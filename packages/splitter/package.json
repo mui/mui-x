@@ -7,6 +7,9 @@
 	"files": [
 		"dist/*"
 	],
+	"publishConfig": {
+		"access": "public"
+	},
 	"dependencies": {
 		"@material-ui/icons": "^4.9.1"
 	},
@@ -30,5 +33,6 @@
 	},
 	"setupFiles": [
 		"<rootDir>/src/setupTests.js"
-	]
+	],
+	"gitHead": "da7e86d38fd895ba71f6fa00cafe40d2e6ff0969"
 }

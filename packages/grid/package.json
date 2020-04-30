@@ -33,7 +33,7 @@
 	"setupFiles": [
 		"<rootDir>/src/setupTests.js"
 	],
-	"gitHead": "187aa304ed5cc58ff187ed4dad270e02129278ed",
+	"gitHead": "da7e86d38fd895ba71f6fa00cafe40d2e6ff0969",
 	"dependencies": {
 		"@material-ui/core": "^4.9.12",
 		"@material-ui/icons": "^4.9.1"

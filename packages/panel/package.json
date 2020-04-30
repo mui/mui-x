@@ -32,5 +32,6 @@
 		"start": "rollup -cw",
 		"lint": "../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../.eslintrc.js && npm run lint:css",
 		"lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../.stylelintrc.js"
-	}
+	},
+	"gitHead": "da7e86d38fd895ba71f6fa00cafe40d2e6ff0969"
 }
