@@ -9,8 +9,11 @@
   "files": [
     "dist/*"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
-  "gitHead": "fb6e701100211fa066601011a65c2eb77e2f1c4e"
+  "gitHead": "52b4b97788247497d5adeda9104c3f374a685bbb"
 }
