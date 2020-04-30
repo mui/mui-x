@@ -1,0 +1,15 @@
+{
+  "name": "@material-ui-x/grid-data-gen",
+  "version": "0.1.12",
+  "description": "Data generator services for the grid",
+  "author": "damien <damien@material-ui.com>",
+  "main": "dist/index-cjs.js",
+  "module": "dist/index-esm.js",
+  "types": "dist/src/index.d.ts",
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  }
+}
