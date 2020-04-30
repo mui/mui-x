@@ -1,0 +1,22 @@
+ .age {
+     color: darkblue;
+ }
+ .shine {
+     background: beige;
+ }
+
+ .common {
+     background: aquamarine;
+ }
+ .unknown {
+     background: coral;
+ }
+ #root {
+     top:0;
+     left: 0;
+     min-width: 100%;
+     min-height: 100%;
+     display: flex;
+     position: absolute;
+     flex-direction: column;
+ }

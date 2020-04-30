@@ -1,0 +1,31 @@
+#root {
+    top:0;
+    left: 0;
+    min-width: 100%;
+    min-height: 100%;
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+}
+
+.negative {
+    color: darkred;
+}
+.positive {
+    color: darkgreen;
+}
+.info-icon {
+    color: #2196f3;
+    align-self: center;
+}
+.bad {
+    background: rgba(255,128,171,.4);
+}
+.good {
+    background: rgba(185,246,202,.4);
+}
+.ellipsis {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}

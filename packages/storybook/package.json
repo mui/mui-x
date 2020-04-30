@@ -1,0 +1,35 @@
+{
+  "name": "@material-ui-x/storybook",
+  "version": "0.1.16",
+  "description": "Storybook components",
+  "author": "Damien Tassone <damien@material-ui.com>",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.9.12",
+    "@material-ui/icons": "^4.9.1",
+    "faker": "^4.1.0",
+    "fin-ui-grid": "^0.1.12",
+    "react": "^16.13.1",
+    "rxjs": "^6.5.5",
+    "styled-components": "^5.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@material-ui/core": "^4.9.12",
+    "@storybook/addon-actions": "^5.3.18",
+    "@storybook/addon-console": "^1.2.1",
+    "@storybook/addon-info": "^5.3.18",
+    "@storybook/addon-storysource": "^5.3.18",
+    "@storybook/react": "^5.3.18",
+    "babel-loader": "^8.1.0",
+    "core-js": "^3.6.5",
+    "react-docgen-typescript-loader": "^3.7.2",
+    "source-map-loader": "^0.2.4",
+    "ts-loader": "^7.0.1",
+    "typescript": "^3.8.3"
+  },
+  "scripts": {
+    "start": "start-storybook -s ./public -p 6006",
+    "build": "build-storybook -s ./public -o dist/ --quiet"
+  }
+}
