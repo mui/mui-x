@@ -8,7 +8,8 @@
     "@material-ui/core": "^4.9.12",
     "@material-ui/icons": "^4.9.1",
     "faker": "^4.1.0",
-    "fin-ui-grid": "^0.1.12",
+    "@material-ui-x/grid": "^0.1.18",
+    "@material-ui-x/grid-data-generator": "^0.1.18",
     "react": "^16.13.1",
     "rxjs": "^6.5.5",
     "styled-components": "^5.0.1"
@@ -29,7 +30,9 @@
     "typescript": "^3.8.3"
   },
   "scripts": {
-    "start": "start-storybook -s ./public -p 6006",
-    "build": "build-storybook -s ./public -o dist/ --quiet"
+    "start": "start-storybook -s ./node_modules/@material-ui-x/grid-data-generator/dist/ -p 6006",
+    "build": "build-storybook -s ./node_modules/@material-ui-x/grid-data-generator/dist/ -o dist/ --quiet",
+    "lint": "../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../.eslintrc.js && npm run lint:css",
+    "lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../.stylelintrc.js"
   }
 }

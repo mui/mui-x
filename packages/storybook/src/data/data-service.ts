@@ -1,5 +1,5 @@
 import { currencyPairs } from './currency-pairs';
-import {ColDef, RowId} from 'fin-ui-grid';
+import {ColDef, RowId} from '@material-ui-x/grid';
 
 export interface DataRowModel {
   id: RowId;

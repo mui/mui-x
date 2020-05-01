@@ -1,6 +1,6 @@
 import React  from 'react';
 import { action } from '@storybook/addon-actions';
-import { GridOptionsProp } from 'fin-ui-grid';
+import { GridOptionsProp } from '@material-ui-x/grid';
 import {GridDataSet} from "../components/grid-dataset";
 
 export default {

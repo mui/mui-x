@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from 'react';
-import {ColDef, Grid, GridApi} from "fin-ui-grid";
+import {ColDef, Grid, GridApi} from "@material-ui-x/grid";
 
 export default {
   title: 'Grid Sorting',
@@ -15,7 +15,7 @@ export const BasicTest = () => {
     { id:5, name: 'clara', age: null},
     { id:6, name: null, age: 40},
     { id:7, name: '', age: 40},
-  ]
+  ];
 
   return (
     <>
@@ -45,7 +45,7 @@ export const SortedWithApi = () => {
     { id:5, name: 'clara', age: null},
     { id:6, name: null, age: 40},
     { id:7, name: '', age: 40},
-  ]
+  ];
 
   return (
     <>
@@ -77,7 +77,7 @@ export const withValueGetterAndFormatter = () => {
     {id: 5, lastName: 'Bob', firstName: 'clara', age: null},
     {id: 6, lastName: 'James', firstName: null, age: 40},
     {id: 7, lastName: 'Smith', firstName: '', age: 40},
-  ]
+  ];
 
   return (
     <>

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { action } from '@storybook/addon-actions';
-import {Grid, GridApi , GridOptionsProp} from 'fin-ui-grid';
+import {Grid, GridApi , GridOptionsProp} from '@material-ui-x/grid';
 import { getData, GridData } from '../data/data-service';
 import { GridDataSet } from '../components/grid-dataset';
 

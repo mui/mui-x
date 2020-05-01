@@ -1,5 +1,5 @@
-import { ColDef, RowId } from 'fin-ui-grid';
-import { GeneratableColDef } from './real-data-demo.columns';
+import { ColDef, RowId } from '@material-ui-x/grid';
+import {GeneratableColDef} from "./generatableColDef";
 
 export interface DataRowModel {
   id: RowId;

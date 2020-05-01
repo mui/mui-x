@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ColDef, ElementSize, Grid, GridOptionsProp } from 'fin-ui-grid';
+import { ColDef, ElementSize, Grid, GridOptionsProp } from '@material-ui-x/grid';
 import { GridDataSet } from '../components/grid-dataset';
 import { GridData } from '../data/data-service';
 import '../style/grid-stories.css';

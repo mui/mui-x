@@ -1,17 +1,19 @@
-import { ColDef } from 'fin-ui-grid';
-import {random, randomArrayItem, randomInt, randomPrice, randomRate} from '../../data/random-generator';
+import './style/real-data-stories.css';
+import {GeneratableColDef, random, randomArrayItem, randomInt, randomPrice, randomRate} from './services/';
 import faker from 'faker';
 import React from 'react';
-import {EmailRenderer} from "./renderer/email-renderer";
-import {ProgressBar} from "./renderer/progress-bar";
-import {IsDone} from "./renderer/done";
-import {IncotermRenderer} from "./renderer/incoterm-renderer";
-import {StatusRenderer} from "./renderer/status-renderer";
-import {Country} from "./renderer/country";
+import { Country, EmailRenderer, IncotermRenderer, IsDone, ProgressBar, StatusRenderer } from './renderer';
+import {
+  COMMODITY_OPTIONS,
+  CONTRACT_TYPE_OPTIONS,
+  COUNTRY_OPTIONS,
+  CURRENCY_OPTIONS,
+  INCOTERM_OPTIONS,
+  RATE_TYPE_OPTIONS,
+  STATUS_OPTIONS,
+  TAXCODE_OPTIONS,
+} from './services/static-data';
 
-export interface GeneratableColDef extends ColDef {
-  generateData: (data: any) => any;
-}
 export const commodityGeneratableColumns: GeneratableColDef[] = [
   {
     field: 'id',
@@ -228,71 +230,4 @@ export const commodityGeneratableColumns: GeneratableColDef[] = [
     type: 'date',
     width: 150,
   },
-];
-
-const STATUS_OPTIONS = ['Open', 'PartiallyFilled', 'Filled', 'Rejected'];
-const TAXCODE_OPTIONS = ['BR', '1250L', '20G', 'BC45', 'IGN179'];
-const RATE_TYPE_OPTIONS = ['Fixed', 'Floating'];
-const CONTRACT_TYPE_OPTIONS = ['FP', 'TM', 'CR'];
-const INCOTERM_OPTIONS = [
-  'EXW (Ex Works)',
-  'FAS (Free Alongside Ship)',
-  'FCA (Free Carrier)',
-  'CPT (Carriage Paid To)',
-  'DAP (Delivered at Place)',
-  'DPU (Delivered at Place Unloaded)',
-  'DDP (Delivered Duty Paid)',
-];
-const COMMODITY_OPTIONS = [
-  'Corn',
-  'Oats',
-  'Rough Rice',
-  'Soybeans',
-  'Rapeseed',
-  'Soybeans',
-  'Soybean Meal',
-  'Soybean Oil',
-  'Wheat',
-  'Milk',
-  'Cocoa',
-  'Coffee C',
-  'Cotton No.2',
-  'Sugar No.11',
-  'Sugar No.14',
-  'Frozen Concentrated Orange Juice',
-  'Adzuki bean',
-  'Robusta coffee',
-];
-
-const CURRENCY_OPTIONS = [
-  'USD',
-  'GBP',
-  'JPY',
-  'EUR',
-  'BRZ',
-  'MXN',
-  'AUD',
-  'CAD',
-  'NZD',
-  'ARS',
-  'CHF',
-  'THB',
-  'HKD',
-  'TRY',
-];
-const COUNTRY_OPTIONS = [
-  'United States',
-  'United Kingdom',
-  'Japan',
-  'France',
-  'Brazil',
-  'Mexico',
-  'Australia',
-  'Canada',
-  'New Zealand',
-  'Argentina',
-  'Switzerland',
-  'Thailand',
-  'Hong Kong',
-  'Turkey',
 ];

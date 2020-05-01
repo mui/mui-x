@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { PricingModel, subscribeCurrencyPair } from '../data/streaming/pricing-service';
-import {ColDef, Grid, GridApi, GridOptionsProp} from 'fin-ui-grid';
+import {ColDef, Grid, GridApi, GridOptionsProp} from '@material-ui-x/grid';
 import { currencyPairs } from '../data/currency-pairs';
 import { pricingColumns } from '../data/streaming/pricing-service';
 

@@ -27,7 +27,7 @@ const Container = styled.div`
           background: #088208a3;
           }
  }
-`
+`;
 
 export const ProgressBar: React.FC<{value:number}> = React.memo(({value})=> {
 	const valueInPercent = (value * 100);

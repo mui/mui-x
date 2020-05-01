@@ -1,67 +1,50 @@
-import React, {useEffect, useState} from 'react';
-import {Grid, GridOptions, RowData} from 'fin-ui-grid';
-import './real-data-stories.css';
-
-import {getRealData} from "./real-data-service";
-import {commodityGeneratableColumns} from "./real-data-demo.columns";
+import React from 'react';
+import { Grid, GridOptions } from '@material-ui-x/grid';
+import { useDemoData } from '@material-ui-x/grid-data-generator';
+import '@material-ui-x/grid-data-generator/dist/index-esm.css';
 
 export default {
   title: 'Real data demo',
 };
 
-const useData = (nbRows: number)=> {
-  const [rows, setRows] = useState<RowData[]>([]);
-
-  const loadData = async () => {
-    const data = await getRealData(nbRows, commodityGeneratableColumns);
-    setRows(data.rows);
-  };
-
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  return rows;
-};
-
 export const Commodity = () => {
   const options: Partial<GridOptions> = {
-    checkboxSelection: true
+    checkboxSelection: true,
   };
 
-  const rows = useData(100);
+  const data = useDemoData(100);
 
   return (
-    <div style={{ padding: 10, flexGrow:1 }}>
-      <Grid rows={rows} columns={commodityGeneratableColumns}  options={options} />
+    <div style={{ padding: 10, flexGrow: 1 }}>
+      <Grid rows={data.rows} columns={data.columns} options={options} />
     </div>
   );
 };
 export const Commodity500 = () => {
   const options: Partial<GridOptions> = {
     checkboxSelection: true,
-    disableSelectionOnClick: true
+    // disableSelectionOnClick: true,
   };
 
-  const rows = useData(500);
+  const data = useDemoData(500);
 
   return (
-    <div style={{ padding: 10, flexGrow:1 }}>
-      <Grid rows={rows} columns={commodityGeneratableColumns}  options={options} />
+    <div style={{ padding: 10, flexGrow: 1 }}>
+      <Grid rows={data.rows} columns={data.columns} options={options} />
     </div>
   );
 };
 export const Commodity1000 = () => {
   const options: Partial<GridOptions> = {
     checkboxSelection: true,
-    // disableSelectionOnClick: true
+    disableSelectionOnClick: true
   };
 
-  const rows = useData(1000);
+  const data = useDemoData(1000);
 
   return (
-    <div style={{ padding: 10, flexGrow:1 }}>
-      <Grid rows={rows} columns={commodityGeneratableColumns}  options={options} />
+    <div style={{ padding: 10, flexGrow: 1 }}>
+      <Grid rows={data.rows} columns={data.columns} options={options} />
     </div>
   );
 };
