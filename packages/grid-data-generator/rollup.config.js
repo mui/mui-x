@@ -32,7 +32,7 @@ export default {
         targets: ['./dist/'],
       }),
     typescript(),
-    css(),
+    css({output: 'dist/demo-style.css'}),
     commonjs(),
     static_files({
       include: ['./public']

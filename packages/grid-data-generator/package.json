@@ -24,6 +24,9 @@
     "rollup-plugin-typescript2": "^0.27.0"
   },
   "peerDependencies": {
+    "@material-ui/core": "^4.9.12",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui-x/grid": "^0.1.18",
     "react": "^16.13.1",
     "styled-components": "^5.0.1"
   },
@@ -39,8 +42,6 @@
   ],
   "gitHead": "f0f0bf72099f0b7d28aa88ca441082b2dc587d93",
   "dependencies": {
-    "@material-ui/core": "^4.9.12",
-    "@material-ui/icons": "^4.9.1",
     "faker": "^4.1.0"
   }
 }
