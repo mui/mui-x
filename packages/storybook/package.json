@@ -30,8 +30,8 @@
     "typescript": "^3.8.3"
   },
   "scripts": {
-    "start": "start-storybook -s ./node_modules/@material-ui-x/grid-data-generator/dist/ -p 6006",
-    "build": "build-storybook -s ./node_modules/@material-ui-x/grid-data-generator/dist/ -o dist/ --quiet",
+    "start": "start-storybook -s ./node_modules/@material-ui-x/grid-data-generator/dist -p 6006",
+    "build": "build-storybook -s ./node_modules/@material-ui-x/grid-data-generator/dist -o dist/ --quiet",
     "lint": "../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../.eslintrc.js && npm run lint:css",
     "lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../.stylelintrc.js"
   }

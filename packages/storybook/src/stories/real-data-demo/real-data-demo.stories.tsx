@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, GridOptions } from '@material-ui-x/grid';
 import { useDemoData } from '@material-ui-x/grid-data-generator';
-import '@material-ui-x/grid-data-generator/dist/index-esm.css';
+import '@material-ui-x/grid-data-generator/dist/demo-style.css';
 
 export default {
   title: 'Real data demo',
@@ -12,7 +12,7 @@ export const Commodity = () => {
     checkboxSelection: true,
   };
 
-  const data = useDemoData(100);
+  const { data } = useDemoData(100);
 
   return (
     <div style={{ padding: 10, flexGrow: 1 }}>
@@ -26,7 +26,7 @@ export const Commodity500 = () => {
     // disableSelectionOnClick: true,
   };
 
-  const data = useDemoData(500);
+  const { data } = useDemoData(500);
 
   return (
     <div style={{ padding: 10, flexGrow: 1 }}>
@@ -40,7 +40,7 @@ export const Commodity1000 = () => {
     disableSelectionOnClick: true,
   };
 
-  const data = useDemoData(1000);
+  const { data } = useDemoData(1000);
 
   return (
     <div style={{ padding: 10, flexGrow: 1 }}>
