@@ -21,15 +21,15 @@ export const feedColumns = [
   { field: 'id' },
   { field: 'currencyPair' },
   { field: 'priceSpot', type: 'number' },
-  { field: 'price1m' , type:'number'},
-  { field: 'price2m', type:'number' },
-  { field: 'price3m', type:'number'},
-  { field: 'price6m', type:'number'},
-  { field: 'price1y', type:'number'},
-  { field: 'price2y', type:'number'},
-  { field: 'price5y', type:'number'},
+  { field: 'price1m', type: 'number' },
+  { field: 'price2m', type: 'number' },
+  { field: 'price3m', type: 'number' },
+  { field: 'price6m', type: 'number' },
+  { field: 'price1y', type: 'number' },
+  { field: 'price2y', type: 'number' },
+  { field: 'price5y', type: 'number' },
 ];
-const generateModel = ()=> ({
+const generateModel = () => ({
   id: random(0, currencyPairs.length).toFixed(),
   currencyPair: currencyPairs[random(0, currencyPairs.length).toFixed()],
   priceSpot: randomPrice(),
@@ -47,7 +47,7 @@ export function subscribeFeed(minUpdateRate = 100, maxUpdateRate = 500): Observa
     flatMap(() => {
       return new Observable<PricingModel[]>(obs => {
         const updates: PricingModel[] = [];
-        for(let i = 0; i< random(1, 10); i++) {
+        for (let i = 0; i < random(1, 10); i++) {
           updates.push(generateModel());
         }
         obs.next(updates);

@@ -1,4 +1,5 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "dist/",
     "module": "es6",
@@ -20,10 +21,13 @@
     "declaration": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
   },
   "include": [
     "src/**/*"
   ],
-  "exclude": ["node_modules", "build", "scripts"]
+  "exclude": [    "__tests__",
+    "**/*.test.ts",
+    "node_modules",
+    "lib", "build", "scripts"]
 }

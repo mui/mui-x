@@ -24,3 +24,4 @@ export const Country: React.FC<{ value: string }> = React.memo(({ value }) => {
     </Container>
   );
 });
+Country.displayName = 'Country';

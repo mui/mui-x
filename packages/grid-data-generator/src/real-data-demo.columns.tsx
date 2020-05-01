@@ -1,5 +1,5 @@
 import './style/real-data-stories.css';
-import {GeneratableColDef, random, randomArrayItem, randomInt, randomPrice, randomRate} from './services/';
+import { GeneratableColDef, random, randomArrayItem, randomInt, randomPrice, randomRate } from './services/';
 import faker from 'faker';
 import React from 'react';
 import { Country, EmailRenderer, IncotermRenderer, IsDone, ProgressBar, StatusRenderer } from './renderer';
@@ -40,6 +40,7 @@ export const commodityGeneratableColumns: GeneratableColDef[] = [
     field: 'traderName',
     headerName: 'Trader Name',
     generateData: () => faker.name.findName(),
+    // eslint-disable-next-line react/display-name
     cellRenderer: params => <EmailRenderer email={params.data['traderEmail']} label={params.value!.toString()} />,
     disableClickEventBubbling: true,
     width: 150,
@@ -75,6 +76,7 @@ export const commodityGeneratableColumns: GeneratableColDef[] = [
     field: 'filledQuantity',
     headerName: 'Filled Quantity',
     generateData: data => Number((data.quantity * randomRate()).toFixed()) / data.quantity,
+    // eslint-disable-next-line react/display-name
     cellRenderer: params => <ProgressBar value={Number(params.value)!} />,
     type: 'number',
     width: 120,
@@ -82,6 +84,7 @@ export const commodityGeneratableColumns: GeneratableColDef[] = [
   {
     field: 'isFilled',
     headerName: 'Is Filled',
+    // eslint-disable-next-line react/display-name
     cellRenderer: params => <IsDone value={!!params.value} />,
     align: 'center',
     generateData: data => data.quantity === data.filledQuantity,
@@ -111,6 +114,7 @@ export const commodityGeneratableColumns: GeneratableColDef[] = [
   {
     field: 'incoTerm',
     generateData: () => randomArrayItem(INCOTERM_OPTIONS),
+    // eslint-disable-next-line react/display-name
     cellRenderer: params => <IncotermRenderer value={params.value!} />,
     width: 100,
   },
@@ -129,6 +133,7 @@ export const commodityGeneratableColumns: GeneratableColDef[] = [
   {
     field: 'status',
     generateData: data => randomArrayItem(STATUS_OPTIONS),
+    // eslint-disable-next-line react/display-name
     cellRenderer: params => <StatusRenderer status={params.value!.toString()} />,
     width: 150,
   },
@@ -181,6 +186,7 @@ export const commodityGeneratableColumns: GeneratableColDef[] = [
     field: 'counterPartyCountry',
     headerName: 'Counterparty Country',
     generateData: () => randomArrayItem(COUNTRY_OPTIONS),
+    // eslint-disable-next-line react/display-name
     cellRenderer: params => <Country value={params.value!.toString()} />,
     width: 120,
   },

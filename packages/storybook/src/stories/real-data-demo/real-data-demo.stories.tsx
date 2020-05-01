@@ -37,7 +37,7 @@ export const Commodity500 = () => {
 export const Commodity1000 = () => {
   const options: Partial<GridOptions> = {
     checkboxSelection: true,
-    disableSelectionOnClick: true
+    disableSelectionOnClick: true,
   };
 
   const data = useDemoData(1000);

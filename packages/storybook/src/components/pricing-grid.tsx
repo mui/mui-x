@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { PricingModel, subscribeCurrencyPair } from '../data/streaming/pricing-service';
-import {ColDef, Grid, GridApi, GridOptionsProp} from '@material-ui-x/grid';
+import { ColDef, Grid, GridApi, GridOptionsProp } from '@material-ui-x/grid';
 import { currencyPairs } from '../data/currency-pairs';
 import { pricingColumns } from '../data/streaming/pricing-service';
 
@@ -11,8 +11,8 @@ export interface PricingGridProps {
   max?: number;
   options?: GridOptionsProp;
 }
-export const PricingGrid: React.FC<PricingGridProps> = (p) => {
-  const [columns ] = useState<ColDef[]>(pricingColumns);
+export const PricingGrid: React.FC<PricingGridProps> = p => {
+  const [columns] = useState<ColDef[]>(pricingColumns);
   const [rows] = useState<PricingModel[]>([]);
 
   const [started, setStarted] = useState<boolean>(false);
@@ -58,7 +58,11 @@ export const PricingGrid: React.FC<PricingGridProps> = (p) => {
   };
   return (
     <>
-      <button ref={stopButton} onClick={onStartStreamBtnClick} style={{padding: 5, textTransform:"capitalize", margin: 10 }}>
+      <button
+        ref={stopButton}
+        onClick={onStartStreamBtnClick}
+        style={{ padding: 5, textTransform: 'capitalize', margin: 10 }}
+      >
         {started ? 'Stop' : 'Start'} Ticking
       </button>
       <div style={{ width: 800, height: 600 }}>

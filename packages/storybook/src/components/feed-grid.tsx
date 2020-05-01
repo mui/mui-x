@@ -2,16 +2,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { PricingModel } from '../data/streaming/pricing-service';
-import {ColDef, Grid, GridApi, GridOptionsProp} from '@material-ui-x/grid';
-import {feedColumns, subscribeFeed} from "../data/streaming/single-subscription-service";
+import { ColDef, Grid, GridApi, GridOptionsProp } from '@material-ui-x/grid';
+import { feedColumns, subscribeFeed } from '../data/streaming/single-subscription-service';
 
 export interface FeedGridProps {
   min?: number;
   max?: number;
   options?: GridOptionsProp;
 }
-export const FeedGrid: React.FC<FeedGridProps> = (p) => {
-  const [columns ] = useState<ColDef[]>(feedColumns);
+export const FeedGrid: React.FC<FeedGridProps> = p => {
+  const [columns] = useState<ColDef[]>(feedColumns);
   const [rows] = useState<PricingModel[]>([]);
 
   const [started, setStarted] = useState<boolean>(false);
@@ -56,7 +56,11 @@ export const FeedGrid: React.FC<FeedGridProps> = (p) => {
   };
   return (
     <>
-      <button ref={stopButton} onClick={onStartStreamBtnClick} style={{padding: 5, textTransform:"capitalize", margin: 10 }}>
+      <button
+        ref={stopButton}
+        onClick={onStartStreamBtnClick}
+        style={{ padding: 5, textTransform: 'capitalize', margin: 10 }}
+      >
         {started ? 'Stop' : 'Start'} Ticking
       </button>
       <div style={{ width: 800, height: 600 }}>

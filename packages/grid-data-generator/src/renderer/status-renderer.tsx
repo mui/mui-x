@@ -4,7 +4,7 @@ import InfoIcon from '@material-ui/icons/Info';
 import AutorenewIcon from '@material-ui/icons/Autorenew';
 import DoneIcon from '@material-ui/icons/Done';
 import { Chip } from '@material-ui/core';
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const StatusContainer = styled.div`
   justify-content: left !important;
@@ -51,7 +51,7 @@ export const StatusRenderer: React.FC<{ status: string }> = React.memo(({ status
     icon = <DoneIcon className={'icon'} />;
   }
   let label = status;
-  if(status === 'PartiallyFilled') {
+  if (status === 'PartiallyFilled') {
     label = 'Partially Filled';
   }
   return (
@@ -60,3 +60,4 @@ export const StatusRenderer: React.FC<{ status: string }> = React.memo(({ status
     </StatusContainer>
   );
 });
+StatusRenderer.displayName = 'StatusRenderer';

@@ -1,5 +1,5 @@
 import { interval, Observable } from 'rxjs';
-import {flatMap } from 'rxjs/operators';
+import { flatMap } from 'rxjs/operators';
 import { random, randomPrice } from '../random-generator';
 import { RowId } from '@material-ui-x/grid';
 
@@ -19,17 +19,22 @@ export interface PricingModel {
 export const pricingColumns = [
   { field: 'id' },
   { field: 'currencyPair' },
-  { field: 'priceSpot', type: 'number'},
-  { field: 'price1m', type: 'number'},
-  { field: 'price2m', type: 'number'},
-  { field: 'price3m', type: 'number'},
-  { field: 'price6m', type: 'number'},
-  { field: 'price1y', type: 'number'},
-  { field: 'price2y', type: 'number'},
-  { field: 'price5y', type: 'number'},
+  { field: 'priceSpot', type: 'number' },
+  { field: 'price1m', type: 'number' },
+  { field: 'price2m', type: 'number' },
+  { field: 'price3m', type: 'number' },
+  { field: 'price6m', type: 'number' },
+  { field: 'price1y', type: 'number' },
+  { field: 'price2y', type: 'number' },
+  { field: 'price5y', type: 'number' },
 ];
 
-export function subscribeCurrencyPair(currencyPair: string, i: number, minUpdateRate = 100, maxUpdateRate = 500): Observable<PricingModel> {
+export function subscribeCurrencyPair(
+  currencyPair: string,
+  i: number,
+  minUpdateRate = 100,
+  maxUpdateRate = 500,
+): Observable<PricingModel> {
   return interval(random(minUpdateRate, maxUpdateRate)).pipe(
     flatMap(() => {
       return new Observable<any>(obs => {

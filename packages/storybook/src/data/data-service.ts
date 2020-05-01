@@ -1,5 +1,5 @@
 import { currencyPairs } from './currency-pairs';
-import {ColDef, RowId} from '@material-ui-x/grid';
+import { ColDef, RowId } from '@material-ui-x/grid';
 
 export interface DataRowModel {
   id: RowId;
@@ -34,7 +34,7 @@ export function getData(rowLength: number, colLength: number): Promise<GridData>
     ];
     for (let j = 1; j <= pricesColLength; j++) {
       // const y = Math.floor(j / 12);
-      columns.push({ field: `price${j}M`, headerName: `${j}M`, type:'number' }); //(y > 0 ? `${y}Y` : '') + `${j - y * 12}M`
+      columns.push({ field: `price${j}M`, headerName: `${j}M`, type: 'number' }); //(y > 0 ? `${y}Y` : '') + `${j - y * 12}M`
     }
     columns.length = colLength; //we cut the array in case < 2;
     resolve({ columns, rows: data });
