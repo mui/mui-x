@@ -1,6 +1,6 @@
 {
 	"name": "@material-ui-x/grid",
-	"version": "0.1.18",
+	"version": "0.1.20",
 	"description": "Official Material-UI Data Grid Component",
 	"author": "Damien Tassone <damien@material-ui.com>",
 	"main": "dist/index-cjs.js",
