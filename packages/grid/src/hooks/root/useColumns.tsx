@@ -29,7 +29,7 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
       mappedCols = [checkboxSelectionColDef, ...mappedCols];
     }
     return mappedCols;
-  }, [columns]);
+  }, [columns, options]);
 
   const columnFieldLookup = useMemo<ColumnLookup>(() => {
     logger.debug('Building columns lookup');
@@ -37,12 +37,12 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
       lookup[col.field] = col;
       return lookup;
     }, {});
-  }, [columns]);
+  }, [columns, options]);
 
   const visibleColumns = useMemo<Columns>(() => {
     logger.debug('Calculating visibleColumns');
     return allColumns.filter(c => c.field != null && !c.hide);
-  }, [columns]);
+  }, [columns, options]);
 
   const columnsMeta = useMemo<ColumnsMeta>(() => {
     logger.debug('Calculating columnsMeta');
@@ -54,7 +54,7 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
       return totalW + curCol.width!;
     }, 0);
     return { totalWidth, positions: positions };
-  }, [columns]);
+  }, [columns, options]);
 
   const state = {
     all: allColumns,
@@ -80,7 +80,7 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
     };
     setInternalColumns(newState);
     stateRef.current = newState;
-  }, [columns]);
+  }, [columns, options]);
 
   const getColumnFromField: (field: string) => ColDef = field => stateRef.current.lookup[field];
 

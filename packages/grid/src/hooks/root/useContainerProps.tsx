@@ -1,20 +1,15 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { ContainerProps, ElementSize, GridOptions } from '../../models';
 import { useLogger } from '../utils/useLogger';
 
-type ReturnType = (columnsTotalWidth: number, rowsCount: number) => ContainerProps | null; //[ContainerProps | null, () => void];
+type ReturnType = (options: GridOptions, columnsTotalWidth: number, rowsCount: number) => ContainerProps | null; //[ContainerProps | null, () => void];
 
-export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, options: GridOptions): ReturnType => {
+export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>): ReturnType => {
   const logger = useLogger('useContainerProps');
   const windowSizesRef = useRef<ElementSize>({ width: 0, height: 0 });
 
-  const scrollBarSize = useMemo<number>(() => {
-    //TODO dynamic scrollbar size? perf issue?
-    return options.scrollbarSize;
-  }, [options]);
-
   const getContainerProps = useCallback(
-    (columnsTotalWidth: number, rowsCount: number): ContainerProps | null => {
+    (options: GridOptions, columnsTotalWidth: number, rowsCount: number): ContainerProps | null => {
       if (!windowRef || !windowRef.current) {
         return null;
       }
@@ -27,6 +22,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, op
       const rowHeight = options.rowHeight;
       const hasScrollY = windowSizesRef.current.height < rowsCount * rowHeight;
       const hasScrollX = columnsTotalWidth > windowSizesRef.current.width;
+      const scrollBarSize = options.scrollbarSize;
 
       const windowPageSize = Math.floor((windowSizesRef.current.height - scrollBarSize) / rowHeight) - 1; //nb ligne in viewport
       const pageSize = windowPageSize * 2; //nb ligne in rendering zone

@@ -30,7 +30,7 @@ export const useVirtualRows = (
 
   const scrollTo = useScrollFn(viewportRef);
   // const scrollColHeaderTo = useScrollFn(colRef);
-  const getContainerProps = useContainerProps(windowRef, options);
+  const getContainerProps = useContainerProps(windowRef);
   const [renderCtx, setRenderCtx] = useRafDebouncedState<Partial<RenderContextProps> | null>(null);
   const [renderedColRef, updateRenderedCols] = useVirtualColumns(internalColumns, options);
 
@@ -165,7 +165,7 @@ export const useVirtualRows = (
 
   const updateContainerSize = () => {
     if (columnTotalWidthRef.current > 0) {
-      containerPropsRef.current = getContainerProps(columnTotalWidthRef.current, rowsCount.current);
+      containerPropsRef.current = getContainerProps(options, columnTotalWidthRef.current, rowsCount.current);
       updateViewport();
       reRender();
     } else {
