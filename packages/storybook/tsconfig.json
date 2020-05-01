@@ -21,13 +21,18 @@
     "declaration": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
+    "emitDecoratorMetadata": true
   },
   "include": [
     "src/**/*"
   ],
-  "exclude": [    "__tests__",
+  "exclude": [
+    "__tests__",
     "**/*.test.ts",
     "node_modules",
-    "lib", "build", "scripts"]
+    "lib",
+    "build",
+    "scripts"
+  ],
+  "types": []
 }
