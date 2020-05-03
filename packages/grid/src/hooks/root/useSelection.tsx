@@ -88,7 +88,20 @@ export const useSelection = (options: GridOptions, rows: Rows, initialised: bool
     if (!options.enableMultipleSelection && ids.length > 1) {
       throw new Error('Enable Options.enableMultipleSelection to select more than 1 item');
     }
-    ids.forEach(id => selectRow(id, true, isSelected));
+
+    apiRef!.current!.updateRowModels(ids.map(id => ({ id, selected: isSelected })));
+    selectedItemsRef.current = isSelected ? ids : [];
+    forceUpdate((p: any) => !p);
+
+    if (apiRef && apiRef.current != null) {
+      //TODO: emit event for each row
+      // selectedItemsRef.current.forEach(item=> {
+      //   const rowSelectedParam: RowSelectedParam = { data: row.data, isSelected: isSelected, rowIndex };
+      //   apiRef.current!.emit(ROW_SELECTED_EVENT, rowSelectedParam);
+      // });
+      const selectionChangedParam: SelectionChangedParam = { rows: getSelectedRows().map(r => r.data) };
+      apiRef.current!.emit(SELECTION_CHANGED_EVENT, selectionChangedParam);
+    }
   };
 
   const rowClickedHandler = (params: RowClickedParam) => {

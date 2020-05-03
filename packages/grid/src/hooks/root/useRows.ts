@@ -48,21 +48,20 @@ export const useRows = (options: GridOptions, rows: RowsProp, initialised: boole
       if (partialRow.id == null) {
         throw new Error(`All rows need an id.`);
       }
-      const rowModel = getRowFromId(partialRow.id!);
-      if (!rowModel) {
+      const idx = getRowIndexFromId(partialRow.id);
+      if (idx == null) {
         //New row?
         addedRows.push(partialRow as RowModel);
         return;
       }
-      const newRow = { ...rowModel, ...partialRow };
-      const idx = getRowIndexFromId(partialRow.id);
+      const newRow = { ...rowModelsRef.current[idx], ...partialRow };
 
       rowModelsRef.current[idx] = newRow;
       rowModels[idx] = newRow;
-      if (!isScrollingRef.current && !isSortedRef.current) {
-        rafUpdate();
-      }
     });
+    if (!isScrollingRef.current && !isSortedRef.current) {
+      rafUpdate();
+    }
 
     if (addedRows.length > 0) {
       const newRows = [...rowModelsRef.current, ...addedRows];
