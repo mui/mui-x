@@ -45,11 +45,13 @@ export interface GridOptions {
   enableMultipleColumnsSorting: boolean;
   showCellRightBorder: boolean;
   extendRowFullWidth: boolean;
+
   onCellClicked?: (param: CellClickedParam) => void;
   onRowClicked?: (param: RowClickedParam) => void;
   onRowSelected?: (param: RowSelectedParam) => void;
   onSelectionChanged?: (param: SelectionChangedParam) => void;
   onColumnHeaderClicked?: (param: ColumnHeaderClickedParam) => void;
+
   checkboxSelection?: boolean;
   disableSelectionOnClick?: boolean;
   showColumnSeparator?: boolean;

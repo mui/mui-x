@@ -70,10 +70,10 @@ export const RootStyle = styled.div<GridRootProps>`
             white-space: nowrap;
           }
           .sort-icon > .icon {
-            min-height: ${p => p.options.headerHeight}px;
+            min-height: ${p => p.options.headerHeight - 2}px; 
           }
           * {
-            max-height: ${p => p.options.headerHeight}px;
+            max-height: ${p => p.options.headerHeight - 2}px;
           }
           &.checkbox-selection-header-cell .checkbox-input {
             padding: 12px;

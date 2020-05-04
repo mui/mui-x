@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import {
   ColDef,
   ColumnHeaderClickedParam,
@@ -172,11 +172,14 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
     }
   }, [apiRef]);
 
+  const [rowsState] = useState(rowsProp);
+  const [colState] = useState(colsProp);
+
   useEffect(() => {
-    if (rowsProp.length > 0) {
+    if (rowsProp.length > 0 && sortModelRef.current.length === 0) {
       storeOriginalOrder();
     }
-  }, [rowsProp]);
+  }, [rowsState]);
 
   useEffect(() => {
     if (colsProp.length > 0 && apiRef.current) {
@@ -186,5 +189,5 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
         .sort((a, b) => a.sortIndex! - b.sortIndex!);
       setSortModel(sortedCols.map(c => ({ colId: c.field, sort: c.sortDirection })));
     }
-  }, colsProp);
+  }, [colState]);
 };

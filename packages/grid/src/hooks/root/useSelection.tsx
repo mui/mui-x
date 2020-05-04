@@ -81,7 +81,7 @@ export const useSelection = (options: GridOptions, rows: Rows, initialised: bool
     return selectRowModel(apiRef.current.getRowFromId(id), allowMultiple, isSelected);
   };
 
-  const selectRows = (ids: RowId[], isSelected?: boolean) => {
+  const selectRows = (ids: RowId[], isSelected = true) => {
     if (!apiRef || !apiRef.current) {
       return;
     }
