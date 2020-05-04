@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import {
   ColDef,
   ColumnHeaderClickedParam,
+  Columns,
   ComparatorFn,
   FieldComparatorList,
   GridApi,
@@ -36,7 +37,7 @@ import { SortItem, SortModel } from '../../models/sortModel';
  *
  * */
 
-export const useSorting = (options: GridOptions, rowsProp: RowsProp, apiRef: GridApiRef) => {
+export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: Columns, apiRef: GridApiRef) => {
   const logger = useLogger('useSorting');
   const sortModelRef = useRef<SortModel>([]);
   const allowMultipleSorting = useRef<boolean>(false);
@@ -176,4 +177,14 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, apiRef: Gri
       storeOriginalOrder();
     }
   }, [rowsProp]);
+
+  useEffect(() => {
+    if (colsProp.length > 0 && apiRef.current) {
+      const sortedCols = apiRef.current
+        .getAllColumns()
+        .filter(c => c.sortDirection != null)
+        .sort((a, b) => a.sortIndex! - b.sortIndex!);
+      setSortModel(sortedCols.map(c => ({ colId: c.field, sort: c.sortDirection })));
+    }
+  }, colsProp);
 };

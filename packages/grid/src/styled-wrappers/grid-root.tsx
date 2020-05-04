@@ -69,9 +69,14 @@ export const RootStyle = styled.div<GridRootProps>`
             overflow: hidden;
             white-space: nowrap;
           }
-
-          * {
+          .sort-icon > .icon {
             min-height: ${p => p.options.headerHeight}px;
+          }
+          * {
+            max-height: ${p => p.options.headerHeight}px;
+          }
+          &.checkbox-selection-header-cell .checkbox-input {
+            padding: 12px;
           }
         }
         &.scroll .material-col-cell:last-child {
@@ -102,60 +107,59 @@ export const RootStyle = styled.div<GridRootProps>`
         flex-direction: column;
         overflow: hidden;
       }
-    }
-
-    .material-row {
-      display: flex;
-      width: fit-content;
-      max-height: ${p => p.options.rowHeight}px;
-      min-height: ${p => p.options.rowHeight}px;
-      background-color: #fff;
-
-      &.even {
-        background-color: #fff;
-      }
-
-      &.odd {
-        background-color: #fcfcfc;
-      }
-
-      &:hover {
-        cursor: pointer;
-        background-color: #4b99ec52;
-      }
-      &.selected {
-        background-color: #4a98ec;
-        color: #fff;
-      }
-
-      .material-cell {
-        display: block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        padding: 0 16px;
-        line-height: ${p => p.options.rowHeight - 1}px; /* 1 = border bottom; */
+      .material-row {
+        display: flex;
+        width: fit-content;
         max-height: ${p => p.options.rowHeight}px;
         min-height: ${p => p.options.rowHeight}px;
-        font-size: 12px;
-        border-bottom: 1px solid #bdc3c7;
+        background-color: #fff;
 
-        &.with-renderer {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
+        &.even {
+          background-color: #fff;
         }
-        &.with-border {
-          border-right: 1px solid #bdc3c7;
+
+        &.odd {
+          background-color: #fcfcfc;
         }
-        &.right {
-          text-align: right;
+
+        &:hover {
+          cursor: pointer;
+          background-color: #4b99ec52;
         }
-        &.center {
-          text-align: center;
+        &.selected {
+          background-color: #4a98ec;
+          color: #fff;
         }
-        &.checkbox-selection-cell .checkbox-input {
-          padding: 12px;
+
+        .material-cell {
+          display: block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          padding: 0 16px;
+          line-height: ${p => p.options.rowHeight - 1}px; /* 1 = border bottom; */
+          max-height: ${p => p.options.rowHeight}px;
+          min-height: ${p => p.options.rowHeight}px;
+          font-size: 12px;
+          border-bottom: 1px solid #bdc3c7;
+
+          &.with-renderer {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+          }
+          &.with-border {
+            border-right: 1px solid #bdc3c7;
+          }
+          &.right {
+            text-align: right;
+          }
+          &.center {
+            text-align: center;
+          }
+          &.checkbox-selection-cell .checkbox-input {
+            padding: 12px;
+          }
         }
       }
     }

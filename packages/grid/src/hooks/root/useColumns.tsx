@@ -28,6 +28,26 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
     if (options.checkboxSelection) {
       mappedCols = [checkboxSelectionColDef, ...mappedCols];
     }
+    const sortedCols = mappedCols.filter(c => c.sortDirection != null);
+    if (sortedCols.length > 0 && apiRef.current) {
+      //in case consumer missed to set the sort index
+      sortedCols.forEach((c, idx) => {
+        if (c.sortIndex == null) {
+          c.sortIndex = idx + 1;
+        }
+      });
+    }
+    // we check if someone called setSortModel using apiref to apply icons
+    if (apiRef.current && apiRef.current!.getSortModel) {
+      const sortedCols = apiRef.current!.getSortModel();
+      sortedCols.forEach((c, idx) => {
+        const col = mappedCols.find(mc => mc.field === c.colId);
+        if (col) {
+          col.sortDirection = c.sort;
+          col.sortIndex = sortedCols.length > 1 ? idx + 1 : undefined;
+        }
+      });
+    }
     return mappedCols;
   }, [columns, options]);
 
@@ -42,7 +62,7 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
   const visibleColumns = useMemo<Columns>(() => {
     logger.debug('Calculating visibleColumns');
     return allColumns.filter(c => c.field != null && !c.hide);
-  }, [columns, options]);
+  }, [columns, options, apiRef]);
 
   const columnsMeta = useMemo<ColumnsMeta>(() => {
     logger.debug('Calculating columnsMeta');
@@ -70,26 +90,31 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
 
   useEffect(() => {
     logger.debug('Columns have changed.');
-    const newState = {
-      all: allColumns,
-      visible: visibleColumns,
-      meta: columnsMeta,
-      hasColumns: allColumns.length > 0,
-      hasVisibleColumns: visibleColumns.length > 0,
-      lookup: columnFieldLookup,
-    };
-    setInternalColumns(newState);
-    stateRef.current = newState;
+    if (stateRef.current.all !== allColumns) {
+      const newState = {
+        all: allColumns,
+        visible: visibleColumns,
+        meta: columnsMeta,
+        hasColumns: allColumns.length > 0,
+        hasVisibleColumns: visibleColumns.length > 0,
+        lookup: columnFieldLookup,
+      };
+      setInternalColumns(newState);
+      stateRef.current = newState;
+    }
   }, [columns, options]);
 
   const getColumnFromField: (field: string) => ColDef = field => stateRef.current.lookup[field];
+  const getAllColumns: () => Columns = () => stateRef.current.all;
 
   const onSortedColumns = (sortModel: SortModel) => {
+    logger.debug('Sort model changed to ', sortModel);
     stateRef.current.all.forEach(c => (c.sortDirection = null));
 
     //We mutate state here to avoid rebuilding all state, as they are all pointing to the same ref internally
     //TODO refactor this to create a new object ref
-    sortModel.forEach(model => {
+    sortModel.forEach((model, index) => {
+      stateRef.current.lookup[model.colId].sortIndex = sortModel.length > 1 ? index + 1 : undefined;
       stateRef.current.lookup[model.colId].sortDirection = model.sort;
     });
     rafUpdate();
@@ -101,10 +126,10 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
 
       const colApi: ColumnApi = {
         getColumnFromField,
+        getAllColumns,
       };
 
       apiRef.current = Object.assign(apiRef.current, colApi) as GridApi;
-
       apiRef.current.on(POST_SORT, onSortedColumns);
 
       return () => {

@@ -4,6 +4,7 @@ import { HEADER_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import { Tooltip } from '@material-ui/core';
 import { isArray, isOverflown } from '../utils';
 import { ApiContext } from './api-context';
+import Badge from '@material-ui/core/Badge';
 
 export interface ColumnsHeaderProps {
   columns: Columns;
@@ -18,9 +19,20 @@ interface ColumnHeaderItemProps {
   icons: { [key: string]: React.ReactElement };
   colIndex: number;
 }
+
 //Can't use React.memo here until we refactor useColumns
 export const ColumnHeaderItem = ({ column, icons, colIndex, headerHeight }: ColumnHeaderItemProps) => {
-  const sortIconElement = !column.hideSortIcons && column.sortDirection ? icons[column.sortDirection] : null;
+  const sortIconElement =
+    !column.hideSortIcons && column.sortDirection ? (
+      <span className={'sort-icon'}>
+        {column.sortIndex != null && (
+          <Badge badgeContent={column.sortIndex} color="default">
+            {icons[column.sortDirection]}
+          </Badge>
+        )}
+        {column.sortIndex == null && icons[column.sortDirection]}
+      </span>
+    ) : null;
   const titleRef = useRef<HTMLDivElement>(null);
   const [tooltipText, setTooltip] = useState('');
   const api = useContext(ApiContext);
@@ -53,7 +65,6 @@ export const ColumnHeaderItem = ({ column, icons, colIndex, headerHeight }: Colu
       data-field={column.field}
       style={{ width: column.width, minWidth: column.width, maxWidth: column.width, maxHeight: headerHeight }}
     >
-      {sortIconElement}
       <Tooltip title={column.description || tooltipText}>
         {headerComponent || (
           <div ref={titleRef} className={'title'}>
@@ -61,6 +72,7 @@ export const ColumnHeaderItem = ({ column, icons, colIndex, headerHeight }: Colu
           </div>
         )}
       </Tooltip>
+      {sortIconElement}
     </div>
   );
 };

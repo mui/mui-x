@@ -72,8 +72,8 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   extendRowFullWidth: true,
   icons: {
     sortedColumns: {
-      asc: <ArrowUpIcon />,
-      desc: <ArrowDownIcon />,
+      asc: <ArrowUpIcon className={'icon'} />,
+      desc: <ArrowDownIcon className={'icon'} />,
     },
   },
 };

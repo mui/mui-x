@@ -94,11 +94,7 @@ export const useSelection = (options: GridOptions, rows: Rows, initialised: bool
     forceUpdate((p: any) => !p);
 
     if (apiRef && apiRef.current != null) {
-      //TODO: emit event for each row
-      // selectedItemsRef.current.forEach(item=> {
-      //   const rowSelectedParam: RowSelectedParam = { data: row.data, isSelected: isSelected, rowIndex };
-      //   apiRef.current!.emit(ROW_SELECTED_EVENT, rowSelectedParam);
-      // });
+      //We don't emit ROW_SELECTED_EVENT on each row as it would be too consuming for large set of data.
       const selectionChangedParam: SelectionChangedParam = { rows: getSelectedRows().map(r => r.data) };
       apiRef.current!.emit(SELECTION_CHANGED_EVENT, selectionChangedParam);
     }

@@ -34,6 +34,7 @@ export interface ColDef {
   sortable?: boolean;
   comparator?: ComparatorFn;
   sortDirection?: SortDirection;
+  sortIndex?: number;
   type?: ColType;
   align?: Alignement;
   valueGetter?: (params: ValueGetterParams) => CellValue;
