@@ -1,7 +1,8 @@
 import React from 'react';
-import { Grid, GridOptions } from '@material-ui-x/grid';
+import {Grid, GridOptions, GridOptionsProp} from '@material-ui-x/grid';
 import { useDemoData } from '@material-ui-x/grid-data-generator';
 import '@material-ui-x/grid-data-generator/dist/demo-style.css';
+import {action} from "@storybook/addon-actions";
 
 export default {
   title: 'Real data demo',
@@ -12,7 +13,7 @@ export const Commodity = () => {
     checkboxSelection: true,
   };
 
-  const { data } = useDemoData(100);
+  const { data } = useDemoData('Commodity', 100);
 
   return (
     <div style={{ padding: 10, flexGrow: 1 }}>
@@ -23,10 +24,9 @@ export const Commodity = () => {
 export const Commodity500 = () => {
   const options: Partial<GridOptions> = {
     checkboxSelection: true,
-    // disableSelectionOnClick: true,
   };
 
-  const { data } = useDemoData(500);
+  const { data } = useDemoData('Commodity', 500);
 
   return (
     <div style={{ padding: 10, flexGrow: 1 }}>
@@ -37,10 +37,33 @@ export const Commodity500 = () => {
 export const Commodity1000 = () => {
   const options: Partial<GridOptions> = {
     checkboxSelection: true,
-    disableSelectionOnClick: true,
   };
 
-  const { data } = useDemoData(1000);
+  const { data } = useDemoData('Commodity', 1000);
+
+  return (
+    <div style={{ padding: 10, flexGrow: 1 }}>
+      <Grid rows={data.rows} columns={data.columns} options={options} />
+    </div>
+  );
+};
+export const Commodity10000 = () => {
+  const { data } = useDemoData('Commodity', 10000);
+  const options: GridOptionsProp = {
+    checkboxSelection: true,
+  };
+
+  return (
+    <div style={{ padding: 10, flexGrow: 1 }}>
+      <Grid rows={data.rows} columns={data.columns} options={options} />
+    </div>
+  );
+};
+export const Employee100 = () => {
+  const { data } = useDemoData('Employee', 100);
+  const options: GridOptionsProp = {
+    checkboxSelection: true,
+  };
 
   return (
     <div style={{ padding: 10, flexGrow: 1 }}>

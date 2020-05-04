@@ -42,6 +42,7 @@
   ],
   "gitHead": "f0f0bf72099f0b7d28aa88ca441082b2dc587d93",
   "dependencies": {
+    "@material-ui/lab": "^4.0.0-alpha.52",
     "faker": "^4.1.0"
   }
 }

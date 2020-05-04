@@ -1,14 +1,8 @@
 import React from 'react';
-import styled from 'styled-components';
-
-const StyledLink = styled.a`
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  color: inherit;
-`;
+import {Link} from "./link-renderer";
 
 export const EmailRenderer: React.FC<{ label?: string; email: string }> = ({ label, email }) => {
-  return <StyledLink href={`mailto:${email}`}>{label || email}</StyledLink>;
+  return <Link href={`mailto:${email}`}>{label || email}</Link>;
 };
 EmailRenderer.displayName = 'EmailRenderer';
+

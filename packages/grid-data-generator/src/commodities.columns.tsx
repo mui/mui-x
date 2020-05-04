@@ -5,7 +5,7 @@ import React from 'react';
 import { Country, EmailRenderer, IncotermRenderer, IsDone, ProgressBar, StatusRenderer } from './renderer';
 import {
   COMMODITY_OPTIONS,
-  CONTRACT_TYPE_OPTIONS,
+  CONTRACT_TYPE_OPTIONS, COUNTRY_ISO_OPTIONS,
   COUNTRY_OPTIONS,
   CURRENCY_OPTIONS,
   INCOTERM_OPTIONS,
@@ -14,7 +14,7 @@ import {
   TAXCODE_OPTIONS,
 } from './services/static-data';
 
-export const commodityGeneratableColumns: GeneratableColDef[] = [
+export const commodityColumns: GeneratableColDef[] = [
   {
     field: 'id',
     generateData: () => faker.random.uuid(),
@@ -185,9 +185,9 @@ export const commodityGeneratableColumns: GeneratableColDef[] = [
   {
     field: 'counterPartyCountry',
     headerName: 'Counterparty Country',
-    generateData: () => randomArrayItem(COUNTRY_OPTIONS),
+    generateData: () => randomArrayItem(COUNTRY_ISO_OPTIONS),
     // eslint-disable-next-line react/display-name
-    cellRenderer: params => <Country value={params.value!.toString()} />,
+    cellRenderer: params => <Country value={params.value! as any} />,
     width: 120,
   },
   {

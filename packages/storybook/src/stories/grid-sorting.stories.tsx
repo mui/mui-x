@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ColDef, Grid, GridApi } from '@material-ui-x/grid';
 
 export default {
@@ -28,17 +28,13 @@ export const BasicTest = () => {
     </>
   );
 };
-
-export const SortedWithApi = () => {
-  const apiRef = useRef<GridApi>();
-  useEffect(() => {
-    if (apiRef && apiRef.current != null) {
-      apiRef.current.setSortModel([{ colId: 'name', sort: 'desc' }]);
-    }
-  }, [apiRef]);
-
+export const SortedWithColDef = () => {
   const size = { width: 800, height: 600 };
-  const columns = [{ field: 'id' }, { field: 'name' }, { field: 'age' }];
+  const columns: ColDef[] = [
+    { field: 'id' },
+    { field: 'name', sortDirection: 'asc' },
+    { field: 'age', sortDirection: 'desc' },
+  ];
 
   const rows = [
     { id: 1, name: 'alice', age: 40 },
@@ -46,9 +42,39 @@ export const SortedWithApi = () => {
     { id: 3, name: 'igor', age: 40 },
     { id: 4, name: 'clara', age: 40 },
     { id: 5, name: 'clara', age: null },
+    { id: 6, name: null, age: 25 },
+    { id: 7, name: '', age: 42 },
+  ];
+
+  return (
+    <>
+      <p>Maintain CTRL or Command to sort by multiple fields</p>
+      <div style={{ width: size.width, height: size.height, resize: 'both' }}>
+        <Grid rows={rows} columns={columns} />
+      </div>
+    </>
+  );
+};
+export const SortedWithApi = () => {
+  const apiRef = useRef<GridApi>();
+  useEffect(() => {
+    if (apiRef && apiRef.current != null) {
+      apiRef.current.setSortModel([{ colId: 'name', sort: 'asc' }]);
+    }
+  }, [apiRef]);
+
+  const size = { width: 800, height: 600 };
+  const [columns] = useState([{ field: 'id' }, { field: 'name' }, { field: 'age' }]);
+
+  const [rows] = useState([
+    { id: 1, name: 'alice', age: 40 },
+    { id: 2, name: 'bob', age: 30 },
+    { id: 3, name: 'igor', age: 40 },
+    { id: 4, name: 'clara', age: 40 },
+    { id: 5, name: 'clara', age: null },
     { id: 6, name: null, age: 40 },
     { id: 7, name: '', age: 40 },
-  ];
+  ]);
 
   return (
     <>

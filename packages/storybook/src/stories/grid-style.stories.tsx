@@ -45,8 +45,9 @@ export const WithTooltip = () => {
 
 export const Big = () => {
   const options: GridOptionsProp = {
-    headerHeight: 50,
-    rowHeight: 35,
+    headerHeight: 80,
+    rowHeight: 60,
+    checkboxSelection: true
   };
 
   return <GridDataSet nbRows={200} nbCols={200} options={options} />;
@@ -79,6 +80,7 @@ export const withCellClass = () => {
       cellClass: ['age', 'shine'],
       headerClass: 'age',
       type: 'number',
+      sortDirection: "desc"
     },
     {
       field: 'fullName',
@@ -103,6 +105,7 @@ export const withCellClass = () => {
     {
       field: 'registerDate',
       headerName: 'Registered on',
+      sortDirection: "asc",
       type: 'date',
     },
     {

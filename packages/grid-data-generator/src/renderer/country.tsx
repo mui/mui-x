@@ -6,21 +6,31 @@ const Container = styled.div`
 
   .country-flag {
     margin-right: 5px;
-    margin-top: 10px;
+    margin-top: 5px;
     height: 32px;
     width: 32px;
+    font-size: 32px;
   }
   .country-name {
     overflow: hidden;
     text-overflow: ellipsis;
   }
 `;
+// ISO 3166-1 alpha-2
+// ⚠️ No support for IE 11
+function countryToFlag(isoCode: string) {
+  return typeof String.fromCodePoint !== 'undefined'
+    ? isoCode
+      .toUpperCase()
+      .replace(/./g, (char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
+    : isoCode;
+}
 
-export const Country: React.FC<{ value: string }> = React.memo(({ value }) => {
+export const Country: React.FC<{ value: { code: string, label:string} }> = React.memo(({ value }) => {
   return (
     <Container>
-      <img src={`/country-icons/32/${value.replace(' ', '-')}.png`} className={'country-flag'} />
-      <span className={'country-name'}>{value}</span>
+      <span className={'country-flag'}>{countryToFlag(value.code)}</span>
+      <span className={'country-name'}>{value.label}</span>
     </Container>
   );
 });
