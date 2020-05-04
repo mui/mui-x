@@ -1,8 +1,7 @@
 import React from 'react';
-import {Grid, GridOptions, GridOptionsProp} from '@material-ui-x/grid';
+import { Grid, GridOptions, GridOptionsProp } from '@material-ui-x/grid';
 import { useDemoData } from '@material-ui-x/grid-data-generator';
 import '@material-ui-x/grid-data-generator/dist/demo-style.css';
-import {action} from "@storybook/addon-actions";
 
 export default {
   title: 'Real data demo',

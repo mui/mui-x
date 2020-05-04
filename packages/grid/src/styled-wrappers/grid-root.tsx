@@ -70,7 +70,7 @@ export const RootStyle = styled.div<GridRootProps>`
             white-space: nowrap;
           }
           .sort-icon > .icon {
-            min-height: ${p => p.options.headerHeight - 2}px; 
+            min-height: ${p => p.options.headerHeight - 2}px;
           }
           * {
             max-height: ${p => p.options.headerHeight - 2}px;

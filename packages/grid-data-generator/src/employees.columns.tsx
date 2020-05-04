@@ -1,11 +1,11 @@
 import './style/real-data-stories.css';
-import {GeneratableColDef, random, randomArrayItem, randomInt} from './services/';
+import { GeneratableColDef, randomArrayItem, randomInt } from './services/';
 import faker from 'faker';
 import React from 'react';
-import {Country, EmailRenderer, Link} from "./renderer";
-import {Avatar} from "@material-ui/core";
-import {COUNTRY_ISO_OPTIONS, COUNTRY_OPTIONS} from "./services/static-data";
-import {Rating} from "@material-ui/lab";
+import { Country, EmailRenderer, Link } from './renderer';
+import { Avatar } from '@material-ui/core';
+import { COUNTRY_ISO_OPTIONS } from './services/static-data';
+import { Rating } from '@material-ui/lab';
 
 console.log('---------****----uUUUUUSER->', faker.helpers.userCard());
 console.log('---------****----avatar->', faker.image.avatar());
@@ -42,13 +42,13 @@ export const employeeColumns: GeneratableColDef[] = [
     sortable: false,
     generateData: () => faker.image.avatar(),
     // eslint-disable-next-line react/display-name
-    cellRenderer: params => <Avatar src={params.value!.toString()} />
+    cellRenderer: params => <Avatar src={params.value!.toString()} />,
   },
   {
     field: 'name',
     headerName: 'Name',
     generateData: () => faker.name.findName(),
-    sortDirection:'asc',
+    sortDirection: 'asc',
     sortIndex: 1,
     width: 120,
   },

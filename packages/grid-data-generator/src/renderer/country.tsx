@@ -20,13 +20,11 @@ const Container = styled.div`
 // ⚠️ No support for IE 11
 function countryToFlag(isoCode: string) {
   return typeof String.fromCodePoint !== 'undefined'
-    ? isoCode
-      .toUpperCase()
-      .replace(/./g, (char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
+    ? isoCode.toUpperCase().replace(/./g, char => String.fromCodePoint(char.charCodeAt(0) + 127397))
     : isoCode;
 }
 
-export const Country: React.FC<{ value: { code: string, label:string} }> = React.memo(({ value }) => {
+export const Country: React.FC<{ value: { code: string; label: string } }> = React.memo(({ value }) => {
   return (
     <Container>
       <span className={'country-flag'}>{countryToFlag(value.code)}</span>

@@ -5,8 +5,8 @@ import React from 'react';
 import { Country, EmailRenderer, IncotermRenderer, IsDone, ProgressBar, StatusRenderer } from './renderer';
 import {
   COMMODITY_OPTIONS,
-  CONTRACT_TYPE_OPTIONS, COUNTRY_ISO_OPTIONS,
-  COUNTRY_OPTIONS,
+  CONTRACT_TYPE_OPTIONS,
+  COUNTRY_ISO_OPTIONS,
   CURRENCY_OPTIONS,
   INCOTERM_OPTIONS,
   RATE_TYPE_OPTIONS,

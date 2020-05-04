@@ -47,7 +47,7 @@ export const Big = () => {
   const options: GridOptionsProp = {
     headerHeight: 80,
     rowHeight: 60,
-    checkboxSelection: true
+    checkboxSelection: true,
   };
 
   return <GridDataSet nbRows={200} nbCols={200} options={options} />;
@@ -80,7 +80,7 @@ export const withCellClass = () => {
       cellClass: ['age', 'shine'],
       headerClass: 'age',
       type: 'number',
-      sortDirection: "desc"
+      sortDirection: 'desc',
     },
     {
       field: 'fullName',
@@ -105,7 +105,7 @@ export const withCellClass = () => {
     {
       field: 'registerDate',
       headerName: 'Registered on',
-      sortDirection: "asc",
+      sortDirection: 'asc',
       type: 'date',
     },
     {
