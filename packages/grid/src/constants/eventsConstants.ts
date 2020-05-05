@@ -13,6 +13,7 @@ export const SCROLLING_START = 'scrolling:start';
 export const SCROLLING_STOP = 'scrolling:stop';
 
 export const ROWS_UPDATED = 'rowsUpdated';
+export const COLUMNS_UPDATED = 'columnsUpdated';
 export const SORT_MODEL_UPDATED = 'sortModelUpdated';
 export const POST_SORT = 'postSort'; //ag-grid compatible
 export const MULTIPLE_KEY_PRESS_CHANGED = 'multipleKeyPressChanged';

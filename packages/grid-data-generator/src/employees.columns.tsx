@@ -1,5 +1,5 @@
 import './style/real-data-stories.css';
-import { GeneratableColDef, randomArrayItem, randomInt } from './services/';
+import { GeneratableColDef, randomArrayItem, randomColor, randomInt } from './services/';
 import faker from 'faker';
 import React from 'react';
 import { Country, EmailRenderer, Link } from './renderer';
@@ -7,29 +7,6 @@ import { Avatar } from '@material-ui/core';
 import { COUNTRY_ISO_OPTIONS } from './services/static-data';
 import { Rating } from '@material-ui/lab';
 
-console.log('---------****----uUUUUUSER->', faker.helpers.userCard());
-console.log('---------****----avatar->', faker.image.avatar());
-/*
-address:
-city: "Douglasstad"
-geo: {lat: "48.1940", lng: "-72.8628"}
-street: "Kiana Crest"
-suite: "Apt. 793"
-zipcode: "87863"
-__proto__: Object
-company:
-bs: "virtual unleash schemas"
-catchPhrase: "Adaptive discrete complexity"
-name: "Dibbert - Will"
-__proto__: Object
-email: "Ollie_Gutkowski83@gmail.com"
-name: "Addie Breitenberg"
-phone: "409-038-4522 x7231"
-username: "Laurianne30"
-website: "rachel.org"
-
-
-* */
 export const employeeColumns: GeneratableColDef[] = [
   {
     field: 'id',
@@ -40,14 +17,19 @@ export const employeeColumns: GeneratableColDef[] = [
     field: 'avatar',
     headerName: '',
     sortable: false,
-    generateData: () => faker.image.avatar(),
+    generateData: () => ({ name: faker.name.findName(), color: randomColor() }),
     // eslint-disable-next-line react/display-name
-    cellRenderer: params => <Avatar src={params.value!.toString()} />,
+    cellRenderer: params => (
+      <Avatar style={{ backgroundColor: (params.value! as any).color }}>
+        {(params.value! as any).name!.toString().substring(0, 1)}
+      </Avatar>
+    ),
   },
   {
     field: 'name',
     headerName: 'Name',
-    generateData: () => faker.name.findName(),
+    generateData: data => data.avatar.name,
+    // valueGetter: (params=> params.data['avatar']),
     sortDirection: 'asc',
     sortIndex: 1,
     width: 120,
@@ -79,14 +61,16 @@ export const employeeColumns: GeneratableColDef[] = [
     generateData: () => faker.internet.url(),
     // eslint-disable-next-line react/display-name
     cellRenderer: params => <Link href={params.value!.toString()}>{params.value!.toString()}</Link>,
-    width: 200,
+    width: 160,
   },
   {
     field: 'rating',
     headerName: 'Rating',
     generateData: () => randomInt(0, 5),
     // eslint-disable-next-line react/display-name
-    cellRenderer: params => <Rating value={Number(params.value)} />,
+    cellRenderer: params => <Rating name={params.data['id'].toString()} value={Number(params.value)} />,
+    sortDirection: 'desc',
+    sortIndex: 0,
     width: 180,
   },
   {
@@ -118,8 +102,6 @@ export const employeeColumns: GeneratableColDef[] = [
   {
     field: 'lastUpdated',
     headerName: 'Updated on',
-    sortDirection: 'desc',
-    sortIndex: 0,
     generateData: () => faker.date.recent(),
     type: 'dateTime',
     width: 180,

@@ -14,7 +14,7 @@ import {
 } from '../../models';
 import { useLogger } from '../utils/useLogger';
 import { GridApiRef } from '../../grid';
-import { POST_SORT } from '../../constants/eventsConstants';
+import { COLUMNS_UPDATED, POST_SORT } from '../../constants/eventsConstants';
 import { useRafUpdate } from '../utils';
 
 export function useColumns(options: GridOptions, columns: Columns, apiRef: GridApiRef): InternalColumns {
@@ -90,22 +90,25 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
 
   useEffect(() => {
     logger.debug('Columns have changed.');
-    if (stateRef.current.all !== allColumns) {
-      const newState = {
-        all: allColumns,
-        visible: visibleColumns,
-        meta: columnsMeta,
-        hasColumns: allColumns.length > 0,
-        hasVisibleColumns: visibleColumns.length > 0,
-        lookup: columnFieldLookup,
-      };
-      setInternalColumns(newState);
-      stateRef.current = newState;
+    const newState = {
+      all: allColumns,
+      visible: visibleColumns,
+      meta: columnsMeta,
+      hasColumns: allColumns.length > 0,
+      hasVisibleColumns: visibleColumns.length > 0,
+      lookup: columnFieldLookup,
+    };
+    setInternalColumns(newState);
+    stateRef.current = newState;
+    if (apiRef.current) {
+      apiRef.current.emit(COLUMNS_UPDATED, newState.all);
     }
   }, [columns, options]);
 
   const getColumnFromField: (field: string) => ColDef = field => stateRef.current.lookup[field];
   const getAllColumns: () => Columns = () => stateRef.current.all;
+  const getColumnsMeta: () => ColumnsMeta = () => stateRef.current.meta;
+  const getVisibleColumns: () => Columns = () => stateRef.current.visible;
 
   const onSortedColumns = (sortModel: SortModel) => {
     logger.debug('Sort model changed to ', sortModel);
@@ -127,6 +130,8 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
       const colApi: ColumnApi = {
         getColumnFromField,
         getAllColumns,
+        getVisibleColumns,
+        getColumnsMeta,
       };
 
       apiRef.current = Object.assign(apiRef.current, colApi) as GridApi;

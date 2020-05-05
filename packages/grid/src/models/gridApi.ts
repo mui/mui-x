@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { RowData, RowId, RowModel, Rows } from './rows';
-import { ColDef, Columns } from './colDef';
+import { ColDef, Columns, ColumnsMeta } from './colDef';
 import { SortModel } from './sortModel';
 import { RowSelectedParam, SelectionChangedParam } from './gridOptions';
 
@@ -17,6 +17,8 @@ export interface RowApi {
 export interface ColumnApi {
   getColumnFromField: (field: string) => ColDef;
   getAllColumns: () => Columns;
+  getVisibleColumns: () => Columns;
+  getColumnsMeta: () => ColumnsMeta;
 }
 
 export interface SelectionApi {

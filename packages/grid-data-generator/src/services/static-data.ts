@@ -1,3 +1,7 @@
+import { blue, green, lightBlue, orange, pink, purple, red } from '@material-ui/core/colors';
+
+export const COLORS = [pink[500], blue[500], orange[500], red[500], green[500], lightBlue[500], purple[500]];
+
 export const STATUS_OPTIONS = ['Open', 'PartiallyFilled', 'Filled', 'Rejected'];
 export const TAXCODE_OPTIONS = ['BR', '1250L', '20G', 'BC45', 'IGN179'];
 export const RATE_TYPE_OPTIONS = ['Fixed', 'Floating'];

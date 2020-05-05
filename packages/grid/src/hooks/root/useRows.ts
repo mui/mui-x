@@ -54,11 +54,9 @@ export const useRows = (options: GridOptions, rows: RowsProp, initialised: boole
         addedRows.push(partialRow as RowModel);
         return;
       }
-      const newRow = { ...rowModelsRef.current[idx], ...partialRow };
-
-      rowModelsRef.current[idx] = newRow;
-      rowModels[idx] = newRow;
+      Object.assign(rowModelsRef.current[idx], partialRow);
     });
+
     if (!isScrollingRef.current && !isSortedRef.current) {
       rafUpdate();
     }

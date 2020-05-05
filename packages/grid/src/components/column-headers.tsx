@@ -20,6 +20,16 @@ interface ColumnHeaderItemProps {
   colIndex: number;
 }
 
+export const ColumnHeaderTitle = React.forwardRef<HTMLDivElement, any>((props, ref) => {
+  const { label, className, ...rest } = props;
+  return (
+    <div ref={ref} className={'title ' + className} {...rest}>
+      {label}
+    </div>
+  );
+});
+ColumnHeaderTitle.displayName = 'ColumnHeaderTitle';
+
 //Can't use React.memo here until we refactor useColumns
 export const ColumnHeaderItem = ({ column, icons, colIndex, headerHeight }: ColumnHeaderItemProps) => {
   const sortIconElement =
@@ -65,13 +75,11 @@ export const ColumnHeaderItem = ({ column, icons, colIndex, headerHeight }: Colu
       data-field={column.field}
       style={{ width: column.width, minWidth: column.width, maxWidth: column.width, maxHeight: headerHeight }}
     >
-      <Tooltip title={column.description || tooltipText}>
-        {headerComponent || (
-          <div ref={titleRef} className={'title'}>
-            {column.headerName || column.field}
-          </div>
-        )}
-      </Tooltip>
+      {headerComponent || (
+        <Tooltip title={column.description || tooltipText} innerRef={titleRef}>
+          <ColumnHeaderTitle label={column.headerName || column.field} />
+        </Tooltip>
+      )}
       {sortIconElement}
     </div>
   );

@@ -15,7 +15,7 @@ export const PreSelectedRows = () => {
   useEffect(() => {
     if (apiRef && apiRef.current != null && data.rows.length > 0) {
       apiRef.current.selectRows([1, 3, 5]);
-      apiRef.current.selectRow(8, true);
+      apiRef.current.selectRow(8, true, true);
     }
   }, [data]);
 

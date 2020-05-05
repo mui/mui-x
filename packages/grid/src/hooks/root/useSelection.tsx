@@ -74,7 +74,7 @@ export const useSelection = (options: GridOptions, rows: Rows, initialised: bool
     forceUpdate((p: any) => !p);
   };
 
-  const selectRow = (id: RowId, allowMultiple?: boolean, isSelected?: boolean) => {
+  const selectRow = (id: RowId, isSelected = true, allowMultiple = false) => {
     if (!apiRef || !apiRef.current) {
       return;
     }
@@ -124,7 +124,9 @@ export const useSelection = (options: GridOptions, rows: Rows, initialised: bool
       apiRef.current.on(MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
       //TODO handle Cell Clicked?
 
-      selectedItemsRef.current.forEach(id => selectRow(id));
+      if (selectedItemsRef.current.length > 0) {
+        selectRows(selectedItemsRef.current);
+      }
       return () => {
         apiRef.current!.removeListener(ROW_CLICKED, rowClickedHandler);
         apiRef.current!.removeListener(MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);

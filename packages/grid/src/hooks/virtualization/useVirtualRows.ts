@@ -32,7 +32,7 @@ export const useVirtualRows = (
   // const scrollColHeaderTo = useScrollFn(colRef);
   const getContainerProps = useContainerProps(windowRef);
   const [renderCtx, setRenderCtx] = useRafDebouncedState<Partial<RenderContextProps> | null>(null);
-  const [renderedColRef, updateRenderedCols] = useVirtualColumns(internalColumns, options);
+  const [renderedColRef, updateRenderedCols] = useVirtualColumns(options, apiRef);
 
   const getRenderRowProps = (page: number) => {
     if (containerPropsRef.current == null) {
