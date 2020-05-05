@@ -99,7 +99,7 @@ export const withCellClass = () => {
       // eslint-disable-next-line react/display-name
       cellRenderer: params => <IsDone value={!!params.value} />,
       // eslint-disable-next-line react/display-name
-      headerComponent: params => <CreateIcon />,
+      headerComponent: params => <CreateIcon className={'icon'} />,
       headerAlign: 'center',
     },
     {
