@@ -1,4 +1,4 @@
-import {COLORS} from "./static-data";
+import { COLORS } from './static-data';
 
 export const random = (min: number, max: number): number => Math.random() * (max - min) + min;
 export const randomInt = (min: number, max: number): number => Number(random(min, max).toFixed());
@@ -8,4 +8,4 @@ export const randomDate = (start, end) => new Date(start.getTime() + Math.random
 export const getDate = () => randomDate(new Date(2012, 0, 1), new Date());
 export const randomArrayItem = (arr: any[]) => arr[random(0, arr.length - 1).toFixed()];
 
-export const randomColor = ()=> randomArrayItem(COLORS);
+export const randomColor = () => randomArrayItem(COLORS);

@@ -1,5 +1,5 @@
 import './style/real-data-stories.css';
-import {GeneratableColDef, randomArrayItem, randomColor, randomInt} from './services/';
+import { GeneratableColDef, randomArrayItem, randomColor, randomInt } from './services/';
 import faker from 'faker';
 import React from 'react';
 import { Country, EmailRenderer, Link } from './renderer';
@@ -17,14 +17,18 @@ export const employeeColumns: GeneratableColDef[] = [
     field: 'avatar',
     headerName: '',
     sortable: false,
-    generateData: () => ({name:faker.name.findName(), color: randomColor()}),
+    generateData: () => ({ name: faker.name.findName(), color: randomColor() }),
     // eslint-disable-next-line react/display-name
-    cellRenderer: params => <Avatar style={{backgroundColor: (params.value! as any).color }}>{(params.value! as any).name!.toString().substring(0,1)}</Avatar>,
+    cellRenderer: params => (
+      <Avatar style={{ backgroundColor: (params.value! as any).color }}>
+        {(params.value! as any).name!.toString().substring(0, 1)}
+      </Avatar>
+    ),
   },
   {
     field: 'name',
     headerName: 'Name',
-    generateData: (data) => data.avatar.name,
+    generateData: data => data.avatar.name,
     // valueGetter: (params=> params.data['avatar']),
     sortDirection: 'asc',
     sortIndex: 1,
