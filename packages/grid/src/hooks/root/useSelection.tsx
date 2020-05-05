@@ -124,7 +124,7 @@ export const useSelection = (options: GridOptions, rows: Rows, initialised: bool
       apiRef.current.on(MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
       //TODO handle Cell Clicked?
 
-      if(selectedItemsRef.current.length > 0 ) {
+      if (selectedItemsRef.current.length > 0) {
         selectRows(selectedItemsRef.current);
       }
       return () => {

@@ -14,7 +14,7 @@ import {
 } from '../../models';
 import { useLogger } from '../utils/useLogger';
 import { GridApiRef } from '../../grid';
-import {COLUMNS_UPDATED, POST_SORT} from '../../constants/eventsConstants';
+import { COLUMNS_UPDATED, POST_SORT } from '../../constants/eventsConstants';
 import { useRafUpdate } from '../utils';
 
 export function useColumns(options: GridOptions, columns: Columns, apiRef: GridApiRef): InternalColumns {
@@ -100,7 +100,7 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
     };
     setInternalColumns(newState);
     stateRef.current = newState;
-    if(apiRef.current) {
+    if (apiRef.current) {
       apiRef.current.emit(COLUMNS_UPDATED, newState.all);
     }
   }, [columns, options]);
@@ -131,7 +131,7 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
         getColumnFromField,
         getAllColumns,
         getVisibleColumns,
-        getColumnsMeta
+        getColumnsMeta,
       };
 
       apiRef.current = Object.assign(apiRef.current, colApi) as GridApi;

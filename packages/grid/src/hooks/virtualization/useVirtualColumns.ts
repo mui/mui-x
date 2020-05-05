@@ -1,16 +1,13 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import { ContainerProps, GridOptions, InternalColumns, RenderColumnsProps } from '../../models';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { ContainerProps, GridOptions, RenderColumnsProps } from '../../models';
 import { useLogger } from '../utils/useLogger';
-import {GridApiRef} from "../../grid";
-import {COLUMNS_UPDATED} from "../../constants/eventsConstants";
+import { GridApiRef } from '../../grid';
+import { COLUMNS_UPDATED } from '../../constants/eventsConstants';
 
 type UpdateRenderedColsFnType = (containerProps: ContainerProps | null, scrollLeft: number) => boolean;
 type UseVirtualColumnsReturnType = [React.MutableRefObject<RenderColumnsProps | null>, UpdateRenderedColsFnType];
 
-export const useVirtualColumns = (
-  options: GridOptions,
-  apiRef: GridApiRef,
-): UseVirtualColumnsReturnType => {
+export const useVirtualColumns = (options: GridOptions, apiRef: GridApiRef): UseVirtualColumnsReturnType => {
   const logger = useLogger('useVirtualColumns');
   const renderedColRef = useRef<RenderColumnsProps | null>(null);
   const lastScrollLeftRef = useRef<number>(0);
@@ -93,9 +90,9 @@ export const useVirtualColumns = (
     }
   };
 
-  useEffect(()=> {
-    if(apiRef.current) {
-      const handler = ()=> {
+  useEffect(() => {
+    if (apiRef.current) {
+      const handler = () => {
         logger.debug('Clearing previous renderedColRef');
         renderedColRef.current = null;
       };

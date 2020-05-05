@@ -175,11 +175,11 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
   const [rowsState, setRowsState] = useState(rowsProp);
   const [colState, setColState] = useState(colsProp);
 
-  useEffect(()=> {
+  useEffect(() => {
     setRowsState(rowsProp);
   }, [rowsProp]);
 
-  useEffect(()=> {
+  useEffect(() => {
     setColState(colsProp);
   }, [colsProp]);
 

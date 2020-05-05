@@ -26,7 +26,7 @@ export const ColumnHeaderTitle = React.forwardRef<HTMLDivElement, any>((props, r
     <div ref={ref} className={'title ' + className} {...rest}>
       {label}
     </div>
-    );
+  );
 });
 ColumnHeaderTitle.displayName = 'ColumnHeaderTitle';
 

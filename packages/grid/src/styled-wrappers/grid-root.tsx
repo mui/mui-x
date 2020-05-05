@@ -69,8 +69,8 @@ export const RootStyle = styled.div<GridRootProps>`
             overflow: hidden;
             white-space: nowrap;
           }
-          .sort-icon > .icon,
-          & > .icon {
+          & > .icon,
+          .sort-icon > .icon {
             min-height: ${p => p.options.headerHeight - 2}px;
           }
           * {
