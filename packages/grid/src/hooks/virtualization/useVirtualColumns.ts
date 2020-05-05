@@ -1,47 +1,51 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { ContainerProps, GridOptions, InternalColumns, RenderColumnsProps } from '../../models';
 import { useLogger } from '../utils/useLogger';
+import {GridApiRef} from "../../grid";
+import {COLUMNS_UPDATED} from "../../constants/eventsConstants";
 
 type UpdateRenderedColsFnType = (containerProps: ContainerProps | null, scrollLeft: number) => boolean;
 type UseVirtualColumnsReturnType = [React.MutableRefObject<RenderColumnsProps | null>, UpdateRenderedColsFnType];
 
 export const useVirtualColumns = (
-  internalColumns: InternalColumns,
   options: GridOptions,
+  apiRef: GridApiRef,
 ): UseVirtualColumnsReturnType => {
   const logger = useLogger('useVirtualColumns');
   const renderedColRef = useRef<RenderColumnsProps | null>(null);
   const lastScrollLeftRef = useRef<number>(0);
 
-  const reversedPosition = useMemo(() => {
-    return [...internalColumns.meta.positions].reverse();
-  }, [internalColumns]);
-
   const getColumnIdxFromScroll = useCallback(
     (left: number) => {
-      if (!internalColumns.hasColumns) {
+      const positions = apiRef.current!.getColumnsMeta().positions;
+      const hasColumns = apiRef.current!.getVisibleColumns().length;
+
+      if (!hasColumns) {
         return -1;
       }
-      let colIdx = reversedPosition.findIndex(p => left >= p);
-      colIdx = internalColumns.meta.positions.length - 1 - colIdx;
+      let colIdx = [...positions].reverse().findIndex(p => left >= p);
+      colIdx = positions.length - 1 - colIdx;
       return colIdx;
     },
-    [internalColumns],
+    [apiRef],
   );
   const getColumnFromScroll = useCallback(
     (left: number) => {
-      if (!internalColumns.hasColumns) {
+      const visibleColumns = apiRef.current!.getVisibleColumns();
+      if (!visibleColumns.length) {
         return null;
       }
-      return internalColumns.visible[getColumnIdxFromScroll(left)];
+      return visibleColumns[getColumnIdxFromScroll(left)];
     },
-    [internalColumns],
+    [apiRef],
   );
 
   const updateRenderedCols: UpdateRenderedColsFnType = (containerProps: ContainerProps | null, scrollLeft: number) => {
-    if (!containerProps || !internalColumns.hasColumns) {
+    if (!containerProps) {
       return false;
     }
+    const visibleColumns = apiRef.current!.getVisibleColumns();
+    const columnsMeta = apiRef.current!.getColumnsMeta();
     const windowWidth = containerProps.windowSizes.width;
     lastScrollLeftRef.current = scrollLeft;
     logger.debug('first column displayed: ', getColumnFromScroll(scrollLeft)?.headerName);
@@ -66,20 +70,20 @@ export const useVirtualColumns = (
       const newRenderedColState: RenderColumnsProps = {
         firstColIdx: firstDisplayedIdx - columnBuffer >= 0 ? firstDisplayedIdx - columnBuffer : 0,
         lastColIdx:
-          lastDisplayedIdx + columnBuffer >= internalColumns.visible.length - 1
-            ? internalColumns.visible.length - 1
+          lastDisplayedIdx + columnBuffer >= visibleColumns.length - 1
+            ? visibleColumns.length - 1
             : lastDisplayedIdx + columnBuffer,
         left: 0,
         rightEmptyWidth: 0,
       };
-      newRenderedColState.left = internalColumns.meta.positions[newRenderedColState.firstColIdx];
+      newRenderedColState.left = columnsMeta.positions[newRenderedColState.firstColIdx];
       if (containerProps.hasScrollX) {
         newRenderedColState.rightEmptyWidth =
-          internalColumns.meta.totalWidth -
-          internalColumns.meta.positions[newRenderedColState.lastColIdx] -
-          internalColumns.visible[newRenderedColState.lastColIdx].width!;
+          columnsMeta.totalWidth -
+          columnsMeta.positions[newRenderedColState.lastColIdx] -
+          visibleColumns[newRenderedColState.lastColIdx].width!;
       } else if (options.extendRowFullWidth) {
-        newRenderedColState.rightEmptyWidth = containerProps.viewportSize.width - internalColumns.meta.totalWidth;
+        newRenderedColState.rightEmptyWidth = containerProps.viewportSize.width - columnsMeta.totalWidth;
       }
       renderedColRef.current = newRenderedColState;
       logger.debug('New columns state to ', newRenderedColState);
@@ -89,9 +93,15 @@ export const useVirtualColumns = (
     }
   };
 
-  useEffect(() => {
-    renderedColRef.current = null;
-  }, [internalColumns, options]);
+  useEffect(()=> {
+    if(apiRef.current) {
+      const handler = ()=> {
+        logger.debug('Clearing previous renderedColRef');
+        renderedColRef.current = null;
+      };
+      return apiRef.current.registerEvent(COLUMNS_UPDATED, handler);
+    }
+  }, [apiRef]);
 
   return [renderedColRef, updateRenderedCols];
 };

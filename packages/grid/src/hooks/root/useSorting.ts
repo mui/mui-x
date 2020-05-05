@@ -172,14 +172,22 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
     }
   }, [apiRef]);
 
-  const [rowsState] = useState(rowsProp);
-  const [colState] = useState(colsProp);
+  const [rowsState, setRowsState] = useState(rowsProp);
+  const [colState, setColState] = useState(colsProp);
+
+  useEffect(()=> {
+    setRowsState(rowsProp);
+  }, [rowsProp]);
+
+  useEffect(()=> {
+    setColState(colsProp);
+  }, [colsProp]);
 
   useEffect(() => {
     if (rowsProp.length > 0 && sortModelRef.current.length === 0) {
       storeOriginalOrder();
     }
-  }, [rowsState]);
+  }, [rowsState, colState]);
 
   useEffect(() => {
     if (colsProp.length > 0 && apiRef.current) {

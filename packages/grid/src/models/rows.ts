@@ -6,7 +6,7 @@ export interface RowData extends ObjectWithId {
 }
 
 export type RowId = string | number;
-export type CellValue = string | number | boolean | Date | null | undefined;
+export type CellValue = string | number | boolean | Date | null | undefined | object;
 
 export interface ObjectWithId {
   id: RowId;
