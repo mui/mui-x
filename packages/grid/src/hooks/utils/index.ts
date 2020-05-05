@@ -1,3 +1,3 @@
 export * from './useLogger';
-export * from './useRafDebouncedState';
+export * from './useRafUpdate';
 export * from './useScrollFn';

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useLogger } from './useLogger';
 import { debounce } from '../../utils/utils';
-import { useRafUpdate } from './useRafDebouncedState';
+import { useRafUpdate } from './useRafUpdate';
 
 export interface ScrollParams {
   left: number;

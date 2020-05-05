@@ -1,4 +1,4 @@
-const isDebugging = process.env.NODE_ENV !== 'production';
+const isDebugging = process.env.NODE_ENV !== 'production' || localStorage.getItem('DEBUG') != null;
 
 interface Logger {
   debug: (...args: any[]) => void;
