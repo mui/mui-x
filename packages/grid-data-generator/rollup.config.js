@@ -6,7 +6,6 @@ import { terser } from 'rollup-plugin-terser';
 import css from 'rollup-plugin-css-only';
 import commonjs from 'rollup-plugin-commonjs';
 import postcss from 'rollup-plugin-postcss';
-import static_files from 'rollup-plugin-static-files';
 
 // dev build if watching, prod build if not
 const production = !process.env.ROLLUP_WATCH;
@@ -34,9 +33,6 @@ export default {
     typescript(),
     css({output: 'dist/demo-style.css'}),
     commonjs(),
-    static_files({
-      include: ['./public']
-    }),
     postcss(),
     !production && sourceMaps(),
     production && terser(),

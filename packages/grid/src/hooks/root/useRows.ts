@@ -1,7 +1,7 @@
 import { createRow, GridOptions, RowData, RowId, RowModel, Rows, RowsProp } from '../../models';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLogger } from '../utils/useLogger';
-import { useRafDebouncedState, useRafUpdate } from '../utils';
+import { useRafUpdate } from '../utils';
 import { GridApi, RowApi } from '../../models/gridApi';
 import { GridApiRef } from '../../grid';
 import { ROWS_UPDATED, SCROLLING_START, SCROLLING_STOP, SORT_MODEL_UPDATED } from '../../constants/eventsConstants';
@@ -9,7 +9,7 @@ import { ROWS_UPDATED, SCROLLING_START, SCROLLING_STOP, SORT_MODEL_UPDATED } fro
 export const useRows = (options: GridOptions, rows: RowsProp, initialised: boolean, apiRef: GridApiRef): RowModel[] => {
   const logger = useLogger('useRows');
   const rowModels = useMemo(() => rows.map(r => createRow(r)), [rows]);
-  const [rowModelsState, setRowModelsState] = useRafDebouncedState<RowModel[]>(rowModels, 30, false);
+  const [rowModelsState, setRowModelsState] = useState<RowModel[]>(rowModels);
   const [, forceUpdate] = useState();
   const [rafUpdate] = useRafUpdate(() => forceUpdate(p => !p));
 

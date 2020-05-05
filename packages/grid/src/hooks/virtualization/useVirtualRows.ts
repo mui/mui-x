@@ -1,7 +1,7 @@
-import React, { useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useVirtualColumns } from './useVirtualColumns';
 import { ContainerProps, GridOptions, InternalColumns, RenderContextProps, RenderRowProps, Rows } from '../../models';
-import { ScrollParams, useRafDebouncedState, useScrollFn } from '../utils';
+import { ScrollParams, useScrollFn } from '../utils';
 import { useLogger } from '../utils/useLogger';
 import { useContainerProps } from '../root';
 import { GridApiRef } from '../../grid';
@@ -15,7 +15,6 @@ export const useVirtualRows = (
   colRef: React.MutableRefObject<HTMLDivElement | null>,
   windowRef: React.MutableRefObject<HTMLDivElement | null>,
   viewportRef: React.MutableRefObject<HTMLDivElement | null>,
-  // containerProps: ContainerProps | null,
   internalColumns: InternalColumns,
   rows: Rows,
   options: GridOptions,
@@ -31,7 +30,7 @@ export const useVirtualRows = (
   const scrollTo = useScrollFn(viewportRef);
   // const scrollColHeaderTo = useScrollFn(colRef);
   const getContainerProps = useContainerProps(windowRef);
-  const [renderCtx, setRenderCtx] = useRafDebouncedState<Partial<RenderContextProps> | null>(null);
+  const [renderCtx, setRenderCtx] = useState<Partial<RenderContextProps> | null>(null);
   const [renderedColRef, updateRenderedCols] = useVirtualColumns(options, apiRef);
 
   const getRenderRowProps = (page: number) => {

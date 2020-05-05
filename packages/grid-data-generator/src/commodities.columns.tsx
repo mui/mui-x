@@ -29,6 +29,8 @@ export const commodityColumns: GeneratableColDef[] = [
     field: 'commodity',
     headerName: 'Commodity',
     generateData: () => randomArrayItem(COMMODITY_OPTIONS),
+    sortDirection: 'asc',
+    sortIndex: 0,
     width: 120,
   },
   {
@@ -78,6 +80,8 @@ export const commodityColumns: GeneratableColDef[] = [
     generateData: data => Number((data.quantity * randomRate()).toFixed()) / data.quantity,
     // eslint-disable-next-line react/display-name
     cellRenderer: params => <ProgressBar value={Number(params.value)!} />,
+    sortDirection: 'desc',
+    sortIndex: 1,
     type: 'number',
     width: 120,
   },
