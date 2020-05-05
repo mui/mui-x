@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.24](https://github.com/mui-org/material-ui-x/compare/v0.1.23...v0.1.24) (2020-05-05)
+
+**Note:** Version bump only for package @material-ui-x/grid
+
+
+
+
+
 ## [0.1.23](https://github.com/mui-org/material-ui-x/compare/v0.1.22...v0.1.23) (2020-05-05)
 
 **Note:** Version bump only for package @material-ui-x/grid
