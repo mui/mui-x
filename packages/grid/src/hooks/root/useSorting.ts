@@ -163,7 +163,6 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
 
       const sortApi: SortApi = { getSortModel, setSortModel };
       apiRef.current = Object.assign(apiRef.current, sortApi) as GridApi;
-      applySorting();
 
       return () => {
         apiRef.current?.removeListener(COLUMN_HEADER_CLICKED, headerClickHandler);
