@@ -4,23 +4,28 @@ import { useEffect, useState } from 'react';
 import { commodityColumns } from './commodities.columns';
 import { employeeColumns } from './employees.columns';
 
-export type DemoDataReturnType = { data: { rows: RowData[]; columns: ColDef[] }; setSize: (count: number) => void };
+export type DemoDataReturnType = {
+  data: { rows: RowData[]; columns: ColDef[] };
+  setSize: (count: number) => void;
+  setDataset: (dataset: string) => void;
+};
 export type DataSet = 'Commodity' | 'Employee';
 
-export const useDemoData = (dataSet: DataSet, nbRows: number): DemoDataReturnType => {
+export const useDemoData = (dataSetProp: DataSet, nbRows: number): DemoDataReturnType => {
   const [rows, setRows] = useState<RowData[]>([]);
   const [cols, setCols] = useState<Columns>([]);
   const [size, setSize] = useState(nbRows);
+  const [dataset, setDataset] = useState(dataSetProp.toString());
 
   const loadData = async () => {
-    const data = await getRealData(size, dataSet === 'Commodity' ? commodityColumns : employeeColumns);
+    const data = await getRealData(size, dataset === 'Commodity' ? commodityColumns : employeeColumns);
     setRows(data.rows);
     setCols(data.columns);
   };
 
   useEffect(() => {
     loadData();
-  }, [size]);
+  }, [size, dataset]);
 
-  return { data: { rows, columns: cols }, setSize };
+  return { data: { rows, columns: cols }, setSize, setDataset };
 };
