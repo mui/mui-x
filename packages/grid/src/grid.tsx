@@ -7,6 +7,7 @@ import { debounce } from './utils';
 import { useSorting } from './hooks/root/useSorting';
 import { useKeyboard } from './hooks/root/useKeyboard';
 import { ApiContext } from './components/api-context';
+import {DATA_CONTAINER_CSS_CLASS} from "./constants/cssClassesConstants";
 
 export type GridApiRef = React.MutableRefObject<GridApi | null | undefined>;
 export type GridOptionsProp = Partial<GridOptions>;
@@ -86,6 +87,7 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
             <Window ref={windowRef}>
               <DataContainer
                 ref={gridRef}
+                className={DATA_CONTAINER_CSS_CLASS}
                 style={{ minHeight: renderCtx?.totalHeight, minWidth: renderCtx?.totalWidth }}
               >
                 {renderCtx != null && (

@@ -32,6 +32,7 @@ export interface ColDef {
   width?: number;
   hide?: boolean;
   sortable?: boolean;
+  resizable?: boolean;
   comparator?: ComparatorFn;
   sortDirection?: SortDirection;
   sortIndex?: number;

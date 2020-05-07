@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import { useLogger } from '../utils/useLogger';
 import { EventEmitter } from 'events';
 import {
   CELL_CLICKED,
-  CLICK_EVENT,
+  CLICK_EVENT, COL_RESIZE_START, COL_RESIZE_STOP,
   COLUMN_HEADER_CLICKED,
   KEYDOWN_EVENT,
   KEYPRESS_EVENT,
@@ -17,7 +17,7 @@ import { GridApi } from '../../models/gridApi';
 import { GridApiRef } from '../../grid';
 import { CELL_CSS_CLASS, HEADER_CELL_CSS_CLASS, ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
 import {
-  findElementFromClassName,
+  findParentElementFromClassName,
   getDataFromElem,
   getFieldFromHeaderElem,
   getIdFromRowElem,
@@ -25,6 +25,7 @@ import {
   isHeaderCell,
 } from '../../utils/domUtils';
 
+//TODO Split this effect in useEvents and UseApi
 export const useApi = (
   gridRootRef: React.RefObject<HTMLDivElement>,
   options: GridOptions,
@@ -32,6 +33,7 @@ export const useApi = (
 ): boolean => {
   const [isApiInitialised, setApiInitialised] = useState(false);
   const [initialised, setInit] = useState(false);
+  const isResizingRef = useRef(false);
   const logger = useLogger('useApi');
 
   const initApi = () => {
@@ -55,14 +57,17 @@ export const useApi = (
 
   const getHandler = (name: string) => (...args: any[]) => emitEvent(name, ...args);
 
+  const handleResizeStart = ()=> isResizingRef.current = true;
+  const handleResizeStop = ()=> isResizingRef.current = false;
+
   const onClickHandler = (e: MouseEvent) => {
     if (e.target == null) {
       return;
     }
     const elem = e.target as HTMLElement;
     if (isCell(elem)) {
-      const cellEl = findElementFromClassName(elem, CELL_CSS_CLASS)! as HTMLElement;
-      const rowEl = findElementFromClassName(elem, ROW_CSS_CLASS)! as HTMLElement;
+      const cellEl = findParentElementFromClassName(elem, CELL_CSS_CLASS)! as HTMLElement;
+      const rowEl = findParentElementFromClassName(elem, ROW_CSS_CLASS)! as HTMLElement;
       const id = getIdFromRowElem(rowEl);
       const rowModel = apiRef!.current!.getRowFromId(id);
       const rowIndex = apiRef!.current!.getRowIndexFromId(id);
@@ -85,8 +90,8 @@ export const useApi = (
         emitEvent(CELL_CLICKED, cellParams);
         emitEvent(ROW_CLICKED, rowParams);
       }
-    } else if (isHeaderCell(elem)) {
-      const headerCell = findElementFromClassName(elem, HEADER_CELL_CSS_CLASS)!;
+    } else if (isHeaderCell(elem) && !isResizingRef.current) {
+      const headerCell = findParentElementFromClassName(elem, HEADER_CELL_CSS_CLASS)!;
       const field = getFieldFromHeaderElem(headerCell);
       const column = apiRef.current!.getColumnFromField(field);
       const colHeaderParams = { field, column };
@@ -121,6 +126,9 @@ export const useApi = (
       document.addEventListener(KEYPRESS_EVENT, keyPressHandler);
       apiRef.current!.isInitialised = true;
       setInit(true);
+
+      apiRef.current!.on(COL_RESIZE_START, handleResizeStart);
+      apiRef.current!.on(COL_RESIZE_STOP, handleResizeStop);
 
       return () => {
         logger.info('Clearing all events listeners');

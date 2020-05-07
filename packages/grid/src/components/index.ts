@@ -8,3 +8,4 @@ export * from './row';
 export * from './row-cells';
 export * from './sticky-container';
 export * from './viewport';
+export * from './column-header-item';

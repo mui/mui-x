@@ -33,7 +33,7 @@ export const RootStyle = styled.div<GridRootProps>`
 
       min-height: ${p => p.options.headerHeight}px;
       max-height: ${p => p.options.headerHeight}px;
-      line-height: ${p => p.options.headerHeight - 2}px; /* 2 = border sizes */
+      line-height: ${p => p.options.headerHeight}px;
 
       background-color: #f9f9f9;
       color: #000000;
@@ -42,11 +42,11 @@ export const RootStyle = styled.div<GridRootProps>`
 
       .material-col-cell-wrapper {
         display: flex;
-        width: fit-content;
+        width: 100%;
         align-items: center;
 
         .material-col-cell {
-          overflow: hidden;
+          position: relative;
           display: flex;
           padding: 0 12px;
           border-right: ${p => (p.options.showColumnSeparator ? '1px solid #bdc3c7' : 'none')};
@@ -69,12 +69,33 @@ export const RootStyle = styled.div<GridRootProps>`
             overflow: hidden;
             white-space: nowrap;
           }
+          .column-separator {
+            position: absolute;
+            right: -12px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: ${p => p.options.headerHeight}px;
+
+            .icon {
+              transform: rotate(90deg);
+              &.separator {
+                color: #bdc3c7;
+              }
+            }
+            &:hover .separator.resizable {
+              cursor: col-resize;
+              color: inherit;
+            }
+          }
+
           & > .icon,
           .sort-icon > .icon {
-            min-height: ${p => p.options.headerHeight - 2}px;
+            min-height: ${p => p.options.headerHeight}px;
           }
           * {
-            max-height: ${p => p.options.headerHeight - 2}px;
+            max-height: ${p => p.options.headerHeight}px;
           }
           &.checkbox-selection-header-cell .checkbox-input {
             padding: 12px;
