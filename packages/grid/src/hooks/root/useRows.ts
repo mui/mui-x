@@ -96,6 +96,7 @@ export const useRows = (options: GridOptions, rows: RowsProp, initialised: boole
   };
 
   const getRowModels = () => rowModelsRef.current;
+  const getRowsCount = () => rowModelsRef.current.length;
   const getAllRowIds = () => rowModelsRef.current.map(r => r.id);
   const setRowModels = (rows: Rows) => updateAllRows(rows);
 
@@ -109,6 +110,7 @@ export const useRows = (options: GridOptions, rows: RowsProp, initialised: boole
         updateRowModels,
         updateRowData,
         getRowModels,
+        getRowsCount,
         getAllRowIds,
         setRowModels,
       };

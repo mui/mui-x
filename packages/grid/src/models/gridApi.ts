@@ -6,6 +6,7 @@ import { RowSelectedParam, SelectionChangedParam } from './gridOptions';
 
 export interface RowApi {
   getRowModels: () => Rows;
+  getRowsCount: () => number;
   getAllRowIds: () => RowId[];
   setRowModels: (rows: Rows) => void;
   updateRowModels: (updates: Partial<RowModel>[]) => void;

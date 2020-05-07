@@ -163,7 +163,6 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
 
       const sortApi: SortApi = { getSortModel, setSortModel };
       apiRef.current = Object.assign(apiRef.current, sortApi) as GridApi;
-      applySorting();
 
       return () => {
         apiRef.current?.removeListener(COLUMN_HEADER_CLICKED, headerClickHandler);
@@ -182,13 +181,16 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
 
   useEffect(() => {
     setColState(colsProp);
+    sortModelRef.current = [];
   }, [colsProp]);
 
   useEffect(() => {
     if (rowsProp.length > 0 && sortModelRef.current.length === 0) {
       storeOriginalOrder();
+    } else if (rowsProp.length > 0 && sortModelRef.current.length > 0) {
+      applySorting();
     }
-  }, [rowsState, colState]);
+  }, [rowsState]);
 
   useEffect(() => {
     if (colsProp.length > 0 && apiRef.current) {
