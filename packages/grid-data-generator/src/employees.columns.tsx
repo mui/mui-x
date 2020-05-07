@@ -68,7 +68,7 @@ export const employeeColumns: GeneratableColDef[] = [
     headerName: 'Rating',
     generateData: () => randomInt(0, 5),
     // eslint-disable-next-line react/display-name
-    cellRenderer: params => <Rating name={params.data['id'].toString()} value={Number(params.value)} />,
+    cellRenderer: params => <Rating name={params.data['id'].toString()} value={Number(params.value)} readOnly />,
     sortDirection: 'desc',
     sortIndex: 0,
     width: 180,
