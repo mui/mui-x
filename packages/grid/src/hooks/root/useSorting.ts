@@ -187,7 +187,7 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
   useEffect(() => {
     if (rowsProp.length > 0 && sortModelRef.current.length === 0) {
       storeOriginalOrder();
-    } else if(rowsProp.length > 0 && sortModelRef.current.length > 0) {
+    } else if (rowsProp.length > 0 && sortModelRef.current.length > 0) {
       applySorting();
     }
   }, [rowsState]);
