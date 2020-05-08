@@ -1,6 +1,7 @@
 import React from 'react';
 import { Alignement, CellValue } from '../models';
 import { CELL_CSS_CLASS } from '../constants/cssClassesConstants';
+import { classnames } from '../utils';
 
 export interface GridCellProps {
   field?: string;
@@ -14,14 +15,22 @@ export interface GridCellProps {
 
 export const Cell: React.FC<GridCellProps> = React.memo(
   ({ value, field, width, children, showRightBorder, align, formattedValue, cssClass }) => {
-    let cssClasses = `${CELL_CSS_CLASS} ${cssClass || ''} ${showRightBorder ? 'with-border' : ''}`;
-
-    cssClasses += !align || align === 'left' ? '' : ` ${align}`;
-
+    const cssClasses = classnames(
+      CELL_CSS_CLASS,
+      cssClass,
+      { 'with-border': showRightBorder },
+      align !== 'left' ? align : '',
+    );
     const valueToRender = formattedValue || value;
 
     return (
-      <div className={cssClasses} data-value={value} data-field={field} style={{ minWidth: width, maxWidth: width }}>
+      <div
+        className={cssClasses}
+        role={field + ' cell'}
+        data-value={value}
+        data-field={field}
+        style={{ minWidth: width, maxWidth: width }}
+      >
         {children ? children : valueToRender?.toString()}
       </div>
     );

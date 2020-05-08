@@ -1,20 +1,25 @@
-import { CELL_CSS_CLASS, HEADER_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
+import {
+  CELL_CSS_CLASS,
+  DATA_CONTAINER_CSS_CLASS,
+  HEADER_CELL_CSS_CLASS,
+  ROOT_CSS_CLASS,
+} from '../constants/cssClassesConstants';
 const DATA_ATTRIBUTE_PREFIX = 'data-';
 
 export function isOverflown(element: Element): boolean {
   return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
 }
 
-export function findElementFromClassName(elem: Element, className: string): Element | null {
+export function findParentElementFromClassName(elem: Element, className: string): Element | null {
   return elem.closest('.' + className);
 }
 
 export function isCell(elem: Element): boolean {
-  return elem && findElementFromClassName(elem, CELL_CSS_CLASS) !== null;
+  return elem && findParentElementFromClassName(elem, CELL_CSS_CLASS) !== null;
 }
 
 export function isHeaderCell(elem: Element): boolean {
-  return elem && findElementFromClassName(elem, HEADER_CELL_CSS_CLASS) !== null;
+  return elem && findParentElementFromClassName(elem, HEADER_CELL_CSS_CLASS) !== null;
 }
 
 export function getDataFromElem(elem: Element, field: string) {
@@ -27,4 +32,20 @@ export function getIdFromRowElem(rowEl: Element): string {
 
 export function getFieldFromHeaderElem(colCellEl: Element): string {
   return getDataFromElem(colCellEl, 'field')!;
+}
+export function findCellElementsFromCol(col: HTMLElement): NodeListOf<Element> | null {
+  const field = getDataFromElem(col, 'field');
+  const root = findParentElementFromClassName(col, ROOT_CSS_CLASS);
+  if (!root) {
+    throw new Error('Root element not found');
+  }
+  const cells = root.querySelectorAll(`:scope .${CELL_CSS_CLASS}[data-field="${field}"]`);
+  return cells;
+}
+export function findDataContainerFromCurrent(elem: Element): HTMLDivElement | null {
+  const root = findParentElementFromClassName(elem, ROOT_CSS_CLASS);
+  if (!root) {
+    return null;
+  }
+  return root.querySelector(`:scope .${DATA_CONTAINER_CSS_CLASS}`) as HTMLDivElement;
 }

@@ -26,7 +26,6 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportP
     }
 
     const getRows = () => {
-      //TODO remove slice
       const renderedRows = rows.slice(renderCtx.firstRowIdx, renderCtx.lastRowIdx! + 1);
       return renderedRows.map((r, idx) => (
         <Row
@@ -45,6 +44,7 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportP
             scrollSize={renderCtx.scrollBarSize}
             showCellRightBorder={options.showCellRightBorder}
             extendRowFullWidth={options.extendRowFullWidth}
+            rowIndex={renderCtx.firstRowIdx + idx}
           />
           <RightEmptyCell key={'right-empty'} width={renderCtx.rightEmptyWidth} />
         </Row>

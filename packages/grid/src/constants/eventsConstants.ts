@@ -10,7 +10,11 @@ export const SELECTION_CHANGED_EVENT = 'selectionChanged';
 export const COLUMN_HEADER_CLICKED = 'columnClicked';
 
 export const SCROLLING_START = 'scrolling:start';
+export const SCROLLING = 'scrolling';
 export const SCROLLING_STOP = 'scrolling:stop';
+
+export const COL_RESIZE_START = 'colResizing:start';
+export const COL_RESIZE_STOP = 'colResizing:stop';
 
 export const ROWS_UPDATED = 'rowsUpdated';
 export const COLUMNS_UPDATED = 'columnsUpdated';
