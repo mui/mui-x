@@ -2,6 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { CellParams, ColParams } from '../models/colDef';
 import { Checkbox } from '@material-ui/core';
 import { SelectionChangedParam } from '../models';
+import styled from 'styled-components';
+
+const CheckboxInputContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 
 export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api, colDef, colIndex }) => {
   const [isChecked, setChecked] = useState(false);
@@ -23,12 +29,14 @@ export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api, colDef, co
     return api.onSelectionChanged(selectionChanged);
   }, [api]);
   return (
-    <Checkbox
-      indeterminate={isIndeterminate}
-      checked={isChecked}
-      onChange={handleChange}
-      className={'checkbox-input'}
-    />
+    <CheckboxInputContainer>
+      <Checkbox
+        indeterminate={isIndeterminate}
+        checked={isChecked}
+        onChange={handleChange}
+        className={'checkbox-input'}
+      />
+    </CheckboxInputContainer>
   );
 });
 HeaderCheckbox.displayName = 'HeaderCheckbox';
@@ -37,6 +45,10 @@ export const CellCheckboxRenderer: React.FC<CellParams> = React.memo(({ api, row
     api.selectRow(rowModel.id, checked, true);
   };
 
-  return <Checkbox checked={!!value} onChange={handleChange} className={'checkbox-input'} />;
+  return (
+    <CheckboxInputContainer>
+      <Checkbox checked={!!value} onChange={handleChange} className={'checkbox-input'} />
+    </CheckboxInputContainer>
+  );
 });
 CellCheckboxRenderer.displayName = 'CellCheckboxRenderer';
