@@ -101,7 +101,7 @@ export const withButtonToChangeColProp: React.FC = () => {
   const changeCols = () => {
     if (cols.length === columns.length) {
       const newCols = columns.filter(c => c.field.indexOf('age') === -1);
-      newCols.forEach(c=> c.resizable = false);
+      newCols.forEach(c => (c.resizable = false));
       setCols(newCols);
     } else {
       setCols(columns);

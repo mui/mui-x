@@ -23,7 +23,7 @@ export const BasicTest = () => {
     <>
       <p>Maintain CTRL or Command to sort by multiple fields</p>
       <div style={{ width: size.width, height: size.height, resize: 'both' }}>
-        <Grid rows={rows} columns={columns} options={{showColumnSeparator: false}} />
+        <Grid rows={rows} columns={columns} options={{ showColumnSeparator: false }} />
       </div>
     </>
   );
