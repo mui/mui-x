@@ -12,7 +12,7 @@ export interface RowProps {
 export const Row: React.FC<RowProps> = React.memo(({ selected, id, className, children }) => {
   const cssClasses = (selected ? 'selected ' : ' ') + (className || '');
   return (
-    <div key={id} data-id={id} className={`${ROW_CSS_CLASS} ${cssClasses}`}>
+    <div key={id} data-id={id} role={'row'} className={`${ROW_CSS_CLASS} ${cssClasses}`}>
       {children}
     </div>
   );

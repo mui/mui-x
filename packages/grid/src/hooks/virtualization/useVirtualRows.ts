@@ -1,11 +1,20 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useVirtualColumns } from './useVirtualColumns';
-import { ContainerProps, GridOptions, InternalColumns, RenderContextProps, RenderRowProps, Rows } from '../../models';
+import {
+  ContainerProps,
+  GridApi,
+  GridOptions,
+  InternalColumns,
+  RenderContextProps,
+  RenderRowProps,
+  Rows,
+  VirtualizationApi,
+} from '../../models';
 import { ScrollParams, useScrollFn } from '../utils';
 import { useLogger } from '../utils/useLogger';
 import { useContainerProps } from '../root';
 import { GridApiRef } from '../../grid';
-import { SCROLLING_START, SCROLLING_STOP } from '../../constants/eventsConstants';
+import { SCROLLING, SCROLLING_START, SCROLLING_STOP } from '../../constants/eventsConstants';
 import { debounce } from '../../utils';
 
 const SCROLL_EVENT = 'scroll';
@@ -132,6 +141,7 @@ export const useVirtualRows = (
         scrollTo(scrollParams);
         // scrollColHeaderTo({ ...scrollParams, ...{ top: 0 } });
         colRef.current!.scroll({ ...scrollParams, ...{ top: 0 } });
+        apiRef.current!.emit(SCROLLING, scrollParams);
       }
       rzScrollRef.current = scrollParams;
 
@@ -186,9 +196,18 @@ export const useVirtualRows = (
     }, 300);
     updateViewport();
   };
+  const scroll = (params: Partial<ScrollParams>) => {
+    logger.debug(`Scrolling to left: ${params.left} top: ${params.top}`);
+    if (windowRef.current && params.left) {
+      windowRef.current.scrollLeft = params.left;
+    }
+    if (windowRef.current && params.top) {
+      windowRef.current.scrollTop = params.top;
+    }
+    updateViewport();
+  };
 
   useEffect(() => {
-    resetScroll();
     columnTotalWidthRef.current = internalColumns.meta.totalWidth;
     updateContainerSize();
 
@@ -220,6 +239,18 @@ export const useVirtualRows = (
     logger.debug('+++ onResize ');
     updateContainerSize();
   };
+
+  useEffect(() => {
+    if (apiRef && apiRef.current) {
+      logger.debug('Adding scroll api to apiRef');
+
+      const virtualApi: VirtualizationApi = {
+        scroll,
+      };
+
+      apiRef.current = Object.assign(apiRef.current, virtualApi) as GridApi;
+    }
+  }, [apiRef]);
 
   return [renderCtx, onResize];
 };

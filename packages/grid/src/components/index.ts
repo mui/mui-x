@@ -8,3 +8,7 @@ export * from './row';
 export * from './row-cells';
 export * from './sticky-container';
 export * from './viewport';
+export * from './column-header-item';
+export * from './column-header-sort-icon';
+export * from './column-header-title';
+export * from './column-header-separator';

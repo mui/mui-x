@@ -24,3 +24,27 @@ export function isString(value: any): value is string {
 export function isNumber(value: any): value is number {
   return typeof value === 'number';
 }
+export function isFunction(value: any): value is Function {
+  return typeof value === 'function';
+}
+export const classnames = (...args) => {
+  const cssClass = args.reduce((cssClass, value) => {
+    if (!value) {
+      return cssClass;
+    } else if (isArray(value)) {
+      cssClass += value.join(' ');
+    } else if (isString(value)) {
+      cssClass += value;
+    } else if (typeof value === 'object') {
+      Object.keys(value).forEach(cssKey => {
+        if (value[cssKey]) {
+          cssClass += ` ${cssKey}`;
+        }
+      });
+    }
+    cssClass += ' ';
+    return cssClass;
+  }, '');
+
+  return cssClass;
+};
