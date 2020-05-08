@@ -1,11 +1,11 @@
 {
   "name": "@material-ui-x/storybook",
-  "version": "0.1.26",
+  "version": "0.1.27",
   "description": "Storybook components",
   "author": "Damien Tassone <damien@material-ui.com>",
   "private": true,
   "dependencies": {
-    "@material-ui-x/grid": "^0.1.26",
+    "@material-ui-x/grid": "^0.1.27",
     "@material-ui-x/grid-data-generator": "^0.1.26",
     "@material-ui/core": "^4.9.12",
     "@material-ui/icons": "^4.9.1",
