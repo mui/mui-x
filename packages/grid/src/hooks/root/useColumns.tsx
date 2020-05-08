@@ -3,7 +3,6 @@ import {
   checkboxSelectionColDef,
   ColDef,
   ColumnApi,
-  ColumnLookup,
   Columns,
   ColumnsMeta,
   getColDef,
@@ -12,7 +11,7 @@ import {
   InternalColumns,
   SortModel,
 } from '../../models';
-import {Logger, useLogger} from '../utils/useLogger';
+import { Logger, useLogger } from '../utils/useLogger';
 import { GridApiRef } from '../../grid';
 import { COLUMNS_UPDATED, POST_SORT } from '../../constants/eventsConstants';
 import { useRafUpdate } from '../utils';
@@ -77,23 +76,35 @@ const resetState = (columns: Columns, options: GridOptions, logger: Logger, apiR
   const meta = toMeta(logger, visible);
   const lookup = toLookup(logger, all);
   return {
-    all, visible, meta, lookup, hasColumns: all.length > 0, hasVisibleColumns: visible.length > 0
+    all,
+    visible,
+    meta,
+    lookup,
+    hasColumns: all.length > 0,
+    hasVisibleColumns: visible.length > 0,
   };
 };
 
-const getUpdatedColumnState = (logger: Logger, state: InternalColumns, newColumn: ColDef): InternalColumns => {
-  const index = state.all.findIndex(c=> c.field === newColumn.field);
-  const newState = {...state};
-  newState.all[index] = {...newColumn};
-  newState.all = [...newState.all];
+const getUpdatedColumnState = (logger: Logger, state: InternalColumns, columnUpdates: ColDef[]): InternalColumns => {
+  const newState = { ...state };
+  columnUpdates.forEach(newColumn => {
+    const index = newState.all.findIndex(c => c.field === newColumn.field);
+    const columnUpdated = { ...newState.all[index], ...newColumn };
+    newState.all[index] = columnUpdated;
+    newState.all = [...newState.all];
 
-  newState.lookup[newColumn.field] = {...newColumn};
-  newState.lookup = {...newState.lookup};
+    newState.lookup[newColumn.field] = columnUpdated;
+    newState.lookup = { ...newState.lookup };
+  });
 
-  const visible = filterVisible(logger, state.all);
+  const visible = filterVisible(logger, newState.all);
   const meta = toMeta(logger, visible);
   return {
-    ...newState, visible, meta, hasColumns: newState.all.length > 0, hasVisibleColumns: visible.length > 0
+    ...newState,
+    visible,
+    meta,
+    hasColumns: newState.all.length > 0,
+    hasVisibleColumns: visible.length > 0,
   };
 };
 
@@ -102,16 +113,12 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
   const [, forceUpdate] = useState();
   const [rafUpdate] = useRafUpdate(() => forceUpdate(p => !p));
 
-  // const allColumns = useMemo<Columns>(() => hydrateColumns(columns, options, logger, apiRef), [columns, options]);
-  // const columnFieldLookup = useMemo<ColumnLookup>(() => toLookup(logger, allColumns), [columns, options]);
-  // const visibleColumns = useMemo<Columns>(() => filterVisible(logger, allColumns), [columns, options, apiRef]);
-  // const columnsMeta = useMemo<ColumnsMeta>(() => toMeta(logger, visibleColumns), [columns, options]);
-
-  const state = useMemo(()=> resetState(columns, options, logger, apiRef), [columns, options, apiRef]);
+  const state = useMemo(() => resetState(columns, options, logger, apiRef), [columns, options, apiRef]);
   const [internalColumns, setInternalColumns] = useState<InternalColumns>(state);
   const stateRef = useRef<InternalColumns>(state);
+  const sortedColFieldsRef = useRef<string[]>([]);
 
-  const updateState = (newState, emit = true)=> {
+  const updateState = (newState, emit = true) => {
     setInternalColumns(newState);
     stateRef.current = newState;
     if (apiRef.current && emit) {
@@ -128,30 +135,43 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
   const getColumnFromField: (field: string) => ColDef = field => stateRef.current.lookup[field];
   const getAllColumns: () => Columns = () => stateRef.current.all;
   const getColumnsMeta: () => ColumnsMeta = () => stateRef.current.meta;
-  const getColumnIndex: (field: string) => number = (field) => stateRef.current.visible.findIndex(c=> c.field === field);
-  const getColumnPosition: (field: string) => number = (field) => {
+  const getColumnIndex: (field: string) => number = field => stateRef.current.visible.findIndex(c => c.field === field);
+  const getColumnPosition: (field: string) => number = field => {
     const index = getColumnIndex(field);
     return stateRef.current.meta.positions[index];
   };
   const getVisibleColumns: () => Columns = () => stateRef.current.visible;
 
-  const updateColumn = (col: ColDef)=> {
-    const newState = getUpdatedColumnState(logger, stateRef.current, col);
+  const updateColumn = (col: ColDef) => {
+    const newState = getUpdatedColumnState(logger, stateRef.current, [col]);
+    updateState(newState, false);
+  };
+
+  const updateColumns = (cols: ColDef[]) => {
+    const newState = getUpdatedColumnState(logger, stateRef.current, cols);
     updateState(newState, false);
   };
 
   const onSortedColumns = (sortModel: SortModel) => {
     logger.debug('Sort model changed to ', sortModel);
-    stateRef.current.all.forEach(c => (c.sortDirection = null));
+    const updatedCols: ColDef[] = [];
 
-    //We mutate state here to avoid rebuilding all state, as they are all pointing to the same ref internally
-    //TODO refactor this to create a new object ref
-    sortModel.forEach((model, index) => {
-      const col = { ...stateRef.current.lookup[model.colId] };
-      col.sortIndex = sortModel.length > 1 ? index + 1 : undefined;
-      col.sortDirection = model.sort;
-      updateColumn(col);
+    //We restore the previous columns
+    sortedColFieldsRef.current.forEach(field => {
+      updatedCols.push({ field, sortDirection: null, sortIndex: undefined })
     });
+    sortedColFieldsRef.current = [];
+
+    sortModel.forEach((model, index) => {
+      sortedColFieldsRef.current = [...sortedColFieldsRef.current, model.colId];
+      const sortIndex = sortModel.length > 1 ? index + 1 : undefined;
+      updatedCols.push({ field: model.colId, sortDirection: model.sort, sortIndex });
+    });
+
+    if(updatedCols.length > 0) {
+      updateColumns(updatedCols);
+    }
+
     rafUpdate();
   };
 
@@ -167,6 +187,7 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
         getVisibleColumns,
         getColumnsMeta,
         updateColumn,
+        updateColumns,
       };
 
       apiRef.current = Object.assign(apiRef.current, colApi) as GridApi;

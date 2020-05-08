@@ -1,7 +1,7 @@
-import React, {useContext, useRef} from 'react';
-import {Columns} from '../models';
-import {ColumnHeaderItem} from './column-header-item';
-import {ApiContext} from './api-context';
+import React, { useContext, useRef } from 'react';
+import { Columns } from '../models';
+import { ColumnHeaderItem } from './column-header-item';
+import { ApiContext } from './api-context';
 import { useColumnResize } from '../hooks/features/useColumnResize';
 
 export interface ColumnsHeaderProps {
@@ -21,11 +21,7 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps
     const onResizeColumn = useColumnResize(columnsRef, api, headerHeight);
 
     return (
-      <div
-        ref={columnsRef}
-        key={'columns'}
-        className={wrapperCssClasses}
-      >
+      <div ref={columnsRef} key={'columns'} className={wrapperCssClasses}>
         {columns.map((c, idx) => (
           <ColumnHeaderItem
             key={c.field}

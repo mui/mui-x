@@ -24,6 +24,7 @@ export interface ColumnApi {
   getColumnIndex: (field: string) => number;
   getColumnPosition: (field: string) => number;
   updateColumn: (col: ColDef)=> void;
+  updateColumns: (cols: ColDef[])=> void;
 }
 
 export interface SelectionApi {

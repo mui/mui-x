@@ -24,6 +24,7 @@ export interface CellParams {
 export type CellClassParams = CellParams;
 export type ValueGetterParams = CellParams;
 export type ValueFormatterParams = CellParams;
+export type CellClassRules = { [cssClass: string]: (params: CellClassParams) => boolean };
 
 export interface ColDef {
   field: string;
@@ -41,7 +42,7 @@ export interface ColDef {
   valueGetter?: (params: ValueGetterParams) => CellValue;
   valueFormatter?: (params: ValueFormatterParams) => CellValue;
   cellClass?: CellClassPropType;
-  cellClassRules?: { [cssClass: string]: (params: CellClassParams) => boolean };
+  cellClassRules?: CellClassRules;
   cellRenderer?: (params: CellParams) => React.ReactElement;
   headerClass?: string | string[];
   headerComponent?: (params: ColParams) => React.ReactElement;

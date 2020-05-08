@@ -9,6 +9,8 @@ export const checkboxSelectionColDef: ColDef = {
   width: 80,
   align: 'center',
   headerAlign: 'center',
+  resizable: true,
+  sortable: false,
   disableClickEventBubbling: true,
   valueGetter: params => params.rowModel.selected,
   // eslint-disable-next-line react/display-name

@@ -7,22 +7,12 @@ import {
   GridApi,
   RowModel,
   ValueFormatterParams,
-  ValueGetterParams,
+  ValueGetterParams, CellClassRules,
 } from '../models';
 import React, { useContext } from 'react';
 import { Cell } from './cell';
 import { ApiContext } from './api-context';
-
-interface RowCellsProps {
-  firstColIdx: number;
-  lastColIdx: number;
-  hasScroll: { y: boolean; x: boolean };
-  scrollSize: number;
-  columns: Columns;
-  row: RowModel;
-  showCellRightBorder: boolean;
-  extendRowFullWidth: boolean;
-}
+import { classnames, isFunction } from '../utils';
 
 function getCellParams(rowModel: RowModel, col: ColDef, rowIndex: number, value: CellValue, api: GridApi): CellParams {
   return {
@@ -34,6 +24,25 @@ function getCellParams(rowModel: RowModel, col: ColDef, rowIndex: number, value:
     rowIndex,
     api,
   };
+}
+
+function applyCssClassRules(cellClassRules: CellClassRules, params: CellClassParams) {
+  return Object.entries(cellClassRules).reduce((appliedCss, entry) => {
+    const shouldApplyCss: boolean = entry[1](params);
+    appliedCss += shouldApplyCss ? entry[0] : '';
+    return appliedCss;
+  }, '');
+}
+
+interface RowCellsProps {
+  firstColIdx: number;
+  lastColIdx: number;
+  hasScroll: { y: boolean; x: boolean };
+  scrollSize: number;
+  columns: Columns;
+  row: RowModel;
+  showCellRightBorder: boolean;
+  extendRowFullWidth: boolean;
 }
 
 export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
@@ -65,11 +74,9 @@ export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
 
     let cssClassProp = { cssClass: '' };
     if (c.cellClass) {
-      if (typeof c.cellClass === 'string') {
-        cssClassProp = { cssClass: c.cellClass };
-      } else if (Array.isArray(c.cellClass)) {
-        cssClassProp = { cssClass: c.cellClass.join(' ') };
-      } else if (typeof c.cellClass === 'function') {
+      if (!isFunction(c.cellClass)) {
+        cssClassProp = { cssClass: classnames(c.cellClass) };
+      } else {
         const params: CellClassParams = getCellParams(row, c, rowIndex, value, api!.current!);
         cssClassProp = { cssClass: c.cellClass(params) as string };
       }
@@ -77,11 +84,7 @@ export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
 
     if (c.cellClassRules) {
       const params: CellClassParams = getCellParams(row, c, rowIndex, value, api!.current!);
-      const cssClass = Object.entries(c.cellClassRules).reduce((appliedCss, entry) => {
-        const shouldApplyCss: boolean = entry[1](params);
-        appliedCss += shouldApplyCss ? entry[0] : '';
-        return appliedCss;
-      }, '');
+      const cssClass = applyCssClassRules(c.cellClassRules, params);
       cssClassProp = { cssClass: cssClassProp.cssClass + ' ' + cssClass };
     }
 

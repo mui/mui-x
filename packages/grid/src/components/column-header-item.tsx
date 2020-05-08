@@ -1,11 +1,11 @@
 import { ColDef } from '../models/colDef';
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import Badge from '@material-ui/core/Badge';
+import React, { useContext } from 'react';
 import { ApiContext } from './api-context';
 import { HEADER_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
-import { isArray, isOverflown } from '../utils';
-import { Tooltip } from '@material-ui/core';
-import SeparatorIcon from '@material-ui/icons/Remove';
+import { classnames } from '../utils';
+import { ColumnHeaderSortIcon } from './column-header-sort-icon';
+import { ColumnHeaderTitle } from './column-header-title';
+import { ColumnHeaderSeparator } from './column-header-separator';
 
 interface ColumnHeaderItemProps {
   column: ColDef;
@@ -15,81 +15,48 @@ interface ColumnHeaderItemProps {
   onResizeColumn: (c: any) => void;
 }
 
-export const ColumnHeaderTitle = React.forwardRef<HTMLDivElement, any>((props, ref) => {
-  const { label, className, ...rest } = props;
-  return (
-    <div ref={ref} className={'title ' + className} {...rest}>
-      {label}
-    </div>
-  );
-});
-ColumnHeaderTitle.displayName = 'ColumnHeaderTitle';
-//TODO cleanup this component and split in smaller one;
 export const ColumnHeaderItem = React.memo(
   ({ column, icons, colIndex, headerHeight, onResizeColumn }: ColumnHeaderItemProps) => {
-    //TODO move that in its own component
-    const sortIconElement =
-      !column.hideSortIcons && column.sortDirection ? (
-        <span className={'sort-icon'}>
-          {column.sortIndex != null && (
-            <Badge badgeContent={column.sortIndex} color="default">
-              {icons[column.sortDirection]}
-            </Badge>
-          )}
-          {column.sortIndex == null && icons[column.sortDirection]}
-        </span>
-      ) : null;
-
-    const titleRef = useRef<HTMLDivElement>(null);
-    const [tooltipText, setTooltip] = useState('');
     const api = useContext(ApiContext);
 
-    let cssClass = HEADER_CELL_CSS_CLASS;
-    if (column.headerClass != null) {
-      cssClass += isArray(column.headerClass) ? column.headerClass.join(' ') : ' ' + column.headerClass;
-    }
-    cssClass += !column.headerAlign || column.headerAlign === 'left' ? '' : ` ${column.headerAlign}`;
-    cssClass += column.sortable ? ' sortable' : '';
+    const cssClass = classnames(
+      HEADER_CELL_CSS_CLASS,
+      column.headerClass,
+      column.headerAlign !== 'left' ? column.headerAlign : '',
+      { sortable: column.sortable },
+    );
 
     let headerComponent: React.ReactElement | null = null;
     if (column.headerComponent) {
       headerComponent = column.headerComponent({ api: api!.current!, colDef: column, colIndex });
     }
 
-    useEffect(() => {
-      if (!column.description && titleRef && titleRef.current) {
-        const isOver = isOverflown(titleRef.current);
-        if (isOver) {
-          setTooltip(column.headerName || column.field);
-        }
-      }
-    }, [titleRef]);
-
-    const handleOnMouseDown = e => {
+    const onResize = () => {
       onResizeColumn(column);
     };
 
-    const width = column.width;
+    const width = column.width!;
     return (
       <div
         className={cssClass}
         key={column.field}
         data-field={column.field}
-        style={{ width: width, minWidth: width, maxWidth: width, maxHeight: headerHeight }}
+        style={{ width: width, minWidth: width, maxWidth: width, maxHeight: headerHeight, minHeight: headerHeight }}
       >
         {headerComponent || (
-          <Tooltip title={column.description || tooltipText} innerRef={titleRef}>
-            <ColumnHeaderTitle label={column.headerName || column.field} />
-          </Tooltip>
-        )}
-        {sortIconElement}
-        <div className={'column-separator'} >
-          <SeparatorIcon
-            fontSize={'default'}
-            className={'icon separator ' + (column.resizable ? 'resizable' : '')}
-            {...(column.resizable ? { onMouseDown: handleOnMouseDown } : {})}
+          <ColumnHeaderTitle
+            label={column.headerName || column.field}
+            description={column.description}
+            columnWidth={width}
           />
-        </div>
+        )}
+        <ColumnHeaderSortIcon
+          direction={column.sortDirection}
+          index={column.sortIndex}
+          icons={icons}
+          hide={column.hideSortIcons}
+        />
+        <ColumnHeaderSeparator resizable={column.resizable} onResize={onResize} />
       </div>
     );
   },
