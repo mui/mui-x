@@ -7,7 +7,8 @@ import {
   GridApi,
   RowModel,
   ValueFormatterParams,
-  ValueGetterParams, CellClassRules,
+  ValueGetterParams,
+  CellClassRules,
 } from '../models';
 import React, { useContext } from 'react';
 import { Cell } from './cell';
@@ -43,15 +44,15 @@ interface RowCellsProps {
   row: RowModel;
   showCellRightBorder: boolean;
   extendRowFullWidth: boolean;
+  rowIndex: number;
 }
 
 export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
-  const { scrollSize, hasScroll, lastColIdx, firstColIdx, columns, row } = props;
+  const { scrollSize, hasScroll, lastColIdx, firstColIdx, columns, row, rowIndex } = props;
   const api = useContext(ApiContext);
 
-  const cells = columns.slice(firstColIdx, lastColIdx + 1).map((c, idx) => {
-    const rowIndex = firstColIdx + idx;
-    const isLastColumn = rowIndex === columns.length - 1;
+  const cells = columns.slice(firstColIdx, lastColIdx + 1).map((c, colIdx) => {
+    const isLastColumn = firstColIdx + colIdx === columns.length - 1;
     const removeScrollWidth = isLastColumn && hasScroll.y && hasScroll.x;
     const width = removeScrollWidth ? c.width! - scrollSize : c.width!;
     const removeLastBorderRight = isLastColumn && hasScroll.x && !hasScroll.y;

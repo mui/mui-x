@@ -7,7 +7,7 @@ const ColumnHeaderInnerTitle = React.forwardRef<HTMLDivElement, any>((props, ref
   const { label, className, ...rest } = props;
 
   return (
-    <div ref={ref} className={'title ' + className} {...rest}>
+    <div ref={ref} className={'title ' + className} {...rest} role={'column-header-title'}>
       {label}
     </div>
   );

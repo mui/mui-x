@@ -42,6 +42,7 @@ export const ColumnHeaderItem = React.memo(
         key={column.field}
         data-field={column.field}
         style={{ width: width, minWidth: width, maxWidth: width, maxHeight: headerHeight, minHeight: headerHeight }}
+        role={'column-header'}
       >
         {headerComponent || (
           <ColumnHeaderTitle

@@ -158,7 +158,7 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
 
     //We restore the previous columns
     sortedColFieldsRef.current.forEach(field => {
-      updatedCols.push({ field, sortDirection: null, sortIndex: undefined })
+      updatedCols.push({ field, sortDirection: null, sortIndex: undefined });
     });
     sortedColFieldsRef.current = [];
 
@@ -168,7 +168,7 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
       updatedCols.push({ field: model.colId, sortDirection: model.sort, sortIndex });
     });
 
-    if(updatedCols.length > 0) {
+    if (updatedCols.length > 0) {
       updateColumns(updatedCols);
     }
 

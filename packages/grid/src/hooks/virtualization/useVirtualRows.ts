@@ -1,19 +1,20 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useVirtualColumns } from './useVirtualColumns';
 import {
-  ColumnApi,
-  ContainerProps, GridApi,
+  ContainerProps,
+  GridApi,
   GridOptions,
   InternalColumns,
   RenderContextProps,
   RenderRowProps,
-  Rows, VirtualizationApi
+  Rows,
+  VirtualizationApi,
 } from '../../models';
 import { ScrollParams, useScrollFn } from '../utils';
 import { useLogger } from '../utils/useLogger';
 import { useContainerProps } from '../root';
 import { GridApiRef } from '../../grid';
-import {POST_SORT, SCROLLING, SCROLLING_START, SCROLLING_STOP} from '../../constants/eventsConstants';
+import { SCROLLING, SCROLLING_START, SCROLLING_STOP } from '../../constants/eventsConstants';
 import { debounce } from '../../utils';
 
 const SCROLL_EVENT = 'scroll';
@@ -141,7 +142,6 @@ export const useVirtualRows = (
         // scrollColHeaderTo({ ...scrollParams, ...{ top: 0 } });
         colRef.current!.scroll({ ...scrollParams, ...{ top: 0 } });
         apiRef.current!.emit(SCROLLING, scrollParams);
-
       }
       rzScrollRef.current = scrollParams;
 
@@ -197,20 +197,17 @@ export const useVirtualRows = (
     updateViewport();
   };
   const scroll = (params: Partial<ScrollParams>) => {
-    logger.debug(`Scrolling to left: ${params.left} top: ${params.top}`)
-    if(windowRef.current && params.left) {
+    logger.debug(`Scrolling to left: ${params.left} top: ${params.top}`);
+    if (windowRef.current && params.left) {
       windowRef.current.scrollLeft = params.left;
     }
-    if(windowRef.current && params.top) {
+    if (windowRef.current && params.top) {
       windowRef.current.scrollTop = params.top;
     }
     updateViewport();
   };
 
   useEffect(() => {
-    // if(hasColumnChanged(internalColumns)) {
-      // resetScroll();
-    // }
     columnTotalWidthRef.current = internalColumns.meta.totalWidth;
     updateContainerSize();
 

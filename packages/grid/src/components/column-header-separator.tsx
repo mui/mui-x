@@ -17,3 +17,4 @@ export const ColumnHeaderSeparator: React.FC<ColumnHeaderSeparatorProps> = React
     </div>
   );
 });
+ColumnHeaderSeparator.displayName = 'ColumnHeaderSeparator';

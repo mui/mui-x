@@ -1,9 +1,11 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLogger } from '../utils/useLogger';
 import { EventEmitter } from 'events';
 import {
   CELL_CLICKED,
-  CLICK_EVENT, COL_RESIZE_START, COL_RESIZE_STOP,
+  CLICK_EVENT,
+  COL_RESIZE_START,
+  COL_RESIZE_STOP,
   COLUMN_HEADER_CLICKED,
   KEYDOWN_EVENT,
   KEYPRESS_EVENT,
@@ -57,8 +59,8 @@ export const useApi = (
 
   const getHandler = (name: string) => (...args: any[]) => emitEvent(name, ...args);
 
-  const handleResizeStart = ()=> isResizingRef.current = true;
-  const handleResizeStop = ()=> isResizingRef.current = false;
+  const handleResizeStart = () => (isResizingRef.current = true);
+  const handleResizeStop = () => (isResizingRef.current = false);
 
   const onClickHandler = (e: MouseEvent) => {
     if (e.target == null) {

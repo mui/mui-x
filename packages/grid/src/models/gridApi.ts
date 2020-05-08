@@ -3,7 +3,7 @@ import { RowData, RowId, RowModel, Rows } from './rows';
 import { ColDef, Columns, ColumnsMeta } from './colDef';
 import { SortModel } from './sortModel';
 import { RowSelectedParam, SelectionChangedParam } from './gridOptions';
-import {ScrollParams} from "../hooks/utils";
+import { ScrollParams } from '../hooks/utils';
 
 export interface RowApi {
   getRowModels: () => Rows;
@@ -23,8 +23,8 @@ export interface ColumnApi {
   getColumnsMeta: () => ColumnsMeta;
   getColumnIndex: (field: string) => number;
   getColumnPosition: (field: string) => number;
-  updateColumn: (col: ColDef)=> void;
-  updateColumns: (cols: ColDef[])=> void;
+  updateColumn: (col: ColDef) => void;
+  updateColumns: (cols: ColDef[]) => void;
 }
 
 export interface SelectionApi {
@@ -40,7 +40,7 @@ export interface SortApi {
   setSortModel: (model: SortModel) => void;
 }
 export interface VirtualizationApi {
-  scroll: (params: Partial<ScrollParams>)=> void;
+  scroll: (params: Partial<ScrollParams>) => void;
 }
 export interface CoreApi extends EventEmitter {
   isInitialised: boolean;

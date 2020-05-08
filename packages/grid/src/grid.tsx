@@ -7,7 +7,7 @@ import { debounce } from './utils';
 import { useSorting } from './hooks/root/useSorting';
 import { useKeyboard } from './hooks/root/useKeyboard';
 import { ApiContext } from './components/api-context';
-import {DATA_CONTAINER_CSS_CLASS} from "./constants/cssClassesConstants";
+import { DATA_CONTAINER_CSS_CLASS } from './constants/cssClassesConstants';
 
 export type GridApiRef = React.MutableRefObject<GridApi | null | undefined>;
 export type GridOptionsProp = Partial<GridOptions>;

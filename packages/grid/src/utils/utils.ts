@@ -29,7 +29,7 @@ export function isFunction(value: any): value is Function {
 }
 export const classnames = (...args) => {
   const cssClass = args.reduce((cssClass, value) => {
-    if(!value) {
+    if (!value) {
       return cssClass;
     } else if (isArray(value)) {
       cssClass += value.join(' ');

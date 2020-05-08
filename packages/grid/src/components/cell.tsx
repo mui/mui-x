@@ -24,7 +24,13 @@ export const Cell: React.FC<GridCellProps> = React.memo(
     const valueToRender = formattedValue || value;
 
     return (
-      <div className={cssClasses} data-value={value} data-field={field} style={{ minWidth: width, maxWidth: width }}>
+      <div
+        className={cssClasses}
+        role={field + ' cell'}
+        data-value={value}
+        data-field={field}
+        style={{ minWidth: width, maxWidth: width }}
+      >
         {children ? children : valueToRender?.toString()}
       </div>
     );
