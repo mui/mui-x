@@ -78,13 +78,14 @@ export const withCellClass = () => {
     {
       field: 'age',
       cellClass: ['age', 'shine'],
-      headerClass: 'age',
+      headerClass: ['age', 'shine'],
       type: 'number',
       sortDirection: 'desc',
     },
     {
       field: 'fullName',
       description: 'this column has a value getter and is not sortable',
+      headerClass: 'highlight',
       sortable: false,
       valueGetter: params => `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
       cellClassRules: {
