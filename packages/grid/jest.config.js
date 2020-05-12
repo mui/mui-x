@@ -3,8 +3,8 @@ module.exports = {
   testEnvironment: 'node',
   setupFilesAfterEnv: ['<rootDir>/jest/setupTest.ts'],
   transform: {
-    '^.+\\.js$': 'babel-jest',
+    '^.+\\.(t|j)sx?$': 'ts-jest',
     '.+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub',
   },
-  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+  testPathIgnorePatterns: ['/node_modules/', '/dist/', '/lib/'],
 };

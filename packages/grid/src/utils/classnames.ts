@@ -1,6 +1,6 @@
 import { isArray, isString } from './utils';
 
-export const classnames = (...args) => {
+export const classnames = (...args: any[]): string => {
   const cssClass = args.reduce((cssClass, value) => {
     if (!value) {
       return cssClass;
@@ -11,13 +11,14 @@ export const classnames = (...args) => {
     } else if (typeof value === 'object') {
       Object.keys(value).forEach(cssKey => {
         if (value[cssKey]) {
-          cssClass += ` ${cssKey}`;
+          cssClass += `${cssKey} `;
         }
       });
+      cssClass = cssClass.trim();
     }
     cssClass += ' ';
     return cssClass;
   }, '');
 
-  return cssClass;
+  return cssClass.trim();
 };
