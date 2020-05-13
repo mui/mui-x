@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { DataContainer, ColumnsContainer, Window, GridRoot } from './styled-wrappers';
-import { ColumnsHeader, NoRowMessage, Viewport, AutoSizerWrapper, RenderContext } from './components';
+import {ColumnsHeader, NoRowMessage, Viewport, AutoSizerWrapper, RenderContext, LoadingMessage} from './components';
 import { useColumns, useVirtualRows, useLogger, useSelection, useApi, useRows } from './hooks';
 import { Columns, DEFAULT_GRID_OPTIONS, ElementSize, GridOptions, RowsProp, GridApi } from './models';
 import { debounce } from './utils';
@@ -17,9 +17,10 @@ export interface GridProps {
   columns: Columns;
   options?: GridOptionsProp;
   apiRef?: GridApiRef;
+  loading?: boolean;
 }
 
-export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, apiRef }) => {
+export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, apiRef, loading }) => {
   const logger = useLogger('Grid');
   const gridRootRef = useRef<HTMLDivElement>(null);
   const colRef = useRef<HTMLDivElement>(null);
@@ -83,7 +84,8 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
                 headerHeight={internalOptions.headerHeight}
               />
             </ColumnsContainer>
-            {internalRows.length === 0 && <NoRowMessage />}
+            {!loading && internalRows.length === 0 && <NoRowMessage />}
+            {loading && <LoadingMessage />}
             <Window ref={windowRef}>
               <DataContainer
                 ref={gridRef}
