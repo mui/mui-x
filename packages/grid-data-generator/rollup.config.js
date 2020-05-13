@@ -1,3 +1,4 @@
+import multiEntry from 'rollup-plugin-multi-entry';
 import typescript from 'rollup-plugin-typescript2';
 import pkg from './package.json';
 import cleaner from 'rollup-plugin-cleaner';
@@ -10,7 +11,7 @@ import postcss from 'rollup-plugin-postcss';
 // dev build if watching, prod build if not
 const production = !process.env.ROLLUP_WATCH;
 export default {
-  input: 'src/index.ts',
+  input: ['src/index.ts', 'src/datagen-cli.ts'],
   output: [
     {
       file: 'dist/index-esm.js',
@@ -36,5 +37,6 @@ export default {
     postcss(),
     !production && sourceMaps(),
     production && terser(),
+    multiEntry(),
   ],
 };
