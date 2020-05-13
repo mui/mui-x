@@ -22,6 +22,11 @@ export const StyledPanels = styled.div`
     transition: height 0.2s ease;
     overflow: hidden;
 
+    .panel-content {
+      display: none;
+      padding: 10px;
+    }
+
     .panel-title {
       display: flex;
       flex-direction: row;
@@ -44,14 +49,15 @@ export const StyledPanels = styled.div`
       .arrow {
         transform: rotate(0deg);
       }
+
+      .panel-content {
+        display: initial;
+      }
     }
     @media screen and (max-width: 600px) {
       &.open {
         height: 200px;
       }
-    }
-    .panel-content {
-      padding: 10px;
     }
   }
 `;
