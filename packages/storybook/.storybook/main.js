@@ -15,6 +15,7 @@ module.exports = {
         },
       ],
     });
+    config.node = { fs: 'empty', commander: 'empty', child_process: 'empty' };
 
     config.module.rules.push({
         test: /\.tsx?|\.js$/,
