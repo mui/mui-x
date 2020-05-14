@@ -10,13 +10,19 @@ interface AppBreadcrumbsProps {
 }
 
 const StyledBreadcrumbs = styled(Breadcrumbs)`
-  padding: 5px;
-  font-size: 12px;
-  line-height: 25px;
   background-color: ${p => p.theme.colors.breadcrumbsBg};
-  font-weight: 600;
+  color: ${p => p.theme.colors.breadcrumbsTitle} !important;
   border-bottom: 1px solid ${p => p.theme.colors.breadcrumbsBorderBottom};
-  color: ${p => p.theme.colors.breadcrumbsTitle};
+  line-height: 36px;
+  height: 36px;
+
+  a {
+    line-height: 36px;
+    padding: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    color: ${p => p.theme.colors.breadcrumbsTitle};
+  }
 
   .current {
     color: ${p => p.theme.colors.breadcrumbsTitleCurrent};

@@ -15,9 +15,9 @@ import { isIntroPage } from './utils';
 import { useLocation } from 'react-router-dom';
 
 const DemoAppBarStyled = styled(AppBar)`
-  color: ${p => p.theme.colors.background};
-  border-bottom: 1px solid ${p => p.theme.colors.background};
-  background-color: ${p => p.theme.colors.app};
+  color: ${p => p.theme.colors.app};
+  border-bottom: 1px solid ${p => p.theme.colors.app};
+  background-color: ${p => p.theme.colors.background};
 
   .title {
     flex-grow: 1;
@@ -32,7 +32,7 @@ const DemoAppBarStyled = styled(AppBar)`
   }
   .product-title {
     margin-left: 10px;
-    color: ${p => p.theme.colors.secondApp};
+    color: ${p => p.theme.colors.xColor};
     font-weight: 400;
     text-shadow: -2px 1px 4px ${p => p.theme.colors.xShadowColor};
     font-size: 2.5rem;
@@ -61,7 +61,6 @@ export const DemoAppBar: React.FC<DemoAppBarProps> = ({ onMenuButtonClick, onThe
   useEffect(() => {
     const isIntro = isIntroPage();
     setHideTitle(isIntro);
-
   }, [location]);
 
   const titleEl: any = hideTitle ? null : (

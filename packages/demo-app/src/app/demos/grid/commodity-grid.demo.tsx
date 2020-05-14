@@ -5,6 +5,7 @@ import { MainContainer } from './components/main-container';
 import { SettingsPanel } from './components/settings-panel';
 import { commodityColumns, employeeColumns } from '@material-ui-x/grid-data-generator';
 import '@material-ui-x/grid-data-generator/dist/demo-style.css';
+import { useTheme } from '../theme';
 
 export const DEFAULT_DATASET = 'Employee';
 
@@ -22,6 +23,7 @@ export const CommodityGridDemo: React.FC<{}> = props => {
   const [rows, setRows] = useState<any>([]);
   const [cols, setCols] = useState<any>([]);
   const [loading, setLoading] = useState(false);
+  const [theme, themeId, toggleTheme, isDark] = useTheme();
 
   useEffect(() => {
     const gridColumns = type === 'commodity' ? commodityColumns : employeeColumns;
@@ -40,9 +42,12 @@ export const CommodityGridDemo: React.FC<{}> = props => {
     );
   }, [setRows, type, size]);
 
-  const onApplyClick = (settings: { size: number; type: string }) => {
+  const onApplyClick = (settings: { size: number; type: string; selectedTheme: string }) => {
     setSize(settings.size);
     setType(settings.type.toLowerCase());
+    if (settings.selectedTheme !== themeId) {
+      toggleTheme();
+    }
   };
 
   return (

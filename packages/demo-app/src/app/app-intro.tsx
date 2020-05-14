@@ -5,6 +5,7 @@ import React from 'react';
 import { Button, Container } from '@material-ui/core';
 import styled from 'styled-components';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import Footer from './app-footer';
 
 const Splash = styled.div`
   display: flex;
@@ -97,27 +98,30 @@ const Splash = styled.div`
 
 export const AppIntro: React.FC<{}> = () => {
   return (
-    <Splash>
-      <Container maxWidth="sm" className={'splash-container'}>
-        <div className={'logo-container'}>
-          <MuiLogo />
-          <Typography variant="h1" className={'product-title-logo'}>
-            X
-          </Typography>
-        </div>
-        <div>
-          <Typography variant="h1" className={'title'}>
-            Material-UI <span className={'product-title'}>X</span>
-          </Typography>
-          <Typography component="h5" className={'intro'}>
-            Extension with highly complex components for Startup and Enterprise projects.
-          </Typography>
-          <Button href={'#/grid'} variant={'outlined'} color={'primary'} className={'main-action-button'}>
-            <KeyboardArrowRightIcon fontSize={'small'} /> Preview
-          </Button>
-        </div>
-      </Container>
-    </Splash>
+    <>
+      <Splash>
+        <Container maxWidth="sm" className={'splash-container'}>
+          <div className={'logo-container'}>
+            <MuiLogo />
+            <Typography variant="h1" className={'product-title-logo'}>
+              X
+            </Typography>
+          </div>
+          <div>
+            <Typography variant="h1" className={'title'}>
+              Material-UI <span className={'product-title'}>X</span>
+            </Typography>
+            <Typography component="h5" className={'intro'}>
+              Extension with highly complex components for Startup and Enterprise projects.
+            </Typography>
+            <Button href={'#/grid'} variant={'outlined'} color={'primary'} className={'main-action-button'}>
+              <KeyboardArrowRightIcon fontSize={'small'} /> Preview
+            </Button>
+          </div>
+        </Container>
+      </Splash>
+      <Footer />
+    </>
   );
 };
 /*
