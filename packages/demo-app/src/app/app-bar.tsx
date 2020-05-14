@@ -34,7 +34,7 @@ const DemoAppBarStyled = styled(AppBar)`
     margin-left: 10px;
     color: ${p => p.theme.colors.secondApp};
     font-weight: 400;
-    text-shadow: -2px 1px 4px #a5a5a5;
+    text-shadow: -2px 1px 4px ${p => p.theme.colors.xShadowColor};
     font-size: 2.5rem;
   }
 `;

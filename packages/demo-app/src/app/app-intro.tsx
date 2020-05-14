@@ -2,7 +2,7 @@ import { MuiLogo } from './demos/grid/components/logo';
 import Typography from '@material-ui/core/Typography';
 
 import React from 'react';
-import {Button, Container, Link} from '@material-ui/core';
+import { Button, Container } from '@material-ui/core';
 import styled from 'styled-components';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
@@ -84,7 +84,7 @@ const Splash = styled.div`
     padding: 0;
     margin: 0;
     display: none;
-    text-shadow: -2px 1px 4px #a5a5a5;
+    text-shadow: -2px 1px 4px ${p => p.theme.colors.xShadowColor};
   }
   .logo-container {
     position: relative;
