@@ -72,6 +72,7 @@ const Splash = styled.div`
     color: ${p => p.theme.colors.secondApp};
     font-size: 4rem;
     font-weight: 500;
+    text-shadow: -2px 1px 4px #929292;
   }
   .product-title-logo {
     color: ${p => p.theme.colors.secondApp};
@@ -83,6 +84,7 @@ const Splash = styled.div`
     padding: 0;
     margin: 0;
     display: none;
+    text-shadow: -2px 1px 4px #929292;
   }
   .logo-container {
     position: relative;

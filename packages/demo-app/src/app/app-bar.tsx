@@ -15,9 +15,9 @@ import { isIntroPage } from './utils';
 import { useLocation } from 'react-router-dom';
 
 const DemoAppBarStyled = styled(AppBar)`
-  color: ${p => p.theme.colors.app};
-  border-bottom: 1px solid ${p => p.theme.colors.app};
-  background-color: ${p => p.theme.colors.background};
+  color: ${p => p.theme.colors.background};
+  border-bottom: 1px solid ${p => p.theme.colors.background};
+  background-color: ${p => p.theme.colors.app};
 
   .title {
     flex-grow: 1;
@@ -34,6 +34,8 @@ const DemoAppBarStyled = styled(AppBar)`
     margin-left: 10px;
     color: ${p => p.theme.colors.secondApp};
     font-weight: 400;
+    text-shadow: -2px 1px 4px ${p => p.theme.colors.background};
+    font-size: 2.5rem;
   }
 `;
 
@@ -85,16 +87,16 @@ export const DemoAppBar: React.FC<DemoAppBarProps> = ({ onMenuButtonClick, onThe
           {titleEl}
         </Typography>
 
-        <Link href={'https://github.com/mui-org/material-ui-x'} className={'github-button'}>
+        <Link href={'https://github.com/mui-org/material-ui-x'} className={'github-button'} color="inherit">
           <Tooltip title="GitHub repository">
-            <IconButton aria-label="Toggle Theme" color="primary">
+            <IconButton aria-label="GitHub repository" color="inherit">
               <GitHubIcon />
             </IconButton>
           </Tooltip>
         </Link>
         <div className={'theme-button'} onClick={onThemeToggle}>
           <Tooltip title="Toggle light/dark theme">
-            <IconButton aria-label="Toggle Theme" color="primary">
+            <IconButton aria-label="Toggle Theme" color="inherit">
               {isDark ? <Brightness4Icon /> : <Brightness7Icon />}
             </IconButton>
           </Tooltip>
@@ -103,4 +105,4 @@ export const DemoAppBar: React.FC<DemoAppBarProps> = ({ onMenuButtonClick, onThe
     </DemoAppBarStyled>
   );
 };
-DemoAppBar.displayName = 'FinUiAppBar';
+DemoAppBar.displayName = 'DemoAppBar';

@@ -5,14 +5,12 @@ import { MainContainer } from './components/main-container';
 import { SettingsPanel } from './components/settings-panel';
 import { commodityColumns, employeeColumns } from '@material-ui-x/grid-data-generator';
 import '@material-ui-x/grid-data-generator/dist/demo-style.css';
-import set = Reflect.set;
 
 export const DEFAULT_DATASET = 'Employee';
 
 const loadFile = async (file: string) => {
   const response = await fetch(file);
   const data = await response.json();
-  console.log(data);
 
   return data;
 };
@@ -49,7 +47,7 @@ export const CommodityGridDemo: React.FC<{}> = props => {
 
   return (
     <>
-      {/*<AppBreadcrumbs name={'NEW* Material-UI Grid'} />*/}
+      <AppBreadcrumbs name={'NEW* Material-UI X Grid'} />
       <SettingsPanel onApply={onApplyClick} size={size} type={type} />
 
       <MainContainer>

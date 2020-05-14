@@ -1,15 +1,19 @@
 import React, { useCallback, useReducer } from 'react';
 import { DemoAppBar } from './app-bar';
-import { SplitterDemo } from './demos/splitter/splitter-demo';
+
 import './app.less';
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import { AppDrawer } from './app-drawer';
 import { appReducer } from './app-reducer';
 import { ThemeProvider, useTheme } from './demos/theme';
 import { CommodityGridDemo } from './demos/grid/commodity-grid.demo';
-import { DevToggle } from './demos/utils/devToggle';
-import {AppIntro} from "./app-intro";
-import {isIntroPage} from "./utils";
+
+import { AppIntro } from './app-intro';
+import styled from 'styled-components';
+
+const StyledApp = styled.div`
+  background: ${p => p.theme.colors.background};
+`;
 
 export const App: React.FC<{}> = () => {
   const [state, dispatch] = useReducer(appReducer, { isOpen: false });

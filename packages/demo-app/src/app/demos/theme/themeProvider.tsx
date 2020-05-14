@@ -7,6 +7,8 @@ import { ThemeColors } from './utils';
 import { lightTheme, lightThemeId } from './light';
 import { darkTheme, darkThemeId } from './dark';
 
+export const STORAGE_THEME_KEY = 'theme';
+
 export const DEFAULT_THEME = lightThemeId;
 
 export const ThemeValuePair: { [key: string]: AppTheme } = {};
@@ -26,8 +28,11 @@ export interface ThemeProviderProps {
 }
 
 type AppThemeContext = { theme: string; toggleTheme: () => void };
+
+const item = window.localStorage.getItem(STORAGE_THEME_KEY);
+const themeToLoad = item != null ? JSON.parse(item) : DEFAULT_THEME;
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-export const ThemeContext = React.createContext<AppThemeContext>({ theme: DEFAULT_THEME, toggleTheme: () => {} });
+export const ThemeContext = React.createContext<AppThemeContext>({ theme: themeToLoad, toggleTheme: () => {} });
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = props => {
   const muiTheme = createMuiTheme({
