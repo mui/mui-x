@@ -12,11 +12,15 @@
   "publishConfig": {
     "access": "public"
   },
+  "bin": {
+    "datagen": "./bin/data-gen-script.js"
+  },
   "devDependencies": {
     "rollup": "^2.6.1",
     "rollup-plugin-cleaner": "^1.0.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-css-only": "^2.0.0",
+    "rollup-plugin-multi-entry": "^2.1.0",
     "rollup-plugin-postcss": "^3.1.1",
     "rollup-plugin-sourcemaps": "^0.5.0",
     "rollup-plugin-terser": "^5.3.0",
@@ -42,6 +46,8 @@
   "gitHead": "f0f0bf72099f0b7d28aa88ca441082b2dc587d93",
   "dependencies": {
     "@material-ui/lab": "^4.0.0-alpha.52",
+    "commander": "^5.1.0",
+    "esm": "^3.2.25",
     "faker": "^4.1.0"
   }
 }

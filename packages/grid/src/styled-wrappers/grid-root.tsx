@@ -48,7 +48,7 @@ export const RootStyle = styled.div<GridRootProps>`
         .material-col-cell {
           position: relative;
           display: flex;
-          padding: 0 12px;
+          padding: 0 16px;
           border-right: ${p => (p.options.showColumnSeparator ? '1px solid #bdc3c7' : 'none')};
 
           &.sortable {
@@ -69,6 +69,10 @@ export const RootStyle = styled.div<GridRootProps>`
             overflow: hidden;
             white-space: nowrap;
           }
+          & > .icon,
+          .sort-icon > .icon {
+            min-height: ${p => p.options.headerHeight}px;
+          }
           .column-separator {
             position: absolute;
             right: -12px;
@@ -88,11 +92,6 @@ export const RootStyle = styled.div<GridRootProps>`
               cursor: col-resize;
               color: inherit;
             }
-          }
-
-          & > .icon,
-          .sort-icon > .icon {
-            min-height: ${p => p.options.headerHeight}px;
           }
           * {
             max-height: ${p => p.options.headerHeight}px;
