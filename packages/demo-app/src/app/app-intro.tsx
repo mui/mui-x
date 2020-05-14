@@ -11,15 +11,18 @@ const Splash = styled.div`
   display: flex;
   color: ${p => p.theme.colors.app};
   background-color: ${p => p.theme.colors.background};
+  justify-content: space-between;
+  flex: auto;
 
   .splash-container {
     width: 100%;
     display: flex;
     text-align: center;
-    align-items: center;
-    padding-top: 32px;
     flex-direction: column;
-    padding-bottom: 64px;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    display: flex;
+    align-items: center !important;
   }
   .logo {
     width: 120px;
