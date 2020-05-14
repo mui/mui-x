@@ -13,15 +13,15 @@ import { createStyles, Theme } from '@material-ui/core';
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
     root: {
-      marginTop: theme.spacing(6),
+      marginTop: 20,
     },
     section: {
       color: theme.palette.secondary.contrastText,
     },
     footer: {
-      padding: theme.spacing(3, 0),
+      padding: 0,
       [theme.breakpoints.up('sm')]: {
-        padding: theme.spacing(8, 0),
+        padding: '15px 0',
       },
     },
     logo: {
