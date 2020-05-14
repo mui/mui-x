@@ -2,6 +2,7 @@ import { ThemeColors, getAppTheme } from './utils';
 
 export const lightColors: ThemeColors = {
   app: '#1976d2',
+  xShadowColor: '#a5a5a5',
   secondApp: 'rgb(52, 54, 57)',
   secondTitle: '#2b2d2f',
   contrastText: '#000',

@@ -1,0 +1,2 @@
+./packages/demo-app/public filter=lfs diff=lfs merge=lfs -text
+./packages/demo-app/public/static-data filter=lfs diff=lfs merge=lfs -text
