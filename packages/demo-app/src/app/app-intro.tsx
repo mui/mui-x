@@ -84,7 +84,7 @@ const Splash = styled.div`
     padding: 0;
     margin: 0;
     display: none;
-    text-shadow: -2px 1px 4px #929292;
+    text-shadow: -2px 1px 4px #a5a5a5;
   }
   .logo-container {
     position: relative;
