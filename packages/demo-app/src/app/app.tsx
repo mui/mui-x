@@ -27,7 +27,7 @@ export const App: React.FC<{}> = () => {
   return (
     <ThemeProvider theme={theme} toggleTheme={toggleTheme}>
       <HashRouter>
-        <div className="app">
+        <StyledApp className="app">
           <DemoAppBar onMenuButtonClick={toggleDrawer} onThemeToggle={toggleTheme} isDark={isDark} />
           <AppDrawer isOpen={state.isOpen} toggleDrawer={toggleDrawer} />
           <Switch>
@@ -38,7 +38,7 @@ export const App: React.FC<{}> = () => {
               <AppIntro />
             </Route>
           </Switch>
-        </div>
+        </StyledApp>
       </HashRouter>
     </ThemeProvider>
   );

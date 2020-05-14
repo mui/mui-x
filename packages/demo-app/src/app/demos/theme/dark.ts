@@ -2,13 +2,14 @@ import { ThemeColors, getAppTheme } from './utils';
 
 export const darkColors: ThemeColors = {
   app: '#1976d2',
+  xColor: 'rgb(52, 54, 57)',
   xShadowColor: '#a5a5a5',
   secondApp: '#e2e2e2',
   secondTitle: '#e1e1e1',
-  contrastText: '#000000',
+  contrastText: '#e1e1e1',
   background: 'rgb(52, 54, 57)',
   backgroundLight: 'rgba(52, 54, 57, 0.95)',
-  breadcrumbsBg: '#cecece4f',
+  breadcrumbsBg: '#f1f1f1',
   breadcrumbsTitle: '#0000008a',
   breadcrumbsTitleCurrent: '#2b2d2f',
   breadcrumbsBorderBottom: '#1976d2',

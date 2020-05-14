@@ -1,12 +1,13 @@
-import React, { ChangeEvent, useCallback, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { StyledPanels } from './styled-panel';
-import { Panel } from '@material-ui-x/panel';
+
 import { FormControl, FormGroup, Button, FormLabel, MenuItem, Select } from '@material-ui/core';
 import { darkThemeId, lightThemeId } from '../../theme';
 import { useTheme } from '../../theme/useTheme';
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
 export interface SettingsPanelProps {
-  onApply: ({ size: number, type: string }) => void;
+  onApply: (settings: { size: number; type: string; selectedTheme: string }) => void;
   type: string;
   size: number;
 }
@@ -15,10 +16,11 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onApply, type, siz
   const [sizeState, setSize] = useState<number>(size);
   const [typeState, setType] = useState<string>(type);
   const [theme, themeId, toggleTheme, isDark] = useTheme();
+  const [selectedTheme, setSelectedTheme] = useState<string>(themeId);
 
   const applyChanges = useCallback(() => {
-    onApply({ size: sizeState, type: typeState });
-  }, [sizeState, typeState, onApply]);
+    onApply({ size: sizeState, type: typeState, selectedTheme });
+  }, [sizeState, typeState, selectedTheme, onApply]);
 
   const onDatasetChange = useCallback(
     (e: ChangeEvent<{ name?: string; value: any }>) => {
@@ -33,6 +35,16 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onApply, type, siz
     },
     [setSize],
   );
+  const onSelectedThemeChange = useCallback(
+    (e: ChangeEvent<{ name?: string; value: any }>) => {
+      setSelectedTheme(e.target.value);
+    },
+    [setSelectedTheme],
+  );
+
+  useEffect(() => {
+    setSelectedTheme(themeId);
+  }, [themeId]);
 
   return (
     <StyledPanels>
@@ -57,15 +69,15 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onApply, type, siz
           </FormControl>
           <FormControl className={'dataset-control input-text'} size={'small'} component="fieldset">
             <FormLabel component="legend">Themes</FormLabel>
-            <Select value={themeId} onChange={toggleTheme}>
+            <Select value={selectedTheme} onChange={onSelectedThemeChange}>
               <MenuItem value={lightThemeId}>Light</MenuItem>
               <MenuItem value={darkThemeId}>Dark</MenuItem>
             </Select>
           </FormControl>
           <div>
-          <Button size="small" className={'apply-btn'} variant={'outlined'} color={'primary'} onClick={applyChanges}>
-            Apply
-          </Button>
+            <Button size="small" className={'apply-btn'} variant={'outlined'} color={'primary'} onClick={applyChanges}>
+              <KeyboardArrowRightIcon fontSize={'small'} /> Apply
+            </Button>
           </div>
         </FormGroup>
       </div>

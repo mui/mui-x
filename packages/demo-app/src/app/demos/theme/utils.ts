@@ -2,6 +2,7 @@ import { AppTheme } from './themeProvider';
 
 export interface ThemeColors {
   app: string;
+  xColor: string;
   xShadowColor: string;
   secondApp: string;
   secondTitle: string;

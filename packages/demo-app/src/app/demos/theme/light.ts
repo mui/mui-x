@@ -2,6 +2,7 @@ import { ThemeColors, getAppTheme } from './utils';
 
 export const lightColors: ThemeColors = {
   app: '#1976d2',
+  xColor: 'rgb(52, 54, 57)',
   xShadowColor: '#a5a5a5',
   secondApp: 'rgb(52, 54, 57)',
   secondTitle: '#2b2d2f',
@@ -14,7 +15,7 @@ export const lightColors: ThemeColors = {
   breadcrumbsBorderBottom: '#1976d2',
   panelTitle: '#1976d2',
   panelTitleBg: '#ffffff',
-  text: '#2b2d2f', //'#f1f1f1', //#e1e1e1  very similar white
+  text: '#f1f1f1', //'#f1f1f1', //#e1e1e1  very similar white
   label: '#0000008a',
   panelBorder: '#1976d2',
   panelBackground: '#ffffff',
