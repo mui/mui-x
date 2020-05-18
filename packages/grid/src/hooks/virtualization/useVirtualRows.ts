@@ -213,7 +213,8 @@ export const useVirtualRows = (
 
     if (windowRef && windowRef.current) {
       logger.debug('Binding scroll event to window.');
-      windowRef.current.addEventListener(SCROLL_EVENT, onScroll);
+      const options = {passive: true}
+      windowRef.current.addEventListener(SCROLL_EVENT, onScroll, options);
       return () => {
         logger.debug('Unbinding scroll event to window.');
         windowRef.current!.removeEventListener(SCROLL_EVENT, onScroll);

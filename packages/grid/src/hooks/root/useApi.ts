@@ -8,7 +8,6 @@ import {
   COL_RESIZE_STOP,
   COLUMN_HEADER_CLICKED,
   KEYDOWN_EVENT,
-  KEYPRESS_EVENT,
   KEYUP_EVENT,
   ROW_CLICKED,
   ROW_SELECTED_EVENT,
@@ -30,6 +29,7 @@ import {
 //TODO Split this effect in useEvents and UseApi
 export const useApi = (
   gridRootRef: React.RefObject<HTMLDivElement>,
+  windowRef: React.RefObject<HTMLDivElement>,
   options: GridOptions,
   apiRef: GridApiRef,
 ): boolean => {
@@ -67,6 +67,7 @@ export const useApi = (
       return;
     }
     const elem = e.target as HTMLElement;
+
     if (isCell(elem)) {
       const cellEl = findParentElementFromClassName(elem, CELL_CSS_CLASS)! as HTMLElement;
       const rowEl = findParentElementFromClassName(elem, ROW_CSS_CLASS)! as HTMLElement;
@@ -120,12 +121,11 @@ export const useApi = (
     if (gridRootRef && gridRootRef.current && isApiInitialised) {
       const keyDownHandler = getHandler(KEYDOWN_EVENT);
       const keyUpHandler = getHandler(KEYUP_EVENT);
-      const keyPressHandler = getHandler(KEYPRESS_EVENT);
 
       gridRootRef.current.addEventListener(CLICK_EVENT, onClickHandler, { capture: true });
       document.addEventListener(KEYDOWN_EVENT, keyDownHandler);
       document.addEventListener(KEYUP_EVENT, keyUpHandler);
-      document.addEventListener(KEYPRESS_EVENT, keyPressHandler);
+
       apiRef.current!.isInitialised = true;
       setInit(true);
 
@@ -137,7 +137,7 @@ export const useApi = (
         gridRootRef.current!.removeEventListener(CLICK_EVENT, onClickHandler, { capture: true });
         document.removeEventListener(KEYDOWN_EVENT, keyDownHandler);
         document.removeEventListener(KEYUP_EVENT, keyUpHandler);
-        document.removeEventListener(KEYPRESS_EVENT, keyPressHandler);
+
         apiRef.current?.removeAllListeners();
       };
     }

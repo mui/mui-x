@@ -1,17 +1,17 @@
 import { useRef } from 'react';
 import { useLogger } from './useLogger';
 
-type UseRafUpdateReturnType = [(...args) => void, (fn: (args) => void) => void];
+type UseRafUpdateReturnType = [(...args: any[]) => void, (fn: (args: any) => void) => void];
 export function useRafUpdate(initialFn?: (...args: any) => void): UseRafUpdateReturnType {
   const logger = useLogger('useRafUpdate');
   const rafRef = useRef(0);
   let fn = initialFn;
 
-  const setUpdate = (updateFn: (...args) => void) => {
+  const setUpdate = (updateFn: (...args: any[]) => void) => {
     fn = updateFn;
   };
 
-  const runUpdate = (...args) => {
+  const runUpdate = (...args: any[]) => {
     if (!fn) {
       return;
     }

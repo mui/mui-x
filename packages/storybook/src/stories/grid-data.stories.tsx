@@ -7,6 +7,7 @@ export default {
 
 export const NoRows = () => <GridDataSet nbRows={0} nbCols={20} />;
 export const NoRowsNoCols = () => <GridDataSet nbRows={0} nbCols={0} />;
+export const loadingRows = () => <GridDataSet nbRows={0} nbCols={20} loading={true} />;
 export const SmallDataSet = () => <GridDataSet nbRows={20} nbCols={2} />;
 export const AndNoRowExtend = () => <GridDataSet nbRows={20} nbCols={2} options={{ extendRowFullWidth: false }} />;
 export const AndWithRightBorder = () => (

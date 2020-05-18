@@ -1,7 +1,6 @@
 export const CLICK_EVENT = 'click';
 export const KEYDOWN_EVENT = 'keydown';
 export const KEYUP_EVENT = 'keyup';
-export const KEYPRESS_EVENT = 'keypress';
 
 export const CELL_CLICKED = 'cellClicked';
 export const ROW_CLICKED = 'rowClicked';

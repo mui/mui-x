@@ -3,12 +3,17 @@ import { ColDef } from '../../models/colDef';
 import { ScrollParams, useLogger } from '../utils';
 import { COL_RESIZE_START, COL_RESIZE_STOP, SCROLLING } from '../../constants/eventsConstants';
 import { findCellElementsFromCol, findDataContainerFromCurrent } from '../../utils';
+import {GridApiRef} from "../../grid";
 
 const MIN_COL_WIDTH = 30;
 const MOUSE_LEFT_TIMEOUT = 1000;
 
 //TODO improve last column behaviour
-export const useColumnResize = (columnsRef, apiRef, headerHeight) => {
+export const useColumnResize = (
+  columnsRef: React.RefObject<HTMLDivElement>,
+  apiRef: GridApiRef,
+  headerHeight: number,
+) => {
   const logger = useLogger('useColumnResize');
 
   const isResizing = useRef<boolean>(false);
@@ -49,7 +54,7 @@ export const useColumnResize = (columnsRef, apiRef, headerHeight) => {
     isResizing.current = true;
     currentColDefRef.current = col;
     currentColPreviousWidth.current = col.width;
-    currentColElem.current = columnsRef.current!.querySelector(`[data-field="${col.field}"]`) as HTMLDivElement;
+    currentColElem.current = columnsRef?.current?.querySelector(`[data-field="${col.field}"]`) as HTMLDivElement;
     currentColCellsElems.current = findCellElementsFromCol(currentColElem.current) || undefined;
     dataContainerElemRef.current = findDataContainerFromCurrent(currentColElem.current) || undefined;
     dataContainerPreviousWidth.current = Number(dataContainerElemRef.current!.style.minWidth.replace('px', ''));
@@ -74,7 +79,7 @@ export const useColumnResize = (columnsRef, apiRef, headerHeight) => {
     }
 
     stopResizeEventTimeout.current = setTimeout(() => {
-      apiRef.current.emit(COL_RESIZE_STOP);
+      apiRef.current?.emit(COL_RESIZE_STOP);
     }, 200);
   };
 
@@ -106,12 +111,12 @@ export const useColumnResize = (columnsRef, apiRef, headerHeight) => {
     }
   };
 
-  const handleMouseEnter = (e): void => {
+  const handleMouseEnter = (): void => {
     if (mouseLeftTimeout.current != null) {
       clearTimeout(mouseLeftTimeout.current);
     }
   };
-  const handleMouseLeave = (e): void => {
+  const handleMouseLeave = (): void => {
     if (
       isLastColumn.current &&
       resizingMouseMove.current &&
@@ -133,7 +138,7 @@ export const useColumnResize = (columnsRef, apiRef, headerHeight) => {
     }
   };
 
-  const handleMouseMove = (ev: MouseEvent): void => {
+  const handleMouseMove = (ev: any): void => {
     if (isResizing.current) {
       resizingMouseMove.current = { x: ev.clientX, y: ev.clientY };
 
@@ -152,10 +157,10 @@ export const useColumnResize = (columnsRef, apiRef, headerHeight) => {
       columnsRef.current.addEventListener('mousemove', handleMouseMove);
 
       return () => {
-        columnsRef.current.removeEventListener('mouseup', stopResize);
-        columnsRef.current.removeEventListener('mouseleave', handleMouseLeave);
-        columnsRef.current.removeEventListener('mouseenter', handleMouseEnter);
-        columnsRef.current.removeEventListener('mousemove', handleMouseMove);
+        columnsRef.current?.removeEventListener('mouseup', stopResize);
+        columnsRef.current?.removeEventListener('mouseleave', handleMouseLeave);
+        columnsRef.current?.removeEventListener('mouseenter', handleMouseEnter);
+        columnsRef.current?.removeEventListener('mousemove', handleMouseMove);
       };
     }
   }, [columnsRef]);

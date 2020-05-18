@@ -6,12 +6,14 @@ import { GridApi, RowApi } from '../../models/gridApi';
 import { GridApiRef } from '../../grid';
 import { ROWS_UPDATED, SCROLLING_START, SCROLLING_STOP, SORT_MODEL_UPDATED } from '../../constants/eventsConstants';
 
+type IdLookup = {[key: string]: number};
+
 export const useRows = (options: GridOptions, rows: RowsProp, initialised: boolean, apiRef: GridApiRef): RowModel[] => {
   const logger = useLogger('useRows');
   const rowModels = useMemo(() => rows.map(r => createRow(r)), [rows]);
   const [rowModelsState, setRowModelsState] = useState<RowModel[]>(rowModels);
   const [, forceUpdate] = useState();
-  const [rafUpdate] = useRafUpdate(() => forceUpdate(p => !p));
+  const [rafUpdate] = useRafUpdate(() => forceUpdate((p: any) => !p));
 
   const idLookupRef = useRef({});
   const rowModelsRef = useRef<RowModel[]>(rowModels);
@@ -25,7 +27,7 @@ export const useRows = (options: GridOptions, rows: RowsProp, initialised: boole
     idLookupRef.current = allNewRows.reduce((lookup, row, index) => {
       lookup[row.id] = index;
       return lookup;
-    }, {});
+    }, {} as IdLookup);
     rowModelsRef.current = allNewRows;
     if (!isScrollingRef.current) {
       setRowModelsState(allNewRows);
@@ -37,7 +39,7 @@ export const useRows = (options: GridOptions, rows: RowsProp, initialised: boole
     updateAllRows(rowModels);
   }, [rows]);
 
-  const getRowsLookup = () => idLookupRef.current;
+  const getRowsLookup = () => idLookupRef.current as IdLookup ;
   const getRowIndexFromId = (id: RowId): number => getRowsLookup()[id];
   const getRowFromId = (id: RowId): RowModel => rowModelsRef.current[getRowIndexFromId(id)];
 
@@ -78,7 +80,7 @@ export const useRows = (options: GridOptions, rows: RowsProp, initialised: boole
     const uniqUpdates = updates.reduce((uniq, update) => {
       uniq[update.id] = uniq[update.id] != null ? { ...uniq[update.id], ...update } : update;
       return uniq;
-    }, {});
+    }, {} as { [id: string]: any });
 
     const rowModelUpdates = Object.values<RowData>(uniqUpdates).map(partialRow => {
       const oldRow = getRowFromId(partialRow.id!);

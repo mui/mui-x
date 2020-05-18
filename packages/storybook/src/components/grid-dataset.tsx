@@ -8,9 +8,10 @@ export interface GridDatasetProps {
   options?: GridOptionsProp;
   container?: ElementSize;
   onData?: (data: GridData) => void;
+  loading?: boolean;
 }
 
-export const GridDataSet = ({ nbRows, nbCols, options, container, onData }: GridDatasetProps) => {
+export const GridDataSet = ({ nbRows, nbCols, options, container, onData, loading }: GridDatasetProps) => {
   const [data, setData] = useState<GridData>({ rows: [], columns: [] });
 
   const loadData = async () => {
@@ -28,7 +29,7 @@ export const GridDataSet = ({ nbRows, nbCols, options, container, onData }: Grid
   const size = container || { width: 800, height: 600 };
   return (
     <div style={{ width: size.width, height: size.height, resize: 'both' }}>
-      <Grid rows={data.rows} columns={data.columns} options={options} />
+      <Grid rows={data.rows} columns={data.columns} options={options} loading={loading} />
     </div>
   );
 };

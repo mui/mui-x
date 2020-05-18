@@ -30,6 +30,7 @@ export const Cell: React.FC<GridCellProps> = React.memo(
         data-value={value}
         data-field={field}
         style={{ minWidth: width, maxWidth: width }}
+        tabIndex={-1}
       >
         {children ? children : valueToRender?.toString()}
       </div>

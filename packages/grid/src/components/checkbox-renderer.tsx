@@ -13,7 +13,7 @@ export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api, colDef, co
   const [isChecked, setChecked] = useState(false);
   const [isIndeterminate, setIndeterminate] = useState(false);
 
-  const handleChange = (e, checked) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     setChecked(checked);
     api.selectRows(api.getAllRowIds(), checked);
   };
@@ -41,7 +41,7 @@ export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api, colDef, co
 });
 HeaderCheckbox.displayName = 'HeaderCheckbox';
 export const CellCheckboxRenderer: React.FC<CellParams> = React.memo(({ api, rowModel, value }) => {
-  const handleChange = (e, checked) => {
+  const handleChange =(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     api.selectRow(rowModel.id, checked, true);
   };
 

@@ -36,7 +36,7 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
   if (!apiRef) {
     apiRef = internalApiRef;
   }
-  const initialised = useApi(gridRootRef, internalOptions, apiRef);
+  const initialised = useApi(gridRootRef, windowRef, internalOptions, apiRef);
   const internalColumns = useColumns(internalOptions, columns, apiRef);
   const internalRows = useRows(internalOptions, rows, initialised, apiRef);
   useKeyboard(initialised, apiRef);
@@ -74,7 +74,7 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
   return (
     <AutoSizerWrapper onResize={onResize}>
       {size => (
-        <GridRoot ref={gridRootRef} options={internalOptions} style={{ width: size.width, height: size.height }}>
+        <GridRoot ref={gridRootRef} options={internalOptions} style={{ width: size.width, height: size.height }} tabIndex={-1}>
           <ApiContext.Provider value={apiRef}>
             <ColumnsContainer ref={colRef}>
               <ColumnsHeader

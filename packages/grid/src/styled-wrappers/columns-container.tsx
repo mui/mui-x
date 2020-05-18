@@ -9,4 +9,4 @@ export const ColumnsContainer = React.forwardRef<HTMLDivElement, DivProps>((prop
     </div>
   );
 });
-ColumnsContainer.displayName = 'ColumnsContainer';
+// ColumnsContainer.displayName = 'ColumnsContainer';

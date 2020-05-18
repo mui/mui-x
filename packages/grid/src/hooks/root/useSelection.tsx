@@ -45,7 +45,7 @@ export const useSelection = (options: GridOptions, rows: Rows, initialised: bool
       allowMultiSelect = allowMultipleOverride;
     }
     const isRowSelected = allowMultiSelect ? (isSelected == null ? !row.selected : isSelected) : true;
-
+    const updatedRowModels: RowModel[] = [];
     if (allowMultiSelect) {
       if (isRowSelected) {
         selectedItemsRef.current =
@@ -58,11 +58,11 @@ export const useSelection = (options: GridOptions, rows: Rows, initialised: bool
     } else {
       selectedItemsRef.current.forEach(id => {
         const otherSelectedRow = apiRef!.current!.getRowFromId(id);
-        apiRef!.current!.updateRowModels([{ ...otherSelectedRow, selected: false }]);
+        updatedRowModels.push({ ...otherSelectedRow, selected: false });
       });
       selectedItemsRef.current = [row.id];
     }
-    apiRef!.current!.updateRowModels([{ ...row, selected: isRowSelected }]);
+    apiRef!.current!.updateRowModels([...updatedRowModels, { ...row, selected: isRowSelected }]);
 
     if (apiRef && apiRef.current != null) {
       const rowSelectedParam: RowSelectedParam = { data: row.data, isSelected: isRowSelected, rowIndex };

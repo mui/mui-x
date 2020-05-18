@@ -17,11 +17,15 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps
     const api = useContext(ApiContext);
     const columnsRef = useRef<HTMLDivElement>(null);
 
+    if(!api) {
+      throw new Error('ApiRef not found in context');
+    }
+
     //TODO move this call in grid use ref...
     const onResizeColumn = useColumnResize(columnsRef, api, headerHeight);
 
     return (
-      <div ref={columnsRef} key={'columns'} className={wrapperCssClasses}>
+      <div ref={columnsRef} key={'columns'} className={wrapperCssClasses} >
         {columns.map((c, idx) => (
           <ColumnHeaderItem
             key={c.field}
@@ -36,4 +40,4 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps
     );
   },
 );
-ColumnsHeader.displayName = 'GridColumnsHeader';
+// ColumnsHeader.displayName = 'GridColumnsHeader';

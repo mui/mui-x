@@ -42,8 +42,14 @@ export function findCellElementsFromCol(col: HTMLElement): NodeListOf<Element> |
   const cells = root.querySelectorAll(`:scope .${CELL_CSS_CLASS}[data-field="${field}"]`);
   return cells;
 }
-export function findDataContainerFromCurrent(elem: Element): HTMLDivElement | null {
+
+export function findGridRootFromCurrent(elem: Element): HTMLDivElement | null {
   const root = findParentElementFromClassName(elem, ROOT_CSS_CLASS);
+  return root as HTMLDivElement;
+}
+
+export function findDataContainerFromCurrent(elem: Element): HTMLDivElement | null {
+  const root = findGridRootFromCurrent(elem);
   if (!root) {
     return null;
   }
