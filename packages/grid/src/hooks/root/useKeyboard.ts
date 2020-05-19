@@ -1,15 +1,42 @@
 import { useEffect } from 'react';
 import { useLogger } from '../utils/useLogger';
-import {KEYDOWN_EVENT, KEYUP_EVENT, MULTIPLE_KEY_PRESS_CHANGED} from '../../constants/eventsConstants';
+import { KEYDOWN_EVENT, KEYUP_EVENT, MULTIPLE_KEY_PRESS_CHANGED } from '../../constants/eventsConstants';
 
 import { GridApiRef } from '../../grid';
-import {findGridRootFromCurrent} from "../../utils";
+import {
+  findGridRootFromCurrent,
+  findParentElementFromClassName,
+  getCellElementFromIndexes,
+  getDataFromElem,
+  getIdFromRowElem,
+  isCell,
+} from '../../utils';
+import { CELL_CSS_CLASS, ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
+import { CellIndexCoordinates } from '../../models';
 
 const MULTIPLE_SELECTION_KEYS = ['Meta', 'Control'];
 const isMultipleKey = (key: string): boolean => MULTIPLE_SELECTION_KEYS.indexOf(key) > -1;
 const isTabKey = (key: string): boolean => key === 'Tab';
 const isSpaceKey = (key: string): boolean => key === 'Space';
 const isArrowKeys = (key: string): boolean => key.indexOf('Arrow') === 0;
+
+const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
+  if (!isArrowKeys(code)) {
+    throw new Error('first argument code should be an Arrow Key code');
+  }
+
+  if (code === 'ArrowLeft') {
+    return { ...indexes, colIndex: indexes.colIndex - 1 };
+  }
+  if (code === 'ArrowRight') {
+    return { ...indexes, colIndex: indexes.colIndex + 1 };
+  }
+  if (code === 'ArrowUp') {
+    return { ...indexes, rowIndex: indexes.rowIndex - 1 };
+  }
+  // Last option code === 'ArrowDown'
+  return { ...indexes, rowIndex: indexes.rowIndex + 1 };
+};
 
 export const useKeyboard = (initialised: boolean, apiRef: GridApiRef): void => {
   const logger = useLogger('useKeyboard');
@@ -20,10 +47,38 @@ export const useKeyboard = (initialised: boolean, apiRef: GridApiRef): void => {
     }
   };
 
-  const onKeyDownHandler = (e: KeyboardEvent) => {
-    console.log('Active elt: ', document.activeElement);
+  const navigateCells = (code: string)=> {
+    const cellEl = findParentElementFromClassName(
+      document.activeElement as HTMLDivElement,
+      CELL_CSS_CLASS,
+    )! as HTMLElement;
+    cellEl.tabIndex = -1;
+    const root = findGridRootFromCurrent(cellEl)!;
 
-    if(!e.target || !findGridRootFromCurrent(e.target as Element)) {
+    let nextCellIndexes: CellIndexCoordinates;
+    if(isArrowKeys(code)) {
+      const colIndex = Number(getDataFromElem(cellEl, 'colIndex'));
+      const rowIndex = Number(getDataFromElem(cellEl, 'rowIndex'));
+      nextCellIndexes = getNextCellIndexes(code, { colIndex, rowIndex });
+    } else {
+      const rowIndex = Number(getDataFromElem(cellEl, 'rowIndex'));
+      const colIdx = code === 'Home' ? 0 : apiRef.current!.getVisibleColumns().length - 1;
+      nextCellIndexes = { colIndex: colIdx, rowIndex };
+    }
+
+    apiRef.current!.scrollToIndexes(nextCellIndexes);
+    setTimeout(() => {
+      const nextCell = getCellElementFromIndexes(root, nextCellIndexes);
+
+      if (nextCell) {
+        nextCell.tabIndex = 0;
+        (nextCell as HTMLDivElement).focus();
+      }
+    }, 200);
+  };
+
+  const onKeyDownHandler = (e: KeyboardEvent) => {
+    if (!e.target || !findGridRootFromCurrent(e.target as Element)) {
       logger.info('Outside the grid', e);
       return;
     }
@@ -31,26 +86,37 @@ export const useKeyboard = (initialised: boolean, apiRef: GridApiRef): void => {
     if (isMultipleKey(e.key)) {
       logger.debug('Multiple Select key pressed');
       onMultipleKeyChange(true);
-    } else if(isTabKey(e.code)) {
+    } else if (isTabKey(e.code)) {
       logger.debug('tab key pressed!');
       //TODO move to next section previous - headers-rows - next
-    } else if(isArrowKeys(e.code)) {
-      logger.debug('Arrow pressed!');
-      //TODO move to next cell
-    } else if(isSpaceKey(e.code)) {
-      logger.debug('Space pressed!');
-      //TODO select row
-    }
+    } else if ((e.code === 'End' || e.code === 'Home' || isArrowKeys(e.code)) && isCell(document.activeElement)) {
+      navigateCells(e.code);
 
-    logger.info('Key down, stopping event ', e);
-    e.preventDefault();
-    e.stopPropagation();
+      logger.debug('Arrow and space keys need default behavior prevented');
+      e.preventDefault();
+      e.stopPropagation();
+
+    } else if (isSpaceKey(e.code) && isCell(document.activeElement)) {
+      logger.debug('Space pressed!');
+
+      const rowEl = findParentElementFromClassName(
+        document.activeElement as HTMLDivElement,
+        ROW_CSS_CLASS,
+      )! as HTMLElement;
+
+      const rowId = getIdFromRowElem(rowEl);
+      if (apiRef.current) {
+        apiRef.current.selectRow(rowId);
+      }
+
+      logger.debug('Arrow and space keys need default behavior prevented');
+      e.preventDefault();
+      e.stopPropagation();
+    }
   };
 
   const onKeyUpHandler = (e: KeyboardEvent) => {
-    console.log('Active elt: ', document.activeElement);
-
-    if(!e.target || !findGridRootFromCurrent(e.target as Element)) {
+    if (!e.target || !findGridRootFromCurrent(e.target as Element)) {
       logger.info('Outside the grid', e);
       return;
     }

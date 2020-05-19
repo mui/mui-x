@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { RowData, RowId, RowModel, Rows } from './rows';
+import {CellIndexCoordinates, RowData, RowId, RowModel, Rows} from './rows';
 import { ColDef, Columns, ColumnsMeta } from './colDef';
 import { SortModel } from './sortModel';
 import { RowSelectedParam, SelectionChangedParam } from './gridOptions';
@@ -41,6 +41,8 @@ export interface SortApi {
 }
 export interface VirtualizationApi {
   scroll: (params: Partial<ScrollParams>) => void;
+  scrollToIndexes: (params: CellIndexCoordinates)=> void;
+  isColumnVisibleInWindow: (colIndex: number)=> boolean
 }
 export interface CoreApi extends EventEmitter {
   isInitialised: boolean;

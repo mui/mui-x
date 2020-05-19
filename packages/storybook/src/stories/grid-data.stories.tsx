@@ -29,6 +29,7 @@ export const WithBothScroll = () => <GridDataSet nbRows={200} nbCols={20} />;
 export const WithBothScrollAndRightBorder = () => (
   <GridDataSet nbRows={200} nbCols={20} options={{ extendRowFullWidth: false, showCellRightBorder: true }} />
 );
+export const Grid100by100 = () => <GridDataSet nbRows={100} nbCols={100} />;
 export const Grid1000by100 = () => <GridDataSet nbRows={1000} nbCols={100} />;
 export const Grid1000by200 = () => <GridDataSet nbRows={1000} nbCols={200} />;
 export const Grid1000by1000 = () => <GridDataSet nbRows={1000} nbCols={1000} />;

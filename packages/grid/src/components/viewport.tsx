@@ -45,6 +45,7 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportP
             showCellRightBorder={options.showCellRightBorder}
             extendRowFullWidth={options.extendRowFullWidth}
             rowIndex={renderCtx.firstRowIdx + idx}
+            domIndex={idx}
           />
           <RightEmptyCell key={'right-empty'} width={renderCtx.rightEmptyWidth} />
         </Row>

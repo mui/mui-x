@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useVirtualColumns } from './useVirtualColumns';
 import {
+  CellIndexCoordinates,
   ContainerProps,
   GridApi,
   GridOptions,
@@ -33,8 +34,10 @@ export const useVirtualRows = (
   const pageRef = useRef<number>(0);
   const rowsCount = useRef<number>(0);
   const containerPropsRef = useRef<ContainerProps | null>(null);
+  const realScrollRef = useRef<ScrollParams>({ left: 0, top: 0 });
   const rzScrollRef = useRef<ScrollParams>({ left: 0, top: 0 });
   const columnTotalWidthRef = useRef<number>(internalColumns.meta.totalWidth);
+  const renderCtxRef = useRef<Partial<RenderContextProps>>();
 
   const scrollTo = useScrollFn(viewportRef);
   // const scrollColHeaderTo = useScrollFn(colRef);
@@ -71,7 +74,7 @@ export const useVirtualRows = (
       ...renderedRow,
     };
     logger.debug(':: getRenderCtxState - returning state ', renderCtx);
-
+    renderCtxRef.current = renderCtx;
     return renderCtx;
   };
 
@@ -183,7 +186,8 @@ export const useVirtualRows = (
   };
 
   const scrollingTimeout = useRef<any>(0);
-  const onScroll: any = () => {
+  const onScroll: any = (e: any) => {
+    realScrollRef.current = { left: e.target.scrollLeft, top: e.target.scrollTop };
     if (apiRef && apiRef.current && scrollingTimeout.current === 0) {
       apiRef.current.emit(SCROLLING_START);
     }
@@ -196,12 +200,63 @@ export const useVirtualRows = (
     }, 300);
     updateViewport();
   };
+
+  const scrollToIndexes = (params: CellIndexCoordinates) => {
+    logger.debug(`Scrolling to cell at row ${params.rowIndex}, col: ${params.colIndex} `);
+    //TODO Check if cell already displayed
+    //If yes do nothing
+    let scrollLeft;
+    if (apiRef.current) {
+      const isColVisible = apiRef.current.isColumnVisibleInWindow(params.colIndex);
+      console.log(`==> Column ${params.colIndex} is ${isColVisible ? 'YES' : 'NOT'} visible!`);
+      if (!isColVisible) {
+        const meta = apiRef.current.getColumnsMeta();
+        scrollLeft = meta.positions[params.colIndex + 1] - containerPropsRef.current!.windowSizes.width;
+
+        const isLastCol = params.colIndex + 1 === meta.positions.length;
+        if (isLastCol) {
+          const lastColWidth = apiRef.current.getVisibleColumns()[params.colIndex].width!;
+          scrollLeft = meta.positions[params.colIndex] + lastColWidth - containerPropsRef.current!.windowSizes.width;
+        }
+        scrollLeft = rzScrollRef.current.left > scrollLeft ? meta.positions[params.colIndex] : scrollLeft;
+      }
+
+      const isRowIndexAbove = realScrollRef.current.top > params.rowIndex * options.rowHeight;  //rzScrollRef.current.top > rowPositionInRenderingZone;
+      const isRowIndexBelow = realScrollRef.current.top + containerPropsRef.current!.viewportSize.height < (params.rowIndex + 1) * options.rowHeight;
+
+      console.log(`row height ${options.rowHeight}, row position: ${params.rowIndex * options.rowHeight}  realScroll.top ${realScrollRef.current.top}
+window H: ${containerPropsRef.current!.viewportSize.height}, above: ${isRowIndexAbove} or below: ${isRowIndexBelow} `);
+
+      let scrollTop;
+
+      if(isRowIndexBelow) {
+        scrollTop = (params.rowIndex + 1) * options.rowHeight
+          - containerPropsRef.current!.viewportSize.height
+        console.log(`Setting scrollTop to ${scrollTop}`);
+
+      }
+   else if(isRowIndexAbove) {
+        scrollTop = (params.rowIndex) * options.rowHeight;
+        console.log(`Setting scrollTop to ${scrollTop}`);
+
+      }
+
+      apiRef.current.scroll({
+        left: scrollLeft,
+        top: scrollTop
+      });
+      // const rowPosition = params.rowIndex * options.rowHeight;
+      // const isRowVisible  = renderCtxRef.current.firstRowIdx>=
+    }
+  };
+
   const scroll = (params: Partial<ScrollParams>) => {
     logger.debug(`Scrolling to left: ${params.left} top: ${params.top}`);
-    if (windowRef.current && params.left) {
+    if (windowRef.current && params.left != null && colRef.current) {
+      colRef.current.scrollLeft = params.left;
       windowRef.current.scrollLeft = params.left;
     }
-    if (windowRef.current && params.top) {
+    if (windowRef.current && params.top != null) {
       windowRef.current.scrollTop = params.top;
     }
     updateViewport();
@@ -213,7 +268,7 @@ export const useVirtualRows = (
 
     if (windowRef && windowRef.current) {
       logger.debug('Binding scroll event to window.');
-      const options = {passive: true}
+      const options = { passive: true };
       windowRef.current.addEventListener(SCROLL_EVENT, onScroll, options);
       return () => {
         logger.debug('Unbinding scroll event to window.');
@@ -228,11 +283,28 @@ export const useVirtualRows = (
     updateContainerSize();
   }, [options, viewportRef]);
 
+  const onViewportScroll = (e: any) => {
+    logger.debug('Using keyboard to navigate cells, converting scroll events ');
+    const { scrollLeft, scrollTop } = e.target;
+    // scroll({ left: scrollLeft, top: scrollTop });
+    e.target.scrollLeft = 0;
+    e.target.scrollTop = 0;
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  };
+
   useEffect(() => {
     if (rows.length !== rowsCount.current) {
       logger.debug('Row length changed to ', rows.length);
       rowsCount.current = rows.length;
       updateContainerSize();
+    }
+    if (viewportRef && viewportRef.current) {
+      viewportRef.current.parentElement?.addEventListener(SCROLL_EVENT, onViewportScroll);
+      return () => {
+        viewportRef.current?.parentElement?.removeEventListener(SCROLL_EVENT, onViewportScroll);
+      };
     }
   }, [rows]);
 
@@ -245,8 +317,9 @@ export const useVirtualRows = (
     if (apiRef && apiRef.current) {
       logger.debug('Adding scroll api to apiRef');
 
-      const virtualApi: VirtualizationApi = {
+      const virtualApi: Partial<VirtualizationApi> = {
         scroll,
+        scrollToIndexes,
       };
 
       apiRef.current = Object.assign(apiRef.current, virtualApi) as GridApi;

@@ -15,7 +15,7 @@ import { Logger, useLogger } from '../utils/useLogger';
 import { GridApiRef } from '../../grid';
 import { COLUMNS_UPDATED, POST_SORT } from '../../constants/eventsConstants';
 import { useRafUpdate } from '../utils';
-import {isEqual} from "../../utils";
+import { isEqual } from '../../utils';
 
 function hydrateColumns(columns: Columns, options: GridOptions, logger: Logger, apiRef: GridApiRef): Columns {
   logger.debug('Hydrating Columns with default definitions');
@@ -117,7 +117,6 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
   const state = useMemo(() => resetState(columns, options, logger, apiRef), [columns, options, apiRef]);
   const [internalColumns, setInternalColumns] = useState<InternalColumns>(state);
   const stateRef = useRef<InternalColumns>(state);
-  // const sortedColFieldsRef = useRef<string[]>([]);
 
   const updateState = (newState: InternalColumns, emit = true) => {
     setInternalColumns(newState);
@@ -166,10 +165,8 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
     currentSortedCols.forEach(c => {
       updatedCols.push({ field: c.colId, sortDirection: null, sortIndex: undefined });
     });
-    // sortedColFieldsRef.current = [];
 
     sortModel.forEach((model, index) => {
-      // sortedColFieldsRef.current = [...sortedColFieldsRef.current, model.colId];
       const sortIndex = sortModel.length > 1 ? index + 1 : undefined;
       updatedCols.push({ field: model.colId, sortDirection: model.sort, sortIndex });
     });

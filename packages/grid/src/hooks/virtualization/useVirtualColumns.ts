@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { ContainerProps, GridOptions, RenderColumnsProps } from '../../models';
+import {ContainerProps, GridApi, GridOptions, RenderColumnsProps, VirtualizationApi} from '../../models';
 import { useLogger } from '../utils/useLogger';
 import { GridApiRef } from '../../grid';
 import { COLUMNS_UPDATED } from '../../constants/eventsConstants';
@@ -10,6 +10,7 @@ type UseVirtualColumnsReturnType = [React.MutableRefObject<RenderColumnsProps | 
 export const useVirtualColumns = (options: GridOptions, apiRef: GridApiRef): UseVirtualColumnsReturnType => {
   const logger = useLogger('useVirtualColumns');
   const renderedColRef = useRef<RenderColumnsProps | null>(null);
+  const containerPropsRef = useRef< ContainerProps | null>(null);
   const lastScrollLeftRef = useRef<number>(0);
 
   const getColumnIdxFromScroll = useCallback(
@@ -26,6 +27,7 @@ export const useVirtualColumns = (options: GridOptions, apiRef: GridApiRef): Use
     },
     [apiRef],
   );
+
   const getColumnFromScroll = useCallback(
     (left: number) => {
       const visibleColumns = apiRef.current!.getVisibleColumns();
@@ -37,10 +39,26 @@ export const useVirtualColumns = (options: GridOptions, apiRef: GridApiRef): Use
     [apiRef],
   );
 
+  const isColumnVisibleInWindow = (colIndex: number): boolean => {
+    if(!containerPropsRef.current) {
+      return false;
+    }
+    const windowWidth = containerPropsRef.current.windowSizes.width;
+    const firstCol = getColumnFromScroll(lastScrollLeftRef.current);
+    const lastCol = getColumnFromScroll(lastScrollLeftRef.current + windowWidth);
+
+    const visibleColumns = apiRef.current!.getVisibleColumns();
+    const firstColIndex = visibleColumns.findIndex(col=> col.field === firstCol?.field);
+    const lastColIndex = visibleColumns.findIndex(col=> col.field === lastCol?.field) - 1; //We ensure the last col is completely visible
+
+    return colIndex >= firstColIndex && colIndex <= lastColIndex;
+  }
+
   const updateRenderedCols: UpdateRenderedColsFnType = (containerProps: ContainerProps | null, scrollLeft: number) => {
     if (!containerProps) {
       return false;
     }
+    containerPropsRef.current = containerProps;
     const visibleColumns = apiRef.current!.getVisibleColumns();
     const columnsMeta = apiRef.current!.getColumnsMeta();
     const windowWidth = containerProps.windowSizes.width;
@@ -96,6 +114,15 @@ export const useVirtualColumns = (options: GridOptions, apiRef: GridApiRef): Use
         logger.debug('Clearing previous renderedColRef');
         renderedColRef.current = null;
       };
+
+      logger.debug('Adding scroll api to apiRef');
+
+      const virtualApi: Partial<VirtualizationApi> = {
+        isColumnVisibleInWindow,
+      };
+
+      apiRef.current = Object.assign(apiRef.current, virtualApi) as GridApi;
+
       return apiRef.current.registerEvent(COLUMNS_UPDATED, handler);
     }
   }, [apiRef]);

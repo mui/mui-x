@@ -8,6 +8,10 @@ export interface RowData extends ObjectWithId {
 export type RowId = string | number;
 export type CellValue = string | number | boolean | Date | null | undefined | object;
 
+export interface CellIndexCoordinates {
+  colIndex: number;
+  rowIndex: number;
+}
 export interface ObjectWithId {
   id: RowId;
 }
