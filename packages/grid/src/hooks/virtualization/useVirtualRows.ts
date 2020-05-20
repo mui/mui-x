@@ -83,63 +83,30 @@ export const useVirtualRows = (
     if (windowRef && windowRef.current && containerPropsRef && containerPropsRef.current) {
       const containerProps = containerPropsRef.current;
       const { scrollLeft, scrollTop } = windowRef.current;
-      logger.debug(`scrolling Left: ${scrollLeft} Top: ${scrollTop}`);
-
-      // const rzHeight = containerProps.renderingZone.height;
-      const viewportHeight = containerProps.viewportSize.height;
-      const maxScrollTop = containerProps.renderingZone.height - viewportHeight + containerProps?.scrollBarSize; // one row as buffer;
-
-      // let rzScrollTop = scrollTop % maxScrollTop;
-      // let rzScrollTop = scrollTop % maxScrollTop;
-      const rzScrollLeft = scrollLeft;
+      logger.debug(`--- Handling scroll Left: ${scrollLeft} Top: ${scrollTop}`);
 
       let requireRerender = updateRenderedCols(containerProps, scrollLeft);
-      logger.info(`scrollTop / viewportHeight: ${scrollTop / viewportHeight} `);
+
+      const viewportHeight = containerProps.viewportSize.height;
+      const rzScrollLeft = scrollLeft;
       let currentPage = scrollTop / viewportHeight;
-      let rzScrollTop = scrollTop % viewportHeight;
-
-      logger.info(`rzH: ${containerProps.renderingZone.height} viewportHeight:${viewportHeight} scrollTop: ${scrollTop}, maxScrollTop ${maxScrollTop}, calc current page = ${currentPage}`);
-
+      const rzScrollTop = scrollTop % viewportHeight;
+      logger.debug(` viewportHeight:${viewportHeight},
+      rzScrollTop: ${rzScrollTop},  
+      scrollTop: ${scrollTop},  
+      current page = ${currentPage}`);
 
       const scrollParams = { left: rzScrollLeft, top: rzScrollTop };
 
-      // let freezeScrollTop = false;
-      // if (currentPage > containerProps.lastPage!) {
-      //   scrollParams.top = maxScrollTop;
-      //   freezeScrollTop = true;
-      //   logger.debug(`not scrolling to rzScrollTop: ${rzScrollTop}, scrolling to max ${maxScrollTop}`);
-      //
-      //   //HACK to fix issue on the last page, totalHeight needs to resize to avoid blank scroll page
-      //   const newTotalHeight = scrollTop - rzScrollTop + maxScrollTop;
-      //   logger.debug(`Patching height to `, newTotalHeight);
-      //   containerPropsRef.current.totalHeight = newTotalHeight;
-      //   requireRerender = true;
-      // } else if (currentPage < containerProps.lastPage!) {
-      //   //HACK to restore the fix above.
-      //   const oldTotalHeight = (containerProps.lastPage + 2) * (containerProps.renderingZone.height / 2);
-      //   logger.debug(`Patching back height to `, oldTotalHeight);
-      //   if (oldTotalHeight !== containerPropsRef.current.totalHeight) {
-      //     containerPropsRef.current.totalHeight = oldTotalHeight;
-      //     requireRerender = true;
-      //   }
-      // }
       const page = pageRef.current;
-      // currentPage = currentPage > containerProps.lastPage! ? containerProps.lastPage! : currentPage;
-      logger.debug(`state pageNumber ${page}, current is ${currentPage}`);
       currentPage = Math.floor(currentPage);
 
       if (page !== currentPage) {
-        // if (page < currentPage ) { //&& !freezeScrollTop) {
-        //   rzScrollTop = rzScrollTop <= maxScrollTop ? 0 : rzScrollTop % maxScrollTop;
-        //   scrollParams.top = rzScrollTop;
-        //   logger.debug('Resetting rzScrollTop  to', rzScrollTop);
-        // }
-
         pageRef.current = currentPage;
+        logger.debug(`Changing page from ${page} to ${currentPage}`);
         requireRerender = true;
       } else {
         scrollTo(scrollParams);
-        // scrollColHeaderTo({ ...scrollParams, ...{ top: 0 } });
         colRef.current!.scroll({ ...scrollParams, ...{ top: 0 } });
         apiRef.current!.emit(SCROLLING, scrollParams);
       }
@@ -149,8 +116,7 @@ export const useVirtualRows = (
         reRender();
       }
 
-      logger.debug(`rzScrollTop: ${rzScrollTop} `); //Viewport SC: ${viewportRef.current?.scrollTop}
-      logger.debug('------------');
+      logger.debug('---');
     }
   }, 10);
 

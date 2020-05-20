@@ -8,6 +8,7 @@ import { useSorting } from './hooks/root/useSorting';
 import { useKeyboard } from './hooks/root/useKeyboard';
 import { ApiContext } from './components/api-context';
 import { DATA_CONTAINER_CSS_CLASS } from './constants/cssClassesConstants';
+import {useColumnResize} from "./hooks/features/useColumnResize";
 
 export type GridApiRef = React.MutableRefObject<GridApi | null | undefined>;
 export type GridOptionsProp = Partial<GridOptions>;
@@ -23,7 +24,7 @@ export interface GridProps {
 export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, apiRef, loading }) => {
   const logger = useLogger('Grid');
   const gridRootRef = useRef<HTMLDivElement>(null);
-  const colRef = useRef<HTMLDivElement>(null);
+  const columnsContainerRef = useRef<HTMLDivElement>(null);
   const windowRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -43,8 +44,8 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
   useSelection(internalOptions, internalRows, initialised, apiRef);
   useSorting(internalOptions, rows, columns, apiRef);
 
-    const [renderCtx, resizeGrid] = useVirtualRows(
-    colRef,
+  const [renderCtx, resizeGrid] = useVirtualRows(
+    columnsContainerRef,
     windowRef,
     viewportRef,
     internalColumns,
@@ -52,6 +53,10 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
     internalOptions,
     apiRef,
   );
+  const columnsHeaderRef = useRef<HTMLDivElement>(null);
+
+  //TODO move this call in grid use ref...
+  const onResizeColumn = useColumnResize(columnsHeaderRef, apiRef, internalOptions.headerHeight);
 
   useEffect(() => {
     setOptions({ ...DEFAULT_GRID_OPTIONS, ...options });
@@ -76,12 +81,14 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
       {size => (
         <GridRoot ref={gridRootRef} options={internalOptions} style={{ width: size.width, height: size.height }} role={'grid'}>
           <ApiContext.Provider value={apiRef}>
-            <ColumnsContainer ref={colRef}>
+            <ColumnsContainer ref={columnsContainerRef}>
               <ColumnsHeader
+                ref={columnsHeaderRef}
                 columns={internalColumns.visible || []}
                 hasScrollX={!!renderCtx?.hasScrollX}
                 icons={internalOptions.icons.sortedColumns}
                 headerHeight={internalOptions.headerHeight}
+                onResizeColumn={onResizeColumn}
               />
             </ColumnsContainer>
             {!loading && internalRows.length === 0 && <NoRowMessage />}

@@ -1,11 +1,12 @@
 import { ColDef } from '../models/colDef';
-import React, { useContext } from 'react';
+import React, {useContext, useEffect, useRef} from 'react';
 import { ApiContext } from './api-context';
 import { HEADER_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import { classnames } from '../utils';
 import { ColumnHeaderSortIcon } from './column-header-sort-icon';
 import { ColumnHeaderTitle } from './column-header-title';
 import { ColumnHeaderSeparator } from './column-header-separator';
+import {useLogger} from "../hooks/utils";
 
 interface ColumnHeaderItemProps {
   column: ColDef;
@@ -18,7 +19,6 @@ interface ColumnHeaderItemProps {
 export const ColumnHeaderItem = React.memo(
   ({ column, icons, colIndex, headerHeight, onResizeColumn }: ColumnHeaderItemProps) => {
     const api = useContext(ApiContext);
-
     const cssClass = classnames(
       HEADER_CELL_CSS_CLASS,
       column.headerClass,

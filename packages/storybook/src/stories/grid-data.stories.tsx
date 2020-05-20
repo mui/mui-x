@@ -35,6 +35,7 @@ export const Grid1000by200 = () => <GridDataSet nbRows={1000} nbCols={20} />;
 export const Grid2000by20 = () => <GridDataSet nbRows={2000} nbCols={20} />;
 export const Grid2000by200 = () => <GridDataSet nbRows={2000} nbCols={200} />;
 export const Grid1000by1000 = () => <GridDataSet nbRows={1000} nbCols={1000} />;
+export const Grid2000by2000 = () => <GridDataSet nbRows={2000} nbCols={2000} />;
 export const Grid6002 = () => <GridDataSet nbRows={6002} nbCols={100} />;
 export const Grid3012 = () => <GridDataSet nbRows={3012} nbCols={100} />;
 export const Grid8628 = () => <GridDataSet nbRows={8628} nbCols={100} />;

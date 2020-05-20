@@ -1,14 +1,15 @@
-import { MouseEvent, useCallback, useEffect, useRef } from 'react';
+import { MouseEvent, RefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ColDef } from '../../models/colDef';
 import { ScrollParams, useLogger } from '../utils';
 import { COL_RESIZE_START, COL_RESIZE_STOP, SCROLLING } from '../../constants/eventsConstants';
 import { findCellElementsFromCol, findDataContainerFromCurrent } from '../../utils';
 import {GridApiRef} from "../../grid";
+import {useStateRef} from "../utils/useStateRef";
 
 const MIN_COL_WIDTH = 30;
 const MOUSE_LEFT_TIMEOUT = 1000;
 
-//TODO improve last column behaviour
+//TODO improve experience for last column
 export const useColumnResize = (
   columnsRef: React.RefObject<HTMLDivElement>,
   apiRef: GridApiRef,
@@ -45,7 +46,7 @@ export const useColumnResize = (
     }
   }, [apiRef]);
 
-  const handleMouseDown = (col: ColDef): void => {
+  const handleMouseDown = useCallback((col: ColDef): void => {
     if (!apiRef || !apiRef.current) {
       return;
     }
@@ -60,9 +61,9 @@ export const useColumnResize = (
     dataContainerPreviousWidth.current = Number(dataContainerElemRef.current!.style.minWidth.replace('px', ''));
     currentColPosition.current = apiRef.current.getColumnPosition(col.field);
     isLastColumn.current = apiRef.current.getColumnIndex(col.field) === apiRef.current.getVisibleColumns().length - 1;
-  };
+  }, []);
 
-  const stopResize = (): void => {
+  const stopResize = useCallback((): void => {
     logger.debug(`Stopping Resize for col ${currentColDefRef.current?.field}`);
     isResizing.current = false;
 
@@ -81,9 +82,9 @@ export const useColumnResize = (
     stopResizeEventTimeout.current = setTimeout(() => {
       apiRef.current?.emit(COL_RESIZE_STOP);
     }, 200);
-  };
+  }, []);
 
-  const updateWidth = (newWidth: number) => {
+  const updateWidth = useCallback((newWidth: number) => {
     logger.debug(`Updating width to ${newWidth} for col ${currentColDefRef.current!.field}`);
     if (currentColDefRef.current) {
       currentColDefRef.current.width = newWidth;
@@ -109,14 +110,14 @@ export const useColumnResize = (
         div.style.maxWidth = newWidth + 'px';
       });
     }
-  };
+  }, []);
 
-  const handleMouseEnter = (): void => {
+  const handleMouseEnter = useCallback((): void => {
     if (mouseLeftTimeout.current != null) {
       clearTimeout(mouseLeftTimeout.current);
     }
-  };
-  const handleMouseLeave = (): void => {
+  }, []);
+  const handleMouseLeave = useCallback((): void => {
     if (
       isLastColumn.current &&
       resizingMouseMove.current &&
@@ -136,9 +137,9 @@ export const useColumnResize = (
     } else if (isResizing) {
       stopResize();
     }
-  };
+  }, []);
 
-  const handleMouseMove = (ev: any): void => {
+  const handleMouseMove = useCallback((ev: any): void => {
     if (isResizing.current) {
       resizingMouseMove.current = { x: ev.clientX, y: ev.clientY };
 
@@ -146,11 +147,14 @@ export const useColumnResize = (
       newWidth = newWidth > MIN_COL_WIDTH ? newWidth : MIN_COL_WIDTH;
       updateWidth(newWidth);
     }
-  };
+  }, []);
 
+
+  //This a hack due to the limitation of react as I cannot put columnsRef in the dependency array of the effect adding the Event listener
+  const columnsRefState = useStateRef(columnsRef);
   useEffect(() => {
     if (columnsRef && columnsRef.current) {
-      console.log('Adding resizing event listener');
+      logger.info('Adding resizing event listener');
       columnsRef.current.addEventListener('mouseup', stopResize);
       columnsRef.current.addEventListener('mouseleave', handleMouseLeave);
       columnsRef.current.addEventListener('mouseenter', handleMouseEnter);
@@ -163,7 +167,7 @@ export const useColumnResize = (
         columnsRef.current?.removeEventListener('mousemove', handleMouseMove);
       };
     }
-  }, [columnsRef]);
+  } , [columnsRefState]);
 
   useEffect(() => {
     return () => {
