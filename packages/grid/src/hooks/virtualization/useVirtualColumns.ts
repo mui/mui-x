@@ -63,8 +63,8 @@ export const useVirtualColumns = (options: GridOptions, apiRef: GridApiRef): Use
     const columnsMeta = apiRef.current!.getColumnsMeta();
     const windowWidth = containerProps.windowSizes.width;
     lastScrollLeftRef.current = scrollLeft;
-    logger.debug('first column displayed: ', getColumnFromScroll(scrollLeft)?.headerName);
-    logger.debug('last column displayed: ', getColumnFromScroll(scrollLeft + windowWidth)?.headerName);
+    // logger.debug('first column displayed: ', getColumnFromScroll(scrollLeft)?.headerName);
+    // logger.debug('last column displayed: ', getColumnFromScroll(scrollLeft + windowWidth)?.headerName);
     const firstDisplayedIdx = getColumnIdxFromScroll(scrollLeft);
     const lastDisplayedIdx = getColumnIdxFromScroll(scrollLeft + windowWidth);
     const prevFirstColIdx = renderedColRef?.current?.firstColIdx || 0;
@@ -73,13 +73,13 @@ export const useVirtualColumns = (options: GridOptions, apiRef: GridApiRef): Use
     const tolerance = columnBuffer - 1; //Math.floor(columnBuffer / 2);
     const diffFirst = Math.abs(firstDisplayedIdx - tolerance - prevFirstColIdx);
     const diffLast = Math.abs(lastDisplayedIdx + tolerance - prevLastColIdx);
-    logger.debug(`Column buffer: ${columnBuffer}, tolerance: ${tolerance}`);
-    logger.debug(`Previous values  => first: ${prevFirstColIdx}, last: ${prevLastColIdx}`);
-    logger.debug(`Current displayed values  => first: ${firstDisplayedIdx}, last: ${lastDisplayedIdx}`);
-    logger.debug('DIFF last => ', diffLast);
-    logger.debug('DIFF first => ', diffFirst);
+    // logger.debug(`Column buffer: ${columnBuffer}, tolerance: ${tolerance}`);
+    // logger.debug(`Previous values  => first: ${prevFirstColIdx}, last: ${prevLastColIdx}`);
+    // logger.debug(`Current displayed values  => first: ${firstDisplayedIdx}, last: ${lastDisplayedIdx}`);
+    // logger.debug('DIFF last => ', diffLast);
+    // logger.debug('DIFF first => ', diffFirst);
     const renderNewColState = diffLast > tolerance || diffFirst > tolerance;
-    logger.debug('RENDER NEW COL STATE ----> ', renderNewColState);
+    // logger.debug('RENDER NEW COL STATE ----> ', renderNewColState);
 
     if (!renderedColRef || !renderedColRef.current || renderNewColState) {
       const newRenderedColState: RenderColumnsProps = {

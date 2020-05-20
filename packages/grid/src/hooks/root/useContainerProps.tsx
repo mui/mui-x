@@ -23,21 +23,32 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>): R
       const hasScrollY = windowSizesRef.current.height < rowsCount * rowHeight;
       const hasScrollX = columnsTotalWidth > windowSizesRef.current.width;
       const scrollBarSize = options.scrollbarSize;
+      const viewportSize = {
+        width: windowSizesRef.current!.width - (hasScrollY ? scrollBarSize : 0),
+        height: windowSizesRef.current!.height - (hasScrollX ? scrollBarSize : 0),
+      };
 
-      const windowPageSize = Math.floor((windowSizesRef.current.height - scrollBarSize) / rowHeight) - 1; //nb ligne in viewport
-      const pageSize = windowPageSize * 2; //nb ligne in rendering zone
-      const maxPage = Math.floor(rowsCount / windowPageSize);
-      logger.debug(`windowPageSize:  ${windowPageSize} - PageSize: ${pageSize} - MaxPage: ${maxPage}`);
-      const renderingZoneHeight = (pageSize + 1) * rowHeight + (hasScrollX ? scrollBarSize : 0); //columns + scrollbar
+      const viewportPageSize = Math.floor(viewportSize.height / rowHeight);
+      const rzPageSize = viewportPageSize * 2;
+      const viewportMaxPage = Math.ceil(rowsCount / viewportPageSize);
+      const rzMaxPage = Math.ceil(rowsCount / rzPageSize);
+      // const maxPage = Math.floor(rowsCount / viewportPageSize);
+      logger.debug(`viewportPageSize:  ${viewportPageSize} - rzPageSize: ${rzPageSize} - viewportMaxPage: ${viewportMaxPage}`);
+      const renderingZoneHeight = rzPageSize * rowHeight + rowHeight;  //(rzPageSize + 1) * rowHeight + (hasScrollX ? scrollBarSize : 0); //columns + scrollbar
       const dataContainerWidth = columnsTotalWidth - (hasScrollY ? scrollBarSize : 0);
       // const renderingZoneWidth = dataContainerWidth - (hasScrollY ? scrollBarSize : 0);
-      logger.debug('columnsTotalWidth ', columnsTotalWidth);
-      const lastPage = maxPage - 1 > 0 ? maxPage - 1 : 0;
-      const totalHeight = maxPage > 1 ? maxPage * (renderingZoneHeight / 2) : rowsCount * rowHeight;
+
+      const lastPage = viewportMaxPage; //maxPage - 1 > 0 ? maxPage - 1 : 0;
+      // const totalHeight =  (viewportMaxPage + 2) * viewportPageSize * rowHeight + (hasScrollX ? scrollBarSize : 0);
+      // const totalHeight =  (rzMaxPage) * renderingZoneHeight + (hasScrollX ? scrollBarSize : 0);
+      const totalHeight =  (rowsCount / viewportPageSize) * viewportSize.height + (hasScrollX ? scrollBarSize : 0);
+
+      //maxPage > 1 ? maxPage * (renderingZoneHeight / 2) : rowsCount * rowHeight;
+      // const viewportMaxScrollTop = renderingZoneHeight -
 
       const indexes: ContainerProps = {
-        pageSize,
-        windowPageSize,
+        pageSize: rzPageSize,
+        windowPageSize: viewportPageSize,
         hasScrollY,
         hasScrollX,
         scrollBarSize,
@@ -48,10 +59,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>): R
           height: renderingZoneHeight,
         },
         windowSizes: windowSizesRef.current,
-        viewportSize: {
-          width: windowSizesRef.current!.width - (hasScrollY ? scrollBarSize : 0),
-          height: windowSizesRef.current!.height - (hasScrollX ? scrollBarSize : 0),
-        },
+        viewportSize,
         lastPage,
       };
 

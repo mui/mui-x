@@ -20,3 +20,10 @@
      position: absolute;
      flex-direction: column;
  }
+
+ .rendering-zone .material-row:first-child {
+     background: blueviolet !important;
+ }
+ .rendering-zone .material-row:last-child {
+     background: red !important;
+ }
