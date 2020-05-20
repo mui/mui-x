@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import { useVirtualColumns } from './useVirtualColumns';
 import {
   CellIndexCoordinates,
@@ -166,50 +166,46 @@ export const useVirtualRows = (
 
   const scrollToIndexes = (params: CellIndexCoordinates) => {
     logger.debug(`Scrolling to cell at row ${params.rowIndex}, col: ${params.colIndex} `);
-    //TODO Check if cell already displayed
-    //If yes do nothing
-    let scrollLeft;
+
     if (apiRef.current) {
+      let scrollLeft;
       const isColVisible = apiRef.current.isColumnVisibleInWindow(params.colIndex);
-      console.log(`==> Column ${params.colIndex} is ${isColVisible ? 'YES' : 'NOT'} visible!`);
+      logger.debug(`Column ${params.colIndex} is ${isColVisible ? 'already' : 'not'} visible.`);
       if (!isColVisible) {
         const meta = apiRef.current.getColumnsMeta();
-        scrollLeft = meta.positions[params.colIndex + 1] - containerPropsRef.current!.windowSizes.width;
-
         const isLastCol = params.colIndex + 1 === meta.positions.length;
+
         if (isLastCol) {
           const lastColWidth = apiRef.current.getVisibleColumns()[params.colIndex].width!;
           scrollLeft = meta.positions[params.colIndex] + lastColWidth - containerPropsRef.current!.windowSizes.width;
+        } else {
+          scrollLeft = meta.positions[params.colIndex + 1] - containerPropsRef.current!.windowSizes.width;
         }
         scrollLeft = rzScrollRef.current.left > scrollLeft ? meta.positions[params.colIndex] : scrollLeft;
       }
 
-      const isRowIndexAbove = realScrollRef.current.top > params.rowIndex * options.rowHeight;  //rzScrollRef.current.top > rowPositionInRenderingZone;
-      const isRowIndexBelow = realScrollRef.current.top + containerPropsRef.current!.viewportSize.height < (params.rowIndex + 1) * options.rowHeight;
-
-      console.log(`row height ${options.rowHeight}, row position: ${params.rowIndex * options.rowHeight}  realScroll.top ${realScrollRef.current.top}
-window H: ${containerPropsRef.current!.viewportSize.height}, above: ${isRowIndexAbove} or below: ${isRowIndexBelow} `);
-
       let scrollTop;
 
-      if(isRowIndexBelow) {
-        scrollTop = (params.rowIndex + 1) * options.rowHeight
-          - containerPropsRef.current!.viewportSize.height
-        console.log(`Setting scrollTop to ${scrollTop}`);
+      const pageSize = containerPropsRef.current!.windowPageSize;
+      const currentRowPage = params.rowIndex / pageSize;
+      const scrollPosition = currentRowPage * containerPropsRef.current!.viewportSize.height;
 
-      }
-   else if(isRowIndexAbove) {
-        scrollTop = (params.rowIndex) * options.rowHeight;
-        console.log(`Setting scrollTop to ${scrollTop}`);
+      const isRowIndexAbove = realScrollRef.current.top > scrollPosition; //rzScrollRef.current.top > rowPositionInRenderingZone;
+      const isRowIndexBelow = realScrollRef.current.top + containerPropsRef.current!.viewportSize.height < scrollPosition;
 
+      if (isRowIndexAbove) {
+        scrollTop = scrollPosition; //We put it at the top of the page
+        logger.debug(`Row is above, setting scrollTop to ${scrollTop}`);
+      } else if (isRowIndexBelow) {
+        //We make sure the row is not half visible
+        scrollTop = scrollPosition - containerPropsRef.current!.viewportSize.height + options.rowHeight;
+        logger.debug(`Row is below, setting scrollTop to ${scrollTop}`);
       }
 
       apiRef.current.scroll({
         left: scrollLeft,
-        top: scrollTop
+        top: scrollTop,
       });
-      // const rowPosition = params.rowIndex * options.rowHeight;
-      // const isRowVisible  = renderCtxRef.current.firstRowIdx>=
     }
   };
 
@@ -246,16 +242,15 @@ window H: ${containerPropsRef.current!.viewportSize.height}, above: ${isRowIndex
     updateContainerSize();
   }, [options, viewportRef]);
 
-  const onViewportScroll = (e: any) => {
+  const onViewportScroll = useCallback((e: any) => {
     logger.debug('Using keyboard to navigate cells, converting scroll events ');
-    const { scrollLeft, scrollTop } = e.target;
-    // scroll({ left: scrollLeft, top: scrollTop });
+
     e.target.scrollLeft = 0;
     e.target.scrollTop = 0;
     e.preventDefault();
     e.stopPropagation();
     return false;
-  };
+  }, []);
 
   useEffect(() => {
     if (rows.length !== rowsCount.current) {
@@ -271,10 +266,10 @@ window H: ${containerPropsRef.current!.viewportSize.height}, above: ${isRowIndex
     }
   }, [rows]);
 
-  const onResize = () => {
-    logger.debug('+++ onResize ');
+  const onResize = useCallback(() => {
+    logger.debug('OnResize, recalculating container sizes.');
     updateContainerSize();
-  };
+  }, []);
 
   useEffect(() => {
     if (apiRef && apiRef.current) {

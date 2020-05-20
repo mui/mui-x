@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import {useEffect, useRef} from 'react';
 import { useLogger } from '../utils/useLogger';
 import { KEYDOWN_EVENT, KEYUP_EVENT, MULTIPLE_KEY_PRESS_CHANGED } from '../../constants/eventsConstants';
 
@@ -40,8 +40,10 @@ const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
 
 export const useKeyboard = (initialised: boolean, apiRef: GridApiRef): void => {
   const logger = useLogger('useKeyboard');
+  const isMultipleKeyPressed = useRef(false);
 
   const onMultipleKeyChange = (isPressed: boolean) => {
+    isMultipleKeyPressed.current = isPressed;
     if (apiRef.current) {
       apiRef.current.emit(MULTIPLE_KEY_PRESS_CHANGED, isPressed);
     }
@@ -61,9 +63,17 @@ export const useKeyboard = (initialised: boolean, apiRef: GridApiRef): void => {
       const rowIndex = Number(getDataFromElem(cellEl, 'rowIndex'));
       nextCellIndexes = getNextCellIndexes(code, { colIndex, rowIndex });
     } else {
-      const rowIndex = Number(getDataFromElem(cellEl, 'rowIndex'));
       const colIdx = code === 'Home' ? 0 : apiRef.current!.getVisibleColumns().length - 1;
-      nextCellIndexes = { colIndex: colIdx, rowIndex };
+
+      if(!isMultipleKeyPressed.current) {
+        //we go to the current row, first col, or last col!
+        const rowIndex = Number(getDataFromElem(cellEl, 'rowIndex'));
+        nextCellIndexes = {colIndex: colIdx, rowIndex};
+      } else {
+        //In that case we go to first row, first col, or last row last col!
+        const rowIndex = colIdx === 0 ? 0 : apiRef.current!.getRowsCount() - 1;
+        nextCellIndexes = {colIndex: colIdx, rowIndex};
+      }
     }
 
     apiRef.current!.scrollToIndexes(nextCellIndexes);
@@ -74,7 +84,7 @@ export const useKeyboard = (initialised: boolean, apiRef: GridApiRef): void => {
         nextCell.tabIndex = 0;
         (nextCell as HTMLDivElement).focus();
       }
-    }, 200);
+    }, 100);
   };
 
   const onKeyDownHandler = (e: KeyboardEvent) => {
