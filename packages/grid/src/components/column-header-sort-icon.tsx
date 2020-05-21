@@ -1,7 +1,7 @@
 import React from 'react';
 import Badge from '@material-ui/core/Badge';
 import { SortDirection } from '../models';
-import {IconButton} from "@material-ui/core";
+import { IconButton } from '@material-ui/core';
 
 export interface ColumnHeaderSortIconProps {
   direction: SortDirection;

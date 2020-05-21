@@ -33,6 +33,7 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportP
           key={r.id}
           id={r.id}
           selected={r.selected}
+          rowIndex={renderCtx.firstRowIdx + idx}
         >
           <LeftEmptyCell key={'left-empty'} width={renderCtx.left} />
           <RowCells

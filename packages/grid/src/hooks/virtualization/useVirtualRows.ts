@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useVirtualColumns } from './useVirtualColumns';
 import {
   CellIndexCoordinates,
@@ -24,7 +24,7 @@ type UseVirtualRowsReturnType = [Partial<RenderContextProps> | null, () => void]
 export const useVirtualRows = (
   colRef: React.MutableRefObject<HTMLDivElement | null>,
   windowRef: React.MutableRefObject<HTMLDivElement | null>,
-  viewportRef: React.MutableRefObject<HTMLDivElement | null>,
+  renderingZoneRef: React.MutableRefObject<HTMLDivElement | null>,
   internalColumns: InternalColumns,
   rows: Rows,
   options: GridOptions,
@@ -39,7 +39,7 @@ export const useVirtualRows = (
   const columnTotalWidthRef = useRef<number>(internalColumns.meta.totalWidth);
   const renderCtxRef = useRef<Partial<RenderContextProps>>();
 
-  const scrollTo = useScrollFn(viewportRef);
+  const scrollTo = useScrollFn(renderingZoneRef);
   // const scrollColHeaderTo = useScrollFn(colRef);
   const getContainerProps = useContainerProps(windowRef);
   const [renderCtx, setRenderCtx] = useState<Partial<RenderContextProps> | null>(null);
@@ -49,9 +49,9 @@ export const useVirtualRows = (
     if (containerPropsRef.current == null) {
       return null;
     }
-    const containerProps = containerPropsRef.current;
-    const firstRowIdx = page * containerProps.windowPageSize;
-    let lastRowIdx = firstRowIdx + containerProps.pageSize;
+    const containerProps = containerPropsRef.current!;
+    const firstRowIdx = page * containerProps.viewportPageSize;
+    let lastRowIdx = firstRowIdx + containerProps.renderingZonePageSize;
     if (lastRowIdx > rowsCount.current - 1) {
       lastRowIdx = rowsCount.current - 1;
     }
@@ -121,7 +121,7 @@ export const useVirtualRows = (
   }, 10);
 
   useLayoutEffect(() => {
-    if (viewportRef && viewportRef.current) {
+    if (renderingZoneRef && renderingZoneRef.current) {
       logger.debug('applying scrollTop ', rzScrollRef.current);
       scrollTo(rzScrollRef.current);
       // scrollColHeaderTo({ ...rzScrollRef.current, ...{ top: 0 } });
@@ -186,12 +186,12 @@ export const useVirtualRows = (
 
       let scrollTop;
 
-      const pageSize = containerPropsRef.current!.windowPageSize;
-      const currentRowPage = params.rowIndex / pageSize;
+      const currentRowPage = params.rowIndex / containerPropsRef.current!.viewportPageSize;
       const scrollPosition = currentRowPage * containerPropsRef.current!.viewportSize.height;
 
       const isRowIndexAbove = realScrollRef.current.top > scrollPosition; //rzScrollRef.current.top > rowPositionInRenderingZone;
-      const isRowIndexBelow = realScrollRef.current.top + containerPropsRef.current!.viewportSize.height < scrollPosition;
+      const isRowIndexBelow =
+        realScrollRef.current.top + containerPropsRef.current!.viewportSize.height < scrollPosition + options.rowHeight;
 
       if (isRowIndexAbove) {
         scrollTop = scrollPosition; //We put it at the top of the page
@@ -221,6 +221,10 @@ export const useVirtualRows = (
     updateViewport();
   };
 
+  const getContainerPropsState = useCallback(() => {
+    return containerPropsRef.current;
+  }, []);
+
   useEffect(() => {
     columnTotalWidthRef.current = internalColumns.meta.totalWidth;
     updateContainerSize();
@@ -237,10 +241,10 @@ export const useVirtualRows = (
   }, [internalColumns]);
 
   useEffect(() => {
-    logger.debug('+++ options or viewportRef changed ');
+    logger.debug('+++ options or renderingZoneRef changed ');
     resetScroll();
     updateContainerSize();
-  }, [options, viewportRef]);
+  }, [options, renderingZoneRef]);
 
   const onViewportScroll = useCallback((e: any) => {
     logger.debug('Using keyboard to navigate cells, converting scroll events ');
@@ -258,10 +262,11 @@ export const useVirtualRows = (
       rowsCount.current = rows.length;
       updateContainerSize();
     }
-    if (viewportRef && viewportRef.current) {
-      viewportRef.current.parentElement?.addEventListener(SCROLL_EVENT, onViewportScroll);
+    if (renderingZoneRef && renderingZoneRef.current) {
+      const viewportStickyContainerElt = renderingZoneRef.current.parentElement!;
+      viewportStickyContainerElt.addEventListener(SCROLL_EVENT, onViewportScroll);
       return () => {
-        viewportRef.current?.parentElement?.removeEventListener(SCROLL_EVENT, onViewportScroll);
+        viewportStickyContainerElt.removeEventListener(SCROLL_EVENT, onViewportScroll);
       };
     }
   }, [rows]);
@@ -278,6 +283,7 @@ export const useVirtualRows = (
       const virtualApi: Partial<VirtualizationApi> = {
         scroll,
         scrollToIndexes,
+        getContainerPropsState,
       };
 
       apiRef.current = Object.assign(apiRef.current, virtualApi) as GridApi;

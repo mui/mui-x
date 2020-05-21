@@ -1,10 +1,10 @@
-import { MouseEvent, RefObject, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { RefObject, useCallback, useEffect, useRef } from 'react';
 import { ColDef } from '../../models/colDef';
 import { ScrollParams, useLogger } from '../utils';
 import { COL_RESIZE_START, COL_RESIZE_STOP, SCROLLING } from '../../constants/eventsConstants';
 import { findCellElementsFromCol, findDataContainerFromCurrent } from '../../utils';
-import {GridApiRef} from "../../grid";
-import {useStateRef} from "../utils/useStateRef";
+import { GridApiRef } from '../../grid';
+import { useStateRef } from '../utils/useStateRef';
 
 const MIN_COL_WIDTH = 30;
 const MOUSE_LEFT_TIMEOUT = 1000;
@@ -149,7 +149,6 @@ export const useColumnResize = (
     }
   }, []);
 
-
   //This a hack due to the limitation of react as I cannot put columnsRef in the dependency array of the effect adding the Event listener
   const columnsRefState = useStateRef(columnsRef);
   useEffect(() => {
@@ -167,7 +166,7 @@ export const useColumnResize = (
         columnsRef.current?.removeEventListener('mousemove', handleMouseMove);
       };
     }
-  } , [columnsRefState]);
+  }, [columnsRefState]);
 
   useEffect(() => {
     return () => {

@@ -27,7 +27,7 @@ export function datagenCli(args) {
       loadData(Number(program.size), program.dataset).then(data => {
         const output = !program.output ? `./${program.dataset}-${program.size}.json` : program.output;
         console.log(`Saving generated dataset in ${output}`);
-        fs.writeFileSync(output, JSON.stringify(data, null, (program.pretty ? 2 : undefined )));
+        fs.writeFileSync(output, JSON.stringify(data, null, program.pretty ? 2 : undefined));
       });
     })
     .parse(args);

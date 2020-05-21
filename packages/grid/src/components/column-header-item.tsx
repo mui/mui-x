@@ -1,12 +1,11 @@
 import { ColDef } from '../models/colDef';
-import React, {useContext, useEffect, useRef} from 'react';
+import React, { useContext } from 'react';
 import { ApiContext } from './api-context';
 import { HEADER_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import { classnames } from '../utils';
 import { ColumnHeaderSortIcon } from './column-header-sort-icon';
 import { ColumnHeaderTitle } from './column-header-title';
 import { ColumnHeaderSeparator } from './column-header-separator';
-import {useLogger} from "../hooks/utils";
 
 interface ColumnHeaderItemProps {
   column: ColDef;
@@ -36,14 +35,22 @@ export const ColumnHeaderItem = React.memo(
     };
 
     const width = column.width!;
+
+    let ariaSort: any = undefined;
+    if (column.sortDirection != null) {
+      ariaSort = { 'aria-sort': column.sortDirection === 'asc' ? 'ascending' : 'descending' };
+    }
+
     return (
       <div
         className={cssClass}
         key={column.field}
         data-field={column.field}
         style={{ width: width, minWidth: width, maxWidth: width, maxHeight: headerHeight, minHeight: headerHeight }}
-        role={'column-header'}
+        role={'columnheader'}
         tabIndex={-1}
+        aria-colindex={colIndex + 1}
+        {...ariaSort}
       >
         {headerComponent || (
           <ColumnHeaderTitle

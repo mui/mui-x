@@ -156,8 +156,10 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
     logger.debug('Sort model changed to ', sortModel);
     const updatedCols: ColDef[] = [];
 
-    const currentSortedCols = stateRef.current.all.filter(c=> c.sortDirection != null).map(c=> ({colId: c.field, sort: c.sortDirection}));
-    if(isEqual(currentSortedCols, sortModel) ){
+    const currentSortedCols = stateRef.current.all
+      .filter(c => c.sortDirection != null)
+      .map(c => ({ colId: c.field, sort: c.sortDirection }));
+    if (isEqual(currentSortedCols, sortModel)) {
       return;
     }
 

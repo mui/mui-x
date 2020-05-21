@@ -1,8 +1,8 @@
 import { ElementSize } from './elementSize';
 
 export interface ContainerProps {
-  pageSize: number;
-  windowPageSize: number;
+  renderingZonePageSize: number;
+  viewportPageSize: number;
   totalWidth: number;
   totalHeight: number;
   hasScrollY: boolean;

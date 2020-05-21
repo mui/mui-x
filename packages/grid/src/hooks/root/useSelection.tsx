@@ -24,7 +24,7 @@ export const useSelection = (options: GridOptions, rows: Rows, initialised: bool
   const allowMultipleSelectionKeyPressed = useRef<boolean>(false);
   const [, forceUpdate] = useState();
 
-  const getSelectedRows = () => {
+  const getSelectedRows = (): RowModel[] => {
     return selectedItemsRef.current.map(id => apiRef!.current!.getRowFromId(id));
   };
 
@@ -81,15 +81,20 @@ export const useSelection = (options: GridOptions, rows: Rows, initialised: bool
     return selectRowModel(apiRef.current.getRowFromId(id), allowMultiple, isSelected);
   };
 
-  const selectRows = (ids: RowId[], isSelected = true) => {
+  const selectRows = (ids: RowId[], isSelected = true, deSelectOthers = false) => {
     if (!apiRef || !apiRef.current) {
       return;
     }
     if (!options.enableMultipleSelection && ids.length > 1) {
       throw new Error('Enable Options.enableMultipleSelection to select more than 1 item');
     }
+    let updates = ids.map(id => ({ id, selected: isSelected }));
 
-    apiRef!.current!.updateRowModels(ids.map(id => ({ id, selected: isSelected })));
+    if (deSelectOthers) {
+      updates = [...selectedItemsRef.current.map(id => ({ id, selected: false })), ...updates];
+    }
+
+    apiRef!.current!.updateRowModels(updates);
     selectedItemsRef.current = isSelected ? ids : [];
     forceUpdate((p: any) => !p);
 

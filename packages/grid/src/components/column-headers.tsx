@@ -32,6 +32,7 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
     return <>{items}</>;
   },
 );
+ColumnHeaderItemCollection.displayName = 'ColumnHeaderItemCollection';
 
 export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps>(
   ({ columns, hasScrollX, icons, headerHeight, onResizeColumn }, columnsHeaderRef) => {
@@ -43,7 +44,7 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps
     }
 
     return (
-      <div ref={columnsHeaderRef} key={'columns'} className={wrapperCssClasses}>
+      <div ref={columnsHeaderRef} key={'columns'} className={wrapperCssClasses} aria-rowindex={1}>
         <ColumnHeaderItemCollection
           columns={columns}
           onResizeColumn={onResizeColumn}
@@ -54,4 +55,4 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps
     );
   },
 );
-// ColumnsHeader.displayName = 'GridColumnsHeader';
+ColumnsHeader.displayName = 'GridColumnsHeader';

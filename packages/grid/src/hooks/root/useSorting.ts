@@ -82,7 +82,9 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
   const buildComparatorList = (sortModel: SortModel): FieldComparatorList => {
     const comparatorList = sortModel.map(item => {
       const col = apiRef.current!.getColumnFromField(item.colId);
-      const comparator = isDesc(item.sort) ? (v1: CellValue, v2: CellValue) => -1 * col.comparator!(v1, v2) : col.comparator!;
+      const comparator = isDesc(item.sort)
+        ? (v1: CellValue, v2: CellValue) => -1 * col.comparator!(v1, v2)
+        : col.comparator!;
       return { field: col.field, comparator };
     });
     return comparatorList;

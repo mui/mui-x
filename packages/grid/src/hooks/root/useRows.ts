@@ -6,7 +6,7 @@ import { GridApi, RowApi } from '../../models/gridApi';
 import { GridApiRef } from '../../grid';
 import { ROWS_UPDATED, SCROLLING_START, SCROLLING_STOP, SORT_MODEL_UPDATED } from '../../constants/eventsConstants';
 
-type IdLookup = {[key: string]: number};
+type IdLookup = { [key: string]: number };
 
 export const useRows = (options: GridOptions, rows: RowsProp, initialised: boolean, apiRef: GridApiRef): RowModel[] => {
   const logger = useLogger('useRows');
@@ -39,8 +39,9 @@ export const useRows = (options: GridOptions, rows: RowsProp, initialised: boole
     updateAllRows(rowModels);
   }, [rows]);
 
-  const getRowsLookup = () => idLookupRef.current as IdLookup ;
+  const getRowsLookup = () => idLookupRef.current as IdLookup;
   const getRowIndexFromId = (id: RowId): number => getRowsLookup()[id];
+  const getRowIdFromRowIndex = (index: number): RowId => Object.entries(getRowsLookup())[index][0];
   const getRowFromId = (id: RowId): RowModel => rowModelsRef.current[getRowIndexFromId(id)];
 
   const updateRowModels = (updates: Partial<RowModel>[]) => {
@@ -108,6 +109,7 @@ export const useRows = (options: GridOptions, rows: RowsProp, initialised: boole
 
       const rowApi: RowApi = {
         getRowIndexFromId,
+        getRowIdFromRowIndex,
         getRowFromId,
         updateRowModels,
         updateRowData,

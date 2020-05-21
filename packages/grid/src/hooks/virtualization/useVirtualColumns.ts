@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import {ContainerProps, GridApi, GridOptions, RenderColumnsProps, VirtualizationApi} from '../../models';
+import { ContainerProps, GridApi, GridOptions, RenderColumnsProps, VirtualizationApi } from '../../models';
 import { useLogger } from '../utils/useLogger';
 import { GridApiRef } from '../../grid';
 import { COLUMNS_UPDATED } from '../../constants/eventsConstants';
@@ -10,7 +10,7 @@ type UseVirtualColumnsReturnType = [React.MutableRefObject<RenderColumnsProps | 
 export const useVirtualColumns = (options: GridOptions, apiRef: GridApiRef): UseVirtualColumnsReturnType => {
   const logger = useLogger('useVirtualColumns');
   const renderedColRef = useRef<RenderColumnsProps | null>(null);
-  const containerPropsRef = useRef< ContainerProps | null>(null);
+  const containerPropsRef = useRef<ContainerProps | null>(null);
   const lastScrollLeftRef = useRef<number>(0);
 
   const getColumnIdxFromScroll = useCallback(
@@ -40,7 +40,7 @@ export const useVirtualColumns = (options: GridOptions, apiRef: GridApiRef): Use
   );
 
   const isColumnVisibleInWindow = (colIndex: number): boolean => {
-    if(!containerPropsRef.current) {
+    if (!containerPropsRef.current) {
       return false;
     }
     const windowWidth = containerPropsRef.current.windowSizes.width;
@@ -48,11 +48,11 @@ export const useVirtualColumns = (options: GridOptions, apiRef: GridApiRef): Use
     const lastCol = getColumnFromScroll(lastScrollLeftRef.current + windowWidth);
 
     const visibleColumns = apiRef.current!.getVisibleColumns();
-    const firstColIndex = visibleColumns.findIndex(col=> col.field === firstCol?.field);
-    const lastColIndex = visibleColumns.findIndex(col=> col.field === lastCol?.field) - 1; //We ensure the last col is completely visible
+    const firstColIndex = visibleColumns.findIndex(col => col.field === firstCol?.field);
+    const lastColIndex = visibleColumns.findIndex(col => col.field === lastCol?.field) - 1; //We ensure the last col is completely visible
 
     return colIndex >= firstColIndex && colIndex <= lastColIndex;
-  }
+  };
 
   const updateRenderedCols: UpdateRenderedColsFnType = (containerProps: ContainerProps | null, scrollLeft: number) => {
     if (!containerProps) {
@@ -63,7 +63,11 @@ export const useVirtualColumns = (options: GridOptions, apiRef: GridApiRef): Use
     const columnsMeta = apiRef.current!.getColumnsMeta();
     const windowWidth = containerProps.windowSizes.width;
     lastScrollLeftRef.current = scrollLeft;
-    logger.debug(`Columns from ${getColumnFromScroll(scrollLeft)?.headerName} to ${getColumnFromScroll(scrollLeft + windowWidth)?.headerName}` );
+    logger.debug(
+      `Columns from ${getColumnFromScroll(scrollLeft)?.headerName} to ${
+        getColumnFromScroll(scrollLeft + windowWidth)?.headerName
+      }`,
+    );
     const firstDisplayedIdx = getColumnIdxFromScroll(scrollLeft);
     const lastDisplayedIdx = getColumnIdxFromScroll(scrollLeft + windowWidth);
     const prevFirstColIdx = renderedColRef?.current?.firstColIdx || 0;

@@ -1,4 +1,4 @@
-import {useEffect, useRef} from 'react';
+import { useEffect, useRef } from 'react';
 import { useLogger } from '../utils/useLogger';
 import { KEYDOWN_EVENT, KEYUP_EVENT, MULTIPLE_KEY_PRESS_CHANGED } from '../../constants/eventsConstants';
 
@@ -9,16 +9,17 @@ import {
   getCellElementFromIndexes,
   getDataFromElem,
   getIdFromRowElem,
+  isArrowKeys,
   isCell,
+  isHomeOrEndKeys,
+  isMultipleKey,
+  isNavigationKey,
+  isPageKeys,
+  isSpaceKey,
+  isTabKey,
 } from '../../utils';
 import { CELL_CSS_CLASS, ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
 import { CellIndexCoordinates } from '../../models';
-
-const MULTIPLE_SELECTION_KEYS = ['Meta', 'Control'];
-const isMultipleKey = (key: string): boolean => MULTIPLE_SELECTION_KEYS.indexOf(key) > -1;
-const isTabKey = (key: string): boolean => key === 'Tab';
-const isSpaceKey = (key: string): boolean => key === 'Space';
-const isArrowKeys = (key: string): boolean => key.indexOf('Arrow') === 0;
 
 const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
   if (!isArrowKeys(code)) {
@@ -49,32 +50,45 @@ export const useKeyboard = (initialised: boolean, apiRef: GridApiRef): void => {
     }
   };
 
-  const navigateCells = (code: string)=> {
+  const navigateCells = (code: string) => {
     const cellEl = findParentElementFromClassName(
       document.activeElement as HTMLDivElement,
       CELL_CSS_CLASS,
     )! as HTMLElement;
     cellEl.tabIndex = -1;
+
     const root = findGridRootFromCurrent(cellEl)!;
+    const currentColIndex = Number(getDataFromElem(cellEl, 'colindex'));
+    const currentRowIndex = Number(getDataFromElem(cellEl, 'rowindex'));
+    const rowCount = apiRef.current!.getRowsCount();
+    const colCount = apiRef.current!.getVisibleColumns().length;
 
     let nextCellIndexes: CellIndexCoordinates;
-    if(isArrowKeys(code)) {
-      const colIndex = Number(getDataFromElem(cellEl, 'colIndex'));
-      const rowIndex = Number(getDataFromElem(cellEl, 'rowIndex'));
-      nextCellIndexes = getNextCellIndexes(code, { colIndex, rowIndex });
-    } else {
-      const colIdx = code === 'Home' ? 0 : apiRef.current!.getVisibleColumns().length - 1;
+    if (isArrowKeys(code)) {
+      nextCellIndexes = getNextCellIndexes(code, { colIndex: currentColIndex, rowIndex: currentRowIndex });
+    } else if (isHomeOrEndKeys(code)) {
+      const colIdx = code === 'Home' ? 0 : colCount - 1;
 
-      if(!isMultipleKeyPressed.current) {
+      if (!isMultipleKeyPressed.current) {
         //we go to the current row, first col, or last col!
-        const rowIndex = Number(getDataFromElem(cellEl, 'rowIndex'));
-        nextCellIndexes = {colIndex: colIdx, rowIndex};
+        nextCellIndexes = { colIndex: colIdx, rowIndex: currentRowIndex };
       } else {
         //In that case we go to first row, first col, or last row last col!
-        const rowIndex = colIdx === 0 ? 0 : apiRef.current!.getRowsCount() - 1;
-        nextCellIndexes = {colIndex: colIdx, rowIndex};
+        const rowIndex = colIdx === 0 ? 0 : rowCount - 1;
+        nextCellIndexes = { colIndex: colIdx, rowIndex };
       }
+    } else if (isPageKeys(code) || isSpaceKey(code)) {
+      const pageSize = apiRef.current!.getContainerPropsState()!.viewportPageSize;
+      const nextRowIndex = currentRowIndex + (code.indexOf('Down') > -1 || isSpaceKey(code) ? pageSize : -1 * pageSize);
+      nextCellIndexes = { colIndex: currentColIndex, rowIndex: nextRowIndex };
+    } else {
+      throw new Error('Key not mapped to navigation behaviour');
     }
+
+    nextCellIndexes.rowIndex = nextCellIndexes.rowIndex <= 0 ? 0 : nextCellIndexes.rowIndex;
+    nextCellIndexes.rowIndex = nextCellIndexes.rowIndex >= rowCount ? rowCount - 1 : nextCellIndexes.rowIndex;
+    nextCellIndexes.colIndex = nextCellIndexes.colIndex <= 0 ? 0 : nextCellIndexes.colIndex;
+    nextCellIndexes.colIndex = nextCellIndexes.colIndex >= colCount ? colCount - 1 : nextCellIndexes.colIndex;
 
     apiRef.current!.scrollToIndexes(nextCellIndexes);
     setTimeout(() => {
@@ -85,59 +99,113 @@ export const useKeyboard = (initialised: boolean, apiRef: GridApiRef): void => {
         (nextCell as HTMLDivElement).focus();
       }
     }, 100);
+
+    return nextCellIndexes;
+  };
+
+  const selectActiveRow = () => {
+    const rowEl = findParentElementFromClassName(
+      document.activeElement as HTMLDivElement,
+      ROW_CSS_CLASS,
+    )! as HTMLElement;
+
+    const rowId = getIdFromRowElem(rowEl);
+    if (apiRef.current) {
+      apiRef.current.selectRow(rowId);
+    }
+  };
+
+  const expandSelection = (code: string) => {
+    const rowEl = findParentElementFromClassName(
+      document.activeElement as HTMLDivElement,
+      ROW_CSS_CLASS,
+    )! as HTMLElement;
+
+    const currentRowIndex = Number(getDataFromElem(rowEl, 'rowindex'));
+    let selectionFromRowIndex = currentRowIndex;
+    const selectedRows = apiRef.current!.getSelectedRows();
+    if (selectedRows.length > 0) {
+      const selectedRowsIndex = selectedRows.map(row => apiRef.current!.getRowIndexFromId(row.id));
+
+      const diffWithCurrentIndex: number[] = selectedRowsIndex.map(idx => Math.abs(currentRowIndex - idx));
+      const minIndex = Math.max(...diffWithCurrentIndex);
+      selectionFromRowIndex = selectedRowsIndex[diffWithCurrentIndex.indexOf(minIndex)];
+    }
+
+    const nextCellIndexes = navigateCells(code);
+    //We select the rows in between
+    const rowIds = Array(Math.abs(nextCellIndexes.rowIndex - selectionFromRowIndex) + 1)
+      .fill(nextCellIndexes.rowIndex > selectionFromRowIndex ? selectionFromRowIndex : nextCellIndexes.rowIndex)
+      .map((cur, idx) => apiRef.current!.getRowIdFromRowIndex(cur + idx));
+
+    logger.debug('Selecting rows ', rowIds);
+
+    apiRef.current!.selectRows(rowIds, true, true);
+  };
+
+  const handleCopy = () => {
+    const rowEl = findParentElementFromClassName(
+      document.activeElement as HTMLDivElement,
+      ROW_CSS_CLASS,
+    )! as HTMLElement;
+    const rowId = getIdFromRowElem(rowEl);
+    const rowModel = apiRef.current!.getRowFromId(rowId);
+
+    if (rowModel.selected) {
+      window?.getSelection()?.selectAllChildren(rowEl);
+    } else {
+      window?.getSelection()?.selectAllChildren(document.activeElement!);
+    }
+    document.execCommand('copy');
   };
 
   const onKeyDownHandler = (e: KeyboardEvent) => {
-    if (!e.target || !findGridRootFromCurrent(e.target as Element)) {
-      logger.info('Outside the grid', e);
-      return;
-    }
-
     if (isMultipleKey(e.key)) {
       logger.debug('Multiple Select key pressed');
       onMultipleKeyChange(true);
-    } else if (isTabKey(e.code)) {
-      logger.debug('tab key pressed!');
-      //TODO move to next section previous - headers-rows - next
-    } else if ((e.code === 'End' || e.code === 'Home' || isArrowKeys(e.code)) && isCell(document.activeElement)) {
+      return;
+    }
+
+    if (!isCell(document.activeElement)) {
+      return;
+    }
+
+    if (!isTabKey(e.code)) {
+      //WE prevent default behaviour for all key shortcut except tab when the current active element is a cell
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    if (isSpaceKey(e.code) && e.shiftKey) {
+      selectActiveRow();
+      return;
+    }
+
+    if (isNavigationKey(e.code) && !e.shiftKey) {
       navigateCells(e.code);
+      return;
+    }
+    if (isNavigationKey(e.code) && e.shiftKey) {
+      expandSelection(e.code);
+      return;
+    }
 
-      logger.debug('Arrow and space keys need default behavior prevented');
-      e.preventDefault();
-      e.stopPropagation();
+    if (e.key.toLowerCase() === 'c' && (e.ctrlKey || e.metaKey)) {
+      handleCopy();
+      return;
+    }
 
-    } else if (isSpaceKey(e.code) && isCell(document.activeElement)) {
-      logger.debug('Space pressed!');
-
-      const rowEl = findParentElementFromClassName(
-        document.activeElement as HTMLDivElement,
-        ROW_CSS_CLASS,
-      )! as HTMLElement;
-
-      const rowId = getIdFromRowElem(rowEl);
-      if (apiRef.current) {
-        apiRef.current.selectRow(rowId);
-      }
-
-      logger.debug('Arrow and space keys need default behavior prevented');
-      e.preventDefault();
-      e.stopPropagation();
+    if (e.key.toLowerCase() === 'a' && (e.ctrlKey || e.metaKey)) {
+      apiRef.current!.selectRows(apiRef.current!.getAllRowIds(), true);
+      return;
     }
   };
 
   const onKeyUpHandler = (e: KeyboardEvent) => {
-    if (!e.target || !findGridRootFromCurrent(e.target as Element)) {
-      logger.info('Outside the grid', e);
-      return;
-    }
-
     if (isMultipleKey(e.key)) {
       logger.debug('Multiple Select key released');
       onMultipleKeyChange(false);
     }
-    // logger.info('Key up, stopping event ', e);
-    e.preventDefault();
-    e.stopPropagation();
   };
 
   useEffect(() => {

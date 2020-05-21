@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { DataContainer, ColumnsContainer, Window, GridRoot } from './styled-wrappers';
-import {ColumnsHeader, NoRowMessage, Viewport, AutoSizerWrapper, RenderContext, LoadingMessage} from './components';
+import { ColumnsHeader, NoRowMessage, Viewport, AutoSizerWrapper, RenderContext, LoadingMessage } from './components';
 import { useColumns, useVirtualRows, useLogger, useSelection, useApi, useRows } from './hooks';
 import { Columns, DEFAULT_GRID_OPTIONS, ElementSize, GridOptions, RowsProp, GridApi } from './models';
 import { debounce } from './utils';
@@ -8,7 +8,7 @@ import { useSorting } from './hooks/root/useSorting';
 import { useKeyboard } from './hooks/root/useKeyboard';
 import { ApiContext } from './components/api-context';
 import { DATA_CONTAINER_CSS_CLASS } from './constants/cssClassesConstants';
-import {useColumnResize} from "./hooks/features/useColumnResize";
+import { useColumnResize } from './hooks/features/useColumnResize';
 
 export type GridApiRef = React.MutableRefObject<GridApi | null | undefined>;
 export type GridOptionsProp = Partial<GridOptions>;
@@ -27,7 +27,7 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
   const columnsContainerRef = useRef<HTMLDivElement>(null);
   const windowRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
-  const viewportRef = useRef<HTMLDivElement>(null);
+  const renderingZoneRef = useRef<HTMLDivElement>(null);
   const internalApiRef = useRef<GridApi | null | undefined>();
   const [internalOptions, setOptions] = useState<GridOptions>({
     ...DEFAULT_GRID_OPTIONS,
@@ -47,7 +47,7 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
   const [renderCtx, resizeGrid] = useVirtualRows(
     columnsContainerRef,
     windowRef,
-    viewportRef,
+    renderingZoneRef,
     internalColumns,
     internalRows,
     internalOptions,
@@ -79,7 +79,17 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
   return (
     <AutoSizerWrapper onResize={onResize}>
       {size => (
-        <GridRoot ref={gridRootRef} options={internalOptions} style={{ width: size.width, height: size.height }} role={'grid'}>
+        <GridRoot
+          ref={gridRootRef}
+          options={internalOptions}
+          style={{ width: size.width, height: size.height }}
+          role={'grid'}
+          aria-colcount={internalColumns.visible.length}
+          aria-rowcount={internalRows.length + 1}
+          tabIndex={0}
+          aria-label={'Grid'}
+          aria-multiselectable={internalOptions.enableMultipleSelection}
+        >
           <ApiContext.Provider value={apiRef}>
             <ColumnsContainer ref={columnsContainerRef}>
               <ColumnsHeader
@@ -102,7 +112,7 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
                 {renderCtx != null && (
                   <RenderContext.Provider value={renderCtx}>
                     <Viewport
-                      ref={viewportRef}
+                      ref={renderingZoneRef}
                       options={internalOptions}
                       rows={internalRows}
                       visibleColumns={internalColumns.visible}
