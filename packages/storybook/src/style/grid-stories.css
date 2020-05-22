@@ -20,3 +20,13 @@
      position: absolute;
      flex-direction: column;
  }
+
+ /* highlight first and last row in rendering zone -> useful for Debugging virtualisation */
+ /*
+ .rendering-zone .material-row:first-child {
+     background: blueviolet !important;
+ }
+ .rendering-zone .material-row:last-child {
+     background: red !important;
+ }
+  */

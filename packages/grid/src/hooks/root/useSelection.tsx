@@ -4,8 +4,8 @@ import {
   RowClickedParam,
   RowId,
   RowModel,
-  Rows,
   RowSelectedParam,
+  RowsProp,
   SelectionChangedParam,
 } from '../../models';
 import { useLogger } from '../utils/useLogger';
@@ -18,13 +18,18 @@ import {
 import { GridApi, SelectionApi } from '../../models/gridApi';
 import { GridApiRef } from '../../grid';
 
-export const useSelection = (options: GridOptions, rows: Rows, initialised: boolean, apiRef: GridApiRef): void => {
+export const useSelection = (
+  options: GridOptions,
+  rowsProp: RowsProp,
+  initialised: boolean,
+  apiRef: GridApiRef,
+): void => {
   const logger = useLogger('useSelection');
   const selectedItemsRef = useRef<RowId[]>([]);
   const allowMultipleSelectionKeyPressed = useRef<boolean>(false);
   const [, forceUpdate] = useState();
 
-  const getSelectedRows = () => {
+  const getSelectedRows = (): RowModel[] => {
     return selectedItemsRef.current.map(id => apiRef!.current!.getRowFromId(id));
   };
 
@@ -45,7 +50,7 @@ export const useSelection = (options: GridOptions, rows: Rows, initialised: bool
       allowMultiSelect = allowMultipleOverride;
     }
     const isRowSelected = allowMultiSelect ? (isSelected == null ? !row.selected : isSelected) : true;
-
+    const updatedRowModels: RowModel[] = [];
     if (allowMultiSelect) {
       if (isRowSelected) {
         selectedItemsRef.current =
@@ -58,11 +63,11 @@ export const useSelection = (options: GridOptions, rows: Rows, initialised: bool
     } else {
       selectedItemsRef.current.forEach(id => {
         const otherSelectedRow = apiRef!.current!.getRowFromId(id);
-        apiRef!.current!.updateRowModels([{ ...otherSelectedRow, selected: false }]);
+        updatedRowModels.push({ ...otherSelectedRow, selected: false });
       });
       selectedItemsRef.current = [row.id];
     }
-    apiRef!.current!.updateRowModels([{ ...row, selected: isRowSelected }]);
+    apiRef!.current!.updateRowModels([...updatedRowModels, { ...row, selected: isRowSelected }]);
 
     if (apiRef && apiRef.current != null) {
       const rowSelectedParam: RowSelectedParam = { data: row.data, isSelected: isRowSelected, rowIndex };
@@ -81,15 +86,20 @@ export const useSelection = (options: GridOptions, rows: Rows, initialised: bool
     return selectRowModel(apiRef.current.getRowFromId(id), allowMultiple, isSelected);
   };
 
-  const selectRows = (ids: RowId[], isSelected = true) => {
+  const selectRows = (ids: RowId[], isSelected = true, deSelectOthers = false) => {
     if (!apiRef || !apiRef.current) {
       return;
     }
     if (!options.enableMultipleSelection && ids.length > 1) {
       throw new Error('Enable Options.enableMultipleSelection to select more than 1 item');
     }
+    let updates = ids.map(id => ({ id, selected: isSelected }));
 
-    apiRef!.current!.updateRowModels(ids.map(id => ({ id, selected: isSelected })));
+    if (deSelectOthers) {
+      updates = [...selectedItemsRef.current.map(id => ({ id, selected: false })), ...updates];
+    }
+
+    apiRef!.current!.updateRowModels(updates);
     selectedItemsRef.current = isSelected ? ids : [];
     forceUpdate((p: any) => !p);
 
@@ -142,4 +152,12 @@ export const useSelection = (options: GridOptions, rows: Rows, initialised: bool
       apiRef.current = Object.assign(apiRef.current, selectionApi) as GridApi;
     }
   }, [apiRef]);
+
+  useEffect(() => {
+    selectedItemsRef.current = [];
+    if (apiRef && apiRef.current != null) {
+      const selectionChangedParam: SelectionChangedParam = { rows: [] };
+      apiRef.current!.emit(SELECTION_CHANGED_EVENT, selectionChangedParam);
+    }
+  }, [rowsProp]);
 };

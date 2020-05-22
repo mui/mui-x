@@ -19,6 +19,15 @@ export const RootStyle = styled.div<GridRootProps>`
       sans-serif;
     border: 1px solid #bdc3c7;
     border-radius: 4px;
+    outline: none;
+
+    .material-cell:focus,
+    .material-col-cell:focus {
+      outline: dashed;
+      outline-color: black;
+      outline-width: 2px;
+      outline-offset: -3px;
+    }
 
     .columns-container {
       position: absolute;

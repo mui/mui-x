@@ -1,9 +1,10 @@
 import { EventEmitter } from 'events';
-import { RowData, RowId, RowModel, Rows } from './rows';
+import { CellIndexCoordinates, RowData, RowId, RowModel, Rows } from './rows';
 import { ColDef, Columns, ColumnsMeta } from './colDef';
 import { SortModel } from './sortModel';
 import { RowSelectedParam, SelectionChangedParam } from './gridOptions';
 import { ScrollParams } from '../hooks/utils';
+import { ContainerProps } from './containerProps';
 
 export interface RowApi {
   getRowModels: () => Rows;
@@ -12,6 +13,7 @@ export interface RowApi {
   setRowModels: (rows: Rows) => void;
   updateRowModels: (updates: Partial<RowModel>[]) => void;
   updateRowData: (updates: RowData[]) => void;
+  getRowIdFromRowIndex: (index: number) => RowId;
   getRowIndexFromId: (id: RowId) => number;
   getRowFromId: (id: RowId) => RowModel;
 }
@@ -29,8 +31,8 @@ export interface ColumnApi {
 
 export interface SelectionApi {
   selectRow: (id: RowId, allowMultiple?: boolean, isSelected?: boolean) => void;
-  selectRows: (ids: RowId[], isSelected?: boolean) => void;
-  getSelectedRows: () => void;
+  selectRows: (ids: RowId[], isSelected?: boolean, deselectOtherRows?: boolean) => void;
+  getSelectedRows: () => RowModel[];
   onSelectedRow: (handler: (param: RowSelectedParam) => void) => () => void;
   onSelectionChanged: (handler: (param: SelectionChangedParam) => void) => () => void;
 }
@@ -41,6 +43,9 @@ export interface SortApi {
 }
 export interface VirtualizationApi {
   scroll: (params: Partial<ScrollParams>) => void;
+  scrollToIndexes: (params: CellIndexCoordinates) => void;
+  isColumnVisibleInWindow: (colIndex: number) => boolean;
+  getContainerPropsState: () => ContainerProps | null;
 }
 export interface CoreApi extends EventEmitter {
   isInitialised: boolean;

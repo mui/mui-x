@@ -6,7 +6,7 @@ import { HashRouter, Route, Switch } from 'react-router-dom';
 import { AppDrawer } from './app-drawer';
 import { appReducer } from './app-reducer';
 import { ThemeProvider, useTheme } from './demos/theme';
-import { CommodityGridDemo } from './demos/grid/commodity-grid.demo';
+import { RealDataGridDemo } from './demos/grid/real-data-grid.demo';
 
 import { AppIntro } from './app-intro';
 import styled from 'styled-components';
@@ -32,7 +32,7 @@ export const App: React.FC<{}> = () => {
           <AppDrawer isOpen={state.isOpen} toggleDrawer={toggleDrawer} />
           <Switch>
             <Route path="/grid">
-              <CommodityGridDemo />
+              <RealDataGridDemo />
             </Route>
             <Route path="/">
               <AppIntro />
@@ -43,12 +43,4 @@ export const App: React.FC<{}> = () => {
     </ThemeProvider>
   );
 };
-/*
-           <DevToggle>
-              <Route path="/splitter">
-                <SplitterDemo />
-              </Route>
-            </DevToggle>
-
-* */
 export default App;

@@ -1,6 +1,7 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useVirtualColumns } from './useVirtualColumns';
 import {
+  CellIndexCoordinates,
   ContainerProps,
   GridApi,
   GridOptions,
@@ -23,7 +24,7 @@ type UseVirtualRowsReturnType = [Partial<RenderContextProps> | null, () => void]
 export const useVirtualRows = (
   colRef: React.MutableRefObject<HTMLDivElement | null>,
   windowRef: React.MutableRefObject<HTMLDivElement | null>,
-  viewportRef: React.MutableRefObject<HTMLDivElement | null>,
+  renderingZoneRef: React.MutableRefObject<HTMLDivElement | null>,
   internalColumns: InternalColumns,
   rows: Rows,
   options: GridOptions,
@@ -31,13 +32,17 @@ export const useVirtualRows = (
 ): UseVirtualRowsReturnType => {
   const logger = useLogger('useVirtualRows');
   const pageRef = useRef<number>(0);
-  const rowsCount = useRef<number>(0);
+  const rowsCount = useRef<number>(rows.length);
   const containerPropsRef = useRef<ContainerProps | null>(null);
+  const realScrollRef = useRef<ScrollParams>({ left: 0, top: 0 });
   const rzScrollRef = useRef<ScrollParams>({ left: 0, top: 0 });
   const columnTotalWidthRef = useRef<number>(internalColumns.meta.totalWidth);
+  const renderCtxRef = useRef<Partial<RenderContextProps>>();
 
-  const scrollTo = useScrollFn(viewportRef);
-  // const scrollColHeaderTo = useScrollFn(colRef);
+  const [, scrollColHeaderTo] = useScrollFn(colRef);
+  const onDataScroll = (v: ScrollParams) => scrollColHeaderTo({ left: v.left, top: 0 });
+  const [scrollTo] = useScrollFn(renderingZoneRef, onDataScroll);
+
   const getContainerProps = useContainerProps(windowRef);
   const [renderCtx, setRenderCtx] = useState<Partial<RenderContextProps> | null>(null);
   const [renderedColRef, updateRenderedCols] = useVirtualColumns(options, apiRef);
@@ -46,9 +51,9 @@ export const useVirtualRows = (
     if (containerPropsRef.current == null) {
       return null;
     }
-    const containerProps = containerPropsRef.current;
-    const firstRowIdx = page * containerProps.windowPageSize;
-    let lastRowIdx = firstRowIdx + containerProps.pageSize;
+    const containerProps = containerPropsRef.current!;
+    const firstRowIdx = page * containerProps.viewportPageSize;
+    let lastRowIdx = firstRowIdx + containerProps.renderingZonePageSize;
     if (lastRowIdx > rowsCount.current - 1) {
       lastRowIdx = rowsCount.current - 1;
     }
@@ -71,7 +76,7 @@ export const useVirtualRows = (
       ...renderedRow,
     };
     logger.debug(':: getRenderCtxState - returning state ', renderCtx);
-
+    renderCtxRef.current = renderCtx;
     return renderCtx;
   };
 
@@ -80,67 +85,29 @@ export const useVirtualRows = (
     if (windowRef && windowRef.current && containerPropsRef && containerPropsRef.current) {
       const containerProps = containerPropsRef.current;
       const { scrollLeft, scrollTop } = windowRef.current;
-      logger.debug(`scrolling Left: ${scrollLeft} Top: ${scrollTop}`);
+      logger.debug(`Handling scroll Left: ${scrollLeft} Top: ${scrollTop}`);
 
-      const rzHeight = containerProps.renderingZone.height;
-      const rzWidth = containerProps.renderingZone.width;
-      const windowHeight = containerProps.windowSizes.height;
-      const windowWidth = containerProps.windowSizes.width;
-      const maxScrollTop = rzHeight - windowHeight + containerProps.scrollBarSize!; //629
-      const maxScrollLeft = rzWidth - windowWidth + containerProps.scrollBarSize!; //629
-
-      const rowViewportScrollTop = scrollTop; // columns height
-      const rowViewportScrollLeft = scrollLeft; // columns height
-      logger.debug('scrollTop: ', scrollTop);
-      let rzScrollTop = rowViewportScrollTop % maxScrollTop;
-      logger.debug('First calc rzScrollTop: ', rzScrollTop);
-      const rzScrollLeft = rowViewportScrollLeft; // % maxScrollLeft;
-      logger.debug(
-        `rzH: ${rzHeight} winH: ${windowHeight}, maxScrollTop: ${maxScrollTop}, maxScrollLeft: ${maxScrollLeft}`,
-      );
-      logger.debug(`rzScrollLeft: ${rzScrollLeft} `);
       let requireRerender = updateRenderedCols(containerProps, scrollLeft);
 
+      const viewportHeight = containerProps.viewportSize.height;
+      const rzScrollLeft = scrollLeft;
+      let currentPage = scrollTop / viewportHeight;
+      const rzScrollTop = scrollTop % viewportHeight;
+      logger.debug(
+        ` viewportHeight:${viewportHeight}, rzScrollTop: ${rzScrollTop}, scrollTop: ${scrollTop}, current page = ${currentPage}`,
+      );
+
       const scrollParams = { left: rzScrollLeft, top: rzScrollTop };
-      let currentPage = Math.floor(rowViewportScrollTop / maxScrollTop);
 
-      let freezeScrollTop = false;
-      if (currentPage > containerProps.lastPage!) {
-        scrollParams.top = maxScrollTop;
-        freezeScrollTop = true;
-        logger.debug(`not scrolling to rzScrollTop: ${rzScrollTop}, scrolling to max ${maxScrollTop}`);
-
-        //HACK to fix issue on the last page, totalHeight needs to resize to avoid blank scroll page
-        const newTotalHeight = rowViewportScrollTop - rzScrollTop + maxScrollTop;
-        logger.debug(`Patching height to `, newTotalHeight);
-        containerPropsRef.current.totalHeight = newTotalHeight;
-        requireRerender = true;
-      } else if (currentPage < containerProps.lastPage!) {
-        //HACK to restore the fix above.
-        const oldTotalHeight = (containerProps.lastPage + 2) * (containerProps.renderingZone.height / 2);
-        logger.debug(`Patching back height to `, oldTotalHeight);
-        if (oldTotalHeight !== containerPropsRef.current.totalHeight) {
-          containerPropsRef.current.totalHeight = oldTotalHeight;
-          requireRerender = true;
-        }
-      }
       const page = pageRef.current;
-      currentPage = currentPage > containerProps.lastPage! ? containerProps.lastPage! : currentPage;
-      logger.debug(`state pageNumber ${page}, current is ${currentPage}`);
+      currentPage = Math.floor(currentPage);
 
       if (page !== currentPage) {
-        if (page < currentPage && !freezeScrollTop) {
-          rzScrollTop = rzScrollTop <= maxScrollTop ? 0 : rzScrollTop % maxScrollTop;
-          scrollParams.top = rzScrollTop;
-          logger.debug('Resetting rzScrollTop  to', rzScrollTop);
-        }
-
         pageRef.current = currentPage;
+        logger.debug(`Changing page from ${page} to ${currentPage}`);
         requireRerender = true;
       } else {
         scrollTo(scrollParams);
-        // scrollColHeaderTo({ ...scrollParams, ...{ top: 0 } });
-        colRef.current!.scroll({ ...scrollParams, ...{ top: 0 } });
         apiRef.current!.emit(SCROLLING, scrollParams);
       }
       rzScrollRef.current = scrollParams;
@@ -148,17 +115,13 @@ export const useVirtualRows = (
       if (requireRerender) {
         reRender();
       }
-
-      logger.debug(`rzScrollTop: ${rzScrollTop} `); //Viewport SC: ${viewportRef.current?.scrollTop}
-      logger.debug('------------');
     }
   }, 10);
 
   useLayoutEffect(() => {
-    if (viewportRef && viewportRef.current) {
+    if (renderingZoneRef && renderingZoneRef.current) {
       logger.debug('applying scrollTop ', rzScrollRef.current);
       scrollTo(rzScrollRef.current);
-      // scrollColHeaderTo({ ...rzScrollRef.current, ...{ top: 0 } });
     }
   });
 
@@ -174,6 +137,7 @@ export const useVirtualRows = (
 
   const updateContainerSize = () => {
     if (columnTotalWidthRef.current > 0) {
+      rowsCount.current = apiRef?.current?.getRowsCount() || 0; //we ensure we call with latest length
       containerPropsRef.current = getContainerProps(options, columnTotalWidthRef.current, rowsCount.current);
       updateViewport();
       reRender();
@@ -183,7 +147,8 @@ export const useVirtualRows = (
   };
 
   const scrollingTimeout = useRef<any>(0);
-  const onScroll: any = () => {
+  const onScroll: any = (e: any) => {
+    realScrollRef.current = { left: e.target.scrollLeft, top: e.target.scrollTop };
     if (apiRef && apiRef.current && scrollingTimeout.current === 0) {
       apiRef.current.emit(SCROLLING_START);
     }
@@ -196,16 +161,67 @@ export const useVirtualRows = (
     }, 300);
     updateViewport();
   };
+
+  const scrollToIndexes = (params: CellIndexCoordinates) => {
+    logger.debug(`Scrolling to cell at row ${params.rowIndex}, col: ${params.colIndex} `);
+
+    if (apiRef.current) {
+      let scrollLeft;
+      const isColVisible = apiRef.current.isColumnVisibleInWindow(params.colIndex);
+      logger.debug(`Column ${params.colIndex} is ${isColVisible ? 'already' : 'not'} visible.`);
+      if (!isColVisible) {
+        const meta = apiRef.current.getColumnsMeta();
+        const isLastCol = params.colIndex + 1 === meta.positions.length;
+
+        if (isLastCol) {
+          const lastColWidth = apiRef.current.getVisibleColumns()[params.colIndex].width!;
+          scrollLeft = meta.positions[params.colIndex] + lastColWidth - containerPropsRef.current!.windowSizes.width;
+        } else {
+          scrollLeft = meta.positions[params.colIndex + 1] - containerPropsRef.current!.windowSizes.width;
+        }
+        scrollLeft = rzScrollRef.current.left > scrollLeft ? meta.positions[params.colIndex] : scrollLeft;
+      }
+
+      let scrollTop;
+
+      const currentRowPage = params.rowIndex / containerPropsRef.current!.viewportPageSize;
+      const scrollPosition = currentRowPage * containerPropsRef.current!.viewportSize.height;
+
+      const isRowIndexAbove = realScrollRef.current.top > scrollPosition; //rzScrollRef.current.top > rowPositionInRenderingZone;
+      const isRowIndexBelow =
+        realScrollRef.current.top + containerPropsRef.current!.viewportSize.height < scrollPosition + options.rowHeight;
+
+      if (isRowIndexAbove) {
+        scrollTop = scrollPosition; //We put it at the top of the page
+        logger.debug(`Row is above, setting scrollTop to ${scrollTop}`);
+      } else if (isRowIndexBelow) {
+        //We make sure the row is not half visible
+        scrollTop = scrollPosition - containerPropsRef.current!.viewportSize.height + options.rowHeight;
+        logger.debug(`Row is below, setting scrollTop to ${scrollTop}`);
+      }
+
+      apiRef.current.scroll({
+        left: scrollLeft,
+        top: scrollTop,
+      });
+    }
+  };
+
   const scroll = (params: Partial<ScrollParams>) => {
     logger.debug(`Scrolling to left: ${params.left} top: ${params.top}`);
-    if (windowRef.current && params.left) {
+    if (windowRef.current && params.left != null && colRef.current) {
+      colRef.current.scrollLeft = params.left;
       windowRef.current.scrollLeft = params.left;
     }
-    if (windowRef.current && params.top) {
+    if (windowRef.current && params.top != null) {
       windowRef.current.scrollTop = params.top;
     }
     updateViewport();
   };
+
+  const getContainerPropsState = useCallback(() => {
+    return containerPropsRef.current;
+  }, []);
 
   useEffect(() => {
     columnTotalWidthRef.current = internalColumns.meta.totalWidth;
@@ -213,7 +229,8 @@ export const useVirtualRows = (
 
     if (windowRef && windowRef.current) {
       logger.debug('Binding scroll event to window.');
-      windowRef.current.addEventListener(SCROLL_EVENT, onScroll);
+      const options = { passive: true };
+      windowRef.current.addEventListener(SCROLL_EVENT, onScroll, options);
       return () => {
         logger.debug('Unbinding scroll event to window.');
         windowRef.current!.removeEventListener(SCROLL_EVENT, onScroll);
@@ -222,10 +239,20 @@ export const useVirtualRows = (
   }, [internalColumns]);
 
   useEffect(() => {
-    logger.debug('+++ options or viewportRef changed ');
+    logger.debug('+++ options or renderingZoneRef changed ');
     resetScroll();
     updateContainerSize();
-  }, [options, viewportRef]);
+  }, [options, renderingZoneRef]);
+
+  const onViewportScroll = useCallback((e: any) => {
+    logger.debug('Using keyboard to navigate cells, converting scroll events ');
+
+    e.target.scrollLeft = 0;
+    e.target.scrollTop = 0;
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  }, []);
 
   useEffect(() => {
     if (rows.length !== rowsCount.current) {
@@ -233,19 +260,28 @@ export const useVirtualRows = (
       rowsCount.current = rows.length;
       updateContainerSize();
     }
+    if (renderingZoneRef && renderingZoneRef.current) {
+      const viewportStickyContainerElt = renderingZoneRef.current.parentElement!;
+      viewportStickyContainerElt.addEventListener(SCROLL_EVENT, onViewportScroll);
+      return () => {
+        viewportStickyContainerElt.removeEventListener(SCROLL_EVENT, onViewportScroll);
+      };
+    }
   }, [rows]);
 
-  const onResize = () => {
-    logger.debug('+++ onResize ');
+  const onResize = useCallback(() => {
+    logger.debug('OnResize, recalculating container sizes.');
     updateContainerSize();
-  };
+  }, []);
 
   useEffect(() => {
     if (apiRef && apiRef.current) {
       logger.debug('Adding scroll api to apiRef');
 
-      const virtualApi: VirtualizationApi = {
+      const virtualApi: Partial<VirtualizationApi> = {
         scroll,
+        scrollToIndexes,
+        getContainerPropsState,
       };
 
       apiRef.current = Object.assign(apiRef.current, virtualApi) as GridApi;

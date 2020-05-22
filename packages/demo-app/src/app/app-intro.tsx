@@ -21,7 +21,6 @@ const Splash = styled.div`
     flex-direction: column;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
-    display: flex;
     align-items: center !important;
   }
   .logo {

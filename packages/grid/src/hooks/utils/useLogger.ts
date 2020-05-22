@@ -20,10 +20,10 @@ const getConsoleAppender = (name: string): Logger => {
   const logger = ['debug', 'info', 'warn', 'error'].reduce((logger, method) => {
     logger[method] = (...args: any[]) => {
       const [message, ...rest] = args;
-      console[method](`[${name}] - ${message}`, ...rest);
+      (console as any)[method](`[${name}] - ${message}`, ...rest);
     };
     return logger;
-  }, {});
+  }, {} as any);
 
   return logger as Logger;
 };

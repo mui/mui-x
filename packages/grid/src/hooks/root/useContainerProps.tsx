@@ -23,36 +23,44 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>): R
       const hasScrollY = windowSizesRef.current.height < rowsCount * rowHeight;
       const hasScrollX = columnsTotalWidth > windowSizesRef.current.width;
       const scrollBarSize = options.scrollbarSize;
+      const viewportSize = {
+        width: windowSizesRef.current!.width - (hasScrollY ? scrollBarSize : 0),
+        height: windowSizesRef.current!.height - (hasScrollX ? scrollBarSize : 0),
+      };
 
-      const windowPageSize = Math.floor((windowSizesRef.current.height - scrollBarSize) / rowHeight) - 1; //nb ligne in viewport
-      const pageSize = windowPageSize * 2; //nb ligne in rendering zone
-      const maxPage = Math.floor(rowsCount / windowPageSize);
-      logger.debug(`windowPageSize:  ${windowPageSize} - PageSize: ${pageSize} - MaxPage: ${maxPage}`);
-      const renderingZoneHeight = (pageSize + 1) * rowHeight + (hasScrollX ? scrollBarSize : 0); //columns + scrollbar
+      const viewportPageSize = Math.floor(viewportSize.height / rowHeight);
+      const rzPageSize = viewportPageSize * 2;
+      const viewportMaxPage = Math.ceil(rowsCount / viewportPageSize);
+
+      logger.debug(
+        `viewportPageSize:  ${viewportPageSize}, rzPageSize: ${rzPageSize}, viewportMaxPage: ${viewportMaxPage}`,
+      );
+      const renderingZoneHeight = rzPageSize * rowHeight + rowHeight;
       const dataContainerWidth = columnsTotalWidth - (hasScrollY ? scrollBarSize : 0);
-      // const renderingZoneWidth = dataContainerWidth - (hasScrollY ? scrollBarSize : 0);
-      logger.debug('columnsTotalWidth ', columnsTotalWidth);
-      const lastPage = maxPage - 1 > 0 ? maxPage - 1 : 0;
-      const totalHeight = maxPage > 1 ? maxPage * (renderingZoneHeight / 2) : rowsCount * rowHeight;
+
+      const totalHeight = (rowsCount / viewportPageSize) * viewportSize.height + (hasScrollX ? scrollBarSize : 0);
 
       const indexes: ContainerProps = {
-        pageSize,
-        windowPageSize,
+        renderingZonePageSize: rzPageSize,
+        viewportPageSize: viewportPageSize,
         hasScrollY,
         hasScrollX,
         scrollBarSize,
-        totalWidth: dataContainerWidth, //internalColumns.meta.totalWidth,
-        totalHeight: totalHeight || 1, //min 1px if no rows
+        totalSizes: {
+          width: columnsTotalWidth,
+          height: totalHeight || 1,
+        },
+        dataContainerSizes: {
+          width: dataContainerWidth,
+          height: totalHeight || 1,
+        },
         renderingZone: {
           width: dataContainerWidth,
           height: renderingZoneHeight,
         },
         windowSizes: windowSizesRef.current,
-        viewportSize: {
-          width: windowSizesRef.current!.width - (hasScrollY ? scrollBarSize : 0),
-          height: windowSizesRef.current!.height - (hasScrollX ? scrollBarSize : 0),
-        },
-        lastPage,
+        viewportSize,
+        lastPage: viewportMaxPage,
       };
 
       logger.debug('returning container props', indexes);

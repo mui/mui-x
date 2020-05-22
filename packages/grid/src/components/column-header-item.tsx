@@ -18,7 +18,6 @@ interface ColumnHeaderItemProps {
 export const ColumnHeaderItem = React.memo(
   ({ column, icons, colIndex, headerHeight, onResizeColumn }: ColumnHeaderItemProps) => {
     const api = useContext(ApiContext);
-
     const cssClass = classnames(
       HEADER_CELL_CSS_CLASS,
       column.headerClass,
@@ -36,14 +35,31 @@ export const ColumnHeaderItem = React.memo(
     };
 
     const width = column.width!;
+
+    let ariaSort: any = undefined;
+    if (column.sortDirection != null) {
+      ariaSort = { 'aria-sort': column.sortDirection === 'asc' ? 'ascending' : 'descending' };
+    }
+
     return (
       <div
         className={cssClass}
         key={column.field}
         data-field={column.field}
         style={{ width: width, minWidth: width, maxWidth: width, maxHeight: headerHeight, minHeight: headerHeight }}
-        role={'column-header'}
+        role={'columnheader'}
+        tabIndex={-1}
+        aria-colindex={colIndex + 1}
+        {...ariaSort}
       >
+        {column.type === 'number' && (
+          <ColumnHeaderSortIcon
+            direction={column.sortDirection}
+            index={column.sortIndex}
+            icons={icons}
+            hide={column.hideSortIcons}
+          />
+        )}
         {headerComponent || (
           <ColumnHeaderTitle
             label={column.headerName || column.field}
@@ -51,12 +67,14 @@ export const ColumnHeaderItem = React.memo(
             columnWidth={width}
           />
         )}
-        <ColumnHeaderSortIcon
-          direction={column.sortDirection}
-          index={column.sortIndex}
-          icons={icons}
-          hide={column.hideSortIcons}
-        />
+        {column.type !== 'number' && (
+          <ColumnHeaderSortIcon
+            direction={column.sortDirection}
+            index={column.sortIndex}
+            icons={icons}
+            hide={column.hideSortIcons}
+          />
+        )}
         <ColumnHeaderSeparator resizable={column.resizable} onResize={onResize} />
       </div>
     );

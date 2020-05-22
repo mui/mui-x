@@ -1,9 +1,9 @@
 import React from 'react';
-import { CellValue } from '@material-ui-x/grid';
+import { CellParams, CellValue } from '@material-ui-x/grid';
 import { Tooltip } from '@material-ui/core';
 import InfoIcon from '@material-ui/icons/Info';
 
-export const IncotermRenderer: React.FC<{ value: CellValue }> = React.memo(({ value }) => {
+export const Incoterm: React.FC<{ value: CellValue }> = React.memo(({ value }) => {
   if (!value) {
     return null;
   }
@@ -19,4 +19,8 @@ export const IncotermRenderer: React.FC<{ value: CellValue }> = React.memo(({ va
     </div>
   );
 });
-IncotermRenderer.displayName = 'IncotermRenderer';
+Incoterm.displayName = 'Incoterm';
+
+export function IncotermRenderer(params: CellParams) {
+  return <Incoterm value={params.value!} />;
+}

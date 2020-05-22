@@ -5,6 +5,7 @@ import AutorenewIcon from '@material-ui/icons/Autorenew';
 import DoneIcon from '@material-ui/icons/Done';
 import { Chip } from '@material-ui/core';
 import styled from 'styled-components';
+import { CellParams } from '@material-ui-x/grid';
 
 const StatusContainer = styled.div`
   justify-content: left !important;
@@ -39,7 +40,7 @@ const StatusContainer = styled.div`
   }
 `;
 
-export const StatusRenderer: React.FC<{ status: string }> = React.memo(({ status }) => {
+export const Status: React.FC<{ status: string }> = React.memo(({ status }) => {
   let icon: any = null;
   if (status === 'Rejected') {
     icon = <ReportProblemIcon className={'icon'} />;
@@ -60,4 +61,8 @@ export const StatusRenderer: React.FC<{ status: string }> = React.memo(({ status
     </StatusContainer>
   );
 });
-StatusRenderer.displayName = 'StatusRenderer';
+Status.displayName = 'Status';
+
+export function StatusRenderer(params: CellParams) {
+  return <Status status={params.value!.toString()} />;
+}

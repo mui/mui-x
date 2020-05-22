@@ -4,6 +4,7 @@ import {
   HEADER_CELL_CSS_CLASS,
   ROOT_CSS_CLASS,
 } from '../constants/cssClassesConstants';
+import { CellIndexCoordinates } from '../models';
 const DATA_ATTRIBUTE_PREFIX = 'data-';
 
 export function isOverflown(element: Element): boolean {
@@ -14,8 +15,8 @@ export function findParentElementFromClassName(elem: Element, className: string)
   return elem.closest('.' + className);
 }
 
-export function isCell(elem: Element): boolean {
-  return elem && findParentElementFromClassName(elem, CELL_CSS_CLASS) !== null;
+export function isCell(elem: Element | null): boolean {
+  return elem != null && findParentElementFromClassName(elem, CELL_CSS_CLASS) !== null;
 }
 
 export function isHeaderCell(elem: Element): boolean {
@@ -42,10 +43,25 @@ export function findCellElementsFromCol(col: HTMLElement): NodeListOf<Element> |
   const cells = root.querySelectorAll(`:scope .${CELL_CSS_CLASS}[data-field="${field}"]`);
   return cells;
 }
-export function findDataContainerFromCurrent(elem: Element): HTMLDivElement | null {
+
+export function findGridRootFromCurrent(elem: Element): HTMLDivElement | null {
+  if (elem.classList.contains(ROOT_CSS_CLASS)) {
+    return elem as HTMLDivElement;
+  }
   const root = findParentElementFromClassName(elem, ROOT_CSS_CLASS);
+  return root as HTMLDivElement;
+}
+
+export function findDataContainerFromCurrent(elem: Element): HTMLDivElement | null {
+  const root = findGridRootFromCurrent(elem);
   if (!root) {
     return null;
   }
   return root.querySelector(`:scope .${DATA_CONTAINER_CSS_CLASS}`) as HTMLDivElement;
+}
+
+export function getCellElementFromIndexes(root: Element, { colIndex, rowIndex }: CellIndexCoordinates) {
+  return root.querySelector(
+    `:scope .${CELL_CSS_CLASS}[data-colIndex='${colIndex}'][data-rowIndex='${rowIndex}']`,
+  ) as HTMLDivElement;
 }

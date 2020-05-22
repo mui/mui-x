@@ -45,67 +45,71 @@ interface RowCellsProps {
   showCellRightBorder: boolean;
   extendRowFullWidth: boolean;
   rowIndex: number;
+  domIndex: number;
 }
 
 export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
-  const { scrollSize, hasScroll, lastColIdx, firstColIdx, columns, row, rowIndex } = props;
+  const { scrollSize, hasScroll, lastColIdx, firstColIdx, columns, row, rowIndex, domIndex } = props;
   const api = useContext(ApiContext);
 
-  const cells = columns.slice(firstColIdx, lastColIdx + 1).map((c, colIdx) => {
+  const cells = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const isLastColumn = firstColIdx + colIdx === columns.length - 1;
     const removeScrollWidth = isLastColumn && hasScroll.y && hasScroll.x;
-    const width = removeScrollWidth ? c.width! - scrollSize : c.width!;
+    const width = removeScrollWidth ? column.width! - scrollSize : column.width!;
     const removeLastBorderRight = isLastColumn && hasScroll.x && !hasScroll.y;
     const showRightBorder = !isLastColumn
       ? props.showCellRightBorder
       : !removeLastBorderRight && !props.extendRowFullWidth;
 
-    let value = row.data[c.field!];
-    if (c.valueGetter) {
-      const params: ValueGetterParams = getCellParams(row, c, rowIndex, value, api!.current!);
+    let value = row.data[column.field!];
+    if (column.valueGetter) {
+      const params: ValueGetterParams = getCellParams(row, column, rowIndex, value, api!.current!);
       //Value getter override the original value
-      value = c.valueGetter(params);
+      value = column.valueGetter(params);
     }
 
     let formattedValueProp = {};
-    if (c.valueFormatter) {
-      const params: ValueFormatterParams = getCellParams(row, c, rowIndex, value, api!.current!);
-      formattedValueProp = { formattedValue: c.valueFormatter(params) };
+    if (column.valueFormatter) {
+      const params: ValueFormatterParams = getCellParams(row, column, rowIndex, value, api!.current!);
+      formattedValueProp = { formattedValue: column.valueFormatter(params) };
     }
 
     let cssClassProp = { cssClass: '' };
-    if (c.cellClass) {
-      if (!isFunction(c.cellClass)) {
-        cssClassProp = { cssClass: classnames(c.cellClass) };
+    if (column.cellClass) {
+      if (!isFunction(column.cellClass)) {
+        cssClassProp = { cssClass: classnames(column.cellClass) };
       } else {
-        const params: CellClassParams = getCellParams(row, c, rowIndex, value, api!.current!);
-        cssClassProp = { cssClass: c.cellClass(params) as string };
+        const params: CellClassParams = getCellParams(row, column, rowIndex, value, api!.current!);
+        cssClassProp = { cssClass: column.cellClass(params) as string };
       }
     }
 
-    if (c.cellClassRules) {
-      const params: CellClassParams = getCellParams(row, c, rowIndex, value, api!.current!);
-      const cssClass = applyCssClassRules(c.cellClassRules, params);
+    if (column.cellClassRules) {
+      const params: CellClassParams = getCellParams(row, column, rowIndex, value, api!.current!);
+      const cssClass = applyCssClassRules(column.cellClassRules, params);
       cssClassProp = { cssClass: cssClassProp.cssClass + ' ' + cssClass };
     }
 
     let cellComponent: React.ReactElement | null = null;
-    if (c.cellRenderer) {
-      const params: CellParams = getCellParams(row, c, rowIndex, value, api!.current!);
-      cellComponent = c.cellRenderer(params);
+    if (column.cellRenderer) {
+      const params: CellParams = getCellParams(row, column, rowIndex, value, api!.current!);
+      cellComponent = column.cellRenderer(params);
       cssClassProp = { cssClass: cssClassProp.cssClass + ' with-renderer' };
     }
 
     return (
       <Cell
-        key={c.field}
+        key={column.field}
         value={value}
-        field={c.field}
+        field={column.field}
         width={width}
         showRightBorder={showRightBorder}
         {...formattedValueProp}
-        align={c.align}
+        align={column.align}
         {...cssClassProp}
+        tabIndex={domIndex === 0 && colIdx === 0 ? 0 : -1}
+        rowIndex={rowIndex}
+        colIndex={colIdx + firstColIdx}
       >
         {cellComponent}
       </Cell>

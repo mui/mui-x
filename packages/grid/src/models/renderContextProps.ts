@@ -3,7 +3,7 @@ import { ContainerProps } from './containerProps';
 export interface RenderColumnsProps {
   firstColIdx: number;
   lastColIdx: number;
-  left: number;
+  leftEmptyWidth: number;
   rightEmptyWidth: number;
 }
 

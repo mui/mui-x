@@ -15,8 +15,9 @@ import { Logger, useLogger } from '../utils/useLogger';
 import { GridApiRef } from '../../grid';
 import { COLUMNS_UPDATED, POST_SORT } from '../../constants/eventsConstants';
 import { useRafUpdate } from '../utils';
+import { isEqual } from '../../utils';
 
-function hydrateColumns(columns: Columns, options: GridOptions, logger: Logger, apiRef): Columns {
+function hydrateColumns(columns: Columns, options: GridOptions, logger: Logger, apiRef: GridApiRef): Columns {
   logger.debug('Hydrating Columns with default definitions');
   let mappedCols = columns.map(c => ({ ...getColDef(c.type), ...c }));
   if (options.checkboxSelection) {
@@ -50,7 +51,7 @@ function toLookup(logger: Logger, allColumns: Columns) {
   return allColumns.reduce((lookup, col) => {
     lookup[col.field] = col;
     return lookup;
-  }, {});
+  }, {} as { [key: string]: ColDef });
 }
 
 function filterVisible(logger: Logger, allColumns: Columns) {
@@ -70,7 +71,7 @@ function toMeta(logger: Logger, visibleColumns: Columns): ColumnsMeta {
   return { totalWidth, positions: positions };
 }
 
-const resetState = (columns: Columns, options: GridOptions, logger: Logger, apiRef): InternalColumns => {
+const resetState = (columns: Columns, options: GridOptions, logger: Logger, apiRef: GridApiRef): InternalColumns => {
   const all = hydrateColumns(columns, options, logger, apiRef);
   const visible = filterVisible(logger, all);
   const meta = toMeta(logger, visible);
@@ -111,15 +112,14 @@ const getUpdatedColumnState = (logger: Logger, state: InternalColumns, columnUpd
 export function useColumns(options: GridOptions, columns: Columns, apiRef: GridApiRef): InternalColumns {
   const logger = useLogger('useColumns');
   const [, forceUpdate] = useState();
-  const [rafUpdate] = useRafUpdate(() => forceUpdate(p => !p));
+  const [rafUpdate] = useRafUpdate(() => forceUpdate((p: any) => !p));
 
   const state = useMemo(() => resetState(columns, options, logger, apiRef), [columns, options, apiRef]);
   const [internalColumns, setInternalColumns] = useState<InternalColumns>(state);
   const stateRef = useRef<InternalColumns>(state);
-  const sortedColFieldsRef = useRef<string[]>([]);
 
-  const updateState = (newState, emit = true) => {
-    setInternalColumns(newState);
+  const updateState = (newState: InternalColumns, emit = true) => {
+    setInternalColumns(p => newState);
     stateRef.current = newState;
     if (apiRef.current && emit) {
       apiRef.current.emit(COLUMNS_UPDATED, newState.all);
@@ -156,14 +156,19 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
     logger.debug('Sort model changed to ', sortModel);
     const updatedCols: ColDef[] = [];
 
+    const currentSortedCols = stateRef.current.all
+      .filter(c => c.sortDirection != null)
+      .map(c => ({ colId: c.field, sort: c.sortDirection }));
+    if (isEqual(currentSortedCols, sortModel)) {
+      return;
+    }
+
     //We restore the previous columns
-    sortedColFieldsRef.current.forEach(field => {
-      updatedCols.push({ field, sortDirection: null, sortIndex: undefined });
+    currentSortedCols.forEach(c => {
+      updatedCols.push({ field: c.colId, sortDirection: null, sortIndex: undefined });
     });
-    sortedColFieldsRef.current = [];
 
     sortModel.forEach((model, index) => {
-      sortedColFieldsRef.current = [...sortedColFieldsRef.current, model.colId];
       const sortIndex = sortModel.length > 1 ? index + 1 : undefined;
       updatedCols.push({ field: model.colId, sortDirection: model.sort, sortIndex });
     });

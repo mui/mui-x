@@ -11,10 +11,25 @@ export interface GridCellProps {
   showRightBorder?: boolean;
   align?: Alignement;
   cssClass?: string;
+  tabIndex?: number;
+  colIndex?: number;
+  rowIndex?: number;
 }
 
 export const Cell: React.FC<GridCellProps> = React.memo(
-  ({ value, field, width, children, showRightBorder, align, formattedValue, cssClass }) => {
+  ({
+    value,
+    field,
+    width,
+    children,
+    showRightBorder,
+    align,
+    formattedValue,
+    cssClass,
+    tabIndex,
+    colIndex,
+    rowIndex,
+  }) => {
     const cssClasses = classnames(
       CELL_CSS_CLASS,
       cssClass,
@@ -26,10 +41,14 @@ export const Cell: React.FC<GridCellProps> = React.memo(
     return (
       <div
         className={cssClasses}
-        role={field + ' cell'}
+        role={'cell'}
         data-value={value}
         data-field={field}
+        data-colindex={colIndex}
+        data-rowindex={rowIndex}
+        aria-colindex={colIndex}
         style={{ minWidth: width, maxWidth: width }}
+        tabIndex={tabIndex}
       >
         {children ? children : valueToRender?.toString()}
       </div>
