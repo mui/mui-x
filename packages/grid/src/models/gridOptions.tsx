@@ -70,7 +70,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   columnBuffer: 5,
   enableMultipleSelection: true,
   enableMultipleColumnsSorting: true,
-  showCellRightBorder: true,
+  showCellRightBorder: false,
   extendRowFullWidth: true,
   icons: {
     sortedColumns: {

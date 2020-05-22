@@ -50,7 +50,7 @@ export const useKeyboard = (initialised: boolean, apiRef: GridApiRef): void => {
     }
   };
 
-  const navigateCells = (code: string) => {
+  const navigateCells = (code: string, isCtrlPressed: boolean) => {
     const cellEl = findParentElementFromClassName(
       document.activeElement as HTMLDivElement,
       CELL_CSS_CLASS,
@@ -69,7 +69,7 @@ export const useKeyboard = (initialised: boolean, apiRef: GridApiRef): void => {
     } else if (isHomeOrEndKeys(code)) {
       const colIdx = code === 'Home' ? 0 : colCount - 1;
 
-      if (!isMultipleKeyPressed.current) {
+      if (!isCtrlPressed) {
         //we go to the current row, first col, or last col!
         nextCellIndexes = { colIndex: colIdx, rowIndex: currentRowIndex };
       } else {
@@ -132,7 +132,7 @@ export const useKeyboard = (initialised: boolean, apiRef: GridApiRef): void => {
       selectionFromRowIndex = selectedRowsIndex[diffWithCurrentIndex.indexOf(minIndex)];
     }
 
-    const nextCellIndexes = navigateCells(code);
+    const nextCellIndexes = navigateCells(code, false);
     //We select the rows in between
     const rowIds = Array(Math.abs(nextCellIndexes.rowIndex - selectionFromRowIndex) + 1)
       .fill(nextCellIndexes.rowIndex > selectionFromRowIndex ? selectionFromRowIndex : nextCellIndexes.rowIndex)
@@ -182,7 +182,7 @@ export const useKeyboard = (initialised: boolean, apiRef: GridApiRef): void => {
     }
 
     if (isNavigationKey(e.code) && !e.shiftKey) {
-      navigateCells(e.code);
+      navigateCells(e.code, e.ctrlKey || e.metaKey);
       return;
     }
     if (isNavigationKey(e.code) && e.shiftKey) {
