@@ -1,11 +1,14 @@
 import faker from 'faker';
 import {
-	COLORS,
-	COMMODITY_OPTIONS, CONTRACT_TYPE_OPTIONS,
-	COUNTRY_ISO_OPTIONS,
-	CURRENCY_OPTIONS,
-	INCOTERM_OPTIONS, RATE_TYPE_OPTIONS,
-	STATUS_OPTIONS, TAXCODE_OPTIONS
+  COLORS,
+  COMMODITY_OPTIONS,
+  CONTRACT_TYPE_OPTIONS,
+  COUNTRY_ISO_OPTIONS,
+  CURRENCY_OPTIONS,
+  INCOTERM_OPTIONS,
+  RATE_TYPE_OPTIONS,
+  STATUS_OPTIONS,
+  TAXCODE_OPTIONS,
 } from './static-data';
 
 export const random = (min: number, max: number): number => Math.random() * (max - min) + min;
@@ -48,7 +51,7 @@ export const randomCreatedDate = () => faker.date.past();
 export const randomUpdatedDate = () => faker.date.recent();
 export const randomAvatar = () => ({ name: faker.name.findName(), color: randomColor() });
 export const randomJobTitle = () => faker.name.jobTitle();
-export const randomRating =  () => random(0, 5)
+export const randomRating = () => random(0, 5);
 
 export const generateName = data => data.avatar.name;
 export const generateFilledQuantity = data => Number((data.quantity * randomRate()).toFixed()) / data.quantity;

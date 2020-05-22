@@ -4,7 +4,8 @@ import {
   RowClickedParam,
   RowId,
   RowModel,
-  RowSelectedParam, RowsProp,
+  RowSelectedParam,
+  RowsProp,
   SelectionChangedParam,
 } from '../../models';
 import { useLogger } from '../utils/useLogger';

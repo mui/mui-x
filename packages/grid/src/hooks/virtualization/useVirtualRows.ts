@@ -93,7 +93,9 @@ export const useVirtualRows = (
       const rzScrollLeft = scrollLeft;
       let currentPage = scrollTop / viewportHeight;
       const rzScrollTop = scrollTop % viewportHeight;
-      logger.debug(` viewportHeight:${viewportHeight}, rzScrollTop: ${rzScrollTop}, scrollTop: ${scrollTop}, current page = ${currentPage}`);
+      logger.debug(
+        ` viewportHeight:${viewportHeight}, rzScrollTop: ${rzScrollTop}, scrollTop: ${scrollTop}, current page = ${currentPage}`,
+      );
 
       const scrollParams = { left: rzScrollLeft, top: rzScrollTop };
 

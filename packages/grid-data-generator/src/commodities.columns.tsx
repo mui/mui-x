@@ -31,7 +31,7 @@ import {
   randomCreatedDate,
   randomRateType,
   randomContractType,
-  randomTaxCode
+  randomTaxCode,
 } from './services/';
 import {
   CountryRenderer,
@@ -110,7 +110,7 @@ export const commodityColumns: GeneratableColDef[] = [
   {
     field: 'filledQuantity',
     headerName: 'Filled Quantity',
-    generateData: generateFilledQuantity ,
+    generateData: generateFilledQuantity,
     cellRenderer: ProgressRenderer,
     sortDirection: 'desc',
     sortIndex: 1,
@@ -148,7 +148,7 @@ export const commodityColumns: GeneratableColDef[] = [
   },
   {
     field: 'incoTerm',
-    generateData: randomIncoterm ,
+    generateData: randomIncoterm,
     cellRenderer: IncotermRenderer,
     width: 100,
   },
@@ -254,7 +254,7 @@ export const commodityColumns: GeneratableColDef[] = [
   {
     field: 'lastUpdated',
     headerName: 'Updated on',
-    generateData: randomUpdatedDate ,
+    generateData: randomUpdatedDate,
     type: 'dateTime',
     width: 180,
   },

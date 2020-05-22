@@ -10,5 +10,5 @@ export const Link = styled.a`
 `;
 
 export function LinkRenderer(params: CellParams) {
-	return <Link href={params.value!.toString()}>{params.value!.toString()}</Link>;
+  return <Link href={params.value!.toString()}>{params.value!.toString()}</Link>;
 }

@@ -33,11 +33,11 @@ export const RealDataGridDemo: React.FC<{}> = props => {
 
     loadFile(`./static-data/${type}-1000.json`).then(
       data => {
-        if(size > 1000) {
-          while(data.length < size) {
+        if (size > 1000) {
+          while (data.length < size) {
             data = [...data, ...data];
           }
-          data = data.map((row, idx) => ({ ...row, ...{id: idx} }) );
+          data = data.map((row, idx) => ({ ...row, ...{ id: idx } }));
         }
         data.length = size;
 
@@ -52,10 +52,10 @@ export const RealDataGridDemo: React.FC<{}> = props => {
   }, [setRows, type, size]);
 
   const onApplyClick = (settings: { size: number; type: string; selectedTheme: string }) => {
-    if(size !== settings.size) {
+    if (size !== settings.size) {
       setSize(settings.size);
     }
-    if(type !== settings.type) {
+    if (type !== settings.type) {
       setType(settings.type.toLowerCase());
     }
     if (settings.selectedTheme !== themeId) {
@@ -71,7 +71,12 @@ export const RealDataGridDemo: React.FC<{}> = props => {
       <MainContainer>
         <div style={{ display: 'flex', boxSizing: 'border-box' }} className={'fill-space'}>
           <div className={'grow'}>
-            <DataGrid rows={rows as any} columns={cols as any} loading={loading} options={{checkboxSelection: true}} />
+            <DataGrid
+              rows={rows as any}
+              columns={cols as any}
+              loading={loading}
+              options={{ checkboxSelection: true }}
+            />
           </div>
         </div>
       </MainContainer>

@@ -3,5 +3,5 @@ import { Rating } from '@material-ui/lab';
 import React from 'react';
 
 export function RatingRenderer(params: CellParams) {
-	return <Rating name={params.data['id'].toString()} value={Number(params.value)} readOnly/>
+  return <Rating name={params.data['id'].toString()} value={Number(params.value)} readOnly />;
 }
