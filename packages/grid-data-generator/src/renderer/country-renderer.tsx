@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { CellParams } from '@material-ui-x/grid';
 
 const Container = styled.div`
   display: flex;
@@ -33,3 +34,7 @@ export const Country: React.FC<{ value: { code: string; label: string } }> = Rea
   );
 });
 Country.displayName = 'Country';
+
+export function CountryRenderer(params: CellParams) {
+  return <Country value={params.value! as any} />;
+}

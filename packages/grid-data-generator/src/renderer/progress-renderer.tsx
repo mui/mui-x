@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { CellParams } from '@material-ui-x/grid';
 
 const Container = styled.div`
   border: 1px solid #bec3c7;
@@ -43,3 +44,7 @@ export const ProgressBar: React.FC<{ value: number }> = React.memo(({ value }) =
   );
 });
 ProgressBar.displayName = 'ProgressBar';
+
+export function ProgressRenderer(params: CellParams) {
+  return <ProgressBar value={Number(params.value)!} />;
+}

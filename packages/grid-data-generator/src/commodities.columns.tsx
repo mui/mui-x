@@ -1,34 +1,68 @@
 import './style/real-data-stories.css';
-import { GeneratableColDef, random, randomArrayItem, randomInt, randomPrice, randomRate } from './services/';
-import faker from 'faker';
-import React from 'react';
-import { Country, EmailRenderer, IncotermRenderer, IsDone, ProgressBar, StatusRenderer } from './renderer';
 import {
-  COMMODITY_OPTIONS,
-  CONTRACT_TYPE_OPTIONS,
-  COUNTRY_ISO_OPTIONS,
-  CURRENCY_OPTIONS,
-  INCOTERM_OPTIONS,
-  RATE_TYPE_OPTIONS,
-  STATUS_OPTIONS,
-  TAXCODE_OPTIONS,
-} from './services/static-data';
+  GeneratableColDef,
+  generateTotalPrice,
+  randomCommodity,
+  randomDesk,
+  randomEmail,
+  generateFeeAmount,
+  randomFeeRate,
+  generateFilledQuantity,
+  randomId,
+  randomIncoterm,
+  generateIsFilled,
+  randomQuantity,
+  generateSubTotal,
+  randomTraderId,
+  randomTraderName,
+  randomUnitPrice,
+  randomUnitPriceCurrency,
+  randomStatusOptions,
+  randomPnL,
+  randomTradeDate,
+  randomMaturityDate,
+  randomBrokerId,
+  randomCompanyName,
+  randomCountry,
+  randomCurrency,
+  randomAddress,
+  randomCity,
+  randomUpdatedDate,
+  randomCreatedDate,
+  randomRateType,
+  randomContractType,
+  randomTaxCode
+} from './services/';
+import {
+  CountryRenderer,
+  DoneRenderer,
+  EmailRenderer,
+  IncotermRenderer,
+  ProgressRenderer,
+  StatusRenderer,
+} from './renderer';
+
+const totalPriceFormatter = ({ value }) => `$ ${Number(value).toLocaleString()}`;
+const pnlFormatter = params =>
+  Number(params.value!) < 0
+    ? `(${Math.abs(Number(params.value!)).toLocaleString()})`
+    : Number(params.value).toLocaleString();
 
 export const commodityColumns: GeneratableColDef[] = [
   {
     field: 'id',
-    generateData: () => faker.random.uuid(),
+    generateData: randomId,
     hide: true,
   },
   {
     field: 'desk',
     headerName: 'Desk',
-    generateData: () => 'D-' + faker.random.number(),
+    generateData: randomDesk,
   },
   {
     field: 'commodity',
     headerName: 'Commodity',
-    generateData: () => randomArrayItem(COMMODITY_OPTIONS),
+    generateData: randomCommodity,
     sortDirection: 'asc',
     sortIndex: 0,
     width: 120,
@@ -36,28 +70,27 @@ export const commodityColumns: GeneratableColDef[] = [
   {
     field: 'traderId',
     headerName: 'Trader Id',
-    generateData: () => faker.random.number(),
+    generateData: randomTraderId,
   },
   {
     field: 'traderName',
     headerName: 'Trader Name',
-    generateData: () => faker.name.findName(),
-    // eslint-disable-next-line react/display-name
-    cellRenderer: params => <EmailRenderer email={params.data['traderEmail']} label={params.value!.toString()} />,
+    generateData: randomTraderName,
+    cellRenderer: EmailRenderer,
     disableClickEventBubbling: true,
     width: 150,
   },
   {
     field: 'traderEmail',
     headerName: 'Trader Email',
-    generateData: () => faker.internet.email(),
+    generateData: randomEmail,
     width: 200,
     hide: true,
   },
   {
     field: 'unitPrice',
     headerName: 'Unit Price',
-    generateData: () => randomPrice(1, 100),
+    generateData: randomUnitPrice,
     // valueFormatter: params=> `${Number(params.value).toLocaleString()} ${params.data['unitPriceCurrency']}`,
     type: 'number',
     width: 100,
@@ -65,21 +98,20 @@ export const commodityColumns: GeneratableColDef[] = [
   {
     field: 'unitPriceCurrency',
     headerName: 'Unit Price Currency',
-    generateData: () => randomArrayItem(CURRENCY_OPTIONS),
+    generateData: randomUnitPriceCurrency,
     width: 70,
     // hide: true
   },
   {
     field: 'quantity',
     type: 'number',
-    generateData: () => randomInt(1000, 100000),
+    generateData: randomQuantity,
   },
   {
     field: 'filledQuantity',
     headerName: 'Filled Quantity',
-    generateData: data => Number((data.quantity * randomRate()).toFixed()) / data.quantity,
-    // eslint-disable-next-line react/display-name
-    cellRenderer: params => <ProgressBar value={Number(params.value)!} />,
+    generateData: generateFilledQuantity ,
+    cellRenderer: ProgressRenderer,
     sortDirection: 'desc',
     sortIndex: 1,
     type: 'number',
@@ -88,45 +120,43 @@ export const commodityColumns: GeneratableColDef[] = [
   {
     field: 'isFilled',
     headerName: 'Is Filled',
-    // eslint-disable-next-line react/display-name
-    cellRenderer: params => <IsDone value={!!params.value} />,
+    cellRenderer: DoneRenderer,
     align: 'center',
-    generateData: data => data.quantity === data.filledQuantity,
+    generateData: generateIsFilled,
     width: 50,
   },
   {
     field: 'subTotal',
     headerName: 'Sub Total',
-    generateData: data => data.unitPrice * data.quantity,
+    generateData: generateSubTotal,
     type: 'number',
     width: 120,
   },
   {
     field: 'feeRate',
     headerName: 'Fee Rate',
-    generateData: () => random(0.1, 0.4),
+    generateData: randomFeeRate,
     type: 'number',
     width: 80,
   },
   {
     field: 'feeAmount',
     headerName: 'Fee Amount',
-    generateData: data => Number(data.feeRate) * data.subTotal,
+    generateData: generateFeeAmount,
     type: 'number',
     width: 120,
   },
   {
     field: 'incoTerm',
-    generateData: () => randomArrayItem(INCOTERM_OPTIONS),
-    // eslint-disable-next-line react/display-name
-    cellRenderer: params => <IncotermRenderer value={params.value!} />,
+    generateData: randomIncoterm ,
+    cellRenderer: IncotermRenderer,
     width: 100,
   },
   {
     field: 'totalPrice',
     headerName: 'Total in USD',
-    generateData: data => data.feeRate + data.subTotal,
-    valueFormatter: ({ value }) => `$ ${Number(value).toLocaleString()}`,
+    generateData: generateTotalPrice,
+    valueFormatter: totalPriceFormatter,
     cellClassRules: {
       good: ({ value }) => Number(value) > 1000000,
       bad: ({ value }) => Number(value) < 1000000,
@@ -136,19 +166,15 @@ export const commodityColumns: GeneratableColDef[] = [
   },
   {
     field: 'status',
-    generateData: data => randomArrayItem(STATUS_OPTIONS),
-    // eslint-disable-next-line react/display-name
-    cellRenderer: params => <StatusRenderer status={params.value!.toString()} />,
+    generateData: randomStatusOptions,
+    cellRenderer: StatusRenderer,
     width: 150,
   },
   {
     field: 'pnl',
     headerName: 'PnL',
-    generateData: () => random(-100000000, 100000000),
-    valueFormatter: params =>
-      Number(params.value!) < 0
-        ? `(${Math.abs(Number(params.value!)).toLocaleString()})`
-        : Number(params.value).toLocaleString(),
+    generateData: randomPnL,
+    valueFormatter: pnlFormatter,
     cellClassRules: {
       positive: ({ value }) => Number(value) > 0,
       negative: ({ value }) => Number(value) < 0,
@@ -159,84 +185,83 @@ export const commodityColumns: GeneratableColDef[] = [
   {
     field: 'maturityDate',
     headerName: 'Maturity Date',
-    generateData: () => faker.date.future(),
+    generateData: randomMaturityDate,
     type: 'date',
   },
   {
     field: 'tradeDate',
     headerName: 'Trade Date',
-    generateData: () => faker.date.recent(),
+    generateData: randomTradeDate,
     type: 'date',
   },
   {
     field: 'brokerId',
     headerName: 'Broker Id',
-    generateData: () => faker.random.uuid(),
+    generateData: randomBrokerId,
     hide: true,
   },
   {
     field: 'brokerName',
     headerName: 'Broker Name',
-    generateData: () => faker.company.companyName(),
+    generateData: randomCompanyName,
     width: 140,
   },
   {
     field: 'counterPartyName',
     headerName: 'Counterparty',
-    generateData: () => faker.company.companyName(),
+    generateData: randomCompanyName,
     width: 180,
   },
   {
     field: 'counterPartyCountry',
     headerName: 'Counterparty Country',
-    generateData: () => randomArrayItem(COUNTRY_ISO_OPTIONS),
-    // eslint-disable-next-line react/display-name
-    cellRenderer: params => <Country value={params.value! as any} />,
+    generateData: randomCountry,
+    cellRenderer: CountryRenderer,
     width: 120,
   },
   {
     field: 'counterPartyCurrency',
     headerName: 'Counterparty Currency',
-    generateData: () => randomArrayItem(CURRENCY_OPTIONS),
+    generateData: randomCurrency,
   },
   {
     field: 'counterPartyAddress',
     headerName: 'Counterparty Address',
-    generateData: () => faker.address.streetAddress(),
+    generateData: randomAddress,
     width: 200,
   },
   {
     field: 'counterPartyCity',
     headerName: 'Counterparty City',
-    generateData: () => faker.address.city(),
+    generateData: randomCity,
     width: 120,
   },
   {
     field: 'taxCode',
     headerName: 'Tax Code',
-    generateData: () => randomArrayItem(TAXCODE_OPTIONS),
+    generateData: randomTaxCode,
   },
   {
     field: 'contractType',
     headerName: 'Contract Type',
-    generateData: () => randomArrayItem(CONTRACT_TYPE_OPTIONS),
+    generateData: randomContractType,
   },
   {
     field: 'rateType',
     headerName: 'Rate Type',
-    generateData: () => randomArrayItem(RATE_TYPE_OPTIONS),
+    generateData: randomRateType,
   },
   {
     field: 'lastUpdated',
     headerName: 'Updated on',
-    generateData: () => faker.date.recent(),
+    generateData: randomUpdatedDate ,
     type: 'dateTime',
     width: 180,
   },
   {
     field: 'dateCreated',
     headerName: 'Created on',
-    generateData: () => faker.date.past(),
+    generateData: randomCreatedDate,
     type: 'date',
     width: 150,
   },
