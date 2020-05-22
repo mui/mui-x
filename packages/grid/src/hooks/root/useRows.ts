@@ -23,14 +23,14 @@ export const useRows = (options: GridOptions, rows: RowsProp, initialised: boole
   const setIsScrolling = (v: boolean) => (isScrollingRef.current = v);
 
   const updateAllRows = (allNewRows: RowModel[]) => {
-    logger.debug('updating all rows...');
+    logger.debug(`updating all rows, new length ${allNewRows.length}`);
     idLookupRef.current = allNewRows.reduce((lookup, row, index) => {
       lookup[row.id] = index;
       return lookup;
     }, {} as IdLookup);
     rowModelsRef.current = allNewRows;
     if (!isScrollingRef.current) {
-      setRowModelsState(allNewRows);
+      setRowModelsState(p => allNewRows);
     }
   };
 

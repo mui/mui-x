@@ -4,8 +4,7 @@ import {
   RowClickedParam,
   RowId,
   RowModel,
-  Rows,
-  RowSelectedParam,
+  RowSelectedParam, RowsProp,
   SelectionChangedParam,
 } from '../../models';
 import { useLogger } from '../utils/useLogger';
@@ -18,7 +17,12 @@ import {
 import { GridApi, SelectionApi } from '../../models/gridApi';
 import { GridApiRef } from '../../grid';
 
-export const useSelection = (options: GridOptions, rows: Rows, initialised: boolean, apiRef: GridApiRef): void => {
+export const useSelection = (
+  options: GridOptions,
+  rowsProp: RowsProp,
+  initialised: boolean,
+  apiRef: GridApiRef,
+): void => {
   const logger = useLogger('useSelection');
   const selectedItemsRef = useRef<RowId[]>([]);
   const allowMultipleSelectionKeyPressed = useRef<boolean>(false);
@@ -147,4 +151,12 @@ export const useSelection = (options: GridOptions, rows: Rows, initialised: bool
       apiRef.current = Object.assign(apiRef.current, selectionApi) as GridApi;
     }
   }, [apiRef]);
+
+  useEffect(() => {
+    selectedItemsRef.current = [];
+    if (apiRef && apiRef.current != null) {
+      const selectionChangedParam: SelectionChangedParam = { rows: [] };
+      apiRef.current!.emit(SELECTION_CHANGED_EVENT, selectionChangedParam);
+    }
+  }, [rowsProp]);
 };

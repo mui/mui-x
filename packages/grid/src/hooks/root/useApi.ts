@@ -133,7 +133,7 @@ export const useApi = (
       apiRef.current!.on(COL_RESIZE_STOP, handleResizeStop);
 
       return () => {
-        logger.info('Clearing all events listeners');
+        logger.debug('Clearing all events listeners');
         gridRootRef.current!.removeEventListener(CLICK_EVENT, onClickHandler, { capture: true });
         document.removeEventListener(KEYDOWN_EVENT, keyDownHandler);
         document.removeEventListener(KEYUP_EVENT, keyUpHandler);

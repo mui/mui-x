@@ -52,6 +52,14 @@ export const ColumnHeaderItem = React.memo(
         aria-colindex={colIndex + 1}
         {...ariaSort}
       >
+        {column.type === 'number' && (
+          <ColumnHeaderSortIcon
+            direction={column.sortDirection}
+            index={column.sortIndex}
+            icons={icons}
+            hide={column.hideSortIcons}
+          />
+        )}
         {headerComponent || (
           <ColumnHeaderTitle
             label={column.headerName || column.field}
@@ -59,12 +67,14 @@ export const ColumnHeaderItem = React.memo(
             columnWidth={width}
           />
         )}
-        <ColumnHeaderSortIcon
-          direction={column.sortDirection}
-          index={column.sortIndex}
-          icons={icons}
-          hide={column.hideSortIcons}
-        />
+        {column.type !== 'number' && (
+          <ColumnHeaderSortIcon
+            direction={column.sortDirection}
+            index={column.sortIndex}
+            icons={icons}
+            hide={column.hideSortIcons}
+          />
+        )}
         <ColumnHeaderSeparator resizable={column.resizable} onResize={onResize} />
       </div>
     );

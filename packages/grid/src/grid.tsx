@@ -42,7 +42,7 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
   const internalColumns = useColumns(internalOptions, columns, apiRef);
   const internalRows = useRows(internalOptions, rows, initialised, apiRef);
   useKeyboard(initialised, apiRef);
-  useSelection(internalOptions, internalRows, initialised, apiRef);
+  useSelection(internalOptions, rows, initialised, apiRef);
   useSorting(internalOptions, rows, columns, apiRef);
 
   const [renderCtx, resizeGrid] = useVirtualRows(

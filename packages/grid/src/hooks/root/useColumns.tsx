@@ -119,7 +119,7 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
   const stateRef = useRef<InternalColumns>(state);
 
   const updateState = (newState: InternalColumns, emit = true) => {
-    setInternalColumns(newState);
+    setInternalColumns(p => newState);
     stateRef.current = newState;
     if (apiRef.current && emit) {
       apiRef.current.emit(COLUMNS_UPDATED, newState.all);

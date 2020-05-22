@@ -32,7 +32,7 @@ export const useVirtualRows = (
 ): UseVirtualRowsReturnType => {
   const logger = useLogger('useVirtualRows');
   const pageRef = useRef<number>(0);
-  const rowsCount = useRef<number>(0);
+  const rowsCount = useRef<number>(rows.length);
   const containerPropsRef = useRef<ContainerProps | null>(null);
   const realScrollRef = useRef<ScrollParams>({ left: 0, top: 0 });
   const rzScrollRef = useRef<ScrollParams>({ left: 0, top: 0 });
@@ -85,7 +85,7 @@ export const useVirtualRows = (
     if (windowRef && windowRef.current && containerPropsRef && containerPropsRef.current) {
       const containerProps = containerPropsRef.current;
       const { scrollLeft, scrollTop } = windowRef.current;
-      logger.debug(`--- Handling scroll Left: ${scrollLeft} Top: ${scrollTop}`);
+      logger.debug(`Handling scroll Left: ${scrollLeft} Top: ${scrollTop}`);
 
       let requireRerender = updateRenderedCols(containerProps, scrollLeft);
 
@@ -93,10 +93,7 @@ export const useVirtualRows = (
       const rzScrollLeft = scrollLeft;
       let currentPage = scrollTop / viewportHeight;
       const rzScrollTop = scrollTop % viewportHeight;
-      logger.debug(` viewportHeight:${viewportHeight},
-      rzScrollTop: ${rzScrollTop},  
-      scrollTop: ${scrollTop},  
-      current page = ${currentPage}`);
+      logger.debug(` viewportHeight:${viewportHeight}, rzScrollTop: ${rzScrollTop}, scrollTop: ${scrollTop}, current page = ${currentPage}`);
 
       const scrollParams = { left: rzScrollLeft, top: rzScrollTop };
 
@@ -116,8 +113,6 @@ export const useVirtualRows = (
       if (requireRerender) {
         reRender();
       }
-
-      logger.debug('---');
     }
   }, 10);
 
@@ -140,6 +135,7 @@ export const useVirtualRows = (
 
   const updateContainerSize = () => {
     if (columnTotalWidthRef.current > 0) {
+      rowsCount.current = apiRef?.current?.getRowsCount() || 0; //we ensure we call with latest length
       containerPropsRef.current = getContainerProps(options, columnTotalWidthRef.current, rowsCount.current);
       updateViewport();
       reRender();

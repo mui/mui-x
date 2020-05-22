@@ -53,7 +53,7 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportP
       ));
     }; //, [rows, visibleColumns, renderCtx]);
 
-    logger.info('Rendering ViewPort');
+    logger.debug('Rendering ViewPort');
     return (
       <StickyContainer {...renderCtx.viewportSize}>
         <RenderingZone ref={renderingZoneRef} {...renderCtx.renderingZone}>
