@@ -16,7 +16,7 @@ const loadFile = async (file: string) => {
   return data;
 };
 
-export const CommodityGridDemo: React.FC<{}> = props => {
+export const RealDataGridDemo: React.FC<{}> = props => {
   const [size, setSize] = useState(100);
   const [type, setType] = useState('commodity');
 
@@ -31,8 +31,17 @@ export const CommodityGridDemo: React.FC<{}> = props => {
     setCols(gridColumns);
     setLoading(true);
 
-    loadFile(`./static-data/${type}-${size}.json`).then(
+    loadFile(`./static-data/${type}-1000.json`).then(
       data => {
+        if(size > 1000) {
+          while(data.length < size) {
+            data = [...data, ...data];
+          }
+          data = data.map((row, idx) => ({ ...row, ...{id: idx} }) );
+        }
+        data.length = size;
+
+        console.log(`Setting rows with length ${data.length}`);
         setRows(data);
         setLoading(false);
       },
@@ -43,8 +52,12 @@ export const CommodityGridDemo: React.FC<{}> = props => {
   }, [setRows, type, size]);
 
   const onApplyClick = (settings: { size: number; type: string; selectedTheme: string }) => {
-    setSize(settings.size);
-    setType(settings.type.toLowerCase());
+    if(size !== settings.size) {
+      setSize(settings.size);
+    }
+    if(type !== settings.type) {
+      setType(settings.type.toLowerCase());
+    }
     if (settings.selectedTheme !== themeId) {
       toggleTheme();
     }
@@ -58,7 +71,7 @@ export const CommodityGridDemo: React.FC<{}> = props => {
       <MainContainer>
         <div style={{ display: 'flex', boxSizing: 'border-box' }} className={'fill-space'}>
           <div className={'grow'}>
-            <DataGrid rows={rows as any} columns={cols as any} loading={loading} />
+            <DataGrid rows={rows as any} columns={cols as any} loading={loading} options={{checkboxSelection: true}} />
           </div>
         </div>
       </MainContainer>
