@@ -9,7 +9,10 @@ export interface ScrollParams {
 }
 export type ScrollFn = (v: ScrollParams) => void;
 
-export function useScrollFn(scrollingElementRef: React.RefObject<HTMLDivElement>): ScrollFn {
+export function useScrollFn(
+  scrollingElementRef: React.RefObject<HTMLDivElement>,
+  onScroll?: ScrollFn,
+): [ScrollFn, ScrollFn] {
   const logger = useLogger('useScrollFn');
   const rafRef = useRef(0);
   const rafResetPointerRef = useRef(0);
@@ -31,14 +34,17 @@ export function useScrollFn(scrollingElementRef: React.RefObject<HTMLDivElement>
 
       if (scrollingElementRef && scrollingElementRef.current) {
         rafRef.current = 0;
-        logger.debug(`Moving ${scrollingElementRef.current.className} to: ${v.top}`);
-        // ref.current!.scrollTo(v);
+        logger.debug(`Moving ${scrollingElementRef.current.className} to: ${v.left}-${v.top}`);
         if (scrollingElementRef.current!.style.pointerEvents !== 'none') {
           scrollingElementRef.current!.style.pointerEvents = 'none';
         }
         scrollingElementRef.current!.style.transform = `translate(-${v.left}px, -${v.top}px)`;
         debouncedResetPointerEvents();
         previousValue.current = v;
+
+        if (onScroll) {
+          onScroll(v);
+        }
       }
     },
     [scrollingElementRef],
@@ -52,5 +58,5 @@ export function useScrollFn(scrollingElementRef: React.RefObject<HTMLDivElement>
     };
   }, [scrollingElementRef]);
 
-  return runScroll;
+  return [runScroll, scrollTo];
 }

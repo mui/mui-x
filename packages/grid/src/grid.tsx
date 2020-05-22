@@ -24,6 +24,7 @@ export interface GridProps {
 export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, apiRef, loading }) => {
   const logger = useLogger('Grid');
   const gridRootRef = useRef<HTMLDivElement>(null);
+  const columnsHeaderRef = useRef<HTMLDivElement>(null);
   const columnsContainerRef = useRef<HTMLDivElement>(null);
   const windowRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -45,7 +46,7 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
   useSorting(internalOptions, rows, columns, apiRef);
 
   const [renderCtx, resizeGrid] = useVirtualRows(
-    columnsContainerRef,
+    columnsHeaderRef,
     windowRef,
     renderingZoneRef,
     internalColumns,
@@ -53,9 +54,7 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
     internalOptions,
     apiRef,
   );
-  const columnsHeaderRef = useRef<HTMLDivElement>(null);
 
-  //TODO move this call in grid use ref...
   const onResizeColumn = useColumnResize(columnsHeaderRef, apiRef, internalOptions.headerHeight);
 
   useEffect(() => {
@@ -99,6 +98,7 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
                 icons={internalOptions.icons.sortedColumns}
                 headerHeight={internalOptions.headerHeight}
                 onResizeColumn={onResizeColumn}
+                renderCtx={renderCtx}
               />
             </ColumnsContainer>
             {!loading && internalRows.length === 0 && <NoRowMessage />}
@@ -107,7 +107,10 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
               <DataContainer
                 ref={gridRef}
                 className={DATA_CONTAINER_CSS_CLASS}
-                style={{ minHeight: renderCtx?.totalHeight, minWidth: renderCtx?.totalWidth }}
+                style={{
+                  minHeight: renderCtx?.dataContainerSizes?.height,
+                  minWidth: renderCtx?.dataContainerSizes?.width,
+                }}
               >
                 {renderCtx != null && (
                   <RenderContext.Provider value={renderCtx}>

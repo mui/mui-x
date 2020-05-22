@@ -1,15 +1,9 @@
-import React, { useContext } from 'react';
-import { ColDef, Columns } from '../models';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { ColDef, Columns, RenderContextProps } from '../models';
 import { ColumnHeaderItem } from './column-header-item';
 import { ApiContext } from './api-context';
+import { LeftEmptyCell, RightEmptyCell } from './cell';
 
-export interface ColumnsHeaderProps {
-  columns: Columns;
-  hasScrollX: boolean;
-  headerHeight: number;
-  icons: { [key: string]: React.ReactElement };
-  onResizeColumn: (col: ColDef) => void;
-}
 export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
   icons: { [key: string]: React.ReactElement }; //TODO move to context
@@ -34,23 +28,61 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
 );
 ColumnHeaderItemCollection.displayName = 'ColumnHeaderItemCollection';
 
+export interface ColumnsHeaderProps {
+  columns: Columns;
+  hasScrollX: boolean;
+  headerHeight: number;
+  icons: { [key: string]: React.ReactElement };
+  onResizeColumn: (col: ColDef) => void;
+  renderCtx: Partial<RenderContextProps> | null;
+}
+
 export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps>(
-  ({ columns, hasScrollX, icons, headerHeight, onResizeColumn }, columnsHeaderRef) => {
+  ({ columns, hasScrollX, icons, headerHeight, onResizeColumn, renderCtx }, columnsHeaderRef) => {
     const wrapperCssClasses = 'material-col-cell-wrapper ' + (hasScrollX ? 'scroll' : '');
     const api = useContext(ApiContext);
 
     if (!api) {
       throw new Error('ApiRef not found in context');
     }
+    const lastRenderedColIndexes = useRef({ first: renderCtx?.firstColIdx, last: renderCtx?.lastColIdx });
+    const [renderedCols, setRenderedCols] = useState(columns);
+
+    useEffect(() => {
+      if (
+        renderCtx &&
+        renderCtx.firstColIdx != null &&
+        renderCtx.lastColIdx != null &&
+        (lastRenderedColIndexes.current.first !== renderCtx.firstColIdx ||
+          lastRenderedColIndexes.current.last !== renderCtx.lastColIdx)
+      ) {
+        setRenderedCols(columns.slice(renderCtx.firstColIdx, renderCtx.lastColIdx + 1));
+        lastRenderedColIndexes.current = { first: renderCtx.firstColIdx, last: renderCtx.lastColIdx };
+      }
+    }, [renderCtx]);
+
+    useEffect(() => {
+      if (renderCtx && renderCtx.firstColIdx != null && renderCtx.lastColIdx != null) {
+        setRenderedCols(columns.slice(renderCtx.firstColIdx, renderCtx.lastColIdx + 1));
+      }
+    }, [columns]);
 
     return (
-      <div ref={columnsHeaderRef} key={'columns'} className={wrapperCssClasses} aria-rowindex={1}>
+      <div
+        ref={columnsHeaderRef}
+        key={'columns'}
+        className={wrapperCssClasses}
+        aria-rowindex={1}
+        style={{ minWidth: renderCtx?.totalSizes?.width }}
+      >
+        <LeftEmptyCell key={'left-empty'} width={renderCtx?.leftEmptyWidth} />
         <ColumnHeaderItemCollection
-          columns={columns}
+          columns={renderedCols}
           onResizeColumn={onResizeColumn}
           headerHeight={headerHeight}
           icons={icons}
         />
+        <RightEmptyCell key={'right-empty'} width={renderCtx?.rightEmptyWidth} />
       </div>
     );
   },

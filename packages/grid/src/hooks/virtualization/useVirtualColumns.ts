@@ -90,10 +90,10 @@ export const useVirtualColumns = (options: GridOptions, apiRef: GridApiRef): Use
           lastDisplayedIdx + columnBuffer >= visibleColumns.length - 1
             ? visibleColumns.length - 1
             : lastDisplayedIdx + columnBuffer,
-        left: 0,
+        leftEmptyWidth: 0,
         rightEmptyWidth: 0,
       };
-      newRenderedColState.left = columnsMeta.positions[newRenderedColState.firstColIdx];
+      newRenderedColState.leftEmptyWidth = columnsMeta.positions[newRenderedColState.firstColIdx];
       if (containerProps.hasScrollX) {
         newRenderedColState.rightEmptyWidth =
           columnsMeta.totalWidth -

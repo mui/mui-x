@@ -39,8 +39,10 @@ export const useVirtualRows = (
   const columnTotalWidthRef = useRef<number>(internalColumns.meta.totalWidth);
   const renderCtxRef = useRef<Partial<RenderContextProps>>();
 
-  const scrollTo = useScrollFn(renderingZoneRef);
-  // const scrollColHeaderTo = useScrollFn(colRef);
+  const [, scrollColHeaderTo] = useScrollFn(colRef);
+  const onDataScroll = (v: ScrollParams) => scrollColHeaderTo({ left: v.left, top: 0 });
+  const [scrollTo] = useScrollFn(renderingZoneRef, onDataScroll);
+
   const getContainerProps = useContainerProps(windowRef);
   const [renderCtx, setRenderCtx] = useState<Partial<RenderContextProps> | null>(null);
   const [renderedColRef, updateRenderedCols] = useVirtualColumns(options, apiRef);
@@ -107,7 +109,6 @@ export const useVirtualRows = (
         requireRerender = true;
       } else {
         scrollTo(scrollParams);
-        colRef.current!.scroll({ ...scrollParams, ...{ top: 0 } });
         apiRef.current!.emit(SCROLLING, scrollParams);
       }
       rzScrollRef.current = scrollParams;
@@ -124,7 +125,6 @@ export const useVirtualRows = (
     if (renderingZoneRef && renderingZoneRef.current) {
       logger.debug('applying scrollTop ', rzScrollRef.current);
       scrollTo(rzScrollRef.current);
-      // scrollColHeaderTo({ ...rzScrollRef.current, ...{ top: 0 } });
     }
   });
 

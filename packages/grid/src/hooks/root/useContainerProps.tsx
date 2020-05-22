@@ -46,8 +46,14 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>): R
         hasScrollY,
         hasScrollX,
         scrollBarSize,
-        totalWidth: dataContainerWidth,
-        totalHeight: totalHeight || 1, //min 1px if no rows
+        totalSizes: {
+          width: columnsTotalWidth,
+          height: totalHeight || 1,
+        },
+        dataContainerSizes: {
+          width: dataContainerWidth,
+          height: totalHeight || 1,
+        },
         renderingZone: {
           width: dataContainerWidth,
           height: renderingZoneHeight,
