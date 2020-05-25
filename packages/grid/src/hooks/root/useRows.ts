@@ -30,12 +30,14 @@ export const useRows = (options: GridOptions, rows: RowsProp, initialised: boole
     }, {} as IdLookup);
     rowModelsRef.current = allNewRows;
     if (!isScrollingRef.current) {
+      logger.debug(`Setting RowModelState to new rows with length ${allNewRows.length}`);
       setRowModelsState(p => allNewRows);
     }
   };
 
   useEffect(() => {
     logger.debug('Rows updated.');
+    isScrollingRef.current = false;
     updateAllRows(rowModels);
   }, [rows]);
 
