@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { AppBreadcrumbs } from '../../app-breadcrumbs';
-import { Grid as DataGrid } from '@material-ui-x/grid';
+import { Columns, Grid as DataGrid, RowModel } from '@material-ui-x/grid';
 import { MainContainer } from './components/main-container';
 import { SettingsPanel } from './components/settings-panel';
 import { commodityColumns, employeeColumns } from '@material-ui-x/grid-data-generator';
@@ -14,6 +14,24 @@ const loadFile = async (file: string) => {
   const data = await response.json();
 
   return data;
+};
+
+const mapDates = (data: RowModel[], columns: Columns) => {
+  const dateCols = columns.filter(c => c.type === 'date' || c.type === 'dateTime');
+
+  if (dateCols.length === 0) {
+    return;
+  }
+
+  const mappedData = data.map(row => {
+    dateCols.forEach(dateCol => {
+      row[dateCol.field] = new Date(row[dateCol.field]);
+    });
+
+    return row;
+  });
+
+  return mappedData;
 };
 
 export const RealDataGridDemo: React.FC<{}> = props => {
@@ -40,6 +58,7 @@ export const RealDataGridDemo: React.FC<{}> = props => {
           data = data.map((row, idx) => ({ ...row, ...{ id: idx } }));
         }
         data.length = size;
+        data = mapDates(data, gridColumns as Columns);
 
         console.log(`Setting rows with length ${data.length}`);
         setRows(data);
