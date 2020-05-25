@@ -64,8 +64,8 @@ export const useVirtualColumns = (options: GridOptions, apiRef: GridApiRef): Use
     const windowWidth = containerProps.windowSizes.width;
     lastScrollLeftRef.current = scrollLeft;
     logger.debug(
-      `Columns from ${getColumnFromScroll(scrollLeft)?.headerName} to ${
-        getColumnFromScroll(scrollLeft + windowWidth)?.headerName
+      `Columns from ${getColumnFromScroll(scrollLeft)?.field} to ${
+        getColumnFromScroll(scrollLeft + windowWidth)?.field
       }`,
     );
     const firstDisplayedIdx = getColumnIdxFromScroll(scrollLeft);

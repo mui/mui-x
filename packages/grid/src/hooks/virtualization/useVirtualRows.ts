@@ -126,13 +126,13 @@ export const useVirtualRows = (
   });
 
   const resetScroll = () => {
+    scrollTo({ left: 0, top: 0 });
     pageRef.current = 0;
 
     if (windowRef && windowRef.current) {
       windowRef.current.scrollTo(0, 0);
     }
     rzScrollRef.current = { left: 0, top: 0 };
-    scrollTo({ left: 0, top: 0 });
   };
 
   const updateContainerSize = () => {
