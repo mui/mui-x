@@ -3,12 +3,17 @@ import { ColDef } from './colDef';
 import React from 'react';
 import ArrowUpIcon from '@material-ui/icons/ArrowUpward';
 import ArrowDownIcon from '@material-ui/icons/ArrowDownward';
+import {SortDirection, SortModel} from "./sortModel";
+import {Logger} from "../hooks/utils";
 
 export interface ColumnHeaderClickedParam {
   field: string;
   column: ColDef;
 }
-
+export interface ColumnSortedParams {
+  sortedColumns: ColDef[];
+  sortModel: SortModel;
+}
 export interface RowClickedParam {
   element: HTMLElement;
   rowModel: RowModel;
@@ -34,10 +39,8 @@ export interface RowSelectedParam {
 export interface SelectionChangedParam {
   rows: RowData[];
 }
+//TODO Do something to have a better way to pass icons
 //Todo add multiSortKey
-//Todo add sortingOrder
-//Todo add logger
-
 export interface GridOptions {
   rowHeight: number;
   headerHeight: number;
@@ -47,16 +50,21 @@ export interface GridOptions {
   enableMultipleColumnsSorting: boolean;
   showCellRightBorder: boolean;
   extendRowFullWidth: boolean;
+  sortingOrder: SortDirection[];
 
   onCellClicked?: (param: CellClickedParam) => void;
   onRowClicked?: (param: RowClickedParam) => void;
   onRowSelected?: (param: RowSelectedParam) => void;
   onSelectionChanged?: (param: SelectionChangedParam) => void;
   onColumnHeaderClicked?: (param: ColumnHeaderClickedParam) => void;
+  onColumnsSorted?:(params: ColumnSortedParams)=> void
 
   checkboxSelection?: boolean;
   disableSelectionOnClick?: boolean;
   showColumnSeparator?: boolean;
+  logger?: Logger;
+  loadingOverlayComponent?: React.ReactNode;
+  noRowsOverlayComponent?: React.ReactNode;
   icons: {
     sortedColumns: {
       asc: React.ReactElement;
@@ -74,6 +82,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   enableMultipleColumnsSorting: true,
   showCellRightBorder: false,
   extendRowFullWidth: true,
+  sortingOrder: ['asc', 'desc', null],
   icons: {
     sortedColumns: {
       asc: <ArrowUpIcon className={'icon'} />,

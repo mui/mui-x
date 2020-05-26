@@ -2,7 +2,7 @@ import { EventEmitter } from 'events';
 import { CellIndexCoordinates, RowData, RowId, RowModel, Rows } from './rows';
 import { ColDef, Columns, ColumnsMeta } from './colDef';
 import { SortModel } from './sortModel';
-import { RowSelectedParam, SelectionChangedParam } from './gridOptions';
+import { ColumnSortedParams, RowSelectedParam, SelectionChangedParam } from './gridOptions';
 import { ScrollParams } from '../hooks/utils';
 import { ContainerProps } from './containerProps';
 
@@ -40,6 +40,7 @@ export interface SelectionApi {
 export interface SortApi {
   getSortModel: () => SortModel;
   setSortModel: (model: SortModel) => void;
+  onColumnsSorted: (handler: (param: ColumnSortedParams) => void) => () => void;
 }
 export interface VirtualizationApi {
   scroll: (params: Partial<ScrollParams>) => void;

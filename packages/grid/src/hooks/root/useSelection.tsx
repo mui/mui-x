@@ -35,7 +35,7 @@ export const useSelection = (
 
   const selectRowModel = (row: RowModel, allowMultipleOverride?: boolean, isSelected?: boolean) => {
     if (!apiRef || apiRef.current == null) {
-      throw 'ApiRef should be defined at this stage';
+      throw new Error('ApiRef should be defined at this stage');
     }
 
     if (!apiRef.current.isInitialised) {
@@ -70,6 +70,7 @@ export const useSelection = (
     apiRef!.current!.updateRowModels([...updatedRowModels, { ...row, selected: isRowSelected }]);
 
     if (apiRef && apiRef.current != null) {
+      logger.info(`Row at index ${rowIndex} has changed to ${isRowSelected ? 'selected' : 'unselected'} `)
       const rowSelectedParam: RowSelectedParam = { data: row.data, isSelected: isRowSelected, rowIndex };
       const selectionChangedParam: SelectionChangedParam = { rows: getSelectedRows().map(r => r.data) };
       apiRef.current!.emit(ROW_SELECTED_EVENT, rowSelectedParam);
@@ -132,7 +133,7 @@ export const useSelection = (
       logger.debug('Binding click event');
       apiRef.current.on(ROW_CLICKED, rowClickedHandler);
       apiRef.current.on(MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
-      //TODO handle Cell Clicked?
+      //TODO handle Cell Clicked/range selection?
 
       if (selectedItemsRef.current.length > 0) {
         selectRows(selectedItemsRef.current);

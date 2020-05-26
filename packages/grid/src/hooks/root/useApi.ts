@@ -6,9 +6,10 @@ import {
   CLICK_EVENT,
   COL_RESIZE_START,
   COL_RESIZE_STOP,
-  COLUMN_HEADER_CLICKED,
+  COLUMN_HEADER_CLICKED, COLUMNS_SORTED,
   KEYDOWN_EVENT,
   KEYUP_EVENT,
+  POST_SORT,
   ROW_CLICKED,
   ROW_SELECTED_EVENT,
   SELECTION_CHANGED_EVENT,
@@ -174,6 +175,11 @@ export const useApi = (
         apiRef.current!.removeListener(COLUMN_HEADER_CLICKED, options.onColumnHeaderClicked!),
       );
     }
+    if (options.onColumnsSorted) {
+      apiRef.current.on(COLUMNS_SORTED, options.onColumnsSorted);
+      unsubscribeHandlers.push(() => apiRef.current!.removeListener(COLUMNS_SORTED, options.onColumnsSorted!));
+    }
+
     return () => {
       logger.info(`Clearing all subscribed options handlers`);
       unsubscribeHandlers.forEach(unsubscribeHandler => unsubscribeHandler());

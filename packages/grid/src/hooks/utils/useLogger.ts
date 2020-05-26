@@ -1,3 +1,5 @@
+import { isFunction } from '../../utils';
+
 const isDebugging = process.env.NODE_ENV !== 'production' || localStorage.getItem('DEBUG') != null;
 
 export interface Logger {
@@ -9,18 +11,18 @@ export interface Logger {
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
-const noopLogger: Logger = {
+export const noopLogger: Logger = {
   debug: noop,
   info: noop,
   warn: noop,
   error: noop,
 };
 
-const getConsoleAppender = (name: string): Logger => {
+const getAppender = (name: string, appender: Logger = console): Logger => {
   const logger = ['debug', 'info', 'warn', 'error'].reduce((logger, method) => {
     logger[method] = (...args: any[]) => {
       const [message, ...rest] = args;
-      (console as any)[method](`[${name}] - ${message}`, ...rest);
+      (appender as any)[method](`[${name}] - ${message}`, ...rest);
     };
     return logger;
   }, {} as any);
@@ -28,9 +30,30 @@ const getConsoleAppender = (name: string): Logger => {
   return logger as Logger;
 };
 
-export function useLogger(name: string): Logger {
+const defaultFactory: LoggerFactoryFn = (name: string) => {
   if (!isDebugging) {
     return noopLogger;
   }
-  return getConsoleAppender(name);
+  return getAppender(name);
+};
+let factory: LoggerFactoryFn = defaultFactory;
+
+export function useLogger(name: string): Logger {
+  return factory(name);
+}
+
+export type LoggerFactoryFn = (name: string) => Logger;
+
+export function useLoggerFactory(customLogger?: Logger | LoggerFactoryFn) {
+  if (!customLogger) {
+    factory = defaultFactory;
+    return;
+  }
+
+  if (isFunction(customLogger)) {
+    factory = customLogger;
+    return;
+  }
+
+  factory = (name: string) => getAppender(name, customLogger);
 }

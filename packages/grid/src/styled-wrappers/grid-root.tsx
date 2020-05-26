@@ -28,7 +28,9 @@ export const RootStyle = styled.div<GridRootProps>`
       outline-width: 2px;
       outline-offset: -3px;
     }
-
+    .overlay {
+      top: ${p => p.options.headerHeight}px;
+    }
     .columns-container {
       position: absolute;
       top: 0;
@@ -39,6 +41,7 @@ export const RootStyle = styled.div<GridRootProps>`
       display: flex;
       flex-direction: column;
       border-bottom: 1px solid #bdc3c7;
+      z-index: 100;
 
       min-height: ${p => p.options.headerHeight}px;
       max-height: ${p => p.options.headerHeight}px;

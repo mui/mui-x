@@ -55,6 +55,34 @@ export const SortedWithColDef = () => {
     </>
   );
 };
+
+export const WithNotNullSortingOrder = () => {
+  const size = { width: 800, height: 600 };
+  const columns: ColDef[] = [
+    { field: 'id' },
+    { field: 'name', sortDirection: 'asc' },
+    { field: 'age', sortDirection: 'desc' },
+  ];
+
+  const rows = [
+    { id: 1, name: 'alice', age: 40 },
+    { id: 2, name: 'bob', age: 30 },
+    { id: 3, name: 'igor', age: 40 },
+    { id: 4, name: 'clara', age: 40 },
+    { id: 5, name: 'clara', age: null },
+    { id: 6, name: null, age: 25 },
+    { id: 7, name: '', age: 42 },
+  ];
+
+  return (
+    <>
+      <p>Maintain CTRL or Command to sort by multiple fields</p>
+      <div style={{ width: size.width, height: size.height, resize: 'both' }}>
+        <Grid rows={rows} columns={columns} options={{sortingOrder:['desc', 'asc']}} />
+      </div>
+    </>
+  );
+};
 export const SortedWithApi = () => {
   const apiRef = useRef<GridApi>();
   useEffect(() => {

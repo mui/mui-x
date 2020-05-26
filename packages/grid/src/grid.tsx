@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import { DataContainer, ColumnsContainer, Window, GridRoot } from './styled-wrappers';
-import { ColumnsHeader, NoRowMessage, Viewport, AutoSizerWrapper, RenderContext, LoadingMessage } from './components';
-import { useColumns, useVirtualRows, useLogger, useSelection, useApi, useRows } from './hooks';
+import { ColumnsHeader, NoRowMessage, Viewport, AutoSizerWrapper, RenderContext, LoadingOverlay } from './components';
+import {useColumns, useVirtualRows, useLogger, useSelection, useApi, useRows, useLoggerFactory} from './hooks';
 import { Columns, DEFAULT_GRID_OPTIONS, ElementSize, GridOptions, RowsProp, GridApi } from './models';
 import { debounce } from './utils';
 import { useSorting } from './hooks/root/useSorting';
@@ -22,6 +22,7 @@ export interface GridProps {
 }
 
 export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, apiRef, loading }) => {
+  useLoggerFactory(options?.logger);
   const logger = useLogger('Grid');
   const gridRootRef = useRef<HTMLDivElement>(null);
   const columnsHeaderRef = useRef<HTMLDivElement>(null);
@@ -75,6 +76,9 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
     `Rendering, page: ${renderCtx?.page}, col: ${renderCtx?.firstColIdx}-${renderCtx?.lastColIdx}, row: ${renderCtx?.firstRowIdx}-${renderCtx?.lastRowIdx}`,
   );
 
+  const loadingComponent = useMemo(()=> internalOptions.loadingOverlayComponent ? internalOptions.loadingOverlayComponent : <LoadingOverlay />, [options]);
+  const noRowsComponent = useMemo(()=> internalOptions.noRowsOverlayComponent ? internalOptions.noRowsOverlayComponent : <NoRowMessage />, [options]);
+
   return (
     <AutoSizerWrapper onResize={onResize}>
       {size => (
@@ -101,8 +105,8 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
                 renderCtx={renderCtx}
               />
             </ColumnsContainer>
-            {!loading && internalRows.length === 0 && <NoRowMessage />}
-            {loading && <LoadingMessage />}
+            {!loading && internalRows.length === 0 && noRowsComponent}
+            {loading && loadingComponent}
             <Window ref={windowRef}>
               <DataContainer
                 ref={gridRef}

@@ -4,16 +4,19 @@ import {
   ColDef,
   ColumnHeaderClickedParam,
   Columns,
+  ColumnSortedParams,
   ComparatorFn,
   FieldComparatorList,
   GridApi,
   GridOptions,
-  RowId, RowModel,
+  RowId,
+  RowModel,
   RowsProp,
   SortApi,
 } from '../../models';
 import {
   COLUMN_HEADER_CLICKED,
+  COLUMNS_SORTED,
   MULTIPLE_KEY_PRESS_CHANGED,
   POST_SORT,
   ROWS_UPDATED,
@@ -23,20 +26,6 @@ import { GridApiRef } from '../../grid';
 import { useLogger } from '../utils';
 import { isDesc, nextSortDirection } from '../../utils/';
 import { SortItem, SortModel } from '../../models/sortModel';
-
-/*
- * Maintain sortModel
- * Create direction flow ASC=>DSC=> NONE
- * add allow multiple sort options
- * Change sort event to onSort
- * Create post sort event
- * Resort after update
- * Allow Multiple
- * Enable server side sorting
- * Restore original sort order;
- * try sort with values mixed string null numbers...
- *
- * */
 
 export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: Columns, apiRef: GridApiRef) => {
   const logger = useLogger('useSorting');
@@ -63,10 +52,10 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
   const createSortItem = (col: ColDef): SortItem | undefined => {
     const existing = sortModelRef.current.find(c => c.colId === col.field);
     if (existing) {
-      const nextSort = nextSortDirection(existing.sort);
+      const nextSort = nextSortDirection(options.sortingOrder, existing.sort);
       return nextSort == null ? undefined : { ...existing, sort: nextSort };
     } else {
-      return { colId: col.field, sort: nextSortDirection() };
+      return { colId: col.field, sort: nextSortDirection(options.sortingOrder) };
     }
   };
 
@@ -90,7 +79,7 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
     return comparatorList;
   };
 
-  const getOriginalOrderedRows: ()=> RowModel[] = ()=> {
+  const getOriginalOrderedRows: () => RowModel[] = () => {
     return originalOrder.current.map(rowId => apiRef.current!.getRowFromId(rowId));
   };
 
@@ -99,7 +88,7 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
       return;
     }
 
-    logger.debug('Sorting rows');
+    logger.info('Sorting rows with ', sortModelRef.current);
     const newRows = apiRef.current.getRowModels();
 
     let sorted = [...newRows];
@@ -110,6 +99,12 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
     }
     apiRef.current!.setRowModels([...sorted]);
     apiRef.current!.emit(POST_SORT, sortModelRef.current);
+
+    const params: ColumnSortedParams = {
+      sortedColumns: sortModelRef.current.map(model => apiRef.current!.getColumnFromField(model.colId)),
+      sortModel: sortModelRef.current,
+    };
+    apiRef.current!.emit(COLUMNS_SORTED, params);
   };
 
   const setSortModel = (sortModel: SortModel) => {
@@ -156,6 +151,10 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
     allowMultipleSorting.current = options.enableMultipleColumnsSorting && isPressed;
   };
 
+  const onColumnsSorted = (handler: (param: ColumnSortedParams) => void): (() => void) => {
+    return apiRef!.current!.registerEvent(COLUMNS_SORTED, handler);
+  };
+
   useEffect(() => {
     if (apiRef && apiRef.current) {
       logger.debug('Binding Sorting events');
@@ -166,7 +165,7 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
 
       logger.debug('Adding sorting to api');
 
-      const sortApi: SortApi = { getSortModel, setSortModel };
+      const sortApi: SortApi = { getSortModel, setSortModel, onColumnsSorted };
       apiRef.current = Object.assign(apiRef.current, sortApi) as GridApi;
 
       return () => {
