@@ -1,10 +1,10 @@
-#Material-ui-x/Grid
+# Material-ui-x/Grid
 
 The official Material-UI Data Grid written in typescript. 
 
 [logo]: https://material-ui.com/static/logo_raw.svg "Material-UI Logo"
 
-##Install
+## Install
 
 ```shell script
 //with npm
@@ -14,7 +14,7 @@ npm install @material-ui-x/grid
 yarn add @material-ui-x/grid
 ```
 
-##Quick Guide
+## Quick Guide
 
 After installing the package, you are now ready to use the grid.
 First you have to import the component as below.
@@ -77,6 +77,6 @@ function MyApp() {
 
 ```
 
-###More Examples on our storybook
+### More Examples on our storybook
 
 https://muix-storybook.netlify.app/
