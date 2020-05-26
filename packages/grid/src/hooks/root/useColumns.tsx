@@ -24,7 +24,7 @@ function hydrateColumns(columns: Columns, options: GridOptions, logger: Logger, 
     mappedCols = [checkboxSelectionColDef, ...mappedCols];
   }
   const sortedCols = mappedCols.filter(c => c.sortDirection != null);
-  if (sortedCols.length > 0 && apiRef.current) {
+  if (sortedCols.length > 1 && apiRef.current) {
     //in case consumer missed to set the sort index
     sortedCols.forEach((c, idx) => {
       if (c.sortIndex == null) {
