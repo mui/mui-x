@@ -2,9 +2,9 @@
 
 The official Material-UI Data Grid written in typescript. 
 
-[logo]: https://material-ui.com/static/logo_raw.svg "Material-UI Logo"
-
 ## Install
+
+Using your favourite package manager, install `@material-ui-x/grid`
 
 ```shell script
 //with npm
@@ -13,6 +13,16 @@ npm install @material-ui-x/grid
 //with yarn
 yarn add @material-ui-x/grid
 ```
+
+This component has 2 peer dependencies that you will need to install as well.
+
+```
+"peerDependencies": {
+    "react": "^16.13.1",
+    "styled-components": "^5.0.1"
+},
+```
+
 
 ## Quick Guide
 
@@ -76,6 +86,8 @@ function MyApp() {
 }
 
 ```
+Code Sandbox here https://codesandbox.io/s/get-started-grid-kkdn2
+
 
 ### More Examples on our storybook
 
