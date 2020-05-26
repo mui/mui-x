@@ -8,7 +8,7 @@ import {
   FieldComparatorList,
   GridApi,
   GridOptions,
-  RowId,
+  RowId, RowModel,
   RowsProp,
   SortApi,
 } from '../../models';
@@ -90,6 +90,10 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
     return comparatorList;
   };
 
+  const getOriginalOrderedRows: ()=> RowModel[] = ()=> {
+    return originalOrder.current.map(rowId => apiRef.current!.getRowFromId(rowId));
+  };
+
   const applySorting = () => {
     if (!apiRef.current) {
       return;
@@ -100,8 +104,7 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
 
     let sorted = [...newRows];
     if (sortModelRef.current.length === 0) {
-      const originalOrderedRows = originalOrder.current.map(id => apiRef.current!.getRowFromId(id));
-      sorted = [...originalOrderedRows];
+      sorted = getOriginalOrderedRows();
     } else {
       sorted = sorted.sort(comparatorListAggregate);
     }
@@ -141,9 +144,8 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
   };
 
   const onRowsUpdated = () => {
-    if (sortModelRef.current.length === 0) {
-      storeOriginalOrder();
-    } else {
+    storeOriginalOrder();
+    if (sortModelRef.current.length > 0) {
       applySorting();
     }
   };
@@ -188,9 +190,8 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
   }, [colsProp]);
 
   useEffect(() => {
-    if (rowsProp.length > 0 && sortModelRef.current.length === 0) {
+    if (rowsProp.length > 0) {
       storeOriginalOrder();
-    } else if (rowsProp.length > 0 && sortModelRef.current.length > 0) {
       applySorting();
     }
   }, [rowsState]);
@@ -201,7 +202,9 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
         .getAllColumns()
         .filter(c => c.sortDirection != null)
         .sort((a, b) => a.sortIndex! - b.sortIndex!);
-      setSortModel(sortedCols.map(c => ({ colId: c.field, sort: c.sortDirection })));
+
+      const sortModel = sortedCols.map(c => ({ colId: c.field, sort: c.sortDirection }));
+      setSortModel(sortModel);
     }
   }, [colState]);
 };
