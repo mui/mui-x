@@ -2,6 +2,8 @@
 
 The official Material-UI Data Grid written in typescript. 
 
+Check out our [Demo here!](https://muix-preview.netlify.app/#/grid)
+
 ## Install
 
 Using your favourite package manager, install `@material-ui-x/grid`
@@ -86,7 +88,7 @@ function MyApp() {
 }
 
 ```
-Code Sandbox here https://codesandbox.io/s/get-started-grid-kkdn2
+Code Sandbox [here!](https://codesandbox.io/s/get-started-grid-kkdn2)
 
 
 ### More Examples on our storybook
