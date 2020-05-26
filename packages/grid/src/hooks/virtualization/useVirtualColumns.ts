@@ -73,7 +73,7 @@ export const useVirtualColumns = (options: GridOptions, apiRef: GridApiRef): Use
     const prevFirstColIdx = renderedColRef?.current?.firstColIdx || 0;
     const prevLastColIdx = renderedColRef?.current?.lastColIdx || 0;
     const columnBuffer = options.columnBuffer;
-    const tolerance = columnBuffer - 1; //Math.floor(columnBuffer / 2);
+    const tolerance = columnBuffer > 1 ? columnBuffer - 1 : columnBuffer; //Math.floor(columnBuffer / 2);
     const diffFirst = Math.abs(firstDisplayedIdx - tolerance - prevFirstColIdx);
     const diffLast = Math.abs(lastDisplayedIdx + tolerance - prevLastColIdx);
     logger.debug(`Column buffer: ${columnBuffer}, tolerance: ${tolerance}`);

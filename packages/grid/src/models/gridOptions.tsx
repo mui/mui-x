@@ -36,6 +36,8 @@ export interface SelectionChangedParam {
 }
 //Todo add multiSortKey
 //Todo add sortingOrder
+//Todo add logger
+
 export interface GridOptions {
   rowHeight: number;
   headerHeight: number;
@@ -67,7 +69,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   rowHeight: 52,
   headerHeight: 56,
   scrollbarSize: 15,
-  columnBuffer: 5,
+  columnBuffer: 2,
   enableMultipleSelection: true,
   enableMultipleColumnsSorting: true,
   showCellRightBorder: false,
