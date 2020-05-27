@@ -1,7 +1,9 @@
 import React from 'react';
-import {ColDef, Grid, GridOverlay} from '@material-ui-x/grid';
-import {LinearProgress} from "@material-ui/core";
+import { ColDef, DEFAULT_GRID_OPTIONS, Grid, GridOverlay } from '@material-ui-x/grid';
+import { LinearProgress } from '@material-ui/core';
 import CodeIcon from '@material-ui/icons/Code';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
 export default {
   title: 'Grid Options',
@@ -37,6 +39,13 @@ export const WithCustomLogger = () => {
     </div>
   );
 };
+export const WithNoLogger = () => {
+  return (
+    <div style={{ width: size.width, height: size.height, resize: 'both' }}>
+      <Grid rows={rows} columns={columns} options={{ logLevel: false }} />
+    </div>
+  );
+};
 
 export const WithCustomLoadingComponent = () => {
   const loadingComponent = (
@@ -56,12 +65,32 @@ export const WithCustomLoadingComponent = () => {
 export const WithCustomNoRowsComponent = () => {
   const loadingComponent = (
     <GridOverlay className={'custom-overlay'}>
-      <CodeIcon /><span style={{lineHeight: '24px', padding: '0 10px'}}>No Rows</span><CodeIcon />
+      <CodeIcon />
+      <span style={{ lineHeight: '24px', padding: '0 10px' }}>No Rows</span>
+      <CodeIcon />
     </GridOverlay>
   );
   return (
     <div style={{ width: size.width, height: size.height, resize: 'both' }}>
       <Grid rows={[]} columns={columns} options={{ noRowsOverlayComponent: loadingComponent }} />
+    </div>
+  );
+};
+export const withCustomIcons = () => {
+  const size = { width: 800, height: 600 };
+
+  return (
+    <div style={{ width: size.width, height: size.height, resize: 'both' }}>
+      <Grid
+        rows={rows}
+        columns={columns}
+        options={{
+          icons: {
+            columnSortedDescending: () => <ExpandMoreIcon className={'icon'} />,
+            columnSortedAscending: () => <ExpandLessIcon className={'icon'} />,
+          },
+        }}
+      />
     </div>
   );
 };

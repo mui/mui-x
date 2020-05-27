@@ -1,10 +1,9 @@
 import { CellValue, RowData, RowModel } from './rows';
 import { ColDef } from './colDef';
 import React from 'react';
-import ArrowUpIcon from '@material-ui/icons/ArrowUpward';
-import ArrowDownIcon from '@material-ui/icons/ArrowDownward';
-import {SortDirection, SortModel} from "./sortModel";
-import {Logger} from "../hooks/utils";
+import { SortDirection, SortModel } from './sortModel';
+import { Logger } from '../hooks/utils';
+import { ArrowDownward, ArrowUpward, SeparatorIcon } from '../components/icons';
 
 export interface ColumnHeaderClickedParam {
   field: string;
@@ -39,7 +38,13 @@ export interface RowSelectedParam {
 export interface SelectionChangedParam {
   rows: RowData[];
 }
-//TODO Do something to have a better way to pass icons
+
+export interface IconsOptions {
+  columnSortedAscending?: React.FC<{}>;
+  columnSortedDescending?: React.FC<{}>;
+  columnResize?: React.FC<{ className: string }>;
+}
+
 //Todo add multiSortKey
 export interface GridOptions {
   rowHeight: number;
@@ -57,20 +62,16 @@ export interface GridOptions {
   onRowSelected?: (param: RowSelectedParam) => void;
   onSelectionChanged?: (param: SelectionChangedParam) => void;
   onColumnHeaderClicked?: (param: ColumnHeaderClickedParam) => void;
-  onColumnsSorted?:(params: ColumnSortedParams)=> void
+  onColumnsSorted?: (params: ColumnSortedParams) => void;
 
   checkboxSelection?: boolean;
   disableSelectionOnClick?: boolean;
   showColumnSeparator?: boolean;
   logger?: Logger;
+  logLevel?: string | boolean;
   loadingOverlayComponent?: React.ReactNode;
   noRowsOverlayComponent?: React.ReactNode;
-  icons: {
-    sortedColumns: {
-      asc: React.ReactElement;
-      desc: React.ReactElement;
-    };
-  };
+  icons: IconsOptions;
 }
 
 export const DEFAULT_GRID_OPTIONS: GridOptions = {
@@ -84,9 +85,10 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   extendRowFullWidth: true,
   sortingOrder: ['asc', 'desc', null],
   icons: {
-    sortedColumns: {
-      asc: <ArrowUpIcon className={'icon'} />,
-      desc: <ArrowDownIcon className={'icon'} />,
-    },
+    // eslint-disable-next-line react/display-name
+    columnSortedAscending: () => <ArrowUpward className={'icon'} />,
+    // eslint-disable-next-line react/display-name
+    columnSortedDescending: () => <ArrowDownward className={'icon'} />,
+    columnResize: SeparatorIcon,
   },
 };

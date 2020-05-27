@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { GridOptions } from '../models';
+import { GridOptions } from '../../models';
 
 export type DivProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -94,11 +94,8 @@ export const RootStyle = styled.div<GridRootProps>`
             justify-content: center;
             min-height: ${p => p.options.headerHeight}px;
 
-            .icon {
-              transform: rotate(90deg);
-              &.separator {
-                color: #bdc3c7;
-              }
+            .icon.separator {
+              color: #bdc3c7;
             }
             &:hover .separator.resizable {
               cursor: col-resize;

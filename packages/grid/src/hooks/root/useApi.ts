@@ -78,7 +78,7 @@ export const useApi = (
       const field = getDataFromElem(cellEl, 'field');
       const value = getDataFromElem(cellEl, 'value');
       const column = apiRef.current!.getColumnFromField(field);
-      if (!column.disableClickEventBubbling) {
+      if (!column || !column.disableClickEventBubbling) {
         const commonParams = { data: rowModel.data, rowIndex, colDef: column };
         const cellParams: CellClickedParam = {
           element: cellEl,

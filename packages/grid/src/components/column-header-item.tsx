@@ -10,14 +10,14 @@ import { ColumnHeaderSeparator } from './column-header-separator';
 interface ColumnHeaderItemProps {
   column: ColDef;
   headerHeight: number;
-  icons: { [key: string]: React.ReactElement };
   colIndex: number;
   onResizeColumn: (c: any) => void;
 }
 
 export const ColumnHeaderItem = React.memo(
-  ({ column, icons, colIndex, headerHeight, onResizeColumn }: ColumnHeaderItemProps) => {
+  ({ column, colIndex, headerHeight, onResizeColumn }: ColumnHeaderItemProps) => {
     const api = useContext(ApiContext);
+
     const cssClass = classnames(
       HEADER_CELL_CSS_CLASS,
       column.headerClass,
@@ -56,7 +56,6 @@ export const ColumnHeaderItem = React.memo(
           <ColumnHeaderSortIcon
             direction={column.sortDirection}
             index={column.sortIndex}
-            icons={icons}
             hide={column.hideSortIcons}
           />
         )}
@@ -71,7 +70,6 @@ export const ColumnHeaderItem = React.memo(
           <ColumnHeaderSortIcon
             direction={column.sortDirection}
             index={column.sortIndex}
-            icons={icons}
             hide={column.hideSortIcons}
           />
         )}
