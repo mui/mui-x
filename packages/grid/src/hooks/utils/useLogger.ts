@@ -1,7 +1,7 @@
 import { isFunction } from '../../utils';
 
 const forceDebug = localStorage.getItem('DEBUG') != null;
-const isDebugging = process.env.NODE_ENV !== 'production' || forceDebug ;
+const isDebugging = process.env.NODE_ENV !== 'production' || forceDebug;
 
 export interface Logger {
   debug: (...args: any[]) => void;
@@ -53,7 +53,7 @@ export type LoggerFactoryFn = (name: string) => Logger;
 //TODO Refactor to allow different logger for each grid in a page...
 let factory: LoggerFactoryFn | null;
 export function useLoggerFactory(customLogger?: Logger | LoggerFactoryFn, logLevel: string | boolean = 'info') {
-  if(forceDebug) {
+  if (forceDebug) {
     factory = defaultFactory('debug');
     return;
   }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ColDef, DEFAULT_GRID_OPTIONS, Grid, GridOverlay } from '@material-ui-x/grid';
+import { ColDef, Grid, GridOverlay } from '@material-ui-x/grid';
 import { LinearProgress } from '@material-ui/core';
 import CodeIcon from '@material-ui/icons/Code';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -28,6 +28,7 @@ const rows = [
 
 export const WithCustomLogger = () => {
   const logger = {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     debug: () => {},
     info: (...args) => console.info('CUSTOM-LOGGING =>' + args[0], args.slice(1)),
     warn: (...args) => console.warn('CUSTOM-LOGGING =>' + args[0], args.slice(1)),
@@ -86,7 +87,9 @@ export const withCustomIcons = () => {
         columns={columns}
         options={{
           icons: {
+            // eslint-disable-next-line react/display-name
             columnSortedDescending: () => <ExpandMoreIcon className={'icon'} />,
+            // eslint-disable-next-line react/display-name
             columnSortedAscending: () => <ExpandLessIcon className={'icon'} />,
           },
         }}

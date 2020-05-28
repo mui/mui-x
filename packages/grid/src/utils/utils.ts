@@ -35,7 +35,7 @@ export function mergeOptions(defaultOptions: any, options?: any) {
   const mergedIcons = { ...defaultIcons, ...optionsIcons };
   const mergedOptions = {
     ...defaultOptions,
-    ...options
+    ...options,
   };
   mergedOptions.icons = mergedIcons;
   return mergedOptions;

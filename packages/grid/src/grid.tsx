@@ -3,7 +3,7 @@ import { DataContainer, ColumnsContainer, Window, GridRoot } from './components/
 import { ColumnsHeader, NoRowMessage, Viewport, AutoSizerWrapper, RenderContext, LoadingOverlay } from './components';
 import { useColumns, useVirtualRows, useLogger, useSelection, useApi, useRows, useLoggerFactory } from './hooks';
 import { Columns, DEFAULT_GRID_OPTIONS, ElementSize, GridOptions, RowsProp, GridApi } from './models';
-import {debounce, mergeOptions} from './utils';
+import { debounce, mergeOptions } from './utils';
 import { useSorting } from './hooks/root/useSorting';
 import { useKeyboard } from './hooks/root/useKeyboard';
 import { ApiContext } from './components/api-context';

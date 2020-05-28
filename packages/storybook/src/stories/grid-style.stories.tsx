@@ -161,8 +161,7 @@ export const withCellClass = () => {
 
   return (
     <div style={{ width: size.width, height: size.height, resize: 'both' }}>
-      <Grid rows={rows} columns={columns}>
-      </Grid>
+      <Grid rows={rows} columns={columns}></Grid>
     </div>
   );
 };

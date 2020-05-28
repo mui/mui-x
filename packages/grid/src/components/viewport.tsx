@@ -1,4 +1,4 @@
-import React, {RefAttributes, useContext, useMemo} from 'react';
+import React, { RefAttributes, useContext } from 'react';
 import { Columns, GridOptions, RenderContextProps, RowModel } from '../models';
 import { useLogger } from '../hooks/utils/useLogger';
 import { RenderingZone } from './rendering-zone';

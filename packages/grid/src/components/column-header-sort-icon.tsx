@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Badge from '@material-ui/core/Badge';
 import { IconsOptions, SortDirection } from '../models';
 import { IconButton } from '@material-ui/core';
-import { OptionsContext } from './options-context';
-import {useIcons} from "../hooks/utils/useIcons";
+
+import { useIcons } from '../hooks/utils/useIcons';
 
 export interface ColumnHeaderSortIconProps {
   direction: SortDirection;
