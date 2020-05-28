@@ -54,8 +54,8 @@ export const useVirtualRows = (
     const containerProps = containerPropsRef.current!;
     const firstRowIdx = page * containerProps.viewportPageSize;
     let lastRowIdx = firstRowIdx + containerProps.renderingZonePageSize;
-    if (lastRowIdx > rowsCount.current - 1) {
-      lastRowIdx = rowsCount.current - 1;
+    if (lastRowIdx > rowsCount.current) {
+      lastRowIdx = rowsCount.current;
     }
     const rowProps: RenderRowProps = { page, firstRowIdx, lastRowIdx };
     return rowProps;
@@ -97,7 +97,7 @@ export const useVirtualRows = (
         ` viewportHeight:${viewportHeight}, rzScrollTop: ${rzScrollTop}, scrollTop: ${scrollTop}, current page = ${currentPage}`,
       );
 
-      const scrollParams = { left: rzScrollLeft, top: rzScrollTop };
+      const scrollParams = { left: rzScrollLeft, top: !options.pagination ? rzScrollTop : 0 };
 
       const page = pageRef.current;
       currentPage = Math.floor(currentPage);
@@ -186,17 +186,18 @@ export const useVirtualRows = (
 
       const currentRowPage = params.rowIndex / containerPropsRef.current!.viewportPageSize;
       const scrollPosition = currentRowPage * containerPropsRef.current!.viewportSize.height;
+      const windowHeight = containerPropsRef.current!.windowSizes.height - (containerPropsRef.current!.hasScrollX ? containerPropsRef.current!.scrollBarSize : 0);
 
-      const isRowIndexAbove = realScrollRef.current.top > scrollPosition; //rzScrollRef.current.top > rowPositionInRenderingZone;
+      const isRowIndexAbove = realScrollRef.current.top > scrollPosition;
       const isRowIndexBelow =
-        realScrollRef.current.top + containerPropsRef.current!.viewportSize.height < scrollPosition + options.rowHeight;
+        realScrollRef.current.top + windowHeight < scrollPosition + options.rowHeight;
 
       if (isRowIndexAbove) {
         scrollTop = scrollPosition; //We put it at the top of the page
         logger.debug(`Row is above, setting scrollTop to ${scrollTop}`);
       } else if (isRowIndexBelow) {
         //We make sure the row is not half visible
-        scrollTop = scrollPosition - containerPropsRef.current!.viewportSize.height + options.rowHeight;
+        scrollTop = scrollPosition - windowHeight + options.rowHeight;
         logger.debug(`Row is below, setting scrollTop to ${scrollTop}`);
       }
 

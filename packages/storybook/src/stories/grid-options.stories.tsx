@@ -5,6 +5,8 @@ import CodeIcon from '@material-ui/icons/Code';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
+import { GridDataSet } from '../components/grid-dataset';
+
 export default {
   title: 'Grid Options',
 };
@@ -95,5 +97,35 @@ export const withCustomIcons = () => {
         }}
       />
     </div>
+  );
+};
+export const withPagination = () => {
+  const size = { width: 800, height: 600 };
+
+  return (
+    <GridDataSet
+      nbRows={2000}
+      nbCols={200}
+      container={size}
+      options={{
+        pagination: true,
+        paginationPageSize: 100,
+      }}
+    />
+  );
+};
+export const withAutoPagination = () => {
+  const size = { width: 800, height: 600 };
+
+  return (
+    <GridDataSet
+      nbRows={2000}
+      nbCols={200}
+      container={size}
+      options={{
+        pagination: true,
+        paginationAutoPageSize: true,
+      }}
+    />
   );
 };

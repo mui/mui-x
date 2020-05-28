@@ -3,6 +3,7 @@ import { ElementSize } from './elementSize';
 export interface ContainerProps {
   renderingZonePageSize: number;
   viewportPageSize: number;
+  viewportAutoPageSize: number;
   lastPage: number;
 
   hasScrollY: boolean;

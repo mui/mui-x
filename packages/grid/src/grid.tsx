@@ -41,7 +41,7 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
   const initialised = useApi(gridRootRef, windowRef, internalOptions, apiRef);
   const internalColumns = useColumns(internalOptions, columns, apiRef);
   const internalRows = useRows(internalOptions, rows, initialised, apiRef);
-  useKeyboard(initialised, apiRef);
+  useKeyboard(internalOptions, initialised, apiRef);
   useSelection(internalOptions, rows, initialised, apiRef);
   useSorting(internalOptions, rows, columns, apiRef);
 
@@ -72,8 +72,7 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
   }, []);
 
   logger.info(
-    `Rendering, page: ${renderCtx?.page}, col: ${renderCtx?.firstColIdx}-${renderCtx?.lastColIdx}, row: ${renderCtx?.firstRowIdx}-${renderCtx?.lastRowIdx}`,
-  );
+    `Rendering, page: ${renderCtx?.page}, col: ${renderCtx?.firstColIdx}-${renderCtx?.lastColIdx}, row: ${renderCtx?.firstRowIdx}-${renderCtx?.lastRowIdx}`, renderCtx);
 
   const loadingComponent = useMemo(
     () => (internalOptions.loadingOverlayComponent ? internalOptions.loadingOverlayComponent : <LoadingOverlay />),

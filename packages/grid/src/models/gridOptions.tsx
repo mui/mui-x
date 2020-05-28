@@ -56,6 +56,9 @@ export interface GridOptions {
   showCellRightBorder: boolean;
   extendRowFullWidth: boolean;
   sortingOrder: SortDirection[];
+  pagination?: boolean;
+  paginationPageSize?: number;
+  paginationAutoPageSize?: boolean;
 
   onCellClicked?: (param: CellClickedParam) => void;
   onRowClicked?: (param: RowClickedParam) => void;

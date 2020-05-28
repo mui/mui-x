@@ -22,7 +22,7 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportP
     const renderCtx = useContext(RenderContext) as RenderContextProps;
 
     const getRowsElements = () => {
-      const renderedRows = rows.slice(renderCtx.firstRowIdx, renderCtx.lastRowIdx! + 1);
+      const renderedRows = rows.slice(renderCtx.firstRowIdx, renderCtx.lastRowIdx!);
       return renderedRows.map((r, idx) => (
         <Row
           className={(renderCtx.firstRowIdx! + idx) % 2 === 0 ? 'even' : 'odd'}

@@ -19,7 +19,7 @@ import {
   isTabKey,
 } from '../../utils';
 import { CELL_CSS_CLASS, ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
-import { CellIndexCoordinates } from '../../models';
+import {CellIndexCoordinates, GridOptions} from '../../models';
 
 const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
   if (!isArrowKeys(code)) {
@@ -39,7 +39,7 @@ const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
   return { ...indexes, rowIndex: indexes.rowIndex + 1 };
 };
 
-export const useKeyboard = (initialised: boolean, apiRef: GridApiRef): void => {
+export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: GridApiRef): void => {
   const logger = useLogger('useKeyboard');
   const isMultipleKeyPressed = useRef(false);
 
@@ -60,7 +60,9 @@ export const useKeyboard = (initialised: boolean, apiRef: GridApiRef): void => {
     const root = findGridRootFromCurrent(cellEl)!;
     const currentColIndex = Number(getDataFromElem(cellEl, 'colindex'));
     const currentRowIndex = Number(getDataFromElem(cellEl, 'rowindex'));
-    const rowCount = apiRef.current!.getRowsCount();
+    const autoPageSize = apiRef.current!.getContainerPropsState()!.viewportAutoPageSize;
+    const pageSize = apiRef.current!.getContainerPropsState()!.viewportPageSize;
+    const rowCount = options.pagination ? pageSize : apiRef.current!.getRowsCount();
     const colCount = apiRef.current!.getVisibleColumns().length;
 
     let nextCellIndexes: CellIndexCoordinates;
@@ -78,8 +80,7 @@ export const useKeyboard = (initialised: boolean, apiRef: GridApiRef): void => {
         nextCellIndexes = { colIndex: colIdx, rowIndex };
       }
     } else if (isPageKeys(code) || isSpaceKey(code)) {
-      const pageSize = apiRef.current!.getContainerPropsState()!.viewportPageSize;
-      const nextRowIndex = currentRowIndex + (code.indexOf('Down') > -1 || isSpaceKey(code) ? pageSize : -1 * pageSize);
+      const nextRowIndex = currentRowIndex + (code.indexOf('Down') > -1 || isSpaceKey(code) ? autoPageSize : -1 * autoPageSize);
       nextCellIndexes = { colIndex: currentColIndex, rowIndex: nextRowIndex };
     } else {
       throw new Error('Key not mapped to navigation behaviour');
