@@ -6,17 +6,15 @@ import { LeftEmptyCell, RightEmptyCell } from './cell';
 
 export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
-  icons: { [key: string]: React.ReactElement }; //TODO move to context
   headerHeight: number;
   onResizeColumn: (col: ColDef) => void;
 }
 export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionProps> = React.memo(
-  ({ icons, headerHeight, onResizeColumn, columns }) => {
+  ({ headerHeight, onResizeColumn, columns }) => {
     const items = columns.map((col, idx) => (
       <ColumnHeaderItem
         key={col.field}
         column={col}
-        icons={icons}
         colIndex={idx}
         headerHeight={headerHeight}
         onResizeColumn={onResizeColumn}
@@ -32,14 +30,13 @@ export interface ColumnsHeaderProps {
   columns: Columns;
   hasScrollX: boolean;
   headerHeight: number;
-  icons: { [key: string]: React.ReactElement };
   onResizeColumn: (col: ColDef) => void;
   renderCtx: Partial<RenderContextProps> | null;
 }
 
 export const ColumnsHeader = memo(
   forwardRef<HTMLDivElement, ColumnsHeaderProps>(
-    ({ columns, hasScrollX, icons, headerHeight, onResizeColumn, renderCtx }, columnsHeaderRef) => {
+    ({ columns, hasScrollX, headerHeight, onResizeColumn, renderCtx }, columnsHeaderRef) => {
       const wrapperCssClasses = 'material-col-cell-wrapper ' + (hasScrollX ? 'scroll' : '');
       const api = useContext(ApiContext);
 
@@ -81,7 +78,6 @@ export const ColumnsHeader = memo(
             columns={renderedCols}
             onResizeColumn={onResizeColumn}
             headerHeight={headerHeight}
-            icons={icons}
           />
           <RightEmptyCell key={'right-empty'} width={renderCtx?.rightEmptyWidth} />
         </div>

@@ -78,7 +78,7 @@ export const WithNotNullSortingOrder = () => {
     <>
       <p>Maintain CTRL or Command to sort by multiple fields</p>
       <div style={{ width: size.width, height: size.height, resize: 'both' }}>
-        <Grid rows={rows} columns={columns} options={{sortingOrder:['desc', 'asc']}} />
+        <Grid rows={rows} columns={columns} options={{ sortingOrder: ['desc', 'asc'] }} />
       </div>
     </>
   );

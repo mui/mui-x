@@ -27,3 +27,16 @@ export function isNumber(value: any): value is number {
 export function isFunction(value: any): value is Function {
   return typeof value === 'function';
 }
+
+//We intentionally set the types to any to avoid circular deps
+export function mergeOptions(defaultOptions: any, options?: any) {
+  const defaultIcons = defaultOptions.icons;
+  const optionsIcons = options?.icons;
+  const mergedIcons = { ...defaultIcons, ...optionsIcons };
+  const mergedOptions = {
+    ...defaultOptions,
+    ...options,
+  };
+  mergedOptions.icons = mergedIcons;
+  return mergedOptions;
+}

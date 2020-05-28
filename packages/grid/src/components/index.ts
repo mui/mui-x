@@ -13,3 +13,4 @@ export * from './column-header-sort-icon';
 export * from './column-header-title';
 export * from './column-header-separator';
 export * from './loading-overlay';
+export * from './styled-wrappers';

@@ -21,7 +21,7 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportP
     const logger = useLogger('Viewport');
     const renderCtx = useContext(RenderContext) as RenderContextProps;
 
-    const getRows = () => {
+    const getRowsElements = () => {
       const renderedRows = rows.slice(renderCtx.firstRowIdx, renderCtx.lastRowIdx! + 1);
       return renderedRows.map((r, idx) => (
         <Row
@@ -47,13 +47,13 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportP
           <RightEmptyCell key={'right-empty'} width={renderCtx.rightEmptyWidth} />
         </Row>
       ));
-    }; //, [rows, visibleColumns, renderCtx]);
+    };
 
     logger.debug('Rendering ViewPort');
     return (
       <StickyContainer {...renderCtx.viewportSize}>
         <RenderingZone ref={renderingZoneRef} {...renderCtx.renderingZone}>
-          {getRows()}
+          {getRowsElements()}
         </RenderingZone>
       </StickyContainer>
     );

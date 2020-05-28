@@ -10,9 +10,8 @@ export interface RowProps {
   rowIndex: number;
 }
 
-export const Row: React.FC<RowProps> = React.memo(({ selected, id, className, rowIndex, children }) => {
+export const Row: React.FC<RowProps> = ({ selected, id, className, rowIndex, children }) => {
   const cssClasses = (selected ? 'selected ' : ' ') + (className || '');
-
   const ariaRowIndex = rowIndex + 2; //1 for the header row and 1 as it's 1 based
   return (
     <div
@@ -27,6 +26,6 @@ export const Row: React.FC<RowProps> = React.memo(({ selected, id, className, ro
       {children}
     </div>
   );
-});
+};
 
 Row.displayName = 'Row';

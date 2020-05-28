@@ -1,6 +1,7 @@
 import { isFunction } from '../../utils';
 
-const isDebugging = process.env.NODE_ENV !== 'production' || localStorage.getItem('DEBUG') != null;
+const forceDebug = localStorage.getItem('DEBUG') != null;
+const isDebugging = process.env.NODE_ENV !== 'production' || forceDebug;
 
 export interface Logger {
   debug: (...args: any[]) => void;
@@ -17,36 +18,47 @@ export const noopLogger: Logger = {
   warn: noop,
   error: noop,
 };
+const LOG_LEVELS = ['debug', 'info', 'warn', 'error'];
+const getAppender = (name: string, logLevel: string, appender: Logger = console): Logger => {
+  const minLogLevelIdx = LOG_LEVELS.indexOf(logLevel);
 
-const getAppender = (name: string, appender: Logger = console): Logger => {
-  const logger = ['debug', 'info', 'warn', 'error'].reduce((logger, method) => {
-    logger[method] = (...args: any[]) => {
-      const [message, ...rest] = args;
-      (appender as any)[method](`[${name}] - ${message}`, ...rest);
-    };
+  if (minLogLevelIdx === -1) {
+    throw new Error(`LogLevel ${logLevel} not recognised`);
+  }
+
+  const logger = LOG_LEVELS.reduce((logger, method, idx) => {
+    if (idx >= minLogLevelIdx) {
+      logger[method] = (...args: any[]) => {
+        const [message, ...rest] = args;
+        (appender as any)[method](`[${name}] - ${message}`, ...rest);
+      };
+    } else {
+      logger[method] = noop;
+    }
     return logger;
   }, {} as any);
 
   return logger as Logger;
 };
 
-const defaultFactory: LoggerFactoryFn = (name: string) => {
+const defaultFactory: (logLevel: string) => LoggerFactoryFn = (logLevel: string) => (name: string) => {
   if (!isDebugging) {
     return noopLogger;
   }
-  return getAppender(name);
+  return getAppender(name, logLevel);
 };
-let factory: LoggerFactoryFn = defaultFactory;
-
-export function useLogger(name: string): Logger {
-  return factory(name);
-}
 
 export type LoggerFactoryFn = (name: string) => Logger;
 
-export function useLoggerFactory(customLogger?: Logger | LoggerFactoryFn) {
+//TODO Refactor to allow different logger for each grid in a page...
+let factory: LoggerFactoryFn | null;
+export function useLoggerFactory(customLogger?: Logger | LoggerFactoryFn, logLevel: string | boolean = 'info') {
+  if (forceDebug) {
+    factory = defaultFactory('debug');
+    return;
+  }
   if (!customLogger) {
-    factory = defaultFactory;
+    factory = !!logLevel ? defaultFactory(logLevel.toString()) : null;
     return;
   }
 
@@ -55,5 +67,11 @@ export function useLoggerFactory(customLogger?: Logger | LoggerFactoryFn) {
     return;
   }
 
-  factory = (name: string) => getAppender(name, customLogger);
+  factory = !!logLevel ? (name: string) => getAppender(name, logLevel.toString(), customLogger) : null;
+}
+export function useLogger(name: string): Logger {
+  if (factory) {
+    return factory(name);
+  }
+  return noopLogger;
 }

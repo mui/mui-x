@@ -2,7 +2,7 @@ import { CellValue, ComparatorFn, SortDirection } from '../models';
 
 export const nextSortDirection = (sortingOrder: SortDirection[], current?: SortDirection) => {
   const currentIdx = sortingOrder.indexOf(current);
-  if (!current || currentIdx === -1 || currentIdx + 1 === sortingOrder.length ) {
+  if (!current || currentIdx === -1 || currentIdx + 1 === sortingOrder.length) {
     return sortingOrder[0];
   }
 

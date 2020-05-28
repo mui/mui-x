@@ -61,7 +61,7 @@ export const Commodity10000 = () => {
 export const Commodity10000NoCheckbox = () => {
   const { data } = useDemoData('Commodity', 10000);
   const options: GridOptionsProp = {
-    checkboxSelection: false
+    checkboxSelection: false,
   };
 
   return (

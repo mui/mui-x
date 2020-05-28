@@ -12,7 +12,7 @@ export const Overlay = styled.div`
   align-self: center;
   align-items: center;
   z-index: 10;
-  
+
   .content {
     flex: 1;
     display: flex;

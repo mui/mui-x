@@ -1,14 +1,15 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
-import { DataContainer, ColumnsContainer, Window, GridRoot } from './styled-wrappers';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { DataContainer, ColumnsContainer, Window, GridRoot } from './components/styled-wrappers';
 import { ColumnsHeader, NoRowMessage, Viewport, AutoSizerWrapper, RenderContext, LoadingOverlay } from './components';
-import {useColumns, useVirtualRows, useLogger, useSelection, useApi, useRows, useLoggerFactory} from './hooks';
+import { useColumns, useVirtualRows, useLogger, useSelection, useApi, useRows, useLoggerFactory } from './hooks';
 import { Columns, DEFAULT_GRID_OPTIONS, ElementSize, GridOptions, RowsProp, GridApi } from './models';
-import { debounce } from './utils';
+import { debounce, mergeOptions } from './utils';
 import { useSorting } from './hooks/root/useSorting';
 import { useKeyboard } from './hooks/root/useKeyboard';
 import { ApiContext } from './components/api-context';
 import { DATA_CONTAINER_CSS_CLASS } from './constants/cssClassesConstants';
 import { useColumnResize } from './hooks/features/useColumnResize';
+import { OptionsContext } from './components/options-context';
 
 export type GridApiRef = React.MutableRefObject<GridApi | null | undefined>;
 export type GridOptionsProp = Partial<GridOptions>;
@@ -22,7 +23,7 @@ export interface GridProps {
 }
 
 export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, apiRef, loading }) => {
-  useLoggerFactory(options?.logger);
+  useLoggerFactory(options?.logger, options?.logLevel);
   const logger = useLogger('Grid');
   const gridRootRef = useRef<HTMLDivElement>(null);
   const columnsHeaderRef = useRef<HTMLDivElement>(null);
@@ -31,10 +32,8 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
   const gridRef = useRef<HTMLDivElement>(null);
   const renderingZoneRef = useRef<HTMLDivElement>(null);
   const internalApiRef = useRef<GridApi | null | undefined>();
-  const [internalOptions, setOptions] = useState<GridOptions>({
-    ...DEFAULT_GRID_OPTIONS,
-    ...options,
-  });
+
+  const [internalOptions, setOptions] = useState<GridOptions>(mergeOptions(DEFAULT_GRID_OPTIONS, options));
 
   if (!apiRef) {
     apiRef = internalApiRef;
@@ -59,7 +58,7 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
   const onResizeColumn = useColumnResize(columnsHeaderRef, apiRef, internalOptions.headerHeight);
 
   useEffect(() => {
-    setOptions({ ...DEFAULT_GRID_OPTIONS, ...options });
+    setOptions(mergeOptions(DEFAULT_GRID_OPTIONS, options));
   }, [options]);
 
   const onResize = debounce((size: ElementSize) => {
@@ -76,8 +75,14 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
     `Rendering, page: ${renderCtx?.page}, col: ${renderCtx?.firstColIdx}-${renderCtx?.lastColIdx}, row: ${renderCtx?.firstRowIdx}-${renderCtx?.lastRowIdx}`,
   );
 
-  const loadingComponent = useMemo(()=> internalOptions.loadingOverlayComponent ? internalOptions.loadingOverlayComponent : <LoadingOverlay />, [options]);
-  const noRowsComponent = useMemo(()=> internalOptions.noRowsOverlayComponent ? internalOptions.noRowsOverlayComponent : <NoRowMessage />, [options]);
+  const loadingComponent = useMemo(
+    () => (internalOptions.loadingOverlayComponent ? internalOptions.loadingOverlayComponent : <LoadingOverlay />),
+    [options],
+  );
+  const noRowsComponent = useMemo(
+    () => (internalOptions.noRowsOverlayComponent ? internalOptions.noRowsOverlayComponent : <NoRowMessage />),
+    [options],
+  );
 
   return (
     <AutoSizerWrapper onResize={onResize}>
@@ -94,40 +99,41 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
           aria-multiselectable={internalOptions.enableMultipleSelection}
         >
           <ApiContext.Provider value={apiRef}>
-            <ColumnsContainer ref={columnsContainerRef}>
-              <ColumnsHeader
-                ref={columnsHeaderRef}
-                columns={internalColumns.visible || []}
-                hasScrollX={!!renderCtx?.hasScrollX}
-                icons={internalOptions.icons.sortedColumns}
-                headerHeight={internalOptions.headerHeight}
-                onResizeColumn={onResizeColumn}
-                renderCtx={renderCtx}
-              />
-            </ColumnsContainer>
-            {!loading && internalRows.length === 0 && noRowsComponent}
-            {loading && loadingComponent}
-            <Window ref={windowRef}>
-              <DataContainer
-                ref={gridRef}
-                className={DATA_CONTAINER_CSS_CLASS}
-                style={{
-                  minHeight: renderCtx?.dataContainerSizes?.height,
-                  minWidth: renderCtx?.dataContainerSizes?.width,
-                }}
-              >
-                {renderCtx != null && (
-                  <RenderContext.Provider value={renderCtx}>
-                    <Viewport
-                      ref={renderingZoneRef}
-                      options={internalOptions}
-                      rows={internalRows}
-                      visibleColumns={internalColumns.visible}
-                    />
-                  </RenderContext.Provider>
-                )}
-              </DataContainer>
-            </Window>
+            <OptionsContext.Provider value={internalOptions}>
+              <ColumnsContainer ref={columnsContainerRef}>
+                <ColumnsHeader
+                  ref={columnsHeaderRef}
+                  columns={internalColumns.visible || []}
+                  hasScrollX={!!renderCtx?.hasScrollX}
+                  headerHeight={internalOptions.headerHeight}
+                  onResizeColumn={onResizeColumn}
+                  renderCtx={renderCtx}
+                />
+              </ColumnsContainer>
+              {!loading && internalRows.length === 0 && noRowsComponent}
+              {loading && loadingComponent}
+              <Window ref={windowRef}>
+                <DataContainer
+                  ref={gridRef}
+                  className={DATA_CONTAINER_CSS_CLASS}
+                  style={{
+                    minHeight: renderCtx?.dataContainerSizes?.height,
+                    minWidth: renderCtx?.dataContainerSizes?.width,
+                  }}
+                >
+                  {renderCtx != null && (
+                    <RenderContext.Provider value={renderCtx}>
+                      <Viewport
+                        ref={renderingZoneRef}
+                        options={internalOptions}
+                        rows={internalRows}
+                        visibleColumns={internalColumns.visible}
+                      />
+                    </RenderContext.Provider>
+                  )}
+                </DataContainer>
+              </Window>
+            </OptionsContext.Provider>
           </ApiContext.Provider>
         </GridRoot>
       )}

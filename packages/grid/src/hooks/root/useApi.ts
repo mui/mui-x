@@ -6,10 +6,10 @@ import {
   CLICK_EVENT,
   COL_RESIZE_START,
   COL_RESIZE_STOP,
-  COLUMN_HEADER_CLICKED, COLUMNS_SORTED,
+  COLUMN_HEADER_CLICKED,
+  COLUMNS_SORTED,
   KEYDOWN_EVENT,
   KEYUP_EVENT,
-  POST_SORT,
   ROW_CLICKED,
   ROW_SELECTED_EVENT,
   SELECTION_CHANGED_EVENT,
@@ -78,7 +78,7 @@ export const useApi = (
       const field = getDataFromElem(cellEl, 'field');
       const value = getDataFromElem(cellEl, 'value');
       const column = apiRef.current!.getColumnFromField(field);
-      if (!column.disableClickEventBubbling) {
+      if (!column || !column.disableClickEventBubbling) {
         const commonParams = { data: rowModel.data, rowIndex, colDef: column };
         const cellParams: CellClickedParam = {
           element: cellEl,

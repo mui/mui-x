@@ -1,7 +1,7 @@
 import React from 'react';
 import { ElementSize } from '../models';
 
-export const StickyContainer: React.FC<ElementSize> = React.memo(({ height, width, children }) => (
+export const StickyContainer: React.FC<ElementSize> = ({ height, width, children }) => (
   <div
     className={'viewport'}
     style={{
@@ -13,5 +13,5 @@ export const StickyContainer: React.FC<ElementSize> = React.memo(({ height, widt
   >
     {children}
   </div>
-));
+);
 StickyContainer.displayName = 'StickyContainer';

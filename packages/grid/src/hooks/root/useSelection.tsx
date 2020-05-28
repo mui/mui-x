@@ -70,7 +70,7 @@ export const useSelection = (
     apiRef!.current!.updateRowModels([...updatedRowModels, { ...row, selected: isRowSelected }]);
 
     if (apiRef && apiRef.current != null) {
-      logger.info(`Row at index ${rowIndex} has changed to ${isRowSelected ? 'selected' : 'unselected'} `)
+      logger.info(`Row at index ${rowIndex} has changed to ${isRowSelected ? 'selected' : 'unselected'} `);
       const rowSelectedParam: RowSelectedParam = { data: row.data, isSelected: isRowSelected, rowIndex };
       const selectionChangedParam: SelectionChangedParam = { rows: getSelectedRows().map(r => r.data) };
       apiRef.current!.emit(ROW_SELECTED_EVENT, rowSelectedParam);
