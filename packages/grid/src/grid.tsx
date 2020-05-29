@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DataContainer, ColumnsContainer, Window, GridRoot } from './components/styled-wrappers';
 import { ColumnsHeader, NoRowMessage, Viewport, AutoSizerWrapper, RenderContext, LoadingOverlay } from './components';
 import { useColumns, useVirtualRows, useLogger, useSelection, useApi, useRows, useLoggerFactory } from './hooks';
@@ -10,6 +10,9 @@ import { ApiContext } from './components/api-context';
 import { DATA_CONTAINER_CSS_CLASS } from './constants/cssClassesConstants';
 import { useColumnResize } from './hooks/features/useColumnResize';
 import { OptionsContext } from './components/options-context';
+
+import { TablePagination } from '@material-ui/core';
+import { usePagination } from './hooks/features/usePagination';
 
 export type GridApiRef = React.MutableRefObject<GridApi | null | undefined>;
 export type GridOptionsProp = Partial<GridOptions>;
@@ -72,7 +75,9 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
   }, []);
 
   logger.info(
-    `Rendering, page: ${renderCtx?.page}, col: ${renderCtx?.firstColIdx}-${renderCtx?.lastColIdx}, row: ${renderCtx?.firstRowIdx}-${renderCtx?.lastRowIdx}`, renderCtx);
+    `Rendering, page: ${renderCtx?.page}, col: ${renderCtx?.firstColIdx}-${renderCtx?.lastColIdx}, row: ${renderCtx?.firstRowIdx}-${renderCtx?.lastRowIdx}`,
+    renderCtx,
+  );
 
   const loadingComponent = useMemo(
     () => (internalOptions.loadingOverlayComponent ? internalOptions.loadingOverlayComponent : <LoadingOverlay />),
@@ -81,6 +86,53 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
   const noRowsComponent = useMemo(
     () => (internalOptions.noRowsOverlayComponent ? internalOptions.noRowsOverlayComponent : <NoRowMessage />),
     [options],
+  );
+
+  /*
+   * Number of pages
+   * current page
+   * Change page - 2 ways using api, or via the UI
+   *
+   * */
+
+//TODO move footer to component
+//  How to use your own footer and pagination
+/*
+ options.footerComponent = <YourFooter>
+
+  <Grid>
+    <Footer>
+      <PaginationHook>
+        {(page, pageSize, pageCount, rowCount, setPage, setPageSize)=>  (
+            <TablePagination
+              component="div"
+              count={rowCount}
+              page={page}
+              onChangePage={setPage}
+              rowsPerPage={pageSize}
+              onChangeRowsPerPage={setPageSize}
+            />
+      </PaginationHook>
+    </Footer>
+  </Grid>
+)}
+  * */
+
+  const [pageCount, setPage, setPageSize] = usePagination(internalRows, internalOptions, setOptions, apiRef);
+  const onPageSizeChange = useCallback(
+    (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+      const newPageSize = Number(event.target.value);
+      setPageSize(newPageSize);
+      setPage(Math.floor(renderCtx!.firstRowIdx! / newPageSize) + 1);
+    },
+    [renderCtx, setPageSize, setPage],
+  );
+
+  const onPageChange = useCallback(
+    (e: any, page: number) => {
+      setPage(page + 1);
+    },
+    [apiRef, setPage],
   );
 
   return (
@@ -99,39 +151,53 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
         >
           <ApiContext.Provider value={apiRef}>
             <OptionsContext.Provider value={internalOptions}>
-              <ColumnsContainer ref={columnsContainerRef}>
-                <ColumnsHeader
-                  ref={columnsHeaderRef}
-                  columns={internalColumns.visible || []}
-                  hasScrollX={!!renderCtx?.hasScrollX}
-                  headerHeight={internalOptions.headerHeight}
-                  onResizeColumn={onResizeColumn}
-                  renderCtx={renderCtx}
-                />
-              </ColumnsContainer>
-              {!loading && internalRows.length === 0 && noRowsComponent}
-              {loading && loadingComponent}
-              <Window ref={windowRef}>
-                <DataContainer
-                  ref={gridRef}
-                  className={DATA_CONTAINER_CSS_CLASS}
-                  style={{
-                    minHeight: renderCtx?.dataContainerSizes?.height,
-                    minWidth: renderCtx?.dataContainerSizes?.width,
-                  }}
-                >
-                  {renderCtx != null && (
-                    <RenderContext.Provider value={renderCtx}>
-                      <Viewport
-                        ref={renderingZoneRef}
-                        options={internalOptions}
-                        rows={internalRows}
-                        visibleColumns={internalColumns.visible}
-                      />
-                    </RenderContext.Provider>
-                  )}
-                </DataContainer>
-              </Window>
+              <div className={'main-grid-container'}>
+                <ColumnsContainer ref={columnsContainerRef}>
+                  <ColumnsHeader
+                    ref={columnsHeaderRef}
+                    columns={internalColumns.visible || []}
+                    hasScrollX={!!renderCtx?.hasScrollX}
+                    headerHeight={internalOptions.headerHeight}
+                    onResizeColumn={onResizeColumn}
+                    renderCtx={renderCtx}
+                  />
+                </ColumnsContainer>
+                {!loading && internalRows.length === 0 && noRowsComponent}
+                {loading && loadingComponent}
+                <Window ref={windowRef}>
+                  <DataContainer
+                    ref={gridRef}
+                    className={DATA_CONTAINER_CSS_CLASS}
+                    style={{
+                      minHeight: renderCtx?.dataContainerSizes?.height,
+                      minWidth: renderCtx?.dataContainerSizes?.width,
+                    }}
+                  >
+                    {renderCtx != null && (
+                      <RenderContext.Provider value={renderCtx}>
+                        <Viewport
+                          ref={renderingZoneRef}
+                          options={internalOptions}
+                          rows={internalRows}
+                          visibleColumns={internalColumns.visible}
+                        />
+                      </RenderContext.Provider>
+                    )}
+                  </DataContainer>
+                </Window>
+              </div>
+              {internalOptions.pagination && internalOptions.paginationPageSize != null && (
+                <div className={'footer'}>
+                  <TablePagination
+                    component="div"
+                    count={internalRows.length}
+                    page={renderCtx?.paginationCurrentPage! - 1}
+                    onChangePage={onPageChange}
+                    rowsPerPage={internalOptions.paginationPageSize}
+                    onChangeRowsPerPage={onPageSizeChange}
+                  />
+                </div>
+              )}
             </OptionsContext.Provider>
           </ApiContext.Provider>
         </GridRoot>

@@ -60,8 +60,8 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
     const root = findGridRootFromCurrent(cellEl)!;
     const currentColIndex = Number(getDataFromElem(cellEl, 'colindex'));
     const currentRowIndex = Number(getDataFromElem(cellEl, 'rowindex'));
-    const autoPageSize = apiRef.current!.getContainerPropsState()!.viewportAutoPageSize;
-    const pageSize = apiRef.current!.getContainerPropsState()!.viewportPageSize;
+    const autoPageSize = apiRef.current!.getContainerPropsState()!.viewportPageSize;
+    const pageSize = options.pagination && options.paginationPageSize != null ? options.paginationPageSize : autoPageSize;
     const rowCount = options.pagination ? pageSize : apiRef.current!.getRowsCount();
     const colCount = apiRef.current!.getVisibleColumns().length;
 

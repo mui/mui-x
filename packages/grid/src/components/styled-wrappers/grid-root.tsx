@@ -20,6 +20,14 @@ export const RootStyle = styled.div<GridRootProps>`
     border: 1px solid #bdc3c7;
     border-radius: 4px;
     outline: none;
+    display: flex;
+    flex-direction: column;
+    
+    .main-grid-container {
+      position: relative;
+      flex-grow: 1;
+      display: flex;
+    }
 
     .material-cell:focus,
     .material-col-cell:focus {

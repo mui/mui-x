@@ -47,6 +47,7 @@ export interface VirtualizationApi {
   scrollToIndexes: (params: CellIndexCoordinates) => void;
   isColumnVisibleInWindow: (colIndex: number) => boolean;
   getContainerPropsState: () => ContainerProps | null;
+  setPage: (page: number)=> void;
 }
 export interface CoreApi extends EventEmitter {
   isInitialised: boolean;
