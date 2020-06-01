@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { DataContainer, ColumnsContainer, Window, GridRoot } from './components/styled-wrappers';
 import { ColumnsHeader, NoRowMessage, Viewport, AutoSizerWrapper, RenderContext, LoadingOverlay } from './components';
 import { useColumns, useVirtualRows, useLogger, useSelection, useApi, useRows, useLoggerFactory } from './hooks';
@@ -10,11 +10,14 @@ import { ApiContext } from './components/api-context';
 import { DATA_CONTAINER_CSS_CLASS } from './constants/cssClassesConstants';
 import { useColumnResize } from './hooks/features/useColumnResize';
 import { OptionsContext } from './components/options-context';
-
-import { TablePagination } from '@material-ui/core';
 import { usePagination } from './hooks/features/usePagination';
+import { DefaultFooter } from './components/default-footer';
+import { GridChildrenProp, useChildren } from './hooks/features/useChildren';
 
 export type GridApiRef = React.MutableRefObject<GridApi | null | undefined>;
+// eslint-disable-next-line react-hooks/rules-of-hooks
+export const gridApiRef = (): GridApiRef => useRef<GridApi | null | undefined>();
+export type GridRootRef = React.RefObject<HTMLDivElement>;
 export type GridOptionsProp = Partial<GridOptions>;
 
 export interface GridProps {
@@ -23,12 +26,13 @@ export interface GridProps {
   options?: GridOptionsProp;
   apiRef?: GridApiRef;
   loading?: boolean;
+  children?: GridChildrenProp;
 }
 
-export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, apiRef, loading }) => {
+export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, apiRef, loading, children }) => {
   useLoggerFactory(options?.logger, options?.logLevel);
   const logger = useLogger('Grid');
-  const gridRootRef = useRef<HTMLDivElement>(null);
+  const gridRootRef: GridRootRef = useRef<HTMLDivElement>(null);
   const columnsHeaderRef = useRef<HTMLDivElement>(null);
   const columnsContainerRef = useRef<HTMLDivElement>(null);
   const windowRef = useRef<HTMLDivElement>(null);
@@ -88,51 +92,16 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
     [options],
   );
 
-  /*
-   * Number of pages
-   * current page
-   * Change page - 2 ways using api, or via the UI
-   *
-   * */
+  const paginationProps = usePagination(internalRows, internalOptions, setOptions, apiRef);
 
-//TODO move footer to component
-//  How to use your own footer and pagination
-/*
- options.footerComponent = <YourFooter>
-
-  <Grid>
-    <Footer>
-      <PaginationHook>
-        {(page, pageSize, pageCount, rowCount, setPage, setPageSize)=>  (
-            <TablePagination
-              component="div"
-              count={rowCount}
-              page={page}
-              onChangePage={setPage}
-              rowsPerPage={pageSize}
-              onChangeRowsPerPage={setPageSize}
-            />
-      </PaginationHook>
-    </Footer>
-  </Grid>
-)}
-  * */
-
-  const [pageCount, setPage, setPageSize] = usePagination(internalRows, internalOptions, setOptions, apiRef);
-  const onPageSizeChange = useCallback(
-    (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-      const newPageSize = Number(event.target.value);
-      setPageSize(newPageSize);
-      setPage(Math.floor(renderCtx!.firstRowIdx! / newPageSize) + 1);
-    },
-    [renderCtx, setPageSize, setPage],
-  );
-
-  const onPageChange = useCallback(
-    (e: any, page: number) => {
-      setPage(page + 1);
-    },
-    [apiRef, setPage],
+  const [footerChildNode, headerChildNode] = useChildren(
+    internalColumns,
+    internalRows,
+    internalOptions,
+    paginationProps,
+    apiRef,
+    gridRootRef,
+    children,
   );
 
   return (
@@ -151,6 +120,7 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
         >
           <ApiContext.Provider value={apiRef}>
             <OptionsContext.Provider value={internalOptions}>
+              {headerChildNode}
               <div className={'main-grid-container'}>
                 <ColumnsContainer ref={columnsContainerRef}>
                   <ColumnsHeader
@@ -186,18 +156,12 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
                   </DataContainer>
                 </Window>
               </div>
-              {internalOptions.pagination && internalOptions.paginationPageSize != null && (
-                <div className={'footer'}>
-                  <TablePagination
-                    component="div"
-                    count={internalRows.length}
-                    page={renderCtx?.paginationCurrentPage! - 1}
-                    onChangePage={onPageChange}
-                    rowsPerPage={internalOptions.paginationPageSize}
-                    onChangeRowsPerPage={onPageSizeChange}
-                  />
-                </div>
-              )}
+              <DefaultFooter
+                paginationProps={paginationProps}
+                rowCount={internalRows.length}
+                options={internalOptions}
+              />
+              {footerChildNode}
             </OptionsContext.Provider>
           </ApiContext.Provider>
         </GridRoot>

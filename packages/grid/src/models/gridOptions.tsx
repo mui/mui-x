@@ -1,9 +1,10 @@
 import { CellValue, RowData, RowModel } from './rows';
 import { ColDef } from './colDef';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { SortDirection, SortModel } from './sortModel';
 import { Logger } from '../hooks/utils';
 import { ArrowDownward, ArrowUpward, SeparatorIcon } from '../components/icons';
+import { PageChangedParams } from '../hooks/features/usePagination';
 
 export interface ColumnHeaderClickedParam {
   field: string;
@@ -57,8 +58,13 @@ export interface GridOptions {
   extendRowFullWidth: boolean;
   sortingOrder: SortDirection[];
   pagination?: boolean;
+  paginationComponent?: (props: any) => ReactNode; //TODO replace any here
   paginationPageSize?: number;
   paginationAutoPageSize?: boolean;
+  hideFooter?: boolean;
+  hideFooterRowCount?: boolean;
+  hideFooterSelectedRowCount?: boolean;
+  hideFooterPagination?: boolean;
 
   onCellClicked?: (param: CellClickedParam) => void;
   onRowClicked?: (param: RowClickedParam) => void;
@@ -66,6 +72,8 @@ export interface GridOptions {
   onSelectionChanged?: (param: SelectionChangedParam) => void;
   onColumnHeaderClicked?: (param: ColumnHeaderClickedParam) => void;
   onColumnsSorted?: (params: ColumnSortedParams) => void;
+  onPageChanged?: (param: PageChangedParams) => void;
+  onPageSizeChanged?: (param: PageChangedParams) => void;
 
   checkboxSelection?: boolean;
   disableSelectionOnClick?: boolean;

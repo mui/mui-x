@@ -19,7 +19,7 @@ import {
   isTabKey,
 } from '../../utils';
 import { CELL_CSS_CLASS, ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
-import {CellIndexCoordinates, GridOptions} from '../../models';
+import { CellIndexCoordinates, GridOptions } from '../../models';
 
 const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
   if (!isArrowKeys(code)) {
@@ -61,7 +61,8 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
     const currentColIndex = Number(getDataFromElem(cellEl, 'colindex'));
     const currentRowIndex = Number(getDataFromElem(cellEl, 'rowindex'));
     const autoPageSize = apiRef.current!.getContainerPropsState()!.viewportPageSize;
-    const pageSize = options.pagination && options.paginationPageSize != null ? options.paginationPageSize : autoPageSize;
+    const pageSize =
+      options.pagination && options.paginationPageSize != null ? options.paginationPageSize : autoPageSize;
     const rowCount = options.pagination ? pageSize : apiRef.current!.getRowsCount();
     const colCount = apiRef.current!.getVisibleColumns().length;
 
@@ -80,7 +81,8 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
         nextCellIndexes = { colIndex: colIdx, rowIndex };
       }
     } else if (isPageKeys(code) || isSpaceKey(code)) {
-      const nextRowIndex = currentRowIndex + (code.indexOf('Down') > -1 || isSpaceKey(code) ? autoPageSize : -1 * autoPageSize);
+      const nextRowIndex =
+        currentRowIndex + (code.indexOf('Down') > -1 || isSpaceKey(code) ? autoPageSize : -1 * autoPageSize);
       nextCellIndexes = { colIndex: currentColIndex, rowIndex: nextRowIndex };
     } else {
       throw new Error('Key not mapped to navigation behaviour');

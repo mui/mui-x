@@ -223,7 +223,8 @@ export const useVirtualRows = (
       const viewportHeight = containerPropsRef.current!.viewportSize.height;
 
       const isRowIndexAbove = realScrollRef.current.top > scrollPosition;
-      const isRowIndexBelow = realScrollRef.current.top + viewportHeight < scrollPosition + optionsRef.current.rowHeight;
+      const isRowIndexBelow =
+        realScrollRef.current.top + viewportHeight < scrollPosition + optionsRef.current.rowHeight;
 
       if (isRowIndexAbove) {
         scrollTop = scrollPosition; //We put it at the top of the page
@@ -257,12 +258,14 @@ export const useVirtualRows = (
     return containerPropsRef.current;
   }, []);
 
-  const setPage = (page: number) => {
+  const getRenderContextState = useCallback(() => {
+    return renderCtxRef.current;
+  }, []);
+
+  const renderPage = (page: number) => {
     paginationCurrentPage.current = page;
     resetScroll();
     updateViewport();
-
-    //TODO emit onPageChanged event
   };
 
   useEffect(() => {
@@ -323,7 +326,8 @@ export const useVirtualRows = (
         scroll,
         scrollToIndexes,
         getContainerPropsState,
-        setPage,
+        getRenderContextState,
+        renderPage,
       };
 
       apiRef.current = Object.assign(apiRef.current, virtualApi) as GridApi;

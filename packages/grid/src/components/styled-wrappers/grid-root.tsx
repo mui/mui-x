@@ -22,13 +22,29 @@ export const RootStyle = styled.div<GridRootProps>`
     outline: none;
     display: flex;
     flex-direction: column;
-    
+
     .main-grid-container {
       position: relative;
       flex-grow: 1;
       display: flex;
     }
 
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: row;
+    }
+    .row-count {
+      display: flex;
+      align-items: center;
+      padding-left: 16px;
+      font-size: 0.875rem;
+      font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      font-weight: 400;
+      line-height: 1.43;
+      letter-spacing: 0.01071em;
+      min-height: 48px;
+    }
     .material-cell:focus,
     .material-col-cell:focus {
       outline: dashed;

@@ -22,7 +22,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>): R
       const rowHeight = options.rowHeight;
       const hasScrollY = windowSizesRef.current.height < rowsCount * rowHeight;
       const hasScrollX = columnsTotalWidth > windowSizesRef.current.width;
-      const scrollBarSize = {y: hasScrollY ? options.scrollbarSize : 0, x: hasScrollX ? options.scrollbarSize : 0};
+      const scrollBarSize = { y: hasScrollY ? options.scrollbarSize : 0, x: hasScrollX ? options.scrollbarSize : 0 };
       const viewportSize = {
         width: windowSizesRef.current!.width - scrollBarSize.y,
         height: windowSizesRef.current!.height - scrollBarSize.x,
