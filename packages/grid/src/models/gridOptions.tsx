@@ -4,7 +4,7 @@ import React, { ReactNode } from 'react';
 import { SortDirection, SortModel } from './sortModel';
 import { Logger } from '../hooks/utils';
 import { ArrowDownward, ArrowUpward, SeparatorIcon } from '../components/icons';
-import { PageChangedParams } from '../hooks/features/usePagination';
+import { PageChangedParams, PaginationProps } from '../hooks/features/usePagination';
 
 export interface ColumnHeaderClickedParam {
   field: string;
@@ -58,7 +58,7 @@ export interface GridOptions {
   extendRowFullWidth: boolean;
   sortingOrder: SortDirection[];
   pagination?: boolean;
-  paginationComponent?: (props: any) => ReactNode; //TODO replace any here
+  paginationComponent?: (props: PaginationProps) => React.ReactNode;
   paginationPageSize?: number;
   paginationAutoPageSize?: boolean;
   hideFooter?: boolean;

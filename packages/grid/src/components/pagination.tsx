@@ -1,4 +1,4 @@
-import { TablePagination } from '@material-ui/core';
+import TablePagination from '@material-ui/core/TablePagination';
 import React, { useCallback } from 'react';
 
 export interface PaginationComponentProps {
@@ -26,7 +26,7 @@ export const Pagination: React.FC<PaginationComponentProps> = ({
   );
 
   const onPageChange = useCallback(
-    (e: any, page: number) => {
+    (event: any, page: number) => {
       setPage(page + 1);
     },
     [setPage],

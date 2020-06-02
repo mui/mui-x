@@ -92,7 +92,13 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
     [options],
   );
 
-  const paginationProps = usePagination(internalRows, internalOptions, setOptions, apiRef);
+  const paginationProps = usePagination(internalRows, internalOptions, apiRef);
+
+  useEffect(() => {
+    if (internalOptions.paginationPageSize !== paginationProps.pageSize) {
+      setOptions(p => ({ ...p, paginationPageSize: paginationProps.pageSize }));
+    }
+  }, [paginationProps, options, setOptions]);
 
   const [footerChildNode, headerChildNode] = useChildren(
     internalColumns,

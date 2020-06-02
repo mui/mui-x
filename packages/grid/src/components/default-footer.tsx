@@ -23,27 +23,27 @@ export const DefaultFooter: React.FC<DefaultFooterProps> = ({ options, paginatio
     }
   }, [api, setSelectedCount]);
 
+  if (options.hideFooter) {
+    return null;
+  }
+
   return (
-    <>
-      {!options.hideFooter && (
-        <Footer>
-          {!options.hideFooterRowCount && <RowCount rowCount={rowCount} />}
-          {!options.hideFooterSelectedRowCount && <SelectedRowCount selectedRowCount={selectedRowCount} />}
-          {options.pagination &&
-            options.paginationPageSize != null &&
-            !options.hideFooterPagination &&
-            ((options.paginationComponent && options.paginationComponent(paginationProps)) || (
-              <Pagination
-                setPage={paginationProps.setPage}
-                currentPage={paginationProps.page}
-                pageCount={paginationProps.pageCount}
-                pageSize={paginationProps.pageSize}
-                rowCount={paginationProps.rowCount}
-                setPageSize={paginationProps.setPageSize}
-              />
-            ))}
-        </Footer>
-      )}
-    </>
+    <Footer>
+      {!options.hideFooterRowCount && <RowCount rowCount={rowCount} />}
+      {!options.hideFooterSelectedRowCount && <SelectedRowCount selectedRowCount={selectedRowCount} />}
+      {options.pagination &&
+        options.paginationPageSize != null &&
+        !options.hideFooterPagination &&
+        ((options.paginationComponent && options.paginationComponent(paginationProps)) || (
+          <Pagination
+            setPage={paginationProps.setPage}
+            currentPage={paginationProps.page}
+            pageCount={paginationProps.pageCount}
+            pageSize={paginationProps.pageSize}
+            rowCount={paginationProps.rowCount}
+            setPageSize={paginationProps.setPageSize}
+          />
+        ))}
+    </Footer>
   );
 };
