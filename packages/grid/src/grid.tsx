@@ -1,18 +1,30 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { DataContainer, ColumnsContainer, Window, GridRoot } from './components/styled-wrappers';
-import { ColumnsHeader, NoRowMessage, Viewport, AutoSizerWrapper, RenderContext, LoadingOverlay } from './components';
-import { useColumns, useVirtualRows, useLogger, useSelection, useApi, useRows, useLoggerFactory } from './hooks';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ColumnsContainer, DataContainer, GridRoot, Window } from './components/styled-wrappers';
+import { AutoSizerWrapper, ColumnsHeader, Viewport, RenderContext, LoadingOverlay, NoRowMessage } from './components';
+import {
+  useColumns,
+  useLogger,
+  useApi,
+  useLoggerFactory,
+  useRows,
+  useVirtualRows,
+  useColumnResize,
+  useSelection,
+  usePagination,
+  useChildren,
+} from './hooks';
 import { Columns, DEFAULT_GRID_OPTIONS, ElementSize, GridOptions, RowsProp, GridApi } from './models';
 import { debounce, mergeOptions } from './utils';
-import { useSorting } from './hooks/root/useSorting';
-import { useKeyboard } from './hooks/root/useKeyboard';
+
 import { ApiContext } from './components/api-context';
-import { DATA_CONTAINER_CSS_CLASS } from './constants/cssClassesConstants';
-import { useColumnResize } from './hooks/features/useColumnResize';
+
 import { OptionsContext } from './components/options-context';
-import { usePagination } from './hooks/features/usePagination';
+
+import { GridChildrenProp } from './hooks/features/useChildren';
+import { DATA_CONTAINER_CSS_CLASS } from './constants/cssClassesConstants';
+import { useKeyboard } from './hooks/root/useKeyboard';
+import { useSorting } from './hooks/root/useSorting';
 import { DefaultFooter } from './components/default-footer';
-import { GridChildrenProp, useChildren } from './hooks/features/useChildren';
 
 export type GridApiRef = React.MutableRefObject<GridApi | null | undefined>;
 // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -41,10 +53,14 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
   const internalApiRef = useRef<GridApi | null | undefined>();
 
   const [internalOptions, setOptions] = useState<GridOptions>(mergeOptions(DEFAULT_GRID_OPTIONS, options));
+  useEffect(() => {
+    setOptions(mergeOptions(DEFAULT_GRID_OPTIONS, options));
+  }, [options]);
 
   if (!apiRef) {
     apiRef = internalApiRef;
   }
+
   const initialised = useApi(gridRootRef, windowRef, internalOptions, apiRef);
   const internalColumns = useColumns(internalOptions, columns, apiRef);
   const internalRows = useRows(internalOptions, rows, initialised, apiRef);
@@ -63,42 +79,13 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
   );
 
   const onResizeColumn = useColumnResize(columnsHeaderRef, apiRef, internalOptions.headerHeight);
-
-  useEffect(() => {
-    setOptions(mergeOptions(DEFAULT_GRID_OPTIONS, options));
-  }, [options]);
-
-  const onResize = debounce((size: ElementSize) => {
-    logger.info('resized...', size);
-    resizeGrid();
-  }, 100) as any;
-
-  useEffect(() => {
-    logger.info('canceling resize...');
-    return () => onResize.cancel();
-  }, []);
-
-  logger.info(
-    `Rendering, page: ${renderCtx?.page}, col: ${renderCtx?.firstColIdx}-${renderCtx?.lastColIdx}, row: ${renderCtx?.firstRowIdx}-${renderCtx?.lastRowIdx}`,
-    renderCtx,
-  );
-
-  const loadingComponent = useMemo(
-    () => (internalOptions.loadingOverlayComponent ? internalOptions.loadingOverlayComponent : <LoadingOverlay />),
-    [options],
-  );
-  const noRowsComponent = useMemo(
-    () => (internalOptions.noRowsOverlayComponent ? internalOptions.noRowsOverlayComponent : <NoRowMessage />),
-    [options],
-  );
-
   const paginationProps = usePagination(internalRows, internalOptions, apiRef);
 
   useEffect(() => {
     if (internalOptions.paginationPageSize !== paginationProps.pageSize) {
       setOptions(p => ({ ...p, paginationPageSize: paginationProps.pageSize }));
     }
-  }, [paginationProps, options, setOptions]);
+  }, [paginationProps.pageSize, internalOptions.paginationPageSize, setOptions]);
 
   const [footerChildNode, headerChildNode] = useChildren(
     internalColumns,
@@ -110,8 +97,38 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
     children,
   );
 
+  const onResize = useCallback(
+    (size: ElementSize) => {
+      logger.info('resized...', size);
+      resizeGrid();
+    },
+    [logger, resizeGrid],
+  );
+  const debouncedOnResize = useMemo(() => debounce(onResize, 100), [onResize]) as any;
+
+  useEffect(() => {
+    return () => {
+      logger.info('canceling resize...');
+      debouncedOnResize.cancel();
+    };
+  }, [logger, debouncedOnResize]);
+
+  logger.info(
+    `Rendering, page: ${renderCtx?.page}, col: ${renderCtx?.firstColIdx}-${renderCtx?.lastColIdx}, row: ${renderCtx?.firstRowIdx}-${renderCtx?.lastRowIdx}`,
+    renderCtx,
+  );
+
+  const loadingComponent = useMemo(
+    () => (internalOptions.loadingOverlayComponent ? internalOptions.loadingOverlayComponent : <LoadingOverlay />),
+    [internalOptions.loadingOverlayComponent],
+  );
+  const noRowsComponent = useMemo(
+    () => (internalOptions.noRowsOverlayComponent ? internalOptions.noRowsOverlayComponent : <NoRowMessage />),
+    [internalOptions.noRowsOverlayComponent],
+  );
+
   return (
-    <AutoSizerWrapper onResize={onResize}>
+    <AutoSizerWrapper onResize={debouncedOnResize}>
       {size => (
         <GridRoot
           ref={gridRootRef}

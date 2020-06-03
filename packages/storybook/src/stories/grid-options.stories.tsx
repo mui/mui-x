@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ColDef, Grid, GridOverlay, Footer, GridApiRef, gridApiRef } from '@material-ui-x/grid';
-import {Button, LinearProgress} from '@material-ui/core';
+import { Button, LinearProgress } from '@material-ui/core';
 import CodeIcon from '@material-ui/icons/Code';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
@@ -160,24 +160,31 @@ export const withCustomPagination = () => {
     }
   }, [apiRef, data]);
 
-const backToFirstPage = ()=> {
-  apiRef.current.setPage(1);
-};
-  const changePageSize = ()=> {
-    apiRef.current.setPageSize(50);
+  const backToFirstPage = () => {
+    apiRef.current.setPage(1);
+  };
+  const [myPageSize, setPageSize] = useState(33);
+  const changePageSize = () => {
+    const newPageSize = myPageSize === 33 ? 50 : 33;
+    // apiRef.current.setPageSize(newPageSize);
+    setPageSize(newPageSize);
   };
 
   return (
     <div style={{ width: size.width, height: size.height }}>
-      <Button component={'button'} color={"primary"} variant={"outlined"} onClick={backToFirstPage}>Back to first page! </Button>
-      <Button component={'button'} color={"primary"} variant={"outlined"} onClick={changePageSize}>Change pageSize </Button>
+      <Button component={'button'} color={'primary'} variant={'outlined'} onClick={backToFirstPage}>
+        Back to first page!{' '}
+      </Button>
+      <Button component={'button'} color={'primary'} variant={'outlined'} onClick={changePageSize}>
+        Change pageSize{' '}
+      </Button>
       <Grid
         rows={data.rows}
         columns={data.columns}
         apiRef={apiRef}
         options={{
           pagination: true,
-          paginationPageSize: 33,
+          paginationPageSize: myPageSize,
           paginationComponent: paginationProps => (
             <Pagination
               className={'my-custom-pagination'}

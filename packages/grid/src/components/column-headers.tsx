@@ -7,7 +7,7 @@ import { LeftEmptyCell, RightEmptyCell } from './cell';
 export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
   headerHeight: number;
-  onResizeColumn: (col: ColDef) => void;
+  onResizeColumn?: (col: ColDef) => void;
 }
 export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionProps> = React.memo(
   ({ headerHeight, onResizeColumn, columns }) => {
@@ -30,7 +30,7 @@ export interface ColumnsHeaderProps {
   columns: Columns;
   hasScrollX: boolean;
   headerHeight: number;
-  onResizeColumn: (col: ColDef) => void;
+  onResizeColumn?: (col: ColDef) => void;
   renderCtx: Partial<RenderContextProps> | null;
 }
 
@@ -47,23 +47,17 @@ export const ColumnsHeader = memo(
       const [renderedCols, setRenderedCols] = useState(columns);
 
       useEffect(() => {
-        if (
-          renderCtx &&
-          renderCtx.firstColIdx != null &&
-          renderCtx.lastColIdx != null &&
-          (lastRenderedColIndexes.current.first !== renderCtx.firstColIdx ||
-            lastRenderedColIndexes.current.last !== renderCtx.lastColIdx)
-        ) {
-          setRenderedCols(columns.slice(renderCtx.firstColIdx, renderCtx.lastColIdx + 1));
-          lastRenderedColIndexes.current = { first: renderCtx.firstColIdx, last: renderCtx.lastColIdx };
-        }
-      }, [renderCtx]);
-
-      useEffect(() => {
         if (renderCtx && renderCtx.firstColIdx != null && renderCtx.lastColIdx != null) {
           setRenderedCols(columns.slice(renderCtx.firstColIdx, renderCtx.lastColIdx + 1));
+
+          if (
+            lastRenderedColIndexes.current.first !== renderCtx.firstColIdx ||
+            lastRenderedColIndexes.current.last !== renderCtx.lastColIdx
+          ) {
+            lastRenderedColIndexes.current = { first: renderCtx.firstColIdx, last: renderCtx.lastColIdx };
+          }
         }
-      }, [columns]);
+      }, [renderCtx, columns]);
 
       return (
         <div

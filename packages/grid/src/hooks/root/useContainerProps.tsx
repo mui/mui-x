@@ -65,7 +65,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>): R
       logger.debug('returning container props', indexes);
       return indexes;
     },
-    [windowRef],
+    [windowRef, logger],
   );
 
   return getContainerProps;

@@ -24,7 +24,7 @@ export function useScrollFn(
     rafResetPointerRef.current = 0;
   });
 
-  const debouncedResetPointerEvents = debounce(restorePointerEvents, 300);
+  const debouncedResetPointerEvents = useCallback(debounce(restorePointerEvents, 300) as any, [restorePointerEvents]);
 
   const scrollTo: (v: ScrollParams) => void = useCallback(
     v => {
@@ -47,7 +47,7 @@ export function useScrollFn(
         }
       }
     },
-    [scrollingElementRef],
+    [scrollingElementRef, debouncedResetPointerEvents, logger, onScroll],
   );
 
   const [runScroll] = useRafUpdate(scrollTo);
@@ -56,7 +56,7 @@ export function useScrollFn(
     return () => {
       debouncedResetPointerEvents.cancel();
     };
-  }, [scrollingElementRef]);
+  }, [scrollingElementRef, debouncedResetPointerEvents]);
 
   return [runScroll, scrollTo];
 }

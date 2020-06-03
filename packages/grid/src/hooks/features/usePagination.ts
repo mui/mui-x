@@ -1,8 +1,10 @@
-import { useEffect, useReducer, useRef } from 'react';
-import { GridApi, GridOptions, PaginationApi, Rows } from '../../models';
+import { useCallback, useEffect, useReducer, useRef } from 'react';
+import { GridOptions, PaginationApi, Rows } from '../../models';
 import { GridApiRef } from '../../grid';
 import { useLogger } from '../utils';
 import { PAGE_CHANGED_EVENT, PAGESIZE_CHANGED_EVENT } from '../../constants/eventsConstants';
+import { useApiMethod } from '../root/useApiMethod';
+import { useApiEventHandler } from '../root/useApiEventHandler';
 
 export interface PaginationProps {
   page: number;
@@ -51,89 +53,106 @@ export const usePagination = (rows: Rows, options: GridOptions, apiRef: GridApiR
   const stateRef = useRef(initialState);
   const [state, dispatch] = useReducer(paginationReducer, initialState);
 
+  const setPage = useCallback(
+    (page: number) => {
+      if (apiRef && apiRef.current) {
+        apiRef.current!.renderPage(page);
+        const params: PageChangedParams = {
+          ...stateRef.current,
+          page,
+        };
+        apiRef.current!.emit(PAGE_CHANGED_EVENT, params);
+      }
+      if (stateRef.current.page !== page) {
+        dispatch(updateStateAction({ page }));
+      }
+    },
+    [dispatch, apiRef],
+  );
+
+  //We use stateRef in this method to avoid reattaching this method to the api every time the state changes
+  const setPageSize = useCallback(
+    (pageSize: number) => {
+      if (stateRef.current.pageSize === pageSize) {
+        return;
+      }
+
+      const oldPageSize = options.paginationPageSize!;
+      const newPageCount = getPageCount(pageSize, stateRef.current.rowCount);
+      const firstRowIdx = (stateRef.current.page - 1) * oldPageSize;
+      let newPage = Math.floor(firstRowIdx / pageSize) + 1;
+      newPage = newPage > newPageCount ? newPageCount : newPage;
+      newPage = newPage < 1 ? 1 : newPage;
+      logger.info(`PageSize changed to ${pageSize}, setting page to ${newPage}, total page count is ${newPageCount}`);
+      const newState: PaginationState = {
+        ...stateRef.current,
+        page: newPage,
+        pageCount: newPageCount,
+        pageSize,
+      };
+      apiRef.current!.emit(PAGESIZE_CHANGED_EVENT, newState as PageChangedParams);
+
+      dispatch(updateStateAction(newState));
+      setPage(newPage);
+    },
+    [options.paginationPageSize, stateRef, apiRef, setPage, dispatch, logger],
+  );
+
+  const onPageChanged = useCallback(
+    (handler: (param: PageChangedParams) => void): (() => void) => {
+      return apiRef!.current!.registerEvent(PAGE_CHANGED_EVENT, handler);
+    },
+    [apiRef],
+  );
+  const onPageSizeChanged = useCallback(
+    (handler: (param: PageChangedParams) => void): (() => void) => {
+      return apiRef!.current!.registerEvent(PAGESIZE_CHANGED_EVENT, handler);
+    },
+    [apiRef],
+  );
+
   useEffect(() => {
     stateRef.current = state;
   }, [state]);
-
-  const setPage = (page: number) => {
-    if (apiRef && apiRef.current) {
-      apiRef.current!.renderPage(page);
-      const params: PageChangedParams = {
-        ...stateRef.current,
-        page,
-      };
-      apiRef.current!.emit(PAGE_CHANGED_EVENT, params);
-    }
-    if (stateRef.current.page !== page) {
-      dispatch(updateStateAction({ page }));
-    }
-  };
-
-  //We use stateRef in this method to avoid reattaching this method to the api every time the state changes
-  const setPageSize = (pageSize: number) => {
-    const oldPageSize = options.paginationPageSize!;
-    const newPageCount = getPageCount(pageSize, stateRef.current.rowCount);
-    const firstRowIdx = (stateRef.current.page - 1) * oldPageSize;
-    let newPage = Math.floor(firstRowIdx / pageSize) + 1;
-    newPage = newPage > newPageCount ? newPageCount : newPage;
-    newPage = newPage < 1 ? 1 : newPage;
-    logger.info(`PageSize changed to ${pageSize}, setting page to ${newPage}, total page count is ${newPageCount}`);
-    const newState: PaginationState = {
-      ...stateRef.current,
-      page: newPage,
-      pageCount: newPageCount,
-      pageSize,
-    };
-    apiRef.current!.emit(PAGESIZE_CHANGED_EVENT, newState as PageChangedParams);
-
-    dispatch(updateStateAction(newState));
-    setPage(newPage);
-  };
-
-  const onPageChanged = (handler: (param: PageChangedParams) => void): (() => void) => {
-    return apiRef!.current!.registerEvent(PAGE_CHANGED_EVENT, handler);
-  };
-  const onPageSizeChanged = (handler: (param: PageChangedParams) => void): (() => void) => {
-    return apiRef!.current!.registerEvent(PAGESIZE_CHANGED_EVENT, handler);
-  };
+  //
+  // useEffect(() => {
+  //   if (options.paginationPageSize !== state.pageSize || rows.length !== state.rowCount) {
+  //     logger.info(`Options or rows changed, recalculating pageCount and rowCount`);
+  //     const newPageCount = getPageCount(options.paginationPageSize, rows.length);
+  //
+  //     dispatch(updateStateAction({ pageCount: newPageCount, rowCount: rows.length, pageSize:  }));
+  //   }
+  // }, [rows, options.paginationPageSize, logger, state.pageSize, state.rowCount]);
 
   useEffect(() => {
-    if (options.paginationPageSize !== state.pageSize || rows.length !== state.rowCount) {
+    if (rows.length !== state.rowCount) {
       logger.info(`Options or rows changed, recalculating pageCount and rowCount`);
-      const newPageCount = getPageCount(options.paginationPageSize, rows.length);
+      const newPageCount = getPageCount(state.pageSize, rows.length);
 
       dispatch(updateStateAction({ pageCount: newPageCount, rowCount: rows.length }));
+      if (state.page > newPageCount) {
+        setPage(newPageCount);
+      }
     }
-  }, [rows, options]);
+  }, [rows.length, logger, dispatch, state.rowCount, state.pageSize, setPage, state.page]);
 
   useEffect(() => {
-    const subscription: any[] = [];
-    if (options.onPageChanged) {
-      subscription.push(onPageChanged(options.onPageChanged));
+    if (options.paginationPageSize) {
+      setPageSize(options.paginationPageSize);
     }
-    if (options.onPageSizeChanged) {
-      subscription.push(onPageSizeChanged(options.onPageSizeChanged));
-    }
-    return () => {
-      logger.info('Clearing pagination event listeners.');
-      subscription.forEach(sub => sub());
-    };
-  }, [options]);
+  }, [options.paginationPageSize, logger, setPageSize]);
 
-  useEffect(() => {
-    if (apiRef && apiRef.current) {
-      logger.debug('Adding pagination api to apiRef');
+  useApiEventHandler(apiRef, PAGE_CHANGED_EVENT, options.onPageChanged);
+  useApiEventHandler(apiRef, PAGESIZE_CHANGED_EVENT, options.onPageSizeChanged);
 
-      const paginationApi: PaginationApi = {
-        setPageSize,
-        setPage,
-        onPageChanged,
-        onPageSizeChanged,
-      };
+  const paginationApi: PaginationApi = {
+    setPageSize,
+    setPage,
+    onPageChanged,
+    onPageSizeChanged,
+  };
 
-      apiRef.current = Object.assign(apiRef.current, paginationApi) as GridApi;
-    }
-  }, [apiRef, dispatch]);
+  useApiMethod(apiRef, paginationApi, 'paginationApi');
 
   return {
     ...state,
