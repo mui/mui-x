@@ -164,19 +164,24 @@ export const withCustomPagination = () => {
     apiRef.current.setPage(1);
   };
   const [myPageSize, setPageSize] = useState(33);
-  const changePageSize = () => {
+  const changePageSizeWithOptionProp = () => {
     const newPageSize = myPageSize === 33 ? 50 : 33;
     // apiRef.current.setPageSize(newPageSize);
     setPageSize(newPageSize);
   };
-
+  const changePageSizeWithApi = () => {
+    apiRef.current!.setPageSize(105);
+  };
   return (
     <div style={{ width: size.width, height: size.height }}>
       <Button component={'button'} color={'primary'} variant={'outlined'} onClick={backToFirstPage}>
         Back to first page!{' '}
       </Button>
-      <Button component={'button'} color={'primary'} variant={'outlined'} onClick={changePageSize}>
-        Change pageSize{' '}
+      <Button component={'button'} color={'primary'} variant={'outlined'} onClick={changePageSizeWithOptionProp}>
+        Change pageSize with Options
+      </Button>
+      <Button component={'button'} color={'primary'} variant={'outlined'} onClick={changePageSizeWithApi}>
+        Change pageSize with Api
       </Button>
       <Grid
         rows={data.rows}

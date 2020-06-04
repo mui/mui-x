@@ -37,7 +37,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>): R
       );
       const renderingZoneHeight = rzPageSize * rowHeight + rowHeight + scrollBarSize.x;
       const dataContainerWidth = columnsTotalWidth - scrollBarSize.y;
-      const totalHeight = (rowsCount / viewportPageSize) * viewportSize.height + scrollBarSize.x;
+      const totalHeight = (rowsCount / viewportPageSize) * viewportSize.height + (hasScrollY ? scrollBarSize.x : 0);
 
       const indexes: ContainerProps = {
         renderingZonePageSize: rzPageSize,

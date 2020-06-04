@@ -79,13 +79,16 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
   );
 
   const onResizeColumn = useColumnResize(columnsHeaderRef, apiRef, internalOptions.headerHeight);
-  const paginationProps = usePagination(internalRows, internalOptions, apiRef);
+  const paginationProps = usePagination(internalRows, internalColumns, internalOptions, apiRef);
 
   useEffect(() => {
-    if (internalOptions.paginationPageSize !== paginationProps.pageSize) {
-      setOptions(p => ({ ...p, paginationPageSize: paginationProps.pageSize }));
-    }
-  }, [paginationProps.pageSize, internalOptions.paginationPageSize, setOptions]);
+    setOptions(previousState => {
+      if (previousState.paginationPageSize !== paginationProps.pageSize) {
+        return { ...previousState, paginationPageSize: paginationProps.pageSize };
+      }
+      return previousState;
+    });
+  }, [paginationProps.pageSize, setOptions]);
 
   const [footerChildNode, headerChildNode] = useChildren(
     internalColumns,

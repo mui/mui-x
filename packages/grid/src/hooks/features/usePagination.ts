@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useReducer, useRef } from 'react';
-import { GridOptions, PaginationApi, Rows } from '../../models';
+import {GridOptions, InternalColumns, PaginationApi, Rows} from '../../models';
 import { GridApiRef } from '../../grid';
 import { useLogger } from '../utils';
 import { PAGE_CHANGED_EVENT, PAGESIZE_CHANGED_EVENT } from '../../constants/eventsConstants';
@@ -41,7 +41,9 @@ const getPageCount = (pageSize: number | undefined, rowsCount: number) => {
   return pageSize ? Math.ceil(rowsCount / pageSize!) : 1;
 };
 
-export const usePagination = (rows: Rows, options: GridOptions, apiRef: GridApiRef): PaginationProps => {
+export const usePagination = (rows: Rows,
+                              columns: InternalColumns,
+                              options: GridOptions, apiRef: GridApiRef): PaginationProps => {
   const logger = useLogger('usePagination');
 
   const initialState: PaginationState = {
@@ -52,6 +54,15 @@ export const usePagination = (rows: Rows, options: GridOptions, apiRef: GridApiR
   };
   const stateRef = useRef(initialState);
   const [state, dispatch] = useReducer(paginationReducer, initialState);
+
+  const updateState = useCallback(
+    (stateUpdate: Partial<PaginationState>) => {
+      const newState = { ...stateRef.current, ...stateUpdate };
+      stateRef.current = newState;
+      dispatch(updateStateAction(newState));
+    },
+    [dispatch],
+  );
 
   const setPage = useCallback(
     (page: number) => {
@@ -64,10 +75,10 @@ export const usePagination = (rows: Rows, options: GridOptions, apiRef: GridApiR
         apiRef.current!.emit(PAGE_CHANGED_EVENT, params);
       }
       if (stateRef.current.page !== page) {
-        dispatch(updateStateAction({ page }));
+        updateState({ page });
       }
     },
-    [dispatch, apiRef],
+    [updateState, apiRef],
   );
 
   //We use stateRef in this method to avoid reattaching this method to the api every time the state changes
@@ -77,7 +88,7 @@ export const usePagination = (rows: Rows, options: GridOptions, apiRef: GridApiR
         return;
       }
 
-      const oldPageSize = options.paginationPageSize!;
+      const oldPageSize = stateRef.current.pageSize;
       const newPageCount = getPageCount(pageSize, stateRef.current.rowCount);
       const firstRowIdx = (stateRef.current.page - 1) * oldPageSize;
       let newPage = Math.floor(firstRowIdx / pageSize) + 1;
@@ -92,10 +103,10 @@ export const usePagination = (rows: Rows, options: GridOptions, apiRef: GridApiR
       };
       apiRef.current!.emit(PAGESIZE_CHANGED_EVENT, newState as PageChangedParams);
 
-      dispatch(updateStateAction(newState));
+      updateState(newState);
       setPage(newPage);
     },
-    [options.paginationPageSize, stateRef, apiRef, setPage, dispatch, logger],
+    [stateRef, apiRef, setPage, updateState, logger],
   );
 
   const onPageChanged = useCallback(
@@ -114,33 +125,35 @@ export const usePagination = (rows: Rows, options: GridOptions, apiRef: GridApiR
   useEffect(() => {
     stateRef.current = state;
   }, [state]);
-  //
-  // useEffect(() => {
-  //   if (options.paginationPageSize !== state.pageSize || rows.length !== state.rowCount) {
-  //     logger.info(`Options or rows changed, recalculating pageCount and rowCount`);
-  //     const newPageCount = getPageCount(options.paginationPageSize, rows.length);
-  //
-  //     dispatch(updateStateAction({ pageCount: newPageCount, rowCount: rows.length, pageSize:  }));
-  //   }
-  // }, [rows, options.paginationPageSize, logger, state.pageSize, state.rowCount]);
 
   useEffect(() => {
     if (rows.length !== state.rowCount) {
       logger.info(`Options or rows changed, recalculating pageCount and rowCount`);
       const newPageCount = getPageCount(state.pageSize, rows.length);
 
-      dispatch(updateStateAction({ pageCount: newPageCount, rowCount: rows.length }));
+      updateState({ pageCount: newPageCount, rowCount: rows.length });
       if (state.page > newPageCount) {
         setPage(newPageCount);
       }
     }
-  }, [rows.length, logger, dispatch, state.rowCount, state.pageSize, setPage, state.page]);
+  }, [rows.length, logger, updateState, state.rowCount, state.pageSize, setPage, state.page]);
 
   useEffect(() => {
-    if (options.paginationPageSize) {
+    if (!options.paginationAutoPageSize && options.paginationPageSize && options.paginationPageSize !== stateRef.current.pageSize) {
       setPageSize(options.paginationPageSize);
     }
-  }, [options.paginationPageSize, logger, setPageSize]);
+  }, [options.paginationAutoPageSize, options.paginationPageSize, logger, setPageSize]);
+
+  useEffect(() => {
+    if (options.paginationAutoPageSize && apiRef && apiRef.current && columns.visible.length > 0) {
+      const containerProps = apiRef!.current!.getContainerPropsState();
+      if(containerProps && containerProps.viewportPageSize) {
+        const autoPagesize = containerProps.viewportPageSize;
+        logger.debug(`Setting autoPagesize to ${autoPagesize}`);
+        setPageSize(autoPagesize);
+      }
+    }
+  }, [apiRef, options.paginationAutoPageSize, logger, setPageSize, columns.visible.length]);
 
   useApiEventHandler(apiRef, PAGE_CHANGED_EVENT, options.onPageChanged);
   useApiEventHandler(apiRef, PAGESIZE_CHANGED_EVENT, options.onPageSizeChanged);

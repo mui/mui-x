@@ -114,7 +114,7 @@ export const useVirtualRows = (
         ` viewportHeight:${viewportHeight}, rzScrollTop: ${rzScrollTop}, scrollTop: ${scrollTop}, current page = ${currentPage}`,
       );
 
-      const scrollParams = { left: rzScrollLeft, top: rzScrollTop };
+      const scrollParams = { left: containerProps?.hasScrollX ? rzScrollLeft : 0, top: containerProps?.hasScrollY ? rzScrollTop : 0 };
 
       const page = pageRef.current;
       currentPage = Math.floor(currentPage);
@@ -159,25 +159,19 @@ export const useVirtualRows = (
   const updateContainerSize = useCallback(() => {
     if (columnTotalWidthRef.current > 0) {
       const totalRowsCount = apiRef?.current?.getRowsCount() || 0; //we ensure we call with latest length
-      const pageRowCount =
+      const currentPage = paginationCurrentPage.current;
+      let pageRowCount =
         optionsRef.current.pagination && optionsRef.current.paginationPageSize
           ? optionsRef.current.paginationPageSize
           : null;
-      rowsCount.current = pageRowCount == null || pageRowCount > totalRowsCount ? totalRowsCount : pageRowCount;
 
-      if (optionsRef.current.pagination && optionsRef.current.paginationPageSize) {
-        containerPropsRef.current = getContainerProps(
-          optionsRef.current,
-          columnTotalWidthRef.current,
-          optionsRef.current.paginationPageSize,
-        );
-      } else {
-        containerPropsRef.current = getContainerProps(
-          optionsRef.current,
-          columnTotalWidthRef.current,
-          rowsCount.current,
-        );
-      }
+      pageRowCount =
+        !pageRowCount || currentPage * pageRowCount <= totalRowsCount
+          ? pageRowCount
+          : totalRowsCount - (currentPage - 1) * pageRowCount;
+
+      rowsCount.current = pageRowCount == null || pageRowCount > totalRowsCount ? totalRowsCount : pageRowCount;
+      containerPropsRef.current = getContainerProps(optionsRef.current, columnTotalWidthRef.current, rowsCount.current);
       updateViewport();
       reRender();
     } else {
@@ -269,6 +263,9 @@ export const useVirtualRows = (
   );
 
   const getContainerPropsState = useCallback(() => {
+    if(!containerPropsRef.current) {
+      updateContainerSize();
+    }
     return containerPropsRef.current;
   }, []);
 
@@ -280,9 +277,9 @@ export const useVirtualRows = (
     (page: number) => {
       paginationCurrentPage.current = page;
       resetScroll();
-      updateViewport();
+      updateContainerSize();
     },
-    [paginationCurrentPage, resetScroll, updateViewport],
+    [paginationCurrentPage, resetScroll, updateContainerSize],
   );
   const onResize = useCallback(() => {
     logger.debug('OnResize, recalculating container sizes.');
