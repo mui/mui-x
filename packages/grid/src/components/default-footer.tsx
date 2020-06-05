@@ -32,7 +32,7 @@ export const DefaultFooter: React.FC<DefaultFooterProps> = ({ options, paginatio
       {!options.hideFooterRowCount && <RowCount rowCount={rowCount} />}
       {!options.hideFooterSelectedRowCount && <SelectedRowCount selectedRowCount={selectedRowCount} />}
       {options.pagination &&
-        options.paginationPageSize != null &&
+        paginationProps.pageSize != null &&
         !options.hideFooterPagination &&
         ((options.paginationComponent && options.paginationComponent(paginationProps)) || (
           <Pagination
@@ -42,6 +42,7 @@ export const DefaultFooter: React.FC<DefaultFooterProps> = ({ options, paginatio
             pageSize={paginationProps.pageSize}
             rowCount={paginationProps.rowCount}
             setPageSize={paginationProps.setPageSize}
+            rowsPerPageOptions={options.paginationRowsPerPageOptions}
           />
         ))}
     </Footer>

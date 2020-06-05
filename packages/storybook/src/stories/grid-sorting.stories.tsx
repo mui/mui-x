@@ -22,7 +22,7 @@ export const BasicTest = () => {
   return (
     <>
       <p>Maintain CTRL or Command to sort by multiple fields</p>
-      <div style={{ width: size.width, height: size.height, resize: 'both' }}>
+      <div style={{ width: size.width, height: size.height }}>
         <Grid rows={rows} columns={columns} options={{ showColumnSeparator: false }} />
       </div>
     </>
@@ -49,7 +49,7 @@ export const SortedWithColDef = () => {
   return (
     <>
       <p>Maintain CTRL or Command to sort by multiple fields</p>
-      <div style={{ width: size.width, height: size.height, resize: 'both' }}>
+      <div style={{ width: size.width, height: size.height }}>
         <Grid rows={rows} columns={columns} />
       </div>
     </>
@@ -77,7 +77,7 @@ export const WithNotNullSortingOrder = () => {
   return (
     <>
       <p>Maintain CTRL or Command to sort by multiple fields</p>
-      <div style={{ width: size.width, height: size.height, resize: 'both' }}>
+      <div style={{ width: size.width, height: size.height }}>
         <Grid rows={rows} columns={columns} options={{ sortingOrder: ['desc', 'asc'] }} />
       </div>
     </>
@@ -106,7 +106,7 @@ export const SortedWithApi = () => {
 
   return (
     <>
-      <div style={{ width: size.width, height: size.height, resize: 'both' }}>
+      <div style={{ width: size.width, height: size.height }}>
         <Grid rows={rows} columns={columns} apiRef={apiRef} />
       </div>
     </>
@@ -143,7 +143,7 @@ export const withValueGetterAndFormatter = () => {
   return (
     <>
       <p>Maintain CTRL or Command to sort by multiple fields</p>
-      <div style={{ width: size.width, height: size.height, resize: 'both' }}>
+      <div style={{ width: size.width, height: size.height }}>
         <Grid rows={rows} columns={columns} />
       </div>
     </>

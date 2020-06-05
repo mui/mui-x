@@ -14,13 +14,14 @@ import { ScrollParams, useScrollFn } from '../utils';
 import { useLogger } from '../utils/useLogger';
 import { useContainerProps } from '../root';
 import { GridApiRef } from '../../grid';
-import { SCROLLING, SCROLLING_START, SCROLLING_STOP } from '../../constants/eventsConstants';
+import { RESIZE, SCROLLING, SCROLLING_START, SCROLLING_STOP } from '../../constants/eventsConstants';
 import { debounce } from '../../utils';
 import { useApiMethod } from '../root/useApiMethod';
 import { useNativeEventListener } from '../root/useNativeEventListener';
+import { useApiEventHandler } from '../root/useApiEventHandler';
 
 const SCROLL_EVENT = 'scroll';
-type UseVirtualRowsReturnType = [Partial<RenderContextProps> | null, () => void];
+type UseVirtualRowsReturnType = Partial<RenderContextProps> | null;
 
 export const useVirtualRows = (
   colRef: React.MutableRefObject<HTMLDivElement | null>,
@@ -114,7 +115,10 @@ export const useVirtualRows = (
         ` viewportHeight:${viewportHeight}, rzScrollTop: ${rzScrollTop}, scrollTop: ${scrollTop}, current page = ${currentPage}`,
       );
 
-      const scrollParams = { left: containerProps?.hasScrollX ? rzScrollLeft : 0, top: containerProps?.hasScrollY ? rzScrollTop : 0 };
+      const scrollParams = {
+        left: containerProps?.hasScrollX ? rzScrollLeft : 0,
+        top: containerProps?.hasScrollY ? rzScrollTop : 0,
+      };
 
       const page = pageRef.current;
       currentPage = Math.floor(currentPage);
@@ -172,6 +176,9 @@ export const useVirtualRows = (
 
       rowsCount.current = pageRowCount == null || pageRowCount > totalRowsCount ? totalRowsCount : pageRowCount;
       containerPropsRef.current = getContainerProps(optionsRef.current, columnTotalWidthRef.current, rowsCount.current);
+      if (optionsRef.current.paginationAutoPageSize && containerPropsRef.current) {
+        rowsCount.current = containerPropsRef.current.viewportPageSize;
+      }
       updateViewport();
       reRender();
     } else {
@@ -263,11 +270,11 @@ export const useVirtualRows = (
   );
 
   const getContainerPropsState = useCallback(() => {
-    if(!containerPropsRef.current) {
+    if (!containerPropsRef.current) {
       updateContainerSize();
     }
     return containerPropsRef.current;
-  }, []);
+  }, [updateContainerSize]);
 
   const getRenderContextState = useCallback(() => {
     return renderCtxRef.current;
@@ -299,6 +306,7 @@ export const useVirtualRows = (
     [logger],
   );
 
+  useApiEventHandler(apiRef, RESIZE, onResize);
   useNativeEventListener(apiRef, windowRef, SCROLL_EVENT, onScroll, { passive: true });
   useNativeEventListener(apiRef, () => renderingZoneRef.current?.parentElement, SCROLL_EVENT, onViewportScroll);
 
@@ -335,5 +343,5 @@ export const useVirtualRows = (
 
   useApiMethod(apiRef, virtualApi, 'VirtualizationApi');
 
-  return [renderCtx, onResize];
+  return renderCtx;
 };

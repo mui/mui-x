@@ -34,7 +34,7 @@ export const GridDataSet = ({ nbRows, nbCols, options, container, onData, childr
   const data = useData(nbRows, nbCols)
   const size = container || { width: 800, height: 600 };
   return (
-    <div style={{ width: size.width, height: size.height, resize: 'both' }}>
+    <div style={{ width: size.width, height: size.height}}>
       <Grid rows={data.rows} columns={data.columns} options={options} loading={loading}>
         {children}
       </Grid>

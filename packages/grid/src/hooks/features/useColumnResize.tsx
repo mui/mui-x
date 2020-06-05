@@ -64,7 +64,6 @@ export const useColumnResize = (
   );
 
   const stopResize = useCallback((): void => {
-    logger.debug(`Stopping Resize for col ${currentColDefRef.current?.field}`);
     isResizing.current = false;
 
     // setColResizing(undefined);

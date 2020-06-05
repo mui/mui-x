@@ -61,6 +61,7 @@ export interface GridOptions {
   paginationComponent?: (props: PaginationProps) => React.ReactNode;
   paginationPageSize?: number;
   paginationAutoPageSize?: boolean;
+  paginationRowsPerPageOptions?: number[];
   hideFooter?: boolean;
   hideFooterRowCount?: boolean;
   hideFooterSelectedRowCount?: boolean;
@@ -92,6 +93,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   columnBuffer: 2,
   enableMultipleSelection: true,
   enableMultipleColumnsSorting: true,
+  paginationRowsPerPageOptions: [25, 50, 100],
   showCellRightBorder: false,
   extendRowFullWidth: true,
   sortingOrder: ['asc', 'desc', null],

@@ -33,11 +33,11 @@ export const RootStyle = styled.div<GridRootProps>`
       display: flex;
       justify-content: space-between;
       flex-direction: row;
+      padding: 0 16px;
     }
     .row-count {
       display: flex;
       align-items: center;
-      padding-left: 16px;
       font-size: 0.875rem;
       font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
       font-weight: 400;

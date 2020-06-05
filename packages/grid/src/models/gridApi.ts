@@ -63,7 +63,9 @@ export interface VirtualizationApi {
 export interface CoreApi extends EventEmitter {
   isInitialised: boolean;
   registerEvent: (event: string, handler: (param: any) => void) => () => void;
-  onDestroy: (handler: (param: any) => void) => void;
+  onUnmount: (handler: (param: any) => void) => void;
+  onResize: (handler: (param: any) => void) => void;
+  resize: () => void;
 }
 
 export type GridApi = RowApi & ColumnApi & SelectionApi & SortApi & VirtualizationApi & CoreApi & PaginationApi;

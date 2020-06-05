@@ -8,8 +8,10 @@ import {
   COL_RESIZE_STOP,
   COLUMN_HEADER_CLICKED,
   COLUMNS_SORTED,
+  UNMOUNT,
   KEYDOWN_EVENT,
   KEYUP_EVENT,
+  RESIZE,
   ROW_CLICKED,
   ROW_SELECTED_EVENT,
   SELECTION_CHANGED_EVENT,
@@ -111,12 +113,6 @@ export const useApi = (
     [emitEvent, apiRef],
   );
 
-  const onDestroy = useCallback(
-    (handler: (param: any) => void): void => {
-      apiRef.current!.on('destroy', handler);
-    },
-    [apiRef],
-  );
   const registerEvent = useCallback(
     (event: string, handler: (param: any) => void): (() => void) => {
       logger.debug(`Binding ${event} event`);
@@ -129,8 +125,20 @@ export const useApi = (
     },
     [apiRef, logger],
   );
-
-  useApiMethod(apiRef, { registerEvent, onDestroy }, 'CoreApi');
+  const onUnmount = useCallback(
+    (handler: (param: any) => void): (() => void) => {
+      return registerEvent(UNMOUNT, handler);
+    },
+    [registerEvent],
+  );
+  const onResize = useCallback(
+    (handler: (param: any) => void): (() => void) => {
+      return registerEvent(RESIZE, handler);
+    },
+    [registerEvent],
+  );
+  const resize = useCallback(() => apiRef.current?.emit(RESIZE), [apiRef]);
+  useApiMethod(apiRef, { registerEvent, onUnmount, onResize, resize }, 'CoreApi');
 
   useEffect(() => {
     if (gridRootRef && gridRootRef.current && isApiInitialised) {
@@ -149,7 +157,7 @@ export const useApi = (
 
       return () => {
         logger.debug('Clearing all events listeners');
-        api.emit('destroy');
+        api.emit(UNMOUNT);
         gridRootElem.removeEventListener(CLICK_EVENT, onClickHandler, { capture: true });
         document.removeEventListener(KEYDOWN_EVENT, keyDownHandler);
         document.removeEventListener(KEYUP_EVENT, keyUpHandler);

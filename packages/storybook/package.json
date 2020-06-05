@@ -13,7 +13,7 @@
     "faker": "^4.1.0",
     "react": "^16.13.1",
     "rxjs": "^6.5.5",
-    "styled-components": "^5.0.1"
+    "styled-components": "^5.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

@@ -68,7 +68,7 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
   useSelection(internalOptions, rows, initialised, apiRef);
   useSorting(internalOptions, rows, columns, apiRef);
 
-  const [renderCtx, resizeGrid] = useVirtualRows(
+  const renderCtx = useVirtualRows(
     columnsHeaderRef,
     windowRef,
     renderingZoneRef,
@@ -103,9 +103,11 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
   const onResize = useCallback(
     (size: ElementSize) => {
       logger.info('resized...', size);
-      resizeGrid();
+      if (apiRef && apiRef.current) {
+        apiRef.current.resize();
+      }
     },
-    [logger, resizeGrid],
+    [logger, apiRef],
   );
   const debouncedOnResize = useMemo(() => debounce(onResize, 100), [onResize]) as any;
 

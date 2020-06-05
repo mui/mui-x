@@ -34,7 +34,7 @@ export const useNativeEventListener = (
         bindedElem.removeEventListener(eventName, handler, options);
       };
 
-      apiRef.current!.onDestroy(unsubscribe);
+      apiRef.current!.onUnmount(unsubscribe);
     }
   });
 };

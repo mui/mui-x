@@ -8,6 +8,7 @@ export interface PaginationComponentProps {
   currentPage: number;
   rowCount: number;
   pageSize: number;
+  rowsPerPageOptions?: number[];
 }
 
 export const Pagination: React.FC<PaginationComponentProps> = ({
@@ -16,6 +17,7 @@ export const Pagination: React.FC<PaginationComponentProps> = ({
   pageSize,
   rowCount,
   currentPage,
+  rowsPerPageOptions,
 }) => {
   const onPageSizeChange = useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -38,6 +40,7 @@ export const Pagination: React.FC<PaginationComponentProps> = ({
       count={rowCount}
       page={currentPage - 1}
       onChangePage={onPageChange}
+      rowsPerPageOptions={rowsPerPageOptions && rowsPerPageOptions.indexOf(pageSize) > -1 ? rowsPerPageOptions : []}
       rowsPerPage={pageSize}
       onChangeRowsPerPage={onPageSizeChange}
     />

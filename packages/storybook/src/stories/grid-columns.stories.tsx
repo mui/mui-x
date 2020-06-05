@@ -113,7 +113,7 @@ export const withButtonToChangeColProp: React.FC = () => {
       <div>
         <button onClick={changeCols}>Change cols </button>
       </div>
-      <div style={{ width: size.width, height: size.height, resize: 'both' }}>
+      <div style={{ width: size.width, height: size.height }}>
         <Grid rows={rows} columns={cols} />
       </div>
     </div>

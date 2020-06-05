@@ -15,6 +15,11 @@
   "bin": {
     "datagen": "./bin/data-gen-script.js"
   },
+  "dependencies": {
+    "commander": "^5.1.0",
+    "esm": "^3.2.25",
+    "faker": "^4.1.0"
+  },
   "devDependencies": {
     "rollup": "^2.6.1",
     "rollup-plugin-cleaner": "^1.0.0",
@@ -30,6 +35,7 @@
     "@material-ui-x/grid": "^0.1.18",
     "@material-ui/core": "^4.9.12",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.54",
     "react": "^16.13.1",
     "styled-components": "^5.0.1"
   },
@@ -43,11 +49,5 @@
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
   ],
-  "gitHead": "f0f0bf72099f0b7d28aa88ca441082b2dc587d93",
-  "dependencies": {
-    "@material-ui/lab": "^4.0.0-alpha.52",
-    "commander": "^5.1.0",
-    "esm": "^3.2.25",
-    "faker": "^4.1.0"
-  }
+  "gitHead": "f0f0bf72099f0b7d28aa88ca441082b2dc587d93"
 }

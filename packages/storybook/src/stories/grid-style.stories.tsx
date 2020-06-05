@@ -160,7 +160,7 @@ export const withCellClass = () => {
   ];
 
   return (
-    <div style={{ width: size.width, height: size.height, resize: 'both' }}>
+    <div style={{ width: size.width, height: size.height }}>
       <Grid rows={rows} columns={columns}></Grid>
     </div>
   );

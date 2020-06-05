@@ -5,7 +5,7 @@ import CodeIcon from '@material-ui/icons/Code';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
-import { GridDataSet, useData } from '../components/grid-dataset';
+import { useData } from '../components/grid-dataset';
 import { Pagination } from '@material-ui/lab';
 import { action } from '@storybook/addon-actions';
 
@@ -39,14 +39,14 @@ export const WithCustomLogger = () => {
     error: (...args) => console.error('CUSTOM-LOGGING =>' + args[0], args.slice(1)),
   };
   return (
-    <div style={{ width: size.width, height: size.height, resize: 'both' }}>
+    <div style={{ width: size.width, height: size.height }}>
       <Grid rows={rows} columns={columns} options={{ logger }} />
     </div>
   );
 };
 export const WithNoLogger = () => {
   return (
-    <div style={{ width: size.width, height: size.height, resize: 'both' }}>
+    <div style={{ width: size.width, height: size.height }}>
       <Grid rows={rows} columns={columns} options={{ logLevel: false }} />
     </div>
   );
@@ -61,7 +61,7 @@ export const WithCustomLoadingComponent = () => {
     </GridOverlay>
   );
   return (
-    <div style={{ width: size.width, height: size.height, resize: 'both' }}>
+    <div style={{ width: size.width, height: size.height }}>
       <Grid rows={rows} columns={columns} options={{ loadingOverlayComponent: loadingComponent }} loading={true} />
     </div>
   );
@@ -76,7 +76,7 @@ export const WithCustomNoRowsComponent = () => {
     </GridOverlay>
   );
   return (
-    <div style={{ width: size.width, height: size.height, resize: 'both' }}>
+    <div style={{ width: size.width, height: size.height }}>
       <Grid rows={[]} columns={columns} options={{ noRowsOverlayComponent: loadingComponent }} />
     </div>
   );
@@ -85,7 +85,7 @@ export const withCustomIcons = () => {
   const size = { width: 800, height: 600 };
 
   return (
-    <div style={{ width: size.width, height: size.height, resize: 'both' }}>
+    <div style={{ width: size.width, height: size.height }}>
       <Grid
         rows={rows}
         columns={columns}
@@ -103,56 +103,66 @@ export const withCustomIcons = () => {
 };
 export const withPagination = () => {
   const size = { width: 800, height: 600 };
+  const data = useData(2000, 200);
 
   return (
-    <GridDataSet
-      nbRows={2000}
-      nbCols={200}
-      container={size}
-      options={{
-        pagination: true,
-        paginationPageSize: 100,
-      }}
-    />
+    <div style={{width: size.width, height: size.height}} >
+      <Grid
+        rows={data.rows}
+        columns={data.columns}
+        options={{
+          pagination: true,
+          paginationPageSize: 100,
+        }}
+      />
+    </div>
   );
 };
 
 export const withPaginationNoRowCount = () => {
   const size = { width: 800, height: 600 };
+  const data = useData(2000, 200);
 
   return (
-    <GridDataSet
-      nbRows={2000}
-      nbCols={200}
-      container={size}
-      options={{
-        pagination: true,
-        paginationPageSize: 100,
-        hideFooterRowCount: true,
-      }}
-    />
+    <div style={{width: size.width, height: size.height}} >
+      <Grid
+        rows={data.rows}
+        columns={data.columns}
+        options={{
+          pagination: true,
+          paginationPageSize: 100,
+          paginationRowsPerPageOptions: [10, 20, 50, 100, 200],
+          hideFooterRowCount: true,
+        }}
+      />
+    </div>
   );
 };
 export const withPaginationButNotVisible = () => {
   const size = { width: 800, height: 600 };
+  const data = useData(2000, 200);
 
   return (
-    <GridDataSet
-      nbRows={2000}
-      nbCols={200}
-      container={size}
-      options={{
-        pagination: true,
-        paginationPageSize: 100,
-        hideFooterPagination: true,
-      }}
-    />
+    <div style={{width: size.width, height: size.height}} >
+      <Grid
+        rows={data.rows}
+        columns={data.columns}
+        options={{
+          pagination: true,
+          paginationPageSize: 100,
+          hideFooterPagination: true,
+        }}
+      />
+    </div>
   );
 };
+// eslint-disable-file react-hooks/rules-of-hooks
+
 export const withCustomPagination = () => {
   const size = { width: 800, height: 600 };
   const apiRef: GridApiRef = gridApiRef();
   const data = useData(2000, 200);
+  const [autosize, setAutoSize] = useState(false);
 
   useEffect(() => {
     if (apiRef && apiRef.current) {
@@ -161,27 +171,31 @@ export const withCustomPagination = () => {
   }, [apiRef, data]);
 
   const backToFirstPage = () => {
-    apiRef.current.setPage(1);
+    apiRef.current?.setPage(1);
   };
   const [myPageSize, setPageSize] = useState(33);
   const changePageSizeWithOptionProp = () => {
     const newPageSize = myPageSize === 33 ? 50 : 33;
-    // apiRef.current.setPageSize(newPageSize);
+    setAutoSize(false);
     setPageSize(newPageSize);
   };
   const changePageSizeWithApi = () => {
+    setAutoSize(false);
     apiRef.current!.setPageSize(105);
   };
   return (
     <div style={{ width: size.width, height: size.height }}>
       <Button component={'button'} color={'primary'} variant={'outlined'} onClick={backToFirstPage}>
-        Back to first page!{' '}
+        Back to first page
       </Button>
       <Button component={'button'} color={'primary'} variant={'outlined'} onClick={changePageSizeWithOptionProp}>
         Change pageSize with Options
       </Button>
       <Button component={'button'} color={'primary'} variant={'outlined'} onClick={changePageSizeWithApi}>
         Change pageSize with Api
+      </Button>
+      <Button component={'button'} color={'primary'} variant={'outlined'} onClick={()=> setAutoSize(p=> !p) }>
+        toggle pageAutoSize
       </Button>
       <Grid
         rows={data.rows}
@@ -190,6 +204,7 @@ export const withCustomPagination = () => {
         options={{
           pagination: true,
           paginationPageSize: myPageSize,
+          paginationAutoPageSize: autosize,
           paginationComponent: paginationProps => (
             <Pagination
               className={'my-custom-pagination'}
@@ -277,17 +292,35 @@ export const withCustomHeaderAndFooter = () => {
 };
 
 export const withAutoPagination = () => {
-  const size = { width: 800, height: 600 };
+  const [size, setSize] = useState({ width: 800, height: 600 });
+  const data = useData(2000, 200);
 
   return (
-    <GridDataSet
-      nbRows={2000}
-      nbCols={200}
-      container={size}
-      options={{
-        pagination: true,
-        paginationAutoPageSize: true,
-      }}
-    />
+    <div style={{ width: size.width, height: size.height }}>
+      <Button
+        component={'button'}
+        color={'primary'}
+        variant={'outlined'}
+        onClick={() => setSize({ width: size.height, height: size.width })}
+      >
+        Invert Sizes
+      </Button>
+      <Button
+        component={'button'}
+        color={'primary'}
+        variant={'outlined'}
+        onClick={() => setSize(p=> ({...p, height: p.height + 20}) )}
+      >
+        Add 20px height
+      </Button>
+      <Grid
+        rows={data.rows}
+        columns={data.columns}
+        options={{
+          pagination: true,
+          paginationAutoPageSize: true,
+        }}
+      />
+    </div>
   );
 };

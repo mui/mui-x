@@ -1,3 +1,5 @@
+export const RESIZE = 'resize';
+export const UNMOUNT = 'unmount';
 export const CLICK_EVENT = 'click';
 export const KEYDOWN_EVENT = 'keydown';
 export const KEYUP_EVENT = 'keyup';
