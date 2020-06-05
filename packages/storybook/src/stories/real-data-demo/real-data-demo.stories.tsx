@@ -18,9 +18,13 @@ export const Commodity = () => {
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'space-around'}}>
-        <Button color={"primary"} onClick={loadNewData}>Load New Rows</Button>
-        <Button color={"primary"} onClick={() => setSize(randomInt(100, 500))}>Load New Rows with new length</Button>
+      <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+        <Button color={'primary'} onClick={loadNewData}>
+          Load New Rows
+        </Button>
+        <Button color={'primary'} onClick={() => setSize(randomInt(100, 500))}>
+          Load New Rows with new length
+        </Button>
       </div>
       <div style={{ padding: 10, flexGrow: 1 }}>
         <Grid rows={data.rows} columns={data.columns} options={options} />
@@ -59,7 +63,7 @@ export const Commodity1000WithAutoPagination = () => {
   const options: Partial<GridOptions> = {
     checkboxSelection: true,
     pagination: true,
-    paginationAutoPageSize: true
+    paginationAutoPageSize: true,
   };
 
   const { data } = useDemoData('Commodity', 1000);
@@ -87,7 +91,7 @@ export const Commodity10000WithPagination = () => {
     checkboxSelection: true,
     paginationPageSize: 100,
     pagination: true,
-    paginationRowsPerPageOptions: [100, 200, 1000]
+    paginationRowsPerPageOptions: [100, 200, 1000],
   };
 
   const { data } = useDemoData('Commodity', 10000);

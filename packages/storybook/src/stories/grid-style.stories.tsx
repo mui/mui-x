@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ColDef, ElementSize, Grid, GridOptionsProp } from '@material-ui-x/grid';
-import {GridDataSet, useData} from '../components/grid-dataset';
-import { GridData } from '../data/data-service';
+import { useData } from '../components/grid-dataset';
+
 import '../style/grid-stories.css';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
@@ -24,7 +24,7 @@ export const Resize = () => {
       >
         Switch sizes
       </button>
-      <div style={{ width: size.width, height: size.height}}>
+      <div style={{ width: size.width, height: size.height }}>
         <Grid rows={data.rows} columns={data.columns} />
       </div>
     </>
@@ -33,15 +33,16 @@ export const Resize = () => {
 
 export const WithTooltip = () => {
   const data = useData(200, 200);
-  const transformColSizes = (columns: ColDef[]) => columns.map(c => {
-    if (c.field === 'currencyPair') {
-      return {...c, width: 100, description: 'This is the currency pair column'}
-    } else {
-      return {...c, width: 40 }
-    }
-  });
+  const transformColSizes = (columns: ColDef[]) =>
+    columns.map(c => {
+      if (c.field === 'currencyPair') {
+        return { ...c, width: 100, description: 'This is the currency pair column' };
+      } else {
+        return { ...c, width: 40 };
+      }
+    });
 
-  return <Grid  rows={data.rows} columns={transformColSizes(data.columns)} />;
+  return <Grid rows={data.rows} columns={transformColSizes(data.columns)} />;
 };
 
 export const Big = () => {

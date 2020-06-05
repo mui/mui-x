@@ -106,7 +106,7 @@ export const withPagination = () => {
   const data = useData(2000, 200);
 
   return (
-    <div style={{width: size.width, height: size.height}} >
+    <div style={{ width: size.width, height: size.height }}>
       <Grid
         rows={data.rows}
         columns={data.columns}
@@ -124,7 +124,7 @@ export const withPaginationNoRowCount = () => {
   const data = useData(2000, 200);
 
   return (
-    <div style={{width: size.width, height: size.height}} >
+    <div style={{ width: size.width, height: size.height }}>
       <Grid
         rows={data.rows}
         columns={data.columns}
@@ -143,7 +143,7 @@ export const withPaginationButNotVisible = () => {
   const data = useData(2000, 200);
 
   return (
-    <div style={{width: size.width, height: size.height}} >
+    <div style={{ width: size.width, height: size.height }}>
       <Grid
         rows={data.rows}
         columns={data.columns}
@@ -156,7 +156,6 @@ export const withPaginationButNotVisible = () => {
     </div>
   );
 };
-// eslint-disable-file react-hooks/rules-of-hooks
 
 export const withCustomPagination = () => {
   const size = { width: 800, height: 600 };
@@ -164,10 +163,15 @@ export const withCustomPagination = () => {
   const data = useData(2000, 200);
   const [autosize, setAutoSize] = useState(false);
 
+  // eslint-disable-next-line
   useEffect(() => {
+    let unsubscribe;
     if (apiRef && apiRef.current) {
-      return apiRef.current.onPageChanged(action('pageChanged'));
+      unsubscribe = apiRef.current.onPageChanged(action('pageChanged'));
     }
+    return () => {
+      unsubscribe && unsubscribe();
+    };
   }, [apiRef, data]);
 
   const backToFirstPage = () => {
@@ -194,7 +198,7 @@ export const withCustomPagination = () => {
       <Button component={'button'} color={'primary'} variant={'outlined'} onClick={changePageSizeWithApi}>
         Change pageSize with Api
       </Button>
-      <Button component={'button'} color={'primary'} variant={'outlined'} onClick={()=> setAutoSize(p=> !p) }>
+      <Button component={'button'} color={'primary'} variant={'outlined'} onClick={() => setAutoSize(p => !p)}>
         toggle pageAutoSize
       </Button>
       <Grid
@@ -309,7 +313,7 @@ export const withAutoPagination = () => {
         component={'button'}
         color={'primary'}
         variant={'outlined'}
-        onClick={() => setSize(p=> ({...p, height: p.height + 20}) )}
+        onClick={() => setSize(p => ({ ...p, height: p.height + 20 }))}
       >
         Add 20px height
       </Button>

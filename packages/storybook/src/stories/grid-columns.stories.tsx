@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import { useData} from '../components/grid-dataset';
-import { GridData } from '../data/data-service';
+import React, { useState } from 'react';
+import { useData } from '../components/grid-dataset';
+
 import { getDate, random } from '../data/random-generator';
 
 import { ColDef, Grid } from '@material-ui-x/grid';
@@ -11,26 +11,27 @@ export default {
 
 export const SmallColSizes = () => {
   const data = useData(100, 20);
-  const transformColSizes = (columns: ColDef[]) => columns.map(c => ({ ...c, width: 60}));
+  const transformColSizes = (columns: ColDef[]) => columns.map(c => ({ ...c, width: 60 }));
 
   return <Grid rows={data.rows} columns={transformColSizes(data.columns)} />;
 };
 
 export const VerySmallColSizes = () => {
   const data = useData(100, 20);
-  const transformColSizes = (columns: ColDef[]) => columns.map(c => ({ ...c, width: 50}));
+  const transformColSizes = (columns: ColDef[]) => columns.map(c => ({ ...c, width: 50 }));
   return <Grid rows={data.rows} columns={transformColSizes(data.columns)} />;
 };
 
 export const RandomColSizes = () => {
   const data = useData(100, 20);
-  const transformColSizes = (columns: ColDef[]) => columns.map(c => ({ ...c, width: Number(random(50, 300).toFixed())}));
+  const transformColSizes = (columns: ColDef[]) =>
+    columns.map(c => ({ ...c, width: Number(random(50, 300).toFixed()) }));
   return <Grid rows={data.rows} columns={transformColSizes(data.columns)} />;
 };
 
 export const HideCols = () => {
   const data = useData(100, 20);
-  const transformColSizes = (columns: ColDef[]) => columns.map((c, idx) => ({ ...c, hide: idx % 2 === 0}));
+  const transformColSizes = (columns: ColDef[]) => columns.map((c, idx) => ({ ...c, hide: idx % 2 === 0 }));
   return <Grid rows={data.rows} columns={transformColSizes(data.columns)} />;
 };
 
@@ -113,7 +114,7 @@ export const withButtonToChangeColProp: React.FC = () => {
       <div>
         <button onClick={changeCols}>Change cols </button>
       </div>
-      <div style={{display: 'flex', flexGrow: 1, padding: '10px'}}>
+      <div style={{ display: 'flex', flexGrow: 1, padding: '10px' }}>
         <Grid rows={rows} columns={cols} />
       </div>
     </>

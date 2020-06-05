@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { action } from '@storybook/addon-actions';
 import { Grid, GridApi, GridOptionsProp } from '@material-ui-x/grid';
 import { getData, GridData } from '../data/data-service';
-import {GridDataSet, useData} from '../components/grid-dataset';
+import { useData } from '../components/grid-dataset';
 
 export default {
   title: 'Grid Selection',
@@ -28,9 +28,7 @@ export const PreSelectedRows = () => {
     loadData();
   }, []);
 
-  return (
-    <Grid rows={data.rows} columns={data.columns} apiRef={apiRef} />
-  );
+  return <Grid rows={data.rows} columns={data.columns} apiRef={apiRef} />;
 };
 
 export const WithSelectedEvents = () => {

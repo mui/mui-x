@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { getData, GridData } from '../data/data-service';
 import { ElementSize, Grid, GridOptionsProp, GridChildrenProp } from '@material-ui-x/grid';
 
@@ -12,7 +12,7 @@ export interface GridDatasetProps {
   children?: GridChildrenProp;
 }
 
-export const useData = (nbRows: number, nbCols: number, onData?: (data: GridData) => void )=> {
+export const useData = (nbRows: number, nbCols: number, onData?: (data: GridData) => void) => {
   const [data, setData] = useState<GridData>({ rows: [], columns: [] });
 
   const loadData = async () => {
@@ -31,10 +31,10 @@ export const useData = (nbRows: number, nbCols: number, onData?: (data: GridData
 };
 
 export const GridDataSet = ({ nbRows, nbCols, options, container, onData, children, loading }: GridDatasetProps) => {
-  const data = useData(nbRows, nbCols)
+  const data = useData(nbRows, nbCols);
   const size = container || { width: 800, height: 600 };
   return (
-    <div style={{ width: size.width, height: size.height}}>
+    <div style={{ width: size.width, height: size.height }}>
       <Grid rows={data.rows} columns={data.columns} options={options} loading={loading}>
         {children}
       </Grid>

@@ -32,7 +32,7 @@
   "scripts": {
     "start": "start-storybook -p 6006",
     "build": "build-storybook -o dist/ --quiet",
-    "lint": "../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../.eslintrc.js && npm run lint:css",
+    "lint": "../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ./.eslintrc.js && npm run lint:css",
     "lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../.stylelintrc.js"
   }
 }

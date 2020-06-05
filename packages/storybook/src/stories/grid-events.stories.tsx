@@ -1,7 +1,7 @@
 import React from 'react';
 import { action } from '@storybook/addon-actions';
-import {Grid, GridOptionsProp} from '@material-ui-x/grid';
-import {GridDataSet, useData} from '../components/grid-dataset';
+import { Grid, GridOptionsProp } from '@material-ui-x/grid';
+import { useData } from '../components/grid-dataset';
 
 export default {
   title: 'Grid Events',
