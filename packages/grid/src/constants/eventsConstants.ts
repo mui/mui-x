@@ -1,3 +1,5 @@
+export const RESIZE = 'resize';
+export const UNMOUNT = 'unmount';
 export const CLICK_EVENT = 'click';
 export const KEYDOWN_EVENT = 'keydown';
 export const KEYUP_EVENT = 'keyup';
@@ -7,6 +9,8 @@ export const ROW_CLICKED = 'rowClicked';
 export const ROW_SELECTED_EVENT = 'rowSelected';
 export const SELECTION_CHANGED_EVENT = 'selectionChanged';
 export const COLUMN_HEADER_CLICKED = 'columnClicked';
+export const PAGE_CHANGED_EVENT = 'pageChanged';
+export const PAGESIZE_CHANGED_EVENT = 'pageSizeChanged';
 
 export const SCROLLING_START = 'scrolling:start';
 export const SCROLLING = 'scrolling';

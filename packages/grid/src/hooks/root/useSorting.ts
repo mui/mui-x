@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   CellValue,
   ColDef,
@@ -7,7 +7,6 @@ import {
   ColumnSortedParams,
   ComparatorFn,
   FieldComparatorList,
-  GridApi,
   GridOptions,
   RowId,
   RowModel,
@@ -26,6 +25,8 @@ import { GridApiRef } from '../../grid';
 import { useLogger } from '../utils';
 import { isDesc, nextSortDirection } from '../../utils/';
 import { SortItem, SortModel } from '../../models/sortModel';
+import { useApiEventHandler } from './useApiEventHandler';
+import { useApiMethod } from './useApiMethod';
 
 export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: Columns, apiRef: GridApiRef) => {
   const logger = useLogger('useSorting');
@@ -34,56 +35,68 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
   const originalOrder = useRef<RowId[]>([]);
   const comparatorList = useRef<FieldComparatorList>([]);
 
-  const upsertSortModel = (field: string, sortItem?: SortItem): SortModel => {
-    const existingIdx = sortModelRef.current.findIndex(c => c.colId === field);
-    let newSortModel = [...sortModelRef.current];
-    if (existingIdx > -1) {
-      if (!sortItem) {
-        newSortModel.splice(existingIdx, 1);
+  const upsertSortModel = useCallback(
+    (field: string, sortItem?: SortItem): SortModel => {
+      const existingIdx = sortModelRef.current.findIndex(c => c.colId === field);
+      let newSortModel = [...sortModelRef.current];
+      if (existingIdx > -1) {
+        if (!sortItem) {
+          newSortModel.splice(existingIdx, 1);
+        } else {
+          newSortModel.splice(existingIdx, 1, sortItem);
+        }
       } else {
-        newSortModel.splice(existingIdx, 1, sortItem);
+        newSortModel = [...sortModelRef.current, sortItem!];
       }
-    } else {
-      newSortModel = [...sortModelRef.current, sortItem!];
-    }
-    return newSortModel;
-  };
+      return newSortModel;
+    },
+    [sortModelRef],
+  );
 
-  const createSortItem = (col: ColDef): SortItem | undefined => {
-    const existing = sortModelRef.current.find(c => c.colId === col.field);
-    if (existing) {
-      const nextSort = nextSortDirection(options.sortingOrder, existing.sort);
-      return nextSort == null ? undefined : { ...existing, sort: nextSort };
-    } else {
-      return { colId: col.field, sort: nextSortDirection(options.sortingOrder) };
-    }
-  };
+  const createSortItem = useCallback(
+    (col: ColDef): SortItem | undefined => {
+      const existing = sortModelRef.current.find(c => c.colId === col.field);
+      if (existing) {
+        const nextSort = nextSortDirection(options.sortingOrder, existing.sort);
+        return nextSort == null ? undefined : { ...existing, sort: nextSort };
+      } else {
+        return { colId: col.field, sort: nextSortDirection(options.sortingOrder) };
+      }
+    },
+    [sortModelRef, options.sortingOrder],
+  );
 
-  const comparatorListAggregate: ComparatorFn = (row1, row2) => {
-    const result = comparatorList.current.reduce((res, colComparator) => {
-      const { field, comparator } = colComparator;
-      res = res || comparator(row1.data[field], row2.data[field]);
-      return res;
-    }, 0);
-    return result;
-  };
+  const comparatorListAggregate: ComparatorFn = useCallback(
+    (row1, row2) => {
+      const result = comparatorList.current.reduce((res, colComparator) => {
+        const { field, comparator } = colComparator;
+        res = res || comparator(row1.data[field], row2.data[field]);
+        return res;
+      }, 0);
+      return result;
+    },
+    [comparatorList],
+  );
 
-  const buildComparatorList = (sortModel: SortModel): FieldComparatorList => {
-    const comparatorList = sortModel.map(item => {
-      const col = apiRef.current!.getColumnFromField(item.colId);
-      const comparator = isDesc(item.sort)
-        ? (v1: CellValue, v2: CellValue) => -1 * col.comparator!(v1, v2)
-        : col.comparator!;
-      return { field: col.field, comparator };
-    });
-    return comparatorList;
-  };
+  const buildComparatorList = useCallback(
+    (sortModel: SortModel): FieldComparatorList => {
+      const comparatorList = sortModel.map(item => {
+        const col = apiRef.current!.getColumnFromField(item.colId);
+        const comparator = isDesc(item.sort)
+          ? (v1: CellValue, v2: CellValue) => -1 * col.comparator!(v1, v2)
+          : col.comparator!;
+        return { field: col.field, comparator };
+      });
+      return comparatorList;
+    },
+    [apiRef],
+  );
 
-  const getOriginalOrderedRows: () => RowModel[] = () => {
+  const getOriginalOrderedRows: () => RowModel[] = useCallback(() => {
     return originalOrder.current.map(rowId => apiRef.current!.getRowFromId(rowId));
-  };
+  }, [apiRef, originalOrder]);
 
-  const applySorting = () => {
+  const applySorting = useCallback(() => {
     if (!apiRef.current) {
       return;
     }
@@ -105,83 +118,72 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
       sortModel: sortModelRef.current,
     };
     apiRef.current!.emit(COLUMNS_SORTED, params);
-  };
+  }, [apiRef, sortModelRef, comparatorListAggregate, getOriginalOrderedRows, logger]);
 
-  const setSortModel = (sortModel: SortModel) => {
-    sortModelRef.current = sortModel;
-    comparatorList.current = buildComparatorList(sortModel);
-    apiRef.current!.emit(SORT_MODEL_UPDATED, sortModelRef.current);
-    applySorting();
-  };
+  const setSortModel = useCallback(
+    (sortModel: SortModel) => {
+      sortModelRef.current = sortModel;
+      comparatorList.current = buildComparatorList(sortModel);
+      apiRef.current!.emit(SORT_MODEL_UPDATED, sortModelRef.current);
+      applySorting();
+    },
+    [sortModelRef, comparatorList, apiRef, applySorting, buildComparatorList],
+  );
 
-  const sortColumn = (column: ColDef) => {
-    const sortItem = createSortItem(column);
-    let sortModel;
-    if (!allowMultipleSorting.current) {
-      sortModel = !sortItem ? [] : [sortItem];
-    } else {
-      sortModel = upsertSortModel(column.field, sortItem);
-    }
-    setSortModel(sortModel);
-  };
+  const sortColumn = useCallback(
+    (column: ColDef) => {
+      const sortItem = createSortItem(column);
+      let sortModel;
+      if (!allowMultipleSorting.current) {
+        sortModel = !sortItem ? [] : [sortItem];
+      } else {
+        sortModel = upsertSortModel(column.field, sortItem);
+      }
+      setSortModel(sortModel);
+    },
+    [upsertSortModel, setSortModel, allowMultipleSorting, createSortItem],
+  );
 
-  const headerClickHandler = ({ column, field }: ColumnHeaderClickedParam) => {
-    if (column.sortable) {
-      sortColumn(column);
-    }
-  };
+  const headerClickHandler = useCallback(
+    ({ column, field }: ColumnHeaderClickedParam) => {
+      if (column.sortable) {
+        sortColumn(column);
+      }
+    },
+    [sortColumn],
+  );
 
-  const storeOriginalOrder = () => {
+  const storeOriginalOrder = useCallback(() => {
     originalOrder.current = apiRef.current!.getRowModels().reduce((order, row) => {
       order.push(row.id);
       return order;
     }, [] as RowId[]);
-  };
+  }, [originalOrder, apiRef]);
 
-  const onRowsUpdated = () => {
+  const onRowsUpdated = useCallback(() => {
     storeOriginalOrder();
     if (sortModelRef.current.length > 0) {
       applySorting();
     }
-  };
+  }, [sortModelRef, storeOriginalOrder, applySorting]);
 
-  const getSortModel = () => sortModelRef.current;
+  const getSortModel = useCallback(() => sortModelRef.current, [sortModelRef]);
 
-  const onMultipleKeyPressed = (isPressed: boolean) => {
-    allowMultipleSorting.current = options.enableMultipleColumnsSorting && isPressed;
-  };
+  const onMultipleKeyPressed = useCallback(
+    (isPressed: boolean) => {
+      allowMultipleSorting.current = options.enableMultipleColumnsSorting && isPressed;
+    },
+    [allowMultipleSorting, options.enableMultipleColumnsSorting],
+  );
 
-  const onColumnsSorted = (handler: (param: ColumnSortedParams) => void): (() => void) => {
-    return apiRef!.current!.registerEvent(COLUMNS_SORTED, handler);
-  };
+  const onColumnsSorted = useCallback(
+    (handler: (param: ColumnSortedParams) => void): (() => void) => {
+      return apiRef!.current!.registerEvent(COLUMNS_SORTED, handler);
+    },
+    [apiRef],
+  );
 
-  useEffect(() => {
-    if (apiRef && apiRef.current) {
-      logger.debug('Binding Sorting events');
-
-      apiRef.current.on(COLUMN_HEADER_CLICKED, headerClickHandler);
-      apiRef.current.on(ROWS_UPDATED, onRowsUpdated);
-      apiRef.current.on(MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
-
-      logger.debug('Adding sorting to api');
-
-      const sortApi: SortApi = { getSortModel, setSortModel, onColumnsSorted };
-      apiRef.current = Object.assign(apiRef.current, sortApi) as GridApi;
-
-      return () => {
-        apiRef.current?.removeListener(COLUMN_HEADER_CLICKED, headerClickHandler);
-        apiRef.current?.removeListener(ROWS_UPDATED, onRowsUpdated);
-        apiRef.current?.removeListener(MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
-      };
-    }
-  }, [apiRef]);
-
-  const [rowsState, setRowsState] = useState(rowsProp);
   const [colState, setColState] = useState(colsProp);
-
-  useEffect(() => {
-    setRowsState(rowsProp);
-  }, [rowsProp]);
 
   useEffect(() => {
     setColState(colsProp);
@@ -191,9 +193,11 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
   useEffect(() => {
     if (rowsProp.length > 0) {
       storeOriginalOrder();
-      applySorting();
+      if (sortModelRef.current.length > 0) {
+        applySorting();
+      }
     }
-  }, [rowsState]);
+  }, [rowsProp, applySorting, storeOriginalOrder]);
 
   useEffect(() => {
     if (colsProp.length > 0 && apiRef.current) {
@@ -205,5 +209,12 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
       const sortModel = sortedCols.map(c => ({ colId: c.field, sort: c.sortDirection }));
       setSortModel(sortModel);
     }
-  }, [colState]);
+  }, [colState, setSortModel, apiRef, colsProp]);
+
+  useApiEventHandler(apiRef, COLUMN_HEADER_CLICKED, headerClickHandler);
+  useApiEventHandler(apiRef, ROWS_UPDATED, onRowsUpdated);
+  useApiEventHandler(apiRef, MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
+  const sortApi: SortApi = { getSortModel, setSortModel, onColumnsSorted };
+
+  useApiMethod(apiRef, sortApi, 'SortApi');
 };

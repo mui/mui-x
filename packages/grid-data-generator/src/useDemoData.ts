@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { ColDef, Columns, RowData } from '@material-ui-x/grid';
 import { getRealData } from './services/real-data-service';
 import { useEffect, useState } from 'react';
@@ -8,6 +9,7 @@ export type DemoDataReturnType = {
   data: { rows: RowData[]; columns: ColDef[] };
   setSize: (count: number) => void;
   setDataset: (dataset: string) => void;
+  loadNewData: () => Promise<void>;
 };
 export type DataSet = 'Commodity' | 'Employee';
 
@@ -27,5 +29,5 @@ export const useDemoData = (dataSetProp: DataSet, nbRows: number): DemoDataRetur
     loadData();
   }, [size, dataset]);
 
-  return { data: { rows, columns: cols }, setSize, setDataset };
+  return { data: { rows, columns: cols }, setSize, setDataset, loadNewData: loadData };
 };

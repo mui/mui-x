@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { GridDataSet } from '../components/grid-dataset';
-import { GridData } from '../data/data-service';
+import { useData } from '../components/grid-dataset';
+
 import { getDate, random } from '../data/random-generator';
 
 import { ColDef, Grid } from '@material-ui-x/grid';
@@ -10,31 +10,32 @@ export default {
 };
 
 export const SmallColSizes = () => {
-  const transformColSizes = (data: GridData) => data.columns.map(c => (c.width = 60));
+  const data = useData(100, 20);
+  const transformColSizes = (columns: ColDef[]) => columns.map(c => ({ ...c, width: 60 }));
 
-  return <GridDataSet nbRows={100} nbCols={20} onData={transformColSizes} />;
+  return <Grid rows={data.rows} columns={transformColSizes(data.columns)} />;
 };
 
 export const VerySmallColSizes = () => {
-  const transformColSizes = (data: GridData) => data.columns.map(c => (c.width = 30));
-
-  return <GridDataSet nbRows={100} nbCols={20} onData={transformColSizes} />;
+  const data = useData(100, 20);
+  const transformColSizes = (columns: ColDef[]) => columns.map(c => ({ ...c, width: 50 }));
+  return <Grid rows={data.rows} columns={transformColSizes(data.columns)} />;
 };
 
 export const RandomColSizes = () => {
-  const transformColSizes = (data: GridData) => data.columns.map(c => (c.width = Number(random(30, 300).toFixed())));
-
-  return <GridDataSet nbRows={100} nbCols={20} onData={transformColSizes} />;
+  const data = useData(100, 20);
+  const transformColSizes = (columns: ColDef[]) =>
+    columns.map(c => ({ ...c, width: Number(random(50, 300).toFixed()) }));
+  return <Grid rows={data.rows} columns={transformColSizes(data.columns)} />;
 };
 
 export const HideCols = () => {
-  const transformColSizes = (data: GridData) => data.columns.map((c, idx) => (c.hide = idx % 2 === 0));
-
-  return <GridDataSet nbRows={100} nbCols={20} onData={transformColSizes} />;
+  const data = useData(100, 20);
+  const transformColSizes = (columns: ColDef[]) => columns.map((c, idx) => ({ ...c, hide: idx % 2 === 0 }));
+  return <Grid rows={data.rows} columns={transformColSizes(data.columns)} />;
 };
 
 export const withButtonToChangeColProp: React.FC = () => {
-  const size = { width: 800, height: 600 };
   const columns: ColDef[] = [
     { field: 'id' },
     { field: 'firstName' },
@@ -109,13 +110,13 @@ export const withButtonToChangeColProp: React.FC = () => {
   };
 
   return (
-    <div>
+    <>
       <div>
         <button onClick={changeCols}>Change cols </button>
       </div>
-      <div style={{ width: size.width, height: size.height, resize: 'both' }}>
+      <div style={{ display: 'flex', flexGrow: 1, padding: '10px' }}>
         <Grid rows={rows} columns={cols} />
       </div>
-    </div>
+    </>
   );
 };

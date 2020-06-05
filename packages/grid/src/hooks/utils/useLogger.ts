@@ -1,4 +1,5 @@
 import { isFunction } from '../../utils';
+import { useState } from 'react';
 
 const forceDebug = localStorage.getItem('DEBUG') != null;
 const isDebugging = process.env.NODE_ENV !== 'production' || forceDebug;
@@ -70,8 +71,10 @@ export function useLoggerFactory(customLogger?: Logger | LoggerFactoryFn, logLev
   factory = !!logLevel ? (name: string) => getAppender(name, logLevel.toString(), customLogger) : null;
 }
 export function useLogger(name: string): Logger {
-  if (factory) {
-    return factory(name);
-  }
-  return noopLogger;
+  const [logger, setLogger] = useState(factory ? factory(name) : noopLogger);
+  return logger;
+  // if (factory) {
+  //   return factory(name);
+  // }
+  // return noopLogger;
 }

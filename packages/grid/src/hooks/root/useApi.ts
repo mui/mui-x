@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useLogger } from '../utils/useLogger';
 import { EventEmitter } from 'events';
 import {
@@ -8,13 +8,15 @@ import {
   COL_RESIZE_STOP,
   COLUMN_HEADER_CLICKED,
   COLUMNS_SORTED,
+  UNMOUNT,
   KEYDOWN_EVENT,
   KEYUP_EVENT,
+  RESIZE,
   ROW_CLICKED,
   ROW_SELECTED_EVENT,
   SELECTION_CHANGED_EVENT,
 } from '../../constants/eventsConstants';
-import { CellClickedParam, CoreApi, GridOptions, RowClickedParam } from '../../models';
+import { CellClickedParam, GridOptions, RowClickedParam } from '../../models';
 import { GridApi } from '../../models/gridApi';
 import { GridApiRef } from '../../grid';
 import { CELL_CSS_CLASS, HEADER_CELL_CSS_CLASS, ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
@@ -26,6 +28,8 @@ import {
   isCell,
   isHeaderCell,
 } from '../../utils/domUtils';
+import { useApiMethod } from './useApiMethod';
+import { useApiEventHandler } from './useApiEventHandler';
 
 //TODO Split this effect in useEvents and UseApi
 export const useApi = (
@@ -39,89 +43,109 @@ export const useApi = (
   const isResizingRef = useRef(false);
   const logger = useLogger('useApi');
 
-  const initApi = () => {
+  const initApi = useCallback(() => {
     logger.debug('Initialising grid api.');
     const api = new EventEmitter();
     apiRef.current = api as GridApi;
     setApiInitialised(true);
-  };
+  }, [apiRef, logger, setApiInitialised]);
 
   useEffect(() => {
     if (apiRef) {
       initApi();
     }
-  }, [apiRef]);
+  }, [apiRef, initApi]);
 
-  const emitEvent = (name: string, ...args: any[]) => {
-    if (apiRef && apiRef.current && isApiInitialised) {
-      apiRef.current.emit(name, ...args);
-    }
-  };
-
-  const getHandler = (name: string) => (...args: any[]) => emitEvent(name, ...args);
-
-  const handleResizeStart = () => (isResizingRef.current = true);
-  const handleResizeStop = () => (isResizingRef.current = false);
-
-  const onClickHandler = (e: MouseEvent) => {
-    if (e.target == null) {
-      return;
-    }
-    const elem = e.target as HTMLElement;
-
-    if (isCell(elem)) {
-      const cellEl = findParentElementFromClassName(elem, CELL_CSS_CLASS)! as HTMLElement;
-      const rowEl = findParentElementFromClassName(elem, ROW_CSS_CLASS)! as HTMLElement;
-      const id = getIdFromRowElem(rowEl);
-      const rowModel = apiRef!.current!.getRowFromId(id);
-      const rowIndex = apiRef!.current!.getRowIndexFromId(id);
-      const field = getDataFromElem(cellEl, 'field');
-      const value = getDataFromElem(cellEl, 'value');
-      const column = apiRef.current!.getColumnFromField(field);
-      if (!column || !column.disableClickEventBubbling) {
-        const commonParams = { data: rowModel.data, rowIndex, colDef: column };
-        const cellParams: CellClickedParam = {
-          element: cellEl,
-          field,
-          value,
-          ...commonParams,
-        };
-        const rowParams: RowClickedParam = {
-          element: rowEl,
-          rowModel,
-          ...commonParams,
-        };
-        emitEvent(CELL_CLICKED, cellParams);
-        emitEvent(ROW_CLICKED, rowParams);
+  const emitEvent = useCallback(
+    (name: string, ...args: any[]) => {
+      if (apiRef && apiRef.current && isApiInitialised) {
+        apiRef.current.emit(name, ...args);
       }
-    } else if (isHeaderCell(elem) && !isResizingRef.current) {
-      const headerCell = findParentElementFromClassName(elem, HEADER_CELL_CSS_CLASS)!;
-      const field = getFieldFromHeaderElem(headerCell);
-      const column = apiRef.current!.getColumnFromField(field);
-      const colHeaderParams = { field, column };
-      emitEvent(COLUMN_HEADER_CLICKED, colHeaderParams);
-    }
-  };
+    },
+    [apiRef, isApiInitialised],
+  );
 
-  const registerEvent = (event: string, handler: (param: any) => void): (() => void) => {
-    apiRef!.current!.on(event, handler);
-    return () => {
-      apiRef!.current!.removeListener(event, handler);
-    };
-  };
-  useEffect(() => {
-    if (apiRef && apiRef.current) {
-      logger.debug('Adding row selection to api');
+  const getHandler = useCallback((name: string) => (...args: any[]) => emitEvent(name, ...args), [emitEvent]);
 
-      const coreApi: Partial<CoreApi> = { registerEvent };
-      apiRef.current = Object.assign(apiRef.current, coreApi) as GridApi;
-    }
-  }, [apiRef]);
+  const handleResizeStart = useCallback(() => (isResizingRef.current = true), [isResizingRef]);
+  const handleResizeStop = useCallback(() => (isResizingRef.current = false), [isResizingRef]);
+
+  const onClickHandler = useCallback(
+    (e: MouseEvent) => {
+      if (e.target == null) {
+        return;
+      }
+      const elem = e.target as HTMLElement;
+
+      if (isCell(elem)) {
+        const cellEl = findParentElementFromClassName(elem, CELL_CSS_CLASS)! as HTMLElement;
+        const rowEl = findParentElementFromClassName(elem, ROW_CSS_CLASS)! as HTMLElement;
+        const id = getIdFromRowElem(rowEl);
+        const rowModel = apiRef!.current!.getRowFromId(id);
+        const rowIndex = apiRef!.current!.getRowIndexFromId(id);
+        const field = getDataFromElem(cellEl, 'field');
+        const value = getDataFromElem(cellEl, 'value');
+        const column = apiRef.current!.getColumnFromField(field);
+        if (!column || !column.disableClickEventBubbling) {
+          const commonParams = { data: rowModel.data, rowIndex, colDef: column };
+          const cellParams: CellClickedParam = {
+            element: cellEl,
+            field,
+            value,
+            ...commonParams,
+          };
+          const rowParams: RowClickedParam = {
+            element: rowEl,
+            rowModel,
+            ...commonParams,
+          };
+          emitEvent(CELL_CLICKED, cellParams);
+          emitEvent(ROW_CLICKED, rowParams);
+        }
+      } else if (isHeaderCell(elem) && !isResizingRef.current) {
+        const headerCell = findParentElementFromClassName(elem, HEADER_CELL_CSS_CLASS)!;
+        const field = getFieldFromHeaderElem(headerCell);
+        const column = apiRef.current!.getColumnFromField(field);
+        const colHeaderParams = { field, column };
+        emitEvent(COLUMN_HEADER_CLICKED, colHeaderParams);
+      }
+    },
+    [emitEvent, apiRef],
+  );
+
+  const registerEvent = useCallback(
+    (event: string, handler: (param: any) => void): (() => void) => {
+      logger.debug(`Binding ${event} event`);
+      apiRef.current!.on(event, handler);
+      const api = apiRef.current!;
+      return () => {
+        logger.debug(`Clearing ${event} event`);
+        api.removeListener(event, handler);
+      };
+    },
+    [apiRef, logger],
+  );
+  const onUnmount = useCallback(
+    (handler: (param: any) => void): (() => void) => {
+      return registerEvent(UNMOUNT, handler);
+    },
+    [registerEvent],
+  );
+  const onResize = useCallback(
+    (handler: (param: any) => void): (() => void) => {
+      return registerEvent(RESIZE, handler);
+    },
+    [registerEvent],
+  );
+  const resize = useCallback(() => apiRef.current?.emit(RESIZE), [apiRef]);
+  useApiMethod(apiRef, { registerEvent, onUnmount, onResize, resize }, 'CoreApi');
 
   useEffect(() => {
     if (gridRootRef && gridRootRef.current && isApiInitialised) {
+      logger.debug('Binding events listeners');
       const keyDownHandler = getHandler(KEYDOWN_EVENT);
       const keyUpHandler = getHandler(KEYUP_EVENT);
+      const gridRootElem = gridRootRef.current;
 
       gridRootRef.current.addEventListener(CLICK_EVENT, onClickHandler, { capture: true });
       document.addEventListener(KEYDOWN_EVENT, keyDownHandler);
@@ -129,62 +153,27 @@ export const useApi = (
 
       apiRef.current!.isInitialised = true;
       setInit(true);
-
-      apiRef.current!.on(COL_RESIZE_START, handleResizeStart);
-      apiRef.current!.on(COL_RESIZE_STOP, handleResizeStop);
+      const api = apiRef.current!;
 
       return () => {
         logger.debug('Clearing all events listeners');
-        gridRootRef.current!.removeEventListener(CLICK_EVENT, onClickHandler, { capture: true });
+        api.emit(UNMOUNT);
+        gridRootElem.removeEventListener(CLICK_EVENT, onClickHandler, { capture: true });
         document.removeEventListener(KEYDOWN_EVENT, keyDownHandler);
         document.removeEventListener(KEYUP_EVENT, keyUpHandler);
-
-        apiRef.current?.removeAllListeners();
+        api.removeAllListeners();
       };
     }
-  }, [gridRootRef, isApiInitialised]);
+  }, [gridRootRef, isApiInitialised, getHandler, logger, onClickHandler, apiRef]);
 
-  useEffect(() => {
-    if (!apiRef || !apiRef.current) {
-      return;
-    }
-
-    const unsubscribeHandlers: Array<() => void> = [];
-
-    if (options.onCellClicked) {
-      apiRef.current.on(CELL_CLICKED, options.onCellClicked);
-      unsubscribeHandlers.push(() => apiRef.current!.removeListener(CELL_CLICKED, options.onCellClicked!));
-    }
-    if (options.onRowClicked) {
-      apiRef.current.on(ROW_CLICKED, options.onRowClicked);
-      unsubscribeHandlers.push(() => apiRef.current!.removeListener(ROW_CLICKED, options.onRowClicked!));
-    }
-    if (options.onRowSelected) {
-      apiRef.current.on(ROW_SELECTED_EVENT, options.onRowSelected);
-      unsubscribeHandlers.push(() => apiRef.current!.removeListener(ROW_SELECTED_EVENT, options.onRowSelected!));
-    }
-    if (options.onSelectionChanged) {
-      apiRef.current.on(SELECTION_CHANGED_EVENT, options.onSelectionChanged);
-      unsubscribeHandlers.push(() =>
-        apiRef.current!.removeListener(SELECTION_CHANGED_EVENT, options.onSelectionChanged!),
-      );
-    }
-    if (options.onColumnHeaderClicked) {
-      apiRef.current.on(COLUMN_HEADER_CLICKED, options.onColumnHeaderClicked);
-      unsubscribeHandlers.push(() =>
-        apiRef.current!.removeListener(COLUMN_HEADER_CLICKED, options.onColumnHeaderClicked!),
-      );
-    }
-    if (options.onColumnsSorted) {
-      apiRef.current.on(COLUMNS_SORTED, options.onColumnsSorted);
-      unsubscribeHandlers.push(() => apiRef.current!.removeListener(COLUMNS_SORTED, options.onColumnsSorted!));
-    }
-
-    return () => {
-      logger.info(`Clearing all subscribed options handlers`);
-      unsubscribeHandlers.forEach(unsubscribeHandler => unsubscribeHandler());
-    };
-  }, [options]);
+  useApiEventHandler(apiRef, COL_RESIZE_START, handleResizeStart);
+  useApiEventHandler(apiRef, COL_RESIZE_STOP, handleResizeStop);
+  useApiEventHandler(apiRef, CELL_CLICKED, options.onCellClicked);
+  useApiEventHandler(apiRef, ROW_CLICKED, options.onRowClicked);
+  useApiEventHandler(apiRef, ROW_SELECTED_EVENT, options.onRowSelected);
+  useApiEventHandler(apiRef, SELECTION_CHANGED_EVENT, options.onSelectionChanged);
+  useApiEventHandler(apiRef, COLUMN_HEADER_CLICKED, options.onColumnHeaderClicked);
+  useApiEventHandler(apiRef, COLUMNS_SORTED, options.onColumnsSorted);
 
   return initialised;
 };

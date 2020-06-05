@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useVirtualColumns } from './useVirtualColumns';
 import {
   CellIndexCoordinates,
   ContainerProps,
-  GridApi,
   GridOptions,
   InternalColumns,
   RenderContextProps,
@@ -15,11 +14,14 @@ import { ScrollParams, useScrollFn } from '../utils';
 import { useLogger } from '../utils/useLogger';
 import { useContainerProps } from '../root';
 import { GridApiRef } from '../../grid';
-import { SCROLLING, SCROLLING_START, SCROLLING_STOP } from '../../constants/eventsConstants';
+import { RESIZE, SCROLLING, SCROLLING_START, SCROLLING_STOP } from '../../constants/eventsConstants';
 import { debounce } from '../../utils';
+import { useApiMethod } from '../root/useApiMethod';
+import { useNativeEventListener } from '../root/useNativeEventListener';
+import { useApiEventHandler } from '../root/useApiEventHandler';
 
 const SCROLL_EVENT = 'scroll';
-type UseVirtualRowsReturnType = [Partial<RenderContextProps> | null, () => void];
+type UseVirtualRowsReturnType = Partial<RenderContextProps> | null;
 
 export const useVirtualRows = (
   colRef: React.MutableRefObject<HTMLDivElement | null>,
@@ -33,7 +35,9 @@ export const useVirtualRows = (
   const logger = useLogger('useVirtualRows');
   const pageRef = useRef<number>(0);
   const rowsCount = useRef<number>(rows.length);
+  const paginationCurrentPage = useRef<number>(1);
   const containerPropsRef = useRef<ContainerProps | null>(null);
+  const optionsRef = useRef<GridOptions>(options);
   const realScrollRef = useRef<ScrollParams>({ left: 0, top: 0 });
   const rzScrollRef = useRef<ScrollParams>({ left: 0, top: 0 });
   const columnTotalWidthRef = useRef<number>(internalColumns.meta.totalWidth);
@@ -47,21 +51,31 @@ export const useVirtualRows = (
   const [renderCtx, setRenderCtx] = useState<Partial<RenderContextProps> | null>(null);
   const [renderedColRef, updateRenderedCols] = useVirtualColumns(options, apiRef);
 
-  const getRenderRowProps = (page: number) => {
-    if (containerPropsRef.current == null) {
-      return null;
-    }
-    const containerProps = containerPropsRef.current!;
-    const firstRowIdx = page * containerProps.viewportPageSize;
-    let lastRowIdx = firstRowIdx + containerProps.renderingZonePageSize;
-    if (lastRowIdx > rowsCount.current - 1) {
-      lastRowIdx = rowsCount.current - 1;
-    }
-    const rowProps: RenderRowProps = { page, firstRowIdx, lastRowIdx };
-    return rowProps;
-  };
+  const getRenderRowProps = useCallback(
+    (page: number) => {
+      if (containerPropsRef.current == null) {
+        return null;
+      }
+      const containerProps = containerPropsRef.current!;
+      let minRowIdx = 0;
+      if (optionsRef.current.pagination && optionsRef.current.paginationPageSize != null) {
+        minRowIdx = optionsRef.current.paginationPageSize * (paginationCurrentPage.current - 1);
+      }
 
-  const getRenderCtxState = (): Partial<RenderContextProps> | null => {
+      const firstRowIdx = page * containerProps.viewportPageSize + minRowIdx;
+      let lastRowIdx = firstRowIdx + containerProps.renderingZonePageSize;
+      const maxIndex = rowsCount.current + minRowIdx;
+      if (lastRowIdx > maxIndex) {
+        lastRowIdx = maxIndex;
+      }
+
+      const rowProps: RenderRowProps = { page, firstRowIdx, lastRowIdx };
+      return rowProps;
+    },
+    [containerPropsRef],
+  );
+
+  const getRenderCtxState = useCallback((): Partial<RenderContextProps> | null => {
     const containerProps = containerPropsRef.current;
     const renderedCol = renderedColRef.current;
     const renderedRow = getRenderRowProps(pageRef.current);
@@ -74,14 +88,18 @@ export const useVirtualRows = (
       ...containerProps,
       ...renderedCol,
       ...renderedRow,
+      ...{
+        paginationCurrentPage: paginationCurrentPage.current,
+        paginationPageSize: optionsRef.current.paginationPageSize,
+      },
     };
     logger.debug(':: getRenderCtxState - returning state ', renderCtx);
     renderCtxRef.current = renderCtx;
     return renderCtx;
-  };
+  }, [logger, renderCtxRef, containerPropsRef, renderedColRef, getRenderRowProps]);
 
-  const reRender = () => setRenderCtx(getRenderCtxState());
-  const updateViewport = debounce(() => {
+  const reRender = useCallback(() => setRenderCtx(getRenderCtxState()), [getRenderCtxState, setRenderCtx]);
+  const updateViewport = useCallback(() => {
     if (windowRef && windowRef.current && containerPropsRef && containerPropsRef.current) {
       const containerProps = containerPropsRef.current;
       const { scrollLeft, scrollTop } = windowRef.current;
@@ -97,7 +115,10 @@ export const useVirtualRows = (
         ` viewportHeight:${viewportHeight}, rzScrollTop: ${rzScrollTop}, scrollTop: ${scrollTop}, current page = ${currentPage}`,
       );
 
-      const scrollParams = { left: rzScrollLeft, top: rzScrollTop };
+      const scrollParams = {
+        left: containerProps?.hasScrollX ? rzScrollLeft : 0,
+        top: containerProps?.hasScrollY ? rzScrollTop : 0,
+      };
 
       const page = pageRef.current;
       currentPage = Math.floor(currentPage);
@@ -112,11 +133,15 @@ export const useVirtualRows = (
       }
       rzScrollRef.current = scrollParams;
 
-      if (requireRerender) {
+      if (
+        requireRerender ||
+        (renderCtxRef.current && renderCtxRef.current.paginationCurrentPage !== paginationCurrentPage.current)
+      ) {
         reRender();
       }
     }
-  }, 10);
+  }, [apiRef, logger, reRender, windowRef, updateRenderedCols, scrollTo]);
+  const debouncedUpdateViewport = useMemo(() => debounce(updateViewport, 10), [updateViewport]);
 
   useLayoutEffect(() => {
     if (renderingZoneRef && renderingZoneRef.current) {
@@ -125,7 +150,7 @@ export const useVirtualRows = (
     }
   });
 
-  const resetScroll = () => {
+  const resetScroll = useCallback(() => {
     scrollTo({ left: 0, top: 0 });
     pageRef.current = 0;
 
@@ -133,160 +158,189 @@ export const useVirtualRows = (
       windowRef.current.scrollTo(0, 0);
     }
     rzScrollRef.current = { left: 0, top: 0 };
-  };
+  }, [windowRef, rzScrollRef, pageRef, scrollTo]);
 
-  const updateContainerSize = () => {
+  const updateContainerSize = useCallback(() => {
     if (columnTotalWidthRef.current > 0) {
-      rowsCount.current = apiRef?.current?.getRowsCount() || 0; //we ensure we call with latest length
-      containerPropsRef.current = getContainerProps(options, columnTotalWidthRef.current, rowsCount.current);
+      const totalRowsCount = apiRef?.current?.getRowsCount() || 0; //we ensure we call with latest length
+      const currentPage = paginationCurrentPage.current;
+      let pageRowCount =
+        optionsRef.current.pagination && optionsRef.current.paginationPageSize
+          ? optionsRef.current.paginationPageSize
+          : null;
+
+      pageRowCount =
+        !pageRowCount || currentPage * pageRowCount <= totalRowsCount
+          ? pageRowCount
+          : totalRowsCount - (currentPage - 1) * pageRowCount;
+
+      rowsCount.current = pageRowCount == null || pageRowCount > totalRowsCount ? totalRowsCount : pageRowCount;
+      containerPropsRef.current = getContainerProps(optionsRef.current, columnTotalWidthRef.current, rowsCount.current);
+      if (optionsRef.current.paginationAutoPageSize && containerPropsRef.current) {
+        rowsCount.current = containerPropsRef.current.viewportPageSize;
+      }
       updateViewport();
       reRender();
     } else {
       containerPropsRef.current = null;
     }
-  };
+  }, [containerPropsRef, apiRef, getContainerProps, reRender, updateViewport]);
 
   const scrollingTimeout = useRef<any>(0);
-  const onScroll: any = (e: any) => {
-    realScrollRef.current = { left: e.target.scrollLeft, top: e.target.scrollTop };
-    if (apiRef && apiRef.current && scrollingTimeout.current === 0) {
-      apiRef.current.emit(SCROLLING_START);
-    }
-    clearTimeout(scrollingTimeout.current);
-    scrollingTimeout.current = setTimeout(() => {
-      scrollingTimeout.current = 0;
-      if (apiRef && apiRef.current) {
-        apiRef.current.emit(SCROLLING_STOP);
+  const onScroll: any = useCallback(
+    (event: any) => {
+      realScrollRef.current = { left: event.target.scrollLeft, top: event.target.scrollTop };
+      if (apiRef && apiRef.current && scrollingTimeout.current === 0) {
+        apiRef.current.emit(SCROLLING_START);
       }
-    }, 300);
-    updateViewport();
-  };
-
-  const scrollToIndexes = (params: CellIndexCoordinates) => {
-    logger.debug(`Scrolling to cell at row ${params.rowIndex}, col: ${params.colIndex} `);
-
-    if (apiRef.current) {
-      let scrollLeft;
-      const isColVisible = apiRef.current.isColumnVisibleInWindow(params.colIndex);
-      logger.debug(`Column ${params.colIndex} is ${isColVisible ? 'already' : 'not'} visible.`);
-      if (!isColVisible) {
-        const meta = apiRef.current.getColumnsMeta();
-        const isLastCol = params.colIndex + 1 === meta.positions.length;
-
-        if (isLastCol) {
-          const lastColWidth = apiRef.current.getVisibleColumns()[params.colIndex].width!;
-          scrollLeft = meta.positions[params.colIndex] + lastColWidth - containerPropsRef.current!.windowSizes.width;
-        } else {
-          scrollLeft = meta.positions[params.colIndex + 1] - containerPropsRef.current!.windowSizes.width;
+      clearTimeout(scrollingTimeout.current);
+      scrollingTimeout.current = setTimeout(() => {
+        scrollingTimeout.current = 0;
+        if (apiRef && apiRef.current) {
+          apiRef.current.emit(SCROLLING_STOP);
         }
-        scrollLeft = rzScrollRef.current.left > scrollLeft ? meta.positions[params.colIndex] : scrollLeft;
+      }, 300);
+      debouncedUpdateViewport();
+    },
+    [apiRef, debouncedUpdateViewport, scrollingTimeout, realScrollRef],
+  );
+
+  const scrollToIndexes = useCallback(
+    (params: CellIndexCoordinates) => {
+      logger.debug(`Scrolling to cell at row ${params.rowIndex}, col: ${params.colIndex} `);
+
+      if (apiRef.current) {
+        let scrollLeft;
+        const isColVisible = apiRef.current.isColumnVisibleInWindow(params.colIndex);
+        logger.debug(`Column ${params.colIndex} is ${isColVisible ? 'already' : 'not'} visible.`);
+        if (!isColVisible) {
+          const meta = apiRef.current.getColumnsMeta();
+          const isLastCol = params.colIndex + 1 === meta.positions.length;
+
+          if (isLastCol) {
+            const lastColWidth = apiRef.current.getVisibleColumns()[params.colIndex].width!;
+            scrollLeft = meta.positions[params.colIndex] + lastColWidth - containerPropsRef.current!.windowSizes.width;
+          } else {
+            scrollLeft = meta.positions[params.colIndex + 1] - containerPropsRef.current!.windowSizes.width;
+          }
+          scrollLeft = rzScrollRef.current.left > scrollLeft ? meta.positions[params.colIndex] : scrollLeft;
+        }
+
+        let scrollTop;
+
+        const currentRowPage = params.rowIndex / containerPropsRef.current!.viewportPageSize;
+        const scrollPosition = currentRowPage * containerPropsRef.current!.viewportSize.height;
+        const viewportHeight = containerPropsRef.current!.viewportSize.height;
+
+        const isRowIndexAbove = realScrollRef.current.top > scrollPosition;
+        const isRowIndexBelow =
+          realScrollRef.current.top + viewportHeight < scrollPosition + optionsRef.current.rowHeight;
+
+        if (isRowIndexAbove) {
+          scrollTop = scrollPosition; //We put it at the top of the page
+          logger.debug(`Row is above, setting scrollTop to ${scrollTop}`);
+        } else if (isRowIndexBelow) {
+          //We make sure the row is not half visible
+          scrollTop = scrollPosition - viewportHeight + optionsRef.current.rowHeight;
+          logger.debug(`Row is below, setting scrollTop to ${scrollTop}`);
+        }
+
+        apiRef.current.scroll({
+          left: scrollLeft,
+          top: scrollTop,
+        });
       }
+    },
+    [apiRef, realScrollRef, logger],
+  );
 
-      let scrollTop;
-
-      const currentRowPage = params.rowIndex / containerPropsRef.current!.viewportPageSize;
-      const scrollPosition = currentRowPage * containerPropsRef.current!.viewportSize.height;
-
-      const isRowIndexAbove = realScrollRef.current.top > scrollPosition; //rzScrollRef.current.top > rowPositionInRenderingZone;
-      const isRowIndexBelow =
-        realScrollRef.current.top + containerPropsRef.current!.viewportSize.height < scrollPosition + options.rowHeight;
-
-      if (isRowIndexAbove) {
-        scrollTop = scrollPosition; //We put it at the top of the page
-        logger.debug(`Row is above, setting scrollTop to ${scrollTop}`);
-      } else if (isRowIndexBelow) {
-        //We make sure the row is not half visible
-        scrollTop = scrollPosition - containerPropsRef.current!.viewportSize.height + options.rowHeight;
-        logger.debug(`Row is below, setting scrollTop to ${scrollTop}`);
+  const scroll = useCallback(
+    (params: Partial<ScrollParams>) => {
+      logger.debug(`Scrolling to left: ${params.left} top: ${params.top}`);
+      if (windowRef.current && params.left != null && colRef.current) {
+        colRef.current.scrollLeft = params.left;
+        windowRef.current.scrollLeft = params.left;
       }
-
-      apiRef.current.scroll({
-        left: scrollLeft,
-        top: scrollTop,
-      });
-    }
-  };
-
-  const scroll = (params: Partial<ScrollParams>) => {
-    logger.debug(`Scrolling to left: ${params.left} top: ${params.top}`);
-    if (windowRef.current && params.left != null && colRef.current) {
-      colRef.current.scrollLeft = params.left;
-      windowRef.current.scrollLeft = params.left;
-    }
-    if (windowRef.current && params.top != null) {
-      windowRef.current.scrollTop = params.top;
-    }
-    updateViewport();
-  };
+      if (windowRef.current && params.top != null) {
+        windowRef.current.scrollTop = params.top;
+      }
+      debouncedUpdateViewport();
+    },
+    [logger, windowRef, debouncedUpdateViewport, colRef],
+  );
 
   const getContainerPropsState = useCallback(() => {
-    return containerPropsRef.current;
-  }, []);
-
-  useEffect(() => {
-    columnTotalWidthRef.current = internalColumns.meta.totalWidth;
-    updateContainerSize();
-
-    if (windowRef && windowRef.current) {
-      logger.debug('Binding scroll event to window.');
-      const options = { passive: true };
-      windowRef.current.addEventListener(SCROLL_EVENT, onScroll, options);
-      return () => {
-        logger.debug('Unbinding scroll event to window.');
-        windowRef.current!.removeEventListener(SCROLL_EVENT, onScroll);
-      };
+    if (!containerPropsRef.current) {
+      updateContainerSize();
     }
-  }, [internalColumns]);
+    return containerPropsRef.current;
+  }, [updateContainerSize]);
+
+  const getRenderContextState = useCallback(() => {
+    return renderCtxRef.current;
+  }, []);
+
+  const renderPage = useCallback(
+    (page: number) => {
+      paginationCurrentPage.current = page;
+      resetScroll();
+      updateContainerSize();
+    },
+    [paginationCurrentPage, resetScroll, updateContainerSize],
+  );
+  const onResize = useCallback(() => {
+    logger.debug('OnResize, recalculating container sizes.');
+    updateContainerSize();
+  }, [logger, updateContainerSize]);
+
+  const onViewportScroll = useCallback(
+    (event: any) => {
+      logger.debug('Using keyboard to navigate cells, converting scroll events ');
+
+      event.target.scrollLeft = 0;
+      event.target.scrollTop = 0;
+      event.preventDefault();
+      event.stopPropagation();
+      return false;
+    },
+    [logger],
+  );
+
+  useApiEventHandler(apiRef, RESIZE, onResize);
+  useNativeEventListener(apiRef, windowRef, SCROLL_EVENT, onScroll, { passive: true });
+  useNativeEventListener(apiRef, () => renderingZoneRef.current?.parentElement, SCROLL_EVENT, onViewportScroll);
 
   useEffect(() => {
-    logger.debug('+++ options or renderingZoneRef changed ');
-    resetScroll();
-    updateContainerSize();
-  }, [options, renderingZoneRef]);
+    if (columnTotalWidthRef.current !== internalColumns.meta.totalWidth) {
+      columnTotalWidthRef.current = internalColumns.meta.totalWidth;
+      updateContainerSize();
+    }
+  }, [internalColumns, updateContainerSize]);
 
-  const onViewportScroll = useCallback((e: any) => {
-    logger.debug('Using keyboard to navigate cells, converting scroll events ');
-
-    e.target.scrollLeft = 0;
-    e.target.scrollTop = 0;
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
-  }, []);
+  useEffect(() => {
+    if (optionsRef.current !== options) {
+      logger.debug('Options changed, updating container sizes');
+      optionsRef.current = options;
+      updateContainerSize();
+    }
+  }, [options, renderingZoneRef, resetScroll, updateContainerSize, logger]);
 
   useEffect(() => {
     if (rows.length !== rowsCount.current) {
       logger.debug('Row length changed to ', rows.length);
-      rowsCount.current = rows.length;
       updateContainerSize();
     }
-    if (renderingZoneRef && renderingZoneRef.current) {
-      const viewportStickyContainerElt = renderingZoneRef.current.parentElement!;
-      viewportStickyContainerElt.addEventListener(SCROLL_EVENT, onViewportScroll);
-      return () => {
-        viewportStickyContainerElt.removeEventListener(SCROLL_EVENT, onViewportScroll);
-      };
-    }
-  }, [rows]);
+  }, [rows.length, logger, updateContainerSize]);
 
-  const onResize = useCallback(() => {
-    logger.debug('OnResize, recalculating container sizes.');
-    updateContainerSize();
-  }, []);
+  const virtualApi: Partial<VirtualizationApi> = {
+    scroll,
+    scrollToIndexes,
+    getContainerPropsState,
+    getRenderContextState,
+    renderPage,
+  };
 
-  useEffect(() => {
-    if (apiRef && apiRef.current) {
-      logger.debug('Adding scroll api to apiRef');
+  useApiMethod(apiRef, virtualApi, 'VirtualizationApi');
 
-      const virtualApi: Partial<VirtualizationApi> = {
-        scroll,
-        scrollToIndexes,
-        getContainerPropsState,
-      };
-
-      apiRef.current = Object.assign(apiRef.current, virtualApi) as GridApi;
-    }
-  }, [apiRef]);
-
-  return [renderCtx, onResize];
+  return renderCtx;
 };

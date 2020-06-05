@@ -11,7 +11,7 @@ interface ColumnHeaderItemProps {
   column: ColDef;
   headerHeight: number;
   colIndex: number;
-  onResizeColumn: (c: any) => void;
+  onResizeColumn?: (c: any) => void;
 }
 
 export const ColumnHeaderItem = React.memo(
@@ -30,9 +30,7 @@ export const ColumnHeaderItem = React.memo(
       headerComponent = column.headerComponent({ api: api!.current!, colDef: column, colIndex });
     }
 
-    const onResize = () => {
-      onResizeColumn(column);
-    };
+    const onResize = onResizeColumn ? () => onResizeColumn(column) : undefined;
 
     const width = column.width!;
 

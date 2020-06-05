@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { action } from '@storybook/addon-actions';
 import { Grid, GridApi, GridOptionsProp } from '@material-ui-x/grid';
 import { getData, GridData } from '../data/data-service';
-import { GridDataSet } from '../components/grid-dataset';
+import { useData } from '../components/grid-dataset';
 
 export default {
   title: 'Grid Selection',
@@ -28,31 +28,31 @@ export const PreSelectedRows = () => {
     loadData();
   }, []);
 
-  return (
-    <div style={{ width: 800, height: 600 }}>
-      <Grid rows={data.rows} columns={data.columns} apiRef={apiRef} />
-    </div>
-  );
+  return <Grid rows={data.rows} columns={data.columns} apiRef={apiRef} />;
 };
 
 export const WithSelectedEvents = () => {
+  const data = useData(200, 200);
+
   const options: GridOptionsProp = {
     onSelectionChanged: params => action('onSelectionChanged')(params),
     onRowSelected: params => action('onRowSelected')(params),
   };
 
-  return <GridDataSet nbRows={200} nbCols={200} options={options} />;
+  return <Grid rows={data.rows} columns={data.columns} options={options} />;
 };
 
 export const SingleSelect = () => {
+  const data = useData(200, 200);
   const options: GridOptionsProp = {
     enableMultipleSelection: false,
   };
 
-  return <GridDataSet nbRows={200} nbCols={200} options={options} />;
+  return <Grid rows={data.rows} columns={data.columns} options={options} />;
 };
 
 export const MultipleSelect = () => {
+  const data = useData(200, 200);
   const options: GridOptionsProp = {
     enableMultipleSelection: true,
   };
@@ -60,19 +60,16 @@ export const MultipleSelect = () => {
   return (
     <>
       <p>Maintain CTRL or Command to select multiple rows</p>
-      <GridDataSet nbRows={200} nbCols={200} options={options} />
+      <Grid rows={data.rows} columns={data.columns} options={options} />
     </>
   );
 };
 export const MultipleSelectWithCheckbox = () => {
+  const data = useData(200, 200);
   const options: GridOptionsProp = {
     checkboxSelection: true,
     disableSelectionOnClick: true,
   };
 
-  return (
-    <>
-      <GridDataSet nbRows={200} nbCols={200} options={options} />
-    </>
-  );
+  return <Grid rows={data.rows} columns={data.columns} options={options} />;
 };
