@@ -321,7 +321,6 @@ export const useVirtualRows = (
     if (optionsRef.current !== options) {
       logger.debug('Options changed, updating container sizes');
       optionsRef.current = options;
-      resetScroll();
       updateContainerSize();
     }
   }, [options, renderingZoneRef, resetScroll, updateContainerSize, logger]);

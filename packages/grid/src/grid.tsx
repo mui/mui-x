@@ -52,9 +52,9 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
   const renderingZoneRef = useRef<HTMLDivElement>(null);
   const internalApiRef = useRef<GridApi | null | undefined>();
 
-  const [internalOptions, setOptions] = useState<GridOptions>(mergeOptions(DEFAULT_GRID_OPTIONS, options));
+  const [internalOptions, setInternalOptions] = useState<GridOptions>(mergeOptions(DEFAULT_GRID_OPTIONS, options));
   useEffect(() => {
-    setOptions(mergeOptions(DEFAULT_GRID_OPTIONS, options));
+    setInternalOptions(previousState => mergeOptions(previousState, options));
   }, [options]);
 
   if (!apiRef) {
@@ -82,13 +82,13 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
   const paginationProps = usePagination(internalRows, internalColumns, internalOptions, apiRef);
 
   useEffect(() => {
-    setOptions(previousState => {
+    setInternalOptions(previousState => {
       if (previousState.paginationPageSize !== paginationProps.pageSize) {
         return { ...previousState, paginationPageSize: paginationProps.pageSize };
       }
       return previousState;
     });
-  }, [paginationProps.pageSize, setOptions]);
+  }, [paginationProps.pageSize, setInternalOptions]);
 
   const [footerChildNode, headerChildNode] = useChildren(
     internalColumns,

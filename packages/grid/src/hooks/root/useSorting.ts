@@ -183,12 +183,7 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
     [apiRef],
   );
 
-  const [rowsState, setRowsState] = useState(rowsProp);
   const [colState, setColState] = useState(colsProp);
-
-  useEffect(() => {
-    setRowsState(rowsProp);
-  }, [rowsProp]);
 
   useEffect(() => {
     setColState(colsProp);
@@ -198,9 +193,11 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
   useEffect(() => {
     if (rowsProp.length > 0) {
       storeOriginalOrder();
-      applySorting();
+      if(sortModelRef.current.length > 0) {
+        applySorting();
+      }
     }
-  }, [rowsState, applySorting, storeOriginalOrder, rowsProp.length]);
+  }, [rowsProp, applySorting, storeOriginalOrder]);
 
   useEffect(() => {
     if (colsProp.length > 0 && apiRef.current) {
@@ -212,7 +209,7 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
       const sortModel = sortedCols.map(c => ({ colId: c.field, sort: c.sortDirection }));
       setSortModel(sortModel);
     }
-  }, [colState, setSortModel, apiRef, colsProp.length]);
+  }, [colState, setSortModel, apiRef, colsProp]);
 
   useApiEventHandler(apiRef, COLUMN_HEADER_CLICKED, headerClickHandler);
   useApiEventHandler(apiRef, ROWS_UPDATED, onRowsUpdated);
