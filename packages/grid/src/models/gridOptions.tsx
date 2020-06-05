@@ -1,14 +1,19 @@
 import { CellValue, RowData, RowModel } from './rows';
 import { ColDef } from './colDef';
-import React from 'react';
-import ArrowUpIcon from '@material-ui/icons/ArrowUpward';
-import ArrowDownIcon from '@material-ui/icons/ArrowDownward';
+import React, { ReactNode } from 'react';
+import { SortDirection, SortModel } from './sortModel';
+import { Logger } from '../hooks/utils';
+import { ArrowDownward, ArrowUpward, SeparatorIcon } from '../components/icons';
+import { PageChangedParams, PaginationProps } from '../hooks/features/usePagination';
 
 export interface ColumnHeaderClickedParam {
   field: string;
   column: ColDef;
 }
-
+export interface ColumnSortedParams {
+  sortedColumns: ColDef[];
+  sortModel: SortModel;
+}
 export interface RowClickedParam {
   element: HTMLElement;
   rowModel: RowModel;
@@ -34,10 +39,14 @@ export interface RowSelectedParam {
 export interface SelectionChangedParam {
   rows: RowData[];
 }
-//Todo add multiSortKey
-//Todo add sortingOrder
-//Todo add logger
 
+export interface IconsOptions {
+  columnSortedAscending?: React.FC<{}>;
+  columnSortedDescending?: React.FC<{}>;
+  columnResize?: React.FC<{ className: string }>;
+}
+
+//Todo add multiSortKey
 export interface GridOptions {
   rowHeight: number;
   headerHeight: number;
@@ -47,22 +56,34 @@ export interface GridOptions {
   enableMultipleColumnsSorting: boolean;
   showCellRightBorder: boolean;
   extendRowFullWidth: boolean;
+  sortingOrder: SortDirection[];
+  pagination?: boolean;
+  paginationComponent?: (props: PaginationProps) => React.ReactNode;
+  paginationPageSize?: number;
+  paginationAutoPageSize?: boolean;
+  paginationRowsPerPageOptions?: number[];
+  hideFooter?: boolean;
+  hideFooterRowCount?: boolean;
+  hideFooterSelectedRowCount?: boolean;
+  hideFooterPagination?: boolean;
 
   onCellClicked?: (param: CellClickedParam) => void;
   onRowClicked?: (param: RowClickedParam) => void;
   onRowSelected?: (param: RowSelectedParam) => void;
   onSelectionChanged?: (param: SelectionChangedParam) => void;
   onColumnHeaderClicked?: (param: ColumnHeaderClickedParam) => void;
+  onColumnsSorted?: (params: ColumnSortedParams) => void;
+  onPageChanged?: (param: PageChangedParams) => void;
+  onPageSizeChanged?: (param: PageChangedParams) => void;
 
   checkboxSelection?: boolean;
   disableSelectionOnClick?: boolean;
   showColumnSeparator?: boolean;
-  icons: {
-    sortedColumns: {
-      asc: React.ReactElement;
-      desc: React.ReactElement;
-    };
-  };
+  logger?: Logger;
+  logLevel?: string | boolean;
+  loadingOverlayComponent?: React.ReactNode;
+  noRowsOverlayComponent?: React.ReactNode;
+  icons: IconsOptions;
 }
 
 export const DEFAULT_GRID_OPTIONS: GridOptions = {
@@ -72,12 +93,15 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   columnBuffer: 2,
   enableMultipleSelection: true,
   enableMultipleColumnsSorting: true,
+  paginationRowsPerPageOptions: [25, 50, 100],
   showCellRightBorder: false,
   extendRowFullWidth: true,
+  sortingOrder: ['asc', 'desc', null],
   icons: {
-    sortedColumns: {
-      asc: <ArrowUpIcon className={'icon'} />,
-      desc: <ArrowDownIcon className={'icon'} />,
-    },
+    // eslint-disable-next-line react/display-name
+    columnSortedAscending: () => <ArrowUpward className={'icon'} />,
+    // eslint-disable-next-line react/display-name
+    columnSortedDescending: () => <ArrowDownward className={'icon'} />,
+    columnResize: SeparatorIcon,
   },
 };

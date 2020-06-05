@@ -10,14 +10,14 @@ import { ColumnHeaderSeparator } from './column-header-separator';
 interface ColumnHeaderItemProps {
   column: ColDef;
   headerHeight: number;
-  icons: { [key: string]: React.ReactElement };
   colIndex: number;
-  onResizeColumn: (c: any) => void;
+  onResizeColumn?: (c: any) => void;
 }
 
 export const ColumnHeaderItem = React.memo(
-  ({ column, icons, colIndex, headerHeight, onResizeColumn }: ColumnHeaderItemProps) => {
+  ({ column, colIndex, headerHeight, onResizeColumn }: ColumnHeaderItemProps) => {
     const api = useContext(ApiContext);
+
     const cssClass = classnames(
       HEADER_CELL_CSS_CLASS,
       column.headerClass,
@@ -30,9 +30,7 @@ export const ColumnHeaderItem = React.memo(
       headerComponent = column.headerComponent({ api: api!.current!, colDef: column, colIndex });
     }
 
-    const onResize = () => {
-      onResizeColumn(column);
-    };
+    const onResize = onResizeColumn ? () => onResizeColumn(column) : undefined;
 
     const width = column.width!;
 
@@ -53,12 +51,7 @@ export const ColumnHeaderItem = React.memo(
         {...ariaSort}
       >
         {column.type === 'number' && (
-          <ColumnHeaderSortIcon
-            direction={column.sortDirection}
-            index={column.sortIndex}
-            icons={icons}
-            hide={column.hideSortIcons}
-          />
+          <ColumnHeaderSortIcon direction={column.sortDirection} index={column.sortIndex} hide={column.hideSortIcons} />
         )}
         {headerComponent || (
           <ColumnHeaderTitle
@@ -68,12 +61,7 @@ export const ColumnHeaderItem = React.memo(
           />
         )}
         {column.type !== 'number' && (
-          <ColumnHeaderSortIcon
-            direction={column.sortDirection}
-            index={column.sortIndex}
-            icons={icons}
-            hide={column.hideSortIcons}
-          />
+          <ColumnHeaderSortIcon direction={column.sortDirection} index={column.sortIndex} hide={column.hideSortIcons} />
         )}
         <ColumnHeaderSeparator resizable={column.resizable} onResize={onResize} />
       </div>

@@ -18,7 +18,7 @@ export function useTheme(): ReturnType {
     setTheme(newTheme);
     setSelectedTheme(currentThemeCtx.theme);
     setIsDark(newTheme === darkTheme);
-  }, [currentThemeCtx]);
+  }, [currentThemeCtx, setSelectedTheme]);
 
   const toggleTheme = () => {
     if (theme === lightTheme) {

@@ -12,4 +12,10 @@ export interface RenderRowProps {
   firstRowIdx: number;
   lastRowIdx: number;
 }
-export type RenderContextProps = ContainerProps & RenderColumnsProps & RenderRowProps;
+
+export interface RenderPaginationProps {
+  paginationCurrentPage?: number;
+  paginationPageSize?: number;
+}
+
+export type RenderContextProps = ContainerProps & RenderColumnsProps & RenderRowProps & RenderPaginationProps;

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { GridOptions } from '../models';
+import { GridOptions } from '../../models';
 
 export type DivProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -20,7 +20,31 @@ export const RootStyle = styled.div<GridRootProps>`
     border: 1px solid #bdc3c7;
     border-radius: 4px;
     outline: none;
+    display: flex;
+    flex-direction: column;
 
+    .main-grid-container {
+      position: relative;
+      flex-grow: 1;
+      display: flex;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: row;
+      padding: 0 16px;
+    }
+    .row-count {
+      display: flex;
+      align-items: center;
+      font-size: 0.875rem;
+      font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+      font-weight: 400;
+      line-height: 1.43;
+      letter-spacing: 0.01071em;
+      min-height: 48px;
+    }
     .material-cell:focus,
     .material-col-cell:focus {
       outline: dashed;
@@ -28,7 +52,9 @@ export const RootStyle = styled.div<GridRootProps>`
       outline-width: 2px;
       outline-offset: -3px;
     }
-
+    .overlay {
+      top: ${p => p.options.headerHeight}px;
+    }
     .columns-container {
       position: absolute;
       top: 0;
@@ -39,6 +65,7 @@ export const RootStyle = styled.div<GridRootProps>`
       display: flex;
       flex-direction: column;
       border-bottom: 1px solid #bdc3c7;
+      z-index: 100;
 
       min-height: ${p => p.options.headerHeight}px;
       max-height: ${p => p.options.headerHeight}px;
@@ -91,11 +118,8 @@ export const RootStyle = styled.div<GridRootProps>`
             justify-content: center;
             min-height: ${p => p.options.headerHeight}px;
 
-            .icon {
-              transform: rotate(90deg);
-              &.separator {
-                color: #bdc3c7;
-              }
+            .icon.separator {
+              color: #bdc3c7;
             }
             &:hover .separator.resizable {
               cursor: col-resize;

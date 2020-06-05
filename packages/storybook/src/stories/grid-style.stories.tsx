@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ColDef, ElementSize, Grid, GridOptionsProp } from '@material-ui-x/grid';
-import { GridDataSet } from '../components/grid-dataset';
-import { GridData } from '../data/data-service';
+import { useData } from '../components/grid-dataset';
+
 import '../style/grid-stories.css';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
@@ -14,6 +14,7 @@ export default {
 
 export const Resize = () => {
   const [size, setSize] = useState<ElementSize>({ width: 800, height: 600 });
+  const data = useData(200, 200);
 
   return (
     <>
@@ -23,47 +24,50 @@ export const Resize = () => {
       >
         Switch sizes
       </button>
-      <GridDataSet nbRows={200} nbCols={200} container={size} />
+      <div style={{ width: size.width, height: size.height }}>
+        <Grid rows={data.rows} columns={data.columns} />
+      </div>
     </>
   );
 };
 
 export const WithTooltip = () => {
-  const transformColSizes = (data: GridData) =>
-    data.columns.map(c => {
+  const data = useData(200, 200);
+  const transformColSizes = (columns: ColDef[]) =>
+    columns.map(c => {
       if (c.field === 'currencyPair') {
-        c.description = 'This is the currency pair column';
-        c.width = 100;
+        return { ...c, width: 100, description: 'This is the currency pair column' };
       } else {
-        c.width = 40;
+        return { ...c, width: 40 };
       }
-      return c;
     });
 
-  return <GridDataSet nbRows={200} nbCols={200} onData={transformColSizes} />;
+  return <Grid rows={data.rows} columns={transformColSizes(data.columns)} />;
 };
 
 export const Big = () => {
+  const data = useData(200, 200);
   const options: GridOptionsProp = {
     headerHeight: 80,
     rowHeight: 60,
     checkboxSelection: true,
   };
 
-  return <GridDataSet nbRows={200} nbCols={200} options={options} />;
+  return <Grid rows={data.rows} columns={data.columns} options={options} />;
 };
 
 export const Unset = () => {
-  return <GridDataSet nbRows={200} nbCols={200} />;
+  const data = useData(200, 200);
+  return <Grid rows={data.rows} columns={data.columns} />;
 };
 
 export const Small = () => {
+  const data = useData(200, 200);
   const options: GridOptionsProp = {
     headerHeight: 30,
     rowHeight: 22,
   };
-
-  return <GridDataSet nbRows={200} nbCols={200} options={options} />;
+  return <Grid rows={data.rows} columns={data.columns} options={options} />;
 };
 
 const IsDone: React.FC<{ value: boolean }> = ({ value }) =>
@@ -160,8 +164,8 @@ export const withCellClass = () => {
   ];
 
   return (
-    <div style={{ width: size.width, height: size.height, resize: 'both' }}>
-      <Grid rows={rows} columns={columns} />
+    <div style={{ width: size.width, height: size.height, padding: '0 10px' }}>
+      <Grid rows={rows} columns={columns}></Grid>
     </div>
   );
 };

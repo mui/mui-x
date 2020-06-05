@@ -6,7 +6,6 @@ export default {
 };
 
 export const BasicTest = () => {
-  const size = { width: 800, height: 600 };
   const columns = [{ field: 'id' }, { field: 'name' }, { field: 'age' }];
 
   const rows = [
@@ -22,14 +21,13 @@ export const BasicTest = () => {
   return (
     <>
       <p>Maintain CTRL or Command to sort by multiple fields</p>
-      <div style={{ width: size.width, height: size.height, resize: 'both' }}>
+      <div style={{ display: 'flex', flexGrow: 1, padding: '10px' }}>
         <Grid rows={rows} columns={columns} options={{ showColumnSeparator: false }} />
       </div>
     </>
   );
 };
 export const SortedWithColDef = () => {
-  const size = { width: 800, height: 600 };
   const columns: ColDef[] = [
     { field: 'id' },
     { field: 'name', sortDirection: 'asc' },
@@ -49,8 +47,35 @@ export const SortedWithColDef = () => {
   return (
     <>
       <p>Maintain CTRL or Command to sort by multiple fields</p>
-      <div style={{ width: size.width, height: size.height, resize: 'both' }}>
+      <div style={{ display: 'flex', flexGrow: 1, padding: '10px' }}>
         <Grid rows={rows} columns={columns} />
+      </div>
+    </>
+  );
+};
+
+export const WithNotNullSortingOrder = () => {
+  const columns: ColDef[] = [
+    { field: 'id' },
+    { field: 'name', sortDirection: 'asc' },
+    { field: 'age', sortDirection: 'desc' },
+  ];
+
+  const rows = [
+    { id: 1, name: 'alice', age: 40 },
+    { id: 2, name: 'bob', age: 30 },
+    { id: 3, name: 'igor', age: 40 },
+    { id: 4, name: 'clara', age: 40 },
+    { id: 5, name: 'clara', age: null },
+    { id: 6, name: null, age: 25 },
+    { id: 7, name: '', age: 42 },
+  ];
+
+  return (
+    <>
+      <p>Maintain CTRL or Command to sort by multiple fields</p>
+      <div style={{ display: 'flex', flexGrow: 1, padding: '10px' }}>
+        <Grid rows={rows} columns={columns} options={{ sortingOrder: ['desc', 'asc'] }} />
       </div>
     </>
   );
@@ -63,7 +88,6 @@ export const SortedWithApi = () => {
     }
   }, [apiRef]);
 
-  const size = { width: 800, height: 600 };
   const [columns] = useState([{ field: 'id' }, { field: 'name' }, { field: 'age' }]);
 
   const [rows] = useState([
@@ -78,7 +102,7 @@ export const SortedWithApi = () => {
 
   return (
     <>
-      <div style={{ width: size.width, height: size.height, resize: 'both' }}>
+      <div style={{ display: 'flex', flexGrow: 1, padding: '10px' }}>
         <Grid rows={rows} columns={columns} apiRef={apiRef} />
       </div>
     </>
@@ -86,7 +110,6 @@ export const SortedWithApi = () => {
 };
 
 export const withValueGetterAndFormatter = () => {
-  const size = { width: 800, height: 600 };
   const columns: ColDef[] = [
     { field: 'id' },
     { field: 'firstName' },
@@ -115,7 +138,7 @@ export const withValueGetterAndFormatter = () => {
   return (
     <>
       <p>Maintain CTRL or Command to sort by multiple fields</p>
-      <div style={{ width: size.width, height: size.height, resize: 'both' }}>
+      <div style={{ display: 'flex', flexGrow: 1, padding: '10px' }}>
         <Grid rows={rows} columns={columns} />
       </div>
     </>

@@ -1,5 +1,6 @@
 import React from 'react';
-import SeparatorIcon from '@material-ui/icons/Remove';
+
+import { useIcons } from '../hooks/utils/useIcons';
 
 export interface ColumnHeaderSeparatorProps {
   resizable: boolean | undefined;
@@ -7,14 +8,13 @@ export interface ColumnHeaderSeparatorProps {
 }
 
 export const ColumnHeaderSeparator: React.FC<ColumnHeaderSeparatorProps> = React.memo(({ onResize, resizable }) => {
-  return (
-    <div className={'column-separator'}>
-      <SeparatorIcon
-        fontSize={'default'}
-        className={'icon separator ' + (resizable ? 'resizable' : '')}
-        {...(resizable && onResize ? { onMouseDown: onResize } : {})}
-      />
-    </div>
-  );
+  const icons = useIcons();
+
+  const resizeIconProps = {
+    className: 'icon separator ' + (resizable ? 'resizable' : ''),
+    ...(resizable && onResize ? { onMouseDown: onResize } : {}),
+  };
+
+  return <div className={'column-separator'}>{icons!.columnResize!(resizeIconProps)}</div>;
 });
 ColumnHeaderSeparator.displayName = 'ColumnHeaderSeparator';

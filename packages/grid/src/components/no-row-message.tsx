@@ -1,10 +1,4 @@
 import React from 'react';
-import { GridOverlay } from '../styled-wrappers/window-overlay';
-import { CircularProgress } from '@material-ui/core';
+import { GridOverlay } from './styled-wrappers/window-overlay';
 
 export const NoRowMessage: React.FC<{}> = () => <GridOverlay>No Rows</GridOverlay>;
-export const LoadingMessage: React.FC<{}> = () => (
-  <GridOverlay>
-    <CircularProgress />
-  </GridOverlay>
-);

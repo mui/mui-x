@@ -1,10 +1,12 @@
 import { CellValue, ComparatorFn, SortDirection } from '../models';
 
-export const nextSortDirection = (current?: SortDirection) => {
-  if (!current) {
-    return 'asc';
+export const nextSortDirection = (sortingOrder: SortDirection[], current?: SortDirection) => {
+  const currentIdx = sortingOrder.indexOf(current);
+  if (!current || currentIdx === -1 || currentIdx + 1 === sortingOrder.length) {
+    return sortingOrder[0];
   }
-  return current === 'asc' ? 'desc' : null;
+
+  return sortingOrder[currentIdx + 1];
 };
 
 export const isDesc = (direction: SortDirection) => direction === 'desc';

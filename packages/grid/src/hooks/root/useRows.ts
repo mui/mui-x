@@ -1,10 +1,12 @@
 import { createRow, GridOptions, RowData, RowId, RowModel, Rows, RowsProp } from '../../models';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLogger } from '../utils/useLogger';
 import { useRafUpdate } from '../utils';
-import { GridApi, RowApi } from '../../models/gridApi';
+import { RowApi } from '../../models/gridApi';
 import { GridApiRef } from '../../grid';
 import { ROWS_UPDATED, SCROLLING_START, SCROLLING_STOP, SORT_MODEL_UPDATED } from '../../constants/eventsConstants';
+import { useApiMethod } from './useApiMethod';
+import { useApiEventHandler } from './useApiEventHandler';
 
 type IdLookup = { [key: string]: number };
 
@@ -20,123 +22,128 @@ export const useRows = (options: GridOptions, rows: RowsProp, initialised: boole
   const isScrollingRef = useRef<boolean>(false);
   const isSortedRef = useRef<boolean>(false);
 
-  const setIsScrolling = (v: boolean) => (isScrollingRef.current = v);
+  const setIsScrolling = useCallback((v: boolean) => (isScrollingRef.current = v), [isScrollingRef]);
 
-  const updateAllRows = (allNewRows: RowModel[]) => {
-    logger.debug(`updating all rows, new length ${allNewRows.length}`);
-    idLookupRef.current = allNewRows.reduce((lookup, row, index) => {
-      lookup[row.id] = index;
-      return lookup;
-    }, {} as IdLookup);
-    rowModelsRef.current = allNewRows;
-    if (!isScrollingRef.current) {
-      logger.debug(`Setting RowModelState to new rows with length ${allNewRows.length}`);
-      setRowModelsState(p => allNewRows);
-    }
-  };
+  const updateAllRows = useCallback(
+    (allNewRows: RowModel[]) => {
+      logger.debug(`updating all rows, new length ${allNewRows.length}`);
+      idLookupRef.current = allNewRows.reduce((lookup, row, index) => {
+        lookup[row.id] = index;
+        return lookup;
+      }, {} as IdLookup);
+      rowModelsRef.current = allNewRows;
+      if (!isScrollingRef.current) {
+        logger.info(`Setting row models to new rows with length ${allNewRows.length}`);
+        setRowModelsState(p => allNewRows);
+      }
+    },
+    [logger, idLookupRef, rowModelsRef, setRowModelsState],
+  );
 
   useEffect(() => {
-    logger.debug('Rows updated.');
+    logger.info('Updating Rows.');
     isScrollingRef.current = false;
     updateAllRows(rowModels);
-  }, [rows]);
+  }, [rows, logger, rowModels, updateAllRows]);
 
-  const getRowsLookup = () => idLookupRef.current as IdLookup;
-  const getRowIndexFromId = (id: RowId): number => getRowsLookup()[id];
-  const getRowIdFromRowIndex = (index: number): RowId => Object.entries(getRowsLookup())[index][0];
-  const getRowFromId = (id: RowId): RowModel => rowModelsRef.current[getRowIndexFromId(id)];
+  const getRowsLookup = useCallback(() => idLookupRef.current as IdLookup, [idLookupRef]);
+  const getRowIndexFromId = useCallback((id: RowId): number => getRowsLookup()[id], [getRowsLookup]);
+  const getRowIdFromRowIndex = useCallback((index: number): RowId => Object.entries(getRowsLookup())[index][0], [
+    getRowsLookup,
+  ]);
+  const getRowFromId = useCallback((id: RowId): RowModel => rowModelsRef.current[getRowIndexFromId(id)], [
+    rowModelsRef,
+    getRowIndexFromId,
+  ]);
 
-  const updateRowModels = (updates: Partial<RowModel>[]) => {
-    logger.debug(`updating row models`, updates);
-    const addedRows: RowModel[] = [];
-    updates.forEach(partialRow => {
-      if (partialRow.id == null) {
-        throw new Error(`All rows need an id.`);
+  const updateRowModels = useCallback(
+    (updates: Partial<RowModel>[]) => {
+      logger.debug(`updating row models`, updates);
+      const addedRows: RowModel[] = [];
+      updates.forEach(partialRow => {
+        if (partialRow.id == null) {
+          throw new Error(`All rows need an id.`);
+        }
+        const idx = getRowIndexFromId(partialRow.id);
+        if (idx == null) {
+          //New row?
+          addedRows.push(partialRow as RowModel);
+          return;
+        }
+        Object.assign(rowModelsRef.current[idx], partialRow);
+      });
+
+      if (!isScrollingRef.current && !isSortedRef.current) {
+        rafUpdate();
       }
-      const idx = getRowIndexFromId(partialRow.id);
-      if (idx == null) {
-        //New row?
-        addedRows.push(partialRow as RowModel);
-        return;
+
+      if (addedRows.length > 0) {
+        const newRows = [...rowModelsRef.current, ...addedRows];
+        updateAllRows(newRows);
       }
-      Object.assign(rowModelsRef.current[idx], partialRow);
-    });
 
-    if (!isScrollingRef.current && !isSortedRef.current) {
-      rafUpdate();
-    }
+      if (apiRef.current) {
+        apiRef.current.emit(ROWS_UPDATED, rowModelsRef.current);
+      }
+    },
+    [apiRef, updateAllRows, rafUpdate, getRowIndexFromId, logger],
+  );
 
-    if (addedRows.length > 0) {
-      const newRows = [...rowModelsRef.current, ...addedRows];
-      updateAllRows(newRows);
-    }
+  const updateRowData = useCallback(
+    (updates: RowData[]) => {
+      logger.debug(`updating rows data`);
 
-    if (apiRef.current) {
-      apiRef.current.emit(ROWS_UPDATED, rowModelsRef.current);
-    }
+      //we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
+      const uniqUpdates = updates.reduce((uniq, update) => {
+        uniq[update.id] = uniq[update.id] != null ? { ...uniq[update.id], ...update } : update;
+        return uniq;
+      }, {} as { [id: string]: any });
+
+      const rowModelUpdates = Object.values<RowData>(uniqUpdates).map(partialRow => {
+        const oldRow = getRowFromId(partialRow.id!);
+        if (!oldRow) {
+          return createRow(partialRow);
+        } else {
+          return { ...oldRow, data: { ...oldRow.data, ...partialRow } };
+        }
+      });
+      return updateRowModels(rowModelUpdates);
+    },
+    [updateRowModels, logger, getRowFromId],
+  );
+
+  const onSortModelUpdated = useCallback(
+    (sortModel: any[]) => {
+      isSortedRef.current = sortModel.length > 0;
+    },
+    [isSortedRef],
+  );
+
+  const getRowModels = useCallback(() => rowModelsRef.current, [rowModelsRef]);
+  const getRowsCount = useCallback(() => rowModelsRef.current.length, [rowModelsRef]);
+  const getAllRowIds = useCallback(() => rowModelsRef.current.map(r => r.id), [rowModelsRef]);
+  const setRowModels = useCallback((rows: Rows) => updateAllRows(rows), [updateAllRows]);
+
+  const rowApi: RowApi = {
+    getRowIndexFromId,
+    getRowIdFromRowIndex,
+    getRowFromId,
+    updateRowModels,
+    updateRowData,
+    getRowModels,
+    getRowsCount,
+    getAllRowIds,
+    setRowModels,
   };
 
-  const updateRowData = (updates: RowData[]) => {
-    logger.debug(`updating rows data`);
+  useApiMethod(apiRef, rowApi, 'RowApi');
 
-    //we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
-    const uniqUpdates = updates.reduce((uniq, update) => {
-      uniq[update.id] = uniq[update.id] != null ? { ...uniq[update.id], ...update } : update;
-      return uniq;
-    }, {} as { [id: string]: any });
+  const startScrollingHandler = useCallback(() => setIsScrolling(true), [setIsScrolling]);
+  const stopScrollingHandler = useCallback(() => setIsScrolling(false), [setIsScrolling]);
 
-    const rowModelUpdates = Object.values<RowData>(uniqUpdates).map(partialRow => {
-      const oldRow = getRowFromId(partialRow.id!);
-      if (!oldRow) {
-        return createRow(partialRow);
-      } else {
-        return { ...oldRow, data: { ...oldRow.data, ...partialRow } };
-      }
-    });
-    return updateRowModels(rowModelUpdates);
-  };
-
-  const onSortModelUpdated = (sortModel: any[]) => {
-    isSortedRef.current = sortModel.length > 0;
-  };
-
-  const getRowModels = () => rowModelsRef.current;
-  const getRowsCount = () => rowModelsRef.current.length;
-  const getAllRowIds = () => rowModelsRef.current.map(r => r.id);
-  const setRowModels = (rows: Rows) => updateAllRows(rows);
-
-  useEffect(() => {
-    if (apiRef && apiRef.current) {
-      logger.debug('Adding row api to apiRef');
-
-      const rowApi: RowApi = {
-        getRowIndexFromId,
-        getRowIdFromRowIndex,
-        getRowFromId,
-        updateRowModels,
-        updateRowData,
-        getRowModels,
-        getRowsCount,
-        getAllRowIds,
-        setRowModels,
-      };
-
-      apiRef.current = Object.assign(apiRef.current, rowApi) as GridApi;
-
-      //We stop updating the grid while we scroll.
-      const startScrollingHandler = () => setIsScrolling(true);
-      const stopScrollingHandler = () => setIsScrolling(false);
-
-      apiRef.current.on(SCROLLING_START, startScrollingHandler);
-      apiRef.current.on(SCROLLING_STOP, stopScrollingHandler);
-      apiRef.current.on(SORT_MODEL_UPDATED, onSortModelUpdated);
-
-      return () => {
-        apiRef.current?.removeListener(SCROLLING_START, startScrollingHandler);
-        apiRef.current?.removeListener(SCROLLING_STOP, stopScrollingHandler);
-      };
-    }
-  }, [apiRef]);
+  useApiEventHandler(apiRef, SCROLLING_START, startScrollingHandler);
+  useApiEventHandler(apiRef, SCROLLING_STOP, stopScrollingHandler);
+  useApiEventHandler(apiRef, SORT_MODEL_UPDATED, onSortModelUpdated);
 
   return rowModelsState;
 };

@@ -22,11 +22,29 @@
  }
 
  /* highlight first and last row in rendering zone -> useful for Debugging virtualisation */
- /*
- .rendering-zone .material-row:first-child {
-     background: blueviolet !important;
+
+ /*.rendering-zone .material-row:first-child {*/
+ /*    background: blueviolet !important;*/
+ /*}*/
+ /*.rendering-zone .material-row:last-child {*/
+ /*    background: red !important;*/
+ /*}*/
+
+
+ .overlay.custom-overlay {
+     background: #ffffff61;
  }
- .rendering-zone .material-row:last-child {
-     background: red !important;
+
+ .material-grid.grid-root .footer.my-custom-footer {
+     justify-content: flex-end;
+     padding: 10px 0;
  }
-  */
+ .my-custom-pagination {
+     align-items: center;
+     display: flex;
+ }
+ .custom-header {
+     display: flex;
+     justify-content: flex-end;
+     padding: 10px 0;
+ }

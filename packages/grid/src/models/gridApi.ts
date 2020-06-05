@@ -2,9 +2,11 @@ import { EventEmitter } from 'events';
 import { CellIndexCoordinates, RowData, RowId, RowModel, Rows } from './rows';
 import { ColDef, Columns, ColumnsMeta } from './colDef';
 import { SortModel } from './sortModel';
-import { RowSelectedParam, SelectionChangedParam } from './gridOptions';
+import { ColumnSortedParams, RowSelectedParam, SelectionChangedParam } from './gridOptions';
 import { ScrollParams } from '../hooks/utils';
 import { ContainerProps } from './containerProps';
+import { RenderContextProps } from './renderContextProps';
+import { PageChangedParams } from '../hooks/features/usePagination';
 
 export interface RowApi {
   getRowModels: () => Rows;
@@ -40,16 +42,30 @@ export interface SelectionApi {
 export interface SortApi {
   getSortModel: () => SortModel;
   setSortModel: (model: SortModel) => void;
+  onColumnsSorted: (handler: (param: ColumnSortedParams) => void) => () => void;
 }
+
+export interface PaginationApi {
+  setPage: (page: number) => void;
+  setPageSize: (pageSize: number) => void;
+  onPageChanged: (handler: (param: PageChangedParams) => void) => () => void;
+  onPageSizeChanged: (handler: (param: PageChangedParams) => void) => () => void;
+}
+
 export interface VirtualizationApi {
   scroll: (params: Partial<ScrollParams>) => void;
   scrollToIndexes: (params: CellIndexCoordinates) => void;
   isColumnVisibleInWindow: (colIndex: number) => boolean;
   getContainerPropsState: () => ContainerProps | null;
+  getRenderContextState: () => Partial<RenderContextProps> | undefined;
+  renderPage: (page: number) => void;
 }
 export interface CoreApi extends EventEmitter {
   isInitialised: boolean;
   registerEvent: (event: string, handler: (param: any) => void) => () => void;
+  onUnmount: (handler: (param: any) => void) => void;
+  onResize: (handler: (param: any) => void) => void;
+  resize: () => void;
 }
 
-export type GridApi = RowApi & ColumnApi & SelectionApi & SortApi & VirtualizationApi & CoreApi;
+export type GridApi = RowApi & ColumnApi & SelectionApi & SortApi & VirtualizationApi & CoreApi & PaginationApi;

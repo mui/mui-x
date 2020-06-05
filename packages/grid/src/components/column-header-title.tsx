@@ -32,7 +32,7 @@ export const ColumnHeaderTitle: React.FC<ColumnHeaderTitleProps> = ({ label, des
         setTooltip('');
       }
     }
-  }, [titleRef, columnWidth]);
+  }, [titleRef, columnWidth, description, label]);
 
   return (
     <Tooltip title={description || tooltipText} innerRef={titleRef}>

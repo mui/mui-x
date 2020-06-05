@@ -6,17 +6,15 @@ import { LeftEmptyCell, RightEmptyCell } from './cell';
 
 export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
-  icons: { [key: string]: React.ReactElement }; //TODO move to context
   headerHeight: number;
-  onResizeColumn: (col: ColDef) => void;
+  onResizeColumn?: (col: ColDef) => void;
 }
 export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionProps> = React.memo(
-  ({ icons, headerHeight, onResizeColumn, columns }) => {
+  ({ headerHeight, onResizeColumn, columns }) => {
     const items = columns.map((col, idx) => (
       <ColumnHeaderItem
         key={col.field}
         column={col}
-        icons={icons}
         colIndex={idx}
         headerHeight={headerHeight}
         onResizeColumn={onResizeColumn}
@@ -32,14 +30,13 @@ export interface ColumnsHeaderProps {
   columns: Columns;
   hasScrollX: boolean;
   headerHeight: number;
-  icons: { [key: string]: React.ReactElement };
-  onResizeColumn: (col: ColDef) => void;
+  onResizeColumn?: (col: ColDef) => void;
   renderCtx: Partial<RenderContextProps> | null;
 }
 
 export const ColumnsHeader = memo(
   forwardRef<HTMLDivElement, ColumnsHeaderProps>(
-    ({ columns, hasScrollX, icons, headerHeight, onResizeColumn, renderCtx }, columnsHeaderRef) => {
+    ({ columns, hasScrollX, headerHeight, onResizeColumn, renderCtx }, columnsHeaderRef) => {
       const wrapperCssClasses = 'material-col-cell-wrapper ' + (hasScrollX ? 'scroll' : '');
       const api = useContext(ApiContext);
 
@@ -50,23 +47,17 @@ export const ColumnsHeader = memo(
       const [renderedCols, setRenderedCols] = useState(columns);
 
       useEffect(() => {
-        if (
-          renderCtx &&
-          renderCtx.firstColIdx != null &&
-          renderCtx.lastColIdx != null &&
-          (lastRenderedColIndexes.current.first !== renderCtx.firstColIdx ||
-            lastRenderedColIndexes.current.last !== renderCtx.lastColIdx)
-        ) {
-          setRenderedCols(columns.slice(renderCtx.firstColIdx, renderCtx.lastColIdx + 1));
-          lastRenderedColIndexes.current = { first: renderCtx.firstColIdx, last: renderCtx.lastColIdx };
-        }
-      }, [renderCtx]);
-
-      useEffect(() => {
         if (renderCtx && renderCtx.firstColIdx != null && renderCtx.lastColIdx != null) {
           setRenderedCols(columns.slice(renderCtx.firstColIdx, renderCtx.lastColIdx + 1));
+
+          if (
+            lastRenderedColIndexes.current.first !== renderCtx.firstColIdx ||
+            lastRenderedColIndexes.current.last !== renderCtx.lastColIdx
+          ) {
+            lastRenderedColIndexes.current = { first: renderCtx.firstColIdx, last: renderCtx.lastColIdx };
+          }
         }
-      }, [columns]);
+      }, [renderCtx, columns]);
 
       return (
         <div
@@ -81,7 +72,6 @@ export const ColumnsHeader = memo(
             columns={renderedCols}
             onResizeColumn={onResizeColumn}
             headerHeight={headerHeight}
-            icons={icons}
           />
           <RightEmptyCell key={'right-empty'} width={renderCtx?.rightEmptyWidth} />
         </div>
