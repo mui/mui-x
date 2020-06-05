@@ -54,11 +54,43 @@ export const Commodity1000 = () => {
     </div>
   );
 };
+
+export const Commodity1000WithAutoPagination = () => {
+  const options: Partial<GridOptions> = {
+    checkboxSelection: true,
+    pagination: true,
+    paginationAutoPageSize: true
+  };
+
+  const { data } = useDemoData('Commodity', 1000);
+
+  return (
+    <div style={{ padding: 10, flexGrow: 1 }}>
+      <Grid rows={data.rows} columns={data.columns} options={options} />
+    </div>
+  );
+};
 export const Commodity10000 = () => {
   const { data } = useDemoData('Commodity', 10000);
   const options: GridOptionsProp = {
     checkboxSelection: true,
   };
+
+  return (
+    <div style={{ padding: 10, flexGrow: 1 }}>
+      <Grid rows={data.rows} columns={data.columns} options={options} />
+    </div>
+  );
+};
+export const Commodity10000WithPagination = () => {
+  const options: Partial<GridOptions> = {
+    checkboxSelection: true,
+    paginationPageSize: 100,
+    pagination: true,
+    paginationRowsPerPageOptions: [100, 200, 1000]
+  };
+
+  const { data } = useDemoData('Commodity', 10000);
 
   return (
     <div style={{ padding: 10, flexGrow: 1 }}>
