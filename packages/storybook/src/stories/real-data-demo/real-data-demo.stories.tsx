@@ -2,6 +2,8 @@ import React from 'react';
 import { Grid, GridOptions, GridOptionsProp } from '@material-ui-x/grid';
 import { useDemoData } from '@material-ui-x/grid-data-generator';
 import '@material-ui-x/grid-data-generator/dist/demo-style.css';
+import { Button } from '@material-ui/core';
+import { randomInt } from '../../data/random-generator';
 
 export default {
   title: 'Real data demo',
@@ -12,12 +14,18 @@ export const Commodity = () => {
     checkboxSelection: true,
   };
 
-  const { data } = useDemoData('Commodity', 100);
+  const { data, setSize, loadNewData } = useDemoData('Commodity', 100);
 
   return (
-    <div style={{ padding: 10, flexGrow: 1 }}>
-      <Grid rows={data.rows} columns={data.columns} options={options} />
-    </div>
+    <>
+      <div style={{ display: 'flex', justifyContent: 'space-around'}}>
+        <Button color={"primary"} onClick={loadNewData}>Load New Rows</Button>
+        <Button color={"primary"} onClick={() => setSize(randomInt(100, 500))}>Load New Rows with new length</Button>
+      </div>
+      <div style={{ padding: 10, flexGrow: 1 }}>
+        <Grid rows={data.rows} columns={data.columns} options={options} />
+      </div>
+    </>
   );
 };
 export const Commodity500 = () => {
