@@ -1,10 +1,10 @@
 {
 	"name": "demo-app",
-	"version": "0.1.33",
+	"version": "0.1.34",
 	"private": true,
 	"dependencies": {
 		"@ag-grid-community/all-modules": "^22.1.1",
-		"@material-ui-x/grid": "^0.1.33",
+		"@material-ui-x/grid": "^0.1.34",
 		"@material-ui-x/grid-data-generator": "^0.1.32",
 		"@material-ui-x/panel": "^0.1.28",
 		"@material-ui-x/splitter": "^0.1.32",

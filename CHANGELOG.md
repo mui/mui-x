@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.34](https://github.com/mui-org/material-ui-x/compare/v0.1.33...v0.1.34) (2020-06-08)
+
+**Note:** Version bump only for package material-ui-x
+
+
+
+
+
 ## [0.1.33](https://github.com/mui-org/material-ui-x/compare/v0.1.32...v0.1.33) (2020-06-08)
 
 **Note:** Version bump only for package material-ui-x
