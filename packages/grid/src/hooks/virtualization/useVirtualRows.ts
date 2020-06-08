@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useVirtualColumns } from './useVirtualColumns';
 import {
   CellIndexCoordinates,
@@ -15,13 +15,12 @@ import { useLogger } from '../utils/useLogger';
 import { useContainerProps } from '../root';
 import { GridApiRef } from '../../grid';
 import { RESIZE, SCROLLING, SCROLLING_START, SCROLLING_STOP } from '../../constants/eventsConstants';
-import { debounce } from '../../utils';
+
 import { useApiMethod } from '../root/useApiMethod';
 import { useNativeEventListener } from '../root/useNativeEventListener';
 import { useApiEventHandler } from '../root/useApiEventHandler';
 
 const SCROLL_EVENT = 'scroll';
-const UPDATE_VIEWPORT_DEBOUNCE_TIME = 20;
 type UseVirtualRowsReturnType = Partial<RenderContextProps> | null;
 
 export const useVirtualRows = (
@@ -142,7 +141,6 @@ export const useVirtualRows = (
       }
     }
   }, [apiRef, logger, reRender, windowRef, updateRenderedCols, scrollTo]);
-  const debouncedUpdateViewport = useMemo(() => debounce(updateViewport, UPDATE_VIEWPORT_DEBOUNCE_TIME), [updateViewport]);
 
   useLayoutEffect(() => {
     if (renderingZoneRef && renderingZoneRef.current) {
@@ -201,9 +199,9 @@ export const useVirtualRows = (
           apiRef.current.emit(SCROLLING_STOP);
         }
       }, 300);
-      debouncedUpdateViewport();
+      updateViewport();
     },
-    [apiRef, debouncedUpdateViewport, scrollingTimeout, realScrollRef],
+    [apiRef, updateViewport, scrollingTimeout, realScrollRef],
   );
 
   const scrollToIndexes = useCallback(
@@ -265,9 +263,9 @@ export const useVirtualRows = (
       if (windowRef.current && params.top != null) {
         windowRef.current.scrollTop = params.top;
       }
-      debouncedUpdateViewport();
+      updateViewport();
     },
-    [logger, windowRef, debouncedUpdateViewport, colRef],
+    [logger, windowRef, updateViewport, colRef],
   );
 
   const getContainerPropsState = useCallback(() => {
