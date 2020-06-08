@@ -21,6 +21,7 @@ import { useNativeEventListener } from '../root/useNativeEventListener';
 import { useApiEventHandler } from '../root/useApiEventHandler';
 
 const SCROLL_EVENT = 'scroll';
+const UPDATE_VIEWPORT_DEBOUNCE_TIME = 20;
 type UseVirtualRowsReturnType = Partial<RenderContextProps> | null;
 
 export const useVirtualRows = (
@@ -141,7 +142,7 @@ export const useVirtualRows = (
       }
     }
   }, [apiRef, logger, reRender, windowRef, updateRenderedCols, scrollTo]);
-  const debouncedUpdateViewport = useMemo(() => debounce(updateViewport, 10), [updateViewport]);
+  const debouncedUpdateViewport = useMemo(() => debounce(updateViewport, UPDATE_VIEWPORT_DEBOUNCE_TIME), [updateViewport]);
 
   useLayoutEffect(() => {
     if (renderingZoneRef && renderingZoneRef.current) {
