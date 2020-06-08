@@ -28,7 +28,6 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>): R
         height: windowSizesRef.current!.height - scrollBarSize.x,
       };
 
-
       let viewportPageSize = viewportSize.height / rowHeight;
       viewportPageSize = options.pagination ? Math.floor(viewportPageSize) : Math.round(viewportPageSize);
       const rzPageSize = viewportPageSize * 2; //we multiply by 2 for virtualisation //TODO allow buffer with fixed nb rows

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useVirtualColumns } from './useVirtualColumns';
 import {
   CellIndexCoordinates,
@@ -15,7 +15,7 @@ import { useLogger } from '../utils/useLogger';
 import { useContainerProps } from '../root';
 import { GridApiRef } from '../../grid';
 import { RESIZE, SCROLLING, SCROLLING_START, SCROLLING_STOP } from '../../constants/eventsConstants';
-import { debounce } from '../../utils';
+
 import { useApiMethod } from '../root/useApiMethod';
 import { useNativeEventListener } from '../root/useNativeEventListener';
 import { useApiEventHandler } from '../root/useApiEventHandler';
