@@ -160,6 +160,7 @@ function hex(x: any) {
 export function md5(s: any) {
 	return hex(md51(s));
 }
+
 var isIeCompatible = md5('hello') != '5d41402abc4b2a76b9719d911017c592';
 
 function add32(a: any, b: any) {
@@ -177,12 +178,3 @@ function add32Compat(x: any, y: any) {
 		msw = (x >> 16) + (y >> 16) + (lsw >> 16);
 	return (msw << 16) | (lsw & 0xFFFF);
 }
-
-//
-// if (md5('hello') != '5d41402abc4b2a76b9719d911017c592') {
-// 	function add32(x, y) {
-// 		var lsw = (x & 0xFFFF) + (y & 0xFFFF),
-// 			msw = (x >> 16) + (y >> 16) + (lsw >> 16);
-// 		return (msw << 16) | (lsw & 0xFFFF);
-// 	}
-// }

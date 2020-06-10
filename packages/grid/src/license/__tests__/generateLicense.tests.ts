@@ -1,22 +1,22 @@
 import { generateLicence } from '../generateLicense';
 import { LicenseStatus, verifyLicense } from '../verifyLicense';
 
+const oneDayInMS = 1000 * 60 * 60 * 24;
+const oneYear = oneDayInMS * 365;
+
 describe('License: generateLicense', () => {
   it('should generate License properly', () => {
     expect(
-      generateLicence({ expiryDate: new Date(1591723879062), version: '1.2.3', developerCount: 10, name: 'Material-UI SAS' }),
+      generateLicence({ expiryDate: new Date(1591723879062), orderNumber: 'MUI-123' }),
     ).toBe(
-      '43381d14c87948ff1f07c9a1f4879d96TkFNRTpNYXRlcmlhbC1VSSBTQVMsREVWRUxPUEVSX0NPVU5UPTEwLEVYUElSWT0xNTkxNzIzODc5MDYyLFZFUlNJT049MS4yLjM=',
+      'e34253b37166e7a4a85189b91b653e63T1JERVI6TVVJLTEyMyxFWFBJUlk9MTU5MTcyMzg3OTA2MixLRVlWRVJTSU9OPTE=',
     );
   });
 });
 
 describe('License: verifyLicense ', () => {
-  const oneDayInMS = 1000 * 60 * 60 * 24;
-  const oneYear = oneDayInMS * 365;
-
   it('should verify License properly', () => {
-    const validLicense = generateLicence({ expiryDate: new Date(new Date().getTime() + oneYear), version: '1.2.3', developerCount: 10, name: 'Material-UI SAS' });
+    const validLicense = generateLicence({ expiryDate: new Date(new Date().getTime() + oneYear), orderNumber: 'MUI-123' });
     expect(
       verifyLicense(validLicense),
     ).toBe(LicenseStatus.Valid);
@@ -25,9 +25,7 @@ describe('License: verifyLicense ', () => {
   it('should check expired License properly', () => {
     const expiredLicense = generateLicence({
       expiryDate: new Date(new Date().getTime() - oneDayInMS),
-      version: '1.2.3',
-      developerCount: 10,
-      name: 'Material-UI SAS',
+      orderNumber: 'MUI-123'
     });
 
     expect(verifyLicense(expiredLicense)).toBe(LicenseStatus.Expired);

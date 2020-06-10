@@ -1,17 +1,14 @@
 import { md5 } from './encoding/md5';
 import { base64Encode } from './encoding/base64';
 
+const licenseVersion = '1';
 export interface LicenseDetails {
-  name: string;
+  orderNumber: string;
   expiryDate: Date;
-  developerCount: number;
-  version: string;
 }
 
 function getClearLicenseString(details: LicenseDetails): string {
-  return `NAME:${details.name},DEVELOPER_COUNT=${
-    details.developerCount
-  },EXPIRY=${details.expiryDate.getTime()},VERSION=${details.version}`;
+  return `ORDER:${details.orderNumber},EXPIRY=${details.expiryDate.getTime()},KEYVERSION=${licenseVersion}`;
 }
 
 export const generateLicence = (details: LicenseDetails): string => {

@@ -25,6 +25,8 @@ import { DATA_CONTAINER_CSS_CLASS } from './constants/cssClassesConstants';
 import { useKeyboard } from './hooks/root/useKeyboard';
 import { useSorting } from './hooks/root/useSorting';
 import { DefaultFooter } from './components/default-footer';
+import { useLicenseVerifier } from './license/';
+import {Watermark} from "./components/watermark";
 
 export type GridApiRef = React.MutableRefObject<GridApi | null | undefined>;
 // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -43,6 +45,7 @@ export interface GridProps {
 
 export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, apiRef, loading, children }) => {
   useLoggerFactory(options?.logger, options?.logLevel);
+  const licenseStatus = useLicenseVerifier();
   const logger = useLogger('Grid');
   const gridRootRef: GridRootRef = useRef<HTMLDivElement>(null);
   const columnsHeaderRef = useRef<HTMLDivElement>(null);
@@ -150,6 +153,7 @@ export const Grid: React.FC<GridProps> = React.memo(({ rows, columns, options, a
             <OptionsContext.Provider value={internalOptions}>
               {headerChildNode}
               <div className={'main-grid-container'}>
+                <Watermark licenseStatus={licenseStatus} />
                 <ColumnsContainer ref={columnsContainerRef}>
                   <ColumnsHeader
                     ref={columnsHeaderRef}
