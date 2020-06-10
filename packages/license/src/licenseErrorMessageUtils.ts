@@ -20,7 +20,7 @@ export function showNotFoundLicenseError() {
   console.error('* development projects intended for production                          *');
   console.error('*                                                                       *');
   console.error('* If you want to hide the watermark, please email                       *');
-  console.error('* license@material-ui.com  for a trial license.                         *');
+  console.error('* license@material-ui.com for a trial license.                         *');
   console.error('*                                                                       *');
   console.error('*************************************************************************');
   console.error('*************************************************************************');
