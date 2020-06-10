@@ -32,7 +32,7 @@ export function showExpiredLicenseError() {
   console.error('************************** License Key Expired **************************');
   console.error('*                                                                       *');
   console.error('* Please contact license@material-ui.com to renew your subscription     *');
-  console.error('* and get the latest version of Material-UI X                           *');
+  console.error('* and get the latest version of Material-UI X.                           *');
   console.error('*                                                                       *');
   console.error('*************************************************************************');
   console.error('*************************************************************************');
