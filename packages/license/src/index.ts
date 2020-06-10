@@ -1,4 +1,5 @@
 export * from './generateLicense';
-export * from './licenseKey';
+export * from './licenseInfo';
+export * from './licenseErrorMessageUtils';
 export * from './verifyLicense';
 export * from './useLicenseVerifier';

@@ -8,12 +8,13 @@
     "strict": true,
     "outDir": "./dist",
     "target": "es6",
-    "sourceMap": true,
+    "sourceMap": true
   },
   "include": ["src"],
   "exclude": [
     "__tests__",
     "**/*.test.ts",
+    "**/*.tests.ts",
     "node_modules",
     "lib"
   ]

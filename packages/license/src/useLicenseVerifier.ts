@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { LicenseStatus, verifyLicense } from './verifyLicense';
-import { LicenseKey } from './licenseKey';
+import { LicenseInfo } from './licenseInfo';
 import { showExpiredLicenseError, showInvalidLicenseError, showNotFoundLicenseError } from './licenseErrorMessageUtils';
 
 export const useLicenseVerifier = () => {
   const [licenseStatus, setLicenseStatus] = useState(LicenseStatus.Invalid);
 
   useEffect(() => {
-    const licenseStatus = verifyLicense(LicenseKey.key);
+    const licenseStatus = verifyLicense(LicenseInfo.releaseInfo, LicenseInfo.key);
     setLicenseStatus(licenseStatus);
     if (licenseStatus === LicenseStatus.Invalid) {
       showInvalidLicenseError();

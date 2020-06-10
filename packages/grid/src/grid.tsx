@@ -15,18 +15,20 @@ import {
 } from './hooks';
 import { Columns, DEFAULT_GRID_OPTIONS, ElementSize, GridOptions, RowsProp, GridApi } from './models';
 import { debounce, mergeOptions } from './utils';
-
 import { ApiContext } from './components/api-context';
-
 import { OptionsContext } from './components/options-context';
-
 import { GridChildrenProp } from './hooks/features/useChildren';
 import { DATA_CONTAINER_CSS_CLASS } from './constants/cssClassesConstants';
 import { useKeyboard } from './hooks/root/useKeyboard';
 import { useSorting } from './hooks/root/useSorting';
 import { DefaultFooter } from './components/default-footer';
-import { useLicenseVerifier } from './license/';
-import {Watermark} from "./components/watermark";
+import { Watermark } from './components/watermark';
+import { useLicenseVerifier, LicenseInfo } from '@material-ui-x/license';
+
+// This is the grid release date
+// each grid version should update this const automatically when a new version of the grid is published to NPM
+const RELEASE_INFO = '__RELEASE_INFO__';
+LicenseInfo.setReleaseInfo(RELEASE_INFO);
 
 export type GridApiRef = React.MutableRefObject<GridApi | null | undefined>;
 // eslint-disable-next-line react-hooks/rules-of-hooks

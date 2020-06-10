@@ -1,5 +1,5 @@
 import React from 'react';
-import { LicenseStatus } from '../license';
+import { LicenseStatus } from '@material-ui-x/license';
 
 export interface WatermarkProps {
   licenseStatus: LicenseStatus;

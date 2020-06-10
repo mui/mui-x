@@ -30,6 +30,7 @@ export const RootStyle = styled.div<GridRootProps>`
     }
     .watermark {
       position: absolute;
+      pointer-events: none;
       color: #8282829e;
       z-index: 100000;
       width: 100%;
