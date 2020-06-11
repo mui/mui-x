@@ -1,5 +1,5 @@
 import { generateLicence } from '../generateLicense';
-import {generateReleaseInfo, LicenseStatus, verifyLicense} from '../verifyLicense';
+import { generateReleaseInfo, LicenseStatus, verifyLicense } from '../verifyLicense';
 
 const oneDayInMS = 1000 * 60 * 60 * 24;
 const oneYear = oneDayInMS * 365;
@@ -33,7 +33,7 @@ describe('License: verifyLicense ', () => {
   });
 
   it('should log an error when ReleaseInfo is not valid', () => {
-    expect(()=> verifyLicense('__RELEASE_INFO__', validLicense)).toThrow(
+    expect(() => verifyLicense('__RELEASE_INFO__', validLicense)).toThrow(
       'Package ReleaseInfo is invalid. Cannot check license key!',
     );
   });
