@@ -59,7 +59,9 @@ export const useVirtualRows = (
       const containerProps = containerPropsRef.current!;
       let minRowIdx = 0;
       if (optionsRef.current.pagination && optionsRef.current.paginationPageSize != null) {
-        minRowIdx = optionsRef.current.paginationPageSize * (paginationCurrentPage.current - 1 > 0 ? paginationCurrentPage.current - 1 : 0);
+        minRowIdx =
+          optionsRef.current.paginationPageSize *
+          (paginationCurrentPage.current - 1 > 0 ? paginationCurrentPage.current - 1 : 0);
       }
 
       const firstRowIdx = page * containerProps.viewportPageSize + minRowIdx;
