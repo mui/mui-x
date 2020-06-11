@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { AppBreadcrumbs } from '../../app-breadcrumbs';
-import { Columns, Grid as DataGrid, RowModel } from '@material-ui-x/grid';
+import {Columns, Grid as DataGrid, GridOptions, RowModel, version} from '@material-ui-x/grid';
 import { MainContainer } from './components/main-container';
 import { SettingsPanel } from './components/settings-panel';
 import { commodityColumns, employeeColumns } from '@material-ui-x/grid-data-generator';
 import '@material-ui-x/grid-data-generator/dist/demo-style.css';
 import { useTheme } from '../theme';
+import set = Reflect.set;
+console.info(
+  '*******************************\n' + `    GRID VERSION: ${version}   \n` + '*******************************',
+);
 
 export const DEFAULT_DATASET = 'Employee';
 
@@ -40,6 +44,7 @@ export const RealDataGridDemo: React.FC<{}> = props => {
 
   const [rows, setRows] = useState<any>([]);
   const [cols, setCols] = useState<any>([]);
+  const [pagination, setPagination] = useState<Partial<GridOptions>>({});
   const [loading, setLoading] = useState(false);
   const [theme, themeId, toggleTheme, isDark] = useTheme();
 
@@ -70,7 +75,7 @@ export const RealDataGridDemo: React.FC<{}> = props => {
     );
   }, [setRows, type, size]);
 
-  const onApplyClick = (settings: { size: number; type: string; selectedTheme: string }) => {
+  const onApplyClick = (settings: { size: number; type: string; selectedTheme: string, pagesize: number }) => {
     if (size !== settings.size) {
       setSize(settings.size);
     }
@@ -80,6 +85,23 @@ export const RealDataGridDemo: React.FC<{}> = props => {
     if (settings.selectedTheme !== themeId) {
       toggleTheme();
     }
+
+    const newPagination: Partial<GridOptions> = {
+      pagination: settings.pagesize === -1 ? false : true,
+      paginationAutoPageSize: settings.pagesize === 0 ? true : false,
+      paginationPageSize: settings.pagesize > 0 ? settings.pagesize : undefined
+    };
+
+    setPagination(p => {
+      if (
+        p.pagination === newPagination.pagination &&
+        p.paginationAutoPageSize === newPagination.paginationAutoPageSize &&
+        p.paginationPageSize === newPagination.paginationPageSize
+      ) {
+        return p;
+      }
+      return newPagination;
+    });
   };
 
   return (
@@ -94,7 +116,7 @@ export const RealDataGridDemo: React.FC<{}> = props => {
               rows={rows as any}
               columns={cols as any}
               loading={loading}
-              options={{ checkboxSelection: true }}
+              options={{ checkboxSelection: true, ...pagination }}
             />
           </div>
         </div>
