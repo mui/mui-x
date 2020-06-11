@@ -26,7 +26,8 @@ export default {
   external: [...Object.keys(pkg.peerDependencies || {})],
   plugins: [
      replace({
-      __RELEASE_INFO__: generateReleaseInfo()
+      __RELEASE_INFO__: generateReleaseInfo(),
+       __VERSION__: pkg.version,
     }),
     production &&
       cleaner({

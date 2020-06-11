@@ -28,6 +28,7 @@ import { useLicenseVerifier, LicenseInfo } from '@material-ui-x/license';
 // This is the grid release date
 // each grid version should update this const automatically when a new version of the grid is published to NPM
 const RELEASE_INFO = '__RELEASE_INFO__';
+export const version = '__VERSION__';
 LicenseInfo.setReleaseInfo(RELEASE_INFO);
 
 export type GridApiRef = React.MutableRefObject<GridApi | null | undefined>;
