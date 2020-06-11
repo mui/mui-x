@@ -7,7 +7,7 @@ import { useTheme } from '../../theme/useTheme';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
 export interface SettingsPanelProps {
-  onApply: (settings: { size: number; type: string; selectedTheme: string }) => void;
+  onApply: (settings: { size: number; type: string; selectedTheme: string, pagesize: number }) => void;
   type: string;
   size: number;
 }
@@ -17,10 +17,11 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onApply, type, siz
   const [typeState, setType] = useState<string>(type);
   const [theme, themeId, toggleTheme, isDark] = useTheme();
   const [selectedTheme, setSelectedTheme] = useState<string>(themeId);
+  const [selectedPaginationValue, setSelectedPaginationValue] = useState<number>(-1);
 
   const applyChanges = useCallback(() => {
-    onApply({ size: sizeState, type: typeState, selectedTheme });
-  }, [sizeState, typeState, selectedTheme, onApply]);
+    onApply({ size: sizeState, type: typeState, selectedTheme, pagesize: selectedPaginationValue });
+  }, [sizeState, typeState, selectedTheme, selectedPaginationValue, onApply]);
 
   const onDatasetChange = useCallback(
     (e: ChangeEvent<{ name?: string; value: any }>) => {
@@ -34,6 +35,13 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onApply, type, siz
       setSize(Number(e.target.value));
     },
     [setSize],
+  );
+  const onPaginationChange = useCallback(
+    (e: ChangeEvent<{ name?: string; value: any }>) => {
+      setSelectedPaginationValue(e.target.value);
+      // setSize(Number(e.target.value));
+    },
+    [setSelectedPaginationValue],
   );
   const onSelectedThemeChange = useCallback(
     (e: ChangeEvent<{ name?: string; value: any }>) => {
@@ -65,6 +73,16 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onApply, type, siz
               <MenuItem value={1000}>{Number(1000).toLocaleString()}</MenuItem>
               <MenuItem value={10000}>{Number(10000).toLocaleString()}</MenuItem>
               <MenuItem value={100000}>{Number(100000).toLocaleString()}</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl className={'dataset-control input-text'} size={'small'} component="fieldset">
+            <FormLabel component="legend">Pagination</FormLabel>
+            <Select value={selectedPaginationValue} onChange={onPaginationChange}>
+              <MenuItem value={-1}>off</MenuItem>
+              <MenuItem value={0}>auto</MenuItem>
+              <MenuItem value={25}>25</MenuItem>
+              <MenuItem value={100}>100</MenuItem>
+              <MenuItem value={1000}>{Number(1000).toLocaleString()}</MenuItem>
             </Select>
           </FormControl>
           <FormControl className={'dataset-control input-text'} size={'small'} component="fieldset">
