@@ -28,7 +28,18 @@ export const RootStyle = styled.div<GridRootProps>`
       flex-grow: 1;
       display: flex;
     }
-
+    .watermark {
+      position: absolute;
+      pointer-events: none;
+      color: #8282829e;
+      z-index: 100000;
+      width: 100%;
+      text-align: center;
+      bottom: 50%;
+      right: 0;
+      letter-spacing: 5px;
+      font-size: 24px;
+    }
     .footer {
       display: flex;
       justify-content: space-between;

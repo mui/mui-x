@@ -38,7 +38,7 @@ function paginationReducer(state: PaginationState, action: { type: string; paylo
 }
 
 const getPageCount = (pageSize: number | undefined, rowsCount: number) => {
-  return pageSize ? Math.ceil(rowsCount / pageSize!) : 1;
+  return pageSize && rowsCount > 0 ? Math.ceil(rowsCount / pageSize!) : 1;
 };
 
 export const usePagination = (
