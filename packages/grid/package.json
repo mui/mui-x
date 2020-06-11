@@ -31,6 +31,7 @@
 	"scripts": {
 		"precommit": "npm run lint",
 		"build": "rollup -c",
+		"prepare": "npm run build",
 		"start": "rollup -cw",
 		"lint": "../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../.eslintrc.js && npm run lint:css",
 		"lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../.stylelintrc.js",
