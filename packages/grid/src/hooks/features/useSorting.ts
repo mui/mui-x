@@ -23,10 +23,9 @@ import {
 } from '../../constants/eventsConstants';
 import { GridApiRef } from '../../grid';
 import { useLogger } from '../utils';
-import { isDesc, nextSortDirection } from '../../utils/';
+import { isDesc, nextSortDirection } from '../../utils';
 import { SortItem, SortModel } from '../../models/sortModel';
-import { useApiEventHandler } from './useApiEventHandler';
-import { useApiMethod } from './useApiMethod';
+import { useApiEventHandler, useApiMethod } from '../root';
 
 export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: Columns, apiRef: GridApiRef) => {
   const logger = useLogger('useSorting');

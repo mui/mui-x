@@ -17,8 +17,7 @@ import {
 } from '../../constants/eventsConstants';
 import { SelectionApi } from '../../models/gridApi';
 import { GridApiRef } from '../../grid';
-import { useApiEventHandler } from './useApiEventHandler';
-import { useApiMethod } from './useApiMethod';
+import { useApiEventHandler, useApiMethod } from '../root';
 
 export const useSelection = (
   options: GridOptions,
