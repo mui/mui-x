@@ -5,10 +5,6 @@
       "yes": true
     }
   },
-  "packages": [
-    "packages/*",
-    "!packages/grid",
-    "packages/grid/*"
-  ],
+  "packages": ["packages/*", "!packages/grid", "packages/grid/*"],
   "version": "0.1.35"
 }

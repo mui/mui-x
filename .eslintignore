@@ -1,0 +1,9 @@
+/.git
+CHANGELOG.md
+dist
+node_modules
+package-lock.json
+packages/demo-app/public/static-data
+packages/grid/lib/lodash
+packages/grid/x-grid-modules/lib/autosizer
+packages/grid/x-grid-modules/lib/lodash

@@ -1,6 +1,6 @@
 import { generateLicence } from '../generateLicense';
 import { generateReleaseInfo, verifyLicense } from '../verifyLicense';
-import {LicenseStatus} from "../licenseStatus";
+import { LicenseStatus } from '../licenseStatus';
 
 const oneDayInMS = 1000 * 60 * 60 * 24;
 const oneYear = oneDayInMS * 365;

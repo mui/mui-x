@@ -46,7 +46,8 @@ export const RootStyle = styled.div<GridRootProps>`
       flex-direction: row;
       padding: 0 16px;
     }
-    .row-count, .selected-row-count {
+    .row-count,
+    .selected-row-count {
       display: flex;
       align-items: center;
       font-size: 0.875rem;
@@ -57,7 +58,8 @@ export const RootStyle = styled.div<GridRootProps>`
       min-height: 48px;
     }
     @media (max-width: 650px) {
-      .row-count, .selected-row-count {
+      .row-count,
+      .selected-row-count {
         display: none;
       }
     }

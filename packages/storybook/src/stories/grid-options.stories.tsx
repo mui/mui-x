@@ -240,11 +240,11 @@ export const withCustomFooter = () => {
           pagination: true,
           paginationPageSize: 33,
           hideFooterPagination: true,
-          footerComponent: ({paginationProps, rows, columns, options, api, gridRef}) => (
+          footerComponent: ({ paginationProps, rows, columns, options, api, gridRef }) => (
             <Footer className={'my-custom-footer'}>
-            <span style={{ display: 'flex', alignItems: 'center' }}>
+              <span style={{ display: 'flex', alignItems: 'center' }}>
                 This is my custom footer and pagination here!
-            </span>
+              </span>
               <Pagination
                 className={'my-custom-pagination'}
                 page={paginationProps.page}
@@ -252,7 +252,7 @@ export const withCustomFooter = () => {
                 onChange={(e, value) => paginationProps.setPage(value)}
               />
             </Footer>
-          )
+          ),
         }}
       />
     </div>
@@ -272,7 +272,7 @@ export const withCustomHeaderAndFooter = () => {
           pagination: true,
           paginationPageSize: 33,
           hideFooterPagination: true,
-          headerComponent: ({paginationProps}) => (
+          headerComponent: ({ paginationProps }) => (
             <div className={'custom-header'}>
               <Pagination
                 className={'my-custom-pagination'}
@@ -282,10 +282,11 @@ export const withCustomHeaderAndFooter = () => {
               />
             </div>
           ),
-          footerComponent: ({paginationProps}) => (
+          footerComponent: ({ paginationProps }) => (
             <div className="footer my-custom-footer"> I counted {paginationProps.rowCount} row(s) </div>
-          )
-        }} />
+          ),
+        }}
+      />
     </div>
   );
 };

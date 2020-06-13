@@ -23,15 +23,6 @@
     "emitDecoratorMetadata": true,
     "types": ["node"]
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "__tests__",
-    "**/*.test.ts",
-    "node_modules",
-    "lib",
-    "build",
-    "scripts"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["__tests__", "**/*.test.ts", "node_modules", "lib", "build", "scripts"]
 }

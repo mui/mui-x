@@ -12,12 +12,7 @@
     "build": true
   },
   "include": ["src"],
-  "exclude": [
-    "__tests__",
-    "**/*.test.ts",
-    "node_modules",
-    "lib"
-  ],
+  "exclude": ["__tests__", "**/*.test.ts", "node_modules", "lib"],
   "references": [
     {
       "path": "../x-grid-modules"
