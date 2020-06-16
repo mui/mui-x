@@ -25,7 +25,6 @@ yarn-debug.log*
 yarn-error.log*
 /packages/*/dist/
 /packages/*/node_modules/
-/packages/x-grid/packages/x-grid/node_modules/
-/packages/x-grid/packages/data-grid/node_modules/*
-/packages/x-grid/packages/data-grid/dist/*
-/packages/x-grid/packages/x-grid/dist/*
+/packages/*/packages/*/node_modules/
+/packages/*/packages/*/dist/
+
