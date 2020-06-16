@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { ColDef, Columns, RowData } from '@material-ui-x/grid';
+import { ColDef, Columns, RowData } from '@material-ui/x-grid';
 import { getRealData } from './services/real-data-service';
 import { useEffect, useState } from 'react';
 import { commodityColumns } from './commodities.columns';

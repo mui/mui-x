@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { CellParams } from '@material-ui-x/grid';
+import { CellParams } from '@material-ui/x-grid';
 
 const Container = styled.div`
   border: 1px solid #bec3c7;

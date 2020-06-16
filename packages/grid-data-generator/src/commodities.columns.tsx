@@ -1,6 +1,5 @@
 import './style/real-data-stories.css';
 import {
-  GeneratableColDef,
   generateTotalPrice,
   randomCommodity,
   randomDesk,
@@ -48,7 +47,7 @@ const pnlFormatter = params =>
     ? `(${Math.abs(Number(params.value!)).toLocaleString()})`
     : Number(params.value).toLocaleString();
 
-export const commodityColumns: GeneratableColDef[] = [
+export const commodityColumns: any[] = [
   {
     field: 'id',
     generateData: randomId,

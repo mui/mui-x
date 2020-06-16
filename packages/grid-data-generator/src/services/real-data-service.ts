@@ -1,5 +1,4 @@
-import { ColDef, RowId } from '@material-ui-x/grid';
-import { GeneratableColDef } from './generatableColDef';
+import { ColDef, RowId } from '@material-ui/x-grid';
 
 export interface DataRowModel {
   id: RowId;
@@ -11,7 +10,7 @@ export interface GridData {
   rows: DataRowModel[];
 }
 
-export function getRealData(rowLength: number, columns: GeneratableColDef[]): Promise<GridData> {
+export function getRealData(rowLength: number, columns: any[]): Promise<GridData> {
   return new Promise<GridData>((resolve, reject) => {
     const data: DataRowModel[] = [];
     for (let i = 0; i < rowLength; i++) {

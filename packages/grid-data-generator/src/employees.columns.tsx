@@ -1,6 +1,5 @@
 import './style/real-data-stories.css';
 import {
-  GeneratableColDef,
   generateName,
   randomAvatar,
   randomCity,
@@ -19,7 +18,7 @@ import {
 
 import { AvatarRenderer, CountryRenderer, EmailRenderer, LinkRenderer, RatingRenderer } from './renderer';
 
-export const employeeColumns: GeneratableColDef[] = [
+export const employeeColumns: any[] = [
   {
     field: 'id',
     generateData: randomId,

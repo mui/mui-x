@@ -5,7 +5,7 @@ import AutorenewIcon from '@material-ui/icons/Autorenew';
 import DoneIcon from '@material-ui/icons/Done';
 import { Chip } from '@material-ui/core';
 import styled from 'styled-components';
-import { CellParams } from '@material-ui-x/grid';
+import { CellParams } from '@material-ui/x-grid';
 
 const StatusContainer = styled.div`
   justify-content: left !important;

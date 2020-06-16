@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { CellParams } from '@material-ui-x/grid';
+import { CellParams } from '@material-ui/x-grid';
 import React from 'react';
 
 export const Link = styled.a`

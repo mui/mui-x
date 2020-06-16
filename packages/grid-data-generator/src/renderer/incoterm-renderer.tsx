@@ -1,5 +1,5 @@
 import React from 'react';
-import { CellParams, CellValue } from '@material-ui-x/grid';
+import { CellParams, CellValue } from '@material-ui/x-grid';
 import { Tooltip } from '@material-ui/core';
 import InfoIcon from '@material-ui/icons/Info';
 
