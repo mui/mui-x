@@ -1,7 +1,7 @@
 {
-	"name": "@material-ui/data-grid",
+	"name": "@material-ui/x-grid",
 	"version": "0.1.35",
-	"description": "Official Material-UI Data Grid Component",
+	"description": "Official Material-UI X Grid Component",
 	"author": "Damien Tassone <damien@material-ui.com>",
 	"main": "dist/index-cjs.js",
 	"module": "dist/index-esm.js",
@@ -34,8 +34,8 @@
 		"prepublishOnly": "npm run build",
 		"postinstall": "rm -rf ../../node_modules && mv -f ./node_modules ../../",
 		"start": "rollup -cw",
-		"lint": "../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../.eslintrc.js && npm run lint:css",
-		"lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../.stylelintrc.js",
+		"lint": "../../../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../../.eslintrc.js && npm run lint:css",
+		"lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../../../.stylelintrc.js",
 		"test": "../../../../node_modules/.bin/jest --config jest.config.js"
 	},
 	"setupFiles": [
