@@ -3,10 +3,19 @@ import { useData } from '../components/grid-dataset';
 
 import { getDate, random } from '../data/random-generator';
 
-import { ColDef, Grid } from '@material-ui-x/grid';
+import { ColDef, Grid } from '@material-ui/x-grid';
+import {withKnobs} from "@storybook/addon-knobs";
+import {withA11y} from "@storybook/addon-a11y";
 
 export default {
-  title: 'Grid Columns',
+  title: 'X-Grid Tests/Columns',
+  component: Grid,
+  decorators: [withKnobs, withA11y],
+  parameters: {
+    docs: {
+      page: null,
+    },
+  },
 };
 
 export const SmallColSizes = () => {

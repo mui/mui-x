@@ -1,6 +1,6 @@
 module.exports = {
   stories: ['../src/stories/**/*.stories.*'],
-  addons: [ '@storybook/addon-storysource', '@storybook/addon-actions/register'],
+  addons: [ '@storybook/addon-docs', '@storybook/addon-viewport/register', '@storybook/addon-knobs/register', '@storybook/addon-actions/register', '@storybook/addon-storysource','@storybook/addon-a11y/register'],
   webpackFinal: async config => {
     config.devtool = 'inline-source-map';
     config.module.rules.push({

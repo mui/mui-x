@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getData, GridData } from '../data/data-service';
-import { ElementSize, Grid, GridOptionsProp, GridChildrenProp } from '@material-ui-x/grid';
+import { ElementSize, Grid, GridOptionsProp, GridChildrenProp } from '@material-ui/x-grid';
 
 export interface GridDatasetProps {
   nbRows: number;

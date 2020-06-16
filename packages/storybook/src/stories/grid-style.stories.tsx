@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ColDef, ElementSize, Grid, GridOptionsProp } from '@material-ui-x/grid';
+import { ColDef, ElementSize, Grid, GridOptionsProp } from '@material-ui/x-grid';
 import { useData } from '../components/grid-dataset';
 
 import '../style/grid-stories.css';
@@ -7,9 +7,18 @@ import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
 import CreateIcon from '@material-ui/icons/Create';
 import { getDate } from '../data/random-generator';
+import {withKnobs} from "@storybook/addon-knobs";
+import {withA11y} from "@storybook/addon-a11y";
 
 export default {
-  title: 'Grid Style',
+  title: 'X-Grid Tests/Styling',
+  component: Grid,
+  decorators: [withKnobs, withA11y],
+  parameters: {
+    docs: {
+      page: null,
+    },
+  },
 };
 
 export const Resize = () => {

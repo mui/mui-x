@@ -1,8 +1,16 @@
 import React from 'react';
 import { GridDataSet } from '../components/grid-dataset';
+import {withKnobs} from "@storybook/addon-knobs";
+import {withA11y} from "@storybook/addon-a11y";
 
 export default {
-  title: 'Grid Dataset',
+  title: 'X-Grid Tests/Dataset',
+  decorators: [withKnobs, withA11y],
+  parameters: {
+    docs: {
+      page: null,
+    },
+  },
 };
 
 export const NoRows = () => <GridDataSet nbRows={0} nbCols={20} />;
