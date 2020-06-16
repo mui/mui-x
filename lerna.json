@@ -6,7 +6,10 @@
     }
   },
   "packages": [
-    "packages/*"
+    "packages/*",
+    "!packages/grid",
+    "!packages/x-grid",
+    "packages/x-grid/packages/*"
   ],
   "version": "0.1.35"
 }
