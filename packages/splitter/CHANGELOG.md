@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.32](https://github.com/mui-org/material-ui-x/compare/v0.1.31...v0.1.32) (2020-06-05)
+
+**Note:** Version bump only for package @material-ui-x/splitter
+
+
+
+
+
 ## [0.1.28](https://github.com/mui-org/material-ui-x/compare/v0.1.27...v0.1.28) (2020-05-14)
 
 **Note:** Version bump only for package @material-ui-x/splitter

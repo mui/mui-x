@@ -76,7 +76,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onApply, type, siz
             </Select>
           </FormControl>
           <FormControl className={'dataset-control input-text'} size={'small'} component="fieldset">
-            <FormLabel component="legend">Pagination</FormLabel>
+            <FormLabel component="legend">Page Size</FormLabel>
             <Select value={selectedPaginationValue} onChange={onPaginationChange}>
               <MenuItem value={-1}>off</MenuItem>
               <MenuItem value={0}>auto</MenuItem>
