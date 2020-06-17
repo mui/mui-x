@@ -2,9 +2,10 @@ import React from 'react';
 import { Grid } from '@material-ui/x-grid';
 import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
-import { useData } from '../../components/grid-dataset';
 import { action } from '@storybook/addon-actions';
 import { GridOptionsProp } from '@material-ui/x-grid';
+import { useData } from '../../hooks/useData';
+import { SortDirection } from '@material-ui/x-grid';
 
 export default {
   title: 'X-Grid Demos/Options-Events',
@@ -14,7 +15,6 @@ export default {
     options: { selectedPanel: 'storybook/knobs/panel' },
     docs: {
       page: null,
-
     },
   },
 };
@@ -52,7 +52,7 @@ export const Options = () => {
         checkboxSelection: boolean('checkboxSelection', true),
         disableSelectionOnClick: boolean('disableSelectionOnClick', true),
         enableMultipleColumnsSorting: boolean('enableMultipleColumnsSorting', true),
-        sortingOrder: sortingOrder.map(value => (value === 'null' ? null : value)),
+        sortingOrder: sortingOrder.map(value => (value === 'null' ? null : (value as SortDirection))),
         headerHeight: number('headerHeight', 56),
         rowHeight: number('rowHeight', 52),
       }}

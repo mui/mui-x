@@ -1,4 +1,4 @@
-import React  from 'react';
+import React from 'react';
 import { ColDef, Grid, GridOverlay, Footer, GridApiRef, gridApiRef } from '@material-ui/x-grid';
 import { LinearProgress } from '@material-ui/core';
 import CodeIcon from '@material-ui/icons/Code';
@@ -8,18 +8,18 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { Pagination } from '@material-ui/lab';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
-import {useData} from "../../components/grid-dataset";
-import DoneIcon from "@material-ui/icons/Done";
-import ClearIcon from "@material-ui/icons/Clear";
-import CreateIcon from "@material-ui/icons/Create";
-import {getDate} from "../../data/random-generator";
+import DoneIcon from '@material-ui/icons/Done';
+import ClearIcon from '@material-ui/icons/Clear';
+import CreateIcon from '@material-ui/icons/Create';
+import { getDate } from '../../data/random-generator';
+import { useData } from '../../hooks/useData';
 
 export default {
   title: 'X-Grid Demos/Custom-Components',
   component: Grid,
-  options: { selectedPanel: 'storybook/knobs/panel' },
   decorators: [withKnobs, withA11y],
   parameters: {
+    options: { selectedPanel: 'storybook/knobs/panel' },
     docs: {
       page: null,
     },

@@ -5,11 +5,11 @@ import CodeIcon from '@material-ui/icons/Code';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
-import { useData } from '../components/grid-dataset';
 import { Pagination } from '@material-ui/lab';
 import { action } from '@storybook/addon-actions';
-import {array, boolean, number, withKnobs} from '@storybook/addon-knobs';
-import {withA11y} from "@storybook/addon-a11y";
+import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
+import { withA11y } from '@storybook/addon-a11y';
+import { useData } from '../hooks/useData';
 // import mdx from './grid-options.mdx';
 
 export default {
@@ -17,10 +17,10 @@ export default {
   component: Grid,
   decorators: [withKnobs, withA11y],
   parameters: {
-    // docs: {
-    //   page: mdx,
-    //
-    // },
+    options: { selectedPanel: 'storybook/storysource/panel' },
+    docs: {
+      page: null,
+    },
   },
 };
 
@@ -136,19 +136,19 @@ export const withPaginationNoRowCount = () => {
   const rowsPerPageOptions = array('Rows per page options', ['10', '20', '50', '100', '200'], ', ');
 
   return (
-      <Grid
-        rows={data.rows}
-        columns={data.columns}
-        options={{
-          pagination: true,
-          paginationPageSize: number('PageSize', 100),
-          paginationAutoPageSize: boolean('Auto page size', false),
-          paginationRowsPerPageOptions: rowsPerPageOptions.map(value => parseInt(value, 10)),
-          hideFooterRowCount: boolean('Hide row count', false),
-          hideFooterPagination: boolean('Hide footer pagination', false),
-          hideFooter:  boolean('Hide footer', false),
-        }}
-      />
+    <Grid
+      rows={data.rows}
+      columns={data.columns}
+      options={{
+        pagination: true,
+        paginationPageSize: number('PageSize', 100),
+        paginationAutoPageSize: boolean('Auto page size', false),
+        paginationRowsPerPageOptions: rowsPerPageOptions.map(value => parseInt(value, 10)),
+        hideFooterRowCount: boolean('Hide row count', false),
+        hideFooterPagination: boolean('Hide footer pagination', false),
+        hideFooter: boolean('Hide footer', false),
+      }}
+    />
   );
 };
 export const withPaginationButNotVisible = () => {

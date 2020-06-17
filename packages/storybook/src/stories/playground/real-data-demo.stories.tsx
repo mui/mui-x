@@ -1,19 +1,19 @@
 import React from 'react';
 import { withA11y } from '@storybook/addon-a11y';
-import { Grid, GridOptionsProp } from '@material-ui/x-grid';
+import { Grid, GridOptionsProp, SortDirection } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import '@material-ui/x-grid-data-generator/dist/demo-style.css';
 import { Button } from '@material-ui/core';
 import { randomInt } from '../../data/random-generator';
-import {array, boolean, number, withKnobs} from "@storybook/addon-knobs";
-import {action} from "@storybook/addon-actions";
+import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
+import { action } from '@storybook/addon-actions';
 
 export default {
   title: 'X-Grid Demos/Playground',
   component: Grid,
   decorators: [withKnobs, withA11y],
-  options: { selectedPanel: 'storybook/knobs/panel' },
   parameters: {
+    options: { selectedPanel: 'storybook/knobs/panel' },
     docs: {
       page: null,
     },
@@ -23,7 +23,7 @@ export default {
 const rowsPerPageOptions = array('paginationRowsPerPageOptions', ['25', '50', '100'], ', ');
 const sortingOrder = array('sortingOrder', ['asc', 'desc', 'null'], ', ');
 
-const getGridOptions: ()=> GridOptionsProp = ()=> ({
+const getGridOptions: () => GridOptionsProp = () => ({
   onRowClicked: params => action('onRowClicked')(params),
   onCellClicked: params => action('onCellClicked')(params),
   onColumnHeaderClicked: params => action('onColumnHeaderClicked')(params),
@@ -47,7 +47,7 @@ const getGridOptions: ()=> GridOptionsProp = ()=> ({
   checkboxSelection: boolean('checkboxSelection', true),
   disableSelectionOnClick: boolean('disableSelectionOnClick', true),
   enableMultipleColumnsSorting: boolean('enableMultipleColumnsSorting', true),
-  sortingOrder: sortingOrder.map(value => (value === 'null' ? null : value)),
+  sortingOrder: sortingOrder.map(value => (value === 'null' ? null : (value as SortDirection))),
   headerHeight: number('headerHeight', 56),
   rowHeight: number('rowHeight', 52),
 });

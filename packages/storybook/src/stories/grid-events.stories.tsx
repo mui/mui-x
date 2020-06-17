@@ -1,14 +1,20 @@
 import React from 'react';
 import { action } from '@storybook/addon-actions';
 import { Grid, GridOptionsProp } from '@material-ui/x-grid';
-import { useData } from '../components/grid-dataset';
-import {withKnobs} from "@storybook/addon-knobs";
-import {withA11y} from "@storybook/addon-a11y";
+import { withKnobs } from '@storybook/addon-knobs';
+import { withA11y } from '@storybook/addon-a11y';
+import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/Events',
   component: Grid,
-  decorators: [withKnobs, withA11y]
+  decorators: [withKnobs, withA11y],
+  parameters: {
+    options: { selectedPanel: 'storybook/storysource/panel' },
+    docs: {
+      page: null,
+    },
+  },
 };
 
 export const AllEvents = () => {

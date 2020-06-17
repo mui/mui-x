@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ColDef, Grid, GridApi } from '@material-ui/x-grid';
-import {withKnobs} from "@storybook/addon-knobs";
-import {withA11y} from "@storybook/addon-a11y";
+import { withKnobs } from '@storybook/addon-knobs';
+import { withA11y } from '@storybook/addon-a11y';
 
 export default {
   title: 'X-Grid Tests/Sorting',
   component: Grid,
   decorators: [withKnobs, withA11y],
   parameters: {
+    options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
       page: null,
     },
