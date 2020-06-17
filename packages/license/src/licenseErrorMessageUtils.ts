@@ -1,4 +1,4 @@
-function showError(message) {
+function showError(message: string[]) {
   console.error(
     [
       '************************************************************',
