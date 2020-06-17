@@ -1,11 +1,22 @@
 import React from 'react';
 import { action } from '@storybook/addon-actions';
-import { GridOptionsProp } from '@material-ui-x/grid';
+import { GridOptionsProp } from '@material-ui/x-grid';
 import { PricingGrid } from '../components/pricing-grid';
 import { FeedGrid } from '../components/feed-grid';
+import { withKnobs } from '@storybook/addon-knobs';
+import { withA11y } from '@storybook/addon-a11y';
+import { Grid } from '@material-ui/x-grid';
 
 export default {
-  title: 'Grid Streaming',
+  title: 'X-Grid Tests/Streaming',
+  component: Grid,
+  decorators: [withKnobs, withA11y],
+  parameters: {
+    options: { selectedPanel: 'storybook/storysource/panel' },
+    docs: {
+      page: null,
+    },
+  },
 };
 
 export const SlowUpdateGrid = () => {
@@ -17,8 +28,7 @@ export const SlowUpdateGrid = () => {
   return (
     <>
       <p>
-        One Subscription per row! So every rows should update independently at a rate between {rate.min} - {rate.max}{' '}
-        ms!
+        One Subscription per row! Update rate between {rate.min} - {rate.max} ms!
       </p>
       <PricingGrid options={options} {...rate} />
     </>
@@ -33,8 +43,7 @@ export const FastUpdateGrid = () => {
   return (
     <>
       <p>
-        One Subscription per row! So every rows should update independently at a rate between {rate.min} - {rate.max}{' '}
-        ms!
+        One Subscription per row! Update rate between {rate.min} - {rate.max} ms!
       </p>
       <PricingGrid options={options} {...rate} />
     </>
@@ -49,8 +58,7 @@ export const SingleSubscriptionFast = () => {
   return (
     <>
       <p>
-        One Subscription for the whole feed! The grid updates just the changed values. So every rows should update
-        independently at a rate between {rate.min} - {rate.max} ms!
+        One Subscription for the whole feed! Update rate between {rate.min} - {rate.max} ms!
       </p>
       <FeedGrid options={options} {...rate} />
     </>

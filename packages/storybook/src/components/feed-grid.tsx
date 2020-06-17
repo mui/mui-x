@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { PricingModel } from '../data/streaming/pricing-service';
-import { ColDef, Grid, GridApi, GridOptionsProp } from '@material-ui-x/grid';
 import { feedColumns, subscribeFeed } from '../data/streaming/single-subscription-service';
+import { ColDef, GridApi, GridOptionsProp, Grid } from '@material-ui/x-grid';
 
 export interface FeedGridProps {
   min?: number;

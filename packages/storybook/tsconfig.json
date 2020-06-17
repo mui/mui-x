@@ -22,7 +22,7 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "types": []
+    "types": ["node"]
   },
   "include": [
     "src/**/*"

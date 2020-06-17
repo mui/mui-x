@@ -6,7 +6,9 @@
     }
   },
   "packages": [
-    "packages/*"
+    "packages/*",
+    "!packages/grid",
+    "packages/grid/*"
   ],
   "version": "0.1.36"
 }

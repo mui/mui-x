@@ -1,8 +1,35 @@
 import React from 'react';
-import { GridDataSet } from '../components/grid-dataset';
+import { withKnobs } from '@storybook/addon-knobs';
+import { withA11y } from '@storybook/addon-a11y';
+import { Grid, GridOptionsProp } from '@material-ui/x-grid';
+import { useData } from '../hooks/useData';
 
 export default {
-  title: 'Grid Dataset',
+  title: 'X-Grid Tests/Dataset',
+  component: Grid,
+  decorators: [withKnobs, withA11y],
+  parameters: {
+    options: { selectedPanel: 'storybook/storysource/panel' },
+    docs: {
+      page: null,
+    },
+  },
+};
+
+interface GridDatasetProps {
+  nbRows: number;
+  nbCols: number;
+  options?: GridOptionsProp;
+  loading?: boolean;
+}
+
+const GridDataSet = ({ nbRows, nbCols, options, loading }: GridDatasetProps) => {
+  const data = useData(nbRows, nbCols);
+  return (
+    <div style={{ width: 800, height: 600 }}>
+      <Grid rows={data.rows} columns={data.columns} options={options} loading={loading} />
+    </div>
+  );
 };
 
 export const NoRows = () => <GridDataSet nbRows={0} nbCols={20} />;

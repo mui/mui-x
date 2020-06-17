@@ -1,7 +1,7 @@
 import { interval, Observable } from 'rxjs';
 import { delay, flatMap } from 'rxjs/operators';
 import { random, randomPrice } from '../random-generator';
-import { RowId } from '@material-ui-x/grid';
+import { RowId } from '@material-ui/x-grid';
 import { currencyPairs } from '../currency-pairs';
 
 export interface PricingModel {
