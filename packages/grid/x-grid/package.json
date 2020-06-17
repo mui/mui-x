@@ -1,0 +1,45 @@
+{
+	"name": "@material-ui/x-grid",
+	"version": "0.1.35",
+	"description": "Official Material-UI X Grid Component",
+	"author": "Damien Tassone <damien@material-ui.com>",
+	"main": "dist/index-cjs.js",
+	"module": "dist/index-esm.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"dist/*"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"dependencies": {
+		"@material-ui/x-license": "^0.1.35",
+		"@material-ui/x-grid-modules": "^0.1.35"
+	},
+	"devDependencies": {
+		"@rollup/plugin-replace": "^2.3.3",
+		"rollup": "^2.6.1",
+		"rollup-plugin-cleaner": "^1.0.0",
+		"rollup-plugin-sourcemaps": "^0.5.0",
+		"rollup-plugin-terser": "^5.3.0",
+		"rollup-plugin-typescript2": "^0.27.0"
+	},
+	"peerDependencies": {
+		"@material-ui/core": "^4.9.12",
+		"react": "^16.13.1",
+		"styled-components": "^5.0.1"
+	},
+	"scripts": {
+		"precommit": "npm run lint",
+		"build": "rollup -c ",
+		"prepublishOnly": "npm run build",
+		"start": "rollup -cw",
+		"lint": "../../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../.eslintrc.js && npm run lint:css",
+		"lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../../.stylelintrc.js",
+		"test": "../../../node_modules/.bin/jest --config jest.config.js"
+	},
+	"setupFiles": [
+		"<rootDir>/src/setupTests.js"
+	],
+	"gitHead": "da7e86d38fd895ba71f6fa00cafe40d2e6ff0969"
+}

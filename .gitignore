@@ -27,4 +27,3 @@ yarn-error.log*
 /packages/*/node_modules/
 /packages/*/packages/*/node_modules/
 /packages/*/packages/*/dist/
-
