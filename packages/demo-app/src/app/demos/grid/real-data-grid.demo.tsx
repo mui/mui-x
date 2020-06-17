@@ -3,8 +3,8 @@ import { AppBreadcrumbs } from '../../app-breadcrumbs';
 import {Columns, Grid as DataGrid, GridOptions, RowModel, version} from '@material-ui/x-grid';
 import { MainContainer } from './components/main-container';
 import { SettingsPanel } from './components/settings-panel';
-import { commodityColumns, employeeColumns } from '@material-ui-x/grid-data-generator';
-import '@material-ui-x/grid-data-generator/dist/demo-style.css';
+import { commodityColumns, employeeColumns } from '@material-ui/x-grid-data-generator';
+import '@material-ui/x-grid-data-generator/dist/demo-style.css';
 import { useTheme } from '../theme';
 import set = Reflect.set;
 console.info(
