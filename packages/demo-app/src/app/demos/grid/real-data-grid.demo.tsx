@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { AppBreadcrumbs } from '../../app-breadcrumbs';
-import {Columns, Grid as DataGrid, GridOptions, RowModel, version} from '@material-ui-x/grid';
+import {Columns, Grid as DataGrid, GridOptions, RowModel, version} from '@material-ui/x-grid';
 import { MainContainer } from './components/main-container';
 import { SettingsPanel } from './components/settings-panel';
 import { commodityColumns, employeeColumns } from '@material-ui-x/grid-data-generator';

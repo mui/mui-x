@@ -1,11 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { action } from '@storybook/addon-actions';
-import { Grid, GridApi, GridOptionsProp } from '@material-ui-x/grid';
+import { Grid, GridApi, GridOptionsProp } from '@material-ui/x-grid';
 import { getData, GridData } from '../data/data-service';
-import { useData } from '../components/grid-dataset';
+import { withKnobs } from '@storybook/addon-knobs';
+import { withA11y } from '@storybook/addon-a11y';
+import { useData } from '../hooks/useData';
 
 export default {
-  title: 'Grid Selection',
+  title: 'X-Grid Tests/Selection',
+  component: Grid,
+  decorators: [withKnobs, withA11y],
+  parameters: {
+    options: { selectedPanel: 'storybook/storysource/panel' },
+    docs: {
+      page: null,
+    },
+  },
 };
 
 export const PreSelectedRows = () => {
@@ -28,7 +38,7 @@ export const PreSelectedRows = () => {
     loadData();
   }, []);
 
-  return <Grid rows={data.rows} columns={data.columns} apiRef={apiRef} />;
+  return <Grid rows={data.rows} columns={data.columns} />;
 };
 
 export const WithSelectedEvents = () => {

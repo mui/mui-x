@@ -1,16 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { ColDef, Grid, GridOverlay, Footer, GridApiRef, gridApiRef } from '@material-ui-x/grid';
+import { ColDef, Grid, GridOverlay, Footer, GridApiRef, gridApiRef } from '@material-ui/x-grid';
 import { Button, LinearProgress } from '@material-ui/core';
 import CodeIcon from '@material-ui/icons/Code';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
-import { useData } from '../components/grid-dataset';
 import { Pagination } from '@material-ui/lab';
 import { action } from '@storybook/addon-actions';
+import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
+import { withA11y } from '@storybook/addon-a11y';
+import { useData } from '../hooks/useData';
+// import mdx from './grid-options.mdx';
 
 export default {
-  title: 'Grid Options',
+  title: 'X-Grid Tests/Options',
+  component: Grid,
+  decorators: [withKnobs, withA11y],
+  parameters: {
+    options: { selectedPanel: 'storybook/storysource/panel' },
+    docs: {
+      page: null,
+    },
+  },
 };
 
 const size = { width: 800, height: 600 };
@@ -39,7 +50,7 @@ export const WithCustomLogger = () => {
     error: (...args) => console.error('CUSTOM-LOGGING =>' + args[0], args.slice(1)),
   };
   return (
-    <div style={{ width: size.width, height: size.height }}>
+    <div style={{ width: 800, height: 600 }}>
       <Grid rows={rows} columns={columns} options={{ logger }} />
     </div>
   );
@@ -120,22 +131,24 @@ export const withPagination = () => {
 };
 
 export const withPaginationNoRowCount = () => {
-  const size = { width: 800, height: 600 };
+  // const size = { width: 800, height: 600 };
   const data = useData(2000, 200);
+  const rowsPerPageOptions = array('Rows per page options', ['10', '20', '50', '100', '200'], ', ');
 
   return (
-    <div style={{ width: size.width, height: size.height }}>
-      <Grid
-        rows={data.rows}
-        columns={data.columns}
-        options={{
-          pagination: true,
-          paginationPageSize: 100,
-          paginationRowsPerPageOptions: [10, 20, 50, 100, 200],
-          hideFooterRowCount: true,
-        }}
-      />
-    </div>
+    <Grid
+      rows={data.rows}
+      columns={data.columns}
+      options={{
+        pagination: true,
+        paginationPageSize: number('PageSize', 100),
+        paginationAutoPageSize: boolean('Auto page size', false),
+        paginationRowsPerPageOptions: rowsPerPageOptions.map(value => parseInt(value, 10)),
+        hideFooterRowCount: boolean('Hide row count', false),
+        hideFooterPagination: boolean('Hide footer pagination', false),
+        hideFooter: boolean('Hide footer', false),
+      }}
+    />
   );
 };
 export const withPaginationButNotVisible = () => {

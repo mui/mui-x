@@ -1,0 +1,21 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "./dist",
+    "module": "es6",
+    "noImplicitAny": true,
+    "strict": true,
+    "outDir": "./dist",
+    "target": "es6",
+    "sourceMap": true,
+    "composite": true
+  },
+  "include": ["src", "lib"],
+  "exclude": [
+    "__tests__",
+    "**/*.test.ts",
+    "**/*.tests.ts",
+    "node_modules"
+  ]
+}

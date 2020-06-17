@@ -25,4 +25,5 @@ yarn-debug.log*
 yarn-error.log*
 /packages/*/dist/
 /packages/*/node_modules/
-/packages/fin-ui-app/dist/
+/packages/*/*/node_modules/
+/packages/*/*/dist/
