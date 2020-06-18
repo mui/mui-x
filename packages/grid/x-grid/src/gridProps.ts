@@ -4,7 +4,6 @@ import { LicenseInfo } from '@material-ui/x-license';
 import { Columns, GridApiRef, GridChildrenProp, GridOptions, RowsProp } from '@material-ui/x-grid-modules';
 
 const RELEASE_INFO = '__RELEASE_INFO__';
-export const version = '__VERSION__';
 LicenseInfo.setReleaseInfo(RELEASE_INFO);
 
 export type GridOptionsProp = Partial<GridOptions>;

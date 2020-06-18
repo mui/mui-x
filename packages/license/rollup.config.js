@@ -3,11 +3,13 @@ import pkg from './package.json';
 import cleaner from 'rollup-plugin-cleaner';
 import sourceMaps from 'rollup-plugin-sourcemaps';
 import { terser } from 'rollup-plugin-terser';
+import commonjs from 'rollup-plugin-commonjs';
+import multiEntry from 'rollup-plugin-multi-entry';
 
 // dev build if watching, prod build if not
 const production = !process.env.ROLLUP_WATCH;
 export default {
-  input: 'src/index.ts',
+  input: ['src/index.ts', 'src/license-cli.ts'],
   output: [
     {
       file: 'dist/index-esm.js',
@@ -28,7 +30,9 @@ export default {
         targets: ['./dist/'],
       }),
     typescript(),
+    commonjs(),
     !production && sourceMaps(),
     production && terser(),
+    multiEntry(),
   ],
 };
