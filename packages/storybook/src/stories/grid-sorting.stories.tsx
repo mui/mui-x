@@ -31,7 +31,7 @@ export const BasicTest = () => {
   return (
     <>
       <p>Maintain CTRL or Command to sort by multiple fields</p>
-      <div style={{ display: 'flex', flexGrow: 1, padding: '10px' }}>
+      <div style={{ display: 'flex', flexGrow: '1', padding: '10px' }}>
         <Grid rows={rows} columns={columns} options={{ showColumnSeparator: false }} />
       </div>
     </>
@@ -113,7 +113,7 @@ export const SortedWithApi = () => {
   return (
     <>
       <div style={{ display: 'flex', flexGrow: 1, padding: '10px' }}>
-        <Grid rows={rows} columns={columns} apiRef={apiRef} />
+        <Grid rows={rows} columns={columns} apiRef={apiRef} what={'anything'} />
       </div>
     </>
   );

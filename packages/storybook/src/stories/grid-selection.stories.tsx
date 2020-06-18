@@ -38,7 +38,7 @@ export const PreSelectedRows = () => {
     loadData();
   }, []);
 
-  return <Grid rows={data.rows} columns={data.columns} />;
+  return <Grid rows={data.rows} columns={data.columns} apiRef={apiRef} />;
 };
 
 export const WithSelectedEvents = () => {

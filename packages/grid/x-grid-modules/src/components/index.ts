@@ -23,3 +23,4 @@ export * from './row-count';
 export * from './selected-row-count';
 export * from './sticky-container';
 export * from './viewport';
+export * from './watermark';

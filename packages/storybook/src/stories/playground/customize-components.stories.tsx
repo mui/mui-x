@@ -162,12 +162,7 @@ export const HeaderAndFooter = () => {
           pagination: true,
           paginationPageSize: 33,
           hideFooterPagination: true,
-          hideFooter: true,
-        }}
-      >
-        {{
-          // eslint-disable-next-line react/display-name
-          header: paginationProps => (
+          headerComponent: ({paginationProps}) => (
             <div className={'custom-header'}>
               <Pagination
                 className={'my-custom-pagination'}
@@ -177,12 +172,11 @@ export const HeaderAndFooter = () => {
               />
             </div>
           ),
-          // eslint-disable-next-line react/display-name
-          footer: paginationProps => (
+          footerComponent: ({paginationProps}) => (
             <div className="footer my-custom-footer"> I counted {paginationProps.rowCount} row(s) </div>
-          ),
+          )
         }}
-      </Grid>
+      />
     </div>
   );
 };
