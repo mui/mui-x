@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { AppBreadcrumbs } from '../../app-breadcrumbs';
-import {Columns, Grid as DataGrid, GridOptions, RowModel, version} from '@material-ui/x-grid';
+import { Columns, Grid as DataGrid, GridOptions, RowModel, LicenseInfo } from '@material-ui/x-grid';
+import pkg from '@material-ui/x-grid/package.json';
 import { MainContainer } from './components/main-container';
 import { SettingsPanel } from './components/settings-panel';
 import { commodityColumns, employeeColumns } from '@material-ui/x-grid-data-generator';
 import '@material-ui/x-grid-data-generator/dist/demo-style.css';
 import { useTheme } from '../theme';
-import set = Reflect.set;
+
 console.info(
-  '*******************************\n' + `    GRID VERSION: ${version}   \n` + '*******************************',
+  '*******************************\n' + `    GRID VERSION: ${pkg.version}   \n` + '*******************************',
 );
 
-export const DEFAULT_DATASET = 'Employee';
+LicenseInfo.setLicenseKey(
+  '80dab07483993e147508c3a1d6b127e5T1JERVI6ZGVtb2FwcCxFWFBJUlk9MTYyNDA5OTE1NjQzNSxLRVlWRVJTSU9OPTE=',
+);
 
 const loadFile = async (file: string) => {
   const response = await fetch(file);
@@ -75,7 +78,7 @@ export const RealDataGridDemo: React.FC<{}> = props => {
     );
   }, [setRows, type, size]);
 
-  const onApplyClick = (settings: { size: number; type: string; selectedTheme: string, pagesize: number }) => {
+  const onApplyClick = (settings: { size: number; type: string; selectedTheme: string; pagesize: number }) => {
     if (size !== settings.size) {
       setSize(settings.size);
     }
@@ -89,7 +92,7 @@ export const RealDataGridDemo: React.FC<{}> = props => {
     const newPagination: Partial<GridOptions> = {
       pagination: settings.pagesize === -1 ? false : true,
       paginationAutoPageSize: settings.pagesize === 0 ? true : false,
-      paginationPageSize: settings.pagesize > 0 ? settings.pagesize : undefined
+      paginationPageSize: settings.pagesize > 0 ? settings.pagesize : undefined,
     };
 
     setPagination(p => {

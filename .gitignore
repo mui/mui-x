@@ -27,3 +27,4 @@ yarn-error.log*
 /packages/*/node_modules/
 /packages/*/*/node_modules/
 /packages/*/*/dist/
+/packages/grid/x-grid/dist/
