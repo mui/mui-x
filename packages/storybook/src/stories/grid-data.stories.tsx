@@ -26,7 +26,7 @@ interface GridDatasetProps {
 const GridDataSet = ({ nbRows, nbCols, options, loading }: GridDatasetProps) => {
   const data = useData(nbRows, nbCols);
   return (
-    <div style={{ width: 800, height: 600 }}>
+    <div className="grid-container">
       <Grid rows={data.rows} columns={data.columns} options={options} loading={loading} />
     </div>
   );

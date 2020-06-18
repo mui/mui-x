@@ -84,7 +84,6 @@ const IsDone: React.FC<{ value: boolean }> = ({ value }) =>
   value ? <DoneIcon fontSize={'small'} /> : <ClearIcon fontSize={'small'} />;
 
 export const withCellClass = () => {
-  const size = { width: 800, height: 600 };
   const columns: ColDef[] = [
     { field: 'id' },
     { field: 'firstName' },
@@ -174,7 +173,7 @@ export const withCellClass = () => {
   ];
 
   return (
-    <div style={{ width: size.width, height: size.height, padding: '0 10px' }}>
+    <div className={'grid-container'}>
       <Grid rows={rows} columns={columns}></Grid>
     </div>
   );

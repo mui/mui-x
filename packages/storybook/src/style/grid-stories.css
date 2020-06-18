@@ -48,3 +48,9 @@
      justify-content: flex-end;
      padding: 10px 0;
  }
+
+ .grid-container {
+     padding: 10px;
+     width: 800px;
+     height: 600px;
+ }
