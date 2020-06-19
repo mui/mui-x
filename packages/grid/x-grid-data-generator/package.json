@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/x-grid-data-generator",
-  "version": "0.1.35",
+  "version": "0.1.37",
   "description": "Data generator services for the grid",
   "author": "damien <damien@material-ui.com>",
   "main": "dist/index-cjs.js",
@@ -32,10 +32,10 @@
     "rollup-plugin-typescript2": "^0.27.0"
   },
   "peerDependencies": {
-    "@material-ui/x-grid": "^0.1.35",
     "@material-ui/core": "^4.9.12",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.54",
+    "@material-ui/x-grid": "^0.1.35",
     "react": "^16.13.1",
     "styled-components": "^5.0.1"
   },
