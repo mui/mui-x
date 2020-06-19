@@ -42,11 +42,11 @@ export const RootStyle = styled.div<GridRootProps>`
     }
     .footer {
       display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
       flex-direction: row;
       padding: 0 16px;
     }
-    .row-count {
+    .row-count, .selected-row-count {
       display: flex;
       align-items: center;
       font-size: 0.875rem;
@@ -55,6 +55,11 @@ export const RootStyle = styled.div<GridRootProps>`
       line-height: 1.43;
       letter-spacing: 0.01071em;
       min-height: 48px;
+    }
+    @media (max-width: 650px) {
+      .row-count, .selected-row-count {
+        display: none;
+      }
     }
     .material-cell:focus,
     .material-col-cell:focus {

@@ -4,8 +4,7 @@
     "declaration": true,
     "declarationDir": "./dist",
     "module": "es6",
-    "noImplicitAny": true,
-    "strict": true,
+    "noImplicitAny": false,
     "outDir": "./dist",
     "target": "es6",
     "sourceMap": true

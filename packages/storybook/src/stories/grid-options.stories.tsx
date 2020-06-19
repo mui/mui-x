@@ -24,7 +24,6 @@ export default {
   },
 };
 
-const size = { width: 800, height: 600 };
 const columns: ColDef[] = [
   { field: 'id' },
   { field: 'name', sortDirection: 'asc' },
@@ -50,14 +49,14 @@ export const WithCustomLogger = () => {
     error: (...args) => console.error('CUSTOM-LOGGING =>' + args[0], args.slice(1)),
   };
   return (
-    <div style={{ width: 800, height: 600 }}>
+    <div className="grid-container">
       <Grid rows={rows} columns={columns} options={{ logger }} />
     </div>
   );
 };
 export const WithNoLogger = () => {
   return (
-    <div style={{ width: size.width, height: size.height }}>
+    <div className="grid-container">
       <Grid rows={rows} columns={columns} options={{ logLevel: false }} />
     </div>
   );
@@ -72,7 +71,7 @@ export const WithCustomLoadingComponent = () => {
     </GridOverlay>
   );
   return (
-    <div style={{ width: size.width, height: size.height }}>
+    <div className="grid-container">
       <Grid rows={rows} columns={columns} options={{ loadingOverlayComponent: loadingComponent }} loading={true} />
     </div>
   );
@@ -87,16 +86,14 @@ export const WithCustomNoRowsComponent = () => {
     </GridOverlay>
   );
   return (
-    <div style={{ width: size.width, height: size.height }}>
+    <div className="grid-container">
       <Grid rows={[]} columns={columns} options={{ noRowsOverlayComponent: loadingComponent }} />
     </div>
   );
 };
 export const withCustomIcons = () => {
-  const size = { width: 800, height: 600 };
-
   return (
-    <div style={{ width: size.width, height: size.height }}>
+    <div className="grid-container">
       <Grid
         rows={rows}
         columns={columns}
@@ -113,11 +110,10 @@ export const withCustomIcons = () => {
   );
 };
 export const withPagination = () => {
-  const size = { width: 800, height: 600 };
   const data = useData(2000, 200);
 
   return (
-    <div style={{ width: size.width, height: size.height }}>
+    <div className="grid-container">
       <Grid
         rows={data.rows}
         columns={data.columns}
@@ -131,7 +127,6 @@ export const withPagination = () => {
 };
 
 export const withPaginationNoRowCount = () => {
-  // const size = { width: 800, height: 600 };
   const data = useData(2000, 200);
   const rowsPerPageOptions = array('Rows per page options', ['10', '20', '50', '100', '200'], ', ');
 
@@ -152,11 +147,10 @@ export const withPaginationNoRowCount = () => {
   );
 };
 export const withPaginationButNotVisible = () => {
-  const size = { width: 800, height: 600 };
   const data = useData(2000, 200);
 
   return (
-    <div style={{ width: size.width, height: size.height }}>
+    <div className="grid-container">
       <Grid
         rows={data.rows}
         columns={data.columns}
@@ -171,7 +165,6 @@ export const withPaginationButNotVisible = () => {
 };
 
 export const withCustomPagination = () => {
-  const size = { width: 800, height: 600 };
   const apiRef: GridApiRef = gridApiRef();
   const data = useData(2000, 200);
   const [autosize, setAutoSize] = useState(false);
@@ -201,7 +194,7 @@ export const withCustomPagination = () => {
     apiRef.current!.setPageSize(105);
   };
   return (
-    <div style={{ width: size.width, height: size.height }}>
+    <div className="grid-container">
       <Button component={'button'} color={'primary'} variant={'outlined'} onClick={backToFirstPage}>
         Back to first page
       </Button>
@@ -236,11 +229,10 @@ export const withCustomPagination = () => {
   );
 };
 export const withCustomFooter = () => {
-  const size = { width: 800, height: 600 };
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const data = useData(2000, 200);
   return (
-    <div style={{ width: size.width, height: size.height }}>
+    <div className="grid-container">
       <Grid
         rows={data.rows}
         columns={data.columns}
@@ -248,34 +240,31 @@ export const withCustomFooter = () => {
           pagination: true,
           paginationPageSize: 33,
           hideFooterPagination: true,
-          hideFooter: true,
-        }}
-      >
-        {(paginationProps, rows, columns, options, api, gridRef) => (
-          <Footer className={'my-custom-footer'}>
+          footerComponent: ({paginationProps, rows, columns, options, api, gridRef}) => (
+            <Footer className={'my-custom-footer'}>
             <span style={{ display: 'flex', alignItems: 'center' }}>
-              This is my custom footer and pagination here!{' '}
+                This is my custom footer and pagination here!
             </span>
-            <Pagination
-              className={'my-custom-pagination'}
-              page={paginationProps.page}
-              count={paginationProps.pageCount}
-              onChange={(e, value) => paginationProps.setPage(value)}
-            />
-          </Footer>
-        )}
-      </Grid>
+              <Pagination
+                className={'my-custom-pagination'}
+                page={paginationProps.page}
+                count={paginationProps.pageCount}
+                onChange={(e, value) => paginationProps.setPage(value)}
+              />
+            </Footer>
+          )
+        }}
+      />
     </div>
   );
 };
 
 export const withCustomHeaderAndFooter = () => {
-  const size = { width: 800, height: 600 };
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const data = useData(2000, 200);
 
   return (
-    <div style={{ width: size.width, height: size.height }}>
+    <div className="grid-container">
       <Grid
         rows={data.rows}
         columns={data.columns}
@@ -283,12 +272,7 @@ export const withCustomHeaderAndFooter = () => {
           pagination: true,
           paginationPageSize: 33,
           hideFooterPagination: true,
-          hideFooter: true,
-        }}
-      >
-        {{
-          // eslint-disable-next-line react/display-name
-          header: paginationProps => (
+          headerComponent: ({paginationProps}) => (
             <div className={'custom-header'}>
               <Pagination
                 className={'my-custom-pagination'}
@@ -298,12 +282,10 @@ export const withCustomHeaderAndFooter = () => {
               />
             </div>
           ),
-          // eslint-disable-next-line react/display-name
-          footer: paginationProps => (
+          footerComponent: ({paginationProps}) => (
             <div className="footer my-custom-footer"> I counted {paginationProps.rowCount} row(s) </div>
-          ),
-        }}
-      </Grid>
+          )
+        }} />
     </div>
   );
 };
@@ -313,7 +295,7 @@ export const withAutoPagination = () => {
   const data = useData(2000, 200);
 
   return (
-    <div style={{ width: size.width, height: size.height }}>
+    <div className="grid-container">
       <Button
         component={'button'}
         color={'primary'}

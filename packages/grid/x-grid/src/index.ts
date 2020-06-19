@@ -1,3 +1,3 @@
 export * from '@material-ui/x-grid-modules';
-export * from './gridProps';
-export * from './grid';
+export * from '@material-ui/x-license';
+export { XGrid as Grid } from './grid';

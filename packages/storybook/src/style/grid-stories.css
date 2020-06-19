@@ -48,3 +48,8 @@
      justify-content: flex-end;
      padding: 10px 0;
  }
+
+ .grid-container {
+    padding: 10px;
+    flex-grow: 1;
+ }

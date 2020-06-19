@@ -1,10 +1,11 @@
-import { CellValue, RowData, RowModel } from './rows';
-import { ColDef } from './colDef';
+import { CellValue, RowData, RowModel, Rows } from './rows';
+import { ColDef, Columns } from './colDef';
 import React, { ReactNode } from 'react';
 import { SortDirection, SortModel } from './sortModel';
 import { Logger } from '../hooks/utils';
 import { ArrowDownward, ArrowUpward, SeparatorIcon } from '../components/icons';
 import { PageChangedParams, PaginationProps } from '../hooks/features/usePagination';
+import { GridApiRef, GridRootRef } from './gridApiRef';
 
 export interface ColumnHeaderClickedParam {
   field: string;
@@ -46,6 +47,15 @@ export interface IconsOptions {
   columnResize?: React.FC<{ className: string }>;
 }
 
+export interface ComponentParams {
+  paginationProps: PaginationProps;
+  rows: Rows;
+  columns: Columns;
+  options: GridOptions;
+  api: GridApiRef;
+  rootElement: GridRootRef;
+}
+
 //Todo add multiSortKey
 export interface GridOptions {
   rowHeight: number;
@@ -58,7 +68,6 @@ export interface GridOptions {
   extendRowFullWidth: boolean;
   sortingOrder: SortDirection[];
   pagination?: boolean;
-  paginationComponent?: (props: PaginationProps) => React.ReactNode;
   paginationPageSize?: number;
   paginationAutoPageSize?: boolean;
   paginationRowsPerPageOptions?: number[];
@@ -81,8 +90,11 @@ export interface GridOptions {
   showColumnSeparator?: boolean;
   logger?: Logger;
   logLevel?: string | boolean;
+  paginationComponent?: (props: PaginationProps) => React.ReactNode;
   loadingOverlayComponent?: React.ReactNode;
   noRowsOverlayComponent?: React.ReactNode;
+  footerComponent?: (params: ComponentParams) => React.ReactNode;
+  headerComponent?: (params: ComponentParams) => React.ReactNode;
   icons: IconsOptions;
 }
 

@@ -1,4 +1,4 @@
-import { LicenseInfo } from '@material-ui/x-license';
+import { LicenseInfo } from '@material-ui/x-grid';
 import { addParameters } from '@storybook/react';
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 import { DocsPage, DocsContainer } from '@storybook/addon-docs/blocks';
