@@ -41,9 +41,7 @@ export const DataGrid: React.FC<DataGridProps> = React.memo(props => {
       loading={props.loading}
       options={internalOptions}
       licenseStatus={'Valid'}
-    >
-      {props.children}
-    </Grid>
+    />
   );
 });
 DataGrid.displayName = 'DataGrid';

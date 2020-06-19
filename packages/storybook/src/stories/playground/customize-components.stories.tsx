@@ -129,22 +129,21 @@ export const CustomFooter = () => {
           paginationPageSize: 33,
           hideFooterPagination: true,
           hideFooter: true,
-        }}
-      >
-        {(paginationProps, rows, columns, options, api, gridRef) => (
-          <Footer className={'my-custom-footer'}>
+          footerComponent: ({ paginationProps }) => (
+            <Footer className={'my-custom-footer'}>
             <span style={{ display: 'flex', alignItems: 'center' }}>
               This is my custom footer and pagination here!{' '}
             </span>
-            <Pagination
-              className={'my-custom-pagination'}
-              page={paginationProps.page}
-              count={paginationProps.pageCount}
-              onChange={(e, value) => paginationProps.setPage(value)}
-            />
-          </Footer>
-        )}
-      </Grid>
+              <Pagination
+                className={'my-custom-pagination'}
+                page={paginationProps.page}
+                count={paginationProps.pageCount}
+                onChange={(e, value) => paginationProps.setPage(value)}
+              />
+            </Footer>
+          )
+        }}
+     />
     </div>
   );
 };

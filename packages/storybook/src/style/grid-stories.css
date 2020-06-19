@@ -50,7 +50,6 @@
  }
 
  .grid-container {
-     padding: 10px;
-     width: 800px;
-     height: 600px;
+    padding: 10px;
+    flex-grow: 1;
  }

@@ -122,7 +122,7 @@ export const withButtonToChangeColProp: React.FC = () => {
       <div>
         <button onClick={changeCols}>Change cols </button>
       </div>
-      <div style={{ display: 'flex', flexGrow: 1, padding: '10px' }}>
+      <div className="grid-container">
         <Grid rows={rows} columns={cols} />
       </div>
     </>
