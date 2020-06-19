@@ -3,7 +3,7 @@
 import { Columns, GridApiRef, GridOptions, RowsProp } from './index';
 export type GridOptionsProp = Partial<GridOptions>;
 
-export interface GridProps {
+export interface GridComponentProps {
   rows: RowsProp;
   columns: Columns;
   options?: GridOptionsProp;

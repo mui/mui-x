@@ -1,11 +1,11 @@
 {
 	"name": "@material-ui/x-grid-modules",
-	"version": "0.1.35",
+	"version": "0.1.37",
 	"description": "Official Material-UI X Grid modules",
 	"author": "Damien Tassone <damien@material-ui.com>",
 	"main": "dist/index-cjs.js",
 	"module": "dist/index-esm.js",
-	"types": "dist/src/index.d.ts",
+	"types": "dist/x-grid-modules.d.ts",
 	"files": [
 		"dist/*"
 	],
@@ -15,6 +15,7 @@
 	"devDependencies": {
 		"rollup": "^2.6.1",
 		"rollup-plugin-cleaner": "^1.0.0",
+		"rollup-plugin-dts": "^1.4.7",
 		"rollup-plugin-sourcemaps": "^0.5.0",
 		"rollup-plugin-terser": "^5.3.0",
 		"rollup-plugin-typescript2": "^0.27.0"

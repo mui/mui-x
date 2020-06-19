@@ -1,6 +1,6 @@
 {
 	"name": "demo-app",
-	"version": "0.1.35",
+	"version": "0.1.37",
 	"private": true,
 	"dependencies": {
 		"@material-ui/x-grid": "^0.1.35",
