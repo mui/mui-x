@@ -1,6 +1,6 @@
 {
   "name": "@material-ui-x/storybook",
-  "version": "0.1.35",
+  "version": "0.1.37",
   "description": "Storybook components",
   "author": "Damien Tassone <damien@material-ui.com>",
   "private": true,

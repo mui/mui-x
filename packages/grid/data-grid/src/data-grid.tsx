@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Grid } from '@material-ui/x-grid-modules';
-
-import { DEFAULT_GRID_OPTIONS, GridOptions, GridProps } from '@material-ui/x-grid-modules';
-import { mergeOptions } from '@material-ui/x-grid-modules';
+import {
+  GridComponent,
+  GridComponentProps,
+  DEFAULT_GRID_OPTIONS,
+  GridOptions,
+  mergeOptions,
+} from '@material-ui/x-grid-modules';
 
 export type DataGridOptionsProp = Partial<
   Exclude<GridOptions, 'pagination' | 'enableMultipleColumnsSorting' | 'enableMultipleSelection'>
@@ -13,7 +16,7 @@ const OPTIONS_OVERRIDES: Partial<GridOptions> = {
   enableMultipleSelection: false,
 };
 
-type ModuleGridType = Omit<GridProps, 'licenseStatus' | 'apiRef' | 'options'>;
+type ModuleGridType = Omit<GridComponentProps, 'licenseStatus' | 'apiRef' | 'options'>;
 export interface DataGridProps extends ModuleGridType {
   options: DataGridOptionsProp;
 }
@@ -35,7 +38,7 @@ export const DataGrid: React.FC<DataGridProps> = React.memo(props => {
   }, [props.options]);
 
   return (
-    <Grid
+    <GridComponent
       rows={props.rows}
       columns={props.columns}
       loading={props.loading}
