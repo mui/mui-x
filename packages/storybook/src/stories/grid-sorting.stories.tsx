@@ -31,7 +31,7 @@ export const BasicTest = () => {
   return (
     <>
       <p>Maintain CTRL or Command to sort by multiple fields</p>
-      <div style={{ display: 'flex', flexGrow: 1, padding: '10px' }}>
+      <div style={{ display: 'flex', flexGrow: '1', padding: '10px' }}>
         <Grid rows={rows} columns={columns} options={{ showColumnSeparator: false }} />
       </div>
     </>
@@ -57,7 +57,7 @@ export const SortedWithColDef = () => {
   return (
     <>
       <p>Maintain CTRL or Command to sort by multiple fields</p>
-      <div style={{ display: 'flex', flexGrow: 1, padding: '10px' }}>
+      <div className="grid-container">
         <Grid rows={rows} columns={columns} />
       </div>
     </>
@@ -84,7 +84,7 @@ export const WithNotNullSortingOrder = () => {
   return (
     <>
       <p>Maintain CTRL or Command to sort by multiple fields</p>
-      <div style={{ display: 'flex', flexGrow: 1, padding: '10px' }}>
+      <div className="grid-container">
         <Grid rows={rows} columns={columns} options={{ sortingOrder: ['desc', 'asc'] }} />
       </div>
     </>
@@ -112,8 +112,8 @@ export const SortedWithApi = () => {
 
   return (
     <>
-      <div style={{ display: 'flex', flexGrow: 1, padding: '10px' }}>
-        <Grid rows={rows} columns={columns} apiRef={apiRef} />
+      <div className="grid-container">
+        <Grid rows={rows} columns={columns} apiRef={apiRef} what={'anything'} />
       </div>
     </>
   );
@@ -148,7 +148,7 @@ export const withValueGetterAndFormatter = () => {
   return (
     <>
       <p>Maintain CTRL or Command to sort by multiple fields</p>
-      <div style={{ display: 'flex', flexGrow: 1, padding: '10px' }}>
+      <div className="grid-container">
         <Grid rows={rows} columns={columns} />
       </div>
     </>

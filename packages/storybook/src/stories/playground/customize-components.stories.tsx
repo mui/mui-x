@@ -129,22 +129,21 @@ export const CustomFooter = () => {
           paginationPageSize: 33,
           hideFooterPagination: true,
           hideFooter: true,
-        }}
-      >
-        {(paginationProps, rows, columns, options, api, gridRef) => (
-          <Footer className={'my-custom-footer'}>
+          footerComponent: ({ paginationProps }) => (
+            <Footer className={'my-custom-footer'}>
             <span style={{ display: 'flex', alignItems: 'center' }}>
               This is my custom footer and pagination here!{' '}
             </span>
-            <Pagination
-              className={'my-custom-pagination'}
-              page={paginationProps.page}
-              count={paginationProps.pageCount}
-              onChange={(e, value) => paginationProps.setPage(value)}
-            />
-          </Footer>
-        )}
-      </Grid>
+              <Pagination
+                className={'my-custom-pagination'}
+                page={paginationProps.page}
+                count={paginationProps.pageCount}
+                onChange={(e, value) => paginationProps.setPage(value)}
+              />
+            </Footer>
+          )
+        }}
+     />
     </div>
   );
 };
@@ -162,12 +161,7 @@ export const HeaderAndFooter = () => {
           pagination: true,
           paginationPageSize: 33,
           hideFooterPagination: true,
-          hideFooter: true,
-        }}
-      >
-        {{
-          // eslint-disable-next-line react/display-name
-          header: paginationProps => (
+          headerComponent: ({paginationProps}) => (
             <div className={'custom-header'}>
               <Pagination
                 className={'my-custom-pagination'}
@@ -177,12 +171,11 @@ export const HeaderAndFooter = () => {
               />
             </div>
           ),
-          // eslint-disable-next-line react/display-name
-          footer: paginationProps => (
+          footerComponent: ({paginationProps}) => (
             <div className="footer my-custom-footer"> I counted {paginationProps.rowCount} row(s) </div>
-          ),
+          )
         }}
-      </Grid>
+      />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-export * from './useChildren';
+export * from './useComponents';
 export * from './useColumnResize';
 export * from './usePagination';
 export * from './useSelection';
