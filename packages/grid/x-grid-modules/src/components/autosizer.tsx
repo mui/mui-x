@@ -1,7 +1,6 @@
 import React from 'react';
-import AutoSizer from '../../lib/autosizer/index';
-import { AutoSizerProps, Size } from '../../lib/autosizer/types';
+import AutoSizer from '../../lib/autosizer';
 
-export const AutoSizerWrapper: React.FC<AutoSizerProps> = p => (
-  <AutoSizer {...p}>{(size: Size) => p.children(size)}</AutoSizer>
+export const AutoSizerWrapper: React.FC<any> = p => (
+  <AutoSizer {...p}>{(size: any) => p.children(size)}</AutoSizer>
 );
