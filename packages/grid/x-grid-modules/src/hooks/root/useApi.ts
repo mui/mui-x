@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useLogger } from '../utils/useLogger';
-import { EventEmitter } from 'events';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const EventEmitter = require('events').EventEmitter;
 import {
   CELL_CLICKED,
   CLICK_EVENT,
