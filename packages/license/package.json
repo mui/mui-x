@@ -3,8 +3,8 @@
 	"version": "0.1.38",
 	"description": "Material-UI License Verification",
 	"author": "Damien Tassone <damien@material-ui.com>",
-	"main": "dist/index-cjs.js",
-	"module": "dist/index-esm.js",
+	"main": "dist/cjs/index.js",
+	"module": "dist/esm/index.js",
 	"types": "dist/x-license.d.ts",
 	"files": [
 		"dist/*"
@@ -21,11 +21,11 @@
 	},
 	"devDependencies": {
 		"@rollup/plugin-node-resolve": "^8.0.1",
+		"@types/node": "^14.0.13",
 		"rollup": "^2.6.1",
 		"rollup-plugin-cleaner": "^1.0.0",
 		"rollup-plugin-commonjs": "^10.1.0",
 		"rollup-plugin-dts": "^1.4.7",
-		"rollup-plugin-multi-entry": "^2.1.0",
 		"rollup-plugin-sourcemaps": "^0.5.0",
 		"rollup-plugin-terser": "^5.3.0",
 		"rollup-plugin-typescript2": "^0.27.0"

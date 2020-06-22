@@ -13,7 +13,6 @@ module.exports = {
     modules: [path.resolve(__dirname, 'node_modules'), path.resolve(__dirname, '../node_modules'), 'node_modules'],
     extensions: ['.tsx', '.ts', '.js'],
   },
-  node: { fs: 'empty', commander: 'empty', child_process: 'empty' },
   module: {
     rules: [
       {

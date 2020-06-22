@@ -4,4 +4,4 @@ require = require('esm')(module /*, options*/);
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 
-require('../dist/index-cjs').licenseGenCli(process.argv);
+require('../dist/cjs/license-cli').licenseGenCli(process.argv);

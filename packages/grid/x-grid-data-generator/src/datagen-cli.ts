@@ -1,11 +1,8 @@
 import { commodityColumns } from './commodities.columns';
 import { employeeColumns } from './employees.columns';
 import { getRealData } from './services';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const program = require('commander');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const fs = require('fs');
+import * as fs from 'fs';
+import * as program from 'commander';
 
 const loadData = async (size: number, dataset: string): Promise<any> => {
   const result = await getRealData(

@@ -21,8 +21,9 @@ export const useDemoData = (dataSetProp: DataSet, nbRows: number): DemoDataRetur
 
   const loadData = async () => {
     const data = await getRealData(size, dataset === 'Commodity' ? commodityColumns : employeeColumns);
-    setRows(data.rows);
+    setRows([]);
     setCols(data.columns);
+    setRows(data.rows);
   };
 
   useEffect(() => {
