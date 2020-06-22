@@ -42,7 +42,7 @@ export const RootStyle = styled.div<GridRootProps>`
     }
     .footer {
       display: flex;
-      justify-content: space-around;
+      justify-content: space-between;
       flex-direction: row;
       padding: 0 16px;
     }

@@ -8,6 +8,6 @@ const EmailLink: React.FC<{ label?: string; email: string }> = React.memo(({ lab
 EmailLink.displayName = 'EmailRenderer';
 
 export function EmailRenderer(params: CellParams) {
-  const email = params.value!.toString();
-  return <EmailLink email={email} label={email} />;
+  const email = params.value?.toString();
+  return <EmailLink email={email || ''} label={email} />;
 }

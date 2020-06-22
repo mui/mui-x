@@ -1,7 +1,6 @@
 import { generateLicence } from './generateLicense';
+import * as program from 'commander';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const program = require('commander');
 const oneDayInMs = 1000 * 60 * 60 * 24;
 
 export function licenseGenCli(args: any) {
