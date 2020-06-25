@@ -59,5 +59,11 @@
   ],
   "dependencies": {
     "styled-components": "^5.1.0"
-  }
+  },
+	"private": true,
+	"workspaces": [
+		"packages/*",
+		"!packages/grid",
+		"packages/grid/*"
+	]
 }
