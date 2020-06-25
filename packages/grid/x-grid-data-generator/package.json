@@ -38,7 +38,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.54",
     "react": "^16.13.1",
-    "styled-components": "^5.0.1"
+    "styled-components": "^5.1.0"
   },
   "scripts": {
     "precommit": "npm run lint",

@@ -34,7 +34,7 @@ export interface ColDef {
   hide?: boolean;
   sortable?: boolean;
   resizable?: boolean;
-  comparator?: ComparatorFn;
+  sortComparator?: ComparatorFn;
   sortDirection?: SortDirection;
   sortIndex?: number;
   type?: ColType;

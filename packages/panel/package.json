@@ -17,7 +17,7 @@
   },
   "peerDependencies": {
     "react": "^16.13.1",
-    "styled-components": "^5.0.1"
+    "styled-components": "^5.1.0"
   },
   "devDependencies": {
     "rollup": "^2.6.1",

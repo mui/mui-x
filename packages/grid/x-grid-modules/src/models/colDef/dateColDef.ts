@@ -22,13 +22,13 @@ export const DATE_COL_DEF: ColTypeDef = {
   ...STRING_COL_DEF,
   type: 'date',
   width: 100,
-  comparator: dateComparer,
+  sortComparator: dateComparer,
   valueFormatter: dateFormatter,
 };
 export const DATETIME_COL_DEF: ColTypeDef = {
   ...STRING_COL_DEF,
   type: 'dateTime',
   width: 100,
-  comparator: dateComparer,
+  sortComparator: dateComparer,
   valueFormatter: dateTimeFormatter,
 };

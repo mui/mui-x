@@ -1,12 +1,12 @@
 import { EventEmitter } from 'events';
 import { CellIndexCoordinates, RowData, RowId, RowModel, Rows } from './rows';
-import { ColDef, Columns, ColumnsMeta } from './colDef';
 import { SortModel } from './sortModel';
 import { ColumnSortedParams, RowSelectedParam, SelectionChangedParam } from './gridOptions';
 import { ScrollParams } from '../hooks/utils';
 import { ContainerProps } from './containerProps';
 import { RenderContextProps } from './renderContextProps';
 import { PageChangedParams } from '../hooks/features/usePagination';
+import { ColDef, Columns, ColumnsMeta } from './colDef/colDef';
 
 export interface RowApi {
   getRowModels: () => Rows;

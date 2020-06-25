@@ -52,6 +52,7 @@ export default [
       command(
         `cat ../../license/dist/x-license.d.ts ../x-grid-modules/dist/x-grid-modules.d.ts ./dist/x-grid.d.ts > ./dist/x-grid.all.d.ts`,
         { exitOnFail: true, wait: true },
+        !production && sourceMaps(),
       ),
     ],
   },

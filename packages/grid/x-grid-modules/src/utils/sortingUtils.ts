@@ -40,7 +40,7 @@ export const numberComparer: ComparatorFn = (v1: CellValue, v2: CellValue) => {
   return Number(v1) - Number(v2);
 };
 
-export const dateComparer = (v1?: Date, v2?: Date): number => {
+export const dateComparer = (v1: CellValue, v2: CellValue): number => {
   const nillResult = nillComparer(v1, v2);
   if (nillResult != null) {
     return nillResult;

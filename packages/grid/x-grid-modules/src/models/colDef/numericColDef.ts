@@ -7,7 +7,7 @@ export const NUMERIC_COL_DEF: ColTypeDef = {
   type: 'number',
   align: 'right',
   width: 80,
-  comparator: numberComparer,
+  sortComparator: numberComparer,
   valueFormatter: ({ value }) => (value && isNumber(value) && value.toLocaleString()) || value,
 };
 //todo memoize
