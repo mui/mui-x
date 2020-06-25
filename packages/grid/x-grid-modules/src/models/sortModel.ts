@@ -1,4 +1,4 @@
-import {CellValue, RowModel} from "./rows";
+import { CellValue, RowModel } from './rows';
 
 export type SortDirection = 'asc' | 'desc' | null | undefined;
 

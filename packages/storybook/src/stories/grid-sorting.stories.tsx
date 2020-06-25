@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ColDef, Grid, GridApi } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
@@ -245,12 +245,12 @@ export const SortedEventsApi = () => {
   const apiRef = useRef<GridApi>();
   const rows = useMemo(() => getRows(), []);
   const cols = useMemo(() => getColumns(), []);
-  const [loggedEvents, setEvents] = useState([]);
+  const [loggedEvents, setEvents] = useState<any[]>([]);
 
   const handleEvent = useCallback(
     (name, params) => {
       action(name)(params);
-      setEvents(prev => [...prev, name]);
+      setEvents((prev: any[]) => [...prev, name]);
     },
     [setEvents],
   );

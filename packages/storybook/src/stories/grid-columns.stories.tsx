@@ -1,10 +1,10 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import { getDate, random } from '../data/random-generator';
+import React, { useCallback, useState } from 'react';
+import { getDate } from '../data/random-generator';
 import { ColDef, Grid } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { useData } from '../hooks/useData';
-import CreateIcon from "@material-ui/icons/Create";
+import CreateIcon from '@material-ui/icons/Create';
 
 export default {
   title: 'X-Grid Tests/Columns',
@@ -139,7 +139,7 @@ export const HeaderComponent = () => {
 
   const transformCols = useCallback(cols => {
     if (cols.length > 0) {
-      cols[0].headerComponent = params => <CreateIcon className={'icon'}/>;
+      cols[0].headerComponent = params => <CreateIcon className={'icon'} />;
     }
     return cols;
   }, []);

@@ -5,7 +5,6 @@ import {
   ColumnHeaderClickedParam,
   Columns,
   ColumnSortedParams,
-  ComparatorFn,
   FieldComparatorList,
   GridOptions,
   RowId,
@@ -83,7 +82,8 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
       const comparatorList = sortModel.map(item => {
         const col = apiRef.current!.getColumnFromField(item.colId);
         const comparator = isDesc(item.sort)
-          ? (v1: CellValue, v2: CellValue, row1: RowModel, row2: RowModel) => -1 * col.sortComparator!(v1, v2, row1, row2)
+          ? (v1: CellValue, v2: CellValue, row1: RowModel, row2: RowModel) =>
+              -1 * col.sortComparator!(v1, v2, row1, row2)
           : col.sortComparator!;
         return { field: col.field, comparator };
       });

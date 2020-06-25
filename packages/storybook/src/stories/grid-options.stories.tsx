@@ -64,7 +64,7 @@ export const NoRowExtend = () => {
   const data = useData(20, 2);
   return (
     <div className="grid-container">
-      <Grid rows={data.rows} columns={data.columns} options={ {extendRowFullWidth: false }} />
+      <Grid rows={data.rows} columns={data.columns} options={{ extendRowFullWidth: false }} />
     </div>
   );
 };
@@ -73,7 +73,11 @@ export const NoRowExtendCellBorder = () => {
   const data = useData(20, 2);
   return (
     <div className="grid-container">
-      <Grid rows={data.rows} columns={data.columns} options={ {extendRowFullWidth: false, showCellRightBorder: true }} />
+      <Grid
+        rows={data.rows}
+        columns={data.columns}
+        options={{ extendRowFullWidth: false, showCellRightBorder: true }}
+      />
     </div>
   );
 };

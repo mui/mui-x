@@ -1,14 +1,14 @@
-import React, {useMemo} from 'react';
-import { ColDef, Grid, GridOptionsProp } from '@material-ui/x-grid';
+import React, { useMemo } from 'react';
+import { Grid, GridOptionsProp } from '@material-ui/x-grid';
 
 import '../style/grid-stories.css';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
-import CreateIcon from '@material-ui/icons/Create';
 import { getDate } from '../data/random-generator';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { useData } from '../hooks/useData';
+import { ColDef } from '@material-ui/x-grid-modules/dist/src';
 
 export default {
   title: 'X-Grid Tests/Styling',
@@ -50,7 +50,7 @@ export const Small = () => {
 const IsDone: React.FC<{ value: boolean }> = ({ value }) =>
   value ? <DoneIcon fontSize={'small'} /> : <ClearIcon fontSize={'small'} />;
 
-const getColumns = () => [
+const getColumns: () => ColDef[] = () => [
   { field: 'id' },
   { field: 'firstName' },
   { field: 'lastName' },
@@ -62,7 +62,7 @@ const getColumns = () => [
     field: 'fullName',
     description: 'this column has a value getter and is not sortable',
     sortable: false,
-    valueGetter: params => `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`
+    valueGetter: params => `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
   },
   {
     field: 'isRegistered',
