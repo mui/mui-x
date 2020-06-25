@@ -216,7 +216,8 @@ export const AutoPagination = () => {
   const data = useData(2000, 200);
 
   return (
-    <div className="grid-container">
+    <>
+      <div>
       <Button
         component={'button'}
         color={'primary'}
@@ -233,7 +234,9 @@ export const AutoPagination = () => {
       >
         Add 20px height
       </Button>
-      <Grid
+      </div>
+  <div style={{width: size.width, height: size.height}}>
+  <Grid
         rows={data.rows}
         columns={data.columns}
         options={{
@@ -242,5 +245,6 @@ export const AutoPagination = () => {
         }}
       />
     </div>
+    </>
   );
 };
