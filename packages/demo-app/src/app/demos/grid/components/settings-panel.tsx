@@ -7,7 +7,7 @@ import { useTheme } from '../../theme/useTheme';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
 export interface SettingsPanelProps {
-  onApply: (settings: { size: number; type: string; selectedTheme: string, pagesize: number }) => void;
+  onApply: (settings: { size: number; type: string; selectedTheme: string; pagesize: number }) => void;
   type: string;
   size: number;
 }

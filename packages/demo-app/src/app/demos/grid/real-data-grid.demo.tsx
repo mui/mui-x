@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { AppBreadcrumbs } from '../../app-breadcrumbs';
-import { Grid, LicenseInfo, RowModel, Columns, GridOptions} from '@material-ui/x-grid';
+import { Grid, LicenseInfo, RowModel, Columns, GridOptions } from '@material-ui/x-grid';
 import pkg from '@material-ui/x-grid/package.json';
 import { MainContainer } from './components/main-container';
 import { SettingsPanel } from './components/settings-panel';
