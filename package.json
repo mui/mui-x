@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "description": "Material-UI X Monorepo",
   "author": "Damien Tassone",
-  "license": "MIT",
   "private": true,
   "devDependencies": {
     "@material-ui/icons": "^4.9.1",
