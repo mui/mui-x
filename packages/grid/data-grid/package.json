@@ -9,13 +9,12 @@
   "files": [
     "dist/*"
   ],
+  "license": "MIT",
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
-    "@material-ui/x-grid-modules": "^0.1.35"
-  },
   "devDependencies": {
+    "@material-ui/x-grid-modules": "^0.1.35",
     "rollup": "^2.6.1",
     "rollup-plugin-cleaner": "^1.0.0",
     "rollup-plugin-command": "^1.1.3",
