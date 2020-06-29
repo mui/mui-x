@@ -218,33 +218,33 @@ export const AutoPagination = () => {
   return (
     <>
       <div>
-      <Button
-        component={'button'}
-        color={'primary'}
-        variant={'outlined'}
-        onClick={() => setSize({ width: size.height, height: size.width })}
-      >
-        Invert Sizes
-      </Button>
-      <Button
-        component={'button'}
-        color={'primary'}
-        variant={'outlined'}
-        onClick={() => setSize(p => ({ ...p, height: p.height + 20 }))}
-      >
-        Add 20px height
-      </Button>
+        <Button
+          component={'button'}
+          color={'primary'}
+          variant={'outlined'}
+          onClick={() => setSize({ width: size.height, height: size.width })}
+        >
+          Invert Sizes
+        </Button>
+        <Button
+          component={'button'}
+          color={'primary'}
+          variant={'outlined'}
+          onClick={() => setSize(p => ({ ...p, height: p.height + 20 }))}
+        >
+          Add 20px height
+        </Button>
       </div>
-  <div style={{width: size.width, height: size.height}}>
-  <Grid
-        rows={data.rows}
-        columns={data.columns}
-        options={{
-          pagination: true,
-          paginationAutoPageSize: true,
-        }}
-      />
-    </div>
+      <div style={{ width: size.width, height: size.height }}>
+        <Grid
+          rows={data.rows}
+          columns={data.columns}
+          options={{
+            pagination: true,
+            paginationAutoPageSize: true,
+          }}
+        />
+      </div>
     </>
   );
 };

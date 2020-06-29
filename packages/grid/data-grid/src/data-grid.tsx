@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   GridComponent,
   GridComponentProps,
@@ -20,22 +20,31 @@ type ModuleGridType = Omit<GridComponentProps, 'licenseStatus' | 'apiRef' | 'opt
 export interface DataGridProps extends ModuleGridType {
   options: DataGridOptionsProp;
 }
-
+const MAX_PAGE_SIZE = 100;
 export const DataGrid: React.FC<DataGridProps> = React.memo(props => {
+  const validateOptions = useCallback((options: DataGridOptionsProp) => {
+    if (options && options.paginationPageSize && options.paginationPageSize > MAX_PAGE_SIZE) {
+      throw new Error(
+        `paginationPageSize cannot be above ${MAX_PAGE_SIZE}. Use the @material-ui/x-grid to unlock this feature`,
+      );
+    }
+    return options;
+  }, []);
+
   const [internalOptions, setInternalOptions] = useState<GridOptions>(
     mergeOptions(DEFAULT_GRID_OPTIONS, {
-      ...props.options,
+      ...validateOptions(props.options),
       ...OPTIONS_OVERRIDES,
     }),
   );
   useEffect(() => {
     setInternalOptions(previousState =>
       mergeOptions(previousState, {
-        ...props.options,
+        ...validateOptions(props.options),
         ...OPTIONS_OVERRIDES,
       }),
     );
-  }, [props.options]);
+  }, [props.options, validateOptions]);
 
   return (
     <GridComponent
