@@ -1,3 +1,4 @@
+import resolve from '@rollup/plugin-node-resolve';
 import typescript from 'rollup-plugin-typescript2';
 import pkg from './package.json';
 import cleaner from 'rollup-plugin-cleaner';
@@ -26,6 +27,9 @@ export default [
 
     external: [...Object.keys(pkg.peerDependencies || {})],
     plugins: [
+      resolve({
+        resolveOnly: [/^@material-ui\/x\-.*$/], //we bundle x-license and x-grid-modules
+      }),
       production &&
         cleaner({
           targets: ['./dist/'],
