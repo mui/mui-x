@@ -1,6 +1,6 @@
 {
   "name": "@material-ui-x/splitter",
-  "version": "0.1.32",
+  "version": "0.1.40",
   "main": "dist/index-cjs.js",
   "module": "dist/index-esm.js",
   "types": "dist/index.d.ts",

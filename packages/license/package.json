@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/x-license",
-  "version": "0.1.39",
+  "version": "0.1.40",
   "description": "Material-UI License Verification",
   "author": "Damien Tassone <damien@material-ui.com>",
   "main": "dist/cjs/index.js",
