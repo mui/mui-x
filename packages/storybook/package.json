@@ -1,12 +1,12 @@
 {
   "name": "@material-ui-x/storybook",
-  "version": "0.1.41",
+  "version": "0.1.42",
   "description": "Storybook components",
   "author": "Damien Tassone <damien@material-ui.com>",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.9.12",
-    "@material-ui/data-grid": "^0.1.41",
+    "@material-ui/data-grid": "^0.1.42",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.54",
     "@material-ui/x-grid": "^0.1.40",
