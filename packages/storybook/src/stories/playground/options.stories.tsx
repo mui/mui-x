@@ -50,7 +50,7 @@ export const Options = () => {
         showColumnSeparator: boolean('showColumnSeparator', false),
         enableMultipleSelection: boolean('enableMultipleSelection', true),
         checkboxSelection: boolean('checkboxSelection', true),
-        disableSelectionOnClick: boolean('disableSelectionOnClick', true),
+        disableSelectionOnClick: boolean('disableSelectionOnClick', false),
         enableMultipleColumnsSorting: boolean('enableMultipleColumnsSorting', true),
         sortingOrder: sortingOrder.map(value => (value === 'null' ? null : (value as SortDirection))),
         headerHeight: number('headerHeight', 56),
@@ -59,7 +59,6 @@ export const Options = () => {
     />
   );
 };
-
 export const Events = () => {
   const data = useData(2000, 200);
 
