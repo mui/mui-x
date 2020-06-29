@@ -11,7 +11,6 @@ import { withA11y } from '@storybook/addon-a11y';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
 import CreateIcon from '@material-ui/icons/Create';
-import { getDate } from '../../data/random-generator';
 import { useData } from '../../hooks/useData';
 
 export default {
@@ -240,8 +239,7 @@ export const StyledColumns = () => {
       registerDate: new Date(2010, 10, 25),
       lastLoginDate: new Date(2019, 0, 30, 10, 55, 32),
     },
-    { id: 3, lastName: 'Smith', firstName: 'igor', isRegistered: false, age: 40,
-      registerDate: new Date(2013, 2, 13) },
+    { id: 3, lastName: 'Smith', firstName: 'igor', isRegistered: false, age: 40, registerDate: new Date(2013, 2, 13) },
     {
       id: 4,
       lastName: 'James',
