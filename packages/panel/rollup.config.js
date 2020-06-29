@@ -24,9 +24,9 @@ export default {
   external: [...Object.keys(pkg.peerDependencies || {})],
   plugins: [
     production &&
-    cleaner({
-      targets: ['./dist/'],
-    }),
+      cleaner({
+        targets: ['./dist/'],
+      }),
     typescript(),
     !production && sourceMaps(),
     production && terser(),

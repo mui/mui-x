@@ -45,6 +45,6 @@ export default [
   {
     input: './dist/esm/index.d.ts',
     output: [{ file: 'dist/esm/x-grid-data-generator.d.ts', format: 'es' }],
-    plugins: [dts()],
+    plugins: [dts(), !production && sourceMaps()],
   },
 ];

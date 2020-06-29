@@ -11,9 +11,12 @@
     "@material-ui/x-grid": "^0.1.39",
     "@material-ui/x-grid-data-generator": "^0.1.39",
     "@material-ui/x-license": "^0.1.39",
+    "@types/jest-image-snapshot": "^3.1.0",
     "faker": "^4.1.0",
+    "puppeteer": "^4.0.0",
     "react": "^16.13.1",
     "rxjs": "^6.5.5",
+    "start-server-and-test": "^1.11.0",
     "styled-components": "^5.1.0"
   },
   "devDependencies": {
@@ -28,17 +31,24 @@
     "@storybook/addon-viewport": "^5.3.19",
     "@storybook/react": "^5.3.18",
     "@storybook/theming": "^5.3.19",
+    "@types/jest": "^26.0.0",
+    "@types/puppeteer": "^3.0.0",
     "babel-loader": "^8.1.0",
     "core-js": "^3.6.5",
+    "jest": "^26.0.1",
+    "jest-image-snapshot": "^4.0.2",
+    "jest-puppeteer": "^4.4.0",
     "react-docgen-typescript-loader": "^3.7.2",
     "source-map-loader": "^0.2.4",
     "ts-loader": "^7.0.1",
     "typescript": "^3.8.3"
   },
   "scripts": {
-    "start": "start-storybook -p 6006",
+    "start": "start-storybook -p 6006 --ci",
     "build": "build-storybook -o dist/ --quiet",
     "lint": "../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ./.eslintrc.js && npm run lint:css",
-    "lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../.stylelintrc.js"
+    "lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../.stylelintrc.js",
+    "test": "jest -c integration/setup/jest.config.js --detectOpenHandles --force-exit --runInBand",
+    "test:ci": "start-server-and-test start http://localhost:6006 test"
   }
 }

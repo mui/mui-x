@@ -42,6 +42,6 @@ export default [
   {
     input: './dist/esm/index.d.ts',
     output: [{ file: 'dist/x-license.d.ts', format: 'es' }],
-    plugins: [dts()],
+    plugins: [dts(), !production && sourceMaps()],
   },
 ];

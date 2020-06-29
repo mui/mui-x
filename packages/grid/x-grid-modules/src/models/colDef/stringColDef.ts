@@ -7,7 +7,7 @@ export const STRING_COL_DEF: ColTypeDef = {
   sortable: true,
   resizable: true,
   sortDirection: null,
-  comparator: stringNumberComparer,
+  sortComparator: stringNumberComparer,
   type: 'string',
   align: 'left',
 };

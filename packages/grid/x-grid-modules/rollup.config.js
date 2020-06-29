@@ -37,6 +37,6 @@ export default [
   {
     input: './dist/src/index.d.ts',
     output: [{ file: 'dist/x-grid-modules.d.ts', format: 'es' }],
-    plugins: [dts()],
+    plugins: [dts(), !production && sourceMaps()],
   },
 ];

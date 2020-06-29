@@ -18,7 +18,7 @@ export default {
   },
 };
 
-export const PreSelectedRows = () => {
+export const ApiPreSelectedRows = () => {
   const apiRef = useRef<GridApi>();
   const [data, setData] = useState<GridData>({ rows: [], columns: [] });
 
@@ -41,7 +41,7 @@ export const PreSelectedRows = () => {
   return <Grid rows={data.rows} columns={data.columns} apiRef={apiRef} />;
 };
 
-export const WithSelectedEvents = () => {
+export const EventsMapped = () => {
   const data = useData(200, 200);
 
   const options: GridOptionsProp = {
