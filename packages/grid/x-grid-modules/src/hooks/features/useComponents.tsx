@@ -24,11 +24,11 @@ export const useComponents = (
   );
 
   const headerComponent = useMemo(() => (options.headerComponent ? options.headerComponent(componentParams) : null), [
-    options.headerComponent,
+    options,
     componentParams,
   ]);
   const footerComponent = useMemo(() => (options.footerComponent ? options.footerComponent(componentParams) : null), [
-    options.footerComponent,
+    options,
     componentParams,
   ]);
 

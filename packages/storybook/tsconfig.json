@@ -11,6 +11,7 @@
     "rootDirs": ["src"],
     "baseUrl": "src",
     "moduleResolution": "node",
+    "isolatedModules": false,
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
@@ -21,7 +22,7 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "types": ["node"]
+    "types": ["node", "jest", "jest-image-snapshot"]
   },
   "include": ["src/**/*"],
   "exclude": ["__tests__", "**/*.test.ts", "node_modules", "lib", "build", "scripts"]

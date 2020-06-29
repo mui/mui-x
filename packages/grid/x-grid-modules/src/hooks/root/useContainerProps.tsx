@@ -40,7 +40,6 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>): R
       const dataContainerWidth = columnsTotalWidth - scrollBarSize.y;
       const totalHeight =
         (options.paginationAutoPageSize ? 1 : rowsCount / viewportPageSize) * viewportSize.height +
-        rowHeight +
         (hasScrollY ? scrollBarSize.x : 0);
 
       const indexes: ContainerProps = {

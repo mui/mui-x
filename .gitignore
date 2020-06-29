@@ -7,3 +7,4 @@
 *.log
 dist
 node_modules
+__diff_output__

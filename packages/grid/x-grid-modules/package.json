@@ -24,7 +24,7 @@
   "peerDependencies": {
     "@material-ui/core": "^4.9.12",
     "react": "^16.13.1",
-    "styled-components": "^5.0.1"
+    "styled-components": "^5.1.0"
   },
   "scripts": {
     "precommit": "npm run lint",

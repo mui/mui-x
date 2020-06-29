@@ -58,13 +58,15 @@ export const PricingGrid: React.FC<PricingGridProps> = p => {
   };
   return (
     <>
-      <button
-        ref={stopButton}
-        onClick={onStartStreamBtnClick}
-        style={{ padding: 5, textTransform: 'capitalize', margin: 10 }}
-      >
-        {started ? 'Stop' : 'Start'} Ticking
-      </button>
+      <div>
+        <button
+          ref={stopButton}
+          onClick={onStartStreamBtnClick}
+          style={{ padding: 5, textTransform: 'capitalize', margin: 10 }}
+        >
+          {started ? 'Stop' : 'Start'} Ticking
+        </button>
+      </div>
       <div style={{ width: 800, height: 600 }}>
         <Grid rows={rows} columns={columns} apiRef={gridApiRef} {...p} />
       </div>

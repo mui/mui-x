@@ -5,7 +5,6 @@ import {
   ColumnHeaderClickedParam,
   Columns,
   ColumnSortedParams,
-  ComparatorFn,
   FieldComparatorList,
   GridOptions,
   RowId,
@@ -66,11 +65,11 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
     [sortModelRef, options.sortingOrder],
   );
 
-  const comparatorListAggregate: ComparatorFn = useCallback(
-    (row1, row2) => {
+  const comparatorListAggregate = useCallback(
+    (row1: RowModel, row2: RowModel) => {
       const result = comparatorList.current.reduce((res, colComparator) => {
         const { field, comparator } = colComparator;
-        res = res || comparator(row1.data[field], row2.data[field]);
+        res = res || comparator(row1.data[field], row2.data[field], row1, row2);
         return res;
       }, 0);
       return result;
@@ -83,8 +82,9 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
       const comparatorList = sortModel.map(item => {
         const col = apiRef.current!.getColumnFromField(item.colId);
         const comparator = isDesc(item.sort)
-          ? (v1: CellValue, v2: CellValue) => -1 * col.comparator!(v1, v2)
-          : col.comparator!;
+          ? (v1: CellValue, v2: CellValue, row1: RowModel, row2: RowModel) =>
+              -1 * col.sortComparator!(v1, v2, row1, row2)
+          : col.sortComparator!;
         return { field: col.field, comparator };
       });
       return comparatorList;

@@ -21,7 +21,7 @@ This component has 2 peer dependencies that you will need to install as well.
 ```
 "peerDependencies": {
     "react": "^16.13.1",
-    "styled-components": "^5.0.1"
+    "styled-components": "^5.1.0"
 },
 ```
 
