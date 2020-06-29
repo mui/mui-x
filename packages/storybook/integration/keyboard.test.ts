@@ -1,28 +1,11 @@
-const puppeteer = require('puppeteer');
-jest.setTimeout(30000);
-
-async function getStoryPage(path: string) {
-  const browser = await puppeteer.launch({
-    args: ['--disable-lcd-text'],
-    defaultViewport: { width: 1600, height: 900 },
-    // headless: false
-  });
-  const url = `http://localhost:6006/iframe.html?path=${path}`;
-  const context = browser.defaultBrowserContext();
-  await context.overridePermissions(url, ['clipboard-read']);
-
-  const page = await browser.newPage();
-  await page.goto(url);
-  await page.waitForSelector('.grid-root');
-
-  return { page, browser };
-}
+import {activeCell, getStoryPage} from './helper-fn';
 
 describe('Keyboard Navigation', () => {
   let page, browser;
+  const waitFnOptions = { timeout: 500 };
 
   beforeEach(async done => {
-    const story = await getStoryPage('/story/x-grid-tests-columns--small-col-sizes');
+    const story = await getStoryPage('/story/x-grid-tests-columns--small-col-sizes', true);
     page = story.page;
     browser = story.browser;
     await page.keyboard.press('Tab');
@@ -39,34 +22,36 @@ describe('Keyboard Navigation', () => {
 
   test('Cell navigation with arrows ', async done => {
     await page.keyboard.press('ArrowRight');
-    await page.waitFor(100);
+    await page.waitForFunction(activeCell, waitFnOptions, 0, 1);
+
     await page.keyboard.press('ArrowRight');
-    await page.waitFor(100);
+    await page.waitForFunction(activeCell, waitFnOptions, 0, 2);
+
     await page.keyboard.press('ArrowRight');
-    await page.waitFor(100);
+    await page.waitForFunction(activeCell, waitFnOptions, 0, 3);
+
     await page.keyboard.press('ArrowDown');
-    await page.waitFor(100);
+    await page.waitForFunction(activeCell, waitFnOptions, 1, 3);
+
     await page.keyboard.press('ArrowDown');
-    await page.waitFor(100);
+    await page.waitForFunction(activeCell, waitFnOptions, 2, 3);
+
     await page.keyboard.press('ArrowLeft');
-    await page.waitFor(100);
+    await page.waitForFunction(activeCell, waitFnOptions, 2 ,2);
+
     await page.keyboard.press('ArrowUp');
-    await page.waitFor(100);
-    const image = await page.screenshot();
-    expect(image).toMatchImageSnapshot();
+    await page.waitForFunction(activeCell, waitFnOptions, 1, 2);
+
     done();
   });
 
   test('Home / End navigation', async done => {
     await page.keyboard.press('End');
-    await page.waitFor(100);
-    const imageEnd = await page.screenshot();
-    expect(imageEnd).toMatchImageSnapshot();
-    await page.keyboard.press('Home');
-    await page.waitFor(100);
+    await page.waitForFunction(activeCell, waitFnOptions, 0, 19);
 
-    const imageHome = await page.screenshot();
-    expect(imageHome).toMatchImageSnapshot();
+    await page.keyboard.press('Home');
+    await page.waitForFunction(activeCell, waitFnOptions, 0, 0);
+
     done();
   });
 
@@ -74,16 +59,13 @@ describe('Keyboard Navigation', () => {
     await page.keyboard.down('Control');
     await page.waitFor(100);
     await page.keyboard.press('End');
-    await page.waitFor(100);
-    const imageEnd = await page.screenshot();
-    expect(imageEnd).toMatchImageSnapshot();
+    await page.waitForFunction(activeCell, waitFnOptions, 99, 19);
 
     await page.keyboard.press('Home');
-    await page.keyboard.up('Control');
     await page.waitFor(100);
+    await page.keyboard.up('Control');
+    await page.waitForFunction(activeCell, waitFnOptions, 0, 0);
 
-    const imageHome = await page.screenshot();
-    expect(imageHome).toMatchImageSnapshot();
     done();
   });
 
@@ -117,19 +99,14 @@ describe('Keyboard Navigation', () => {
 
   test('Next/Previous page', async done => {
     await page.keyboard.press('Space');
-    await page.waitFor(100);
-    const spaceNavImage = await page.screenshot();
-    expect(spaceNavImage).toMatchImageSnapshot();
+    await page.waitForFunction(activeCell, waitFnOptions, 15, 0);
 
     await page.keyboard.press('PageDown');
-    await page.waitFor(100);
-    const pageDownNavImage = await page.screenshot();
-    expect(pageDownNavImage).toMatchImageSnapshot();
+    await page.waitForFunction(activeCell, waitFnOptions, 30, 0);
 
     await page.keyboard.press('PageUp');
-    await page.waitFor(100);
-    const pageUpImage = await page.screenshot();
-    expect(pageUpImage).toMatchImageSnapshot();
+    await page.waitForFunction(activeCell, waitFnOptions, 15, 0);
+
     done();
   });
 
