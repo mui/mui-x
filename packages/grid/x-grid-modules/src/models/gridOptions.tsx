@@ -57,6 +57,17 @@ export interface ComponentParams {
 }
 
 //Todo add multiSortKey
+/**
+ * This is the set of options supported by X-Grid
+ *
+ * @remarks
+ * This method is part of the {@link core-library#Statistics | Statistics subsystem}.
+ *
+ * @param x - The first input number
+ * @param y - The second input number
+ * @returns The arithmetic mean of `x` and `y`
+ *
+ */
 export interface GridOptions {
   rowHeight: number;
   headerHeight: number;
