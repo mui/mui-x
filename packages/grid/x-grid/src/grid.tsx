@@ -14,3 +14,4 @@ export const Grid: React.FC<Omit<GridComponentProps, 'licenseStatus'>> = React.m
   return <GridComponent {...props} licenseStatus={licenseStatus.toString()} />;
 });
 Grid.displayName = 'Grid';
+export const XGrid = Grid;
