@@ -7,7 +7,7 @@ import { action } from '@storybook/addon-actions';
 import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { useData } from '../hooks/useData';
-// import mdx from './grid-options.mdx';
+import mdx from './grid-options.mdx';
 
 export default {
   title: 'X-Grid Tests/Options',
@@ -16,7 +16,7 @@ export default {
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
-      page: null,
+      page: mdx,
     },
   },
 };
