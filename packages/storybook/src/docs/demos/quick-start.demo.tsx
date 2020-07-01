@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ColDef, XGrid, RowsProp } from '@material-ui/x-grid';
+import { ColDef, Grid, RowsProp } from '@material-ui/x-grid';
 
 export const QuickStartDemo = () => {
   const columns: ColDef[] = [
@@ -99,9 +99,10 @@ export const QuickStartDemo = () => {
     },
   ];
 
+  //TODO use XGrid when published
   return (
     <div style={{ width: 800, height: 600 }}>
-      <XGrid rows={rows} columns={columns} options={{ checkboxSelection: true }} />
+      <Grid rows={rows} columns={columns} options={{ checkboxSelection: true }} />
     </div>
   );
 };
