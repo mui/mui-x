@@ -25,7 +25,7 @@ export const DataGrid: React.FC<DataGridProps> = React.memo(props => {
   const validateOptions = useCallback((options: DataGridOptionsProp) => {
     if (options && options.paginationPageSize && options.paginationPageSize > MAX_PAGE_SIZE) {
       throw new Error(
-        `paginationPageSize cannot be above ${MAX_PAGE_SIZE}. Use the @material-ui/x-grid to unlock this feature`,
+        `Material-UI: Option 'paginationPageSize' cannot be above ${MAX_PAGE_SIZE}. Use the @material-ui/x-grid to unlock this feature`,
       );
     }
     return options;
