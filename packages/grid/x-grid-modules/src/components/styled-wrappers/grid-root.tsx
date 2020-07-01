@@ -15,8 +15,8 @@ export const RootStyle = styled.div<GridRootProps>`
   }
   &.grid-root {
     position: relative;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue',
-      sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu,
+      Cantarell, 'Helvetica Neue', sans-serif;
     border: 1px solid #bdc3c7;
     border-radius: 4px;
     outline: none;
@@ -242,7 +242,12 @@ RootStyle.displayName = 'RootStyle';
 export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps & DivProps>((props, ref) => {
   const { options, children, className, ...rest } = props;
   return (
-    <RootStyle ref={ref} className={'material-grid grid-root ' + (className || '')} options={options} {...rest}>
+    <RootStyle
+      ref={ref}
+      className={'material-grid grid-root ' + (className || '')}
+      options={options}
+      {...rest}
+    >
       {children}
     </RootStyle>
   );

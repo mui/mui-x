@@ -180,13 +180,28 @@ export const PaginationApiTests = () => {
       <Button component={'button'} color={'primary'} variant={'outlined'} onClick={backToFirstPage}>
         Back to first page
       </Button>
-      <Button component={'button'} color={'primary'} variant={'outlined'} onClick={changePageSizeWithOptionProp}>
+      <Button
+        component={'button'}
+        color={'primary'}
+        variant={'outlined'}
+        onClick={changePageSizeWithOptionProp}
+      >
         Change pageSize with Options
       </Button>
-      <Button component={'button'} color={'primary'} variant={'outlined'} onClick={changePageSizeWithApi}>
+      <Button
+        component={'button'}
+        color={'primary'}
+        variant={'outlined'}
+        onClick={changePageSizeWithApi}
+      >
         Change pageSize with Api
       </Button>
-      <Button component={'button'} color={'primary'} variant={'outlined'} onClick={() => setAutoSize(p => !p)}>
+      <Button
+        component={'button'}
+        color={'primary'}
+        variant={'outlined'}
+        onClick={() => setAutoSize(p => !p)}
+      >
         toggle pageAutoSize
       </Button>
       <Grid

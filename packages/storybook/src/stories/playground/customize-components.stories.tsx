@@ -51,7 +51,12 @@ export const Loading = () => {
   );
   return (
     <div className="grid-container">
-      <Grid rows={rows} columns={columns} options={{ loadingOverlayComponent: loadingComponent }} loading={true} />
+      <Grid
+        rows={rows}
+        columns={columns}
+        options={{ loadingOverlayComponent: loadingComponent }}
+        loading={true}
+      />
     </div>
   );
 };
@@ -171,7 +176,10 @@ export const HeaderAndFooter = () => {
             </div>
           ),
           footerComponent: ({ paginationProps }) => (
-            <div className="footer my-custom-footer"> I counted {paginationProps.rowCount} row(s) </div>
+            <div className="footer my-custom-footer">
+              {' '}
+              I counted {paginationProps.rowCount} row(s){' '}
+            </div>
           ),
         }}
       />
@@ -198,7 +206,8 @@ export const StyledColumns = () => {
       description: 'this column has a value getter and is not sortable',
       headerClass: 'highlight',
       sortable: false,
-      valueGetter: params => `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
+      valueGetter: params =>
+        `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
       cellClassRules: {
         common: params => params.data['lastName'] === 'Smith',
         unknown: params => !params.data['lastName'],
@@ -239,7 +248,14 @@ export const StyledColumns = () => {
       registerDate: new Date(2010, 10, 25),
       lastLoginDate: new Date(2019, 0, 30, 10, 55, 32),
     },
-    { id: 3, lastName: 'Smith', firstName: 'igor', isRegistered: false, age: 40, registerDate: new Date(2013, 2, 13) },
+    {
+      id: 3,
+      lastName: 'Smith',
+      firstName: 'igor',
+      isRegistered: false,
+      age: 40,
+      registerDate: new Date(2013, 2, 13),
+    },
     {
       id: 4,
       lastName: 'James',

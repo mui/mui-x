@@ -7,14 +7,16 @@ export interface ColumnHeaderSeparatorProps {
   onResize?: () => void;
 }
 
-export const ColumnHeaderSeparator: React.FC<ColumnHeaderSeparatorProps> = React.memo(({ onResize, resizable }) => {
-  const icons = useIcons();
+export const ColumnHeaderSeparator: React.FC<ColumnHeaderSeparatorProps> = React.memo(
+  ({ onResize, resizable }) => {
+    const icons = useIcons();
 
-  const resizeIconProps = {
-    className: 'icon separator ' + (resizable ? 'resizable' : ''),
-    ...(resizable && onResize ? { onMouseDown: onResize } : {}),
-  };
+    const resizeIconProps = {
+      className: 'icon separator ' + (resizable ? 'resizable' : ''),
+      ...(resizable && onResize ? { onMouseDown: onResize } : {}),
+    };
 
-  return <div className={'column-separator'}>{icons!.columnResize!(resizeIconProps)}</div>;
-});
+    return <div className={'column-separator'}>{icons!.columnResize!(resizeIconProps)}</div>;
+  },
+);
 ColumnHeaderSeparator.displayName = 'ColumnHeaderSeparator';

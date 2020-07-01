@@ -60,7 +60,10 @@ export function findDataContainerFromCurrent(elem: Element): HTMLDivElement | nu
   return root.querySelector(`:scope .${DATA_CONTAINER_CSS_CLASS}`) as HTMLDivElement;
 }
 
-export function getCellElementFromIndexes(root: Element, { colIndex, rowIndex }: CellIndexCoordinates) {
+export function getCellElementFromIndexes(
+  root: Element,
+  { colIndex, rowIndex }: CellIndexCoordinates,
+) {
   return root.querySelector(
     `:scope .${CELL_CSS_CLASS}[data-colIndex='${colIndex}'][data-rowIndex='${rowIndex}']`,
   ) as HTMLDivElement;

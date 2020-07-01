@@ -43,7 +43,10 @@ export const ColumnsHeader = memo(
       if (!api) {
         throw new Error('ApiRef not found in context');
       }
-      const lastRenderedColIndexes = useRef({ first: renderCtx?.firstColIdx, last: renderCtx?.lastColIdx });
+      const lastRenderedColIndexes = useRef({
+        first: renderCtx?.firstColIdx,
+        last: renderCtx?.lastColIdx,
+      });
       const [renderedCols, setRenderedCols] = useState(columns);
 
       useEffect(() => {
@@ -54,7 +57,10 @@ export const ColumnsHeader = memo(
             lastRenderedColIndexes.current.first !== renderCtx.firstColIdx ||
             lastRenderedColIndexes.current.last !== renderCtx.lastColIdx
           ) {
-            lastRenderedColIndexes.current = { first: renderCtx.firstColIdx, last: renderCtx.lastColIdx };
+            lastRenderedColIndexes.current = {
+              first: renderCtx.firstColIdx,
+              last: renderCtx.lastColIdx,
+            };
           }
         }
       }, [renderCtx, columns]);

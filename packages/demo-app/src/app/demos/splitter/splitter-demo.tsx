@@ -17,7 +17,8 @@ export const SplitterDemo: React.FC<{}> = () => {
 
   const reverseSizes = (): void => setSizes([sizes[1], sizes[0]]);
   const toggleInvertHandler = (): void => setInvertHandler(!invertHandler);
-  const changeDirection = (): void => setDirection(direction === 'horizontal' ? 'vertical' : 'horizontal');
+  const changeDirection = (): void =>
+    setDirection(direction === 'horizontal' ? 'vertical' : 'horizontal');
 
   return (
     <>
@@ -53,7 +54,12 @@ export const SplitterDemo: React.FC<{}> = () => {
             <Button size={'small'} onClick={reverseSizes} variant={'outlined'} color={'primary'}>
               Reverse Sizes
             </Button>
-            <Button size={'small'} onClick={toggleInvertHandler} variant={'outlined'} color={'primary'}>
+            <Button
+              size={'small'}
+              onClick={toggleInvertHandler}
+              variant={'outlined'}
+              color={'primary'}
+            >
               Invert Handler
             </Button>
           </div>

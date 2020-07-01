@@ -67,7 +67,12 @@ function AppFooter() {
             <Grid item xs={12} sm={3}>
               <div className={classes.logo}>
                 <img src="/mui-logo_raw.svg" alt="" />
-                <Link className={classes.section} variant="body1" color="inherit" href="https://material-ui.com">
+                <Link
+                  className={classes.section}
+                  variant="body1"
+                  color="inherit"
+                  href="https://material-ui.com"
+                >
                   Material-UI
                 </Link>
               </div>
@@ -78,7 +83,11 @@ function AppFooter() {
               </Typography>
               <ul>
                 <li>
-                  <Link color="inherit" variant="body2" href="https://github.com/mui-org/material-ui">
+                  <Link
+                    color="inherit"
+                    variant="body2"
+                    href="https://github.com/mui-org/material-ui"
+                  >
                     GitHub
                   </Link>
                 </li>
@@ -88,12 +97,20 @@ function AppFooter() {
                   </Link>
                 </li>
                 <li>
-                  <Link color="inherit" variant="body2" href="https://stackoverflow.com/questions/tagged/material-ui">
+                  <Link
+                    color="inherit"
+                    variant="body2"
+                    href="https://stackoverflow.com/questions/tagged/material-ui"
+                  >
                     StackOverflow
                   </Link>
                 </li>
                 <li>
-                  <Link color="inherit" variant="body2" href="https://material-ui.com/discover-more/team/">
+                  <Link
+                    color="inherit"
+                    variant="body2"
+                    href="https://material-ui.com/discover-more/team/"
+                  >
                     Team
                   </Link>
                 </li>
@@ -105,7 +122,11 @@ function AppFooter() {
               </Typography>
               <ul>
                 <li>
-                  <Link color="inherit" variant="body2" href="https://material-ui.com/getting-started/support/">
+                  <Link
+                    color="inherit"
+                    variant="body2"
+                    href="https://material-ui.com/getting-started/support/"
+                  >
                     Support
                   </Link>
                 </li>
@@ -115,7 +136,11 @@ function AppFooter() {
                   </Link>
                 </li>
                 <li>
-                  <Link color="inherit" variant="body2" href="https://material-ui.com/components/material-icons/">
+                  <Link
+                    color="inherit"
+                    variant="body2"
+                    href="https://material-ui.com/components/material-icons/"
+                  >
                     Material Icons
                   </Link>
                 </li>
@@ -127,12 +152,20 @@ function AppFooter() {
               </Typography>
               <ul>
                 <li>
-                  <Link color="inherit" variant="body2" href="https://material-ui.com/company/about/">
+                  <Link
+                    color="inherit"
+                    variant="body2"
+                    href="https://material-ui.com/company/about/"
+                  >
                     About
                   </Link>
                 </li>
                 <li>
-                  <Link color="inherit" variant="body2" href="https://material-ui.com/company/contact/">
+                  <Link
+                    color="inherit"
+                    variant="body2"
+                    href="https://material-ui.com/company/contact/"
+                  >
                     Contact Us
                   </Link>
                 </li>
@@ -159,7 +192,10 @@ function AppFooter() {
                   </Link>
                 ),
                 license: (
-                  <Link color="inherit" href="https://github.com/mui-org/material-ui/blob/master/LICENSE">
+                  <Link
+                    color="inherit"
+                    href="https://github.com/mui-org/material-ui/blob/master/LICENSE"
+                  >
                     MIT
                   </Link>
                 ),

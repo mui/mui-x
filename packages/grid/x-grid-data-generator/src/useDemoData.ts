@@ -20,7 +20,10 @@ export const useDemoData = (dataSetProp: DataSet, nbRows: number): DemoDataRetur
   const [dataset, setDataset] = useState(dataSetProp.toString());
 
   const loadData = async () => {
-    const data = await getRealData(size, dataset === 'Commodity' ? commodityColumns : employeeColumns);
+    const data = await getRealData(
+      size,
+      dataset === 'Commodity' ? commodityColumns : employeeColumns,
+    );
     setRows([]);
     setCols(data.columns);
     setRows(data.rows);

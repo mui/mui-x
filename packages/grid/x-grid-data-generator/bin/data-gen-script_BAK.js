@@ -13,7 +13,9 @@ program
     console.log('size: %s dataset: %s', program.size, dataset);
     const data = await dataGenerator.getRealData(
       Number(program.size),
-      dataset.toLowerCase() === 'commodity' ? dataGenerator.commodityColumns : dataGenerator.binemployeeColumns,
+      dataset.toLowerCase() === 'commodity'
+        ? dataGenerator.commodityColumns
+        : dataGenerator.binemployeeColumns,
     );
     fs.writeFile(program.output, JSON.stringify(data, null, 2));
   })

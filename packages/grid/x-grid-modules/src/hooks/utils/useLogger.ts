@@ -42,7 +42,9 @@ const getAppender = (name: string, logLevel: string, appender: Logger = console)
   return logger as Logger;
 };
 
-const defaultFactory: (logLevel: string) => LoggerFactoryFn = (logLevel: string) => (name: string) => {
+const defaultFactory: (logLevel: string) => LoggerFactoryFn = (logLevel: string) => (
+  name: string,
+) => {
   if (!isDebugging) {
     return noopLogger;
   }
@@ -53,7 +55,10 @@ export type LoggerFactoryFn = (name: string) => Logger;
 
 //TODO Refactor to allow different logger for each grid in a page...
 let factory: LoggerFactoryFn | null;
-export function useLoggerFactory(customLogger?: Logger | LoggerFactoryFn, logLevel: string | boolean = 'info') {
+export function useLoggerFactory(
+  customLogger?: Logger | LoggerFactoryFn,
+  logLevel: string | boolean = 'info',
+) {
   if (forceDebug) {
     factory = defaultFactory('debug');
     return;
@@ -68,7 +73,9 @@ export function useLoggerFactory(customLogger?: Logger | LoggerFactoryFn, logLev
     return;
   }
 
-  factory = !!logLevel ? (name: string) => getAppender(name, logLevel.toString(), customLogger) : null;
+  factory = !!logLevel
+    ? (name: string) => getAppender(name, logLevel.toString(), customLogger)
+    : null;
 }
 export function useLogger(name: string): Logger {
   const [logger, setLogger] = useState(factory ? factory(name) : noopLogger);

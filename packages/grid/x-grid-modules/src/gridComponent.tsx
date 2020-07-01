@@ -1,6 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { GridComponentProps } from './gridComponentProps';
-import { useColumnResize, useComponents, usePagination, useSelection, useSorting } from './hooks/features';
+import {
+  useColumnResize,
+  useComponents,
+  usePagination,
+  useSelection,
+  useSorting,
+} from './hooks/features';
 import { DEFAULT_GRID_OPTIONS, ElementSize, GridApi, GridOptions, GridRootRef } from './models';
 import { DATA_CONTAINER_CSS_CLASS } from './constants';
 import { ColumnsContainer, DataContainer, GridRoot } from './components/styled-wrappers';
@@ -32,7 +38,9 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
     const renderingZoneRef = useRef<HTMLDivElement>(null);
     const internalApiRef = useRef<GridApi | null | undefined>();
 
-    const [internalOptions, setInternalOptions] = useState<GridOptions>(mergeOptions(DEFAULT_GRID_OPTIONS, options));
+    const [internalOptions, setInternalOptions] = useState<GridOptions>(
+      mergeOptions(DEFAULT_GRID_OPTIONS, options),
+    );
     useEffect(() => {
       setInternalOptions(previousState => mergeOptions(previousState, options));
     }, [options]);

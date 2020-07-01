@@ -1,6 +1,9 @@
 const puppeteer = require('puppeteer');
 
-export async function getStoryPage(path: string, withClipboard = false): Promise<{ page: any; browser: any }> {
+export async function getStoryPage(
+  path: string,
+  withClipboard = false,
+): Promise<{ page: any; browser: any }> {
   const browser = await puppeteer.launch({
     args: ['--disable-lcd-text'],
     defaultViewport: { width: 1600, height: 900 },
@@ -20,7 +23,7 @@ export async function getStoryPage(path: string, withClipboard = false): Promise
 
 export const activeCell = (rowIndex: number, colIndex: number): boolean => {
   return (
-  	document &&
+    document &&
     document.activeElement?.getAttribute('data-rowindex') === rowIndex.toString() &&
     document.activeElement?.getAttribute('data-colindex') === colIndex.toString()
   );

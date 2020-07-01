@@ -13,7 +13,12 @@ import {
 import { ScrollParams, useScrollFn } from '../utils';
 import { useLogger } from '../utils/useLogger';
 import { useContainerProps } from '../root';
-import { RESIZE, SCROLLING, SCROLLING_START, SCROLLING_STOP } from '../../constants/eventsConstants';
+import {
+  RESIZE,
+  SCROLLING,
+  SCROLLING_START,
+  SCROLLING_STOP,
+} from '../../constants/eventsConstants';
 
 import { useApiMethod } from '../root/useApiMethod';
 import { useNativeEventListener } from '../root/useNativeEventListener';
@@ -100,7 +105,10 @@ export const useVirtualRows = (
     return renderCtx;
   }, [logger, renderCtxRef, containerPropsRef, renderedColRef, getRenderRowProps]);
 
-  const reRender = useCallback(() => setRenderCtx(getRenderCtxState()), [getRenderCtxState, setRenderCtx]);
+  const reRender = useCallback(() => setRenderCtx(getRenderCtxState()), [
+    getRenderCtxState,
+    setRenderCtx,
+  ]);
   const updateViewport = useCallback(() => {
     if (windowRef && windowRef.current && containerPropsRef && containerPropsRef.current) {
       const containerProps = containerPropsRef.current;
@@ -137,7 +145,8 @@ export const useVirtualRows = (
 
       if (
         requireRerender ||
-        (renderCtxRef.current && renderCtxRef.current.paginationCurrentPage !== paginationCurrentPage.current)
+        (renderCtxRef.current &&
+          renderCtxRef.current.paginationCurrentPage !== paginationCurrentPage.current)
       ) {
         reRender();
       }
@@ -175,8 +184,13 @@ export const useVirtualRows = (
           ? pageRowCount
           : totalRowsCount - (currentPage - 1) * pageRowCount;
 
-      rowsCount.current = pageRowCount == null || pageRowCount > totalRowsCount ? totalRowsCount : pageRowCount;
-      containerPropsRef.current = getContainerProps(optionsRef.current, columnTotalWidthRef.current, rowsCount.current);
+      rowsCount.current =
+        pageRowCount == null || pageRowCount > totalRowsCount ? totalRowsCount : pageRowCount;
+      containerPropsRef.current = getContainerProps(
+        optionsRef.current,
+        columnTotalWidthRef.current,
+        rowsCount.current,
+      );
       if (optionsRef.current.paginationAutoPageSize && containerPropsRef.current) {
         rowsCount.current = containerPropsRef.current.viewportPageSize;
       }
@@ -220,11 +234,16 @@ export const useVirtualRows = (
 
           if (isLastCol) {
             const lastColWidth = apiRef.current.getVisibleColumns()[params.colIndex].width!;
-            scrollLeft = meta.positions[params.colIndex] + lastColWidth - containerPropsRef.current!.windowSizes.width;
+            scrollLeft =
+              meta.positions[params.colIndex] +
+              lastColWidth -
+              containerPropsRef.current!.windowSizes.width;
           } else {
-            scrollLeft = meta.positions[params.colIndex + 1] - containerPropsRef.current!.windowSizes.width;
+            scrollLeft =
+              meta.positions[params.colIndex + 1] - containerPropsRef.current!.windowSizes.width;
           }
-          scrollLeft = rzScrollRef.current.left > scrollLeft ? meta.positions[params.colIndex] : scrollLeft;
+          scrollLeft =
+            rzScrollRef.current.left > scrollLeft ? meta.positions[params.colIndex] : scrollLeft;
         }
 
         let scrollTop;
@@ -235,7 +254,8 @@ export const useVirtualRows = (
 
         const isRowIndexAbove = realScrollRef.current.top > scrollPosition;
         const isRowIndexBelow =
-          realScrollRef.current.top + viewportHeight < scrollPosition + optionsRef.current.rowHeight;
+          realScrollRef.current.top + viewportHeight <
+          scrollPosition + optionsRef.current.rowHeight;
 
         if (isRowIndexAbove) {
           scrollTop = scrollPosition; //We put it at the top of the page
@@ -309,7 +329,12 @@ export const useVirtualRows = (
 
   useApiEventHandler(apiRef, RESIZE, onResize);
   useNativeEventListener(apiRef, windowRef, SCROLL_EVENT, onScroll, { passive: true });
-  useNativeEventListener(apiRef, () => renderingZoneRef.current?.parentElement, SCROLL_EVENT, onViewportScroll);
+  useNativeEventListener(
+    apiRef,
+    () => renderingZoneRef.current?.parentElement,
+    SCROLL_EVENT,
+    onViewportScroll,
+  );
 
   useEffect(() => {
     if (columnTotalWidthRef.current !== internalColumns.meta.totalWidth) {

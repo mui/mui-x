@@ -62,7 +62,8 @@ const getColumns: () => ColDef[] = () => [
     field: 'fullName',
     description: 'this column has a value getter and is not sortable',
     sortable: false,
-    valueGetter: params => `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
+    valueGetter: params =>
+      `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
   },
   {
     field: 'isRegistered',
@@ -94,7 +95,14 @@ const getRows = () => [
     registerDate: getDate(),
     lastLoginDate: getDate(),
   },
-  { id: 3, lastName: 'Smith', firstName: 'igor', isRegistered: false, age: 40, registerDate: getDate() },
+  {
+    id: 3,
+    lastName: 'Smith',
+    firstName: 'igor',
+    isRegistered: false,
+    age: 40,
+    registerDate: getDate(),
+  },
   {
     id: 4,
     lastName: 'James',

@@ -18,4 +18,7 @@ export interface RenderPaginationProps {
   paginationPageSize?: number;
 }
 
-export type RenderContextProps = ContainerProps & RenderColumnsProps & RenderRowProps & RenderPaginationProps;
+export type RenderContextProps = ContainerProps &
+  RenderColumnsProps &
+  RenderRowProps &
+  RenderPaginationProps;

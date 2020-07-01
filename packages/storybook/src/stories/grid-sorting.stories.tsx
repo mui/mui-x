@@ -25,11 +25,41 @@ const getColumns: () => ColDef[] = () => [
 ];
 
 const getRows = () => [
-  { id: 1, name: 'alice', age: 40, born: new Date(1990, 10, 8), updatedOn: new Date(2020, 6, 21, 21, 0, 0) },
-  { id: 2, name: 'bob', age: 30, born: new Date(1990, 9, 8), updatedOn: new Date(2020, 6, 21, 20, 0, 0) },
-  { id: 3, name: 'igor', age: 40, born: new Date(1990, 10, 7), updatedOn: new Date(2020, 6, 21, 19, 50, 0) },
-  { id: 4, name: 'clara', age: 40, born: new Date(1989, 1, 30), updatedOn: new Date(2020, 5, 18, 10, 11, 0) },
-  { id: 5, name: 'clara', age: null, born: new Date(1984, 6, 11), updatedOn: new Date(2020, 6, 8, 23, 33, 25) },
+  {
+    id: 1,
+    name: 'alice',
+    age: 40,
+    born: new Date(1990, 10, 8),
+    updatedOn: new Date(2020, 6, 21, 21, 0, 0),
+  },
+  {
+    id: 2,
+    name: 'bob',
+    age: 30,
+    born: new Date(1990, 9, 8),
+    updatedOn: new Date(2020, 6, 21, 20, 0, 0),
+  },
+  {
+    id: 3,
+    name: 'igor',
+    age: 40,
+    born: new Date(1990, 10, 7),
+    updatedOn: new Date(2020, 6, 21, 19, 50, 0),
+  },
+  {
+    id: 4,
+    name: 'clara',
+    age: 40,
+    born: new Date(1989, 1, 30),
+    updatedOn: new Date(2020, 5, 18, 10, 11, 0),
+  },
+  {
+    id: 5,
+    name: 'clara',
+    age: null,
+    born: new Date(1984, 6, 11),
+    updatedOn: new Date(2020, 6, 8, 23, 33, 25),
+  },
   { id: 6, name: null, age: 25, born: null, updatedOn: new Date(2020, 6, 11, 11, 45, 53) },
   { id: 7, name: '', age: 42, born: new Date(2010, 12, 25), updatedOn: null },
 ];
@@ -166,7 +196,8 @@ export const UnsortableLastCol = () => {
   columns[columns.length] = {
     field: 'username',
     sortable: false,
-    valueGetter: params => `${params.getValue('name') || 'unknown'}_${params.getValue('age') || 'x'}`,
+    valueGetter: params =>
+      `${params.getValue('name') || 'unknown'}_${params.getValue('age') || 'x'}`,
     width: 150,
   };
 
@@ -181,7 +212,8 @@ export const CustomComparator = () => {
   const columns = getColumns();
   columns[columns.length] = {
     field: 'username',
-    valueGetter: params => `${params.getValue('name') || 'unknown'}_${params.getValue('age') || 'x'}`,
+    valueGetter: params =>
+      `${params.getValue('name') || 'unknown'}_${params.getValue('age') || 'x'}`,
     sortComparator: (v1, v2, row1, row2) => row1.data['age'] - row2.data['age'],
     sortDirection: 'asc',
     width: 150,

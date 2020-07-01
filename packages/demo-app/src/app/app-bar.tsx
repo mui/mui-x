@@ -53,7 +53,11 @@ export interface DemoAppBarProps {
   isDark: boolean;
 }
 
-export const DemoAppBar: React.FC<DemoAppBarProps> = ({ onMenuButtonClick, onThemeToggle, isDark }) => {
+export const DemoAppBar: React.FC<DemoAppBarProps> = ({
+  onMenuButtonClick,
+  onThemeToggle,
+  isDark,
+}) => {
   const classes = useStyles();
   const location = useLocation();
   const [hideTitle, setHideTitle] = useState(false);
@@ -86,7 +90,11 @@ export const DemoAppBar: React.FC<DemoAppBarProps> = ({ onMenuButtonClick, onThe
           {titleEl}
         </Typography>
 
-        <Link href={'https://github.com/mui-org/material-ui-x'} className={'github-button'} color="inherit">
+        <Link
+          href={'https://github.com/mui-org/material-ui-x'}
+          className={'github-button'}
+          color="inherit"
+        >
           <Tooltip title="GitHub repository">
             <IconButton aria-label="GitHub repository" color="inherit">
               <GitHubIcon />
