@@ -1,11 +1,11 @@
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from 'rollup-plugin-typescript2';
-import pkg from './package.json';
 import cleaner from 'rollup-plugin-cleaner';
 import sourceMaps from 'rollup-plugin-sourcemaps';
 import { terser } from 'rollup-plugin-terser';
 import dts from 'rollup-plugin-dts';
 import command from 'rollup-plugin-command';
+import pkg from './package.json';
 
 // dev build if watching, prod build if not
 const production = !process.env.ROLLUP_WATCH;
@@ -28,7 +28,7 @@ export default [
     external: [...Object.keys(pkg.peerDependencies || {})],
     plugins: [
       resolve({
-        resolveOnly: [/^@material-ui\/x\-.*$/], //we bundle x-license and x-grid-modules
+        resolveOnly: [/^@material-ui\/x-.*$/], // we bundle x-license and x-grid-modules
       }),
       production &&
         cleaner({
