@@ -1,0 +1,68 @@
+version: 2.1
+
+defaults: &defaults
+  parameters:
+    react-dist-tag:
+      description: The dist-tag of react to be used
+      type: string
+      default: stable
+  environment:
+    # expose it globally otherwise we have to thread it from each job to the install command
+    REACT_DIST_TAG: << parameters.react-dist-tag >>
+  working_directory: /tmp/material-ui-x
+  docker:
+    - image: circleci/node:10
+# CircleCI has disabled the cache across forks for security reasons.
+# Following their official statement, it was a quick solution, they
+# are working on providing this feature back with appropriate security measures.
+# https://discuss.circleci.com/t/saving-cache-stopped-working-warning-skipping-this-step-disabled-in-configuration/24423/21
+#
+# restore_repo: &restore_repo
+#   restore_cache:
+#     key: v1-repo-{{ .Branch }}-{{ .Revision }}
+
+commands:
+  install_js:
+    steps:
+      - run:
+          name: View install environment
+          command: |
+            node --version
+            yarn --version
+      - restore_cache:
+          keys:
+            - v2-yarn-sha-{{ checksum "yarn.lock" }}
+            - v2-yarn-sha-
+      - run:
+          name: Install js dependencies
+          command: yarn
+
+jobs:
+  checkout:
+    <<: *defaults
+    steps:
+      - checkout
+      - install_js
+      - run:
+          name: Should not have any git not staged
+          command: git diff --exit-code
+      - save_cache:
+          key: v2-yarn-sha-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn/v4
+  test_static:
+    <<: *defaults
+    steps:
+      - checkout
+      - install_js
+      - run:
+          name: '`yarn prettier` changes committed?'
+          command: yarn prettier check-changed
+workflows:
+  version: 2
+  pipeline:
+    jobs:
+      - checkout
+      - test_static:
+          requires:
+            - checkout
