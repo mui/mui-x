@@ -15,7 +15,13 @@ import { Cell } from './cell';
 import { ApiContext } from './api-context';
 import { classnames, isFunction } from '../utils';
 
-function getCellParams(rowModel: RowModel, col: ColDef, rowIndex: number, value: CellValue, api: GridApi): CellParams {
+function getCellParams(
+  rowModel: RowModel,
+  col: ColDef,
+  rowIndex: number,
+  value: CellValue,
+  api: GridApi,
+): CellParams {
   return {
     value,
     getValue: (field: string) => rowModel.data[field],
@@ -49,7 +55,16 @@ interface RowCellsProps {
 }
 
 export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
-  const { scrollSize, hasScroll, lastColIdx, firstColIdx, columns, row, rowIndex, domIndex } = props;
+  const {
+    scrollSize,
+    hasScroll,
+    lastColIdx,
+    firstColIdx,
+    columns,
+    row,
+    rowIndex,
+    domIndex,
+  } = props;
   const api = useContext(ApiContext);
 
   const cells = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
@@ -70,7 +85,13 @@ export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
 
     let formattedValueProp = {};
     if (column.valueFormatter) {
-      const params: ValueFormatterParams = getCellParams(row, column, rowIndex, value, api!.current!);
+      const params: ValueFormatterParams = getCellParams(
+        row,
+        column,
+        rowIndex,
+        value,
+        api!.current!,
+      );
       formattedValueProp = { formattedValue: column.valueFormatter(params) };
     }
 

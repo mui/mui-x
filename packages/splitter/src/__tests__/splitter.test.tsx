@@ -4,7 +4,8 @@ import { Splitter } from '../splitter';
 
 describe('Splitter', () => {
   it('should take only 2 children', () => {
-    const errorMessage = 'The Splitter component needs exactly 2 children react node to split panels properly';
+    const errorMessage =
+      'The Splitter component needs exactly 2 children react node to split panels properly';
     expect(() => shallow(<Splitter />)).toThrow(errorMessage);
 
     expect(() =>

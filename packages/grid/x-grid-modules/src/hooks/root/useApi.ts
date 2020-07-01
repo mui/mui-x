@@ -19,7 +19,11 @@ import {
 } from '../../constants/eventsConstants';
 import { CellClickedParam, GridOptions, RowClickedParam } from '../../models';
 import { GridApi } from '../../models/gridApi';
-import { CELL_CSS_CLASS, HEADER_CELL_CSS_CLASS, ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
+import {
+  CELL_CSS_CLASS,
+  HEADER_CELL_CSS_CLASS,
+  ROW_CSS_CLASS,
+} from '../../constants/cssClassesConstants';
 import {
   findParentElementFromClassName,
   getDataFromElem,
@@ -66,7 +70,9 @@ export const useApi = (
     [apiRef, isApiInitialised],
   );
 
-  const getHandler = useCallback((name: string) => (...args: any[]) => emitEvent(name, ...args), [emitEvent]);
+  const getHandler = useCallback((name: string) => (...args: any[]) => emitEvent(name, ...args), [
+    emitEvent,
+  ]);
 
   const handleResizeStart = useCallback(() => (isResizingRef.current = true), [isResizingRef]);
   const handleResizeStop = useCallback(() => (isResizingRef.current = false), [isResizingRef]);

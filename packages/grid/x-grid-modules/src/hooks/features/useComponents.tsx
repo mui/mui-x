@@ -1,6 +1,13 @@
 import React, { useMemo } from 'react';
 import { PaginationProps } from './usePagination';
-import { ComponentParams, GridApiRef, GridOptions, GridRootRef, InternalColumns, Rows } from '../../models';
+import {
+  ComponentParams,
+  GridApiRef,
+  GridOptions,
+  GridRootRef,
+  InternalColumns,
+  Rows,
+} from '../../models';
 import { LoadingOverlay, NoRowMessage } from '../../components';
 
 export const useComponents = (
@@ -23,14 +30,14 @@ export const useComponents = (
     [paginationProps, rows, columns, options, apiRef, gridRootRef],
   );
 
-  const headerComponent = useMemo(() => (options.headerComponent ? options.headerComponent(componentParams) : null), [
-    options,
-    componentParams,
-  ]);
-  const footerComponent = useMemo(() => (options.footerComponent ? options.footerComponent(componentParams) : null), [
-    options,
-    componentParams,
-  ]);
+  const headerComponent = useMemo(
+    () => (options.headerComponent ? options.headerComponent(componentParams) : null),
+    [options, componentParams],
+  );
+  const footerComponent = useMemo(
+    () => (options.footerComponent ? options.footerComponent(componentParams) : null),
+    [options, componentParams],
+  );
 
   const loadingComponent = useMemo(
     () => (options.loadingOverlayComponent ? options.loadingOverlayComponent : <LoadingOverlay />),

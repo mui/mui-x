@@ -1,6 +1,10 @@
 import { useCallback, useRef } from 'react';
 import { useLogger } from '../utils/useLogger';
-import { KEYDOWN_EVENT, KEYUP_EVENT, MULTIPLE_KEY_PRESS_CHANGED } from '../../constants/eventsConstants';
+import {
+  KEYDOWN_EVENT,
+  KEYUP_EVENT,
+  MULTIPLE_KEY_PRESS_CHANGED,
+} from '../../constants/eventsConstants';
 
 import {
   findGridRootFromCurrent,
@@ -40,7 +44,11 @@ const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
   return { ...indexes, rowIndex: indexes.rowIndex + 1 };
 };
 
-export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: GridApiRef): void => {
+export const useKeyboard = (
+  options: GridOptions,
+  initialised: boolean,
+  apiRef: GridApiRef,
+): void => {
   const logger = useLogger('useKeyboard');
   const isMultipleKeyPressed = useRef(false);
 
@@ -67,13 +75,18 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
       const currentRowIndex = Number(getDataFromElem(cellEl, 'rowindex'));
       const autoPageSize = apiRef.current!.getContainerPropsState()!.viewportPageSize;
       const pageSize =
-        options.pagination && options.paginationPageSize != null ? options.paginationPageSize : autoPageSize;
+        options.pagination && options.paginationPageSize != null
+          ? options.paginationPageSize
+          : autoPageSize;
       const rowCount = options.pagination ? pageSize : apiRef.current!.getRowsCount();
       const colCount = apiRef.current!.getVisibleColumns().length;
 
       let nextCellIndexes: CellIndexCoordinates;
       if (isArrowKeys(code)) {
-        nextCellIndexes = getNextCellIndexes(code, { colIndex: currentColIndex, rowIndex: currentRowIndex });
+        nextCellIndexes = getNextCellIndexes(code, {
+          colIndex: currentColIndex,
+          rowIndex: currentRowIndex,
+        });
       } else if (isHomeOrEndKeys(code)) {
         const colIdx = code === 'Home' ? 0 : colCount - 1;
 
@@ -87,16 +100,19 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
         }
       } else if (isPageKeys(code) || isSpaceKey(code)) {
         const nextRowIndex =
-          currentRowIndex + (code.indexOf('Down') > -1 || isSpaceKey(code) ? autoPageSize : -1 * autoPageSize);
+          currentRowIndex +
+          (code.indexOf('Down') > -1 || isSpaceKey(code) ? autoPageSize : -1 * autoPageSize);
         nextCellIndexes = { colIndex: currentColIndex, rowIndex: nextRowIndex };
       } else {
         throw new Error('Key not mapped to navigation behaviour');
       }
 
       nextCellIndexes.rowIndex = nextCellIndexes.rowIndex <= 0 ? 0 : nextCellIndexes.rowIndex;
-      nextCellIndexes.rowIndex = nextCellIndexes.rowIndex >= rowCount ? rowCount - 1 : nextCellIndexes.rowIndex;
+      nextCellIndexes.rowIndex =
+        nextCellIndexes.rowIndex >= rowCount ? rowCount - 1 : nextCellIndexes.rowIndex;
       nextCellIndexes.colIndex = nextCellIndexes.colIndex <= 0 ? 0 : nextCellIndexes.colIndex;
-      nextCellIndexes.colIndex = nextCellIndexes.colIndex >= colCount ? colCount - 1 : nextCellIndexes.colIndex;
+      nextCellIndexes.colIndex =
+        nextCellIndexes.colIndex >= colCount ? colCount - 1 : nextCellIndexes.colIndex;
 
       apiRef.current!.scrollToIndexes(nextCellIndexes);
       setTimeout(() => {
@@ -136,9 +152,13 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
       let selectionFromRowIndex = currentRowIndex;
       const selectedRows = apiRef.current!.getSelectedRows();
       if (selectedRows.length > 0) {
-        const selectedRowsIndex = selectedRows.map(row => apiRef.current!.getRowIndexFromId(row.id));
+        const selectedRowsIndex = selectedRows.map(row =>
+          apiRef.current!.getRowIndexFromId(row.id),
+        );
 
-        const diffWithCurrentIndex: number[] = selectedRowsIndex.map(idx => Math.abs(currentRowIndex - idx));
+        const diffWithCurrentIndex: number[] = selectedRowsIndex.map(idx =>
+          Math.abs(currentRowIndex - idx),
+        );
         const minIndex = Math.max(...diffWithCurrentIndex);
         selectionFromRowIndex = selectedRowsIndex[diffWithCurrentIndex.indexOf(minIndex)];
       }
@@ -146,7 +166,11 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
       const nextCellIndexes = navigateCells(code, false);
       //We select the rows in between
       const rowIds = Array(Math.abs(nextCellIndexes.rowIndex - selectionFromRowIndex) + 1)
-        .fill(nextCellIndexes.rowIndex > selectionFromRowIndex ? selectionFromRowIndex : nextCellIndexes.rowIndex)
+        .fill(
+          nextCellIndexes.rowIndex > selectionFromRowIndex
+            ? selectionFromRowIndex
+            : nextCellIndexes.rowIndex,
+        )
         .map((cur, idx) => apiRef.current!.getRowIdFromRowIndex(cur + idx));
 
       logger.debug('Selecting rows ', rowIds);
@@ -214,7 +238,15 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
         return;
       }
     },
-    [apiRef, logger, onMultipleKeyChange, expandSelection, handleCopy, navigateCells, selectActiveRow],
+    [
+      apiRef,
+      logger,
+      onMultipleKeyChange,
+      expandSelection,
+      handleCopy,
+      navigateCells,
+      selectActiveRow,
+    ],
   );
 
   const onKeyUpHandler = useCallback(

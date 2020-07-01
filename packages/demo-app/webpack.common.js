@@ -10,7 +10,11 @@ module.exports = {
     usedExports: true,
   },
   resolve: {
-    modules: [path.resolve(__dirname, 'node_modules'), path.resolve(__dirname, '../node_modules'), 'node_modules'],
+    modules: [
+      path.resolve(__dirname, 'node_modules'),
+      path.resolve(__dirname, '../node_modules'),
+      'node_modules',
+    ],
     extensions: ['.tsx', '.ts', '.js'],
   },
   module: {

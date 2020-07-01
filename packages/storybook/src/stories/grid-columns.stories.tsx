@@ -45,7 +45,8 @@ export const ColumnDescriptionTooltip = () => {
 
 export const HiddenColumns = () => {
   const data = useData(100, 20);
-  const transformColSizes = (columns: ColDef[]) => columns.map((c, idx) => ({ ...c, hide: idx % 2 === 0 }));
+  const transformColSizes = (columns: ColDef[]) =>
+    columns.map((c, idx) => ({ ...c, hide: idx % 2 === 0 }));
   return <Grid rows={data.rows} columns={transformColSizes(data.columns)} />;
 };
 
@@ -80,7 +81,14 @@ export const UpdateColumnsBtn: React.FC = () => {
       registerDate: getDate(),
       lastLoginDate: getDate(),
     },
-    { id: 3, lastName: 'Smith', firstName: 'igor', isRegistered: false, age: 40, registerDate: getDate() },
+    {
+      id: 3,
+      lastName: 'Smith',
+      firstName: 'igor',
+      isRegistered: false,
+      age: 40,
+      registerDate: getDate(),
+    },
     {
       id: 4,
       lastName: 'James',

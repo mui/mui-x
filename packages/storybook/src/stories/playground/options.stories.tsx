@@ -52,7 +52,9 @@ export const Options = () => {
         checkboxSelection: boolean('checkboxSelection', true),
         disableSelectionOnClick: boolean('disableSelectionOnClick', false),
         enableMultipleColumnsSorting: boolean('enableMultipleColumnsSorting', true),
-        sortingOrder: sortingOrder.map(value => (value === 'null' ? null : (value as SortDirection))),
+        sortingOrder: sortingOrder.map(value =>
+          value === 'null' ? null : (value as SortDirection),
+        ),
         headerHeight: number('headerHeight', 56),
         rowHeight: number('rowHeight', 52),
       }}

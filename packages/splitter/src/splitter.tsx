@@ -63,7 +63,11 @@ export const Splitter: React.FC<SplitterProps> = ({
   };
 
   const calculateSizes = (): void => {
-    if (containerTop.current != null && panelAvailableSize.current != null && clientY.current != null) {
+    if (
+      containerTop.current != null &&
+      panelAvailableSize.current != null &&
+      clientY.current != null
+    ) {
       const splitterY = clientY.current - containerTop.current;
       if (splitterY < topPanelSize) {
         setPanelSizes([topPanelSize, panelAvailableSize.current - topPanelSize]);
@@ -92,7 +96,9 @@ export const Splitter: React.FC<SplitterProps> = ({
   const resetParentContainerSizes = () => {
     if (container.current && panelAvailableSize && containerTop) {
       const containerClientRect = container.current.getBoundingClientRect();
-      const containerHeight = isHorizontal() ? containerClientRect.height : containerClientRect.width;
+      const containerHeight = isHorizontal()
+        ? containerClientRect.height
+        : containerClientRect.width;
       const splitterHeight = 1;
 
       containerTop.current = isHorizontal() ? containerClientRect.top : containerClientRect.left;

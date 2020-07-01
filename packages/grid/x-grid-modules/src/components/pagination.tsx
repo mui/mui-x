@@ -40,7 +40,9 @@ export const Pagination: React.FC<PaginationComponentProps> = ({
       count={rowCount}
       page={currentPage - 1}
       onChangePage={onPageChange}
-      rowsPerPageOptions={rowsPerPageOptions && rowsPerPageOptions.indexOf(pageSize) > -1 ? rowsPerPageOptions : []}
+      rowsPerPageOptions={
+        rowsPerPageOptions && rowsPerPageOptions.indexOf(pageSize) > -1 ? rowsPerPageOptions : []
+      }
       rowsPerPage={pageSize}
       onChangeRowsPerPage={onPageSizeChange}
     />

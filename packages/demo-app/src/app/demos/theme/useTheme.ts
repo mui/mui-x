@@ -8,7 +8,10 @@ type ReturnType = [AppTheme, string, () => void, boolean];
 
 export function useTheme(): ReturnType {
   const currentThemeCtx = useContext(ThemeContext);
-  const [selectedThemeId, setSelectedTheme] = useLocalStorage(STORAGE_THEME_KEY, currentThemeCtx.theme);
+  const [selectedThemeId, setSelectedTheme] = useLocalStorage(
+    STORAGE_THEME_KEY,
+    currentThemeCtx.theme,
+  );
 
   const [theme, setTheme] = useState(ThemeValuePair[selectedThemeId]);
   const [isDark, setIsDark] = useState(theme === darkTheme);
