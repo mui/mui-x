@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { Columns, Grid, RowsProp } from '@material-ui/x-grid';
+import { Columns, Grid, RowsProp, CellValue } from '@material-ui/x-grid';
 import { useCallback, useMemo, useState } from 'react';
 import { randomCreatedDate, randomUpdatedDate } from '@material-ui/x-grid-data-generator';
 import { Button } from '@material-ui/core';
-import { CellValue } from '@material-ui/x-grid-modules/dist/src';
 import './demo.css';
 
 export const ColumnTypesDemo = () => {
