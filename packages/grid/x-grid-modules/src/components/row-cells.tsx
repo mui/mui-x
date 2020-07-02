@@ -30,7 +30,7 @@ function getCellParams(rowModel: RowModel, col: ColDef, rowIndex: number, value:
 function applyCssClassRules(cellClassRules: CellClassRules, params: CellClassParams) {
   return Object.entries(cellClassRules).reduce((appliedCss, entry) => {
     const shouldApplyCss: boolean = entry[1](params);
-    appliedCss += shouldApplyCss ? entry[0] : '';
+    appliedCss += shouldApplyCss ? entry[0] + ' ' : '';
     return appliedCss;
   }, '');
 }

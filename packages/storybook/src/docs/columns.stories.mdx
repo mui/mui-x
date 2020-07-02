@@ -1,5 +1,5 @@
 import { Grid } from '@material-ui/x-grid';
-import {ColumnTypesDemo, HideColumnDemo, ValueGetterDemo, FormattingDemo} from './demos/columns.demo'
+import {ColumnTypesDemo, HideColumnDemo, ValueGetterDemo, FormattingDemo, StyleHeaderDemo, StyleCellDemo} from './demos/columns.demo'
 
 <Meta title="1. Docs/2. Columns" component={Grid} />
 
@@ -104,8 +104,42 @@ Formatting data before rendering is a common task, it is used in our built in `d
 <FormattingDemo />
 
 ## Styling
+There are different ways of styling `X-Grid` or `DataGrid`. In this part, we are going to focus only on the options available in our `ColDef` type.
+### Header
+`ColDef` has an attribute called `headerClass` that let you inject some css classes in your column header.
+You can also specify where to align the header text using `headerAlign`, default value is `left`
 
+ ```typescript jsx
+ const columns: Columns = [
+   { field: 'styledCol', headerClass: 'super-app-theme--header', headerAlign: 'center'}
+ ]
+ ```
+- `HeaderClass` can be a `string` or a `string[]`
+<StyleHeaderDemo />
+
+### Cell
+`ColDef` let you style cells with different attributes.
+- `align` to align cell content, `'left' | 'right' | 'center'`
+- `cellClass` of type `string | string[]`, allows to apply css classes on every cells. It can also be of type `CellClassFn` which is a function that let you apply css classes dynamically.
+- `cellClassRules` works like `classnames` [github here](https://github.com/JedWatson/classnames). It's an object, with css classes as keys and a boolean or a function as values.
+
+ ```typescript jsx
+ const columns: Columns = [
+   { field: 'styledCell', cellClass: 'super-app-theme--cell', align: 'center'},
+   {
+     field: 'withRules',
+     cellClassRules: {
+       negative: {value} => value < 0,
+       positive: {value} => value > 0
+     },
+     align: 'right'
+   },
+ ]
+ ```
+<StyleCellDemo />
 
 ## Options
+We added more options in `ColDef` which you can find the full definition in the Api page (TODO add link here)
 
+   - `disableClickEventBubbling`: allows to disable the default click behaviour of the grid. If you render a clickable component in a column such as a link or a button, you can use this options to disable the row selection on click.
 

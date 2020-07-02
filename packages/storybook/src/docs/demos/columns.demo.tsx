@@ -3,7 +3,8 @@ import { Columns, Grid, RowsProp } from '@material-ui/x-grid';
 import { useCallback, useMemo, useState } from 'react';
 import { randomCreatedDate, randomUpdatedDate } from '@material-ui/x-grid-data-generator';
 import { Button } from '@material-ui/core';
-import {CellValue} from "@material-ui/x-grid-modules/dist/src";
+import { CellValue } from '@material-ui/x-grid-modules/dist/src';
+import './demo.css';
 
 export const ColumnTypesDemo = () => {
   const columns: Columns = useMemo(
@@ -130,10 +131,10 @@ export const HideColumnDemo = () => {
   //TODO use XGrid when published
   return (
     <>
-      <Button onClick={toggleLastLogin} color={'primary'} variant={"contained"} size={"small"}>
+      <Button onClick={toggleLastLogin} color={'primary'} variant={'contained'} size={'small'}>
         Toggle Last Login Column
       </Button>
-      <div style={{ width: 800, height: 500, padding:'10px 0' }}>
+      <div style={{ width: 800, height: 500, padding: '10px 0' }}>
         <Grid rows={rows} columns={columns} options={{ hideFooter: true }} />
       </div>
     </>
@@ -141,11 +142,14 @@ export const HideColumnDemo = () => {
 };
 
 export const ValueGetterDemo = () => {
-  const columns = useMemo<Columns>(()=> [
-    { field: 'firstName'},
-    { field: 'lastName' },
-    { field: 'fullName', width: 200, valueGetter: ({data})=> `${data.firstName} ${data.lastName}` }
-  ], []);
+  const columns = useMemo<Columns>(
+    () => [
+      { field: 'firstName' },
+      { field: 'lastName' },
+      { field: 'fullName', width: 200, valueGetter: ({ data }) => `${data.firstName} ${data.lastName}` },
+    ],
+    [],
+  );
 
   const rows: RowsProp = useMemo(
     () => [
@@ -169,16 +173,23 @@ export const ValueGetterDemo = () => {
   );
 
   return (
-      <div style={{ width: 800, height: 500, padding:'10px 0' }}>
-        <Grid rows={rows} columns={columns} options={{ hideFooter: true }} />
-      </div>
+    <div style={{ width: 800, height: 500, padding: '10px 0' }}>
+      <Grid rows={rows} columns={columns} options={{ hideFooter: true }} />
+    </div>
   );
 };
 
 export const FormattingDemo = () => {
-  const columns = useMemo<Columns>(()=> [
-    { field: 'date', headerName: 'Year', valueFormatter: ({value}: {value: CellValue})=> (value as Date).getFullYear() }
-  ], []);
+  const columns = useMemo<Columns>(
+    () => [
+      {
+        field: 'date',
+        headerName: 'Year',
+        valueFormatter: ({ value }: { value: CellValue }) => (value as Date).getFullYear(),
+      },
+    ],
+    [],
+  );
 
   const rows: RowsProp = useMemo(
     () => [
@@ -188,18 +199,111 @@ export const FormattingDemo = () => {
       },
       {
         id: 2,
-        date: new Date(1984, 1, 1)
+        date: new Date(1984, 1, 1),
       },
       {
         id: 3,
-        date: new Date(1992, 2, 1)
+        date: new Date(1992, 2, 1),
       },
     ],
     [],
   );
 
   return (
-    <div style={{ width: 800, height: 500, padding:'10px 0' }}>
+    <div style={{ width: 800, height: 500, padding: '10px 0' }}>
+      <Grid rows={rows} columns={columns} options={{ hideFooter: true }} />
+    </div>
+  );
+};
+
+export const StyleHeaderDemo = () => {
+  const columns = useMemo<Columns>(
+    () => [
+      {
+        field: 'first',
+        headerClass: 'super-app-theme--header',
+        headerAlign: 'center',
+      },
+      {
+        field: 'last',
+        headerClass: 'super-app-theme--header',
+        headerAlign: 'center',
+      },
+    ],
+    [],
+  );
+
+  const rows: RowsProp = useMemo(
+    () => [
+      {
+        id: 1,
+        first: 'Jane',
+        last: 'Carter',
+      },
+      {
+        id: 2,
+        first: 'Jack',
+        last: 'Smith',
+      },
+      {
+        id: 3,
+        first: 'Gill',
+        last: 'Martin',
+      },
+    ],
+    [],
+  );
+
+  return (
+    <div style={{ width: 800, height: 500, padding: '10px 0' }}>
+      <Grid rows={rows} columns={columns} options={{ hideFooter: true }} />
+    </div>
+  );
+};
+
+export const StyleCellDemo = () => {
+  const columns = useMemo<Columns>(
+    () => [
+      {
+        field: 'name',
+        cellClass: 'super-app-theme--cell',
+      },
+      {
+        field: 'score',
+        type: 'number',
+        cellClass: 'super-app',
+        cellClassRules: {
+          negative: ({ value }) => value! < 0,
+          positive: ({ value }) => value! > 0,
+        },
+      },
+    ],
+    [],
+  );
+
+  const rows: RowsProp = useMemo(
+    () => [
+      {
+        id: 1,
+        name: 'Jane',
+        score: 100,
+      },
+      {
+        id: 2,
+        name: 'Jack',
+        score: -100,
+      },
+      {
+        id: 3,
+        name: 'Gill',
+        score: -50,
+      },
+    ],
+    [],
+  );
+
+  return (
+    <div style={{ width: 800, height: 500, padding: '10px 0' }}>
       <Grid rows={rows} columns={columns} options={{ hideFooter: true }} />
     </div>
   );
