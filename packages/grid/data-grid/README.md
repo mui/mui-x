@@ -36,19 +36,19 @@ Then you need to create some columns which are simple objects containing at leas
 You can import `ColDef` to see all column properties.
 A simple set of column can be.
 
-```typescript jsx
+```tsx
 const columns = [{ field: "id"}, {field: "name", headerName:  'Client Name'}...];
 ```
 
 Rows are string key value pair objects.
 
-```typescript jsx
+```tsx
 const rows = [{id: 1, name:'Jon Snow'}, {id: 2, name: 'Tyrion Lannister'}...]
 ```
 
 A complete example below.
 
-```typescript jsx
+```tsx
 import * as React from 'react';
 import { ColDef, Grid } from '@material-ui-x/grid';
 

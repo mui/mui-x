@@ -9,7 +9,7 @@ After importing XGrid or DataGrid, you're now ready to use the component in your
 Todo that, you need to define the columns property of the component as below.
 If you use Typescript, you can enforce the typing and define the prop with 'Columns' or 'ColDef[]' type.
 
-```typescript jsx
+```tsx
 const columns: Columns = [
     {
         field: 'columnId', headerName: 'My Column Id', description: 'Something about this grid is amazing!', width: 100, sortable: true, type: 'number'
@@ -39,7 +39,7 @@ We have built-in the following types
  - dateTime
 
 To apply a column type, you just need to define the `type` property in your column definition.
-```typescript jsx
+```tsx
 const columns: Columns = [
   { field: 'name', type: 'string' },
   { field: 'age', type: 'number' },
@@ -57,7 +57,7 @@ We also added locale formatting for date, dateTime, and number Columns.
 
 ## Hiding
 Hiding a column is pretty straightforward, you just need to toggle the `hide` attribute of the column definition.
-```typescript jsx
+```tsx
 const columns: Columns = [
   { field: 'hiddenCol', hide: true },
 ]
@@ -68,7 +68,7 @@ const columns: Columns = [
 
 To define the size of a column, you can use the `width` attribute available in ColDef. You can also resize the column, using the column resize separator icon, available on the column header. If you would like to block the resizing of a column, you can do by setting the resizable prop to false.
 
-```typescript jsx
+```tsx
 const columns: Columns = [
   { field: 'largeCol', width: 200 },
   { field: 'unresizableCol', width: 200, resizable: false }
@@ -78,7 +78,7 @@ const columns: Columns = [
 Sometimes a column might not have a corresponding value and you just want to render a combination of different field.
 To do that, you can set the `valueGetter` attribute of `ColDef` as in the example below.
 
- ```typescript jsx
+ ```tsx
  const columns: Columns = [
    { field: 'firstName'},
    { field: 'lastName' },
@@ -93,7 +93,7 @@ TODO Api ref the valueGetter interface here!
 ## Formatting
 Formatting data before rendering is a common task, it is used in our built in `date` or `dateTime` column types, to apply local formatting to dates.
 
- ```typescript jsx
+ ```tsx
  const columns: Columns = [
    { field: 'date', headerName: 'Year'  valueFormatter: ({value})=> value.getFullYear() }
  ]
@@ -109,7 +109,7 @@ There are different ways of styling `X-Grid` or `DataGrid`. In this part, we are
 `ColDef` has an attribute called `headerClass` that let you inject some css classes in your column header.
 You can also specify where to align the header text using `headerAlign`, default value is `left`
 
- ```typescript jsx
+ ```tsx
  const columns: Columns = [
    { field: 'styledCol', headerClass: 'super-app-theme--header', headerAlign: 'center'}
  ]
@@ -123,7 +123,7 @@ You can also specify where to align the header text using `headerAlign`, default
 - `cellClass` of type `string | string[]`, allows to apply css classes on every cells. It can also be of type `CellClassFn` which is a function that let you apply css classes dynamically.
 - `cellClassRules` works like `classnames` [github here](https://github.com/JedWatson/classnames). It's an object, with css classes as keys and a boolean or a function as values.
 
- ```typescript jsx
+ ```tsx
  const columns: Columns = [
    { field: 'styledCell', cellClass: 'super-app-theme--cell', align: 'center'},
    {
