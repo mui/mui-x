@@ -4,7 +4,7 @@ import { takeUntil, tap } from 'rxjs/operators';
 import { PricingModel, subscribeCurrencyPair } from '../data/streaming/pricing-service';
 import { currencyPairs } from '../data/currency-pairs';
 import { pricingColumns } from '../data/streaming/pricing-service';
-import { Grid, ColDef, GridApi, GridOptionsProp } from '@material-ui/x-grid';
+import { XGrid, ColDef, GridApi, GridOptionsProp } from '@material-ui/x-grid';
 
 export interface PricingGridProps {
   min?: number;
@@ -68,7 +68,7 @@ export const PricingGrid: React.FC<PricingGridProps> = p => {
         </button>
       </div>
       <div style={{ width: 800, height: 600 }}>
-        <Grid rows={rows} columns={columns} apiRef={gridApiRef} {...p} />
+        <XGrid rows={rows} columns={columns} apiRef={gridApiRef} {...p} />
       </div>
     </>
   );

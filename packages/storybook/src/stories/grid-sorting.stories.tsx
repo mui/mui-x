@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ColDef, Grid, GridApi } from '@material-ui/x-grid';
+import { ColDef, XGrid, GridApi } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { action } from '@storybook/addon-actions';
 
 export default {
   title: 'X-Grid Tests/Sorting',
-  component: Grid,
+  component: XGrid,
   decorators: [withKnobs, withA11y],
   parameters: {
     options: { selectedPanel: 'storybook/action/panel' },
@@ -39,7 +39,7 @@ export const HeadersClick = () => {
     <>
       <p>Click column headers to sort</p>
       <div className="grid-container">
-        <Grid rows={getRows()} columns={getColumns()} />
+        <XGrid rows={getRows()} columns={getColumns()} />
       </div>
     </>
   );
@@ -50,7 +50,7 @@ export const SortingOrderOverrideOption = () => {
     <>
       <p>Click column headers to sort</p>
       <div className="grid-container">
-        <Grid rows={getRows()} columns={getColumns()} options={{ sortingOrder: ['desc', 'asc'] }} />
+        <XGrid rows={getRows()} columns={getColumns()} options={{ sortingOrder: ['desc', 'asc'] }} />
       </div>
     </>
   );
@@ -62,7 +62,7 @@ export const StringSortingAsc = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -72,7 +72,7 @@ export const StringSortingDesc = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -82,7 +82,7 @@ export const NumberSortingAsc = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -92,7 +92,7 @@ export const NumberSortingDesc = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -102,7 +102,7 @@ export const DateSortingAsc = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -112,7 +112,7 @@ export const DateSortingDesc = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -122,7 +122,7 @@ export const DateTimeSortingAsc = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -132,7 +132,7 @@ export const DateTimeSortingDesc = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -144,7 +144,7 @@ export const MultipleSorting = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -156,7 +156,7 @@ export const MultipleAndSortIndex = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -172,7 +172,7 @@ export const UnsortableLastCol = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -189,7 +189,7 @@ export const CustomComparator = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -204,7 +204,7 @@ export const SortingWithFormatter = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -219,7 +219,7 @@ export const ApiSingleSorted = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={getColumns()} apiRef={apiRef} />
+      <XGrid rows={getRows()} columns={getColumns()} apiRef={apiRef} />
     </div>
   );
 };
@@ -236,7 +236,7 @@ export const ApiMultipleSorted = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={getColumns()} apiRef={apiRef} />
+      <XGrid rows={getRows()} columns={getColumns()} apiRef={apiRef} />
     </div>
   );
 };
@@ -276,7 +276,7 @@ export const SortedEventsApi = () => {
         <ol>{...loggedEvents.map((evt, idx) => <li key={evt + idx}>{evt}</li>)}</ol>
       </div>
       <div className="grid-container">
-        <Grid rows={rows} columns={cols} apiRef={apiRef} />
+        <XGrid rows={rows} columns={cols} apiRef={apiRef} />
       </div>
     </>
   );

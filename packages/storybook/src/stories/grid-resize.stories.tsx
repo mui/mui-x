@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ElementSize, Grid } from '@material-ui/x-grid';
+import { ElementSize, XGrid } from '@material-ui/x-grid';
 
 import '../style/grid-stories.css';
 import { withKnobs } from '@storybook/addon-knobs';
@@ -8,7 +8,7 @@ import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/Resize',
-  component: Grid,
+  component: XGrid,
   decorators: [withKnobs, withA11y],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
@@ -31,8 +31,8 @@ export const ResizeSmallDataset = () => {
           Switch sizes
         </button>
       </div>
-      <div style={{ width: size.width, height: size.height }}>
-        <Grid rows={data.rows} columns={data.columns} />
+      <div style={{ width: size.width, height: size.height , display: 'flex' }}>
+        <XGrid rows={data.rows} columns={data.columns} />
       </div>
     </>
   );
@@ -52,7 +52,7 @@ export const ResizeLargeDataset = () => {
         </button>
       </div>
       <div style={{ width: size.width, height: size.height }}>
-        <Grid rows={data.rows} columns={data.columns} />
+        <XGrid rows={data.rows} columns={data.columns} />
       </div>
     </>
   );

@@ -21,10 +21,11 @@ import { useLogger, useLoggerFactory } from './hooks/utils';
 import { debounce, mergeOptions } from './utils';
 
 export const GridComponent: React.FC<GridComponentProps> = React.memo(
-  ({ rows, columns, options, apiRef, loading, licenseStatus }) => {
+  ({ rows, columns, options, apiRef, loading, licenseStatus, className}) => {
     useLoggerFactory(options?.logger, options?.logLevel);
     const logger = useLogger('Grid');
     const gridRootRef: GridRootRef = useRef<HTMLDivElement>(null);
+    const footerRef = useRef<HTMLDivElement>(null);
     const columnsHeaderRef = useRef<HTMLDivElement>(null);
     const columnsContainerRef = useRef<HTMLDivElement>(null);
     const windowRef = useRef<HTMLDivElement>(null);
@@ -102,13 +103,29 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
       renderCtx,
     );
 
+    const getTotalHeight = useCallback(
+      size => {
+        if (!internalOptions.autoHeight) {
+          return size.height;
+        }
+        const footerHeight = (footerRef.current && footerRef.current.getBoundingClientRect().height) || 0;
+        let dataHeight = (renderCtx && renderCtx.dataContainerSizes!.height) || 0;
+        if (dataHeight < internalOptions.rowHeight) {
+          dataHeight = internalOptions.rowHeight * 2; //If we have no rows, we give the size of 2 rows to display the no rows overlay
+        }
+
+        return footerHeight + dataHeight + internalOptions.headerHeight;
+      },
+      [internalOptions.autoHeight, internalOptions.headerHeight, internalOptions.rowHeight, renderCtx],
+    );
+
     return (
-      <AutoSizerWrapper onResize={debouncedOnResize}>
+      <AutoSizerWrapper onResize={debouncedOnResize} style={{ height: 'unset', width: 'unset' }} className={'material-grid MuiGrid ' + (className || '')} >
         {(size: any) => (
           <GridRoot
             ref={gridRootRef}
             options={internalOptions}
-            style={{ width: size.width, height: size.height }}
+            style={{ width: size.width, height: getTotalHeight(size) }}
             role={'grid'}
             aria-colcount={internalColumns.visible.length}
             aria-rowcount={internalRows.length + 1}
@@ -157,6 +174,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
                 </div>
                 {components.footerComponent || (
                   <DefaultFooter
+                    ref={footerRef}
                     paginationProps={paginationProps}
                     rowCount={internalRows.length}
                     options={internalOptions}

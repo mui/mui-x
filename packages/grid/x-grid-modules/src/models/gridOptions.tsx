@@ -58,6 +58,7 @@ export interface ComponentParams {
 
 //Todo add multiSortKey
 export interface GridOptions {
+  autoHeight?: boolean;
   rowHeight: number;
   headerHeight: number;
   scrollbarSize: number;
@@ -99,6 +100,7 @@ export interface GridOptions {
 }
 
 export const DEFAULT_GRID_OPTIONS: GridOptions = {
+  autoHeight: false,
   rowHeight: 52,
   headerHeight: 56,
   scrollbarSize: 15,

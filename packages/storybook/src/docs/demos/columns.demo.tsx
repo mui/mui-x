@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Columns, Grid, RowsProp, CellValue } from '@material-ui/x-grid';
+import { Columns, XGrid, RowsProp, CellValue } from '@material-ui/x-grid';
 import { useCallback, useMemo, useState } from 'react';
 import { randomCreatedDate, randomUpdatedDate } from '@material-ui/x-grid-data-generator';
 import { Button } from '@material-ui/core';
@@ -60,9 +60,7 @@ export const ColumnTypesDemo = () => {
 
   //TODO use XGrid when published
   return (
-    <div style={{ width: 800, height: 500 }}>
-      <Grid rows={rows} columns={columns} options={{ hideFooter: true }} />
-    </div>
+      <XGrid rows={rows} columns={columns} options={{ hideFooter: true, autoHeight: true }} />
   );
 };
 
@@ -133,8 +131,8 @@ export const HideColumnDemo = () => {
       <Button onClick={toggleLastLogin} color={'primary'} variant={'contained'} size={'small'}>
         Toggle Last Login Column
       </Button>
-      <div style={{ width: 800, height: 500, padding: '10px 0' }}>
-        <Grid rows={rows} columns={columns} options={{ hideFooter: true }} />
+      <div style={{ width: 800, height: 320, padding: '10px 0' }}>
+        <XGrid rows={rows} columns={columns} options={{ hideFooter: true, autoHeight: true }}  />
       </div>
     </>
   );
@@ -172,9 +170,7 @@ export const ValueGetterDemo = () => {
   );
 
   return (
-    <div style={{ width: 800, height: 500, padding: '10px 0' }}>
-      <Grid rows={rows} columns={columns} options={{ hideFooter: true }} />
-    </div>
+      <XGrid rows={rows} columns={columns} options={{ hideFooter: true, autoHeight: true }}  />
   );
 };
 
@@ -209,9 +205,7 @@ export const FormattingDemo = () => {
   );
 
   return (
-    <div style={{ width: 800, height: 500, padding: '10px 0' }}>
-      <Grid rows={rows} columns={columns} options={{ hideFooter: true }} />
-    </div>
+      <XGrid rows={rows} columns={columns} options={{ hideFooter: true, autoHeight: true }}  />
   );
 };
 
@@ -254,9 +248,7 @@ export const StyleHeaderDemo = () => {
   );
 
   return (
-    <div style={{ width: 800, height: 500, padding: '10px 0' }}>
-      <Grid rows={rows} columns={columns} options={{ hideFooter: true }} />
-    </div>
+      <XGrid rows={rows} columns={columns} options={{ hideFooter: true, autoHeight: true }}  />
   );
 };
 
@@ -302,8 +294,6 @@ export const StyleCellDemo = () => {
   );
 
   return (
-    <div style={{ width: 800, height: 500, padding: '10px 0' }}>
-      <Grid rows={rows} columns={columns} options={{ hideFooter: true }} />
-    </div>
+      <XGrid rows={rows} columns={columns} options={{ hideFooter: true, autoHeight: true }}  />
   );
 };

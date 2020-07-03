@@ -20,12 +20,15 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>): R
       logger.debug(`window Size - W: ${windowSizesRef.current.width} H: ${windowSizesRef.current.height} `);
 
       const rowHeight = options.rowHeight;
-      const hasScrollY = options.paginationAutoPageSize ? false : windowSizesRef.current.height < rowsCount * rowHeight;
+      const hasScrollY =
+        options.paginationAutoPageSize || options.autoHeight
+          ? false
+          : windowSizesRef.current.height < rowsCount * rowHeight;
       const hasScrollX = columnsTotalWidth > windowSizesRef.current.width;
       const scrollBarSize = { y: hasScrollY ? options.scrollbarSize : 0, x: hasScrollX ? options.scrollbarSize : 0 };
       const viewportSize = {
         width: windowSizesRef.current!.width - scrollBarSize.y,
-        height: windowSizesRef.current!.height - scrollBarSize.x,
+        height: options.autoHeight ? rowsCount * rowHeight : windowSizesRef.current!.height - scrollBarSize.x,
       };
 
       let viewportPageSize = viewportSize.height / rowHeight;
@@ -38,9 +41,13 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>): R
       );
       const renderingZoneHeight = rzPageSize * rowHeight + rowHeight + scrollBarSize.x;
       const dataContainerWidth = columnsTotalWidth - scrollBarSize.y;
-      const totalHeight =
+      let totalHeight =
         (options.paginationAutoPageSize ? 1 : rowsCount / viewportPageSize) * viewportSize.height +
         (hasScrollY ? scrollBarSize.x : 0);
+
+      if (options.autoHeight) {
+        totalHeight = rowsCount * rowHeight + scrollBarSize.x;
+      }
 
       const indexes: ContainerProps = {
         renderingZonePageSize: rzPageSize,

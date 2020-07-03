@@ -5,11 +5,11 @@ import { PricingGrid } from '../components/pricing-grid';
 import { FeedGrid } from '../components/feed-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
-import { Grid } from '@material-ui/x-grid';
+import { XGrid } from '@material-ui/x-grid';
 
 export default {
   title: 'X-Grid Tests/Streaming',
-  component: Grid,
+  component: XGrid,
   decorators: [withKnobs, withA11y],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
