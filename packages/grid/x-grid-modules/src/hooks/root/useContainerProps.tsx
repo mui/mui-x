@@ -1,4 +1,5 @@
-import React, { useCallback, useRef } from 'react';
+import * as React from 'react';
+import { useCallback, useRef } from 'react';
 import { ContainerProps, ElementSize, GridOptions } from '../../models';
 import { useLogger } from '../utils/useLogger';
 

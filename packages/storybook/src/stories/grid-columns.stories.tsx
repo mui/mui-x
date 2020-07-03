@@ -1,4 +1,5 @@
-import React, { useCallback, useState } from 'react';
+import * as React from 'react';
+import { useCallback, useState } from 'react';
 import { getDate } from '../data/random-generator';
 import { ColDef, XGrid } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';

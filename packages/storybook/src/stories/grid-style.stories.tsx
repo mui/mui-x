@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+import * as React from 'react';
+import { useMemo } from 'react';
 import { XGrid, GridOptionsProp } from '@material-ui/x-grid';
 
 import '../style/grid-stories.css';

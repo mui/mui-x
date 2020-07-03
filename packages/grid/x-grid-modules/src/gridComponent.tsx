@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import * as React from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { GridComponentProps } from './gridComponentProps';
 import { useColumnResize, useComponents, usePagination, useSelection, useSorting } from './hooks/features';
 import { DEFAULT_GRID_OPTIONS, ElementSize, GridApi, GridOptions, GridRootRef } from './models';
@@ -120,10 +121,11 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
     );
 
     return (
-      <AutoSizerWrapper onResize={debouncedOnResize} style={{ height: 'unset', width: 'unset' }} className={'material-grid MuiGrid ' + (className || '')} >
+      <AutoSizerWrapper onResize={debouncedOnResize} style={{ height: 'unset', width: 'unset' }}  >
         {(size: any) => (
           <GridRoot
             ref={gridRootRef}
+            className={'material-grid MuiGrid ' + (className || '')}
             options={internalOptions}
             style={{ width: size.width, height: getTotalHeight(size) }}
             role={'grid'}

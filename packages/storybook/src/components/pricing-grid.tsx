@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import * as React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { PricingModel, subscribeCurrencyPair } from '../data/streaming/pricing-service';

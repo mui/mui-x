@@ -1,7 +1,7 @@
 //old blue: #3f51b5
 import { createMuiTheme, ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 import { PaletteOptions } from '@material-ui/core/styles/createPalette';
-import React from 'react';
+import * as React from 'react';
 import { ThemeProvider as SCThemeProvider } from 'styled-components';
 import { ThemeColors } from './utils';
 import { lightTheme, lightThemeId } from './light';

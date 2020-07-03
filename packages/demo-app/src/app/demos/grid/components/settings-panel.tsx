@@ -1,4 +1,5 @@
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import * as React from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { StyledPanels } from './styled-panel';
 
 import { FormControl, FormGroup, Button, FormLabel, MenuItem, Select } from '@material-ui/core';

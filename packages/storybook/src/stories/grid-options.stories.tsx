@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { ColDef, XGrid, GridApiRef, gridApiRef } from '@material-ui/x-grid';
 import { Button } from '@material-ui/core';
 
