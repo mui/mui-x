@@ -97,8 +97,7 @@ export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
       cssClassProp = { cssClass: cssClassProp.cssClass + ' with-renderer' };
     }
 
-    const cellProps: any = {
-      key: column.field,
+    const cellProps: GridCellProps & { children: any } = {
       value: value,
       field: column.field,
       width: width,
@@ -111,14 +110,14 @@ export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
       colIndex: colIdx + firstColIdx,
       children: cellComponent,
     };
+
     return cellProps;
   });
-  // eslint-disable-next-line react/jsx-key
+
   return (
     <>
       {cellProps.map(props => (
-      // eslint-disable-next-line react/jsx-key
-        <Cell {...(props as any)} />
+        <Cell key={props.field} {...props} />
       ))}
     </>
   );
