@@ -20,7 +20,7 @@ In the code above we define a column with some of the basic attributes.
 - `field` is a mandatory field and is used to identify the corresponding value on rows. It's similar to an id, but has to be a string.
 - `headerName` is the title visible in the grid column header. If not set, `field` will be used in the header.
 - `description` is the description of the column, that will be displayed in a tooltip if the column header is too small to render the full column title.
-- `width` is the width the column will be when the component has mounted
+- `width` is the width the column will be when the component has mounted.
 - `sortable` is an optional boolean that allows to make the column sortable.
 - `type` is the type of the column, *more on this one below*.
 
@@ -142,4 +142,3 @@ You can also specify where to align the header text using `headerAlign`, default
 We added more options in `ColDef` which you can find the full definition in the Api page (TODO add link here)
 
    - `disableClickEventBubbling`: allows to disable the default click behaviour of the grid. If you render a clickable component in a column such as a link or a button, you can use this options to disable the row selection on click.
-
