@@ -1,15 +1,15 @@
 {
   "name": "@material-ui-x/storybook",
-  "version": "0.1.46",
+  "version": "0.1.47",
   "description": "Storybook components",
   "author": "Damien Tassone <damien@material-ui.com>",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.9.12",
-    "@material-ui/data-grid": "^0.1.46",
+    "@material-ui/data-grid": "^0.1.47",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.54",
-    "@material-ui/x-grid": "^0.1.46",
+    "@material-ui/x-grid": "^0.1.47",
     "@material-ui/x-grid-data-generator": "^0.1.45",
     "@material-ui/x-license": "^0.1.40",
     "faker": "^4.1.0",
