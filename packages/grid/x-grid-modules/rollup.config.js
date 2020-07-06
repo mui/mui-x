@@ -31,7 +31,7 @@ export default [
         }),
       typescript(),
       !production && sourceMaps(),
-      production && terser(),
+      // production && terser(),
     ],
   },
   {
