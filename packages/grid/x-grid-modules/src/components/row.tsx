@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 import { RowId } from '../models';
 import { ROW_CSS_CLASS } from '../constants/cssClassesConstants';

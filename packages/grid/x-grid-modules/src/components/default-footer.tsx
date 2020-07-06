@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import { GridOptions } from '../models';
 import { PaginationProps } from '../hooks/features/usePagination';

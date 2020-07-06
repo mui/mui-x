@@ -10,8 +10,7 @@ import {
   ValueGetterParams,
   CellClassRules,
 } from '../models';
-import React from 'react';
-import { useContext } from 'react';
+import * as React from 'react';
 import { Cell } from './cell';
 import { ApiContext } from './api-context';
 import { classnames, isFunction } from '../utils';
@@ -51,7 +50,7 @@ interface RowCellsProps {
 
 export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
   const { scrollSize, hasScroll, lastColIdx, firstColIdx, columns, row, rowIndex, domIndex } = props;
-  const api = useContext(ApiContext);
+  const api = React.useContext(ApiContext);
 
   const cells = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const isLastColumn = firstColIdx + colIdx === columns.length - 1;

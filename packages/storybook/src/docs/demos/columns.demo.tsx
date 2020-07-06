@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Columns, XGrid, RowsProp, CellValue } from '@material-ui/x-grid';
 import { useCallback, useMemo, useState } from 'react';
 import { randomCreatedDate, randomUpdatedDate } from '@material-ui/x-grid-data-generator';

@@ -1,5 +1,5 @@
 import { ColDef } from '../models/colDef';
-import React from 'react';
+import * as React from 'react';
 import { useContext } from 'react';
 import { ApiContext } from './api-context';
 import { HEADER_CELL_CSS_CLASS } from '../constants/cssClassesConstants';

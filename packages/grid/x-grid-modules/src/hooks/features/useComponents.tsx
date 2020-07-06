@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { useMemo } from 'react';
 import { PaginationProps } from './usePagination';
 import { ComponentParams, GridApiRef, GridOptions, GridRootRef, InternalColumns, Rows } from '../../models';

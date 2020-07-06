@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { action } from '@storybook/addon-actions';
 import { XGrid, GridApi, GridOptionsProp } from '@material-ui/x-grid';

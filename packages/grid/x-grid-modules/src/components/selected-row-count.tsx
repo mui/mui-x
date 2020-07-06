@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 export const SelectedRowCount: React.FC<{ selectedRowCount: number }> = ({ selectedRowCount }) => {
   if (selectedRowCount === 0) {

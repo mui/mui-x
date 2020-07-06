@@ -1,5 +1,5 @@
 import TablePagination from '@material-ui/core/TablePagination';
-import React from 'react';
+import * as React from 'react';
 import { useCallback } from 'react';
 
 export interface PaginationComponentProps {

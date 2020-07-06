@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { AppBreadcrumbs } from '../../app-breadcrumbs';
 import { XGrid, LicenseInfo, RowModel, Columns, GridOptions } from '@material-ui/x-grid';

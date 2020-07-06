@@ -1,7 +1,7 @@
 import { Button } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 
-import React from 'react';
+import * as React from 'react';
 import { useState } from 'react';
 import { DummyContent } from './dummyContent';
 import { Splitter } from '@material-ui-x/splitter';

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { ReactNode } from 'react';
 
 export const validateChildren = (childrenArray: Array<Exclude<ReactNode, boolean | null | undefined>>): void => {

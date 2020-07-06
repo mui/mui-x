@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 const isDev = process.env.NODE_ENV !== 'production';
 
