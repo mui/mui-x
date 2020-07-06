@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { forwardRef, memo, useContext, useEffect, useRef, useState } from 'react';
 import { ColDef, Columns, RenderContextProps } from '../models';
 import { ColumnHeaderItem } from './column-header-item';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ColDef, XGrid, GridApi } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';

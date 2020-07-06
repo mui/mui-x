@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { CellParams, ColParams } from '../models/colDef';
 import { Checkbox } from '@material-ui/core';

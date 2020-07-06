@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import LeftArrow from '@material-ui/icons/KeyboardArrowLeft';

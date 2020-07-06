@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ColDef, XGrid, RowsProp } from '@material-ui/x-grid';
 
 export const QuickStartDemo = () => {

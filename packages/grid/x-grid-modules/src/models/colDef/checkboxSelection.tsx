@@ -1,5 +1,5 @@
 import { ColDef } from './colDef';
-import * as React from 'react';
+import React from 'react';
 import { CellCheckboxRenderer, HeaderCheckbox } from '../../components/checkbox-renderer';
 
 export const checkboxSelectionColDef: ColDef = {

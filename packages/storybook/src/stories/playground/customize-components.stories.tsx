@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ColDef, XGrid, GridOverlay, Footer, GridApiRef, gridApiRef } from '@material-ui/x-grid';
 import { LinearProgress } from '@material-ui/core';
 import CodeIcon from '@material-ui/icons/Code';

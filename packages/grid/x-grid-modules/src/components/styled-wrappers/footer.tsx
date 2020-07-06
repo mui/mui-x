@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DivProps } from './grid-root';
 
 export const Footer = React.forwardRef<HTMLDivElement, DivProps>((props, ref) => {

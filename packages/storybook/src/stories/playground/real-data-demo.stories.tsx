@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { withA11y } from '@storybook/addon-a11y';
 import { XGrid, GridOptionsProp, SortDirection } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';

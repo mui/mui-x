@@ -10,7 +10,7 @@ import {
   ValueGetterParams,
   CellClassRules,
 } from '../models';
-import * as React from 'react';
+import React from 'react';
 import { useContext } from 'react';
 import { Cell } from './cell';
 import { ApiContext } from './api-context';

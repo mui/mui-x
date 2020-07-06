@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Alignement, CellValue } from '../models';
 import { CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import { classnames } from '../utils';

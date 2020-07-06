@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { isOverflown } from '../utils';
 import { Tooltip } from '@material-ui/core';

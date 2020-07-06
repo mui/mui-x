@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { XGrid, GridOptionsProp } from '@material-ui/x-grid';

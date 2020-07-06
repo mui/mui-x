@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { DataGrid, DataGridOptionsProp } from '@material-ui/data-grid';
 import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
