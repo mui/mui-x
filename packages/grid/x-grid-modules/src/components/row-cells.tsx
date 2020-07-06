@@ -11,7 +11,7 @@ import {
   CellClassRules,
 } from '../models';
 import * as React from 'react';
-import { Cell } from './cell';
+import {Cell, GridCellProps} from './cell';
 import { ApiContext } from './api-context';
 import { classnames, isFunction } from '../utils';
 
@@ -52,7 +52,7 @@ export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
   const { scrollSize, hasScroll, lastColIdx, firstColIdx, columns, row, rowIndex, domIndex } = props;
   const api = React.useContext(ApiContext);
 
-  const cells = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
+  const cellProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const isLastColumn = firstColIdx + colIdx === columns.length - 1;
     const removeScrollWidth = isLastColumn && hasScroll.y && hasScroll.x;
     const width = removeScrollWidth ? column.width! - scrollSize : column.width!;
@@ -97,24 +97,30 @@ export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
       cssClassProp = { cssClass: cssClassProp.cssClass + ' with-renderer' };
     }
 
-    return (
-      <Cell
-        key={column.field}
-        value={value}
-        field={column.field}
-        width={width}
-        showRightBorder={showRightBorder}
-        {...formattedValueProp}
-        align={column.align}
-        {...cssClassProp}
-        tabIndex={domIndex === 0 && colIdx === 0 ? 0 : -1}
-        rowIndex={rowIndex}
-        colIndex={colIdx + firstColIdx}
-      >
-        {cellComponent}
-      </Cell>
-    );
+    const cellProps: any = {
+      key: column.field,
+      value: value,
+      field: column.field,
+      width: width,
+      showRightBorder: showRightBorder,
+      ...formattedValueProp,
+      align: column.align,
+      ...cssClassProp,
+      tabIndex: domIndex === 0 && colIdx === 0 ? 0 : -1,
+      rowIndex: rowIndex,
+      colIndex: colIdx + firstColIdx,
+      children: cellComponent,
+    };
+    return cellProps;
   });
-  return <>{cells}</>;
+  // eslint-disable-next-line react/jsx-key
+  return (
+    <>
+      {cellProps.map(props => (
+      // eslint-disable-next-line react/jsx-key
+        <Cell {...(props as any)} />
+      ))}
+    </>
+  );
 });
 RowCells.displayName = 'RowCells';
