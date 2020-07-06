@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.48](https://github.com/mui-org/material-ui-x/compare/v0.1.47...v0.1.48) (2020-07-06)
+
+**Note:** Version bump only for package @material-ui-x/storybook
+
+
+
+
+
 ## [0.1.47](https://github.com/mui-org/material-ui-x/compare/v0.1.46...v0.1.47) (2020-07-06)
 
 **Note:** Version bump only for package @material-ui-x/storybook
