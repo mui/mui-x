@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/x-grid",
-  "version": "0.1.49",
+  "version": "0.1.50",
   "description": "Official Material-UI X Grid Component",
   "author": "Damien Tassone <damien@material-ui.com>",
   "main": "dist/index-cjs.js",
@@ -15,7 +15,6 @@
   "dependencies": {
     "tslib": "^2.0.0"
   },
-
   "devDependencies": {
     "@material-ui/x-grid-modules": "^0.1.49",
     "@material-ui/x-license": "^0.1.40",

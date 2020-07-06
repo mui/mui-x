@@ -1,6 +1,6 @@
 {
   "name": "@material-ui-x/storybook",
-  "version": "0.1.49",
+  "version": "0.1.50",
   "description": "Storybook components",
   "author": "Damien Tassone <damien@material-ui.com>",
   "private": true,
@@ -9,7 +9,7 @@
     "@material-ui/data-grid": "^0.1.49",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.54",
-    "@material-ui/x-grid": "^0.1.49",
+    "@material-ui/x-grid": "^0.1.50",
     "@material-ui/x-grid-data-generator": "^0.1.49",
     "@material-ui/x-license": "^0.1.40",
     "faker": "^4.1.0",
