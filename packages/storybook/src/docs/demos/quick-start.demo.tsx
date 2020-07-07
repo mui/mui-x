@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { ColDef, XGrid, RowsProp } from '@material-ui/x-grid';
+import { Columns, XGrid, RowsProp } from '@material-ui/x-grid';
 
-export const QuickStartDemo = () => {
-  const columns: ColDef[] = [
+export default function QuickStartDemo() {
+  const columns: Columns = [
     { field: 'id', hide: true },
     { field: 'brand', width: 100 },
     {
@@ -99,10 +99,5 @@ export const QuickStartDemo = () => {
     },
   ];
 
-  //TODO use XGrid when published
-  return (
-    <div style={{ width: 800, height: 600 }}>
-      <XGrid rows={rows} columns={columns} options={{ checkboxSelection: true }} />
-    </div>
-  );
-};
+  return <XGrid rows={rows} columns={columns} options={{ checkboxSelection: true, autoHeight: true }} />;
+}
