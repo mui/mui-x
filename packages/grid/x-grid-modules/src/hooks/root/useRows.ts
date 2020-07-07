@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createRow, GridOptions, RowData, RowId, RowModel, Rows, RowsProp , GridApiRef } from '../../models';
 import { useLogger } from '../utils/useLogger';
 import { useRafUpdate } from '../utils';
-import { RowApi } from '../../models/gridApi';
 import {
   ROWS_UPDATED,
   SCROLLING_START,
@@ -11,6 +10,7 @@ import {
 } from '../../constants/eventsConstants';
 import { useApiMethod } from './useApiMethod';
 import { useApiEventHandler } from './useApiEventHandler';
+import {RowApi} from "../../models/api/rowApi";
 
 
 type IdLookup = { [key: string]: number };

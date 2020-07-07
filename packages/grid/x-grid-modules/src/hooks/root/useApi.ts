@@ -16,7 +16,7 @@ import {
   SELECTION_CHANGED_EVENT,
 } from '../../constants/eventsConstants';
 import { CellClickedParam, GridOptions, RowClickedParam , GridApiRef } from '../../models';
-import { GridApi } from '../../models/gridApi';
+import { GridApi } from '../../models/api/gridApi';
 import {
   CELL_CSS_CLASS,
   HEADER_CELL_CSS_CLASS,

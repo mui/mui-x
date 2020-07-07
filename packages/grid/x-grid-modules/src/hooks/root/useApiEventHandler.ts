@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useLogger } from '../utils';
-import { GridApiRef } from '../../models';
+import { GridApiRef } from '../../models/api';
 
 export const useApiEventHandler = (
   apiRef: GridApiRef,

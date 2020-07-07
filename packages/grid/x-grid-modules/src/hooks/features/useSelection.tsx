@@ -4,9 +4,9 @@ import {
   RowClickedParam,
   RowId,
   RowModel,
-  RowSelectedParam,
+  RowSelectedParams,
   RowsProp,
-  SelectionChangedParam,
+  SelectionChangedParams,
  GridApiRef } from '../../models';
 import { useLogger } from '../utils/useLogger';
 import {
@@ -15,9 +15,9 @@ import {
   ROW_SELECTED_EVENT,
   SELECTION_CHANGED_EVENT,
 } from '../../constants/eventsConstants';
-import { SelectionApi } from '../../models/gridApi';
 import { useApiEventHandler } from '../root/useApiEventHandler';
 import { useApiMethod } from '../root/useApiMethod';
+import {SelectionApi} from "../../models/api/selectionApi";
 
 
 export const useSelection = (
@@ -80,12 +80,12 @@ export const useSelection = (
         logger.info(
           `Row at index ${rowIndex} has changed to ${isRowSelected ? 'selected' : 'unselected'} `,
         );
-        const rowSelectedParam: RowSelectedParam = {
+        const rowSelectedParam: RowSelectedParams = {
           data: row.data,
           isSelected: isRowSelected,
           rowIndex,
         };
-        const selectionChangedParam: SelectionChangedParam = {
+        const selectionChangedParam: SelectionChangedParams = {
           rows: getSelectedRows().map(r => r.data),
         };
         apiRef.current!.emit(ROW_SELECTED_EVENT, rowSelectedParam);
@@ -134,7 +134,7 @@ export const useSelection = (
 
       if (apiRef && apiRef.current != null) {
         // We don't emit ROW_SELECTED_EVENT on each row as it would be too consuming for large set of data.
-        const selectionChangedParam: SelectionChangedParam = {
+        const selectionChangedParam: SelectionChangedParams = {
           rows: getSelectedRows().map(r => r.data),
         };
         apiRef.current!.emit(SELECTION_CHANGED_EVENT, selectionChangedParam);
@@ -160,13 +160,13 @@ export const useSelection = (
   );
 
   const onSelectedRow = useCallback(
-    (handler: (param: RowSelectedParam) => void): (() => void) => {
+    (handler: (param: RowSelectedParams) => void): (() => void) => {
       return apiRef!.current!.registerEvent(ROW_SELECTED_EVENT, handler);
     },
     [apiRef],
   );
   const onSelectionChanged = useCallback(
-    (handler: (param: SelectionChangedParam) => void): (() => void) => {
+    (handler: (param: SelectionChangedParams) => void): (() => void) => {
       return apiRef!.current!.registerEvent(SELECTION_CHANGED_EVENT, handler);
     },
     [apiRef],
@@ -194,7 +194,7 @@ export const useSelection = (
   useEffect(() => {
     selectedItemsRef.current = [];
     if (apiRef && apiRef.current != null) {
-      const selectionChangedParam: SelectionChangedParam = { rows: [] };
+      const selectionChangedParam: SelectionChangedParams = { rows: [] };
       apiRef.current!.emit(SELECTION_CHANGED_EVENT, selectionChangedParam);
     }
   }, [rowsProp, apiRef]);

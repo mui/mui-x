@@ -1,14 +1,14 @@
-import { useCallback, useEffect, useReducer, useRef } from 'react';
-import { GridOptions, InternalColumns, PaginationApi, Rows , GridApiRef } from '../../models';
-import { useLogger } from '../utils';
-import {
-  PAGE_CHANGED_EVENT,
-  PAGESIZE_CHANGED_EVENT,
-  RESIZE,
-} from '../../constants/eventsConstants';
-import { useApiMethod } from '../root/useApiMethod';
-import { useApiEventHandler } from '../root/useApiEventHandler';
-
+import {useCallback, useEffect, useReducer, useRef} from 'react';
+import {useLogger} from '../utils';
+import {PAGE_CHANGED_EVENT, PAGESIZE_CHANGED_EVENT, RESIZE,} from '../../constants/eventsConstants';
+import {useApiMethod} from '../root/useApiMethod';
+import {useApiEventHandler} from '../root/useApiEventHandler';
+import {PageChangedParams} from "../../models/params/pageChangedParams";
+import { Rows } from '../../models/rows';
+import { InternalColumns } from '../../models/colDef/colDef';
+import { GridOptions } from '../../models/gridOptions';
+import { GridApiRef } from '../../models/api/gridApiRef';
+import { PaginationApi } from '../../models/api/paginationApi';
 
 export interface PaginationProps {
   page: number;
@@ -18,14 +18,7 @@ export interface PaginationProps {
   setPage: (page: number) => void;
   setPageSize: (pageSize: number) => void;
 }
-export type PageChangedParams = PaginationState;
-export interface PaginationState {
-  page: number;
-  pageCount: number;
-  pageSize: number;
-  rowCount: number;
-}
-
+export type PaginationState = PageChangedParams;
 const UPDATE_STATE_ACTION = 'updateState';
 
 function updateStateAction(

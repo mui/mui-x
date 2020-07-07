@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { isFunction } from '../../utils';
+import { isFunction } from '../../utils/utils';
 
 const forceDebug = localStorage.getItem('DEBUG') != null;
 const isDebugging = process.env.NODE_ENV !== 'production' || forceDebug;
