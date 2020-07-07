@@ -21,17 +21,6 @@ export interface IconsOptions {
 }
 
 // Todo add multiSortKey
-/**
- * This is the set of options supported by X-Grid
- *
- * @remarks
- * This method is part of the {@link core-library#Statistics | Statistics subsystem}.
- *
- * @param x - The first input number
- * @param y - The second input number
- * @returns The arithmetic mean of `x` and `y`
- *
- */
 export interface GridOptions {
   autoHeight?: boolean;
   rowHeight: number;
@@ -51,6 +40,11 @@ export interface GridOptions {
   hideFooterRowCount?: boolean;
   hideFooterSelectedRowCount?: boolean;
   hideFooterPagination?: boolean;
+  checkboxSelection?: boolean;
+  disableSelectionOnClick?: boolean;
+  showColumnSeparator?: boolean;
+  logger?: Logger;
+  logLevel?: string | boolean;
 
   onCellClicked?: (param: CellClickedParam) => void;
   onRowClicked?: (param: RowClickedParam) => void;
@@ -61,11 +55,6 @@ export interface GridOptions {
   onPageChanged?: (param: PageChangedParams) => void;
   onPageSizeChanged?: (param: PageChangedParams) => void;
 
-  checkboxSelection?: boolean;
-  disableSelectionOnClick?: boolean;
-  showColumnSeparator?: boolean;
-  logger?: Logger;
-  logLevel?: string | boolean;
   paginationComponent?: (props: PaginationProps) => React.ReactNode;
   loadingOverlayComponent?: React.ReactNode;
   noRowsOverlayComponent?: React.ReactNode;

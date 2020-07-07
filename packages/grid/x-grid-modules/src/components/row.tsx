@@ -12,7 +12,7 @@ export interface RowProps {
 
 export const Row: React.FC<RowProps> = ({ selected, id, className, rowIndex, children }) => {
   const cssClasses = (selected ? 'selected ' : ' ') + (className || '');
-  const ariaRowIndex = rowIndex + 2; //1 for the header row and 1 as it's 1 based
+  const ariaRowIndex = rowIndex + 2; // 1 for the header row and 1 as it's 1 based
   return (
     <div
       key={id}

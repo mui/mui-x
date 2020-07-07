@@ -22,6 +22,6 @@ export const COL_RESIZE_STOP = 'colResizing:stop';
 export const ROWS_UPDATED = 'rowsUpdated';
 export const COLUMNS_UPDATED = 'columnsUpdated';
 export const SORT_MODEL_UPDATED = 'sortModelUpdated';
-export const POST_SORT = 'postSort'; //ag-grid compatible
+export const POST_SORT = 'postSort'; // ag-grid compatible
 export const COLUMNS_SORTED = 'columnsSorted';
 export const MULTIPLE_KEY_PRESS_CHANGED = 'multipleKeyPressChanged';

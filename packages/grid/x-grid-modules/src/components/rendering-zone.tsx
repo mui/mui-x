@@ -12,7 +12,7 @@ export const RenderingZone = React.forwardRef<HTMLDivElement, ElementSize & With
         className={'rendering-zone'}
         style={{
           maxHeight: height,
-          width: width,
+          width,
         }}
       >
         {children}

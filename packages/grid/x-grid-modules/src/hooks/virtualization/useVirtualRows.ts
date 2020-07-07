@@ -9,7 +9,7 @@ import {
   RenderRowProps,
   Rows,
   VirtualizationApi,
-} from '../../models';
+ GridApiRef } from '../../models';
 import { ScrollParams, useScrollFn } from '../utils';
 import { useLogger } from '../utils/useLogger';
 import { useContainerProps } from '../root';
@@ -23,7 +23,7 @@ import {
 import { useApiMethod } from '../root/useApiMethod';
 import { useNativeEventListener } from '../root/useNativeEventListener';
 import { useApiEventHandler } from '../root/useApiEventHandler';
-import { GridApiRef } from '../../models';
+
 
 const SCROLL_EVENT = 'scroll';
 type UseVirtualRowsReturnType = Partial<RenderContextProps> | null;
@@ -172,7 +172,7 @@ export const useVirtualRows = (
 
   const updateContainerSize = useCallback(() => {
     if (columnTotalWidthRef.current > 0) {
-      const totalRowsCount = apiRef?.current?.getRowsCount() || 0; //we ensure we call with latest length
+      const totalRowsCount = apiRef?.current?.getRowsCount() || 0; // we ensure we call with latest length
       const currentPage = paginationCurrentPage.current;
       let pageRowCount =
         optionsRef.current.pagination && optionsRef.current.paginationPageSize
@@ -258,10 +258,10 @@ export const useVirtualRows = (
           scrollPosition + optionsRef.current.rowHeight;
 
         if (isRowIndexAbove) {
-          scrollTop = scrollPosition; //We put it at the top of the page
+          scrollTop = scrollPosition; // We put it at the top of the page
           logger.debug(`Row is above, setting scrollTop to ${scrollTop}`);
         } else if (isRowIndexBelow) {
-          //We make sure the row is not half visible
+          // We make sure the row is not half visible
           scrollTop = scrollPosition - viewportHeight + optionsRef.current.rowHeight;
           logger.debug(`Row is below, setting scrollTop to ${scrollTop}`);
         }
