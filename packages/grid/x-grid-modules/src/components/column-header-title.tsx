@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import * as React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { isOverflown } from '../utils';
 import { Tooltip } from '@material-ui/core';
 
@@ -19,7 +20,11 @@ export interface ColumnHeaderTitleProps {
   description?: string;
 }
 //No React.memo here as if we display the sort icon, we need to recalculate the isOver
-export const ColumnHeaderTitle: React.FC<ColumnHeaderTitleProps> = ({ label, description, columnWidth }) => {
+export const ColumnHeaderTitle: React.FC<ColumnHeaderTitleProps> = ({
+  label,
+  description,
+  columnWidth,
+}) => {
   const titleRef = useRef<HTMLDivElement>(null);
   const [tooltipText, setTooltip] = useState('');
 

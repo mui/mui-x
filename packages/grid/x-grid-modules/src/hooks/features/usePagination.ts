@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useReducer, useRef } from 'react';
 import { GridOptions, InternalColumns, PaginationApi, Rows } from '../../models';
 import { useLogger } from '../utils';
-import { PAGE_CHANGED_EVENT, PAGESIZE_CHANGED_EVENT, RESIZE } from '../../constants/eventsConstants';
+import {
+  PAGE_CHANGED_EVENT,
+  PAGESIZE_CHANGED_EVENT,
+  RESIZE,
+} from '../../constants/eventsConstants';
 import { useApiMethod } from '../root/useApiMethod';
 import { useApiEventHandler } from '../root/useApiEventHandler';
 import { GridApiRef } from '../../models';
@@ -30,7 +34,10 @@ function updateStateAction(
   return { type: UPDATE_STATE_ACTION, payload: state };
 }
 
-function paginationReducer(state: PaginationState, action: { type: string; payload?: Partial<PaginationState> }) {
+function paginationReducer(
+  state: PaginationState,
+  action: { type: string; payload?: Partial<PaginationState> },
+) {
   if (action.type === UPDATE_STATE_ACTION) {
     return { ...state, ...action.payload };
   }
@@ -97,7 +104,9 @@ export const usePagination = (
       let newPage = Math.floor(firstRowIdx / pageSize) + 1;
       newPage = newPage > newPageCount ? newPageCount : newPage;
       newPage = newPage < 1 ? 1 : newPage;
-      logger.info(`PageSize changed to ${pageSize}, setting page to ${newPage}, total page count is ${newPageCount}`);
+      logger.info(
+        `PageSize changed to ${pageSize}, setting page to ${newPage}, total page count is ${newPageCount}`,
+      );
       const newState: PaginationState = {
         ...stateRef.current,
         page: newPage,

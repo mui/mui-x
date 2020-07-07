@@ -1,12 +1,13 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ColDef, Grid, GridApi } from '@material-ui/x-grid';
+import * as React from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ColDef, XGrid, GridApi } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { action } from '@storybook/addon-actions';
 
 export default {
   title: 'X-Grid Tests/Sorting',
-  component: Grid,
+  component: XGrid,
   decorators: [withKnobs, withA11y],
   parameters: {
     options: { selectedPanel: 'storybook/action/panel' },
@@ -25,11 +26,41 @@ const getColumns: () => ColDef[] = () => [
 ];
 
 const getRows = () => [
-  { id: 1, name: 'alice', age: 40, born: new Date(1990, 10, 8), updatedOn: new Date(2020, 6, 21, 21, 0, 0) },
-  { id: 2, name: 'bob', age: 30, born: new Date(1990, 9, 8), updatedOn: new Date(2020, 6, 21, 20, 0, 0) },
-  { id: 3, name: 'igor', age: 40, born: new Date(1990, 10, 7), updatedOn: new Date(2020, 6, 21, 19, 50, 0) },
-  { id: 4, name: 'clara', age: 40, born: new Date(1989, 1, 30), updatedOn: new Date(2020, 5, 18, 10, 11, 0) },
-  { id: 5, name: 'clara', age: null, born: new Date(1984, 6, 11), updatedOn: new Date(2020, 6, 8, 23, 33, 25) },
+  {
+    id: 1,
+    name: 'alice',
+    age: 40,
+    born: new Date(1990, 10, 8),
+    updatedOn: new Date(2020, 6, 21, 21, 0, 0),
+  },
+  {
+    id: 2,
+    name: 'bob',
+    age: 30,
+    born: new Date(1990, 9, 8),
+    updatedOn: new Date(2020, 6, 21, 20, 0, 0),
+  },
+  {
+    id: 3,
+    name: 'igor',
+    age: 40,
+    born: new Date(1990, 10, 7),
+    updatedOn: new Date(2020, 6, 21, 19, 50, 0),
+  },
+  {
+    id: 4,
+    name: 'clara',
+    age: 40,
+    born: new Date(1989, 1, 30),
+    updatedOn: new Date(2020, 5, 18, 10, 11, 0),
+  },
+  {
+    id: 5,
+    name: 'clara',
+    age: null,
+    born: new Date(1984, 6, 11),
+    updatedOn: new Date(2020, 6, 8, 23, 33, 25),
+  },
   { id: 6, name: null, age: 25, born: null, updatedOn: new Date(2020, 6, 11, 11, 45, 53) },
   { id: 7, name: '', age: 42, born: new Date(2010, 12, 25), updatedOn: null },
 ];
@@ -39,7 +70,7 @@ export const HeadersClick = () => {
     <>
       <p>Click column headers to sort</p>
       <div className="grid-container">
-        <Grid rows={getRows()} columns={getColumns()} />
+        <XGrid rows={getRows()} columns={getColumns()} />
       </div>
     </>
   );
@@ -50,7 +81,11 @@ export const SortingOrderOverrideOption = () => {
     <>
       <p>Click column headers to sort</p>
       <div className="grid-container">
-        <Grid rows={getRows()} columns={getColumns()} options={{ sortingOrder: ['desc', 'asc'] }} />
+        <XGrid
+          rows={getRows()}
+          columns={getColumns()}
+          options={{ sortingOrder: ['desc', 'asc'] }}
+        />
       </div>
     </>
   );
@@ -62,7 +97,7 @@ export const StringSortingAsc = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -72,7 +107,7 @@ export const StringSortingDesc = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -82,7 +117,7 @@ export const NumberSortingAsc = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -92,7 +127,7 @@ export const NumberSortingDesc = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -102,7 +137,7 @@ export const DateSortingAsc = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -112,7 +147,7 @@ export const DateSortingDesc = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -122,7 +157,7 @@ export const DateTimeSortingAsc = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -132,7 +167,7 @@ export const DateTimeSortingDesc = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -144,7 +179,7 @@ export const MultipleSorting = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -156,7 +191,7 @@ export const MultipleAndSortIndex = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -166,13 +201,14 @@ export const UnsortableLastCol = () => {
   columns[columns.length] = {
     field: 'username',
     sortable: false,
-    valueGetter: params => `${params.getValue('name') || 'unknown'}_${params.getValue('age') || 'x'}`,
+    valueGetter: params =>
+      `${params.getValue('name') || 'unknown'}_${params.getValue('age') || 'x'}`,
     width: 150,
   };
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -181,7 +217,8 @@ export const CustomComparator = () => {
   const columns = getColumns();
   columns[columns.length] = {
     field: 'username',
-    valueGetter: params => `${params.getValue('name') || 'unknown'}_${params.getValue('age') || 'x'}`,
+    valueGetter: params =>
+      `${params.getValue('name') || 'unknown'}_${params.getValue('age') || 'x'}`,
     sortComparator: (v1, v2, row1, row2) => row1.data['age'] - row2.data['age'],
     sortDirection: 'asc',
     width: 150,
@@ -189,7 +226,7 @@ export const CustomComparator = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -204,7 +241,7 @@ export const SortingWithFormatter = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={columns} />
+      <XGrid rows={getRows()} columns={columns} />
     </div>
   );
 };
@@ -219,7 +256,7 @@ export const ApiSingleSorted = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={getColumns()} apiRef={apiRef} />
+      <XGrid rows={getRows()} columns={getColumns()} apiRef={apiRef} />
     </div>
   );
 };
@@ -236,7 +273,7 @@ export const ApiMultipleSorted = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={getRows()} columns={getColumns()} apiRef={apiRef} />
+      <XGrid rows={getRows()} columns={getColumns()} apiRef={apiRef} />
     </div>
   );
 };
@@ -276,7 +313,7 @@ export const SortedEventsApi = () => {
         <ol>{...loggedEvents.map((evt, idx) => <li key={evt + idx}>{evt}</li>)}</ol>
       </div>
       <div className="grid-container">
-        <Grid rows={rows} columns={cols} apiRef={apiRef} />
+        <XGrid rows={rows} columns={cols} apiRef={apiRef} />
       </div>
     </>
   );

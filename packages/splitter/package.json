@@ -1,6 +1,6 @@
 {
   "name": "@material-ui-x/splitter",
-  "version": "0.1.40",
+  "version": "0.1.45",
   "main": "dist/index-cjs.js",
   "module": "dist/index-esm.js",
   "types": "dist/index.d.ts",
@@ -35,5 +35,5 @@
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
   ],
-  "gitHead": "da7e86d38fd895ba71f6fa00cafe40d2e6ff0969"
+  "gitHead": "4604f069db2ab4d1cf992eb57bb07d261ffe6cf2"
 }

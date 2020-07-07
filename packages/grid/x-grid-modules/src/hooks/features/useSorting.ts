@@ -27,7 +27,12 @@ import { useApiEventHandler } from '../root/useApiEventHandler';
 import { useApiMethod } from '../root/useApiMethod';
 import { GridApiRef } from '../../models';
 
-export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: Columns, apiRef: GridApiRef) => {
+export const useSorting = (
+  options: GridOptions,
+  rowsProp: RowsProp,
+  colsProp: Columns,
+  apiRef: GridApiRef,
+) => {
   const logger = useLogger('useSorting');
   const sortModelRef = useRef<SortModel>([]);
   const allowMultipleSorting = useRef<boolean>(false);
@@ -114,7 +119,9 @@ export const useSorting = (options: GridOptions, rowsProp: RowsProp, colsProp: C
     apiRef.current!.emit(POST_SORT, sortModelRef.current);
 
     const params: ColumnSortedParams = {
-      sortedColumns: sortModelRef.current.map(model => apiRef.current!.getColumnFromField(model.colId)),
+      sortedColumns: sortModelRef.current.map(model =>
+        apiRef.current!.getColumnFromField(model.colId),
+      ),
       sortModel: sortModelRef.current,
     };
     apiRef.current!.emit(COLUMNS_SORTED, params);

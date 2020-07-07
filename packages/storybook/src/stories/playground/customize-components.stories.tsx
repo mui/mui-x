@@ -1,5 +1,5 @@
-import React from 'react';
-import { ColDef, Grid, GridOverlay, Footer, GridApiRef, gridApiRef } from '@material-ui/x-grid';
+import * as React from 'react';
+import { ColDef, XGrid, GridOverlay, Footer, GridApiRef, gridApiRef } from '@material-ui/x-grid';
 import { LinearProgress } from '@material-ui/core';
 import CodeIcon from '@material-ui/icons/Code';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -15,7 +15,7 @@ import { useData } from '../../hooks/useData';
 
 export default {
   title: 'X-Grid Demos/Custom-Components',
-  component: Grid,
+  component: XGrid,
   decorators: [withKnobs, withA11y],
   parameters: {
     options: { selectedPanel: 'storybook/knobs/panel' },
@@ -51,7 +51,12 @@ export const Loading = () => {
   );
   return (
     <div className="grid-container">
-      <Grid rows={rows} columns={columns} options={{ loadingOverlayComponent: loadingComponent }} loading={true} />
+      <XGrid
+        rows={rows}
+        columns={columns}
+        options={{ loadingOverlayComponent: loadingComponent }}
+        loading={true}
+      />
     </div>
   );
 };
@@ -66,14 +71,14 @@ export const NoRows = () => {
   );
   return (
     <div className="grid-container">
-      <Grid rows={[]} columns={columns} options={{ noRowsOverlayComponent: loadingComponent }} />
+      <XGrid rows={[]} columns={columns} options={{ noRowsOverlayComponent: loadingComponent }} />
     </div>
   );
 };
 export const Icons = () => {
   return (
     <div className="grid-container">
-      <Grid
+      <XGrid
         rows={rows}
         columns={columns}
         options={{
@@ -95,7 +100,7 @@ export const CustomPagination = () => {
 
   return (
     <div className="grid-container">
-      <Grid
+      <XGrid
         rows={data.rows}
         columns={data.columns}
         apiRef={apiRef}
@@ -120,7 +125,7 @@ export const CustomFooter = () => {
   const data = useData(2000, 200);
   return (
     <div className="grid-container">
-      <Grid
+      <XGrid
         rows={data.rows}
         columns={data.columns}
         options={{
@@ -153,7 +158,7 @@ export const HeaderAndFooter = () => {
 
   return (
     <div className="grid-container">
-      <Grid
+      <XGrid
         rows={data.rows}
         columns={data.columns}
         options={{
@@ -171,7 +176,10 @@ export const HeaderAndFooter = () => {
             </div>
           ),
           footerComponent: ({ paginationProps }) => (
-            <div className="footer my-custom-footer"> I counted {paginationProps.rowCount} row(s) </div>
+            <div className="footer my-custom-footer">
+              {' '}
+              I counted {paginationProps.rowCount} row(s){' '}
+            </div>
           ),
         }}
       />
@@ -198,7 +206,8 @@ export const StyledColumns = () => {
       description: 'this column has a value getter and is not sortable',
       headerClass: 'highlight',
       sortable: false,
-      valueGetter: params => `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
+      valueGetter: params =>
+        `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
       cellClassRules: {
         common: params => params.data['lastName'] === 'Smith',
         unknown: params => !params.data['lastName'],
@@ -239,7 +248,14 @@ export const StyledColumns = () => {
       registerDate: new Date(2010, 10, 25),
       lastLoginDate: new Date(2019, 0, 30, 10, 55, 32),
     },
-    { id: 3, lastName: 'Smith', firstName: 'igor', isRegistered: false, age: 40, registerDate: new Date(2013, 2, 13) },
+    {
+      id: 3,
+      lastName: 'Smith',
+      firstName: 'igor',
+      isRegistered: false,
+      age: 40,
+      registerDate: new Date(2013, 2, 13),
+    },
     {
       id: 4,
       lastName: 'James',
@@ -272,7 +288,7 @@ export const StyledColumns = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={rows} columns={columns}></Grid>
+      <XGrid rows={rows} columns={columns} />
     </div>
   );
 };

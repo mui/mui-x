@@ -16,7 +16,13 @@ import {
   randomUserName,
 } from './services/';
 
-import { AvatarRenderer, CountryRenderer, EmailRenderer, LinkRenderer, RatingRenderer } from './renderer';
+import {
+  AvatarRenderer,
+  CountryRenderer,
+  EmailRenderer,
+  LinkRenderer,
+  RatingRenderer,
+} from './renderer';
 
 export const employeeColumns: any[] = [
   {

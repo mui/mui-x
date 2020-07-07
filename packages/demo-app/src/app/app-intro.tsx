@@ -1,7 +1,7 @@
 import { MuiLogo } from './demos/grid/components/logo';
 import Typography from '@material-ui/core/Typography';
 
-import React from 'react';
+import * as React from 'react';
 import { Button, Container } from '@material-ui/core';
 import styled from 'styled-components';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
@@ -116,7 +116,12 @@ export const AppIntro: React.FC<{}> = () => {
             <Typography component="h5" className={'intro'}>
               Extension with highly complex components for Startup and Enterprise projects.
             </Typography>
-            <Button href={'#/grid'} variant={'outlined'} color={'primary'} className={'main-action-button'}>
+            <Button
+              href={'#/grid'}
+              variant={'outlined'}
+              color={'primary'}
+              className={'main-action-button'}
+            >
               <KeyboardArrowRightIcon fontSize={'small'} /> Preview
             </Button>
           </div>

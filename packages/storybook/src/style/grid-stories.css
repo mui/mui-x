@@ -52,5 +52,6 @@
 
  .grid-container {
     padding: 10px;
+    display: flex;
     flex-grow: 1;
  }

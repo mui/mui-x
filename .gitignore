@@ -5,6 +5,7 @@
 
 .DS_STORE
 *.log
+/.eslintcache
 dist
 node_modules
 __diff_output__

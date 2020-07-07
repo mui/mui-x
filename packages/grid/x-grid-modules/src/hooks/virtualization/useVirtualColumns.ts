@@ -6,10 +6,19 @@ import { useApiMethod } from '../root/useApiMethod';
 import { useApiEventHandler } from '../root/useApiEventHandler';
 import { GridApiRef } from '../../models';
 
-type UpdateRenderedColsFnType = (containerProps: ContainerProps | null, scrollLeft: number) => boolean;
-type UseVirtualColumnsReturnType = [React.MutableRefObject<RenderColumnsProps | null>, UpdateRenderedColsFnType];
+type UpdateRenderedColsFnType = (
+  containerProps: ContainerProps | null,
+  scrollLeft: number,
+) => boolean;
+type UseVirtualColumnsReturnType = [
+  React.MutableRefObject<RenderColumnsProps | null>,
+  UpdateRenderedColsFnType,
+];
 
-export const useVirtualColumns = (options: GridOptions, apiRef: GridApiRef): UseVirtualColumnsReturnType => {
+export const useVirtualColumns = (
+  options: GridOptions,
+  apiRef: GridApiRef,
+): UseVirtualColumnsReturnType => {
   const logger = useLogger('useVirtualColumns');
   const renderedColRef = useRef<RenderColumnsProps | null>(null);
   const containerPropsRef = useRef<ContainerProps | null>(null);
@@ -84,7 +93,9 @@ export const useVirtualColumns = (options: GridOptions, apiRef: GridApiRef): Use
       const diffLast = Math.abs(lastDisplayedIdx + tolerance - prevLastColIdx);
       logger.debug(`Column buffer: ${columnBuffer}, tolerance: ${tolerance}`);
       logger.debug(`Previous values  => first: ${prevFirstColIdx}, last: ${prevLastColIdx}`);
-      logger.debug(`Current displayed values  => first: ${firstDisplayedIdx}, last: ${lastDisplayedIdx}`);
+      logger.debug(
+        `Current displayed values  => first: ${firstDisplayedIdx}, last: ${lastDisplayedIdx}`,
+      );
       logger.debug(`Difference with first: ${diffFirst} and last: ${diffLast} `);
 
       const renderNewColState = diffLast > tolerance || diffFirst > tolerance;
@@ -106,7 +117,8 @@ export const useVirtualColumns = (options: GridOptions, apiRef: GridApiRef): Use
             columnsMeta.positions[newRenderedColState.lastColIdx] -
             visibleColumns[newRenderedColState.lastColIdx].width!;
         } else if (options.extendRowFullWidth) {
-          newRenderedColState.rightEmptyWidth = containerProps.viewportSize.width - columnsMeta.totalWidth;
+          newRenderedColState.rightEmptyWidth =
+            containerProps.viewportSize.width - columnsMeta.totalWidth;
         }
         renderedColRef.current = newRenderedColState;
         logger.debug('New columns state to render', newRenderedColState);

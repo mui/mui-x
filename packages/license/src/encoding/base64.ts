@@ -105,7 +105,12 @@ export const base64Encode = (input: string): string => {
       enc4 = 64;
     }
 
-    output = output + _keyStr.charAt(enc1) + _keyStr.charAt(enc2) + _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+    output =
+      output +
+      _keyStr.charAt(enc1) +
+      _keyStr.charAt(enc2) +
+      _keyStr.charAt(enc3) +
+      _keyStr.charAt(enc4);
   }
 
   return output;

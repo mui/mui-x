@@ -8,5 +8,6 @@ export interface GridComponentProps {
   options?: GridOptionsProp;
   apiRef?: GridApiRef;
   loading?: boolean;
+  className?: string;
   licenseStatus: string;
 }

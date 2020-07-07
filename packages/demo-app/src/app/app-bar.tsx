@@ -3,7 +3,8 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
-import React, { useEffect, useState } from 'react';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { createStyles, Link, Theme } from '@material-ui/core';
 import Brightness7Icon from '@material-ui/icons/Brightness7';
@@ -53,7 +54,11 @@ export interface DemoAppBarProps {
   isDark: boolean;
 }
 
-export const DemoAppBar: React.FC<DemoAppBarProps> = ({ onMenuButtonClick, onThemeToggle, isDark }) => {
+export const DemoAppBar: React.FC<DemoAppBarProps> = ({
+  onMenuButtonClick,
+  onThemeToggle,
+  isDark,
+}) => {
   const classes = useStyles();
   const location = useLocation();
   const [hideTitle, setHideTitle] = useState(false);
@@ -86,7 +91,11 @@ export const DemoAppBar: React.FC<DemoAppBarProps> = ({ onMenuButtonClick, onThe
           {titleEl}
         </Typography>
 
-        <Link href={'https://github.com/mui-org/material-ui-x'} className={'github-button'} color="inherit">
+        <Link
+          href={'https://github.com/mui-org/material-ui-x'}
+          className={'github-button'}
+          color="inherit"
+        >
           <Tooltip title="GitHub repository">
             <IconButton aria-label="GitHub repository" color="inherit">
               <GitHubIcon />

@@ -1,7 +1,8 @@
 import { Button } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 
-import React, { useState } from 'react';
+import * as React from 'react';
+import { useState } from 'react';
 import { DummyContent } from './dummyContent';
 import { Splitter } from '@material-ui-x/splitter';
 import { AppBreadcrumbs } from '../../app-breadcrumbs';
@@ -17,7 +18,8 @@ export const SplitterDemo: React.FC<{}> = () => {
 
   const reverseSizes = (): void => setSizes([sizes[1], sizes[0]]);
   const toggleInvertHandler = (): void => setInvertHandler(!invertHandler);
-  const changeDirection = (): void => setDirection(direction === 'horizontal' ? 'vertical' : 'horizontal');
+  const changeDirection = (): void =>
+    setDirection(direction === 'horizontal' ? 'vertical' : 'horizontal');
 
   return (
     <>
@@ -53,7 +55,12 @@ export const SplitterDemo: React.FC<{}> = () => {
             <Button size={'small'} onClick={reverseSizes} variant={'outlined'} color={'primary'}>
               Reverse Sizes
             </Button>
-            <Button size={'small'} onClick={toggleInvertHandler} variant={'outlined'} color={'primary'}>
+            <Button
+              size={'small'}
+              onClick={toggleInvertHandler}
+              variant={'outlined'}
+              color={'primary'}
+            >
               Invert Handler
             </Button>
           </div>

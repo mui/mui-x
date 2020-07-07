@@ -36,19 +36,19 @@ Then you need to create some columns which are simple objects containing at leas
 You can import `ColDef` to see all column properties.
 A simple set of column can be.
 
-```typescript jsx
+```tsx
 const columns = [{ field: "id"}, {field: "name", headerName:  'Client Name'}...];
 ```
 
 Rows are string key value pair objects.
 
-```typescript jsx
+```tsx
 const rows = [{id: 1, name:'Jon Snow'}, {id: 2, name: 'Tyrion Lannister'}...]
 ```
 
 A complete example below.
 
-```typescript jsx
+```tsx
 import * as React from 'react';
 import { ColDef, Grid } from '@material-ui-x/grid';
 
@@ -69,7 +69,9 @@ function MyApp() {
       description: 'this column has a value getter and is not sortable',
       headerClass: 'highlight',
       sortable: false,
-      valueGetter: params => `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
+      valueGetter: params =>
+        `${params.getValue('firstName') || ''} ${params.getValue('lastName') ||
+          ''}`,
     },
   ];
 
@@ -84,7 +86,11 @@ function MyApp() {
 
   return (
     <div style={{ width: 800, height: 600 }}>
-      <Grid rows={rows} columns={columns} options={{ checkboxSelection: true }} />
+      <Grid
+        rows={rows}
+        columns={columns}
+        options={{ checkboxSelection: true }}
+      />
     </div>
   );
 }

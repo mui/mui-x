@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Link } from './link-renderer';
 import { CellParams } from '@material-ui/x-grid';
 

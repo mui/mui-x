@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import styled from 'styled-components';
 import { CellParams } from '@material-ui/x-grid';
 
@@ -25,14 +25,16 @@ function countryToFlag(isoCode: string) {
     : isoCode;
 }
 
-export const Country: React.FC<{ value: { code: string; label: string } }> = React.memo(({ value }) => {
-  return (
-    <Container>
-      <span className={'country-flag'}>{countryToFlag(value.code)}</span>
-      <span className={'country-name'}>{value.label}</span>
-    </Container>
-  );
-});
+export const Country: React.FC<{ value: { code: string; label: string } }> = React.memo(
+  ({ value }) => {
+    return (
+      <Container>
+        <span className={'country-flag'}>{countryToFlag(value.code)}</span>
+        <span className={'country-name'}>{value.label}</span>
+      </Container>
+    );
+  },
+);
 Country.displayName = 'Country';
 
 export function CountryRenderer(params: CellParams) {

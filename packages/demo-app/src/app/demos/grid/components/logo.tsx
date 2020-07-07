@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import styled from 'styled-components';
 
 export const LogoContainer = styled.div`
@@ -12,4 +12,6 @@ export const Logo = styled.img`
   margin-right: 10px;
 `;
 
-export const MuiLogo: React.FC = () => <Logo src="./mui-logo_raw.svg" alt="" className={'logo mui'} />;
+export const MuiLogo: React.FC = () => (
+  <Logo src="./mui-logo_raw.svg" alt="" className={'logo mui'} />
+);

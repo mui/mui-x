@@ -1,7 +1,7 @@
 import Link from '@material-ui/core/Link';
 
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
-import React from 'react';
+import * as React from 'react';
 
 import styled from 'styled-components';
 

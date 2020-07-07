@@ -12,4 +12,6 @@ export const ArrowDownward = createSvgIcon(
 );
 
 const Remove = createSvgIcon(<path d="M19 13H5v-2h14v2z" />, 'Remove');
-export const SeparatorIcon = (props: any) => <Remove style={{ transform: 'rotate(90deg)' }} {...props} />;
+export const SeparatorIcon = (props: any) => (
+  <Remove style={{ transform: 'rotate(90deg)' }} {...props} />
+);

@@ -1,13 +1,13 @@
-import React from 'react';
+import * as React from 'react';
 import { action } from '@storybook/addon-actions';
-import { Grid, GridOptionsProp } from '@material-ui/x-grid';
+import { XGrid, GridOptionsProp } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/Events',
-  component: Grid,
+  component: XGrid,
   decorators: [withKnobs, withA11y],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
@@ -31,7 +31,7 @@ export const AllEvents = () => {
     onPageSizeChanged: params => action('onPageSizeChanged')(params),
   };
 
-  return <Grid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
 };
 
 export const onRowClicked = () => {
@@ -41,7 +41,7 @@ export const onRowClicked = () => {
     onRowClicked: params => action('row clicked')(params),
   };
 
-  return <Grid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
 };
 
 export const onCellClicked = () => {
@@ -50,7 +50,7 @@ export const onCellClicked = () => {
     onCellClicked: params => action('cell clicked')(params),
   };
 
-  return <Grid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
 };
 
 export const onColumnHeaderClicked = () => {
@@ -58,5 +58,5 @@ export const onColumnHeaderClicked = () => {
   const options: GridOptionsProp = {
     onColumnHeaderClicked: params => action('Header clicked')(params),
   };
-  return <Grid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
 };

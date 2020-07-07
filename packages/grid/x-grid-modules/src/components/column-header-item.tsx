@@ -1,5 +1,6 @@
 import { ColDef } from '../models/colDef';
-import React, { useContext } from 'react';
+import * as React from 'react';
+import { useContext } from 'react';
 import { ApiContext } from './api-context';
 import { HEADER_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import { classnames } from '../utils';
@@ -44,14 +45,24 @@ export const ColumnHeaderItem = React.memo(
         className={cssClass}
         key={column.field}
         data-field={column.field}
-        style={{ width: width, minWidth: width, maxWidth: width, maxHeight: headerHeight, minHeight: headerHeight }}
+        style={{
+          width: width,
+          minWidth: width,
+          maxWidth: width,
+          maxHeight: headerHeight,
+          minHeight: headerHeight,
+        }}
         role={'columnheader'}
         tabIndex={-1}
         aria-colindex={colIndex + 1}
         {...ariaSort}
       >
         {column.type === 'number' && (
-          <ColumnHeaderSortIcon direction={column.sortDirection} index={column.sortIndex} hide={column.hideSortIcons} />
+          <ColumnHeaderSortIcon
+            direction={column.sortDirection}
+            index={column.sortIndex}
+            hide={column.hideSortIcons}
+          />
         )}
         {headerComponent || (
           <ColumnHeaderTitle
@@ -61,7 +72,11 @@ export const ColumnHeaderItem = React.memo(
           />
         )}
         {column.type !== 'number' && (
-          <ColumnHeaderSortIcon direction={column.sortDirection} index={column.sortIndex} hide={column.hideSortIcons} />
+          <ColumnHeaderSortIcon
+            direction={column.sortDirection}
+            index={column.sortIndex}
+            hide={column.hideSortIcons}
+          />
         )}
         <ColumnHeaderSeparator resizable={column.resizable} onResize={onResize} />
       </div>

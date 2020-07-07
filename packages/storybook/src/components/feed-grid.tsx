@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import * as React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { PricingModel } from '../data/streaming/pricing-service';
 import { feedColumns, subscribeFeed } from '../data/streaming/single-subscription-service';
-import { ColDef, GridApi, GridOptionsProp, Grid } from '@material-ui/x-grid';
+import { ColDef, GridApi, GridOptionsProp, XGrid } from '@material-ui/x-grid';
 
 export interface FeedGridProps {
   min?: number;
@@ -66,7 +67,7 @@ export const FeedGrid: React.FC<FeedGridProps> = p => {
         </button>
       </div>
       <div style={{ width: 800, height: 600 }}>
-        <Grid rows={rows} columns={columns} apiRef={gridApiRef} {...p} />
+        <XGrid rows={rows} columns={columns} apiRef={gridApiRef} {...p} />
       </div>
     </>
   );

@@ -1,6 +1,7 @@
 import { CellValue, RowData, RowModel, Rows } from './rows';
 import { ColDef, Columns } from './colDef';
-import React, { ReactNode } from 'react';
+import * as React from 'react';
+import { ReactNode } from 'react';
 import { SortDirection, SortModel } from './sortModel';
 import { Logger } from '../hooks/utils';
 import { ArrowDownward, ArrowUpward, SeparatorIcon } from '../components/icons';
@@ -69,6 +70,7 @@ export interface ComponentParams {
  *
  */
 export interface GridOptions {
+  autoHeight?: boolean;
   rowHeight: number;
   headerHeight: number;
   scrollbarSize: number;
@@ -110,6 +112,7 @@ export interface GridOptions {
 }
 
 export const DEFAULT_GRID_OPTIONS: GridOptions = {
+  autoHeight: false,
   rowHeight: 52,
   headerHeight: 56,
   scrollbarSize: 15,

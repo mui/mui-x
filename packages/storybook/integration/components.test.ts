@@ -16,8 +16,8 @@ const NO_ANIM_CSS = `
 
 describe('Components override', () => {
   test('Loading', async done => {
-    const {page, browser} = await getStoryPage('/story/x-grid-demos-custom-components--loading');
-    await page.addStyleTag({content: NO_ANIM_CSS});
+    const { page, browser } = await getStoryPage('/story/x-grid-demos-custom-components--loading');
+    await page.addStyleTag({ content: NO_ANIM_CSS });
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
@@ -26,7 +26,7 @@ describe('Components override', () => {
     done();
   });
   test('No rows', async done => {
-    const {page, browser} = await getStoryPage('/story/x-grid-demos-custom-components--no-rows');
+    const { page, browser } = await getStoryPage('/story/x-grid-demos-custom-components--no-rows');
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
@@ -35,7 +35,7 @@ describe('Components override', () => {
     done();
   });
   test('Icons', async done => {
-    const {page, browser} = await getStoryPage('/story/x-grid-demos-custom-components--icons');
+    const { page, browser } = await getStoryPage('/story/x-grid-demos-custom-components--icons');
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
@@ -44,7 +44,9 @@ describe('Components override', () => {
     done();
   });
   test('Pagination', async done => {
-    const {page, browser} = await getStoryPage('/story/x-grid-demos-custom-components--custom-pagination');
+    const { page, browser } = await getStoryPage(
+      '/story/x-grid-demos-custom-components--custom-pagination',
+    );
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
@@ -53,7 +55,9 @@ describe('Components override', () => {
     done();
   });
   test('Footer', async done => {
-    const {page, browser} = await getStoryPage('/story/x-grid-demos-custom-components--custom-footer');
+    const { page, browser } = await getStoryPage(
+      '/story/x-grid-demos-custom-components--custom-footer',
+    );
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
@@ -62,7 +66,9 @@ describe('Components override', () => {
     done();
   });
   test('Header & Footer', async done => {
-    const {page, browser} = await getStoryPage('/story/x-grid-demos-custom-components--header-and-footer');
+    const { page, browser } = await getStoryPage(
+      '/story/x-grid-demos-custom-components--header-and-footer',
+    );
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();
@@ -71,7 +77,9 @@ describe('Components override', () => {
     done();
   });
   test('Styled Columns', async done => {
-    const {page, browser} = await getStoryPage('/story/x-grid-demos-custom-components--styled-columns');
+    const { page, browser } = await getStoryPage(
+      '/story/x-grid-demos-custom-components--styled-columns',
+    );
 
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot();

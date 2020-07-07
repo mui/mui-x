@@ -68,4 +68,10 @@ export interface CoreApi extends EventEmitter {
   resize: () => void;
 }
 
-export type GridApi = RowApi & ColumnApi & SelectionApi & SortApi & VirtualizationApi & CoreApi & PaginationApi;
+export type GridApi = RowApi &
+  ColumnApi &
+  SelectionApi &
+  SortApi &
+  VirtualizationApi &
+  CoreApi &
+  PaginationApi;

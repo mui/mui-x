@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import styled from 'styled-components';
 
 export interface SplitterPanelProps {
@@ -15,7 +15,12 @@ const SplitterPanelWrapper = styled.div`
   position: relative;
 `;
 
-export const SplitterPanel: React.FC<SplitterPanelProps> = ({ direction, position, size, children }) => (
+export const SplitterPanel: React.FC<SplitterPanelProps> = ({
+  direction,
+  position,
+  size,
+  children,
+}) => (
   <SplitterPanelWrapper
     className={`splitter-panel splitter-panel-${position}`}
     style={direction === 'horizontal' ? { height: `${size}px` } : { width: `${size}px` }}

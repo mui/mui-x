@@ -3,14 +3,24 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLogger } from '../utils/useLogger';
 import { useRafUpdate } from '../utils';
 import { RowApi } from '../../models/gridApi';
-import { ROWS_UPDATED, SCROLLING_START, SCROLLING_STOP, SORT_MODEL_UPDATED } from '../../constants/eventsConstants';
+import {
+  ROWS_UPDATED,
+  SCROLLING_START,
+  SCROLLING_STOP,
+  SORT_MODEL_UPDATED,
+} from '../../constants/eventsConstants';
 import { useApiMethod } from './useApiMethod';
 import { useApiEventHandler } from './useApiEventHandler';
 import { GridApiRef } from '../../models';
 
 type IdLookup = { [key: string]: number };
 
-export const useRows = (options: GridOptions, rows: RowsProp, initialised: boolean, apiRef: GridApiRef): RowModel[] => {
+export const useRows = (
+  options: GridOptions,
+  rows: RowsProp,
+  initialised: boolean,
+  apiRef: GridApiRef,
+): RowModel[] => {
   const logger = useLogger('useRows');
   const rowModels = useMemo(() => rows.map(r => createRow(r)), [rows]);
   const [rowModelsState, setRowModelsState] = useState<RowModel[]>(rowModels);
@@ -22,7 +32,9 @@ export const useRows = (options: GridOptions, rows: RowsProp, initialised: boole
   const isScrollingRef = useRef<boolean>(false);
   const isSortedRef = useRef<boolean>(false);
 
-  const setIsScrolling = useCallback((v: boolean) => (isScrollingRef.current = v), [isScrollingRef]);
+  const setIsScrolling = useCallback((v: boolean) => (isScrollingRef.current = v), [
+    isScrollingRef,
+  ]);
 
   const updateAllRows = useCallback(
     (allNewRows: RowModel[]) => {
@@ -47,14 +59,17 @@ export const useRows = (options: GridOptions, rows: RowsProp, initialised: boole
   }, [rows, logger, rowModels, updateAllRows]);
 
   const getRowsLookup = useCallback(() => idLookupRef.current as IdLookup, [idLookupRef]);
-  const getRowIndexFromId = useCallback((id: RowId): number => getRowsLookup()[id], [getRowsLookup]);
-  const getRowIdFromRowIndex = useCallback((index: number): RowId => Object.entries(getRowsLookup())[index][0], [
+  const getRowIndexFromId = useCallback((id: RowId): number => getRowsLookup()[id], [
     getRowsLookup,
   ]);
-  const getRowFromId = useCallback((id: RowId): RowModel => rowModelsRef.current[getRowIndexFromId(id)], [
-    rowModelsRef,
-    getRowIndexFromId,
-  ]);
+  const getRowIdFromRowIndex = useCallback(
+    (index: number): RowId => Object.entries(getRowsLookup())[index][0],
+    [getRowsLookup],
+  );
+  const getRowFromId = useCallback(
+    (id: RowId): RowModel => rowModelsRef.current[getRowIndexFromId(id)],
+    [rowModelsRef, getRowIndexFromId],
+  );
 
   const updateRowModels = useCallback(
     (updates: Partial<RowModel>[]) => {

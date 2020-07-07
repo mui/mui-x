@@ -1,6 +1,6 @@
 {
   "name": "@material-ui-x/panel",
-  "version": "0.1.40",
+  "version": "0.1.45",
   "description": "Official Material-UI Panel Component",
   "author": "Damien Tassone <damien@material-ui.com>",
   "main": "dist/index-cjs.js",
@@ -33,5 +33,5 @@
     "lint": "../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../.eslintrc.js && npm run lint:css",
     "lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../.stylelintrc.js"
   },
-  "gitHead": "da7e86d38fd895ba71f6fa00cafe40d2e6ff0969"
+  "gitHead": "4604f069db2ab4d1cf992eb57bb07d261ffe6cf2"
 }

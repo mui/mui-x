@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/x-grid",
-  "version": "0.1.40",
+  "version": "0.1.50",
   "description": "Official Material-UI X Grid Component",
   "author": "Damien Tassone <damien@material-ui.com>",
   "main": "dist/index-cjs.js",
@@ -12,8 +12,11 @@
   "publishConfig": {
     "access": "public"
   },
+  "dependencies": {
+    "tslib": "^2.0.0"
+  },
   "devDependencies": {
-    "@material-ui/x-grid-modules": "^0.1.40",
+    "@material-ui/x-grid-modules": "^0.1.49",
     "@material-ui/x-license": "^0.1.40",
     "@rollup/plugin-node-resolve": "^8.0.1",
     "@rollup/plugin-replace": "^2.3.3",
@@ -24,7 +27,7 @@
     "rollup-plugin-multi-entry": "^2.1.0",
     "rollup-plugin-sourcemaps": "^0.5.0",
     "rollup-plugin-terser": "^5.3.0",
-    "rollup-plugin-typescript2": "^0.27.0"
+    "rollup-plugin-typescript2": "^0.27.1"
   },
   "peerDependencies": {
     "@material-ui/core": "^4.9.12",
@@ -43,5 +46,5 @@
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
   ],
-  "gitHead": "da7e86d38fd895ba71f6fa00cafe40d2e6ff0969"
+  "gitHead": "4604f069db2ab4d1cf992eb57bb07d261ffe6cf2"
 }

@@ -27,7 +27,12 @@ const initialState: InternalColumns = {
   meta: { positions: [], totalWidth: 0 },
 };
 
-function hydrateColumns(columns: Columns, withCheckboxSelection: boolean, logger: Logger, apiRef: GridApiRef): Columns {
+function hydrateColumns(
+  columns: Columns,
+  withCheckboxSelection: boolean,
+  logger: Logger,
+  apiRef: GridApiRef,
+): Columns {
   logger.debug('Hydrating Columns with default definitions');
   let mappedCols = columns.map(c => ({ ...getColDef(c.type), ...c }));
   if (withCheckboxSelection) {
@@ -105,7 +110,11 @@ const resetState = (
   };
 };
 
-const getUpdatedColumnState = (logger: Logger, state: InternalColumns, columnUpdates: ColDef[]): InternalColumns => {
+const getUpdatedColumnState = (
+  logger: Logger,
+  state: InternalColumns,
+  columnUpdates: ColDef[],
+): InternalColumns => {
   const newState = { ...state };
   columnUpdates.forEach(newColumn => {
     const index = newState.all.findIndex(c => c.field === newColumn.field);
@@ -128,7 +137,11 @@ const getUpdatedColumnState = (logger: Logger, state: InternalColumns, columnUpd
   };
 };
 
-export function useColumns(options: GridOptions, columns: Columns, apiRef: GridApiRef): InternalColumns {
+export function useColumns(
+  options: GridOptions,
+  columns: Columns,
+  apiRef: GridApiRef,
+): InternalColumns {
   const logger = useLogger('useColumns');
   const [, forceUpdate] = useState();
   const [rafUpdate] = useRafUpdate(() => forceUpdate((p: any) => !p));
@@ -155,12 +168,14 @@ export function useColumns(options: GridOptions, columns: Columns, apiRef: GridA
     updateState(newState);
   }, [columns, options.checkboxSelection, logger, apiRef, updateState]);
 
-  const getColumnFromField: (field: string) => ColDef = useCallback(field => stateRef.current.lookup[field], [
-    stateRef,
-  ]);
+  const getColumnFromField: (field: string) => ColDef = useCallback(
+    field => stateRef.current.lookup[field],
+    [stateRef],
+  );
   const getAllColumns: () => Columns = () => stateRef.current.all;
   const getColumnsMeta: () => ColumnsMeta = () => stateRef.current.meta;
-  const getColumnIndex: (field: string) => number = field => stateRef.current.visible.findIndex(c => c.field === field);
+  const getColumnIndex: (field: string) => number = field =>
+    stateRef.current.visible.findIndex(c => c.field === field);
   const getColumnPosition: (field: string) => number = field => {
     const index = getColumnIndex(field);
     return stateRef.current.meta.positions[index];

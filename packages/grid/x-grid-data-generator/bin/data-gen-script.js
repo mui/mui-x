@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-require = require('esm')(module /*, options*/);
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line no-global-assign
+require = require('esm')(module);
 
 require('../dist/index-cjs').datagenCli(process.argv);

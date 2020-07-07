@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 //we duplicate licenseStatus to avoid adding a dependency on x-license.
 enum LicenseStatus {

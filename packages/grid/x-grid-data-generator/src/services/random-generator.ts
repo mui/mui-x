@@ -15,7 +15,8 @@ export const random = (min: number, max: number): number => Math.random() * (max
 export const randomInt = (min: number, max: number): number => Number(random(min, max).toFixed());
 export const randomPrice = (min = 0, max = 100000): number => random(min, max);
 export const randomRate = (): number => random(0, 1);
-export const randomDate = (start, end) => new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+export const randomDate = (start, end) =>
+  new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 export const getDate = () => randomDate(new Date(2012, 0, 1), new Date());
 export const randomArrayItem = (arr: any[]) => arr[random(0, arr.length - 1).toFixed()];
 
@@ -54,7 +55,8 @@ export const randomJobTitle = () => faker.name.jobTitle();
 export const randomRating = () => random(0, 5);
 
 export const generateName = data => data.avatar.name;
-export const generateFilledQuantity = data => Number((data.quantity * randomRate()).toFixed()) / data.quantity;
+export const generateFilledQuantity = data =>
+  Number((data.quantity * randomRate()).toFixed()) / data.quantity;
 export const generateIsFilled = data => data.quantity === data.filledQuantity;
 export const generateSubTotal = data => data.unitPrice * data.quantity;
 export const generateFeeAmount = data => Number(data.feeRate) * data.subTotal;

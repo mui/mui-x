@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import List from '@material-ui/core/List';
@@ -29,7 +29,12 @@ export function AppDrawer({ isOpen, toggleDrawer }: AppDrawerProps) {
 
   return (
     <SwipeableDrawer open={isOpen} onClose={toggleDrawer} onOpen={toggleDrawer}>
-      <div className={classes.list} role="presentation" onClick={toggleDrawer} onKeyDown={toggleDrawer}>
+      <div
+        className={classes.list}
+        role="presentation"
+        onClick={toggleDrawer}
+        onKeyDown={toggleDrawer}
+      >
         <List>
           <ListItem component={Link} button to={'/'} key={'back'}>
             <ListItemIcon>

@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import ReportProblemIcon from '@material-ui/icons/ReportProblem';
 import InfoIcon from '@material-ui/icons/Info';
 import AutorenewIcon from '@material-ui/icons/Autorenew';

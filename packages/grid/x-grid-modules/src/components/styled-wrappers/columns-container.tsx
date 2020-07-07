@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { DivProps } from './grid-root';
 
 export const ColumnsContainer = React.forwardRef<HTMLDivElement, DivProps>((props, ref) => {
