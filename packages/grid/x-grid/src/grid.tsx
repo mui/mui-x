@@ -9,11 +9,17 @@ const RELEASE_INFO = '__RELEASE_INFO__';
 LicenseInfo.setReleaseInfo(RELEASE_INFO);
 export type XGridProps = Omit<GridComponentProps, 'licenseStatus'>;
 
-export const XGrid: React.FC<XGridProps> = React.memo<XGridProps>(function XGrid(props: XGridProps) {
+export const XGrid: React.FC<XGridProps> = React.memo<XGridProps>(function XGrid(
+  props: XGridProps,
+) {
   const licenseStatus = useLicenseVerifier();
   const { className, ...otherProps } = props;
 
   return (
-    <GridComponent {...otherProps} licenseStatus={licenseStatus.toString()} className={'x-grid ' + (className || '')} />
+    <GridComponent
+      {...otherProps}
+      licenseStatus={licenseStatus.toString()}
+      className={'x-grid ' + (className || '')}
+    />
   );
 });

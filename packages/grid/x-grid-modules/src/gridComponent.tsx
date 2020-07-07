@@ -28,7 +28,7 @@ import { useLogger, useLoggerFactory } from './hooks/utils';
 import { debounce, mergeOptions } from './utils';
 
 export const GridComponent: React.FC<GridComponentProps> = React.memo(
-  ({ rows, columns, options, apiRef, loading, licenseStatus, className}) => {
+  ({ rows, columns, options, apiRef, loading, licenseStatus, className }) => {
     useLoggerFactory(options?.logger, options?.logLevel);
     const logger = useLogger('Grid');
     const gridRootRef: GridRootRef = useRef<HTMLDivElement>(null);
@@ -117,7 +117,8 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
         if (!internalOptions.autoHeight) {
           return size.height;
         }
-        const footerHeight = (footerRef.current && footerRef.current.getBoundingClientRect().height) || 0;
+        const footerHeight =
+          (footerRef.current && footerRef.current.getBoundingClientRect().height) || 0;
         let dataHeight = (renderCtx && renderCtx.dataContainerSizes!.height) || 0;
         if (dataHeight < internalOptions.rowHeight) {
           dataHeight = internalOptions.rowHeight * 2; //If we have no rows, we give the size of 2 rows to display the no rows overlay
@@ -125,11 +126,16 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
 
         return footerHeight + dataHeight + internalOptions.headerHeight;
       },
-      [internalOptions.autoHeight, internalOptions.headerHeight, internalOptions.rowHeight, renderCtx],
+      [
+        internalOptions.autoHeight,
+        internalOptions.headerHeight,
+        internalOptions.rowHeight,
+        renderCtx,
+      ],
     );
 
     return (
-      <AutoSizerWrapper onResize={debouncedOnResize} style={{ height: 'unset', width: 'unset' }}  >
+      <AutoSizerWrapper onResize={debouncedOnResize} style={{ height: 'unset', width: 'unset' }}>
         {(size: any) => (
           <GridRoot
             ref={gridRootRef}

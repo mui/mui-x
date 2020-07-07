@@ -176,7 +176,10 @@ export const HeaderAndFooter = () => {
             </div>
           ),
           footerComponent: ({ paginationProps }) => (
-            <div className="footer my-custom-footer"> I counted {paginationProps.rowCount} row(s) </div>
+            <div className="footer my-custom-footer">
+              {' '}
+              I counted {paginationProps.rowCount} row(s){' '}
+            </div>
           ),
         }}
       />

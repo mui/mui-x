@@ -35,9 +35,15 @@ const GridDataSet = ({ nbRows, nbCols, options, loading }: GridDatasetProps) => 
 export const NoRows = () => <GridDataSet nbRows={0} nbCols={20} />;
 export const NoRowsNoCols = () => <GridDataSet nbRows={0} nbCols={0} />;
 export const LoadingRows = () => <GridDataSet nbRows={0} nbCols={20} loading={true} />;
-export const NoRowsAutoHeight = () => <GridDataSet nbRows={0} nbCols={20}  options={{autoHeight: true}} />;
-export const NoRowsNoColsAutoHeight = () => <GridDataSet nbRows={0} nbCols={0} options={{autoHeight: true}} />;
-export const LoadingRowsAutoHeight = () => <GridDataSet nbRows={0} nbCols={20} options={{autoHeight: true}} loading={true} />;
+export const NoRowsAutoHeight = () => (
+  <GridDataSet nbRows={0} nbCols={20} options={{ autoHeight: true }} />
+);
+export const NoRowsNoColsAutoHeight = () => (
+  <GridDataSet nbRows={0} nbCols={0} options={{ autoHeight: true }} />
+);
+export const LoadingRowsAutoHeight = () => (
+  <GridDataSet nbRows={0} nbCols={20} options={{ autoHeight: true }} loading={true} />
+);
 export const VerticalScroll = () => <GridDataSet nbRows={200} nbCols={2} />;
 export const HorizontalScroll = () => <GridDataSet nbRows={15} nbCols={20} />;
 export const BothScroll = () => <GridDataSet nbRows={200} nbCols={50} />;

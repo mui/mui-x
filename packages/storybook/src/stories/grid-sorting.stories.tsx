@@ -81,7 +81,11 @@ export const SortingOrderOverrideOption = () => {
     <>
       <p>Click column headers to sort</p>
       <div className="grid-container">
-        <XGrid rows={getRows()} columns={getColumns()} options={{ sortingOrder: ['desc', 'asc'] }} />
+        <XGrid
+          rows={getRows()}
+          columns={getColumns()}
+          options={{ sortingOrder: ['desc', 'asc'] }}
+        />
       </div>
     </>
   );

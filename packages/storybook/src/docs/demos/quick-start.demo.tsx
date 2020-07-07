@@ -17,11 +17,14 @@ export default function QuickStartDemo() {
     {
       field: 'age',
       headerClass: 'highlight',
-      valueGetter: params => new Date().getFullYear() - (params.getValue('dateFounded') as Date).getFullYear(),
+      valueGetter: params =>
+        new Date().getFullYear() - (params.getValue('dateFounded') as Date).getFullYear(),
     },
     {
       field: 'logo',
-      cellRenderer: ({ value }) => <img src={value!.toString()} style={{ width: 60 }} alt={'logo'} />,
+      cellRenderer: ({ value }) => (
+        <img src={value!.toString()} style={{ width: 60 }} alt={'logo'} />
+      ),
     },
   ];
 
@@ -31,7 +34,8 @@ export default function QuickStartDemo() {
       brand: 'Nike',
       dateFounded: new Date(1964, 0, 1),
       founder: 'Phil Knight, Bill Bowerman',
-      logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Logo_NIKE.svg/1200px-Logo_NIKE.svg.png',
+      logo:
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Logo_NIKE.svg/1200px-Logo_NIKE.svg.png',
     },
     {
       id: 2,
@@ -99,5 +103,7 @@ export default function QuickStartDemo() {
     },
   ];
 
-  return <XGrid rows={rows} columns={columns} options={{ checkboxSelection: true, autoHeight: true }} />;
+  return (
+    <XGrid rows={rows} columns={columns} options={{ checkboxSelection: true, autoHeight: true }} />
+  );
 }

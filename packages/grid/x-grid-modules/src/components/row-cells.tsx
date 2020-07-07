@@ -11,7 +11,7 @@ import {
   CellClassRules,
 } from '../models';
 import * as React from 'react';
-import {Cell, GridCellProps} from './cell';
+import { Cell, GridCellProps } from './cell';
 import { ApiContext } from './api-context';
 import { classnames, isFunction } from '../utils';
 
@@ -55,7 +55,16 @@ interface RowCellsProps {
 }
 
 export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
-  const { scrollSize, hasScroll, lastColIdx, firstColIdx, columns, row, rowIndex, domIndex } = props;
+  const {
+    scrollSize,
+    hasScroll,
+    lastColIdx,
+    firstColIdx,
+    columns,
+    row,
+    rowIndex,
+    domIndex,
+  } = props;
   const api = React.useContext(ApiContext);
 
   const cellProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {

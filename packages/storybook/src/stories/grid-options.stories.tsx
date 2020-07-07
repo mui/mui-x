@@ -87,11 +87,7 @@ export const AutoHeightSmall = () => {
   const data = useData(8, 12);
   return (
     <div className="grid-container">
-      <XGrid
-        rows={data.rows}
-        columns={data.columns}
-        options={{ autoHeight: true }}
-      />
+      <XGrid rows={data.rows} columns={data.columns} options={{ autoHeight: true }} />
     </div>
   );
 };
@@ -100,11 +96,7 @@ export const AutoHeightLarge = () => {
   const data = useData(75, 20);
   return (
     <div className="grid-container">
-      <XGrid
-        rows={data.rows}
-        columns={data.columns}
-        options={{ autoHeight: true }}
-      />
+      <XGrid rows={data.rows} columns={data.columns} options={{ autoHeight: true }} />
     </div>
   );
 };

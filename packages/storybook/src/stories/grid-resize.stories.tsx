@@ -32,7 +32,7 @@ export const ResizeSmallDataset = () => {
           Switch sizes
         </button>
       </div>
-      <div style={{ width: size.width, height: size.height , display: 'flex' }}>
+      <div style={{ width: size.width, height: size.height, display: 'flex' }}>
         <XGrid rows={data.rows} columns={data.columns} />
       </div>
     </>

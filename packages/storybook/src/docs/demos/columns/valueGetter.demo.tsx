@@ -6,7 +6,11 @@ export default function ValueGetterDemo() {
   const columns: Columns = [
     { field: 'firstName' },
     { field: 'lastName' },
-    { field: 'fullName', width: 200, valueGetter: ({ data }) => `${data.firstName} ${data.lastName}` },
+    {
+      field: 'fullName',
+      width: 200,
+      valueGetter: ({ data }) => `${data.firstName} ${data.lastName}`,
+    },
   ];
 
   const rows: RowsProp = [

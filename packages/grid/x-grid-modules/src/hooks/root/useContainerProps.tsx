@@ -38,7 +38,9 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>): R
       };
       const viewportSize = {
         width: windowSizesRef.current!.width - scrollBarSize.y,
-        height: options.autoHeight ? rowsCount * rowHeight : windowSizesRef.current!.height - scrollBarSize.x,
+        height: options.autoHeight
+          ? rowsCount * rowHeight
+          : windowSizesRef.current!.height - scrollBarSize.x,
       };
 
       let viewportPageSize = viewportSize.height / rowHeight;
