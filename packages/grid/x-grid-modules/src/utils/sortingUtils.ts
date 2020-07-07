@@ -27,9 +27,9 @@ export const stringNumberComparer: ComparatorFn = (v1: CellValue, v2: CellValue)
 
   if (typeof v1 === 'string') {
     return v1.localeCompare(v2!.toString());
-  } else {
+  } 
     return (v1 as any) - (v2 as any);
-  }
+  
 };
 
 export const numberComparer: ComparatorFn = (v1: CellValue, v2: CellValue) => {

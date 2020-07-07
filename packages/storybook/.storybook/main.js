@@ -1,5 +1,5 @@
 module.exports = {
-  stories: ['../src/**/*.stories.*'],
+  stories: ['../src/**/*.stories.*', '../../grid/documentation/pages/*.mdx'],
   addons: [
     '@storybook/addon-docs',
     '@storybook/addon-viewport/register',

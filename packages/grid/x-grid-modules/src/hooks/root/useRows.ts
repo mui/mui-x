@@ -1,5 +1,5 @@
-import { createRow, GridOptions, RowData, RowId, RowModel, Rows, RowsProp } from '../../models';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { createRow, GridOptions, RowData, RowId, RowModel, Rows, RowsProp , GridApiRef } from '../../models';
 import { useLogger } from '../utils/useLogger';
 import { useRafUpdate } from '../utils';
 import { RowApi } from '../../models/gridApi';
@@ -11,7 +11,7 @@ import {
 } from '../../constants/eventsConstants';
 import { useApiMethod } from './useApiMethod';
 import { useApiEventHandler } from './useApiEventHandler';
-import { GridApiRef } from '../../models';
+
 
 type IdLookup = { [key: string]: number };
 
@@ -81,7 +81,7 @@ export const useRows = (
         }
         const idx = getRowIndexFromId(partialRow.id);
         if (idx == null) {
-          //New row?
+          // New row?
           addedRows.push(partialRow as RowModel);
           return;
         }
@@ -108,7 +108,7 @@ export const useRows = (
     (updates: RowData[]) => {
       logger.debug(`updating rows data`);
 
-      //we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
+      // we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
       const uniqUpdates = updates.reduce((uniq, update) => {
         uniq[update.id] = uniq[update.id] != null ? { ...uniq[update.id], ...update } : update;
         return uniq;
@@ -118,9 +118,9 @@ export const useRows = (
         const oldRow = getRowFromId(partialRow.id!);
         if (!oldRow) {
           return createRow(partialRow);
-        } else {
+        } 
           return { ...oldRow, data: { ...oldRow.data, ...partialRow } };
-        }
+        
       });
       return updateRowModels(rowModelUpdates);
     },

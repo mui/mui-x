@@ -10,4 +10,4 @@ export const NUMERIC_COL_DEF: ColTypeDef = {
   sortComparator: numberComparer,
   valueFormatter: ({ value }) => (value && isNumber(value) && value.toLocaleString()) || value,
 };
-//todo memoize
+// todo memoize

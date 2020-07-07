@@ -7,7 +7,7 @@ type ReturnType = (
   options: GridOptions,
   columnsTotalWidth: number,
   rowsCount: number,
-) => ContainerProps | null; //[ContainerProps | null, () => void];
+) => ContainerProps | null; // [ContainerProps | null, () => void];
 
 export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>): ReturnType => {
   const logger = useLogger('useContainerProps');
@@ -47,7 +47,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>): R
       viewportPageSize = options.pagination
         ? Math.floor(viewportPageSize)
         : Math.round(viewportPageSize);
-      const rzPageSize = viewportPageSize * 2; //we multiply by 2 for virtualisation //TODO allow buffer with fixed nb rows
+      const rzPageSize = viewportPageSize * 2; // we multiply by 2 for virtualisation //TODO allow buffer with fixed nb rows
       const viewportMaxPage = options.paginationAutoPageSize
         ? 1
         : Math.ceil(rowsCount / viewportPageSize);

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import { CellParams, ColParams } from '../models/colDef';
 import { Checkbox } from '@material-ui/core';
-import { SelectionChangedParam } from '../models';
 import styled from 'styled-components';
+import { CellParams, ColParams } from '../models/colDef';
+import { SelectionChangedParam } from '../models';
 
 const CheckboxInputContainer = styled.div`
   display: flex;

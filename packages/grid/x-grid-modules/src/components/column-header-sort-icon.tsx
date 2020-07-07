@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Badge from '@material-ui/core/Badge';
-import { IconsOptions, SortDirection } from '../models';
 import { IconButton } from '@material-ui/core';
+import { IconsOptions, SortDirection } from '../models';
 
 import { useIcons } from '../hooks/utils/useIcons';
 

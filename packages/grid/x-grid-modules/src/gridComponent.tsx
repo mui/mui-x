@@ -121,7 +121,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
           (footerRef.current && footerRef.current.getBoundingClientRect().height) || 0;
         let dataHeight = (renderCtx && renderCtx.dataContainerSizes!.height) || 0;
         if (dataHeight < internalOptions.rowHeight) {
-          dataHeight = internalOptions.rowHeight * 2; //If we have no rows, we give the size of 2 rows to display the no rows overlay
+          dataHeight = internalOptions.rowHeight * 2; // If we have no rows, we give the size of 2 rows to display the no rows overlay
         }
 
         return footerHeight + dataHeight + internalOptions.headerHeight;
@@ -139,7 +139,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
         {(size: any) => (
           <GridRoot
             ref={gridRootRef}
-            className={'material-grid MuiGrid ' + (className || '')}
+            className={`material-grid MuiGrid ${  className || ''}`}
             options={internalOptions}
             style={{ width: size.width, height: getTotalHeight(size) }}
             role={'grid'}

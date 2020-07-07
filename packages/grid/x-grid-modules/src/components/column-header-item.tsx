@@ -1,6 +1,6 @@
-import { ColDef } from '../models/colDef';
 import * as React from 'react';
 import { useContext } from 'react';
+import { ColDef } from '../models/colDef';
 import { ApiContext } from './api-context';
 import { HEADER_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import { classnames } from '../utils';
@@ -35,7 +35,7 @@ export const ColumnHeaderItem = React.memo(
 
     const width = column.width!;
 
-    let ariaSort: any = undefined;
+    let ariaSort: any;
     if (column.sortDirection != null) {
       ariaSort = { 'aria-sort': column.sortDirection === 'asc' ? 'ascending' : 'descending' };
     }
@@ -46,7 +46,7 @@ export const ColumnHeaderItem = React.memo(
         key={column.field}
         data-field={column.field}
         style={{
-          width: width,
+          width,
           minWidth: width,
           maxWidth: width,
           maxHeight: headerHeight,

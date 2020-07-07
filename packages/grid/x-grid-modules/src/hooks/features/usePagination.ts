@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useReducer, useRef } from 'react';
-import { GridOptions, InternalColumns, PaginationApi, Rows } from '../../models';
+import { GridOptions, InternalColumns, PaginationApi, Rows , GridApiRef } from '../../models';
 import { useLogger } from '../utils';
 import {
   PAGE_CHANGED_EVENT,
@@ -8,7 +8,7 @@ import {
 } from '../../constants/eventsConstants';
 import { useApiMethod } from '../root/useApiMethod';
 import { useApiEventHandler } from '../root/useApiEventHandler';
-import { GridApiRef } from '../../models';
+
 
 export interface PaginationProps {
   page: number;
@@ -91,7 +91,7 @@ export const usePagination = (
     [updateState, apiRef],
   );
 
-  //We use stateRef in this method to avoid reattaching this method to the api every time the state changes
+  // We use stateRef in this method to avoid reattaching this method to the api every time the state changes
   const setPageSize = useCallback(
     (pageSize: number) => {
       if (stateRef.current.pageSize === pageSize) {

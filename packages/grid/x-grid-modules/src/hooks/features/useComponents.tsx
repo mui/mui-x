@@ -22,9 +22,9 @@ export const useComponents = (
   const componentParams: ComponentParams = useMemo(
     () => ({
       paginationProps,
-      rows: rows,
+      rows,
       columns: columns.visible,
-      options: options,
+      options,
       api: apiRef,
       rootElement: gridRootRef,
     }),

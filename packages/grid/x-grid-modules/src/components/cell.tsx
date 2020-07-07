@@ -50,7 +50,7 @@ export const Cell: React.FC<GridCellProps> = React.memo(
         style={{ minWidth: width, maxWidth: width }}
         tabIndex={tabIndex}
       >
-        {children ? children : valueToRender?.toString()}
+        {children || valueToRender?.toString()}
       </div>
     );
   },

@@ -7,7 +7,7 @@ import {
   RowSelectedParam,
   RowsProp,
   SelectionChangedParam,
-} from '../../models';
+ GridApiRef } from '../../models';
 import { useLogger } from '../utils/useLogger';
 import {
   MULTIPLE_KEY_PRESS_CHANGED,
@@ -18,7 +18,7 @@ import {
 import { SelectionApi } from '../../models/gridApi';
 import { useApiEventHandler } from '../root/useApiEventHandler';
 import { useApiMethod } from '../root/useApiMethod';
-import { GridApiRef } from '../../models';
+
 
 export const useSelection = (
   options: GridOptions,
@@ -133,7 +133,7 @@ export const useSelection = (
       forceUpdate((p: any) => !p);
 
       if (apiRef && apiRef.current != null) {
-        //We don't emit ROW_SELECTED_EVENT on each row as it would be too consuming for large set of data.
+        // We don't emit ROW_SELECTED_EVENT on each row as it would be too consuming for large set of data.
         const selectionChangedParam: SelectionChangedParam = {
           rows: getSelectedRows().map(r => r.data),
         };
@@ -174,7 +174,7 @@ export const useSelection = (
 
   useApiEventHandler(apiRef, ROW_CLICKED, rowClickedHandler);
   useApiEventHandler(apiRef, MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
-  //TODO handle Cell Clicked/range selection?
+  // TODO handle Cell Clicked/range selection?
 
   const selectionApi: SelectionApi = {
     selectRow,

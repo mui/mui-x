@@ -1,7 +1,5 @@
 {
   "inputFiles": ["./src"],
   "mode": "modules",
-  "out": "doc",
-  "externalPattern": "lib/**/*.js",
-  "json": "doc/tsdoc.json"
+  "out": "../documentation/generated/"
 }

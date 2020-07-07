@@ -1,7 +1,6 @@
+import * as React from 'react';
 import { CellValue, RowData, RowModel, Rows } from './rows';
 import { ColDef, Columns } from './colDef';
-import * as React from 'react';
-import { ReactNode } from 'react';
 import { SortDirection, SortModel } from './sortModel';
 import { Logger } from '../hooks/utils';
 import { ArrowDownward, ArrowUpward, SeparatorIcon } from '../components/icons';
@@ -57,7 +56,7 @@ export interface ComponentParams {
   rootElement: GridRootRef;
 }
 
-//Todo add multiSortKey
+// Todo add multiSortKey
 /**
  * This is the set of options supported by X-Grid
  *
@@ -75,7 +74,7 @@ export interface GridOptions {
   headerHeight: number;
   scrollbarSize: number;
   columnBuffer: number;
-  enableMultipleSelection: boolean; //ag=> rowSelection : Single | Multiple
+  enableMultipleSelection: boolean; // ag=> rowSelection : Single | Multiple
   enableMultipleColumnsSorting: boolean;
   showCellRightBorder: boolean;
   extendRowFullWidth: boolean;

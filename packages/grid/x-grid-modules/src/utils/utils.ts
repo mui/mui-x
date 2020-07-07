@@ -31,7 +31,7 @@ export function isObject(value: any): value is Record<string, any> {
   return typeof value === 'object';
 }
 
-//We intentionally set the types to any to avoid circular deps
+// We intentionally set the types to any to avoid circular deps
 export function mergeOptions(defaultOptions: any, options?: any) {
   const defaultIcons = defaultOptions.icons;
   const optionsIcons = options?.icons;
