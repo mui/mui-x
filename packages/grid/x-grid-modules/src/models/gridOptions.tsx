@@ -1,46 +1,18 @@
-import { CellValue, RowData, RowModel, Rows } from './rows';
-import { ColDef, Columns } from './colDef';
 import * as React from 'react';
-import { ReactNode } from 'react';
-import { SortDirection, SortModel } from './sortModel';
-import { Logger } from '../hooks/utils';
-import { ArrowDownward, ArrowUpward, SeparatorIcon } from '../components/icons';
-import { PageChangedParams, PaginationProps } from '../hooks/features/usePagination';
-import { GridApiRef, GridRootRef } from './gridApiRef';
-
-export interface ColumnHeaderClickedParam {
-  field: string;
-  column: ColDef;
-}
-export interface ColumnSortedParams {
-  sortedColumns: ColDef[];
-  sortModel: SortModel;
-}
-export interface RowClickedParam {
-  element: HTMLElement;
-  rowModel: RowModel;
-  data: RowData;
-  rowIndex: number;
-  colDef: ColDef;
-}
-
-export interface CellClickedParam {
-  element: HTMLElement;
-  value: CellValue;
-  field: string;
-  data: RowData;
-  rowIndex: number;
-  colDef: ColDef;
-}
-
-export interface RowSelectedParam {
-  data: RowData;
-  rowIndex: number;
-  isSelected: boolean;
-}
-export interface SelectionChangedParam {
-  rows: RowData[];
-}
+import {SortDirection} from './sortModel';
+import {Logger} from '../hooks/utils';
+import {ArrowDownward, ArrowUpward, SeparatorIcon} from '../components/icons';
+import {PaginationProps} from '../hooks/features/usePagination';
+import {
+  ColumnHeaderClickedParams
+} from "./params/columnHeaderClickedParams";
+import {ColumnSortedParams} from "./params/columnSortedParams";
+import {RowClickedParam} from "./params/rowClickedParams";
+import {CellClickedParam} from "./params/cellClickedParams";
+import {ComponentParams} from "./params/componentParams";
+import {RowSelectedParams} from "./params/rowSelectedParams";
+import {SelectionChangedParams} from "./params/selectionChangedParams";
+import {PageChangedParams} from "./params/pageChangedParams";
 
 export interface IconsOptions {
   columnSortedAscending?: React.FC<{}>;
@@ -48,23 +20,25 @@ export interface IconsOptions {
   columnResize?: React.FC<{ className: string }>;
 }
 
-export interface ComponentParams {
-  paginationProps: PaginationProps;
-  rows: Rows;
-  columns: Columns;
-  options: GridOptions;
-  api: GridApiRef;
-  rootElement: GridRootRef;
-}
-
-//Todo add multiSortKey
+// Todo add multiSortKey
+/**
+ * This is the set of options supported by X-Grid
+ *
+ * @remarks
+ * This method is part of the {@link core-library#Statistics | Statistics subsystem}.
+ *
+ * @param x - The first input number
+ * @param y - The second input number
+ * @returns The arithmetic mean of `x` and `y`
+ *
+ */
 export interface GridOptions {
   autoHeight?: boolean;
   rowHeight: number;
   headerHeight: number;
   scrollbarSize: number;
   columnBuffer: number;
-  enableMultipleSelection: boolean; //ag=> rowSelection : Single | Multiple
+  enableMultipleSelection: boolean; // ag=> rowSelection : Single | Multiple
   enableMultipleColumnsSorting: boolean;
   showCellRightBorder: boolean;
   extendRowFullWidth: boolean;
@@ -80,9 +54,9 @@ export interface GridOptions {
 
   onCellClicked?: (param: CellClickedParam) => void;
   onRowClicked?: (param: RowClickedParam) => void;
-  onRowSelected?: (param: RowSelectedParam) => void;
-  onSelectionChanged?: (param: SelectionChangedParam) => void;
-  onColumnHeaderClicked?: (param: ColumnHeaderClickedParam) => void;
+  onRowSelected?: (param: RowSelectedParams) => void;
+  onSelectionChanged?: (param: SelectionChangedParams) => void;
+  onColumnHeaderClicked?: (param: ColumnHeaderClickedParams) => void;
   onColumnsSorted?: (params: ColumnSortedParams) => void;
   onPageChanged?: (param: PageChangedParams) => void;
   onPageSizeChanged?: (param: PageChangedParams) => void;

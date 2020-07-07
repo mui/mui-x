@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   CellValue,
   ColDef,
-  ColumnHeaderClickedParam,
+  ColumnHeaderClickedParams,
   Columns,
   ColumnSortedParams,
   FieldComparatorList,
@@ -152,7 +152,7 @@ export const useSorting = (
   );
 
   const headerClickHandler = useCallback(
-    ({ column, field }: ColumnHeaderClickedParam) => {
+    ({ column, field }: ColumnHeaderClickedParams) => {
       if (column.sortable) {
         sortColumn(column);
       }
