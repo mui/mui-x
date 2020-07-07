@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { MouseEvent, TouchEvent, useEffect, useRef, useState } from 'react';
+import * as React from 'react';
+import { MouseEvent, TouchEvent, useEffect, useRef, useState } from 'react';
 import { SplitterPanel } from './splitterPanel';
 import { SplitterHandler } from './splitterHandler';
 import { validateChildren } from './splitterUtils';

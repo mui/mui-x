@@ -1,5 +1,5 @@
-import React from 'react';
-import { ColDef, Grid, GridOverlay, Footer, GridApiRef, gridApiRef } from '@material-ui/x-grid';
+import * as React from 'react';
+import { ColDef, XGrid, GridOverlay, Footer, GridApiRef, gridApiRef } from '@material-ui/x-grid';
 import { LinearProgress } from '@material-ui/core';
 import CodeIcon from '@material-ui/icons/Code';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -15,7 +15,7 @@ import { useData } from '../../hooks/useData';
 
 export default {
   title: 'X-Grid Demos/Custom-Components',
-  component: Grid,
+  component: XGrid,
   decorators: [withKnobs, withA11y],
   parameters: {
     options: { selectedPanel: 'storybook/knobs/panel' },
@@ -51,7 +51,7 @@ export const Loading = () => {
   );
   return (
     <div className="grid-container">
-      <Grid
+      <XGrid
         rows={rows}
         columns={columns}
         options={{ loadingOverlayComponent: loadingComponent }}
@@ -71,14 +71,14 @@ export const NoRows = () => {
   );
   return (
     <div className="grid-container">
-      <Grid rows={[]} columns={columns} options={{ noRowsOverlayComponent: loadingComponent }} />
+      <XGrid rows={[]} columns={columns} options={{ noRowsOverlayComponent: loadingComponent }} />
     </div>
   );
 };
 export const Icons = () => {
   return (
     <div className="grid-container">
-      <Grid
+      <XGrid
         rows={rows}
         columns={columns}
         options={{
@@ -100,7 +100,7 @@ export const CustomPagination = () => {
 
   return (
     <div className="grid-container">
-      <Grid
+      <XGrid
         rows={data.rows}
         columns={data.columns}
         apiRef={apiRef}
@@ -125,7 +125,7 @@ export const CustomFooter = () => {
   const data = useData(2000, 200);
   return (
     <div className="grid-container">
-      <Grid
+      <XGrid
         rows={data.rows}
         columns={data.columns}
         options={{
@@ -158,7 +158,7 @@ export const HeaderAndFooter = () => {
 
   return (
     <div className="grid-container">
-      <Grid
+      <XGrid
         rows={data.rows}
         columns={data.columns}
         options={{
@@ -288,7 +288,7 @@ export const StyledColumns = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={rows} columns={columns}></Grid>
+      <XGrid rows={rows} columns={columns} />
     </div>
   );
 };

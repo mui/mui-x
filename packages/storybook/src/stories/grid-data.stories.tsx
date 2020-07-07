@@ -1,12 +1,12 @@
-import React from 'react';
+import * as React from 'react';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
-import { Grid, GridOptionsProp } from '@material-ui/x-grid';
+import { XGrid, GridOptionsProp } from '@material-ui/x-grid';
 import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/Dataset',
-  component: Grid,
+  component: XGrid,
   decorators: [withKnobs, withA11y],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
@@ -27,7 +27,7 @@ const GridDataSet = ({ nbRows, nbCols, options, loading }: GridDatasetProps) => 
   const data = useData(nbRows, nbCols);
   return (
     <div className="grid-container">
-      <Grid rows={data.rows} columns={data.columns} options={options} loading={loading} />
+      <XGrid rows={data.rows} columns={data.columns} options={options} loading={loading} />
     </div>
   );
 };
@@ -35,6 +35,15 @@ const GridDataSet = ({ nbRows, nbCols, options, loading }: GridDatasetProps) => 
 export const NoRows = () => <GridDataSet nbRows={0} nbCols={20} />;
 export const NoRowsNoCols = () => <GridDataSet nbRows={0} nbCols={0} />;
 export const LoadingRows = () => <GridDataSet nbRows={0} nbCols={20} loading={true} />;
+export const NoRowsAutoHeight = () => (
+  <GridDataSet nbRows={0} nbCols={20} options={{ autoHeight: true }} />
+);
+export const NoRowsNoColsAutoHeight = () => (
+  <GridDataSet nbRows={0} nbCols={0} options={{ autoHeight: true }} />
+);
+export const LoadingRowsAutoHeight = () => (
+  <GridDataSet nbRows={0} nbCols={20} options={{ autoHeight: true }} loading={true} />
+);
 export const VerticalScroll = () => <GridDataSet nbRows={200} nbCols={2} />;
 export const HorizontalScroll = () => <GridDataSet nbRows={15} nbCols={20} />;
 export const BothScroll = () => <GridDataSet nbRows={200} nbCols={50} />;

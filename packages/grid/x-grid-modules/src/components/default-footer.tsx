@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
+import * as React from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { GridOptions } from '../models';
 import { PaginationProps } from '../hooks/features/usePagination';
 import { Footer } from './styled-wrappers';
@@ -13,44 +14,42 @@ export interface DefaultFooterProps {
   rowCount: number;
 }
 
-export const DefaultFooter: React.FC<DefaultFooterProps> = ({
-  options,
-  paginationProps,
-  rowCount,
-}) => {
-  const api = useContext(ApiContext);
-  const [selectedRowCount, setSelectedCount] = useState(0);
+export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps>(
+  function DefaultFooter({ options, paginationProps, rowCount }, ref) {
+    const api = useContext(ApiContext);
+    const [selectedRowCount, setSelectedCount] = useState(0);
 
-  useEffect(() => {
-    if (api && api.current) {
-      return api.current!.onSelectionChanged(({ rows }) => setSelectedCount(rows.length));
+    useEffect(() => {
+      if (api && api.current) {
+        return api.current!.onSelectionChanged(({ rows }) => setSelectedCount(rows.length));
+      }
+    }, [api, setSelectedCount]);
+
+    if (options.hideFooter) {
+      return null;
     }
-  }, [api, setSelectedCount]);
 
-  if (options.hideFooter) {
-    return null;
-  }
-
-  return (
-    <Footer>
-      {!options.hideFooterRowCount && <RowCount rowCount={rowCount} />}
-      {!options.hideFooterSelectedRowCount && (
-        <SelectedRowCount selectedRowCount={selectedRowCount} />
-      )}
-      {options.pagination &&
-        paginationProps.pageSize != null &&
-        !options.hideFooterPagination &&
-        ((options.paginationComponent && options.paginationComponent(paginationProps)) || (
-          <Pagination
-            setPage={paginationProps.setPage}
-            currentPage={paginationProps.page}
-            pageCount={paginationProps.pageCount}
-            pageSize={paginationProps.pageSize}
-            rowCount={paginationProps.rowCount}
-            setPageSize={paginationProps.setPageSize}
-            rowsPerPageOptions={options.paginationRowsPerPageOptions}
-          />
-        ))}
-    </Footer>
-  );
-};
+    return (
+      <Footer ref={ref}>
+        {!options.hideFooterRowCount && <RowCount rowCount={rowCount} />}
+        {!options.hideFooterSelectedRowCount && (
+          <SelectedRowCount selectedRowCount={selectedRowCount} />
+        )}
+        {options.pagination &&
+          paginationProps.pageSize != null &&
+          !options.hideFooterPagination &&
+          ((options.paginationComponent && options.paginationComponent(paginationProps)) || (
+            <Pagination
+              setPage={paginationProps.setPage}
+              currentPage={paginationProps.page}
+              pageCount={paginationProps.pageCount}
+              pageSize={paginationProps.pageSize}
+              rowCount={paginationProps.rowCount}
+              setPageSize={paginationProps.setPageSize}
+              rowsPerPageOptions={options.paginationRowsPerPageOptions}
+            />
+          ))}
+      </Footer>
+    );
+  },
+);

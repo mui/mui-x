@@ -1,5 +1,6 @@
-import React, { useMemo } from 'react';
-import { Grid, GridOptionsProp } from '@material-ui/x-grid';
+import * as React from 'react';
+import { useMemo } from 'react';
+import { XGrid, GridOptionsProp } from '@material-ui/x-grid';
 
 import '../style/grid-stories.css';
 import DoneIcon from '@material-ui/icons/Done';
@@ -12,7 +13,7 @@ import { ColDef } from '@material-ui/x-grid-modules/dist/src';
 
 export default {
   title: 'X-Grid Tests/Styling',
-  component: Grid,
+  component: XGrid,
   decorators: [withKnobs, withA11y],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
@@ -30,12 +31,12 @@ export const BigRowsAndHeader = () => {
     checkboxSelection: true,
   };
 
-  return <Grid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
 };
 
 export const Unset = () => {
   const data = useData(200, 200);
-  return <Grid rows={data.rows} columns={data.columns} />;
+  return <XGrid rows={data.rows} columns={data.columns} />;
 };
 
 export const Small = () => {
@@ -44,7 +45,7 @@ export const Small = () => {
     headerHeight: 35,
     rowHeight: 27,
   };
-  return <Grid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
 };
 
 const IsDone: React.FC<{ value: boolean }> = ({ value }) =>
@@ -140,7 +141,7 @@ export const ColumnCellClass = () => {
 
   return (
     <div className={'grid-container'}>
-      <Grid rows={rows} columns={cols}></Grid>
+      <XGrid rows={rows} columns={cols} />
     </div>
   );
 };
@@ -151,7 +152,7 @@ export const ColumnHeaderClass = () => {
 
   return (
     <div className={'grid-container'}>
-      <Grid rows={rows} columns={cols}></Grid>
+      <XGrid rows={rows} columns={cols} />
     </div>
   );
 };
@@ -166,7 +167,7 @@ export const ColumnCellClassRules = () => {
 
   return (
     <div className={'grid-container'}>
-      <Grid rows={rows} columns={cols}></Grid>
+      <XGrid rows={rows} columns={cols} />
     </div>
   );
 };
@@ -178,7 +179,7 @@ export const ColumnCellRenderer = () => {
 
   return (
     <div className={'grid-container'}>
-      <Grid rows={rows} columns={cols}></Grid>
+      <XGrid rows={rows} columns={cols} />
     </div>
   );
 };

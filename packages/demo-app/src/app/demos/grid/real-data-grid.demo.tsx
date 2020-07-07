@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { AppBreadcrumbs } from '../../app-breadcrumbs';
-import { Grid, LicenseInfo, RowModel, Columns, GridOptions } from '@material-ui/x-grid';
+import { XGrid, LicenseInfo, RowModel, Columns, GridOptions } from '@material-ui/x-grid';
 import pkg from '@material-ui/x-grid/package.json';
 import { MainContainer } from './components/main-container';
 import { SettingsPanel } from './components/settings-panel';
@@ -122,7 +123,7 @@ export const RealDataGridDemo: React.FC<{}> = props => {
       <MainContainer>
         <div style={{ display: 'flex', boxSizing: 'border-box' }} className={'fill-space'}>
           <div className={'grow'}>
-            <Grid
+            <XGrid
               rows={rows as any}
               columns={cols as any}
               loading={loading}

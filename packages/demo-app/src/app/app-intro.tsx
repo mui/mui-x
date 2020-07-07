@@ -1,7 +1,7 @@
 import { MuiLogo } from './demos/grid/components/logo';
 import Typography from '@material-ui/core/Typography';
 
-import React from 'react';
+import * as React from 'react';
 import { Button, Container } from '@material-ui/core';
 import styled from 'styled-components';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';

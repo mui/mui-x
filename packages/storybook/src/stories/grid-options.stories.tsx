@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { ColDef, Grid, GridApiRef, gridApiRef } from '@material-ui/x-grid';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
+import { ColDef, XGrid, GridApiRef, gridApiRef } from '@material-ui/x-grid';
 import { Button } from '@material-ui/core';
 
 import { Pagination } from '@material-ui/lab';
@@ -11,7 +12,7 @@ import mdx from './grid-options.mdx';
 
 export default {
   title: 'X-Grid Tests/Options',
-  component: Grid,
+  component: XGrid,
   decorators: [withKnobs, withA11y],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
@@ -40,7 +41,7 @@ const rows = [
 export const NoLogger = () => {
   return (
     <div className="grid-container">
-      <Grid rows={rows} columns={columns} options={{ logLevel: false }} />
+      <XGrid rows={rows} columns={columns} options={{ logLevel: false }} />
     </div>
   );
 };
@@ -55,7 +56,7 @@ export const CustomLogger = () => {
   };
   return (
     <div className="grid-container">
-      <Grid rows={rows} columns={columns} options={{ logger }} />
+      <XGrid rows={rows} columns={columns} options={{ logger }} />
     </div>
   );
 };
@@ -64,7 +65,7 @@ export const NoRowExtend = () => {
   const data = useData(20, 2);
   return (
     <div className="grid-container">
-      <Grid rows={data.rows} columns={data.columns} options={{ extendRowFullWidth: false }} />
+      <XGrid rows={data.rows} columns={data.columns} options={{ extendRowFullWidth: false }} />
     </div>
   );
 };
@@ -73,7 +74,7 @@ export const NoRowExtendCellBorder = () => {
   const data = useData(20, 2);
   return (
     <div className="grid-container">
-      <Grid
+      <XGrid
         rows={data.rows}
         columns={data.columns}
         options={{ extendRowFullWidth: false, showCellRightBorder: true }}
@@ -82,11 +83,29 @@ export const NoRowExtendCellBorder = () => {
   );
 };
 
+export const AutoHeightSmall = () => {
+  const data = useData(8, 12);
+  return (
+    <div className="grid-container">
+      <XGrid rows={data.rows} columns={data.columns} options={{ autoHeight: true }} />
+    </div>
+  );
+};
+
+export const AutoHeightLarge = () => {
+  const data = useData(75, 20);
+  return (
+    <div className="grid-container">
+      <XGrid rows={data.rows} columns={data.columns} options={{ autoHeight: true }} />
+    </div>
+  );
+};
+
 export const ColumnSeparator = () => {
   const data = useData(20, 2);
   return (
     <div className="grid-container">
-      <Grid rows={data.rows} columns={data.columns} options={{ showColumnSeparator: true }} />
+      <XGrid rows={data.rows} columns={data.columns} options={{ showColumnSeparator: true }} />
     </div>
   );
 };
@@ -96,7 +115,7 @@ export const PageSize100 = () => {
 
   return (
     <div className="grid-container">
-      <Grid
+      <XGrid
         rows={data.rows}
         columns={data.columns}
         options={{
@@ -113,7 +132,7 @@ export const PaginationKnobs = () => {
   const rowsPerPageOptions = array('Rows per page options', ['10', '20', '50', '100', '200'], ', ');
 
   return (
-    <Grid
+    <XGrid
       rows={data.rows}
       columns={data.columns}
       options={{
@@ -133,7 +152,7 @@ export const HiddenPagination = () => {
 
   return (
     <div className="grid-container">
-      <Grid
+      <XGrid
         rows={data.rows}
         columns={data.columns}
         options={{
@@ -204,7 +223,7 @@ export const PaginationApiTests = () => {
       >
         toggle pageAutoSize
       </Button>
-      <Grid
+      <XGrid
         rows={data.rows}
         columns={data.columns}
         apiRef={apiRef}
@@ -251,7 +270,7 @@ export const AutoPagination = () => {
         </Button>
       </div>
       <div style={{ width: size.width, height: size.height }}>
-        <Grid
+        <XGrid
           rows={data.rows}
           columns={data.columns}
           options={{

@@ -10,8 +10,8 @@ import {
   ValueGetterParams,
   CellClassRules,
 } from '../models';
-import React, { useContext } from 'react';
-import { Cell } from './cell';
+import * as React from 'react';
+import { Cell, GridCellProps } from './cell';
 import { ApiContext } from './api-context';
 import { classnames, isFunction } from '../utils';
 
@@ -36,7 +36,7 @@ function getCellParams(
 function applyCssClassRules(cellClassRules: CellClassRules, params: CellClassParams) {
   return Object.entries(cellClassRules).reduce((appliedCss, entry) => {
     const shouldApplyCss: boolean = entry[1](params);
-    appliedCss += shouldApplyCss ? entry[0] : '';
+    appliedCss += shouldApplyCss ? entry[0] + ' ' : '';
     return appliedCss;
   }, '');
 }
@@ -65,9 +65,9 @@ export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
     rowIndex,
     domIndex,
   } = props;
-  const api = useContext(ApiContext);
+  const api = React.useContext(ApiContext);
 
-  const cells = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
+  const cellProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const isLastColumn = firstColIdx + colIdx === columns.length - 1;
     const removeScrollWidth = isLastColumn && hasScroll.y && hasScroll.x;
     const width = removeScrollWidth ? column.width! - scrollSize : column.width!;
@@ -118,24 +118,29 @@ export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
       cssClassProp = { cssClass: cssClassProp.cssClass + ' with-renderer' };
     }
 
-    return (
-      <Cell
-        key={column.field}
-        value={value}
-        field={column.field}
-        width={width}
-        showRightBorder={showRightBorder}
-        {...formattedValueProp}
-        align={column.align}
-        {...cssClassProp}
-        tabIndex={domIndex === 0 && colIdx === 0 ? 0 : -1}
-        rowIndex={rowIndex}
-        colIndex={colIdx + firstColIdx}
-      >
-        {cellComponent}
-      </Cell>
-    );
+    const cellProps: GridCellProps & { children: any } = {
+      value: value,
+      field: column.field,
+      width: width,
+      showRightBorder: showRightBorder,
+      ...formattedValueProp,
+      align: column.align,
+      ...cssClassProp,
+      tabIndex: domIndex === 0 && colIdx === 0 ? 0 : -1,
+      rowIndex: rowIndex,
+      colIndex: colIdx + firstColIdx,
+      children: cellComponent,
+    };
+
+    return cellProps;
   });
-  return <>{cells}</>;
+
+  return (
+    <>
+      {cellProps.map(props => (
+        <Cell key={props.field} {...props} />
+      ))}
+    </>
+  );
 });
 RowCells.displayName = 'RowCells';

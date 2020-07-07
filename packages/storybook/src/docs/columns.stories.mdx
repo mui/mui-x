@@ -1,0 +1,149 @@
+import { XGrid } from '@material-ui/x-grid';
+import ColumnTypesDemo from './demos/columns/columnTypes.demo';
+import HideColumnDemo from './demos/columns/hideColumn.demo';
+import ValueGetterDemo from './demos/columns/valueGetter.demo';
+import FormattingDemo from './demos/columns/formatting.demo';
+import StyleHeaderDemo from './demos/columns/styleHeader.demo';
+import StyleCellDemo from './demos/columns/styleCell.demo';
+
+<Meta title="1. Docs/2. Columns" component={XGrid} />
+
+# Columns
+
+After importing XGrid or DataGrid, you're now ready to use the component in your JSX, and configure your grid columns.
+To do this, you need to define the columns property of the component as below.
+If you use Typescript, you can enforce the typing and define the prop with 'Columns' or 'ColDef[]' type.
+
+```tsx
+const columns: Columns = [
+    {
+        field: 'columnId', headerName: 'My Column Id', description: 'Something about this grid is amazing!', width: 100, sortable: true, type: 'number'
+    }
+]
+```
+In the code above we define a column with some of the basic attributes.
+- `field` is a mandatory field and is used to associate the column header with the corresponding value in the rows that follow. It's similar to an id, but has to be a string.
+- `headerName` is the title visible in the grid column header. If not set, `field` will be used in the header.
+- `description` is the description of the column that will be displayed in a tooltip if the column header is too small to render the full column title.
+- `width` is the width the column will be when the component has mounted.
+- `sortable` is an optional boolean that allows making the column sortable.
+- `type` is the type of the column, *more on this below*.
+
+The full list of column option is defined in the `ColDef` interface and can be found here (TODO: add link to ColDef generated doc)
+
+## Column types
+
+To facilitate column configuration, some column types are predefined.
+By default, columns are assumed to hold strings and thus the default column string type will be applied.
+As a result, column sorting will use the string comparator, and the column content will be aligned to the left side of the cell.
+
+The following types are built in:
+ - string
+ - number
+ - date
+ - dateTime
+
+To apply a column type, you just need to define the `type` property in your column definition.
+```tsx
+const columns: Columns = [
+  { field: 'name' }, // `type: 'string'` by default
+  { field: 'age', type: 'number' },
+  { field: 'dateCreated', type: 'date' },
+  { field: 'lastLogin', type: 'dateTime' },
+]
+```
+In the code above, we are defining 4 columns, and just by applying a type, each column will be sortable with the correct comparator for its type.
+We also added locale formatting for date, dateTime, and number Columns.
+
+<ColumnTypesDemo />
+<br />
+
+### Extending col type? Adding new col type?
+
+## Hiding
+Hiding a column is pretty straightforward, you just need to toggle the `hide` attribute of the column definition.
+```tsx
+const columns: Columns = [
+  { field: 'hiddenCol', hide: true },
+]
+```
+<HideColumnDemo />
+
+## Sizing
+
+To define the width of a column, you can use the `width` attribute available in ColDef. You can also resize the column, using the column resize separator icon, available on the column header. If you would like to block the resizing of a column, you can do by setting the resizable prop to false.
+
+```tsx
+const columns: Columns = [
+  { field: 'largeCol', width: 200 },
+  { field: 'unresizableCol', width: 200, resizable: false }
+]
+```
+## Getting values
+Sometimes a column might not have a corresponding value and you just want to render a combination of different fields.
+To do that, you can set the `valueGetter` attribute of `ColDef` as in the example below.
+
+ ```tsx
+ const columns: Columns = [
+   { field: 'firstName'},
+   { field: 'lastName' },
+   { field: 'fullName', valueGetter: ({data}) => `${data.firstName} ${data.lastName}` }
+ ]
+ ```
+- `valueGetter` is a function of type `(params: ValueGetterParams) => CellValue;`, therefore you can destructure `params` to get all the row data, as in the example above.
+TODO Api ref the valueGetter interface here!
+
+<ValueGetterDemo />
+
+## Formatting
+Formatting data before rendering is a common task. It is used in the built in `date` or `dateTime` column types to apply local formatting to dates.
+
+ ```tsx
+ const columns: Columns = [
+   { field: 'date', headerName: 'Year'  valueFormatter: ({value})=> value.getFullYear() }
+ ]
+ ```
+ - `valueFormatter` is a function of type `(params: ValueFormatterParams) => CellValue;`, therefore you can destructure `params` to get the column value as in the example above.
+ TODO: Api ref the valueFormatter interface here!
+
+<FormattingDemo />
+
+## Styling
+There are different ways of styling `X-Grid` or `DataGrid`. In this part, we are going to focus only on the options available in our `ColDef` type.
+### Header
+`ColDef` has an attribute called `headerClass` that lets you inject some css classes into your column header.
+You can also specify how to align the header text using `headerAlign`. The default value is `left`.
+
+ ```tsx
+ const columns: Columns = [
+   { field: 'styledCol', headerClass: 'super-app-theme--header', headerAlign: 'center'}
+ ]
+ ```
+- `HeaderClass` can be a `string` or a `string[]`
+<StyleHeaderDemo />
+
+### Cell
+`ColDef` lets you style cells with different attributes.
+- `align` to align cell content, `'left' | 'right' | 'center'`
+- `cellClass` of type `string | string[]`, allows you to apply css classes on every cell. It can also be of type `CellClassFn` which is a function that let you apply css classes dynamically.
+- `cellClassRules` works like `classnames` [github here](https://github.com/JedWatson/classnames). It's an object, with css classes as keys and a boolean or a function as values.
+
+ ```tsx
+ const columns: Columns = [
+   { field: 'styledCell', cellClass: 'super-app-theme--cell', align: 'center'},
+   {
+     field: 'withRules',
+     cellClassRules: {
+       negative: {value} => value < 0,
+       positive: {value} => value > 0
+     },
+     align: 'right'
+   },
+ ]
+ ```
+<StyleCellDemo />
+
+## Options
+There are more options in `ColDef` which you can find the full definition in the API page (TODO: add link here)
+
+   - `disableClickEventBubbling`: allows you to disable the default click behaviour of the grid. If you render a clickable component in a column, such as a link or a button, you can use this option to disable the row selection on click.

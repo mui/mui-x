@@ -1,4 +1,5 @@
-import React, { useCallback, useReducer } from 'react';
+import * as React from 'react';
+import { useCallback, useReducer } from 'react';
 import { DemoAppBar } from './app-bar';
 
 import './app.less';

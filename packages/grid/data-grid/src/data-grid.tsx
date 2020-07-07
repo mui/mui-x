@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import * as React from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   GridComponent,
   GridComponentProps,
@@ -21,7 +22,9 @@ export interface DataGridProps extends ModuleGridType {
   options: DataGridOptionsProp;
 }
 const MAX_PAGE_SIZE = 100;
-export const DataGrid: React.FC<DataGridProps> = React.memo(props => {
+export const DataGrid: React.FC<DataGridProps> = React.memo(function DataGrid(
+  props: DataGridProps,
+) {
   const validateOptions = useCallback((options: DataGridOptionsProp) => {
     if (options && options.paginationPageSize && options.paginationPageSize > MAX_PAGE_SIZE) {
       throw new Error(
@@ -53,7 +56,7 @@ export const DataGrid: React.FC<DataGridProps> = React.memo(props => {
       loading={props.loading}
       options={internalOptions}
       licenseStatus={'Valid'}
+      className={'data-grid ' + (props.className || '')}
     />
   );
 });
-DataGrid.displayName = 'DataGrid';

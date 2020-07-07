@@ -1,6 +1,6 @@
-import React from 'react';
+import * as React from 'react';
 import { withA11y } from '@storybook/addon-a11y';
-import { Grid, GridOptionsProp, SortDirection } from '@material-ui/x-grid';
+import { XGrid, GridOptionsProp, SortDirection } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import '@material-ui/x-grid-data-generator/dist/demo-style.css';
 import { Button } from '@material-ui/core';
@@ -10,7 +10,7 @@ import { action } from '@storybook/addon-actions';
 
 export default {
   title: 'X-Grid Demos/Playground',
-  component: Grid,
+  component: XGrid,
   decorators: [withKnobs, withA11y],
   parameters: {
     options: { selectedPanel: 'storybook/knobs/panel' },
@@ -68,7 +68,7 @@ export const Commodity = () => {
         </Button>
       </div>
       <div className="grid-container">
-        <Grid rows={data.rows} columns={data.columns} options={getGridOptions()} />
+        <XGrid rows={data.rows} columns={data.columns} options={getGridOptions()} />
       </div>
     </>
   );
@@ -78,7 +78,7 @@ export const Commodity500 = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={data.rows} columns={data.columns} options={getGridOptions()} />
+      <XGrid rows={data.rows} columns={data.columns} options={getGridOptions()} />
     </div>
   );
 };
@@ -87,7 +87,7 @@ export const Commodity1000 = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={data.rows} columns={data.columns} options={getGridOptions()} />
+      <XGrid rows={data.rows} columns={data.columns} options={getGridOptions()} />
     </div>
   );
 };
@@ -97,7 +97,7 @@ export const Commodity10000 = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={data.rows} columns={data.columns} options={getGridOptions()} />
+      <XGrid rows={data.rows} columns={data.columns} options={getGridOptions()} />
     </div>
   );
 };
@@ -107,7 +107,7 @@ export const Employee100 = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={data.rows} columns={data.columns} options={getGridOptions()} />
+      <XGrid rows={data.rows} columns={data.columns} options={getGridOptions()} />
     </div>
   );
 };
@@ -116,7 +116,7 @@ export const Employee1000 = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={data.rows} columns={data.columns} options={getGridOptions()} />
+      <XGrid rows={data.rows} columns={data.columns} options={getGridOptions()} />
     </div>
   );
 };
@@ -125,7 +125,7 @@ export const Employee10000 = () => {
 
   return (
     <div className="grid-container">
-      <Grid rows={data.rows} columns={data.columns} options={getGridOptions()} />
+      <XGrid rows={data.rows} columns={data.columns} options={getGridOptions()} />
     </div>
   );
 };

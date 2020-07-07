@@ -1,5 +1,5 @@
-import React from 'react';
-import { Grid } from '@material-ui/x-grid';
+import * as React from 'react';
+import { XGrid } from '@material-ui/x-grid';
 import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { action } from '@storybook/addon-actions';
@@ -9,7 +9,7 @@ import { SortDirection } from '@material-ui/x-grid';
 
 export default {
   title: 'X-Grid Demos/Options-Events',
-  component: Grid,
+  component: XGrid,
   decorators: [withKnobs, withA11y],
   parameters: {
     options: { selectedPanel: 'storybook/knobs/panel' },
@@ -25,7 +25,7 @@ export const Options = () => {
   const sortingOrder = array('sortingOrder', ['asc', 'desc', 'null'], ', ');
 
   return (
-    <Grid
+    <XGrid
       rows={data.rows}
       columns={data.columns}
       options={{
@@ -38,6 +38,7 @@ export const Options = () => {
         onPageChanged: params => action('onPageChanged')(params),
         onPageSizeChanged: params => action('onPageSizeChanged')(params),
 
+        autoHeight: boolean('autoHeight', false),
         pagination: boolean('pagination', true),
         paginationPageSize: number('paginationPageSize', 100),
         paginationAutoPageSize: boolean('paginationAutoPageSize', false),
@@ -75,5 +76,5 @@ export const Events = () => {
     onPageSizeChanged: params => action('onPageSizeChanged')(params),
   };
 
-  return <Grid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
 };

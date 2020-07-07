@@ -1,6 +1,7 @@
-import React, { useCallback, useState } from 'react';
+import * as React from 'react';
+import { useCallback, useState } from 'react';
 import { getDate } from '../data/random-generator';
-import { ColDef, Grid } from '@material-ui/x-grid';
+import { ColDef, XGrid } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { useData } from '../hooks/useData';
@@ -8,7 +9,7 @@ import CreateIcon from '@material-ui/icons/Create';
 
 export default {
   title: 'X-Grid Tests/Columns',
-  component: Grid,
+  component: XGrid,
   decorators: [withKnobs, withA11y],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
@@ -22,13 +23,13 @@ export const SmallColSizes = () => {
   const data = useData(100, 20);
   const transformColSizes = (columns: ColDef[]) => columns.map(c => ({ ...c, width: 60 }));
 
-  return <Grid rows={data.rows} columns={transformColSizes(data.columns)} />;
+  return <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />;
 };
 
 export const VerySmallColSizes = () => {
   const data = useData(100, 20);
   const transformColSizes = (columns: ColDef[]) => columns.map(c => ({ ...c, width: 50 }));
-  return <Grid rows={data.rows} columns={transformColSizes(data.columns)} />;
+  return <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />;
 };
 export const ColumnDescriptionTooltip = () => {
   const data = useData(100, 20);
@@ -40,14 +41,14 @@ export const ColumnDescriptionTooltip = () => {
       return c;
     });
 
-  return <Grid rows={data.rows} columns={transformColSizes(data.columns)} />;
+  return <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />;
 };
 
 export const HiddenColumns = () => {
   const data = useData(100, 20);
   const transformColSizes = (columns: ColDef[]) =>
     columns.map((c, idx) => ({ ...c, hide: idx % 2 === 0 }));
-  return <Grid rows={data.rows} columns={transformColSizes(data.columns)} />;
+  return <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />;
 };
 
 export const UpdateColumnsBtn: React.FC = () => {
@@ -137,7 +138,7 @@ export const UpdateColumnsBtn: React.FC = () => {
         <button onClick={changeCols}>Change cols </button>
       </div>
       <div className="grid-container">
-        <Grid rows={rows} columns={cols} />
+        <XGrid rows={rows} columns={cols} />
       </div>
     </>
   );
@@ -154,7 +155,7 @@ export const HeaderComponent = () => {
 
   return (
     <div className={'grid-container'}>
-      <Grid rows={data.rows} columns={transformCols(data.columns)}></Grid>
+      <XGrid rows={data.rows} columns={transformCols(data.columns)} />
     </div>
   );
 };

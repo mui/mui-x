@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import * as React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { action } from '@storybook/addon-actions';
-import { Grid, GridApi, GridOptionsProp } from '@material-ui/x-grid';
+import { XGrid, GridApi, GridOptionsProp } from '@material-ui/x-grid';
 import { getData, GridData } from '../data/data-service';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
@@ -8,7 +9,7 @@ import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/Selection',
-  component: Grid,
+  component: XGrid,
   decorators: [withKnobs, withA11y],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
@@ -38,7 +39,7 @@ export const ApiPreSelectedRows = () => {
     loadData();
   }, []);
 
-  return <Grid rows={data.rows} columns={data.columns} apiRef={apiRef} />;
+  return <XGrid rows={data.rows} columns={data.columns} apiRef={apiRef} />;
 };
 
 export const EventsMapped = () => {
@@ -49,7 +50,7 @@ export const EventsMapped = () => {
     onRowSelected: params => action('onRowSelected')(params),
   };
 
-  return <Grid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
 };
 
 export const SingleSelect = () => {
@@ -58,7 +59,7 @@ export const SingleSelect = () => {
     enableMultipleSelection: false,
   };
 
-  return <Grid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
 };
 
 export const MultipleSelect = () => {
@@ -70,7 +71,7 @@ export const MultipleSelect = () => {
   return (
     <>
       <p>Maintain CTRL or Command to select multiple rows</p>
-      <Grid rows={data.rows} columns={data.columns} options={options} />
+      <XGrid rows={data.rows} columns={data.columns} options={options} />
     </>
   );
 };
@@ -81,5 +82,5 @@ export const MultipleSelectWithCheckbox = () => {
     disableSelectionOnClick: true,
   };
 
-  return <Grid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
 };

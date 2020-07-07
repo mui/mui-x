@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { GridOverlay } from './styled-wrappers';
 import { CircularProgress } from '@material-ui/core';
 

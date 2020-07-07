@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import styled from 'styled-components';
 import { GridOptions } from '../../models';
 
@@ -21,11 +21,13 @@ export const RootStyle = styled.div<GridRootProps>`
     border-radius: 4px;
     outline: none;
     display: flex;
+    flex: 1;
     flex-direction: column;
 
     .main-grid-container {
       position: relative;
       flex-grow: 1;
+      flex-direction: column;
       display: flex;
     }
     .watermark {
@@ -168,7 +170,7 @@ export const RootStyle = styled.div<GridRootProps>`
       bottom: 0px;
       left: 0px;
       right: 0px;
-      overflow-y: auto;
+      overflow-y: ${p => (p.options.autoHeight ? 'hidden' : 'auto')};
       overflow-x: auto;
 
       .viewport {
@@ -242,12 +244,7 @@ RootStyle.displayName = 'RootStyle';
 export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps & DivProps>((props, ref) => {
   const { options, children, className, ...rest } = props;
   return (
-    <RootStyle
-      ref={ref}
-      className={'material-grid grid-root ' + (className || '')}
-      options={options}
-      {...rest}
-    >
+    <RootStyle ref={ref} className={'grid-root ' + (className || '')} options={options} {...rest}>
       {children}
     </RootStyle>
   );
