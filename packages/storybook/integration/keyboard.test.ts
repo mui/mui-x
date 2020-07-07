@@ -1,4 +1,4 @@
-import {activeCell, getStoryPage} from './helper-fn';
+import { activeCell, getStoryPage } from './helper-fn';
 
 describe('Keyboard Navigation', () => {
   let page, browser;
@@ -37,7 +37,7 @@ describe('Keyboard Navigation', () => {
     await page.waitForFunction(activeCell, waitFnOptions, 2, 3);
 
     await page.keyboard.press('ArrowLeft');
-    await page.waitForFunction(activeCell, waitFnOptions, 2 ,2);
+    await page.waitForFunction(activeCell, waitFnOptions, 2, 2);
 
     await page.keyboard.press('ArrowUp');
     await page.waitForFunction(activeCell, waitFnOptions, 1, 2);

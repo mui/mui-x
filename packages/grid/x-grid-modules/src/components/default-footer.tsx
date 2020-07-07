@@ -15,7 +15,11 @@ export interface DefaultFooterProps {
 }
 
 export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps>(function DefaultFooter(
-  { options, paginationProps, rowCount },
+  {
+  options,
+  paginationProps,
+  rowCount,
+},
   ref,
 ) {
   const api = useContext(ApiContext);
@@ -34,7 +38,9 @@ export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps
   return (
     <Footer ref={ref}>
       {!options.hideFooterRowCount && <RowCount rowCount={rowCount} />}
-      {!options.hideFooterSelectedRowCount && <SelectedRowCount selectedRowCount={selectedRowCount} />}
+      {!options.hideFooterSelectedRowCount && (
+        <SelectedRowCount selectedRowCount={selectedRowCount} />
+      )}
       {options.pagination &&
         paginationProps.pageSize != null &&
         !options.hideFooterPagination &&

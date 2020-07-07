@@ -52,7 +52,11 @@ export const useSelection = (
       if (allowMultipleOverride) {
         allowMultiSelect = allowMultipleOverride;
       }
-      const isRowSelected = allowMultiSelect ? (isSelected == null ? !row.selected : isSelected) : true;
+      const isRowSelected = allowMultiSelect
+        ? isSelected == null
+          ? !row.selected
+          : isSelected
+        : true;
       const updatedRowModels: RowModel[] = [];
       if (allowMultiSelect) {
         if (isRowSelected) {
@@ -73,16 +77,31 @@ export const useSelection = (
       apiRef!.current!.updateRowModels([...updatedRowModels, { ...row, selected: isRowSelected }]);
 
       if (apiRef && apiRef.current != null) {
-        logger.info(`Row at index ${rowIndex} has changed to ${isRowSelected ? 'selected' : 'unselected'} `);
-        const rowSelectedParam: RowSelectedParam = { data: row.data, isSelected: isRowSelected, rowIndex };
-        const selectionChangedParam: SelectionChangedParam = { rows: getSelectedRows().map(r => r.data) };
+        logger.info(
+          `Row at index ${rowIndex} has changed to ${isRowSelected ? 'selected' : 'unselected'} `,
+        );
+        const rowSelectedParam: RowSelectedParam = {
+          data: row.data,
+          isSelected: isRowSelected,
+          rowIndex,
+        };
+        const selectionChangedParam: SelectionChangedParam = {
+          rows: getSelectedRows().map(r => r.data),
+        };
         apiRef.current!.emit(ROW_SELECTED_EVENT, rowSelectedParam);
         apiRef.current!.emit(SELECTION_CHANGED_EVENT, selectionChangedParam);
       }
 
       forceUpdate((p: any) => !p);
     },
-    [forceUpdate, apiRef, logger, selectedItemsRef, allowMultipleSelectionKeyPressed, getSelectedRows],
+    [
+      forceUpdate,
+      apiRef,
+      logger,
+      selectedItemsRef,
+      allowMultipleSelectionKeyPressed,
+      getSelectedRows,
+    ],
   );
 
   const selectRow = useCallback(
@@ -115,7 +134,9 @@ export const useSelection = (
 
       if (apiRef && apiRef.current != null) {
         //We don't emit ROW_SELECTED_EVENT on each row as it would be too consuming for large set of data.
-        const selectionChangedParam: SelectionChangedParam = { rows: getSelectedRows().map(r => r.data) };
+        const selectionChangedParam: SelectionChangedParam = {
+          rows: getSelectedRows().map(r => r.data),
+        };
         apiRef.current!.emit(SELECTION_CHANGED_EVENT, selectionChangedParam);
       }
     },
@@ -155,7 +176,13 @@ export const useSelection = (
   useApiEventHandler(apiRef, MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
   //TODO handle Cell Clicked/range selection?
 
-  const selectionApi: SelectionApi = { selectRow, getSelectedRows, selectRows, onSelectedRow, onSelectionChanged };
+  const selectionApi: SelectionApi = {
+    selectRow,
+    getSelectedRows,
+    selectRows,
+    onSelectedRow,
+    onSelectionChanged,
+  };
   useApiMethod(apiRef, selectionApi, 'SelectionApi');
 
   useEffect(() => {

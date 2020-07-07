@@ -8,7 +8,9 @@ export interface LicenseDetails {
 }
 
 function getClearLicenseString(details: LicenseDetails): string {
-  return `ORDER:${details.orderNumber},EXPIRY=${details.expiryDate.getTime()},KEYVERSION=${licenseVersion}`;
+  return `ORDER:${
+    details.orderNumber
+  },EXPIRY=${details.expiryDate.getTime()},KEYVERSION=${licenseVersion}`;
 }
 
 export const generateLicence = (details: LicenseDetails): string => {

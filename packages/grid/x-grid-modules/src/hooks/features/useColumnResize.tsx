@@ -53,12 +53,18 @@ export const useColumnResize = (
       isResizing.current = true;
       currentColDefRef.current = col;
       currentColPreviousWidth.current = col.width;
-      currentColElem.current = columnsRef?.current?.querySelector(`[data-field="${col.field}"]`) as HTMLDivElement;
+      currentColElem.current = columnsRef?.current?.querySelector(
+        `[data-field="${col.field}"]`,
+      ) as HTMLDivElement;
       currentColCellsElems.current = findCellElementsFromCol(currentColElem.current) || undefined;
-      dataContainerElemRef.current = findDataContainerFromCurrent(currentColElem.current) || undefined;
-      dataContainerPreviousWidth.current = Number(dataContainerElemRef.current!.style.minWidth.replace('px', ''));
+      dataContainerElemRef.current =
+        findDataContainerFromCurrent(currentColElem.current) || undefined;
+      dataContainerPreviousWidth.current = Number(
+        dataContainerElemRef.current!.style.minWidth.replace('px', ''),
+      );
       currentColPosition.current = apiRef.current.getColumnPosition(col.field);
-      isLastColumn.current = apiRef.current.getColumnIndex(col.field) === apiRef.current.getVisibleColumns().length - 1;
+      isLastColumn.current =
+        apiRef.current.getColumnIndex(col.field) === apiRef.current.getVisibleColumns().length - 1;
     },
     [apiRef, columnsRef, logger],
   );
@@ -73,7 +79,9 @@ export const useColumnResize = (
     resizingMouseMove.current = undefined;
     isLastColumn.current = false;
     if (currentColDefRef.current) {
-      logger.debug(`Updating col ${currentColDefRef.current.field} with new width: ${currentColDefRef.current.width}`);
+      logger.debug(
+        `Updating col ${currentColDefRef.current.field} with new width: ${currentColDefRef.current.width}`,
+      );
       apiRef?.current?.updateColumn(currentColDefRef.current);
       currentColDefRef.current = undefined;
     }
@@ -96,7 +104,8 @@ export const useColumnResize = (
       }
       if (dataContainerElemRef.current) {
         const diffWithPrev = newWidth - currentColPreviousWidth.current!;
-        dataContainerElemRef.current.style.minWidth = dataContainerPreviousWidth.current! + diffWithPrev + 'px';
+        dataContainerElemRef.current.style.minWidth =
+          dataContainerPreviousWidth.current! + diffWithPrev + 'px';
 
         if (isLastColumn.current && apiRef && apiRef.current) {
           apiRef.current.scroll({ left: dataContainerPreviousWidth.current! + diffWithPrev });

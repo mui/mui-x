@@ -69,7 +69,9 @@ function MyApp() {
       description: 'this column has a value getter and is not sortable',
       headerClass: 'highlight',
       sortable: false,
-      valueGetter: params => `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
+      valueGetter: params =>
+        `${params.getValue('firstName') || ''} ${params.getValue('lastName') ||
+          ''}`,
     },
   ];
 
@@ -84,7 +86,11 @@ function MyApp() {
 
   return (
     <div style={{ width: 800, height: 600 }}>
-      <Grid rows={rows} columns={columns} options={{ checkboxSelection: true }} />
+      <Grid
+        rows={rows}
+        columns={columns}
+        options={{ checkboxSelection: true }}
+      />
     </div>
   );
 }

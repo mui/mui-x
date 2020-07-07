@@ -16,7 +16,8 @@ const SplitterHandlerWrapper = styled.div<Pick<SplitterHandlerProps, 'direction'
   ${({ direction }) => (direction === 'horizontal' ? 'width: 100%;' : 'height: 100%')};
   cursor: ${({ direction }) => (direction === 'horizontal' ? 'row-resize' : 'col-resize')};
   box-sizing: border-box;
-  ${({ direction }) => (direction === 'horizontal' ? 'border-bottom' : 'border-right')}: 1px solid #c1c1c1;
+  ${({ direction }) => (direction === 'horizontal' ? 'border-bottom' : 'border-right')}: 1px solid
+    #c1c1c1;
   justify-content: center;
   align-items: center;
   display: flex;
@@ -24,8 +25,11 @@ const SplitterHandlerWrapper = styled.div<Pick<SplitterHandlerProps, 'direction'
   flex-direction: ${({ direction }) => (direction === 'horizontal' ? 'column' : 'row')};
 `;
 
-const SplitterHandlerButton = styled.div<Pick<SplitterHandlerProps, 'invertHandler' | 'direction' | 'displayHandler'>>`
-  display: ${p => (p.displayHandler === 'show' || p.displayHandler === 'fade' ? 'inline-flex' : 'none')};
+const SplitterHandlerButton = styled.div<
+  Pick<SplitterHandlerProps, 'invertHandler' | 'direction' | 'displayHandler'>
+>`
+  display: ${p =>
+    p.displayHandler === 'show' || p.displayHandler === 'fade' ? 'inline-flex' : 'none'};
   justify-content: center;
   background-color: #e0e0e0;
   position: absolute;
@@ -82,7 +86,13 @@ const SmallRightArrowIcon = styled(RightArrow)`
   margin-left: -3px;
 `;
 
-const HandlerIcon = ({ invert, direction }: { invert?: boolean; direction: 'horizontal' | 'vertical' }) => {
+const HandlerIcon = ({
+  invert,
+  direction,
+}: {
+  invert?: boolean;
+  direction: 'horizontal' | 'vertical';
+}) => {
   if (direction === 'horizontal') {
     return invert ? <SmallExpandLessIcon /> : <SmallExpandMoreIcon />;
   } else {

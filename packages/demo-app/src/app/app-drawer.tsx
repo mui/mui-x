@@ -29,7 +29,12 @@ export function AppDrawer({ isOpen, toggleDrawer }: AppDrawerProps) {
 
   return (
     <SwipeableDrawer open={isOpen} onClose={toggleDrawer} onOpen={toggleDrawer}>
-      <div className={classes.list} role="presentation" onClick={toggleDrawer} onKeyDown={toggleDrawer}>
+      <div
+        className={classes.list}
+        role="presentation"
+        onClick={toggleDrawer}
+        onKeyDown={toggleDrawer}
+      >
         <List>
           <ListItem component={Link} button to={'/'} key={'back'}>
             <ListItemIcon>

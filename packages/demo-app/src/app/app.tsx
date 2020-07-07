@@ -18,10 +18,10 @@ const StyledApp = styled.div`
 
 export const App: React.FC<{}> = () => {
   const [state, dispatch] = useReducer(appReducer, { isOpen: false });
-  const toggleDrawer = useCallback(() => dispatch({ type: state.isOpen ? 'close-drawer' : 'open-drawer' }), [
-    state,
-    dispatch,
-  ]);
+  const toggleDrawer = useCallback(
+    () => dispatch({ type: state.isOpen ? 'close-drawer' : 'open-drawer' }),
+    [state, dispatch],
+  );
 
   const [theme, themeId, toggleTheme, isDark] = useTheme();
 
@@ -29,7 +29,11 @@ export const App: React.FC<{}> = () => {
     <ThemeProvider theme={theme} toggleTheme={toggleTheme}>
       <HashRouter>
         <StyledApp className="app">
-          <DemoAppBar onMenuButtonClick={toggleDrawer} onThemeToggle={toggleTheme} isDark={isDark} />
+          <DemoAppBar
+            onMenuButtonClick={toggleDrawer}
+            onThemeToggle={toggleTheme}
+            isDark={isDark}
+          />
           <AppDrawer isOpen={state.isOpen} toggleDrawer={toggleDrawer} />
           <Switch>
             <Route path="/grid">

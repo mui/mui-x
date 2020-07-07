@@ -1,9 +1,13 @@
 import * as React from 'react';
 import { ReactNode } from 'react';
 
-export const validateChildren = (childrenArray: Array<Exclude<ReactNode, boolean | null | undefined>>): void => {
+export const validateChildren = (
+  childrenArray: Array<Exclude<ReactNode, boolean | null | undefined>>,
+): void => {
   if (childrenArray.length !== 2) {
-    throw new Error('The Splitter component needs exactly 2 children react node to split panels properly');
+    throw new Error(
+      'The Splitter component needs exactly 2 children react node to split panels properly',
+    );
   } else {
     childrenArray.forEach(c => {
       if (!React.isValidElement(c)) {

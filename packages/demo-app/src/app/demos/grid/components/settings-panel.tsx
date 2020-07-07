@@ -8,7 +8,12 @@ import { useTheme } from '../../theme/useTheme';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
 export interface SettingsPanelProps {
-  onApply: (settings: { size: number; type: string; selectedTheme: string; pagesize: number }) => void;
+  onApply: (settings: {
+    size: number;
+    type: string;
+    selectedTheme: string;
+    pagesize: number;
+  }) => void;
   type: string;
   size: number;
 }
@@ -94,7 +99,13 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onApply, type, siz
             </Select>
           </FormControl>
           <div>
-            <Button size="small" className={'apply-btn'} variant={'outlined'} color={'primary'} onClick={applyChanges}>
+            <Button
+              size="small"
+              className={'apply-btn'}
+              variant={'outlined'}
+              color={'primary'}
+              onClick={applyChanges}
+            >
               <KeyboardArrowRightIcon fontSize={'small'} /> Apply
             </Button>
           </div>

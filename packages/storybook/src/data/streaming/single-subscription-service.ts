@@ -41,7 +41,10 @@ const generateModel = () => ({
   price2y: randomPrice(),
   price5y: randomPrice(),
 });
-export function subscribeFeed(minUpdateRate = 100, maxUpdateRate = 500): Observable<PricingModel[]> {
+export function subscribeFeed(
+  minUpdateRate = 100,
+  maxUpdateRate = 500,
+): Observable<PricingModel[]> {
   return interval(50).pipe(
     delay(random(0, maxUpdateRate - 50)),
     flatMap(() => {

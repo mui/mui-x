@@ -25,14 +25,16 @@ function countryToFlag(isoCode: string) {
     : isoCode;
 }
 
-export const Country: React.FC<{ value: { code: string; label: string } }> = React.memo(({ value }) => {
-  return (
-    <Container>
-      <span className={'country-flag'}>{countryToFlag(value.code)}</span>
-      <span className={'country-name'}>{value.label}</span>
-    </Container>
-  );
-});
+export const Country: React.FC<{ value: { code: string; label: string } }> = React.memo(
+  ({ value }) => {
+    return (
+      <Container>
+        <span className={'country-flag'}>{countryToFlag(value.code)}</span>
+        <span className={'country-name'}>{value.label}</span>
+      </Container>
+    );
+  },
+);
 Country.displayName = 'Country';
 
 export function CountryRenderer(params: CellParams) {

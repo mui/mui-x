@@ -116,7 +116,12 @@ export const AppIntro: React.FC<{}> = () => {
             <Typography component="h5" className={'intro'}>
               Extension with highly complex components for Startup and Enterprise projects.
             </Typography>
-            <Button href={'#/grid'} variant={'outlined'} color={'primary'} className={'main-action-button'}>
+            <Button
+              href={'#/grid'}
+              variant={'outlined'}
+              color={'primary'}
+              className={'main-action-button'}
+            >
               <KeyboardArrowRightIcon fontSize={'small'} /> Preview
             </Button>
           </div>

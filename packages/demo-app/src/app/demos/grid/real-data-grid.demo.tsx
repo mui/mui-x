@@ -10,7 +10,9 @@ import '@material-ui/x-grid-data-generator/dist/demo-style.css';
 import { useTheme } from '../theme';
 
 console.info(
-  '*******************************\n' + `    GRID VERSION: ${pkg.version}   \n` + '*******************************',
+  '*******************************\n' +
+    `    GRID VERSION: ${pkg.version}   \n` +
+    '*******************************',
 );
 
 LicenseInfo.setLicenseKey(
@@ -79,7 +81,12 @@ export const RealDataGridDemo: React.FC<{}> = props => {
     );
   }, [setRows, type, size]);
 
-  const onApplyClick = (settings: { size: number; type: string; selectedTheme: string; pagesize: number }) => {
+  const onApplyClick = (settings: {
+    size: number;
+    type: string;
+    selectedTheme: string;
+    pagesize: number;
+  }) => {
     if (size !== settings.size) {
       setSize(settings.size);
     }
