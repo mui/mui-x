@@ -32,6 +32,8 @@ module.exports = {
    * their own groups.
    */
   rules: {
+    '@typescript-eslint/no-var-requires': [0, {patterns: ['*.js']}],
+    '@typescript-eslint/explicit-function-return-type':[0, {patterns: ['*.js']}],
     'consistent-this': ['error', 'self'],
     'linebreak-style': 'off', // Doesn't play nicely with Windows
     // just as bad as 'max components per file'
