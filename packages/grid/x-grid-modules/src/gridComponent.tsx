@@ -21,14 +21,14 @@ import {
   RenderContext,
   ApiContext,
   Window,
-  Watermark,
+  Watermark, Pagination,
 } from './components';
 import { useApi, useColumns, useKeyboard, useRows } from './hooks/root';
 import { useLogger, useLoggerFactory } from './hooks/utils';
 import { debounce, mergeOptions } from './utils';
 
 export const GridComponent: React.FC<GridComponentProps> = React.memo(
-  ({ rows, columns, options, apiRef, loading, licenseStatus, className }) => {
+  ({ rows, columns, options, apiRef, loading, licenseStatus, className, components }) => {
     useLoggerFactory(options?.logger, options?.logLevel);
     const logger = useLogger('Grid');
     const gridRootRef: GridRootRef = useRef<HTMLDivElement>(null);
@@ -80,10 +80,11 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
       });
     }, [paginationProps.pageSize, setInternalOptions]);
 
-    const components = useComponents(
+    const customComponents = useComponents(
       internalColumns,
       internalRows,
       internalOptions,
+      components,
       paginationProps,
       apiRef,
       gridRootRef,
@@ -151,7 +152,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
           >
             <ApiContext.Provider value={apiRef}>
               <OptionsContext.Provider value={internalOptions}>
-                {components.headerComponent}
+                {customComponents.headerComponent}
                 <div className={'main-grid-container'}>
                   <Watermark licenseStatus={licenseStatus} />
                   <ColumnsContainer ref={columnsContainerRef}>
@@ -164,8 +165,8 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
                       renderCtx={renderCtx}
                     />
                   </ColumnsContainer>
-                  {!loading && internalRows.length === 0 && components.noRowsComponent}
-                  {loading && components.loadingComponent}
+                  {!loading && internalRows.length === 0 && customComponents.noRowsComponent}
+                  {loading && customComponents.loadingComponent}
                   <Window ref={windowRef}>
                     <DataContainer
                       ref={gridRef}
@@ -188,10 +189,23 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
                     </DataContainer>
                   </Window>
                 </div>
-                {components.footerComponent || (
+                {customComponents.footerComponent || (
                   <DefaultFooter
                     ref={footerRef}
-                    paginationProps={paginationProps}
+                    paginationComponent={!!internalOptions.pagination &&
+                    paginationProps.pageSize != null &&
+                    !internalOptions.hideFooterPagination &&
+                    (customComponents.paginationComponent ||
+                      <Pagination
+                        setPage={paginationProps.setPage}
+                        currentPage={paginationProps.page}
+                        pageCount={paginationProps.pageCount}
+                        pageSize={paginationProps.pageSize}
+                        rowCount={paginationProps.rowCount}
+                        setPageSize={paginationProps.setPageSize}
+                        rowsPerPageOptions={internalOptions.paginationRowsPerPageOptions}
+                      />
+                    )}
                     rowCount={internalRows.length}
                     options={internalOptions}
                   />

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { Checkbox } from '@material-ui/core';
 import styled from 'styled-components';
-import { SelectionChangedParams } from '../models';
+import { SelectionChangedParams } from '../models/params/selectionChangedParams';
 import {ColParams} from "../models/params/colParams";
 import {CellParams} from "../models/params/cellParams";
 

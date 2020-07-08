@@ -49,12 +49,12 @@ function hydrateColumns(
   }
   // we check if someone called setSortModel using apiref to apply icons
   if (apiRef.current && apiRef.current!.getSortModel) {
-    const sortedCols = apiRef.current!.getSortModel();
-    sortedCols.forEach((c, idx) => {
+    const sortModel = apiRef.current!.getSortModel();
+    sortModel.forEach((c, idx) => {
       const col = mappedCols.find(mc => mc.field === c.colId);
       if (col) {
         col.sortDirection = c.sort;
-        col.sortIndex = sortedCols.length > 1 ? idx + 1 : undefined;
+        col.sortIndex = sortModel.length > 1 ? idx + 1 : undefined;
       }
     });
   }

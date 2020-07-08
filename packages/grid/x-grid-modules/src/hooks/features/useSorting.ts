@@ -84,7 +84,7 @@ export const useSorting = (
 
   const buildComparatorList = useCallback(
     (sortModel: SortModel): FieldComparatorList => {
-      const comparatorList = sortModel.map(item => {
+      const comparators = sortModel.map(item => {
         const col = apiRef.current!.getColumnFromField(item.colId);
         const comparator = isDesc(item.sort)
           ? (v1: CellValue, v2: CellValue, row1: RowModel, row2: RowModel) =>
@@ -92,7 +92,7 @@ export const useSorting = (
           : col.sortComparator!;
         return { field: col.field, comparator };
       });
-      return comparatorList;
+      return comparators;
     },
     [apiRef],
   );

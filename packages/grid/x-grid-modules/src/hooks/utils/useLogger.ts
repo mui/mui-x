@@ -27,16 +27,16 @@ const getAppender = (name: string, logLevel: string, appender: Logger = console)
     throw new Error(`LogLevel ${logLevel} not recognised`);
   }
 
-  const logger = LOG_LEVELS.reduce((logger, method, idx) => {
+  const logger = LOG_LEVELS.reduce((loggerObj, method, idx) => {
     if (idx >= minLogLevelIdx) {
-      logger[method] = (...args: any[]) => {
+      loggerObj[method] = (...args: any[]) => {
         const [message, ...rest] = args;
         (appender as any)[method](`[${name}] - ${message}`, ...rest);
       };
     } else {
-      logger[method] = noop;
+      loggerObj[method] = noop;
     }
-    return logger;
+    return loggerObj;
   }, {} as any);
 
   return logger as Logger;

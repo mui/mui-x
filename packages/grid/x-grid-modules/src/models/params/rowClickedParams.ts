@@ -1,5 +1,5 @@
 import {RowData, RowModel} from "../rows";
-import {ColDef} from "../colDef";
+import {ColDef} from "../colDef/colDef";
 
 export interface RowClickedParam {
 	element: HTMLElement;

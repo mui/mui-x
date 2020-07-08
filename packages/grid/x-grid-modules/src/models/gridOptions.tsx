@@ -2,22 +2,18 @@ import * as React from 'react';
 import {SortDirection} from './sortModel';
 import {Logger} from '../hooks/utils';
 import {ArrowDownward, ArrowUpward, SeparatorIcon} from '../components/icons';
-import {PaginationProps} from '../hooks/features/usePagination';
-import {
-  ColumnHeaderClickedParams
-} from "./params/columnHeaderClickedParams";
+import {ColumnHeaderClickedParams} from "./params/columnHeaderClickedParams";
 import {ColumnSortedParams} from "./params/columnSortedParams";
 import {RowClickedParam} from "./params/rowClickedParams";
 import {CellClickedParam} from "./params/cellClickedParams";
-import {ComponentParams} from "./params/componentParams";
 import {RowSelectedParams} from "./params/rowSelectedParams";
 import {SelectionChangedParams} from "./params/selectionChangedParams";
 import {PageChangedParams} from "./params/pageChangedParams";
 
 export interface IconsOptions {
-  columnSortedAscending?: React.FC<{}>;
-  columnSortedDescending?: React.FC<{}>;
-  columnResize?: React.FC<{ className: string }>;
+  columnSortedAscending?: React.ElementType;
+  columnSortedDescending?: React.ElementType;
+  columnResize?: React.ElementType<{ className: string }>;
 }
 
 // Todo add multiSortKey
@@ -55,11 +51,6 @@ export interface GridOptions {
   onPageChanged?: (param: PageChangedParams) => void;
   onPageSizeChanged?: (param: PageChangedParams) => void;
 
-  paginationComponent?: (props: PaginationProps) => React.ReactNode;
-  loadingOverlayComponent?: React.ReactNode;
-  noRowsOverlayComponent?: React.ReactNode;
-  footerComponent?: (params: ComponentParams) => React.ReactNode;
-  headerComponent?: (params: ComponentParams) => React.ReactNode;
   icons: IconsOptions;
 }
 

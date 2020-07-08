@@ -137,7 +137,7 @@ export const useRows = (
   const getRowModels = useCallback(() => rowModelsRef.current, [rowModelsRef]);
   const getRowsCount = useCallback(() => rowModelsRef.current.length, [rowModelsRef]);
   const getAllRowIds = useCallback(() => rowModelsRef.current.map(r => r.id), [rowModelsRef]);
-  const setRowModels = useCallback((rows: Rows) => updateAllRows(rows), [updateAllRows]);
+  const setRowModels = useCallback((rowsParam: Rows) => updateAllRows(rowsParam), [updateAllRows]);
 
   const rowApi: RowApi = {
     getRowIndexFromId,

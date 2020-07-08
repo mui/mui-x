@@ -168,17 +168,17 @@ export const useColumnResize = (
   useEffect(() => {
     if (columnsRef && columnsRef.current) {
       logger.info('Adding resizing event listener');
-      const _columnsRefEvents = columnsRef.current;
+      const columnsRefEvents = columnsRef.current;
       columnsRef.current.addEventListener('mouseup', stopResize);
       columnsRef.current.addEventListener('mouseleave', handleMouseLeave);
       columnsRef.current.addEventListener('mouseenter', handleMouseEnter);
       columnsRef.current.addEventListener('mousemove', handleMouseMove);
 
       return () => {
-        _columnsRefEvents.removeEventListener('mouseup', stopResize);
-        _columnsRefEvents.removeEventListener('mouseleave', handleMouseLeave);
-        _columnsRefEvents.removeEventListener('mouseenter', handleMouseEnter);
-        _columnsRefEvents.removeEventListener('mousemove', handleMouseMove);
+        columnsRefEvents.removeEventListener('mouseup', stopResize);
+        columnsRefEvents.removeEventListener('mouseleave', handleMouseLeave);
+        columnsRefEvents.removeEventListener('mouseenter', handleMouseEnter);
+        columnsRefEvents.removeEventListener('mousemove', handleMouseMove);
       };
     }
   }, [

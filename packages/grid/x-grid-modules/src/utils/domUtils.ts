@@ -4,7 +4,7 @@ import {
   HEADER_CELL_CSS_CLASS,
   ROOT_CSS_CLASS,
 } from '../constants/cssClassesConstants';
-import { CellIndexCoordinates } from '../models';
+import { CellIndexCoordinates } from '../models/rows';
 
 const DATA_ATTRIBUTE_PREFIX = 'data-';
 

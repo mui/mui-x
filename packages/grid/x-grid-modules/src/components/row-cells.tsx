@@ -67,7 +67,7 @@ export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
   } = props;
   const api = React.useContext(ApiContext);
 
-  const cellProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
+  const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const isLastColumn = firstColIdx + colIdx === columns.length - 1;
     const removeScrollWidth = isLastColumn && hasScroll.y && hasScroll.x;
     const width = removeScrollWidth ? column.width! - scrollSize : column.width!;
@@ -137,8 +137,8 @@ export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
 
   return (
     <React.Fragment>
-      {cellProps.map(props => (
-        <Cell key={props.field} {...props} />
+      {cellsProps.map(cellProps => (
+        <Cell key={cellProps.field} {...cellProps} />
       ))}
     </React.Fragment>
   );

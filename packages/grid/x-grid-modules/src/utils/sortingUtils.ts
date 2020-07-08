@@ -1,4 +1,5 @@
-import { CellValue, ComparatorFn, SortDirection } from '../models';
+import { SortDirection, ComparatorFn } from "../models/sortModel";
+import { CellValue } from "../models/rows";
 
 export const nextSortDirection = (sortingOrder: SortDirection[], current?: SortDirection) => {
   const currentIdx = sortingOrder.indexOf(current);
