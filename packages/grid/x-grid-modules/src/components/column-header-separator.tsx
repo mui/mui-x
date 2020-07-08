@@ -16,7 +16,9 @@ export const ColumnHeaderSeparator: React.FC<ColumnHeaderSeparatorProps> = React
       ...(resizable && onResize ? { onMouseDown: onResize } : {}),
     };
 
-    return <div className={'column-separator'}>{icons!.columnResize!(resizeIconProps)}</div>;
+    const icon = React.createElement(icons!.columnResize!, resizeIconProps);
+
+    return <div className={'column-separator'}>{icon}</div>;
   },
 );
 ColumnHeaderSeparator.displayName = 'ColumnHeaderSeparator';

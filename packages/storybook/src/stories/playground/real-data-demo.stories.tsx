@@ -4,9 +4,9 @@ import { XGrid, GridOptionsProp, SortDirection } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import '@material-ui/x-grid-data-generator/dist/demo-style.css';
 import { Button } from '@material-ui/core';
-import { randomInt } from '../../data/random-generator';
 import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
 import { action } from '@storybook/addon-actions';
+import { randomInt } from '../../data/random-generator';
 
 export default {
   title: 'X-Grid Demos/Playground',
@@ -29,7 +29,10 @@ const getGridOptions: () => GridOptionsProp = () => {
     onCellClicked: params => action('onCellClicked')(params),
     onColumnHeaderClicked: params => action('onColumnHeaderClicked')(params),
     onRowSelected: params => action('onRowSelected')(params),
-    onSelectionChanged: params => action('onSelectionChanged')(params),
+    onSelectionChanged: params =>
+      action('onSelectionChanged', {
+        depth: 1,
+      })(params),
     onColumnsSorted: params => action('onColumnsSorted')(params),
     onPageChanged: params => action('onPageChanged')(params),
     onPageSizeChanged: params => action('onPageSizeChanged')(params),
@@ -58,7 +61,7 @@ export const Commodity = () => {
   const { data, setSize, loadNewData } = useDemoData('Commodity', 100);
 
   return (
-    <>
+    <React.Fragment>
       <div style={{ display: 'flex', justifyContent: 'space-around' }}>
         <Button color={'primary'} onClick={loadNewData}>
           Load New Rows
@@ -70,7 +73,7 @@ export const Commodity = () => {
       <div className="grid-container">
         <XGrid rows={data.rows} columns={data.columns} options={getGridOptions()} />
       </div>
-    </>
+    </React.Fragment>
   );
 };
 export const Commodity500 = () => {

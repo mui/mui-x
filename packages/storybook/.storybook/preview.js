@@ -2,10 +2,16 @@ import { LicenseInfo } from '@material-ui/x-grid';
 import { addParameters } from '@storybook/react';
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 import { DocsPage, DocsContainer } from '@storybook/addon-docs/blocks';
+import { configureActions } from '@storybook/addon-actions';
 
 LicenseInfo.setLicenseKey(
   '0f94d8b65161817ca5d7f7af8ac2f042T1JERVI6TVVJLVN0b3J5Ym9vayxFWFBJUlk9MTY1NDg1ODc1MzU1MCxLRVlWRVJTSU9OPTE=',
 );
+
+configureActions({
+  depth: 3,
+  limit: 10
+});
 
 addParameters({
   options: {
