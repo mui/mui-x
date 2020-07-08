@@ -1,4 +1,4 @@
-import {Columns, GridApiRef, GridComponentOverridesProp, GridOptions, RowsProp} from './models';
+import { Columns, GridApiRef, GridComponentOverridesProp, GridOptions, RowsProp } from './models';
 
 export type GridOptionsProp = Partial<GridOptions>;
 

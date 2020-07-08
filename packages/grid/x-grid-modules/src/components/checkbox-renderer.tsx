@@ -3,8 +3,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { Checkbox } from '@material-ui/core';
 import styled from 'styled-components';
 import { SelectionChangedParams } from '../models/params/selectionChangedParams';
-import {ColParams} from "../models/params/colParams";
-import {CellParams} from "../models/params/cellParams";
+import { ColParams } from '../models/params/colParams';
+import { CellParams } from '../models/params/cellParams';
 
 const CheckboxInputContainer = styled.div`
   display: flex;
@@ -24,7 +24,7 @@ export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api, colDef, co
       const isAllSelected = api.getAllRowIds().length === e.rows.length && e.rows.length > 0;
       const hasNoneSelected = e.rows.length === 0;
       setChecked(isAllSelected || !hasNoneSelected);
-      setIndeterminate( !isAllSelected && !hasNoneSelected);
+      setIndeterminate(!isAllSelected && !hasNoneSelected);
     },
     [api, setIndeterminate, setChecked],
   );

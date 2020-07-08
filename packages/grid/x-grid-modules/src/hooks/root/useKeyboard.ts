@@ -22,9 +22,8 @@ import {
   isTabKey,
 } from '../../utils';
 import { CELL_CSS_CLASS, ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
-import { CellIndexCoordinates, GridOptions , GridApiRef } from '../../models';
+import { CellIndexCoordinates, GridOptions, GridApiRef } from '../../models';
 import { useApiEventHandler } from './useApiEventHandler';
-
 
 const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
   if (!isArrowKeys(code)) {
@@ -235,7 +234,6 @@ export const useKeyboard = (
 
       if (event.key.toLowerCase() === 'a' && (event.ctrlKey || event.metaKey)) {
         apiRef.current!.selectRows(apiRef.current!.getAllRowIds(), true);
-        
       }
     },
     [

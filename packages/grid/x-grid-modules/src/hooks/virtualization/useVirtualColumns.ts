@@ -1,10 +1,15 @@
 import React, { useCallback, useRef } from 'react';
-import { ContainerProps, GridOptions, RenderColumnsProps, VirtualizationApi , GridApiRef } from '../../models';
+import {
+  ContainerProps,
+  GridOptions,
+  RenderColumnsProps,
+  VirtualizationApi,
+  GridApiRef,
+} from '../../models';
 import { useLogger } from '../utils/useLogger';
 import { COLUMNS_UPDATED } from '../../constants/eventsConstants';
 import { useApiMethod } from '../root/useApiMethod';
 import { useApiEventHandler } from '../root/useApiEventHandler';
-
 
 type UpdateRenderedColsFnType = (
   containerProps: ContainerProps | null,
@@ -123,10 +128,9 @@ export const useVirtualColumns = (
         renderedColRef.current = newRenderedColState;
         logger.debug('New columns state to render', newRenderedColState);
         return true;
-      } 
-        logger.debug(`No rendering needed on columns`);
-        return false;
-      
+      }
+      logger.debug(`No rendering needed on columns`);
+      return false;
     },
     [
       renderedColRef,

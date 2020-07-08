@@ -21,7 +21,8 @@ import {
   RenderContext,
   ApiContext,
   Window,
-  Watermark, Pagination,
+  Watermark,
+  Pagination,
 } from './components';
 import { useApi, useColumns, useKeyboard, useRows } from './hooks/root';
 import { useLogger, useLoggerFactory } from './hooks/utils';
@@ -140,7 +141,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
         {(size: any) => (
           <GridRoot
             ref={gridRootRef}
-            className={`material-grid MuiGrid ${  className || ''}`}
+            className={`material-grid MuiGrid ${className || ''}`}
             options={internalOptions}
             style={{ width: size.width, height: getTotalHeight(size) }}
             role={'grid'}
@@ -192,20 +193,22 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
                 {customComponents.footerComponent || (
                   <DefaultFooter
                     ref={footerRef}
-                    paginationComponent={!!internalOptions.pagination &&
-                    paginationProps.pageSize != null &&
-                    !internalOptions.hideFooterPagination &&
-                    (customComponents.paginationComponent ||
-                      <Pagination
-                        setPage={paginationProps.setPage}
-                        currentPage={paginationProps.page}
-                        pageCount={paginationProps.pageCount}
-                        pageSize={paginationProps.pageSize}
-                        rowCount={paginationProps.rowCount}
-                        setPageSize={paginationProps.setPageSize}
-                        rowsPerPageOptions={internalOptions.paginationRowsPerPageOptions}
-                      />
-                    )}
+                    paginationComponent={
+                      !!internalOptions.pagination &&
+                      paginationProps.pageSize != null &&
+                      !internalOptions.hideFooterPagination &&
+                      (customComponents.paginationComponent || (
+                        <Pagination
+                          setPage={paginationProps.setPage}
+                          currentPage={paginationProps.page}
+                          pageCount={paginationProps.pageCount}
+                          pageSize={paginationProps.pageSize}
+                          rowCount={paginationProps.rowCount}
+                          setPageSize={paginationProps.setPageSize}
+                          rowsPerPageOptions={internalOptions.paginationRowsPerPageOptions}
+                        />
+                      ))
+                    }
                     rowCount={internalRows.length}
                     options={internalOptions}
                   />

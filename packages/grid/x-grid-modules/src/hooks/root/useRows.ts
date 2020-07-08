@@ -1,5 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { createRow, GridOptions, RowData, RowId, RowModel, Rows, RowsProp , GridApiRef } from '../../models';
+import {
+  createRow,
+  GridOptions,
+  RowData,
+  RowId,
+  RowModel,
+  Rows,
+  RowsProp,
+  GridApiRef,
+} from '../../models';
 import { useLogger } from '../utils/useLogger';
 import { useRafUpdate } from '../utils';
 import {
@@ -10,8 +19,7 @@ import {
 } from '../../constants/eventsConstants';
 import { useApiMethod } from './useApiMethod';
 import { useApiEventHandler } from './useApiEventHandler';
-import {RowApi} from "../../models/api/rowApi";
-
+import { RowApi } from '../../models/api/rowApi';
 
 type IdLookup = { [key: string]: number };
 
@@ -32,11 +40,12 @@ export const useRows = (
   const isScrollingRef = useRef<boolean>(false);
   const isSortedRef = useRef<boolean>(false);
 
-  const setIsScrolling = useCallback((v: boolean) => {
-    isScrollingRef.current = v;
-  }, [
-    isScrollingRef,
-  ]);
+  const setIsScrolling = useCallback(
+    (v: boolean) => {
+      isScrollingRef.current = v;
+    },
+    [isScrollingRef],
+  );
 
   const updateAllRows = useCallback(
     (allNewRows: RowModel[]) => {
@@ -120,9 +129,8 @@ export const useRows = (
         const oldRow = getRowFromId(partialRow.id!);
         if (!oldRow) {
           return createRow(partialRow);
-        } 
-          return { ...oldRow, data: { ...oldRow.data, ...partialRow } };
-        
+        }
+        return { ...oldRow, data: { ...oldRow.data, ...partialRow } };
       });
       return updateRowModels(rowModelUpdates);
     },

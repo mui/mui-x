@@ -9,7 +9,8 @@ import {
   RenderRowProps,
   Rows,
   VirtualizationApi,
- GridApiRef } from '../../models';
+  GridApiRef,
+} from '../../models';
 import { ScrollParams, useScrollFn } from '../utils';
 import { useLogger } from '../utils/useLogger';
 import { useContainerProps } from '../root';
@@ -23,7 +24,6 @@ import {
 import { useApiMethod } from '../root/useApiMethod';
 import { useNativeEventListener } from '../root/useNativeEventListener';
 import { useApiEventHandler } from '../root/useApiEventHandler';
-
 
 const SCROLL_EVENT = 'scroll';
 type UseVirtualRowsReturnType = Partial<RenderContextProps> | null;

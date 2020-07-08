@@ -42,7 +42,7 @@ const rows = [
 ];
 
 export const Loading = () => {
-  const loadingComponent = ()=> (
+  const loadingComponent = () => (
     <GridOverlay className={'custom-overlay'}>
       <div style={{ position: 'absolute', top: 0, width: '100%' }}>
         <LinearProgress />
@@ -62,7 +62,7 @@ export const Loading = () => {
 };
 
 export const NoRows = () => {
-  const noRowsComponent = ()=> (
+  const noRowsComponent = () => (
     <GridOverlay className={'custom-overlay'}>
       <CodeIcon />
       <span style={{ lineHeight: '24px', padding: '0 10px' }}>No Rows</span>
@@ -72,7 +72,7 @@ export const NoRows = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={[]} columns={columns} components={{ noRowsOverlay: noRowsComponent  }} />
+      <XGrid rows={[]} columns={columns} components={{ noRowsOverlay: noRowsComponent }} />
     </div>
   );
 };
@@ -107,9 +107,10 @@ export const CustomPagination = () => {
         apiRef={apiRef}
         options={{
           pagination: true,
-          paginationPageSize: 50}}
-        components= {{
-          pagination: ({paginationProps}) => (
+          paginationPageSize: 50,
+        }}
+        components={{
+          pagination: ({ paginationProps }) => (
             <Pagination
               className={'my-custom-pagination'}
               page={paginationProps.page}
@@ -134,8 +135,9 @@ export const CustomFooter = () => {
           pagination: true,
           paginationPageSize: 33,
           hideFooterPagination: true,
-          hideFooter: true}}
-        components= {{
+          hideFooter: true,
+        }}
+        components={{
           footer: ({ paginationProps }) => (
             <Footer className={'my-custom-footer'}>
               <span style={{ display: 'flex', alignItems: 'center' }}>
@@ -167,9 +169,10 @@ export const HeaderAndFooter = () => {
         options={{
           pagination: true,
           paginationPageSize: 33,
-          hideFooterPagination: true}}
-        components= {{
-          header : ({ paginationProps }) => (
+          hideFooterPagination: true,
+        }}
+        components={{
+          header: ({ paginationProps }) => (
             <div className={'custom-header'}>
               <Pagination
                 className={'my-custom-pagination'}
@@ -179,7 +182,7 @@ export const HeaderAndFooter = () => {
               />
             </div>
           ),
-          footer : ({ paginationProps }) => (
+          footer: ({ paginationProps }) => (
             <div className="footer my-custom-footer">
               {' '}
               I counted {paginationProps.rowCount} row(s){' '}

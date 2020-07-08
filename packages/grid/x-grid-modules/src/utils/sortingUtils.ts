@@ -1,5 +1,5 @@
-import { SortDirection, ComparatorFn } from "../models/sortModel";
-import { CellValue } from "../models/rows";
+import { SortDirection, ComparatorFn } from '../models/sortModel';
+import { CellValue } from '../models/rows';
 
 export const nextSortDirection = (sortingOrder: SortDirection[], current?: SortDirection) => {
   const currentIdx = sortingOrder.indexOf(current);
@@ -28,9 +28,8 @@ export const stringNumberComparer: ComparatorFn = (v1: CellValue, v2: CellValue)
 
   if (typeof v1 === 'string') {
     return v1.localeCompare(v2!.toString());
-  } 
-    return (v1 as any) - (v2 as any);
-  
+  }
+  return (v1 as any) - (v2 as any);
 };
 
 export const numberComparer: ComparatorFn = (v1: CellValue, v2: CellValue) => {

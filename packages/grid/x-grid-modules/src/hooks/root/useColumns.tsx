@@ -9,14 +9,14 @@ import {
   GridOptions,
   InternalColumns,
   SortModel,
- GridApiRef } from '../../models';
+  GridApiRef,
+} from '../../models';
 import { Logger, useLogger } from '../utils/useLogger';
 import { COLUMNS_UPDATED, POST_SORT } from '../../constants/eventsConstants';
 import { useRafUpdate } from '../utils';
 import { isEqual } from '../../utils';
 import { useApiMethod } from './useApiMethod';
 import { useApiEventHandler } from './useApiEventHandler';
-
 
 const initialState: InternalColumns = {
   visible: [],

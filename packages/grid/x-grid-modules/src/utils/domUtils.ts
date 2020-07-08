@@ -13,7 +13,7 @@ export function isOverflown(element: Element): boolean {
 }
 
 export function findParentElementFromClassName(elem: Element, className: string): Element | null {
-  return elem.closest(`.${  className}`);
+  return elem.closest(`.${className}`);
 }
 
 export function isCell(elem: Element | null): boolean {

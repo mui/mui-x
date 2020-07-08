@@ -1,5 +1,5 @@
-import {RowData} from "../rows";
+import { RowData } from '../rows';
 
 export interface SelectionChangedParams {
-	rows: RowData[];
+  rows: RowData[];
 }

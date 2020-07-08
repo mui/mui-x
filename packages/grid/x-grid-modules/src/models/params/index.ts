@@ -8,4 +8,3 @@ export * from './pageChangedParams';
 export * from './rowClickedParams';
 export * from './rowSelectedParams';
 export * from './selectionChangedParams';
-

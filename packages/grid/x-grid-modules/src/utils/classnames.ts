@@ -4,7 +4,8 @@ export const classnames = (...args: any[]): string => {
   const cssClasses = args.reduce((cssClass, value) => {
     if (!value) {
       return cssClass;
-    } if (isArray(value)) {
+    }
+    if (isArray(value)) {
       cssClass += value.join(' ');
     } else if (isString(value)) {
       cssClass += value;

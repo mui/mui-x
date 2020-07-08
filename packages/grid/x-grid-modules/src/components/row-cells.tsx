@@ -36,7 +36,7 @@ function getCellParams(
 function applyCssClassRules(cellClassRules: CellClassRules, params: CellClassParams) {
   return Object.entries(cellClassRules).reduce((appliedCss, entry) => {
     const shouldApplyCss: boolean = entry[1](params);
-    appliedCss += shouldApplyCss ? `${entry[0]  } ` : '';
+    appliedCss += shouldApplyCss ? `${entry[0]} ` : '';
     return appliedCss;
   }, '');
 }
@@ -108,14 +108,14 @@ export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
     if (column.cellClassRules) {
       const params: CellClassParams = getCellParams(row, column, rowIndex, value, api!.current!);
       const cssClass = applyCssClassRules(column.cellClassRules, params);
-      cssClassProp = { cssClass: `${cssClassProp.cssClass  } ${  cssClass}` };
+      cssClassProp = { cssClass: `${cssClassProp.cssClass} ${cssClass}` };
     }
 
     let cellComponent: React.ReactElement | null = null;
     if (column.cellRenderer) {
       const params: CellParams = getCellParams(row, column, rowIndex, value, api!.current!);
       cellComponent = column.cellRenderer(params);
-      cssClassProp = { cssClass: `${cssClassProp.cssClass  } with-renderer` };
+      cssClassProp = { cssClass: `${cssClassProp.cssClass} with-renderer` };
     }
 
     const cellProps: GridCellProps & { children: any } = {

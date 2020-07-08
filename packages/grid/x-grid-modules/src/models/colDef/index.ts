@@ -5,4 +5,3 @@ export * from './colType';
 export * from './dateColDef';
 export * from './numericColDef';
 export * from './stringColDef';
-

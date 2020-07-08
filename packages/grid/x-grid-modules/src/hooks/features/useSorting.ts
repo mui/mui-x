@@ -11,7 +11,8 @@ import {
   RowModel,
   RowsProp,
   SortApi,
- GridApiRef } from '../../models';
+  GridApiRef,
+} from '../../models';
 import {
   COLUMN_HEADER_CLICKED,
   COLUMNS_SORTED,
@@ -25,7 +26,6 @@ import { isDesc, nextSortDirection } from '../../utils';
 import { SortItem, SortModel } from '../../models/sortModel';
 import { useApiEventHandler } from '../root/useApiEventHandler';
 import { useApiMethod } from '../root/useApiMethod';
-
 
 export const useSorting = (
   options: GridOptions,
@@ -63,9 +63,8 @@ export const useSorting = (
       if (existing) {
         const nextSort = nextSortDirection(options.sortingOrder, existing.sort);
         return nextSort == null ? undefined : { ...existing, sort: nextSort };
-      } 
-        return { colId: col.field, sort: nextSortDirection(options.sortingOrder) };
-      
+      }
+      return { colId: col.field, sort: nextSortDirection(options.sortingOrder) };
     },
     [sortModelRef, options.sortingOrder],
   );

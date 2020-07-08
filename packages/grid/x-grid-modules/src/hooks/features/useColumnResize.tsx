@@ -99,14 +99,14 @@ export const useColumnResize = (
         currentColDefRef.current.width = newWidth;
       }
       if (currentColElem.current) {
-        currentColElem.current.style.width = `${newWidth  }px`;
-        currentColElem.current.style.minWidth = `${newWidth  }px`;
-        currentColElem.current.style.maxWidth = `${newWidth  }px`;
+        currentColElem.current.style.width = `${newWidth}px`;
+        currentColElem.current.style.minWidth = `${newWidth}px`;
+        currentColElem.current.style.maxWidth = `${newWidth}px`;
       }
       if (dataContainerElemRef.current) {
         const diffWithPrev = newWidth - currentColPreviousWidth.current!;
-        dataContainerElemRef.current.style.minWidth =
-          `${dataContainerPreviousWidth.current! + diffWithPrev  }px`;
+        dataContainerElemRef.current.style.minWidth = `${dataContainerPreviousWidth.current! +
+          diffWithPrev}px`;
 
         if (isLastColumn.current && apiRef && apiRef.current) {
           apiRef.current.scroll({ left: dataContainerPreviousWidth.current! + diffWithPrev });
@@ -115,9 +115,9 @@ export const useColumnResize = (
       if (currentColCellsElems.current) {
         currentColCellsElems.current.forEach(el => {
           const div = el as HTMLDivElement;
-          div.style.width = `${newWidth  }px`;
-          div.style.minWidth = `${newWidth  }px`;
-          div.style.maxWidth = `${newWidth  }px`;
+          div.style.width = `${newWidth}px`;
+          div.style.minWidth = `${newWidth}px`;
+          div.style.maxWidth = `${newWidth}px`;
         });
       }
     },
@@ -144,8 +144,6 @@ export const useColumnResize = (
       mouseLeftTimeout.current = setTimeout(() => {
         stopResize();
       }, MOUSE_LEFT_TIMEOUT);
-
-      
     } else if (isResizing) {
       stopResize();
     }

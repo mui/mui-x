@@ -1,10 +1,10 @@
-import * as React from "react";
-import {ComparatorFn, SortDirection} from '../sortModel';
-import {CellValue} from '../rows';
-import {ColType} from './colType';
-import {CellClassPropType, CellClassRules} from "../cellClass";
-import {ColParams} from "../params/colParams";
-import {CellParams, ValueFormatterParams, ValueGetterParams} from "../params/cellParams";
+import * as React from 'react';
+import { ComparatorFn, SortDirection } from '../sortModel';
+import { CellValue } from '../rows';
+import { ColType } from './colType';
+import { CellClassPropType, CellClassRules } from '../cellClass';
+import { ColParams } from '../params/colParams';
+import { CellParams, ValueFormatterParams, ValueGetterParams } from '../params/cellParams';
 
 export type Alignement = 'left' | 'right' | 'center';
 

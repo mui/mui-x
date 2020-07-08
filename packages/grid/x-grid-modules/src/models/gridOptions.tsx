@@ -1,14 +1,14 @@
 import * as React from 'react';
-import {SortDirection} from './sortModel';
-import {Logger} from '../hooks/utils';
-import {ArrowDownward, ArrowUpward, SeparatorIcon} from '../components/icons';
-import {ColumnHeaderClickedParams} from "./params/columnHeaderClickedParams";
-import {ColumnSortedParams} from "./params/columnSortedParams";
-import {RowClickedParam} from "./params/rowClickedParams";
-import {CellClickedParam} from "./params/cellClickedParams";
-import {RowSelectedParams} from "./params/rowSelectedParams";
-import {SelectionChangedParams} from "./params/selectionChangedParams";
-import {PageChangedParams} from "./params/pageChangedParams";
+import { SortDirection } from './sortModel';
+import { Logger } from '../hooks/utils';
+import { ArrowDownward, ArrowUpward, SeparatorIcon } from '../components/icons';
+import { ColumnHeaderClickedParams } from './params/columnHeaderClickedParams';
+import { ColumnSortedParams } from './params/columnSortedParams';
+import { RowClickedParam } from './params/rowClickedParams';
+import { CellClickedParam } from './params/cellClickedParams';
+import { RowSelectedParams } from './params/rowSelectedParams';
+import { SelectionChangedParams } from './params/selectionChangedParams';
+import { PageChangedParams } from './params/pageChangedParams';
 
 export interface IconsOptions {
   columnSortedAscending?: React.ElementType;

@@ -3,7 +3,8 @@ import { useMemo } from 'react';
 import { PaginationProps } from './usePagination';
 import {
   ComponentParams,
-  GridApiRef, GridComponentOverridesProp,
+  GridApiRef,
+  GridComponentOverridesProp,
   GridOptions,
   GridRootRef,
   InternalColumns,
@@ -33,27 +34,52 @@ export const useComponents = (
   );
 
   const headerComponent = useMemo(
-    () => (componentOverrides?.header ? React.createElement(componentOverrides.header, componentParams) : null),
+    () =>
+      componentOverrides?.header
+        ? React.createElement(componentOverrides.header, componentParams)
+        : null,
     [componentOverrides, componentParams],
   );
   const footerComponent = useMemo(
-    () => (componentOverrides?.footer ? React.createElement(componentOverrides.footer, componentParams) : null),
+    () =>
+      componentOverrides?.footer
+        ? React.createElement(componentOverrides.footer, componentParams)
+        : null,
     [componentOverrides, componentParams],
   );
 
   const loadingComponent = useMemo(
-    () => (componentOverrides?.loadingOverlay ? React.createElement(componentOverrides.loadingOverlay, componentParams) : <LoadingOverlay />),
+    () =>
+      componentOverrides?.loadingOverlay ? (
+        React.createElement(componentOverrides.loadingOverlay, componentParams)
+      ) : (
+        <LoadingOverlay />
+      ),
     [componentOverrides, componentParams],
   );
   const noRowsComponent = useMemo(
-    () => (componentOverrides?.noRowsOverlay ? React.createElement(componentOverrides.noRowsOverlay, componentParams) : <NoRowMessage />),
+    () =>
+      componentOverrides?.noRowsOverlay ? (
+        React.createElement(componentOverrides.noRowsOverlay, componentParams)
+      ) : (
+        <NoRowMessage />
+      ),
     [componentOverrides, componentParams],
   );
 
   const paginationComponent = useMemo(
-    () => (componentOverrides?.pagination ? React.createElement(componentOverrides.pagination, componentParams) : null),
+    () =>
+      componentOverrides?.pagination
+        ? React.createElement(componentOverrides.pagination, componentParams)
+        : null,
     [componentOverrides, componentParams],
   );
 
-  return { headerComponent, footerComponent, loadingComponent, noRowsComponent, paginationComponent };
+  return {
+    headerComponent,
+    footerComponent,
+    loadingComponent,
+    noRowsComponent,
+    paginationComponent,
+  };
 };

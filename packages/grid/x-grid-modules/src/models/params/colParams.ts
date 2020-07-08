@@ -1,5 +1,5 @@
 export interface ColParams {
-	colDef: any;
-	colIndex: number;
-	api: any;
+  colDef: any;
+  colIndex: number;
+  api: any;
 }

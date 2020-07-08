@@ -1,9 +1,13 @@
-import {useCallback, useEffect, useReducer, useRef} from 'react';
-import {useLogger} from '../utils';
-import {PAGE_CHANGED_EVENT, PAGESIZE_CHANGED_EVENT, RESIZE,} from '../../constants/eventsConstants';
-import {useApiMethod} from '../root/useApiMethod';
-import {useApiEventHandler} from '../root/useApiEventHandler';
-import {PageChangedParams} from "../../models/params/pageChangedParams";
+import { useCallback, useEffect, useReducer, useRef } from 'react';
+import { useLogger } from '../utils';
+import {
+  PAGE_CHANGED_EVENT,
+  PAGESIZE_CHANGED_EVENT,
+  RESIZE,
+} from '../../constants/eventsConstants';
+import { useApiMethod } from '../root/useApiMethod';
+import { useApiEventHandler } from '../root/useApiEventHandler';
+import { PageChangedParams } from '../../models/params/pageChangedParams';
 import { Rows } from '../../models/rows';
 import { InternalColumns } from '../../models/colDef/colDef';
 import { GridOptions } from '../../models/gridOptions';

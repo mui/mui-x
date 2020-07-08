@@ -1,4 +1,4 @@
-import {CellParams} from "./params/cellParams";
+import { CellParams } from './params/cellParams';
 
 export type CellClassParams = CellParams;
 export type CellClassFn = (params: CellClassParams) => string | string[];

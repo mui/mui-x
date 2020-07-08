@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useContext, useEffect, useState} from 'react';
-import { GridOptions} from '../models';
+import { useContext, useEffect, useState } from 'react';
+import { GridOptions } from '../models';
 import { Footer } from './styled-wrappers';
 import { RowCount } from './row-count';
 import { SelectedRowCount } from './selected-row-count';

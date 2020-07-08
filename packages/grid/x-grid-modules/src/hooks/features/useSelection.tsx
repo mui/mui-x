@@ -7,7 +7,8 @@ import {
   RowSelectedParams,
   RowsProp,
   SelectionChangedParams,
- GridApiRef } from '../../models';
+  GridApiRef,
+} from '../../models';
 import { useLogger } from '../utils/useLogger';
 import {
   MULTIPLE_KEY_PRESS_CHANGED,
@@ -17,8 +18,7 @@ import {
 } from '../../constants/eventsConstants';
 import { useApiEventHandler } from '../root/useApiEventHandler';
 import { useApiMethod } from '../root/useApiMethod';
-import {SelectionApi} from "../../models/api/selectionApi";
-
+import { SelectionApi } from '../../models/api/selectionApi';
 
 export const useSelection = (
   options: GridOptions,
@@ -54,9 +54,7 @@ export const useSelection = (
       }
       let isRowSelected: boolean;
       if (allowMultiSelect) {
-        isRowSelected = isSelected == null
-          ? !row.selected
-          : isSelected;
+        isRowSelected = isSelected == null ? !row.selected : isSelected;
       } else {
         isRowSelected = true;
       }

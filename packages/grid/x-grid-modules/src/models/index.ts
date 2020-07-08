@@ -7,5 +7,5 @@ export * from './rows';
 export * from './sortModel';
 export * from './params';
 export * from './cellClass';
-export * from './api'
-export * from "./gridComponentOverridesProp";
+export * from './api';
+export * from './gridComponentOverridesProp';
