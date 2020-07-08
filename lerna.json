@@ -5,8 +5,12 @@
       "yes": true
     }
   },
-  "packages": ["!packages/grid", "packages/*", "packages/grid/*"],
-  "version": "0.1.50",
+  "packages": [
+    "!packages/grid",
+    "packages/*",
+    "packages/grid/*"
+  ],
+  "version": "0.1.51",
   "npmClient": "yarn",
   "useWorkspaces": true
 }

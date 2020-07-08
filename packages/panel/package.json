@@ -1,6 +1,6 @@
 {
   "name": "@material-ui-x/panel",
-  "version": "0.1.45",
+  "version": "0.1.51",
   "description": "Official Material-UI Panel Component",
   "author": "Damien Tassone <damien@material-ui.com>",
   "main": "dist/index-cjs.js",
