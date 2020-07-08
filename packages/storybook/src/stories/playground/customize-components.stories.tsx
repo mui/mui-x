@@ -134,6 +134,23 @@ export function CustomPagination() {
   );
 }
 
+function FooterComponent(props) {
+  const { paginationProps } = props;
+  return (
+    <Footer className="my-custom-footer">
+      <span style={{ display: 'flex', alignItems: 'center' }}>
+        This is my custom footer and pagination here!{' '}
+      </span>
+      <Pagination
+        className="my-custom-pagination"
+        page={paginationProps.page}
+        count={paginationProps.pageCount}
+        onChange={(event, value) => paginationProps.setPage(value)}
+      />
+    </Footer>
+  );
+}
+
 export function CustomFooter() {
   const data = useData(2000, 200);
 
@@ -149,24 +166,24 @@ export function CustomFooter() {
           hideFooter: true,
         }}
         components={{
-          footer: ({ paginationProps }) => (
-            <Footer className="my-custom-footer">
-              <span style={{ display: 'flex', alignItems: 'center' }}>
-                This is my custom footer and pagination here!{' '}
-              </span>
-              <Pagination
-                className="my-custom-pagination"
-                page={paginationProps.page}
-                count={paginationProps.pageCount}
-                onChange={(event, value) => paginationProps.setPage(value)}
-              />
-            </Footer>
-          ),
+          footer: FooterComponent,
         }}
       />
     </div>
   );
 }
+
+function FooterComponent2(props) {
+  const { paginationProps } = props;
+
+  return (
+    <div className="footer my-custom-footer">
+      {' '}
+      I counted {paginationProps.rowCount} row(s){' '}
+    </div>
+  )
+}
+
 
 export function HeaderAndFooter() {
   const data = useData(2000, 200);
@@ -182,22 +199,8 @@ export function HeaderAndFooter() {
           hideFooterPagination: true,
         }}
         components={{
-          header: ({ paginationProps }) => (
-            <div className="custom-header">
-              <Pagination
-                className="my-custom-pagination"
-                page={paginationProps.page}
-                count={paginationProps.pageCount}
-                onChange={(event, value) => paginationProps.setPage(value)}
-              />
-            </div>
-          ),
-          footer: ({ paginationProps }) => (
-            <div className="footer my-custom-footer">
-              {' '}
-              I counted {paginationProps.rowCount} row(s){' '}
-            </div>
-          ),
+          header: PaginationComponent,
+          footer: FooterComponent2,
         }}
       />
     </div>
