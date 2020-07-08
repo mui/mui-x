@@ -84,7 +84,7 @@ export const useRows = (
 
   const updateRowModels = useCallback(
     (updates: Partial<RowModel>[]) => {
-      logger.debug(`updating row models`, updates);
+      logger.debug(`updating ${updates.length} row models`);
       const addedRows: RowModel[] = [];
       updates.forEach(partialRow => {
         if (partialRow.id == null) {

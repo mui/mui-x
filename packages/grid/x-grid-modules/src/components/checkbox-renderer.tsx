@@ -7,8 +7,7 @@ import { ColParams } from '../models/params/colParams';
 import { CellParams } from '../models/params/cellParams';
 
 const CheckboxInputContainer = styled.div`
-  display: flex;
-  justify-content: center;
+  display: block;
 `;
 
 export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api, colDef, colIndex }) => {
