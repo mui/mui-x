@@ -1,11 +1,15 @@
 import * as React from 'react';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
-import { StyledPanels } from './styled-panel';
-
-import { FormControl, FormGroup, Button, FormLabel, MenuItem, Select } from '@material-ui/core';
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import Button from '@material-ui/core/Button';
+import FormLabel from '@material-ui/core/FormLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import { darkThemeId, lightThemeId } from '../../theme';
 import { useTheme } from '../../theme/useTheme';
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import { StyledPanels } from './styled-panel';
 
 export interface SettingsPanelProps {
   onApply: (settings: {

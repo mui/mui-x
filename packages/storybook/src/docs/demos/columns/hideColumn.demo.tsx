@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useCallback, useMemo, useState } from 'react';
 import { Columns, RowsProp, XGrid } from '@material-ui/x-grid';
 import { randomCreatedDate, randomUpdatedDate } from '@material-ui/x-grid-data-generator';
-import { Button } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 
 export default function HideColumnDemo() {
   const [columns, setColumns] = useState<Columns>([

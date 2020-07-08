@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { CellParams, CellValue } from '@material-ui/x-grid';
-import { Tooltip } from '@material-ui/core';
+import Tooltip from '@material-ui/core/Tooltip';
 import InfoIcon from '@material-ui/icons/Info';
+import { CellParams, CellValue } from '@material-ui/x-grid';
 
 export const Incoterm: React.FC<{ value: CellValue }> = React.memo(({ value }) => {
   if (!value) {

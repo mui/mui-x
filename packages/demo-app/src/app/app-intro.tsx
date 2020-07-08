@@ -1,10 +1,10 @@
-import { MuiLogo } from './demos/grid/components/logo';
-import Typography from '@material-ui/core/Typography';
-
 import * as React from 'react';
-import { Button, Container } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
 import styled from 'styled-components';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import { MuiLogo } from './demos/grid/components/logo';
 import Footer from './app-footer';
 
 const Splash = styled.div`
@@ -100,7 +100,7 @@ const Splash = styled.div`
 
 export const AppIntro: React.FC<{}> = () => {
   return (
-    <>
+    <React.Fragment>
       <Splash>
         <Container maxWidth="sm" className={'splash-container'}>
           <div className={'logo-container'}>
@@ -128,9 +128,10 @@ export const AppIntro: React.FC<{}> = () => {
         </Container>
       </Splash>
       <Footer />
-    </>
+    </React.Fragment>
   );
 };
+
 /*
 * Build your own financial or
             trading application with this highly customisable and accessible toolkit.*/

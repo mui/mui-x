@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { ColDef, XGrid, GridOverlay, Footer, GridApiRef, gridApiRef } from '@material-ui/x-grid';
-import { LinearProgress } from '@material-ui/core';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import CodeIcon from '@material-ui/icons/Code';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-
-import { Pagination } from '@material-ui/lab';
+import Pagination from '@material-ui/lab/Pagination';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import DoneIcon from '@material-ui/icons/Done';
@@ -41,42 +40,48 @@ const rows = [
   { id: 7, name: '', age: 42 },
 ];
 
-export const Loading = () => {
-  const loadingComponent = () => (
-    <GridOverlay className={'custom-overlay'}>
+function LoadingComponent() {
+  return (
+    <GridOverlay className="custom-overlay">
       <div style={{ position: 'absolute', top: 0, width: '100%' }}>
         <LinearProgress />
       </div>
     </GridOverlay>
   );
+}
+
+export function Loading() {
   return (
     <div className="grid-container">
       <XGrid
         rows={rows}
         columns={columns}
-        components={{ loadingOverlay: loadingComponent }}
+        components={{ loadingOverlay: LoadingComponent }}
         loading
       />
     </div>
   );
-};
+}
 
-export const NoRows = () => {
-  const noRowsComponent = () => (
-    <GridOverlay className={'custom-overlay'}>
+function NoRowsComponent() {
+  return (
+    <GridOverlay className="custom-overlay">
       <CodeIcon />
       <span style={{ lineHeight: '24px', padding: '0 10px' }}>No Rows</span>
       <CodeIcon />
     </GridOverlay>
   );
+}
 
+export function NoRows() {
   return (
     <div className="grid-container">
-      <XGrid rows={[]} columns={columns} components={{ noRowsOverlay: noRowsComponent }} />
+      <XGrid rows={[]} columns={columns} components={{ noRowsOverlay: NoRowsComponent }} />
     </div>
   );
-};
-export const Icons = () => {
+}
+
+export function Icons() {
   return (
     <div className="grid-container">
       <XGrid
@@ -93,9 +98,21 @@ export const Icons = () => {
       />
     </div>
   );
-};
+}
 
-export const CustomPagination = () => {
+function PaginationComponent(props) {
+  const { paginationProps } = props;
+  return (
+    <Pagination
+      className="my-custom-pagination"
+      page={paginationProps.page}
+      count={paginationProps.pageCount}
+      onChange={(event, value) => paginationProps.setPage(value)}
+    />
+  );
+}
+
+export function CustomPagination() {
   const apiRef: GridApiRef = gridApiRef();
   const data = useData(2000, 200);
 
@@ -110,22 +127,16 @@ export const CustomPagination = () => {
           paginationPageSize: 50,
         }}
         components={{
-          pagination: ({ paginationProps }) => (
-            <Pagination
-              className={'my-custom-pagination'}
-              page={paginationProps.page}
-              count={paginationProps.pageCount}
-              onChange={(e, value) => paginationProps.setPage(value)}
-            />
-          ),
+          pagination: PaginationComponent,
         }}
       />
     </div>
   );
-};
-export const CustomFooter = () => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+}
+
+export function CustomFooter() {
   const data = useData(2000, 200);
+
   return (
     <div className="grid-container">
       <XGrid
@@ -139,15 +150,15 @@ export const CustomFooter = () => {
         }}
         components={{
           footer: ({ paginationProps }) => (
-            <Footer className={'my-custom-footer'}>
+            <Footer className="my-custom-footer">
               <span style={{ display: 'flex', alignItems: 'center' }}>
                 This is my custom footer and pagination here!{' '}
               </span>
               <Pagination
-                className={'my-custom-pagination'}
+                className="my-custom-pagination"
                 page={paginationProps.page}
                 count={paginationProps.pageCount}
-                onChange={(e, value) => paginationProps.setPage(value)}
+                onChange={(event, value) => paginationProps.setPage(value)}
               />
             </Footer>
           ),
@@ -155,10 +166,9 @@ export const CustomFooter = () => {
       />
     </div>
   );
-};
+}
 
-export const HeaderAndFooter = () => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+export function HeaderAndFooter() {
   const data = useData(2000, 200);
 
   return (
@@ -173,12 +183,12 @@ export const HeaderAndFooter = () => {
         }}
         components={{
           header: ({ paginationProps }) => (
-            <div className={'custom-header'}>
+            <div className="custom-header">
               <Pagination
-                className={'my-custom-pagination'}
+                className="my-custom-pagination"
                 page={paginationProps.page}
                 count={paginationProps.pageCount}
-                onChange={(e, value) => paginationProps.setPage(value)}
+                onChange={(event, value) => paginationProps.setPage(value)}
               />
             </div>
           ),
@@ -192,11 +202,13 @@ export const HeaderAndFooter = () => {
       />
     </div>
   );
-};
-const IsDone: React.FC<{ value: boolean }> = ({ value }) =>
-  value ? <DoneIcon fontSize={'small'} /> : <ClearIcon fontSize={'small'} />;
+}
 
-export const StyledColumns = () => {
+function IsDone(props: { value?: boolean }) {
+  return props.value ? <DoneIcon fontSize="small" /> : <ClearIcon fontSize="small" />;
+}
+
+export function StyledColumns() {
   const storyColumns: ColDef[] = [
     { field: 'id' },
     { field: 'firstName' },
@@ -298,4 +310,4 @@ export const StyledColumns = () => {
       <XGrid rows={storyRows} columns={storyColumns} />
     </div>
   );
-};
+}

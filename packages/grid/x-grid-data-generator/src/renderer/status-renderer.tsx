@@ -3,7 +3,7 @@ import ReportProblemIcon from '@material-ui/icons/ReportProblem';
 import InfoIcon from '@material-ui/icons/Info';
 import AutorenewIcon from '@material-ui/icons/Autorenew';
 import DoneIcon from '@material-ui/icons/Done';
-import { Chip } from '@material-ui/core';
+import Chip from '@material-ui/core/Chip';
 import styled from 'styled-components';
 import { CellParams } from '@material-ui/x-grid';
 

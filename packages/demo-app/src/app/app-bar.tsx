@@ -5,15 +5,15 @@ import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import { createStyles, Link, Theme } from '@material-ui/core';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import Link from '@material-ui/core/Link';
 import Brightness7Icon from '@material-ui/icons/Brightness7';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
 import Tooltip from '@material-ui/core/Tooltip';
 import styled from 'styled-components';
 import GitHubIcon from '@material-ui/icons/GitHub';
-import { isIntroPage } from './utils';
 import { useLocation } from 'react-router-dom';
+import { isIntroPage } from './utils';
 
 const DemoAppBarStyled = styled(AppBar)`
   color: ${p => p.theme.colors.app};
@@ -69,9 +69,9 @@ export const DemoAppBar: React.FC<DemoAppBarProps> = ({
   }, [location]);
 
   const titleEl: any = hideTitle ? null : (
-    <>
+    <React.Fragment>
       Material-UI<span className={'product-title'}>X</span>
-    </>
+    </React.Fragment>
   );
 
   return (

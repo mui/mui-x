@@ -1,20 +1,18 @@
-import { Button } from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-
 import * as React from 'react';
-import { useState } from 'react';
-import { DummyContent } from './dummyContent';
-import { Splitter } from '@material-ui-x/splitter';
-import { AppBreadcrumbs } from '../../app-breadcrumbs';
-import { Panel } from '@material-ui-x/panel';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 import FormGroup from '@material-ui/core/FormGroup';
+import { Panel } from '@material-ui-x/panel';
+import { Splitter } from '@material-ui-x/splitter';
+import { DummyContent } from './dummyContent';
+import { AppBreadcrumbs } from '../../app-breadcrumbs';
 import { StyledPanels } from '../grid/components/styled-panel';
 
 export const SplitterDemo: React.FC<{}> = () => {
-  const [sizes, setSizes] = useState([30, 70]);
-  const [minPanelSizes, setMinPanelSizes] = useState([100, 300]);
-  const [invertHandler, setInvertHandler] = useState(true);
-  const [direction, setDirection] = useState<'horizontal' | 'vertical'>('horizontal');
+  const [sizes, setSizes] = React.useState([30, 70]);
+  const [minPanelSizes, setMinPanelSizes] = React.useState([100, 300]);
+  const [invertHandler, setInvertHandler] = React.useState(true);
+  const [direction, setDirection] = React.useState<'horizontal' | 'vertical'>('horizontal');
 
   const reverseSizes = (): void => setSizes([sizes[1], sizes[0]]);
   const toggleInvertHandler = (): void => setInvertHandler(!invertHandler);
