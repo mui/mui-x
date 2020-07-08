@@ -10,6 +10,7 @@ module.exports = {
     es6: true,
     browser: true,
     node: true,
+    jest: true,
   },
   extends: ['airbnb', 'prettier', 'prettier/react', 'plugin:@typescript-eslint/recommended'],
   parser: '@typescript-eslint/parser',
@@ -99,6 +100,9 @@ module.exports = {
 
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': ['error', { additionalHooks: 'useEnhancedEffect' }],
+
+    'no-unused-expressions': 'off',
+    '@typescript-eslint/no-unused-expressions': 'error',
 
     'import/no-unresolved': 'off',
     'import/no-extraneous-dependencies': 'off',

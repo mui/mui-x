@@ -52,11 +52,14 @@ export const useSelection = (
       if (allowMultipleOverride) {
         allowMultiSelect = allowMultipleOverride;
       }
-      const isRowSelected = allowMultiSelect
-        ? isSelected == null
+      let isRowSelected: boolean;
+      if (allowMultiSelect) {
+        isRowSelected = isSelected == null
           ? !row.selected
-          : isSelected
-        : true;
+          : isSelected;
+      } else {
+        isRowSelected = true;
+      }
       const updatedRowModels: RowModel[] = [];
       if (allowMultiSelect) {
         if (isRowSelected) {
@@ -109,7 +112,7 @@ export const useSelection = (
       if (!apiRef || !apiRef.current) {
         return;
       }
-      return selectRowModel(apiRef.current.getRowFromId(id), allowMultiple, isSelected);
+      selectRowModel(apiRef.current.getRowFromId(id), allowMultiple, isSelected);
     },
     [apiRef, selectRowModel],
   );

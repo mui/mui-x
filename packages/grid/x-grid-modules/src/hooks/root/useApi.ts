@@ -74,8 +74,12 @@ export const useApi = (
     emitEvent,
   ]);
 
-  const handleResizeStart = useCallback(() => (isResizingRef.current = true), [isResizingRef]);
-  const handleResizeStop = useCallback(() => (isResizingRef.current = false), [isResizingRef]);
+  const handleResizeStart = useCallback(() => {
+    isResizingRef.current = true;
+  }, [isResizingRef]);
+  const handleResizeStop = useCallback(() => {
+    isResizingRef.current = false;
+  }, [isResizingRef]);
 
   const onClickHandler = useCallback(
     (e: MouseEvent) => {
@@ -147,6 +151,7 @@ export const useApi = (
   const resize = useCallback(() => apiRef.current?.emit(RESIZE), [apiRef]);
   useApiMethod(apiRef, { registerEvent, onUnmount, onResize, resize }, 'CoreApi');
 
+  // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (gridRootRef && gridRootRef.current && isApiInitialised) {
       logger.debug('Binding events listeners');

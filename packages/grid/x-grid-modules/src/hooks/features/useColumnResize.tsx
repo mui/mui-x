@@ -37,6 +37,7 @@ export const useColumnResize = (
     scrollOffset.current = params.left;
   }, []);
 
+  // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (apiRef && apiRef.current) {
       return apiRef.current.registerEvent(SCROLLING, onScrollHandler);
@@ -165,6 +166,7 @@ export const useColumnResize = (
 
   // This a hack due to the limitation of react as I cannot put columnsRef in the dependency array of the effect adding the Event listener
   const columnsRefState = useStateRef(columnsRef);
+  // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (columnsRef && columnsRef.current) {
       logger.info('Adding resizing event listener');

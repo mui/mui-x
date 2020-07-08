@@ -9,6 +9,7 @@ export const useApiEventHandler = (
 ) => {
   const logger = useLogger('useApiEventHandler');
 
+  // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (apiRef && apiRef.current && handler && eventName) {
       return apiRef.current!.registerEvent(eventName, handler);

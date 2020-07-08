@@ -32,7 +32,9 @@ export const useRows = (
   const isScrollingRef = useRef<boolean>(false);
   const isSortedRef = useRef<boolean>(false);
 
-  const setIsScrolling = useCallback((v: boolean) => (isScrollingRef.current = v), [
+  const setIsScrolling = useCallback((v: boolean) => {
+    isScrollingRef.current = v;
+  }, [
     isScrollingRef,
   ]);
 
