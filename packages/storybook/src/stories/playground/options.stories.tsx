@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { XGrid , GridOptionsProp , SortDirection } from '@material-ui/x-grid';
+import { XGrid, GridOptionsProp, SortDirection } from '@material-ui/x-grid';
 import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { action } from '@storybook/addon-actions';
 
 import { useData } from '../../hooks/useData';
-
 
 export default {
   title: 'X-Grid Demos/Options-Events',
@@ -33,7 +32,7 @@ export const Options = () => {
         onCellClicked: params => action('onCellClicked')(params),
         onColumnHeaderClicked: params => action('onColumnHeaderClicked')(params),
         onRowSelected: params => action('onRowSelected')(params),
-        onSelectionChanged: params => action('onSelectionChanged', {depth: 1 })(params),
+        onSelectionChanged: params => action('onSelectionChanged', { depth: 1 })(params),
         onColumnsSorted: params => action('onColumnsSorted')(params),
         onPageChanged: params => action('onPageChanged')(params),
         onPageSizeChanged: params => action('onPageSizeChanged')(params),
@@ -70,7 +69,7 @@ export const Events = () => {
     onCellClicked: params => action('onCellClicked')(params),
     onColumnHeaderClicked: params => action('onColumnHeaderClicked')(params),
     onRowSelected: params => action('onRowSelected')(params),
-    onSelectionChanged: params => action('onSelectionChanged', {depth: 1 })(params),
+    onSelectionChanged: params => action('onSelectionChanged', { depth: 1 })(params),
     onColumnsSorted: params => action('onColumnsSorted')(params),
     onPageChanged: params => action('onPageChanged')(params),
     onPageSizeChanged: params => action('onPageSizeChanged')(params),

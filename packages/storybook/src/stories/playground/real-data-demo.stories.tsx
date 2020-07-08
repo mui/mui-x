@@ -29,9 +29,10 @@ const getGridOptions: () => GridOptionsProp = () => {
     onCellClicked: params => action('onCellClicked')(params),
     onColumnHeaderClicked: params => action('onColumnHeaderClicked')(params),
     onRowSelected: params => action('onRowSelected')(params),
-    onSelectionChanged: params => action('onSelectionChanged',  {
-      depth: 1
-    })(params),
+    onSelectionChanged: params =>
+      action('onSelectionChanged', {
+        depth: 1,
+      })(params),
     onColumnsSorted: params => action('onColumnsSorted')(params),
     onPageChanged: params => action('onPageChanged')(params),
     onPageSizeChanged: params => action('onPageSizeChanged')(params),
