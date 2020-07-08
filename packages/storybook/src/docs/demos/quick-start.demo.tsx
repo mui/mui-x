@@ -104,6 +104,11 @@ export default function QuickStartDemo() {
   ];
 
   return (
-    <XGrid rows={rows} columns={columns} options={{ checkboxSelection: true, autoHeight: true }} />
+    <XGrid
+      rows={rows}
+      columns={columns}
+      options={{ checkboxSelection: true, autoHeight: true }}
+      className={'demo'}
+    />
   );
 }

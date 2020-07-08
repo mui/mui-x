@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useLogger } from '../utils/useLogger';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const EventEmitter = require('events').EventEmitter;
 import {
   CELL_CLICKED,
   CLICK_EVENT,
@@ -17,8 +15,8 @@ import {
   ROW_SELECTED_EVENT,
   SELECTION_CHANGED_EVENT,
 } from '../../constants/eventsConstants';
-import { CellClickedParam, GridOptions, RowClickedParam } from '../../models';
-import { GridApi } from '../../models/gridApi';
+import { CellClickedParam, GridOptions, RowClickedParam, GridApiRef } from '../../models';
+import { GridApi } from '../../models/api/gridApi';
 import {
   CELL_CSS_CLASS,
   HEADER_CELL_CSS_CLASS,
@@ -34,9 +32,11 @@ import {
 } from '../../utils/domUtils';
 import { useApiMethod } from './useApiMethod';
 import { useApiEventHandler } from './useApiEventHandler';
-import { GridApiRef } from '../../models';
 
-//TODO Split this effect in useEvents and UseApi
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const EventEmitter = require('events').EventEmitter;
+
+// TODO Split this effect in useEvents and UseApi
 export const useApi = (
   gridRootRef: React.RefObject<HTMLDivElement>,
   windowRef: React.RefObject<HTMLDivElement>,
@@ -74,8 +74,12 @@ export const useApi = (
     emitEvent,
   ]);
 
-  const handleResizeStart = useCallback(() => (isResizingRef.current = true), [isResizingRef]);
-  const handleResizeStop = useCallback(() => (isResizingRef.current = false), [isResizingRef]);
+  const handleResizeStart = useCallback(() => {
+    isResizingRef.current = true;
+  }, [isResizingRef]);
+  const handleResizeStop = useCallback(() => {
+    isResizingRef.current = false;
+  }, [isResizingRef]);
 
   const onClickHandler = useCallback(
     (e: MouseEvent) => {
@@ -147,6 +151,7 @@ export const useApi = (
   const resize = useCallback(() => apiRef.current?.emit(RESIZE), [apiRef]);
   useApiMethod(apiRef, { registerEvent, onUnmount, onResize, resize }, 'CoreApi');
 
+  // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (gridRootRef && gridRootRef.current && isApiInitialised) {
       logger.debug('Binding events listeners');

@@ -1,3 +1,4 @@
+import * as React from 'react';
 import {
   CellClassParams,
   CellValue,
@@ -10,7 +11,6 @@ import {
   ValueGetterParams,
   CellClassRules,
 } from '../models';
-import * as React from 'react';
 import { Cell, GridCellProps } from './cell';
 import { ApiContext } from './api-context';
 import { classnames, isFunction } from '../utils';
@@ -26,7 +26,7 @@ function getCellParams(
     value,
     getValue: (field: string) => rowModel.data[field],
     data: rowModel.data,
-    rowModel: rowModel,
+    rowModel,
     colDef: col,
     rowIndex,
     api,
@@ -36,7 +36,7 @@ function getCellParams(
 function applyCssClassRules(cellClassRules: CellClassRules, params: CellClassParams) {
   return Object.entries(cellClassRules).reduce((appliedCss, entry) => {
     const shouldApplyCss: boolean = entry[1](params);
-    appliedCss += shouldApplyCss ? entry[0] + ' ' : '';
+    appliedCss += shouldApplyCss ? `${entry[0]} ` : '';
     return appliedCss;
   }, '');
 }
@@ -67,7 +67,7 @@ export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
   } = props;
   const api = React.useContext(ApiContext);
 
-  const cellProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
+  const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const isLastColumn = firstColIdx + colIdx === columns.length - 1;
     const removeScrollWidth = isLastColumn && hasScroll.y && hasScroll.x;
     const width = removeScrollWidth ? column.width! - scrollSize : column.width!;
@@ -79,7 +79,7 @@ export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
     let value = row.data[column.field!];
     if (column.valueGetter) {
       const params: ValueGetterParams = getCellParams(row, column, rowIndex, value, api!.current!);
-      //Value getter override the original value
+      // Value getter override the original value
       value = column.valueGetter(params);
     }
 
@@ -108,26 +108,26 @@ export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
     if (column.cellClassRules) {
       const params: CellClassParams = getCellParams(row, column, rowIndex, value, api!.current!);
       const cssClass = applyCssClassRules(column.cellClassRules, params);
-      cssClassProp = { cssClass: cssClassProp.cssClass + ' ' + cssClass };
+      cssClassProp = { cssClass: `${cssClassProp.cssClass} ${cssClass}` };
     }
 
     let cellComponent: React.ReactElement | null = null;
     if (column.cellRenderer) {
       const params: CellParams = getCellParams(row, column, rowIndex, value, api!.current!);
       cellComponent = column.cellRenderer(params);
-      cssClassProp = { cssClass: cssClassProp.cssClass + ' with-renderer' };
+      cssClassProp = { cssClass: `${cssClassProp.cssClass} with-renderer` };
     }
 
     const cellProps: GridCellProps & { children: any } = {
-      value: value,
+      value,
       field: column.field,
-      width: width,
-      showRightBorder: showRightBorder,
+      width,
+      showRightBorder,
       ...formattedValueProp,
       align: column.align,
       ...cssClassProp,
       tabIndex: domIndex === 0 && colIdx === 0 ? 0 : -1,
-      rowIndex: rowIndex,
+      rowIndex,
       colIndex: colIdx + firstColIdx,
       children: cellComponent,
     };
@@ -136,11 +136,11 @@ export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
   });
 
   return (
-    <>
-      {cellProps.map(props => (
-        <Cell key={props.field} {...props} />
+    <React.Fragment>
+      {cellsProps.map(cellProps => (
+        <Cell key={cellProps.field} {...cellProps} />
       ))}
-    </>
+    </React.Fragment>
   );
 });
 RowCells.displayName = 'RowCells';

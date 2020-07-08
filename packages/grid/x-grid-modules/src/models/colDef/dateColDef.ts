@@ -1,6 +1,6 @@
 import { ColTypeDef } from './colDef';
-import { isDate } from '../../utils';
-import { dateComparer } from '../../utils/';
+import { isDate, dateComparer } from '../../utils';
+
 import { STRING_COL_DEF } from './stringColDef';
 import { CellValue } from '../rows';
 

@@ -22,13 +22,14 @@ import {
   ApiContext,
   Window,
   Watermark,
+  Pagination,
 } from './components';
 import { useApi, useColumns, useKeyboard, useRows } from './hooks/root';
 import { useLogger, useLoggerFactory } from './hooks/utils';
 import { debounce, mergeOptions } from './utils';
 
 export const GridComponent: React.FC<GridComponentProps> = React.memo(
-  ({ rows, columns, options, apiRef, loading, licenseStatus, className }) => {
+  ({ rows, columns, options, apiRef, loading, licenseStatus, className, components }) => {
     useLoggerFactory(options?.logger, options?.logLevel);
     const logger = useLogger('Grid');
     const gridRootRef: GridRootRef = useRef<HTMLDivElement>(null);
@@ -80,10 +81,11 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
       });
     }, [paginationProps.pageSize, setInternalOptions]);
 
-    const components = useComponents(
+    const customComponents = useComponents(
       internalColumns,
       internalRows,
       internalOptions,
+      components,
       paginationProps,
       apiRef,
       gridRootRef,
@@ -121,7 +123,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
           (footerRef.current && footerRef.current.getBoundingClientRect().height) || 0;
         let dataHeight = (renderCtx && renderCtx.dataContainerSizes!.height) || 0;
         if (dataHeight < internalOptions.rowHeight) {
-          dataHeight = internalOptions.rowHeight * 2; //If we have no rows, we give the size of 2 rows to display the no rows overlay
+          dataHeight = internalOptions.rowHeight * 2; // If we have no rows, we give the size of 2 rows to display the no rows overlay
         }
 
         return footerHeight + dataHeight + internalOptions.headerHeight;
@@ -139,7 +141,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
         {(size: any) => (
           <GridRoot
             ref={gridRootRef}
-            className={'material-grid MuiGrid ' + (className || '')}
+            className={`material-grid MuiGrid ${className || ''}`}
             options={internalOptions}
             style={{ width: size.width, height: getTotalHeight(size) }}
             role={'grid'}
@@ -151,7 +153,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
           >
             <ApiContext.Provider value={apiRef}>
               <OptionsContext.Provider value={internalOptions}>
-                {components.headerComponent}
+                {customComponents.headerComponent}
                 <div className={'main-grid-container'}>
                   <Watermark licenseStatus={licenseStatus} />
                   <ColumnsContainer ref={columnsContainerRef}>
@@ -164,8 +166,8 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
                       renderCtx={renderCtx}
                     />
                   </ColumnsContainer>
-                  {!loading && internalRows.length === 0 && components.noRowsComponent}
-                  {loading && components.loadingComponent}
+                  {!loading && internalRows.length === 0 && customComponents.noRowsComponent}
+                  {loading && customComponents.loadingComponent}
                   <Window ref={windowRef}>
                     <DataContainer
                       ref={gridRef}
@@ -188,10 +190,25 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
                     </DataContainer>
                   </Window>
                 </div>
-                {components.footerComponent || (
+                {customComponents.footerComponent || (
                   <DefaultFooter
                     ref={footerRef}
-                    paginationProps={paginationProps}
+                    paginationComponent={
+                      !!internalOptions.pagination &&
+                      paginationProps.pageSize != null &&
+                      !internalOptions.hideFooterPagination &&
+                      (customComponents.paginationComponent || (
+                        <Pagination
+                          setPage={paginationProps.setPage}
+                          currentPage={paginationProps.page}
+                          pageCount={paginationProps.pageCount}
+                          pageSize={paginationProps.pageSize}
+                          rowCount={paginationProps.rowCount}
+                          setPageSize={paginationProps.setPageSize}
+                          rowsPerPageOptions={internalOptions.paginationRowsPerPageOptions}
+                        />
+                      ))
+                    }
                     rowCount={internalRows.length}
                     options={internalOptions}
                   />

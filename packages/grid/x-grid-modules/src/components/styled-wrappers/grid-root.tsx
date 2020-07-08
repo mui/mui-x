@@ -244,7 +244,7 @@ RootStyle.displayName = 'RootStyle';
 export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps & DivProps>((props, ref) => {
   const { options, children, className, ...rest } = props;
   return (
-    <RootStyle ref={ref} className={'grid-root ' + (className || '')} options={options} {...rest}>
+    <RootStyle ref={ref} className={`grid-root ${className || ''}`} options={options} {...rest}>
       {children}
     </RootStyle>
   );

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Badge from '@material-ui/core/Badge';
-import { IconsOptions, SortDirection } from '../models';
 import { IconButton } from '@material-ui/core';
+import { IconsOptions, SortDirection } from '../models';
 
 import { useIcons } from '../hooks/utils/useIcons';
 
@@ -12,7 +12,9 @@ export interface ColumnHeaderSortIconProps {
 }
 
 const getIcon = (icons: IconsOptions, direction: SortDirection): React.ReactNode =>
-  direction === 'asc' ? icons!.columnSortedAscending!({}) : icons!.columnSortedDescending!({});
+  direction === 'asc'
+    ? React.createElement(icons!.columnSortedAscending!)
+    : React.createElement(icons!.columnSortedDescending!);
 
 export const ColumnHeaderSortIcon: React.FC<ColumnHeaderSortIconProps> = React.memo(
   ({ direction, index, hide }) => {

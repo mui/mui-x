@@ -14,12 +14,12 @@ export default [
       {
         file: 'dist/index-esm.js',
         format: 'esm',
-        sourcemap: true,
+        sourcemap: !production,
       },
       {
         file: 'dist/index-cjs.js',
         format: 'cjs',
-        sourcemap: true,
+        sourcemap: !production,
       },
     ],
 

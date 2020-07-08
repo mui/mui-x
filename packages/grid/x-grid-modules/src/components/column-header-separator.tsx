@@ -12,7 +12,7 @@ export const ColumnHeaderSeparator: React.FC<ColumnHeaderSeparatorProps> = React
     const icons = useIcons();
 
     const resizeIconProps = {
-      className: 'icon separator ' + (resizable ? 'resizable' : ''),
+      className: `icon separator ${resizable ? 'resizable' : ''}`,
       ...(resizable && onResize ? { onMouseDown: onResize } : {}),
     };
 

@@ -4,9 +4,10 @@ import {
   RowClickedParam,
   RowId,
   RowModel,
-  RowSelectedParam,
+  RowSelectedParams,
   RowsProp,
-  SelectionChangedParam,
+  SelectionChangedParams,
+  GridApiRef,
 } from '../../models';
 import { useLogger } from '../utils/useLogger';
 import {
@@ -15,10 +16,9 @@ import {
   ROW_SELECTED_EVENT,
   SELECTION_CHANGED_EVENT,
 } from '../../constants/eventsConstants';
-import { SelectionApi } from '../../models/gridApi';
 import { useApiEventHandler } from '../root/useApiEventHandler';
 import { useApiMethod } from '../root/useApiMethod';
-import { GridApiRef } from '../../models';
+import { SelectionApi } from '../../models/api/selectionApi';
 
 export const useSelection = (
   options: GridOptions,
@@ -52,11 +52,12 @@ export const useSelection = (
       if (allowMultipleOverride) {
         allowMultiSelect = allowMultipleOverride;
       }
-      const isRowSelected = allowMultiSelect
-        ? isSelected == null
-          ? !row.selected
-          : isSelected
-        : true;
+      let isRowSelected: boolean;
+      if (allowMultiSelect) {
+        isRowSelected = isSelected == null ? !row.selected : isSelected;
+      } else {
+        isRowSelected = true;
+      }
       const updatedRowModels: RowModel[] = [];
       if (allowMultiSelect) {
         if (isRowSelected) {
@@ -80,12 +81,12 @@ export const useSelection = (
         logger.info(
           `Row at index ${rowIndex} has changed to ${isRowSelected ? 'selected' : 'unselected'} `,
         );
-        const rowSelectedParam: RowSelectedParam = {
+        const rowSelectedParam: RowSelectedParams = {
           data: row.data,
           isSelected: isRowSelected,
           rowIndex,
         };
-        const selectionChangedParam: SelectionChangedParam = {
+        const selectionChangedParam: SelectionChangedParams = {
           rows: getSelectedRows().map(r => r.data),
         };
         apiRef.current!.emit(ROW_SELECTED_EVENT, rowSelectedParam);
@@ -109,7 +110,7 @@ export const useSelection = (
       if (!apiRef || !apiRef.current) {
         return;
       }
-      return selectRowModel(apiRef.current.getRowFromId(id), allowMultiple, isSelected);
+      selectRowModel(apiRef.current.getRowFromId(id), allowMultiple, isSelected);
     },
     [apiRef, selectRowModel],
   );
@@ -133,8 +134,8 @@ export const useSelection = (
       forceUpdate((p: any) => !p);
 
       if (apiRef && apiRef.current != null) {
-        //We don't emit ROW_SELECTED_EVENT on each row as it would be too consuming for large set of data.
-        const selectionChangedParam: SelectionChangedParam = {
+        // We don't emit ROW_SELECTED_EVENT on each row as it would be too consuming for large set of data.
+        const selectionChangedParam: SelectionChangedParams = {
           rows: getSelectedRows().map(r => r.data),
         };
         apiRef.current!.emit(SELECTION_CHANGED_EVENT, selectionChangedParam);
@@ -160,13 +161,13 @@ export const useSelection = (
   );
 
   const onSelectedRow = useCallback(
-    (handler: (param: RowSelectedParam) => void): (() => void) => {
+    (handler: (param: RowSelectedParams) => void): (() => void) => {
       return apiRef!.current!.registerEvent(ROW_SELECTED_EVENT, handler);
     },
     [apiRef],
   );
   const onSelectionChanged = useCallback(
-    (handler: (param: SelectionChangedParam) => void): (() => void) => {
+    (handler: (param: SelectionChangedParams) => void): (() => void) => {
       return apiRef!.current!.registerEvent(SELECTION_CHANGED_EVENT, handler);
     },
     [apiRef],
@@ -174,7 +175,7 @@ export const useSelection = (
 
   useApiEventHandler(apiRef, ROW_CLICKED, rowClickedHandler);
   useApiEventHandler(apiRef, MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
-  //TODO handle Cell Clicked/range selection?
+  // TODO handle Cell Clicked/range selection?
 
   const selectionApi: SelectionApi = {
     selectRow,
@@ -194,7 +195,7 @@ export const useSelection = (
   useEffect(() => {
     selectedItemsRef.current = [];
     if (apiRef && apiRef.current != null) {
-      const selectionChangedParam: SelectionChangedParam = { rows: [] };
+      const selectionChangedParam: SelectionChangedParams = { rows: [] };
       apiRef.current!.emit(SELECTION_CHANGED_EVENT, selectionChangedParam);
     }
   }, [rowsProp, apiRef]);

@@ -9,6 +9,7 @@ import {
   GridOptions,
   InternalColumns,
   SortModel,
+  GridApiRef,
 } from '../../models';
 import { Logger, useLogger } from '../utils/useLogger';
 import { COLUMNS_UPDATED, POST_SORT } from '../../constants/eventsConstants';
@@ -16,7 +17,6 @@ import { useRafUpdate } from '../utils';
 import { isEqual } from '../../utils';
 import { useApiMethod } from './useApiMethod';
 import { useApiEventHandler } from './useApiEventHandler';
-import { GridApiRef } from '../../models';
 
 const initialState: InternalColumns = {
   visible: [],
@@ -40,7 +40,7 @@ function hydrateColumns(
   }
   const sortedCols = mappedCols.filter(c => c.sortDirection != null);
   if (sortedCols.length > 1 && apiRef.current) {
-    //in case consumer missed to set the sort index
+    // in case consumer missed to set the sort index
     sortedCols.forEach((c, idx) => {
       if (c.sortIndex == null) {
         c.sortIndex = idx + 1;
@@ -49,12 +49,12 @@ function hydrateColumns(
   }
   // we check if someone called setSortModel using apiref to apply icons
   if (apiRef.current && apiRef.current!.getSortModel) {
-    const sortedCols = apiRef.current!.getSortModel();
-    sortedCols.forEach((c, idx) => {
+    const sortModel = apiRef.current!.getSortModel();
+    sortModel.forEach((c, idx) => {
       const col = mappedCols.find(mc => mc.field === c.colId);
       if (col) {
         col.sortDirection = c.sort;
-        col.sortIndex = sortedCols.length > 1 ? idx + 1 : undefined;
+        col.sortIndex = sortModel.length > 1 ? idx + 1 : undefined;
       }
     });
   }
@@ -83,7 +83,7 @@ function toMeta(logger: Logger, visibleColumns: Columns): ColumnsMeta {
     positions.push(totalW);
     return totalW + curCol.width!;
   }, 0);
-  return { totalWidth, positions: positions };
+  return { totalWidth, positions };
 }
 
 const resetState = (
@@ -205,7 +205,7 @@ export function useColumns(
         return;
       }
 
-      //We restore the previous columns
+      // We restore the previous columns
       currentSortedCols.forEach(c => {
         updatedCols.push({ field: c.colId, sortDirection: null, sortIndex: undefined });
       });

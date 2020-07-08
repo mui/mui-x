@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-//we duplicate licenseStatus to avoid adding a dependency on x-license.
+// we duplicate licenseStatus to avoid adding a dependency on x-license.
 enum LicenseStatus {
   NotFound = 'NotFound',
   Invalid = 'Invalid',

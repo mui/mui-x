@@ -1,10 +1,15 @@
 import React, { useCallback, useRef } from 'react';
-import { ContainerProps, GridOptions, RenderColumnsProps, VirtualizationApi } from '../../models';
+import {
+  ContainerProps,
+  GridOptions,
+  RenderColumnsProps,
+  VirtualizationApi,
+  GridApiRef,
+} from '../../models';
 import { useLogger } from '../utils/useLogger';
 import { COLUMNS_UPDATED } from '../../constants/eventsConstants';
 import { useApiMethod } from '../root/useApiMethod';
 import { useApiEventHandler } from '../root/useApiEventHandler';
-import { GridApiRef } from '../../models';
 
 type UpdateRenderedColsFnType = (
   containerProps: ContainerProps | null,
@@ -61,7 +66,7 @@ export const useVirtualColumns = (
 
       const visibleColumns = apiRef.current!.getVisibleColumns();
       const firstColIndex = visibleColumns.findIndex(col => col.field === firstCol?.field);
-      const lastColIndex = visibleColumns.findIndex(col => col.field === lastCol?.field) - 1; //We ensure the last col is completely visible
+      const lastColIndex = visibleColumns.findIndex(col => col.field === lastCol?.field) - 1; // We ensure the last col is completely visible
 
       return colIndex >= firstColIndex && colIndex <= lastColIndex;
     },
@@ -88,7 +93,7 @@ export const useVirtualColumns = (
       const prevFirstColIdx = renderedColRef?.current?.firstColIdx || 0;
       const prevLastColIdx = renderedColRef?.current?.lastColIdx || 0;
       const columnBuffer = options.columnBuffer;
-      const tolerance = columnBuffer > 1 ? columnBuffer - 1 : columnBuffer; //Math.floor(columnBuffer / 2);
+      const tolerance = columnBuffer > 1 ? columnBuffer - 1 : columnBuffer; // Math.floor(columnBuffer / 2);
       const diffFirst = Math.abs(firstDisplayedIdx - tolerance - prevFirstColIdx);
       const diffLast = Math.abs(lastDisplayedIdx + tolerance - prevLastColIdx);
       logger.debug(`Column buffer: ${columnBuffer}, tolerance: ${tolerance}`);
@@ -123,10 +128,9 @@ export const useVirtualColumns = (
         renderedColRef.current = newRenderedColState;
         logger.debug('New columns state to render', newRenderedColState);
         return true;
-      } else {
-        logger.debug(`No rendering needed on columns`);
-        return false;
       }
+      logger.debug(`No rendering needed on columns`);
+      return false;
     },
     [
       renderedColRef,

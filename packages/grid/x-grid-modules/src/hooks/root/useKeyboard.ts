@@ -22,9 +22,8 @@ import {
   isTabKey,
 } from '../../utils';
 import { CELL_CSS_CLASS, ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
-import { CellIndexCoordinates, GridOptions } from '../../models';
+import { CellIndexCoordinates, GridOptions, GridApiRef } from '../../models';
 import { useApiEventHandler } from './useApiEventHandler';
-import { GridApiRef } from '../../models';
 
 const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
   if (!isArrowKeys(code)) {
@@ -91,10 +90,10 @@ export const useKeyboard = (
         const colIdx = code === 'Home' ? 0 : colCount - 1;
 
         if (!isCtrlPressed) {
-          //we go to the current row, first col, or last col!
+          // we go to the current row, first col, or last col!
           nextCellIndexes = { colIndex: colIdx, rowIndex: currentRowIndex };
         } else {
-          //In that case we go to first row, first col, or last row last col!
+          // In that case we go to first row, first col, or last row last col!
           const rowIndex = colIdx === 0 ? 0 : rowCount - 1;
           nextCellIndexes = { colIndex: colIdx, rowIndex };
         }
@@ -164,7 +163,7 @@ export const useKeyboard = (
       }
 
       const nextCellIndexes = navigateCells(code, false);
-      //We select the rows in between
+      // We select the rows in between
       const rowIds = Array(Math.abs(nextCellIndexes.rowIndex - selectionFromRowIndex) + 1)
         .fill(
           nextCellIndexes.rowIndex > selectionFromRowIndex
@@ -209,7 +208,7 @@ export const useKeyboard = (
       }
 
       if (!isTabKey(event.code)) {
-        //WE prevent default behaviour for all key shortcut except tab when the current active element is a cell
+        // WE prevent default behaviour for all key shortcut except tab when the current active element is a cell
         event.preventDefault();
         event.stopPropagation();
       }
@@ -235,7 +234,6 @@ export const useKeyboard = (
 
       if (event.key.toLowerCase() === 'a' && (event.ctrlKey || event.metaKey)) {
         apiRef.current!.selectRows(apiRef.current!.getAllRowIds(), true);
-        return;
       }
     },
     [

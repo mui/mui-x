@@ -23,7 +23,7 @@ export const Overlay = styled.div`
 export const GridOverlay: React.FC<DivProps> = (props, ref) => {
   const { className, children, ...rest } = props;
   return (
-    <Overlay className={'overlay ' + (className || '')} {...rest}>
+    <Overlay className={`overlay ${className || ''}`} {...rest}>
       <div className={'content'}>{children}</div>
     </Overlay>
   );

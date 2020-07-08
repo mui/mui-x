@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   CellValue,
   ColDef,
-  ColumnHeaderClickedParam,
+  ColumnHeaderClickedParams,
   Columns,
   ColumnSortedParams,
   FieldComparatorList,
@@ -11,6 +11,7 @@ import {
   RowModel,
   RowsProp,
   SortApi,
+  GridApiRef,
 } from '../../models';
 import {
   COLUMN_HEADER_CLICKED,
@@ -25,7 +26,6 @@ import { isDesc, nextSortDirection } from '../../utils';
 import { SortItem, SortModel } from '../../models/sortModel';
 import { useApiEventHandler } from '../root/useApiEventHandler';
 import { useApiMethod } from '../root/useApiMethod';
-import { GridApiRef } from '../../models';
 
 export const useSorting = (
   options: GridOptions,
@@ -63,9 +63,8 @@ export const useSorting = (
       if (existing) {
         const nextSort = nextSortDirection(options.sortingOrder, existing.sort);
         return nextSort == null ? undefined : { ...existing, sort: nextSort };
-      } else {
-        return { colId: col.field, sort: nextSortDirection(options.sortingOrder) };
       }
+      return { colId: col.field, sort: nextSortDirection(options.sortingOrder) };
     },
     [sortModelRef, options.sortingOrder],
   );
@@ -84,7 +83,7 @@ export const useSorting = (
 
   const buildComparatorList = useCallback(
     (sortModel: SortModel): FieldComparatorList => {
-      const comparatorList = sortModel.map(item => {
+      const comparators = sortModel.map(item => {
         const col = apiRef.current!.getColumnFromField(item.colId);
         const comparator = isDesc(item.sort)
           ? (v1: CellValue, v2: CellValue, row1: RowModel, row2: RowModel) =>
@@ -92,7 +91,7 @@ export const useSorting = (
           : col.sortComparator!;
         return { field: col.field, comparator };
       });
-      return comparatorList;
+      return comparators;
     },
     [apiRef],
   );
@@ -152,7 +151,7 @@ export const useSorting = (
   );
 
   const headerClickHandler = useCallback(
-    ({ column, field }: ColumnHeaderClickedParam) => {
+    ({ column, field }: ColumnHeaderClickedParams) => {
       if (column.sortable) {
         sortColumn(column);
       }

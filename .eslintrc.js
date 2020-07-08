@@ -10,15 +10,23 @@ module.exports = {
     es6: true,
     browser: true,
     node: true,
+    jest: true,
   },
-  extends: ['airbnb', 'prettier', 'prettier/react'],
-  parser: 'babel-eslint',
+  extends: ['airbnb', 'prettier', 'prettier/react', 'plugin:@typescript-eslint/recommended'],
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 7,
     sourceType: 'module',
   },
-  plugins: ['babel', 'react-hooks'],
-  settings: {},
+  plugins: ['@typescript-eslint', 'react-hooks'],
+  settings: {
+    'import/extensions': ['.js','.jsx','.ts','.tsx'],
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx', '.json']
+      }
+    },
+  },
   /**
    * Sorted alphanumerically within each group. built-in and each plugin form
    * their own groups.
@@ -26,7 +34,7 @@ module.exports = {
   rules: {
     'consistent-this': ['error', 'self'],
     'linebreak-style': 'off', // Doesn't play nicely with Windows
-    // just as bad as "max components per file"
+    // just as bad as 'max components per file'
     'max-classes-per-file': 'off',
     'no-alert': 'error',
     // Strict, airbnb is using warn; allow warn and error for dev environments
@@ -61,12 +69,13 @@ module.exports = {
     // This rule is great for raising people awareness of what a key is and how it works.
     'react/no-array-index-key': 'off',
     'react/destructuring-assignment': 'off',
+    'react/prop-types': 'off',
     // It's buggy
     'react/forbid-prop-types': 'off',
     'react/jsx-curly-brace-presence': 'off',
     // prefer <React.Fragment> over <>. The former allows `key` while the latter doesn't
     'react/jsx-fragments': ['error', 'element'],
-    'react/jsx-filename-extension': ['error', { extensions: ['.js'] }], // airbnb is using .jsx
+    'react/jsx-filename-extension': ['error', { extensions: ['.jsx', '.tsx'] }], // airbnb is using .jsx
     'react/jsx-handler-names': [
       'error',
       {
@@ -92,8 +101,23 @@ module.exports = {
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': ['error', { additionalHooks: 'useEnhancedEffect' }],
 
+    'no-unused-expressions': 'off',
+    '@typescript-eslint/no-unused-expressions': 'error',
+
     'import/no-unresolved': 'off',
     'import/no-extraneous-dependencies': 'off',
+    'import/prefer-default-export': 'off',
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        mjs: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
+      },
+    ],
   },
   overrides: [],
 };

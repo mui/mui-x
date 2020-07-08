@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useReducer, useRef } from 'react';
-import { GridOptions, InternalColumns, PaginationApi, Rows } from '../../models';
 import { useLogger } from '../utils';
 import {
   PAGE_CHANGED_EVENT,
@@ -8,7 +7,12 @@ import {
 } from '../../constants/eventsConstants';
 import { useApiMethod } from '../root/useApiMethod';
 import { useApiEventHandler } from '../root/useApiEventHandler';
-import { GridApiRef } from '../../models';
+import { PageChangedParams } from '../../models/params/pageChangedParams';
+import { Rows } from '../../models/rows';
+import { InternalColumns } from '../../models/colDef/colDef';
+import { GridOptions } from '../../models/gridOptions';
+import { GridApiRef } from '../../models/api/gridApiRef';
+import { PaginationApi } from '../../models/api/paginationApi';
 
 export interface PaginationProps {
   page: number;
@@ -18,14 +22,7 @@ export interface PaginationProps {
   setPage: (page: number) => void;
   setPageSize: (pageSize: number) => void;
 }
-export type PageChangedParams = PaginationState;
-export interface PaginationState {
-  page: number;
-  pageCount: number;
-  pageSize: number;
-  rowCount: number;
-}
-
+export type PaginationState = PageChangedParams;
 const UPDATE_STATE_ACTION = 'updateState';
 
 function updateStateAction(
@@ -91,7 +88,7 @@ export const usePagination = (
     [updateState, apiRef],
   );
 
-  //We use stateRef in this method to avoid reattaching this method to the api every time the state changes
+  // We use stateRef in this method to avoid reattaching this method to the api every time the state changes
   const setPageSize = useCallback(
     (pageSize: number) => {
       if (stateRef.current.pageSize === pageSize) {

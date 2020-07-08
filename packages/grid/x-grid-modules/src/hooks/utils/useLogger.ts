@@ -1,5 +1,5 @@
-import { isFunction } from '../../utils';
 import { useState } from 'react';
+import { isFunction } from '../../utils/utils';
 
 const forceDebug = localStorage.getItem('DEBUG') != null;
 const isDebugging = process.env.NODE_ENV !== 'production' || forceDebug;
@@ -27,16 +27,16 @@ const getAppender = (name: string, logLevel: string, appender: Logger = console)
     throw new Error(`LogLevel ${logLevel} not recognised`);
   }
 
-  const logger = LOG_LEVELS.reduce((logger, method, idx) => {
+  const logger = LOG_LEVELS.reduce((loggerObj, method, idx) => {
     if (idx >= minLogLevelIdx) {
-      logger[method] = (...args: any[]) => {
+      loggerObj[method] = (...args: any[]) => {
         const [message, ...rest] = args;
         (appender as any)[method](`[${name}] - ${message}`, ...rest);
       };
     } else {
-      logger[method] = noop;
+      loggerObj[method] = noop;
     }
-    return logger;
+    return loggerObj;
   }, {} as any);
 
   return logger as Logger;
@@ -53,7 +53,7 @@ const defaultFactory: (logLevel: string) => LoggerFactoryFn = (logLevel: string)
 
 export type LoggerFactoryFn = (name: string) => Logger;
 
-//TODO Refactor to allow different logger for each grid in a page...
+// TODO Refactor to allow different logger for each grid in a page...
 let factory: LoggerFactoryFn | null;
 export function useLoggerFactory(
   customLogger?: Logger | LoggerFactoryFn,
@@ -64,7 +64,7 @@ export function useLoggerFactory(
     return;
   }
   if (!customLogger) {
-    factory = !!logLevel ? defaultFactory(logLevel.toString()) : null;
+    factory = logLevel ? defaultFactory(logLevel.toString()) : null;
     return;
   }
 
@@ -73,7 +73,7 @@ export function useLoggerFactory(
     return;
   }
 
-  factory = !!logLevel
+  factory = logLevel
     ? (name: string) => getAppender(name, logLevel.toString(), customLogger)
     : null;
 }
