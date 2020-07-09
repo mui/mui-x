@@ -88,7 +88,6 @@ export const UpdateColumnsBtn: React.FC = () => {
       isRegistered: false,
       age: 40,
       registerDate: new Date(2011, 5, 9),
-
     },
     {
       id: 4,
@@ -98,7 +97,6 @@ export const UpdateColumnsBtn: React.FC = () => {
       age: 40,
       registerDate: new Date(2013, 8, 1),
       lastLoginDate: new Date(2020, 4, 24, 8, 30, 25),
-
     },
     {
       id: 5,
@@ -108,7 +106,6 @@ export const UpdateColumnsBtn: React.FC = () => {
       age: null,
       registerDate: new Date(2014, 6, 1),
       lastLoginDate: new Date(2020, 2, 24, 12, 10, 25),
-
     },
     {
       id: 6,
@@ -118,7 +115,6 @@ export const UpdateColumnsBtn: React.FC = () => {
       age: 40,
       registerDate: new Date(2004, 2, 15),
       lastLoginDate: new Date(2020, 7, 4, 2, 10, 25),
-
     },
     { id: 7, lastName: 'Smith', firstName: '', isRegistered: true, age: 40 },
   ];
@@ -128,7 +124,9 @@ export const UpdateColumnsBtn: React.FC = () => {
   const changeCols = () => {
     if (cols.length === columns.length) {
       const newCols = columns.filter(c => c.field.indexOf('age') === -1);
-      newCols.forEach(c => (c.resizable = false));
+      newCols.forEach(c => {
+        c.resizable = false;
+      });
       setCols(newCols);
     } else {
       setCols(columns);
@@ -138,7 +136,9 @@ export const UpdateColumnsBtn: React.FC = () => {
   return (
     <React.Fragment>
       <div>
-        <button onClick={changeCols} id={'action-btn'}>Change cols</button>
+        <button type="button" onClick={changeCols} id={'action-btn'}>
+          Change cols
+        </button>
       </div>
       <div className="grid-container">
         <XGrid rows={rows} columns={cols} />

@@ -1,7 +1,8 @@
-import {activeCell, getStoryPage, startBrowser} from './helper-fn';
+import { activeCell, getStoryPage, startBrowser } from './helper-fn';
 
 describe('Keyboard Navigation', () => {
-  let page; let browser;
+  let page;
+  let browser;
   const waitFnOptions = { timeout: 500 };
 
   beforeAll(async done => {
@@ -9,7 +10,7 @@ describe('Keyboard Navigation', () => {
     done();
   });
   beforeEach(async done => {
-    page = await getStoryPage( browser, '/story/x-grid-tests-columns--small-col-sizes', true);
+    page = await getStoryPage(browser, '/story/x-grid-tests-columns--small-col-sizes', true);
     await page.keyboard.press('Tab');
     await page.keyboard.press('Tab');
     await page.waitFor(100);
@@ -21,7 +22,7 @@ describe('Keyboard Navigation', () => {
     done();
   });
 
-  afterAll(async  (done)=> {
+  afterAll(async done => {
     await browser.close();
     done();
   });

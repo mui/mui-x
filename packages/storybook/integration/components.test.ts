@@ -1,4 +1,4 @@
-import { snapshotTest} from './helper-fn';
+import { snapshotTest } from './helper-fn';
 
 jest.setTimeout(30000);
 

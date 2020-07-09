@@ -26,7 +26,6 @@ export async function getStoryPage(
   path: string,
   withClipboard = false,
 ): Promise<any> {
-
   const url = `http://localhost:6006/iframe.html?path=${path}`;
   if (withClipboard) {
     const context = browser.defaultBrowserContext();
@@ -39,12 +38,15 @@ export async function getStoryPage(
   return page;
 }
 
-export async function snapshotTest(path: string, beforeTest?: (page) => Promise<void>): Promise<void> {
+export async function snapshotTest(
+  path: string,
+  beforeTest?: (page) => Promise<void>,
+): Promise<void> {
   const browser = await startBrowser();
   const page = await getStoryPage(browser, path);
-  await page.addStyleTag({content: NO_ANIM_CSS});
+  await page.addStyleTag({ content: NO_ANIM_CSS });
 
-  if(beforeTest) {
+  if (beforeTest) {
     await beforeTest(page);
   }
 

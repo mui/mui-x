@@ -2,9 +2,9 @@ import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
+import { ColDef, GridApi, GridOptionsProp, XGrid } from '@material-ui/x-grid';
 import { PricingModel } from '../data/streaming/pricing-service';
 import { feedColumns, subscribeFeed } from '../data/streaming/single-subscription-service';
-import { ColDef, GridApi, GridOptionsProp, XGrid } from '@material-ui/x-grid';
 
 export interface FeedGridProps {
   min?: number;
@@ -35,7 +35,6 @@ export const FeedGrid: React.FC<FeedGridProps> = p => {
         }),
       );
 
-      console.log('subscribing to feed');
       const data$ = subscribeFeed(p.min, p.max);
       subscription.add(data$.pipe(takeUntil(cancel$)).subscribe(data => handleNewPrices(data)));
       setStarted(true);
@@ -43,8 +42,8 @@ export const FeedGrid: React.FC<FeedGridProps> = p => {
   };
 
   useEffect(() => {
-    // subscribeToStream();
     return () => {
+      // eslint-disable-next-line no-console
       console.log('Unmounting, cleaning subscriptions ');
       subscription.unsubscribe();
     };
@@ -56,9 +55,10 @@ export const FeedGrid: React.FC<FeedGridProps> = p => {
     }
   };
   return (
-    <>
+    <React.Fragment>
       <div>
         <button
+          type="button"
           ref={stopButton}
           onClick={onStartStreamBtnClick}
           style={{ padding: 5, textTransform: 'capitalize', margin: 10 }}
@@ -69,6 +69,6 @@ export const FeedGrid: React.FC<FeedGridProps> = p => {
       <div style={{ width: 800, height: 600 }}>
         <XGrid rows={rows} columns={columns} apiRef={gridApiRef} {...p} />
       </div>
-    </>
+    </React.Fragment>
   );
 };

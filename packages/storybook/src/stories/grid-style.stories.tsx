@@ -92,8 +92,6 @@ const getRows = () => [
     age: 30,
     registerDate: new Date(2011, 6, 16),
     lastLoginDate: new Date(2020, 2, 14, 7, 30, 25),
-
-
   },
   {
     id: 3,
@@ -102,7 +100,6 @@ const getRows = () => [
     isRegistered: false,
     age: 40,
     registerDate: new Date(2016, 8, 1),
-
   },
   {
     id: 4,
@@ -112,7 +109,6 @@ const getRows = () => [
     age: 40,
     registerDate: new Date(2011, 1, 1),
     lastLoginDate: new Date(2020, 2, 10, 15, 30, 25),
-
   },
   {
     id: 5,
@@ -122,7 +118,6 @@ const getRows = () => [
     age: null,
     registerDate: new Date(2018, 0, 1),
     lastLoginDate: new Date(2020, 5, 29, 18, 0, 25),
-
   },
   {
     id: 6,
@@ -132,7 +127,6 @@ const getRows = () => [
     age: 40,
     registerDate: new Date(2013, 8, 16),
     lastLoginDate: new Date(2019, 6, 4, 22, 36, 25),
-
   },
   { id: 7, lastName: 'Smith', firstName: '', isRegistered: true, age: 40 },
 ];
