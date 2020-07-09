@@ -127,4 +127,5 @@ module.exports = {
     "@typescript-eslint/no-unused-vars": ['error'],
     'react/prop-types': 'off', // Will see later
   },
+  overrides: [],
 };
