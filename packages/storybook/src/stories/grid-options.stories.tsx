@@ -50,9 +50,9 @@ export const CustomLogger = () => {
   const logger = {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     debug: () => {},
-    info: (...args) => console.info('CUSTOM-LOGGING =>' + args[0], args.slice(1)),
-    warn: (...args) => console.warn('CUSTOM-LOGGING =>' + args[0], args.slice(1)),
-    error: (...args) => console.error('CUSTOM-LOGGING =>' + args[0], args.slice(1)),
+    info: (...args) => console.info(`CUSTOM-LOGGING =>${  args[0]}`, args.slice(1)),
+    warn: (...args) => console.warn(`CUSTOM-LOGGING =>${  args[0]}`, args.slice(1)),
+    error: (...args) => console.error(`CUSTOM-LOGGING =>${  args[0]}`, args.slice(1)),
   };
   return (
     <div className="grid-container">
@@ -195,7 +195,8 @@ export const PaginationApiTests = () => {
     apiRef.current!.setPageSize(105);
   };
   return (
-    <div className="grid-container">
+    <React.Fragment>
+      <div>
       <Button component={'button'} color={'primary'} variant={'outlined'} onClick={backToFirstPage}>
         Back to first page
       </Button>
@@ -223,6 +224,8 @@ export const PaginationApiTests = () => {
       >
         toggle pageAutoSize
       </Button>
+      </div>
+      <div className="grid-container">
       <XGrid
         rows={data.rows}
         columns={data.columns}
@@ -242,6 +245,7 @@ export const PaginationApiTests = () => {
         }}
       />
     </div>
+    </React.Fragment>
   );
 };
 
@@ -250,7 +254,7 @@ export const AutoPagination = () => {
   const data = useData(2000, 200);
 
   return (
-    <>
+    <React.Fragment>
       <div>
         <Button
           component={'button'}
@@ -279,6 +283,6 @@ export const AutoPagination = () => {
           }}
         />
       </div>
-    </>
+    </React.Fragment>
   );
 };

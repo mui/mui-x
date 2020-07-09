@@ -69,10 +69,7 @@ export const MultipleSelect = () => {
   };
 
   return (
-    <React.Fragment>
-      <p>Maintain CTRL or Command to select multiple rows</p>
       <XGrid rows={data.rows} columns={data.columns} options={options} />
-    </React.Fragment>
   );
 };
 export const MultipleSelectWithCheckbox = () => {
