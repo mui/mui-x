@@ -12,7 +12,7 @@ module.exports = {
     node: true,
     jest: true,
   },
-  extends: ['airbnb', 'prettier', 'prettier/react', 'plugin:@typescript-eslint/recommended'],
+  extends: ['plugin:import/recommended', 'airbnb', 'prettier', 'prettier/react', 'plugin:import/typescript'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 7,
@@ -20,10 +20,9 @@ module.exports = {
   },
   plugins: ['@typescript-eslint', 'react-hooks'],
   settings: {
-    'import/extensions': ['.js','.jsx','.ts','.tsx'],
     'import/resolver': {
       node: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx', '.json']
+        extensions: ['.js', '.ts', '.tsx', '.json']
       }
     },
   },
@@ -32,11 +31,9 @@ module.exports = {
    * their own groups.
    */
   rules: {
-    '@typescript-eslint/no-var-requires': [0, {patterns: ['*.js']}],
-    '@typescript-eslint/explicit-function-return-type':[0, {patterns: ['*.js']}],
     'consistent-this': ['error', 'self'],
     'linebreak-style': 'off', // Doesn't play nicely with Windows
-    // just as bad as 'max components per file'
+    // just as bad as "max components per file"
     'max-classes-per-file': 'off',
     'no-alert': 'error',
     // Strict, airbnb is using warn; allow warn and error for dev environments
@@ -71,13 +68,12 @@ module.exports = {
     // This rule is great for raising people awareness of what a key is and how it works.
     'react/no-array-index-key': 'off',
     'react/destructuring-assignment': 'off',
-    'react/prop-types': 'off',
     // It's buggy
     'react/forbid-prop-types': 'off',
     'react/jsx-curly-brace-presence': 'off',
     // prefer <React.Fragment> over <>. The former allows `key` while the latter doesn't
     'react/jsx-fragments': ['error', 'element'],
-    'react/jsx-filename-extension': ['error', { extensions: ['.jsx', '.tsx'] }], // airbnb is using .jsx
+    'react/jsx-filename-extension': ['error', { extensions: ['.js', '.tsx'] }], // airbnb is using .jsx
     'react/jsx-handler-names': [
       'error',
       {
@@ -100,15 +96,19 @@ module.exports = {
     // stylistic opinion. For conditional assignment we want it outside, otherwise as static
     'react/static-property-placement': 'off',
 
+    'import/no-extraneous-dependencies': 'off', // It would be better to enable this rule.
+    'import/namespace': ['error', { allowComputed: true }],
+    'import/order': [
+      'error',
+      {
+        groups: [['index', 'sibling', 'parent', 'internal', 'external', 'builtin']],
+        'newlines-between': 'never',
+      },
+    ],
+
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': ['error', { additionalHooks: 'useEnhancedEffect' }],
 
-    'no-unused-expressions': 'off',
-    '@typescript-eslint/no-unused-expressions': 'error',
-
-    'import/no-unresolved': 'off',
-    'import/no-extraneous-dependencies': 'off',
-    'import/prefer-default-export': 'off',
     'import/extensions': [
       'error',
       'ignorePackages',
@@ -120,6 +120,11 @@ module.exports = {
         tsx: 'never',
       },
     ],
+
+    // TODO
+    'import/no-unresolved': 'off', // Didn't look why
+    "no-unused-vars": 'off', // Need to migrte to babel
+    "@typescript-eslint/no-unused-vars": ['error'],
+    'react/prop-types': 'off', // Will see later
   },
-  overrides: [],
 };
