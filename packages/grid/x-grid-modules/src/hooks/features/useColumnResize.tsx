@@ -6,7 +6,7 @@ import { findCellElementsFromCol, findDataContainerFromCurrent } from '../../uti
 import { useStateRef } from '../utils/useStateRef';
 import { GridApiRef } from '../../models';
 
-const MIN_COL_WIDTH = 30;
+const MIN_COL_WIDTH = 50;
 const MOUSE_LEFT_TIMEOUT = 1000;
 
 // TODO improve experience for last column
@@ -72,8 +72,6 @@ export const useColumnResize = (
 
   const stopResize = useCallback((): void => {
     isResizing.current = false;
-
-    // setColResizing(undefined);
     currentColPosition.current = undefined;
     currentColElem.current = undefined;
     currentColCellsElems.current = undefined;
@@ -130,6 +128,8 @@ export const useColumnResize = (
     }
   }, []);
   const handleMouseLeave = useCallback((): void => {
+    console.log(`       LEFT = resizingMouseMove: ${JSON.stringify(resizingMouseMove.current)} `);
+
     if (
       isLastColumn.current &&
       resizingMouseMove.current &&
@@ -140,21 +140,26 @@ export const useColumnResize = (
       logger.debug(`Mouse left and same row, so extending last column width of 100`);
 
       // we are resizing the last column outside the window
-      updateWidth(currentColDefRef.current.width! + 100);
+      updateWidth(currentColDefRef.current.width! + 10);
       mouseLeftTimeout.current = setTimeout(() => {
         stopResize();
       }, MOUSE_LEFT_TIMEOUT);
     } else if (isResizing) {
-      stopResize();
+      mouseLeftTimeout.current = setTimeout(() => {
+        stopResize();
+      }, MOUSE_LEFT_TIMEOUT);
     }
   }, [headerHeight, logger, stopResize, updateWidth]);
 
   const handleMouseMove = useCallback(
-    (ev: any): void => {
+    (event: React.MouseEvent<HTMLElement>): void => {
       if (isResizing.current) {
-        resizingMouseMove.current = { x: ev.clientX, y: ev.clientY };
+        const rect = ev.currentTarget.getBoundingClientRect();
+        resizingMouseMove.current = { x: ev.clientX - rect.left, y: ev.clientY - rect.top };
 
-        let newWidth = ev.clientX + scrollOffset.current - currentColPosition.current!;
+        const offsetLeft = !isLastColumn.current ? rect.left : scrollOffset.current * -1;
+
+        let newWidth = ev.clientX - offsetLeft - currentColPosition.current!;
         newWidth = newWidth > MIN_COL_WIDTH ? newWidth : MIN_COL_WIDTH;
         updateWidth(newWidth);
       }
