@@ -81,6 +81,14 @@ export function NoRows() {
   );
 }
 
+function SortedDescending() {
+  return <ExpandMoreIcon className="icon" />;
+}
+
+function SortedAscending() {
+  return <ExpandLessIcon className="icon" />;
+}
+
 export function Icons() {
   return (
     <div className="grid-container">
@@ -89,10 +97,8 @@ export function Icons() {
         columns={columns}
         options={{
           icons: {
-            // eslint-disable-next-line react/display-name
-            columnSortedDescending: () => <ExpandMoreIcon className={'icon'} />,
-            // eslint-disable-next-line react/display-name
-            columnSortedAscending: () => <ExpandLessIcon className={'icon'} />,
+            columnSortedDescending: SortedDescending,
+            columnSortedAscending: SortedAscending,
           },
         }}
       />
@@ -177,13 +183,9 @@ function FooterComponent2(props) {
   const { paginationProps } = props;
 
   return (
-    <div className="footer my-custom-footer">
-      {' '}
-      I counted {paginationProps.rowCount} row(s){' '}
-    </div>
-  )
+    <div className="footer my-custom-footer"> I counted {paginationProps.rowCount} row(s) </div>
+  );
 }
-
 
 export function HeaderAndFooter() {
   const data = useData(2000, 200);
@@ -209,6 +211,10 @@ export function HeaderAndFooter() {
 
 function IsDone(props: { value?: boolean }) {
   return props.value ? <DoneIcon fontSize="small" /> : <ClearIcon fontSize="small" />;
+}
+
+function RegisteredComponent() {
+  return <CreateIcon className="icon" />;
 }
 
 export function StyledColumns() {
@@ -239,10 +245,8 @@ export function StyledColumns() {
       field: 'isRegistered',
       description: 'Is Registered',
       align: 'center',
-      // eslint-disable-next-line react/display-name
       cellRenderer: params => <IsDone value={!!params.value} />,
-      // eslint-disable-next-line react/display-name
-      headerComponent: params => <CreateIcon className={'icon'} />,
+      headerComponent: RegisteredComponent,
       headerAlign: 'center',
     },
     {
