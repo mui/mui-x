@@ -49,7 +49,6 @@ yarn add @material-ui/core react styled-components
 After installing the package, you are now ready to use the grid.
 First you have to import the component as below.
 To avoid component clashing, we named our components **XGrid** and **DataGrid**.
-If you don't use Material-UI core grid layout <a href='https://material-ui.com/components/grid/'>here</a>, and don't have any other components named grid, you can also import **Grid**.
 
 ```js
 import { XGrid } from '@material-ui/x-grid';
@@ -85,3 +84,14 @@ A complete example is below.
 <QuickStartDemo />
 
 **[Edit in Stackblitz](https://stackblitz.com/edit/x-grid-overview-demo)**
+
+### Component Properties
+
+- `columns`: An array of ColDef
+- `rows`: An array of objects
+- `options`: Optional. An object of type `GridOptions` that allow to configure the grid
+- `components`: Optional. An object that allows to replace default components
+- `apiRef`: Optional. An object of type `GridApiRef` that can be instantiated using `gridApiRef()` that allows to manipulate the grid outside the component props.
+- `loading`: Optional. `boolean` that display the `LoadingOverlay` component when true;
+- `className`: Optional. String containing some css classes that will be applied to the grid container;
+
