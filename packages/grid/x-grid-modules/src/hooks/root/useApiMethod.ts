@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
-import { GridApi , GridApiRef } from '../../models';
+import { GridApi, GridApiRef } from '../../models/api';
 import { useLogger } from '../utils';
-
 
 export const useApiMethod = (apiRef: GridApiRef, apiMethods: Partial<GridApi>, apiName: string) => {
   const logger = useLogger('useApiMethod');

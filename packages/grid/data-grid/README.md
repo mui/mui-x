@@ -8,7 +8,7 @@ Check out our [Demo here!](https://muix-preview.netlify.app/#/grid)
 
 Using your favourite package manager, install `@material-ui-x/grid`
 
-```shell script
+```sh
 //with npm
 npm install @material-ui-x/grid
 

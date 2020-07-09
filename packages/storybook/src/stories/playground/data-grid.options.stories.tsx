@@ -3,9 +3,8 @@ import { DataGrid, DataGridOptionsProp } from '@material-ui/data-grid';
 import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { action } from '@storybook/addon-actions';
-import { GridOptionsProp } from '@material-ui/x-grid';
+import { GridOptionsProp, SortDirection } from '@material-ui/x-grid';
 import { useData } from '../../hooks/useData';
-import { SortDirection } from '@material-ui/x-grid';
 
 export default {
   title: 'Data-Grid Demos/Options Events',
@@ -29,7 +28,7 @@ export const Options = () => {
     onCellClicked: params => action('onCellClicked')(params),
     onColumnHeaderClicked: params => action('onColumnHeaderClicked')(params),
     onRowSelected: params => action('onRowSelected')(params),
-    onSelectionChanged: params => action('onSelectionChanged')(params),
+    onSelectionChanged: params => action('onSelectionChanged', { depth: 1 })(params),
     onColumnsSorted: params => action('onColumnsSorted')(params),
     onPageChanged: params => action('onPageChanged')(params),
     onPageSizeChanged: params => action('onPageSizeChanged')(params),
@@ -60,7 +59,7 @@ export const Events = () => {
     onCellClicked: params => action('onCellClicked')(params),
     onColumnHeaderClicked: params => action('onColumnHeaderClicked')(params),
     onRowSelected: params => action('onRowSelected')(params),
-    onSelectionChanged: params => action('onSelectionChanged')(params),
+    onSelectionChanged: params => action('onSelectionChanged', { depth: 1 })(params),
     onColumnsSorted: params => action('onColumnsSorted')(params),
     onPageChanged: params => action('onPageChanged')(params),
     onPageSizeChanged: params => action('onPageSizeChanged')(params),

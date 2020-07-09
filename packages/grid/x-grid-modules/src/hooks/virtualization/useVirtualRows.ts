@@ -9,7 +9,8 @@ import {
   RenderRowProps,
   Rows,
   VirtualizationApi,
- GridApiRef } from '../../models';
+  GridApiRef,
+} from '../../models';
 import { ScrollParams, useScrollFn } from '../utils';
 import { useLogger } from '../utils/useLogger';
 import { useContainerProps } from '../root';
@@ -23,7 +24,6 @@ import {
 import { useApiMethod } from '../root/useApiMethod';
 import { useNativeEventListener } from '../root/useNativeEventListener';
 import { useApiEventHandler } from '../root/useApiEventHandler';
-
 
 const SCROLL_EVENT = 'scroll';
 type UseVirtualRowsReturnType = Partial<RenderContextProps> | null;
@@ -91,7 +91,7 @@ export const useVirtualRows = (
       return null;
     }
 
-    const renderCtx: Partial<RenderContextProps> = {
+    const newRenderCtx: Partial<RenderContextProps> = {
       ...containerProps,
       ...renderedCol,
       ...renderedRow,
@@ -100,9 +100,9 @@ export const useVirtualRows = (
         paginationPageSize: optionsRef.current.paginationPageSize,
       },
     };
-    logger.debug(':: getRenderCtxState - returning state ', renderCtx);
-    renderCtxRef.current = renderCtx;
-    return renderCtx;
+    logger.debug(':: getRenderCtxState - returning state ', newRenderCtx);
+    renderCtxRef.current = newRenderCtx;
+    return newRenderCtx;
   }, [logger, renderCtxRef, containerPropsRef, renderedColRef, getRenderRowProps]);
 
   const reRender = useCallback(() => setRenderCtx(getRenderCtxState()), [

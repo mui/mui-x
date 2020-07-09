@@ -2,37 +2,42 @@ import { XGrid } from '@material-ui/x-grid';
 import QuickStartDemo from './demos/quick-start.demo';
 
 # Quick Start
+
 <Meta title="1. Docs/1. Quick Start" component={XGrid} />
 
-The official Material-UI Data Grid Component built in Typescript.
+The official Material-UI Data Grid Component built in TypeScript.
 
 Have a look at our demo app ** [here](https://muix-preview.netlify.app/#/grid)**.
 
 ## Install
 
-Using your favourite package manager, install `@material-ui/x-grid` for the full featured enterprise grid, or `@material-ui/data-grid` for the free community version
+Using your favourite package manager, install `@material-ui/x-grid` for the full featured enterprise grid, or `@material-ui/data-grid` for the free community version.
 
-```shell script
-//with npm
+```sh
+// with npm
 npm install @material-ui/x-grid
 
-//with yarn
+// with yarn
 yarn add @material-ui/x-grid
 ```
 
 ## Dependencies
+
 To avoid package duplication, and its related issues, we let you control our dependencies.
 Hence, X-Grid has the following peerDependencies.
-```
+
+```json
 "peerDependencies": {
-    "@material-ui/core": "^4.11.0",
-    "react": "^16.13.1",
-    "styled-components": "^5.1.0"
-},
+  "@material-ui/core": "^4.11.0",
+  "react": "^16.13.1",
+  "styled-components": "^5.1.0"
+}
 ```
+
 If you have not installed them yet, please do by running one of the following.
-```shell script
-//with npm
+
+```sh
+// with npm
 npm install @material-ui/core react styled-components
 
 //with yarn
@@ -46,7 +51,9 @@ First you have to import the component as below.
 To avoid component clashing, we named our components **XGrid** and **DataGrid**.
 If you don't use Material-UI core grid layout <a href='https://material-ui.com/components/grid/'>here</a>, and don't have any other components named grid, you can also import **Grid**.
 
-`import { XGrid } from '@material-ui/x-grid';`
+```js
+import { XGrid } from '@material-ui/x-grid';
+```
 
 Then you need to create some columns which are simple objects containing at least a field property.
 You can import `ColDef` to see all column properties.
@@ -54,21 +61,21 @@ A simple set of columns could be:
 
 ```tsx
 const columns: ColDef[] = [
-     { field: "id", width: 80},
-     { field: "brand", headerName:  'Brand Name', width: 150}
-     ...
-  ];
+  { field: 'id', width: 80 },
+  { field: 'brand', headerName:  'Brand Name', width: 150 },
+  ...
+];
 ```
 
 Rows are key value pair objects.
 
 ```tsx
 const rows: RowsProp = [
-    { id: 1, brand:'Nike'},
-    { id: 2, brand:'Addidas'},
-    { id: 3, brand:'Puma'},
-    ...
-  ]
+  { id: 1, brand:'Nike'},
+  { id: 2, brand:'Addidas'},
+  { id: 3, brand:'Puma'},
+  ...
+];
 ```
 
 The `options` properties let you apply different settings to the grid.
@@ -76,8 +83,5 @@ The `options` properties let you apply different settings to the grid.
 A complete example is below.
 
 <QuickStartDemo />
-
-
-
 
 **[Edit in Stackblitz](https://stackblitz.com/edit/x-grid-overview-demo)**

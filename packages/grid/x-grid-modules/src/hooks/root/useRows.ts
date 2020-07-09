@@ -1,8 +1,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { createRow, GridOptions, RowData, RowId, RowModel, Rows, RowsProp , GridApiRef } from '../../models';
+import {
+  createRow,
+  GridOptions,
+  RowData,
+  RowId,
+  RowModel,
+  Rows,
+  RowsProp,
+  GridApiRef,
+} from '../../models';
 import { useLogger } from '../utils/useLogger';
 import { useRafUpdate } from '../utils';
-import { RowApi } from '../../models/gridApi';
 import {
   ROWS_UPDATED,
   SCROLLING_START,
@@ -11,7 +19,7 @@ import {
 } from '../../constants/eventsConstants';
 import { useApiMethod } from './useApiMethod';
 import { useApiEventHandler } from './useApiEventHandler';
-
+import { RowApi } from '../../models/api/rowApi';
 
 type IdLookup = { [key: string]: number };
 
@@ -32,9 +40,12 @@ export const useRows = (
   const isScrollingRef = useRef<boolean>(false);
   const isSortedRef = useRef<boolean>(false);
 
-  const setIsScrolling = useCallback((v: boolean) => (isScrollingRef.current = v), [
-    isScrollingRef,
-  ]);
+  const setIsScrolling = useCallback(
+    (v: boolean) => {
+      isScrollingRef.current = v;
+    },
+    [isScrollingRef],
+  );
 
   const updateAllRows = useCallback(
     (allNewRows: RowModel[]) => {
@@ -73,7 +84,7 @@ export const useRows = (
 
   const updateRowModels = useCallback(
     (updates: Partial<RowModel>[]) => {
-      logger.debug(`updating row models`, updates);
+      logger.debug(`updating ${updates.length} row models`);
       const addedRows: RowModel[] = [];
       updates.forEach(partialRow => {
         if (partialRow.id == null) {
@@ -118,9 +129,8 @@ export const useRows = (
         const oldRow = getRowFromId(partialRow.id!);
         if (!oldRow) {
           return createRow(partialRow);
-        } 
-          return { ...oldRow, data: { ...oldRow.data, ...partialRow } };
-        
+        }
+        return { ...oldRow, data: { ...oldRow.data, ...partialRow } };
       });
       return updateRowModels(rowModelUpdates);
     },
@@ -137,7 +147,7 @@ export const useRows = (
   const getRowModels = useCallback(() => rowModelsRef.current, [rowModelsRef]);
   const getRowsCount = useCallback(() => rowModelsRef.current.length, [rowModelsRef]);
   const getAllRowIds = useCallback(() => rowModelsRef.current.map(r => r.id), [rowModelsRef]);
-  const setRowModels = useCallback((rows: Rows) => updateAllRows(rows), [updateAllRows]);
+  const setRowModels = useCallback((rowsParam: Rows) => updateAllRows(rowsParam), [updateAllRows]);
 
   const rowApi: RowApi = {
     getRowIndexFromId,

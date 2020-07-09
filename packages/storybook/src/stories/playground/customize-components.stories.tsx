@@ -42,7 +42,7 @@ const rows = [
 ];
 
 export const Loading = () => {
-  const loadingComponent = (
+  const loadingComponent = () => (
     <GridOverlay className={'custom-overlay'}>
       <div style={{ position: 'absolute', top: 0, width: '100%' }}>
         <LinearProgress />
@@ -54,24 +54,25 @@ export const Loading = () => {
       <XGrid
         rows={rows}
         columns={columns}
-        options={{ loadingOverlayComponent: loadingComponent }}
-        loading={true}
+        components={{ loadingOverlay: loadingComponent }}
+        loading
       />
     </div>
   );
 };
 
 export const NoRows = () => {
-  const loadingComponent = (
+  const noRowsComponent = () => (
     <GridOverlay className={'custom-overlay'}>
       <CodeIcon />
       <span style={{ lineHeight: '24px', padding: '0 10px' }}>No Rows</span>
       <CodeIcon />
     </GridOverlay>
   );
+
   return (
     <div className="grid-container">
-      <XGrid rows={[]} columns={columns} options={{ noRowsOverlayComponent: loadingComponent }} />
+      <XGrid rows={[]} columns={columns} components={{ noRowsOverlay: noRowsComponent }} />
     </div>
   );
 };
@@ -107,7 +108,9 @@ export const CustomPagination = () => {
         options={{
           pagination: true,
           paginationPageSize: 50,
-          paginationComponent: paginationProps => (
+        }}
+        components={{
+          pagination: ({ paginationProps }) => (
             <Pagination
               className={'my-custom-pagination'}
               page={paginationProps.page}
@@ -133,7 +136,9 @@ export const CustomFooter = () => {
           paginationPageSize: 33,
           hideFooterPagination: true,
           hideFooter: true,
-          footerComponent: ({ paginationProps }) => (
+        }}
+        components={{
+          footer: ({ paginationProps }) => (
             <Footer className={'my-custom-footer'}>
               <span style={{ display: 'flex', alignItems: 'center' }}>
                 This is my custom footer and pagination here!{' '}
@@ -165,7 +170,9 @@ export const HeaderAndFooter = () => {
           pagination: true,
           paginationPageSize: 33,
           hideFooterPagination: true,
-          headerComponent: ({ paginationProps }) => (
+        }}
+        components={{
+          header: ({ paginationProps }) => (
             <div className={'custom-header'}>
               <Pagination
                 className={'my-custom-pagination'}
@@ -175,7 +182,7 @@ export const HeaderAndFooter = () => {
               />
             </div>
           ),
-          footerComponent: ({ paginationProps }) => (
+          footer: ({ paginationProps }) => (
             <div className="footer my-custom-footer">
               {' '}
               I counted {paginationProps.rowCount} row(s){' '}
@@ -209,8 +216,8 @@ export const StyledColumns = () => {
       valueGetter: params =>
         `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
       cellClassRules: {
-        common: params => params.data['lastName'] === 'Smith',
-        unknown: params => !params.data['lastName'],
+        common: params => params.data.lastName === 'Smith',
+        unknown: params => !params.data.lastName,
       },
     },
     {

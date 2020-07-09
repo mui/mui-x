@@ -1,30 +1,12 @@
+import * as React from 'react';
 import { ComparatorFn, SortDirection } from '../sortModel';
-import { CellValue, RowData, RowModel } from '../rows';
-import { GridApi } from '../gridApi';
+import { CellValue } from '../rows';
 import { ColType } from './colType';
+import { CellClassPropType, CellClassRules } from '../cellClass';
+import { ColParams } from '../params/colParams';
+import { CellParams, ValueFormatterParams, ValueGetterParams } from '../params/cellParams';
 
 export type Alignement = 'left' | 'right' | 'center';
-
-export type CellClassFn = (params: CellClassParams) => string | string[];
-export type CellClassPropType = string | string[] | CellClassFn;
-export interface ColParams {
-  colDef: ColDef;
-  colIndex: number;
-  api: GridApi;
-}
-export interface CellParams {
-  value: CellValue;
-  getValue: (field: string) => CellValue;
-  data: RowData;
-  rowModel: RowModel;
-  colDef: ColDef;
-  rowIndex: number;
-  api: GridApi;
-}
-export type CellClassParams = CellParams;
-export type ValueGetterParams = CellParams;
-export type ValueFormatterParams = CellParams;
-export type CellClassRules = { [cssClass: string]: (params: CellClassParams) => boolean };
 
 export interface ColDef {
   field: string;

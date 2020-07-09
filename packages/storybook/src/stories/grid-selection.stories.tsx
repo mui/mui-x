@@ -2,9 +2,9 @@ import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { action } from '@storybook/addon-actions';
 import { XGrid, GridApi, GridOptionsProp } from '@material-ui/x-grid';
-import { getData, GridData } from '../data/data-service';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
+import { getData, GridData } from '../data/data-service';
 import { useData } from '../hooks/useData';
 
 export default {
@@ -46,7 +46,7 @@ export const EventsMapped = () => {
   const data = useData(200, 200);
 
   const options: GridOptionsProp = {
-    onSelectionChanged: params => action('onSelectionChanged')(params),
+    onSelectionChanged: params => action('onSelectionChanged', { depth: 1 })(params),
     onRowSelected: params => action('onRowSelected')(params),
   };
 
@@ -69,10 +69,10 @@ export const MultipleSelect = () => {
   };
 
   return (
-    <>
+    <React.Fragment>
       <p>Maintain CTRL or Command to select multiple rows</p>
       <XGrid rows={data.rows} columns={data.columns} options={options} />
-    </>
+    </React.Fragment>
   );
 };
 export const MultipleSelectWithCheckbox = () => {

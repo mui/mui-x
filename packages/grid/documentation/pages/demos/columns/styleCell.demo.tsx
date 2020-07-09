@@ -37,5 +37,12 @@ export default function StyleCellDemo() {
     },
   ];
 
-  return <XGrid rows={rows} columns={columns} options={{ hideFooter: true, autoHeight: true }} />;
+  return (
+    <XGrid
+      rows={rows}
+      columns={columns}
+      options={{ hideFooter: true, autoHeight: true }}
+      className={'demo'}
+    />
+  );
 }

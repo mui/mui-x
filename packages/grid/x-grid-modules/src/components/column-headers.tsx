@@ -38,7 +38,7 @@ export interface ColumnsHeaderProps {
 export const ColumnsHeader = memo(
   forwardRef<HTMLDivElement, ColumnsHeaderProps>(
     ({ columns, hasScrollX, headerHeight, onResizeColumn, renderCtx }, columnsHeaderRef) => {
-      const wrapperCssClasses = `material-col-cell-wrapper ${  hasScrollX ? 'scroll' : ''}`;
+      const wrapperCssClasses = `material-col-cell-wrapper ${hasScrollX ? 'scroll' : ''}`;
       const api = useContext(ApiContext);
 
       if (!api) {

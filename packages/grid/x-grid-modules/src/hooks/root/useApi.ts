@@ -15,8 +15,8 @@ import {
   ROW_SELECTED_EVENT,
   SELECTION_CHANGED_EVENT,
 } from '../../constants/eventsConstants';
-import { CellClickedParam, GridOptions, RowClickedParam , GridApiRef } from '../../models';
-import { GridApi } from '../../models/gridApi';
+import { CellClickedParam, GridOptions, RowClickedParam, GridApiRef } from '../../models';
+import { GridApi } from '../../models/api/gridApi';
 import {
   CELL_CSS_CLASS,
   HEADER_CELL_CSS_CLASS,
@@ -74,8 +74,12 @@ export const useApi = (
     emitEvent,
   ]);
 
-  const handleResizeStart = useCallback(() => (isResizingRef.current = true), [isResizingRef]);
-  const handleResizeStop = useCallback(() => (isResizingRef.current = false), [isResizingRef]);
+  const handleResizeStart = useCallback(() => {
+    isResizingRef.current = true;
+  }, [isResizingRef]);
+  const handleResizeStop = useCallback(() => {
+    isResizingRef.current = false;
+  }, [isResizingRef]);
 
   const onClickHandler = useCallback(
     (e: MouseEvent) => {
@@ -147,6 +151,7 @@ export const useApi = (
   const resize = useCallback(() => apiRef.current?.emit(RESIZE), [apiRef]);
   useApiMethod(apiRef, { registerEvent, onUnmount, onResize, resize }, 'CoreApi');
 
+  // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (gridRootRef && gridRootRef.current && isApiInitialised) {
       logger.debug('Binding events listeners');

@@ -4,7 +4,7 @@ import {
   HEADER_CELL_CSS_CLASS,
   ROOT_CSS_CLASS,
 } from '../constants/cssClassesConstants';
-import { CellIndexCoordinates } from '../models';
+import { CellIndexCoordinates } from '../models/rows';
 
 const DATA_ATTRIBUTE_PREFIX = 'data-';
 
@@ -13,7 +13,7 @@ export function isOverflown(element: Element): boolean {
 }
 
 export function findParentElementFromClassName(elem: Element, className: string): Element | null {
-  return elem.closest(`.${  className}`);
+  return elem.closest(`.${className}`);
 }
 
 export function isCell(elem: Element | null): boolean {

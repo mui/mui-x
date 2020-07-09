@@ -37,6 +37,7 @@ export const useColumnResize = (
     scrollOffset.current = params.left;
   }, []);
 
+  // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (apiRef && apiRef.current) {
       return apiRef.current.registerEvent(SCROLLING, onScrollHandler);
@@ -98,14 +99,14 @@ export const useColumnResize = (
         currentColDefRef.current.width = newWidth;
       }
       if (currentColElem.current) {
-        currentColElem.current.style.width = `${newWidth  }px`;
-        currentColElem.current.style.minWidth = `${newWidth  }px`;
-        currentColElem.current.style.maxWidth = `${newWidth  }px`;
+        currentColElem.current.style.width = `${newWidth}px`;
+        currentColElem.current.style.minWidth = `${newWidth}px`;
+        currentColElem.current.style.maxWidth = `${newWidth}px`;
       }
       if (dataContainerElemRef.current) {
         const diffWithPrev = newWidth - currentColPreviousWidth.current!;
-        dataContainerElemRef.current.style.minWidth =
-          `${dataContainerPreviousWidth.current! + diffWithPrev  }px`;
+        dataContainerElemRef.current.style.minWidth = `${dataContainerPreviousWidth.current! +
+          diffWithPrev}px`;
 
         if (isLastColumn.current && apiRef && apiRef.current) {
           apiRef.current.scroll({ left: dataContainerPreviousWidth.current! + diffWithPrev });
@@ -114,9 +115,9 @@ export const useColumnResize = (
       if (currentColCellsElems.current) {
         currentColCellsElems.current.forEach(el => {
           const div = el as HTMLDivElement;
-          div.style.width = `${newWidth  }px`;
-          div.style.minWidth = `${newWidth  }px`;
-          div.style.maxWidth = `${newWidth  }px`;
+          div.style.width = `${newWidth}px`;
+          div.style.minWidth = `${newWidth}px`;
+          div.style.maxWidth = `${newWidth}px`;
         });
       }
     },
@@ -143,8 +144,6 @@ export const useColumnResize = (
       mouseLeftTimeout.current = setTimeout(() => {
         stopResize();
       }, MOUSE_LEFT_TIMEOUT);
-
-      
     } else if (isResizing) {
       stopResize();
     }
@@ -165,20 +164,21 @@ export const useColumnResize = (
 
   // This a hack due to the limitation of react as I cannot put columnsRef in the dependency array of the effect adding the Event listener
   const columnsRefState = useStateRef(columnsRef);
+  // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (columnsRef && columnsRef.current) {
       logger.info('Adding resizing event listener');
-      const _columnsRefEvents = columnsRef.current;
+      const columnsRefEvents = columnsRef.current;
       columnsRef.current.addEventListener('mouseup', stopResize);
       columnsRef.current.addEventListener('mouseleave', handleMouseLeave);
       columnsRef.current.addEventListener('mouseenter', handleMouseEnter);
       columnsRef.current.addEventListener('mousemove', handleMouseMove);
 
       return () => {
-        _columnsRefEvents.removeEventListener('mouseup', stopResize);
-        _columnsRefEvents.removeEventListener('mouseleave', handleMouseLeave);
-        _columnsRefEvents.removeEventListener('mouseenter', handleMouseEnter);
-        _columnsRefEvents.removeEventListener('mousemove', handleMouseMove);
+        columnsRefEvents.removeEventListener('mouseup', stopResize);
+        columnsRefEvents.removeEventListener('mouseleave', handleMouseLeave);
+        columnsRefEvents.removeEventListener('mouseenter', handleMouseEnter);
+        columnsRefEvents.removeEventListener('mousemove', handleMouseMove);
       };
     }
   }, [
