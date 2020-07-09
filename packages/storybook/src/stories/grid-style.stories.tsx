@@ -186,7 +186,7 @@ export const ColumnCellRendererWithPadding = () => {
   cols[5].cellRenderer = params => <IsDone value={!!params.value} />;
 
   return (
-    <div className={'grid-container'} style={{ padding: '50px' }}>
+    <div className="grid-container" style={{ padding: 50 }}>
       <XGrid rows={rows} columns={cols} />
     </div>
   );
