@@ -154,6 +154,7 @@ export const useColumnResize = (
       if (isResizing.current) {
         const target = ev.currentTarget! as HTMLDivElement;
         const rect = target.getBoundingClientRect();
+
         resizingMouseMove.current = { x: ev.clientX - rect.left, y: ev.clientY - rect.top };
 
         const offsetLeft = !isLastColumn.current ? rect.left : scrollOffset.current * -1;
