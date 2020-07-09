@@ -8,7 +8,6 @@ import { action } from '@storybook/addon-actions';
 import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { useData } from '../hooks/useData';
-import mdx from './grid-options.mdx';
 
 export default {
   title: 'X-Grid Tests/Options',
@@ -16,9 +15,6 @@ export default {
   decorators: [withKnobs, withA11y],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
-    docs: {
-      page: mdx,
-    },
   },
 };
 
@@ -50,9 +46,10 @@ export const CustomLogger = () => {
   const logger = {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     debug: () => {},
-    info: (...args) => console.info('CUSTOM-LOGGING =>' + args[0], args.slice(1)),
-    warn: (...args) => console.warn('CUSTOM-LOGGING =>' + args[0], args.slice(1)),
-    error: (...args) => console.error('CUSTOM-LOGGING =>' + args[0], args.slice(1)),
+    // eslint-disable-next-line no-console
+    info: (...args) => console.info(`CUSTOM-LOGGING =>${args[0]}`, args.slice(1)),
+    warn: (...args) => console.warn(`CUSTOM-LOGGING =>${args[0]}`, args.slice(1)),
+    error: (...args) => console.error(`CUSTOM-LOGGING =>${args[0]}`, args.slice(1)),
   };
   return (
     <div className="grid-container">
@@ -177,7 +174,9 @@ export const PaginationApiTests = () => {
       unsubscribe = apiRef.current.onPageChanged(action('pageChanged'));
     }
     return () => {
-      unsubscribe && unsubscribe();
+      if (unsubscribe) {
+        unsubscribe();
+      }
     };
   }, [apiRef, data]);
 
@@ -195,53 +194,64 @@ export const PaginationApiTests = () => {
     apiRef.current!.setPageSize(105);
   };
   return (
-    <div className="grid-container">
-      <Button component={'button'} color={'primary'} variant={'outlined'} onClick={backToFirstPage}>
-        Back to first page
-      </Button>
-      <Button
-        component={'button'}
-        color={'primary'}
-        variant={'outlined'}
-        onClick={changePageSizeWithOptionProp}
-      >
-        Change pageSize with Options
-      </Button>
-      <Button
-        component={'button'}
-        color={'primary'}
-        variant={'outlined'}
-        onClick={changePageSizeWithApi}
-      >
-        Change pageSize with Api
-      </Button>
-      <Button
-        component={'button'}
-        color={'primary'}
-        variant={'outlined'}
-        onClick={() => setAutoSize(p => !p)}
-      >
-        toggle pageAutoSize
-      </Button>
-      <XGrid
-        rows={data.rows}
-        columns={data.columns}
-        apiRef={apiRef}
-        options={{
-          pagination: true,
-          paginationPageSize: myPageSize,
-          paginationAutoPageSize: autosize,
-          paginationComponent: paginationProps => (
-            <Pagination
-              className={'my-custom-pagination'}
-              page={paginationProps.page}
-              count={paginationProps.pageCount}
-              onChange={(e, value) => paginationProps.setPage(value)}
-            />
-          ),
-        }}
-      />
-    </div>
+    <React.Fragment>
+      <div>
+        <Button
+          component={'button'}
+          color={'primary'}
+          variant={'outlined'}
+          onClick={backToFirstPage}
+        >
+          Back to first page
+        </Button>
+        <Button
+          component={'button'}
+          color={'primary'}
+          variant={'outlined'}
+          onClick={changePageSizeWithOptionProp}
+        >
+          Change pageSize with Options
+        </Button>
+        <Button
+          component={'button'}
+          color={'primary'}
+          variant={'outlined'}
+          onClick={changePageSizeWithApi}
+        >
+          Change pageSize with Api
+        </Button>
+        <Button
+          component={'button'}
+          color={'primary'}
+          variant={'outlined'}
+          onClick={() => setAutoSize(p => !p)}
+        >
+          toggle pageAutoSize
+        </Button>
+      </div>
+      <div className="grid-container">
+        <XGrid
+          rows={data.rows}
+          columns={data.columns}
+          apiRef={apiRef}
+          options={{
+            pagination: true,
+            paginationPageSize: myPageSize,
+            paginationAutoPageSize: autosize,
+          }}
+          components={{
+            pagination: ({ paginationProps }) => (
+              <Pagination
+                className={'my-custom-pagination'}
+                page={paginationProps.page}
+                count={paginationProps.pageCount}
+                onChange={(e, value) => paginationProps.setPage(value)}
+              />
+            ),
+          }}
+        />
+      </div>
+    </React.Fragment>
   );
 };
 
@@ -250,7 +260,7 @@ export const AutoPagination = () => {
   const data = useData(2000, 200);
 
   return (
-    <>
+    <React.Fragment>
       <div>
         <Button
           component={'button'}
@@ -279,6 +289,6 @@ export const AutoPagination = () => {
           }}
         />
       </div>
-    </>
+    </React.Fragment>
   );
 };

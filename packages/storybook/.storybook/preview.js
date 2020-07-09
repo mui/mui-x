@@ -1,7 +1,6 @@
 import { LicenseInfo } from '@material-ui/x-grid';
 import { addParameters } from '@storybook/react';
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
-import { DocsPage, DocsContainer } from '@storybook/addon-docs/blocks';
 import { configureActions } from '@storybook/addon-actions';
 
 LicenseInfo.setLicenseKey(
@@ -19,14 +18,11 @@ addParameters({
      * display the top-level grouping as a "root" in the sidebar
      * @type {Boolean}
      */
+    isToolshown: true,
     showRoots: true,
     storySort: (a, b) => (a[1].kind === b[1].kind ? 0 : a[1].id.localeCompare(b[1].id, undefined, { numeric: true })),
   },
   viewport: {
     viewports: INITIAL_VIEWPORTS,
-  },
-  docs: {
-    container: DocsContainer,
-    page: DocsPage,
-  },
+  }
 });

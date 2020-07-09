@@ -23,9 +23,10 @@ export const ResizeSmallDataset = () => {
   const data = useData(5, 4);
 
   return (
-    <>
+    <React.Fragment>
       <div>
         <button
+          type="button"
           onClick={() => setSize(p => ({ width: p.height, height: p.width }))}
           style={{ padding: 5, textTransform: 'capitalize', margin: 10 }}
         >
@@ -35,7 +36,7 @@ export const ResizeSmallDataset = () => {
       <div style={{ width: size.width, height: size.height, display: 'flex' }}>
         <XGrid rows={data.rows} columns={data.columns} />
       </div>
-    </>
+    </React.Fragment>
   );
 };
 export const ResizeLargeDataset = () => {
@@ -43,9 +44,10 @@ export const ResizeLargeDataset = () => {
   const data = useData(200, 200);
 
   return (
-    <>
+    <React.Fragment>
       <div>
         <button
+          type="button"
           onClick={() => setSize(p => ({ width: p.height, height: p.width }))}
           style={{ padding: 5, textTransform: 'capitalize', margin: 10 }}
         >
@@ -55,6 +57,6 @@ export const ResizeLargeDataset = () => {
       <div style={{ width: size.width, height: size.height }}>
         <XGrid rows={data.rows} columns={data.columns} />
       </div>
-    </>
+    </React.Fragment>
   );
 };
