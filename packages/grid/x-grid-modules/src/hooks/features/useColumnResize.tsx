@@ -128,7 +128,7 @@ export const useColumnResize = (
     }
   }, []);
   const handleMouseLeave = useCallback((): void => {
-    console.log(`       LEFT = resizingMouseMove: ${JSON.stringify(resizingMouseMove.current) } `);
+    console.log(`       LEFT = resizingMouseMove: ${JSON.stringify(resizingMouseMove.current)} `);
 
     if (
       isLastColumn.current &&
@@ -157,7 +157,7 @@ export const useColumnResize = (
         const rect = ev.currentTarget.getBoundingClientRect();
         resizingMouseMove.current = { x: ev.clientX - rect.left, y: ev.clientY - rect.top };
 
-        const offsetLeft = !isLastColumn.current ? rect.left: scrollOffset.current * -1;
+        const offsetLeft = !isLastColumn.current ? rect.left : scrollOffset.current * -1;
 
         let newWidth = ev.clientX - offsetLeft - currentColPosition.current!;
         newWidth = newWidth > MIN_COL_WIDTH ? newWidth : MIN_COL_WIDTH;
