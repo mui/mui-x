@@ -152,7 +152,7 @@ export const useColumnResize = (
   }, [headerHeight, logger, stopResize, updateWidth]);
 
   const handleMouseMove = useCallback(
-    (ev: any): void => {
+    (event: React.MouseEvent<HTMLElement>): void => {
       if (isResizing.current) {
         const rect = ev.currentTarget.getBoundingClientRect();
         resizingMouseMove.current = { x: ev.clientX - rect.left, y: ev.clientY - rect.top };
