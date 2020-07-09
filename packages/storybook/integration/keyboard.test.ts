@@ -1,13 +1,16 @@
-import { activeCell, getStoryPage } from './helper-fn';
+import { activeCell, getStoryPage, startBrowser } from './helper-fn';
 
 describe('Keyboard Navigation', () => {
-  let page, browser;
+  let page;
+  let browser;
   const waitFnOptions = { timeout: 500 };
 
+  beforeAll(async done => {
+    browser = await startBrowser();
+    done();
+  });
   beforeEach(async done => {
-    const story = await getStoryPage('/story/x-grid-tests-columns--small-col-sizes', true);
-    page = story.page;
-    browser = story.browser;
+    page = await getStoryPage(browser, '/story/x-grid-tests-columns--small-col-sizes', true);
     await page.keyboard.press('Tab');
     await page.keyboard.press('Tab');
     await page.waitFor(100);
@@ -16,6 +19,10 @@ describe('Keyboard Navigation', () => {
 
   afterEach(async done => {
     await page.close();
+    done();
+  });
+
+  afterAll(async done => {
     await browser.close();
     done();
   });

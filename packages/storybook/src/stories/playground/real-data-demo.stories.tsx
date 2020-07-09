@@ -2,6 +2,7 @@ import * as React from 'react';
 import { withA11y } from '@storybook/addon-a11y';
 import { XGrid, GridOptionsProp, SortDirection } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
+// eslint-disable-next-line no-restricted-imports
 import '@material-ui/x-grid-data-generator/dist/demo-style.css';
 import { Button } from '@material-ui/core';
 import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';

@@ -31,8 +31,8 @@ export const ApiPreSelectedRows = () => {
   }, [data]);
 
   const loadData = async () => {
-    const data = await getData(50, 5);
-    setData(data);
+    const newData = await getData(50, 5);
+    setData(newData);
   };
 
   useEffect(() => {
@@ -68,12 +68,7 @@ export const MultipleSelect = () => {
     enableMultipleSelection: true,
   };
 
-  return (
-    <React.Fragment>
-      <p>Maintain CTRL or Command to select multiple rows</p>
-      <XGrid rows={data.rows} columns={data.columns} options={options} />
-    </React.Fragment>
-  );
+  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
 };
 export const MultipleSelectWithCheckbox = () => {
   const data = useData(200, 200);

@@ -11,7 +11,6 @@ if (!(__DEV__ || __PROD__)) {
 }
 console.log(`Loading config for ${env}`)
 
-
 module.exports = {
   stories: ['../src/**/*.stories.*'],
   addons: [

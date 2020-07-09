@@ -2,10 +2,13 @@ import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
-import { PricingModel, subscribeCurrencyPair } from '../data/streaming/pricing-service';
-import { currencyPairs } from '../data/currency-pairs';
-import { pricingColumns } from '../data/streaming/pricing-service';
 import { XGrid, ColDef, GridApi, GridOptionsProp } from '@material-ui/x-grid';
+import {
+  PricingModel,
+  subscribeCurrencyPair,
+  pricingColumns,
+} from '../data/streaming/pricing-service';
+import { currencyPairs } from '../data/currency-pairs';
 
 export interface PricingGridProps {
   min?: number;
@@ -35,8 +38,7 @@ export const PricingGrid: React.FC<PricingGridProps> = p => {
         }),
       );
 
-      for (let i = 0, len = currencyPairs.length; i < len; i++) {
-        console.log('subscribing to ', currencyPairs[i]);
+      for (let i = 0, len = currencyPairs.length; i < len; i += 1) {
         const data$ = subscribeCurrencyPair(currencyPairs[i], i, p.min, p.max);
         subscription.add(data$.pipe(takeUntil(cancel$)).subscribe(data => handleNewPrice(data)));
       }
@@ -45,9 +47,7 @@ export const PricingGrid: React.FC<PricingGridProps> = p => {
   };
 
   useEffect(() => {
-    // subscribeToStream();
     return () => {
-      console.log('Unmounting, cleaning subscriptions ');
       subscription.unsubscribe();
     };
   }, [stopButton]);
@@ -58,9 +58,10 @@ export const PricingGrid: React.FC<PricingGridProps> = p => {
     }
   };
   return (
-    <>
+    <React.Fragment>
       <div>
         <button
+          type="button"
           ref={stopButton}
           onClick={onStartStreamBtnClick}
           style={{ padding: 5, textTransform: 'capitalize', margin: 10 }}
@@ -71,6 +72,6 @@ export const PricingGrid: React.FC<PricingGridProps> = p => {
       <div style={{ width: 800, height: 600 }}>
         <XGrid rows={rows} columns={columns} apiRef={gridApiRef} {...p} />
       </div>
-    </>
+    </React.Fragment>
   );
 };

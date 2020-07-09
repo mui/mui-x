@@ -197,7 +197,7 @@ const IsDone: React.FC<{ value: boolean }> = ({ value }) =>
   value ? <DoneIcon fontSize={'small'} /> : <ClearIcon fontSize={'small'} />;
 
 export const StyledColumns = () => {
-  const columns: ColDef[] = [
+  const storyColumns: ColDef[] = [
     { field: 'id' },
     { field: 'firstName' },
     { field: 'lastName' },
@@ -244,7 +244,7 @@ export const StyledColumns = () => {
     },
   ];
 
-  const rows = [
+  const storyRows = [
     { id: 1, firstName: 'alice', age: 40 },
     {
       id: 2,
@@ -295,7 +295,7 @@ export const StyledColumns = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={rows} columns={columns} />
+      <XGrid rows={storyRows} columns={storyColumns} />
     </div>
   );
 };

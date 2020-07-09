@@ -67,18 +67,18 @@ const getRows = () => [
 
 export const HeadersClick = () => {
   return (
-    <>
+    <React.Fragment>
       <p>Click column headers to sort</p>
       <div className="grid-container">
         <XGrid rows={getRows()} columns={getColumns()} />
       </div>
-    </>
+    </React.Fragment>
   );
 };
 
 export const SortingOrderOverrideOption = () => {
   return (
-    <>
+    <React.Fragment>
       <p>Click column headers to sort</p>
       <div className="grid-container">
         <XGrid
@@ -87,7 +87,7 @@ export const SortingOrderOverrideOption = () => {
           options={{ sortingOrder: ['desc', 'asc'] }}
         />
       </div>
-    </>
+    </React.Fragment>
   );
 };
 
@@ -219,7 +219,7 @@ export const CustomComparator = () => {
     field: 'username',
     valueGetter: params =>
       `${params.getValue('name') || 'unknown'}_${params.getValue('age') || 'x'}`,
-    sortComparator: (v1, v2, row1, row2) => row1.data['age'] - row2.data['age'],
+    sortComparator: (v1, v2, row1, row2) => row1.data.age - row2.data.age,
     sortDirection: 'asc',
     width: 150,
   };
@@ -305,9 +305,9 @@ export const SortedEventsApi = () => {
     }
   }, [apiRef]);
 
-  //We had the ol so we can test it with image snapshots
+  // We had the ol so we can test it with image snapshots
   return (
-    <>
+    <React.Fragment>
       <div>
         <h1 style={{ fontSize: '16pt' }}>Triggered Events in order </h1>
         <ol>{...loggedEvents.map((evt, idx) => <li key={evt + idx}>{evt}</li>)}</ol>
@@ -315,6 +315,6 @@ export const SortedEventsApi = () => {
       <div className="grid-container">
         <XGrid rows={rows} columns={cols} apiRef={apiRef} />
       </div>
-    </>
+    </React.Fragment>
   );
 };
