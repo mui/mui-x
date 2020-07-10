@@ -10,6 +10,7 @@ if (!(__DEV__ || __PROD__)) {
   throw new Error(`Unknown env: ${env}.`)
 }
 console.log(`Loading config for ${env}`)
+const maxAssetSize = 1024 * 1024;
 
 module.exports = {
   stories: ['../src/**/*.stories.*', '../../grid/documentation/pages/*.mdx'],
@@ -53,6 +54,16 @@ module.exports = {
       ],
       enforce: 'pre',
     });
+    config.optimization = {
+      splitChunks: {
+        chunks: 'all',
+          minSize: 30 * 1024,
+          maxSize: maxAssetSize,
+      }
+    };
+    config.performance= {
+      maxAssetSize: maxAssetSize
+    };
 
     config.resolve.extensions.push('.ts', '.tsx');
     return config;
