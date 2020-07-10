@@ -13,7 +13,7 @@ console.log(`Loading config for ${env}`)
 const maxAssetSize = 1024 * 1024;
 
 module.exports = {
-  stories: ['../src/**/*.stories.*', '../../grid/documentation/pages/*.mdx'],
+  stories: ['../src/**/*.stories.*', '../../grid/documentation/pages/* yarn add core-js@2     .mdx'],
   addons: [
     '@storybook/addon-docs',
     '@storybook/addon-viewport/register',
@@ -32,7 +32,7 @@ module.exports = {
         }
       ],
     });
-    if(__DEV__) {
+    if (__DEV__) {
       config.module.rules.push({
         test: /\.tsx?|\.js$/,
         use: ['source-map-loader'],
@@ -47,7 +47,7 @@ module.exports = {
           loader: require.resolve('@storybook/source-loader'),
           options: {
             parser: 'typescript',
-            prettierConfig: { printWidth: 80, singleQuote: false },
+            prettierConfig: {printWidth: 80, singleQuote: false},
             tsconfigPath: path.resolve(__dirname, '../tsconfig.json'),
           },
         },
@@ -57,13 +57,18 @@ module.exports = {
     config.optimization = {
       splitChunks: {
         chunks: 'all',
-          minSize: 30 * 1024,
-          maxSize: maxAssetSize,
+        minSize: 30 * 1024,
+        maxSize: maxAssetSize,
       }
     };
-    config.performance= {
+    config.performance = {
       maxAssetSize: maxAssetSize
     };
+
+    config.resolve.alias['core-js/modules'] = path.resolve(
+      __dirname,
+      'node_modules/@storybook/core/node_modules/core-js/modules',
+    );
 
     config.resolve.extensions.push('.ts', '.tsx');
     return config;

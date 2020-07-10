@@ -12,7 +12,6 @@
     "@material-ui/x-grid": "^0.1.50",
     "@material-ui/x-grid-data-generator": "^0.1.49",
     "@material-ui/x-license": "^0.1.40",
-    "core-js": "^3.6.5",
     "faker": "^4.1.0",
     "react": "^16.13.1",
     "rxjs": "^6.5.5",
