@@ -180,3 +180,14 @@ export const ColumnCellRenderer = () => {
     </div>
   );
 };
+export const ColumnCellRendererWithPadding = () => {
+  const rows = useMemo(() => getRows(), []);
+  const cols = useMemo(() => getColumns(), []);
+  cols[5].cellRenderer = params => <IsDone value={!!params.value} />;
+
+  return (
+    <div className="grid-container" style={{ padding: 50 }}>
+      <XGrid rows={rows} columns={cols} />
+    </div>
+  );
+};
