@@ -1,16 +1,12 @@
 import { XGrid } from '@material-ui/x-grid';
 import QuickStartDemo from './demos/quick-start.demo';
 
-# Quick Start
+<Meta title="1. Docs/1. Getting Started" component={XGrid} />
 
-<Meta title="1. Docs/1. Quick Start" component={XGrid} />
+# Getting Started
 
-The official Material-UI Data Grid Component built in TypeScript.
-
-Have a look at our demo app ** [here](https://muix-preview.netlify.app/#/grid)**.
 
 ## Install
-
 Using your favourite package manager, install `@material-ui/x-grid` for the full featured enterprise grid, or `@material-ui/data-grid` for the free community version.
 
 ```sh
@@ -22,9 +18,11 @@ yarn add @material-ui/x-grid
 ```
 
 ## Dependencies
+Our grid is built on React, Styled-Components and Material-UI Core components.
+Nonetheless, we placed all this dependencies as peers to avoid package duplication, and its related issues.
+We leave you in control of our versions and promise to not tight you to old version of React or Styled Components.
 
-To avoid package duplication, and its related issues, we let you control our dependencies.
-Hence, X-Grid has the following peerDependencies.
+To summarise, X-Grid has the following peerDependencies.
 
 ```json
 "peerDependencies": {
@@ -44,9 +42,10 @@ npm install @material-ui/core react styled-components
 yarn add @material-ui/core react styled-components
 ```
 
-## Overview
+## Quick Start
 
-After installing the package, you are now ready to use the grid.
+If you have installed the component, you are now ready to build your first DataGrid.
+
 First you have to import the component as below.
 To avoid component clashing, we named our components **XGrid** and **DataGrid**.
 
@@ -54,30 +53,56 @@ To avoid component clashing, we named our components **XGrid** and **DataGrid**.
 import { XGrid } from '@material-ui/x-grid';
 ```
 
-Then you need to create some columns which are simple objects containing at least a field property.
-You can import `ColDef` to see all column properties.
+### Define Rows
+Rows are key value pair objects, mapping column names as keys with their values.
+You should also provide an id on each rows to allow delta updates and better performance. //Should Id be optional?
+
+Here is an example
+```tsx
+const rows: RowsProp = [
+  { id: 1, col1:'Hello', col2: 'World'},
+  { id: 2, col1:'XGrid', col2: 'Awesome'},
+  { id: 3, col1:'Material-UI', col2: 'Amazing'},
+  ...
+];
+```
+
+### Define Columns
+Comparable to Rows, Columns are objects defined with a set of attributes of the ColDef interface.
+They are mapped to Rows through their `field` property.
+*You can import `ColDef` to see all column properties.*
+
 A simple set of columns could be:
 
 ```tsx
 const columns: ColDef[] = [
-  { field: 'id', width: 80 },
-  { field: 'brand', headerName:  'Brand Name', width: 150 },
+  { field: 'id', hide: true },
+  { field: 'col1', headerName:  'Column 1', width: 150 },
+  { field: 'col2', headerName:  'Column 2', width: 150 },
   ...
 ];
 ```
+As mentioned above, we define our first column as `id`, with an `hide` attribute true to hide the column from the users. Therefore it can be used internally.
 
-Rows are key value pair objects.
+// Should we just always do that internally, in the component???
 
-```tsx
-const rows: RowsProp = [
-  { id: 1, brand:'Nike'},
-  { id: 2, brand:'Addidas'},
-  { id: 3, brand:'Puma'},
-  ...
-];
-```
+Id apart, the 2 columns defined, match the row block defined in the previous paragraph with the `field` attribute. It is the glue between Columns and Rows.
 
-The `options` properties let you apply different settings to the grid.
+### Basic config options
+
+The `options` properties let you apply different settings to the grid. The following can be set in the options property object of the component as below.
+
+`<XGrid rows={rows} columns={columns} options={{hideFooter: true}} />`
+
+`options` implement the `GridOptionsProp` interface. And some basic options include:
+- **autoHeight** set the grid height to follow the dataset height
+- **hideFooter** hide the container below the rows at the bottom of the component
+- **pagination** turn pagination on or off.
+- **checkboxSelection** will add an extra column with a checkbox that let you select rows by ticking the checkbox.
+- **enableMultipleColumnsSorting** turn column multiple sorting on or off
+- ...
+
+More options here...
 
 A complete example is below.
 
@@ -85,6 +110,7 @@ A complete example is below.
 
 **[Edit in Stackblitz](https://stackblitz.com/edit/x-grid-overview-demo)**
 
+//TODO move that somewhere??
 ### Component Properties
 
 - `columns`: An array of ColDef
@@ -94,4 +120,3 @@ A complete example is below.
 - `apiRef`: Optional. An object of type `GridApiRef` that can be instantiated using `gridApiRef()` that allows to manipulate the grid outside the component props.
 - `loading`: Optional. `boolean` that display the `LoadingOverlay` component when true;
 - `className`: Optional. String containing some css classes that will be applied to the grid container;
-
