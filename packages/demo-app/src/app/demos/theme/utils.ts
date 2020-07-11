@@ -37,7 +37,7 @@ export function getAppTheme(id: string, colors: ThemeColors, type: 'dark' | 'lig
   return {
     id,
     colors,
-    type: type,
+    type,
     primary: {
       light: colors.backgroundLight,
       main: colors.app,

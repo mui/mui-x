@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 // Hook
-//TODO use generic for return type;
+// TODO use generic for return type;
 export function useLocalStorage(key, initialValue) {
   // State to store our value
   // Pass initial state function to useState so logic is only executed once

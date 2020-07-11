@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { LicenseInfo, useLicenseVerifier } from '@material-ui/x-license';
 import { GridComponent, GridComponentProps } from '@material-ui/x-grid-modules';
 

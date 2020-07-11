@@ -20,7 +20,7 @@ export const SplitterDemo: React.FC<{}> = () => {
     setDirection(direction === 'horizontal' ? 'vertical' : 'horizontal');
 
   return (
-    <>
+    <React.Fragment>
       <AppBreadcrumbs name={'Splitter'} />
       <StyledPanels>
         <Panel title={'Settings'}>
@@ -78,6 +78,6 @@ export const SplitterDemo: React.FC<{}> = () => {
           </Splitter>
         </div>
       </div>
-    </>
+    </React.Fragment>
   );
 };
