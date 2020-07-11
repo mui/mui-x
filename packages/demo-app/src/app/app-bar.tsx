@@ -1,19 +1,18 @@
+import * as React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
-import * as React from 'react';
-import { useEffect, useState } from 'react';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import { createStyles, Link, Theme } from '@material-ui/core';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import Link from '@material-ui/core/Link';
 import Brightness7Icon from '@material-ui/icons/Brightness7';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
 import Tooltip from '@material-ui/core/Tooltip';
 import styled from 'styled-components';
 import GitHubIcon from '@material-ui/icons/GitHub';
-import { isIntroPage } from './utils';
 import { useLocation } from 'react-router-dom';
+import { isIntroPage } from './utils';
 
 const DemoAppBarStyled = styled(AppBar)`
   color: ${p => p.theme.colors.app};
@@ -61,22 +60,22 @@ export const DemoAppBar: React.FC<DemoAppBarProps> = ({
 }) => {
   const classes = useStyles();
   const location = useLocation();
-  const [hideTitle, setHideTitle] = useState(false);
+  const [hideTitle, setHideTitle] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const isIntro = isIntroPage();
     setHideTitle(isIntro);
   }, [location]);
 
   const titleEl: any = hideTitle ? null : (
-    <>
-      Material-UI<span className={'product-title'}>X</span>
-    </>
+    <React.Fragment>
+      Material-UI<span className="product-title">X</span>
+    </React.Fragment>
   );
 
   return (
-    <DemoAppBarStyled position="static" variant={'outlined'}>
-      <Toolbar className={'toolbar'}>
+    <DemoAppBarStyled position="static" variant="outlined">
+      <Toolbar className="toolbar">
         <IconButton
           onClick={onMenuButtonClick}
           onTouchStart={onMenuButtonClick}
@@ -87,13 +86,13 @@ export const DemoAppBar: React.FC<DemoAppBarProps> = ({
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h1" className={'title'}>
+        <Typography variant="h1" className="title">
           {titleEl}
         </Typography>
 
         <Link
-          href={'https://github.com/mui-org/material-ui-x'}
-          className={'github-button'}
+          href="https://github.com/mui-org/material-ui-x"
+          className="github-button"
           color="inherit"
         >
           <Tooltip title="GitHub repository">
@@ -102,7 +101,7 @@ export const DemoAppBar: React.FC<DemoAppBarProps> = ({
             </IconButton>
           </Tooltip>
         </Link>
-        <div className={'theme-button'} onClick={onThemeToggle}>
+        <div className="theme-button" onClick={onThemeToggle}>
           <Tooltip title="Toggle light/dark theme">
             <IconButton aria-label="Toggle Theme" color="inherit">
               {isDark ? <Brightness4Icon /> : <Brightness7Icon />}

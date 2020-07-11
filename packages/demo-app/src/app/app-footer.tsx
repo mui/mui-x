@@ -1,14 +1,11 @@
 import * as React from 'react';
-
 import Interpolate from '@trendmicro/react-interpolate';
-
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Divider from '@material-ui/core/Divider';
 import Link from '@material-ui/core/Link';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import { createStyles, Theme } from '@material-ui/core';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({

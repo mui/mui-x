@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { useCallback, useEffect, useState } from 'react';
-import { Checkbox } from '@material-ui/core';
+import Checkbox from '@material-ui/core/Checkbox';
 import styled from 'styled-components';
 import { SelectionChangedParams } from '../models/params/selectionChangedParams';
 import { ColParams } from '../models/params/colParams';
@@ -11,14 +10,14 @@ const CheckboxInputContainer = styled.div`
 `;
 
 export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api, colDef, colIndex }) => {
-  const [isChecked, setChecked] = useState(false);
-  const [isIndeterminate, setIndeterminate] = useState(false);
+  const [isChecked, setChecked] = React.useState(false);
+  const [isIndeterminate, setIndeterminate] = React.useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     setChecked(checked);
     api.selectRows(api.getAllRowIds(), checked);
   };
-  const selectionChanged = useCallback(
+  const selectionChanged = React.useCallback(
     (e: SelectionChangedParams) => {
       const isAllSelected = api.getAllRowIds().length === e.rows.length && e.rows.length > 0;
       const hasNoneSelected = e.rows.length === 0;
@@ -28,7 +27,7 @@ export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api, colDef, co
     [api, setIndeterminate, setChecked],
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     return api.onSelectionChanged(selectionChanged);
   }, [api, selectionChanged]);
   return (
