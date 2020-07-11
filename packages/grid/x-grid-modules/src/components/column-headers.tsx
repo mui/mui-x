@@ -42,7 +42,7 @@ export const ColumnsHeader = memo(
       const api = useContext(ApiContext);
 
       if (!api) {
-        throw new Error('ApiRef not found in context');
+        throw new Error('Material-UI: ApiRef was not found in context.');
       }
       const lastRenderedColIndexes = useRef({
         first: renderCtx?.firstColIdx,

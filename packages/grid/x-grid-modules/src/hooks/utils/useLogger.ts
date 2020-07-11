@@ -24,7 +24,7 @@ const getAppender = (name: string, logLevel: string, appender: Logger = console)
   const minLogLevelIdx = LOG_LEVELS.indexOf(logLevel);
 
   if (minLogLevelIdx === -1) {
-    throw new Error(`LogLevel ${logLevel} not recognised`);
+    throw new Error(`Material-UI: Log level ${logLevel} not recognized.`);
   }
 
   const logger = LOG_LEVELS.reduce((loggerObj, method, idx) => {
