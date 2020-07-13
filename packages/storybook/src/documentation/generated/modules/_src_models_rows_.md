@@ -6,66 +6,66 @@
 
 ### Interfaces
 
-* [CellIndexCoordinates](../interfaces/_src_models_rows_.cellindexcoordinates.md)
-* [ObjectWithId](../interfaces/_src_models_rows_.objectwithid.md)
-* [RowData](../interfaces/_src_models_rows_.rowdata.md)
-* [RowModel](../interfaces/_src_models_rows_.rowmodel.md)
+- [CellIndexCoordinates](../interfaces/_src_models_rows_.cellindexcoordinates.md)
+- [ObjectWithId](../interfaces/_src_models_rows_.objectwithid.md)
+- [RowData](../interfaces/_src_models_rows_.rowdata.md)
+- [RowModel](../interfaces/_src_models_rows_.rowmodel.md)
 
 ### Type aliases
 
-* [CellValue](_src_models_rows_.md#cellvalue)
-* [RowId](_src_models_rows_.md#rowid)
-* [Rows](_src_models_rows_.md#rows)
-* [RowsProp](_src_models_rows_.md#rowsprop)
+- [CellValue](_src_models_rows_.md#cellvalue)
+- [RowId](_src_models_rows_.md#rowid)
+- [Rows](_src_models_rows_.md#rows)
+- [RowsProp](_src_models_rows_.md#rowsprop)
 
 ### Functions
 
-* [createRow](_src_models_rows_.md#createrow)
+- [createRow](_src_models_rows_.md#createrow)
 
 ## Type aliases
 
-###  CellValue
+### CellValue
 
-Ƭ **CellValue**: *string | number | boolean | Date | null | undefined | object*
+Ƭ **CellValue**: _string | number | boolean | Date | null | undefined | object_
 
-*Defined in [packages/grid/x-grid-modules/src/models/rows.ts:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/rows.ts#L9)*
+_Defined in [packages/grid/x-grid-modules/src/models/rows.ts:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/rows.ts#L9)_
 
-___
+---
 
-###  RowId
+### RowId
 
-Ƭ **RowId**: *string | number*
+Ƭ **RowId**: _string | number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/rows.ts:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/rows.ts#L8)*
+_Defined in [packages/grid/x-grid-modules/src/models/rows.ts:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/rows.ts#L8)_
 
-___
+---
 
-###  Rows
+### Rows
 
-Ƭ **Rows**: *[RowModel](../interfaces/_src_models_rows_.rowmodel.md)[]*
+Ƭ **Rows**: _[RowModel](../interfaces/_src_models_rows_.rowmodel.md)[]_
 
-*Defined in [packages/grid/x-grid-modules/src/models/rows.ts:2](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/rows.ts#L2)*
+_Defined in [packages/grid/x-grid-modules/src/models/rows.ts:2](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/rows.ts#L2)_
 
-___
+---
 
-###  RowsProp
+### RowsProp
 
-Ƭ **RowsProp**: *[RowData](../interfaces/_src_models_rows_.rowdata.md)[]*
+Ƭ **RowsProp**: _[RowData](../interfaces/_src_models_rows_.rowdata.md)[]_
 
-*Defined in [packages/grid/x-grid-modules/src/models/rows.ts:1](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/rows.ts#L1)*
+_Defined in [packages/grid/x-grid-modules/src/models/rows.ts:1](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/rows.ts#L1)_
 
 ## Functions
 
-###  createRow
+### createRow
 
-▸ **createRow**(`r`: [RowData](../interfaces/_src_models_rows_.rowdata.md)): *[RowModel](../interfaces/_src_models_rows_.rowmodel.md)*
+▸ **createRow**(`r`: [RowData](../interfaces/_src_models_rows_.rowdata.md)): _[RowModel](../interfaces/_src_models_rows_.rowmodel.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/rows.ts:25](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/rows.ts#L25)*
+_Defined in [packages/grid/x-grid-modules/src/models/rows.ts:25](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/rows.ts#L25)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`r` | [RowData](../interfaces/_src_models_rows_.rowdata.md) |
+| Name | Type                                                  |
+| ---- | ----------------------------------------------------- |
+| `r`  | [RowData](../interfaces/_src_models_rows_.rowdata.md) |
 
-**Returns:** *[RowModel](../interfaces/_src_models_rows_.rowmodel.md)*
+**Returns:** _[RowModel](../interfaces/_src_models_rows_.rowmodel.md)_

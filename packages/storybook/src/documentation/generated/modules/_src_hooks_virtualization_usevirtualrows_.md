@@ -6,50 +6,50 @@
 
 ### Type aliases
 
-* [UseVirtualRowsReturnType](_src_hooks_virtualization_usevirtualrows_.md#usevirtualrowsreturntype)
+- [UseVirtualRowsReturnType](_src_hooks_virtualization_usevirtualrows_.md#usevirtualrowsreturntype)
 
 ### Variables
 
-* [SCROLL_EVENT](_src_hooks_virtualization_usevirtualrows_.md#const-scroll_event)
+- [SCROLL_EVENT](_src_hooks_virtualization_usevirtualrows_.md#const-scroll_event)
 
 ### Functions
 
-* [useVirtualRows](_src_hooks_virtualization_usevirtualrows_.md#const-usevirtualrows)
+- [useVirtualRows](_src_hooks_virtualization_usevirtualrows_.md#const-usevirtualrows)
 
 ## Type aliases
 
-###  UseVirtualRowsReturnType
+### UseVirtualRowsReturnType
 
-Ƭ **UseVirtualRowsReturnType**: *Partial‹[RenderContextProps](_src_models_rendercontextprops_.md#rendercontextprops)› | null*
+Ƭ **UseVirtualRowsReturnType**: _Partial‹[RenderContextProps](_src_models_rendercontextprops_.md#rendercontextprops)› | null_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/virtualization/useVirtualRows.ts:29](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/virtualization/useVirtualRows.ts#L29)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/virtualization/useVirtualRows.ts:29](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/virtualization/useVirtualRows.ts#L29)_
 
 ## Variables
 
 ### `Const` SCROLL_EVENT
 
-• **SCROLL_EVENT**: *"scroll"* = "scroll"
+• **SCROLL_EVENT**: _"scroll"_ = "scroll"
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/virtualization/useVirtualRows.ts:28](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/virtualization/useVirtualRows.ts#L28)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/virtualization/useVirtualRows.ts:28](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/virtualization/useVirtualRows.ts#L28)_
 
 ## Functions
 
 ### `Const` useVirtualRows
 
-▸ **useVirtualRows**(`colRef`: MutableRefObject‹HTMLDivElement | null›, `windowRef`: MutableRefObject‹HTMLDivElement | null›, `renderingZoneRef`: MutableRefObject‹HTMLDivElement | null›, `internalColumns`: [InternalColumns](../interfaces/_src_models_coldef_coldef_.internalcolumns.md), `rows`: [Rows](_src_models_rows_.md#rows), `options`: [GridOptions](../interfaces/_src_models_gridoptions_.gridoptions.md), `apiRef`: [GridApiRef](_src_models_gridapiref_.md#gridapiref)): *[UseVirtualRowsReturnType](_src_hooks_virtualization_usevirtualrows_.md#usevirtualrowsreturntype)*
+▸ **useVirtualRows**(`colRef`: MutableRefObject‹HTMLDivElement | null›, `windowRef`: MutableRefObject‹HTMLDivElement | null›, `renderingZoneRef`: MutableRefObject‹HTMLDivElement | null›, `internalColumns`: [InternalColumns](../interfaces/_src_models_coldef_coldef_.internalcolumns.md), `rows`: [Rows](_src_models_rows_.md#rows), `options`: [GridOptions](../interfaces/_src_models_gridoptions_.gridoptions.md), `apiRef`: [GridApiRef](_src_models_gridapiref_.md#gridapiref)): _[UseVirtualRowsReturnType](_src_hooks_virtualization_usevirtualrows_.md#usevirtualrowsreturntype)_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/virtualization/useVirtualRows.ts:31](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/virtualization/useVirtualRows.ts#L31)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/virtualization/useVirtualRows.ts:31](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/virtualization/useVirtualRows.ts#L31)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`colRef` | MutableRefObject‹HTMLDivElement &#124; null› |
-`windowRef` | MutableRefObject‹HTMLDivElement &#124; null› |
-`renderingZoneRef` | MutableRefObject‹HTMLDivElement &#124; null› |
-`internalColumns` | [InternalColumns](../interfaces/_src_models_coldef_coldef_.internalcolumns.md) |
-`rows` | [Rows](_src_models_rows_.md#rows) |
-`options` | [GridOptions](../interfaces/_src_models_gridoptions_.gridoptions.md) |
-`apiRef` | [GridApiRef](_src_models_gridapiref_.md#gridapiref) |
+| Name               | Type                                                                           |
+| ------------------ | ------------------------------------------------------------------------------ |
+| `colRef`           | MutableRefObject‹HTMLDivElement &#124; null›                                   |
+| `windowRef`        | MutableRefObject‹HTMLDivElement &#124; null›                                   |
+| `renderingZoneRef` | MutableRefObject‹HTMLDivElement &#124; null›                                   |
+| `internalColumns`  | [InternalColumns](../interfaces/_src_models_coldef_coldef_.internalcolumns.md) |
+| `rows`             | [Rows](_src_models_rows_.md#rows)                                              |
+| `options`          | [GridOptions](../interfaces/_src_models_gridoptions_.gridoptions.md)           |
+| `apiRef`           | [GridApiRef](_src_models_gridapiref_.md#gridapiref)                            |
 
-**Returns:** *[UseVirtualRowsReturnType](_src_hooks_virtualization_usevirtualrows_.md#usevirtualrowsreturntype)*
+**Returns:** _[UseVirtualRowsReturnType](_src_hooks_virtualization_usevirtualrows_.md#usevirtualrowsreturntype)_

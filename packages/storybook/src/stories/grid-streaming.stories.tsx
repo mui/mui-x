@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { action } from '@storybook/addon-actions';
-import { GridOptionsProp, XGrid , gridApiRef} from '@material-ui/x-grid';
+import { GridOptionsProp, XGrid, gridApiRef } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
-import {interval} from "rxjs";
-import {useEffect} from "react";
-import {map} from "rxjs/operators";
-import {randomInt, randomUserName} from "@material-ui/x-grid-data-generator";
+import { interval } from 'rxjs';
+import { useEffect } from 'react';
+import { map } from 'rxjs/operators';
+import { randomInt, randomUserName } from '@material-ui/x-grid-data-generator';
 import { FeedGrid } from '../components/feed-grid';
 import { PricingGrid } from '../components/pricing-grid';
 
@@ -68,22 +68,22 @@ export const SingleSubscriptionFast = () => {
   );
 };
 
-export const SimpleRxUpdate = ()=> {
+export const SimpleRxUpdate = () => {
   const api = gridApiRef();
-  const columns = [ {field: 'id'}, { field: 'username', width: 150 }, {field: 'age', width: 80 }];
+  const columns = [{ field: 'id' }, { field: 'username', width: 150 }, { field: 'age', width: 80 }];
 
   useEffect(() => {
-    const subscription = interval(100).subscribe(obs=>
-        api.current?.updateRowData([
-          {id: 1, username:  randomUserName(), age: randomInt(10, 80) },
-          {id: 2, username:  randomUserName(), age: randomInt(10, 80)  },
-          {id: 3, username:  randomUserName(), age: randomInt(10, 80)  },
-          {id: 4, username:  randomUserName(), age: randomInt(10, 80)  },
-        ])
+    const subscription = interval(100).subscribe(obs =>
+      api.current?.updateRowData([
+        { id: 1, username: randomUserName(), age: randomInt(10, 80) },
+        { id: 2, username: randomUserName(), age: randomInt(10, 80) },
+        { id: 3, username: randomUserName(), age: randomInt(10, 80) },
+        { id: 4, username: randomUserName(), age: randomInt(10, 80) },
+      ]),
     );
 
-    return ()=> subscription.unsubscribe();
+    return () => subscription.unsubscribe();
   }, [api]);
 
-  return <XGrid rows={[]} columns={columns} apiRef={api} options={{autoHeight: true}}/>
-}
+  return <XGrid rows={[]} columns={columns} apiRef={api} options={{ autoHeight: true }} />;
+};

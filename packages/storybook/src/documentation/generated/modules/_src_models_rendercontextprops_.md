@@ -6,18 +6,18 @@
 
 ### Interfaces
 
-* [RenderColumnsProps](../interfaces/_src_models_rendercontextprops_.rendercolumnsprops.md)
-* [RenderPaginationProps](../interfaces/_src_models_rendercontextprops_.renderpaginationprops.md)
-* [RenderRowProps](../interfaces/_src_models_rendercontextprops_.renderrowprops.md)
+- [RenderColumnsProps](../interfaces/_src_models_rendercontextprops_.rendercolumnsprops.md)
+- [RenderPaginationProps](../interfaces/_src_models_rendercontextprops_.renderpaginationprops.md)
+- [RenderRowProps](../interfaces/_src_models_rendercontextprops_.renderrowprops.md)
 
 ### Type aliases
 
-* [RenderContextProps](_src_models_rendercontextprops_.md#rendercontextprops)
+- [RenderContextProps](_src_models_rendercontextprops_.md#rendercontextprops)
 
 ## Type aliases
 
-###  RenderContextProps
+### RenderContextProps
 
-Ƭ **RenderContextProps**: *[ContainerProps](../interfaces/_src_models_containerprops_.containerprops.md) & [RenderColumnsProps](../interfaces/_src_models_rendercontextprops_.rendercolumnsprops.md) & [RenderRowProps](../interfaces/_src_models_rendercontextprops_.renderrowprops.md) & [RenderPaginationProps](../interfaces/_src_models_rendercontextprops_.renderpaginationprops.md)*
+Ƭ **RenderContextProps**: _[ContainerProps](../interfaces/_src_models_containerprops_.containerprops.md) & [RenderColumnsProps](../interfaces/_src_models_rendercontextprops_.rendercolumnsprops.md) & [RenderRowProps](../interfaces/_src_models_rendercontextprops_.renderrowprops.md) & [RenderPaginationProps](../interfaces/_src_models_rendercontextprops_.renderpaginationprops.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/renderContextProps.ts:21](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/renderContextProps.ts#L21)*
+_Defined in [packages/grid/x-grid-modules/src/models/renderContextProps.ts:21](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/renderContextProps.ts#L21)_

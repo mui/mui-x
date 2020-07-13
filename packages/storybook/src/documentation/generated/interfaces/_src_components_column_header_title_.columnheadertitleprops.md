@@ -4,36 +4,36 @@
 
 ## Hierarchy
 
-* **ColumnHeaderTitleProps**
+- **ColumnHeaderTitleProps**
 
 ## Index
 
 ### Properties
 
-* [columnWidth](_src_components_column_header_title_.columnheadertitleprops.md#columnwidth)
-* [description](_src_components_column_header_title_.columnheadertitleprops.md#optional-description)
-* [label](_src_components_column_header_title_.columnheadertitleprops.md#label)
+- [columnWidth](_src_components_column_header_title_.columnheadertitleprops.md#columnwidth)
+- [description](_src_components_column_header_title_.columnheadertitleprops.md#optional-description)
+- [label](_src_components_column_header_title_.columnheadertitleprops.md#label)
 
 ## Properties
 
-###  columnWidth
+### columnWidth
 
-• **columnWidth**: *number*
+• **columnWidth**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/components/column-header-title.tsx:19](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-title.tsx#L19)*
+_Defined in [packages/grid/x-grid-modules/src/components/column-header-title.tsx:19](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-title.tsx#L19)_
 
-___
+---
 
 ### `Optional` description
 
-• **description**? : *undefined | string*
+• **description**? : _undefined | string_
 
-*Defined in [packages/grid/x-grid-modules/src/components/column-header-title.tsx:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-title.tsx#L20)*
+_Defined in [packages/grid/x-grid-modules/src/components/column-header-title.tsx:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-title.tsx#L20)_
 
-___
+---
 
-###  label
+### label
 
-• **label**: *string*
+• **label**: _string_
 
-*Defined in [packages/grid/x-grid-modules/src/components/column-header-title.tsx:18](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-title.tsx#L18)*
+_Defined in [packages/grid/x-grid-modules/src/components/column-header-title.tsx:18](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-title.tsx#L18)_

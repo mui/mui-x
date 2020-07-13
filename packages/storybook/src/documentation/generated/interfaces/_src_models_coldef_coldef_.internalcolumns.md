@@ -4,63 +4,63 @@
 
 ## Hierarchy
 
-* **InternalColumns**
+- **InternalColumns**
 
 ## Index
 
 ### Properties
 
-* [all](_src_models_coldef_coldef_.internalcolumns.md#all)
-* [hasColumns](_src_models_coldef_coldef_.internalcolumns.md#hascolumns)
-* [hasVisibleColumns](_src_models_coldef_coldef_.internalcolumns.md#hasvisiblecolumns)
-* [lookup](_src_models_coldef_coldef_.internalcolumns.md#lookup)
-* [meta](_src_models_coldef_coldef_.internalcolumns.md#meta)
-* [visible](_src_models_coldef_coldef_.internalcolumns.md#visible)
+- [all](_src_models_coldef_coldef_.internalcolumns.md#all)
+- [hasColumns](_src_models_coldef_coldef_.internalcolumns.md#hascolumns)
+- [hasVisibleColumns](_src_models_coldef_coldef_.internalcolumns.md#hasvisiblecolumns)
+- [lookup](_src_models_coldef_coldef_.internalcolumns.md#lookup)
+- [meta](_src_models_coldef_coldef_.internalcolumns.md#meta)
+- [visible](_src_models_coldef_coldef_.internalcolumns.md#visible)
 
 ## Properties
 
-###  all
+### all
 
-• **all**: *[Columns](../modules/_src_models_coldef_coldef_.md#columns)*
+• **all**: _[Columns](../modules/_src_models_coldef_coldef_.md#columns)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:64](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L64)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:64](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L64)_
 
-___
+---
 
-###  hasColumns
+### hasColumns
 
-• **hasColumns**: *boolean*
+• **hasColumns**: _boolean_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:67](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L67)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:67](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L67)_
 
-___
+---
 
-###  hasVisibleColumns
+### hasVisibleColumns
 
-• **hasVisibleColumns**: *boolean*
+• **hasVisibleColumns**: _boolean_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:68](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L68)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:68](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L68)_
 
-___
+---
 
-###  lookup
+### lookup
 
-• **lookup**: *[ColumnLookup](../modules/_src_models_coldef_coldef_.md#columnlookup)*
+• **lookup**: _[ColumnLookup](../modules/_src_models_coldef_coldef_.md#columnlookup)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:69](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L69)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:69](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L69)_
 
-___
+---
 
-###  meta
+### meta
 
-• **meta**: *[ColumnsMeta](_src_models_coldef_coldef_.columnsmeta.md)*
+• **meta**: _[ColumnsMeta](_src_models_coldef_coldef_.columnsmeta.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:66](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L66)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:66](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L66)_
 
-___
+---
 
-###  visible
+### visible
 
-• **visible**: *[Columns](../modules/_src_models_coldef_coldef_.md#columns)*
+• **visible**: _[Columns](../modules/_src_models_coldef_coldef_.md#columns)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:65](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L65)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:65](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L65)_

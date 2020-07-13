@@ -4,27 +4,27 @@
 
 ## Hierarchy
 
-* **RenderPaginationProps**
+- **RenderPaginationProps**
 
 ## Index
 
 ### Properties
 
-* [paginationCurrentPage](_src_models_rendercontextprops_.renderpaginationprops.md#optional-paginationcurrentpage)
-* [paginationPageSize](_src_models_rendercontextprops_.renderpaginationprops.md#optional-paginationpagesize)
+- [paginationCurrentPage](_src_models_rendercontextprops_.renderpaginationprops.md#optional-paginationcurrentpage)
+- [paginationPageSize](_src_models_rendercontextprops_.renderpaginationprops.md#optional-paginationpagesize)
 
 ## Properties
 
 ### `Optional` paginationCurrentPage
 
-• **paginationCurrentPage**? : *undefined | number*
+• **paginationCurrentPage**? : _undefined | number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/renderContextProps.ts:17](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/renderContextProps.ts#L17)*
+_Defined in [packages/grid/x-grid-modules/src/models/renderContextProps.ts:17](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/renderContextProps.ts#L17)_
 
-___
+---
 
 ### `Optional` paginationPageSize
 
-• **paginationPageSize**? : *undefined | number*
+• **paginationPageSize**? : _undefined | number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/renderContextProps.ts:18](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/renderContextProps.ts#L18)*
+_Defined in [packages/grid/x-grid-modules/src/models/renderContextProps.ts:18](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/renderContextProps.ts#L18)_

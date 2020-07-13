@@ -4,36 +4,36 @@
 
 ## Hierarchy
 
-* **RowModel**
+- **RowModel**
 
 ## Index
 
 ### Properties
 
-* [data](_src_models_rows_.rowmodel.md#data)
-* [id](_src_models_rows_.rowmodel.md#id)
-* [selected](_src_models_rows_.rowmodel.md#selected)
+- [data](_src_models_rows_.rowmodel.md#data)
+- [id](_src_models_rows_.rowmodel.md#id)
+- [selected](_src_models_rows_.rowmodel.md#selected)
 
 ## Properties
 
-###  data
+### data
 
-• **data**: *[RowData](_src_models_rows_.rowdata.md)*
+• **data**: _[RowData](_src_models_rows_.rowdata.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/rows.ts:21](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/rows.ts#L21)*
+_Defined in [packages/grid/x-grid-modules/src/models/rows.ts:21](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/rows.ts#L21)_
 
-___
+---
 
-###  id
+### id
 
-• **id**: *[RowId](../modules/_src_models_rows_.md#rowid)*
+• **id**: _[RowId](../modules/_src_models_rows_.md#rowid)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/rows.ts:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/rows.ts#L20)*
+_Defined in [packages/grid/x-grid-modules/src/models/rows.ts:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/rows.ts#L20)_
 
-___
+---
 
-###  selected
+### selected
 
-• **selected**: *boolean*
+• **selected**: _boolean_
 
-*Defined in [packages/grid/x-grid-modules/src/models/rows.ts:22](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/rows.ts#L22)*
+_Defined in [packages/grid/x-grid-modules/src/models/rows.ts:22](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/rows.ts#L22)_

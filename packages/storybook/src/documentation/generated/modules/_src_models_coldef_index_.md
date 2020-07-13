@@ -6,171 +6,171 @@
 
 ### References
 
-* [Alignement](_src_models_coldef_index_.md#alignement)
-* [CellClassFn](_src_models_coldef_index_.md#cellclassfn)
-* [CellClassParams](_src_models_coldef_index_.md#cellclassparams)
-* [CellClassPropType](_src_models_coldef_index_.md#cellclassproptype)
-* [CellClassRules](_src_models_coldef_index_.md#cellclassrules)
-* [CellParams](_src_models_coldef_index_.md#cellparams)
-* [ColDef](_src_models_coldef_index_.md#coldef)
-* [ColParams](_src_models_coldef_index_.md#colparams)
-* [ColType](_src_models_coldef_index_.md#coltype)
-* [ColTypeDef](_src_models_coldef_index_.md#coltypedef)
-* [ColumnLookup](_src_models_coldef_index_.md#columnlookup)
-* [Columns](_src_models_coldef_index_.md#columns)
-* [ColumnsMeta](_src_models_coldef_index_.md#columnsmeta)
-* [DATETIME_COL_DEF](_src_models_coldef_index_.md#datetime_col_def)
-* [DATE_COL_DEF](_src_models_coldef_index_.md#date_col_def)
-* [InternalColumns](_src_models_coldef_index_.md#internalcolumns)
-* [NUMERIC_COL_DEF](_src_models_coldef_index_.md#numeric_col_def)
-* [STRING_COL_DEF](_src_models_coldef_index_.md#string_col_def)
-* [ValueFormatterParams](_src_models_coldef_index_.md#valueformatterparams)
-* [ValueGetterParams](_src_models_coldef_index_.md#valuegetterparams)
-* [checkboxSelectionColDef](_src_models_coldef_index_.md#checkboxselectioncoldef)
-* [dateFormatter](_src_models_coldef_index_.md#dateformatter)
-* [dateTimeFormatter](_src_models_coldef_index_.md#datetimeformatter)
-* [getColDef](_src_models_coldef_index_.md#getcoldef)
+- [Alignement](_src_models_coldef_index_.md#alignement)
+- [CellClassFn](_src_models_coldef_index_.md#cellclassfn)
+- [CellClassParams](_src_models_coldef_index_.md#cellclassparams)
+- [CellClassPropType](_src_models_coldef_index_.md#cellclassproptype)
+- [CellClassRules](_src_models_coldef_index_.md#cellclassrules)
+- [CellParams](_src_models_coldef_index_.md#cellparams)
+- [ColDef](_src_models_coldef_index_.md#coldef)
+- [ColParams](_src_models_coldef_index_.md#colparams)
+- [ColType](_src_models_coldef_index_.md#coltype)
+- [ColTypeDef](_src_models_coldef_index_.md#coltypedef)
+- [ColumnLookup](_src_models_coldef_index_.md#columnlookup)
+- [Columns](_src_models_coldef_index_.md#columns)
+- [ColumnsMeta](_src_models_coldef_index_.md#columnsmeta)
+- [DATETIME_COL_DEF](_src_models_coldef_index_.md#datetime_col_def)
+- [DATE_COL_DEF](_src_models_coldef_index_.md#date_col_def)
+- [InternalColumns](_src_models_coldef_index_.md#internalcolumns)
+- [NUMERIC_COL_DEF](_src_models_coldef_index_.md#numeric_col_def)
+- [STRING_COL_DEF](_src_models_coldef_index_.md#string_col_def)
+- [ValueFormatterParams](_src_models_coldef_index_.md#valueformatterparams)
+- [ValueGetterParams](_src_models_coldef_index_.md#valuegetterparams)
+- [checkboxSelectionColDef](_src_models_coldef_index_.md#checkboxselectioncoldef)
+- [dateFormatter](_src_models_coldef_index_.md#dateformatter)
+- [dateTimeFormatter](_src_models_coldef_index_.md#datetimeformatter)
+- [getColDef](_src_models_coldef_index_.md#getcoldef)
 
 ## References
 
-###  Alignement
+### Alignement
 
 • **Alignement**:
 
-___
+---
 
-###  CellClassFn
+### CellClassFn
 
 • **CellClassFn**:
 
-___
+---
 
-###  CellClassParams
+### CellClassParams
 
 • **CellClassParams**:
 
-___
+---
 
-###  CellClassPropType
+### CellClassPropType
 
 • **CellClassPropType**:
 
-___
+---
 
-###  CellClassRules
+### CellClassRules
 
 • **CellClassRules**:
 
-___
+---
 
-###  CellParams
+### CellParams
 
 • **CellParams**:
 
-___
+---
 
-###  ColDef
+### ColDef
 
 • **ColDef**:
 
-___
+---
 
-###  ColParams
+### ColParams
 
 • **ColParams**:
 
-___
+---
 
-###  ColType
+### ColType
 
 • **ColType**:
 
-___
+---
 
-###  ColTypeDef
+### ColTypeDef
 
 • **ColTypeDef**:
 
-___
+---
 
-###  ColumnLookup
+### ColumnLookup
 
 • **ColumnLookup**:
 
-___
+---
 
-###  Columns
+### Columns
 
 • **Columns**:
 
-___
+---
 
-###  ColumnsMeta
+### ColumnsMeta
 
 • **ColumnsMeta**:
 
-___
+---
 
-###  DATETIME_COL_DEF
+### DATETIME_COL_DEF
 
 • **DATETIME_COL_DEF**:
 
-___
+---
 
-###  DATE_COL_DEF
+### DATE_COL_DEF
 
 • **DATE_COL_DEF**:
 
-___
+---
 
-###  InternalColumns
+### InternalColumns
 
 • **InternalColumns**:
 
-___
+---
 
-###  NUMERIC_COL_DEF
+### NUMERIC_COL_DEF
 
 • **NUMERIC_COL_DEF**:
 
-___
+---
 
-###  STRING_COL_DEF
+### STRING_COL_DEF
 
 • **STRING_COL_DEF**:
 
-___
+---
 
-###  ValueFormatterParams
+### ValueFormatterParams
 
 • **ValueFormatterParams**:
 
-___
+---
 
-###  ValueGetterParams
+### ValueGetterParams
 
 • **ValueGetterParams**:
 
-___
+---
 
-###  checkboxSelectionColDef
+### checkboxSelectionColDef
 
 • **checkboxSelectionColDef**:
 
-___
+---
 
-###  dateFormatter
+### dateFormatter
 
 • **dateFormatter**:
 
-___
+---
 
-###  dateTimeFormatter
+### dateTimeFormatter
 
 • **dateTimeFormatter**:
 
-___
+---
 
-###  getColDef
+### getColDef
 
 • **getColDef**:

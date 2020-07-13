@@ -6,31 +6,31 @@
 
 ### Interfaces
 
-* [PaginationComponentProps](../interfaces/_src_components_pagination_.paginationcomponentprops.md)
+- [PaginationComponentProps](../interfaces/_src_components_pagination_.paginationcomponentprops.md)
 
 ### Functions
 
-* [Pagination](_src_components_pagination_.md#const-pagination)
+- [Pagination](_src_components_pagination_.md#const-pagination)
 
 ## Functions
 
 ### `Const` Pagination
 
-▸ **Pagination**(`__namedParameters`: object): *Element‹›*
+▸ **Pagination**(`__namedParameters`: object): _Element‹›_
 
-*Defined in [packages/grid/x-grid-modules/src/components/pagination.tsx:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/pagination.tsx#L15)*
+_Defined in [packages/grid/x-grid-modules/src/components/pagination.tsx:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/pagination.tsx#L15)_
 
 **Parameters:**
 
-▪ **__namedParameters**: *object*
+▪ **\_\_namedParameters**: _object_
 
-Name | Type |
------- | ------ |
-`currentPage` | number |
-`pageSize` | number |
-`rowCount` | number |
-`rowsPerPageOptions` | undefined &#124; number[] |
-`setPage` | function |
-`setPageSize` | function |
+| Name                 | Type                      |
+| -------------------- | ------------------------- |
+| `currentPage`        | number                    |
+| `pageSize`           | number                    |
+| `rowCount`           | number                    |
+| `rowsPerPageOptions` | undefined &#124; number[] |
+| `setPage`            | function                  |
+| `setPageSize`        | function                  |
 
-**Returns:** *Element‹›*
+**Returns:** _Element‹›_

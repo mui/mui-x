@@ -6,32 +6,32 @@
 
 ### Interfaces
 
-* [ViewportProps](../interfaces/_src_components_viewport_.viewportprops.md)
+- [ViewportProps](../interfaces/_src_components_viewport_.viewportprops.md)
 
 ### Type aliases
 
-* [ViewportType](_src_components_viewport_.md#viewporttype)
+- [ViewportType](_src_components_viewport_.md#viewporttype)
 
 ### Variables
 
-* [Viewport](_src_components_viewport_.md#const-viewport)
+- [Viewport](_src_components_viewport_.md#const-viewport)
 
 ## Type aliases
 
-###  ViewportType
+### ViewportType
 
-Ƭ **ViewportType**: *ForwardRefExoticComponent‹[ViewportProps](../interfaces/_src_components_viewport_.viewportprops.md) & RefAttributes‹HTMLDivElement››*
+Ƭ **ViewportType**: _ForwardRefExoticComponent‹[ViewportProps](../interfaces/_src_components_viewport_.viewportprops.md) & RefAttributes‹HTMLDivElement››_
 
-*Defined in [packages/grid/x-grid-modules/src/components/viewport.tsx:19](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/viewport.tsx#L19)*
+_Defined in [packages/grid/x-grid-modules/src/components/viewport.tsx:19](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/viewport.tsx#L19)_
 
 ## Variables
 
 ### `Const` Viewport
 
-• **Viewport**: *[ViewportType](_src_components_viewport_.md#viewporttype)* = React.forwardRef<HTMLDivElement, ViewportProps>(
-  ({ options, rows, visibleColumns, children }, renderingZoneRef) => {
-    const logger = useLogger('Viewport');
-    const renderCtx = useContext(RenderContext) as RenderContextProps;
+• **Viewport**: _[ViewportType](_src_components_viewport_.md#viewporttype)_ = React.forwardRef<HTMLDivElement, ViewportProps>(
+({ options, rows, visibleColumns, children }, renderingZoneRef) => {
+const logger = useLogger('Viewport');
+const renderCtx = useContext(RenderContext) as RenderContextProps;
 
     const getRowsElements = () => {
       const renderedRows = rows.slice(renderCtx.firstRowIdx, renderCtx.lastRowIdx!);
@@ -69,7 +69,8 @@
         </RenderingZone>
       </StickyContainer>
     );
-  },
+
+},
 )
 
-*Defined in [packages/grid/x-grid-modules/src/components/viewport.tsx:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/viewport.tsx#L20)*
+_Defined in [packages/grid/x-grid-modules/src/components/viewport.tsx:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/viewport.tsx#L20)_

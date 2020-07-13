@@ -6,20 +6,20 @@
 
 ### Functions
 
-* [classnames](_src_utils_classnames_.md#const-classnames)
+- [classnames](_src_utils_classnames_.md#const-classnames)
 
 ## Functions
 
 ### `Const` classnames
 
-▸ **classnames**(...`args`: any[]): *string*
+▸ **classnames**(...`args`: any[]): _string_
 
-*Defined in [packages/grid/x-grid-modules/src/utils/classnames.ts:3](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/classnames.ts#L3)*
+_Defined in [packages/grid/x-grid-modules/src/utils/classnames.ts:3](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/classnames.ts#L3)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`...args` | any[] |
+| Name      | Type  |
+| --------- | ----- |
+| `...args` | any[] |
 
-**Returns:** *string*
+**Returns:** _string_

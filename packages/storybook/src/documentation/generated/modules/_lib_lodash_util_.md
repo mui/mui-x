@@ -6,24 +6,24 @@
 
 ### References
 
-* [default](_lib_lodash_util_.md#default)
-* [stubArray](_lib_lodash_util_.md#stubarray)
-* [stubFalse](_lib_lodash_util_.md#stubfalse)
+- [default](_lib_lodash_util_.md#default)
+- [stubArray](_lib_lodash_util_.md#stubarray)
+- [stubFalse](_lib_lodash_util_.md#stubfalse)
 
 ## References
 
-###  default
+### default
 
 • **default**:
 
-___
+---
 
-###  stubArray
+### stubArray
 
 • **stubArray**:
 
-___
+---
 
-###  stubFalse
+### stubFalse
 
 • **stubFalse**:

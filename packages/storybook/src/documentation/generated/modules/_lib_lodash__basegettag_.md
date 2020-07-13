@@ -1,46 +1,46 @@
-[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/_baseGetTag"](_lib_lodash__basegettag_.md)
+[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/\_baseGetTag"](_lib_lodash__basegettag_.md)
 
-# Module: "lib/lodash/_baseGetTag"
+# Module: "lib/lodash/\_baseGetTag"
 
 ## Index
 
 ### Variables
 
-* [nullTag](_lib_lodash__basegettag_.md#nulltag)
-* [symToStringTag](_lib_lodash__basegettag_.md#symtostringtag)
-* [undefinedTag](_lib_lodash__basegettag_.md#undefinedtag)
+- [nullTag](_lib_lodash__basegettag_.md#nulltag)
+- [symToStringTag](_lib_lodash__basegettag_.md#symtostringtag)
+- [undefinedTag](_lib_lodash__basegettag_.md#undefinedtag)
 
 ### Functions
 
-* [baseGetTag](_lib_lodash__basegettag_.md#private-basegettag)
+- [baseGetTag](_lib_lodash__basegettag_.md#private-basegettag)
 
 ## Variables
 
-###  nullTag
+### nullTag
 
-• **nullTag**: *string* = "[object Null]"
+• **nullTag**: _string_ = "[object Null]"
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_baseGetTag.js:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_baseGetTag.js#L8)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_baseGetTag.js:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_baseGetTag.js#L8)_
 
 `Object#toString` result references.
 
-___
+---
 
-###  symToStringTag
+### symToStringTag
 
-• **symToStringTag**: *any* = Symbol ? Symbol.toStringTag : undefined
+• **symToStringTag**: _any_ = Symbol ? Symbol.toStringTag : undefined
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_baseGetTag.js:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_baseGetTag.js#L12)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_baseGetTag.js:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_baseGetTag.js#L12)_
 
 Built-in value references.
 
-___
+---
 
-###  undefinedTag
+### undefinedTag
 
-• **undefinedTag**: *string* = "[object Undefined]"
+• **undefinedTag**: _string_ = "[object Undefined]"
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_baseGetTag.js:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_baseGetTag.js#L9)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_baseGetTag.js:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_baseGetTag.js#L9)_
 
 `Object#toString` result references.
 
@@ -48,18 +48,18 @@ ___
 
 ### `Private` baseGetTag
 
-▸ **baseGetTag**(`value`: any): *string*
+▸ **baseGetTag**(`value`: any): _string_
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_baseGetTag.js:21](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_baseGetTag.js#L21)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_baseGetTag.js:21](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_baseGetTag.js#L21)_
 
 The base implementation of `getTag` without fallbacks for buggy environments.
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`value` | any | The value to query. |
+| Name    | Type | Description         |
+| ------- | ---- | ------------------- |
+| `value` | any  | The value to query. |
 
-**Returns:** *string*
+**Returns:** _string_
 
 Returns the `toStringTag`.

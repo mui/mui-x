@@ -4,27 +4,27 @@
 
 ## Hierarchy
 
-* **ElementSize**
+- **ElementSize**
 
 ## Index
 
 ### Properties
 
-* [height](_src_models_elementsize_.elementsize.md#height)
-* [width](_src_models_elementsize_.elementsize.md#width)
+- [height](_src_models_elementsize_.elementsize.md#height)
+- [width](_src_models_elementsize_.elementsize.md#width)
 
 ## Properties
 
-###  height
+### height
 
-• **height**: *number*
+• **height**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/elementSize.ts:3](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/elementSize.ts#L3)*
+_Defined in [packages/grid/x-grid-modules/src/models/elementSize.ts:3](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/elementSize.ts#L3)_
 
-___
+---
 
-###  width
+### width
 
-• **width**: *number*
+• **width**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/elementSize.ts:2](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/elementSize.ts#L2)*
+_Defined in [packages/grid/x-grid-modules/src/models/elementSize.ts:2](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/elementSize.ts#L2)_

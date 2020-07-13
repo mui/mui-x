@@ -6,30 +6,30 @@
 
 ### Interfaces
 
-* [RowProps](../interfaces/_src_components_row_.rowprops.md)
+- [RowProps](../interfaces/_src_components_row_.rowprops.md)
 
 ### Functions
 
-* [Row](_src_components_row_.md#const-row)
+- [Row](_src_components_row_.md#const-row)
 
 ## Functions
 
 ### `Const` Row
 
-▸ **Row**(`__namedParameters`: object): *Element‹›*
+▸ **Row**(`__namedParameters`: object): _Element‹›_
 
-*Defined in [packages/grid/x-grid-modules/src/components/row.tsx:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row.tsx#L13)*
+_Defined in [packages/grid/x-grid-modules/src/components/row.tsx:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row.tsx#L13)_
 
 **Parameters:**
 
-▪ **__namedParameters**: *object*
+▪ **\_\_namedParameters**: _object_
 
-Name | Type |
------- | ------ |
-`children` | undefined &#124; null &#124; string &#124; number &#124; false &#124; true &#124; object &#124; ReactElement‹any, string &#124; function &#124; object› &#124; ReactNodeArray‹› &#124; ReactPortal‹› |
-`className` | string |
-`id` | string &#124; number |
-`rowIndex` | number |
-`selected` | boolean |
+| Name        | Type                                                                                                                                                                                                 |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `children`  | undefined &#124; null &#124; string &#124; number &#124; false &#124; true &#124; object &#124; ReactElement‹any, string &#124; function &#124; object› &#124; ReactNodeArray‹› &#124; ReactPortal‹› |
+| `className` | string                                                                                                                                                                                               |
+| `id`        | string &#124; number                                                                                                                                                                                 |
+| `rowIndex`  | number                                                                                                                                                                                               |
+| `selected`  | boolean                                                                                                                                                                                              |
 
-**Returns:** *Element‹›*
+**Returns:** _Element‹›_

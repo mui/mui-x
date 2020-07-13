@@ -4,162 +4,162 @@
 
 ## Hierarchy
 
-* **RowApi**
+- **RowApi**
 
 ## Index
 
 ### Properties
 
-* [getAllRowIds](_src_models_gridapi_.rowapi.md#getallrowids)
-* [getRowFromId](_src_models_gridapi_.rowapi.md#getrowfromid)
-* [getRowIdFromRowIndex](_src_models_gridapi_.rowapi.md#getrowidfromrowindex)
-* [getRowIndexFromId](_src_models_gridapi_.rowapi.md#getrowindexfromid)
-* [getRowModels](_src_models_gridapi_.rowapi.md#getrowmodels)
-* [getRowsCount](_src_models_gridapi_.rowapi.md#getrowscount)
-* [setRowModels](_src_models_gridapi_.rowapi.md#setrowmodels)
-* [updateRowData](_src_models_gridapi_.rowapi.md#updaterowdata)
-* [updateRowModels](_src_models_gridapi_.rowapi.md#updaterowmodels)
+- [getAllRowIds](_src_models_gridapi_.rowapi.md#getallrowids)
+- [getRowFromId](_src_models_gridapi_.rowapi.md#getrowfromid)
+- [getRowIdFromRowIndex](_src_models_gridapi_.rowapi.md#getrowidfromrowindex)
+- [getRowIndexFromId](_src_models_gridapi_.rowapi.md#getrowindexfromid)
+- [getRowModels](_src_models_gridapi_.rowapi.md#getrowmodels)
+- [getRowsCount](_src_models_gridapi_.rowapi.md#getrowscount)
+- [setRowModels](_src_models_gridapi_.rowapi.md#setrowmodels)
+- [updateRowData](_src_models_gridapi_.rowapi.md#updaterowdata)
+- [updateRowModels](_src_models_gridapi_.rowapi.md#updaterowmodels)
 
 ## Properties
 
-###  getAllRowIds
+### getAllRowIds
 
-• **getAllRowIds**: *function*
+• **getAllRowIds**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L14)*
-
-#### Type declaration:
-
-▸ (): *[RowId](../modules/_src_models_rows_.md#rowid)[]*
-
-___
-
-###  getRowFromId
-
-• **getRowFromId**: *function*
-
-*Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L20)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L14)_
 
 #### Type declaration:
 
-▸ (`id`: [RowId](../modules/_src_models_rows_.md#rowid)): *[RowModel](_src_models_rows_.rowmodel.md)*
+▸ (): _[RowId](../modules/_src_models_rows_.md#rowid)[]_
+
+---
+
+### getRowFromId
+
+• **getRowFromId**: _function_
+
+_Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L20)_
+
+#### Type declaration:
+
+▸ (`id`: [RowId](../modules/_src_models_rows_.md#rowid)): _[RowModel](_src_models_rows_.rowmodel.md)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`id` | [RowId](../modules/_src_models_rows_.md#rowid) |
+| Name | Type                                           |
+| ---- | ---------------------------------------------- |
+| `id` | [RowId](../modules/_src_models_rows_.md#rowid) |
 
-___
+---
 
-###  getRowIdFromRowIndex
+### getRowIdFromRowIndex
 
-• **getRowIdFromRowIndex**: *function*
+• **getRowIdFromRowIndex**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:18](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L18)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:18](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L18)_
 
 #### Type declaration:
 
-▸ (`index`: number): *[RowId](../modules/_src_models_rows_.md#rowid)*
+▸ (`index`: number): _[RowId](../modules/_src_models_rows_.md#rowid)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`index` | number |
+| Name    | Type   |
+| ------- | ------ |
+| `index` | number |
 
-___
+---
 
-###  getRowIndexFromId
+### getRowIndexFromId
 
-• **getRowIndexFromId**: *function*
+• **getRowIndexFromId**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:19](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L19)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:19](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L19)_
 
 #### Type declaration:
 
-▸ (`id`: [RowId](../modules/_src_models_rows_.md#rowid)): *number*
+▸ (`id`: [RowId](../modules/_src_models_rows_.md#rowid)): _number_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`id` | [RowId](../modules/_src_models_rows_.md#rowid) |
+| Name | Type                                           |
+| ---- | ---------------------------------------------- |
+| `id` | [RowId](../modules/_src_models_rows_.md#rowid) |
 
-___
+---
 
-###  getRowModels
+### getRowModels
 
-• **getRowModels**: *function*
+• **getRowModels**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L12)*
-
-#### Type declaration:
-
-▸ (): *[Rows](../modules/_src_models_rows_.md#rows)*
-
-___
-
-###  getRowsCount
-
-• **getRowsCount**: *function*
-
-*Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L13)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L12)_
 
 #### Type declaration:
 
-▸ (): *number*
+▸ (): _[Rows](../modules/_src_models_rows_.md#rows)_
 
-___
+---
 
-###  setRowModels
+### getRowsCount
 
-• **setRowModels**: *function*
+• **getRowsCount**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L15)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L13)_
 
 #### Type declaration:
 
-▸ (`rows`: [Rows](../modules/_src_models_rows_.md#rows)): *void*
+▸ (): _number_
+
+---
+
+### setRowModels
+
+• **setRowModels**: _function_
+
+_Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L15)_
+
+#### Type declaration:
+
+▸ (`rows`: [Rows](../modules/_src_models_rows_.md#rows)): _void_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`rows` | [Rows](../modules/_src_models_rows_.md#rows) |
+| Name   | Type                                         |
+| ------ | -------------------------------------------- |
+| `rows` | [Rows](../modules/_src_models_rows_.md#rows) |
 
-___
+---
 
-###  updateRowData
+### updateRowData
 
-• **updateRowData**: *function*
+• **updateRowData**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:17](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L17)*
-
-#### Type declaration:
-
-▸ (`updates`: [RowData](_src_models_rows_.rowdata.md)[]): *void*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`updates` | [RowData](_src_models_rows_.rowdata.md)[] |
-
-___
-
-###  updateRowModels
-
-• **updateRowModels**: *function*
-
-*Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:16](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L16)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:17](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L17)_
 
 #### Type declaration:
 
-▸ (`updates`: Partial‹[RowModel](_src_models_rows_.rowmodel.md)›[]): *void*
+▸ (`updates`: [RowData](_src_models_rows_.rowdata.md)[]): _void_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`updates` | Partial‹[RowModel](_src_models_rows_.rowmodel.md)›[] |
+| Name      | Type                                      |
+| --------- | ----------------------------------------- |
+| `updates` | [RowData](_src_models_rows_.rowdata.md)[] |
+
+---
+
+### updateRowModels
+
+• **updateRowModels**: _function_
+
+_Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:16](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L16)_
+
+#### Type declaration:
+
+▸ (`updates`: Partial‹[RowModel](_src_models_rows_.rowmodel.md)›[]): _void_
+
+**Parameters:**
+
+| Name      | Type                                                 |
+| --------- | ---------------------------------------------------- |
+| `updates` | Partial‹[RowModel](_src_models_rows_.rowmodel.md)›[] |

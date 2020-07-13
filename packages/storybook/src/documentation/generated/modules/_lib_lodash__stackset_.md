@@ -1,24 +1,24 @@
-[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/_stackSet"](_lib_lodash__stackset_.md)
+[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/\_stackSet"](_lib_lodash__stackset_.md)
 
-# Module: "lib/lodash/_stackSet"
+# Module: "lib/lodash/\_stackSet"
 
 ## Index
 
 ### Variables
 
-* [LARGE_ARRAY_SIZE](_lib_lodash__stackset_.md#large_array_size)
+- [LARGE_ARRAY_SIZE](_lib_lodash__stackset_.md#large_array_size)
 
 ### Functions
 
-* [stackSet](_lib_lodash__stackset_.md#private-stackset)
+- [stackSet](_lib_lodash__stackset_.md#private-stackset)
 
 ## Variables
 
-###  LARGE_ARRAY_SIZE
+### LARGE_ARRAY_SIZE
 
-• **LARGE_ARRAY_SIZE**: *number* = 200
+• **LARGE_ARRAY_SIZE**: _number_ = 200
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_stackSet.js:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_stackSet.js#L8)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_stackSet.js:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_stackSet.js#L8)_
 
 Used as the size to enable large array optimizations.
 
@@ -26,9 +26,9 @@ Used as the size to enable large array optimizations.
 
 ### `Private` stackSet
 
-▸ **stackSet**(`key`: string, `value`: any): *Object*
+▸ **stackSet**(`key`: string, `value`: any): _Object_
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_stackSet.js:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_stackSet.js#L20)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_stackSet.js:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_stackSet.js#L20)_
 
 Sets the stack `key` to `value`.
 
@@ -38,11 +38,11 @@ Sets the stack `key` to `value`.
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`key` | string | The key of the value to set. |
-`value` | any | The value to set. |
+| Name    | Type   | Description                  |
+| ------- | ------ | ---------------------------- |
+| `key`   | string | The key of the value to set. |
+| `value` | any    | The value to set.            |
 
-**Returns:** *Object*
+**Returns:** _Object_
 
 Returns the stack cache instance.

@@ -4,63 +4,63 @@
 
 ## Hierarchy
 
-* **ComponentParams**
+- **ComponentParams**
 
 ## Index
 
 ### Properties
 
-* [api](_src_models_gridoptions_.componentparams.md#api)
-* [columns](_src_models_gridoptions_.componentparams.md#columns)
-* [options](_src_models_gridoptions_.componentparams.md#options)
-* [paginationProps](_src_models_gridoptions_.componentparams.md#paginationprops)
-* [rootElement](_src_models_gridoptions_.componentparams.md#rootelement)
-* [rows](_src_models_gridoptions_.componentparams.md#rows)
+- [api](_src_models_gridoptions_.componentparams.md#api)
+- [columns](_src_models_gridoptions_.componentparams.md#columns)
+- [options](_src_models_gridoptions_.componentparams.md#options)
+- [paginationProps](_src_models_gridoptions_.componentparams.md#paginationprops)
+- [rootElement](_src_models_gridoptions_.componentparams.md#rootelement)
+- [rows](_src_models_gridoptions_.componentparams.md#rows)
 
 ## Properties
 
-###  api
+### api
 
-• **api**: *[GridApiRef](../modules/_src_models_gridapiref_.md#gridapiref)*
+• **api**: _[GridApiRef](../modules/_src_models_gridapiref_.md#gridapiref)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:56](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L56)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:56](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L56)_
 
-___
+---
 
-###  columns
+### columns
 
-• **columns**: *[Columns](../modules/_src_models_coldef_coldef_.md#columns)*
+• **columns**: _[Columns](../modules/_src_models_coldef_coldef_.md#columns)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:54](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L54)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:54](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L54)_
 
-___
+---
 
-###  options
+### options
 
-• **options**: *[GridOptions](_src_models_gridoptions_.gridoptions.md)*
+• **options**: _[GridOptions](_src_models_gridoptions_.gridoptions.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:55](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L55)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:55](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L55)_
 
-___
+---
 
-###  paginationProps
+### paginationProps
 
-• **paginationProps**: *[PaginationProps](_src_hooks_features_usepagination_.paginationprops.md)*
+• **paginationProps**: _[PaginationProps](_src_hooks_features_usepagination_.paginationprops.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:52](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L52)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:52](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L52)_
 
-___
+---
 
-###  rootElement
+### rootElement
 
-• **rootElement**: *[GridRootRef](../modules/_src_models_gridapiref_.md#gridrootref)*
+• **rootElement**: _[GridRootRef](../modules/_src_models_gridapiref_.md#gridrootref)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:57](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L57)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:57](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L57)_
 
-___
+---
 
-###  rows
+### rows
 
-• **rows**: *[Rows](../modules/_src_models_rows_.md#rows)*
+• **rows**: _[Rows](../modules/_src_models_rows_.md#rows)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:53](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L53)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:53](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L53)_

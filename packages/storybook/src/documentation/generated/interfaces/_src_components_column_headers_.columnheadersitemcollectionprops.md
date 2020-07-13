@@ -4,36 +4,36 @@
 
 ## Hierarchy
 
-* **ColumnHeadersItemCollectionProps**
+- **ColumnHeadersItemCollectionProps**
 
 ## Index
 
 ### Properties
 
-* [columns](_src_components_column_headers_.columnheadersitemcollectionprops.md#columns)
-* [headerHeight](_src_components_column_headers_.columnheadersitemcollectionprops.md#headerheight)
-* [onResizeColumn](_src_components_column_headers_.columnheadersitemcollectionprops.md#optional-onresizecolumn)
+- [columns](_src_components_column_headers_.columnheadersitemcollectionprops.md#columns)
+- [headerHeight](_src_components_column_headers_.columnheadersitemcollectionprops.md#headerheight)
+- [onResizeColumn](_src_components_column_headers_.columnheadersitemcollectionprops.md#optional-onresizecolumn)
 
 ## Properties
 
-###  columns
+### columns
 
-• **columns**: *[Columns](../modules/_src_models_coldef_coldef_.md#columns)*
+• **columns**: _[Columns](../modules/_src_models_coldef_coldef_.md#columns)_
 
-*Defined in [packages/grid/x-grid-modules/src/components/column-headers.tsx:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-headers.tsx#L9)*
+_Defined in [packages/grid/x-grid-modules/src/components/column-headers.tsx:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-headers.tsx#L9)_
 
-___
+---
 
-###  headerHeight
+### headerHeight
 
-• **headerHeight**: *number*
+• **headerHeight**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/components/column-headers.tsx:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-headers.tsx#L10)*
+_Defined in [packages/grid/x-grid-modules/src/components/column-headers.tsx:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-headers.tsx#L10)_
 
-___
+---
 
 ### `Optional` onResizeColumn
 
-• **onResizeColumn**? : *undefined | function*
+• **onResizeColumn**? : _undefined | function_
 
-*Defined in [packages/grid/x-grid-modules/src/components/column-headers.tsx:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-headers.tsx#L11)*
+_Defined in [packages/grid/x-grid-modules/src/components/column-headers.tsx:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-headers.tsx#L11)_

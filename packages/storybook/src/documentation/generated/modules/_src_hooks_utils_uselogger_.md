@@ -6,186 +6,186 @@
 
 ### Interfaces
 
-* [Logger](../interfaces/_src_hooks_utils_uselogger_.logger.md)
+- [Logger](../interfaces/_src_hooks_utils_uselogger_.logger.md)
 
 ### Type aliases
 
-* [LoggerFactoryFn](_src_hooks_utils_uselogger_.md#loggerfactoryfn)
+- [LoggerFactoryFn](_src_hooks_utils_uselogger_.md#loggerfactoryfn)
 
 ### Variables
 
-* [LOG_LEVELS](_src_hooks_utils_uselogger_.md#const-log_levels)
-* [factory](_src_hooks_utils_uselogger_.md#let-factory)
-* [forceDebug](_src_hooks_utils_uselogger_.md#const-forcedebug)
-* [isDebugging](_src_hooks_utils_uselogger_.md#const-isdebugging)
+- [LOG_LEVELS](_src_hooks_utils_uselogger_.md#const-log_levels)
+- [factory](_src_hooks_utils_uselogger_.md#let-factory)
+- [forceDebug](_src_hooks_utils_uselogger_.md#const-forcedebug)
+- [isDebugging](_src_hooks_utils_uselogger_.md#const-isdebugging)
 
 ### Functions
 
-* [defaultFactory](_src_hooks_utils_uselogger_.md#const-defaultfactory)
-* [getAppender](_src_hooks_utils_uselogger_.md#const-getappender)
-* [noop](_src_hooks_utils_uselogger_.md#const-noop)
-* [useLogger](_src_hooks_utils_uselogger_.md#uselogger)
-* [useLoggerFactory](_src_hooks_utils_uselogger_.md#useloggerfactory)
+- [defaultFactory](_src_hooks_utils_uselogger_.md#const-defaultfactory)
+- [getAppender](_src_hooks_utils_uselogger_.md#const-getappender)
+- [noop](_src_hooks_utils_uselogger_.md#const-noop)
+- [useLogger](_src_hooks_utils_uselogger_.md#uselogger)
+- [useLoggerFactory](_src_hooks_utils_uselogger_.md#useloggerfactory)
 
 ### Object literals
 
-* [noopLogger](_src_hooks_utils_uselogger_.md#const-nooplogger)
+- [noopLogger](_src_hooks_utils_uselogger_.md#const-nooplogger)
 
 ## Type aliases
 
-###  LoggerFactoryFn
+### LoggerFactoryFn
 
-Ƭ **LoggerFactoryFn**: *function*
+Ƭ **LoggerFactoryFn**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:54](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L54)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:54](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L54)_
 
 #### Type declaration:
 
-▸ (`name`: string): *[Logger](../interfaces/_src_hooks_utils_uselogger_.logger.md)*
+▸ (`name`: string): _[Logger](../interfaces/_src_hooks_utils_uselogger_.logger.md)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`name` | string |
+| Name   | Type   |
+| ------ | ------ |
+| `name` | string |
 
 ## Variables
 
 ### `Const` LOG_LEVELS
 
-• **LOG_LEVELS**: *string[]* = ['debug', 'info', 'warn', 'error']
+• **LOG_LEVELS**: _string[]_ = ['debug', 'info', 'warn', 'error']
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:22](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L22)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:22](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L22)_
 
-___
+---
 
 ### `Let` factory
 
-• **factory**: *[LoggerFactoryFn](_src_hooks_utils_uselogger_.md#loggerfactoryfn) | null*
+• **factory**: _[LoggerFactoryFn](_src_hooks_utils_uselogger_.md#loggerfactoryfn) | null_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:57](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L57)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:57](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L57)_
 
-___
+---
 
 ### `Const` forceDebug
 
-• **forceDebug**: *boolean* = localStorage.getItem('DEBUG') != null
+• **forceDebug**: _boolean_ = localStorage.getItem('DEBUG') != null
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:4](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L4)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:4](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L4)_
 
-___
+---
 
 ### `Const` isDebugging
 
-• **isDebugging**: *boolean* = process.env.NODE_ENV !== 'production' || forceDebug
+• **isDebugging**: _boolean_ = process.env.NODE_ENV !== 'production' || forceDebug
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L5)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L5)_
 
 ## Functions
 
 ### `Const` defaultFactory
 
-▸ **defaultFactory**(`logLevel`: string): *(Anonymous function)*
+▸ **defaultFactory**(`logLevel`: string): _(Anonymous function)_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:45](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L45)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:45](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L45)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`logLevel` | string |
+| Name       | Type   |
+| ---------- | ------ |
+| `logLevel` | string |
 
-**Returns:** *(Anonymous function)*
+**Returns:** _(Anonymous function)_
 
-___
+---
 
 ### `Const` getAppender
 
-▸ **getAppender**(`name`: string, `logLevel`: string, `appender`: [Logger](../interfaces/_src_hooks_utils_uselogger_.logger.md)): *[Logger](../interfaces/_src_hooks_utils_uselogger_.logger.md)*
+▸ **getAppender**(`name`: string, `logLevel`: string, `appender`: [Logger](../interfaces/_src_hooks_utils_uselogger_.logger.md)): _[Logger](../interfaces/_src_hooks_utils_uselogger_.logger.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:23](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L23)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:23](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L23)_
 
 **Parameters:**
 
-Name | Type | Default |
------- | ------ | ------ |
-`name` | string | - |
-`logLevel` | string | - |
-`appender` | [Logger](../interfaces/_src_hooks_utils_uselogger_.logger.md) | console |
+| Name       | Type                                                          | Default |
+| ---------- | ------------------------------------------------------------- | ------- |
+| `name`     | string                                                        | -       |
+| `logLevel` | string                                                        | -       |
+| `appender` | [Logger](../interfaces/_src_hooks_utils_uselogger_.logger.md) | console |
 
-**Returns:** *[Logger](../interfaces/_src_hooks_utils_uselogger_.logger.md)*
+**Returns:** _[Logger](../interfaces/_src_hooks_utils_uselogger_.logger.md)_
 
-___
+---
 
 ### `Const` noop
 
-▸ **noop**(): *void*
+▸ **noop**(): _void_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L15)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L15)_
 
-**Returns:** *void*
+**Returns:** _void_
 
-___
+---
 
-###  useLogger
+### useLogger
 
-▸ **useLogger**(`name`: string): *[Logger](../interfaces/_src_hooks_utils_uselogger_.logger.md)*
+▸ **useLogger**(`name`: string): _[Logger](../interfaces/_src_hooks_utils_uselogger_.logger.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:80](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L80)*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`name` | string |
-
-**Returns:** *[Logger](../interfaces/_src_hooks_utils_uselogger_.logger.md)*
-
-___
-
-###  useLoggerFactory
-
-▸ **useLoggerFactory**(`customLogger?`: [Logger](../interfaces/_src_hooks_utils_uselogger_.logger.md) | [LoggerFactoryFn](_src_hooks_utils_uselogger_.md#loggerfactoryfn), `logLevel`: string | boolean): *void*
-
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:58](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L58)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:80](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L80)_
 
 **Parameters:**
 
-Name | Type | Default |
------- | ------ | ------ |
-`customLogger?` | [Logger](../interfaces/_src_hooks_utils_uselogger_.logger.md) &#124; [LoggerFactoryFn](_src_hooks_utils_uselogger_.md#loggerfactoryfn) | - |
-`logLevel` | string &#124; boolean | "info" |
+| Name   | Type   |
+| ------ | ------ |
+| `name` | string |
 
-**Returns:** *void*
+**Returns:** _[Logger](../interfaces/_src_hooks_utils_uselogger_.logger.md)_
+
+---
+
+### useLoggerFactory
+
+▸ **useLoggerFactory**(`customLogger?`: [Logger](../interfaces/_src_hooks_utils_uselogger_.logger.md) | [LoggerFactoryFn](_src_hooks_utils_uselogger_.md#loggerfactoryfn), `logLevel`: string | boolean): _void_
+
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:58](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L58)_
+
+**Parameters:**
+
+| Name            | Type                                                                                                                                   | Default |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| `customLogger?` | [Logger](../interfaces/_src_hooks_utils_uselogger_.logger.md) &#124; [LoggerFactoryFn](_src_hooks_utils_uselogger_.md#loggerfactoryfn) | -       |
+| `logLevel`      | string &#124; boolean                                                                                                                  | "info"  |
+
+**Returns:** _void_
 
 ## Object literals
 
 ### `Const` noopLogger
 
-### ▪ **noopLogger**: *object*
+### ▪ **noopLogger**: _object_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:16](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L16)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:16](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L16)_
 
-###  debug
+### debug
 
-• **debug**: *[noop](_src_hooks_utils_uselogger_.md#const-noop)* = noop
+• **debug**: _[noop](_src_hooks_utils_uselogger_.md#const-noop)_ = noop
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:17](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L17)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:17](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L17)_
 
-###  error
+### error
 
-• **error**: *[noop](_src_hooks_utils_uselogger_.md#const-noop)* = noop
+• **error**: _[noop](_src_hooks_utils_uselogger_.md#const-noop)_ = noop
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L20)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L20)_
 
-###  info
+### info
 
-• **info**: *[noop](_src_hooks_utils_uselogger_.md#const-noop)* = noop
+• **info**: _[noop](_src_hooks_utils_uselogger_.md#const-noop)_ = noop
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:18](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L18)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:18](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L18)_
 
-###  warn
+### warn
 
-• **warn**: *[noop](_src_hooks_utils_uselogger_.md#const-noop)* = noop
+• **warn**: _[noop](_src_hooks_utils_uselogger_.md#const-noop)_ = noop
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:19](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L19)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:19](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L19)_

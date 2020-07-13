@@ -4,45 +4,45 @@
 
 ## Hierarchy
 
-* **PaginationState**
+- **PaginationState**
 
 ## Index
 
 ### Properties
 
-* [page](_src_hooks_features_usepagination_.paginationstate.md#page)
-* [pageCount](_src_hooks_features_usepagination_.paginationstate.md#pagecount)
-* [pageSize](_src_hooks_features_usepagination_.paginationstate.md#pagesize)
-* [rowCount](_src_hooks_features_usepagination_.paginationstate.md#rowcount)
+- [page](_src_hooks_features_usepagination_.paginationstate.md#page)
+- [pageCount](_src_hooks_features_usepagination_.paginationstate.md#pagecount)
+- [pageSize](_src_hooks_features_usepagination_.paginationstate.md#pagesize)
+- [rowCount](_src_hooks_features_usepagination_.paginationstate.md#rowcount)
 
 ## Properties
 
-###  page
+### page
 
-• **page**: *number*
+• **page**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:23](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L23)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:23](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L23)_
 
-___
+---
 
-###  pageCount
+### pageCount
 
-• **pageCount**: *number*
+• **pageCount**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:24](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L24)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:24](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L24)_
 
-___
+---
 
-###  pageSize
+### pageSize
 
-• **pageSize**: *number*
+• **pageSize**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:25](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L25)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:25](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L25)_
 
-___
+---
 
-###  rowCount
+### rowCount
 
-• **rowCount**: *number*
+• **rowCount**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:26](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L26)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:26](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L26)_

@@ -6,127 +6,127 @@
 
 ### Interfaces
 
-* [CellParams](../interfaces/_src_models_coldef_coldef_.cellparams.md)
-* [ColDef](../interfaces/_src_models_coldef_coldef_.coldef.md)
-* [ColParams](../interfaces/_src_models_coldef_coldef_.colparams.md)
-* [ColumnsMeta](../interfaces/_src_models_coldef_coldef_.columnsmeta.md)
-* [InternalColumns](../interfaces/_src_models_coldef_coldef_.internalcolumns.md)
+- [CellParams](../interfaces/_src_models_coldef_coldef_.cellparams.md)
+- [ColDef](../interfaces/_src_models_coldef_coldef_.coldef.md)
+- [ColParams](../interfaces/_src_models_coldef_coldef_.colparams.md)
+- [ColumnsMeta](../interfaces/_src_models_coldef_coldef_.columnsmeta.md)
+- [InternalColumns](../interfaces/_src_models_coldef_coldef_.internalcolumns.md)
 
 ### Type aliases
 
-* [Alignement](_src_models_coldef_coldef_.md#alignement)
-* [CellClassFn](_src_models_coldef_coldef_.md#cellclassfn)
-* [CellClassParams](_src_models_coldef_coldef_.md#cellclassparams)
-* [CellClassPropType](_src_models_coldef_coldef_.md#cellclassproptype)
-* [CellClassRules](_src_models_coldef_coldef_.md#cellclassrules)
-* [ColTypeDef](_src_models_coldef_coldef_.md#coltypedef)
-* [ColumnLookup](_src_models_coldef_coldef_.md#columnlookup)
-* [Columns](_src_models_coldef_coldef_.md#columns)
-* [ValueFormatterParams](_src_models_coldef_coldef_.md#valueformatterparams)
-* [ValueGetterParams](_src_models_coldef_coldef_.md#valuegetterparams)
+- [Alignement](_src_models_coldef_coldef_.md#alignement)
+- [CellClassFn](_src_models_coldef_coldef_.md#cellclassfn)
+- [CellClassParams](_src_models_coldef_coldef_.md#cellclassparams)
+- [CellClassPropType](_src_models_coldef_coldef_.md#cellclassproptype)
+- [CellClassRules](_src_models_coldef_coldef_.md#cellclassrules)
+- [ColTypeDef](_src_models_coldef_coldef_.md#coltypedef)
+- [ColumnLookup](_src_models_coldef_coldef_.md#columnlookup)
+- [Columns](_src_models_coldef_coldef_.md#columns)
+- [ValueFormatterParams](_src_models_coldef_coldef_.md#valueformatterparams)
+- [ValueGetterParams](_src_models_coldef_coldef_.md#valuegetterparams)
 
 ## Type aliases
 
-###  Alignement
+### Alignement
 
-Ƭ **Alignement**: *"left" | "right" | "center"*
+Ƭ **Alignement**: _"left" | "right" | "center"_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L6)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L6)_
 
-___
+---
 
-###  CellClassFn
+### CellClassFn
 
-Ƭ **CellClassFn**: *function*
+Ƭ **CellClassFn**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L8)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L8)_
 
 #### Type declaration:
 
-▸ (`params`: [CellClassParams](_src_models_coldef_coldef_.md#cellclassparams)): *string | string[]*
+▸ (`params`: [CellClassParams](_src_models_coldef_coldef_.md#cellclassparams)): _string | string[]_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`params` | [CellClassParams](_src_models_coldef_coldef_.md#cellclassparams) |
+| Name     | Type                                                             |
+| -------- | ---------------------------------------------------------------- |
+| `params` | [CellClassParams](_src_models_coldef_coldef_.md#cellclassparams) |
 
-___
+---
 
-###  CellClassParams
+### CellClassParams
 
-Ƭ **CellClassParams**: *[CellParams](../interfaces/_src_models_coldef_coldef_.cellparams.md)*
+Ƭ **CellClassParams**: _[CellParams](../interfaces/_src_models_coldef_coldef_.cellparams.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:24](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L24)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:24](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L24)_
 
-___
+---
 
-###  CellClassPropType
+### CellClassPropType
 
-Ƭ **CellClassPropType**: *string | string[] | [CellClassFn](_src_models_coldef_coldef_.md#cellclassfn)*
+Ƭ **CellClassPropType**: _string | string[] | [CellClassFn](_src_models_coldef_coldef_.md#cellclassfn)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L9)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L9)_
 
-___
+---
 
-###  CellClassRules
+### CellClassRules
 
-Ƭ **CellClassRules**: *object*
+Ƭ **CellClassRules**: _object_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:27](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L27)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:27](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L27)_
 
 #### Type declaration:
 
-* \[ **cssClass**: *string*\]: function
+- \[ **cssClass**: _string_\]: function
 
-▸ (`params`: [CellClassParams](_src_models_coldef_coldef_.md#cellclassparams)): *boolean*
+▸ (`params`: [CellClassParams](_src_models_coldef_coldef_.md#cellclassparams)): _boolean_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`params` | [CellClassParams](_src_models_coldef_coldef_.md#cellclassparams) |
+| Name     | Type                                                             |
+| -------- | ---------------------------------------------------------------- |
+| `params` | [CellClassParams](_src_models_coldef_coldef_.md#cellclassparams) |
 
-___
+---
 
-###  ColTypeDef
+### ColTypeDef
 
-Ƭ **ColTypeDef**: *Omit‹[ColDef](../interfaces/_src_models_coldef_coldef_.coldef.md), "field"›*
+Ƭ **ColTypeDef**: _Omit‹[ColDef](../interfaces/_src_models_coldef_coldef_.coldef.md), "field"›_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:54](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L54)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:54](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L54)_
 
-___
+---
 
-###  ColumnLookup
+### ColumnLookup
 
-Ƭ **ColumnLookup**: *object*
+Ƭ **ColumnLookup**: _object_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:61](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L61)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:61](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L61)_
 
 #### Type declaration:
 
-* \[ **field**: *string*\]: [ColDef](../interfaces/_src_models_coldef_coldef_.coldef.md)
+- \[ **field**: _string_\]: [ColDef](../interfaces/_src_models_coldef_coldef_.coldef.md)
 
-___
+---
 
-###  Columns
+### Columns
 
-Ƭ **Columns**: *[ColDef](../interfaces/_src_models_coldef_coldef_.coldef.md)[]*
+Ƭ **Columns**: _[ColDef](../interfaces/_src_models_coldef_coldef_.coldef.md)[]_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:53](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L53)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:53](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L53)_
 
-___
+---
 
-###  ValueFormatterParams
+### ValueFormatterParams
 
-Ƭ **ValueFormatterParams**: *[CellParams](../interfaces/_src_models_coldef_coldef_.cellparams.md)*
+Ƭ **ValueFormatterParams**: _[CellParams](../interfaces/_src_models_coldef_coldef_.cellparams.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:26](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L26)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:26](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L26)_
 
-___
+---
 
-###  ValueGetterParams
+### ValueGetterParams
 
-Ƭ **ValueGetterParams**: *[CellParams](../interfaces/_src_models_coldef_coldef_.cellparams.md)*
+Ƭ **ValueGetterParams**: _[CellParams](../interfaces/_src_models_coldef_coldef_.cellparams.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:25](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L25)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:25](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L25)_

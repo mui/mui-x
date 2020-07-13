@@ -6,43 +6,43 @@
 
 ### Variables
 
-* [MIN_COL_WIDTH](_src_hooks_features_usecolumnresize_.md#const-min_col_width)
-* [MOUSE_LEFT_TIMEOUT](_src_hooks_features_usecolumnresize_.md#const-mouse_left_timeout)
+- [MIN_COL_WIDTH](_src_hooks_features_usecolumnresize_.md#const-min_col_width)
+- [MOUSE_LEFT_TIMEOUT](_src_hooks_features_usecolumnresize_.md#const-mouse_left_timeout)
 
 ### Functions
 
-* [useColumnResize](_src_hooks_features_usecolumnresize_.md#const-usecolumnresize)
+- [useColumnResize](_src_hooks_features_usecolumnresize_.md#const-usecolumnresize)
 
 ## Variables
 
 ### `Const` MIN_COL_WIDTH
 
-• **MIN_COL_WIDTH**: *30* = 30
+• **MIN_COL_WIDTH**: _30_ = 30
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/features/useColumnResize.tsx:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/useColumnResize.tsx#L9)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/features/useColumnResize.tsx:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/useColumnResize.tsx#L9)_
 
-___
+---
 
 ### `Const` MOUSE_LEFT_TIMEOUT
 
-• **MOUSE_LEFT_TIMEOUT**: *1000* = 1000
+• **MOUSE_LEFT_TIMEOUT**: _1000_ = 1000
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/features/useColumnResize.tsx:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/useColumnResize.tsx#L10)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/features/useColumnResize.tsx:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/useColumnResize.tsx#L10)_
 
 ## Functions
 
 ### `Const` useColumnResize
 
-▸ **useColumnResize**(`columnsRef`: RefObject‹HTMLDivElement›, `apiRef`: [GridApiRef](_src_models_gridapiref_.md#gridapiref), `headerHeight`: number): *(Anonymous function)*
+▸ **useColumnResize**(`columnsRef`: RefObject‹HTMLDivElement›, `apiRef`: [GridApiRef](_src_models_gridapiref_.md#gridapiref), `headerHeight`: number): _(Anonymous function)_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/features/useColumnResize.tsx:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/useColumnResize.tsx#L13)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/features/useColumnResize.tsx:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/useColumnResize.tsx#L13)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`columnsRef` | RefObject‹HTMLDivElement› |
-`apiRef` | [GridApiRef](_src_models_gridapiref_.md#gridapiref) |
-`headerHeight` | number |
+| Name           | Type                                                |
+| -------------- | --------------------------------------------------- |
+| `columnsRef`   | RefObject‹HTMLDivElement›                           |
+| `apiRef`       | [GridApiRef](_src_models_gridapiref_.md#gridapiref) |
+| `headerHeight` | number                                              |
 
-**Returns:** *(Anonymous function)*
+**Returns:** _(Anonymous function)_

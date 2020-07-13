@@ -6,56 +6,56 @@
 
 ### Interfaces
 
-* [SortItem](../interfaces/_src_models_sortmodel_.sortitem.md)
+- [SortItem](../interfaces/_src_models_sortmodel_.sortitem.md)
 
 ### Type aliases
 
-* [ComparatorFn](_src_models_sortmodel_.md#comparatorfn)
-* [FieldComparatorList](_src_models_sortmodel_.md#fieldcomparatorlist)
-* [SortDirection](_src_models_sortmodel_.md#sortdirection)
-* [SortModel](_src_models_sortmodel_.md#sortmodel)
+- [ComparatorFn](_src_models_sortmodel_.md#comparatorfn)
+- [FieldComparatorList](_src_models_sortmodel_.md#fieldcomparatorlist)
+- [SortDirection](_src_models_sortmodel_.md#sortdirection)
+- [SortModel](_src_models_sortmodel_.md#sortmodel)
 
 ## Type aliases
 
-###  ComparatorFn
+### ComparatorFn
 
-Ƭ **ComparatorFn**: *function*
+Ƭ **ComparatorFn**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/sortModel.ts:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/sortModel.ts#L7)*
+_Defined in [packages/grid/x-grid-modules/src/models/sortModel.ts:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/sortModel.ts#L7)_
 
 #### Type declaration:
 
-▸ (`v1`: [CellValue](_src_models_rows_.md#cellvalue), `v2`: [CellValue](_src_models_rows_.md#cellvalue), `row1`: [RowModel](../interfaces/_src_models_rows_.rowmodel.md), `row2`: [RowModel](../interfaces/_src_models_rows_.rowmodel.md)): *number*
+▸ (`v1`: [CellValue](_src_models_rows_.md#cellvalue), `v2`: [CellValue](_src_models_rows_.md#cellvalue), `row1`: [RowModel](../interfaces/_src_models_rows_.rowmodel.md), `row2`: [RowModel](../interfaces/_src_models_rows_.rowmodel.md)): _number_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`v1` | [CellValue](_src_models_rows_.md#cellvalue) |
-`v2` | [CellValue](_src_models_rows_.md#cellvalue) |
-`row1` | [RowModel](../interfaces/_src_models_rows_.rowmodel.md) |
-`row2` | [RowModel](../interfaces/_src_models_rows_.rowmodel.md) |
+| Name   | Type                                                    |
+| ------ | ------------------------------------------------------- |
+| `v1`   | [CellValue](_src_models_rows_.md#cellvalue)             |
+| `v2`   | [CellValue](_src_models_rows_.md#cellvalue)             |
+| `row1` | [RowModel](../interfaces/_src_models_rows_.rowmodel.md) |
+| `row2` | [RowModel](../interfaces/_src_models_rows_.rowmodel.md) |
 
-___
+---
 
-###  FieldComparatorList
+### FieldComparatorList
 
-Ƭ **FieldComparatorList**: *object[]*
+Ƭ **FieldComparatorList**: _object[]_
 
-*Defined in [packages/grid/x-grid-modules/src/models/sortModel.ts:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/sortModel.ts#L5)*
+_Defined in [packages/grid/x-grid-modules/src/models/sortModel.ts:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/sortModel.ts#L5)_
 
-___
+---
 
-###  SortDirection
+### SortDirection
 
-Ƭ **SortDirection**: *"asc" | "desc" | null | undefined*
+Ƭ **SortDirection**: _"asc" | "desc" | null | undefined_
 
-*Defined in [packages/grid/x-grid-modules/src/models/sortModel.ts:3](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/sortModel.ts#L3)*
+_Defined in [packages/grid/x-grid-modules/src/models/sortModel.ts:3](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/sortModel.ts#L3)_
 
-___
+---
 
-###  SortModel
+### SortModel
 
-Ƭ **SortModel**: *[SortItem](../interfaces/_src_models_sortmodel_.sortitem.md)[]*
+Ƭ **SortModel**: _[SortItem](../interfaces/_src_models_sortmodel_.sortitem.md)[]_
 
-*Defined in [packages/grid/x-grid-modules/src/models/sortModel.ts:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/sortModel.ts#L13)*
+_Defined in [packages/grid/x-grid-modules/src/models/sortModel.ts:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/sortModel.ts#L13)_

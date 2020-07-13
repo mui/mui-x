@@ -1,24 +1,24 @@
-[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/_isPrototype"](_lib_lodash__isprototype_.md)
+[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/\_isPrototype"](_lib_lodash__isprototype_.md)
 
-# Module: "lib/lodash/_isPrototype"
+# Module: "lib/lodash/\_isPrototype"
 
 ## Index
 
 ### Variables
 
-* [objectProto](_lib_lodash__isprototype_.md#objectproto)
+- [objectProto](_lib_lodash__isprototype_.md#objectproto)
 
 ### Functions
 
-* [isPrototype](_lib_lodash__isprototype_.md#private-isprototype)
+- [isPrototype](_lib_lodash__isprototype_.md#private-isprototype)
 
 ## Variables
 
-###  objectProto
+### objectProto
 
-• **objectProto**: *Object* = Object.prototype
+• **objectProto**: _Object_ = Object.prototype
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_isPrototype.js:4](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_isPrototype.js#L4)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_isPrototype.js:4](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_isPrototype.js#L4)_
 
 Used for built-in method references.
 
@@ -26,18 +26,18 @@ Used for built-in method references.
 
 ### `Private` isPrototype
 
-▸ **isPrototype**(`value`: any): *boolean*
+▸ **isPrototype**(`value`: any): _boolean_
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_isPrototype.js:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_isPrototype.js#L13)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_isPrototype.js:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_isPrototype.js#L13)_
 
 Checks if `value` is likely a prototype object.
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`value` | any | The value to check. |
+| Name    | Type | Description         |
+| ------- | ---- | ------------------- |
+| `value` | any  | The value to check. |
 
-**Returns:** *boolean*
+**Returns:** _boolean_
 
 Returns `true` if `value` is a prototype, else `false`.

@@ -4,45 +4,45 @@
 
 ## Hierarchy
 
-* **ColumnHeaderItemProps**
+- **ColumnHeaderItemProps**
 
 ## Index
 
 ### Properties
 
-* [colIndex](_src_components_column_header_item_.columnheaderitemprops.md#colindex)
-* [column](_src_components_column_header_item_.columnheaderitemprops.md#column)
-* [headerHeight](_src_components_column_header_item_.columnheaderitemprops.md#headerheight)
-* [onResizeColumn](_src_components_column_header_item_.columnheaderitemprops.md#optional-onresizecolumn)
+- [colIndex](_src_components_column_header_item_.columnheaderitemprops.md#colindex)
+- [column](_src_components_column_header_item_.columnheaderitemprops.md#column)
+- [headerHeight](_src_components_column_header_item_.columnheaderitemprops.md#headerheight)
+- [onResizeColumn](_src_components_column_header_item_.columnheaderitemprops.md#optional-onresizecolumn)
 
 ## Properties
 
-###  colIndex
+### colIndex
 
-• **colIndex**: *number*
+• **colIndex**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/components/column-header-item.tsx:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-item.tsx#L14)*
+_Defined in [packages/grid/x-grid-modules/src/components/column-header-item.tsx:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-item.tsx#L14)_
 
-___
+---
 
-###  column
+### column
 
-• **column**: *[ColDef](_src_models_coldef_coldef_.coldef.md)*
+• **column**: _[ColDef](_src_models_coldef_coldef_.coldef.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/components/column-header-item.tsx:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-item.tsx#L12)*
+_Defined in [packages/grid/x-grid-modules/src/components/column-header-item.tsx:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-item.tsx#L12)_
 
-___
+---
 
-###  headerHeight
+### headerHeight
 
-• **headerHeight**: *number*
+• **headerHeight**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/components/column-header-item.tsx:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-item.tsx#L13)*
+_Defined in [packages/grid/x-grid-modules/src/components/column-header-item.tsx:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-item.tsx#L13)_
 
-___
+---
 
 ### `Optional` onResizeColumn
 
-• **onResizeColumn**? : *undefined | function*
+• **onResizeColumn**? : _undefined | function_
 
-*Defined in [packages/grid/x-grid-modules/src/components/column-header-item.tsx:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-item.tsx#L15)*
+_Defined in [packages/grid/x-grid-modules/src/components/column-header-item.tsx:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-item.tsx#L15)_

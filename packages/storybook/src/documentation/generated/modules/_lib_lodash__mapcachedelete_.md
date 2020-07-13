@@ -1,20 +1,20 @@
-[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/_mapCacheDelete"](_lib_lodash__mapcachedelete_.md)
+[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/\_mapCacheDelete"](_lib_lodash__mapcachedelete_.md)
 
-# Module: "lib/lodash/_mapCacheDelete"
+# Module: "lib/lodash/\_mapCacheDelete"
 
 ## Index
 
 ### Functions
 
-* [mapCacheDelete](_lib_lodash__mapcachedelete_.md#private-mapcachedelete)
+- [mapCacheDelete](_lib_lodash__mapcachedelete_.md#private-mapcachedelete)
 
 ## Functions
 
 ### `Private` mapCacheDelete
 
-▸ **mapCacheDelete**(`key`: string): *boolean*
+▸ **mapCacheDelete**(`key`: string): _boolean_
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_mapCacheDelete.js:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_mapCacheDelete.js#L14)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_mapCacheDelete.js:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_mapCacheDelete.js#L14)_
 
 Removes `key` and its value from the map.
 
@@ -24,10 +24,10 @@ Removes `key` and its value from the map.
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`key` | string | The key of the value to remove. |
+| Name  | Type   | Description                     |
+| ----- | ------ | ------------------------------- |
+| `key` | string | The key of the value to remove. |
 
-**Returns:** *boolean*
+**Returns:** _boolean_
 
 Returns `true` if the entry was removed, else `false`.

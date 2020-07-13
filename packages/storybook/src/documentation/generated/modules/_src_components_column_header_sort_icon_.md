@@ -6,23 +6,23 @@
 
 ### Interfaces
 
-* [ColumnHeaderSortIconProps](../interfaces/_src_components_column_header_sort_icon_.columnheadersorticonprops.md)
+- [ColumnHeaderSortIconProps](../interfaces/_src_components_column_header_sort_icon_.columnheadersorticonprops.md)
 
 ### Variables
 
-* [ColumnHeaderSortIcon](_src_components_column_header_sort_icon_.md#const-columnheadersorticon)
+- [ColumnHeaderSortIcon](_src_components_column_header_sort_icon_.md#const-columnheadersorticon)
 
 ### Functions
 
-* [getIcon](_src_components_column_header_sort_icon_.md#const-geticon)
+- [getIcon](_src_components_column_header_sort_icon_.md#const-geticon)
 
 ## Variables
 
 ### `Const` ColumnHeaderSortIcon
 
-• **ColumnHeaderSortIcon**: *React.FC‹[ColumnHeaderSortIconProps](../interfaces/_src_components_column_header_sort_icon_.columnheadersorticonprops.md)›* = React.memo(
-  ({ direction, index, hide }) => {
-    const icons = useIcons();
+• **ColumnHeaderSortIcon**: _React.FC‹[ColumnHeaderSortIconProps](../interfaces/_src_components_column_header_sort_icon_.columnheadersorticonprops.md)›_ = React.memo(
+({ direction, index, hide }) => {
+const icons = useIcons();
 
     if (hide || direction == null) {
       return null;
@@ -44,24 +44,25 @@
         )}
       </span>
     );
-  },
+
+},
 )
 
-*Defined in [packages/grid/x-grid-modules/src/components/column-header-sort-icon.tsx:17](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-sort-icon.tsx#L17)*
+_Defined in [packages/grid/x-grid-modules/src/components/column-header-sort-icon.tsx:17](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-sort-icon.tsx#L17)_
 
 ## Functions
 
 ### `Const` getIcon
 
-▸ **getIcon**(`icons`: [IconsOptions](../interfaces/_src_models_gridoptions_.iconsoptions.md), `direction`: [SortDirection](_src_models_sortmodel_.md#sortdirection)): *React.ReactNode*
+▸ **getIcon**(`icons`: [IconsOptions](../interfaces/_src_models_gridoptions_.iconsoptions.md), `direction`: [SortDirection](_src_models_sortmodel_.md#sortdirection)): _React.ReactNode_
 
-*Defined in [packages/grid/x-grid-modules/src/components/column-header-sort-icon.tsx:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-sort-icon.tsx#L14)*
+_Defined in [packages/grid/x-grid-modules/src/components/column-header-sort-icon.tsx:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-sort-icon.tsx#L14)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`icons` | [IconsOptions](../interfaces/_src_models_gridoptions_.iconsoptions.md) |
-`direction` | [SortDirection](_src_models_sortmodel_.md#sortdirection) |
+| Name        | Type                                                                   |
+| ----------- | ---------------------------------------------------------------------- |
+| `icons`     | [IconsOptions](../interfaces/_src_models_gridoptions_.iconsoptions.md) |
+| `direction` | [SortDirection](_src_models_sortmodel_.md#sortdirection)               |
 
-**Returns:** *React.ReactNode*
+**Returns:** _React.ReactNode_

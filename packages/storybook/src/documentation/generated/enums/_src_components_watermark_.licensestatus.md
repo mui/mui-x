@@ -6,39 +6,39 @@
 
 ### Enumeration members
 
-* [Expired](_src_components_watermark_.licensestatus.md#expired)
-* [Invalid](_src_components_watermark_.licensestatus.md#invalid)
-* [NotFound](_src_components_watermark_.licensestatus.md#notfound)
-* [Valid](_src_components_watermark_.licensestatus.md#valid)
+- [Expired](_src_components_watermark_.licensestatus.md#expired)
+- [Invalid](_src_components_watermark_.licensestatus.md#invalid)
+- [NotFound](_src_components_watermark_.licensestatus.md#notfound)
+- [Valid](_src_components_watermark_.licensestatus.md#valid)
 
 ## Enumeration members
 
-###  Expired
+### Expired
 
 • **Expired**: = "Expired"
 
-*Defined in [packages/grid/x-grid-modules/src/components/watermark.tsx:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/watermark.tsx#L7)*
+_Defined in [packages/grid/x-grid-modules/src/components/watermark.tsx:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/watermark.tsx#L7)_
 
-___
+---
 
-###  Invalid
+### Invalid
 
 • **Invalid**: = "Invalid"
 
-*Defined in [packages/grid/x-grid-modules/src/components/watermark.tsx:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/watermark.tsx#L6)*
+_Defined in [packages/grid/x-grid-modules/src/components/watermark.tsx:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/watermark.tsx#L6)_
 
-___
+---
 
-###  NotFound
+### NotFound
 
 • **NotFound**: = "NotFound"
 
-*Defined in [packages/grid/x-grid-modules/src/components/watermark.tsx:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/watermark.tsx#L5)*
+_Defined in [packages/grid/x-grid-modules/src/components/watermark.tsx:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/watermark.tsx#L5)_
 
-___
+---
 
-###  Valid
+### Valid
 
 • **Valid**: = "Valid"
 
-*Defined in [packages/grid/x-grid-modules/src/components/watermark.tsx:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/watermark.tsx#L8)*
+_Defined in [packages/grid/x-grid-modules/src/components/watermark.tsx:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/watermark.tsx#L8)_

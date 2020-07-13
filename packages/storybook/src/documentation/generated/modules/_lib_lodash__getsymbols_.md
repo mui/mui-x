@@ -1,31 +1,31 @@
-[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/_getSymbols"](_lib_lodash__getsymbols_.md)
+[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/\_getSymbols"](_lib_lodash__getsymbols_.md)
 
-# Module: "lib/lodash/_getSymbols"
+# Module: "lib/lodash/\_getSymbols"
 
 ## Index
 
 ### Variables
 
-* [getSymbols](_lib_lodash__getsymbols_.md#private-getsymbols)
-* [nativeGetSymbols](_lib_lodash__getsymbols_.md#nativegetsymbols)
-* [objectProto](_lib_lodash__getsymbols_.md#objectproto)
-* [propertyIsEnumerable](_lib_lodash__getsymbols_.md#propertyisenumerable)
+- [getSymbols](_lib_lodash__getsymbols_.md#private-getsymbols)
+- [nativeGetSymbols](_lib_lodash__getsymbols_.md#nativegetsymbols)
+- [objectProto](_lib_lodash__getsymbols_.md#objectproto)
+- [propertyIsEnumerable](_lib_lodash__getsymbols_.md#propertyisenumerable)
 
 ## Variables
 
 ### `Private` getSymbols
 
-• **getSymbols**: *(Anonymous function)* = !nativeGetSymbols ? stubArray : function(object) {
-  if (object == null) {
-    return [];
-  }
-  object = Object(object);
-  return arrayFilter(nativeGetSymbols(object), function(symbol) {
-    return propertyIsEnumerable.call(object, symbol);
-  });
+• **getSymbols**: _(Anonymous function)_ = !nativeGetSymbols ? stubArray : function(object) {
+if (object == null) {
+return [];
+}
+object = Object(object);
+return arrayFilter(nativeGetSymbols(object), function(symbol) {
+return propertyIsEnumerable.call(object, symbol);
+});
 }
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_getSymbols.js:22](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getSymbols.js#L22)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_getSymbols.js:22](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getSymbols.js#L22)_
 
 Creates an array of the own enumerable symbols of `object`.
 
@@ -33,30 +33,30 @@ Creates an array of the own enumerable symbols of `object`.
 
 **`returns`** Returns the array of symbols.
 
-___
+---
 
-###  nativeGetSymbols
+### nativeGetSymbols
 
-• **nativeGetSymbols**: *getOwnPropertySymbols* = Object.getOwnPropertySymbols
+• **nativeGetSymbols**: _getOwnPropertySymbols_ = Object.getOwnPropertySymbols
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_getSymbols.js:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getSymbols.js#L13)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_getSymbols.js:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getSymbols.js#L13)_
 
-___
+---
 
-###  objectProto
+### objectProto
 
-• **objectProto**: *Object* = Object.prototype
+• **objectProto**: _Object_ = Object.prototype
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_getSymbols.js:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getSymbols.js#L7)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_getSymbols.js:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getSymbols.js#L7)_
 
 Used for built-in method references.
 
-___
+---
 
-###  propertyIsEnumerable
+### propertyIsEnumerable
 
-• **propertyIsEnumerable**: *propertyIsEnumerable* = objectProto.propertyIsEnumerable
+• **propertyIsEnumerable**: _propertyIsEnumerable_ = objectProto.propertyIsEnumerable
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_getSymbols.js:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getSymbols.js#L10)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_getSymbols.js:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getSymbols.js#L10)_
 
 Built-in value references.

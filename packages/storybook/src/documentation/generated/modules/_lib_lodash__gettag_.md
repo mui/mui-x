@@ -1,49 +1,49 @@
-[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/_getTag"](_lib_lodash__gettag_.md)
+[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/\_getTag"](_lib_lodash__gettag_.md)
 
-# Module: "lib/lodash/_getTag"
+# Module: "lib/lodash/\_getTag"
 
 ## Index
 
 ### Variables
 
-* [dataViewCtorString](_lib_lodash__gettag_.md#dataviewctorstring)
-* [dataViewTag](_lib_lodash__gettag_.md#dataviewtag)
-* [getTag](_lib_lodash__gettag_.md#private-gettag)
-* [mapCtorString](_lib_lodash__gettag_.md#mapctorstring)
-* [mapTag](_lib_lodash__gettag_.md#maptag)
-* [objectTag](_lib_lodash__gettag_.md#objecttag)
-* [promiseCtorString](_lib_lodash__gettag_.md#promisectorstring)
-* [promiseTag](_lib_lodash__gettag_.md#promisetag)
-* [setCtorString](_lib_lodash__gettag_.md#setctorstring)
-* [setTag](_lib_lodash__gettag_.md#settag)
-* [weakMapCtorString](_lib_lodash__gettag_.md#weakmapctorstring)
-* [weakMapTag](_lib_lodash__gettag_.md#weakmaptag)
+- [dataViewCtorString](_lib_lodash__gettag_.md#dataviewctorstring)
+- [dataViewTag](_lib_lodash__gettag_.md#dataviewtag)
+- [getTag](_lib_lodash__gettag_.md#private-gettag)
+- [mapCtorString](_lib_lodash__gettag_.md#mapctorstring)
+- [mapTag](_lib_lodash__gettag_.md#maptag)
+- [objectTag](_lib_lodash__gettag_.md#objecttag)
+- [promiseCtorString](_lib_lodash__gettag_.md#promisectorstring)
+- [promiseTag](_lib_lodash__gettag_.md#promisetag)
+- [setCtorString](_lib_lodash__gettag_.md#setctorstring)
+- [setTag](_lib_lodash__gettag_.md#settag)
+- [weakMapCtorString](_lib_lodash__gettag_.md#weakmapctorstring)
+- [weakMapTag](_lib_lodash__gettag_.md#weakmaptag)
 
 ## Variables
 
-###  dataViewCtorString
+### dataViewCtorString
 
-• **dataViewCtorString**: *string* = toSource(DataView)
+• **dataViewCtorString**: _string_ = toSource(DataView)
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_getTag.js:21](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L21)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_getTag.js:21](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L21)_
 
 Used to detect maps, sets, and weakmaps.
 
-___
+---
 
-###  dataViewTag
+### dataViewTag
 
-• **dataViewTag**: *string* = "[object DataView]"
+• **dataViewTag**: _string_ = "[object DataView]"
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_getTag.js:18](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L18)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_getTag.js:18](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L18)_
 
-___
+---
 
 ### `Private` getTag
 
-• **getTag**: *[baseGetTag](_lib_lodash__basegettag_.md#private-basegettag)* = baseGetTag
+• **getTag**: _[baseGetTag](_lib_lodash__basegettag_.md#private-basegettag)_ = baseGetTag
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_getTag.js:34](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L34)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_getTag.js:34](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L34)_
 
 Gets the `toStringTag` of `value`.
 
@@ -51,92 +51,92 @@ Gets the `toStringTag` of `value`.
 
 **`returns`** Returns the `toStringTag`.
 
-___
+---
 
-###  mapCtorString
+### mapCtorString
 
-• **mapCtorString**: *string* = toSource(Map)
+• **mapCtorString**: _string_ = toSource(Map)
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_getTag.js:22](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L22)*
-
-Used to detect maps, sets, and weakmaps.
-
-___
-
-###  mapTag
-
-• **mapTag**: *string* = "[object Map]"
-
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_getTag.js:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L12)*
-
-`Object#toString` result references.
-
-___
-
-###  objectTag
-
-• **objectTag**: *string* = "[object Object]"
-
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_getTag.js:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L13)*
-
-`Object#toString` result references.
-
-___
-
-###  promiseCtorString
-
-• **promiseCtorString**: *string* = toSource(Promise)
-
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_getTag.js:23](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L23)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_getTag.js:22](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L22)_
 
 Used to detect maps, sets, and weakmaps.
 
-___
+---
 
-###  promiseTag
+### mapTag
 
-• **promiseTag**: *string* = "[object Promise]"
+• **mapTag**: _string_ = "[object Map]"
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_getTag.js:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L14)*
-
-`Object#toString` result references.
-
-___
-
-###  setCtorString
-
-• **setCtorString**: *string* = toSource(Set)
-
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_getTag.js:24](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L24)*
-
-Used to detect maps, sets, and weakmaps.
-
-___
-
-###  setTag
-
-• **setTag**: *string* = "[object Set]"
-
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_getTag.js:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L15)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_getTag.js:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L12)_
 
 `Object#toString` result references.
 
-___
+---
 
-###  weakMapCtorString
+### objectTag
 
-• **weakMapCtorString**: *string* = toSource(WeakMap)
+• **objectTag**: _string_ = "[object Object]"
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_getTag.js:25](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L25)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_getTag.js:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L13)_
+
+`Object#toString` result references.
+
+---
+
+### promiseCtorString
+
+• **promiseCtorString**: _string_ = toSource(Promise)
+
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_getTag.js:23](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L23)_
 
 Used to detect maps, sets, and weakmaps.
 
-___
+---
 
-###  weakMapTag
+### promiseTag
 
-• **weakMapTag**: *string* = "[object WeakMap]"
+• **promiseTag**: _string_ = "[object Promise]"
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_getTag.js:16](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L16)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_getTag.js:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L14)_
+
+`Object#toString` result references.
+
+---
+
+### setCtorString
+
+• **setCtorString**: _string_ = toSource(Set)
+
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_getTag.js:24](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L24)_
+
+Used to detect maps, sets, and weakmaps.
+
+---
+
+### setTag
+
+• **setTag**: _string_ = "[object Set]"
+
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_getTag.js:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L15)_
+
+`Object#toString` result references.
+
+---
+
+### weakMapCtorString
+
+• **weakMapCtorString**: _string_ = toSource(WeakMap)
+
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_getTag.js:25](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L25)_
+
+Used to detect maps, sets, and weakmaps.
+
+---
+
+### weakMapTag
+
+• **weakMapTag**: _string_ = "[object WeakMap]"
+
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_getTag.js:16](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_getTag.js#L16)_
 
 `Object#toString` result references.

@@ -6,15 +6,15 @@
 
 ### Object Functions
 
-* [keys](_lib_lodash_keys_.md#keys)
+- [keys](_lib_lodash_keys_.md#keys)
 
 ## Object Functions
 
-###  keys
+### keys
 
-▸ **keys**(`object`: Object): *any[]*
+▸ **keys**(`object`: Object): _any[]_
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/keys.js:35](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/keys.js#L35)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/keys.js:35](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/keys.js#L35)_
 
 Creates an array of the own enumerable property names of `object`.
 
@@ -22,33 +22,33 @@ Creates an array of the own enumerable property names of `object`.
 [ES spec](http://ecma-international.org/ecma-262/7.0/#sec-object.keys)
 for more details.
 
-**`static`** 
+**`static`**
 
 **`since`** 0.1.0
 
-**`memberof`** _
+**`memberof`** \_
 
-**`example`** 
+**`example`**
 
 function Foo() {
-  this.a = 1;
-  this.b = 2;
+this.a = 1;
+this.b = 2;
 }
 
 Foo.prototype.c = 3;
 
-_.keys(new Foo);
+\_.keys(new Foo);
 // => ['a', 'b'] (iteration order is not guaranteed)
 
-_.keys('hi');
+\_.keys('hi');
 // => ['0', '1']
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`object` | Object | The object to query. |
+| Name     | Type   | Description          |
+| -------- | ------ | -------------------- |
+| `object` | Object | The object to query. |
 
-**Returns:** *any[]*
+**Returns:** _any[]_
 
 Returns the array of property names.

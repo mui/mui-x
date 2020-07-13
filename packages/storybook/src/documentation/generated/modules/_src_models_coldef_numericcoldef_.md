@@ -6,65 +6,65 @@
 
 ### Object literals
 
-* [NUMERIC_COL_DEF](_src_models_coldef_numericcoldef_.md#const-numeric_col_def)
+- [NUMERIC_COL_DEF](_src_models_coldef_numericcoldef_.md#const-numeric_col_def)
 
 ## Object literals
 
 ### `Const` NUMERIC_COL_DEF
 
-### ▪ **NUMERIC_COL_DEF**: *object*
+### ▪ **NUMERIC_COL_DEF**: _object_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts#L5)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts#L5)_
 
-###  align
+### align
 
-• **align**: *"right"* = "right"
+• **align**: _"right"_ = "right"
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts#L8)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts#L8)_
 
-###  sortComparator
+### sortComparator
 
-• **sortComparator**: *function* = numberComparer
+• **sortComparator**: _function_ = numberComparer
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts#L10)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts#L10)_
 
 #### Type declaration:
 
-▸ (`v1`: [CellValue](_src_models_rows_.md#cellvalue), `v2`: [CellValue](_src_models_rows_.md#cellvalue), `row1`: [RowModel](../interfaces/_src_models_rows_.rowmodel.md), `row2`: [RowModel](../interfaces/_src_models_rows_.rowmodel.md)): *number*
+▸ (`v1`: [CellValue](_src_models_rows_.md#cellvalue), `v2`: [CellValue](_src_models_rows_.md#cellvalue), `row1`: [RowModel](../interfaces/_src_models_rows_.rowmodel.md), `row2`: [RowModel](../interfaces/_src_models_rows_.rowmodel.md)): _number_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`v1` | [CellValue](_src_models_rows_.md#cellvalue) |
-`v2` | [CellValue](_src_models_rows_.md#cellvalue) |
-`row1` | [RowModel](../interfaces/_src_models_rows_.rowmodel.md) |
-`row2` | [RowModel](../interfaces/_src_models_rows_.rowmodel.md) |
+| Name   | Type                                                    |
+| ------ | ------------------------------------------------------- |
+| `v1`   | [CellValue](_src_models_rows_.md#cellvalue)             |
+| `v2`   | [CellValue](_src_models_rows_.md#cellvalue)             |
+| `row1` | [RowModel](../interfaces/_src_models_rows_.rowmodel.md) |
+| `row2` | [RowModel](../interfaces/_src_models_rows_.rowmodel.md) |
 
-###  type
+### type
 
-• **type**: *string* = "number"
+• **type**: _string_ = "number"
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts#L7)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts#L7)_
 
-###  width
+### width
 
-• **width**: *number* = 80
+• **width**: _number_ = 80
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts#L9)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts#L9)_
 
-###  valueFormatter
+### valueFormatter
 
-▸ **valueFormatter**(`__namedParameters`: object): *undefined | null | string | number | false | true | object*
+▸ **valueFormatter**(`__namedParameters`: object): _undefined | null | string | number | false | true | object_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts#L11)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/numericColDef.ts#L11)_
 
 **Parameters:**
 
-▪ **__namedParameters**: *object*
+▪ **\_\_namedParameters**: _object_
 
-Name | Type |
------- | ------ |
-`value` | undefined &#124; null &#124; string &#124; number &#124; false &#124; true &#124; object &#124; Date |
+| Name    | Type                                                                                                 |
+| ------- | ---------------------------------------------------------------------------------------------------- |
+| `value` | undefined &#124; null &#124; string &#124; number &#124; false &#124; true &#124; object &#124; Date |
 
-**Returns:** *undefined | null | string | number | false | true | object*
+**Returns:** _undefined | null | string | number | false | true | object_

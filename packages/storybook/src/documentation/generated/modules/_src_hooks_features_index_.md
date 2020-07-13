@@ -6,59 +6,59 @@
 
 ### References
 
-* [PageChangedParams](_src_hooks_features_index_.md#pagechangedparams)
-* [PaginationProps](_src_hooks_features_index_.md#paginationprops)
-* [PaginationState](_src_hooks_features_index_.md#paginationstate)
-* [useColumnResize](_src_hooks_features_index_.md#usecolumnresize)
-* [useComponents](_src_hooks_features_index_.md#usecomponents)
-* [usePagination](_src_hooks_features_index_.md#usepagination)
-* [useSelection](_src_hooks_features_index_.md#useselection)
-* [useSorting](_src_hooks_features_index_.md#usesorting)
+- [PageChangedParams](_src_hooks_features_index_.md#pagechangedparams)
+- [PaginationProps](_src_hooks_features_index_.md#paginationprops)
+- [PaginationState](_src_hooks_features_index_.md#paginationstate)
+- [useColumnResize](_src_hooks_features_index_.md#usecolumnresize)
+- [useComponents](_src_hooks_features_index_.md#usecomponents)
+- [usePagination](_src_hooks_features_index_.md#usepagination)
+- [useSelection](_src_hooks_features_index_.md#useselection)
+- [useSorting](_src_hooks_features_index_.md#usesorting)
 
 ## References
 
-###  PageChangedParams
+### PageChangedParams
 
 • **PageChangedParams**:
 
-___
+---
 
-###  PaginationProps
+### PaginationProps
 
 • **PaginationProps**:
 
-___
+---
 
-###  PaginationState
+### PaginationState
 
 • **PaginationState**:
 
-___
+---
 
-###  useColumnResize
+### useColumnResize
 
 • **useColumnResize**:
 
-___
+---
 
-###  useComponents
+### useComponents
 
 • **useComponents**:
 
-___
+---
 
-###  usePagination
+### usePagination
 
 • **usePagination**:
 
-___
+---
 
-###  useSelection
+### useSelection
 
 • **useSelection**:
 
-___
+---
 
-###  useSorting
+### useSorting
 
 • **useSorting**:

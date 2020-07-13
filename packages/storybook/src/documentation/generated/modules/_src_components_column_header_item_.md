@@ -6,19 +6,19 @@
 
 ### Interfaces
 
-* [ColumnHeaderItemProps](../interfaces/_src_components_column_header_item_.columnheaderitemprops.md)
+- [ColumnHeaderItemProps](../interfaces/_src_components_column_header_item_.columnheaderitemprops.md)
 
 ### Variables
 
-* [ColumnHeaderItem](_src_components_column_header_item_.md#const-columnheaderitem)
+- [ColumnHeaderItem](_src_components_column_header_item_.md#const-columnheaderitem)
 
 ## Variables
 
 ### `Const` ColumnHeaderItem
 
-• **ColumnHeaderItem**: *NamedExoticComponent‹[ColumnHeaderItemProps](../interfaces/_src_components_column_header_item_.columnheaderitemprops.md)› & object* = React.memo(
-  ({ column, colIndex, headerHeight, onResizeColumn }: ColumnHeaderItemProps) => {
-    const api = useContext(ApiContext);
+• **ColumnHeaderItem**: _NamedExoticComponent‹[ColumnHeaderItemProps](../interfaces/_src_components_column_header_item_.columnheaderitemprops.md)› & object_ = React.memo(
+({ column, colIndex, headerHeight, onResizeColumn }: ColumnHeaderItemProps) => {
+const api = useContext(ApiContext);
 
     const cssClass = classnames(
       HEADER_CELL_CSS_CLASS,
@@ -82,7 +82,8 @@
         <ColumnHeaderSeparator resizable={column.resizable} onResize={onResize} />
       </div>
     );
-  },
+
+},
 )
 
-*Defined in [packages/grid/x-grid-modules/src/components/column-header-item.tsx:18](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-item.tsx#L18)*
+_Defined in [packages/grid/x-grid-modules/src/components/column-header-item.tsx:18](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-item.tsx#L18)_

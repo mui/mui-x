@@ -6,17 +6,17 @@
 
 ### References
 
-* [debounce](_lib_lodash_function_.md#debounce)
-* [default](_lib_lodash_function_.md#default)
+- [debounce](_lib_lodash_function_.md#debounce)
+- [default](_lib_lodash_function_.md#default)
 
 ## References
 
-###  debounce
+### debounce
 
 • **debounce**:
 
-___
+---
 
-###  default
+### default
 
 • **default**:

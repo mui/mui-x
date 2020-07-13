@@ -4,36 +4,36 @@
 
 ## Hierarchy
 
-* **ColParams**
+- **ColParams**
 
 ## Index
 
 ### Properties
 
-* [api](_src_models_coldef_coldef_.colparams.md#api)
-* [colDef](_src_models_coldef_coldef_.colparams.md#coldef)
-* [colIndex](_src_models_coldef_coldef_.colparams.md#colindex)
+- [api](_src_models_coldef_coldef_.colparams.md#api)
+- [colDef](_src_models_coldef_coldef_.colparams.md#coldef)
+- [colIndex](_src_models_coldef_coldef_.colparams.md#colindex)
 
 ## Properties
 
-###  api
+### api
 
-• **api**: *[GridApi](../modules/_src_models_gridapi_.md#gridapi)*
+• **api**: _[GridApi](../modules/_src_models_gridapi_.md#gridapi)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L13)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L13)_
 
-___
+---
 
-###  colDef
+### colDef
 
-• **colDef**: *[ColDef](_src_models_coldef_coldef_.coldef.md)*
+• **colDef**: _[ColDef](_src_models_coldef_coldef_.coldef.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L11)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L11)_
 
-___
+---
 
-###  colIndex
+### colIndex
 
-• **colIndex**: *number*
+• **colIndex**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L12)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L12)_

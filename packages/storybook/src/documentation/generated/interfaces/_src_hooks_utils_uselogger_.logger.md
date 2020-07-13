@@ -4,85 +4,85 @@
 
 ## Hierarchy
 
-* **Logger**
+- **Logger**
 
 ## Index
 
 ### Properties
 
-* [debug](_src_hooks_utils_uselogger_.logger.md#debug)
-* [error](_src_hooks_utils_uselogger_.logger.md#error)
-* [info](_src_hooks_utils_uselogger_.logger.md#info)
-* [warn](_src_hooks_utils_uselogger_.logger.md#warn)
+- [debug](_src_hooks_utils_uselogger_.logger.md#debug)
+- [error](_src_hooks_utils_uselogger_.logger.md#error)
+- [info](_src_hooks_utils_uselogger_.logger.md#info)
+- [warn](_src_hooks_utils_uselogger_.logger.md#warn)
 
 ## Properties
 
-###  debug
+### debug
 
-• **debug**: *function*
+• **debug**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L8)*
-
-#### Type declaration:
-
-▸ (...`args`: any[]): *void*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`...args` | any[] |
-
-___
-
-###  error
-
-• **error**: *function*
-
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L11)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L8)_
 
 #### Type declaration:
 
-▸ (...`args`: any[]): *void*
+▸ (...`args`: any[]): _void_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`...args` | any[] |
+| Name      | Type  |
+| --------- | ----- |
+| `...args` | any[] |
 
-___
+---
 
-###  info
+### error
 
-• **info**: *function*
+• **error**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L9)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L11)_
 
 #### Type declaration:
 
-▸ (...`args`: any[]): *void*
+▸ (...`args`: any[]): _void_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`...args` | any[] |
+| Name      | Type  |
+| --------- | ----- |
+| `...args` | any[] |
 
-___
+---
 
-###  warn
+### info
 
-• **warn**: *function*
+• **info**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L10)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L9)_
 
 #### Type declaration:
 
-▸ (...`args`: any[]): *void*
+▸ (...`args`: any[]): _void_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`...args` | any[] |
+| Name      | Type  |
+| --------- | ----- |
+| `...args` | any[] |
+
+---
+
+### warn
+
+• **warn**: _function_
+
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useLogger.ts#L10)_
+
+#### Type declaration:
+
+▸ (...`args`: any[]): _void_
+
+**Parameters:**
+
+| Name      | Type  |
+| --------- | ----- |
+| `...args` | any[] |

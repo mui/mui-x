@@ -1,35 +1,35 @@
-[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/_listCacheDelete"](_lib_lodash__listcachedelete_.md)
+[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/\_listCacheDelete"](_lib_lodash__listcachedelete_.md)
 
-# Module: "lib/lodash/_listCacheDelete"
+# Module: "lib/lodash/\_listCacheDelete"
 
 ## Index
 
 ### Variables
 
-* [arrayProto](_lib_lodash__listcachedelete_.md#arrayproto)
-* [splice](_lib_lodash__listcachedelete_.md#splice)
+- [arrayProto](_lib_lodash__listcachedelete_.md#arrayproto)
+- [splice](_lib_lodash__listcachedelete_.md#splice)
 
 ### Functions
 
-* [listCacheDelete](_lib_lodash__listcachedelete_.md#private-listcachedelete)
+- [listCacheDelete](_lib_lodash__listcachedelete_.md#private-listcachedelete)
 
 ## Variables
 
-###  arrayProto
+### arrayProto
 
-• **arrayProto**: *any[]* = Array.prototype
+• **arrayProto**: _any[]_ = Array.prototype
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_listCacheDelete.js:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_listCacheDelete.js#L6)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_listCacheDelete.js:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_listCacheDelete.js#L6)_
 
 Used for built-in method references.
 
-___
+---
 
-###  splice
+### splice
 
-• **splice**: *splice* = arrayProto.splice
+• **splice**: _splice_ = arrayProto.splice
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_listCacheDelete.js:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_listCacheDelete.js#L9)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_listCacheDelete.js:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_listCacheDelete.js#L9)_
 
 Built-in value references.
 
@@ -37,9 +37,9 @@ Built-in value references.
 
 ### `Private` listCacheDelete
 
-▸ **listCacheDelete**(`key`: string): *boolean*
+▸ **listCacheDelete**(`key`: string): _boolean_
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_listCacheDelete.js:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_listCacheDelete.js#L20)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_listCacheDelete.js:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_listCacheDelete.js#L20)_
 
 Removes `key` and its value from the list cache.
 
@@ -49,10 +49,10 @@ Removes `key` and its value from the list cache.
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`key` | string | The key of the value to remove. |
+| Name  | Type   | Description                     |
+| ----- | ------ | ------------------------------- |
+| `key` | string | The key of the value to remove. |
 
-**Returns:** *boolean*
+**Returns:** _boolean_
 
 Returns `true` if the entry was removed, else `false`.

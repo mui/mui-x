@@ -4,36 +4,36 @@
 
 ## Hierarchy
 
-* **RowSelectedParam**
+- **RowSelectedParam**
 
 ## Index
 
 ### Properties
 
-* [data](_src_models_gridoptions_.rowselectedparam.md#data)
-* [isSelected](_src_models_gridoptions_.rowselectedparam.md#isselected)
-* [rowIndex](_src_models_gridoptions_.rowselectedparam.md#rowindex)
+- [data](_src_models_gridoptions_.rowselectedparam.md#data)
+- [isSelected](_src_models_gridoptions_.rowselectedparam.md#isselected)
+- [rowIndex](_src_models_gridoptions_.rowselectedparam.md#rowindex)
 
 ## Properties
 
-###  data
+### data
 
-• **data**: *[RowData](_src_models_rows_.rowdata.md)*
+• **data**: _[RowData](_src_models_rows_.rowdata.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:37](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L37)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:37](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L37)_
 
-___
+---
 
-###  isSelected
+### isSelected
 
-• **isSelected**: *boolean*
+• **isSelected**: _boolean_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:39](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L39)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:39](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L39)_
 
-___
+---
 
-###  rowIndex
+### rowIndex
 
-• **rowIndex**: *number*
+• **rowIndex**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:38](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L38)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:38](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L38)_

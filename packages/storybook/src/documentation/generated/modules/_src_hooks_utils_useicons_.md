@@ -6,14 +6,14 @@
 
 ### Functions
 
-* [useIcons](_src_hooks_utils_useicons_.md#const-useicons)
+- [useIcons](_src_hooks_utils_useicons_.md#const-useicons)
 
 ## Functions
 
 ### `Const` useIcons
 
-▸ **useIcons**(): *[IconsOptions](../interfaces/_src_models_gridoptions_.iconsoptions.md)*
+▸ **useIcons**(): _[IconsOptions](../interfaces/_src_models_gridoptions_.iconsoptions.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useIcons.ts:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useIcons.ts#L5)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useIcons.ts:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useIcons.ts#L5)_
 
-**Returns:** *[IconsOptions](../interfaces/_src_models_gridoptions_.iconsoptions.md)*
+**Returns:** _[IconsOptions](../interfaces/_src_models_gridoptions_.iconsoptions.md)_

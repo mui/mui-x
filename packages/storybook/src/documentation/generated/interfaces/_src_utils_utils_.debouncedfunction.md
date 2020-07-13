@@ -4,7 +4,7 @@
 
 ## Hierarchy
 
-* [Function](_src_utils_utils_.debouncedfunction.md#function)
+- [Function](_src_utils_utils_.debouncedfunction.md#function)
 
   ↳ **DebouncedFunction**
 
@@ -12,114 +12,114 @@
 
 ### Properties
 
-* [Function](_src_utils_utils_.debouncedfunction.md#function)
-* [arguments](_src_utils_utils_.debouncedfunction.md#arguments)
-* [caller](_src_utils_utils_.debouncedfunction.md#caller)
-* [cancel](_src_utils_utils_.debouncedfunction.md#cancel)
-* [flush](_src_utils_utils_.debouncedfunction.md#flush)
-* [length](_src_utils_utils_.debouncedfunction.md#readonly-length)
-* [name](_src_utils_utils_.debouncedfunction.md#readonly-name)
-* [prototype](_src_utils_utils_.debouncedfunction.md#prototype)
+- [Function](_src_utils_utils_.debouncedfunction.md#function)
+- [arguments](_src_utils_utils_.debouncedfunction.md#arguments)
+- [caller](_src_utils_utils_.debouncedfunction.md#caller)
+- [cancel](_src_utils_utils_.debouncedfunction.md#cancel)
+- [flush](_src_utils_utils_.debouncedfunction.md#flush)
+- [length](_src_utils_utils_.debouncedfunction.md#readonly-length)
+- [name](_src_utils_utils_.debouncedfunction.md#readonly-name)
+- [prototype](_src_utils_utils_.debouncedfunction.md#prototype)
 
 ### Methods
 
-* [[Symbol.hasInstance]](_src_utils_utils_.debouncedfunction.md#[symbol.hasinstance])
-* [apply](_src_utils_utils_.debouncedfunction.md#apply)
-* [bind](_src_utils_utils_.debouncedfunction.md#bind)
-* [call](_src_utils_utils_.debouncedfunction.md#call)
-* [toString](_src_utils_utils_.debouncedfunction.md#tostring)
+- [[Symbol.hasInstance]](_src_utils_utils_.debouncedfunction.md#[symbol.hasinstance])
+- [apply](_src_utils_utils_.debouncedfunction.md#apply)
+- [bind](_src_utils_utils_.debouncedfunction.md#bind)
+- [call](_src_utils_utils_.debouncedfunction.md#call)
+- [toString](_src_utils_utils_.debouncedfunction.md#tostring)
 
 ## Properties
 
-###  Function
+### Function
 
-• **Function**: *FunctionConstructor*
+• **Function**: _FunctionConstructor_
 
 Defined in node_modules/typescript/lib/lib.es5.d.ts:316
 
-___
+---
 
-###  arguments
+### arguments
 
-• **arguments**: *any*
+• **arguments**: _any_
 
-*Inherited from [DebouncedFunction](_src_utils_utils_.debouncedfunction.md).[arguments](_src_utils_utils_.debouncedfunction.md#arguments)*
+_Inherited from [DebouncedFunction](_src_utils_utils_.debouncedfunction.md).[arguments](_src_utils_utils_.debouncedfunction.md#arguments)_
 
 Defined in node_modules/typescript/lib/lib.es5.d.ts:302
 
-___
+---
 
-###  caller
+### caller
 
-• **caller**: *[Function](_src_utils_utils_.debouncedfunction.md#function)*
+• **caller**: _[Function](_src_utils_utils_.debouncedfunction.md#function)_
 
-*Inherited from [DebouncedFunction](_src_utils_utils_.debouncedfunction.md).[caller](_src_utils_utils_.debouncedfunction.md#caller)*
+_Inherited from [DebouncedFunction](_src_utils_utils_.debouncedfunction.md).[caller](_src_utils_utils_.debouncedfunction.md#caller)_
 
 Defined in node_modules/typescript/lib/lib.es5.d.ts:303
 
-___
+---
 
-###  cancel
+### cancel
 
-• **cancel**: *function*
+• **cancel**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/utils/utils.ts:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/utils.ts#L7)*
-
-#### Type declaration:
-
-▸ (): *void*
-
-___
-
-###  flush
-
-• **flush**: *function*
-
-*Defined in [packages/grid/x-grid-modules/src/utils/utils.ts:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/utils.ts#L8)*
+_Defined in [packages/grid/x-grid-modules/src/utils/utils.ts:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/utils.ts#L7)_
 
 #### Type declaration:
 
-▸ (): *void*
+▸ (): _void_
 
-___
+---
+
+### flush
+
+• **flush**: _function_
+
+_Defined in [packages/grid/x-grid-modules/src/utils/utils.ts:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/utils.ts#L8)_
+
+#### Type declaration:
+
+▸ (): _void_
+
+---
 
 ### `Readonly` length
 
-• **length**: *number*
+• **length**: _number_
 
-*Inherited from [DebouncedFunction](_src_utils_utils_.debouncedfunction.md).[length](_src_utils_utils_.debouncedfunction.md#readonly-length)*
+_Inherited from [DebouncedFunction](_src_utils_utils_.debouncedfunction.md).[length](_src_utils_utils_.debouncedfunction.md#readonly-length)_
 
 Defined in node_modules/typescript/lib/lib.es5.d.ts:299
 
-___
+---
 
 ### `Readonly` name
 
-• **name**: *string*
+• **name**: _string_
 
-*Inherited from [DebouncedFunction](_src_utils_utils_.debouncedfunction.md).[name](_src_utils_utils_.debouncedfunction.md#readonly-name)*
+_Inherited from [DebouncedFunction](_src_utils_utils_.debouncedfunction.md).[name](_src_utils_utils_.debouncedfunction.md#readonly-name)_
 
 Defined in node_modules/typescript/lib/lib.es2015.core.d.ts:97
 
 Returns the name of the function. Function names are read-only and can not be changed.
 
-___
+---
 
-###  prototype
+### prototype
 
-• **prototype**: *any*
+• **prototype**: _any_
 
-*Inherited from [DebouncedFunction](_src_utils_utils_.debouncedfunction.md).[prototype](_src_utils_utils_.debouncedfunction.md#prototype)*
+_Inherited from [DebouncedFunction](_src_utils_utils_.debouncedfunction.md).[prototype](_src_utils_utils_.debouncedfunction.md#prototype)_
 
 Defined in node_modules/typescript/lib/lib.es5.d.ts:298
 
 ## Methods
 
-###  [Symbol.hasInstance]
+### [Symbol.hasInstance]
 
-▸ **[Symbol.hasInstance]**(`value`: any): *boolean*
+▸ **[Symbol.hasInstance]**(`value`: any): _boolean_
 
-*Inherited from [DebouncedFunction](_src_utils_utils_.debouncedfunction.md).[[Symbol.hasInstance]](_src_utils_utils_.debouncedfunction.md#[symbol.hasinstance])*
+_Inherited from [DebouncedFunction](_src_utils_utils_.debouncedfunction.md).[[Symbol.hasInstance]](_src_utils_utils_.debouncedfunction.md#[symbol.hasinstance])_
 
 Defined in node_modules/typescript/lib/lib.es2015.symbol.wellknown.d.ts:157
 
@@ -131,19 +131,19 @@ A constructor function can control which objects are recognized as its instances
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`value` | any |
+| Name    | Type |
+| ------- | ---- |
+| `value` | any  |
 
-**Returns:** *boolean*
+**Returns:** _boolean_
 
-___
+---
 
-###  apply
+### apply
 
-▸ **apply**(`this`: [Function](_src_utils_utils_.debouncedfunction.md#function), `thisArg`: any, `argArray?`: any): *any*
+▸ **apply**(`this`: [Function](_src_utils_utils_.debouncedfunction.md#function), `thisArg`: any, `argArray?`: any): _any_
 
-*Inherited from [DebouncedFunction](_src_utils_utils_.debouncedfunction.md).[apply](_src_utils_utils_.debouncedfunction.md#apply)*
+_Inherited from [DebouncedFunction](_src_utils_utils_.debouncedfunction.md).[apply](_src_utils_utils_.debouncedfunction.md#apply)_
 
 Defined in node_modules/typescript/lib/lib.es5.d.ts:278
 
@@ -151,21 +151,21 @@ Calls the function, substituting the specified object for the this value of the 
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`this` | [Function](_src_utils_utils_.debouncedfunction.md#function) | - |
-`thisArg` | any | The object to be used as the this object. |
-`argArray?` | any | A set of arguments to be passed to the function.  |
+| Name        | Type                                                        | Description                                      |
+| ----------- | ----------------------------------------------------------- | ------------------------------------------------ |
+| `this`      | [Function](_src_utils_utils_.debouncedfunction.md#function) | -                                                |
+| `thisArg`   | any                                                         | The object to be used as the this object.        |
+| `argArray?` | any                                                         | A set of arguments to be passed to the function. |
 
-**Returns:** *any*
+**Returns:** _any_
 
-___
+---
 
-###  bind
+### bind
 
-▸ **bind**(`this`: [Function](_src_utils_utils_.debouncedfunction.md#function), `thisArg`: any, ...`argArray`: any[]): *any*
+▸ **bind**(`this`: [Function](_src_utils_utils_.debouncedfunction.md#function), `thisArg`: any, ...`argArray`: any[]): _any_
 
-*Inherited from [DebouncedFunction](_src_utils_utils_.debouncedfunction.md).[bind](_src_utils_utils_.debouncedfunction.md#bind)*
+_Inherited from [DebouncedFunction](_src_utils_utils_.debouncedfunction.md).[bind](_src_utils_utils_.debouncedfunction.md#bind)_
 
 Defined in node_modules/typescript/lib/lib.es5.d.ts:293
 
@@ -174,21 +174,21 @@ The this object of the bound function is associated with the specified object, a
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`this` | [Function](_src_utils_utils_.debouncedfunction.md#function) | - |
-`thisArg` | any | An object to which the this keyword can refer inside the new function. |
-`...argArray` | any[] | A list of arguments to be passed to the new function.  |
+| Name          | Type                                                        | Description                                                            |
+| ------------- | ----------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `this`        | [Function](_src_utils_utils_.debouncedfunction.md#function) | -                                                                      |
+| `thisArg`     | any                                                         | An object to which the this keyword can refer inside the new function. |
+| `...argArray` | any[]                                                       | A list of arguments to be passed to the new function.                  |
 
-**Returns:** *any*
+**Returns:** _any_
 
-___
+---
 
-###  call
+### call
 
-▸ **call**(`this`: [Function](_src_utils_utils_.debouncedfunction.md#function), `thisArg`: any, ...`argArray`: any[]): *any*
+▸ **call**(`this`: [Function](_src_utils_utils_.debouncedfunction.md#function), `thisArg`: any, ...`argArray`: any[]): _any_
 
-*Inherited from [DebouncedFunction](_src_utils_utils_.debouncedfunction.md).[call](_src_utils_utils_.debouncedfunction.md#call)*
+_Inherited from [DebouncedFunction](_src_utils_utils_.debouncedfunction.md).[call](_src_utils_utils_.debouncedfunction.md#call)_
 
 Defined in node_modules/typescript/lib/lib.es5.d.ts:285
 
@@ -196,24 +196,24 @@ Calls a method of an object, substituting another object for the current object.
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`this` | [Function](_src_utils_utils_.debouncedfunction.md#function) | - |
-`thisArg` | any | The object to be used as the current object. |
-`...argArray` | any[] | A list of arguments to be passed to the method.  |
+| Name          | Type                                                        | Description                                     |
+| ------------- | ----------------------------------------------------------- | ----------------------------------------------- |
+| `this`        | [Function](_src_utils_utils_.debouncedfunction.md#function) | -                                               |
+| `thisArg`     | any                                                         | The object to be used as the current object.    |
+| `...argArray` | any[]                                                       | A list of arguments to be passed to the method. |
 
-**Returns:** *any*
+**Returns:** _any_
 
-___
+---
 
-###  toString
+### toString
 
-▸ **toString**(): *string*
+▸ **toString**(): _string_
 
-*Inherited from [DebouncedFunction](_src_utils_utils_.debouncedfunction.md).[toString](_src_utils_utils_.debouncedfunction.md#tostring)*
+_Inherited from [DebouncedFunction](_src_utils_utils_.debouncedfunction.md).[toString](_src_utils_utils_.debouncedfunction.md#tostring)_
 
 Defined in node_modules/typescript/lib/lib.es5.d.ts:296
 
 Returns a string representation of a function.
 
-**Returns:** *string*
+**Returns:** _string_

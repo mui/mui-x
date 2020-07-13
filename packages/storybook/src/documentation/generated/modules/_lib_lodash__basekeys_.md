@@ -1,35 +1,35 @@
-[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/_baseKeys"](_lib_lodash__basekeys_.md)
+[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/\_baseKeys"](_lib_lodash__basekeys_.md)
 
-# Module: "lib/lodash/_baseKeys"
+# Module: "lib/lodash/\_baseKeys"
 
 ## Index
 
 ### Variables
 
-* [hasOwnProperty](_lib_lodash__basekeys_.md#hasownproperty)
-* [objectProto](_lib_lodash__basekeys_.md#objectproto)
+- [hasOwnProperty](_lib_lodash__basekeys_.md#hasownproperty)
+- [objectProto](_lib_lodash__basekeys_.md#objectproto)
 
 ### Functions
 
-* [baseKeys](_lib_lodash__basekeys_.md#private-basekeys)
+- [baseKeys](_lib_lodash__basekeys_.md#private-basekeys)
 
 ## Variables
 
-###  hasOwnProperty
+### hasOwnProperty
 
-• **hasOwnProperty**: *hasOwnProperty* = objectProto.hasOwnProperty
+• **hasOwnProperty**: _hasOwnProperty_ = objectProto.hasOwnProperty
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_baseKeys.js:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_baseKeys.js#L10)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_baseKeys.js:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_baseKeys.js#L10)_
 
 Used to check objects for own properties.
 
-___
+---
 
-###  objectProto
+### objectProto
 
-• **objectProto**: *Object* = Object.prototype
+• **objectProto**: _Object_ = Object.prototype
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_baseKeys.js:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_baseKeys.js#L7)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_baseKeys.js:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_baseKeys.js#L7)_
 
 Used for built-in method references.
 
@@ -37,18 +37,18 @@ Used for built-in method references.
 
 ### `Private` baseKeys
 
-▸ **baseKeys**(`object`: Object): *any[]*
+▸ **baseKeys**(`object`: Object): _any[]_
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_baseKeys.js:19](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_baseKeys.js#L19)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_baseKeys.js:19](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_baseKeys.js#L19)_
 
 The base implementation of `_.keys` which doesn't treat sparse arrays as dense.
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`object` | Object | The object to query. |
+| Name     | Type   | Description          |
+| -------- | ------ | -------------------- |
+| `object` | Object | The object to query. |
 
-**Returns:** *any[]*
+**Returns:** _any[]_
 
 Returns the array of property names.

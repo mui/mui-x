@@ -4,68 +4,68 @@
 
 ## Hierarchy
 
-* **SortApi**
+- **SortApi**
 
 ## Index
 
 ### Properties
 
-* [getSortModel](_src_models_gridapi_.sortapi.md#getsortmodel)
-* [onColumnsSorted](_src_models_gridapi_.sortapi.md#oncolumnssorted)
-* [setSortModel](_src_models_gridapi_.sortapi.md#setsortmodel)
+- [getSortModel](_src_models_gridapi_.sortapi.md#getsortmodel)
+- [onColumnsSorted](_src_models_gridapi_.sortapi.md#oncolumnssorted)
+- [setSortModel](_src_models_gridapi_.sortapi.md#setsortmodel)
 
 ## Properties
 
-###  getSortModel
+### getSortModel
 
-• **getSortModel**: *function*
+• **getSortModel**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:43](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L43)*
-
-#### Type declaration:
-
-▸ (): *[SortModel](../modules/_src_models_sortmodel_.md#sortmodel)*
-
-___
-
-###  onColumnsSorted
-
-• **onColumnsSorted**: *function*
-
-*Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:45](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L45)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:43](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L43)_
 
 #### Type declaration:
 
-▸ (`handler`: function): *function*
+▸ (): _[SortModel](../modules/_src_models_sortmodel_.md#sortmodel)_
 
-**Parameters:**
+---
 
-▪ **handler**: *function*
+### onColumnsSorted
 
-▸ (`param`: [ColumnSortedParams](_src_models_gridoptions_.columnsortedparams.md)): *void*
+• **onColumnsSorted**: _function_
 
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`param` | [ColumnSortedParams](_src_models_gridoptions_.columnsortedparams.md) |
-
-▸ (): *void*
-
-___
-
-###  setSortModel
-
-• **setSortModel**: *function*
-
-*Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:44](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L44)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:45](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L45)_
 
 #### Type declaration:
 
-▸ (`model`: [SortModel](../modules/_src_models_sortmodel_.md#sortmodel)): *void*
+▸ (`handler`: function): _function_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`model` | [SortModel](../modules/_src_models_sortmodel_.md#sortmodel) |
+▪ **handler**: _function_
+
+▸ (`param`: [ColumnSortedParams](_src_models_gridoptions_.columnsortedparams.md)): _void_
+
+**Parameters:**
+
+| Name    | Type                                                                 |
+| ------- | -------------------------------------------------------------------- |
+| `param` | [ColumnSortedParams](_src_models_gridoptions_.columnsortedparams.md) |
+
+▸ (): _void_
+
+---
+
+### setSortModel
+
+• **setSortModel**: _function_
+
+_Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:44](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L44)_
+
+#### Type declaration:
+
+▸ (`model`: [SortModel](../modules/_src_models_sortmodel_.md#sortmodel)): _void_
+
+**Parameters:**
+
+| Name    | Type                                                        |
+| ------- | ----------------------------------------------------------- |
+| `model` | [SortModel](../modules/_src_models_sortmodel_.md#sortmodel) |

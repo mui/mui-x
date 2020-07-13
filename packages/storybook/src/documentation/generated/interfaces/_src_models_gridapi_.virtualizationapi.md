@@ -4,111 +4,111 @@
 
 ## Hierarchy
 
-* **VirtualizationApi**
+- **VirtualizationApi**
 
 ## Index
 
 ### Properties
 
-* [getContainerPropsState](_src_models_gridapi_.virtualizationapi.md#getcontainerpropsstate)
-* [getRenderContextState](_src_models_gridapi_.virtualizationapi.md#getrendercontextstate)
-* [isColumnVisibleInWindow](_src_models_gridapi_.virtualizationapi.md#iscolumnvisibleinwindow)
-* [renderPage](_src_models_gridapi_.virtualizationapi.md#renderpage)
-* [scroll](_src_models_gridapi_.virtualizationapi.md#scroll)
-* [scrollToIndexes](_src_models_gridapi_.virtualizationapi.md#scrolltoindexes)
+- [getContainerPropsState](_src_models_gridapi_.virtualizationapi.md#getcontainerpropsstate)
+- [getRenderContextState](_src_models_gridapi_.virtualizationapi.md#getrendercontextstate)
+- [isColumnVisibleInWindow](_src_models_gridapi_.virtualizationapi.md#iscolumnvisibleinwindow)
+- [renderPage](_src_models_gridapi_.virtualizationapi.md#renderpage)
+- [scroll](_src_models_gridapi_.virtualizationapi.md#scroll)
+- [scrollToIndexes](_src_models_gridapi_.virtualizationapi.md#scrolltoindexes)
 
 ## Properties
 
-###  getContainerPropsState
+### getContainerPropsState
 
-• **getContainerPropsState**: *function*
+• **getContainerPropsState**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:59](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L59)*
-
-#### Type declaration:
-
-▸ (): *[ContainerProps](_src_models_containerprops_.containerprops.md) | null*
-
-___
-
-###  getRenderContextState
-
-• **getRenderContextState**: *function*
-
-*Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:60](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L60)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:59](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L59)_
 
 #### Type declaration:
 
-▸ (): *Partial‹[RenderContextProps](../modules/_src_models_rendercontextprops_.md#rendercontextprops)› | undefined*
+▸ (): _[ContainerProps](_src_models_containerprops_.containerprops.md) | null_
 
-___
+---
 
-###  isColumnVisibleInWindow
+### getRenderContextState
 
-• **isColumnVisibleInWindow**: *function*
+• **getRenderContextState**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:58](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L58)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:60](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L60)_
 
 #### Type declaration:
 
-▸ (`colIndex`: number): *boolean*
+▸ (): _Partial‹[RenderContextProps](../modules/_src_models_rendercontextprops_.md#rendercontextprops)› | undefined_
+
+---
+
+### isColumnVisibleInWindow
+
+• **isColumnVisibleInWindow**: _function_
+
+_Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:58](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L58)_
+
+#### Type declaration:
+
+▸ (`colIndex`: number): _boolean_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`colIndex` | number |
+| Name       | Type   |
+| ---------- | ------ |
+| `colIndex` | number |
 
-___
+---
 
-###  renderPage
+### renderPage
 
-• **renderPage**: *function*
+• **renderPage**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:61](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L61)*
-
-#### Type declaration:
-
-▸ (`page`: number): *void*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`page` | number |
-
-___
-
-###  scroll
-
-• **scroll**: *function*
-
-*Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:56](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L56)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:61](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L61)_
 
 #### Type declaration:
 
-▸ (`params`: Partial‹[ScrollParams](_src_hooks_utils_usescrollfn_.scrollparams.md)›): *void*
+▸ (`page`: number): _void_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`params` | Partial‹[ScrollParams](_src_hooks_utils_usescrollfn_.scrollparams.md)› |
+| Name   | Type   |
+| ------ | ------ |
+| `page` | number |
 
-___
+---
 
-###  scrollToIndexes
+### scroll
 
-• **scrollToIndexes**: *function*
+• **scroll**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:57](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L57)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:56](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L56)_
 
 #### Type declaration:
 
-▸ (`params`: [CellIndexCoordinates](_src_models_rows_.cellindexcoordinates.md)): *void*
+▸ (`params`: Partial‹[ScrollParams](_src_hooks_utils_usescrollfn_.scrollparams.md)›): _void_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`params` | [CellIndexCoordinates](_src_models_rows_.cellindexcoordinates.md) |
+| Name     | Type                                                                   |
+| -------- | ---------------------------------------------------------------------- |
+| `params` | Partial‹[ScrollParams](_src_hooks_utils_usescrollfn_.scrollparams.md)› |
+
+---
+
+### scrollToIndexes
+
+• **scrollToIndexes**: _function_
+
+_Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:57](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L57)_
+
+#### Type declaration:
+
+▸ (`params`: [CellIndexCoordinates](_src_models_rows_.cellindexcoordinates.md)): _void_
+
+**Parameters:**
+
+| Name     | Type                                                              |
+| -------- | ----------------------------------------------------------------- |
+| `params` | [CellIndexCoordinates](_src_models_rows_.cellindexcoordinates.md) |

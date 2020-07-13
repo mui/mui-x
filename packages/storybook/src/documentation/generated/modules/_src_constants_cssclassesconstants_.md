@@ -6,48 +6,48 @@
 
 ### Variables
 
-* [CELL_CSS_CLASS](_src_constants_cssclassesconstants_.md#const-cell_css_class)
-* [DATA_CONTAINER_CSS_CLASS](_src_constants_cssclassesconstants_.md#const-data_container_css_class)
-* [HEADER_CELL_CSS_CLASS](_src_constants_cssclassesconstants_.md#const-header_cell_css_class)
-* [ROOT_CSS_CLASS](_src_constants_cssclassesconstants_.md#const-root_css_class)
-* [ROW_CSS_CLASS](_src_constants_cssclassesconstants_.md#const-row_css_class)
+- [CELL_CSS_CLASS](_src_constants_cssclassesconstants_.md#const-cell_css_class)
+- [DATA_CONTAINER_CSS_CLASS](_src_constants_cssclassesconstants_.md#const-data_container_css_class)
+- [HEADER_CELL_CSS_CLASS](_src_constants_cssclassesconstants_.md#const-header_cell_css_class)
+- [ROOT_CSS_CLASS](_src_constants_cssclassesconstants_.md#const-root_css_class)
+- [ROW_CSS_CLASS](_src_constants_cssclassesconstants_.md#const-row_css_class)
 
 ## Variables
 
 ### `Const` CELL_CSS_CLASS
 
-• **CELL_CSS_CLASS**: *"material-cell"* = "material-cell"
+• **CELL_CSS_CLASS**: _"material-cell"_ = "material-cell"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/cssClassesConstants.ts:2](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/cssClassesConstants.ts#L2)*
+_Defined in [packages/grid/x-grid-modules/src/constants/cssClassesConstants.ts:2](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/cssClassesConstants.ts#L2)_
 
-___
+---
 
 ### `Const` DATA_CONTAINER_CSS_CLASS
 
-• **DATA_CONTAINER_CSS_CLASS**: *"data-container"* = "data-container"
+• **DATA_CONTAINER_CSS_CLASS**: _"data-container"_ = "data-container"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/cssClassesConstants.ts:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/cssClassesConstants.ts#L6)*
+_Defined in [packages/grid/x-grid-modules/src/constants/cssClassesConstants.ts:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/cssClassesConstants.ts#L6)_
 
-___
+---
 
 ### `Const` HEADER_CELL_CSS_CLASS
 
-• **HEADER_CELL_CSS_CLASS**: *"material-col-cell"* = "material-col-cell"
+• **HEADER_CELL_CSS_CLASS**: _"material-col-cell"_ = "material-col-cell"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/cssClassesConstants.ts:4](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/cssClassesConstants.ts#L4)*
+_Defined in [packages/grid/x-grid-modules/src/constants/cssClassesConstants.ts:4](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/cssClassesConstants.ts#L4)_
 
-___
+---
 
 ### `Const` ROOT_CSS_CLASS
 
-• **ROOT_CSS_CLASS**: *"grid-root"* = "grid-root"
+• **ROOT_CSS_CLASS**: _"grid-root"_ = "grid-root"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/cssClassesConstants.ts:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/cssClassesConstants.ts#L5)*
+_Defined in [packages/grid/x-grid-modules/src/constants/cssClassesConstants.ts:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/cssClassesConstants.ts#L5)_
 
-___
+---
 
 ### `Const` ROW_CSS_CLASS
 
-• **ROW_CSS_CLASS**: *"material-row"* = "material-row"
+• **ROW_CSS_CLASS**: _"material-row"_ = "material-row"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/cssClassesConstants.ts:3](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/cssClassesConstants.ts#L3)*
+_Defined in [packages/grid/x-grid-modules/src/constants/cssClassesConstants.ts:3](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/cssClassesConstants.ts#L3)_

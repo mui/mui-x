@@ -6,17 +6,17 @@
 
 ### References
 
-* [default](_lib_lodash_object_.md#default)
-* [keys](_lib_lodash_object_.md#keys)
+- [default](_lib_lodash_object_.md#default)
+- [keys](_lib_lodash_object_.md#keys)
 
 ## References
 
-###  default
+### default
 
 • **default**:
 
-___
+---
 
-###  keys
+### keys
 
 • **keys**:

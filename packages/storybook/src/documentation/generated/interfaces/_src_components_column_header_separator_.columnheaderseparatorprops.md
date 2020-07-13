@@ -4,27 +4,27 @@
 
 ## Hierarchy
 
-* **ColumnHeaderSeparatorProps**
+- **ColumnHeaderSeparatorProps**
 
 ## Index
 
 ### Properties
 
-* [onResize](_src_components_column_header_separator_.columnheaderseparatorprops.md#optional-onresize)
-* [resizable](_src_components_column_header_separator_.columnheaderseparatorprops.md#resizable)
+- [onResize](_src_components_column_header_separator_.columnheaderseparatorprops.md#optional-onresize)
+- [resizable](_src_components_column_header_separator_.columnheaderseparatorprops.md#resizable)
 
 ## Properties
 
 ### `Optional` onResize
 
-• **onResize**? : *undefined | function*
+• **onResize**? : _undefined | function_
 
-*Defined in [packages/grid/x-grid-modules/src/components/column-header-separator.tsx:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-separator.tsx#L7)*
+_Defined in [packages/grid/x-grid-modules/src/components/column-header-separator.tsx:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-separator.tsx#L7)_
 
-___
+---
 
-###  resizable
+### resizable
 
-• **resizable**: *boolean | undefined*
+• **resizable**: _boolean | undefined_
 
-*Defined in [packages/grid/x-grid-modules/src/components/column-header-separator.tsx:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-separator.tsx#L6)*
+_Defined in [packages/grid/x-grid-modules/src/components/column-header-separator.tsx:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-separator.tsx#L6)_

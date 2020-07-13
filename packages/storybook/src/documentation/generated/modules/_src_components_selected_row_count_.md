@@ -6,22 +6,22 @@
 
 ### Functions
 
-* [SelectedRowCount](_src_components_selected_row_count_.md#const-selectedrowcount)
+- [SelectedRowCount](_src_components_selected_row_count_.md#const-selectedrowcount)
 
 ## Functions
 
 ### `Const` SelectedRowCount
 
-▸ **SelectedRowCount**(`__namedParameters`: object): *null | Element‹›*
+▸ **SelectedRowCount**(`__namedParameters`: object): _null | Element‹›_
 
-*Defined in [packages/grid/x-grid-modules/src/components/selected-row-count.tsx:3](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/selected-row-count.tsx#L3)*
+_Defined in [packages/grid/x-grid-modules/src/components/selected-row-count.tsx:3](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/selected-row-count.tsx#L3)_
 
 **Parameters:**
 
-▪ **__namedParameters**: *object*
+▪ **\_\_namedParameters**: _object_
 
-Name | Type |
------- | ------ |
-`selectedRowCount` | number |
+| Name               | Type   |
+| ------------------ | ------ |
+| `selectedRowCount` | number |
 
-**Returns:** *null | Element‹›*
+**Returns:** _null | Element‹›_

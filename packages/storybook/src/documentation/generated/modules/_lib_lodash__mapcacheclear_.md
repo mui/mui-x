@@ -1,20 +1,20 @@
-[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/_mapCacheClear"](_lib_lodash__mapcacheclear_.md)
+[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/\_mapCacheClear"](_lib_lodash__mapcacheclear_.md)
 
-# Module: "lib/lodash/_mapCacheClear"
+# Module: "lib/lodash/\_mapCacheClear"
 
 ## Index
 
 ### Functions
 
-* [mapCacheClear](_lib_lodash__mapcacheclear_.md#private-mapcacheclear)
+- [mapCacheClear](_lib_lodash__mapcacheclear_.md#private-mapcacheclear)
 
 ## Functions
 
 ### `Private` mapCacheClear
 
-▸ **mapCacheClear**(): *void*
+▸ **mapCacheClear**(): _void_
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_mapCacheClear.js:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_mapCacheClear.js#L14)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_mapCacheClear.js:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_mapCacheClear.js#L14)_
 
 Removes all key-value entries from the map.
 
@@ -22,4 +22,4 @@ Removes all key-value entries from the map.
 
 **`memberof`** MapCache
 
-**Returns:** *void*
+**Returns:** _void_

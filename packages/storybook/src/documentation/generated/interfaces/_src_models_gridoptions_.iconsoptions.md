@@ -4,36 +4,36 @@
 
 ## Hierarchy
 
-* **IconsOptions**
+- **IconsOptions**
 
 ## Index
 
 ### Properties
 
-* [columnResize](_src_models_gridoptions_.iconsoptions.md#optional-columnresize)
-* [columnSortedAscending](_src_models_gridoptions_.iconsoptions.md#optional-columnsortedascending)
-* [columnSortedDescending](_src_models_gridoptions_.iconsoptions.md#optional-columnsorteddescending)
+- [columnResize](_src_models_gridoptions_.iconsoptions.md#optional-columnresize)
+- [columnSortedAscending](_src_models_gridoptions_.iconsoptions.md#optional-columnsortedascending)
+- [columnSortedDescending](_src_models_gridoptions_.iconsoptions.md#optional-columnsorteddescending)
 
 ## Properties
 
 ### `Optional` columnResize
 
-• **columnResize**? : *React.FC‹object›*
+• **columnResize**? : _React.FC‹object›_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:48](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L48)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:48](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L48)_
 
-___
+---
 
 ### `Optional` columnSortedAscending
 
-• **columnSortedAscending**? : *React.FC‹object›*
+• **columnSortedAscending**? : _React.FC‹object›_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:46](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L46)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:46](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L46)_
 
-___
+---
 
 ### `Optional` columnSortedDescending
 
-• **columnSortedDescending**? : *React.FC‹object›*
+• **columnSortedDescending**? : _React.FC‹object›_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:47](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L47)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:47](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L47)_

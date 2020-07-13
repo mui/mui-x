@@ -4,27 +4,27 @@
 
 ## Hierarchy
 
-* **CellIndexCoordinates**
+- **CellIndexCoordinates**
 
 ## Index
 
 ### Properties
 
-* [colIndex](_src_models_rows_.cellindexcoordinates.md#colindex)
-* [rowIndex](_src_models_rows_.cellindexcoordinates.md#rowindex)
+- [colIndex](_src_models_rows_.cellindexcoordinates.md#colindex)
+- [rowIndex](_src_models_rows_.cellindexcoordinates.md#rowindex)
 
 ## Properties
 
-###  colIndex
+### colIndex
 
-• **colIndex**: *number*
+• **colIndex**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/rows.ts:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/rows.ts#L12)*
+_Defined in [packages/grid/x-grid-modules/src/models/rows.ts:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/rows.ts#L12)_
 
-___
+---
 
-###  rowIndex
+### rowIndex
 
-• **rowIndex**: *number*
+• **rowIndex**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/rows.ts:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/rows.ts#L13)*
+_Defined in [packages/grid/x-grid-modules/src/models/rows.ts:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/rows.ts#L13)_

@@ -6,19 +6,19 @@
 
 ### Interfaces
 
-* [ColumnHeaderSeparatorProps](../interfaces/_src_components_column_header_separator_.columnheaderseparatorprops.md)
+- [ColumnHeaderSeparatorProps](../interfaces/_src_components_column_header_separator_.columnheaderseparatorprops.md)
 
 ### Variables
 
-* [ColumnHeaderSeparator](_src_components_column_header_separator_.md#const-columnheaderseparator)
+- [ColumnHeaderSeparator](_src_components_column_header_separator_.md#const-columnheaderseparator)
 
 ## Variables
 
 ### `Const` ColumnHeaderSeparator
 
-• **ColumnHeaderSeparator**: *React.FC‹[ColumnHeaderSeparatorProps](../interfaces/_src_components_column_header_separator_.columnheaderseparatorprops.md)›* = React.memo(
-  ({ onResize, resizable }) => {
-    const icons = useIcons();
+• **ColumnHeaderSeparator**: _React.FC‹[ColumnHeaderSeparatorProps](../interfaces/_src_components_column_header_separator_.columnheaderseparatorprops.md)›_ = React.memo(
+({ onResize, resizable }) => {
+const icons = useIcons();
 
     const resizeIconProps = {
       className: 'icon separator ' + (resizable ? 'resizable' : ''),
@@ -26,7 +26,8 @@
     };
 
     return <div className={'column-separator'}>{icons!.columnResize!(resizeIconProps)}</div>;
-  },
+
+},
 )
 
-*Defined in [packages/grid/x-grid-modules/src/components/column-header-separator.tsx:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-separator.tsx#L10)*
+_Defined in [packages/grid/x-grid-modules/src/components/column-header-separator.tsx:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-header-separator.tsx#L10)_

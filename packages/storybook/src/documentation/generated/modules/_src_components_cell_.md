@@ -6,39 +6,39 @@
 
 ### Interfaces
 
-* [GridCellProps](../interfaces/_src_components_cell_.gridcellprops.md)
+- [GridCellProps](../interfaces/_src_components_cell_.gridcellprops.md)
 
 ### Variables
 
-* [Cell](_src_components_cell_.md#const-cell)
-* [LeftEmptyCell](_src_components_cell_.md#const-leftemptycell)
-* [RightEmptyCell](_src_components_cell_.md#const-rightemptycell)
+- [Cell](_src_components_cell_.md#const-cell)
+- [LeftEmptyCell](_src_components_cell_.md#const-leftemptycell)
+- [RightEmptyCell](_src_components_cell_.md#const-rightemptycell)
 
 ## Variables
 
 ### `Const` Cell
 
-• **Cell**: *React.FC‹[GridCellProps](../interfaces/_src_components_cell_.gridcellprops.md)›* = React.memo(
-  ({
-    value,
-    field,
-    width,
-    children,
-    showRightBorder,
-    align,
-    formattedValue,
-    cssClass,
-    tabIndex,
-    colIndex,
-    rowIndex,
-  }) => {
-    const cssClasses = classnames(
-      CELL_CSS_CLASS,
-      cssClass,
-      { 'with-border': showRightBorder },
-      align !== 'left' ? align : '',
-    );
-    const valueToRender = formattedValue || value;
+• **Cell**: _React.FC‹[GridCellProps](../interfaces/_src_components_cell_.gridcellprops.md)›_ = React.memo(
+({
+value,
+field,
+width,
+children,
+showRightBorder,
+align,
+formattedValue,
+cssClass,
+tabIndex,
+colIndex,
+rowIndex,
+}) => {
+const cssClasses = classnames(
+CELL_CSS_CLASS,
+cssClass,
+{ 'with-border': showRightBorder },
+align !== 'left' ? align : '',
+);
+const valueToRender = formattedValue || value;
 
     return (
       <div
@@ -55,27 +55,28 @@
         {children ? children : valueToRender?.toString()}
       </div>
     );
-  },
+
+},
 )
 
-*Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:19](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L19)*
+_Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:19](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L19)_
 
-___
+---
 
 ### `Const` LeftEmptyCell
 
-• **LeftEmptyCell**: *React.FC‹object›* = React.memo(({ width }) =>
-  !width ? null : <Cell key={'empty-col-left'} width={width} />,
+• **LeftEmptyCell**: _React.FC‹object›_ = React.memo(({ width }) =>
+!width ? null : <Cell key={'empty-col-left'} width={width} />,
 )
 
-*Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:61](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L61)*
+_Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:61](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L61)_
 
-___
+---
 
 ### `Const` RightEmptyCell
 
-• **RightEmptyCell**: *React.FC‹object›* = React.memo(({ width }) =>
-  !width ? null : <Cell key={'empty-col-right'} width={width} />,
+• **RightEmptyCell**: _React.FC‹object›_ = React.memo(({ width }) =>
+!width ? null : <Cell key={'empty-col-right'} width={width} />,
 )
 
-*Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:66](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L66)*
+_Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:66](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L66)_

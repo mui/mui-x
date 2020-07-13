@@ -4,27 +4,27 @@
 
 ## Hierarchy
 
-* **ColumnsMeta**
+- **ColumnsMeta**
 
 ## Index
 
 ### Properties
 
-* [positions](_src_models_coldef_coldef_.columnsmeta.md#positions)
-* [totalWidth](_src_models_coldef_coldef_.columnsmeta.md#totalwidth)
+- [positions](_src_models_coldef_coldef_.columnsmeta.md#positions)
+- [totalWidth](_src_models_coldef_coldef_.columnsmeta.md#totalwidth)
 
 ## Properties
 
-###  positions
+### positions
 
-• **positions**: *number[]*
+• **positions**: _number[]_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:58](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L58)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:58](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L58)_
 
-___
+---
 
-###  totalWidth
+### totalWidth
 
-• **totalWidth**: *number*
+• **totalWidth**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:57](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L57)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:57](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L57)_

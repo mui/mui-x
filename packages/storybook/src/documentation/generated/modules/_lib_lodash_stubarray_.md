@@ -6,25 +6,25 @@
 
 ### Util Functions
 
-* [stubArray](_lib_lodash_stubarray_.md#stubarray)
+- [stubArray](_lib_lodash_stubarray_.md#stubarray)
 
 ## Util Functions
 
-###  stubArray
+### stubArray
 
-▸ **stubArray**(): *any[]*
+▸ **stubArray**(): _any[]_
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/stubArray.js:21](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/stubArray.js#L21)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/stubArray.js:21](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/stubArray.js#L21)_
 
 This method returns a new empty array.
 
-**`static`** 
+**`static`**
 
-**`memberof`** _
+**`memberof`** \_
 
 **`since`** 4.13.0
 
-**`example`** 
+**`example`**
 
 var arrays = _.times(2, _.stubArray);
 
@@ -34,6 +34,6 @@ console.log(arrays);
 console.log(arrays[0] === arrays[1]);
 // => false
 
-**Returns:** *any[]*
+**Returns:** _any[]_
 
 Returns the new empty array.

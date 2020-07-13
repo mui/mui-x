@@ -6,29 +6,29 @@
 
 ### Util Functions
 
-* [stubFalse](_lib_lodash_stubfalse_.md#stubfalse)
+- [stubFalse](_lib_lodash_stubfalse_.md#stubfalse)
 
 ## Util Functions
 
-###  stubFalse
+### stubFalse
 
-▸ **stubFalse**(): *boolean*
+▸ **stubFalse**(): _boolean_
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/stubFalse.js:16](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/stubFalse.js#L16)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/stubFalse.js:16](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/stubFalse.js#L16)_
 
 This method returns `false`.
 
-**`static`** 
+**`static`**
 
-**`memberof`** _
+**`memberof`** \_
 
 **`since`** 4.13.0
 
-**`example`** 
+**`example`**
 
 _.times(2, _.stubFalse);
 // => [false, false]
 
-**Returns:** *boolean*
+**Returns:** _boolean_
 
 Returns `false`.

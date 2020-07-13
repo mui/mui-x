@@ -4,27 +4,27 @@
 
 ## Hierarchy
 
-* **ColumnHeaderClickedParam**
+- **ColumnHeaderClickedParam**
 
 ## Index
 
 ### Properties
 
-* [column](_src_models_gridoptions_.columnheaderclickedparam.md#column)
-* [field](_src_models_gridoptions_.columnheaderclickedparam.md#field)
+- [column](_src_models_gridoptions_.columnheaderclickedparam.md#column)
+- [field](_src_models_gridoptions_.columnheaderclickedparam.md#field)
 
 ## Properties
 
-###  column
+### column
 
-• **column**: *[ColDef](_src_models_coldef_coldef_.coldef.md)*
+• **column**: _[ColDef](_src_models_coldef_coldef_.coldef.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L13)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L13)_
 
-___
+---
 
-###  field
+### field
 
-• **field**: *string*
+• **field**: _string_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L12)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L12)_

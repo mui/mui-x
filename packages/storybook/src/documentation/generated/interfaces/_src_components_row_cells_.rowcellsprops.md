@@ -4,105 +4,105 @@
 
 ## Hierarchy
 
-* **RowCellsProps**
+- **RowCellsProps**
 
 ## Index
 
 ### Properties
 
-* [columns](_src_components_row_cells_.rowcellsprops.md#columns)
-* [domIndex](_src_components_row_cells_.rowcellsprops.md#domindex)
-* [extendRowFullWidth](_src_components_row_cells_.rowcellsprops.md#extendrowfullwidth)
-* [firstColIdx](_src_components_row_cells_.rowcellsprops.md#firstcolidx)
-* [hasScroll](_src_components_row_cells_.rowcellsprops.md#hasscroll)
-* [lastColIdx](_src_components_row_cells_.rowcellsprops.md#lastcolidx)
-* [row](_src_components_row_cells_.rowcellsprops.md#row)
-* [rowIndex](_src_components_row_cells_.rowcellsprops.md#rowindex)
-* [scrollSize](_src_components_row_cells_.rowcellsprops.md#scrollsize)
-* [showCellRightBorder](_src_components_row_cells_.rowcellsprops.md#showcellrightborder)
+- [columns](_src_components_row_cells_.rowcellsprops.md#columns)
+- [domIndex](_src_components_row_cells_.rowcellsprops.md#domindex)
+- [extendRowFullWidth](_src_components_row_cells_.rowcellsprops.md#extendrowfullwidth)
+- [firstColIdx](_src_components_row_cells_.rowcellsprops.md#firstcolidx)
+- [hasScroll](_src_components_row_cells_.rowcellsprops.md#hasscroll)
+- [lastColIdx](_src_components_row_cells_.rowcellsprops.md#lastcolidx)
+- [row](_src_components_row_cells_.rowcellsprops.md#row)
+- [rowIndex](_src_components_row_cells_.rowcellsprops.md#rowindex)
+- [scrollSize](_src_components_row_cells_.rowcellsprops.md#scrollsize)
+- [showCellRightBorder](_src_components_row_cells_.rowcellsprops.md#showcellrightborder)
 
 ## Properties
 
-###  columns
+### columns
 
-• **columns**: *[Columns](../modules/_src_models_coldef_coldef_.md#columns)*
+• **columns**: _[Columns](../modules/_src_models_coldef_coldef_.md#columns)_
 
-*Defined in [packages/grid/x-grid-modules/src/components/row-cells.tsx:49](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row-cells.tsx#L49)*
+_Defined in [packages/grid/x-grid-modules/src/components/row-cells.tsx:49](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row-cells.tsx#L49)_
 
-___
+---
 
-###  domIndex
+### domIndex
 
-• **domIndex**: *number*
+• **domIndex**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/components/row-cells.tsx:54](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row-cells.tsx#L54)*
+_Defined in [packages/grid/x-grid-modules/src/components/row-cells.tsx:54](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row-cells.tsx#L54)_
 
-___
+---
 
-###  extendRowFullWidth
+### extendRowFullWidth
 
-• **extendRowFullWidth**: *boolean*
+• **extendRowFullWidth**: _boolean_
 
-*Defined in [packages/grid/x-grid-modules/src/components/row-cells.tsx:52](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row-cells.tsx#L52)*
+_Defined in [packages/grid/x-grid-modules/src/components/row-cells.tsx:52](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row-cells.tsx#L52)_
 
-___
+---
 
-###  firstColIdx
+### firstColIdx
 
-• **firstColIdx**: *number*
+• **firstColIdx**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/components/row-cells.tsx:45](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row-cells.tsx#L45)*
+_Defined in [packages/grid/x-grid-modules/src/components/row-cells.tsx:45](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row-cells.tsx#L45)_
 
-___
+---
 
-###  hasScroll
+### hasScroll
 
-• **hasScroll**: *object*
+• **hasScroll**: _object_
 
-*Defined in [packages/grid/x-grid-modules/src/components/row-cells.tsx:47](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row-cells.tsx#L47)*
+_Defined in [packages/grid/x-grid-modules/src/components/row-cells.tsx:47](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row-cells.tsx#L47)_
 
 #### Type declaration:
 
-* **x**: *boolean*
+- **x**: _boolean_
 
-* **y**: *boolean*
+- **y**: _boolean_
 
-___
+---
 
-###  lastColIdx
+### lastColIdx
 
-• **lastColIdx**: *number*
+• **lastColIdx**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/components/row-cells.tsx:46](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row-cells.tsx#L46)*
+_Defined in [packages/grid/x-grid-modules/src/components/row-cells.tsx:46](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row-cells.tsx#L46)_
 
-___
+---
 
-###  row
+### row
 
-• **row**: *[RowModel](_src_models_rows_.rowmodel.md)*
+• **row**: _[RowModel](_src_models_rows_.rowmodel.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/components/row-cells.tsx:50](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row-cells.tsx#L50)*
+_Defined in [packages/grid/x-grid-modules/src/components/row-cells.tsx:50](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row-cells.tsx#L50)_
 
-___
+---
 
-###  rowIndex
+### rowIndex
 
-• **rowIndex**: *number*
+• **rowIndex**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/components/row-cells.tsx:53](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row-cells.tsx#L53)*
+_Defined in [packages/grid/x-grid-modules/src/components/row-cells.tsx:53](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row-cells.tsx#L53)_
 
-___
+---
 
-###  scrollSize
+### scrollSize
 
-• **scrollSize**: *number*
+• **scrollSize**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/components/row-cells.tsx:48](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row-cells.tsx#L48)*
+_Defined in [packages/grid/x-grid-modules/src/components/row-cells.tsx:48](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row-cells.tsx#L48)_
 
-___
+---
 
-###  showCellRightBorder
+### showCellRightBorder
 
-• **showCellRightBorder**: *boolean*
+• **showCellRightBorder**: _boolean_
 
-*Defined in [packages/grid/x-grid-modules/src/components/row-cells.tsx:51](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row-cells.tsx#L51)*
+_Defined in [packages/grid/x-grid-modules/src/components/row-cells.tsx:51](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row-cells.tsx#L51)_

@@ -6,26 +6,26 @@
 
 ### Variables
 
-* [AutoSizer](_lib_autosizer_index_.md#autosizer)
-* [_extends](_lib_autosizer_index_.md#_extends)
-* [createClass](_lib_autosizer_index_.md#createclass)
+- [AutoSizer](_lib_autosizer_index_.md#autosizer)
+- [\_extends](_lib_autosizer_index_.md#_extends)
+- [createClass](_lib_autosizer_index_.md#createclass)
 
 ### Functions
 
-* [classCallCheck](_lib_autosizer_index_.md#classcallcheck)
-* [createDetectElementResize](_lib_autosizer_index_.md#createdetectelementresize)
-* [inherits](_lib_autosizer_index_.md#inherits)
-* [possibleConstructorReturn](_lib_autosizer_index_.md#possibleconstructorreturn)
+- [classCallCheck](_lib_autosizer_index_.md#classcallcheck)
+- [createDetectElementResize](_lib_autosizer_index_.md#createdetectelementresize)
+- [inherits](_lib_autosizer_index_.md#inherits)
+- [possibleConstructorReturn](_lib_autosizer_index_.md#possibleconstructorreturn)
 
 ## Variables
 
-###  AutoSizer
+### AutoSizer
 
-• **AutoSizer**: *[AutoSizer](_lib_autosizer_index_.md#autosizer)* = function (_React$PureComponent) {
+• **AutoSizer**: _[AutoSizer](_lib_autosizer_index_.md#autosizer)_ = function (\_React$PureComponent) {
   inherits(AutoSizer, _React$PureComponent);
 
-  function AutoSizer() {
-    var _ref;
+function AutoSizer() {
+var \_ref;
 
     var _temp, _this, _ret;
 
@@ -73,12 +73,13 @@
     }, _this._setRef = function (autoSizer) {
       _this._autoSizer = autoSizer;
     }, _temp), possibleConstructorReturn(_this, _ret);
-  }
 
-  createClass(AutoSizer, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      var nonce = this.props.nonce;
+}
+
+createClass(AutoSizer, [{
+key: 'componentDidMount',
+value: function componentDidMount() {
+var nonce = this.props.nonce;
 
       if (this._autoSizer && this._autoSizer.parentNode && this._autoSizer.parentNode.ownerDocument && this._autoSizer.parentNode.ownerDocument.defaultView && this._autoSizer.parentNode instanceof this._autoSizer.parentNode.ownerDocument.defaultView.HTMLElement) {
         // Delay access of parentNode until mount.
@@ -94,25 +95,26 @@
         this._onResize();
       }
     }
-  }, {
-    key: 'componentWillUnmount',
-    value: function componentWillUnmount() {
-      if (this._detectElementResize && this._parentNode) {
-        this._detectElementResize.removeResizeListener(this._parentNode, this._onResize);
-      }
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _props = this.props,
-          children = _props.children,
-          className = _props.className,
-          disableHeight = _props.disableHeight,
-          disableWidth = _props.disableWidth,
-          style = _props.style;
-      var _state = this.state,
-          height = _state.height,
-          width = _state.width;
+
+}, {
+key: 'componentWillUnmount',
+value: function componentWillUnmount() {
+if (this.\_detectElementResize && this.\_parentNode) {
+this.\_detectElementResize.removeResizeListener(this.\_parentNode, this.\_onResize);
+}
+}
+}, {
+key: 'render',
+value: function render() {
+var \_props = this.props,
+children = \_props.children,
+className = \_props.className,
+disableHeight = \_props.disableHeight,
+disableWidth = \_props.disableWidth,
+style = \_props.style;
+var \_state = this.state,
+height = \_state.height,
+width = \_state.width;
 
       // Outer div should not force width/height since that may prevent containers from shrinking.
       // Inner component should overflow and use calculated width/height.
@@ -150,80 +152,82 @@
         !bailoutOnChildren && children(childParams)
       );
     }
-  }]);
-  return AutoSizer;
+
+}]);
+return AutoSizer;
 }(PureComponent)
 
-*Defined in [packages/grid/x-grid-modules/lib/autosizer/index.js:260](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/autosizer/index.js#L260)*
+_Defined in [packages/grid/x-grid-modules/lib/autosizer/index.js:260](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/autosizer/index.js#L260)_
 
-___
+---
 
-###  _extends
+### \_extends
 
-• **_extends**: *assign* = Object.assign || function (target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
+• **\_extends**: _assign_ = Object.assign || function (target) {
+for (var i = 1; i < arguments.length; i++) {
+var source = arguments[i];
 
     for (var key in source) {
       if (Object.prototype.hasOwnProperty.call(source, key)) {
         target[key] = source[key];
       }
     }
-  }
 
-  return target;
 }
 
-*Defined in [packages/grid/x-grid-modules/lib/autosizer/index.js:222](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/autosizer/index.js#L222)*
+return target;
+}
 
-___
+_Defined in [packages/grid/x-grid-modules/lib/autosizer/index.js:222](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/autosizer/index.js#L222)_
 
-###  createClass
+---
 
-• **createClass**: *(Anonymous function)* = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
+### createClass
 
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
+• **createClass**: _(Anonymous function)_ = function () {
+function defineProperties(target, props) {
+for (var i = 0; i < props.length; i++) {
+var descriptor = props[i];
+descriptor.enumerable = descriptor.enumerable || false;
+descriptor.configurable = true;
+if ("value" in descriptor) descriptor.writable = true;
+Object.defineProperty(target, descriptor.key, descriptor);
+}
+}
+
+return function (Constructor, protoProps, staticProps) {
+if (protoProps) defineProperties(Constructor.prototype, protoProps);
+if (staticProps) defineProperties(Constructor, staticProps);
+return Constructor;
+};
 }()
 
-*Defined in [packages/grid/x-grid-modules/lib/autosizer/index.js:204](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/autosizer/index.js#L204)*
+_Defined in [packages/grid/x-grid-modules/lib/autosizer/index.js:204](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/autosizer/index.js#L204)_
 
 ## Functions
 
-###  classCallCheck
+### classCallCheck
 
-▸ **classCallCheck**(`instance`: any, `Constructor`: any): *void*
+▸ **classCallCheck**(`instance`: any, `Constructor`: any): _void_
 
-*Defined in [packages/grid/x-grid-modules/lib/autosizer/index.js:198](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/autosizer/index.js#L198)*
+_Defined in [packages/grid/x-grid-modules/lib/autosizer/index.js:198](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/autosizer/index.js#L198)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`instance` | any |
-`Constructor` | any |
+| Name          | Type |
+| ------------- | ---- |
+| `instance`    | any  |
+| `Constructor` | any  |
 
-**Returns:** *void*
+**Returns:** _void_
 
-___
+---
 
-###  createDetectElementResize
+### createDetectElementResize
 
-▸ **createDetectElementResize**(`nonce`: any): *object*
+▸ **createDetectElementResize**(`nonce`: any): _object_
 
-*Defined in [packages/grid/x-grid-modules/lib/autosizer/index.js:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/autosizer/index.js#L15)*
+_Defined in [packages/grid/x-grid-modules/lib/autosizer/index.js:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/autosizer/index.js#L15)_
 
 Detect Element Resize.
 https://github.com/sdecima/javascript-detect-element-resize
@@ -232,51 +236,52 @@ Sebastian Decima
 Forked from version 0.5.3; includes the following modifications:
 1) Guard against unsafe 'window' and 'document' references (to support SSR).
 2) Defer initialization code via a top-level function wrapper (to support SSR).
-3) Avoid unnecessary reflows by not measuring size for scroll events bubbling from children.
-4) Add nonce for style element.
+
+3. Avoid unnecessary reflows by not measuring size for scroll events bubbling from children.
+4. Add nonce for style element.
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`nonce` | any |
+| Name    | Type |
+| ------- | ---- |
+| `nonce` | any  |
 
-**Returns:** *object*
+**Returns:** _object_
 
-* **addResizeListener**: *addResizeListener* = addResizeListener
+- **addResizeListener**: _addResizeListener_ = addResizeListener
 
-* **removeResizeListener**: *removeResizeListener* = removeResizeListener
+- **removeResizeListener**: _removeResizeListener_ = removeResizeListener
 
-___
+---
 
-###  inherits
+### inherits
 
-▸ **inherits**(`subClass`: any, `superClass`: any): *void*
+▸ **inherits**(`subClass`: any, `superClass`: any): _void_
 
-*Defined in [packages/grid/x-grid-modules/lib/autosizer/index.js:236](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/autosizer/index.js#L236)*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`subClass` | any |
-`superClass` | any |
-
-**Returns:** *void*
-
-___
-
-###  possibleConstructorReturn
-
-▸ **possibleConstructorReturn**(`self`: any, `call`: any): *any*
-
-*Defined in [packages/grid/x-grid-modules/lib/autosizer/index.js:252](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/autosizer/index.js#L252)*
+_Defined in [packages/grid/x-grid-modules/lib/autosizer/index.js:236](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/autosizer/index.js#L236)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`self` | any |
-`call` | any |
+| Name         | Type |
+| ------------ | ---- |
+| `subClass`   | any  |
+| `superClass` | any  |
 
-**Returns:** *any*
+**Returns:** _void_
+
+---
+
+### possibleConstructorReturn
+
+▸ **possibleConstructorReturn**(`self`: any, `call`: any): _any_
+
+_Defined in [packages/grid/x-grid-modules/lib/autosizer/index.js:252](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/autosizer/index.js#L252)_
+
+**Parameters:**
+
+| Name   | Type |
+| ------ | ---- |
+| `self` | any  |
+| `call` | any  |
+
+**Returns:** _any_

@@ -6,21 +6,21 @@
 
 ### Lang Variables
 
-* [isArray](_lib_lodash_isarray_.md#isarray)
+- [isArray](_lib_lodash_isarray_.md#isarray)
 
 ## Lang Variables
 
-###  isArray
+### isArray
 
-• **isArray**: *isArray* = Array.isArray
+• **isArray**: _isArray_ = Array.isArray
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/isArray.js:26](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/isArray.js#L26)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/isArray.js:26](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/isArray.js#L26)_
 
 Checks if `value` is classified as an `Array` object.
 
-**`static`** 
+**`static`**
 
-**`memberof`** _
+**`memberof`** \_
 
 **`since`** 0.1.0
 
@@ -28,15 +28,15 @@ Checks if `value` is classified as an `Array` object.
 
 **`returns`** Returns `true` if `value` is an array, else `false`.
 
-**`example`** 
+**`example`**
 
-_.isArray([1, 2, 3]);
+\_.isArray([1, 2, 3]);
 // => true
 
-_.isArray(document.body.children);
+\_.isArray(document.body.children);
 // => false
 
-_.isArray('abc');
+\_.isArray('abc');
 // => false
 
 _.isArray(_.noop);

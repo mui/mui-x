@@ -1,5 +1,6 @@
 import { XGrid } from '@material-ui/x-grid';
 import UpdateRows from './demos/rows/updateRows.demo';
+import BasicRowsDemo from './demos/rows/basicRows.demo';
 
 <Meta title="1. Docs/3. Rows" component={XGrid} />
 
@@ -10,10 +11,11 @@ RowData are `Record` matching column field value.
 Hence the following code defines a row with a simple field `name` and its corresponding column.
 
 ```tsx
-  rows = [ { name: 'XGrid' } ]
-  columns = [ { field: 'name' } ];
+rows = [{ name: 'XGrid' }];
+columns = [{ field: 'name' }];
 ```
-//Basic exemple here
+
+<BasicRowsDemo />
 
 ## Updating rows
 
@@ -23,6 +25,7 @@ Rows can be updated in 2 ways.
 
 The first and most obvious way is to bind a new or updated set of rows using the `rows` component property.
 While this approach works well. It has some drawbacks
+
 - You will need to pass the full set of updated rows.
 - It can lead to bad performance due to extra rendering if you recreate the row object to merge your updates.
 
@@ -33,8 +36,9 @@ Updates are batched and re-rendered by the component at a "fixed" rate.
 This means that if your streaming api updates every 10ms, XGrid and React will batch updates and rerender on request animation frame updates. That is between 45 and 100 ms depending on the client machine and data processing time.
 
 **Note**
+
 - `updateRowData` is the api function that allows to apply the update on an existing row,
-however if the row id `RowId` is not found in the existing set of data, the row will be added to the dataset.
+  however if the row id `RowId` is not found in the existing set of data, the row will be added to the dataset.
 
 //Should I rename the function to `upsertRowData` ?
 
@@ -42,29 +46,45 @@ Below is a sample code showing how you can achieve this.
 
 ```tsx
 function StreamingGrid() {
-	const api = gridApiRef();
-	const columns = [ {field: 'id'}, { field: 'username', width: 150 }, {field: 'age', width: 80 }];
-	const rows = [
-		{id: 1, username:  randomUserName(), age: randomInt(10, 80) },
-		{id: 2, username:  randomUserName(), age: randomInt(10, 80)  },
-		{id: 3, username:  randomUserName(), age: randomInt(10, 80)  },
-		{id: 4, username:  randomUserName(), age: randomInt(10, 80)  },
-	]
-	useEffect(() => {
-		const subscription = interval(200).subscribe(obs =>
-			api.current?.updateRowData(
-				[
-					{id: randomInt(1, 4), username: randomUserName(), age: randomInt(10, 80)},
-					{id: randomInt(1, 4), username: randomUserName(), age: randomInt(10, 80)}
-				]
-			)
-		);
+  const api = gridApiRef();
+  const columns = [
+    { field: 'id' },
+    { field: 'username', width: 150 },
+    { field: 'age', width: 80 },
+  ];
+  const rows = [
+    { id: 1, username: randomUserName(), age: randomInt(10, 80) },
+    { id: 2, username: randomUserName(), age: randomInt(10, 80) },
+    { id: 3, username: randomUserName(), age: randomInt(10, 80) },
+    { id: 4, username: randomUserName(), age: randomInt(10, 80) },
+  ];
+  useEffect(() => {
+    const subscription = interval(200).subscribe(obs =>
+      api.current?.updateRowData([
+        {
+          id: randomInt(1, 4),
+          username: randomUserName(),
+          age: randomInt(10, 80),
+        },
+        {
+          id: randomInt(1, 4),
+          username: randomUserName(),
+          age: randomInt(10, 80),
+        },
+      ]),
+    );
 
-		return () => subscription.unsubscribe();
+    return () => subscription.unsubscribe();
+  }, [api]);
 
-	}, [api]);
-
-	return <XGrid rows={rows} columns={columns} apiRef={api} options={{autoHeight: true}} />
+  return (
+    <XGrid
+      rows={rows}
+      columns={columns}
+      apiRef={api}
+      options={{ autoHeight: true }}
+    />
+  );
 }
 ```
 
@@ -79,10 +99,11 @@ However you can change this value as below.
 - `RowHeight` is a number in pixel unit.
 
 ```tsx
-<XGrid rows={rows} columns={columns} options={{rowHeight: 25 }} />
+<XGrid rows={rows} columns={columns} options={{ rowHeight: 25 }} />
 ```
 
 ## Row Selection
+
 Please refer to the selection page of the documentation here for more info about row selection
 
 ## Api

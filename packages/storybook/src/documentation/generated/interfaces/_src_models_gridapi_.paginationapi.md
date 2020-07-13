@@ -4,101 +4,101 @@
 
 ## Hierarchy
 
-* **PaginationApi**
+- **PaginationApi**
 
 ## Index
 
 ### Properties
 
-* [onPageChanged](_src_models_gridapi_.paginationapi.md#onpagechanged)
-* [onPageSizeChanged](_src_models_gridapi_.paginationapi.md#onpagesizechanged)
-* [setPage](_src_models_gridapi_.paginationapi.md#setpage)
-* [setPageSize](_src_models_gridapi_.paginationapi.md#setpagesize)
+- [onPageChanged](_src_models_gridapi_.paginationapi.md#onpagechanged)
+- [onPageSizeChanged](_src_models_gridapi_.paginationapi.md#onpagesizechanged)
+- [setPage](_src_models_gridapi_.paginationapi.md#setpage)
+- [setPageSize](_src_models_gridapi_.paginationapi.md#setpagesize)
 
 ## Properties
 
-###  onPageChanged
+### onPageChanged
 
-• **onPageChanged**: *function*
+• **onPageChanged**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:51](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L51)*
-
-#### Type declaration:
-
-▸ (`handler`: function): *function*
-
-**Parameters:**
-
-▪ **handler**: *function*
-
-▸ (`param`: [PageChangedParams](../modules/_src_hooks_features_usepagination_.md#pagechangedparams)): *void*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`param` | [PageChangedParams](../modules/_src_hooks_features_usepagination_.md#pagechangedparams) |
-
-▸ (): *void*
-
-___
-
-###  onPageSizeChanged
-
-• **onPageSizeChanged**: *function*
-
-*Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:52](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L52)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:51](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L51)_
 
 #### Type declaration:
 
-▸ (`handler`: function): *function*
+▸ (`handler`: function): _function_
 
 **Parameters:**
 
-▪ **handler**: *function*
+▪ **handler**: _function_
 
-▸ (`param`: [PageChangedParams](../modules/_src_hooks_features_usepagination_.md#pagechangedparams)): *void*
+▸ (`param`: [PageChangedParams](../modules/_src_hooks_features_usepagination_.md#pagechangedparams)): _void_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`param` | [PageChangedParams](../modules/_src_hooks_features_usepagination_.md#pagechangedparams) |
+| Name    | Type                                                                                    |
+| ------- | --------------------------------------------------------------------------------------- |
+| `param` | [PageChangedParams](../modules/_src_hooks_features_usepagination_.md#pagechangedparams) |
 
-▸ (): *void*
+▸ (): _void_
 
-___
+---
 
-###  setPage
+### onPageSizeChanged
 
-• **setPage**: *function*
+• **onPageSizeChanged**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:49](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L49)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:52](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L52)_
 
 #### Type declaration:
 
-▸ (`page`: number): *void*
+▸ (`handler`: function): _function_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`page` | number |
+▪ **handler**: _function_
 
-___
+▸ (`param`: [PageChangedParams](../modules/_src_hooks_features_usepagination_.md#pagechangedparams)): _void_
 
-###  setPageSize
+**Parameters:**
 
-• **setPageSize**: *function*
+| Name    | Type                                                                                    |
+| ------- | --------------------------------------------------------------------------------------- |
+| `param` | [PageChangedParams](../modules/_src_hooks_features_usepagination_.md#pagechangedparams) |
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:50](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L50)*
+▸ (): _void_
+
+---
+
+### setPage
+
+• **setPage**: _function_
+
+_Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:49](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L49)_
 
 #### Type declaration:
 
-▸ (`pageSize`: number): *void*
+▸ (`page`: number): _void_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`pageSize` | number |
+| Name   | Type   |
+| ------ | ------ |
+| `page` | number |
+
+---
+
+### setPageSize
+
+• **setPageSize**: _function_
+
+_Defined in [packages/grid/x-grid-modules/src/models/gridApi.ts:50](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApi.ts#L50)_
+
+#### Type declaration:
+
+▸ (`pageSize`: number): _void_
+
+**Parameters:**
+
+| Name       | Type   |
+| ---------- | ------ |
+| `pageSize` | number |

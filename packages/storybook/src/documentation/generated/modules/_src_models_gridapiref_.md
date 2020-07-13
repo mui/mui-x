@@ -6,35 +6,35 @@
 
 ### Type aliases
 
-* [GridApiRef](_src_models_gridapiref_.md#gridapiref)
-* [GridRootRef](_src_models_gridapiref_.md#gridrootref)
+- [GridApiRef](_src_models_gridapiref_.md#gridapiref)
+- [GridRootRef](_src_models_gridapiref_.md#gridrootref)
 
 ### Functions
 
-* [gridApiRef](_src_models_gridapiref_.md#const-gridapiref)
+- [gridApiRef](_src_models_gridapiref_.md#const-gridapiref)
 
 ## Type aliases
 
-###  GridApiRef
+### GridApiRef
 
-Ƭ **GridApiRef**: *MutableRefObject‹[GridApi](_src_models_gridapi_.md#gridapi) | null | undefined›*
+Ƭ **GridApiRef**: _MutableRefObject‹[GridApi](_src_models_gridapi_.md#gridapi) | null | undefined›_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridApiRef.ts:4](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApiRef.ts#L4)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridApiRef.ts:4](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApiRef.ts#L4)_
 
-___
+---
 
-###  GridRootRef
+### GridRootRef
 
-Ƭ **GridRootRef**: *RefObject‹HTMLDivElement›*
+Ƭ **GridRootRef**: _RefObject‹HTMLDivElement›_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridApiRef.ts:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApiRef.ts#L7)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridApiRef.ts:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApiRef.ts#L7)_
 
 ## Functions
 
 ### `Const` gridApiRef
 
-▸ **gridApiRef**(): *[GridApiRef](_src_models_gridapiref_.md#gridapiref)*
+▸ **gridApiRef**(): _[GridApiRef](_src_models_gridapiref_.md#gridapiref)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridApiRef.ts:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApiRef.ts#L6)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridApiRef.ts:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridApiRef.ts#L6)_
 
-**Returns:** *[GridApiRef](_src_models_gridapiref_.md#gridapiref)*
+**Returns:** _[GridApiRef](_src_models_gridapiref_.md#gridapiref)_

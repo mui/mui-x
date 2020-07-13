@@ -4,27 +4,27 @@
 
 ## Hierarchy
 
-* **SortItem**
+- **SortItem**
 
 ## Index
 
 ### Properties
 
-* [colId](_src_models_sortmodel_.sortitem.md#colid)
-* [sort](_src_models_sortmodel_.sortitem.md#sort)
+- [colId](_src_models_sortmodel_.sortitem.md#colid)
+- [sort](_src_models_sortmodel_.sortitem.md#sort)
 
 ## Properties
 
-###  colId
+### colId
 
-• **colId**: *string*
+• **colId**: _string_
 
-*Defined in [packages/grid/x-grid-modules/src/models/sortModel.ts:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/sortModel.ts#L10)*
+_Defined in [packages/grid/x-grid-modules/src/models/sortModel.ts:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/sortModel.ts#L10)_
 
-___
+---
 
-###  sort
+### sort
 
-• **sort**: *[SortDirection](../modules/_src_models_sortmodel_.md#sortdirection)*
+• **sort**: _[SortDirection](../modules/_src_models_sortmodel_.md#sortdirection)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/sortModel.ts:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/sortModel.ts#L11)*
+_Defined in [packages/grid/x-grid-modules/src/models/sortModel.ts:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/sortModel.ts#L11)_

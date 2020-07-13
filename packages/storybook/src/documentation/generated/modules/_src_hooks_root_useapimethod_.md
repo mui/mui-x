@@ -6,22 +6,22 @@
 
 ### Functions
 
-* [useApiMethod](_src_hooks_root_useapimethod_.md#const-useapimethod)
+- [useApiMethod](_src_hooks_root_useapimethod_.md#const-useapimethod)
 
 ## Functions
 
 ### `Const` useApiMethod
 
-▸ **useApiMethod**(`apiRef`: [GridApiRef](_src_models_gridapiref_.md#gridapiref), `apiMethods`: Partial‹[GridApi](_src_models_gridapi_.md#gridapi)›, `apiName`: string): *void*
+▸ **useApiMethod**(`apiRef`: [GridApiRef](_src_models_gridapiref_.md#gridapiref), `apiMethods`: Partial‹[GridApi](_src_models_gridapi_.md#gridapi)›, `apiName`: string): _void_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/root/useApiMethod.ts:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/root/useApiMethod.ts#L6)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/root/useApiMethod.ts:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/root/useApiMethod.ts#L6)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`apiRef` | [GridApiRef](_src_models_gridapiref_.md#gridapiref) |
-`apiMethods` | Partial‹[GridApi](_src_models_gridapi_.md#gridapi)› |
-`apiName` | string |
+| Name         | Type                                                |
+| ------------ | --------------------------------------------------- |
+| `apiRef`     | [GridApiRef](_src_models_gridapiref_.md#gridapiref) |
+| `apiMethods` | Partial‹[GridApi](_src_models_gridapi_.md#gridapi)› |
+| `apiName`    | string                                              |
 
-**Returns:** *void*
+**Returns:** _void_

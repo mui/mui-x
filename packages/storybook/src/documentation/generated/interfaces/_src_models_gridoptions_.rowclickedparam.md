@@ -4,54 +4,54 @@
 
 ## Hierarchy
 
-* **RowClickedParam**
+- **RowClickedParam**
 
 ## Index
 
 ### Properties
 
-* [colDef](_src_models_gridoptions_.rowclickedparam.md#coldef)
-* [data](_src_models_gridoptions_.rowclickedparam.md#data)
-* [element](_src_models_gridoptions_.rowclickedparam.md#element)
-* [rowIndex](_src_models_gridoptions_.rowclickedparam.md#rowindex)
-* [rowModel](_src_models_gridoptions_.rowclickedparam.md#rowmodel)
+- [colDef](_src_models_gridoptions_.rowclickedparam.md#coldef)
+- [data](_src_models_gridoptions_.rowclickedparam.md#data)
+- [element](_src_models_gridoptions_.rowclickedparam.md#element)
+- [rowIndex](_src_models_gridoptions_.rowclickedparam.md#rowindex)
+- [rowModel](_src_models_gridoptions_.rowclickedparam.md#rowmodel)
 
 ## Properties
 
-###  colDef
+### colDef
 
-• **colDef**: *[ColDef](_src_models_coldef_coldef_.coldef.md)*
+• **colDef**: _[ColDef](_src_models_coldef_coldef_.coldef.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:24](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L24)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:24](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L24)_
 
-___
+---
 
-###  data
+### data
 
-• **data**: *[RowData](_src_models_rows_.rowdata.md)*
+• **data**: _[RowData](_src_models_rows_.rowdata.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:22](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L22)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:22](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L22)_
 
-___
+---
 
-###  element
+### element
 
-• **element**: *HTMLElement*
+• **element**: _HTMLElement_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L20)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L20)_
 
-___
+---
 
-###  rowIndex
+### rowIndex
 
-• **rowIndex**: *number*
+• **rowIndex**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:23](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L23)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:23](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L23)_
 
-___
+---
 
-###  rowModel
+### rowModel
 
-• **rowModel**: *[RowModel](_src_models_rows_.rowmodel.md)*
+• **rowModel**: _[RowModel](_src_models_rows_.rowmodel.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:21](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L21)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:21](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L21)_

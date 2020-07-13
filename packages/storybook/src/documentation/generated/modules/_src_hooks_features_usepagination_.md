@@ -6,113 +6,113 @@
 
 ### Interfaces
 
-* [PaginationProps](../interfaces/_src_hooks_features_usepagination_.paginationprops.md)
-* [PaginationState](../interfaces/_src_hooks_features_usepagination_.paginationstate.md)
+- [PaginationProps](../interfaces/_src_hooks_features_usepagination_.paginationprops.md)
+- [PaginationState](../interfaces/_src_hooks_features_usepagination_.paginationstate.md)
 
 ### Type aliases
 
-* [PageChangedParams](_src_hooks_features_usepagination_.md#pagechangedparams)
+- [PageChangedParams](_src_hooks_features_usepagination_.md#pagechangedparams)
 
 ### Variables
 
-* [UPDATE_STATE_ACTION](_src_hooks_features_usepagination_.md#const-update_state_action)
+- [UPDATE_STATE_ACTION](_src_hooks_features_usepagination_.md#const-update_state_action)
 
 ### Functions
 
-* [getPageCount](_src_hooks_features_usepagination_.md#const-getpagecount)
-* [paginationReducer](_src_hooks_features_usepagination_.md#paginationreducer)
-* [updateStateAction](_src_hooks_features_usepagination_.md#updatestateaction)
-* [usePagination](_src_hooks_features_usepagination_.md#const-usepagination)
+- [getPageCount](_src_hooks_features_usepagination_.md#const-getpagecount)
+- [paginationReducer](_src_hooks_features_usepagination_.md#paginationreducer)
+- [updateStateAction](_src_hooks_features_usepagination_.md#updatestateaction)
+- [usePagination](_src_hooks_features_usepagination_.md#const-usepagination)
 
 ## Type aliases
 
-###  PageChangedParams
+### PageChangedParams
 
-Ƭ **PageChangedParams**: *[PaginationState](../interfaces/_src_hooks_features_usepagination_.paginationstate.md)*
+Ƭ **PageChangedParams**: _[PaginationState](../interfaces/_src_hooks_features_usepagination_.paginationstate.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:21](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L21)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:21](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L21)_
 
 ## Variables
 
 ### `Const` UPDATE_STATE_ACTION
 
-• **UPDATE_STATE_ACTION**: *"updateState"* = "updateState"
+• **UPDATE_STATE_ACTION**: _"updateState"_ = "updateState"
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:29](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L29)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:29](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L29)_
 
 ## Functions
 
 ### `Const` getPageCount
 
-▸ **getPageCount**(`pageSize`: number | undefined, `rowsCount`: number): *number*
+▸ **getPageCount**(`pageSize`: number | undefined, `rowsCount`: number): _number_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:47](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L47)*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`pageSize` | number &#124; undefined |
-`rowsCount` | number |
-
-**Returns:** *number*
-
-___
-
-###  paginationReducer
-
-▸ **paginationReducer**(`state`: [PaginationState](../interfaces/_src_hooks_features_usepagination_.paginationstate.md), `action`: object): *object | object*
-
-*Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:37](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L37)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:47](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L47)_
 
 **Parameters:**
 
-▪ **state**: *[PaginationState](../interfaces/_src_hooks_features_usepagination_.paginationstate.md)*
+| Name        | Type                    |
+| ----------- | ----------------------- |
+| `pageSize`  | number &#124; undefined |
+| `rowsCount` | number                  |
 
-▪ **action**: *object*
+**Returns:** _number_
 
-Name | Type |
------- | ------ |
-`payload?` | Partial‹[PaginationState](../interfaces/_src_hooks_features_usepagination_.paginationstate.md)› |
-`type` | string |
+---
 
-**Returns:** *object | object*
+### paginationReducer
 
-___
+▸ **paginationReducer**(`state`: [PaginationState](../interfaces/_src_hooks_features_usepagination_.paginationstate.md), `action`: object): _object | object_
 
-###  updateStateAction
-
-▸ **updateStateAction**(`state`: Partial‹[PaginationState](../interfaces/_src_hooks_features_usepagination_.paginationstate.md)›): *object*
-
-*Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:31](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L31)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:37](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L37)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`state` | Partial‹[PaginationState](../interfaces/_src_hooks_features_usepagination_.paginationstate.md)› |
+▪ **state**: _[PaginationState](../interfaces/_src_hooks_features_usepagination_.paginationstate.md)_
 
-**Returns:** *object*
+▪ **action**: _object_
 
-* **payload**: *Partial‹[PaginationState](../interfaces/_src_hooks_features_usepagination_.paginationstate.md)›*
+| Name       | Type                                                                                            |
+| ---------- | ----------------------------------------------------------------------------------------------- |
+| `payload?` | Partial‹[PaginationState](../interfaces/_src_hooks_features_usepagination_.paginationstate.md)› |
+| `type`     | string                                                                                          |
 
-* **type**: *"updateState"*
+**Returns:** _object | object_
 
-___
+---
+
+### updateStateAction
+
+▸ **updateStateAction**(`state`: Partial‹[PaginationState](../interfaces/_src_hooks_features_usepagination_.paginationstate.md)›): _object_
+
+_Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:31](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L31)_
+
+**Parameters:**
+
+| Name    | Type                                                                                            |
+| ------- | ----------------------------------------------------------------------------------------------- |
+| `state` | Partial‹[PaginationState](../interfaces/_src_hooks_features_usepagination_.paginationstate.md)› |
+
+**Returns:** _object_
+
+- **payload**: _Partial‹[PaginationState](../interfaces/_src_hooks_features_usepagination_.paginationstate.md)›_
+
+- **type**: _"updateState"_
+
+---
 
 ### `Const` usePagination
 
-▸ **usePagination**(`rows`: [Rows](_src_models_rows_.md#rows), `columns`: [InternalColumns](../interfaces/_src_models_coldef_coldef_.internalcolumns.md), `options`: [GridOptions](../interfaces/_src_models_gridoptions_.gridoptions.md), `apiRef`: [GridApiRef](_src_models_gridapiref_.md#gridapiref)): *[PaginationProps](../interfaces/_src_hooks_features_usepagination_.paginationprops.md)*
+▸ **usePagination**(`rows`: [Rows](_src_models_rows_.md#rows), `columns`: [InternalColumns](../interfaces/_src_models_coldef_coldef_.internalcolumns.md), `options`: [GridOptions](../interfaces/_src_models_gridoptions_.gridoptions.md), `apiRef`: [GridApiRef](_src_models_gridapiref_.md#gridapiref)): _[PaginationProps](../interfaces/_src_hooks_features_usepagination_.paginationprops.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:51](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L51)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:51](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L51)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`rows` | [Rows](_src_models_rows_.md#rows) |
-`columns` | [InternalColumns](../interfaces/_src_models_coldef_coldef_.internalcolumns.md) |
-`options` | [GridOptions](../interfaces/_src_models_gridoptions_.gridoptions.md) |
-`apiRef` | [GridApiRef](_src_models_gridapiref_.md#gridapiref) |
+| Name      | Type                                                                           |
+| --------- | ------------------------------------------------------------------------------ |
+| `rows`    | [Rows](_src_models_rows_.md#rows)                                              |
+| `columns` | [InternalColumns](../interfaces/_src_models_coldef_coldef_.internalcolumns.md) |
+| `options` | [GridOptions](../interfaces/_src_models_gridoptions_.gridoptions.md)           |
+| `apiRef`  | [GridApiRef](_src_models_gridapiref_.md#gridapiref)                            |
 
-**Returns:** *[PaginationProps](../interfaces/_src_hooks_features_usepagination_.paginationprops.md)*
+**Returns:** _[PaginationProps](../interfaces/_src_hooks_features_usepagination_.paginationprops.md)_

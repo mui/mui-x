@@ -4,99 +4,99 @@
 
 ## Hierarchy
 
-* **GridCellProps**
+- **GridCellProps**
 
 ## Index
 
 ### Properties
 
-* [align](_src_components_cell_.gridcellprops.md#optional-align)
-* [colIndex](_src_components_cell_.gridcellprops.md#optional-colindex)
-* [cssClass](_src_components_cell_.gridcellprops.md#optional-cssclass)
-* [field](_src_components_cell_.gridcellprops.md#optional-field)
-* [formattedValue](_src_components_cell_.gridcellprops.md#optional-formattedvalue)
-* [rowIndex](_src_components_cell_.gridcellprops.md#optional-rowindex)
-* [showRightBorder](_src_components_cell_.gridcellprops.md#optional-showrightborder)
-* [tabIndex](_src_components_cell_.gridcellprops.md#optional-tabindex)
-* [value](_src_components_cell_.gridcellprops.md#optional-value)
-* [width](_src_components_cell_.gridcellprops.md#width)
+- [align](_src_components_cell_.gridcellprops.md#optional-align)
+- [colIndex](_src_components_cell_.gridcellprops.md#optional-colindex)
+- [cssClass](_src_components_cell_.gridcellprops.md#optional-cssclass)
+- [field](_src_components_cell_.gridcellprops.md#optional-field)
+- [formattedValue](_src_components_cell_.gridcellprops.md#optional-formattedvalue)
+- [rowIndex](_src_components_cell_.gridcellprops.md#optional-rowindex)
+- [showRightBorder](_src_components_cell_.gridcellprops.md#optional-showrightborder)
+- [tabIndex](_src_components_cell_.gridcellprops.md#optional-tabindex)
+- [value](_src_components_cell_.gridcellprops.md#optional-value)
+- [width](_src_components_cell_.gridcellprops.md#width)
 
 ## Properties
 
 ### `Optional` align
 
-• **align**? : *[Alignement](../modules/_src_models_coldef_coldef_.md#alignement)*
+• **align**? : _[Alignement](../modules/_src_models_coldef_coldef_.md#alignement)_
 
-*Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L12)*
+_Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L12)_
 
-___
+---
 
 ### `Optional` colIndex
 
-• **colIndex**? : *undefined | number*
+• **colIndex**? : _undefined | number_
 
-*Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L15)*
+_Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L15)_
 
-___
+---
 
 ### `Optional` cssClass
 
-• **cssClass**? : *undefined | string*
+• **cssClass**? : _undefined | string_
 
-*Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L13)*
+_Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L13)_
 
-___
+---
 
 ### `Optional` field
 
-• **field**? : *undefined | string*
+• **field**? : _undefined | string_
 
-*Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L7)*
+_Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L7)_
 
-___
+---
 
 ### `Optional` formattedValue
 
-• **formattedValue**? : *[CellValue](../modules/_src_models_rows_.md#cellvalue)*
+• **formattedValue**? : _[CellValue](../modules/_src_models_rows_.md#cellvalue)_
 
-*Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L9)*
+_Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L9)_
 
-___
+---
 
 ### `Optional` rowIndex
 
-• **rowIndex**? : *undefined | number*
+• **rowIndex**? : _undefined | number_
 
-*Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:16](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L16)*
+_Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:16](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L16)_
 
-___
+---
 
 ### `Optional` showRightBorder
 
-• **showRightBorder**? : *undefined | false | true*
+• **showRightBorder**? : _undefined | false | true_
 
-*Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L11)*
+_Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L11)_
 
-___
+---
 
 ### `Optional` tabIndex
 
-• **tabIndex**? : *undefined | number*
+• **tabIndex**? : _undefined | number_
 
-*Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L14)*
+_Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L14)_
 
-___
+---
 
 ### `Optional` value
 
-• **value**? : *[CellValue](../modules/_src_models_rows_.md#cellvalue)*
+• **value**? : _[CellValue](../modules/_src_models_rows_.md#cellvalue)_
 
-*Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L8)*
+_Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L8)_
 
-___
+---
 
-###  width
+### width
 
-• **width**: *number*
+• **width**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L10)*
+_Defined in [packages/grid/x-grid-modules/src/components/cell.tsx:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/cell.tsx#L10)_

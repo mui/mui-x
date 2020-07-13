@@ -6,20 +6,20 @@
 
 ### Functions
 
-* [AutoSizerWrapper](_src_components_autosizer_.md#const-autosizerwrapper)
+- [AutoSizerWrapper](_src_components_autosizer_.md#const-autosizerwrapper)
 
 ## Functions
 
 ### `Const` AutoSizerWrapper
 
-▸ **AutoSizerWrapper**(`props`: any): *Element‹›*
+▸ **AutoSizerWrapper**(`props`: any): _Element‹›_
 
-*Defined in [packages/grid/x-grid-modules/src/components/autosizer.tsx:4](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/autosizer.tsx#L4)*
+_Defined in [packages/grid/x-grid-modules/src/components/autosizer.tsx:4](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/autosizer.tsx#L4)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`props` | any |
+| Name    | Type |
+| ------- | ---- |
+| `props` | any  |
 
-**Returns:** *Element‹›*
+**Returns:** _Element‹›_

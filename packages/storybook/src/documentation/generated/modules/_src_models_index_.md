@@ -6,458 +6,458 @@
 
 ### References
 
-* [Alignement](_src_models_index_.md#alignement)
-* [CellClassFn](_src_models_index_.md#cellclassfn)
-* [CellClassParams](_src_models_index_.md#cellclassparams)
-* [CellClassPropType](_src_models_index_.md#cellclassproptype)
-* [CellClassRules](_src_models_index_.md#cellclassrules)
-* [CellClickedParam](_src_models_index_.md#cellclickedparam)
-* [CellIndexCoordinates](_src_models_index_.md#cellindexcoordinates)
-* [CellParams](_src_models_index_.md#cellparams)
-* [CellValue](_src_models_index_.md#cellvalue)
-* [ColDef](_src_models_index_.md#coldef)
-* [ColParams](_src_models_index_.md#colparams)
-* [ColType](_src_models_index_.md#coltype)
-* [ColTypeDef](_src_models_index_.md#coltypedef)
-* [ColumnApi](_src_models_index_.md#columnapi)
-* [ColumnHeaderClickedParam](_src_models_index_.md#columnheaderclickedparam)
-* [ColumnLookup](_src_models_index_.md#columnlookup)
-* [ColumnSortedParams](_src_models_index_.md#columnsortedparams)
-* [Columns](_src_models_index_.md#columns)
-* [ColumnsMeta](_src_models_index_.md#columnsmeta)
-* [ComparatorFn](_src_models_index_.md#comparatorfn)
-* [ComponentParams](_src_models_index_.md#componentparams)
-* [ContainerProps](_src_models_index_.md#containerprops)
-* [CoreApi](_src_models_index_.md#coreapi)
-* [DATETIME_COL_DEF](_src_models_index_.md#datetime_col_def)
-* [DATE_COL_DEF](_src_models_index_.md#date_col_def)
-* [DEFAULT_GRID_OPTIONS](_src_models_index_.md#default_grid_options)
-* [ElementSize](_src_models_index_.md#elementsize)
-* [FieldComparatorList](_src_models_index_.md#fieldcomparatorlist)
-* [GridApi](_src_models_index_.md#gridapi)
-* [GridApiRef](_src_models_index_.md#gridapiref)
-* [GridOptions](_src_models_index_.md#gridoptions)
-* [GridRootRef](_src_models_index_.md#gridrootref)
-* [IconsOptions](_src_models_index_.md#iconsoptions)
-* [InternalColumns](_src_models_index_.md#internalcolumns)
-* [NUMERIC_COL_DEF](_src_models_index_.md#numeric_col_def)
-* [ObjectWithId](_src_models_index_.md#objectwithid)
-* [PaginationApi](_src_models_index_.md#paginationapi)
-* [RenderColumnsProps](_src_models_index_.md#rendercolumnsprops)
-* [RenderContextProps](_src_models_index_.md#rendercontextprops)
-* [RenderPaginationProps](_src_models_index_.md#renderpaginationprops)
-* [RenderRowProps](_src_models_index_.md#renderrowprops)
-* [RowApi](_src_models_index_.md#rowapi)
-* [RowClickedParam](_src_models_index_.md#rowclickedparam)
-* [RowData](_src_models_index_.md#rowdata)
-* [RowId](_src_models_index_.md#rowid)
-* [RowModel](_src_models_index_.md#rowmodel)
-* [RowSelectedParam](_src_models_index_.md#rowselectedparam)
-* [Rows](_src_models_index_.md#rows)
-* [RowsProp](_src_models_index_.md#rowsprop)
-* [STRING_COL_DEF](_src_models_index_.md#string_col_def)
-* [SelectionApi](_src_models_index_.md#selectionapi)
-* [SelectionChangedParam](_src_models_index_.md#selectionchangedparam)
-* [SortApi](_src_models_index_.md#sortapi)
-* [SortDirection](_src_models_index_.md#sortdirection)
-* [SortItem](_src_models_index_.md#sortitem)
-* [SortModel](_src_models_index_.md#sortmodel)
-* [ValueFormatterParams](_src_models_index_.md#valueformatterparams)
-* [ValueGetterParams](_src_models_index_.md#valuegetterparams)
-* [VirtualizationApi](_src_models_index_.md#virtualizationapi)
-* [checkboxSelectionColDef](_src_models_index_.md#checkboxselectioncoldef)
-* [createRow](_src_models_index_.md#createrow)
-* [dateFormatter](_src_models_index_.md#dateformatter)
-* [dateTimeFormatter](_src_models_index_.md#datetimeformatter)
-* [getColDef](_src_models_index_.md#getcoldef)
-* [gridApiRef](_src_models_index_.md#gridapiref)
+- [Alignement](_src_models_index_.md#alignement)
+- [CellClassFn](_src_models_index_.md#cellclassfn)
+- [CellClassParams](_src_models_index_.md#cellclassparams)
+- [CellClassPropType](_src_models_index_.md#cellclassproptype)
+- [CellClassRules](_src_models_index_.md#cellclassrules)
+- [CellClickedParam](_src_models_index_.md#cellclickedparam)
+- [CellIndexCoordinates](_src_models_index_.md#cellindexcoordinates)
+- [CellParams](_src_models_index_.md#cellparams)
+- [CellValue](_src_models_index_.md#cellvalue)
+- [ColDef](_src_models_index_.md#coldef)
+- [ColParams](_src_models_index_.md#colparams)
+- [ColType](_src_models_index_.md#coltype)
+- [ColTypeDef](_src_models_index_.md#coltypedef)
+- [ColumnApi](_src_models_index_.md#columnapi)
+- [ColumnHeaderClickedParam](_src_models_index_.md#columnheaderclickedparam)
+- [ColumnLookup](_src_models_index_.md#columnlookup)
+- [ColumnSortedParams](_src_models_index_.md#columnsortedparams)
+- [Columns](_src_models_index_.md#columns)
+- [ColumnsMeta](_src_models_index_.md#columnsmeta)
+- [ComparatorFn](_src_models_index_.md#comparatorfn)
+- [ComponentParams](_src_models_index_.md#componentparams)
+- [ContainerProps](_src_models_index_.md#containerprops)
+- [CoreApi](_src_models_index_.md#coreapi)
+- [DATETIME_COL_DEF](_src_models_index_.md#datetime_col_def)
+- [DATE_COL_DEF](_src_models_index_.md#date_col_def)
+- [DEFAULT_GRID_OPTIONS](_src_models_index_.md#default_grid_options)
+- [ElementSize](_src_models_index_.md#elementsize)
+- [FieldComparatorList](_src_models_index_.md#fieldcomparatorlist)
+- [GridApi](_src_models_index_.md#gridapi)
+- [GridApiRef](_src_models_index_.md#gridapiref)
+- [GridOptions](_src_models_index_.md#gridoptions)
+- [GridRootRef](_src_models_index_.md#gridrootref)
+- [IconsOptions](_src_models_index_.md#iconsoptions)
+- [InternalColumns](_src_models_index_.md#internalcolumns)
+- [NUMERIC_COL_DEF](_src_models_index_.md#numeric_col_def)
+- [ObjectWithId](_src_models_index_.md#objectwithid)
+- [PaginationApi](_src_models_index_.md#paginationapi)
+- [RenderColumnsProps](_src_models_index_.md#rendercolumnsprops)
+- [RenderContextProps](_src_models_index_.md#rendercontextprops)
+- [RenderPaginationProps](_src_models_index_.md#renderpaginationprops)
+- [RenderRowProps](_src_models_index_.md#renderrowprops)
+- [RowApi](_src_models_index_.md#rowapi)
+- [RowClickedParam](_src_models_index_.md#rowclickedparam)
+- [RowData](_src_models_index_.md#rowdata)
+- [RowId](_src_models_index_.md#rowid)
+- [RowModel](_src_models_index_.md#rowmodel)
+- [RowSelectedParam](_src_models_index_.md#rowselectedparam)
+- [Rows](_src_models_index_.md#rows)
+- [RowsProp](_src_models_index_.md#rowsprop)
+- [STRING_COL_DEF](_src_models_index_.md#string_col_def)
+- [SelectionApi](_src_models_index_.md#selectionapi)
+- [SelectionChangedParam](_src_models_index_.md#selectionchangedparam)
+- [SortApi](_src_models_index_.md#sortapi)
+- [SortDirection](_src_models_index_.md#sortdirection)
+- [SortItem](_src_models_index_.md#sortitem)
+- [SortModel](_src_models_index_.md#sortmodel)
+- [ValueFormatterParams](_src_models_index_.md#valueformatterparams)
+- [ValueGetterParams](_src_models_index_.md#valuegetterparams)
+- [VirtualizationApi](_src_models_index_.md#virtualizationapi)
+- [checkboxSelectionColDef](_src_models_index_.md#checkboxselectioncoldef)
+- [createRow](_src_models_index_.md#createrow)
+- [dateFormatter](_src_models_index_.md#dateformatter)
+- [dateTimeFormatter](_src_models_index_.md#datetimeformatter)
+- [getColDef](_src_models_index_.md#getcoldef)
+- [gridApiRef](_src_models_index_.md#gridapiref)
 
 ## References
 
-###  Alignement
+### Alignement
 
 • **Alignement**:
 
-___
+---
 
-###  CellClassFn
+### CellClassFn
 
 • **CellClassFn**:
 
-___
+---
 
-###  CellClassParams
+### CellClassParams
 
 • **CellClassParams**:
 
-___
+---
 
-###  CellClassPropType
+### CellClassPropType
 
 • **CellClassPropType**:
 
-___
+---
 
-###  CellClassRules
+### CellClassRules
 
 • **CellClassRules**:
 
-___
+---
 
-###  CellClickedParam
+### CellClickedParam
 
 • **CellClickedParam**:
 
-___
+---
 
-###  CellIndexCoordinates
+### CellIndexCoordinates
 
 • **CellIndexCoordinates**:
 
-___
+---
 
-###  CellParams
+### CellParams
 
 • **CellParams**:
 
-___
+---
 
-###  CellValue
+### CellValue
 
 • **CellValue**:
 
-___
+---
 
-###  ColDef
+### ColDef
 
 • **ColDef**:
 
-___
+---
 
-###  ColParams
+### ColParams
 
 • **ColParams**:
 
-___
+---
 
-###  ColType
+### ColType
 
 • **ColType**:
 
-___
+---
 
-###  ColTypeDef
+### ColTypeDef
 
 • **ColTypeDef**:
 
-___
+---
 
-###  ColumnApi
+### ColumnApi
 
 • **ColumnApi**:
 
-___
+---
 
-###  ColumnHeaderClickedParam
+### ColumnHeaderClickedParam
 
 • **ColumnHeaderClickedParam**:
 
-___
+---
 
-###  ColumnLookup
+### ColumnLookup
 
 • **ColumnLookup**:
 
-___
+---
 
-###  ColumnSortedParams
+### ColumnSortedParams
 
 • **ColumnSortedParams**:
 
-___
+---
 
-###  Columns
+### Columns
 
 • **Columns**:
 
-___
+---
 
-###  ColumnsMeta
+### ColumnsMeta
 
 • **ColumnsMeta**:
 
-___
+---
 
-###  ComparatorFn
+### ComparatorFn
 
 • **ComparatorFn**:
 
-___
+---
 
-###  ComponentParams
+### ComponentParams
 
 • **ComponentParams**:
 
-___
+---
 
-###  ContainerProps
+### ContainerProps
 
 • **ContainerProps**:
 
-___
+---
 
-###  CoreApi
+### CoreApi
 
 • **CoreApi**:
 
-___
+---
 
-###  DATETIME_COL_DEF
+### DATETIME_COL_DEF
 
 • **DATETIME_COL_DEF**:
 
-___
+---
 
-###  DATE_COL_DEF
+### DATE_COL_DEF
 
 • **DATE_COL_DEF**:
 
-___
+---
 
-###  DEFAULT_GRID_OPTIONS
+### DEFAULT_GRID_OPTIONS
 
 • **DEFAULT_GRID_OPTIONS**:
 
-___
+---
 
-###  ElementSize
+### ElementSize
 
 • **ElementSize**:
 
-___
+---
 
-###  FieldComparatorList
+### FieldComparatorList
 
 • **FieldComparatorList**:
 
-___
+---
 
-###  GridApi
+### GridApi
 
 • **GridApi**:
 
-___
+---
 
-###  GridApiRef
+### GridApiRef
 
 • **GridApiRef**:
 
-___
+---
 
-###  GridOptions
+### GridOptions
 
 • **GridOptions**:
 
-___
+---
 
-###  GridRootRef
+### GridRootRef
 
 • **GridRootRef**:
 
-___
+---
 
-###  IconsOptions
+### IconsOptions
 
 • **IconsOptions**:
 
-___
+---
 
-###  InternalColumns
+### InternalColumns
 
 • **InternalColumns**:
 
-___
+---
 
-###  NUMERIC_COL_DEF
+### NUMERIC_COL_DEF
 
 • **NUMERIC_COL_DEF**:
 
-___
+---
 
-###  ObjectWithId
+### ObjectWithId
 
 • **ObjectWithId**:
 
-___
+---
 
-###  PaginationApi
+### PaginationApi
 
 • **PaginationApi**:
 
-___
+---
 
-###  RenderColumnsProps
+### RenderColumnsProps
 
 • **RenderColumnsProps**:
 
-___
+---
 
-###  RenderContextProps
+### RenderContextProps
 
 • **RenderContextProps**:
 
-___
+---
 
-###  RenderPaginationProps
+### RenderPaginationProps
 
 • **RenderPaginationProps**:
 
-___
+---
 
-###  RenderRowProps
+### RenderRowProps
 
 • **RenderRowProps**:
 
-___
+---
 
-###  RowApi
+### RowApi
 
 • **RowApi**:
 
-___
+---
 
-###  RowClickedParam
+### RowClickedParam
 
 • **RowClickedParam**:
 
-___
+---
 
-###  RowData
+### RowData
 
 • **RowData**:
 
-___
+---
 
-###  RowId
+### RowId
 
 • **RowId**:
 
-___
+---
 
-###  RowModel
+### RowModel
 
 • **RowModel**:
 
-___
+---
 
-###  RowSelectedParam
+### RowSelectedParam
 
 • **RowSelectedParam**:
 
-___
+---
 
-###  Rows
+### Rows
 
 • **Rows**:
 
-___
+---
 
-###  RowsProp
+### RowsProp
 
 • **RowsProp**:
 
-___
+---
 
-###  STRING_COL_DEF
+### STRING_COL_DEF
 
 • **STRING_COL_DEF**:
 
-___
+---
 
-###  SelectionApi
+### SelectionApi
 
 • **SelectionApi**:
 
-___
+---
 
-###  SelectionChangedParam
+### SelectionChangedParam
 
 • **SelectionChangedParam**:
 
-___
+---
 
-###  SortApi
+### SortApi
 
 • **SortApi**:
 
-___
+---
 
-###  SortDirection
+### SortDirection
 
 • **SortDirection**:
 
-___
+---
 
-###  SortItem
+### SortItem
 
 • **SortItem**:
 
-___
+---
 
-###  SortModel
+### SortModel
 
 • **SortModel**:
 
-___
+---
 
-###  ValueFormatterParams
+### ValueFormatterParams
 
 • **ValueFormatterParams**:
 
-___
+---
 
-###  ValueGetterParams
+### ValueGetterParams
 
 • **ValueGetterParams**:
 
-___
+---
 
-###  VirtualizationApi
+### VirtualizationApi
 
 • **VirtualizationApi**:
 
-___
+---
 
-###  checkboxSelectionColDef
+### checkboxSelectionColDef
 
 • **checkboxSelectionColDef**:
 
-___
+---
 
-###  createRow
+### createRow
 
 • **createRow**:
 
-___
+---
 
-###  dateFormatter
+### dateFormatter
 
 • **dateFormatter**:
 
-___
+---
 
-###  dateTimeFormatter
+### dateTimeFormatter
 
 • **dateTimeFormatter**:
 
-___
+---
 
-###  getColDef
+### getColDef
 
 • **getColDef**:
 
-___
+---
 
-###  gridApiRef
+### gridApiRef
 
 • **gridApiRef**:

@@ -6,19 +6,19 @@
 
 ### Variables
 
-* [Window](_src_components_styled_wrappers_window_.md#const-window)
+- [Window](_src_components_styled_wrappers_window_.md#const-window)
 
 ## Variables
 
 ### `Const` Window
 
-• **Window**: *ForwardRefExoticComponent‹HTMLAttributes‹HTMLDivElement› & RefAttributes‹HTMLDivElement››* = React.forwardRef<HTMLDivElement, DivProps>((props, ref) => {
-  const { className, children, ...rest } = props;
-  return (
-    <div ref={ref} className={'window ' + (className || '')} {...rest}>
-      {children}
-    </div>
-  );
+• **Window**: _ForwardRefExoticComponent‹HTMLAttributes‹HTMLDivElement› & RefAttributes‹HTMLDivElement››_ = React.forwardRef<HTMLDivElement, DivProps>((props, ref) => {
+const { className, children, ...rest } = props;
+return (
+<div ref={ref} className={'window ' + (className || '')} {...rest}>
+{children}
+</div>
+);
 })
 
-*Defined in [packages/grid/x-grid-modules/src/components/styled-wrappers/window.tsx:4](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/styled-wrappers/window.tsx#L4)*
+_Defined in [packages/grid/x-grid-modules/src/components/styled-wrappers/window.tsx:4](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/styled-wrappers/window.tsx#L4)_

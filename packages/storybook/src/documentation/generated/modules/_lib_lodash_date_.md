@@ -6,17 +6,17 @@
 
 ### References
 
-* [default](_lib_lodash_date_.md#default)
-* [now](_lib_lodash_date_.md#now)
+- [default](_lib_lodash_date_.md#default)
+- [now](_lib_lodash_date_.md#now)
 
 ## References
 
-###  default
+### default
 
 • **default**:
 
-___
+---
 
-###  now
+### now
 
 • **now**:

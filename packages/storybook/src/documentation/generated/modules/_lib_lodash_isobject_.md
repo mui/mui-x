@@ -6,46 +6,46 @@
 
 ### Lang Functions
 
-* [isObject](_lib_lodash_isobject_.md#isobject)
+- [isObject](_lib_lodash_isobject_.md#isobject)
 
 ## Lang Functions
 
-###  isObject
+### isObject
 
-▸ **isObject**(`value`: any): *boolean*
+▸ **isObject**(`value`: any): _boolean_
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/isObject.js:28](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/isObject.js#L28)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/isObject.js:28](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/isObject.js#L28)_
 
 Checks if `value` is the
 [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
 of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
 
-**`static`** 
+**`static`**
 
-**`memberof`** _
+**`memberof`** \_
 
 **`since`** 0.1.0
 
-**`example`** 
+**`example`**
 
-_.isObject({});
+\_.isObject({});
 // => true
 
-_.isObject([1, 2, 3]);
+\_.isObject([1, 2, 3]);
 // => true
 
 _.isObject(_.noop);
 // => true
 
-_.isObject(null);
+\_.isObject(null);
 // => false
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`value` | any | The value to check. |
+| Name    | Type | Description         |
+| ------- | ---- | ------------------- |
+| `value` | any  | The value to check. |
 
-**Returns:** *boolean*
+**Returns:** _boolean_
 
 Returns `true` if `value` is an object, else `false`.

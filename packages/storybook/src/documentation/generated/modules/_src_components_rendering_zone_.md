@@ -6,43 +6,42 @@
 
 ### Type aliases
 
-* [WithChildren](_src_components_rendering_zone_.md#withchildren)
+- [WithChildren](_src_components_rendering_zone_.md#withchildren)
 
 ### Variables
 
-* [RenderingZone](_src_components_rendering_zone_.md#const-renderingzone)
+- [RenderingZone](_src_components_rendering_zone_.md#const-renderingzone)
 
 ## Type aliases
 
-###  WithChildren
+### WithChildren
 
-Ƭ **WithChildren**: *object*
+Ƭ **WithChildren**: _object_
 
-*Defined in [packages/grid/x-grid-modules/src/components/rendering-zone.tsx:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/rendering-zone.tsx#L5)*
+_Defined in [packages/grid/x-grid-modules/src/components/rendering-zone.tsx:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/rendering-zone.tsx#L5)_
 
 #### Type declaration:
 
-* **children**? : *React.ReactNode*
+- **children**? : _React.ReactNode_
 
 ## Variables
 
 ### `Const` RenderingZone
 
-• **RenderingZone**: *ForwardRefExoticComponent‹[ElementSize](../interfaces/_src_models_elementsize_.elementsize.md) & object & RefAttributes‹HTMLDivElement››* = React.forwardRef<HTMLDivElement, ElementSize & WithChildren>(
-  ({ height, width, children }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className={'rendering-zone'}
-        style={{
+• **RenderingZone**: _ForwardRefExoticComponent‹[ElementSize](../interfaces/_src_models_elementsize_.elementsize.md) & object & RefAttributes‹HTMLDivElement››_ = React.forwardRef<HTMLDivElement, ElementSize & WithChildren>(
+({ height, width, children }, ref) => {
+return (
+<div
+ref={ref}
+className={'rendering-zone'}
+style={{
           maxHeight: height,
           width: width,
-        }}
-      >
-        {children}
-      </div>
-    );
-  },
+        }} >
+{children}
+</div>
+);
+},
 )
 
-*Defined in [packages/grid/x-grid-modules/src/components/rendering-zone.tsx:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/rendering-zone.tsx#L7)*
+_Defined in [packages/grid/x-grid-modules/src/components/rendering-zone.tsx:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/rendering-zone.tsx#L7)_

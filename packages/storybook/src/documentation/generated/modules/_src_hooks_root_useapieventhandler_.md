@@ -6,22 +6,22 @@
 
 ### Functions
 
-* [useApiEventHandler](_src_hooks_root_useapieventhandler_.md#const-useapieventhandler)
+- [useApiEventHandler](_src_hooks_root_useapieventhandler_.md#const-useapieventhandler)
 
 ## Functions
 
 ### `Const` useApiEventHandler
 
-▸ **useApiEventHandler**(`apiRef`: [GridApiRef](_src_models_gridapiref_.md#gridapiref), `eventName`: string, `handler?`: undefined | function): *void*
+▸ **useApiEventHandler**(`apiRef`: [GridApiRef](_src_models_gridapiref_.md#gridapiref), `eventName`: string, `handler?`: undefined | function): _void_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/root/useApiEventHandler.ts:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/root/useApiEventHandler.ts#L5)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/root/useApiEventHandler.ts:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/root/useApiEventHandler.ts#L5)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`apiRef` | [GridApiRef](_src_models_gridapiref_.md#gridapiref) |
-`eventName` | string |
-`handler?` | undefined &#124; function |
+| Name        | Type                                                |
+| ----------- | --------------------------------------------------- |
+| `apiRef`    | [GridApiRef](_src_models_gridapiref_.md#gridapiref) |
+| `eventName` | string                                              |
+| `handler?`  | undefined &#124; function                           |
 
-**Returns:** *void*
+**Returns:** _void_

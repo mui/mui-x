@@ -1,20 +1,20 @@
-[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/_listCacheClear"](_lib_lodash__listcacheclear_.md)
+[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/\_listCacheClear"](_lib_lodash__listcacheclear_.md)
 
-# Module: "lib/lodash/_listCacheClear"
+# Module: "lib/lodash/\_listCacheClear"
 
 ## Index
 
 ### Functions
 
-* [listCacheClear](_lib_lodash__listcacheclear_.md#private-listcacheclear)
+- [listCacheClear](_lib_lodash__listcacheclear_.md#private-listcacheclear)
 
 ## Functions
 
 ### `Private` listCacheClear
 
-▸ **listCacheClear**(): *void*
+▸ **listCacheClear**(): _void_
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_listCacheClear.js:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_listCacheClear.js#L10)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_listCacheClear.js:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_listCacheClear.js#L10)_
 
 Removes all key-value entries from the list cache.
 
@@ -22,4 +22,4 @@ Removes all key-value entries from the list cache.
 
 **`memberof`** ListCache
 
-**Returns:** *void*
+**Returns:** _void_

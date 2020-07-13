@@ -6,120 +6,120 @@
 
 ### Object literals
 
-* [checkboxSelectionColDef](_src_models_coldef_checkboxselection_.md#const-checkboxselectioncoldef)
+- [checkboxSelectionColDef](_src_models_coldef_checkboxselection_.md#const-checkboxselectioncoldef)
 
 ## Object literals
 
 ### `Const` checkboxSelectionColDef
 
-### ▪ **checkboxSelectionColDef**: *object*
+### ▪ **checkboxSelectionColDef**: _object_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L5)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L5)_
 
-###  align
+### align
 
-• **align**: *"center"* = "center"
+• **align**: _"center"_ = "center"
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L10)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L10)_
 
-###  cellClass
+### cellClass
 
-• **cellClass**: *string* = "checkbox-selection-cell"
+• **cellClass**: _string_ = "checkbox-selection-cell"
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L20)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L20)_
 
-###  description
+### description
 
-• **description**: *string* = "Select Multiple Rows"
+• **description**: _string_ = "Select Multiple Rows"
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L7)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L7)_
 
-###  disableClickEventBubbling
+### disableClickEventBubbling
 
-• **disableClickEventBubbling**: *true* = true
+• **disableClickEventBubbling**: _true_ = true
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L14)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L14)_
 
-###  field
+### field
 
-• **field**: *string* = "__check__"
+• **field**: _string_ = "**check**"
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L6)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L6)_
 
-###  headerAlign
+### headerAlign
 
-• **headerAlign**: *"center"* = "center"
+• **headerAlign**: _"center"_ = "center"
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L11)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L11)_
 
-###  headerClass
+### headerClass
 
-• **headerClass**: *string* = "checkbox-selection-header-cell"
+• **headerClass**: _string_ = "checkbox-selection-header-cell"
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:21](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L21)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:21](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L21)_
 
-###  resizable
+### resizable
 
-• **resizable**: *true* = true
+• **resizable**: _true_ = true
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L12)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L12)_
 
-###  sortable
+### sortable
 
-• **sortable**: *false* = false
+• **sortable**: _false_ = false
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L13)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L13)_
 
-###  type
+### type
 
-• **type**: *string* = "checkboxSelection"
+• **type**: _string_ = "checkboxSelection"
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L8)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L8)_
 
-###  width
+### width
 
-• **width**: *number* = 80
+• **width**: _number_ = 80
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L9)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L9)_
 
-###  cellRenderer
+### cellRenderer
 
-▸ **cellRenderer**(`params`: [CellParams](../interfaces/_src_models_coldef_coldef_.cellparams.md)): *Element‹›*
+▸ **cellRenderer**(`params`: [CellParams](../interfaces/_src_models_coldef_coldef_.cellparams.md)): _Element‹›_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:19](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L19)*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`params` | [CellParams](../interfaces/_src_models_coldef_coldef_.cellparams.md) |
-
-**Returns:** *Element‹›*
-
-###  headerComponent
-
-▸ **headerComponent**(`params`: [ColParams](../interfaces/_src_models_coldef_coldef_.colparams.md)): *Element‹›*
-
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:17](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L17)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:19](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L19)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`params` | [ColParams](../interfaces/_src_models_coldef_coldef_.colparams.md) |
+| Name     | Type                                                                 |
+| -------- | -------------------------------------------------------------------- |
+| `params` | [CellParams](../interfaces/_src_models_coldef_coldef_.cellparams.md) |
 
-**Returns:** *Element‹›*
+**Returns:** _Element‹›_
 
-###  valueGetter
+### headerComponent
 
-▸ **valueGetter**(`params`: [CellParams](../interfaces/_src_models_coldef_coldef_.cellparams.md)): *boolean*
+▸ **headerComponent**(`params`: [ColParams](../interfaces/_src_models_coldef_coldef_.colparams.md)): _Element‹›_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L15)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:17](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L17)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`params` | [CellParams](../interfaces/_src_models_coldef_coldef_.cellparams.md) |
+| Name     | Type                                                               |
+| -------- | ------------------------------------------------------------------ |
+| `params` | [ColParams](../interfaces/_src_models_coldef_coldef_.colparams.md) |
 
-**Returns:** *boolean*
+**Returns:** _Element‹›_
+
+### valueGetter
+
+▸ **valueGetter**(`params`: [CellParams](../interfaces/_src_models_coldef_coldef_.cellparams.md)): _boolean_
+
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/checkboxSelection.tsx#L15)_
+
+**Parameters:**
+
+| Name     | Type                                                                 |
+| -------- | -------------------------------------------------------------------- |
+| `params` | [CellParams](../interfaces/_src_models_coldef_coldef_.cellparams.md) |
+
+**Returns:** _boolean_

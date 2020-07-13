@@ -1,20 +1,20 @@
-[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/_stackClear"](_lib_lodash__stackclear_.md)
+[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/\_stackClear"](_lib_lodash__stackclear_.md)
 
-# Module: "lib/lodash/_stackClear"
+# Module: "lib/lodash/\_stackClear"
 
 ## Index
 
 ### Functions
 
-* [stackClear](_lib_lodash__stackclear_.md#private-stackclear)
+- [stackClear](_lib_lodash__stackclear_.md#private-stackclear)
 
 ## Functions
 
 ### `Private` stackClear
 
-▸ **stackClear**(): *void*
+▸ **stackClear**(): _void_
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_stackClear.js:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_stackClear.js#L12)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_stackClear.js:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_stackClear.js#L12)_
 
 Removes all key-value entries from the stack.
 
@@ -22,4 +22,4 @@ Removes all key-value entries from the stack.
 
 **`memberof`** Stack
 
-**Returns:** *void*
+**Returns:** _void_

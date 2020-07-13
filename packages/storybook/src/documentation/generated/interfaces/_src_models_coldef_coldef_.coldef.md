@@ -4,207 +4,207 @@
 
 ## Hierarchy
 
-* **ColDef**
+- **ColDef**
 
 ## Index
 
 ### Properties
 
-* [align](_src_models_coldef_coldef_.coldef.md#optional-align)
-* [cellClass](_src_models_coldef_coldef_.coldef.md#optional-cellclass)
-* [cellClassRules](_src_models_coldef_coldef_.coldef.md#optional-cellclassrules)
-* [cellRenderer](_src_models_coldef_coldef_.coldef.md#optional-cellrenderer)
-* [description](_src_models_coldef_coldef_.coldef.md#optional-description)
-* [disableClickEventBubbling](_src_models_coldef_coldef_.coldef.md#optional-disableclickeventbubbling)
-* [field](_src_models_coldef_coldef_.coldef.md#field)
-* [headerAlign](_src_models_coldef_coldef_.coldef.md#optional-headeralign)
-* [headerClass](_src_models_coldef_coldef_.coldef.md#optional-headerclass)
-* [headerComponent](_src_models_coldef_coldef_.coldef.md#optional-headercomponent)
-* [headerName](_src_models_coldef_coldef_.coldef.md#optional-headername)
-* [hide](_src_models_coldef_coldef_.coldef.md#optional-hide)
-* [hideSortIcons](_src_models_coldef_coldef_.coldef.md#optional-hidesorticons)
-* [resizable](_src_models_coldef_coldef_.coldef.md#optional-resizable)
-* [sortComparator](_src_models_coldef_coldef_.coldef.md#optional-sortcomparator)
-* [sortDirection](_src_models_coldef_coldef_.coldef.md#optional-sortdirection)
-* [sortIndex](_src_models_coldef_coldef_.coldef.md#optional-sortindex)
-* [sortable](_src_models_coldef_coldef_.coldef.md#optional-sortable)
-* [type](_src_models_coldef_coldef_.coldef.md#optional-type)
-* [valueFormatter](_src_models_coldef_coldef_.coldef.md#optional-valueformatter)
-* [valueGetter](_src_models_coldef_coldef_.coldef.md#optional-valuegetter)
-* [width](_src_models_coldef_coldef_.coldef.md#optional-width)
+- [align](_src_models_coldef_coldef_.coldef.md#optional-align)
+- [cellClass](_src_models_coldef_coldef_.coldef.md#optional-cellclass)
+- [cellClassRules](_src_models_coldef_coldef_.coldef.md#optional-cellclassrules)
+- [cellRenderer](_src_models_coldef_coldef_.coldef.md#optional-cellrenderer)
+- [description](_src_models_coldef_coldef_.coldef.md#optional-description)
+- [disableClickEventBubbling](_src_models_coldef_coldef_.coldef.md#optional-disableclickeventbubbling)
+- [field](_src_models_coldef_coldef_.coldef.md#field)
+- [headerAlign](_src_models_coldef_coldef_.coldef.md#optional-headeralign)
+- [headerClass](_src_models_coldef_coldef_.coldef.md#optional-headerclass)
+- [headerComponent](_src_models_coldef_coldef_.coldef.md#optional-headercomponent)
+- [headerName](_src_models_coldef_coldef_.coldef.md#optional-headername)
+- [hide](_src_models_coldef_coldef_.coldef.md#optional-hide)
+- [hideSortIcons](_src_models_coldef_coldef_.coldef.md#optional-hidesorticons)
+- [resizable](_src_models_coldef_coldef_.coldef.md#optional-resizable)
+- [sortComparator](_src_models_coldef_coldef_.coldef.md#optional-sortcomparator)
+- [sortDirection](_src_models_coldef_coldef_.coldef.md#optional-sortdirection)
+- [sortIndex](_src_models_coldef_coldef_.coldef.md#optional-sortindex)
+- [sortable](_src_models_coldef_coldef_.coldef.md#optional-sortable)
+- [type](_src_models_coldef_coldef_.coldef.md#optional-type)
+- [valueFormatter](_src_models_coldef_coldef_.coldef.md#optional-valueformatter)
+- [valueGetter](_src_models_coldef_coldef_.coldef.md#optional-valuegetter)
+- [width](_src_models_coldef_coldef_.coldef.md#optional-width)
 
 ## Properties
 
 ### `Optional` align
 
-• **align**? : *[Alignement](../modules/_src_models_coldef_coldef_.md#alignement)*
+• **align**? : _[Alignement](../modules/_src_models_coldef_coldef_.md#alignement)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:41](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L41)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:41](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L41)_
 
-___
+---
 
 ### `Optional` cellClass
 
-• **cellClass**? : *[CellClassPropType](../modules/_src_models_coldef_coldef_.md#cellclassproptype)*
+• **cellClass**? : _[CellClassPropType](../modules/_src_models_coldef_coldef_.md#cellclassproptype)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:44](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L44)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:44](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L44)_
 
-___
+---
 
 ### `Optional` cellClassRules
 
-• **cellClassRules**? : *[CellClassRules](../modules/_src_models_coldef_coldef_.md#cellclassrules)*
+• **cellClassRules**? : _[CellClassRules](../modules/_src_models_coldef_coldef_.md#cellclassrules)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:45](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L45)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:45](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L45)_
 
-___
+---
 
 ### `Optional` cellRenderer
 
-• **cellRenderer**? : *undefined | function*
+• **cellRenderer**? : _undefined | function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:46](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L46)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:46](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L46)_
 
-___
+---
 
 ### `Optional` description
 
-• **description**? : *undefined | string*
+• **description**? : _undefined | string_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:32](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L32)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:32](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L32)_
 
-___
+---
 
 ### `Optional` disableClickEventBubbling
 
-• **disableClickEventBubbling**? : *undefined | false | true*
+• **disableClickEventBubbling**? : _undefined | false | true_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:51](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L51)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:51](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L51)_
 
-___
+---
 
-###  field
+### field
 
-• **field**: *string*
+• **field**: _string_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:30](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L30)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:30](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L30)_
 
-___
+---
 
 ### `Optional` headerAlign
 
-• **headerAlign**? : *[Alignement](../modules/_src_models_coldef_coldef_.md#alignement)*
+• **headerAlign**? : _[Alignement](../modules/_src_models_coldef_coldef_.md#alignement)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:49](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L49)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:49](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L49)_
 
-___
+---
 
 ### `Optional` headerClass
 
-• **headerClass**? : *string | string[]*
+• **headerClass**? : _string | string[]_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:47](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L47)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:47](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L47)_
 
-___
+---
 
 ### `Optional` headerComponent
 
-• **headerComponent**? : *undefined | function*
+• **headerComponent**? : _undefined | function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:48](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L48)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:48](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L48)_
 
-___
+---
 
 ### `Optional` headerName
 
-• **headerName**? : *undefined | string*
+• **headerName**? : _undefined | string_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:31](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L31)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:31](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L31)_
 
-___
+---
 
 ### `Optional` hide
 
-• **hide**? : *undefined | false | true*
+• **hide**? : _undefined | false | true_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:34](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L34)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:34](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L34)_
 
-___
+---
 
 ### `Optional` hideSortIcons
 
-• **hideSortIcons**? : *undefined | false | true*
+• **hideSortIcons**? : _undefined | false | true_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:50](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L50)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:50](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L50)_
 
-___
+---
 
 ### `Optional` resizable
 
-• **resizable**? : *undefined | false | true*
+• **resizable**? : _undefined | false | true_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:36](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L36)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:36](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L36)_
 
-___
+---
 
 ### `Optional` sortComparator
 
-• **sortComparator**? : *[ComparatorFn](../modules/_src_models_sortmodel_.md#comparatorfn)*
+• **sortComparator**? : _[ComparatorFn](../modules/_src_models_sortmodel_.md#comparatorfn)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:37](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L37)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:37](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L37)_
 
-___
+---
 
 ### `Optional` sortDirection
 
-• **sortDirection**? : *[SortDirection](../modules/_src_models_sortmodel_.md#sortdirection)*
+• **sortDirection**? : _[SortDirection](../modules/_src_models_sortmodel_.md#sortdirection)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:38](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L38)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:38](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L38)_
 
-___
+---
 
 ### `Optional` sortIndex
 
-• **sortIndex**? : *undefined | number*
+• **sortIndex**? : _undefined | number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:39](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L39)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:39](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L39)_
 
-___
+---
 
 ### `Optional` sortable
 
-• **sortable**? : *undefined | false | true*
+• **sortable**? : _undefined | false | true_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:35](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L35)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:35](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L35)_
 
-___
+---
 
 ### `Optional` type
 
-• **type**? : *[ColType](../modules/_src_models_coldef_coltype_.md#coltype)*
+• **type**? : _[ColType](../modules/_src_models_coldef_coltype_.md#coltype)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:40](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L40)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:40](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L40)_
 
-___
+---
 
 ### `Optional` valueFormatter
 
-• **valueFormatter**? : *undefined | function*
+• **valueFormatter**? : _undefined | function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:43](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L43)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:43](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L43)_
 
-___
+---
 
 ### `Optional` valueGetter
 
-• **valueGetter**? : *undefined | function*
+• **valueGetter**? : _undefined | function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:42](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L42)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:42](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L42)_
 
-___
+---
 
 ### `Optional` width
 
-• **width**? : *undefined | number*
+• **width**? : _undefined | number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:33](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L33)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:33](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L33)_

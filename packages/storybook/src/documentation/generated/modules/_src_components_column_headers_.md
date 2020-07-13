@@ -6,45 +6,46 @@
 
 ### Interfaces
 
-* [ColumnHeadersItemCollectionProps](../interfaces/_src_components_column_headers_.columnheadersitemcollectionprops.md)
-* [ColumnsHeaderProps](../interfaces/_src_components_column_headers_.columnsheaderprops.md)
+- [ColumnHeadersItemCollectionProps](../interfaces/_src_components_column_headers_.columnheadersitemcollectionprops.md)
+- [ColumnsHeaderProps](../interfaces/_src_components_column_headers_.columnsheaderprops.md)
 
 ### Variables
 
-* [ColumnHeaderItemCollection](_src_components_column_headers_.md#const-columnheaderitemcollection)
-* [ColumnsHeader](_src_components_column_headers_.md#const-columnsheader)
+- [ColumnHeaderItemCollection](_src_components_column_headers_.md#const-columnheaderitemcollection)
+- [ColumnsHeader](_src_components_column_headers_.md#const-columnsheader)
 
 ## Variables
 
 ### `Const` ColumnHeaderItemCollection
 
-• **ColumnHeaderItemCollection**: *React.FC‹[ColumnHeadersItemCollectionProps](../interfaces/_src_components_column_headers_.columnheadersitemcollectionprops.md)›* = React.memo(
-  ({ headerHeight, onResizeColumn, columns }) => {
-    const items = columns.map((col, idx) => (
-      <ColumnHeaderItem
+• **ColumnHeaderItemCollection**: _React.FC‹[ColumnHeadersItemCollectionProps](../interfaces/_src_components_column_headers_.columnheadersitemcollectionprops.md)›_ = React.memo(
+({ headerHeight, onResizeColumn, columns }) => {
+const items = columns.map((col, idx) => (
+<ColumnHeaderItem
         key={col.field}
         column={col}
         colIndex={idx}
         headerHeight={headerHeight}
         onResizeColumn={onResizeColumn}
       />
-    ));
+));
 
     return <>{items}</>;
-  },
+
+},
 )
 
-*Defined in [packages/grid/x-grid-modules/src/components/column-headers.tsx:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-headers.tsx#L13)*
+_Defined in [packages/grid/x-grid-modules/src/components/column-headers.tsx:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-headers.tsx#L13)_
 
-___
+---
 
 ### `Const` ColumnsHeader
 
-• **ColumnsHeader**: *NamedExoticComponent‹[ColumnsHeaderProps](../interfaces/_src_components_column_headers_.columnsheaderprops.md) & RefAttributes‹HTMLDivElement›› & object* = memo(
-  forwardRef<HTMLDivElement, ColumnsHeaderProps>(
-    ({ columns, hasScrollX, headerHeight, onResizeColumn, renderCtx }, columnsHeaderRef) => {
-      const wrapperCssClasses = 'material-col-cell-wrapper ' + (hasScrollX ? 'scroll' : '');
-      const api = useContext(ApiContext);
+• **ColumnsHeader**: _NamedExoticComponent‹[ColumnsHeaderProps](../interfaces/_src_components_column_headers_.columnsheaderprops.md) & RefAttributes‹HTMLDivElement›› & object_ = memo(
+forwardRef<HTMLDivElement, ColumnsHeaderProps>(
+({ columns, hasScrollX, headerHeight, onResizeColumn, renderCtx }, columnsHeaderRef) => {
+const wrapperCssClasses = 'material-col-cell-wrapper ' + (hasScrollX ? 'scroll' : '');
+const api = useContext(ApiContext);
 
       if (!api) {
         throw new Error('ApiRef not found in context');
@@ -90,7 +91,8 @@ ___
         </div>
       );
     },
-  ),
+
+),
 )
 
-*Defined in [packages/grid/x-grid-modules/src/components/column-headers.tsx:38](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-headers.tsx#L38)*
+_Defined in [packages/grid/x-grid-modules/src/components/column-headers.tsx:38](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/column-headers.tsx#L38)_

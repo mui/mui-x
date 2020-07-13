@@ -1,20 +1,20 @@
-[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/_mapCacheHas"](_lib_lodash__mapcachehas_.md)
+[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/\_mapCacheHas"](_lib_lodash__mapcachehas_.md)
 
-# Module: "lib/lodash/_mapCacheHas"
+# Module: "lib/lodash/\_mapCacheHas"
 
 ## Index
 
 ### Functions
 
-* [mapCacheHas](_lib_lodash__mapcachehas_.md#private-mapcachehas)
+- [mapCacheHas](_lib_lodash__mapcachehas_.md#private-mapcachehas)
 
 ## Functions
 
 ### `Private` mapCacheHas
 
-▸ **mapCacheHas**(`key`: string): *boolean*
+▸ **mapCacheHas**(`key`: string): _boolean_
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_mapCacheHas.js:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_mapCacheHas.js#L14)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_mapCacheHas.js:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_mapCacheHas.js#L14)_
 
 Checks if a map value for `key` exists.
 
@@ -24,10 +24,10 @@ Checks if a map value for `key` exists.
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`key` | string | The key of the entry to check. |
+| Name  | Type   | Description                    |
+| ----- | ------ | ------------------------------ |
+| `key` | string | The key of the entry to check. |
 
-**Returns:** *boolean*
+**Returns:** _boolean_
 
 Returns `true` if an entry for `key` exists, else `false`.

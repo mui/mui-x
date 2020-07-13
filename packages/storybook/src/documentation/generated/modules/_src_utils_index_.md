@@ -6,255 +6,255 @@
 
 ### References
 
-* [DebouncedFunction](_src_utils_index_.md#debouncedfunction)
-* [MULTIPLE_SELECTION_KEYS](_src_utils_index_.md#multiple_selection_keys)
-* [classnames](_src_utils_index_.md#classnames)
-* [dateComparer](_src_utils_index_.md#datecomparer)
-* [debounce](_src_utils_index_.md#debounce)
-* [findCellElementsFromCol](_src_utils_index_.md#findcellelementsfromcol)
-* [findDataContainerFromCurrent](_src_utils_index_.md#finddatacontainerfromcurrent)
-* [findGridRootFromCurrent](_src_utils_index_.md#findgridrootfromcurrent)
-* [findParentElementFromClassName](_src_utils_index_.md#findparentelementfromclassname)
-* [getCellElementFromIndexes](_src_utils_index_.md#getcellelementfromindexes)
-* [getDataFromElem](_src_utils_index_.md#getdatafromelem)
-* [getFieldFromHeaderElem](_src_utils_index_.md#getfieldfromheaderelem)
-* [getIdFromRowElem](_src_utils_index_.md#getidfromrowelem)
-* [isArray](_src_utils_index_.md#isarray)
-* [isArrowKeys](_src_utils_index_.md#isarrowkeys)
-* [isCell](_src_utils_index_.md#iscell)
-* [isDate](_src_utils_index_.md#isdate)
-* [isDesc](_src_utils_index_.md#isdesc)
-* [isEqual](_src_utils_index_.md#isequal)
-* [isFunction](_src_utils_index_.md#isfunction)
-* [isHeaderCell](_src_utils_index_.md#isheadercell)
-* [isHomeOrEndKeys](_src_utils_index_.md#ishomeorendkeys)
-* [isMultipleKey](_src_utils_index_.md#ismultiplekey)
-* [isNavigationKey](_src_utils_index_.md#isnavigationkey)
-* [isNumber](_src_utils_index_.md#isnumber)
-* [isObject](_src_utils_index_.md#isobject)
-* [isOverflown](_src_utils_index_.md#isoverflown)
-* [isPageKeys](_src_utils_index_.md#ispagekeys)
-* [isSpaceKey](_src_utils_index_.md#isspacekey)
-* [isString](_src_utils_index_.md#isstring)
-* [isTabKey](_src_utils_index_.md#istabkey)
-* [mergeOptions](_src_utils_index_.md#mergeoptions)
-* [nextSortDirection](_src_utils_index_.md#nextsortdirection)
-* [nillComparer](_src_utils_index_.md#nillcomparer)
-* [numberComparer](_src_utils_index_.md#numbercomparer)
-* [stringNumberComparer](_src_utils_index_.md#stringnumbercomparer)
+- [DebouncedFunction](_src_utils_index_.md#debouncedfunction)
+- [MULTIPLE_SELECTION_KEYS](_src_utils_index_.md#multiple_selection_keys)
+- [classnames](_src_utils_index_.md#classnames)
+- [dateComparer](_src_utils_index_.md#datecomparer)
+- [debounce](_src_utils_index_.md#debounce)
+- [findCellElementsFromCol](_src_utils_index_.md#findcellelementsfromcol)
+- [findDataContainerFromCurrent](_src_utils_index_.md#finddatacontainerfromcurrent)
+- [findGridRootFromCurrent](_src_utils_index_.md#findgridrootfromcurrent)
+- [findParentElementFromClassName](_src_utils_index_.md#findparentelementfromclassname)
+- [getCellElementFromIndexes](_src_utils_index_.md#getcellelementfromindexes)
+- [getDataFromElem](_src_utils_index_.md#getdatafromelem)
+- [getFieldFromHeaderElem](_src_utils_index_.md#getfieldfromheaderelem)
+- [getIdFromRowElem](_src_utils_index_.md#getidfromrowelem)
+- [isArray](_src_utils_index_.md#isarray)
+- [isArrowKeys](_src_utils_index_.md#isarrowkeys)
+- [isCell](_src_utils_index_.md#iscell)
+- [isDate](_src_utils_index_.md#isdate)
+- [isDesc](_src_utils_index_.md#isdesc)
+- [isEqual](_src_utils_index_.md#isequal)
+- [isFunction](_src_utils_index_.md#isfunction)
+- [isHeaderCell](_src_utils_index_.md#isheadercell)
+- [isHomeOrEndKeys](_src_utils_index_.md#ishomeorendkeys)
+- [isMultipleKey](_src_utils_index_.md#ismultiplekey)
+- [isNavigationKey](_src_utils_index_.md#isnavigationkey)
+- [isNumber](_src_utils_index_.md#isnumber)
+- [isObject](_src_utils_index_.md#isobject)
+- [isOverflown](_src_utils_index_.md#isoverflown)
+- [isPageKeys](_src_utils_index_.md#ispagekeys)
+- [isSpaceKey](_src_utils_index_.md#isspacekey)
+- [isString](_src_utils_index_.md#isstring)
+- [isTabKey](_src_utils_index_.md#istabkey)
+- [mergeOptions](_src_utils_index_.md#mergeoptions)
+- [nextSortDirection](_src_utils_index_.md#nextsortdirection)
+- [nillComparer](_src_utils_index_.md#nillcomparer)
+- [numberComparer](_src_utils_index_.md#numbercomparer)
+- [stringNumberComparer](_src_utils_index_.md#stringnumbercomparer)
 
 ## References
 
-###  DebouncedFunction
+### DebouncedFunction
 
 • **DebouncedFunction**:
 
-___
+---
 
-###  MULTIPLE_SELECTION_KEYS
+### MULTIPLE_SELECTION_KEYS
 
 • **MULTIPLE_SELECTION_KEYS**:
 
-___
+---
 
-###  classnames
+### classnames
 
 • **classnames**:
 
-___
+---
 
-###  dateComparer
+### dateComparer
 
 • **dateComparer**:
 
-___
+---
 
-###  debounce
+### debounce
 
 • **debounce**:
 
-___
+---
 
-###  findCellElementsFromCol
+### findCellElementsFromCol
 
 • **findCellElementsFromCol**:
 
-___
+---
 
-###  findDataContainerFromCurrent
+### findDataContainerFromCurrent
 
 • **findDataContainerFromCurrent**:
 
-___
+---
 
-###  findGridRootFromCurrent
+### findGridRootFromCurrent
 
 • **findGridRootFromCurrent**:
 
-___
+---
 
-###  findParentElementFromClassName
+### findParentElementFromClassName
 
 • **findParentElementFromClassName**:
 
-___
+---
 
-###  getCellElementFromIndexes
+### getCellElementFromIndexes
 
 • **getCellElementFromIndexes**:
 
-___
+---
 
-###  getDataFromElem
+### getDataFromElem
 
 • **getDataFromElem**:
 
-___
+---
 
-###  getFieldFromHeaderElem
+### getFieldFromHeaderElem
 
 • **getFieldFromHeaderElem**:
 
-___
+---
 
-###  getIdFromRowElem
+### getIdFromRowElem
 
 • **getIdFromRowElem**:
 
-___
+---
 
-###  isArray
+### isArray
 
 • **isArray**:
 
-___
+---
 
-###  isArrowKeys
+### isArrowKeys
 
 • **isArrowKeys**:
 
-___
+---
 
-###  isCell
+### isCell
 
 • **isCell**:
 
-___
+---
 
-###  isDate
+### isDate
 
 • **isDate**:
 
-___
+---
 
-###  isDesc
+### isDesc
 
 • **isDesc**:
 
-___
+---
 
-###  isEqual
+### isEqual
 
 • **isEqual**:
 
-___
+---
 
-###  isFunction
+### isFunction
 
 • **isFunction**:
 
-___
+---
 
-###  isHeaderCell
+### isHeaderCell
 
 • **isHeaderCell**:
 
-___
+---
 
-###  isHomeOrEndKeys
+### isHomeOrEndKeys
 
 • **isHomeOrEndKeys**:
 
-___
+---
 
-###  isMultipleKey
+### isMultipleKey
 
 • **isMultipleKey**:
 
-___
+---
 
-###  isNavigationKey
+### isNavigationKey
 
 • **isNavigationKey**:
 
-___
+---
 
-###  isNumber
+### isNumber
 
 • **isNumber**:
 
-___
+---
 
-###  isObject
+### isObject
 
 • **isObject**:
 
-___
+---
 
-###  isOverflown
+### isOverflown
 
 • **isOverflown**:
 
-___
+---
 
-###  isPageKeys
+### isPageKeys
 
 • **isPageKeys**:
 
-___
+---
 
-###  isSpaceKey
+### isSpaceKey
 
 • **isSpaceKey**:
 
-___
+---
 
-###  isString
+### isString
 
 • **isString**:
 
-___
+---
 
-###  isTabKey
+### isTabKey
 
 • **isTabKey**:
 
-___
+---
 
-###  mergeOptions
+### mergeOptions
 
 • **mergeOptions**:
 
-___
+---
 
-###  nextSortDirection
+### nextSortDirection
 
 • **nextSortDirection**:
 
-___
+---
 
-###  nillComparer
+### nillComparer
 
 • **nillComparer**:
 
-___
+---
 
-###  numberComparer
+### numberComparer
 
 • **numberComparer**:
 
-___
+---
 
-###  stringNumberComparer
+### stringNumberComparer
 
 • **stringNumberComparer**:

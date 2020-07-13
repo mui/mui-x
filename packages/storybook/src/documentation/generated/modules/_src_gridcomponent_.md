@@ -6,24 +6,24 @@
 
 ### Variables
 
-* [GridComponent](_src_gridcomponent_.md#const-gridcomponent)
+- [GridComponent](_src_gridcomponent_.md#const-gridcomponent)
 
 ## Variables
 
 ### `Const` GridComponent
 
-• **GridComponent**: *React.FC‹[GridComponentProps](../interfaces/_src_gridcomponentprops_.gridcomponentprops.md)›* = React.memo(
-  ({ rows, columns, options, apiRef, loading, licenseStatus, className }) => {
-    useLoggerFactory(options?.logger, options?.logLevel);
-    const logger = useLogger('Grid');
-    const gridRootRef: GridRootRef = useRef<HTMLDivElement>(null);
-    const footerRef = useRef<HTMLDivElement>(null);
-    const columnsHeaderRef = useRef<HTMLDivElement>(null);
-    const columnsContainerRef = useRef<HTMLDivElement>(null);
-    const windowRef = useRef<HTMLDivElement>(null);
-    const gridRef = useRef<HTMLDivElement>(null);
-    const renderingZoneRef = useRef<HTMLDivElement>(null);
-    const internalApiRef = useRef<GridApi | null | undefined>();
+• **GridComponent**: _React.FC‹[GridComponentProps](../interfaces/_src_gridcomponentprops_.gridcomponentprops.md)›_ = React.memo(
+({ rows, columns, options, apiRef, loading, licenseStatus, className }) => {
+useLoggerFactory(options?.logger, options?.logLevel);
+const logger = useLogger('Grid');
+const gridRootRef: GridRootRef = useRef<HTMLDivElement>(null);
+const footerRef = useRef<HTMLDivElement>(null);
+const columnsHeaderRef = useRef<HTMLDivElement>(null);
+const columnsContainerRef = useRef<HTMLDivElement>(null);
+const windowRef = useRef<HTMLDivElement>(null);
+const gridRef = useRef<HTMLDivElement>(null);
+const renderingZoneRef = useRef<HTMLDivElement>(null);
+const internalApiRef = useRef<GridApi | null | undefined>();
 
     const [internalOptions, setInternalOptions] = useState<GridOptions>(
       mergeOptions(DEFAULT_GRID_OPTIONS, options),
@@ -187,7 +187,8 @@
         )}
       </AutoSizerWrapper>
     );
-  },
+
+},
 )
 
-*Defined in [packages/grid/x-grid-modules/src/gridComponent.tsx:30](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/gridComponent.tsx#L30)*
+_Defined in [packages/grid/x-grid-modules/src/gridComponent.tsx:30](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/gridComponent.tsx#L30)_

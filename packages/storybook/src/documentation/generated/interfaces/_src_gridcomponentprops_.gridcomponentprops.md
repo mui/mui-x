@@ -4,72 +4,72 @@
 
 ## Hierarchy
 
-* **GridComponentProps**
+- **GridComponentProps**
 
 ## Index
 
 ### Properties
 
-* [apiRef](_src_gridcomponentprops_.gridcomponentprops.md#optional-apiref)
-* [className](_src_gridcomponentprops_.gridcomponentprops.md#optional-classname)
-* [columns](_src_gridcomponentprops_.gridcomponentprops.md#columns)
-* [licenseStatus](_src_gridcomponentprops_.gridcomponentprops.md#licensestatus)
-* [loading](_src_gridcomponentprops_.gridcomponentprops.md#optional-loading)
-* [options](_src_gridcomponentprops_.gridcomponentprops.md#optional-options)
-* [rows](_src_gridcomponentprops_.gridcomponentprops.md#rows)
+- [apiRef](_src_gridcomponentprops_.gridcomponentprops.md#optional-apiref)
+- [className](_src_gridcomponentprops_.gridcomponentprops.md#optional-classname)
+- [columns](_src_gridcomponentprops_.gridcomponentprops.md#columns)
+- [licenseStatus](_src_gridcomponentprops_.gridcomponentprops.md#licensestatus)
+- [loading](_src_gridcomponentprops_.gridcomponentprops.md#optional-loading)
+- [options](_src_gridcomponentprops_.gridcomponentprops.md#optional-options)
+- [rows](_src_gridcomponentprops_.gridcomponentprops.md#rows)
 
 ## Properties
 
 ### `Optional` apiRef
 
-• **apiRef**? : *[GridApiRef](../modules/_src_models_gridapiref_.md#gridapiref)*
+• **apiRef**? : _[GridApiRef](../modules/_src_models_gridapiref_.md#gridapiref)_
 
-*Defined in [packages/grid/x-grid-modules/src/gridComponentProps.ts:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/gridComponentProps.ts#L9)*
+_Defined in [packages/grid/x-grid-modules/src/gridComponentProps.ts:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/gridComponentProps.ts#L9)_
 
-___
+---
 
 ### `Optional` className
 
-• **className**? : *undefined | string*
+• **className**? : _undefined | string_
 
-*Defined in [packages/grid/x-grid-modules/src/gridComponentProps.ts:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/gridComponentProps.ts#L11)*
+_Defined in [packages/grid/x-grid-modules/src/gridComponentProps.ts:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/gridComponentProps.ts#L11)_
 
-___
+---
 
-###  columns
+### columns
 
-• **columns**: *[Columns](../modules/_src_models_coldef_coldef_.md#columns)*
+• **columns**: _[Columns](../modules/_src_models_coldef_coldef_.md#columns)_
 
-*Defined in [packages/grid/x-grid-modules/src/gridComponentProps.ts:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/gridComponentProps.ts#L7)*
+_Defined in [packages/grid/x-grid-modules/src/gridComponentProps.ts:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/gridComponentProps.ts#L7)_
 
-___
+---
 
-###  licenseStatus
+### licenseStatus
 
-• **licenseStatus**: *string*
+• **licenseStatus**: _string_
 
-*Defined in [packages/grid/x-grid-modules/src/gridComponentProps.ts:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/gridComponentProps.ts#L12)*
+_Defined in [packages/grid/x-grid-modules/src/gridComponentProps.ts:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/gridComponentProps.ts#L12)_
 
-___
+---
 
 ### `Optional` loading
 
-• **loading**? : *undefined | false | true*
+• **loading**? : _undefined | false | true_
 
-*Defined in [packages/grid/x-grid-modules/src/gridComponentProps.ts:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/gridComponentProps.ts#L10)*
+_Defined in [packages/grid/x-grid-modules/src/gridComponentProps.ts:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/gridComponentProps.ts#L10)_
 
-___
+---
 
 ### `Optional` options
 
-• **options**? : *[GridOptionsProp](../modules/_src_gridcomponentprops_.md#gridoptionsprop)*
+• **options**? : _[GridOptionsProp](../modules/_src_gridcomponentprops_.md#gridoptionsprop)_
 
-*Defined in [packages/grid/x-grid-modules/src/gridComponentProps.ts:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/gridComponentProps.ts#L8)*
+_Defined in [packages/grid/x-grid-modules/src/gridComponentProps.ts:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/gridComponentProps.ts#L8)_
 
-___
+---
 
-###  rows
+### rows
 
-• **rows**: *[RowsProp](../modules/_src_models_rows_.md#rowsprop)*
+• **rows**: _[RowsProp](../modules/_src_models_rows_.md#rowsprop)_
 
-*Defined in [packages/grid/x-grid-modules/src/gridComponentProps.ts:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/gridComponentProps.ts#L6)*
+_Defined in [packages/grid/x-grid-modules/src/gridComponentProps.ts:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/gridComponentProps.ts#L6)_

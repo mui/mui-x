@@ -1,20 +1,20 @@
-[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/_listCacheSet"](_lib_lodash__listcacheset_.md)
+[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/\_listCacheSet"](_lib_lodash__listcacheset_.md)
 
-# Module: "lib/lodash/_listCacheSet"
+# Module: "lib/lodash/\_listCacheSet"
 
 ## Index
 
 ### Functions
 
-* [listCacheSet](_lib_lodash__listcacheset_.md#private-listcacheset)
+- [listCacheSet](_lib_lodash__listcacheset_.md#private-listcacheset)
 
 ## Functions
 
 ### `Private` listCacheSet
 
-▸ **listCacheSet**(`key`: string, `value`: any): *Object*
+▸ **listCacheSet**(`key`: string, `value`: any): _Object_
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_listCacheSet.js:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_listCacheSet.js#L15)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_listCacheSet.js:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_listCacheSet.js#L15)_
 
 Sets the list cache `key` to `value`.
 
@@ -24,11 +24,11 @@ Sets the list cache `key` to `value`.
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`key` | string | The key of the value to set. |
-`value` | any | The value to set. |
+| Name    | Type   | Description                  |
+| ------- | ------ | ---------------------------- |
+| `key`   | string | The key of the value to set. |
+| `value` | any    | The value to set.            |
 
-**Returns:** *Object*
+**Returns:** _Object_
 
 Returns the list cache instance.

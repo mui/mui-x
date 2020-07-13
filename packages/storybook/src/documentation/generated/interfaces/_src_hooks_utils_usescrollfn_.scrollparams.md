@@ -4,27 +4,27 @@
 
 ## Hierarchy
 
-* **ScrollParams**
+- **ScrollParams**
 
 ## Index
 
 ### Properties
 
-* [left](_src_hooks_utils_usescrollfn_.scrollparams.md#left)
-* [top](_src_hooks_utils_usescrollfn_.scrollparams.md#top)
+- [left](_src_hooks_utils_usescrollfn_.scrollparams.md#left)
+- [top](_src_hooks_utils_usescrollfn_.scrollparams.md#top)
 
 ## Properties
 
-###  left
+### left
 
-• **left**: *number*
+• **left**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useScrollFn.ts:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useScrollFn.ts#L7)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useScrollFn.ts:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useScrollFn.ts#L7)_
 
-___
+---
 
-###  top
+### top
 
-• **top**: *number*
+• **top**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useScrollFn.ts:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useScrollFn.ts#L8)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useScrollFn.ts:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useScrollFn.ts#L8)_

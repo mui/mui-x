@@ -4,92 +4,92 @@
 
 ## Hierarchy
 
-* **PaginationComponentProps**
+- **PaginationComponentProps**
 
 ## Index
 
 ### Properties
 
-* [currentPage](_src_components_pagination_.paginationcomponentprops.md#currentpage)
-* [pageCount](_src_components_pagination_.paginationcomponentprops.md#pagecount)
-* [pageSize](_src_components_pagination_.paginationcomponentprops.md#pagesize)
-* [rowCount](_src_components_pagination_.paginationcomponentprops.md#rowcount)
-* [rowsPerPageOptions](_src_components_pagination_.paginationcomponentprops.md#optional-rowsperpageoptions)
-* [setPage](_src_components_pagination_.paginationcomponentprops.md#setpage)
-* [setPageSize](_src_components_pagination_.paginationcomponentprops.md#setpagesize)
+- [currentPage](_src_components_pagination_.paginationcomponentprops.md#currentpage)
+- [pageCount](_src_components_pagination_.paginationcomponentprops.md#pagecount)
+- [pageSize](_src_components_pagination_.paginationcomponentprops.md#pagesize)
+- [rowCount](_src_components_pagination_.paginationcomponentprops.md#rowcount)
+- [rowsPerPageOptions](_src_components_pagination_.paginationcomponentprops.md#optional-rowsperpageoptions)
+- [setPage](_src_components_pagination_.paginationcomponentprops.md#setpage)
+- [setPageSize](_src_components_pagination_.paginationcomponentprops.md#setpagesize)
 
 ## Properties
 
-###  currentPage
+### currentPage
 
-• **currentPage**: *number*
+• **currentPage**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/components/pagination.tsx:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/pagination.tsx#L9)*
+_Defined in [packages/grid/x-grid-modules/src/components/pagination.tsx:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/pagination.tsx#L9)_
 
-___
+---
 
-###  pageCount
+### pageCount
 
-• **pageCount**: *number*
+• **pageCount**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/components/pagination.tsx:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/pagination.tsx#L6)*
+_Defined in [packages/grid/x-grid-modules/src/components/pagination.tsx:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/pagination.tsx#L6)_
 
-___
+---
 
-###  pageSize
+### pageSize
 
-• **pageSize**: *number*
+• **pageSize**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/components/pagination.tsx:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/pagination.tsx#L11)*
+_Defined in [packages/grid/x-grid-modules/src/components/pagination.tsx:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/pagination.tsx#L11)_
 
-___
+---
 
-###  rowCount
+### rowCount
 
-• **rowCount**: *number*
+• **rowCount**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/components/pagination.tsx:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/pagination.tsx#L10)*
+_Defined in [packages/grid/x-grid-modules/src/components/pagination.tsx:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/pagination.tsx#L10)_
 
-___
+---
 
 ### `Optional` rowsPerPageOptions
 
-• **rowsPerPageOptions**? : *number[]*
+• **rowsPerPageOptions**? : _number[]_
 
-*Defined in [packages/grid/x-grid-modules/src/components/pagination.tsx:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/pagination.tsx#L12)*
+_Defined in [packages/grid/x-grid-modules/src/components/pagination.tsx:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/pagination.tsx#L12)_
 
-___
+---
 
-###  setPage
+### setPage
 
-• **setPage**: *function*
+• **setPage**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/components/pagination.tsx:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/pagination.tsx#L7)*
-
-#### Type declaration:
-
-▸ (`pageCount`: number): *void*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`pageCount` | number |
-
-___
-
-###  setPageSize
-
-• **setPageSize**: *function*
-
-*Defined in [packages/grid/x-grid-modules/src/components/pagination.tsx:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/pagination.tsx#L8)*
+_Defined in [packages/grid/x-grid-modules/src/components/pagination.tsx:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/pagination.tsx#L7)_
 
 #### Type declaration:
 
-▸ (`pageSize`: number): *void*
+▸ (`pageCount`: number): _void_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`pageSize` | number |
+| Name        | Type   |
+| ----------- | ------ |
+| `pageCount` | number |
+
+---
+
+### setPageSize
+
+• **setPageSize**: _function_
+
+_Defined in [packages/grid/x-grid-modules/src/components/pagination.tsx:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/pagination.tsx#L8)_
+
+#### Type declaration:
+
+▸ (`pageSize`: number): _void_
+
+**Parameters:**
+
+| Name       | Type   |
+| ---------- | ------ |
+| `pageSize` | number |

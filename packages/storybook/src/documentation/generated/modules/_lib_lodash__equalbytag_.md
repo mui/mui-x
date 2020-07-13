@@ -1,174 +1,174 @@
-[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/_equalByTag"](_lib_lodash__equalbytag_.md)
+[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/\_equalByTag"](_lib_lodash__equalbytag_.md)
 
-# Module: "lib/lodash/_equalByTag"
+# Module: "lib/lodash/\_equalByTag"
 
 ## Index
 
 ### Variables
 
-* [COMPARE_PARTIAL_FLAG](_lib_lodash__equalbytag_.md#compare_partial_flag)
-* [COMPARE_UNORDERED_FLAG](_lib_lodash__equalbytag_.md#compare_unordered_flag)
-* [arrayBufferTag](_lib_lodash__equalbytag_.md#arraybuffertag)
-* [boolTag](_lib_lodash__equalbytag_.md#booltag)
-* [dataViewTag](_lib_lodash__equalbytag_.md#dataviewtag)
-* [dateTag](_lib_lodash__equalbytag_.md#datetag)
-* [errorTag](_lib_lodash__equalbytag_.md#errortag)
-* [mapTag](_lib_lodash__equalbytag_.md#maptag)
-* [numberTag](_lib_lodash__equalbytag_.md#numbertag)
-* [regexpTag](_lib_lodash__equalbytag_.md#regexptag)
-* [setTag](_lib_lodash__equalbytag_.md#settag)
-* [stringTag](_lib_lodash__equalbytag_.md#stringtag)
-* [symbolProto](_lib_lodash__equalbytag_.md#symbolproto)
-* [symbolTag](_lib_lodash__equalbytag_.md#symboltag)
-* [symbolValueOf](_lib_lodash__equalbytag_.md#symbolvalueof)
+- [COMPARE_PARTIAL_FLAG](_lib_lodash__equalbytag_.md#compare_partial_flag)
+- [COMPARE_UNORDERED_FLAG](_lib_lodash__equalbytag_.md#compare_unordered_flag)
+- [arrayBufferTag](_lib_lodash__equalbytag_.md#arraybuffertag)
+- [boolTag](_lib_lodash__equalbytag_.md#booltag)
+- [dataViewTag](_lib_lodash__equalbytag_.md#dataviewtag)
+- [dateTag](_lib_lodash__equalbytag_.md#datetag)
+- [errorTag](_lib_lodash__equalbytag_.md#errortag)
+- [mapTag](_lib_lodash__equalbytag_.md#maptag)
+- [numberTag](_lib_lodash__equalbytag_.md#numbertag)
+- [regexpTag](_lib_lodash__equalbytag_.md#regexptag)
+- [setTag](_lib_lodash__equalbytag_.md#settag)
+- [stringTag](_lib_lodash__equalbytag_.md#stringtag)
+- [symbolProto](_lib_lodash__equalbytag_.md#symbolproto)
+- [symbolTag](_lib_lodash__equalbytag_.md#symboltag)
+- [symbolValueOf](_lib_lodash__equalbytag_.md#symbolvalueof)
 
 ### Functions
 
-* [equalByTag](_lib_lodash__equalbytag_.md#private-equalbytag)
+- [equalByTag](_lib_lodash__equalbytag_.md#private-equalbytag)
 
 ## Variables
 
-###  COMPARE_PARTIAL_FLAG
+### COMPARE_PARTIAL_FLAG
 
-• **COMPARE_PARTIAL_FLAG**: *number* = 1
+• **COMPARE_PARTIAL_FLAG**: _number_ = 1
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_equalByTag.js:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L11)*
-
-Used to compose bitmasks for value comparisons.
-
-___
-
-###  COMPARE_UNORDERED_FLAG
-
-• **COMPARE_UNORDERED_FLAG**: *number* = 2
-
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_equalByTag.js:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L12)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_equalByTag.js:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L11)_
 
 Used to compose bitmasks for value comparisons.
 
-___
+---
 
-###  arrayBufferTag
+### COMPARE_UNORDERED_FLAG
 
-• **arrayBufferTag**: *string* = "[object ArrayBuffer]"
+• **COMPARE_UNORDERED_FLAG**: _number_ = 2
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_equalByTag.js:25](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L25)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_equalByTag.js:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L12)_
 
-___
+Used to compose bitmasks for value comparisons.
 
-###  boolTag
+---
 
-• **boolTag**: *string* = "[object Boolean]"
+### arrayBufferTag
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_equalByTag.js:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L15)*
+• **arrayBufferTag**: _string_ = "[object ArrayBuffer]"
 
-`Object#toString` result references.
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_equalByTag.js:25](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L25)_
 
-___
+---
 
-###  dataViewTag
+### boolTag
 
-• **dataViewTag**: *string* = "[object DataView]"
+• **boolTag**: _string_ = "[object Boolean]"
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_equalByTag.js:26](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L26)*
-
-___
-
-###  dateTag
-
-• **dateTag**: *string* = "[object Date]"
-
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_equalByTag.js:16](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L16)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_equalByTag.js:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L15)_
 
 `Object#toString` result references.
 
-___
+---
 
-###  errorTag
+### dataViewTag
 
-• **errorTag**: *string* = "[object Error]"
+• **dataViewTag**: _string_ = "[object DataView]"
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_equalByTag.js:17](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L17)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_equalByTag.js:26](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L26)_
 
-`Object#toString` result references.
+---
 
-___
+### dateTag
 
-###  mapTag
+• **dateTag**: _string_ = "[object Date]"
 
-• **mapTag**: *string* = "[object Map]"
-
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_equalByTag.js:18](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L18)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_equalByTag.js:16](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L16)_
 
 `Object#toString` result references.
 
-___
+---
 
-###  numberTag
+### errorTag
 
-• **numberTag**: *string* = "[object Number]"
+• **errorTag**: _string_ = "[object Error]"
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_equalByTag.js:19](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L19)*
-
-`Object#toString` result references.
-
-___
-
-###  regexpTag
-
-• **regexpTag**: *string* = "[object RegExp]"
-
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_equalByTag.js:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L20)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_equalByTag.js:17](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L17)_
 
 `Object#toString` result references.
 
-___
+---
 
-###  setTag
+### mapTag
 
-• **setTag**: *string* = "[object Set]"
+• **mapTag**: _string_ = "[object Map]"
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_equalByTag.js:21](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L21)*
-
-`Object#toString` result references.
-
-___
-
-###  stringTag
-
-• **stringTag**: *string* = "[object String]"
-
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_equalByTag.js:22](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L22)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_equalByTag.js:18](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L18)_
 
 `Object#toString` result references.
 
-___
+---
 
-###  symbolProto
+### numberTag
 
-• **symbolProto**: *any* = Symbol ? Symbol.prototype : undefined
+• **numberTag**: _string_ = "[object Number]"
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_equalByTag.js:29](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L29)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_equalByTag.js:19](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L19)_
+
+`Object#toString` result references.
+
+---
+
+### regexpTag
+
+• **regexpTag**: _string_ = "[object RegExp]"
+
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_equalByTag.js:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L20)_
+
+`Object#toString` result references.
+
+---
+
+### setTag
+
+• **setTag**: _string_ = "[object Set]"
+
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_equalByTag.js:21](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L21)_
+
+`Object#toString` result references.
+
+---
+
+### stringTag
+
+• **stringTag**: _string_ = "[object String]"
+
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_equalByTag.js:22](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L22)_
+
+`Object#toString` result references.
+
+---
+
+### symbolProto
+
+• **symbolProto**: _any_ = Symbol ? Symbol.prototype : undefined
+
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_equalByTag.js:29](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L29)_
 
 Used to convert symbols to primitives and strings.
 
-___
+---
 
-###  symbolTag
+### symbolTag
 
-• **symbolTag**: *string* = "[object Symbol]"
+• **symbolTag**: _string_ = "[object Symbol]"
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_equalByTag.js:23](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L23)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_equalByTag.js:23](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L23)_
 
 `Object#toString` result references.
 
-___
+---
 
-###  symbolValueOf
+### symbolValueOf
 
-• **symbolValueOf**: *any* = symbolProto ? symbolProto.valueOf : undefined
+• **symbolValueOf**: _any_ = symbolProto ? symbolProto.valueOf : undefined
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_equalByTag.js:30](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L30)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_equalByTag.js:30](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L30)_
 
 Used to convert symbols to primitives and strings.
 
@@ -176,9 +176,9 @@ Used to convert symbols to primitives and strings.
 
 ### `Private` equalByTag
 
-▸ **equalByTag**(`object`: Object, `other`: Object, `tag`: string, `bitmask`: number, `customizer`: [Function](../interfaces/_src_utils_utils_.debouncedfunction.md#function), `equalFunc`: [Function](../interfaces/_src_utils_utils_.debouncedfunction.md#function), `stack`: Object): *boolean*
+▸ **equalByTag**(`object`: Object, `other`: Object, `tag`: string, `bitmask`: number, `customizer`: [Function](../interfaces/_src_utils_utils_.debouncedfunction.md#function), `equalFunc`: [Function](../interfaces/_src_utils_utils_.debouncedfunction.md#function), `stack`: Object): _boolean_
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_equalByTag.js:49](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L49)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_equalByTag.js:49](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_equalByTag.js#L49)_
 
 A specialized version of `baseIsEqualDeep` for comparing objects of
 the same `toStringTag`.
@@ -188,16 +188,16 @@ the same `toStringTag`.
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`object` | Object | The object to compare. |
-`other` | Object | The other object to compare. |
-`tag` | string | The `toStringTag` of the objects to compare. |
-`bitmask` | number | The bitmask flags. See `baseIsEqual` for more details. |
-`customizer` | [Function](../interfaces/_src_utils_utils_.debouncedfunction.md#function) | The function to customize comparisons. |
-`equalFunc` | [Function](../interfaces/_src_utils_utils_.debouncedfunction.md#function) | The function to determine equivalents of values. |
-`stack` | Object | Tracks traversed `object` and `other` objects. |
+| Name         | Type                                                                      | Description                                            |
+| ------------ | ------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `object`     | Object                                                                    | The object to compare.                                 |
+| `other`      | Object                                                                    | The other object to compare.                           |
+| `tag`        | string                                                                    | The `toStringTag` of the objects to compare.           |
+| `bitmask`    | number                                                                    | The bitmask flags. See `baseIsEqual` for more details. |
+| `customizer` | [Function](../interfaces/_src_utils_utils_.debouncedfunction.md#function) | The function to customize comparisons.                 |
+| `equalFunc`  | [Function](../interfaces/_src_utils_utils_.debouncedfunction.md#function) | The function to determine equivalents of values.       |
+| `stack`      | Object                                                                    | Tracks traversed `object` and `other` objects.         |
 
-**Returns:** *boolean*
+**Returns:** _boolean_
 
 Returns `true` if the objects are equivalent, else `false`.

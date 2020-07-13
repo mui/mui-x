@@ -6,32 +6,32 @@
 
 ### Type aliases
 
-* [UseRafUpdateReturnType](_src_hooks_utils_userafupdate_.md#userafupdatereturntype)
+- [UseRafUpdateReturnType](_src_hooks_utils_userafupdate_.md#userafupdatereturntype)
 
 ### Functions
 
-* [useRafUpdate](_src_hooks_utils_userafupdate_.md#userafupdate)
+- [useRafUpdate](_src_hooks_utils_userafupdate_.md#userafupdate)
 
 ## Type aliases
 
-###  UseRafUpdateReturnType
+### UseRafUpdateReturnType
 
-Ƭ **UseRafUpdateReturnType**: *[function, function]*
+Ƭ **UseRafUpdateReturnType**: _[function, function]_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useRafUpdate.ts:4](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useRafUpdate.ts#L4)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useRafUpdate.ts:4](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useRafUpdate.ts#L4)_
 
 ## Functions
 
-###  useRafUpdate
+### useRafUpdate
 
-▸ **useRafUpdate**(`initialFn?`: undefined | function): *[UseRafUpdateReturnType](_src_hooks_utils_userafupdate_.md#userafupdatereturntype)*
+▸ **useRafUpdate**(`initialFn?`: undefined | function): _[UseRafUpdateReturnType](_src_hooks_utils_userafupdate_.md#userafupdatereturntype)_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/utils/useRafUpdate.ts:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useRafUpdate.ts#L5)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/utils/useRafUpdate.ts:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/utils/useRafUpdate.ts#L5)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`initialFn?` | undefined &#124; function |
+| Name         | Type                      |
+| ------------ | ------------------------- |
+| `initialFn?` | undefined &#124; function |
 
-**Returns:** *[UseRafUpdateReturnType](_src_hooks_utils_userafupdate_.md#userafupdatereturntype)*
+**Returns:** _[UseRafUpdateReturnType](_src_hooks_utils_userafupdate_.md#userafupdatereturntype)_

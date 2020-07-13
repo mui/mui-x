@@ -6,53 +6,53 @@
 
 ### Lang Functions
 
-* [eq](_lib_lodash_eq_.md#eq)
+- [eq](_lib_lodash_eq_.md#eq)
 
 ## Lang Functions
 
-###  eq
+### eq
 
-▸ **eq**(`value`: any, `other`: any): *boolean*
+▸ **eq**(`value`: any, `other`: any): _boolean_
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/eq.js:35](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/eq.js#L35)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/eq.js:35](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/eq.js#L35)_
 
 Performs a
 [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
 comparison between two values to determine if they are equivalent.
 
-**`static`** 
+**`static`**
 
-**`memberof`** _
+**`memberof`** \_
 
 **`since`** 4.0.0
 
-**`example`** 
+**`example`**
 
 var object = { 'a': 1 };
 var other = { 'a': 1 };
 
-_.eq(object, object);
+\_.eq(object, object);
 // => true
 
-_.eq(object, other);
+\_.eq(object, other);
 // => false
 
-_.eq('a', 'a');
+\_.eq('a', 'a');
 // => true
 
-_.eq('a', Object('a'));
+\_.eq('a', Object('a'));
 // => false
 
-_.eq(NaN, NaN);
+\_.eq(NaN, NaN);
 // => true
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`value` | any | The value to compare. |
-`other` | any | The other value to compare. |
+| Name    | Type | Description                 |
+| ------- | ---- | --------------------------- |
+| `value` | any  | The value to compare.       |
+| `other` | any  | The other value to compare. |
 
-**Returns:** *boolean*
+**Returns:** _boolean_
 
 Returns `true` if the values are equivalent, else `false`.

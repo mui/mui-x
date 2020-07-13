@@ -4,83 +4,83 @@
 
 ## Hierarchy
 
-* **PaginationProps**
+- **PaginationProps**
 
 ## Index
 
 ### Properties
 
-* [page](_src_hooks_features_usepagination_.paginationprops.md#page)
-* [pageCount](_src_hooks_features_usepagination_.paginationprops.md#pagecount)
-* [pageSize](_src_hooks_features_usepagination_.paginationprops.md#pagesize)
-* [rowCount](_src_hooks_features_usepagination_.paginationprops.md#rowcount)
-* [setPage](_src_hooks_features_usepagination_.paginationprops.md#setpage)
-* [setPageSize](_src_hooks_features_usepagination_.paginationprops.md#setpagesize)
+- [page](_src_hooks_features_usepagination_.paginationprops.md#page)
+- [pageCount](_src_hooks_features_usepagination_.paginationprops.md#pagecount)
+- [pageSize](_src_hooks_features_usepagination_.paginationprops.md#pagesize)
+- [rowCount](_src_hooks_features_usepagination_.paginationprops.md#rowcount)
+- [setPage](_src_hooks_features_usepagination_.paginationprops.md#setpage)
+- [setPageSize](_src_hooks_features_usepagination_.paginationprops.md#setpagesize)
 
 ## Properties
 
-###  page
+### page
 
-• **page**: *number*
+• **page**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L14)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L14)_
 
-___
+---
 
-###  pageCount
+### pageCount
 
-• **pageCount**: *number*
+• **pageCount**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L15)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L15)_
 
-___
+---
 
-###  pageSize
+### pageSize
 
-• **pageSize**: *number*
+• **pageSize**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:16](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L16)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:16](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L16)_
 
-___
+---
 
-###  rowCount
+### rowCount
 
-• **rowCount**: *number*
+• **rowCount**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:17](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L17)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:17](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L17)_
 
-___
+---
 
-###  setPage
+### setPage
 
-• **setPage**: *function*
+• **setPage**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:18](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L18)*
-
-#### Type declaration:
-
-▸ (`page`: number): *void*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`page` | number |
-
-___
-
-###  setPageSize
-
-• **setPageSize**: *function*
-
-*Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:19](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L19)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:18](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L18)_
 
 #### Type declaration:
 
-▸ (`pageSize`: number): *void*
+▸ (`page`: number): _void_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`pageSize` | number |
+| Name   | Type   |
+| ------ | ------ |
+| `page` | number |
+
+---
+
+### setPageSize
+
+• **setPageSize**: _function_
+
+_Defined in [packages/grid/x-grid-modules/src/hooks/features/usePagination.ts:19](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/usePagination.ts#L19)_
+
+#### Type declaration:
+
+▸ (`pageSize`: number): _void_
+
+**Parameters:**
+
+| Name       | Type   |
+| ---------- | ------ |
+| `pageSize` | number |

@@ -4,27 +4,27 @@
 
 ## Hierarchy
 
-* **ColumnSortedParams**
+- **ColumnSortedParams**
 
 ## Index
 
 ### Properties
 
-* [sortModel](_src_models_gridoptions_.columnsortedparams.md#sortmodel)
-* [sortedColumns](_src_models_gridoptions_.columnsortedparams.md#sortedcolumns)
+- [sortModel](_src_models_gridoptions_.columnsortedparams.md#sortmodel)
+- [sortedColumns](_src_models_gridoptions_.columnsortedparams.md#sortedcolumns)
 
 ## Properties
 
-###  sortModel
+### sortModel
 
-• **sortModel**: *[SortModel](../modules/_src_models_sortmodel_.md#sortmodel)*
+• **sortModel**: _[SortModel](../modules/_src_models_sortmodel_.md#sortmodel)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:17](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L17)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:17](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L17)_
 
-___
+---
 
-###  sortedColumns
+### sortedColumns
 
-• **sortedColumns**: *[ColDef](_src_models_coldef_coldef_.coldef.md)[]*
+• **sortedColumns**: _[ColDef](_src_models_coldef_coldef_.coldef.md)[]_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:16](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L16)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:16](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L16)_

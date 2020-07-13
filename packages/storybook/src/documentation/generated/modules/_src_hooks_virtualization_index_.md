@@ -6,17 +6,17 @@
 
 ### References
 
-* [useVirtualColumns](_src_hooks_virtualization_index_.md#usevirtualcolumns)
-* [useVirtualRows](_src_hooks_virtualization_index_.md#usevirtualrows)
+- [useVirtualColumns](_src_hooks_virtualization_index_.md#usevirtualcolumns)
+- [useVirtualRows](_src_hooks_virtualization_index_.md#usevirtualrows)
 
 ## References
 
-###  useVirtualColumns
+### useVirtualColumns
 
 • **useVirtualColumns**:
 
-___
+---
 
-###  useVirtualRows
+### useVirtualRows
 
 • **useVirtualRows**:

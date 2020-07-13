@@ -4,45 +4,45 @@
 
 ## Hierarchy
 
-* **RowProps**
+- **RowProps**
 
 ## Index
 
 ### Properties
 
-* [className](_src_components_row_.rowprops.md#classname)
-* [id](_src_components_row_.rowprops.md#id)
-* [rowIndex](_src_components_row_.rowprops.md#rowindex)
-* [selected](_src_components_row_.rowprops.md#selected)
+- [className](_src_components_row_.rowprops.md#classname)
+- [id](_src_components_row_.rowprops.md#id)
+- [rowIndex](_src_components_row_.rowprops.md#rowindex)
+- [selected](_src_components_row_.rowprops.md#selected)
 
 ## Properties
 
-###  className
+### className
 
-• **className**: *string*
+• **className**: _string_
 
-*Defined in [packages/grid/x-grid-modules/src/components/row.tsx:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row.tsx#L9)*
+_Defined in [packages/grid/x-grid-modules/src/components/row.tsx:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row.tsx#L9)_
 
-___
+---
 
-###  id
+### id
 
-• **id**: *[RowId](../modules/_src_models_rows_.md#rowid)*
+• **id**: _[RowId](../modules/_src_models_rows_.md#rowid)_
 
-*Defined in [packages/grid/x-grid-modules/src/components/row.tsx:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row.tsx#L7)*
+_Defined in [packages/grid/x-grid-modules/src/components/row.tsx:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row.tsx#L7)_
 
-___
+---
 
-###  rowIndex
+### rowIndex
 
-• **rowIndex**: *number*
+• **rowIndex**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/components/row.tsx:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row.tsx#L10)*
+_Defined in [packages/grid/x-grid-modules/src/components/row.tsx:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row.tsx#L10)_
 
-___
+---
 
-###  selected
+### selected
 
-• **selected**: *boolean*
+• **selected**: _boolean_
 
-*Defined in [packages/grid/x-grid-modules/src/components/row.tsx:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row.tsx#L8)*
+_Defined in [packages/grid/x-grid-modules/src/components/row.tsx:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/row.tsx#L8)_

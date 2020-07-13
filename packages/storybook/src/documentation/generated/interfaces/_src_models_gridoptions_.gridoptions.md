@@ -4,7 +4,7 @@
 
 This is the set of options supported by X-Grid
 
-**`remarks`** 
+**`remarks`**
 This method is part of the {@link core-library#Statistics | Statistics subsystem}.
 
 **`param`** The first input number
@@ -15,342 +15,342 @@ This method is part of the {@link core-library#Statistics | Statistics subsystem
 
 ## Hierarchy
 
-* **GridOptions**
+- **GridOptions**
 
 ## Index
 
 ### Properties
 
-* [autoHeight](_src_models_gridoptions_.gridoptions.md#optional-autoheight)
-* [checkboxSelection](_src_models_gridoptions_.gridoptions.md#optional-checkboxselection)
-* [columnBuffer](_src_models_gridoptions_.gridoptions.md#columnbuffer)
-* [disableSelectionOnClick](_src_models_gridoptions_.gridoptions.md#optional-disableselectiononclick)
-* [enableMultipleColumnsSorting](_src_models_gridoptions_.gridoptions.md#enablemultiplecolumnssorting)
-* [enableMultipleSelection](_src_models_gridoptions_.gridoptions.md#enablemultipleselection)
-* [extendRowFullWidth](_src_models_gridoptions_.gridoptions.md#extendrowfullwidth)
-* [footerComponent](_src_models_gridoptions_.gridoptions.md#optional-footercomponent)
-* [headerComponent](_src_models_gridoptions_.gridoptions.md#optional-headercomponent)
-* [headerHeight](_src_models_gridoptions_.gridoptions.md#headerheight)
-* [hideFooter](_src_models_gridoptions_.gridoptions.md#optional-hidefooter)
-* [hideFooterPagination](_src_models_gridoptions_.gridoptions.md#optional-hidefooterpagination)
-* [hideFooterRowCount](_src_models_gridoptions_.gridoptions.md#optional-hidefooterrowcount)
-* [hideFooterSelectedRowCount](_src_models_gridoptions_.gridoptions.md#optional-hidefooterselectedrowcount)
-* [icons](_src_models_gridoptions_.gridoptions.md#icons)
-* [loadingOverlayComponent](_src_models_gridoptions_.gridoptions.md#optional-loadingoverlaycomponent)
-* [logLevel](_src_models_gridoptions_.gridoptions.md#optional-loglevel)
-* [logger](_src_models_gridoptions_.gridoptions.md#optional-logger)
-* [noRowsOverlayComponent](_src_models_gridoptions_.gridoptions.md#optional-norowsoverlaycomponent)
-* [onCellClicked](_src_models_gridoptions_.gridoptions.md#optional-oncellclicked)
-* [onColumnHeaderClicked](_src_models_gridoptions_.gridoptions.md#optional-oncolumnheaderclicked)
-* [onColumnsSorted](_src_models_gridoptions_.gridoptions.md#optional-oncolumnssorted)
-* [onPageChanged](_src_models_gridoptions_.gridoptions.md#optional-onpagechanged)
-* [onPageSizeChanged](_src_models_gridoptions_.gridoptions.md#optional-onpagesizechanged)
-* [onRowClicked](_src_models_gridoptions_.gridoptions.md#optional-onrowclicked)
-* [onRowSelected](_src_models_gridoptions_.gridoptions.md#optional-onrowselected)
-* [onSelectionChanged](_src_models_gridoptions_.gridoptions.md#optional-onselectionchanged)
-* [pagination](_src_models_gridoptions_.gridoptions.md#optional-pagination)
-* [paginationAutoPageSize](_src_models_gridoptions_.gridoptions.md#optional-paginationautopagesize)
-* [paginationComponent](_src_models_gridoptions_.gridoptions.md#optional-paginationcomponent)
-* [paginationPageSize](_src_models_gridoptions_.gridoptions.md#optional-paginationpagesize)
-* [paginationRowsPerPageOptions](_src_models_gridoptions_.gridoptions.md#optional-paginationrowsperpageoptions)
-* [rowHeight](_src_models_gridoptions_.gridoptions.md#rowheight)
-* [scrollbarSize](_src_models_gridoptions_.gridoptions.md#scrollbarsize)
-* [showCellRightBorder](_src_models_gridoptions_.gridoptions.md#showcellrightborder)
-* [showColumnSeparator](_src_models_gridoptions_.gridoptions.md#optional-showcolumnseparator)
-* [sortingOrder](_src_models_gridoptions_.gridoptions.md#sortingorder)
+- [autoHeight](_src_models_gridoptions_.gridoptions.md#optional-autoheight)
+- [checkboxSelection](_src_models_gridoptions_.gridoptions.md#optional-checkboxselection)
+- [columnBuffer](_src_models_gridoptions_.gridoptions.md#columnbuffer)
+- [disableSelectionOnClick](_src_models_gridoptions_.gridoptions.md#optional-disableselectiononclick)
+- [enableMultipleColumnsSorting](_src_models_gridoptions_.gridoptions.md#enablemultiplecolumnssorting)
+- [enableMultipleSelection](_src_models_gridoptions_.gridoptions.md#enablemultipleselection)
+- [extendRowFullWidth](_src_models_gridoptions_.gridoptions.md#extendrowfullwidth)
+- [footerComponent](_src_models_gridoptions_.gridoptions.md#optional-footercomponent)
+- [headerComponent](_src_models_gridoptions_.gridoptions.md#optional-headercomponent)
+- [headerHeight](_src_models_gridoptions_.gridoptions.md#headerheight)
+- [hideFooter](_src_models_gridoptions_.gridoptions.md#optional-hidefooter)
+- [hideFooterPagination](_src_models_gridoptions_.gridoptions.md#optional-hidefooterpagination)
+- [hideFooterRowCount](_src_models_gridoptions_.gridoptions.md#optional-hidefooterrowcount)
+- [hideFooterSelectedRowCount](_src_models_gridoptions_.gridoptions.md#optional-hidefooterselectedrowcount)
+- [icons](_src_models_gridoptions_.gridoptions.md#icons)
+- [loadingOverlayComponent](_src_models_gridoptions_.gridoptions.md#optional-loadingoverlaycomponent)
+- [logLevel](_src_models_gridoptions_.gridoptions.md#optional-loglevel)
+- [logger](_src_models_gridoptions_.gridoptions.md#optional-logger)
+- [noRowsOverlayComponent](_src_models_gridoptions_.gridoptions.md#optional-norowsoverlaycomponent)
+- [onCellClicked](_src_models_gridoptions_.gridoptions.md#optional-oncellclicked)
+- [onColumnHeaderClicked](_src_models_gridoptions_.gridoptions.md#optional-oncolumnheaderclicked)
+- [onColumnsSorted](_src_models_gridoptions_.gridoptions.md#optional-oncolumnssorted)
+- [onPageChanged](_src_models_gridoptions_.gridoptions.md#optional-onpagechanged)
+- [onPageSizeChanged](_src_models_gridoptions_.gridoptions.md#optional-onpagesizechanged)
+- [onRowClicked](_src_models_gridoptions_.gridoptions.md#optional-onrowclicked)
+- [onRowSelected](_src_models_gridoptions_.gridoptions.md#optional-onrowselected)
+- [onSelectionChanged](_src_models_gridoptions_.gridoptions.md#optional-onselectionchanged)
+- [pagination](_src_models_gridoptions_.gridoptions.md#optional-pagination)
+- [paginationAutoPageSize](_src_models_gridoptions_.gridoptions.md#optional-paginationautopagesize)
+- [paginationComponent](_src_models_gridoptions_.gridoptions.md#optional-paginationcomponent)
+- [paginationPageSize](_src_models_gridoptions_.gridoptions.md#optional-paginationpagesize)
+- [paginationRowsPerPageOptions](_src_models_gridoptions_.gridoptions.md#optional-paginationrowsperpageoptions)
+- [rowHeight](_src_models_gridoptions_.gridoptions.md#rowheight)
+- [scrollbarSize](_src_models_gridoptions_.gridoptions.md#scrollbarsize)
+- [showCellRightBorder](_src_models_gridoptions_.gridoptions.md#showcellrightborder)
+- [showColumnSeparator](_src_models_gridoptions_.gridoptions.md#optional-showcolumnseparator)
+- [sortingOrder](_src_models_gridoptions_.gridoptions.md#sortingorder)
 
 ## Properties
 
 ### `Optional` autoHeight
 
-• **autoHeight**? : *undefined | false | true*
+• **autoHeight**? : _undefined | false | true_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:73](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L73)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:73](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L73)_
 
-___
+---
 
 ### `Optional` checkboxSelection
 
-• **checkboxSelection**? : *undefined | false | true*
+• **checkboxSelection**? : _undefined | false | true_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:101](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L101)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:101](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L101)_
 
-___
+---
 
-###  columnBuffer
+### columnBuffer
 
-• **columnBuffer**: *number*
+• **columnBuffer**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:77](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L77)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:77](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L77)_
 
-___
+---
 
 ### `Optional` disableSelectionOnClick
 
-• **disableSelectionOnClick**? : *undefined | false | true*
+• **disableSelectionOnClick**? : _undefined | false | true_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:102](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L102)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:102](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L102)_
 
-___
+---
 
-###  enableMultipleColumnsSorting
+### enableMultipleColumnsSorting
 
-• **enableMultipleColumnsSorting**: *boolean*
+• **enableMultipleColumnsSorting**: _boolean_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:79](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L79)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:79](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L79)_
 
-___
+---
 
-###  enableMultipleSelection
+### enableMultipleSelection
 
-• **enableMultipleSelection**: *boolean*
+• **enableMultipleSelection**: _boolean_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:78](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L78)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:78](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L78)_
 
-___
+---
 
-###  extendRowFullWidth
+### extendRowFullWidth
 
-• **extendRowFullWidth**: *boolean*
+• **extendRowFullWidth**: _boolean_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:81](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L81)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:81](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L81)_
 
-___
+---
 
 ### `Optional` footerComponent
 
-• **footerComponent**? : *undefined | function*
+• **footerComponent**? : _undefined | function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:109](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L109)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:109](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L109)_
 
-___
+---
 
 ### `Optional` headerComponent
 
-• **headerComponent**? : *undefined | function*
+• **headerComponent**? : _undefined | function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:110](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L110)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:110](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L110)_
 
-___
+---
 
-###  headerHeight
+### headerHeight
 
-• **headerHeight**: *number*
+• **headerHeight**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:75](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L75)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:75](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L75)_
 
-___
+---
 
 ### `Optional` hideFooter
 
-• **hideFooter**? : *undefined | false | true*
+• **hideFooter**? : _undefined | false | true_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:87](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L87)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:87](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L87)_
 
-___
+---
 
 ### `Optional` hideFooterPagination
 
-• **hideFooterPagination**? : *undefined | false | true*
+• **hideFooterPagination**? : _undefined | false | true_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:90](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L90)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:90](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L90)_
 
-___
+---
 
 ### `Optional` hideFooterRowCount
 
-• **hideFooterRowCount**? : *undefined | false | true*
+• **hideFooterRowCount**? : _undefined | false | true_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:88](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L88)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:88](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L88)_
 
-___
+---
 
 ### `Optional` hideFooterSelectedRowCount
 
-• **hideFooterSelectedRowCount**? : *undefined | false | true*
+• **hideFooterSelectedRowCount**? : _undefined | false | true_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:89](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L89)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:89](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L89)_
 
-___
+---
 
-###  icons
+### icons
 
-• **icons**: *[IconsOptions](_src_models_gridoptions_.iconsoptions.md)*
+• **icons**: _[IconsOptions](_src_models_gridoptions_.iconsoptions.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:111](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L111)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:111](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L111)_
 
-___
+---
 
 ### `Optional` loadingOverlayComponent
 
-• **loadingOverlayComponent**? : *React.ReactNode*
+• **loadingOverlayComponent**? : _React.ReactNode_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:107](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L107)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:107](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L107)_
 
-___
+---
 
 ### `Optional` logLevel
 
-• **logLevel**? : *string | boolean*
+• **logLevel**? : _string | boolean_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:105](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L105)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:105](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L105)_
 
-___
+---
 
 ### `Optional` logger
 
-• **logger**? : *[Logger](_src_hooks_utils_uselogger_.logger.md)*
+• **logger**? : _[Logger](_src_hooks_utils_uselogger_.logger.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:104](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L104)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:104](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L104)_
 
-___
+---
 
 ### `Optional` noRowsOverlayComponent
 
-• **noRowsOverlayComponent**? : *React.ReactNode*
+• **noRowsOverlayComponent**? : _React.ReactNode_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:108](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L108)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:108](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L108)_
 
-___
+---
 
 ### `Optional` onCellClicked
 
-• **onCellClicked**? : *undefined | function*
+• **onCellClicked**? : _undefined | function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:92](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L92)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:92](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L92)_
 
-___
+---
 
 ### `Optional` onColumnHeaderClicked
 
-• **onColumnHeaderClicked**? : *undefined | function*
+• **onColumnHeaderClicked**? : _undefined | function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:96](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L96)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:96](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L96)_
 
-___
+---
 
 ### `Optional` onColumnsSorted
 
-• **onColumnsSorted**? : *undefined | function*
+• **onColumnsSorted**? : _undefined | function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:97](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L97)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:97](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L97)_
 
-___
+---
 
 ### `Optional` onPageChanged
 
-• **onPageChanged**? : *undefined | function*
+• **onPageChanged**? : _undefined | function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:98](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L98)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:98](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L98)_
 
-___
+---
 
 ### `Optional` onPageSizeChanged
 
-• **onPageSizeChanged**? : *undefined | function*
+• **onPageSizeChanged**? : _undefined | function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:99](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L99)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:99](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L99)_
 
-___
+---
 
 ### `Optional` onRowClicked
 
-• **onRowClicked**? : *undefined | function*
+• **onRowClicked**? : _undefined | function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:93](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L93)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:93](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L93)_
 
-___
+---
 
 ### `Optional` onRowSelected
 
-• **onRowSelected**? : *undefined | function*
+• **onRowSelected**? : _undefined | function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:94](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L94)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:94](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L94)_
 
-___
+---
 
 ### `Optional` onSelectionChanged
 
-• **onSelectionChanged**? : *undefined | function*
+• **onSelectionChanged**? : _undefined | function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:95](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L95)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:95](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L95)_
 
-___
+---
 
 ### `Optional` pagination
 
-• **pagination**? : *undefined | false | true*
+• **pagination**? : _undefined | false | true_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:83](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L83)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:83](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L83)_
 
-___
+---
 
 ### `Optional` paginationAutoPageSize
 
-• **paginationAutoPageSize**? : *undefined | false | true*
+• **paginationAutoPageSize**? : _undefined | false | true_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:85](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L85)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:85](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L85)_
 
-___
+---
 
 ### `Optional` paginationComponent
 
-• **paginationComponent**? : *undefined | function*
+• **paginationComponent**? : _undefined | function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:106](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L106)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:106](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L106)_
 
-___
+---
 
 ### `Optional` paginationPageSize
 
-• **paginationPageSize**? : *undefined | number*
+• **paginationPageSize**? : _undefined | number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:84](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L84)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:84](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L84)_
 
-___
+---
 
 ### `Optional` paginationRowsPerPageOptions
 
-• **paginationRowsPerPageOptions**? : *number[]*
+• **paginationRowsPerPageOptions**? : _number[]_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:86](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L86)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:86](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L86)_
 
-___
+---
 
-###  rowHeight
+### rowHeight
 
-• **rowHeight**: *number*
+• **rowHeight**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:74](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L74)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:74](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L74)_
 
-___
+---
 
-###  scrollbarSize
+### scrollbarSize
 
-• **scrollbarSize**: *number*
+• **scrollbarSize**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:76](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L76)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:76](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L76)_
 
-___
+---
 
-###  showCellRightBorder
+### showCellRightBorder
 
-• **showCellRightBorder**: *boolean*
+• **showCellRightBorder**: _boolean_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:80](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L80)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:80](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L80)_
 
-___
+---
 
 ### `Optional` showColumnSeparator
 
-• **showColumnSeparator**? : *undefined | false | true*
+• **showColumnSeparator**? : _undefined | false | true_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:103](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L103)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:103](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L103)_
 
-___
+---
 
-###  sortingOrder
+### sortingOrder
 
-• **sortingOrder**: *[SortDirection](../modules/_src_models_sortmodel_.md#sortdirection)[]*
+• **sortingOrder**: _[SortDirection](../modules/_src_models_sortmodel_.md#sortdirection)[]_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:82](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L82)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:82](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L82)_

@@ -1,24 +1,24 @@
-[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/_hashSet"](_lib_lodash__hashset_.md)
+[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/\_hashSet"](_lib_lodash__hashset_.md)
 
-# Module: "lib/lodash/_hashSet"
+# Module: "lib/lodash/\_hashSet"
 
 ## Index
 
 ### Variables
 
-* [HASH_UNDEFINED](_lib_lodash__hashset_.md#hash_undefined)
+- [HASH_UNDEFINED](_lib_lodash__hashset_.md#hash_undefined)
 
 ### Functions
 
-* [hashSet](_lib_lodash__hashset_.md#private-hashset)
+- [hashSet](_lib_lodash__hashset_.md#private-hashset)
 
 ## Variables
 
-###  HASH_UNDEFINED
+### HASH_UNDEFINED
 
-• **HASH_UNDEFINED**: *string* = "__lodash_hash_undefined__"
+• **HASH_UNDEFINED**: _string_ = "**lodash_hash_undefined**"
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_hashSet.js:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_hashSet.js#L6)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_hashSet.js:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_hashSet.js#L6)_
 
 Used to stand-in for `undefined` hash values.
 
@@ -26,9 +26,9 @@ Used to stand-in for `undefined` hash values.
 
 ### `Private` hashSet
 
-▸ **hashSet**(`key`: string, `value`: any): *Object*
+▸ **hashSet**(`key`: string, `value`: any): _Object_
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_hashSet.js:18](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_hashSet.js#L18)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_hashSet.js:18](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_hashSet.js#L18)_
 
 Sets the hash `key` to `value`.
 
@@ -38,11 +38,11 @@ Sets the hash `key` to `value`.
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`key` | string | The key of the value to set. |
-`value` | any | The value to set. |
+| Name    | Type   | Description                  |
+| ------- | ------ | ---------------------------- |
+| `key`   | string | The key of the value to set. |
+| `value` | any    | The value to set.            |
 
-**Returns:** *Object*
+**Returns:** _Object_
 
 Returns the hash instance.

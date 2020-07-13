@@ -6,47 +6,47 @@
 
 ### Enumerations
 
-* [LicenseStatus](../enums/_src_components_watermark_.licensestatus.md)
+- [LicenseStatus](../enums/_src_components_watermark_.licensestatus.md)
 
 ### Interfaces
 
-* [WatermarkProps](../interfaces/_src_components_watermark_.watermarkprops.md)
+- [WatermarkProps](../interfaces/_src_components_watermark_.watermarkprops.md)
 
 ### Functions
 
-* [Watermark](_src_components_watermark_.md#const-watermark)
-* [getLicenseErrorMessage](_src_components_watermark_.md#getlicenseerrormessage)
+- [Watermark](_src_components_watermark_.md#const-watermark)
+- [getLicenseErrorMessage](_src_components_watermark_.md#getlicenseerrormessage)
 
 ## Functions
 
 ### `Const` Watermark
 
-▸ **Watermark**(`__namedParameters`: object): *null | Element‹›*
+▸ **Watermark**(`__namedParameters`: object): _null | Element‹›_
 
-*Defined in [packages/grid/x-grid-modules/src/components/watermark.tsx:28](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/watermark.tsx#L28)*
-
-**Parameters:**
-
-▪ **__namedParameters**: *object*
-
-Name | Type |
------- | ------ |
-`licenseStatus` | string |
-
-**Returns:** *null | Element‹›*
-
-___
-
-###  getLicenseErrorMessage
-
-▸ **getLicenseErrorMessage**(`licenseStatus`: string): *"Material-UI X License Expired" | "Material-UI X Invalid License" | "Material-UI X Unlicensed product"*
-
-*Defined in [packages/grid/x-grid-modules/src/components/watermark.tsx:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/watermark.tsx#L15)*
+_Defined in [packages/grid/x-grid-modules/src/components/watermark.tsx:28](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/watermark.tsx#L28)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`licenseStatus` | string |
+▪ **\_\_namedParameters**: _object_
 
-**Returns:** *"Material-UI X License Expired" | "Material-UI X Invalid License" | "Material-UI X Unlicensed product"*
+| Name            | Type   |
+| --------------- | ------ |
+| `licenseStatus` | string |
+
+**Returns:** _null | Element‹›_
+
+---
+
+### getLicenseErrorMessage
+
+▸ **getLicenseErrorMessage**(`licenseStatus`: string): _"Material-UI X License Expired" | "Material-UI X Invalid License" | "Material-UI X Unlicensed product"_
+
+_Defined in [packages/grid/x-grid-modules/src/components/watermark.tsx:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/watermark.tsx#L15)_
+
+**Parameters:**
+
+| Name            | Type   |
+| --------------- | ------ |
+| `licenseStatus` | string |
+
+**Returns:** _"Material-UI X License Expired" | "Material-UI X Invalid License" | "Material-UI X Unlicensed product"_

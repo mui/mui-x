@@ -1,35 +1,35 @@
-[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/_hashHas"](_lib_lodash__hashhas_.md)
+[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/\_hashHas"](_lib_lodash__hashhas_.md)
 
-# Module: "lib/lodash/_hashHas"
+# Module: "lib/lodash/\_hashHas"
 
 ## Index
 
 ### Variables
 
-* [hasOwnProperty](_lib_lodash__hashhas_.md#hasownproperty)
-* [objectProto](_lib_lodash__hashhas_.md#objectproto)
+- [hasOwnProperty](_lib_lodash__hashhas_.md#hasownproperty)
+- [objectProto](_lib_lodash__hashhas_.md#objectproto)
 
 ### Functions
 
-* [hashHas](_lib_lodash__hashhas_.md#private-hashhas)
+- [hashHas](_lib_lodash__hashhas_.md#private-hashhas)
 
 ## Variables
 
-###  hasOwnProperty
+### hasOwnProperty
 
-• **hasOwnProperty**: *hasOwnProperty* = objectProto.hasOwnProperty
+• **hasOwnProperty**: _hasOwnProperty_ = objectProto.hasOwnProperty
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_hashHas.js:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_hashHas.js#L9)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_hashHas.js:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_hashHas.js#L9)_
 
 Used to check objects for own properties.
 
-___
+---
 
-###  objectProto
+### objectProto
 
-• **objectProto**: *Object* = Object.prototype
+• **objectProto**: _Object_ = Object.prototype
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_hashHas.js:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_hashHas.js#L6)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_hashHas.js:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_hashHas.js#L6)_
 
 Used for built-in method references.
 
@@ -37,9 +37,9 @@ Used for built-in method references.
 
 ### `Private` hashHas
 
-▸ **hashHas**(`key`: string): *boolean*
+▸ **hashHas**(`key`: string): _boolean_
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_hashHas.js:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_hashHas.js#L20)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_hashHas.js:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_hashHas.js#L20)_
 
 Checks if a hash value for `key` exists.
 
@@ -49,10 +49,10 @@ Checks if a hash value for `key` exists.
 
 **Parameters:**
 
-Name | Type | Description |
------- | ------ | ------ |
-`key` | string | The key of the entry to check. |
+| Name  | Type   | Description                    |
+| ----- | ------ | ------------------------------ |
+| `key` | string | The key of the entry to check. |
 
-**Returns:** *boolean*
+**Returns:** _boolean_
 
 Returns `true` if an entry for `key` exists, else `false`.

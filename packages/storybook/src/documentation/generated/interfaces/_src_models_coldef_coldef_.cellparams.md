@@ -4,82 +4,82 @@
 
 ## Hierarchy
 
-* **CellParams**
+- **CellParams**
 
 ## Index
 
 ### Properties
 
-* [api](_src_models_coldef_coldef_.cellparams.md#api)
-* [colDef](_src_models_coldef_coldef_.cellparams.md#coldef)
-* [data](_src_models_coldef_coldef_.cellparams.md#data)
-* [getValue](_src_models_coldef_coldef_.cellparams.md#getvalue)
-* [rowIndex](_src_models_coldef_coldef_.cellparams.md#rowindex)
-* [rowModel](_src_models_coldef_coldef_.cellparams.md#rowmodel)
-* [value](_src_models_coldef_coldef_.cellparams.md#value)
+- [api](_src_models_coldef_coldef_.cellparams.md#api)
+- [colDef](_src_models_coldef_coldef_.cellparams.md#coldef)
+- [data](_src_models_coldef_coldef_.cellparams.md#data)
+- [getValue](_src_models_coldef_coldef_.cellparams.md#getvalue)
+- [rowIndex](_src_models_coldef_coldef_.cellparams.md#rowindex)
+- [rowModel](_src_models_coldef_coldef_.cellparams.md#rowmodel)
+- [value](_src_models_coldef_coldef_.cellparams.md#value)
 
 ## Properties
 
-###  api
+### api
 
-• **api**: *[GridApi](../modules/_src_models_gridapi_.md#gridapi)*
+• **api**: _[GridApi](../modules/_src_models_gridapi_.md#gridapi)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:22](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L22)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:22](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L22)_
 
-___
+---
 
-###  colDef
+### colDef
 
-• **colDef**: *[ColDef](_src_models_coldef_coldef_.coldef.md)*
+• **colDef**: _[ColDef](_src_models_coldef_coldef_.coldef.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L20)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L20)_
 
-___
+---
 
-###  data
+### data
 
-• **data**: *[RowData](_src_models_rows_.rowdata.md)*
+• **data**: _[RowData](_src_models_rows_.rowdata.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:18](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L18)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:18](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L18)_
 
-___
+---
 
-###  getValue
+### getValue
 
-• **getValue**: *function*
+• **getValue**: _function_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:17](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L17)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:17](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L17)_
 
 #### Type declaration:
 
-▸ (`field`: string): *[CellValue](../modules/_src_models_rows_.md#cellvalue)*
+▸ (`field`: string): _[CellValue](../modules/_src_models_rows_.md#cellvalue)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`field` | string |
+| Name    | Type   |
+| ------- | ------ |
+| `field` | string |
 
-___
+---
 
-###  rowIndex
+### rowIndex
 
-• **rowIndex**: *number*
+• **rowIndex**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:21](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L21)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:21](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L21)_
 
-___
+---
 
-###  rowModel
+### rowModel
 
-• **rowModel**: *[RowModel](_src_models_rows_.rowmodel.md)*
+• **rowModel**: _[RowModel](_src_models_rows_.rowmodel.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:19](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L19)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:19](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L19)_
 
-___
+---
 
-###  value
+### value
 
-• **value**: *[CellValue](../modules/_src_models_rows_.md#cellvalue)*
+• **value**: _[CellValue](../modules/_src_models_rows_.md#cellvalue)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:16](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L16)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colDef.ts:16](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colDef.ts#L16)_

@@ -6,209 +6,209 @@
 
 ### Variables
 
-* [DATA_ATTRIBUTE_PREFIX](_src_utils_domutils_.md#const-data_attribute_prefix)
+- [DATA_ATTRIBUTE_PREFIX](_src_utils_domutils_.md#const-data_attribute_prefix)
 
 ### Functions
 
-* [findCellElementsFromCol](_src_utils_domutils_.md#findcellelementsfromcol)
-* [findDataContainerFromCurrent](_src_utils_domutils_.md#finddatacontainerfromcurrent)
-* [findGridRootFromCurrent](_src_utils_domutils_.md#findgridrootfromcurrent)
-* [findParentElementFromClassName](_src_utils_domutils_.md#findparentelementfromclassname)
-* [getCellElementFromIndexes](_src_utils_domutils_.md#getcellelementfromindexes)
-* [getDataFromElem](_src_utils_domutils_.md#getdatafromelem)
-* [getFieldFromHeaderElem](_src_utils_domutils_.md#getfieldfromheaderelem)
-* [getIdFromRowElem](_src_utils_domutils_.md#getidfromrowelem)
-* [isCell](_src_utils_domutils_.md#iscell)
-* [isHeaderCell](_src_utils_domutils_.md#isheadercell)
-* [isOverflown](_src_utils_domutils_.md#isoverflown)
+- [findCellElementsFromCol](_src_utils_domutils_.md#findcellelementsfromcol)
+- [findDataContainerFromCurrent](_src_utils_domutils_.md#finddatacontainerfromcurrent)
+- [findGridRootFromCurrent](_src_utils_domutils_.md#findgridrootfromcurrent)
+- [findParentElementFromClassName](_src_utils_domutils_.md#findparentelementfromclassname)
+- [getCellElementFromIndexes](_src_utils_domutils_.md#getcellelementfromindexes)
+- [getDataFromElem](_src_utils_domutils_.md#getdatafromelem)
+- [getFieldFromHeaderElem](_src_utils_domutils_.md#getfieldfromheaderelem)
+- [getIdFromRowElem](_src_utils_domutils_.md#getidfromrowelem)
+- [isCell](_src_utils_domutils_.md#iscell)
+- [isHeaderCell](_src_utils_domutils_.md#isheadercell)
+- [isOverflown](_src_utils_domutils_.md#isoverflown)
 
 ## Variables
 
 ### `Const` DATA_ATTRIBUTE_PREFIX
 
-• **DATA_ATTRIBUTE_PREFIX**: *"data-"* = "data-"
+• **DATA_ATTRIBUTE_PREFIX**: _"data-"_ = "data-"
 
-*Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L8)*
+_Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L8)_
 
 ## Functions
 
-###  findCellElementsFromCol
+### findCellElementsFromCol
 
-▸ **findCellElementsFromCol**(`col`: HTMLElement): *NodeListOf‹Element› | null*
+▸ **findCellElementsFromCol**(`col`: HTMLElement): _NodeListOf‹Element› | null_
 
-*Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:37](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L37)*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`col` | HTMLElement |
-
-**Returns:** *NodeListOf‹Element› | null*
-
-___
-
-###  findDataContainerFromCurrent
-
-▸ **findDataContainerFromCurrent**(`elem`: Element): *HTMLDivElement | null*
-
-*Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:55](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L55)*
+_Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:37](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L37)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`elem` | Element |
+| Name  | Type        |
+| ----- | ----------- |
+| `col` | HTMLElement |
 
-**Returns:** *HTMLDivElement | null*
+**Returns:** _NodeListOf‹Element› | null_
 
-___
+---
 
-###  findGridRootFromCurrent
+### findDataContainerFromCurrent
 
-▸ **findGridRootFromCurrent**(`elem`: Element): *HTMLDivElement | null*
+▸ **findDataContainerFromCurrent**(`elem`: Element): _HTMLDivElement | null_
 
-*Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:47](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L47)*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`elem` | Element |
-
-**Returns:** *HTMLDivElement | null*
-
-___
-
-###  findParentElementFromClassName
-
-▸ **findParentElementFromClassName**(`elem`: Element, `className`: string): *Element | null*
-
-*Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L14)*
+_Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:55](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L55)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`elem` | Element |
-`className` | string |
+| Name   | Type    |
+| ------ | ------- |
+| `elem` | Element |
 
-**Returns:** *Element | null*
+**Returns:** _HTMLDivElement | null_
 
-___
+---
 
-###  getCellElementFromIndexes
+### findGridRootFromCurrent
 
-▸ **getCellElementFromIndexes**(`root`: Element, `__namedParameters`: object): *HTMLDivElement*
+▸ **findGridRootFromCurrent**(`elem`: Element): _HTMLDivElement | null_
 
-*Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:63](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L63)*
-
-**Parameters:**
-
-▪ **root**: *Element*
-
-▪ **__namedParameters**: *object*
-
-Name | Type |
------- | ------ |
-`colIndex` | number |
-`rowIndex` | number |
-
-**Returns:** *HTMLDivElement*
-
-___
-
-###  getDataFromElem
-
-▸ **getDataFromElem**(`elem`: Element, `field`: string): *string*
-
-*Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:26](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L26)*
+_Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:47](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L47)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`elem` | Element |
-`field` | string |
+| Name   | Type    |
+| ------ | ------- |
+| `elem` | Element |
 
-**Returns:** *string*
+**Returns:** _HTMLDivElement | null_
 
-___
+---
 
-###  getFieldFromHeaderElem
+### findParentElementFromClassName
 
-▸ **getFieldFromHeaderElem**(`colCellEl`: Element): *string*
+▸ **findParentElementFromClassName**(`elem`: Element, `className`: string): _Element | null_
 
-*Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:34](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L34)*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`colCellEl` | Element |
-
-**Returns:** *string*
-
-___
-
-###  getIdFromRowElem
-
-▸ **getIdFromRowElem**(`rowEl`: Element): *string*
-
-*Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:30](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L30)*
+_Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L14)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`rowEl` | Element |
+| Name        | Type    |
+| ----------- | ------- |
+| `elem`      | Element |
+| `className` | string  |
 
-**Returns:** *string*
+**Returns:** _Element | null_
 
-___
+---
 
-###  isCell
+### getCellElementFromIndexes
 
-▸ **isCell**(`elem`: Element | null): *boolean*
+▸ **getCellElementFromIndexes**(`root`: Element, `__namedParameters`: object): _HTMLDivElement_
 
-*Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:18](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L18)*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`elem` | Element &#124; null |
-
-**Returns:** *boolean*
-
-___
-
-###  isHeaderCell
-
-▸ **isHeaderCell**(`elem`: Element): *boolean*
-
-*Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:22](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L22)*
+_Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:63](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L63)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`elem` | Element |
+▪ **root**: _Element_
 
-**Returns:** *boolean*
+▪ **\_\_namedParameters**: _object_
 
-___
+| Name       | Type   |
+| ---------- | ------ |
+| `colIndex` | number |
+| `rowIndex` | number |
 
-###  isOverflown
+**Returns:** _HTMLDivElement_
 
-▸ **isOverflown**(`element`: Element): *boolean*
+---
 
-*Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L10)*
+### getDataFromElem
+
+▸ **getDataFromElem**(`elem`: Element, `field`: string): _string_
+
+_Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:26](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L26)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`element` | Element |
+| Name    | Type    |
+| ------- | ------- |
+| `elem`  | Element |
+| `field` | string  |
 
-**Returns:** *boolean*
+**Returns:** _string_
+
+---
+
+### getFieldFromHeaderElem
+
+▸ **getFieldFromHeaderElem**(`colCellEl`: Element): _string_
+
+_Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:34](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L34)_
+
+**Parameters:**
+
+| Name        | Type    |
+| ----------- | ------- |
+| `colCellEl` | Element |
+
+**Returns:** _string_
+
+---
+
+### getIdFromRowElem
+
+▸ **getIdFromRowElem**(`rowEl`: Element): _string_
+
+_Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:30](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L30)_
+
+**Parameters:**
+
+| Name    | Type    |
+| ------- | ------- |
+| `rowEl` | Element |
+
+**Returns:** _string_
+
+---
+
+### isCell
+
+▸ **isCell**(`elem`: Element | null): _boolean_
+
+_Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:18](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L18)_
+
+**Parameters:**
+
+| Name   | Type                |
+| ------ | ------------------- |
+| `elem` | Element &#124; null |
+
+**Returns:** _boolean_
+
+---
+
+### isHeaderCell
+
+▸ **isHeaderCell**(`elem`: Element): _boolean_
+
+_Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:22](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L22)_
+
+**Parameters:**
+
+| Name   | Type    |
+| ------ | ------- |
+| `elem` | Element |
+
+**Returns:** _boolean_
+
+---
+
+### isOverflown
+
+▸ **isOverflown**(`element`: Element): _boolean_
+
+_Defined in [packages/grid/x-grid-modules/src/utils/domUtils.ts:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/domUtils.ts#L10)_
+
+**Parameters:**
+
+| Name      | Type    |
+| --------- | ------- |
+| `element` | Element |
+
+**Returns:** _boolean_

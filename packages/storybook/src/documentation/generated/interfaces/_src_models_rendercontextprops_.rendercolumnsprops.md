@@ -4,45 +4,45 @@
 
 ## Hierarchy
 
-* **RenderColumnsProps**
+- **RenderColumnsProps**
 
 ## Index
 
 ### Properties
 
-* [firstColIdx](_src_models_rendercontextprops_.rendercolumnsprops.md#firstcolidx)
-* [lastColIdx](_src_models_rendercontextprops_.rendercolumnsprops.md#lastcolidx)
-* [leftEmptyWidth](_src_models_rendercontextprops_.rendercolumnsprops.md#leftemptywidth)
-* [rightEmptyWidth](_src_models_rendercontextprops_.rendercolumnsprops.md#rightemptywidth)
+- [firstColIdx](_src_models_rendercontextprops_.rendercolumnsprops.md#firstcolidx)
+- [lastColIdx](_src_models_rendercontextprops_.rendercolumnsprops.md#lastcolidx)
+- [leftEmptyWidth](_src_models_rendercontextprops_.rendercolumnsprops.md#leftemptywidth)
+- [rightEmptyWidth](_src_models_rendercontextprops_.rendercolumnsprops.md#rightemptywidth)
 
 ## Properties
 
-###  firstColIdx
+### firstColIdx
 
-• **firstColIdx**: *number*
+• **firstColIdx**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/renderContextProps.ts:4](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/renderContextProps.ts#L4)*
+_Defined in [packages/grid/x-grid-modules/src/models/renderContextProps.ts:4](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/renderContextProps.ts#L4)_
 
-___
+---
 
-###  lastColIdx
+### lastColIdx
 
-• **lastColIdx**: *number*
+• **lastColIdx**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/renderContextProps.ts:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/renderContextProps.ts#L5)*
+_Defined in [packages/grid/x-grid-modules/src/models/renderContextProps.ts:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/renderContextProps.ts#L5)_
 
-___
+---
 
-###  leftEmptyWidth
+### leftEmptyWidth
 
-• **leftEmptyWidth**: *number*
+• **leftEmptyWidth**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/renderContextProps.ts:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/renderContextProps.ts#L6)*
+_Defined in [packages/grid/x-grid-modules/src/models/renderContextProps.ts:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/renderContextProps.ts#L6)_
 
-___
+---
 
-###  rightEmptyWidth
+### rightEmptyWidth
 
-• **rightEmptyWidth**: *number*
+• **rightEmptyWidth**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/models/renderContextProps.ts:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/renderContextProps.ts#L7)*
+_Defined in [packages/grid/x-grid-modules/src/models/renderContextProps.ts:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/renderContextProps.ts#L7)_

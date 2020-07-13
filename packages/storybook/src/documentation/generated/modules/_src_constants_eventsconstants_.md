@@ -6,210 +6,210 @@
 
 ### Variables
 
-* [CELL_CLICKED](_src_constants_eventsconstants_.md#const-cell_clicked)
-* [CLICK_EVENT](_src_constants_eventsconstants_.md#const-click_event)
-* [COLUMNS_SORTED](_src_constants_eventsconstants_.md#const-columns_sorted)
-* [COLUMNS_UPDATED](_src_constants_eventsconstants_.md#const-columns_updated)
-* [COLUMN_HEADER_CLICKED](_src_constants_eventsconstants_.md#const-column_header_clicked)
-* [COL_RESIZE_START](_src_constants_eventsconstants_.md#const-col_resize_start)
-* [COL_RESIZE_STOP](_src_constants_eventsconstants_.md#const-col_resize_stop)
-* [KEYDOWN_EVENT](_src_constants_eventsconstants_.md#const-keydown_event)
-* [KEYUP_EVENT](_src_constants_eventsconstants_.md#const-keyup_event)
-* [MULTIPLE_KEY_PRESS_CHANGED](_src_constants_eventsconstants_.md#const-multiple_key_press_changed)
-* [PAGESIZE_CHANGED_EVENT](_src_constants_eventsconstants_.md#const-pagesize_changed_event)
-* [PAGE_CHANGED_EVENT](_src_constants_eventsconstants_.md#const-page_changed_event)
-* [POST_SORT](_src_constants_eventsconstants_.md#const-post_sort)
-* [RESIZE](_src_constants_eventsconstants_.md#const-resize)
-* [ROWS_UPDATED](_src_constants_eventsconstants_.md#const-rows_updated)
-* [ROW_CLICKED](_src_constants_eventsconstants_.md#const-row_clicked)
-* [ROW_SELECTED_EVENT](_src_constants_eventsconstants_.md#const-row_selected_event)
-* [SCROLLING](_src_constants_eventsconstants_.md#const-scrolling)
-* [SCROLLING_START](_src_constants_eventsconstants_.md#const-scrolling_start)
-* [SCROLLING_STOP](_src_constants_eventsconstants_.md#const-scrolling_stop)
-* [SELECTION_CHANGED_EVENT](_src_constants_eventsconstants_.md#const-selection_changed_event)
-* [SORT_MODEL_UPDATED](_src_constants_eventsconstants_.md#const-sort_model_updated)
-* [UNMOUNT](_src_constants_eventsconstants_.md#const-unmount)
+- [CELL_CLICKED](_src_constants_eventsconstants_.md#const-cell_clicked)
+- [CLICK_EVENT](_src_constants_eventsconstants_.md#const-click_event)
+- [COLUMNS_SORTED](_src_constants_eventsconstants_.md#const-columns_sorted)
+- [COLUMNS_UPDATED](_src_constants_eventsconstants_.md#const-columns_updated)
+- [COLUMN_HEADER_CLICKED](_src_constants_eventsconstants_.md#const-column_header_clicked)
+- [COL_RESIZE_START](_src_constants_eventsconstants_.md#const-col_resize_start)
+- [COL_RESIZE_STOP](_src_constants_eventsconstants_.md#const-col_resize_stop)
+- [KEYDOWN_EVENT](_src_constants_eventsconstants_.md#const-keydown_event)
+- [KEYUP_EVENT](_src_constants_eventsconstants_.md#const-keyup_event)
+- [MULTIPLE_KEY_PRESS_CHANGED](_src_constants_eventsconstants_.md#const-multiple_key_press_changed)
+- [PAGESIZE_CHANGED_EVENT](_src_constants_eventsconstants_.md#const-pagesize_changed_event)
+- [PAGE_CHANGED_EVENT](_src_constants_eventsconstants_.md#const-page_changed_event)
+- [POST_SORT](_src_constants_eventsconstants_.md#const-post_sort)
+- [RESIZE](_src_constants_eventsconstants_.md#const-resize)
+- [ROWS_UPDATED](_src_constants_eventsconstants_.md#const-rows_updated)
+- [ROW_CLICKED](_src_constants_eventsconstants_.md#const-row_clicked)
+- [ROW_SELECTED_EVENT](_src_constants_eventsconstants_.md#const-row_selected_event)
+- [SCROLLING](_src_constants_eventsconstants_.md#const-scrolling)
+- [SCROLLING_START](_src_constants_eventsconstants_.md#const-scrolling_start)
+- [SCROLLING_STOP](_src_constants_eventsconstants_.md#const-scrolling_stop)
+- [SELECTION_CHANGED_EVENT](_src_constants_eventsconstants_.md#const-selection_changed_event)
+- [SORT_MODEL_UPDATED](_src_constants_eventsconstants_.md#const-sort_model_updated)
+- [UNMOUNT](_src_constants_eventsconstants_.md#const-unmount)
 
 ## Variables
 
 ### `Const` CELL_CLICKED
 
-• **CELL_CLICKED**: *"cellClicked"* = "cellClicked"
+• **CELL_CLICKED**: _"cellClicked"_ = "cellClicked"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L7)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L7)_
 
-___
+---
 
 ### `Const` CLICK_EVENT
 
-• **CLICK_EVENT**: *"click"* = "click"
+• **CLICK_EVENT**: _"click"_ = "click"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:3](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L3)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:3](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L3)_
 
-___
+---
 
 ### `Const` COLUMNS_SORTED
 
-• **COLUMNS_SORTED**: *"columnsSorted"* = "columnsSorted"
+• **COLUMNS_SORTED**: _"columnsSorted"_ = "columnsSorted"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:26](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L26)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:26](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L26)_
 
-___
+---
 
 ### `Const` COLUMNS_UPDATED
 
-• **COLUMNS_UPDATED**: *"columnsUpdated"* = "columnsUpdated"
+• **COLUMNS_UPDATED**: _"columnsUpdated"_ = "columnsUpdated"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:23](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L23)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:23](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L23)_
 
-___
+---
 
 ### `Const` COLUMN_HEADER_CLICKED
 
-• **COLUMN_HEADER_CLICKED**: *"columnClicked"* = "columnClicked"
+• **COLUMN_HEADER_CLICKED**: _"columnClicked"_ = "columnClicked"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L11)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L11)_
 
-___
+---
 
 ### `Const` COL_RESIZE_START
 
-• **COL_RESIZE_START**: *"colResizing:start"* = "colResizing:start"
+• **COL_RESIZE_START**: _"colResizing:start"_ = "colResizing:start"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:19](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L19)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:19](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L19)_
 
-___
+---
 
 ### `Const` COL_RESIZE_STOP
 
-• **COL_RESIZE_STOP**: *"colResizing:stop"* = "colResizing:stop"
+• **COL_RESIZE_STOP**: _"colResizing:stop"_ = "colResizing:stop"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L20)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:20](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L20)_
 
-___
+---
 
 ### `Const` KEYDOWN_EVENT
 
-• **KEYDOWN_EVENT**: *"keydown"* = "keydown"
+• **KEYDOWN_EVENT**: _"keydown"_ = "keydown"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:4](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L4)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:4](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L4)_
 
-___
+---
 
 ### `Const` KEYUP_EVENT
 
-• **KEYUP_EVENT**: *"keyup"* = "keyup"
+• **KEYUP_EVENT**: _"keyup"_ = "keyup"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L5)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L5)_
 
-___
+---
 
 ### `Const` MULTIPLE_KEY_PRESS_CHANGED
 
-• **MULTIPLE_KEY_PRESS_CHANGED**: *"multipleKeyPressChanged"* = "multipleKeyPressChanged"
+• **MULTIPLE_KEY_PRESS_CHANGED**: _"multipleKeyPressChanged"_ = "multipleKeyPressChanged"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:27](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L27)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:27](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L27)_
 
-___
+---
 
 ### `Const` PAGESIZE_CHANGED_EVENT
 
-• **PAGESIZE_CHANGED_EVENT**: *"pageSizeChanged"* = "pageSizeChanged"
+• **PAGESIZE_CHANGED_EVENT**: _"pageSizeChanged"_ = "pageSizeChanged"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L13)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L13)_
 
-___
+---
 
 ### `Const` PAGE_CHANGED_EVENT
 
-• **PAGE_CHANGED_EVENT**: *"pageChanged"* = "pageChanged"
+• **PAGE_CHANGED_EVENT**: _"pageChanged"_ = "pageChanged"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L12)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L12)_
 
-___
+---
 
 ### `Const` POST_SORT
 
-• **POST_SORT**: *"postSort"* = "postSort"
+• **POST_SORT**: _"postSort"_ = "postSort"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:25](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L25)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:25](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L25)_
 
-___
+---
 
 ### `Const` RESIZE
 
-• **RESIZE**: *"resize"* = "resize"
+• **RESIZE**: _"resize"_ = "resize"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:1](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L1)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:1](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L1)_
 
-___
+---
 
 ### `Const` ROWS_UPDATED
 
-• **ROWS_UPDATED**: *"rowsUpdated"* = "rowsUpdated"
+• **ROWS_UPDATED**: _"rowsUpdated"_ = "rowsUpdated"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:22](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L22)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:22](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L22)_
 
-___
+---
 
 ### `Const` ROW_CLICKED
 
-• **ROW_CLICKED**: *"rowClicked"* = "rowClicked"
+• **ROW_CLICKED**: _"rowClicked"_ = "rowClicked"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L8)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L8)_
 
-___
+---
 
 ### `Const` ROW_SELECTED_EVENT
 
-• **ROW_SELECTED_EVENT**: *"rowSelected"* = "rowSelected"
+• **ROW_SELECTED_EVENT**: _"rowSelected"_ = "rowSelected"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L9)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L9)_
 
-___
+---
 
 ### `Const` SCROLLING
 
-• **SCROLLING**: *"scrolling"* = "scrolling"
+• **SCROLLING**: _"scrolling"_ = "scrolling"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:16](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L16)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:16](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L16)_
 
-___
+---
 
 ### `Const` SCROLLING_START
 
-• **SCROLLING_START**: *"scrolling:start"* = "scrolling:start"
+• **SCROLLING_START**: _"scrolling:start"_ = "scrolling:start"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L15)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:15](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L15)_
 
-___
+---
 
 ### `Const` SCROLLING_STOP
 
-• **SCROLLING_STOP**: *"scrolling:stop"* = "scrolling:stop"
+• **SCROLLING_STOP**: _"scrolling:stop"_ = "scrolling:stop"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:17](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L17)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:17](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L17)_
 
-___
+---
 
 ### `Const` SELECTION_CHANGED_EVENT
 
-• **SELECTION_CHANGED_EVENT**: *"selectionChanged"* = "selectionChanged"
+• **SELECTION_CHANGED_EVENT**: _"selectionChanged"_ = "selectionChanged"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L10)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L10)_
 
-___
+---
 
 ### `Const` SORT_MODEL_UPDATED
 
-• **SORT_MODEL_UPDATED**: *"sortModelUpdated"* = "sortModelUpdated"
+• **SORT_MODEL_UPDATED**: _"sortModelUpdated"_ = "sortModelUpdated"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:24](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L24)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:24](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L24)_
 
-___
+---
 
 ### `Const` UNMOUNT
 
-• **UNMOUNT**: *"unmount"* = "unmount"
+• **UNMOUNT**: _"unmount"_ = "unmount"
 
-*Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:2](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L2)*
+_Defined in [packages/grid/x-grid-modules/src/constants/eventsConstants.ts:2](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/constants/eventsConstants.ts#L2)_

@@ -6,23 +6,23 @@
 
 ### Functions
 
-* [useSorting](_src_hooks_features_usesorting_.md#const-usesorting)
+- [useSorting](_src_hooks_features_usesorting_.md#const-usesorting)
 
 ## Functions
 
 ### `Const` useSorting
 
-▸ **useSorting**(`options`: [GridOptions](../interfaces/_src_models_gridoptions_.gridoptions.md), `rowsProp`: [RowsProp](_src_models_rows_.md#rowsprop), `colsProp`: [Columns](_src_models_coldef_coldef_.md#columns), `apiRef`: [GridApiRef](_src_models_gridapiref_.md#gridapiref)): *void*
+▸ **useSorting**(`options`: [GridOptions](../interfaces/_src_models_gridoptions_.gridoptions.md), `rowsProp`: [RowsProp](_src_models_rows_.md#rowsprop), `colsProp`: [Columns](_src_models_coldef_coldef_.md#columns), `apiRef`: [GridApiRef](_src_models_gridapiref_.md#gridapiref)): _void_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/features/useSorting.ts:30](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/useSorting.ts#L30)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/features/useSorting.ts:30](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/features/useSorting.ts#L30)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`options` | [GridOptions](../interfaces/_src_models_gridoptions_.gridoptions.md) |
-`rowsProp` | [RowsProp](_src_models_rows_.md#rowsprop) |
-`colsProp` | [Columns](_src_models_coldef_coldef_.md#columns) |
-`apiRef` | [GridApiRef](_src_models_gridapiref_.md#gridapiref) |
+| Name       | Type                                                                 |
+| ---------- | -------------------------------------------------------------------- |
+| `options`  | [GridOptions](../interfaces/_src_models_gridoptions_.gridoptions.md) |
+| `rowsProp` | [RowsProp](_src_models_rows_.md#rowsprop)                            |
+| `colsProp` | [Columns](_src_models_coldef_coldef_.md#columns)                     |
+| `apiRef`   | [GridApiRef](_src_models_gridapiref_.md#gridapiref)                  |
 
-**Returns:** *void*
+**Returns:** _void_

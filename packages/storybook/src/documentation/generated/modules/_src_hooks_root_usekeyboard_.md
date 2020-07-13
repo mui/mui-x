@@ -6,42 +6,42 @@
 
 ### Functions
 
-* [getNextCellIndexes](_src_hooks_root_usekeyboard_.md#const-getnextcellindexes)
-* [useKeyboard](_src_hooks_root_usekeyboard_.md#const-usekeyboard)
+- [getNextCellIndexes](_src_hooks_root_usekeyboard_.md#const-getnextcellindexes)
+- [useKeyboard](_src_hooks_root_usekeyboard_.md#const-usekeyboard)
 
 ## Functions
 
 ### `Const` getNextCellIndexes
 
-▸ **getNextCellIndexes**(`code`: string, `indexes`: [CellIndexCoordinates](../interfaces/_src_models_rows_.cellindexcoordinates.md)): *object*
+▸ **getNextCellIndexes**(`code`: string, `indexes`: [CellIndexCoordinates](../interfaces/_src_models_rows_.cellindexcoordinates.md)): _object_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/root/useKeyboard.ts:29](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/root/useKeyboard.ts#L29)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/root/useKeyboard.ts:29](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/root/useKeyboard.ts#L29)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`code` | string |
-`indexes` | [CellIndexCoordinates](../interfaces/_src_models_rows_.cellindexcoordinates.md) |
+| Name      | Type                                                                            |
+| --------- | ------------------------------------------------------------------------------- |
+| `code`    | string                                                                          |
+| `indexes` | [CellIndexCoordinates](../interfaces/_src_models_rows_.cellindexcoordinates.md) |
 
-**Returns:** *object*
+**Returns:** _object_
 
-* **colIndex**: *number* = indexes.colIndex - 1
+- **colIndex**: _number_ = indexes.colIndex - 1
 
-___
+---
 
 ### `Const` useKeyboard
 
-▸ **useKeyboard**(`options`: [GridOptions](../interfaces/_src_models_gridoptions_.gridoptions.md), `initialised`: boolean, `apiRef`: [GridApiRef](_src_models_gridapiref_.md#gridapiref)): *void*
+▸ **useKeyboard**(`options`: [GridOptions](../interfaces/_src_models_gridoptions_.gridoptions.md), `initialised`: boolean, `apiRef`: [GridApiRef](_src_models_gridapiref_.md#gridapiref)): _void_
 
-*Defined in [packages/grid/x-grid-modules/src/hooks/root/useKeyboard.ts:47](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/root/useKeyboard.ts#L47)*
+_Defined in [packages/grid/x-grid-modules/src/hooks/root/useKeyboard.ts:47](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/hooks/root/useKeyboard.ts#L47)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`options` | [GridOptions](../interfaces/_src_models_gridoptions_.gridoptions.md) |
-`initialised` | boolean |
-`apiRef` | [GridApiRef](_src_models_gridapiref_.md#gridapiref) |
+| Name          | Type                                                                 |
+| ------------- | -------------------------------------------------------------------- |
+| `options`     | [GridOptions](../interfaces/_src_models_gridoptions_.gridoptions.md) |
+| `initialised` | boolean                                                              |
+| `apiRef`      | [GridApiRef](_src_models_gridapiref_.md#gridapiref)                  |
 
-**Returns:** *void*
+**Returns:** _void_

@@ -6,110 +6,110 @@
 
 ### Functions
 
-* [dateComparer](_src_utils_sortingutils_.md#const-datecomparer)
-* [isDesc](_src_utils_sortingutils_.md#const-isdesc)
-* [nextSortDirection](_src_utils_sortingutils_.md#const-nextsortdirection)
-* [nillComparer](_src_utils_sortingutils_.md#const-nillcomparer)
-* [numberComparer](_src_utils_sortingutils_.md#const-numbercomparer)
-* [stringNumberComparer](_src_utils_sortingutils_.md#const-stringnumbercomparer)
+- [dateComparer](_src_utils_sortingutils_.md#const-datecomparer)
+- [isDesc](_src_utils_sortingutils_.md#const-isdesc)
+- [nextSortDirection](_src_utils_sortingutils_.md#const-nextsortdirection)
+- [nillComparer](_src_utils_sortingutils_.md#const-nillcomparer)
+- [numberComparer](_src_utils_sortingutils_.md#const-numbercomparer)
+- [stringNumberComparer](_src_utils_sortingutils_.md#const-stringnumbercomparer)
 
 ## Functions
 
 ### `Const` dateComparer
 
-▸ **dateComparer**(`v1`: [CellValue](_src_models_rows_.md#cellvalue), `v2`: [CellValue](_src_models_rows_.md#cellvalue)): *number*
+▸ **dateComparer**(`v1`: [CellValue](_src_models_rows_.md#cellvalue), `v2`: [CellValue](_src_models_rows_.md#cellvalue)): _number_
 
-*Defined in [packages/grid/x-grid-modules/src/utils/sortingUtils.ts:43](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/sortingUtils.ts#L43)*
+_Defined in [packages/grid/x-grid-modules/src/utils/sortingUtils.ts:43](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/sortingUtils.ts#L43)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`v1` | [CellValue](_src_models_rows_.md#cellvalue) |
-`v2` | [CellValue](_src_models_rows_.md#cellvalue) |
+| Name | Type                                        |
+| ---- | ------------------------------------------- |
+| `v1` | [CellValue](_src_models_rows_.md#cellvalue) |
+| `v2` | [CellValue](_src_models_rows_.md#cellvalue) |
 
-**Returns:** *number*
+**Returns:** _number_
 
-___
+---
 
 ### `Const` isDesc
 
-▸ **isDesc**(`direction`: [SortDirection](_src_models_sortmodel_.md#sortdirection)): *boolean*
+▸ **isDesc**(`direction`: [SortDirection](_src_models_sortmodel_.md#sortdirection)): _boolean_
 
-*Defined in [packages/grid/x-grid-modules/src/utils/sortingUtils.ts:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/sortingUtils.ts#L12)*
+_Defined in [packages/grid/x-grid-modules/src/utils/sortingUtils.ts:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/sortingUtils.ts#L12)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`direction` | [SortDirection](_src_models_sortmodel_.md#sortdirection) |
+| Name        | Type                                                     |
+| ----------- | -------------------------------------------------------- |
+| `direction` | [SortDirection](_src_models_sortmodel_.md#sortdirection) |
 
-**Returns:** *boolean*
+**Returns:** _boolean_
 
-___
+---
 
 ### `Const` nextSortDirection
 
-▸ **nextSortDirection**(`sortingOrder`: [SortDirection](_src_models_sortmodel_.md#sortdirection)[], `current?`: [SortDirection](_src_models_sortmodel_.md#sortdirection)): *undefined | null | "asc" | "desc"*
+▸ **nextSortDirection**(`sortingOrder`: [SortDirection](_src_models_sortmodel_.md#sortdirection)[], `current?`: [SortDirection](_src_models_sortmodel_.md#sortdirection)): _undefined | null | "asc" | "desc"_
 
-*Defined in [packages/grid/x-grid-modules/src/utils/sortingUtils.ts:3](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/sortingUtils.ts#L3)*
+_Defined in [packages/grid/x-grid-modules/src/utils/sortingUtils.ts:3](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/sortingUtils.ts#L3)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`sortingOrder` | [SortDirection](_src_models_sortmodel_.md#sortdirection)[] |
-`current?` | [SortDirection](_src_models_sortmodel_.md#sortdirection) |
+| Name           | Type                                                       |
+| -------------- | ---------------------------------------------------------- |
+| `sortingOrder` | [SortDirection](_src_models_sortmodel_.md#sortdirection)[] |
+| `current?`     | [SortDirection](_src_models_sortmodel_.md#sortdirection)   |
 
-**Returns:** *undefined | null | "asc" | "desc"*
+**Returns:** _undefined | null | "asc" | "desc"_
 
-___
+---
 
 ### `Const` nillComparer
 
-▸ **nillComparer**(`v1`: [CellValue](_src_models_rows_.md#cellvalue), `v2`: [CellValue](_src_models_rows_.md#cellvalue)): *number | null*
+▸ **nillComparer**(`v1`: [CellValue](_src_models_rows_.md#cellvalue), `v2`: [CellValue](_src_models_rows_.md#cellvalue)): _number | null_
 
-*Defined in [packages/grid/x-grid-modules/src/utils/sortingUtils.ts:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/sortingUtils.ts#L14)*
+_Defined in [packages/grid/x-grid-modules/src/utils/sortingUtils.ts:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/sortingUtils.ts#L14)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`v1` | [CellValue](_src_models_rows_.md#cellvalue) |
-`v2` | [CellValue](_src_models_rows_.md#cellvalue) |
+| Name | Type                                        |
+| ---- | ------------------------------------------- |
+| `v1` | [CellValue](_src_models_rows_.md#cellvalue) |
+| `v2` | [CellValue](_src_models_rows_.md#cellvalue) |
 
-**Returns:** *number | null*
+**Returns:** _number | null_
 
-___
+---
 
 ### `Const` numberComparer
 
-▸ **numberComparer**(`v1`: [CellValue](_src_models_rows_.md#cellvalue), `v2`: [CellValue](_src_models_rows_.md#cellvalue)): *number*
+▸ **numberComparer**(`v1`: [CellValue](_src_models_rows_.md#cellvalue), `v2`: [CellValue](_src_models_rows_.md#cellvalue)): _number_
 
-*Defined in [packages/grid/x-grid-modules/src/utils/sortingUtils.ts:35](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/sortingUtils.ts#L35)*
+_Defined in [packages/grid/x-grid-modules/src/utils/sortingUtils.ts:35](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/sortingUtils.ts#L35)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`v1` | [CellValue](_src_models_rows_.md#cellvalue) |
-`v2` | [CellValue](_src_models_rows_.md#cellvalue) |
+| Name | Type                                        |
+| ---- | ------------------------------------------- |
+| `v1` | [CellValue](_src_models_rows_.md#cellvalue) |
+| `v2` | [CellValue](_src_models_rows_.md#cellvalue) |
 
-**Returns:** *number*
+**Returns:** _number_
 
-___
+---
 
 ### `Const` stringNumberComparer
 
-▸ **stringNumberComparer**(`v1`: [CellValue](_src_models_rows_.md#cellvalue), `v2`: [CellValue](_src_models_rows_.md#cellvalue)): *number*
+▸ **stringNumberComparer**(`v1`: [CellValue](_src_models_rows_.md#cellvalue), `v2`: [CellValue](_src_models_rows_.md#cellvalue)): _number_
 
-*Defined in [packages/grid/x-grid-modules/src/utils/sortingUtils.ts:22](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/sortingUtils.ts#L22)*
+_Defined in [packages/grid/x-grid-modules/src/utils/sortingUtils.ts:22](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/utils/sortingUtils.ts#L22)_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`v1` | [CellValue](_src_models_rows_.md#cellvalue) |
-`v2` | [CellValue](_src_models_rows_.md#cellvalue) |
+| Name | Type                                        |
+| ---- | ------------------------------------------- |
+| `v1` | [CellValue](_src_models_rows_.md#cellvalue) |
+| `v2` | [CellValue](_src_models_rows_.md#cellvalue) |
 
-**Returns:** *number*
+**Returns:** _number_

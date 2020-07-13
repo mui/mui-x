@@ -1,20 +1,20 @@
-[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/_hashClear"](_lib_lodash__hashclear_.md)
+[@material-ui/x-grid-modules](../README.md) › [Globals](../globals.md) › ["lib/lodash/\_hashClear"](_lib_lodash__hashclear_.md)
 
-# Module: "lib/lodash/_hashClear"
+# Module: "lib/lodash/\_hashClear"
 
 ## Index
 
 ### Functions
 
-* [hashClear](_lib_lodash__hashclear_.md#private-hashclear)
+- [hashClear](_lib_lodash__hashclear_.md#private-hashclear)
 
 ## Functions
 
 ### `Private` hashClear
 
-▸ **hashClear**(): *void*
+▸ **hashClear**(): _void_
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/_hashClear.js:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_hashClear.js#L12)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/\_hashClear.js:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/_hashClear.js#L12)_
 
 Removes all key-value entries from the hash.
 
@@ -22,4 +22,4 @@ Removes all key-value entries from the hash.
 
 **`memberof`** Hash
 
-**Returns:** *void*
+**Returns:** _void_

@@ -6,12 +6,12 @@
 
 ### Type aliases
 
-* [ColType](_src_models_coldef_coltype_.md#coltype)
+- [ColType](_src_models_coldef_coltype_.md#coltype)
 
 ## Type aliases
 
-###  ColType
+### ColType
 
-Ƭ **ColType**: *"string" | "number" | "date" | "dateTime" | string*
+Ƭ **ColType**: _"string" | "number" | "date" | "dateTime" | string_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/colType.ts:1](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colType.ts#L1)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/colType.ts:1](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/colType.ts#L1)_

@@ -6,25 +6,25 @@
 
 ### Lang Variables
 
-* [isTypedArray](_lib_lodash_istypedarray_.md#istypedarray)
+- [isTypedArray](_lib_lodash_istypedarray_.md#istypedarray)
 
 ### Other Variables
 
-* [nodeIsTypedArray](_lib_lodash_istypedarray_.md#nodeistypedarray)
+- [nodeIsTypedArray](_lib_lodash_istypedarray_.md#nodeistypedarray)
 
 ## Lang Variables
 
-###  isTypedArray
+### isTypedArray
 
-• **isTypedArray**: *[Function](../interfaces/_src_utils_utils_.debouncedfunction.md#function)* = nodeIsTypedArray ? baseUnary(nodeIsTypedArray) : baseIsTypedArray
+• **isTypedArray**: _[Function](../interfaces/_src_utils_utils_.debouncedfunction.md#function)_ = nodeIsTypedArray ? baseUnary(nodeIsTypedArray) : baseIsTypedArray
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/isTypedArray.js:27](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/isTypedArray.js#L27)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/isTypedArray.js:27](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/isTypedArray.js#L27)_
 
 Checks if `value` is classified as a typed array.
 
-**`static`** 
+**`static`**
 
-**`memberof`** _
+**`memberof`** \_
 
 **`since`** 3.0.0
 
@@ -32,20 +32,20 @@ Checks if `value` is classified as a typed array.
 
 **`returns`** Returns `true` if `value` is a typed array, else `false`.
 
-**`example`** 
+**`example`**
 
-_.isTypedArray(new Uint8Array);
+\_.isTypedArray(new Uint8Array);
 // => true
 
-_.isTypedArray([]);
+\_.isTypedArray([]);
 // => false
 
-___
+---
 
 ## Other Variables
 
-###  nodeIsTypedArray
+### nodeIsTypedArray
 
-• **nodeIsTypedArray**: *any* = nodeUtil && nodeUtil.isTypedArray
+• **nodeIsTypedArray**: _any_ = nodeUtil && nodeUtil.isTypedArray
 
-*Defined in [packages/grid/x-grid-modules/lib/lodash/isTypedArray.js:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/isTypedArray.js#L8)*
+_Defined in [packages/grid/x-grid-modules/lib/lodash/isTypedArray.js:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/lib/lodash/isTypedArray.js#L8)_

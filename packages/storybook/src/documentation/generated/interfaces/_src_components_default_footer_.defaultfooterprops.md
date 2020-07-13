@@ -4,36 +4,36 @@
 
 ## Hierarchy
 
-* **DefaultFooterProps**
+- **DefaultFooterProps**
 
 ## Index
 
 ### Properties
 
-* [options](_src_components_default_footer_.defaultfooterprops.md#options)
-* [paginationProps](_src_components_default_footer_.defaultfooterprops.md#paginationprops)
-* [rowCount](_src_components_default_footer_.defaultfooterprops.md#rowcount)
+- [options](_src_components_default_footer_.defaultfooterprops.md#options)
+- [paginationProps](_src_components_default_footer_.defaultfooterprops.md#paginationprops)
+- [rowCount](_src_components_default_footer_.defaultfooterprops.md#rowcount)
 
 ## Properties
 
-###  options
+### options
 
-• **options**: *[GridOptions](_src_models_gridoptions_.gridoptions.md)*
+• **options**: _[GridOptions](_src_models_gridoptions_.gridoptions.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/components/default-footer.tsx:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/default-footer.tsx#L12)*
+_Defined in [packages/grid/x-grid-modules/src/components/default-footer.tsx:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/default-footer.tsx#L12)_
 
-___
+---
 
-###  paginationProps
+### paginationProps
 
-• **paginationProps**: *[PaginationProps](_src_hooks_features_usepagination_.paginationprops.md)*
+• **paginationProps**: _[PaginationProps](_src_hooks_features_usepagination_.paginationprops.md)_
 
-*Defined in [packages/grid/x-grid-modules/src/components/default-footer.tsx:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/default-footer.tsx#L13)*
+_Defined in [packages/grid/x-grid-modules/src/components/default-footer.tsx:13](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/default-footer.tsx#L13)_
 
-___
+---
 
-###  rowCount
+### rowCount
 
-• **rowCount**: *number*
+• **rowCount**: _number_
 
-*Defined in [packages/grid/x-grid-modules/src/components/default-footer.tsx:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/default-footer.tsx#L14)*
+_Defined in [packages/grid/x-grid-modules/src/components/default-footer.tsx:14](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/default-footer.tsx#L14)_

@@ -6,24 +6,24 @@
 
 ### Functions
 
-* [StickyContainer](_src_components_sticky_container_.md#const-stickycontainer)
+- [StickyContainer](_src_components_sticky_container_.md#const-stickycontainer)
 
 ## Functions
 
 ### `Const` StickyContainer
 
-▸ **StickyContainer**(`__namedParameters`: object): *Element‹›*
+▸ **StickyContainer**(`__namedParameters`: object): _Element‹›_
 
-*Defined in [packages/grid/x-grid-modules/src/components/sticky-container.tsx:4](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/sticky-container.tsx#L4)*
+_Defined in [packages/grid/x-grid-modules/src/components/sticky-container.tsx:4](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/sticky-container.tsx#L4)_
 
 **Parameters:**
 
-▪ **__namedParameters**: *object*
+▪ **\_\_namedParameters**: _object_
 
-Name | Type |
------- | ------ |
-`children` | undefined &#124; null &#124; string &#124; number &#124; false &#124; true &#124; object &#124; ReactElement‹any, string &#124; function &#124; object› &#124; ReactNodeArray‹› &#124; ReactPortal‹› |
-`height` | number |
-`width` | number |
+| Name       | Type                                                                                                                                                                                                 |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `children` | undefined &#124; null &#124; string &#124; number &#124; false &#124; true &#124; object &#124; ReactElement‹any, string &#124; function &#124; object› &#124; ReactNodeArray‹› &#124; ReactPortal‹› |
+| `height`   | number                                                                                                                                                                                               |
+| `width`    | number                                                                                                                                                                                               |
 
-**Returns:** *Element‹›*
+**Returns:** _Element‹›_

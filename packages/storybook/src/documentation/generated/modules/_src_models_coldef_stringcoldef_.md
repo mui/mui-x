@@ -6,73 +6,73 @@
 
 ### Object literals
 
-* [STRING_COL_DEF](_src_models_coldef_stringcoldef_.md#const-string_col_def)
+- [STRING_COL_DEF](_src_models_coldef_stringcoldef_.md#const-string_col_def)
 
 ## Object literals
 
 ### `Const` STRING_COL_DEF
 
-### ▪ **STRING_COL_DEF**: *object*
+### ▪ **STRING_COL_DEF**: _object_
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts:4](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts#L4)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts:4](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts#L4)_
 
-###  align
+### align
 
-• **align**: *"left"* = "left"
+• **align**: _"left"_ = "left"
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts#L12)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts:12](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts#L12)_
 
-###  hide
+### hide
 
-• **hide**: *false* = false
+• **hide**: _false_ = false
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts#L6)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts:6](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts#L6)_
 
-###  resizable
+### resizable
 
-• **resizable**: *true* = true
+• **resizable**: _true_ = true
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts#L8)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts:8](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts#L8)_
 
-###  sortComparator
+### sortComparator
 
-• **sortComparator**: *function* = stringNumberComparer
+• **sortComparator**: _function_ = stringNumberComparer
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts#L10)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts:10](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts#L10)_
 
 #### Type declaration:
 
-▸ (`v1`: [CellValue](_src_models_rows_.md#cellvalue), `v2`: [CellValue](_src_models_rows_.md#cellvalue), `row1`: [RowModel](../interfaces/_src_models_rows_.rowmodel.md), `row2`: [RowModel](../interfaces/_src_models_rows_.rowmodel.md)): *number*
+▸ (`v1`: [CellValue](_src_models_rows_.md#cellvalue), `v2`: [CellValue](_src_models_rows_.md#cellvalue), `row1`: [RowModel](../interfaces/_src_models_rows_.rowmodel.md), `row2`: [RowModel](../interfaces/_src_models_rows_.rowmodel.md)): _number_
 
 **Parameters:**
 
-Name | Type |
------- | ------ |
-`v1` | [CellValue](_src_models_rows_.md#cellvalue) |
-`v2` | [CellValue](_src_models_rows_.md#cellvalue) |
-`row1` | [RowModel](../interfaces/_src_models_rows_.rowmodel.md) |
-`row2` | [RowModel](../interfaces/_src_models_rows_.rowmodel.md) |
+| Name   | Type                                                    |
+| ------ | ------------------------------------------------------- |
+| `v1`   | [CellValue](_src_models_rows_.md#cellvalue)             |
+| `v2`   | [CellValue](_src_models_rows_.md#cellvalue)             |
+| `row1` | [RowModel](../interfaces/_src_models_rows_.rowmodel.md) |
+| `row2` | [RowModel](../interfaces/_src_models_rows_.rowmodel.md) |
 
-###  sortDirection
+### sortDirection
 
-• **sortDirection**: *null* = null
+• **sortDirection**: _null_ = null
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts#L9)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts:9](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts#L9)_
 
-###  sortable
+### sortable
 
-• **sortable**: *true* = true
+• **sortable**: _true_ = true
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts#L7)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts:7](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts#L7)_
 
-###  type
+### type
 
-• **type**: *string* = "string"
+• **type**: _string_ = "string"
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts#L11)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts:11](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts#L11)_
 
-###  width
+### width
 
-• **width**: *number* = 100
+• **width**: _number_ = 100
 
-*Defined in [packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts#L5)*
+_Defined in [packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts:5](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/colDef/stringColDef.ts#L5)_

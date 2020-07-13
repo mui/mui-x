@@ -6,20 +6,20 @@
 
 ### Interfaces
 
-* [DefaultFooterProps](../interfaces/_src_components_default_footer_.defaultfooterprops.md)
+- [DefaultFooterProps](../interfaces/_src_components_default_footer_.defaultfooterprops.md)
 
 ### Variables
 
-* [DefaultFooter](_src_components_default_footer_.md#const-defaultfooter)
+- [DefaultFooter](_src_components_default_footer_.md#const-defaultfooter)
 
 ## Variables
 
 ### `Const` DefaultFooter
 
-• **DefaultFooter**: *ForwardRefExoticComponent‹[DefaultFooterProps](../interfaces/_src_components_default_footer_.defaultfooterprops.md) & RefAttributes‹HTMLDivElement››* = React.forwardRef<HTMLDivElement, DefaultFooterProps>(
-  function DefaultFooter({ options, paginationProps, rowCount }, ref) {
-    const api = useContext(ApiContext);
-    const [selectedRowCount, setSelectedCount] = useState(0);
+• **DefaultFooter**: _ForwardRefExoticComponent‹[DefaultFooterProps](../interfaces/_src_components_default_footer_.defaultfooterprops.md) & RefAttributes‹HTMLDivElement››_ = React.forwardRef<HTMLDivElement, DefaultFooterProps>(
+function DefaultFooter({ options, paginationProps, rowCount }, ref) {
+const api = useContext(ApiContext);
+const [selectedRowCount, setSelectedCount] = useState(0);
 
     useEffect(() => {
       if (api && api.current) {
@@ -53,7 +53,8 @@
           ))}
       </Footer>
     );
-  },
+
+},
 )
 
-*Defined in [packages/grid/x-grid-modules/src/components/default-footer.tsx:17](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/default-footer.tsx#L17)*
+_Defined in [packages/grid/x-grid-modules/src/components/default-footer.tsx:17](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/components/default-footer.tsx#L17)_

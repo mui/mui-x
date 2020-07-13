@@ -4,18 +4,18 @@
 
 ## Hierarchy
 
-* **SelectionChangedParam**
+- **SelectionChangedParam**
 
 ## Index
 
 ### Properties
 
-* [rows](_src_models_gridoptions_.selectionchangedparam.md#rows)
+- [rows](_src_models_gridoptions_.selectionchangedparam.md#rows)
 
 ## Properties
 
-###  rows
+### rows
 
-• **rows**: *[RowData](_src_models_rows_.rowdata.md)[]*
+• **rows**: _[RowData](_src_models_rows_.rowdata.md)[]_
 
-*Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:42](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L42)*
+_Defined in [packages/grid/x-grid-modules/src/models/gridOptions.tsx:42](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/gridOptions.tsx#L42)_

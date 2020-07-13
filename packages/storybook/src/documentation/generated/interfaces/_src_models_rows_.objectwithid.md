@@ -4,7 +4,7 @@
 
 ## Hierarchy
 
-* **ObjectWithId**
+- **ObjectWithId**
 
   ↳ [RowData](_src_models_rows_.rowdata.md)
 
@@ -12,12 +12,12 @@
 
 ### Properties
 
-* [id](_src_models_rows_.objectwithid.md#id)
+- [id](_src_models_rows_.objectwithid.md#id)
 
 ## Properties
 
-###  id
+### id
 
-• **id**: *[RowId](../modules/_src_models_rows_.md#rowid)*
+• **id**: _[RowId](../modules/_src_models_rows_.md#rowid)_
 
-*Defined in [packages/grid/x-grid-modules/src/models/rows.ts:16](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/rows.ts#L16)*
+_Defined in [packages/grid/x-grid-modules/src/models/rows.ts:16](https://github.com/mui-org/material-ui-x/blob/a679779/packages/grid/x-grid-modules/src/models/rows.ts#L16)_
