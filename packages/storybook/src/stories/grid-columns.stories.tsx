@@ -119,7 +119,6 @@ export const UpdateColumnsBtn: React.FC = () => {
     { id: 7, lastName: 'Smith', firstName: '', isRegistered: true, age: 40 },
   ];
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [cols, setCols] = useState(columns);
   const changeCols = () => {
     if (cols.length === columns.length) {

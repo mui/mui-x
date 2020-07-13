@@ -166,7 +166,6 @@ export const PaginationApiTests = () => {
   const data = useData(2000, 200);
   const [autosize, setAutoSize] = useState(false);
 
-  // eslint-disable-next-line
   useEffect(() => {
     let unsubscribe;
     if (apiRef && apiRef.current) {

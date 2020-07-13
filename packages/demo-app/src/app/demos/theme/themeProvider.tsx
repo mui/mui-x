@@ -1,4 +1,3 @@
-//old blue: #3f51b5
 import { createMuiTheme, ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 import { PaletteOptions } from '@material-ui/core/styles/createPalette';
 import * as React from 'react';

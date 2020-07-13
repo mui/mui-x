@@ -2,7 +2,6 @@ import * as React from 'react';
 import Tooltip from '@material-ui/core/Tooltip';
 import { isOverflown } from '../utils';
 
-// eslint-disable-next-line react/display-name
 const ColumnHeaderInnerTitle = React.forwardRef<HTMLDivElement, any>((props, ref) => {
   const { label, className, ...rest } = props;
 

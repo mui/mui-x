@@ -1,10 +1,9 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from 'react';
 import { MouseEvent, TouchEvent, useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
 import { SplitterPanel } from './splitterPanel';
 import { SplitterHandler } from './splitterHandler';
 import { validateChildren } from './splitterUtils';
-import styled from 'styled-components';
 
 export interface SplitterProps {
   minPanelSizes?: number[];
@@ -23,7 +22,7 @@ const SplitterWrapper = styled.div<{ isResizing: boolean; direction: 'vertical' 
   cursor: ${p => (p.isResizing ? 'row-resize' : '')};
 `;
 
-//todo useReducer && debounce rendering
+// Todo useReducer && debounce rendering
 export const Splitter: React.FC<SplitterProps> = ({
   sizesInPercent,
   invertHandler,
@@ -42,7 +41,7 @@ export const Splitter: React.FC<SplitterProps> = ({
   const childrenArray = React.Children.toArray(children);
   validateChildren(childrenArray);
 
-  //Todo validate minPanelSizes
+  // Todo validate minPanelSizes
   const topPanelSize = (minPanelSizes && minPanelSizes[0]) || 0;
   const bottomPanelSize = (minPanelSizes && minPanelSizes[1]) || 0;
 

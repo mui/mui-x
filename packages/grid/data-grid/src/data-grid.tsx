@@ -55,7 +55,7 @@ export const DataGrid: React.FC<DataGridProps> = React.memo(function DataGrid(
       columns={props.columns}
       loading={props.loading}
       options={internalOptions}
-      licenseStatus={'Valid'}
+      licenseStatus="Valid"
       className={'data-grid ' + (props.className || '')}
     />
   );

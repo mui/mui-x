@@ -67,9 +67,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   extendRowFullWidth: true,
   sortingOrder: ['asc', 'desc', null],
   icons: {
-    // eslint-disable-next-line react/display-name
     columnSortedAscending: () => <ArrowUpward className={'icon'} />,
-    // eslint-disable-next-line react/display-name
     columnSortedDescending: () => <ArrowDownward className={'icon'} />,
     columnResize: SeparatorIcon,
   },

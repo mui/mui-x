@@ -13,9 +13,7 @@ export const checkboxSelectionColDef: ColDef = {
   sortable: false,
   disableClickEventBubbling: true,
   valueGetter: params => params.rowModel.selected,
-  // eslint-disable-next-line react/display-name
   headerComponent: params => <HeaderCheckbox {...params} />,
-  // eslint-disable-next-line react/display-name
   cellRenderer: params => <CellCheckboxRenderer {...params} />,
   cellClass: 'checkbox-selection-cell',
   headerClass: 'checkbox-selection-header-cell',
