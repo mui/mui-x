@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useCallback, useEffect, useState } from 'react';
 import {
   GridComponent,
   GridComponentProps,
@@ -25,7 +24,7 @@ const MAX_PAGE_SIZE = 100;
 export const DataGrid: React.FC<DataGridProps> = React.memo(function DataGrid(
   props: DataGridProps,
 ) {
-  const validateOptions = useCallback((options: DataGridOptionsProp) => {
+  const validateOptions = React.useCallback((options: DataGridOptionsProp) => {
     if (options && options.paginationPageSize && options.paginationPageSize > MAX_PAGE_SIZE) {
       throw new Error(
         `Material-UI: Option 'paginationPageSize' cannot be above ${MAX_PAGE_SIZE}. Use the @material-ui/x-grid to unlock this feature`,
@@ -34,13 +33,13 @@ export const DataGrid: React.FC<DataGridProps> = React.memo(function DataGrid(
     return options;
   }, []);
 
-  const [internalOptions, setInternalOptions] = useState<GridOptions>(
+  const [internalOptions, setInternalOptions] = React.useState<GridOptions>(
     mergeOptions(DEFAULT_GRID_OPTIONS, {
       ...validateOptions(props.options),
       ...OPTIONS_OVERRIDES,
     }),
   );
-  useEffect(() => {
+  React.useEffect(() => {
     setInternalOptions(previousState =>
       mergeOptions(previousState, {
         ...validateOptions(props.options),
@@ -56,7 +55,7 @@ export const DataGrid: React.FC<DataGridProps> = React.memo(function DataGrid(
       loading={props.loading}
       options={internalOptions}
       licenseStatus="Valid"
-      className={'data-grid ' + (props.className || '')}
+      className={`data-grid ${props.className || ''}`}
     />
   );
 });

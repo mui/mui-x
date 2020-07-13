@@ -187,6 +187,14 @@ function FooterComponent2(props) {
   );
 }
 
+function CustomHeader(props) {
+  return (
+    <div className={'custom-header'}>
+      <PaginationComponent {...props} />
+    </div>
+  );
+}
+
 export function HeaderAndFooter() {
   const data = useData(2000, 200);
 
@@ -201,7 +209,7 @@ export function HeaderAndFooter() {
           hideFooterPagination: true,
         }}
         components={{
-          header: PaginationComponent,
+          header: CustomHeader,
           footer: FooterComponent2,
         }}
       />

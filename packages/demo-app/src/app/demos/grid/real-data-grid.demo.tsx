@@ -1,14 +1,15 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { AppBreadcrumbs } from '../../app-breadcrumbs';
 import { XGrid, LicenseInfo, RowModel, Columns, GridOptions } from '@material-ui/x-grid';
 import pkg from '@material-ui/x-grid/package.json';
+import { commodityColumns, employeeColumns } from '@material-ui/x-grid-data-generator';
+import { AppBreadcrumbs } from '../../app-breadcrumbs';
 import { MainContainer } from './components/main-container';
 import { SettingsPanel } from './components/settings-panel';
-import { commodityColumns, employeeColumns } from '@material-ui/x-grid-data-generator';
+// eslint-disable-next-line no-restricted-imports
 import '@material-ui/x-grid-data-generator/dist/demo-style.css';
 import { useTheme } from '../theme';
 
+// eslint-disable-next-line no-console
 console.info(
   '*******************************\n' +
     `    GRID VERSION: ${pkg.version}   \n` +
@@ -26,11 +27,11 @@ const loadFile = async (file: string) => {
   return data;
 };
 
-const mapDates = (data: RowModel[], columns: Columns) => {
+const mapDates = (data: RowModel[], columns: Columns): RowModel[] => {
   const dateCols = columns.filter(c => c.type === 'date' || c.type === 'dateTime');
 
   if (dateCols.length === 0) {
-    return;
+    return data;
   }
 
   const mappedData = data.map(row => {
@@ -45,16 +46,16 @@ const mapDates = (data: RowModel[], columns: Columns) => {
 };
 
 export const RealDataGridDemo: React.FC<{}> = props => {
-  const [size, setSize] = useState(100);
-  const [type, setType] = useState('commodity');
+  const [size, setSize] = React.useState(100);
+  const [type, setType] = React.useState('commodity');
 
-  const [rows, setRows] = useState<any>([]);
-  const [cols, setCols] = useState<any>([]);
-  const [pagination, setPagination] = useState<Partial<GridOptions>>({});
-  const [loading, setLoading] = useState(false);
+  const [rows, setRows] = React.useState<any>([]);
+  const [cols, setCols] = React.useState<any>([]);
+  const [pagination, setPagination] = React.useState<Partial<GridOptions>>({});
+  const [loading, setLoading] = React.useState(false);
   const [theme, themeId, toggleTheme, isDark] = useTheme();
 
-  useEffect(() => {
+  React.useEffect(() => {
     const gridColumns = type === 'commodity' ? commodityColumns : employeeColumns;
     setRows([]);
     setCols(gridColumns);
@@ -71,6 +72,7 @@ export const RealDataGridDemo: React.FC<{}> = props => {
         data.length = size;
         data = mapDates(data, gridColumns as Columns);
 
+        // eslint-disable-next-line no-console
         console.log(`Setting rows with length ${data.length}`);
         setRows(data);
         setLoading(false);
@@ -98,8 +100,8 @@ export const RealDataGridDemo: React.FC<{}> = props => {
     }
 
     const newPagination: Partial<GridOptions> = {
-      pagination: settings.pagesize === -1 ? false : true,
-      paginationAutoPageSize: settings.pagesize === 0 ? true : false,
+      pagination: settings.pagesize !== -1,
+      paginationAutoPageSize: settings.pagesize === 0,
       paginationPageSize: settings.pagesize > 0 ? settings.pagesize : undefined,
     };
 
@@ -116,7 +118,7 @@ export const RealDataGridDemo: React.FC<{}> = props => {
   };
 
   return (
-    <>
+    <React.Fragment>
       <AppBreadcrumbs name={'NEW* Material-UI X Grid'} />
       <SettingsPanel onApply={onApplyClick} size={size} type={type} />
 
@@ -132,6 +134,6 @@ export const RealDataGridDemo: React.FC<{}> = props => {
           </div>
         </div>
       </MainContainer>
-    </>
+    </React.Fragment>
   );
 };

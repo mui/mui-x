@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { useCallback, useMemo, useState } from 'react';
 import { Columns, RowsProp, XGrid } from '@material-ui/x-grid';
 import { randomCreatedDate, randomUpdatedDate } from '@material-ui/x-grid-data-generator';
 import Button from '@material-ui/core/Button';
 
 export default function HideColumnDemo() {
-  const [columns, setColumns] = useState<Columns>([
+  const [columns, setColumns] = React.useState<Columns>([
     { field: 'id', hide: true },
     { field: 'name', type: 'string' },
     { field: 'age', type: 'number' },
@@ -13,7 +12,7 @@ export default function HideColumnDemo() {
     { field: 'lastLogin', type: 'dateTime', width: 180 },
   ]);
 
-  const rows: RowsProp = useMemo(
+  const rows: RowsProp = React.useMemo(
     () => [
       {
         id: 1,
@@ -54,7 +53,7 @@ export default function HideColumnDemo() {
     [],
   );
 
-  const toggleLastLogin = useCallback(() => {
+  const toggleLastLogin = React.useCallback(() => {
     setColumns(cols =>
       cols.map(col => {
         if (col.field === 'lastLogin') {

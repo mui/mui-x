@@ -1,10 +1,11 @@
 import { createMuiTheme, ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
+// eslint-disable-next-line no-restricted-imports
 import { PaletteOptions } from '@material-ui/core/styles/createPalette';
 import * as React from 'react';
 import { ThemeProvider as SCThemeProvider } from 'styled-components';
-import { ThemeColors } from './utils';
 import { lightTheme, lightThemeId } from './light';
 import { darkTheme, darkThemeId } from './dark';
+import { AppTheme } from './appTheme';
 
 export const STORAGE_THEME_KEY = 'theme';
 
@@ -13,12 +14,6 @@ export const DEFAULT_THEME = lightThemeId;
 export const ThemeValuePair: { [key: string]: AppTheme } = {};
 ThemeValuePair[darkThemeId] = darkTheme;
 ThemeValuePair[lightThemeId] = lightTheme;
-
-export interface AppTheme extends PaletteOptions {
-  id: string;
-  colors: ThemeColors;
-  type: 'dark' | 'light';
-}
 
 export interface ThemeProviderProps {
   children?: React.ReactNode;
@@ -33,6 +28,7 @@ const themeToLoad = item != null ? JSON.parse(item) : DEFAULT_THEME;
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const ThemeContext = React.createContext<AppThemeContext>({
   theme: themeToLoad,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   toggleTheme: () => {},
 });
 

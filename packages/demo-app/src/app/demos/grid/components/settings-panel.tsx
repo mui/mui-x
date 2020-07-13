@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
@@ -23,50 +22,50 @@ export interface SettingsPanelProps {
 }
 
 export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onApply, type, size }) => {
-  const [sizeState, setSize] = useState<number>(size);
-  const [typeState, setType] = useState<string>(type);
+  const [sizeState, setSize] = React.useState<number>(size);
+  const [typeState, setType] = React.useState<string>(type);
   const [theme, themeId, toggleTheme, isDark] = useTheme();
-  const [selectedTheme, setSelectedTheme] = useState<string>(themeId);
-  const [selectedPaginationValue, setSelectedPaginationValue] = useState<number>(-1);
+  const [selectedTheme, setSelectedTheme] = React.useState<string>(themeId);
+  const [selectedPaginationValue, setSelectedPaginationValue] = React.useState<number>(-1);
 
-  const applyChanges = useCallback(() => {
+  const applyChanges = React.useCallback(() => {
     onApply({ size: sizeState, type: typeState, selectedTheme, pagesize: selectedPaginationValue });
   }, [sizeState, typeState, selectedTheme, selectedPaginationValue, onApply]);
 
-  const onDatasetChange = useCallback(
-    (e: ChangeEvent<{ name?: string; value: any }>) => {
+  const onDatasetChange = React.useCallback(
+    (e: React.ChangeEvent<{ name?: string; value: any }>) => {
       setType(e.target.value);
     },
     [setType],
   );
 
-  const onSizeChange = useCallback(
-    (e: ChangeEvent<{ name?: string; value: any }>) => {
+  const onSizeChange = React.useCallback(
+    (e: React.ChangeEvent<{ name?: string; value: any }>) => {
       setSize(Number(e.target.value));
     },
     [setSize],
   );
-  const onPaginationChange = useCallback(
-    (e: ChangeEvent<{ name?: string; value: any }>) => {
+  const onPaginationChange = React.useCallback(
+    (e: React.ChangeEvent<{ name?: string; value: any }>) => {
       setSelectedPaginationValue(e.target.value);
       // setSize(Number(e.target.value));
     },
     [setSelectedPaginationValue],
   );
-  const onSelectedThemeChange = useCallback(
-    (e: ChangeEvent<{ name?: string; value: any }>) => {
+  const onSelectedThemeChange = React.useCallback(
+    (e: React.ChangeEvent<{ name?: string; value: any }>) => {
       setSelectedTheme(e.target.value);
     },
     [setSelectedTheme],
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     setSelectedTheme(themeId);
   }, [themeId]);
 
   return (
     <StyledPanels>
-      {/*<Panel title={'Settings'}>*/}
+      {/* <Panel title={'Settings'}> */}
       <div className={'panel'}>
         <FormGroup row className={'center'}>
           <FormControl className={'dataset-control input-text'} size={'small'} component="fieldset">

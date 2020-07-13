@@ -40,13 +40,13 @@ export function AppDrawer({ isOpen, toggleDrawer }: AppDrawerProps) {
             <ListItemIcon>
               <ArrowBackIcon />
             </ListItemIcon>
-            <ListItemText primary={'Material-UI X'}></ListItemText>
+            <ListItemText primary={'Material-UI X'} />
           </ListItem>
           <ListItem component={Link} to={'/grid'} button key={'gridData'}>
             <ListItemIcon>
               <GridOn />
             </ListItemIcon>
-            <ListItemText primary={'Grid'}></ListItemText>
+            <ListItemText primary={'Grid'} />
           </ListItem>
         </List>
       </div>

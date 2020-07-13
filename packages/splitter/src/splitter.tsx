@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { MouseEvent, TouchEvent, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { SplitterPanel } from './splitterPanel';
 import { SplitterHandler } from './splitterHandler';
@@ -49,14 +48,14 @@ export const Splitter: React.FC<SplitterProps> = ({
   const topPanelSize = (minPanelSizes && minPanelSizes[0]) || 0;
   const bottomPanelSize = (minPanelSizes && minPanelSizes[1]) || 0;
 
-  const isHorizontal = (): boolean => direction === 'horizontal';
-  const container = useRef<HTMLDivElement>(null);
-  const panelAvailableSize = useRef<number>();
-  const containerTop = useRef<number>();
-  const clientY = useRef<number>();
+  const isHorizontal = React.useCallback((): boolean => direction === 'horizontal', [direction]);
+  const container = React.useRef<HTMLDivElement>(null);
+  const panelAvailableSize = React.useRef<number>();
+  const containerTop = React.useRef<number>();
+  const clientY = React.useRef<number>();
 
-  const [panelSizes, setPanelSizes] = useState<Array<number>>([]);
-  const [isResizing, setIsResizing] = useState(false);
+  const [panelSizes, setPanelSizes] = React.useState<Array<number>>([]);
+  const [isResizing, setIsResizing] = React.useState(false);
 
   const handleMouseDown = (): void => {
     setIsResizing(true);
@@ -66,7 +65,7 @@ export const Splitter: React.FC<SplitterProps> = ({
     setIsResizing(false);
   };
 
-  const calculateSizes = (): void => {
+  const calculateSizes = React.useCallback((): void => {
     if (
       containerTop.current != null &&
       panelAvailableSize.current != null &&
@@ -81,23 +80,23 @@ export const Splitter: React.FC<SplitterProps> = ({
         setPanelSizes([splitterY, panelAvailableSize.current - splitterY]);
       }
     }
-  };
+  }, [bottomPanelSize, topPanelSize]);
 
-  const handleMouseMove = (ev: MouseEvent): void => {
+  const handleMouseMove = (ev: React.MouseEvent): void => {
     if (isResizing) {
       clientY.current = isHorizontal() ? ev.clientY : ev.clientX;
       calculateSizes();
     }
   };
 
-  const onTouchMove = (ev: TouchEvent) => {
+  const onTouchMove = (ev: React.TouchEvent) => {
     if (isResizing) {
       clientY.current = isHorizontal() ? ev.targetTouches[0].clientY : ev.targetTouches[0].clientX;
       calculateSizes();
     }
   };
 
-  const resetParentContainerSizes = () => {
+  const resetParentContainerSizes = React.useCallback(() => {
     if (container.current && panelAvailableSize && containerTop) {
       const containerClientRect = container.current.getBoundingClientRect();
       const containerHeight = isHorizontal()
@@ -112,16 +111,16 @@ export const Splitter: React.FC<SplitterProps> = ({
         calculateSizes();
       }
     }
-  };
+  }, [calculateSizes, isHorizontal]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     window.addEventListener('resize', resetParentContainerSizes);
     return () => {
       window.removeEventListener('resize', resetParentContainerSizes);
     };
-  }, [container, direction]);
+  }, [resetParentContainerSizes]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (container.current && panelAvailableSize && containerTop) {
       resetParentContainerSizes();
 
@@ -133,7 +132,7 @@ export const Splitter: React.FC<SplitterProps> = ({
         setPanelSizes([clientY.current, clientY.current]);
       }
     }
-  }, [sizesInPercent, direction]);
+  }, [sizesInPercent, direction, resetParentContainerSizes]);
 
   return (
     <SplitterWrapper

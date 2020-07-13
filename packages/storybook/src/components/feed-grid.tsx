@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { ColDef, GridApi, GridOptionsProp, XGrid } from '@material-ui/x-grid';
@@ -12,12 +11,12 @@ export interface FeedGridProps {
   options?: GridOptionsProp;
 }
 export const FeedGrid: React.FC<FeedGridProps> = p => {
-  const [columns] = useState<ColDef[]>(feedColumns);
-  const [rows] = useState<PricingModel[]>([]);
+  const [columns] = React.useState<ColDef[]>(feedColumns);
+  const [rows] = React.useState<PricingModel[]>([]);
 
-  const [started, setStarted] = useState<boolean>(false);
-  const gridApiRef = useRef<GridApi>(null);
-  const stopButton = useRef<HTMLButtonElement>(null);
+  const [started, setStarted] = React.useState<boolean>(false);
+  const gridApiRef = React.useRef<GridApi>(null);
+  const stopButton = React.useRef<HTMLButtonElement>(null);
 
   const subscription: Subscription = new Subscription();
 
@@ -41,7 +40,7 @@ export const FeedGrid: React.FC<FeedGridProps> = p => {
     }
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     return () => {
       // eslint-disable-next-line no-console
       console.log('Unmounting, cleaning subscriptions ');

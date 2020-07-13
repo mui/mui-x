@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ColDef, XGrid, GridApi } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
@@ -247,8 +246,8 @@ export const SortingWithFormatter = () => {
 };
 
 export const ApiSingleSorted = () => {
-  const apiRef = useRef<GridApi>();
-  useEffect(() => {
+  const apiRef = React.useRef<GridApi>();
+  React.useEffect(() => {
     if (apiRef && apiRef.current != null) {
       apiRef.current.setSortModel([{ colId: 'name', sort: 'asc' }]);
     }
@@ -261,8 +260,8 @@ export const ApiSingleSorted = () => {
   );
 };
 export const ApiMultipleSorted = () => {
-  const apiRef = useRef<GridApi>();
-  useEffect(() => {
+  const apiRef = React.useRef<GridApi>();
+  React.useEffect(() => {
     if (apiRef && apiRef.current != null) {
       apiRef.current.setSortModel([
         { colId: 'age', sort: 'desc' },
@@ -279,12 +278,12 @@ export const ApiMultipleSorted = () => {
 };
 
 export const SortedEventsApi = () => {
-  const apiRef = useRef<GridApi>();
-  const rows = useMemo(() => getRows(), []);
-  const cols = useMemo(() => getColumns(), []);
-  const [loggedEvents, setEvents] = useState<any[]>([]);
+  const apiRef = React.useRef<GridApi>();
+  const rows = React.useMemo(() => getRows(), []);
+  const cols = React.useMemo(() => getColumns(), []);
+  const [loggedEvents, setEvents] = React.useState<any[]>([]);
 
-  const handleEvent = useCallback(
+  const handleEvent = React.useCallback(
     (name, params) => {
       action(name)(params);
       setEvents((prev: any[]) => [...prev, name]);
@@ -292,7 +291,7 @@ export const SortedEventsApi = () => {
     [setEvents],
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (apiRef && apiRef.current != null) {
       apiRef.current.onColumnsSorted(params => handleEvent('ColumnsSorted', params));
       apiRef.current.on('sortModelUpdated', params => handleEvent('sortModelUpdated', params));

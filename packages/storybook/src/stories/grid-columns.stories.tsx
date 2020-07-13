@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useCallback, useState } from 'react';
 import { ColDef, XGrid } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
@@ -119,7 +118,7 @@ export const UpdateColumnsBtn: React.FC = () => {
     { id: 7, lastName: 'Smith', firstName: '', isRegistered: true, age: 40 },
   ];
 
-  const [cols, setCols] = useState(columns);
+  const [cols, setCols] = React.useState(columns);
   const changeCols = () => {
     if (cols.length === columns.length) {
       const newCols = columns.filter(c => c.field.indexOf('age') === -1);
@@ -148,7 +147,7 @@ export const UpdateColumnsBtn: React.FC = () => {
 export const HeaderComponent = () => {
   const data = useData(100, 5);
 
-  const transformCols = useCallback(cols => {
+  const transformCols = React.useCallback(cols => {
     if (cols.length > 0) {
       cols[0].headerComponent = params => <CreateIcon className={'icon'} />;
     }
