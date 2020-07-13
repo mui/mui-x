@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useState } from 'react';
 import styled from 'styled-components';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
@@ -66,7 +65,7 @@ export const StyledPanels = styled.div`
 export const Panels: React.FC<DivProps> = props => {
   const { className, children, ...rest } = props;
   return (
-    <StyledPanels className={'panels ' + (className || '')} {...rest}>
+    <StyledPanels className={`panels ${className || ''}`} {...rest}>
       {children}
     </StyledPanels>
   );
@@ -79,11 +78,13 @@ export interface PanelProps {
 }
 export const Panel: React.FC<PanelProps & DivProps> = props => {
   const { className, children, title, isOpen, ...rest } = props;
-  const [isOpenState, setOpenState] = useState<boolean>(isOpen === undefined ? true : isOpen);
+  const [isOpenState, setOpenState] = React.useState<boolean>(isOpen === undefined ? true : isOpen);
   const toggleOpen = () => setOpenState(!isOpenState);
 
+  // TODO fix panel title click to remove the eslint disable rules below
   return (
-    <div className={`panel ${isOpenState ? 'open' : ''}` + (className || '')} {...rest}>
+    <div className={`panel ${isOpenState ? 'open' : ''}${className || ''}`} {...rest}>
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
       <div className={'panel-title'} onClick={toggleOpen}>
         <ArrowDropDownIcon className={'arrow'} />
         <h5>{title}</h5>
@@ -96,6 +97,6 @@ Panel.displayName = 'Panel';
 
 export const PanelSeparator: React.FC<DivProps> = props => {
   const { className, children, ...rest } = props;
-  return <div className={'panel-separator ' + (className || '')} {...rest}></div>;
+  return <div className={`panel-separator ${className || ''}`} {...rest} />;
 };
 PanelSeparator.displayName = 'PanelSeparator';

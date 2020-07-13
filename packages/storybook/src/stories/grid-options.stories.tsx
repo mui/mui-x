@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
 import { ColDef, XGrid, GridApiRef, gridApiRef } from '@material-ui/x-grid';
 import Button from '@material-ui/core/Button';
 import Pagination from '@material-ui/lab/Pagination';
@@ -164,9 +163,9 @@ export const HiddenPagination = () => {
 export const PaginationApiTests = () => {
   const apiRef: GridApiRef = gridApiRef();
   const data = useData(2000, 200);
-  const [autosize, setAutoSize] = useState(false);
+  const [autosize, setAutoSize] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     let unsubscribe;
     if (apiRef && apiRef.current) {
       unsubscribe = apiRef.current.onPageChanged(action('pageChanged'));
@@ -181,7 +180,7 @@ export const PaginationApiTests = () => {
   const backToFirstPage = () => {
     apiRef.current?.setPage(1);
   };
-  const [myPageSize, setPageSize] = useState(33);
+  const [myPageSize, setPageSize] = React.useState(33);
   const changePageSizeWithOptionProp = () => {
     const newPageSize = myPageSize === 33 ? 50 : 33;
     setAutoSize(false);
@@ -254,7 +253,7 @@ export const PaginationApiTests = () => {
 };
 
 export const AutoPagination = () => {
-  const [size, setSize] = useState({ width: 800, height: 600 });
+  const [size, setSize] = React.useState({ width: 800, height: 600 });
   const data = useData(2000, 200);
 
   return (

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useMemo } from 'react';
 import { XGrid, GridOptionsProp, ColDef } from '@material-ui/x-grid';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
@@ -132,8 +131,8 @@ const getRows = () => [
 ];
 
 export const ColumnCellClass = () => {
-  const rows = useMemo(() => getRows(), []);
-  const cols = useMemo(() => getColumns(), []);
+  const rows = React.useMemo(() => getRows(), []);
+  const cols = React.useMemo(() => getColumns(), []);
   cols[3].cellClass = ['age', 'shine'];
 
   return (
@@ -143,8 +142,8 @@ export const ColumnCellClass = () => {
   );
 };
 export const ColumnHeaderClass = () => {
-  const rows = useMemo(() => getRows(), []);
-  const cols = useMemo(() => getColumns(), []);
+  const rows = React.useMemo(() => getRows(), []);
+  const cols = React.useMemo(() => getColumns(), []);
   cols[3].headerClass = ['age', 'shine'];
 
   return (
@@ -155,8 +154,8 @@ export const ColumnHeaderClass = () => {
 };
 
 export const ColumnCellClassRules = () => {
-  const rows = useMemo(() => getRows(), []);
-  const cols = useMemo(() => getColumns(), []);
+  const rows = React.useMemo(() => getRows(), []);
+  const cols = React.useMemo(() => getColumns(), []);
   cols[4].cellClassRules = {
     common: params => params.data.lastName === 'Smith',
     unknown: params => !params.data.lastName,
@@ -170,8 +169,8 @@ export const ColumnCellClassRules = () => {
 };
 
 export const ColumnCellRenderer = () => {
-  const rows = useMemo(() => getRows(), []);
-  const cols = useMemo(() => getColumns(), []);
+  const rows = React.useMemo(() => getRows(), []);
+  const cols = React.useMemo(() => getColumns(), []);
   cols[5].cellRenderer = params => <IsDone value={!!params.value} />;
 
   return (
@@ -181,8 +180,8 @@ export const ColumnCellRenderer = () => {
   );
 };
 export const ColumnCellRendererWithPadding = () => {
-  const rows = useMemo(() => getRows(), []);
-  const cols = useMemo(() => getColumns(), []);
+  const rows = React.useMemo(() => getRows(), []);
+  const cols = React.useMemo(() => getColumns(), []);
   cols[5].cellRenderer = params => <IsDone value={!!params.value} />;
 
   return (

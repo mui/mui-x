@@ -134,4 +134,4 @@ export const AppIntro: React.FC<{}> = () => {
 
 /*
 * Build your own financial or
-            trading application with this highly customisable and accessible toolkit.*/
+            trading application with this highly customisable and accessible toolkit. */

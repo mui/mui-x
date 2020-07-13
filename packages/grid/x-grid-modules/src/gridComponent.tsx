@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { GridComponentProps } from './gridComponentProps';
 import {
   useColumnResize,
@@ -32,19 +31,19 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
   ({ rows, columns, options, apiRef, loading, licenseStatus, className, components }) => {
     useLoggerFactory(options?.logger, options?.logLevel);
     const logger = useLogger('Grid');
-    const gridRootRef: GridRootRef = useRef<HTMLDivElement>(null);
-    const footerRef = useRef<HTMLDivElement>(null);
-    const columnsHeaderRef = useRef<HTMLDivElement>(null);
-    const columnsContainerRef = useRef<HTMLDivElement>(null);
-    const windowRef = useRef<HTMLDivElement>(null);
-    const gridRef = useRef<HTMLDivElement>(null);
-    const renderingZoneRef = useRef<HTMLDivElement>(null);
-    const internalApiRef = useRef<GridApi | null | undefined>();
+    const gridRootRef: GridRootRef = React.useRef<HTMLDivElement>(null);
+    const footerRef = React.useRef<HTMLDivElement>(null);
+    const columnsHeaderRef = React.useRef<HTMLDivElement>(null);
+    const columnsContainerRef = React.useRef<HTMLDivElement>(null);
+    const windowRef = React.useRef<HTMLDivElement>(null);
+    const gridRef = React.useRef<HTMLDivElement>(null);
+    const renderingZoneRef = React.useRef<HTMLDivElement>(null);
+    const internalApiRef = React.useRef<GridApi | null | undefined>();
 
-    const [internalOptions, setInternalOptions] = useState<GridOptions>(
+    const [internalOptions, setInternalOptions] = React.useState<GridOptions>(
       mergeOptions(DEFAULT_GRID_OPTIONS, options),
     );
-    useEffect(() => {
+    React.useEffect(() => {
       setInternalOptions(previousState => mergeOptions(previousState, options));
     }, [options]);
 
@@ -72,7 +71,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
     const onResizeColumn = useColumnResize(columnsHeaderRef, apiRef, internalOptions.headerHeight);
     const paginationProps = usePagination(internalRows, internalColumns, internalOptions, apiRef);
 
-    useEffect(() => {
+    React.useEffect(() => {
       setInternalOptions(previousState => {
         if (previousState.paginationPageSize !== paginationProps.pageSize) {
           return { ...previousState, paginationPageSize: paginationProps.pageSize };
@@ -91,7 +90,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
       gridRootRef,
     );
 
-    const onResize = useCallback(
+    const onResize = React.useCallback(
       (size: ElementSize) => {
         logger.info('resized...', size);
         if (apiRef && apiRef.current) {
@@ -100,9 +99,9 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
       },
       [logger, apiRef],
     );
-    const debouncedOnResize = useMemo(() => debounce(onResize, 100), [onResize]) as any;
+    const debouncedOnResize = React.useMemo(() => debounce(onResize, 100), [onResize]) as any;
 
-    useEffect(() => {
+    React.useEffect(() => {
       return () => {
         logger.info('canceling resize...');
         debouncedOnResize.cancel();
@@ -114,7 +113,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
       renderCtx,
     );
 
-    const getTotalHeight = useCallback(
+    const getTotalHeight = React.useCallback(
       size => {
         if (!internalOptions.autoHeight) {
           return size.height;

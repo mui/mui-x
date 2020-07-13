@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { forwardRef, memo, useContext, useEffect, useRef, useState } from 'react';
 import { ColDef, Columns, RenderContextProps } from '../models';
 import { ColumnHeaderItem } from './column-header-item';
 import { ApiContext } from './api-context';
@@ -35,22 +34,22 @@ export interface ColumnsHeaderProps {
   renderCtx: Partial<RenderContextProps> | null;
 }
 
-export const ColumnsHeader = memo(
-  forwardRef<HTMLDivElement, ColumnsHeaderProps>(
+export const ColumnsHeader = React.memo(
+  React.forwardRef<HTMLDivElement, ColumnsHeaderProps>(
     ({ columns, hasScrollX, headerHeight, onResizeColumn, renderCtx }, columnsHeaderRef) => {
       const wrapperCssClasses = `material-col-cell-wrapper ${hasScrollX ? 'scroll' : ''}`;
-      const api = useContext(ApiContext);
+      const api = React.useContext(ApiContext);
 
       if (!api) {
         throw new Error('Material-UI: ApiRef was not found in context.');
       }
-      const lastRenderedColIndexes = useRef({
+      const lastRenderedColIndexes = React.useRef({
         first: renderCtx?.firstColIdx,
         last: renderCtx?.lastColIdx,
       });
-      const [renderedCols, setRenderedCols] = useState(columns);
+      const [renderedCols, setRenderedCols] = React.useState(columns);
 
-      useEffect(() => {
+      React.useEffect(() => {
         if (renderCtx && renderCtx.firstColIdx != null && renderCtx.lastColIdx != null) {
           setRenderedCols(columns.slice(renderCtx.firstColIdx, renderCtx.lastColIdx + 1));
 
