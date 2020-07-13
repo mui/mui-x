@@ -88,7 +88,7 @@ export const useRows = (
       const addedRows: RowModel[] = [];
       updates.forEach(partialRow => {
         if (partialRow.id == null) {
-          throw new Error(`All rows need an id.`);
+          throw new Error('Material-UI: All rows need an id.');
         }
         const idx = getRowIndexFromId(partialRow.id);
         if (idx == null) {

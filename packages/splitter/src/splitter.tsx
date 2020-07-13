@@ -32,11 +32,15 @@ export const Splitter: React.FC<SplitterProps> = ({
   displayHandler = 'fade',
 }) => {
   if (sizesInPercent && sizesInPercent.length !== 2) {
-    throw new Error('The Splitter component prop sizesInPercent needs to be an array of 2 numbers');
+    throw new Error(
+      'Material-UI: The Splitter component prop sizesInPercent needs to be an array of 2 numbers.',
+    );
   }
 
   if (sizesInPercent && sizesInPercent[0] + sizesInPercent[1] > 100) {
-    throw new Error('The sum of the elements in sizesInPercent should be less or equal to 100 ');
+    throw new Error(
+      'Material-UI: The sum of the elements in sizesInPercent should be less or equal to 100.',
+    );
   }
   const childrenArray = React.Children.toArray(children);
   validateChildren(childrenArray);

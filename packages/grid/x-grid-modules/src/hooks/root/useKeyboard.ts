@@ -27,7 +27,7 @@ import { useApiEventHandler } from './useApiEventHandler';
 
 const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
   if (!isArrowKeys(code)) {
-    throw new Error('first argument code should be an Arrow Key code');
+    throw new Error('Material-UI: The first argument (code) should be an arrow key code.');
   }
 
   if (code === 'ArrowLeft') {
@@ -103,7 +103,7 @@ export const useKeyboard = (
           (code.indexOf('Down') > -1 || isSpaceKey(code) ? autoPageSize : -1 * autoPageSize);
         nextCellIndexes = { colIndex: currentColIndex, rowIndex: nextRowIndex };
       } else {
-        throw new Error('Key not mapped to navigation behaviour');
+        throw new Error('Material-UI. Key not mapped to navigation behaviour.');
       }
 
       nextCellIndexes.rowIndex = nextCellIndexes.rowIndex <= 0 ? 0 : nextCellIndexes.rowIndex;

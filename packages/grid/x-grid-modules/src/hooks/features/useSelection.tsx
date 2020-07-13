@@ -38,7 +38,7 @@ export const useSelection = (
   const selectRowModel = useCallback(
     (row: RowModel, allowMultipleOverride?: boolean, isSelected?: boolean) => {
       if (!apiRef || apiRef.current == null) {
-        throw new Error('ApiRef should be defined at this stage');
+        throw new Error('Material-UI: ApiRef should be defined at this stage.');
       }
 
       if (!apiRef.current.isInitialised) {
@@ -121,7 +121,9 @@ export const useSelection = (
         return;
       }
       if (!options.enableMultipleSelection && ids.length > 1) {
-        throw new Error('Enable Options.enableMultipleSelection to select more than 1 item');
+        throw new Error(
+          'Material-UI: Enable options.enableMultipleSelection to select more than 1 item.',
+        );
       }
       let updates = ids.map(id => ({ id, selected: isSelected }));
 

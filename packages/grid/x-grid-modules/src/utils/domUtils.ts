@@ -39,7 +39,7 @@ export function findCellElementsFromCol(col: HTMLElement): NodeListOf<Element> |
   const field = getDataFromElem(col, 'field');
   const root = findParentElementFromClassName(col, ROOT_CSS_CLASS);
   if (!root) {
-    throw new Error('Root element not found');
+    throw new Error('Material-UI: The root element is not found.');
   }
   const cells = root.querySelectorAll(`:scope .${CELL_CSS_CLASS}[data-field="${field}"]`);
   return cells;

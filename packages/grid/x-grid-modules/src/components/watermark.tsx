@@ -21,7 +21,7 @@ function getLicenseErrorMessage(licenseStatus: string) {
     case LicenseStatus.NotFound.toString():
       return 'Material-UI X Unlicensed product';
     default:
-      throw new Error('Unhandled license status.');
+      throw new Error('Material-UI: Unhandled license status.');
   }
 }
 
