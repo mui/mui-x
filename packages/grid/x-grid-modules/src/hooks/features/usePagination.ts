@@ -38,7 +38,7 @@ function paginationReducer(
   if (action.type === UPDATE_STATE_ACTION) {
     return { ...state, ...action.payload };
   }
-  throw new Error(`Action ${action.type} not found.`);
+  throw new Error(`Material-UI: Action ${action.type} not found.`);
 }
 
 const getPageCount = (pageSize: number | undefined, rowsCount: number) => {

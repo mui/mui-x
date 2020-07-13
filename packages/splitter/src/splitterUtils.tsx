@@ -6,12 +6,12 @@ export const validateChildren = (
 ): void => {
   if (childrenArray.length !== 2) {
     throw new Error(
-      'The Splitter component needs exactly 2 children react node to split panels properly',
+      'Material-UI: The Splitter component needs exactly 2 children react node to split panels properly.',
     );
   } else {
     childrenArray.forEach(c => {
       if (!React.isValidElement(c)) {
-        throw new Error('Invalid child element');
+        throw new Error('Material-UI: Invalid child element.');
       }
     });
   }

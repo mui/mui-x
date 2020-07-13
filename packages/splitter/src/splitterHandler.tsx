@@ -95,9 +95,9 @@ const HandlerIcon = ({
 }) => {
   if (direction === 'horizontal') {
     return invert ? <SmallExpandLessIcon /> : <SmallExpandMoreIcon />;
-  } else {
-    return invert ? <SmallLeftArrowIcon /> : <SmallRightArrowIcon />;
   }
+
+  return invert ? <SmallLeftArrowIcon /> : <SmallRightArrowIcon />;
 };
 
 export const SplitterHandler: React.FC<SplitterHandlerProps> = ({

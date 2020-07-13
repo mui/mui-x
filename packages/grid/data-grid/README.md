@@ -9,19 +9,19 @@ Check out our [Demo here!](https://muix-preview.netlify.app/#/grid)
 Using your favourite package manager, install `@material-ui-x/grid`
 
 ```sh
-//with npm
+// with npm
 npm install @material-ui-x/grid
 
-//with yarn
+// with yarn
 yarn add @material-ui-x/grid
 ```
 
 This component has 2 peer dependencies that you will need to install as well.
 
-```
+```json
 "peerDependencies": {
-    "react": "^16.13.1",
-    "styled-components": "^5.1.0"
+  "react": "^16.13.1",
+  "styled-components": "^5.1.0"
 },
 ```
 

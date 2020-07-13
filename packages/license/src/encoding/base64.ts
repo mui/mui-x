@@ -1,3 +1,4 @@
+/* eslint-disable */
 const _keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
 function utf8Encode(str: string) {

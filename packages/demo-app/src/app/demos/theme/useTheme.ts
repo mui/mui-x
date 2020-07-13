@@ -1,8 +1,9 @@
-import { useLocalStorage } from '../utils/useLocalStorage';
-import { AppTheme, STORAGE_THEME_KEY, ThemeContext, ThemeValuePair } from './themeProvider';
 import { useContext, useEffect, useState } from 'react';
+import { useLocalStorage } from '../utils/useLocalStorage';
+import { STORAGE_THEME_KEY, ThemeContext, ThemeValuePair } from './themeProvider';
 import { darkTheme } from './dark';
 import { lightTheme } from './light';
+import { AppTheme } from './appTheme';
 
 type ReturnType = [AppTheme, string, () => void, boolean];
 

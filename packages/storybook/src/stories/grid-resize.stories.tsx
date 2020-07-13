@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useState } from 'react';
 import { ElementSize, XGrid } from '@material-ui/x-grid';
 
 import '../style/grid-stories.css';
@@ -19,7 +18,7 @@ export default {
   },
 };
 export const ResizeSmallDataset = () => {
-  const [size, setSize] = useState<ElementSize>({ width: 800, height: 600 });
+  const [size, setSize] = React.useState<ElementSize>({ width: 800, height: 600 });
   const data = useData(5, 4);
 
   return (
@@ -40,7 +39,7 @@ export const ResizeSmallDataset = () => {
   );
 };
 export const ResizeLargeDataset = () => {
-  const [size, setSize] = useState<ElementSize>({ width: 800, height: 600 });
+  const [size, setSize] = React.useState<ElementSize>({ width: 800, height: 600 });
   const data = useData(200, 200);
 
   return (

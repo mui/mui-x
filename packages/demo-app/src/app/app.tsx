@@ -1,24 +1,22 @@
 import * as React from 'react';
-import { useCallback, useReducer } from 'react';
-import { DemoAppBar } from './app-bar';
-
-import './app.less';
 import { HashRouter, Route, Switch } from 'react-router-dom';
+import './app.less';
+import styled from 'styled-components';
+import { DemoAppBar } from './app-bar';
 import { AppDrawer } from './app-drawer';
 import { appReducer } from './app-reducer';
 import { ThemeProvider, useTheme } from './demos/theme';
 import { RealDataGridDemo } from './demos/grid/real-data-grid.demo';
 
 import { AppIntro } from './app-intro';
-import styled from 'styled-components';
 
 const StyledApp = styled.div`
   background: ${p => p.theme.colors.background};
 `;
 
 export const App: React.FC<{}> = () => {
-  const [state, dispatch] = useReducer(appReducer, { isOpen: false });
-  const toggleDrawer = useCallback(
+  const [state, dispatch] = React.useReducer(appReducer, { isOpen: false });
+  const toggleDrawer = React.useCallback(
     () => dispatch({ type: state.isOpen ? 'close-drawer' : 'open-drawer' }),
     [state, dispatch],
   );
@@ -48,4 +46,3 @@ export const App: React.FC<{}> = () => {
     </ThemeProvider>
   );
 };
-export default App;

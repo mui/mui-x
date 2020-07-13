@@ -1,6 +1,5 @@
 import TablePagination from '@material-ui/core/TablePagination';
 import * as React from 'react';
-import { useCallback } from 'react';
 
 export interface PaginationComponentProps {
   pageCount: number;
@@ -20,7 +19,7 @@ export const Pagination: React.FC<PaginationComponentProps> = ({
   currentPage,
   rowsPerPageOptions,
 }) => {
-  const onPageSizeChange = useCallback(
+  const onPageSizeChange = React.useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
       const newPageSize = Number(event.target.value);
       setPageSize(newPageSize);
@@ -28,7 +27,7 @@ export const Pagination: React.FC<PaginationComponentProps> = ({
     [setPageSize],
   );
 
-  const onPageChange = useCallback(
+  const onPageChange = React.useCallback(
     (event: any, page: number) => {
       setPage(page + 1);
     },

@@ -32,13 +32,13 @@ const StyledBreadcrumbs = styled(Breadcrumbs)`
 export function AppBreadcrumbs({ name }: AppBreadcrumbsProps) {
   return (
     <StyledBreadcrumbs separator="›" aria-label="breadcrumb">
-      <Link color="inherit" href="#">
+      <Link color="inherit" href="#/">
         Home
       </Link>
-      <Link color="inherit" href="#">
+      <Link color="inherit" href="#/">
         Components Showcase
       </Link>
-      <Link color="textPrimary" className={'current'}>
+      <Link color="textPrimary" className={'current'} href={`#/${name}`}>
         {name}
       </Link>
     </StyledBreadcrumbs>
