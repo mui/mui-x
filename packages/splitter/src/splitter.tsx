@@ -111,7 +111,7 @@ export const Splitter: React.FC<SplitterProps> = ({
         calculateSizes();
       }
     }
-  },[calculateSizes, isHorizontal]);
+  }, [calculateSizes, isHorizontal]);
 
   React.useEffect(() => {
     window.addEventListener('resize', resetParentContainerSizes);

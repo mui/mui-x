@@ -1,5 +1,5 @@
 import { getAppTheme } from './utils';
-import {ThemeColors} from "./themeColors";
+import { ThemeColors } from './themeColors';
 
 export const lightColors: ThemeColors = {
   app: '#1976d2',

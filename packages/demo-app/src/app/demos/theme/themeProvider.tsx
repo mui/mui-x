@@ -1,11 +1,11 @@
-import {createMuiTheme, ThemeProvider as MuiThemeProvider} from '@material-ui/core/styles';
+import { createMuiTheme, ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 // eslint-disable-next-line no-restricted-imports
-import {PaletteOptions} from '@material-ui/core/styles/createPalette';
+import { PaletteOptions } from '@material-ui/core/styles/createPalette';
 import * as React from 'react';
-import {ThemeProvider as SCThemeProvider} from 'styled-components';
-import {lightTheme, lightThemeId} from './light';
-import {darkTheme, darkThemeId} from './dark';
-import {AppTheme} from "./appTheme";
+import { ThemeProvider as SCThemeProvider } from 'styled-components';
+import { lightTheme, lightThemeId } from './light';
+import { darkTheme, darkThemeId } from './dark';
+import { AppTheme } from './appTheme';
 
 export const STORAGE_THEME_KEY = 'theme';
 

@@ -1,5 +1,5 @@
-import {AppTheme} from "./appTheme";
-import {ThemeColors} from "./themeColors";
+import { AppTheme } from './appTheme';
+import { ThemeColors } from './themeColors';
 
 export function getAppTheme(id: string, colors: ThemeColors, type: 'dark' | 'light'): AppTheme {
   return {
