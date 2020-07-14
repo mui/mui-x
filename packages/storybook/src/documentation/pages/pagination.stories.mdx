@@ -8,12 +8,16 @@ import CustomPaginationDemo from './demos/pagination/customPagination.demo';
 
 # Pagination
 
+- **Switch Pagination**
+
 By Default, XGrid uses infinite rows and virtualization. However, we also implemented pagination if you wish to limit the number of rows visible in the grid.
 To turn it on, toggle the `pagination` boolean property of the `options` React prop as below.
 
 ```tsx
 <XGrid rows={rows} columns={columns} options={{ pagination: true }} />
 ```
+
+- **Set PageSize**
 
 Our default `pageSize` is set to `100`. You can change this value by setting the `paginationPageSize` property of the `options` React prop as below.
 
@@ -24,6 +28,8 @@ Our default `pageSize` is set to `100`. You can change this value by setting the
   options={{ pagination: true, paginationPageSize: 50 }}
 />
 ```
+
+- **Set Rows per page options**
 
 Along with the `paginationPageSize` property, we added the `paginationRowsPerPageOptions` that let you select the `paginationPageSize` dynamically using XGrid UI.
 Our default `paginationRowsPerPageOptions` is set to `[25, 50, 100]`. You can change this value by setting the `paginationRowsPerPageOptions` property of the `options` React prop as below.
