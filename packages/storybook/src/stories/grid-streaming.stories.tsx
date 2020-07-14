@@ -5,7 +5,6 @@ import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { interval } from 'rxjs';
 import { useEffect } from 'react';
-import { map } from 'rxjs/operators';
 import { randomInt, randomUserName } from '@material-ui/x-grid-data-generator';
 import { FeedGrid } from '../components/feed-grid';
 import { PricingGrid } from '../components/pricing-grid';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ColDef, XGrid, GridApiRef, gridApiRef } from '@material-ui/x-grid';
+import { XGrid, GridApiRef, gridApiRef } from '@material-ui/x-grid';
 import Button from '@material-ui/core/Button';
 import Pagination from '@material-ui/lab/Pagination';
 import { action } from '@storybook/addon-actions';
