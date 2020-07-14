@@ -16,7 +16,7 @@ export interface IconsOptions {
   columnResize?: React.ElementType<{ className: string }>;
 }
 
-// Todo add multiSortKey
+// TODO add multiSortKey
 export interface GridOptions {
   autoHeight?: boolean;
   rowHeight: number;

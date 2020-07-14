@@ -21,7 +21,7 @@ const SplitterWrapper = styled.div<{ isResizing: boolean; direction: 'vertical' 
   cursor: ${p => (p.isResizing ? 'row-resize' : '')};
 `;
 
-// Todo useReducer && debounce rendering
+// TODO useReducer && debounce rendering
 export const Splitter: React.FC<SplitterProps> = ({
   sizesInPercent,
   invertHandler,
@@ -44,7 +44,7 @@ export const Splitter: React.FC<SplitterProps> = ({
   const childrenArray = React.Children.toArray(children);
   validateChildren(childrenArray);
 
-  // Todo validate minPanelSizes
+  // TODO validate minPanelSizes
   const topPanelSize = (minPanelSizes && minPanelSizes[0]) || 0;
   const bottomPanelSize = (minPanelSizes && minPanelSizes[1]) || 0;
 
