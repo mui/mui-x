@@ -1,10 +1,10 @@
 import { XGrid } from '@material-ui/x-grid';
-import UnSortableColumnDemo from './demos/sorting/unsortableColumn.demo'
-import SortOrderDemo from './demos/sorting/sortOrder.demo'
-import CustomComparatorDemo from './demos/sorting/customComparator.demo'
-import SingleSortDemo from './demos/sorting/singleSort.demo'
-import MultipleSortColumnDemo from './demos/sorting/multipleSort.demo'
-import SortIndexDemo from './demos/sorting/sortIndex.demo'
+import UnSortableColumnDemo from './demos/sorting/unsortableColumn.demo';
+import SortOrderDemo from './demos/sorting/sortOrder.demo';
+import CustomComparatorDemo from './demos/sorting/customComparator.demo';
+import SingleSortDemo from './demos/sorting/singleSort.demo';
+import MultipleSortColumnDemo from './demos/sorting/multipleSort.demo';
+import SortIndexDemo from './demos/sorting/sortIndex.demo';
 
 <Meta title="1. Docs/5. Sorting" component={XGrid} />
 
@@ -40,16 +40,21 @@ Below is an example of pre-configured sorted grid.
 
 <SingleSortDemo />
 
-
 ### Sorting Order
 
 By default, XGrid is configured to sort first in **Ascending** order, followed by **Descending** and back to original order.
 This behaviour can be overwritten by setting the `sortingOrder` property of the `options` React prop as below.
 
 ```tsx
-  <XGrid rows={rows} columns={columns} options={{sortingOrder: ['desc', 'asc', null] }} />
+<XGrid
+  rows={rows}
+  columns={columns}
+  options={{ sortingOrder: ['desc', 'asc', null] }}
+/>
 ```
+
 The code above set the `sortingOrder` property to first sort columns in **Descending** direction, followed by **Ascending** and back to the original order.
+
 - **Note** `null` is the value mapped to the original order. You can drop this value or other direction to prevent users from sorting in one direction or another.
 
 In the example below columns are only sortable in Descending then Ascending order.
@@ -60,6 +65,7 @@ In the example below columns are only sortable in Descending then Ascending orde
 
 XGrid handles sorting and apply different comparator in columns according to their types. More about columns types [here]().
 Hence, XGrid can handle sorting natively for the following types
+
 - string
 - number
 - date
@@ -86,6 +92,7 @@ const columns: Columns = [
 ```
 
 In the example below we pre-configured the grid to sort by `Name` `Ascending` and by `Age` `Descending`.
+
 <MultipleSortColumnDemo />
 
 But what if you want to sort first by Age then Name. See in the next section, how you can change the sorted column order.
@@ -119,7 +126,7 @@ Finally we added the following methods in XGrid Api. More about the Api and how 
 - `setSortModel` - Set a `SortModel` to sort the grid in one or multiple columns
 
 TODO
+
 - Server side sorting?
 - Implement postSort?
 - Talk about onColumnHeaderClicked?: (param: ColumnHeaderClickedParams) => void; ? => not good as api can trigger sort?
-

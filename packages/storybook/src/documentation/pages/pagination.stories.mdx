@@ -87,8 +87,8 @@ To achieve this, just set the pagination property of the `components` react prop
   }}
 />
 ```
-<CustomPaginationDemo />
 
+<CustomPaginationDemo />
 
 ## Pagination Api
 
@@ -96,13 +96,13 @@ Now that you understand how to implement the pagination feature of the grid. You
 To achieve this, you should use our `apiRef` as below;
 
 ```tsx
-  const apiRef = gridApiRef();
+const apiRef = gridApiRef();
 
-  useEffect(()=> {
-    apiRef.current?.setPage(2);
-  }, [apiRef]);
+useEffect(() => {
+  apiRef.current?.setPage(2);
+}, [apiRef]);
 
-  //Set rows, columns ...
+//Set rows, columns ...
 
 <XGrid
   rows={rows}
@@ -112,19 +112,20 @@ To achieve this, you should use our `apiRef` as below;
     paginationPageSize: 5,
   }}
   apiRef={apiRef}
-/>
+/>;
 ```
 
 <SetPageDemo />
 
 ### How to implement server pagination?
+
 How to set row count / page count? On pageChange...?
 => set pageCount then onPageChange((page)=> serverQuery(page).then(data=> setRows(data))
 
 // Todo
+
 - expose pageCount in options, needed for server api
 - expose page or currentPage in options, avoid using apiRef
 - add setRows (RowData) method to replace rows on pageChange ?? You can just use useState
 
 //Todo implement example with react Query?
-

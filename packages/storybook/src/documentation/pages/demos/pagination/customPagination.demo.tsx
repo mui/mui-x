@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Columns, RowsProp, XGrid } from '@material-ui/x-grid';
 import { randomCreatedDate, randomUpdatedDate } from '@material-ui/x-grid-data-generator';
 import '../demo.css';
-import Pagination from "@material-ui/lab/Pagination";
+import Pagination from '@material-ui/lab/Pagination';
 
 function CustomPagination({ paginationProps }) {
   return (
@@ -109,7 +109,7 @@ export default function CustomPaginationDemo() {
       }}
       className={'demo'}
       components={{
-       pagination:  CustomPagination
+        pagination: CustomPagination,
       }}
     />
   );
