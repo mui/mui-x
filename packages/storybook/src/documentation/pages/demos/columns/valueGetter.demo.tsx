@@ -36,7 +36,7 @@ export default function ValueGetterDemo() {
       rows={rows}
       columns={columns}
       options={{ hideFooter: true, autoHeight: true }}
-      className={'demo'}
+      className="demo"
     />
   );
 }

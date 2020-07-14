@@ -46,13 +46,13 @@ Our default `paginationRowsPerPageOptions` is set to `[25, 50, 100]`. You can ch
 />
 ```
 
-Please find below an example of grid with pagination using the options properties described above.
+Please find below an example of a grid with pagination using the options properties described above.
 
 <SimplePaginationDemo />
 
 ## Auto Pagination
 
-To complement the pagination feature, we added the property `paginationAutoPageSize` in options, that auto scale the `pageSize` with the container size to the max number of rows to avoid rendering a vertical scroll bar.
+To complement the pagination feature, we added the property `paginationAutoPageSize` in options, that auto-scale the `pageSize` with the container size to the max number of rows to avoid rendering a vertical scroll bar.
 By default, this feature is off and can be turned on, by toggling the `paginationAutoPageSize` boolean property of the `options` React prop as below.
 
 ```tsx
@@ -90,7 +90,7 @@ To achieve this, just set the pagination property of the `components` react prop
 
 <CustomPaginationDemo />
 
-## Pagination Api
+## Pagination API
 
 Now that you understand how to implement the pagination feature of the grid. You might want to manipulate the page or set a listener when the current page change.
 To achieve this, you should use our `apiRef` as below;
@@ -98,11 +98,11 @@ To achieve this, you should use our `apiRef` as below;
 ```tsx
 const apiRef = gridApiRef();
 
-useEffect(() => {
+React.useEffect(() => {
   apiRef.current?.setPage(2);
 }, [apiRef]);
 
-//Set rows, columns ...
+// Set rows, columns ...
 
 <XGrid
   rows={rows}
@@ -128,4 +128,4 @@ How to set row count / page count? On pageChange...?
 - expose page or currentPage in options, avoid using apiRef
 - add setRows (RowData) method to replace rows on pageChange ?? You can just use useState
 
-//Todo implement example with react Query?
+// Todo implement example with react Query?

@@ -1,6 +1,6 @@
+import * as React from 'react';
 import { Columns, RowsProp, XGrid } from '@material-ui/x-grid';
 import { randomCreatedDate, randomUpdatedDate } from '@material-ui/x-grid-data-generator';
-import * as React from 'react';
 
 export default function UnSortableColumnDemo() {
   const columns: Columns = [
@@ -63,7 +63,7 @@ export default function UnSortableColumnDemo() {
       options={{
         autoHeight: true,
       }}
-      className={'demo'}
+      className="demo"
     />
   );
 }

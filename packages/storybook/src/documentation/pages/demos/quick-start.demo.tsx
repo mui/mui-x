@@ -108,7 +108,7 @@ export default function QuickStartDemo() {
       rows={rows}
       columns={columns}
       options={{ checkboxSelection: true, autoHeight: true }}
-      className={'demo'}
+      className="demo"
     />
   );
 }

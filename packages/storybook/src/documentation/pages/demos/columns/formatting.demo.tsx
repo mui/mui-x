@@ -31,7 +31,7 @@ export default function FormattingDemo() {
       rows={rows}
       columns={columns}
       options={{ hideFooter: true, autoHeight: true }}
-      className={'demo'}
+      className="demo"
     />
   );
 }

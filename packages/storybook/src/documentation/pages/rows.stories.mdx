@@ -29,15 +29,15 @@ While this approach works well. It has some drawbacks
 - You will need to pass the full set of updated rows.
 - It can lead to bad performance due to extra rendering if you recreate the row object to merge your updates.
 
-### Using Api for Real Time apps
+### Using API for Real-Time apps
 
-The second way to update rows is to use the api and the `apiRef` object. This is the preferable approach for streaming and real-time api.
+The second way to update rows is to use the API and the `apiRef` object. This is the preferable approach for streaming and real-time api.
 Updates are batched and re-rendered by the component at a "fixed" rate.
-This means that if your streaming api updates every 10ms, XGrid and React will batch updates and rerender on request animation frame updates. That is between 45 and 100 ms depending on the client machine and data processing time.
+This means that if your streaming API updates every 10ms, XGrid and React will batch updates and rerender on request animation frame updates. That is between 45 and 100 ms depending on the client machine and data processing time.
 
 **Note**
 
-- `updateRowData` is the api function that allows to apply the update on an existing row,
+- `updateRowData` is the API function that allows applying the update on an existing row,
   however if the row id `RowId` is not found in the existing set of data, the row will be added to the dataset.
 
 //Should I rename the function to `upsertRowData` ?
@@ -106,6 +106,6 @@ However you can change this value as below.
 
 Please refer to the selection page of the documentation here for more info about row selection
 
-## Api
+## API
 
 ## RowUpdated Event

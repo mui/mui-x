@@ -39,7 +39,7 @@ export default function StyleHeaderDemo() {
       rows={rows}
       columns={columns}
       options={{ hideFooter: true, autoHeight: true }}
-      className={'demo'}
+      className="demo"
     />
   );
 }

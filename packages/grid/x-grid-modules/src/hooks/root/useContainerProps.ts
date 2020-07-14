@@ -46,7 +46,7 @@ export const useContainerProps = (windowRef: RefObject<HTMLDivElement>): ReturnT
       viewportPageSize = options.pagination
         ? Math.floor(viewportPageSize)
         : Math.round(viewportPageSize);
-      const rzPageSize = viewportPageSize * 2; // we multiply by 2 for virtualisation //TODO allow buffer with fixed nb rows
+      const rzPageSize = viewportPageSize * 2; // we multiply by 2 for Virtualization //TODO allow buffer with fixed nb rows
       const viewportMaxPage = options.paginationAutoPageSize
         ? 1
         : Math.ceil(rowsCount / viewportPageSize);

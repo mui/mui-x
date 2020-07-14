@@ -42,7 +42,7 @@ export default function StyleCellDemo() {
       rows={rows}
       columns={columns}
       options={{ hideFooter: true, autoHeight: true }}
-      className={'demo'}
+      className="demo"
     />
   );
 }
