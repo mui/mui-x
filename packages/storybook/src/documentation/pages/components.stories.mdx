@@ -6,6 +6,7 @@ import LoadingOverrideDemo from './demos/customization/loadingOverride.demo';
 # Components
 
 As part of our customisation Api, XGrid allows to replace and override the following components.
+
 - `pagination` - the native pagination component as mentioned in the pagination page [here]()
 - `loadingOverlay` - rendered when the `loading` react prop is set to `true`
 - `noRowsOverlay` - rendered when the `rows` react prop is empty or `[]`
@@ -15,7 +16,11 @@ As part of our customisation Api, XGrid allows to replace and override the follo
 To achieve this, you need to override the desired property of the `components` react prop.
 
 ```tsx
-<XGrid rows={[]} columns={columns} components={{ noRowsOverlay: CustomReactComponent }} />
+<XGrid
+  rows={[]}
+  columns={columns}
+  components={{ noRowsOverlay: CustomReactComponent }}
+/>
 ```
 
 Below is an example on how you can replace the loading overlay.
@@ -23,4 +28,3 @@ Below is an example on how you can replace the loading overlay.
 <LoadingOverrideDemo />
 
 - TODO add more components ?
-
