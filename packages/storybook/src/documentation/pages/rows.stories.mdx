@@ -58,7 +58,7 @@ function StreamingGrid() {
     { id: 3, username: randomUserName(), age: randomInt(10, 80) },
     { id: 4, username: randomUserName(), age: randomInt(10, 80) },
   ];
-  useEffect(() => {
+  React.useEffect(() => {
     const subscription = interval(200).subscribe(obs =>
       api.current?.updateRowData([
         {
