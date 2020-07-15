@@ -1,5 +1,0 @@
-{
-  "inputFiles": ["./src"],
-  "mode": "modules",
-  "out": "../documentation/generated/"
-}

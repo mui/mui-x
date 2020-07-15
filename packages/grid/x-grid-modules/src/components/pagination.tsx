@@ -1,5 +1,5 @@
-import * as React from 'react';
 import TablePagination from '@material-ui/core/TablePagination';
+import * as React from 'react';
 
 export interface PaginationComponentProps {
   pageCount: number;

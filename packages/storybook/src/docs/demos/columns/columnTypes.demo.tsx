@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { Columns, RowsProp, XGrid } from '@material-ui/x-grid';
 import { randomCreatedDate, randomUpdatedDate } from '@material-ui/x-grid-data-generator';
+import '../demo.css';
 
-export default function SortOrderDemo() {
+export default function ColumnTypesDemo() {
   const columns: Columns = [
     { field: 'id', hide: true },
-    { field: 'name', sortDirection: 'desc' },
+    { field: 'name', type: 'string' },
     { field: 'age', type: 'number' },
     { field: 'dateCreated', type: 'date', width: 180 },
     { field: 'lastLogin', type: 'dateTime', width: 180 },
@@ -47,24 +48,14 @@ export default function SortOrderDemo() {
       dateCreated: randomCreatedDate(),
       lastLogin: randomUpdatedDate(),
     },
-    {
-      id: 6,
-      name: 'George',
-      age: 10,
-      dateCreated: randomCreatedDate(),
-      lastLogin: randomUpdatedDate(),
-    },
   ];
 
   return (
     <XGrid
       rows={rows}
       columns={columns}
-      options={{
-        autoHeight: true,
-        sortingOrder: ['desc', 'asc'],
-      }}
-      className="demo"
+      options={{ hideFooter: true, autoHeight: true }}
+      className={'demo'}
     />
   );
 }
