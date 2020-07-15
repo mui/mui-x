@@ -74,7 +74,7 @@ export default function HideColumnDemo() {
           rows={rows}
           columns={columns}
           options={{ hideFooter: true, autoHeight: true }}
-          className={'demo'}
+          className="demo"
         />
       </div>
     </React.Fragment>

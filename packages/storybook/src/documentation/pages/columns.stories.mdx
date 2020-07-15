@@ -108,7 +108,7 @@ const columns: Columns = [
 ```
 
 - `valueGetter` is a function of type `(params: ValueGetterParams) => CellValue;`, therefore you can destructure `params` to get all the row data, as in the example above.
-  TODO Api ref the valueGetter interface here!
+  TODO API ref the valueGetter interface here!
 
 <ValueGetterDemo />
 
@@ -123,7 +123,7 @@ const columns: Columns = [
 ```
 
 - `valueFormatter` is a function of type `(params: ValueFormatterParams) => CellValue;`, therefore you can destructure `params` to get the column value as in the example above.
-  TODO: Api ref the valueFormatter interface here!
+  TODO: API ref the valueFormatter interface here!
 
 <FormattingDemo />
 
@@ -146,7 +146,7 @@ const columns: Columns = [
 ];
 ```
 
-- `HeaderClass` can be a `string` or a `string[]`
+- `headerClass` can be a `string` or a `string[]`
   <StyleHeaderDemo />
 
 ### Cell
@@ -177,4 +177,4 @@ const columns: Columns = [
 
 There are more options in `ColDef` which you can find the full definition in the API page (TODO: add link here)
 
-- `disableClickEventBubbling`: allows you to disable the default click behaviour of the grid. If you render a clickable component in a column, such as a link or a button, you can use this option to disable the row selection on click.
+- `disableClickEventBubbling`: allows you to disable the default click behavior of the grid. If you render a clickable component in a column, such as a link or a button, you can use this option to disable the row selection on click.

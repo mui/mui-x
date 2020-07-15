@@ -1,6 +1,6 @@
+import * as React from 'react';
 import styled from 'styled-components';
 import { CellParams } from '@material-ui/x-grid';
-import * as React from 'react';
 
 export const Link = styled.a`
   text-overflow: ellipsis;

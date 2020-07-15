@@ -40,10 +40,13 @@ const stories = [
   '/story/x-grid-tests-options--auto-height-small',
   '/story/x-grid-tests-options--auto-height-large',
   '/story/x-grid-tests-options--column-separator',
-  '/story/x-grid-tests-options--page-size-100',
-  '/story/x-grid-tests-options--hidden-pagination',
-  '/story/x-grid-tests-options--pagination-api-tests', // todo click btns',
-  '/story/x-grid-tests-options--auto-pagination', // todo click btns',
+
+  '/story/x-grid-tests-pagination--pagination-default',
+  '/story/x-grid-tests-pagination--hidden-pagination',
+  '/story/x-grid-tests-pagination--page-size-100',
+  '/story/x-grid-tests-pagination--hidden-pagination',
+  '/story/x-grid-tests-pagination--pagination-api-tests', // TODO click btns',
+  '/story/x-grid-tests-pagination--auto-pagination', // TODO click btns',
 
   '/story/x-grid-tests-resize--resize-small-dataset',
   '/story/x-grid-tests-resize--resize-large-dataset',

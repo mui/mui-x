@@ -16,7 +16,7 @@ export interface IconsOptions {
   columnResize?: React.ElementType<{ className: string }>;
 }
 
-// Todo add multiSortKey
+// TODO add multiSortKey
 export interface GridOptions {
   autoHeight?: boolean;
   rowHeight: number;
@@ -63,6 +63,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   enableMultipleSelection: true,
   enableMultipleColumnsSorting: true,
   paginationRowsPerPageOptions: [25, 50, 100],
+  paginationPageSize: 100,
   showCellRightBorder: false,
   extendRowFullWidth: true,
   sortingOrder: ['asc', 'desc', null],
