@@ -33,7 +33,8 @@
     "start": "rollup -cw",
     "lint": "eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../.eslintrc.js && npm run lint:css",
     "lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../../.stylelintrc.js",
-    "test": "../../../node_modules/.bin/jest --config jest.config.js"
+    "test": "../../../node_modules/.bin/jest --config jest.config.js",
+    "doc": "typedoc"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
