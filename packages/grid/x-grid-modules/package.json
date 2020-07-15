@@ -9,9 +9,7 @@
   "files": [
     "dist/*"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
+  "private": true,
   "devDependencies": {
     "@types/node": "^14.0.13",
     "rollup": "^2.6.1",
