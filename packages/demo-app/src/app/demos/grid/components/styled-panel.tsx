@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-import { Panels } from '@material-ui-x/panel';
 
-export const StyledPanels = styled(Panels)`
+export const StyledPanels = styled.div`
   background-color: ${props => props.theme.colors.backgroundLight};
 
   .panel {
