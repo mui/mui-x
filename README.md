@@ -7,9 +7,7 @@ The Material-UI X mono-repo of our advanced components.
 The Data Grid component is designed to display and analyze tabular data. It leverages the power of React and TypeScript, to provide the best UX, while manipulating an unlimited set of data.
 As one of our X advanced component series, it comes with an intuitive API for real-time updates, accessibility, as well as theming and custom templates, all with blazing fast performance.
 
-### Preview
-
-Check out our demo ** [here](https://muix-preview.netlify.app/#/grid)**.
+Check out our demo **[here](https://muix-preview.netlify.app/#/grid)**.
 
 ### Features
 
@@ -21,11 +19,7 @@ Check out our demo ** [here](https://muix-preview.netlify.app/#/grid)**.
 - **API** for the advanced users that needs to manipulate the component, outside the react component props. Great for real-time updates and streaming applications.
 - **Theming** to make it your own.
 
-Of course, we have more on the pipeline, check our roadmap here for more info.
-
 ## Licenses
-
-It comes in 2 versions.
 
 - DataGrid. **MIT** license as part of our core package
 - XGrid. **Commercial** License as part of our X package. More here
