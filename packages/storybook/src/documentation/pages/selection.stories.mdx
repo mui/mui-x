@@ -9,7 +9,7 @@ import DisabledCellSelectionDemo from './demos/selection/disabledCellSelection.d
 Selection provides the ability for users to highlight or select rows. It can be done with a simple Mouse click or using the keyboard shortcuts.
 XGrid currently supports **Single** and **Multiple** rows selection.
 
-By default, the grid allows multiple selection, however this setting can be turned off using the property `enableMultipleSelection` of the `options` React prop.
+By default, the grid allows multiple selection. However, this setting can be turned off using the property `enableMultipleSelection` of the `options` React prop.
 
 ```tsx
 <XGrid
@@ -33,7 +33,7 @@ To activate, this feature you need to toggle the `checkboxSelection` property of
 <XGrid rows={rows} columns={columns} options={{ checkboxSelection: true }} />
 ```
 
-Below is an example of grid with `checkboxSelection` turned on.
+Below is an example of a grid with `checkboxSelection` turned on.
 
 <CheckboxSelectionDemo />
 
@@ -62,21 +62,21 @@ To conveniently apply action on selected rows, we emit the following events base
 - `onRowSelected` - Event emitted when one row is selected.
 - `onSelectionChanged` - Event emitted when one or multiple rows are selected.
 
-## Api
+## API
 
-Finally we added the following methods in XGrid Api. More about the Api and how to use it [here]().
+Finally, we added the following methods in XGrid API. More about the API and how to use it [here]().
 
 - `getSelectedRows` - Returns the selected rows
 - `selectRows` - Select / deselect one or multiple rows
 - `selectRow` - Select / deselect a single row.
 
-## Todo:
+## TODO:
 
 - Add range selection with Shift + click
 - Add cell range selection
 
-DOC Todo
+DOC TODO
 
 - Add keyboard shortcuts page
 - Ref Events API page in Events
-- Ref Events API page in Api
+- Ref Events API page in API

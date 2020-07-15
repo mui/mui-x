@@ -7,7 +7,7 @@ import QuickStartDemo from './demos/quick-start.demo';
 
 ## Install
 
-Using your favourite package manager, install `@material-ui/x-grid` for the full featured enterprise grid, or `@material-ui/data-grid` for the free community version.
+Using your favorite package manager, install `@material-ui/x-grid` for the full featured enterprise grid, or `@material-ui/data-grid` for the free community version.
 
 ```sh
 // with npm
@@ -19,11 +19,12 @@ yarn add @material-ui/x-grid
 
 ## Dependencies
 
-Our grid is built on React, Styled-Components and Material-UI Core components.
-Nonetheless, we placed all this dependencies as peers to avoid package duplication, and its related issues.
-We leave you in control of our versions and promise to not tight you to old version of React or Styled Components.
+The data grid is built on React, styled-components, and Material-UI.
+Nonetheless, all these dependencies are placed as peers to avoid package duplication and its related issues.
 
-To summarise, X-Grid has the following peerDependencies.
+To summarise, the component has the following peer dependencies.
+
+To summarise, X-Grid has the following peer dependencies.
 
 ```json
 "peerDependencies": {
@@ -39,16 +40,16 @@ If you have not installed them yet, please do by running one of the following.
 // with npm
 npm install @material-ui/core react styled-components
 
-//with yarn
+// with yarn
 yarn add @material-ui/core react styled-components
 ```
 
 ## Quick Start
 
-If you have installed the component, you are now ready to build your first DataGrid.
+If you have installed the component, you are now ready to build your first data grid.
 
-First you have to import the component as below.
-To avoid component clashing, we named our components **XGrid** and **DataGrid**.
+First, you have to import the component as below.
+To avoid name conflicts, the components are named **XGrid** and **DataGrid**.
 
 ```js
 import { XGrid } from '@material-ui/x-grid';
@@ -56,8 +57,8 @@ import { XGrid } from '@material-ui/x-grid';
 
 ### Define Rows
 
-Rows are key value pair objects, mapping column names as keys with their values.
-You should also provide an id on each rows to allow delta updates and better performance. //Should Id be optional?
+Rows are key-value pair objects, mapping column names as keys with their values.
+You should also provide an id on each row to allow delta updates and better performance. //Should Id be optional?
 
 Here is an example
 
@@ -97,7 +98,7 @@ Id apart, the 2 columns defined, match the row block defined in the previous par
 
 The `options` properties let you apply different settings to the grid. The following can be set in the options property object of the component as below.
 
-`<XGrid rows={rows} columns={columns} options={{hideFooter: true}} />`
+`<XGrid rows={rows} columns={columns} options={{ hideFooter: true }} />`
 
 `options` implement the `GridOptionsProp` interface. And some basic options include:
 
@@ -118,12 +119,12 @@ A complete example is below.
 
 //TODO move that somewhere??
 
-### Component Properties
+### Component Props
 
 - `columns`: An array of ColDef
 - `rows`: An array of objects
-- `options`: Optional. An object of type `GridOptions` that allow to configure the grid
-- `components`: Optional. An object that allows to replace default components
-- `apiRef`: Optional. An object of type `GridApiRef` that can be instantiated using `gridApiRef()` that allows to manipulate the grid outside the component props.
+- `options`: Optional. An object of type `GridOptions` that allow configuring the grid
+- `components`: Optional. An object that allows replacing default components
+- `apiRef`: Optional. An object of type `GridApiRef` that can be instantiated using `gridApiRef()` that allows manipulating the grid outside the component props.
 - `loading`: Optional. `boolean` that display the `LoadingOverlay` component when true;
-- `className`: Optional. String containing some css classes that will be applied to the grid container;
+- `className`: Optional. String containing some CSS classes that will be applied to the grid container;

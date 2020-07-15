@@ -1,6 +1,6 @@
+import * as React from 'react';
 import { Columns, RowsProp, XGrid } from '@material-ui/x-grid';
 import { randomCreatedDate, randomUpdatedDate } from '@material-ui/x-grid-data-generator';
-import * as React from 'react';
 
 export default function CheckboxSelectionDemo() {
   const columns: Columns = [
@@ -64,7 +64,7 @@ export default function CheckboxSelectionDemo() {
         autoHeight: true,
         checkboxSelection: true,
       }}
-      className={'demo'}
+      className="demo"
     />
   );
 }

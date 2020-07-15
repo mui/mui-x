@@ -4,7 +4,6 @@ import { GridOptionsProp, XGrid, gridApiRef } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { interval } from 'rxjs';
-import { useEffect } from 'react';
 import { randomInt, randomUserName } from '@material-ui/x-grid-data-generator';
 import { FeedGrid } from '../components/feed-grid';
 import { PricingGrid } from '../components/pricing-grid';
@@ -67,12 +66,12 @@ export const SingleSubscriptionFast = () => {
   );
 };
 
-export const SimpleRxUpdate = () => {
+export function SimpleRxUpdate() {
   const api = gridApiRef();
   const columns = [{ field: 'id' }, { field: 'username', width: 150 }, { field: 'age', width: 80 }];
 
-  useEffect(() => {
-    const subscription = interval(100).subscribe(obs =>
+  React.useEffect(() => {
+    const subscription = interval(100).subscribe(() =>
       api.current?.updateRowData([
         { id: 1, username: randomUserName(), age: randomInt(10, 80) },
         { id: 2, username: randomUserName(), age: randomInt(10, 80) },
@@ -85,4 +84,4 @@ export const SimpleRxUpdate = () => {
   }, [api]);
 
   return <XGrid rows={[]} columns={columns} apiRef={api} options={{ autoHeight: true }} />;
-};
+}

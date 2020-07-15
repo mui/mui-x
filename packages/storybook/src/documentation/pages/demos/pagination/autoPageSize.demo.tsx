@@ -91,7 +91,7 @@ export default function AutoPageSizeDemo() {
         rows={rows}
         columns={columns}
         options={{ pagination: true, paginationAutoPageSize: true }}
-        className={'demo'}
+        className="demo"
       />
     </div>
   );

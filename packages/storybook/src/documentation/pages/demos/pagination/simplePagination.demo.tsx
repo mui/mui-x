@@ -95,7 +95,7 @@ export default function SimplePaginationDemo() {
         paginationRowsPerPageOptions: [5, 10],
         autoHeight: true,
       }}
-      className={'demo'}
+      className="demo"
     />
   );
 }

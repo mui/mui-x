@@ -16,7 +16,7 @@ export default {
   },
 };
 
-export const PaginationDefault = () => {
+export function PaginationDefault() {
   const data = useData(2000, 200);
 
   return (
@@ -30,9 +30,9 @@ export const PaginationDefault = () => {
       />
     </div>
   );
-};
+}
 
-export const PageSize100 = () => {
+export function PageSize100() {
   const data = useData(2000, 200);
 
   return (
@@ -47,9 +47,9 @@ export const PageSize100 = () => {
       />
     </div>
   );
-};
+}
 
-export const PaginationKnobs = () => {
+export function PaginationKnobs() {
   const data = useData(2000, 200);
   const rowsPerPageOptions = array('Rows per page options', ['10', '20', '50', '100', '200'], ', ');
 
@@ -68,8 +68,8 @@ export const PaginationKnobs = () => {
       }}
     />
   );
-};
-export const HiddenPagination = () => {
+}
+export function HiddenPagination() {
   const data = useData(2000, 200);
 
   return (
@@ -85,9 +85,9 @@ export const HiddenPagination = () => {
       />
     </div>
   );
-};
+}
 
-export const PaginationApiTests = () => {
+export function PaginationApiTests() {
   const apiRef: GridApiRef = gridApiRef();
   const data = useData(2000, 200);
   const [autosize, setAutoSize] = React.useState(false);
@@ -177,9 +177,9 @@ export const PaginationApiTests = () => {
       </div>
     </React.Fragment>
   );
-};
+}
 
-export const AutoPagination = () => {
+export function AutoPagination() {
   const [size, setSize] = React.useState({ width: 800, height: 600 });
   const data = useData(2000, 200);
 
@@ -215,4 +215,4 @@ export const AutoPagination = () => {
       </div>
     </React.Fragment>
   );
-};
+}

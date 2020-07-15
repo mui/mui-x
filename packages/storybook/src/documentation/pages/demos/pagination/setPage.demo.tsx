@@ -2,12 +2,11 @@ import * as React from 'react';
 import { Columns, RowsProp, XGrid, gridApiRef } from '@material-ui/x-grid';
 import { randomCreatedDate, randomUpdatedDate } from '@material-ui/x-grid-data-generator';
 import '../demo.css';
-import { useEffect } from 'react';
 
 export default function SetPageDemo() {
   const apiRef = gridApiRef();
 
-  useEffect(() => {
+  React.useEffect(() => {
     apiRef.current?.setPage(2);
   }, [apiRef]);
 
@@ -102,7 +101,7 @@ export default function SetPageDemo() {
         paginationRowsPerPageOptions: [5, 10],
         autoHeight: true,
       }}
-      className={'demo'}
+      className="demo"
       apiRef={apiRef}
     />
   );

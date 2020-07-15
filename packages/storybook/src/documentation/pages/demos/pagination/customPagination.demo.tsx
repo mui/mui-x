@@ -107,7 +107,7 @@ export default function CustomPaginationDemo() {
         paginationRowsPerPageOptions: [5, 10],
         autoHeight: true,
       }}
-      className={'demo'}
+      className="demo"
       components={{
         pagination: CustomPagination,
       }}
