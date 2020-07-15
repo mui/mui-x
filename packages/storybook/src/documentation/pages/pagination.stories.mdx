@@ -8,7 +8,7 @@ import CustomPaginationDemo from './demos/pagination/customPagination.demo';
 
 # Pagination
 
-- **Switch Pagination**
+- **Switch pagination**
 
 By Default, XGrid uses infinite rows and virtualization. However, we also implemented pagination if you wish to limit the number of rows visible in the grid.
 To turn it on, toggle the `pagination` boolean property of the `options` React prop as below.
@@ -17,7 +17,7 @@ To turn it on, toggle the `pagination` boolean property of the `options` React p
 <XGrid rows={rows} columns={columns} options={{ pagination: true }} />
 ```
 
-- **Set PageSize**
+- **Set page size**
 
 Our default `pageSize` is set to `100`. You can change this value by setting the `paginationPageSize` property of the `options` React prop as below.
 
@@ -46,13 +46,13 @@ Our default `paginationRowsPerPageOptions` is set to `[25, 50, 100]`. You can ch
 />
 ```
 
-Please find below an example of a grid with pagination using the options properties described above.
+Please find below an example of a grid with pagination using the options prop described above.
 
 <SimplePaginationDemo />
 
 ## Auto Pagination
 
-To complement the pagination feature, we added the property `paginationAutoPageSize` in options, that auto-scale the `pageSize` with the container size to the max number of rows to avoid rendering a vertical scroll bar.
+The property `paginationAutoPageSize` is available as an option to auto-scale the `pageSize` with the container size to the max number of rows to avoid rendering a vertical scroll bar.
 By default, this feature is off and can be turned on, by toggling the `paginationAutoPageSize` boolean property of the `options` React prop as below.
 
 ```tsx
@@ -69,7 +69,7 @@ Please find below an example of grid with `paginationAutoPageSize` turned on as 
 
 ## Overriding the Pagination component
 
-Our default pagination component is our Material-UI `TablePagination` available [here](https://material-ui.com/api/table-pagination/#tablepagination-api).
+Our default pagination component is our Material-UI `TablePagination` available [here](https://material-ui.com/api/table-pagination/).
 Along with others, you can override this component and replace it with our Pagination from our lab [here](https://material-ui.com/components/pagination/)
 or use your own pagination.
 To achieve this, just set the pagination property of the `components` react prop as below.

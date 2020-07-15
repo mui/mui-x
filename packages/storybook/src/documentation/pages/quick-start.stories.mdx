@@ -19,9 +19,10 @@ yarn add @material-ui/x-grid
 
 ## Dependencies
 
-Our grid is built on React, Styled-Components, and Material-UI Core components.
-Nonetheless, we placed all these dependencies as peers to avoid package duplication and its related issues.
-We leave you in control of our versions and promise to not tight you to old version of React or Styled Components.
+The data grid is built on React, styled-components, and Material-UI.
+Nonetheless, all these dependencies are placed as peers to avoid package duplication and its related issues.
+
+To summarise, the component has the following peer dependencies.
 
 To summarise, X-Grid has the following peer dependencies.
 
@@ -48,7 +49,7 @@ yarn add @material-ui/core react styled-components
 If you have installed the component, you are now ready to build your first data grid.
 
 First, you have to import the component as below.
-To avoid component clashing, we named our components **XGrid** and **DataGrid**.
+To avoid name conflicts, the components are named **XGrid** and **DataGrid**.
 
 ```js
 import { XGrid } from '@material-ui/x-grid';
@@ -97,7 +98,7 @@ Id apart, the 2 columns defined, match the row block defined in the previous par
 
 The `options` properties let you apply different settings to the grid. The following can be set in the options property object of the component as below.
 
-`<XGrid rows={rows} columns={columns} options={{hideFooter: true}} />`
+`<XGrid rows={rows} columns={columns} options={{ hideFooter: true }} />`
 
 `options` implement the `GridOptionsProp` interface. And some basic options include:
 
