@@ -3,7 +3,7 @@ import { RowSelectedParams } from '../params/rowSelectedParams';
 import { SelectionChangedParams } from '../params/selectionChangedParams';
 
 /**
- * The Selection api interface that is available in the grid [[apiRef]]
+ * The Selection API interface that is available in the grid [[apiRef]]
  */
 export interface SelectionApi {
   /**
@@ -28,12 +28,12 @@ export interface SelectionApi {
    */
   getSelectedRows: () => RowModel[];
   /**
-   * handler triggered after a row is selected
+   * Handler triggered after a row is selected
    * @param handler
    */
   onSelectedRow: (handler: (param: RowSelectedParams) => void) => () => void;
   /**
-   * handler triggered after one or multiple rows had a selection state changed.
+   * Handler triggered after one or multiple rows had a selection state changed.
    * @param handler
    */
   onSelectionChanged: (handler: (param: SelectionChangedParams) => void) => () => void;

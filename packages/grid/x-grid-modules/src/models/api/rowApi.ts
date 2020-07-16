@@ -1,11 +1,11 @@
 import { RowData, RowId, RowModel, Rows } from '../rows';
 
 /**
- * The Row api interface that is available in the grid [[apiRef]]
+ * The Row API interface that is available in the grid [[apiRef]]
  */
 export interface RowApi {
   /**
-   * get the full set of rows as [[Rows]]
+   * Get the full set of rows as [[Rows]]
    * @returns [[Rows]]
    */
   getRowModels: () => Rows;

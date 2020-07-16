@@ -1,7 +1,7 @@
 import { PageChangedParams } from '../params/pageChangedParams';
 
 /**
- * The pagination api interface that is available in the grid [[apiRef]]
+ * The pagination API interface that is available in the grid [[apiRef]]
  */
 export interface PaginationApi {
   /**
@@ -20,7 +20,7 @@ export interface PaginationApi {
    */
   onPageChanged: (handler: (param: PageChangedParams) => void) => () => void;
   /**
-   * handler that is triggered after the page size was changed
+   * Handler that is triggered after the page size was changed
    * @param handler
    */
   onPageSizeChanged: (handler: (param: PageChangedParams) => void) => () => void;
