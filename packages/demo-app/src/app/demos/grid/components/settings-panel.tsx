@@ -6,8 +6,8 @@ import Button from '@material-ui/core/Button';
 import FormLabel from '@material-ui/core/FormLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import {useContext} from "react";
-import {darkThemeId, lightThemeId, ThemeContext} from '../../theme';
+import { useContext } from 'react';
+import { darkThemeId, lightThemeId, ThemeContext } from '../../theme';
 import { useTheme } from '../../theme/useTheme';
 import { StyledPanels } from './styled-panel';
 
@@ -91,7 +91,12 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onApply, type, siz
               <MenuItem value={1000}>{Number(1000).toLocaleString()}</MenuItem>
             </Select>
           </FormControl>
-          <FormControl className={'dataset-control input-text'} size={'small'} component="fieldset" style={{display: 'none'}}>
+          <FormControl
+            className={'dataset-control input-text'}
+            size={'small'}
+            component="fieldset"
+            style={{ display: 'none' }}
+          >
             <FormLabel component="legend">Themes</FormLabel>
             <Select value={selectedTheme} onChange={onSelectedThemeChange}>
               <MenuItem value={lightThemeId}>Light</MenuItem>

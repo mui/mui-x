@@ -26,7 +26,7 @@ const item = window.localStorage.getItem(STORAGE_THEME_KEY);
 const themeToLoad = item != null ? JSON.parse(item) : DEFAULT_THEME;
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const ThemeContext = React.createContext<AppThemeContext>({
-  theme: themeToLoad
+  theme: themeToLoad,
 });
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = props => {
@@ -35,7 +35,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = props => {
   });
 
   return (
-    <ThemeContext.Provider value={{ theme: props.theme.id  }}>
+    <ThemeContext.Provider value={{ theme: props.theme.id }}>
       <MuiThemeProvider theme={muiTheme}>
         <SCThemeProvider theme={props.theme}>{props.children}</SCThemeProvider>
       </MuiThemeProvider>

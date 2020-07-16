@@ -22,9 +22,9 @@ export const App: React.FC<{}> = () => {
   );
 
   const [theme, themeId, toggleTheme, isDark] = useTheme();
-React.useEffect(()=> {
-  console.log('Theme has changed ', theme);
-}, [theme])
+  React.useEffect(() => {
+    console.log('Theme has changed ', theme);
+  }, [theme]);
   return (
     <ThemeProvider theme={theme}>
       <HashRouter>
@@ -37,7 +37,7 @@ React.useEffect(()=> {
           <AppDrawer isOpen={state.isOpen} toggleDrawer={toggleDrawer} />
           <Switch>
             <Route path="/grid">
-              <RealDataGridDemo toggleTheme = {toggleTheme} themeId={themeId} />
+              <RealDataGridDemo toggleTheme={toggleTheme} themeId={themeId} />
             </Route>
             <Route path="/">
               <AppIntro />

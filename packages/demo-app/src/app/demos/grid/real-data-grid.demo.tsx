@@ -45,7 +45,7 @@ const mapDates = (data: RowModel[], columns: Columns): RowModel[] => {
   return mappedData;
 };
 
-export const RealDataGridDemo: React.FC<{toggleTheme: () => void; themeId: string}> = props => {
+export const RealDataGridDemo: React.FC<{ toggleTheme: () => void; themeId: string }> = props => {
   const [size, setSize] = React.useState(100);
   const [type, setType] = React.useState('commodity');
 
