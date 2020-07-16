@@ -18,7 +18,6 @@ export type RowId = string | number;
  */
 export type CellValue = string | number | boolean | Date | null | undefined | object;
 
-
 /**
  * The coordinates of cell represented by their row and column indexes
  */
