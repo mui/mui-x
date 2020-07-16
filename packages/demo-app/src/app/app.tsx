@@ -1,29 +1,32 @@
 import * as React from 'react';
 import { HashRouter, Route, Switch } from 'react-router-dom';
-import styled from 'styled-components';
 import './app.less';
+import styled from 'styled-components';
 import { DemoAppBar } from './app-bar';
 import { AppDrawer } from './app-drawer';
 import { appReducer } from './app-reducer';
 import { ThemeProvider, useTheme } from './demos/theme';
 import { RealDataGridDemo } from './demos/grid/real-data-grid.demo';
+
 import { AppIntro } from './app-intro';
 
 const StyledApp = styled.div`
-  background: ${(p) => p.theme.colors.background};
+  background: ${p => p.theme.colors.background};
 `;
 
-export function App() {
+export const App: React.FC<{}> = () => {
   const [state, dispatch] = React.useReducer(appReducer, { isOpen: false });
   const toggleDrawer = React.useCallback(
     () => dispatch({ type: state.isOpen ? 'close-drawer' : 'open-drawer' }),
     [state, dispatch],
   );
 
-  const { theme, toggleTheme, isDark } = useTheme();
-
+  const [theme, themeId, toggleTheme, isDark] = useTheme();
+React.useEffect(()=> {
+  console.log('Theme has changed ', theme);
+}, [theme])
   return (
-    <ThemeProvider theme={theme} toggleTheme={toggleTheme}>
+    <ThemeProvider theme={theme}>
       <HashRouter>
         <StyledApp className="app">
           <DemoAppBar
@@ -34,7 +37,7 @@ export function App() {
           <AppDrawer isOpen={state.isOpen} toggleDrawer={toggleDrawer} />
           <Switch>
             <Route path="/grid">
-              <RealDataGridDemo />
+              <RealDataGridDemo toggleTheme = {toggleTheme} themeId={themeId} />
             </Route>
             <Route path="/">
               <AppIntro />
@@ -44,4 +47,4 @@ export function App() {
       </HashRouter>
     </ThemeProvider>
   );
-}
+};

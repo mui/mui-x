@@ -28,14 +28,14 @@ const loadFile = async (file: string) => {
 };
 
 const mapDates = (data: RowModel[], columns: Columns): RowModel[] => {
-  const dateCols = columns.filter((c) => c.type === 'date' || c.type === 'dateTime');
+  const dateCols = columns.filter(c => c.type === 'date' || c.type === 'dateTime');
 
   if (dateCols.length === 0) {
     return data;
   }
 
-  const mappedData = data.map((row) => {
-    dateCols.forEach((dateCol) => {
+  const mappedData = data.map(row => {
+    dateCols.forEach(dateCol => {
       row[dateCol.field] = new Date(row[dateCol.field]);
     });
 
@@ -45,7 +45,7 @@ const mapDates = (data: RowModel[], columns: Columns): RowModel[] => {
   return mappedData;
 };
 
-export function RealDataGridDemo() {
+export const RealDataGridDemo: React.FC<{toggleTheme: () => void; themeId: string}> = props => {
   const [size, setSize] = React.useState(100);
   const [type, setType] = React.useState('commodity');
 
@@ -53,7 +53,7 @@ export function RealDataGridDemo() {
   const [cols, setCols] = React.useState<any>([]);
   const [pagination, setPagination] = React.useState<Partial<GridOptions>>({});
   const [loading, setLoading] = React.useState(false);
-  const { themeId, toggleTheme } = useTheme();
+  // const [theme, themeId, toggleTheme, isDark] = useTheme();
 
   React.useEffect(() => {
     const gridColumns = type === 'commodity' ? commodityColumns : employeeColumns;
@@ -62,7 +62,7 @@ export function RealDataGridDemo() {
     setLoading(true);
 
     loadFile(`./static-data/${type}-1000.json`).then(
-      (data) => {
+      data => {
         if (size > 1000) {
           while (data.length < size) {
             data = [...data, ...data];
@@ -77,7 +77,7 @@ export function RealDataGridDemo() {
         setRows(data);
         setLoading(false);
       },
-      () => {
+      err => {
         setRows([]);
       },
     );
@@ -95,8 +95,8 @@ export function RealDataGridDemo() {
     if (type !== settings.type) {
       setType(settings.type.toLowerCase());
     }
-    if (settings.selectedTheme !== themeId) {
-      toggleTheme();
+    if (settings.selectedTheme !== props.themeId) {
+      props.toggleTheme();
     }
 
     const newPagination: Partial<GridOptions> = {
@@ -105,7 +105,7 @@ export function RealDataGridDemo() {
       paginationPageSize: settings.pagesize > 0 ? settings.pagesize : undefined,
     };
 
-    setPagination((p) => {
+    setPagination(p => {
       if (
         p.pagination === newPagination.pagination &&
         p.paginationAutoPageSize === newPagination.paginationAutoPageSize &&
@@ -119,11 +119,12 @@ export function RealDataGridDemo() {
 
   return (
     <React.Fragment>
-      <AppBreadcrumbs name="NEW* Material-UI X Grid" />
+      <AppBreadcrumbs name={'NEW* Material-UI X Grid'} />
       <SettingsPanel onApply={onApplyClick} size={size} type={type} />
+
       <MainContainer>
-        <div style={{ display: 'flex', boxSizing: 'border-box' }} className="fill-space">
-          <div className="grow">
+        <div style={{ display: 'flex', boxSizing: 'border-box' }} className={'fill-space'}>
+          <div className={'grow'}>
             <XGrid
               rows={rows as any}
               columns={cols as any}
@@ -135,4 +136,4 @@ export function RealDataGridDemo() {
       </MainContainer>
     </React.Fragment>
   );
-}
+};
