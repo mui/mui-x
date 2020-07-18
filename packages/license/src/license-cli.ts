@@ -1,5 +1,6 @@
-import { generateLicence } from './generateLicense';
+/* eslint-disable no-console */
 import * as program from 'commander';
+import { generateLicence } from './generateLicense';
 
 const oneDayInMs = 1000 * 60 * 60 * 24;
 
@@ -7,7 +8,7 @@ export function licenseGenCli(args: any) {
   program
     .option('-o, --order <order>', 'Order number id')
     .option('-e, --expiry <expiry>', 'Number of days from now until expiry date', '366')
-    .action(function () {
+    .action(() => {
       if (!program.order) {
         throw new Error(
           'Material-UI: You forgot to pass an order number. $ > licensegen -o order_123.',

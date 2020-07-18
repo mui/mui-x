@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Link } from './link-renderer';
 import { CellParams } from '@material-ui/x-grid';
+import { Link } from './link-renderer';
 
 const EmailLink: React.FC<{ label?: string; email: string }> = React.memo(({ label, email }) => {
   return <Link href={`mailto:${email}`}>{label || email}</Link>;

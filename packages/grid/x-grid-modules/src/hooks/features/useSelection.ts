@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import * as React from 'react';
 import {
   GridOptions,
   RowClickedParam,
@@ -27,15 +27,15 @@ export const useSelection = (
   apiRef: GridApiRef,
 ): void => {
   const logger = useLogger('useSelection');
-  const selectedItemsRef = useRef<RowId[]>([]);
-  const allowMultipleSelectionKeyPressed = useRef<boolean>(false);
-  const [, forceUpdate] = useState();
+  const selectedItemsRef = React.useRef<RowId[]>([]);
+  const allowMultipleSelectionKeyPressed = React.useRef<boolean>(false);
+  const [, forceUpdate] = React.useState();
 
-  const getSelectedRows = useCallback((): RowModel[] => {
+  const getSelectedRows = React.useCallback((): RowModel[] => {
     return selectedItemsRef.current.map((id) => apiRef!.current!.getRowFromId(id));
   }, [selectedItemsRef, apiRef]);
 
-  const selectRowModel = useCallback(
+  const selectRowModel = React.useCallback(
     (row: RowModel, allowMultipleOverride?: boolean, isSelected?: boolean) => {
       if (!apiRef || apiRef.current == null) {
         throw new Error('Material-UI: ApiRef should be defined at this stage.');
@@ -105,7 +105,7 @@ export const useSelection = (
     ],
   );
 
-  const selectRow = useCallback(
+  const selectRow = React.useCallback(
     (id: RowId, isSelected = true, allowMultiple = false) => {
       if (!apiRef || !apiRef.current) {
         return;
@@ -115,7 +115,7 @@ export const useSelection = (
     [apiRef, selectRowModel],
   );
 
-  const selectRows = useCallback(
+  const selectRows = React.useCallback(
     (ids: RowId[], isSelected = true, deSelectOthers = false) => {
       if (!apiRef || !apiRef.current) {
         return;
@@ -146,7 +146,7 @@ export const useSelection = (
     [apiRef, selectedItemsRef, forceUpdate, options.enableMultipleSelection, getSelectedRows],
   );
 
-  const rowClickedHandler = useCallback(
+  const rowClickedHandler = React.useCallback(
     (params: RowClickedParam) => {
       if (!options.disableSelectionOnClick) {
         selectRowModel(params.rowModel);
@@ -155,20 +155,20 @@ export const useSelection = (
     [options.disableSelectionOnClick, selectRowModel],
   );
 
-  const onMultipleKeyPressed = useCallback(
+  const onMultipleKeyPressed = React.useCallback(
     (isPressed: boolean) => {
       allowMultipleSelectionKeyPressed.current = options.enableMultipleSelection && isPressed;
     },
     [options.enableMultipleSelection, allowMultipleSelectionKeyPressed],
   );
 
-  const onSelectedRow = useCallback(
+  const onSelectedRow = React.useCallback(
     (handler: (param: RowSelectedParams) => void): (() => void) => {
       return apiRef!.current!.registerEvent(ROW_SELECTED_EVENT, handler);
     },
     [apiRef],
   );
-  const onSelectionChanged = useCallback(
+  const onSelectionChanged = React.useCallback(
     (handler: (param: SelectionChangedParams) => void): (() => void) => {
       return apiRef!.current!.registerEvent(SELECTION_CHANGED_EVENT, handler);
     },
@@ -188,13 +188,13 @@ export const useSelection = (
   };
   useApiMethod(apiRef, selectionApi, 'SelectionApi');
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (initialised && selectedItemsRef.current.length > 0) {
       selectRows(selectedItemsRef.current);
     }
   }, [initialised, selectRows, selectedItemsRef]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     selectedItemsRef.current = [];
     if (apiRef && apiRef.current != null) {
       const selectionChangedParam: SelectionChangedParams = { rows: [] };

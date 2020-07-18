@@ -45,7 +45,7 @@ const mapDates = (data: RowModel[], columns: Columns): RowModel[] => {
   return mappedData;
 };
 
-export const RealDataGridDemo: React.FC<{}> = (props) => {
+export function RealDataGridDemo() {
   const [size, setSize] = React.useState(100);
   const [type, setType] = React.useState('commodity');
 
@@ -53,7 +53,7 @@ export const RealDataGridDemo: React.FC<{}> = (props) => {
   const [cols, setCols] = React.useState<any>([]);
   const [pagination, setPagination] = React.useState<Partial<GridOptions>>({});
   const [loading, setLoading] = React.useState(false);
-  const [theme, themeId, toggleTheme, isDark] = useTheme();
+  const { themeId, toggleTheme } = useTheme();
 
   React.useEffect(() => {
     const gridColumns = type === 'commodity' ? commodityColumns : employeeColumns;
@@ -77,7 +77,7 @@ export const RealDataGridDemo: React.FC<{}> = (props) => {
         setRows(data);
         setLoading(false);
       },
-      (err) => {
+      () => {
         setRows([]);
       },
     );
@@ -119,12 +119,11 @@ export const RealDataGridDemo: React.FC<{}> = (props) => {
 
   return (
     <React.Fragment>
-      <AppBreadcrumbs name={'NEW* Material-UI X Grid'} />
+      <AppBreadcrumbs name="NEW* Material-UI X Grid" />
       <SettingsPanel onApply={onApplyClick} size={size} type={type} />
-
       <MainContainer>
-        <div style={{ display: 'flex', boxSizing: 'border-box' }} className={'fill-space'}>
-          <div className={'grow'}>
+        <div style={{ display: 'flex', boxSizing: 'border-box' }} className="fill-space">
+          <div className="grow">
             <XGrid
               rows={rows as any}
               columns={cols as any}
@@ -136,4 +135,4 @@ export const RealDataGridDemo: React.FC<{}> = (props) => {
       </MainContainer>
     </React.Fragment>
   );
-};
+}

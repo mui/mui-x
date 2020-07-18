@@ -20,7 +20,6 @@ import {
   SCROLLING_START,
   SCROLLING_STOP,
 } from '../../constants/eventsConstants';
-
 import { useApiMethod } from '../root/useApiMethod';
 import { useNativeEventListener } from '../root/useNativeEventListener';
 import { useApiEventHandler } from '../root/useApiEventHandler';

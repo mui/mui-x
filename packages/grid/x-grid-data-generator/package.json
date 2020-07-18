@@ -16,6 +16,7 @@
     "datagen": "./bin/data-gen-script.js"
   },
   "dependencies": {
+    "clsx": "^1.0.4",
     "commander": "^5.1.0",
     "esm": "^3.2.25",
     "faker": "^4.1.0"

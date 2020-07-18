@@ -68,8 +68,8 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   extendRowFullWidth: true,
   sortingOrder: ['asc', 'desc', null],
   icons: {
-    columnSortedAscending: () => <ArrowUpward className={'icon'} />,
-    columnSortedDescending: () => <ArrowDownward className={'icon'} />,
+    columnSortedAscending: () => <ArrowUpward className="icon" />,
+    columnSortedDescending: () => <ArrowDownward className="icon" />,
     columnResize: SeparatorIcon,
   },
 };

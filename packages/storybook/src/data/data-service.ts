@@ -13,7 +13,7 @@ export interface GridData {
 }
 
 export function getData(rowLength: number, colLength: number): Promise<GridData> {
-  return new Promise<GridData>((resolve, reject) => {
+  return new Promise<GridData>((resolve) => {
     const data: DataRowModel[] = [];
     const pricesColLength = colLength - 2;
     for (let i = 0; i < rowLength; i += 1) {

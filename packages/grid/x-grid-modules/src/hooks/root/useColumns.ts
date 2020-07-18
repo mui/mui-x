@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import * as React from 'react';
 import {
   checkboxSelectionColDef,
   ColDef,
@@ -143,16 +143,16 @@ export function useColumns(
   apiRef: GridApiRef,
 ): InternalColumns {
   const logger = useLogger('useColumns');
-  const [, forceUpdate] = useState();
+  const [, forceUpdate] = React.useState();
   const [rafUpdate] = useRafUpdate(() => forceUpdate((p: any) => !p));
 
-  const [internalColumns, setInternalColumns] = useState<InternalColumns>(initialState);
-  const stateRef = useRef<InternalColumns>(initialState);
+  const [internalColumns, setInternalColumns] = React.useState<InternalColumns>(initialState);
+  const stateRef = React.useRef<InternalColumns>(initialState);
 
-  const updateState = useCallback(
+  const updateState = React.useCallback(
     (newState: InternalColumns, emit = true) => {
       logger.debug('Updating columns state.');
-      setInternalColumns((p) => newState);
+      setInternalColumns(() => newState);
       stateRef.current = newState;
 
       if (apiRef.current && emit) {
@@ -162,13 +162,13 @@ export function useColumns(
     [setInternalColumns, apiRef, logger, stateRef],
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     logger.info(`Columns have changed, new length ${columns.length}`);
     const newState = resetState(columns, !!options.checkboxSelection, logger, apiRef);
     updateState(newState);
   }, [columns, options.checkboxSelection, logger, apiRef, updateState]);
 
-  const getColumnFromField: (field: string) => ColDef = useCallback(
+  const getColumnFromField: (field: string) => ColDef = React.useCallback(
     (field) => stateRef.current.lookup[field],
     [stateRef],
   );
@@ -183,7 +183,7 @@ export function useColumns(
 
   const getVisibleColumns: () => Columns = () => stateRef.current.visible;
 
-  const updateColumns = useCallback(
+  const updateColumns = React.useCallback(
     (cols: ColDef[]) => {
       const newState = getUpdatedColumnState(logger, stateRef.current, cols);
       updateState(newState, false);
@@ -191,9 +191,9 @@ export function useColumns(
     [updateState, logger, stateRef],
   );
 
-  const updateColumn = useCallback((col: ColDef) => updateColumns([col]), [updateColumns]);
+  const updateColumn = React.useCallback((col: ColDef) => updateColumns([col]), [updateColumns]);
 
-  const onSortedColumns = useCallback(
+  const onSortedColumns = React.useCallback(
     (sortModel: SortModel) => {
       logger.debug('Sort model changed to ', sortModel);
       const updatedCols: ColDef[] = [];

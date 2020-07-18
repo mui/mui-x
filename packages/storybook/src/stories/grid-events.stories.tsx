@@ -17,7 +17,7 @@ export default {
   },
 };
 
-export const AllEvents = () => {
+export function AllEvents() {
   const data = useData(2000, 200);
 
   const options: GridOptionsProp = {
@@ -32,7 +32,7 @@ export const AllEvents = () => {
   };
 
   return <XGrid rows={data.rows} columns={data.columns} options={options} />;
-};
+}
 
 export const onRowClicked = () => {
   const data = useData(2000, 200);

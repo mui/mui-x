@@ -242,12 +242,10 @@ export const RootStyle = styled.div<GridRootProps>`
 RootStyle.displayName = 'RootStyle';
 
 export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps & DivProps>((props, ref) => {
-  const { options, children, className, ...rest } = props;
+  const { options, className, ...other } = props;
+
   return (
-    <RootStyle ref={ref} className={`grid-root ${className || ''}`} options={options} {...rest}>
-      {children}
-    </RootStyle>
+    <RootStyle ref={ref} className={`grid-root ${className || ''}`} options={options} {...other} />
   );
 });
-
 GridRoot.displayName = 'GridRoot';

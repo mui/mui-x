@@ -16,11 +16,12 @@ export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps
     const api = React.useContext(ApiContext);
     const [selectedRowCount, setSelectedCount] = React.useState(0);
 
-    // eslint-disable-next-line consistent-return
     React.useEffect(() => {
       if (api && api.current) {
         return api.current!.onSelectionChanged(({ rows }) => setSelectedCount(rows.length));
       }
+
+      return undefined;
     }, [api, setSelectedCount]);
 
     if (options.hideFooter) {

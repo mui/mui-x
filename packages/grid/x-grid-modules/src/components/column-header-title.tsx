@@ -3,10 +3,10 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { isOverflown } from '../utils';
 
 const ColumnHeaderInnerTitle = React.forwardRef<HTMLDivElement, any>((props, ref) => {
-  const { label, className, ...rest } = props;
+  const { label, className, ...other } = props;
 
   return (
-    <div ref={ref} className={`title ${className}`} {...rest} aria-label={label}>
+    <div ref={ref} className={`title ${className}`} {...other} aria-label={label}>
       {label}
     </div>
   );

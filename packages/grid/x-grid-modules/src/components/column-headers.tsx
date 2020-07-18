@@ -68,19 +68,19 @@ export const ColumnsHeader = React.memo(
       return (
         <div
           ref={columnsHeaderRef}
-          key={'columns'}
+          key="columns"
           className={wrapperCssClasses}
           aria-rowindex={1}
-          role={'row'}
+          role="row"
           style={{ minWidth: renderCtx?.totalSizes?.width }}
         >
-          <LeftEmptyCell key={'left-empty'} width={renderCtx?.leftEmptyWidth} />
+          <LeftEmptyCell key="left-empty" width={renderCtx?.leftEmptyWidth} />
           <ColumnHeaderItemCollection
             columns={renderedCols}
             onResizeColumn={onResizeColumn}
             headerHeight={headerHeight}
           />
-          <RightEmptyCell key={'right-empty'} width={renderCtx?.rightEmptyWidth} />
+          <RightEmptyCell key="right-empty" width={renderCtx?.rightEmptyWidth} />
         </div>
       );
     },

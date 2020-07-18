@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { ElementSize, XGrid } from '@material-ui/x-grid';
-
-import '../style/grid-stories.css';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
+import '../style/grid-stories.css';
 import { useData } from '../hooks/useData';
 
 export default {

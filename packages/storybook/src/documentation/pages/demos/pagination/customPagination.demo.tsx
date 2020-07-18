@@ -7,7 +7,7 @@ import Pagination from '@material-ui/lab/Pagination';
 function CustomPagination({ paginationProps }) {
   return (
     <Pagination
-      className={'my-custom-pagination'}
+      className="my-custom-pagination"
       page={paginationProps.page}
       count={paginationProps.pageCount}
       onChange={(e, value) => paginationProps.setPage(value)}

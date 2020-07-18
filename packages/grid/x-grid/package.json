@@ -13,6 +13,7 @@
     "access": "public"
   },
   "dependencies": {
+    "clsx": "^1.0.4",
     "tslib": "^2.0.0"
   },
   "devDependencies": {

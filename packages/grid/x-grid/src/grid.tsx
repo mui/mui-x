@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { LicenseInfo, useLicenseVerifier } from '@material-ui/x-license';
 import { GridComponent, GridComponentProps } from '@material-ui/x-grid-modules';
 
@@ -11,14 +12,14 @@ export type XGridProps = Omit<GridComponentProps, 'licenseStatus'>;
 export const XGrid: React.FC<XGridProps> = React.memo<XGridProps>(function XGrid(
   props: XGridProps,
 ) {
+  const { className, ...other } = props;
   const licenseStatus = useLicenseVerifier();
-  const { className, ...otherProps } = props;
 
   return (
     <GridComponent
-      {...otherProps}
+      {...other}
       licenseStatus={licenseStatus.toString()}
-      className={'x-grid ' + (className || '')}
+      className={clsx('MuiXGrid-root', className)}
     />
   );
 });

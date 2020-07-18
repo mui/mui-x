@@ -1,11 +1,10 @@
-import { useCallback, useRef } from 'react';
+import * as React from 'react';
 import { useLogger } from '../utils/useLogger';
 import {
   KEYDOWN_EVENT,
   KEYUP_EVENT,
   MULTIPLE_KEY_PRESS_CHANGED,
 } from '../../constants/eventsConstants';
-
 import {
   findGridRootFromCurrent,
   findParentElementFromClassName,
@@ -49,9 +48,9 @@ export const useKeyboard = (
   apiRef: GridApiRef,
 ): void => {
   const logger = useLogger('useKeyboard');
-  const isMultipleKeyPressed = useRef(false);
+  const isMultipleKeyPressed = React.useRef(false);
 
-  const onMultipleKeyChange = useCallback(
+  const onMultipleKeyChange = React.useCallback(
     (isPressed: boolean) => {
       isMultipleKeyPressed.current = isPressed;
       if (apiRef.current) {
@@ -61,7 +60,7 @@ export const useKeyboard = (
     [apiRef, isMultipleKeyPressed],
   );
 
-  const navigateCells = useCallback(
+  const navigateCells = React.useCallback(
     (code: string, isCtrlPressed: boolean) => {
       const cellEl = findParentElementFromClassName(
         document.activeElement as HTMLDivElement,
@@ -128,7 +127,7 @@ export const useKeyboard = (
     [apiRef, options.pagination, options.paginationPageSize],
   );
 
-  const selectActiveRow = useCallback(() => {
+  const selectActiveRow = React.useCallback(() => {
     const rowEl = findParentElementFromClassName(
       document.activeElement as HTMLDivElement,
       ROW_CSS_CLASS,
@@ -140,7 +139,7 @@ export const useKeyboard = (
     }
   }, [apiRef]);
 
-  const expandSelection = useCallback(
+  const expandSelection = React.useCallback(
     (code: string) => {
       const rowEl = findParentElementFromClassName(
         document.activeElement as HTMLDivElement,
@@ -179,7 +178,7 @@ export const useKeyboard = (
     [logger, apiRef, navigateCells],
   );
 
-  const handleCopy = useCallback(() => {
+  const handleCopy = React.useCallback(() => {
     const rowEl = findParentElementFromClassName(
       document.activeElement as HTMLDivElement,
       ROW_CSS_CLASS,
@@ -195,7 +194,7 @@ export const useKeyboard = (
     document.execCommand('copy');
   }, [apiRef]);
 
-  const onKeyDownHandler = useCallback(
+  const onKeyDownHandler = React.useCallback(
     (event: KeyboardEvent) => {
       if (isMultipleKey(event.key)) {
         logger.debug('Multiple Select key pressed');
@@ -247,7 +246,7 @@ export const useKeyboard = (
     ],
   );
 
-  const onKeyUpHandler = useCallback(
+  const onKeyUpHandler = React.useCallback(
     (event: KeyboardEvent) => {
       if (isMultipleKey(event.key)) {
         logger.debug('Multiple Select key released');

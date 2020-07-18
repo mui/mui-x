@@ -25,10 +25,9 @@ type AppThemeContext = { theme: string; toggleTheme: () => void };
 
 const item = window.localStorage.getItem(STORAGE_THEME_KEY);
 const themeToLoad = item != null ? JSON.parse(item) : DEFAULT_THEME;
-// eslint-disable-next-line @typescript-eslint/no-empty-function
+
 export const ThemeContext = React.createContext<AppThemeContext>({
   theme: themeToLoad,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   toggleTheme: () => {},
 });
 
