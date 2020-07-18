@@ -1,14 +1,15 @@
 {
   "name": "@material-ui/x-grid",
   "version": "0.1.50",
-  "description": "Official Material-UI X Grid Component",
-  "author": "Damien Tassone <damien@material-ui.com>",
+  "description": "The Material-UI X edition of the data grid component.",
+  "author": "Material-UI Team",
   "main": "dist/index-cjs.js",
   "module": "dist/index-esm.js",
   "types": "dist/x-grid.all.d.ts",
   "files": [
     "dist/*"
   ],
+  "license": "See LICENSE file",
   "publishConfig": {
     "access": "public"
   },

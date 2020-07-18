@@ -2,13 +2,14 @@
   "name": "@material-ui/x-grid-data-generator",
   "version": "0.1.49",
   "description": "Data generator services for the grid",
-  "author": "damien <damien@material-ui.com>",
+  "author": "Material-UI Team",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/esm/x-grid-data-generator.d.ts",
   "files": [
     "dist/*"
   ],
+  "license": "MIT",
   "publishConfig": {
     "access": "public"
   },
