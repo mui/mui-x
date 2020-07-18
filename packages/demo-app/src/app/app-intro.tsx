@@ -9,8 +9,8 @@ import Footer from './app-footer';
 
 const Splash = styled.div`
   display: flex;
-  color: ${p => p.theme.colors.app};
-  background-color: ${p => p.theme.colors.background};
+  color: ${(p) => p.theme.colors.app};
+  background-color: ${(p) => p.theme.colors.background};
   justify-content: space-between;
   flex: auto;
 
@@ -72,13 +72,13 @@ const Splash = styled.div`
   }
 
   .product-title {
-    color: ${p => p.theme.colors.secondApp};
+    color: ${(p) => p.theme.colors.secondApp};
     font-size: 4rem;
     font-weight: 500;
     text-shadow: -2px 1px 4px #929292;
   }
   .product-title-logo {
-    color: ${p => p.theme.colors.secondApp};
+    color: ${(p) => p.theme.colors.secondApp};
     position: absolute;
     font-weight: 800;
     top: -22px;
@@ -87,7 +87,7 @@ const Splash = styled.div`
     padding: 0;
     margin: 0;
     display: none;
-    text-shadow: -2px 1px 4px ${p => p.theme.colors.xShadowColor};
+    text-shadow: -2px 1px 4px ${(p) => p.theme.colors.xShadowColor};
   }
   .logo-container {
     position: relative;

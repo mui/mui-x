@@ -19,20 +19,20 @@ export default {
 
 export const SmallColSizes = () => {
   const data = useData(100, 20);
-  const transformColSizes = (columns: ColDef[]) => columns.map(c => ({ ...c, width: 60 }));
+  const transformColSizes = (columns: ColDef[]) => columns.map((c) => ({ ...c, width: 60 }));
 
   return <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />;
 };
 
 export const VerySmallColSizes = () => {
   const data = useData(100, 20);
-  const transformColSizes = (columns: ColDef[]) => columns.map(c => ({ ...c, width: 50 }));
+  const transformColSizes = (columns: ColDef[]) => columns.map((c) => ({ ...c, width: 50 }));
   return <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />;
 };
 export const ColumnDescriptionTooltip = () => {
   const data = useData(100, 20);
   const transformColSizes = (columns: ColDef[]) =>
-    columns.map(c => {
+    columns.map((c) => {
       if (c.field === 'currencyPair') {
         return { ...c, width: 80, description: 'This is the currency pair column' };
       }
@@ -121,8 +121,8 @@ export const UpdateColumnsBtn: React.FC = () => {
   const [cols, setCols] = React.useState(columns);
   const changeCols = () => {
     if (cols.length === columns.length) {
-      const newCols = columns.filter(c => c.field.indexOf('age') === -1);
-      newCols.forEach(c => {
+      const newCols = columns.filter((c) => c.field.indexOf('age') === -1);
+      newCols.forEach((c) => {
         c.resizable = false;
       });
       setCols(newCols);
@@ -147,9 +147,9 @@ export const UpdateColumnsBtn: React.FC = () => {
 export const HeaderComponent = () => {
   const data = useData(100, 5);
 
-  const transformCols = React.useCallback(cols => {
+  const transformCols = React.useCallback((cols) => {
     if (cols.length > 0) {
-      cols[0].headerComponent = params => <CreateIcon className={'icon'} />;
+      cols[0].headerComponent = (params) => <CreateIcon className={'icon'} />;
     }
     return cols;
   }, []);

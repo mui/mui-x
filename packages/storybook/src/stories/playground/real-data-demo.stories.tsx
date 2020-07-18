@@ -26,22 +26,22 @@ const getGridOptions: () => GridOptionsProp = () => {
   const sortingOrder = array('sortingOrder', ['asc', 'desc', 'null'], ', ');
 
   return {
-    onRowClicked: params => action('onRowClicked')(params),
-    onCellClicked: params => action('onCellClicked')(params),
-    onColumnHeaderClicked: params => action('onColumnHeaderClicked')(params),
-    onRowSelected: params => action('onRowSelected')(params),
-    onSelectionChanged: params =>
+    onRowClicked: (params) => action('onRowClicked')(params),
+    onCellClicked: (params) => action('onCellClicked')(params),
+    onColumnHeaderClicked: (params) => action('onColumnHeaderClicked')(params),
+    onRowSelected: (params) => action('onRowSelected')(params),
+    onSelectionChanged: (params) =>
       action('onSelectionChanged', {
         depth: 1,
       })(params),
-    onColumnsSorted: params => action('onColumnsSorted')(params),
-    onPageChanged: params => action('onPageChanged')(params),
-    onPageSizeChanged: params => action('onPageSizeChanged')(params),
+    onColumnsSorted: (params) => action('onColumnsSorted')(params),
+    onPageChanged: (params) => action('onPageChanged')(params),
+    onPageSizeChanged: (params) => action('onPageSizeChanged')(params),
 
     pagination: boolean('pagination', false),
     paginationPageSize: number('paginationPageSize', 100),
     paginationAutoPageSize: boolean('paginationAutoPageSize', false),
-    paginationRowsPerPageOptions: rowsPerPageOptions.map(value => parseInt(value, 10)),
+    paginationRowsPerPageOptions: rowsPerPageOptions.map((value) => parseInt(value, 10)),
     hideFooterRowCount: boolean('hideFooterRowCount', false),
     hideFooterPagination: boolean('hideFooterPagination', false),
     hideFooter: boolean('hideFooter', false),
@@ -52,7 +52,7 @@ const getGridOptions: () => GridOptionsProp = () => {
     checkboxSelection: boolean('checkboxSelection', true),
     disableSelectionOnClick: boolean('disableSelectionOnClick', true),
     enableMultipleColumnsSorting: boolean('enableMultipleColumnsSorting', true),
-    sortingOrder: sortingOrder.map(value => (value === 'null' ? null : (value as SortDirection))),
+    sortingOrder: sortingOrder.map((value) => (value === 'null' ? null : (value as SortDirection))),
     headerHeight: number('headerHeight', 56),
     rowHeight: number('rowHeight', 52),
   };

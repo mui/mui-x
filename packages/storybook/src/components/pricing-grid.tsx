@@ -14,7 +14,7 @@ export interface PricingGridProps {
   max?: number;
   options?: GridOptionsProp;
 }
-export const PricingGrid: React.FC<PricingGridProps> = p => {
+export const PricingGrid: React.FC<PricingGridProps> = (p) => {
   const [columns] = React.useState<ColDef[]>(pricingColumns);
   const [rows] = React.useState<PricingModel[]>([]);
 
@@ -39,7 +39,7 @@ export const PricingGrid: React.FC<PricingGridProps> = p => {
 
       for (let i = 0, len = currencyPairs.length; i < len; i += 1) {
         const data$ = subscribeCurrencyPair(currencyPairs[i], i, p.min, p.max);
-        subscription.add(data$.pipe(takeUntil(cancel$)).subscribe(data => handleNewPrice(data)));
+        subscription.add(data$.pipe(takeUntil(cancel$)).subscribe((data) => handleNewPrice(data)));
       }
       setStarted(true);
     }

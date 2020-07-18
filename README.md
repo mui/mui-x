@@ -1,4 +1,4 @@
-# Material-UI  X
+# Material-UI X
 
 The Material-UI X mono-repo of our advanced components.
 

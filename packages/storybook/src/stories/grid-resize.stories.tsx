@@ -26,7 +26,7 @@ export const ResizeSmallDataset = () => {
       <div>
         <button
           type="button"
-          onClick={() => setSize(p => ({ width: p.height, height: p.width }))}
+          onClick={() => setSize((p) => ({ width: p.height, height: p.width }))}
           style={{ padding: 5, textTransform: 'capitalize', margin: 10 }}
         >
           Switch sizes
@@ -47,7 +47,7 @@ export const ResizeLargeDataset = () => {
       <div>
         <button
           type="button"
-          onClick={() => setSize(p => ({ width: p.height, height: p.width }))}
+          onClick={() => setSize((p) => ({ width: p.height, height: p.width }))}
           style={{ padding: 5, textTransform: 'capitalize', margin: 10 }}
         >
           Switch sizes

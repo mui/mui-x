@@ -5,11 +5,11 @@ describe('Keyboard Navigation', () => {
   let browser;
   const waitFnOptions = { timeout: 500 };
 
-  beforeAll(async done => {
+  beforeAll(async (done) => {
     browser = await startBrowser();
     done();
   });
-  beforeEach(async done => {
+  beforeEach(async (done) => {
     page = await getStoryPage(browser, '/story/x-grid-tests-columns--small-col-sizes', true);
     await page.keyboard.press('Tab');
     await page.keyboard.press('Tab');
@@ -17,17 +17,17 @@ describe('Keyboard Navigation', () => {
     done();
   });
 
-  afterEach(async done => {
+  afterEach(async (done) => {
     await page.close();
     done();
   });
 
-  afterAll(async done => {
+  afterAll(async (done) => {
     await browser.close();
     done();
   });
 
-  test('Cell navigation with arrows ', async done => {
+  test('Cell navigation with arrows ', async (done) => {
     await page.keyboard.press('ArrowRight');
     await page.waitForFunction(activeCell, waitFnOptions, 0, 1);
 
@@ -52,7 +52,7 @@ describe('Keyboard Navigation', () => {
     done();
   });
 
-  test('Home / End navigation', async done => {
+  test('Home / End navigation', async (done) => {
     await page.keyboard.press('End');
     await page.waitForFunction(activeCell, waitFnOptions, 0, 19);
 
@@ -62,7 +62,7 @@ describe('Keyboard Navigation', () => {
     done();
   });
 
-  test('CTRL Home / End navigation ', async done => {
+  test('CTRL Home / End navigation ', async (done) => {
     await page.keyboard.down('Control');
     await page.waitFor(100);
     await page.keyboard.press('End');
@@ -76,7 +76,7 @@ describe('Keyboard Navigation', () => {
     done();
   });
 
-  test('CTRL A to select all rows', async done => {
+  test('CTRL A to select all rows', async (done) => {
     await page.keyboard.down('Control');
     await page.waitFor(100);
     await page.keyboard.press('a');
@@ -86,7 +86,7 @@ describe('Keyboard Navigation', () => {
     done();
   });
 
-  test('Shift space + arrows to select rows ', async done => {
+  test('Shift space + arrows to select rows ', async (done) => {
     await page.keyboard.down('Shift');
     await page.waitFor(100);
     await page.keyboard.press('Space');
@@ -104,7 +104,7 @@ describe('Keyboard Navigation', () => {
     done();
   });
 
-  test('Next/Previous page', async done => {
+  test('Next/Previous page', async (done) => {
     await page.keyboard.press('Space');
     await page.waitForFunction(activeCell, waitFnOptions, 15, 0);
 
@@ -117,7 +117,7 @@ describe('Keyboard Navigation', () => {
     done();
   });
 
-  test('Copy to clipboard', async done => {
+  test('Copy to clipboard', async (done) => {
     await page.keyboard.down('Shift');
     await page.waitFor(100);
     await page.keyboard.press('Space');

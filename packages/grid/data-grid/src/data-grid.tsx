@@ -40,7 +40,7 @@ export const DataGrid: React.FC<DataGridProps> = React.memo(function DataGrid(
     }),
   );
   React.useEffect(() => {
-    setInternalOptions(previousState =>
+    setInternalOptions((previousState) =>
       mergeOptions(previousState, {
         ...validateOptions(props.options),
         ...OPTIONS_OVERRIDES,

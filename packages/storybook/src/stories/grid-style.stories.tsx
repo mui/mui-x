@@ -59,7 +59,7 @@ const getColumns: () => ColDef[] = () => [
     field: 'fullName',
     description: 'this column has a value getter and is not sortable',
     sortable: false,
-    valueGetter: params =>
+    valueGetter: (params) =>
       `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
   },
   {
@@ -157,8 +157,8 @@ export const ColumnCellClassRules = () => {
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
   cols[4].cellClassRules = {
-    common: params => params.data.lastName === 'Smith',
-    unknown: params => !params.data.lastName,
+    common: (params) => params.data.lastName === 'Smith',
+    unknown: (params) => !params.data.lastName,
   };
 
   return (
@@ -171,7 +171,7 @@ export const ColumnCellClassRules = () => {
 export const ColumnCellRenderer = () => {
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
-  cols[5].cellRenderer = params => <IsDone value={!!params.value} />;
+  cols[5].cellRenderer = (params) => <IsDone value={!!params.value} />;
 
   return (
     <div className={'grid-container'}>
@@ -182,7 +182,7 @@ export const ColumnCellRenderer = () => {
 export const ColumnCellRendererWithPadding = () => {
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
-  cols[5].cellRenderer = params => <IsDone value={!!params.value} />;
+  cols[5].cellRenderer = (params) => <IsDone value={!!params.value} />;
 
   return (
     <div className="grid-container" style={{ padding: 50 }}>
