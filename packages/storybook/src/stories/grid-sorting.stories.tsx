@@ -200,7 +200,7 @@ export const UnsortableLastCol = () => {
   columns[columns.length] = {
     field: 'username',
     sortable: false,
-    valueGetter: params =>
+    valueGetter: (params) =>
       `${params.getValue('name') || 'unknown'}_${params.getValue('age') || 'x'}`,
     width: 150,
   };
@@ -216,7 +216,7 @@ export const CustomComparator = () => {
   const columns = getColumns();
   columns[columns.length] = {
     field: 'username',
-    valueGetter: params =>
+    valueGetter: (params) =>
       `${params.getValue('name') || 'unknown'}_${params.getValue('age') || 'x'}`,
     sortComparator: (v1, v2, row1, row2) => row1.data.age - row2.data.age,
     sortDirection: 'asc',
@@ -235,7 +235,7 @@ export const SortingWithFormatter = () => {
   columns[2] = {
     ...columns[2],
     sortDirection: 'desc',
-    valueFormatter: params => (params.value ? `${params.value} years ` : 'unknown'),
+    valueFormatter: (params) => (params.value ? `${params.value} years ` : 'unknown'),
   };
 
   return (
@@ -293,9 +293,9 @@ export const SortedEventsApi = () => {
 
   React.useEffect(() => {
     if (apiRef && apiRef.current != null) {
-      apiRef.current.onColumnsSorted(params => handleEvent('ColumnsSorted', params));
-      apiRef.current.on('sortModelUpdated', params => handleEvent('sortModelUpdated', params));
-      apiRef.current.on('postSort', params => handleEvent('postSort', params));
+      apiRef.current.onColumnsSorted((params) => handleEvent('ColumnsSorted', params));
+      apiRef.current.on('sortModelUpdated', (params) => handleEvent('sortModelUpdated', params));
+      apiRef.current.on('postSort', (params) => handleEvent('postSort', params));
 
       apiRef.current.setSortModel([
         { colId: 'age', sort: 'desc' },

@@ -7,7 +7,7 @@ export function licenseGenCli(args: any) {
   program
     .option('-o, --order <order>', 'Order number id')
     .option('-e, --expiry <expiry>', 'Number of days from now until expiry date', '366')
-    .action(function() {
+    .action(function () {
       if (!program.order) {
         throw new Error(
           'Material-UI: You forgot to pass an order number. $ > licensegen -o order_123.',

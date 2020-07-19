@@ -15,9 +15,9 @@ import { useLocation } from 'react-router-dom';
 import { isIntroPage } from './utils';
 
 const DemoAppBarStyled = styled(AppBar)`
-  color: ${p => p.theme.colors.app};
-  border-bottom: 1px solid ${p => p.theme.colors.app};
-  background-color: ${p => p.theme.colors.background};
+  color: ${(p) => p.theme.colors.app};
+  border-bottom: 1px solid ${(p) => p.theme.colors.app};
+  background-color: ${(p) => p.theme.colors.background};
 
   .title {
     flex-grow: 1;
@@ -32,9 +32,9 @@ const DemoAppBarStyled = styled(AppBar)`
   }
   .product-title {
     margin-left: 10px;
-    color: ${p => p.theme.colors.xColor};
+    color: ${(p) => p.theme.colors.xColor};
     font-weight: 400;
-    text-shadow: -2px 1px 4px ${p => p.theme.colors.xShadowColor};
+    text-shadow: -2px 1px 4px ${(p) => p.theme.colors.xShadowColor};
     font-size: 2.5rem;
   }
 `;

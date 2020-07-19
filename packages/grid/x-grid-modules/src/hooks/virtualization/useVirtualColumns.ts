@@ -37,7 +37,7 @@ export const useVirtualColumns = (
       if (!hasColumns) {
         return -1;
       }
-      let colIdx = [...positions].reverse().findIndex(p => left >= p);
+      let colIdx = [...positions].reverse().findIndex((p) => left >= p);
       colIdx = positions.length - 1 - colIdx;
       return colIdx;
     },
@@ -65,8 +65,8 @@ export const useVirtualColumns = (
       const lastCol = getColumnFromScroll(lastScrollLeftRef.current + windowWidth);
 
       const visibleColumns = apiRef.current!.getVisibleColumns();
-      const firstColIndex = visibleColumns.findIndex(col => col.field === firstCol?.field);
-      const lastColIndex = visibleColumns.findIndex(col => col.field === lastCol?.field) - 1; // We ensure the last col is completely visible
+      const firstColIndex = visibleColumns.findIndex((col) => col.field === firstCol?.field);
+      const lastColIndex = visibleColumns.findIndex((col) => col.field === lastCol?.field) - 1; // We ensure the last col is completely visible
 
       return colIndex >= firstColIndex && colIndex <= lastColIndex;
     },

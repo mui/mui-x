@@ -28,20 +28,20 @@ export const Options = () => {
       rows={data.rows}
       columns={data.columns}
       options={{
-        onRowClicked: params => action('onRowClicked')(params),
-        onCellClicked: params => action('onCellClicked')(params),
-        onColumnHeaderClicked: params => action('onColumnHeaderClicked')(params),
-        onRowSelected: params => action('onRowSelected')(params),
-        onSelectionChanged: params => action('onSelectionChanged', { depth: 1 })(params),
-        onColumnsSorted: params => action('onColumnsSorted')(params),
-        onPageChanged: params => action('onPageChanged')(params),
-        onPageSizeChanged: params => action('onPageSizeChanged')(params),
+        onRowClicked: (params) => action('onRowClicked')(params),
+        onCellClicked: (params) => action('onCellClicked')(params),
+        onColumnHeaderClicked: (params) => action('onColumnHeaderClicked')(params),
+        onRowSelected: (params) => action('onRowSelected')(params),
+        onSelectionChanged: (params) => action('onSelectionChanged', { depth: 1 })(params),
+        onColumnsSorted: (params) => action('onColumnsSorted')(params),
+        onPageChanged: (params) => action('onPageChanged')(params),
+        onPageSizeChanged: (params) => action('onPageSizeChanged')(params),
 
         autoHeight: boolean('autoHeight', false),
         pagination: boolean('pagination', true),
         paginationPageSize: number('paginationPageSize', 100),
         paginationAutoPageSize: boolean('paginationAutoPageSize', false),
-        paginationRowsPerPageOptions: rowsPerPageOptions.map(value => parseInt(value, 10)),
+        paginationRowsPerPageOptions: rowsPerPageOptions.map((value) => parseInt(value, 10)),
         hideFooterRowCount: boolean('hideFooterRowCount', false),
         hideFooterPagination: boolean('hideFooterPagination', false),
         hideFooter: boolean('hideFooter', false),
@@ -52,7 +52,7 @@ export const Options = () => {
         checkboxSelection: boolean('checkboxSelection', true),
         disableSelectionOnClick: boolean('disableSelectionOnClick', false),
         enableMultipleColumnsSorting: boolean('enableMultipleColumnsSorting', true),
-        sortingOrder: sortingOrder.map(value =>
+        sortingOrder: sortingOrder.map((value) =>
           value === 'null' ? null : (value as SortDirection),
         ),
         headerHeight: number('headerHeight', 56),
@@ -65,14 +65,14 @@ export const Events = () => {
   const data = useData(2000, 200);
 
   const options: GridOptionsProp = {
-    onRowClicked: params => action('onRowClicked')(params),
-    onCellClicked: params => action('onCellClicked')(params),
-    onColumnHeaderClicked: params => action('onColumnHeaderClicked')(params),
-    onRowSelected: params => action('onRowSelected')(params),
-    onSelectionChanged: params => action('onSelectionChanged', { depth: 1 })(params),
-    onColumnsSorted: params => action('onColumnsSorted')(params),
-    onPageChanged: params => action('onPageChanged')(params),
-    onPageSizeChanged: params => action('onPageSizeChanged')(params),
+    onRowClicked: (params) => action('onRowClicked')(params),
+    onCellClicked: (params) => action('onCellClicked')(params),
+    onColumnHeaderClicked: (params) => action('onColumnHeaderClicked')(params),
+    onRowSelected: (params) => action('onRowSelected')(params),
+    onSelectionChanged: (params) => action('onSelectionChanged', { depth: 1 })(params),
+    onColumnsSorted: (params) => action('onColumnsSorted')(params),
+    onPageChanged: (params) => action('onPageChanged')(params),
+    onPageSizeChanged: (params) => action('onPageSizeChanged')(params),
   };
 
   return <XGrid rows={data.rows} columns={data.columns} options={options} />;

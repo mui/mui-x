@@ -32,7 +32,7 @@ export const useSelection = (
   const [, forceUpdate] = useState();
 
   const getSelectedRows = useCallback((): RowModel[] => {
-    return selectedItemsRef.current.map(id => apiRef!.current!.getRowFromId(id));
+    return selectedItemsRef.current.map((id) => apiRef!.current!.getRowFromId(id));
   }, [selectedItemsRef, apiRef]);
 
   const selectRowModel = useCallback(
@@ -69,7 +69,7 @@ export const useSelection = (
           selectedItemsRef.current.splice(selectedItemsRef.current.indexOf(row.id), 1);
         }
       } else {
-        selectedItemsRef.current.forEach(id => {
+        selectedItemsRef.current.forEach((id) => {
           const otherSelectedRow = apiRef!.current!.getRowFromId(id);
           updatedRowModels.push({ ...otherSelectedRow, selected: false });
         });
@@ -87,7 +87,7 @@ export const useSelection = (
           rowIndex,
         };
         const selectionChangedParam: SelectionChangedParams = {
-          rows: getSelectedRows().map(r => r.data),
+          rows: getSelectedRows().map((r) => r.data),
         };
         apiRef.current!.emit(ROW_SELECTED_EVENT, rowSelectedParam);
         apiRef.current!.emit(SELECTION_CHANGED_EVENT, selectionChangedParam);
@@ -125,10 +125,10 @@ export const useSelection = (
           'Material-UI: Enable options.enableMultipleSelection to select more than 1 item.',
         );
       }
-      let updates = ids.map(id => ({ id, selected: isSelected }));
+      let updates = ids.map((id) => ({ id, selected: isSelected }));
 
       if (deSelectOthers) {
-        updates = [...selectedItemsRef.current.map(id => ({ id, selected: false })), ...updates];
+        updates = [...selectedItemsRef.current.map((id) => ({ id, selected: false })), ...updates];
       }
 
       apiRef!.current!.updateRowModels(updates);
@@ -138,7 +138,7 @@ export const useSelection = (
       if (apiRef && apiRef.current != null) {
         // We don't emit ROW_SELECTED_EVENT on each row as it would be too consuming for large set of data.
         const selectionChangedParam: SelectionChangedParams = {
-          rows: getSelectedRows().map(r => r.data),
+          rows: getSelectedRows().map((r) => r.data),
         };
         apiRef.current!.emit(SELECTION_CHANGED_EVENT, selectionChangedParam);
       }

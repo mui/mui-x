@@ -9,7 +9,7 @@ export default function CustomComparatorDemo() {
     { field: 'age', type: 'number' },
     {
       field: 'username',
-      valueGetter: params =>
+      valueGetter: (params) =>
         `${params.getValue('name') || 'unknown'} - ${params.getValue('age') || 'x'}`,
       sortComparator: (v1, v2, row1, row2) => row1.data.age - row2.data.age,
       width: 150,

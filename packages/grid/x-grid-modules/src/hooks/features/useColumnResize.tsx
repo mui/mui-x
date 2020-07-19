@@ -103,15 +103,16 @@ export const useColumnResize = (
       }
       if (dataContainerElemRef.current) {
         const diffWithPrev = newWidth - currentColPreviousWidth.current!;
-        dataContainerElemRef.current.style.minWidth = `${dataContainerPreviousWidth.current! +
-          diffWithPrev}px`;
+        dataContainerElemRef.current.style.minWidth = `${
+          dataContainerPreviousWidth.current! + diffWithPrev
+        }px`;
 
         if (isLastColumn.current && apiRef && apiRef.current) {
           apiRef.current.scroll({ left: dataContainerPreviousWidth.current! + diffWithPrev });
         }
       }
       if (currentColCellsElems.current) {
-        currentColCellsElems.current.forEach(el => {
+        currentColCellsElems.current.forEach((el) => {
           const div = el as HTMLDivElement;
           div.style.width = `${newWidth}px`;
           div.style.minWidth = `${newWidth}px`;

@@ -9,7 +9,7 @@ export const useApiMethod = (apiRef: GridApiRef, apiMethods: Partial<GridApi>, a
     if (apiRef && apiRef.current) {
       let hasMethodsInstalled = true;
 
-      Object.keys(apiMethods).forEach(methodName => {
+      Object.keys(apiMethods).forEach((methodName) => {
         if (!apiRef.current!.hasOwnProperty(methodName)) {
           hasMethodsInstalled = false;
         }
