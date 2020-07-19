@@ -28,7 +28,7 @@
     "css-loader": "^3.4.2",
     "html-webpack-plugin": "^3.2.0",
     "less": "^3.10.3",
-    "less-loader": "^5.0.0",
+    "less-loader": "^6.2.0",
     "node-fetch": "^2.6.0",
     "source-map-loader": "^0.2.4",
     "style-loader": "^1.1.3",
