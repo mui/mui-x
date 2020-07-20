@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.54](https://github.com/mui-org/material-ui-x/compare/v0.1.53...v0.1.54) (2020-07-20)
+
+**Note:** Version bump only for package @material-ui/x-license
+
+
+
+
+
 ## [0.1.53](https://github.com/mui-org/material-ui-x/compare/v0.1.52...v0.1.53) (2020-07-20)
 
 **Note:** Version bump only for package @material-ui/x-license

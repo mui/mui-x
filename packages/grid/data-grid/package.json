@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/data-grid",
-  "version": "0.1.53",
+  "version": "0.1.54",
   "description": "The Material-UI community edition of the data grid component.",
   "author": "Material-UI Team",
   "main": "dist/index-cjs.js",
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "@material-ui/x-grid-modules": "^0.1.53",
+    "@material-ui/x-grid-modules": "^0.1.54",
     "rollup": "^2.6.1",
     "rollup-plugin-cleaner": "^1.0.0",
     "rollup-plugin-command": "^1.1.3",
@@ -40,5 +40,5 @@
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
   ],
-  "gitHead": "edc15182e0a18e57d807f6797309baed616b8379"
+  "gitHead": "cb9362553e02b4a243081864098a48426871a168"
 }
