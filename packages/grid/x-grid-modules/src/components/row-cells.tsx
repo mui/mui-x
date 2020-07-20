@@ -54,7 +54,7 @@ interface RowCellsProps {
   domIndex: number;
 }
 
-export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
+export const RowCells: React.FC<RowCellsProps> = React.memo((props) => {
   const {
     scrollSize,
     hasScroll,
@@ -137,7 +137,7 @@ export const RowCells: React.FC<RowCellsProps> = React.memo(props => {
 
   return (
     <React.Fragment>
-      {cellsProps.map(cellProps => (
+      {cellsProps.map((cellProps) => (
         <Cell key={cellProps.field} {...cellProps} />
       ))}
     </React.Fragment>
