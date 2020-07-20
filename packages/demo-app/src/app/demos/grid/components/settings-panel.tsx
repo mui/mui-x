@@ -6,8 +6,8 @@ import Button from '@material-ui/core/Button';
 import FormLabel from '@material-ui/core/FormLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import { darkThemeId, lightThemeId } from '../../theme';
-import { useTheme } from '../../theme/useTheme';
+import { useContext } from 'react';
+import { darkThemeId, lightThemeId, ThemeContext } from '../../theme';
 import { StyledPanels } from './styled-panel';
 
 export interface SettingsPanelProps {
@@ -21,12 +21,11 @@ export interface SettingsPanelProps {
   size: number;
 }
 
-export function SettingsPanel(props: SettingsPanelProps) {
-  const { onApply, type, size } = props;
+export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onApply, type, size }) => {
   const [sizeState, setSize] = React.useState<number>(size);
   const [typeState, setType] = React.useState<string>(type);
-  const { themeId } = useTheme();
-  const [selectedTheme, setSelectedTheme] = React.useState<string>(themeId);
+  const currentTheme = useContext(ThemeContext);
+  const [selectedTheme, setSelectedTheme] = React.useState<string>(currentTheme.theme);
   const [selectedPaginationValue, setSelectedPaginationValue] = React.useState<number>(-1);
 
   const applyChanges = React.useCallback(() => {
@@ -34,49 +33,45 @@ export function SettingsPanel(props: SettingsPanelProps) {
   }, [sizeState, typeState, selectedTheme, selectedPaginationValue, onApply]);
 
   const onDatasetChange = React.useCallback(
-    (event: React.ChangeEvent<{ name?: string; value: any }>) => {
-      setType(event.target.value);
+    (e: React.ChangeEvent<{ name?: string; value: any }>) => {
+      setType(e.target.value);
     },
     [setType],
   );
 
   const onSizeChange = React.useCallback(
-    (event: React.ChangeEvent<{ name?: string; value: any }>) => {
-      setSize(Number(event.target.value));
+    (e: React.ChangeEvent<{ name?: string; value: any }>) => {
+      setSize(Number(e.target.value));
     },
     [setSize],
   );
   const onPaginationChange = React.useCallback(
-    (event: React.ChangeEvent<{ name?: string; value: any }>) => {
-      setSelectedPaginationValue(event.target.value);
-      // setSize(Number(event.target.value));
+    (e: React.ChangeEvent<{ name?: string; value: any }>) => {
+      setSelectedPaginationValue(e.target.value);
+      // setSize(Number(e.target.value));
     },
     [setSelectedPaginationValue],
   );
   const onSelectedThemeChange = React.useCallback(
-    (event: React.ChangeEvent<{ name?: string; value: any }>) => {
-      setSelectedTheme(event.target.value);
+    (e: React.ChangeEvent<{ name?: string; value: any }>) => {
+      setSelectedTheme(e.target.value);
     },
     [setSelectedTheme],
   );
 
-  React.useEffect(() => {
-    setSelectedTheme(themeId);
-  }, [themeId]);
-
   return (
     <StyledPanels>
-      {/* <Panel title="Settings"> */}
-      <div className="panel">
-        <FormGroup row className="center">
-          <FormControl className="dataset-control input-text" size="small" component="fieldset">
+      {/* <Panel title={'Settings'}> */}
+      <div className={'panel'}>
+        <FormGroup row className={'center'}>
+          <FormControl className={'dataset-control input-text'} size={'small'} component="fieldset">
             <FormLabel component="legend">Dataset</FormLabel>
             <Select value={typeState} onChange={onDatasetChange}>
-              <MenuItem value="employee">Employee</MenuItem>
-              <MenuItem value="commodity">Commodity</MenuItem>
+              <MenuItem value={'employee'}>Employee</MenuItem>
+              <MenuItem value={'commodity'}>Commodity</MenuItem>
             </Select>
           </FormControl>
-          <FormControl className="dataset-control input-text" size="small" component="fieldset">
+          <FormControl className={'dataset-control input-text'} size={'small'} component="fieldset">
             <FormLabel component="legend">Rows</FormLabel>
             <Select value={sizeState} onChange={onSizeChange}>
               <MenuItem value={100}>100</MenuItem>
@@ -85,7 +80,7 @@ export function SettingsPanel(props: SettingsPanelProps) {
               <MenuItem value={100000}>{Number(100000).toLocaleString()}</MenuItem>
             </Select>
           </FormControl>
-          <FormControl className="dataset-control input-text" size="small" component="fieldset">
+          <FormControl className={'dataset-control input-text'} size={'small'} component="fieldset">
             <FormLabel component="legend">Page Size</FormLabel>
             <Select value={selectedPaginationValue} onChange={onPaginationChange}>
               <MenuItem value={-1}>off</MenuItem>
@@ -95,7 +90,12 @@ export function SettingsPanel(props: SettingsPanelProps) {
               <MenuItem value={1000}>{Number(1000).toLocaleString()}</MenuItem>
             </Select>
           </FormControl>
-          <FormControl className="dataset-control input-text" size="small" component="fieldset">
+          <FormControl
+            className={'dataset-control input-text'}
+            size={'small'}
+            component="fieldset"
+            style={{ display: 'none' }}
+          >
             <FormLabel component="legend">Themes</FormLabel>
             <Select value={selectedTheme} onChange={onSelectedThemeChange}>
               <MenuItem value={lightThemeId}>Light</MenuItem>
@@ -105,16 +105,16 @@ export function SettingsPanel(props: SettingsPanelProps) {
           <div>
             <Button
               size="small"
-              className="apply-btn"
-              variant="outlined"
-              color="primary"
+              className={'apply-btn'}
+              variant={'outlined'}
+              color={'primary'}
               onClick={applyChanges}
             >
-              <KeyboardArrowRightIcon fontSize="small" /> Apply
+              <KeyboardArrowRightIcon fontSize={'small'} /> Apply
             </Button>
           </div>
         </FormGroup>
       </div>
     </StyledPanels>
   );
-}
+};

@@ -20,10 +20,9 @@ export function App() {
     [state, dispatch],
   );
 
-  const { theme, toggleTheme, isDark } = useTheme();
-
+  const { theme, themeId, toggleTheme, isDark } = useTheme();
   return (
-    <ThemeProvider theme={theme} toggleTheme={toggleTheme}>
+    <ThemeProvider theme={theme}>
       <HashRouter>
         <StyledApp className="app">
           <DemoAppBar
@@ -34,7 +33,7 @@ export function App() {
           <AppDrawer isOpen={state.isOpen} toggleDrawer={toggleDrawer} />
           <Switch>
             <Route path="/grid">
-              <RealDataGridDemo />
+              <RealDataGridDemo toggleTheme={toggleTheme} themeId={themeId} />
             </Route>
             <Route path="/">
               <AppIntro />

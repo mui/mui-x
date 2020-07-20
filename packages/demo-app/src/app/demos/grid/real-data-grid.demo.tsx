@@ -7,7 +7,6 @@ import { MainContainer } from './components/main-container';
 import { SettingsPanel } from './components/settings-panel';
 // eslint-disable-next-line no-restricted-imports
 import '@material-ui/x-grid-data-generator/dist/demo-style.css';
-import { useTheme } from '../theme';
 
 // eslint-disable-next-line no-console
 console.info(
@@ -45,7 +44,7 @@ const mapDates = (data: RowModel[], columns: Columns): RowModel[] => {
   return mappedData;
 };
 
-export function RealDataGridDemo() {
+export const RealDataGridDemo: React.FC<{ toggleTheme: () => void; themeId: string }> = (props) => {
   const [size, setSize] = React.useState(100);
   const [type, setType] = React.useState('commodity');
 
@@ -53,7 +52,7 @@ export function RealDataGridDemo() {
   const [cols, setCols] = React.useState<any>([]);
   const [pagination, setPagination] = React.useState<Partial<GridOptions>>({});
   const [loading, setLoading] = React.useState(false);
-  const { themeId, toggleTheme } = useTheme();
+  // const [theme, themeId, toggleTheme, isDark] = useTheme();
 
   React.useEffect(() => {
     const gridColumns = type === 'commodity' ? commodityColumns : employeeColumns;
@@ -95,8 +94,8 @@ export function RealDataGridDemo() {
     if (type !== settings.type) {
       setType(settings.type.toLowerCase());
     }
-    if (settings.selectedTheme !== themeId) {
-      toggleTheme();
+    if (settings.selectedTheme !== props.themeId) {
+      props.toggleTheme();
     }
 
     const newPagination: Partial<GridOptions> = {
@@ -119,11 +118,12 @@ export function RealDataGridDemo() {
 
   return (
     <React.Fragment>
-      <AppBreadcrumbs name="NEW* Material-UI X Grid" />
+      <AppBreadcrumbs name={'NEW* Material-UI X Grid'} />
       <SettingsPanel onApply={onApplyClick} size={size} type={type} />
+
       <MainContainer>
-        <div style={{ display: 'flex', boxSizing: 'border-box' }} className="fill-space">
-          <div className="grow">
+        <div style={{ display: 'flex', boxSizing: 'border-box' }} className={'fill-space'}>
+          <div className={'grow'}>
             <XGrid
               rows={rows as any}
               columns={cols as any}
@@ -135,4 +135,4 @@ export function RealDataGridDemo() {
       </MainContainer>
     </React.Fragment>
   );
-}
+};
