@@ -5,7 +5,7 @@ import {
   ApiRef,
   GridComponentOverridesProp,
   GridOptions,
-  GridRootRef,
+  RootContainerRef,
   InternalColumns,
   Rows,
 } from '../../models';
@@ -18,7 +18,7 @@ export const useComponents = (
   componentOverrides: GridComponentOverridesProp | undefined,
   paginationProps: PaginationProps,
   apiRef: ApiRef,
-  gridRootRef: GridRootRef,
+  gridRootRef: RootContainerRef,
 ) => {
   const componentParams: ComponentParams = React.useMemo(
     () => ({

@@ -2,7 +2,7 @@ import { Rows } from '../rows';
 import { Columns } from '../colDef/colDef';
 import { GridOptions } from '../gridOptions';
 import { PaginationProps } from '../../hooks/features/usePagination';
-import { GridRootRef } from '../gridRootRef';
+import { RootContainerRef } from '../rootContainerRef';
 import { ApiRef } from '../api';
 
 /**
@@ -32,5 +32,5 @@ export interface ComponentParams {
   /**
    * The ref of the inner div Element of the grid
    */
-  rootElement: GridRootRef;
+  rootElement: RootContainerRef;
 }
