@@ -5,7 +5,12 @@ import { darkTheme } from './dark';
 import { lightTheme } from './light';
 import { AppTheme } from './appTheme';
 
-type ReturnType = [AppTheme, string, () => void, boolean];
+type ReturnType = {
+  theme: AppTheme;
+  themeId: string;
+  toggleTheme: () => void;
+  isDark: boolean;
+};
 
 export function useTheme(): ReturnType {
   const [selectedThemeId, setSelectedTheme] = useLocalStorage(STORAGE_THEME_KEY, DEFAULT_THEME);
@@ -26,5 +31,5 @@ export function useTheme(): ReturnType {
       setSelectedTheme(lightTheme.id);
     }
   };
-  return [theme, selectedThemeId, toggleTheme, isDark];
+  return { theme, themeId: theme.id, toggleTheme, isDark };
 }
