@@ -7,7 +7,7 @@ const stories = [
   '/story/x-grid-tests-columns--very-small-col-sizes',
   {
     path: '/story/x-grid-tests-columns--column-description-tooltip',
-    beforeTest: async page => {
+    beforeTest: async (page) => {
       await page.hover(
         '.grid-root .columns-container .material-col-cell-wrapper .material-col-cell:nth-child(2) .title',
       );
@@ -17,7 +17,7 @@ const stories = [
   '/story/x-grid-tests-columns--update-columns-btn',
   {
     path: '/story/x-grid-tests-columns--update-columns-btn',
-    beforeTest: async page => {
+    beforeTest: async (page) => {
       await page.click('#action-btn');
     },
   },
@@ -85,7 +85,7 @@ describe.only('snapshotTest', () => {
     const path = typeof config === 'string' ? config : config.path;
     const beforeTest = typeof config === 'string' ? undefined : config.beforeTest;
 
-    test(path, async done => {
+    test(path, async (done) => {
       await snapshotTest(path, beforeTest);
       done();
     });

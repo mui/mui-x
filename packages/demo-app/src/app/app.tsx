@@ -11,7 +11,7 @@ import { RealDataGridDemo } from './demos/grid/real-data-grid.demo';
 import { AppIntro } from './app-intro';
 
 const StyledApp = styled.div`
-  background: ${p => p.theme.colors.background};
+  background: ${(p) => p.theme.colors.background};
 `;
 
 export const App: React.FC<{}> = () => {

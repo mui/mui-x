@@ -22,13 +22,13 @@ export function datagenCli(args) {
       'The output file, if not passed, it will generate "./<dataset>-<size>.json"',
     )
     .option('-p, --pretty', 'print a prettier output', false)
-    .action(function() {
+    .action(function () {
       console.log(
         `Generating new ${program.dataset} dataset with ${Number(
           program.size,
         ).toLocaleString()} rows`,
       );
-      loadData(Number(program.size), program.dataset).then(data => {
+      loadData(Number(program.size), program.dataset).then((data) => {
         const output = !program.output
           ? `./${program.dataset}-${program.size}.json`
           : program.output;

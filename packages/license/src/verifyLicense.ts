@@ -15,7 +15,7 @@ const MUI_DOMAINS = [
   'material-ui.com/',
 ];
 const isOnMUIDomain = () =>
-  MUI_DOMAINS.some(domain => window != null && window.location.href.indexOf(domain) > -1);
+  MUI_DOMAINS.some((domain) => window != null && window.location.href.indexOf(domain) > -1);
 
 const expiryReg = /^.*EXPIRY=([0-9]+),.*$/;
 

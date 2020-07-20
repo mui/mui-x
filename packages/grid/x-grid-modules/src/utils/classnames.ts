@@ -10,7 +10,7 @@ export const classnames = (...args: any[]): string => {
     } else if (isString(value)) {
       cssClass += value;
     } else if (typeof value === 'object') {
-      Object.keys(value).forEach(cssKey => {
+      Object.keys(value).forEach((cssKey) => {
         if (value[cssKey]) {
           cssClass += `${cssKey} `;
         }

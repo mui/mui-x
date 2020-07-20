@@ -29,7 +29,7 @@ export function useScrollFn(
   ]);
 
   const scrollTo: (v: ScrollParams) => void = useCallback(
-    v => {
+    (v) => {
       if (v.left === previousValue.current?.left && v.top === previousValue.current.top) {
         return;
       }

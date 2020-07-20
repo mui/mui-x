@@ -151,11 +151,11 @@ export const useKeyboard = (
       let selectionFromRowIndex = currentRowIndex;
       const selectedRows = apiRef.current!.getSelectedRows();
       if (selectedRows.length > 0) {
-        const selectedRowsIndex = selectedRows.map(row =>
+        const selectedRowsIndex = selectedRows.map((row) =>
           apiRef.current!.getRowIndexFromId(row.id),
         );
 
-        const diffWithCurrentIndex: number[] = selectedRowsIndex.map(idx =>
+        const diffWithCurrentIndex: number[] = selectedRowsIndex.map((idx) =>
           Math.abs(currentRowIndex - idx),
         );
         const minIndex = Math.max(...diffWithCurrentIndex);

@@ -41,7 +41,7 @@ export const useSorting = (
 
   const upsertSortModel = useCallback(
     (field: string, sortItem?: SortItem): SortModel => {
-      const existingIdx = sortModelRef.current.findIndex(c => c.colId === field);
+      const existingIdx = sortModelRef.current.findIndex((c) => c.colId === field);
       let newSortModel = [...sortModelRef.current];
       if (existingIdx > -1) {
         if (!sortItem) {
@@ -59,7 +59,7 @@ export const useSorting = (
 
   const createSortItem = useCallback(
     (col: ColDef): SortItem | undefined => {
-      const existing = sortModelRef.current.find(c => c.colId === col.field);
+      const existing = sortModelRef.current.find((c) => c.colId === col.field);
       if (existing) {
         const nextSort = nextSortDirection(options.sortingOrder, existing.sort);
         return nextSort == null ? undefined : { ...existing, sort: nextSort };
@@ -83,7 +83,7 @@ export const useSorting = (
 
   const buildComparatorList = useCallback(
     (sortModel: SortModel): FieldComparatorList => {
-      const comparators = sortModel.map(item => {
+      const comparators = sortModel.map((item) => {
         const col = apiRef.current!.getColumnFromField(item.colId);
         const comparator = isDesc(item.sort)
           ? (v1: CellValue, v2: CellValue, row1: RowModel, row2: RowModel) =>
@@ -97,7 +97,7 @@ export const useSorting = (
   );
 
   const getOriginalOrderedRows: () => RowModel[] = useCallback(() => {
-    return originalOrder.current.map(rowId => apiRef.current!.getRowFromId(rowId));
+    return originalOrder.current.map((rowId) => apiRef.current!.getRowFromId(rowId));
   }, [apiRef, originalOrder]);
 
   const applySorting = useCallback(() => {
@@ -118,7 +118,7 @@ export const useSorting = (
     apiRef.current!.emit(POST_SORT, sortModelRef.current);
 
     const params: ColumnSortedParams = {
-      sortedColumns: sortModelRef.current.map(model =>
+      sortedColumns: sortModelRef.current.map((model) =>
         apiRef.current!.getColumnFromField(model.colId),
       ),
       sortModel: sortModelRef.current,
@@ -209,10 +209,10 @@ export const useSorting = (
     if (colsProp.length > 0 && apiRef.current) {
       const sortedCols = apiRef.current
         .getAllColumns()
-        .filter(c => c.sortDirection != null)
+        .filter((c) => c.sortDirection != null)
         .sort((a, b) => a.sortIndex! - b.sortIndex!);
 
-      const sortModel = sortedCols.map(c => ({ colId: c.field, sort: c.sortDirection }));
+      const sortModel = sortedCols.map((c) => ({ colId: c.field, sort: c.sortDirection }));
       setSortModel(sortModel);
     }
   }, [colState, setSortModel, apiRef, colsProp]);
