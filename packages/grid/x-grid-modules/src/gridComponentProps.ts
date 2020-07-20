@@ -1,4 +1,4 @@
-import { Columns, GridApiRef, GridComponentOverridesProp, GridOptions, RowsProp } from './models';
+import { Columns, ApiRef, GridComponentOverridesProp, GridOptions, RowsProp } from './models';
 
 /**
  * Partial set of [[GridOptions]].
@@ -28,7 +28,7 @@ export interface GridComponentProps {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with [[gridApiRef()]]
    */
-  apiRef?: GridApiRef;
+  apiRef?: ApiRef;
   /**
    * Boolean prop that toggle the loading overlay
    */

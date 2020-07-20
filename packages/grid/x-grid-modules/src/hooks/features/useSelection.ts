@@ -7,7 +7,7 @@ import {
   RowSelectedParams,
   RowsProp,
   SelectionChangedParams,
-  GridApiRef,
+  ApiRef,
 } from '../../models';
 import { useLogger } from '../utils/useLogger';
 import {
@@ -24,7 +24,7 @@ export const useSelection = (
   options: GridOptions,
   rowsProp: RowsProp,
   initialised: boolean,
-  apiRef: GridApiRef,
+  apiRef: ApiRef,
 ): void => {
   const logger = useLogger('useSelection');
   const selectedItemsRef = React.useRef<RowId[]>([]);

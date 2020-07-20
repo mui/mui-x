@@ -21,7 +21,7 @@ import {
   isTabKey,
 } from '../../utils';
 import { CELL_CSS_CLASS, ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
-import { CellIndexCoordinates, GridOptions, GridApiRef } from '../../models';
+import { CellIndexCoordinates, GridOptions, ApiRef } from '../../models';
 import { useApiEventHandler } from './useApiEventHandler';
 
 const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
@@ -45,7 +45,7 @@ const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
 export const useKeyboard = (
   options: GridOptions,
   initialised: boolean,
-  apiRef: GridApiRef,
+  apiRef: ApiRef,
 ): void => {
   const logger = useLogger('useKeyboard');
   const isMultipleKeyPressed = React.useRef(false);

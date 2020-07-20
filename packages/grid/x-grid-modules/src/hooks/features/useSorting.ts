@@ -11,7 +11,7 @@ import {
   RowModel,
   RowsProp,
   SortApi,
-  GridApiRef,
+  ApiRef,
 } from '../../models';
 import {
   COLUMN_HEADER_CLICKED,
@@ -31,7 +31,7 @@ export const useSorting = (
   options: GridOptions,
   rowsProp: RowsProp,
   colsProp: Columns,
-  apiRef: GridApiRef,
+  apiRef: ApiRef,
 ) => {
   const logger = useLogger('useSorting');
   const sortModelRef = React.useRef<SortModel>([]);

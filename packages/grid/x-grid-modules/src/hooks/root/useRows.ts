@@ -7,7 +7,7 @@ import {
   RowModel,
   Rows,
   RowsProp,
-  GridApiRef,
+  ApiRef,
 } from '../../models';
 import { useLogger } from '../utils/useLogger';
 import { useRafUpdate } from '../utils';
@@ -27,7 +27,7 @@ export const useRows = (
   options: GridOptions,
   rows: RowsProp,
   initialised: boolean,
-  apiRef: GridApiRef,
+  apiRef: ApiRef,
 ): RowModel[] => {
   const logger = useLogger('useRows');
   const rowModels = React.useMemo(() => rows.map((r) => createRow(r)), [rows]);

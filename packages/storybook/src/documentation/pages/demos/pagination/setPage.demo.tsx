@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Columns, RowsProp, XGrid, gridApiRef } from '@material-ui/x-grid';
+import { Columns, RowsProp, XGrid, useApiRef } from '@material-ui/x-grid';
 import { randomCreatedDate, randomUpdatedDate } from '@material-ui/x-grid-data-generator';
 import '../demo.css';
 
 export default function SetPageDemo() {
-  const apiRef = gridApiRef();
+  const apiRef = useApiRef();
 
   React.useEffect(() => {
     apiRef.current?.setPage(2);

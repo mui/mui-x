@@ -4,7 +4,7 @@ import { ScrollParams, useLogger } from '../utils';
 import { COL_RESIZE_START, COL_RESIZE_STOP, SCROLLING } from '../../constants/eventsConstants';
 import { findCellElementsFromCol, findDataContainerFromCurrent } from '../../utils';
 import { useStateRef } from '../utils/useStateRef';
-import { GridApiRef } from '../../models';
+import { ApiRef } from '../../models';
 
 const MIN_COL_WIDTH = 50;
 const MOUSE_LEFT_TIMEOUT = 1000;
@@ -12,7 +12,7 @@ const MOUSE_LEFT_TIMEOUT = 1000;
 // TODO improve experience for last column
 export const useColumnResize = (
   columnsRef: React.RefObject<HTMLDivElement>,
-  apiRef: GridApiRef,
+  apiRef: ApiRef,
   headerHeight: number,
 ) => {
   const logger = useLogger('useColumnResize');

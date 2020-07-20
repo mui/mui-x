@@ -46,7 +46,7 @@ Below is a sample code showing how you can achieve this.
 
 ```tsx
 function StreamingGrid() {
-  const api = gridApiRef();
+  const apiRef = useApiRef();
   const columns = [
     { field: 'id' },
     { field: 'username', width: 150 },
@@ -75,13 +75,13 @@ function StreamingGrid() {
     );
 
     return () => subscription.unsubscribe();
-  }, [api]);
+  }, [apiRef]);
 
   return (
     <XGrid
       rows={rows}
       columns={columns}
-      apiRef={api}
+      apiRef={apiRef}
       options={{ autoHeight: true }}
     />
   );
