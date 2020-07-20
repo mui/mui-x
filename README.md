@@ -1,6 +1,6 @@
 # Material-UI X
 
-The Material-UI X mono-repo of our advanced components.
+The Material-UI X mono-repo gathers Material-UI advanced components.
 
 ## XGrid
 

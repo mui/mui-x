@@ -27,6 +27,10 @@ import { useApi, useColumns, useKeyboard, useRows } from './hooks/root';
 import { useLogger, useLoggerFactory } from './hooks/utils';
 import { debounce, mergeOptions } from './utils';
 
+/**
+ * Material-UI Grid React component implementing [[GridComponentProps]].
+ * @return JSX.Element.
+ */
 export const GridComponent: React.FC<GridComponentProps> = React.memo(
   ({ rows, columns, options, apiRef, loading, licenseStatus, className, components }) => {
     useLoggerFactory(options?.logger, options?.logLevel);
