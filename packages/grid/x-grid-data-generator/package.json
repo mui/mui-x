@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/x-grid-data-generator",
-  "version": "0.1.57",
+  "version": "0.1.58",
   "description": "Data generator services for the grid",
   "author": "Material-UI Team",
   "main": "dist/cjs/index.js",
@@ -53,5 +53,5 @@
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
   ],
-  "gitHead": "d625476a940ee7a057a892e2266a158342d784d0"
+  "gitHead": "2607d2b9b11cdd0de926cf5480f6011517cd4e33"
 }
