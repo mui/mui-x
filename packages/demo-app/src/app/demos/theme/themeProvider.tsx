@@ -29,7 +29,7 @@ export const ThemeContext = React.createContext<AppThemeContext>({
   theme: themeToLoad,
 });
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = props => {
+export const ThemeProvider: React.FC<ThemeProviderProps> = (props) => {
   const muiTheme = createMuiTheme({
     palette: props.theme as PaletteOptions,
   });

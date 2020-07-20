@@ -44,7 +44,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
       mergeOptions(DEFAULT_GRID_OPTIONS, options),
     );
     React.useEffect(() => {
-      setInternalOptions(previousState => mergeOptions(previousState, options));
+      setInternalOptions((previousState) => mergeOptions(previousState, options));
     }, [options]);
 
     if (!apiRef) {
@@ -72,7 +72,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
     const paginationProps = usePagination(internalRows, internalColumns, internalOptions, apiRef);
 
     React.useEffect(() => {
-      setInternalOptions(previousState => {
+      setInternalOptions((previousState) => {
         if (previousState.paginationPageSize !== paginationProps.pageSize) {
           return { ...previousState, paginationPageSize: paginationProps.pageSize };
         }
@@ -114,7 +114,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
     );
 
     const getTotalHeight = React.useCallback(
-      size => {
+      (size) => {
         if (!internalOptions.autoHeight) {
           return size.height;
         }

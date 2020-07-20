@@ -242,18 +242,18 @@ export function StyledColumns() {
       description: 'this column has a value getter and is not sortable',
       headerClass: 'highlight',
       sortable: false,
-      valueGetter: params =>
+      valueGetter: (params) =>
         `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
       cellClassRules: {
-        common: params => params.data.lastName === 'Smith',
-        unknown: params => !params.data.lastName,
+        common: (params) => params.data.lastName === 'Smith',
+        unknown: (params) => !params.data.lastName,
       },
     },
     {
       field: 'isRegistered',
       description: 'Is Registered',
       align: 'center',
-      cellRenderer: params => <IsDone value={!!params.value} />,
+      cellRenderer: (params) => <IsDone value={!!params.value} />,
       headerComponent: RegisteredComponent,
       headerAlign: 'center',
     },

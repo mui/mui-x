@@ -17,7 +17,7 @@ export default function QuickStartDemo() {
     {
       field: 'age',
       headerClass: 'highlight',
-      valueGetter: params =>
+      valueGetter: (params) =>
         new Date().getFullYear() - (params.getValue('dateFounded') as Date).getFullYear(),
     },
     {

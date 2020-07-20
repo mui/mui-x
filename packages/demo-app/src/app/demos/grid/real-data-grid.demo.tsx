@@ -27,14 +27,14 @@ const loadFile = async (file: string) => {
 };
 
 const mapDates = (data: RowModel[], columns: Columns): RowModel[] => {
-  const dateCols = columns.filter(c => c.type === 'date' || c.type === 'dateTime');
+  const dateCols = columns.filter((c) => c.type === 'date' || c.type === 'dateTime');
 
   if (dateCols.length === 0) {
     return data;
   }
 
-  const mappedData = data.map(row => {
-    dateCols.forEach(dateCol => {
+  const mappedData = data.map((row) => {
+    dateCols.forEach((dateCol) => {
       row[dateCol.field] = new Date(row[dateCol.field]);
     });
 
@@ -44,7 +44,7 @@ const mapDates = (data: RowModel[], columns: Columns): RowModel[] => {
   return mappedData;
 };
 
-export const RealDataGridDemo: React.FC<{ toggleTheme: () => void; themeId: string }> = props => {
+export const RealDataGridDemo: React.FC<{ toggleTheme: () => void; themeId: string }> = (props) => {
   const [size, setSize] = React.useState(100);
   const [type, setType] = React.useState('commodity');
 
@@ -61,7 +61,7 @@ export const RealDataGridDemo: React.FC<{ toggleTheme: () => void; themeId: stri
     setLoading(true);
 
     loadFile(`./static-data/${type}-1000.json`).then(
-      data => {
+      (data) => {
         if (size > 1000) {
           while (data.length < size) {
             data = [...data, ...data];
@@ -104,7 +104,7 @@ export const RealDataGridDemo: React.FC<{ toggleTheme: () => void; themeId: stri
       paginationPageSize: settings.pagesize > 0 ? settings.pagesize : undefined,
     };
 
-    setPagination(p => {
+    setPagination((p) => {
       if (
         p.pagination === newPagination.pagination &&
         p.paginationAutoPageSize === newPagination.paginationAutoPageSize &&

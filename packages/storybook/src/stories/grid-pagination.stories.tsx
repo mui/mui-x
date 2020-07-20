@@ -61,7 +61,7 @@ export function PaginationKnobs() {
         pagination: true,
         paginationPageSize: number('PageSize', 100),
         paginationAutoPageSize: boolean('Auto page size', false),
-        paginationRowsPerPageOptions: rowsPerPageOptions.map(value => parseInt(value, 10)),
+        paginationRowsPerPageOptions: rowsPerPageOptions.map((value) => parseInt(value, 10)),
         hideFooterRowCount: boolean('Hide row count', false),
         hideFooterPagination: boolean('Hide footer pagination', false),
         hideFooter: boolean('Hide footer', false),
@@ -139,7 +139,7 @@ export function PaginationApiTests() {
         >
           Change pageSize with Api
         </Button>
-        <Button color="primary" variant="outlined" onClick={() => setAutoSize(p => !p)}>
+        <Button color="primary" variant="outlined" onClick={() => setAutoSize((p) => !p)}>
           toggle pageAutoSize
         </Button>
       </div>
@@ -188,7 +188,7 @@ export function AutoPagination() {
           component="button"
           color="primary"
           variant="outlined"
-          onClick={() => setSize(p => ({ ...p, height: p.height + 20 }))}
+          onClick={() => setSize((p) => ({ ...p, height: p.height + 20 }))}
         >
           Add 20px height
         </Button>

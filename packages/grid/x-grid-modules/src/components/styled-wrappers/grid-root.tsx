@@ -73,7 +73,7 @@ export const RootStyle = styled.div<GridRootProps>`
       outline-offset: -3px;
     }
     .overlay {
-      top: ${p => p.options.headerHeight}px;
+      top: ${(p) => p.options.headerHeight}px;
     }
     .columns-container {
       position: absolute;
@@ -87,9 +87,9 @@ export const RootStyle = styled.div<GridRootProps>`
       border-bottom: 1px solid #bdc3c7;
       z-index: 100;
 
-      min-height: ${p => p.options.headerHeight}px;
-      max-height: ${p => p.options.headerHeight}px;
-      line-height: ${p => p.options.headerHeight}px;
+      min-height: ${(p) => p.options.headerHeight}px;
+      max-height: ${(p) => p.options.headerHeight}px;
+      line-height: ${(p) => p.options.headerHeight}px;
 
       background-color: #f9f9f9;
       color: #000000;
@@ -105,7 +105,7 @@ export const RootStyle = styled.div<GridRootProps>`
           position: relative;
           display: flex;
           padding: 0 16px;
-          border-right: ${p => (p.options.showColumnSeparator ? '1px solid #bdc3c7' : 'none')};
+          border-right: ${(p) => (p.options.showColumnSeparator ? '1px solid #bdc3c7' : 'none')};
 
           &.sortable {
             cursor: pointer;
@@ -127,7 +127,7 @@ export const RootStyle = styled.div<GridRootProps>`
           }
           & > .icon,
           .sort-icon > .icon {
-            min-height: ${p => p.options.headerHeight}px;
+            min-height: ${(p) => p.options.headerHeight}px;
           }
           .column-separator {
             position: absolute;
@@ -136,7 +136,7 @@ export const RootStyle = styled.div<GridRootProps>`
             display: flex;
             flex-direction: column;
             justify-content: center;
-            min-height: ${p => p.options.headerHeight}px;
+            min-height: ${(p) => p.options.headerHeight}px;
 
             .icon.separator {
               color: #bdc3c7;
@@ -147,7 +147,7 @@ export const RootStyle = styled.div<GridRootProps>`
             }
           }
           * {
-            max-height: ${p => p.options.headerHeight}px;
+            max-height: ${(p) => p.options.headerHeight}px;
           }
           &.checkbox-selection-header-cell .checkbox-input {
             padding: 12px;
@@ -166,11 +166,11 @@ export const RootStyle = styled.div<GridRootProps>`
     }
     .window {
       position: absolute;
-      top: ${p => p.options.headerHeight}px;
+      top: ${(p) => p.options.headerHeight}px;
       bottom: 0px;
       left: 0px;
       right: 0px;
-      overflow-y: ${p => (p.options.autoHeight ? 'hidden' : 'auto')};
+      overflow-y: ${(p) => (p.options.autoHeight ? 'hidden' : 'auto')};
       overflow-x: auto;
 
       .viewport {
@@ -184,8 +184,8 @@ export const RootStyle = styled.div<GridRootProps>`
       .material-row {
         display: flex;
         width: fit-content;
-        max-height: ${p => p.options.rowHeight}px;
-        min-height: ${p => p.options.rowHeight}px;
+        max-height: ${(p) => p.options.rowHeight}px;
+        min-height: ${(p) => p.options.rowHeight}px;
         background-color: #fff;
 
         &.even {
@@ -211,9 +211,9 @@ export const RootStyle = styled.div<GridRootProps>`
           text-overflow: ellipsis;
           white-space: nowrap;
           padding: 0 16px;
-          line-height: ${p => p.options.rowHeight - 1}px; /* 1 = border bottom; */
-          max-height: ${p => p.options.rowHeight}px;
-          min-height: ${p => p.options.rowHeight}px;
+          line-height: ${(p) => p.options.rowHeight - 1}px; /* 1 = border bottom; */
+          max-height: ${(p) => p.options.rowHeight}px;
+          min-height: ${(p) => p.options.rowHeight}px;
           font-size: 12px;
           border-bottom: 1px solid #bdc3c7;
 

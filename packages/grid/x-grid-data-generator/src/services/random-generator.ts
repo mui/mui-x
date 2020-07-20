@@ -54,10 +54,10 @@ export const randomAvatar = () => ({ name: faker.name.findName(), color: randomC
 export const randomJobTitle = () => faker.name.jobTitle();
 export const randomRating = () => random(0, 5);
 
-export const generateName = data => data.avatar.name;
-export const generateFilledQuantity = data =>
+export const generateName = (data) => data.avatar.name;
+export const generateFilledQuantity = (data) =>
   Number((data.quantity * randomRate()).toFixed()) / data.quantity;
-export const generateIsFilled = data => data.quantity === data.filledQuantity;
-export const generateSubTotal = data => data.unitPrice * data.quantity;
-export const generateFeeAmount = data => Number(data.feeRate) * data.subTotal;
-export const generateTotalPrice = data => data.feeRate + data.subTotal;
+export const generateIsFilled = (data) => data.quantity === data.filledQuantity;
+export const generateSubTotal = (data) => data.unitPrice * data.quantity;
+export const generateFeeAmount = (data) => Number(data.feeRate) * data.subTotal;
+export const generateTotalPrice = (data) => data.feeRate + data.subTotal;
