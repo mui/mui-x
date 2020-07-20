@@ -2,7 +2,7 @@
   "name": "material-ui-x",
   "version": "0.1.0",
   "description": "Material-UI X Monorepo",
-  "author": "Damien Tassone",
+  "author": "Material-UI Team",
   "private": true,
   "devDependencies": {
     "@material-ui/core": "^4.9.12",

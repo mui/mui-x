@@ -1,14 +1,15 @@
 {
   "name": "@material-ui/x-license",
   "version": "0.1.40",
-  "description": "Material-UI License Verification",
-  "author": "Damien Tassone <damien@material-ui.com>",
+  "description": "Material-UI X License verification",
+  "author": "Material-UI Team",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/x-license.d.ts",
   "files": [
     "dist/*"
   ],
+  "license": "See LICENSE file",
   "publishConfig": {
     "access": "public"
   },
