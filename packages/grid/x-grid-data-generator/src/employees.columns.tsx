@@ -14,8 +14,7 @@ import {
   randomUpdatedDate,
   randomUrl,
   randomUserName,
-} from './services/';
-
+} from './services';
 import {
   AvatarRenderer,
   CountryRenderer,

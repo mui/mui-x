@@ -143,17 +143,17 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
             className={`material-grid MuiGrid ${className || ''}`}
             options={internalOptions}
             style={{ width: size.width, height: getTotalHeight(size) }}
-            role={'grid'}
+            role="grid"
             aria-colcount={internalColumns.visible.length}
             aria-rowcount={internalRows.length + 1}
             tabIndex={0}
-            aria-label={'Grid'}
+            aria-label="grid"
             aria-multiselectable={internalOptions.enableMultipleSelection}
           >
             <ApiContext.Provider value={apiRef}>
               <OptionsContext.Provider value={internalOptions}>
                 {customComponents.headerComponent}
-                <div className={'main-grid-container'}>
+                <div className="main-grid-container">
                   <Watermark licenseStatus={licenseStatus} />
                   <ColumnsContainer ref={columnsContainerRef}>
                     <ColumnsHeader

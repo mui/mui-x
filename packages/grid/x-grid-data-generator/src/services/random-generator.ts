@@ -22,7 +22,7 @@ export const randomArrayItem = (arr: any[]) => arr[random(0, arr.length - 1).toF
 
 export const randomColor = () => randomArrayItem(COLORS);
 export const randomId = () => faker.random.uuid();
-export const randomDesk = () => 'D-' + faker.random.number();
+export const randomDesk = () => `D-${faker.random.number()}`;
 export const randomCommodity = () => randomArrayItem(COMMODITY_OPTIONS);
 export const randomTraderId = () => faker.random.number();
 export const randomTraderName = () => faker.name.findName();

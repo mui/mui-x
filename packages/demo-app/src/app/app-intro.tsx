@@ -98,31 +98,26 @@ const Splash = styled.div`
   }
 `;
 
-export const AppIntro: React.FC<{}> = () => {
+export function AppIntro() {
   return (
     <React.Fragment>
       <Splash>
-        <Container maxWidth="sm" className={'splash-container'}>
-          <div className={'logo-container'}>
+        <Container maxWidth="sm" className="splash-container">
+          <div className="logo-container">
             <MuiLogo />
-            <Typography variant="h1" className={'product-title-logo'}>
+            <Typography variant="h1" className="product-title-logo">
               X
             </Typography>
           </div>
           <div>
-            <Typography variant="h1" className={'title'}>
-              Material-UI <span className={'product-title'}>X</span>
+            <Typography variant="h1" className="title">
+              Material-UI <span className="product-title">X</span>
             </Typography>
-            <Typography component="h5" className={'intro'}>
+            <Typography component="h5" className="intro">
               Extension with highly complex components for Startup and Enterprise projects.
             </Typography>
-            <Button
-              href={'#/grid'}
-              variant={'outlined'}
-              color={'primary'}
-              className={'main-action-button'}
-            >
-              <KeyboardArrowRightIcon fontSize={'small'} /> Preview
+            <Button href="#/grid" variant="outlined" color="primary" className="main-action-button">
+              <KeyboardArrowRightIcon fontSize="small" /> Preview
             </Button>
           </div>
         </Container>
@@ -130,8 +125,4 @@ export const AppIntro: React.FC<{}> = () => {
       <Footer />
     </React.Fragment>
   );
-};
-
-/*
-* Build your own financial or
-            trading application with this highly customisable and accessible toolkit. */
+}

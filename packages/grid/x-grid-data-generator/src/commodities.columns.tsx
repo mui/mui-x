@@ -31,7 +31,7 @@ import {
   randomRateType,
   randomContractType,
   randomTaxCode,
-} from './services/';
+} from './services';
 import {
   CountryRenderer,
   DoneRenderer,

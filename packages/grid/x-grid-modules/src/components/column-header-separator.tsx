@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { useIcons } from '../hooks/utils/useIcons';
 
 export interface ColumnHeaderSeparatorProps {
@@ -18,7 +17,7 @@ export const ColumnHeaderSeparator: React.FC<ColumnHeaderSeparatorProps> = React
 
     const icon = React.createElement(icons!.columnResize!, resizeIconProps);
 
-    return <div className={'column-separator'}>{icon}</div>;
+    return <div className="column-separator">{icon}</div>;
   },
 );
 ColumnHeaderSeparator.displayName = 'ColumnHeaderSeparator';

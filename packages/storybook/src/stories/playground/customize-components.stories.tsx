@@ -189,7 +189,7 @@ function FooterComponent2(props) {
 
 function CustomHeader(props) {
   return (
-    <div className={'custom-header'}>
+    <div className="custom-header">
       <PaginationComponent {...props} />
     </div>
   );

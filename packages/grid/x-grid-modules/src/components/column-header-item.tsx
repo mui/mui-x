@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useContext } from 'react';
 import { ColDef } from '../models/colDef';
 import { ApiContext } from './api-context';
 import { HEADER_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
@@ -17,7 +16,7 @@ interface ColumnHeaderItemProps {
 
 export const ColumnHeaderItem = React.memo(
   ({ column, colIndex, headerHeight, onResizeColumn }: ColumnHeaderItemProps) => {
-    const api = useContext(ApiContext);
+    const api = React.useContext(ApiContext);
 
     const cssClass = classnames(
       HEADER_CELL_CSS_CLASS,
@@ -52,7 +51,7 @@ export const ColumnHeaderItem = React.memo(
           maxHeight: headerHeight,
           minHeight: headerHeight,
         }}
-        role={'columnheader'}
+        role="columnheader"
         tabIndex={-1}
         aria-colindex={colIndex + 1}
         {...ariaSort}

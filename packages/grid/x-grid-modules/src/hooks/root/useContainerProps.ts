@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useRef } from 'react';
+import * as React from 'react';
 import { ContainerProps, ElementSize, GridOptions } from '../../models';
 import { useLogger } from '../utils/useLogger';
 
@@ -8,11 +8,11 @@ type ReturnType = (
   rowsCount: number,
 ) => ContainerProps | null; // [ContainerProps | null, () => void];
 
-export const useContainerProps = (windowRef: RefObject<HTMLDivElement>): ReturnType => {
+export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>): ReturnType => {
   const logger = useLogger('useContainerProps');
-  const windowSizesRef = useRef<ElementSize>({ width: 0, height: 0 });
+  const windowSizesRef = React.useRef<ElementSize>({ width: 0, height: 0 });
 
-  const getContainerProps = useCallback(
+  const getContainerProps = React.useCallback(
     (options: GridOptions, columnsTotalWidth: number, rowsCount: number): ContainerProps | null => {
       if (!windowRef || !windowRef.current) {
         return null;

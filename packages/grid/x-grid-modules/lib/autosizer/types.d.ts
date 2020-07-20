@@ -3,7 +3,6 @@
 // Definitions by: Hidemi Yukita <https://github.com/otofu-square>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 // TypeScript Version: 2.8
-
 import * as React from 'react';
 
 export interface Size {

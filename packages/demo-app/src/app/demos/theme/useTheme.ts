@@ -1,23 +1,25 @@
-import { useContext, useEffect, useState } from 'react';
+import * as React from 'react';
 import { useLocalStorage } from '../utils/useLocalStorage';
 import { STORAGE_THEME_KEY, ThemeContext, ThemeValuePair } from './themeProvider';
 import { darkTheme } from './dark';
 import { lightTheme } from './light';
 import { AppTheme } from './appTheme';
 
-type ReturnType = [AppTheme, string, () => void, boolean];
+type ReturnType = {
+  theme: AppTheme;
+  themeId: string;
+  toggleTheme: () => void;
+  isDark: boolean;
+};
 
 export function useTheme(): ReturnType {
-  const currentThemeCtx = useContext(ThemeContext);
-  const [selectedThemeId, setSelectedTheme] = useLocalStorage(
-    STORAGE_THEME_KEY,
-    currentThemeCtx.theme,
-  );
+  const currentThemeCtx = React.useContext(ThemeContext);
+  const [themeId, setSelectedTheme] = useLocalStorage(STORAGE_THEME_KEY, currentThemeCtx.theme);
 
-  const [theme, setTheme] = useState(ThemeValuePair[selectedThemeId]);
-  const [isDark, setIsDark] = useState(theme === darkTheme);
+  const [theme, setTheme] = React.useState(ThemeValuePair[themeId]);
+  const [isDark, setIsDark] = React.useState(theme === darkTheme);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const newTheme = ThemeValuePair[currentThemeCtx.theme];
     setTheme(newTheme);
     setSelectedTheme(currentThemeCtx.theme);
@@ -35,5 +37,5 @@ export function useTheme(): ReturnType {
       currentThemeCtx.toggleTheme();
     }
   };
-  return [theme, selectedThemeId, toggleTheme, isDark];
+  return { theme, themeId, toggleTheme, isDark };
 }

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import * as React from 'react';
 import { useLogger } from '../utils/useLogger';
 import {
   CELL_CLICKED,
@@ -33,35 +33,34 @@ import {
 import { useApiMethod } from './useApiMethod';
 import { useApiEventHandler } from './useApiEventHandler';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const EventEmitter = require('events').EventEmitter;
 
 // TODO Split this effect in useEvents and UseApi
-export const useApi = (
+export function useApi(
   gridRootRef: React.RefObject<HTMLDivElement>,
   windowRef: React.RefObject<HTMLDivElement>,
   options: GridOptions,
   apiRef: GridApiRef,
-): boolean => {
-  const [isApiInitialised, setApiInitialised] = useState(false);
-  const [initialised, setInit] = useState(false);
-  const isResizingRef = useRef(false);
+): boolean {
+  const [isApiInitialised, setApiInitialised] = React.useState(false);
+  const [initialised, setInit] = React.useState(false);
+  const isResizingRef = React.useRef(false);
   const logger = useLogger('useApi');
 
-  const initApi = useCallback(() => {
+  const initApi = React.useCallback(() => {
     logger.debug('Initialising grid api.');
     const api = new EventEmitter();
     apiRef.current = api as GridApi;
     setApiInitialised(true);
   }, [apiRef, logger, setApiInitialised]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (apiRef) {
       initApi();
     }
   }, [apiRef, initApi]);
 
-  const emitEvent = useCallback(
+  const emitEvent = React.useCallback(
     (name: string, ...args: any[]) => {
       if (apiRef && apiRef.current && isApiInitialised) {
         apiRef.current.emit(name, ...args);
@@ -70,23 +69,24 @@ export const useApi = (
     [apiRef, isApiInitialised],
   );
 
-  const getHandler = useCallback((name: string) => (...args: any[]) => emitEvent(name, ...args), [
-    emitEvent,
-  ]);
+  const getHandler = React.useCallback(
+    (name: string) => (...args: any[]) => emitEvent(name, ...args),
+    [emitEvent],
+  );
 
-  const handleResizeStart = useCallback(() => {
+  const handleResizeStart = React.useCallback(() => {
     isResizingRef.current = true;
   }, [isResizingRef]);
-  const handleResizeStop = useCallback(() => {
+  const handleResizeStop = React.useCallback(() => {
     isResizingRef.current = false;
   }, [isResizingRef]);
 
-  const onClickHandler = useCallback(
-    (e: MouseEvent) => {
-      if (e.target == null) {
+  const onClickHandler = React.useCallback(
+    (event: MouseEvent) => {
+      if (event.target == null) {
         return;
       }
-      const elem = e.target as HTMLElement;
+      const elem = event.target as HTMLElement;
 
       if (isCell(elem)) {
         const cellEl = findParentElementFromClassName(elem, CELL_CSS_CLASS)! as HTMLElement;
@@ -124,7 +124,7 @@ export const useApi = (
     [emitEvent, apiRef],
   );
 
-  const registerEvent = useCallback(
+  const registerEvent = React.useCallback(
     (event: string, handler: (param: any) => void): (() => void) => {
       logger.debug(`Binding ${event} event`);
       apiRef.current!.on(event, handler);
@@ -136,23 +136,22 @@ export const useApi = (
     },
     [apiRef, logger],
   );
-  const onUnmount = useCallback(
+  const onUnmount = React.useCallback(
     (handler: (param: any) => void): (() => void) => {
       return registerEvent(UNMOUNT, handler);
     },
     [registerEvent],
   );
-  const onResize = useCallback(
+  const onResize = React.useCallback(
     (handler: (param: any) => void): (() => void) => {
       return registerEvent(RESIZE, handler);
     },
     [registerEvent],
   );
-  const resize = useCallback(() => apiRef.current?.emit(RESIZE), [apiRef]);
+  const resize = React.useCallback(() => apiRef.current?.emit(RESIZE), [apiRef]);
   useApiMethod(apiRef, { registerEvent, onUnmount, onResize, resize }, 'CoreApi');
 
-  // eslint-disable-next-line consistent-return
-  useEffect(() => {
+  React.useEffect(() => {
     if (gridRootRef && gridRootRef.current && isApiInitialised) {
       logger.debug('Binding events listeners');
       const keyDownHandler = getHandler(KEYDOWN_EVENT);
@@ -176,6 +175,8 @@ export const useApi = (
         api.removeAllListeners();
       };
     }
+
+    return undefined;
   }, [gridRootRef, isApiInitialised, getHandler, logger, onClickHandler, apiRef]);
 
   useApiEventHandler(apiRef, COL_RESIZE_START, handleResizeStart);
@@ -188,4 +189,4 @@ export const useApi = (
   useApiEventHandler(apiRef, COLUMNS_SORTED, options.onColumnsSorted);
 
   return initialised;
-};
+}

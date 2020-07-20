@@ -9,18 +9,18 @@ const CheckboxInputContainer = styled.div`
   display: block;
 `;
 
-export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api, colDef, colIndex }) => {
+export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api }) => {
   const [isChecked, setChecked] = React.useState(false);
   const [isIndeterminate, setIndeterminate] = React.useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     setChecked(checked);
     api.selectRows(api.getAllRowIds(), checked);
   };
   const selectionChanged = React.useCallback(
-    (e: SelectionChangedParams) => {
+    (event: SelectionChangedParams) => {
       const isAllSelected = api.getAllRowIds().length === e.rows.length && e.rows.length > 0;
-      const hasNoneSelected = e.rows.length === 0;
+      const hasNoneSelected = event.rows.length === 0;
       setChecked(isAllSelected || !hasNoneSelected);
       setIndeterminate(!isAllSelected && !hasNoneSelected);
     },
@@ -36,15 +36,16 @@ export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api, colDef, co
         indeterminate={isIndeterminate}
         checked={isChecked}
         onChange={handleChange}
-        className={'checkbox-input'}
+        className="checkbox-input"
         inputProps={{ 'aria-label': 'Select All Rows checkbox' }}
       />
     </CheckboxInputContainer>
   );
 });
 HeaderCheckbox.displayName = 'HeaderCheckbox';
+
 export const CellCheckboxRenderer: React.FC<CellParams> = React.memo(({ api, rowModel, value }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     api.selectRow(rowModel.id, checked, true);
   };
 
@@ -53,7 +54,7 @@ export const CellCheckboxRenderer: React.FC<CellParams> = React.memo(({ api, row
       <Checkbox
         checked={!!value}
         onChange={handleChange}
-        className={'checkbox-input'}
+        className="checkbox-input"
         inputProps={{ 'aria-label': 'Select Row checkbox' }}
       />
     </CheckboxInputContainer>

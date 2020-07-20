@@ -45,7 +45,7 @@ export const verifyLicense = (releaseInfo: string, encodedLicense: string) => {
   let expiryTimestamp = 0;
   try {
     expiryTimestamp = parseInt(clearLicense.match(expiryReg)![1], 10);
-    if (!expiryTimestamp || isNaN(expiryTimestamp)) {
+    if (!expiryTimestamp || Number.isNaN(expiryTimestamp)) {
       console.error('Error checking license. Expiry timestamp not found or invalid!');
       return LicenseStatus.Invalid;
     }
@@ -55,7 +55,7 @@ export const verifyLicense = (releaseInfo: string, encodedLicense: string) => {
   }
 
   const pkgTimestamp = parseInt(base64Decode(releaseInfo), 10);
-  if (isNaN(pkgTimestamp)) {
+  if (Number.isNaN(pkgTimestamp)) {
     throw new Error(
       'Material-UI: The release information is invalid. Not able to validate license.',
     );

@@ -41,7 +41,7 @@ export const Cell: React.FC<GridCellProps> = React.memo(
     return (
       <div
         className={cssClasses}
-        role={'cell'}
+        role="cell"
         data-value={value}
         data-field={field}
         data-colindex={colIndex}
@@ -59,11 +59,11 @@ export const Cell: React.FC<GridCellProps> = React.memo(
 Cell.displayName = 'GridCell';
 
 export const LeftEmptyCell: React.FC<{ width?: number }> = React.memo(({ width }) =>
-  !width ? null : <Cell key={'empty-col-left'} width={width} />,
+  !width ? null : <Cell key="empty-col-left" width={width} />,
 );
 LeftEmptyCell.displayName = 'LeftEmptyCell';
 
 export const RightEmptyCell: React.FC<{ width?: number }> = React.memo(({ width }) =>
-  !width ? null : <Cell key={'empty-col-right'} width={width} />,
+  !width ? null : <Cell key="empty-col-right" width={width} />,
 );
 RightEmptyCell.displayName = 'RightEmptyCell';

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import * as React from 'react';
 import { verifyLicense } from './verifyLicense';
 import { LicenseInfo } from './licenseInfo';
 import {
@@ -8,20 +8,20 @@ import {
 } from './licenseErrorMessageUtils';
 import { LicenseStatus } from './licenseStatus';
 
-export const useLicenseVerifier = () => {
-  const [licenseStatus, setLicenseStatus] = useState(LicenseStatus.Invalid);
+export function useLicenseVerifier() {
+  const [licenseStatus, setLicenseStatus] = React.useState(LicenseStatus.Invalid);
 
-  useEffect(() => {
-    const licenseStatus = verifyLicense(LicenseInfo.releaseInfo, LicenseInfo.key);
-    setLicenseStatus(licenseStatus);
-    if (licenseStatus === LicenseStatus.Invalid) {
+  React.useEffect(() => {
+    const newLicenseStatus = verifyLicense(LicenseInfo.releaseInfo, LicenseInfo.key);
+    setLicenseStatus(newLicenseStatus);
+    if (newLicenseStatus === LicenseStatus.Invalid) {
       showInvalidLicenseError();
-    } else if (licenseStatus === LicenseStatus.NotFound) {
+    } else if (newLicenseStatus === LicenseStatus.NotFound) {
       showNotFoundLicenseError();
-    } else if (licenseStatus === LicenseStatus.Expired) {
+    } else if (newLicenseStatus === LicenseStatus.Expired) {
       showExpiredLicenseError();
     }
   }, [setLicenseStatus]);
 
   return licenseStatus;
-};
+}

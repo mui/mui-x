@@ -22,9 +22,7 @@ export default function QuickStartDemo() {
     },
     {
       field: 'logo',
-      cellRenderer: ({ value }) => (
-        <img src={value!.toString()} style={{ width: 60 }} alt={'logo'} />
-      ),
+      cellRenderer: ({ value }) => <img src={value!.toString()} style={{ width: 60 }} alt="logo" />,
     },
   ];
 
