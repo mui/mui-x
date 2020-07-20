@@ -1,9 +1,10 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import ReportProblemIcon from '@material-ui/icons/ReportProblem';
 import InfoIcon from '@material-ui/icons/Info';
 import AutorenewIcon from '@material-ui/icons/Autorenew';
 import DoneIcon from '@material-ui/icons/Done';
-import { Chip } from '@material-ui/core';
+import Chip from '@material-ui/core/Chip';
 import styled from 'styled-components';
 import { CellParams } from '@material-ui/x-grid';
 
@@ -43,13 +44,13 @@ const StatusContainer = styled.div`
 export const Status: React.FC<{ status: string }> = React.memo(({ status }) => {
   let icon: any = null;
   if (status === 'Rejected') {
-    icon = <ReportProblemIcon className={'icon'} />;
+    icon = <ReportProblemIcon className="icon" />;
   } else if (status === 'Open') {
-    icon = <InfoIcon className={'icon'} />;
+    icon = <InfoIcon className="icon" />;
   } else if (status === 'PartiallyFilled') {
-    icon = <AutorenewIcon className={'icon'} />;
+    icon = <AutorenewIcon className="icon" />;
   } else if (status === 'Filled') {
-    icon = <DoneIcon className={'icon'} />;
+    icon = <DoneIcon className="icon" />;
   }
   let label = status;
   if (status === 'PartiallyFilled') {
@@ -57,7 +58,7 @@ export const Status: React.FC<{ status: string }> = React.memo(({ status }) => {
   }
   return (
     <StatusContainer>
-      <Chip className={'status ' + status} icon={icon} label={label} variant={'outlined'} />
+      <Chip className={clsx('status', status)} icon={icon} label={label} variant="outlined" />
     </StatusContainer>
   );
 });

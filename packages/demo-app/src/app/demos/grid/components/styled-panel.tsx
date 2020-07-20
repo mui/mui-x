@@ -1,16 +1,15 @@
 import styled from 'styled-components';
-import { Panels } from '@material-ui-x/panel';
 
-export const StyledPanels = styled(Panels)`
-  background-color: ${props => props.theme.colors.backgroundLight};
+export const StyledPanels = styled.div`
+  background-color: ${(props) => props.theme.colors.backgroundLight};
 
   .panel {
     padding: 20px;
-    background-color: ${props => props.theme.colors.panelBackground};
-    color: ${props => props.theme.colors.text};
+    background-color: ${(props) => props.theme.colors.panelBackground};
+    color: ${(props) => props.theme.colors.text};
     .panel-title {
-      background-color: ${props => props.theme.colors.panelTitleBg};
-      color: ${props => props.theme.colors.panelTitle};
+      background-color: ${(props) => props.theme.colors.panelTitleBg};
+      color: ${(props) => props.theme.colors.panelTitle};
     }
 
     .panel-content {
@@ -32,13 +31,13 @@ export const StyledPanels = styled(Panels)`
       }
 
       input {
-        color: ${p => p.theme.colors.text};
+        color: ${(p) => p.theme.colors.text};
       }
       .MuiFormLabel-root {
-        color: ${p => p.theme.colors.label};
+        color: ${(p) => p.theme.colors.label};
 
         &.Mui-focused {
-          color: ${p => p.theme.colors.app};
+          color: ${(p) => p.theme.colors.app};
         }
       }
     }
@@ -48,7 +47,7 @@ export const StyledPanels = styled(Panels)`
     }
     .switch {
       display: none;
-      color: ${p => p.theme.colors.text};
+      color: ${(p) => p.theme.colors.text};
       font-size: 12px;
 
       & label: {

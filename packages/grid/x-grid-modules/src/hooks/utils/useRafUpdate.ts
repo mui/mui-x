@@ -1,17 +1,17 @@
-import { useCallback, useRef } from 'react';
+import * as React from 'react';
 import { useLogger } from './useLogger';
 
 type UseRafUpdateReturnType = [(...args: any[]) => void, (fn: (args: any) => void) => void];
 export function useRafUpdate(initialFn?: (...args: any) => void): UseRafUpdateReturnType {
   const logger = useLogger('useRafUpdate');
-  const rafRef = useRef(0);
-  const fn = useRef(initialFn);
+  const rafRef = React.useRef(0);
+  const fn = React.useRef(initialFn);
 
-  const setUpdate = useCallback((updateFn: (...args: any[]) => void) => {
+  const setUpdate = React.useCallback((updateFn: (...args: any[]) => void) => {
     fn.current = updateFn;
   }, []);
 
-  const runUpdate = useCallback(
+  const runUpdate = React.useCallback(
     (...args: any[]) => {
       if (!fn) {
         return;

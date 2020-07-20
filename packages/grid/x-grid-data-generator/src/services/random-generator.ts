@@ -22,7 +22,7 @@ export const randomArrayItem = (arr: any[]) => arr[random(0, arr.length - 1).toF
 
 export const randomColor = () => randomArrayItem(COLORS);
 export const randomId = () => faker.random.uuid();
-export const randomDesk = () => 'D-' + faker.random.number();
+export const randomDesk = () => `D-${faker.random.number()}`;
 export const randomCommodity = () => randomArrayItem(COMMODITY_OPTIONS);
 export const randomTraderId = () => faker.random.number();
 export const randomTraderName = () => faker.name.findName();
@@ -54,10 +54,10 @@ export const randomAvatar = () => ({ name: faker.name.findName(), color: randomC
 export const randomJobTitle = () => faker.name.jobTitle();
 export const randomRating = () => random(0, 5);
 
-export const generateName = data => data.avatar.name;
-export const generateFilledQuantity = data =>
+export const generateName = (data) => data.avatar.name;
+export const generateFilledQuantity = (data) =>
   Number((data.quantity * randomRate()).toFixed()) / data.quantity;
-export const generateIsFilled = data => data.quantity === data.filledQuantity;
-export const generateSubTotal = data => data.unitPrice * data.quantity;
-export const generateFeeAmount = data => Number(data.feeRate) * data.subTotal;
-export const generateTotalPrice = data => data.feeRate + data.subTotal;
+export const generateIsFilled = (data) => data.quantity === data.filledQuantity;
+export const generateSubTotal = (data) => data.unitPrice * data.quantity;
+export const generateFeeAmount = (data) => Number(data.feeRate) * data.subTotal;
+export const generateTotalPrice = (data) => data.feeRate + data.subTotal;

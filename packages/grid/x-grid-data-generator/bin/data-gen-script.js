@@ -3,4 +3,5 @@
 // eslint-disable-next-line no-global-assign
 require = require('esm')(module);
 
+// eslint-disable-next-line import/no-unresolved
 require('../dist/index-cjs').datagenCli(process.argv);

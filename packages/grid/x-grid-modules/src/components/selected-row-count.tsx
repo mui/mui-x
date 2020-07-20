@@ -6,7 +6,7 @@ export const SelectedRowCount: React.FC<{ selectedRowCount: number }> = ({ selec
   }
 
   return (
-    <div className={'selected-row-count'}>
+    <div className="selected-row-count">
       {`${selectedRowCount.toLocaleString()} ${selectedRowCount > 1 ? 'rows' : 'row'} selected`}
     </div>
   );

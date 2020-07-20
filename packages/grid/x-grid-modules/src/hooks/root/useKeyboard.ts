@@ -1,11 +1,10 @@
-import { useCallback, useRef } from 'react';
+import * as React from 'react';
 import { useLogger } from '../utils/useLogger';
 import {
   KEYDOWN_EVENT,
   KEYUP_EVENT,
   MULTIPLE_KEY_PRESS_CHANGED,
 } from '../../constants/eventsConstants';
-
 import {
   findGridRootFromCurrent,
   findParentElementFromClassName,
@@ -22,12 +21,12 @@ import {
   isTabKey,
 } from '../../utils';
 import { CELL_CSS_CLASS, ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
-import { CellIndexCoordinates, GridOptions, GridApiRef } from '../../models';
+import { CellIndexCoordinates, GridOptions, ApiRef } from '../../models';
 import { useApiEventHandler } from './useApiEventHandler';
 
 const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
   if (!isArrowKeys(code)) {
-    throw new Error('first argument code should be an Arrow Key code');
+    throw new Error('Material-UI: The first argument (code) should be an arrow key code.');
   }
 
   if (code === 'ArrowLeft') {
@@ -43,15 +42,11 @@ const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
   return { ...indexes, rowIndex: indexes.rowIndex + 1 };
 };
 
-export const useKeyboard = (
-  options: GridOptions,
-  initialised: boolean,
-  apiRef: GridApiRef,
-): void => {
+export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: ApiRef): void => {
   const logger = useLogger('useKeyboard');
-  const isMultipleKeyPressed = useRef(false);
+  const isMultipleKeyPressed = React.useRef(false);
 
-  const onMultipleKeyChange = useCallback(
+  const onMultipleKeyChange = React.useCallback(
     (isPressed: boolean) => {
       isMultipleKeyPressed.current = isPressed;
       if (apiRef.current) {
@@ -61,7 +56,7 @@ export const useKeyboard = (
     [apiRef, isMultipleKeyPressed],
   );
 
-  const navigateCells = useCallback(
+  const navigateCells = React.useCallback(
     (code: string, isCtrlPressed: boolean) => {
       const cellEl = findParentElementFromClassName(
         document.activeElement as HTMLDivElement,
@@ -103,7 +98,7 @@ export const useKeyboard = (
           (code.indexOf('Down') > -1 || isSpaceKey(code) ? autoPageSize : -1 * autoPageSize);
         nextCellIndexes = { colIndex: currentColIndex, rowIndex: nextRowIndex };
       } else {
-        throw new Error('Key not mapped to navigation behaviour');
+        throw new Error('Material-UI. Key not mapped to navigation behaviour.');
       }
 
       nextCellIndexes.rowIndex = nextCellIndexes.rowIndex <= 0 ? 0 : nextCellIndexes.rowIndex;
@@ -128,7 +123,7 @@ export const useKeyboard = (
     [apiRef, options.pagination, options.paginationPageSize],
   );
 
-  const selectActiveRow = useCallback(() => {
+  const selectActiveRow = React.useCallback(() => {
     const rowEl = findParentElementFromClassName(
       document.activeElement as HTMLDivElement,
       ROW_CSS_CLASS,
@@ -140,7 +135,7 @@ export const useKeyboard = (
     }
   }, [apiRef]);
 
-  const expandSelection = useCallback(
+  const expandSelection = React.useCallback(
     (code: string) => {
       const rowEl = findParentElementFromClassName(
         document.activeElement as HTMLDivElement,
@@ -151,11 +146,11 @@ export const useKeyboard = (
       let selectionFromRowIndex = currentRowIndex;
       const selectedRows = apiRef.current!.getSelectedRows();
       if (selectedRows.length > 0) {
-        const selectedRowsIndex = selectedRows.map(row =>
+        const selectedRowsIndex = selectedRows.map((row) =>
           apiRef.current!.getRowIndexFromId(row.id),
         );
 
-        const diffWithCurrentIndex: number[] = selectedRowsIndex.map(idx =>
+        const diffWithCurrentIndex: number[] = selectedRowsIndex.map((idx) =>
           Math.abs(currentRowIndex - idx),
         );
         const minIndex = Math.max(...diffWithCurrentIndex);
@@ -179,7 +174,7 @@ export const useKeyboard = (
     [logger, apiRef, navigateCells],
   );
 
-  const handleCopy = useCallback(() => {
+  const handleCopy = React.useCallback(() => {
     const rowEl = findParentElementFromClassName(
       document.activeElement as HTMLDivElement,
       ROW_CSS_CLASS,
@@ -195,7 +190,7 @@ export const useKeyboard = (
     document.execCommand('copy');
   }, [apiRef]);
 
-  const onKeyDownHandler = useCallback(
+  const onKeyDownHandler = React.useCallback(
     (event: KeyboardEvent) => {
       if (isMultipleKey(event.key)) {
         logger.debug('Multiple Select key pressed');
@@ -247,7 +242,7 @@ export const useKeyboard = (
     ],
   );
 
-  const onKeyUpHandler = useCallback(
+  const onKeyUpHandler = React.useCallback(
     (event: KeyboardEvent) => {
       if (isMultipleKey(event.key)) {
         logger.debug('Multiple Select key released');

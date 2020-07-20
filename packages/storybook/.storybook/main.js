@@ -10,7 +10,7 @@ if (!(__DEV__ || __PROD__)) {
   throw new Error(`Unknown env: ${env}.`)
 }
 console.log(`Loading config for ${env}`)
-
+const maxAssetSize = 1024 * 1024;
 
 module.exports = {
   stories: ['../src/**/*.stories.*'],
@@ -32,7 +32,7 @@ module.exports = {
         }
       ],
     });
-    if(__DEV__) {
+    if (__DEV__) {
       config.module.rules.push({
         test: /\.tsx?|\.js$/,
         use: ['source-map-loader'],
@@ -47,13 +47,23 @@ module.exports = {
           loader: require.resolve('@storybook/source-loader'),
           options: {
             parser: 'typescript',
-            prettierConfig: { printWidth: 80, singleQuote: false },
+            prettierConfig: {printWidth: 80, singleQuote: true},
             tsconfigPath: path.resolve(__dirname, '../tsconfig.json'),
           },
         },
       ],
       enforce: 'pre',
     });
+    config.optimization = {
+      splitChunks: {
+        chunks: 'all',
+        minSize: 30 * 1024,
+        maxSize: maxAssetSize,
+      }
+    };
+    config.performance = {
+      maxAssetSize: maxAssetSize
+    };
 
     config.resolve.extensions.push('.ts', '.tsx');
     return config;

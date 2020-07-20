@@ -1,20 +1,20 @@
+import * as React from 'react';
 import { getData, GridData } from '../data/data-service';
-import { useEffect, useState } from 'react';
 
-export const useData = (nbRows: number, nbCols: number, onData?: (data: GridData) => void) => {
-  const [data, setData] = useState<GridData>({ rows: [], columns: [] });
+export function useData(nbRows: number, nbCols: number, onData?: (data: GridData) => void) {
+  const [data, setData] = React.useState<GridData>({ rows: [], columns: [] });
 
   const loadData = async () => {
-    const data = await getData(nbRows, nbCols);
+    const newData = await getData(nbRows, nbCols);
     if (onData != null) {
-      onData(data);
+      onData(newData);
     }
-    setData(data);
+    setData(newData);
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     loadData();
   }, [nbRows, nbCols]);
 
   return data;
-};
+}

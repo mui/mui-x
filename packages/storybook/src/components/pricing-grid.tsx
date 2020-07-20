@@ -1,29 +1,31 @@
 import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
-import { PricingModel, subscribeCurrencyPair } from '../data/streaming/pricing-service';
+import { XGrid, ColDef, GridOptionsProp, useApiRef } from '@material-ui/x-grid';
+import {
+  PricingModel,
+  subscribeCurrencyPair,
+  pricingColumns,
+} from '../data/streaming/pricing-service';
 import { currencyPairs } from '../data/currency-pairs';
-import { pricingColumns } from '../data/streaming/pricing-service';
-import { XGrid, ColDef, GridApi, GridOptionsProp } from '@material-ui/x-grid';
 
 export interface PricingGridProps {
   min?: number;
   max?: number;
   options?: GridOptionsProp;
 }
-export const PricingGrid: React.FC<PricingGridProps> = p => {
-  const [columns] = useState<ColDef[]>(pricingColumns);
-  const [rows] = useState<PricingModel[]>([]);
+export const PricingGrid: React.FC<PricingGridProps> = (p) => {
+  const [columns] = React.useState<ColDef[]>(pricingColumns);
+  const [rows] = React.useState<PricingModel[]>([]);
 
-  const [started, setStarted] = useState<boolean>(false);
-  const gridApiRef = useRef<GridApi>(null);
-  const stopButton = useRef<HTMLButtonElement>(null);
+  const [started, setStarted] = React.useState<boolean>(false);
+  const apiRef = useApiRef();
+  const stopButton = React.useRef<HTMLButtonElement>(null);
 
   const subscription: Subscription = new Subscription();
   const handleNewPrice = (pricingModel: PricingModel) => {
-    if (gridApiRef && gridApiRef.current) {
-      gridApiRef.current.updateRowData([pricingModel]);
+    if (apiRef && apiRef.current) {
+      apiRef.current.updateRowData([pricingModel]);
     }
   };
 
@@ -35,19 +37,16 @@ export const PricingGrid: React.FC<PricingGridProps> = p => {
         }),
       );
 
-      for (let i = 0, len = currencyPairs.length; i < len; i++) {
-        console.log('subscribing to ', currencyPairs[i]);
+      for (let i = 0, len = currencyPairs.length; i < len; i += 1) {
         const data$ = subscribeCurrencyPair(currencyPairs[i], i, p.min, p.max);
-        subscription.add(data$.pipe(takeUntil(cancel$)).subscribe(data => handleNewPrice(data)));
+        subscription.add(data$.pipe(takeUntil(cancel$)).subscribe((data) => handleNewPrice(data)));
       }
       setStarted(true);
     }
   };
 
-  useEffect(() => {
-    // subscribeToStream();
+  React.useEffect(() => {
     return () => {
-      console.log('Unmounting, cleaning subscriptions ');
       subscription.unsubscribe();
     };
   }, [stopButton]);
@@ -58,9 +57,10 @@ export const PricingGrid: React.FC<PricingGridProps> = p => {
     }
   };
   return (
-    <>
+    <React.Fragment>
       <div>
         <button
+          type="button"
           ref={stopButton}
           onClick={onStartStreamBtnClick}
           style={{ padding: 5, textTransform: 'capitalize', margin: 10 }}
@@ -69,8 +69,8 @@ export const PricingGrid: React.FC<PricingGridProps> = p => {
         </button>
       </div>
       <div style={{ width: 800, height: 600 }}>
-        <XGrid rows={rows} columns={columns} apiRef={gridApiRef} {...p} />
+        <XGrid rows={rows} columns={columns} apiRef={apiRef} {...p} />
       </div>
-    </>
+    </React.Fragment>
   );
 };

@@ -1,1 +1,3 @@
-export const isIntroPage = () => window.location.hash === '#/';
+export function isIntroPage() {
+  return window.location.hash === '#/';
+}

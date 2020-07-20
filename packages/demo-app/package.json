@@ -3,8 +3,6 @@
   "version": "0.1.51",
   "private": true,
   "dependencies": {
-    "@material-ui-x/panel": "^0.1.51",
-    "@material-ui-x/splitter": "^0.1.51",
     "@material-ui/core": "^4.9.12",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.54",
@@ -26,7 +24,7 @@
     "@types/react-router-dom": "^5.1.3",
     "@types/styled-components": "^5.0.1",
     "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^5.1.1",
+    "copy-webpack-plugin": "^6.0.3",
     "css-loader": "^3.4.2",
     "html-webpack-plugin": "^3.2.0",
     "less": "^3.10.3",

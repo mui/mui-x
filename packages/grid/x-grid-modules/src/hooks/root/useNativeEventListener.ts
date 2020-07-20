@@ -1,20 +1,19 @@
-import { useEffect, useState } from 'react';
+import * as React from 'react';
 import { useLogger } from '../utils';
 import { isFunction } from '../../utils';
-import { GridApiRef } from '../../models';
+import { ApiRef } from '../../models';
 
 export const useNativeEventListener = (
-  apiRef: GridApiRef,
+  apiRef: ApiRef,
   ref: React.MutableRefObject<HTMLDivElement | null> | (() => Element | undefined | null),
   eventName: string,
   handler?: (event: Event) => any,
   options?: AddEventListenerOptions,
 ) => {
   const logger = useLogger('useNativeEventListener');
-  const [added, setAdded] = useState(false);
+  const [added, setAdded] = React.useState(false);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
+  React.useEffect(() => {
     let targetElement: Element | null | undefined;
 
     if (isFunction(ref)) {

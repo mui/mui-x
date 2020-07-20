@@ -2,13 +2,14 @@
   "name": "@material-ui/x-grid-data-generator",
   "version": "0.1.51",
   "description": "Data generator services for the grid",
-  "author": "damien <damien@material-ui.com>",
+  "author": "Material-UI Team",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/esm/x-grid-data-generator.d.ts",
   "files": [
     "dist/*"
   ],
+  "license": "MIT",
   "publishConfig": {
     "access": "public"
   },
@@ -16,6 +17,7 @@
     "datagen": "./bin/data-gen-script.js"
   },
   "dependencies": {
+    "clsx": "^1.0.4",
     "commander": "^5.1.0",
     "esm": "^3.2.25",
     "faker": "^4.1.0"
@@ -28,7 +30,7 @@
     "rollup-plugin-css-only": "^2.0.0",
     "rollup-plugin-dts": "^1.4.7",
     "rollup-plugin-postcss": "^3.1.2",
-    "rollup-plugin-sourcemaps": "^0.5.0",
+    "rollup-plugin-sourcemaps": "^0.6.2",
     "rollup-plugin-terser": "^5.3.0",
     "rollup-plugin-typescript2": "^0.27.1",
     "tslib": "^2.0.0"

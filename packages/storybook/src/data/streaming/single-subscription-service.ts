@@ -1,7 +1,7 @@
 import { interval, Observable } from 'rxjs';
 import { delay, flatMap } from 'rxjs/operators';
-import { random, randomPrice } from '../random-generator';
 import { RowId } from '@material-ui/x-grid';
+import { random, randomPrice } from '../random-generator';
 import { currencyPairs } from '../currency-pairs';
 
 export interface PricingModel {
@@ -41,16 +41,14 @@ const generateModel = () => ({
   price2y: randomPrice(),
   price5y: randomPrice(),
 });
-export function subscribeFeed(
-  minUpdateRate = 100,
-  maxUpdateRate = 500,
-): Observable<PricingModel[]> {
+
+export function subscribeFeed(_, maxUpdateRate = 500): Observable<PricingModel[]> {
   return interval(50).pipe(
     delay(random(0, maxUpdateRate - 50)),
     flatMap(() => {
-      return new Observable<PricingModel[]>(obs => {
+      return new Observable<PricingModel[]>((obs) => {
         const updates: PricingModel[] = [];
-        for (let i = 0; i < random(1, 10); i++) {
+        for (let i = 0; i < random(1, 10); i += 1) {
           updates.push(generateModel());
         }
         obs.next(updates);

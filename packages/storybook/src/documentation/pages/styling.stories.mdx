@@ -1,0 +1,51 @@
+import { XGrid } from '@material-ui/x-grid';
+import StyleHeaderDemo from './demos/styling/styleHeader.demo';
+import StyleCellDemo from './demos/styling/styleCell.demo';
+
+<Meta title="1. Docs/10. Styling" component={XGrid} />
+
+# Styling
+
+There are different ways of styling `X-Grid` or `DataGrid`. In this part, we are going to focus only on the options available in our `ColDef` type.
+
+## Header
+
+`ColDef` has an attribute called `headerClass` that lets you inject some css classes into your column header.
+You can also specify how to align the header text using `headerAlign`. The default value is `left`.
+
+```tsx
+const columns: Columns = [
+  {
+    field: 'styledCol',
+    headerClass: 'super-app-theme--header',
+    headerAlign: 'center',
+  },
+];
+```
+
+- `headerClass` can be a `string` or a `string[]`
+  <StyleHeaderDemo />
+
+## Cell
+
+`ColDef` lets you style cells with different attributes.
+
+- `align` to align cell content, `'left' | 'right' | 'center'`
+- `cellClass` of type `string | string[]`, allows you to apply css classes on every cell. It can also be of type `CellClassFn` which is a function that let you apply css classes dynamically.
+- `cellClassRules` works like `classnames` [github here](https://github.com/JedWatson/classnames). It's an object, with css classes as keys and a boolean or a function as values.
+
+```tsx
+const columns: Columns = [
+  { field: 'styledCell', cellClass: 'super-app-theme--cell', align: 'center'},
+  {
+    field: 'withRules',
+    cellClassRules: {
+      negative: {value} => value < 0,
+      positive: {value} => value > 0,
+    },
+    align: 'right',
+  },
+]
+```
+
+<StyleCellDemo />

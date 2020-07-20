@@ -1,0 +1,30 @@
+import { XGrid } from '@material-ui/x-grid';
+import LoadingOverrideDemo from './demos/customization/loadingOverride.demo';
+
+<Meta title="1. Docs/9. Components" component={XGrid} />
+
+# Components
+
+As part of our customization API, XGrid allows to replace and override the following components.
+
+- `pagination` - the native pagination component as mentioned in the pagination page [here]()
+- `loadingOverlay` - rendered when the `loading` react prop is set to `true`
+- `noRowsOverlay` - rendered when the `rows` react prop is empty or `[]`
+- `header` - Rendered above the column header bar
+- `footer` - Rendered below the viewport
+
+To achieve this, you need to override the desired property of the `components` react prop.
+
+```tsx
+<XGrid
+  rows={[]}
+  columns={columns}
+  components={{ noRowsOverlay: CustomReactComponent }}
+/>
+```
+
+Below is an example on how you can replace the loading overlay.
+
+<LoadingOverrideDemo />
+
+- TODO add more components?

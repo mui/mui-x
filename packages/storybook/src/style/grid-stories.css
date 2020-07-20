@@ -22,7 +22,7 @@
      flex-direction: column;
  }
 
- /* highlight first and last row in rendering zone -> useful for Debugging virtualisation */
+ /* highlight first and last row in rendering zone -> useful for Debugging virtualization */
 
  /*.rendering-zone .material-row:first-child {*/
  /*    background: blueviolet !important;*/

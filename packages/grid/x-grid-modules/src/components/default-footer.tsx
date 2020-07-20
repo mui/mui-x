@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useContext, useEffect, useState } from 'react';
 import { GridOptions } from '../models';
 import { Footer } from './styled-wrappers';
 import { RowCount } from './row-count';
@@ -14,14 +13,15 @@ export interface DefaultFooterProps {
 
 export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps>(
   function DefaultFooter({ options, rowCount, paginationComponent }, ref) {
-    const api = useContext(ApiContext);
-    const [selectedRowCount, setSelectedCount] = useState(0);
+    const api = React.useContext(ApiContext);
+    const [selectedRowCount, setSelectedCount] = React.useState(0);
 
-    // eslint-disable-next-line consistent-return
-    useEffect(() => {
+    React.useEffect(() => {
       if (api && api.current) {
         return api.current!.onSelectionChanged(({ rows }) => setSelectedCount(rows.length));
       }
+
+      return undefined;
     }, [api, setSelectedCount]);
 
     if (options.hideFooter) {

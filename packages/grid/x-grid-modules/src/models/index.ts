@@ -2,6 +2,7 @@ export * from './colDef';
 export * from './containerProps';
 export * from './elementSize';
 export * from './gridOptions';
+export * from './rootContainerRef';
 export * from './renderContextProps';
 export * from './rows';
 export * from './sortModel';

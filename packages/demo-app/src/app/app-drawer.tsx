@@ -7,7 +7,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { GridOn } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
-
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const useStyles = makeStyles({
@@ -24,7 +23,8 @@ export interface AppDrawerProps {
   toggleDrawer: () => void;
 }
 
-export function AppDrawer({ isOpen, toggleDrawer }: AppDrawerProps) {
+export function AppDrawer(props: AppDrawerProps) {
+  const { isOpen, toggleDrawer } = props;
   const classes = useStyles();
 
   return (
@@ -36,17 +36,17 @@ export function AppDrawer({ isOpen, toggleDrawer }: AppDrawerProps) {
         onKeyDown={toggleDrawer}
       >
         <List>
-          <ListItem component={Link} button to={'/'} key={'back'}>
+          <ListItem component={Link} button to="/" key="back">
             <ListItemIcon>
               <ArrowBackIcon />
             </ListItemIcon>
-            <ListItemText primary={'Material-UI X'}></ListItemText>
+            <ListItemText primary="'Material-UI X" />
           </ListItem>
-          <ListItem component={Link} to={'/grid'} button key={'gridData'}>
+          <ListItem component={Link} to="/grid" button key="gridData">
             <ListItemIcon>
               <GridOn />
             </ListItemIcon>
-            <ListItemText primary={'Grid'}></ListItemText>
+            <ListItemText primary="Grid" />
           </ListItem>
         </List>
       </div>

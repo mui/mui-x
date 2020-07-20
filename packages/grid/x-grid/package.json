@@ -1,18 +1,20 @@
 {
   "name": "@material-ui/x-grid",
   "version": "0.1.51",
-  "description": "Official Material-UI X Grid Component",
-  "author": "Damien Tassone <damien@material-ui.com>",
+  "description": "The Material-UI X edition of the data grid component.",
+  "author": "Material-UI Team",
   "main": "dist/index-cjs.js",
   "module": "dist/index-esm.js",
   "types": "dist/x-grid.all.d.ts",
   "files": [
     "dist/*"
   ],
+  "license": "See LICENSE file",
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
+    "clsx": "^1.0.4",
     "tslib": "^2.0.0"
   },
   "devDependencies": {
@@ -25,7 +27,7 @@
     "rollup-plugin-command": "^1.1.3",
     "rollup-plugin-dts": "^1.4.7",
     "rollup-plugin-multi-entry": "^2.1.0",
-    "rollup-plugin-sourcemaps": "^0.5.0",
+    "rollup-plugin-sourcemaps": "^0.6.2",
     "rollup-plugin-terser": "^5.3.0",
     "rollup-plugin-typescript2": "^0.27.1"
   },

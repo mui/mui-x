@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import * as React from 'react';
 import {
   CellValue,
   ColDef,
@@ -11,7 +11,7 @@ import {
   RowModel,
   RowsProp,
   SortApi,
-  GridApiRef,
+  ApiRef,
 } from '../../models';
 import {
   COLUMN_HEADER_CLICKED,
@@ -31,17 +31,17 @@ export const useSorting = (
   options: GridOptions,
   rowsProp: RowsProp,
   colsProp: Columns,
-  apiRef: GridApiRef,
+  apiRef: ApiRef,
 ) => {
   const logger = useLogger('useSorting');
-  const sortModelRef = useRef<SortModel>([]);
-  const allowMultipleSorting = useRef<boolean>(false);
-  const originalOrder = useRef<RowId[]>([]);
-  const comparatorList = useRef<FieldComparatorList>([]);
+  const sortModelRef = React.useRef<SortModel>([]);
+  const allowMultipleSorting = React.useRef<boolean>(false);
+  const originalOrder = React.useRef<RowId[]>([]);
+  const comparatorList = React.useRef<FieldComparatorList>([]);
 
-  const upsertSortModel = useCallback(
+  const upsertSortModel = React.useCallback(
     (field: string, sortItem?: SortItem): SortModel => {
-      const existingIdx = sortModelRef.current.findIndex(c => c.colId === field);
+      const existingIdx = sortModelRef.current.findIndex((c) => c.colId === field);
       let newSortModel = [...sortModelRef.current];
       if (existingIdx > -1) {
         if (!sortItem) {
@@ -57,9 +57,9 @@ export const useSorting = (
     [sortModelRef],
   );
 
-  const createSortItem = useCallback(
+  const createSortItem = React.useCallback(
     (col: ColDef): SortItem | undefined => {
-      const existing = sortModelRef.current.find(c => c.colId === col.field);
+      const existing = sortModelRef.current.find((c) => c.colId === col.field);
       if (existing) {
         const nextSort = nextSortDirection(options.sortingOrder, existing.sort);
         return nextSort == null ? undefined : { ...existing, sort: nextSort };
@@ -69,7 +69,7 @@ export const useSorting = (
     [sortModelRef, options.sortingOrder],
   );
 
-  const comparatorListAggregate = useCallback(
+  const comparatorListAggregate = React.useCallback(
     (row1: RowModel, row2: RowModel) => {
       const result = comparatorList.current.reduce((res, colComparator) => {
         const { field, comparator } = colComparator;
@@ -81,9 +81,9 @@ export const useSorting = (
     [comparatorList],
   );
 
-  const buildComparatorList = useCallback(
+  const buildComparatorList = React.useCallback(
     (sortModel: SortModel): FieldComparatorList => {
-      const comparators = sortModel.map(item => {
+      const comparators = sortModel.map((item) => {
         const col = apiRef.current!.getColumnFromField(item.colId);
         const comparator = isDesc(item.sort)
           ? (v1: CellValue, v2: CellValue, row1: RowModel, row2: RowModel) =>
@@ -96,11 +96,11 @@ export const useSorting = (
     [apiRef],
   );
 
-  const getOriginalOrderedRows: () => RowModel[] = useCallback(() => {
-    return originalOrder.current.map(rowId => apiRef.current!.getRowFromId(rowId));
+  const getOriginalOrderedRows: () => RowModel[] = React.useCallback(() => {
+    return originalOrder.current.map((rowId) => apiRef.current!.getRowFromId(rowId));
   }, [apiRef, originalOrder]);
 
-  const applySorting = useCallback(() => {
+  const applySorting = React.useCallback(() => {
     if (!apiRef.current) {
       return;
     }
@@ -118,7 +118,7 @@ export const useSorting = (
     apiRef.current!.emit(POST_SORT, sortModelRef.current);
 
     const params: ColumnSortedParams = {
-      sortedColumns: sortModelRef.current.map(model =>
+      sortedColumns: sortModelRef.current.map((model) =>
         apiRef.current!.getColumnFromField(model.colId),
       ),
       sortModel: sortModelRef.current,
@@ -126,7 +126,7 @@ export const useSorting = (
     apiRef.current!.emit(COLUMNS_SORTED, params);
   }, [apiRef, sortModelRef, comparatorListAggregate, getOriginalOrderedRows, logger]);
 
-  const setSortModel = useCallback(
+  const setSortModel = React.useCallback(
     (sortModel: SortModel) => {
       sortModelRef.current = sortModel;
       comparatorList.current = buildComparatorList(sortModel);
@@ -136,7 +136,7 @@ export const useSorting = (
     [sortModelRef, comparatorList, apiRef, applySorting, buildComparatorList],
   );
 
-  const sortColumn = useCallback(
+  const sortColumn = React.useCallback(
     (column: ColDef) => {
       const sortItem = createSortItem(column);
       let sortModel;
@@ -150,8 +150,8 @@ export const useSorting = (
     [upsertSortModel, setSortModel, allowMultipleSorting, createSortItem],
   );
 
-  const headerClickHandler = useCallback(
-    ({ column, field }: ColumnHeaderClickedParams) => {
+  const headerClickHandler = React.useCallback(
+    ({ column }: ColumnHeaderClickedParams) => {
       if (column.sortable) {
         sortColumn(column);
       }
@@ -159,44 +159,44 @@ export const useSorting = (
     [sortColumn],
   );
 
-  const storeOriginalOrder = useCallback(() => {
+  const storeOriginalOrder = React.useCallback(() => {
     originalOrder.current = apiRef.current!.getRowModels().reduce((order, row) => {
       order.push(row.id);
       return order;
     }, [] as RowId[]);
   }, [originalOrder, apiRef]);
 
-  const onRowsUpdated = useCallback(() => {
+  const onRowsUpdated = React.useCallback(() => {
     storeOriginalOrder();
     if (sortModelRef.current.length > 0) {
       applySorting();
     }
   }, [sortModelRef, storeOriginalOrder, applySorting]);
 
-  const getSortModel = useCallback(() => sortModelRef.current, [sortModelRef]);
+  const getSortModel = React.useCallback(() => sortModelRef.current, [sortModelRef]);
 
-  const onMultipleKeyPressed = useCallback(
+  const onMultipleKeyPressed = React.useCallback(
     (isPressed: boolean) => {
       allowMultipleSorting.current = options.enableMultipleColumnsSorting && isPressed;
     },
     [allowMultipleSorting, options.enableMultipleColumnsSorting],
   );
 
-  const onColumnsSorted = useCallback(
+  const onColumnsSorted = React.useCallback(
     (handler: (param: ColumnSortedParams) => void): (() => void) => {
       return apiRef!.current!.registerEvent(COLUMNS_SORTED, handler);
     },
     [apiRef],
   );
 
-  const [colState, setColState] = useState(colsProp);
+  const [colState, setColState] = React.useState(colsProp);
 
-  useEffect(() => {
+  React.useEffect(() => {
     setColState(colsProp);
     sortModelRef.current = [];
   }, [colsProp]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (rowsProp.length > 0) {
       storeOriginalOrder();
       if (sortModelRef.current.length > 0) {
@@ -205,14 +205,14 @@ export const useSorting = (
     }
   }, [rowsProp, applySorting, storeOriginalOrder]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (colsProp.length > 0 && apiRef.current) {
       const sortedCols = apiRef.current
         .getAllColumns()
-        .filter(c => c.sortDirection != null)
+        .filter((c) => c.sortDirection != null)
         .sort((a, b) => a.sortIndex! - b.sortIndex!);
 
-      const sortModel = sortedCols.map(c => ({ colId: c.field, sort: c.sortDirection }));
+      const sortModel = sortedCols.map((c) => ({ colId: c.field, sort: c.sortDirection }));
       setSortModel(sortModel);
     }
   }, [colState, setSortModel, apiRef, colsProp]);

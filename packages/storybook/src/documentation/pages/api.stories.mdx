@@ -1,0 +1,46 @@
+import { XGrid } from '@material-ui/x-grid';
+
+<Meta title="1. Docs/11. API" component={XGrid} />
+
+# API
+
+## How to use ApiRef?
+
+The `ApiRef` allows you to manipulate the grid outside the React component context. This can be very handy in a streaming api to update rows with changes from the server.
+To enable ApiRef, you need to use the `useApiRef` hook and pass the ref to the component prop as below.
+
+```tsx
+
+const apiRef = useApiRef();
+...
+return <XGrid rows={rows} columns={columns} apiRef={apiRef} />
+
+```
+
+Generated?
+
+## GridAPI
+
+### Core API
+
+### Columns API
+
+### Row API
+
+### Pagination API
+
+### Virtualization API
+
+### Sort API
+
+### Selection API
+
+### Style API => Coming soon
+
+## Options
+
+## Events
+
+## ColDef
+
+## Rows

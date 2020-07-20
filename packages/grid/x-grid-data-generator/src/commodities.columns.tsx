@@ -31,7 +31,7 @@ import {
   randomRateType,
   randomContractType,
   randomTaxCode,
-} from './services/';
+} from './services';
 import {
   CountryRenderer,
   DoneRenderer,
@@ -42,7 +42,7 @@ import {
 } from './renderer';
 
 const totalPriceFormatter = ({ value }) => `$ ${Number(value).toLocaleString()}`;
-const pnlFormatter = params =>
+const pnlFormatter = (params) =>
   Number(params.value!) < 0
     ? `(${Math.abs(Number(params.value!)).toLocaleString()})`
     : Number(params.value).toLocaleString();

@@ -15,7 +15,7 @@ const MUI_DOMAINS = [
   'material-ui.com/',
 ];
 const isOnMUIDomain = () =>
-  MUI_DOMAINS.some(domain => window != null && window.location.href.indexOf(domain) > -1);
+  MUI_DOMAINS.some((domain) => window != null && window.location.href.indexOf(domain) > -1);
 
 const expiryReg = /^.*EXPIRY=([0-9]+),.*$/;
 
@@ -25,7 +25,9 @@ export const verifyLicense = (releaseInfo: string, encodedLicense: string) => {
   }
 
   if (!releaseInfo) {
-    throw new Error('Release Info missing! Not able to validate license!');
+    throw new Error(
+      'Material-UI: The release information is missing. Not able to validate license.',
+    );
   }
 
   if (!encodedLicense) {
@@ -43,7 +45,7 @@ export const verifyLicense = (releaseInfo: string, encodedLicense: string) => {
   let expiryTimestamp = 0;
   try {
     expiryTimestamp = parseInt(clearLicense.match(expiryReg)![1], 10);
-    if (!expiryTimestamp || isNaN(expiryTimestamp)) {
+    if (!expiryTimestamp || Number.isNaN(expiryTimestamp)) {
       console.error('Error checking license. Expiry timestamp not found or invalid!');
       return LicenseStatus.Invalid;
     }
@@ -53,8 +55,10 @@ export const verifyLicense = (releaseInfo: string, encodedLicense: string) => {
   }
 
   const pkgTimestamp = parseInt(base64Decode(releaseInfo), 10);
-  if (isNaN(pkgTimestamp)) {
-    throw new Error('Package ReleaseInfo is invalid. Cannot check license key!');
+  if (Number.isNaN(pkgTimestamp)) {
+    throw new Error(
+      'Material-UI: The release information is invalid. Not able to validate license.',
+    );
   }
 
   if (expiryTimestamp < pkgTimestamp) {

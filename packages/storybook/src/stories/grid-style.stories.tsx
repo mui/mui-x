@@ -1,15 +1,11 @@
 import * as React from 'react';
-import { useMemo } from 'react';
-import { XGrid, GridOptionsProp } from '@material-ui/x-grid';
-
-import '../style/grid-stories.css';
+import { XGrid, GridOptionsProp, ColDef } from '@material-ui/x-grid';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
-import { getDate } from '../data/random-generator';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { useData } from '../hooks/useData';
-import { ColDef } from '@material-ui/x-grid-modules/dist/src';
+import '../style/grid-stories.css';
 
 export default {
   title: 'X-Grid Tests/Styling',
@@ -49,7 +45,7 @@ export const Small = () => {
 };
 
 const IsDone: React.FC<{ value: boolean }> = ({ value }) =>
-  value ? <DoneIcon fontSize={'small'} /> : <ClearIcon fontSize={'small'} />;
+  value ? <DoneIcon fontSize="small" /> : <ClearIcon fontSize="small" />;
 
 const getColumns: () => ColDef[] = () => [
   { field: 'id' },
@@ -63,7 +59,7 @@ const getColumns: () => ColDef[] = () => [
     field: 'fullName',
     description: 'this column has a value getter and is not sortable',
     sortable: false,
-    valueGetter: params =>
+    valueGetter: (params) =>
       `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
   },
   {
@@ -93,8 +89,8 @@ const getRows = () => [
     firstName: 'bob',
     isRegistered: true,
     age: 30,
-    registerDate: getDate(),
-    lastLoginDate: getDate(),
+    registerDate: new Date(2011, 6, 16),
+    lastLoginDate: new Date(2020, 2, 14, 7, 30, 25),
   },
   {
     id: 3,
@@ -102,7 +98,7 @@ const getRows = () => [
     firstName: 'igor',
     isRegistered: false,
     age: 40,
-    registerDate: getDate(),
+    registerDate: new Date(2016, 8, 1),
   },
   {
     id: 4,
@@ -110,8 +106,8 @@ const getRows = () => [
     firstName: 'clara',
     isRegistered: true,
     age: 40,
-    registerDate: getDate(),
-    lastLoginDate: getDate(),
+    registerDate: new Date(2011, 1, 1),
+    lastLoginDate: new Date(2020, 2, 10, 15, 30, 25),
   },
   {
     id: 5,
@@ -119,8 +115,8 @@ const getRows = () => [
     firstName: 'clara',
     isRegistered: false,
     age: null,
-    registerDate: getDate(),
-    lastLoginDate: getDate(),
+    registerDate: new Date(2018, 0, 1),
+    lastLoginDate: new Date(2020, 5, 29, 18, 0, 25),
   },
   {
     id: 6,
@@ -128,57 +124,68 @@ const getRows = () => [
     firstName: null,
     isRegistered: false,
     age: 40,
-    registerDate: getDate(),
-    lastLoginDate: getDate(),
+    registerDate: new Date(2013, 8, 16),
+    lastLoginDate: new Date(2019, 6, 4, 22, 36, 25),
   },
   { id: 7, lastName: 'Smith', firstName: '', isRegistered: true, age: 40 },
 ];
 
 export const ColumnCellClass = () => {
-  const rows = useMemo(() => getRows(), []);
-  const cols = useMemo(() => getColumns(), []);
+  const rows = React.useMemo(() => getRows(), []);
+  const cols = React.useMemo(() => getColumns(), []);
   cols[3].cellClass = ['age', 'shine'];
 
   return (
-    <div className={'grid-container'}>
+    <div className="grid-container">
       <XGrid rows={rows} columns={cols} />
     </div>
   );
 };
 export const ColumnHeaderClass = () => {
-  const rows = useMemo(() => getRows(), []);
-  const cols = useMemo(() => getColumns(), []);
+  const rows = React.useMemo(() => getRows(), []);
+  const cols = React.useMemo(() => getColumns(), []);
   cols[3].headerClass = ['age', 'shine'];
 
   return (
-    <div className={'grid-container'}>
+    <div className="grid-container">
       <XGrid rows={rows} columns={cols} />
     </div>
   );
 };
 
 export const ColumnCellClassRules = () => {
-  const rows = useMemo(() => getRows(), []);
-  const cols = useMemo(() => getColumns(), []);
+  const rows = React.useMemo(() => getRows(), []);
+  const cols = React.useMemo(() => getColumns(), []);
   cols[4].cellClassRules = {
-    common: params => params.data['lastName'] === 'Smith',
-    unknown: params => !params.data['lastName'],
+    common: (params) => params.data.lastName === 'Smith',
+    unknown: (params) => !params.data.lastName,
   };
 
   return (
-    <div className={'grid-container'}>
+    <div className="grid-container">
       <XGrid rows={rows} columns={cols} />
     </div>
   );
 };
 
 export const ColumnCellRenderer = () => {
-  const rows = useMemo(() => getRows(), []);
-  const cols = useMemo(() => getColumns(), []);
-  cols[5].cellRenderer = params => <IsDone value={!!params.value} />;
+  const rows = React.useMemo(() => getRows(), []);
+  const cols = React.useMemo(() => getColumns(), []);
+  cols[5].cellRenderer = (params) => <IsDone value={!!params.value} />;
 
   return (
-    <div className={'grid-container'}>
+    <div className="grid-container">
+      <XGrid rows={rows} columns={cols} />
+    </div>
+  );
+};
+export const ColumnCellRendererWithPadding = () => {
+  const rows = React.useMemo(() => getRows(), []);
+  const cols = React.useMemo(() => getColumns(), []);
+  cols[5].cellRenderer = (params) => <IsDone value={!!params.value} />;
+
+  return (
+    <div className="grid-container" style={{ padding: 50 }}>
       <XGrid rows={rows} columns={cols} />
     </div>
   );

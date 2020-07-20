@@ -1,11 +1,9 @@
 import * as React from 'react';
-import { useCallback, useState } from 'react';
-import { getDate } from '../data/random-generator';
 import { ColDef, XGrid } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
-import { useData } from '../hooks/useData';
 import CreateIcon from '@material-ui/icons/Create';
+import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/Columns',
@@ -19,22 +17,22 @@ export default {
   },
 };
 
-export const SmallColSizes = () => {
+export function SmallColSizes() {
   const data = useData(100, 20);
-  const transformColSizes = (columns: ColDef[]) => columns.map(c => ({ ...c, width: 60 }));
+  const transformColSizes = (columns: ColDef[]) => columns.map((c) => ({ ...c, width: 60 }));
 
   return <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />;
-};
+}
 
-export const VerySmallColSizes = () => {
+export function VerySmallColSizes() {
   const data = useData(100, 20);
-  const transformColSizes = (columns: ColDef[]) => columns.map(c => ({ ...c, width: 50 }));
+  const transformColSizes = (columns: ColDef[]) => columns.map((c) => ({ ...c, width: 50 }));
   return <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />;
-};
-export const ColumnDescriptionTooltip = () => {
+}
+export function ColumnDescriptionTooltip() {
   const data = useData(100, 20);
   const transformColSizes = (columns: ColDef[]) =>
-    columns.map(c => {
+    columns.map((c) => {
       if (c.field === 'currencyPair') {
         return { ...c, width: 80, description: 'This is the currency pair column' };
       }
@@ -42,16 +40,16 @@ export const ColumnDescriptionTooltip = () => {
     });
 
   return <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />;
-};
+}
 
-export const HiddenColumns = () => {
+export function HiddenColumns() {
   const data = useData(100, 20);
   const transformColSizes = (columns: ColDef[]) =>
     columns.map((c, idx) => ({ ...c, hide: idx % 2 === 0 }));
   return <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />;
-};
+}
 
-export const UpdateColumnsBtn: React.FC = () => {
+export function UpdateColumnsBtn() {
   const columns: ColDef[] = [
     { field: 'id' },
     { field: 'firstName' },
@@ -79,8 +77,8 @@ export const UpdateColumnsBtn: React.FC = () => {
       age2: 54,
       age3: 24,
       age4: 342,
-      registerDate: getDate(),
-      lastLoginDate: getDate(),
+      registerDate: new Date(2011, 2, 11),
+      lastLoginDate: new Date(2020, 4, 28, 11, 30, 25),
     },
     {
       id: 3,
@@ -88,7 +86,7 @@ export const UpdateColumnsBtn: React.FC = () => {
       firstName: 'igor',
       isRegistered: false,
       age: 40,
-      registerDate: getDate(),
+      registerDate: new Date(2011, 5, 9),
     },
     {
       id: 4,
@@ -96,8 +94,8 @@ export const UpdateColumnsBtn: React.FC = () => {
       firstName: 'clara',
       isRegistered: true,
       age: 40,
-      registerDate: getDate(),
-      lastLoginDate: getDate(),
+      registerDate: new Date(2013, 8, 1),
+      lastLoginDate: new Date(2020, 4, 24, 8, 30, 25),
     },
     {
       id: 5,
@@ -105,8 +103,8 @@ export const UpdateColumnsBtn: React.FC = () => {
       firstName: 'clara',
       isRegistered: false,
       age: null,
-      registerDate: getDate(),
-      lastLoginDate: getDate(),
+      registerDate: new Date(2014, 6, 1),
+      lastLoginDate: new Date(2020, 2, 24, 12, 10, 25),
     },
     {
       id: 6,
@@ -114,18 +112,19 @@ export const UpdateColumnsBtn: React.FC = () => {
       firstName: null,
       isRegistered: false,
       age: 40,
-      registerDate: getDate(),
-      lastLoginDate: getDate(),
+      registerDate: new Date(2004, 2, 15),
+      lastLoginDate: new Date(2020, 7, 4, 2, 10, 25),
     },
     { id: 7, lastName: 'Smith', firstName: '', isRegistered: true, age: 40 },
   ];
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [cols, setCols] = useState(columns);
+  const [cols, setCols] = React.useState(columns);
   const changeCols = () => {
     if (cols.length === columns.length) {
-      const newCols = columns.filter(c => c.field.indexOf('age') === -1);
-      newCols.forEach(c => (c.resizable = false));
+      const newCols = columns.filter((c) => c.field.indexOf('age') === -1);
+      newCols.forEach((c) => {
+        c.resizable = false;
+      });
       setCols(newCols);
     } else {
       setCols(columns);
@@ -133,29 +132,32 @@ export const UpdateColumnsBtn: React.FC = () => {
   };
 
   return (
-    <>
+    <React.Fragment>
       <div>
-        <button onClick={changeCols}>Change cols </button>
+        <button type="button" onClick={changeCols} id="action-btn">
+          Change cols
+        </button>
       </div>
       <div className="grid-container">
         <XGrid rows={rows} columns={cols} />
       </div>
-    </>
+    </React.Fragment>
   );
-};
-export const HeaderComponent = () => {
+}
+
+export function HeaderComponent() {
   const data = useData(100, 5);
 
-  const transformCols = useCallback(cols => {
+  const transformCols = React.useCallback((cols) => {
     if (cols.length > 0) {
-      cols[0].headerComponent = params => <CreateIcon className={'icon'} />;
+      cols[0].headerComponent = () => <CreateIcon className="icon" />;
     }
     return cols;
   }, []);
 
   return (
-    <div className={'grid-container'}>
+    <div className="grid-container">
       <XGrid rows={data.rows} columns={transformCols(data.columns)} />
     </div>
   );
-};
+}

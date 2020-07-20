@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import * as React from 'react';
 import { useLogger } from './useLogger';
 import { debounce } from '../../utils/utils';
 import { useRafUpdate } from './useRafUpdate';
@@ -14,9 +14,9 @@ export function useScrollFn(
   onScroll?: ScrollFn,
 ): [ScrollFn, ScrollFn] {
   const logger = useLogger('useScrollFn');
-  const rafRef = useRef(0);
-  const rafResetPointerRef = useRef(0);
-  const previousValue = useRef<ScrollParams>();
+  const rafRef = React.useRef(0);
+  const rafResetPointerRef = React.useRef(0);
+  const previousValue = React.useRef<ScrollParams>();
   const [restorePointerEvents] = useRafUpdate(() => {
     if (scrollingElementRef && scrollingElementRef.current) {
       scrollingElementRef.current!.style.pointerEvents = 'unset';
@@ -24,12 +24,13 @@ export function useScrollFn(
     rafResetPointerRef.current = 0;
   });
 
-  const debouncedResetPointerEvents = useCallback(debounce(restorePointerEvents, 300) as any, [
-    restorePointerEvents,
-  ]);
+  const debouncedResetPointerEvents = React.useCallback(
+    debounce(restorePointerEvents, 300) as any,
+    [restorePointerEvents],
+  );
 
-  const scrollTo: (v: ScrollParams) => void = useCallback(
-    v => {
+  const scrollTo: (v: ScrollParams) => void = React.useCallback(
+    (v) => {
       if (v.left === previousValue.current?.left && v.top === previousValue.current.top) {
         return;
       }
@@ -54,7 +55,7 @@ export function useScrollFn(
 
   const [runScroll] = useRafUpdate(scrollTo);
 
-  useEffect(() => {
+  React.useEffect(() => {
     return () => {
       debouncedResetPointerEvents.cancel();
     };

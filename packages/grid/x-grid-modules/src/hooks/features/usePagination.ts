@@ -11,8 +11,8 @@ import { PageChangedParams } from '../../models/params/pageChangedParams';
 import { Rows } from '../../models/rows';
 import { InternalColumns } from '../../models/colDef/colDef';
 import { GridOptions } from '../../models/gridOptions';
-import { GridApiRef } from '../../models/api/gridApiRef';
 import { PaginationApi } from '../../models/api/paginationApi';
+import { ApiRef } from '../../models/api';
 
 export interface PaginationProps {
   page: number;
@@ -38,7 +38,7 @@ function paginationReducer(
   if (action.type === UPDATE_STATE_ACTION) {
     return { ...state, ...action.payload };
   }
-  throw new Error(`Action ${action.type} not found.`);
+  throw new Error(`Material-UI: Action ${action.type} not found.`);
 }
 
 const getPageCount = (pageSize: number | undefined, rowsCount: number) => {
@@ -49,7 +49,7 @@ export const usePagination = (
   rows: Rows,
   columns: InternalColumns,
   options: GridOptions,
-  apiRef: GridApiRef,
+  apiRef: ApiRef,
 ): PaginationProps => {
   const logger = useLogger('usePagination');
 

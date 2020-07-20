@@ -1,29 +1,28 @@
 import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
+import { ColDef, GridOptionsProp, XGrid, useApiRef } from '@material-ui/x-grid';
 import { PricingModel } from '../data/streaming/pricing-service';
 import { feedColumns, subscribeFeed } from '../data/streaming/single-subscription-service';
-import { ColDef, GridApi, GridOptionsProp, XGrid } from '@material-ui/x-grid';
 
 export interface FeedGridProps {
   min?: number;
   max?: number;
   options?: GridOptionsProp;
 }
-export const FeedGrid: React.FC<FeedGridProps> = p => {
-  const [columns] = useState<ColDef[]>(feedColumns);
-  const [rows] = useState<PricingModel[]>([]);
+export const FeedGrid: React.FC<FeedGridProps> = (p) => {
+  const [columns] = React.useState<ColDef[]>(feedColumns);
+  const [rows] = React.useState<PricingModel[]>([]);
 
-  const [started, setStarted] = useState<boolean>(false);
-  const gridApiRef = useRef<GridApi>(null);
-  const stopButton = useRef<HTMLButtonElement>(null);
+  const [started, setStarted] = React.useState<boolean>(false);
+  const apiRef = useApiRef();
+  const stopButton = React.useRef<HTMLButtonElement>(null);
 
   const subscription: Subscription = new Subscription();
 
   const handleNewPrices = (updates: PricingModel[]) => {
-    if (gridApiRef && gridApiRef.current) {
-      gridApiRef.current.updateRowData(updates);
+    if (apiRef && apiRef.current) {
+      apiRef.current.updateRowData(updates);
     }
   };
 
@@ -35,16 +34,15 @@ export const FeedGrid: React.FC<FeedGridProps> = p => {
         }),
       );
 
-      console.log('subscribing to feed');
       const data$ = subscribeFeed(p.min, p.max);
-      subscription.add(data$.pipe(takeUntil(cancel$)).subscribe(data => handleNewPrices(data)));
+      subscription.add(data$.pipe(takeUntil(cancel$)).subscribe((data) => handleNewPrices(data)));
       setStarted(true);
     }
   };
 
-  useEffect(() => {
-    // subscribeToStream();
+  React.useEffect(() => {
     return () => {
+      // eslint-disable-next-line no-console
       console.log('Unmounting, cleaning subscriptions ');
       subscription.unsubscribe();
     };
@@ -56,9 +54,10 @@ export const FeedGrid: React.FC<FeedGridProps> = p => {
     }
   };
   return (
-    <>
+    <React.Fragment>
       <div>
         <button
+          type="button"
           ref={stopButton}
           onClick={onStartStreamBtnClick}
           style={{ padding: 5, textTransform: 'capitalize', margin: 10 }}
@@ -67,8 +66,8 @@ export const FeedGrid: React.FC<FeedGridProps> = p => {
         </button>
       </div>
       <div style={{ width: 800, height: 600 }}>
-        <XGrid rows={rows} columns={columns} apiRef={gridApiRef} {...p} />
+        <XGrid rows={rows} columns={columns} apiRef={apiRef} {...p} />
       </div>
-    </>
+    </React.Fragment>
   );
 };

@@ -3,7 +3,7 @@ import { ElementSize } from '../models';
 
 export const StickyContainer: React.FC<ElementSize> = ({ height, width, children }) => (
   <div
-    className={'viewport'}
+    className="viewport"
     style={{
       minWidth: width,
       maxWidth: width,

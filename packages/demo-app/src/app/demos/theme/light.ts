@@ -1,4 +1,5 @@
-import { ThemeColors, getAppTheme } from './utils';
+import { getAppTheme } from './utils';
+import { ThemeColors } from './themeColors';
 
 export const lightColors: ThemeColors = {
   app: '#1976d2',
@@ -15,14 +16,14 @@ export const lightColors: ThemeColors = {
   breadcrumbsBorderBottom: '#1976d2',
   panelTitle: '#1976d2',
   panelTitleBg: '#ffffff',
-  text: '#f1f1f1', //'#f1f1f1', //#e1e1e1  very similar white
+  text: '#f1f1f1', // '#f1f1f1', //#e1e1e1  very similar white
   label: '#0000008a',
   panelBorder: '#1976d2',
   panelBackground: '#ffffff',
   grid: {
     headerTitle: '#2b2d2f',
     headerBackground: '#cecece4f',
-    oddRowBackground: '#fcfcfc', //'#9e9e9e0f',
+    oddRowBackground: '#fcfcfc', // '#9e9e9e0f',
     evenRowBackground: '#fff',
     rowColor: '#000',
     headerBorderRight: '#2b2d2f3d',

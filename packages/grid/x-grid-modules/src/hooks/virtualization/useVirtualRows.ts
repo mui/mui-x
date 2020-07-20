@@ -9,7 +9,7 @@ import {
   RenderRowProps,
   Rows,
   VirtualizationApi,
-  GridApiRef,
+  ApiRef,
 } from '../../models';
 import { ScrollParams, useScrollFn } from '../utils';
 import { useLogger } from '../utils/useLogger';
@@ -20,7 +20,6 @@ import {
   SCROLLING_START,
   SCROLLING_STOP,
 } from '../../constants/eventsConstants';
-
 import { useApiMethod } from '../root/useApiMethod';
 import { useNativeEventListener } from '../root/useNativeEventListener';
 import { useApiEventHandler } from '../root/useApiEventHandler';
@@ -35,7 +34,7 @@ export const useVirtualRows = (
   internalColumns: InternalColumns,
   rows: Rows,
   options: GridOptions,
-  apiRef: GridApiRef,
+  apiRef: ApiRef,
 ): UseVirtualRowsReturnType => {
   const logger = useLogger('useVirtualRows');
   const pageRef = useRef<number>(0);

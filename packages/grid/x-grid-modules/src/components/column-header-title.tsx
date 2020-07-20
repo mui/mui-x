@@ -1,14 +1,12 @@
 import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
-import { Tooltip } from '@material-ui/core';
+import Tooltip from '@material-ui/core/Tooltip';
 import { isOverflown } from '../utils';
 
-// eslint-disable-next-line react/display-name
 const ColumnHeaderInnerTitle = React.forwardRef<HTMLDivElement, any>((props, ref) => {
-  const { label, className, ...rest } = props;
+  const { label, className, ...other } = props;
 
   return (
-    <div ref={ref} className={`title ${className}`} {...rest} aria-label={label}>
+    <div ref={ref} className={`title ${className}`} {...other} aria-label={label}>
       {label}
     </div>
   );
@@ -25,10 +23,10 @@ export const ColumnHeaderTitle: React.FC<ColumnHeaderTitleProps> = ({
   description,
   columnWidth,
 }) => {
-  const titleRef = useRef<HTMLDivElement>(null);
-  const [tooltipText, setTooltip] = useState('');
+  const titleRef = React.useRef<HTMLDivElement>(null);
+  const [tooltipText, setTooltip] = React.useState('');
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!description && titleRef && titleRef.current) {
       const isOver = isOverflown(titleRef.current);
       if (isOver) {

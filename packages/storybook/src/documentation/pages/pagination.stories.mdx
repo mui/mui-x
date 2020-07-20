@@ -1,0 +1,131 @@
+import { XGrid } from '@material-ui/x-grid';
+import SimplePaginationDemo from './demos/pagination/simplePagination.demo';
+import AutoPageSizeDemo from './demos/pagination/autoPageSize.demo';
+import SetPageDemo from './demos/pagination/setPage.demo';
+import CustomPaginationDemo from './demos/pagination/customPagination.demo';
+
+<Meta title="1. Docs/6. Pagination" component={XGrid} />
+
+# Pagination
+
+- **Switch pagination**
+
+By Default, XGrid uses infinite rows and virtualization. However, we also implemented pagination if you wish to limit the number of rows visible in the grid.
+To turn it on, toggle the `pagination` boolean property of the `options` React prop as below.
+
+```tsx
+<XGrid rows={rows} columns={columns} options={{ pagination: true }} />
+```
+
+- **Set page size**
+
+Our default `pageSize` is set to `100`. You can change this value by setting the `paginationPageSize` property of the `options` React prop as below.
+
+```tsx
+<XGrid
+  rows={rows}
+  columns={columns}
+  options={{ pagination: true, paginationPageSize: 50 }}
+/>
+```
+
+- **Set Rows per page options**
+
+Along with the `paginationPageSize` property, we added the `paginationRowsPerPageOptions` that let you select the `paginationPageSize` dynamically using XGrid UI.
+Our default `paginationRowsPerPageOptions` is set to `[25, 50, 100]`. You can change this value by setting the `paginationRowsPerPageOptions` property of the `options` React prop as below.
+
+```tsx
+<XGrid
+  rows={rows}
+  columns={columns}
+  options={{
+    pagination: true,
+    paginationPageSize: 50,
+    paginationRowsPerPageOptions: [10, 20, 50],
+  }}
+/>
+```
+
+Please find below an example of a grid with pagination using the options prop described above.
+
+<SimplePaginationDemo />
+
+## Auto pagination
+
+The property `paginationAutoPageSize` is available as an option to auto-scale the `pageSize` with the container size to the max number of rows to avoid rendering a vertical scroll bar.
+By default, this feature is off and can be turned on, by toggling the `paginationAutoPageSize` boolean property of the `options` React prop as below.
+
+```tsx
+<XGrid
+  rows={rows}
+  columns={columns}
+  options={{ pagination: true, paginationAutoPageSize: true }}
+/>
+```
+
+Please find below an example of grid with `paginationAutoPageSize` turned on as described above.
+
+<AutoPageSizeDemo />
+
+## Overriding the Pagination component
+
+Our default pagination component is our Material-UI `TablePagination` available [here](https://material-ui.com/api/table-pagination/).
+Along with others, you can override this component and replace it with our Pagination from our lab [here](https://material-ui.com/components/pagination/)
+or use your own pagination.
+To achieve this, just set the pagination property of the `components` react prop as below.
+
+```tsx
+<XGrid
+  rows={rows}
+  columns={columns}
+  options={{
+    pagination: true,
+    paginationPageSize: 50,
+  }}
+  components={{
+    pagination: PaginationComponent,
+  }}
+/>
+```
+
+<CustomPaginationDemo />
+
+## Pagination API
+
+Now that you understand how to implement the pagination feature of the grid. You might want to manipulate the page or set a listener when the current page change.
+To achieve this, you should use our `apiRef` as below;
+
+```tsx
+const apiRef = useApiRef();
+
+React.useEffect(() => {
+  apiRef.current?.setPage(2);
+}, [apiRef]);
+
+// Set rows, columns ...
+
+<XGrid
+  rows={rows}
+  columns={columns}
+  options={{
+    pagination: true,
+    paginationPageSize: 5,
+  }}
+  apiRef={apiRef}
+/>;
+```
+
+<SetPageDemo />
+
+### How to implement server pagination?
+
+How to set row count / page count? On pageChange...?
+=> set pageCount then onPageChange((page)=> serverQuery(page).then(data=> setRows(data))
+
+// TODO
+
+- expose pageCount in options, needed for server api
+- expose page or currentPage in options, avoid using apiRef
+- add setRows (RowData) method to replace rows on pageChange ?? You can just use useState
+
+// TODO implement example with react Query?

@@ -1,3 +1,4 @@
+/* eslint-disable */
 // See "precomputation" in notes
 const k: any = [];
 let i = 0;

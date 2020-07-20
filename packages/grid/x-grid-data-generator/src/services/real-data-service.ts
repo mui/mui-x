@@ -11,9 +11,9 @@ export interface GridData {
 }
 
 export function getRealData(rowLength: number, columns: any[]): Promise<GridData> {
-  return new Promise<GridData>((resolve, reject) => {
+  return new Promise<GridData>((resolve) => {
     const data: DataRowModel[] = [];
-    for (let i = 0; i < rowLength; i++) {
+    for (let i = 0; i < rowLength; i += 1) {
       let model: any = {};
 
       model = columns.reduce((rowData, column) => {

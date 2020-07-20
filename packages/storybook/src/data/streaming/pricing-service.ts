@@ -1,7 +1,7 @@
 import { interval, Observable } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
-import { random, randomPrice } from '../random-generator';
 import { RowId } from '@material-ui/x-grid';
+import { random, randomPrice } from '../random-generator';
 
 export interface PricingModel {
   id: RowId;
@@ -37,7 +37,7 @@ export function subscribeCurrencyPair(
 ): Observable<PricingModel> {
   return interval(random(minUpdateRate, maxUpdateRate)).pipe(
     flatMap(() => {
-      return new Observable<any>(obs => {
+      return new Observable<any>((obs) => {
         const model: PricingModel = {
           id: i,
           currencyPair,

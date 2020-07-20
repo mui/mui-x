@@ -1,8 +1,7 @@
 import * as React from 'react';
 import Badge from '@material-ui/core/Badge';
-import { IconButton } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
 import { IconsOptions, SortDirection } from '../models';
-
 import { useIcons } from '../hooks/utils/useIcons';
 
 export interface ColumnHeaderSortIconProps {
@@ -25,7 +24,7 @@ export const ColumnHeaderSortIcon: React.FC<ColumnHeaderSortIconProps> = React.m
     }
 
     return (
-      <span className={'sort-icon'}>
+      <span className="sort-icon">
         {index != null && (
           <Badge badgeContent={index} color="default">
             <IconButton aria-label="Sort" size="small">
