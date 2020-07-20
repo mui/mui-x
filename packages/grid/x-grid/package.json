@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/x-grid",
-  "version": "0.1.54",
+  "version": "0.1.55",
   "description": "The Material-UI X edition of the data grid component.",
   "author": "Material-UI Team",
   "main": "dist/index-cjs.js",
@@ -18,8 +18,8 @@
     "tslib": "^2.0.0"
   },
   "devDependencies": {
-    "@material-ui/x-grid-modules": "^0.1.54",
-    "@material-ui/x-license": "^0.1.54",
+    "@material-ui/x-grid-modules": "^0.1.55",
+    "@material-ui/x-license": "^0.1.55",
     "@rollup/plugin-node-resolve": "^8.0.1",
     "@rollup/plugin-replace": "^2.3.3",
     "rollup": "^2.6.1",
@@ -48,5 +48,5 @@
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
   ],
-  "gitHead": "cb9362553e02b4a243081864098a48426871a168"
+  "gitHead": "369c954ada133fcf5eabfe159bcd13bc2f148aa5"
 }

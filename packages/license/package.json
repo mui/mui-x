@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/x-license",
-  "version": "0.1.54",
+  "version": "0.1.55",
   "description": "Material-UI X License verification",
   "author": "Material-UI Team",
   "main": "dist/cjs/index.js",
@@ -45,5 +45,5 @@
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
   ],
-  "gitHead": "cb9362553e02b4a243081864098a48426871a168"
+  "gitHead": "369c954ada133fcf5eabfe159bcd13bc2f148aa5"
 }
