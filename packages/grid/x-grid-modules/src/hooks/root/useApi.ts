@@ -15,7 +15,7 @@ import {
   ROW_SELECTED_EVENT,
   SELECTION_CHANGED_EVENT,
 } from '../../constants/eventsConstants';
-import { CellClickedParam, GridOptions, RowClickedParam, GridApiRef } from '../../models';
+import { CellClickedParam, GridOptions, RowClickedParam, ApiRef } from '../../models';
 import { GridApi } from '../../models/api/gridApi';
 import {
   CELL_CSS_CLASS,
@@ -40,7 +40,7 @@ export function useApi(
   gridRootRef: React.RefObject<HTMLDivElement>,
   windowRef: React.RefObject<HTMLDivElement>,
   options: GridOptions,
-  apiRef: GridApiRef,
+  apiRef: ApiRef,
 ): boolean {
   const [isApiInitialised, setApiInitialised] = React.useState(false);
   const [initialised, setInit] = React.useState(false);

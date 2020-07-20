@@ -11,8 +11,8 @@ import { PageChangedParams } from '../../models/params/pageChangedParams';
 import { Rows } from '../../models/rows';
 import { InternalColumns } from '../../models/colDef/colDef';
 import { GridOptions } from '../../models/gridOptions';
-import { GridApiRef } from '../../models/api/gridApiRef';
 import { PaginationApi } from '../../models/api/paginationApi';
+import { ApiRef } from '../../models/api';
 
 export interface PaginationProps {
   page: number;
@@ -49,7 +49,7 @@ export const usePagination = (
   rows: Rows,
   columns: InternalColumns,
   options: GridOptions,
-  apiRef: GridApiRef,
+  apiRef: ApiRef,
 ): PaginationProps => {
   const logger = useLogger('usePagination');
 

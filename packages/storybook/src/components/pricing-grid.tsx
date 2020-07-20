@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
-import { XGrid, ColDef, GridApi, GridOptionsProp } from '@material-ui/x-grid';
+import { XGrid, ColDef, GridOptionsProp, useApiRef } from '@material-ui/x-grid';
 import {
   PricingModel,
   subscribeCurrencyPair,
@@ -19,13 +19,13 @@ export const PricingGrid: React.FC<PricingGridProps> = (p) => {
   const [rows] = React.useState<PricingModel[]>([]);
 
   const [started, setStarted] = React.useState<boolean>(false);
-  const gridApiRef = React.useRef<GridApi>(null);
+  const apiRef = useApiRef();
   const stopButton = React.useRef<HTMLButtonElement>(null);
 
   const subscription: Subscription = new Subscription();
   const handleNewPrice = (pricingModel: PricingModel) => {
-    if (gridApiRef && gridApiRef.current) {
-      gridApiRef.current.updateRowData([pricingModel]);
+    if (apiRef && apiRef.current) {
+      apiRef.current.updateRowData([pricingModel]);
     }
   };
 
@@ -69,7 +69,7 @@ export const PricingGrid: React.FC<PricingGridProps> = (p) => {
         </button>
       </div>
       <div style={{ width: 800, height: 600 }}>
-        <XGrid rows={rows} columns={columns} apiRef={gridApiRef} {...p} />
+        <XGrid rows={rows} columns={columns} apiRef={apiRef} {...p} />
       </div>
     </React.Fragment>
   );

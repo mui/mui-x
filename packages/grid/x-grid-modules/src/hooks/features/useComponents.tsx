@@ -2,10 +2,10 @@ import * as React from 'react';
 import { PaginationProps } from './usePagination';
 import {
   ComponentParams,
-  GridApiRef,
+  ApiRef,
   GridComponentOverridesProp,
   GridOptions,
-  GridRootRef,
+  RootContainerRef,
   InternalColumns,
   Rows,
 } from '../../models';
@@ -17,8 +17,8 @@ export const useComponents = (
   options: GridOptions,
   componentOverrides: GridComponentOverridesProp | undefined,
   paginationProps: PaginationProps,
-  apiRef: GridApiRef,
-  gridRootRef: GridRootRef,
+  apiRef: ApiRef,
+  gridRootRef: RootContainerRef,
 ) => {
   const componentParams: ComponentParams = React.useMemo(
     () => ({

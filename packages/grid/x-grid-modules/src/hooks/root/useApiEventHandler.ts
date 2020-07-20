@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useLogger } from '../utils';
-import { GridApiRef } from '../../models/api';
+import { ApiRef } from '../../models/api';
 
 export function useApiEventHandler(
-  apiRef: GridApiRef,
+  apiRef: ApiRef,
   eventName: string,
   handler?: (args: any) => void,
 ) {

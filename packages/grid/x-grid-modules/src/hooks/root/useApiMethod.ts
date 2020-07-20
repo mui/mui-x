@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { GridApi, GridApiRef } from '../../models/api';
+import { ApiRef, GridApi } from '../../models/api';
 import { useLogger } from '../utils';
 
-export function useApiMethod(apiRef: GridApiRef, apiMethods: Partial<GridApi>, apiName: string) {
+export function useApiMethod(apiRef: ApiRef, apiMethods: Partial<GridApi>, apiName: string) {
   const logger = useLogger('useApiMethod');
 
   React.useEffect(() => {

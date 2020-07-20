@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { XGrid, GridApiRef, gridApiRef } from '@material-ui/x-grid';
+import { XGrid, ApiRef, useApiRef } from '@material-ui/x-grid';
 import Button from '@material-ui/core/Button';
 import Pagination from '@material-ui/lab/Pagination';
 import { action } from '@storybook/addon-actions';
@@ -88,7 +88,7 @@ export function HiddenPagination() {
 }
 
 export function PaginationApiTests() {
-  const apiRef: GridApiRef = gridApiRef();
+  const apiRef: ApiRef = useApiRef();
   const data = useData(2000, 200);
   const [autosize, setAutoSize] = React.useState(false);
 

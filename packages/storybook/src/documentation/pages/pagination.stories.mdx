@@ -96,7 +96,7 @@ Now that you understand how to implement the pagination feature of the grid. You
 To achieve this, you should use our `apiRef` as below;
 
 ```tsx
-const apiRef = gridApiRef();
+const apiRef = useApiRef();
 
 React.useEffect(() => {
   apiRef.current?.setPage(2);

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { action } from '@storybook/addon-actions';
-import { GridOptionsProp, XGrid, gridApiRef } from '@material-ui/x-grid';
+import { GridOptionsProp, XGrid, useApiRef } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { interval } from 'rxjs';
@@ -67,12 +67,12 @@ export const SingleSubscriptionFast = () => {
 };
 
 export function SimpleRxUpdate() {
-  const api = gridApiRef();
+  const apiRef = useApiRef();
   const columns = [{ field: 'id' }, { field: 'username', width: 150 }, { field: 'age', width: 80 }];
 
   React.useEffect(() => {
     const subscription = interval(100).subscribe(() =>
-      api.current?.updateRowData([
+      apiRef.current?.updateRowData([
         { id: 1, username: randomUserName(), age: randomInt(10, 80) },
         { id: 2, username: randomUserName(), age: randomInt(10, 80) },
         { id: 3, username: randomUserName(), age: randomInt(10, 80) },
@@ -81,7 +81,7 @@ export function SimpleRxUpdate() {
     );
 
     return () => subscription.unsubscribe();
-  }, [api]);
+  }, [apiRef]);
 
-  return <XGrid rows={[]} columns={columns} apiRef={api} options={{ autoHeight: true }} />;
+  return <XGrid rows={[]} columns={columns} apiRef={apiRef} options={{ autoHeight: true }} />;
 }

@@ -9,7 +9,7 @@ import {
   GridOptions,
   InternalColumns,
   SortModel,
-  GridApiRef,
+  ApiRef,
 } from '../../models';
 import { Logger, useLogger } from '../utils/useLogger';
 import { COLUMNS_UPDATED, POST_SORT } from '../../constants/eventsConstants';
@@ -31,7 +31,7 @@ function hydrateColumns(
   columns: Columns,
   withCheckboxSelection: boolean,
   logger: Logger,
-  apiRef: GridApiRef,
+  apiRef: ApiRef,
 ): Columns {
   logger.debug('Hydrating Columns with default definitions');
   let mappedCols = columns.map((c) => ({ ...getColDef(c.type), ...c }));
@@ -90,7 +90,7 @@ const resetState = (
   columns: Columns,
   withCheckboxSelection: boolean,
   logger: Logger,
-  apiRef: GridApiRef,
+  apiRef: ApiRef,
 ): InternalColumns => {
   if (columns.length === 0) {
     return initialState;
@@ -140,7 +140,7 @@ const getUpdatedColumnState = (
 export function useColumns(
   options: GridOptions,
   columns: Columns,
-  apiRef: GridApiRef,
+  apiRef: ApiRef,
 ): InternalColumns {
   const logger = useLogger('useColumns');
   const [, forceUpdate] = React.useState();

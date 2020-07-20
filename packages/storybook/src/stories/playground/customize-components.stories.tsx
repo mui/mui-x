@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ColDef, XGrid, GridOverlay, Footer, GridApiRef, gridApiRef } from '@material-ui/x-grid';
+import { ColDef, XGrid, GridOverlay, Footer, useApiRef, ApiRef } from '@material-ui/x-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CodeIcon from '@material-ui/icons/Code';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -119,7 +119,7 @@ function PaginationComponent(props) {
 }
 
 export function CustomPagination() {
-  const apiRef: GridApiRef = gridApiRef();
+  const apiRef: ApiRef = useApiRef();
   const data = useData(2000, 200);
 
   return (

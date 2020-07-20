@@ -7,7 +7,13 @@ import {
   useSelection,
   useSorting,
 } from './hooks/features';
-import { DEFAULT_GRID_OPTIONS, ElementSize, GridApi, GridOptions, GridRootRef } from './models';
+import {
+  DEFAULT_GRID_OPTIONS,
+  ElementSize,
+  GridApi,
+  GridOptions,
+  RootContainerRef,
+} from './models';
 import { DATA_CONTAINER_CSS_CLASS } from './constants';
 import { ColumnsContainer, DataContainer, GridRoot } from './components/styled-wrappers';
 import { useVirtualRows } from './hooks/virtualization';
@@ -35,7 +41,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
   ({ rows, columns, options, apiRef, loading, licenseStatus, className, components }) => {
     useLoggerFactory(options?.logger, options?.logLevel);
     const logger = useLogger('Grid');
-    const gridRootRef: GridRootRef = React.useRef<HTMLDivElement>(null);
+    const rootContainerRef: RootContainerRef = React.useRef<HTMLDivElement>(null);
     const footerRef = React.useRef<HTMLDivElement>(null);
     const columnsHeaderRef = React.useRef<HTMLDivElement>(null);
     const columnsContainerRef = React.useRef<HTMLDivElement>(null);
@@ -55,7 +61,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
       apiRef = internalApiRef;
     }
 
-    const initialised = useApi(gridRootRef, windowRef, internalOptions, apiRef);
+    const initialised = useApi(rootContainerRef, windowRef, internalOptions, apiRef);
     const internalColumns = useColumns(internalOptions, columns, apiRef);
     const internalRows = useRows(internalOptions, rows, initialised, apiRef);
     useKeyboard(internalOptions, initialised, apiRef);
@@ -91,7 +97,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
       components,
       paginationProps,
       apiRef,
-      gridRootRef,
+      rootContainerRef,
     );
 
     const onResize = React.useCallback(
@@ -143,7 +149,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
       <AutoSizerWrapper onResize={debouncedOnResize} style={{ height: 'unset', width: 'unset' }}>
         {(size: any) => (
           <GridRoot
-            ref={gridRootRef}
+            ref={rootContainerRef}
             className={`material-grid MuiGrid ${className || ''}`}
             options={internalOptions}
             style={{ width: size.width, height: getTotalHeight(size) }}

@@ -4,7 +4,7 @@ import {
   GridOptions,
   RenderColumnsProps,
   VirtualizationApi,
-  GridApiRef,
+  ApiRef,
 } from '../../models';
 import { useLogger } from '../utils/useLogger';
 import { COLUMNS_UPDATED } from '../../constants/eventsConstants';
@@ -22,7 +22,7 @@ type UseVirtualColumnsReturnType = [
 
 export const useVirtualColumns = (
   options: GridOptions,
-  apiRef: GridApiRef,
+  apiRef: ApiRef,
 ): UseVirtualColumnsReturnType => {
   const logger = useLogger('useVirtualColumns');
   const renderedColRef = useRef<RenderColumnsProps | null>(null);

@@ -1,8 +1,9 @@
 import { Rows } from '../rows';
 import { Columns } from '../colDef/colDef';
 import { GridOptions } from '../gridOptions';
-import { GridApiRef, GridRootRef } from '../api/gridApiRef';
 import { PaginationProps } from '../../hooks/features/usePagination';
+import { RootContainerRef } from '../rootContainerRef';
+import { ApiRef } from '../api';
 
 /**
  * Object passed as React prop in the component override.
@@ -27,9 +28,9 @@ export interface ComponentParams {
   /**
    * ApiRef that let you manipulate the grid
    */
-  api: GridApiRef;
+  api: ApiRef;
   /**
    * The ref of the inner div Element of the grid
    */
-  rootElement: GridRootRef;
+  rootElement: RootContainerRef;
 }
