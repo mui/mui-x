@@ -5,12 +5,12 @@ export type SortDirection = 'asc' | 'desc' | null | undefined;
 export type FieldComparatorList = { field: string; comparator: ComparatorFn }[];
 
 /**
- * The type of the sort comparison function
+ * The type of the sort comparison function.
  */
 export type ComparatorFn = (v1: CellValue, v2: CellValue, row1: RowModel, row2: RowModel) => number;
 
 /**
- * Object that represents the column sorted data, part of the [[SortModel]]
+ * Object that represents the column sorted data, part of the [[SortModel]].
  */
 export interface SortItem {
   /**
@@ -24,6 +24,6 @@ export interface SortItem {
 }
 
 /**
- * The model used for sorting the grid
+ * The model used for sorting the grid.
  */
 export type SortModel = SortItem[];

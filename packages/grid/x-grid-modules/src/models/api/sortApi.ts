@@ -2,7 +2,7 @@ import { SortModel } from '../sortModel';
 import { ColumnSortedParams } from '../params/columnSortedParams';
 
 /**
- * The Sort API interface that is available in the grid [[apiRef]]
+ * The Sort API interface that is available in the grid [[apiRef]].
  */
 export interface SortApi {
   /**

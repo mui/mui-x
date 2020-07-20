@@ -1,5 +1,5 @@
 /**
- * Object passed as parameter of the page changed event handler
+ * Object passed as parameter of the page changed event handler.
  */
 export interface PageChangedParams {
   /**

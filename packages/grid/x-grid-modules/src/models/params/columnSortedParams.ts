@@ -2,7 +2,7 @@ import { ColDef } from '../colDef/colDef';
 import { SortModel } from '../sortModel';
 
 /**
- * Object passed as parameter of the column sorted event
+ * Object passed as parameter of the column sorted event.
  */
 export interface ColumnSortedParams {
   /**

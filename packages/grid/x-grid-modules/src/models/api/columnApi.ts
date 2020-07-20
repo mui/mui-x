@@ -1,7 +1,7 @@
 import { ColDef, Columns, ColumnsMeta } from '../colDef/colDef';
 
 /**
- * The column API interface that is available in the grid [[apiRef]]
+ * The column API interface that is available in the grid [[apiRef]].
  */
 export interface ColumnApi {
   /**

@@ -36,10 +36,10 @@ export interface CellParams {
 }
 
 /**
- * Alias of CellParams
+ * Alias of CellParams.
  */
 export type ValueGetterParams = CellParams;
 /**
- * Alias of CellParams
+ * Alias of CellParams.
  */
 export type ValueFormatterParams = CellParams;

@@ -1,5 +1,5 @@
 /**
- * The size of a container
+ * The size of a container.
  */
 export interface ElementSize {
   /**

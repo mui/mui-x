@@ -1,7 +1,7 @@
 import { ContainerProps } from './containerProps';
 
 /**
- * The object containing the column properties of the rendering state
+ * The object containing the column properties of the rendering state.
  */
 export interface RenderColumnsProps {
   /**
@@ -23,7 +23,7 @@ export interface RenderColumnsProps {
 }
 
 /**
- * The object containing the row properties of the rendering state
+ * The object containing the row properties of the rendering state.
  */
 export interface RenderRowProps {
   /**
@@ -41,7 +41,7 @@ export interface RenderRowProps {
 }
 
 /**
- * The object containing the pagination properties of the rendering state
+ * The object containing the pagination properties of the rendering state.
  */
 export interface RenderPaginationProps {
   /**
@@ -55,7 +55,7 @@ export interface RenderPaginationProps {
 }
 
 /**
- * The full rendering state
+ * The full rendering state.
  */
 export type RenderContextProps = ContainerProps &
   RenderColumnsProps &

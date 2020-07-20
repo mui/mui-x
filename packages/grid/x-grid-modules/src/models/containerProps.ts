@@ -1,7 +1,7 @@
 import { ElementSize } from './elementSize';
 
 /**
- * The set of container properties calculated on resize of the grid
+ * The set of container properties calculated on resize of the grid.
  */
 export interface ContainerProps {
   /**

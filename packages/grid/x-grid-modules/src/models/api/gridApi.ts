@@ -7,7 +7,7 @@ import { PaginationApi } from './paginationApi';
 import { VirtualizationApi } from './virtualizationApi';
 
 /**
- * The Core API interface that is available in the grid [[apiRef]]
+ * The Core API interface that is available in the grid [[apiRef]].
  */
 export interface CoreApi extends EventEmitter {
   /**
@@ -39,7 +39,7 @@ export interface CoreApi extends EventEmitter {
 }
 
 /**
- * The full Grid API
+ * The full Grid API.
  */
 export type GridApi = RowApi &
   ColumnApi &

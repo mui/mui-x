@@ -3,7 +3,7 @@ import { RowSelectedParams } from '../params/rowSelectedParams';
 import { SelectionChangedParams } from '../params/selectionChangedParams';
 
 /**
- * The Selection API interface that is available in the grid [[apiRef]]
+ * The Selection API interface that is available in the grid [[apiRef]].
  */
 export interface SelectionApi {
   /**

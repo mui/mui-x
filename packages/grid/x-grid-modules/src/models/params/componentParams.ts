@@ -5,7 +5,7 @@ import { GridApiRef, GridRootRef } from '../api/gridApiRef';
 import { PaginationProps } from '../../hooks/features/usePagination';
 
 /**
- * Object passed as React prop in the component override
+ * Object passed as React prop in the component override.
  */
 export interface ComponentParams {
   /**

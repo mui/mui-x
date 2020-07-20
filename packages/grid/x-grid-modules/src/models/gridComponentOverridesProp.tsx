@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ComponentParams } from './params';
 
 /**
- * Grid components React prop interface containing all the overridable components
+ * Grid components React prop interface containing all the overridable components.
  */
 export interface GridComponentOverridesProp {
   /**

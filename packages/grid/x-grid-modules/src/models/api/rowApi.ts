@@ -1,7 +1,7 @@
 import { RowData, RowId, RowModel, Rows } from '../rows';
 
 /**
- * The Row API interface that is available in the grid [[apiRef]]
+ * The Row API interface that is available in the grid [[apiRef]].
  */
 export interface RowApi {
   /**

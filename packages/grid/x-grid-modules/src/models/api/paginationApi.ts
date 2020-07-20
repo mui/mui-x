@@ -1,7 +1,7 @@
 import { PageChangedParams } from '../params/pageChangedParams';
 
 /**
- * The pagination API interface that is available in the grid [[apiRef]]
+ * The pagination API interface that is available in the grid [[apiRef]].
  */
 export interface PaginationApi {
   /**

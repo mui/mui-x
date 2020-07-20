@@ -2,7 +2,7 @@ import { RowData, RowModel } from '../rows';
 import { ColDef } from '../colDef/colDef';
 
 /**
- * The object passed as parameter of the Row click event handler
+ * The object passed as parameter of the Row click event handler.
  */
 export interface RowClickedParam {
   /**

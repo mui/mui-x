@@ -7,12 +7,12 @@ import { ColParams } from '../params/colParams';
 import { CellParams, ValueFormatterParams, ValueGetterParams } from '../params/cellParams';
 
 /**
- * Alignement used in position elements in Cells
+ * Alignement used in position elements in Cells.
  */
 export type Alignement = 'left' | 'right' | 'center';
 
 /**
- * Column Definition interface
+ * Column Definition interface.
  */
 export interface ColDef {
   /**
@@ -116,7 +116,7 @@ export type Columns = ColDef[];
 export type ColTypeDef = Omit<ColDef, 'field'>;
 
 /**
- * Meta Info about Columns
+ * Meta Info about Columns.
  */
 export interface ColumnsMeta {
   totalWidth: number;

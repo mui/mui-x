@@ -1,7 +1,7 @@
 import { Columns, GridApiRef, GridComponentOverridesProp, GridOptions, RowsProp } from './models';
 
 /**
- * Partial set of [[GridOptions]]
+ * Partial set of [[GridOptions]].
  */
 export type GridOptionsProp = Partial<GridOptions>;
 

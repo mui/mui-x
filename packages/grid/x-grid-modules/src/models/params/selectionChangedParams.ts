@@ -1,7 +1,7 @@
 import { RowData } from '../rows';
 
 /**
- * Object passed as parameter as the selection changed event handler
+ * Object passed as parameter as the selection changed event handler.
  */
 export interface SelectionChangedParams {
   /**

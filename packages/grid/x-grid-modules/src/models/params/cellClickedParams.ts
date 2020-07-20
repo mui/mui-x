@@ -2,7 +2,7 @@ import { CellValue, RowData } from '../rows';
 import { ColDef } from '../colDef';
 
 /**
- * Object passed as parameter in the Cell Click event handler
+ * Object passed as parameter in the Cell Click event handler.
  */
 export interface CellClickedParam {
   /**

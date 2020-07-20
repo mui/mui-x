@@ -4,7 +4,7 @@ import { ContainerProps } from '../containerProps';
 import { RenderContextProps } from '../renderContextProps';
 
 /**
- * The Virtualization API interface that is available in the grid [[apiRef]]
+ * The Virtualization API interface that is available in the grid [[apiRef]].
  */
 export interface VirtualizationApi {
   /**

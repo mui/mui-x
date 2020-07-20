@@ -11,7 +11,7 @@ import { SelectionChangedParams } from './params/selectionChangedParams';
 import { PageChangedParams } from './params/pageChangedParams';
 
 /**
- * Set of icons used in the grid component UI
+ * Set of icons used in the grid component UI.
  */
 export interface IconsOptions {
   /**
@@ -30,7 +30,7 @@ export interface IconsOptions {
 
 // TODO add multiSortKey
 /**
- * Grid options react prop, containing all the setting for the grid
+ * Grid options react prop, containing all the setting for the grid.
  */
 export interface GridOptions {
   /**

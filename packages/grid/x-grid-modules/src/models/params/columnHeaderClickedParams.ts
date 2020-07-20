@@ -1,7 +1,7 @@
 import { ColDef } from '../colDef';
 
 /**
- * Object passed as parameter of the column header click event
+ * Object passed as parameter of the column header click event.
  */
 export interface ColumnHeaderClickedParams {
   /**
