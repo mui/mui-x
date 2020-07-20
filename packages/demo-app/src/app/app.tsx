@@ -20,7 +20,7 @@ export function App() {
     [state, dispatch],
   );
 
-  const {theme, themeId, toggleTheme, isDark} = useTheme();
+  const { theme, themeId, toggleTheme, isDark } = useTheme();
   return (
     <ThemeProvider theme={theme}>
       <HashRouter>

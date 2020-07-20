@@ -1,6 +1,6 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocalStorage } from '../utils/useLocalStorage';
-import { DEFAULT_THEME, STORAGE_THEME_KEY, ThemeContext, ThemeValuePair } from './themeProvider';
+import { DEFAULT_THEME, STORAGE_THEME_KEY, ThemeValuePair } from './themeProvider';
 import { darkTheme } from './dark';
 import { lightTheme } from './light';
 import { AppTheme } from './appTheme';

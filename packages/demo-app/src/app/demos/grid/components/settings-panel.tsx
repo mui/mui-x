@@ -8,7 +8,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { useContext } from 'react';
 import { darkThemeId, lightThemeId, ThemeContext } from '../../theme';
-import { useTheme } from '../../theme/useTheme';
 import { StyledPanels } from './styled-panel';
 
 export interface SettingsPanelProps {

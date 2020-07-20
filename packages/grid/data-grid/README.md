@@ -71,10 +71,9 @@ const columns: ColDef[] = [
     description: 'this column has a value getter and is not sortable',
     headerClass: 'highlight',
     sortable: false,
-    valueGetter: (params) =>
-      `${params.getValue('firstName') || ''} ${
-        params.getValue('lastName') || ''
-      }`,
+    valueGetter: params =>
+      `${params.getValue('firstName') || ''} ${params.getValue('lastName') ||
+        ''}`,
   },
 ];
 
