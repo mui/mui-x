@@ -30,5 +30,5 @@ export const Watermark: React.FC<WatermarkProps> = ({ licenseStatus }) => {
     return null;
   }
 
-  return <div className={'watermark'}> {getLicenseErrorMessage(licenseStatus)} </div>;
+  return <div className="watermark"> {getLicenseErrorMessage(licenseStatus)} </div>;
 };

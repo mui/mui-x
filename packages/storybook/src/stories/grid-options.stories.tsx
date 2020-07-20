@@ -39,7 +39,6 @@ export const NoLogger = () => {
 
 export const CustomLogger = () => {
   const logger = {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     debug: () => {},
     // eslint-disable-next-line no-console
     info: (...args) => console.info(`CUSTOM-LOGGING =>${args[0]}`, args.slice(1)),

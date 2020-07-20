@@ -26,22 +26,22 @@ const getGridOptions: () => GridOptionsProp = () => {
   const sortingOrder = array('sortingOrder', ['asc', 'desc', 'null'], ', ');
 
   return {
-    onRowClicked: params => action('onRowClicked')(params),
-    onCellClicked: params => action('onCellClicked')(params),
-    onColumnHeaderClicked: params => action('onColumnHeaderClicked')(params),
-    onRowSelected: params => action('onRowSelected')(params),
-    onSelectionChanged: params =>
+    onRowClicked: (params) => action('onRowClicked')(params),
+    onCellClicked: (params) => action('onCellClicked')(params),
+    onColumnHeaderClicked: (params) => action('onColumnHeaderClicked')(params),
+    onRowSelected: (params) => action('onRowSelected')(params),
+    onSelectionChanged: (params) =>
       action('onSelectionChanged', {
         depth: 1,
       })(params),
-    onColumnsSorted: params => action('onColumnsSorted')(params),
-    onPageChanged: params => action('onPageChanged')(params),
-    onPageSizeChanged: params => action('onPageSizeChanged')(params),
+    onColumnsSorted: (params) => action('onColumnsSorted')(params),
+    onPageChanged: (params) => action('onPageChanged')(params),
+    onPageSizeChanged: (params) => action('onPageSizeChanged')(params),
 
     pagination: boolean('pagination', false),
     paginationPageSize: number('paginationPageSize', 100),
     paginationAutoPageSize: boolean('paginationAutoPageSize', false),
-    paginationRowsPerPageOptions: rowsPerPageOptions.map(value => parseInt(value, 10)),
+    paginationRowsPerPageOptions: rowsPerPageOptions.map((value) => parseInt(value, 10)),
     hideFooterRowCount: boolean('hideFooterRowCount', false),
     hideFooterPagination: boolean('hideFooterPagination', false),
     hideFooter: boolean('hideFooter', false),
@@ -52,22 +52,22 @@ const getGridOptions: () => GridOptionsProp = () => {
     checkboxSelection: boolean('checkboxSelection', true),
     disableSelectionOnClick: boolean('disableSelectionOnClick', true),
     enableMultipleColumnsSorting: boolean('enableMultipleColumnsSorting', true),
-    sortingOrder: sortingOrder.map(value => (value === 'null' ? null : (value as SortDirection))),
+    sortingOrder: sortingOrder.map((value) => (value === 'null' ? null : (value as SortDirection))),
     headerHeight: number('headerHeight', 56),
     rowHeight: number('rowHeight', 52),
   };
 };
 
-export const Commodity = () => {
+export function Commodity() {
   const { data, setSize, loadNewData } = useDemoData('Commodity', 100);
 
   return (
     <React.Fragment>
       <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-        <Button color={'primary'} onClick={loadNewData}>
+        <Button color="primary" onClick={loadNewData}>
           Load New Rows
         </Button>
-        <Button color={'primary'} onClick={() => setSize(randomInt(100, 500))}>
+        <Button color="primary" onClick={() => setSize(randomInt(100, 500))}>
           Load New Rows with new length
         </Button>
       </div>
@@ -76,8 +76,9 @@ export const Commodity = () => {
       </div>
     </React.Fragment>
   );
-};
-export const Commodity500 = () => {
+}
+
+export function Commodity500() {
   const { data } = useDemoData('Commodity', 500);
 
   return (
@@ -85,8 +86,9 @@ export const Commodity500 = () => {
       <XGrid rows={data.rows} columns={data.columns} options={getGridOptions()} />
     </div>
   );
-};
-export const Commodity1000 = () => {
+}
+
+export function Commodity1000() {
   const { data } = useDemoData('Commodity', 1000);
 
   return (
@@ -94,9 +96,9 @@ export const Commodity1000 = () => {
       <XGrid rows={data.rows} columns={data.columns} options={getGridOptions()} />
     </div>
   );
-};
+}
 
-export const Commodity10000 = () => {
+export function Commodity10000() {
   const { data } = useDemoData('Commodity', 10000);
 
   return (
@@ -104,9 +106,9 @@ export const Commodity10000 = () => {
       <XGrid rows={data.rows} columns={data.columns} options={getGridOptions()} />
     </div>
   );
-};
+}
 
-export const Employee100 = () => {
+export function Employee100() {
   const { data } = useDemoData('Employee', 100);
 
   return (
@@ -114,8 +116,9 @@ export const Employee100 = () => {
       <XGrid rows={data.rows} columns={data.columns} options={getGridOptions()} />
     </div>
   );
-};
-export const Employee1000 = () => {
+}
+
+export function Employee1000() {
   const { data } = useDemoData('Employee', 1000);
 
   return (
@@ -123,8 +126,9 @@ export const Employee1000 = () => {
       <XGrid rows={data.rows} columns={data.columns} options={getGridOptions()} />
     </div>
   );
-};
-export const Employee10000 = () => {
+}
+
+export function Employee10000() {
   const { data } = useDemoData('Employee', 10000);
 
   return (
@@ -132,4 +136,4 @@ export const Employee10000 = () => {
       <XGrid rows={data.rows} columns={data.columns} options={getGridOptions()} />
     </div>
   );
-};
+}

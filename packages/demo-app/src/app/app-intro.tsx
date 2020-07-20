@@ -9,8 +9,8 @@ import Footer from './app-footer';
 
 const Splash = styled.div`
   display: flex;
-  color: ${p => p.theme.colors.app};
-  background-color: ${p => p.theme.colors.background};
+  color: ${(p) => p.theme.colors.app};
+  background-color: ${(p) => p.theme.colors.background};
   justify-content: space-between;
   flex: auto;
 
@@ -72,13 +72,13 @@ const Splash = styled.div`
   }
 
   .product-title {
-    color: ${p => p.theme.colors.secondApp};
+    color: ${(p) => p.theme.colors.secondApp};
     font-size: 4rem;
     font-weight: 500;
     text-shadow: -2px 1px 4px #929292;
   }
   .product-title-logo {
-    color: ${p => p.theme.colors.secondApp};
+    color: ${(p) => p.theme.colors.secondApp};
     position: absolute;
     font-weight: 800;
     top: -22px;
@@ -87,7 +87,7 @@ const Splash = styled.div`
     padding: 0;
     margin: 0;
     display: none;
-    text-shadow: -2px 1px 4px ${p => p.theme.colors.xShadowColor};
+    text-shadow: -2px 1px 4px ${(p) => p.theme.colors.xShadowColor};
   }
   .logo-container {
     position: relative;
@@ -98,31 +98,26 @@ const Splash = styled.div`
   }
 `;
 
-export const AppIntro: React.FC<{}> = () => {
+export function AppIntro() {
   return (
     <React.Fragment>
       <Splash>
-        <Container maxWidth="sm" className={'splash-container'}>
-          <div className={'logo-container'}>
+        <Container maxWidth="sm" className="splash-container">
+          <div className="logo-container">
             <MuiLogo />
-            <Typography variant="h1" className={'product-title-logo'}>
+            <Typography variant="h1" className="product-title-logo">
               X
             </Typography>
           </div>
           <div>
-            <Typography variant="h1" className={'title'}>
-              Material-UI <span className={'product-title'}>X</span>
+            <Typography variant="h1" className="title">
+              Material-UI <span className="product-title">X</span>
             </Typography>
-            <Typography component="h5" className={'intro'}>
+            <Typography component="h5" className="intro">
               Extension with highly complex components for Startup and Enterprise projects.
             </Typography>
-            <Button
-              href={'#/grid'}
-              variant={'outlined'}
-              color={'primary'}
-              className={'main-action-button'}
-            >
-              <KeyboardArrowRightIcon fontSize={'small'} /> Preview
+            <Button href="#/grid" variant="outlined" color="primary" className="main-action-button">
+              <KeyboardArrowRightIcon fontSize="small" /> Preview
             </Button>
           </div>
         </Container>
@@ -130,8 +125,4 @@ export const AppIntro: React.FC<{}> = () => {
       <Footer />
     </React.Fragment>
   );
-};
-
-/*
-* Build your own financial or
-            trading application with this highly customisable and accessible toolkit. */
+}

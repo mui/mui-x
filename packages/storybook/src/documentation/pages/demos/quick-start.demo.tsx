@@ -17,14 +17,12 @@ export default function QuickStartDemo() {
     {
       field: 'age',
       headerClass: 'highlight',
-      valueGetter: params =>
+      valueGetter: (params) =>
         new Date().getFullYear() - (params.getValue('dateFounded') as Date).getFullYear(),
     },
     {
       field: 'logo',
-      cellRenderer: ({ value }) => (
-        <img src={value!.toString()} style={{ width: 60 }} alt={'logo'} />
-      ),
+      cellRenderer: ({ value }) => <img src={value!.toString()} style={{ width: 60 }} alt="logo" />,
     },
   ];
 

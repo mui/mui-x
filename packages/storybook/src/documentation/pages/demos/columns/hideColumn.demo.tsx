@@ -54,8 +54,8 @@ export default function HideColumnDemo() {
   );
 
   const toggleLastLogin = React.useCallback(() => {
-    setColumns(cols =>
-      cols.map(col => {
+    setColumns((cols) =>
+      cols.map((col) => {
         if (col.field === 'lastLogin') {
           col.hide = !col.hide;
         }
@@ -66,7 +66,7 @@ export default function HideColumnDemo() {
 
   return (
     <React.Fragment>
-      <Button onClick={toggleLastLogin} color={'primary'} variant={'contained'} size={'small'}>
+      <Button onClick={toggleLastLogin} color="primary" variant="contained" size="small">
         Toggle Last Login Column
       </Button>
       <div style={{ width: 800, height: 320, padding: '10px 0' }}>

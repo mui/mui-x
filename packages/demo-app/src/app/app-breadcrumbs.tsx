@@ -1,18 +1,16 @@
-import Link from '@material-ui/core/Link';
-
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import * as React from 'react';
-
 import styled from 'styled-components';
+import Link from '@material-ui/core/Link';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 
 interface AppBreadcrumbsProps {
   name: string;
 }
 
 const StyledBreadcrumbs = styled(Breadcrumbs)`
-  background-color: ${p => p.theme.colors.breadcrumbsBg};
-  color: ${p => p.theme.colors.breadcrumbsTitle} !important;
-  border-bottom: 1px solid ${p => p.theme.colors.breadcrumbsBorderBottom};
+  background-color: ${(p) => p.theme.colors.breadcrumbsBg};
+  color: ${(p) => p.theme.colors.breadcrumbsTitle} !important;
+  border-bottom: 1px solid ${(p) => p.theme.colors.breadcrumbsBorderBottom};
   line-height: 36px;
   height: 36px;
 
@@ -21,15 +19,16 @@ const StyledBreadcrumbs = styled(Breadcrumbs)`
     padding: 5px;
     font-size: 12px;
     font-weight: 600;
-    color: ${p => p.theme.colors.breadcrumbsTitle};
+    color: ${(p) => p.theme.colors.breadcrumbsTitle};
   }
 
   .current {
-    color: ${p => p.theme.colors.breadcrumbsTitleCurrent};
+    color: ${(p) => p.theme.colors.breadcrumbsTitleCurrent};
   }
 `;
 
-export function AppBreadcrumbs({ name }: AppBreadcrumbsProps) {
+export function AppBreadcrumbs(props: AppBreadcrumbsProps) {
+  const { name } = props;
   return (
     <StyledBreadcrumbs separator="›" aria-label="breadcrumb">
       <Link color="inherit" href="#/">
@@ -38,7 +37,7 @@ export function AppBreadcrumbs({ name }: AppBreadcrumbsProps) {
       <Link color="inherit" href="#/">
         Components Showcase
       </Link>
-      <Link color="textPrimary" className={'current'} href={`#/${name}`}>
+      <Link color="textPrimary" className="current" href={`#/${name}`}>
         {name}
       </Link>
     </StyledBreadcrumbs>

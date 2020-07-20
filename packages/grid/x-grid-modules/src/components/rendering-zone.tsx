@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { ElementSize } from '../models';
 
 type WithChildren = { children?: React.ReactNode };
@@ -9,7 +8,7 @@ export const RenderingZone = React.forwardRef<HTMLDivElement, ElementSize & With
     return (
       <div
         ref={ref}
-        className={'rendering-zone'}
+        className="rendering-zone"
         style={{
           maxHeight: height,
           width,

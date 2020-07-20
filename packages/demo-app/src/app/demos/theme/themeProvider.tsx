@@ -18,27 +18,24 @@ ThemeValuePair[lightThemeId] = lightTheme;
 export interface ThemeProviderProps {
   children?: React.ReactNode;
   theme: AppTheme;
-  toggleTheme: () => void;
 }
 
-type AppThemeContext = { theme: string; toggleTheme: () => void };
+type AppThemeContext = { theme: string };
 
 const item = window.localStorage.getItem(STORAGE_THEME_KEY);
 const themeToLoad = item != null ? JSON.parse(item) : DEFAULT_THEME;
-// eslint-disable-next-line @typescript-eslint/no-empty-function
+
 export const ThemeContext = React.createContext<AppThemeContext>({
   theme: themeToLoad,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  toggleTheme: () => {},
 });
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = props => {
+export const ThemeProvider: React.FC<ThemeProviderProps> = (props) => {
   const muiTheme = createMuiTheme({
     palette: props.theme as PaletteOptions,
   });
 
   return (
-    <ThemeContext.Provider value={{ theme: props.theme.id, toggleTheme: props.toggleTheme }}>
+    <ThemeContext.Provider value={{ theme: props.theme.id }}>
       <MuiThemeProvider theme={muiTheme}>
         <SCThemeProvider theme={props.theme}>{props.children}</SCThemeProvider>
       </MuiThemeProvider>

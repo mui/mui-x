@@ -45,8 +45,8 @@ export const EventsMapped = () => {
   const data = useData(200, 200);
 
   const options: GridOptionsProp = {
-    onSelectionChanged: params => action('onSelectionChanged', { depth: 1 })(params),
-    onRowSelected: params => action('onRowSelected')(params),
+    onSelectionChanged: (params) => action('onSelectionChanged', { depth: 1 })(params),
+    onRowSelected: (params) => action('onRowSelected')(params),
   };
 
   return <XGrid rows={data.rows} columns={data.columns} options={options} />;

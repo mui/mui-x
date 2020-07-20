@@ -1,7 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+import * as React from 'react';
 import { ColDef, Columns, RowData } from '@material-ui/x-grid';
 import { getRealData } from './services/real-data-service';
-import { useEffect, useState } from 'react';
 import { commodityColumns } from './commodities.columns';
 import { employeeColumns } from './employees.columns';
 
@@ -14,10 +13,10 @@ export type DemoDataReturnType = {
 export type DataSet = 'Commodity' | 'Employee';
 
 export const useDemoData = (dataSetProp: DataSet, nbRows: number): DemoDataReturnType => {
-  const [rows, setRows] = useState<RowData[]>([]);
-  const [cols, setCols] = useState<Columns>([]);
-  const [size, setSize] = useState(nbRows);
-  const [dataset, setDataset] = useState(dataSetProp.toString());
+  const [rows, setRows] = React.useState<RowData[]>([]);
+  const [cols, setCols] = React.useState<Columns>([]);
+  const [size, setSize] = React.useState(nbRows);
+  const [dataset, setDataset] = React.useState(dataSetProp.toString());
 
   const loadData = async () => {
     const data = await getRealData(
@@ -29,7 +28,7 @@ export const useDemoData = (dataSetProp: DataSet, nbRows: number): DemoDataRetur
     setRows(data.rows);
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     loadData();
   }, [size, dataset]);
 

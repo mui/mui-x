@@ -37,7 +37,7 @@ export function subscribeCurrencyPair(
 ): Observable<PricingModel> {
   return interval(random(minUpdateRate, maxUpdateRate)).pipe(
     flatMap(() => {
-      return new Observable<any>(obs => {
+      return new Observable<any>((obs) => {
         const model: PricingModel = {
           id: i,
           currencyPair,

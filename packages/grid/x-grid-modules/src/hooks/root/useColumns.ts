@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import * as React from 'react';
 import {
   checkboxSelectionColDef,
   ColDef,
@@ -34,11 +34,11 @@ function hydrateColumns(
   apiRef: GridApiRef,
 ): Columns {
   logger.debug('Hydrating Columns with default definitions');
-  let mappedCols = columns.map(c => ({ ...getColDef(c.type), ...c }));
+  let mappedCols = columns.map((c) => ({ ...getColDef(c.type), ...c }));
   if (withCheckboxSelection) {
     mappedCols = [checkboxSelectionColDef, ...mappedCols];
   }
-  const sortedCols = mappedCols.filter(c => c.sortDirection != null);
+  const sortedCols = mappedCols.filter((c) => c.sortDirection != null);
   if (sortedCols.length > 1 && apiRef.current) {
     // in case consumer missed to set the sort index
     sortedCols.forEach((c, idx) => {
@@ -51,7 +51,7 @@ function hydrateColumns(
   if (apiRef.current && apiRef.current!.getSortModel) {
     const sortModel = apiRef.current!.getSortModel();
     sortModel.forEach((c, idx) => {
-      const col = mappedCols.find(mc => mc.field === c.colId);
+      const col = mappedCols.find((mc) => mc.field === c.colId);
       if (col) {
         col.sortDirection = c.sort;
         col.sortIndex = sortModel.length > 1 ? idx + 1 : undefined;
@@ -71,7 +71,7 @@ function toLookup(logger: Logger, allColumns: Columns) {
 
 function filterVisible(logger: Logger, allColumns: Columns) {
   logger.debug('Calculating visibleColumns');
-  return allColumns.filter(c => c.field != null && !c.hide);
+  return allColumns.filter((c) => c.field != null && !c.hide);
 }
 
 function toMeta(logger: Logger, visibleColumns: Columns): ColumnsMeta {
@@ -116,8 +116,8 @@ const getUpdatedColumnState = (
   columnUpdates: ColDef[],
 ): InternalColumns => {
   const newState = { ...state };
-  columnUpdates.forEach(newColumn => {
-    const index = newState.all.findIndex(c => c.field === newColumn.field);
+  columnUpdates.forEach((newColumn) => {
+    const index = newState.all.findIndex((c) => c.field === newColumn.field);
     const columnUpdated = { ...newState.all[index], ...newColumn };
     newState.all[index] = columnUpdated;
     newState.all = [...newState.all];
@@ -143,16 +143,16 @@ export function useColumns(
   apiRef: GridApiRef,
 ): InternalColumns {
   const logger = useLogger('useColumns');
-  const [, forceUpdate] = useState();
+  const [, forceUpdate] = React.useState();
   const [rafUpdate] = useRafUpdate(() => forceUpdate((p: any) => !p));
 
-  const [internalColumns, setInternalColumns] = useState<InternalColumns>(initialState);
-  const stateRef = useRef<InternalColumns>(initialState);
+  const [internalColumns, setInternalColumns] = React.useState<InternalColumns>(initialState);
+  const stateRef = React.useRef<InternalColumns>(initialState);
 
-  const updateState = useCallback(
+  const updateState = React.useCallback(
     (newState: InternalColumns, emit = true) => {
       logger.debug('Updating columns state.');
-      setInternalColumns(p => newState);
+      setInternalColumns(() => newState);
       stateRef.current = newState;
 
       if (apiRef.current && emit) {
@@ -162,28 +162,28 @@ export function useColumns(
     [setInternalColumns, apiRef, logger, stateRef],
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     logger.info(`Columns have changed, new length ${columns.length}`);
     const newState = resetState(columns, !!options.checkboxSelection, logger, apiRef);
     updateState(newState);
   }, [columns, options.checkboxSelection, logger, apiRef, updateState]);
 
-  const getColumnFromField: (field: string) => ColDef = useCallback(
-    field => stateRef.current.lookup[field],
+  const getColumnFromField: (field: string) => ColDef = React.useCallback(
+    (field) => stateRef.current.lookup[field],
     [stateRef],
   );
   const getAllColumns: () => Columns = () => stateRef.current.all;
   const getColumnsMeta: () => ColumnsMeta = () => stateRef.current.meta;
-  const getColumnIndex: (field: string) => number = field =>
-    stateRef.current.visible.findIndex(c => c.field === field);
-  const getColumnPosition: (field: string) => number = field => {
+  const getColumnIndex: (field: string) => number = (field) =>
+    stateRef.current.visible.findIndex((c) => c.field === field);
+  const getColumnPosition: (field: string) => number = (field) => {
     const index = getColumnIndex(field);
     return stateRef.current.meta.positions[index];
   };
 
   const getVisibleColumns: () => Columns = () => stateRef.current.visible;
 
-  const updateColumns = useCallback(
+  const updateColumns = React.useCallback(
     (cols: ColDef[]) => {
       const newState = getUpdatedColumnState(logger, stateRef.current, cols);
       updateState(newState, false);
@@ -191,22 +191,22 @@ export function useColumns(
     [updateState, logger, stateRef],
   );
 
-  const updateColumn = useCallback((col: ColDef) => updateColumns([col]), [updateColumns]);
+  const updateColumn = React.useCallback((col: ColDef) => updateColumns([col]), [updateColumns]);
 
-  const onSortedColumns = useCallback(
+  const onSortedColumns = React.useCallback(
     (sortModel: SortModel) => {
       logger.debug('Sort model changed to ', sortModel);
       const updatedCols: ColDef[] = [];
 
       const currentSortedCols = stateRef.current.all
-        .filter(c => c.sortDirection != null)
-        .map(c => ({ colId: c.field, sort: c.sortDirection }));
+        .filter((c) => c.sortDirection != null)
+        .map((c) => ({ colId: c.field, sort: c.sortDirection }));
       if (isEqual(currentSortedCols, sortModel)) {
         return;
       }
 
       // We restore the previous columns
-      currentSortedCols.forEach(c => {
+      currentSortedCols.forEach((c) => {
         updatedCols.push({ field: c.colId, sortDirection: null, sortIndex: undefined });
       });
 

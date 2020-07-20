@@ -37,11 +37,12 @@ export const useColumnResize = (
     scrollOffset.current = params.left;
   }, []);
 
-  // eslint-disable-next-line consistent-return
   React.useEffect(() => {
     if (apiRef && apiRef.current) {
       return apiRef.current.registerEvent(SCROLLING, onScrollHandler);
     }
+
+    return undefined;
   }, [apiRef, onScrollHandler]);
 
   const handleMouseDown = React.useCallback(
@@ -103,15 +104,16 @@ export const useColumnResize = (
       }
       if (dataContainerElemRef.current) {
         const diffWithPrev = newWidth - currentColPreviousWidth.current!;
-        dataContainerElemRef.current.style.minWidth = `${dataContainerPreviousWidth.current! +
-          diffWithPrev}px`;
+        dataContainerElemRef.current.style.minWidth = `${
+          dataContainerPreviousWidth.current! + diffWithPrev
+        }px`;
 
         if (isLastColumn.current && apiRef && apiRef.current) {
           apiRef.current.scroll({ left: dataContainerPreviousWidth.current! + diffWithPrev });
         }
       }
       if (currentColCellsElems.current) {
-        currentColCellsElems.current.forEach(el => {
+        currentColCellsElems.current.forEach((el) => {
           const div = el as HTMLDivElement;
           div.style.width = `${newWidth}px`;
           div.style.minWidth = `${newWidth}px`;
@@ -169,7 +171,7 @@ export const useColumnResize = (
 
   // This a hack due to the limitation of react as I cannot put columnsRef in the dependency array of the effect adding the Event listener
   const columnsRefState = useStateRef(columnsRef);
-  // eslint-disable-next-line consistent-return
+
   React.useEffect(() => {
     if (columnsRef && columnsRef.current) {
       logger.info('Adding resizing event listener');
@@ -186,6 +188,7 @@ export const useColumnResize = (
         columnsRefEvents.removeEventListener('mousemove', handleMouseMove);
       };
     }
+    return undefined;
   }, [
     columnsRefState,
     columnsRef,

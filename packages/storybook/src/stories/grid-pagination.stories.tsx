@@ -61,7 +61,7 @@ export function PaginationKnobs() {
         pagination: true,
         paginationPageSize: number('PageSize', 100),
         paginationAutoPageSize: boolean('Auto page size', false),
-        paginationRowsPerPageOptions: rowsPerPageOptions.map(value => parseInt(value, 10)),
+        paginationRowsPerPageOptions: rowsPerPageOptions.map((value) => parseInt(value, 10)),
         hideFooterRowCount: boolean('Hide row count', false),
         hideFooterPagination: boolean('Hide footer pagination', false),
         hideFooter: boolean('Hide footer', false),
@@ -120,36 +120,26 @@ export function PaginationApiTests() {
   return (
     <React.Fragment>
       <div>
-        <Button
-          component={'button'}
-          color={'primary'}
-          variant={'outlined'}
-          onClick={backToFirstPage}
-        >
+        <Button component="button" color="primary" variant="outlined" onClick={backToFirstPage}>
           Back to first page
         </Button>
         <Button
-          component={'button'}
-          color={'primary'}
-          variant={'outlined'}
+          component="button"
+          color="primary"
+          variant="outlined"
           onClick={changePageSizeWithOptionProp}
         >
           Change pageSize with Options
         </Button>
         <Button
-          component={'button'}
-          color={'primary'}
-          variant={'outlined'}
+          component="button"
+          color="primary"
+          variant="outlined"
           onClick={changePageSizeWithApi}
         >
           Change pageSize with Api
         </Button>
-        <Button
-          component={'button'}
-          color={'primary'}
-          variant={'outlined'}
-          onClick={() => setAutoSize(p => !p)}
-        >
+        <Button color="primary" variant="outlined" onClick={() => setAutoSize((p) => !p)}>
           toggle pageAutoSize
         </Button>
       </div>
@@ -166,7 +156,7 @@ export function PaginationApiTests() {
           components={{
             pagination: ({ paginationProps }) => (
               <Pagination
-                className={'my-custom-pagination'}
+                className="my-custom-pagination"
                 page={paginationProps.page}
                 count={paginationProps.pageCount}
                 onChange={(e, value) => paginationProps.setPage(value)}
@@ -187,18 +177,18 @@ export function AutoPagination() {
     <React.Fragment>
       <div>
         <Button
-          component={'button'}
-          color={'primary'}
-          variant={'outlined'}
+          component="button"
+          color="primary"
+          variant="outlined"
           onClick={() => setSize({ width: size.height, height: size.width })}
         >
           Invert Sizes
         </Button>
         <Button
-          component={'button'}
-          color={'primary'}
-          variant={'outlined'}
-          onClick={() => setSize(p => ({ ...p, height: p.height + 20 }))}
+          component="button"
+          color="primary"
+          variant="outlined"
+          onClick={() => setSize((p) => ({ ...p, height: p.height + 20 }))}
         >
           Add 20px height
         </Button>

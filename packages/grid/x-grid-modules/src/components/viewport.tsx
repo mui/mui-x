@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { RefAttributes, useContext } from 'react';
 import { Columns, GridOptions, RenderContextProps, RowModel } from '../models';
 import { useLogger } from '../hooks/utils/useLogger';
 import { RenderingZone } from './rendering-zone';
@@ -16,11 +15,13 @@ export interface ViewportProps {
   children?: React.ReactNode;
 }
 
-type ViewportType = React.ForwardRefExoticComponent<ViewportProps & RefAttributes<HTMLDivElement>>;
+type ViewportType = React.ForwardRefExoticComponent<
+  ViewportProps & React.RefAttributes<HTMLDivElement>
+>;
 export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportProps>(
-  ({ options, rows, visibleColumns, children }, renderingZoneRef) => {
+  ({ options, rows, visibleColumns }, renderingZoneRef) => {
     const logger = useLogger('Viewport');
-    const renderCtx = useContext(RenderContext) as RenderContextProps;
+    const renderCtx = React.useContext(RenderContext) as RenderContextProps;
 
     const getRowsElements = () => {
       const renderedRows = rows.slice(renderCtx.firstRowIdx, renderCtx.lastRowIdx!);
@@ -32,7 +33,7 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportP
           selected={r.selected}
           rowIndex={renderCtx.firstRowIdx + idx}
         >
-          <LeftEmptyCell key={'left-empty'} width={renderCtx.leftEmptyWidth} />
+          <LeftEmptyCell key="left-empty" width={renderCtx.leftEmptyWidth} />
           <RowCells
             columns={visibleColumns}
             row={r}
@@ -45,7 +46,7 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportP
             rowIndex={renderCtx.firstRowIdx + idx}
             domIndex={idx}
           />
-          <RightEmptyCell key={'right-empty'} width={renderCtx.rightEmptyWidth} />
+          <RightEmptyCell key="right-empty" width={renderCtx.rightEmptyWidth} />
         </Row>
       ));
     };

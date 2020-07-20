@@ -48,7 +48,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
       mergeOptions(DEFAULT_GRID_OPTIONS, options),
     );
     React.useEffect(() => {
-      setInternalOptions(previousState => mergeOptions(previousState, options));
+      setInternalOptions((previousState) => mergeOptions(previousState, options));
     }, [options]);
 
     if (!apiRef) {
@@ -76,7 +76,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
     const paginationProps = usePagination(internalRows, internalColumns, internalOptions, apiRef);
 
     React.useEffect(() => {
-      setInternalOptions(previousState => {
+      setInternalOptions((previousState) => {
         if (previousState.paginationPageSize !== paginationProps.pageSize) {
           return { ...previousState, paginationPageSize: paginationProps.pageSize };
         }
@@ -118,7 +118,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
     );
 
     const getTotalHeight = React.useCallback(
-      size => {
+      (size) => {
         if (!internalOptions.autoHeight) {
           return size.height;
         }
@@ -147,17 +147,17 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
             className={`material-grid MuiGrid ${className || ''}`}
             options={internalOptions}
             style={{ width: size.width, height: getTotalHeight(size) }}
-            role={'grid'}
+            role="grid"
             aria-colcount={internalColumns.visible.length}
             aria-rowcount={internalRows.length + 1}
             tabIndex={0}
-            aria-label={'Grid'}
+            aria-label="grid"
             aria-multiselectable={internalOptions.enableMultipleSelection}
           >
             <ApiContext.Provider value={apiRef}>
               <OptionsContext.Provider value={internalOptions}>
                 {customComponents.headerComponent}
-                <div className={'main-grid-container'}>
+                <div className="main-grid-container">
                   <Watermark licenseStatus={licenseStatus} />
                   <ColumnsContainer ref={columnsContainerRef}>
                     <ColumnsHeader
