@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ApiRef, GridApi} from '../../models/api';
+import { ApiRef, GridApi } from '../../models/api';
 import { useLogger } from '../utils';
 
 export function useApiMethod(apiRef: ApiRef, apiMethods: Partial<GridApi>, apiName: string) {

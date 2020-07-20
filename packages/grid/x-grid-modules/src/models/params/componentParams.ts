@@ -2,8 +2,8 @@ import { Rows } from '../rows';
 import { Columns } from '../colDef/colDef';
 import { GridOptions } from '../gridOptions';
 import { PaginationProps } from '../../hooks/features/usePagination';
-import {GridRootRef} from "../gridRootRef";
-import {ApiRef} from "../api";
+import { GridRootRef } from '../gridRootRef';
+import { ApiRef } from '../api';
 
 /**
  * Object passed as React prop in the component override.

@@ -42,11 +42,7 @@ const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
   return { ...indexes, rowIndex: indexes.rowIndex + 1 };
 };
 
-export const useKeyboard = (
-  options: GridOptions,
-  initialised: boolean,
-  apiRef: ApiRef,
-): void => {
+export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: ApiRef): void => {
   const logger = useLogger('useKeyboard');
   const isMultipleKeyPressed = React.useRef(false);
 

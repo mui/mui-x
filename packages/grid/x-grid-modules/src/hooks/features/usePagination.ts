@@ -12,7 +12,7 @@ import { Rows } from '../../models/rows';
 import { InternalColumns } from '../../models/colDef/colDef';
 import { GridOptions } from '../../models/gridOptions';
 import { PaginationApi } from '../../models/api/paginationApi';
-import {ApiRef} from "../../models/api";
+import { ApiRef } from '../../models/api';
 
 export interface PaginationProps {
   page: number;
