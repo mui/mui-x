@@ -6,7 +6,7 @@ import { Columns, GridApiRef, GridComponentOverridesProp, GridOptions, RowsProp 
 export type GridOptionsProp = Partial<GridOptions>;
 
 /**
- * The grid component react props interface
+ * The grid component react props interface. 
  */
 export interface GridComponentProps {
   /**
