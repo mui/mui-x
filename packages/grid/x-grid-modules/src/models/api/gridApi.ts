@@ -39,7 +39,7 @@ export interface CoreApi extends EventEmitter {
 }
 
 /**
- * The full Grid api
+ * The full Grid API
  */
 export type GridApi = RowApi &
   ColumnApi &
