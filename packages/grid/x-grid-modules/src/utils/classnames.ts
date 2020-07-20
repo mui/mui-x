@@ -1,6 +1,6 @@
 import { isArray, isString } from './utils';
 
-export const classnames = (...args: any[]): string => {
+export function classnames(...args: any[]): string {
   const cssClasses = args.reduce((cssClass, value) => {
     if (!value) {
       return cssClass;
@@ -22,4 +22,4 @@ export const classnames = (...args: any[]): string => {
   }, '');
 
   return cssClasses.trim();
-};
+}

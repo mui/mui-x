@@ -31,8 +31,8 @@ export const Country: React.FC<{ value: { code: string; label: string } }> = Rea
   ({ value }) => {
     return (
       <Container>
-        <span className={'country-flag'}>{countryToFlag(value.code)}</span>
-        <span className={'country-name'}>{value.label}</span>
+        <span className="country-flag">{countryToFlag(value.code)}</span>
+        <span className="country-name">{value.label}</span>
       </Container>
     );
   },

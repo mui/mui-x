@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import * as React from 'react';
 import { isFunction } from '../../utils/utils';
 
 const forceDebug = localStorage.getItem('DEBUG') != null;
@@ -11,8 +11,8 @@ export interface Logger {
   error: (...args: any[]) => void;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
+
 export const noopLogger: Logger = {
   debug: noop,
   info: noop,
@@ -77,11 +77,8 @@ export function useLoggerFactory(
     ? (name: string) => getAppender(name, logLevel.toString(), customLogger)
     : null;
 }
+
 export function useLogger(name: string): Logger {
-  const [logger, setLogger] = useState(factory ? factory(name) : noopLogger);
-  return logger;
-  // if (factory) {
-  //   return factory(name);
-  // }
-  // return noopLogger;
+  const logger = React.useRef(factory ? factory(name) : noopLogger);
+  return logger.current;
 }

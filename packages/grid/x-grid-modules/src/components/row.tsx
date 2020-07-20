@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { RowId } from '../models';
 import { ROW_CSS_CLASS } from '../constants/cssClassesConstants';
 
@@ -18,7 +17,7 @@ export const Row: React.FC<RowProps> = ({ selected, id, className, rowIndex, chi
       key={id}
       data-id={id}
       data-rowindex={rowIndex}
-      role={'row'}
+      role="row"
       className={`${ROW_CSS_CLASS} ${cssClasses}`}
       aria-rowindex={ariaRowIndex}
       aria-selected={selected}

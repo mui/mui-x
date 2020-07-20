@@ -14,7 +14,7 @@ export const Incoterm: React.FC<{ value: CellValue }> = React.memo(({ value }) =
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       <span>{code}</span>
       <Tooltip title={tooltip}>
-        <InfoIcon className={'info-icon'} />
+        <InfoIcon className="info-icon" />
       </Tooltip>
     </div>
   );

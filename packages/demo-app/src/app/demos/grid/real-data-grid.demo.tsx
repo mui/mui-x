@@ -7,7 +7,6 @@ import { MainContainer } from './components/main-container';
 import { SettingsPanel } from './components/settings-panel';
 // eslint-disable-next-line no-restricted-imports
 import '@material-ui/x-grid-data-generator/dist/demo-style.css';
-import { useTheme } from '../theme';
 
 // eslint-disable-next-line no-console
 console.info(
@@ -45,7 +44,7 @@ const mapDates = (data: RowModel[], columns: Columns): RowModel[] => {
   return mappedData;
 };
 
-export const RealDataGridDemo: React.FC<{}> = (props) => {
+export const RealDataGridDemo: React.FC<{ toggleTheme: () => void; themeId: string }> = (props) => {
   const [size, setSize] = React.useState(100);
   const [type, setType] = React.useState('commodity');
 
@@ -53,7 +52,7 @@ export const RealDataGridDemo: React.FC<{}> = (props) => {
   const [cols, setCols] = React.useState<any>([]);
   const [pagination, setPagination] = React.useState<Partial<GridOptions>>({});
   const [loading, setLoading] = React.useState(false);
-  const [theme, themeId, toggleTheme, isDark] = useTheme();
+  // const [theme, themeId, toggleTheme, isDark] = useTheme();
 
   React.useEffect(() => {
     const gridColumns = type === 'commodity' ? commodityColumns : employeeColumns;
@@ -77,7 +76,7 @@ export const RealDataGridDemo: React.FC<{}> = (props) => {
         setRows(data);
         setLoading(false);
       },
-      (err) => {
+      () => {
         setRows([]);
       },
     );
@@ -95,8 +94,8 @@ export const RealDataGridDemo: React.FC<{}> = (props) => {
     if (type !== settings.type) {
       setType(settings.type.toLowerCase());
     }
-    if (settings.selectedTheme !== themeId) {
-      toggleTheme();
+    if (settings.selectedTheme !== props.themeId) {
+      props.toggleTheme();
     }
 
     const newPagination: Partial<GridOptions> = {

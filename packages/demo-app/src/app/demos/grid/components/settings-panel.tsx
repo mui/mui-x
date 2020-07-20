@@ -6,8 +6,8 @@ import Button from '@material-ui/core/Button';
 import FormLabel from '@material-ui/core/FormLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import { darkThemeId, lightThemeId } from '../../theme';
-import { useTheme } from '../../theme/useTheme';
+import { useContext } from 'react';
+import { darkThemeId, lightThemeId, ThemeContext } from '../../theme';
 import { StyledPanels } from './styled-panel';
 
 export interface SettingsPanelProps {
@@ -24,8 +24,8 @@ export interface SettingsPanelProps {
 export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onApply, type, size }) => {
   const [sizeState, setSize] = React.useState<number>(size);
   const [typeState, setType] = React.useState<string>(type);
-  const [theme, themeId, toggleTheme, isDark] = useTheme();
-  const [selectedTheme, setSelectedTheme] = React.useState<string>(themeId);
+  const currentTheme = useContext(ThemeContext);
+  const [selectedTheme, setSelectedTheme] = React.useState<string>(currentTheme.theme);
   const [selectedPaginationValue, setSelectedPaginationValue] = React.useState<number>(-1);
 
   const applyChanges = React.useCallback(() => {
@@ -59,10 +59,6 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onApply, type, siz
     [setSelectedTheme],
   );
 
-  React.useEffect(() => {
-    setSelectedTheme(themeId);
-  }, [themeId]);
-
   return (
     <StyledPanels>
       {/* <Panel title={'Settings'}> */}
@@ -94,7 +90,12 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onApply, type, siz
               <MenuItem value={1000}>{Number(1000).toLocaleString()}</MenuItem>
             </Select>
           </FormControl>
-          <FormControl className={'dataset-control input-text'} size={'small'} component="fieldset">
+          <FormControl
+            className={'dataset-control input-text'}
+            size={'small'}
+            component="fieldset"
+            style={{ display: 'none' }}
+          >
             <FormLabel component="legend">Themes</FormLabel>
             <Select value={selectedTheme} onChange={onSelectedThemeChange}>
               <MenuItem value={lightThemeId}>Light</MenuItem>

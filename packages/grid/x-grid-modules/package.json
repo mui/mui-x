@@ -1,8 +1,8 @@
 {
   "name": "@material-ui/x-grid-modules",
   "version": "0.1.49",
-  "description": "Official Material-UI X Grid modules",
-  "author": "Damien Tassone <damien@material-ui.com>",
+  "description": "Material-UI shared grid modules",
+  "author": "Material-UI Team",
   "main": "dist/index-cjs.js",
   "module": "dist/index-esm.js",
   "types": "dist/x-grid-modules.d.ts",

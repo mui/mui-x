@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
+import * as React from 'react';
 import { GridApi, GridApiRef } from '../../models/api';
 import { useLogger } from '../utils';
 
-export const useApiMethod = (apiRef: GridApiRef, apiMethods: Partial<GridApi>, apiName: string) => {
+export function useApiMethod(apiRef: GridApiRef, apiMethods: Partial<GridApi>, apiName: string) {
   const logger = useLogger('useApiMethod');
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (apiRef && apiRef.current) {
       let hasMethodsInstalled = true;
 
@@ -21,4 +21,4 @@ export const useApiMethod = (apiRef: GridApiRef, apiMethods: Partial<GridApi>, a
       }
     }
   }, [apiRef, apiMethods, logger, apiName]);
-};
+}

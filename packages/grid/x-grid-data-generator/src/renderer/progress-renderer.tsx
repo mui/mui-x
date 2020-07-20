@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import styled from 'styled-components';
 import { CellParams } from '@material-ui/x-grid';
 
@@ -38,8 +39,8 @@ export const ProgressBar: React.FC<{ value: number }> = React.memo(({ value }) =
 
   return (
     <Container style={{ width: '100%', height: 30 }}>
-      <div className={'progress-bar--value'}>{`${valueInPercent.toLocaleString()} %`}</div>
-      <div className={'progress-bar ' + barColor} style={{ maxWidth: `${valueInPercent}%` }}></div>
+      <div className="progress-bar--value">{`${valueInPercent.toLocaleString()} %`}</div>
+      <div className={clsx('progress-bar', barColor)} style={{ maxWidth: `${valueInPercent}%` }} />
     </Container>
   );
 });

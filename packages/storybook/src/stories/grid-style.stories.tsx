@@ -45,7 +45,7 @@ export const Small = () => {
 };
 
 const IsDone: React.FC<{ value: boolean }> = ({ value }) =>
-  value ? <DoneIcon fontSize={'small'} /> : <ClearIcon fontSize={'small'} />;
+  value ? <DoneIcon fontSize="small" /> : <ClearIcon fontSize="small" />;
 
 const getColumns: () => ColDef[] = () => [
   { field: 'id' },
@@ -136,7 +136,7 @@ export const ColumnCellClass = () => {
   cols[3].cellClass = ['age', 'shine'];
 
   return (
-    <div className={'grid-container'}>
+    <div className="grid-container">
       <XGrid rows={rows} columns={cols} />
     </div>
   );
@@ -147,7 +147,7 @@ export const ColumnHeaderClass = () => {
   cols[3].headerClass = ['age', 'shine'];
 
   return (
-    <div className={'grid-container'}>
+    <div className="grid-container">
       <XGrid rows={rows} columns={cols} />
     </div>
   );
@@ -162,7 +162,7 @@ export const ColumnCellClassRules = () => {
   };
 
   return (
-    <div className={'grid-container'}>
+    <div className="grid-container">
       <XGrid rows={rows} columns={cols} />
     </div>
   );
@@ -174,7 +174,7 @@ export const ColumnCellRenderer = () => {
   cols[5].cellRenderer = (params) => <IsDone value={!!params.value} />;
 
   return (
-    <div className={'grid-container'}>
+    <div className="grid-container">
       <XGrid rows={rows} columns={cols} />
     </div>
   );

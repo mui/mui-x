@@ -17,19 +17,19 @@ export default {
   },
 };
 
-export const SmallColSizes = () => {
+export function SmallColSizes() {
   const data = useData(100, 20);
   const transformColSizes = (columns: ColDef[]) => columns.map((c) => ({ ...c, width: 60 }));
 
   return <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />;
-};
+}
 
-export const VerySmallColSizes = () => {
+export function VerySmallColSizes() {
   const data = useData(100, 20);
   const transformColSizes = (columns: ColDef[]) => columns.map((c) => ({ ...c, width: 50 }));
   return <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />;
-};
-export const ColumnDescriptionTooltip = () => {
+}
+export function ColumnDescriptionTooltip() {
   const data = useData(100, 20);
   const transformColSizes = (columns: ColDef[]) =>
     columns.map((c) => {
@@ -40,16 +40,16 @@ export const ColumnDescriptionTooltip = () => {
     });
 
   return <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />;
-};
+}
 
-export const HiddenColumns = () => {
+export function HiddenColumns() {
   const data = useData(100, 20);
   const transformColSizes = (columns: ColDef[]) =>
     columns.map((c, idx) => ({ ...c, hide: idx % 2 === 0 }));
   return <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />;
-};
+}
 
-export const UpdateColumnsBtn: React.FC = () => {
+export function UpdateColumnsBtn() {
   const columns: ColDef[] = [
     { field: 'id' },
     { field: 'firstName' },
@@ -134,7 +134,7 @@ export const UpdateColumnsBtn: React.FC = () => {
   return (
     <React.Fragment>
       <div>
-        <button type="button" onClick={changeCols} id={'action-btn'}>
+        <button type="button" onClick={changeCols} id="action-btn">
           Change cols
         </button>
       </div>
@@ -143,20 +143,21 @@ export const UpdateColumnsBtn: React.FC = () => {
       </div>
     </React.Fragment>
   );
-};
-export const HeaderComponent = () => {
+}
+
+export function HeaderComponent() {
   const data = useData(100, 5);
 
   const transformCols = React.useCallback((cols) => {
     if (cols.length > 0) {
-      cols[0].headerComponent = (params) => <CreateIcon className={'icon'} />;
+      cols[0].headerComponent = () => <CreateIcon className="icon" />;
     }
     return cols;
   }, []);
 
   return (
-    <div className={'grid-container'}>
+    <div className="grid-container">
       <XGrid rows={data.rows} columns={transformCols(data.columns)} />
     </div>
   );
-};
+}
