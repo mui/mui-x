@@ -30,7 +30,7 @@ export const useRows = (
   apiRef: GridApiRef,
 ): RowModel[] => {
   const logger = useLogger('useRows');
-  const rowModels = React.useMemo(() => rows.map((r) => createRow(r)), [rows]);
+  const rowModels = React.useMemo(() => rows.map(r => createRow(r)), [rows]);
   const [rowModelsState, setRowModelsState] = React.useState<RowModel[]>(rowModels);
   const [, forceUpdate] = React.useState();
   const [rafUpdate] = useRafUpdate(() => forceUpdate((p: any) => !p));
@@ -86,7 +86,7 @@ export const useRows = (
     (updates: Partial<RowModel>[]) => {
       logger.debug(`updating ${updates.length} row models`);
       const addedRows: RowModel[] = [];
-      updates.forEach((partialRow) => {
+      updates.forEach(partialRow => {
         if (partialRow.id == null) {
           throw new Error('Material-UI: All rows need an id.');
         }
@@ -125,7 +125,7 @@ export const useRows = (
         return uniq;
       }, {} as { [id: string]: any });
 
-      const rowModelUpdates = Object.values<RowData>(uniqUpdates).map((partialRow) => {
+      const rowModelUpdates = Object.values<RowData>(uniqUpdates).map(partialRow => {
         const oldRow = getRowFromId(partialRow.id!);
         if (!oldRow) {
           return createRow(partialRow);
@@ -146,9 +146,7 @@ export const useRows = (
 
   const getRowModels = React.useCallback(() => rowModelsRef.current, [rowModelsRef]);
   const getRowsCount = React.useCallback(() => rowModelsRef.current.length, [rowModelsRef]);
-  const getAllRowIds = React.useCallback(() => rowModelsRef.current.map((r) => r.id), [
-    rowModelsRef,
-  ]);
+  const getAllRowIds = React.useCallback(() => rowModelsRef.current.map(r => r.id), [rowModelsRef]);
   const setRowModels = React.useCallback((rowsParam: Rows) => updateAllRows(rowsParam), [
     updateAllRows,
   ]);

@@ -29,7 +29,7 @@ export function datagenCli(args) {
           program.size,
         ).toLocaleString()} rows`,
       );
-      loadData(Number(program.size), program.dataset).then((data) => {
+      loadData(Number(program.size), program.dataset).then(data => {
         const output = !program.output
           ? `./${program.dataset}-${program.size}.json`
           : program.output;
