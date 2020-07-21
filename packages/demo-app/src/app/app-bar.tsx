@@ -90,14 +90,13 @@ export const DemoAppBar: React.FC<DemoAppBarProps> = ({
           {titleEl}
         </Typography>
 
-        <Link
-          href="https://muix-storybook.netlify.app"
-          className="github-button"
-          color="inherit"
-        >
+        <Link href="https://muix-storybook.netlify.app" className="github-button" color="inherit">
           <Tooltip title="Our Storybook">
             <IconButton aria-label="Storybook" color="inherit">
-              <img src="https://pbs.twimg.com/profile_images/1100804485616566273/sOct-Txm_400x400.png" className="storybook-img" />
+              <img
+                src="https://pbs.twimg.com/profile_images/1100804485616566273/sOct-Txm_400x400.png"
+                className="storybook-img"
+              />
             </IconButton>
           </Tooltip>
         </Link>
