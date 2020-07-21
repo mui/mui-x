@@ -15,6 +15,6 @@
     "jsx": "react",
     "sourceMap": true,
     "noImplicitAny": false,
-    "types": ["jest", "enzyme"]
+    "types": ["jest", "node"]
   }
 }
