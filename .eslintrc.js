@@ -84,7 +84,7 @@ module.exports = {
 
     // TODO
     'react/prop-types': 'off', // For public API
-    'import/prefer-default-export': 'warn',
+    'import/prefer-default-export': 'off',
   },
   overrides: [
     {

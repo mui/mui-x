@@ -133,7 +133,7 @@ const getRows = () => [
 export const ColumnCellClass = () => {
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
-  cols[3].cellClass = ['age', 'shine'];
+  cols[3].cellClassName = ['age', 'shine'];
 
   return (
     <div className="grid-container">
@@ -144,7 +144,7 @@ export const ColumnCellClass = () => {
 export const ColumnHeaderClass = () => {
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
-  cols[3].headerClass = ['age', 'shine'];
+  cols[3].headerClassName = ['age', 'shine'];
 
   return (
     <div className="grid-container">
@@ -171,7 +171,7 @@ export const ColumnCellClassRules = () => {
 export const ColumnCellRenderer = () => {
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
-  cols[5].cellRenderer = (params) => <IsDone value={!!params.value} />;
+  cols[5].renderCell = (params) => <IsDone value={!!params.value} />;
 
   return (
     <div className="grid-container">
@@ -182,7 +182,7 @@ export const ColumnCellRenderer = () => {
 export const ColumnCellRendererWithPadding = () => {
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
-  cols[5].cellRenderer = (params) => <IsDone value={!!params.value} />;
+  cols[5].renderCell = (params) => <IsDone value={!!params.value} />;
 
   return (
     <div className="grid-container" style={{ padding: 50 }}>

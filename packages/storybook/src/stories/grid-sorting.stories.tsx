@@ -249,7 +249,7 @@ export const ApiSingleSorted = () => {
   const apiRef = React.useRef<GridApi>();
   React.useEffect(() => {
     if (apiRef && apiRef.current != null) {
-      apiRef.current.setSortModel([{ colId: 'name', sort: 'asc' }]);
+      apiRef.current.setSortModel([{ field: 'name', sort: 'asc' }]);
     }
   }, [apiRef]);
 
@@ -264,8 +264,8 @@ export const ApiMultipleSorted = () => {
   React.useEffect(() => {
     if (apiRef && apiRef.current != null) {
       apiRef.current.setSortModel([
-        { colId: 'age', sort: 'desc' },
-        { colId: 'name', sort: 'asc' },
+        { field: 'age', sort: 'desc' },
+        { field: 'name', sort: 'asc' },
       ]);
     }
   }, [apiRef]);
@@ -298,8 +298,8 @@ export const SortedEventsApi = () => {
       apiRef.current.on('postSort', (params) => handleEvent('postSort', params));
 
       apiRef.current.setSortModel([
-        { colId: 'age', sort: 'desc' },
-        { colId: 'name', sort: 'asc' },
+        { field: 'age', sort: 'desc' },
+        { field: 'name', sort: 'asc' },
       ]);
     }
   }, [apiRef]);

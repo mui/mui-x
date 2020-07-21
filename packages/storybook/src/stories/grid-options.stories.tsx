@@ -74,6 +74,23 @@ export const NoRowExtendCellBorder = () => {
   );
 };
 
+export const CellRightBorder = () => {
+  const data = useData(20, 2);
+  return (
+    <div className="grid-container">
+      <XGrid rows={data.rows} columns={data.columns} options={{ showCellRightBorder: true }} />
+    </div>
+  );
+};
+
+export const ColumnRightBorder = () => {
+  const data = useData(20, 2);
+  return (
+    <div className="grid-container">
+      <XGrid rows={data.rows} columns={data.columns} options={{ showColumnRightBorder: true }} />
+    </div>
+  );
+};
 export const AutoHeightSmall = () => {
   const data = useData(8, 12);
   return (
@@ -88,15 +105,6 @@ export const AutoHeightLarge = () => {
   return (
     <div className="grid-container">
       <XGrid rows={data.rows} columns={data.columns} options={{ autoHeight: true }} />
-    </div>
-  );
-};
-
-export const ColumnSeparator = () => {
-  const data = useData(20, 2);
-  return (
-    <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} options={{ showColumnSeparator: true }} />
     </div>
   );
 };

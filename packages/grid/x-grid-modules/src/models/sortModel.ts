@@ -16,7 +16,7 @@ export interface SortItem {
   /**
    * The column field identifier
    */
-  colId: string;
+  field: string;
   /**
    * The direction of the column that the grid should sort
    */

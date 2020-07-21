@@ -81,7 +81,7 @@ export const commodityColumns: any[] = [
     field: 'traderEmail',
     headerName: 'Trader Email',
     generateData: randomEmail,
-    cellRenderer: EmailRenderer,
+    renderCell: EmailRenderer,
     disableClickEventBubbling: true,
     width: 150,
   },
@@ -109,7 +109,7 @@ export const commodityColumns: any[] = [
     field: 'filledQuantity',
     headerName: 'Filled Quantity',
     generateData: generateFilledQuantity,
-    cellRenderer: ProgressRenderer,
+    renderCell: ProgressRenderer,
     sortDirection: 'desc',
     sortIndex: 2,
     type: 'number',
@@ -118,7 +118,7 @@ export const commodityColumns: any[] = [
   {
     field: 'isFilled',
     headerName: 'Is Filled',
-    cellRenderer: DoneRenderer,
+    renderCell: DoneRenderer,
     align: 'center',
     generateData: generateIsFilled,
     width: 50,
@@ -147,7 +147,7 @@ export const commodityColumns: any[] = [
   {
     field: 'incoTerm',
     generateData: randomIncoterm,
-    cellRenderer: IncotermRenderer,
+    renderCell: IncotermRenderer,
     width: 100,
   },
   {
@@ -165,7 +165,7 @@ export const commodityColumns: any[] = [
   {
     field: 'status',
     generateData: randomStatusOptions,
-    cellRenderer: StatusRenderer,
+    renderCell: StatusRenderer,
     width: 150,
   },
   {
@@ -214,7 +214,7 @@ export const commodityColumns: any[] = [
     field: 'counterPartyCountry',
     headerName: 'Counterparty Country',
     generateData: randomCountry,
-    cellRenderer: CountryRenderer,
+    renderCell: CountryRenderer,
     width: 120,
   },
   {

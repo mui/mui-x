@@ -41,7 +41,7 @@ export const useSorting = (
 
   const upsertSortModel = React.useCallback(
     (field: string, sortItem?: SortItem): SortModel => {
-      const existingIdx = sortModelRef.current.findIndex((c) => c.colId === field);
+      const existingIdx = sortModelRef.current.findIndex((c) => c.field === field);
       let newSortModel = [...sortModelRef.current];
       if (existingIdx > -1) {
         if (!sortItem) {
@@ -59,12 +59,12 @@ export const useSorting = (
 
   const createSortItem = React.useCallback(
     (col: ColDef): SortItem | undefined => {
-      const existing = sortModelRef.current.find((c) => c.colId === col.field);
+      const existing = sortModelRef.current.find((c) => c.field === col.field);
       if (existing) {
         const nextSort = nextSortDirection(options.sortingOrder, existing.sort);
         return nextSort == null ? undefined : { ...existing, sort: nextSort };
       }
-      return { colId: col.field, sort: nextSortDirection(options.sortingOrder) };
+      return { field: col.field, sort: nextSortDirection(options.sortingOrder) };
     },
     [sortModelRef, options.sortingOrder],
   );
@@ -84,7 +84,7 @@ export const useSorting = (
   const buildComparatorList = React.useCallback(
     (sortModel: SortModel): FieldComparatorList => {
       const comparators = sortModel.map((item) => {
-        const col = apiRef.current!.getColumnFromField(item.colId);
+        const col = apiRef.current!.getColumnFromField(item.field);
         const comparator = isDesc(item.sort)
           ? (v1: CellValue, v2: CellValue, row1: RowModel, row2: RowModel) =>
               -1 * col.sortComparator!(v1, v2, row1, row2)
@@ -119,7 +119,7 @@ export const useSorting = (
 
     const params: ColumnSortedParams = {
       sortedColumns: sortModelRef.current.map((model) =>
-        apiRef.current!.getColumnFromField(model.colId),
+        apiRef.current!.getColumnFromField(model.field),
       ),
       sortModel: sortModelRef.current,
     };
@@ -212,7 +212,7 @@ export const useSorting = (
         .filter((c) => c.sortDirection != null)
         .sort((a, b) => a.sortIndex! - b.sortIndex!);
 
-      const sortModel = sortedCols.map((c) => ({ colId: c.field, sort: c.sortDirection }));
+      const sortModel = sortedCols.map((c) => ({ field: c.field, sort: c.sortDirection }));
       setSortModel(sortModel);
     }
   }, [colState, setSortModel, apiRef, colsProp]);

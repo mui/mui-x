@@ -10,20 +10,20 @@ There are different ways of styling `X-Grid` or `DataGrid`. In this part, we are
 
 ## Header
 
-`ColDef` has an attribute called `headerClass` that lets you inject some css classes into your column header.
+`ColDef` has an attribute called `headerClassName` that lets you inject some css classes into your column header.
 You can also specify how to align the header text using `headerAlign`. The default value is `left`.
 
 ```tsx
 const columns: Columns = [
   {
     field: 'styledCol',
-    headerClass: 'super-app-theme--header',
+    headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
   },
 ];
 ```
 
-- `headerClass` can be a `string` or a `string[]`
+- `headerClassName` can be a `string` or a `string[]`
   <StyleHeaderDemo />
 
 ## Cell
@@ -31,12 +31,12 @@ const columns: Columns = [
 `ColDef` lets you style cells with different attributes.
 
 - `align` to align cell content, `'left' | 'right' | 'center'`
-- `cellClass` of type `string | string[]`, allows you to apply css classes on every cell. It can also be of type `CellClassFn` which is a function that let you apply css classes dynamically.
+- `cellClassName` of type `string | string[]`, allows you to apply css classes on every cell. It can also be of type `CellClassFn` which is a function that let you apply css classes dynamically.
 - `cellClassRules` works like `classnames` [github here](https://github.com/JedWatson/classnames). It's an object, with css classes as keys and a boolean or a function as values.
 
 ```tsx
 const columns: Columns = [
-  { field: 'styledCell', cellClass: 'super-app-theme--cell', align: 'center'},
+  { field: 'styledCell', cellClassName: 'super-app-theme--cell', align: 'center'},
   {
     field: 'withRules',
     cellClassRules: {

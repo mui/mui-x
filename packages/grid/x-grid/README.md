@@ -61,15 +61,15 @@ const columns: ColDef[] = [
   { field: 'lastName' },
   {
     field: 'age',
-    cellClass: ['age'],
-    headerClass: ['age'],
+    cellClassName: ['age'],
+    headerClassName: ['age'],
     type: 'number',
     sortDirection: 'desc',
   },
   {
     field: 'fullName',
     description: 'this column has a value getter and is not sortable',
-    headerClass: 'highlight',
+    headerClassName: 'highlight',
     sortable: false,
     valueGetter: (params) =>
       `${params.getValue('firstName') || ''} ${

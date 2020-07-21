@@ -150,7 +150,7 @@ export function HeaderComponent() {
 
   const transformCols = React.useCallback((cols) => {
     if (cols.length > 0) {
-      cols[0].headerComponent = () => <CreateIcon className="icon" />;
+      cols[0].renderHeader = () => <CreateIcon className="icon" />;
     }
     return cols;
   }, []);

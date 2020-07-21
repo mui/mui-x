@@ -232,15 +232,15 @@ export function StyledColumns() {
     { field: 'lastName' },
     {
       field: 'age',
-      cellClass: ['age', 'shine'],
-      headerClass: ['age', 'shine'],
+      cellClassName: ['age', 'shine'],
+      headerClassName: ['age', 'shine'],
       type: 'number',
       sortDirection: 'desc',
     },
     {
       field: 'fullName',
       description: 'this column has a value getter and is not sortable',
-      headerClass: 'highlight',
+      headerClassName: 'highlight',
       sortable: false,
       valueGetter: (params) =>
         `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
@@ -253,8 +253,8 @@ export function StyledColumns() {
       field: 'isRegistered',
       description: 'Is Registered',
       align: 'center',
-      cellRenderer: (params) => <IsDone value={!!params.value} />,
-      headerComponent: RegisteredComponent,
+      renderCell: (params) => <IsDone value={!!params.value} />,
+      renderHeader: RegisteredComponent,
       headerAlign: 'center',
     },
     {

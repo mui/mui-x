@@ -1,7 +1,6 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import { LicenseInfo, useLicenseVerifier } from '@material-ui/x-license';
-import { GridComponent, GridComponentProps } from '@material-ui/x-grid-modules';
+import { GridComponent, GridComponentProps, classnames } from '@material-ui/x-grid-modules';
 
 // This is the grid release date
 // each grid version should update this const automatically when a new version of the grid is published to NPM
@@ -19,7 +18,7 @@ export const XGrid: React.FC<XGridProps> = React.memo<XGridProps>(function XGrid
     <GridComponent
       {...other}
       licenseStatus={licenseStatus.toString()}
-      className={clsx('MuiXGrid-root', className)}
+      className={classnames('MuiXGrid-root', className)}
     />
   );
 });

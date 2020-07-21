@@ -51,7 +51,7 @@ function hydrateColumns(
   if (apiRef.current && apiRef.current!.getSortModel) {
     const sortModel = apiRef.current!.getSortModel();
     sortModel.forEach((c, idx) => {
-      const col = mappedCols.find((mc) => mc.field === c.colId);
+      const col = mappedCols.find((mc) => mc.field === c.field);
       if (col) {
         col.sortDirection = c.sort;
         col.sortIndex = sortModel.length > 1 ? idx + 1 : undefined;
@@ -200,19 +200,19 @@ export function useColumns(
 
       const currentSortedCols = stateRef.current.all
         .filter((c) => c.sortDirection != null)
-        .map((c) => ({ colId: c.field, sort: c.sortDirection }));
+        .map((c) => ({ field: c.field, sort: c.sortDirection }));
       if (isEqual(currentSortedCols, sortModel)) {
         return;
       }
 
       // We restore the previous columns
       currentSortedCols.forEach((c) => {
-        updatedCols.push({ field: c.colId, sortDirection: null, sortIndex: undefined });
+        updatedCols.push({ field: c.field, sortDirection: null, sortIndex: undefined });
       });
 
       sortModel.forEach((model, index) => {
         const sortIndex = sortModel.length > 1 ? index + 1 : undefined;
-        updatedCols.push({ field: model.colId, sortDirection: model.sort, sortIndex });
+        updatedCols.push({ field: model.field, sortDirection: model.sort, sortIndex });
       });
 
       if (updatedCols.length > 0) {
