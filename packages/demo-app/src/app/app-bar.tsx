@@ -96,6 +96,7 @@ export const DemoAppBar: React.FC<DemoAppBarProps> = ({
               <img
                 src="https://pbs.twimg.com/profile_images/1100804485616566273/sOct-Txm_400x400.png"
                 className="storybook-img"
+                alt="Storybook logo"
               />
             </IconButton>
           </Tooltip>
