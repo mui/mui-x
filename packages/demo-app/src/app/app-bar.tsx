@@ -91,6 +91,17 @@ export const DemoAppBar: React.FC<DemoAppBarProps> = ({
         </Typography>
 
         <Link
+          href="https://muix-storybook.netlify.app"
+          className="github-button"
+          color="inherit"
+        >
+          <Tooltip title="Our Storybook">
+            <IconButton aria-label="Storybook" color="inherit">
+              <img src="https://pbs.twimg.com/profile_images/1100804485616566273/sOct-Txm_400x400.png" className="storybook-img" />
+            </IconButton>
+          </Tooltip>
+        </Link>
+        <Link
           href="https://github.com/mui-org/material-ui-x"
           className="github-button"
           color="inherit"
