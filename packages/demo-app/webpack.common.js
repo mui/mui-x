@@ -40,7 +40,7 @@ module.exports = {
       title: 'Fin Ui - Demo',
       template: './public/index.html',
     }),
-    new CopyPlugin([{ from: 'public', to: './' }]),
+    new CopyPlugin({ patterns: [{ from: 'public', to: './' }] }),
   ],
   output: {
     filename: '[name].[contenthash].js',
