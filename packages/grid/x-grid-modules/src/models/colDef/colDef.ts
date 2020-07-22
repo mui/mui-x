@@ -113,6 +113,8 @@ export interface ColDef {
   disableClickEventBubbling?: boolean;
 }
 export type Columns = ColDef[];
+export type ColTypeDef = Omit<ColDef, 'field'> & { extendType?: NativeColTypes };
+
 /**
  * Meta Info about Columns.
  */
@@ -132,4 +134,3 @@ export interface InternalColumns {
   lookup: ColumnLookup;
 }
 
-export type ColTypeDef = Omit<ColDef, 'field'> & { extendType?: NativeColTypes };
