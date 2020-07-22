@@ -62,12 +62,12 @@ export interface GridOptions {
    * Enable multiple selection using the CTRL or CMD key
    * @default true
    */
-  enableMultipleSelection?: boolean;
+  enableMultipleSelection: boolean;
   /**
    * Enable sorting the grid rows with one or more columns
    * @default true
    */
-  enableMultipleColumnsSorting?: boolean;
+  enableMultipleColumnsSorting: boolean;
   /**
    * Display the right border of the cells
    * @default false
