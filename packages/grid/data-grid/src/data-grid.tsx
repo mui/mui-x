@@ -5,6 +5,7 @@ import {
   DEFAULT_GRID_OPTIONS,
   GridOptions,
   mergeOptions,
+  classnames,
 } from '@material-ui/x-grid-modules';
 
 export type DataGridOptionsProp = Partial<
@@ -55,7 +56,7 @@ export const DataGrid: React.FC<DataGridProps> = React.memo(function DataGrid(
       loading={props.loading}
       options={internalOptions}
       licenseStatus="Valid"
-      className={`data-grid ${props.className || ''}`}
+      className={classnames('data-grid', props.className)}
     />
   );
 });

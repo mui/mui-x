@@ -46,7 +46,7 @@ export const Options = () => {
         hideFooter: boolean('hideFooter', false),
         extendRowFullWidth: boolean('extendRowFullWidth', true),
         showCellRightBorder: boolean('showCellRightBorder', false),
-        showColumnSeparator: boolean('showColumnSeparator', false),
+        showColumnRightBorder: boolean('showColumnRightBorder', false),
         enableMultipleSelection: boolean('enableMultipleSelection', true),
         checkboxSelection: boolean('checkboxSelection', true),
         disableSelectionOnClick: boolean('disableSelectionOnClick', false),

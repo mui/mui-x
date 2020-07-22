@@ -22,6 +22,7 @@ const stories = [
     },
   },
   '/story/x-grid-tests-columns--header-component',
+  '/story/x-grid-tests-columns--new-column-types',
   '/story/x-grid-tests-dataset--no-rows',
   '/story/x-grid-tests-dataset--no-rows-no-cols',
   '/story/x-grid-tests-dataset--loading-rows',
@@ -39,7 +40,8 @@ const stories = [
   '/story/x-grid-tests-options--no-row-extend-cell-border',
   '/story/x-grid-tests-options--auto-height-small',
   '/story/x-grid-tests-options--auto-height-large',
-  '/story/x-grid-tests-options--column-separator',
+  '/story/x-grid-tests-options--cell-right-border',
+  '/story/x-grid-tests-options--column-right-border',
 
   '/story/x-grid-tests-pagination--pagination-default',
   '/story/x-grid-tests-pagination--hidden-pagination',

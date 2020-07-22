@@ -1,1 +1,2 @@
-export type ColType = 'string' | 'number' | 'date' | 'dateTime' | string;
+export type NativeColTypes = 'string' | 'number' | 'date' | 'dateTime';
+export type ColType = NativeColTypes | string;

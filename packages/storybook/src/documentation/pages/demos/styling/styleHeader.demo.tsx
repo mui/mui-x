@@ -6,12 +6,12 @@ export default function StyleHeaderDemo() {
   const columns: Columns = [
     {
       field: 'first',
-      headerClass: 'super-app-theme--header',
+      headerClassName: 'super-app-theme--header',
       headerAlign: 'center',
     },
     {
       field: 'last',
-      headerClass: 'super-app-theme--header',
+      headerClassName: 'super-app-theme--header',
       headerAlign: 'center',
     },
   ];

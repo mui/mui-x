@@ -3,6 +3,7 @@ import ColumnTypesDemo from './demos/columns/columnTypes.demo';
 import HideColumnDemo from './demos/columns/hideColumn.demo';
 import ValueGetterDemo from './demos/columns/valueGetter.demo';
 import FormattingDemo from './demos/columns/formatting.demo';
+import ExtendColTypesDemo from './demos/columns/extendColTypes.demo';
 
 <Meta title="1. Docs/2. Columns" component={XGrid} />
 
@@ -42,7 +43,7 @@ To facilitate column configuration, some column types are predefined.
 By default, columns are assumed to hold strings and thus the default column string type will be applied.
 As a result, column sorting will use the string comparator, and the column content will be aligned to the left side of the cell.
 
-The following types are built in:
+The following types are the native column types:
 
 - string
 - number
@@ -66,7 +67,55 @@ We also added locale formatting for date, dateTime, and number Columns.
 <ColumnTypesDemo />
 <br />
 
-### Extending col type? Adding new col type?
+### Extending column types
+
+XGrid lets you extend the native column types with your own columns types.
+To do this, you need to define your new column type first and add it to `options.columnTypes` as below.
+
+**Note** `ColTypeDef` lets you extend native columnTypes by defining the `extendType` property.
+If you do not define this property, then your new column type will extend the default column type of `string`.
+
+```tsx
+// We define 2 new column types.
+const highlightCellColType: ColTypeDef = { cellClassName: 'highlight' };
+const usdPriceColType: ColTypeDef = { extendType: 'number', valueFormatter: ({value})=> `${value} USD`};
+
+// We define 3 columns that use those 2 new column types.
+const columns = [{
+    field: 'status', type: 'highlight'
+    field: 'subTotalPrice', type: 'usdPrice'
+    field: 'totalPrice', type: 'usdPrice'
+}]
+...
+
+return <XGrid rows={rows} columns={columns} options= {{columnTypes: {usdPrice: usdPriceColType, highlight: highlightCellColType} }} />
+```
+
+In the code above, we define 2 new column type, `highlight` and `usdPrice`. The `highlight` columnTypes has no `extendType`
+defined therefore it will extend the `string` column type. The `usdPrice` column type will extend the native `number` column type.
+Following the column types definition, we define 3 columns that make use of those new columns types.
+
+<ExtendColTypesDemo />
+<br />
+
+#### Extending your own types
+
+XGrid does not natively support the extension of your own column types. However that is still achievable by just assigning your own column type to the newly defined column type.
+
+```tsx
+// We define 2 new column types.
+const styledCellColType: ColTypeDef = { cellClassName: 'highlight' };
+const highlightColType: ColTypeDef = { ...styledCellColType, headerClassName: 'highlight' };
+
+// We define 2 columns that use those 2 new column types.
+const columns = [{
+    field: 'importantValues', type: 'styledCell'
+    field: 'importantColumn', type: 'highlight'
+}]
+...
+
+return <XGrid rows={rows} columns={columns} options= {{columnTypes: {styledCell: styledCellColType, highlight: highlightColType} }} />
+```
 
 ## Hiding
 

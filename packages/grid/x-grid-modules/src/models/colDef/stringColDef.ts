@@ -1,5 +1,5 @@
+import { stringNumberComparer } from '../../utils/sortingUtils';
 import { ColTypeDef } from './colDef';
-import { stringNumberComparer } from '../../utils';
 
 export const STRING_COL_DEF: ColTypeDef = {
   width: 100,

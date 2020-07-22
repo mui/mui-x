@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { ComparatorFn, SortDirection } from '../sortModel';
 import { CellValue } from '../rows';
-import { ColType } from './colType';
-import { CellClassPropType, CellClassRules } from '../cellClass';
+import { ColType, NativeColTypes } from './colType';
+import { CellClassNamePropType, CellClassRules } from '../cellClass';
 import { ColParams } from '../params/colParams';
 import { CellParams, ValueFormatterParams, ValueGetterParams } from '../params/cellParams';
 
@@ -80,7 +80,7 @@ export interface ColDef {
   /**
    * Css class that will be added in cells for that column
    */
-  cellClass?: CellClassPropType;
+  cellClassName?: CellClassNamePropType;
   /**
    * Set of css class rules that will be dynamically applied on cells
    */
@@ -89,16 +89,16 @@ export interface ColDef {
    * Allows to override the component rendered as cell for this column
    * @param params
    */
-  cellRenderer?: (params: CellParams) => React.ReactElement;
+  renderCell?: (params: CellParams) => React.ReactElement;
   /**
    * Css class that will be added in the column header cell
    */
-  headerClass?: string | string[];
+  headerClassName?: string | string[];
   /**
    * Allows to render a component in the column header cell
    * @param params
    */
-  headerComponent?: (params: ColParams) => React.ReactElement;
+  renderHeader?: (params: ColParams) => React.ReactElement;
   /**
    * Header cell element alignment
    */
@@ -113,7 +113,7 @@ export interface ColDef {
   disableClickEventBubbling?: boolean;
 }
 export type Columns = ColDef[];
-export type ColTypeDef = Omit<ColDef, 'field'>;
+export type ColTypeDef = Omit<ColDef, 'field'> & { extendType?: NativeColTypes };
 
 /**
  * Meta Info about Columns.
