@@ -137,7 +137,7 @@ export const RootStyle = styled.div<GridRootProps>`
             flex-direction: column;
             justify-content: center;
             min-height: ${(p) => p.options.headerHeight}px;
-            opacity: ${(p)=> p.options.showColumnRightBorder ? 0 : 1};
+            opacity: ${(p) => (p.options.showColumnRightBorder ? 0 : 1)};
 
             .icon.separator {
               color: #bdc3c7;

@@ -5,7 +5,7 @@ import {
   DEFAULT_GRID_OPTIONS,
   GridOptions,
   mergeOptions,
-  classnames
+  classnames,
 } from '@material-ui/x-grid-modules';
 
 export type DataGridOptionsProp = Partial<
