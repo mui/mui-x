@@ -22,6 +22,7 @@ const stories = [
     },
   },
   '/story/x-grid-tests-columns--header-component',
+  '/story/x-grid-tests-columns--new-column-types',
   '/story/x-grid-tests-dataset--no-rows',
   '/story/x-grid-tests-dataset--no-rows-no-cols',
   '/story/x-grid-tests-dataset--loading-rows',

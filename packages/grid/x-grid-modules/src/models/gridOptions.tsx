@@ -9,6 +9,7 @@ import { CellClickedParam } from './params/cellClickedParams';
 import { RowSelectedParams } from './params/rowSelectedParams';
 import { SelectionChangedParams } from './params/selectionChangedParams';
 import { PageChangedParams } from './params/pageChangedParams';
+import { ColumnTypesRecord, DEFAULT_COLUMN_TYPES } from './colDef';
 
 /**
  * Set of icons used in the grid component UI.
@@ -62,12 +63,12 @@ export interface GridOptions {
    * Enable multiple selection using the CTRL or CMD key
    * @default true
    */
-  enableMultipleSelection?: boolean;
+  enableMultipleSelection: boolean;
   /**
    * Enable sorting the grid rows with one or more columns
    * @default true
    */
-  enableMultipleColumnsSorting?: boolean;
+  enableMultipleColumnsSorting: boolean;
   /**
    * Display the right border of the cells
    * @default false
@@ -194,6 +195,11 @@ export interface GridOptions {
    * Set of icons used in the grid
    */
   icons: IconsOptions;
+
+  /**
+   * Extend native column types with your new column types
+   */
+  columnTypes: ColumnTypesRecord;
 }
 
 /**
@@ -211,6 +217,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   paginationPageSize: 100,
   extendRowFullWidth: true,
   sortingOrder: ['asc', 'desc', null],
+  columnTypes: DEFAULT_COLUMN_TYPES,
   icons: {
     columnSortedAscending: () => <ArrowUpward className="icon" />,
     columnSortedDescending: () => <ArrowDownward className="icon" />,

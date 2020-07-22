@@ -23,3 +23,6 @@
 .demo.MuiGrid.grid-root.x-grid {
     margin: 10px 0;
 }
+.demo .highlight {
+    color: #008508;
+}

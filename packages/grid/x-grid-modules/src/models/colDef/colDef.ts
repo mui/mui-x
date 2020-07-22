@@ -5,6 +5,7 @@ import { ColType } from './colType';
 import { CellClassNamePropType, CellClassRules } from '../cellClass';
 import { ColParams } from '../params/colParams';
 import { CellParams, ValueFormatterParams, ValueGetterParams } from '../params/cellParams';
+import { NATIVE_COL_TYPE_KEYS } from './getColDef';
 
 /**
  * Alignement used in position elements in Cells.
@@ -113,8 +114,8 @@ export interface ColDef {
   disableClickEventBubbling?: boolean;
 }
 export type Columns = ColDef[];
-export type ColTypeDef = Omit<ColDef, 'field'>;
-
+export type ColTypeDef = Omit<ColDef, 'field'> & { extendType?: NATIVE_COL_TYPE_KEYS };
+export type ColumnTypesRecord = Record<ColType, ColTypeDef>;
 /**
  * Meta Info about Columns.
  */
