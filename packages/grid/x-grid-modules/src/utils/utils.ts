@@ -30,16 +30,3 @@ export function isFunction(value: any): value is Function {
 export function isObject(value: any): value is Record<string, any> {
   return typeof value === 'object';
 }
-
-// We intentionally set the types to any to avoid circular deps
-export function mergeOptions(defaultOptions: any, options?: any) {
-  const defaultIcons = defaultOptions.icons;
-  const optionsIcons = options?.icons;
-  const mergedIcons = { ...defaultIcons, ...optionsIcons };
-  const mergedOptions = {
-    ...defaultOptions,
-    ...options,
-  };
-  mergedOptions.icons = mergedIcons;
-  return mergedOptions;
-}

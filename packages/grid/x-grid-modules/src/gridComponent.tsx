@@ -31,7 +31,8 @@ import {
 } from './components';
 import { useApi, useColumns, useKeyboard, useRows } from './hooks/root';
 import { useLogger, useLoggerFactory } from './hooks/utils';
-import { debounce, mergeOptions } from './utils';
+import { debounce } from './utils';
+import { mergeOptions } from './utils/mergeOptions';
 
 /**
  * Material-UI Grid React component implementing [[GridComponentProps]].

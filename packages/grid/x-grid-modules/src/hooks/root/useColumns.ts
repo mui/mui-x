@@ -10,6 +10,7 @@ import {
   InternalColumns,
   SortModel,
   ApiRef,
+  ColumnTypesRecord,
 } from '../../models';
 import { Logger, useLogger } from '../utils/useLogger';
 import { COLUMNS_UPDATED, POST_SORT } from '../../constants/eventsConstants';
@@ -29,12 +30,13 @@ const initialState: InternalColumns = {
 
 function hydrateColumns(
   columns: Columns,
+  columnTypes: ColumnTypesRecord,
   withCheckboxSelection: boolean,
   logger: Logger,
   apiRef: ApiRef,
 ): Columns {
   logger.debug('Hydrating Columns with default definitions');
-  let mappedCols = columns.map((c) => ({ ...getColDef(c.type), ...c }));
+  let mappedCols = columns.map((c) => ({ ...getColDef(columnTypes, c.type), ...c }));
   if (withCheckboxSelection) {
     mappedCols = [checkboxSelectionColDef, ...mappedCols];
   }
@@ -88,6 +90,7 @@ function toMeta(logger: Logger, visibleColumns: Columns): ColumnsMeta {
 
 const resetState = (
   columns: Columns,
+  columnTypes: ColumnTypesRecord,
   withCheckboxSelection: boolean,
   logger: Logger,
   apiRef: ApiRef,
@@ -96,7 +99,7 @@ const resetState = (
     return initialState;
   }
 
-  const all = hydrateColumns(columns, withCheckboxSelection, logger, apiRef);
+  const all = hydrateColumns(columns, columnTypes, withCheckboxSelection, logger, apiRef);
   const visible = filterVisible(logger, all);
   const meta = toMeta(logger, visible);
   const lookup = toLookup(logger, all);
@@ -164,9 +167,15 @@ export function useColumns(
 
   React.useEffect(() => {
     logger.info(`Columns have changed, new length ${columns.length}`);
-    const newState = resetState(columns, !!options.checkboxSelection, logger, apiRef);
+    const newState = resetState(
+      columns,
+      options.columnTypes,
+      !!options.checkboxSelection,
+      logger,
+      apiRef,
+    );
     updateState(newState);
-  }, [columns, options.checkboxSelection, logger, apiRef, updateState]);
+  }, [columns, options.columnTypes, options.checkboxSelection, logger, apiRef, updateState]);
 
   const getColumnFromField: (field: string) => ColDef = React.useCallback(
     (field) => stateRef.current.lookup[field],
