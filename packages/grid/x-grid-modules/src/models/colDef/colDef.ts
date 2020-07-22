@@ -133,4 +133,3 @@ export interface InternalColumns {
   hasVisibleColumns: boolean;
   lookup: ColumnLookup;
 }
-
