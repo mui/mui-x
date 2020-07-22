@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { DataGrid, DataGridOptionsProp } from '@material-ui/data-grid';
+import { DataGrid, DataGridOptionsProp, SortDirection } from '@material-ui/data-grid';
 import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { action } from '@storybook/addon-actions';
-import { GridOptionsProp, SortDirection } from '@material-ui/x-grid';
 import { useData } from '../../hooks/useData';
 
 export default {
@@ -41,7 +40,7 @@ export const Options = () => {
     hideFooter: boolean('hideFooter', false),
     extendRowFullWidth: boolean('extendRowFullWidth', true),
     showCellRightBorder: boolean('showCellRightBorder', false),
-    showColumnSeparator: boolean('showColumnSeparator', false),
+    showColumnRightBorder: boolean('showColumnRightBorder', false),
     checkboxSelection: boolean('checkboxSelection', true),
     disableSelectionOnClick: boolean('disableSelectionOnClick', false),
     sortingOrder: sortingOrder.map((value) => (value === 'null' ? null : (value as SortDirection))),
@@ -54,7 +53,7 @@ export const Options = () => {
 export const Events = () => {
   const data = useData(2000, 200);
 
-  const options: GridOptionsProp = {
+  const options: DataGridOptionsProp = {
     onRowClicked: (params) => action('onRowClicked')(params),
     onCellClicked: (params) => action('onCellClicked')(params),
     onColumnHeaderClicked: (params) => action('onColumnHeaderClicked')(params),

@@ -16,13 +16,13 @@ export default function QuickStartDemo() {
     { field: 'founder', headerName: 'by', width: 180 },
     {
       field: 'age',
-      headerClass: 'highlight',
+      headerClassName: 'highlight',
       valueGetter: (params) =>
         new Date().getFullYear() - (params.getValue('dateFounded') as Date).getFullYear(),
     },
     {
       field: 'logo',
-      cellRenderer: ({ value }) => <img src={value!.toString()} style={{ width: 60 }} alt="logo" />,
+      renderCell: ({ value }) => <img src={value!.toString()} style={{ width: 60 }} alt="logo" />,
     },
   ];
 

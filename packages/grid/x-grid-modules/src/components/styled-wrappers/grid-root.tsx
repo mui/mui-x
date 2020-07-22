@@ -105,7 +105,7 @@ export const RootStyle = styled.div<GridRootProps>`
           position: relative;
           display: flex;
           padding: 0 16px;
-          border-right: ${(p) => (p.options.showColumnSeparator ? '1px solid #bdc3c7' : 'none')};
+          border-right: ${(p) => (p.options.showColumnRightBorder ? '1px solid #bdc3c7' : 'none')};
 
           &.sortable {
             cursor: pointer;
@@ -137,6 +137,7 @@ export const RootStyle = styled.div<GridRootProps>`
             flex-direction: column;
             justify-content: center;
             min-height: ${(p) => p.options.headerHeight}px;
+            opacity: ${(p) => (p.options.showColumnRightBorder ? 0 : 1)};
 
             .icon.separator {
               color: #bdc3c7;

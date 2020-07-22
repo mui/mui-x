@@ -13,8 +13,8 @@ export const checkboxSelectionColDef: ColDef = {
   sortable: false,
   disableClickEventBubbling: true,
   valueGetter: (params) => params.rowModel.selected,
-  headerComponent: (params) => <HeaderCheckbox {...params} />,
-  cellRenderer: (params) => <CellCheckboxRenderer {...params} />,
-  cellClass: 'checkbox-selection-cell',
-  headerClass: 'checkbox-selection-header-cell',
+  renderHeader: (params) => <HeaderCheckbox {...params} />,
+  renderCell: (params) => <CellCheckboxRenderer {...params} />,
+  cellClassName: 'checkbox-selection-cell',
+  headerClassName: 'checkbox-selection-header-cell',
 };

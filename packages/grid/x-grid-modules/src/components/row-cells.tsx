@@ -96,12 +96,12 @@ export const RowCells: React.FC<RowCellsProps> = React.memo((props) => {
     }
 
     let cssClassProp = { cssClass: '' };
-    if (column.cellClass) {
-      if (!isFunction(column.cellClass)) {
-        cssClassProp = { cssClass: classnames(column.cellClass) };
+    if (column.cellClassName) {
+      if (!isFunction(column.cellClassName)) {
+        cssClassProp = { cssClass: classnames(column.cellClassName) };
       } else {
         const params: CellClassParams = getCellParams(row, column, rowIndex, value, api!.current!);
-        cssClassProp = { cssClass: column.cellClass(params) as string };
+        cssClassProp = { cssClass: column.cellClassName(params) as string };
       }
     }
 
@@ -112,9 +112,9 @@ export const RowCells: React.FC<RowCellsProps> = React.memo((props) => {
     }
 
     let cellComponent: React.ReactElement | null = null;
-    if (column.cellRenderer) {
+    if (column.renderCell) {
       const params: CellParams = getCellParams(row, column, rowIndex, value, api!.current!);
-      cellComponent = column.cellRenderer(params);
+      cellComponent = column.renderCell(params);
       cssClassProp = { cssClass: `${cssClassProp.cssClass} with-renderer` };
     }
 

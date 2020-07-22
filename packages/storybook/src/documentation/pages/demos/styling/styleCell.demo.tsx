@@ -6,12 +6,12 @@ export default function StyleCellDemo() {
   const columns: Columns = [
     {
       field: 'name',
-      cellClass: 'super-app-theme--cell',
+      cellClassName: 'super-app-theme--cell',
     },
     {
       field: 'score',
       type: 'number',
-      cellClass: 'super-app',
+      cellClassName: 'super-app',
       cellClassRules: {
         negative: ({ value }) => value! < 0,
         positive: ({ value }) => value! > 0,

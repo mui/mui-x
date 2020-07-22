@@ -20,14 +20,14 @@ export const ColumnHeaderItem = React.memo(
 
     const cssClass = classnames(
       HEADER_CELL_CSS_CLASS,
-      column.headerClass,
+      column.headerClassName,
       column.headerAlign !== 'left' ? column.headerAlign : '',
       { sortable: column.sortable },
     );
 
     let headerComponent: React.ReactElement | null = null;
-    if (column.headerComponent) {
-      headerComponent = column.headerComponent({ api: api!.current!, colDef: column, colIndex });
+    if (column.renderHeader) {
+      headerComponent = column.renderHeader({ api: api!.current!, colDef: column, colIndex });
     }
 
     const onResize = onResizeColumn ? () => onResizeColumn(column) : undefined;

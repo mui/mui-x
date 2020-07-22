@@ -62,7 +62,7 @@ export interface GridOptions {
    * Enable multiple selection using the CTRL or CMD key
    * @default true
    */
-  enableMultipleSelection: boolean; // ag=> rowSelection : Single | Multiple
+  enableMultipleSelection: boolean;
   /**
    * Enable sorting the grid rows with one or more columns
    * @default true
@@ -72,12 +72,17 @@ export interface GridOptions {
    * Display the right border of the cells
    * @default false
    */
-  showCellRightBorder: boolean;
+  showCellRightBorder?: boolean;
+  /**
+   * Display the column header right border
+   * @default false
+   */
+  showColumnRightBorder?: boolean;
   /**
    * Extend rows to fill the grid container width
    * @default true
    */
-  extendRowFullWidth: boolean;
+  extendRowFullWidth?: boolean;
   /**
    * The order of the sorting sequence.
    * @default ['asc', 'desc', null]
@@ -133,11 +138,6 @@ export interface GridOptions {
    * @default false
    */
   disableSelectionOnClick?: boolean;
-  /**
-   * Display the column header right border
-   * @default false
-   */
-  showColumnSeparator?: boolean;
   /**
    * Pass a custom logger in the components that implements the [[Logger]] interface
    * @default null
@@ -209,7 +209,6 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   enableMultipleColumnsSorting: true,
   paginationRowsPerPageOptions: [25, 50, 100],
   paginationPageSize: 100,
-  showCellRightBorder: false,
   extendRowFullWidth: true,
   sortingOrder: ['asc', 'desc', null],
   icons: {

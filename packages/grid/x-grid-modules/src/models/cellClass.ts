@@ -11,7 +11,7 @@ export type CellClassFn = (params: CellClassParams) => string | string[];
 /**
  * The union type representing the [[ColDef]] cell class type.
  */
-export type CellClassPropType = string | string[] | CellClassFn;
+export type CellClassNamePropType = string | string[] | CellClassFn;
 /**
  * An object representing the cell class rules.
  */
