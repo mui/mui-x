@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { ColDef, XGrid, NUMERIC_COL_DEF } from '@material-ui/x-grid';
+import { ColDef, XGrid, ColTypeDef } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import CreateIcon from '@material-ui/icons/Create';
 import { useData } from '../hooks/useData';
-import { ColTypeDef } from '@material-ui/x-grid-modules/dist/src';
 
 export default {
   title: 'X-Grid Tests/Columns',

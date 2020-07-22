@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { ComparatorFn, SortDirection } from '../sortModel';
 import { CellValue } from '../rows';
-import { ColType } from './colType';
+import { ColType, NativeColTypes } from './colType';
 import { CellClassNamePropType, CellClassRules } from '../cellClass';
 import { ColParams } from '../params/colParams';
 import { CellParams, ValueFormatterParams, ValueGetterParams } from '../params/cellParams';
-import { NATIVE_COL_TYPE_KEYS } from './getColDef';
 
 /**
  * Alignement used in position elements in Cells.
@@ -114,8 +113,6 @@ export interface ColDef {
   disableClickEventBubbling?: boolean;
 }
 export type Columns = ColDef[];
-export type ColTypeDef = Omit<ColDef, 'field'> & { extendType?: NATIVE_COL_TYPE_KEYS };
-export type ColumnTypesRecord = Record<ColType, ColTypeDef>;
 /**
  * Meta Info about Columns.
  */
@@ -134,3 +131,5 @@ export interface InternalColumns {
   hasVisibleColumns: boolean;
   lookup: ColumnLookup;
 }
+
+export type ColTypeDef = Omit<ColDef, 'field'> & { extendType?: NativeColTypes };

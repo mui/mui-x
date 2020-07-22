@@ -1,6 +1,7 @@
-import { ColTypeDef } from './colDef';
-import { isNumber, numberComparer } from '../../utils';
+import { numberComparer } from '../../utils/sortingUtils';
+import { isNumber } from '../../utils/utils';
 import { STRING_COL_DEF } from './stringColDef';
+import { ColTypeDef } from './colDef';
 
 export const NUMERIC_COL_DEF: ColTypeDef = {
   ...STRING_COL_DEF,

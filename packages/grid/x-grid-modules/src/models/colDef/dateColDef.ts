@@ -1,7 +1,8 @@
-import { ColTypeDef } from './colDef';
-import { isDate, dateComparer } from '../../utils';
+import { isDate } from '../../utils/utils';
+import { dateComparer } from '../../utils/sortingUtils';
 import { STRING_COL_DEF } from './stringColDef';
 import { CellValue } from '../rows';
+import { ColTypeDef } from './colDef';
 
 export const dateFormatter = ({ value }: { value: CellValue }) => {
   if (isDate(value)) {
