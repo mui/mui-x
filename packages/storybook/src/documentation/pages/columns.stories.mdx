@@ -76,11 +76,11 @@ To do this, you need to define your new column type first and add it to `options
 If you do not define this property, then your new column type will extend the default column type of `string`.
 
 ```tsx
-//We define 2 new column types.
+// We define 2 new column types.
 const highlightCellColType: ColTypeDef = { cellClassName: 'highlight' };
 const usdPriceColType: ColTypeDef = { extendType: 'number', valueFormatter: ({value})=> `${value} USD`};
 
-//We define 3 columns that use those 2 new column types.
+// We define 3 columns that use those 2 new column types.
 const columns = [{
     field: 'status', type: 'highlight'
     field: 'subTotalPrice', type: 'usdPrice'
@@ -103,11 +103,11 @@ Following the column types definition, we define 3 columns that make use of thos
 XGrid does not natively support the extension of your own column types. However that is still achievable by just assigning your own column type to the newly defined column type.
 
 ```tsx
-//We define 2 new column types.
+// We define 2 new column types.
 const styledCellColType: ColTypeDef = { cellClassName: 'highlight' };
 const highlightColType: ColTypeDef = { ...styledCellColType, headerClassName: 'highlight' };
 
-//We define 2 columns that use those 2 new column types.
+// We define 2 columns that use those 2 new column types.
 const columns = [{
     field: 'importantValues', type: 'styledCell'
     field: 'importantColumn', type: 'highlight'
