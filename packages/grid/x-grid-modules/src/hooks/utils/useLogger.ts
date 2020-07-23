@@ -57,7 +57,7 @@ export type LoggerFactoryFn = (name: string) => Logger;
 let factory: LoggerFactoryFn | null;
 export function useLoggerFactory(
   customLogger?: Logger | LoggerFactoryFn,
-  logLevel: string | boolean = 'info',
+  logLevel: string | boolean = 'debug',
 ) {
   if (forceDebug) {
     factory = defaultFactory('debug');
