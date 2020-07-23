@@ -13,9 +13,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
-    "tslib": "^2.0.0"
-  },
   "devDependencies": {
     "@material-ui/x-grid-modules": "^0.1.62",
     "@material-ui/x-license": "^0.1.61",
