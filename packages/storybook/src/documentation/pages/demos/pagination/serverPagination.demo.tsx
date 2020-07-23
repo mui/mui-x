@@ -48,8 +48,8 @@ export default function ServerPaginationDemo() {
   const onPageChanged = useCallback(
     (params) => {
       setLoading(true);
-      loadServerRows(params).then((rows) => {
-        setRows(rows);
+      loadServerRows(params).then((newRows) => {
+        setRows(newRows);
         setLoading(false);
       });
     },
@@ -66,7 +66,7 @@ export default function ServerPaginationDemo() {
         pageSize: 5,
         rowCount: 50,
         paginationMode: FeatureMode.Server,
-        onPageChanged: onPageChanged,
+        onPageChanged,
       }}
       loading={isLoading}
     />
