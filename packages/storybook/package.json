@@ -9,7 +9,7 @@
     "@material-ui/data-grid": "^0.1.62",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.54",
-    "@material-ui/x-grid": "^0.1.62",
+    "@material-ui/x-grid": "file:../grid/x-grid/dist/",
     "@material-ui/x-grid-data-generator": "^0.1.62",
     "@material-ui/x-license": "^0.1.61",
     "faker": "^4.1.0",
