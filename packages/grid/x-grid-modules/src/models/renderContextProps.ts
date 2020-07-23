@@ -51,7 +51,7 @@ export interface RenderPaginationProps {
   /**
    * The current page size if pagination is enabled
    */
-  paginationPageSize?: number;
+  pageSize?: number;
 }
 
 /**

@@ -1,14 +1,19 @@
-import {useCallback, useEffect, useReducer, useRef} from 'react';
-import {useLogger} from '../utils';
-import {PAGE_CHANGED_EVENT, PAGESIZE_CHANGED_EVENT, RESIZE,} from '../../constants/eventsConstants';
-import {useApiMethod} from '../root/useApiMethod';
-import {useApiEventHandler} from '../root/useApiEventHandler';
-import {PageChangedParams, PaginationMode} from '../../models/params/pageChangedParams';
-import {Rows} from '../../models/rows';
-import {InternalColumns} from '../../models/colDef/colDef';
-import {GridOptions} from '../../models/gridOptions';
-import {PaginationApi} from '../../models/api/paginationApi';
-import {ApiRef} from '../../models/api';
+import { useCallback, useEffect, useReducer, useRef } from 'react';
+import { useLogger } from '../utils';
+import {
+  PAGE_CHANGED_EVENT,
+  PAGESIZE_CHANGED_EVENT,
+  RESIZE,
+} from '../../constants/eventsConstants';
+import { useApiMethod } from '../root/useApiMethod';
+import { useApiEventHandler } from '../root/useApiEventHandler';
+import { PageChangedParams } from '../../models/params/pageChangedParams';
+import { Rows } from '../../models/rows';
+import { InternalColumns } from '../../models/colDef/colDef';
+import { GridOptions } from '../../models/gridOptions';
+import { PaginationApi } from '../../models/api/paginationApi';
+import { ApiRef } from '../../models/api';
+import { FeatureMode } from '../../models/featureMode';
 
 export interface PaginationProps {
   page: number;
@@ -51,10 +56,13 @@ export const usePagination = (
 
   const initialState: PaginationState = {
     paginationMode: options.paginationMode!,
-    pageSize: options.paginationPageSize || 0,
+    pageSize: options.pageSize || 0,
     rowCount: options.rowCount == null ? rows.length : options.rowCount,
     page: options.page || 1,
-    pageCount: getPageCount(options.paginationPageSize, options.rowCount == null ? rows.length : options.rowCount),
+    pageCount: getPageCount(
+      options.pageSize,
+      options.rowCount == null ? rows.length : options.rowCount,
+    ),
   };
   const stateRef = useRef(initialState);
   const [state, dispatch] = useReducer(paginationReducer, initialState);
@@ -72,7 +80,9 @@ export const usePagination = (
     (page: number) => {
       if (apiRef && apiRef.current) {
         page = stateRef.current.pageCount >= page ? page : stateRef.current.pageCount;
-        apiRef.current!.renderPage(stateRef.current.paginationMode === PaginationMode.Client ? page : 1);
+        apiRef.current!.renderPage(
+          stateRef.current.paginationMode === FeatureMode.Client ? page : 1,
+        );
 
         const params: PageChangedParams = {
           ...stateRef.current,
@@ -147,17 +157,17 @@ export const usePagination = (
     stateRef.current = state;
   }, [state]);
 
-  useEffect(()=> {
-    if(apiRef.current?.isInitialised) {
+  useEffect(() => {
+    if (apiRef.current?.isInitialised) {
       apiRef.current!.emit(PAGE_CHANGED_EVENT, stateRef.current);
     }
   }, [apiRef, stateRef, apiRef.current?.isInitialised]);
 
-  useEffect(()=> {
-    updateState({paginationMode: options.paginationMode!});
+  useEffect(() => {
+    updateState({ paginationMode: options.paginationMode! });
   }, [options.paginationMode]);
 
-  useEffect(()=> {
+  useEffect(() => {
     setPage(options.page != null ? options.page : 1);
   }, [options.page]);
 
@@ -172,32 +182,41 @@ export const usePagination = (
         setPage(newPageCount);
       }
     }
-  }, [rows.length, options.rowCount, logger, updateState, state.rowCount, state.pageSize, setPage, state.page]);
+  }, [
+    rows.length,
+    options.rowCount,
+    logger,
+    updateState,
+    state.rowCount,
+    state.pageSize,
+    setPage,
+    state.page,
+  ]);
 
   useEffect(() => {
     if (
-      !options.paginationAutoPageSize &&
-      options.paginationPageSize &&
-      options.paginationPageSize !== stateRef.current.pageSize
+      !options.autoPageSize &&
+      options.pageSize &&
+      options.pageSize !== stateRef.current.pageSize
     ) {
-      setPageSize(options.paginationPageSize);
+      setPageSize(options.pageSize);
     }
-  }, [options.paginationAutoPageSize, options.paginationPageSize, logger, setPageSize]);
+  }, [options.autoPageSize, options.pageSize, logger, setPageSize]);
 
   useEffect(() => {
-    if (options.paginationAutoPageSize && columns.visible.length > 0) {
+    if (options.autoPageSize && columns.visible.length > 0) {
       resetAutopageSize();
     }
-  }, [options.paginationAutoPageSize, resetAutopageSize, columns.visible.length]);
+  }, [options.autoPageSize, resetAutopageSize, columns.visible.length]);
 
   useApiEventHandler(apiRef, PAGE_CHANGED_EVENT, options.onPageChanged);
   useApiEventHandler(apiRef, PAGESIZE_CHANGED_EVENT, options.onPageSizeChanged);
 
   const onResize = useCallback(() => {
-    if (options.paginationAutoPageSize) {
+    if (options.autoPageSize) {
       resetAutopageSize();
     }
-  }, [options.paginationAutoPageSize, resetAutopageSize]);
+  }, [options.autoPageSize, resetAutopageSize]);
 
   useApiEventHandler(apiRef, RESIZE, onResize);
 

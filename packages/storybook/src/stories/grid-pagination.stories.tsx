@@ -1,13 +1,20 @@
 import * as React from 'react';
-import {useState} from 'react';
-import {ApiRef, PaginationMode, useApiRef, XGrid, PageChangedParams, RowsProp} from '@material-ui/x-grid';
+import { useCallback, useState } from 'react';
+import {
+  ApiRef,
+  FeatureMode,
+  useApiRef,
+  XGrid,
+  PageChangedParams,
+  RowsProp,
+} from '@material-ui/x-grid';
 import Button from '@material-ui/core/Button';
 import Pagination from '@material-ui/lab/Pagination';
-import {action} from '@storybook/addon-actions';
-import {array, boolean, number, withKnobs} from '@storybook/addon-knobs';
-import {withA11y} from '@storybook/addon-a11y';
-import {useData} from '../hooks/useData';
-import {getData, GridData} from "../data/data-service";
+import { action } from '@storybook/addon-actions';
+import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
+import { withA11y } from '@storybook/addon-a11y';
+import { useData } from '../hooks/useData';
+import { getData, GridData } from '../data/data-service';
 
 export default {
   title: 'X-Grid Tests/Pagination',
@@ -44,7 +51,7 @@ export function PageSize100() {
         columns={data.columns}
         options={{
           pagination: true,
-          paginationPageSize: 100,
+          pageSize: 100,
         }}
       />
     </div>
@@ -61,11 +68,11 @@ export function PaginationKnobs() {
       columns={data.columns}
       options={{
         pagination: true,
-        paginationPageSize: number('PageSize', 100),
+        pageSize: number('PageSize', 100),
         page: number('Page', 1),
         rowCount: number('RowCount', 2000),
-        paginationAutoPageSize: boolean('Auto page size', false),
-        paginationRowsPerPageOptions: rowsPerPageOptions.map((value) => parseInt(value, 10)),
+        autoPageSize: boolean('Auto page size', false),
+        rowsPerPageOptions: rowsPerPageOptions.map((value) => parseInt(value, 10)),
         hideFooterRowCount: boolean('Hide row count', false),
         hideFooterPagination: boolean('Hide footer pagination', false),
         hideFooter: boolean('Hide footer', false),
@@ -83,7 +90,7 @@ export function HiddenPagination() {
         columns={data.columns}
         options={{
           pagination: true,
-          paginationPageSize: 100,
+          pageSize: 100,
           hideFooterPagination: true,
         }}
       />
@@ -154,8 +161,8 @@ export function PaginationApiTests() {
           apiRef={apiRef}
           options={{
             pagination: true,
-            paginationPageSize: myPageSize,
-            paginationAutoPageSize: autosize,
+            pageSize: myPageSize,
+            autoPageSize: autosize,
           }}
           components={{
             pagination: ({ paginationProps }) => (
@@ -203,7 +210,7 @@ export function AutoPagination() {
           columns={data.columns}
           options={{
             pagination: true,
-            paginationAutoPageSize: true,
+            autoPageSize: true,
           }}
         />
       </div>
@@ -212,20 +219,20 @@ export function AutoPagination() {
 }
 
 function loadServerRows(params: PageChangedParams): Promise<GridData> {
-  return new Promise<GridData>(resolve => {
-    getData(params.pageSize, 10).then(data => {
+  return new Promise<GridData>((resolve) => {
+    getData(params.pageSize, 10).then((data) => {
       setTimeout(() => {
         const minId = (params.page - 1) * params.pageSize;
-        data.rows.forEach(row=> {
+        data.rows.forEach((row) => {
           row.id = (Number(row.id) + minId).toString();
-        } );
+        });
         resolve(data);
       }, 500);
     });
   });
 }
 
-export function ServerPagination() {
+export function ServerPaginationWithApi() {
   const apiRef: ApiRef = useApiRef();
   const data = useData(100, 10);
   const [rows, setRows] = useState<RowsProp>([]);
@@ -234,13 +241,13 @@ export function ServerPagination() {
   React.useEffect(() => {
     let unsubscribe;
     if (apiRef && apiRef.current) {
-      unsubscribe = apiRef.current.onPageChanged((params)=> {
+      unsubscribe = apiRef.current.onPageChanged((params) => {
         action('onPageChanged')(params);
         setLoading(true);
-        loadServerRows(params).then(newData => {
+        loadServerRows(params).then((newData) => {
           setRows(newData.rows);
           setLoading(false);
-        })
+        });
       });
     }
     return () => {
@@ -250,21 +257,57 @@ export function ServerPagination() {
     };
   }, [apiRef, data]);
 
+  return (
+    <div className="grid-container">
+      <XGrid
+        rows={rows}
+        columns={data.columns}
+        apiRef={apiRef}
+        options={{
+          pagination: true,
+          pageSize: 50,
+          rowCount: 552,
+          paginationMode: FeatureMode.Server,
+        }}
+        loading={isLoading}
+      />
+    </div>
+  );
+}
+
+export function ServerPaginationWithEventHandler() {
+  const apiRef: ApiRef = useApiRef();
+  const data = useData(100, 10);
+  const [rows, setRows] = useState<RowsProp>([]);
+  const [isLoading, setLoading] = useState<boolean>(false);
+
+  const onPageChange = useCallback(
+    (params) => {
+      action('onPageChanged')(params);
+      setLoading(true);
+      loadServerRows(params).then((newData) => {
+        setRows(newData.rows);
+        setLoading(false);
+      });
+    },
+    [setRows, setLoading],
+  );
 
   return (
-      <div className="grid-container">
-        <XGrid
-          rows={rows}
-          columns={data.columns}
-          apiRef={apiRef}
-          options={{
-            pagination: true,
-            paginationPageSize: 50,
-            rowCount: 552,
-            paginationMode: PaginationMode.Server
-          }}
-          loading={isLoading}
-        />
-      </div>
+    <div className="grid-container">
+      <XGrid
+        rows={rows}
+        columns={data.columns}
+        apiRef={apiRef}
+        options={{
+          pagination: true,
+          pageSize: 50,
+          rowCount: 552,
+          paginationMode: FeatureMode.Server,
+          onPageChanged: onPageChange,
+        }}
+        loading={isLoading}
+      />
+    </div>
   );
 }

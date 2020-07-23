@@ -1,3 +1,5 @@
+import { FeatureMode } from '../featureMode';
+
 /**
  * Object passed as parameter of the page changed event handler.
  */
@@ -19,9 +21,5 @@ export interface PageChangedParams {
    */
   rowCount: number;
 
-  paginationMode: PaginationMode;
-}
-export enum PaginationMode {
-  Client='Client',
-  Server='Server'
+  paginationMode: FeatureMode;
 }

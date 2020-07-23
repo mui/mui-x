@@ -19,7 +19,7 @@ export default {
 
 export const Options = () => {
   const data = useData(2000, 200);
-  const rowsPerPageOptions = array('paginationRowsPerPageOptions', ['25', '50', '100'], ', ');
+  const rowsPerPageOptions = array('rowsPerPageOptions', ['25', '50', '100'], ', ');
   const sortingOrder = array('sortingOrder', ['asc', 'desc', 'null'], ', ');
 
   const dataGridOptionsProp: DataGridOptionsProp = {
@@ -32,9 +32,9 @@ export const Options = () => {
     onPageChanged: (params) => action('onPageChanged')(params),
     onPageSizeChanged: (params) => action('onPageSizeChanged')(params),
 
-    paginationPageSize: number('paginationPageSize', 100),
-    paginationAutoPageSize: boolean('paginationAutoPageSize', false),
-    paginationRowsPerPageOptions: rowsPerPageOptions.map((value) => parseInt(value, 10)),
+    pageSize: number('pageSize', 100),
+    autoPageSize: boolean('autoPageSize', false),
+    rowsPerPageOptions: rowsPerPageOptions.map((value) => parseInt(value, 10)),
     hideFooterRowCount: boolean('hideFooterRowCount', false),
     hideFooterPagination: boolean('hideFooterPagination', false),
     hideFooter: boolean('hideFooter', false),
