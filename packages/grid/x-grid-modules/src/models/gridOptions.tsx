@@ -8,7 +8,7 @@ import { RowClickedParam } from './params/rowClickedParams';
 import { CellClickedParam } from './params/cellClickedParams';
 import { RowSelectedParams } from './params/rowSelectedParams';
 import { SelectionChangedParams } from './params/selectionChangedParams';
-import { PageChangedParams } from './params/pageChangedParams';
+import {PageChangedParams, PaginationMode} from './params/pageChangedParams';
 import { ColumnTypesRecord, DEFAULT_COLUMN_TYPES } from './colDef';
 
 /**
@@ -109,6 +109,11 @@ export interface GridOptions {
    * @default [25, 50, 100]
    */
   paginationRowsPerPageOptions?: number[];
+
+  paginationMode?: PaginationMode;
+  rowCount?: number;
+  page?: number;
+
   /**
    * Toggle footer component visibility.
    * @default false
@@ -215,6 +220,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   enableMultipleColumnsSorting: true,
   paginationRowsPerPageOptions: [25, 50, 100],
   paginationPageSize: 100,
+  paginationMode: PaginationMode.Client,
   extendRowFullWidth: true,
   sortingOrder: ['asc', 'desc', null],
   columnTypes: DEFAULT_COLUMN_TYPES,

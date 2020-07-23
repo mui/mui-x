@@ -18,4 +18,10 @@ export interface PageChangedParams {
    * The total number of rows
    */
   rowCount: number;
+
+  paginationMode: PaginationMode;
+}
+export enum PaginationMode {
+  Client='Client',
+  Server='Server'
 }

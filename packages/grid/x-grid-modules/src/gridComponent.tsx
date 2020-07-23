@@ -219,7 +219,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
                         />
                       ))
                     }
-                    rowCount={internalRows.length}
+                    rowCount={internalOptions.rowCount == null ? internalRows.length : internalOptions.rowCount }
                     options={internalOptions}
                   />
                 )}

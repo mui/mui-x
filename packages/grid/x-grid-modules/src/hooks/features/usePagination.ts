@@ -1,18 +1,14 @@
-import { useCallback, useEffect, useReducer, useRef } from 'react';
-import { useLogger } from '../utils';
-import {
-  PAGE_CHANGED_EVENT,
-  PAGESIZE_CHANGED_EVENT,
-  RESIZE,
-} from '../../constants/eventsConstants';
-import { useApiMethod } from '../root/useApiMethod';
-import { useApiEventHandler } from '../root/useApiEventHandler';
-import { PageChangedParams } from '../../models/params/pageChangedParams';
-import { Rows } from '../../models/rows';
-import { InternalColumns } from '../../models/colDef/colDef';
-import { GridOptions } from '../../models/gridOptions';
-import { PaginationApi } from '../../models/api/paginationApi';
-import { ApiRef } from '../../models/api';
+import {useCallback, useEffect, useReducer, useRef} from 'react';
+import {useLogger} from '../utils';
+import {PAGE_CHANGED_EVENT, PAGESIZE_CHANGED_EVENT, RESIZE,} from '../../constants/eventsConstants';
+import {useApiMethod} from '../root/useApiMethod';
+import {useApiEventHandler} from '../root/useApiEventHandler';
+import {PageChangedParams, PaginationMode} from '../../models/params/pageChangedParams';
+import {Rows} from '../../models/rows';
+import {InternalColumns} from '../../models/colDef/colDef';
+import {GridOptions} from '../../models/gridOptions';
+import {PaginationApi} from '../../models/api/paginationApi';
+import {ApiRef} from '../../models/api';
 
 export interface PaginationProps {
   page: number;
@@ -54,10 +50,11 @@ export const usePagination = (
   const logger = useLogger('usePagination');
 
   const initialState: PaginationState = {
+    paginationMode: options.paginationMode!,
     pageSize: options.paginationPageSize || 0,
-    rowCount: rows.length,
-    page: 1,
-    pageCount: getPageCount(options.paginationPageSize, rows.length),
+    rowCount: options.rowCount == null ? rows.length : options.rowCount,
+    page: options.page || 1,
+    pageCount: getPageCount(options.paginationPageSize, options.rowCount == null ? rows.length : options.rowCount),
   };
   const stateRef = useRef(initialState);
   const [state, dispatch] = useReducer(paginationReducer, initialState);
@@ -74,7 +71,9 @@ export const usePagination = (
   const setPage = useCallback(
     (page: number) => {
       if (apiRef && apiRef.current) {
-        apiRef.current!.renderPage(page);
+        page = stateRef.current.pageCount >= page ? page : stateRef.current.pageCount;
+        apiRef.current!.renderPage(stateRef.current.paginationMode === PaginationMode.Client ? page : 1);
+
         const params: PageChangedParams = {
           ...stateRef.current,
           page,
@@ -148,17 +147,32 @@ export const usePagination = (
     stateRef.current = state;
   }, [state]);
 
-  useEffect(() => {
-    if (rows.length !== state.rowCount) {
-      logger.info(`Options or rows changed, recalculating pageCount and rowCount`);
-      const newPageCount = getPageCount(state.pageSize, rows.length);
+  useEffect(()=> {
+    if(apiRef.current?.isInitialised) {
+      apiRef.current!.emit(PAGE_CHANGED_EVENT, stateRef.current);
+    }
+  }, [apiRef, stateRef, apiRef.current?.isInitialised]);
 
-      updateState({ pageCount: newPageCount, rowCount: rows.length });
+  useEffect(()=> {
+    updateState({paginationMode: options.paginationMode!});
+  }, [options.paginationMode]);
+
+  useEffect(()=> {
+    setPage(options.page != null ? options.page : 1);
+  }, [options.page]);
+
+  useEffect(() => {
+    const rowCount = options.rowCount == null ? rows.length : options.rowCount;
+    if (rowCount !== state.rowCount) {
+      logger.info(`Options or rows changed, recalculating pageCount and rowCount`);
+      const newPageCount = getPageCount(state.pageSize, rowCount);
+
+      updateState({ pageCount: newPageCount, rowCount });
       if (state.page > newPageCount) {
         setPage(newPageCount);
       }
     }
-  }, [rows.length, logger, updateState, state.rowCount, state.pageSize, setPage, state.page]);
+  }, [rows.length, options.rowCount, logger, updateState, state.rowCount, state.pageSize, setPage, state.page]);
 
   useEffect(() => {
     if (

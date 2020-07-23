@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { XGrid, ApiRef, useApiRef } from '@material-ui/x-grid';
+import {useState} from 'react';
+import {ApiRef, PaginationMode, useApiRef, XGrid, PageChangedParams, RowsProp} from '@material-ui/x-grid';
 import Button from '@material-ui/core/Button';
 import Pagination from '@material-ui/lab/Pagination';
-import { action } from '@storybook/addon-actions';
-import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
-import { withA11y } from '@storybook/addon-a11y';
-import { useData } from '../hooks/useData';
+import {action} from '@storybook/addon-actions';
+import {array, boolean, number, withKnobs} from '@storybook/addon-knobs';
+import {withA11y} from '@storybook/addon-a11y';
+import {useData} from '../hooks/useData';
+import {getData, GridData} from "../data/data-service";
 
 export default {
   title: 'X-Grid Tests/Pagination',
@@ -50,7 +52,7 @@ export function PageSize100() {
 }
 
 export function PaginationKnobs() {
-  const data = useData(2000, 200);
+  const data = useData(100, 200);
   const rowsPerPageOptions = array('Rows per page options', ['10', '20', '50', '100', '200'], ', ');
 
   return (
@@ -60,6 +62,8 @@ export function PaginationKnobs() {
       options={{
         pagination: true,
         paginationPageSize: number('PageSize', 100),
+        page: number('Page', 1),
+        rowCount: number('RowCount', 2000),
         paginationAutoPageSize: boolean('Auto page size', false),
         paginationRowsPerPageOptions: rowsPerPageOptions.map((value) => parseInt(value, 10)),
         hideFooterRowCount: boolean('Hide row count', false),
@@ -204,5 +208,63 @@ export function AutoPagination() {
         />
       </div>
     </React.Fragment>
+  );
+}
+
+function loadServerRows(params: PageChangedParams): Promise<GridData> {
+  return new Promise<GridData>(resolve => {
+    getData(params.pageSize, 10).then(data => {
+      setTimeout(() => {
+        const minId = (params.page - 1) * params.pageSize;
+        data.rows.forEach(row=> {
+          row.id = (Number(row.id) + minId).toString();
+        } );
+        resolve(data);
+      }, 500);
+    });
+  });
+}
+
+export function ServerPagination() {
+  const apiRef: ApiRef = useApiRef();
+  const data = useData(100, 10);
+  const [rows, setRows] = useState<RowsProp>([]);
+  const [isLoading, setLoading] = useState<boolean>(false);
+
+  React.useEffect(() => {
+    let unsubscribe;
+    if (apiRef && apiRef.current) {
+      unsubscribe = apiRef.current.onPageChanged((params)=> {
+        action('onPageChanged')(params);
+        setLoading(true);
+        loadServerRows(params).then(newData => {
+          setRows(newData.rows);
+          setLoading(false);
+        })
+      });
+    }
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
+  }, [apiRef, data]);
+
+
+  return (
+      <div className="grid-container">
+        <XGrid
+          rows={rows}
+          columns={data.columns}
+          apiRef={apiRef}
+          options={{
+            pagination: true,
+            paginationPageSize: 50,
+            rowCount: 552,
+            paginationMode: PaginationMode.Server
+          }}
+          loading={isLoading}
+        />
+      </div>
   );
 }
