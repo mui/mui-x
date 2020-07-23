@@ -7,7 +7,7 @@ import {
   ApiRef,
 } from '../../models';
 import { useLogger } from '../utils/useLogger';
-import { COLUMNS_UPDATED } from '../../constants/eventsConstants';
+import { COLUMNS_UPDATED, RESIZE } from '../../constants/eventsConstants';
 import { useApiMethod } from '../root/useApiMethod';
 import { useApiEventHandler } from '../root/useApiEventHandler';
 
@@ -147,12 +147,13 @@ export const useVirtualColumns = (
   };
   useApiMethod(apiRef, virtualApi, 'ColumnVirtualizationApi');
 
-  const onColUpdated = useCallback(() => {
+  const resetRenderedColState = useCallback(() => {
     logger.debug('Clearing previous renderedColRef');
     renderedColRef.current = null;
   }, [logger, renderedColRef]);
 
-  useApiEventHandler(apiRef, COLUMNS_UPDATED, onColUpdated);
+  useApiEventHandler(apiRef, COLUMNS_UPDATED, resetRenderedColState);
+  useApiEventHandler(apiRef, RESIZE, resetRenderedColState);
 
   return [renderedColRef, updateRenderedCols];
 };
