@@ -239,17 +239,14 @@ export function ServerPaginationWithApi() {
   const [isLoading, setLoading] = useState<boolean>(false);
 
   React.useEffect(() => {
-    let unsubscribe;
-    if (apiRef && apiRef.current) {
-      unsubscribe = apiRef.current.onPageChanged((params) => {
-        action('onPageChanged')(params);
-        setLoading(true);
-        loadServerRows(params).then((newData) => {
-          setRows(newData.rows);
-          setLoading(false);
-        });
+    const unsubscribe = apiRef.current!.onPageChanged((params) => {
+      action('onPageChanged')(params);
+      setLoading(true);
+      loadServerRows(params).then((newData) => {
+        setRows(newData.rows);
+        setLoading(false);
       });
-    }
+    });
     return () => {
       if (unsubscribe) {
         unsubscribe();

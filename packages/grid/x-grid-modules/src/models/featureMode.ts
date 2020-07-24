@@ -1,4 +1,4 @@
 export enum FeatureMode {
-  Client = 'Client',
-  Server = 'Server',
+  Client = 'client',
+  Server = 'server',
 }
