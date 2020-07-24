@@ -37,7 +37,7 @@ function loadServerRows(params: PageChangedParams): Promise<any> {
     }
 
     setTimeout(() => {
-      resolve(rows);
+      resolve({ response: { rows }, request: { params } });
     }, 800);
   });
 }
@@ -45,12 +45,16 @@ function loadServerRows(params: PageChangedParams): Promise<any> {
 export default function ServerPaginationDemo() {
   const [rows, setRows] = React.useState<RowsProp>([]);
   const [isLoading, setLoading] = React.useState<boolean>(false);
+  const currentPage = React.useRef<number>(1);
 
   const onPageChanged = (params) => {
+    currentPage.current = params.page;
     setLoading(true);
-    loadServerRows(params).then((newRows) => {
-      setRows(newRows);
-      setLoading(false);
+    loadServerRows(params).then(({ response, request }) => {
+      if (currentPage.current === request.params.page) {
+        setRows(response.rows);
+        setLoading(false);
+      }
     });
   };
 
