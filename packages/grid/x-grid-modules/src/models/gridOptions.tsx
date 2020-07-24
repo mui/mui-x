@@ -111,9 +111,9 @@ export interface GridOptions {
    */
   rowsPerPageOptions?: number[];
   /**
-   * Pagination can be processed on the server or client side.
-   * Set it to FeatureMode.client or `client` if you would like to handle the pagination on the client side.
-   * Set it to FeatureMode.server or `server` if you would like to handle the pagination on the server side.
+   * Pagination can be processed on the server or client-side.
+   * Set it to FeatureMode.client or `client` if you would like to handle the pagination on the client-side.
+   * Set it to FeatureMode.server or `server` if you would like to handle the pagination on the server-side.
    */
   paginationMode?: FeatureMode;
   /**
