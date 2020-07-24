@@ -116,15 +116,12 @@ set the property `paginationMode` to `server` as string or you can use our `Feat
 Finally, you're going to need to handle the `onPageChanged` event, to load the rows for the corresponding page.
 
 ```tsx
-const [rows, setRows] = useState<RowsProp>([]);
-const onPageChanged = useCallback(
-  (params) => {
-    loadServerRows(params).then((newRows) => {
-      setRows(newRows);
-    });
-  },
-  [setRows],
-);
+const [rows, setRows] = React.useState<RowsProp>([]);
+const onPageChanged = (params) => {
+  loadServerRows(params).then((newRows) => {
+    setRows(newRows);
+  });
+};
 
 <XGrid
   rows={rows}
