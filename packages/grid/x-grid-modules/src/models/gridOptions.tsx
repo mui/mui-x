@@ -2,13 +2,13 @@ import * as React from 'react';
 import { SortDirection } from './sortModel';
 import { Logger } from '../hooks/utils';
 import { ArrowDownward, ArrowUpward, SeparatorIcon } from '../components/icons';
-import { ColumnHeaderClickedParams } from './params/columnHeaderClickedParams';
+import { ColumnHeaderClickParams } from './params/columnHeaderClickParams';
 import { ColumnSortedParams } from './params/columnSortedParams';
-import { RowClickedParam } from './params/rowClickedParams';
-import { CellClickedParam } from './params/cellClickedParams';
+import { RowClickParam } from './params/rowClickParams';
+import { CellClickParam } from './params/cellClickParams';
 import { RowSelectedParams } from './params/rowSelectedParams';
-import { SelectionChangedParams } from './params/selectionChangedParams';
-import { PageChangedParams } from './params/pageChangedParams';
+import { SelectionChangeParams } from './params/selectionChangeParams';
+import { PageChangeParams } from './params/pageChangeParams';
 import { ColumnTypesRecord, DEFAULT_COLUMN_TYPES } from './colDef';
 import { FeatureMode } from './featureMode';
 
@@ -168,44 +168,54 @@ export interface GridOptions {
 
   /**
    * Handler triggered when the click event comes from a cell element.
-   * @param param with all properties from [[CellClickedParam]].
+   * @param param with all properties from [[CellClickParam]].
    */
-  onCellClicked?: (param: CellClickedParam) => void;
+  onCellClick?: (param: CellClickParam) => void;
+  /**
+   * Handler triggered when the hover event comes from a cell element.
+   * @param param with all properties from [[CellHoverParam]].
+   */
+  onCellHover?: (param: CellClickParam) => void;
   /**
    * Handler triggered when the click event comes from a row container element.
-   * @param param with all properties from [[RowClickedParam]].
+   * @param param with all properties from [[RowClickParam]].
    */
-  onRowClicked?: (param: RowClickedParam) => void;
+  onRowClick?: (param: RowClickParam) => void;
+  /**
+   * Handler triggered when the hover event comes from a row container element.
+   * @param param with all properties from [[RowHoverParam]].
+   */
+  onRowHover?: (param: RowClickParam) => void;
   /**
    * Handler triggered when one row get selected.
    * @param param with all properties from [[RowSelectedParams]].
    */
-  onRowSelected?: (param: RowSelectedParams) => void;
+  onSelectedRow?: (param: RowSelectedParams) => void;
   /**
-   * Handler triggered when one or multiple rows get their selection state changed.
-   * @param param with all properties from [[SelectionChangedParams]]
+   * Handler triggered when one or multiple rows get their selection state change.
+   * @param param with all properties from [[SelectionChangeParams]]
    */
-  onSelectionChanged?: (param: SelectionChangedParams) => void;
+  onSelectionChange?: (param: SelectionChangeParams) => void;
   /**
    * Handler triggered when the click event comes from a column header element.
-   * @param param with all properties from [[ColumnHeaderClickedParams]].
+   * @param param with all properties from [[ColumnHeaderClickParams]].
    */
-  onColumnHeaderClicked?: (param: ColumnHeaderClickedParams) => void;
+  onColumnHeaderClick?: (param: ColumnHeaderClickParams) => void;
   /**
    * Handler triggered when grid resorted its rows.
    * @param param with all properties from [[ColumnSortedParams]].
    */
-  onColumnsSorted?: (params: ColumnSortedParams) => void;
+  onSortedColumns?: (params: ColumnSortedParams) => void;
   /**
-   * Handler triggered when the current page has changed.
-   * @param param with all properties from [[PageChangedParams]].
+   * Handler triggered when the current page has change.
+   * @param param with all properties from [[PageChangeParams]].
    */
-  onPageChanged?: (param: PageChangedParams) => void;
+  onPageChange?: (param: PageChangeParams) => void;
   /**
-   * Handler triggered when the page size changed.
-   * @param param with all properties from [[PageChangedParams]].
+   * Handler triggered when the page size change.
+   * @param param with all properties from [[PageChangeParams]].
    */
-  onPageSizeChanged?: (param: PageChangedParams) => void;
+  onPageSizeChange?: (param: PageChangeParams) => void;
 
   /**
    * Set of icons used in the grid.

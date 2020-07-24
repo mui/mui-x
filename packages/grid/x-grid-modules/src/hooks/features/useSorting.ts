@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   CellValue,
   ColDef,
-  ColumnHeaderClickedParams,
+  ColumnHeaderClickParams,
   Columns,
   ColumnSortedParams,
   FieldComparatorList,
@@ -14,7 +14,7 @@ import {
   ApiRef,
 } from '../../models';
 import {
-  COLUMN_HEADER_CLICKED,
+  COLUMN_HEADER_CLICK,
   COLUMNS_SORTED,
   MULTIPLE_KEY_PRESS_CHANGED,
   POST_SORT,
@@ -151,7 +151,7 @@ export const useSorting = (
   );
 
   const headerClickHandler = React.useCallback(
-    ({ column }: ColumnHeaderClickedParams) => {
+    ({ column }: ColumnHeaderClickParams) => {
       if (column.sortable) {
         sortColumn(column);
       }
@@ -182,7 +182,7 @@ export const useSorting = (
     [allowMultipleSorting, options.enableMultipleColumnsSorting],
   );
 
-  const onColumnsSorted = React.useCallback(
+  const onSortedColumns = React.useCallback(
     (handler: (param: ColumnSortedParams) => void): (() => void) => {
       return apiRef!.current!.registerEvent(COLUMNS_SORTED, handler);
     },
@@ -217,10 +217,10 @@ export const useSorting = (
     }
   }, [colState, setSortModel, apiRef, colsProp]);
 
-  useApiEventHandler(apiRef, COLUMN_HEADER_CLICKED, headerClickHandler);
+  useApiEventHandler(apiRef, COLUMN_HEADER_CLICK, headerClickHandler);
   useApiEventHandler(apiRef, ROWS_UPDATED, onRowsUpdated);
   useApiEventHandler(apiRef, MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
-  const sortApi: SortApi = { getSortModel, setSortModel, onColumnsSorted };
+  const sortApi: SortApi = { getSortModel, setSortModel, onSortedColumns };
 
   useApiMethod(apiRef, sortApi, 'SortApi');
 };
