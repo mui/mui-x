@@ -11,14 +11,15 @@ import {
 } from '@material-ui/x-grid-data-generator';
 
 function newRow() {
-  return (
-  id: randomId(),
-  name: randomTraderName(),
-  email: randomEmail(),
-  age: randomInt(10, 100),
-  dateCreated: randomCreatedDate(),
-  lastLogin: randomUpdatedDate(),
-});
+  return {
+    id: randomId(),
+    name: randomTraderName(),
+    email: randomEmail(),
+    age: randomInt(10, 100),
+    dateCreated: randomCreatedDate(),
+    lastLogin: randomUpdatedDate(),
+  };
+}
 
 const columns: Columns = [
   { field: 'id', hide: true },
