@@ -4,7 +4,7 @@ import { ColDef } from '../colDef';
 /**
  * Object passed as parameter in the Cell Click event handler.
  */
-export interface CellClickedParam {
+export interface CellClickParam {
   /**
    * The HTMLElement that triggered the event
    */

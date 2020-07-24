@@ -95,7 +95,7 @@ export function PaginationApiTests() {
   React.useEffect(() => {
     let unsubscribe;
     if (apiRef && apiRef.current) {
-      unsubscribe = apiRef.current.onPageChanged(action('pageChanged'));
+      unsubscribe = apiRef.current.onPageChange(action('pageChange'));
     }
     return () => {
       if (unsubscribe) {

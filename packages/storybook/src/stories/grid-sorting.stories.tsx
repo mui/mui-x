@@ -293,7 +293,7 @@ export const SortedEventsApi = () => {
 
   React.useEffect(() => {
     if (apiRef && apiRef.current != null) {
-      apiRef.current.onColumnsSorted((params) => handleEvent('ColumnsSorted', params));
+      apiRef.current.onSortedColumns((params) => handleEvent('ColumnsSorted', params));
       apiRef.current.on('sortModelUpdated', (params) => handleEvent('sortModelUpdated', params));
       apiRef.current.on('postSort', (params) => handleEvent('postSort', params));
 

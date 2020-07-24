@@ -4,7 +4,7 @@ import { ColDef } from '../colDef/colDef';
 /**
  * The object passed as parameter of the Row click event handler.
  */
-export interface RowClickedParam {
+export interface RowClickParam {
   /**
    * The row element that trigger the click
    */
