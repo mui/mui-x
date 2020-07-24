@@ -231,7 +231,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   enableMultipleColumnsSorting: true,
   rowsPerPageOptions: [25, 50, 100],
   pageSize: 100,
-  paginationMode: FeatureMode.Client,
+  paginationMode: FeatureMode.client,
   extendRowFullWidth: true,
   sortingOrder: ['asc', 'desc', null],
   columnTypes: DEFAULT_COLUMN_TYPES,

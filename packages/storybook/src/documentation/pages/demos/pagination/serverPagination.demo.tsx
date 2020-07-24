@@ -1,5 +1,5 @@
 import { Columns, FeatureMode, PageChangedParams, RowsProp, XGrid } from '@material-ui/x-grid';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import * as React from 'react';
 import {
   randomCreatedDate,
@@ -47,16 +47,13 @@ export default function ServerPaginationDemo() {
   const [rows, setRows] = useState<RowsProp>([]);
   const [isLoading, setLoading] = useState<boolean>(false);
 
-  const onPageChanged = useCallback(
-    (params) => {
-      setLoading(true);
-      loadServerRows(params).then((newRows) => {
-        setRows(newRows);
-        setLoading(false);
-      });
-    },
-    [setRows, setLoading],
-  );
+  const onPageChanged = (params) => {
+    setLoading(true);
+    loadServerRows(params).then((newRows) => {
+      setRows(newRows);
+      setLoading(false);
+    });
+  };
 
   return (
     <XGrid
@@ -67,7 +64,7 @@ export default function ServerPaginationDemo() {
         pagination: true,
         pageSize: 5,
         rowCount: 50,
-        paginationMode: FeatureMode.Server,
+        paginationMode: FeatureMode.server,
         onPageChanged,
       }}
       loading={isLoading}

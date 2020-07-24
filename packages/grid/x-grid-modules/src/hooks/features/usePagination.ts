@@ -81,7 +81,7 @@ export const usePagination = (
       if (apiRef && apiRef.current) {
         page = stateRef.current.pageCount >= page ? page : stateRef.current.pageCount;
         apiRef.current!.renderPage(
-          stateRef.current.paginationMode === FeatureMode.Client ? page : 1,
+          stateRef.current.paginationMode === FeatureMode.client ? page : 1,
         );
 
         const params: PageChangedParams = {
