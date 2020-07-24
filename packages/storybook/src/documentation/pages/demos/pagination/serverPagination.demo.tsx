@@ -10,7 +10,8 @@ import {
   randomUpdatedDate,
 } from '@material-ui/x-grid-data-generator';
 
-const newRow = () => ({
+function newRow() {
+  return (
   id: randomId(),
   name: randomTraderName(),
   email: randomEmail(),

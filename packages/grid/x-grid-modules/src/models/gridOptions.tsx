@@ -110,7 +110,6 @@ export interface GridOptions {
    * @default [25, 50, 100]
    */
   rowsPerPageOptions?: number[];
-
   /**
    * Pagination can be processed on the server or client side.
    * Set it to FeatureMode.Client or `Client` if you would like to handle the pagination on the client side.
@@ -118,15 +117,14 @@ export interface GridOptions {
    */
   paginationMode?: FeatureMode;
   /**
-   * Set the total number of rows, if it is different than the length of the value `rows` prop
+   * Set the total number of rows, if it is different than the length of the value `rows` prop.
    */
   rowCount?: number;
   /**
    * Set the current page.
-   * Default 1
+   * @default 1
    */
   page?: number;
-
   /**
    * Toggle footer component visibility.
    * @default false

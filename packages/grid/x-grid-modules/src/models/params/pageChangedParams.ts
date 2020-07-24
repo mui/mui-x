@@ -20,6 +20,5 @@ export interface PageChangedParams {
    * The total number of rows
    */
   rowCount: number;
-
   paginationMode: FeatureMode;
 }
