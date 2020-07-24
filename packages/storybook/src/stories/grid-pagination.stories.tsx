@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useCallback, useState } from 'react';
 import {
   ApiRef,
   FeatureMode,
@@ -235,8 +234,8 @@ function loadServerRows(params: PageChangedParams): Promise<GridData> {
 export function ServerPaginationWithApi() {
   const apiRef: ApiRef = useApiRef();
   const data = useData(100, 10);
-  const [rows, setRows] = useState<RowsProp>([]);
-  const [isLoading, setLoading] = useState<boolean>(false);
+  const [rows, setRows] = React.useState<RowsProp>([]);
+  const [isLoading, setLoading] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     const unsubscribe = apiRef.current!.onPageChanged((params) => {
@@ -275,10 +274,10 @@ export function ServerPaginationWithApi() {
 export function ServerPaginationWithEventHandler() {
   const apiRef: ApiRef = useApiRef();
   const data = useData(100, 10);
-  const [rows, setRows] = useState<RowsProp>([]);
-  const [isLoading, setLoading] = useState<boolean>(false);
+  const [rows, setRows] = React.useState<RowsProp>([]);
+  const [isLoading, setLoading] = React.useState<boolean>(false);
 
-  const onPageChange = useCallback(
+  const onPageChange = React.useCallback(
     (params) => {
       action('onPageChanged')(params);
       setLoading(true);
