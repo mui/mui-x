@@ -165,11 +165,11 @@ export const usePagination = (
 
   useEffect(() => {
     updateState({ paginationMode: options.paginationMode! });
-  }, [options.paginationMode]);
+  }, [options.paginationMode, updateState]);
 
   useEffect(() => {
     setPage(options.page != null ? options.page : 1);
-  }, [options.page]);
+  }, [options.page, setPage]);
 
   useEffect(() => {
     const rowCount = options.rowCount == null ? rows.length : options.rowCount;
