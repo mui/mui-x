@@ -11,31 +11,41 @@ export interface Size {
 }
 
 export interface AutoSizerProps {
-  /** Function responsible for rendering children. */
+  /**
+   * Function responsible for rendering children.
+   */
   children: (size: Size) => React.ReactNode;
-
-  /** Optional custom CSS class name to attach to root AutoSizer element.    */
+  /**
+   * Optional custom CSS class name to attach to root AutoSizer element.
+   */
   className?: string;
-
-  /** Default height to use for initial render; useful for SSR */
+  /**
+   * Default height to use for initial render; useful for SSR.
+   */
   defaultHeight?: number;
-
-  /** Default width to use for initial render; useful for SSR */
+  /**
+   * Default width to use for initial render; useful for SSR.
+   */
   defaultWidth?: number;
-
-  /** Disable dynamic :height property */
+  /**
+   * Disable dynamic :height property.
+   */
   disableHeight?: boolean;
-
-  /** Disable dynamic :width property */
+  /**
+   * Disable dynamic :width property.
+   */
   disableWidth?: boolean;
-
-  /** Nonce of the inlined stylesheet for Content Security Policy */
+  /**
+   * Nonce of the inlined stylesheet for Content Security Policy.
+   */
   nonce?: string;
-
-  /** Callback to be invoked on-resize */
+  /**
+   * Callback to be invoked on-resize.
+   */
   onResize?: (size: Size) => void;
-
-  /** Optional inline style */
+  /**
+   * Optional inline style.
+   */
   style?: React.CSSProperties;
 }
 

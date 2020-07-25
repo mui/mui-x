@@ -5,12 +5,14 @@ import { PageChangedParams } from '../params/pageChangedParams';
  */
 export interface PaginationApi {
   /**
-   * Set the displayed page
+   * Set the displayed page.
+   *
    * @param page
    */
   setPage: (page: number) => void;
   /**
-   * Set the number of rows in one page
+   * Set the number of rows in one page.
+   *
    * @param pageSize
    */
   setPageSize: (pageSize: number) => void;

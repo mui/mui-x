@@ -5,19 +5,19 @@ import { FeatureMode } from '../featureMode';
  */
 export interface PageChangedParams {
   /**
-   * The new page
+   * The new page.
    */
   page: number;
   /**
-   * The total number of pages
+   * The total number of pages.
    */
   pageCount: number;
   /**
-   * The number of rows in a page
+   * The number of rows in a page.
    */
   pageSize: number;
   /**
-   * The total number of rows
+   * The total number of rows.
    */
   rowCount: number;
   paginationMode: FeatureMode;

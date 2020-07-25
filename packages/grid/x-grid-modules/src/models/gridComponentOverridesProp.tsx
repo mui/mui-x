@@ -6,23 +6,23 @@ import { ComponentParams } from './params';
  */
 export interface GridComponentOverridesProp {
   /**
-   * pagination component rendered in the grid footer by default
+   * Pagination component rendered in the grid footer by default.
    */
   pagination?: React.ElementType<ComponentParams>;
   /**
-   * loadingOverlay component rendered when the grid is in a loading state
+   * Loading overlay component rendered when the grid is in a loading state.
    */
   loadingOverlay?: React.ElementType<ComponentParams>;
   /**
-   * noRowsOverlay component rendered when the grid has no rows
+   * No rows overlay component rendered when the grid has no rows.
    */
   noRowsOverlay?: React.ElementType<ComponentParams>;
   /**
-   * footer component rendered at the bottom of the grid viewport
+   * Footer component rendered at the bottom of the grid viewport.
    */
   footer?: React.ElementType<ComponentParams>;
   /**
-   * header component rendered above the grid column header bar
+   * Header component rendered above the grid column header bar.
    */
   header?: React.ElementType<ComponentParams>;
 }
