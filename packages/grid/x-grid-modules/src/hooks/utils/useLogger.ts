@@ -13,7 +13,7 @@ export interface Logger {
 
 const noop = () => {};
 
-export const noopLogger: Logger = {
+const noopLogger: Logger = {
   debug: noop,
   info: noop,
   warn: noop,
