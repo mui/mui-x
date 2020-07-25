@@ -6,7 +6,6 @@ import Button from '@material-ui/core/Button';
 import FormLabel from '@material-ui/core/FormLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import { useContext } from 'react';
 import { darkThemeId, lightThemeId, ThemeContext } from '../../theme';
 import { StyledPanels } from './styled-panel';
 
@@ -24,7 +23,7 @@ export interface SettingsPanelProps {
 export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onApply, type, size }) => {
   const [sizeState, setSize] = React.useState<number>(size);
   const [typeState, setType] = React.useState<string>(type);
-  const currentTheme = useContext(ThemeContext);
+  const currentTheme = React.useContext(ThemeContext);
   const [selectedTheme, setSelectedTheme] = React.useState<string>(currentTheme.theme);
   const [selectedPaginationValue, setSelectedPaginationValue] = React.useState<number>(-1);
 

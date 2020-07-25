@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import * as React from 'react';
 import { useLocalStorage } from '../utils/useLocalStorage';
 import { DEFAULT_THEME, STORAGE_THEME_KEY, ThemeValuePair } from './themeProvider';
 import { darkTheme } from './dark';
@@ -15,10 +15,10 @@ type ReturnType = {
 export function useTheme(): ReturnType {
   const [selectedThemeId, setSelectedTheme] = useLocalStorage(STORAGE_THEME_KEY, DEFAULT_THEME);
 
-  const [theme, setTheme] = useState(ThemeValuePair[selectedThemeId]);
-  const [isDark, setIsDark] = useState(theme.id === darkTheme.id);
+  const [theme, setTheme] = React.useState(ThemeValuePair[selectedThemeId]);
+  const [isDark, setIsDark] = React.useState(theme.id === darkTheme.id);
 
-  useEffect(() => {
+  React.useEffect(() => {
     setIsDark(theme === darkTheme);
   }, [theme]);
 
