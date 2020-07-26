@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   root: true, // So parent files don't get applied
   globals: {
@@ -24,8 +26,8 @@ module.exports = {
   plugins: ['react-hooks', '@typescript-eslint'],
   settings: {
     'import/resolver': {
-      node: {
-        extensions: ['.js', '.ts', '.tsx', '.json'],
+      webpack: {
+        config: path.join(__dirname, './webpackBaseConfig.js'),
       },
     },
   },
@@ -88,11 +90,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: [
-        '**/test-utils/**/*.js',
-        // matching the pattern of the test runner
-        '*.test.js',
-      ],
+      files: ['*.test.tsx', '*.test.ts'],
       env: {
         mocha: true,
       },
