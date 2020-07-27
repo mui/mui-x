@@ -23,6 +23,8 @@ export function AllEvents() {
   const options: GridOptionsProp = {
     onRowClick: (params) => action('onRowClick')(params),
     onCellClick: (params) => action('onCellClick')(params),
+    onCellHover: (params) => action('onCellHover')(params),
+    onRowHover: (params) => action('onRowHover')(params),
     onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
     onSelectedRow: (params) => action('onSelectedRow')(params),
     onSelectionChange: (params) => action('onSelectionChange', { depth: 1 })(params),
@@ -44,10 +46,28 @@ export const onRowClick = () => {
   return <XGrid rows={data.rows} columns={data.columns} options={options} />;
 };
 
+export const onRowHover = () => {
+  const data = useData(2000, 200);
+  const options: GridOptionsProp = {
+    onRowHover: (params) => action('Row Hover')(params),
+  };
+
+  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
+};
+
 export const onCellClick = () => {
   const data = useData(2000, 200);
   const options: GridOptionsProp = {
     onCellClick: (params) => action('cell click')(params),
+  };
+
+  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
+};
+
+export const onCellHover = () => {
+  const data = useData(2000, 200);
+  const options: GridOptionsProp = {
+    onCellHover: (params) => action('cell Hover')(params),
   };
 
   return <XGrid rows={data.rows} columns={data.columns} options={options} />;
