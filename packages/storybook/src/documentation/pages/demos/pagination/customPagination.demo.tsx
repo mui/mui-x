@@ -103,8 +103,8 @@ export default function CustomPaginationDemo() {
       columns={columns}
       options={{
         pagination: true,
-        paginationPageSize: 5,
-        paginationRowsPerPageOptions: [5, 10],
+        pageSize: 5,
+        rowsPerPageOptions: [5, 10],
         autoHeight: true,
       }}
       className="demo"

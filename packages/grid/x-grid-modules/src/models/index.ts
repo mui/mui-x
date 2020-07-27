@@ -1,6 +1,7 @@
 export * from './colDef';
 export * from './containerProps';
 export * from './elementSize';
+export * from './featureMode';
 export * from './gridOptions';
 export * from './rootContainerRef';
 export * from './renderContextProps';

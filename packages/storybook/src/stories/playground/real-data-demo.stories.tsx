@@ -22,26 +22,26 @@ export default {
 };
 
 const getGridOptions: () => GridOptionsProp = () => {
-  const rowsPerPageOptions = array('paginationRowsPerPageOptions', ['25', '50', '100'], ', ');
+  const rowsPerPageOptions = array('rowsPerPageOptions', ['25', '50', '100'], ', ');
   const sortingOrder = array('sortingOrder', ['asc', 'desc', 'null'], ', ');
 
   return {
-    onRowClicked: (params) => action('onRowClicked')(params),
-    onCellClicked: (params) => action('onCellClicked')(params),
-    onColumnHeaderClicked: (params) => action('onColumnHeaderClicked')(params),
+    onRowClick: (params) => action('onRowClick')(params),
+    onCellClick: (params) => action('onCellClick')(params),
+    onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
     onRowSelected: (params) => action('onRowSelected')(params),
-    onSelectionChanged: (params) =>
-      action('onSelectionChanged', {
+    onSelectionChange: (params) =>
+      action('onSelectionChange', {
         depth: 1,
       })(params),
-    onColumnsSorted: (params) => action('onColumnsSorted')(params),
-    onPageChanged: (params) => action('onPageChanged')(params),
-    onPageSizeChanged: (params) => action('onPageSizeChanged')(params),
+    onSortedColumns: (params) => action('onSortedColumns')(params),
+    onPageChange: (params) => action('onPageChange')(params),
+    onPageSizeChange: (params) => action('onPageSizeChange')(params),
 
     pagination: boolean('pagination', false),
-    paginationPageSize: number('paginationPageSize', 100),
-    paginationAutoPageSize: boolean('paginationAutoPageSize', false),
-    paginationRowsPerPageOptions: rowsPerPageOptions.map((value) => parseInt(value, 10)),
+    pageSize: number('pageSize', 100),
+    autoPageSize: boolean('autoPageSize', false),
+    rowsPerPageOptions: rowsPerPageOptions.map((value) => parseInt(value, 10)),
     hideFooterRowCount: boolean('hideFooterRowCount', false),
     hideFooterPagination: boolean('hideFooterPagination', false),
     hideFooter: boolean('hideFooter', false),

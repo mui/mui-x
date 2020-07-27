@@ -5,19 +5,19 @@ import { ContainerProps } from './containerProps';
  */
 export interface RenderColumnsProps {
   /**
-   * The column index of the first rendered column
+   * The column index of the first rendered column.
    */
   firstColIdx: number;
   /**
-   * The column index of the last rendered column
+   * The column index of the last rendered column.
    */
   lastColIdx: number;
   /**
-   * The left empty width required to position the viewport at the beginning of the first rendered column
+   * The left empty width required to position the viewport at the beginning of the first rendered column.
    */
   leftEmptyWidth: number;
   /**
-   * The right empty width limit the position the viewport to the end of the last rendered column
+   * The right empty width limit the position the viewport to the end of the last rendered column.
    */
   rightEmptyWidth: number;
 }
@@ -45,13 +45,13 @@ export interface RenderRowProps {
  */
 export interface RenderPaginationProps {
   /**
-   * The current page if pagination is enabled
+   * The current page if pagination is enabled.
    */
   paginationCurrentPage?: number;
   /**
-   * The current page size if pagination is enabled
+   * The current page size if pagination is enabled.
    */
-  paginationPageSize?: number;
+  pageSize?: number;
 }
 
 /**

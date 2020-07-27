@@ -1,16 +1,18 @@
-import { PageChangedParams } from '../params/pageChangedParams';
+import { PageChangeParams } from '../params/pageChangeParams';
 
 /**
  * The pagination API interface that is available in the grid [[apiRef]].
  */
 export interface PaginationApi {
   /**
-   * Set the displayed page
+   * Set the displayed page.
+   *
    * @param page
    */
   setPage: (page: number) => void;
   /**
-   * Set the number of rows in one page
+   * Set the number of rows in one page.
+   *
    * @param pageSize
    */
   setPageSize: (pageSize: number) => void;
@@ -18,10 +20,10 @@ export interface PaginationApi {
    * Handler that is triggered after a new page has been displayed
    * @param handler
    */
-  onPageChanged: (handler: (param: PageChangedParams) => void) => () => void;
+  onPageChange: (handler: (param: PageChangeParams) => void) => () => void;
   /**
-   * Handler that is triggered after the page size was changed
+   * Handler that is triggered after the page size was change
    * @param handler
    */
-  onPageSizeChanged: (handler: (param: PageChangedParams) => void) => () => void;
+  onPageSizeChange: (handler: (param: PageChangeParams) => void) => () => void;
 }

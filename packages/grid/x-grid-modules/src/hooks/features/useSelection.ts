@@ -1,18 +1,18 @@
 import * as React from 'react';
 import {
   GridOptions,
-  RowClickedParam,
   RowId,
   RowModel,
   RowSelectedParams,
   RowsProp,
-  SelectionChangedParams,
+  SelectionChangeParams,
   ApiRef,
+  RowParams,
 } from '../../models';
 import { useLogger } from '../utils/useLogger';
 import {
   MULTIPLE_KEY_PRESS_CHANGED,
-  ROW_CLICKED,
+  ROW_CLICK,
   ROW_SELECTED_EVENT,
   SELECTION_CHANGED_EVENT,
 } from '../../constants/eventsConstants';
@@ -79,18 +79,18 @@ export const useSelection = (
 
       if (apiRef && apiRef.current != null) {
         logger.info(
-          `Row at index ${rowIndex} has changed to ${isRowSelected ? 'selected' : 'unselected'} `,
+          `Row at index ${rowIndex} has change to ${isRowSelected ? 'selected' : 'unselected'} `,
         );
         const rowSelectedParam: RowSelectedParams = {
           data: row.data,
           isSelected: isRowSelected,
           rowIndex,
         };
-        const selectionChangedParam: SelectionChangedParams = {
+        const selectionChangeParam: SelectionChangeParams = {
           rows: getSelectedRows().map((r) => r.data),
         };
         apiRef.current!.emit(ROW_SELECTED_EVENT, rowSelectedParam);
-        apiRef.current!.emit(SELECTION_CHANGED_EVENT, selectionChangedParam);
+        apiRef.current!.emit(SELECTION_CHANGED_EVENT, selectionChangeParam);
       }
 
       forceUpdate((p: any) => !p);
@@ -137,17 +137,17 @@ export const useSelection = (
 
       if (apiRef && apiRef.current != null) {
         // We don't emit ROW_SELECTED_EVENT on each row as it would be too consuming for large set of data.
-        const selectionChangedParam: SelectionChangedParams = {
+        const selectionChangeParam: SelectionChangeParams = {
           rows: getSelectedRows().map((r) => r.data),
         };
-        apiRef.current!.emit(SELECTION_CHANGED_EVENT, selectionChangedParam);
+        apiRef.current!.emit(SELECTION_CHANGED_EVENT, selectionChangeParam);
       }
     },
     [apiRef, selectedItemsRef, forceUpdate, options.enableMultipleSelection, getSelectedRows],
   );
 
-  const rowClickedHandler = React.useCallback(
-    (params: RowClickedParam) => {
+  const rowClickHandler = React.useCallback(
+    (params: RowParams) => {
       if (!options.disableSelectionOnClick) {
         selectRowModel(params.rowModel);
       }
@@ -162,29 +162,29 @@ export const useSelection = (
     [options.enableMultipleSelection, allowMultipleSelectionKeyPressed],
   );
 
-  const onSelectedRow = React.useCallback(
+  const onRowSelected = React.useCallback(
     (handler: (param: RowSelectedParams) => void): (() => void) => {
       return apiRef!.current!.registerEvent(ROW_SELECTED_EVENT, handler);
     },
     [apiRef],
   );
-  const onSelectionChanged = React.useCallback(
-    (handler: (param: SelectionChangedParams) => void): (() => void) => {
+  const onSelectionChange = React.useCallback(
+    (handler: (param: SelectionChangeParams) => void): (() => void) => {
       return apiRef!.current!.registerEvent(SELECTION_CHANGED_EVENT, handler);
     },
     [apiRef],
   );
 
-  useApiEventHandler(apiRef, ROW_CLICKED, rowClickedHandler);
+  useApiEventHandler(apiRef, ROW_CLICK, rowClickHandler);
   useApiEventHandler(apiRef, MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
-  // TODO handle Cell Clicked/range selection?
+  // TODO handle Cell Click/range selection?
 
   const selectionApi: SelectionApi = {
     selectRow,
     getSelectedRows,
     selectRows,
-    onSelectedRow,
-    onSelectionChanged,
+    onRowSelected,
+    onSelectionChange,
   };
   useApiMethod(apiRef, selectionApi, 'SelectionApi');
 
@@ -197,8 +197,8 @@ export const useSelection = (
   React.useEffect(() => {
     selectedItemsRef.current = [];
     if (apiRef && apiRef.current != null) {
-      const selectionChangedParam: SelectionChangedParams = { rows: [] };
-      apiRef.current!.emit(SELECTION_CHANGED_EVENT, selectionChangedParam);
+      const selectionChangeParam: SelectionChangeParams = { rows: [] };
+      apiRef.current!.emit(SELECTION_CHANGED_EVENT, selectionChangeParam);
     }
   }, [rowsProp, apiRef]);
 };

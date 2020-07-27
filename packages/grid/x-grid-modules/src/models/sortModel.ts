@@ -14,11 +14,11 @@ export type ComparatorFn = (v1: CellValue, v2: CellValue, row1: RowModel, row2: 
  */
 export interface SortItem {
   /**
-   * The column field identifier
+   * The column field identifier.
    */
   field: string;
   /**
-   * The direction of the column that the grid should sort
+   * The direction of the column that the grid should sort.
    */
   sort: SortDirection;
 }
