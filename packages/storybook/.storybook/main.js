@@ -1,4 +1,6 @@
 const path = require('path');
+const webpack = require('webpack');
+const { generateReleaseInfo } = require('@material-ui/x-license');
 
 const env = process.env.NODE_ENV || 'development'
 /* eslint-disable */
@@ -25,16 +27,17 @@ module.exports = {
   webpackFinal: async config => {
     config.devtool = __DEV__ ? 'inline-source-map' : undefined;
     config.module.rules.push({
-      test: /\.(ts|tsx)$/,
-      use: [
-        {
-          loader: require.resolve('ts-loader'),
-        }
-      ],
+      test: /\.(js|ts|tsx)$/,
+      exclude: /node_modules/,
+      loader: 'babel-loader',
+      query: {
+        cacheDirectory: true,
+      },
     });
+
     if (__DEV__) {
       config.module.rules.push({
-        test: /\.tsx?|\.js$/,
+        test: /\.(js|ts|tsx)$/,
         use: ['source-map-loader'],
         enforce: 'pre',
       });
@@ -54,6 +57,16 @@ module.exports = {
       ],
       enforce: 'pre',
     });
+
+    config.module.rules.push({
+      test: /\.(js|ts|tsx)$/,
+      loader: 'string-replace-loader',
+      options: {
+        search: '__RELEASE_INFO__',
+        replace: generateReleaseInfo(),
+      }
+    });
+
     config.optimization = {
       splitChunks: {
         chunks: 'all',
@@ -64,8 +77,11 @@ module.exports = {
     config.performance = {
       maxAssetSize: maxAssetSize
     };
-
-    config.resolve.extensions.push('.ts', '.tsx');
+    config.resolve = {
+      ...config.resolve,
+      extensions: ['.js', '.ts', '.tsx'],
+      modules: [path.join(__dirname, '../../../'), 'node_modules'],
+    };
     return config;
   },
 };
