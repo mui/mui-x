@@ -31,7 +31,7 @@ export interface SelectionApi {
    * Handler triggered after a row is selected
    * @param handler
    */
-  onSelectedRow: (handler: (param: RowSelectedParams) => void) => () => void;
+  onRowSelected: (handler: (param: RowSelectedParams) => void) => () => void;
   /**
    * Handler triggered after one or multiple rows had a selection state change.
    * @param handler

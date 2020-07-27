@@ -162,7 +162,7 @@ export const useSelection = (
     [options.enableMultipleSelection, allowMultipleSelectionKeyPressed],
   );
 
-  const onSelectedRow = React.useCallback(
+  const onRowSelected = React.useCallback(
     (handler: (param: RowSelectedParams) => void): (() => void) => {
       return apiRef!.current!.registerEvent(ROW_SELECTED_EVENT, handler);
     },
@@ -183,7 +183,7 @@ export const useSelection = (
     selectRow,
     getSelectedRows,
     selectRows,
-    onSelectedRow,
+    onRowSelected,
     onSelectionChange,
   };
   useApiMethod(apiRef, selectionApi, 'SelectionApi');

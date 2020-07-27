@@ -194,7 +194,7 @@ export interface GridOptions {
    * Handler triggered when one row get selected.
    * @param param with all properties from [[RowSelectedParams]].
    */
-  onSelectedRow?: (param: RowSelectedParams) => void;
+  onRowSelected?: (param: RowSelectedParams) => void;
   /**
    * Handler triggered when one or multiple rows get their selection state change.
    *
