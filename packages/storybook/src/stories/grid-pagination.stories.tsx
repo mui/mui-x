@@ -4,7 +4,7 @@ import {
   FeatureMode,
   useApiRef,
   XGrid,
-  PageChangedParams,
+  PageChangeParams,
   RowsProp,
 } from '@material-ui/x-grid';
 import Button from '@material-ui/core/Button';
@@ -217,7 +217,7 @@ export function AutoPagination() {
   );
 }
 
-function loadServerRows(params: PageChangedParams): Promise<GridData> {
+function loadServerRows(params: PageChangeParams): Promise<GridData> {
   return new Promise<GridData>((resolve) => {
     getData(params.pageSize, 10).then((data) => {
       setTimeout(() => {
@@ -238,8 +238,8 @@ export function ServerPaginationWithApi() {
   const [isLoading, setLoading] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    const unsubscribe = apiRef.current!.onPageChanged((params) => {
-      action('onPageChanged')(params);
+    const unsubscribe = apiRef.current!.onPageChange((params) => {
+      action('onPageChange')(params);
       setLoading(true);
       loadServerRows(params).then((newData) => {
         setRows(newData.rows);
@@ -279,7 +279,7 @@ export function ServerPaginationWithEventHandler() {
 
   const onPageChange = React.useCallback(
     (params) => {
-      action('onPageChanged')(params);
+      action('onPageChange')(params);
       setLoading(true);
       loadServerRows(params).then((newData) => {
         setRows(newData.rows);
@@ -300,7 +300,7 @@ export function ServerPaginationWithEventHandler() {
           pageSize: 50,
           rowCount: 552,
           paginationMode: FeatureMode.Server,
-          onPageChanged: onPageChange,
+          onPageChange: onPageChange,
         }}
         loading={isLoading}
       />

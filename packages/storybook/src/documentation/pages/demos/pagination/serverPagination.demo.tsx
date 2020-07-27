@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Columns, FeatureMode, PageChangedParams, RowsProp, XGrid } from '@material-ui/x-grid';
+import { Columns, FeatureMode, PageChangeParams, RowsProp, XGrid } from '@material-ui/x-grid';
 import {
   randomCreatedDate,
   randomEmail,
@@ -29,7 +29,7 @@ const columns: Columns = [
   { field: 'lastLogin', type: 'dateTime', width: 180 },
 ];
 
-function loadServerRows(params: PageChangedParams): Promise<any> {
+function loadServerRows(params: PageChangeParams): Promise<any> {
   return new Promise<any>((resolve) => {
     const rows: any[] = [];
     while (rows.length < params.pageSize) {
@@ -47,7 +47,7 @@ export default function ServerPaginationDemo() {
   const [isLoading, setLoading] = React.useState<boolean>(false);
   const currentPage = React.useRef<number>(1);
 
-  const onPageChanged = (params) => {
+  const onPageChange = (params) => {
     currentPage.current = params.page;
     setLoading(true);
     loadServerRows(params).then(({ response, request }) => {
@@ -68,7 +68,7 @@ export default function ServerPaginationDemo() {
         pageSize: 5,
         rowCount: 50,
         paginationMode: FeatureMode.server,
-        onPageChanged,
+        onPageChange,
       }}
       loading={isLoading}
     />

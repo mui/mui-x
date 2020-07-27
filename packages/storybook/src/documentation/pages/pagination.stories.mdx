@@ -113,11 +113,11 @@ XGrid supports both client and server-side pagination. By default, pagination wo
 set the property `paginationMode` to `server` as string or you can use our `FeatureMode` enum.
 **Note**: You also need to set the `rowCount` property to override the number of rows in the grid so XGrid can calculate the total number of pages.
 
-Finally, you're going to need to handle the `onPageChanged` event, to load the rows for the corresponding page.
+Finally, you're going to need to handle the `onPageChange` event, to load the rows for the corresponding page.
 
 ```tsx
 const [rows, setRows] = React.useState<RowsProp>([]);
-const onPageChanged = (params) => {
+const onPageChange = (params) => {
   loadServerRows(params).then((newRows) => {
     setRows(newRows);
   });
@@ -131,7 +131,7 @@ const onPageChanged = (params) => {
     pageSize: 5,
     paginationMode: 'server',
     rowCount: 50,
-    onPageChanged: onPageChanged,
+    onPageChange: onPageChange,
   }}
 />;
 ```
