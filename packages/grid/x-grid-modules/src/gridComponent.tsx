@@ -41,7 +41,7 @@ import { mergeOptions } from './utils/mergeOptions';
  */
 export const GridComponent: React.FC<GridComponentProps> = React.memo(
   ({ rows, columns, options, apiRef, loading, licenseStatus, className, components }) => {
-    useLoggerFactory(options?.logger, options?.logLevel);
+    useLoggerFactory(options?.logger, options?.logLevel || DEFAULT_GRID_OPTIONS.logLevel);
     const logger = useLogger('Grid');
     const rootContainerRef: RootContainerRef = React.useRef<HTMLDivElement>(null);
     const footerRef = React.useRef<HTMLDivElement>(null);

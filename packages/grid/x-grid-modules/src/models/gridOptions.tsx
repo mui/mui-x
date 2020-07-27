@@ -276,6 +276,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   paginationMode: FeatureMode.client,
   extendRowFullWidth: true,
   sortingOrder: ['asc', 'desc', null],
+  logLevel: 'warn',
   columnTypes: DEFAULT_COLUMN_TYPES,
   icons: {
     columnSortedAscending: () => <ArrowUpward className="icon" />,
