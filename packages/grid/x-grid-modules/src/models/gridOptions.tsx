@@ -9,7 +9,7 @@ import { PageChangeParams } from './params/pageChangeParams';
 import { ColumnTypesRecord, DEFAULT_COLUMN_TYPES } from './colDef';
 import { FeatureMode } from './featureMode';
 import { ColParams } from './params/colParams';
-import {CellParams, RowParams} from './params/cellParams';
+import { CellParams, RowParams } from './params/cellParams';
 
 /**
  * Set of icons used in the grid component UI.

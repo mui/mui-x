@@ -6,7 +6,8 @@ import {
   RowSelectedParams,
   RowsProp,
   SelectionChangeParams,
-  ApiRef, RowParams,
+  ApiRef,
+  RowParams,
 } from '../../models';
 import { useLogger } from '../utils/useLogger';
 import {

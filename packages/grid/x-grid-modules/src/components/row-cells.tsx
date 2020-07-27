@@ -1,20 +1,9 @@
 import * as React from 'react';
-import {
-  CellClassParams,
-  CellValue,
-  ColDef,
-  CellParams,
-  Columns,
-  GridApi,
-  RowModel,
-  ValueFormatterParams,
-  ValueGetterParams,
-  CellClassRules,
-} from '../models';
+import { CellClassParams, Columns, RowModel, CellClassRules, CellParams } from '../models';
 import { Cell, GridCellProps } from './cell';
 import { ApiContext } from './api-context';
 import { classnames, isFunction } from '../utils';
-import {buildCellParams} from "../utils/paramsUtils";
+import { buildCellParams } from '../utils/paramsUtils';
 
 function applyCssClassRules(cellClassRules: CellClassRules, params: CellClassParams) {
   return Object.entries(cellClassRules).reduce((appliedCss, entry) => {
@@ -60,7 +49,13 @@ export const RowCells: React.FC<RowCellsProps> = React.memo((props) => {
       : !removeLastBorderRight && !props.extendRowFullWidth;
 
     let value = row.data[column.field!];
-    const cellParams: ValueGetterParams = buildCellParams({rowModel: row, colDef: column, rowIndex, value, api: api!.current!});
+    const cellParams: CellParams = buildCellParams({
+      rowModel: row,
+      colDef: column,
+      rowIndex,
+      value,
+      api: api!.current!,
+    });
 
     if (column.valueGetter) {
       // Value getter override the original value

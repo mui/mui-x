@@ -10,7 +10,8 @@ import {
   RowModel,
   RowsProp,
   SortApi,
-  ApiRef, ColParams,
+  ApiRef,
+  ColParams,
 } from '../../models';
 import {
   COLUMN_HEADER_CLICK,
