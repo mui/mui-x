@@ -1,4 +1,4 @@
-import { createElement, PureComponent } from 'react';
+import * as React from 'react';
 
 /**
  * Detect Element Resize.
@@ -378,7 +378,7 @@ var AutoSizer = function (_React$PureComponent) {
         childParams.width = width;
       }
 
-      return createElement(
+      return React.createElement(
         'div',
         {
           className: className,
@@ -389,7 +389,7 @@ var AutoSizer = function (_React$PureComponent) {
     }
   }]);
   return AutoSizer;
-}(PureComponent);
+}(React.PureComponent);
 
 AutoSizer.defaultProps = {
   onResize: function onResize() {},
