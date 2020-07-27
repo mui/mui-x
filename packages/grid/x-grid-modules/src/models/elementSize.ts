@@ -3,11 +3,11 @@
  */
 export interface ElementSize {
   /**
-   * The width of a container or HTMLElement
-   */
-  width: number;
-  /**
-   * The height of a container or HTMLElement
+   * The height of a container or HTMLElement.
    */
   height: number;
+  /**
+   * The width of a container or HTMLElement.
+   */
+  width: number;
 }

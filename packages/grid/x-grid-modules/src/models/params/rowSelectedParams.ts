@@ -5,15 +5,15 @@ import { RowData } from '../rows';
  */
 export interface RowSelectedParams {
   /**
-   * The row data of the row that triggers the event
+   * The row data of the row that triggers the event.
    */
   data: RowData;
   /**
-   * The row index of the row that triggers the event
+   * The row index of the row that triggers the event.
    */
   rowIndex: number;
   /**
-   * The selected state of the row that triggers the event
+   * The selected state of the row that triggers the event.
    */
   isSelected: boolean;
 }

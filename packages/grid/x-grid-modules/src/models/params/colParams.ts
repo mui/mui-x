@@ -3,15 +3,15 @@
  */
 export interface ColParams {
   /**
-   * The column of the current header component
+   * The column of the current header component.
    */
   colDef: any;
   /**
-   * The column index of the current header component
+   * The column index of the current header component.
    */
   colIndex: number;
   /**
-   * ApiRef that let you manipulate the grid
+   * API ref that let you manipulate the grid.
    */
   api: any;
 }
