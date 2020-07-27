@@ -13,7 +13,11 @@ import {
   RESIZE,
   ROW_CLICK,
   ROW_SELECTED_EVENT,
-  SELECTION_CHANGED_EVENT, HOVER_EVENT, CELL_HOVER, ROW_HOVER, COLUMN_HEADER_HOVER,
+  SELECTION_CHANGED_EVENT,
+  HOVER_EVENT,
+  CELL_HOVER,
+  ROW_HOVER,
+  COLUMN_HEADER_HOVER,
 } from '../../constants/eventsConstants';
 import { CellClickParam, GridOptions, RowClickParam, ApiRef } from '../../models';
 import { GridApi } from '../../models/api/gridApi';
@@ -166,7 +170,6 @@ export function useApi(
     },
     [emitEvent, apiRef],
   );
-
 
   const registerEvent = React.useCallback(
     (event: string, handler: (param: any) => void): (() => void) => {

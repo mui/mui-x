@@ -27,7 +27,7 @@ export const Options = () => {
       rows={data.rows}
       columns={data.columns}
       options={{
-        onRowclick: (params) => action('onRowClick')(params),
+        onRowClick: (params) => action('onRowClick')(params),
         onCellClick: (params) => action('onCellClick')(params),
         onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
         onSelectedRow: (params) => action('onSelectedRow')(params),

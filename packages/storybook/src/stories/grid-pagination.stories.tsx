@@ -263,7 +263,7 @@ export function ServerPaginationWithApi() {
           pagination: true,
           pageSize: 50,
           rowCount: 552,
-          paginationMode: FeatureMode.Server,
+          paginationMode: FeatureMode.server,
         }}
         loading={isLoading}
       />
@@ -299,8 +299,8 @@ export function ServerPaginationWithEventHandler() {
           pagination: true,
           pageSize: 50,
           rowCount: 552,
-          paginationMode: FeatureMode.Server,
-          onPageChange: onPageChange,
+          paginationMode: FeatureMode.server,
+          onPageChange,
         }}
         loading={isLoading}
       />
