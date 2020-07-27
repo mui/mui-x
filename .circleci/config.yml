@@ -66,7 +66,7 @@ jobs:
           command: yarn lint:ci
       - run:
           name: Lint JSON
-          command: yarn --silent jsonlint
+          command: yarn jsonlint
 workflows:
   version: 2
   pipeline:
