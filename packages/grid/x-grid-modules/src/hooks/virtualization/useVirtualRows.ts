@@ -344,7 +344,7 @@ export const useVirtualRows = (
 
   React.useEffect(() => {
     if (optionsRef.current !== options) {
-      logger.debug('Options changed, updating container sizes');
+      logger.debug('Options change, updating container sizes');
       optionsRef.current = options;
       updateContainerSize();
     }
@@ -352,7 +352,7 @@ export const useVirtualRows = (
 
   React.useEffect(() => {
     if (rows.length !== rowsCount.current) {
-      logger.debug('Row length changed to ', rows.length);
+      logger.debug('Row length change to ', rows.length);
       updateContainerSize();
     }
   }, [rows.length, logger, updateContainerSize]);

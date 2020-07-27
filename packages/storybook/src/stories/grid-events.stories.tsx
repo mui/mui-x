@@ -21,42 +21,62 @@ export function AllEvents() {
   const data = useData(2000, 200);
 
   const options: GridOptionsProp = {
-    onRowClicked: (params) => action('onRowClicked')(params),
-    onCellClicked: (params) => action('onCellClicked')(params),
-    onColumnHeaderClicked: (params) => action('onColumnHeaderClicked')(params),
+    onRowClick: (params) => action('onRowClick')(params),
+    onCellClick: (params) => action('onCellClick')(params),
+    onCellHover: (params) => action('onCellHover')(params),
+    onRowHover: (params) => action('onRowHover')(params),
+    onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
     onRowSelected: (params) => action('onRowSelected')(params),
-    onSelectionChanged: (params) => action('onSelectionChanged', { depth: 1 })(params),
-    onColumnsSorted: (params) => action('onColumnsSorted')(params),
-    onPageChanged: (params) => action('onPageChanged')(params),
-    onPageSizeChanged: (params) => action('onPageSizeChanged')(params),
+    onSelectionChange: (params) => action('onSelectionChange', { depth: 1 })(params),
+    onSortedColumns: (params) => action('onSortedColumns')(params),
+    onPageChange: (params) => action('onPageChange')(params),
+    onPageSizeChange: (params) => action('onPageSizeChange')(params),
   };
 
   return <XGrid rows={data.rows} columns={data.columns} options={options} />;
 }
 
-export const onRowClicked = () => {
+export const onRowClick = () => {
   const data = useData(2000, 200);
 
   const options: GridOptionsProp = {
-    onRowClicked: (params) => action('row clicked')(params),
+    onRowClick: (params) => action('row click')(params),
   };
 
   return <XGrid rows={data.rows} columns={data.columns} options={options} />;
 };
 
-export const onCellClicked = () => {
+export const onRowHover = () => {
   const data = useData(2000, 200);
   const options: GridOptionsProp = {
-    onCellClicked: (params) => action('cell clicked')(params),
+    onRowHover: (params) => action('Row Hover')(params),
   };
 
   return <XGrid rows={data.rows} columns={data.columns} options={options} />;
 };
 
-export const onColumnHeaderClicked = () => {
+export const onCellClick = () => {
   const data = useData(2000, 200);
   const options: GridOptionsProp = {
-    onColumnHeaderClicked: (params) => action('Header clicked')(params),
+    onCellClick: (params) => action('cell click')(params),
+  };
+
+  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
+};
+
+export const onCellHover = () => {
+  const data = useData(2000, 200);
+  const options: GridOptionsProp = {
+    onCellHover: (params) => action('cell Hover')(params),
+  };
+
+  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
+};
+
+export const onColumnHeaderClick = () => {
+  const data = useData(2000, 200);
+  const options: GridOptionsProp = {
+    onColumnHeaderClick: (params) => action('Header click')(params),
   };
   return <XGrid rows={data.rows} columns={data.columns} options={options} />;
 };

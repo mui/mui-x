@@ -3,6 +3,10 @@
  */
 export interface ColParams {
   /**
+   * The column field of the column that triggered the event
+   */
+  field: string;
+  /**
    * The column of the current header component.
    */
   colDef: any;

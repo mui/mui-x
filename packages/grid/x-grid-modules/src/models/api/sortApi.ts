@@ -20,5 +20,5 @@ export interface SortApi {
    *
    * @param handler
    */
-  onColumnsSorted: (handler: (param: ColumnSortedParams) => void) => () => void;
+  onSortedColumns: (handler: (param: ColumnSortedParams) => void) => () => void;
 }

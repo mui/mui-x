@@ -1,9 +1,9 @@
 import { FeatureMode } from '../featureMode';
 
 /**
- * Object passed as parameter of the page changed event handler.
+ * Object passed as parameter of the page change event handler.
  */
-export interface PageChangedParams {
+export interface PageChangeParams {
   /**
    * The new page.
    */

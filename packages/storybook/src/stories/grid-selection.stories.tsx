@@ -45,7 +45,7 @@ export const EventsMapped = () => {
   const data = useData(200, 200);
 
   const options: GridOptionsProp = {
-    onSelectionChanged: (params) => action('onSelectionChanged', { depth: 1 })(params),
+    onSelectionChange: (params) => action('onSelectionChange', { depth: 1 })(params),
     onRowSelected: (params) => action('onRowSelected')(params),
   };
 
