@@ -19,7 +19,7 @@ import {
   ROW_HOVER,
   COLUMN_HEADER_HOVER,
 } from '../../constants/eventsConstants';
-import { CellClickParam, GridOptions, RowClickParam, ApiRef } from '../../models';
+import {CellClickParam, GridOptions, RowClickParam, ApiRef, ColumnHeaderClickParams} from '../../models';
 import { GridApi } from '../../models/api/gridApi';
 import {
   CELL_CSS_CLASS,
@@ -81,16 +81,17 @@ export function useApi(
   const handleResizeStart = React.useCallback(() => {
     isResizingRef.current = true;
   }, [isResizingRef]);
+
   const handleResizeStop = React.useCallback(() => {
     isResizingRef.current = false;
   }, [isResizingRef]);
 
-  const onClickHandler = React.useCallback(
-    (event: MouseEvent) => {
+  const getEventParams = React.useCallback((event: any) => {
       if (event.target == null) {
-        return;
+        return null;
       }
       const elem = event.target as HTMLElement;
+      const eventParams: { cell?: CellClickParam, row?: RowClickParam, header?: ColumnHeaderClickParams } = {};
 
       if (isCell(elem)) {
         const cellEl = findParentElementFromClassName(elem, CELL_CSS_CLASS)! as HTMLElement;
@@ -102,27 +103,46 @@ export function useApi(
         const value = getDataFromElem(cellEl, 'value');
         const column = apiRef.current!.getColumnFromField(field);
         if (!column || !column.disableClickEventBubbling) {
-          const commonParams = { data: rowModel.data, rowIndex, colDef: column };
-          const cellParams: CellClickParam = {
+          const commonParams = {data: rowModel.data, rowIndex, colDef: column};
+          eventParams.cell = {
             element: cellEl,
             field,
             value,
             ...commonParams,
           };
-          const rowParams: RowClickParam = {
+          eventParams.row = {
             element: rowEl,
             rowModel,
             ...commonParams,
           };
-          emitEvent(CELL_CLICK, cellParams);
-          emitEvent(ROW_CLICK, rowParams);
         }
       } else if (isHeaderCell(elem) && !isResizingRef.current) {
         const headerCell = findParentElementFromClassName(elem, HEADER_CELL_CSS_CLASS)!;
         const field = getFieldFromHeaderElem(headerCell);
         const column = apiRef.current!.getColumnFromField(field);
-        const colHeaderParams = { field, column };
-        emitEvent(COLUMN_HEADER_CLICK, colHeaderParams);
+        const colHeaderParams: ColumnHeaderClickParams = {field, column};
+        eventParams.header = colHeaderParams;
+      }
+      return eventParams;
+    },[emitEvent, apiRef],
+  );
+
+  const onClickHandler = React.useCallback(
+    (event: MouseEvent) => {
+      const eventParams = getEventParams(event);
+
+      if(!eventParams) {
+        return;
+      }
+
+      if(eventParams.cell) {
+        emitEvent(CELL_CLICK, eventParams.cell);
+      }
+      if(eventParams.row) {
+        emitEvent(ROW_CLICK, eventParams.row);
+      }
+      if(eventParams.header) {
+        emitEvent(COLUMN_HEADER_CLICK, eventParams.header);
       }
     },
     [emitEvent, apiRef],
@@ -130,42 +150,20 @@ export function useApi(
 
   const onHoverHandler = React.useCallback(
     (event: any) => {
-      if (event.target == null) {
+      const eventParams = getEventParams(event);
+
+      if(!eventParams) {
         return;
       }
-      const elem = event.target as HTMLElement;
 
-      if (isCell(elem)) {
-        const cellEl = findParentElementFromClassName(elem, CELL_CSS_CLASS)! as HTMLElement;
-        const rowEl = findParentElementFromClassName(elem, ROW_CSS_CLASS)! as HTMLElement;
-        const id = getIdFromRowElem(rowEl);
-        const rowModel = apiRef!.current!.getRowFromId(id);
-        const rowIndex = apiRef!.current!.getRowIndexFromId(id);
-        const field = getDataFromElem(cellEl, 'field');
-        const value = getDataFromElem(cellEl, 'value');
-        const column = apiRef.current!.getColumnFromField(field);
-        if (!column || !column.disableClickEventBubbling) {
-          const commonParams = { data: rowModel.data, rowIndex, colDef: column };
-          const cellParams: CellClickParam = {
-            element: cellEl,
-            field,
-            value,
-            ...commonParams,
-          };
-          const rowParams: RowClickParam = {
-            element: rowEl,
-            rowModel,
-            ...commonParams,
-          };
-          emitEvent(CELL_HOVER, cellParams);
-          emitEvent(ROW_HOVER, rowParams);
-        }
-      } else if (isHeaderCell(elem) && !isResizingRef.current) {
-        const headerCell = findParentElementFromClassName(elem, HEADER_CELL_CSS_CLASS)!;
-        const field = getFieldFromHeaderElem(headerCell);
-        const column = apiRef.current!.getColumnFromField(field);
-        const colHeaderParams = { field, column };
-        emitEvent(COLUMN_HEADER_HOVER, colHeaderParams);
+      if(eventParams.cell) {
+        emitEvent(CELL_HOVER, eventParams.cell);
+      }
+      if(eventParams.row) {
+        emitEvent(ROW_HOVER, eventParams.row);
+      }
+      if(eventParams.header) {
+        emitEvent(COLUMN_HEADER_HOVER, eventParams.header);
       }
     },
     [emitEvent, apiRef],
@@ -234,7 +232,7 @@ export function useApi(
   useApiEventHandler(apiRef, ROW_CLICK, options.onRowClick);
   useApiEventHandler(apiRef, CELL_HOVER, options.onCellHover);
   useApiEventHandler(apiRef, ROW_HOVER, options.onRowHover);
-  useApiEventHandler(apiRef, ROW_SELECTED_EVENT, options.onSelectedRow);
+  useApiEventHandler(apiRef, ROW_SELECTED_EVENT, options.onRowSelected);
   useApiEventHandler(apiRef, SELECTION_CHANGED_EVENT, options.onSelectionChange);
   useApiEventHandler(apiRef, COLUMN_HEADER_CLICK, options.onColumnHeaderClick);
   useApiEventHandler(apiRef, COLUMNS_SORTED, options.onSortedColumns);
