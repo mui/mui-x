@@ -5,6 +5,14 @@ import { CellValue, RowData, RowModel } from '../rows';
  */
 export interface CellParams {
   /**
+   * The HTMLElement that triggered the event
+   */
+  element?: HTMLElement;
+  /**
+   * The column field of the cell that triggered the event
+   */
+  field: string;
+  /**
    * the cell value
    */
   value: CellValue;
@@ -34,6 +42,11 @@ export interface CellParams {
    */
   api: any;
 }
+
+/**
+ * Alias of CellParams.
+ */
+export type RowParams = Omit<CellParams, 'value'>;
 
 /**
  * Alias of CellParams.

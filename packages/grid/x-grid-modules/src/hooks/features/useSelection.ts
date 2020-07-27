@@ -1,13 +1,12 @@
 import * as React from 'react';
 import {
   GridOptions,
-  RowClickParam,
   RowId,
   RowModel,
   RowSelectedParams,
   RowsProp,
   SelectionChangeParams,
-  ApiRef,
+  ApiRef, RowParams,
 } from '../../models';
 import { useLogger } from '../utils/useLogger';
 import {
@@ -147,7 +146,7 @@ export const useSelection = (
   );
 
   const rowClickHandler = React.useCallback(
-    (params: RowClickParam) => {
+    (params: RowParams) => {
       if (!options.disableSelectionOnClick) {
         selectRowModel(params.rowModel);
       }

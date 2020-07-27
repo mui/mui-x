@@ -14,24 +14,7 @@ import {
 import { Cell, GridCellProps } from './cell';
 import { ApiContext } from './api-context';
 import { classnames, isFunction } from '../utils';
-
-function getCellParams(
-  rowModel: RowModel,
-  col: ColDef,
-  rowIndex: number,
-  value: CellValue,
-  api: GridApi,
-): CellParams {
-  return {
-    value,
-    getValue: (field: string) => rowModel.data[field],
-    data: rowModel.data,
-    rowModel,
-    colDef: col,
-    rowIndex,
-    api,
-  };
-}
+import {buildCellParams} from "../utils/paramsUtils";
 
 function applyCssClassRules(cellClassRules: CellClassRules, params: CellClassParams) {
   return Object.entries(cellClassRules).reduce((appliedCss, entry) => {
@@ -77,22 +60,16 @@ export const RowCells: React.FC<RowCellsProps> = React.memo((props) => {
       : !removeLastBorderRight && !props.extendRowFullWidth;
 
     let value = row.data[column.field!];
+    const cellParams: ValueGetterParams = buildCellParams({rowModel: row, colDef: column, rowIndex, value, api: api!.current!});
+
     if (column.valueGetter) {
-      const params: ValueGetterParams = getCellParams(row, column, rowIndex, value, api!.current!);
       // Value getter override the original value
-      value = column.valueGetter(params);
+      value = column.valueGetter(cellParams);
     }
 
     let formattedValueProp = {};
     if (column.valueFormatter) {
-      const params: ValueFormatterParams = getCellParams(
-        row,
-        column,
-        rowIndex,
-        value,
-        api!.current!,
-      );
-      formattedValueProp = { formattedValue: column.valueFormatter(params) };
+      formattedValueProp = { formattedValue: column.valueFormatter(cellParams) };
     }
 
     let cssClassProp = { cssClass: '' };
@@ -100,21 +77,18 @@ export const RowCells: React.FC<RowCellsProps> = React.memo((props) => {
       if (!isFunction(column.cellClassName)) {
         cssClassProp = { cssClass: classnames(column.cellClassName) };
       } else {
-        const params: CellClassParams = getCellParams(row, column, rowIndex, value, api!.current!);
-        cssClassProp = { cssClass: column.cellClassName(params) as string };
+        cssClassProp = { cssClass: column.cellClassName(cellParams) as string };
       }
     }
 
     if (column.cellClassRules) {
-      const params: CellClassParams = getCellParams(row, column, rowIndex, value, api!.current!);
-      const cssClass = applyCssClassRules(column.cellClassRules, params);
+      const cssClass = applyCssClassRules(column.cellClassRules, cellParams);
       cssClassProp = { cssClass: `${cssClassProp.cssClass} ${cssClass}` };
     }
 
     let cellComponent: React.ReactElement | null = null;
     if (column.renderCell) {
-      const params: CellParams = getCellParams(row, column, rowIndex, value, api!.current!);
-      cellComponent = column.renderCell(params);
+      cellComponent = column.renderCell(cellParams);
       cssClassProp = { cssClass: `${cssClassProp.cssClass} with-renderer` };
     }
 

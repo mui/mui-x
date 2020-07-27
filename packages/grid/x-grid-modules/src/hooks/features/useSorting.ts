@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   CellValue,
   ColDef,
-  ColumnHeaderClickParams,
   Columns,
   ColumnSortedParams,
   FieldComparatorList,
@@ -11,7 +10,7 @@ import {
   RowModel,
   RowsProp,
   SortApi,
-  ApiRef,
+  ApiRef, ColParams,
 } from '../../models';
 import {
   COLUMN_HEADER_CLICK,
@@ -151,9 +150,9 @@ export const useSorting = (
   );
 
   const headerClickHandler = React.useCallback(
-    ({ column }: ColumnHeaderClickParams) => {
-      if (column.sortable) {
-        sortColumn(column);
+    ({ colDef }: ColParams) => {
+      if (colDef.sortable) {
+        sortColumn(colDef);
       }
     },
     [sortColumn],

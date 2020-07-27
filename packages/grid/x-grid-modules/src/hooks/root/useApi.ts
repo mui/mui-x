@@ -19,7 +19,7 @@ import {
   ROW_HOVER,
   COLUMN_HEADER_HOVER,
 } from '../../constants/eventsConstants';
-import {CellClickParam, GridOptions, RowClickParam, ApiRef, ColumnHeaderClickParams} from '../../models';
+import { GridOptions, ApiRef, CellParams, ColParams, RowParams } from '../../models';
 import { GridApi } from '../../models/api/gridApi';
 import {
   CELL_CSS_CLASS,
@@ -36,6 +36,7 @@ import {
 } from '../../utils/domUtils';
 import { useApiMethod } from './useApiMethod';
 import { useApiEventHandler } from './useApiEventHandler';
+import { buildCellParams, buildRowParams } from '../../utils/paramsUtils';
 
 const EventEmitter = require('events').EventEmitter;
 
@@ -86,12 +87,13 @@ export function useApi(
     isResizingRef.current = false;
   }, [isResizingRef]);
 
-  const getEventParams = React.useCallback((event: any) => {
+  const getEventParams = React.useCallback(
+    (event: any) => {
       if (event.target == null) {
         return null;
       }
       const elem = event.target as HTMLElement;
-      const eventParams: { cell?: CellClickParam, row?: RowClickParam, header?: ColumnHeaderClickParams } = {};
+      const eventParams: { cell?: CellParams; row?: RowParams; header?: ColParams } = {};
 
       if (isCell(elem)) {
         const cellEl = findParentElementFromClassName(elem, CELL_CSS_CLASS)! as HTMLElement;
@@ -103,45 +105,56 @@ export function useApi(
         const value = getDataFromElem(cellEl, 'value');
         const column = apiRef.current!.getColumnFromField(field);
         if (!column || !column.disableClickEventBubbling) {
-          const commonParams = {data: rowModel.data, rowIndex, colDef: column};
-          eventParams.cell = {
-            element: cellEl,
-            field,
-            value,
-            ...commonParams,
-          };
-          eventParams.row = {
-            element: rowEl,
+          const commonParams = {
+            data: rowModel.data,
+            rowIndex,
+            colDef: column,
             rowModel,
-            ...commonParams,
+            api: apiRef.current!,
           };
+          eventParams.cell = buildCellParams({
+            ...commonParams,
+            element: cellEl,
+            value,
+          });
+          eventParams.row = buildRowParams({
+            ...commonParams,
+            element: rowEl,
+          });
         }
       } else if (isHeaderCell(elem) && !isResizingRef.current) {
         const headerCell = findParentElementFromClassName(elem, HEADER_CELL_CSS_CLASS)!;
         const field = getFieldFromHeaderElem(headerCell);
         const column = apiRef.current!.getColumnFromField(field);
-        const colHeaderParams: ColumnHeaderClickParams = {field, column};
+        const colIndex = apiRef.current!.getColumnIndex(field);
+        const colHeaderParams: ColParams = {
+          field,
+          colDef: column,
+          colIndex,
+          api: apiRef.current!,
+        };
         eventParams.header = colHeaderParams;
       }
       return eventParams;
-    },[emitEvent, apiRef],
+    },
+    [emitEvent, apiRef],
   );
 
   const onClickHandler = React.useCallback(
     (event: MouseEvent) => {
       const eventParams = getEventParams(event);
 
-      if(!eventParams) {
+      if (!eventParams) {
         return;
       }
 
-      if(eventParams.cell) {
+      if (eventParams.cell) {
         emitEvent(CELL_CLICK, eventParams.cell);
       }
-      if(eventParams.row) {
+      if (eventParams.row) {
         emitEvent(ROW_CLICK, eventParams.row);
       }
-      if(eventParams.header) {
+      if (eventParams.header) {
         emitEvent(COLUMN_HEADER_CLICK, eventParams.header);
       }
     },
@@ -152,17 +165,17 @@ export function useApi(
     (event: any) => {
       const eventParams = getEventParams(event);
 
-      if(!eventParams) {
+      if (!eventParams) {
         return;
       }
 
-      if(eventParams.cell) {
+      if (eventParams.cell) {
         emitEvent(CELL_HOVER, eventParams.cell);
       }
-      if(eventParams.row) {
+      if (eventParams.row) {
         emitEvent(ROW_HOVER, eventParams.row);
       }
-      if(eventParams.header) {
+      if (eventParams.header) {
         emitEvent(COLUMN_HEADER_HOVER, eventParams.header);
       }
     },

@@ -2,15 +2,14 @@ import * as React from 'react';
 import { SortDirection } from './sortModel';
 import { Logger } from '../hooks/utils';
 import { ArrowDownward, ArrowUpward, SeparatorIcon } from '../components/icons';
-import { ColumnHeaderClickParams } from './params/columnHeaderClickParams';
 import { ColumnSortedParams } from './params/columnSortedParams';
-import { RowClickParam } from './params/rowClickParams';
-import { CellClickParam } from './params/cellClickParams';
 import { RowSelectedParams } from './params/rowSelectedParams';
 import { SelectionChangeParams } from './params/selectionChangeParams';
 import { PageChangeParams } from './params/pageChangeParams';
 import { ColumnTypesRecord, DEFAULT_COLUMN_TYPES } from './colDef';
 import { FeatureMode } from './featureMode';
+import { ColParams } from './params/colParams';
+import {CellParams, RowParams} from './params/cellParams';
 
 /**
  * Set of icons used in the grid component UI.
@@ -169,27 +168,27 @@ export interface GridOptions {
   /**
    * Handler triggered when the click event comes from a cell element.
    *
-   * @param param With all properties from [[CellClickParam]].
+   * @param param With all properties from [[CellParams]].
    */
-  onCellClick?: (param: CellClickParam) => void;
+  onCellClick?: (param: CellParams) => void;
   /**
    * Handler triggered when the hover event comes from a cell element.
    *
-   * @param param With all properties from [[CellHoverParam]].
+   * @param param With all properties from [[CellParams]].
    */
-  onCellHover?: (param: CellClickParam) => void;
+  onCellHover?: (param: CellParams) => void;
   /**
    * Handler triggered when the click event comes from a row container element.
    *
-   * @param param With all properties from [[RowClickParam]].
+   * @param param With all properties from [[RowParams]].
    */
-  onRowClick?: (param: RowClickParam) => void;
+  onRowClick?: (param: RowParams) => void;
   /**
    * Handler triggered when the hover event comes from a row container element.
    *
-   * @param param With all properties from [[RowHoverParam]].
+   * @param param With all properties from [[RowParams]].
    */
-  onRowHover?: (param: RowClickParam) => void;
+  onRowHover?: (param: RowParams) => void;
   /**
    * Handler triggered when one row get selected.
    * @param param with all properties from [[RowSelectedParams]].
@@ -204,9 +203,9 @@ export interface GridOptions {
   /**
    * Handler triggered when the click event comes from a column header element.
    *
-   * @param param With all properties from [[ColumnHeaderClickParams]].
+   * @param param With all properties from [[ColParams]].
    */
-  onColumnHeaderClick?: (param: ColumnHeaderClickParams) => void;
+  onColumnHeaderClick?: (param: ColParams) => void;
   /**
    * Handler triggered when grid resorted its rows.
    *
