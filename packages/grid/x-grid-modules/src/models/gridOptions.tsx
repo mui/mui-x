@@ -168,22 +168,26 @@ export interface GridOptions {
 
   /**
    * Handler triggered when the click event comes from a cell element.
-   * @param param with all properties from [[CellClickParam]].
+   *
+   * @param param With all properties from [[CellClickParam]].
    */
   onCellClick?: (param: CellClickParam) => void;
   /**
    * Handler triggered when the hover event comes from a cell element.
-   * @param param with all properties from [[CellHoverParam]].
+   *
+   * @param param With all properties from [[CellHoverParam]].
    */
   onCellHover?: (param: CellClickParam) => void;
   /**
    * Handler triggered when the click event comes from a row container element.
-   * @param param with all properties from [[RowClickParam]].
+   *
+   * @param param With all properties from [[RowClickParam]].
    */
   onRowClick?: (param: RowClickParam) => void;
   /**
    * Handler triggered when the hover event comes from a row container element.
-   * @param param with all properties from [[RowHoverParam]].
+   *
+   * @param param With all properties from [[RowHoverParam]].
    */
   onRowHover?: (param: RowClickParam) => void;
   /**
@@ -193,27 +197,32 @@ export interface GridOptions {
   onSelectedRow?: (param: RowSelectedParams) => void;
   /**
    * Handler triggered when one or multiple rows get their selection state change.
-   * @param param with all properties from [[SelectionChangeParams]]
+   *
+   * @param param With all properties from [[SelectionChangeParams]]
    */
   onSelectionChange?: (param: SelectionChangeParams) => void;
   /**
    * Handler triggered when the click event comes from a column header element.
-   * @param param with all properties from [[ColumnHeaderClickParams]].
+   *
+   * @param param With all properties from [[ColumnHeaderClickParams]].
    */
   onColumnHeaderClick?: (param: ColumnHeaderClickParams) => void;
   /**
    * Handler triggered when grid resorted its rows.
-   * @param param with all properties from [[ColumnSortedParams]].
+   *
+   * @param param With all properties from [[ColumnSortedParams]].
    */
   onSortedColumns?: (params: ColumnSortedParams) => void;
   /**
    * Handler triggered when the current page has change.
-   * @param param with all properties from [[PageChangeParams]].
+   *
+   * @param param With all properties from [[PageChangeParams]].
    */
   onPageChange?: (param: PageChangeParams) => void;
   /**
    * Handler triggered when the page size change.
-   * @param param with all properties from [[PageChangeParams]].
+   *
+   * @param param With all properties from [[PageChangeParams]].
    */
   onPageSizeChange?: (param: PageChangeParams) => void;
 
