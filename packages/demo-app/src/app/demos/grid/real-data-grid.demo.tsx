@@ -100,15 +100,15 @@ export const RealDataGridDemo: React.FC<{ toggleTheme: () => void; themeId: stri
 
     const newPagination: Partial<GridOptions> = {
       pagination: settings.pagesize !== -1,
-      paginationAutoPageSize: settings.pagesize === 0,
-      paginationPageSize: settings.pagesize > 0 ? settings.pagesize : undefined,
+      autoPageSize: settings.pagesize === 0,
+      pageSize: settings.pagesize > 0 ? settings.pagesize : undefined,
     };
 
     setPagination((p) => {
       if (
         p.pagination === newPagination.pagination &&
-        p.paginationAutoPageSize === newPagination.paginationAutoPageSize &&
-        p.paginationPageSize === newPagination.paginationPageSize
+        p.autoPageSize === newPagination.autoPageSize &&
+        p.pageSize === newPagination.pageSize
       ) {
         return p;
       }
@@ -118,12 +118,12 @@ export const RealDataGridDemo: React.FC<{ toggleTheme: () => void; themeId: stri
 
   return (
     <React.Fragment>
-      <AppBreadcrumbs name={'NEW* Material-UI X Grid'} />
+      <AppBreadcrumbs name="NEW* Material-UI X Grid" />
       <SettingsPanel onApply={onApplyClick} size={size} type={type} />
 
       <MainContainer>
-        <div style={{ display: 'flex', boxSizing: 'border-box' }} className={'fill-space'}>
-          <div className={'grow'}>
+        <div style={{ display: 'flex', boxSizing: 'border-box' }} className="fill-space">
+          <div className="grow">
             <XGrid
               rows={rows as any}
               columns={cols as any}

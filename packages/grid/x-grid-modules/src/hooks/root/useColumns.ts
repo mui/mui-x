@@ -166,7 +166,7 @@ export function useColumns(
   );
 
   React.useEffect(() => {
-    logger.info(`Columns have changed, new length ${columns.length}`);
+    logger.info(`Columns have change, new length ${columns.length}`);
     const newState = resetState(
       columns,
       options.columnTypes,
@@ -204,7 +204,7 @@ export function useColumns(
 
   const onSortedColumns = React.useCallback(
     (sortModel: SortModel) => {
-      logger.debug('Sort model changed to ', sortModel);
+      logger.debug('Sort model change to ', sortModel);
       const updatedCols: ColDef[] = [];
 
       const currentSortedCols = stateRef.current.all

@@ -10,31 +10,31 @@ export type GridOptionsProp = Partial<GridOptions>;
  */
 export interface GridComponentProps {
   /**
-   * Set of rows of type [[RowsProp]]
+   * Set of rows of type [[RowsProp]].
    */
   rows: RowsProp;
   /**
-   * Set of columns of type [[Columns]]
+   * Set of columns of type [[Columns]].
    */
   columns: Columns;
   /**
-   * Set of options of type [[GridOptionsProp]]
+   * Set of options of type [[GridOptionsProp]].
    */
   options?: GridOptionsProp;
   /**
-   * Overrideable components
+   * Overrideable components.
    */
   components?: GridComponentOverridesProp;
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with [[gridApiRef()]]
+   * The ref object that allows grid manipulation. Can be instantiated with [[gridApiRef()]].
    */
   apiRef?: ApiRef;
   /**
-   * Boolean prop that toggle the loading overlay
+   * Boolean prop that toggle the loading overlay.
    */
   loading?: boolean;
   /**
-   * String prop that allows to pass extra Css class in the inner grid container.
+   * @ignore
    */
   className?: string;
   /**

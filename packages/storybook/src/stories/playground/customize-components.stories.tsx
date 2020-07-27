@@ -130,7 +130,7 @@ export function CustomPagination() {
         apiRef={apiRef}
         options={{
           pagination: true,
-          paginationPageSize: 50,
+          pageSize: 50,
         }}
         components={{
           pagination: PaginationComponent,
@@ -167,7 +167,7 @@ export function CustomFooter() {
         columns={data.columns}
         options={{
           pagination: true,
-          paginationPageSize: 33,
+          pageSize: 33,
           hideFooterPagination: true,
           hideFooter: true,
         }}
@@ -205,7 +205,7 @@ export function HeaderAndFooter() {
         columns={data.columns}
         options={{
           pagination: true,
-          paginationPageSize: 33,
+          pageSize: 33,
           hideFooterPagination: true,
         }}
         components={{

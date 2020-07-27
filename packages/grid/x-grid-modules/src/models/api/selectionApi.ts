@@ -1,20 +1,21 @@
 import { RowId, RowModel } from '../rows';
 import { RowSelectedParams } from '../params/rowSelectedParams';
-import { SelectionChangedParams } from '../params/selectionChangedParams';
+import { SelectionChangeParams } from '../params/selectionChangeParams';
 
 /**
- * The Selection API interface that is available in the grid [[apiRef]].
+ * The selection API interface that is available in the grid [[apiRef]].
  */
 export interface SelectionApi {
   /**
-   * Toggle the row selected state
+   * Toggle the row selected state.
+   *
    * @param id
-   * @param allowMultiple, default: false = deselect other rows if isSelected is true
-   * @param isSelected, default true
+   * @param allowMultiple Default: false = deselect other rows if isSelected is true
+   * @param isSelected Default true
    */
   selectRow: (id: RowId, allowMultiple?: boolean, isSelected?: boolean) => void;
   /**
-   * Batch toggle rows selected state
+   * Batch toggle rows selected state.
    *
    * @param ids
    * @param isSelected default true
@@ -22,19 +23,20 @@ export interface SelectionApi {
    */
   selectRows: (ids: RowId[], isSelected?: boolean, deselectOtherRows?: boolean) => void;
   // TODO unify parameter between SelectRow and SelectRows
-
   /**
-   * Get an array of selected rows
+   * Get an array of selected rows.
    */
   getSelectedRows: () => RowModel[];
   /**
-   * Handler triggered after a row is selected
+   * Handler triggered after a row is selected.
+   *
    * @param handler
    */
-  onSelectedRow: (handler: (param: RowSelectedParams) => void) => () => void;
+  onRowSelected: (handler: (param: RowSelectedParams) => void) => () => void;
   /**
-   * Handler triggered after one or multiple rows had a selection state changed.
+   * Handler triggered after one or multiple rows had a selection state change.
+   *
    * @param handler
    */
-  onSelectionChanged: (handler: (param: SelectionChangedParams) => void) => () => void;
+  onSelectionChange: (handler: (param: SelectionChangeParams) => void) => () => void;
 }

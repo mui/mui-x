@@ -40,13 +40,14 @@ export interface RowModel {
 
 /**
  * An helper function allowing to create [[RowModel]] from [[RowData]].
- * @param a row as [[RowData]].
- * @returns a row as [[RowModel]].
+ *
+ * @param rowData Row as [[RowData]].
+ * @returns A row as [[RowModel]].
  */
-export function createRow(r: RowData): RowModel {
+export function createRow(rowData: RowData): RowModel {
   const row: RowModel = {
-    id: r.id,
-    data: r,
+    id: rowData.id,
+    data: rowData,
     selected: false,
   };
   return row;

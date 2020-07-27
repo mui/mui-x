@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import * as React from 'react';
 import { useVirtualColumns } from './useVirtualColumns';
 import {
   CellIndexCoordinates,
@@ -37,34 +37,34 @@ export const useVirtualRows = (
   apiRef: ApiRef,
 ): UseVirtualRowsReturnType => {
   const logger = useLogger('useVirtualRows');
-  const pageRef = useRef<number>(0);
-  const rowsCount = useRef<number>(rows.length);
-  const paginationCurrentPage = useRef<number>(1);
-  const containerPropsRef = useRef<ContainerProps | null>(null);
-  const optionsRef = useRef<GridOptions>(options);
-  const realScrollRef = useRef<ScrollParams>({ left: 0, top: 0 });
-  const rzScrollRef = useRef<ScrollParams>({ left: 0, top: 0 });
-  const columnTotalWidthRef = useRef<number>(internalColumns.meta.totalWidth);
-  const renderCtxRef = useRef<Partial<RenderContextProps>>();
+  const pageRef = React.useRef<number>(0);
+  const rowsCount = React.useRef<number>(rows.length);
+  const paginationCurrentPage = React.useRef<number>(1);
+  const containerPropsRef = React.useRef<ContainerProps | null>(null);
+  const optionsRef = React.useRef<GridOptions>(options);
+  const realScrollRef = React.useRef<ScrollParams>({ left: 0, top: 0 });
+  const rzScrollRef = React.useRef<ScrollParams>({ left: 0, top: 0 });
+  const columnTotalWidthRef = React.useRef<number>(internalColumns.meta.totalWidth);
+  const renderCtxRef = React.useRef<Partial<RenderContextProps>>();
 
   const [, scrollColHeaderTo] = useScrollFn(colRef);
   const onDataScroll = (v: ScrollParams) => scrollColHeaderTo({ left: v.left, top: 0 });
   const [scrollTo] = useScrollFn(renderingZoneRef, onDataScroll);
 
   const getContainerProps = useContainerProps(windowRef);
-  const [renderCtx, setRenderCtx] = useState<Partial<RenderContextProps> | null>(null);
+  const [renderCtx, setRenderCtx] = React.useState<Partial<RenderContextProps> | null>(null);
   const [renderedColRef, updateRenderedCols] = useVirtualColumns(options, apiRef);
 
-  const getRenderRowProps = useCallback(
+  const getRenderRowProps = React.useCallback(
     (page: number) => {
       if (containerPropsRef.current == null) {
         return null;
       }
       const containerProps = containerPropsRef.current!;
       let minRowIdx = 0;
-      if (optionsRef.current.pagination && optionsRef.current.paginationPageSize != null) {
+      if (optionsRef.current.pagination && optionsRef.current.pageSize != null) {
         minRowIdx =
-          optionsRef.current.paginationPageSize *
+          optionsRef.current.pageSize *
           (paginationCurrentPage.current - 1 > 0 ? paginationCurrentPage.current - 1 : 0);
       }
 
@@ -81,7 +81,7 @@ export const useVirtualRows = (
     [containerPropsRef],
   );
 
-  const getRenderCtxState = useCallback((): Partial<RenderContextProps> | null => {
+  const getRenderCtxState = React.useCallback((): Partial<RenderContextProps> | null => {
     const containerProps = containerPropsRef.current;
     const renderedCol = renderedColRef.current;
     const renderedRow = getRenderRowProps(pageRef.current);
@@ -96,7 +96,7 @@ export const useVirtualRows = (
       ...renderedRow,
       ...{
         paginationCurrentPage: paginationCurrentPage.current,
-        paginationPageSize: optionsRef.current.paginationPageSize,
+        pageSize: optionsRef.current.pageSize,
       },
     };
     logger.debug(':: getRenderCtxState - returning state ', newRenderCtx);
@@ -104,11 +104,11 @@ export const useVirtualRows = (
     return newRenderCtx;
   }, [logger, renderCtxRef, containerPropsRef, renderedColRef, getRenderRowProps]);
 
-  const reRender = useCallback(() => setRenderCtx(getRenderCtxState()), [
+  const reRender = React.useCallback(() => setRenderCtx(getRenderCtxState()), [
     getRenderCtxState,
     setRenderCtx,
   ]);
-  const updateViewport = useCallback(() => {
+  const updateViewport = React.useCallback(() => {
     if (windowRef && windowRef.current && containerPropsRef && containerPropsRef.current) {
       const containerProps = containerPropsRef.current;
       const { scrollLeft, scrollTop } = windowRef.current;
@@ -152,14 +152,14 @@ export const useVirtualRows = (
     }
   }, [apiRef, logger, reRender, windowRef, updateRenderedCols, scrollTo]);
 
-  useLayoutEffect(() => {
+  React.useLayoutEffect(() => {
     if (renderingZoneRef && renderingZoneRef.current) {
       logger.debug('applying scrollTop ', rzScrollRef.current);
       scrollTo(rzScrollRef.current);
     }
   });
 
-  const resetScroll = useCallback(() => {
+  const resetScroll = React.useCallback(() => {
     scrollTo({ left: 0, top: 0 });
     pageRef.current = 1;
 
@@ -169,13 +169,13 @@ export const useVirtualRows = (
     rzScrollRef.current = { left: 0, top: 0 };
   }, [windowRef, rzScrollRef, pageRef, scrollTo]);
 
-  const updateContainerSize = useCallback(() => {
+  const updateContainerSize = React.useCallback(() => {
     if (columnTotalWidthRef.current > 0) {
       const totalRowsCount = apiRef?.current?.getRowsCount() || 0; // we ensure we call with latest length
       const currentPage = paginationCurrentPage.current;
       let pageRowCount =
-        optionsRef.current.pagination && optionsRef.current.paginationPageSize
-          ? optionsRef.current.paginationPageSize
+        optionsRef.current.pagination && optionsRef.current.pageSize
+          ? optionsRef.current.pageSize
           : null;
 
       pageRowCount =
@@ -190,7 +190,7 @@ export const useVirtualRows = (
         columnTotalWidthRef.current,
         rowsCount.current,
       );
-      if (optionsRef.current.paginationAutoPageSize && containerPropsRef.current) {
+      if (optionsRef.current.autoPageSize && containerPropsRef.current) {
         rowsCount.current = containerPropsRef.current.viewportPageSize;
       }
       updateViewport();
@@ -200,8 +200,8 @@ export const useVirtualRows = (
     }
   }, [containerPropsRef, apiRef, getContainerProps, reRender, updateViewport]);
 
-  const scrollingTimeout = useRef<any>(0);
-  const onScroll: any = useCallback(
+  const scrollingTimeout = React.useRef<any>(0);
+  const onScroll: any = React.useCallback(
     (event: any) => {
       realScrollRef.current = { left: event.target.scrollLeft, top: event.target.scrollTop };
       if (apiRef && apiRef.current && scrollingTimeout.current === 0) {
@@ -219,7 +219,7 @@ export const useVirtualRows = (
     [apiRef, updateViewport, scrollingTimeout, realScrollRef],
   );
 
-  const scrollToIndexes = useCallback(
+  const scrollToIndexes = React.useCallback(
     (params: CellIndexCoordinates) => {
       logger.debug(`Scrolling to cell at row ${params.rowIndex}, col: ${params.colIndex} `);
 
@@ -274,7 +274,7 @@ export const useVirtualRows = (
     [apiRef, realScrollRef, logger],
   );
 
-  const scroll = useCallback(
+  const scroll = React.useCallback(
     (params: Partial<ScrollParams>) => {
       logger.debug(`Scrolling to left: ${params.left} top: ${params.top}`);
       if (windowRef.current && params.left != null && colRef.current) {
@@ -289,18 +289,18 @@ export const useVirtualRows = (
     [logger, windowRef, updateViewport, colRef],
   );
 
-  const getContainerPropsState = useCallback(() => {
+  const getContainerPropsState = React.useCallback(() => {
     if (!containerPropsRef.current) {
       updateContainerSize();
     }
     return containerPropsRef.current;
   }, [updateContainerSize]);
 
-  const getRenderContextState = useCallback(() => {
+  const getRenderContextState = React.useCallback(() => {
     return renderCtxRef.current;
   }, []);
 
-  const renderPage = useCallback(
+  const renderPage = React.useCallback(
     (page: number) => {
       paginationCurrentPage.current = page;
       resetScroll();
@@ -308,12 +308,12 @@ export const useVirtualRows = (
     },
     [paginationCurrentPage, resetScroll, updateContainerSize],
   );
-  const onResize = useCallback(() => {
+  const onResize = React.useCallback(() => {
     logger.debug('OnResize, recalculating container sizes.');
     updateContainerSize();
   }, [logger, updateContainerSize]);
 
-  const onViewportScroll = useCallback(
+  const onViewportScroll = React.useCallback(
     (event: any) => {
       logger.debug('Using keyboard to navigate cells, converting scroll events ');
 
@@ -335,24 +335,24 @@ export const useVirtualRows = (
     onViewportScroll,
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (columnTotalWidthRef.current !== internalColumns.meta.totalWidth) {
       columnTotalWidthRef.current = internalColumns.meta.totalWidth;
       updateContainerSize();
     }
   }, [internalColumns, updateContainerSize]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (optionsRef.current !== options) {
-      logger.debug('Options changed, updating container sizes');
+      logger.debug('Options change, updating container sizes');
       optionsRef.current = options;
       updateContainerSize();
     }
   }, [options, renderingZoneRef, resetScroll, updateContainerSize, logger]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (rows.length !== rowsCount.current) {
-      logger.debug('Row length changed to ', rows.length);
+      logger.debug('Row length change to ', rows.length);
       updateContainerSize();
     }
   }, [rows.length, logger, updateContainerSize]);

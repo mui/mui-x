@@ -27,7 +27,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>): R
 
       const rowHeight = options.rowHeight;
       const hasScrollY =
-        options.paginationAutoPageSize || options.autoHeight
+        options.autoPageSize || options.autoHeight
           ? false
           : windowSizesRef.current.height < rowsCount * rowHeight;
       const hasScrollX = columnsTotalWidth > windowSizesRef.current.width;
@@ -50,9 +50,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>): R
       // We multiply by 2 for virtualization
       // TODO allow buffer with fixed nb rows
       const rzPageSize = viewportPageSize * 2;
-      const viewportMaxPage = options.paginationAutoPageSize
-        ? 1
-        : Math.ceil(rowsCount / viewportPageSize);
+      const viewportMaxPage = options.autoPageSize ? 1 : Math.ceil(rowsCount / viewportPageSize);
 
       logger.debug(
         `viewportPageSize:  ${viewportPageSize}, rzPageSize: ${rzPageSize}, viewportMaxPage: ${viewportMaxPage}`,
@@ -60,7 +58,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>): R
       const renderingZoneHeight = rzPageSize * rowHeight + rowHeight + scrollBarSize.x;
       const dataContainerWidth = columnsTotalWidth - scrollBarSize.y;
       let totalHeight =
-        (options.paginationAutoPageSize ? 1 : rowsCount / viewportPageSize) * viewportSize.height +
+        (options.autoPageSize ? 1 : rowsCount / viewportPageSize) * viewportSize.height +
         (hasScrollY ? scrollBarSize.x : 0);
 
       if (options.autoHeight) {

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { classnames } from '../../utils';
 import { DivProps } from './grid-root';
 
 export const Overlay = styled.div`
@@ -23,7 +24,7 @@ export const Overlay = styled.div`
 export function GridOverlay(props: DivProps) {
   const { className, children, ...other } = props;
   return (
-    <Overlay className={`overlay ${className || ''}`} {...other}>
+    <Overlay className={classnames('overlay', className)} {...other}>
       <div className="content">{children}</div>
     </Overlay>
   );

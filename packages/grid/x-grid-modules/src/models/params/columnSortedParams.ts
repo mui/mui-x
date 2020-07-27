@@ -6,11 +6,12 @@ import { SortModel } from '../sortModel';
  */
 export interface ColumnSortedParams {
   /**
-   * An array of column [[ColDef]] that the grid is sorted with. The array order corresponds to the order of sorting
+   * An array of column [[ColDef]] that the grid is sorted with.
+   * The array order corresponds to the order of sorting.
    */
   sortedColumns: ColDef[];
   /**
-   * The sort model used to sort the grid
+   * The sort model used to sort the grid.
    */
   sortModel: SortModel;
 }

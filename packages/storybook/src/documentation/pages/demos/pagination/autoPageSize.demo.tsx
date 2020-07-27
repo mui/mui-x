@@ -90,7 +90,7 @@ export default function AutoPageSizeDemo() {
       <XGrid
         rows={rows}
         columns={columns}
-        options={{ pagination: true, paginationAutoPageSize: true }}
+        options={{ pagination: true, autoPageSize: true }}
         className="demo"
       />
     </div>

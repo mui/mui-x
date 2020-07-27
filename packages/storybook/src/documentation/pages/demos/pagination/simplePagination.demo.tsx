@@ -91,8 +91,8 @@ export default function SimplePaginationDemo() {
       columns={columns}
       options={{
         pagination: true,
-        paginationPageSize: 5,
-        paginationRowsPerPageOptions: [5, 10],
+        pageSize: 5,
+        rowsPerPageOptions: [5, 10],
         autoHeight: true,
       }}
       className="demo"

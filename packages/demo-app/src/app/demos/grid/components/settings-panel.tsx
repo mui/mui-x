@@ -6,7 +6,6 @@ import Button from '@material-ui/core/Button';
 import FormLabel from '@material-ui/core/FormLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import { useContext } from 'react';
 import { darkThemeId, lightThemeId, ThemeContext } from '../../theme';
 import { StyledPanels } from './styled-panel';
 
@@ -24,7 +23,7 @@ export interface SettingsPanelProps {
 export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onApply, type, size }) => {
   const [sizeState, setSize] = React.useState<number>(size);
   const [typeState, setType] = React.useState<string>(type);
-  const currentTheme = useContext(ThemeContext);
+  const currentTheme = React.useContext(ThemeContext);
   const [selectedTheme, setSelectedTheme] = React.useState<string>(currentTheme.theme);
   const [selectedPaginationValue, setSelectedPaginationValue] = React.useState<number>(-1);
 
@@ -61,17 +60,17 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onApply, type, siz
 
   return (
     <StyledPanels>
-      {/* <Panel title={'Settings'}> */}
-      <div className={'panel'}>
-        <FormGroup row className={'center'}>
-          <FormControl className={'dataset-control input-text'} size={'small'} component="fieldset">
+      {/* <Panel title="Settings"> */}
+      <div className="panel">
+        <FormGroup row className="center">
+          <FormControl className="dataset-control input-text" size="small" component="fieldset">
             <FormLabel component="legend">Dataset</FormLabel>
             <Select value={typeState} onChange={onDatasetChange}>
-              <MenuItem value={'employee'}>Employee</MenuItem>
-              <MenuItem value={'commodity'}>Commodity</MenuItem>
+              <MenuItem value="employee">Employee</MenuItem>
+              <MenuItem value="commodity">Commodity</MenuItem>
             </Select>
           </FormControl>
-          <FormControl className={'dataset-control input-text'} size={'small'} component="fieldset">
+          <FormControl className="dataset-control input-text" size="small" component="fieldset">
             <FormLabel component="legend">Rows</FormLabel>
             <Select value={sizeState} onChange={onSizeChange}>
               <MenuItem value={100}>100</MenuItem>
@@ -80,7 +79,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onApply, type, siz
               <MenuItem value={100000}>{Number(100000).toLocaleString()}</MenuItem>
             </Select>
           </FormControl>
-          <FormControl className={'dataset-control input-text'} size={'small'} component="fieldset">
+          <FormControl className="dataset-control input-text" size="small" component="fieldset">
             <FormLabel component="legend">Page Size</FormLabel>
             <Select value={selectedPaginationValue} onChange={onPaginationChange}>
               <MenuItem value={-1}>off</MenuItem>
@@ -91,8 +90,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onApply, type, siz
             </Select>
           </FormControl>
           <FormControl
-            className={'dataset-control input-text'}
-            size={'small'}
+            className="dataset-control input-text"
+            size="small"
             component="fieldset"
             style={{ display: 'none' }}
           >
@@ -105,12 +104,12 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onApply, type, siz
           <div>
             <Button
               size="small"
-              className={'apply-btn'}
-              variant={'outlined'}
-              color={'primary'}
+              className="apply-btn"
+              variant="outlined"
+              color="primary"
               onClick={applyChanges}
             >
-              <KeyboardArrowRightIcon fontSize={'small'} /> Apply
+              <KeyboardArrowRightIcon fontSize="small" /> Apply
             </Button>
           </div>
         </FormGroup>
