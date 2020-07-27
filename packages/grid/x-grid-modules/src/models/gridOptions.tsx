@@ -10,6 +10,7 @@ import { RowSelectedParams } from './params/rowSelectedParams';
 import { SelectionChangedParams } from './params/selectionChangedParams';
 import { PageChangedParams } from './params/pageChangedParams';
 import { ColumnTypesRecord, DEFAULT_COLUMN_TYPES } from './colDef';
+import { FeatureMode } from './featureMode';
 
 /**
  * Set of icons used in the grid component UI.
@@ -98,17 +99,32 @@ export interface GridOptions {
    * Set the number of rows in one page.
    * @default 100
    */
-  paginationPageSize?: number;
+  pageSize?: number;
   /**
    * Auto-scale the pageSize with the container size to the max number of rows to avoid rendering a vertical scroll bar.
    * @default false
    */
-  paginationAutoPageSize?: boolean;
+  autoPageSize?: boolean;
   /**
-   * Select the paginationPageSize dynamically using the component UI.
+   * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]
    */
-  paginationRowsPerPageOptions?: number[];
+  rowsPerPageOptions?: number[];
+  /**
+   * Pagination can be processed on the server or client-side.
+   * Set it to FeatureMode.client or `client` if you would like to handle the pagination on the client-side.
+   * Set it to FeatureMode.server or `server` if you would like to handle the pagination on the server-side.
+   */
+  paginationMode?: FeatureMode;
+  /**
+   * Set the total number of rows, if it is different than the length of the value `rows` prop.
+   */
+  rowCount?: number;
+  /**
+   * Set the current page.
+   * @default 1
+   */
+  page?: number;
   /**
    * Toggle footer component visibility.
    * @default false
@@ -213,8 +229,9 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   columnBuffer: 2,
   enableMultipleSelection: true,
   enableMultipleColumnsSorting: true,
-  paginationRowsPerPageOptions: [25, 50, 100],
-  paginationPageSize: 100,
+  rowsPerPageOptions: [25, 50, 100],
+  pageSize: 100,
+  paginationMode: FeatureMode.client,
   extendRowFullWidth: true,
   sortingOrder: ['asc', 'desc', null],
   columnTypes: DEFAULT_COLUMN_TYPES,

@@ -62,9 +62,9 @@ export const useVirtualRows = (
       }
       const containerProps = containerPropsRef.current!;
       let minRowIdx = 0;
-      if (optionsRef.current.pagination && optionsRef.current.paginationPageSize != null) {
+      if (optionsRef.current.pagination && optionsRef.current.pageSize != null) {
         minRowIdx =
-          optionsRef.current.paginationPageSize *
+          optionsRef.current.pageSize *
           (paginationCurrentPage.current - 1 > 0 ? paginationCurrentPage.current - 1 : 0);
       }
 
@@ -96,7 +96,7 @@ export const useVirtualRows = (
       ...renderedRow,
       ...{
         paginationCurrentPage: paginationCurrentPage.current,
-        paginationPageSize: optionsRef.current.paginationPageSize,
+        pageSize: optionsRef.current.pageSize,
       },
     };
     logger.debug(':: getRenderCtxState - returning state ', newRenderCtx);
@@ -174,8 +174,8 @@ export const useVirtualRows = (
       const totalRowsCount = apiRef?.current?.getRowsCount() || 0; // we ensure we call with latest length
       const currentPage = paginationCurrentPage.current;
       let pageRowCount =
-        optionsRef.current.pagination && optionsRef.current.paginationPageSize
-          ? optionsRef.current.paginationPageSize
+        optionsRef.current.pagination && optionsRef.current.pageSize
+          ? optionsRef.current.pageSize
           : null;
 
       pageRowCount =
@@ -190,7 +190,7 @@ export const useVirtualRows = (
         columnTotalWidthRef.current,
         rowsCount.current,
       );
-      if (optionsRef.current.paginationAutoPageSize && containerPropsRef.current) {
+      if (optionsRef.current.autoPageSize && containerPropsRef.current) {
         rowsCount.current = containerPropsRef.current.viewportPageSize;
       }
       updateViewport();

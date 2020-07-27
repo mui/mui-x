@@ -1,3 +1,5 @@
+import { FeatureMode } from '../featureMode';
+
 /**
  * Object passed as parameter of the page changed event handler.
  */
@@ -18,4 +20,5 @@ export interface PageChangedParams {
    * The total number of rows
    */
   rowCount: number;
+  paginationMode: FeatureMode;
 }

@@ -69,9 +69,7 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
       const currentRowIndex = Number(getDataFromElem(cellEl, 'rowindex'));
       const autoPageSize = apiRef.current!.getContainerPropsState()!.viewportPageSize;
       const pageSize =
-        options.pagination && options.paginationPageSize != null
-          ? options.paginationPageSize
-          : autoPageSize;
+        options.pagination && options.pageSize != null ? options.pageSize : autoPageSize;
       const rowCount = options.pagination ? pageSize : apiRef.current!.getRowsCount();
       const colCount = apiRef.current!.getVisibleColumns().length;
 
@@ -120,7 +118,7 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
 
       return nextCellIndexes;
     },
-    [apiRef, options.pagination, options.paginationPageSize],
+    [apiRef, options.pagination, options.pageSize],
   );
 
   const selectActiveRow = React.useCallback(() => {

@@ -84,8 +84,8 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
 
     React.useEffect(() => {
       setInternalOptions((previousState) => {
-        if (previousState.paginationPageSize !== paginationProps.pageSize) {
-          return { ...previousState, paginationPageSize: paginationProps.pageSize };
+        if (previousState.pageSize !== paginationProps.pageSize) {
+          return { ...previousState, pageSize: paginationProps.pageSize };
         }
         return previousState;
       });
@@ -215,11 +215,15 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
                           pageSize={paginationProps.pageSize}
                           rowCount={paginationProps.rowCount}
                           setPageSize={paginationProps.setPageSize}
-                          rowsPerPageOptions={internalOptions.paginationRowsPerPageOptions}
+                          rowsPerPageOptions={internalOptions.rowsPerPageOptions}
                         />
                       ))
                     }
-                    rowCount={internalRows.length}
+                    rowCount={
+                      internalOptions.rowCount == null
+                        ? internalRows.length
+                        : internalOptions.rowCount
+                    }
                     options={internalOptions}
                   />
                 )}

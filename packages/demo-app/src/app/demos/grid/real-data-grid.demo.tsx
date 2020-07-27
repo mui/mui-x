@@ -100,15 +100,15 @@ export const RealDataGridDemo: React.FC<{ toggleTheme: () => void; themeId: stri
 
     const newPagination: Partial<GridOptions> = {
       pagination: settings.pagesize !== -1,
-      paginationAutoPageSize: settings.pagesize === 0,
-      paginationPageSize: settings.pagesize > 0 ? settings.pagesize : undefined,
+      autoPageSize: settings.pagesize === 0,
+      pageSize: settings.pagesize > 0 ? settings.pagesize : undefined,
     };
 
     setPagination((p) => {
       if (
         p.pagination === newPagination.pagination &&
-        p.paginationAutoPageSize === newPagination.paginationAutoPageSize &&
-        p.paginationPageSize === newPagination.paginationPageSize
+        p.autoPageSize === newPagination.autoPageSize &&
+        p.pageSize === newPagination.pageSize
       ) {
         return p;
       }
