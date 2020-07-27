@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { GridOptions } from '../../models';
+import { classnames } from '../../utils';
 
 export type DivProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -246,7 +247,12 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps & DivProp
   const { options, className, ...other } = props;
 
   return (
-    <RootStyle ref={ref} className={`grid-root ${className || ''}`} options={options} {...other} />
+    <RootStyle
+      ref={ref}
+      className={classnames('grid-root', className)}
+      options={options}
+      {...other}
+    />
   );
 });
 GridRoot.displayName = 'GridRoot';

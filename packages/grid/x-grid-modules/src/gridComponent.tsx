@@ -35,8 +35,9 @@ import { debounce } from './utils';
 import { mergeOptions } from './utils/mergeOptions';
 
 /**
- * Material-UI Grid React component implementing [[GridComponentProps]].
- * @return JSX.Element.
+ * Data Grid component implementing [[GridComponentProps]].
+ *
+ * @returns JSX.Element
  */
 export const GridComponent: React.FC<GridComponentProps> = React.memo(
   ({ rows, columns, options, apiRef, loading, licenseStatus, className, components }) => {

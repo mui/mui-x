@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import * as React from 'react';
 import {
   ContainerProps,
   GridOptions,
@@ -25,11 +25,11 @@ export const useVirtualColumns = (
   apiRef: ApiRef,
 ): UseVirtualColumnsReturnType => {
   const logger = useLogger('useVirtualColumns');
-  const renderedColRef = useRef<RenderColumnsProps | null>(null);
-  const containerPropsRef = useRef<ContainerProps | null>(null);
-  const lastScrollLeftRef = useRef<number>(0);
+  const renderedColRef = React.useRef<RenderColumnsProps | null>(null);
+  const containerPropsRef = React.useRef<ContainerProps | null>(null);
+  const lastScrollLeftRef = React.useRef<number>(0);
 
-  const getColumnIdxFromScroll = useCallback(
+  const getColumnIdxFromScroll = React.useCallback(
     (left: number) => {
       const positions = apiRef.current!.getColumnsMeta().positions;
       const hasColumns = apiRef.current!.getVisibleColumns().length;
@@ -44,7 +44,7 @@ export const useVirtualColumns = (
     [apiRef],
   );
 
-  const getColumnFromScroll = useCallback(
+  const getColumnFromScroll = React.useCallback(
     (left: number) => {
       const visibleColumns = apiRef.current!.getVisibleColumns();
       if (!visibleColumns.length) {
@@ -55,7 +55,7 @@ export const useVirtualColumns = (
     [apiRef, getColumnIdxFromScroll],
   );
 
-  const isColumnVisibleInWindow = useCallback(
+  const isColumnVisibleInWindow = React.useCallback(
     (colIndex: number): boolean => {
       if (!containerPropsRef.current) {
         return false;
@@ -73,7 +73,7 @@ export const useVirtualColumns = (
     [containerPropsRef, getColumnFromScroll, apiRef],
   );
 
-  const updateRenderedCols: UpdateRenderedColsFnType = useCallback(
+  const updateRenderedCols: UpdateRenderedColsFnType = React.useCallback(
     (containerProps: ContainerProps | null, scrollLeft: number) => {
       if (!containerProps) {
         return false;
@@ -147,7 +147,7 @@ export const useVirtualColumns = (
   };
   useApiMethod(apiRef, virtualApi, 'ColumnVirtualizationApi');
 
-  const resetRenderedColState = useCallback(() => {
+  const resetRenderedColState = React.useCallback(() => {
     logger.debug('Clearing previous renderedColRef');
     renderedColRef.current = null;
   }, [logger, renderedColRef]);
