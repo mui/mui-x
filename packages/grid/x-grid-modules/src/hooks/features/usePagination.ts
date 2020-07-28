@@ -182,7 +182,16 @@ export const usePagination = (
         setPage(newPageCount);
       }
     }
-  }, [rows.length, options.rowCount, logger, updateState, state.rowCount, state.pageSize, setPage, state.page]);
+  }, [
+    rows.length,
+    options.rowCount,
+    logger,
+    updateState,
+    state.rowCount,
+    state.pageSize,
+    setPage,
+    state.page,
+  ]);
 
   React.useEffect(() => {
     if (
