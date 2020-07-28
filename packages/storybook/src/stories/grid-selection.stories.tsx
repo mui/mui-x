@@ -73,6 +73,14 @@ export const MultipleSelectWithCheckbox = () => {
   const data = useData(200, 200);
   const options: GridOptionsProp = {
     checkboxSelection: true,
+  };
+
+  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
+};
+export const MultipleSelectWithCheckboxNoClick = () => {
+  const data = useData(200, 200);
+  const options: GridOptionsProp = {
+    checkboxSelection: true,
     disableSelectionOnClick: true,
   };
 

@@ -60,6 +60,7 @@ export const RowCells: React.FC<RowCellsProps> = React.memo((props) => {
     if (column.valueGetter) {
       // Value getter override the original value
       value = column.valueGetter(cellParams);
+      cellParams.value = value;
     }
 
     let formattedValueProp = {};
