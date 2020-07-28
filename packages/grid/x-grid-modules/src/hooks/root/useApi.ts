@@ -137,7 +137,7 @@ export function useApi(
       }
       return eventParams;
     },
-    [emitEvent, apiRef],
+    [apiRef],
   );
 
   const onClickHandler = React.useCallback(
@@ -158,7 +158,7 @@ export function useApi(
         emitEvent(COLUMN_HEADER_CLICK, eventParams.header);
       }
     },
-    [emitEvent, apiRef],
+    [emitEvent, getEventParams],
   );
 
   const onHoverHandler = React.useCallback(
@@ -179,7 +179,7 @@ export function useApi(
         emitEvent(COLUMN_HEADER_HOVER, eventParams.header);
       }
     },
-    [emitEvent, apiRef],
+    [emitEvent, getEventParams],
   );
 
   const registerEvent = React.useCallback(
@@ -237,7 +237,7 @@ export function useApi(
     }
 
     return undefined;
-  }, [gridRootRef, isApiInitialised, getHandler, logger, onClickHandler, apiRef]);
+  }, [gridRootRef, isApiInitialised, getHandler, logger, onClickHandler, onHoverHandler, apiRef]);
 
   useApiEventHandler(apiRef, COL_RESIZE_START, handleResizeStart);
   useApiEventHandler(apiRef, COL_RESIZE_STOP, handleResizeStop);

@@ -159,6 +159,7 @@ export const ColumnCellClassRules = () => {
   cols[4].cellClassRules = {
     common: (params) => params.data.lastName === 'Smith',
     unknown: (params) => !params.data.lastName,
+    border: true,
   };
 
   return (
