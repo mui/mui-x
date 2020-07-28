@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/data-grid",
-  "version": "0.1.62",
+  "version": "0.1.64",
   "description": "The Material-UI community edition of the data grid component.",
   "author": "Material-UI Team",
   "main": "dist/index-cjs.js",
@@ -17,7 +17,7 @@
     "tslib": "^2.0.0"
   },
   "devDependencies": {
-    "@material-ui/x-grid-modules": "^0.1.62",
+    "@material-ui/x-grid-modules": "^0.1.64",
     "@rollup/plugin-node-resolve": "^8.0.1",
     "rollup": "^2.6.1",
     "rollup-plugin-cleaner": "^1.0.0",
