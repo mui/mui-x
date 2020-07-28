@@ -21,6 +21,14 @@ const stories = [
       await page.click('#action-btn');
     },
   },
+  {
+    path: '/story/x-grid-tests-selection--multiple-select-with-checkbox-no-click',
+    beforeTest: async (page) => {
+      await page.click(
+        '.grid-root .window .material-row:first-child .material-cell.checkbox-selection-cell .checkbox-input',
+      );
+    },
+  },
   '/story/x-grid-tests-columns--header-component',
   '/story/x-grid-tests-columns--new-column-types',
   '/story/x-grid-tests-dataset--no-rows',
@@ -82,7 +90,7 @@ const stories = [
   '/story/x-grid-tests-styling--column-cell-renderer',
 ];
 
-describe.only('snapshotTest', () => {
+describe('snapshotTest', () => {
   stories.forEach((config: any) => {
     const path = typeof config === 'string' ? config : config.path;
     const beforeTest = typeof config === 'string' ? undefined : config.beforeTest;
