@@ -46,6 +46,7 @@ const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
 export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: ApiRef): void => {
   const logger = useLogger('useKeyboard');
   const isMultipleKeyPressed = React.useRef(false);
+  const rafFocusOnCellRef = React.useRef(0);
 
   const onMultipleKeyChange = React.useCallback(
     (isPressed: boolean) => {
@@ -107,8 +108,12 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
       nextCellIndexes.colIndex =
         nextCellIndexes.colIndex >= colCount ? colCount - 1 : nextCellIndexes.colIndex;
 
+      if (rafFocusOnCellRef.current) {
+        cancelAnimationFrame(rafFocusOnCellRef.current);
+      }
+
       apiRef.current!.once(SCROLLING, () => {
-        requestAnimationFrame(() => {
+        rafFocusOnCellRef.current = requestAnimationFrame(() => {
           const nextCell = getCellElementFromIndexes(root, nextCellIndexes);
 
           if (nextCell) {
