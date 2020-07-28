@@ -1,8 +1,5 @@
 {
-  "name": "material-ui-x",
   "version": "0.1.0",
-  "description": "Material-UI X Monorepo",
-  "author": "Material-UI Team",
   "private": true,
   "devDependencies": {
     "@material-ui/core": "^4.9.12",
@@ -45,20 +42,21 @@
     "stylelint-config-standard": "^20.0.0",
     "stylelint-config-styled-components": "^0.1.1",
     "stylelint-processor-styled-components": "^1.10.0",
-    "ts-jest": "^25.2.0"
+    "ts-jest": "^25.2.0",
+    "yarn-deduplicate": "^2.1.1"
   },
   "scripts": {
+    "deduplicate": "node scripts/deduplicate.js",
+    "jsonlint": "node scripts/jsonlint.js",
     "hoist": "lerna bootstrap --hoist",
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build --stream",
     "start": "lerna run start --parallel",
     "prettier": "node ./scripts/prettier.js",
     "test": "lerna run test --parallel",
-    "lint": "eslint . --cache --report-unused-disable-directives --ext .js,.ts,.tsx",
-    "lint:ci": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "lint": "yarn eslint && yarn jsonlint",
+    "eslint": "eslint . --cache --report-unused-disable-directives --ext .js,.ts,.tsx",
+    "eslint:ci": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"

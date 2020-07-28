@@ -7,7 +7,7 @@ import { buildCellParams } from '../utils/paramsUtils';
 
 function applyCssClassRules(cellClassRules: CellClassRules, params: CellClassParams) {
   return Object.entries(cellClassRules).reduce((appliedCss, entry) => {
-    const shouldApplyCss: boolean = entry[1](params);
+    const shouldApplyCss: boolean = isFunction(entry[1]) ? entry[1](params) : entry[1];
     appliedCss += shouldApplyCss ? `${entry[0]} ` : '';
     return appliedCss;
   }, '');
@@ -60,6 +60,7 @@ export const RowCells: React.FC<RowCellsProps> = React.memo((props) => {
     if (column.valueGetter) {
       // Value getter override the original value
       value = column.valueGetter(cellParams);
+      cellParams.value = value;
     }
 
     let formattedValueProp = {};

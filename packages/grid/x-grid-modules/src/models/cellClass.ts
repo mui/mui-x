@@ -15,4 +15,6 @@ export type CellClassNamePropType = string | string[] | CellClassFn;
 /**
  * An object representing the cell class rules.
  */
-export type CellClassRules = { [cssClass: string]: (params: CellClassParams) => boolean };
+export type CellClassRules = {
+  [cssClass: string]: ((params: CellClassParams) => boolean) | boolean;
+};
