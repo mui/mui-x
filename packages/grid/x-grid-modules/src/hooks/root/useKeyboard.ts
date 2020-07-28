@@ -4,6 +4,7 @@ import {
   KEYDOWN_EVENT,
   KEYUP_EVENT,
   MULTIPLE_KEY_PRESS_CHANGED,
+  SCROLLING,
 } from '../../constants/eventsConstants';
 import {
   findGridRootFromCurrent,
@@ -106,19 +107,25 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
       nextCellIndexes.colIndex =
         nextCellIndexes.colIndex >= colCount ? colCount - 1 : nextCellIndexes.colIndex;
 
-      apiRef.current!.scrollToIndexes(nextCellIndexes);
-      setTimeout(() => {
-        const nextCell = getCellElementFromIndexes(root, nextCellIndexes);
+      apiRef.current!.once(SCROLLING, () => {
+        requestAnimationFrame(() => {
+          const nextCell = getCellElementFromIndexes(root, nextCellIndexes);
 
-        if (nextCell) {
-          nextCell.tabIndex = 0;
-          (nextCell as HTMLDivElement).focus();
-        }
-      }, 100);
+          if (nextCell) {
+            logger.debug(
+              `Focusing on cell with index ${nextCellIndexes.rowIndex} - ${nextCellIndexes.colIndex} `,
+            );
+            nextCell.tabIndex = 0;
+            (nextCell as HTMLDivElement).focus();
+          }
+        });
+      });
+
+      apiRef.current!.scrollToIndexes(nextCellIndexes);
 
       return nextCellIndexes;
     },
-    [apiRef, options.pagination, options.pageSize],
+    [apiRef, options.pagination, options.pageSize, logger],
   );
 
   const selectActiveRow = React.useCallback(() => {
