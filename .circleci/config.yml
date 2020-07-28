@@ -62,8 +62,11 @@ jobs:
           name: '`yarn prettier` changes committed?'
           command: yarn prettier check-changed
       - run:
-          name: Lint
-          command: yarn lint:ci
+          name: Eslint
+          command: yarn eslint:ci
+      - run:
+          name: Lint JSON
+          command: yarn jsonlint
 workflows:
   version: 2
   pipeline:

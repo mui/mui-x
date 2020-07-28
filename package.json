@@ -47,14 +47,16 @@
   },
   "scripts": {
     "deduplicate": "node scripts/deduplicate.js",
+    "jsonlint": "node scripts/jsonlint.js",
     "hoist": "lerna bootstrap --hoist",
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build --stream",
     "start": "lerna run start --parallel",
     "prettier": "node ./scripts/prettier.js",
     "test": "lerna run test --parallel",
-    "lint": "eslint . --cache --report-unused-disable-directives --ext .js,.ts,.tsx",
-    "lint:ci": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx"
+    "lint": "yarn eslint && yarn jsonlint",
+    "eslint": "eslint . --cache --report-unused-disable-directives --ext .js,.ts,.tsx",
+    "eslint:ci": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
