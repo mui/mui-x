@@ -177,12 +177,21 @@ export const usePagination = (
       logger.info(`Options or rows change, recalculating pageCount and rowCount`);
       const newPageCount = getPageCount(state.pageSize, rowCount);
 
-      updateState({ pageCount: newPageCount, rowCount: rows.length });
+      updateState({ pageCount: newPageCount, rowCount });
       if (state.page > newPageCount) {
         setPage(newPageCount);
       }
     }
-  }, [rows.length, logger, updateState, state.rowCount, state.pageSize, setPage, state.page]);
+  }, [
+    rows.length,
+    options.rowCount,
+    logger,
+    updateState,
+    state.rowCount,
+    state.pageSize,
+    setPage,
+    state.page,
+  ]);
 
   React.useEffect(() => {
     if (

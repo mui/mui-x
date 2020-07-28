@@ -4,6 +4,7 @@ import {
   KEYDOWN_EVENT,
   KEYUP_EVENT,
   MULTIPLE_KEY_PRESS_CHANGED,
+  SCROLLING,
 } from '../../constants/eventsConstants';
 import {
   findGridRootFromCurrent,
@@ -45,6 +46,7 @@ const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
 export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: ApiRef): void => {
   const logger = useLogger('useKeyboard');
   const isMultipleKeyPressed = React.useRef(false);
+  const rafFocusOnCellRef = React.useRef(0);
 
   const onMultipleKeyChange = React.useCallback(
     (isPressed: boolean) => {
@@ -106,19 +108,29 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
       nextCellIndexes.colIndex =
         nextCellIndexes.colIndex >= colCount ? colCount - 1 : nextCellIndexes.colIndex;
 
-      apiRef.current!.scrollToIndexes(nextCellIndexes);
-      setTimeout(() => {
-        const nextCell = getCellElementFromIndexes(root, nextCellIndexes);
+      if (rafFocusOnCellRef.current) {
+        cancelAnimationFrame(rafFocusOnCellRef.current);
+      }
 
-        if (nextCell) {
-          nextCell.tabIndex = 0;
-          (nextCell as HTMLDivElement).focus();
-        }
-      }, 100);
+      apiRef.current!.once(SCROLLING, () => {
+        rafFocusOnCellRef.current = requestAnimationFrame(() => {
+          const nextCell = getCellElementFromIndexes(root, nextCellIndexes);
+
+          if (nextCell) {
+            logger.debug(
+              `Focusing on cell with index ${nextCellIndexes.rowIndex} - ${nextCellIndexes.colIndex} `,
+            );
+            nextCell.tabIndex = 0;
+            (nextCell as HTMLDivElement).focus();
+          }
+        });
+      });
+
+      apiRef.current!.scrollToIndexes(nextCellIndexes);
 
       return nextCellIndexes;
     },
-    [apiRef, options.pagination, options.pageSize],
+    [apiRef, options.pagination, options.pageSize, logger],
   );
 
   const selectActiveRow = React.useCallback(() => {

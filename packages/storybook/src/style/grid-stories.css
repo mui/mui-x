@@ -12,6 +12,9 @@
  .unknown {
      background: coral;
  }
+ .border {
+     border: 1px solid orangered;
+ }
  #root {
      top:0;
      left: 0;
