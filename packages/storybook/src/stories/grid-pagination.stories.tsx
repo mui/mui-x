@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  ApiRef,
-  useApiRef,
-  XGrid,
-  PageChangeParams,
-  RowsProp,
-} from '@material-ui/x-grid';
+import { ApiRef, useApiRef, XGrid, PageChangeParams, RowsProp } from '@material-ui/x-grid';
 import Button from '@material-ui/core/Button';
 import Pagination from '@material-ui/lab/Pagination';
 import { action } from '@storybook/addon-actions';

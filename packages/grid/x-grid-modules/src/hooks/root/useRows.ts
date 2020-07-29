@@ -138,7 +138,7 @@ export const useRows = (
   );
 
   const onSortModelUpdated = React.useCallback(
-    ({sortModel}: any) => {
+    ({ sortModel }: any) => {
       isSortedRef.current = sortModel.length > 0;
     },
     [isSortedRef],

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {SortDirection, SortModel} from './sortModel';
+import { SortDirection, SortModel } from './sortModel';
 import { Logger } from '../hooks/utils';
 import { ArrowDownward, ArrowUpward, SeparatorIcon } from '../components/icons';
 import { ColumnSortedParams } from './params/columnSortedParams';
@@ -7,7 +7,7 @@ import { RowSelectedParams } from './params/rowSelectedParams';
 import { SelectionChangeParams } from './params/selectionChangeParams';
 import { PageChangeParams } from './params/pageChangeParams';
 import { ColumnTypesRecord, DEFAULT_COLUMN_TYPES } from './colDef';
-import {FeatureMode, FeatureModeConstant} from './featureMode';
+import { FeatureMode, FeatureModeConstant } from './featureMode';
 import { ColParams } from './params/colParams';
 import { CellParams, RowParams } from './params/cellParams';
 
@@ -243,9 +243,8 @@ export interface GridOptions {
    */
   onColumnsSorted?: (params: ColumnSortedParams) => void;
 
-  onColumnsSortingChange?:(params: ColumnSortedParams) => void;
+  onColumnsSortingChange?: (params: ColumnSortedParams) => void;
   sortModel?: SortModel;
-
 
   /**
    * Handler triggered when the current page has change.

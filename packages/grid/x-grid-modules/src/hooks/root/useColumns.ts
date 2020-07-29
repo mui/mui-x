@@ -9,10 +9,11 @@ import {
   GridOptions,
   InternalColumns,
   ApiRef,
-  ColumnTypesRecord, ColumnSortedParams,
+  ColumnTypesRecord,
+  ColumnSortedParams,
 } from '../../models';
 import { Logger, useLogger } from '../utils/useLogger';
-import {COLUMNS_SORTED, COLUMNS_UPDATED} from '../../constants/eventsConstants';
+import { COLUMNS_SORTED, COLUMNS_UPDATED } from '../../constants/eventsConstants';
 import { useRafUpdate } from '../utils';
 import { isEqual } from '../../utils';
 import { useApiMethod } from './useApiMethod';
@@ -202,7 +203,7 @@ export function useColumns(
   const updateColumn = React.useCallback((col: ColDef) => updateColumns([col]), [updateColumns]);
 
   const onColumnsSorted = React.useCallback(
-    ({sortModel}: ColumnSortedParams) => {
+    ({ sortModel }: ColumnSortedParams) => {
       logger.debug('Sort model change to ', sortModel);
       const updatedCols: ColDef[] = [];
 

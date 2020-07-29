@@ -21,11 +21,11 @@ import {
   ROWS_UPDATED,
   COLUMNS_SORTING_CHANGE,
 } from '../../constants/eventsConstants';
-import {useLogger} from '../utils';
-import {isDesc, nextSortDirection} from '../../utils';
-import {SortItem, SortModel} from '../../models/sortModel';
-import {useApiEventHandler} from '../root/useApiEventHandler';
-import {useApiMethod} from '../root/useApiMethod';
+import { useLogger } from '../utils';
+import { isDesc, nextSortDirection } from '../../utils';
+import { SortItem, SortModel } from '../../models/sortModel';
+import { useApiEventHandler } from '../root/useApiEventHandler';
+import { useApiMethod } from '../root/useApiMethod';
 
 export const useSorting = (
   options: GridOptions,
@@ -39,13 +39,15 @@ export const useSorting = (
   const originalOrder = React.useRef<RowId[]>([]);
   const comparatorList = React.useRef<FieldComparatorList>([]);
 
-  const getColumnsSortedParams = React.useCallback((): ColumnSortedParams => (
-     {
+  const getColumnsSortedParams = React.useCallback(
+    (): ColumnSortedParams => ({
       sortedColumns: sortModelRef.current.map((model) =>
         apiRef.current!.getColumnFromField(model.field),
       ),
       sortModel: sortModelRef.current,
-    }),[sortModelRef, apiRef]);
+    }),
+    [sortModelRef, apiRef],
+  );
 
   const upsertSortModel = React.useCallback(
     (field: string, sortItem?: SortItem): SortModel => {
@@ -125,7 +127,6 @@ export const useSorting = (
 
     apiRef.current!.setRowModels([...sorted]);
     apiRef.current!.emit(COLUMNS_SORTED, getColumnsSortedParams());
-
   }, [apiRef, sortModelRef, comparatorListAggregate, getOriginalOrderedRows, logger]);
 
   const setSortModel = React.useCallback(
@@ -133,7 +134,7 @@ export const useSorting = (
       sortModelRef.current = sortModel;
       comparatorList.current = buildComparatorList(sortModel);
       apiRef.current!.emit(COLUMNS_SORTING_CHANGE, getColumnsSortedParams());
-      if(options.sortingMode === FeatureModeConstant.client) {
+      if (options.sortingMode === FeatureModeConstant.client) {
         applySorting();
       } else {
         apiRef.current!.emit(COLUMNS_SORTED, getColumnsSortedParams());
@@ -212,7 +213,7 @@ export const useSorting = (
     if (rowsProp.length > 0 && options.sortingMode === FeatureModeConstant.client) {
       storeOriginalOrder();
       if (sortModelRef.current.length > 0) {
-        logger.debug('row changed, applying sortModel')
+        logger.debug('row changed, applying sortModel');
         applySorting();
       }
     }
@@ -226,7 +227,7 @@ export const useSorting = (
         .sort((a, b) => a.sortIndex! - b.sortIndex!);
 
       const sortModel = sortedCols.map((c) => ({ field: c.field, sort: c.sortDirection }));
-      if(sortModel.length > 0) {
+      if (sortModel.length > 0) {
         setSortModel(sortModel);
       }
     }
@@ -234,7 +235,7 @@ export const useSorting = (
 
   React.useEffect(() => {
     const model = options.sortModel || [];
-    if(model !== sortModelRef.current && model.length > 0 && apiRef.current?.isInitialised) {
+    if (model !== sortModelRef.current && model.length > 0 && apiRef.current?.isInitialised) {
       setSortModel(model);
     }
   }, [options.sortModel, setSortModel, apiRef, apiRef.current?.isInitialised]);
