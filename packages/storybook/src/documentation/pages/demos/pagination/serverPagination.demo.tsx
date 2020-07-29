@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Columns, FeatureMode, PageChangeParams, RowsProp, XGrid } from '@material-ui/x-grid';
+import { Columns, PageChangeParams, RowsProp, XGrid } from '@material-ui/x-grid';
 import {
   randomCreatedDate,
   randomEmail,
@@ -67,7 +67,7 @@ export default function ServerPaginationDemo() {
         pagination: true,
         pageSize: 5,
         rowCount: 50,
-        paginationMode: FeatureMode.server,
+        paginationMode: 'server',
         onPageChange,
       }}
       loading={isLoading}

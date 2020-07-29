@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   ApiRef,
-  FeatureMode,
   useApiRef,
   XGrid,
   PageChangeParams,
@@ -263,7 +262,7 @@ export function ServerPaginationWithApi() {
           pagination: true,
           pageSize: 50,
           rowCount: 552,
-          paginationMode: FeatureMode.server,
+          paginationMode: 'server',
         }}
         loading={isLoading}
       />
@@ -299,7 +298,7 @@ export function ServerPaginationWithEventHandler() {
           pagination: true,
           pageSize: 50,
           rowCount: 552,
-          paginationMode: FeatureMode.server,
+          paginationMode: 'server',
           onPageChange,
         }}
         loading={isLoading}

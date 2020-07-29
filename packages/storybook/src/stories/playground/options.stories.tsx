@@ -32,7 +32,7 @@ export const Options = () => {
         onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
         onRowSelected: (params) => action('onRowSelected')(params),
         onSelectionChange: (params) => action('onSelectionChange', { depth: 1 })(params),
-        onSortedColumns: (params) => action('onSortedColumns')(params),
+        onColumnsSorted: (params) => action('onColumnsSorted')(params),
         onPageChange: (params) => action('onPageChange')(params),
         onPageSizeChange: (params) => action('onPageSizeChange')(params),
 
@@ -71,7 +71,7 @@ export const Events = () => {
     onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
     onRowSelected: (params) => action('onRowSelected')(params),
     onSelectionChange: (params) => action('onSelectionChange', { depth: 1 })(params),
-    onSortedColumns: (params) => action('onSortedColumns')(params),
+    onColumnsSorted: (params) => action('onColumnsSorted')(params),
     onPageChange: (params) => action('onPageChange')(params),
     onPageSizeChange: (params) => action('onPageSizeChange')(params),
   };

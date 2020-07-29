@@ -241,14 +241,12 @@ export function useApi(
 
   useApiEventHandler(apiRef, COL_RESIZE_START, handleResizeStart);
   useApiEventHandler(apiRef, COL_RESIZE_STOP, handleResizeStop);
+
+  useApiEventHandler(apiRef, COLUMN_HEADER_CLICK, options.onColumnHeaderClick);
   useApiEventHandler(apiRef, CELL_CLICK, options.onCellClick);
   useApiEventHandler(apiRef, ROW_CLICK, options.onRowClick);
   useApiEventHandler(apiRef, CELL_HOVER, options.onCellHover);
   useApiEventHandler(apiRef, ROW_HOVER, options.onRowHover);
-  useApiEventHandler(apiRef, ROW_SELECTED_EVENT, options.onRowSelected);
-  useApiEventHandler(apiRef, SELECTION_CHANGED_EVENT, options.onSelectionChange);
-  useApiEventHandler(apiRef, COLUMN_HEADER_CLICK, options.onColumnHeaderClick);
-  useApiEventHandler(apiRef, COLUMNS_SORTED, options.onSortedColumns);
 
   return initialised;
 }
