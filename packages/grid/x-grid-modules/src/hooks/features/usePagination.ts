@@ -13,7 +13,7 @@ import { InternalColumns } from '../../models/colDef/colDef';
 import { GridOptions } from '../../models/gridOptions';
 import { PaginationApi } from '../../models/api/paginationApi';
 import { ApiRef } from '../../models/api';
-import { FeatureMode, FeatureModeConstant } from '../../models/featureMode';
+import { FeatureModeConstant } from '../../models/featureMode';
 
 export interface PaginationProps {
   page: number;

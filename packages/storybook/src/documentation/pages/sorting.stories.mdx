@@ -6,6 +6,7 @@ import SingleSortDemo from './demos/sorting/singleSort.demo';
 import MultipleSortColumnDemo from './demos/sorting/multipleSort.demo';
 import SortIndexDemo from './demos/sorting/sortIndex.demo';
 import ServerSortingDemo from './demos/sorting/serverSorting.demo';
+import SortModelOptionDemo from './demos/sorting/sortModelOption.demo';
 
 <Meta title="1. Docs/5. Sorting" component={XGrid} />
 
@@ -115,6 +116,26 @@ const columns: Columns = [
 
 <SortIndexDemo />
 
+### Using the `sortModel` options
+
+XGrid also offers to override the sortModel using its `sortModel` property of its `options` React prop.
+**Note** The `sortModel` property is an array and its order will be used as the `sortIndex` property described above.
+
+```tsx
+<XGrid
+  rows={rows}
+  columns={columns}
+  options={{
+    sortModel = [
+      { field: 'age', sortDirection: 'desc' },
+      { field: 'name', sortDirection: 'asc' },
+    ],
+  }}
+/>
+```
+
+<SortModelOptionDemo />
+
 ## Server-side sorting
 
 XGrid supports both client and server-side pagination. By default, sorting works on the client-side. To switch it to server-side,
@@ -134,9 +155,9 @@ const onColumnsSortingChange = (params) => {
   rows={rows}
   columns={columns}
   options={{
-      sortingMode: 'server',
-      sortModel: sortBy,
-      onColumnsSortingChange: onColumnsSortingChange
+    sortingMode: 'server',
+    sortModel: sortBy,
+    onColumnsSortingChange: onColumnsSortingChange,
   }}
 />;
 ```
@@ -145,7 +166,8 @@ const onColumnsSortingChange = (params) => {
 
 ## Events
 
-- `onSortedColumns` - Event triggered after a column is sorted
+- `onColumnsSortingChange` - Event triggered when the sort model change and before a column is sorted.
+- `onColumnsSorted` - Event triggered after columns are sorted.
 
 ## API
 
@@ -153,3 +175,5 @@ Finally, we added the following methods in XGrid API. More about the API and how
 
 - `getSortModel` - Returns the currently applied `SortModel`
 - `setSortModel` - Set a `SortModel` to sort the grid in one or multiple columns
+- `onColumnsSorted` - Set a handler for the `onColumnsSorted` event
+- `onColumnsSortingChange` - Set a handler for the `onColumnsSortingChange` event

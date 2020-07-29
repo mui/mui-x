@@ -4,8 +4,8 @@ import {
   XGrid,
   GridApi,
   RowsProp,
-  SortDirection,
   ColumnSortedParams,
+  SortModel,
 } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
@@ -251,7 +251,21 @@ export const SortingWithFormatter = () => {
     </div>
   );
 };
+export const SortModelOptionsMultiple = () => {
+  const sortModel: SortModel = React.useMemo(
+    () => [
+      { field: 'age', sort: 'desc' },
+      { field: 'name', sort: 'asc' },
+    ],
+    [],
+  );
 
+  return (
+    <div className="grid-container">
+      <XGrid rows={getRows()} columns={getColumns()} options={{ sortModel }} />
+    </div>
+  );
+};
 export const ApiSingleSorted = () => {
   const apiRef = React.useRef<GridApi>();
   React.useEffect(() => {
@@ -346,10 +360,11 @@ export const SortedEventsOptions = () => {
     [handleEvent],
   );
   const sortModel = React.useMemo(
-    () => [
-      { field: 'age', sort: 'desc' },
-      { field: 'name', sort: 'asc' },
-    ],
+    () =>
+      [
+        { field: 'age', sort: 'desc' },
+        { field: 'name', sort: 'asc' },
+      ] as SortModel,
     [],
   );
 
@@ -413,7 +428,7 @@ export const ServerSideSorting = () => {
     [setLoading, rows, setRows],
   );
 
-  const sortBy = React.useMemo(() => [{ field: 'age', sort: 'desc' as SortDirection }], []);
+  const sortBy: SortModel = React.useMemo(() => [{ field: 'age', sort: 'desc' }], []);
 
   return (
     <div className="grid-container">

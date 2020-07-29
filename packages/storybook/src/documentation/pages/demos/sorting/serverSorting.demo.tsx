@@ -2,49 +2,49 @@ import * as React from 'react';
 import { ColDef, RowsProp, SortDirection, XGrid, ColumnSortedParams } from '@material-ui/x-grid';
 
 const getColumns: () => ColDef[] = () => [
-	{ field: 'id', type: 'number' },
-	{ field: 'name', type: 'string' },
-	{ field: 'age', type: 'number', width: 100 },
-	{ field: 'born', type: 'date' },
-	{ field: 'updatedOn', type: 'dateTime', width: 180 },
+  { field: 'id', type: 'number' },
+  { field: 'name', type: 'string' },
+  { field: 'age', type: 'number', width: 100 },
+  { field: 'born', type: 'date' },
+  { field: 'updatedOn', type: 'dateTime', width: 180 },
 ];
 
 const getRows = () => [
-	{
-		id: 1,
-		name: 'Zelda',
-		age: 21,
-		born: new Date(1990, 10, 8),
-		updatedOn: new Date(2020, 6, 21, 21, 0, 0),
-	},
-	{
-		id: 2,
-		name: 'Anakin',
-		age: 30,
-		born: new Date(1990, 9, 8),
-		updatedOn: new Date(2020, 6, 21, 20, 0, 0),
-	},
-	{
-		id: 3,
-		name: 'James',
-		age: 40,
-		born: new Date(1990, 10, 7),
-		updatedOn: new Date(2020, 6, 21, 19, 50, 0),
-	},
-	{
-		id: 4,
-		name: 'Chun',
-		age: 40,
-		born: new Date(1989, 1, 30),
-		updatedOn: new Date(2020, 5, 18, 10, 11, 0),
-	},
-	{
-		id: 5,
-		name: 'Leila',
-		age: null,
-		born: new Date(1984, 6, 11),
-		updatedOn: new Date(2020, 6, 8, 23, 33, 25),
-	},
+  {
+    id: 1,
+    name: 'Zelda',
+    age: 21,
+    born: new Date(1990, 10, 8),
+    updatedOn: new Date(2020, 6, 21, 21, 0, 0),
+  },
+  {
+    id: 2,
+    name: 'Anakin',
+    age: 30,
+    born: new Date(1990, 9, 8),
+    updatedOn: new Date(2020, 6, 21, 20, 0, 0),
+  },
+  {
+    id: 3,
+    name: 'James',
+    age: 40,
+    born: new Date(1990, 10, 7),
+    updatedOn: new Date(2020, 6, 21, 19, 50, 0),
+  },
+  {
+    id: 4,
+    name: 'Chun',
+    age: 40,
+    born: new Date(1989, 1, 30),
+    updatedOn: new Date(2020, 5, 18, 10, 11, 0),
+  },
+  {
+    id: 5,
+    name: 'Leila',
+    age: null,
+    born: new Date(1984, 6, 11),
+    updatedOn: new Date(2020, 6, 8, 23, 33, 25),
+  },
 ];
 
 function sortServerRows(rows: any[], params: ColumnSortedParams): Promise<any[]> {
@@ -87,17 +87,18 @@ export default function ServerSortingDemo() {
   const sortBy = React.useMemo(() => [{ field: 'age', sort: 'desc' as SortDirection }], []);
 
   return (
-      <XGrid
-        rows={rows}
-        columns={columns}
-        options={{
-          onColumnsSortingChange,
-          sortingMode: 'server',
-          enableMultipleColumnsSorting: false,
-          sortModel: sortBy,
-	        autoHeight: true
-        }}
-        loading={isLoading}
-      />
+    <XGrid
+      rows={rows}
+      columns={columns}
+      options={{
+        onColumnsSortingChange,
+        sortingMode: 'server',
+        enableMultipleColumnsSorting: false,
+        sortModel: sortBy,
+        autoHeight: true,
+      }}
+      loading={isLoading}
+      className="demo"
+    />
   );
-};
+}
