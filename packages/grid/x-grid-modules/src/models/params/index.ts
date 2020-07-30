@@ -1,6 +1,6 @@
 export * from './cellParams';
 export * from './colParams';
-export * from './columnSortedParams';
+export * from './sortModelParams';
 export * from './componentParams';
 export * from './pageChangeParams';
 export * from './rowSelectedParams';

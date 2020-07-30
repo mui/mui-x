@@ -15,7 +15,7 @@ import {
   ROWS_UPDATED,
   SCROLLING_START,
   SCROLLING_STOP,
-  COLUMNS_SORTING_CHANGE,
+  SORT_MODEL_CHANGE,
 } from '../../constants/eventsConstants';
 import { useApiMethod } from './useApiMethod';
 import { useApiEventHandler } from './useApiEventHandler';
@@ -172,7 +172,7 @@ export const useRows = (
 
   useApiEventHandler(apiRef, SCROLLING_START, startScrollingHandler);
   useApiEventHandler(apiRef, SCROLLING_STOP, stopScrollingHandler);
-  useApiEventHandler(apiRef, COLUMNS_SORTING_CHANGE, onSortModelUpdated);
+  useApiEventHandler(apiRef, SORT_MODEL_CHANGE, onSortModelUpdated);
 
   return rowModelsState;
 };

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SortDirection, SortModel } from './sortModel';
 import { Logger } from '../hooks/utils';
 import { ArrowDownward, ArrowUpward, SeparatorIcon } from '../components/icons';
-import { ColumnSortedParams } from './params/columnSortedParams';
+import { SortModelParams } from './params/sortModelParams';
 import { RowSelectedParams } from './params/rowSelectedParams';
 import { SelectionChangeParams } from './params/selectionChangeParams';
 import { PageChangeParams } from './params/pageChangeParams';
@@ -194,6 +194,11 @@ export interface GridOptions {
    */
   logLevel?: string | false;
   /**
+   * Set the sort model of the grid
+   *
+   */
+  sortModel?: SortModel;
+  /**
    * Handler triggered when the click event comes from a cell element.
    *
    * @param param With all properties from [[CellParams]].
@@ -237,22 +242,11 @@ export interface GridOptions {
    */
   onColumnHeaderClick?: (param: ColParams) => void;
   /**
-   * Handler triggered when grid resorted its rows.
-   *
-   * @param param With all properties from [[ColumnSortedParams]].
-   */
-  onColumnsSorted?: (params: ColumnSortedParams) => void;
-  /**
    * Handler triggered when the sort model change and before a column is sorted.
    *
-   * @param param With all properties from [[ColumnSortedParams]].
+   * @param param With all properties from [[SortModelParams]].
    */
-  onColumnsSortingChange?: (params: ColumnSortedParams) => void;
-  /**
-   * Set the sort model of the grid
-   *
-   */
-  sortModel?: SortModel;
+  onSortModelChange?: (params: SortModelParams) => void;
   /**
    * Handler triggered when the current page has change.
    *

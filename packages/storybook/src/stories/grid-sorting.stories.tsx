@@ -1,12 +1,5 @@
 import * as React from 'react';
-import {
-  ColDef,
-  XGrid,
-  GridApi,
-  RowsProp,
-  ColumnSortedParams,
-  SortModel,
-} from '@material-ui/x-grid';
+import { ColDef, XGrid, GridApi, RowsProp, SortModelParams, SortModel } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { action } from '@storybook/addon-actions';
@@ -314,10 +307,7 @@ export const SortedEventsApi = () => {
 
   React.useEffect(() => {
     if (apiRef && apiRef.current != null) {
-      apiRef.current.onColumnsSorted((params) => handleEvent('ColumnsSorted', params));
-      apiRef.current.onColumnsSortingChange((params) =>
-        handleEvent('ColumnsSortingChange', params),
-      );
+      apiRef.current.onSortModelChange((params) => handleEvent('onSortModelChange', params));
 
       apiRef.current.setSortModel([
         { field: 'age', sort: 'desc' },
@@ -352,11 +342,8 @@ export const SortedEventsOptions = () => {
     [setEvents],
   );
 
-  const onColumnsSorted = React.useCallback((params) => handleEvent('ColumnsSorted', params), [
-    handleEvent,
-  ]);
-  const onColumnsSortingChange = React.useCallback(
-    (params) => handleEvent('ColumnsSortingChange', params),
+  const onSortModelChange = React.useCallback(
+    (params) => handleEvent('onSortModelChange', params),
     [handleEvent],
   );
   const sortModel = React.useMemo(
@@ -380,8 +367,7 @@ export const SortedEventsOptions = () => {
           rows={rows}
           columns={cols}
           options={{
-            onColumnsSorted,
-            onColumnsSortingChange,
+            onSortModelChange,
             sortModel,
           }}
         />
@@ -390,7 +376,7 @@ export const SortedEventsOptions = () => {
   );
 };
 
-function sortServerRows(rows: any[], params: ColumnSortedParams): Promise<any[]> {
+function sortServerRows(rows: any[], params: SortModelParams): Promise<any[]> {
   return new Promise<any[]>((resolve) => {
     setTimeout(() => {
       if (params.sortModel.length === 0) {
@@ -416,10 +402,10 @@ export const ServerSideSorting = () => {
   const [columns] = React.useState<ColDef[]>(getColumns());
   const [isLoading, setLoading] = React.useState<boolean>(false);
 
-  const onColumnsSortingChange = React.useCallback(
-    async (params: ColumnSortedParams) => {
+  const onSortModelChange = React.useCallback(
+    async (params: SortModelParams) => {
       setLoading(true);
-      action('onColumnsSortingChange')(params);
+      action('onSortModelChange')(params);
 
       const newRows = await sortServerRows(rows, params);
       setRows(newRows);
@@ -437,7 +423,7 @@ export const ServerSideSorting = () => {
         rows={rows}
         columns={columns}
         options={{
-          onColumnsSortingChange,
+          onSortModelChange,
           sortingMode: 'server',
           enableMultipleColumnsSorting: false,
           sortModel: sortBy,

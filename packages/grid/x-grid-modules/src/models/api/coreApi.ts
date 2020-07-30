@@ -1,0 +1,26 @@
+import { EventEmitter } from 'events';
+
+/**
+ * The core API interface that is available in the grid [[apiRef]].
+ */
+export interface CoreApi extends EventEmitter {
+  /**
+   * Property that comes true when the grid has its EventEmitter initialised.
+   */
+  isInitialised: boolean;
+  /**
+   * Allows to register a handler for an event.
+   *
+   * @param event
+   * @param handler
+   */
+  registerEvent: (event: string, handler: (param: any) => void) => () => void;
+
+  /**
+   * Allows to emit an event.
+   *
+   * @param name
+   * @param args
+   */
+  emitEvent: (name: string, ...args: any[]) => void;
+}

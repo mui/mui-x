@@ -33,6 +33,7 @@ import { useApi, useColumns, useKeyboard, useRows } from './hooks/root';
 import { useLogger, useLoggerFactory } from './hooks/utils';
 import { debounce } from './utils';
 import { mergeOptions } from './utils/mergeOptions';
+import { useEvents } from './hooks/root/useEvents';
 
 /**
  * Data Grid component implementing [[GridComponentProps]].
@@ -63,7 +64,8 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
       apiRef = internalApiRef;
     }
 
-    const initialised = useApi(rootContainerRef, windowRef, internalOptions, apiRef);
+    const initialised = useApi(rootContainerRef, internalOptions, apiRef);
+    useEvents(rootContainerRef, internalOptions, apiRef);
     const internalColumns = useColumns(internalOptions, columns, apiRef);
     const internalRows = useRows(internalOptions, rows, initialised, apiRef);
     useKeyboard(internalOptions, initialised, apiRef);

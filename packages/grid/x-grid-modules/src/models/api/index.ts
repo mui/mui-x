@@ -1,5 +1,7 @@
 export * from './apiRef';
+export * from './coreApi';
 export * from './columnApi';
+export * from './eventsApi';
 export * from './gridApi';
 export * from './paginationApi';
 export * from './rowApi';
