@@ -206,7 +206,7 @@ export function useEvents(
         api.removeAllListeners();
       };
     }
-    return;
+    return undefined;
   }, [
     gridRootRef,
     apiRef.current?.isInitialised,

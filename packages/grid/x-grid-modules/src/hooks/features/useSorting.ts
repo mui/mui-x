@@ -42,7 +42,7 @@ export const useSorting = (
     (): SortModelParams => ({
       sortModel: sortModelRef.current,
       api: apiRef.current,
-      columns: apiRef.current!.getAllColumns()
+      columns: apiRef.current!.getAllColumns(),
     }),
     [sortModelRef, apiRef],
   );
@@ -135,7 +135,16 @@ export const useSorting = (
         applySorting();
       }
     },
-    [sortModelRef, comparatorList, apiRef, applySorting, buildComparatorList, options.sortingMode, getSortModelParams, logger],
+    [
+      sortModelRef,
+      comparatorList,
+      apiRef,
+      applySorting,
+      buildComparatorList,
+      options.sortingMode,
+      getSortModelParams,
+      logger,
+    ],
   );
 
   const sortColumn = React.useCallback(

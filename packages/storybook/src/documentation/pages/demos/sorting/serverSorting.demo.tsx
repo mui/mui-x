@@ -54,7 +54,8 @@ function sortServerRows(rows: any[], params: SortModelParams): Promise<any[]> {
         resolve(getRows());
       }
       const sortedCol = params.sortModel[0];
-      const comparator = params.columns.filter((col: ColDef)=> col.field === sortedCol.field)[0].sortComparator!;
+      const comparator = params.columns.filter((col: ColDef) => col.field === sortedCol.field)[0]
+        .sortComparator!;
       let sortedRows = [
         ...rows.sort((a, b) => comparator(a[sortedCol.field], b[sortedCol.field], a, b)),
       ];
@@ -70,7 +71,7 @@ function sortServerRows(rows: any[], params: SortModelParams): Promise<any[]> {
 
 export default function ServerSortingDemo() {
   const [rows, setRows] = React.useState<RowsProp>(getRows());
-  const [columns] = React.useState<ColDef[]>(getColumns());
+  const columns = React.useRef<ColDef[]>(getColumns());
   const [loading, setLoading] = React.useState<boolean>(false);
 
   const onSortModelChange = React.useCallback(
@@ -89,7 +90,7 @@ export default function ServerSortingDemo() {
   return (
     <XGrid
       rows={rows}
-      columns={columns}
+      columns={columns.current}
       options={{
         onSortModelChange,
         sortingMode: 'server',

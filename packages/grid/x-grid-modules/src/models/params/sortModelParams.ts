@@ -1,4 +1,4 @@
-import { Columns} from '../colDef/colDef';
+import { Columns } from '../colDef/colDef';
 import { SortModel } from '../sortModel';
 /**
  * Object passed as parameter of the column sorted event.

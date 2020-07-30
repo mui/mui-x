@@ -1,12 +1,5 @@
 import * as React from 'react';
-import {
-  ColDef,
-  XGrid,
-  GridApi,
-  RowsProp,
-  SortModelParams,
-  SortModel,
-} from '@material-ui/x-grid';
+import { ColDef, XGrid, GridApi, RowsProp, SortModelParams, SortModel } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { action } from '@storybook/addon-actions';
