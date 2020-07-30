@@ -8,12 +8,12 @@ import {
   getColDef,
   GridOptions,
   InternalColumns,
-  SortModel,
   ApiRef,
   ColumnTypesRecord,
+  ColumnSortedParams,
 } from '../../models';
 import { Logger, useLogger } from '../utils/useLogger';
-import { COLUMNS_UPDATED, POST_SORT } from '../../constants/eventsConstants';
+import { COLUMNS_SORTED, COLUMNS_UPDATED } from '../../constants/eventsConstants';
 import { useRafUpdate } from '../utils';
 import { isEqual } from '../../utils';
 import { useApiMethod } from './useApiMethod';
@@ -202,8 +202,8 @@ export function useColumns(
 
   const updateColumn = React.useCallback((col: ColDef) => updateColumns([col]), [updateColumns]);
 
-  const onSortedColumns = React.useCallback(
-    (sortModel: SortModel) => {
+  const onColumnsSorted = React.useCallback(
+    ({ sortModel }: ColumnSortedParams) => {
       logger.debug('Sort model change to ', sortModel);
       const updatedCols: ColDef[] = [];
 
@@ -245,7 +245,7 @@ export function useColumns(
   };
 
   useApiMethod(apiRef, colApi, 'ColApi');
-  useApiEventHandler(apiRef, POST_SORT, onSortedColumns);
+  useApiEventHandler(apiRef, COLUMNS_SORTED, onColumnsSorted);
 
   return internalColumns;
 }

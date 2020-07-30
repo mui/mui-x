@@ -34,7 +34,7 @@ const getGridOptions: () => GridOptionsProp = () => {
       action('onSelectionChange', {
         depth: 1,
       })(params),
-    onSortedColumns: (params) => action('onSortedColumns')(params),
+    onColumnsSorted: (params) => action('onColumnsSorted')(params),
     onPageChange: (params) => action('onPageChange')(params),
     onPageSizeChange: (params) => action('onPageSizeChange')(params),
 

@@ -15,7 +15,7 @@ import {
   ROWS_UPDATED,
   SCROLLING_START,
   SCROLLING_STOP,
-  SORT_MODEL_UPDATED,
+  COLUMNS_SORTING_CHANGE,
 } from '../../constants/eventsConstants';
 import { useApiMethod } from './useApiMethod';
 import { useApiEventHandler } from './useApiEventHandler';
@@ -138,7 +138,7 @@ export const useRows = (
   );
 
   const onSortModelUpdated = React.useCallback(
-    (sortModel: any[]) => {
+    ({ sortModel }: any) => {
       isSortedRef.current = sortModel.length > 0;
     },
     [isSortedRef],
@@ -172,7 +172,7 @@ export const useRows = (
 
   useApiEventHandler(apiRef, SCROLLING_START, startScrollingHandler);
   useApiEventHandler(apiRef, SCROLLING_STOP, stopScrollingHandler);
-  useApiEventHandler(apiRef, SORT_MODEL_UPDATED, onSortModelUpdated);
+  useApiEventHandler(apiRef, COLUMNS_SORTING_CHANGE, onSortModelUpdated);
 
   return rowModelsState;
 };

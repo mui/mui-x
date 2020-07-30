@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { ColDef, XGrid, GridApi } from '@material-ui/x-grid';
+import {
+  ColDef,
+  XGrid,
+  GridApi,
+  RowsProp,
+  ColumnSortedParams,
+  SortModel,
+} from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { action } from '@storybook/addon-actions';
@@ -244,7 +251,21 @@ export const SortingWithFormatter = () => {
     </div>
   );
 };
+export const SortModelOptionsMultiple = () => {
+  const sortModel: SortModel = React.useMemo(
+    () => [
+      { field: 'age', sort: 'desc' },
+      { field: 'name', sort: 'asc' },
+    ],
+    [],
+  );
 
+  return (
+    <div className="grid-container">
+      <XGrid rows={getRows()} columns={getColumns()} options={{ sortModel }} />
+    </div>
+  );
+};
 export const ApiSingleSorted = () => {
   const apiRef = React.useRef<GridApi>();
   React.useEffect(() => {
@@ -293,9 +314,10 @@ export const SortedEventsApi = () => {
 
   React.useEffect(() => {
     if (apiRef && apiRef.current != null) {
-      apiRef.current.onSortedColumns((params) => handleEvent('ColumnsSorted', params));
-      apiRef.current.on('sortModelUpdated', (params) => handleEvent('sortModelUpdated', params));
-      apiRef.current.on('postSort', (params) => handleEvent('postSort', params));
+      apiRef.current.onColumnsSorted((params) => handleEvent('ColumnsSorted', params));
+      apiRef.current.onColumnsSortingChange((params) =>
+        handleEvent('ColumnsSortingChange', params),
+      );
 
       apiRef.current.setSortModel([
         { field: 'age', sort: 'desc' },
@@ -315,5 +337,113 @@ export const SortedEventsApi = () => {
         <XGrid rows={rows} columns={cols} apiRef={apiRef} />
       </div>
     </React.Fragment>
+  );
+};
+export const SortedEventsOptions = () => {
+  const rows = React.useMemo(() => getRows(), []);
+  const cols = React.useMemo(() => getColumns(), []);
+  const [loggedEvents, setEvents] = React.useState<any[]>([]);
+
+  const handleEvent = React.useCallback(
+    (name, params) => {
+      action(name)(params);
+      setEvents((prev: any[]) => [...prev, name]);
+    },
+    [setEvents],
+  );
+
+  const onColumnsSorted = React.useCallback((params) => handleEvent('ColumnsSorted', params), [
+    handleEvent,
+  ]);
+  const onColumnsSortingChange = React.useCallback(
+    (params) => handleEvent('ColumnsSortingChange', params),
+    [handleEvent],
+  );
+  const sortModel = React.useMemo(
+    () =>
+      [
+        { field: 'age', sort: 'desc' },
+        { field: 'name', sort: 'asc' },
+      ] as SortModel,
+    [],
+  );
+
+  // We had the ol so we can test it with image snapshots
+  return (
+    <React.Fragment>
+      <div>
+        <h1 style={{ fontSize: '16pt' }}>Triggered Events in order </h1>
+        <ol>{...loggedEvents.map((evt, idx) => <li key={evt + idx}>{evt}</li>)}</ol>
+      </div>
+      <div className="grid-container">
+        <XGrid
+          rows={rows}
+          columns={cols}
+          options={{
+            onColumnsSorted,
+            onColumnsSortingChange,
+            sortModel,
+          }}
+        />
+      </div>
+    </React.Fragment>
+  );
+};
+
+function sortServerRows(rows: any[], params: ColumnSortedParams): Promise<any[]> {
+  return new Promise<any[]>((resolve) => {
+    setTimeout(() => {
+      if (params.sortModel.length === 0) {
+        resolve(getRows());
+      }
+      const sortedCol = params.sortModel[0];
+      const comparator = params.sortedColumns[0].sortComparator!;
+      let sortedRows = [
+        ...rows.sort((a, b) => comparator(a[sortedCol.field], b[sortedCol.field], a, b)),
+      ];
+
+      if (params.sortModel[0].sort === 'desc') {
+        sortedRows = sortedRows.reverse();
+      }
+
+      resolve(sortedRows);
+    }, 500);
+  });
+}
+
+export const ServerSideSorting = () => {
+  const [rows, setRows] = React.useState<RowsProp>(getRows());
+  const [columns] = React.useState<ColDef[]>(getColumns());
+  const [isLoading, setLoading] = React.useState<boolean>(false);
+
+  const onColumnsSortingChange = React.useCallback(
+    async (params: ColumnSortedParams) => {
+      setLoading(true);
+      action('onColumnsSortingChange')(params);
+
+      const newRows = await sortServerRows(rows, params);
+      setRows(newRows);
+      setLoading(false);
+    },
+    [setLoading, rows, setRows],
+  );
+
+  // We use `useMemo` here, to keep the same ref and not trigger another sort on the next rendering
+  const sortBy: SortModel = React.useMemo(() => [{ field: 'age', sort: 'desc' }], []);
+
+  return (
+    <div className="grid-container">
+      <XGrid
+        rows={rows}
+        columns={columns}
+        options={{
+          onColumnsSortingChange,
+          sortingMode: 'server',
+          enableMultipleColumnsSorting: false,
+          sortModel: sortBy,
+        }}
+        loading={isLoading}
+      />
+    </div>
   );
 };

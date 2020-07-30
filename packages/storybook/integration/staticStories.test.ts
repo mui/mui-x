@@ -77,9 +77,11 @@ const stories = [
   '/story/x-grid-tests-sorting--unsortable-last-col',
   '/story/x-grid-tests-sorting--custom-comparator',
   '/story/x-grid-tests-sorting--sorting-with-formatter',
+  '/story/x-grid-tests-sorting--sort-model-options-multiple',
   '/story/x-grid-tests-sorting--api-single-sorted',
   '/story/x-grid-tests-sorting--api-multiple-sorted',
   '/story/x-grid-tests-sorting--sorted-events-api',
+  '/story/x-grid-tests-sorting--sorted-events-options',
 
   '/story/x-grid-tests-styling--big-rows-and-header',
   '/story/x-grid-tests-styling--unset',

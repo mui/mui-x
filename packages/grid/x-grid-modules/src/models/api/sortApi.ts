@@ -20,5 +20,13 @@ export interface SortApi {
    *
    * @param handler
    */
-  onSortedColumns: (handler: (param: ColumnSortedParams) => void) => () => void;
+  onColumnsSorted: (
+    handler: (param: ColumnSortedParams) => void,
+  ) => () => void /**
+
+   * Handler triggered when the columns sorting changed before the grid has sorted its rows.
+   *
+   * @param handler
+   */;
+  onColumnsSortingChange: (handler: (param: ColumnSortedParams) => void) => () => void;
 }

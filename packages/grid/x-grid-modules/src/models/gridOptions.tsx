@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SortDirection } from './sortModel';
+import { SortDirection, SortModel } from './sortModel';
 import { Logger } from '../hooks/utils';
 import { ArrowDownward, ArrowUpward, SeparatorIcon } from '../components/icons';
 import { ColumnSortedParams } from './params/columnSortedParams';
@@ -7,7 +7,7 @@ import { RowSelectedParams } from './params/rowSelectedParams';
 import { SelectionChangeParams } from './params/selectionChangeParams';
 import { PageChangeParams } from './params/pageChangeParams';
 import { ColumnTypesRecord, DEFAULT_COLUMN_TYPES } from './colDef';
-import { FeatureMode } from './featureMode';
+import { FeatureMode, FeatureModeConstant } from './featureMode';
 import { ColParams } from './params/colParams';
 import { CellParams, RowParams } from './params/cellParams';
 
@@ -126,8 +126,8 @@ export interface GridOptions {
   rowsPerPageOptions?: number[];
   /**
    * Pagination can be processed on the server or client-side.
-   * Set it to FeatureMode.client or `client` if you would like to handle the pagination on the client-side.
-   * Set it to FeatureMode.server or `server` if you would like to handle the pagination on the server-side.
+   * Set it to 'client' if you would like to handle the pagination on the client-side.
+   * Set it to 'server' if you would like to handle the pagination on the server-side.
    */
   paginationMode?: FeatureMode;
   /**
@@ -139,6 +139,12 @@ export interface GridOptions {
    * @default 1
    */
   page?: number;
+  /**
+   * Sorting can be processed on the server or client-side.
+   * Set it to 'client' if you would like to handle sorting on the client-side.
+   * Set it to 'server' if you would like to handle sorting on the server-side.
+   */
+  sortingMode?: FeatureMode;
   /**
    * Toggle footer component visibility.
    *
@@ -235,7 +241,18 @@ export interface GridOptions {
    *
    * @param param With all properties from [[ColumnSortedParams]].
    */
-  onSortedColumns?: (params: ColumnSortedParams) => void;
+  onColumnsSorted?: (params: ColumnSortedParams) => void;
+  /**
+   * Handler triggered when the sort model change and before a column is sorted.
+   *
+   * @param param With all properties from [[ColumnSortedParams]].
+   */
+  onColumnsSortingChange?: (params: ColumnSortedParams) => void;
+  /**
+   * Set the sort model of the grid
+   *
+   */
+  sortModel?: SortModel;
   /**
    * Handler triggered when the current page has change.
    *
@@ -273,7 +290,8 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   enableMultipleColumnsSorting: true,
   rowsPerPageOptions: [25, 50, 100],
   pageSize: 100,
-  paginationMode: FeatureMode.client,
+  paginationMode: FeatureModeConstant.client,
+  sortingMode: FeatureModeConstant.client,
   extendRowFullWidth: true,
   sortingOrder: ['asc', 'desc', null],
   logLevel: 'warn',

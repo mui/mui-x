@@ -177,6 +177,10 @@ export const useSelection = (
 
   useApiEventHandler(apiRef, ROW_CLICK, rowClickHandler);
   useApiEventHandler(apiRef, MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
+
+  useApiEventHandler(apiRef, ROW_SELECTED_EVENT, options.onRowSelected);
+  useApiEventHandler(apiRef, SELECTION_CHANGED_EVENT, options.onSelectionChange);
+
   // TODO handle Cell Click/range selection?
 
   const selectionApi: SelectionApi = {

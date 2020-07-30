@@ -13,7 +13,7 @@ import { InternalColumns } from '../../models/colDef/colDef';
 import { GridOptions } from '../../models/gridOptions';
 import { PaginationApi } from '../../models/api/paginationApi';
 import { ApiRef } from '../../models/api';
-import { FeatureMode } from '../../models/featureMode';
+import { FeatureModeConstant } from '../../models/featureMode';
 
 export interface PaginationProps {
   page: number;
@@ -81,7 +81,7 @@ export const usePagination = (
       if (apiRef && apiRef.current) {
         page = stateRef.current.pageCount >= page ? page : stateRef.current.pageCount;
         apiRef.current!.renderPage(
-          stateRef.current.paginationMode === FeatureMode.client ? page : 1,
+          stateRef.current.paginationMode === FeatureModeConstant.client ? page : 1,
         );
 
         const params: PageChangeParams = {

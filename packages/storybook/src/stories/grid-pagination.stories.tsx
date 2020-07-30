@@ -1,12 +1,5 @@
 import * as React from 'react';
-import {
-  ApiRef,
-  FeatureMode,
-  useApiRef,
-  XGrid,
-  PageChangeParams,
-  RowsProp,
-} from '@material-ui/x-grid';
+import { ApiRef, useApiRef, XGrid, PageChangeParams, RowsProp } from '@material-ui/x-grid';
 import Button from '@material-ui/core/Button';
 import Pagination from '@material-ui/lab/Pagination';
 import { action } from '@storybook/addon-actions';
@@ -263,7 +256,7 @@ export function ServerPaginationWithApi() {
           pagination: true,
           pageSize: 50,
           rowCount: 552,
-          paginationMode: FeatureMode.server,
+          paginationMode: 'server',
         }}
         loading={isLoading}
       />
@@ -299,7 +292,7 @@ export function ServerPaginationWithEventHandler() {
           pagination: true,
           pageSize: 50,
           rowCount: 552,
-          paginationMode: FeatureMode.server,
+          paginationMode: 'server',
           onPageChange,
         }}
         loading={isLoading}
