@@ -428,6 +428,7 @@ export const ServerSideSorting = () => {
     [setLoading, rows, setRows],
   );
 
+  // We use `useMemo` here, to keep the same ref and not trigger another sort on the next rendering
   const sortBy: SortModel = React.useMemo(() => [{ field: 'age', sort: 'desc' }], []);
 
   return (

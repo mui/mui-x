@@ -242,15 +242,17 @@ export interface GridOptions {
    * @param param With all properties from [[ColumnSortedParams]].
    */
   onColumnsSorted?: (params: ColumnSortedParams) => void;
-
   /**
    * Handler triggered when the sort model change and before a column is sorted.
    *
    * @param param With all properties from [[ColumnSortedParams]].
    */
   onColumnsSortingChange?: (params: ColumnSortedParams) => void;
+  /**
+   * Set the sort model of the grid
+   *
+   */
   sortModel?: SortModel;
-
   /**
    * Handler triggered when the current page has change.
    *

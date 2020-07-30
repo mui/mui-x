@@ -71,7 +71,7 @@ function sortServerRows(rows: any[], params: ColumnSortedParams): Promise<any[]>
 export default function ServerSortingDemo() {
   const [rows, setRows] = React.useState<RowsProp>(getRows());
   const [columns] = React.useState<ColDef[]>(getColumns());
-  const [isLoading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   const onColumnsSortingChange = React.useCallback(
     async (params: ColumnSortedParams) => {
@@ -97,7 +97,7 @@ export default function ServerSortingDemo() {
         sortModel: sortBy,
         autoHeight: true,
       }}
-      loading={isLoading}
+      loading={loading}
       className="demo"
     />
   );
