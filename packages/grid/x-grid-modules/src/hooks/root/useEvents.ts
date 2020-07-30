@@ -40,7 +40,7 @@ export function useEvents(
   options: GridOptions,
   apiRef: ApiRef,
 ): void {
-  //We use the isResizingRef to prevent the click on column header when the user is resizing the column
+  //  We use the isResizingRef to prevent the click on column header when the user is resizing the column
   const isResizingRef = React.useRef(false);
   const logger = useLogger('useEvents');
 
@@ -52,7 +52,9 @@ export function useEvents(
   const getEventParams = React.useCallback(
     (event: MouseEvent) => {
       if (event.target == null) {
-        throw new Error(`Event target null - Target has been removed or component might already be unmounted.`)
+        throw new Error(
+          `Event target null - Target has been removed or component might already be unmounted.`,
+        );
       }
 
       const elem = event.target as HTMLElement;
@@ -204,6 +206,7 @@ export function useEvents(
         api.removeAllListeners();
       };
     }
+    return;
   }, [
     gridRootRef,
     apiRef.current?.isInitialised,

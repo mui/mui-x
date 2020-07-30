@@ -1,5 +1,5 @@
 import { SortModel } from '../sortModel';
-import { ColumnSortedParams } from '../params/columnSortedParams';
+import { SortModelParams } from '../params/sortModelParams';
 
 /**
  * The sort API interface that is available in the grid [[apiRef]].
@@ -16,17 +16,9 @@ export interface SortApi {
    */
   setSortModel: (model: SortModel) => void;
   /**
-   * Handler triggered after the grid has sorted its rows.
-   *
-   * @param handler
-   */
-  onColumnsSorted: (
-    handler: (param: ColumnSortedParams) => void,
-  ) => () => void /**
-
    * Handler triggered when the columns sorting changed before the grid has sorted its rows.
    *
    * @param handler
-   */;
-  onColumnsSortingChange: (handler: (param: ColumnSortedParams) => void) => () => void;
+   */
+  onSortModelChange: (handler: (param: SortModelParams) => void) => () => void;
 }

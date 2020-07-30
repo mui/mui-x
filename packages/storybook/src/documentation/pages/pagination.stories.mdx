@@ -110,7 +110,7 @@ To achieve this, just set the pagination property of the `components` react prop
 ## Server-side pagination
 
 XGrid supports both client and server-side pagination. By default, pagination works on the client-side. To switch it to server-side,
-set the property `paginationMode` to `server` as string or you can use our `FeatureModeConstant` enum.
+set the property `paginationMode` to `server`.
 **Note**: You also need to set the `rowCount` property to override the number of rows in the grid so XGrid can calculate the total number of pages.
 
 Finally, you're going to need to handle the `onPageChange` event, to load the rows for the corresponding page.

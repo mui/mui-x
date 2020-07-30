@@ -28,9 +28,9 @@ export const Options = () => {
     onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
     onRowSelected: (params) => action('onRowSelected')(params),
     onSelectionChange: (params) => action('onSelectionChange', { depth: 1 })(params),
-    onColumnsSorted: (params) => action('onColumnsSorted')(params),
     onPageChange: (params) => action('onPageChange')(params),
     onPageSizeChange: (params) => action('onPageSizeChange')(params),
+    onSortModelChange: (params) => action('onSortModelChange')(params),
 
     pageSize: number('pageSize', 100),
     autoPageSize: boolean('autoPageSize', false),
@@ -59,9 +59,9 @@ export const Events = () => {
     onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
     onRowSelected: (params) => action('onRowSelected')(params),
     onSelectionChange: (params) => action('onSelectionChange', { depth: 1 })(params),
-    onColumnsSorted: (params) => action('onColumnsSorted')(params),
     onPageChange: (params) => action('onPageChange')(params),
     onPageSizeChange: (params) => action('onPageSizeChange')(params),
+    onSortModelChange: (params) => action('onSortModelChange')(params),
   };
 
   return <DataGrid rows={data.rows} columns={data.columns} options={options} />;

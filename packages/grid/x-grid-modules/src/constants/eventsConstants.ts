@@ -26,7 +26,6 @@ export const COL_RESIZE_STOP = 'colResizing:stop';
 export const ROWS_UPDATED = 'rowsUpdated';
 export const COLUMNS_UPDATED = 'columnsUpdated';
 
-export const COLUMNS_SORTING_CHANGE = 'columnsSortingChange';
-export const COLUMNS_SORTED = 'columnsSorted';
+export const SORT_MODEL_CHANGE = 'sortModelChange';
 
 export const MULTIPLE_KEY_PRESS_CHANGED = 'multipleKeyPressChange';

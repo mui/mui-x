@@ -67,6 +67,7 @@ export function useApi(
         api.removeAllListeners();
       };
     }
+    return;
   }, [gridRootRef, isApiInitialised, logger, apiRef]);
 
   return initialised;

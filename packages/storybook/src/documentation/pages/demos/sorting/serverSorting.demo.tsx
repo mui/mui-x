@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ColDef, RowsProp, SortDirection, XGrid, ColumnSortedParams } from '@material-ui/x-grid';
+import { ColDef, RowsProp, SortDirection, XGrid, SortModelParams } from '@material-ui/x-grid';
 
 const getColumns: () => ColDef[] = () => [
   { field: 'id', type: 'number' },
@@ -47,14 +47,14 @@ const getRows = () => [
   },
 ];
 
-function sortServerRows(rows: any[], params: ColumnSortedParams): Promise<any[]> {
+function sortServerRows(rows: any[], params: SortModelParams): Promise<any[]> {
   return new Promise<any[]>((resolve) => {
     setTimeout(() => {
       if (params.sortModel.length === 0) {
         resolve(getRows());
       }
       const sortedCol = params.sortModel[0];
-      const comparator = params.sortedColumns[0].sortComparator!;
+      const comparator = params.columns.filter((col: ColDef)=> col.field === sortedCol.field)[0].sortComparator!;
       let sortedRows = [
         ...rows.sort((a, b) => comparator(a[sortedCol.field], b[sortedCol.field], a, b)),
       ];
@@ -73,8 +73,8 @@ export default function ServerSortingDemo() {
   const [columns] = React.useState<ColDef[]>(getColumns());
   const [loading, setLoading] = React.useState<boolean>(false);
 
-  const onColumnsSortingChange = React.useCallback(
-    async (params: ColumnSortedParams) => {
+  const onSortModelChange = React.useCallback(
+    async (params: SortModelParams) => {
       setLoading(true);
 
       const newRows = await sortServerRows(rows, params);
@@ -91,7 +91,7 @@ export default function ServerSortingDemo() {
       rows={rows}
       columns={columns}
       options={{
-        onColumnsSortingChange,
+        onSortModelChange,
         sortingMode: 'server',
         enableMultipleColumnsSorting: false,
         sortModel: sortBy,

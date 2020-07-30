@@ -139,13 +139,13 @@ XGrid also offers to override the sortModel using its `sortModel` property of it
 ## Server-side sorting
 
 XGrid supports both client and server-side pagination. By default, sorting works on the client-side. To switch it to server-side,
-set the property `sortingMode` to `server` as string or you can use our `FeatureModeConstant`.
+set the property `sortingMode` to `server`.
 
-Then, you're going to need to handle the `onColumnsSortingChange` event, to intercept the event, sort the rows on the server side and update the component with the new sorted rows.
+Then, you're going to need to handle the `onSortModelChange` event, to intercept the event, sort the rows on the server side and update the component with the new sorted rows.
 
 ```tsx
 const [rows, setRows] = React.useState<RowsProp>([]);
-const onColumnsSortingChange = (params) => {
+const onSortModelChange = (params) => {
   sortServerRows(params).then((newRows) => {
     setRows(newRows);
   });
@@ -157,7 +157,7 @@ const onColumnsSortingChange = (params) => {
   options={{
     sortingMode: 'server',
     sortModel: sortBy,
-    onColumnsSortingChange,
+    onSortModelChange,
   }}
 />;
 ```
@@ -166,8 +166,7 @@ const onColumnsSortingChange = (params) => {
 
 ## Events
 
-- `onColumnsSortingChange` - Event triggered when the sort model change and before a column is sorted.
-- `onColumnsSorted` - Event triggered after columns are sorted.
+- `onSortModelChange` - Event triggered when the sort model change and before a column is sorted.
 
 ## API
 
@@ -175,5 +174,4 @@ Finally, we added the following methods in XGrid API. More about the API and how
 
 - `getSortModel` - Returns the currently applied `SortModel`
 - `setSortModel` - Set a `SortModel` to sort the grid in one or multiple columns
-- `onColumnsSorted` - Set a handler for the `onColumnsSorted` event
-- `onColumnsSortingChange` - Set a handler for the `onColumnsSortingChange` event
+- `onSortModelChange` - Set a handler for the `onSortModelChange` event
