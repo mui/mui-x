@@ -31,11 +31,11 @@ export function useApi(
 
   const emitEvent = React.useCallback(
     (name: string, ...args: any[]) => {
-      if (apiRef && apiRef.current && isApiInitialised) {
+      if (apiRef && apiRef.current && apiRef.current?.isInitialised) {
         apiRef.current.emit(name, ...args);
       }
     },
-    [apiRef, isApiInitialised],
+    [apiRef],
   );
 
   const registerEvent = React.useCallback(

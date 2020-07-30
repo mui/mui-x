@@ -33,7 +33,7 @@ import {
 import { useApiMethod } from './useApiMethod';
 import { useApiEventHandler } from './useApiEventHandler';
 import { buildCellParams, buildRowParams } from '../../utils/paramsUtils';
-import {EventsApi} from "../../models/api/eventsApi";
+import { EventsApi } from '../../models/api/eventsApi';
 
 export function useEvents(
   gridRootRef: React.RefObject<HTMLDivElement>,
@@ -120,7 +120,7 @@ export function useEvents(
         apiRef.current!.emitEvent(COLUMN_HEADER_CLICK, eventParams.header);
       }
     },
-    [apiRef.current?.emitEvent, getEventParams],
+    [apiRef, getEventParams],
   );
 
   const onHoverHandler = React.useCallback(
@@ -141,20 +141,20 @@ export function useEvents(
         apiRef.current!.emitEvent(COLUMN_HEADER_HOVER, eventParams.header);
       }
     },
-    [apiRef.current?.emitEvent, getEventParams],
+    [apiRef, getEventParams],
   );
 
   const onUnmount = React.useCallback(
     (handler: (param: any) => void): (() => void) => {
       return apiRef.current!.registerEvent(UNMOUNT, handler);
     },
-    [ apiRef.current?.registerEvent],
+    [apiRef],
   );
   const onResize = React.useCallback(
     (handler: (param: any) => void): (() => void) => {
-      return  apiRef.current!.registerEvent(RESIZE, handler);
+      return apiRef.current!.registerEvent(RESIZE, handler);
     },
-    [ apiRef.current?.registerEvent],
+    [apiRef],
   );
 
   const handleResizeStart = React.useCallback(() => {
@@ -166,8 +166,8 @@ export function useEvents(
   }, [isResizingRef]);
 
   const resize = React.useCallback(() => apiRef.current?.emit(RESIZE), [apiRef]);
-  const eventsApi: EventsApi = {resize, onUnmount, onResize};
-  useApiMethod(apiRef, eventsApi , 'EventsApi');
+  const eventsApi: EventsApi = { resize, onUnmount, onResize };
+  useApiMethod(apiRef, eventsApi, 'EventsApi');
 
   useApiEventHandler(apiRef, COL_RESIZE_START, handleResizeStart);
   useApiEventHandler(apiRef, COL_RESIZE_STOP, handleResizeStop);
@@ -179,8 +179,8 @@ export function useEvents(
   useApiEventHandler(apiRef, ROW_HOVER, options.onRowHover);
 
   React.useEffect(() => {
-    if (gridRootRef && gridRootRef.current &&  apiRef.current?.isInitialised) {
-      logger.debug('Binding events listeners');
+    if (gridRootRef && gridRootRef.current && apiRef.current?.isInitialised) {
+      logger.warn('Binding events listeners');
       const keyDownHandler = getHandler(KEYDOWN_EVENT);
       const keyUpHandler = getHandler(KEYUP_EVENT);
       const gridRootElem = gridRootRef.current;
@@ -194,7 +194,7 @@ export function useEvents(
       const api = apiRef.current!;
 
       return () => {
-        logger.debug('Clearing all events listeners');
+        logger.warn('Clearing all events listeners');
         api.emit(UNMOUNT);
         gridRootElem.removeEventListener(CLICK_EVENT, onClickHandler, { capture: true });
         gridRootElem.removeEventListener(HOVER_EVENT, onHoverHandler, { capture: true });
@@ -203,6 +203,13 @@ export function useEvents(
         api.removeAllListeners();
       };
     }
-
-  }, [gridRootRef, apiRef.current?.isInitialised, getHandler, logger, onClickHandler, onHoverHandler, apiRef]);
+  }, [
+    gridRootRef,
+    apiRef.current?.isInitialised,
+    getHandler,
+    logger,
+    onClickHandler,
+    onHoverHandler,
+    apiRef,
+  ]);
 }

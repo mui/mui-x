@@ -33,7 +33,7 @@ import { useApi, useColumns, useKeyboard, useRows } from './hooks/root';
 import { useLogger, useLoggerFactory } from './hooks/utils';
 import { debounce } from './utils';
 import { mergeOptions } from './utils/mergeOptions';
-import {useEvents} from "./hooks/root/useEvents";
+import { useEvents } from './hooks/root/useEvents';
 
 /**
  * Data Grid component implementing [[GridComponentProps]].
