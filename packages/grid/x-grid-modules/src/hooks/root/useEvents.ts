@@ -50,10 +50,11 @@ export function useEvents(
   );
 
   const getEventParams = React.useCallback(
-    (event: any) => {
+    (event: MouseEvent) => {
       if (event.target == null) {
-        return null;
+        throw new Error(`Event target null - Target has been removed or component might already be unmounted.`)
       }
+
       const elem = event.target as HTMLElement;
       const eventParams: { cell?: CellParams; row?: RowParams; header?: ColParams } = {};
 
@@ -124,7 +125,7 @@ export function useEvents(
   );
 
   const onHoverHandler = React.useCallback(
-    (event: any) => {
+    (event: MouseEvent) => {
       const eventParams = getEventParams(event);
 
       if (!eventParams) {
