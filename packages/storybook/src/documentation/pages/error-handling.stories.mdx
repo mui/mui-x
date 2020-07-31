@@ -1,0 +1,36 @@
+import { XGrid } from '@material-ui/x-grid';
+import ExceptionDemo from './demos/error/exception.demo';
+import ServerErrorDemo from './demos/error/serverError.demo';
+
+<Meta title="1. Docs/13. Error handling" component={XGrid} />
+
+# Error handling
+
+Handling error on the UI and in the grid, is critical to avoid breaking the whole application, or even displaying corrupted data.
+Therefore, XGrid is wrapped with an error boundary internally. So if the component throw an unhandled exception anywhere in the tree,
+the exception will get caught by the error boundary, and a nice error message overlay will be displayed.
+
+<ExceptionDemo />
+
+## Show server errors
+
+Server errors can be displayed using the `showError` method of the `ApiRef` as below.
+
+```tsx
+const apiRef = useApiRef();
+
+useEffect(()=> {
+    service.loadBadRows().catch((error)=> {
+        apiRef.current.showError({message: 'Error loading rows.'});
+    }
+}, [apiRef]);
+
+<XGrid rows={rows} columns={columns} apiRef={apiRef} />
+
+```
+
+<ServerErrorDemo />
+
+## Customising the error component
+
+## Events and OnError option
