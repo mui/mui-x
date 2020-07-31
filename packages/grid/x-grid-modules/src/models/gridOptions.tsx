@@ -262,7 +262,7 @@ export interface GridOptions {
    */
   onPageSizeChange?: (param: PageChangeParams) => void;
 
-  onError?: ()=> void;
+  onError?: () => void;
   /**
    * Set of icons used in the grid.
    */

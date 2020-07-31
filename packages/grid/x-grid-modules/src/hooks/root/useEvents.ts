@@ -14,7 +14,8 @@ import {
   HOVER_EVENT,
   CELL_HOVER,
   ROW_HOVER,
-  COLUMN_HEADER_HOVER, ERROR,
+  COLUMN_HEADER_HOVER,
+  ERROR,
 } from '../../constants/eventsConstants';
 import { GridOptions, ApiRef, CellParams, ColParams, RowParams } from '../../models';
 import {

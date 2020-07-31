@@ -1,15 +1,15 @@
 import * as React from 'react';
-import {XGrid, GridOptionsProp, ColDef, useApiRef, GridOverlay} from '@material-ui/x-grid';
+import { XGrid, GridOptionsProp, ColDef, useApiRef, GridOverlay } from '@material-ui/x-grid';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { useData } from '../hooks/useData';
 import '../style/grid-stories.css';
-import {useEffect} from "react";
-import {Simulate} from "react-dom/test-utils";
+import { useEffect } from 'react';
+import { Simulate } from 'react-dom/test-utils';
 import error = Simulate.error;
-import LinearProgress from "@material-ui/core/LinearProgress";
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 export default {
   title: 'X-Grid Tests/Styling',

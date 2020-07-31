@@ -1,15 +1,15 @@
 import * as React from 'react';
-import {XGrid, GridOptionsProp, ColDef, useApiRef, GridOverlay} from '@material-ui/x-grid';
+import { XGrid, GridOptionsProp, ColDef, useApiRef, GridOverlay } from '@material-ui/x-grid';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { useData } from '../hooks/useData';
 import '../style/grid-stories.css';
-import {useEffect} from "react";
-import {Simulate} from "react-dom/test-utils";
+import { useEffect } from 'react';
+import { Simulate } from 'react-dom/test-utils';
 import error = Simulate.error;
-import LinearProgress from "@material-ui/core/LinearProgress";
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 export default {
   title: 'X-Grid Tests/Error Handling',
@@ -112,7 +112,7 @@ export const throwException = () => {
   cols[4].cellClassRules = {
     common: () => {
       throw new Error('Some bad stuff happened!');
-    }
+    },
   };
 
   return (
@@ -127,24 +127,23 @@ export const showErrorApi = () => {
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
 
-  useEffect(()=> {
-    if(api && api.current ) {
-        api.current!.showError({message: 'Error loading rows!'})
+  useEffect(() => {
+    if (api && api.current) {
+      api.current!.showError({ message: 'Error loading rows!' });
     }
-  },[api])
+  }, [api]);
 
   return (
     <div className="grid-container">
-      <XGrid rows={rows} columns={cols} apiRef={api}/>
+      <XGrid rows={rows} columns={cols} apiRef={api} />
     </div>
   );
 };
 
-
 function CustomErrorOverlay(props) {
   return (
     <GridOverlay className="custom-overlay">
-      <div style={{textAlign: "center"}}>
+      <div style={{ textAlign: 'center' }}>
         <h1>{props.title}</h1>
         <p>{typeof props.error === 'string' ? props.error : props.error.message}</p>
       </div>
@@ -159,16 +158,19 @@ export const CustomError = () => {
 
   useEffect(() => {
     if (api && api.current) {
-      api.current!.showError({error: 'Something bad happened!', title: 'BIG ERROR'})
+      api.current!.showError({ error: 'Something bad happened!', title: 'BIG ERROR' });
     }
-  }, [api])
+  }, [api]);
 
   return (
     <div className="grid-container">
-      <XGrid rows={rows} columns={cols} apiRef={api}
-             components={{
-               errorOverlay: CustomErrorOverlay
-             }}
+      <XGrid
+        rows={rows}
+        columns={cols}
+        apiRef={api}
+        components={{
+          errorOverlay: CustomErrorOverlay,
+        }}
       />
     </div>
   );
@@ -179,15 +181,18 @@ export const CustomErrorWithException = () => {
   cols[4].cellClassRules = {
     common: () => {
       throw new Error('Some bad stuff happened!');
-    }
+    },
   };
 
   return (
     <div className="grid-container">
-      <XGrid rows={rows} columns={cols}
-             components={{
-        errorOverlay: CustomErrorOverlay
-      }}/>
+      <XGrid
+        rows={rows}
+        columns={cols}
+        components={{
+          errorOverlay: CustomErrorOverlay,
+        }}
+      />
     </div>
   );
 };

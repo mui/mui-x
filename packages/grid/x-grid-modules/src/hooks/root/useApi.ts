@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useLogger } from '../utils/useLogger';
-import {ERROR, UNMOUNT} from '../../constants/eventsConstants';
-import {GridOptions, ApiRef, CoreApi} from '../../models';
+import { ERROR, UNMOUNT } from '../../constants/eventsConstants';
+import { GridOptions, ApiRef, CoreApi } from '../../models';
 import { GridApi } from '../../models/api/gridApi';
 import { useApiMethod } from './useApiMethod';
 
@@ -51,9 +51,12 @@ export function useApi(
     [apiRef, logger],
   );
 
-  const showError = React.useCallback((args)=> {
-    emitEvent(ERROR, args);
-  }, [emitEvent])
+  const showError = React.useCallback(
+    (args) => {
+      emitEvent(ERROR, args);
+    },
+    [emitEvent],
+  );
 
   useApiMethod(apiRef, { registerEvent, emitEvent, showError }, 'CoreApi');
   React.useEffect(() => {

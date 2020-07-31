@@ -14,8 +14,13 @@ import {
   GridOptions,
   RootContainerRef,
 } from './models';
-import {DATA_CONTAINER_CSS_CLASS, ERROR} from './constants';
-import {ColumnsContainer, DataContainer, GridOverlay, GridRoot} from './components/styled-wrappers';
+import { DATA_CONTAINER_CSS_CLASS, ERROR } from './constants';
+import {
+  ColumnsContainer,
+  DataContainer,
+  GridOverlay,
+  GridRoot,
+} from './components/styled-wrappers';
 import { useVirtualRows } from './hooks/virtualization';
 import {
   AutoSizerWrapper,
@@ -34,7 +39,7 @@ import { useLogger, useLoggerFactory } from './hooks/utils';
 import { debounce } from './utils';
 import { mergeOptions } from './utils/mergeOptions';
 import { useEvents } from './hooks/root/useEvents';
-import {ErrorBoundary} from "./components/error-boundary";
+import { ErrorBoundary } from './components/error-boundary';
 
 /**
  * Data Grid component implementing [[GridComponentProps]].
@@ -68,14 +73,14 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
 
     const initialised = useApi(rootContainerRef, internalOptions, apiRef);
 
-    const errorHandler = (args: any)=> {
-      setErrorState(args)
+    const errorHandler = (args: any) => {
+      setErrorState(args);
     };
-    React.useEffect(()=> {
-      if(apiRef && apiRef.current) {
+    React.useEffect(() => {
+      if (apiRef && apiRef.current) {
         apiRef.current.registerEvent(ERROR, errorHandler);
       }
-    }, [apiRef])
+    }, [apiRef]);
 
     useEvents(rootContainerRef, internalOptions, apiRef);
     const internalColumns = useColumns(internalOptions, columns, apiRef);
@@ -176,79 +181,85 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
             aria-label="grid"
             aria-multiselectable={internalOptions.enableMultipleSelection}
           >
-            <ErrorBoundary hasError={errorState != null} componentProps={errorState} api={apiRef!} logger={logger} render={(errorProps)=> (
-              <div className="main-grid-container">
+            <ErrorBoundary
+              hasError={errorState != null}
+              componentProps={errorState}
+              api={apiRef!}
+              logger={logger}
+              render={(errorProps) => (
+                <div className="main-grid-container">
                   {customComponents.renderError(errorProps)}
                 </div>
-              )}>
-            <ApiContext.Provider value={apiRef}>
-              <OptionsContext.Provider value={internalOptions}>
-                {customComponents.headerComponent}
-                <div className="main-grid-container">
-                  <Watermark licenseStatus={licenseStatus} />
-                  <ColumnsContainer ref={columnsContainerRef}>
-                    <ColumnsHeader
-                      ref={columnsHeaderRef}
-                      columns={internalColumns.visible || []}
-                      hasScrollX={!!renderCtx?.hasScrollX}
-                      headerHeight={internalOptions.headerHeight}
-                      onResizeColumn={onResizeColumn}
-                      renderCtx={renderCtx}
-                    />
-                  </ColumnsContainer>
-                  {!loading && internalRows.length === 0 && customComponents.noRowsComponent}
-                  {loading && customComponents.loadingComponent}
-                  <Window ref={windowRef}>
-                    <DataContainer
-                      ref={gridRef}
-                      className={DATA_CONTAINER_CSS_CLASS}
-                      style={{
-                        minHeight: renderCtx?.dataContainerSizes?.height,
-                        minWidth: renderCtx?.dataContainerSizes?.width,
-                      }}
-                    >
-                      {renderCtx != null && (
-                        <RenderContext.Provider value={renderCtx}>
-                          <Viewport
-                            ref={renderingZoneRef}
-                            options={internalOptions}
-                            rows={internalRows}
-                            visibleColumns={internalColumns.visible}
+              )}
+            >
+              <ApiContext.Provider value={apiRef}>
+                <OptionsContext.Provider value={internalOptions}>
+                  {customComponents.headerComponent}
+                  <div className="main-grid-container">
+                    <Watermark licenseStatus={licenseStatus} />
+                    <ColumnsContainer ref={columnsContainerRef}>
+                      <ColumnsHeader
+                        ref={columnsHeaderRef}
+                        columns={internalColumns.visible || []}
+                        hasScrollX={!!renderCtx?.hasScrollX}
+                        headerHeight={internalOptions.headerHeight}
+                        onResizeColumn={onResizeColumn}
+                        renderCtx={renderCtx}
+                      />
+                    </ColumnsContainer>
+                    {!loading && internalRows.length === 0 && customComponents.noRowsComponent}
+                    {loading && customComponents.loadingComponent}
+                    <Window ref={windowRef}>
+                      <DataContainer
+                        ref={gridRef}
+                        className={DATA_CONTAINER_CSS_CLASS}
+                        style={{
+                          minHeight: renderCtx?.dataContainerSizes?.height,
+                          minWidth: renderCtx?.dataContainerSizes?.width,
+                        }}
+                      >
+                        {renderCtx != null && (
+                          <RenderContext.Provider value={renderCtx}>
+                            <Viewport
+                              ref={renderingZoneRef}
+                              options={internalOptions}
+                              rows={internalRows}
+                              visibleColumns={internalColumns.visible}
+                            />
+                          </RenderContext.Provider>
+                        )}
+                      </DataContainer>
+                    </Window>
+                  </div>
+                  {customComponents.footerComponent || (
+                    <DefaultFooter
+                      ref={footerRef}
+                      paginationComponent={
+                        !!internalOptions.pagination &&
+                        paginationProps.pageSize != null &&
+                        !internalOptions.hideFooterPagination &&
+                        (customComponents.paginationComponent || (
+                          <Pagination
+                            setPage={paginationProps.setPage}
+                            currentPage={paginationProps.page}
+                            pageCount={paginationProps.pageCount}
+                            pageSize={paginationProps.pageSize}
+                            rowCount={paginationProps.rowCount}
+                            setPageSize={paginationProps.setPageSize}
+                            rowsPerPageOptions={internalOptions.rowsPerPageOptions}
                           />
-                        </RenderContext.Provider>
-                      )}
-                    </DataContainer>
-                  </Window>
-                </div>
-                {customComponents.footerComponent || (
-                  <DefaultFooter
-                    ref={footerRef}
-                    paginationComponent={
-                      !!internalOptions.pagination &&
-                      paginationProps.pageSize != null &&
-                      !internalOptions.hideFooterPagination &&
-                      (customComponents.paginationComponent || (
-                        <Pagination
-                          setPage={paginationProps.setPage}
-                          currentPage={paginationProps.page}
-                          pageCount={paginationProps.pageCount}
-                          pageSize={paginationProps.pageSize}
-                          rowCount={paginationProps.rowCount}
-                          setPageSize={paginationProps.setPageSize}
-                          rowsPerPageOptions={internalOptions.rowsPerPageOptions}
-                        />
-                      ))
-                    }
-                    rowCount={
-                      internalOptions.rowCount == null
-                        ? internalRows.length
-                        : internalOptions.rowCount
-                    }
-                    options={internalOptions}
-                  />
-                )}
-              </OptionsContext.Provider>
-            </ApiContext.Provider>
+                        ))
+                      }
+                      rowCount={
+                        internalOptions.rowCount == null
+                          ? internalRows.length
+                          : internalOptions.rowCount
+                      }
+                      options={internalOptions}
+                    />
+                  )}
+                </OptionsContext.Provider>
+              </ApiContext.Provider>
             </ErrorBoundary>
           </GridRoot>
         )}
