@@ -12,7 +12,7 @@ import error = Simulate.error;
 import LinearProgress from "@material-ui/core/LinearProgress";
 
 export default {
-  title: 'X-Grid Tests/Styling',
+  title: 'X-Grid Tests/Error Handling',
   component: XGrid,
   decorators: [withKnobs, withA11y],
   parameters: {
@@ -22,34 +22,6 @@ export default {
     },
   },
 };
-
-export const BigRowsAndHeader = () => {
-  const data = useData(200, 200);
-  const options: GridOptionsProp = {
-    headerHeight: 80,
-    rowHeight: 60,
-    checkboxSelection: true,
-  };
-
-  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
-};
-
-export const Unset = () => {
-  const data = useData(200, 200);
-  return <XGrid rows={data.rows} columns={data.columns} />;
-};
-
-export const Small = () => {
-  const data = useData(200, 200);
-  const options: GridOptionsProp = {
-    headerHeight: 35,
-    rowHeight: 27,
-  };
-  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
-};
-
-const IsDone: React.FC<{ value: boolean }> = ({ value }) =>
-  value ? <DoneIcon fontSize="small" /> : <ClearIcon fontSize="small" />;
 
 const getColumns: () => ColDef[] = () => [
   { field: 'id' },
@@ -134,36 +106,13 @@ const getRows = () => [
   { id: 7, lastName: 'Smith', firstName: '', isRegistered: true, age: 40 },
 ];
 
-export const ColumnCellClass = () => {
-  const rows = React.useMemo(() => getRows(), []);
-  const cols = React.useMemo(() => getColumns(), []);
-  cols[3].cellClassName = ['age', 'shine'];
-
-  return (
-    <div className="grid-container">
-      <XGrid rows={rows} columns={cols} />
-    </div>
-  );
-};
-export const ColumnHeaderClass = () => {
-  const rows = React.useMemo(() => getRows(), []);
-  const cols = React.useMemo(() => getColumns(), []);
-  cols[3].headerClassName = ['age', 'shine'];
-
-  return (
-    <div className="grid-container">
-      <XGrid rows={rows} columns={cols} />
-    </div>
-  );
-};
-
-export const ColumnCellClassRules = () => {
+export const throwException = () => {
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
   cols[4].cellClassRules = {
-    common: (params) => params.data.lastName === 'Smith',
-    unknown: (params) => !params.data.lastName,
-    border: true,
+    common: () => {
+      throw new Error('Some bad stuff happened!');
+    }
   };
 
   return (
@@ -173,25 +122,72 @@ export const ColumnCellClassRules = () => {
   );
 };
 
-export const ColumnCellRenderer = () => {
+export const showErrorApi = () => {
+  const api = useApiRef();
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
-  cols[5].renderCell = (params) => <IsDone value={!!params.value} />;
+
+  useEffect(()=> {
+    if(api && api.current ) {
+        api.current!.showError({message: 'Error loading rows!'})
+    }
+  },[api])
 
   return (
     <div className="grid-container">
-      <XGrid rows={rows} columns={cols} />
+      <XGrid rows={rows} columns={cols} apiRef={api}/>
     </div>
   );
 };
-export const ColumnCellRendererWithPadding = () => {
+
+
+function CustomErrorOverlay(props) {
+  return (
+    <GridOverlay className="custom-overlay">
+      <div style={{textAlign: "center"}}>
+        <h1>{props.title}</h1>
+        <p>{typeof props.error === 'string' ? props.error : props.error.message}</p>
+      </div>
+    </GridOverlay>
+  );
+}
+
+export const CustomError = () => {
+  const api = useApiRef();
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
-  cols[5].renderCell = (params) => <IsDone value={!!params.value} />;
+
+  useEffect(() => {
+    if (api && api.current) {
+      api.current!.showError({error: 'Something bad happened!', title: 'BIG ERROR'})
+    }
+  }, [api])
 
   return (
-    <div className="grid-container" style={{ padding: 50 }}>
-      <XGrid rows={rows} columns={cols} />
+    <div className="grid-container">
+      <XGrid rows={rows} columns={cols} apiRef={api}
+             components={{
+               errorOverlay: CustomErrorOverlay
+             }}
+      />
+    </div>
+  );
+};
+export const CustomErrorWithException = () => {
+  const rows = React.useMemo(() => getRows(), []);
+  const cols = React.useMemo(() => getColumns(), []);
+  cols[4].cellClassRules = {
+    common: () => {
+      throw new Error('Some bad stuff happened!');
+    }
+  };
+
+  return (
+    <div className="grid-container">
+      <XGrid rows={rows} columns={cols}
+             components={{
+        errorOverlay: CustomErrorOverlay
+      }}/>
     </div>
   );
 };

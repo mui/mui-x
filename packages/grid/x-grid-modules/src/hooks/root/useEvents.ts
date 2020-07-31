@@ -14,7 +14,7 @@ import {
   HOVER_EVENT,
   CELL_HOVER,
   ROW_HOVER,
-  COLUMN_HEADER_HOVER,
+  COLUMN_HEADER_HOVER, ERROR,
 } from '../../constants/eventsConstants';
 import { GridOptions, ApiRef, CellParams, ColParams, RowParams } from '../../models';
 import {
@@ -180,6 +180,7 @@ export function useEvents(
   useApiEventHandler(apiRef, ROW_CLICK, options.onRowClick);
   useApiEventHandler(apiRef, CELL_HOVER, options.onCellHover);
   useApiEventHandler(apiRef, ROW_HOVER, options.onRowHover);
+  useApiEventHandler(apiRef, ERROR, options.onError);
 
   React.useEffect(() => {
     if (gridRootRef && gridRootRef.current && apiRef.current?.isInitialised) {

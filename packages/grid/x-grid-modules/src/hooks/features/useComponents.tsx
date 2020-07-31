@@ -10,6 +10,7 @@ import {
   Rows,
 } from '../../models';
 import { LoadingOverlay, NoRowMessage } from '../../components';
+import {ErrorMessage} from "../../components/error-message";
 
 export const useComponents = (
   columns: InternalColumns,
@@ -74,11 +75,20 @@ export const useComponents = (
     [componentOverrides, componentParams],
   );
 
+  const renderError = React.useCallback((props)=> {
+    return  componentOverrides?.errorOverlay ? (
+      React.createElement(componentOverrides.errorOverlay, {...componentParams, ...props})
+    ) : (
+      <ErrorMessage {...{...componentParams, ...props}} />
+    );
+  }, []);
+
   return {
     headerComponent,
     footerComponent,
     loadingComponent,
     noRowsComponent,
     paginationComponent,
+    renderError
   };
 };

@@ -14,8 +14,8 @@ import {
   GridOptions,
   RootContainerRef,
 } from './models';
-import { DATA_CONTAINER_CSS_CLASS } from './constants';
-import { ColumnsContainer, DataContainer, GridRoot } from './components/styled-wrappers';
+import {DATA_CONTAINER_CSS_CLASS, ERROR} from './constants';
+import {ColumnsContainer, DataContainer, GridOverlay, GridRoot} from './components/styled-wrappers';
 import { useVirtualRows } from './hooks/virtualization';
 import {
   AutoSizerWrapper,
@@ -34,6 +34,7 @@ import { useLogger, useLoggerFactory } from './hooks/utils';
 import { debounce } from './utils';
 import { mergeOptions } from './utils/mergeOptions';
 import { useEvents } from './hooks/root/useEvents';
+import {ErrorBoundary} from "./components/error-boundary";
 
 /**
  * Data Grid component implementing [[GridComponentProps]].
@@ -52,6 +53,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
     const gridRef = React.useRef<HTMLDivElement>(null);
     const renderingZoneRef = React.useRef<HTMLDivElement>(null);
     const internalApiRef = React.useRef<GridApi | null | undefined>();
+    const [errorState, setErrorState] = React.useState<any>(null);
 
     const [internalOptions, setInternalOptions] = React.useState<GridOptions>(
       mergeOptions(DEFAULT_GRID_OPTIONS, options),
@@ -65,6 +67,16 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
     }
 
     const initialised = useApi(rootContainerRef, internalOptions, apiRef);
+
+    const errorHandler = (args: any)=> {
+      setErrorState(args)
+    };
+    React.useEffect(()=> {
+      if(apiRef && apiRef.current) {
+        apiRef.current.registerEvent(ERROR, errorHandler);
+      }
+    }, [apiRef])
+
     useEvents(rootContainerRef, internalOptions, apiRef);
     const internalColumns = useColumns(internalOptions, columns, apiRef);
     const internalRows = useRows(internalOptions, rows, initialised, apiRef);
@@ -164,6 +176,11 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
             aria-label="grid"
             aria-multiselectable={internalOptions.enableMultipleSelection}
           >
+            <ErrorBoundary hasError={errorState != null} componentProps={errorState} api={apiRef!} logger={logger} render={(errorProps)=> (
+              <div className="main-grid-container">
+                  {customComponents.renderError(errorProps)}
+                </div>
+              )}>
             <ApiContext.Provider value={apiRef}>
               <OptionsContext.Provider value={internalOptions}>
                 {customComponents.headerComponent}
@@ -232,6 +249,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
                 )}
               </OptionsContext.Provider>
             </ApiContext.Provider>
+            </ErrorBoundary>
           </GridRoot>
         )}
       </AutoSizerWrapper>

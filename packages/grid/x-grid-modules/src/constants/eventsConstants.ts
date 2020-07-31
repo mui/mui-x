@@ -1,4 +1,5 @@
 export const RESIZE = 'resize';
+export const ERROR = 'grid_error';
 export const UNMOUNT = 'unmount';
 export const CLICK_EVENT = 'click';
 export const HOVER_EVENT = 'mouseover';

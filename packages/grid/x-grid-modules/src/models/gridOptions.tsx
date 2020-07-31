@@ -261,6 +261,8 @@ export interface GridOptions {
    * @param param With all properties from [[PageChangeParams]].
    */
   onPageSizeChange?: (param: PageChangeParams) => void;
+
+  onError?: ()=> void;
   /**
    * Set of icons used in the grid.
    */

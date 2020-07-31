@@ -23,4 +23,9 @@ export interface CoreApi extends EventEmitter {
    * @param args
    */
   emitEvent: (name: string, ...args: any[]) => void;
+
+  /**
+   * Display the error overlay component.
+   */
+  showError: (props: any)=> void;
 }
