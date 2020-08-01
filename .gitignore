@@ -3,6 +3,7 @@
 .idea
 .vscode
 
+__diff_output__
 .DS_STORE
 *.log
 /.eslintcache
@@ -10,4 +11,3 @@
 /coverage
 dist
 node_modules
-__diff_output__
