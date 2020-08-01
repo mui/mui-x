@@ -194,8 +194,7 @@ export interface GridOptions {
    */
   logLevel?: string | false;
   /**
-   * Set the sort model of the grid
-   *
+   * Set the sort model of the grid.
    */
   sortModel?: SortModel;
   /**
@@ -231,8 +230,7 @@ export interface GridOptions {
   /**
    * Handler triggered when one or multiple rows get their selection state change.
    *
-   *
-   * @param param With all properties from [[SelectionChangeParams]]
+   * @param param With all properties from [[SelectionChangeParams]].
    */
   onSelectionChange?: (param: SelectionChangeParams) => void;
   /**
@@ -250,13 +248,11 @@ export interface GridOptions {
   /**
    * Handler triggered when the current page has change.
    *
-   *
    * @param param With all properties from [[PageChangeParams]].
    */
   onPageChange?: (param: PageChangeParams) => void;
   /**
    * Handler triggered when the page size change.
-   *
    *
    * @param param With all properties from [[PageChangeParams]].
    */
