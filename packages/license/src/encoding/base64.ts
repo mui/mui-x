@@ -26,8 +26,8 @@ function utf8Encode(str: string) {
 function utf8Decode(utftext: string) {
   let string = '';
   let i = 0;
-  let c, c1, c2, c3;
-  c = c1 = c2 = c3 = 0;
+  let c, c2, c3;
+  c = c2 = c3 = 0;
 
   while (i < utftext.length) {
     c = utftext.charCodeAt(i);

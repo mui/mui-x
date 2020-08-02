@@ -27,12 +27,12 @@ module.exports = {
   webpackFinal: async config => {
     config.devtool = __DEV__ ? 'inline-source-map' : undefined;
     config.module.rules.push({
-      test: /\.(js|ts|tsx)$/,
-      exclude: /node_modules/,
-      loader: 'babel-loader',
-      query: {
-        cacheDirectory: true,
-      },
+      test: /\.(ts|tsx)$/,
+      use: [
+        {
+          loader: require.resolve('ts-loader'),
+        }
+      ],
     });
 
     if (__DEV__) {
@@ -80,6 +80,12 @@ module.exports = {
     config.resolve = {
       ...config.resolve,
       extensions: ['.js', '.ts', '.tsx'],
+      alias: {
+        '@material-ui/x-grid': path.resolve(__dirname, '../../../packages/grid/x-grid/src'),
+        '@material-ui/x-grid-modules': path.resolve(__dirname, '../../../packages/grid/x-grid-modules/src'),
+        '@material-ui/x-license': path.resolve(__dirname, '../../../packages/license/src'),
+        '@material-ui/data-grid': path.resolve(__dirname, '../../../packages/grid/data-grid/src'),
+      },
       modules: [path.join(__dirname, '../../../'), 'node_modules'],
     };
     return config;
