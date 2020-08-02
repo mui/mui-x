@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createMuiTheme, ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
-// eslint-disable-next-line no-restricted-imports
 import { PaletteOptions } from '@material-ui/core/styles/createPalette';
 import { ThemeProvider as SCThemeProvider } from 'styled-components';
 import { lightTheme, lightThemeId } from './light';

@@ -58,7 +58,7 @@ module.exports = {
     });
 
     config.module.rules.push({
-      test: /\.(js|ts|tsx)$/,
+      test: /\.tsx$/,
       loader: 'string-replace-loader',
       options: {
         search: '__RELEASE_INFO__',

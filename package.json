@@ -1,14 +1,16 @@
 {
-  "version": "0.1.0",
+  "version": "4.11.0",
   "private": true,
   "devDependencies": {
     "@babel/core": "^7.10.2",
+    "@babel/node": "^7.10.5",
     "@babel/plugin-transform-object-assign": "^7.10.4",
     "@babel/plugin-transform-runtime": "^7.10.5",
     "@babel/register": "^7.10.5",
     "@material-ui/core": "^4.9.12",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.54",
+    "@material-ui/monorepo": "https://github.com/mui-org/material-ui.git#next",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@types/enzyme": "^3.10.5",
@@ -68,13 +70,19 @@
     "yarn-deduplicate": "^2.1.1"
   },
   "scripts": {
+    "docs:dev": "yarn workspace docs dev",
+    "docs:build": "yarn workspace docs build",
+    "docs:export": "yarn workspace docs export",
+    "docs:typescript:formatted": "yarn workspace docs typescript:transpile",
+    "storybook:build": "yarn workspace storybook build",
+    "storybook:export": "yarn workspace storybook export",
     "deduplicate": "node scripts/deduplicate.js",
     "jsonlint": "node scripts/jsonlint.js",
     "hoist": "lerna bootstrap --hoist",
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build --stream",
     "start": "lerna run start --parallel",
-    "prettier": "node ./scripts/prettier.js",
+    "prettier": "yarn babel-node -i '/node_modules/(?!@material-ui)/' ./scripts/prettier.js --branch master",
     "test": "lerna run test --parallel",
     "test:coverage": "cross-env NODE_ENV=test BABEL_ENV=coverage nyc mocha 'packages/**/*.test.tsx' --exclude '**/node_modules/**' && nyc report -r lcovonly",
     "test:coverage:html": "cross-env NODE_ENV=test BABEL_ENV=coverage nyc mocha 'packages/**/*.test.tsx' --exclude '**/node_modules/**' && nyc report --reporter=html",
@@ -88,9 +96,15 @@
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
   ],
-  "workspaces": [
-    "packages/*",
-    "!packages/grid",
-    "packages/grid/*"
-  ]
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "!packages/grid",
+      "packages/grid/*",
+      "docs"
+    ],
+    "nohoist": [
+      "**/@material-ui/monorepo"
+    ]
+  }
 }

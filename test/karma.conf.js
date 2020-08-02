@@ -64,7 +64,7 @@ module.exports = function setKarmaConfig(config) {
           {
             test: /\.(js|ts|tsx)$/,
             loader: 'babel-loader',
-            exclude: /node_modules/,
+            exclude: /node_modules\/(?!@material-ui\/monorepo)/,
           },
         ],
       },

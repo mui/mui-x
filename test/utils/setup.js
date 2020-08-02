@@ -1,14 +1,11 @@
 const formatUtil = require('format-util');
 const Mocha = require('mocha');
-const createDOM = require('./createDOM');
+const createDOM = require('@material-ui/monorepo/test/utils/createDOM');
 
-process.browser = true;
-
-require('@babel/register')({ extensions: ['.js', '.ts', '.tsx'] });
-
-// Enable missing act warnings: https://github.com/facebook/react/blob/v16.13.1/packages/react-reconciler/src/ReactFiberHooks.js#L965
-// TODO: Revisit once https://github.com/facebook/react/issues/15439 is resolved.
-global.jest = null;
+require('@babel/register')({
+  extensions: ['.js', '.ts', '.tsx'],
+  ignore: [/node_modules\/(?!@material-ui\/monorepo)/],
+});
 
 createDOM();
 require('./init');

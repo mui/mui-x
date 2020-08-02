@@ -48,34 +48,21 @@ module.exports = {
     ['@babel/plugin-transform-runtime', { version: '^7.4.4' }],
     // for IE 11 support
     '@babel/plugin-transform-object-assign',
+    'babel-plugin-istanbul',
+    [
+      'babel-plugin-module-resolver',
+      {
+        root: ['./'],
+        extensions: ['.js', '.ts', '.tsx'],
+        alias: defaultAlias,
+      },
+    ],
   ],
   ignore: [/@babel[\\|/]runtime/], // Fix a Windows issue.
   env: {
-    coverage: {
-      plugins: [
-        'babel-plugin-istanbul',
-        [
-          'babel-plugin-module-resolver',
-          {
-            root: ['./'],
-            extensions: ['.js', '.ts', '.tsx'],
-            alias: defaultAlias,
-          },
-        ],
-      ],
-    },
+    coverage: {},
     test: {
       sourceMaps: 'both',
-      plugins: [
-        [
-          'babel-plugin-module-resolver',
-          {
-            root: ['./'],
-            extensions: ['.js', '.ts', '.tsx'],
-            alias: defaultAlias,
-          },
-        ],
-      ],
     },
   },
 };
