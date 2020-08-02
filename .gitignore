@@ -9,3 +9,9 @@
 dist
 node_modules
 __diff_output__
+
+.yarn/cache
+.pnp.js
+.yarn/build-state.yml
+.yarn/unplugged
+.yarn/install-state.gz
