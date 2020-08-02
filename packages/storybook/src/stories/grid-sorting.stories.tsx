@@ -391,7 +391,7 @@ function sortServerRows(rows: any[], params: SortModelParams): Promise<any[]> {
         resolve(getRows());
       }
       const sortedCol = params.sortModel[0];
-      const comparator = params.sortedColumns[0].sortComparator!;
+      const comparator = params.columns[0].sortComparator!;
       let sortedRows = [
         ...rows.sort((a, b) => comparator(a[sortedCol.field], b[sortedCol.field], a, b)),
       ];

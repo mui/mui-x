@@ -17,6 +17,7 @@
     "datagen": "./bin/data-gen-script.js"
   },
   "dependencies": {
+    "@types/faker": "^4.1.0",
     "clsx": "^1.0.4",
     "commander": "^5.1.0",
     "esm": "^3.2.25",

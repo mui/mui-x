@@ -1,6 +1,5 @@
 const path = require('path');
 const webpack = require('webpack');
-const { generateReleaseInfo } = require('@material-ui/x-license');
 
 const env = process.env.NODE_ENV || 'development'
 /* eslint-disable */
@@ -63,7 +62,7 @@ module.exports = {
       loader: 'string-replace-loader',
       options: {
         search: '__RELEASE_INFO__',
-        replace: generateReleaseInfo(),
+        replace: 'MTU5NjMxOTIwMDAwMA==', // 2020-08-02
       }
     });
 
@@ -81,10 +80,11 @@ module.exports = {
       ...config.resolve,
       extensions: ['.js', '.ts', '.tsx'],
       alias: {
-        '@material-ui/x-grid': path.resolve(__dirname, '../../../packages/grid/x-grid/src'),
-        '@material-ui/x-grid-modules': path.resolve(__dirname, '../../../packages/grid/x-grid-modules/src'),
-        '@material-ui/x-license': path.resolve(__dirname, '../../../packages/license/src'),
         '@material-ui/data-grid': path.resolve(__dirname, '../../../packages/grid/data-grid/src'),
+        '@material-ui/x-grid-data-generator': path.resolve(__dirname, '../../../packages/grid/x-grid-data-generator/src'),
+        '@material-ui/x-grid-modules': path.resolve(__dirname, '../../../packages/grid/x-grid-modules/src'),
+        '@material-ui/x-grid': path.resolve(__dirname, '../../../packages/grid/x-grid/src'),
+        '@material-ui/x-license': path.resolve(__dirname, '../../../packages/license/src'),
       },
       modules: [path.join(__dirname, '../../../'), 'node_modules'],
     };

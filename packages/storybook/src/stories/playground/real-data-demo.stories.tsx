@@ -2,12 +2,12 @@ import * as React from 'react';
 import { withA11y } from '@storybook/addon-a11y';
 import { XGrid, GridOptionsProp, SortDirection } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
-// eslint-disable-next-line no-restricted-imports
-import '@material-ui/x-grid-data-generator/dist/demo-style.css';
 import Button from '@material-ui/core/Button';
 import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
 import { action } from '@storybook/addon-actions';
 import { randomInt } from '../../data/random-generator';
+// eslint-disable-next-line no-restricted-imports
+import '@material-ui/x-grid-data-generator/style/real-data-stories.css';
 
 export default {
   title: 'X-Grid Demos/Playground',

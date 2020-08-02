@@ -85,7 +85,9 @@ export function useLoggerFactory(
     return;
   }
 
-  factory = logLevel ? (name: string) => getAppender(name, logLevel.toString(), customLogger) : null;
+  factory = logLevel
+    ? (name: string) => getAppender(name, logLevel.toString(), customLogger)
+    : null;
 }
 
 export function useLogger(name: string): Logger {

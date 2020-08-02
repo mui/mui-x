@@ -6,7 +6,7 @@ import { AppBreadcrumbs } from '../../app-breadcrumbs';
 import { MainContainer } from './components/main-container';
 import { SettingsPanel } from './components/settings-panel';
 // eslint-disable-next-line no-restricted-imports
-import '@material-ui/x-grid-data-generator/dist/demo-style.css';
+import '@material-ui/x-grid-data-generator/style/real-data-stories.css';
 
 // eslint-disable-next-line no-console
 console.info(
