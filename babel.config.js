@@ -23,10 +23,10 @@ if (process.env.BABEL_ENV === 'es') {
 }
 
 const defaultAlias = {
-  '@material-ui/x-grid': './packages/grid/x-grid/src',
-  '@material-ui/x-grid-modules': './packages/grid/x-grid-modules/src',
-  '@material-ui/x-license': './packages/license/src',
   '@material-ui/data-grid': './packages/grid/data-grid/src',
+  '@material-ui/x-grid-modules': './packages/grid/x-grid-modules/src',
+  '@material-ui/x-grid': './packages/grid/x-grid/src',
+  '@material-ui/x-license': './packages/license/src',
 };
 
 module.exports = {

@@ -68,7 +68,7 @@ let factory: LoggerFactoryFn | null;
 
 export function useLoggerFactory(
   customLogger?: Logger | LoggerFactoryFn,
-  logLevel: string = 'debug',
+  logLevel: string | boolean = 'debug',
 ) {
   if (forceDebug) {
     factory = defaultFactory('debug');
@@ -76,7 +76,7 @@ export function useLoggerFactory(
   }
 
   if (!customLogger) {
-    factory = logLevel ? defaultFactory(logLevel) : null;
+    factory = logLevel ? defaultFactory(logLevel.toString()) : null;
     return;
   }
 
@@ -85,7 +85,9 @@ export function useLoggerFactory(
     return;
   }
 
-  factory = logLevel ? (name: string) => getAppender(name, logLevel, customLogger) : null;
+  factory = logLevel
+    ? (name: string) => getAppender(name, logLevel.toString(), customLogger)
+    : null;
 }
 
 export function useLogger(name: string): Logger {

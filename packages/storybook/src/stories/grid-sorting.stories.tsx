@@ -321,7 +321,11 @@ export const SortedEventsApi = () => {
     <React.Fragment>
       <div>
         <h1 style={{ fontSize: '16pt' }}>Triggered Events in order </h1>
-        <ol>{...loggedEvents.map((evt, idx) => <li key={evt + idx}>{evt}</li>)}</ol>
+        <ol>
+          {loggedEvents.map((event, idx) => (
+            <li key={event + idx}>{event}</li>
+          ))}
+        </ol>
       </div>
       <div className="grid-container">
         <XGrid rows={rows} columns={cols} apiRef={apiRef} />
@@ -360,7 +364,11 @@ export const SortedEventsOptions = () => {
     <React.Fragment>
       <div>
         <h1 style={{ fontSize: '16pt' }}>Triggered Events in order </h1>
-        <ol>{...loggedEvents.map((evt, idx) => <li key={evt + idx}>{evt}</li>)}</ol>
+        <ol>
+          {loggedEvents.map((event, idx) => (
+            <li key={event + idx}>{event}</li>
+          ))}
+        </ol>
       </div>
       <div className="grid-container">
         <XGrid
@@ -383,7 +391,7 @@ function sortServerRows(rows: any[], params: SortModelParams): Promise<any[]> {
         resolve(getRows());
       }
       const sortedCol = params.sortModel[0];
-      const comparator = params.sortedColumns[0].sortComparator!;
+      const comparator = params.columns[0].sortComparator!;
       let sortedRows = [
         ...rows.sort((a, b) => comparator(a[sortedCol.field], b[sortedCol.field], a, b)),
       ];
