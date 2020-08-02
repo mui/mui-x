@@ -1,5 +1,4 @@
 import typescript from 'rollup-plugin-typescript2';
-// eslint-disable-next-line import/no-unresolved
 import { generateReleaseInfo } from '@material-ui/x-license';
 import cleaner from 'rollup-plugin-cleaner';
 import sourceMaps from 'rollup-plugin-sourcemaps';

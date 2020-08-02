@@ -6,6 +6,8 @@
 .DS_STORE
 *.log
 /.eslintcache
+/.nyc_output
+/coverage
 dist
 node_modules
 __diff_output__

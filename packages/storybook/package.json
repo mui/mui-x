@@ -14,6 +14,7 @@
     "@material-ui/x-license": "^0.1.61",
     "faker": "^4.1.0",
     "react": "^16.13.1",
+    "react-is": "^16.13.1",
     "rxjs": "^6.5.5",
     "styled-components": "^5.1.0"
   },
@@ -42,7 +43,7 @@
     "source-map-loader": "^0.2.4",
     "start-server-and-test": "^1.11.0",
     "ts-loader": "^7.0.1",
-    "typescript": "^3.8.3"
+    "typescript": "^3.9.6"
   },
   "scripts": {
     "start": "start-storybook -p 6006 --ci",
