@@ -2,6 +2,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "@babel/core": "^7.10.2",
     "@babel/plugin-transform-object-assign": "^7.10.4",
     "@babel/plugin-transform-runtime": "^7.10.5",
     "@babel/register": "^7.10.5",
@@ -56,13 +57,13 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "sinon": "^9.0.2",
-    "styled-components": "^5.1.0",
     "stylelint": "^13.3.3",
     "stylelint-config-recommended": "^3.0.0",
     "stylelint-config-standard": "^20.0.0",
     "stylelint-config-styled-components": "^0.1.1",
     "stylelint-processor-styled-components": "^1.10.0",
     "ts-jest": "^25.2.0",
+    "typescript": "^3.9.6",
     "webpack": "^4.41.0",
     "yarn-deduplicate": "^2.1.1"
   },
