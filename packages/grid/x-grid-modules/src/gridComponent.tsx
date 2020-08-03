@@ -14,7 +14,7 @@ import {
   GridOptions,
   RootContainerRef,
 } from './models';
-import { DATA_CONTAINER_CSS_CLASS, ERROR } from './constants';
+import { DATA_CONTAINER_CSS_CLASS, COMPONENT_ERROR } from './constants';
 import { ColumnsContainer, DataContainer, GridRoot } from './components/styled-wrappers';
 import { useVirtualRows } from './hooks/virtualization';
 import {
@@ -74,7 +74,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
     };
     React.useEffect(() => {
       if (apiRef && apiRef.current) {
-        return apiRef.current.registerEvent(ERROR, errorHandler);
+        return apiRef.current.registerEvent(COMPONENT_ERROR, errorHandler);
       }
       return undefined;
     }, [apiRef]);
