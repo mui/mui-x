@@ -54,5 +54,8 @@
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
   ],
-  "gitHead": "f1d56176bb6308bb55c69f5c2fd5593c4e4faebc"
+  "gitHead": "f1d56176bb6308bb55c69f5c2fd5593c4e4faebc",
+  "engines": {
+    "node": ">=8.0.0"
+  }
 }
