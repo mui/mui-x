@@ -11,9 +11,11 @@ export interface ErrorBoundaryProps {
   componentProps?: any[];
 }
 
-export class ErrorBoundary extends React.Component<ErrorBoundaryProps, {}> {
-  constructor(props: any) {
-    super(props);
+export class ErrorBoundary extends React.Component<ErrorBoundaryProps, any> {
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true, error };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
@@ -34,9 +36,9 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, {}> {
   }
 
   render() {
-    if (this.props.hasError) {
+    if (this.props.hasError || this.state?.hasError) {
       // You can render any custom fallback UI
-      return this.props.render(this.props.componentProps);
+      return this.props.render(this.props.componentProps || this.state);
     }
 
     return this.props.children;

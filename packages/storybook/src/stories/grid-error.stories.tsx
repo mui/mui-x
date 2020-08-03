@@ -1,15 +1,8 @@
 import * as React from 'react';
-import { XGrid, GridOptionsProp, ColDef, useApiRef, GridOverlay } from '@material-ui/x-grid';
-import DoneIcon from '@material-ui/icons/Done';
-import ClearIcon from '@material-ui/icons/Clear';
+import { XGrid, ColDef, useApiRef, GridOverlay } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
-import { useData } from '../hooks/useData';
 import '../style/grid-stories.css';
-import { useEffect } from 'react';
-import { Simulate } from 'react-dom/test-utils';
-import error = Simulate.error;
-import LinearProgress from '@material-ui/core/LinearProgress';
 
 export default {
   title: 'X-Grid Tests/Error Handling',
@@ -109,9 +102,12 @@ const getRows = () => [
 export const throwException = () => {
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
-  cols[4].cellClassRules = {
-    common: () => {
-      throw new Error('Some bad stuff happened!');
+  cols[1].cellClassRules = {
+    common: ({ value }) => {
+      if (value === 'alice') {
+        throw new Error('Alice created an error!');
+      }
+      return true;
     },
   };
 
@@ -127,7 +123,7 @@ export const showErrorApi = () => {
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (api && api.current) {
       api.current!.showError({ message: 'Error loading rows!' });
     }
@@ -139,7 +135,16 @@ export const showErrorApi = () => {
     </div>
   );
 };
+export const errorProp = () => {
+  const rows = React.useMemo(() => getRows(), []);
+  const cols = React.useMemo(() => getColumns(), []);
 
+  return (
+    <div className="grid-container">
+      <XGrid rows={rows} columns={cols} error={{ message: 'Error can also be set in props!' }} />
+    </div>
+  );
+};
 function CustomErrorOverlay(props) {
   return (
     <GridOverlay className="custom-overlay">
@@ -156,7 +161,7 @@ export const CustomError = () => {
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (api && api.current) {
       api.current!.showError({ error: 'Something bad happened!', title: 'BIG ERROR' });
     }
@@ -178,9 +183,12 @@ export const CustomError = () => {
 export const CustomErrorWithException = () => {
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
-  cols[4].cellClassRules = {
-    common: () => {
-      throw new Error('Some bad stuff happened!');
+  cols[1].cellClassRules = {
+    common: ({ value }) => {
+      if (value === 'alice') {
+        throw new Error('Alice created an error!');
+      }
+      return true;
     },
   };
 
@@ -194,5 +202,61 @@ export const CustomErrorWithException = () => {
         }}
       />
     </div>
+  );
+};
+function fetchError(): Promise<any> {
+  return new Promise<any>((resolve, reject) => {
+    setTimeout(() => {
+      reject(new Error('Bad fetch'));
+    }, 500);
+  });
+}
+
+export const AsyncErrorApi = () => {
+  const api = useApiRef();
+  const rows = React.useMemo(() => getRows(), []);
+  const cols = React.useMemo(() => getColumns(), []);
+
+  React.useEffect(() => {
+    fetchError().catch((err) => {
+      api.current!.showError(err);
+    });
+  }, [api]);
+
+  return (
+    <div className="grid-container">
+      <XGrid rows={rows} columns={cols} apiRef={api} />
+    </div>
+  );
+};
+
+export const onErrorHandler = () => {
+  const rows = React.useMemo(() => getRows(), []);
+  const cols = React.useMemo(() => getColumns(), []);
+  const [errorMessage, setErrorMessage] = React.useState('');
+
+  cols[1].cellClassRules = {
+    common: ({ value }) => {
+      if (value === 'alice') {
+        throw new Error('Alice created an error!');
+      }
+      return true;
+    },
+  };
+
+  const onError = React.useCallback(
+    ({ error }) => {
+      setErrorMessage(`Oops! Something went wrong! ${error.message}`);
+    },
+    [setErrorMessage],
+  );
+
+  return (
+    <React.Fragment>
+      <div>{errorMessage}</div>
+      <div className="grid-container">
+        <XGrid rows={rows} columns={cols} options={{ onError }} />
+      </div>
+    </React.Fragment>
   );
 };

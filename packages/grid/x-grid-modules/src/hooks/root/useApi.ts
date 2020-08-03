@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useLogger } from '../utils/useLogger';
 import { ERROR, UNMOUNT } from '../../constants/eventsConstants';
-import { GridOptions, ApiRef, CoreApi } from '../../models';
+import { GridOptions, ApiRef } from '../../models';
 import { GridApi } from '../../models/api/gridApi';
 import { useApiMethod } from './useApiMethod';
 

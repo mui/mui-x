@@ -15,12 +15,7 @@ import {
   RootContainerRef,
 } from './models';
 import { DATA_CONTAINER_CSS_CLASS, ERROR } from './constants';
-import {
-  ColumnsContainer,
-  DataContainer,
-  GridOverlay,
-  GridRoot,
-} from './components/styled-wrappers';
+import { ColumnsContainer, DataContainer, GridRoot } from './components/styled-wrappers';
 import { useVirtualRows } from './hooks/virtualization';
 import {
   AutoSizerWrapper,
@@ -47,7 +42,7 @@ import { ErrorBoundary } from './components/error-boundary';
  * @returns JSX.Element
  */
 export const GridComponent: React.FC<GridComponentProps> = React.memo(
-  ({ rows, columns, options, apiRef, loading, licenseStatus, className, components }) => {
+  ({ rows, columns, options, apiRef, loading, licenseStatus, className, components, error }) => {
     useLoggerFactory(options?.logger, options?.logLevel || DEFAULT_GRID_OPTIONS.logLevel);
     const logger = useLogger('Grid');
     const rootContainerRef: RootContainerRef = React.useRef<HTMLDivElement>(null);
@@ -74,13 +69,21 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
     const initialised = useApi(rootContainerRef, internalOptions, apiRef);
 
     const errorHandler = (args: any) => {
+      // We are handling error here, to set up the handler as early as possible and be able to catch error thrown at init time.
       setErrorState(args);
     };
     React.useEffect(() => {
       if (apiRef && apiRef.current) {
-        apiRef.current.registerEvent(ERROR, errorHandler);
+        return apiRef.current.registerEvent(ERROR, errorHandler);
       }
+      return undefined;
     }, [apiRef]);
+
+    React.useEffect(() => {
+      if (apiRef && apiRef.current) {
+        apiRef.current.showError(error);
+      }
+    }, [error]);
 
     useEvents(rootContainerRef, internalOptions, apiRef);
     const internalColumns = useColumns(internalOptions, columns, apiRef);

@@ -1,6 +1,8 @@
 import { XGrid } from '@material-ui/x-grid';
 import ExceptionDemo from './demos/error/exception.demo';
 import ServerErrorDemo from './demos/error/serverError.demo';
+import ServerErrorStateDemo from './demos/error/serverErrorState.demo';
+import CustomErrorDemo from './demos/error/customError.demo';
 
 <Meta title="1. Docs/13. Error handling" component={XGrid} />
 
@@ -8,11 +10,48 @@ import ServerErrorDemo from './demos/error/serverError.demo';
 
 Handling error on the UI and in the grid, is critical to avoid breaking the whole application, or even displaying corrupted data.
 Therefore, XGrid is wrapped with an error boundary internally. So if the component throw an unhandled exception anywhere in the tree,
-the exception will get caught by the error boundary, and a nice error message overlay will be displayed.
+the exception will get handled by the error boundary, and a nice error message overlay will be displayed.
 
 <ExceptionDemo />
 
+## Customising the error component
+
+The error component is also part of the customization components and can be replaced as below.
+
+```tsx
+...
+return (
+    <XGrid
+      rows={rows}
+      columns={columns}
+      components={{
+        errorOverlay: CustomErrorOverlay,
+      }}
+    />
+  );
+```
+
+<CustomErrorDemo />
+
 ## Show server errors
+
+### Using state
+
+```tsx
+const [error, setError] = React.useState();
+useEffect(()=> {
+    service.loadBadRows().catch((error)=> {
+        setError({ message: `An error occured! Details: ${error.message}` });
+    }
+}, [setError]);
+
+<XGrid rows={rows} columns={columns} error = {error} />
+
+```
+
+<ServerErrorStateDemo />
+
+### Using the ApiRef
 
 Server errors can be displayed using the `showError` method of the `ApiRef` as below.
 
@@ -31,6 +70,6 @@ useEffect(()=> {
 
 <ServerErrorDemo />
 
-## Customising the error component
+## Events
 
-## Events and OnError option
+- `onError` - Event triggered when the an exception is thrown in the grid or when the `showError` api method is called.

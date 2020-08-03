@@ -41,4 +41,8 @@ export interface GridComponentProps {
    * @internal enum
    */
   licenseStatus: string;
+  /**
+   * An error that will turn the grid into its error state and display the error component
+   */
+  error?: any;
 }

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Columns, useApiRef, XGrid } from '@material-ui/x-grid';
+import { Columns, XGrid } from '@material-ui/x-grid';
 
 const columns: Columns = [
   { field: 'id', hide: true },
@@ -18,15 +18,15 @@ function loadServerRows(): Promise<any> {
   });
 }
 
-export default function ServerErrorDemo() {
-  const apiRef = useApiRef();
+export default function ServerErrorStateDemo() {
   const [isLoading, setLoading] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<any>();
 
   React.useEffect(() => {
     setLoading(true);
-    loadServerRows().catch((err) => {
+    loadServerRows().catch((error) => {
       setLoading(false);
-      apiRef.current!.showError({ message: err.message });
+      setError({ message: `An error occured! Details: ${error.message}` });
     });
   }, []);
 
@@ -37,7 +37,7 @@ export default function ServerErrorDemo() {
       options={{
         autoHeight: true,
       }}
-      apiRef={apiRef}
+      error={error}
       loading={isLoading}
     />
   );
