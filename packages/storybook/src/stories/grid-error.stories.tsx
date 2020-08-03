@@ -230,7 +230,7 @@ export const AsyncErrorApi = () => {
   );
 };
 
-export const onErrorHandler = () => {
+export const OnErrorHandler = () => {
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
   const [errorMessage, setErrorMessage] = React.useState('');
