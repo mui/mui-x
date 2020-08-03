@@ -2,8 +2,8 @@ import * as React from 'react';
 import { useLogger } from '../utils/useLogger';
 import {
   GRID_FOCUS_OUT,
-  KEYDOWN_EVENT,
-  KEYUP_EVENT,
+  KEYDOWN,
+  KEYUP,
   MULTIPLE_KEY_PRESS_CHANGED,
   SCROLLING,
 } from '../../constants/eventsConstants';
@@ -263,13 +263,15 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
     [logger, onMultipleKeyChange],
   );
 
-  const onFocusOutHandler = React.useCallback((event: FocusEvent)=> {
+  const onFocusOutHandler = React.useCallback(
+    (event: FocusEvent) => {
       logger.debug('Grid lost focus, releasing key press', event);
       onMultipleKeyChange(false);
-  }, [logger, onMultipleKeyChange])
+    },
+    [logger, onMultipleKeyChange],
+  );
 
-  useApiEventHandler(apiRef, KEYDOWN_EVENT, onKeyDownHandler);
-  useApiEventHandler(apiRef, KEYUP_EVENT, onKeyUpHandler);
+  useApiEventHandler(apiRef, KEYDOWN, onKeyDownHandler);
+  useApiEventHandler(apiRef, KEYUP, onKeyUpHandler);
   useApiEventHandler(apiRef, GRID_FOCUS_OUT, onFocusOutHandler);
-
 };

@@ -1,10 +1,6 @@
 import * as React from 'react';
 import { useLogger } from '../utils';
-import {
-  PAGE_CHANGED_EVENT,
-  PAGESIZE_CHANGED_EVENT,
-  RESIZE,
-} from '../../constants/eventsConstants';
+import { PAGE_CHANGED, PAGESIZE_CHANGED, RESIZE } from '../../constants/eventsConstants';
 import { useApiMethod } from '../root/useApiMethod';
 import { useApiEventHandler } from '../root/useApiEventHandler';
 import { PageChangeParams } from '../../models/params/pageChangeParams';
@@ -88,7 +84,7 @@ export const usePagination = (
           ...stateRef.current,
           page,
         };
-        apiRef.current!.emit(PAGE_CHANGED_EVENT, params);
+        apiRef.current!.emit(PAGE_CHANGED, params);
       }
       if (stateRef.current.page !== page) {
         updateState({ page });
@@ -119,7 +115,7 @@ export const usePagination = (
         pageCount: newPageCount,
         pageSize,
       };
-      apiRef.current!.emit(PAGESIZE_CHANGED_EVENT, newState as PageChangeParams);
+      apiRef.current!.emit(PAGESIZE_CHANGED, newState as PageChangeParams);
 
       updateState(newState);
       setPage(newPage);
@@ -129,13 +125,13 @@ export const usePagination = (
 
   const onPageChange = React.useCallback(
     (handler: (param: PageChangeParams) => void): (() => void) => {
-      return apiRef!.current!.registerEvent(PAGE_CHANGED_EVENT, handler);
+      return apiRef!.current!.registerEvent(PAGE_CHANGED, handler);
     },
     [apiRef],
   );
   const onPageSizeChange = React.useCallback(
     (handler: (param: PageChangeParams) => void): (() => void) => {
-      return apiRef!.current!.registerEvent(PAGESIZE_CHANGED_EVENT, handler);
+      return apiRef!.current!.registerEvent(PAGESIZE_CHANGED, handler);
     },
     [apiRef],
   );
@@ -159,7 +155,7 @@ export const usePagination = (
 
   React.useEffect(() => {
     if (apiRef.current?.isInitialised) {
-      apiRef.current!.emit(PAGE_CHANGED_EVENT, stateRef.current);
+      apiRef.current!.emit(PAGE_CHANGED, stateRef.current);
     }
   }, [apiRef, stateRef, apiRef.current?.isInitialised]);
 
@@ -209,8 +205,8 @@ export const usePagination = (
     }
   }, [options.autoPageSize, resetAutopageSize, columns.visible.length]);
 
-  useApiEventHandler(apiRef, PAGE_CHANGED_EVENT, options.onPageChange);
-  useApiEventHandler(apiRef, PAGESIZE_CHANGED_EVENT, options.onPageSizeChange);
+  useApiEventHandler(apiRef, PAGE_CHANGED, options.onPageChange);
+  useApiEventHandler(apiRef, PAGESIZE_CHANGED, options.onPageSizeChange);
 
   const onResize = React.useCallback(() => {
     if (options.autoPageSize) {
