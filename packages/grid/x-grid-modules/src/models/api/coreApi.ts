@@ -15,7 +15,6 @@ export interface CoreApi extends EventEmitter {
    * @param handler
    */
   registerEvent: (event: string, handler: (param: any) => void) => () => void;
-
   /**
    * Allows to emit an event.
    *
@@ -23,7 +22,6 @@ export interface CoreApi extends EventEmitter {
    * @param args
    */
   emitEvent: (name: string, ...args: any[]) => void;
-
   /**
    * Display the error overlay component.
    */

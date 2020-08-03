@@ -135,16 +135,7 @@ export const useSorting = (
         applySorting();
       }
     },
-    [
-      sortModelRef,
-      comparatorList,
-      apiRef,
-      applySorting,
-      buildComparatorList,
-      options.sortingMode,
-      getSortModelParams,
-      logger,
-    ],
+    [sortModelRef, comparatorList, apiRef, applySorting, buildComparatorList, options.sortingMode, getSortModelParams],
   );
 
   const sortColumn = React.useCallback(
@@ -215,7 +206,7 @@ export const useSorting = (
         applySorting();
       }
     }
-  }, [rowsProp, applySorting, storeOriginalOrder, options.sortingMode]);
+  }, [rowsProp, applySorting, storeOriginalOrder, options.sortingMode, logger]);
 
   React.useEffect(() => {
     if (colsProp.length > 0 && apiRef.current) {

@@ -9,7 +9,7 @@ import CustomErrorDemo from './demos/error/customError.demo';
 # Error handling
 
 Handling error on the UI and in the grid, is critical to avoid breaking the whole application, or even displaying corrupted data.
-Therefore, XGrid is wrapped with an error boundary internally. So if the component throw an unhandled exception anywhere in the tree,
+Therefore, XGrid is wrapped with an [error boundary](https://reactjs.org/docs/error-boundaries.html) internally. So if the component throws an unhandled exception anywhere in the tree,
 the exception will get handled by the error boundary, and a nice error message overlay will be displayed.
 
 <ExceptionDemo />
@@ -39,7 +39,7 @@ return (
 
 ```tsx
 const [error, setError] = React.useState();
-useEffect(()=> {
+React.useEffect(()=> {
     service.loadBadRows().catch((error)=> {
         setError({ message: `An error occured! Details: ${error.message}` });
     }
@@ -58,7 +58,7 @@ Server errors can be displayed using the `showError` method of the `ApiRef` as b
 ```tsx
 const apiRef = useApiRef();
 
-useEffect(()=> {
+React.useEffect(()=> {
     service.loadBadRows().catch((error)=> {
         apiRef.current.showError({message: 'Error loading rows.'});
     }
@@ -72,4 +72,4 @@ useEffect(()=> {
 
 ## Events
 
-- `onError` - Event triggered when the an exception is thrown in the grid or when the `showError` api method is called.
+- `onError` - Event triggered when an exception is thrown in the grid or when the `showError` api method is called.

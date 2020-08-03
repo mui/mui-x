@@ -28,7 +28,7 @@ export default function ServerErrorDemo() {
       setLoading(false);
       apiRef.current!.showError({ message: err.message });
     });
-  }, []);
+  }, [apiRef, setLoading]);
 
   return (
     <XGrid

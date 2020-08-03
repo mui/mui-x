@@ -24,9 +24,9 @@ export default function ServerErrorStateDemo() {
 
   React.useEffect(() => {
     setLoading(true);
-    loadServerRows().catch((error) => {
+    loadServerRows().catch((serverError) => {
       setLoading(false);
-      setError({ message: `An error occured! Details: ${error.message}` });
+      setError({ message: `An error occured! Details: ${serverError.message}` });
     });
   }, []);
 

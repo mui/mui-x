@@ -83,7 +83,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
       if (apiRef && apiRef.current) {
         apiRef.current.showError(error);
       }
-    }, [error]);
+    }, [apiRef, error]);
 
     useEvents(rootContainerRef, internalOptions, apiRef);
     const internalColumns = useColumns(internalOptions, columns, apiRef);

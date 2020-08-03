@@ -47,7 +47,7 @@ export function useEvents(
 
   const getHandler = React.useCallback(
     (name: string) => (...args: any[]) => apiRef.current!.emitEvent(name, ...args),
-    [],
+    [apiRef],
   );
 
   const getEventParams = React.useCallback(

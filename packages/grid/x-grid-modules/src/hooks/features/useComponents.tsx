@@ -76,12 +76,9 @@ export const useComponents = (
   );
 
   const renderError = React.useCallback((props) => {
-    return componentOverrides?.errorOverlay ? (
-      React.createElement(componentOverrides.errorOverlay, { ...componentParams, ...props })
-    ) : (
-      <ErrorMessage {...{ ...componentParams, ...props }} />
-    );
-  }, []);
+    const ErrorOverlay = componentOverrides?.errorOverlay || ErrorMessage;
+    return <ErrorOverlay {...componentParams} {...props} />;
+  }, [componentOverrides?.errorOverlay, componentParams]);
 
   return {
     headerComponent,
