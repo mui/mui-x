@@ -1,10 +1,14 @@
+// Web standard events
 export const RESIZE = 'resize';
-export const UNMOUNT = 'unmount';
 export const CLICK_EVENT = 'click';
 export const HOVER_EVENT = 'mouseover';
+export const FOCUS_OUT_EVENT = 'focusout';
 export const KEYDOWN_EVENT = 'keydown';
 export const KEYUP_EVENT = 'keyup';
 
+// XGRID events
+export const GRID_FOCUS_OUT = 'gridFocusOut';
+export const UNMOUNT = 'unmount';
 export const CELL_CLICK = 'cellClick';
 export const CELL_HOVER = 'cellHover';
 export const ROW_CLICK = 'rowClick';

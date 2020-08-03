@@ -14,7 +14,7 @@ import {
   HOVER_EVENT,
   CELL_HOVER,
   ROW_HOVER,
-  COLUMN_HEADER_HOVER,
+  COLUMN_HEADER_HOVER, FOCUS_OUT_EVENT, GRID_FOCUS_OUT,
 } from '../../constants/eventsConstants';
 import { GridOptions, ApiRef, CellParams, ColParams, RowParams } from '../../models';
 import {
@@ -147,6 +147,18 @@ export function useEvents(
     [apiRef, getEventParams],
   );
 
+  const onFocusOutHandler = React.useCallback(
+    (event: FocusEvent) => {
+      apiRef.current!.emitEvent(FOCUS_OUT_EVENT, event);
+      if(event.relatedTarget === null) {
+        apiRef.current!.emitEvent(GRID_FOCUS_OUT, event);
+      }
+
+    },
+    [apiRef, getEventParams],
+  );
+
+
   const onUnmount = React.useCallback(
     (handler: (param: any) => void): (() => void) => {
       return apiRef.current!.registerEvent(UNMOUNT, handler);
@@ -190,6 +202,8 @@ export function useEvents(
 
       gridRootRef.current.addEventListener(CLICK_EVENT, onClickHandler, { capture: true });
       gridRootRef.current.addEventListener(HOVER_EVENT, onHoverHandler, { capture: true });
+      gridRootRef.current.addEventListener(FOCUS_OUT_EVENT, onFocusOutHandler );
+
       document.addEventListener(KEYDOWN_EVENT, keyDownHandler);
       document.addEventListener(KEYUP_EVENT, keyUpHandler);
 
@@ -201,6 +215,7 @@ export function useEvents(
         api.emit(UNMOUNT);
         gridRootElem.removeEventListener(CLICK_EVENT, onClickHandler, { capture: true });
         gridRootElem.removeEventListener(HOVER_EVENT, onHoverHandler, { capture: true });
+        gridRootElem.removeEventListener(FOCUS_OUT_EVENT, onFocusOutHandler );
         document.removeEventListener(KEYDOWN_EVENT, keyDownHandler);
         document.removeEventListener(KEYUP_EVENT, keyUpHandler);
         api.removeAllListeners();
