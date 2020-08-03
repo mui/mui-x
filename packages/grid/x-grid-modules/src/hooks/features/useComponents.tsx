@@ -75,10 +75,13 @@ export const useComponents = (
     [componentOverrides, componentParams],
   );
 
-  const renderError = React.useCallback((props) => {
-    const ErrorOverlay = componentOverrides?.errorOverlay || ErrorMessage;
-    return <ErrorOverlay {...componentParams} {...props} />;
-  }, [componentOverrides?.errorOverlay, componentParams]);
+  const renderError = React.useCallback(
+    (props) => {
+      const ErrorOverlay = componentOverrides?.errorOverlay || ErrorMessage;
+      return <ErrorOverlay {...componentParams} {...props} />;
+    },
+    [componentOverrides?.errorOverlay, componentParams],
+  );
 
   return {
     headerComponent,
