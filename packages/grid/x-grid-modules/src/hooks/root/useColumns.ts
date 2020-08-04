@@ -50,8 +50,8 @@ function hydrateColumns(
     });
   }
   // we check if someone called setSortModel using apiref to apply icons
-  if (apiRef.current && apiRef.current!.getSortModel) {
-    const sortModel = apiRef.current!.getSortModel();
+  if (apiRef.current && apiRef.current.getSortModel) {
+    const sortModel = apiRef.current.getSortModel();
     sortModel.forEach((c, idx) => {
       const col = mappedCols.find((mc) => mc.field === c.field);
       if (col) {

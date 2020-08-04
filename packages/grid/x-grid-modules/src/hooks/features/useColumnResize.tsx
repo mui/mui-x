@@ -38,11 +38,7 @@ export const useColumnResize = (
   }, []);
 
   React.useEffect(() => {
-    if (apiRef && apiRef.current) {
-      return apiRef.current.registerEvent(SCROLLING, onScrollHandler);
-    }
-
-    return undefined;
+    return apiRef.current.registerEvent(SCROLLING, onScrollHandler);
   }, [apiRef, onScrollHandler]);
 
   const handleMouseDown = React.useCallback(
@@ -108,7 +104,7 @@ export const useColumnResize = (
           dataContainerPreviousWidth.current! + diffWithPrev
         }px`;
 
-        if (isLastColumn.current && apiRef && apiRef.current) {
+        if (isLastColumn.current) {
           apiRef.current.scroll({ left: dataContainerPreviousWidth.current! + diffWithPrev });
         }
       }

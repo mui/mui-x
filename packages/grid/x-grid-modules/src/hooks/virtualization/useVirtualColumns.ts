@@ -31,8 +31,8 @@ export const useVirtualColumns = (
 
   const getColumnIdxFromScroll = React.useCallback(
     (left: number) => {
-      const positions = apiRef.current!.getColumnsMeta().positions;
-      const hasColumns = apiRef.current!.getVisibleColumns().length;
+      const positions = apiRef.current.getColumnsMeta().positions;
+      const hasColumns = apiRef.current.getVisibleColumns().length;
 
       if (!hasColumns) {
         return -1;
@@ -46,7 +46,7 @@ export const useVirtualColumns = (
 
   const getColumnFromScroll = React.useCallback(
     (left: number) => {
-      const visibleColumns = apiRef.current!.getVisibleColumns();
+      const visibleColumns = apiRef.current.getVisibleColumns();
       if (!visibleColumns.length) {
         return null;
       }
@@ -64,7 +64,7 @@ export const useVirtualColumns = (
       const firstCol = getColumnFromScroll(lastScrollLeftRef.current);
       const lastCol = getColumnFromScroll(lastScrollLeftRef.current + windowWidth);
 
-      const visibleColumns = apiRef.current!.getVisibleColumns();
+      const visibleColumns = apiRef.current.getVisibleColumns();
       const firstColIndex = visibleColumns.findIndex((col) => col.field === firstCol?.field);
       const lastColIndex = visibleColumns.findIndex((col) => col.field === lastCol?.field) - 1; // We ensure the last col is completely visible
 
@@ -79,8 +79,8 @@ export const useVirtualColumns = (
         return false;
       }
       containerPropsRef.current = containerProps;
-      const visibleColumns = apiRef.current!.getVisibleColumns();
-      const columnsMeta = apiRef.current!.getColumnsMeta();
+      const visibleColumns = apiRef.current.getVisibleColumns();
+      const columnsMeta = apiRef.current.getColumnsMeta();
       const windowWidth = containerProps.windowSizes.width;
       lastScrollLeftRef.current = scrollLeft;
       logger.debug(

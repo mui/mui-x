@@ -138,7 +138,7 @@ export const useVirtualRows = (
         requireRerender = true;
       } else {
         scrollTo(scrollParams);
-        apiRef.current!.emit(SCROLLING, scrollParams);
+        apiRef.current.emit(SCROLLING, scrollParams);
       }
       rzScrollRef.current = scrollParams;
 
@@ -204,15 +204,13 @@ export const useVirtualRows = (
   const onScroll: any = React.useCallback(
     (event: any) => {
       realScrollRef.current = { left: event.target.scrollLeft, top: event.target.scrollTop };
-      if (apiRef && apiRef.current && scrollingTimeout.current === 0) {
+      if (scrollingTimeout.current === 0) {
         apiRef.current.emit(SCROLLING_START);
       }
       clearTimeout(scrollingTimeout.current);
       scrollingTimeout.current = setTimeout(() => {
         scrollingTimeout.current = 0;
-        if (apiRef && apiRef.current) {
-          apiRef.current.emit(SCROLLING_STOP);
-        }
+        apiRef.current.emit(SCROLLING_STOP);
       }, 300);
       updateViewport();
     },

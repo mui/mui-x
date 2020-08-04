@@ -14,7 +14,7 @@ export default function UpdateRows() {
   ];
   React.useEffect(() => {
     const subscription = interval(100).subscribe(() =>
-      apiRef.current?.updateRowData([
+      apiRef.current.updateRowData([
         { id: randomInt(1, 4), username: randomUserName(), age: randomInt(10, 80) },
         { id: randomInt(1, 4), username: randomUserName(), age: randomInt(10, 80) },
       ]),

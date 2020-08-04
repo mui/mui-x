@@ -86,7 +86,7 @@ module.exports = {
         '@material-ui/x-grid': path.resolve(__dirname, '../../../packages/grid/x-grid/src'),
         '@material-ui/x-license': path.resolve(__dirname, '../../../packages/license/src'),
       },
-      modules: [path.join(__dirname, '../../../'), 'node_modules'],
+      // modules: [path.join(__dirname, '../../../'), 'node_modules'],
     };
     return config;
   },

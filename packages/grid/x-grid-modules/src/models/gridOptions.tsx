@@ -9,7 +9,8 @@ import { PageChangeParams } from './params/pageChangeParams';
 import { ColumnTypesRecord, DEFAULT_COLUMN_TYPES } from './colDef';
 import { FeatureMode, FeatureModeConstant } from './featureMode';
 import { ColParams } from './params/colParams';
-import { CellParams, RowParams } from './params/cellParams';
+import { CellParams } from './params/cellParams';
+import { RowParams } from './params/rowParams';
 
 /**
  * Set of icons used in the grid component UI.
@@ -260,7 +261,7 @@ export interface GridOptions {
   /**
    * Handler triggered when an exception is thrown in the grid or when the showError api method is called.
    */
-  onError?: () => void;
+  onError?: (args: any) => void;
   /**
    * Set of icons used in the grid.
    */

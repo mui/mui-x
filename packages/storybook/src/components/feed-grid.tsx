@@ -21,9 +21,7 @@ export const FeedGrid: React.FC<FeedGridProps> = (p) => {
   const subscription: Subscription = new Subscription();
 
   const handleNewPrices = (updates: PricingModel[]) => {
-    if (apiRef && apiRef.current) {
-      apiRef.current.updateRowData(updates);
-    }
+    apiRef.current.updateRowData(updates);
   };
 
   const subscribeToStream = () => {

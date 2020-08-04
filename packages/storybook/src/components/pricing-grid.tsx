@@ -24,9 +24,7 @@ export const PricingGrid: React.FC<PricingGridProps> = (p) => {
 
   const subscription: Subscription = new Subscription();
   const handleNewPrice = (pricingModel: PricingModel) => {
-    if (apiRef && apiRef.current) {
-      apiRef.current.updateRowData([pricingModel]);
-    }
+    apiRef.current.updateRowData([pricingModel]);
   };
 
   const subscribeToStream = () => {

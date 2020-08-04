@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { action } from '@storybook/addon-actions';
-import { XGrid, GridApi, GridOptionsProp } from '@material-ui/x-grid';
+import {XGrid, GridApi, GridOptionsProp, useApiRef} from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { getData, GridData } from '../data/data-service';
@@ -19,11 +19,11 @@ export default {
 };
 
 export const ApiPreSelectedRows = () => {
-  const apiRef = React.useRef<GridApi>();
+  const apiRef = useApiRef();
   const [data, setData] = React.useState<GridData>({ rows: [], columns: [] });
 
   React.useEffect(() => {
-    if (apiRef && apiRef.current != null && data.rows.length > 0) {
+    if (data.rows.length > 0) {
       apiRef.current.selectRows([1, 3, 5]);
       apiRef.current.selectRow(8, true, true);
     }
