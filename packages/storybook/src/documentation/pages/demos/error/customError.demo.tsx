@@ -4,8 +4,8 @@ import { randomCreatedDate, randomUpdatedDate } from '@material-ui/x-grid-data-g
 
 function CustomErrorOverlay(props) {
   return (
-    <GridOverlay className="custom-overlay">
-      <div style={{ textAlign: 'center' }}>
+    <GridOverlay className="custom-error-overlay">
+      <div>
         <h1>Oops! An error occured!</h1>
         <p>{typeof props.error === 'string' ? props.error : props.error.message}</p>
       </div>
@@ -60,6 +60,7 @@ export default function CustomErrorDemo() {
       components={{
         errorOverlay: CustomErrorOverlay,
       }}
+      className="demo"
     />
   );
 }
