@@ -1,20 +1,25 @@
+// Web standard events
 export const RESIZE = 'resize';
-export const UNMOUNT = 'unmount';
-export const CLICK_EVENT = 'click';
-export const HOVER_EVENT = 'mouseover';
-export const KEYDOWN_EVENT = 'keydown';
-export const KEYUP_EVENT = 'keyup';
+export const CLICK = 'click';
+export const MOUSE_HOVER = 'mouseover';
+export const FOCUS_OUT = 'focusout';
+export const KEYDOWN = 'keydown';
+export const KEYUP = 'keyup';
+export const SCROLL = 'scroll';
 
+// XGRID events
+export const UNMOUNT = 'unmount';
+export const GRID_FOCUS_OUT = 'gridFocusOut';
 export const CELL_CLICK = 'cellClick';
 export const CELL_HOVER = 'cellHover';
 export const ROW_CLICK = 'rowClick';
 export const ROW_HOVER = 'rowHover';
-export const ROW_SELECTED_EVENT = 'rowSelected';
-export const SELECTION_CHANGED_EVENT = 'selectionChange';
+export const ROW_SELECTED = 'rowSelected';
+export const SELECTION_CHANGED = 'selectionChange';
 export const COLUMN_HEADER_CLICK = 'columnClick';
 export const COLUMN_HEADER_HOVER = 'columnHeaderHover';
-export const PAGE_CHANGED_EVENT = 'pageChange';
-export const PAGESIZE_CHANGED_EVENT = 'pageSizeChange';
+export const PAGE_CHANGED = 'pageChange';
+export const PAGESIZE_CHANGED = 'pageSizeChange';
 
 export const SCROLLING_START = 'scrolling:start';
 export const SCROLLING = 'scrolling';

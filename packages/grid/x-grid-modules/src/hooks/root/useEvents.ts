@@ -2,19 +2,21 @@ import * as React from 'react';
 import { useLogger } from '../utils/useLogger';
 import {
   CELL_CLICK,
-  CLICK_EVENT,
+  CLICK,
   COL_RESIZE_START,
   COL_RESIZE_STOP,
   COLUMN_HEADER_CLICK,
   UNMOUNT,
-  KEYDOWN_EVENT,
-  KEYUP_EVENT,
+  KEYDOWN,
+  KEYUP,
   RESIZE,
   ROW_CLICK,
-  HOVER_EVENT,
+  MOUSE_HOVER,
   CELL_HOVER,
   ROW_HOVER,
   COLUMN_HEADER_HOVER,
+  FOCUS_OUT,
+  GRID_FOCUS_OUT,
 } from '../../constants/eventsConstants';
 import { GridOptions, ApiRef, CellParams, ColParams, RowParams } from '../../models';
 import {
@@ -147,6 +149,16 @@ export function useEvents(
     [apiRef, getEventParams],
   );
 
+  const onFocusOutHandler = React.useCallback(
+    (event: FocusEvent) => {
+      apiRef.current!.emitEvent(FOCUS_OUT, event);
+      if (event.relatedTarget === null) {
+        apiRef.current!.emitEvent(GRID_FOCUS_OUT, event);
+      }
+    },
+    [apiRef, getEventParams],
+  );
+
   const onUnmount = React.useCallback(
     (handler: (param: any) => void): (() => void) => {
       return apiRef.current!.registerEvent(UNMOUNT, handler);
@@ -184,14 +196,16 @@ export function useEvents(
   React.useEffect(() => {
     if (gridRootRef && gridRootRef.current && apiRef.current?.isInitialised) {
       logger.warn('Binding events listeners');
-      const keyDownHandler = getHandler(KEYDOWN_EVENT);
-      const keyUpHandler = getHandler(KEYUP_EVENT);
+      const keyDownHandler = getHandler(KEYDOWN);
+      const keyUpHandler = getHandler(KEYUP);
       const gridRootElem = gridRootRef.current;
 
-      gridRootRef.current.addEventListener(CLICK_EVENT, onClickHandler, { capture: true });
-      gridRootRef.current.addEventListener(HOVER_EVENT, onHoverHandler, { capture: true });
-      document.addEventListener(KEYDOWN_EVENT, keyDownHandler);
-      document.addEventListener(KEYUP_EVENT, keyUpHandler);
+      gridRootRef.current.addEventListener(CLICK, onClickHandler, { capture: true });
+      gridRootRef.current.addEventListener(MOUSE_HOVER, onHoverHandler, { capture: true });
+      gridRootRef.current.addEventListener(FOCUS_OUT, onFocusOutHandler);
+
+      document.addEventListener(KEYDOWN, keyDownHandler);
+      document.addEventListener(KEYUP, keyUpHandler);
 
       apiRef.current!.isInitialised = true;
       const api = apiRef.current!;
@@ -199,10 +213,11 @@ export function useEvents(
       return () => {
         logger.warn('Clearing all events listeners');
         api.emit(UNMOUNT);
-        gridRootElem.removeEventListener(CLICK_EVENT, onClickHandler, { capture: true });
-        gridRootElem.removeEventListener(HOVER_EVENT, onHoverHandler, { capture: true });
-        document.removeEventListener(KEYDOWN_EVENT, keyDownHandler);
-        document.removeEventListener(KEYUP_EVENT, keyUpHandler);
+        gridRootElem.removeEventListener(CLICK, onClickHandler, { capture: true });
+        gridRootElem.removeEventListener(MOUSE_HOVER, onHoverHandler, { capture: true });
+        gridRootElem.removeEventListener(FOCUS_OUT, onFocusOutHandler);
+        document.removeEventListener(KEYDOWN, keyDownHandler);
+        document.removeEventListener(KEYUP, keyUpHandler);
         api.removeAllListeners();
       };
     }
