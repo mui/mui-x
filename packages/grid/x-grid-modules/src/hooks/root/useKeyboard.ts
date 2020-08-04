@@ -52,9 +52,7 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
   const onMultipleKeyChange = React.useCallback(
     (isPressed: boolean) => {
       isMultipleKeyPressed.current = isPressed;
-      if (apiRef.current) {
-        apiRef.current.emit(MULTIPLE_KEY_PRESS_CHANGED, isPressed);
-      }
+      apiRef.current.publishEvent(MULTIPLE_KEY_PRESS_CHANGED, isPressed);
     },
     [apiRef, isMultipleKeyPressed],
   );
@@ -141,9 +139,7 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
     )! as HTMLElement;
 
     const rowId = getIdFromRowElem(rowEl);
-    if (apiRef.current) {
-      apiRef.current.selectRow(rowId);
-    }
+    apiRef.current.selectRow(rowId);
   }, [apiRef]);
 
   const expandSelection = React.useCallback(

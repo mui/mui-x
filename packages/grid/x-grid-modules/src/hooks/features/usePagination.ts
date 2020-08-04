@@ -83,7 +83,7 @@ export const usePagination = (
         ...stateRef.current,
         page,
       };
-      apiRef.current.emit(PAGE_CHANGED, params);
+      apiRef.current.publishEvent(PAGE_CHANGED, params);
       if (stateRef.current.page !== page) {
         updateState({ page });
       }
@@ -113,7 +113,7 @@ export const usePagination = (
         pageCount: newPageCount,
         pageSize,
       };
-      apiRef.current.emit(PAGESIZE_CHANGED, newState as PageChangeParams);
+      apiRef.current.publishEvent(PAGESIZE_CHANGED, newState as PageChangeParams);
 
       updateState(newState);
       setPage(newPage);
@@ -153,7 +153,7 @@ export const usePagination = (
 
   React.useEffect(() => {
     if (apiRef.current?.isInitialised) {
-      apiRef.current.emit(PAGE_CHANGED, stateRef.current);
+      apiRef.current.publishEvent(PAGE_CHANGED, stateRef.current);
     }
   }, [apiRef, stateRef, apiRef.current?.isInitialised]);
 

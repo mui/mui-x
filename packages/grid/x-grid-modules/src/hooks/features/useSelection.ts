@@ -85,8 +85,8 @@ export const useSelection = (
       const selectionChangeParam: SelectionChangeParams = {
         rows: getSelectedRows().map((r) => r.data),
       };
-      apiRef.current.emit(ROW_SELECTED, rowSelectedParam);
-      apiRef.current.emit(SELECTION_CHANGED, selectionChangeParam);
+      apiRef.current.publishEvent(ROW_SELECTED, rowSelectedParam);
+      apiRef.current.publishEvent(SELECTION_CHANGED, selectionChangeParam);
 
       forceUpdate((p: any) => !p);
     },
@@ -97,15 +97,12 @@ export const useSelection = (
       selectedItemsRef,
       allowMultipleSelectionKeyPressed,
       getSelectedRows,
-      options.checkboxSelection
+      options.checkboxSelection,
     ],
   );
 
   const selectRow = React.useCallback(
     (id: RowId, isSelected = true, allowMultiple = false) => {
-      if (!apiRef || !apiRef.current) {
-        return;
-      }
       selectRowModel(apiRef.current.getRowFromId(id), allowMultiple, isSelected);
     },
     [apiRef, selectRowModel],
@@ -113,9 +110,6 @@ export const useSelection = (
 
   const selectRows = React.useCallback(
     (ids: RowId[], isSelected = true, deSelectOthers = false) => {
-      if (!apiRef || !apiRef.current) {
-        return;
-      }
       if (!options.enableMultipleSelection && ids.length > 1) {
         throw new Error(
           'Material-UI: Enable options.enableMultipleSelection to select more than 1 item.',
@@ -135,7 +129,7 @@ export const useSelection = (
       const selectionChangeParam: SelectionChangeParams = {
         rows: getSelectedRows().map((r) => r.data),
       };
-      apiRef.current.emit(SELECTION_CHANGED, selectionChangeParam);
+      apiRef.current.publishEvent(SELECTION_CHANGED, selectionChangeParam);
     },
     [apiRef, selectedItemsRef, forceUpdate, options.enableMultipleSelection, getSelectedRows],
   );
@@ -195,6 +189,6 @@ export const useSelection = (
   React.useEffect(() => {
     selectedItemsRef.current = [];
     const selectionChangeParam: SelectionChangeParams = { rows: [] };
-    apiRef.current.emit(SELECTION_CHANGED, selectionChangeParam);
+    apiRef.current.publishEvent(SELECTION_CHANGED, selectionChangeParam);
   }, [rowsProp, apiRef]);
 };

@@ -7,7 +7,7 @@ export function useApiMethod(apiRef: ApiRef, apiMethods: Partial<GridApi>, apiNa
 
   React.useEffect(() => {
     let hasMethodsInstalled = true;
-    if(!apiRef.current.isInitialised) {
+    if (!apiRef.current.isInitialised) {
       return;
     }
 

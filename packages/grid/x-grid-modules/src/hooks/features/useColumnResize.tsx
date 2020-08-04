@@ -43,11 +43,8 @@ export const useColumnResize = (
 
   const handleMouseDown = React.useCallback(
     (col: ColDef): void => {
-      if (!apiRef || !apiRef.current) {
-        return;
-      }
       logger.debug(`Start Resize on col ${col.field}`);
-      apiRef.current.emit(COL_RESIZE_START);
+      apiRef.current.publishEvent(COL_RESIZE_START);
       isResizing.current = true;
       currentColDefRef.current = col;
       currentColPreviousWidth.current = col.width;
@@ -83,7 +80,7 @@ export const useColumnResize = (
     }
 
     stopResizeEventTimeout.current = setTimeout(() => {
-      apiRef.current?.emit(COL_RESIZE_STOP);
+      apiRef.current.publishEvent(COL_RESIZE_STOP);
     }, 200);
   }, [apiRef, logger]);
 

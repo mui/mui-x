@@ -109,10 +109,6 @@ export const useSorting = (
   }, [apiRef, originalOrder]);
 
   const applySorting = React.useCallback(() => {
-    if (!apiRef.current) {
-      return;
-    }
-
     logger.info('Sorting rows with ', sortModelRef.current);
     const newRows = apiRef.current.getRowModels();
 
@@ -130,7 +126,7 @@ export const useSorting = (
     (sortModel: SortModel) => {
       sortModelRef.current = sortModel;
       comparatorList.current = buildComparatorList(sortModel);
-      apiRef.current.emit(SORT_MODEL_CHANGE, getSortModelParams());
+      apiRef.current.publishEvent(SORT_MODEL_CHANGE, getSortModelParams());
       if (options.sortingMode === FeatureModeConstant.client) {
         applySorting();
       }
@@ -217,7 +213,7 @@ export const useSorting = (
   }, [rowsProp, applySorting, storeOriginalOrder, options.sortingMode, logger]);
 
   React.useEffect(() => {
-    if (colsProp.length > 0 && apiRef.current) {
+    if (colsProp.length > 0) {
       const sortedCols = apiRef.current
         .getAllColumns()
         .filter((c) => c.sortDirection != null)

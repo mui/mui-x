@@ -108,9 +108,7 @@ export const useRows = (
         updateAllRows(newRows);
       }
 
-      if (apiRef.current) {
-        apiRef.current.emit(ROWS_UPDATED, rowModelsRef.current);
-      }
+      apiRef.current.publishEvent(ROWS_UPDATED, rowModelsRef.current);
     },
     [apiRef, updateAllRows, rafUpdate, getRowIndexFromId, logger],
   );

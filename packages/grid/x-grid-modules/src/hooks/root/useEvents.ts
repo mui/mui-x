@@ -181,7 +181,7 @@ export function useEvents(
     isResizingRef.current = false;
   }, [isResizingRef]);
 
-  const resize = React.useCallback(() => apiRef.current?.emit(RESIZE), [apiRef]);
+  const resize = React.useCallback(() => apiRef.current.publishEvent(RESIZE), [apiRef]);
   const eventsApi: EventsApi = { resize, onUnmount, onResize };
   useApiMethod(apiRef, eventsApi, 'EventsApi');
 
@@ -214,7 +214,7 @@ export function useEvents(
 
       return () => {
         logger.warn('Clearing all events listeners');
-        api.emit(UNMOUNT);
+        api.publishEvent(UNMOUNT);
         gridRootElem.removeEventListener(CLICK, onClickHandler, { capture: true });
         gridRootElem.removeEventListener(MOUSE_HOVER, onHoverHandler, { capture: true });
         gridRootElem.removeEventListener(FOCUS_OUT, onFocusOutHandler);
