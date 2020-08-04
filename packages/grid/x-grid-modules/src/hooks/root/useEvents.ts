@@ -197,7 +197,7 @@ export function useEvents(
 
   React.useEffect(() => {
     if (gridRootRef && gridRootRef.current && apiRef.current?.isInitialised) {
-      logger.warn('Binding events listeners');
+      logger.debug('Binding events listeners');
       const keyDownHandler = getHandler(KEYDOWN);
       const keyUpHandler = getHandler(KEYUP);
       const gridRootElem = gridRootRef.current;
