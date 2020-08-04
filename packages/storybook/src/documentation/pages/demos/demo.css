@@ -26,3 +26,6 @@
 .demo .highlight {
     color: #008508;
 }
+.demo .custom-error-overlay div {
+    text-align: center;
+}

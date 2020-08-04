@@ -143,7 +143,6 @@ export const useSorting = (
       buildComparatorList,
       options.sortingMode,
       getSortModelParams,
-      logger,
     ],
   );
 
@@ -215,7 +214,7 @@ export const useSorting = (
         applySorting();
       }
     }
-  }, [rowsProp, applySorting, storeOriginalOrder, options.sortingMode]);
+  }, [rowsProp, applySorting, storeOriginalOrder, options.sortingMode, logger]);
 
   React.useEffect(() => {
     if (colsProp.length > 0 && apiRef.current) {

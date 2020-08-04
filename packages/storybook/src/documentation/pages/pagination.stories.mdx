@@ -151,15 +151,17 @@ React.useEffect(() => {
   apiRef.current?.setPage(2);
 }, [apiRef]);
 
-<XGrid
-  rows={rows}
-  columns={columns}
-  options={{
-    pagination: true,
-    pageSize: 5,
-  }}
-  apiRef={apiRef}
-/>;
+return (
+  <XGrid
+    rows={rows}
+    columns={columns}
+    options={{
+      pagination: true,
+      pageSize: 5,
+    }}
+    apiRef={apiRef}
+  />
+);
 ```
 
 <SetPageDemo />

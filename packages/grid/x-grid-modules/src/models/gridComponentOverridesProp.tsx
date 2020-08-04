@@ -25,4 +25,8 @@ export interface GridComponentOverridesProp {
    * Header component rendered above the grid column header bar.
    */
   header?: React.ElementType<ComponentParams>;
+  /**
+   * Error overlay component rendered above the grid when an error is caught.
+   */
+  errorOverlay?: React.ElementType<ComponentParams>;
 }

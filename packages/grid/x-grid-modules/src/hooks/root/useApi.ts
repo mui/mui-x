@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useLogger } from '../utils/useLogger';
-import { UNMOUNT } from '../../constants/eventsConstants';
+import { COMPONENT_ERROR, UNMOUNT } from '../../constants/eventsConstants';
 import { GridOptions, ApiRef } from '../../models';
 import { GridApi } from '../../models/api/gridApi';
 import { useApiMethod } from './useApiMethod';
@@ -31,7 +31,7 @@ export function useApi(
 
   const emitEvent = React.useCallback(
     (name: string, ...args: any[]) => {
-      if (apiRef && apiRef.current && apiRef.current?.isInitialised) {
+      if (apiRef && apiRef.current) {
         apiRef.current.emit(name, ...args);
       }
     },
@@ -51,7 +51,14 @@ export function useApi(
     [apiRef, logger],
   );
 
-  useApiMethod(apiRef, { registerEvent, emitEvent }, 'CoreApi');
+  const showError = React.useCallback(
+    (args) => {
+      emitEvent(COMPONENT_ERROR, args);
+    },
+    [emitEvent],
+  );
+
+  useApiMethod(apiRef, { registerEvent, emitEvent, showError }, 'CoreApi');
   React.useEffect(() => {
     if (gridRootRef && gridRootRef.current && isApiInitialised) {
       apiRef.current!.isInitialised = true;

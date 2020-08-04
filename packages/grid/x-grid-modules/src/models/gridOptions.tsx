@@ -258,6 +258,10 @@ export interface GridOptions {
    */
   onPageSizeChange?: (param: PageChangeParams) => void;
   /**
+   * Handler triggered when an exception is thrown in the grid or when the showError api method is called.
+   */
+  onError?: () => void;
+  /**
    * Set of icons used in the grid.
    */
   icons: IconsOptions;

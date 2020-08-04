@@ -314,7 +314,7 @@ export const SortedEventsApi = () => {
         { field: 'name', sort: 'asc' },
       ]);
     }
-  }, [apiRef]);
+  }, [apiRef, handleEvent]);
 
   // We had the ol so we can test it with image snapshots
   return (

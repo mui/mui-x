@@ -8,6 +8,7 @@ export const KEYUP = 'keyup';
 export const SCROLL = 'scroll';
 
 // XGRID events
+export const COMPONENT_ERROR = 'componentError';
 export const UNMOUNT = 'unmount';
 export const GRID_FOCUS_OUT = 'gridFocusOut';
 export const CELL_CLICK = 'cellClick';
