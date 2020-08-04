@@ -16,6 +16,7 @@ import { useLogger } from '../utils/useLogger';
 import { useContainerProps } from '../root';
 import {
   RESIZE,
+  SCROLL,
   SCROLLING,
   SCROLLING_START,
   SCROLLING_STOP,
@@ -24,7 +25,6 @@ import { useApiMethod } from '../root/useApiMethod';
 import { useNativeEventListener } from '../root/useNativeEventListener';
 import { useApiEventHandler } from '../root/useApiEventHandler';
 
-const SCROLL_EVENT = 'scroll';
 type UseVirtualRowsReturnType = Partial<RenderContextProps> | null;
 
 export const useVirtualRows = (
@@ -327,11 +327,11 @@ export const useVirtualRows = (
   );
 
   useApiEventHandler(apiRef, RESIZE, onResize);
-  useNativeEventListener(apiRef, windowRef, SCROLL_EVENT, onScroll, { passive: true });
+  useNativeEventListener(apiRef, windowRef, SCROLL, onScroll, { passive: true });
   useNativeEventListener(
     apiRef,
     () => renderingZoneRef.current?.parentElement,
-    SCROLL_EVENT,
+    SCROLL,
     onViewportScroll,
   );
 

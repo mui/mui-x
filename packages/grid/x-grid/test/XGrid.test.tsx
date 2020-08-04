@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createClientRender, act, fireEvent } from 'test/utils';
+import { screen, createClientRender, act, fireEvent } from 'test/utils';
 import { expect } from 'chai';
 import { XGrid } from '@material-ui/x-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
@@ -116,7 +116,6 @@ describe('<XGrid />', () => {
               { field: 'id', hide: true },
               { field: 'brand', width: 100 },
             ]}
-            options={{ checkboxSelection: true }}
           />
         </div>
       );
@@ -136,5 +135,40 @@ describe('<XGrid />', () => {
     // @ts-ignore
     rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
     expect(rect.width).to.equal(400 - 2);
+  });
+
+  describe('prop: checkboxSelection', () => {
+    it('should check and uncheck when double clicking the row', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid
+            rows={[
+              {
+                id: 0,
+                brand: 'Nike',
+              },
+            ]}
+            columns={[
+              { field: 'id', hide: true },
+              { field: 'brand', width: 100 },
+            ]}
+            options={{ checkboxSelection: true }}
+          />
+        </div>,
+      );
+
+      const row = document.querySelector('[role="row"][aria-rowindex="2"]');
+      const checkbox = row!.querySelector('input');
+      expect(row).to.not.have.class('selected');
+      expect(checkbox).to.have.property('checked', false);
+
+      fireEvent.click(screen.getByRole('cell', { name: 'Nike' }));
+      expect(row).to.have.class('selected');
+      expect(checkbox).to.have.property('checked', true);
+
+      fireEvent.click(screen.getByRole('cell', { name: 'Nike' }));
+      expect(row).to.not.have.class('selected');
+      expect(checkbox).to.have.property('checked', false);
+    });
   });
 });

@@ -13,8 +13,8 @@ import { useLogger } from '../utils/useLogger';
 import {
   MULTIPLE_KEY_PRESS_CHANGED,
   ROW_CLICK,
-  ROW_SELECTED_EVENT,
-  SELECTION_CHANGED_EVENT,
+  ROW_SELECTED,
+  SELECTION_CHANGED,
 } from '../../constants/eventsConstants';
 import { useApiEventHandler } from '../root/useApiEventHandler';
 import { useApiMethod } from '../root/useApiMethod';
@@ -48,7 +48,8 @@ export const useSelection = (
 
       logger.debug(`Selecting row ${row.id}`);
       const rowIndex = apiRef.current.getRowIndexFromId(row.id);
-      let allowMultiSelect = allowMultipleSelectionKeyPressed.current;
+      // if checkboxSelection true then we allow click to deselect a row.
+      let allowMultiSelect = allowMultipleSelectionKeyPressed.current || options.checkboxSelection;
       if (allowMultipleOverride) {
         allowMultiSelect = allowMultipleOverride;
       }
@@ -89,8 +90,8 @@ export const useSelection = (
         const selectionChangeParam: SelectionChangeParams = {
           rows: getSelectedRows().map((r) => r.data),
         };
-        apiRef.current!.emit(ROW_SELECTED_EVENT, rowSelectedParam);
-        apiRef.current!.emit(SELECTION_CHANGED_EVENT, selectionChangeParam);
+        apiRef.current!.emit(ROW_SELECTED, rowSelectedParam);
+        apiRef.current!.emit(SELECTION_CHANGED, selectionChangeParam);
       }
 
       forceUpdate((p: any) => !p);
@@ -136,11 +137,11 @@ export const useSelection = (
       forceUpdate((p: any) => !p);
 
       if (apiRef && apiRef.current != null) {
-        // We don't emit ROW_SELECTED_EVENT on each row as it would be too consuming for large set of data.
+        // We don't emit ROW_SELECTED on each row as it would be too consuming for large set of data.
         const selectionChangeParam: SelectionChangeParams = {
           rows: getSelectedRows().map((r) => r.data),
         };
-        apiRef.current!.emit(SELECTION_CHANGED_EVENT, selectionChangeParam);
+        apiRef.current!.emit(SELECTION_CHANGED, selectionChangeParam);
       }
     },
     [apiRef, selectedItemsRef, forceUpdate, options.enableMultipleSelection, getSelectedRows],
@@ -164,13 +165,13 @@ export const useSelection = (
 
   const onRowSelected = React.useCallback(
     (handler: (param: RowSelectedParams) => void): (() => void) => {
-      return apiRef!.current!.registerEvent(ROW_SELECTED_EVENT, handler);
+      return apiRef!.current!.registerEvent(ROW_SELECTED, handler);
     },
     [apiRef],
   );
   const onSelectionChange = React.useCallback(
     (handler: (param: SelectionChangeParams) => void): (() => void) => {
-      return apiRef!.current!.registerEvent(SELECTION_CHANGED_EVENT, handler);
+      return apiRef!.current!.registerEvent(SELECTION_CHANGED, handler);
     },
     [apiRef],
   );
@@ -178,8 +179,8 @@ export const useSelection = (
   useApiEventHandler(apiRef, ROW_CLICK, rowClickHandler);
   useApiEventHandler(apiRef, MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
 
-  useApiEventHandler(apiRef, ROW_SELECTED_EVENT, options.onRowSelected);
-  useApiEventHandler(apiRef, SELECTION_CHANGED_EVENT, options.onSelectionChange);
+  useApiEventHandler(apiRef, ROW_SELECTED, options.onRowSelected);
+  useApiEventHandler(apiRef, SELECTION_CHANGED, options.onSelectionChange);
 
   // TODO handle Cell Click/range selection?
 
@@ -202,7 +203,7 @@ export const useSelection = (
     selectedItemsRef.current = [];
     if (apiRef && apiRef.current != null) {
       const selectionChangeParam: SelectionChangeParams = { rows: [] };
-      apiRef.current!.emit(SELECTION_CHANGED_EVENT, selectionChangeParam);
+      apiRef.current!.emit(SELECTION_CHANGED, selectionChangeParam);
     }
   }, [rowsProp, apiRef]);
 };
