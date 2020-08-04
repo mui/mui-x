@@ -194,7 +194,7 @@ export const useSorting = (
 
   const onSortModelChange = React.useCallback(
     (handler: (param: SortModelParams) => void): (() => void) => {
-      return apiRef.current.registerEvent(SORT_MODEL_CHANGE, handler);
+      return apiRef.current.subscribeEvent(SORT_MODEL_CHANGE, handler);
     },
     [apiRef],
   );

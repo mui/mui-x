@@ -158,13 +158,13 @@ export const useSelection = (
 
   const onRowSelected = React.useCallback(
     (handler: (param: RowSelectedParams) => void): (() => void) => {
-      return apiRef.current.registerEvent(ROW_SELECTED, handler);
+      return apiRef.current.subscribeEvent(ROW_SELECTED, handler);
     },
     [apiRef],
   );
   const onSelectionChange = React.useCallback(
     (handler: (param: SelectionChangeParams) => void): (() => void) => {
-      return apiRef.current.registerEvent(SELECTION_CHANGED, handler);
+      return apiRef.current.subscribeEvent(SELECTION_CHANGED, handler);
     },
     [apiRef],
   );

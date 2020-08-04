@@ -74,7 +74,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
       setErrorState(args);
     };
     React.useEffect(() => {
-      return apiRef!.current.registerEvent(COMPONENT_ERROR, errorHandler);
+      return apiRef!.current.subscribeEvent(COMPONENT_ERROR, errorHandler);
     }, [apiRef]);
 
     React.useEffect(() => {

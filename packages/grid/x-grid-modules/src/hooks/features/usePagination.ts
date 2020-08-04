@@ -123,13 +123,13 @@ export const usePagination = (
 
   const onPageChange = React.useCallback(
     (handler: (param: PageChangeParams) => void): (() => void) => {
-      return apiRef.current.registerEvent(PAGE_CHANGED, handler);
+      return apiRef.current.subscribeEvent(PAGE_CHANGED, handler);
     },
     [apiRef],
   );
   const onPageSizeChange = React.useCallback(
     (handler: (param: PageChangeParams) => void): (() => void) => {
-      return apiRef.current.registerEvent(PAGESIZE_CHANGED, handler);
+      return apiRef.current.subscribeEvent(PAGESIZE_CHANGED, handler);
     },
     [apiRef],
   );

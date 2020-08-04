@@ -12,14 +12,14 @@ export function useApi(
   const [initialised, setInit] = React.useState(false);
   const logger = useLogger('useApi');
 
-  const emitEvent = React.useCallback(
+  const publishEvent = React.useCallback(
     (name: string, ...args: any[]) => {
       apiRef.current.emit(name, ...args);
     },
     [apiRef],
   );
 
-  const registerEvent = React.useCallback(
+  const subscribeEvent = React.useCallback(
     (event: string, handler: (param: any) => void): (() => void) => {
       logger.debug(`Binding ${event} event`);
       apiRef.current.on(event, handler);
@@ -34,9 +34,9 @@ export function useApi(
 
   const showError = React.useCallback(
     (args) => {
-      emitEvent(COMPONENT_ERROR, args);
+      publishEvent(COMPONENT_ERROR, args);
     },
-    [emitEvent],
+    [publishEvent],
   );
 
   React.useEffect(() => {
@@ -55,7 +55,7 @@ export function useApi(
     };
   }, [gridRootRef, logger, apiRef]);
 
-  useApiMethod(apiRef, { registerEvent, emitEvent, showError }, 'CoreApi');
+  useApiMethod(apiRef, { subscribeEvent, publishEvent, showError }, 'CoreApi');
 
   return initialised;
 }

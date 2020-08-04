@@ -38,7 +38,7 @@ export const useColumnResize = (
   }, []);
 
   React.useEffect(() => {
-    return apiRef.current.registerEvent(SCROLLING, onScrollHandler);
+    return apiRef.current.subscribeEvent(SCROLLING, onScrollHandler);
   }, [apiRef, onScrollHandler]);
 
   const handleMouseDown = React.useCallback(

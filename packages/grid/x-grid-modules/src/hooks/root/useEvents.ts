@@ -48,7 +48,7 @@ export function useEvents(
   const logger = useLogger('useEvents');
 
   const getHandler = React.useCallback(
-    (name: string) => (...args: any[]) => apiRef.current.emitEvent(name, ...args),
+    (name: string) => (...args: any[]) => apiRef.current.publishEvent(name, ...args),
     [apiRef],
   );
 
@@ -117,13 +117,13 @@ export function useEvents(
       }
 
       if (eventParams.cell) {
-        apiRef.current.emitEvent(CELL_CLICK, eventParams.cell);
+        apiRef.current.publishEvent(CELL_CLICK, eventParams.cell);
       }
       if (eventParams.row) {
-        apiRef.current.emitEvent(ROW_CLICK, eventParams.row);
+        apiRef.current.publishEvent(ROW_CLICK, eventParams.row);
       }
       if (eventParams.header) {
-        apiRef.current.emitEvent(COLUMN_HEADER_CLICK, eventParams.header);
+        apiRef.current.publishEvent(COLUMN_HEADER_CLICK, eventParams.header);
       }
     },
     [apiRef, getEventParams],
@@ -138,13 +138,13 @@ export function useEvents(
       }
 
       if (eventParams.cell) {
-        apiRef.current.emitEvent(CELL_HOVER, eventParams.cell);
+        apiRef.current.publishEvent(CELL_HOVER, eventParams.cell);
       }
       if (eventParams.row) {
-        apiRef.current.emitEvent(ROW_HOVER, eventParams.row);
+        apiRef.current.publishEvent(ROW_HOVER, eventParams.row);
       }
       if (eventParams.header) {
-        apiRef.current.emitEvent(COLUMN_HEADER_HOVER, eventParams.header);
+        apiRef.current.publishEvent(COLUMN_HEADER_HOVER, eventParams.header);
       }
     },
     [apiRef, getEventParams],
@@ -152,9 +152,9 @@ export function useEvents(
 
   const onFocusOutHandler = React.useCallback(
     (event: FocusEvent) => {
-      apiRef.current.emitEvent(FOCUS_OUT, event);
+      apiRef.current.publishEvent(FOCUS_OUT, event);
       if (event.relatedTarget === null) {
-        apiRef.current.emitEvent(GRID_FOCUS_OUT, event);
+        apiRef.current.publishEvent(GRID_FOCUS_OUT, event);
       }
     },
     [apiRef, getEventParams],
@@ -162,13 +162,13 @@ export function useEvents(
 
   const onUnmount = React.useCallback(
     (handler: (param: any) => void): (() => void) => {
-      return apiRef.current.registerEvent(UNMOUNT, handler);
+      return apiRef.current.subscribeEvent(UNMOUNT, handler);
     },
     [apiRef],
   );
   const onResize = React.useCallback(
     (handler: (param: any) => void): (() => void) => {
-      return apiRef.current.registerEvent(RESIZE, handler);
+      return apiRef.current.subscribeEvent(RESIZE, handler);
     },
     [apiRef],
   );
