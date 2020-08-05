@@ -96,12 +96,13 @@ const stories = [
 ];
 
 describe('snapshotTest', () => {
-  stories.forEach((config: any) => {
+  stories.forEach((config: any, index: number) => {
     const path = typeof config === 'string' ? config : config.path;
     const beforeTest = typeof config === 'string' ? undefined : config.beforeTest;
+    const isLatestStory = stories.length -1 === index;
 
     test(path, async (done) => {
-      await snapshotTest(path, beforeTest);
+      await snapshotTest(path, beforeTest, isLatestStory);
       done();
     });
   });

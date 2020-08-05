@@ -20,15 +20,26 @@ export const IMAGE_SNAPSHOT_CONFIG = {
   },
 } as MatchImageSnapshotOptions;
 
+let browserInstance;
 export async function startBrowser() {
-  const browser = await puppeteer.launch({
-    args: ['--disable-lcd-text', '--no-sandbox', '--disable-setuid-sandbox'],
-    defaultViewport: { width: 1600, height: 900 },
-    // headless: false
-  });
-  return browser;
+  if(!browserInstance) {
+    // eslint-disable-next-line no-console
+    console.log('Launching new browser');
+    browserInstance = await puppeteer.launch({
+      args: ['--disable-lcd-text', '--no-sandbox', '--disable-setuid-sandbox'],
+      defaultViewport: {width: 1600, height: 900},
+    });
+  }
+  return browserInstance;
 }
-
+export async function stopBrowser() {
+  if(browserInstance != null) {
+    // eslint-disable-next-line no-console
+    console.log('Stopping browser')
+    await browserInstance.close();
+    browserInstance = null;
+  }
+}
 export async function getStoryPage(
   browser: any,
   path: string,
@@ -49,19 +60,30 @@ export async function getStoryPage(
 export async function snapshotTest(
   path: string,
   beforeTest?: (page) => Promise<void>,
+  isLatestStory?: boolean,
 ): Promise<void> {
-  const browser = await startBrowser();
-  const page = await getStoryPage(browser, path);
-  await page.addStyleTag({ content: NO_ANIM_CSS });
+  try {
+    // eslint-disable-next-line no-console
+    const browser = await startBrowser();
+    const page = await getStoryPage(browser, path);
+    await page.addStyleTag({content: NO_ANIM_CSS});
 
-  if (beforeTest) {
-    await beforeTest(page);
+    if (beforeTest) {
+      await beforeTest(page);
+    }
+
+    const image = await page.screenshot();
+    expect(image).toMatchImageSnapshot(IMAGE_SNAPSHOT_CONFIG);
+    await page.close();
+  } catch(err) {
+    await stopBrowser();
+    throw err;
   }
-
-  const image = await page.screenshot();
-  expect(image).toMatchImageSnapshot(IMAGE_SNAPSHOT_CONFIG);
-  await page.close();
-  await browser.close();
+  finally {
+    if(isLatestStory) {
+      await stopBrowser();
+    }
+  }
 }
 
 export const activeCell = (rowIndex: number, colIndex: number): boolean => {

@@ -1,4 +1,4 @@
-import { snapshotTest } from './helper-fn';
+import {snapshotTest, stopBrowser} from './helper-fn';
 
 jest.setTimeout(30000);
 
@@ -31,4 +31,7 @@ describe('Components override', () => {
     await snapshotTest('/story/x-grid-demos-custom-components--styled-columns');
     done();
   });
+  afterAll(async ()=> {
+    await stopBrowser();
+  })
 });
