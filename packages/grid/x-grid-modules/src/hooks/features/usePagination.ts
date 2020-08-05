@@ -74,18 +74,16 @@ export const usePagination = (
 
   const setPage = React.useCallback(
     (page: number) => {
-      if (apiRef && apiRef.current) {
-        page = stateRef.current.pageCount >= page ? page : stateRef.current.pageCount;
-        apiRef.current!.renderPage(
-          stateRef.current.paginationMode === FeatureModeConstant.client ? page : 1,
-        );
+      page = stateRef.current.pageCount >= page ? page : stateRef.current.pageCount;
+      apiRef.current.renderPage(
+        stateRef.current.paginationMode === FeatureModeConstant.client ? page : 1,
+      );
 
-        const params: PageChangeParams = {
-          ...stateRef.current,
-          page,
-        };
-        apiRef.current!.emit(PAGE_CHANGED, params);
-      }
+      const params: PageChangeParams = {
+        ...stateRef.current,
+        page,
+      };
+      apiRef.current.publishEvent(PAGE_CHANGED, params);
       if (stateRef.current.page !== page) {
         updateState({ page });
       }
@@ -115,7 +113,7 @@ export const usePagination = (
         pageCount: newPageCount,
         pageSize,
       };
-      apiRef.current!.emit(PAGESIZE_CHANGED, newState as PageChangeParams);
+      apiRef.current.publishEvent(PAGESIZE_CHANGED, newState as PageChangeParams);
 
       updateState(newState);
       setPage(newPage);
@@ -125,13 +123,13 @@ export const usePagination = (
 
   const onPageChange = React.useCallback(
     (handler: (param: PageChangeParams) => void): (() => void) => {
-      return apiRef!.current!.registerEvent(PAGE_CHANGED, handler);
+      return apiRef.current.subscribeEvent(PAGE_CHANGED, handler);
     },
     [apiRef],
   );
   const onPageSizeChange = React.useCallback(
     (handler: (param: PageChangeParams) => void): (() => void) => {
-      return apiRef!.current!.registerEvent(PAGESIZE_CHANGED, handler);
+      return apiRef.current.subscribeEvent(PAGESIZE_CHANGED, handler);
     },
     [apiRef],
   );
@@ -155,7 +153,7 @@ export const usePagination = (
 
   React.useEffect(() => {
     if (apiRef.current?.isInitialised) {
-      apiRef.current!.emit(PAGE_CHANGED, stateRef.current);
+      apiRef.current.publishEvent(PAGE_CHANGED, stateRef.current);
     }
   }, [apiRef, stateRef, apiRef.current?.isInitialised]);
 

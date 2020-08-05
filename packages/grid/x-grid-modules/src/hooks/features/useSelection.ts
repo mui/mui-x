@@ -32,15 +32,11 @@ export const useSelection = (
   const [, forceUpdate] = React.useState();
 
   const getSelectedRows = React.useCallback((): RowModel[] => {
-    return selectedItemsRef.current.map((id) => apiRef!.current!.getRowFromId(id));
+    return selectedItemsRef.current.map((id) => apiRef.current.getRowFromId(id));
   }, [selectedItemsRef, apiRef]);
 
   const selectRowModel = React.useCallback(
     (row: RowModel, allowMultipleOverride?: boolean, isSelected?: boolean) => {
-      if (!apiRef || apiRef.current == null) {
-        throw new Error('Material-UI: ApiRef should be defined at this stage.');
-      }
-
       if (!apiRef.current.isInitialised) {
         selectedItemsRef.current = [row.id];
         return;
@@ -71,28 +67,26 @@ export const useSelection = (
         }
       } else {
         selectedItemsRef.current.forEach((id) => {
-          const otherSelectedRow = apiRef!.current!.getRowFromId(id);
+          const otherSelectedRow = apiRef.current.getRowFromId(id);
           updatedRowModels.push({ ...otherSelectedRow, selected: false });
         });
         selectedItemsRef.current = [row.id];
       }
-      apiRef!.current!.updateRowModels([...updatedRowModels, { ...row, selected: isRowSelected }]);
+      apiRef.current.updateRowModels([...updatedRowModels, { ...row, selected: isRowSelected }]);
 
-      if (apiRef && apiRef.current != null) {
-        logger.info(
-          `Row at index ${rowIndex} has change to ${isRowSelected ? 'selected' : 'unselected'} `,
-        );
-        const rowSelectedParam: RowSelectedParams = {
-          data: row.data,
-          isSelected: isRowSelected,
-          rowIndex,
-        };
-        const selectionChangeParam: SelectionChangeParams = {
-          rows: getSelectedRows().map((r) => r.data),
-        };
-        apiRef.current!.emit(ROW_SELECTED, rowSelectedParam);
-        apiRef.current!.emit(SELECTION_CHANGED, selectionChangeParam);
-      }
+      logger.info(
+        `Row at index ${rowIndex} has change to ${isRowSelected ? 'selected' : 'unselected'} `,
+      );
+      const rowSelectedParam: RowSelectedParams = {
+        data: row.data,
+        isSelected: isRowSelected,
+        rowIndex,
+      };
+      const selectionChangeParam: SelectionChangeParams = {
+        rows: getSelectedRows().map((r) => r.data),
+      };
+      apiRef.current.publishEvent(ROW_SELECTED, rowSelectedParam);
+      apiRef.current.publishEvent(SELECTION_CHANGED, selectionChangeParam);
 
       forceUpdate((p: any) => !p);
     },
@@ -103,14 +97,12 @@ export const useSelection = (
       selectedItemsRef,
       allowMultipleSelectionKeyPressed,
       getSelectedRows,
+      options.checkboxSelection,
     ],
   );
 
   const selectRow = React.useCallback(
     (id: RowId, isSelected = true, allowMultiple = false) => {
-      if (!apiRef || !apiRef.current) {
-        return;
-      }
       selectRowModel(apiRef.current.getRowFromId(id), allowMultiple, isSelected);
     },
     [apiRef, selectRowModel],
@@ -118,9 +110,6 @@ export const useSelection = (
 
   const selectRows = React.useCallback(
     (ids: RowId[], isSelected = true, deSelectOthers = false) => {
-      if (!apiRef || !apiRef.current) {
-        return;
-      }
       if (!options.enableMultipleSelection && ids.length > 1) {
         throw new Error(
           'Material-UI: Enable options.enableMultipleSelection to select more than 1 item.',
@@ -132,17 +121,15 @@ export const useSelection = (
         updates = [...selectedItemsRef.current.map((id) => ({ id, selected: false })), ...updates];
       }
 
-      apiRef!.current!.updateRowModels(updates);
+      apiRef.current.updateRowModels(updates);
       selectedItemsRef.current = isSelected ? ids : [];
       forceUpdate((p: any) => !p);
 
-      if (apiRef && apiRef.current != null) {
-        // We don't emit ROW_SELECTED on each row as it would be too consuming for large set of data.
-        const selectionChangeParam: SelectionChangeParams = {
-          rows: getSelectedRows().map((r) => r.data),
-        };
-        apiRef.current!.emit(SELECTION_CHANGED, selectionChangeParam);
-      }
+      // We don't emit ROW_SELECTED on each row as it would be too consuming for large set of data.
+      const selectionChangeParam: SelectionChangeParams = {
+        rows: getSelectedRows().map((r) => r.data),
+      };
+      apiRef.current.publishEvent(SELECTION_CHANGED, selectionChangeParam);
     },
     [apiRef, selectedItemsRef, forceUpdate, options.enableMultipleSelection, getSelectedRows],
   );
@@ -165,13 +152,13 @@ export const useSelection = (
 
   const onRowSelected = React.useCallback(
     (handler: (param: RowSelectedParams) => void): (() => void) => {
-      return apiRef!.current!.registerEvent(ROW_SELECTED, handler);
+      return apiRef.current.subscribeEvent(ROW_SELECTED, handler);
     },
     [apiRef],
   );
   const onSelectionChange = React.useCallback(
     (handler: (param: SelectionChangeParams) => void): (() => void) => {
-      return apiRef!.current!.registerEvent(SELECTION_CHANGED, handler);
+      return apiRef.current.subscribeEvent(SELECTION_CHANGED, handler);
     },
     [apiRef],
   );
@@ -201,9 +188,7 @@ export const useSelection = (
 
   React.useEffect(() => {
     selectedItemsRef.current = [];
-    if (apiRef && apiRef.current != null) {
-      const selectionChangeParam: SelectionChangeParams = { rows: [] };
-      apiRef.current!.emit(SELECTION_CHANGED, selectionChangeParam);
-    }
+    const selectionChangeParam: SelectionChangeParams = { rows: [] };
+    apiRef.current.publishEvent(SELECTION_CHANGED, selectionChangeParam);
   }, [rowsProp, apiRef]);
 };

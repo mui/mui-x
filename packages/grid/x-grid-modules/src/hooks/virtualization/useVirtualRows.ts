@@ -138,7 +138,7 @@ export const useVirtualRows = (
         requireRerender = true;
       } else {
         scrollTo(scrollParams);
-        apiRef.current!.emit(SCROLLING, scrollParams);
+        apiRef.current.publishEvent(SCROLLING, scrollParams);
       }
       rzScrollRef.current = scrollParams;
 
@@ -204,15 +204,13 @@ export const useVirtualRows = (
   const onScroll: any = React.useCallback(
     (event: any) => {
       realScrollRef.current = { left: event.target.scrollLeft, top: event.target.scrollTop };
-      if (apiRef && apiRef.current && scrollingTimeout.current === 0) {
-        apiRef.current.emit(SCROLLING_START);
+      if (scrollingTimeout.current === 0) {
+        apiRef.current.publishEvent(SCROLLING_START);
       }
       clearTimeout(scrollingTimeout.current);
       scrollingTimeout.current = setTimeout(() => {
         scrollingTimeout.current = 0;
-        if (apiRef && apiRef.current) {
-          apiRef.current.emit(SCROLLING_STOP);
-        }
+        apiRef.current.publishEvent(SCROLLING_STOP);
       }, 300);
       updateViewport();
     },
@@ -223,53 +221,50 @@ export const useVirtualRows = (
     (params: CellIndexCoordinates) => {
       logger.debug(`Scrolling to cell at row ${params.rowIndex}, col: ${params.colIndex} `);
 
-      if (apiRef.current) {
-        let scrollLeft;
-        const isColVisible = apiRef.current.isColumnVisibleInWindow(params.colIndex);
-        logger.debug(`Column ${params.colIndex} is ${isColVisible ? 'already' : 'not'} visible.`);
-        if (!isColVisible) {
-          const meta = apiRef.current.getColumnsMeta();
-          const isLastCol = params.colIndex + 1 === meta.positions.length;
+      let scrollLeft;
+      const isColVisible = apiRef.current.isColumnVisibleInWindow(params.colIndex);
+      logger.debug(`Column ${params.colIndex} is ${isColVisible ? 'already' : 'not'} visible.`);
+      if (!isColVisible) {
+        const meta = apiRef.current.getColumnsMeta();
+        const isLastCol = params.colIndex + 1 === meta.positions.length;
 
-          if (isLastCol) {
-            const lastColWidth = apiRef.current.getVisibleColumns()[params.colIndex].width!;
-            scrollLeft =
-              meta.positions[params.colIndex] +
-              lastColWidth -
-              containerPropsRef.current!.windowSizes.width;
-          } else {
-            scrollLeft =
-              meta.positions[params.colIndex + 1] - containerPropsRef.current!.windowSizes.width;
-          }
+        if (isLastCol) {
+          const lastColWidth = apiRef.current.getVisibleColumns()[params.colIndex].width!;
           scrollLeft =
-            rzScrollRef.current.left > scrollLeft ? meta.positions[params.colIndex] : scrollLeft;
+            meta.positions[params.colIndex] +
+            lastColWidth -
+            containerPropsRef.current!.windowSizes.width;
+        } else {
+          scrollLeft =
+            meta.positions[params.colIndex + 1] - containerPropsRef.current!.windowSizes.width;
         }
-
-        let scrollTop;
-
-        const currentRowPage = params.rowIndex / containerPropsRef.current!.viewportPageSize;
-        const scrollPosition = currentRowPage * containerPropsRef.current!.viewportSize.height;
-        const viewportHeight = containerPropsRef.current!.viewportSize.height;
-
-        const isRowIndexAbove = realScrollRef.current.top > scrollPosition;
-        const isRowIndexBelow =
-          realScrollRef.current.top + viewportHeight <
-          scrollPosition + optionsRef.current.rowHeight;
-
-        if (isRowIndexAbove) {
-          scrollTop = scrollPosition; // We put it at the top of the page
-          logger.debug(`Row is above, setting scrollTop to ${scrollTop}`);
-        } else if (isRowIndexBelow) {
-          // We make sure the row is not half visible
-          scrollTop = scrollPosition - viewportHeight + optionsRef.current.rowHeight;
-          logger.debug(`Row is below, setting scrollTop to ${scrollTop}`);
-        }
-
-        apiRef.current.scroll({
-          left: scrollLeft,
-          top: scrollTop,
-        });
+        scrollLeft =
+          rzScrollRef.current.left > scrollLeft ? meta.positions[params.colIndex] : scrollLeft;
       }
+
+      let scrollTop;
+
+      const currentRowPage = params.rowIndex / containerPropsRef.current!.viewportPageSize;
+      const scrollPosition = currentRowPage * containerPropsRef.current!.viewportSize.height;
+      const viewportHeight = containerPropsRef.current!.viewportSize.height;
+
+      const isRowIndexAbove = realScrollRef.current.top > scrollPosition;
+      const isRowIndexBelow =
+        realScrollRef.current.top + viewportHeight < scrollPosition + optionsRef.current.rowHeight;
+
+      if (isRowIndexAbove) {
+        scrollTop = scrollPosition; // We put it at the top of the page
+        logger.debug(`Row is above, setting scrollTop to ${scrollTop}`);
+      } else if (isRowIndexBelow) {
+        // We make sure the row is not half visible
+        scrollTop = scrollPosition - viewportHeight + optionsRef.current.rowHeight;
+        logger.debug(`Row is below, setting scrollTop to ${scrollTop}`);
+      }
+
+      apiRef.current.scroll({
+        left: scrollLeft,
+        top: scrollTop,
+      });
     },
     [apiRef, realScrollRef, logger],
   );

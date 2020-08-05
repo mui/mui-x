@@ -1,7 +1,8 @@
 import { RowModel, CellValue } from '../models/rows';
 import { ColDef } from '../models/colDef/colDef';
 import { GridApi } from '../models/api/gridApi';
-import { CellParams, RowParams } from '../models/params/cellParams';
+import { CellParams } from '../models/params/cellParams';
+import { RowParams } from '../models/params/rowParams';
 
 export function buildCellParams({
   element,
@@ -21,7 +22,7 @@ export function buildCellParams({
   return {
     element,
     value,
-    field: colDef.field,
+    field: colDef?.field,
     getValue: (field: string) => rowModel.data[field],
     data: rowModel.data,
     rowModel,
@@ -35,7 +36,6 @@ export function buildRowParams({
   element,
   rowIndex,
   rowModel,
-  colDef,
   api,
 }: {
   rowModel: RowModel;
@@ -46,11 +46,10 @@ export function buildRowParams({
 }): RowParams {
   return {
     element,
-    field: colDef.field,
+    columns: api.getAllColumns(),
     getValue: (field: string) => rowModel.data[field],
     data: rowModel.data,
     rowModel,
-    colDef,
     rowIndex,
     api,
   };

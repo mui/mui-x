@@ -42,7 +42,7 @@ export const useSorting = (
     (): SortModelParams => ({
       sortModel: sortModelRef.current,
       api: apiRef.current,
-      columns: apiRef.current!.getAllColumns(),
+      columns: apiRef.current.getAllColumns(),
     }),
     [sortModelRef, apiRef],
   );
@@ -92,7 +92,7 @@ export const useSorting = (
   const buildComparatorList = React.useCallback(
     (sortModel: SortModel): FieldComparatorList => {
       const comparators = sortModel.map((item) => {
-        const col = apiRef.current!.getColumnFromField(item.field);
+        const col = apiRef.current.getColumnFromField(item.field);
         const comparator = isDesc(item.sort)
           ? (v1: CellValue, v2: CellValue, row1: RowModel, row2: RowModel) =>
               -1 * col.sortComparator!(v1, v2, row1, row2)
@@ -105,14 +105,10 @@ export const useSorting = (
   );
 
   const getOriginalOrderedRows: () => RowModel[] = React.useCallback(() => {
-    return originalOrder.current.map((rowId) => apiRef.current!.getRowFromId(rowId));
+    return originalOrder.current.map((rowId) => apiRef.current.getRowFromId(rowId));
   }, [apiRef, originalOrder]);
 
   const applySorting = React.useCallback(() => {
-    if (!apiRef.current) {
-      return;
-    }
-
     logger.info('Sorting rows with ', sortModelRef.current);
     const newRows = apiRef.current.getRowModels();
 
@@ -123,14 +119,14 @@ export const useSorting = (
       sorted = sorted.sort(comparatorListAggregate);
     }
 
-    apiRef.current!.setRowModels([...sorted]);
+    apiRef.current.setRowModels([...sorted]);
   }, [apiRef, sortModelRef, comparatorListAggregate, getOriginalOrderedRows, logger]);
 
   const setSortModel = React.useCallback(
     (sortModel: SortModel) => {
       sortModelRef.current = sortModel;
       comparatorList.current = buildComparatorList(sortModel);
-      apiRef.current!.emit(SORT_MODEL_CHANGE, getSortModelParams());
+      apiRef.current.publishEvent(SORT_MODEL_CHANGE, getSortModelParams());
       if (options.sortingMode === FeatureModeConstant.client) {
         applySorting();
       }
@@ -170,7 +166,7 @@ export const useSorting = (
   );
 
   const storeOriginalOrder = React.useCallback(() => {
-    originalOrder.current = apiRef.current!.getRowModels().reduce((order, row) => {
+    originalOrder.current = apiRef.current.getRowModels().reduce((order, row) => {
       order.push(row.id);
       return order;
     }, [] as RowId[]);
@@ -194,12 +190,21 @@ export const useSorting = (
 
   const onSortModelChange = React.useCallback(
     (handler: (param: SortModelParams) => void): (() => void) => {
-      return apiRef!.current!.registerEvent(SORT_MODEL_CHANGE, handler);
+      return apiRef.current.subscribeEvent(SORT_MODEL_CHANGE, handler);
     },
     [apiRef],
   );
 
   const [colState, setColState] = React.useState(colsProp);
+
+  useApiEventHandler(apiRef, COLUMN_HEADER_CLICK, headerClickHandler);
+  useApiEventHandler(apiRef, ROWS_UPDATED, onRowsUpdated);
+  useApiEventHandler(apiRef, MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
+
+  useApiEventHandler(apiRef, SORT_MODEL_CHANGE, options.onSortModelChange);
+
+  const sortApi: SortApi = { getSortModel, setSortModel, onSortModelChange };
+  useApiMethod(apiRef, sortApi, 'SortApi');
 
   React.useEffect(() => {
     setColState(colsProp);
@@ -217,7 +222,7 @@ export const useSorting = (
   }, [rowsProp, applySorting, storeOriginalOrder, options.sortingMode, logger]);
 
   React.useEffect(() => {
-    if (colsProp.length > 0 && apiRef.current) {
+    if (colsProp.length > 0) {
       const sortedCols = apiRef.current
         .getAllColumns()
         .filter((c) => c.sortDirection != null)
@@ -236,14 +241,4 @@ export const useSorting = (
       setSortModel(model);
     }
   }, [options.sortModel, setSortModel, apiRef, apiRef.current?.isInitialised]);
-
-  useApiEventHandler(apiRef, COLUMN_HEADER_CLICK, headerClickHandler);
-  useApiEventHandler(apiRef, ROWS_UPDATED, onRowsUpdated);
-  useApiEventHandler(apiRef, MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
-
-  useApiEventHandler(apiRef, SORT_MODEL_CHANGE, options.onSortModelChange);
-
-  const sortApi: SortApi = { getSortModel, setSortModel, onSortModelChange };
-
-  useApiMethod(apiRef, sortApi, 'SortApi');
 };

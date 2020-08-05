@@ -41,7 +41,7 @@ function hydrateColumns(
     mappedCols = [checkboxSelectionColDef, ...mappedCols];
   }
   const sortedCols = mappedCols.filter((c) => c.sortDirection != null);
-  if (sortedCols.length > 1 && apiRef.current) {
+  if (sortedCols.length > 1) {
     // in case consumer missed to set the sort index
     sortedCols.forEach((c, idx) => {
       if (c.sortIndex == null) {
@@ -50,8 +50,8 @@ function hydrateColumns(
     });
   }
   // we check if someone called setSortModel using apiref to apply icons
-  if (apiRef.current && apiRef.current!.getSortModel) {
-    const sortModel = apiRef.current!.getSortModel();
+  if (apiRef.current && apiRef.current.getSortModel) {
+    const sortModel = apiRef.current.getSortModel();
     sortModel.forEach((c, idx) => {
       const col = mappedCols.find((mc) => mc.field === c.field);
       if (col) {
@@ -159,7 +159,7 @@ export function useColumns(
       stateRef.current = newState;
 
       if (apiRef.current && emit) {
-        apiRef.current.emit(COLUMNS_UPDATED, newState.all);
+        apiRef.current.publishEvent(COLUMNS_UPDATED, newState.all);
       }
     },
     [setInternalColumns, apiRef, logger, stateRef],

@@ -99,7 +99,7 @@ const getRows = () => [
   { id: 7, lastName: 'Smith', firstName: '', isRegistered: true, age: 40 },
 ];
 
-export const throwException = () => {
+export const ThrowException = () => {
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
   cols[1].cellClassRules = {
@@ -118,7 +118,7 @@ export const throwException = () => {
   );
 };
 
-export const showErrorApi = () => {
+export const ShowErrorApi = () => {
   const api = useApiRef();
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
@@ -135,7 +135,7 @@ export const showErrorApi = () => {
     </div>
   );
 };
-export const errorProp = () => {
+export const ErrorProp = () => {
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
 

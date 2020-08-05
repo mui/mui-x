@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { ColDef, XGrid, GridApi, RowsProp, SortModelParams, SortModel } from '@material-ui/x-grid';
+import {
+  ColDef,
+  XGrid,
+  RowsProp,
+  SortModelParams,
+  SortModel,
+  useApiRef,
+} from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { action } from '@storybook/addon-actions';
@@ -260,11 +267,9 @@ export const SortModelOptionsMultiple = () => {
   );
 };
 export const ApiSingleSorted = () => {
-  const apiRef = React.useRef<GridApi>();
+  const apiRef = useApiRef();
   React.useEffect(() => {
-    if (apiRef && apiRef.current != null) {
-      apiRef.current.setSortModel([{ field: 'name', sort: 'asc' }]);
-    }
+    apiRef.current.setSortModel([{ field: 'name', sort: 'asc' }]);
   }, [apiRef]);
 
   return (
@@ -274,14 +279,12 @@ export const ApiSingleSorted = () => {
   );
 };
 export const ApiMultipleSorted = () => {
-  const apiRef = React.useRef<GridApi>();
+  const apiRef = useApiRef();
   React.useEffect(() => {
-    if (apiRef && apiRef.current != null) {
-      apiRef.current.setSortModel([
-        { field: 'age', sort: 'desc' },
-        { field: 'name', sort: 'asc' },
-      ]);
-    }
+    apiRef.current.setSortModel([
+      { field: 'age', sort: 'desc' },
+      { field: 'name', sort: 'asc' },
+    ]);
   }, [apiRef]);
 
   return (
@@ -292,7 +295,7 @@ export const ApiMultipleSorted = () => {
 };
 
 export const SortedEventsApi = () => {
-  const apiRef = React.useRef<GridApi>();
+  const apiRef = useApiRef();
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
   const [loggedEvents, setEvents] = React.useState<any[]>([]);
@@ -306,14 +309,12 @@ export const SortedEventsApi = () => {
   );
 
   React.useEffect(() => {
-    if (apiRef && apiRef.current != null) {
-      apiRef.current.onSortModelChange((params) => handleEvent('onSortModelChange', params));
+    apiRef.current.onSortModelChange((params) => handleEvent('onSortModelChange', params));
 
-      apiRef.current.setSortModel([
-        { field: 'age', sort: 'desc' },
-        { field: 'name', sort: 'asc' },
-      ]);
-    }
+    apiRef.current.setSortModel([
+      { field: 'age', sort: 'desc' },
+      { field: 'name', sort: 'asc' },
+    ]);
   }, [apiRef, handleEvent]);
 
   // We had the ol so we can test it with image snapshots

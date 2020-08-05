@@ -7,7 +7,7 @@ export default function SetPageDemo() {
   const apiRef = useApiRef();
 
   React.useEffect(() => {
-    apiRef.current?.setPage(2);
+    apiRef.current.setPage(2);
   }, [apiRef]);
 
   const columns: Columns = [

@@ -1,19 +1,14 @@
 import * as React from 'react';
 import { GridComponentProps } from './gridComponentProps';
 import {
+  useApiRef,
   useColumnResize,
   useComponents,
   usePagination,
   useSelection,
   useSorting,
 } from './hooks/features';
-import {
-  DEFAULT_GRID_OPTIONS,
-  ElementSize,
-  GridApi,
-  GridOptions,
-  RootContainerRef,
-} from './models';
+import { DEFAULT_GRID_OPTIONS, ElementSize, GridOptions, RootContainerRef } from './models';
 import { DATA_CONTAINER_CSS_CLASS, COMPONENT_ERROR } from './constants';
 import { ColumnsContainer, DataContainer, GridRoot } from './components/styled-wrappers';
 import { useVirtualRows } from './hooks/virtualization';
@@ -52,7 +47,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
     const windowRef = React.useRef<HTMLDivElement>(null);
     const gridRef = React.useRef<HTMLDivElement>(null);
     const renderingZoneRef = React.useRef<HTMLDivElement>(null);
-    const internalApiRef = React.useRef<GridApi | null | undefined>();
+    const internalApiRef = useApiRef();
     const [errorState, setErrorState] = React.useState<any>(null);
 
     const [internalOptions, setInternalOptions] = React.useState<GridOptions>(
@@ -73,16 +68,11 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
       setErrorState(args);
     };
     React.useEffect(() => {
-      if (apiRef && apiRef.current) {
-        return apiRef.current.registerEvent(COMPONENT_ERROR, errorHandler);
-      }
-      return undefined;
+      return apiRef!.current.subscribeEvent(COMPONENT_ERROR, errorHandler);
     }, [apiRef]);
 
     React.useEffect(() => {
-      if (apiRef && apiRef.current) {
-        apiRef.current.showError(error);
-      }
+      apiRef!.current.showError(error);
     }, [apiRef, error]);
 
     useEvents(rootContainerRef, internalOptions, apiRef);
@@ -127,9 +117,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo(
     const onResize = React.useCallback(
       (size: ElementSize) => {
         logger.info('resized...', size);
-        if (apiRef && apiRef.current) {
-          apiRef.current.resize();
-        }
+        apiRef!.current.resize();
       },
       [logger, apiRef],
     );

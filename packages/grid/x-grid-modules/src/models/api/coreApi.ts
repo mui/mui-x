@@ -13,15 +13,16 @@ export interface CoreApi extends EventEmitter {
    *
    * @param event
    * @param handler
+   * @returns Unsubscribe Function
    */
-  registerEvent: (event: string, handler: (param: any) => void) => () => void;
+  subscribeEvent: (event: string, handler: (param: any) => void) => () => void;
   /**
    * Allows to emit an event.
    *
    * @param name
    * @param args
    */
-  emitEvent: (name: string, ...args: any[]) => void;
+  publishEvent: (name: string, ...args: any[]) => void;
   /**
    * Display the error overlay component.
    */

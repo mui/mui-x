@@ -1,3 +1,5 @@
+import { MatchImageSnapshotOptions } from 'jest-image-snapshot';
+
 const puppeteer = require('puppeteer');
 
 export const NO_ANIM_CSS = `
@@ -11,6 +13,12 @@ export const NO_ANIM_CSS = `
     caret-color: transparent !important;
 }
 `;
+
+export const IMAGE_SNAPSHOT_CONFIG = {
+  customDiffConfig: {
+    includeAA: true, // Passing anti aliasing to pixelMatch
+  },
+} as MatchImageSnapshotOptions;
 
 export async function startBrowser() {
   const browser = await puppeteer.launch({
@@ -51,7 +59,7 @@ export async function snapshotTest(
   }
 
   const image = await page.screenshot();
-  expect(image).toMatchImageSnapshot();
+  expect(image).toMatchImageSnapshot(IMAGE_SNAPSHOT_CONFIG);
   await page.close();
   await browser.close();
 }

@@ -6,19 +6,20 @@ export function useApiMethod(apiRef: ApiRef, apiMethods: Partial<GridApi>, apiNa
   const logger = useLogger('useApiMethod');
 
   React.useEffect(() => {
-    if (apiRef && apiRef.current) {
-      let hasMethodsInstalled = true;
-
-      Object.keys(apiMethods).forEach((methodName) => {
-        if (!apiRef.current!.hasOwnProperty(methodName)) {
-          hasMethodsInstalled = false;
-        }
-      });
-
-      if (!hasMethodsInstalled) {
-        logger.debug(`Adding ${apiName} to apiRef`);
-        apiRef.current = Object.assign(apiRef.current, apiMethods) as GridApi;
-      }
+    let hasMethodsInstalled = true;
+    if (!apiRef.current.isInitialised) {
+      return;
     }
-  }, [apiRef, apiMethods, logger, apiName]);
+
+    Object.keys(apiMethods).forEach((methodName) => {
+      if (!apiRef.current.hasOwnProperty(methodName)) {
+        hasMethodsInstalled = false;
+      }
+    });
+
+    if (!hasMethodsInstalled) {
+      logger.debug(`Adding ${apiName} to apiRef`);
+      apiRef.current = Object.assign(apiRef.current, apiMethods) as GridApi;
+    }
+  }, [apiRef.current.isInitialised, apiRef, apiMethods, logger, apiName]);
 }

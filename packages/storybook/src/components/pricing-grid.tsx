@@ -22,11 +22,9 @@ export const PricingGrid: React.FC<PricingGridProps> = (p) => {
   const apiRef = useApiRef();
   const stopButton = React.useRef<HTMLButtonElement>(null);
 
-  const subscription: Subscription = new Subscription();
+  const subscriptionRef = React.useRef(new Subscription());
   const handleNewPrice = (pricingModel: PricingModel) => {
-    if (apiRef && apiRef.current) {
-      apiRef.current.updateRowData([pricingModel]);
-    }
+    apiRef.current.updateRowData([pricingModel]);
   };
 
   const subscribeToStream = () => {
@@ -39,7 +37,9 @@ export const PricingGrid: React.FC<PricingGridProps> = (p) => {
 
       for (let i = 0, len = currencyPairs.length; i < len; i += 1) {
         const data$ = subscribeCurrencyPair(currencyPairs[i], i, p.min, p.max);
-        subscription.add(data$.pipe(takeUntil(cancel$)).subscribe((data) => handleNewPrice(data)));
+        subscriptionRef.current.add(
+          data$.pipe(takeUntil(cancel$)).subscribe((data) => handleNewPrice(data)),
+        );
       }
       setStarted(true);
     }
@@ -47,9 +47,9 @@ export const PricingGrid: React.FC<PricingGridProps> = (p) => {
 
   React.useEffect(() => {
     return () => {
-      subscription.unsubscribe();
+      subscriptionRef.current.unsubscribe();
     };
-  }, [stopButton]);
+  }, [stopButton, subscriptionRef]);
 
   const onStartStreamBtnClick = () => {
     if (!started) {
