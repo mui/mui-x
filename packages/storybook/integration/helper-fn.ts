@@ -22,7 +22,7 @@ export const IMAGE_SNAPSHOT_CONFIG = {
 
 export async function startBrowser() {
   const browser = await puppeteer.launch({
-    args: ['--disable-lcd-text'],
+    args: ['--disable-lcd-text', '--no-sandbox', '--disable-setuid-sandbox'],
     defaultViewport: { width: 1600, height: 900 },
     // headless: false
   });
