@@ -103,7 +103,7 @@ jobs:
           # hardcoded in karma-webpack
           path: /tmp/_karma_webpack_
           destination: artifact-file
-  test_integration:
+  test_puppeteer:
     <<: *defaults
     steps:
       - checkout
@@ -125,7 +125,7 @@ workflows:
       - test_browser:
           requires:
             - checkout
-      - test_integration:
+      - test_puppeteer:
           requires:
             - checkout
 
