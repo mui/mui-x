@@ -103,6 +103,14 @@ jobs:
           # hardcoded in karma-webpack
           path: /tmp/_karma_webpack_
           destination: artifact-file
+  test_integration:
+    <<: *defaults
+    steps:
+      - checkout
+      - install_js
+      - run:
+          name: 'Running Storybook integration tests'
+          command: yarn e2e
 workflows:
   version: 2
   pipeline:
@@ -115,5 +123,8 @@ workflows:
           requires:
             - checkout
       - test_browser:
+          requires:
+            - checkout
+      - test_integration:
           requires:
             - checkout
