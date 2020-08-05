@@ -99,7 +99,7 @@ describe('snapshotTest', () => {
   stories.forEach((config: any, index: number) => {
     const path = typeof config === 'string' ? config : config.path;
     const beforeTest = typeof config === 'string' ? undefined : config.beforeTest;
-    const isLatestStory = stories.length -1 === index;
+    const isLatestStory = stories.length - 1 === index;
 
     test(path, async (done) => {
       await snapshotTest(path, beforeTest, isLatestStory);

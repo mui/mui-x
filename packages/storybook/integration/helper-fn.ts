@@ -22,20 +22,20 @@ export const IMAGE_SNAPSHOT_CONFIG = {
 
 let browserInstance;
 export async function startBrowser() {
-  if(!browserInstance) {
+  if (!browserInstance) {
     // eslint-disable-next-line no-console
     console.log('Launching new browser');
     browserInstance = await puppeteer.launch({
       args: ['--disable-lcd-text', '--no-sandbox', '--disable-setuid-sandbox'],
-      defaultViewport: {width: 1600, height: 900},
+      defaultViewport: { width: 1600, height: 900 },
     });
   }
   return browserInstance;
 }
 export async function stopBrowser() {
-  if(browserInstance != null) {
+  if (browserInstance != null) {
     // eslint-disable-next-line no-console
-    console.log('Stopping browser')
+    console.log('Stopping browser');
     await browserInstance.close();
     browserInstance = null;
   }
@@ -66,7 +66,7 @@ export async function snapshotTest(
     // eslint-disable-next-line no-console
     const browser = await startBrowser();
     const page = await getStoryPage(browser, path);
-    await page.addStyleTag({content: NO_ANIM_CSS});
+    await page.addStyleTag({ content: NO_ANIM_CSS });
 
     if (beforeTest) {
       await beforeTest(page);
@@ -75,12 +75,11 @@ export async function snapshotTest(
     const image = await page.screenshot();
     expect(image).toMatchImageSnapshot(IMAGE_SNAPSHOT_CONFIG);
     await page.close();
-  } catch(err) {
+  } catch (err) {
     await stopBrowser();
     throw err;
-  }
-  finally {
-    if(isLatestStory) {
+  } finally {
+    if (isLatestStory) {
       await stopBrowser();
     }
   }
