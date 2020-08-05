@@ -63,7 +63,6 @@ export async function snapshotTest(
   isLatestStory?: boolean,
 ): Promise<void> {
   try {
-    // eslint-disable-next-line no-console
     const browser = await startBrowser();
     const page = await getStoryPage(browser, path);
     await page.addStyleTag({ content: NO_ANIM_CSS });
