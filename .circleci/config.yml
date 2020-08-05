@@ -110,7 +110,7 @@ jobs:
       - install_js
       - run:
           name: 'Running Storybook integration tests'
-          command: yarn e2e
+          command: yarn test:e2e
 workflows:
   version: 2
   pipeline:
@@ -128,3 +128,5 @@ workflows:
       - test_integration:
           requires:
             - checkout
+
+
