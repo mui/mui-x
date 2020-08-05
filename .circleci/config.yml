@@ -111,6 +111,8 @@ jobs:
       - run:
           name: 'Running Storybook integration tests'
           command: yarn test:e2e
+      - store_artifacts:
+          path: /tmp/material-ui-x/packages/storybook/integration/__image_snapshots__/__diff_output__
 workflows:
   version: 2
   pipeline:
