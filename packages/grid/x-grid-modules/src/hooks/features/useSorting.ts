@@ -197,6 +197,15 @@ export const useSorting = (
 
   const [colState, setColState] = React.useState(colsProp);
 
+  useApiEventHandler(apiRef, COLUMN_HEADER_CLICK, headerClickHandler);
+  useApiEventHandler(apiRef, ROWS_UPDATED, onRowsUpdated);
+  useApiEventHandler(apiRef, MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
+
+  useApiEventHandler(apiRef, SORT_MODEL_CHANGE, options.onSortModelChange);
+
+  const sortApi: SortApi = { getSortModel, setSortModel, onSortModelChange };
+  useApiMethod(apiRef, sortApi, 'SortApi');
+
   React.useEffect(() => {
     setColState(colsProp);
     sortModelRef.current = [];
@@ -232,14 +241,4 @@ export const useSorting = (
       setSortModel(model);
     }
   }, [options.sortModel, setSortModel, apiRef, apiRef.current?.isInitialised]);
-
-  useApiEventHandler(apiRef, COLUMN_HEADER_CLICK, headerClickHandler);
-  useApiEventHandler(apiRef, ROWS_UPDATED, onRowsUpdated);
-  useApiEventHandler(apiRef, MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
-
-  useApiEventHandler(apiRef, SORT_MODEL_CHANGE, options.onSortModelChange);
-
-  const sortApi: SortApi = { getSortModel, setSortModel, onSortModelChange };
-
-  useApiMethod(apiRef, sortApi, 'SortApi');
 };

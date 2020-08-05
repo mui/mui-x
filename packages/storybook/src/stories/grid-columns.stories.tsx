@@ -3,6 +3,7 @@ import { ColDef, XGrid, ColTypeDef } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import CreateIcon from '@material-ui/icons/Create';
+import { Button } from '@material-ui/core';
 import { useData } from '../hooks/useData';
 
 export default {
@@ -134,9 +135,9 @@ export function UpdateColumnsBtn() {
   return (
     <React.Fragment>
       <div>
-        <button type="button" onClick={changeCols} id="action-btn">
+        <Button onClick={changeCols} id="action-btn">
           Change cols
-        </button>
+        </Button>
       </div>
       <div className="grid-container">
         <XGrid rows={rows} columns={cols} />
