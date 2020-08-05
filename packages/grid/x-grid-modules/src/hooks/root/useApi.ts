@@ -40,7 +40,7 @@ export function useApi(
   );
 
   React.useEffect(() => {
-    logger.debug('Initialising grid api.');
+    logger.debug('Initializing grid api.');
     apiRef.current.isInitialised = true;
     apiRef.current.rootElementRef = gridRootRef;
 

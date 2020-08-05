@@ -10,7 +10,7 @@ const EventEmitter = require('events').EventEmitter;
  */
 export const useApiRef = (): ApiRef => {
   const logger = useLogger('useApiRef');
-  logger.debug('Initialising grid api with EventEmitter.');
+  logger.debug('Initializing grid api with EventEmitter.');
 
   return React.useRef<GridApi>(new EventEmitter());
 };
