@@ -213,7 +213,7 @@ export function useEvents(
       const api = apiRef.current;
 
       return () => {
-        logger.warn('Clearing all events listeners');
+        logger.debug('Clearing all events listeners');
         api.publishEvent(UNMOUNT);
         gridRootElem.removeEventListener(CLICK, onClickHandler, { capture: true });
         gridRootElem.removeEventListener(MOUSE_HOVER, onHoverHandler, { capture: true });
