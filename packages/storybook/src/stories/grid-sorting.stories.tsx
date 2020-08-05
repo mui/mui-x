@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   ColDef,
   XGrid,
-  GridApi,
   RowsProp,
   SortModelParams,
   SortModel,

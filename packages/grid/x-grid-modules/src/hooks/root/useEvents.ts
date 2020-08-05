@@ -157,7 +157,7 @@ export function useEvents(
         apiRef.current.publishEvent(GRID_FOCUS_OUT, event);
       }
     },
-    [apiRef, getEventParams],
+    [apiRef],
   );
 
   const onUnmount = React.useCallback(
@@ -231,6 +231,7 @@ export function useEvents(
     logger,
     onClickHandler,
     onHoverHandler,
+    onFocusOutHandler,
     apiRef,
   ]);
 }

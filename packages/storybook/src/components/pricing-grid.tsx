@@ -47,7 +47,7 @@ export const PricingGrid: React.FC<PricingGridProps> = (p) => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [stopButton]);
+  }, [stopButton, subscription]);
 
   const onStartStreamBtnClick = () => {
     if (!started) {

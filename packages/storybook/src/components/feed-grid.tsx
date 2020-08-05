@@ -44,7 +44,7 @@ export const FeedGrid: React.FC<FeedGridProps> = (p) => {
       console.log('Unmounting, cleaning subscriptions ');
       subscription.unsubscribe();
     };
-  }, [stopButton]);
+  }, [stopButton, subscription]);
 
   const onStartStreamBtnClick = () => {
     if (!started) {

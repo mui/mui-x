@@ -8,13 +8,7 @@ import {
   useSelection,
   useSorting,
 } from './hooks/features';
-import {
-  DEFAULT_GRID_OPTIONS,
-  ElementSize,
-  GridApi,
-  GridOptions,
-  RootContainerRef,
-} from './models';
+import { DEFAULT_GRID_OPTIONS, ElementSize, GridOptions, RootContainerRef } from './models';
 import { DATA_CONTAINER_CSS_CLASS, COMPONENT_ERROR } from './constants';
 import { ColumnsContainer, DataContainer, GridRoot } from './components/styled-wrappers';
 import { useVirtualRows } from './hooks/virtualization';
