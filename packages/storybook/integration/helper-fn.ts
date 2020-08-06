@@ -26,7 +26,7 @@ export async function startBrowser() {
     // eslint-disable-next-line no-console
     console.log('Launching new browser');
     browserInstance = await puppeteer.launch({
-      args: ['--disable-lcd-text', '--no-sandbox', '--disable-setuid-sandbox'],
+      args: ['--disable-lcd-text', '--no-sandbox', '--disable-setuid-sandbox', '--enable-font-antialiasing', '--font-render-hinting=none', '--disable-gpu'],
       defaultViewport: { width: 1600, height: 900 },
     });
   }
