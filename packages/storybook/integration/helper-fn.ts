@@ -3,6 +3,10 @@ import { MatchImageSnapshotOptions } from 'jest-image-snapshot';
 const puppeteer = require('puppeteer');
 
 export const NO_ANIM_CSS = `
+* {
+    text-rendering: geometricprecision !important;
+    font-family: Monospace !important;
+  }  
 :not(iframe) *,
 :not(iframe) *::before,
 :not(iframe) *::after {
@@ -26,7 +30,14 @@ export async function startBrowser() {
     // eslint-disable-next-line no-console
     console.log('Launching new browser');
     browserInstance = await puppeteer.launch({
-      args: ['--disable-lcd-text', '--no-sandbox', '--disable-setuid-sandbox', '--enable-font-antialiasing', '--font-render-hinting=none', '--disable-gpu'],
+      args: [
+        '--disable-lcd-text',
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--enable-font-antialiasing',
+        '--font-render-hinting=medium',
+        '--disable-gpu',
+      ],
       defaultViewport: { width: 1600, height: 900 },
     });
   }

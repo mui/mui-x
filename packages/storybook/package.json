@@ -52,6 +52,7 @@
     "lint": "../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ./.eslintrc.js && npm run lint:css",
     "lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../.stylelintrc.js",
     "test": "jest -c integration/setup/jest.config.js --detectOpenHandles --force-exit --runInBand",
+    "test-update": "jest -c integration/setup/jest.config.js --detectOpenHandles --force-exit --runInBand --updateSnapshot",
     "test:ci": "start-server-and-test start http://localhost:6006 test"
   }
 }
