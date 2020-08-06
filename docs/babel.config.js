@@ -18,10 +18,10 @@ const alias = {
   '@material-ui/x-grid-modules': '../packages/grid/x-grid-modules/src',
   '@material-ui/x-grid': '../packages/grid/x-grid/src',
   '@material-ui/x-license': '../packages/license/src',
+  // docs: './node_modules/@material-ui/monorepo/docs',
   docs: './',
   modules: './node_modules/@material-ui/monorepo/modules',
   // 'typescript-to-proptypes': './node_modules/@material-ui/monorepo/packages/typescript-to-proptypes',
-  // pages: './pages',
 };
 
 const { version: transformRuntimeVersion } = fse.readJSONSync(

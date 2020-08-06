@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const withTM = require('next-transpile-modules')(['@material-ui/monorepo']);
+// const withTM = require('next-transpile-modules')(['@material-ui/monorepo']);
 const pkg = require('../package.json');
 const { findPages } = require('./src/modules/utils/find');
 const { LANGUAGES, LANGUAGES_SSR } = require('./src/modules/constants');
@@ -21,7 +21,7 @@ const reactMode = 'legacy';
 // eslint-disable-next-line no-console
 console.log(`Using React '${reactMode}' mode.`);
 
-module.exports = withTM({
+module.exports = {
   typescript: {
     // Motivated by https://github.com/zeit/next.js/issues/7687
     ignoreDevErrors: true,
@@ -51,6 +51,24 @@ module.exports = withTM({
       );
     }
 
+    const includesMonorepo = [
+      /(@material-ui[\\/]monorepo)$/,
+      /(@material-ui[\\/]monorepo)[\\/](?!.*node_modules)/
+    ];
+
+    if (config.externals) {
+      config.externals = config.externals.map((external) => {
+        if (typeof external !== 'function') return external;
+        return (ctx, req, cb) => {
+          return includesMonorepo.find((include) =>
+            req.startsWith('.') ? include.test(path.resolve(ctx, req)) : include.test(req)
+          )
+            ? cb()
+            : external(ctx, req, cb);
+        };
+      });
+    }
+
     return {
       ...config,
       plugins,
@@ -64,6 +82,11 @@ module.exports = withTM({
           {
             test: /\.md$/,
             loader: 'raw-loader',
+          },
+          {
+            test: /\.+(js|jsx|mjs|ts|tsx)$/,
+            include: includesMonorepo,
+            use: options.defaultLoaders.babel,
           },
           {
             test: /\.(js|mjs|ts|tsx)$/,
@@ -134,4 +157,4 @@ module.exports = withTM({
       { source: '/api/:rest*', destination: '/api-docs/:rest*' },
     ];
   },
-});
+};
