@@ -49,9 +49,7 @@ export default function LoadingOverrideDemo() {
       rows={rows}
       columns={columns}
       components={{ loadingOverlay: LoadingComponent }}
-      options={{
-        autoHeight: true,
-      }}
+      autoHeight
       loading
     />
   );

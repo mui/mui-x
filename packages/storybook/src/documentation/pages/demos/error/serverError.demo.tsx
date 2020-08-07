@@ -20,7 +20,7 @@ function loadServerRows(): Promise<any> {
 
 export default function ServerErrorDemo() {
   const apiRef = useApiRef();
-  const [isLoading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     setLoading(true);
@@ -30,15 +30,5 @@ export default function ServerErrorDemo() {
     });
   }, [apiRef, setLoading]);
 
-  return (
-    <XGrid
-      rows={[]}
-      columns={columns}
-      options={{
-        autoHeight: true,
-      }}
-      apiRef={apiRef}
-      loading={isLoading}
-    />
-  );
+  return <XGrid rows={[]} columns={columns} autoHeight apiRef={apiRef} loading={loading} />;
 }

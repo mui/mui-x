@@ -89,7 +89,7 @@ export default function SimplePaginationDemo() {
     <XGrid
       rows={rows}
       columns={columns}
-      options={{
+      {...{
         pagination: true,
         pageSize: 5,
         rowsPerPageOptions: [5, 10],

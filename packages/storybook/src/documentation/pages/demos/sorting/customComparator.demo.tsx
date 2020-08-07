@@ -64,14 +64,5 @@ export default function CustomComparatorDemo() {
     },
   ];
 
-  return (
-    <XGrid
-      rows={rows}
-      columns={columns}
-      options={{
-        autoHeight: true,
-      }}
-      className="demo"
-    />
-  );
+  return <XGrid rows={rows} columns={columns} autoHeight className="demo" />;
 }

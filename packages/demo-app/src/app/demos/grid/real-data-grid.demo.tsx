@@ -127,7 +127,8 @@ export const RealDataGridDemo: React.FC<{ toggleTheme: () => void; themeId: stri
               rows={rows as any}
               columns={cols as any}
               loading={loading}
-              options={{ checkboxSelection: true, ...pagination }}
+              checkboxSelection
+              {...pagination}
             />
           </div>
         </div>

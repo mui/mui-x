@@ -255,7 +255,7 @@ export const OnErrorHandler = () => {
     <React.Fragment>
       <div>{errorMessage}</div>
       <div className="grid-container">
-        <XGrid rows={rows} columns={cols} options={{ onError }} />
+        <XGrid rows={rows} columns={cols} {...{ onError }} />
       </div>
     </React.Fragment>
   );

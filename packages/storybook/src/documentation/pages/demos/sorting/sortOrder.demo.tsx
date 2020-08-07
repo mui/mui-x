@@ -60,10 +60,8 @@ export default function SortOrderDemo() {
     <XGrid
       rows={rows}
       columns={columns}
-      options={{
-        autoHeight: true,
-        sortingOrder: ['desc', 'asc'],
-      }}
+      autoHeight
+      sortingOrder={['desc', 'asc']}
       className="demo"
     />
   );

@@ -91,7 +91,7 @@ export default function ServerSortingDemo() {
     <XGrid
       rows={rows}
       columns={columns.current}
-      options={{
+      {...{
         onSortModelChange,
         sortingMode: 'server',
         enableMultipleColumnsSorting: false,

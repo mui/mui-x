@@ -26,7 +26,7 @@ export const Options = () => {
     <XGrid
       rows={data.rows}
       columns={data.columns}
-      options={{
+      {...{
         onRowClick: (params) => action('onRowClick')(params),
         onCellClick: (params) => action('onCellClick')(params),
         onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
@@ -75,5 +75,5 @@ export const Events = () => {
     onSortModelChange: (params) => action('onSortModelChange')(params),
   };
 
-  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
 };

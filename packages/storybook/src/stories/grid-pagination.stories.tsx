@@ -22,13 +22,7 @@ export function PaginationDefault() {
 
   return (
     <div className="grid-container">
-      <XGrid
-        rows={data.rows}
-        columns={data.columns}
-        options={{
-          pagination: true,
-        }}
-      />
+      <XGrid rows={data.rows} columns={data.columns} pagination />
     </div>
   );
 }
@@ -38,14 +32,7 @@ export function PageSize100() {
 
   return (
     <div className="grid-container">
-      <XGrid
-        rows={data.rows}
-        columns={data.columns}
-        options={{
-          pagination: true,
-          pageSize: 100,
-        }}
-      />
+      <XGrid rows={data.rows} columns={data.columns} pagination pageSize={100} />
     </div>
   );
 }
@@ -58,7 +45,7 @@ export function PaginationKnobs() {
     <XGrid
       rows={data.rows}
       columns={data.columns}
-      options={{
+      {...{
         pagination: true,
         pageSize: number('PageSize', 100),
         page: number('Page', 1),
@@ -80,7 +67,7 @@ export function HiddenPagination() {
       <XGrid
         rows={data.rows}
         columns={data.columns}
-        options={{
+        {...{
           pagination: true,
           pageSize: 100,
           hideFooterPagination: true,
@@ -143,7 +130,7 @@ export function PaginationApiTests() {
           rows={data.rows}
           columns={data.columns}
           apiRef={apiRef}
-          options={{
+          {...{
             pagination: true,
             pageSize: myPageSize,
             autoPageSize: autosize,
@@ -192,7 +179,7 @@ export function AutoPagination() {
         <XGrid
           rows={data.rows}
           columns={data.columns}
-          options={{
+          {...{
             pagination: true,
             autoPageSize: true,
           }}
@@ -244,7 +231,7 @@ export function ServerPaginationWithApi() {
         rows={rows}
         columns={data.columns}
         apiRef={apiRef}
-        options={{
+        {...{
           pagination: true,
           pageSize: 50,
           rowCount: 552,
@@ -280,7 +267,7 @@ export function ServerPaginationWithEventHandler() {
         rows={rows}
         columns={data.columns}
         apiRef={apiRef}
-        options={{
+        {...{
           pagination: true,
           pageSize: 50,
           rowCount: 552,

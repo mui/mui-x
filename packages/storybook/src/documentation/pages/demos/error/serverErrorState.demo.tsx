@@ -30,15 +30,5 @@ export default function ServerErrorStateDemo() {
     });
   }, []);
 
-  return (
-    <XGrid
-      rows={[]}
-      columns={columns}
-      options={{
-        autoHeight: true,
-      }}
-      error={error}
-      loading={isLoading}
-    />
-  );
+  return <XGrid rows={[]} columns={columns} autoHeight error={error} loading={isLoading} />;
 }

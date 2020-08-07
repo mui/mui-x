@@ -39,13 +39,5 @@ export default function ExceptionDemo() {
       lastLogin: randomUpdatedDate(),
     },
   ];
-  return (
-    <XGrid
-      rows={rows}
-      columns={columns}
-      options={{
-        autoHeight: true,
-      }}
-    />
-  );
+  return <XGrid rows={rows} columns={columns} autoHeight />;
 }

@@ -95,11 +95,9 @@ export function Icons() {
       <XGrid
         rows={rows}
         columns={columns}
-        options={{
-          icons: {
-            columnSortedDescending: SortedDescending,
-            columnSortedAscending: SortedAscending,
-          },
+        icons={{
+          columnSortedDescending: SortedDescending,
+          columnSortedAscending: SortedAscending,
         }}
       />
     </div>
@@ -128,10 +126,8 @@ export function CustomPagination() {
         rows={data.rows}
         columns={data.columns}
         apiRef={apiRef}
-        options={{
-          pagination: true,
-          pageSize: 50,
-        }}
+        pagination
+        pageSize={50}
         components={{
           pagination: PaginationComponent,
         }}
@@ -165,12 +161,10 @@ export function CustomFooter() {
       <XGrid
         rows={data.rows}
         columns={data.columns}
-        options={{
-          pagination: true,
-          pageSize: 33,
-          hideFooterPagination: true,
-          hideFooter: true,
-        }}
+        pagination
+        hideFooterPagination
+        hideFooter
+        pageSize={33}
         components={{
           footer: FooterComponent,
         }}
@@ -203,11 +197,9 @@ export function HeaderAndFooter() {
       <XGrid
         rows={data.rows}
         columns={data.columns}
-        options={{
-          pagination: true,
-          pageSize: 33,
-          hideFooterPagination: true,
-        }}
+        pagination
+        hideFooterPagination
+        pageSize={33}
         components={{
           header: CustomHeader,
           footer: FooterComponent2,

@@ -33,7 +33,7 @@ export function AllEvents() {
     onSortModelChange: (params) => action('onSortModelChange')(params),
   };
 
-  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
 }
 
 export const OnRowClick = () => {
@@ -43,7 +43,7 @@ export const OnRowClick = () => {
     onRowClick: (params) => action('row click')(params),
   };
 
-  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
 };
 
 export const OnRowHover = () => {
@@ -52,7 +52,7 @@ export const OnRowHover = () => {
     onRowHover: (params) => action('Row Hover')(params),
   };
 
-  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
 };
 
 export const OnCellClick = () => {
@@ -61,7 +61,7 @@ export const OnCellClick = () => {
     onCellClick: (params) => action('cell click')(params),
   };
 
-  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
 };
 
 export const OnCellHover = () => {
@@ -70,7 +70,7 @@ export const OnCellHover = () => {
     onCellHover: (params) => action('cell Hover')(params),
   };
 
-  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
 };
 
 export const OnColumnHeaderClick = () => {
@@ -78,5 +78,5 @@ export const OnColumnHeaderClick = () => {
   const options: GridOptionsProp = {
     onColumnHeaderClick: (params) => action('Header click')(params),
   };
-  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
 };

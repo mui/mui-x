@@ -23,5 +23,5 @@ export default function UpdateRows() {
     return () => subscription.unsubscribe();
   }, [apiRef]);
 
-  return <XGrid rows={rows} columns={columns} apiRef={apiRef} options={{ autoHeight: true }} />;
+  return <XGrid rows={rows} columns={columns} apiRef={apiRef} autoHeight />;
 }

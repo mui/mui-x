@@ -62,7 +62,7 @@ export default function ServerPaginationDemo() {
     <XGrid
       rows={rows}
       columns={columns}
-      options={{
+      {...{
         autoHeight: true,
         pagination: true,
         pageSize: 5,

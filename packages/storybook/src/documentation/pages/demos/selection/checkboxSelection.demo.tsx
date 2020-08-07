@@ -56,15 +56,5 @@ export default function CheckboxSelectionDemo() {
     },
   ];
 
-  return (
-    <XGrid
-      rows={rows}
-      columns={columns}
-      options={{
-        autoHeight: true,
-        checkboxSelection: true,
-      }}
-      className="demo"
-    />
-  );
+  return <XGrid rows={rows} columns={columns} autoHeight checkboxSelection className="demo" />;
 }

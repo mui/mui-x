@@ -55,13 +55,11 @@ export default function ExtendColTypesDemo() {
     <XGrid
       rows={rows}
       columns={columns}
-      options={{
-        hideFooter: true,
-        autoHeight: true,
-        columnTypes: {
-          usdPrice: usdPriceColType,
-          highlight: highlightCellColType,
-        },
+      hideFooter
+      autoHeight
+      columnTypes={{
+        usdPrice: usdPriceColType,
+        highlight: highlightCellColType,
       }}
       className="demo"
     />

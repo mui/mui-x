@@ -60,19 +60,17 @@ export default function SortModelOptionDemo() {
     <XGrid
       rows={rows}
       columns={columns}
-      options={{
-        autoHeight: true,
-        sortModel: [
-          {
-            field: 'age',
-            sort: 'desc',
-          },
-          {
-            field: 'name',
-            sort: 'asc',
-          },
-        ],
-      }}
+      sortModel={[
+        {
+          field: 'age',
+          sort: 'desc',
+        },
+        {
+          field: 'name',
+          sort: 'asc',
+        },
+      ]}
+      autoHeight
       className="demo"
     />
   );

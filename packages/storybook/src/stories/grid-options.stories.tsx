@@ -32,7 +32,7 @@ const rows = [
 export const NoLogger = () => {
   return (
     <div className="grid-container">
-      <XGrid rows={rows} columns={columns} options={{ logLevel: false }} />
+      <XGrid rows={rows} columns={columns} {...{ logLevel: false }} />
     </div>
   );
 };
@@ -47,7 +47,7 @@ export const CustomLogger = () => {
   };
   return (
     <div className="grid-container">
-      <XGrid rows={rows} columns={columns} options={{ logger }} />
+      <XGrid rows={rows} columns={columns} {...{ logger }} />
     </div>
   );
 };
@@ -56,7 +56,7 @@ export const NoRowExtend = () => {
   const data = useData(20, 2);
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} options={{ extendRowFullWidth: false }} />
+      <XGrid rows={data.rows} columns={data.columns} extendRowFullWidth={false} />
     </div>
   );
 };
@@ -68,7 +68,8 @@ export const NoRowExtendCellBorder = () => {
       <XGrid
         rows={data.rows}
         columns={data.columns}
-        options={{ extendRowFullWidth: false, showCellRightBorder: true }}
+        extendRowFullWidth={false}
+        showCellRightBorder
       />
     </div>
   );
@@ -78,7 +79,7 @@ export const CellRightBorder = () => {
   const data = useData(20, 2);
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} options={{ showCellRightBorder: true }} />
+      <XGrid rows={data.rows} columns={data.columns} showCellRightBorder />
     </div>
   );
 };
@@ -87,7 +88,7 @@ export const ColumnRightBorder = () => {
   const data = useData(20, 2);
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} options={{ showColumnRightBorder: true }} />
+      <XGrid rows={data.rows} columns={data.columns} showColumnRightBorder />
     </div>
   );
 };
@@ -95,7 +96,7 @@ export const AutoHeightSmall = () => {
   const data = useData(8, 12);
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} options={{ autoHeight: true }} />
+      <XGrid rows={data.rows} columns={data.columns} autoHeight />
     </div>
   );
 };
@@ -104,7 +105,7 @@ export const AutoHeightLarge = () => {
   const data = useData(75, 20);
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} options={{ autoHeight: true }} />
+      <XGrid rows={data.rows} columns={data.columns} autoHeight />
     </div>
   );
 };

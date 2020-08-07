@@ -87,11 +87,7 @@ export const SortingOrderOverrideOption = () => {
     <React.Fragment>
       <p>Click column headers to sort</p>
       <div className="grid-container">
-        <XGrid
-          rows={getRows()}
-          columns={getColumns()}
-          options={{ sortingOrder: ['desc', 'asc'] }}
-        />
+        <XGrid rows={getRows()} columns={getColumns()} {...{ sortingOrder: ['desc', 'asc'] }} />
       </div>
     </React.Fragment>
   );
@@ -262,7 +258,7 @@ export const SortModelOptionsMultiple = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={getRows()} columns={getColumns()} options={{ sortModel }} />
+      <XGrid rows={getRows()} columns={getColumns()} {...{ sortModel }} />
     </div>
   );
 };
@@ -375,7 +371,7 @@ export const SortedEventsOptions = () => {
         <XGrid
           rows={rows}
           columns={cols}
-          options={{
+          {...{
             onSortModelChange,
             sortModel,
           }}
@@ -431,7 +427,7 @@ export const ServerSideSorting = () => {
       <XGrid
         rows={rows}
         columns={columns}
-        options={{
+        {...{
           onSortModelChange,
           sortingMode: 'server',
           enableMultipleColumnsSorting: false,

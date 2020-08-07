@@ -70,12 +70,7 @@ export default function HideColumnDemo() {
         Toggle Last Login Column
       </Button>
       <div style={{ width: 800, height: 320, padding: '10px 0' }}>
-        <XGrid
-          rows={rows}
-          columns={columns}
-          options={{ hideFooter: true, autoHeight: true }}
-          className="demo"
-        />
+        <XGrid rows={rows} columns={columns} hideFooter autoHeight className="demo" />
       </div>
     </React.Fragment>
   );
