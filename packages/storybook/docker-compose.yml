@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  puppeteer:
+    build: .
+    volumes:
+    # mount code and output directories into the container
+      - ./output:/output
+      - .:/app
+    working_dir: /app
+    shm_size: 1gb #512M
+    # just run the container doing nothing
+    entrypoint: ["sh", "-c", "sleep infinity"]
