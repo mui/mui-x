@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* eslint-disable */
 import * as babel from '@babel/core';
 import traverse from '@babel/traverse';
 import { mkdirSync, readFileSync, writeFileSync } from 'fs';
@@ -196,7 +196,6 @@ async function buildDocs(options) {
 
   const spread = !src.match(/ = exactProp\(/);
 
-  // eslint-disable-next-line global-require, import/no-dynamic-require
   const component = require(componentObject.filename);
   const name = path.parse(componentObject.filename).name;
   const styles = {
