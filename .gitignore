@@ -9,5 +9,7 @@ __diff_output__
 /.eslintcache
 /.nyc_output
 /coverage
+/docs/.next
+/docs/export
 dist
 node_modules

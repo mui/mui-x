@@ -1,17 +1,11 @@
+const baseline = require('@material-ui/monorepo/prettier.config');
+
 module.exports = {
-  printWidth: 100,
-  singleQuote: true,
-  trailingComma: 'all',
+  ...baseline,
   overrides: [
+    ...baseline.overrides,
     {
-      files: '*.d.ts',
-      options: {
-        // This is needed for TypeScript 3.2 support
-        trailingComma: 'es5',
-      },
-    },
-    {
-      files: ['**/*.md', '**/*.mdx'],
+      files: ['**/*.mdx'],
       options: {
         // otherwise code blocks overflow on the docs website
         printWidth: 80,

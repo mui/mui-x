@@ -20,7 +20,7 @@ This component has 3 peer dependencies that you will need to install as well.
 
 ```json
 "peerDependencies": {
-  "@material-ui/core": "^4.11.0",
+  "@material-ui/core": "^4.9.12",
   "react": "^16.13.1",
   "styled-components": "^5.1.0"
 },
@@ -72,9 +72,7 @@ const columns: ColDef[] = [
     headerClassName: 'highlight',
     sortable: false,
     valueGetter: (params) =>
-      `${params.getValue('firstName') || ''} ${
-        params.getValue('lastName') || ''
-      }`,
+      `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
   },
 ];
 
@@ -90,11 +88,7 @@ const rows = [
 export default function MyApp() {
   return (
     <div style={{ width: 800, height: 600 }}>
-      <XGrid
-        rows={rows}
-        columns={columns}
-        options={{ checkboxSelection: true }}
-      />
+      <XGrid rows={rows} columns={columns} options={{ checkboxSelection: true }} />
     </div>
   );
 }
