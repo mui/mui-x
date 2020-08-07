@@ -2832,17 +2832,14 @@
     react-is "^16.8.0"
     react-transition-group "^4.4.0"
 
-"@material-ui/docs@^4.0.0-beta.0":
-  version "4.0.0-beta.0"
-  resolved "https://registry.yarnpkg.com/@material-ui/docs/-/docs-4.0.0-beta.0.tgz#0d869ce989f5dc7ffea4ff55331b8a73108f6ab2"
-  integrity sha512-x8sb2lA5tKkkJeAJiuHTT6pwN0UiGX6w57ReOm6tun3cJyEfthZ5O0ogoRfFnIPiNN+nJ4LtRJwgVLoxbCDo1g==
+"@material-ui/docs@^4.0.0-beta.3":
+  version "4.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@material-ui/docs/-/docs-4.0.0-beta.3.tgz#8c37863a58b175e03d565a8c8a9ea25c64ba30f8"
+  integrity sha512-RLgfN41V+gnstWYrBsFfluH4qX8We9coMOhAe/vlJLsZ5pQxP2HEJFE/FGa2ImszezwCsG7DuCZigHRXoHTy9w==
   dependencies:
-    "@babel/runtime" "^7.2.0"
-    "@material-ui/utils" "^4.0.0-beta.0"
-    clsx "^1.0.2"
-    marked "^0.6.0"
+    "@babel/runtime" "^7.4.4"
+    "@material-ui/utils" "^4.9.6"
     nprogress "^0.2.0"
-    prismjs "^1.8.4"
 
 "@material-ui/icons@^4.9.1":
   version "4.9.1"
@@ -2926,7 +2923,7 @@
   resolved "https://registry.yarnpkg.com/@material-ui/types/-/types-5.1.0.tgz#efa1c7a0b0eaa4c7c87ac0390445f0f88b0d88f2"
   integrity sha512-7cqRjrY50b8QzRSYyhSpx4WRw2YuO0KKIGQEVk5J8uoz2BanawykgZGoWEqKm7pVIbzFDN0SpPcVV4IhOFkl8A==
 
-"@material-ui/utils@^4.0.0-beta.0", "@material-ui/utils@^4.10.2", "@material-ui/utils@^4.9.6":
+"@material-ui/utils@^4.10.2", "@material-ui/utils@^4.9.6":
   version "4.10.2"
   resolved "https://registry.yarnpkg.com/@material-ui/utils/-/utils-4.10.2.tgz#3fd5470ca61b7341f1e0468ac8f29a70bf6df321"
   integrity sha512-eg29v74P7W5r6a4tWWDAAfZldXIzfyO1am2fIsC39hdUUHm/33k6pGOKPbgDjg/U/4ifmgAePy/1OjkKN6rFRw==
@@ -14283,11 +14280,6 @@ marked@^0.3.12:
   version "0.3.19"
   resolved "https://registry.yarnpkg.com/marked/-/marked-0.3.19.tgz#5d47f709c4c9fc3c216b6d46127280f40b39d790"
   integrity sha512-ea2eGWOqNxPcXv8dyERdSr/6FmzvWwzjMxpfGB/sbMccXoct+xY+YukPD+QTUZwyvK7BZwcr4m21WBOW41pAkg==
-
-marked@^0.6.0:
-  version "0.6.3"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-0.6.3.tgz#79babad78af638ba4d522a9e715cdfdd2429e946"
-  integrity sha512-Fqa7eq+UaxfMriqzYLayfqAE40WN03jf+zHjT18/uXNuzjq3TY0XTbrAoPeqSJrAmPz11VuUA+kBPYOhHt9oOQ==
 
 marked@^1.0.0:
   version "1.1.1"

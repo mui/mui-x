@@ -53,7 +53,7 @@ module.exports = {
 
     const includesMonorepo = [
       /(@material-ui[\\/]monorepo)$/,
-      /(@material-ui[\\/]monorepo)[\\/](?!.*node_modules)/
+      /(@material-ui[\\/]monorepo)[\\/](?!.*node_modules)/,
     ];
 
     if (config.externals) {
@@ -61,7 +61,7 @@ module.exports = {
         if (typeof external !== 'function') return external;
         return (ctx, req, cb) => {
           return includesMonorepo.find((include) =>
-            req.startsWith('.') ? include.test(path.resolve(ctx, req)) : include.test(req)
+            req.startsWith('.') ? include.test(path.resolve(ctx, req)) : include.test(req),
           )
             ? cb()
             : external(ctx, req, cb);
