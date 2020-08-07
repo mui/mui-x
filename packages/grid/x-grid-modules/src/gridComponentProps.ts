@@ -8,7 +8,7 @@ export type GridOptionsProp = Partial<GridOptions>;
 /**
  * The grid component react props interface.
  */
-export interface GridComponentProps {
+export interface GridComponentProps extends GridOptionsProp {
   /**
    * Set of rows of type [[RowsProp]].
    */
@@ -17,10 +17,6 @@ export interface GridComponentProps {
    * Set of columns of type [[Columns]].
    */
   columns: Columns;
-  /**
-   * Set of options of type [[GridOptionsProp]].
-   */
-  options?: GridOptionsProp;
   /**
    * Overrideable components.
    */

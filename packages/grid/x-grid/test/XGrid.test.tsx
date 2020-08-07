@@ -152,7 +152,7 @@ describe('<XGrid />', () => {
               { field: 'id', hide: true },
               { field: 'brand', width: 100 },
             ]}
-            options={{ checkboxSelection: true }}
+            checkboxSelection
           />
         </div>,
       );

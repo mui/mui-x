@@ -20,8 +20,19 @@ export function mergeColTypes(
   return hydratedOptionColTypes;
 }
 
+export function removeUndefinedProps(options: Object) {
+  const cleanedOptions = { ...options };
+  Object.keys(options).forEach((key) => {
+    if (options.hasOwnProperty(key) && options[key] === undefined) {
+      delete cleanedOptions[key];
+    }
+  });
+  return cleanedOptions;
+}
+
 // We intentionally set the types to any to avoid circular deps
 export function mergeOptions(defaultOptions: any, options?: any) {
+  options = removeUndefinedProps(options);
   const defaultIcons = defaultOptions.icons;
   const optionsIcons = options?.icons;
   const mergedIcons = { ...defaultIcons, ...optionsIcons };
