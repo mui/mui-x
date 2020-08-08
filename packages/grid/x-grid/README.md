@@ -1,12 +1,10 @@
-# Material-UI XGrid
+# @material-ui/x-grid
 
 The Material-UI X edition of the data grid component.
 
-Check out our [Demo here!](https://muix-preview.netlify.app/#/grid)
+## Installation
 
-## Install
-
-Using your favorite package manager, install `@material-ui/x-grid`:
+Install the package in your project directory with:
 
 ```sh
 // with npm
@@ -94,8 +92,6 @@ export default function MyApp() {
 }
 ```
 
-Code Sandbox [here!](https://codesandbox.io/s/get-started-grid-kkdn2)
+## Documentation
 
-### More examples on our storybook
-
-https://muix-storybook.netlify.app/
+[The documentation](https://material-ui.com/components/data-grid/)
