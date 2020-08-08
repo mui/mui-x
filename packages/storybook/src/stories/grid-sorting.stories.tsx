@@ -405,7 +405,7 @@ function sortServerRows(rows: any[], params: SortModelParams): Promise<any[]> {
 export const ServerSideSorting = () => {
   const [rows, setRows] = React.useState<RowsProp>(getRows());
   const [columns] = React.useState<ColDef[]>(getColumns());
-  const [isLoading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   const onSortModelChange = React.useCallback(
     async (params: SortModelParams) => {
@@ -427,13 +427,11 @@ export const ServerSideSorting = () => {
       <XGrid
         rows={rows}
         columns={columns}
-        {...{
-          onSortModelChange,
-          sortingMode: 'server',
-          enableMultipleColumnsSorting: false,
-          sortModel: sortBy,
-        }}
-        loading={isLoading}
+        onSortModelChange={onSortModelChange}
+        sortingMode="server"
+        enableMultipleColumnsSorting={false}
+        sortModel={sortBy}
+        loading={loading}
       />
     </div>
   );

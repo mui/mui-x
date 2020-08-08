@@ -207,7 +207,7 @@ export function ServerPaginationWithApi() {
   const apiRef: ApiRef = useApiRef();
   const data = useData(100, 10);
   const [rows, setRows] = React.useState<RowsProp>([]);
-  const [isLoading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     const unsubscribe = apiRef.current.onPageChange((params) => {
@@ -237,7 +237,7 @@ export function ServerPaginationWithApi() {
           rowCount: 552,
           paginationMode: 'server',
         }}
-        loading={isLoading}
+        loading={loading}
       />
     </div>
   );
@@ -247,7 +247,7 @@ export function ServerPaginationWithEventHandler() {
   const apiRef: ApiRef = useApiRef();
   const data = useData(100, 10);
   const [rows, setRows] = React.useState<RowsProp>([]);
-  const [isLoading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   const onPageChange = React.useCallback(
     (params) => {
@@ -274,7 +274,7 @@ export function ServerPaginationWithEventHandler() {
           paginationMode: 'server',
           onPageChange,
         }}
-        loading={isLoading}
+        loading={loading}
       />
     </div>
   );
