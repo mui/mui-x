@@ -46,7 +46,7 @@ const getGridOptions: () => GridOptionsProp = () => {
     extendRowFullWidth: boolean('extendRowFullWidth', true),
     showCellRightBorder: boolean('showCellRightBorder', false),
     showColumnRightBorder: boolean('showColumnRightBorder', false),
-    enableMultipleSelection: boolean('enableMultipleSelection', true),
+    disableMultipleSelection: boolean('disableMultipleSelection', false),
     checkboxSelection: boolean('checkboxSelection', true),
     disableSelectionOnClick: boolean('disableSelectionOnClick', true),
     enableMultipleColumnsSorting: boolean('enableMultipleColumnsSorting', true),

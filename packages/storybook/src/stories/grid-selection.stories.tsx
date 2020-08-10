@@ -55,7 +55,7 @@ export const EventsMapped = () => {
 export const SingleSelect = () => {
   const data = useData(200, 200);
   const options: GridOptionsProp = {
-    enableMultipleSelection: false,
+    disableMultipleSelection: true,
   };
 
   return <XGrid rows={data.rows} columns={data.columns} {...options} />;
@@ -64,7 +64,7 @@ export const SingleSelect = () => {
 export const MultipleSelect = () => {
   const data = useData(200, 200);
   const options: GridOptionsProp = {
-    enableMultipleSelection: true,
+    disableMultipleSelection: false,
   };
 
   return <XGrid rows={data.rows} columns={data.columns} {...options} />;

@@ -66,11 +66,11 @@ export interface GridOptions {
    */
   columnBuffer: number;
   /**
-   * Enable multiple selection using the CTRL or CMD key.
+   * Disable multiple selection using the CTRL or CMD key.
    *
    * @default true
    */
-  enableMultipleSelection: boolean;
+  disableMultipleSelection?: boolean;
   /**
    * Enable sorting the grid rows with one or more columns.
    *
@@ -281,7 +281,6 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   headerHeight: 56,
   scrollbarSize: 15,
   columnBuffer: 2,
-  enableMultipleSelection: true,
   enableMultipleColumnsSorting: true,
   rowsPerPageOptions: [25, 50, 100],
   pageSize: 100,

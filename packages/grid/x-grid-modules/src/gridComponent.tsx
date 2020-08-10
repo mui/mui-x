@@ -166,7 +166,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo((props) =>
           aria-rowcount={internalRows.length + 1}
           tabIndex={0}
           aria-label="grid"
-          aria-multiselectable={internalOptions.enableMultipleSelection}
+          aria-multiselectable={!internalOptions.disableMultipleSelection}
         >
           <ErrorBoundary
             hasError={errorState != null}

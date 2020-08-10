@@ -9,13 +9,13 @@ import DisabledCellSelectionDemo from './demos/selection/disabledCellSelection.d
 Selection provides the ability for users to highlight or select rows. It can be done with a simple Mouse click or using the keyboard shortcuts.
 XGrid currently supports **Single** and **Multiple** rows selection.
 
-By default, the grid allows multiple selection. However, this setting can be turned off using the property `enableMultipleSelection` of the `options` React prop.
+By default, the grid allows multiple selection. However, this setting can be turned off using the property `disableMultipleSelection` of the `options`React prop.
 
 ```tsx
 <XGrid
   rows={rows}
   columns={columns}
-  enableMultipleSelection={false}
+  disableMultipleSelection
 />
 ```
 
