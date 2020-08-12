@@ -67,11 +67,9 @@ export function HiddenPagination() {
       <XGrid
         rows={data.rows}
         columns={data.columns}
-        {...{
-          pagination: true,
-          pageSize: 100,
-          hideFooterPagination: true,
-        }}
+        pageSize={100}
+        pagination
+        hideFooterPagination
       />
     </div>
   );
@@ -130,11 +128,9 @@ export function PaginationApiTests() {
           rows={data.rows}
           columns={data.columns}
           apiRef={apiRef}
-          {...{
-            pagination: true,
-            pageSize: myPageSize,
-            autoPageSize: autosize,
-          }}
+          pagination
+          pageSize={myPageSize}
+          autoPageSize={autosize}
           components={{
             pagination: ({ paginationProps }) => (
               <Pagination
@@ -176,14 +172,7 @@ export function AutoPagination() {
         </Button>
       </div>
       <div style={{ width: size.width, height: size.height }}>
-        <XGrid
-          rows={data.rows}
-          columns={data.columns}
-          {...{
-            pagination: true,
-            autoPageSize: true,
-          }}
-        />
+        <XGrid rows={data.rows} columns={data.columns} autoPageSize pagination />
       </div>
     </React.Fragment>
   );
@@ -231,12 +220,10 @@ export function ServerPaginationWithApi() {
         rows={rows}
         columns={data.columns}
         apiRef={apiRef}
-        {...{
-          pagination: true,
-          pageSize: 50,
-          rowCount: 552,
-          paginationMode: 'server',
-        }}
+        pagination
+        pageSize={50}
+        rowCount={552}
+        paginationMode={'server'}
         loading={loading}
       />
     </div>
@@ -267,13 +254,11 @@ export function ServerPaginationWithEventHandler() {
         rows={rows}
         columns={data.columns}
         apiRef={apiRef}
-        {...{
-          pagination: true,
-          pageSize: 50,
-          rowCount: 552,
-          paginationMode: 'server',
-          onPageChange,
-        }}
+        pagination
+        pageSize={50}
+        rowCount={552}
+        paginationMode={'server'}
+        onPageChange={onPageChange}
         loading={loading}
       />
     </div>
