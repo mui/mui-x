@@ -16,18 +16,17 @@ export default {
   },
 };
 
-interface GridDatasetProps {
+interface GridDatasetProps extends GridOptionsProp {
   nbRows: number;
   nbCols: number;
-  options?: GridOptionsProp;
   loading?: boolean;
 }
 
-const GridDataSet = ({ nbRows, nbCols, options, loading }: GridDatasetProps) => {
+const GridDataSet = ({ nbRows, nbCols, loading, ...options }: GridDatasetProps) => {
   const data = useData(nbRows, nbCols);
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} options={options} loading={loading} />
+      <XGrid rows={data.rows} columns={data.columns} {...options} loading={loading} />
     </div>
   );
 };
@@ -35,24 +34,16 @@ const GridDataSet = ({ nbRows, nbCols, options, loading }: GridDatasetProps) => 
 export const NoRows = () => <GridDataSet nbRows={0} nbCols={20} />;
 export const NoRowsNoCols = () => <GridDataSet nbRows={0} nbCols={0} />;
 export const LoadingRows = () => <GridDataSet nbRows={0} nbCols={20} loading />;
-export const NoRowsAutoHeight = () => (
-  <GridDataSet nbRows={0} nbCols={20} options={{ autoHeight: true }} />
-);
-export const NoRowsNoColsAutoHeight = () => (
-  <GridDataSet nbRows={0} nbCols={0} options={{ autoHeight: true }} />
-);
+export const NoRowsAutoHeight = () => <GridDataSet nbRows={0} nbCols={20} autoHeight />;
+export const NoRowsNoColsAutoHeight = () => <GridDataSet nbRows={0} nbCols={0} autoHeight />;
 export const LoadingRowsAutoHeight = () => (
-  <GridDataSet nbRows={0} nbCols={20} options={{ autoHeight: true }} loading />
+  <GridDataSet nbRows={0} nbCols={20} autoHeight loading />
 );
 export const VerticalScroll = () => <GridDataSet nbRows={200} nbCols={2} />;
 export const HorizontalScroll = () => <GridDataSet nbRows={15} nbCols={20} />;
 export const BothScroll = () => <GridDataSet nbRows={200} nbCols={50} />;
 export const BothScrollNoExtendAndBorders = () => (
-  <GridDataSet
-    nbRows={200}
-    nbCols={50}
-    options={{ extendRowFullWidth: false, showCellRightBorder: true }}
-  />
+  <GridDataSet nbRows={200} nbCols={50} extendRowFullWidth showCellRightBorder />
 );
 export const Grid20By2 = () => <GridDataSet nbRows={20} nbCols={2} />;
 export const Grid100by100 = () => <GridDataSet nbRows={100} nbCols={100} />;

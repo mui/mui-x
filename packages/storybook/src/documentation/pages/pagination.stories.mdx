@@ -15,7 +15,7 @@ By Default, XGrid uses infinite rows and virtualization. However, we also implem
 To turn it on, toggle the `pagination` boolean property of the `options` React prop as below.
 
 ```tsx
-<XGrid rows={rows} columns={columns} options={{ pagination: true }} />
+<XGrid rows={rows} columns={columns} pagination />
 ```
 
 - **Set page size**
@@ -26,7 +26,8 @@ Our default `pageSize` is set to `100`. You can change this value by setting the
 <XGrid
   rows={rows}
   columns={columns}
-  options={{ pagination: true, pageSize: 50 }}
+  pagination
+  pageSize={50}
 />
 ```
 
@@ -39,11 +40,9 @@ The default `rowsPerPageOptions` is set to `[25, 50, 100]`. You can change this 
 <XGrid
   rows={rows}
   columns={columns}
-  options={{
-    pagination: true,
-    pageSize: 50,
-    rowsPerPageOptions: [10, 20, 50],
-  }}
+  pagination
+  pageSize={50}
+  rowsPerPageOptions={[10, 20, 50]}
 />
 ```
 
@@ -60,10 +59,8 @@ If you would like to render the second page, then you can set this property to `
 <XGrid
   rows={rows}
   columns={columns}
-  options={{
-    pagination: true,
-    page: 2,
-  }}
+  pagination
+  page={2}
 />
 ```
 
@@ -76,7 +73,8 @@ By default, this feature is off and can be turned on, by toggling the `autoPageS
 <XGrid
   rows={rows}
   columns={columns}
-  options={{ pagination: true, autoPageSize: true }}
+  pagination:
+  autoPageSize
 />
 ```
 
@@ -95,10 +93,8 @@ To achieve this, just set the pagination property of the `components` react prop
 <XGrid
   rows={rows}
   columns={columns}
-  options={{
-    pagination: true,
-    pageSize: 50,
-  }}
+  pagination
+  pageSize={50}
   components={{
     pagination: PaginationComponent,
   }}
@@ -126,13 +122,11 @@ const onPageChange = (params) => {
 <XGrid
   rows={rows}
   columns={columns}
-  options={{
-    pagination: true,
-    pageSize: 5,
-    paginationMode: 'server',
-    rowCount: 50,
-    onPageChange: onPageChange,
-  }}
+  pagination
+  pageSize={5}
+  paginationMode="server"
+  rowCount={50}
+  onPageChange={onPageChange}
 />;
 ```
 
@@ -155,10 +149,8 @@ return (
   <XGrid
     rows={rows}
     columns={columns}
-    options={{
-      pagination: true,
-      pageSize: 5,
-    }}
+    pagination
+    pageSize={5}
     apiRef={apiRef}
   />
 );

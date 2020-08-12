@@ -119,7 +119,6 @@ export const RealDataGridDemo: React.FC<{ toggleTheme: () => void; themeId: stri
     <React.Fragment>
       <AppBreadcrumbs name="NEW* Material-UI X Grid" />
       <SettingsPanel onApply={onApplyClick} size={size} type={type} />
-
       <MainContainer>
         <div style={{ display: 'flex', boxSizing: 'border-box' }} className="fill-space">
           <div className="grow">
@@ -127,7 +126,8 @@ export const RealDataGridDemo: React.FC<{ toggleTheme: () => void; themeId: stri
               rows={rows as any}
               columns={cols as any}
               loading={loading}
-              options={{ checkboxSelection: true, ...pagination }}
+              checkboxSelection
+              {...pagination}
             />
           </div>
         </div>

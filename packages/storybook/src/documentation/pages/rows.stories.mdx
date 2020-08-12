@@ -82,7 +82,7 @@ function StreamingGrid() {
       rows={rows}
       columns={columns}
       apiRef={apiRef}
-      options={{ autoHeight: true }}
+      autoHeight
     />
   );
 }
@@ -99,7 +99,7 @@ However you can change this value as below.
 - `RowHeight` is a number in pixel unit.
 
 ```tsx
-<XGrid rows={rows} columns={columns} options={{ rowHeight: 25 }} />
+<XGrid rows={rows} columns={columns} rowHeight={25} />
 ```
 
 ## Row Selection

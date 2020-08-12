@@ -191,7 +191,7 @@ export function NewColumnTypes() {
       <XGrid
         rows={data.rows}
         columns={transformCols(data.columns)}
-        options={{ columnTypes: { price: priceColumnType, unknownPrice: unknownPriceColumnType } }}
+        columnTypes={{ price: priceColumnType, unknownPrice: unknownPriceColumnType }}
       />
     </div>
   );

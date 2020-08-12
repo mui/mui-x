@@ -22,13 +22,7 @@ export function PaginationDefault() {
 
   return (
     <div className="grid-container">
-      <XGrid
-        rows={data.rows}
-        columns={data.columns}
-        options={{
-          pagination: true,
-        }}
-      />
+      <XGrid rows={data.rows} columns={data.columns} pagination />
     </div>
   );
 }
@@ -38,14 +32,7 @@ export function PageSize100() {
 
   return (
     <div className="grid-container">
-      <XGrid
-        rows={data.rows}
-        columns={data.columns}
-        options={{
-          pagination: true,
-          pageSize: 100,
-        }}
-      />
+      <XGrid rows={data.rows} columns={data.columns} pagination pageSize={100} />
     </div>
   );
 }
@@ -58,7 +45,7 @@ export function PaginationKnobs() {
     <XGrid
       rows={data.rows}
       columns={data.columns}
-      options={{
+      {...{
         pagination: true,
         pageSize: number('PageSize', 100),
         page: number('Page', 1),
@@ -80,7 +67,7 @@ export function HiddenPagination() {
       <XGrid
         rows={data.rows}
         columns={data.columns}
-        options={{
+        {...{
           pagination: true,
           pageSize: 100,
           hideFooterPagination: true,
@@ -143,7 +130,7 @@ export function PaginationApiTests() {
           rows={data.rows}
           columns={data.columns}
           apiRef={apiRef}
-          options={{
+          {...{
             pagination: true,
             pageSize: myPageSize,
             autoPageSize: autosize,
@@ -192,7 +179,7 @@ export function AutoPagination() {
         <XGrid
           rows={data.rows}
           columns={data.columns}
-          options={{
+          {...{
             pagination: true,
             autoPageSize: true,
           }}
@@ -220,7 +207,7 @@ export function ServerPaginationWithApi() {
   const apiRef: ApiRef = useApiRef();
   const data = useData(100, 10);
   const [rows, setRows] = React.useState<RowsProp>([]);
-  const [isLoading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     const unsubscribe = apiRef.current.onPageChange((params) => {
@@ -244,13 +231,13 @@ export function ServerPaginationWithApi() {
         rows={rows}
         columns={data.columns}
         apiRef={apiRef}
-        options={{
+        {...{
           pagination: true,
           pageSize: 50,
           rowCount: 552,
           paginationMode: 'server',
         }}
-        loading={isLoading}
+        loading={loading}
       />
     </div>
   );
@@ -260,7 +247,7 @@ export function ServerPaginationWithEventHandler() {
   const apiRef: ApiRef = useApiRef();
   const data = useData(100, 10);
   const [rows, setRows] = React.useState<RowsProp>([]);
-  const [isLoading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   const onPageChange = React.useCallback(
     (params) => {
@@ -280,14 +267,14 @@ export function ServerPaginationWithEventHandler() {
         rows={rows}
         columns={data.columns}
         apiRef={apiRef}
-        options={{
+        {...{
           pagination: true,
           pageSize: 50,
           rowCount: 552,
           paginationMode: 'server',
           onPageChange,
         }}
-        loading={isLoading}
+        loading={loading}
       />
     </div>
   );

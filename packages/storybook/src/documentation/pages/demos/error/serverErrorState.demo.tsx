@@ -19,7 +19,7 @@ function loadServerRows(): Promise<any> {
 }
 
 export default function ServerErrorStateDemo() {
-  const [isLoading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<any>();
 
   React.useEffect(() => {
@@ -30,15 +30,5 @@ export default function ServerErrorStateDemo() {
     });
   }, []);
 
-  return (
-    <XGrid
-      rows={[]}
-      columns={columns}
-      options={{
-        autoHeight: true,
-      }}
-      error={error}
-      loading={isLoading}
-    />
-  );
+  return <XGrid rows={[]} columns={columns} autoHeight error={error} loading={loading} />;
 }

@@ -87,11 +87,7 @@ export const SortingOrderOverrideOption = () => {
     <React.Fragment>
       <p>Click column headers to sort</p>
       <div className="grid-container">
-        <XGrid
-          rows={getRows()}
-          columns={getColumns()}
-          options={{ sortingOrder: ['desc', 'asc'] }}
-        />
+        <XGrid rows={getRows()} columns={getColumns()} {...{ sortingOrder: ['desc', 'asc'] }} />
       </div>
     </React.Fragment>
   );
@@ -262,7 +258,7 @@ export const SortModelOptionsMultiple = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={getRows()} columns={getColumns()} options={{ sortModel }} />
+      <XGrid rows={getRows()} columns={getColumns()} {...{ sortModel }} />
     </div>
   );
 };
@@ -375,7 +371,7 @@ export const SortedEventsOptions = () => {
         <XGrid
           rows={rows}
           columns={cols}
-          options={{
+          {...{
             onSortModelChange,
             sortModel,
           }}
@@ -409,7 +405,7 @@ function sortServerRows(rows: any[], params: SortModelParams): Promise<any[]> {
 export const ServerSideSorting = () => {
   const [rows, setRows] = React.useState<RowsProp>(getRows());
   const [columns] = React.useState<ColDef[]>(getColumns());
-  const [isLoading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   const onSortModelChange = React.useCallback(
     async (params: SortModelParams) => {
@@ -431,13 +427,11 @@ export const ServerSideSorting = () => {
       <XGrid
         rows={rows}
         columns={columns}
-        options={{
-          onSortModelChange,
-          sortingMode: 'server',
-          enableMultipleColumnsSorting: false,
-          sortModel: sortBy,
-        }}
-        loading={isLoading}
+        onSortModelChange={onSortModelChange}
+        sortingMode="server"
+        enableMultipleColumnsSorting={false}
+        sortModel={sortBy}
+        loading={loading}
       />
     </div>
   );

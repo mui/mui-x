@@ -15,7 +15,7 @@ By default, the grid allows multiple selection. However, this setting can be tur
 <XGrid
   rows={rows}
   columns={columns}
-  options={{ enableMultipleSelection: false }}
+  enableMultipleSelection={false}
 />
 ```
 
@@ -30,7 +30,7 @@ Another way to provide the ability to select rows in the grid is by adding a che
 To activate, this feature you need to toggle the `checkboxSelection` property of the `options` React prop as below.
 
 ```tsx
-<XGrid rows={rows} columns={columns} options={{ checkboxSelection: true }} />
+<XGrid rows={rows} columns={columns} checkboxSelection />
 ```
 
 Below is an example of a grid with `checkboxSelection` turned on.

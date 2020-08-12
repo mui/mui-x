@@ -49,7 +49,7 @@ export const EventsMapped = () => {
     onRowSelected: (params) => action('onRowSelected')(params),
   };
 
-  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
 };
 
 export const SingleSelect = () => {
@@ -58,7 +58,7 @@ export const SingleSelect = () => {
     enableMultipleSelection: false,
   };
 
-  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
 };
 
 export const MultipleSelect = () => {
@@ -67,7 +67,7 @@ export const MultipleSelect = () => {
     enableMultipleSelection: true,
   };
 
-  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
 };
 export const MultipleSelectWithCheckbox = () => {
   const data = useData(200, 200);
@@ -75,7 +75,7 @@ export const MultipleSelectWithCheckbox = () => {
     checkboxSelection: true,
   };
 
-  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
 };
 export const MultipleSelectWithCheckboxNoClick = () => {
   const data = useData(200, 200);
@@ -84,5 +84,5 @@ export const MultipleSelectWithCheckboxNoClick = () => {
     disableSelectionOnClick: true,
   };
 
-  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
 };

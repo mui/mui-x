@@ -87,12 +87,7 @@ export default function AutoPageSizeDemo() {
 
   return (
     <div style={{ height: 280 }}>
-      <XGrid
-        rows={rows}
-        columns={columns}
-        options={{ pagination: true, autoPageSize: true }}
-        className="demo"
-      />
+      <XGrid rows={rows} columns={columns} pagination autoPageSize className="demo" />
     </div>
   );
 }

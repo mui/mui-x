@@ -70,7 +70,7 @@ export function Commodity() {
         </Button>
       </div>
       <div className="grid-container">
-        <XGrid rows={data.rows} columns={data.columns} options={getGridOptions()} />
+        <XGrid rows={data.rows} columns={data.columns} {...getGridOptions()} />
       </div>
     </React.Fragment>
   );
@@ -81,7 +81,7 @@ export function Commodity500() {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} options={getGridOptions()} />
+      <XGrid rows={data.rows} columns={data.columns} {...getGridOptions()} />
     </div>
   );
 }
@@ -91,7 +91,7 @@ export function Commodity1000() {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} options={getGridOptions()} />
+      <XGrid rows={data.rows} columns={data.columns} {...getGridOptions()} />
     </div>
   );
 }
@@ -101,7 +101,7 @@ export function Commodity10000() {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} options={getGridOptions()} />
+      <XGrid rows={data.rows} columns={data.columns} {...getGridOptions()} />
     </div>
   );
 }
@@ -111,7 +111,7 @@ export function Employee100() {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} options={getGridOptions()} />
+      <XGrid rows={data.rows} columns={data.columns} {...getGridOptions()} />
     </div>
   );
 }
@@ -121,7 +121,7 @@ export function Employee1000() {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} options={getGridOptions()} />
+      <XGrid rows={data.rows} columns={data.columns} {...getGridOptions()} />
     </div>
   );
 }
@@ -131,7 +131,7 @@ export function Employee10000() {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} options={getGridOptions()} />
+      <XGrid rows={data.rows} columns={data.columns} {...getGridOptions()} />
     </div>
   );
 }

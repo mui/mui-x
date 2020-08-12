@@ -51,7 +51,7 @@ This behavior can be overwritten by setting the `sortingOrder` property of the `
 <XGrid
   rows={rows}
   columns={columns}
-  options={{ sortingOrder: ['desc', 'asc', null] }}
+  sortingOrder={['desc', 'asc', null]}
 />
 ```
 
@@ -125,12 +125,10 @@ XGrid also offers to override the sortModel using its `sortModel` property of it
 <XGrid
   rows={rows}
   columns={columns}
-  options={{
-    sortModel = [
-      { field: 'age', sortDirection: 'desc' },
-      { field: 'name', sortDirection: 'asc' },
-    ],
-  }}
+  sortModel={[
+    { field: 'age', sortDirection: 'desc' },
+    { field: 'name', sortDirection: 'asc' },
+  ]}
 />
 ```
 
@@ -154,11 +152,9 @@ const onSortModelChange = (params) => {
 <XGrid
   rows={rows}
   columns={columns}
-  options={{
-    sortingMode: 'server',
-    sortModel: sortBy,
-    onSortModelChange,
-  }}
+  sortingMode="server"
+  sortModel={sortBy}
+  onSortModelChange={onSortModelChange}
 />;
 ```
 

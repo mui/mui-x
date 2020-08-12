@@ -54,9 +54,7 @@ export default function CustomErrorDemo() {
     <XGrid
       rows={rows}
       columns={columns}
-      options={{
-        autoHeight: true,
-      }}
+      autoHeight
       components={{
         errorOverlay: CustomErrorOverlay,
       }}

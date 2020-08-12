@@ -27,7 +27,7 @@ export const BigRowsAndHeader = () => {
     checkboxSelection: true,
   };
 
-  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
 };
 
 export const Unset = () => {
@@ -41,7 +41,7 @@ export const Small = () => {
     headerHeight: 35,
     rowHeight: 27,
   };
-  return <XGrid rows={data.rows} columns={data.columns} options={options} />;
+  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
 };
 
 const IsDone: React.FC<{ value: boolean }> = ({ value }) =>

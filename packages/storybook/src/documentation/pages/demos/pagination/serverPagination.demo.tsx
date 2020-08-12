@@ -44,7 +44,7 @@ function loadServerRows(params: PageChangeParams): Promise<any> {
 
 export default function ServerPaginationDemo() {
   const [rows, setRows] = React.useState<RowsProp>([]);
-  const [isLoading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const currentPage = React.useRef<number>(1);
 
   const onPageChange = (params) => {
@@ -62,15 +62,13 @@ export default function ServerPaginationDemo() {
     <XGrid
       rows={rows}
       columns={columns}
-      options={{
-        autoHeight: true,
-        pagination: true,
-        pageSize: 5,
-        rowCount: 50,
-        paginationMode: 'server',
-        onPageChange,
-      }}
-      loading={isLoading}
+      autoHeight
+      pagination
+      pageSize={5}
+      rowCount={50}
+      paginationMode="server"
+      onPageChange={onPageChange}
+      loading={loading}
     />
   );
 }

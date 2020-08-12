@@ -78,13 +78,13 @@ If you do not define this property, then your new column type will extend the de
 ```tsx
 // We define 2 new column types.
 const highlightCellColType: ColTypeDef = { cellClassName: 'highlight' };
-const usdPriceColType: ColTypeDef = { extendType: 'number', valueFormatter: ({value})=> `${value} USD`};
+const usdPriceColType: ColTypeDef = { extendType: 'number', valueFormatter: ({value})=> `${value} USD` };
 
 // We define 3 columns that use those 2 new column types.
 const columns = [{
-    field: 'status', type: 'highlight'
-    field: 'subTotalPrice', type: 'usdPrice'
-    field: 'totalPrice', type: 'usdPrice'
+  field: 'status', type: 'highlight',
+  field: 'subTotalPrice', type: 'usdPrice',
+  field: 'totalPrice', type: 'usdPrice',
 }]
 ...
 
@@ -109,8 +109,8 @@ const highlightColType: ColTypeDef = { ...styledCellColType, headerClassName: 'h
 
 // We define 2 columns that use those 2 new column types.
 const columns = [{
-    field: 'importantValues', type: 'styledCell'
-    field: 'importantColumn', type: 'highlight'
+  field: 'importantValues', type: 'styledCell',
+  field: 'importantColumn', type: 'highlight',
 }]
 ...
 

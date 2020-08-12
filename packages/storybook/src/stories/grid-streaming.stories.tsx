@@ -31,7 +31,7 @@ export const SlowUpdateGrid = () => {
       <p>
         One Subscription per row! Update rate between {rate.min} - {rate.max} ms!
       </p>
-      <PricingGrid options={options} {...rate} />
+      <PricingGrid {...options} {...rate} />
     </React.Fragment>
   );
 };
@@ -46,7 +46,7 @@ export const FastUpdateGrid = () => {
       <p>
         One Subscription per row! Update rate between {rate.min} - {rate.max} ms!
       </p>
-      <PricingGrid options={options} {...rate} />
+      <PricingGrid {...options} {...rate} />
     </React.Fragment>
   );
 };
@@ -61,7 +61,7 @@ export const SingleSubscriptionFast = () => {
       <p>
         One Subscription for the whole feed! Update rate between {rate.min} - {rate.max} ms!
       </p>
-      <FeedGrid options={options} {...rate} />
+      <FeedGrid {...options} {...rate} />
     </React.Fragment>
   );
 };
@@ -83,5 +83,5 @@ export function SimpleRxUpdate() {
     return () => subscription.unsubscribe();
   }, [apiRef]);
 
-  return <XGrid rows={[]} columns={columns} apiRef={apiRef} options={{ autoHeight: true }} />;
+  return <XGrid rows={[]} columns={columns} apiRef={apiRef} autoHeight />;
 }

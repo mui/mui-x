@@ -95,12 +95,10 @@ export default function SetPageDemo() {
     <XGrid
       rows={rows}
       columns={columns}
-      options={{
-        pagination: true,
-        pageSize: 5,
-        rowsPerPageOptions: [5, 10],
-        autoHeight: true,
-      }}
+      pagination
+      pageSize={5}
+      rowsPerPageOptions={[5, 10]}
+      autoHeight
       className="demo"
       apiRef={apiRef}
     />

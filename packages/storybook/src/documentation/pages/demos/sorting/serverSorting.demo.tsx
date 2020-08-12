@@ -91,13 +91,11 @@ export default function ServerSortingDemo() {
     <XGrid
       rows={rows}
       columns={columns.current}
-      options={{
-        onSortModelChange,
-        sortingMode: 'server',
-        enableMultipleColumnsSorting: false,
-        sortModel: sortBy,
-        autoHeight: true,
-      }}
+      onSortModelChange={onSortModelChange}
+      sortingMode="server"
+      enableMultipleColumnsSorting={false}
+      sortModel={sortBy}
+      autoHeight
       loading={loading}
       className="demo"
     />

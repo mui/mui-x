@@ -20,5 +20,5 @@ export default function BasicRowsDemo() {
     },
   ];
 
-  return <XGrid rows={rows} columns={columns} className="demo" options={{ autoHeight: true }} />;
+  return <XGrid rows={rows} columns={columns} className="demo" autoHeight />;
 }

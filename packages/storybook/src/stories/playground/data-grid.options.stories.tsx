@@ -48,7 +48,7 @@ export const Options = () => {
     rowHeight: number('rowHeight', 52),
   };
 
-  return <DataGrid rows={data.rows} columns={data.columns} options={dataGridOptionsProp} />;
+  return <DataGrid rows={data.rows} columns={data.columns} {...dataGridOptionsProp} />;
 };
 export const Events = () => {
   const data = useData(2000, 200);
@@ -64,5 +64,5 @@ export const Events = () => {
     onSortModelChange: (params) => action('onSortModelChange')(params),
   };
 
-  return <DataGrid rows={data.rows} columns={data.columns} options={options} />;
+  return <DataGrid rows={data.rows} columns={data.columns} {...options} />;
 };
