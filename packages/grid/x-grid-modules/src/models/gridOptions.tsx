@@ -66,9 +66,8 @@ export interface GridOptions {
    */
   columnBuffer: number;
   /**
-   * Disable multiple selection using the CTRL or CMD key.
-   *
-   * @default true
+   * If `true`, multiple selection using the CTRL or CMD key is disabled.
+   * @default false
    */
   disableMultipleSelection?: boolean;
   /**

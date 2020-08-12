@@ -112,7 +112,7 @@ export const useSelection = (
     (ids: RowId[], isSelected = true, deSelectOthers = false) => {
       if (options.disableMultipleSelection && ids.length > 1) {
         throw new Error(
-          'Material-UI: DisableMultipleSelection should be false to select more than 1 item.',
+          'Material-UI: `disableMultipleSelection` should be false to select more than 1 item.',
         );
       }
       let updates = ids.map((id) => ({ id, selected: isSelected }));
