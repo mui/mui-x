@@ -7,7 +7,7 @@ import * as React from 'react';
 import { mergeOptions } from '@material-ui/x-grid-modules/utils';
 
 export function useOptionsProp(props: GridComponentProps): [GridOptions, Function] {
-  //TODO Refactor to smaller objects
+  // TODO Refactor to smaller objects
   const options: GridOptionsProp = React.useMemo(
     () => ({
       pageSize: props.pageSize,
