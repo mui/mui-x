@@ -42,7 +42,7 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportP
             hasScroll={{ y: renderCtx.hasScrollY, x: renderCtx.hasScrollX }}
             scrollSize={renderCtx.scrollBarSize}
             showCellRightBorder={!!options.showCellRightBorder}
-            extendRowFullWidth={!!options.extendRowFullWidth}
+            extendRowFullWidth={!options.disableExtendRowFullWidth}
             rowIndex={renderCtx.firstRowIdx + idx}
             domIndex={idx}
           />

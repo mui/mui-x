@@ -56,7 +56,7 @@ export const NoRowExtend = () => {
   const data = useData(20, 2);
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} extendRowFullWidth={false} />
+      <XGrid rows={data.rows} columns={data.columns} disableExtendRowFullWidth />
     </div>
   );
 };
@@ -68,7 +68,7 @@ export const NoRowExtendCellBorder = () => {
       <XGrid
         rows={data.rows}
         columns={data.columns}
-        extendRowFullWidth={false}
+        disableExtendRowFullWidth
         showCellRightBorder
       />
     </div>

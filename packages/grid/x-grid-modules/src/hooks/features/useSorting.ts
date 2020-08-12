@@ -183,9 +183,9 @@ export const useSorting = (
 
   const onMultipleKeyPressed = React.useCallback(
     (isPressed: boolean) => {
-      allowMultipleSorting.current = options.enableMultipleColumnsSorting && isPressed;
+      allowMultipleSorting.current = !options.disableMultipleColumnsSorting && isPressed;
     },
-    [allowMultipleSorting, options.enableMultipleColumnsSorting],
+    [allowMultipleSorting, options.disableMultipleColumnsSorting],
   );
 
   const onSortModelChange = React.useCallback(

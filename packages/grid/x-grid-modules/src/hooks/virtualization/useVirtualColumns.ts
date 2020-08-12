@@ -121,7 +121,7 @@ export const useVirtualColumns = (
             columnsMeta.totalWidth -
             columnsMeta.positions[newRenderedColState.lastColIdx] -
             visibleColumns[newRenderedColState.lastColIdx].width!;
-        } else if (options.extendRowFullWidth) {
+        } else if (!options.disableExtendRowFullWidth) {
           newRenderedColState.rightEmptyWidth =
             containerProps.viewportSize.width - columnsMeta.totalWidth;
         }
@@ -139,7 +139,7 @@ export const useVirtualColumns = (
       getColumnFromScroll,
       getColumnIdxFromScroll,
       options.columnBuffer,
-      options.extendRowFullWidth,
+      options.disableExtendRowFullWidth,
     ],
   );
   const virtualApi: Partial<VirtualizationApi> = {

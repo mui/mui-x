@@ -38,7 +38,7 @@ export const Options = () => {
     hideFooterRowCount: boolean('hideFooterRowCount', false),
     hideFooterPagination: boolean('hideFooterPagination', false),
     hideFooter: boolean('hideFooter', false),
-    extendRowFullWidth: boolean('extendRowFullWidth', true),
+    disableExtendRowFullWidth: boolean('disableExtendRowFullWidth', false),
     showCellRightBorder: boolean('showCellRightBorder', false),
     showColumnRightBorder: boolean('showColumnRightBorder', false),
     checkboxSelection: boolean('checkboxSelection', true),
