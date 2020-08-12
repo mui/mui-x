@@ -117,17 +117,23 @@ const getUpdatedColumnState = (
   logger: Logger,
   state: InternalColumns,
   columnUpdates: ColDef[],
+  resetState = false
 ): InternalColumns => {
   const newState = { ...state };
-  columnUpdates.forEach((newColumn) => {
-    const index = newState.all.findIndex((c) => c.field === newColumn.field);
-    const columnUpdated = { ...newState.all[index], ...newColumn };
-    newState.all[index] = columnUpdated;
-    newState.all = [...newState.all];
 
-    newState.lookup[newColumn.field] = columnUpdated;
-    newState.lookup = { ...newState.lookup };
-  });
+  if (resetState) {
+    newState.all = columnUpdates;
+  } else {
+    columnUpdates.forEach((newColumn) => {
+      const index = newState.all.findIndex((c) => c.field === newColumn.field);
+      const columnUpdated = { ...newState.all[index], ...newColumn };
+      newState.all[index] = columnUpdated;
+      newState.all = [...newState.all];
+
+      newState.lookup[newColumn.field] = columnUpdated;
+      newState.lookup = { ...newState.lookup };
+    });
+  }
 
   const visible = filterVisible(logger, newState.all);
   const meta = toMeta(logger, visible);
@@ -193,8 +199,8 @@ export function useColumns(
   const getVisibleColumns: () => Columns = () => stateRef.current.visible;
 
   const updateColumns = React.useCallback(
-    (cols: ColDef[]) => {
-      const newState = getUpdatedColumnState(logger, stateRef.current, cols);
+    (cols: ColDef[], resetState = false) => {
+      const newState = getUpdatedColumnState(logger, stateRef.current, cols, resetState);
       updateState(newState, false);
     },
     [updateState, logger, stateRef],

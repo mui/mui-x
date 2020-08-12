@@ -154,6 +154,13 @@ export const RootStyle = styled.div<GridRootProps>`
           &.checkbox-selection-header-cell .checkbox-input {
             padding: 12px;
           }
+          .dragging {
+            background: gray;
+            color: white;
+            padding: 0 12px;
+            border-radius: 10px;
+            opacity: 0.3;
+          }
         }
         &.scroll .material-col-cell:last-child {
           border-right: none;

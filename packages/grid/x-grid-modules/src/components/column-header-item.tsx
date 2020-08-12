@@ -12,10 +12,12 @@ interface ColumnHeaderItemProps {
   headerHeight: number;
   colIndex: number;
   onResizeColumn?: (c: any) => void;
+  onColumnDragStart?: (c: ColDef, h: HTMLElement) => void;
+  onColumnDragEnter?: (c: ColDef) => void;
 }
 
 export const ColumnHeaderItem = React.memo(
-  ({ column, colIndex, headerHeight, onResizeColumn }: ColumnHeaderItemProps) => {
+  ({ column, colIndex, headerHeight, onResizeColumn, onColumnDragStart, onColumnDragEnter }: ColumnHeaderItemProps) => {
     const api = React.useContext(ApiContext);
 
     const cssClass = classnames(
@@ -36,6 +38,8 @@ export const ColumnHeaderItem = React.memo(
     }
 
     const onResize = onResizeColumn ? () => onResizeColumn(column) : undefined;
+    const onDragStart = onColumnDragStart ? (e) => onColumnDragStart(column, e.target) : undefined;
+    const onDragEnter = onColumnDragEnter ? () => onColumnDragEnter(column) : undefined;
 
     const width = column.width!;
 
@@ -61,27 +65,33 @@ export const ColumnHeaderItem = React.memo(
         aria-colindex={colIndex + 1}
         {...ariaSort}
       >
-        {column.type === 'number' && (
-          <ColumnHeaderSortIcon
-            direction={column.sortDirection}
-            index={column.sortIndex}
-            hide={column.hideSortIcons}
-          />
-        )}
-        {headerComponent || (
-          <ColumnHeaderTitle
-            label={column.headerName || column.field}
-            description={column.description}
-            columnWidth={width}
-          />
-        )}
-        {column.type !== 'number' && (
-          <ColumnHeaderSortIcon
-            direction={column.sortDirection}
-            index={column.sortIndex}
-            hide={column.hideSortIcons}
-          />
-        )}
+        <div
+          draggable={!!onDragStart && !!onDragEnter}
+          onDragStart={onDragStart}
+          onDragEnter={onDragEnter}
+        >
+          {column.type === 'number' && (
+            <ColumnHeaderSortIcon
+              direction={column.sortDirection}
+              index={column.sortIndex}
+              hide={column.hideSortIcons}
+            />
+          )}
+          {headerComponent || (
+            <ColumnHeaderTitle
+              label={column.headerName || column.field}
+              description={column.description}
+              columnWidth={width}
+            />
+          )}
+          {column.type !== 'number' && (
+            <ColumnHeaderSortIcon
+              direction={column.sortDirection}
+              index={column.sortIndex}
+              hide={column.hideSortIcons}
+            />
+          )}
+        </div>
         <ColumnHeaderSeparator resizable={column.resizable} onResize={onResize} />
       </div>
     );

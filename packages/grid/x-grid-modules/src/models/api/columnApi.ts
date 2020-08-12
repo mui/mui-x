@@ -52,5 +52,5 @@ export interface ColumnApi {
    *
    * @param cols [[ColDef[]]]
    */
-  updateColumns: (cols: ColDef[]) => void;
+  updateColumns: (cols: ColDef[], resetState: boolean) => void;
 }

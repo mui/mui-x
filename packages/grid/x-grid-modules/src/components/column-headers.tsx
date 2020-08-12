@@ -8,9 +8,11 @@ export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
   headerHeight: number;
   onResizeColumn?: (col: ColDef) => void;
+  onColumnDragStart?: (col: ColDef, htmlEL: HTMLElement) => void;
+  onColumnDragEnter?: (col: ColDef) => void;
 }
 export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionProps> = React.memo(
-  ({ headerHeight, onResizeColumn, columns }) => {
+  ({ headerHeight, onResizeColumn, onColumnDragStart, onColumnDragEnter, columns }) => {
     const items = columns.map((col, idx) => (
       <ColumnHeaderItem
         key={col.field}
@@ -18,6 +20,8 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
         colIndex={idx}
         headerHeight={headerHeight}
         onResizeColumn={onResizeColumn}
+        onColumnDragStart={onColumnDragStart}
+        onColumnDragEnter={onColumnDragEnter}
       />
     ));
 
@@ -31,12 +35,14 @@ export interface ColumnsHeaderProps {
   hasScrollX: boolean;
   headerHeight: number;
   onResizeColumn?: (col: ColDef) => void;
+  onColumnDragStart?: (col: ColDef, htmlEl: HTMLElement) => void;
+  onColumnDragEnter?: (col: ColDef) => void;
   renderCtx: Partial<RenderContextProps> | null;
 }
 
 export const ColumnsHeader = React.memo(
   React.forwardRef<HTMLDivElement, ColumnsHeaderProps>(
-    ({ columns, hasScrollX, headerHeight, onResizeColumn, renderCtx }, columnsHeaderRef) => {
+    ({ columns, hasScrollX, headerHeight, onResizeColumn, onColumnDragStart, onColumnDragEnter, renderCtx }, columnsHeaderRef) => {
       const wrapperCssClasses = `material-col-cell-wrapper ${hasScrollX ? 'scroll' : ''}`;
       const api = React.useContext(ApiContext);
 
@@ -78,6 +84,8 @@ export const ColumnsHeader = React.memo(
           <ColumnHeaderItemCollection
             columns={renderedCols}
             onResizeColumn={onResizeColumn}
+            onColumnDragStart={onColumnDragStart}
+            onColumnDragEnter={onColumnDragEnter}
             headerHeight={headerHeight}
           />
           <RightEmptyCell key="right-empty" width={renderCtx?.rightEmptyWidth} />
