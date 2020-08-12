@@ -102,7 +102,7 @@ export interface GridOptions {
    */
   sortingOrder: SortDirection[];
   /**
-   * If `true`, pagination is enabled
+   * If `true`, pagination is enabled.
    *
    * @default false
    */
@@ -147,25 +147,25 @@ export interface GridOptions {
    */
   sortingMode?: FeatureMode;
   /**
-   * If `true`, the footer component is hidden
+   * If `true`, the footer component is hidden.
    *
    * @default false
    */
   hideFooter?: boolean;
   /**
-   * If `true`, the row count in the footer is hidden
+   * If `true`, the row count in the footer is hidden.
    *
    * @default false
    */
   hideFooterRowCount?: boolean;
   /**
-   * If `true`, the selected row count in the footer is hidden
+   * If `true`, the selected row count in the footer is hidden.
    *
    * @default false
    */
   hideFooterSelectedRowCount?: boolean;
   /**
-   * If `true`, the pagination component in the footer is hidden
+   * If `true`, the pagination component in the footer is hidden.
    *
    * @default false
    */
