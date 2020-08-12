@@ -110,9 +110,9 @@ export const useSelection = (
 
   const selectRows = React.useCallback(
     (ids: RowId[], isSelected = true, deSelectOthers = false) => {
-      if (!options.enableMultipleSelection && ids.length > 1) {
+      if (options.disableMultipleSelection && ids.length > 1) {
         throw new Error(
-          'Material-UI: Enable options.enableMultipleSelection to select more than 1 item.',
+          'Material-UI: `disableMultipleSelection` should be false to select more than 1 item.',
         );
       }
       let updates = ids.map((id) => ({ id, selected: isSelected }));
@@ -131,7 +131,7 @@ export const useSelection = (
       };
       apiRef.current.publishEvent(SELECTION_CHANGED, selectionChangeParam);
     },
-    [apiRef, selectedItemsRef, forceUpdate, options.enableMultipleSelection, getSelectedRows],
+    [apiRef, selectedItemsRef, forceUpdate, options.disableMultipleSelection, getSelectedRows],
   );
 
   const rowClickHandler = React.useCallback(
@@ -145,9 +145,9 @@ export const useSelection = (
 
   const onMultipleKeyPressed = React.useCallback(
     (isPressed: boolean) => {
-      allowMultipleSelectionKeyPressed.current = options.enableMultipleSelection && isPressed;
+      allowMultipleSelectionKeyPressed.current = !options.disableMultipleSelection && isPressed;
     },
-    [options.enableMultipleSelection, allowMultipleSelectionKeyPressed],
+    [options.disableMultipleSelection, allowMultipleSelectionKeyPressed],
   );
 
   const onRowSelected = React.useCallback(

@@ -36,7 +36,7 @@ export interface IconsOptions {
  */
 export interface GridOptions {
   /**
-   * Turn grid height dynamic and follow the number of rows in the grid.
+   * If `true`, the grid height is dynamic and follow the number of rows in the grid.
    *
    * @default false
    */
@@ -66,35 +66,35 @@ export interface GridOptions {
    */
   columnBuffer: number;
   /**
-   * Enable multiple selection using the CTRL or CMD key.
+   * If `true`, multiple selection using the CTRL or CMD key is disabled.
    *
-   * @default true
+   * @default false
    */
-  enableMultipleSelection: boolean;
+  disableMultipleSelection?: boolean;
   /**
-   * Enable sorting the grid rows with one or more columns.
+   * If `true`, sorting with multiple columns is disabled.
    *
-   * @default true
+   * @default false
    */
-  enableMultipleColumnsSorting: boolean;
+  disableMultipleColumnsSorting?: boolean;
   /**
-   * Display the right border of the cells.
+   * If `true`, the right border of the cells are displayed.
    *
    * @default false
    */
   showCellRightBorder?: boolean;
   /**
-   * Display the column header right border.
+   * If `true`, the right border of the column headers are displayed.
    *
    * @default false
    */
   showColumnRightBorder?: boolean;
   /**
-   * Extend rows to fill the grid container width.
+   * If `true`, rows will not be extended to fill the full width of the grid container.
    *
-   * @default true
+   * @default false
    */
-  extendRowFullWidth?: boolean;
+  disableExtendRowFullWidth?: boolean;
   /**
    * The order of the sorting sequence.
    *
@@ -102,7 +102,7 @@ export interface GridOptions {
    */
   sortingOrder: SortDirection[];
   /**
-   * Activate pagination.
+   * If `true`, pagination is enabled.
    *
    * @default false
    */
@@ -114,7 +114,7 @@ export interface GridOptions {
    */
   pageSize?: number;
   /**
-   * Auto-scale the pageSize with the container size to the max number of rows to avoid rendering a vertical scroll bar.
+   * If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar.
    *
    * @default false
    */
@@ -147,37 +147,37 @@ export interface GridOptions {
    */
   sortingMode?: FeatureMode;
   /**
-   * Toggle footer component visibility.
+   * If `true`, the footer component is hidden.
    *
    * @default false
    */
   hideFooter?: boolean;
   /**
-   * Toggle footer row count element visibility.
+   * If `true`, the row count in the footer is hidden.
    *
    * @default false
    */
   hideFooterRowCount?: boolean;
   /**
-   * Toggle footer selected row count element visibility.
+   * If `true`, the selected row count in the footer is hidden.
    *
    * @default false
    */
   hideFooterSelectedRowCount?: boolean;
   /**
-   * Toggle footer pagination component visibility.
+   * If `true`, the pagination component in the footer is hidden.
    *
    * @default false
    */
   hideFooterPagination?: boolean;
   /**
-   * Add a first column with checkbox that allows to select rows.
+   * If `true`, the grid get a first column with a checkbox that allows to select rows.
    *
    * @default false
    */
   checkboxSelection?: boolean;
   /**
-   * Disable selection on click on a row or cell.
+   * If `true`, the selection on click on a row or cell is disabled.
    *
    * @default false
    */
@@ -276,18 +276,14 @@ export interface GridOptions {
  * The default [[GridOptions]] object that will be used to merge with the 'options' passed in the react component prop.
  */
 export const DEFAULT_GRID_OPTIONS: GridOptions = {
-  autoHeight: false,
   rowHeight: 52,
   headerHeight: 56,
   scrollbarSize: 15,
   columnBuffer: 2,
-  enableMultipleSelection: true,
-  enableMultipleColumnsSorting: true,
   rowsPerPageOptions: [25, 50, 100],
   pageSize: 100,
   paginationMode: FeatureModeConstant.client,
   sortingMode: FeatureModeConstant.client,
-  extendRowFullWidth: true,
   sortingOrder: ['asc', 'desc', null],
   logLevel: 'warn',
   columnTypes: DEFAULT_COLUMN_TYPES,

@@ -7,12 +7,12 @@ import {
 } from '@material-ui/x-grid-modules';
 
 export type DataGridOptionsProp = Partial<
-  Exclude<GridOptions, 'pagination' | 'enableMultipleColumnsSorting' | 'enableMultipleSelection'>
+  Exclude<GridOptions, 'pagination' | 'disableMultipleColumnsSorting' | 'disableMultipleSelection'>
 >;
 const OPTIONS_OVERRIDES: Partial<GridOptions> = {
   pagination: true,
-  enableMultipleColumnsSorting: false,
-  enableMultipleSelection: false,
+  disableMultipleColumnsSorting: true,
+  disableMultipleSelection: true,
 };
 
 export type DataGridProps = Omit<GridComponentProps, 'licenseStatus' | 'apiRef' | 'options'> &

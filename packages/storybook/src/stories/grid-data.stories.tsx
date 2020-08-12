@@ -43,7 +43,7 @@ export const VerticalScroll = () => <GridDataSet nbRows={200} nbCols={2} />;
 export const HorizontalScroll = () => <GridDataSet nbRows={15} nbCols={20} />;
 export const BothScroll = () => <GridDataSet nbRows={200} nbCols={50} />;
 export const BothScrollNoExtendAndBorders = () => (
-  <GridDataSet nbRows={200} nbCols={50} extendRowFullWidth showCellRightBorder />
+  <GridDataSet nbRows={200} nbCols={50} disableExtendRowFullWidth showCellRightBorder />
 );
 export const Grid20By2 = () => <GridDataSet nbRows={20} nbCols={2} />;
 export const Grid100by100 = () => <GridDataSet nbRows={100} nbCols={100} />;

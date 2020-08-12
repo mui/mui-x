@@ -429,7 +429,7 @@ export const ServerSideSorting = () => {
         columns={columns}
         onSortModelChange={onSortModelChange}
         sortingMode="server"
-        enableMultipleColumnsSorting={false}
+        disableMultipleColumnsSorting
         sortModel={sortBy}
         loading={loading}
       />

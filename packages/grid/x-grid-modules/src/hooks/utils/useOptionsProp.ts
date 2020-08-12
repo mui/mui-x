@@ -7,6 +7,7 @@ import * as React from 'react';
 import { mergeOptions } from '@material-ui/x-grid-modules/utils';
 
 export function useOptionsProp(props: GridComponentProps): [GridOptions, Function] {
+  // TODO Refactor to smaller objects
   const options: GridOptionsProp = React.useMemo(
     () => ({
       pageSize: props.pageSize,
@@ -18,9 +19,9 @@ export function useOptionsProp(props: GridComponentProps): [GridOptions, Functio
       columnBuffer: props.columnBuffer,
       columnTypes: props.columnTypes,
       disableSelectionOnClick: props.disableSelectionOnClick,
-      enableMultipleColumnsSorting: props.enableMultipleColumnsSorting,
-      enableMultipleSelection: props.enableMultipleSelection,
-      extendRowFullWidth: props.extendRowFullWidth,
+      disableMultipleColumnsSorting: props.disableMultipleColumnsSorting,
+      disableMultipleSelection: props.disableMultipleSelection,
+      disableExtendRowFullWidth: props.disableExtendRowFullWidth,
       headerHeight: props.headerHeight,
       hideFooter: props.hideFooter,
       hideFooterPagination: props.hideFooterPagination,
@@ -61,9 +62,9 @@ export function useOptionsProp(props: GridComponentProps): [GridOptions, Functio
       props.columnBuffer,
       props.columnTypes,
       props.disableSelectionOnClick,
-      props.enableMultipleColumnsSorting,
-      props.enableMultipleSelection,
-      props.extendRowFullWidth,
+      props.disableMultipleColumnsSorting,
+      props.disableMultipleSelection,
+      props.disableExtendRowFullWidth,
       props.headerHeight,
       props.hideFooter,
       props.hideFooterPagination,

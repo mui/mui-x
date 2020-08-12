@@ -93,7 +93,7 @@ export default function ServerSortingDemo() {
       columns={columns.current}
       onSortModelChange={onSortModelChange}
       sortingMode="server"
-      enableMultipleColumnsSorting={false}
+      disableMultipleColumnsSorting
       sortModel={sortBy}
       autoHeight
       loading={loading}
