@@ -41,7 +41,7 @@ module.exports = {
         },
       },
     ],
-'react-css-modules',
+    'react-css-modules',
     'babel-plugin-optimize-clsx',
     ['@babel/plugin-proposal-class-properties', { loose: true }],
     ['@babel/plugin-proposal-object-rest-spread', { loose: true }],

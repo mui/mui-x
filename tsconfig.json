@@ -27,11 +27,14 @@
       "@material-ui/data-grid": ["./packages/grid/data-grid/src"],
       "@material-ui/data-grid/*": ["./packages/grid/data-grid/src/*"]
     },
-    "plugins": [{ "name": "typescript-plugin-css-modules",
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules",
         "options": {
           "classnameTransform": "dashes",
           "customMatcher": "\\.m\\.css$"
-         }
-    }]
+        }
+      }
+    ]
   }
 }

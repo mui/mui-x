@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Alignement, CellValue } from '../models';
 import { CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import { classnames } from '../utils';
-import {OptionsContext} from "@material-ui/x-grid-modules/components/options-context";
+import { OptionsContext } from '@material-ui/x-grid-modules/components/options-context';
 
 export interface GridCellProps {
   field?: string;
@@ -38,7 +38,7 @@ export const Cell: React.FC<GridCellProps> = React.memo(
       align !== 'left' ? align : '',
     );
     const valueToRender = formattedValue || value;
-    const {rowHeight} = React.useContext(OptionsContext);
+    const { rowHeight } = React.useContext(OptionsContext);
 
     return (
       <div
@@ -49,10 +49,12 @@ export const Cell: React.FC<GridCellProps> = React.memo(
         data-colindex={colIndex}
         data-rowindex={rowIndex}
         aria-colindex={colIndex}
-        style={{ minWidth: width, maxWidth: width,
-        lineHeight: `${rowHeight - 1  }px`,
+        style={{
+          minWidth: width,
+          maxWidth: width,
+          lineHeight: `${rowHeight - 1}px`,
           minHeight: rowHeight,
-          maxHeight: rowHeight
+          maxHeight: rowHeight,
         }}
         tabIndex={tabIndex}
       >

@@ -6,7 +6,7 @@ import { classnames } from '../utils';
 import { ColumnHeaderSortIcon } from './column-header-sort-icon';
 import { ColumnHeaderTitle } from './column-header-title';
 import { ColumnHeaderSeparator } from './column-header-separator';
-import {OptionsContext} from "./options-context";
+import { OptionsContext } from './options-context';
 
 interface ColumnHeaderItemProps {
   column: ColDef;
@@ -15,9 +15,9 @@ interface ColumnHeaderItemProps {
 }
 
 export const ColumnHeaderItem = React.memo(
-  ({ column, colIndex,  onResizeColumn }: ColumnHeaderItemProps) => {
+  ({ column, colIndex, onResizeColumn }: ColumnHeaderItemProps) => {
     const api = React.useContext(ApiContext);
-    const {headerHeight, showColumnRightBorder} = React.useContext(OptionsContext);
+    const { headerHeight, showColumnRightBorder } = React.useContext(OptionsContext);
 
     const cssClass = classnames(
       HEADER_CELL_CSS_CLASS,
@@ -56,7 +56,7 @@ export const ColumnHeaderItem = React.memo(
           maxWidth: width,
           maxHeight: headerHeight,
           minHeight: headerHeight,
-          borderRight: showColumnRightBorder ? '1px solid #bdc3c7' : 'none'
+          borderRight: showColumnRightBorder ? '1px solid #bdc3c7' : 'none',
         }}
         role="columnheader"
         tabIndex={-1}

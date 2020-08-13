@@ -65,8 +65,6 @@
     outline-offset: -3px;
 }
 .gridRoot .overlay {
-    /*top: 56px; !*  p.options.headerHeight *!*/
-
     display: flex;
     position: absolute;
     top: 0;
@@ -95,10 +93,6 @@
     border-bottom: 1px solid #bdc3c7;
     z-index: 100;
 
-    /*min-height: 56px; !*  p.options.headerHeight *!*/
-    /*max-height: 56px; !*  p.options.headerHeight *!*/
-    /*line-height: 56px; !*  p.options.headerHeight *!*/
-
     background-color: #f9f9f9;
     color: #000000;
     font-weight: 600;
@@ -113,8 +107,6 @@
     position: relative;
     display: flex;
     padding: 0 16px;
-    /*border-right: 'none'; !* todo override style in component *!*/
-    /*border-right: ${(p) => (p.options.showColumnRightBorder ? '1px solid #bdc3c7' : 'none')};*/
 }
 .gridRoot .columns-container .material-col-cell-wrapper .material-col-cell.sortable {
      cursor: pointer;
@@ -134,10 +126,6 @@
     overflow: hidden;
     white-space: nowrap;
 }
-.gridRoot  .columns-container .material-col-cell-wrapper .material-col-cell .title > .icon,
-.gridRoot .columns-container .material-col-cell-wrapper  .material-col-cell .sort-icon > .icon {
-      /*min-height: 56px; !* p.options.headerHeight *!*/
-  }
 .gridRoot  .columns-container .material-col-cell-wrapper .material-col-cell .column-separator {
     position: absolute;
     right: -12px;
@@ -145,8 +133,6 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /*min-height: 56px; !* p.options.headerHeight *!*/
-    /*opacity: 1; !*${(p) => (p.options.showColumnRightBorder ? 0 : 1)};*!*/
 }
 .gridRoot  .columns-container .material-col-cell-wrapper .material-col-cell .column-separator .icon.separator {
     color: #bdc3c7;
@@ -174,11 +160,9 @@
 }
 .gridRoot .window {
     position: absolute;
-    /*top: 56px; !*p.options.headerHeight*!*/
     bottom: 0px;
     left: 0px;
     right: 0px;
-    /*overflow-y: auto; !*p.options.autoHeight ? 'hidden' : 'auto'*!*/
     overflow-x: auto;
 }
 .gridRoot .window .viewport {
@@ -192,8 +176,6 @@
 .gridRoot .window .material-row {
     display: flex;
     width: fit-content;
-    /*max-height: 52px; !*p.options.rowHeight*!*/
-    /*min-height: 52px; !*p.options.rowHeight*!*/
     background-color: #fff;
 }
 .gridRoot .window .material-row.even {
@@ -219,9 +201,6 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     padding: 0 16px;
-    /*line-height: 51px; !*  ${(p) => p.options.rowHeight - 1}px; !* 1 = border bottom; *!*/
-    /*max-height: 52px; !*> p.options.rowHeight *!*/
-    /*min-height: 52px;  !*> p.options.rowHeight *!*/
     font-size: 12px;
     border-bottom: 1px solid #bdc3c7;
 }

@@ -13,8 +13,8 @@ export interface ColumnHeaderSortIconProps {
 
 const getIcon = (icons: IconsOptions, direction: SortDirection, height: number): React.ReactNode =>
   direction === 'asc'
-    ? React.createElement(icons!.columnSortedAscending!, {styles: {minHeight: height}})
-    : React.createElement(icons!.columnSortedDescending!, {styles: {minHeight: height}});
+    ? React.createElement(icons!.columnSortedAscending!, { styles: { minHeight: height } })
+    : React.createElement(icons!.columnSortedDescending!, { styles: { minHeight: height } });
 
 export const ColumnHeaderSortIcon: React.FC<ColumnHeaderSortIconProps> = React.memo(
   ({ direction, index, hide, height }) => {

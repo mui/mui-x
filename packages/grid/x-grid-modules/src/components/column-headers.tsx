@@ -72,10 +72,7 @@ export const ColumnsHeader = React.memo(
           style={{ minWidth: renderCtx?.totalSizes?.width }}
         >
           <LeftEmptyCell key="left-empty" width={renderCtx?.leftEmptyWidth} />
-          <ColumnHeaderItemCollection
-            columns={renderedCols}
-            onResizeColumn={onResizeColumn}
-          />
+          <ColumnHeaderItemCollection columns={renderedCols} onResizeColumn={onResizeColumn} />
           <RightEmptyCell key="right-empty" width={renderCtx?.rightEmptyWidth} />
         </div>
       );

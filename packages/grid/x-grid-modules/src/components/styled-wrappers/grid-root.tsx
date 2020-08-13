@@ -13,12 +13,7 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps & DivProp
   const { options, className, ...other } = props;
 
   return (
-    <div
-      ref={ref}
-      className={classnames( styles.gridRoot || 'gridRoot', className)}
-
-      {...other}
-    />
+    <div ref={ref} className={classnames(styles.gridRoot || 'gridRoot', className)} {...other} />
   );
 });
 GridRoot.displayName = 'GridRoot';

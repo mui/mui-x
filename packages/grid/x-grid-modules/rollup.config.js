@@ -3,6 +3,7 @@ import cleaner from 'rollup-plugin-cleaner';
 import sourceMaps from 'rollup-plugin-sourcemaps';
 import { terser } from 'rollup-plugin-terser';
 import dts from 'rollup-plugin-dts';
+import postcss from 'rollup-plugin-postcss';
 import pkg from './package.json';
 
 // dev build if watching, prod build if not
@@ -29,6 +30,10 @@ export default [
         cleaner({
           targets: ['./dist/'],
         }),
+      postcss({
+        extract: false,
+        modules: true
+      }),
       typescript(),
       !production && sourceMaps(),
       production && terser(),

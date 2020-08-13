@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RowId } from '../models';
 import { ROW_CSS_CLASS } from '../constants/cssClassesConstants';
-import {OptionsContext} from "./options-context";
+import { OptionsContext } from './options-context';
 
 export interface RowProps {
   id: RowId;
@@ -13,7 +13,7 @@ export interface RowProps {
 export const Row: React.FC<RowProps> = ({ selected, id, className, rowIndex, children }) => {
   const cssClasses = (selected ? 'selected ' : ' ') + (className || '');
   const ariaRowIndex = rowIndex + 2; // 1 for the header row and 1 as it's 1 based
-  const {rowHeight} = React.useContext(OptionsContext);
+  const { rowHeight } = React.useContext(OptionsContext);
 
   return (
     <div
@@ -24,9 +24,9 @@ export const Row: React.FC<RowProps> = ({ selected, id, className, rowIndex, chi
       className={`${ROW_CSS_CLASS} ${cssClasses}`}
       aria-rowindex={ariaRowIndex}
       aria-selected={selected}
-      style = {{
+      style={{
         maxHeight: rowHeight,
-        minHeight: rowHeight
+        minHeight: rowHeight,
       }}
     >
       {children}

@@ -18905,6 +18905,26 @@ rollup-plugin-postcss@^3.1.2:
     safe-identifier "^0.4.1"
     style-inject "^0.3.0"
 
+rollup-plugin-postcss@^3.1.5:
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-postcss/-/rollup-plugin-postcss-3.1.5.tgz#4bcc19a7f95ab8fb17fb0ca59080fe3887421db2"
+  integrity sha512-oPD3ubb1JDBwzNMca+OZUpYxyxrIw9ihhUyvEbOwzzj0rR2UEKm8GtfhFXVGDWwBGp5HIK8ss/r8vRStYDddRA==
+  dependencies:
+    chalk "^4.0.0"
+    concat-with-sourcemaps "^1.1.0"
+    cssnano "^4.1.10"
+    import-cwd "^3.0.0"
+    p-queue "^6.3.0"
+    pify "^5.0.0"
+    postcss "^7.0.27"
+    postcss-load-config "^2.1.0"
+    postcss-modules "^2.0.0"
+    promise.series "^0.2.0"
+    resolve "^1.16.1"
+    rollup-pluginutils "^2.8.2"
+    safe-identifier "^0.4.1"
+    style-inject "^0.3.0"
+
 rollup-plugin-sourcemaps@^0.6.2:
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/rollup-plugin-sourcemaps/-/rollup-plugin-sourcemaps-0.6.2.tgz#1eed5a3e07b833dc14c4cdb1e63b300d340f4a74"
