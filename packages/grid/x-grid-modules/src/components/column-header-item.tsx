@@ -38,7 +38,7 @@ export const ColumnHeaderItem = React.memo(
     }
 
     const onResize = onResizeColumn ? () => onResizeColumn(column) : undefined;
-    const onDragStart = onColumnDragStart ? (e) => onColumnDragStart(column, e.target) : undefined;
+    const onDragStart = onColumnDragStart ? (event) => onColumnDragStart(column, event.target) : undefined;
     const onDragEnter = onColumnDragEnter ? () => onColumnDragEnter(column) : undefined;
 
     const width = column.width!;

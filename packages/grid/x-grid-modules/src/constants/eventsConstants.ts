@@ -29,6 +29,9 @@ export const SCROLLING_STOP = 'scrolling:stop';
 export const COL_RESIZE_START = 'colResizing:start';
 export const COL_RESIZE_STOP = 'colResizing:stop';
 
+export const COL_REORDER_START = 'colReordering:start';
+export const COL_REORDER_STOP = 'colReordering:stop';
+
 export const ROWS_UPDATED = 'rowsUpdated';
 export const COLUMNS_UPDATED = 'columnsUpdated';
 

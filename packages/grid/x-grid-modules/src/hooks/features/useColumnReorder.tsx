@@ -2,6 +2,17 @@ import * as React from 'react';
 import { ColDef } from '../../models/colDef';
 import { useLogger } from '../utils';
 import { ApiRef } from '../../models';
+import { COL_REORDER_START, COL_REORDER_STOP } from '../../constants/eventsConstants';
+
+const reorderColDefArray = (
+  columns: ColDef[],
+  newColIndex: number,
+  oldColIndex: number
+): ColDef[] => {
+  const columnsClone = JSON.parse(JSON.stringify(columns))
+
+  return columnsClone.splice(newColIndex, 0, columnsClone.splice(oldColIndex, 1)[0]);
+};
 
 export const useColumnReorder = (
   apiRef: ApiRef
@@ -14,9 +25,11 @@ export const useColumnReorder = (
   const handleDragStart = React.useCallback(
     (col: ColDef, htmlEl: any): void => {
       logger.debug(`Start dragging col ${col.field}`);
+      apiRef.current.publishEvent(COL_REORDER_START);
+
       dragCol.current = col;
       dragColNode.current = htmlEl;
-      dragColNode.current?.addEventListener('dragend', handleDragEnd);
+      dragColNode.current?.addEventListener('dragend', handleDragEnd, { once: true });
       dragColNode.current?.classList.add('dragging');
       setTimeout(() => {
         dragColNode.current?.classList.remove('dragging');
@@ -39,9 +52,9 @@ export const useColumnReorder = (
           rowIndex: 0
         });
 
-        columnsSnapshot.splice(targetColIndex, 0, columnsSnapshot.splice(dragColIndex, 1)[0]);
+        const columnsReordered = reorderColDefArray(columnsSnapshot, targetColIndex, dragColIndex);
 
-        apiRef.current.updateColumns(columnsSnapshot, true);
+        apiRef.current.updateColumns(columnsReordered, true);
       }
     },
     [apiRef, logger]
@@ -50,6 +63,7 @@ export const useColumnReorder = (
   const handleDragEnd = React.useCallback(
     (): void => {
       logger.debug(`End dragging col ${dragCol.current!.field}`);
+      apiRef.current.publishEvent(COL_REORDER_STOP);
 
       dragColNode.current?.removeEventListener('dragend', handleDragEnd);
       dragCol.current = null;

@@ -155,11 +155,10 @@ export const RootStyle = styled.div<GridRootProps>`
             padding: 12px;
           }
           .dragging {
-            background: gray;
-            color: white;
+            background: #f9f9f9;
             padding: 0 12px;
             border-radius: 10px;
-            opacity: 0.3;
+            opacity: 0.4;
           }
         }
         &.scroll .material-col-cell:last-child {

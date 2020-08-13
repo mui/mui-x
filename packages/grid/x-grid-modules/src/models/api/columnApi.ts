@@ -51,6 +51,7 @@ export interface ColumnApi {
    * Allows to batch update multiple columns at the same time.
    *
    * @param cols [[ColDef[]]]
+   * @param resetState
    */
-  updateColumns: (cols: ColDef[], resetState: boolean) => void;
+  updateColumns: (cols: ColDef[], resetState?: boolean) => void;
 }
