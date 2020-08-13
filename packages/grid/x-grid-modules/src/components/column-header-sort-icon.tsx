@@ -8,15 +8,16 @@ export interface ColumnHeaderSortIconProps {
   direction: SortDirection;
   index: number | undefined;
   hide?: boolean;
+  height: number;
 }
 
-const getIcon = (icons: IconsOptions, direction: SortDirection): React.ReactNode =>
+const getIcon = (icons: IconsOptions, direction: SortDirection, height: number): React.ReactNode =>
   direction === 'asc'
-    ? React.createElement(icons!.columnSortedAscending!)
-    : React.createElement(icons!.columnSortedDescending!);
+    ? React.createElement(icons!.columnSortedAscending!, {styles: {minHeight: height}})
+    : React.createElement(icons!.columnSortedDescending!, {styles: {minHeight: height}});
 
 export const ColumnHeaderSortIcon: React.FC<ColumnHeaderSortIconProps> = React.memo(
-  ({ direction, index, hide }) => {
+  ({ direction, index, hide, height }) => {
     const icons = useIcons();
 
     if (hide || direction == null) {
@@ -28,13 +29,13 @@ export const ColumnHeaderSortIcon: React.FC<ColumnHeaderSortIconProps> = React.m
         {index != null && (
           <Badge badgeContent={index} color="default">
             <IconButton aria-label="Sort" size="small">
-              {getIcon(icons, direction)}
+              {getIcon(icons, direction, height)}
             </IconButton>
           </Badge>
         )}
         {index == null && (
           <IconButton aria-label="Sort" size="small">
-            {getIcon(icons, direction)}
+            {getIcon(icons, direction, height)}
           </IconButton>
         )}
       </span>

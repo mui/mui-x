@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useIcons } from '../hooks/utils/useIcons';
+import {OptionsContext} from "./options-context";
 
 export interface ColumnHeaderSeparatorProps {
   resizable: boolean | undefined;
@@ -9,6 +10,7 @@ export interface ColumnHeaderSeparatorProps {
 export const ColumnHeaderSeparator: React.FC<ColumnHeaderSeparatorProps> = React.memo(
   ({ onResize, resizable }) => {
     const icons = useIcons();
+    const {showColumnRightBorder, headerHeight} = React.useContext(OptionsContext);
 
     const resizeIconProps = {
       className: `icon separator ${resizable ? 'resizable' : ''}`,
@@ -17,7 +19,7 @@ export const ColumnHeaderSeparator: React.FC<ColumnHeaderSeparatorProps> = React
 
     const icon = React.createElement(icons!.columnResize!, resizeIconProps);
 
-    return <div className="column-separator">{icon}</div>;
+    return <div className="column-separator" style={{minHeight: headerHeight, opacity: (showColumnRightBorder? 0 : 1) }}>{icon}</div>;
   },
 );
 ColumnHeaderSeparator.displayName = 'ColumnHeaderSeparator';

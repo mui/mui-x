@@ -22,7 +22,19 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "types": ["node", "jest", "jest-image-snapshot"]
+    "types": ["node", "jest", "jest-image-snapshot"],
+    "plugins": [{ "name": "typescript-plugin-css-modules",
+      "options": {
+        "classnameTransform": "dashes",
+        "customMatcher": "\\.m\\.css$"
+      }
+    }],
+    "paths": {
+      "*": [
+        "./typings/*"
+      ]
+    },
+    "typeRoots" : ["./typings","node_modules/@types"]
   },
   "include": ["src/**/*"],
   "exclude": ["__tests__", "**/*.test.ts", "node_modules", "lib", "build", "scripts"]

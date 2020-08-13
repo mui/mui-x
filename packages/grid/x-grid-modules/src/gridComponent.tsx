@@ -182,12 +182,11 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo((props) =>
                 {customComponents.headerComponent}
                 <div className="main-grid-container">
                   <Watermark licenseStatus={props.licenseStatus} />
-                  <ColumnsContainer ref={columnsContainerRef}>
+                  <ColumnsContainer ref={columnsContainerRef} height={internalOptions.headerHeight}>
                     <ColumnsHeader
                       ref={columnsHeaderRef}
                       columns={internalColumns.visible || []}
                       hasScrollX={!!renderCtx?.hasScrollX}
-                      headerHeight={internalOptions.headerHeight}
                       onResizeColumn={onResizeColumn}
                       renderCtx={renderCtx}
                     />
