@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Alignement, CellValue } from '../models';
 import { CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import { classnames } from '../utils';
-import { OptionsContext } from '@material-ui/x-grid-modules/components/options-context';
+import { OptionsContext } from './options-context';
 
 export interface GridCellProps {
   field?: string;
