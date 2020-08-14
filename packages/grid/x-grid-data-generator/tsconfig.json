@@ -1,6 +1,7 @@
 {
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
+    "baseUrl": "./",
     "declaration": true,
     "declarationDir": "./dist",
     "module": "es6",
