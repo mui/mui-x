@@ -1,12 +1,13 @@
-import { makeStyles } from '@material-ui/core/styles';
+import { darken, fade, lighten, makeStyles } from '@material-ui/core/styles';
 
-export const getStyles = makeStyles({
+export const getStyles = makeStyles((theme) => ({
   gridRoot: {
+	  lineHeight: theme.typography.pxToRem(24),
     'box-sizing': 'border-box',
     position: 'relative',
-    'font-family': `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif`,
+    'font-family': theme.typography.fontFamily,
     border: '1px solid #bdc3c7',
-    'border-radius': '4px',
+    'border-radius': theme.shape.borderRadius,
     outline: 'none',
     display: 'flex',
     flex: 1,
@@ -40,17 +41,17 @@ export const getStyles = makeStyles({
       display: 'flex',
       'justify-content': 'space-between',
       'flex-direction': 'row',
-      padding: '0 16px',
+      padding: theme.spacing(0, 2),
     },
 
     '& .row-count, & .selected-row-count': {
       display: 'flex',
       'align-items': 'center',
       'font-size': '0.875rem',
-      'font-family': `'Roboto', 'Helvetica', 'Arial', sans-serif`,
+      'font-family': theme.typography.fontFamily,
       'font-weight': 400,
       'line-height': 1.43,
-      'letter-spacing': '0.01071em',
+      'letter-spacing': theme.typography.body2,
       'min-height': '48px',
     },
     '@media (max-width: 650px)': {
@@ -91,12 +92,16 @@ export const getStyles = makeStyles({
       'overflow-y': 'hidden',
       display: 'flex',
       'flex-direction': 'column',
-      'border-bottom': '1px solid #bdc3c7',
+      'border-bottom': '1px solid',
+      'border-color':
+        theme.palette.type === 'light'
+          ? lighten(fade(theme.palette.divider, 1), 0.88)
+          : darken(fade(theme.palette.divider, 1), 0.68),
       'z-index': 100,
       'background-color': '#f9f9f9',
-      color: '#000000',
-      'font-weight': 600,
-      'font-size': '12px',
+      color: theme.palette.text.primary,
+      'font-weight': theme.typography.fontWeightMedium,
+      // 'font-size': '12px',
     },
     '&  .columns-container .material-col-cell-wrapper': {
       display: 'flex',
@@ -177,22 +182,27 @@ export const getStyles = makeStyles({
       display: 'flex',
       width: 'fit-content',
       'background-color': '#fff',
-    },
-    '&  .window .material-row.even': {
-      'background-color': '#fff',
-    },
 
+      '&:hover': {
+        cursor: 'pointer',
+        backgroundColor: theme.palette.action.hover,
+        // Reset on touch devices, it doesn't add specificity
+        '@media (hover: none)': {
+          backgroundColor: 'transparent',
+        },
+      },
+    },
     '&  .window .material-row.odd': {
       'background-color': '#fcfcfc',
     },
-
-    '&  .window .material-row:hover': {
-      cursor: 'pointer',
-      'background-color': '#4b99ec52',
-    },
     '&  .window  .material-row.selected': {
-      'background-color': '#4a98ec',
-      color: '#fff',
+      backgroundColor: fade(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+      '&$focusVisible': {
+        backgroundColor: fade(
+          theme.palette.primary.main,
+          theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity,
+        ),
+      },
     },
 
     '&  .window  .material-cell': {
@@ -200,9 +210,13 @@ export const getStyles = makeStyles({
       overflow: 'hidden',
       'text-overflow': 'ellipsis',
       'white-space': 'nowrap',
-      padding: '0 16px',
-      'font-size': '12px',
-      'border-bottom': '1px solid #bdc3c7',
+      padding: theme.spacing(0, 2),
+
+      'border-bottom': '1px solid',
+      'border-color':
+        theme.palette.type === 'light'
+          ? lighten(fade(theme.palette.divider, 1), 0.88)
+          : darken(fade(theme.palette.divider, 1), 0.68),
     },
     '&  .window  .material-cell.with-renderer': {
       display: 'flex',
@@ -210,7 +224,11 @@ export const getStyles = makeStyles({
       'justify-content': 'center',
     },
     '&  .with-border': {
-      'border-right': '1px solid #bdc3c7',
+      'border-right': '1px solid',
+      'border-color':
+        theme.palette.type === 'light'
+          ? lighten(fade(theme.palette.divider, 1), 0.88)
+          : darken(fade(theme.palette.divider, 1), 0.68),
     },
     '& .window .material-cell.right': {
       'text-align': 'right',
@@ -222,4 +240,4 @@ export const getStyles = makeStyles({
       padding: '12px',
     },
   },
-});
+}));
