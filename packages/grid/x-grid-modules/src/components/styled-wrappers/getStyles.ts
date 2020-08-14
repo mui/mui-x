@@ -1,7 +1,7 @@
 import { darken, fade, lighten, makeStyles } from '@material-ui/core/styles';
 
 export const getStyles = makeStyles((theme) => ({
-  gridRoot: {
+  'MuiDataGrid-root': {
 	  lineHeight: theme.typography.pxToRem(24),
     'box-sizing': 'border-box',
     position: 'relative',
