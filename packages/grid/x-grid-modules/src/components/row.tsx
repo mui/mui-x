@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RowId } from '../models';
 import { ROW_CSS_CLASS } from '../constants/cssClassesConstants';
 import { OptionsContext } from './options-context';
-import {classnames} from "../utils";
+import { classnames } from '../utils';
 
 export interface RowProps {
   id: RowId;
@@ -21,7 +21,7 @@ export const Row: React.FC<RowProps> = ({ selected, id, className, rowIndex, chi
       data-id={id}
       data-rowindex={rowIndex}
       role="row"
-      className={classnames(ROW_CSS_CLASS, className, {'selected': selected})}
+      className={classnames(ROW_CSS_CLASS, className, { selected: selected })}
       aria-rowindex={ariaRowIndex}
       aria-selected={selected}
       style={{
