@@ -21,6 +21,7 @@ export const ColumnHeaderItem = React.memo(
 
     const cssClass = classnames(
       HEADER_CELL_CSS_CLASS,
+      showColumnRightBorder ? 'with-border' : '',
       column.headerClassName,
       column.headerAlign !== 'left' ? column.headerAlign : '',
       { sortable: column.sortable },
@@ -56,7 +57,6 @@ export const ColumnHeaderItem = React.memo(
           maxWidth: width,
           maxHeight: headerHeight,
           minHeight: headerHeight,
-          borderRight: showColumnRightBorder ? '1px solid #bdc3c7' : 'none',
         }}
         role="columnheader"
         tabIndex={-1}

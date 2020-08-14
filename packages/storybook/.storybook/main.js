@@ -33,21 +33,6 @@ module.exports = {
         }
       ],
     });
-    config.module.rules.push({
-      test: /\.css$/,
-      include: path.join(__dirname, 'src/components'),
-      use: [
-        'style-loader',
-        {
-          loader: 'typings-for-css-modules-loader',
-          options: {
-            modules: true,
-            namedExport: true
-          }
-        }
-      ]
-    });
-
     if (__DEV__) {
       config.module.rules.push({
         test: /\.(js|ts|tsx)$/,
@@ -92,7 +77,7 @@ module.exports = {
     };
     config.resolve = {
       ...config.resolve,
-      extensions: ['.js', '.ts', '.tsx', '.css'],
+      extensions: ['.js', '.ts', '.tsx'],
       alias: {
         '@material-ui/data-grid': path.resolve(__dirname, '../../../packages/grid/data-grid/src'),
         '@material-ui/x-grid-data-generator': path.resolve(__dirname, '../../../packages/grid/x-grid-data-generator/src'),
