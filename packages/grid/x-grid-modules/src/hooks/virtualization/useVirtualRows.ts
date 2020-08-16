@@ -27,6 +27,11 @@ import { useApiEventHandler } from '../root/useApiEventHandler';
 
 type UseVirtualRowsReturnType = Partial<RenderContextProps> | null;
 
+const useEnhancedEffect =
+  typeof window !== 'undefined' && process.env.NODE_ENV !== 'test'
+    ? React.useLayoutEffect
+    : React.useEffect;
+
 export const useVirtualRows = (
   colRef: React.MutableRefObject<HTMLDivElement | null>,
   windowRef: React.MutableRefObject<HTMLDivElement | null>,
@@ -152,7 +157,7 @@ export const useVirtualRows = (
     }
   }, [apiRef, logger, reRender, windowRef, updateRenderedCols, scrollTo]);
 
-  React.useLayoutEffect(() => {
+  useEnhancedEffect(() => {
     if (renderingZoneRef && renderingZoneRef.current) {
       logger.debug('applying scrollTop ', rzScrollRef.current);
       scrollTo(rzScrollRef.current);
