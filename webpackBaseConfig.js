@@ -9,7 +9,7 @@ module.exports = {
     alias: {
       '@material-ui/x-grid': path.resolve(__dirname, './packages/grid/x-grid/src'),
       '@material-ui/x-grid-modules': path.resolve(__dirname, './packages/grid/x-grid-modules/src'),
-      '@material-ui/x-license': path.resolve(__dirname, './packages/license/src'),
+      '@material-ui/x-license': path.resolve(__dirname, './packages/x-license/src'),
       '@material-ui/data-grid': path.resolve(__dirname, './packages/grid/data-grid/src'),
       docs: path.resolve(__dirname, './docs/node_modules/@material-ui/monorepo/docs'),
     },
