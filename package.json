@@ -7,6 +7,7 @@
     "docs:build": "yarn workspace docs build",
     "docs:export": "yarn workspace docs export",
     "docs:typescript:formatted": "yarn workspace docs typescript:transpile",
+    "docs:importDocsStatic": "node scripts/importDocsStatic.js",
     "storybook:dev": "yarn workspace storybook start",
     "storybook:build": "yarn workspace storybook build",
     "storybook:export": "yarn workspace storybook export",
