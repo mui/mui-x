@@ -12,6 +12,7 @@ module.exports = {
       '@material-ui/x-license': path.resolve(__dirname, './packages/x-license/src'),
       '@material-ui/data-grid': path.resolve(__dirname, './packages/grid/data-grid/src'),
       docs: path.resolve(__dirname, './docs/node_modules/@material-ui/monorepo/docs'),
+      docsx: path.resolve(__dirname, './docs'),
     },
     extensions: ['.js', '.ts', '.tsx', '.d.ts'],
   },
