@@ -16,4 +16,4 @@ function getClearLicenseString(details: LicenseDetails) {
 export function generateLicence(details: LicenseDetails) {
   const clearLicense = getClearLicenseString(details);
   return `${md5(base64Encode(clearLicense))}${base64Encode(clearLicense)}`;
-};
+}
