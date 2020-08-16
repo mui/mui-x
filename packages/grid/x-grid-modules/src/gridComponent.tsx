@@ -55,6 +55,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo((props) =>
 
   const apiRef = React.useMemo(() => (!props.apiRef ? internalApiRef : props.apiRef), [
     props.apiRef,
+    internalApiRef,
   ]);
 
   const initialised = useApi(rootContainerRef, internalOptions, apiRef);

@@ -23,6 +23,5 @@ module.exports = {
     'import/prefer-default-export': 'off',
     // TODO
     'no-restricted-imports': 'off',
-    'react-hooks/exhaustive-deps': ['warn', { additionalHooks: 'useEnhancedEffect' }],
   },
 };

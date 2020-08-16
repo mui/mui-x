@@ -35,5 +35,5 @@ export const useNativeEventListener = (
 
       apiRef.current.onUnmount(unsubscribe);
     }
-  });
+  }, [ref, handler, eventName, added, logger, options, apiRef]);
 };

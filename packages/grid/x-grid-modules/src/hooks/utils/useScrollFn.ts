@@ -24,10 +24,9 @@ export function useScrollFn(
     rafResetPointerRef.current = 0;
   });
 
-  const debouncedResetPointerEvents = React.useCallback(
-    debounce(restorePointerEvents, 300) as any,
-    [restorePointerEvents],
-  );
+  const debouncedResetPointerEvents = React.useMemo(() => debounce(restorePointerEvents, 300), [
+    restorePointerEvents,
+  ]) as any;
 
   const scrollTo: (v: ScrollParams) => void = React.useCallback(
     (v) => {
