@@ -106,7 +106,7 @@ module.exports = function setKarmaConfig(config) {
 
   let newConfig = baseConfig;
 
-  if (browserStack.accessKey) {
+  if (browserStack.accessKey && false) {
     newConfig = {
       ...baseConfig,
       browserStack,
