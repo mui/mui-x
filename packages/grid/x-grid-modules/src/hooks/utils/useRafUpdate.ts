@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useLogger } from './useLogger';
 
 type UseRafUpdateReturnType = [(...args: any[]) => void, (fn: (args: any) => void) => void];
+
 export function useRafUpdate(initialFn?: (...args: any) => void): UseRafUpdateReturnType {
   const logger = useLogger('useRafUpdate');
   const rafRef = React.useRef(0);
@@ -13,7 +14,7 @@ export function useRafUpdate(initialFn?: (...args: any) => void): UseRafUpdateRe
 
   const runUpdate = React.useCallback(
     (...args: any[]) => {
-      if (!fn) {
+      if (!fn.current) {
         return;
       }
       if (rafRef.current > 0) {
@@ -28,6 +29,12 @@ export function useRafUpdate(initialFn?: (...args: any) => void): UseRafUpdateRe
     },
     [logger],
   );
+
+  React.useEffect(() => {
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
 
   return [runUpdate, setUpdate];
 }
