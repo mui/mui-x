@@ -2,18 +2,15 @@
   "version": "4.11.0",
   "private": true,
   "scripts": {
+    "start": "yarn docs:dev",
     "docs:dev": "yarn workspace docs dev",
     "docs:build": "yarn workspace docs build",
     "docs:export": "yarn workspace docs export",
     "docs:typescript:formatted": "yarn workspace docs typescript:transpile",
+    "storybook:dev": "yarn workspace storybook start",
     "storybook:build": "yarn workspace storybook build",
     "storybook:export": "yarn workspace storybook export",
     "deduplicate": "node scripts/deduplicate.js",
-    "jsonlint": "node scripts/jsonlint.js",
-    "hoist": "lerna bootstrap --hoist",
-    "bootstrap": "lerna bootstrap",
-    "build": "lerna run build --stream",
-    "start": "lerna run start --parallel",
     "prettier": "yarn babel-node -i '/node_modules/(?!@material-ui)/' ./scripts/prettier.js --branch master",
     "test": "lerna run test --parallel",
     "test:coverage": "cross-env NODE_ENV=test BABEL_ENV=coverage nyc mocha 'packages/**/*.test.tsx' --exclude '**/node_modules/**' && nyc report -r lcovonly",
@@ -23,7 +20,8 @@
     "test:watch": "yarn test:unit --watch",
     "lint": "yarn eslint && yarn jsonlint",
     "eslint": "eslint . --cache --report-unused-disable-directives --ext .js,.ts,.tsx",
-    "eslint:ci": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx"
+    "eslint:ci": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx",
+    "jsonlint": "node scripts/jsonlint.js"
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",
