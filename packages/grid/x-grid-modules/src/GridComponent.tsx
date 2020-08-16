@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { GridComponentProps } from './gridComponentProps';
+import { useForkRef } from '@material-ui/core/utils';
+import { GridComponentProps } from './GridComponentProps';
 import {
   useApiRef,
   useColumnResize,
@@ -36,14 +37,20 @@ import { useOptionsProp } from './hooks/utils/useOptionsProp';
  *
  * @returns JSX.Element
  */
-export const GridComponent: React.FC<GridComponentProps> = React.memo((props) => {
+export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(function DataGrid(
+  props,
+  ref,
+) {
   const [internalOptions, setInternalOptions] = useOptionsProp(props);
   useLoggerFactory(
     internalOptions?.logger,
     internalOptions?.logLevel || DEFAULT_GRID_OPTIONS.logLevel,
   );
   const gridLogger = useLogger('Grid');
+
   const rootContainerRef: RootContainerRef = React.useRef<HTMLDivElement>(null);
+  const handleRef = useForkRef(rootContainerRef, ref);
+
   const footerRef = React.useRef<HTMLDivElement>(null);
   const columnsHeaderRef = React.useRef<HTMLDivElement>(null);
   const columnsContainerRef = React.useRef<HTMLDivElement>(null);
@@ -158,7 +165,7 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo((props) =>
     <AutoSizerWrapper onResize={debouncedOnResize} style={{ height: 'unset', width: 'unset' }}>
       {(size: any) => (
         <GridRoot
-          ref={rootContainerRef}
+          ref={handleRef}
           className={`material-grid MuiGrid ${props.className || ''}`}
           options={internalOptions}
           style={{ width: size.width, height: getTotalHeight(size) }}
@@ -252,5 +259,3 @@ export const GridComponent: React.FC<GridComponentProps> = React.memo((props) =>
     </AutoSizerWrapper>
   );
 });
-
-GridComponent.displayName = 'GridComponent';
