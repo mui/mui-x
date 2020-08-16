@@ -22,7 +22,8 @@
     "lint": "yarn eslint && yarn jsonlint",
     "eslint": "eslint . --cache --report-unused-disable-directives --ext .js,.ts,.tsx",
     "eslint:ci": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx",
-    "jsonlint": "node scripts/jsonlint.js"
+    "jsonlint": "node scripts/jsonlint.js",
+    "typescript": "lerna run typescript --parallel"
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",
