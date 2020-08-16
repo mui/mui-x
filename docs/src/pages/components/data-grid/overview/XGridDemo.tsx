@@ -36,11 +36,7 @@ const rows = [
 export default function XGridDemo() {
   return (
     <div style={{ width: '100%', height: 450 }}>
-      <XGrid
-        rows={rows}
-        columns={columns}
-        options={{ checkboxSelection: true }}
-      />
+      <XGrid rows={rows} columns={columns} checkboxSelection />
     </div>
   );
 }

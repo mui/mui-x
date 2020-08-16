@@ -21,7 +21,6 @@ const alias = {
   docs: './node_modules/@material-ui/monorepo/docs',
   docsx: './',
   modules: './node_modules/@material-ui/monorepo/modules',
-  // 'typescript-to-proptypes': './node_modules/@material-ui/monorepo/packages/typescript-to-proptypes',
 };
 
 const { version: transformRuntimeVersion } = fse.readJSONSync(

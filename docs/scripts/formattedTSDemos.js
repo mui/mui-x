@@ -15,15 +15,19 @@ const fse = require('fs-extra');
 const path = require('path');
 const babel = require('@babel/core');
 const prettier = require('prettier');
-const typescriptToProptypes = require('@material-ui/monorepo/packages/typescript-to-proptypes/src');
+const typescriptToProptypes = require('typescript-to-proptypes');
 const yargs = require('yargs');
 const { fixBabelGeneratorIssues, fixLineEndings } = require('./helpers');
 
 const tsConfig = typescriptToProptypes.loadConfig(path.resolve(__dirname, '../tsconfig.json'));
 
+const unwrap = babel.createConfigItem(
+  require('../node_modules/@material-ui/monorepo/packages/babel-plugin-unwrap-createstyles'),
+);
+
 const babelConfig = {
   presets: ['@babel/preset-typescript'],
-  plugins: ['babel-plugin-unwrap-createstyles'],
+  plugins: [unwrap],
   generatorOpts: { retainLines: true },
   babelrc: false,
   configFile: false,
@@ -114,7 +118,7 @@ async function main(argv) {
 
   const tsxFiles = await getFiles(path.join(workspaceRoot, 'docs/src/pages'));
 
-  const program = typescriptToProptypes.createTSProgram(tsxFiles, tsConfig);
+  const program = typescriptToProptypes.createProgram(tsxFiles, tsConfig);
 
   let successful = 0;
   let failed = 0;

@@ -103,6 +103,20 @@ jobs:
           # hardcoded in karma-webpack
           path: /tmp/_karma_webpack_
           destination: artifact-file
+  test_types:
+    <<: *defaults
+    steps:
+      - checkout
+      - install_js
+      - run:
+          name: Transpile TypeScript demos
+          command: yarn docs:typescript:formatted --disable-cache
+      - run:
+          name: '`yarn docs:typescript:formatted` changes committed?'
+          command: git add -A && git diff --exit-code --staged
+      - run:
+          name: Tests TypeScript definitions
+          command: yarn typescript
 workflows:
   version: 2
   pipeline:
@@ -115,5 +129,8 @@ workflows:
           requires:
             - checkout
       - test_browser:
+          requires:
+            - checkout
+      - test_types:
           requires:
             - checkout
