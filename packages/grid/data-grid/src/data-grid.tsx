@@ -9,6 +9,7 @@ import {
 export type DataGridOptionsProp = Partial<
   Exclude<GridOptions, 'pagination' | 'disableMultipleColumnsSorting' | 'disableMultipleSelection'>
 >;
+
 const OPTIONS_OVERRIDES: Partial<GridOptions> = {
   pagination: true,
   disableMultipleColumnsSorting: true,
@@ -19,6 +20,7 @@ export type DataGridProps = Omit<GridComponentProps, 'licenseStatus' | 'apiRef' 
   DataGridOptionsProp;
 
 const MAX_PAGE_SIZE = 100;
+
 export const DataGrid: React.FC<DataGridProps> = React.memo(function DataGrid(
   props: DataGridProps,
 ) {

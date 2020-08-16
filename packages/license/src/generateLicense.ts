@@ -7,13 +7,13 @@ export interface LicenseDetails {
   expiryDate: Date;
 }
 
-function getClearLicenseString(details: LicenseDetails): string {
+function getClearLicenseString(details: LicenseDetails) {
   return `ORDER:${
     details.orderNumber
   },EXPIRY=${details.expiryDate.getTime()},KEYVERSION=${licenseVersion}`;
 }
 
-export const generateLicence = (details: LicenseDetails): string => {
+export function generateLicence(details: LicenseDetails) {
   const clearLicense = getClearLicenseString(details);
   return `${md5(base64Encode(clearLicense))}${base64Encode(clearLicense)}`;
-};
+}
