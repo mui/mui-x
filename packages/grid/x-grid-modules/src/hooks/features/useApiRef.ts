@@ -13,4 +13,4 @@ export function useApiRef(): ApiRef {
   logger.debug('Initializing grid api with EventEmitter.');
 
   return React.useRef<GridApi>(new EventEmitter());
-};
+}
