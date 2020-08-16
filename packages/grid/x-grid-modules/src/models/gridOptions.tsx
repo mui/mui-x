@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SortDirection, SortModel } from './sortModel';
 import { Logger } from '../hooks/utils';
-import { ArrowDownward, ArrowUpward, SeparatorIcon } from '../components/icons';
+import { ArrowDownwardIcon, ArrowUpwardIcon, SeparatorIcon } from '../components/icons';
 import { SortModelParams } from './params/sortModelParams';
 import { RowSelectedParams } from './params/rowSelectedParams';
 import { SelectionChangeParams } from './params/selectionChangeParams';
@@ -288,8 +288,8 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   logLevel: 'warn',
   columnTypes: DEFAULT_COLUMN_TYPES,
   icons: {
-    columnSortedAscending: () => <ArrowUpward className="icon" />,
-    columnSortedDescending: () => <ArrowDownward className="icon" />,
+    columnSortedAscending: ArrowUpwardIcon,
+    columnSortedDescending: ArrowDownwardIcon,
     columnResize: SeparatorIcon,
   },
 };
