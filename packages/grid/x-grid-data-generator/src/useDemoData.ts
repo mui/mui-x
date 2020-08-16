@@ -8,7 +8,7 @@ export type DemoDataReturnType = {
   data: { rows: RowData[]; columns: ColDef[] };
   setSize: (count: number) => void;
   setDataset: (dataset: string) => void;
-  loadNewData: () => Promise<void>;
+  loadNewData: () => void;
 };
 export type DataSet = 'Commodity' | 'Employee';
 
@@ -16,21 +16,38 @@ export const useDemoData = (dataSetProp: DataSet, nbRows: number): DemoDataRetur
   const [rows, setRows] = React.useState<RowData[]>([]);
   const [cols, setCols] = React.useState<Columns>([]);
   const [size, setSize] = React.useState(nbRows);
+  const [index, setIndex] = React.useState(0);
   const [dataset, setDataset] = React.useState(dataSetProp.toString());
 
-  const loadData = async () => {
-    const data = await getRealData(
-      size,
-      dataset === 'Commodity' ? commodityColumns : employeeColumns,
-    );
-    setRows([]);
-    setCols(data.columns);
-    setRows(data.rows);
-  };
-
   React.useEffect(() => {
-    loadData();
-  }, [size, dataset]);
+    let active = true;
 
-  return { data: { rows, columns: cols }, setSize, setDataset, loadNewData: loadData };
+    (async () => {
+      const data = await getRealData(
+        size,
+        dataset === 'Commodity' ? commodityColumns : employeeColumns,
+      );
+
+      if (!active) {
+        return;
+      }
+
+      setRows([]);
+      setCols(data.columns);
+      setRows(data.rows);
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [size, dataset, index]);
+
+  return {
+    data: { rows, columns: cols },
+    setSize,
+    setDataset,
+    loadNewData: () => {
+      setIndex((oldIndex) => oldIndex + 1);
+    },
+  };
 };
