@@ -17,17 +17,18 @@ LicenseInfo.setReleaseInfo(RELEASE_INFO);
 
 export type XGridProps = Omit<GridComponentProps, 'licenseStatus'>;
 
-export const XGrid: React.FC<XGridProps> = React.memo<XGridProps>(function XGrid(
-  props: XGridProps,
-) {
-  const { className, ...other } = props;
-  const licenseStatus = useLicenseVerifier();
+export const XGrid = React.memo(
+  React.forwardRef<HTMLDivElement, XGridProps>(function XGrid(props, ref) {
+    const { className, ...other } = props;
+    const licenseStatus = useLicenseVerifier();
 
-  return (
-    <GridComponent
-      className={classnames('MuiXGrid-root', className)}
-      {...other}
-      licenseStatus={licenseStatus.toString()}
-    />
-  );
-});
+    return (
+      <GridComponent
+        ref={ref}
+        className={classnames('MuiXGrid-root', className)}
+        {...other}
+        licenseStatus={licenseStatus.toString()}
+      />
+    );
+  }),
+);
