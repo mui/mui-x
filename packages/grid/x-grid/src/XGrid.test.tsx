@@ -46,6 +46,14 @@ describe('<XGrid />', () => {
         id: 0,
         brand: 'Nike',
       },
+      {
+        id: 1,
+        brand: 'Adidas',
+      },
+      {
+        id: 2,
+        brand: 'Puma',
+      },
     ],
     columns: [
       { field: 'id', hide: true },
@@ -203,6 +211,28 @@ describe('<XGrid />', () => {
       fireEvent.click(screen.getByRole('cell', { name: 'Nike' }));
       expect(row).to.not.have.class('selected');
       expect(checkbox).to.have.property('checked', false);
+    });
+  });
+
+  describe('sorting', () => {
+    it('should sort when clicking the header cell', () => {
+      function getColumnValues() {
+        return Array.from(document.querySelectorAll('[aria-colindex="0"]')).map(
+          (x) => x!.textContent,
+        );
+      }
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid {...defaultProps} />
+        </div>,
+      );
+      const header = screen.getByRole('columnheader', { name: 'brand' });
+      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      fireEvent.click(header);
+      expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+      fireEvent.click(header);
+      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
     });
   });
 });
