@@ -11,7 +11,9 @@ const reorderColDefArray = (
 ): ColDef[] => {
   const columnsClone = JSON.parse(JSON.stringify(columns))
 
-  return columnsClone.splice(newColIndex, 0, columnsClone.splice(oldColIndex, 1)[0]);
+  columnsClone.splice(newColIndex, 0, columnsClone.splice(oldColIndex, 1)[0]);
+
+  return columnsClone;
 };
 
 export const useColumnReorder = (
