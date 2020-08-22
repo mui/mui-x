@@ -15,8 +15,8 @@ The component leverages the power of React and TypeScript, to provide the best U
 
 The data grid comes in 2 versions:
 
-- `DataGrid` an **MIT license** as part of our community offering, e.g. `@material-ui/core`.
-- `XGrid` a **commercial license** as part of our X offering.
+- `DataGrid` an **MIT license** as part of our community edition, e.g. `@material-ui/core`.
+- `XGrid` a **commercial license** as part of our X product offering.
 
 ### MIT version
 
