@@ -43,7 +43,7 @@
     "source-map-loader": "^1.0.2",
     "start-server-and-test": "^1.11.3",
     "string-replace-loader": "^2.3.0",
-    "ts-loader": "^7.0.1",
+    "ts-loader": "^8.0.2",
     "typescript": "^3.9.6"
   },
   "scripts": {
