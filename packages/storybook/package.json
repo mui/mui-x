@@ -40,7 +40,7 @@
     "jest-puppeteer": "^4.4.0",
     "puppeteer": "^4.0.0",
     "react-docgen-typescript-loader": "^3.7.2",
-    "source-map-loader": "^0.2.4",
+    "source-map-loader": "^1.0.2",
     "start-server-and-test": "^1.11.3",
     "string-replace-loader": "^2.3.0",
     "ts-loader": "^7.0.1",
