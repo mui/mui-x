@@ -5,12 +5,4 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [0.1.67](https://github.com/oliviertassinari/material-ui-x/compare/v0.1.66...v0.1.67) (2020-08-24)
 
-**Note:** Version bump only for package storybook
-
-
-
-
-
-## [0.1.66](https://github.com/oliviertassinari/material-ui-x/compare/v0.1.65...v0.1.66) (2020-08-24)
-
-**Note:** Version bump only for package storybook
+**Note:** Version bump only for package @material-ui/x-grid-modules
