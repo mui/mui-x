@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.65](https://github.com/oliviertassinari/material-ui-x/compare/v0.1.62...v0.1.65) (2020-08-24)
+
+**Note:** Version bump only for package @material-ui/data-grid
+
+
+
+
+
 ## [0.1.64](https://github.com/dtassone/material-ui-x/compare/v0.1.62...v0.1.64) (2020-07-27)
 
 **Note:** Version bump only for package @material-ui/data-grid
