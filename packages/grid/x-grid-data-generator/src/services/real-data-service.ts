@@ -23,7 +23,6 @@ export function getRealData(rowLength: number, columns: any[]): Promise<GridData
 
       data.push(model);
     }
-
     resolve({ columns, rows: data });
   });
 }
