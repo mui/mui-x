@@ -57,7 +57,7 @@ const getGridOptions: () => GridOptionsProp = () => {
 };
 
 export function Commodity() {
-  const { data, setSize, loadNewData } = useDemoData('Commodity', 100);
+  const { data, setRowLength, loadNewData } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
 
   return (
     <React.Fragment>
@@ -65,7 +65,7 @@ export function Commodity() {
         <Button color="primary" onClick={loadNewData}>
           Load New Rows
         </Button>
-        <Button color="primary" onClick={() => setSize(randomInt(100, 500))}>
+        <Button color="primary" onClick={() => setRowLength(randomInt(100, 500))}>
           Load New Rows with new length
         </Button>
       </div>
@@ -77,7 +77,7 @@ export function Commodity() {
 }
 
 export function Commodity500() {
-  const { data } = useDemoData('Commodity', 500);
+  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 500 });
 
   return (
     <div className="grid-container">
@@ -87,7 +87,7 @@ export function Commodity500() {
 }
 
 export function Commodity1000() {
-  const { data } = useDemoData('Commodity', 1000);
+  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 1000 });
 
   return (
     <div className="grid-container">
@@ -97,7 +97,7 @@ export function Commodity1000() {
 }
 
 export function Commodity10000() {
-  const { data } = useDemoData('Commodity', 10000);
+  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 10000 });
 
   return (
     <div className="grid-container">
@@ -107,7 +107,7 @@ export function Commodity10000() {
 }
 
 export function Employee100() {
-  const { data } = useDemoData('Employee', 100);
+  const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
 
   return (
     <div className="grid-container">
@@ -117,7 +117,7 @@ export function Employee100() {
 }
 
 export function Employee1000() {
-  const { data } = useDemoData('Employee', 1000);
+  const { data } = useDemoData({ dataSet: 'Employee', rowLength: 1000 });
 
   return (
     <div className="grid-container">
@@ -127,7 +127,7 @@ export function Employee1000() {
 }
 
 export function Employee10000() {
-  const { data } = useDemoData('Employee', 10000);
+  const { data } = useDemoData({ dataSet: 'Employee', rowLength: 10000 });
 
   return (
     <div className="grid-container">

@@ -1,4 +1,4 @@
-import './style/real-data-stories.css';
+// import './style/real-data-stories.css';
 import {
   generateName,
   randomAvatar,

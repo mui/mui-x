@@ -1,51 +1,53 @@
 import * as React from 'react';
-import { ColDef, Columns, RowData } from '@material-ui/x-grid';
-import { getRealData } from './services/real-data-service';
+import { GridData, getRealData } from './services/real-data-service';
 import { commodityColumns } from './commodities.columns';
 import { employeeColumns } from './employees.columns';
 
 export type DemoDataReturnType = {
-  data: { rows: RowData[]; columns: ColDef[] };
-  setSize: (count: number) => void;
-  setDataset: (dataset: string) => void;
+  data: GridData;
+  setRowLength: (count: number) => void;
   loadNewData: () => void;
 };
 export type DataSet = 'Commodity' | 'Employee';
 
-export const useDemoData = (dataSetProp: DataSet, nbRows: number): DemoDataReturnType => {
-  const [rows, setRows] = React.useState<RowData[]>([]);
-  const [cols, setCols] = React.useState<Columns>([]);
-  const [size, setSize] = React.useState(nbRows);
+interface DemoDataOptions {
+  dataSet: DataSet;
+  rowLength: number;
+  maxColumns?: number;
+}
+
+export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
+  const [data, setData] = React.useState<GridData>({ columns: [], rows: [] });
+  const [rowLength, setRowLength] = React.useState(options.rowLength);
   const [index, setIndex] = React.useState(0);
-  const [dataset, setDataset] = React.useState(dataSetProp.toString());
 
   React.useEffect(() => {
     let active = true;
 
     (async () => {
-      const data = await getRealData(
-        size,
-        dataset === 'Commodity' ? commodityColumns : employeeColumns,
-      );
+      let columns = options.dataSet === 'Commodity' ? commodityColumns : employeeColumns;
+
+      if (options.maxColumns) {
+        columns = columns.slice(0, options.maxColumns);
+      }
+
+      const newData = await getRealData(rowLength, columns);
 
       if (!active) {
         return;
       }
 
-      setRows([]);
-      setCols(data.columns);
-      setRows(data.rows);
+      setData(newData);
     })();
 
     return () => {
       active = false;
     };
-  }, [size, dataset, index]);
+  }, [rowLength, options.dataSet, index, options.maxColumns]);
 
   return {
-    data: { rows, columns: cols },
-    setSize,
-    setDataset,
+    data,
+    setRowLength,
     loadNewData: () => {
       setIndex((oldIndex) => oldIndex + 1);
     },

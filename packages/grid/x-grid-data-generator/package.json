@@ -17,11 +17,11 @@
     "datagen": "./bin/data-gen-script.js"
   },
   "dependencies": {
-    "@types/faker": "^4.1.0",
+    "@types/chance": "^1.1.0",
+    "chance": "^1.1.6",
     "clsx": "^1.0.4",
     "commander": "^5.1.0",
-    "esm": "^3.2.25",
-    "faker": "^4.1.0"
+    "esm": "^3.2.25"
   },
   "devDependencies": {
     "@types/node": "^14.0.13",

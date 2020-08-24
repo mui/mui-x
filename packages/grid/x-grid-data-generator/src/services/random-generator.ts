@@ -1,4 +1,4 @@
-import faker from 'faker';
+import globalChance from 'chance';
 import {
   COLORS,
   COMMODITY_OPTIONS,
@@ -11,6 +11,62 @@ import {
   TAXCODE_OPTIONS,
 } from './static-data';
 
+const chance = globalChance();
+
+function dateFuture(years?: number, refDate?: string) {
+  let date = new Date();
+  if (typeof refDate !== 'undefined') {
+    date = new Date(Date.parse(refDate));
+  }
+
+  const range = {
+    min: 1000,
+    max: (years || 1) * 365 * 24 * 3600 * 1000,
+  };
+
+  // some time from now to N years later, in milliseconds
+  const past = date.getTime() + chance.integer(range);
+  date.setTime(past);
+
+  return date;
+}
+
+function dateRecent(days?: number, refDate?: string) {
+  let date = new Date();
+  if (typeof refDate !== 'undefined') {
+    date = new Date(Date.parse(refDate));
+  }
+
+  const range = {
+    min: 1000,
+    max: (days || 1) * 24 * 3600 * 1000,
+  };
+
+  // some time from now to N days ago, in milliseconds
+  const past = date.getTime() - chance.integer(range);
+  date.setTime(past);
+
+  return date;
+}
+
+function datePast(years?: number, refDate?: string) {
+  let date = new Date();
+  if (typeof refDate !== 'undefined') {
+    date = new Date(Date.parse(refDate));
+  }
+
+  const range = {
+    min: 1000,
+    max: (years || 1) * 365 * 24 * 3600 * 1000,
+  };
+
+  // some time from now to N years ago, in milliseconds
+  const past = date.getTime() - chance.integer(range);
+  date.setTime(past);
+
+  return date;
+}
+
 export const random = (min: number, max: number): number => Math.random() * (max - min) + min;
 export const randomInt = (min: number, max: number): number => Number(random(min, max).toFixed());
 export const randomPrice = (min = 0, max = 100000): number => random(min, max);
@@ -21,15 +77,15 @@ export const getDate = () => randomDate(new Date(2012, 0, 1), new Date());
 export const randomArrayItem = (arr: any[]) => arr[random(0, arr.length - 1).toFixed()];
 
 export const randomColor = () => randomArrayItem(COLORS);
-export const randomId = () => faker.random.uuid();
-export const randomDesk = () => `D-${faker.random.number()}`;
+export const randomId = () => chance.guid();
+export const randomDesk = () => `D-${chance.integer({ min: 0, max: 10000 })}`;
 export const randomCommodity = () => randomArrayItem(COMMODITY_OPTIONS);
-export const randomTraderId = () => faker.random.number();
-export const randomTraderName = () => faker.name.findName();
-export const randomUserName = () => faker.internet.userName();
-export const randomEmail = () => faker.internet.email();
-export const randomUrl = () => faker.internet.url();
-export const randomPhoneNumber = () => faker.phone.phoneNumber();
+export const randomTraderId = () => chance.integer({ min: 0, max: 10000 });
+export const randomTraderName = () => chance.name();
+export const randomUserName = () => chance.twitter();
+export const randomEmail = () => chance.email();
+export const randomUrl = () => chance.url();
+export const randomPhoneNumber = () => chance.phone();
 export const randomUnitPrice = () => randomPrice(1, 100);
 export const randomUnitPriceCurrency = () => randomArrayItem(CURRENCY_OPTIONS);
 export const randomQuantity = () => randomInt(1000, 100000);
@@ -37,21 +93,21 @@ export const randomFeeRate = () => random(0.1, 0.4);
 export const randomIncoterm = () => randomArrayItem(INCOTERM_OPTIONS);
 export const randomStatusOptions = () => randomArrayItem(STATUS_OPTIONS);
 export const randomPnL = () => random(-100000000, 100000000);
-export const randomMaturityDate = () => faker.date.future();
-export const randomTradeDate = () => faker.date.recent();
-export const randomBrokerId = () => faker.random.uuid();
-export const randomCompanyName = () => faker.company.companyName();
+export const randomMaturityDate = () => dateFuture();
+export const randomTradeDate = () => dateRecent();
+export const randomBrokerId = () => chance.guid();
+export const randomCompanyName = () => chance.company();
 export const randomCountry = () => randomArrayItem(COUNTRY_ISO_OPTIONS);
 export const randomCurrency = () => randomArrayItem(CURRENCY_OPTIONS);
-export const randomAddress = () => faker.address.streetAddress();
-export const randomCity = () => faker.address.city();
+export const randomAddress = () => chance.address();
+export const randomCity = () => chance.city();
 export const randomTaxCode = () => randomArrayItem(TAXCODE_OPTIONS);
 export const randomContractType = () => randomArrayItem(CONTRACT_TYPE_OPTIONS);
 export const randomRateType = () => randomArrayItem(RATE_TYPE_OPTIONS);
-export const randomCreatedDate = () => faker.date.past();
-export const randomUpdatedDate = () => faker.date.recent();
-export const randomAvatar = () => ({ name: faker.name.findName(), color: randomColor() });
-export const randomJobTitle = () => faker.name.jobTitle();
+export const randomCreatedDate = () => datePast();
+export const randomUpdatedDate = () => dateRecent();
+export const randomAvatar = () => ({ name: chance.name(), color: randomColor() });
+export const randomJobTitle = () => chance.profession();
 export const randomRating = () => random(0, 5);
 
 export const generateName = (data) => data.avatar.name;
