@@ -7,8 +7,9 @@ components: DataGrid, XGrid
 
 <p class="description">Through paging, a segment of data can be viewed from the assigned data source.</p>
 
-By default, the Grid displays all the rows with infinite scrolling (and virtualization).
-Set the `pagination` prop to enable the pagination feature.
+By default, the MIT `DataGrid` displays the rows with pagination, and up to 100 rows per page.
+
+On the other hand, the commercial `XGrid` component displays, by default, all the rows with infinite scrolling (and virtualization) and without the 100 rows per page limitation. You need to set the `pagination` prop to enable the pagination feature in such a case.
 
 ## Basic example
 
@@ -33,6 +34,12 @@ The `autoPageSize` prop allows to auto-scale the `pageSize` to match the contain
 By default, this feature is off.
 
 {{"demo": "pages/components/data-grid/pagination/AutoPaginationGrid.js"}}
+
+## Custom pagination component
+
+Head to the [rendering section](/components/data-grid/rendering/#pagination) of the documentation for customizing the pagination component.
+
+## Server-side pagination
 
 - https://ej2.syncfusion.com/react/demos/#/material/grid/paging
 - https://devexpress.github.io/devextreme-reactive/react/grid/docs/guides/paging/

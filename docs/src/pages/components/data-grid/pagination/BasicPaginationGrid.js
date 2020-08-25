@@ -10,8 +10,8 @@ export default function BasisPaginationGrid() {
   });
 
   return (
-    <div style={{ height: 450, width: '100%' }}>
-      <DataGrid pagination rows={data.rows} columns={data.columns} />
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid pagination {...data} />
     </div>
   );
 }
