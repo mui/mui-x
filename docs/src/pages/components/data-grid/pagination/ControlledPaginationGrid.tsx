@@ -11,7 +11,7 @@ export default function ControlledPaginationGrid() {
   const [page, setPage] = React.useState(1);
 
   return (
-    <div style={{ height: 450, width: '100%' }}>
+    <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         page={page}
         onPageChange={(params) => {
@@ -19,8 +19,7 @@ export default function ControlledPaginationGrid() {
         }}
         pageSize={5}
         pagination
-        rows={data.rows}
-        columns={data.columns}
+        {...data}
       />
     </div>
   );

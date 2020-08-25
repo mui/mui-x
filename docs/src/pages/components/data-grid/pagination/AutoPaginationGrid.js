@@ -10,13 +10,8 @@ export default function AutoPaginationGrid() {
   });
 
   return (
-    <div style={{ height: 450, width: '100%' }}>
-      <DataGrid
-        autoPageSize
-        pagination
-        rows={data.rows}
-        columns={data.columns}
-      />
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid autoPageSize pagination {...data} />
     </div>
   );
 }
