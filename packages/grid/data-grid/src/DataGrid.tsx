@@ -104,3 +104,6 @@ DataGrid2.propTypes = {
 };
 
 export const DataGrid = React.memo(DataGrid2);
+
+// @ts-ignore
+DataGrid.Naked = DataGrid2;

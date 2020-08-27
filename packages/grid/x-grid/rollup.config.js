@@ -39,7 +39,7 @@ export default [
         cleaner({
           targets: ['./dist/'],
         }),
-      typescript({ build: true }),
+      typescript(),
       !production && sourceMaps(),
       production && terser(),
     ],
