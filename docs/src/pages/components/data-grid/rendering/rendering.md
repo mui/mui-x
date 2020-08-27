@@ -14,7 +14,7 @@ As part of our customization API, the Grid allows to replace and override the fo
 - `header`: The component rendered above the column header bar.
 - `loadingOverlay`: The component rendered when the loading react prop is set to true.
 - `noRowsOverlay`: The component rendered when the rows react prop is empty or [].
-- `footer` - The component rendered below the viewport.
+- `footer`: The component rendered below the viewport.
 - `pagination`: The component rendered for the pagination feature.
 
 ### Pagination

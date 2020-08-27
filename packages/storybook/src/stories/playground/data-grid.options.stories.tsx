@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, DataGridOptionsProp, SortDirection } from '@material-ui/data-grid';
+import { DataGrid, DataGridProps, SortDirection } from '@material-ui/data-grid';
 import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { action } from '@storybook/addon-actions';
@@ -22,7 +22,7 @@ export const Options = () => {
   const rowsPerPageOptions = array('rowsPerPageOptions', ['25', '50', '100'], ', ');
   const sortingOrder = array('sortingOrder', ['asc', 'desc', 'null'], ', ');
 
-  const dataGridOptionsProp: DataGridOptionsProp = {
+  const dataGridProps: DataGridProps = {
     onRowClick: (params) => action('onRowClick')(params),
     onCellClick: (params) => action('onCellClick')(params),
     onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
@@ -48,12 +48,12 @@ export const Options = () => {
     rowHeight: number('rowHeight', 52),
   };
 
-  return <DataGrid rows={data.rows} columns={data.columns} {...dataGridOptionsProp} />;
+  return <DataGrid rows={data.rows} columns={data.columns} {...dataGridProps} />;
 };
 export const Events = () => {
   const data = useData(2000, 200);
 
-  const options: DataGridOptionsProp = {
+  const options: DataGridProps = {
     onRowClick: (params) => action('onRowClick')(params),
     onCellClick: (params) => action('onCellClick')(params),
     onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
