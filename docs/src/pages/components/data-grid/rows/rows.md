@@ -5,7 +5,36 @@ components: DataGrid, XGrid
 
 # Data Grid - Rows
 
-<p class="description">A fast and extendable data table and data grid for React. It's a feature-rich compoent available in MIT or Enterprise versions.</p>
+<p class="description">This section goes in details on the aspects of the rows you need to know.</p>
+
+## Feeding data
+
+Rows can be defined by setting the `rows` prop of the grid.
+The grid expects an array of objects. The rows should have this type: `RowData[]`.
+The columns' "field" property should match a key of the row object (`RowData`).
+
+{{"demo": "pages/components/data-grid/rows/RowsGrid.js"}}
+
+## Updating rows
+
+Rows can be updated in two ways:
+
+### The `rows` prop
+
+The simplest way is to provide the new rows using the `rows` prop.
+It replaces the previous values. This approach has some drawbacks:
+
+- You need to provide all the rows.
+- You might create a performance bottleneck when preparing the rows array to provide to the grid.
+
+### The apiRef
+
+The second way to update rows is to use the apiRef.
+This is an imperative API that is designed to solve the previous two limitations of the declarative `rows` prop.
+
+`apiRef.current.updateRowData()`, updates the rows to the grid. It **merges** the new rows with the previous ones.
+
+{{"demo": "pages/components/data-grid/rows/ApiRefRowsGrid.js"}}
 
 ## Row sorting
 
@@ -29,12 +58,13 @@ const sortModel = [
 
 ### Custom comparator
 
-The Grid handles sorting and applies different comparators in columns according to their types.
+The grid handles sorting and applies different comparators in columns according to their types.
 The component handles sorting natively for the following types:
 
 - string
 - number
 - date
+- dateTime
 
 To extend or modify this behavior in a specific column, you can pass in a custom comparator, and override the `sortComparator` prop of the `ColDef` interface.
 
@@ -79,9 +109,9 @@ Then you need to handle the `onSortModelChange` callback, sort the rows on the s
 
 ### apiRef
 
-The Grid exposes a set of methods that enables all of these features using the imperative apiRef.
+The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 
-> ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the Grid exposes.
+> ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
 
 - `getSortModel`
 - `setSortModel`
@@ -109,8 +139,12 @@ const sortModel = [
 
 ## Row height
 
-- https://ej2.syncfusion.com/react/demos/#/material/grid/row-height
-- https://ag-grid.com/javascript-grid-row-height/
+By default, the rows have a height of 52 pixels.
+It matches the normal Material Design height of the [specification](https://material.io/components/data-tables).
+
+To change the row height for the whole grid, set the `rowHeight` prop:
+
+{{"demo": "pages/components/data-grid/rows/DenseHeightGrid.js"}}
 
 ## Row spanning
 

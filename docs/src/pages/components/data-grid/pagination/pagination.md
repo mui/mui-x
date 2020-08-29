@@ -50,9 +50,9 @@ Finally, you need to handle the `onPageChange` callback to load the rows for the
 
 ## apiRef
 
-The Grid exposes a set of methods that enables all of these features using the imperative apiRef.
+The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 
-> ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the Grid exposes.
+> ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
 
 - `setPageSize`
 - `setPage`

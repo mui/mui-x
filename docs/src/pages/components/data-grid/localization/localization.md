@@ -13,7 +13,7 @@ components: DataGrid, XGrid
 >
 > 👍 Upvote [issue #196](https://github.com/mui-org/material-ui-x/issues/196) if you want to see it land faster.
 
-The Grid will support localization with a single prop that includes all the translation messages.
+The grid will support localization with a single prop that includes all the translation messages.
 You will be able to follow [this guide](/guides/localization/#locale-text) to use them.
 
 ## RTL Support
