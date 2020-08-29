@@ -8,7 +8,8 @@ export type DemoDataReturnType = {
   setRowLength: (count: number) => void;
   loadNewData: () => void;
 };
-export type DataSet = 'Commodity' | 'Employee';
+
+type DataSet = 'Commodity' | 'Employee';
 
 interface DemoDataOptions {
   dataSet: DataSet;

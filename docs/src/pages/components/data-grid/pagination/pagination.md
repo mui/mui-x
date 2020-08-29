@@ -41,11 +41,19 @@ Head to the [rendering section](/components/data-grid/rendering/#pagination) of 
 
 ## Server-side pagination
 
-- https://ej2.syncfusion.com/react/demos/#/material/grid/paging
-- https://devexpress.github.io/devextreme-reactive/react/grid/docs/guides/paging/
-- https://www.telerik.com/kendo-react-ui/components/grid/paging/
-- https://ag-grid.com/javascript-grid-pagination/
-- https://github.com/tannerlinsley/react-table/blob/master/docs/api/usePagination.md
-- https://www.jqwidgets.com/react/react-grid/#https://www.jqwidgets.com/react/react-grid/react-grid-paging.htm
-- https://js.devexpress.com/Demos/WidgetsGallery/Demo/DataGrid/RecordPaging/React/Light/
-- http://tabulator.info/docs/4.5/page
+By default, pagination works on the client-side.
+To switch it to server-side, set `paginationMode="server"`.
+You also need to set the `rowCount` prop to so the grid know the total number of pages.
+Finally, you need to handle the `onPageChange` callback to load the rows for the corresponding page.
+
+{{"demo": "pages/components/data-grid/pagination/ServerPaginationGrid.js"}}
+
+## apiRef
+
+We exposed a set of methods that will let you achieve all the above features using the imperative apiRef.
+
+> ⚠️ Only use this API when you have no alternatives. Always start from the declarative APIs the Grid exposes.
+
+Below is an example on how you can reset the page using the imperative `setPage` method.
+
+{{"demo": "pages/components/data-grid/pagination/ApiRefPaginationGrid.js"}}
