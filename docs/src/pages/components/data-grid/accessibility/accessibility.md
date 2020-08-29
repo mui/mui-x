@@ -60,5 +60,5 @@ Use the arrow keys to move the focus.
 
 ### Key assignment conventions
 
-The above key assignments are defined in the context of Windows and Linux.
+The above key assignments are for Windows and Linux.
 On macOS, replace <kbd>CTRL</kbd> with <kbd>⌘ Command</kbd>.
