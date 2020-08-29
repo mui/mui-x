@@ -11,7 +11,6 @@ const FORCED_PROPS: Partial<GridComponentProps> = {
 
 export type DataGridProps = Omit<
   GridComponentProps,
-  | 'apiRef'
   | 'disableMultipleColumnsSorting'
   | 'disableMultipleSelection'
   | 'licenseStatus'

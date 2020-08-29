@@ -146,7 +146,7 @@ const pages = [
           { pathname: '/components/data-grid/rendering' },
           { pathname: '/components/data-grid/export', title: 'Export & Import' },
           { pathname: '/components/data-grid/localization' },
-          { pathname: '/components/data-grid/group-pivot', title: 'Group & Pivot' },
+          { pathname: '/components/data-grid/group-pivot', title: 'Group & Pivot ✨' },
           { pathname: '/components/data-grid/accessibility' },
         ],
       },
