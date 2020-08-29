@@ -62,8 +62,6 @@ export const commodityColumns: any[] = [
     field: 'commodity',
     headerName: 'Commodity',
     generateData: randomCommodity,
-    sortDirection: 'asc',
-    sortIndex: 1,
     width: 120,
   },
   {
@@ -89,7 +87,6 @@ export const commodityColumns: any[] = [
     field: 'unitPrice',
     headerName: 'Unit Price',
     generateData: randomUnitPrice,
-    // valueFormatter: params=> `${Number(params.value).toLocaleString()} ${params.data['unitPriceCurrency']}`,
     type: 'number',
     width: 100,
   },
@@ -98,7 +95,6 @@ export const commodityColumns: any[] = [
     headerName: 'Unit Price Currency',
     generateData: randomUnitPriceCurrency,
     width: 70,
-    // hide: true
   },
   {
     field: 'quantity',
@@ -110,8 +106,6 @@ export const commodityColumns: any[] = [
     headerName: 'Filled Quantity',
     generateData: generateFilledQuantity,
     renderCell: ProgressRenderer,
-    sortDirection: 'desc',
-    sortIndex: 2,
     type: 'number',
     width: 120,
   },
