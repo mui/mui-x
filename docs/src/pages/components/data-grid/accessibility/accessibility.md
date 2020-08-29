@@ -28,20 +28,20 @@ The grid responds to keyboard interactions from the user as well as emitting eve
 
 Use the arrow keys to move the focus.
 
-|                                 Keys | Description                                   |
-| -----------------------------------: | :-------------------------------------------- |
-|                       <kbd>Tab</kbd> | Navigate between selectable elements          |
-|                <kbd>Arrow Left</kbd> | Navigate between cell elements                |
-|              <kbd>Arrow Bottom</kbd> | Navigate between cell elements                |
-|               <kbd>Arrow Right</kbd> | Navigate between cell elements                |
-|                  <kbd>Arrow Up</kbd> | Navigate between cell elements                |
-|                      <kbd>Home</kbd> | Navigate to the first cell of the current row |
-|                       <kbd>End</kbd> | Navigate to the last cell of the current row  |
-| <kbd>Control</kbd> + <kbd>Home</kbd> | Navigate to the first cell of the first row   |
-|  <kbd>Control</kbd> + <kbd>End</kbd> | Navigate to the last cell of the last row     |
-|                     <kbd>Space</kbd> | Navigate to the next scrollable page          |
-|                   <kbd>Page Up</kbd> | Navigate to the next scrollable page          |
-|                 <kbd>Page Down</kbd> | Navigate to the previous scrollable page      |
+|                              Keys | Description                                   |
+| --------------------------------: | :-------------------------------------------- |
+|                    <kbd>Tab</kbd> | Navigate between selectable elements          |
+|             <kbd>Arrow Left</kbd> | Navigate between cell elements                |
+|           <kbd>Arrow Bottom</kbd> | Navigate between cell elements                |
+|            <kbd>Arrow Right</kbd> | Navigate between cell elements                |
+|               <kbd>Arrow Up</kbd> | Navigate between cell elements                |
+|                   <kbd>Home</kbd> | Navigate to the first cell of the current row |
+|                    <kbd>End</kbd> | Navigate to the last cell of the current row  |
+| <kbd>CTRL</kbd> + <kbd>Home</kbd> | Navigate to the first cell of the first row   |
+|  <kbd>CTRL</kbd> + <kbd>End</kbd> | Navigate to the last cell of the last row     |
+|                  <kbd>Space</kbd> | Navigate to the next scrollable page          |
+|                <kbd>Page Up</kbd> | Navigate to the next scrollable page          |
+|              <kbd>Page Down</kbd> | Navigate to the previous scrollable page      |
 
 ### Selection
 
@@ -49,5 +49,16 @@ Use the arrow keys to move the focus.
 | -------------------------------------------------------------: | :------------------------------------------------ |
 |                            <kbd>Shift</kbd> + <kbd>Space</kbd> | Select the current row                            |
 | <kbd>Shift</kbd> + <kbd>Space</kbd> + <kbd>Arrow Up/Down</kbd> | Select the current row and the row above or below |
-|                              <kbd>Control</kbd> + <kbd>A</kbd> | Select all rows                                   |
-|                              <kbd>Control</kbd> + <kbd>C</kbd> | Copy the currently selected row                   |
+|                                 <kbd>CTRL</kbd> + <kbd>A</kbd> | Select all rows                                   |
+|                                 <kbd>CTRL</kbd> + <kbd>C</kbd> | Copy the currently selected row                   |
+
+### Sorting
+
+|                    Keys | Description          |
+| ----------------------: | :------------------- |
+| <kbd>CTRL</kbd> + Click | Enable multi-sorting |
+
+### Key assignment conventions
+
+The above key assignments are defined in the context of Windows and Linux.
+On macOS, replace <kbd>CTRL</kbd> with <kbd>⌘ Command</kbd>.
