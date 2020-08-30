@@ -33,6 +33,7 @@ module.exports = {
         'process.env': {
           ENABLE_AD: JSON.stringify(process.env.ENABLE_AD),
           GITHUB_AUTH: JSON.stringify(process.env.GITHUB_AUTH),
+          CONTEXT: JSON.stringify(process.env.CONTEXT),
           LIB_VERSION: JSON.stringify(pkg.version),
           REACT_MODE: JSON.stringify(reactMode),
         },
