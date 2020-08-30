@@ -13,7 +13,7 @@ components: DataGrid, XGrid
 >
 > 👍 Upvote [issue #197](https://github.com/mui-org/material-ui-x/issues/197) if you want to see it land faster.
 
-You will be able to export the displayed data to CSV with an API call, or using the UI of the Grid.
+You will be able to export the displayed data to CSV with an API call, or using the UI of the grid.
 
 ## Print
 
@@ -21,7 +21,7 @@ You will be able to export the displayed data to CSV with an API call, or using 
 >
 > 👍 Upvote [issue #200](https://github.com/mui-org/material-ui-x/issues/200) if you want to see it land faster.
 
-Optimization of the layout of the Grid for print mode, can also be used to export to PDF.
+Optimization of the layout of the grid for print mode, can also be used to export to PDF.
 
 ## Excel export
 
@@ -29,7 +29,7 @@ Optimization of the layout of the Grid for print mode, can also be used to expor
 >
 > 👍 Upvote [issue #198](https://github.com/mui-org/material-ui-x/issues/198) if you want to see it land faster.
 
-You will be able to export the displayed data to Excel with an API call, or using the UI of the Grid.
+You will be able to export the displayed data to Excel with an API call, or using the UI of the grid.
 
 ## Clipboard
 

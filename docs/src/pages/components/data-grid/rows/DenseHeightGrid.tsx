@@ -1,19 +1,8 @@
 import * as React from 'react';
-import { XGrid } from '@material-ui/x-grid';
+import { DataGrid } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
-const sortModel = [
-  {
-    field: 'commodity',
-    sort: 'asc',
-  },
-  {
-    field: 'desk',
-    sort: 'desc',
-  },
-];
-
-export default function MultiSortingGrid() {
+export default function DenseHeightGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
@@ -22,7 +11,7 @@ export default function MultiSortingGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid sortModel={sortModel} {...data} />
+      <DataGrid rowHeight={25} {...data} />
     </div>
   );
 }

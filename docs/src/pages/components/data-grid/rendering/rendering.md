@@ -9,7 +9,7 @@ components: DataGrid, XGrid
 
 ## Components
 
-As part of our customization API, the Grid allows to replace and override the following components:
+As part of our customization API, the grid allows to replace and override the following components:
 
 - `header`: The component rendered above the column header bar.
 - `loadingOverlay`: The component rendered when the loading react prop is set to true.

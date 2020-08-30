@@ -45,7 +45,7 @@ Column reordering enables to reorder the columns by dragging the header cells.
 >
 > 👍 Upvote [issue #193](https://github.com/mui-org/material-ui-x/issues/193) if you want to see it land faster.
 
-Sticky (or frozen, or locked, or pinned) columns are the columns that are visible at all times while the user scrolls the Grid horizontally.
+Sticky (or frozen, or locked, or pinned) columns are the columns that are visible at all times while the user scrolls the grid horizontally.
 
 ## Column spanning
 

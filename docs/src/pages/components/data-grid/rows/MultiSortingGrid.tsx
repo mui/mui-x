@@ -16,7 +16,7 @@ const sortModel = [
 export default function MultiSortingGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
-    rowLength: 1000,
+    rowLength: 100,
     maxColumns: 6,
   });
 

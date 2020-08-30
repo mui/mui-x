@@ -50,9 +50,9 @@ Finally, you need to handle the `onPageChange` callback to load the rows for the
 
 ## apiRef
 
-The Grid exposes a set of methods that will let you achieve all the above features using the imperative apiRef.
+The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 
-> ⚠️ Only use this API when you have no alternatives. Always start from the declarative API the Grid exposes.
+> ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
 
 - `setPageSize`
 - `setPage`
@@ -66,6 +66,7 @@ Below is an example on how you can reset the page using the imperative `setPage`
 ## Paginate > 100 rows ✨
 
 The `DataGrid` component can display up to 100 rows per page.
-The `XGrid` component removes this limitation, the following demo displays 200 rows per page:
+The `XGrid` component removes this limitation.
+The following demo displays 200 rows per page:
 
 {{"demo": "pages/components/data-grid/pagination/200PaginationGrid.js"}}

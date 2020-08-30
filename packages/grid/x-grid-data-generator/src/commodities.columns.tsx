@@ -62,7 +62,7 @@ export const commodityColumns: any[] = [
     field: 'commodity',
     headerName: 'Commodity',
     generateData: randomCommodity,
-    width: 120,
+    width: 140,
   },
   {
     field: 'traderId',
