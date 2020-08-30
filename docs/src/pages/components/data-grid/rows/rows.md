@@ -140,7 +140,7 @@ const sortModel = [
 ## Row height
 
 By default, the rows have a height of 52 pixels.
-It matches the normal Material Design height of the [specification](https://material.io/components/data-tables).
+This matches the normal height in the [Material Design guidelines](https://material.io/components/data-tables).
 
 To change the row height for the whole grid, set the `rowHeight` prop:
 
