@@ -25,6 +25,7 @@ export const DATE_COL_DEF: ColTypeDef = {
   sortComparator: dateComparer,
   valueFormatter: dateFormatter,
 };
+
 export const DATETIME_COL_DEF: ColTypeDef = {
   ...STRING_COL_DEF,
   type: 'dateTime',

@@ -7,7 +7,7 @@ components: DataGrid, XGrid
 
 <p class="description">Filtering helps view particular or related records in the Data Grid.</p>
 
-## Column filter
+## 🚧 Column filter
 
 > ⚠️ This feature isn't yet implemented. It's coming.
 >
@@ -15,7 +15,7 @@ components: DataGrid, XGrid
 
 Column filters are filters that are applied to the data at the column level.
 
-## Quick filter
+## 🚧 Quick filter
 
 > ⚠️ This feature isn't yet implemented. It's coming.
 >

@@ -7,6 +7,10 @@ components: DataGrid, XGrid
 
 <p class="description">Start</p>
 
+## Column definitions
+
+### Header cell
+
 ## Components
 
 As part of the customization API, the grid allows to replace and override the following components:

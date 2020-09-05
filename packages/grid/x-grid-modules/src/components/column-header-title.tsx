@@ -1,14 +1,20 @@
 import * as React from 'react';
 import Tooltip from '@material-ui/core/Tooltip';
-import { isOverflown } from '../utils';
+import { isOverflown, classnames } from '../utils';
 
-const ColumnHeaderInnerTitle = React.forwardRef<HTMLDivElement, any>((props, ref) => {
-  const { label, className, ...other } = props;
+const ColumnHeaderInnerTitle = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(function ColumnHeaderInnerTitle(props, ref) {
+  const { className, ...other } = props;
 
   return (
-    <div ref={ref} className={`title ${className}`} {...other} aria-label={label}>
-      {label}
-    </div>
+    <div
+      ref={ref}
+      className={classnames('title', className)}
+      aria-label={String(other.children)}
+      {...other}
+    />
   );
 });
 
@@ -17,14 +23,12 @@ export interface ColumnHeaderTitleProps {
   columnWidth: number;
   description?: string;
 }
+
 // No React.memo here as if we display the sort icon, we need to recalculate the isOver
-export const ColumnHeaderTitle: React.FC<ColumnHeaderTitleProps> = ({
-  label,
-  description,
-  columnWidth,
-}) => {
+export function ColumnHeaderTitle(props: ColumnHeaderTitleProps) {
+  const { label, description, columnWidth } = props;
   const titleRef = React.useRef<HTMLDivElement>(null);
-  const [tooltipText, setTooltip] = React.useState('');
+  const [tooltip, setTooltip] = React.useState('');
 
   React.useEffect(() => {
     if (!description && titleRef && titleRef.current) {
@@ -38,9 +42,8 @@ export const ColumnHeaderTitle: React.FC<ColumnHeaderTitleProps> = ({
   }, [titleRef, columnWidth, description, label]);
 
   return (
-    <Tooltip title={description || tooltipText} innerRef={titleRef}>
-      <ColumnHeaderInnerTitle label={label} />
+    <Tooltip title={description || tooltip}>
+      <ColumnHeaderInnerTitle ref={titleRef}>{label}</ColumnHeaderInnerTitle>
     </Tooltip>
   );
-};
-ColumnHeaderTitle.displayName = 'ColumnHeaderTitle';
+}

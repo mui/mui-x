@@ -5,9 +5,9 @@ components: DataGrid, XGrid
 
 # Data Grid - Group & Pivot
 
-<p class="description">-----</p>
+<p class="description">Explore and analyse in depth the data of the grid.</p>
 
-## Tree data
+## 🚧 Tree data
 
 > ⚠️ This feature isn't yet implemented. It's coming.
 >
@@ -15,7 +15,7 @@ components: DataGrid, XGrid
 
 Tree data allows to visualize self-referential hierarchical (tree-like structure) data.
 
-## Master detail
+## 🚧 Master detail
 
 > ⚠️ This feature isn't yet implemented. It's coming.
 >
@@ -23,7 +23,7 @@ Tree data allows to visualize self-referential hierarchical (tree-like structure
 
 The feature allows to display row details on an expandable pane.
 
-## Grouping
+## 🚧 Grouping
 
 > ⚠️ This feature isn't yet implemented. It's coming.
 >
@@ -31,7 +31,7 @@ The feature allows to display row details on an expandable pane.
 
 Group rows together that share a column value, this creates a visible header for each group and allows the end-user to collapse groups that they don't want to see.
 
-## Aggregation
+## 🚧 Aggregation ⚡️
 
 > ⚠️ This feature isn't yet implemented. It's coming.
 >
@@ -39,7 +39,7 @@ Group rows together that share a column value, this creates a visible header for
 
 When grouping, you will be able to apply an aggregation function to populate the group row with values.
 
-## Pivoting
+## 🚧 Pivoting ⚡️
 
 > ⚠️ This feature isn't yet implemented. It's coming.
 >

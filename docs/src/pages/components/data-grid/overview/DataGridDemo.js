@@ -10,7 +10,6 @@ const columns = [
     cellClassName: ['age'],
     headerClassName: ['age'],
     type: 'number',
-    sortDirection: 'desc',
   },
   {
     field: 'fullName',

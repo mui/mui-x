@@ -37,91 +37,76 @@ export interface IconsOptions {
 export interface GridOptions {
   /**
    * If `true`, the grid height is dynamic and follow the number of rows in the grid.
-   *
    * @default false
    */
   autoHeight?: boolean;
   /**
    * Set the height in pixel of a row in the grid.
-   *
    * @default 52
    */
   rowHeight: number;
   /**
    * Set the height in pixel of the column headers in the grid.
-   *
    * @default 56
    */
   headerHeight: number;
   /**
    * Set the height/width of the grid inner scrollbar.
-   *
    * @default 15
    */
   scrollbarSize: number;
   /**
    * Number of columns rendered outside the grid viewport.
-   *
    * @default 2
    */
   columnBuffer: number;
   /**
    * If `true`, multiple selection using the CTRL or CMD key is disabled.
-   *
    * @default false
    */
   disableMultipleSelection?: boolean;
   /**
    * If `true`, sorting with multiple columns is disabled.
-   *
    * @default false
    */
   disableMultipleColumnsSorting?: boolean;
   /**
    * If `true`, the right border of the cells are displayed.
-   *
    * @default false
    */
   showCellRightBorder?: boolean;
   /**
    * If `true`, the right border of the column headers are displayed.
-   *
    * @default false
    */
   showColumnRightBorder?: boolean;
   /**
    * If `true`, rows will not be extended to fill the full width of the grid container.
-   *
    * @default false
    */
   disableExtendRowFullWidth?: boolean;
   /**
    * The order of the sorting sequence.
-   *
    * @default ['asc', 'desc', null]
    */
   sortingOrder: SortDirection[];
   /**
    * If `true`, pagination is enabled.
-   *
    * @default false
    */
   pagination?: boolean;
   /**
    * Set the number of rows in one page.
-   *
    * @default 100
    */
   pageSize?: number;
   /**
    * If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar.
-   *
    * @default false
    */
   autoPageSize?: boolean;
   /**
    * Select the pageSize dynamically using the component UI.
-   *
    * @default [25, 50, 100]
    */
   rowsPerPageOptions?: number[];
@@ -148,49 +133,41 @@ export interface GridOptions {
   sortingMode?: FeatureMode;
   /**
    * If `true`, the footer component is hidden.
-   *
    * @default false
    */
   hideFooter?: boolean;
   /**
    * If `true`, the row count in the footer is hidden.
-   *
    * @default false
    */
   hideFooterRowCount?: boolean;
   /**
    * If `true`, the selected row count in the footer is hidden.
-   *
    * @default false
    */
   hideFooterSelectedRowCount?: boolean;
   /**
    * If `true`, the pagination component in the footer is hidden.
-   *
    * @default false
    */
   hideFooterPagination?: boolean;
   /**
    * If `true`, the grid get a first column with a checkbox that allows to select rows.
-   *
    * @default false
    */
   checkboxSelection?: boolean;
   /**
    * If `true`, the selection on click on a row or cell is disabled.
-   *
    * @default false
    */
   disableSelectionOnClick?: boolean;
   /**
    * Pass a custom logger in the components that implements the [[Logger]] interface.
-   *
    * @default null
    */
   logger?: Logger;
   /**
    * Allows to pass the logging level or false to turn off logging.
-   *
    * @default debug
    */
   logLevel?: string | false;
@@ -200,61 +177,51 @@ export interface GridOptions {
   sortModel?: SortModel;
   /**
    * Handler triggered when the click event comes from a cell element.
-   *
    * @param param With all properties from [[CellParams]].
    */
   onCellClick?: (param: CellParams) => void;
   /**
    * Handler triggered when the hover event comes from a cell element.
-   *
    * @param param With all properties from [[CellParams]].
    */
   onCellHover?: (param: CellParams) => void;
   /**
    * Handler triggered when the click event comes from a row container element.
-   *
    * @param param With all properties from [[RowParams]].
    */
   onRowClick?: (param: RowParams) => void;
   /**
    * Handler triggered when the hover event comes from a row container element.
-   *
    * @param param With all properties from [[RowParams]].
    */
   onRowHover?: (param: RowParams) => void;
   /**
    * Handler triggered when one row get selected.
-   *
    * @param param With all properties from [[RowSelectedParams]].
    */
   onRowSelected?: (param: RowSelectedParams) => void;
   /**
    * Handler triggered when one or multiple rows get their selection state change.
-   *
    * @param param With all properties from [[SelectionChangeParams]].
    */
   onSelectionChange?: (param: SelectionChangeParams) => void;
   /**
    * Handler triggered when the click event comes from a column header element.
-   *
    * @param param With all properties from [[ColParams]].
    */
   onColumnHeaderClick?: (param: ColParams) => void;
   /**
    * Handler triggered when the sort model change and before a column is sorted.
-   *
    * @param param With all properties from [[SortModelParams]].
    */
   onSortModelChange?: (params: SortModelParams) => void;
   /**
    * Handler triggered when the current page has change.
-   *
    * @param param With all properties from [[PageChangeParams]].
    */
   onPageChange?: (param: PageChangeParams) => void;
   /**
    * Handler triggered when the page size change.
-   *
    * @param param With all properties from [[PageChangeParams]].
    */
   onPageSizeChange?: (param: PageChangeParams) => void;

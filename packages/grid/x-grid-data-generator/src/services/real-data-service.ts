@@ -14,15 +14,16 @@ export function getRealData(rowLength: number, columns: any[]): Promise<GridData
   return new Promise<GridData>((resolve) => {
     const data: DataRowModel[] = [];
     for (let i = 0; i < rowLength; i += 1) {
-      let model: any = {};
+      const row: any = {};
 
-      model = columns.reduce((rowData, column) => {
-        rowData[column.field] = column.generateData(rowData);
-        return rowData;
-      }, {});
+      for (let j = 0; j < columns.length; j += 1) {
+        const column = columns[j];
+        row[column.field] = column.generateData(row);
+      }
 
-      data.push(model);
+      data.push(row);
     }
+
     resolve({ columns, rows: data });
   });
 }

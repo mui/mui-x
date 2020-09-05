@@ -121,7 +121,6 @@ export const RootStyle = styled.div<GridRootProps>`
           }
 
           .title {
-            text-transform: capitalize;
             text-overflow: ellipsis;
             overflow: hidden;
             white-space: nowrap;

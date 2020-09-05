@@ -7,7 +7,7 @@ components: DataGrid, XGrid
 
 <p class="description">Easily export the rows in various file formats such as CSV, Excel, or PDF.</p>
 
-## CSV export
+## 🚧 CSV export
 
 > ⚠️ This feature isn't yet implemented. It's coming.
 >
@@ -15,7 +15,7 @@ components: DataGrid, XGrid
 
 You will be able to export the displayed data to CSV with an API call, or using the UI of the grid.
 
-## Print
+## 🚧 Print
 
 > ⚠️ This feature isn't yet implemented. It's coming.
 >
@@ -23,7 +23,7 @@ You will be able to export the displayed data to CSV with an API call, or using 
 
 Optimization of the layout of the grid for print mode. It can also be used to export to PDF.
 
-## Excel export
+## 🚧 Excel export ⚡️
 
 > ⚠️ This feature isn't yet implemented. It's coming.
 >
@@ -31,7 +31,7 @@ Optimization of the layout of the grid for print mode. It can also be used to ex
 
 You will be able to export the displayed data to Excel with an API call, or using the grid UI.
 
-## Clipboard
+## 🚧 Clipboard ⚡️
 
 > ⚠️ This feature isn't yet implemented. It's coming.
 >

@@ -7,7 +7,7 @@ components: DataGrid, XGrid
 
 <p class="description">Data Grid will provide full support to create, read, update, and delete operations (CRUD).</p>
 
-## Row editing
+## 🚧 Row editing
 
 > ⚠️ This feature isn't yet implemented. It's coming.
 >
@@ -16,7 +16,7 @@ components: DataGrid, XGrid
 Row editing allows to edit all the cells of a row at once.
 The edition can be performed directly in the cells or in a popup or a modal.
 
-## Cell editing
+## 🚧 Cell editing
 
 > ⚠️ This feature isn't yet implemented. It's coming.
 >

@@ -5,14 +5,58 @@ components: DataGrid, XGrid
 
 # Data Grid - Columns
 
-<p class="description">A fast and extendable data table and data grid for React. It's a feature-rich compoent available in MIT or Enterprise versions.</p>
+<p class="description">This section goes in details on the aspects of the columns you need to know.</p>
+
+## Column definitions
+
+The columns of the grid are definied with the `columns` prop.
+The grid expects an array of objects.
+The columns should have this type: `ColDef[]`.
+
+The `field` is the only required property. It's the identifier of the column. It's also used to map with `RowData` values.
+
+```ts
+interface ColDef {
+  /**
+   * The column identifier. It's used to map with [[RowData]] values.
+   */
+  field: string;
+  …
+}
+```
+
+{{"demo": "pages/components/data-grid/columns/BasicColumnsGrid.js"}}
+
+By default, the columns are positioned in the grid according to the order the `ColDef` are specified in the grid.
+
+## Column headers
+
+You can configure the rendering of the headers with:
+
+- `headerName`: The title of the column rendered in the column header cell.
+- `description`: The description of the column rendered as tooltip if the column header name is not fully displayed.
+- `hide`: Toggle the visibility of a column.
+
+{{"demo": "pages/components/data-grid/columns/HeaderColumnsGrid.js"}}
+
+For more advanced configuration of the header, go to the [rendering section](/components/data-grid/rendering/#header-cell) of the documentation.
 
 ## Column width
 
+By default, the column have a width of 100 pixels.
+This is an arbirary value easy to remember.
+To change the width of a column, use the `width` property available in `ColDef`.
+
+{{"demo": "pages/components/data-grid/columns/ColumnWidthGrid.js"}}
+
 ## Column sizing
 
-Column sizing allows to change the width of the columns by dragging the top right portion of the column.
+By default, all columns can be resized by dragging the right portion of the column.
+If you would like to block the resizing of a column, set `resizable: false` on the `ColDef`.
 
+{{"demo": "pages/components/data-grid/columns/ColumnSizingGrid.js"}}
+
+<!--
 - https://ag-grid.com/javascript-grid-resizing/
 - https://demos.telerik.com/kendo-ui/grid/column-resizing
 - https://www.telerik.com/kendo-react-ui/components/grid/columns/resizing/
@@ -22,8 +66,42 @@ Column sizing allows to change the width of the columns by dragging the top righ
 - https://ej2.syncfusion.com/react/demos/#/material/grid/column-resizing
 - https://js.devexpress.com/Demos/WidgetsGallery/Demo/DataGrid/ColumnResizing/React/Light/
 - https://www.jqwidgets.com/react/react-grid/#https://www.jqwidgets.com/react/react-grid/react-grid-columnsresize.htm
+-->
 
-## Column groups
+## Column types
+
+To facilitate the configuration of the columns, some column types are predefined.
+By default, columns are assumed to hold strings and thus the default column string type will be applied. As a result, column sorting will use the string comparator, and the column content will be aligned to the left side of the cell.
+
+The following types are the native column types:
+
+- `'string'` (default)
+- `'number'`
+- `'date'`
+- `'dateTime'`
+
+To apply a column type, you need to define the type property in your column definition.
+
+{{"demo": "pages/components/data-grid/columns/ColumnTypesGrid.js"}}
+
+## Custom column types
+
+You can extend the native column types with your own columns types by simply spreading.
+
+The demo below defines a new column type: `usdPrice`, it extends the native `number` column type.
+
+```jsx
+const usdPrice: ColTypeDef = {
+  type: 'number',
+  width: 130,
+  valueFormatter: ({ value }) => valueFormatter.format(Number(value)),
+  cellClassName: 'font-tabular-nums',
+};
+```
+
+{{"demo": "pages/components/data-grid/columns/CustomColumnTypesGrid.js"}}
+
+## 🚧 Column groups
 
 > ⚠️ This feature isn't yet implemented. It's coming.
 >
@@ -31,7 +109,7 @@ Column sizing allows to change the width of the columns by dragging the top righ
 
 Grouping columns allows you to have multiple levels of columns in your header and the ability, if you want, to 'open and close' column groups to show and hide additional columns.
 
-## Column reorder
+## 🚧 Column reorder
 
 > ⚠️ This feature isn't yet implemented. It's coming.
 >
@@ -39,7 +117,7 @@ Grouping columns allows you to have multiple levels of columns in your header an
 
 Column reordering enables to reorder the columns by dragging the header cells.
 
-## Column sticky
+## 🚧 Column sticky
 
 > ⚠️ This feature isn't yet implemented. It's coming.
 >
@@ -47,7 +125,7 @@ Column reordering enables to reorder the columns by dragging the header cells.
 
 Sticky (or frozen, locked, or pinned) columns are columns that are visible at all times while the user scrolls the grid horizontally.
 
-## Column spanning
+## 🚧 Column spanning
 
 > ⚠️ This feature isn't yet implemented. It's coming.
 >

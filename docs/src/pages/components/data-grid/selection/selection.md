@@ -21,7 +21,7 @@ components: DataGrid, XGrid
 - https://ej2.syncfusion.com/react/demos/#/material/grid/checkbox-selection
 - https://demos.telerik.com/kendo-ui/grid/checkbox-selection
 
-## Range selection
+## 🚧 Range selection ⚡️
 
 > ⚠️ This feature isn't yet implemented. It's coming.
 >

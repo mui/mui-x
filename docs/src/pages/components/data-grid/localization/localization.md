@@ -7,7 +7,7 @@ components: DataGrid, XGrid
 
 <p class="description">The Date Grid will support users from different locale, with formating, RTL, and localized strings.</p>
 
-## Locale text
+## 🚧 Locale text
 
 > ⚠️ This feature isn't yet implemented. It's coming.
 >
@@ -16,7 +16,7 @@ components: DataGrid, XGrid
 The grid will support localization with a single prop that includes all the translated messages.
 You will be able to follow [this guide](/guides/localization/#locale-text) to use them.
 
-## RTL Support
+## 🚧 RTL Support
 
 > ⚠️ This feature isn't yet implemented. It's coming.
 >

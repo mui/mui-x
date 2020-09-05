@@ -8,7 +8,6 @@ import { SelectionChangeParams } from '../params/selectionChangeParams';
 export interface SelectionApi {
   /**
    * Toggle the row selected state.
-   *
    * @param id
    * @param allowMultiple Default: false = deselect other rows if isSelected is true
    * @param isSelected Default true
@@ -16,7 +15,6 @@ export interface SelectionApi {
   selectRow: (id: RowId, allowMultiple?: boolean, isSelected?: boolean) => void;
   /**
    * Batch toggle rows selected state.
-   *
    * @param ids
    * @param isSelected default true
    * @param deselectOtherRows default: false
@@ -29,13 +27,11 @@ export interface SelectionApi {
   getSelectedRows: () => RowModel[];
   /**
    * Handler triggered after a row is selected.
-   *
    * @param handler
    */
   onRowSelected: (handler: (param: RowSelectedParams) => void) => () => void;
   /**
    * Handler triggered after one or multiple rows had a selection state change.
-   *
    * @param handler
    */
   onSelectionChange: (handler: (param: SelectionChangeParams) => void) => () => void;
