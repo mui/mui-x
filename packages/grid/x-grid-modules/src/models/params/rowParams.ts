@@ -10,7 +10,6 @@ export interface RowParams {
   element?: HTMLElement;
   /**
    * A function that let you get data from other columns.
-   *
    * @param field
    */
   getValue: (field: string) => CellValue;

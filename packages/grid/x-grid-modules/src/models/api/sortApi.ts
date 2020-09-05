@@ -11,13 +11,11 @@ export interface SortApi {
   getSortModel: () => SortModel;
   /**
    * Set the sort model of the component and trigger a new sorting of rows.
-   *
    * @param model
    */
   setSortModel: (model: SortModel) => void;
   /**
    * Handler triggered when the columns sorting changed before the grid has sorted its rows.
-   *
    * @param handler
    */
   onSortModelChange: (handler: (param: SortModelParams) => void) => () => void;

@@ -9,8 +9,9 @@ components: DataGrid, XGrid
 
 ## Feeding data
 
-Rows can be defined by setting the `rows` prop of the grid.
-The grid expects an array of objects. The rows should have this type: `RowData[]`.
+Grid rows can be defined with the `rows` prop.
+`rows` expects an array of objects.
+Rows should have this type: `RowData[]`.
 The columns' "field" property should match a key of the row object (`RowData`).
 
 {{"demo": "pages/components/data-grid/rows/RowsGrid.js"}}
@@ -30,9 +31,9 @@ It replaces the previous values. This approach has some drawbacks:
 ### The apiRef
 
 The second way to update rows is to use the apiRef.
-This is an imperative API that is designed to solve the previous two limitations of the declarative `rows` prop.
+This is an imperative API that is designed to solve the previous two limitations of the declarative `rows` prop. `apiRef.current.updateRowData()`, updates the rows to the grid. It **merges** the new rows with the previous ones.
 
-`apiRef.current.updateRowData()`, updates the rows to the grid. It **merges** the new rows with the previous ones.
+The following demo updates the rows every 200ms.
 
 {{"demo": "pages/components/data-grid/rows/ApiRefRowsGrid.js"}}
 
@@ -117,7 +118,7 @@ The grid exposes a set of methods that enables all of these features using the i
 - `setSortModel`
 - `onSortModelChange`
 
-### Multi-column sorting ✨
+### Multi-column sorting ⚡️
 
 You can sort by multiple columns at the same time using `XGrid`.
 Hold the <kbd>CTRL</kbd> key down while clicking the column header.
@@ -146,9 +147,9 @@ To change the row height for the whole grid, set the `rowHeight` prop:
 
 {{"demo": "pages/components/data-grid/rows/DenseHeightGrid.js"}}
 
-## Row spanning
+## 🚧 Row spanning
 
-> ⚠️ This feature isn't yet implemented. It's coming.
+> ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #207](https://github.com/mui-org/material-ui-x/issues/207) if you want to see it land faster.
 
@@ -157,9 +158,9 @@ Row spanning allows to change this default behavior.
 It allows cells to span multiple rows.
 This is very close to the "row spanning" in an HTML `<table>`.
 
-## Row reorder
+## 🚧 Row reorder
 
-> ⚠️ This feature isn't yet implemented. It's coming.
+> ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #206](https://github.com/mui-org/material-ui-x/issues/206) if you want to see it land faster.
 

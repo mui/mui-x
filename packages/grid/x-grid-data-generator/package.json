@@ -21,7 +21,8 @@
     "chance": "^1.1.6",
     "clsx": "^1.0.4",
     "commander": "^5.1.0",
-    "esm": "^3.2.25"
+    "esm": "^3.2.25",
+    "lru-cache": "^6.0.0"
   },
   "devDependencies": {
     "@types/node": "^14.0.13",

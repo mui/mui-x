@@ -10,7 +10,6 @@ const columns: ColDef[] = [
     cellClassName: ['age'],
     headerClassName: ['age'],
     type: 'number',
-    sortDirection: 'desc',
   },
   {
     field: 'fullName',

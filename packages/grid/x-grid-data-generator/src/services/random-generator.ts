@@ -80,7 +80,6 @@ export const randomColor = () => randomArrayItem(COLORS);
 export const randomId = () => chance.guid();
 export const randomDesk = () => `D-${chance.integer({ min: 0, max: 10000 })}`;
 export const randomCommodity = () => randomArrayItem(COMMODITY_OPTIONS);
-export const randomTraderId = () => chance.integer({ min: 0, max: 10000 });
 export const randomTraderName = () => chance.name();
 export const randomUserName = () => chance.twitter();
 export const randomEmail = () => chance.email();

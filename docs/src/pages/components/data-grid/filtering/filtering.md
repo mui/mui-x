@@ -7,17 +7,17 @@ components: DataGrid, XGrid
 
 <p class="description">Filtering helps view particular or related records in the Data Grid.</p>
 
-## Column filter
+## 🚧 Column filter
 
-> ⚠️ This feature isn't yet implemented. It's coming.
+> ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #201](https://github.com/mui-org/material-ui-x/issues/201) if you want to see it land faster.
 
 Column filters are filters that are applied to the data at the column level.
 
-## Quick filter
+## 🚧 Quick filter
 
-> ⚠️ This feature isn't yet implemented. It's coming.
+> ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #202](https://github.com/mui-org/material-ui-x/issues/202) if you want to see it land faster.
 

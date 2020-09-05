@@ -63,7 +63,7 @@ Below is an example on how you can reset the page using the imperative `setPage`
 
 {{"demo": "pages/components/data-grid/pagination/ApiRefPaginationGrid.js"}}
 
-## Paginate > 100 rows ✨
+## Paginate > 100 rows ⚡️
 
 The `DataGrid` component can display up to 100 rows per page.
 The `XGrid` component removes this limitation.

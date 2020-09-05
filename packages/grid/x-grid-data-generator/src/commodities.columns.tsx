@@ -12,7 +12,6 @@ import {
   generateIsFilled,
   randomQuantity,
   generateSubTotal,
-  randomTraderId,
   randomTraderName,
   randomUnitPrice,
   randomUnitPriceCurrency,
@@ -62,18 +61,13 @@ export const commodityColumns: any[] = [
     field: 'commodity',
     headerName: 'Commodity',
     generateData: randomCommodity,
-    width: 140,
-  },
-  {
-    field: 'traderId',
-    headerName: 'Trader Id',
-    generateData: randomTraderId,
+    width: 120,
   },
   {
     field: 'traderName',
     headerName: 'Trader Name',
     generateData: randomTraderName,
-    width: 150,
+    width: 120,
   },
   {
     field: 'traderEmail',
@@ -84,21 +78,10 @@ export const commodityColumns: any[] = [
     width: 150,
   },
   {
-    field: 'unitPrice',
-    headerName: 'Unit Price',
-    generateData: randomUnitPrice,
-    type: 'number',
-    width: 100,
-  },
-  {
-    field: 'unitPriceCurrency',
-    headerName: 'Unit Price Currency',
-    generateData: randomUnitPriceCurrency,
-    width: 70,
-  },
-  {
     field: 'quantity',
+    headerName: 'Quantity',
     type: 'number',
+    width: 110,
     generateData: randomQuantity,
   },
   {
@@ -115,7 +98,26 @@ export const commodityColumns: any[] = [
     renderCell: DoneRenderer,
     align: 'center',
     generateData: generateIsFilled,
-    width: 50,
+    width: 80,
+  },
+  {
+    field: 'status',
+    headerName: 'Status',
+    generateData: randomStatusOptions,
+    renderCell: StatusRenderer,
+    width: 150,
+  },
+  {
+    field: 'unitPrice',
+    headerName: 'Unit Price',
+    generateData: randomUnitPrice,
+    type: 'number',
+  },
+  {
+    field: 'unitPriceCurrency',
+    headerName: 'Unit Price Currency',
+    generateData: randomUnitPriceCurrency,
+    width: 70,
   },
   {
     field: 'subTotal',
@@ -142,7 +144,6 @@ export const commodityColumns: any[] = [
     field: 'incoTerm',
     generateData: randomIncoterm,
     renderCell: IncotermRenderer,
-    width: 100,
   },
   {
     field: 'totalPrice',
@@ -155,12 +156,6 @@ export const commodityColumns: any[] = [
     },
     type: 'number',
     width: 120,
-  },
-  {
-    field: 'status',
-    generateData: randomStatusOptions,
-    renderCell: StatusRenderer,
-    width: 150,
   },
   {
     field: 'pnl',
