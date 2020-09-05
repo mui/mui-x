@@ -18,7 +18,7 @@ The columns should have this type: `ColDef[]`.
 ```ts
 interface ColDef {
   /**
-   * The column identifier. It's used to map with [[RowData]] values.
+   * The column identifier. It's used to match with [[RowData]] values.
    */
   field: string;
   …
