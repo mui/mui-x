@@ -15,13 +15,13 @@ The component leverages the power of React and TypeScript, to provide the best U
 
 The data grid comes in 2 versions:
 
-- `DataGrid` an **MIT license** as part of the community edition. It's an extension of `@material-ui/core`.
-- `XGrid` a **commercial license** as part of the X product line offering.
+- `DataGrid` **MIT licensed** as part of the community edition. It's an extension of `@material-ui/core`.
+- `XGrid` **Commercially licensed** as part of the X product line offering.
   The features only available in the commercial version are suffixed with a ⚡️ icon.
 
 ### MIT version
 
-The first version is meant to simplify the [Table demo](https://material-ui.com/components/tables/#sorting-amp-selecting) with a clean abtraction.
+The first version is meant to simplify the [Table demo](https://material-ui.com/components/tables/#sorting-amp-selecting) with a clean abstraction.
 This abstraction also set constraints that allow the component to implement new features.
 
 ```js
@@ -44,7 +44,7 @@ import { XGrid } from '@material-ui/x-grid';
 
 - Built with and exclusively for React ⚛️
 - High performance 🚀
-- Lightweight, less than [30 kB](https://bundlephobia.com/result?p=@material-ui/x-grid) gzipped with as few dependencies as possible
+- Lightweight; less than [30 kB](https://bundlephobia.com/result?p=@material-ui/x-grid) gzipped with as few dependencies as possible.
 - [Pagination](/components/data-grid/pagination/)
 - [Sorting](/components/data-grid/rows/#row-sorting) and [multi-sort](/components/data-grid/rows/#multi-column-sorting) ⚡️
 - [Selection](/components/data-grid/selection/)

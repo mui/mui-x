@@ -9,11 +9,11 @@ components: DataGrid, XGrid
 
 ## Column definitions
 
-The columns of the grid are definied with the `columns` prop.
-The grid expects an array of objects.
+Grid columns are definied with the `columns` prop.
+`columns` expects an array of objects.
 The columns should have this type: `ColDef[]`.
 
-The `field` is the only required property. It's the identifier of the column. It's also used to map with `RowData` values.
+`field` is the only required property since it's the column identifier. It's also used to match with `RowData` values.
 
 ```ts
 interface ColDef {
@@ -27,24 +27,24 @@ interface ColDef {
 
 {{"demo": "pages/components/data-grid/columns/BasicColumnsGrid.js"}}
 
-By default, the columns are positioned in the grid according to the order the `ColDef` are specified in the grid.
+By default, columns are ordered according to the order they are included in the `columns` array.
 
 ## Column headers
 
-You can configure the rendering of the headers with:
+You can configure the headers with:
 
 - `headerName`: The title of the column rendered in the column header cell.
 - `description`: The description of the column rendered as tooltip if the column header name is not fully displayed.
-- `hide`: Toggle the visibility of a column.
+- `hide`: Hide the column.
 
 {{"demo": "pages/components/data-grid/columns/HeaderColumnsGrid.js"}}
 
-For more advanced configuration of the header, go to the [rendering section](/components/data-grid/rendering/#header-cell) of the documentation.
+For more advanced header configuration, go to the [rendering section](/components/data-grid/rendering/#header-cell).
 
 ## Column width
 
-By default, the column have a width of 100 pixels.
-This is an arbirary value easy to remember.
+By default, the columns have a width of 100 pixels.
+This is an arbitrary, easy to remember value.
 To change the width of a column, use the `width` property available in `ColDef`.
 
 {{"demo": "pages/components/data-grid/columns/ColumnWidthGrid.js"}}
@@ -52,7 +52,7 @@ To change the width of a column, use the `width` property available in `ColDef`.
 ## Column sizing
 
 By default, all columns can be resized by dragging the right portion of the column.
-If you would like to block the resizing of a column, set `resizable: false` on the `ColDef`.
+To prevent the resizing of a column, set `resizable: false` in the `ColDef`.
 
 {{"demo": "pages/components/data-grid/columns/ColumnSizingGrid.js"}}
 
@@ -70,10 +70,10 @@ If you would like to block the resizing of a column, set `resizable: false` on t
 
 ## Column types
 
-To facilitate the configuration of the columns, some column types are predefined.
-By default, columns are assumed to hold strings and thus the default column string type will be applied. As a result, column sorting will use the string comparator, and the column content will be aligned to the left side of the cell.
+To facilitate configuration of the columns, some column types are predefined.
+By default, columns are assumed to hold strings, so the default column string type will be applied. As a result, column sorting will use the string comparator, and the column content will be aligned to the left side of the cell.
 
-The following types are the native column types:
+The following are the native column types:
 
 - `'string'` (default)
 - `'number'`
@@ -86,9 +86,9 @@ To apply a column type, you need to define the type property in your column defi
 
 ## Custom column types
 
-You can extend the native column types with your own columns types by simply spreading.
+You can extend the native column types with your own by simply spreading the necessary properties.
 
-The demo below defines a new column type: `usdPrice`, it extends the native `number` column type.
+The demo below defines a new column type: `usdPrice` that extends the native `number` column type.
 
 ```jsx
 const usdPrice: ColTypeDef = {
@@ -107,7 +107,7 @@ const usdPrice: ColTypeDef = {
 >
 > 👍 Upvote [issue #195](https://github.com/mui-org/material-ui-x/issues/195) if you want to see it land faster.
 
-Grouping columns allows you to have multiple levels of columns in your header and the ability, if you want, to 'open and close' column groups to show and hide additional columns.
+Grouping columns allows you to have multiple levels of columns in your header and the ability, if needed, to 'open and close' column groups to show and hide additional columns.
 
 ## 🚧 Column reorder
 
@@ -115,9 +115,9 @@ Grouping columns allows you to have multiple levels of columns in your header an
 >
 > 👍 Upvote [issue #194](https://github.com/mui-org/material-ui-x/issues/194) if you want to see it land faster.
 
-Column reordering enables to reorder the columns by dragging the header cells.
+Column reordering enables reordering the columns by dragging the header cells.
 
-## 🚧 Column sticky
+## 🚧 Sticky columns
 
 > ⚠️ This feature isn't yet implemented. It's coming.
 >

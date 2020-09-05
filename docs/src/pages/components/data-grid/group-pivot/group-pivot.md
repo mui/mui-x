@@ -5,7 +5,7 @@ components: DataGrid, XGrid
 
 # Data Grid - Group & Pivot
 
-<p class="description">Explore and analyse in depth the data of the grid.</p>
+<p class="description">Explore and analyse in depth the grid data.</p>
 
 ## 🚧 Tree data
 

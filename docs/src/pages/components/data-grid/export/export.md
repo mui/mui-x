@@ -13,7 +13,7 @@ components: DataGrid, XGrid
 >
 > 👍 Upvote [issue #197](https://github.com/mui-org/material-ui-x/issues/197) if you want to see it land faster.
 
-You will be able to export the displayed data to CSV with an API call, or using the UI of the grid.
+You will be able to export the displayed data to CSV with an API call, or using the grid UI.
 
 ## 🚧 Print
 
