@@ -103,7 +103,7 @@ const usdPrice: ColTypeDef = {
 
 ## 🚧 Column groups
 
-> ⚠️ This feature isn't yet implemented. It's coming.
+> ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #195](https://github.com/mui-org/material-ui-x/issues/195) if you want to see it land faster.
 
@@ -111,7 +111,7 @@ Grouping columns allows you to have multiple levels of columns in your header an
 
 ## 🚧 Column reorder
 
-> ⚠️ This feature isn't yet implemented. It's coming.
+> ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #194](https://github.com/mui-org/material-ui-x/issues/194) if you want to see it land faster.
 
@@ -119,7 +119,7 @@ Column reordering enables reordering the columns by dragging the header cells.
 
 ## 🚧 Sticky columns
 
-> ⚠️ This feature isn't yet implemented. It's coming.
+> ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #193](https://github.com/mui-org/material-ui-x/issues/193) if you want to see it land faster.
 
@@ -127,7 +127,7 @@ Sticky (or frozen, locked, or pinned) columns are columns that are visible at al
 
 ## 🚧 Column spanning
 
-> ⚠️ This feature isn't yet implemented. It's coming.
+> ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #192](https://github.com/mui-org/material-ui-x/issues/192) if you want to see it land faster.
 

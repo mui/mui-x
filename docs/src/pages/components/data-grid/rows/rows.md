@@ -149,7 +149,7 @@ To change the row height for the whole grid, set the `rowHeight` prop:
 
 ## 🚧 Row spanning
 
-> ⚠️ This feature isn't yet implemented. It's coming.
+> ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #207](https://github.com/mui-org/material-ui-x/issues/207) if you want to see it land faster.
 
@@ -160,7 +160,7 @@ This is very close to the "row spanning" in an HTML `<table>`.
 
 ## 🚧 Row reorder
 
-> ⚠️ This feature isn't yet implemented. It's coming.
+> ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #206](https://github.com/mui-org/material-ui-x/issues/206) if you want to see it land faster.
 

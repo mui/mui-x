@@ -4,7 +4,6 @@ import { GridData, getRealData } from './services/real-data-service';
 import { commodityColumns } from './commodities.columns';
 import { employeeColumns } from './employees.columns';
 
-// This is where we cache our rendered HTML pages
 const dataCache = new LRUCache({
   max: 10,
   maxAge: 60 * 5 * 1e3, // 5 minutes

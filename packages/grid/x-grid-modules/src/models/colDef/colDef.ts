@@ -33,17 +33,17 @@ export interface ColDef {
    */
   width?: number;
   /**
-   * Toggle the visibility of a column.
+   * If `true`, hide the column.
    * @default false;
    */
   hide?: boolean;
   /**
-   * Make the column sortable.
+   * If `true`, the column is sortable.
    * @default true
    */
   sortable?: boolean;
   /**
-   * Make the column resizable.
+   * If `true`, the column is resizable.
    * @default true
    */
   resizable?: boolean;

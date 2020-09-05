@@ -9,7 +9,7 @@ components: DataGrid, XGrid
 
 ## 🚧 Tree data
 
-> ⚠️ This feature isn't yet implemented. It's coming.
+> ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #210](https://github.com/mui-org/material-ui-x/issues/210) if you want to see it land faster.
 
@@ -17,7 +17,7 @@ Tree data allows to visualize self-referential hierarchical (tree-like structure
 
 ## 🚧 Master detail
 
-> ⚠️ This feature isn't yet implemented. It's coming.
+> ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #211](https://github.com/mui-org/material-ui-x/issues/211) if you want to see it land faster.
 
@@ -25,7 +25,7 @@ The feature allows to display row details on an expandable pane.
 
 ## 🚧 Grouping
 
-> ⚠️ This feature isn't yet implemented. It's coming.
+> ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #212](https://github.com/mui-org/material-ui-x/issues/212) if you want to see it land faster.
 
@@ -33,7 +33,7 @@ Group rows together that share a column value, this creates a visible header for
 
 ## 🚧 Aggregation ⚡️
 
-> ⚠️ This feature isn't yet implemented. It's coming.
+> ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #213](https://github.com/mui-org/material-ui-x/issues/213) if you want to see it land faster.
 
@@ -41,7 +41,7 @@ When grouping, you will be able to apply an aggregation function to populate the
 
 ## 🚧 Pivoting ⚡️
 
-> ⚠️ This feature isn't yet implemented. It's coming.
+> ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #214](https://github.com/mui-org/material-ui-x/issues/214) if you want to see it land faster.
 

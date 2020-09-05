@@ -23,7 +23,7 @@ components: DataGrid, XGrid
 
 ## 🚧 Range selection ⚡️
 
-> ⚠️ This feature isn't yet implemented. It's coming.
+> ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #208](https://github.com/mui-org/material-ui-x/issues/208) if you want to see it land faster.
 

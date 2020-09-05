@@ -9,7 +9,7 @@ components: DataGrid, XGrid
 
 ## 🚧 Locale text
 
-> ⚠️ This feature isn't yet implemented. It's coming.
+> ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #196](https://github.com/mui-org/material-ui-x/issues/196) if you want to see it land faster.
 
@@ -18,7 +18,7 @@ You will be able to follow [this guide](/guides/localization/#locale-text) to us
 
 ## 🚧 RTL Support
 
-> ⚠️ This feature isn't yet implemented. It's coming.
+> ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #196](https://github.com/mui-org/material-ui-x/issues/196) if you want to see it land faster.
 

@@ -9,7 +9,7 @@ components: DataGrid, XGrid
 
 ## 🚧 Row editing
 
-> ⚠️ This feature isn't yet implemented. It's coming.
+> ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #204](https://github.com/mui-org/material-ui-x/issues/204) if you want to see it land faster.
 
@@ -18,7 +18,7 @@ The edition can be performed directly in the cells or in a popup or a modal.
 
 ## 🚧 Cell editing
 
-> ⚠️ This feature isn't yet implemented. It's coming.
+> ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #203](https://github.com/mui-org/material-ui-x/issues/203) if you want to see it land faster.
 
