@@ -114,9 +114,9 @@ The grid exposes a set of methods that enables all of these features using the i
 
 > ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
 
-- `getSortModel`
-- `setSortModel`
-- `onSortModelChange`
+- `getSortModel`: Get the sort model currently applied in the grid.
+- `setSortModel`: Set the sort model of the component and trigger a new sorting of rows.
+- `onSortModelChange`: Callback fired when the columns sorting changed before the grid has sorted its rows.
 
 ### Multi-column sorting ⚡️
 

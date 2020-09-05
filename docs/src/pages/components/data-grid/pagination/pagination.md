@@ -54,10 +54,10 @@ The grid exposes a set of methods that enables all of these features using the i
 
 > ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
 
-- `setPageSize`
-- `setPage`
-- `onPageChange`
-- `onPageSizeChange`
+- `setPageSize`: Set the number of rows in one page.
+- `setPage`: Set the displayed page.
+- `onPageChange`: Callback fired after a new page has been displayed.
+- `onPageSizeChange`: Callback fired after the page size was changed.
 
 Below is an example on how you can reset the page using the imperative `setPage` method.
 

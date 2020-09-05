@@ -26,12 +26,12 @@ export interface SelectionApi {
    */
   getSelectedRows: () => RowModel[];
   /**
-   * Handler triggered after a row is selected.
+   * Callback fired after a row is selected.
    * @param handler
    */
   onRowSelected: (handler: (param: RowSelectedParams) => void) => () => void;
   /**
-   * Handler triggered after one or multiple rows had a selection state change.
+   * Callback fired after one or multiple rows had a selection state change.
    * @param handler
    */
   onSelectionChange: (handler: (param: SelectionChangeParams) => void) => () => void;

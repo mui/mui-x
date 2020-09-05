@@ -51,12 +51,13 @@ Use the arrow keys to move the focus.
 | <kbd>Shift</kbd> + <kbd>Space</kbd> + <kbd>Arrow Up/Down</kbd> | Select the current row and the row above or below |
 |                                 <kbd>CTRL</kbd> + <kbd>A</kbd> | Select all rows                                   |
 |                                 <kbd>CTRL</kbd> + <kbd>C</kbd> | Copy the currently selected row                   |
+|                                <kbd>CTRL</kbd> + Click on cell | Enable multi-selection                            |
 
 ### Sorting
 
-|                    Keys | Description          |
-| ----------------------: | :------------------- |
-| <kbd>CTRL</kbd> + Click | Enable multi-sorting |
+|                              Keys | Description          |
+| --------------------------------: | :------------------- |
+| <kbd>CTRL</kbd> + Click on header | Enable multi-sorting |
 
 ### Key assignment conventions
 
