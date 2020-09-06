@@ -142,7 +142,7 @@ const pages = [
           process.env.CONTEXT === 'production'
             ? [
                 {
-                  pathname: '/components/data-grid/',
+                  pathname: '/components/data-grid',
                   title: 'Overview',
                 },
                 { pathname: '/components/data-grid/404', title: '🚧 Getting Started' },

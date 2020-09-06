@@ -18,7 +18,7 @@ On the other hand, the commercial `XGrid` component displays, by default, all th
 ## Page size
 
 - The default page size is `100`, you can change this value with the `pageSize` prop.
-- You can configure the possible page size the end-users can choose from with the `rowsPerPageOptions` prop.
+- You can configure the possible page size the user can choose from with the `rowsPerPageOptions` prop.
 
 {{"demo": "pages/components/data-grid/pagination/SizePaginationGrid.js"}}
 

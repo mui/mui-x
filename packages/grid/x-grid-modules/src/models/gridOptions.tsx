@@ -201,7 +201,7 @@ export interface GridOptions {
    */
   onRowSelected?: (param: RowSelectedParams) => void;
   /**
-   * Callback fired when one or multiple rows get their selection state change.
+   * Callback fired when the selection state of one or multiple rows changes.
    * @param param With all properties from [[SelectionChangeParams]].
    */
   onSelectionChange?: (param: SelectionChangeParams) => void;

@@ -6,11 +6,11 @@ import { SortModelParams } from '../params/sortModelParams';
  */
 export interface SortApi {
   /**
-   * Get the sort model currently applied in the grid.
+   * Get the sort model currently applied to the grid.
    */
   getSortModel: () => SortModel;
   /**
-   * Set the sort model of the component and trigger a new sorting of rows.
+   * Set the sort model and trigger the sorting of rows.
    * @param model
    */
   setSortModel: (model: SortModel) => void;
