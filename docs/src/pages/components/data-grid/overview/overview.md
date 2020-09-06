@@ -32,7 +32,7 @@ import { DataGrid } from '@material-ui/data-grid';
 
 ### Commercial version ⚡️
 
-The following grid displays 31 columns and 100,000 rows, it's over 3 million cells.
+The following grid displays 31 columns and 100,000 rows - over 3 million cells in total.
 
 ```js
 import { XGrid } from '@material-ui/x-grid';
