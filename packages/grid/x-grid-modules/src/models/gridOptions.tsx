@@ -176,57 +176,57 @@ export interface GridOptions {
    */
   sortModel?: SortModel;
   /**
-   * Handler triggered when the click event comes from a cell element.
+   * Callback fired when a click event comes from a cell element.
    * @param param With all properties from [[CellParams]].
    */
   onCellClick?: (param: CellParams) => void;
   /**
-   * Handler triggered when the hover event comes from a cell element.
+   * Callback fired when a hover event comes from a cell element.
    * @param param With all properties from [[CellParams]].
    */
   onCellHover?: (param: CellParams) => void;
   /**
-   * Handler triggered when the click event comes from a row container element.
+   * Callback fired when a click event comes from a row container element.
    * @param param With all properties from [[RowParams]].
    */
   onRowClick?: (param: RowParams) => void;
   /**
-   * Handler triggered when the hover event comes from a row container element.
+   * Callback fired when a hover event comes from a row container element.
    * @param param With all properties from [[RowParams]].
    */
   onRowHover?: (param: RowParams) => void;
   /**
-   * Handler triggered when one row get selected.
+   * Callback fired when one row is selected.
    * @param param With all properties from [[RowSelectedParams]].
    */
   onRowSelected?: (param: RowSelectedParams) => void;
   /**
-   * Handler triggered when one or multiple rows get their selection state change.
+   * Callback fired when the selection state of one or multiple rows changes.
    * @param param With all properties from [[SelectionChangeParams]].
    */
   onSelectionChange?: (param: SelectionChangeParams) => void;
   /**
-   * Handler triggered when the click event comes from a column header element.
+   * Callback fired when a click event comes from a column header element.
    * @param param With all properties from [[ColParams]].
    */
   onColumnHeaderClick?: (param: ColParams) => void;
   /**
-   * Handler triggered when the sort model change and before a column is sorted.
+   * Callback fired when the sort model changes before a column is sorted.
    * @param param With all properties from [[SortModelParams]].
    */
   onSortModelChange?: (params: SortModelParams) => void;
   /**
-   * Handler triggered when the current page has change.
+   * Callback fired when the current page has changed.
    * @param param With all properties from [[PageChangeParams]].
    */
   onPageChange?: (param: PageChangeParams) => void;
   /**
-   * Handler triggered when the page size change.
+   * Callback fired when the page size has changed.
    * @param param With all properties from [[PageChangeParams]].
    */
   onPageSizeChange?: (param: PageChangeParams) => void;
   /**
-   * Handler triggered when an exception is thrown in the grid or when the showError api method is called.
+   * Callback fired when an exception is thrown in the grid, or when the `showError` API method is called.
    */
   onError?: (args: any) => void;
   /**
