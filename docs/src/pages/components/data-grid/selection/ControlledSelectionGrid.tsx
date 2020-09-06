@@ -9,7 +9,7 @@ export default function ControlledSelectionGrid() {
     maxColumns: 6,
   });
 
-  // TODO https://github.com/mui-org/material-ui-x/issues/246
+  // TODO: https://github.com/mui-org/material-ui-x/issues/246
   const [, setSelection] = React.useState<RowData[]>([]);
 
   return (

@@ -5,7 +5,7 @@ components: DataGrid, XGrid
 
 # Data Grid - Selection
 
-<p class="description">Selection allows end-users to select and highlight a number of rows that they can then take action on.</p>
+<p class="description">Selection allows the user to select and highlight a number of rows that they can then take action on.</p>
 
 ## Row selection
 
@@ -23,7 +23,7 @@ components: DataGrid, XGrid
 - https://demos.telerik.com/kendo-ui/grid/checkbox-selection
 -->
 
-Row selection can be performed with a simple mouse click or using the [keyboard shortcuts](/components/data-grid/accessibility/#selection). The grid supports single and multiple rows selection.
+Row selection can be performed with a simple mouse click, or using the [keyboard shortcuts](/components/data-grid/accessibility/#selection). The grid supports single and multiple row selection.
 
 ### Single row selection
 
@@ -34,7 +34,7 @@ For the `XGrid`, you need to disable multiple row selection with `disableMultipl
 
 ### Multiple row selection ⚡️
 
-To activate multiple selection, put the focus on the `XGrid` component and maintain the <kbd>CTRL</kbd> key.
+To activate multiple selection, put focus the `XGrid` component and hold the <kbd>CTRL</kbd> key while selecting rows.
 
 {{"demo": "pages/components/data-grid/selection/MultipleRowSelectionGrid.js"}}
 
@@ -60,7 +60,7 @@ The grid exposes a set of methods that enables all of these features using the i
 
 > ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
 
-- `onSelectionChange`: Callback fired when one or multiple rows get their selection state change.
+- `onSelectionChange`: Callback fired when the selection state of one or multiple rows changes.
 
 ## 🚧 Range selection ⚡️
 

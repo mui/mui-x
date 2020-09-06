@@ -176,27 +176,27 @@ export interface GridOptions {
    */
   sortModel?: SortModel;
   /**
-   * Callback fired when the click event comes from a cell element.
+   * Callback fired when a click event comes from a cell element.
    * @param param With all properties from [[CellParams]].
    */
   onCellClick?: (param: CellParams) => void;
   /**
-   * Callback fired when the hover event comes from a cell element.
+   * Callback fired when a hover event comes from a cell element.
    * @param param With all properties from [[CellParams]].
    */
   onCellHover?: (param: CellParams) => void;
   /**
-   * Callback fired when the click event comes from a row container element.
+   * Callback fired when a click event comes from a row container element.
    * @param param With all properties from [[RowParams]].
    */
   onRowClick?: (param: RowParams) => void;
   /**
-   * Callback fired when the hover event comes from a row container element.
+   * Callback fired when a hover event comes from a row container element.
    * @param param With all properties from [[RowParams]].
    */
   onRowHover?: (param: RowParams) => void;
   /**
-   * Callback fired when one row get selected.
+   * Callback fired when one row is selected.
    * @param param With all properties from [[RowSelectedParams]].
    */
   onRowSelected?: (param: RowSelectedParams) => void;
@@ -206,27 +206,27 @@ export interface GridOptions {
    */
   onSelectionChange?: (param: SelectionChangeParams) => void;
   /**
-   * Callback fired when the click event comes from a column header element.
+   * Callback fired when a click event comes from a column header element.
    * @param param With all properties from [[ColParams]].
    */
   onColumnHeaderClick?: (param: ColParams) => void;
   /**
-   * Callback fired when the sort model change and before a column is sorted.
+   * Callback fired when the sort model changes before a column is sorted.
    * @param param With all properties from [[SortModelParams]].
    */
   onSortModelChange?: (params: SortModelParams) => void;
   /**
-   * Callback fired when the current page has change.
+   * Callback fired when the current page has changed.
    * @param param With all properties from [[PageChangeParams]].
    */
   onPageChange?: (param: PageChangeParams) => void;
   /**
-   * Callback fired when the page size change.
+   * Callback fired when the page size has changed.
    * @param param With all properties from [[PageChangeParams]].
    */
   onPageSizeChange?: (param: PageChangeParams) => void;
   /**
-   * Callback fired when an exception is thrown in the grid or when the showError api method is called.
+   * Callback fired when an exception is thrown in the grid, or when the `showError` API method is called.
    */
   onError?: (args: any) => void;
   /**

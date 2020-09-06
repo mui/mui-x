@@ -59,7 +59,7 @@ The grid exposes a set of methods that enables all of these features using the i
 - `onPageChange`: Callback fired after a new page has been displayed.
 - `onPageSizeChange`: Callback fired after the page size was changed.
 
-Below is an example on how you can reset the page using the imperative `setPage` method.
+Below is an example of how you can reset the page using the imperative `setPage` method.
 
 {{"demo": "pages/components/data-grid/pagination/ApiRefPaginationGrid.js"}}
 
