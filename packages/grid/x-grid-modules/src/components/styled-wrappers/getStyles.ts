@@ -107,29 +107,29 @@ export const getStyles = makeStyles((theme) => ({
       width: '100%',
       'align-items': 'center',
     },
-    '&  .columns-container .material-col-cell-wrapper .material-col-cell': {
+    '&  .material-col-cell': {
       position: 'relative',
       display: 'flex',
       padding: '0 16px',
     },
-    '&  .columns-container .material-col-cell-wrapper .material-col-cell.sortable': {
+    '&  .material-col-cell.sortable': {
       cursor: 'pointer',
     },
 
-    '&   .columns-container .material-col-cell-wrapper .material-col-cell.center': {
+    '&  .material-col-cell.center': {
       'justify-content': 'center',
     },
 
-    '&   .columns-container .material-col-cell-wrapper .material-col-cell.right': {
+    '&  .material-col-cell.right': {
       'justify-content': 'flex-end',
     },
 
-    '&  .columns-container .material-col-cell-wrapper  .material-col-cell .title': {
+    '& .material-col-cell .title': {
       'text-overflow': 'ellipsis',
       overflow: 'hidden',
       'white-space': 'nowrap',
     },
-    '&   .columns-container .material-col-cell-wrapper .material-col-cell .column-separator': {
+    '& .material-col-cell .column-separator': {
       position: 'absolute',
       right: '-12px',
       'z-index': 100,
@@ -137,21 +137,21 @@ export const getStyles = makeStyles((theme) => ({
       'flex-direction': 'column',
       'justify-content': 'center',
     },
-    '&   .columns-container .material-col-cell-wrapper .material-col-cell .column-separator .icon.separator': {
+    '& .material-col-cell .column-separator .icon.separator': {
       color: '#bdc3c7',
     },
-    '&   .columns-container .material-col-cell-wrapper .material-col-cell .column-separator:hover .separator.resizable': {
+    '& .material-col-cell .column-separator:hover .separator.resizable': {
       cursor: 'col-resize',
       color: 'inherit',
     },
-    '&   .columns-container .material-col-cell-wrapper .material-col-cell *': {
+    '&  .material-col-cell *': {
       'max-height': '56px',
     },
-    '&   .columns-container .material-col-cell-wrapper .material-col-cell.checkbox-selection-header-cell .checkbox-input': {
+    '& .material-col-cell.checkbox-selection-header-cell .checkbox-input': {
       padding: '12px',
     },
 
-    '&   .columns-container .material-col-cell-wrapper .material-col-cell-wrapper.scroll .material-col-cell:last-child': {
+    '& .material-col-cell-wrapper.scroll .material-col-cell:last-child': {
       'border-right': 'none',
     },
 
