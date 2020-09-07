@@ -16,7 +16,7 @@ export type Alignement = 'left' | 'right' | 'center';
  */
 export interface ColDef {
   /**
-   * String Column Identifier, used to map with [[RowData]] values.
+   * The column identifier. It's used to map with [[RowData]] values.
    */
   field: string;
   /**
@@ -29,23 +29,21 @@ export interface ColDef {
   description?: string;
   /**
    * Set the width of the column.
-   *
    * @default 100
    */
   width?: number;
   /**
-   * Toggle the visibility of a column.
+   * If `true`, hide the column.
+   * @default false;
    */
   hide?: boolean;
   /**
-   * Make the column sortable.
-   *
+   * If `true`, the column is sortable.
    * @default true
    */
   sortable?: boolean;
   /**
-   * Make the column resizable.
-   *
+   * If `true`, the column is resizable.
    * @default true
    */
   resizable?: boolean;
@@ -63,7 +61,6 @@ export interface ColDef {
   sortIndex?: number;
   /**
    * Type allows to merge this object with a default definition [[ColDef]].
-   *
    * @default string
    */
   type?: ColType;
@@ -73,13 +70,11 @@ export interface ColDef {
   align?: Alignement;
   /**
    * Function that allows to get a specific data instead of field to render in the cell.
-   *
    * @param params
    */
   valueGetter?: (params: ValueGetterParams) => CellValue;
   /**
    * Function that allows to apply a formatter before rendering its value.
-   *
    * @param params
    */
   valueFormatter?: (params: ValueFormatterParams) => CellValue;
@@ -93,7 +88,6 @@ export interface ColDef {
   cellClassRules?: CellClassRules;
   /**
    * Allows to override the component rendered as cell for this column.
-   *
    * @param params
    */
   renderCell?: (params: CellParams) => React.ReactElement;
@@ -103,7 +97,6 @@ export interface ColDef {
   headerClassName?: string | string[];
   /**
    * Allows to render a component in the column header cell.
-   *
    * @param params
    */
   renderHeader?: (params: ColParams) => React.ReactElement;

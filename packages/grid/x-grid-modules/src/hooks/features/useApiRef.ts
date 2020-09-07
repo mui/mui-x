@@ -8,9 +8,9 @@ const EventEmitter = require('events').EventEmitter;
 /**
  * Hook that instantiate an ApiRef to pass in component prop.
  */
-export const useApiRef = (): ApiRef => {
+export function useApiRef(): ApiRef {
   const logger = useLogger('useApiRef');
   logger.debug('Initializing grid api with EventEmitter.');
 
   return React.useRef<GridApi>(new EventEmitter());
-};
+}

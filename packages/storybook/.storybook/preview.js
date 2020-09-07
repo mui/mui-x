@@ -25,5 +25,8 @@ addParameters({
   },
   viewport: {
     viewports: INITIAL_VIEWPORTS,
-  }
+  },
+  docs: {
+    page: null,
+  },
 });

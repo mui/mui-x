@@ -15,13 +15,13 @@ function resolvePath(sourcePath, currentFile, opts) {
 
 const alias = {
   '@material-ui/data-grid': '../packages/grid/data-grid/src',
+  '@material-ui/x-grid-data-generator': '../packages/grid/x-grid-data-generator/src',
   '@material-ui/x-grid-modules': '../packages/grid/x-grid-modules/src',
   '@material-ui/x-grid': '../packages/grid/x-grid/src',
-  '@material-ui/x-license': '../packages/license/src',
+  '@material-ui/x-license': '../packages/x-license/src',
   docs: './node_modules/@material-ui/monorepo/docs',
   docsx: './',
   modules: './node_modules/@material-ui/monorepo/modules',
-  // 'typescript-to-proptypes': './node_modules/@material-ui/monorepo/packages/typescript-to-proptypes',
 };
 
 const { version: transformRuntimeVersion } = fse.readJSONSync(

@@ -17,7 +17,7 @@ export const FeedGrid: React.FC<FeedGridProps> = (p) => {
   const [started, setStarted] = React.useState<boolean>(false);
   const apiRef = useApiRef();
   const stopButton = React.useRef<HTMLButtonElement>(null);
-  const subscriptionRef = React.useRef(new Subscription());
+  const { current: subscriptionRef } = React.useRef(new Subscription());
 
   const handleNewPrices = (updates: PricingModel[]) => {
     apiRef.current.updateRowData(updates);
@@ -32,7 +32,7 @@ export const FeedGrid: React.FC<FeedGridProps> = (p) => {
       );
 
       const data$ = subscribeFeed(p.min, p.max);
-      subscriptionRef.current.add(
+      subscriptionRef.add(
         data$.pipe(takeUntil(cancel$)).subscribe((data) => handleNewPrices(data)),
       );
       setStarted(true);
@@ -43,7 +43,7 @@ export const FeedGrid: React.FC<FeedGridProps> = (p) => {
     return () => {
       // eslint-disable-next-line no-console
       console.log('Unmounting, cleaning subscriptions ');
-      subscriptionRef.current.unsubscribe();
+      subscriptionRef.unsubscribe();
     };
   }, [stopButton, subscriptionRef]);
 

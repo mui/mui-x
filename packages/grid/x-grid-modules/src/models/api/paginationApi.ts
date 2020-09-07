@@ -6,23 +6,21 @@ import { PageChangeParams } from '../params/pageChangeParams';
 export interface PaginationApi {
   /**
    * Set the displayed page.
-   *
    * @param page
    */
   setPage: (page: number) => void;
   /**
    * Set the number of rows in one page.
-   *
    * @param pageSize
    */
   setPageSize: (pageSize: number) => void;
   /**
-   * Handler that is triggered after a new page has been displayed
+   * Callback fired after a new page has been displayed.
    * @param handler
    */
   onPageChange: (handler: (param: PageChangeParams) => void) => () => void;
   /**
-   * Handler that is triggered after the page size was change
+   * Callback fired after the page size was changed.
    * @param handler
    */
   onPageSizeChange: (handler: (param: PageChangeParams) => void) => () => void;

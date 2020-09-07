@@ -1,7 +1,7 @@
 import {
   GridComponentProps,
   GridOptionsProp,
-} from '@material-ui/x-grid-modules/gridComponentProps';
+} from '@material-ui/x-grid-modules/GridComponentProps';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '@material-ui/x-grid-modules/models';
 import * as React from 'react';
 import { mergeOptions } from '@material-ui/x-grid-modules/utils';

@@ -1,4 +1,4 @@
-import './style/real-data-stories.css';
+// import './style/real-data-stories.css';
 import {
   generateTotalPrice,
   randomCommodity,
@@ -12,7 +12,6 @@ import {
   generateIsFilled,
   randomQuantity,
   generateSubTotal,
-  randomTraderId,
   randomTraderName,
   randomUnitPrice,
   randomUnitPriceCurrency,
@@ -62,20 +61,13 @@ export const commodityColumns: any[] = [
     field: 'commodity',
     headerName: 'Commodity',
     generateData: randomCommodity,
-    sortDirection: 'asc',
-    sortIndex: 1,
     width: 120,
-  },
-  {
-    field: 'traderId',
-    headerName: 'Trader Id',
-    generateData: randomTraderId,
   },
   {
     field: 'traderName',
     headerName: 'Trader Name',
     generateData: randomTraderName,
-    width: 150,
+    width: 120,
   },
   {
     field: 'traderEmail',
@@ -86,23 +78,10 @@ export const commodityColumns: any[] = [
     width: 150,
   },
   {
-    field: 'unitPrice',
-    headerName: 'Unit Price',
-    generateData: randomUnitPrice,
-    // valueFormatter: params=> `${Number(params.value).toLocaleString()} ${params.data['unitPriceCurrency']}`,
-    type: 'number',
-    width: 100,
-  },
-  {
-    field: 'unitPriceCurrency',
-    headerName: 'Unit Price Currency',
-    generateData: randomUnitPriceCurrency,
-    width: 70,
-    // hide: true
-  },
-  {
     field: 'quantity',
+    headerName: 'Quantity',
     type: 'number',
+    width: 110,
     generateData: randomQuantity,
   },
   {
@@ -110,8 +89,6 @@ export const commodityColumns: any[] = [
     headerName: 'Filled Quantity',
     generateData: generateFilledQuantity,
     renderCell: ProgressRenderer,
-    sortDirection: 'desc',
-    sortIndex: 2,
     type: 'number',
     width: 120,
   },
@@ -121,7 +98,26 @@ export const commodityColumns: any[] = [
     renderCell: DoneRenderer,
     align: 'center',
     generateData: generateIsFilled,
-    width: 50,
+    width: 80,
+  },
+  {
+    field: 'status',
+    headerName: 'Status',
+    generateData: randomStatusOptions,
+    renderCell: StatusRenderer,
+    width: 150,
+  },
+  {
+    field: 'unitPrice',
+    headerName: 'Unit Price',
+    generateData: randomUnitPrice,
+    type: 'number',
+  },
+  {
+    field: 'unitPriceCurrency',
+    headerName: 'Unit Price Currency',
+    generateData: randomUnitPriceCurrency,
+    width: 70,
   },
   {
     field: 'subTotal',
@@ -148,7 +144,6 @@ export const commodityColumns: any[] = [
     field: 'incoTerm',
     generateData: randomIncoterm,
     renderCell: IncotermRenderer,
-    width: 100,
   },
   {
     field: 'totalPrice',
@@ -161,12 +156,6 @@ export const commodityColumns: any[] = [
     },
     type: 'number',
     width: 120,
-  },
-  {
-    field: 'status',
-    generateData: randomStatusOptions,
-    renderCell: StatusRenderer,
-    width: 150,
   },
   {
     field: 'pnl',

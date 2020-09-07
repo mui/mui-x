@@ -110,7 +110,7 @@ export const useSelection = (
 
   const selectRows = React.useCallback(
     (ids: RowId[], isSelected = true, deSelectOthers = false) => {
-      if (options.disableMultipleSelection && ids.length > 1) {
+      if (options.disableMultipleSelection && ids.length > 1 && !options.checkboxSelection) {
         throw new Error(
           'Material-UI: `disableMultipleSelection` should be false to select more than 1 item.',
         );
@@ -131,7 +131,14 @@ export const useSelection = (
       };
       apiRef.current.publishEvent(SELECTION_CHANGED, selectionChangeParam);
     },
-    [apiRef, selectedItemsRef, forceUpdate, options.disableMultipleSelection, getSelectedRows],
+    [
+      apiRef,
+      selectedItemsRef,
+      forceUpdate,
+      options.disableMultipleSelection,
+      getSelectedRows,
+      options.checkboxSelection,
+    ],
   );
 
   const rowClickHandler = React.useCallback(

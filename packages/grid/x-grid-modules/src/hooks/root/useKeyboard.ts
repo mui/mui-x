@@ -97,7 +97,7 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
           (code.indexOf('Down') > -1 || isSpaceKey(code) ? autoPageSize : -1 * autoPageSize);
         nextCellIndexes = { colIndex: currentColIndex, rowIndex: nextRowIndex };
       } else {
-        throw new Error('Material-UI. Key not mapped to navigation behaviour.');
+        throw new Error('Material-UI. Key not mapped to navigation behavior.');
       }
 
       nextCellIndexes.rowIndex = nextCellIndexes.rowIndex <= 0 ? 0 : nextCellIndexes.rowIndex;
@@ -210,7 +210,7 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
       }
 
       if (!isTabKey(event.code)) {
-        // WE prevent default behaviour for all key shortcut except tab when the current active element is a cell
+        // WE prevent default behavior for all key shortcut except tab when the current active element is a cell
         event.preventDefault();
         event.stopPropagation();
       }

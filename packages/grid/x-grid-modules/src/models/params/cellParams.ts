@@ -18,7 +18,6 @@ export interface CellParams {
   value: CellValue;
   /**
    * A function that let you get data from other columns.
-   *
    * @param field
    */
   getValue: (field: string) => CellValue;
