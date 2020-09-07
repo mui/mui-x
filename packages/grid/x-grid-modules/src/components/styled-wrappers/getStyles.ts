@@ -6,6 +6,7 @@ export const getStyles = makeStyles((theme) => ({
     'box-sizing': 'border-box',
     position: 'relative',
     'font-family': theme.typography.fontFamily,
+    'letter-spacing': theme.typography.body2,
     border: '1px solid #bdc3c7',
     'border-radius': theme.shape.borderRadius,
     outline: 'none',
@@ -48,10 +49,8 @@ export const getStyles = makeStyles((theme) => ({
       display: 'flex',
       'align-items': 'center',
       'font-size': '0.875rem',
-      'font-family': theme.typography.fontFamily,
-      'font-weight': 400,
+      'font-weight': theme.typography.fontWeightMedium,
       'line-height': 1.43,
-      'letter-spacing': theme.typography.body2,
       'min-height': '48px',
     },
     '@media (max-width: 650px)': {
@@ -100,8 +99,8 @@ export const getStyles = makeStyles((theme) => ({
       'z-index': 100,
       'background-color': '#f9f9f9',
       color: theme.palette.text.primary,
-      'font-weight': theme.typography.fontWeightMedium,
-      // 'font-size': '12px',
+      'font-weight': theme.typography.fontWeightBold,
+      'font-size': theme.typography.fontSize,
     },
     '&  .columns-container .material-col-cell-wrapper': {
       display: 'flex',
@@ -126,7 +125,6 @@ export const getStyles = makeStyles((theme) => ({
     },
 
     '&  .columns-container .material-col-cell-wrapper  .material-col-cell .title': {
-      'text-transform': 'capitalize',
       'text-overflow': 'ellipsis',
       overflow: 'hidden',
       'white-space': 'nowrap',
@@ -211,7 +209,7 @@ export const getStyles = makeStyles((theme) => ({
       'text-overflow': 'ellipsis',
       'white-space': 'nowrap',
       padding: theme.spacing(0, 2),
-
+      'font-size': theme.typography.fontSize,
       'border-bottom': '1px solid',
       'border-color':
         theme.palette.type === 'light'
