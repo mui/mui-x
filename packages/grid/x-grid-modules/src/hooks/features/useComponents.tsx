@@ -10,8 +10,8 @@ import {
   Rows,
 } from '../../models';
 import { ErrorMessage } from '../../components/error-message';
-import { LoadingOverlay } from "../../components/loading-overlay";
-import { NoRowMessage } from "../../components/no-row-message";
+import { LoadingOverlay } from '../../components/loading-overlay';
+import { NoRowMessage } from '../../components/no-row-message';
 
 export const useComponents = (
   columns: InternalColumns,
