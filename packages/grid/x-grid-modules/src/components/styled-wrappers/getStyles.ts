@@ -1,69 +1,59 @@
 import { darken, fade, lighten, makeStyles } from '@material-ui/core/styles';
+import { ROOT_CSS_CLASS } from '@material-ui/x-grid-modules';
 
-export const getStyles = makeStyles((theme) => ({
-  'MuiDataGrid-root': {
+export const getStyles = makeStyles((theme) => {
+  const borderColor =
+    theme.palette.type === 'light'
+      ? lighten(fade(theme.palette.divider, 1), 0.88)
+      : darken(fade(theme.palette.divider, 1), 0.68);
+
+  const gridStyle: any = {};
+  gridStyle[ROOT_CSS_CLASS] = {
     lineHeight: theme.typography.pxToRem(24),
-    'box-sizing': 'border-box',
+    boxSizing: 'border-box',
     position: 'relative',
-    'font-family': theme.typography.fontFamily,
-    'letter-spacing': theme.typography.body2,
+    fontFamily: theme.typography.fontFamily,
+    letterSpacing: theme.typography.body2,
     border: '1px solid #bdc3c7',
-    'border-radius': theme.shape.borderRadius,
+    borderRadius: theme.shape.borderRadius,
     outline: 'none',
     display: 'flex',
     flex: 1,
-    'flex-direction': 'column',
+    flexDirection: 'column',
 
     '& *': {
-      'box-sizing': 'border-box',
+      boxSizing: 'border-box',
     },
 
     '& .main-grid-container': {
       position: 'relative',
-      'flex-grow': 1,
-      'flex-direction': 'column',
+      flexGrow: 1,
+      flexDirection: 'column',
       display: 'flex',
     },
-
-    '& .watermark': {
-      position: 'absolute',
-      'pointer-events': 'none',
-      color: '#8282829e',
-      'z-index': 100000,
-      width: '100%',
-      'text-align': 'center',
-      bottom: '50%',
-      right: 0,
-      'letter-spacing': '5px',
-      'font-size': '24px',
-    },
-
     '& .footer': {
       display: 'flex',
-      'justify-content': 'space-between',
-      'flex-direction': 'row',
+      justifyContent: 'space-between',
+      flexDirection: 'row',
       padding: theme.spacing(0, 2),
     },
-
     '& .row-count, & .selected-row-count': {
       display: 'flex',
-      'align-items': 'center',
-      'font-size': '0.875rem',
-      'font-weight': theme.typography.fontWeightMedium,
-      'line-height': 1.43,
-      'min-height': '48px',
+      alignItems: 'center',
+      fontSize: '0.875rem',
+      fontWeight: theme.typography.fontWeightMedium,
+      lineHeight: 1.43,
+      minHeight: '48px',
     },
     '@media (max-width: 650px)': {
       '&  .row-count, &  .selected-row-count': {
         display: 'none',
       },
     },
-
-    '&  .material-cell:focus, &  .material-col-cell:focus': {
+    '&  .MuiDataGrid-cell:focus, &  .MuiDataGrid-col-cell:focus': {
       outline: 'dotted',
-      'outline-color': '#000',
-      'outline-width': '2px',
-      'outline-offset': '-3px',
+      outlineWidth: '1px',
+      outlineOffset: '-2px',
     },
     '&  .overlay': {
       display: 'flex',
@@ -72,14 +62,14 @@ export const getStyles = makeStyles((theme) => ({
       left: 0,
       right: 0,
       bottom: '15px',
-      'align-self': 'center',
-      'align-items': 'center',
-      'z-index': 10,
+      alignSelf: 'center',
+      alignItems: 'center',
+      zIndex: 10,
     },
     '&  .overlay .content': {
       flex: 1,
       display: 'flex',
-      'justify-content': 'center',
+      justifyContent: 'center',
     },
 
     '&  .columns-container': {
@@ -87,99 +77,95 @@ export const getStyles = makeStyles((theme) => ({
       top: 0,
       left: 0,
       right: 0,
-      'overflow-x': 'hidden',
-      'overflow-y': 'hidden',
+      overflowX: 'hidden',
+      overflowY: 'hidden',
       display: 'flex',
-      'flex-direction': 'column',
-      'border-bottom': '1px solid',
-      'border-color':
-        theme.palette.type === 'light'
-          ? lighten(fade(theme.palette.divider, 1), 0.88)
-          : darken(fade(theme.palette.divider, 1), 0.68),
-      'z-index': 100,
-      'background-color': '#f9f9f9',
+      flexDirection: 'column',
+      borderBottom: `1px solid ${borderColor}`,
+      zIndex: 100,
+      backgroundColor: '#f9f9f9',
       color: theme.palette.text.primary,
-      'font-weight': theme.typography.fontWeightBold,
-      'font-size': theme.typography.fontSize,
+      fontWeight: theme.typography.fontWeightBold,
+      fontSize: theme.typography.fontSize,
     },
-    '&  .columns-container .material-col-cell-wrapper': {
+    '&  .columns-container .MuiDataGrid-col-cell-wrapper': {
       display: 'flex',
       width: '100%',
-      'align-items': 'center',
+      alignItems: 'center',
     },
-    '&  .material-col-cell': {
+    '&  .MuiDataGrid-col-cell': {
       position: 'relative',
       display: 'flex',
       padding: '0 16px',
     },
-    '&  .material-col-cell.sortable': {
+    '&  .MuiDataGrid-col-cell.sortable': {
       cursor: 'pointer',
     },
 
-    '&  .material-col-cell.center': {
-      'justify-content': 'center',
+    '&  .MuiDataGrid-col-cell.center': {
+      justifyContent: 'center',
     },
 
-    '&  .material-col-cell.right': {
-      'justify-content': 'flex-end',
+    '&  .MuiDataGrid-col-cell.right': {
+      justifyContent: 'flex-end',
     },
 
-    '& .material-col-cell .title': {
-      'text-overflow': 'ellipsis',
+    '& .MuiDataGrid-col-cell .title': {
+      textOverflow: 'ellipsis',
       overflow: 'hidden',
-      'white-space': 'nowrap',
+      whiteSpace: 'nowrap',
     },
-    '& .material-col-cell .column-separator': {
+    '& .MuiDataGrid-col-cell .column-separator': {
       position: 'absolute',
       right: '-12px',
-      'z-index': 100,
+      zIndex: 100,
       display: 'flex',
-      'flex-direction': 'column',
-      'justify-content': 'center',
+      flexDirection: 'column',
+      justifyContent: 'center',
     },
-    '& .material-col-cell .column-separator .icon.separator': {
+    '& .MuiDataGrid-col-cell .column-separator .icon.separator': {
       color: '#bdc3c7',
     },
-    '& .material-col-cell .column-separator:hover .separator.resizable': {
+    '& .MuiDataGrid-col-cell .column-separator:hover .separator.resizable': {
       cursor: 'col-resize',
       color: 'inherit',
     },
-    '&  .material-col-cell *': {
-      'max-height': '56px',
+    '&  .MuiDataGrid-col-cell *': {
+      maxHeight: '56px',
     },
-    '& .material-col-cell.checkbox-selection-header-cell .checkbox-input': {
+    '& .MuiDataGrid-col-cell.checkbox-selection-header-cell .checkbox-input': {
       padding: '12px',
     },
 
-    '& .material-col-cell-wrapper.scroll .material-col-cell:last-child': {
-      'border-right': 'none',
+    '& .MuiDataGrid-col-cell-wrapper.scroll .MuiDataGrid-col-cell:last-child': {
+      borderRight: 'none',
     },
 
     '&  .data-container': {
       position: 'relative',
-      'flex-grow': 1,
+      flexGrow: 1,
       display: 'flex',
-      'flex-direction': 'column',
+      flexDirection: 'column',
     },
     '&  .window': {
       position: 'absolute',
       bottom: '0px',
       left: '0px',
       right: 0,
-      'overflow-x': 'auto',
+      overflowX: 'auto',
     },
     '&  .window .viewport': {
       position: 'sticky',
       top: '0px',
       left: '0px',
       display: 'flex',
-      'flex-direction': 'column',
+      flexDirection: 'column',
       overflow: 'hidden',
     },
-    '&  .window .material-row': {
+    '&  .window .MuiDataGrid-row': {
       display: 'flex',
       width: 'fit-content',
-      'background-color': '#fff',
+      backgroundColor: '#fff',
 
       '&:hover': {
         cursor: 'pointer',
@@ -190,52 +176,38 @@ export const getStyles = makeStyles((theme) => ({
         },
       },
     },
-    '&  .window .material-row.odd': {
-      'background-color': '#fcfcfc',
+    '&  .window .MuiDataGrid-row.odd': {
+      backgroundColor: '#fcfcfc',
     },
-    '&  .window  .material-row.selected': {
+    '&  .window  .MuiDataGrid-row.selected': {
       backgroundColor: fade(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-      '&$focusVisible': {
-        backgroundColor: fade(
-          theme.palette.primary.main,
-          theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity,
-        ),
-      },
     },
-
-    '&  .window  .material-cell': {
+    '&  .window  .MuiDataGrid-cell': {
       display: 'block',
       overflow: 'hidden',
-      'text-overflow': 'ellipsis',
-      'white-space': 'nowrap',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
       padding: theme.spacing(0, 2),
-      'font-size': theme.typography.fontSize,
-      'border-bottom': '1px solid',
-      'border-color':
-        theme.palette.type === 'light'
-          ? lighten(fade(theme.palette.divider, 1), 0.88)
-          : darken(fade(theme.palette.divider, 1), 0.68),
+      fontSize: theme.typography.fontSize,
+      borderBottom: `1px solid ${borderColor}`,
     },
-    '&  .window  .material-cell.with-renderer': {
+    '&  .window  .MuiDataGrid-cell.with-renderer': {
       display: 'flex',
-      'flex-direction': 'column',
-      'justify-content': 'center',
+      flexDirection: 'column',
+      justifyContent: 'center',
     },
     '&  .with-border': {
-      'border-right': '1px solid',
-      'border-color':
-        theme.palette.type === 'light'
-          ? lighten(fade(theme.palette.divider, 1), 0.88)
-          : darken(fade(theme.palette.divider, 1), 0.68),
+      borderRight: `1px solid ${borderColor}`,
     },
-    '& .window .material-cell.right': {
-      'text-align': 'right',
+    '& .window .MuiDataGrid-cell.right': {
+      textAlign: 'right',
     },
-    '& .window .material-cell.center': {
-      'text-align': 'center',
+    '& .window .MuiDataGrid-cell.center': {
+      textAlign: 'center',
     },
-    '&  .window  .material-cell.checkbox-selection-cell .checkbox-input': {
+    '&  .window  .MuiDataGrid-cell.checkbox-selection-cell .checkbox-input': {
       padding: '12px',
     },
-  },
-}));
+  };
+  return gridStyle;
+});

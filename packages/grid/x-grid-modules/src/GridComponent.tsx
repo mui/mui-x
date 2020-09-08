@@ -71,9 +71,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     // We are handling error here, to set up the handler as early as possible and be able to catch error thrown at init time.
     setErrorState(args);
   };
-  React.useEffect(() => {
-    return apiRef!.current.subscribeEvent(COMPONENT_ERROR, errorHandler);
-  }, [apiRef]);
+  React.useEffect(() => apiRef!.current.subscribeEvent(COMPONENT_ERROR, errorHandler), [apiRef]);
 
   React.useEffect(() => {
     apiRef!.current.showError(props.error);

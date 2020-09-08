@@ -34,7 +34,7 @@ export interface ColumnsHeaderProps {
 export const ColumnsHeader = React.memo(
   React.forwardRef<HTMLDivElement, ColumnsHeaderProps>(
     ({ columns, hasScrollX, onResizeColumn, renderCtx }, columnsHeaderRef) => {
-      const wrapperCssClasses = `material-col-cell-wrapper ${hasScrollX ? 'scroll' : ''}`;
+      const wrapperCssClasses = `MuiDataGrid-col-cell-wrapper ${hasScrollX ? 'scroll' : ''}`;
       const api = React.useContext(ApiContext);
 
       if (!api) {
