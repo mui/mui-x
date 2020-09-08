@@ -11,7 +11,9 @@ import {
 } from './hooks/features';
 import { DEFAULT_GRID_OPTIONS, ElementSize, RootContainerRef } from './models';
 import { COMPONENT_ERROR, DATA_CONTAINER_CSS_CLASS } from './constants';
-import { ColumnsContainer, DataContainer, GridRoot } from './components/styled-wrappers';
+import { GridRoot } from './components/styled-wrappers/grid-root';
+import { DataContainer } from './components/styled-wrappers/data-container';
+import { ColumnsContainer } from './components/styled-wrappers/columns-container';
 import { useVirtualRows } from './hooks/virtualization';
 import {
   ApiContext,

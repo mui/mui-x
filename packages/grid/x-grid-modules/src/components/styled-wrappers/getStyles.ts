@@ -1,5 +1,4 @@
 import { darken, fade, lighten, makeStyles } from '@material-ui/core/styles';
-import { ROOT_CSS_CLASS } from '@material-ui/x-grid-modules';
 
 export const getStyles = makeStyles((theme) => {
   const borderColor =
@@ -8,7 +7,7 @@ export const getStyles = makeStyles((theme) => {
       : darken(fade(theme.palette.divider, 1), 0.68);
 
   const gridStyle: any = {};
-  gridStyle[ROOT_CSS_CLASS] = {
+  gridStyle['root'] = {
     lineHeight: theme.typography.pxToRem(24),
     boxSizing: 'border-box',
     position: 'relative',

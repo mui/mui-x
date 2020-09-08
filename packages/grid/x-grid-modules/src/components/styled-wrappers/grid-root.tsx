@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridOptions } from '../../models';
 import { classnames } from '../../utils';
 import { getStyles } from './getStyles';
-import { ROOT_CSS_CLASS } from '../../constants';
+import { ROOT_CSS_CLASS } from '../../constants/cssClassesConstants';
 
 export type DivProps = React.HTMLAttributes<HTMLDivElement>;
 
