@@ -195,12 +195,6 @@ export const getStyles = makeStyles((theme) => ({
     },
     '&  .window  .material-row.selected': {
       backgroundColor: fade(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-      '&$focusVisible': {
-        backgroundColor: fade(
-          theme.palette.primary.main,
-          theme.palette.action.selectedOpacity + theme.palette.action.focusOpacity,
-        ),
-      },
     },
 
     '&  .window  .material-cell': {
