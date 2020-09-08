@@ -1,29 +1,25 @@
-import { darken, fade, lighten, makeStyles } from '@material-ui/core/styles';
+import {darken, fade, lighten, makeStyles, Theme} from '@material-ui/core/styles';
 
-export const getStyles = makeStyles((theme) => {
+export const useStyles = makeStyles<Theme, any>((theme) => {
   const borderColor =
     theme.palette.type === 'light'
       ? lighten(fade(theme.palette.divider, 1), 0.88)
       : darken(fade(theme.palette.divider, 1), 0.68);
 
   const gridStyle: any = {};
-  gridStyle['root'] = {
-    lineHeight: theme.typography.pxToRem(24),
+  gridStyle.root = {
     boxSizing: 'border-box',
     position: 'relative',
-    fontFamily: theme.typography.fontFamily,
-    letterSpacing: theme.typography.body2,
+    ...theme.typography.body2,
     border: '1px solid #bdc3c7',
     borderRadius: theme.shape.borderRadius,
     outline: 'none',
     display: 'flex',
     flex: 1,
     flexDirection: 'column',
-
     '& *': {
       boxSizing: 'border-box',
     },
-
     '& .main-grid-container': {
       position: 'relative',
       flexGrow: 1,
@@ -42,7 +38,7 @@ export const getStyles = makeStyles((theme) => {
       fontSize: '0.875rem',
       fontWeight: theme.typography.fontWeightMedium,
       lineHeight: 1.43,
-      minHeight: '48px',
+      minHeight: 48,
     },
     '@media (max-width: 650px)': {
       '&  .row-count, &  .selected-row-count': {
@@ -60,7 +56,7 @@ export const getStyles = makeStyles((theme) => {
       top: 0,
       left: 0,
       right: 0,
-      bottom: '15px',
+      bottom: 15,
       alignSelf: 'center',
       alignItems: 'center',
       zIndex: 10,
@@ -70,7 +66,6 @@ export const getStyles = makeStyles((theme) => {
       display: 'flex',
       justifyContent: 'center',
     },
-
     '&  .columns-container': {
       position: 'absolute',
       top: 0,
@@ -100,15 +95,12 @@ export const getStyles = makeStyles((theme) => {
     '&  .MuiDataGrid-col-cell.sortable': {
       cursor: 'pointer',
     },
-
     '&  .MuiDataGrid-col-cell.center': {
       justifyContent: 'center',
     },
-
     '&  .MuiDataGrid-col-cell.right': {
       justifyContent: 'flex-end',
     },
-
     '& .MuiDataGrid-col-cell .title': {
       textOverflow: 'ellipsis',
       overflow: 'hidden',
@@ -135,11 +127,9 @@ export const getStyles = makeStyles((theme) => {
     '& .MuiDataGrid-col-cell.checkbox-selection-header-cell .checkbox-input': {
       padding: '12px',
     },
-
     '& .MuiDataGrid-col-cell-wrapper.scroll .MuiDataGrid-col-cell:last-child': {
       borderRight: 'none',
     },
-
     '&  .data-container': {
       position: 'relative',
       flexGrow: 1,
@@ -165,7 +155,6 @@ export const getStyles = makeStyles((theme) => {
       display: 'flex',
       width: 'fit-content',
       backgroundColor: '#fff',
-
       '&:hover': {
         cursor: 'pointer',
         backgroundColor: theme.palette.action.hover,
@@ -175,13 +164,13 @@ export const getStyles = makeStyles((theme) => {
         },
       },
     },
-    '&  .window .MuiDataGrid-row.odd': {
+    '&  .MuiDataGrid-row.odd': {
       backgroundColor: '#fcfcfc',
     },
-    '&  .window  .MuiDataGrid-row.selected': {
+    '&  .MuiDataGrid-row.selected': {
       backgroundColor: fade(theme.palette.primary.main, theme.palette.action.selectedOpacity),
     },
-    '&  .window  .MuiDataGrid-cell': {
+    '&  .MuiDataGrid-cell': {
       display: 'block',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
@@ -190,7 +179,7 @@ export const getStyles = makeStyles((theme) => {
       fontSize: theme.typography.fontSize,
       borderBottom: `1px solid ${borderColor}`,
     },
-    '&  .window  .MuiDataGrid-cell.with-renderer': {
+    '&  .MuiDataGrid-cell.with-renderer': {
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
@@ -198,13 +187,13 @@ export const getStyles = makeStyles((theme) => {
     '&  .with-border': {
       borderRight: `1px solid ${borderColor}`,
     },
-    '& .window .MuiDataGrid-cell.right': {
+    '& .MuiDataGrid-cell.right': {
       textAlign: 'right',
     },
-    '& .window .MuiDataGrid-cell.center': {
+    '& .MuiDataGrid-cell.center': {
       textAlign: 'center',
     },
-    '&  .window  .MuiDataGrid-cell.checkbox-selection-cell .checkbox-input': {
+    '& .MuiDataGrid-cell.checkbox-selection-cell .checkbox-input': {
       padding: '12px',
     },
   };

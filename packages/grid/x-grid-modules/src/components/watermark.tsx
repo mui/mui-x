@@ -41,8 +41,8 @@ export const Watermark: React.FC<WatermarkProps> = ({ licenseStatus }) => {
         textAlign: 'center',
         bottom: '50%',
         right: 0,
-        letterSpacing: '5px',
-        fontSize: '24px',
+        letterSpacing: 5,
+        fontSize: 24,
       }}
     >
       {' '}
