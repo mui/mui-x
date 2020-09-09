@@ -201,7 +201,7 @@ describe('<XGrid />', () => {
 
       const row = document.querySelector('[role="row"][aria-rowindex="2"]');
       const checkbox = row!.querySelector('input');
-      expect(row).to.not.have.class('MuiDataGrid-selected');
+      expect(row).to.not.have.class('Mui-selected');
       expect(checkbox).to.have.property('checked', false);
 
       fireEvent.click(screen.getByRole('cell', { name: 'Nike' }));
