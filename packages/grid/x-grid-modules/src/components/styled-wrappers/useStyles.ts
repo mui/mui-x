@@ -41,7 +41,7 @@ export const useStyles = makeStyles<Theme, any>((theme) => {
       minHeight: 48,
     },
     '@media (max-width: 650px)': {
-      '&  .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
+      '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
         display: 'none',
       },
     },
@@ -159,13 +159,13 @@ export const useStyles = makeStyles<Theme, any>((theme) => {
         },
       },
     },
-    '&  .MuiDataGrid-row.Mui-odd': {
+    '& .MuiDataGrid-row.Mui-odd': {
       backgroundColor: fade(theme.palette.primary.main, theme.palette.action.activatedOpacity),
     },
-    '&  .MuiDataGrid-row.Mui-selected': {
+    '& .MuiDataGrid-row.Mui-selected': {
       backgroundColor: fade(theme.palette.primary.main, theme.palette.action.selectedOpacity),
     },
-    '&  .MuiDataGrid-cell': {
+    '& .MuiDataGrid-cell': {
       display: 'block',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
@@ -177,12 +177,12 @@ export const useStyles = makeStyles<Theme, any>((theme) => {
     '& .MuiDataGrid-colCellWrapper .MuiDataGrid-cell': {
       borderBottom: `none`,
     },
-    '&  .MuiDataGrid-cellWithRenderer': {
+    '& .MuiDataGrid-cellWithRenderer': {
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
     },
-    '&  .MuiDataGrid-withBorder': {
+    '& .MuiDataGrid-withBorder': {
       borderRight: `1px solid ${borderColor}`,
     },
     '& .MuiDataGrid-cellRight': {
