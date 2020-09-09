@@ -7,18 +7,21 @@ const FORCED_PROPS: Partial<GridComponentProps> = {
   pagination: true,
   disableMultipleColumnsSorting: true,
   disableMultipleSelection: true,
+  disableColumnResize: true,
 };
 
 export type DataGridProps = Omit<
   GridComponentProps,
   | 'disableMultipleColumnsSorting'
   | 'disableMultipleSelection'
+  | 'disableColumnResize'
   | 'licenseStatus'
   | 'options'
   | 'pagination'
 > & {
   disableMultipleColumnsSorting?: true;
   disableMultipleSelection?: true;
+  disableColumnResize?: true;
   pagination?: true;
 };
 

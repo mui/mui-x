@@ -18,6 +18,7 @@ export function useOptionsProp(props: GridComponentProps): [GridOptions, Functio
       disableSelectionOnClick: props.disableSelectionOnClick,
       disableMultipleColumnsSorting: props.disableMultipleColumnsSorting,
       disableMultipleSelection: props.disableMultipleSelection,
+      disableColumnResize: props.disableColumnResize,
       disableExtendRowFullWidth: props.disableExtendRowFullWidth,
       headerHeight: props.headerHeight,
       hideFooter: props.hideFooter,

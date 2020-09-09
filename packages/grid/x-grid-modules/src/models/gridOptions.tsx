@@ -71,6 +71,11 @@ export interface GridOptions {
    */
   disableMultipleColumnsSorting?: boolean;
   /**
+   * If `true`, resizing columns is disabled.
+   * @default false
+   */
+  disableColumnResize?: boolean;
+  /**
    * If `true`, the right border of the cells are displayed.
    * @default false
    */
