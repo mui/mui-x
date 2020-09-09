@@ -1,4 +1,4 @@
-import {darken, fade, lighten, makeStyles, Theme} from '@material-ui/core/styles';
+import { darken, fade, lighten, makeStyles, Theme } from '@material-ui/core/styles';
 
 export const useStyles = makeStyles<Theme, any>((theme) => {
   const borderColor =
