@@ -11,15 +11,14 @@ export const useStyles = makeStyles(
       root: {
         boxSizing: 'border-box',
         position: 'relative',
-        ...theme.typography.body2,
-        border: `1px solid ${borderColor}`,
+        border: `1px solid ${theme.palette.divider}`,
         borderRadius: theme.shape.borderRadius,
         outline: 'none',
         display: 'flex',
         flex: 1,
         flexDirection: 'column',
-        '& *': {
-          boxSizing: 'border-box',
+        '& *, & *::before, & *::after': {
+          boxSizing: 'inherit',
         },
         '& .MuiDataGrid-mainGridContainer': {
           position: 'relative',
@@ -34,16 +33,13 @@ export const useStyles = makeStyles(
           padding: theme.spacing(0, 2),
         },
         '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
-          display: 'flex',
           alignItems: 'center',
-          fontSize: theme.typography.fontSize,
-          fontWeight: theme.typography.fontWeightMedium,
+          ...theme.typography.body2,
           lineHeight: 1.43,
           minHeight: 48,
-        },
-        '@media (max-width: 650px)': {
-          '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
-            display: 'none',
+          display: 'none',
+          [theme.breakpoints.up('md')]: {
+            display: 'flex',
           },
         },
         '& .MuiDataGrid-cell:focus, & .MuiDataGrid-colCell:focus': {
