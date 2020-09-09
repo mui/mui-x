@@ -35,7 +35,7 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
   return (
     <GridComponent
       ref={ref}
-      className={classnames('data-grid', className)}
+      className={classnames('MuiDataGrid-root', className)}
       pageSize={pageSize}
       {...other}
       {...FORCED_PROPS}

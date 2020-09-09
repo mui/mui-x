@@ -36,7 +36,9 @@ export function getFieldFromHeaderElem(colCellEl: Element): string {
 }
 export function findCellElementsFromCol(col: HTMLElement): NodeListOf<Element> | null {
   const field = getDataFromElem(col, 'field');
-  const root = findParentElementFromClassName(col, 'MuiXGrid-root');
+  const root =
+    findParentElementFromClassName(col, 'MuiXGrid-root') ||
+    findParentElementFromClassName(col, 'MuiDataGrid-root');
   if (!root) {
     throw new Error('Material-UI: The root element is not found.');
   }
@@ -45,10 +47,12 @@ export function findCellElementsFromCol(col: HTMLElement): NodeListOf<Element> |
 }
 
 export function findGridRootFromCurrent(elem: Element): HTMLDivElement | null {
-  if (elem.classList.contains('MuiXGrid-root')) {
+  if (elem.classList.contains('MuiXGrid-root') || elem.classList.contains('MuiDataGrid-root')) {
     return elem as HTMLDivElement;
   }
-  const root = findParentElementFromClassName(elem, 'MuiXGrid-root');
+  const root =
+    findParentElementFromClassName(elem, 'MuiXGrid-root') ||
+    findParentElementFromClassName(elem, 'MuiDataGrid-root');
   return root as HTMLDivElement;
 }
 
