@@ -8,7 +8,7 @@ export const ColumnsContainer = React.forwardRef<HTMLDivElement, DivProps & { he
     return (
       <div
         ref={ref}
-        className={classnames('columns-container', className)}
+        className={classnames('MuiDataGrid-columnsContainer', className)}
         {...other}
         style={{ minHeight: height, maxHeight: height, lineHeight: `${height}px`, ...style }}
       />

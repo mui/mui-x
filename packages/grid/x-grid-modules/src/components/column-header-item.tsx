@@ -13,7 +13,10 @@ interface ColumnHeaderItemProps {
   colIndex: number;
   onResizeColumn?: (c: any) => void;
 }
-
+const headerAlignPropToCss = {
+  center: 'MuiDataGrid-colCellCenter',
+  right: 'MuiDataGrid-colCellRight',
+};
 export const ColumnHeaderItem = React.memo(
   ({ column, colIndex, onResizeColumn }: ColumnHeaderItemProps) => {
     const api = React.useContext(ApiContext);
@@ -21,10 +24,12 @@ export const ColumnHeaderItem = React.memo(
 
     const cssClass = classnames(
       HEADER_CELL_CSS_CLASS,
-      showColumnRightBorder ? 'with-border' : '',
+      showColumnRightBorder ? 'MuiDataGrid-withBorder' : '',
       column.headerClassName,
-      column.headerAlign !== 'left' ? column.headerAlign : '',
-      { sortable: column.sortable },
+      column.headerAlign && column.headerAlign !== 'left'
+        ? headerAlignPropToCss[column.headerAlign]
+        : '',
+      { 'MuiDataGrid-colCellSortable': column.sortable },
     );
 
     let headerComponent: React.ReactElement | null = null;

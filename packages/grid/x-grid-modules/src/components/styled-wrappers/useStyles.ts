@@ -6,12 +6,12 @@ export const useStyles = makeStyles<Theme, any>((theme) => {
       ? lighten(fade(theme.palette.divider, 1), 0.88)
       : darken(fade(theme.palette.divider, 1), 0.68);
 
-  const gridStyle: any = {};
+  const gridStyle: any = { name: 'MuiDataGrid' };
   gridStyle.root = {
     boxSizing: 'border-box',
     position: 'relative',
     ...theme.typography.body2,
-    border: '1px solid #bdc3c7',
+    border: `1px solid ${borderColor}`,
     borderRadius: theme.shape.borderRadius,
     outline: 'none',
     display: 'flex',
@@ -20,37 +20,37 @@ export const useStyles = makeStyles<Theme, any>((theme) => {
     '& *': {
       boxSizing: 'border-box',
     },
-    '& .main-grid-container': {
+    '& .MuiDataGrid-mainGridContainer': {
       position: 'relative',
       flexGrow: 1,
       flexDirection: 'column',
       display: 'flex',
     },
-    '& .footer': {
+    '& .MuiDataGrid-footer': {
       display: 'flex',
       justifyContent: 'space-between',
       flexDirection: 'row',
       padding: theme.spacing(0, 2),
     },
-    '& .row-count, & .selected-row-count': {
+    '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
       display: 'flex',
       alignItems: 'center',
-      fontSize: '0.875rem',
+      fontSize: theme.typography.fontSize,
       fontWeight: theme.typography.fontWeightMedium,
       lineHeight: 1.43,
       minHeight: 48,
     },
     '@media (max-width: 650px)': {
-      '&  .row-count, &  .selected-row-count': {
+      '&  .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
         display: 'none',
       },
     },
-    '&  .MuiDataGrid-cell:focus, &  .MuiDataGrid-col-cell:focus': {
+    '& .MuiDataGrid-cell:focus, & .MuiDataGrid-colCell:focus': {
       outline: 'dotted',
-      outlineWidth: '1px',
-      outlineOffset: '-2px',
+      outlineWidth: 1,
+      outlineOffset: -2,
     },
-    '&  .overlay': {
+    '& .MuiDataGrid-overlay': {
       display: 'flex',
       position: 'absolute',
       top: 0,
@@ -61,100 +61,95 @@ export const useStyles = makeStyles<Theme, any>((theme) => {
       alignItems: 'center',
       zIndex: 10,
     },
-    '&  .overlay .content': {
+    '& .MuiDataGrid-overlayContent': {
       flex: 1,
       display: 'flex',
       justifyContent: 'center',
     },
-    '&  .columns-container': {
+    '& .MuiDataGrid-columnsContainer': {
       position: 'absolute',
       top: 0,
       left: 0,
       right: 0,
-      overflowX: 'hidden',
-      overflowY: 'hidden',
+      overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column',
       borderBottom: `1px solid ${borderColor}`,
       zIndex: 100,
-      backgroundColor: '#f9f9f9',
+      backgroundColor: fade(theme.palette.primary.main, theme.palette.action.focusOpacity),
       color: theme.palette.text.primary,
       fontWeight: theme.typography.fontWeightBold,
       fontSize: theme.typography.fontSize,
     },
-    '&  .columns-container .MuiDataGrid-col-cell-wrapper': {
+    '& .MuiDataGrid-colCellWrapper': {
       display: 'flex',
       width: '100%',
       alignItems: 'center',
     },
-    '&  .MuiDataGrid-col-cell': {
+    '& .MuiDataGrid-colCell': {
       position: 'relative',
       display: 'flex',
       padding: '0 16px',
     },
-    '&  .MuiDataGrid-col-cell.sortable': {
+    '& .MuiDataGrid-colCellSortable': {
       cursor: 'pointer',
     },
-    '&  .MuiDataGrid-col-cell.center': {
+    '& .MuiDataGrid-colCellCenter': {
       justifyContent: 'center',
     },
-    '&  .MuiDataGrid-col-cell.right': {
+    '& .MuiDataGrid-colCellRight': {
       justifyContent: 'flex-end',
     },
-    '& .MuiDataGrid-col-cell .title': {
+    '& .MuiDataGrid-colCellTitle': {
       textOverflow: 'ellipsis',
       overflow: 'hidden',
       whiteSpace: 'nowrap',
     },
-    '& .MuiDataGrid-col-cell .column-separator': {
+    '& .MuiDataGrid-columnSeparator': {
       position: 'absolute',
-      right: '-12px',
+      right: -12,
       zIndex: 100,
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
     },
-    '& .MuiDataGrid-col-cell .column-separator .icon.separator': {
-      color: '#bdc3c7',
+    '& .MuiDataGrid-iconSeparator': {
+      color: borderColor,
     },
-    '& .MuiDataGrid-col-cell .column-separator:hover .separator.resizable': {
+    '& .MuiDataGrid-columnSeparator:hover .MuiDataGrid-resizable': {
       cursor: 'col-resize',
       color: 'inherit',
     },
-    '&  .MuiDataGrid-col-cell *': {
-      maxHeight: '56px',
+    '& .MuiDataGrid-colCell *': {
+      maxHeight: 56,
     },
-    '& .MuiDataGrid-col-cell.checkbox-selection-header-cell .checkbox-input': {
-      padding: '12px',
-    },
-    '& .MuiDataGrid-col-cell-wrapper.scroll .MuiDataGrid-col-cell:last-child': {
+    '& .MuiDataGrid-colCellWrapper.scroll .MuiDataGrid-colCell:last-child': {
       borderRight: 'none',
     },
-    '&  .data-container': {
+    '& .MuiDataGrid-dataContainer': {
       position: 'relative',
       flexGrow: 1,
       display: 'flex',
       flexDirection: 'column',
     },
-    '&  .window': {
+    '& .MuiDataGrid-window': {
       position: 'absolute',
-      bottom: '0px',
-      left: '0px',
+      bottom: 0,
+      left: 0,
       right: 0,
       overflowX: 'auto',
     },
-    '&  .window .viewport': {
+    '& .MuiDataGrid-viewport': {
       position: 'sticky',
-      top: '0px',
-      left: '0px',
+      top: 0,
+      left: 0,
       display: 'flex',
       flexDirection: 'column',
       overflow: 'hidden',
     },
-    '&  .window .MuiDataGrid-row': {
+    '& .MuiDataGrid-row': {
       display: 'flex',
       width: 'fit-content',
-      backgroundColor: '#fff',
       '&:hover': {
         cursor: 'pointer',
         backgroundColor: theme.palette.action.hover,
@@ -164,10 +159,10 @@ export const useStyles = makeStyles<Theme, any>((theme) => {
         },
       },
     },
-    '&  .MuiDataGrid-row.odd': {
-      backgroundColor: '#fcfcfc',
+    '&  .MuiDataGrid-row.Mui-odd': {
+      backgroundColor: fade(theme.palette.primary.main, theme.palette.action.activatedOpacity),
     },
-    '&  .MuiDataGrid-row.selected': {
+    '&  .MuiDataGrid-row.Mui-selected': {
       backgroundColor: fade(theme.palette.primary.main, theme.palette.action.selectedOpacity),
     },
     '&  .MuiDataGrid-cell': {
@@ -176,25 +171,28 @@ export const useStyles = makeStyles<Theme, any>((theme) => {
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
       padding: theme.spacing(0, 2),
-      fontSize: theme.typography.fontSize,
+      ...theme.typography.body1,
       borderBottom: `1px solid ${borderColor}`,
     },
-    '&  .MuiDataGrid-cell.with-renderer': {
+    '& .MuiDataGrid-colCellWrapper .MuiDataGrid-cell': {
+      borderBottom: `none`,
+    },
+    '&  .MuiDataGrid-cellWithRenderer': {
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
     },
-    '&  .with-border': {
+    '&  .MuiDataGrid-withBorder': {
       borderRight: `1px solid ${borderColor}`,
     },
-    '& .MuiDataGrid-cell.right': {
+    '& .MuiDataGrid-cellRight': {
       textAlign: 'right',
     },
-    '& .MuiDataGrid-cell.center': {
+    '& .MuiDataGrid-cellCenter': {
       textAlign: 'center',
     },
-    '& .MuiDataGrid-cell.checkbox-selection-cell .checkbox-input': {
-      padding: '12px',
+    '& .MuiDataGrid-checkboxInput': {
+      padding: 12,
     },
   };
   return gridStyle;

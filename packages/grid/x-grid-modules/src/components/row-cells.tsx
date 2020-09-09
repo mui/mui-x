@@ -85,7 +85,7 @@ export const RowCells: React.FC<RowCellsProps> = React.memo((props) => {
     let cellComponent: React.ReactElement | null = null;
     if (column.renderCell) {
       cellComponent = column.renderCell(cellParams);
-      cssClassProp = { cssClass: `${cssClassProp.cssClass} with-renderer` };
+      cssClassProp = { cssClass: `${cssClassProp.cssClass} MuiDataGrid-cellWithRenderer` };
     }
 
     const cellProps: GridCellProps & { children: any } = {

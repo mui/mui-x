@@ -11,7 +11,7 @@ const ColumnHeaderInnerTitle = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={classnames('title', className)}
+      className={classnames('MuiDataGrid-colCellTitle', className)}
       aria-label={String(other.children)}
       {...other}
     />

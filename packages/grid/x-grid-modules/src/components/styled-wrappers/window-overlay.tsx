@@ -8,11 +8,11 @@ export function GridOverlay(props: DivProps) {
   const options = React.useContext(OptionsContext);
   return (
     <div
-      className={classnames('overlay', className)}
+      className={classnames('MuiDataGrid-overlay', className)}
       {...other}
       style={{ top: options?.headerHeight }}
     >
-      <div className="content">{children}</div>
+      <div className="MuiDataGrid-overlayContent">{children}</div>
     </div>
   );
 }

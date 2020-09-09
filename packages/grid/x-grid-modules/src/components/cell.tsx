@@ -17,6 +17,11 @@ export interface GridCellProps {
   rowIndex?: number;
 }
 
+const alignPropToCssClass = {
+  center: 'MuiDataGrid-cellCenter',
+  right: 'MuiDataGrid-cellRight',
+};
+
 export const Cell: React.FC<GridCellProps> = React.memo(
   ({
     value,
@@ -34,8 +39,8 @@ export const Cell: React.FC<GridCellProps> = React.memo(
     const cssClasses = classnames(
       CELL_CSS_CLASS,
       cssClass,
-      { 'with-border': showRightBorder },
-      align !== 'left' ? align : '',
+      { 'MuiDataGrid-withBorder': showRightBorder },
+      align && align !== 'left' ? alignPropToCssClass[align] : '',
     );
     const valueToRender = formattedValue || value;
     const { rowHeight } = React.useContext(OptionsContext);

@@ -32,7 +32,7 @@ export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api }) => {
         indeterminate={isIndeterminate}
         checked={isChecked}
         onChange={handleChange}
-        className="checkbox-input"
+        className="MuiDataGrid-checkboxInput"
         inputProps={{ 'aria-label': 'Select All Rows checkbox' }}
       />
     </div>
@@ -50,7 +50,7 @@ export const CellCheckboxRenderer: React.FC<CellParams> = React.memo(({ api, row
       <Checkbox
         checked={!!value}
         onChange={handleChange}
-        className="checkbox-input"
+        className="MuiDataGrid-checkboxInput"
         inputProps={{ 'aria-label': 'Select Row checkbox' }}
       />
     </div>

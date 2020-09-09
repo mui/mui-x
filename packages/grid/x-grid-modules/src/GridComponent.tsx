@@ -166,7 +166,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
       {(size: any) => (
         <GridRoot
           ref={handleRef}
-          className={`material-grid MuiGrid ${props.className || ''}`}
+          className={`MuiDataGrid ${props.className || ''}`}
           options={internalOptions}
           style={{ width: size.width, height: getTotalHeight(size) }}
           role="grid"
@@ -182,13 +182,15 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
             api={apiRef!}
             logger={gridLogger}
             render={(errorProps) => (
-              <div className="main-grid-container">{customComponents.renderError(errorProps)}</div>
+              <div className="MuiDataGrid-mainGridContainer">
+                {customComponents.renderError(errorProps)}
+              </div>
             )}
           >
             <ApiContext.Provider value={apiRef}>
               <OptionsContext.Provider value={internalOptions}>
                 {customComponents.headerComponent}
-                <div className="main-grid-container">
+                <div className="MuiDataGrid-mainGridContainer">
                   <Watermark licenseStatus={props.licenseStatus} />
                   <ColumnsContainer ref={columnsContainerRef} height={internalOptions.headerHeight}>
                     <ColumnsHeader

@@ -13,7 +13,7 @@ export const ColumnHeaderSeparator: React.FC<ColumnHeaderSeparatorProps> = React
     const { showColumnRightBorder, headerHeight } = React.useContext(OptionsContext);
 
     const resizeIconProps = {
-      className: `icon separator ${resizable ? 'resizable' : ''}`,
+      className: `MuiDataGrid-iconSeparator ${resizable ? 'MuiDataGrid-resizable' : ''}`,
       ...(resizable && onResize ? { onMouseDown: onResize } : {}),
     };
 
@@ -21,7 +21,7 @@ export const ColumnHeaderSeparator: React.FC<ColumnHeaderSeparatorProps> = React
 
     return (
       <div
-        className="column-separator"
+        className="MuiDataGrid-columnSeparator"
         style={{ minHeight: headerHeight, opacity: showColumnRightBorder ? 0 : 1 }}
       >
         {icon}

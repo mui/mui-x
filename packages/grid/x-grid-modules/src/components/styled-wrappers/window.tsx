@@ -9,7 +9,7 @@ export const Window = React.forwardRef<HTMLDivElement, DivProps>((props, ref) =>
   return (
     <div
       ref={ref}
-      className={classnames('window', className)}
+      className={classnames('MuiDataGrid-window', className)}
       {...other}
       style={{ top: headerHeight, overflowY: autoHeight ? 'hidden' : 'auto' }}
     />
