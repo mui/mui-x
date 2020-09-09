@@ -7,7 +7,7 @@ components: DataGrid, XGrid
 
 <p class="description">Explore and analyse in depth the grid data.</p>
 
-## 🚧 Tree data
+## 🚧 Tree data ⚡️
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
@@ -15,7 +15,7 @@ components: DataGrid, XGrid
 
 Tree data allows to visualize self-referential hierarchical (tree-like structure) data.
 
-## 🚧 Master detail
+## 🚧 Master detail ⚡️
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
@@ -23,7 +23,7 @@ Tree data allows to visualize self-referential hierarchical (tree-like structure
 
 The feature allows to display row details on an expandable pane.
 
-## 🚧 Grouping
+## 🚧 Grouping ⚡️
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >

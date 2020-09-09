@@ -72,10 +72,7 @@ const pages = [
       {
         pathname: '/components',
         subheader: '/components/foo',
-        children: [
-          { pathname: '/components/data-grid/getting-started' },
-          { pathname: '/components/data-grid/rendering' },
-        ],
+        children: [{ pathname: '/components/data-grid/rendering' }],
       },
       {
         pathname: '/components',
@@ -145,10 +142,9 @@ const pages = [
                   pathname: '/components/data-grid',
                   title: 'Overview',
                 },
-                { pathname: '/components/data-grid/404', title: '🚧 Getting Started' },
+                { pathname: '/components/data-grid/getting-started' },
                 { pathname: '/components/data-grid/columns' },
                 { pathname: '/components/data-grid/rows' },
-                { pathname: '/components/data-grid/404', title: '🚧 Data' },
                 { pathname: '/components/data-grid/filtering', title: '🚧 Filtering' },
                 { pathname: '/components/data-grid/pagination' },
                 { pathname: '/components/data-grid/selection' },
@@ -164,7 +160,7 @@ const pages = [
                   pathname: '/components/data-grid',
                   title: 'Overview',
                 },
-                { pathname: '/components/data-grid/getting-started', title: '🚧 Getting Started' },
+                { pathname: '/components/data-grid/getting-started' },
                 { pathname: '/components/data-grid/columns' },
                 { pathname: '/components/data-grid/rows' },
                 { pathname: '/components/data-grid/filtering', title: '🚧 Filtering' },

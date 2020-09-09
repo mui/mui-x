@@ -158,7 +158,7 @@ Row spanning allows to change this default behavior.
 It allows cells to span multiple rows.
 This is very close to the "row spanning" in an HTML `<table>`.
 
-## 🚧 Row reorder
+## 🚧 Row reorder ⚡️
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
