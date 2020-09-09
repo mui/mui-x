@@ -166,7 +166,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
       {(size: any) => (
         <GridRoot
           ref={handleRef}
-          className={`MuiDataGrid ${props.className || ''}`}
+          className={props.className}
           style={{ width: size.width, height: getTotalHeight(size) }}
           role="grid"
           aria-colcount={internalColumns.visible.length}
