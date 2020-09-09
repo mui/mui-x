@@ -73,10 +73,6 @@ export const useStyles = makeStyles(
           flexDirection: 'column',
           borderBottom: `1px solid ${borderColor}`,
           zIndex: 100,
-          backgroundColor: fade(theme.palette.primary.main, theme.palette.action.focusOpacity),
-          color: theme.palette.text.primary,
-          fontWeight: theme.typography.fontWeightBold,
-          fontSize: theme.typography.fontSize,
         },
         '& .MuiDataGrid-colCellWrapper': {
           display: 'flex',
@@ -86,7 +82,7 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-colCell': {
           position: 'relative',
           display: 'flex',
-          padding: '0 16px',
+          padding: '0 12px',
         },
         '& .MuiDataGrid-colCellSortable': {
           cursor: 'pointer',
@@ -101,6 +97,10 @@ export const useStyles = makeStyles(
           textOverflow: 'ellipsis',
           overflow: 'hidden',
           whiteSpace: 'nowrap',
+          ...theme.typography.body2,
+          lineHeight: null,
+          color: theme.palette.text.primary,
+          fontWeight: theme.typography.fontWeightMedium,
         },
         '& .MuiDataGrid-columnSeparator': {
           position: 'absolute',
@@ -156,9 +156,6 @@ export const useStyles = makeStyles(
             },
           },
         },
-        '& .MuiDataGrid-row.Mui-odd': {
-          backgroundColor: fade(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-        },
         '& .MuiDataGrid-row.Mui-selected': {
           backgroundColor: fade(theme.palette.primary.main, theme.palette.action.selectedOpacity),
         },
@@ -168,7 +165,7 @@ export const useStyles = makeStyles(
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
           padding: theme.spacing(0, 2),
-          ...theme.typography.body1,
+          ...theme.typography.body2,
           borderBottom: `1px solid ${borderColor}`,
         },
         '& .MuiDataGrid-colCellWrapper .MuiDataGrid-cell': {
