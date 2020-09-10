@@ -9,7 +9,7 @@ import {
 } from '@material-ui/x-grid-modules';
 
 export * from '@material-ui/x-grid-modules';
-export type DataGridColDef = Omit<XGridColDef, 'resizable'> & { resizable? : false };
+export type DataGridColDef = Omit<XGridColDef, 'resizable'> & { resizable?: false };
 export interface ColDef extends DataGridColDef {}
 
 const FORCED_PROPS: Partial<GridComponentProps> = {
@@ -49,7 +49,7 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
   return (
     <GridComponent
       ref={ref}
-      columns={ columns }
+      columns={columns}
       className={classnames('MuiDataGrid-root', className)}
       pageSize={pageSize}
       {...other}
