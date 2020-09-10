@@ -109,7 +109,7 @@ const usdPrice: ColTypeDef = {
 
 Grouping columns allows you to have multiple levels of columns in your header and the ability, if needed, to 'open and close' column groups to show and hide additional columns.
 
-## 🚧 Column reorder
+## 🚧 Column reorder ⚡️
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
@@ -117,7 +117,7 @@ Grouping columns allows you to have multiple levels of columns in your header an
 
 Column reordering enables reordering the columns by dragging the header cells.
 
-## 🚧 Sticky columns
+## 🚧 Sticky columns ⚡️
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
