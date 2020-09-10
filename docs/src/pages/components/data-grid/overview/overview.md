@@ -57,7 +57,7 @@ import { XGrid } from '@material-ui/x-grid';
 
 ## 🚧 Upcoming features
 
-Work in progress in the roadmap:
+Work in progress in the [roadmap](https://github.com/mui-org/material-ui-x/projects/1):
 
 - [Filtering](/components/data-grid/filtering/)
 - [Cell editing](/components/data-grid/editing/)
