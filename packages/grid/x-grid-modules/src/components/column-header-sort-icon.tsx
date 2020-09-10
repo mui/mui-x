@@ -8,16 +8,15 @@ export interface ColumnHeaderSortIconProps {
   direction: SortDirection;
   index: number | undefined;
   hide?: boolean;
-  height: number;
 }
 
-const getIcon = (icons: IconsOptions, direction: SortDirection, height: number): React.ReactNode =>
-  direction === 'asc'
-    ? React.createElement(icons!.columnSortedAscending!, { styles: { minHeight: height } })
-    : React.createElement(icons!.columnSortedDescending!, { styles: { minHeight: height } });
+function getIcon(icons: IconsOptions, direction: SortDirection) {
+  const Icon = direction === 'asc' ? icons!.columnSortedAscending! : icons!.columnSortedDescending!;
+  return <Icon className="MuiDataGrid-sortIcon" />;
+}
 
 export const ColumnHeaderSortIcon: React.FC<ColumnHeaderSortIconProps> = React.memo(
-  ({ direction, index, hide, height }) => {
+  ({ direction, index, hide }) => {
     const icons = useIcons();
 
     if (hide || direction == null) {
@@ -25,17 +24,17 @@ export const ColumnHeaderSortIcon: React.FC<ColumnHeaderSortIconProps> = React.m
     }
 
     return (
-      <span className="sort-icon">
+      <span>
         {index != null && (
           <Badge badgeContent={index} color="default">
             <IconButton aria-label="Sort" size="small">
-              {getIcon(icons, direction, height)}
+              {getIcon(icons, direction)}
             </IconButton>
           </Badge>
         )}
         {index == null && (
           <IconButton aria-label="Sort" size="small">
-            {getIcon(icons, direction, height)}
+            {getIcon(icons, direction)}
           </IconButton>
         )}
       </span>

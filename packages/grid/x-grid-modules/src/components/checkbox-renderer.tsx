@@ -26,6 +26,7 @@ export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api }) => {
   React.useEffect(() => {
     return api.onSelectionChange(selectionChange);
   }, [api, selectionChange]);
+
   return (
     <div>
       <Checkbox
@@ -33,6 +34,7 @@ export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api }) => {
         checked={isChecked}
         onChange={handleChange}
         className="MuiDataGrid-checkboxInput"
+        color="primary"
         inputProps={{ 'aria-label': 'Select All Rows checkbox' }}
       />
     </div>
@@ -51,6 +53,7 @@ export const CellCheckboxRenderer: React.FC<CellParams> = React.memo(({ api, row
         checked={!!value}
         onChange={handleChange}
         className="MuiDataGrid-checkboxInput"
+        color="primary"
         inputProps={{ 'aria-label': 'Select Row checkbox' }}
       />
     </div>

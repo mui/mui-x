@@ -9,13 +9,13 @@ export const useStyles = makeStyles(
 
     return {
       root: {
+        flex: 1,
         boxSizing: 'border-box',
         position: 'relative',
-        border: `1px solid ${theme.palette.divider}`,
+        border: `1px solid ${borderColor}`,
         borderRadius: theme.shape.borderRadius,
         outline: 'none',
         display: 'flex',
-        flex: 1,
         flexDirection: 'column',
         '& *, & *::before, & *::after': {
           boxSizing: 'inherit',
@@ -23,29 +23,8 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-mainGridContainer': {
           position: 'relative',
           flexGrow: 1,
+          display: 'flex',
           flexDirection: 'column',
-          display: 'flex',
-        },
-        '& .MuiDataGrid-footer': {
-          display: 'flex',
-          justifyContent: 'space-between',
-          flexDirection: 'row',
-          padding: theme.spacing(0, 2),
-        },
-        '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
-          alignItems: 'center',
-          ...theme.typography.body2,
-          lineHeight: 1.43,
-          minHeight: 48,
-          display: 'none',
-          [theme.breakpoints.up('md')]: {
-            display: 'flex',
-          },
-        },
-        '& .MuiDataGrid-cell:focus, & .MuiDataGrid-colCell:focus': {
-          outline: 'dotted',
-          outlineWidth: 1,
-          outlineOffset: -2,
         },
         '& .MuiDataGrid-overlay': {
           display: 'flex',
@@ -79,13 +58,29 @@ export const useStyles = makeStyles(
           width: '100%',
           alignItems: 'center',
         },
+        '& .MuiDataGrid-colCell, & .MuiDataGrid-cell': {
+          WebkitTapHighlightColor: 'transparent',
+          ...theme.typography.body2,
+          lineHeight: null,
+          padding: theme.spacing(0, 2),
+        },
+        '& .MuiDataGrid-colCell:focus, & .MuiDataGrid-cell:focus': {
+          outline: 'dotted',
+          outlineWidth: 1,
+          outlineOffset: -2,
+        },
+        '& .MuiDataGrid-colCellCheckbox, & .MuiDataGrid-cellCheckbox': {
+          padding: 0,
+        },
         '& .MuiDataGrid-colCell': {
           position: 'relative',
           display: 'flex',
-          padding: '0 12px',
         },
         '& .MuiDataGrid-colCellSortable': {
           cursor: 'pointer',
+        },
+        '& .MuiDataGrid-sortIcon': {
+          fontSize: 18,
         },
         '& .MuiDataGrid-colCellCenter': {
           justifyContent: 'center',
@@ -97,8 +92,6 @@ export const useStyles = makeStyles(
           textOverflow: 'ellipsis',
           overflow: 'hidden',
           whiteSpace: 'nowrap',
-          ...theme.typography.body2,
-          lineHeight: null,
           color: theme.palette.text.primary,
           fontWeight: theme.typography.fontWeightMedium,
         },
@@ -116,9 +109,6 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-columnSeparator:hover .MuiDataGrid-resizable': {
           cursor: 'col-resize',
           color: 'inherit',
-        },
-        '& .MuiDataGrid-colCell *': {
-          maxHeight: 56,
         },
         '& .MuiDataGrid-colCellWrapper.scroll .MuiDataGrid-colCell:last-child': {
           borderRight: 'none',
@@ -148,28 +138,39 @@ export const useStyles = makeStyles(
           display: 'flex',
           width: 'fit-content',
           '&:hover': {
-            cursor: 'pointer',
             backgroundColor: theme.palette.action.hover,
             // Reset on touch devices, it doesn't add specificity
             '@media (hover: none)': {
               backgroundColor: 'transparent',
             },
           },
-        },
-        '& .MuiDataGrid-row.Mui-selected': {
-          backgroundColor: fade(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+          '&.Mui-selected': {
+            backgroundColor: fade(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+            '&:hover': {
+              backgroundColor: fade(
+                theme.palette.primary.main,
+                theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
+              ),
+              // Reset on touch devices, it doesn't add specificity
+              '@media (hover: none)': {
+                backgroundColor: fade(
+                  theme.palette.primary.main,
+                  theme.palette.action.selectedOpacity,
+                ),
+              },
+            },
+          },
         },
         '& .MuiDataGrid-cell': {
           display: 'block',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
-          padding: theme.spacing(0, 2),
-          ...theme.typography.body2,
           borderBottom: `1px solid ${borderColor}`,
         },
+        // The very last cell
         '& .MuiDataGrid-colCellWrapper .MuiDataGrid-cell': {
-          borderBottom: `none`,
+          borderBottom: 'none',
         },
         '& .MuiDataGrid-cellWithRenderer': {
           display: 'flex',
@@ -185,8 +186,18 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-cellCenter': {
           textAlign: 'center',
         },
-        '& .MuiDataGrid-checkboxInput': {
-          padding: 12,
+        '& .MuiDataGrid-footer': {
+          display: 'flex',
+          justifyContent: 'space-between',
+          padding: theme.spacing(0, 2),
+        },
+        '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
+          alignItems: 'center',
+          ...theme.typography.body2,
+          display: 'none',
+          [theme.breakpoints.up('md')]: {
+            display: 'flex',
+          },
         },
       },
     };

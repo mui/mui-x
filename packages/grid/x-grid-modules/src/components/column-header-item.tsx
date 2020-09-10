@@ -42,7 +42,7 @@ export const ColumnHeaderItem = React.memo(
       });
     }
 
-    const onResize = onResizeColumn ? () => onResizeColumn(column) : undefined;
+    const handleResize = onResizeColumn ? () => onResizeColumn(column) : undefined;
 
     const width = column.width!;
 
@@ -73,7 +73,6 @@ export const ColumnHeaderItem = React.memo(
             direction={column.sortDirection}
             index={column.sortIndex}
             hide={column.hideSortIcons}
-            height={headerHeight}
           />
         )}
         {headerComponent || (
@@ -88,10 +87,9 @@ export const ColumnHeaderItem = React.memo(
             direction={column.sortDirection}
             index={column.sortIndex}
             hide={column.hideSortIcons}
-            height={headerHeight}
           />
         )}
-        <ColumnHeaderSeparator resizable={column.resizable} onResize={onResize} />
+        <ColumnHeaderSeparator resizable={column.resizable} onResize={handleResize} />
       </div>
     );
   },
