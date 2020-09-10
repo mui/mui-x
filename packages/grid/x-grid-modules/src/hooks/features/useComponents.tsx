@@ -9,8 +9,9 @@ import {
   InternalColumns,
   Rows,
 } from '../../models';
-import { LoadingOverlay, NoRowMessage } from '../../components';
 import { ErrorMessage } from '../../components/error-message';
+import { LoadingOverlay } from '../../components/loading-overlay';
+import { NoRowMessage } from '../../components/no-row-message';
 
 export const useComponents = (
   columns: InternalColumns,

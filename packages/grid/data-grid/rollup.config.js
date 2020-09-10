@@ -34,7 +34,7 @@ export default [
         cleaner({
           targets: ['./dist/'],
         }),
-      typescript({ build: true }),
+      typescript({ tsconfig: 'tsconfig.build.json' }),
       !production && sourceMaps(),
       production && terser(),
     ],

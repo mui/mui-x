@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/x-grid-modules",
-  "version": "0.1.64",
+  "version": "0.1.67",
   "description": "Material-UI shared grid modules",
   "author": "Material-UI Team",
   "main": "dist/index-cjs.js",
@@ -24,8 +24,7 @@
   },
   "peerDependencies": {
     "@material-ui/core": "^4.9.12",
-    "react": "^16.8.0",
-    "styled-components": "^5.1.0"
+    "react": "^16.8.0"
   },
   "scripts": {
     "precommit": "npm run lint",

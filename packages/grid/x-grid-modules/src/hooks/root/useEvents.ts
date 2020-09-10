@@ -66,6 +66,9 @@ export function useEvents(
       if (isCell(elem)) {
         const cellEl = findParentElementFromClassName(elem, CELL_CSS_CLASS)! as HTMLElement;
         const rowEl = findParentElementFromClassName(elem, ROW_CSS_CLASS)! as HTMLElement;
+        if (rowEl == null) {
+          return null;
+        }
         const id = getIdFromRowElem(rowEl);
         const rowModel = apiRef.current.getRowFromId(id);
         const rowIndex = apiRef.current.getRowIndexFromId(id);

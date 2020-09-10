@@ -6,25 +6,32 @@ import { classnames } from '../utils';
 import { ColumnHeaderSortIcon } from './column-header-sort-icon';
 import { ColumnHeaderTitle } from './column-header-title';
 import { ColumnHeaderSeparator } from './column-header-separator';
+import { OptionsContext } from './options-context';
 
 interface ColumnHeaderItemProps {
   column: ColDef;
-  headerHeight: number;
   colIndex: number;
   onResizeColumn?: (c: any) => void;
   onColumnDragStart?: (c: ColDef, h: HTMLElement) => void;
   onColumnDragEnter?: (c: ColDef) => void;
 }
-
+const headerAlignPropToCss = {
+  center: 'MuiDataGrid-colCellCenter',
+  right: 'MuiDataGrid-colCellRight',
+};
 export const ColumnHeaderItem = React.memo(
-  ({ column, colIndex, headerHeight, onResizeColumn, onColumnDragStart, onColumnDragEnter }: ColumnHeaderItemProps) => {
+  ({ column, colIndex, onResizeColumn, onColumnDragStart, onColumnDragEnter }: ColumnHeaderItemProps) => {
     const api = React.useContext(ApiContext);
+    const { showColumnRightBorder } = React.useContext(OptionsContext);
 
     const cssClass = classnames(
       HEADER_CELL_CSS_CLASS,
+      showColumnRightBorder ? 'MuiDataGrid-withBorder' : '',
       column.headerClassName,
-      column.headerAlign !== 'left' ? column.headerAlign : '',
-      { sortable: column.sortable },
+      column.headerAlign && column.headerAlign !== 'left'
+        ? headerAlignPropToCss[column.headerAlign]
+        : '',
+      { 'MuiDataGrid-colCellSortable': column.sortable },
     );
 
     let headerComponent: React.ReactElement | null = null;
@@ -57,8 +64,6 @@ export const ColumnHeaderItem = React.memo(
           width,
           minWidth: width,
           maxWidth: width,
-          maxHeight: headerHeight,
-          minHeight: headerHeight,
         }}
         role="columnheader"
         tabIndex={-1}

@@ -27,7 +27,7 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportP
       const renderedRows = rows.slice(renderCtx.firstRowIdx, renderCtx.lastRowIdx!);
       return renderedRows.map((r, idx) => (
         <Row
-          className={(renderCtx.firstRowIdx! + idx) % 2 === 0 ? 'even' : 'odd'}
+          className={(renderCtx.firstRowIdx! + idx) % 2 === 0 ? 'Mui-even' : 'Mui-odd'}
           key={r.id}
           id={r.id}
           selected={r.selected}

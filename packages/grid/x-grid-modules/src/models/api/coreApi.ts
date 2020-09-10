@@ -10,7 +10,6 @@ export interface CoreApi extends EventEmitter {
   isInitialised: boolean;
   /**
    * Allows to register a handler for an event.
-   *
    * @param event
    * @param handler
    * @returns Unsubscribe Function
@@ -18,7 +17,6 @@ export interface CoreApi extends EventEmitter {
   subscribeEvent: (event: string, handler: (param: any) => void) => () => void;
   /**
    * Allows to emit an event.
-   *
    * @param name
    * @param args
    */

@@ -33,7 +33,6 @@ module.exports = {
         }
       ],
     });
-
     if (__DEV__) {
       config.module.rules.push({
         test: /\.(js|ts|tsx)$/,

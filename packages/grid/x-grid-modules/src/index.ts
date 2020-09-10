@@ -6,4 +6,4 @@ export * from './utils';
 
 export * from './GridComponentProps';
 export * from './GridComponent';
-export { useOptionsProp } from '@material-ui/x-grid-modules/hooks/utils/useOptionsProp';
+export * from './hooks/utils/useOptionsProp';

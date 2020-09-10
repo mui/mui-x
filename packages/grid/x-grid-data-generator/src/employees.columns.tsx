@@ -1,4 +1,4 @@
-import './style/real-data-stories.css';
+// import './style/real-data-stories.css';
 import {
   generateName,
   randomAvatar,
@@ -85,7 +85,6 @@ export const employeeColumns: any[] = [
     field: 'city',
     headerName: 'City',
     generateData: randomCity,
-    width: 100,
   },
   {
     field: 'country',

@@ -1,13 +1,8 @@
 import * as React from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
-import styled from 'styled-components';
 import { SelectionChangeParams } from '../models/params/selectionChangeParams';
 import { ColParams } from '../models/params/colParams';
 import { CellParams } from '../models/params/cellParams';
-
-const CheckboxInputContainer = styled.div`
-  display: block;
-`;
 
 export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api }) => {
   const [isChecked, setChecked] = React.useState(false);
@@ -31,16 +26,18 @@ export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api }) => {
   React.useEffect(() => {
     return api.onSelectionChange(selectionChange);
   }, [api, selectionChange]);
+
   return (
-    <CheckboxInputContainer>
+    <div>
       <Checkbox
         indeterminate={isIndeterminate}
         checked={isChecked}
         onChange={handleChange}
-        className="checkbox-input"
+        className="MuiDataGrid-checkboxInput"
+        color="primary"
         inputProps={{ 'aria-label': 'Select All Rows checkbox' }}
       />
-    </CheckboxInputContainer>
+    </div>
   );
 });
 HeaderCheckbox.displayName = 'HeaderCheckbox';
@@ -51,14 +48,15 @@ export const CellCheckboxRenderer: React.FC<CellParams> = React.memo(({ api, row
   };
 
   return (
-    <CheckboxInputContainer>
+    <div>
       <Checkbox
         checked={!!value}
         onChange={handleChange}
-        className="checkbox-input"
+        className="MuiDataGrid-checkboxInput"
+        color="primary"
         inputProps={{ 'aria-label': 'Select Row checkbox' }}
       />
-    </CheckboxInputContainer>
+    </div>
   );
 });
 CellCheckboxRenderer.displayName = 'CellCheckboxRenderer';

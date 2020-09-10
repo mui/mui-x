@@ -2,7 +2,6 @@ import {
   CELL_CSS_CLASS,
   DATA_CONTAINER_CSS_CLASS,
   HEADER_CELL_CSS_CLASS,
-  ROOT_CSS_CLASS,
 } from '../constants/cssClassesConstants';
 import { CellIndexCoordinates } from '../models/rows';
 
@@ -37,7 +36,7 @@ export function getFieldFromHeaderElem(colCellEl: Element): string {
 }
 export function findCellElementsFromCol(col: HTMLElement): NodeListOf<Element> | null {
   const field = getDataFromElem(col, 'field');
-  const root = findParentElementFromClassName(col, ROOT_CSS_CLASS);
+  const root = findParentElementFromClassName(col, 'MuiDataGrid-root');
   if (!root) {
     throw new Error('Material-UI: The root element is not found.');
   }
@@ -46,10 +45,10 @@ export function findCellElementsFromCol(col: HTMLElement): NodeListOf<Element> |
 }
 
 export function findGridRootFromCurrent(elem: Element): HTMLDivElement | null {
-  if (elem.classList.contains(ROOT_CSS_CLASS)) {
+  if (elem.classList.contains('MuiDataGrid-root')) {
     return elem as HTMLDivElement;
   }
-  const root = findParentElementFromClassName(elem, ROOT_CSS_CLASS);
+  const root = findParentElementFromClassName(elem, 'MuiDataGrid-root');
   return root as HTMLDivElement;
 }
 

@@ -24,6 +24,7 @@ if (process.env.BABEL_ENV === 'es') {
 
 const defaultAlias = {
   '@material-ui/data-grid': './packages/grid/data-grid/src',
+  '@material-ui/x-grid-data-generator': './packages/grid/x-grid-data-generator/src',
   '@material-ui/x-grid-modules': './packages/grid/x-grid-modules/src',
   '@material-ui/x-grid': './packages/grid/x-grid/src',
   '@material-ui/x-license': './packages/x-license/src',

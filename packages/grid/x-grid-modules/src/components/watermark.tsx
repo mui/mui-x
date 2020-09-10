@@ -30,5 +30,23 @@ export const Watermark: React.FC<WatermarkProps> = ({ licenseStatus }) => {
     return null;
   }
 
-  return <div className="watermark"> {getLicenseErrorMessage(licenseStatus)} </div>;
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        pointerEvents: 'none',
+        color: '#8282829e',
+        zIndex: 100000,
+        width: '100%',
+        textAlign: 'center',
+        bottom: '50%',
+        right: 0,
+        letterSpacing: 5,
+        fontSize: 24,
+      }}
+    >
+      {' '}
+      {getLicenseErrorMessage(licenseStatus)}{' '}
+    </div>
+  );
 };

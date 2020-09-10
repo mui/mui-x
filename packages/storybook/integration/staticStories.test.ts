@@ -28,7 +28,7 @@ const stories = [
     path: '/story/x-grid-tests-selection--multiple-select-with-checkbox-no-click',
     beforeTest: async (page) => {
       await page.click(
-        '.grid-root .window .material-row:first-child .material-cell.checkbox-selection-cell .checkbox-input',
+        '.grid-root .window .material-row:first-child .material-cell.MuiDataGrid-cellCheckbox .checkbox-input',
       );
     },
   },

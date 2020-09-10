@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Alignement, CellValue } from '../models';
 import { CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import { classnames } from '../utils';
+import { OptionsContext } from './options-context';
 
 export interface GridCellProps {
   field?: string;
@@ -15,6 +16,11 @@ export interface GridCellProps {
   colIndex?: number;
   rowIndex?: number;
 }
+
+const alignPropToCssClass = {
+  center: 'MuiDataGrid-cellCenter',
+  right: 'MuiDataGrid-cellRight',
+};
 
 export const Cell: React.FC<GridCellProps> = React.memo(
   ({
@@ -33,10 +39,11 @@ export const Cell: React.FC<GridCellProps> = React.memo(
     const cssClasses = classnames(
       CELL_CSS_CLASS,
       cssClass,
-      { 'with-border': showRightBorder },
-      align !== 'left' ? align : '',
+      { 'MuiDataGrid-withBorder': showRightBorder },
+      align && align !== 'left' ? alignPropToCssClass[align] : '',
     );
     const valueToRender = formattedValue || value;
+    const { rowHeight } = React.useContext(OptionsContext);
 
     return (
       <div
@@ -47,7 +54,13 @@ export const Cell: React.FC<GridCellProps> = React.memo(
         data-colindex={colIndex}
         data-rowindex={rowIndex}
         aria-colindex={colIndex}
-        style={{ minWidth: width, maxWidth: width }}
+        style={{
+          minWidth: width,
+          maxWidth: width,
+          lineHeight: `${rowHeight - 1}px`,
+          minHeight: rowHeight,
+          maxHeight: rowHeight,
+        }}
         tabIndex={tabIndex}
       >
         {children || valueToRender?.toString()}
