@@ -16,6 +16,13 @@
   "bin": {
     "datagen": "./bin/data-gen-script.js"
   },
+  "scripts": {
+    "precommit": "npm run lint",
+    "build": "rollup -c",
+    "start": "rollup -cw",
+    "lint": "../../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../.eslintrc.js && npm run lint:css",
+    "lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../../.stylelintrc.js"
+  },
   "dependencies": {
     "@types/chance": "^1.1.0",
     "chance": "^1.1.6",
@@ -42,15 +49,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.54",
     "@material-ui/x-grid": "^0.1.35",
-    "react": "^16.8.0",
-    "styled-components": "^5.1.0"
-  },
-  "scripts": {
-    "precommit": "npm run lint",
-    "build": "rollup -c",
-    "start": "rollup -cw",
-    "lint": "../../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../.eslintrc.js && npm run lint:css",
-    "lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../../.stylelintrc.js"
+    "react": "^16.8.0"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"

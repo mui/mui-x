@@ -15,13 +15,7 @@ import {
   randomUrl,
   randomUserName,
 } from './services';
-import {
-  AvatarRenderer,
-  CountryRenderer,
-  EmailRenderer,
-  LinkRenderer,
-  RatingRenderer,
-} from './renderer';
+import { renderAvatar, renderCountry, renderEmail, renderLink, renderRating } from './renderer';
 
 export const employeeColumns: any[] = [
   {
@@ -34,7 +28,7 @@ export const employeeColumns: any[] = [
     headerName: '',
     sortable: false,
     generateData: randomAvatar,
-    renderCell: AvatarRenderer,
+    renderCell: renderAvatar,
   },
   {
     field: 'name',
@@ -49,7 +43,7 @@ export const employeeColumns: any[] = [
     field: 'email',
     headerName: 'Email',
     generateData: randomEmail,
-    renderCell: EmailRenderer,
+    renderCell: renderEmail,
     disableClickEventBubbling: true,
     width: 150,
   },
@@ -69,14 +63,14 @@ export const employeeColumns: any[] = [
     field: 'website',
     headerName: 'website',
     generateData: randomUrl,
-    renderCell: LinkRenderer,
+    renderCell: renderLink,
     width: 160,
   },
   {
     field: 'rating',
     headerName: 'Rating',
     generateData: randomRating,
-    renderCell: RatingRenderer,
+    renderCell: renderRating,
     sortDirection: 'desc',
     sortIndex: 0,
     width: 180,
@@ -90,7 +84,7 @@ export const employeeColumns: any[] = [
     field: 'country',
     headerName: 'Country',
     generateData: randomCountry,
-    renderCell: CountryRenderer,
+    renderCell: renderCountry,
     width: 150,
   },
   {

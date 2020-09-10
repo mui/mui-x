@@ -28,16 +28,14 @@ export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api }) => {
   }, [api, selectionChange]);
 
   return (
-    <div>
-      <Checkbox
-        indeterminate={isIndeterminate}
-        checked={isChecked}
-        onChange={handleChange}
-        className="MuiDataGrid-checkboxInput"
-        color="primary"
-        inputProps={{ 'aria-label': 'Select All Rows checkbox' }}
-      />
-    </div>
+    <Checkbox
+      indeterminate={isIndeterminate}
+      checked={isChecked}
+      onChange={handleChange}
+      className="MuiDataGrid-checkboxInput"
+      color="primary"
+      inputProps={{ 'aria-label': 'Select All Rows checkbox' }}
+    />
   );
 });
 HeaderCheckbox.displayName = 'HeaderCheckbox';
@@ -48,15 +46,13 @@ export const CellCheckboxRenderer: React.FC<CellParams> = React.memo(({ api, row
   };
 
   return (
-    <div>
-      <Checkbox
-        checked={!!value}
-        onChange={handleChange}
-        className="MuiDataGrid-checkboxInput"
-        color="primary"
-        inputProps={{ 'aria-label': 'Select Row checkbox' }}
-      />
-    </div>
+    <Checkbox
+      checked={!!value}
+      onChange={handleChange}
+      className="MuiDataGrid-checkboxInput"
+      color="primary"
+      inputProps={{ 'aria-label': 'Select Row checkbox' }}
+    />
   );
 });
 CellCheckboxRenderer.displayName = 'CellCheckboxRenderer';
