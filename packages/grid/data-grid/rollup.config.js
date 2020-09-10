@@ -44,13 +44,6 @@ export default [
     output: [{ file: 'dist/data-grid.d.ts', format: 'es' }],
     plugins: [
       dts(),
-      command(
-        `cat ../x-grid-modules/dist/x-grid-modules.d.ts ./dist/data-grid.d.ts > ./dist/data-grid.all.d.ts`,
-        {
-          exitOnFail: true,
-          wait: true,
-        },
-      ),
       !production && sourceMaps(),
     ],
   },
