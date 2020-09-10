@@ -189,13 +189,14 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-footer': {
           display: 'flex',
           justifyContent: 'space-between',
-          padding: theme.spacing(0, 2),
         },
         '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
           alignItems: 'center',
           ...theme.typography.body2,
           display: 'none',
+          paddingLeft: theme.spacing(2),
           [theme.breakpoints.up('md')]: {
+            minHeight: 52, // Match TablePagination min height
             display: 'flex',
           },
         },
