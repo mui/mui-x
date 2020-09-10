@@ -11,7 +11,9 @@ import {
 } from './hooks/features';
 import { DEFAULT_GRID_OPTIONS, ElementSize, RootContainerRef } from './models';
 import { COMPONENT_ERROR, DATA_CONTAINER_CSS_CLASS } from './constants';
-import { ColumnsContainer, DataContainer, GridRoot } from './components/styled-wrappers';
+import { GridRoot } from './components/styled-wrappers/grid-root';
+import { DataContainer } from './components/styled-wrappers/data-container';
+import { ColumnsContainer } from './components/styled-wrappers/columns-container';
 import { useVirtualRows } from './hooks/virtualization';
 import {
   ApiContext,
@@ -71,9 +73,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     // We are handling error here, to set up the handler as early as possible and be able to catch error thrown at init time.
     setErrorState(args);
   };
-  React.useEffect(() => {
-    return apiRef!.current.subscribeEvent(COMPONENT_ERROR, errorHandler);
-  }, [apiRef]);
+  React.useEffect(() => apiRef!.current.subscribeEvent(COMPONENT_ERROR, errorHandler), [apiRef]);
 
   React.useEffect(() => {
     apiRef!.current.showError(props.error);
@@ -166,8 +166,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
       {(size: any) => (
         <GridRoot
           ref={handleRef}
-          className={`material-grid MuiGrid ${props.className || ''}`}
-          options={internalOptions}
+          className={props.className}
           style={{ width: size.width, height: getTotalHeight(size) }}
           role="grid"
           aria-colcount={internalColumns.visible.length}
@@ -182,20 +181,21 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
             api={apiRef!}
             logger={gridLogger}
             render={(errorProps) => (
-              <div className="main-grid-container">{customComponents.renderError(errorProps)}</div>
+              <div className="MuiDataGrid-mainGridContainer">
+                {customComponents.renderError(errorProps)}
+              </div>
             )}
           >
             <ApiContext.Provider value={apiRef}>
               <OptionsContext.Provider value={internalOptions}>
                 {customComponents.headerComponent}
-                <div className="main-grid-container">
+                <div className="MuiDataGrid-mainGridContainer">
                   <Watermark licenseStatus={props.licenseStatus} />
-                  <ColumnsContainer ref={columnsContainerRef}>
+                  <ColumnsContainer ref={columnsContainerRef} height={internalOptions.headerHeight}>
                     <ColumnsHeader
                       ref={columnsHeaderRef}
                       columns={internalColumns.visible || []}
                       hasScrollX={!!renderCtx?.hasScrollX}
-                      headerHeight={internalOptions.headerHeight}
                       onResizeColumn={onResizeColumn}
                       renderCtx={renderCtx}
                     />

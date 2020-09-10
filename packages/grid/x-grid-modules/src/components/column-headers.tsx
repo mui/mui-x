@@ -6,17 +6,15 @@ import { LeftEmptyCell, RightEmptyCell } from './cell';
 
 export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
-  headerHeight: number;
   onResizeColumn?: (col: ColDef) => void;
 }
 export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionProps> = React.memo(
-  ({ headerHeight, onResizeColumn, columns }) => {
+  ({ onResizeColumn, columns }) => {
     const items = columns.map((col, idx) => (
       <ColumnHeaderItem
         key={col.field}
         column={col}
         colIndex={idx}
-        headerHeight={headerHeight}
         onResizeColumn={onResizeColumn}
       />
     ));
@@ -29,15 +27,14 @@ ColumnHeaderItemCollection.displayName = 'ColumnHeaderItemCollection';
 export interface ColumnsHeaderProps {
   columns: Columns;
   hasScrollX: boolean;
-  headerHeight: number;
   onResizeColumn?: (col: ColDef) => void;
   renderCtx: Partial<RenderContextProps> | null;
 }
 
 export const ColumnsHeader = React.memo(
   React.forwardRef<HTMLDivElement, ColumnsHeaderProps>(
-    ({ columns, hasScrollX, headerHeight, onResizeColumn, renderCtx }, columnsHeaderRef) => {
-      const wrapperCssClasses = `material-col-cell-wrapper ${hasScrollX ? 'scroll' : ''}`;
+    ({ columns, hasScrollX, onResizeColumn, renderCtx }, columnsHeaderRef) => {
+      const wrapperCssClasses = `MuiDataGrid-colCellWrapper ${hasScrollX ? 'scroll' : ''}`;
       const api = React.useContext(ApiContext);
 
       if (!api) {
@@ -75,11 +72,7 @@ export const ColumnsHeader = React.memo(
           style={{ minWidth: renderCtx?.totalSizes?.width }}
         >
           <LeftEmptyCell key="left-empty" width={renderCtx?.leftEmptyWidth} />
-          <ColumnHeaderItemCollection
-            columns={renderedCols}
-            onResizeColumn={onResizeColumn}
-            headerHeight={headerHeight}
-          />
+          <ColumnHeaderItemCollection columns={renderedCols} onResizeColumn={onResizeColumn} />
           <RightEmptyCell key="right-empty" width={renderCtx?.rightEmptyWidth} />
         </div>
       );
