@@ -19,7 +19,7 @@ npm install @material-ui/data-grid
 yarn add @material-ui/data-grid
 ```
 
-The grid has a peer dependency on the core components. If you are not already using Material-UI in your project, you can install it with:
+The grid has a peer dependency on Material-UI core components. If you are not already using Material-UI in your project, you can install it with:
 
 ```sh
 // with npm
@@ -32,7 +32,7 @@ yarn add @material-ui/core
 ## Quick start
 
 First, you have to import the component as below.
-To avoid name conflicts, the component is named `XGrid` for the full-featured enterprise grid and `DataGrid` for the free community version.
+To avoid name conflicts the component is named `XGrid` for the full-featured enterprise grid, and `DataGrid` for the free community version.
 
 ```js
 import { DataGrid } from '@material-ui/data-grid';
@@ -174,7 +174,7 @@ The following table summarizes the features available in the community `DataGrid
 
 ### License key installation
 
-Once you purchase a license, you receive a license key.
+Once you purchase a license, you'll receive a license key.
 This key should be provided to the enterprise package to remove the watermark and
 the warnings in the console.
 
@@ -196,7 +196,7 @@ For crowdsourced technical questions from expert Material-UI devs in our communi
 
 ### GitHub <img src="/static/images/logos/github.svg" width="24" height="24" alt="GitHub logo" loading="lazy" />
 
-We use GitHub issues exclusively as a bugs and feature requests tracker. If you think you have found a bug, or have a new feature idea, please start by making sure it hasn't already been [reported or fixed](https://github.com/mui-org/material-ui-x/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aclosed). You can search through existing issues and pull requests to see if someone has reported one similar to yours.
+We use GitHub issues exclusively as a bug and feature request tracker. If you think you have found a bug, or have a new feature idea, please start by making sure it hasn't already been [reported or fixed](https://github.com/mui-org/material-ui-x/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aclosed). You can search through existing issues and pull requests to see if someone has reported one similar to yours.
 
 [Open an issue](https://github.com/mui-org/material-ui-x/issues/new/choose)
 
@@ -208,10 +208,10 @@ For crowdsourced technical questions from expert Material-UI devs in our communi
 
 ### Enterprise support
 
-We provide a private support channel for the enterprise customers on [Zendesk](https://material-ui.zendesk.com/).
+We provide a [private support channel](https://material-ui.zendesk.com/) for enterprise customers.
 
 ### Roadmap
 
-You can find our public roadmap on this [GitHub project](https://github.com/mui-org/material-ui-x/projects/1). It's organized by quarter.
+Here is [the public roadmap](https://github.com/mui-org/material-ui-x/projects/1). It's organized by quarter.
 
-> ⚠️ Disclaimer: We operate in a dynamic environment, and things are subject to change. The information provided is intended to outline the general framework direction. It's intended for informational purposes only. We may decide to add/remove new items at any time depending on our capability to deliver while meeting our quality standards. The development, releases, and timing of any features or functionality of Material-UI remains at the sole discretion of Material-UI. The roadmap does not represent a commitment, obligation, or promise to deliver at any time.
+> ⚠️ Disclaimer: We operate in a dynamic environment, and things are subject to change. The information provided is intended to outline the general framework direction, for informational purposes only. We may decide to add or remove new items at any time, depending on our capability to deliver while meeting our quality standards. The development, releases, and timing of any features or functionality remains at the sole discretion of Material-UI. The roadmap does not represent a commitment, obligation, or promise to deliver at any time.
