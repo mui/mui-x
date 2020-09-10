@@ -35,9 +35,7 @@ export default [
       typescript(),
       css({ output: 'dist/demo-style.css' }),
       commonjs(),
-      postcss({
-        extract: 'style/real-data-stories.css',
-      }),
+      postcss(),
       !production && sourceMaps(),
       production && terser(),
     ],

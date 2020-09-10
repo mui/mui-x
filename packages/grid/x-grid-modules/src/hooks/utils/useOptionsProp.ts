@@ -1,10 +1,7 @@
-import {
-  GridComponentProps,
-  GridOptionsProp,
-} from '@material-ui/x-grid-modules/GridComponentProps';
-import { DEFAULT_GRID_OPTIONS, GridOptions } from '@material-ui/x-grid-modules/models';
 import * as React from 'react';
-import { mergeOptions } from '@material-ui/x-grid-modules/utils';
+import { GridComponentProps, GridOptionsProp } from '../../GridComponentProps';
+import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../models';
+import { mergeOptions } from '../../utils';
 
 export function useOptionsProp(props: GridComponentProps): [GridOptions, Function] {
   // TODO Refactor to smaller objects

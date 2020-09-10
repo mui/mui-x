@@ -9,7 +9,8 @@
     "outDir": "./dist",
     "target": "es6",
     "sourceMap": true,
-    "composite": true
+    "composite": true,
+    "paths": {}
   },
   "include": ["src", "lib"],
   "exclude": ["__tests__", "**/*.test.ts", "**/*.tests.ts", "node_modules"]

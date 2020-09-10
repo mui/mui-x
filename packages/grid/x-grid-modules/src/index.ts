@@ -6,4 +6,3 @@ export * from './utils';
 
 export * from './GridComponentProps';
 export * from './GridComponent';
-export * from './hooks/utils/useOptionsProp';
