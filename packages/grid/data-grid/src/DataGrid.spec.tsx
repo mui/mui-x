@@ -4,8 +4,8 @@ import { ColDef, DataGrid } from '@material-ui/data-grid';
 function EnterpriseTest() {
   const cols: ColDef[] = [
     {
-      // /* @ts-expect-error Object literal may only specify known properties, and 'resizable' does not exist in type 'ColDef'. */
       field: 'name',
+      // @ts-expect-error Object literal may only specify known properties, and 'resizable' does not exist in type 'ColDef'.
       resizable: true,
     },
     { field: 'id', resizable: false },
