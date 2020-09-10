@@ -241,10 +241,15 @@ export const useVirtualRows = (
             containerPropsRef.current!.windowSizes.width;
         } else {
           scrollLeft =
-            meta.positions[params.colIndex + 1] - containerPropsRef.current!.windowSizes.width;
+            meta.positions[params.colIndex + 1] -
+            containerPropsRef.current!.windowSizes.width +
+            (containerPropsRef.current!.hasScrollY ? containerPropsRef.current!.scrollBarSize : 0);
+          logger.debug(`Scrolling to the right, scrollLeft: ${scrollLeft}`);
         }
-        scrollLeft =
-          rzScrollRef.current.left > scrollLeft ? meta.positions[params.colIndex] : scrollLeft;
+        if (rzScrollRef.current.left > scrollLeft) {
+          scrollLeft = meta.positions[params.colIndex];
+          logger.debug(`Scrolling to the left, scrollLeft: ${scrollLeft}`);
+        }
       }
 
       let scrollTop;
@@ -276,13 +281,14 @@ export const useVirtualRows = (
 
   const scroll = React.useCallback(
     (params: Partial<ScrollParams>) => {
-      logger.debug(`Scrolling to left: ${params.left} top: ${params.top}`);
       if (windowRef.current && params.left != null && colRef.current) {
         colRef.current.scrollLeft = params.left;
         windowRef.current.scrollLeft = params.left;
+        logger.debug(`Scrolling left: ${params.left}`);
       }
       if (windowRef.current && params.top != null) {
         windowRef.current.scrollTop = params.top;
+        logger.debug(`Scrolling top: ${params.top}`);
       }
       updateViewport();
     },

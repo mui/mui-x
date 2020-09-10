@@ -65,7 +65,7 @@ export const useVirtualColumns = (
       const lastCol = getColumnFromScroll(lastScrollLeftRef.current + windowWidth);
 
       const visibleColumns = apiRef.current.getVisibleColumns();
-      const firstColIndex = visibleColumns.findIndex((col) => col.field === firstCol?.field);
+      const firstColIndex = visibleColumns.findIndex((col) => col.field === firstCol?.field) + 1;
       const lastColIndex = visibleColumns.findIndex((col) => col.field === lastCol?.field) - 1; // We ensure the last col is completely visible
 
       return colIndex >= firstColIndex && colIndex <= lastColIndex;
