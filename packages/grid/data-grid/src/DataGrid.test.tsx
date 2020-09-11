@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 // @ts-ignore
 import { createClientRender } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, RowsProp, Columns } from '@material-ui/data-grid';
 
 describe('<DataGrid />', () => {
   const render = createClientRender();
 
-  const defaultProps = {
+  const defaultProps: { rows: RowsProp; columns: Columns } = {
     rows: [
       {
         id: 0,
@@ -32,6 +32,16 @@ describe('<DataGrid />', () => {
 
     // Adapation of describeConformance()
     describe('Material-UI component API', () => {
+      it(`resizable true should throw error`, () => {
+        defaultProps.columns[0].resizable = true;
+        expect(() =>
+          render(
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid {...defaultProps} />
+            </div>,
+          ),
+        ).toThrow();
+      });
       it(`attaches the ref`, () => {
         const ref = React.createRef<HTMLDivElement>();
         const { container } = render(

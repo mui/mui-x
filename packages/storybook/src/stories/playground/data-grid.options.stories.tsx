@@ -65,3 +65,23 @@ export const Events = () => {
 
   return <DataGrid rows={rows} columns={columns as ColDef[]} {...options} />;
 };
+
+export const ResizableValidation = () => {
+  const { rows, columns } = useData(2000, 200);
+  columns.forEach((c) => {
+    c.resizable = true;
+  });
+
+  const options: Partial<DataGridProps> = {
+    onRowClick: (params) => action('onRowClick')(params),
+    onCellClick: (params) => action('onCellClick')(params),
+    onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
+    onRowSelected: (params) => action('onRowSelected')(params),
+    onSelectionChange: (params) => action('onSelectionChange', { depth: 1 })(params),
+    onPageChange: (params) => action('onPageChange')(params),
+    onPageSizeChange: (params) => action('onPageSizeChange')(params),
+    onSortModelChange: (params) => action('onSortModelChange')(params),
+  };
+
+  return <DataGrid rows={rows} columns={columns as ColDef[]} {...options} />;
+};

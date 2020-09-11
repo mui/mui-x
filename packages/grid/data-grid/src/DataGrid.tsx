@@ -5,12 +5,8 @@ import {
   GridComponent,
   GridComponentProps,
   classnames,
-  ColDef as XGridColDef,
+  // ColDef as XGridColDef,
 } from '@material-ui/x-grid-modules';
-
-export * from '@material-ui/x-grid-modules';
-export type DataGridColDef = Omit<XGridColDef, 'resizable'> & { resizable?: false };
-export interface ColDef extends DataGridColDef {}
 
 const FORCED_PROPS: Partial<GridComponentProps> = {
   pagination: true,
@@ -27,19 +23,29 @@ export type DataGridProps = Omit<
   | 'licenseStatus'
   | 'options'
   | 'pagination'
-  | 'columns'
 > & {
   disableMultipleColumnsSorting?: true;
   disableMultipleSelection?: true;
   disableColumnResize?: true;
   pagination?: true;
-  columns: ColDef[];
 };
 
 const MAX_PAGE_SIZE = 100;
 
 const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(props, ref) {
   const { className, pageSize: pageSizeProp, columns, ...other } = props;
+
+  const hasResizableColumns = columns.some((c) => c.resizable);
+  if (hasResizableColumns) {
+    throw new Error(
+      [
+        `Material-UI: \` column.resizable = true \` is not a valid prop.`,
+        'Column resizing is not available in the MIT version',
+        '',
+        'You need to upgrade to the XGrid component to unlock this feature.',
+      ].join('\n'),
+    );
+  }
 
   let pageSize = pageSizeProp;
   if (pageSize && pageSize > MAX_PAGE_SIZE) {
