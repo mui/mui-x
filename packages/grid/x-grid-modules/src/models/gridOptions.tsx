@@ -250,7 +250,7 @@ export interface GridOptions {
 export const DEFAULT_GRID_OPTIONS: GridOptions = {
   rowHeight: 52,
   headerHeight: 56,
-  scrollbarSize: 10,
+  scrollbarSize: 15,
   columnBuffer: 2,
   rowsPerPageOptions: [25, 50, 100],
   pageSize: 100,

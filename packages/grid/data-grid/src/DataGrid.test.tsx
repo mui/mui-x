@@ -7,20 +7,23 @@ import { expect } from 'chai';
 import { DataGrid, RowsProp, Columns } from '@material-ui/data-grid';
 
 describe('<DataGrid />', () => {
-  const render = createClientRender();
-
-  const defaultProps: { rows: RowsProp; columns: Columns } = {
-    rows: [
-      {
-        id: 0,
-        brand: 'Nike',
-      },
-    ],
-    columns: [
-      { field: 'id', hide: true },
-      { field: 'brand', width: 100 },
-    ],
-  };
+  let render;
+  let defaultProps;
+  beforeEach(() => {
+    render = createClientRender();
+    defaultProps = {
+      rows: [
+        {
+          id: 0,
+          brand: 'Nike',
+        },
+      ],
+      columns: [
+        { field: 'id', hide: true },
+        { field: 'brand', width: 100 },
+      ],
+    };
+  });
 
   describe('layout', () => {
     before(function beforeHook() {
@@ -40,7 +43,14 @@ describe('<DataGrid />', () => {
               <DataGrid {...defaultProps} />
             </div>,
           ),
-        ).toThrow();
+        ).to.throw(
+          [
+            `Material-UI: \` column.resizable = true \` is not a valid prop.`,
+            'Column resizing is not available in the MIT version',
+            '',
+            'You need to upgrade to the XGrid component to unlock this feature.',
+          ].join('\n'),
+        );
       });
       it(`attaches the ref`, () => {
         const ref = React.createRef<HTMLDivElement>();

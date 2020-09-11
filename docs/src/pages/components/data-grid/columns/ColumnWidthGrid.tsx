@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { XGrid } from '@material-ui/x-grid';
+import { DataGrid } from '@material-ui/data-grid';
 
 const rows = [
   {
@@ -12,7 +12,7 @@ const rows = [
 export default function ColumnWidthGrid() {
   return (
     <div style={{ height: 250, width: '100%' }}>
-      <XGrid
+      <DataGrid
         columns={[
           { field: 'id' },
           { field: 'username', width: 200 },
