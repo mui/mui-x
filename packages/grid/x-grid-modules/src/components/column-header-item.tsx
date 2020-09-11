@@ -20,15 +20,17 @@ const headerAlignPropToCss = {
 export const ColumnHeaderItem = React.memo(
   ({ column, colIndex, onResizeColumn }: ColumnHeaderItemProps) => {
     const api = React.useContext(ApiContext);
-    const { headerHeight, showColumnRightBorder } = React.useContext(OptionsContext);
+    const { headerHeight, showColumnRightBorder, disableColumnResize } = React.useContext(
+      OptionsContext,
+    );
 
     const cssClass = classnames(
       HEADER_CELL_CSS_CLASS,
       showColumnRightBorder ? 'MuiDataGrid-withBorder' : '',
       column.headerClassName,
-      column.headerAlign && column.headerAlign !== 'left'
-        ? headerAlignPropToCss[column.headerAlign]
-        : '',
+      column.headerAlign &&
+        column.headerAlign !== 'left' &&
+        headerAlignPropToCss[column.headerAlign],
       { 'MuiDataGrid-colCellSortable': column.sortable },
     );
 
@@ -89,7 +91,10 @@ export const ColumnHeaderItem = React.memo(
             hide={column.hideSortIcons}
           />
         )}
-        <ColumnHeaderSeparator resizable={column.resizable} onResize={handleResize} />
+        <ColumnHeaderSeparator
+          resizable={!disableColumnResize && column.resizable}
+          onResize={handleResize}
+        />
       </div>
     );
   },

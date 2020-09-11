@@ -8,7 +8,6 @@ import { DataGrid } from '@material-ui/data-grid';
 
 describe('<DataGrid />', () => {
   const render = createClientRender();
-
   const defaultProps = {
     rows: [
       {
@@ -21,7 +20,6 @@ describe('<DataGrid />', () => {
       { field: 'brand', width: 100 },
     ],
   };
-
   describe('layout', () => {
     before(function beforeHook() {
       if (/jsdom/.test(window.navigator.userAgent)) {

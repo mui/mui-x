@@ -23,6 +23,9 @@ module.exports = {
     '@storybook/addon-storysource/register',
     '@storybook/addon-a11y/register',
   ],
+  typescript: {
+    check: __DEV__, // Netlify is breaking the deploy with this settings on. So deactivate on release
+  },
   webpackFinal: async config => {
     config.devtool = __DEV__ ? 'inline-source-map' : undefined;
     config.module.rules.push({

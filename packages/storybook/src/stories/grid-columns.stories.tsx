@@ -163,6 +163,32 @@ export function HeaderComponent() {
   );
 }
 
+export function ColumnsAlign() {
+  const data = useData(100, 5);
+
+  const transformCols = React.useCallback((cols) => {
+    if (cols.length > 0) {
+      cols.forEach((col: ColDef, idx) => {
+        if (idx > 1 && idx % 2 === 1) {
+          col.align = 'right';
+          col.headerAlign = 'right';
+        } else if (idx > 1 && idx % 2 === 0) {
+          col.align = 'center';
+          col.headerAlign = 'center';
+        }
+        col.width = 180;
+      });
+    }
+    return cols;
+  }, []);
+
+  return (
+    <div className="grid-container">
+      <XGrid rows={data.rows} columns={transformCols(data.columns)} />
+    </div>
+  );
+}
+
 const priceColumnType: ColTypeDef = {
   extendType: 'number',
   valueFormatter: ({ value }) => `${value} USD`,

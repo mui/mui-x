@@ -17,7 +17,8 @@ The data grid comes in 2 versions:
 
 - `DataGrid` **MIT licensed** as part of the community edition. It's an extension of `@material-ui/core`.
 - `XGrid` **Commercially licensed** as part of the X product line offering.
-  The features only available in the commercial version are suffixed with a ⚡️ icon.
+
+The features only available in the commercial version are suffixed with a <span style="font-size: 26px">⚡️</span> icon.
 
 ### MIT version
 
@@ -49,7 +50,7 @@ import { XGrid } from '@material-ui/x-grid';
 - [Sorting](/components/data-grid/rows/#row-sorting) and [multi-sort](/components/data-grid/rows/#multi-column-sorting) ⚡️
 - [Selection](/components/data-grid/selection/)
 - Rows and column virtualization ⚡️
-- [Resizable columns](/components/data-grid/columns/)
+- [Resizable columns](/components/data-grid/columns/#column-resizing) ⚡️
 - 100% customizable
 - Server side data
 - Column hiding

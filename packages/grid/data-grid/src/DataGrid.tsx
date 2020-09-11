@@ -4,19 +4,22 @@ import { chainPropTypes } from '@material-ui/utils';
 import { GridComponent, GridComponentProps, classnames } from '@material-ui/x-grid-modules';
 
 const FORCED_PROPS: Partial<GridComponentProps> = {
-  pagination: true,
+  disableColumnResize: true,
   disableMultipleColumnsSorting: true,
   disableMultipleSelection: true,
+  pagination: true,
 };
 
 export type DataGridProps = Omit<
   GridComponentProps,
+  | 'disableColumnResize'
   | 'disableMultipleColumnsSorting'
   | 'disableMultipleSelection'
   | 'licenseStatus'
   | 'options'
   | 'pagination'
 > & {
+  disableColumnResize?: true;
   disableMultipleColumnsSorting?: true;
   disableMultipleSelection?: true;
   pagination?: true;
@@ -45,8 +48,32 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
 });
 
 DataGrid2.propTypes = {
-  disableMultipleColumnsSorting: chainPropTypes(PropTypes.number, (props) => {
-    if (props.pageSize && props.pageSize > MAX_PAGE_SIZE) {
+  columns: chainPropTypes(PropTypes.any, (props) => {
+    if (props.columns && props.columns.some((column) => column.resizable)) {
+      throw new Error(
+        [
+          `Material-UI: \`column.resizable = true\` is not a valid prop.`,
+          'Column resizing is not available in the MIT version',
+          '',
+          'You need to upgrade to the XGrid component to unlock this feature.',
+        ].join('\n'),
+      );
+    }
+  }),
+  disableColumnResize: chainPropTypes(PropTypes.bool, (props) => {
+    if (props.disableColumnResize === false) {
+      throw new Error(
+        [
+          `Material-UI: \`<DataGrid disableColumnResize={false} />\` is not a valid prop.`,
+          'Column resizing is not available in the MIT version',
+          '',
+          'You need to upgrade to the XGrid component to unlock this feature.',
+        ].join('\n'),
+      );
+    }
+  }),
+  disableMultipleColumnsSorting: chainPropTypes(PropTypes.bool, (props) => {
+    if (props.disableMultipleColumnsSorting === false) {
       throw new Error(
         [
           `Material-UI: \`<DataGrid disableMultipleColumnsSorting={false} />\` is not a valid prop.`,
@@ -59,8 +86,8 @@ DataGrid2.propTypes = {
 
     return null;
   }),
-  disableMultipleSelection: chainPropTypes(PropTypes.number, (props) => {
-    if (props.pageSize && props.pageSize > MAX_PAGE_SIZE) {
+  disableMultipleSelection: chainPropTypes(PropTypes.bool, (props) => {
+    if (props.disableMultipleSelection === false) {
       throw new Error(
         [
           `Material-UI: \`<DataGrid disableMultipleSelection={false} />\` is not a valid prop.`,
