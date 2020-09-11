@@ -52,6 +52,7 @@ describe('<DataGrid />', () => {
           ].join('\n'),
         );
       });
+
       it(`attaches the ref`, () => {
         const ref = React.createRef<HTMLDivElement>();
         const { container } = render(
