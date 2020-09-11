@@ -17,6 +17,17 @@ export const useStyles = makeStyles(
         outline: 'none',
         display: 'flex',
         flexDirection: 'column',
+        '& *::-webkit-scrollbar-track': {
+          borderRadius: 10,
+        },
+        '& *::-webkit-scrollbar': {
+          width: 8,
+          height: 8,
+        },
+        '& *::-webkit-scrollbar-thumb': {
+          borderRadius: 10,
+          backgroundColor: borderColor,
+        },
         '& *, & *::before, & *::after': {
           boxSizing: 'inherit',
         },
