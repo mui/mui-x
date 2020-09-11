@@ -14,7 +14,7 @@ export default function ColumnWidthGrid() {
     <div style={{ height: 250, width: '100%' }}>
       <XGrid
         columns={[
-          { field: 'id', resizable: false },
+          { field: 'id' },
           { field: 'username' },
           { field: 'age', resizable: false },
         ]}
