@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 // @ts-ignore
 import { createClientRender } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid, RowsProp, Columns } from '@material-ui/data-grid';
+import { DataGrid } from '@material-ui/data-grid';
 
 describe('<DataGrid />', () => {
   let render;

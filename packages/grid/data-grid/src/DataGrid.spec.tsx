@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ColDef, DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@material-ui/data-grid';
 
 function EnterpriseTest() {
   return (
