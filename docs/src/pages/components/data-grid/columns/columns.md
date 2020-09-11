@@ -49,11 +49,12 @@ To change the width of a column, use the `width` property available in `ColDef`.
 
 {{"demo": "pages/components/data-grid/columns/ColumnWidthGrid.js"}}
 
-## Column sizing ⚡️
+## Column resizing ⚡️
 
-By default, XGrid allows all columns to be resized by dragging the right portion of the column separator.
+By default, `XGrid` allows all columns to be resized by dragging the right portion of the column separator.
+
 To prevent the resizing of a column, set `resizable: false` in the `ColDef`.
-Alternatively, to disable all columns resize, set the prop `disableColumnResize` to `true`.
+Alternatively, to disable all columns resize, set the prop `disableColumnResize={true}`.
 
 {{"demo": "pages/components/data-grid/columns/ColumnSizingGrid.js"}}
 
@@ -68,8 +69,6 @@ Alternatively, to disable all columns resize, set the prop `disableColumnResize`
 - https://js.devexpress.com/Demos/WidgetsGallery/Demo/DataGrid/ColumnResizing/React/Light/
 - https://www.jqwidgets.com/react/react-grid/#https://www.jqwidgets.com/react/react-grid/react-grid-columnsresize.htm
 -->
-
-Alternatively, to disable all columns resize, set the prop `disableColumnResize` to `true`.
 
 ## Column types
 

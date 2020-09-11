@@ -106,7 +106,7 @@ The data grid comes in 2 versions:
 - `DataGrid` **MIT licensed** as part of the community edition. It's an extension of `@material-ui/core`.
 - `XGrid` **Commercially licensed** as part of the X product line offering.
 
-The features only available in the commercial version are suffixed with a <span style="font-size: 28px">⚡️</span> icon.
+The features only available in the commercial version are suffixed with a <span style="font-size: 26px">⚡️</span> icon.
 
 <img src="/static/x/header-icon.png" width="454" height="239" alt="">
 
@@ -128,7 +128,7 @@ The following table summarizes the features available in the community `DataGrid
 |                                                                                         | Community | Enterprise ⚡️ |
 | --------------------------------------------------------------------------------------- | --------- | -------------- |
 | **Column**                                                                              |           |                |
-| [Column resizing](/components/data-grid/columns/#column-sizing)                         | ❌        | ✅             |
+| [Column resizing](/components/data-grid/columns/#column-resizing)                       | ❌        | ✅             |
 | [Column groups](/components/data-grid/columns/#column-groups)                           | 🚧        | 🚧             |
 | [Column reorder](/components/data-grid/columns/#column-reorder)                         | ❌        | 🚧             |
 | [Column sticky](/components/data-grid/columns/#column-sticky)                           | ❌        | 🚧             |
