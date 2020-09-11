@@ -50,7 +50,7 @@ import { XGrid } from '@material-ui/x-grid';
 - [Sorting](/components/data-grid/rows/#row-sorting) and [multi-sort](/components/data-grid/rows/#multi-column-sorting) ⚡️
 - [Selection](/components/data-grid/selection/)
 - Rows and column virtualization ⚡️
-- [Resizable columns](/components/data-grid/columns/) ⚡️
+- [Resizable columns](/components/data-grid/columns/#column-resizing) ⚡️
 - 100% customizable
 - Server side data
 - Column hiding
