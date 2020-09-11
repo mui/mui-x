@@ -36,7 +36,6 @@ import { useOptionsProp } from './hooks/utils/useOptionsProp';
 
 /**
  * Data Grid component implementing [[GridComponentProps]].
- *
  * @returns JSX.Element
  */
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(function DataGrid(
