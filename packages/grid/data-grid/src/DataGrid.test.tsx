@@ -7,24 +7,19 @@ import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
 
 describe('<DataGrid />', () => {
-  let render;
-  let defaultProps;
-  beforeEach(() => {
-    render = createClientRender();
-    defaultProps = {
-      rows: [
-        {
-          id: 0,
-          brand: 'Nike',
-        },
-      ],
-      columns: [
-        { field: 'id', hide: true },
-        { field: 'brand', width: 100 },
-      ],
-    };
-  });
-
+  const render = createClientRender();
+  const defaultProps = {
+    rows: [
+      {
+        id: 0,
+        brand: 'Nike',
+      },
+    ],
+    columns: [
+      { field: 'id', hide: true },
+      { field: 'brand', width: 100 },
+    ],
+  };
   describe('layout', () => {
     before(function beforeHook() {
       if (/jsdom/.test(window.navigator.userAgent)) {
@@ -35,24 +30,6 @@ describe('<DataGrid />', () => {
 
     // Adapation of describeConformance()
     describe('Material-UI component API', () => {
-      it(`resizable true should throw error`, () => {
-        defaultProps.columns[0].resizable = true;
-        expect(() =>
-          render(
-            <div style={{ width: 300, height: 300 }}>
-              <DataGrid {...defaultProps} />
-            </div>,
-          ),
-        ).to.throw(
-          [
-            `Material-UI: \` column.resizable = true \` is not a valid prop.`,
-            'Column resizing is not available in the MIT version',
-            '',
-            'You need to upgrade to the XGrid component to unlock this feature.',
-          ].join('\n'),
-        );
-      });
-
       it(`attaches the ref`, () => {
         const ref = React.createRef<HTMLDivElement>();
         const { container } = render(
