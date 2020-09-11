@@ -2,25 +2,46 @@ import * as React from 'react';
 import Tooltip from '@material-ui/core/Tooltip';
 import InfoIcon from '@material-ui/icons/Info';
 import { CellParams, CellValue } from '@material-ui/x-grid';
+import { makeStyles } from '@material-ui/core/styles';
 
-export const Incoterm: React.FC<{ value: CellValue }> = React.memo(({ value }) => {
+const useStyles = makeStyles({
+  root: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  icon: {
+    color: '#2196f3',
+    alignSelf: 'center',
+    marginLeft: 8,
+  },
+});
+
+interface IncotermProps {
+  value: CellValue;
+}
+
+const Incoterm = React.memo(function Incoterm(props: IncotermProps) {
+  const { value } = props;
+  const classes = useStyles();
+
   if (!value) {
     return null;
   }
+
   const valueStr = value.toString();
   const tooltip = valueStr.slice(valueStr.indexOf('(') + 1, valueStr.indexOf(')'));
   const code = valueStr.slice(0, valueStr.indexOf('(')).trim();
+
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+    <div className={classes.root}>
       <span>{code}</span>
       <Tooltip title={tooltip}>
-        <InfoIcon className="info-icon" />
+        <InfoIcon className={classes.icon} />
       </Tooltip>
     </div>
   );
 });
-Incoterm.displayName = 'Incoterm';
 
-export function IncotermRenderer(params: CellParams) {
+export function renderIncoterm(params: CellParams) {
   return <Incoterm value={params.value!} />;
 }

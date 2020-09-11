@@ -32,19 +32,15 @@ import {
   randomTaxCode,
 } from './services';
 import {
-  CountryRenderer,
-  DoneRenderer,
-  EmailRenderer,
-  IncotermRenderer,
-  ProgressRenderer,
-  StatusRenderer,
+  renderCountry,
+  renderDone,
+  renderEmail,
+  renderIncoterm,
+  renderPnl,
+  renderProgress,
+  renderStatus,
+  renderTotalPrice,
 } from './renderer';
-
-const totalPriceFormatter = ({ value }) => `$ ${Number(value).toLocaleString()}`;
-const pnlFormatter = (params) =>
-  Number(params.value!) < 0
-    ? `(${Math.abs(Number(params.value!)).toLocaleString()})`
-    : Number(params.value).toLocaleString();
 
 export const commodityColumns: any[] = [
   {
@@ -73,7 +69,7 @@ export const commodityColumns: any[] = [
     field: 'traderEmail',
     headerName: 'Trader Email',
     generateData: randomEmail,
-    renderCell: EmailRenderer,
+    renderCell: renderEmail,
     disableClickEventBubbling: true,
     width: 150,
   },
@@ -88,14 +84,14 @@ export const commodityColumns: any[] = [
     field: 'filledQuantity',
     headerName: 'Filled Quantity',
     generateData: generateFilledQuantity,
-    renderCell: ProgressRenderer,
+    renderCell: renderProgress,
     type: 'number',
     width: 120,
   },
   {
     field: 'isFilled',
     headerName: 'Is Filled',
-    renderCell: DoneRenderer,
+    renderCell: renderDone,
     align: 'center',
     generateData: generateIsFilled,
     width: 80,
@@ -104,7 +100,7 @@ export const commodityColumns: any[] = [
     field: 'status',
     headerName: 'Status',
     generateData: randomStatusOptions,
-    renderCell: StatusRenderer,
+    renderCell: renderStatus,
     width: 150,
   },
   {
@@ -143,31 +139,23 @@ export const commodityColumns: any[] = [
   {
     field: 'incoTerm',
     generateData: randomIncoterm,
-    renderCell: IncotermRenderer,
+    renderCell: renderIncoterm,
   },
   {
     field: 'totalPrice',
     headerName: 'Total in USD',
     generateData: generateTotalPrice,
-    valueFormatter: totalPriceFormatter,
-    cellClassRules: {
-      good: ({ value }) => Number(value) > 1000000,
-      bad: ({ value }) => Number(value) < 1000000,
-    },
+    renderCell: renderTotalPrice,
     type: 'number',
-    width: 120,
+    width: 160,
   },
   {
     field: 'pnl',
     headerName: 'PnL',
     generateData: randomPnL,
-    valueFormatter: pnlFormatter,
-    cellClassRules: {
-      positive: ({ value }) => Number(value) > 0,
-      negative: ({ value }) => Number(value) < 0,
-    },
+    renderCell: renderPnl,
     type: 'number',
-    width: 120,
+    width: 140,
   },
   {
     field: 'maturityDate',
@@ -203,7 +191,7 @@ export const commodityColumns: any[] = [
     field: 'counterPartyCountry',
     headerName: 'Counterparty Country',
     generateData: randomCountry,
-    renderCell: CountryRenderer,
+    renderCell: renderCountry,
     width: 120,
   },
   {

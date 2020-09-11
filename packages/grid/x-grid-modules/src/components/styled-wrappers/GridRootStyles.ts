@@ -71,6 +71,8 @@ export const useStyles = makeStyles(
         },
         '& .MuiDataGrid-colCellCheckbox, & .MuiDataGrid-cellCheckbox': {
           padding: 0,
+          justifyContent: 'center',
+          alignItems: 'center',
         },
         '& .MuiDataGrid-colCell': {
           position: 'relative',
@@ -174,8 +176,7 @@ export const useStyles = makeStyles(
         },
         '& .MuiDataGrid-cellWithRenderer': {
           display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
+          alignItems: 'center',
         },
         '& .MuiDataGrid-withBorder': {
           borderRight: `1px solid ${borderColor}`,
