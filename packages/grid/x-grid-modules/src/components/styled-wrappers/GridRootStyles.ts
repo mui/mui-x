@@ -188,6 +188,7 @@ export const useStyles = makeStyles(
           textAlign: 'center',
         },
         '& .MuiDataGrid-footer': {
+          borderTop: `1px solid ${borderColor}`,
           display: 'flex',
           justifyContent: 'space-between',
         },
