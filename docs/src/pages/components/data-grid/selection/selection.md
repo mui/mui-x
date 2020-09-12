@@ -32,7 +32,7 @@ For the `XGrid`, you need to disable multiple row selection with `disableMultipl
 
 {{"demo": "pages/components/data-grid/selection/SingleRowSelectionGrid.js"}}
 
-### Multiple row selection ⚡️
+### Multiple row selection <span role="img" title="Enterprise">⚡️</span>
 
 To activate multiple selection, put focus the `XGrid` component and hold the <kbd>CTRL</kbd> key while selecting rows.
 
@@ -62,7 +62,7 @@ The grid exposes a set of methods that enables all of these features using the i
 
 - `onSelectionChange`: Callback fired when the selection state of one or multiple rows changes.
 
-## 🚧 Range selection ⚡️
+## 🚧 Range selection <span role="img" title="Enterprise">⚡️</span>
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >

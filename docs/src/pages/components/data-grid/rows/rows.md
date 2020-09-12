@@ -118,7 +118,7 @@ The grid exposes a set of methods that enables all of these features using the i
 - `setSortModel`: Set the sort model and trigger the sorting of rows.
 - `onSortModelChange`: Callback fired when the column sorting changed before the grid has sorted its rows.
 
-### Multi-column sorting ⚡️
+### Multi-column sorting <span role="img" title="Enterprise">⚡️</span>
 
 You can sort by multiple columns at the same time using `XGrid`.
 Hold the <kbd>CTRL</kbd> key down while clicking the column header.
@@ -158,7 +158,7 @@ Row spanning allows to change this default behavior.
 It allows cells to span multiple rows.
 This is very close to the "row spanning" in an HTML `<table>`.
 
-## 🚧 Row reorder ⚡️
+## 🚧 Row reorder <span role="img" title="Enterprise">⚡️</span>
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >

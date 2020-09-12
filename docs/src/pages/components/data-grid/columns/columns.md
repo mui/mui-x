@@ -49,7 +49,7 @@ To change the width of a column, use the `width` property available in `ColDef`.
 
 {{"demo": "pages/components/data-grid/columns/ColumnWidthGrid.js"}}
 
-## Column resizing ⚡️
+## Column resizing <span role="img" title="Enterprise">⚡️</span>
 
 By default, `XGrid` allows all columns to be resized by dragging the right portion of the column separator.
 
@@ -111,7 +111,7 @@ const usdPrice: ColTypeDef = {
 
 Grouping columns allows you to have multiple levels of columns in your header and the ability, if needed, to 'open and close' column groups to show and hide additional columns.
 
-## 🚧 Column reorder ⚡️
+## 🚧 Column reorder <span role="img" title="Enterprise">⚡️</span>
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
@@ -119,7 +119,7 @@ Grouping columns allows you to have multiple levels of columns in your header an
 
 Column reordering enables reordering the columns by dragging the header cells.
 
-## 🚧 Sticky columns ⚡️
+## 🚧 Sticky columns <span role="img" title="Enterprise">⚡️</span>
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
