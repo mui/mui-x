@@ -40,7 +40,7 @@ The following grid displays 31 columns and 100,000 rows - over 3 million cells i
 import { XGrid } from '@material-ui/x-grid';
 ```
 
-{{"demo": "pages/components/data-grid/overview/XGridDemo.js", "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/overview/XGridDemo.js", "defaultCodeOpen": false, "disableAd": true}}
 
 See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on purchasing licenses.
 

@@ -56,7 +56,7 @@ By default, `XGrid` allows all columns to be resized by dragging the right porti
 To prevent the resizing of a column, set `resizable: false` in the `ColDef`.
 Alternatively, to disable all columns resize, set the prop `disableColumnResize={true}`.
 
-{{"demo": "pages/components/data-grid/columns/ColumnSizingGrid.js"}}
+{{"demo": "pages/components/data-grid/columns/ColumnSizingGrid.js", "disableAd": true}}
 
 <!--
 - https://ag-grid.com/javascript-grid-resizing/
