@@ -105,6 +105,7 @@ The data grid comes in 2 versions:
 
 - `DataGrid` **MIT licensed** as part of the community edition. It's an extension of `@material-ui/core`.
 - `XGrid` **Commercially licensed** as part of the X product line offering.
+  See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on purchasing licenses.
 
 The features only available in the commercial version are suffixed with a <span style="font-size: 26px">⚡️</span> icon.
 
@@ -120,6 +121,11 @@ Please take the component for a test run, no need to contact us.
 If you have an enterprise grid running with an invalid license (no license, expired license, incorrect license) the grid displays a watermark and a warning in the console.
 
 <img src="/static/x/watermark.png" width="658" height="175" alt="">
+<br />
+<br />
+<br />
+
+See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on purchasing licenses.
 
 ### Feature comparison
 
@@ -210,7 +216,7 @@ For crowdsourced technical questions from expert Material-UI devs in our communi
 
 We provide a [private support channel](https://material-ui.zendesk.com/) for enterprise customers.
 
-### Roadmap
+## Roadmap
 
 Here is [the public roadmap](https://github.com/mui-org/material-ui-x/projects/1). It's organized by quarter.
 
