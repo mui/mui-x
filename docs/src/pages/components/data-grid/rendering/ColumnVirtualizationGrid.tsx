@@ -11,7 +11,7 @@ export interface GridData {
   rows: DataRowModel[];
 }
 
-function useData(rowLength, columnsLenght) {
+function useData(rowLength, columnLength) {
   const [data, setData] = React.useState<GridData>({ columns: [], rows: [] });
 
   React.useEffect(() => {
@@ -22,7 +22,7 @@ function useData(rowLength, columnsLenght) {
         id: i,
       };
 
-      for (let j = 1; j <= columnsLenght; j += 1) {
+      for (let j = 1; j <= columnLength; j += 1) {
         row[`price${j}M`] = `${i.toString()}, ${j} `;
       }
 
@@ -31,7 +31,7 @@ function useData(rowLength, columnsLenght) {
 
     const columns: ColDef[] = [{ field: 'id', hide: true }];
 
-    for (let j = 1; j <= columnsLenght; j += 1) {
+    for (let j = 1; j <= columnLength; j += 1) {
       columns.push({ field: `price${j}M`, headerName: `${j}M` });
     }
 
