@@ -190,7 +190,10 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                 {customComponents.headerComponent}
                 <div className="MuiDataGrid-mainGridContainer">
                   <Watermark licenseStatus={props.licenseStatus} />
-                  <GridColumnsContainer ref={columnsContainerRef} height={internalOptions.headerHeight}>
+                  <GridColumnsContainer
+                    ref={columnsContainerRef}
+                    height={internalOptions.headerHeight}
+                  >
                     <ColumnsHeader
                       ref={columnsHeaderRef}
                       columns={internalColumns.visible || []}

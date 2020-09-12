@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridOptions } from '../models';
-import { GridFooter } from './styled-wrappers';
+import { GridFooter } from './styled-wrappers/GridFooter';
 import { RowCount } from './row-count';
 import { SelectedRowCount } from './selected-row-count';
 import { ApiContext } from './api-context';
