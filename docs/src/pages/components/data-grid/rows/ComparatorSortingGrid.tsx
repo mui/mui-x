@@ -4,6 +4,7 @@ import {
   RowsProp,
   DataGrid,
   SortDirection,
+  ValueGetterParams,
 } from '@material-ui/data-grid';
 import {
   randomCreatedDate,
@@ -16,7 +17,7 @@ const columns: Columns = [
   { field: 'age', type: 'number' },
   {
     field: 'username',
-    valueGetter: (params) =>
+    valueGetter: (params: ValueGetterParams) =>
       `${params.getValue('name') || 'unknown'} - ${
         params.getValue('age') || 'x'
       }`,

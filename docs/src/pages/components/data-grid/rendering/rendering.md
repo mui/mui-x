@@ -9,7 +9,164 @@ components: DataGrid, XGrid
 
 ## Column definitions
 
-### Header cell
+This section is an extension of the main [column definitions documentation](/components/data-grid/columns/#column-definitions) that focuses on the rendering and the customization of the rendering with `ColDef`.
+
+### Value getter
+
+Sometimes a column might not have a corresponding value and you just want to render a combination of different fields. To do that, you can set the `valueGetter` attribute of `ColDef` as in the example below:
+
+```tsx
+const columns: ColDef[] = [
+  { field: 'id', hide: true },
+  { field: 'firstName', headerName: 'First name', width: 130 },
+  { field: 'lastName', headerName: 'Last name', width: 130 },
+  {
+    field: 'fullName',
+    headerName: 'Full name',
+    width: 160,
+    valueGetter: (params: ValueGetterParams) =>
+      `${params.getValue('firstName') || ''} ${
+        params.getValue('lastName') || ''
+      }`,
+  },
+];
+```
+
+{{"demo": "pages/components/data-grid/rendering/ValueGetterGrid.js", "defaultCodeOpen": false}}
+
+The value generated is used for filtering, sorting, rendering, etc unless overridden by a more specific configuration.
+
+### Value formatter
+
+The value formatters allow you to format values for display as a string.
+For instance, you might want to format a JavaScript date object into a string year.
+
+```tsx
+const columns: ColDef[] = [
+  { field: 'id', hide: true },
+  {
+    field: 'date',
+    headerName: 'Year',
+    valueFormatter: (params: ValueFormatterParams) =>
+      (params.value as Date).getFullYear(),
+  },
+];
+```
+
+{{"demo": "pages/components/data-grid/rendering/ValueFormatterGrid.js", "defaultCodeOpen": false}}
+
+The value generated is used for filtering, sorting, rendering in the cell and outside, etc unless overridden by a more specific configuration.
+
+### Render cell
+
+By default, the grid render the value as string in the cell.
+It resolves the rendered output in the following order:
+
+1. `renderCell() => ReactElement`
+1. `valueFormatter() => string`
+1. `valueGetter() => string`
+1. `row[field]`
+
+The `renderCell` method of the column definitions is similar to `valueFormatter`.
+However, it trades to be able to only render in a cell in exchange for allowing to return a React node (instead of a string).
+
+```tsx
+const columns: ColDef[] = [
+  { field: 'id', hide: true },
+  {
+    field: 'date',
+    headerName: 'Year',
+    renderCell: (params: ValueFormatterParams) => (
+      <strong>
+        {(params.value as Date).getFullYear()}{' '}
+        <span role="img" aria-label="birthday">
+          🎂
+        </span>
+      </strong>
+    ),
+  },
+];
+```
+
+{{"demo": "pages/components/data-grid/rendering/RenderCellGrid.js", "defaultCodeOpen": false}}
+
+### Render header
+
+You can customize the look of each header with the `renderHeader` method.
+It takes precedence over the `headerName` property.
+
+```tsx
+const columns: ColDef[] = [
+  { field: 'id', hide: true },
+  {
+    field: 'date',
+    width: 500,
+    renderHeader: (params: ColParams) => (
+      <strong>
+        {'Birthday '}
+        <span role="img" aria-label="enjoy">
+          🎂
+        </span>
+      </strong>
+    ),
+  },
+];
+```
+
+{{"demo": "pages/components/data-grid/rendering/RenderHeaderGrid.js", "defaultCodeOpen": false}}
+
+### Styling header
+
+The `ColDef` type has properties to apply class names and custom CSS on the header.
+
+- `headerClassName`: to apply class names into the column header.
+- `headerAlign`: to align the content of the header. It must be 'left' | 'right' | 'center'.
+
+```tsx
+const columns: Columns = [
+  { field: 'id', hide: true },
+  {
+    field: 'first',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
+  },
+  {
+    field: 'last',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
+  },
+];
+```
+
+{{"demo": "pages/components/data-grid/rendering/StylingHeaderGrid.js", "defaultCodeOpen": false}}
+
+### Styling cells
+
+The `ColDef` type has properties to apply class names and custom CSS on the cells.
+
+- `cellClassName`: to apply class names on every cell. It can also be a function.
+- `align`: to align the content of the cells. It must be 'left' | 'right' | 'center'.
+
+```tsx
+const columns: Columns = [
+  { field: 'id', hide: true },
+  {
+    field: 'name',
+    cellClassName: 'super-app-theme--cell',
+  },
+  {
+    field: 'score',
+    type: 'number',
+    cellClassName: (params: CellClassParams) =>
+      clsx('super-app', {
+        negative: (params.value as number) < 0,
+        positive: (params.value as number) > 0,
+      }),
+  },
+];
+```
+
+{{"demo": "pages/components/data-grid/rendering/StylingCellsGrid.js", "defaultCodeOpen": false}}
 
 ## Layout
 
@@ -39,7 +196,7 @@ This means that the number of rows will drive the height of the grid and consequ
 ## Virtualization
 
 DOM virtualization is the feature that allows the grid to handle an unlimited\* number of rows and columns.
-This is a is built-in feature of the rendering engine and greatly improve rendering performance.
+This is a built-in feature of the rendering engine and greatly improve rendering performance.
 
 _unlimited\*: Browsers set a limit on the number of pixels a scroll container can host: 17.5 million pixels on Firefox, 33.5 million pixels on Chrome, Edge, and Safari. A [reproduction](https://codesandbox.io/s/beautiful-silence-1yifo?file=/src/App.js)._
 

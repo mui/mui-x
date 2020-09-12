@@ -8,7 +8,6 @@ export const NUMERIC_COL_DEF: ColTypeDef = {
   type: 'number',
   align: 'right',
   headerAlign: 'right',
-  width: 80,
   sortComparator: numberComparer,
   valueFormatter: ({ value }) => (value && isNumber(value) && value.toLocaleString()) || value,
 };

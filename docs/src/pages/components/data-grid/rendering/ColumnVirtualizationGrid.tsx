@@ -39,7 +39,7 @@ function useData(rowLength, columnLength) {
       rows,
       columns,
     });
-  }, [rowLength, columnsLenght]);
+  }, [rowLength, columnLength]);
 
   return data;
 }

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 
-function useData(rowLength, columnsLenght) {
+function useData(rowLength, columnLength) {
   const [data, setData] = React.useState({ columns: [], rows: [] });
 
   React.useEffect(() => {
@@ -12,7 +12,7 @@ function useData(rowLength, columnsLenght) {
         id: i,
       };
 
-      for (let j = 1; j <= columnsLenght; j += 1) {
+      for (let j = 1; j <= columnLength; j += 1) {
         row[`price${j}M`] = `${i.toString()}, ${j} `;
       }
 
@@ -21,7 +21,7 @@ function useData(rowLength, columnsLenght) {
 
     const columns = [{ field: 'id', hide: true }];
 
-    for (let j = 1; j <= columnsLenght; j += 1) {
+    for (let j = 1; j <= columnLength; j += 1) {
       columns.push({ field: `price${j}M`, headerName: `${j}M` });
     }
 
@@ -29,7 +29,7 @@ function useData(rowLength, columnsLenght) {
       rows,
       columns,
     });
-  }, [rowLength, columnsLenght]);
+  }, [rowLength, columnLength]);
 
   return data;
 }

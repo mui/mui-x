@@ -22,7 +22,7 @@ export const nillComparer = (v1: CellValue, v2: CellValue): number | null => {
 
 export const stringNumberComparer: ComparatorFn = (v1: CellValue, v2: CellValue) => {
   const nillResult = nillComparer(v1, v2);
-  if (nillResult != null) {
+  if (nillResult !== null) {
     return nillResult;
   }
 
@@ -34,7 +34,7 @@ export const stringNumberComparer: ComparatorFn = (v1: CellValue, v2: CellValue)
 
 export const numberComparer: ComparatorFn = (v1: CellValue, v2: CellValue) => {
   const nillResult = nillComparer(v1, v2);
-  if (nillResult != null) {
+  if (nillResult !== null) {
     return nillResult;
   }
   return Number(v1) - Number(v2);
@@ -42,7 +42,7 @@ export const numberComparer: ComparatorFn = (v1: CellValue, v2: CellValue) => {
 
 export const dateComparer = (v1: CellValue, v2: CellValue): number => {
   const nillResult = nillComparer(v1, v2);
-  if (nillResult != null) {
+  if (nillResult !== null) {
     return nillResult;
   }
 

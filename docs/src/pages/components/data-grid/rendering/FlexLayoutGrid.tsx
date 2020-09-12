@@ -5,7 +5,7 @@ import { useDemoData } from '@material-ui/x-grid-data-generator';
 export default function FlexLayoutGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
-    rowLength: 100,
+    rowLength: 5,
     maxColumns: 6,
   });
 
