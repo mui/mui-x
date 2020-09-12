@@ -99,14 +99,14 @@ export default function App() {
 
 {{"demo": "pages/components/data-grid/getting-started/Codesandbox.js", "hideToolbar": true, "bg": true}}
 
-## Enterprise
+## Enterprise ⚡️
 
 The data grid comes in 2 versions:
 
 - `DataGrid` **MIT licensed** as part of the community edition. It's an extension of `@material-ui/core`.
 - `XGrid` **Commercially licensed** as part of the X product line offering.
 
-The features only available in the commercial version are suffixed with a <span style="font-size: 26px">⚡️</span> icon.
+The features only available in the commercial version are suffixed with a <span style="font-size: 26px" role="img" title="Enterprise">⚡️</span> icon.
 
 <img src="/static/x/header-icon.png" width="454" height="239" alt="">
 

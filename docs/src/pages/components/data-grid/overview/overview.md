@@ -18,7 +18,7 @@ The data grid comes in 2 versions:
 - `DataGrid` **MIT licensed** as part of the community edition. It's an extension of `@material-ui/core`.
 - `XGrid` **Commercially licensed** as part of the X product line offering.
 
-The features only available in the commercial version are suffixed with a <span style="font-size: 26px">⚡️</span> icon.
+The features only available in the commercial version are suffixed with a <span style="font-size: 26px" role="img" title="Enterprise">⚡️</span> icon.
 
 ### MIT version
 
@@ -31,7 +31,7 @@ import { DataGrid } from '@material-ui/data-grid';
 
 {{"demo": "pages/components/data-grid/overview/DataGridDemo.js", "defaultCodeOpen": false}}
 
-### Commercial version ⚡️
+### Commercial version <span role="img" title="Enterprise">⚡️</span>
 
 The following grid displays 31 columns and 100,000 rows - over 3 million cells in total.
 
