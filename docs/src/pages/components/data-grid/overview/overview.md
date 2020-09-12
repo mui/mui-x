@@ -74,8 +74,8 @@ You can find more details on our living quarterly [roadmap](https://github.com/m
 A couple of resources you might be interested in to learn more about the grid:
 
 - A [fullscreen demo](https://muix-preview.netlify.app/#/grid)
-- The storybook we use for [internal development](https://material-ui-x.netlify.app/storybook/)
+- The storybook used for [internal development](https://material-ui-x.netlify.app/storybook/)
 - The [sources](https://github.com/mui-org/material-ui-x/tree/master/packages/grid) on GitHub
 - The [Material Design](https://material.io/design/components/data-tables.html) specification
-- The [WAI-ARIA authoring practices](https://www.w3.org/TR/wai-aria-practices/#grid)
+- The accessibility [WAI-ARIA authoring practices](https://www.w3.org/TR/wai-aria-practices/#grid)
 - The [Sketch](https://material-ui.com/store/items/sketch-react/) and [Figma](https://material-ui.com/store/items/figma-react/) components
