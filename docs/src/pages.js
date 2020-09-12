@@ -71,11 +71,6 @@ const pages = [
       },
       {
         pathname: '/components',
-        subheader: '/components/foo',
-        children: [{ pathname: '/components/data-grid/rendering' }],
-      },
-      {
-        pathname: '/components',
         subheader: '/components/feedback',
         children: [
           { pathname: '/components/progress' },
@@ -149,7 +144,7 @@ const pages = [
                 { pathname: '/components/data-grid/pagination' },
                 { pathname: '/components/data-grid/selection' },
                 { pathname: '/components/data-grid/editing', title: '🚧 Editing' },
-                { pathname: '/components/data-grid/404', title: '🚧 Rendering' },
+                { pathname: '/components/data-grid/rendering' },
                 { pathname: '/components/data-grid/export', title: '🚧 Export & Import' },
                 { pathname: '/components/data-grid/localization', title: '🚧 Localization' },
                 { pathname: '/components/data-grid/group-pivot', title: '🚧 Group & Pivot' },
@@ -167,7 +162,7 @@ const pages = [
                 { pathname: '/components/data-grid/pagination' },
                 { pathname: '/components/data-grid/selection' },
                 { pathname: '/components/data-grid/editing', title: '🚧 Editing' },
-                { pathname: '/components/data-grid/rendering', title: '🚧 Rendering' },
+                { pathname: '/components/data-grid/rendering' },
                 { pathname: '/components/data-grid/export', title: '🚧 Export & Import' },
                 { pathname: '/components/data-grid/localization', title: '🚧 Localization' },
                 { pathname: '/components/data-grid/group-pivot', title: '🚧 Group & Pivot' },
