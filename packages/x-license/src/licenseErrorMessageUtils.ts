@@ -25,11 +25,11 @@ export function showNotFoundLicenseError() {
   showError([
     'Material-UI X: License key not found.',
     '',
-    'This is an trial only version of Material-UI X.',
+    'This is a trial-only version of Material-UI X.',
     'While all the features are unlocked, it is not licensed for',
-    'development on projects intended for production.',
+    'development use on projects intended for production.',
     '',
-    'If you want a license to use the features, please visit',
+    'To purchase a license, please visit',
     'https://material-ui.com/r/x-license to get a valid license.',
   ]);
 }

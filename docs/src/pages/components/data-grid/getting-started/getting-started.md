@@ -118,7 +118,7 @@ Please take the component for a test run, no need to contact us.
 
 ### Invalid license
 
-If you have an enterprise grid running with an invalid license (no license, expired license, incorrect license) the grid displays a watermark and a warning in the console.
+If you have an enterprise grid running with an expired or missing license key the grid displays a watermark, and a warning in shown in the console.
 
 <img src="/static/x/watermark.png" width="658" height="175" alt="">
 <br />
