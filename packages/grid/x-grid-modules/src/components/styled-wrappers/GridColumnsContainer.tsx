@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { DivProps } from './grid-root';
 import { classnames } from '../../utils';
 
-export const ColumnsContainer = React.forwardRef<HTMLDivElement, DivProps & { height: number }>(
-  (props, ref) => {
+type GridColumnsContainerProps = React.HTMLAttributes<HTMLDivElement> & { height: number };
+
+export const GridColumnsContainer = React.forwardRef<HTMLDivElement, GridColumnsContainerProps>(
+  function GridColumnsContainer(props, ref) {
     const { className, height, style, ...other } = props;
     return (
       <div
@@ -15,4 +16,3 @@ export const ColumnsContainer = React.forwardRef<HTMLDivElement, DivProps & { he
     );
   },
 );
-ColumnsContainer.displayName = 'ColumnsContainer';
