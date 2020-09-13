@@ -17,6 +17,7 @@ The data grid comes in 2 versions:
 
 - `DataGrid` **MIT licensed** as part of the community edition. It's an extension of `@material-ui/core`.
 - `XGrid` **Commercially licensed** as part of the X product line offering.
+  See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on purchasing licenses.
 
 The features only available in the commercial version are suffixed with a <span style="font-size: 26px" role="img" title="Enterprise">⚡️</span> icon.
 
@@ -40,6 +41,8 @@ import { XGrid } from '@material-ui/x-grid';
 ```
 
 {{"demo": "pages/components/data-grid/overview/XGridDemo.js", "defaultCodeOpen": false}}
+
+See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on purchasing licenses.
 
 ## Features
 
