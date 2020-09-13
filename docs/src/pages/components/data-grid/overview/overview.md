@@ -75,7 +75,7 @@ Here are some resources you might be interested in to learn more about the grid:
 
 - A [fullscreen demo](https://muix-preview.netlify.app/#/grid)
 - The storybook used for [internal development](https://material-ui-x.netlify.app/storybook/)
-- The [source on GitHub](https://github.com/mui-org/material-ui-x/tree/master/packages/grid) 
+- The [source on GitHub](https://github.com/mui-org/material-ui-x/tree/master/packages/grid)
 - The [Material Design specification](https://material.io/design/components/data-tables.html) specification
 - The accessibility [WAI-ARIA authoring practices](https://www.w3.org/TR/wai-aria-practices/#grid)
 - The [Sketch](https://material-ui.com/store/items/sketch-react/) and [Figma](https://material-ui.com/store/items/figma-react/) design assets
