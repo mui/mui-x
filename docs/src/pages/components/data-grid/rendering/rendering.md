@@ -59,7 +59,7 @@ The value generated is used for filtering, sorting, rendering in the cell and ou
 
 ### Render cell
 
-By default, the grid render the value as string in the cell.
+By default, the grid render the value as a string in the cell.
 It resolves the rendered output in the following order:
 
 1. `renderCell() => ReactElement`
@@ -178,7 +178,7 @@ It's recommended to use a flex container to render the grid. This allows a flexi
 
 {{"demo": "pages/components/data-grid/rendering/FlexLayoutGrid.js"}}
 
-### Predefiend dimensions
+### Predefined dimensions
 
 You can predefine dimensions for the parent of the grid.
 
@@ -189,14 +189,14 @@ You can predefine dimensions for the parent of the grid.
 The `autoHeight` prop allows the grid to size according to its content.
 This means that the number of rows will drive the height of the grid and consequently, they will all be rendered and visible to the user at the same time.
 
-> ⚠️ This is not recommended for large dataset as row virtualization will not be able to improve performance by limiting the number of elements rendered in the DOM.
+> ⚠️ This is not recommended for large datasets as row virtualization will not be able to improve performance by limiting the number of elements rendered in the DOM.
 
 {{"demo": "pages/components/data-grid/rendering/AutoHeightGrid.js"}}
 
 ## Virtualization
 
 DOM virtualization is the feature that allows the grid to handle an unlimited\* number of rows and columns.
-This is a built-in feature of the rendering engine and greatly improve rendering performance.
+This is a built-in feature of the rendering engine and greatly improves rendering performance.
 
 _unlimited\*: Browsers set a limit on the number of pixels a scroll container can host: 17.5 million pixels on Firefox, 33.5 million pixels on Chrome, Edge, and Safari. A [reproduction](https://codesandbox.io/s/beautiful-silence-1yifo?file=/src/App.js)._
 
@@ -241,7 +241,7 @@ This demo replaces it with a linear progress.
 
 ### No rows overlay
 
-In the following demo, an illustaration is added on top of the default "No Rows" message.
+In the following demo, an illustration is added on top of the default "No Rows" message.
 
 {{"demo": "pages/components/data-grid/rendering/CustomEmptyOverlayGrid.js"}}
 
@@ -252,7 +252,7 @@ The grid exposes props to hide specific elements of the UI:
 - `hideFooter`: If `true`, the footer component is hidden.
 - `hideFooterRowCount`: If `true`, the row count in the footer is hidden.
 - `hideFooterSelectedRowCount`: If `true`, the selected row count in the footer is hidden.
-- `hideFooterPagination`: If `true`, the pagination component in the footer is hidden..
+- `hideFooterPagination`: If `true`, the pagination component in the footer is hidden.
 
 By default, pagination uses the [TablePagination](/components/pagination/#table-pagination) component that is optimized for handling tabular data.
 This demo replaces it with the [Pagination](/components/pagination/) component.
