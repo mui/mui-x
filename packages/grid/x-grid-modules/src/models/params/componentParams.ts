@@ -8,7 +8,7 @@ import { ApiRef } from '../api';
 /**
  * Object passed as React prop in the component override.
  */
-export interface ComponentParams {
+export interface ComponentProps {
   /**
    * The object containing all pagination details in [[PaginationProps]].
    */

@@ -222,9 +222,9 @@ By default, 2 columns are rendered outside of the viewport. You can change this 
 
 You can disable column virtualization by setting the column buffer to a higher number than the number of rendered columns, e.g. with `columnBuffer={columns.length}` or `columnBuffer={Number.MAX_SAFE_INTEGER}`.
 
-## Components
+## Components prop
 
-As part of the customization API, the grid allows you to replace and override the following components:
+As part of the customization API, the grid allows you to replace and override nested components with the `components` prop. The prop accepts an object with the following keys:
 
 - `header`: The component rendered above the column header bar.
 - `loadingOverlay`: The component rendered when the loading react prop is set to true.
@@ -232,12 +232,35 @@ As part of the customization API, the grid allows you to replace and override th
 - `footer`: The component rendered below the viewport.
 - `pagination`: The component rendered for the pagination feature.
 
-### Pagination
+### Loading overlay
 
-By default, pagination uses the [TablePagination](/components/pagination/#table-pagination) component that is optimized for handling tabular data. This demo replaces it with the [Pagination](/components/pagination/) component.
+By default, the loading overlay displays a circular progress.
+This demo replaces it with a linear progress.
+
+{{"demo": "pages/components/data-grid/rendering/CustomLoadingOverlayGrid.js"}}
+
+### No rows overlay
+
+In the following demo, an illustaration is added on top of the default "No Rows" message.
+
+{{"demo": "pages/components/data-grid/rendering/CustomEmptyOverlayGrid.js"}}
+
+### Footer
+
+The grid exposes props to hide specific elements of the UI:
+
+- `hideFooter`: If `true`, the footer component is hidden.
+- `hideFooterRowCount`: If `true`, the row count in the footer is hidden.
+- `hideFooterSelectedRowCount`: If `true`, the selected row count in the footer is hidden.
+- `hideFooterPagination`: If `true`, the pagination component in the footer is hidden..
+
+By default, pagination uses the [TablePagination](/components/pagination/#table-pagination) component that is optimized for handling tabular data.
+This demo replaces it with the [Pagination](/components/pagination/) component.
 
 {{"demo": "pages/components/data-grid/rendering/CustomPaginationGrid.js"}}
 
 ## Customization example
 
-The following grid leverages the Ant Design specification.
+The following grid leverages the CSS customization API to match the Ant Design specification.
+
+{{"demo": "pages/components/data-grid/rendering/AntDesignGrid.js"}}

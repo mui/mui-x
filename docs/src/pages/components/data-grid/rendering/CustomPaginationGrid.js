@@ -27,10 +27,16 @@ function CustomPagination(props) {
 }
 
 CustomPagination.propTypes = {
+  /**
+   * The object containing all pagination details in [[PaginationProps]].
+   */
   paginationProps: PropTypes.shape({
     page: PropTypes.number.isRequired,
     pageCount: PropTypes.number.isRequired,
+    pageSize: PropTypes.number.isRequired,
+    rowCount: PropTypes.number.isRequired,
     setPage: PropTypes.func.isRequired,
+    setPageSize: PropTypes.func.isRequired,
   }).isRequired,
 };
 
