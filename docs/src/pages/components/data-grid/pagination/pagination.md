@@ -69,4 +69,4 @@ The `DataGrid` component can display up to 100 rows per page.
 The `XGrid` component removes this limitation.
 The following demo displays 200 rows per page:
 
-{{"demo": "pages/components/data-grid/pagination/200PaginationGrid.js"}}
+{{"demo": "pages/components/data-grid/pagination/200PaginationGrid.js", "disableAd": true}}

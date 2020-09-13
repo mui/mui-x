@@ -36,7 +36,7 @@ For the `XGrid`, you need to disable multiple row selection with `disableMultipl
 
 To activate multiple selection, put focus the `XGrid` component and hold the <kbd>CTRL</kbd> key while selecting rows.
 
-{{"demo": "pages/components/data-grid/selection/MultipleRowSelectionGrid.js"}}
+{{"demo": "pages/components/data-grid/selection/MultipleRowSelectionGrid.js", "disableAd": true}}
 
 ## Checkbox selection
 

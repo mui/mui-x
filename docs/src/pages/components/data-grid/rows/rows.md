@@ -136,7 +136,7 @@ const sortModel = [
 ];
 ```
 
-{{"demo": "pages/components/data-grid/rows/MultiSortingGrid.js"}}
+{{"demo": "pages/components/data-grid/rows/MultiSortingGrid.js", "disableAd": true}}
 
 ## Row height
 
