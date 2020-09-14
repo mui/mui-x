@@ -3,9 +3,9 @@ import { darken, fade, lighten, makeStyles, Theme } from '@material-ui/core/styl
 export const useStyles = makeStyles(
   (theme: Theme) => {
     const borderColor =
-    theme.palette.type === 'light'
-      ? lighten(fade(theme.palette.divider, 1), 0.88)
-      : darken(fade(theme.palette.divider, 1), 0.68);
+      theme.palette.type === 'light'
+        ? lighten(fade(theme.palette.divider, 1), 0.88)
+        : darken(fade(theme.palette.divider, 1), 0.68);
 
     const gridStyle: { root: any } = {
       root: {
