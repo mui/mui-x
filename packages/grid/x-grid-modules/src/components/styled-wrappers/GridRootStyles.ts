@@ -2,11 +2,11 @@ import { darken, fade, lighten, makeStyles, Theme } from '@material-ui/core/styl
 
 export const useStyles = makeStyles(
   (theme: Theme) => {
-    const isLightTheme = theme.palette.type === 'light';
-    const isDarkTheme = !isLightTheme;
-    const borderColor = isLightTheme
+    const borderColor =
+    theme.palette.type === 'light'
       ? lighten(fade(theme.palette.divider, 1), 0.88)
       : darken(fade(theme.palette.divider, 1), 0.68);
+
     const gridStyle: { root: any } = {
       root: {
         flex: 1,
@@ -204,17 +204,33 @@ export const useStyles = makeStyles(
       },
     };
 
-    if (isDarkTheme) {
+    if (theme.palette.type === 'dark') {
+      // Values coming from mac OS.
+      const track = '#202022';
+      const thumb = '#585859';
+      const active = '#838384';
+
       // We style the scroll bar for dark mode.
       gridStyle.root = {
         ...gridStyle.root,
+        scrollbarColor: `${thumb} ${track}`,
         '& *::-webkit-scrollbar': {
-          width: 'initial',
-          height: 'initial',
+          backgroundColor: track,
         },
         '& *::-webkit-scrollbar-thumb': {
-          borderRadius: 10,
-          backgroundColor: borderColor,
+          borderRadius: 8,
+          backgroundColor: thumb,
+          minHeight: 24,
+          border: `3px solid ${track}`,
+        },
+        '& *::-webkit-scrollbar-thumb:focus': {
+          backgroundColor: active,
+        },
+        '& *::-webkit-scrollbar-thumb:active': {
+          backgroundColor: active,
+        },
+        '& *::-webkit-scrollbar-corner': {
+          backgroundColor: track,
         },
       };
     }
