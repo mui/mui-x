@@ -17,7 +17,7 @@ export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api }) => {
       const isAllSelected =
         api.getAllRowIds().length === event.rows.length && event.rows.length > 0;
       const hasNoneSelected = event.rows.length === 0;
-      setChecked(isAllSelected || !hasNoneSelected);
+      setChecked(isAllSelected && !hasNoneSelected);
       setIndeterminate(!isAllSelected && !hasNoneSelected);
     },
     [api, setIndeterminate, setChecked],
@@ -26,6 +26,15 @@ export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api }) => {
   React.useEffect(() => {
     return api.onSelectionChange(selectionChange);
   }, [api, selectionChange]);
+
+  React.useEffect(() => {
+    const selectedRows = api.getSelectedRows();
+    const allRowsCount = api.getAllRowIds().length;
+    const isCurrentChecked = selectedRows.length === allRowsCount;
+    const isCurrentIndeterminate = selectedRows.length > 0 && selectedRows.length !== selectedRows;
+    setChecked(isCurrentChecked);
+    setIndeterminate(isCurrentIndeterminate);
+  }, [api]);
 
   return (
     <Checkbox
