@@ -61,6 +61,7 @@ export const usePagination = (
     ),
   };
   const stateRef = React.useRef(initialState);
+  const prevPageRef = React.useRef<number>(1);
   const [state, dispatch] = React.useReducer(paginationReducer, initialState);
 
   const updateState = React.useCallback(
@@ -86,8 +87,9 @@ export const usePagination = (
         ...stateRef.current,
         page,
       };
-      if(hasPageChanged) {
+      if(hasPageChanged && prevPageRef.current !== page) {
         apiRef.current.publishEvent(PAGE_CHANGED, params);
+        prevPageRef.current = page;
       }
       if (stateRef.current.page !== page) {
         updateState({ page });
