@@ -6,7 +6,7 @@ export const useStyles = makeStyles(
       theme.palette.type === 'light'
         ? lighten(fade(theme.palette.divider, 1), 0.88)
         : darken(fade(theme.palette.divider, 1), 0.68);
-    return {
+    const gridStyle: { root: any } = {
       root: {
         flex: 1,
         boxSizing: 'border-box',
@@ -16,19 +16,6 @@ export const useStyles = makeStyles(
         outline: 'none',
         display: 'flex',
         flexDirection: 'column',
-        // '& *::-webkit-scrollbar-track': {
-        //   borderRadius: 10,
-        // },
-        '& *::-webkit-scrollbar': {
-          width: 'initial',
-          height: 'initial',
-        },
-        '& *::-webkit-scrollbar-thumb': {
-
-          borderRadius: 10,
-          backgroundColor: borderColor,
-        },
-
         '& *, & *::before, & *::after': {
           boxSizing: 'inherit',
         },
@@ -215,6 +202,22 @@ export const useStyles = makeStyles(
         },
       },
     };
+
+    if(theme.palette.type !== 'light') {
+      gridStyle.root = {
+        ...gridStyle.root,
+        '& *::-webkit-scrollbar': {
+          width: 'initial',
+          height: 'initial',
+        },
+        '& *::-webkit-scrollbar-thumb': {
+
+          borderRadius: 10,
+          backgroundColor: borderColor,
+        },
+      };
+    }
+    return gridStyle;
   },
   { name: 'MuiDataGrid' },
 );
