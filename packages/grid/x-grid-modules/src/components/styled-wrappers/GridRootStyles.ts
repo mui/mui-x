@@ -14,6 +14,8 @@ export const useStyles = makeStyles(
         position: 'relative',
         border: `1px solid ${borderColor}`,
         borderRadius: theme.shape.borderRadius,
+        color: theme.palette.text.primary,
+        ...theme.typography.body2,
         outline: 'none',
         display: 'flex',
         flexDirection: 'column',
@@ -32,10 +34,14 @@ export const useStyles = makeStyles(
           top: 0,
           left: 0,
           right: 0,
-          bottom: 15,
+          bottom: 0,
           alignSelf: 'center',
           alignItems: 'center',
           zIndex: 10,
+          backgroundColor: fade(
+            theme.palette.background.default,
+            theme.palette.action.disabledOpacity,
+          ),
         },
         '& .MuiDataGrid-overlayContent': {
           flex: 1,
@@ -60,7 +66,6 @@ export const useStyles = makeStyles(
         },
         '& .MuiDataGrid-colCell, & .MuiDataGrid-cell': {
           WebkitTapHighlightColor: 'transparent',
-          ...theme.typography.body2,
           lineHeight: null,
           padding: theme.spacing(0, 2),
         },
@@ -94,7 +99,6 @@ export const useStyles = makeStyles(
           textOverflow: 'ellipsis',
           overflow: 'hidden',
           whiteSpace: 'nowrap',
-          color: theme.palette.text.primary,
           fontWeight: theme.typography.fontWeightMedium,
         },
         '& .MuiDataGrid-columnSeparator': {
@@ -190,14 +194,14 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-footer': {
           display: 'flex',
           justifyContent: 'space-between',
+          alignItems: 'center',
+          minHeight: 52, // Match TablePagination min height
         },
         '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
           alignItems: 'center',
-          ...theme.typography.body2,
           display: 'none',
           margin: theme.spacing(0, 2),
           [theme.breakpoints.up('md')]: {
-            minHeight: 52, // Match TablePagination min height
             display: 'flex',
           },
         },

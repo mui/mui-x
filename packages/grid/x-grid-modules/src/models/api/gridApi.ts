@@ -8,7 +8,7 @@ import { CoreApi } from './coreApi';
 import { EventsApi } from './eventsApi';
 
 /**
- * The full Grid API.
+ * The full grid API.
  */
 export type GridApi = CoreApi &
   EventsApi &

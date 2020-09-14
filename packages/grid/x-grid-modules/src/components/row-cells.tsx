@@ -14,28 +14,28 @@ function applyCssClassRules(cellClassRules: CellClassRules, params: CellClassPar
 }
 
 interface RowCellsProps {
-  firstColIdx: number;
-  lastColIdx: number;
-  hasScroll: { y: boolean; x: boolean };
-  scrollSize: number;
   columns: Columns;
-  row: RowModel;
-  showCellRightBorder: boolean;
-  extendRowFullWidth: boolean;
-  rowIndex: number;
   domIndex: number;
+  extendRowFullWidth: boolean;
+  firstColIdx: number;
+  hasScroll: { y: boolean; x: boolean };
+  lastColIdx: number;
+  row: RowModel;
+  rowIndex: number;
+  scrollSize: number;
+  showCellRightBorder: boolean;
 }
 
 export const RowCells: React.FC<RowCellsProps> = React.memo((props) => {
   const {
-    scrollSize,
+    columns,
+    domIndex,
+    firstColIdx,
     hasScroll,
     lastColIdx,
-    firstColIdx,
-    columns,
     row,
     rowIndex,
-    domIndex,
+    scrollSize,
   } = props;
   const api = React.useContext(ApiContext);
 

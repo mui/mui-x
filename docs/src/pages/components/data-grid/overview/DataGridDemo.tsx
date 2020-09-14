@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, ColDef } from '@material-ui/data-grid';
+import { DataGrid, ColDef, ValueGetterParams } from '@material-ui/data-grid';
 
 const columns: ColDef[] = [
   { field: 'id', headerName: 'ID', width: 70 },
@@ -17,7 +17,7 @@ const columns: ColDef[] = [
     description: 'This column has a value getter and is not sortable.',
     sortable: false,
     width: 160,
-    valueGetter: (params) =>
+    valueGetter: (params: ValueGetterParams) =>
       `${params.getValue('firstName') || ''} ${
         params.getValue('lastName') || ''
       }`,
@@ -38,7 +38,7 @@ const rows = [
 
 export default function DataGridDemo() {
   return (
-    <div style={{ width: '100%', height: 400 }}>
+    <div style={{ height: 400, width: '100%' }}>
       <DataGrid rows={rows} columns={columns} pageSize={5} checkboxSelection />
     </div>
   );

@@ -22,61 +22,60 @@ const alignPropToCssClass = {
   right: 'MuiDataGrid-cellRight',
 };
 
-export const Cell: React.FC<GridCellProps> = React.memo(
-  ({
-    value,
-    field,
-    width,
-    children,
-    showRightBorder,
+export const Cell: React.FC<GridCellProps> = React.memo((props) => {
+  const {
     align,
-    formattedValue,
-    cssClass,
-    tabIndex,
+    children,
     colIndex,
+    cssClass,
+    field,
+    formattedValue,
     rowIndex,
-  }) => {
-    const cssClasses = classnames(
-      CELL_CSS_CLASS,
-      cssClass,
-      { 'MuiDataGrid-withBorder': showRightBorder },
-      align && align !== 'left' ? alignPropToCssClass[align] : '',
-    );
-    const valueToRender = formattedValue || value;
-    const { rowHeight } = React.useContext(OptionsContext);
+    showRightBorder,
+    tabIndex,
+    value,
+    width,
+  } = props;
 
-    return (
-      <div
-        className={cssClasses}
-        role="cell"
-        data-value={value}
-        data-field={field}
-        data-colindex={colIndex}
-        data-rowindex={rowIndex}
-        aria-colindex={colIndex}
-        style={{
-          minWidth: width,
-          maxWidth: width,
-          lineHeight: `${rowHeight - 1}px`,
-          minHeight: rowHeight,
-          maxHeight: rowHeight,
-        }}
-        tabIndex={tabIndex}
-      >
-        {children || valueToRender?.toString()}
-      </div>
-    );
-  },
-);
+  const valueToRender = formattedValue || value;
+  const { rowHeight } = React.useContext(OptionsContext);
+
+  return (
+    <div
+      className={classnames(
+        CELL_CSS_CLASS,
+        cssClass,
+        { 'MuiDataGrid-withBorder': showRightBorder },
+        align && align !== 'left' ? alignPropToCssClass[align] : '',
+      )}
+      role="cell"
+      data-value={value}
+      data-field={field}
+      data-colindex={colIndex}
+      data-rowindex={rowIndex}
+      aria-colindex={colIndex}
+      style={{
+        minWidth: width,
+        maxWidth: width,
+        lineHeight: `${rowHeight - 1}px`,
+        minHeight: rowHeight,
+        maxHeight: rowHeight,
+      }}
+      tabIndex={tabIndex}
+    >
+      {children || valueToRender?.toString()}
+    </div>
+  );
+});
 
 Cell.displayName = 'GridCell';
 
 export const LeftEmptyCell: React.FC<{ width?: number }> = React.memo(({ width }) =>
-  !width ? null : <Cell key="empty-col-left" width={width} />,
+  !width ? null : <Cell width={width} />,
 );
 LeftEmptyCell.displayName = 'LeftEmptyCell';
 
 export const RightEmptyCell: React.FC<{ width?: number }> = React.memo(({ width }) =>
-  !width ? null : <Cell key="empty-col-right" width={width} />,
+  !width ? null : <Cell width={width} />,
 );
 RightEmptyCell.displayName = 'RightEmptyCell';

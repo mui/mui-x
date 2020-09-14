@@ -52,11 +52,11 @@ See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on
 - [Pagination](/components/data-grid/pagination/)
 - [Sorting](/components/data-grid/rows/#row-sorting) and [multi-sort](/components/data-grid/rows/#multi-column-sorting) ⚡️
 - [Selection](/components/data-grid/selection/)
-- Rows and column virtualization ⚡️
+- [Rows and column virtualization](/components/data-grid/rendering/#virtualization) ⚡️
 - [Resizable columns](/components/data-grid/columns/#column-resizing) ⚡️
-- 100% customizable
+- [100% customizable](/components/data-grid/rendering/#customization-example)
 - Server side data
-- Column hiding
+- [Column hiding](/components/data-grid/columns/#column-headers)
 - [Accessible](/components/data-grid/accessibility/)
 
 ## 🚧 Upcoming features

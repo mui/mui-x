@@ -38,7 +38,7 @@ const rows = [
 
 export default function DataGridDemo() {
   return (
-    <div style={{ width: '100%', height: 400 }}>
+    <div style={{ height: 400, width: '100%' }}>
       <DataGrid rows={rows} columns={columns} pageSize={5} checkboxSelection />
     </div>
   );

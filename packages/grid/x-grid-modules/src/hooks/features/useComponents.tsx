@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PaginationProps } from './usePagination';
 import {
-  ComponentParams,
+  ComponentProps,
   ApiRef,
   GridComponentOverridesProp,
   GridOptions,
@@ -22,7 +22,7 @@ export const useComponents = (
   apiRef: ApiRef,
   gridRootRef: RootContainerRef,
 ) => {
-  const componentParams: ComponentParams = React.useMemo(
+  const componentProps: ComponentProps = React.useMemo(
     () => ({
       paginationProps,
       rows,
@@ -37,51 +37,51 @@ export const useComponents = (
   const headerComponent = React.useMemo(
     () =>
       componentOverrides?.header
-        ? React.createElement(componentOverrides.header, componentParams)
+        ? React.createElement(componentOverrides.header, componentProps)
         : null,
-    [componentOverrides, componentParams],
+    [componentOverrides, componentProps],
   );
   const footerComponent = React.useMemo(
     () =>
       componentOverrides?.footer
-        ? React.createElement(componentOverrides.footer, componentParams)
+        ? React.createElement(componentOverrides.footer, componentProps)
         : null,
-    [componentOverrides, componentParams],
+    [componentOverrides, componentProps],
   );
 
   const loadingComponent = React.useMemo(
     () =>
       componentOverrides?.loadingOverlay ? (
-        React.createElement(componentOverrides.loadingOverlay, componentParams)
+        React.createElement(componentOverrides.loadingOverlay, componentProps)
       ) : (
         <LoadingOverlay />
       ),
-    [componentOverrides, componentParams],
+    [componentOverrides, componentProps],
   );
   const noRowsComponent = React.useMemo(
     () =>
       componentOverrides?.noRowsOverlay ? (
-        React.createElement(componentOverrides.noRowsOverlay, componentParams)
+        React.createElement(componentOverrides.noRowsOverlay, componentProps)
       ) : (
         <NoRowMessage />
       ),
-    [componentOverrides, componentParams],
+    [componentOverrides, componentProps],
   );
 
   const paginationComponent = React.useMemo(
     () =>
       componentOverrides?.pagination
-        ? React.createElement(componentOverrides.pagination, componentParams)
+        ? React.createElement(componentOverrides.pagination, componentProps)
         : null,
-    [componentOverrides, componentParams],
+    [componentOverrides, componentProps],
   );
 
   const renderError = React.useCallback(
     (props) => {
       const ErrorOverlay = componentOverrides?.errorOverlay || ErrorMessage;
-      return <ErrorOverlay {...componentParams} {...props} />;
+      return <ErrorOverlay {...componentProps} {...props} />;
     },
-    [componentOverrides?.errorOverlay, componentParams],
+    [componentOverrides?.errorOverlay, componentProps],
   );
 
   return {

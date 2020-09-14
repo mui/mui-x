@@ -5,15 +5,227 @@ components: DataGrid, XGrid
 
 # Data Grid - Rendering
 
-<p class="description">Start</p>
+<p class="description">The grid is highly customizable. Take advantage of a React-first implementation.</p>
 
 ## Column definitions
 
-### Header cell
+This section is an extension of the main [column definitions documentation](/components/data-grid/columns/#column-definitions) that focuses on the rendering and the customization of the rendering with `ColDef`.
 
-## Components
+### Value getter
 
-As part of the customization API, the grid allows to replace and override the following components:
+Sometimes a column might not have a corresponding value and you just want to render a combination of different fields. To do that, you can set the `valueGetter` attribute of `ColDef` as in the example below:
+
+```tsx
+const columns: ColDef[] = [
+  { field: 'id', hide: true },
+  { field: 'firstName', headerName: 'First name', width: 130 },
+  { field: 'lastName', headerName: 'Last name', width: 130 },
+  {
+    field: 'fullName',
+    headerName: 'Full name',
+    width: 160,
+    valueGetter: (params: ValueGetterParams) =>
+      `${params.getValue('firstName') || ''} ${
+        params.getValue('lastName') || ''
+      }`,
+  },
+];
+```
+
+{{"demo": "pages/components/data-grid/rendering/ValueGetterGrid.js", "defaultCodeOpen": false}}
+
+The value generated is used for filtering, sorting, rendering, etc unless overridden by a more specific configuration.
+
+### Value formatter
+
+The value formatters allow you to format values for display as a string.
+For instance, you might want to format a JavaScript date object into a string year.
+
+```tsx
+const columns: ColDef[] = [
+  { field: 'id', hide: true },
+  {
+    field: 'date',
+    headerName: 'Year',
+    valueFormatter: (params: ValueFormatterParams) =>
+      (params.value as Date).getFullYear(),
+  },
+];
+```
+
+{{"demo": "pages/components/data-grid/rendering/ValueFormatterGrid.js", "defaultCodeOpen": false}}
+
+The value generated is used for filtering, sorting, rendering in the cell and outside, etc unless overridden by a more specific configuration.
+
+### Render cell
+
+By default, the grid render the value as a string in the cell.
+It resolves the rendered output in the following order:
+
+1. `renderCell() => ReactElement`
+1. `valueFormatter() => string`
+1. `valueGetter() => string`
+1. `row[field]`
+
+The `renderCell` method of the column definitions is similar to `valueFormatter`.
+However, it trades to be able to only render in a cell in exchange for allowing to return a React node (instead of a string).
+
+```tsx
+const columns: ColDef[] = [
+  { field: 'id', hide: true },
+  {
+    field: 'date',
+    headerName: 'Year',
+    renderCell: (params: ValueFormatterParams) => (
+      <strong>
+        {(params.value as Date).getFullYear()}{' '}
+        <span role="img" aria-label="birthday">
+          🎂
+        </span>
+      </strong>
+    ),
+  },
+];
+```
+
+{{"demo": "pages/components/data-grid/rendering/RenderCellGrid.js", "defaultCodeOpen": false}}
+
+### Render header
+
+You can customize the look of each header with the `renderHeader` method.
+It takes precedence over the `headerName` property.
+
+```tsx
+const columns: ColDef[] = [
+  { field: 'id', hide: true },
+  {
+    field: 'date',
+    width: 150,
+    type: 'date',
+    renderHeader: (params: ColParams) => (
+      <strong>
+        {'Birthday '}
+        <span role="img" aria-label="enjoy">
+          🎂
+        </span>
+      </strong>
+    ),
+  },
+];
+```
+
+{{"demo": "pages/components/data-grid/rendering/RenderHeaderGrid.js", "defaultCodeOpen": false}}
+
+### Styling header
+
+The `ColDef` type has properties to apply class names and custom CSS on the header.
+
+- `headerClassName`: to apply class names into the column header.
+- `headerAlign`: to align the content of the header. It must be 'left' | 'right' | 'center'.
+
+```tsx
+const columns: Columns = [
+  { field: 'id', hide: true },
+  {
+    field: 'first',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
+  },
+  {
+    field: 'last',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
+  },
+];
+```
+
+{{"demo": "pages/components/data-grid/rendering/StylingHeaderGrid.js", "defaultCodeOpen": false}}
+
+### Styling cells
+
+The `ColDef` type has properties to apply class names and custom CSS on the cells.
+
+- `cellClassName`: to apply class names on every cell. It can also be a function.
+- `align`: to align the content of the cells. It must be 'left' | 'right' | 'center'.
+
+```tsx
+const columns: Columns = [
+  { field: 'id', hide: true },
+  {
+    field: 'name',
+    cellClassName: 'super-app-theme--cell',
+  },
+  {
+    field: 'score',
+    type: 'number',
+    cellClassName: (params: CellClassParams) =>
+      clsx('super-app', {
+        negative: (params.value as number) < 0,
+        positive: (params.value as number) > 0,
+      }),
+  },
+];
+```
+
+{{"demo": "pages/components/data-grid/rendering/StylingCellsGrid.js", "defaultCodeOpen": false}}
+
+## Layout
+
+By default, the grid has no intrinsic dimensions. It occupies the space its parent leaves.
+
+### Flex layout
+
+It's recommended to use a flex container to render the grid. This allows a flexible layout, resizes well, and works on all devices.
+
+{{"demo": "pages/components/data-grid/rendering/FlexLayoutGrid.js"}}
+
+### Predefined dimensions
+
+You can predefine dimensions for the parent of the grid.
+
+{{"demo": "pages/components/data-grid/rendering/FixedSizeGrid.js"}}
+
+### Auto height
+
+The `autoHeight` prop allows the grid to size according to its content.
+This means that the number of rows will drive the height of the grid and consequently, they will all be rendered and visible to the user at the same time.
+
+> ⚠️ This is not recommended for large datasets as row virtualization will not be able to improve performance by limiting the number of elements rendered in the DOM.
+
+{{"demo": "pages/components/data-grid/rendering/AutoHeightGrid.js"}}
+
+## Virtualization
+
+DOM virtualization is the feature that allows the grid to handle an unlimited\* number of rows and columns.
+This is a built-in feature of the rendering engine and greatly improves rendering performance.
+
+_unlimited\*: Browsers set a limit on the number of pixels a scroll container can host: 17.5 million pixels on Firefox, 33.5 million pixels on Chrome, Edge, and Safari. A [reproduction](https://codesandbox.io/s/beautiful-silence-1yifo?file=/src/App.js)._
+
+### Row virtualization <span role="img" title="Enterprise">⚡️</span>
+
+Row virtualization is the insertion and removal of rows as the grid scrolls vertically.
+
+The grid renders twice as many rows as are visible. It isn't configurable yet.
+Row virtualization is limited to 100 rows in the `DataGrid` component.
+
+### Column virtualization
+
+Column virtualization is the insertion and removal of columns as the grid scrolls horizontally.
+
+- Overscanning by at least one column allows the arrow key to focus on the next (not yet visible) item.
+- Overscanning slightly can reduce or prevent a flash of empty space when a user first starts scrolling.
+- Overscanning more allows the built-in search feature of the browser to find more matching cells.
+- Overscanning too much can negatively impact performance.
+
+By default, 2 columns are rendered outside of the viewport. You can change this option with the `columnBuffer` prop. The following demo renders 1,000 columns in total:
+
+{{"demo": "pages/components/data-grid/rendering/ColumnVirtualizationGrid.js"}}
+
+You can disable column virtualization by setting the column buffer to a higher number than the number of rendered columns, e.g. with `columnBuffer={columns.length}` or `columnBuffer={Number.MAX_SAFE_INTEGER}`.
+
+## Components prop
+
+As part of the customization API, the grid allows you to replace and override nested components with the `components` prop. The prop accepts an object with the following keys:
 
 - `header`: The component rendered above the column header bar.
 - `loadingOverlay`: The component rendered when the loading react prop is set to true.
@@ -21,8 +233,35 @@ As part of the customization API, the grid allows to replace and override the fo
 - `footer`: The component rendered below the viewport.
 - `pagination`: The component rendered for the pagination feature.
 
-### Pagination
+### Loading overlay
 
-By default, the pagination uses the [TablePagination](/components/pagination/#table-pagination) component that is optimized for handling tabular data. This demo replaces it with the [Pagination](/components/pagination/) component.
+By default, the loading overlay displays a circular progress.
+This demo replaces it with a linear progress.
+
+{{"demo": "pages/components/data-grid/rendering/CustomLoadingOverlayGrid.js"}}
+
+### No rows overlay
+
+In the following demo, an illustration is added on top of the default "No Rows" message.
+
+{{"demo": "pages/components/data-grid/rendering/CustomEmptyOverlayGrid.js"}}
+
+### Footer
+
+The grid exposes props to hide specific elements of the UI:
+
+- `hideFooter`: If `true`, the footer component is hidden.
+- `hideFooterRowCount`: If `true`, the row count in the footer is hidden.
+- `hideFooterSelectedRowCount`: If `true`, the selected row count in the footer is hidden.
+- `hideFooterPagination`: If `true`, the pagination component in the footer is hidden.
+
+By default, pagination uses the [TablePagination](/components/pagination/#table-pagination) component that is optimized for handling tabular data.
+This demo replaces it with the [Pagination](/components/pagination/) component.
 
 {{"demo": "pages/components/data-grid/rendering/CustomPaginationGrid.js"}}
+
+## Customization example
+
+The following grid leverages the CSS customization API to match the Ant Design specification.
+
+{{"demo": "pages/components/data-grid/rendering/AntDesignGrid.js"}}
