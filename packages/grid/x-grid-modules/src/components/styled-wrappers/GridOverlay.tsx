@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { classnames } from '../../utils';
-import { DivProps } from './grid-root';
 import { OptionsContext } from '../options-context';
 
-export function GridOverlay(props: DivProps) {
+type GridOverlayProps = React.HTMLAttributes<HTMLDivElement>;
+
+export function GridOverlay(props: GridOverlayProps) {
   const { className, children, ...other } = props;
   const options = React.useContext(OptionsContext);
   return (
@@ -16,4 +17,3 @@ export function GridOverlay(props: DivProps) {
     </div>
   );
 }
-GridOverlay.displayName = 'GridOverlay';

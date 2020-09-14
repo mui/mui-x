@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridOptions } from '../models';
-import { Footer } from './styled-wrappers';
+import { GridFooter } from './styled-wrappers/GridFooter';
 import { RowCount } from './row-count';
 import { SelectedRowCount } from './selected-row-count';
 import { ApiContext } from './api-context';
@@ -29,13 +29,13 @@ export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps
     }
 
     return (
-      <Footer ref={ref}>
+      <GridFooter ref={ref}>
         {!options.hideFooterRowCount && <RowCount rowCount={rowCount} />}
         {!options.hideFooterSelectedRowCount && (
           <SelectedRowCount selectedRowCount={selectedRowCount} />
         )}
         {paginationComponent}
-      </Footer>
+      </GridFooter>
     );
   },
 );

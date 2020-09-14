@@ -11,9 +11,9 @@ import {
 } from './hooks/features';
 import { DEFAULT_GRID_OPTIONS, ElementSize, RootContainerRef } from './models';
 import { COMPONENT_ERROR, DATA_CONTAINER_CSS_CLASS } from './constants';
-import { GridRoot } from './components/styled-wrappers/grid-root';
-import { DataContainer } from './components/styled-wrappers/data-container';
-import { ColumnsContainer } from './components/styled-wrappers/columns-container';
+import { GridRoot } from './components/styled-wrappers/GridRoot';
+import { GridDataContainer } from './components/styled-wrappers/GridDataContainer';
+import { GridColumnsContainer } from './components/styled-wrappers/GridColumnsContainer';
 import { useVirtualRows } from './hooks/virtualization';
 import {
   ApiContext,
@@ -25,7 +25,7 @@ import {
   RenderContext,
   Viewport,
   Watermark,
-  Window,
+  GridWindow,
 } from './components';
 import { useApi, useColumns, useKeyboard, useRows } from './hooks/root';
 import { useLogger, useLoggerFactory } from './hooks/utils';
@@ -190,7 +190,10 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                 {customComponents.headerComponent}
                 <div className="MuiDataGrid-mainGridContainer">
                   <Watermark licenseStatus={props.licenseStatus} />
-                  <ColumnsContainer ref={columnsContainerRef} height={internalOptions.headerHeight}>
+                  <GridColumnsContainer
+                    ref={columnsContainerRef}
+                    height={internalOptions.headerHeight}
+                  >
                     <ColumnsHeader
                       ref={columnsHeaderRef}
                       columns={internalColumns.visible || []}
@@ -198,11 +201,11 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                       onResizeColumn={onResizeColumn}
                       renderCtx={renderCtx}
                     />
-                  </ColumnsContainer>
+                  </GridColumnsContainer>
                   {!props.loading && internalRows.length === 0 && customComponents.noRowsComponent}
                   {props.loading && customComponents.loadingComponent}
-                  <Window ref={windowRef}>
-                    <DataContainer
+                  <GridWindow ref={windowRef}>
+                    <GridDataContainer
                       ref={gridRef}
                       className={DATA_CONTAINER_CSS_CLASS}
                       style={{
@@ -220,8 +223,8 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                           />
                         </RenderContext.Provider>
                       )}
-                    </DataContainer>
-                  </Window>
+                    </GridDataContainer>
+                  </GridWindow>
                 </div>
                 {customComponents.footerComponent || (
                   <DefaultFooter

@@ -1,11 +1,15 @@
 import * as React from 'react';
-import { DivProps } from './grid-root';
 import { classnames } from '../../utils';
 import { OptionsContext } from '../options-context';
 
-export const Window = React.forwardRef<HTMLDivElement, DivProps>((props, ref) => {
-  const { headerHeight, autoHeight } = React.useContext(OptionsContext);
+type GridWindowProps = React.HTMLAttributes<HTMLDivElement>;
+
+export const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(function GridWindow(
+  props,
+  ref,
+) {
   const { className, ...other } = props;
+  const { headerHeight, autoHeight } = React.useContext(OptionsContext);
   return (
     <div
       ref={ref}
@@ -15,4 +19,3 @@ export const Window = React.forwardRef<HTMLDivElement, DivProps>((props, ref) =>
     />
   );
 });
-Window.displayName = 'Window';

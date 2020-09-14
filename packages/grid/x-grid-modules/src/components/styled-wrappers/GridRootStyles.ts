@@ -195,7 +195,7 @@ export const useStyles = makeStyles(
           alignItems: 'center',
           ...theme.typography.body2,
           display: 'none',
-          paddingLeft: theme.spacing(2),
+          margin: theme.spacing(0, 2),
           [theme.breakpoints.up('md')]: {
             minHeight: 52, // Match TablePagination min height
             display: 'flex',
