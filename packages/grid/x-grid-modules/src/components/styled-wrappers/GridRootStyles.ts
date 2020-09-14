@@ -2,10 +2,11 @@ import { darken, fade, lighten, makeStyles, Theme } from '@material-ui/core/styl
 
 export const useStyles = makeStyles(
   (theme: Theme) => {
-    const borderColor =
-      theme.palette.type === 'light'
-        ? lighten(fade(theme.palette.divider, 1), 0.88)
-        : darken(fade(theme.palette.divider, 1), 0.68);
+    const isLightTheme = theme.palette.type === 'light';
+    const isDarkTheme = !isLightTheme;
+    const borderColor = isLightTheme
+      ? lighten(fade(theme.palette.divider, 1), 0.88)
+      : darken(fade(theme.palette.divider, 1), 0.68);
     const gridStyle: { root: any } = {
       root: {
         flex: 1,
@@ -203,7 +204,8 @@ export const useStyles = makeStyles(
       },
     };
 
-    if(theme.palette.type !== 'light') {
+    if (isDarkTheme) {
+      // We style the scroll bar for dark mode.
       gridStyle.root = {
         ...gridStyle.root,
         '& *::-webkit-scrollbar': {
@@ -211,7 +213,6 @@ export const useStyles = makeStyles(
           height: 'initial',
         },
         '& *::-webkit-scrollbar-thumb': {
-
           borderRadius: 10,
           backgroundColor: borderColor,
         },
