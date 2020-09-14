@@ -100,7 +100,8 @@ const columns: ColDef[] = [
   { field: 'id', hide: true },
   {
     field: 'date',
-    width: 500,
+    width: 150,
+    type: 'date',
     renderHeader: (params: ColParams) => (
       <strong>
         {'Birthday '}
