@@ -76,7 +76,7 @@ export const usePagination = (
   const setPage = React.useCallback(
     (page: number) => {
       let hasPageChanged = false;
-      if(stateRef.current.rowCount > 0) {
+      if (stateRef.current.rowCount > 0) {
         page = stateRef.current.pageCount >= page ? page : stateRef.current.pageCount;
         apiRef.current.renderPage(
           stateRef.current.paginationMode === FeatureModeConstant.client ? page : 1,
@@ -87,7 +87,7 @@ export const usePagination = (
         ...stateRef.current,
         page,
       };
-      if(hasPageChanged && prevPageRef.current !== page) {
+      if (hasPageChanged && prevPageRef.current !== page) {
         apiRef.current.publishEvent(PAGE_CHANGED, params);
         prevPageRef.current = page;
       }

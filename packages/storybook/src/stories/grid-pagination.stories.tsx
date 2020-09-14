@@ -269,8 +269,12 @@ export function Page1Prop() {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} pagination pageSize={50}
-             onPageChange={p=> action('pageChange')(p)}
+      <XGrid
+        rows={data.rows}
+        columns={data.columns}
+        pagination
+        pageSize={50}
+        onPageChange={(p) => action('pageChange')(p)}
       />
     </div>
   );
@@ -280,9 +284,13 @@ export function Page2Prop() {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} pagination pageSize={50} page={2}
-             onPageChange={p=> action('pageChange')(p)}
-
+      <XGrid
+        rows={data.rows}
+        columns={data.columns}
+        pagination
+        pageSize={50}
+        page={2}
+        onPageChange={(p) => action('pageChange')(p)}
       />
     </div>
   );
@@ -297,9 +305,13 @@ export function Page2Api() {
 
   return (
     <div className="grid-container">
-      <XGrid  apiRef={apiRef}
-              rows={data.rows} columns={data.columns} pagination pageSize={50}
-          onPageChange={p=> action('pageChange')(p)}
+      <XGrid
+        apiRef={apiRef}
+        rows={data.rows}
+        columns={data.columns}
+        pagination
+        pageSize={50}
+        onPageChange={(p) => action('pageChange')(p)}
       />
     </div>
   );

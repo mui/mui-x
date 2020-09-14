@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 // @ts-ignore
 import { createClientRender } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, useApiRef } from '@material-ui/data-grid';
 
 describe('<DataGrid />', () => {
   const render = createClientRender();
@@ -60,6 +60,59 @@ describe('<DataGrid />', () => {
           container.firstChild.firstChild.firstChild,
         );
       });
+      it('applies page prop correctly', () => {
+        const rows = [
+          {
+            id: 0,
+            brand: 'Nike',
+          },
+          {
+            id: 1,
+            brand: 'Addidas',
+          },
+          {
+            id: 2,
+            brand: 'Puma',
+          },
+        ];
+        render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid rows={rows} columns={defaultProps.columns} page={2} pageSize={1} />
+          </div>,
+        );
+        const cell = document.querySelector(`.MuiDataGrid-row:first-child .MuiDataGrid-cell`)!;
+        expect(cell.textContent).to.equal('Addidas');
+      });
+    });
+    it('applies setPage correctly', () => {
+      const rows = [
+        {
+          id: 0,
+          brand: 'Nike',
+        },
+        {
+          id: 1,
+          brand: 'Addidas',
+        },
+        {
+          id: 2,
+          brand: 'Puma',
+        },
+      ];
+      const GridTest = () => {
+        const apiRef = useApiRef();
+        React.useEffect(() => {
+          apiRef.current.setPage(2);
+        });
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid rows={rows} apiRef={apiRef} columns={defaultProps.columns} pageSize={1} />
+          </div>
+        );
+      };
+      const { container } = render(<GridTest />);
+      const cell = container.querySelector(`.MuiDataGrid-row:first-child .MuiDataGrid-cell`)!;
+      expect(cell.textContent).to.equal('Addidas');
     });
   });
 
