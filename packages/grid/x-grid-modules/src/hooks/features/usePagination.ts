@@ -74,16 +74,21 @@ export const usePagination = (
 
   const setPage = React.useCallback(
     (page: number) => {
-      page = stateRef.current.pageCount >= page ? page : stateRef.current.pageCount;
-      apiRef.current.renderPage(
-        stateRef.current.paginationMode === FeatureModeConstant.client ? page : 1,
-      );
-
+      let hasPageChanged = false;
+      if(stateRef.current.rowCount > 0) {
+        page = stateRef.current.pageCount >= page ? page : stateRef.current.pageCount;
+        apiRef.current.renderPage(
+          stateRef.current.paginationMode === FeatureModeConstant.client ? page : 1,
+        );
+        hasPageChanged = true;
+      }
       const params: PageChangeParams = {
         ...stateRef.current,
         page,
       };
-      apiRef.current.publishEvent(PAGE_CHANGED, params);
+      if(hasPageChanged) {
+        apiRef.current.publishEvent(PAGE_CHANGED, params);
+      }
       if (stateRef.current.page !== page) {
         updateState({ page });
       }
@@ -147,6 +152,17 @@ export const usePagination = (
     }
   }, [setPageSize, logger, getAutoPageSize]);
 
+  useApiEventHandler(apiRef, PAGE_CHANGED, options.onPageChange);
+  useApiEventHandler(apiRef, PAGESIZE_CHANGED, options.onPageSizeChange);
+
+  const onResize = React.useCallback(() => {
+    if (options.autoPageSize) {
+      resetAutopageSize();
+    }
+  }, [options.autoPageSize, resetAutopageSize]);
+
+  useApiEventHandler(apiRef, RESIZE, onResize);
+
   React.useEffect(() => {
     stateRef.current = state;
   }, [state]);
@@ -158,23 +174,13 @@ export const usePagination = (
   }, [apiRef, stateRef, apiRef.current?.isInitialised]);
 
   React.useEffect(() => {
-    updateState({ paginationMode: options.paginationMode! });
-  }, [options.paginationMode, updateState]);
-
-  React.useEffect(() => {
-    setPage(options.page != null ? options.page : 1);
-  }, [options.page, setPage]);
-
-  React.useEffect(() => {
     const rowCount = options.rowCount == null ? rows.length : options.rowCount;
     if (rowCount !== state.rowCount) {
       logger.info(`Options or rows change, recalculating pageCount and rowCount`);
       const newPageCount = getPageCount(state.pageSize, rowCount);
 
       updateState({ pageCount: newPageCount, rowCount });
-      if (state.page > newPageCount) {
-        setPage(newPageCount);
-      }
+      setPage(state.page);
     }
   }, [
     rows.length,
@@ -186,6 +192,14 @@ export const usePagination = (
     setPage,
     state.page,
   ]);
+
+  React.useEffect(() => {
+    updateState({ paginationMode: options.paginationMode! });
+  }, [options.paginationMode, updateState]);
+
+  React.useEffect(() => {
+    setPage(options.page != null ? options.page : 1);
+  }, [options.page, setPage]);
 
   React.useEffect(() => {
     if (
@@ -202,17 +216,6 @@ export const usePagination = (
       resetAutopageSize();
     }
   }, [options.autoPageSize, resetAutopageSize, columns.visible.length]);
-
-  useApiEventHandler(apiRef, PAGE_CHANGED, options.onPageChange);
-  useApiEventHandler(apiRef, PAGESIZE_CHANGED, options.onPageSizeChange);
-
-  const onResize = React.useCallback(() => {
-    if (options.autoPageSize) {
-      resetAutopageSize();
-    }
-  }, [options.autoPageSize, resetAutopageSize]);
-
-  useApiEventHandler(apiRef, RESIZE, onResize);
 
   const paginationApi: PaginationApi = {
     setPageSize,
