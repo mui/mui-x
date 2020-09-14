@@ -59,9 +59,9 @@ See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on
 - [Column hiding](/components/data-grid/columns/#column-headers)
 - [Accessible](/components/data-grid/accessibility/)
 
-## 🚧 Upcoming features
+### 🚧 Upcoming features
 
-Work in progress in the [roadmap](https://github.com/mui-org/material-ui-x/projects/1):
+While development of the data grid component is moving fast, there are still many additional features that we plan to implement:
 
 - [Filtering](/components/data-grid/filtering/)
 - [Cell editing](/components/data-grid/editing/)
@@ -69,4 +69,16 @@ Work in progress in the [roadmap](https://github.com/mui-org/material-ui-x/proje
 - [Localization](/components/data-grid/localization/)
 - [Group & Pivot](/components/data-grid/group-pivot/) ⚡️
 - [Export](/components/data-grid/export/)
-- and [many more features](https://github.com/mui-org/material-ui-x/issues?q=is%3Aopen+label%3A%22component%3A+DataGrid%22+label%3Aenhancement)
+
+You can find more details on our living quarterly [roadmap](https://github.com/mui-org/material-ui-x/projects/1) as well as on the open [GitHub issues](https://github.com/mui-org/material-ui-x/issues?q=is%3Aopen+label%3A%22component%3A+DataGrid%22+label%3Aenhancement).
+
+## Resources
+
+Here are some resources you might be interested in to learn more about the grid:
+
+- A [fullscreen demo](https://muix-preview.netlify.app/#/grid)
+- The storybook used for [internal development](https://material-ui-x.netlify.app/storybook/)
+- The [source on GitHub](https://github.com/mui-org/material-ui-x/tree/master/packages/grid)
+- The [Material Design specification](https://material.io/design/components/data-tables.html) specification
+- The accessibility [WAI-ARIA authoring practices](https://www.w3.org/TR/wai-aria-practices/#grid)
+- The [Sketch](https://material-ui.com/store/items/sketch-react/) and [Figma](https://material-ui.com/store/items/figma-react/) design assets
