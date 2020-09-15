@@ -60,7 +60,8 @@ describe('<DataGrid />', () => {
           container.firstChild.firstChild.firstChild,
         );
       });
-      it('applies page prop correctly', () => {
+
+      it('should apply the page prop correctly', () => {
         const rows = [
           {
             id: 0,
@@ -80,11 +81,12 @@ describe('<DataGrid />', () => {
             <DataGrid rows={rows} columns={defaultProps.columns} page={2} pageSize={1} />
           </div>,
         );
-        const cell = document.querySelector(`.MuiDataGrid-row:first-child .MuiDataGrid-cell`)!;
-        expect(cell.textContent).to.equal('Addidas');
+        const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
+        expect(cell).to.have.text('Addidas');
       });
     });
-    it('applies setPage correctly', () => {
+
+    it('should apply setPage correctly', () => {
       const rows = [
         {
           id: 0,
@@ -111,8 +113,8 @@ describe('<DataGrid />', () => {
         );
       };
       const { container } = render(<GridTest />);
-      const cell = container.querySelector(`.MuiDataGrid-row:first-child .MuiDataGrid-cell`)!;
-      expect(cell.textContent).to.equal('Addidas');
+      const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
+      expect(cell).to.have.text('Addidas');
     });
   });
 
