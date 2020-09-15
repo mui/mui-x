@@ -234,7 +234,13 @@ describe('<XGrid />', () => {
         });
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid rows={rows} apiRef={apiRef} columns={defaultProps.columns} pagination pageSize={1} />
+            <XGrid
+              rows={rows}
+              apiRef={apiRef}
+              columns={defaultProps.columns}
+              pagination
+              pageSize={1}
+            />
           </div>
         );
       };
