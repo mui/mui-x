@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 // @ts-ignore
 import { createClientRender } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid, useApiRef } from '@material-ui/data-grid';
+import { DataGrid } from '@material-ui/data-grid';
 
 describe('<DataGrid />', () => {
   const render = createClientRender();
@@ -84,37 +84,6 @@ describe('<DataGrid />', () => {
         const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
         expect(cell).to.have.text('Addidas');
       });
-    });
-
-    it('should apply setPage correctly', () => {
-      const rows = [
-        {
-          id: 0,
-          brand: 'Nike',
-        },
-        {
-          id: 1,
-          brand: 'Addidas',
-        },
-        {
-          id: 2,
-          brand: 'Puma',
-        },
-      ];
-      const GridTest = () => {
-        const apiRef = useApiRef();
-        React.useEffect(() => {
-          apiRef.current.setPage(2);
-        });
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGrid rows={rows} apiRef={apiRef} columns={defaultProps.columns} pageSize={1} />
-          </div>
-        );
-      };
-      const { container } = render(<GridTest />);
-      const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
-      expect(cell).to.have.text('Addidas');
     });
   });
 
