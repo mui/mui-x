@@ -4,9 +4,14 @@ import { SelectionChangeParams } from '../models/params/selectionChangeParams';
 import { ColParams } from '../models/params/colParams';
 import { CellParams } from '../models/params/cellParams';
 
-export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api }) => {
-  const [isChecked, setChecked] = React.useState(false);
-  const [isIndeterminate, setIndeterminate] = React.useState(false);
+export const HeaderCheckbox: React.FC<ColParams> = ({ api }) => {
+  const selectedRows = api.getSelectedRows();
+  const allRowsCount = api.getAllRowIds().length;
+  const isCurrentIndeterminate = selectedRows.length > 0 && selectedRows.length !== selectedRows;
+  const isCurrentChecked = selectedRows.length === allRowsCount || isCurrentIndeterminate;
+
+  const [isChecked, setChecked] = React.useState(isCurrentChecked);
+  const [isIndeterminate, setIndeterminate] = React.useState(isCurrentIndeterminate);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     setChecked(checked);
@@ -17,7 +22,7 @@ export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api }) => {
       const isAllSelected =
         api.getAllRowIds().length === event.rows.length && event.rows.length > 0;
       const hasNoneSelected = event.rows.length === 0;
-      setChecked(isAllSelected && !hasNoneSelected);
+      setChecked(isAllSelected || !hasNoneSelected);
       setIndeterminate(!isAllSelected && !hasNoneSelected);
     },
     [api, setIndeterminate, setChecked],
@@ -26,15 +31,6 @@ export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api }) => {
   React.useEffect(() => {
     return api.onSelectionChange(selectionChange);
   }, [api, selectionChange]);
-
-  React.useEffect(() => {
-    const selectedRows = api.getSelectedRows();
-    const allRowsCount = api.getAllRowIds().length;
-    const isCurrentChecked = selectedRows.length === allRowsCount;
-    const isCurrentIndeterminate = selectedRows.length > 0 && selectedRows.length !== selectedRows;
-    setChecked(isCurrentChecked);
-    setIndeterminate(isCurrentIndeterminate);
-  }, [api]);
 
   return (
     <Checkbox
@@ -46,7 +42,7 @@ export const HeaderCheckbox: React.FC<ColParams> = React.memo(({ api }) => {
       inputProps={{ 'aria-label': 'Select All Rows checkbox' }}
     />
   );
-});
+};
 HeaderCheckbox.displayName = 'HeaderCheckbox';
 
 export const CellCheckboxRenderer: React.FC<CellParams> = React.memo(({ api, rowModel, value }) => {
