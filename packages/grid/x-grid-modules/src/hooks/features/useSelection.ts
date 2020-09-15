@@ -28,6 +28,7 @@ export const useSelection = (
 ): void => {
   const logger = useLogger('useSelection');
   const selectedItemsRef = React.useRef<RowId[]>([]);
+  const optionsRef = React.useRef<GridOptions>(options);
   const allowMultipleSelectionKeyPressed = React.useRef<boolean>(false);
   const [, forceUpdate] = React.useState();
 
@@ -110,10 +111,12 @@ export const useSelection = (
 
   const selectRows = React.useCallback(
     (ids: RowId[], isSelected = true, deSelectOthers = false) => {
-      if (options.disableMultipleSelection && ids.length > 1 && !options.checkboxSelection) {
-        throw new Error(
-          'Material-UI: `disableMultipleSelection` should be false to select more than 1 item.',
-        );
+      if (
+        optionsRef.current.disableMultipleSelection &&
+        ids.length > 1 &&
+        !optionsRef.current.checkboxSelection
+      ) {
+        return;
       }
       let updates = ids.map((id) => ({ id, selected: isSelected }));
 
@@ -131,14 +134,7 @@ export const useSelection = (
       };
       apiRef.current.publishEvent(SELECTION_CHANGED, selectionChangeParam);
     },
-    [
-      apiRef,
-      selectedItemsRef,
-      forceUpdate,
-      options.disableMultipleSelection,
-      getSelectedRows,
-      options.checkboxSelection,
-    ],
+    [apiRef, selectedItemsRef, forceUpdate, getSelectedRows],
   );
 
   const rowClickHandler = React.useCallback(
@@ -186,6 +182,10 @@ export const useSelection = (
     onSelectionChange,
   };
   useApiMethod(apiRef, selectionApi, 'SelectionApi');
+
+  React.useEffect(() => {
+    optionsRef.current = options;
+  }, [options]);
 
   React.useEffect(() => {
     if (initialised && selectedItemsRef.current.length > 0) {
