@@ -58,6 +58,30 @@ describe('<DataGrid />', () => {
           container.firstChild.firstChild.firstChild,
         );
       });
+
+      it('should apply the page prop correctly', () => {
+        const rows = [
+          {
+            id: 0,
+            brand: 'Nike',
+          },
+          {
+            id: 1,
+            brand: 'Addidas',
+          },
+          {
+            id: 2,
+            brand: 'Puma',
+          },
+        ];
+        render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid rows={rows} columns={defaultProps.columns} page={2} pageSize={1} />
+          </div>,
+        );
+        const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
+        expect(cell).to.have.text('Addidas');
+      });
     });
   });
 

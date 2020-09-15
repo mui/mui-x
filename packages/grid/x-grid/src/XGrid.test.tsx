@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { screen, createClientRender, act, fireEvent } from 'test/utils';
 import { expect } from 'chai';
-import { XGrid } from '@material-ui/x-grid';
+import { XGrid, useApiRef } from '@material-ui/x-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
 function getActiveCell() {
@@ -211,6 +211,42 @@ describe('<XGrid />', () => {
       fireEvent.click(screen.getByRole('cell', { name: 'Nike' }));
       expect(row).to.not.have.class('Mui-selected');
       expect(checkbox).to.have.property('checked', false);
+    });
+    it('should apply setPage correctly', () => {
+      const rows = [
+        {
+          id: 0,
+          brand: 'Nike',
+        },
+        {
+          id: 1,
+          brand: 'Addidas',
+        },
+        {
+          id: 2,
+          brand: 'Puma',
+        },
+      ];
+      const GridTest = () => {
+        const apiRef = useApiRef();
+        React.useEffect(() => {
+          apiRef.current.setPage(2);
+        });
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid
+              rows={rows}
+              apiRef={apiRef}
+              columns={defaultProps.columns}
+              pagination
+              pageSize={1}
+            />
+          </div>
+        );
+      };
+      render(<GridTest />);
+      const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
+      expect(cell).to.have.text('Addidas');
     });
   });
 

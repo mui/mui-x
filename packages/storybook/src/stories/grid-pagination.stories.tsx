@@ -264,3 +264,55 @@ export function ServerPaginationWithEventHandler() {
     </div>
   );
 }
+export function Page1Prop() {
+  const data = useData(2000, 200);
+
+  return (
+    <div className="grid-container">
+      <XGrid
+        rows={data.rows}
+        columns={data.columns}
+        pagination
+        pageSize={50}
+        onPageChange={(p) => action('pageChange')(p)}
+      />
+    </div>
+  );
+}
+export function Page2Prop() {
+  const data = useData(2000, 200);
+
+  return (
+    <div className="grid-container">
+      <XGrid
+        rows={data.rows}
+        columns={data.columns}
+        pagination
+        pageSize={50}
+        page={2}
+        onPageChange={(p) => action('pageChange')(p)}
+      />
+    </div>
+  );
+}
+export function Page2Api() {
+  const data = useData(2000, 200);
+  const apiRef = useApiRef();
+
+  React.useEffect(() => {
+    apiRef.current.setPage(2);
+  }, [apiRef]);
+
+  return (
+    <div className="grid-container">
+      <XGrid
+        apiRef={apiRef}
+        rows={data.rows}
+        columns={data.columns}
+        pagination
+        pageSize={50}
+        onPageChange={(p) => action('pageChange')(p)}
+      />
+    </div>
+  );
+}
