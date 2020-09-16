@@ -105,5 +105,4 @@ If that's not sufficient, you can check the [implementation of the component sty
 
 ## Demos
 
-- [DataGrid](/components/data-grid/)
-
+- [DataGrid](/components/data-grid/#mit-version)
