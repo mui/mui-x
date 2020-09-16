@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, useApiRef } from '@material-ui/data-grid';
+import { XGrid, useApiRef } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
 export default function ApiRefPaginationGrid() {
@@ -16,7 +16,7 @@ export default function ApiRefPaginationGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid pagination pageSize={5} apiRef={apiRef} {...data} />
+      <XGrid pagination pageSize={5} apiRef={apiRef} {...data} />
     </div>
   );
 }

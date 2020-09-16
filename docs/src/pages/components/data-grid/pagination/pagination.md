@@ -48,7 +48,7 @@ Finally, you need to handle the `onPageChange` callback to load the rows for the
 
 {{"demo": "pages/components/data-grid/pagination/ServerPaginationGrid.js"}}
 
-## apiRef
+## apiRef [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
 The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 
@@ -63,7 +63,7 @@ Below is an example of how you can reset the page using the imperative `setPage`
 
 {{"demo": "pages/components/data-grid/pagination/ApiRefPaginationGrid.js"}}
 
-## Paginate > 100 rows <span role="img" title="Enterprise">⚡️</span>
+## Paginate > 100 rows [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
 The `DataGrid` component can display up to 100 rows per page.
 The `XGrid` component removes this limitation.

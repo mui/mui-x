@@ -8,6 +8,7 @@ const FORCED_PROPS: Partial<GridComponentProps> = {
   disableMultipleColumnsSorting: true,
   disableMultipleSelection: true,
   pagination: true,
+  apiRef: undefined,
 };
 
 export type DataGridProps = Omit<
@@ -16,6 +17,7 @@ export type DataGridProps = Omit<
   | 'disableMultipleColumnsSorting'
   | 'disableMultipleSelection'
   | 'licenseStatus'
+  | 'apiRef'
   | 'options'
   | 'pagination'
 > & {
@@ -23,6 +25,7 @@ export type DataGridProps = Omit<
   disableMultipleColumnsSorting?: true;
   disableMultipleSelection?: true;
   pagination?: true;
+  apiRef?: undefined;
 };
 
 const MAX_PAGE_SIZE = 100;
@@ -48,6 +51,18 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
 });
 
 DataGrid2.propTypes = {
+  apiRef: chainPropTypes(PropTypes.any, (props) => {
+    if (props.apiRef != null) {
+      throw new Error(
+        [
+          `Material-UI: \`apiRef\` is not a valid prop.`,
+          'ApiRef is not available in the MIT version',
+          '',
+          'You need to upgrade to the XGrid component to unlock this feature.',
+        ].join('\n'),
+      );
+    }
+  }),
   columns: chainPropTypes(PropTypes.any, (props) => {
     if (props.columns && props.columns.some((column) => column.resizable)) {
       throw new Error(

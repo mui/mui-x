@@ -108,7 +108,7 @@ Then you need to handle the `onSortModelChange` callback, sort the rows on the s
 
 {{"demo": "pages/components/data-grid/rows/ServerSortingGrid.js"}}
 
-### apiRef
+### apiRef [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
 The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 
@@ -118,7 +118,7 @@ The grid exposes a set of methods that enables all of these features using the i
 - `setSortModel`: Set the sort model and trigger the sorting of rows.
 - `onSortModelChange`: Callback fired when the column sorting changed before the grid has sorted its rows.
 
-### Multi-column sorting <span role="img" title="Enterprise">⚡️</span>
+### Multi-column sorting [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
 You can sort by multiple columns at the same time using `XGrid`.
 Hold the <kbd>CTRL</kbd> key down while clicking the column header.
@@ -158,7 +158,7 @@ Row spanning allows to change this default behavior.
 It allows cells to span multiple rows.
 This is very close to the "row spanning" in an HTML `<table>`.
 
-## 🚧 Row reorder <span role="img" title="Enterprise">⚡️</span>
+## 🚧 Row reorder [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
