@@ -7,7 +7,7 @@ components: DataGrid, XGrid
 
 <p class="description">Explore and analyse in depth the grid data.</p>
 
-## 🚧 Tree data <span role="img" title="Enterprise">⚡️</span>
+## 🚧 Tree data [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
@@ -15,7 +15,7 @@ components: DataGrid, XGrid
 
 Tree data allows to visualize self-referential hierarchical (tree-like structure) data.
 
-## 🚧 Master detail <span role="img" title="Enterprise">⚡️</span>
+## 🚧 Master detail [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
@@ -23,7 +23,7 @@ Tree data allows to visualize self-referential hierarchical (tree-like structure
 
 The feature allows to display row details on an expandable pane.
 
-## 🚧 Grouping <span role="img" title="Enterprise">⚡️</span>
+## 🚧 Grouping [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
@@ -31,7 +31,7 @@ The feature allows to display row details on an expandable pane.
 
 Group rows together that share a column value, this creates a visible header for each group and allows the end-user to collapse groups that they don't want to see.
 
-## 🚧 Aggregation <span role="img" title="Enterprise">⚡️</span>
+## 🚧 Aggregation [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
@@ -39,7 +39,7 @@ Group rows together that share a column value, this creates a visible header for
 
 When grouping, you will be able to apply an aggregation function to populate the group row with values.
 
-## 🚧 Pivoting <span role="img" title="Enterprise">⚡️</span>
+## 🚧 Pivoting [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >

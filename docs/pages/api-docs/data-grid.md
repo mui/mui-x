@@ -13,11 +13,10 @@ import { DataGrid } from '@material-ui/data-grid';
 
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
-| <span class="prop-name required">rows<abbr title="required">*</abbr></span> | <span class="prop-type">RowsProp</span> |  | Set of rows of type [[RowsProp]]. |
-| <span class="prop-name required">columns<abbr title="required">*</abbr></span> | <span class="prop-type">Columns</span> |   | Set of columns of type [[Columns]]. |
+| <span class="prop-name required">rows<abbr title="required">*</abbr></span> | <span class="prop-type">RowsProp</span> |  | Set of rows of type 'RowsProp'. |
+| <span class="prop-name required">columns<abbr title="required">*</abbr></span> | <span class="prop-type">Columns</span> |   | Set of columns of type 'Columns'. |
 | <span class="prop-name">columnTypes</span> | <span class="prop-type">ColumnTypesRecord</span> |   | Extend native column types with your new column types. |
 | <span class="prop-name">components</span> | <span class="prop-type">GridComponentOverridesProp</span> |   | Overrideable components. |
-| <span class="prop-name">apiRef</span> | <span class="prop-type">ApiRef</span> |   | The ref object that allows grid manipulation. Can be instantiated with [[useApiRef()]]. |
 | <span class="prop-name">loading</span> | <span class="prop-type">boolean</span> |  false | If `true`, a  loading overlay is displayed. |
 | <span class="prop-name">className</span> | <span class="prop-type">string</span> |   | Css classname to add on the outer container. |
 | <span class="prop-name">error</span> | <span class="prop-type">any</span> |   | An error that will turn the grid into its error state and display the error component. |
@@ -43,7 +42,7 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">hideFooterPagination</span> | <span class="prop-type">boolean</span> | false | If `true`, the pagination component in the footer is hidden. |
 | <span class="prop-name">checkboxSelection</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid get a first column with a checkbox that allows to select rows. |
 | <span class="prop-name">disableSelectionOnClick</span> | <span class="prop-type">boolean</span> | false | If `true`, the selection on click on a row or cell is disabled. |
-| <span class="prop-name">logger</span> | <span class="prop-type">Logger</span> | null | Pass a custom logger in the components that implements the [[Logger]] interface. |
+| <span class="prop-name">logger</span> | <span class="prop-type">Logger</span> | null | Pass a custom logger in the components that implements the 'Logger' interface. |
 | <span class="prop-name">logLevel</span> | <span class="prop-type">string | false</span> | false | Allows to pass the logging level or false to turn off logging. |
 | <span class="prop-name">sortModel</span> | <span class="prop-type">SortModel</span> |   | Set the sort model of the grid. |
 | <span class="prop-name">onCellClick</span> | <span class="prop-type">(param: CellParams) => void</span> |   | Callback fired when a click event comes from a cell element. |
