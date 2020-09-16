@@ -173,10 +173,10 @@ const pages = [
   },
   {
     title: 'Component API',
-    pathname: '/api',
+    pathname: '/api-docs',
     children: [
-      { pathname: '/api/data-grid' },
-      { pathname: '/api/x-grid' },
+      { pathname: '/api-docs/data-grid' },
+      { pathname: '/api-docs/x-grid' },
     ],
   },
   {
