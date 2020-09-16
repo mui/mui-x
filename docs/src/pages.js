@@ -171,7 +171,15 @@ const pages = [
       },
     ],
   },
-  { title: 'Component API', ...findPages[0] },
+  {
+    title: 'Component API',
+    pathname: '/api-docs',
+    children: [
+      ...findPages[0].children,
+      { pathname: '/api-docs/data-grid' },
+      { pathname: '/api-docs/x-grid' },
+    ],
+  },
   {
     pathname: '/styles',
     children: [

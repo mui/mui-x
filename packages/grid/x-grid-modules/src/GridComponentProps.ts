@@ -22,11 +22,11 @@ export interface GridComponentProps extends GridOptionsProp {
    */
   components?: GridComponentOverridesProp;
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with [[gridApiRef()]].
+   * The ref object that allows grid manipulation. Can be instantiated with [[useApiRef()]].
    */
   apiRef?: ApiRef;
   /**
-   * Boolean prop that toggle the loading overlay.
+   * If `true`, a  loading overlay is displayed.
    */
   loading?: boolean;
   /**
