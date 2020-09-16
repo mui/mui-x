@@ -175,6 +175,7 @@ const pages = [
     title: 'Component API',
     pathname: '/api-docs',
     children: [
+      ...findPages[0].children,
       { pathname: '/api-docs/data-grid' },
       { pathname: '/api-docs/x-grid' },
     ],
