@@ -1,8 +1,3 @@
-const path = require('path');
-
-const errorCodesPath = path.resolve(__dirname, './docs/public/static/error-codes.json');
-const missingError = process.env.MUI_EXTRACT_ERROR_CODES === 'true' ? 'write' : 'annotate';
-
 let defaultPresets;
 
 // We release a ES version of Material-UI.
