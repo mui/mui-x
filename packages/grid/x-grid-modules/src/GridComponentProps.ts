@@ -26,7 +26,7 @@ export interface GridComponentProps extends GridOptionsProp {
    */
   apiRef?: ApiRef;
   /**
-   * Boolean prop that toggle the loading overlay.
+   * If `true`, a  loading overlay is displayed.
    */
   loading?: boolean;
   /**

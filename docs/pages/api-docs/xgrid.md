@@ -18,7 +18,7 @@ import {XGrid} from '@material-ui/x-grid';
 | <span class="prop-name">columnTypes</span> | <span class="prop-type">ColumnTypesRecord</span> |   | Extend native column types with your new column types. |
 | <span class="prop-name">components</span> | <span class="prop-type">GridComponentOverridesProp</span> |   | Overrideable components. |
 | <span class="prop-name">apiRef</span> | <span class="prop-type">ApiRef</span> |   | The ref object that allows grid manipulation. Can be instantiated with [[useApiRef()]]. |
-| <span class="prop-name">loading</span> | <span class="prop-type">boolean</span> |  false | Boolean prop that toggle the loading overlay. |
+| <span class="prop-name">loading</span> | <span class="prop-type">boolean</span> |  false | If `true`, a  loading overlay is displayed.. |
 | <span class="prop-name">className</span> | <span class="prop-type">string</span> |   | Css classname to add on the outer container. |
 | <span class="prop-name">error</span> | <span class="prop-type">any</span> |   | An error that will turn the grid into its error state and display the error component. |
 | <span class="prop-name">autoHeight</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid height is dynamic and follow the number of rows in the grid. |
@@ -69,35 +69,35 @@ The `ref` is forwarded to the root element.
 
 | Rule name | Global class | Description |
 |:-----|:-------------|:------------|
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-root</span> | Styles applied to the root element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-mainGridContainer</span> | Styles applied to the main container element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-overlay</span> | Styles applied to the outer overlay element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-overlayContent</span> | Styles applied to the overlay content element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-columnsContainer</span> | Styles applied to the outer columns container element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-colCellWrapper</span> | Styles applied to the outer columns header cells container element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-colCell</span> | Styles applied to the header cell element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-cell</span> | Styles applied to the cell element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-colCellCheckbox</span> | Styles applied to the header checkbox cell element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-cellCheckbox</span> | Styles applied to the cell checkbox element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-colCellSortable</span> | Styles applied to the sortable header cell element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-sortIcon</span> | Styles applied to the sort icon element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-colCellCenter</span> | Styles applied to the centered header cell element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-colCellRight</span> | Styles applied to the aligned right header cell element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-colCellTitle</span> | Styles applied to the header cell title element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-columnSeparator</span> | Styles applied to the header cell separator element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-iconSeparator</span> | Styles applied to the header cell separator icon element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-dataContainer</span> | Styles applied to the data container element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-window</span> | Styles applied to the window element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-viewport</span> | Styles applied to the viewport element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-row</span> | Styles applied to the row element.
-| <span class="prop-name">root</span> | <span class="prop-name">.Mui-selected</span> | Styles applied to the selected row element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-cellWithRenderer</span> | Styles applied to the customised cell element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-withBorder</span> | Styles applied to the cell element that has right border displayed.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-cellRight</span> | Styles applied to the aligned right cell element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-cellCenter</span> | Styles applied to the centered cell element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-footer</span> | Styles applied to the footer element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-rowCount</span> | Styles applied to the footer row count element.
-| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-selectedRowCount</span> | Styles applied to the footer selected row count element.
+| <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-root</span> | Styles applied to the root element. |
+|  | <span class="prop-name">.MuiDataGrid-mainGridContainer</span> | Styles applied to the main container element.|
+|  | <span class="prop-name">.MuiDataGrid-overlay</span> | Styles applied to the outer overlay element.|
+|  | <span class="prop-name">.MuiDataGrid-overlayContent</span> | Styles applied to the overlay content element.|
+|  | <span class="prop-name">.MuiDataGrid-columnsContainer</span> | Styles applied to the outer columns container element.|
+|  | <span class="prop-name">.MuiDataGrid-colCellWrapper</span> | Styles applied to the outer columns header cells container element.|
+|  | <span class="prop-name">.MuiDataGrid-colCell</span> | Styles applied to the header cell element.|
+|  | <span class="prop-name">.MuiDataGrid-cell</span> | Styles applied to the cell element.|
+|  | <span class="prop-name">.MuiDataGrid-colCellCheckbox</span> | Styles applied to the header checkbox cell element.|
+|  | <span class="prop-name">.MuiDataGrid-cellCheckbox</span> | Styles applied to the cell checkbox element.|
+|  | <span class="prop-name">.MuiDataGrid-colCellSortable</span> | Styles applied to the sortable header cell element.|
+|  | <span class="prop-name">.MuiDataGrid-sortIcon</span> | Styles applied to the sort icon element.|
+|  | <span class="prop-name">.MuiDataGrid-colCellCenter</span> | Styles applied to the centered header cell element.|
+|  | <span class="prop-name">.MuiDataGrid-colCellRight</span> | Styles applied to the aligned right header cell element.|
+|  | <span class="prop-name">.MuiDataGrid-colCellTitle</span> | Styles applied to the header cell title element.|
+|  | <span class="prop-name">.MuiDataGrid-columnSeparator</span> | Styles applied to the header cell separator element.|
+|  | <span class="prop-name">.MuiDataGrid-iconSeparator</span> | Styles applied to the header cell separator icon element.|
+|  | <span class="prop-name">.MuiDataGrid-dataContainer</span> | Styles applied to the data container element.|
+|  | <span class="prop-name">.MuiDataGrid-window</span> | Styles applied to the window element.|
+|  | <span class="prop-name">.MuiDataGrid-viewport</span> | Styles applied to the viewport element.|
+|  | <span class="prop-name">.MuiDataGrid-row</span> | Styles applied to the row element.|
+|  | <span class="prop-name">.Mui-selected</span> | Styles applied to the selected row element.|
+|  | <span class="prop-name">.MuiDataGrid-cellWithRenderer</span> | Styles applied to the customised cell element.|
+|  | <span class="prop-name">.MuiDataGrid-withBorder</span> | Styles applied to the cell element that has right border displayed.|
+|  | <span class="prop-name">.MuiDataGrid-cellRight</span> | Styles applied to the aligned right cell element.|
+|  | <span class="prop-name">.MuiDataGrid-cellCenter</span> | Styles applied to the centered cell element.|
+|  | <span class="prop-name">.MuiDataGrid-footer</span> | Styles applied to the footer element.|
+|  | <span class="prop-name">.MuiDataGrid-rowCount</span> | Styles applied to the footer row count element.|
+|  | <span class="prop-name">.MuiDataGrid-selectedRowCount</span> | Styles applied to the footer selected row count element.|
 
 You can override the style of the component thanks to one of these customization points:
 
