@@ -109,7 +109,7 @@ The data grid comes in 2 versions:
 
 The features only available in the commercial version are suffixed with a <span style="font-size: 26px" role="img" title="Enterprise">⚡️</span> icon.
 
-<img src="/static/x/header-icon.png" width="454" height="239" alt="">
+<img src="/static/x/header-icon.png" style="width: 454px;" alt="">
 
 ### Try XGrid for free
 
@@ -120,10 +120,7 @@ Please take the component for a test run, no need to contact us.
 
 If you have an enterprise grid running with an expired or missing license key the grid displays a watermark, and a warning is shown in the console.
 
-<img src="/static/x/watermark.png" width="658" height="175" alt="">
-<br />
-<br />
-<br />
+<img src="/static/x/watermark.png" style="width: 658px; margin-bottom: 3rem" alt="">
 
 See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on purchasing licenses.
 
@@ -131,8 +128,8 @@ See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on
 
 The following table summarizes the features available in the community `DataGrid` and enterprise `XGrid` components. All the features of the community version are available in the enterprise one.
 
-|                                                                                         | Community | Enterprise ⚡️ |
-| --------------------------------------------------------------------------------------- | --------- | -------------- |
+| Features                                                                                | Community | Enterprise ⚡️ |
+| :-------------------------------------------------------------------------------------- | --------- | -------------- |
 | **Column**                                                                              |           |                |
 | [Column resizing](/components/data-grid/columns/#column-resizing)                       | ❌        | ✅             |
 | [Column groups](/components/data-grid/columns/#column-groups)                           | 🚧        | 🚧             |

@@ -1,8 +1,5 @@
 const bpmr = require('babel-plugin-module-resolver');
 const fse = require('fs-extra');
-const path = require('path');
-
-const errorCodesPath = path.resolve(__dirname, './public/static/error-codes.json');
 
 function resolvePath(sourcePath, currentFile, opts) {
   if (sourcePath === 'markdown') {
@@ -19,6 +16,11 @@ const alias = {
   '@material-ui/x-grid-modules': '../packages/grid/x-grid-modules/src',
   '@material-ui/x-grid': '../packages/grid/x-grid/src',
   '@material-ui/x-license': '../packages/x-license/src',
+  // Help in the event npm and git are significantly desynchronized.
+  '@material-ui/core': './node_modules/@material-ui/monorepo/packages/material-ui/src',
+  '@material-ui/styles': './node_modules/@material-ui/monorepo/packages/material-ui-styles/src',
+  '@material-ui/docs': './node_modules/@material-ui/monorepo/packages/material-ui-docs/src',
+  '@material-ui/lab': './node_modules/@material-ui/monorepo/packages/material-ui-lab/src',
   docs: './node_modules/@material-ui/monorepo/docs',
   docsx: './',
   modules: './node_modules/@material-ui/monorepo/modules',
@@ -35,11 +37,11 @@ module.exports = {
   ],
   plugins: [
     [
-      'babel-plugin-macros',
+      'babel-plugin-transform-rename-import',
       {
-        muiError: {
-          errorCodesPath,
-        },
+        replacements: [
+          { original: '@material-ui/utils/macros/MuiError.macro', replacement: 'react' },
+        ],
       },
     ],
     'babel-plugin-optimize-clsx',

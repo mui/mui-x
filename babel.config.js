@@ -1,8 +1,3 @@
-const path = require('path');
-
-const errorCodesPath = path.resolve(__dirname, './docs/public/static/error-codes.json');
-const missingError = process.env.MUI_EXTRACT_ERROR_CODES === 'true' ? 'write' : 'annotate';
-
 let defaultPresets;
 
 // We release a ES version of Material-UI.
@@ -33,15 +28,6 @@ const defaultAlias = {
 module.exports = {
   presets: defaultPresets.concat(['@babel/preset-react', '@babel/preset-typescript']),
   plugins: [
-    [
-      'babel-plugin-macros',
-      {
-        muiError: {
-          errorCodesPath,
-          missingError,
-        },
-      },
-    ],
     'babel-plugin-optimize-clsx',
     ['@babel/plugin-proposal-class-properties', { loose: true }],
     ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
