@@ -5,7 +5,7 @@
 ## Import
 
 ```js
-import {XGrid} from '@material-ui/x-grid';
+import { XGrid } from '@material-ui/x-grid';
 ```
 
 ## Props
@@ -109,5 +109,4 @@ If that's not sufficient, you can check the [implementation of the component sty
 
 ## Demos
 
-- [XGrid](/components/x-grid/)
-
+- [XGrid](/components/data-grid/#commercial-version)
