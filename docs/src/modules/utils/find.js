@@ -3,11 +3,12 @@ const path = require('path');
 
 const markdownRegex = /\.md$/;
 
-// Returns the markdowns of the documentation in a flat array.
-// {
-//   pathname: String,
-//   filename: String,
-// }
+/**
+ * Returns the markdowns of the documentation in a flat array.
+ * @param {string} [directory]
+ * @param {Array<{ filename: string, pathname: string }>} [pagesMarkdown]
+ * @returns {Array<{ filename: string, pathname: string }>}
+ */
 function findPagesMarkdown(
   directory = path.resolve(__dirname, '../../../src/pages'),
   pagesMarkdown = [],
@@ -45,9 +46,13 @@ function findPagesMarkdown(
   return pagesMarkdown;
 }
 
-const componentRegex = /^(Unstable_)?([A-Z][a-z]+)+\.js/;
+const componentRegex = /^(Unstable_)?([A-Z][a-z]+)+\.tsx?/;
 
-// Returns the component source in a flat array.
+/**
+ * Returns the component source in a flat array.
+ * @param {string} directory
+ * @param {Array<{ filename: string }>} components
+ */
 function findComponents(directory, components = []) {
   const items = fs.readdirSync(directory);
 

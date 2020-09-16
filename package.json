@@ -6,6 +6,7 @@
     "docs:dev": "yarn workspace docs dev",
     "docs:build": "yarn workspace docs build",
     "docs:export": "yarn workspace docs export",
+    "docs:api:build": "cross-env BABEL_ENV=test __NEXT_EXPORT_TRAILING_SLASH=true babel-node --extensions \".ts,.tsx,.js\" ./docs/scripts/buildApi.ts  ./docs/pages/api-docs ./packages/grid/x-grid-modules/src",
     "docs:typescript:formatted": "yarn workspace docs typescript:transpile",
     "docs:importDocsStatic": "node scripts/importDocsStatic.js",
     "storybook:dev": "yarn workspace storybook start",
@@ -110,5 +111,8 @@
     "nohoist": [
       "**/@material-ui/monorepo"
     ]
+  },
+  "dependencies": {
+    "@material-ui/styles": "^4.10.0"
   }
 }
