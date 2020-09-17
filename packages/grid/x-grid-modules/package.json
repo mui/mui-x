@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/x-grid-modules",
-  "version": "4.0.0-alpha.1",
+  "version": "4.0.0-alpha.2",
   "description": "Material-UI shared grid modules",
   "author": "Material-UI Team",
   "main": "dist/index-cjs.js",
