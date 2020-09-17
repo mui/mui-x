@@ -10,7 +10,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - [DataGrid] Add api pages for data-grid and x-grid (#289) @dtassone
 - [DataGrid] Add dark mode scrollbar (#282) @dtassone
 - [DataGrid] Better explain the limits of MIT vs commercial (#225) @oliviertassinari
-- [DataGrid] first v4 alpha version (#291) @dtassone
+- [DataGrid] First v4 alpha version (#291) @dtassone
 - [DataGrid] Fix CSS footer spacing (#268) @oliviertassinari
 - [DataGrid] Fix checkbox selection issue (#285) @dtassone
 - [DataGrid] fix disableMultipleSelection (#286) @dtassone
@@ -39,4 +39,3 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - [docs] Migration of the paginaton (#224) @oliviertassinari
 - [docs] Polish the first experience (#261) @oliviertassinari
 - [docs] Remove blank lines @tags @oliviertassinari
-
