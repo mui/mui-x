@@ -1,13 +1,13 @@
 {
   "name": "demo-app",
-  "version": "4.0.0-alpha.0",
+  "version": "4.0.0-alpha.1",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.9.12",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.54",
-    "@material-ui/x-grid": "^4.0.0-alpha.0",
-    "@material-ui/x-grid-data-generator": "^4.0.0-alpha.0",
+    "@material-ui/x-grid": "^4.0.0-alpha.1",
+    "@material-ui/x-grid-data-generator": "^4.0.0-alpha.1",
     "@trendmicro/react-interpolate": "^0.5.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -43,6 +43,7 @@
   "scripts": {
     "build": "./node_modules/.bin/webpack -p --config ./webpack.prod.js",
     "start": "./node_modules/.bin/webpack-dev-server  --config webpack.dev.js",
+    "export": "mv dist ../../docs/export/demo",
     "lint": "../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../.eslintrc.js && npm run lint:css",
     "lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../.stylelintrc.js"
   },
