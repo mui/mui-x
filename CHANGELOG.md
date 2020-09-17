@@ -3,9 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [4.0.0-alpha.1](https://github.com/mui-org/material-ui-x/compare/v0.1.67...v4.0.0-alpha.1) (2020-09-17)
+## [4.0.0-alpha.1](https://github.com/mui-org/material-ui-x/compare/v0.1.67...v4.0.0-alpha.1) (Sep 15, 2020)
 
-## @material-ui/x-grid@v4.0.0-alpha.1 / @material-ui/data-grid@v4.0.0-alpha.1
+This is the first public alpha release of the component after 6 months of development since the initial commit (March 15th 2020).
+`@material-ui/data-grid` is licensed under MIT while `@material-ui/x-grid` is licensed under a commercial license.
+You can find the documentation at this address: https://material-ui.com/components/data-grid/.
+
+### @material-ui/x-grid@v4.0.0-alpha.1 / @material-ui/data-grid@v4.0.0-alpha.1
 
 - [DataGrid] Add api pages for data-grid and x-grid (#289) @dtassone
 - [DataGrid] Add dark mode scrollbar (#282) @dtassone
@@ -21,7 +25,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - [DataGrid] Remove apiRef in DataGrid, a XGrid only feature (#290) @dtassone
 - [DataGrid] Replace style-components with @material-ui/styles (#168) @dtassone
 
-## Docs
+### Docs
+
 - [docs] Add issue templates (#222) @oliviertassinari
 - [docs] Add more context on the ⚡️ icons (#265) @oliviertassinari
 - [docs] Add pricing links (#266) @oliviertassinari
