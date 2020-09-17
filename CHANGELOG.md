@@ -4,24 +4,29 @@ All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
 # [4.0.0-alpha.1](https://github.com/mui-org/material-ui-x/compare/v0.1.67...v4.0.0-alpha.1) (2020-09-17)
-- Fix issue #254, focus cell fully visible (#256) @dtassone
+
+## @material-ui/x-grid@v4.0.0-alpha.1 / @material-ui/data-grid@v4.0.0-alpha.1
+
 - [DataGrid] Add api pages for data-grid and x-grid (#289) @dtassone
 - [DataGrid] Add dark mode scrollbar (#282) @dtassone
 - [DataGrid] Better explain the limits of MIT vs commercial (#225) @oliviertassinari
+- [DataGrid] first v4 alpha version (#291) @dtassone
 - [DataGrid] Fix CSS footer spacing (#268) @oliviertassinari
 - [DataGrid] Fix checkbox selection issue (#285) @dtassone
+- [DataGrid] fix disableMultipleSelection (#286) @dtassone
+- [DataGrid] Fix issue #254, focus cell fully visible (#256) @dtassone
+- [DataGrid] fix issues with path and import (#259) @dtassone
 - [DataGrid] Fix setPage not working (#284) @dtassone
 - [DataGrid] Move column resizing to XGrid only (#257) @dtassone
 - [DataGrid] Remove apiRef in DataGrid, a XGrid only feature (#290) @dtassone
 - [DataGrid] Replace style-components with @material-ui/styles (#168) @dtassone
-- [DataGrid] fix issues with path and import (#259) @dtassone
-- [Security] Bump bl from 4.0.2 to 4.0.3 (#241) @dependabot-preview
-- [Security] Bump node-fetch from 2.6.0 to 2.6.1 (#262) @dependabot-preview
-- [docs] Add Rendering section (#267) @oliviertassinari
-- [docs] Add Resources section (#264) @oliviertassinari
+
+## Docs
 - [docs] Add issue templates (#222) @oliviertassinari
 - [docs] Add more context on the ⚡️ icons (#265) @oliviertassinari
 - [docs] Add pricing links (#266) @oliviertassinari
+- [docs] Add Rendering section (#267) @oliviertassinari
+- [docs] Add Resources section (#264) @oliviertassinari
 - [docs] Apply review from Matt @oliviertassinari
 - [docs] Continue the migration of the demos (#232) @oliviertassinari
 - [docs] Disable ads on Enterprise features (#263) @oliviertassinari
@@ -34,9 +39,4 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - [docs] Migration of the paginaton (#224) @oliviertassinari
 - [docs] Polish the first experience (#261) @oliviertassinari
 - [docs] Remove blank lines @tags @oliviertassinari
-- [test] Add codesandbox-ci (#227) @oliviertassinari
-- first v4 alpha version (#291) @dtassone
-- fix build @oliviertassinari
-- fix disableMultipleSelection (#286) @dtassone
-- foward context @oliviertassinari
-- hack around @oliviertassinari
+
