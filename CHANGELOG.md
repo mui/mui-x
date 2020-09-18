@@ -3,12 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [4.0.0-alpha.2](https://github.com/dtassone/material-ui-x/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (2020-09-18)
+# [4.0.0-alpha.2](https://github.com/dtassone/material-ui-x/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (Sep 18, 2020)
 - [DataGrid] Fix d.ts file for data-grid (#298) @dtassone 
 
-# [4.0.0-alpha.1](https://github.com/mui-org/material-ui-x/compare/v0.1.67...v4.0.0-alpha.1) (2020-09-17)
+## [4.0.0-alpha.1](https://github.com/mui-org/material-ui-x/compare/v0.1.67...v4.0.0-alpha.1) (Sep 17, 2020)
+This is the first public alpha release of the component after 6 months of development since the initial commit (March 15th 2020).
+`@material-ui/data-grid` is licensed under MIT while `@material-ui/x-grid` is licensed under a commercial license.	
+You can find the documentation at this address: https://material-ui.com/components/data-grid/.	
 
-## @material-ui/x-grid@v4.0.0-alpha.1 / @material-ui/data-grid@v4.0.0-alpha.1
+### @material-ui/x-grid@v4.0.0-alpha.1 / @material-ui/data-grid@v4.0.0-alpha.1	
 
 - [DataGrid] Add api pages for data-grid and x-grid (#289) @dtassone
 - [DataGrid] Add dark mode scrollbar (#282) @dtassone
