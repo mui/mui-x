@@ -12,7 +12,7 @@ This is the first public alpha release of the component after 6 months of develo
 `@material-ui/data-grid` is licensed under MIT while `@material-ui/x-grid` is licensed under a commercial license.
 You can find the documentation at this address: https://material-ui.com/components/data-grid/.
 
-### @material-ui/x-grid@v4.0.0-alpha.1 / @material-ui/data-grid@v4.0.0-alpha.1	
+### @material-ui/x-grid@v4.0.0-alpha.1 / @material-ui/data-grid@v4.0.0-alpha.1
 
 - [DataGrid] Add api pages for data-grid and x-grid (#289) @dtassone
 - [DataGrid] Add dark mode scrollbar (#282) @dtassone
