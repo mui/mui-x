@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-alpha.2](https://github.com/dtassone/material-ui-x/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (2020-09-18)
+
+**Note:** Version bump only for package material-ui-x
+
+
+
+
+
 # [4.0.0-alpha.1](https://github.com/mui-org/material-ui-x/compare/v0.1.67...v4.0.0-alpha.1) (2020-09-17)
 
 ## @material-ui/x-grid@v4.0.0-alpha.1 / @material-ui/data-grid@v4.0.0-alpha.1
@@ -39,4 +47,3 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - [docs] Migration of the paginaton (#224) @oliviertassinari
 - [docs] Polish the first experience (#261) @oliviertassinari
 - [docs] Remove blank lines @tags @oliviertassinari
-
