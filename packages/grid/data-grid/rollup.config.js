@@ -4,6 +4,7 @@ import cleaner from 'rollup-plugin-cleaner';
 import sourceMaps from 'rollup-plugin-sourcemaps';
 import { terser } from 'rollup-plugin-terser';
 import dts from 'rollup-plugin-dts';
+import command from 'rollup-plugin-command';
 import pkg from './package.json';
 
 // dev build if watching, prod build if not
@@ -41,6 +42,16 @@ export default [
   {
     input: './dist/index.d.ts',
     output: [{ file: 'dist/data-grid.d.ts', format: 'es' }],
-    plugins: [dts(), !production && sourceMaps()],
+    plugins: [
+      dts(),
+      command(
+        `cat ../x-grid-modules/dist/x-grid-modules.d.ts ./dist/data-grid.d.ts > ./dist/data-grid.all.d.ts`,
+        {
+          exitOnFail: true,
+          wait: true,
+        },
+      ),
+      !production && sourceMaps(),
+    ],
   },
 ];
