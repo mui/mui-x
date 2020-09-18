@@ -16,12 +16,12 @@ You can find the documentation at this address: https://material-ui.com/componen
 - [DataGrid] Add api pages for data-grid and x-grid (#289) @dtassone
 - [DataGrid] Add dark mode scrollbar (#282) @dtassone
 - [DataGrid] Better explain the limits of MIT vs commercial (#225) @oliviertassinari
-- [DataGrid] first v4 alpha version (#291) @dtassone
+- [DataGrid] First v4 alpha version (#291) @dtassone
 - [DataGrid] Fix CSS footer spacing (#268) @oliviertassinari
 - [DataGrid] Fix checkbox selection issue (#285) @dtassone
-- [DataGrid] fix disableMultipleSelection (#286) @dtassone
+- [DataGrid] Fix disableMultipleSelection (#286) @dtassone
 - [DataGrid] Fix issue #254, focus cell fully visible (#256) @dtassone
-- [DataGrid] fix issues with path and import (#259) @dtassone
+- [DataGrid] Fix issues with path and import (#259) @dtassone
 - [DataGrid] Fix setPage not working (#284) @dtassone
 - [DataGrid] Move column resizing to XGrid only (#257) @dtassone
 - [DataGrid] Remove apiRef in DataGrid, a XGrid only feature (#290) @dtassone
