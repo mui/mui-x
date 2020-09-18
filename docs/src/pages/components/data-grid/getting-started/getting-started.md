@@ -105,11 +105,13 @@ The data grid comes in 2 versions:
 
 - `DataGrid` **MIT licensed** as part of the community edition. It's an extension of `@material-ui/core`.
 - `XGrid` **Commercially licensed** as part of the X product line offering.
-  See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on purchasing licenses.
 
 The features only available in the commercial version are suffixed with a <span style="font-size: 26px" role="img" title="Enterprise">⚡️</span> icon.
 
-<img src="/static/x/header-icon.png" style="width: 454px;" alt="">
+<img src="/static/x/header-icon.png" style="width: 454px; margin-bottom: 2rem;" alt="">
+
+You can check the [feature comparison](#feature-comparison) for more details.
+See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on purchasing licenses.
 
 ### Try XGrid for free
 
@@ -121,8 +123,6 @@ Please take the component for a test run, no need to contact us.
 If you have an enterprise grid running with an expired or missing license key the grid displays a watermark, and a warning is shown in the console.
 
 <img src="/static/x/watermark.png" style="width: 658px; margin-bottom: 3rem" alt="">
-
-See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on purchasing licenses.
 
 ### Feature comparison
 
@@ -217,4 +217,4 @@ We provide a [private support channel](https://material-ui.zendesk.com/) for ent
 
 Here is [the public roadmap](https://github.com/mui-org/material-ui-x/projects/1). It's organized by quarter.
 
-> ⚠️ Disclaimer: We operate in a dynamic environment, and things are subject to change. The information provided is intended to outline the general framework direction, for informational purposes only. We may decide to add or remove new items at any time, depending on our capability to deliver while meeting our quality standards. The development, releases, and timing of any features or functionality remains at the sole discretion of Material-UI. The roadmap does not represent a commitment, obligation, or promise to deliver at any time.
+> ⚠️ **Disclaimer**: We operate in a dynamic environment, and things are subject to change. The information provided is intended to outline the general framework direction, for informational purposes only. We may decide to add or remove new items at any time, depending on our capability to deliver while meeting our quality standards. The development, releases, and timing of any features or functionality remains at the sole discretion of Material-UI. The roadmap does not represent a commitment, obligation, or promise to deliver at any time.
