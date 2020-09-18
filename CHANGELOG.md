@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [4.0.0-alpha.2](https://github.com/dtassone/material-ui-x/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (Sep 18, 2020)
+## [4.0.0-alpha.2](https://github.com/dtassone/material-ui-x/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (Sep 18, 2020)
 - [DataGrid] Fix d.ts file for data-grid (#298) @dtassone 
 
 ## [4.0.0-alpha.1](https://github.com/mui-org/material-ui-x/compare/v0.1.67...v4.0.0-alpha.1) (Sep 17, 2020)
@@ -27,7 +27,7 @@ You can find the documentation at this address: https://material-ui.com/componen
 - [DataGrid] Remove apiRef in DataGrid, a XGrid only feature (#290) @dtassone
 - [DataGrid] Replace style-components with @material-ui/styles (#168) @dtassone
 
-## Docs
+### Docs
 - [docs] Add issue templates (#222) @oliviertassinari
 - [docs] Add more context on the ⚡️ icons (#265) @oliviertassinari
 - [docs] Add pricing links (#266) @oliviertassinari
