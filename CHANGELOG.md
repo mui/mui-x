@@ -8,6 +8,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - [DataGrid] Fix wrongly exported types (#298) @dtassone 
 
 ## [4.0.0-alpha.1](https://github.com/mui-org/material-ui-x/compare/v0.1.67...v4.0.0-alpha.1) (Sep 17, 2020)
+
 This is the first public alpha release of the component after 6 months of development since the initial commit (March 15th 2020).
 `@material-ui/data-grid` is licensed under MIT while `@material-ui/x-grid` is licensed under a commercial license.
 You can find the documentation at this address: https://material-ui.com/components/data-grid/.
