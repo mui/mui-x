@@ -29,6 +29,7 @@ You can find the documentation at this address: https://material-ui.com/componen
 - [DataGrid] Replace style-components with @material-ui/styles (#168) @dtassone
 
 ### Docs
+
 - [docs] Add issue templates (#222) @oliviertassinari
 - [docs] Add more context on the ⚡️ icons (#265) @oliviertassinari
 - [docs] Add pricing links (#266) @oliviertassinari
