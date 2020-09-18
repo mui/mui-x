@@ -2842,6 +2842,14 @@
     react-is "^16.8.0"
     react-transition-group "^4.4.0"
 
+"@material-ui/data-grid@^4.0.0-alpha.1":
+  version "4.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/@material-ui/data-grid/-/data-grid-4.0.0-alpha.1.tgz#229970d78d0e41b6b73fb5780bf166d6e3741fdd"
+  integrity sha512-1w5E4lifKe2pV0FEdEmUt7hS/mgjxjyeNZPbKX5nxzFGISC1mipe+jIh13dYfMBzGENd92lJ/bH8lQdYrK3WvQ==
+  dependencies:
+    prop-types "^15.7.2"
+    tslib "^2.0.0"
+
 "@material-ui/docs@^4.0.0-beta.3":
   version "4.0.0-beta.3"
   resolved "https://registry.yarnpkg.com/@material-ui/docs/-/docs-4.0.0-beta.3.tgz#8c37863a58b175e03d565a8c8a9ea25c64ba30f8"
