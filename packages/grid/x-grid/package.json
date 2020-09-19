@@ -13,6 +13,17 @@
   "publishConfig": {
     "access": "public"
   },
+  "keywords": [
+    "react",
+    "react-component",
+    "material-ui",
+    "react-table",
+    "table",
+    "datatable",
+    "data-table",
+    "datagrid",
+    "data-grid"
+  ],
   "dependencies": {
     "prop-types": "^15.7.2",
     "tslib": "^2.0.0"

@@ -13,6 +13,17 @@
   "publishConfig": {
     "access": "public"
   },
+  "keywords": [
+    "react",
+    "react-component",
+    "material-ui",
+    "react-table",
+    "table",
+    "datatable",
+    "data-table",
+    "datagrid",
+    "data-grid"
+  ],
   "scripts": {
     "precommit": "npm run lint",
     "build": "rollup -c ",
