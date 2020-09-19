@@ -67,7 +67,6 @@ The `ref` is forwarded to the root element.
 | <span class="prop-name">root</span> | <span class="prop-name">.MuiDataGrid-root</span> | Styles applied to the root element. |
 |  | <span class="prop-name">.MuiDataGrid-mainGridContainer</span> | Styles applied to the main container element.|
 |  | <span class="prop-name">.MuiDataGrid-overlay</span> | Styles applied to the outer overlay element.|
-|  | <span class="prop-name">.MuiDataGrid-overlayContent</span> | Styles applied to the overlay content element.|
 |  | <span class="prop-name">.MuiDataGrid-columnsContainer</span> | Styles applied to the outer columns container element.|
 |  | <span class="prop-name">.MuiDataGrid-colCellWrapper</span> | Styles applied to the outer columns header cells container element.|
 |  | <span class="prop-name">.MuiDataGrid-colCell</span> | Styles applied to the header cell element.|

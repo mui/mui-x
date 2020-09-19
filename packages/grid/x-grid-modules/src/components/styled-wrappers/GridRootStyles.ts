@@ -37,16 +37,12 @@ export const useStyles = makeStyles(
           bottom: 0,
           alignSelf: 'center',
           alignItems: 'center',
+          justifyContent: 'center',
           zIndex: 10,
           backgroundColor: fade(
             theme.palette.background.default,
             theme.palette.action.disabledOpacity,
           ),
-        },
-        '& .MuiDataGrid-overlayContent': {
-          flex: 1,
-          display: 'flex',
-          justifyContent: 'center',
         },
         '& .MuiDataGrid-columnsContainer': {
           position: 'absolute',
