@@ -5,7 +5,7 @@ components: DataGrid, XGrid
 
 # Data Grid - Getting started
 
-<p class="description">The last React borned data grid you will need.</p>
+<p class="description">Get started with the last React borned data grid you will need.</p>
 
 ## Installation
 
