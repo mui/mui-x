@@ -7,12 +7,12 @@ import { useData } from 'packages/storybook/src/hooks/useData';
 function getActiveCell() {
   const activeElement = document.activeElement;
 
-  if (!activeElement || !activeElement.parentElement) {
+  if (!activeElement) {
     return null;
   }
 
-  return `${activeElement.parentElement.getAttribute('data-rowindex')}-${activeElement.getAttribute(
-    'data-colindex',
+  return `${activeElement.getAttribute('data-rowindex')}-${activeElement.getAttribute(
+    'aria-colindex',
   )}`;
 }
 
@@ -35,6 +35,12 @@ async function raf() {
       });
     });
   });
+}
+
+function getColumnValues() {
+  return Array.from(document.querySelectorAll('[aria-colindex="0"]')).map(
+    (node) => node!.textContent,
+  );
 }
 
 describe('<XGrid />', () => {
@@ -114,9 +120,8 @@ describe('<XGrid />', () => {
 
     it('cell navigation with arrows ', async () => {
       render(<KeyboardTest />);
-      await raf();
       // @ts-ignore
-      document.querySelector('[data-rowindex="0"]').querySelector('[data-colindex="0"]').focus();
+      document.querySelector('[role="cell"][data-rowindex="0"][aria-colindex="0"]').focus();
       expect(getActiveCell()).to.equal('0-0');
 
       fireEvent.keyDown(document.activeElement, { code: 'ArrowRight' });
@@ -138,9 +143,8 @@ describe('<XGrid />', () => {
 
     it('Home / End navigation', async () => {
       render(<KeyboardTest />);
-      await raf();
       // @ts-ignore
-      document.querySelector('[data-rowindex="1"]').querySelector('[data-colindex="1"]').focus();
+      document.querySelector('[role="cell"][data-rowindex="1"][aria-colindex="1"]').focus();
       expect(getActiveCell()).to.equal('1-1');
 
       fireEvent.keyDown(document.activeElement, { code: 'Home' });
@@ -153,17 +157,17 @@ describe('<XGrid />', () => {
     });
   });
 
-  it('should resize the width of the columns', async function test() {
-    function App(props) {
+  it('should resize the width of the columns', async () => {
+    const TestCase = (props) => {
       const { width = 300 } = props;
       return (
         <div style={{ width, height: 300 }}>
           <XGrid {...defaultProps} />
         </div>
       );
-    }
+    };
 
-    const { container, setProps } = render(<App />);
+    const { container, setProps } = render(<TestCase />);
     let rect;
     // @ts-ignore
     rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
@@ -252,12 +256,6 @@ describe('<XGrid />', () => {
 
   describe('sorting', () => {
     it('should sort when clicking the header cell', () => {
-      function getColumnValues() {
-        return Array.from(document.querySelectorAll('[aria-colindex="0"]')).map(
-          (x) => x!.textContent,
-        );
-      }
-
       render(
         <div style={{ width: 300, height: 300 }}>
           <XGrid {...defaultProps} />

@@ -11,7 +11,6 @@ import {
   findGridRootFromCurrent,
   findParentElementFromClassName,
   getCellElementFromIndexes,
-  getDataFromElem,
   getIdFromRowElem,
   isArrowKeys,
   isCell,
@@ -66,8 +65,8 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
       cellEl.tabIndex = -1;
 
       const root = findGridRootFromCurrent(cellEl)!;
-      const currentColIndex = Number(getDataFromElem(cellEl, 'colindex'));
-      const currentRowIndex = Number(getDataFromElem(cellEl, 'rowindex'));
+      const currentColIndex = Number(cellEl.getAttribute('aria-colindex'));
+      const currentRowIndex = Number(cellEl.getAttribute('data-rowindex'));
       const autoPageSize = apiRef.current.getContainerPropsState()!.viewportPageSize;
       const pageSize =
         options.pagination && options.pageSize != null ? options.pageSize : autoPageSize;
@@ -149,7 +148,7 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
         ROW_CSS_CLASS,
       )! as HTMLElement;
 
-      const currentRowIndex = Number(getDataFromElem(rowEl, 'rowindex'));
+      const currentRowIndex = Number(rowEl.getAttribute('data-rowindex'));
       let selectionFromRowIndex = currentRowIndex;
       const selectedRows = apiRef.current.getSelectedRows();
       if (selectedRows.length > 0) {

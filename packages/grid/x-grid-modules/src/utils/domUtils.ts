@@ -5,8 +5,6 @@ import {
 } from '../constants/cssClassesConstants';
 import { CellIndexCoordinates } from '../models/rows';
 
-const DATA_ATTRIBUTE_PREFIX = 'data-';
-
 export function isOverflown(element: Element): boolean {
   return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
 }
@@ -23,19 +21,15 @@ export function isHeaderCell(elem: Element): boolean {
   return elem && findParentElementFromClassName(elem, HEADER_CELL_CSS_CLASS) !== null;
 }
 
-export function getDataFromElem(elem: Element, field: string) {
-  return elem.getAttribute(DATA_ATTRIBUTE_PREFIX + field)!;
-}
-
 export function getIdFromRowElem(rowEl: Element): string {
-  return getDataFromElem(rowEl, 'id')!;
+  return rowEl.getAttribute('data-id')!;
 }
 
 export function getFieldFromHeaderElem(colCellEl: Element): string {
-  return getDataFromElem(colCellEl, 'field')!;
+  return colCellEl.getAttribute('data-field')!;
 }
 export function findCellElementsFromCol(col: HTMLElement): NodeListOf<Element> | null {
-  const field = getDataFromElem(col, 'field');
+  const field = col.getAttribute('data-field');
   const root = findParentElementFromClassName(col, 'MuiDataGrid-root');
   if (!root) {
     throw new Error('Material-UI: The root element is not found.');
@@ -65,6 +59,6 @@ export function getCellElementFromIndexes(
   { colIndex, rowIndex }: CellIndexCoordinates,
 ) {
   return root.querySelector(
-    `:scope .${CELL_CSS_CLASS}[data-colIndex='${colIndex}'][data-rowIndex='${rowIndex}']`,
+    `:scope .${CELL_CSS_CLASS}[aria-colIndex='${colIndex}'][data-rowIndex='${rowIndex}']`,
   ) as HTMLDivElement;
 }

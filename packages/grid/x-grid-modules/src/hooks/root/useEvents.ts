@@ -27,7 +27,6 @@ import {
 } from '../../constants/cssClassesConstants';
 import {
   findParentElementFromClassName,
-  getDataFromElem,
   getFieldFromHeaderElem,
   getIdFromRowElem,
   isCell,
@@ -72,8 +71,8 @@ export function useEvents(
         const id = getIdFromRowElem(rowEl);
         const rowModel = apiRef.current.getRowFromId(id);
         const rowIndex = apiRef.current.getRowIndexFromId(id);
-        const field = getDataFromElem(cellEl, 'field');
-        const value = getDataFromElem(cellEl, 'value');
+        const field = cellEl.getAttribute('data-field') as string;
+        const value = cellEl.getAttribute('data-value');
         const column = apiRef.current.getColumnFromField(field);
         if (!column || !column.disableClickEventBubbling) {
           const commonParams = {

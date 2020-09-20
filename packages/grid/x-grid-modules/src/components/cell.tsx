@@ -51,7 +51,6 @@ export const Cell: React.FC<GridCellProps> = React.memo((props) => {
       role="cell"
       data-value={value}
       data-field={field}
-      data-colindex={colIndex}
       data-rowindex={rowIndex}
       aria-colindex={colIndex}
       style={{
