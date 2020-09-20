@@ -38,7 +38,7 @@
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0",
-    "webpack-merge": "^4.2.2"
+    "webpack-merge": "^5.1.4"
   },
   "scripts": {
     "build": "./node_modules/.bin/webpack -p --config ./webpack.prod.js",
