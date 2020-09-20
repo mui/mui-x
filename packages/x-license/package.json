@@ -17,7 +17,7 @@
     "licensegen": "./bin/license-gen-script.js"
   },
   "dependencies": {
-    "commander": "^5.1.0",
+    "commander": "^6.1.0",
     "esm": "^3.2.25"
   },
   "devDependencies": {
