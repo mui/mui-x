@@ -21191,12 +21191,11 @@ typedoc-default-themes@^0.10.2:
   dependencies:
     lunr "^2.3.8"
 
-typedoc-plugin-markdown@^2.3.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/typedoc-plugin-markdown/-/typedoc-plugin-markdown-2.3.1.tgz#c4c6c3228f625b24875e87cc1622b9a259b914ce"
-  integrity sha512-7rlmg1tLjddYy11uznHCAlyoOpxdWnFXqGEZ7j2mJ4KJg2avwWgEpw6SFZVofgPCGn36zklpFS51lHxYSRTLVQ==
+typedoc-plugin-markdown@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/typedoc-plugin-markdown/-/typedoc-plugin-markdown-3.0.2.tgz#d09c41e4c9640d6236204050a30624118eb73f8f"
+  integrity sha512-EZSqvPqpNDdA1fgKbQFbz5qH5SuhnbTPL7zMjzAzBi+YeAhGAfVIgU9PVUOxzUOp7eYcDNnu1JTzdtu779E1kA==
   dependencies:
-    fs-extra "^9.0.0"
     handlebars "^4.7.6"
 
 typedoc@^0.17.8:
