@@ -4,7 +4,7 @@ const webpack = require('webpack');
 const browserStack = {
   username: process.env.BROWSERSTACK_USERNAME,
   accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
-  build: `material-ui-${new Date().toISOString()}`,
+  build: `material-ui-x-${new Date().toISOString()}`,
 };
 
 process.env.CHROME_BIN = require('puppeteer').executablePath();
