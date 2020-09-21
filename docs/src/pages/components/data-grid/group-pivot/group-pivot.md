@@ -5,7 +5,7 @@ components: DataGrid, XGrid
 
 # Data Grid - Group & Pivot
 
-<p class="description">Explore and analyse in depth the grid data.</p>
+<p class="description">Use grouping, pivoting and more to analyse the data in depth.</p>
 
 ## 🚧 Tree data [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
