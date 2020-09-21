@@ -41,7 +41,6 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.54",
     "@material-ui/monorepo": "https://github.com/mui-org/material-ui.git#next",
-    "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^10.4.8",
     "@types/enzyme": "^3.10.5",
     "@types/enzyme-adapter-react-16": "^1.0.6",
