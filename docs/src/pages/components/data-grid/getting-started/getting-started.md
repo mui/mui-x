@@ -134,7 +134,7 @@ The following table summarizes the features available in the community `DataGrid
 | [Column resizing](/components/data-grid/columns/#column-resizing)                       | ❌        | ✅             |
 | [Column groups](/components/data-grid/columns/#column-groups)                           | 🚧        | 🚧             |
 | [Column reorder](/components/data-grid/columns/#column-reorder)                         | ❌        | 🚧             |
-| [Column sticky](/components/data-grid/columns/#column-sticky)                           | ❌        | 🚧             |
+| [Column pinning](/components/data-grid/columns/#column-pinning)                         | ❌        | 🚧             |
 | [Column spanning](/components/data-grid/columns/#column-spanning)                       | 🚧        | 🚧             |
 | **Rows**                                                                                |           |                |
 | [Rows sorting](/components/data-grid/rows/#row-sorting)                                 | ✅        | ✅             |
