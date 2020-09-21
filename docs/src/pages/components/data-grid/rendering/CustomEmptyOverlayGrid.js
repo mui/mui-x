@@ -5,10 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    '& .MuiDataGrid-overlayContent': {
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
+    flexDirection: 'column',
     '& .ant-empty-img-1': {
       fill: theme.palette.type === 'light' ? '#aeb8c2' : '#262626',
     },
