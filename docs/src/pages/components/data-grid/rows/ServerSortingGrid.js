@@ -71,16 +71,14 @@ export default function ServerSortingGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      {data.columns.length === 0 ? null : (
-        <DataGrid
-          rows={rows}
-          columns={data.columns}
-          sortingMode="server"
-          sortModel={sortModel}
-          onSortModelChange={handleSortModelChange}
-          loading={loading}
-        />
-      )}
+      <DataGrid
+        rows={rows}
+        columns={data.columns}
+        sortingMode="server"
+        sortModel={sortModel}
+        onSortModelChange={handleSortModelChange}
+        loading={loading}
+      />
     </div>
   );
 }
