@@ -29,13 +29,8 @@ export const ApiPreSelectedRows = () => {
     }
   }, [data, apiRef]);
 
-  const loadData = async () => {
-    const newData = await getData(50, 5);
-    setData(newData);
-  };
-
   React.useEffect(() => {
-    loadData();
+    setData(getData(50, 5));
   }, []);
 
   return <XGrid rows={data.rows} columns={data.columns} apiRef={apiRef} />;

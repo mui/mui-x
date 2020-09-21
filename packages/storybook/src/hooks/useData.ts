@@ -1,22 +1,13 @@
 import * as React from 'react';
 import { getData, GridData } from '../data/data-service';
 
-export function useData(nbRows: number, nbCols: number, onData?: (data: GridData) => void) {
+export function useData(nbRows: number, nbCols: number) {
   const [data, setData] = React.useState<GridData>({ rows: [], columns: [] });
 
-  const loadData = React.useCallback(async () => {
-    const newData = await getData(nbRows, nbCols);
-    if (onData != null) {
-      onData(newData);
-    }
-    return newData;
-  }, [nbCols, nbRows, onData]);
-
   React.useEffect(() => {
-    loadData().then((newData: GridData) => {
-      setData(newData);
-    });
-  }, [loadData]);
+    const newData = getData(nbRows, nbCols);
+    setData(newData);
+  }, [nbRows, nbCols]);
 
   return data;
 }

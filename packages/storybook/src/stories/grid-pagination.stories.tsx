@@ -180,15 +180,15 @@ export function AutoPagination() {
 
 function loadServerRows(params: PageChangeParams): Promise<GridData> {
   return new Promise<GridData>((resolve) => {
-    getData(params.pageSize, 10).then((data) => {
-      setTimeout(() => {
-        const minId = (params.page - 1) * params.pageSize;
-        data.rows.forEach((row) => {
-          row.id = (Number(row.id) + minId).toString();
-        });
-        resolve(data);
-      }, 500);
-    });
+    const data = getData(params.pageSize, 10);
+
+    setTimeout(() => {
+      const minId = (params.page - 1) * params.pageSize;
+      data.rows.forEach((row) => {
+        row.id = (Number(row.id) + minId).toString();
+      });
+      resolve(data);
+    }, 500);
   });
 }
 
