@@ -5,7 +5,7 @@
   "author": "Material-UI Team",
   "main": "dist/index-cjs.js",
   "module": "dist/index-esm.js",
-  "types": "dist/data-grid.all.d.ts",
+  "types": "dist/data-grid.d.ts",
   "files": [
     "dist/*"
   ],
