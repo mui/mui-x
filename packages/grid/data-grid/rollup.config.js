@@ -44,14 +44,14 @@ export default [
     output: [{ file: 'dist/data-grid.d.ts', format: 'es' }],
     plugins: [
       dts(),
+      !production && sourceMaps(),
       command(
-        `cat ../x-grid-modules/dist/x-grid-modules.d.ts ./dist/data-grid.d.ts > ./dist/data-grid.all.d.ts`,
+        [`rm -f ./dist/DataGrid*`, `rm -f ./dist/index.d.ts `],
         {
           exitOnFail: true,
           wait: true,
         },
       ),
-      !production && sourceMaps(),
     ],
   },
 ];

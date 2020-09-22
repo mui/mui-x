@@ -49,11 +49,14 @@ export default [
     output: [{ file: 'dist/x-grid.d.ts', format: 'es' }],
     plugins: [
       dts(),
+      !production && sourceMaps(),
       command(
-        `cat ../../x-license/dist/x-license.d.ts ../x-grid-modules/dist/x-grid-modules.d.ts ./dist/x-grid.d.ts > ./dist/x-grid.all.d.ts`,
-        { exitOnFail: true, wait: true },
-        !production && sourceMaps(),
-      ),
+        [`rm -f ./dist/XGrid*`, `rm -f ./dist/index.d.ts `],
+        {
+          exitOnFail: true,
+          wait: true,
+        }
+      )
     ],
   },
 ];
