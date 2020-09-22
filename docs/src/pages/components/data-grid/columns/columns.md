@@ -25,7 +25,7 @@ interface ColDef {
 }
 ```
 
-{{"demo": "pages/components/data-grid/columns/BasicColumnsGrid.js"}}
+{{"demo": "pages/components/data-grid/columns/BasicColumnsGrid.js", "bg": "inline"}}
 
 By default, columns are ordered according to the order they are included in the `columns` array.
 
@@ -37,7 +37,7 @@ You can configure the headers with:
 - `description`: The description of the column rendered as tooltip if the column header name is not fully displayed.
 - `hide`: Hide the column.
 
-{{"demo": "pages/components/data-grid/columns/HeaderColumnsGrid.js"}}
+{{"demo": "pages/components/data-grid/columns/HeaderColumnsGrid.js", "bg": "inline"}}
 
 For more advanced header configuration, go to the [rendering section](/components/data-grid/rendering/#header-cell).
 
@@ -47,7 +47,7 @@ By default, the columns have a width of 100 pixels.
 This is an arbitrary, easy to remember value.
 To change the width of a column, use the `width` property available in `ColDef`.
 
-{{"demo": "pages/components/data-grid/columns/ColumnWidthGrid.js"}}
+{{"demo": "pages/components/data-grid/columns/ColumnWidthGrid.js", "bg": "inline"}}
 
 ## Column resizing [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
@@ -56,7 +56,7 @@ By default, `XGrid` allows all columns to be resized by dragging the right porti
 To prevent the resizing of a column, set `resizable: false` in the `ColDef`.
 Alternatively, to disable all columns resize, set the prop `disableColumnResize={true}`.
 
-{{"demo": "pages/components/data-grid/columns/ColumnSizingGrid.js", "disableAd": true}}
+{{"demo": "pages/components/data-grid/columns/ColumnSizingGrid.js", "disableAd": true, "bg": "inline"}}
 
 <!--
 - https://ag-grid.com/javascript-grid-resizing/
@@ -84,7 +84,7 @@ The following are the native column types:
 
 To apply a column type, you need to define the type property in your column definition.
 
-{{"demo": "pages/components/data-grid/columns/ColumnTypesGrid.js"}}
+{{"demo": "pages/components/data-grid/columns/ColumnTypesGrid.js", "bg": "inline"}}
 
 ## Custom column types
 
@@ -101,7 +101,7 @@ const usdPrice: ColTypeDef = {
 };
 ```
 
-{{"demo": "pages/components/data-grid/columns/CustomColumnTypesGrid.js"}}
+{{"demo": "pages/components/data-grid/columns/CustomColumnTypesGrid.js", "bg": "inline"}}
 
 ## 🚧 Column groups
 

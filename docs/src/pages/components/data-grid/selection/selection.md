@@ -30,29 +30,29 @@ Row selection can be performed with a simple mouse click, or using the [keyboard
 Single row selection is enable by default with the `DataGrid` component.
 For the `XGrid`, you need to disable multiple row selection with `disableMultipleSelection={true}`.
 
-{{"demo": "pages/components/data-grid/selection/SingleRowSelectionGrid.js"}}
+{{"demo": "pages/components/data-grid/selection/SingleRowSelectionGrid.js", "bg": "inline"}}
 
 ### Multiple row selection [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
 To activate multiple selection, put focus the `XGrid` component and hold the <kbd>CTRL</kbd> key while selecting rows.
 
-{{"demo": "pages/components/data-grid/selection/MultipleRowSelectionGrid.js", "disableAd": true}}
+{{"demo": "pages/components/data-grid/selection/MultipleRowSelectionGrid.js", "disableAd": true, "bg": "inline"}}
 
 ## Checkbox selection
 
 To activate checkbox selection set `checkboxSelection={true}`.
 
-{{"demo": "pages/components/data-grid/selection/CheckboxSelectionGrid.js"}}
+{{"demo": "pages/components/data-grid/selection/CheckboxSelectionGrid.js", "bg": "inline"}}
 
 ## Disable selection on click
 
 You might have interactive content in the cells and need to disable the selection of the row on click. Use the `disableClickEventBubbling` option in this case.
 
-{{"demo": "pages/components/data-grid/selection/DisableClickSelectionGrid.js"}}
+{{"demo": "pages/components/data-grid/selection/DisableClickSelectionGrid.js", "bg": "inline"}}
 
 ## Controlled selection
 
-{{"demo": "pages/components/data-grid/selection/ControlledSelectionGrid.js"}}
+{{"demo": "pages/components/data-grid/selection/ControlledSelectionGrid.js", "bg": "inline"}}
 
 ## apiRef
 
