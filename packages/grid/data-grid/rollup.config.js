@@ -45,13 +45,10 @@ export default [
     plugins: [
       dts(),
       !production && sourceMaps(),
-      command(
-        [`rm -f ./dist/DataGrid*`, `rm -f ./dist/index.d.ts `],
-        {
-          exitOnFail: true,
-          wait: true,
-        },
-      ),
+      command([`rm -f ./dist/DataGrid*`, `rm -f ./dist/index.d.ts `], {
+        exitOnFail: true,
+        wait: true,
+      }),
     ],
   },
 ];
