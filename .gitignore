@@ -12,4 +12,5 @@ __diff_output__
 /docs/.next
 /docs/export
 dist
+build
 node_modules

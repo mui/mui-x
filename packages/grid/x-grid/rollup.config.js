@@ -6,14 +6,13 @@ import { terser } from 'rollup-plugin-terser';
 import replace from '@rollup/plugin-replace';
 import resolve from '@rollup/plugin-node-resolve';
 import dts from 'rollup-plugin-dts';
-import command from 'rollup-plugin-command';
 import pkg from './package.json';
 
 // dev build if watching, prod build if not
 const production = !process.env.ROLLUP_WATCH;
 export default [
   {
-    input: 'src/index.ts',
+    input: 'build/index.ts',
     output: [
       {
         file: 'dist/index-esm.js',
@@ -38,7 +37,7 @@ export default [
         cleaner({
           targets: ['./dist/'],
         }),
-      typescript(),
+      typescript({ tsconfig: 'tsconfig.build.json' }),
       !production && sourceMaps(),
       production && terser(),
     ],
@@ -46,13 +45,6 @@ export default [
   {
     input: './dist/index.d.ts',
     output: [{ file: 'dist/x-grid.d.ts', format: 'es' }],
-    plugins: [
-      dts(),
-      command(
-        `cat ../../x-license/dist/x-license.d.ts ../x-grid-modules/dist/x-grid-modules.d.ts ./dist/x-grid.d.ts > ./dist/x-grid.all.d.ts`,
-        { exitOnFail: true, wait: true },
-        !production && sourceMaps(),
-      ),
-    ],
+    plugins: [dts(), !production && sourceMaps()],
   },
 ];

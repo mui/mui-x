@@ -5,7 +5,7 @@
   "author": "Material-UI Team",
   "main": "dist/index-cjs.js",
   "module": "dist/index-esm.js",
-  "types": "dist/data-grid.all.d.ts",
+  "types": "dist/data-grid.d.ts",
   "files": [
     "dist/*"
   ],
@@ -26,7 +26,8 @@
   ],
   "scripts": {
     "precommit": "npm run lint",
-    "build": "rollup -c ",
+    "prebuild": "rimraf build",
+    "build": "cp -r ./src ./build && mkdir ./build/x-grid-modules && cp -r ../x-grid-modules/src ./build/x-grid-modules/src && cp -r ../x-grid-modules/lib/ ./build/x-grid-modules/lib && node replaces.js && rollup -c",
     "start": "rollup -cw",
     "lint": "eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../.eslintrc.js && npm run lint:css",
     "lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../../.stylelintrc.js",
