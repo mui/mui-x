@@ -119,7 +119,7 @@ Grouping columns allows you to have multiple levels of columns in your header an
 
 Column reordering enables reordering the columns by dragging the header cells.
 
-## 🚧 Sticky columns [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
+## 🚧 Column pinning [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >

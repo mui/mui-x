@@ -67,10 +67,6 @@ export default function ServerSortingGrid() {
     };
   }, [sortModel, data]);
 
-  if (data.columns.length === 0) {
-    return null;
-  }
-
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
