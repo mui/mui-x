@@ -50,13 +50,10 @@ export default [
     plugins: [
       dts(),
       !production && sourceMaps(),
-      command(
-        [`rm -f ./dist/XGrid*`, `rm -f ./dist/index.d.ts `],
-        {
-          exitOnFail: true,
-          wait: true,
-        }
-      )
+      command([`rm -f ./dist/XGrid*`, `rm -f ./dist/index.d.ts `], {
+        exitOnFail: true,
+        wait: true,
+      }),
     ],
   },
 ];
