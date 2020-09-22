@@ -264,4 +264,4 @@ This demo replaces it with the [Pagination](/components/pagination/) component.
 
 The following grid leverages the CSS customization API to match the Ant Design specification.
 
-{{"demo": "pages/components/data-grid/rendering/AntDesignGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/rendering/AntDesignGrid.js"}}
