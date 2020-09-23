@@ -32,7 +32,7 @@ const columns: ColDef[] = [
 ];
 ```
 
-{{"demo": "pages/components/data-grid/rendering/ValueGetterGrid.js", "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/rendering/ValueGetterGrid.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 The value generated is used for filtering, sorting, rendering, etc unless overridden by a more specific configuration.
 
@@ -53,7 +53,7 @@ const columns: ColDef[] = [
 ];
 ```
 
-{{"demo": "pages/components/data-grid/rendering/ValueFormatterGrid.js", "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/rendering/ValueFormatterGrid.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 The value generated is used for filtering, sorting, rendering in the cell and outside, etc unless overridden by a more specific configuration.
 
@@ -88,7 +88,7 @@ const columns: ColDef[] = [
 ];
 ```
 
-{{"demo": "pages/components/data-grid/rendering/RenderCellGrid.js", "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/rendering/RenderCellGrid.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ### Render header
 
@@ -114,7 +114,7 @@ const columns: ColDef[] = [
 ];
 ```
 
-{{"demo": "pages/components/data-grid/rendering/RenderHeaderGrid.js", "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/rendering/RenderHeaderGrid.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ### Styling header
 
@@ -139,7 +139,7 @@ const columns: Columns = [
 ];
 ```
 
-{{"demo": "pages/components/data-grid/rendering/StylingHeaderGrid.js", "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/rendering/StylingHeaderGrid.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ### Styling cells
 
@@ -167,7 +167,7 @@ const columns: Columns = [
 ];
 ```
 
-{{"demo": "pages/components/data-grid/rendering/StylingCellsGrid.js", "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/rendering/StylingCellsGrid.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ## Layout
 
@@ -177,13 +177,13 @@ By default, the grid has no intrinsic dimensions. It occupies the space its pare
 
 It's recommended to use a flex container to render the grid. This allows a flexible layout, resizes well, and works on all devices.
 
-{{"demo": "pages/components/data-grid/rendering/FlexLayoutGrid.js"}}
+{{"demo": "pages/components/data-grid/rendering/FlexLayoutGrid.js", "bg": "inline"}}
 
 ### Predefined dimensions
 
 You can predefine dimensions for the parent of the grid.
 
-{{"demo": "pages/components/data-grid/rendering/FixedSizeGrid.js"}}
+{{"demo": "pages/components/data-grid/rendering/FixedSizeGrid.js", "bg": "inline"}}
 
 ### Auto height
 
@@ -192,7 +192,7 @@ This means that the number of rows will drive the height of the grid and consequ
 
 > ⚠️ This is not recommended for large datasets as row virtualization will not be able to improve performance by limiting the number of elements rendered in the DOM.
 
-{{"demo": "pages/components/data-grid/rendering/AutoHeightGrid.js"}}
+{{"demo": "pages/components/data-grid/rendering/AutoHeightGrid.js", "bg": "inline"}}
 
 ## Virtualization
 
@@ -219,7 +219,7 @@ Column virtualization is the insertion and removal of columns as the grid scroll
 
 By default, 2 columns are rendered outside of the viewport. You can change this option with the `columnBuffer` prop. The following demo renders 1,000 columns in total:
 
-{{"demo": "pages/components/data-grid/rendering/ColumnVirtualizationGrid.js"}}
+{{"demo": "pages/components/data-grid/rendering/ColumnVirtualizationGrid.js", "bg": "inline"}}
 
 You can disable column virtualization by setting the column buffer to a higher number than the number of rendered columns, e.g. with `columnBuffer={columns.length}` or `columnBuffer={Number.MAX_SAFE_INTEGER}`.
 
@@ -238,13 +238,13 @@ As part of the customization API, the grid allows you to replace and override ne
 By default, the loading overlay displays a circular progress.
 This demo replaces it with a linear progress.
 
-{{"demo": "pages/components/data-grid/rendering/CustomLoadingOverlayGrid.js"}}
+{{"demo": "pages/components/data-grid/rendering/CustomLoadingOverlayGrid.js", "bg": "inline"}}
 
 ### No rows overlay
 
 In the following demo, an illustration is added on top of the default "No Rows" message.
 
-{{"demo": "pages/components/data-grid/rendering/CustomEmptyOverlayGrid.js"}}
+{{"demo": "pages/components/data-grid/rendering/CustomEmptyOverlayGrid.js", "bg": "inline"}}
 
 ### Footer
 
@@ -258,7 +258,7 @@ The grid exposes props to hide specific elements of the UI:
 By default, pagination uses the [TablePagination](/components/pagination/#table-pagination) component that is optimized for handling tabular data.
 This demo replaces it with the [Pagination](/components/pagination/) component.
 
-{{"demo": "pages/components/data-grid/rendering/CustomPaginationGrid.js"}}
+{{"demo": "pages/components/data-grid/rendering/CustomPaginationGrid.js", "bg": "inline"}}
 
 ## Customization example
 

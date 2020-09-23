@@ -29,7 +29,7 @@ This abstraction also set constraints that allow the component to implement new 
 import { DataGrid } from '@material-ui/data-grid';
 ```
 
-{{"demo": "pages/components/data-grid/overview/DataGridDemo.js", "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/overview/DataGridDemo.js", "defaultCodeOpen": false, "bg": "inline"}}
 
 ### Commercial version [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
@@ -39,7 +39,7 @@ The following grid displays 31 columns and 100,000 rows - over 3 million cells i
 import { XGrid } from '@material-ui/x-grid';
 ```
 
-{{"demo": "pages/components/data-grid/overview/XGridDemo.js", "defaultCodeOpen": false, "disableAd": true}}
+{{"demo": "pages/components/data-grid/overview/XGridDemo.js", "defaultCodeOpen": false, "disableAd": true, "bg": "inline"}}
 
 ## Features
 
