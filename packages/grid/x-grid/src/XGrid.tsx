@@ -6,10 +6,10 @@ import { GridComponent, GridComponentProps, classnames } from '../../_modules_/g
 // automatically when a new version is published on npm.
 let RELEASE_INFO = '__RELEASE_INFO__';
 
+const ponyfillGlobal = require('@material-ui/utils').ponyfillGlobal;
+
 // eslint-disable-next-line no-useless-concat
 if (process.env.NODE_ENV !== 'production' && RELEASE_INFO === '__RELEASE' + '_INFO__') {
-  // eslint-disable-next-line global-require
-  const ponyfillGlobal = require('@material-ui/utils/ponyfillGlobal');
   // eslint-disable-next-line no-underscore-dangle
   RELEASE_INFO = ponyfillGlobal.__MUI_RELEASE_INFO__;
 }
