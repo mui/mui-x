@@ -5,21 +5,21 @@ import sourceMaps from 'rollup-plugin-sourcemaps';
 import { terser } from 'rollup-plugin-terser';
 import dts from 'rollup-plugin-dts';
 import command from 'rollup-plugin-command';
-import pkg from './package.json';
+import pkg from './data-grid/package.json';
 
 // dev build if watching, prod build if not
 const production = !process.env.ROLLUP_WATCH;
 export default [
   {
-    input: 'src/index.ts',
+    input: './data-grid/src/index.ts',
     output: [
       {
-        file: 'dist/index-esm.js',
+        file: './data-grid/dist/index-esm.js',
         format: 'esm',
         sourcemap: !production,
       },
       {
-        file: 'dist/index-cjs.js',
+        file: './data-grid/dist/index-cjs.js',
         format: 'cjs',
         sourcemap: !production,
       },
@@ -32,20 +32,20 @@ export default [
       }),
       production &&
         cleaner({
-          targets: ['./dist/'],
+          targets: ['./data-grid/dist/'],
         }),
-      typescript({ tsconfig: 'tsconfig.build.json' }),
+      typescript({ tsconfig: 'tsconfig.json' }),
       !production && sourceMaps(),
       production && terser(),
     ],
   },
   {
-    input: './dist/index.d.ts',
-    output: [{ file: 'dist/data-grid.d.ts', format: 'es' }],
+    input: './data-grid/dist/data-grid/src/index.d.ts',
+    output: [{ file: './data-grid/dist/data-grid.d.ts', format: 'es' }],
     plugins: [
       dts(),
       !production && sourceMaps(),
-      command([`rm -f ./dist/DataGrid*`, `rm -f ./dist/index.d.ts `], {
+      command([`rm -rf ./data-grid/dist/data-grid/`, `rm -rf ./data-grid/dist/modules `], {
         exitOnFail: true,
         wait: true,
       }),
