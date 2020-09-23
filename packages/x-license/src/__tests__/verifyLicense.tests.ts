@@ -1,4 +1,4 @@
-import { generateLicence } from '../generateLicense';
+import { generateLicence } from '@material-ui/x-license-gen';
 import { generateReleaseInfo, verifyLicense } from '../verifyLicense';
 import { LicenseStatus } from '../licenseStatus';
 

@@ -11,15 +11,15 @@ import pkg from './package.json';
 const production = !process.env.ROLLUP_WATCH;
 export default [
   {
-    input:   'src/index.ts',
+    input:   'src/license-cli.ts',
     output: [
       {
-        file: 'dist/index-esm.js',
+        file: './dist/x-license-gen-esm.js',
         format: 'esm',
         sourcemap: !production,
       },
       {
-        file: 'dist/index-cjs.js',
+        file: './dist/x-license-gen-cjs.js',
         format: 'cjs',
         sourcemap: !production,
       },
@@ -39,17 +39,14 @@ export default [
   },
   {
     input: './dist/index.d.ts',
-    output: [{ file: 'dist/x-license.d.ts', format: 'es' }],
+    output: [{ file: 'dist/x-license-gen.d.ts', format: 'es' }],
     plugins: [
       dts(),
       !production && sourceMaps(),
       production && command([
         `rm -rf ./dist/encoding/`,
-        `rm -rf ./dist/index*.d.ts`,
-        `rm -rf ./dist/license*.d.ts`,
-        `rm -rf ./dist/use*.d.ts`,
-        `rm -rf ./dist/use*.d.ts`,
-        `rm -rf ./dist/verify*.d.ts`,
+        `rm -rf ./dist/index*`,
+        `rm -rf ./dist/generateLicense*`,
       ], {
         exitOnFail: true,
         wait: true,
