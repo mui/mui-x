@@ -1,8 +1,7 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { chainPropTypes } from '@material-ui/utils';
-import { GridComponent,  GridComponentProps, classnames } from '../../modules/grid';
-// import { GridComponent, GridComponentProps, classnames } from '@material-ui/x-grid-modules';
+import { GridComponent,  GridComponentProps, classnames } from '../../_modules_/grid';
 
 const FORCED_PROPS: Partial<GridComponentProps> = {
   disableColumnResize: true,

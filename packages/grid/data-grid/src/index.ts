@@ -1,3 +1,2 @@
-// export * from '@material-ui/x-grid-modules';
-export * from '../../modules';
+export * from '../../_modules_';
 export * from './DataGrid';

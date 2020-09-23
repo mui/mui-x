@@ -1,24 +1,26 @@
+import {generateReleaseInfo} from '@material-ui/x-license';
+import replace from '@rollup/plugin-replace';
 import typescript from 'rollup-plugin-typescript2';
 import cleaner from 'rollup-plugin-cleaner';
 import sourceMaps from 'rollup-plugin-sourcemaps';
 import { terser } from 'rollup-plugin-terser';
 import dts from 'rollup-plugin-dts';
 import command from 'rollup-plugin-command';
-import pkg from './data-grid/package.json';
+import pkg from './x-grid/package.json';
 
 // dev build if watching, prod build if not
 const production = !process.env.ROLLUP_WATCH;
 export default [
   {
-    input: './data-grid/src/index.ts',
+    input: './x-grid/src/index.ts',
     output: [
       {
-        file: './data-grid/dist/index-esm.js',
+        file: './x-grid/dist/index-esm.js',
         format: 'esm',
         sourcemap: !production,
       },
       {
-        file: './data-grid/dist/index-cjs.js',
+        file: './x-grid/dist/index-cjs.js',
         format: 'cjs',
         sourcemap: !production,
       },
@@ -26,22 +28,25 @@ export default [
 
     external: [...Object.keys(pkg.peerDependencies || {})],
     plugins: [
+      replace({
+        __RELEASE_INFO__: generateReleaseInfo(),
+      }),
       production &&
-        cleaner({
-          targets: ['./data-grid/dist/'],
-        }),
+      cleaner({
+        targets: ['./x-grid/dist/'],
+      }),
       typescript({ tsconfig: 'tsconfig.json' }),
       !production && sourceMaps(),
       production && terser(),
     ],
   },
   {
-    input: './data-grid/dist/data-grid/src/index.d.ts',
-    output: [{ file: './data-grid/dist/data-grid.d.ts', format: 'es' }],
+    input: './x-grid/dist/x-grid/src/index.d.ts',
+    output: [{ file: './x-grid/dist/x-grid.d.ts', format: 'es' }],
     plugins: [
       dts(),
       !production && sourceMaps(),
-      production && command([`rm -rf ./data-grid/dist/data-grid/`, `rm -rf ./data-grid/dist/_modules_ `, `rm -rf ./data-grid/dist/x-grid`], {
+      production && command([`rm -rf ./x-grid/dist/x-grid`, `rm -rf ./x-grid/dist/_modules_`, `rm -rf ./x-grid/dist/data-grid`], {
         exitOnFail: true,
         wait: true,
       }),
