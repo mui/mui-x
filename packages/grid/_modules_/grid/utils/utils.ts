@@ -1,5 +1,5 @@
-import _debounce from '../../lib/lodash/debounce';
-import isEqual from '../../lib/lodash/isEqual';
+import _debounce from '../lib/lodash/debounce';
+import isEqual from '../lib/lodash/isEqual';
 
 export { isEqual };
 

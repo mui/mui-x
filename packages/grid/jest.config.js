@@ -1,6 +1,6 @@
 module.exports = {
   preset: 'ts-jest',
-  rootDir: './',
+  rootDir: './_modules_',
   testEnvironment: 'node',
   transform: {
     '^.+\\.(t|j)sx?$': 'ts-jest',
