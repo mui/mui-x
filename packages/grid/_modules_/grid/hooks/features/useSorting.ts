@@ -99,7 +99,7 @@ export const useSorting = (
       return res;
     }, 0);
     return result;
-  }, []);
+  }, [apiRef]);
 
   const buildComparatorList = React.useCallback(
     (sortModel: SortModel): FieldComparatorList => {
