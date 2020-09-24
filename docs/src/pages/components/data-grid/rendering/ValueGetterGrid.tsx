@@ -2,8 +2,9 @@ import * as React from 'react';
 import { DataGrid, ColDef, ValueGetterParams } from '@material-ui/data-grid';
 
 // You can optimize the perf by memoizing this function.
-const getFullName = (params: ValueGetterParams) =>
-  `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`;
+function getFullName(params: ValueGetterParams) {
+  return `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`;
+}
 
 const columns: ColDef[] = [
   { field: 'id', hide: true },

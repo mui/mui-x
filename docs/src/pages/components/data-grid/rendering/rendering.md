@@ -16,7 +16,7 @@ This section is an extension of the main [column definitions documentation](/com
 Sometimes a column might not have a corresponding value and you just want to render a combination of different fields.
 To do that, you can set the `valueGetter` attribute of `ColDef` as in the example below:
 
-<b>Note</b>: You need to set a `sortComparator` for the column sorting to work when setting the `valueGetter` attribute.
+**Note**: You need to set a `sortComparator` for the column sorting to work when setting the `valueGetter` attribute.
 
 ```tsx
 // You can optimize the perf by memoizing this function.
