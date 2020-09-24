@@ -30,7 +30,7 @@ export default [
         cleaner({
           targets: ['./data-grid/dist/'],
         }),
-      typescript({ tsconfig: 'tsconfig.json' }),
+      typescript({ tsconfig: 'tsconfig.build.json' }),
       !production && sourceMaps(),
       production && terser(),
     ],

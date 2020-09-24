@@ -6,6 +6,7 @@ import { GridComponent, GridComponentProps, classnames } from '../../_modules_/g
 // automatically when a new version is published on npm.
 let RELEASE_INFO = '__RELEASE_INFO__';
 
+// TODO: Refactor to import when moving to material-ui v5
 const ponyfillGlobal = require('@material-ui/utils').ponyfillGlobal;
 
 // eslint-disable-next-line no-useless-concat

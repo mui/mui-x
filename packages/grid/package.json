@@ -1,11 +1,9 @@
 {
-  "name": "@material-ui/grid",
-  "version": "4.0.0-alpha.2",
   "private": true,
   "scripts": {
-    "build:data-grid": "rollup --c",
+    "build:data-grid": "rollup --config rollup.data-grid.config.js",
     "build:x": "rollup --config rollup.x-grid.config.js",
-    "build": "rollup --c && rollup --config rollup.x-grid.config.js",
+    "build": "yarn build:data-grid && yarn build:x",
     "start": "rollup -cw",
     "start:x": "rollup -w --config rollup.x-grid.config.js",
     "test:modules": "../../node_modules/.bin/jest --config jest.config.js",

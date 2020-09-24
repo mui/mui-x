@@ -35,7 +35,7 @@ export default [
         cleaner({
           targets: ['./x-grid/dist/'],
         }),
-      typescript({ tsconfig: 'tsconfig.json' }),
+      typescript({ tsconfig: 'tsconfig.build.json' }),
       !production && sourceMaps(),
       production && terser(),
     ],

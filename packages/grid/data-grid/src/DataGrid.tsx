@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as PropTypes from 'prop-types';
 import { GridComponent, GridComponentProps, classnames } from '../../_modules_/grid';
 
+// TODO: Refactor to import when moving to material-ui v5
 const chainPropTypes = require('@material-ui/utils').chainPropTypes;
 
 const FORCED_PROPS: Partial<GridComponentProps> = {

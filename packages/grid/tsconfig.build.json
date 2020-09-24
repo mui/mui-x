@@ -9,7 +9,6 @@
     "outDir": "./dist",
     "target": "es6",
     "sourceMap": true,
-
     "lib": ["dom", "dom.iterable", "esnext", "ES6"],
     "allowJs": true,
     "skipLibCheck": true,
