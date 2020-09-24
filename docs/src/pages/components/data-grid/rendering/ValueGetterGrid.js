@@ -6,6 +6,7 @@ function getFullName(params) {
     params.getValue('lastName') || ''
   }`;
 }
+
 const columns = [
   { field: 'id', hide: true },
   { field: 'firstName', headerName: 'First name', width: 130 },
