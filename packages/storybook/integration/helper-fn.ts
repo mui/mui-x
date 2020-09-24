@@ -68,6 +68,6 @@ export const activeCell = (rowIndex: number, colIndex: number): boolean => {
   return (
     document &&
     document.activeElement?.getAttribute('data-rowindex') === rowIndex.toString() &&
-    document.activeElement?.getAttribute('data-colindex') === colIndex.toString()
+    document.activeElement?.getAttribute('aria-colindex') === colIndex.toString()
   );
 };

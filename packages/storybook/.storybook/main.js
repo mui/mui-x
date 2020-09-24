@@ -23,6 +23,9 @@ module.exports = {
     '@storybook/addon-storysource/register',
     '@storybook/addon-a11y/register',
   ],
+  typescript: {
+    check: __DEV__, // Netlify is breaking the deploy with this settings on. So deactivate on release
+  },
   webpackFinal: async config => {
     config.devtool = __DEV__ ? 'inline-source-map' : undefined;
     config.module.rules.push({
@@ -80,8 +83,7 @@ module.exports = {
       extensions: ['.js', '.ts', '.tsx'],
       alias: {
         '@material-ui/data-grid': path.resolve(__dirname, '../../../packages/grid/data-grid/src'),
-        '@material-ui/x-grid-data-generator': path.resolve(__dirname, '../../../packages/grid/x-grid-data-generator/src'),
-        '@material-ui/x-grid-modules': path.resolve(__dirname, '../../../packages/grid/x-grid-modules/src'),
+        '@material-ui/x-grid-data-generator': path.resolve(__dirname, '../../../packages/x-grid-data-generator/src'),
         '@material-ui/x-grid': path.resolve(__dirname, '../../../packages/grid/x-grid/src'),
         '@material-ui/x-license': path.resolve(__dirname, '../../../packages/x-license/src'),
       },

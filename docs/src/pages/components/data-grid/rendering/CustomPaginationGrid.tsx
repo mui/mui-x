@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, ComponentProps } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import Pagination from '@material-ui/lab/Pagination';
 
@@ -10,15 +10,7 @@ const useStyles = makeStyles({
   },
 });
 
-interface CustomPaginationProps {
-  paginationProps: {
-    page: number;
-    pageCount: number;
-    setPage: (newPage: number) => void;
-  };
-}
-
-function CustomPagination(props: CustomPaginationProps) {
+function CustomPagination(props: ComponentProps) {
   const { paginationProps } = props;
   const classes = useStyles();
 

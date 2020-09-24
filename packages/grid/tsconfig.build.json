@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "declaration": true,
+    "declarationDir": "./dist",
+    "module": "es6",
+    "noImplicitAny": false,
+    "strict": true,
+    "outDir": "./dist",
+    "target": "es6",
+    "sourceMap": true,
+    "lib": ["dom", "dom.iterable", "esnext", "ES6"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react",
+    "types": ["jest", "node"],
+    "rootDir": "./"
+  },
+  "include": ["./data-grid/src", "./x-grid/src", "./_modules_/**/*"],
+  "exclude": ["__tests__", "**/*.test.ts", "node_modules"]
+}

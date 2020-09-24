@@ -180,15 +180,15 @@ export function AutoPagination() {
 
 function loadServerRows(params: PageChangeParams): Promise<GridData> {
   return new Promise<GridData>((resolve) => {
-    getData(params.pageSize, 10).then((data) => {
-      setTimeout(() => {
-        const minId = (params.page - 1) * params.pageSize;
-        data.rows.forEach((row) => {
-          row.id = (Number(row.id) + minId).toString();
-        });
-        resolve(data);
-      }, 500);
-    });
+    const data = getData(params.pageSize, 10);
+
+    setTimeout(() => {
+      const minId = (params.page - 1) * params.pageSize;
+      data.rows.forEach((row) => {
+        row.id = (Number(row.id) + minId).toString();
+      });
+      resolve(data);
+    }, 500);
   });
 }
 
@@ -260,6 +260,58 @@ export function ServerPaginationWithEventHandler() {
         paginationMode={'server'}
         onPageChange={onPageChange}
         loading={loading}
+      />
+    </div>
+  );
+}
+export function Page1Prop() {
+  const data = useData(2000, 200);
+
+  return (
+    <div className="grid-container">
+      <XGrid
+        rows={data.rows}
+        columns={data.columns}
+        pagination
+        pageSize={50}
+        onPageChange={(p) => action('pageChange')(p)}
+      />
+    </div>
+  );
+}
+export function Page2Prop() {
+  const data = useData(2000, 200);
+
+  return (
+    <div className="grid-container">
+      <XGrid
+        rows={data.rows}
+        columns={data.columns}
+        pagination
+        pageSize={50}
+        page={2}
+        onPageChange={(p) => action('pageChange')(p)}
+      />
+    </div>
+  );
+}
+export function Page2Api() {
+  const data = useData(2000, 200);
+  const apiRef = useApiRef();
+
+  React.useEffect(() => {
+    apiRef.current.setPage(2);
+  }, [apiRef]);
+
+  return (
+    <div className="grid-container">
+      <XGrid
+        apiRef={apiRef}
+        rows={data.rows}
+        columns={data.columns}
+        pagination
+        pageSize={50}
+        onPageChange={(p) => action('pageChange')(p)}
       />
     </div>
   );

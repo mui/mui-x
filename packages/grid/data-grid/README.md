@@ -14,13 +14,12 @@ npm install @material-ui/data-grid
 yarn add @material-ui/data-grid
 ```
 
-This component has 3 peer dependencies that you will need to install as well.
+This component has 2 peer dependencies that you will need to install as well.
 
 ```json
 "peerDependencies": {
   "@material-ui/core": "^4.9.12",
-  "react": "^16.8.0",
-  "styled-components": "^5.1.0"
+  "react": "^16.8.0"
 },
 ```
 

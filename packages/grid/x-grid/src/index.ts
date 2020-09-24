@@ -1,3 +1,3 @@
-export * from '@material-ui/x-grid-modules';
-export * from '@material-ui/x-license';
+export { LicenseInfo } from '@material-ui/x-license';
+export * from '../../_modules_';
 export * from './XGrid';

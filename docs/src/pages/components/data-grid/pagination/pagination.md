@@ -13,27 +13,27 @@ On the other hand, the commercial `XGrid` component displays, by default, all th
 
 ## Basic example
 
-{{"demo": "pages/components/data-grid/pagination/BasicPaginationGrid.js"}}
+{{"demo": "pages/components/data-grid/pagination/BasicPaginationGrid.js", "bg": "inline"}}
 
 ## Page size
 
 - The default page size is `100`, you can change this value with the `pageSize` prop.
 - You can configure the possible page size the user can choose from with the `rowsPerPageOptions` prop.
 
-{{"demo": "pages/components/data-grid/pagination/SizePaginationGrid.js"}}
+{{"demo": "pages/components/data-grid/pagination/SizePaginationGrid.js", "bg": "inline"}}
 
 ## Controlled pagination
 
 While the previous demos show how the pagination can be uncontrolled, the active page can be controlled with the `page`/`onPageChange` props.
 
-{{"demo": "pages/components/data-grid/pagination/ControlledPaginationGrid.js"}}
+{{"demo": "pages/components/data-grid/pagination/ControlledPaginationGrid.js", "bg": "inline"}}
 
 ## Auto size
 
 The `autoPageSize` prop allows to auto-scale the `pageSize` to match the container height and the max number of rows that can be displayed without a vertical scroll bar.
 By default, this feature is off.
 
-{{"demo": "pages/components/data-grid/pagination/AutoPaginationGrid.js"}}
+{{"demo": "pages/components/data-grid/pagination/AutoPaginationGrid.js", "bg": "inline"}}
 
 ## Custom pagination component
 
@@ -46,9 +46,9 @@ To switch it to server-side, set `paginationMode="server"`.
 You also need to set the `rowCount` prop to so the grid know the total number of pages.
 Finally, you need to handle the `onPageChange` callback to load the rows for the corresponding page.
 
-{{"demo": "pages/components/data-grid/pagination/ServerPaginationGrid.js"}}
+{{"demo": "pages/components/data-grid/pagination/ServerPaginationGrid.js", "bg": "inline"}}
 
-## apiRef
+## apiRef [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
 The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 
@@ -61,12 +61,12 @@ The grid exposes a set of methods that enables all of these features using the i
 
 Below is an example of how you can reset the page using the imperative `setPage` method.
 
-{{"demo": "pages/components/data-grid/pagination/ApiRefPaginationGrid.js"}}
+{{"demo": "pages/components/data-grid/pagination/ApiRefPaginationGrid.js", "bg": "inline"}}
 
-## Paginate > 100 rows ⚡️
+## Paginate > 100 rows [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
 The `DataGrid` component can display up to 100 rows per page.
 The `XGrid` component removes this limitation.
 The following demo displays 200 rows per page:
 
-{{"demo": "pages/components/data-grid/pagination/200PaginationGrid.js"}}
+{{"demo": "pages/components/data-grid/pagination/200PaginationGrid.js", "disableAd": true, "bg": "inline"}}

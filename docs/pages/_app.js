@@ -70,7 +70,6 @@ function LanguageNegotiation() {
 
 /**
  * Priority: on first render: navigated value, persisted value; otherwise initial value, 'JS'
- *
  * @returns {string} - The persisted variant if the initial value is undefined
  */
 function usePersistCodeVariant() {

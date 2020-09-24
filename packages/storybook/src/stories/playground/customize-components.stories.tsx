@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ColDef, XGrid, GridOverlay, Footer, useApiRef, ApiRef } from '@material-ui/x-grid';
+import { ColDef, XGrid, GridOverlay, GridFooter, useApiRef, ApiRef } from '@material-ui/x-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CodeIcon from '@material-ui/icons/Code';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -139,7 +139,7 @@ export function CustomPagination() {
 function FooterComponent(props) {
   const { paginationProps } = props;
   return (
-    <Footer className="my-custom-footer">
+    <GridFooter className="my-custom-footer">
       <span style={{ display: 'flex', alignItems: 'center' }}>
         This is my custom footer and pagination here!{' '}
       </span>
@@ -149,7 +149,7 @@ function FooterComponent(props) {
         count={paginationProps.pageCount}
         onChange={(event, value) => paginationProps.setPage(value)}
       />
-    </Footer>
+    </GridFooter>
   );
 }
 

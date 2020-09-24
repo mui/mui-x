@@ -1,11 +1,11 @@
 {
   "name": "@material-ui/data-grid",
-  "version": "0.1.67",
+  "version": "4.0.0-alpha.2",
   "description": "The Material-UI community edition of the data grid component.",
   "author": "Material-UI Team",
   "main": "dist/index-cjs.js",
   "module": "dist/index-esm.js",
-  "types": "dist/data-grid.all.d.ts",
+  "types": "dist/data-grid.d.ts",
   "files": [
     "dist/*"
   ],
@@ -13,13 +13,21 @@
   "publishConfig": {
     "access": "public"
   },
+  "keywords": [
+    "react",
+    "react-component",
+    "material-ui",
+    "react-table",
+    "table",
+    "datatable",
+    "data-table",
+    "datagrid",
+    "data-grid"
+  ],
   "scripts": {
     "precommit": "npm run lint",
-    "build": "rollup -c ",
-    "start": "rollup -cw",
     "lint": "eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../.eslintrc.js && npm run lint:css",
     "lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../../.stylelintrc.js",
-    "test": "../../../node_modules/.bin/jest --config jest.config.js",
     "typescript": "tsc -p tsconfig.json"
   },
   "dependencies": {
@@ -27,7 +35,6 @@
     "tslib": "^2.0.0"
   },
   "devDependencies": {
-    "@material-ui/x-grid-modules": "^0.1.67",
     "@rollup/plugin-node-resolve": "^8.0.1",
     "rollup": "^2.6.1",
     "rollup-plugin-cleaner": "^1.0.0",

@@ -5,7 +5,7 @@ components: DataGrid, XGrid
 
 # Data Grid - Getting started
 
-<p class="description">The last React borned data grid you will need.</p>
+<p class="description">Get started with the last React data grid you will need. Install the package, configure the columns, provide rows and you are set.</p>
 
 ## Installation
 
@@ -99,16 +99,19 @@ export default function App() {
 
 {{"demo": "pages/components/data-grid/getting-started/Codesandbox.js", "hideToolbar": true, "bg": true}}
 
-## Enterprise
+## Enterprise ⚡️
 
 The data grid comes in 2 versions:
 
 - `DataGrid` **MIT licensed** as part of the community edition. It's an extension of `@material-ui/core`.
 - `XGrid` **Commercially licensed** as part of the X product line offering.
 
-The features only available in the commercial version are suffixed with a <span style="font-size: 28px">⚡️</span> icon.
+The features only available in the commercial version are suffixed with a <span style="font-size: 26px" role="img" title="Enterprise">⚡️</span> icon.
 
-<img src="/static/x/header-icon.png" width="454" height="239" alt="">
+<img src="/static/x/header-icon.png" style="width: 454px; margin-bottom: 2rem;" alt="">
+
+You can check the [feature comparison](#feature-comparison) for more details.
+See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on purchasing licenses.
 
 ### Try XGrid for free
 
@@ -117,21 +120,21 @@ Please take the component for a test run, no need to contact us.
 
 ### Invalid license
 
-If you have an enterprise grid running with an invalid license (no license, expired license, incorrect license) the grid displays a watermark and a warning in the console.
+If you have an enterprise grid running with an expired or missing license key the grid displays a watermark, and a warning is shown in the console.
 
-<img src="/static/x/watermark.png" width="658" height="175" alt="">
+<img src="/static/x/watermark.png" style="width: 658px; margin-bottom: 3rem" alt="">
 
 ### Feature comparison
 
 The following table summarizes the features available in the community `DataGrid` and enterprise `XGrid` components. All the features of the community version are available in the enterprise one.
 
-|                                                                                         | Community | Enterprise ⚡️ |
-| --------------------------------------------------------------------------------------- | --------- | -------------- |
+| Features                                                                                | Community | Enterprise ⚡️ |
+| :-------------------------------------------------------------------------------------- | --------- | -------------- |
 | **Column**                                                                              |           |                |
-| [Column resizing](/components/data-grid/columns/#column-sizing)                         | ❌        | ✅             |
+| [Column resizing](/components/data-grid/columns/#column-resizing)                       | ❌        | ✅             |
 | [Column groups](/components/data-grid/columns/#column-groups)                           | 🚧        | 🚧             |
 | [Column reorder](/components/data-grid/columns/#column-reorder)                         | ❌        | 🚧             |
-| [Column sticky](/components/data-grid/columns/#column-sticky)                           | ❌        | 🚧             |
+| [Column pinning](/components/data-grid/columns/#column-pinning)                         | ❌        | 🚧             |
 | [Column spanning](/components/data-grid/columns/#column-spanning)                       | 🚧        | 🚧             |
 | **Rows**                                                                                |           |                |
 | [Rows sorting](/components/data-grid/rows/#row-sorting)                                 | ✅        | ✅             |
@@ -210,8 +213,8 @@ For crowdsourced technical questions from expert Material-UI devs in our communi
 
 We provide a [private support channel](https://material-ui.zendesk.com/) for enterprise customers.
 
-### Roadmap
+## Roadmap
 
 Here is [the public roadmap](https://github.com/mui-org/material-ui-x/projects/1). It's organized by quarter.
 
-> ⚠️ Disclaimer: We operate in a dynamic environment, and things are subject to change. The information provided is intended to outline the general framework direction, for informational purposes only. We may decide to add or remove new items at any time, depending on our capability to deliver while meeting our quality standards. The development, releases, and timing of any features or functionality remains at the sole discretion of Material-UI. The roadmap does not represent a commitment, obligation, or promise to deliver at any time.
+> ⚠️ **Disclaimer**: We operate in a dynamic environment, and things are subject to change. The information provided is intended to outline the general framework direction, for informational purposes only. We may decide to add or remove new items at any time, depending on our capability to deliver while meeting our quality standards. The development, releases, and timing of any features or functionality remains at the sole discretion of Material-UI. The roadmap does not represent a commitment, obligation, or promise to deliver at any time.

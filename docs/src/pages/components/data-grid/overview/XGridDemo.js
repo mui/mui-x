@@ -9,7 +9,7 @@ export default function XGridDemo() {
   });
 
   return (
-    <div style={{ width: '100%', height: 520 }}>
+    <div style={{ height: 520, width: '100%' }}>
       <XGrid
         {...data}
         loading={data.rows.length === 0}

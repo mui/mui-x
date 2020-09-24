@@ -8,7 +8,6 @@ import { DataGrid } from '@material-ui/data-grid';
 
 describe('<DataGrid />', () => {
   const render = createClientRender();
-
   const defaultProps = {
     rows: [
       {
@@ -21,7 +20,6 @@ describe('<DataGrid />', () => {
       { field: 'brand', width: 100 },
     ],
   };
-
   describe('layout', () => {
     before(function beforeHook() {
       if (/jsdom/.test(window.navigator.userAgent)) {
@@ -59,6 +57,30 @@ describe('<DataGrid />', () => {
         expect(document.querySelector(`.${className}`)).to.equal(
           container.firstChild.firstChild.firstChild,
         );
+      });
+
+      it('should apply the page prop correctly', () => {
+        const rows = [
+          {
+            id: 0,
+            brand: 'Nike',
+          },
+          {
+            id: 1,
+            brand: 'Addidas',
+          },
+          {
+            id: 2,
+            brand: 'Puma',
+          },
+        ];
+        render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid rows={rows} columns={defaultProps.columns} page={2} pageSize={1} />
+          </div>,
+        );
+        const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
+        expect(cell).to.have.text('Addidas');
       });
     });
   });

@@ -12,31 +12,29 @@ export interface GridData {
   rows: DataRowModel[];
 }
 
-export function getData(rowLength: number, colLength: number): Promise<GridData> {
-  return new Promise<GridData>((resolve) => {
-    const data: DataRowModel[] = [];
-    const pricesColLength = colLength - 2;
-    for (let i = 0; i < rowLength; i += 1) {
-      const idx = i >= currencyPairs.length ? i % currencyPairs.length : i;
-      const model: DataRowModel = {
-        id: i,
-        currencyPair: currencyPairs[idx],
-      };
-      for (let j = 1; j <= pricesColLength; j += 1) {
-        model[`price${j}M`] = `${i.toString()}, ${j} `; // randomPrice(0.7, 2);
-      }
-      data.push(model);
-    }
-
-    const columns: ColDef[] = [
-      { field: 'id', headerName: 'id' },
-      { field: 'currencyPair', headerName: 'Currency Pair' },
-    ];
+export function getData(rowLength: number, colLength: number): GridData {
+  const data: DataRowModel[] = [];
+  const pricesColLength = colLength - 2;
+  for (let i = 0; i < rowLength; i += 1) {
+    const idx = i >= currencyPairs.length ? i % currencyPairs.length : i;
+    const model: DataRowModel = {
+      id: i,
+      currencyPair: currencyPairs[idx],
+    };
     for (let j = 1; j <= pricesColLength; j += 1) {
-      // const y = Math.floor(j / 12);
-      columns.push({ field: `price${j}M`, headerName: `${j}M`, type: 'number' }); // (y > 0 ? `${y}Y` : '') + `${j - y * 12}M`
+      model[`price${j}M`] = `${i.toString()}, ${j} `; // randomPrice(0.7, 2);
     }
-    columns.length = colLength; // we cut the array in case < 2;
-    resolve({ columns, rows: data });
-  });
+    data.push(model);
+  }
+
+  const columns: ColDef[] = [
+    { field: 'id', headerName: 'id' },
+    { field: 'currencyPair', headerName: 'Currency Pair' },
+  ];
+  for (let j = 1; j <= pricesColLength; j += 1) {
+    // const y = Math.floor(j / 12);
+    columns.push({ field: `price${j}M`, headerName: `${j}M`, type: 'number' }); // (y > 0 ? `${y}Y` : '') + `${j - y * 12}M`
+  }
+  columns.length = colLength; // we cut the array in case < 2;
+  return { columns, rows: data };
 }

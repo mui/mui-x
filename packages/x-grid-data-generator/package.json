@@ -1,0 +1,61 @@
+{
+  "name": "@material-ui/x-grid-data-generator",
+  "version": "4.0.0-alpha.2",
+  "description": "Data generator services for the grid",
+  "author": "Material-UI Team",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/x-grid-data-generator.d.ts",
+  "files": [
+    "dist/*"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": {
+    "datagen": "./bin/data-gen-script.js"
+  },
+  "scripts": {
+    "precommit": "npm run lint",
+    "build": "rollup -c",
+    "start": "rollup -cw",
+    "lint": "../../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../.eslintrc.js && npm run lint:css",
+    "lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../../.stylelintrc.js"
+  },
+  "dependencies": {
+    "@types/chance": "^1.1.0",
+    "chance": "^1.1.6",
+    "clsx": "^1.0.4",
+    "commander": "^6.1.0",
+    "esm": "^3.2.25",
+    "lru-cache": "^6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^14.0.13",
+    "rollup": "^2.6.1",
+    "rollup-plugin-cleaner": "^1.0.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-css-only": "^2.0.0",
+    "rollup-plugin-dts": "^1.4.7",
+    "rollup-plugin-postcss": "^3.1.2",
+    "rollup-plugin-sourcemaps": "^0.6.2",
+    "rollup-plugin-terser": "^5.3.0",
+    "rollup-plugin-typescript2": "^0.27.1",
+    "tslib": "^2.0.0"
+  },
+  "peerDependencies": {
+    "@material-ui/core": "^4.9.12",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.54",
+    "@material-ui/x-grid": "^4.0.0-alpha.1",
+    "react": "^16.8.0"
+  },
+  "setupFiles": [
+    "<rootDir>/src/setupTests.js"
+  ],
+  "gitHead": "f1d56176bb6308bb55c69f5c2fd5593c4e4faebc",
+  "engines": {
+    "node": ">=8.0.0"
+  }
+}

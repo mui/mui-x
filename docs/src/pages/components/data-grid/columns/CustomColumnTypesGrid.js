@@ -27,7 +27,7 @@ const rows = [
   },
 ];
 
-const valueFormatter = new Intl.NumberFormat('en-US', {
+const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
 });
@@ -35,14 +35,14 @@ const valueFormatter = new Intl.NumberFormat('en-US', {
 const usdPrice = {
   type: 'number',
   width: 130,
-  valueFormatter: ({ value }) => valueFormatter.format(Number(value)),
+  valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),
   cellClassName: 'font-tabular-nums',
 };
 
 const useStyles = makeStyles({
   root: {
     '& .font-tabular-nums': {
-      fontVariantNumeric: 'font-tabular-nums',
+      fontVariantNumeric: 'tabular-nums',
     },
   },
 });

@@ -1,8 +1,3 @@
-const path = require('path');
-
-const errorCodesPath = path.resolve(__dirname, './docs/public/static/error-codes.json');
-const missingError = process.env.MUI_EXTRACT_ERROR_CODES === 'true' ? 'write' : 'annotate';
-
 let defaultPresets;
 
 // We release a ES version of Material-UI.
@@ -24,8 +19,7 @@ if (process.env.BABEL_ENV === 'es') {
 
 const defaultAlias = {
   '@material-ui/data-grid': './packages/grid/data-grid/src',
-  '@material-ui/x-grid-data-generator': './packages/grid/x-grid-data-generator/src',
-  '@material-ui/x-grid-modules': './packages/grid/x-grid-modules/src',
+  '@material-ui/x-grid-data-generator': './packages/x-grid-data-generator/src',
   '@material-ui/x-grid': './packages/grid/x-grid/src',
   '@material-ui/x-license': './packages/x-license/src',
 };
@@ -33,15 +27,6 @@ const defaultAlias = {
 module.exports = {
   presets: defaultPresets.concat(['@babel/preset-react', '@babel/preset-typescript']),
   plugins: [
-    [
-      'babel-plugin-macros',
-      {
-        muiError: {
-          errorCodesPath,
-          missingError,
-        },
-      },
-    ],
     'babel-plugin-optimize-clsx',
     ['@babel/plugin-proposal-class-properties', { loose: true }],
     ['@babel/plugin-proposal-object-rest-spread', { loose: true }],

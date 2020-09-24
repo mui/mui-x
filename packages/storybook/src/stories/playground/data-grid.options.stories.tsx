@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, DataGridProps, SortDirection } from '@material-ui/data-grid';
+import { ColDef, DataGrid, DataGridProps, SortDirection } from '@material-ui/data-grid';
 import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { action } from '@storybook/addon-actions';
@@ -18,11 +18,11 @@ export default {
 };
 
 export const Options = () => {
-  const data = useData(2000, 200);
+  const { columns, rows } = useData(2000, 200);
   const rowsPerPageOptions = array('rowsPerPageOptions', ['25', '50', '100'], ', ');
   const sortingOrder = array('sortingOrder', ['asc', 'desc', 'null'], ', ');
 
-  const dataGridProps: DataGridProps = {
+  const dataGridProps: Partial<DataGridProps> = {
     onRowClick: (params) => action('onRowClick')(params),
     onCellClick: (params) => action('onCellClick')(params),
     onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
@@ -31,7 +31,6 @@ export const Options = () => {
     onPageChange: (params) => action('onPageChange')(params),
     onPageSizeChange: (params) => action('onPageSizeChange')(params),
     onSortModelChange: (params) => action('onSortModelChange')(params),
-
     pageSize: number('pageSize', 100),
     autoPageSize: boolean('autoPageSize', false),
     rowsPerPageOptions: rowsPerPageOptions.map((value) => parseInt(value, 10)),
@@ -48,12 +47,12 @@ export const Options = () => {
     rowHeight: number('rowHeight', 52),
   };
 
-  return <DataGrid rows={data.rows} columns={data.columns} {...dataGridProps} />;
+  return <DataGrid rows={rows} columns={columns as ColDef[]} {...dataGridProps} />;
 };
 export const Events = () => {
-  const data = useData(2000, 200);
+  const { rows, columns } = useData(2000, 200);
 
-  const options: DataGridProps = {
+  const options: Partial<DataGridProps> = {
     onRowClick: (params) => action('onRowClick')(params),
     onCellClick: (params) => action('onCellClick')(params),
     onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
@@ -64,5 +63,25 @@ export const Events = () => {
     onSortModelChange: (params) => action('onSortModelChange')(params),
   };
 
-  return <DataGrid rows={data.rows} columns={data.columns} {...options} />;
+  return <DataGrid rows={rows} columns={columns as ColDef[]} {...options} />;
+};
+
+export const ResizableValidation = () => {
+  const { rows, columns } = useData(2000, 200);
+  columns.forEach((c) => {
+    c.resizable = true;
+  });
+
+  const options: Partial<DataGridProps> = {
+    onRowClick: (params) => action('onRowClick')(params),
+    onCellClick: (params) => action('onCellClick')(params),
+    onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
+    onRowSelected: (params) => action('onRowSelected')(params),
+    onSelectionChange: (params) => action('onSelectionChange', { depth: 1 })(params),
+    onPageChange: (params) => action('onPageChange')(params),
+    onPageSizeChange: (params) => action('onPageSizeChange')(params),
+    onSortModelChange: (params) => action('onSortModelChange')(params),
+  };
+
+  return <DataGrid rows={rows} columns={columns as ColDef[]} {...options} />;
 };

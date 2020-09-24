@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, useApiRef } from '@material-ui/data-grid';
+import { XGrid, useApiRef } from '@material-ui/x-grid';
 import { interval } from 'rxjs';
 import { randomInt, randomUserName } from '@material-ui/x-grid-data-generator';
 
@@ -42,7 +42,7 @@ export default function ApiRefRowsGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} apiRef={apiRef} />
+      <XGrid rows={rows} columns={columns} apiRef={apiRef} />
     </div>
   );
 }
