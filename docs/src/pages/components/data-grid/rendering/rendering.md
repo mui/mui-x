@@ -23,6 +23,7 @@ To do that, you can set the `valueGetter` attribute of `ColDef` as in the exampl
 function getFullName(params: ValueGetterParams) {
   return `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`;
 }
+
 const columns: ColDef[] = [
   { field: 'id', hide: true },
   { field: 'firstName', headerName: 'First name', width: 130 },
