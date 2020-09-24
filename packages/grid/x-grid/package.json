@@ -1,6 +1,6 @@
 {
   "name": "@material-next/x-grid",
-  "version": "4.0.0-alpha.2",
+  "version": "4.0.0-alpha.3",
   "description": "The Material-UI X edition of the data grid component.",
   "author": "Material-UI Team",
   "main": "dist/index-cjs.js",
@@ -29,7 +29,7 @@
     "tslib": "^2.0.0"
   },
   "devDependencies": {
-    "@material-next/x-license": "^4.0.0-alpha.2",
+    "@material-next/x-license": "^4.0.0-alpha.3",
     "@rollup/plugin-node-resolve": "^8.0.1",
     "@rollup/plugin-replace": "^2.3.3",
     "rollup": "^2.6.1",
