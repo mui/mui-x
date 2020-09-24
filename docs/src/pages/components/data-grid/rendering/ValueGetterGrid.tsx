@@ -2,7 +2,9 @@ import * as React from 'react';
 import { DataGrid, ColDef, ValueGetterParams } from '@material-ui/data-grid';
 
 function getFullName(params: ValueGetterParams) {
-  return `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`;
+  return `${params.getValue('firstName') || ''} ${
+    params.getValue('lastName') || ''
+  }`;
 }
 
 const columns: ColDef[] = [

@@ -21,7 +21,9 @@ To do that, you can set the `valueGetter` attribute of `ColDef` as in the exampl
 
 ```tsx
 function getFullName(params: ValueGetterParams) {
-  return `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`;
+  return `${params.getValue('firstName') || ''} ${
+    params.getValue('lastName') || ''
+  }`;
 }
 
 const columns: ColDef[] = [
