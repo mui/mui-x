@@ -26,6 +26,7 @@ export const SCROLLING_START = 'scrolling:start';
 export const SCROLLING = 'scrolling';
 export const SCROLLING_STOP = 'scrolling:stop';
 
+export const COL_REORDER_DRAG_OVER = 'colResizing:dragOver';
 export const COL_RESIZE_START = 'colResizing:start';
 export const COL_RESIZE_STOP = 'colResizing:stop';
 

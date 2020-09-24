@@ -32,6 +32,7 @@ export interface ColumnsHeaderProps {
   columns: Columns;
   hasScrollX: boolean;
   onResizeColumn?: (col: ColDef) => void;
+  onColumnDragOver?: (event: Event) => void;
   onColumnDragStart?: (col: ColDef, htmlEl: HTMLElement) => void;
   onColumnDragEnter?: (col: ColDef) => void;
   renderCtx: Partial<RenderContextProps> | null;
@@ -39,7 +40,7 @@ export interface ColumnsHeaderProps {
 
 export const ColumnsHeader = React.memo(
   React.forwardRef<HTMLDivElement, ColumnsHeaderProps>(
-    ({ columns, hasScrollX, onResizeColumn, onColumnDragStart, onColumnDragEnter, renderCtx }, columnsHeaderRef) => {
+    ({ columns, hasScrollX, onResizeColumn, onColumnDragOver, onColumnDragStart, onColumnDragEnter, renderCtx }, columnsHeaderRef) => {
       const wrapperCssClasses = `MuiDataGrid-colCellWrapper ${hasScrollX ? 'scroll' : ''}`;
       const api = React.useContext(ApiContext);
 
@@ -68,6 +69,8 @@ export const ColumnsHeader = React.memo(
         }
       }, [renderCtx, columns]);
 
+      const onDragOver = onColumnDragOver ? (event) => onColumnDragOver(event) : undefined;
+
       return (
         <div
           ref={columnsHeaderRef}
@@ -76,6 +79,7 @@ export const ColumnsHeader = React.memo(
           aria-rowindex={1}
           role="row"
           style={{ minWidth: renderCtx?.totalSizes?.width }}
+          onDragOver={onDragOver}
         >
           <LeftEmptyCell key="left-empty" width={renderCtx?.leftEmptyWidth} />
           <ColumnHeaderItemCollection
@@ -85,6 +89,7 @@ export const ColumnsHeader = React.memo(
             onColumnDragEnter={onColumnDragEnter}
           />
           <RightEmptyCell key="right-empty" width={renderCtx?.rightEmptyWidth} />
+
         </div>
       );
     },

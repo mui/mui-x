@@ -33,6 +33,7 @@ import { useLogger, useLoggerFactory } from './hooks/utils';
 import { debounce } from './utils';
 import { useEvents } from './hooks/root/useEvents';
 import { ErrorBoundary } from './components/error-boundary';
+import { ScrollArea } from './components/scroll-area';
 import { useOptionsProp } from './hooks/utils/useOptionsProp';
 
 /**
@@ -97,7 +98,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     apiRef,
   );
 
-  const onColumnReorder = useColumnReorder(apiRef);
+  const onColumnReorder = useColumnReorder(columnsHeaderRef, apiRef);
   const onResizeColumn = useColumnResize(columnsHeaderRef, apiRef, internalOptions.headerHeight);
   const paginationProps = usePagination(internalRows, internalColumns, internalOptions, apiRef);
 
@@ -194,14 +195,23 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                 <div className="MuiDataGrid-mainGridContainer">
                   <Watermark licenseStatus={props.licenseStatus} />
                   <ColumnsContainer ref={columnsContainerRef} height={internalOptions.headerHeight}>
+                    <ScrollArea
+                      scrollDirection="left"
+                      apiRef={apiRef}
+                    />
                     <ColumnsHeader
                       ref={columnsHeaderRef}
                       columns={internalColumns.visible || []}
                       hasScrollX={!!renderCtx?.hasScrollX}
                       onResizeColumn={onResizeColumn}
+                      onColumnDragOver={onColumnReorder.handleDragOver}
                       onColumnDragStart={onColumnReorder.handleDragStart}
                       onColumnDragEnter={onColumnReorder.handleDragEnter}
                       renderCtx={renderCtx}
+                    />
+                    <ScrollArea
+                      scrollDirection="right"
+                      apiRef={apiRef}
                     />
                   </ColumnsContainer>
                   {!props.loading && internalRows.length === 0 && customComponents.noRowsComponent}

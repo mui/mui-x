@@ -45,7 +45,7 @@ export const ColumnHeaderItem = React.memo(
     }
 
     const onResize = onResizeColumn ? () => onResizeColumn(column) : undefined;
-    const onDragStart = onColumnDragStart ? (event) => onColumnDragStart(column, event.target) : undefined;
+    const onDragStart = onColumnDragStart ? (event) => onColumnDragStart(column, event.target): undefined;
     const onDragEnter = onColumnDragEnter ? () => onColumnDragEnter(column) : undefined;
 
     const width = column.width!;
@@ -71,6 +71,7 @@ export const ColumnHeaderItem = React.memo(
         {...ariaSort}
       >
         <div
+          className="MuiDataGrid-colCell-draggable"
           draggable={!!onDragStart && !!onDragEnter}
           onDragStart={onDragStart}
           onDragEnter={onDragEnter}

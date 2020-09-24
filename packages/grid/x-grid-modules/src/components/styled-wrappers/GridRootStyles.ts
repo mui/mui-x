@@ -53,6 +53,20 @@ export const useStyles = makeStyles(
           borderBottom: `1px solid ${borderColor}`,
           zIndex: 100,
         },
+        '& .MuiDataGrid-scrollArea': {
+          position: 'absolute',
+          top: 0,
+          zIndex: 100,
+          width: '5px',
+          height: '100%',
+          background: 'red'
+        },
+        '& .MuiDataGrid-scrollArea-left': {
+          left: 0,
+        },
+        '& .MuiDataGrid-scrollArea-right': {
+          right: 0,
+        },
         '& .MuiDataGrid-colCellWrapper': {
           display: 'flex',
           width: '100%',
@@ -200,11 +214,19 @@ export const useStyles = makeStyles(
             display: 'flex',
           },
         },
-        '& .dragging': {
+        '& .MuiDataGrid-colCell-dropZone .MuiDataGrid-colCell-draggable': {
+          cursor: 'move',
+        },
+        '& .MuiDataGrid-colCell-draggable': {
+          display: 'flex',
+          width: '100%',
+        },
+        '& .MuiDataGrid-colCell-dragging': {
           background: '#f9f9f9',
           padding: '0 12px',
           borderRadius: '10px',
           opacity: 0.4,
+          width: 'auto',
         },
       },
     };
