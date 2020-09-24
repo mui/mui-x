@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { DataGrid } from '@material-ui/data-grid';
+import {DataGrid} from '@material-ui/data-grid';
 
-// You can optimize the perf by memoizing this function.
-const getFullName = (params) =>
-  `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`;
-
+function getFullName(params) {
+  return `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`;
+}
 const columns = [
   { field: 'id', hide: true },
   { field: 'firstName', headerName: 'First name', width: 130 },
