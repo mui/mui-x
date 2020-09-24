@@ -30,7 +30,7 @@ export const useRows = (
   apiRef: ApiRef,
 ): RowModel[] => {
   const logger = useLogger('useRows');
-  const rowModels = React.useMemo(() => rows.map((r) => createRow(r)), [rows]);
+  const rowModels = React.useMemo(() => rows.map((r, idx) => createRow(r, idx)), [rows]);
   const [rowModelsState, setRowModelsState] = React.useState<RowModel[]>(rowModels);
   const [, forceUpdate] = React.useState();
   const [rafUpdate] = useRafUpdate(() => forceUpdate((p: any) => !p));
@@ -119,6 +119,10 @@ export const useRows = (
 
       // we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
       const uniqUpdates = updates.reduce((uniq, update) => {
+        if(update.id == null) {
+          throw new Error('Material-UI: Missing row Id in row data update.');
+        }
+
         uniq[update.id] = uniq[update.id] != null ? { ...uniq[update.id], ...update } : update;
         return uniq;
       }, {} as { [id: string]: any });
@@ -126,7 +130,7 @@ export const useRows = (
       const rowModelUpdates = Object.values<RowData>(uniqUpdates).map((partialRow) => {
         const oldRow = getRowFromId(partialRow.id!);
         if (!oldRow) {
-          return createRow(partialRow);
+          return createRow(partialRow, partialRow.id!);
         }
         return { ...oldRow, data: { ...oldRow.data, ...partialRow } };
       });
