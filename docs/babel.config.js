@@ -12,8 +12,7 @@ function resolvePath(sourcePath, currentFile, opts) {
 
 const alias = {
   '@material-ui/data-grid': '../packages/grid/data-grid/src',
-  '@material-ui/x-grid-data-generator': '../packages/grid/x-grid-data-generator/src',
-  '@material-ui/x-grid-modules': '../packages/grid/x-grid-modules/src',
+  '@material-ui/x-grid-data-generator': '../packages/x-grid-data-generator/src',
   '@material-ui/x-grid': '../packages/grid/x-grid/src',
   '@material-ui/x-license': '../packages/x-license/src',
   // Help in the event npm and git are significantly desynchronized.
