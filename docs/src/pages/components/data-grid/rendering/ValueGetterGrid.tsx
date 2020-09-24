@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { DataGrid, ColDef, ValueGetterParams } from '@material-ui/data-grid';
 
+// You can optimize the perf by memoizing this function.
+const getFullName = (params: ValueGetterParams) =>
+  `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`;
+
 const columns: ColDef[] = [
   { field: 'id', hide: true },
   { field: 'firstName', headerName: 'First name', width: 130 },
@@ -9,10 +13,9 @@ const columns: ColDef[] = [
     field: 'fullName',
     headerName: 'Full name',
     width: 160,
-    valueGetter: (params: ValueGetterParams) =>
-      `${params.getValue('firstName') || ''} ${
-        params.getValue('lastName') || ''
-      }`,
+    valueGetter: getFullName,
+    sortComparator: (v1, v2, cellParams1, cellParams2) =>
+      getFullName(cellParams1).localeCompare(getFullName(cellParams2)),
   },
 ];
 
