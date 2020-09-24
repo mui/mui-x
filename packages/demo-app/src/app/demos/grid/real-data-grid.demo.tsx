@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { XGrid, LicenseInfo, RowModel, Columns, GridOptions } from '@material-ui/x-grid';
-import pkg from '@material-ui/x-grid/package.json';
-import { commodityColumns, employeeColumns } from '@material-ui/x-grid-data-generator';
+import { XGrid, LicenseInfo, RowModel, Columns, GridOptions } from '@material-next/x-grid';
+import pkg from '@material-next/x-grid/package.json';
+import { commodityColumns, employeeColumns } from '@material-next/x-grid-data-generator';
 import { AppBreadcrumbs } from '../../app-breadcrumbs';
 import { MainContainer } from './components/main-container';
 import { SettingsPanel } from './components/settings-panel';

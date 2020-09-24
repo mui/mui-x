@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CellParams } from '@material-ui/x-grid';
+import { CellParams } from '@material-next/x-grid';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({

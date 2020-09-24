@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, ColDef } from '@material-ui/data-grid';
+import { DataGrid, ColDef } from '@material-next/data-grid';
 
 const columns: ColDef[] = [
   { field: 'id', hide: true },

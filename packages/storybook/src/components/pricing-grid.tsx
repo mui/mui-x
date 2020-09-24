@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
-import { XGrid, ColDef, GridOptionsProp, useApiRef } from '@material-ui/x-grid';
+import { XGrid, ColDef, GridOptionsProp, useApiRef } from '@material-next/x-grid';
 import {
   PricingModel,
   subscribeCurrencyPair,

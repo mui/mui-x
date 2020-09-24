@@ -1,4 +1,4 @@
-import { CellParams } from '@material-ui/x-grid';
+import { CellParams } from '@material-next/x-grid';
 import { Rating } from '@material-ui/lab';
 import * as React from 'react';
 

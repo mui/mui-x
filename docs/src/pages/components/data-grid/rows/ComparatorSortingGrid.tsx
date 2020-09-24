@@ -5,11 +5,11 @@ import {
   DataGrid,
   SortDirection,
   ValueGetterParams,
-} from '@material-ui/data-grid';
+} from '@material-next/data-grid';
 import {
   randomCreatedDate,
   randomUpdatedDate,
-} from '@material-ui/x-grid-data-generator';
+} from '@material-next/x-grid-data-generator';
 
 const columns: Columns = [
   { field: 'id', hide: true },

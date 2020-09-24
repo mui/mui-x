@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { CellParams } from '@material-ui/x-grid';
+import { CellParams } from '@material-next/x-grid';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) =>

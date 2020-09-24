@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import { CellParams } from '@material-ui/x-grid';
+import { CellParams } from '@material-next/x-grid';
 
 export function renderAvatar(params: CellParams) {
   return (

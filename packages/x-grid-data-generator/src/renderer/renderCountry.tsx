@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { CellParams } from '@material-ui/x-grid';
+import { CellParams } from '@material-next/x-grid';
 
 // ISO 3166-1 alpha-2
 // ⚠️ No support for IE 11

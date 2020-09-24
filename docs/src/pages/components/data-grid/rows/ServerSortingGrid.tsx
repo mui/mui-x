@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { RowsProp, DataGrid, SortModel } from '@material-ui/data-grid';
-import { useDemoData, GridData } from '@material-ui/x-grid-data-generator';
+import { RowsProp, DataGrid, SortModel } from '@material-next/data-grid';
+import { useDemoData, GridData } from '@material-next/x-grid-data-generator';
 
 function loadServerRows(sortModel: SortModel, data: GridData): Promise<any> {
   return new Promise<any>((resolve) => {

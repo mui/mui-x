@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ColDef, XGrid } from '@material-ui/x-grid';
+import { ColDef, XGrid } from '@material-next/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { useData } from '../hooks/useData';

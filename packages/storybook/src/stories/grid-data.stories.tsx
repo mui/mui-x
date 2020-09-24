@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
-import { XGrid, GridOptionsProp } from '@material-ui/x-grid';
+import { XGrid, GridOptionsProp } from '@material-next/x-grid';
 import { useData } from '../hooks/useData';
 
 export default {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { XGrid, GridOptionsProp, SortDirection } from '@material-ui/x-grid';
+import { XGrid, GridOptionsProp, SortDirection } from '@material-next/x-grid';
 import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { action } from '@storybook/addon-actions';

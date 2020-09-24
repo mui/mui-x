@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ElementSize, XGrid } from '@material-ui/x-grid';
+import { ElementSize, XGrid } from '@material-next/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import '../style/grid-stories.css';

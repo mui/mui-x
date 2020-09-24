@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { XGrid, useApiRef } from '@material-ui/x-grid';
+import { XGrid, useApiRef } from '@material-next/x-grid';
 import { interval } from 'rxjs';
-import { randomInt, randomUserName } from '@material-ui/x-grid-data-generator';
+import { randomInt, randomUserName } from '@material-next/x-grid-data-generator';
 
 const columns = [
   { field: 'id' },

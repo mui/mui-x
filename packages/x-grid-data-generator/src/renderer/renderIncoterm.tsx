@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Tooltip from '@material-ui/core/Tooltip';
 import InfoIcon from '@material-ui/icons/Info';
-import { CellParams, CellValue } from '@material-ui/x-grid';
+import { CellParams, CellValue } from '@material-next/x-grid';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { action } from '@storybook/addon-actions';
-import { XGrid, GridOptionsProp, useApiRef } from '@material-ui/x-grid';
+import { XGrid, GridOptionsProp, useApiRef } from '@material-next/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { getData, GridData } from '../data/data-service';

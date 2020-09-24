@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, ColDef, RowId } from '@material-ui/data-grid';
+import { DataGrid, ColDef, RowId } from '@material-next/data-grid';
 
 export interface DataRowModel {
   id: RowId;

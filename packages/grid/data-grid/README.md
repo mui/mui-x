@@ -1,4 +1,4 @@
-# @material-ui/data-grid
+# @material-next/data-grid
 
 The Material-UI community edition of the data grid component.
 
@@ -8,10 +8,10 @@ Install the package in your project directory with:
 
 ```sh
 // with npm
-npm install @material-ui/data-grid
+npm install @material-next/data-grid
 
 // with yarn
-yarn add @material-ui/data-grid
+yarn add @material-next/data-grid
 ```
 
 This component has 2 peer dependencies that you will need to install as well.

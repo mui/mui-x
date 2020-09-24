@@ -1,4 +1,4 @@
-import { ColDef, RowId } from '@material-ui/x-grid';
+import { ColDef, RowId } from '@material-next/x-grid';
 import { currencyPairs } from './currency-pairs';
 
 export interface DataRowModel {

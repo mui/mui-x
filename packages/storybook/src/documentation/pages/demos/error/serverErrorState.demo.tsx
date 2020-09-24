@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Columns, XGrid } from '@material-ui/x-grid';
+import { Columns, XGrid } from '@material-next/x-grid';
 
 const columns: Columns = [
   { field: 'id', hide: true },

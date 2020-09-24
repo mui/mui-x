@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ColDef, DataGrid, DataGridProps, SortDirection } from '@material-ui/data-grid';
+import { ColDef, DataGrid, DataGridProps, SortDirection } from '@material-next/data-grid';
 import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { action } from '@storybook/addon-actions';

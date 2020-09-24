@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { XGrid, GridOptionsProp, ColDef } from '@material-ui/x-grid';
+import { XGrid, GridOptionsProp, ColDef } from '@material-next/x-grid';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
 import { withKnobs } from '@storybook/addon-knobs';

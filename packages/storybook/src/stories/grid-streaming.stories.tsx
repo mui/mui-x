@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { action } from '@storybook/addon-actions';
-import { GridOptionsProp, XGrid, useApiRef } from '@material-ui/x-grid';
+import { GridOptionsProp, XGrid, useApiRef } from '@material-next/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { interval } from 'rxjs';
-import { randomInt, randomUserName } from '@material-ui/x-grid-data-generator';
+import { randomInt, randomUserName } from '@material-next/x-grid-data-generator';
 import { FeedGrid } from '../components/feed-grid';
 import { PricingGrid } from '../components/pricing-grid';
 

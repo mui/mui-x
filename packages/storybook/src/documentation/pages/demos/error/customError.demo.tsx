@@ -1,6 +1,6 @@
-import { Columns, GridOverlay, RowsProp, XGrid } from '@material-ui/x-grid';
+import { Columns, GridOverlay, RowsProp, XGrid } from '@material-next/x-grid';
 import * as React from 'react';
-import { randomCreatedDate, randomUpdatedDate } from '@material-ui/x-grid-data-generator';
+import { randomCreatedDate, randomUpdatedDate } from '@material-next/x-grid-data-generator';
 
 function CustomErrorOverlay(props) {
   return (

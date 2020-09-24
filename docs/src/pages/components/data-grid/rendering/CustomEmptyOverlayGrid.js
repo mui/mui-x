@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { GridOverlay, DataGrid } from '@material-ui/data-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { GridOverlay, DataGrid } from '@material-next/data-grid';
+import { useDemoData } from '@material-next/x-grid-data-generator';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({

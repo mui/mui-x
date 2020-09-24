@@ -7,10 +7,10 @@
     "packages/x-grid-data-generator"
   ],
   "publishDirectory": {
-    "@material-ui/x-license": "packages/x-license",
-    "@material-ui/data-grid": "packages/grid/data-grid",
-    "@material-ui/x-grid": "packages/grid/x-grid",
-    "@material-ui/x-grid-data-generator": "packages/x-grid-data-generator"
+    "@material-next/x-license": "packages/x-license",
+    "@material-next/data-grid": "packages/grid/data-grid",
+    "@material-next/x-grid": "packages/grid/x-grid",
+    "@material-next/x-grid-data-generator": "packages/x-grid-data-generator"
   },
   "sandboxes": [
     "new",

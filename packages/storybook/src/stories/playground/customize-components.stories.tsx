@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ColDef, XGrid, GridOverlay, GridFooter, useApiRef, ApiRef } from '@material-ui/x-grid';
+import { ColDef, XGrid, GridOverlay, GridFooter, useApiRef, ApiRef } from '@material-next/x-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CodeIcon from '@material-ui/icons/Code';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';

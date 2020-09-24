@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, RowData } from '@material-ui/data-grid';
+import { DataGrid, RowData } from '@material-next/data-grid';
 
 export default function RowsGrid() {
   return (

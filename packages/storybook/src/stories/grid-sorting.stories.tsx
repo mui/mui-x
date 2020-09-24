@@ -6,7 +6,7 @@ import {
   SortModelParams,
   SortModel,
   useApiRef,
-} from '@material-ui/x-grid';
+} from '@material-next/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { action } from '@storybook/addon-actions';

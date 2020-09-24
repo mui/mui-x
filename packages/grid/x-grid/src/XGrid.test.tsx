@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { screen, createClientRender, act, fireEvent } from 'test/utils';
 import { expect } from 'chai';
-import { XGrid, useApiRef } from '@material-ui/x-grid';
+import { XGrid, useApiRef } from '@material-next/x-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
 function getActiveCell() {

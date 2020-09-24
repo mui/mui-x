@@ -7,13 +7,13 @@ module.exports = {
   resolve: {
     modules: [__dirname, 'node_modules'],
     alias: {
-      '@material-ui/data-grid': path.resolve(__dirname, './packages/grid/data-grid/src'),
-      '@material-ui/x-grid-data-generator': path.resolve(
+      '@material-next/data-grid': path.resolve(__dirname, './packages/grid/data-grid/src'),
+      '@material-next/x-grid-data-generator': path.resolve(
         __dirname,
         './packages/x-grid-data-generator/src',
       ),
-      '@material-ui/x-grid': path.resolve(__dirname, './packages/grid/x-grid/src'),
-      '@material-ui/x-license': path.resolve(__dirname, './packages/x-license/src'),
+      '@material-next/x-grid': path.resolve(__dirname, './packages/grid/x-grid/src'),
+      '@material-next/x-license': path.resolve(__dirname, './packages/x-license/src'),
       docs: path.resolve(__dirname, './docs/node_modules/@material-ui/monorepo/docs'),
       docsx: path.resolve(__dirname, './docs'),
     },

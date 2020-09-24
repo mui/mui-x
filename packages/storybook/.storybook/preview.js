@@ -1,4 +1,4 @@
-import { LicenseInfo } from '@material-ui/x-grid';
+import { LicenseInfo } from '@material-next/x-grid';
 import { addParameters } from '@storybook/react';
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 import { configureActions } from '@storybook/addon-actions';

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@material-next/data-grid';
 import {
   randomStatusOptions,
   randomPrice,
-} from '@material-ui/x-grid-data-generator';
+} from '@material-next/x-grid-data-generator';
 
 const rows = [
   {

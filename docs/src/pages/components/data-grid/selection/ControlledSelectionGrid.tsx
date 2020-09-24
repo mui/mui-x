@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { DataGrid, RowData } from '@material-ui/data-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { DataGrid, RowData } from '@material-next/data-grid';
+import { useDemoData } from '@material-next/x-grid-data-generator';
 
 export default function ControlledSelectionGrid() {
   const { data } = useDemoData({

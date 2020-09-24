@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { XGrid, SortDirection } from '@material-ui/x-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { XGrid, SortDirection } from '@material-next/x-grid';
+import { useDemoData } from '@material-next/x-grid-data-generator';
 
 const sortModel = [
   {

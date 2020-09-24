@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@material-next/data-grid';
 import { makeStyles } from '@material-ui/core/styles';
 
 const columns = [

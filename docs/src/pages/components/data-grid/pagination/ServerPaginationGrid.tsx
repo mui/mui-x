@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { RowsProp, DataGrid } from '@material-ui/data-grid';
-import { useDemoData, GridData } from '@material-ui/x-grid-data-generator';
+import { RowsProp, DataGrid } from '@material-next/data-grid';
+import { useDemoData, GridData } from '@material-next/x-grid-data-generator';
 
 function loadServerRows(page: number, data: GridData): Promise<any> {
   return new Promise<any>((resolve) => {

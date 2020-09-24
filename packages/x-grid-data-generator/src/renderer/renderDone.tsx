@@ -1,7 +1,7 @@
 import * as React from 'react';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
-import { CellParams } from '@material-ui/x-grid';
+import { CellParams } from '@material-next/x-grid';
 
 interface IsDoneProps {
   value: boolean;

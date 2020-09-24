@@ -1,5 +1,5 @@
 {
-  "name": "@material-ui/x-grid-data-generator",
+  "name": "@material-next/x-grid-data-generator",
   "version": "4.0.0-alpha.2",
   "description": "Data generator services for the grid",
   "author": "Material-UI Team",
@@ -48,7 +48,7 @@
     "@material-ui/core": "^4.9.12",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.54",
-    "@material-ui/x-grid": "^4.0.0-alpha.1",
+    "@material-next/x-grid": "^4.0.0-alpha.1",
     "react": "^16.8.0"
   },
   "setupFiles": [

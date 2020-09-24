@@ -1,4 +1,4 @@
-# @material-ui/x-grid
+# @material-next/x-grid
 
 The Material-UI X edition of the data grid component.
 
@@ -8,10 +8,10 @@ Install the package in your project directory with:
 
 ```sh
 // with npm
-npm install @material-ui/x-grid
+npm install @material-next/x-grid
 
 // with yarn
-yarn add @material-ui/x-grid
+yarn add @material-next/x-grid
 ```
 
 This component has 2 peer dependencies that you will need to install as well.

@@ -26,7 +26,7 @@ The first version is meant to simplify the [Table demo](https://material-ui.com/
 This abstraction also set constraints that allow the component to implement new features.
 
 ```js
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@material-next/data-grid';
 ```
 
 {{"demo": "pages/components/data-grid/overview/DataGridDemo.js", "defaultCodeOpen": false, "bg": "inline"}}
@@ -36,7 +36,7 @@ import { DataGrid } from '@material-ui/data-grid';
 The following grid displays 31 columns and 100,000 rows - over 3 million cells in total.
 
 ```js
-import { XGrid } from '@material-ui/x-grid';
+import { XGrid } from '@material-next/x-grid';
 ```
 
 {{"demo": "pages/components/data-grid/overview/XGridDemo.js", "defaultCodeOpen": false, "disableAd": true, "bg": "inline"}}
@@ -45,7 +45,7 @@ import { XGrid } from '@material-ui/x-grid';
 
 - Built with and exclusively for React ⚛️
 - High performance 🚀
-- Lightweight; less than [30 kB](https://bundlephobia.com/result?p=@material-ui/data-grid) gzipped with as few dependencies as possible.
+- Lightweight; less than [30 kB](https://bundlephobia.com/result?p=@material-next/data-grid) gzipped with as few dependencies as possible.
 - [Pagination](/components/data-grid/pagination/)
 - [Sorting](/components/data-grid/rows/#row-sorting) and [multi-sort](/components/data-grid/rows/#multi-column-sorting) ⚡️
 - [Selection](/components/data-grid/selection/)

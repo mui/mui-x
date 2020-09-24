@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { Columns, DataGrid, CellClassParams } from '@material-ui/data-grid';
+import { Columns, DataGrid, CellClassParams } from '@material-next/data-grid';
 import { makeStyles } from '@material-ui/core/styles';
 
 const columns: Columns = [

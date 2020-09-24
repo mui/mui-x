@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@material-next/data-grid';
 import {
   randomCreatedDate,
   randomUpdatedDate,
-} from '@material-ui/x-grid-data-generator';
+} from '@material-next/x-grid-data-generator';
 
 const columns = [
   { field: 'id', hide: true },

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { LicenseInfo, useLicenseVerifier } from '@material-ui/x-license';
+import { LicenseInfo, useLicenseVerifier } from '@material-next/x-license';
 import { GridComponent, GridComponentProps, classnames } from '../../_modules_/grid';
 
 // This is the package release date. Each package version should update this const

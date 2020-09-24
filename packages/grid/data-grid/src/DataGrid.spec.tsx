@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, useApiRef } from '@material-ui/data-grid';
+import { DataGrid, useApiRef } from '@material-next/data-grid';
 
 function EnterpriseTest() {
   const apiRef = useApiRef();
