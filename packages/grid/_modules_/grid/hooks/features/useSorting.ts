@@ -13,6 +13,7 @@ import {
   RowModel,
   RowsProp,
   SortApi,
+  CellParams,
 } from '../../models';
 import {
   COLUMN_HEADER_CLICK,
@@ -21,7 +22,7 @@ import {
   SORT_MODEL_CHANGE,
 } from '../../constants/eventsConstants';
 import { useLogger } from '../utils';
-import { isDesc, nextSortDirection } from '../../utils';
+import { buildCellParams, isDesc, nextSortDirection } from '../../utils';
 import { SortItem, SortModel } from '../../models/sortModel';
 import { useApiEventHandler } from '../root/useApiEventHandler';
 import { useApiMethod } from '../root/useApiMethod';
@@ -74,22 +75,42 @@ export const useSorting = (
     [options.sortingOrder],
   );
 
-  const comparatorListAggregate = React.useCallback((row1: RowModel, row2: RowModel) => {
-    const result = comparatorList.current.reduce((res, colComparator) => {
-      const { field, comparator } = colComparator;
-      res = res || comparator(row1.data[field], row2.data[field], row1, row2);
-      return res;
-    }, 0);
-    return result;
-  }, []);
+  const comparatorListAggregate = React.useCallback(
+    (row1: RowModel, row2: RowModel) => {
+      const result = comparatorList.current.reduce((res, colComparator) => {
+        const { field, comparator } = colComparator;
+        res =
+          res ||
+          comparator(
+            row1.data[field],
+            row2.data[field],
+            buildCellParams({
+              api: apiRef.current,
+              colDef: apiRef.current.getColumnFromField(field),
+              rowModel: row1,
+              value: row1.data[field],
+            }),
+            buildCellParams({
+              api: apiRef.current,
+              colDef: apiRef.current.getColumnFromField(field),
+              rowModel: row2,
+              value: row2.data[field],
+            }),
+          );
+        return res;
+      }, 0);
+      return result;
+    },
+    [apiRef],
+  );
 
   const buildComparatorList = React.useCallback(
     (sortModel: SortModel): FieldComparatorList => {
       const comparators = sortModel.map((item) => {
         const column = apiRef.current.getColumnFromField(item.field);
         const comparator = isDesc(item.sort)
-          ? (v1: CellValue, v2: CellValue, row1: RowModel, row2: RowModel) =>
-              -1 * column.sortComparator!(v1, v2, row1, row2)
+          ? (v1: CellValue, v2: CellValue, cellParams1: CellParams, cellParams2: CellParams) =>
+              -1 * column.sortComparator!(v1, v2, cellParams1, cellParams2)
           : column.sortComparator!;
         return { field: column.field, comparator };
       });

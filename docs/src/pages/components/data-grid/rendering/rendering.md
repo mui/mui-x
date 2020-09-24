@@ -13,9 +13,19 @@ This section is an extension of the main [column definitions documentation](/com
 
 ### Value getter
 
-Sometimes a column might not have a corresponding value and you just want to render a combination of different fields. To do that, you can set the `valueGetter` attribute of `ColDef` as in the example below:
+Sometimes a column might not have a corresponding value and you just want to render a combination of different fields.
+
+To do that, you can set the `valueGetter` attribute of `ColDef` as in the example below:
+
+**Note**: You need to set a `sortComparator` for the column sorting to work when setting the `valueGetter` attribute.
 
 ```tsx
+function getFullName(params: ValueGetterParams) {
+  return `${params.getValue('firstName') || ''} ${
+    params.getValue('lastName') || ''
+  }`;
+}
+
 const columns: ColDef[] = [
   { field: 'id', hide: true },
   { field: 'firstName', headerName: 'First name', width: 130 },
@@ -24,10 +34,9 @@ const columns: ColDef[] = [
     field: 'fullName',
     headerName: 'Full name',
     width: 160,
-    valueGetter: (params: ValueGetterParams) =>
-      `${params.getValue('firstName') || ''} ${
-        params.getValue('lastName') || ''
-      }`,
+    valueGetter: getFullName,
+    sortComparator: (v1, v2, cellParams1, cellParams2) =>
+      getFullName(cellParams1).localeCompare(getFullName(cellParams2)),
   },
 ];
 ```

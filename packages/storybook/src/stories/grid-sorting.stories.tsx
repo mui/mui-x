@@ -221,7 +221,8 @@ export const CustomComparator = () => {
     field: 'username',
     valueGetter: (params) =>
       `${params.getValue('name') || 'unknown'}_${params.getValue('age') || 'x'}`,
-    sortComparator: (v1, v2, row1, row2) => row1.data.age - row2.data.age,
+    sortComparator: (v1, v2, cellParams1, cellParams2) =>
+      cellParams1.data.age - cellParams2.data.age,
     sortDirection: 'asc',
     width: 150,
   };

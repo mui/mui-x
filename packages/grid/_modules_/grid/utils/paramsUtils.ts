@@ -14,7 +14,7 @@ export function buildCellParams({
 }: {
   rowModel: RowModel;
   colDef: ColDef;
-  rowIndex: number;
+  rowIndex?: number;
   value: CellValue;
   api: GridApi;
   element?: HTMLElement;

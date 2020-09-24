@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 
+function getFullName(params) {
+  return `${params.getValue('firstName') || ''} ${
+    params.getValue('lastName') || ''
+  }`;
+}
+
 const columns = [
   { field: 'id', hide: true },
   { field: 'firstName', headerName: 'First name', width: 130 },
@@ -9,10 +15,9 @@ const columns = [
     field: 'fullName',
     headerName: 'Full name',
     width: 160,
-    valueGetter: (params) =>
-      `${params.getValue('firstName') || ''} ${
-        params.getValue('lastName') || ''
-      }`,
+    valueGetter: getFullName,
+    sortComparator: (v1, v2, cellParams1, cellParams2) =>
+      getFullName(cellParams1).localeCompare(getFullName(cellParams2)),
   },
 ];
 
