@@ -20,7 +20,13 @@ const headerAlignPropToCss = {
   right: 'MuiDataGrid-colCellRight',
 };
 export const ColumnHeaderItem = React.memo(
-  ({ column, colIndex, onResizeColumn, onColumnDragStart, onColumnDragEnter }: ColumnHeaderItemProps) => {
+  ({
+    column,
+    colIndex,
+    onResizeColumn,
+    onColumnDragStart,
+    onColumnDragEnter,
+  }: ColumnHeaderItemProps) => {
     const api = React.useContext(ApiContext);
     const { showColumnRightBorder } = React.useContext(OptionsContext);
 
@@ -45,7 +51,9 @@ export const ColumnHeaderItem = React.memo(
     }
 
     const onResize = onResizeColumn ? () => onResizeColumn(column) : undefined;
-    const onDragStart = onColumnDragStart ? (event) => onColumnDragStart(column, event.target): undefined;
+    const onDragStart = onColumnDragStart
+      ? (event) => onColumnDragStart(column, event.target)
+      : undefined;
     const onDragEnter = onColumnDragEnter ? () => onColumnDragEnter(column) : undefined;
 
     const width = column.width!;

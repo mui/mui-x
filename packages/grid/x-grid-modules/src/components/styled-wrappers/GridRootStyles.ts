@@ -59,7 +59,6 @@ export const useStyles = makeStyles(
           zIndex: 100,
           width: '5px',
           height: '100%',
-          background: 'red'
         },
         '& .MuiDataGrid-scrollArea-left': {
           left: 0,

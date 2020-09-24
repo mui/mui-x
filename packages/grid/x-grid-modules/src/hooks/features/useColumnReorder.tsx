@@ -16,23 +16,30 @@ const cssDnDClasses = {
 const reorderColDefArray = (
   columns: ColDef[],
   newColIndex: number,
-  oldColIndex: number
+  oldColIndex: number,
 ): ColDef[] => {
-  const columnsClone = JSON.parse(JSON.stringify(columns))
+  const columnsClone = JSON.parse(JSON.stringify(columns));
 
   columnsClone.splice(newColIndex, 0, columnsClone.splice(oldColIndex, 1)[0]);
 
   return columnsClone;
 };
 
-export const useColumnReorder = (
-  columnsRef: React.RefObject<HTMLDivElement>,
-  apiRef: ApiRef,
-) => {
+export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, apiRef: ApiRef) => {
   const logger = useLogger('useColumnReorder');
 
   const dragCol = React.useRef<ColDef | null>();
   const dragColNode = React.useRef<HTMLElement | null>();
+
+  const handleDragEnd = React.useCallback((): void => {
+    logger.debug(`End dragging col ${dragCol.current!.field}`);
+    apiRef.current.publishEvent(COL_REORDER_STOP);
+
+    columnsRef.current?.classList.remove(cssDnDClasses.columnsHeaderDropZone);
+    dragColNode.current?.removeEventListener('dragend', handleDragEnd);
+    dragCol.current = null;
+    dragColNode.current = null;
+  }, [columnsRef, apiRef, logger]);
 
   const handleDragOver = React.useCallback(
     (event) => {
@@ -42,7 +49,7 @@ export const useColumnReorder = (
 
       columnsRef.current?.classList.add(cssDnDClasses.columnsHeaderDropZone);
     },
-    [apiRef, logger],
+    [columnsRef, apiRef, logger],
   );
 
   const handleDragStart = React.useCallback(
@@ -59,7 +66,7 @@ export const useColumnReorder = (
         dragColNode.current?.classList.remove(cssDnDClasses.colCellDragging);
       }, 0);
     },
-    [apiRef, logger],
+    [apiRef, handleDragEnd, logger],
   );
 
   const handleDragEnter = React.useCallback(
@@ -75,25 +82,12 @@ export const useColumnReorder = (
         apiRef.current.updateColumns(columnsReordered, true);
       }
     },
-    [apiRef, logger]
-  );
-
-  const handleDragEnd = React.useCallback(
-    (): void => {
-      logger.debug(`End dragging col ${dragCol.current!.field}`);
-      apiRef.current.publishEvent(COL_REORDER_STOP);
-
-      columnsRef.current?.classList.remove(cssDnDClasses.columnsHeaderDropZone);
-      dragColNode.current?.removeEventListener('dragend', handleDragEnd);
-      dragCol.current = null;
-      dragColNode.current = null;
-    },
-    [logger]
+    [apiRef, logger],
   );
 
   return {
     handleDragOver,
     handleDragStart,
-    handleDragEnter
+    handleDragEnter,
   };
 };

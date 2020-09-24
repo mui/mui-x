@@ -195,10 +195,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                 <div className="MuiDataGrid-mainGridContainer">
                   <Watermark licenseStatus={props.licenseStatus} />
                   <ColumnsContainer ref={columnsContainerRef} height={internalOptions.headerHeight}>
-                    <ScrollArea
-                      scrollDirection="left"
-                      apiRef={apiRef}
-                    />
+                    <ScrollArea scrollDirection="left" apiRef={apiRef} />
                     <ColumnsHeader
                       ref={columnsHeaderRef}
                       columns={internalColumns.visible || []}
@@ -209,10 +206,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                       onColumnDragEnter={onColumnReorder.handleDragEnter}
                       renderCtx={renderCtx}
                     />
-                    <ScrollArea
-                      scrollDirection="right"
-                      apiRef={apiRef}
-                    />
+                    <ScrollArea scrollDirection="right" apiRef={apiRef} />
                   </ColumnsContainer>
                   {!props.loading && internalRows.length === 0 && customComponents.noRowsComponent}
                   {props.loading && customComponents.loadingComponent}

@@ -40,7 +40,18 @@ export interface ColumnsHeaderProps {
 
 export const ColumnsHeader = React.memo(
   React.forwardRef<HTMLDivElement, ColumnsHeaderProps>(
-    ({ columns, hasScrollX, onResizeColumn, onColumnDragOver, onColumnDragStart, onColumnDragEnter, renderCtx }, columnsHeaderRef) => {
+    (
+      {
+        columns,
+        hasScrollX,
+        onResizeColumn,
+        onColumnDragOver,
+        onColumnDragStart,
+        onColumnDragEnter,
+        renderCtx,
+      },
+      columnsHeaderRef,
+    ) => {
       const wrapperCssClasses = `MuiDataGrid-colCellWrapper ${hasScrollX ? 'scroll' : ''}`;
       const api = React.useContext(ApiContext);
 
@@ -89,7 +100,6 @@ export const ColumnsHeader = React.memo(
             onColumnDragEnter={onColumnDragEnter}
           />
           <RightEmptyCell key="right-empty" width={renderCtx?.rightEmptyWidth} />
-
         </div>
       );
     },
