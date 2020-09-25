@@ -248,6 +248,7 @@ export const SortingWithFormatter = () => {
     </div>
   );
 };
+
 export const SortModelOptionsMultiple = () => {
   const sortModel: SortModel = React.useMemo(
     () => [

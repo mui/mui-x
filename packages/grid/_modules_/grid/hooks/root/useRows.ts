@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  createRow,
+  createRowModel,
   GridOptions,
   RowData,
   RowId,
@@ -30,7 +30,7 @@ export const useRows = (
   apiRef: ApiRef,
 ): RowModel[] => {
   const logger = useLogger('useRows');
-  const rowModels = React.useMemo(() => rows.map((r) => createRow(r)), [rows]);
+  const rowModels = React.useMemo(() => rows.map((r) => createRowModel(r)), [rows]);
   const [rowModelsState, setRowModelsState] = React.useState<RowModel[]>(rowModels);
   const [, forceUpdate] = React.useState();
   const [rafUpdate] = useRafUpdate(() => forceUpdate((p: any) => !p));
@@ -119,6 +119,16 @@ export const useRows = (
 
       // we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
       const uniqUpdates = updates.reduce((uniq, update) => {
+        if (update.id == null) {
+          throw new Error(
+            [
+              'Material-UI: The data grid component requires all rows to have a unique id property.',
+              'A row was provided without when calling updateRowData():',
+              JSON.stringify(update),
+            ].join('\n'),
+          );
+        }
+
         uniq[update.id] = uniq[update.id] != null ? { ...uniq[update.id], ...update } : update;
         return uniq;
       }, {} as { [id: string]: any });
@@ -126,7 +136,7 @@ export const useRows = (
       const rowModelUpdates = Object.values<RowData>(uniqUpdates).map((partialRow) => {
         const oldRow = getRowFromId(partialRow.id!);
         if (!oldRow) {
-          return createRow(partialRow);
+          return createRowModel(partialRow);
         }
         return { ...oldRow, data: { ...oldRow.data, ...partialRow } };
       });

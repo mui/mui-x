@@ -44,7 +44,17 @@ export interface RowModel {
  * @param rowData Row as [[RowData]].
  * @returns A row as [[RowModel]].
  */
-export function createRow(rowData: RowData): RowModel {
+export function createRowModel(rowData: RowData): RowModel {
+  if (rowData.id == null) {
+    throw new Error(
+      [
+        'Material-UI: The data grid component requires all rows to have a unique id property.',
+        'A row was provided without in the rows prop:',
+        JSON.stringify(rowData),
+      ].join('\n'),
+    );
+  }
+
   const row: RowModel = {
     id: rowData.id,
     data: rowData,
