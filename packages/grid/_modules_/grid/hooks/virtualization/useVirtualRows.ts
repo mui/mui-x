@@ -28,10 +28,7 @@ import { useApiEventHandler } from '../root/useApiEventHandler';
 type UseVirtualRowsReturnType = Partial<RenderContextProps> | null;
 
 // TODO v5: replace with @material-ui/core/utils/useEnhancedEffect.
-const useEnhancedEffect =
-  typeof window !== 'undefined' && process.env.NODE_ENV !== 'test'
-    ? React.useLayoutEffect
-    : React.useEffect;
+const useEnhancedEffect = typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
 
 export const useVirtualRows = (
   colRef: React.MutableRefObject<HTMLDivElement | null>,

@@ -17,7 +17,7 @@ import { GridColumnsContainer } from './components/styled-wrappers/GridColumnsCo
 import { useVirtualRows } from './hooks/virtualization';
 import {
   ApiContext,
-  AutoSizerWrapper,
+  AutoSizer,
   ColumnsHeader,
   DefaultFooter,
   OptionsContext,
@@ -119,6 +119,17 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
 
   const onResize = React.useCallback(
     (size: ElementSize) => {
+      if (process.env.NODE_ENV !== 'production') {
+        if (size.height === 0) {
+          console.error(
+            [
+              "Material-UI: The data grid's containers has an empty height.",
+              'You can find a solution in the docs https://material-ui.com/components/data-grid/rendering/#layout.',
+            ].join('\n'),
+          );
+        }
+      }
+
       gridLogger.info('resized...', size);
       apiRef!.current.resize();
     },
@@ -161,7 +172,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
   );
 
   return (
-    <AutoSizerWrapper onResize={debouncedOnResize} style={{ height: 'unset', width: 'unset' }}>
+    <AutoSizer onResize={debouncedOnResize}>
       {(size: any) => (
         <GridRoot
           ref={handleRef}
@@ -258,6 +269,6 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
           </ErrorBoundary>
         </GridRoot>
       )}
-    </AutoSizerWrapper>
+    </AutoSizer>
   );
 });

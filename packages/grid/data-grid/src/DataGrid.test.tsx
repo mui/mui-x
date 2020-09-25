@@ -81,6 +81,16 @@ describe('<DataGrid />', () => {
         expect(cell).to.have.text('Addidas');
       });
     });
+
+    // it('should warn if the container has no intrinsic height', () => {
+    //   expect(() => {
+    //     render(
+    //       <div style={{ width: 300, height: 0 }}>
+    //         <DataGrid rows={[]} columns={defaultProps.columns} />
+    //       </div>,
+    //     );
+    //   }).toErrorDev('Material-UI: `<DataGrid pagination={false} />` is not a valid prop.');
+    // });
   });
 
   describe('warnings', () => {
