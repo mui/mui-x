@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Columns, XGrid } from '@material-ui/x-grid';
 
 const columns: Columns = [
-  { field: 'id', hide: true },
   { field: 'name', type: 'string' },
   { field: 'email', type: 'string' },
   { field: 'age', type: 'number' },

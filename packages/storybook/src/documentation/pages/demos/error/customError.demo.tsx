@@ -15,7 +15,6 @@ function CustomErrorOverlay(props) {
 
 export default function CustomErrorDemo() {
   const columns: Columns = [
-    { field: 'id', hide: true },
     { field: 'name', type: 'string' },
     {
       field: 'age',
