@@ -6,3 +6,11 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 # [4.0.0-alpha.3](https://github.com/dtassone/material-ui-x/compare/v0.1.67...v4.0.0-alpha.3) (2020-09-25)
 
 **Note:** Version bump only for package @material-ui/x-grid
+
+
+
+
+
+# [4.0.0-alpha.3](https://github.com/dtassone/material-ui-x/compare/v0.1.67...v4.0.0-alpha.3) (2020-09-25)
+
+**Note:** Version bump only for package @material-ui/x-grid
