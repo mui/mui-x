@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 // @ts-ignore
-import { createClientRender } from 'test/utils';
+import { createClientRender, ErrorBoundary } from 'test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
 
@@ -20,6 +20,7 @@ describe('<DataGrid />', () => {
       { field: 'brand', width: 100 },
     ],
   };
+
   describe('layout', () => {
     before(function beforeHook() {
       if (/jsdom/.test(window.navigator.userAgent)) {
@@ -76,7 +77,7 @@ describe('<DataGrid />', () => {
         ];
         render(
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid rows={rows} columns={defaultProps.columns} page={2} pageSize={1} />
+            <DataGrid {...defaultProps} rows={rows} page={2} pageSize={1} />
           </div>,
         );
         const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
@@ -102,6 +103,39 @@ describe('<DataGrid />', () => {
           'MockedDataGrid',
         );
       }).toErrorDev('Material-UI: `<DataGrid pagination={false} />` is not a valid prop.');
+    });
+
+    it('should throw if the rows has no id', function test() {
+      // TODO is this fixed?
+      if (!/jsdom/.test(window.navigator.userAgent)) {
+        // can't catch render errors in the browser for unknown reason
+        // tried try-catch + error boundary + window onError preventDefault
+        this.skip();
+      }
+
+      const rows = [
+        {
+          brand: 'Nike',
+        },
+      ];
+
+      const errorRef = React.createRef();
+      expect(() => {
+        render(
+          <ErrorBoundary ref={errorRef}>
+            {/* @ts-expect-error missing id */}
+            <DataGrid {...defaultProps} rows={rows} />
+          </ErrorBoundary>,
+        );
+      }).toErrorDev([
+        'The data grid component requires all rows to have a unique id property',
+        'The above error occurred in the <ForwardRef(DataGrid)> component',
+        'The above error occurred in the <ForwardRef(DataGrid)> component',
+      ]);
+      expect((errorRef.current as any).errors).to.have.length(1);
+      expect((errorRef.current as any).errors[0].toString()).to.include(
+        'The data grid component requires all rows to have a unique id property',
+      );
     });
   });
 });
