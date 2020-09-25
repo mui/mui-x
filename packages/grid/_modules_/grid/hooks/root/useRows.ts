@@ -120,7 +120,13 @@ export const useRows = (
       // we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
       const uniqUpdates = updates.reduce((uniq, update) => {
         if (update.id == null) {
-          throw new Error('Material-UI: Missing row Id in row data update.');
+          throw new Error(
+            [
+              'Material-UI: The data grid component requires all rows to have a unique id property.',
+              'A row was provided without when calling updateRowData():',
+              JSON.stringify(update),
+            ].join('\n'),
+          );
         }
 
         uniq[update.id] = uniq[update.id] != null ? { ...uniq[update.id], ...update } : update;
