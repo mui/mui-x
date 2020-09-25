@@ -6,12 +6,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 # [4.0.0-alpha.6](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.2...v4.0.0-alpha.6) (Sep 25, 2020)
 
 ### @material-ui/x-grid@v4.0.0-alpha.6 / @material-ui/data-grid@v4.0.0-alpha.6
+
 - [DataGrid] Throw if rows id is missing (#349) @dtassone
 - [DataGrid] Fix valueGetter sorting (#348) @dtassone
 - [DataGrid] Fix typings and packages assets (#339) @dtassone
 - [DataGrid] Add npm keywords (#304) @oliviertassinari
 
 ### Docs
+
 - [docs] Avoid double borders (#340) @oliviertassinari
 - [docs] Fix layout jump issue (#338) @oliviertassinari
 - [docs] Fix short description warning (#302) @oliviertassinari
