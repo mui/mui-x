@@ -3,47 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [4.0.0-alpha.6](https://github.com/dtassone/material-ui-x/compare/v0.1.67...v4.0.0-alpha.6) (2020-09-25)
+# [4.0.0-alpha.6](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.2...v4.0.0-alpha.6) (Sep 25, 2020)
 
-**Note:** Version bump only for package material-ui-x
+### @material-ui/x-grid@v4.0.0-alpha.6 / @material-ui/data-grid@v4.0.0-alpha.6
+- [DataGrid] Throw if rows id is missing (#349) @dtassone
+- [DataGrid] Fix valueGetter sorting (#348) @dtassone
+- [DataGrid] Fix typings and packages assets (#339) @dtassone
+- [DataGrid] Add npm keywords (#304) @oliviertassinari
 
+### Docs
+- [docs] Avoid double borders (#340) @oliviertassinari
+- [docs] Fix layout jump issue (#338) @oliviertassinari
+- [docs] Fix short description warning (#302) @oliviertassinari
 
-
-
-
-# [4.0.0-alpha.5](https://github.com/dtassone/material-ui-x/compare/v0.1.67...v4.0.0-alpha.5) (2020-09-25)
-
-**Note:** Version bump only for package material-ui-x
-
-
-
-
-
-# [4.0.0-alpha.4](https://github.com/dtassone/material-ui-x/compare/v0.1.67...v4.0.0-alpha.4) (2020-09-25)
-
-**Note:** Version bump only for package material-ui-x
-
-
-
-
-
-# [4.0.0-alpha.3](https://github.com/dtassone/material-ui-x/compare/v0.1.67...v4.0.0-alpha.3) (2020-09-25)
-
-**Note:** Version bump only for package material-ui-x
-
-
-
-
-
-# [4.0.0-alpha.3](https://github.com/dtassone/material-ui-x/compare/v0.1.67...v4.0.0-alpha.3) (2020-09-25)
-
-**Note:** Version bump only for package material-ui-x
-
-
-
-
-
-## [4.0.0-alpha.2](https://github.com/dtassone/material-ui-x/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (Sep 18, 2020)
+## [4.0.0-alpha.2](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (Sep 18, 2020)
 
 - [DataGrid] Fix wrongly exported types (#298) @dtassone 
 
