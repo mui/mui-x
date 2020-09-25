@@ -71,18 +71,18 @@ export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(functi
   });
 
   const rootRef = React.useRef<HTMLDivElement>(null);
-  const parentNode = React.useRef(null) as React.MutableRefObject<HTMLElement | null>;
+  const parentElement = React.useRef(null) as React.MutableRefObject<HTMLElement | null>;
 
   const handleResize = useEventCallback(() => {
     // Guard against AutoSizer component being removed from the DOM immediately after being added.
     // This can result in invalid style values which can result in NaN values if we don't handle them.
     // See issue #150 for more context.
-    if (parentNode.current) {
-      const height = parentNode.current.offsetHeight || 0;
-      const width = parentNode.current.offsetWidth || 0;
+    if (parentElement.current) {
+      const height = parentElement.current.offsetHeight || 0;
+      const width = parentElement.current.offsetWidth || 0;
 
-      const win = ownerWindow(parentNode.current);
-      const computedStyle = win.getComputedStyle(parentNode.current);
+      const win = ownerWindow(parentElement.current);
+      const computedStyle = win.getComputedStyle(parentElement.current);
       const paddingLeft = parseInt(computedStyle.paddingLeft, 10) || 0;
       const paddingRight = parseInt(computedStyle.paddingRight, 10) || 0;
       const paddingTop = parseInt(computedStyle.paddingTop, 10) || 0;
@@ -108,21 +108,21 @@ export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(functi
   });
 
   useEnhancedEffect(() => {
-    // @ts-ignore
-    parentNode.current = rootRef.current.parentNode;
+    parentElement.current = rootRef.current!.parentElement;
 
-    if (!parentNode) {
+    if (!parentElement) {
       return undefined;
     }
 
-    // @ts-ignore
-    const win = ownerWindow(parentNode.current);
+    const win = ownerWindow(parentElement.current ?? undefined);
 
     const detectElementResize = createDetectElementResize(nonce, win);
-    detectElementResize.addResizeListener(parentNode.current, handleResize);
+    detectElementResize.addResizeListener(parentElement.current, handleResize);
+    // @ts-expect-error fixed in v5
+    handleResize();
 
     return () => {
-      detectElementResize.removeResizeListener(parentNode.current, handleResize);
+      detectElementResize.removeResizeListener(parentElement.current, handleResize);
     };
   }, [nonce, handleResize]);
 

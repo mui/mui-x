@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 // @ts-ignore
 import { createClientRender, ErrorBoundary } from 'test/utils';
+import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
 
@@ -82,15 +83,28 @@ describe('<DataGrid />', () => {
       });
     });
 
-    // it('should warn if the container has no intrinsic height', () => {
-    //   expect(() => {
-    //     render(
-    //       <div style={{ width: 300, height: 0 }}>
-    //         <DataGrid rows={[]} columns={defaultProps.columns} />
-    //       </div>,
-    //     );
-    //   }).toErrorDev('Material-UI: `<DataGrid pagination={false} />` is not a valid prop.');
-    // });
+    describe('warnings', () => {
+      let clock;
+
+      beforeEach(() => {
+        clock = useFakeTimers();
+      });
+
+      afterEach(() => {
+        clock.restore();
+      });
+
+      it('should warn if the container has no intrinsic height', () => {
+        expect(() => {
+          render(
+            <div style={{ width: 300, height: 0 }}>
+              <DataGrid {...defaultProps} />
+            </div>,
+          );
+          clock.tick(100);
+        }).toErrorDev("Material-UI: The data grid's containers has an empty height.");
+      });
+    });
   });
 
   describe('warnings', () => {

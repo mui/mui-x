@@ -66,7 +66,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     internalApiRef,
   ]);
 
-  const initialised = useApi(rootContainerRef, internalOptions, apiRef);
+  const initialised = useApi(rootContainerRef, apiRef);
 
   const errorHandler = (args: any) => {
     // We are handling error here, to set up the handler as early as possible and be able to catch error thrown at init time.

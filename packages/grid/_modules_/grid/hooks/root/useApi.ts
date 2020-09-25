@@ -1,14 +1,10 @@
 import * as React from 'react';
 import { useLogger } from '../utils/useLogger';
 import { COMPONENT_ERROR, UNMOUNT } from '../../constants/eventsConstants';
-import { GridOptions, ApiRef } from '../../models';
+import { ApiRef } from '../../models';
 import { useApiMethod } from './useApiMethod';
 
-export function useApi(
-  gridRootRef: React.RefObject<HTMLDivElement>,
-  options: GridOptions,
-  apiRef: ApiRef,
-): boolean {
+export function useApi(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: ApiRef): boolean {
   const [initialised, setInit] = React.useState(false);
   const logger = useLogger('useApi');
 
