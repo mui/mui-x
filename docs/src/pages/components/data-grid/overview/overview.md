@@ -1,5 +1,5 @@
 ---
-title: Data Grid React component
+title: React Data Grid component
 components: DataGrid, XGrid
 ---
 
