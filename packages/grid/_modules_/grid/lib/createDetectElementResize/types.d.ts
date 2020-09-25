@@ -3,4 +3,7 @@ interface DetectElementResize {
   removeResizeListener: any;
 }
 
-export default function createDetectElementResize(nonce: string, win: Window): DetectElementResize;
+export default function createDetectElementResize(
+  nonce: string,
+  hostWindow: Window
+): DetectElementResize;

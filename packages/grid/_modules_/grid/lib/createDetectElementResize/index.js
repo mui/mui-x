@@ -11,16 +11,9 @@ import * as React from 'react';
  * 3) Avoid unnecessary reflows by not measuring size for scroll events bubbling from children.
  * 4) Add nonce for style element.
  **/
-export default function createDetectElementResize(nonce) {
+export default function createDetectElementResize(nonce, hostWindow) {
   // Check `document` and `window` in case of server-side rendering
-  var _window;
-  if (typeof window !== 'undefined') {
-    _window = window;
-  } else if (typeof self !== 'undefined') {
-    _window = self;
-  } else {
-    _window = global;
-  }
+  var _window = hostWindow;
 
   var attachEvent = typeof document !== 'undefined' && document.attachEvent;
 
