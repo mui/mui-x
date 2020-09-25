@@ -1,6 +1,6 @@
 {
   "name": "demo-app",
-  "version": "4.0.0-alpha.3",
+  "version": "4.0.0-alpha.2",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.9.12",
