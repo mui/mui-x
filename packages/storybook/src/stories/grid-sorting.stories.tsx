@@ -248,17 +248,6 @@ export const SortingWithFormatter = () => {
     </div>
   );
 };
-export const SortingNoId = () => {
-  const columns = [...getColumns()];
-  columns.shift();
-  columns[0] = { ...columns[0], sortDirection: 'asc' };
-
-  return (
-    <div className="grid-container">
-      <XGrid rows={getRows()} columns={columns} />
-    </div>
-  );
-};
 
 export const SortModelOptionsMultiple = () => {
   const sortModel: SortModel = React.useMemo(

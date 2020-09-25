@@ -30,7 +30,7 @@ export const useRows = (
   apiRef: ApiRef,
 ): RowModel[] => {
   const logger = useLogger('useRows');
-  const rowModels = React.useMemo(() => rows.map((r, idx) => createRowModel(r, idx)), [rows]);
+  const rowModels = React.useMemo(() => rows.map((r) => createRowModel(r)), [rows]);
   const [rowModelsState, setRowModelsState] = React.useState<RowModel[]>(rowModels);
   const [, forceUpdate] = React.useState();
   const [rafUpdate] = useRafUpdate(() => forceUpdate((p: any) => !p));
@@ -130,7 +130,7 @@ export const useRows = (
       const rowModelUpdates = Object.values<RowData>(uniqUpdates).map((partialRow) => {
         const oldRow = getRowFromId(partialRow.id!);
         if (!oldRow) {
-          return createRowModel(partialRow, partialRow.id!);
+          return createRowModel(partialRow);
         }
         return { ...oldRow, data: { ...oldRow.data, ...partialRow } };
       });

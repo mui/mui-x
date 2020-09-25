@@ -44,9 +44,13 @@ export interface RowModel {
  * @param rowData Row as [[RowData]].
  * @returns A row as [[RowModel]].
  */
-export function createRowModel(rowData: RowData, index: RowId): RowModel {
+export function createRowModel(rowData: RowData): RowModel {
+  if (rowData.id == null) {
+    throw new Error(`Material-UI: Row without id found,  `);
+  }
+
   const row: RowModel = {
-    id: rowData.id == null ? index : rowData.id,
+    id: rowData.id,
     data: rowData,
     selected: false,
   };
