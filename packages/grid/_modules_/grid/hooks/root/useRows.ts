@@ -60,7 +60,7 @@ export const useRows = (
         setRowModelsState(() => allNewRows);
       }
     },
-    [logger, idLookupRef, rowModelsRef, setRowModelsState],
+    [logger, rowModelsRef, setRowModelsState],
   );
 
   React.useEffect(() => {
@@ -69,7 +69,7 @@ export const useRows = (
     updateAllRows(rowModels);
   }, [rows, logger, rowModels, updateAllRows]);
 
-  const getRowsLookup = React.useCallback(() => idLookupRef.current as IdLookup, [idLookupRef]);
+  const getRowsLookup = React.useCallback(() => idLookupRef.current as IdLookup, []);
   const getRowIndexFromId = React.useCallback((id: RowId): number => getRowsLookup()[id], [
     getRowsLookup,
   ]);

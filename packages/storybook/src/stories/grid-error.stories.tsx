@@ -244,12 +244,9 @@ export const OnErrorHandler = () => {
     },
   };
 
-  const onError = React.useCallback(
-    ({ error }) => {
-      setErrorMessage(`Oops! Something went wrong! ${error.message}`);
-    },
-    [setErrorMessage],
-  );
+  const onError = React.useCallback(({ error }) => {
+    setErrorMessage(`Oops! Something went wrong! ${error.message}`);
+  }, []);
 
   return (
     <React.Fragment>

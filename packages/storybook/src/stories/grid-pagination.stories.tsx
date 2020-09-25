@@ -236,17 +236,14 @@ export function ServerPaginationWithEventHandler() {
   const [rows, setRows] = React.useState<RowsProp>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
 
-  const onPageChange = React.useCallback(
-    (params) => {
-      action('onPageChange')(params);
-      setLoading(true);
-      loadServerRows(params).then((newData) => {
-        setRows(newData.rows);
-        setLoading(false);
-      });
-    },
-    [setRows, setLoading],
-  );
+  const onPageChange = React.useCallback((params) => {
+    action('onPageChange')(params);
+    setLoading(true);
+    loadServerRows(params).then((newData) => {
+      setRows(newData.rows);
+      setLoading(false);
+    });
+  }, []);
 
   return (
     <div className="grid-container">
