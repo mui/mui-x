@@ -226,7 +226,6 @@ export const useStyles = makeStyles(
           padding: '0 12px',
           borderRadius: '10px',
           opacity: 0.4,
-          width: 'auto',
         },
       },
     };
