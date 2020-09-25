@@ -28,9 +28,7 @@ export const ColumnHeaderItem = React.memo(
     onColumnDragEnter,
   }: ColumnHeaderItemProps) => {
     const api = React.useContext(ApiContext);
-    const { headerHeight, showColumnRightBorder, disableColumnResize } = React.useContext(
-      OptionsContext,
-    );
+    const { showColumnRightBorder, disableColumnResize } = React.useContext(OptionsContext);
 
     const cssClass = classnames(
       HEADER_CELL_CSS_CLASS,
@@ -86,32 +84,32 @@ export const ColumnHeaderItem = React.memo(
           onDragStart={onDragStart}
           onDragEnter={onDragEnter}
         >
-            {column.type === 'number' && (
-              <ColumnHeaderSortIcon
-                direction={column.sortDirection}
-                index={column.sortIndex}
-                hide={column.hideSortIcons}
-              />
-            )}
-            {headerComponent || (
-              <ColumnHeaderTitle
-                label={column.headerName || column.field}
-                description={column.description}
-                columnWidth={width}
-              />
-            )}
-            {column.type !== 'number' && (
-              <ColumnHeaderSortIcon
-                direction={column.sortDirection}
-                index={column.sortIndex}
-                hide={column.hideSortIcons}
-              />
-            )}
-          </div>
-          <ColumnHeaderSeparator
-            resizable={!disableColumnResize && column.resizable}
-            onResize={handleResize}
-          />
+          {column.type === 'number' && (
+            <ColumnHeaderSortIcon
+              direction={column.sortDirection}
+              index={column.sortIndex}
+              hide={column.hideSortIcons}
+            />
+          )}
+          {headerComponent || (
+            <ColumnHeaderTitle
+              label={column.headerName || column.field}
+              description={column.description}
+              columnWidth={width}
+            />
+          )}
+          {column.type !== 'number' && (
+            <ColumnHeaderSortIcon
+              direction={column.sortDirection}
+              index={column.sortIndex}
+              hide={column.hideSortIcons}
+            />
+          )}
+        </div>
+        <ColumnHeaderSeparator
+          resizable={!disableColumnResize && column.resizable}
+          onResize={handleResize}
+        />
       </div>
     );
   },

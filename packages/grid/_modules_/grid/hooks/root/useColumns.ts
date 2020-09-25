@@ -117,7 +117,7 @@ const getUpdatedColumnState = (
   logger: Logger,
   state: InternalColumns,
   columnUpdates: ColDef[],
-  resetState = false
+  resetState = false,
 ): InternalColumns => {
   const newState = { ...state };
 
