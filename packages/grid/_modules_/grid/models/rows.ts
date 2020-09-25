@@ -44,7 +44,7 @@ export interface RowModel {
  * @param rowData Row as [[RowData]].
  * @returns A row as [[RowModel]].
  */
-export function createRow(rowData: RowData, index: RowId): RowModel {
+export function createRowModel(rowData: RowData, index: RowId): RowModel {
   const row: RowModel = {
     id: rowData.id == null ? index : rowData.id,
     data: rowData,
