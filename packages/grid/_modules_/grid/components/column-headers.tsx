@@ -88,6 +88,7 @@ export const ColumnsHeader = React.memo(
           key="columns"
           className={wrapperCssClasses}
           aria-rowindex={1}
+          tabIndex={0}
           role="row"
           style={{ minWidth: renderCtx?.totalSizes?.width }}
           onDragOver={onDragOver}

@@ -117,11 +117,11 @@ const getUpdatedColumnState = (
   logger: Logger,
   state: InternalColumns,
   columnUpdates: ColDef[],
-  resetState = false,
+  resetColumnState = false,
 ): InternalColumns => {
   const newState = { ...state };
 
-  if (resetState) {
+  if (resetColumnState) {
     newState.all = columnUpdates;
   } else {
     columnUpdates.forEach((newColumn) => {
@@ -199,8 +199,8 @@ export function useColumns(
   const getVisibleColumns: () => Columns = () => stateRef.current.visible;
 
   const updateColumns = React.useCallback(
-    (cols: ColDef[], resetState = false) => {
-      const newState = getUpdatedColumnState(logger, stateRef.current, cols, resetState);
+    (cols: ColDef[], resetColumnState = false) => {
+      const newState = getUpdatedColumnState(logger, stateRef.current, cols, resetColumnState);
       updateState(newState, false);
     },
     [updateState, logger, stateRef],
