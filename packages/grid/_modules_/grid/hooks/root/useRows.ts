@@ -145,12 +145,9 @@ export const useRows = (
     [updateRowModels, logger, getRowFromId],
   );
 
-  const onSortModelUpdated = React.useCallback(
-    ({ sortModel }: any) => {
-      isSortedRef.current = sortModel.length > 0;
-    },
-    [isSortedRef],
-  );
+  const onSortModelUpdated = React.useCallback(({ sortModel }: any) => {
+    isSortedRef.current = sortModel.length > 0;
+  }, []);
 
   const getRowModels = React.useCallback(() => rowModelsRef.current, [rowModelsRef]);
   const getRowsCount = React.useCallback(() => rowModelsRef.current.length, [rowModelsRef]);
