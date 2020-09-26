@@ -73,7 +73,7 @@ You can find more details on, the [feature comparison](/components/data-grid/get
 
 Here are some resources you might be interested in to learn more about the grid:
 
-- A [fullscreen demo](https://material-ui.com/components/data-grid/demo/#/grid)
+- A [fullscreen demo](https://muix-preview.netlify.app/#/grid)
 - The storybook used for [internal development](https://material-ui-x.netlify.app/storybook/)
 - The [source on GitHub](https://github.com/mui-org/material-ui-x/tree/master/packages/grid)
 - The [Material Design specification](https://material.io/design/components/data-tables.html) specification
