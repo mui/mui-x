@@ -1,5 +1,5 @@
 import * as React from 'react';
-// @ts-ignore
+// @ts-expect-error need to migrate helpers to TypeScript
 import { screen, createClientRender, act, fireEvent } from 'test/utils';
 import { expect } from 'chai';
 import { XGrid, useApiRef } from '@material-ui/x-grid';
