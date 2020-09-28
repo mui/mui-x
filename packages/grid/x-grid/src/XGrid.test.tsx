@@ -61,10 +61,7 @@ describe('<XGrid />', () => {
         brand: 'Puma',
       },
     ],
-    columns: [
-      { field: 'id', hide: true },
-      { field: 'brand', width: 100 },
-    ],
+    columns: [{ field: 'brand', width: 100 }],
   };
 
   before(function beforeHook() {
@@ -194,10 +191,7 @@ describe('<XGrid />', () => {
                 brand: 'Nike',
               },
             ]}
-            columns={[
-              { field: 'id', hide: true },
-              { field: 'brand', width: 100 },
-            ]}
+            columns={[{ field: 'brand', width: 100 }]}
             checkboxSelection
           />
         </div>,

@@ -15,10 +15,7 @@ describe('<DataGrid />', () => {
         brand: 'Nike',
       },
     ],
-    columns: [
-      { field: 'id', hide: true },
-      { field: 'brand', width: 100 },
-    ],
+    columns: [{ field: 'brand', width: 100 }],
   };
   describe('layout', () => {
     before(function beforeHook() {

@@ -34,7 +34,6 @@ export default function ColumnTypesDemo() {
     <div style={{ height: 300, width: '100%' }}>
       <DataGrid
         columns={[
-          { field: 'id', hide: true },
           { field: 'name', type: 'string' },
           { field: 'age', type: 'number' },
           { field: 'dateCreated', type: 'date', width: 130 },
