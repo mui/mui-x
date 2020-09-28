@@ -4,7 +4,7 @@ const webpack = require('webpack');
 const browserStack = {
   username: process.env.BROWSERSTACK_USERNAME,
   accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
-  build: `material-ui-${new Date().toISOString()}`,
+  build: `material-ui-x-${new Date().toISOString()}`,
 };
 
 process.env.CHROME_BIN = require('puppeteer').executablePath();
@@ -123,29 +123,29 @@ module.exports = function setKarmaConfig(config) {
           base: 'BrowserStack',
           os: 'OS X',
           os_version: 'Sierra',
-          browser: 'Chrome',
-          browser_version: '49.0',
+          browser: 'chrome',
+          browser_version: '83.0',
         },
         BrowserStack_Firefox: {
           base: 'BrowserStack',
           os: 'Windows',
           os_version: '10',
-          browser: 'Firefox',
-          browser_version: '52.0',
+          browser: 'firefox',
+          browser_version: '78.0',
         },
         BrowserStack_Safari: {
           base: 'BrowserStack',
           os: 'OS X',
-          os_version: 'Sierra',
-          browser: 'Safari',
-          browser_version: '10.1',
+          os_version: 'High Sierra',
+          browser: 'safari',
+          browser_version: '11.1',
         },
         BrowserStack_Edge: {
           base: 'BrowserStack',
           os: 'Windows',
           os_version: '10',
-          browser: 'Edge',
-          browser_version: '14.0',
+          browser: 'edge',
+          browser_version: '83.0',
         },
       },
     };
