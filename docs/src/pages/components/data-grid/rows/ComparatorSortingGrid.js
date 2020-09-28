@@ -6,7 +6,6 @@ import {
 } from '@material-ui/x-grid-data-generator';
 
 const columns = [
-  { field: 'id', hide: true },
   { field: 'name' },
   { field: 'age', type: 'number' },
   {
