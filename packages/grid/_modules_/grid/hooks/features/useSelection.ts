@@ -92,7 +92,6 @@ export const useSelection = (
       forceUpdate((p: any) => !p);
     },
     [
-      forceUpdate,
       apiRef,
       logger,
       selectedItemsRef,
@@ -134,7 +133,7 @@ export const useSelection = (
       };
       apiRef.current.publishEvent(SELECTION_CHANGED, selectionChangeParam);
     },
-    [apiRef, selectedItemsRef, forceUpdate, getSelectedRows],
+    [apiRef, selectedItemsRef, getSelectedRows],
   );
 
   const rowClickHandler = React.useCallback(

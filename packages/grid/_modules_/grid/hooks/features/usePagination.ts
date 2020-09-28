@@ -64,14 +64,11 @@ export const usePagination = (
   const prevPageRef = React.useRef<number>(1);
   const [state, dispatch] = React.useReducer(paginationReducer, initialState);
 
-  const updateState = React.useCallback(
-    (stateUpdate: Partial<PaginationState>) => {
-      const newState = { ...stateRef.current, ...stateUpdate };
-      stateRef.current = newState;
-      dispatch(updateStateAction(newState));
-    },
-    [dispatch],
-  );
+  const updateState = React.useCallback((stateUpdate: Partial<PaginationState>) => {
+    const newState = { ...stateRef.current, ...stateUpdate };
+    stateRef.current = newState;
+    dispatch(updateStateAction(newState));
+  }, []);
 
   const setPage = React.useCallback(
     (page: number) => {
@@ -125,7 +122,7 @@ export const usePagination = (
       updateState(newState);
       setPage(newPage);
     },
-    [stateRef, apiRef, setPage, updateState, logger],
+    [apiRef, setPage, updateState, logger],
   );
 
   const onPageChange = React.useCallback(
@@ -173,7 +170,7 @@ export const usePagination = (
     if (apiRef.current?.isInitialised) {
       apiRef.current.publishEvent(PAGE_CHANGED, stateRef.current);
     }
-  }, [apiRef, stateRef, apiRef.current?.isInitialised]);
+  }, [apiRef, apiRef.current?.isInitialised]);
 
   React.useEffect(() => {
     const rowCount = options.rowCount == null ? rows.length : options.rowCount;

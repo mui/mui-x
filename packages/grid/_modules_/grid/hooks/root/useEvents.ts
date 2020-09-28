@@ -177,11 +177,11 @@ export function useEvents(
 
   const handleResizeStart = React.useCallback(() => {
     isResizingRef.current = true;
-  }, [isResizingRef]);
+  }, []);
 
   const handleResizeStop = React.useCallback(() => {
     isResizingRef.current = false;
-  }, [isResizingRef]);
+  }, []);
 
   const resize = React.useCallback(() => apiRef.current.publishEvent(RESIZE), [apiRef]);
   const eventsApi: EventsApi = { resize, onUnmount, onResize };

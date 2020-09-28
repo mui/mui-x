@@ -25,7 +25,7 @@ export const HeaderCheckbox: React.FC<ColParams> = ({ api }) => {
       setChecked(isAllSelected || !hasNoneSelected);
       setIndeterminate(!isAllSelected && !hasNoneSelected);
     },
-    [api, setIndeterminate, setChecked],
+    [api],
   );
 
   React.useEffect(() => {
