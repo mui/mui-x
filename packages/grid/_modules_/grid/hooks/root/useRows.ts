@@ -30,7 +30,7 @@ export const useRows = (
   apiRef: ApiRef,
 ): RowModel[] => {
   const logger = useLogger('useRows');
-  const rowModels = React.useMemo(() => rows.map((r) => createRowModel(r)), [rows]);
+  const rowModels = React.useMemo(() => rows.map(createRowModel), [rows]);
   const [rowModelsState, setRowModelsState] = React.useState<RowModel[]>(rowModels);
   const [, forceUpdate] = React.useState();
   const [rafUpdate] = useRafUpdate(() => forceUpdate((p: any) => !p));
