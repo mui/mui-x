@@ -102,7 +102,7 @@ describe('<DataGrid />', () => {
             </div>,
           );
           clock.tick(100);
-        }).toErrorDev("Material-UI: The data grid's containers has an empty height.");
+        }).toWarnDev('Material-UI Data Grid: The parent of the grid has an empty height.');
       });
     });
   });

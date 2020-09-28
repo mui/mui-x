@@ -46,7 +46,13 @@ function getAppender(name: string, logLevel: string, appender: Logger = console)
     if (idx >= minLogLevelIdx) {
       loggerObj[method] = (...args: any[]) => {
         const [message, ...rest] = args;
-        (appender as any)[method](`[${name}] - ${message}`, ...rest);
+
+        // Don't console log non errors in production
+        if (appender === console && method !== 'error' && process.env.NODE_ENV === 'production') {
+          return;
+        }
+
+        (appender as any)[method](`${name}: ${message}`, ...rest);
       };
     } else {
       loggerObj[method] = noop;

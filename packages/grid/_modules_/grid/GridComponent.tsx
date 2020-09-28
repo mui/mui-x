@@ -47,7 +47,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     internalOptions?.logger,
     internalOptions?.logLevel || DEFAULT_GRID_OPTIONS.logLevel,
   );
-  const gridLogger = useLogger('Grid');
+  const gridLogger = useLogger('Material-UI Data Grid');
 
   const rootContainerRef: RootContainerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(rootContainerRef, ref);
@@ -119,15 +119,17 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
 
   const onResize = React.useCallback(
     (size: ElementSize) => {
-      if (process.env.NODE_ENV !== 'production') {
-        if (size.height === 0) {
-          console.error(
-            [
-              "Material-UI: The data grid's containers has an empty height.",
-              'You can find a solution in the docs https://material-ui.com/components/data-grid/rendering/#layout.',
-            ].join('\n'),
-          );
-        }
+      if (size.height === 0) {
+        gridLogger.warn(
+          [
+            'The parent of the grid has an empty height.',
+            'You need to make sure the container has an intrinsic height.',
+            'The grid displays with a height of 0px.',
+            '',
+            'You can find a solution in the docs:',
+            'https://material-ui.com/components/data-grid/rendering/#layout',
+          ].join('\n'),
+        );
       }
 
       gridLogger.info('resized...', size);
