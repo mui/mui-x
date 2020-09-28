@@ -60,7 +60,7 @@ export const useRows = (
         setRowModelsState(() => allNewRows);
       }
     },
-    [logger, idLookupRef, rowModelsRef, setRowModelsState],
+    [logger, rowModelsRef, setRowModelsState],
   );
 
   React.useEffect(() => {
@@ -69,7 +69,7 @@ export const useRows = (
     updateAllRows(rowModels);
   }, [rows, logger, rowModels, updateAllRows]);
 
-  const getRowsLookup = React.useCallback(() => idLookupRef.current as IdLookup, [idLookupRef]);
+  const getRowsLookup = React.useCallback(() => idLookupRef.current as IdLookup, []);
   const getRowIndexFromId = React.useCallback((id: RowId): number => getRowsLookup()[id], [
     getRowsLookup,
   ]);
@@ -145,12 +145,9 @@ export const useRows = (
     [updateRowModels, logger, getRowFromId],
   );
 
-  const onSortModelUpdated = React.useCallback(
-    ({ sortModel }: any) => {
-      isSortedRef.current = sortModel.length > 0;
-    },
-    [isSortedRef],
-  );
+  const onSortModelUpdated = React.useCallback(({ sortModel }: any) => {
+    isSortedRef.current = sortModel.length > 0;
+  }, []);
 
   const getRowModels = React.useCallback(() => rowModelsRef.current, [rowModelsRef]);
   const getRowsCount = React.useCallback(() => rowModelsRef.current.length, [rowModelsRef]);

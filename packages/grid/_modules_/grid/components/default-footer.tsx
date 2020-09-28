@@ -22,7 +22,7 @@ export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps
       }
 
       return undefined;
-    }, [api, setSelectedCount]);
+    }, [api]);
 
     if (options.hideFooter) {
       return null;

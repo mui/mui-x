@@ -45,15 +45,13 @@ const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
 
 export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: ApiRef): void => {
   const logger = useLogger('useKeyboard');
-  const isMultipleKeyPressed = React.useRef(false);
   const rafFocusOnCellRef = React.useRef(0);
 
   const onMultipleKeyChange = React.useCallback(
     (isPressed: boolean) => {
-      isMultipleKeyPressed.current = isPressed;
       apiRef.current.publishEvent(MULTIPLE_KEY_PRESS_CHANGED, isPressed);
     },
-    [apiRef, isMultipleKeyPressed],
+    [apiRef],
   );
 
   const navigateCells = React.useCallback(

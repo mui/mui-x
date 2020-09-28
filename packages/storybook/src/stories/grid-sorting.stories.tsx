@@ -298,13 +298,10 @@ export const SortedEventsApi = () => {
   const cols = React.useMemo(() => getColumns(), []);
   const [loggedEvents, setEvents] = React.useState<any[]>([]);
 
-  const handleEvent = React.useCallback(
-    (name, params) => {
-      action(name)(params);
-      setEvents((prev: any[]) => [...prev, name]);
-    },
-    [setEvents],
-  );
+  const handleEvent = React.useCallback((name, params) => {
+    action(name)(params);
+    setEvents((prev: any[]) => [...prev, name]);
+  }, []);
 
   React.useEffect(() => {
     apiRef.current.onSortModelChange((params) => handleEvent('onSortModelChange', params));
@@ -337,13 +334,10 @@ export const SortedEventsOptions = () => {
   const cols = React.useMemo(() => getColumns(), []);
   const [loggedEvents, setEvents] = React.useState<any[]>([]);
 
-  const handleEvent = React.useCallback(
-    (name, params) => {
-      action(name)(params);
-      setEvents((prev: any[]) => [...prev, name]);
-    },
-    [setEvents],
-  );
+  const handleEvent = React.useCallback((name, params) => {
+    action(name)(params);
+    setEvents((prev: any[]) => [...prev, name]);
+  }, []);
 
   const onSortModelChange = React.useCallback(
     (params) => handleEvent('onSortModelChange', params),
@@ -418,7 +412,7 @@ export const ServerSideSorting = () => {
       setRows(newRows);
       setLoading(false);
     },
-    [setLoading, rows, setRows],
+    [rows],
   );
 
   // We use `useMemo` here, to keep the same ref and not trigger another sort on the next rendering
