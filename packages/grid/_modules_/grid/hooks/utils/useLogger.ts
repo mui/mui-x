@@ -47,16 +47,6 @@ function getAppender(name: string, logLevel: string, appender: Logger = console)
       loggerObj[method] = (...args: any[]) => {
         const [message, ...rest] = args;
 
-        // Don't console log non errors in production
-        if (
-          appender === console &&
-          !forceDebug &&
-          method !== 'error' &&
-          process.env.NODE_ENV === 'production'
-        ) {
-          return;
-        }
-
         (appender as any)[method](`${name}: ${message}`, ...rest);
       };
     } else {
@@ -79,7 +69,7 @@ let factory: LoggerFactoryFn | null;
 
 export function useLoggerFactory(
   customLogger?: Logger | LoggerFactoryFn,
-  logLevel: string | boolean = 'debug',
+  logLevel: string | boolean = process.env.NODE_ENV === 'production' ? 'error' : 'warn',
 ) {
   if (forceDebug) {
     factory = defaultFactory('debug');

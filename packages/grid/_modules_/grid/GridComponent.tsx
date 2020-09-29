@@ -43,10 +43,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
   ref,
 ) {
   const [internalOptions, setInternalOptions] = useOptionsProp(props);
-  useLoggerFactory(
-    internalOptions?.logger,
-    internalOptions?.logLevel || DEFAULT_GRID_OPTIONS.logLevel,
-  );
+  useLoggerFactory(internalOptions?.logger, internalOptions?.logLevel);
   const gridLogger = useLogger('Material-UI Data Grid');
 
   const rootContainerRef: RootContainerRef = React.useRef<HTMLDivElement>(null);
