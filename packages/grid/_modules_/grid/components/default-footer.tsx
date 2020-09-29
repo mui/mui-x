@@ -18,9 +18,9 @@ export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps
     const [selectedRowCount, setSelectedCount] = React.useState(0);
 
     React.useEffect(() => {
-      if (apiRef && apiRef.current) {
-        return apiRef.current!.onSelectionChange(({ rows }) => setSelectedCount(rows.length));
-      }
+      return apiRef!.current.onSelectionChange(({ rows }) => {
+        setSelectedCount(rows.length);
+      });
 
       return undefined;
     }, [apiRef]);
