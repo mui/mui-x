@@ -21,8 +21,6 @@ export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps
       return apiRef!.current.onSelectionChange(({ rows }) => {
         setSelectedCount(rows.length);
       });
-
-      return undefined;
     }, [apiRef]);
 
     if (options.hideFooter) {
