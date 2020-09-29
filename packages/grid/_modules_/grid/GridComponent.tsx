@@ -9,7 +9,7 @@ import {
   useSelection,
   useSorting,
 } from './hooks/features';
-import { DEFAULT_GRID_OPTIONS, ElementSize, RootContainerRef } from './models';
+import { ElementSize, RootContainerRef } from './models';
 import { COMPONENT_ERROR, DATA_CONTAINER_CSS_CLASS } from './constants';
 import { GridRoot } from './components/styled-wrappers/GridRoot';
 import { GridDataContainer } from './components/styled-wrappers/GridDataContainer';
