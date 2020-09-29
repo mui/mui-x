@@ -48,7 +48,12 @@ function getAppender(name: string, logLevel: string, appender: Logger = console)
         const [message, ...rest] = args;
 
         // Don't console log non errors in production
-        if (appender === console && method !== 'error' && process.env.NODE_ENV === 'production') {
+        if (
+          appender === console &&
+          !forceDebug &&
+          method !== 'error' &&
+          process.env.NODE_ENV === 'production'
+        ) {
           return;
         }
 
