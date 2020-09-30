@@ -35,7 +35,7 @@ import {
   getFieldFromHeaderElem,
   getIdFromRowElem,
   isCell,
-  isHeaderCell,
+  isHeaderTitleContainer,
 } from '../../utils/domUtils';
 import { optionsSelector } from '../utils/useOptionsProp';
 import { useApiMethod } from './useApiMethod';
@@ -95,7 +95,7 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
             element: rowEl,
           });
         }
-      } else if (isHeaderCell(elem) && !isResizingRef.current) {
+      } else if (isHeaderTitleContainer(elem) && !isResizingRef.current) {
         const headerCell = findParentElementFromClassName(elem, HEADER_CELL_CSS_CLASS)!;
         const field = getFieldFromHeaderElem(headerCell);
         const column = apiRef.current.getColumnFromField(field);

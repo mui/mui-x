@@ -35,10 +35,11 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const columns = useGridSelector(apiRef, columnsSelector);
     const cellFocus = useGridSelector(apiRef, keyboardCellSelector);
     const selectionState = useGridSelector(apiRef, selectionStateSelector);
+    const visibleRows = React.useMemo(()=> rows.filter(row=> !row.isHidden), [rows]);
 
     const getRowsElements = () => {
       // TODO move that to selector
-      const renderedRows = rows.slice(renderCtx.firstRowIdx, renderCtx.lastRowIdx!);
+      const renderedRows = visibleRows.slice(renderCtx.firstRowIdx, renderCtx.lastRowIdx!);
       return renderedRows.map((r, idx) => (
         <Row
           className={(renderCtx.firstRowIdx! + idx) % 2 === 0 ? 'Mui-even' : 'Mui-odd'}

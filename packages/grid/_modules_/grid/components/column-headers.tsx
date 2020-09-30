@@ -14,6 +14,7 @@ import {
   useApiEventHandler,
   columnReorderDragColSelector,
 } from '../hooks';
+import { ColumnFilterMenu } from './column-filter';
 
 export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
@@ -53,8 +54,14 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
     />
   ));
 
-  return <React.Fragment>{items}</React.Fragment>;
+  return (
+    <React.Fragment>
+      <ColumnFilterMenu columns={columns}/>
+      {items}
+    </React.Fragment>
+  );
 };
+
 ColumnHeaderItemCollection.displayName = 'ColumnHeaderItemCollection';
 
 export interface ColumnsHeaderProps {

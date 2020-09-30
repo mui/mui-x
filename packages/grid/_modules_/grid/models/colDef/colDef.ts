@@ -116,6 +116,10 @@ export interface ColDef {
    * Allows to disable the click event in cells.
    */
   disableClickEventBubbling?: boolean;
+
+  filterValue?: any[]
+
+  // applyFilter: (filterValue: any, rows: Rows)=> void;
 }
 
 export type Columns = ColDef[];

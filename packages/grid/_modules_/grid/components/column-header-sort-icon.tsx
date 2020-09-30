@@ -24,20 +24,22 @@ export const ColumnHeaderSortIcon: React.FC<ColumnHeaderSortIconProps> = React.m
     }
 
     return (
-      <span>
-        {index != null && (
-          <Badge badgeContent={index} color="default">
+      <div className="MuiDataGrid-sortIconContainer">
+        <div>
+          {index != null && (
+            <Badge badgeContent={index} color="default">
+              <IconButton aria-label="Sort" size="small">
+                {getIcon(icons, direction)}
+              </IconButton>
+            </Badge>
+          )}
+          {index == null && (
             <IconButton aria-label="Sort" size="small">
               {getIcon(icons, direction)}
             </IconButton>
-          </Badge>
-        )}
-        {index == null && (
-          <IconButton aria-label="Sort" size="small">
-            {getIcon(icons, direction)}
-          </IconButton>
-        )}
-      </span>
+          )}
+        </div>
+      </div>
     );
   },
 );

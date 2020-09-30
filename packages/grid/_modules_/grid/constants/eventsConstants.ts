@@ -22,6 +22,8 @@ export const COLUMN_HEADER_CLICK = 'columnClick';
 export const COLUMN_HEADER_HOVER = 'columnHeaderHover';
 export const PAGE_CHANGED = 'pageChange';
 export const PAGESIZE_CHANGED = 'pageSizeChange';
+export const COLUMN_FILTER_BUTTON_CLICK = 'colFilterButtonClick';
+export const COLUMN_FILTER_CHANGED = 'columnFilterChanged';
 
 export const SCROLLING_START = 'scrolling:start';
 export const SCROLLING = 'scrolling';

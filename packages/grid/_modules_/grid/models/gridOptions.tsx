@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ArrowDownwardIcon, ArrowUpwardIcon, SeparatorIcon } from '../components/icons/index';
+import { ArrowDownwardIcon, ArrowUpwardIcon, SeparatorIcon, FilterIcon } from '../components/icons/index';
 import { Logger } from '../hooks/utils/useLogger';
 import { ColumnTypesRecord } from './colDef/colTypeDef';
 import { DEFAULT_COLUMN_TYPES } from './colDef/defaultColumnTypes';
@@ -17,6 +17,10 @@ import { SortDirection, SortModel } from './sortModel';
  * Set of icons used in the grid component UI.
  */
 export interface IconsOptions {
+  /**
+   * Icon displayed on the side of the column header title to display the filter input component.
+   */
+  columnFiltering?: React.ElementType;
   /**
    * Icon displayed on the side of the column header title when sorted in Ascending order.
    */
@@ -76,6 +80,11 @@ export interface GridOptions {
    * @default false
    */
   disableColumnResize?: boolean;
+  /**
+   * If `true`, column filters are disabled.
+   * @default false
+   */
+  disableColumnFilter?: boolean;
   /**
    * If `true`, reordering columns is disabled.
    * @default false
@@ -268,7 +277,9 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   sortingMode: FeatureModeConstant.client,
   sortingOrder: ['asc', 'desc', null],
   columnTypes: DEFAULT_COLUMN_TYPES,
+  disableColumnFilter: true,
   icons: {
+    columnFiltering: FilterIcon,
     columnSortedAscending: ArrowUpwardIcon,
     columnSortedDescending: ArrowDownwardIcon,
     columnResize: SeparatorIcon,
