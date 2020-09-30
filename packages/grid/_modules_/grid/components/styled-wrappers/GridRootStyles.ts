@@ -53,7 +53,6 @@ export const useStyles = makeStyles(
           display: 'flex',
           flexDirection: 'column',
           borderBottom: `1px solid ${borderColor}`,
-          zIndex: 100,
         },
         '& .MuiDataGrid-colCellWrapper': {
           display: 'flex',
@@ -84,24 +83,25 @@ export const useStyles = makeStyles(
           overflow: 'hidden',
           whiteSpace: 'nowrap',
         },
+        '& .MuiDataGrid-colCell:not(.MuiDataGrid-colCellSorted) .MuiDataGrid-colCellTitleContainer': {
+          flex: 1,
+        },
         '&:not(.MuiDataGrid-colCellNumeric) .MuiDataGrid-sortIconContainer': {
           flex: 1,
           overflow: 'hidden', // issue with multiple sorting on numeric if on. If off issue with small cols
         },
         '& .MuiDataGrid-colCellNumeric .MuiDataGrid-sortIconContainer': {
           display: 'inline-flex',
-          paddingRight: 5
+          paddingRight: 5,
         },
         '& .MuiDataGrid-colCellNumeric .MuiDataGrid-colCellTitleContainer': {
           flex: 1,
         },
-        '&:not(.MuiDataGrid-colCellNumeric)' : {
-          '&.MuiDataGrid-colCellSorted .MuiDataGrid-colCellTitleContainer': {
-            flex: '0 1 auto'
-          }
+        '&  .MuiDataGrid-colCellSorted:not(.MuiDataGrid-colCellNumeric) .MuiDataGrid-colCellTitleContainer': {
+          flex: '0 1 auto',
         },
         '& .MuiDataGrid-colCellNumeric.MuiDataGrid-colCellSorted  .MuiDataGrid-colCellTitle': {
-          display: 'inline-flex'
+          display: 'inline-flex',
         },
         '& .MuiDataGrid-colCellSortable': {
           cursor: 'pointer',
@@ -141,7 +141,7 @@ export const useStyles = makeStyles(
           fontSize: 18,
         },
         '& .MuiDataGrid-colCell:hover  .MuiDataGrid-iconFilter': {
-           visibility: 'visible'
+          visibility: 'visible',
         },
         '& .MuiDataGrid-colCellWrapper.scroll .MuiDataGrid-colCell:last-child': {
           borderRight: 'none',
