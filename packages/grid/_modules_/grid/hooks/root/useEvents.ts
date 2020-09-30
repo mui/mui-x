@@ -30,7 +30,7 @@ import {
   getFieldFromHeaderElem,
   getIdFromRowElem,
   isCell,
-  isHeaderCell,
+  isHeaderTitleContainer,
 } from '../../utils/domUtils';
 import { useApiMethod } from './useApiMethod';
 import { useApiEventHandler } from './useApiEventHandler';
@@ -92,7 +92,7 @@ export function useEvents(
             element: rowEl,
           });
         }
-      } else if (isHeaderCell(elem) && !isResizingRef.current) {
+      } else if (isHeaderTitleContainer(elem) && !isResizingRef.current) {
         const headerCell = findParentElementFromClassName(elem, HEADER_CELL_CSS_CLASS)!;
         const field = getFieldFromHeaderElem(headerCell);
         const column = apiRef.current.getColumnFromField(field);

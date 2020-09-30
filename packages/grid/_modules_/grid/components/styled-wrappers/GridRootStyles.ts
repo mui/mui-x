@@ -79,17 +79,41 @@ export const useStyles = makeStyles(
           position: 'relative',
           display: 'flex',
         },
+        '& .MuiDataGrid-colCellTitleContainer': {
+          textOverflow: 'ellipsis',
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+        },
+        '&:not(.MuiDataGrid-colCellNumeric) .MuiDataGrid-sortIconContainer': {
+          flex: 1,
+          overflow: 'hidden', // issue with multiple sorting on numeric if on. If off issue with small cols
+        },
+        '& .MuiDataGrid-colCellNumeric .MuiDataGrid-sortIconContainer': {
+          display: 'inline-flex',
+          paddingRight: 5
+        },
+        '& .MuiDataGrid-colCellNumeric .MuiDataGrid-colCellTitleContainer': {
+          flex: 1,
+        },
+        '&:not(.MuiDataGrid-colCellNumeric)' : {
+          '&.MuiDataGrid-colCellSorted .MuiDataGrid-colCellTitleContainer': {
+            flex: '0 1 auto'
+          }
+        },
+        '& .MuiDataGrid-colCellNumeric.MuiDataGrid-colCellSorted  .MuiDataGrid-colCellTitle': {
+          display: 'inline-flex'
+        },
         '& .MuiDataGrid-colCellSortable': {
           cursor: 'pointer',
         },
         '& .MuiDataGrid-sortIcon': {
           fontSize: 18,
         },
-        '& .MuiDataGrid-colCellCenter': {
-          justifyContent: 'center',
+        '& .MuiDataGrid-colCellCenter .MuiDataGrid-colCellTitleContainer': {
+          textAlign: 'center',
         },
-        '& .MuiDataGrid-colCellRight': {
-          justifyContent: 'flex-end',
+        '& .MuiDataGrid-colCellRight .MuiDataGrid-colCellTitleContainer': {
+          textAlign: 'right',
         },
         '& .MuiDataGrid-colCellTitle': {
           textOverflow: 'ellipsis',
@@ -111,6 +135,13 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-columnSeparator:hover .MuiDataGrid-resizable': {
           cursor: 'col-resize',
           color: 'inherit',
+        },
+        '& .MuiDataGrid-iconFilter': {
+          visibility: 'hidden',
+          fontSize: 18,
+        },
+        '& .MuiDataGrid-colCell:hover  .MuiDataGrid-iconFilter': {
+           visibility: 'visible'
         },
         '& .MuiDataGrid-colCellWrapper.scroll .MuiDataGrid-colCell:last-child': {
           borderRight: 'none',
