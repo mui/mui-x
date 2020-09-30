@@ -42,8 +42,8 @@ export function ColumnHeaderTitle(props: ColumnHeaderTitleProps) {
   }, [titleRef, columnWidth, description, label]);
 
   return (
-    <Tooltip title={description || tooltip}>
-      <ColumnHeaderInnerTitle ref={titleRef}>{label}</ColumnHeaderInnerTitle>
-    </Tooltip>
+      <Tooltip title={description || tooltip}>
+        <ColumnHeaderInnerTitle ref={titleRef}>{label}</ColumnHeaderInnerTitle>
+      </Tooltip>
   );
 }
