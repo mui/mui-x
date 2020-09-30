@@ -21,7 +21,7 @@ export function ColumnsAlign() {
   const transformCols = React.useCallback((cols) => {
     if (cols.length > 0) {
       cols.forEach((col: ColDef, idx) => {
-        if (idx > 1 && idx % 2 === 1  && idx < 5 ) {
+        if (idx > 1 && idx % 2 === 1 && idx < 5) {
           col.align = 'right';
           col.headerAlign = 'right';
         } else if (idx > 1 && idx % 2 === 0 && idx < 5) {
