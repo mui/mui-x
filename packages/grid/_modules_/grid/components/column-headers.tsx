@@ -3,7 +3,7 @@ import { ColDef, Columns, RenderContextProps } from '../models';
 import { ColumnHeaderItem } from './column-header-item';
 import { ApiContext } from './api-context';
 import { LeftEmptyCell, RightEmptyCell } from './cell';
-import { ColumnFilterMenu } from './column-header-filter-icon';
+import { ColumnFilterMenu } from './column-filter';
 
 export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
@@ -22,7 +22,7 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
 
     return (
       <React.Fragment>
-        <ColumnFilterMenu />
+        <ColumnFilterMenu columns={columns}  />
         {items}
       </React.Fragment>
     );

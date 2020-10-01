@@ -22,9 +22,10 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportP
   ({ options, rows, visibleColumns }, renderingZoneRef) => {
     const logger = useLogger('Viewport');
     const renderCtx = React.useContext(RenderContext) as RenderContextProps;
+    const visibleRows = React.useMemo(()=> rows.filter(row=> !row.isHidden), [rows]);
 
     const getRowsElements = () => {
-      const renderedRows = rows.slice(renderCtx.firstRowIdx, renderCtx.lastRowIdx!);
+      const renderedRows = visibleRows.slice(renderCtx.firstRowIdx, renderCtx.lastRowIdx!);
       return renderedRows.map((r, idx) => (
         <Row
           className={(renderCtx.firstRowIdx! + idx) % 2 === 0 ? 'Mui-even' : 'Mui-odd'}

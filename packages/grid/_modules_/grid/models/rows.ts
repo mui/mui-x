@@ -36,6 +36,7 @@ export interface RowModel {
   id: RowId;
   data: RowData;
   selected: boolean;
+  isHidden?: boolean;
 }
 
 /**
