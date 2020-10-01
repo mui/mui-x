@@ -33,6 +33,7 @@ import { debounce } from './utils';
 import { useEvents } from './hooks/root/useEvents';
 import { ErrorBoundary } from './components/error-boundary';
 import { useOptionsProp } from './hooks/utils/useOptionsProp';
+import {useColumnFilter} from "./hooks/features/useColumnFilter";
 
 /**
  * Data Grid component implementing [[GridComponentProps]].
@@ -84,6 +85,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
   useKeyboard(internalOptions, initialised, apiRef);
   useSelection(internalOptions, props.rows, initialised, apiRef);
   useSorting(internalOptions, props.rows, props.columns, apiRef);
+  useColumnFilter(apiRef, internalOptions, internalRows);
 
   const renderCtx = useVirtualRows(
     columnsHeaderRef,
