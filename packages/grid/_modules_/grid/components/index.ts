@@ -1,5 +1,5 @@
 export * from './api-context';
-export * from './autosizer';
+export * from './AutoSizer';
 export * from './cell';
 export * from './checkbox-renderer';
 export * from './column-header-item';

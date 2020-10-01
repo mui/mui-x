@@ -9,7 +9,7 @@ import {
   useSelection,
   useSorting,
 } from './hooks/features';
-import { DEFAULT_GRID_OPTIONS, ElementSize, RootContainerRef } from './models';
+import { ElementSize, RootContainerRef } from './models';
 import { COMPONENT_ERROR, DATA_CONTAINER_CSS_CLASS } from './constants';
 import { GridRoot } from './components/styled-wrappers/GridRoot';
 import { GridDataContainer } from './components/styled-wrappers/GridDataContainer';
@@ -17,7 +17,7 @@ import { GridColumnsContainer } from './components/styled-wrappers/GridColumnsCo
 import { useVirtualRows } from './hooks/virtualization';
 import {
   ApiContext,
-  AutoSizerWrapper,
+  AutoSizer,
   ColumnsHeader,
   DefaultFooter,
   OptionsContext,
@@ -43,11 +43,8 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
   ref,
 ) {
   const [internalOptions, setInternalOptions] = useOptionsProp(props);
-  useLoggerFactory(
-    internalOptions?.logger,
-    internalOptions?.logLevel || DEFAULT_GRID_OPTIONS.logLevel,
-  );
-  const gridLogger = useLogger('Grid');
+  useLoggerFactory(internalOptions?.logger, internalOptions?.logLevel);
+  const gridLogger = useLogger('Material-UI Data Grid');
 
   const rootContainerRef: RootContainerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(rootContainerRef, ref);
@@ -66,7 +63,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     internalApiRef,
   ]);
 
-  const initialised = useApi(rootContainerRef, internalOptions, apiRef);
+  const initialised = useApi(rootContainerRef, apiRef);
 
   const errorHandler = (args: any) => {
     // We are handling error here, to set up the handler as early as possible and be able to catch error thrown at init time.
@@ -119,6 +116,19 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
 
   const onResize = React.useCallback(
     (size: ElementSize) => {
+      if (size.height === 0) {
+        gridLogger.warn(
+          [
+            'The parent of the grid has an empty height.',
+            'You need to make sure the container has an intrinsic height.',
+            'The grid displays with a height of 0px.',
+            '',
+            'You can find a solution in the docs:',
+            'https://material-ui.com/components/data-grid/rendering/#layout',
+          ].join('\n'),
+        );
+      }
+
       gridLogger.info('resized...', size);
       apiRef!.current.resize();
     },
@@ -161,7 +171,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
   );
 
   return (
-    <AutoSizerWrapper onResize={debouncedOnResize} style={{ height: 'unset', width: 'unset' }}>
+    <AutoSizer onResize={debouncedOnResize}>
       {(size: any) => (
         <GridRoot
           ref={handleRef}
@@ -258,6 +268,6 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
           </ErrorBoundary>
         </GridRoot>
       )}
-    </AutoSizerWrapper>
+    </AutoSizer>
   );
 });

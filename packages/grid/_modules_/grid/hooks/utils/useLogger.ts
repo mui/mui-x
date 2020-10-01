@@ -46,7 +46,8 @@ function getAppender(name: string, logLevel: string, appender: Logger = console)
     if (idx >= minLogLevelIdx) {
       loggerObj[method] = (...args: any[]) => {
         const [message, ...rest] = args;
-        (appender as any)[method](`[${name}] - ${message}`, ...rest);
+
+        (appender as any)[method](`${name}: ${message}`, ...rest);
       };
     } else {
       loggerObj[method] = noop;
@@ -68,7 +69,7 @@ let factory: LoggerFactoryFn | null;
 
 export function useLoggerFactory(
   customLogger?: Logger | LoggerFactoryFn,
-  logLevel: string | boolean = 'debug',
+  logLevel: string | boolean = process.env.NODE_ENV === 'production' ? 'error' : 'warn',
 ) {
   if (forceDebug) {
     factory = defaultFactory('debug');
