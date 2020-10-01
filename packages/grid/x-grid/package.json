@@ -24,6 +24,12 @@
     "datagrid",
     "data-grid"
   ],
+  "scripts": {
+    "precommit": "npm run lint",
+    "lint": "../../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../.eslintrc.js && npm run lint:css",
+    "lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../../.stylelintrc.js",
+    "typescript": "tsc -p tsconfig.json"
+  },
   "dependencies": {
     "@material-ui/x-license": "^4.0.0-alpha.6",
     "prop-types": "^15.7.2",
@@ -33,11 +39,6 @@
   "peerDependencies": {
     "@material-ui/core": "^4.9.12",
     "react": "^16.8.0"
-  },
-  "scripts": {
-    "precommit": "npm run lint",
-    "lint": "../../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../.eslintrc.js && npm run lint:css",
-    "lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../../.stylelintrc.js"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
