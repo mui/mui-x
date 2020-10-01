@@ -1,7 +1,7 @@
 /* eslint-disable react/forbid-foreign-prop-types */
 import * as React from 'react';
 import PropTypes from 'prop-types';
-// @ts-ignore
+// @ts-expect-error need to migrate helpers to TypeScript
 import { createClientRender, ErrorBoundary } from 'test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';

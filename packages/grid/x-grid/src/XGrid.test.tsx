@@ -1,4 +1,5 @@
 import * as React from 'react';
+// @ts-expect-error need to migrate helpers to TypeScript
 import { screen, createClientRender, act, fireEvent } from 'test/utils';
 import { expect } from 'chai';
 import { XGrid, useApiRef } from '@material-ui/x-grid';
@@ -74,7 +75,7 @@ describe('<XGrid />', () => {
   // Adapation of describeConformance()
   describe('Material-UI component API', () => {
     it(`attaches the ref`, () => {
-      const ref = React.createRef();
+      const ref = React.createRef<HTMLDivElement>();
       const { container } = render(
         <div style={{ width: 300, height: 300 }}>
           <XGrid {...defaultProps} ref={ref} />
