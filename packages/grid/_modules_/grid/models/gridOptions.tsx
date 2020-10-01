@@ -257,7 +257,6 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   paginationMode: FeatureModeConstant.client,
   sortingMode: FeatureModeConstant.client,
   sortingOrder: ['asc', 'desc', null],
-  logLevel: 'warn',
   columnTypes: DEFAULT_COLUMN_TYPES,
   icons: {
     columnSortedAscending: ArrowUpwardIcon,

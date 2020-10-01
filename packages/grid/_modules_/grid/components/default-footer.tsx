@@ -12,17 +12,16 @@ export interface DefaultFooterProps {
 }
 
 export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps>(
-  function DefaultFooter({ options, rowCount, paginationComponent }, ref) {
-    const api = React.useContext(ApiContext);
+  function DefaultFooter(props, ref) {
+    const { options, rowCount, paginationComponent } = props;
+    const apiRef = React.useContext(ApiContext);
     const [selectedRowCount, setSelectedCount] = React.useState(0);
 
     React.useEffect(() => {
-      if (api && api.current) {
-        return api.current!.onSelectionChange(({ rows }) => setSelectedCount(rows.length));
-      }
-
-      return undefined;
-    }, [api]);
+      return apiRef!.current.onSelectionChange(({ rows }) => {
+        setSelectedCount(rows.length);
+      });
+    }, [apiRef]);
 
     if (options.hideFooter) {
       return null;

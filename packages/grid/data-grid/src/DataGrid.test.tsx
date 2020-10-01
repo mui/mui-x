@@ -3,6 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 // @ts-expect-error need to migrate helpers to TypeScript
 import { createClientRender, ErrorBoundary } from 'test/utils';
+import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
 
@@ -79,6 +80,29 @@ describe('<DataGrid />', () => {
         );
         const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
         expect(cell).to.have.text('Addidas');
+      });
+    });
+
+    describe('warnings', () => {
+      let clock;
+
+      beforeEach(() => {
+        clock = useFakeTimers();
+      });
+
+      afterEach(() => {
+        clock.restore();
+      });
+
+      it('should warn if the container has no intrinsic height', () => {
+        expect(() => {
+          render(
+            <div style={{ width: 300, height: 0 }}>
+              <DataGrid {...defaultProps} />
+            </div>,
+          );
+          clock.tick(100);
+        }).toWarnDev('Material-UI Data Grid: The parent of the grid has an empty height.');
       });
     });
   });

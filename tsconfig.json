@@ -25,7 +25,7 @@
       "@material-ui/x-grid": ["./packages/grid/x-grid/src"],
       "@material-ui/x-grid/*": ["./packages/grid/x-grid/src/*"],
       "@material-ui/x-license": ["./packages/x-license/src"],
-      "@material-ui/x-license/*": ["./packages/x-license/src/¨"]
+      "@material-ui/x-license/*": ["./packages/x-license/src/*"]
     }
   }
 }
