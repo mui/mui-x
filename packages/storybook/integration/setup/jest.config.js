@@ -1,7 +1,7 @@
 module.exports = {
   preset: 'jest-puppeteer',
   rootDir: '../',
-  testRegex: './integration/mouse.test.ts',
+  testRegex: './*\\.test\\.ts$',
   setupFilesAfterEnv: ['./setup/setupTests.js'],
   transform: {
     '^.+\\.(t)sx?$': 'ts-jest',

@@ -55,17 +55,25 @@ describe('Mouse Interactions', () => {
       });
     }
 
-    const firstTodo = await page.evaluate(() => document.querySelectorAll('.MuiDataGrid-colCell')[0].getAttribute('data-field'));
-    const secondTodo = await page.evaluate(() => document.querySelectorAll('.MuiDataGrid-colCell')[1].getAttribute('data-field'));
+    const firstTodo = await page.evaluate(() =>
+      document.querySelectorAll('.MuiDataGrid-colCell')[0].getAttribute('data-field'),
+    );
+    const secondTodo = await page.evaluate(() =>
+      document.querySelectorAll('.MuiDataGrid-colCell')[1].getAttribute('data-field'),
+    );
 
     dragAndDrop();
     await page.waitFor(100);
 
-    const newFirstTodo = await page.evaluate(() => document.querySelectorAll('.MuiDataGrid-colCell')[0].getAttribute('data-field'));
-    const newSecondTodo = await page.evaluate(() => document.querySelectorAll('.MuiDataGrid-colCell')[1].getAttribute('data-field'));
+    const newFirstTodo = await page.evaluate(() =>
+      document.querySelectorAll('.MuiDataGrid-colCell')[0].getAttribute('data-field'),
+    );
+    const newSecondTodo = await page.evaluate(() =>
+      document.querySelectorAll('.MuiDataGrid-colCell')[1].getAttribute('data-field'),
+    );
 
-    expect(newFirstTodo).toEqual(secondTodo)
-    expect(newSecondTodo).toEqual(firstTodo)
+    expect(newFirstTodo).toEqual(secondTodo);
+    expect(newSecondTodo).toEqual(firstTodo);
 
     done();
   });
