@@ -28,7 +28,7 @@ export const ColumnHeaderItem = React.memo(
     onColumnDragEnter,
   }: ColumnHeaderItemProps) => {
     const api = React.useContext(ApiContext);
-    const { showColumnRightBorder, disableColumnResize } = React.useContext(OptionsContext);
+    const { showColumnRightBorder, disableColumnResize, disableColumnReorder } = React.useContext(OptionsContext);
 
     const cssClass = classnames(
       HEADER_CELL_CSS_CLASS,
@@ -40,6 +40,7 @@ export const ColumnHeaderItem = React.memo(
       { 'MuiDataGrid-colCellSortable': column.sortable },
     );
 
+
     let headerComponent: React.ReactElement | null = null;
     if (column.renderHeader) {
       headerComponent = column.renderHeader({
@@ -50,8 +51,9 @@ export const ColumnHeaderItem = React.memo(
       });
     }
 
-    const handleResize = onResizeColumn ? () => onResizeColumn(column) : undefined;
-    const onDragStart = onColumnDragStart
+    const handleResize = onResizeColumn && !disableColumnReorder
+      ? () => onResizeColumn(column) : undefined;
+    const onDragStart = onColumnDragStart && !disableColumnReorder
       ? (event) => onColumnDragStart(column, event.target)
       : undefined;
     const onDragEnter = onColumnDragEnter ? () => onColumnDragEnter(column) : undefined;
@@ -80,7 +82,7 @@ export const ColumnHeaderItem = React.memo(
       >
         <div
           className="MuiDataGrid-colCell-draggable"
-          draggable={!!onDragStart && !!onDragEnter}
+          draggable={!disableColumnReorder && !!onDragStart && !!onDragEnter}
           onDragStart={onDragStart}
           onDragEnter={onDragEnter}
         >

@@ -7,6 +7,7 @@ const chainPropTypes = require('@material-ui/utils').chainPropTypes;
 
 const FORCED_PROPS: Partial<GridComponentProps> = {
   disableColumnResize: true,
+  disableColumnReorder: true,
   disableMultipleColumnsSorting: true,
   disableMultipleSelection: true,
   pagination: true,
@@ -16,6 +17,7 @@ const FORCED_PROPS: Partial<GridComponentProps> = {
 export type DataGridProps = Omit<
   GridComponentProps,
   | 'disableColumnResize'
+  | 'disableColumnReorder'
   | 'disableMultipleColumnsSorting'
   | 'disableMultipleSelection'
   | 'licenseStatus'
@@ -24,6 +26,7 @@ export type DataGridProps = Omit<
   | 'pagination'
 > & {
   disableColumnResize?: true;
+  disableColumnReorder?: true;
   disableMultipleColumnsSorting?: true;
   disableMultipleSelection?: true;
   pagination?: true;
@@ -83,6 +86,18 @@ DataGrid2.propTypes = {
         [
           `Material-UI: \`<DataGrid disableColumnResize={false} />\` is not a valid prop.`,
           'Column resizing is not available in the MIT version',
+          '',
+          'You need to upgrade to the XGrid component to unlock this feature.',
+        ].join('\n'),
+      );
+    }
+  }),
+  disableColumnReorder: chainPropTypes(PropTypes.bool, (props) => {
+    if (props.disableColumnReorder === false) {
+      throw new Error(
+        [
+          `Material-UI: \`<DataGrid disableColumnReorder={false} />\` is not a valid prop.`,
+          'Column reordering is not available in the MIT version',
           '',
           'You need to upgrade to the XGrid component to unlock this feature.',
         ].join('\n'),

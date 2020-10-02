@@ -3,6 +3,7 @@ import { ColDef, Columns, RenderContextProps } from '../models';
 import { ColumnHeaderItem } from './column-header-item';
 import { ApiContext } from './api-context';
 import { LeftEmptyCell, RightEmptyCell } from './cell';
+import { OptionsContext } from './options-context';
 
 export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
@@ -54,6 +55,7 @@ export const ColumnsHeader = React.memo(
     ) => {
       const wrapperCssClasses = `MuiDataGrid-colCellWrapper ${hasScrollX ? 'scroll' : ''}`;
       const api = React.useContext(ApiContext);
+      const { disableColumnReorder } = React.useContext(OptionsContext);
 
       if (!api) {
         throw new Error('Material-UI: ApiRef was not found in context.');
@@ -80,7 +82,8 @@ export const ColumnsHeader = React.memo(
         }
       }, [renderCtx, columns]);
 
-      const onDragOver = onColumnDragOver ? (event) => onColumnDragOver(event) : undefined;
+      const onDragOver = onColumnDragOver && !disableColumnReorder
+        ? (event) => onColumnDragOver(event) : undefined;
 
       return (
         <div
