@@ -28,9 +28,7 @@ export const ColumnHeaderItem = React.memo(
     onColumnDragEnter,
   }: ColumnHeaderItemProps) => {
     const api = React.useContext(ApiContext);
-    const { showColumnRightBorder, disableColumnResize, disableColumnReorder } = React.useContext(
-      OptionsContext,
-    );
+    const { showColumnRightBorder, disableColumnResize, disableColumnReorder } = React.useContext(OptionsContext);
 
     const cssClass = classnames(
       HEADER_CELL_CSS_CLASS,
@@ -52,12 +50,8 @@ export const ColumnHeaderItem = React.memo(
       });
     }
 
-    const handleResize =
-      onResizeColumn && !disableColumnReorder ? () => onResizeColumn(column) : undefined;
-    const onDragStart =
-      onColumnDragStart && !disableColumnReorder
-        ? (event) => onColumnDragStart(column, event.target)
-        : undefined;
+    const handleResize = onResizeColumn && !disableColumnReorder ? () => onResizeColumn(column) : undefined;
+    const onDragStart = onColumnDragStart && !disableColumnReorder ? (event) => onColumnDragStart(column, event.target) : undefined;
     const onDragEnter = onColumnDragEnter ? () => onColumnDragEnter(column) : undefined;
 
     const width = column.width!;
