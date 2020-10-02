@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/x-license",
-  "version": "4.0.0-alpha.2",
+  "version": "4.0.0-alpha.6",
   "description": "Material-UI X License verification",
   "author": "Material-UI Team",
   "main": "dist/cjs/index.js",
@@ -21,15 +21,7 @@
     "esm": "^3.2.25"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^8.0.1",
-    "@types/node": "^14.0.13",
-    "rollup": "^2.6.1",
-    "rollup-plugin-cleaner": "^1.0.0",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-dts": "^1.4.7",
-    "rollup-plugin-sourcemaps": "^0.6.2",
-    "rollup-plugin-terser": "^5.3.0",
-    "rollup-plugin-typescript2": "^0.27.0"
+    "@types/node": "^14.0.13"
   },
   "peerDependencies": {
     "react": "^16.13.1"
@@ -47,6 +39,6 @@
   ],
   "gitHead": "f1d56176bb6308bb55c69f5c2fd5593c4e4faebc",
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=10.0.0"
   }
 }

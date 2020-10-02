@@ -54,7 +54,6 @@ export default function CustomColumnTypesGrid() {
     <div style={{ height: 300, width: '100%' }} className={classes.root}>
       <DataGrid
         columns={[
-          { field: 'id', hide: true },
           { field: 'status', width: 130 },
           { field: 'subTotal', ...usdPrice },
           { field: 'total', ...usdPrice },

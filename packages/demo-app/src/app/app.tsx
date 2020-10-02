@@ -17,7 +17,7 @@ export function App() {
   const [state, dispatch] = React.useReducer(appReducer, { isOpen: false });
   const toggleDrawer = React.useCallback(
     () => dispatch({ type: state.isOpen ? 'close-drawer' : 'open-drawer' }),
-    [state, dispatch],
+    [state],
   );
 
   const { theme, themeId, toggleTheme, isDark } = useTheme();

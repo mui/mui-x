@@ -221,7 +221,8 @@ export const CustomComparator = () => {
     field: 'username',
     valueGetter: (params) =>
       `${params.getValue('name') || 'unknown'}_${params.getValue('age') || 'x'}`,
-    sortComparator: (v1, v2, row1, row2) => row1.data.age - row2.data.age,
+    sortComparator: (v1, v2, cellParams1, cellParams2) =>
+      cellParams1.data.age - cellParams2.data.age,
     sortDirection: 'asc',
     width: 150,
   };
@@ -247,6 +248,7 @@ export const SortingWithFormatter = () => {
     </div>
   );
 };
+
 export const SortModelOptionsMultiple = () => {
   const sortModel: SortModel = React.useMemo(
     () => [
@@ -296,13 +298,10 @@ export const SortedEventsApi = () => {
   const cols = React.useMemo(() => getColumns(), []);
   const [loggedEvents, setEvents] = React.useState<any[]>([]);
 
-  const handleEvent = React.useCallback(
-    (name, params) => {
-      action(name)(params);
-      setEvents((prev: any[]) => [...prev, name]);
-    },
-    [setEvents],
-  );
+  const handleEvent = React.useCallback((name, params) => {
+    action(name)(params);
+    setEvents((prev: any[]) => [...prev, name]);
+  }, []);
 
   React.useEffect(() => {
     apiRef.current.onSortModelChange((params) => handleEvent('onSortModelChange', params));
@@ -335,13 +334,10 @@ export const SortedEventsOptions = () => {
   const cols = React.useMemo(() => getColumns(), []);
   const [loggedEvents, setEvents] = React.useState<any[]>([]);
 
-  const handleEvent = React.useCallback(
-    (name, params) => {
-      action(name)(params);
-      setEvents((prev: any[]) => [...prev, name]);
-    },
-    [setEvents],
-  );
+  const handleEvent = React.useCallback((name, params) => {
+    action(name)(params);
+    setEvents((prev: any[]) => [...prev, name]);
+  }, []);
 
   const onSortModelChange = React.useCallback(
     (params) => handleEvent('onSortModelChange', params),
@@ -416,7 +412,7 @@ export const ServerSideSorting = () => {
       setRows(newRows);
       setLoading(false);
     },
-    [setLoading, rows, setRows],
+    [rows],
   );
 
   // We use `useMemo` here, to keep the same ref and not trigger another sort on the next rendering

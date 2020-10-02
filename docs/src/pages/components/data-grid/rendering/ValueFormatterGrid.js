@@ -2,7 +2,6 @@ import * as React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 
 const columns = [
-  { field: 'id', hide: true },
   {
     field: 'date',
     headerName: 'Year',

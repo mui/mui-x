@@ -36,7 +36,7 @@ export interface CellParams {
   /**
    * The row index of the row that the current cell belongs to.
    */
-  rowIndex: number;
+  rowIndex?: number;
   /**
    * ApiRef that let you manipulate the grid.
    */

@@ -21,7 +21,7 @@ export function useLicenseVerifier() {
     } else if (newLicenseStatus === LicenseStatus.Expired) {
       showExpiredLicenseError();
     }
-  }, [setLicenseStatus]);
+  }, []);
 
   return licenseStatus;
 }

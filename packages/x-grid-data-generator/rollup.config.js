@@ -2,9 +2,7 @@ import typescript from 'rollup-plugin-typescript2';
 import cleaner from 'rollup-plugin-cleaner';
 import sourceMaps from 'rollup-plugin-sourcemaps';
 import { terser } from 'rollup-plugin-terser';
-import css from 'rollup-plugin-css-only';
 import commonjs from 'rollup-plugin-commonjs';
-import postcss from 'rollup-plugin-postcss';
 import dts from 'rollup-plugin-dts';
 import pkg from './package.json';
 
@@ -25,7 +23,6 @@ export default [
         sourcemap: !production,
       },
     ],
-
     external: [...Object.keys(pkg.peerDependencies || {})],
     plugins: [
       production &&
@@ -33,9 +30,7 @@ export default [
           targets: ['./dist/'],
         }),
       typescript(),
-      css({ output: 'dist/demo-style.css' }),
       commonjs(),
-      postcss(),
       !production && sourceMaps(),
       production && terser(),
     ],
