@@ -18,7 +18,7 @@ export const useColumnFilter = (
 		let updates: any[] = [];
 		rows.forEach(row=> {
 			// const isShown = filterRegex.test(row.data[column.field]);
-			const isShown = filterRegexes.every((regEx)=> regEx.test(row.data[column.field]));
+			const isShown = !filterRegexes.length || filterRegexes.some((regEx)=> regEx.test(row.data[column.field]));
 
 			if(row.isHidden !== !isShown) {
 				updates = [...updates, {id: row.id, isHidden: !isShown}];
