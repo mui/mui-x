@@ -10,9 +10,6 @@ describe('Mouse Interactions', () => {
   });
   beforeEach(async (done) => {
     page = await getStoryPage(browser, '/story/x-grid-tests-reorder--reorder-small-dataset', true);
-    await page.keyboard.press('Tab');
-    await page.keyboard.press('Tab');
-    await page.waitFor(100);
     done();
   });
 
