@@ -3,8 +3,9 @@ import { ColDef } from '../../models/colDef';
 import { useLogger } from '../utils';
 import { ApiRef } from '../../models';
 import {
-  COL_REORDER_DRAG_OVER,
   COL_REORDER_START,
+  COL_REORDER_DRAG_OVER,
+  COL_REORDER_DRAG_ENTER,
   COL_REORDER_STOP,
 } from '../../constants/eventsConstants';
 
@@ -44,7 +45,7 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
   const handleDragOver = React.useCallback(
     (event) => {
       event.preventDefault();
-      logger.debug(`Start dragging col ${event.target}`);
+      logger.debug(`Dragging over col ${event.target}`);
       apiRef.current.publishEvent(COL_REORDER_DRAG_OVER);
 
       columnsRef.current?.classList.add(cssDnDClasses.columnsHeaderDropZone);
@@ -72,6 +73,7 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
   const handleDragEnter = React.useCallback(
     (col: ColDef): void => {
       logger.debug(`Enter dragging col ${col.field}`);
+      apiRef.current.publishEvent(COL_REORDER_DRAG_ENTER);
 
       if (col.field !== dragCol.current!.field) {
         const targetColIndex = apiRef.current.getColumnIndex(col.field);
