@@ -1,16 +1,23 @@
 import * as React from 'react';
+import Button from '@material-ui/core/Button';
 import { DataGrid } from '@material-ui/data-grid';
 
 const columns = [
   {
     field: 'date',
     headerName: 'Year',
+    width: 150,
     renderCell: (params) => (
       <strong>
-        {params.value.getFullYear()}{' '}
-        <span role="img" aria-label="birthday">
-          🎂
-        </span>
+        {params.value.getFullYear()}
+        <Button
+          variant="contained"
+          color="primary"
+          size="small"
+          style={{ marginLeft: 16 }}
+        >
+          Open
+        </Button>
       </strong>
     ),
   },
