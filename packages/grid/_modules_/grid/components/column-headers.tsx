@@ -88,7 +88,7 @@ export const ColumnsHeader = React.memo(
         onColumnDragOver && !disableColumnReorder ? (event) => onColumnDragOver(event) : undefined;
 
       return (
-        <>
+        <React.Fragment>
           <ScrollArea scrollDirection="left" />
           <div
             ref={columnsHeaderRef}
@@ -109,7 +109,7 @@ export const ColumnsHeader = React.memo(
             <RightEmptyCell width={renderCtx?.rightEmptyWidth} />
           </div>
           <ScrollArea scrollDirection="right" />
-        </>
+        </React.Fragment>
       );
     },
   ),

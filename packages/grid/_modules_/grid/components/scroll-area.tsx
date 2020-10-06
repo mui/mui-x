@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { COL_REORDER_START, COL_REORDER_STOP, SCROLLING } from '../constants/eventsConstants';
 import { ScrollParams, useApiEventHandler } from '../hooks';
+import { ApiRef } from '../models';
 import { ApiContext } from './api-context';
 
 type ScrollDirection = 'left' | 'right';
@@ -41,13 +42,15 @@ export const ScrollArea: React.FC<ScrollAreaProps> = React.memo(
       setIsDragging(!isDragging);
     }, [isDragging]);
 
-    if (api) {
-      useApiEventHandler(api, SCROLLING, setCurrentScrollPosition);
-      useApiEventHandler(api, COL_REORDER_START, toggleIsDragging);
-      useApiEventHandler(api, COL_REORDER_STOP, toggleIsDragging);
-    }
+    useApiEventHandler(api as ApiRef, SCROLLING, setCurrentScrollPosition);
+    useApiEventHandler(api as ApiRef, COL_REORDER_START, toggleIsDragging);
+    useApiEventHandler(api as ApiRef, COL_REORDER_STOP, toggleIsDragging);
 
-    return <>{isDragging && <div className={cssClass} onDragOver={handleDragOver} />}</>;
+    return (
+      <React.Fragment>
+        {isDragging && <div className={cssClass} onDragOver={handleDragOver} />}
+      </React.Fragment>
+    );
   },
 );
 ScrollArea.displayName = 'ScrollArea';

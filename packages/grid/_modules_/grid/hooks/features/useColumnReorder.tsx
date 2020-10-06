@@ -107,7 +107,7 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
         apiRef.current.updateColumns(columnsReordered, true);
       }
     },
-    [apiRef, didCursorPositionChanged, reorderColDefArray, logger],
+    [apiRef, logger],
   );
 
   return {
