@@ -29,7 +29,7 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">disableMultipleSelection</span> | <span class="prop-type">boolean</span> | false | If `true`, multiple selection using the CTRL or CMD key is disabled. |
 | <span class="prop-name">disableMultipleColumnsSorting</span> | <span class="prop-type">boolean</span> | false | If `true`, sorting with multiple columns is disabled. |
 | <span class="prop-name">disableColumnResize</span> | <span class="prop-type">boolean</span> | false | If `true`, resizing columns is disabled. |
-| <span class="prop-name">disableColumnReorder</span> | <span class="prop-type">boolean</span> | false | If `true`, reordering columns is disabled. |
+| <span class="prop-name">disableColumnReorder</span> | <span class="prop-type">boolean</span> | false | If `true`, column reordering is disabled. |
 | <span class="prop-name">showCellRightBorder</span> | <span class="prop-type">boolean</span> | false | If `true`, the right border of the cells are displayed. |
 | <span class="prop-name">showColumnRightBorder</span> | <span class="prop-type">boolean</span> | false | If `true`, the right border of the column headers are displayed. |
 | <span class="prop-name">disableExtendRowFullWidth</span> | <span class="prop-type">boolean</span> | false | If `true`, rows will not be extended to fill the full width of the grid container. |
