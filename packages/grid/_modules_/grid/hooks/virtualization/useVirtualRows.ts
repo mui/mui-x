@@ -7,7 +7,6 @@ import {
   InternalColumns,
   RenderContextProps,
   RenderRowProps,
-  Rows,
   VirtualizationApi,
   ApiRef,
 } from '../../models';
@@ -15,7 +14,7 @@ import { ScrollParams, useScrollFn } from '../utils';
 import { useLogger } from '../utils/useLogger';
 import { useContainerProps } from '../root';
 import {
-  RESIZE,
+  RESIZE, ROWS_UPDATED,
   SCROLL,
   SCROLLING,
   SCROLLING_START,
@@ -35,13 +34,12 @@ export const useVirtualRows = (
   windowRef: React.MutableRefObject<HTMLDivElement | null>,
   renderingZoneRef: React.MutableRefObject<HTMLDivElement | null>,
   internalColumns: InternalColumns,
-  rows: Rows,
   options: GridOptions,
   apiRef: ApiRef,
 ): UseVirtualRowsReturnType => {
   const logger = useLogger('useVirtualRows');
   const pageRef = React.useRef<number>(0);
-  const rowsCount = React.useRef<number>(rows.length);
+  const rowsCount = React.useRef<number>(0);
   const paginationCurrentPage = React.useRef<number>(1);
   const containerPropsRef = React.useRef<ContainerProps | null>(null);
   const optionsRef = React.useRef<GridOptions>(options);
@@ -174,7 +172,7 @@ export const useVirtualRows = (
 
   const updateContainerSize = React.useCallback(() => {
     if (columnTotalWidthRef.current > 0) {
-      const totalRowsCount = apiRef?.current?.getRowsCount() || 0; // we ensure we call with latest length
+      const totalRowsCount = apiRef?.current?.getRowsCount(true) || 0; // we ensure we call with latest length
       const currentPage = paginationCurrentPage.current;
       let pageRowCount =
         optionsRef.current.pagination && optionsRef.current.pageSize
@@ -330,7 +328,18 @@ export const useVirtualRows = (
     [logger],
   );
 
+  const onRowsUpdated = React.useCallback(()=> {
+      const visibleRows = apiRef.current.getVisibleRowModels();
+
+        logger.debug('Row length change to ', visibleRows.length);
+        updateContainerSize();
+    // }, [rows.length, logger, updateContainerSize]);
+
+  }, [apiRef])
+
   useApiEventHandler(apiRef, RESIZE, onResize);
+  useApiEventHandler(apiRef, ROWS_UPDATED, onRowsUpdated);
+
   useNativeEventListener(apiRef, windowRef, SCROLL, onScroll, { passive: true });
   useNativeEventListener(
     apiRef,
@@ -353,13 +362,6 @@ export const useVirtualRows = (
       updateContainerSize();
     }
   }, [options, renderingZoneRef, resetScroll, updateContainerSize, logger]);
-
-  React.useEffect(() => {
-    if (rows.length !== rowsCount.current) {
-      logger.debug('Row length change to ', rows.length);
-      updateContainerSize();
-    }
-  }, [rows.length, logger, updateContainerSize]);
 
   const virtualApi: Partial<VirtualizationApi> = {
     scroll,

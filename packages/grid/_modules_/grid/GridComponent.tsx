@@ -89,7 +89,6 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     windowRef,
     renderingZoneRef,
     internalColumns,
-    internalRows,
     internalOptions,
     apiRef,
   );

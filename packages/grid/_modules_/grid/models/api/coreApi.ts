@@ -4,6 +4,8 @@ import { EventEmitter } from 'events';
  * The core API interface that is available in the grid [[apiRef]].
  */
 export interface CoreApi extends EventEmitter {
+
+  state: any;
   /**
    * Property that comes true when the grid has its EventEmitter initialised.
    */

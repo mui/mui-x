@@ -10,9 +10,14 @@ export interface RowApi {
    */
   getRowModels: () => Rows;
   /**
+   * Get the visible set of rows as [[Rows]].
+   * @returns [[Rows]]
+   */
+  getVisibleRowModels: () => Rows;
+  /**
    * Get the total number of rows in the grid.
    */
-  getRowsCount: () => number;
+  getRowsCount: (onlyVisibleRows?: boolean) => number;
   /**
    * Return the list of row Ids.
    */

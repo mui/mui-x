@@ -1,7 +1,7 @@
 import { Rows } from '../rows';
 import { Columns } from '../colDef/colDef';
 import { GridOptions } from '../gridOptions';
-import { PaginationProps } from '../../hooks/features/usePagination';
+import { PaginationProps } from '../../hooks/features/pagination/usePagination';
 import { RootContainerRef } from '../rootContainerRef';
 import { ApiRef } from '../api';
 

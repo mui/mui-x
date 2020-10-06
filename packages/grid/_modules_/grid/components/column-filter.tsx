@@ -6,12 +6,12 @@ import { ApiContext } from './api-context';
 import {ColDef, Columns} from '../models/colDef/colDef';
 import {
   Box, Chip, ChipProps,
-  ClickAwayListener,
+  ClickAwayListener, Grid,
   Paper,
-  Popper,
+  Popper, Switch,
   Tab,
   Tabs,
-  TextField, Theme,
+  TextField, Theme, Typography,
 } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
 import ViewWeekIcon from '@material-ui/icons/ViewWeek';
@@ -168,6 +168,23 @@ export const ColumnFilterMenu: React.FC<ColumnFilterMenuProps> = ({columns} ) =>
                   />
                 ))}
               </div>
+              {colDef?.filterValue?.length != null && colDef?.filterValue?.length > 1 && (
+              <div style={{display: 'inline-flex',  justifyContent: 'center'}} >
+                <Typography component="div">
+                  <Grid component="label" container alignItems="center" spacing={1}>
+                    <Grid item>And</Grid>
+                    <Grid item>
+                      <Switch
+                        defaultChecked
+                        color="default"
+                        inputProps={{ 'aria-label': 'checkbox with default color' }}
+                      />
+                    </Grid>
+                    <Grid item>Or</Grid>
+                  </Grid>
+                </Typography>
+              </div>
+              )}
             </div>
           </TabPanel>
         </Paper>

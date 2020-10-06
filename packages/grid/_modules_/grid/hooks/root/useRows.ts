@@ -20,8 +20,40 @@ import {
 import { useApiMethod } from './useApiMethod';
 import { useApiEventHandler } from './useApiEventHandler';
 import { RowApi } from '../../models/api/rowApi';
+import {useGridState} from "../features";
 
 type IdLookup = { [key: string]: number };
+
+// interface RowsState {
+//   rowModels: RowModel[];
+//   visibleRowModels: RowModel[];
+//   idLookup: IdLookup;
+// }
+//
+// const INITIAL_STATE = {}
+
+
+const HIDE_FIRST_ROW = 'HIDE_FIRST_ROW';
+// REDUCER
+export function rowsReducer(
+  state: RowModel[],
+  action: { type: string; payload?: any },
+) {
+  switch (action.type) {
+    case HIDE_FIRST_ROW:
+      if(state.length > 0) {
+        state[0] = {...state[0], ...{isHidden: true}};
+      }
+
+      return [...state];
+
+    case 'Update':
+      return [...action.payload];
+    default:
+      throw new Error(`Material-UI: Action ${action.type} not found.`);
+  }
+}
+
 
 export const useRows = (
   options: GridOptions,
@@ -31,12 +63,27 @@ export const useRows = (
 ): RowModel[] => {
   const logger = useLogger('useRows');
   const rowModels = React.useMemo(() => rows.map(createRowModel), [rows]);
+
+  // eslint-disable-next-line
+  const [state, dispatch, globalState] = useGridState(apiRef, 'rows', rowsReducer, rowModels);
+  React.useEffect(()=> {
+    // eslint-disable-next-line no-console
+    console.log('Row state changed', state.rows?.length, dispatch.toString());
+  }, [dispatch, state]);
+
+  React.useEffect(()=> {
+    // eslint-disable-next-line no-console
+    console.log('globalState state changed', globalState.pagination);
+  }, [globalState.pagination]);
+  // setTimeout(()=> dispatch({type:HIDE_FIRST_ROW}), 500);
+
   const [rowModelsState, setRowModelsState] = React.useState<RowModel[]>(rowModels);
   const [, forceUpdate] = React.useState();
   const [rafUpdate] = useRafUpdate(() => forceUpdate((p: any) => !p));
 
   const idLookupRef = React.useRef({});
   const rowModelsRef = React.useRef<RowModel[]>(rowModels);
+  const visibleRowModelsRef = React.useRef<RowModel[]>(rowModels);
   const isScrollingRef = React.useRef<boolean>(false);
   const isSortedRef = React.useRef<boolean>(false);
 
@@ -55,9 +102,11 @@ export const useRows = (
         return lookup;
       }, {} as IdLookup);
       rowModelsRef.current = allNewRows;
+      visibleRowModelsRef.current = allNewRows.filter(row=> !row.isHidden);
       if (!isScrollingRef.current) {
         logger.info(`Setting row models to new rows with length ${allNewRows.length}`);
         setRowModelsState(() => allNewRows);
+        dispatch({type:'Update', payload:  rowModelsRef.current});
       }
     },
     [logger, rowModelsRef, setRowModelsState],
@@ -101,6 +150,7 @@ export const useRows = (
 
       if (!isScrollingRef.current && !isSortedRef.current) {
         rafUpdate();
+        updateAllRows(rowModelsRef.current);
       }
 
       if (addedRows.length > 0) {
@@ -150,7 +200,8 @@ export const useRows = (
   }, []);
 
   const getRowModels = React.useCallback(() => rowModelsRef.current, [rowModelsRef]);
-  const getRowsCount = React.useCallback(() => rowModelsRef.current.length, [rowModelsRef]);
+  const getVisibleRowModels = React.useCallback(() => visibleRowModelsRef.current, [visibleRowModelsRef]);
+  const getRowsCount = React.useCallback((isVisibleRows = false) => (isVisibleRows ? visibleRowModelsRef : rowModelsRef).current.length, [rowModelsRef]);
   const getAllRowIds = React.useCallback(() => rowModelsRef.current.map((r) => r.id), [
     rowModelsRef,
   ]);
@@ -165,6 +216,7 @@ export const useRows = (
     updateRowModels,
     updateRowData,
     getRowModels,
+    getVisibleRowModels,
     getRowsCount,
     getAllRowIds,
     setRowModels,
