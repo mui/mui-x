@@ -84,10 +84,15 @@ const columns: ColDef[] = [
     headerName: 'Year',
     renderCell: (params: ValueFormatterParams) => (
       <strong>
-        {(params.value as Date).getFullYear()}{' '}
-        <span role="img" aria-label="birthday">
-          🎂
-        </span>
+        {(params.value as Date).getFullYear()}
+        <Button
+          variant="contained"
+          color="primary"
+          size="small"
+          style={{ marginLeft: 16 }}
+        >
+          Open
+        </Button>
       </strong>
     ),
   },
