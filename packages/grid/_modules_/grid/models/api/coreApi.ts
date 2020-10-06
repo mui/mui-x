@@ -6,6 +6,7 @@ import { EventEmitter } from 'events';
 export interface CoreApi extends EventEmitter {
 
   state: any;
+  getState: ()=> any;
   /**
    * Property that comes true when the grid has its EventEmitter initialised.
    */

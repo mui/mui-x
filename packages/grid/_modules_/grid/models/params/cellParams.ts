@@ -40,7 +40,7 @@ export interface CellParams {
   /**
    * ApiRef that let you manipulate the grid.
    */
-  api: any;
+  api?: any;
 }
 
 /**

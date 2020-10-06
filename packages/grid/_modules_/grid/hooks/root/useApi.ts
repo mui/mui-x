@@ -6,6 +6,7 @@ import { useApiMethod } from './useApiMethod';
 
 export function useApi(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: ApiRef): boolean {
   const [initialised, setInit] = React.useState(false);
+  const stateRef = React.useRef({});
   const logger = useLogger('useApi');
 
   const publishEvent = React.useCallback(
@@ -35,6 +36,14 @@ export function useApi(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: Api
     [publishEvent],
   );
 
+  const getState = React.useCallback(
+    () => {
+      publishEvent('GetState', stateRef);
+      return stateRef.current;
+    },
+    [publishEvent, stateRef],
+  );
+
   React.useEffect(() => {
     logger.debug('Initializing grid api.');
     apiRef.current.isInitialised = true;
@@ -51,7 +60,7 @@ export function useApi(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: Api
     };
   }, [gridRootRef, logger, apiRef]);
 
-  useApiMethod(apiRef, { subscribeEvent, publishEvent, showError }, 'CoreApi');
+  useApiMethod(apiRef, { subscribeEvent, publishEvent, showError, getState }, 'CoreApi');
 
   return initialised;
 }

@@ -10,7 +10,7 @@ export function useApiEventHandler(
   const logger = useLogger('useApiEventHandler');
 
   React.useEffect(() => {
-    if (handler && eventName) {
+    if (handler && eventName && apiRef.current.subscribeEvent) {
       return apiRef.current.subscribeEvent(eventName, handler);
     }
 

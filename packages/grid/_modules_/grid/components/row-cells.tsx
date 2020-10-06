@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { CellClassParams, Columns, RowModel, CellClassRules, CellParams } from '../models';
 import { Cell, GridCellProps } from './cell';
-import { ApiContext } from './api-context';
+// import { ApiContext } from './api-context';
 import { classnames, isFunction } from '../utils';
 import { buildCellParams } from '../utils/paramsUtils';
 
@@ -37,7 +37,7 @@ export const RowCells: React.FC<RowCellsProps> = React.memo((props) => {
     rowIndex,
     scrollSize,
   } = props;
-  const api = React.useContext(ApiContext);
+  // const api = React.useContext(ApiContext);
 
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const isLastColumn = firstColIdx + colIdx === columns.length - 1;
@@ -54,7 +54,7 @@ export const RowCells: React.FC<RowCellsProps> = React.memo((props) => {
       colDef: column,
       rowIndex,
       value,
-      api: api!.current!,
+      // api: api,
     });
 
     if (column.valueGetter) {

@@ -34,6 +34,7 @@ import { useEvents } from './hooks/root/useEvents';
 import { ErrorBoundary } from './components/error-boundary';
 import { useOptionsProp } from './hooks/utils/useOptionsProp';
 import {useColumnFilter} from "./hooks/features/useColumnFilter";
+// import {GridStateContext} from "./components/grid-state-context";
 
 /**
  * Data Grid component implementing [[GridComponentProps]].
@@ -63,6 +64,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     props.apiRef,
     internalApiRef,
   ]);
+  // const internalStateRef = useGridState(apiRef);
 
   const initialised = useApi(rootContainerRef, apiRef);
 
@@ -208,10 +210,12 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
               </div>
             )}
           >
-            <ApiContext.Provider value={apiRef}>
-              <OptionsContext.Provider value={internalOptions}>
+
                 {customComponents.headerComponent}
                 <div className="MuiDataGrid-mainGridContainer">
+                  {/*<GridStateContext.Provider value={internalStateRef}>*/}
+                  <ApiContext.Provider value={apiRef}>
+                    <OptionsContext.Provider value={internalOptions}>
                   <Watermark licenseStatus={props.licenseStatus} />
                   <GridColumnsContainer
                     ref={columnsContainerRef}
@@ -227,6 +231,9 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                   </GridColumnsContainer>
                   {!props.loading && internalRows.length === 0 && customComponents.noRowsComponent}
                   {props.loading && customComponents.loadingComponent}
+                  {/*</GridStateContext.Provider>*/}
+                    </OptionsContext.Provider>
+                  </ApiContext.Provider>
                   <GridWindow ref={windowRef}>
                     <GridDataContainer
                       ref={gridRef}
@@ -249,6 +256,8 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                     </GridDataContainer>
                   </GridWindow>
                 </div>
+            <ApiContext.Provider value={apiRef}>
+              <OptionsContext.Provider value={internalOptions}>
                 {customComponents.footerComponent || (
                   <DefaultFooter
                     ref={footerRef}

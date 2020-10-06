@@ -20,7 +20,7 @@ import {
 import { useApiMethod } from './useApiMethod';
 import { useApiEventHandler } from './useApiEventHandler';
 import { RowApi } from '../../models/api/rowApi';
-import {useGridState} from "../features";
+// import {useGridReducer} from "../features";
 
 type IdLookup = { [key: string]: number };
 
@@ -65,16 +65,16 @@ export const useRows = (
   const rowModels = React.useMemo(() => rows.map(createRowModel), [rows]);
 
   // eslint-disable-next-line
-  const [state, dispatch, globalState] = useGridState(apiRef, 'rows', rowsReducer, rowModels);
-  React.useEffect(()=> {
-    // eslint-disable-next-line no-console
-    console.log('Row state changed', state.rows?.length, dispatch.toString());
-  }, [dispatch, state]);
+  // const [state, dispatch] = useGridReducer(apiRef, 'rows', rowsReducer, rowModels);
+  // React.useEffect(()=> {
+  //   // eslint-disable-next-line no-console
+  //   console.log('Row state changed', state.rows?.length, dispatch.toString());
+  // }, [dispatch, state]);
 
-  React.useEffect(()=> {
-    // eslint-disable-next-line no-console
-    console.log('globalState state changed', globalState.pagination);
-  }, [globalState.pagination]);
+  // React.useEffect(()=> {
+  //   // eslint-disable-next-line no-console
+  //   console.log('globalState state changed', globalState.pagination);
+  // }, [globalState.pagination]);
   // setTimeout(()=> dispatch({type:HIDE_FIRST_ROW}), 500);
 
   const [rowModelsState, setRowModelsState] = React.useState<RowModel[]>(rowModels);
@@ -106,7 +106,7 @@ export const useRows = (
       if (!isScrollingRef.current) {
         logger.info(`Setting row models to new rows with length ${allNewRows.length}`);
         setRowModelsState(() => allNewRows);
-        dispatch({type:'Update', payload:  rowModelsRef.current});
+        // dispatch({type:'Update', payload:  rowModelsRef.current});
       }
     },
     [logger, rowModelsRef, setRowModelsState],
