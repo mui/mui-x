@@ -5,12 +5,13 @@ import { ApiContext } from './api-context';
 import { LeftEmptyCell, RightEmptyCell } from './cell';
 import { OptionsContext } from './options-context';
 import { ScrollArea } from './scroll-area';
+import { CursorCoordinates } from '../hooks';
 
 export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
   onResizeColumn?: (col: ColDef) => void;
   onColumnDragStart?: (col: ColDef, htmlEL: HTMLElement) => void;
-  onColumnDragEnter?: (col: ColDef) => void;
+  onColumnDragEnter?: (col: ColDef, pos: CursorCoordinates) => void;
 }
 export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionProps> = React.memo(
   ({ onResizeColumn, onColumnDragStart, onColumnDragEnter, columns }) => {
@@ -36,7 +37,7 @@ export interface ColumnsHeaderProps {
   onResizeColumn?: (col: ColDef) => void;
   onColumnDragOver?: (event: Event) => void;
   onColumnDragStart?: (col: ColDef, htmlEl: HTMLElement) => void;
-  onColumnDragEnter?: (col: ColDef) => void;
+  onColumnDragEnter?: (col: ColDef, pos: CursorCoordinates) => void;
   renderCtx: Partial<RenderContextProps> | null;
 }
 

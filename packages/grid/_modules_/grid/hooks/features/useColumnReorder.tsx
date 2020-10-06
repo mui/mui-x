@@ -9,6 +9,11 @@ import {
   COL_REORDER_STOP,
 } from '../../constants/eventsConstants';
 
+export interface CursorCoordinates {
+  x: number;
+  y: number;
+}
+
 const cssDnDClasses = {
   columnsHeaderDropZone: 'MuiDataGrid-colCell-dropZone',
   colCellDragging: 'MuiDataGrid-colCell-dragging',
@@ -28,11 +33,21 @@ const reorderColDefArray = (
   return columnsClone;
 };
 
+const didCursorPositionChanged = (
+  currentCoordinates: CursorCoordinates,
+  nextCoordinates: CursorCoordinates,
+): boolean =>
+  currentCoordinates.x !== nextCoordinates.x || currentCoordinates.y !== nextCoordinates.y;
+
 export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, apiRef: ApiRef) => {
   const logger = useLogger('useColumnReorder');
 
   const dragCol = React.useRef<ColDef | null>();
   const dragColNode = React.useRef<HTMLElement | null>();
+  const cursorPosition = React.useRef<CursorCoordinates>({
+    x: 0,
+    y: 0,
+  });
   const removeDnDStylesTimeout = React.useRef<NodeJS.Timeout | number>();
 
   const handleDragEnd = React.useCallback((): void => {
@@ -73,13 +88,17 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
   );
 
   const handleDragEnter = React.useCallback(
-    (col: ColDef): void => {
+    (col: ColDef, coordinates: CursorCoordinates): void => {
       logger.debug(`Enter dragging col ${col.field}`);
       apiRef.current.publishEvent(COL_REORDER_DRAG_ENTER);
 
       clearTimeout(removeDnDStylesTimeout.current as NodeJS.Timeout);
 
-      if (col.field !== dragCol.current!.field) {
+      if (
+        col.field !== dragCol.current!.field &&
+        didCursorPositionChanged(cursorPosition.current, coordinates)
+      ) {
+        cursorPosition.current = coordinates;
         const targetColIndex = apiRef.current.getColumnIndex(col.field);
         const dragColIndex = apiRef.current.getColumnIndex(dragCol.current!.field);
         const columnsSnapshot = apiRef.current.getAllColumns();
@@ -88,7 +107,7 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
         apiRef.current.updateColumns(columnsReordered, true);
       }
     },
-    [apiRef, logger],
+    [apiRef, didCursorPositionChanged, reorderColDefArray, logger],
   );
 
   return {

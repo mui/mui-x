@@ -7,13 +7,14 @@ import { ColumnHeaderSortIcon } from './column-header-sort-icon';
 import { ColumnHeaderTitle } from './column-header-title';
 import { ColumnHeaderSeparator } from './column-header-separator';
 import { OptionsContext } from './options-context';
+import { CursorCoordinates } from '../hooks/features/useColumnReorder';
 
 interface ColumnHeaderItemProps {
   column: ColDef;
   colIndex: number;
   onResizeColumn?: (c: any) => void;
   onColumnDragStart?: (c: ColDef, h: HTMLElement) => void;
-  onColumnDragEnter?: (c: ColDef) => void;
+  onColumnDragEnter?: (c: ColDef, p: CursorCoordinates) => void;
 }
 const headerAlignPropToCss = {
   center: 'MuiDataGrid-colCellCenter',
@@ -59,8 +60,10 @@ export const ColumnHeaderItem = React.memo(
         ? (event) => onColumnDragStart(column, event.target)
         : undefined;
     const onDragEnter = onColumnDragEnter ? (event) => {
-      console.log(event)
-      onColumnDragEnter(column);
+      onColumnDragEnter(column, {
+        x: event.clientX,
+        y: event.clientY,
+      });
     } : undefined;
 
     const width = column.width!;
