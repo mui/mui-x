@@ -6,6 +6,7 @@ export const FOCUS_OUT = 'focusout';
 export const KEYDOWN = 'keydown';
 export const KEYUP = 'keyup';
 export const SCROLL = 'scroll';
+export const DRAGEND = 'dragend';
 
 // XGRID events
 export const COMPONENT_ERROR = 'componentError';

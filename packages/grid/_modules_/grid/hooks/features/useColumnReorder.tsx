@@ -3,37 +3,35 @@ import { ColDef } from '../../models/colDef';
 import { useLogger } from '../utils';
 import { ApiRef } from '../../models';
 import {
+  DRAGEND,
   COL_REORDER_START,
   COL_REORDER_DRAG_OVER,
   COL_REORDER_DRAG_ENTER,
   COL_REORDER_STOP,
 } from '../../constants/eventsConstants';
+import {
+  HEADER_CELL_DROP_ZONE_CSS_CLASS,
+  HEADER_CELL_DRAGGING_CSS_CLASS,
+} from '../../constants/cssClassesConstants';
 
 export interface CursorCoordinates {
   x: number;
   y: number;
 }
 
-const cssDnDClasses = {
-  columnsHeaderDropZone: 'MuiDataGrid-colCell-dropZone',
-  colCellDragging: 'MuiDataGrid-colCell-dragging',
-};
-
-const EVENT_DRAGEND = 'dragend';
-
 const reorderColDefArray = (
   columns: ColDef[],
   newColIndex: number,
   oldColIndex: number,
 ): ColDef[] => {
-  const columnsClone = JSON.parse(JSON.stringify(columns));
+  const columnsClone = [...columns];
 
   columnsClone.splice(newColIndex, 0, columnsClone.splice(oldColIndex, 1)[0]);
 
   return columnsClone;
 };
 
-const didCursorPositionChanged = (
+const hasCursorPositionChanged = (
   currentCoordinates: CursorCoordinates,
   nextCoordinates: CursorCoordinates,
 ): boolean =>
@@ -54,8 +52,8 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
     logger.debug(`End dragging col ${dragCol.current!.field}`);
     apiRef.current.publishEvent(COL_REORDER_STOP);
 
-    columnsRef.current?.classList.remove(cssDnDClasses.columnsHeaderDropZone);
-    dragColNode.current?.removeEventListener(EVENT_DRAGEND, handleDragEnd);
+    columnsRef.current?.classList.remove(HEADER_CELL_DROP_ZONE_CSS_CLASS);
+    dragColNode.current?.removeEventListener(DRAGEND, handleDragEnd);
     dragCol.current = null;
     dragColNode.current = null;
   }, [columnsRef, apiRef, logger]);
@@ -66,7 +64,7 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
       logger.debug(`Dragging over col ${event.target}`);
       apiRef.current.publishEvent(COL_REORDER_DRAG_OVER);
 
-      columnsRef.current?.classList.add(cssDnDClasses.columnsHeaderDropZone);
+      columnsRef.current?.classList.add(HEADER_CELL_DROP_ZONE_CSS_CLASS);
     },
     [columnsRef, apiRef, logger],
   );
@@ -78,10 +76,10 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
 
       dragCol.current = col;
       dragColNode.current = htmlEl;
-      dragColNode.current?.addEventListener(EVENT_DRAGEND, handleDragEnd, { once: true });
-      dragColNode.current?.classList.add(cssDnDClasses.colCellDragging);
+      dragColNode.current?.addEventListener(DRAGEND, handleDragEnd, { once: true });
+      dragColNode.current?.classList.add(HEADER_CELL_DRAGGING_CSS_CLASS);
       removeDnDStylesTimeout.current = setTimeout(() => {
-        dragColNode.current?.classList.remove(cssDnDClasses.colCellDragging);
+        dragColNode.current?.classList.remove(HEADER_CELL_DRAGGING_CSS_CLASS);
       }, 0);
     },
     [apiRef, handleDragEnd, logger],
@@ -96,7 +94,7 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
 
       if (
         col.field !== dragCol.current!.field &&
-        didCursorPositionChanged(cursorPosition.current, coordinates)
+        hasCursorPositionChanged(cursorPosition.current, coordinates)
       ) {
         cursorPosition.current = coordinates;
         const targetColIndex = apiRef.current.getColumnIndex(col.field);

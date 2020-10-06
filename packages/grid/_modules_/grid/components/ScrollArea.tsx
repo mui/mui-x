@@ -23,8 +23,8 @@ export const ScrollArea: React.FC<ScrollAreaProps> = React.memo(
     });
 
     const setCurrentScrollPosition = React.useCallback(
-      (scrollPoition) => {
-        currentScrollPosition.current = scrollPoition;
+      (scrollPosition) => {
+        currentScrollPosition.current = scrollPosition;
       },
       [currentScrollPosition],
     );
