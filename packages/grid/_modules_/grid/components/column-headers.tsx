@@ -4,7 +4,7 @@ import { ColumnHeaderItem } from './column-header-item';
 import { ApiContext } from './api-context';
 import { LeftEmptyCell, RightEmptyCell } from './cell';
 import { OptionsContext } from './options-context';
-import { ScrollArea } from './scroll-area';
+import { ScrollArea } from './ScrollArea';
 import { CursorCoordinates } from '../hooks';
 
 export interface ColumnHeadersItemCollectionProps {
