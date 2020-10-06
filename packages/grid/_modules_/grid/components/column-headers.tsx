@@ -92,7 +92,6 @@ export const ColumnsHeader = React.memo(
           <ScrollArea scrollDirection="left" />
           <div
             ref={columnsHeaderRef}
-            key="columns"
             className={wrapperCssClasses}
             aria-rowindex={1}
             tabIndex={0}
@@ -100,14 +99,14 @@ export const ColumnsHeader = React.memo(
             style={{ minWidth: renderCtx?.totalSizes?.width }}
             onDragOver={handleDragOver}
           >
-            <LeftEmptyCell key="left-empty" width={renderCtx?.leftEmptyWidth} />
+            <LeftEmptyCell width={renderCtx?.leftEmptyWidth} />
             <ColumnHeaderItemCollection
               columns={renderedCols}
               onResizeColumn={onResizeColumn}
               onColumnDragStart={onColumnDragStart}
               onColumnDragEnter={onColumnDragEnter}
             />
-            <RightEmptyCell key="right-empty" width={renderCtx?.rightEmptyWidth} />
+            <RightEmptyCell width={renderCtx?.rightEmptyWidth} />
           </div>
           <ScrollArea scrollDirection="right" />
         </>
