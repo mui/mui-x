@@ -4,6 +4,7 @@ import { ColumnHeaderItem } from './column-header-item';
 import { ApiContext } from './api-context';
 import { LeftEmptyCell, RightEmptyCell } from './cell';
 import { OptionsContext } from './options-context';
+import { ScrollArea } from './scroll-area';
 
 export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
@@ -86,25 +87,29 @@ export const ColumnsHeader = React.memo(
         onColumnDragOver && !disableColumnReorder ? (event) => onColumnDragOver(event) : undefined;
 
       return (
-        <div
-          ref={columnsHeaderRef}
-          key="columns"
-          className={wrapperCssClasses}
-          aria-rowindex={1}
-          tabIndex={0}
-          role="row"
-          style={{ minWidth: renderCtx?.totalSizes?.width }}
-          onDragOver={onDragOver}
-        >
-          <LeftEmptyCell key="left-empty" width={renderCtx?.leftEmptyWidth} />
-          <ColumnHeaderItemCollection
-            columns={renderedCols}
-            onResizeColumn={onResizeColumn}
-            onColumnDragStart={onColumnDragStart}
-            onColumnDragEnter={onColumnDragEnter}
-          />
-          <RightEmptyCell key="right-empty" width={renderCtx?.rightEmptyWidth} />
-        </div>
+        <>
+          <ScrollArea scrollDirection="left" />
+          <div
+            ref={columnsHeaderRef}
+            key="columns"
+            className={wrapperCssClasses}
+            aria-rowindex={1}
+            tabIndex={0}
+            role="row"
+            style={{ minWidth: renderCtx?.totalSizes?.width }}
+            onDragOver={onDragOver}
+          >
+            <LeftEmptyCell key="left-empty" width={renderCtx?.leftEmptyWidth} />
+            <ColumnHeaderItemCollection
+              columns={renderedCols}
+              onResizeColumn={onResizeColumn}
+              onColumnDragStart={onColumnDragStart}
+              onColumnDragEnter={onColumnDragEnter}
+            />
+            <RightEmptyCell key="right-empty" width={renderCtx?.rightEmptyWidth} />
+          </div>
+          <ScrollArea scrollDirection="right" />
+        </>
       );
     },
   ),

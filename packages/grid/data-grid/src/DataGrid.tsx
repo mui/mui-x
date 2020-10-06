@@ -61,7 +61,7 @@ DataGrid2.propTypes = {
       throw new Error(
         [
           `Material-UI: \`apiRef\` is not a valid prop.`,
-          'ApiRef is not available in the MIT version',
+          'ApiRef is not available in the MIT version.',
           '',
           'You need to upgrade to the XGrid component to unlock this feature.',
         ].join('\n'),
@@ -73,7 +73,7 @@ DataGrid2.propTypes = {
       throw new Error(
         [
           `Material-UI: \`column.resizable = true\` is not a valid prop.`,
-          'Column resizing is not available in the MIT version',
+          'Column resizing is not available in the MIT version.',
           '',
           'You need to upgrade to the XGrid component to unlock this feature.',
         ].join('\n'),
@@ -85,7 +85,7 @@ DataGrid2.propTypes = {
       throw new Error(
         [
           `Material-UI: \`<DataGrid disableColumnReorder={false} />\` is not a valid prop.`,
-          'Column reordering is not available in the MIT version',
+          'Column reordering is not available in the MIT version.',
           '',
           'You need to upgrade to the XGrid component to unlock this feature.',
         ].join('\n'),
@@ -97,7 +97,7 @@ DataGrid2.propTypes = {
       throw new Error(
         [
           `Material-UI: \`<DataGrid disableColumnResize={false} />\` is not a valid prop.`,
-          'Column resizing is not available in the MIT version',
+          'Column resizing is not available in the MIT version.',
           '',
           'You need to upgrade to the XGrid component to unlock this feature.',
         ].join('\n'),
@@ -109,7 +109,7 @@ DataGrid2.propTypes = {
       throw new Error(
         [
           `Material-UI: \`<DataGrid disableMultipleColumnsSorting={false} />\` is not a valid prop.`,
-          'Only single column sorting is available in the MIT version',
+          'Only single column sorting is available in the MIT version.',
           '',
           'You need to upgrade to the XGrid component to unlock this feature.',
         ].join('\n'),

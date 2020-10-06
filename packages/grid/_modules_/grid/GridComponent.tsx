@@ -27,7 +27,6 @@ import {
   Viewport,
   Watermark,
   GridWindow,
-  ScrollArea,
 } from './components';
 import { useApi, useColumns, useKeyboard, useRows } from './hooks/root';
 import { useLogger, useLoggerFactory } from './hooks/utils';
@@ -207,7 +206,6 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                     ref={columnsContainerRef}
                     height={internalOptions.headerHeight}
                   >
-                    <ScrollArea scrollDirection="left" apiRef={apiRef} />
                     <ColumnsHeader
                       ref={columnsHeaderRef}
                       columns={internalColumns.visible || []}
@@ -218,7 +216,6 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                       onColumnDragEnter={onColumnReorder.handleDragEnter}
                       renderCtx={renderCtx}
                     />
-                    <ScrollArea scrollDirection="right" apiRef={apiRef} />
                   </GridColumnsContainer>
                   {!props.loading && internalRows.length === 0 && customComponents.noRowsComponent}
                   {props.loading && customComponents.loadingComponent}

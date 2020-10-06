@@ -14,6 +14,8 @@ const cssDnDClasses = {
   colCellDragging: 'MuiDataGrid-colCell-dragging',
 };
 
+const EVENT_DRAGEND = 'dragend';
+
 const reorderColDefArray = (
   columns: ColDef[],
   newColIndex: number,
@@ -31,13 +33,14 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
 
   const dragCol = React.useRef<ColDef | null>();
   const dragColNode = React.useRef<HTMLElement | null>();
+  const removeDnDStylesTimeout = React.useRef<NodeJS.Timeout | number>();
 
   const handleDragEnd = React.useCallback((): void => {
     logger.debug(`End dragging col ${dragCol.current!.field}`);
     apiRef.current.publishEvent(COL_REORDER_STOP);
 
     columnsRef.current?.classList.remove(cssDnDClasses.columnsHeaderDropZone);
-    dragColNode.current?.removeEventListener('dragend', handleDragEnd);
+    dragColNode.current?.removeEventListener(EVENT_DRAGEND, handleDragEnd);
     dragCol.current = null;
     dragColNode.current = null;
   }, [columnsRef, apiRef, logger]);
@@ -60,10 +63,9 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
 
       dragCol.current = col;
       dragColNode.current = htmlEl;
-      dragColNode.current?.addEventListener('dragend', handleDragEnd, { once: true });
+      dragColNode.current?.addEventListener(EVENT_DRAGEND, handleDragEnd, { once: true });
       dragColNode.current?.classList.add(cssDnDClasses.colCellDragging);
-
-      setTimeout(() => {
+      removeDnDStylesTimeout.current = setTimeout(() => {
         dragColNode.current?.classList.remove(cssDnDClasses.colCellDragging);
       }, 0);
     },
@@ -74,6 +76,8 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
     (col: ColDef): void => {
       logger.debug(`Enter dragging col ${col.field}`);
       apiRef.current.publishEvent(COL_REORDER_DRAG_ENTER);
+
+      clearTimeout(removeDnDStylesTimeout.current as NodeJS.Timeout);
 
       if (col.field !== dragCol.current!.field) {
         const targetColIndex = apiRef.current.getColumnIndex(col.field);

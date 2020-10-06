@@ -58,7 +58,10 @@ export const ColumnHeaderItem = React.memo(
       onColumnDragStart && !disableColumnReorder
         ? (event) => onColumnDragStart(column, event.target)
         : undefined;
-    const onDragEnter = onColumnDragEnter ? () => onColumnDragEnter(column) : undefined;
+    const onDragEnter = onColumnDragEnter ? (event) => {
+      console.log(event)
+      onColumnDragEnter(column);
+    } : undefined;
 
     const width = column.width!;
 

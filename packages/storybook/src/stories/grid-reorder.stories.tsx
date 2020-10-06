@@ -21,10 +21,8 @@ export const ReorderSmallDataset = () => {
   const data = useData(5, 4);
 
   return (
-    <React.Fragment>
-      <div style={{ width: size.width, height: size.height, display: 'flex' }}>
-        <XGrid rows={data.rows} columns={data.columns} />
-      </div>
-    </React.Fragment>
+    <div style={{ width: size.width, height: size.height, display: 'flex' }}>
+      <XGrid rows={data.rows} columns={data.columns} />
+    </div>
   );
 };

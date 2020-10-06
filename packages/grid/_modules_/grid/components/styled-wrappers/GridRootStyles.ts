@@ -58,8 +58,8 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-scrollArea': {
           position: 'absolute',
           top: 0,
-          zIndex: 100,
-          width: '5px',
+          zIndex: 101,
+          width: 10,
           height: '100%',
         },
         '& .MuiDataGrid-scrollArea-left': {
@@ -222,9 +222,9 @@ export const useStyles = makeStyles(
           width: '100%',
         },
         '& .MuiDataGrid-colCell-dragging': {
-          background: '#f9f9f9',
+          background: theme.palette.background.paper,
           padding: '0 12px',
-          borderRadius: '10px',
+          borderRadius: theme.shape.borderRadius,
           opacity: 0.4,
         },
       },
