@@ -84,7 +84,7 @@ export const ColumnsHeader = React.memo(
         }
       }, [renderCtx, columns]);
 
-      const onDragOver =
+      const handleDragOver =
         onColumnDragOver && !disableColumnReorder ? (event) => onColumnDragOver(event) : undefined;
 
       return (
@@ -98,7 +98,7 @@ export const ColumnsHeader = React.memo(
             tabIndex={0}
             role="row"
             style={{ minWidth: renderCtx?.totalSizes?.width }}
-            onDragOver={onDragOver}
+            onDragOver={handleDragOver}
           >
             <LeftEmptyCell key="left-empty" width={renderCtx?.leftEmptyWidth} />
             <ColumnHeaderItemCollection

@@ -55,11 +55,11 @@ export const ColumnHeaderItem = React.memo(
 
     const handleResize =
       onResizeColumn && !disableColumnReorder ? () => onResizeColumn(column) : undefined;
-    const onDragStart =
+    const handleDragStart =
       onColumnDragStart && !disableColumnReorder
         ? (event) => onColumnDragStart(column, event.target)
         : undefined;
-    const onDragEnter = onColumnDragEnter ? (event) => {
+    const handleDragEnter = onColumnDragEnter ? (event) => {
       onColumnDragEnter(column, {
         x: event.clientX,
         y: event.clientY,
@@ -90,9 +90,9 @@ export const ColumnHeaderItem = React.memo(
       >
         <div
           className="MuiDataGrid-colCell-draggable"
-          draggable={!disableColumnReorder && !!onDragStart && !!onDragEnter}
-          onDragStart={onDragStart}
-          onDragEnter={onDragEnter}
+          draggable={!disableColumnReorder && !!handleDragStart && !!handleDragEnter}
+          onDragStart={handleDragStart}
+          onDragEnter={handleDragEnter}
         >
           {column.type === 'number' && (
             <ColumnHeaderSortIcon
