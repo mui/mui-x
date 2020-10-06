@@ -53,7 +53,7 @@ export const ColumnsHeader = React.memo(
         onColumnDragEnter,
         renderCtx,
       },
-      columnsHeaderRef,
+      ref,
     ) => {
       const wrapperCssClasses = `MuiDataGrid-colCellWrapper ${hasScrollX ? 'scroll' : ''}`;
       const api = React.useContext(ApiContext);
@@ -91,7 +91,7 @@ export const ColumnsHeader = React.memo(
         <React.Fragment>
           <ScrollArea scrollDirection="left" />
           <div
-            ref={columnsHeaderRef}
+            ref={ref}
             className={wrapperCssClasses}
             aria-rowindex={1}
             tabIndex={0}
