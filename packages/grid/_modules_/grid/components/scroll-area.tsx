@@ -37,12 +37,9 @@ export const ScrollArea: React.FC<ScrollAreaProps> = React.memo(
       [currentScrollPosition, scrollStep, api],
     );
 
-    const toggleIsDragging = React.useCallback(
-      () => {
-        setIsDragging(!isDragging);
-      },
-      [isDragging],
-    );
+    const toggleIsDragging = React.useCallback(() => {
+      setIsDragging(!isDragging);
+    }, [isDragging]);
 
     if (api) {
       useApiEventHandler(api, SCROLLING, setCurrentScrollPosition);
@@ -50,11 +47,7 @@ export const ScrollArea: React.FC<ScrollAreaProps> = React.memo(
       useApiEventHandler(api, COL_REORDER_STOP, toggleIsDragging);
     }
 
-    return (
-      <>
-        { isDragging && <div className={cssClass} onDragOver={handleDragOver} /> }
-      </>
-    )
+    return <>{isDragging && <div className={cssClass} onDragOver={handleDragOver} />}</>;
   },
 );
 ScrollArea.displayName = 'ScrollArea';

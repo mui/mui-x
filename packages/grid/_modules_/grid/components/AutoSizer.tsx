@@ -118,7 +118,7 @@ export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(functi
 
     const detectElementResize = createDetectElementResize(nonce, win);
     detectElementResize.addResizeListener(parentElement.current, handleResize);
-    // // @ts-expect-error fixed in v5
+    // @ts-expect-error fixed in v5
     handleResize();
 
     return () => {
