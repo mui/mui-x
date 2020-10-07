@@ -8,13 +8,12 @@ import {
   useApiRef,
 } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
-import { withA11y } from '@storybook/addon-a11y';
 import { action } from '@storybook/addon-actions';
 
 export default {
   title: 'X-Grid Tests/Sorting',
   component: XGrid,
-  decorators: [withKnobs, withA11y],
+  decorators: [withKnobs],
   parameters: {
     options: { selectedPanel: 'storybook/action/panel' },
     docs: {

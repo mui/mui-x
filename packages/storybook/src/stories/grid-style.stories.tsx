@@ -3,14 +3,13 @@ import { XGrid, GridOptionsProp, ColDef } from '@material-ui/x-grid';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
 import { withKnobs } from '@storybook/addon-knobs';
-import { withA11y } from '@storybook/addon-a11y';
 import { useData } from '../hooks/useData';
 import '../style/grid-stories.css';
 
 export default {
   title: 'X-Grid Tests/Styling',
   component: XGrid,
-  decorators: [withKnobs, withA11y],
+  decorators: [withKnobs],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {

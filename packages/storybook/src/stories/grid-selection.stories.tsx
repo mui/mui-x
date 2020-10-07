@@ -2,14 +2,13 @@ import * as React from 'react';
 import { action } from '@storybook/addon-actions';
 import { XGrid, GridOptionsProp, useApiRef } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
-import { withA11y } from '@storybook/addon-a11y';
 import { getData, GridData } from '../data/data-service';
 import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/Selection',
   component: XGrid,
-  decorators: [withKnobs, withA11y],
+  decorators: [withKnobs],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
