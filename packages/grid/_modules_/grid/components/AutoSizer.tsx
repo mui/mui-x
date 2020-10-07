@@ -18,12 +18,12 @@ export interface AutoSizerProps extends Omit<React.HTMLAttributes<HTMLDivElement
   children: (size: AutoSizerSize) => React.ReactNode;
   /**
    * Default height to use for initial render; useful for SSR.
-   * @default 0
+   * @default null
    */
   defaultHeight?: number;
   /**
    * Default width to use for initial render; useful for SSR.
-   * @default 0
+   * @default null
    */
   defaultWidth?: number;
   /**
@@ -55,8 +55,8 @@ export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(functi
 ) {
   const {
     children,
-    defaultHeight = 0,
-    defaultWidth = 0,
+    defaultHeight = null,
+    defaultWidth = null,
     disableHeight = false,
     disableWidth = false,
     nonce,
@@ -65,7 +65,7 @@ export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(functi
     ...other
   } = props;
 
-  const [state, setState] = React.useState({
+  const [state, setState] = React.useState<{ height: number | null; width: number | null }>({
     height: defaultHeight,
     width: defaultWidth,
   });
@@ -153,7 +153,7 @@ export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(functi
       }}
       {...other}
     >
-      {state.height === 0 && state.width === 0 ? null : children(childParams)}
+      {state.height === null && state.width === null ? null : children(childParams)}
     </div>
   );
 });
