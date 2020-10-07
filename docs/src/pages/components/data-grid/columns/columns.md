@@ -70,7 +70,6 @@ Alternatively, to disable all columns resize, set the prop `disableColumnResize=
 - https://www.jqwidgets.com/react/react-grid/#https://www.jqwidgets.com/react/react-grid/react-grid-columnsresize.htm
 -->
 
-
 ## Column types
 
 To facilitate configuration of the columns, some column types are predefined.
@@ -111,10 +110,11 @@ By default `XGrid` allows all column reordering by dragging the header cells and
 To disable column reordering, set the prop `disableColumnReorder={true}`.
 
 In addition column reordering emits the following events that can be imported from `@material-ui/x-grid`:
- - `COL_REORDER_START`: emitted when dragging of a header cells starts.
- - `COL_REORDER_DRAG_ENTER`: emitted when the cursor enters another header cell while dragging.
- - `COL_REORDER_DRAG_OVER`: emitted when dragging a header cell over the drop zone, which is the `ColumnsHeader` component.
- - `COL_REORDER_STOP`: emitted when dragging of a header cells stops.
+
+- `COL_REORDER_START`: emitted when dragging of a header cells starts.
+- `COL_REORDER_DRAG_ENTER`: emitted when the cursor enters another header cell while dragging.
+- `COL_REORDER_DRAG_OVER`: emitted when dragging a header cell over the drop zone, which is the `ColumnsHeader` component.
+- `COL_REORDER_STOP`: emitted when dragging of a header cells stops.
 
 {{"demo": "pages/components/data-grid/columns/ColumnOrderingGrid.js", "disableAd": true, "bg": "inline"}}
 
