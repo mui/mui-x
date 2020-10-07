@@ -24,11 +24,11 @@ module.exports = {
     '@storybook/addon-a11y/register',
   ],
   typescript: {
-    check:  __DEV__, // Netlify is breaking the deploy with this settings on. So deactivate on release
+    check: __DEV__, // Netlify is breaking the deploy with this settings on. So deactivate on release
     reactDocgen: false
   },
   webpackFinal: async config => {
-    // config.devtool = __DEV__ ? 'eval-source-map' : undefined;
+    config.parallelism = 1;
     config.module.rules.push({
       test: /\.(ts|tsx)$/,
       use: [
