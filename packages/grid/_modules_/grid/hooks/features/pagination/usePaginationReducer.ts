@@ -89,9 +89,10 @@ const setPageSizeStateUpdate =
 		return newState;
 	}
 const setRowCountStateUpdate = (state, payload) => {
-	const {totalRowCount, apiRef} = payload;
-	const newVisibleRowCount = apiRef.current.getRowsCount(true);
-	const newRowCount = totalRowCount == null ? newVisibleRowCount : totalRowCount;
+	const {totalRowCount, rowCount } = payload;
+	// const newVisibleRowCount = apiRef.current.getRowsCount(true);
+	const newRowCount = totalRowCount == null ?  rowCount : totalRowCount;
+
 	if (newRowCount !== state.rowCount) {
 		// logger.info(`Options or rows change, recalculating pageCount and rowCount`);
 		const newPageCount = getPageCount(state.pageSize, newRowCount);
@@ -99,6 +100,7 @@ const setRowCountStateUpdate = (state, payload) => {
 		const newState = {...state, pageCount: newPageCount, rowCount: newRowCount};
 		return newState;
 	}
+	return state;
 }
 
 // REDUCER

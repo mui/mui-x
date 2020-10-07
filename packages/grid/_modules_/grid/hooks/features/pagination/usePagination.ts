@@ -157,16 +157,19 @@ export const usePagination = (
   useApiEventHandler(apiRef, PAGE_CHANGED, options.onPageChange);
   useApiEventHandler(apiRef, PAGESIZE_CHANGED, options.onPageSizeChange);
 
-  const onRowsUpdated = React.useCallback((rowModels: any[] )=> {
-    logger.info(`rowsSize changed ${rowModels.length}`);
-    dispatch(setRowCountActionCreator({rowCount: rowModels.length, totalRowCount: options.rowCount, apiRef}));
-  }, [apiRef, logger, options.rowCount]);
+  const updateRowCount = React.useCallback((rowModels: any[], totalRowCount = options.rowCount )=> {
+    const newRowCount = rowModels.length;
+    if(newRowCount !== state.rowCount || state.totalRowCount !== totalRowCount) {
+      logger.info(`row count changed ${newRowCount}`);
+      dispatch(setRowCountActionCreator({rowCount: newRowCount, totalRowCount, apiRef}));
+    }
+  }, [apiRef, logger, options.rowCount, state.rowCount, state.totalRowCount]);
 
-  useApiEventHandler(apiRef, ROWS_UPDATED, onRowsUpdated);
+  useApiEventHandler(apiRef, ROWS_UPDATED, updateRowCount);
 
   React.useEffect(() => {
-    onRowsUpdated(rows);
-  }, [onRowsUpdated, rows.length]);
+    updateRowCount(rows, options.rowCount);
+  }, [options.rowCount, rows, rows.length, updateRowCount]);
 
   React.useEffect(() => {
     dispatch(setPaginationModeActionCreator(options.paginationMode!));
