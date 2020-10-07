@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { withA11y } from '@storybook/addon-a11y';
 import { XGrid, GridOptionsProp, SortDirection } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import Button from '@material-ui/core/Button';
@@ -11,7 +10,7 @@ import '@material-ui/x-grid-data-generator/style/real-data-stories.css';
 export default {
   title: 'X-Grid Demos/Playground',
   component: XGrid,
-  decorators: [withKnobs, withA11y],
+  decorators: [withKnobs],
   parameters: {
     options: { selectedPanel: 'storybook/knobs/panel' },
     docs: {

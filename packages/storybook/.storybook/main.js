@@ -25,9 +25,10 @@ module.exports = {
   ],
   typescript: {
     check: __DEV__, // Netlify is breaking the deploy with this settings on. So deactivate on release
+    reactDocgen: false
   },
   webpackFinal: async config => {
-    config.devtool = __DEV__ ? 'inline-source-map' : undefined;
+    config.parallelism = 1;
     config.module.rules.push({
       test: /\.(ts|tsx)$/,
       use: [
@@ -38,9 +39,11 @@ module.exports = {
     });
     if (__DEV__) {
       config.module.rules.push({
-        test: /\.(js|ts|tsx)$/,
+        test: /\.(ts|tsx)$/,
         use: ['source-map-loader'],
         enforce: 'pre',
+        exclude:   /node_modules/,
+        include: path.resolve(__dirname, '../../../packages/grid/')
       });
     }
 

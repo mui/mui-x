@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { XGrid, GridOptionsProp, SortDirection } from '@material-ui/x-grid';
 import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
-import { withA11y } from '@storybook/addon-a11y';
 import { action } from '@storybook/addon-actions';
 import { useData } from '../../hooks/useData';
 
 export default {
   title: 'X-Grid Demos/Options-Events',
   component: XGrid,
-  decorators: [withKnobs, withA11y],
+  decorators: [withKnobs],
   parameters: {
     options: { selectedPanel: 'storybook/knobs/panel' },
     docs: {
