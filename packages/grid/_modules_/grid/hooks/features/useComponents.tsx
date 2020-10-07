@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PaginationProps } from './usePagination';
+import { PaginationProps } from './pagination/usePagination';
 import {
   ComponentProps,
   ApiRef,
