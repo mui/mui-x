@@ -55,8 +55,8 @@ export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(functi
 ) {
   const {
     children,
-    defaultHeight = 0,
-    defaultWidth = 0,
+    defaultHeight = null,
+    defaultWidth = null,
     disableHeight = false,
     disableWidth = false,
     nonce,
