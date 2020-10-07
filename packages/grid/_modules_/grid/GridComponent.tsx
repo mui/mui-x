@@ -128,6 +128,18 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
           ].join('\n'),
         );
       }
+      if (size.width === 0) {
+        gridLogger.warn(
+          [
+            'The parent of the grid has an empty width.',
+            'You need to make sure the container has an intrinsic width.',
+            'The grid displays with a width of 0px.',
+            '',
+            'You can find a solution in the docs:',
+            'https://material-ui.com/components/data-grid/rendering/#layout',
+          ].join('\n'),
+        );
+      }
 
       gridLogger.info('resized...', size);
       apiRef!.current.resize();

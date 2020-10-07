@@ -104,6 +104,19 @@ describe('<DataGrid />', () => {
           clock.tick(100);
         }).toWarnDev('Material-UI Data Grid: The parent of the grid has an empty height.');
       });
+
+      it('should warn if the container has no intrinsic width', () => {
+        expect(() => {
+          render(
+            <div style={{ width: 0 }}>
+              <div style={{ width: '100%', height: 300 }}>
+                <DataGrid {...defaultProps} />
+              </div>
+            </div>,
+          );
+          clock.tick(100);
+        }).toWarnDev('Material-UI Data Grid: The parent of the grid has an empty width.');
+      });
     });
   });
 

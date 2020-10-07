@@ -181,6 +181,11 @@ const columns: Columns = [
 
 By default, the grid has no intrinsic dimensions. It occupies the space its parent leaves.
 
+> ⚠️ When using % (**percentage**) for your height or width.<br> ><br>
+> You need to make sure the container you are putting the grid into also has an intrinsic dimension.
+> The browsers fit the element according to a percentage of the parent dimension.
+> If the parent has no dimensions, then the % will be zero.
+
 ### Flex layout
 
 It's recommended to use a flex container to render the grid. This allows a flexible layout, resizes well, and works on all devices.
