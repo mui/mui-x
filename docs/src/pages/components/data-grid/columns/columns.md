@@ -70,6 +70,7 @@ Alternatively, to disable all columns resize, set the prop `disableColumnResize=
 - https://www.jqwidgets.com/react/react-grid/#https://www.jqwidgets.com/react/react-grid/react-grid-columnsresize.htm
 -->
 
+
 ## Column types
 
 To facilitate configuration of the columns, some column types are predefined.
@@ -103,6 +104,20 @@ const usdPrice: ColTypeDef = {
 
 {{"demo": "pages/components/data-grid/columns/CustomColumnTypesGrid.js", "bg": "inline"}}
 
+## Column reorder [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
+
+By default `XGrid` allows all column reordering by dragging the header cells and moving them left or right.
+
+To disable column reordering, set the prop `disableColumnReorder={true}`.
+
+In addition column reordering emits the following events that can be imported from `@material-ui/x-grid`:
+ - `COL_REORDER_START`: emitted when dragging of a header cells starts.
+ - `COL_REORDER_DRAG_ENTER`: emitted when the cursor enters another header cell while dragging.
+ - `COL_REORDER_DRAG_OVER`: emitted when dragging a header cell over the drop zone, which is the `ColumnsHeader` component.
+ - `COL_REORDER_STOP`: emitted when dragging of a header cells stops.
+
+{{"demo": "pages/components/data-grid/columns/ColumnOrderingGrid.js", "disableAd": true, "bg": "inline"}}
+
 ## 🚧 Column groups
 
 > ⚠️ This feature isn't implemented yet. It's coming.
@@ -110,14 +125,6 @@ const usdPrice: ColTypeDef = {
 > 👍 Upvote [issue #195](https://github.com/mui-org/material-ui-x/issues/195) if you want to see it land faster.
 
 Grouping columns allows you to have multiple levels of columns in your header and the ability, if needed, to 'open and close' column groups to show and hide additional columns.
-
-## 🚧 Column reorder [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
-
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #194](https://github.com/mui-org/material-ui-x/issues/194) if you want to see it land faster.
-
-Column reordering enables reordering the columns by dragging the header cells.
 
 ## 🚧 Column pinning [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
