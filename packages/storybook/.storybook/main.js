@@ -24,41 +24,43 @@ module.exports = {
     '@storybook/addon-a11y/register',
   ],
   typescript: {
-    check: __DEV__, // Netlify is breaking the deploy with this settings on. So deactivate on release
+    check:  __DEV__, // Netlify is breaking the deploy with this settings on. So deactivate on release
     reactDocgen: false
   },
   webpackFinal: async config => {
-    config.devtool = __DEV__ ? 'inline-source-map' : undefined;
-    // config.module.rules.push({
-    //   test: /\.(ts|tsx)$/,
-    //   use: [
-    //     {
-    //       loader: require.resolve('ts-loader'),
-    //     }
-    //   ],
-    // });
+    // config.devtool = __DEV__ ? 'eval-source-map' : undefined;
+    config.module.rules.push({
+      test: /\.(ts|tsx)$/,
+      use: [
+        {
+          loader: require.resolve('ts-loader'),
+        }
+      ],
+    });
     if (__DEV__) {
       config.module.rules.push({
         test: /\.(ts|tsx)$/,
         use: ['source-map-loader'],
         enforce: 'pre',
+        exclude:   /node_modules/,
+        include: path.resolve(__dirname, '../../../packages/grid/')
       });
     }
 
-    // config.module.rules.push({
-    //   test: /\.stories\.tsx?$/,
-    //   loaders: [
-    //     {
-    //       loader: require.resolve('@storybook/source-loader'),
-    //       options: {
-    //         parser: 'typescript',
-    //         prettierConfig: {printWidth: 80, singleQuote: true},
-    //         tsconfigPath: path.resolve(__dirname, '../tsconfig.json'),
-    //       },
-    //     },
-    //   ],
-    //   enforce: 'pre',
-    // });
+    config.module.rules.push({
+      test: /\.stories\.tsx?$/,
+      loaders: [
+        {
+          loader: require.resolve('@storybook/source-loader'),
+          options: {
+            parser: 'typescript',
+            prettierConfig: {printWidth: 80, singleQuote: true},
+            tsconfigPath: path.resolve(__dirname, '../tsconfig.json'),
+          },
+        },
+      ],
+      enforce: 'pre',
+    });
 
     config.module.rules.push({
       test: /\.tsx$/,
