@@ -65,7 +65,7 @@ export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(functi
     ...other
   } = props;
 
-  const [state, setState] = React.useState<{height: number | null; width: number | null}>({
+  const [state, setState] = React.useState<{ height: number | null; width: number | null }>({
     height: defaultHeight,
     width: defaultWidth,
   });

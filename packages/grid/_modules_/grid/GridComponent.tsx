@@ -128,7 +128,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
           ].join('\n'),
         );
       }
-      if (size.width === 0){
+      if (size.width === 0) {
         gridLogger.warn(
           [
             'The parent of the grid has an empty width.',
@@ -138,7 +138,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
             'You can find a solution in the docs:',
             'https://material-ui.com/components/data-grid/rendering/#layout',
           ].join('\n'),
-        )
+        );
       }
 
       gridLogger.info('resized...', size);
