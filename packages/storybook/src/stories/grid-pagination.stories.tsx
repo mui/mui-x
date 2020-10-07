@@ -4,14 +4,13 @@ import Button from '@material-ui/core/Button';
 import Pagination from '@material-ui/lab/Pagination';
 import { action } from '@storybook/addon-actions';
 import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
-import { withA11y } from '@storybook/addon-a11y';
 import { useData } from '../hooks/useData';
 import { getData, GridData } from '../data/data-service';
 
 export default {
   title: 'X-Grid Tests/Pagination',
   component: XGrid,
-  decorators: [withKnobs, withA11y],
+  decorators: [withKnobs],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
   },
