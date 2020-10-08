@@ -5,12 +5,12 @@ import { useDemoData } from '@material-ui/x-grid-data-generator';
 export default function ColumnOrderingGrid() {
   const { data } = useDemoData({
     dataSet: 'Employee',
-    rowLength: 100,
-    maxColumns: 6,
+    rowLength: 20,
+    maxColumns: 20,
   });
 
   return (
-    <div style={{ height: 250, width: '100%' }}>
+    <div style={{ height: 400, width: '100%' }}>
       <XGrid {...data} />
     </div>
   );
