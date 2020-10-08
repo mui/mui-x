@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { XGrid } from '@material-ui/x-grid';
+import { useDemoData } from '@material-ui/x-grid-data-generator';
 
 const rows = [
   {
@@ -9,17 +10,16 @@ const rows = [
   },
 ];
 
-export default function ColumnWidthGrid() {
+export default function ColumnOrderingGrid() {
+  const { data } = useDemoData({
+    dataSet: 'Employee',
+    rowLength: 100,
+    maxColumns: 6,
+  });
+
   return (
     <div style={{ height: 250, width: '100%' }}>
-      <XGrid
-        columns={[
-          { field: 'id' },
-          { field: 'username' },
-          { field: 'age', resizable: false },
-        ]}
-        rows={rows}
-      />
+      <XGrid {...data} />
     </div>
   );
 }

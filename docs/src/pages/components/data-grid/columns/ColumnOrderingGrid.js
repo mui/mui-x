@@ -1,25 +1,17 @@
 import * as React from 'react';
 import { XGrid } from '@material-ui/x-grid';
+import { useDemoData } from '@material-ui/x-grid-data-generator';
 
-const rows = [
-  {
-    id: 1,
-    username: 'defunkt',
-    age: 38,
-  },
-];
+export default function ColumnOrderingGrid() {
+  const { data } = useDemoData({
+    dataSet: 'Employee',
+    rowLength: 20,
+    maxColumns: 20,
+  });
 
-export default function ColumnWidthGrid() {
   return (
-    <div style={{ height: 250, width: '100%' }}>
-      <XGrid
-        columns={[
-          { field: 'id' },
-          { field: 'username' },
-          { field: 'age', resizable: false },
-        ]}
-        rows={rows}
-      />
+    <div style={{ height: 400, width: '100%' }}>
+      <XGrid {...data} />
     </div>
   );
 }
