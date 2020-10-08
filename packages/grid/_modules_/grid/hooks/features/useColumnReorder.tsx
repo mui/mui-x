@@ -19,6 +19,9 @@ export interface CursorCoordinates {
   y: number;
 }
 
+const CURSOR_MOVE_DIRECTION_LEFT = 'left';
+const CURSOR_MOVE_DIRECTION_RIGHT = 'right';
+
 const reorderColDefArray = (
   columns: ColDef[],
   newColIndex: number,
@@ -29,6 +32,12 @@ const reorderColDefArray = (
   columnsClone.splice(newColIndex, 0, columnsClone.splice(oldColIndex, 1)[0]);
 
   return columnsClone;
+};
+
+const getCursorNewMoveDirectionX = (currentCoordinates, nextCoordinates) => {
+  return currentCoordinates.x <= nextCoordinates.x
+    ? CURSOR_MOVE_DIRECTION_RIGHT
+    : CURSOR_MOVE_DIRECTION_LEFT;
 };
 
 const hasCursorPositionChanged = (
@@ -42,6 +51,7 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
 
   const dragCol = React.useRef<ColDef | null>();
   const dragColNode = React.useRef<HTMLElement | null>();
+  const cursorXMoveDirection = React.useRef<string>('');
   const cursorPosition = React.useRef<CursorCoordinates>({
     x: 0,
     y: 0,
@@ -94,12 +104,18 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
 
       if (
         col.field !== dragCol.current!.field &&
-        hasCursorPositionChanged(cursorPosition.current, coordinates)
+        hasCursorPositionChanged(cursorPosition.current, coordinates) &&
+        getCursorNewMoveDirectionX(cursorPosition.current, coordinates) !==
+          cursorXMoveDirection.current
       ) {
+        cursorXMoveDirection.current = getCursorNewMoveDirectionX(
+          cursorPosition.current,
+          coordinates,
+        );
         cursorPosition.current = coordinates;
         const targetColIndex = apiRef.current.getColumnIndex(col.field);
         const dragColIndex = apiRef.current.getColumnIndex(dragCol.current!.field);
-        const columnsSnapshot = apiRef.current.getAllColumns();
+        const columnsSnapshot = apiRef.current.getVisibleColumns();
         const columnsReordered = reorderColDefArray(columnsSnapshot, targetColIndex, dragColIndex);
 
         apiRef.current.updateColumns(columnsReordered, true);

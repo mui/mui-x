@@ -2,14 +2,6 @@ import * as React from 'react';
 import { XGrid } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
-const rows = [
-  {
-    id: 1,
-    username: 'defunkt',
-    age: 38,
-  },
-];
-
 export default function ColumnOrderingGrid() {
   const { data } = useDemoData({
     dataSet: 'Employee',

@@ -8,7 +8,7 @@ export default function ColumnOrderingGrid() {
     rowLength: 20,
     maxColumns: 20,
   });
-
+  console.log(data);
   return (
     <div style={{ height: 400, width: '100%' }}>
       <XGrid {...data} />
