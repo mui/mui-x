@@ -105,7 +105,7 @@ const usdPrice: ColTypeDef = {
 
 ## Column reorder [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
-By default `XGrid` allows all column reordering by dragging the header cells and moving them left or right.
+By default, `XGrid` allows all column reordering by dragging the header cells and moving them left or right.
 
 To disable column reordering, set the prop `disableColumnReorder={true}`.
 
