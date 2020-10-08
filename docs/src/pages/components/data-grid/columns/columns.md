@@ -109,7 +109,7 @@ By default, `XGrid` allows all column reordering by dragging the header cells an
 
 To disable column reordering, set the prop `disableColumnReorder={true}`.
 
-In addition column reordering emits the following events that can be imported from `@material-ui/x-grid`:
+In addition, column reordering emits the following events that can be imported:
 
 - `COL_REORDER_START`: emitted when dragging of a header cells starts.
 - `COL_REORDER_DRAG_ENTER`: emitted when the cursor enters another header cell while dragging.
