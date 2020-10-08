@@ -114,7 +114,7 @@ In addition, column reordering emits the following events that can be imported:
 - `COL_REORDER_START`: emitted when dragging of a header cell starts.
 - `COL_REORDER_DRAG_ENTER`: emitted when the cursor enters another header cell while dragging.
 - `COL_REORDER_DRAG_OVER`: emitted when dragging a header cell over the drop zone, which is the `ColumnsHeader` component.
-- `COL_REORDER_STOP`: emitted when dragging of a header cells stops.
+- `COL_REORDER_STOP`: emitted when dragging of a header cell stops.
 
 {{"demo": "pages/components/data-grid/columns/ColumnOrderingGrid.js", "disableAd": true, "bg": "inline"}}
 
