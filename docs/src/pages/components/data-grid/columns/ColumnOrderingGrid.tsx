@@ -4,7 +4,7 @@ import { useDemoData } from '@material-ui/x-grid-data-generator';
 
 export default function ColumnOrderingGrid() {
   const { data } = useDemoData({
-    dataSet: 'Employee',
+    dataSet: 'Commodity',
     rowLength: 20,
     maxColumns: 20,
   });
