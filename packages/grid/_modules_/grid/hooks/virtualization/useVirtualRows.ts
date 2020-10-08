@@ -213,11 +213,13 @@ export const useVirtualRows = (
       top: windowRef.current!.scrollTop,
     };
     if (!scrollingTimeout.current) {
-      apiRef.current.publishEvent(SCROLLING_START);
-    }
-    clearTimeout(scrollingTimeout.current);
-    scrollingTimeout.current = setTimeout(() => {
-      scrollingTimeout.current = null;
+        apiRef.current.publishEvent(SCROLLING_START);
+        apiRef.current.state.isScrolling = true;
+      }
+      clearTimeout(scrollingTimeout.current);
+      scrollingTimeout.current = setTimeout(() => {
+        scrollingTimeout.current = null;
+        apiRef.current.state.isScrolling = false;
       apiRef.current.publishEvent(SCROLLING_STOP);
     }, 300);
     updateViewport();

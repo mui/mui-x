@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { debounce, useForkRef } from '@material-ui/core/utils';
+import { useForkRef } from '@material-ui/core/utils';
 import { GridComponentProps } from './GridComponentProps';
 import {
   useApiRef,
@@ -22,7 +22,6 @@ import {
   ColumnsHeader,
   DefaultFooter,
   OptionsContext,
-  Pagination,
   RenderContext,
   Viewport,
   Watermark,
@@ -30,22 +29,23 @@ import {
 } from './components';
 import { useApi, useColumns, useKeyboard, useRows } from './hooks/root';
 import { useLogger, useLoggerFactory } from './hooks/utils';
+import { debounce } from './utils';
 import { useEvents } from './hooks/root/useEvents';
 import { ErrorBoundary } from './components/error-boundary';
 import { useOptionsProp } from './hooks/utils/useOptionsProp';
+import {useResizeContainer} from "./hooks/utils/useResizeContainer";
+import {useErrorHandler} from "./hooks/utils/useErrorHandler";
+import {getCurryTotalHeight} from "./utils/getTotalHeight";
+import {useRowsReducer} from "./hooks/features/core/useRowsReducer";
 
 /**
  * Data Grid component implementing [[GridComponentProps]].
  * @returns JSX.Element
  */
-export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(function DataGrid(
+export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(function GridComponent(
   props,
   ref,
 ) {
-  const [internalOptions, setInternalOptions] = useOptionsProp(props);
-  useLoggerFactory(internalOptions?.logger, internalOptions?.logLevel);
-  const gridLogger = useLogger('Material-UI Data Grid');
-
   const rootContainerRef: RootContainerRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(rootContainerRef, ref);
 
@@ -55,29 +55,21 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
   const windowRef = React.useRef<HTMLDivElement>(null);
   const gridRef = React.useRef<HTMLDivElement>(null);
   const renderingZoneRef = React.useRef<HTMLDivElement>(null);
-  const internalApiRef = useApiRef();
-  const [errorState, setErrorState] = React.useState<any>(null);
 
-  const apiRef = React.useMemo(() => (!props.apiRef ? internalApiRef : props.apiRef), [
-    props.apiRef,
-    internalApiRef,
-  ]);
+  const apiRef = useApiRef(props.apiRef);
+  const internalOptions = useOptionsProp(apiRef, props);
+
+  useLoggerFactory(internalOptions.logger, internalOptions.logLevel);
+  const gridLogger = useLogger('GridComponent');
 
   const initialised = useApi(rootContainerRef, apiRef);
-
-  const errorHandler = (args: any) => {
-    // We are handling error here, to set up the handler as early as possible and be able to catch error thrown at init time.
-    setErrorState(args);
-  };
-  React.useEffect(() => apiRef!.current.subscribeEvent(COMPONENT_ERROR, errorHandler), [apiRef]);
-
-  React.useEffect(() => {
-    apiRef!.current.showError(props.error);
-  }, [apiRef, props.error]);
+  const errorState =  useErrorHandler(apiRef, props)
+  const onResize = useResizeContainer(apiRef);
 
   useEvents(rootContainerRef, internalOptions, apiRef);
   const internalColumns = useColumns(internalOptions, props.columns, apiRef);
-  const internalRows = useRows(internalOptions, props.rows, initialised, apiRef);
+
+  const internalRows = useRowsReducer(props.rows, apiRef);
   useKeyboard(internalOptions, initialised, apiRef);
   useSelection(internalOptions, props.rows, initialised, apiRef);
   useSorting(internalOptions, props.rows, props.columns, apiRef);
@@ -96,15 +88,6 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
   const separatorProps = useColumnResize(columnsHeaderRef, apiRef);
   const paginationProps = usePagination(internalRows, internalColumns, internalOptions, apiRef);
 
-  React.useEffect(() => {
-    setInternalOptions((previousState) => {
-      if (previousState.pageSize !== paginationProps.pageSize) {
-        return { ...previousState, pageSize: paginationProps.pageSize };
-      }
-      return previousState;
-    });
-  }, [paginationProps.pageSize, setInternalOptions]);
-
   const customComponents = useComponents(
     internalColumns,
     internalRows,
@@ -115,76 +98,17 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     rootContainerRef,
   );
 
-  const onResize = React.useCallback(
-    (size: ElementSize) => {
-      if (size.height === 0) {
-        gridLogger.warn(
-          [
-            'The parent of the grid has an empty height.',
-            'You need to make sure the container has an intrinsic height.',
-            'The grid displays with a height of 0px.',
-            '',
-            'You can find a solution in the docs:',
-            'https://material-ui.com/components/data-grid/rendering/#layout',
-          ].join('\n'),
-        );
-      }
-      if (size.width === 0) {
-        gridLogger.warn(
-          [
-            'The parent of the grid has an empty width.',
-            'You need to make sure the container has an intrinsic width.',
-            'The grid displays with a width of 0px.',
-            '',
-            'You can find a solution in the docs:',
-            'https://material-ui.com/components/data-grid/rendering/#layout',
-          ].join('\n'),
-        );
-      }
-
-      gridLogger.info('resized...', size);
-      apiRef!.current.resize();
-    },
-    [gridLogger, apiRef],
-  );
-  const debouncedOnResize = React.useMemo(() => debounce(onResize, 100), [onResize]);
-
-  React.useEffect(() => {
-    return () => {
-      gridLogger.info('canceling resize...');
-      debouncedOnResize.clear();
-    };
-  }, [gridLogger, debouncedOnResize]);
-
   gridLogger.info(
     `Rendering, page: ${renderCtx?.page}, col: ${renderCtx?.firstColIdx}-${renderCtx?.lastColIdx}, row: ${renderCtx?.firstRowIdx}-${renderCtx?.lastRowIdx}`,
     renderCtx,
   );
 
-  const getTotalHeight = React.useCallback(
-    (size) => {
-      if (!internalOptions.autoHeight) {
-        return size.height;
-      }
-      const footerHeight =
-        (footerRef.current && footerRef.current.getBoundingClientRect().height) || 0;
-      let dataHeight = (renderCtx && renderCtx.dataContainerSizes!.height) || 0;
-      if (dataHeight < internalOptions.rowHeight) {
-        dataHeight = internalOptions.rowHeight * 2; // If we have no rows, we give the size of 2 rows to display the no rows overlay
-      }
-
-      return footerHeight + dataHeight + internalOptions.headerHeight;
-    },
-    [
-      internalOptions.autoHeight,
-      internalOptions.headerHeight,
-      internalOptions.rowHeight,
-      renderCtx,
-    ],
-  );
+  // TODO move that to renderCtx
+  const getTotalHeight = React.useCallback((size)=> getCurryTotalHeight(internalOptions, renderCtx, footerRef)(size),
+    [internalOptions, renderCtx, footerRef]);
 
   return (
-    <AutoSizer onResize={debouncedOnResize}>
+    <AutoSizer onResize={onResize}>
       {(size: any) => (
         <GridRoot
           ref={handleRef}
@@ -257,25 +181,26 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                   <DefaultFooter
                     ref={footerRef}
                     paginationComponent={
-                      !!internalOptions.pagination &&
-                      paginationProps.pageSize != null &&
-                      !internalOptions.hideFooterPagination &&
-                      (customComponents.paginationComponent || (
-                        <Pagination
-                          setPage={paginationProps.setPage}
-                          currentPage={paginationProps.page}
-                          pageCount={paginationProps.pageCount}
-                          pageSize={paginationProps.pageSize}
-                          rowCount={paginationProps.rowCount}
-                          setPageSize={paginationProps.setPageSize}
-                          rowsPerPageOptions={internalOptions.rowsPerPageOptions}
-                        />
-                      ))
+                      // !!internalOptions.pagination &&
+                      // paginationProps.pageSize != null &&
+                      // !internalOptions.hideFooterPagination &&
+                      // (customComponents.paginationComponent || (
+                      //   <Pagination
+                      //     setPage={paginationProps.setPage}
+                      //     currentPage={paginationProps.page}
+                      //     pageCount={paginationProps.pageCount}
+                      //     pageSize={paginationProps.pageSize}
+                      //     rowCount={paginationProps.rowCount}
+                      //     setPageSize={paginationProps.setPageSize}
+                      //     rowsPerPageOptions={internalOptions.rowsPerPageOptions}
+                      //   />
+                      // ))
+                      null
                     }
-                    rowCount={
-                      internalOptions.rowCount == null
-                        ? internalRows.length
-                        : internalOptions.rowCount
+                    rowCount={0
+                      // internalOptions.rowCount == null
+                      //   ? internalRows.length
+                      //   : internalOptions.rowCount
                     }
                     options={internalOptions}
                   />

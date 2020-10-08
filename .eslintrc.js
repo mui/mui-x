@@ -23,5 +23,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     // TODO
     'no-restricted-imports': 'off',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
   },
 };

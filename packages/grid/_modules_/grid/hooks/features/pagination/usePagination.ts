@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useLogger} from '../../utils';
+import {useLogger, useRafUpdate} from '../../utils';
 import {PAGE_CHANGED, PAGESIZE_CHANGED, RESIZE, ROWS_UPDATED} from '../../../constants/eventsConstants';
 import {useApiMethod} from '../../root/useApiMethod';
 import {useApiEventHandler} from '../../root/useApiEventHandler';
@@ -18,6 +18,7 @@ import {
   setPaginationModeActionCreator,
   setRowCountActionCreator
 } from "./usePaginationReducer";
+import {useGridReducer} from "../core/useGridReducer";
 
 export interface PaginationProps {
   page: number;
@@ -27,72 +28,6 @@ export interface PaginationProps {
   setPage: (page: number) => void;
   setPageSize: (pageSize: number) => void;
 }
-
-// // eslint-disable
-// // eslint-disable-next-line @typescript-eslint/no-unused-vars
-// export const useGridState = (apiRef: ApiRef) => {
-//   // const gridStateRef =  React.useRef({});
-//   const [newGridState,  ] = React.useState();
-//   //  const [runSetState] = useRafUpdate(setState);
-//   // const constructState = React.useCallback(()=> {
-//   //    const newState = apiRef.current.getState();
-//   //   runSetState(()=> newState);
-//   // }, [apiRef, runSetState]);
-//   // //
-//   // useApiEventHandler(apiRef, 'StateUpdate',  constructState);
-//
-//   return newGridState as any;
-// }
-//
-// export const useGridReducer = <T>(apiRef: ApiRef, stateId, reducer, initialState) =>  {
-//   // const hookStateRef =  React.useRef(initialState);
-//
-//   // if(!apiRef.current.state) {
-//   //   apiRef.current.state = {};
-//   // }
-//
-//   // if(apiRef.current.state[stateId] != null) {
-//   //   throw new Error(`StateId ${stateId} already declared.`);
-//   // }
-//
-//   const [state, dispatch] = React.useReducer(reducer, initialState);
-//   const [runRafDispatch] = useRafUpdate(dispatch);
-//   // const updateGridContextState = React.useCallback(()=> {
-//   // //   apiRef.current.state[stateId]= state;
-//   // apiRef.current.publishEvent('StateUpdate', {apiRef});
-//   // }, [apiRef]);
-//   // //
-//   // const [runUpdateState] = useRafUpdate(updateGridContextState);
-//
-//   // React.useEffect(()=> {
-//   //   // apiRef.current.state[stateId] = state;
-//   //   hookStateRef.current = state;
-//   //   // apiRef.current.publishEvent('StateUpdate', {apiRef});
-//   //   runUpdateState();
-//   //
-//   // }, [runUpdateState]);
-//   //
-//   // const constructState = React.useCallback((stateRef)=> {
-//   //   stateRef.current[stateId] = hookStateRef.current;
-//   // }, [stateId]);
-//   //
-//   // useApiEventHandler(apiRef, 'GetState', constructState);
-//
-//   return [state as T, runRafDispatch ];
-//
-//
-//   //combine reducers
-//   //combine state
-//   //return state
-//
-//   //Attach to apiRef => not good, as it rerender the whole react tree
-//
-//   //use reselect to get the state
-// }
-// // export const useGridState = (state: any) =>  {
-// //
-// //   apiRef.current.getState();
-// // }
 
 export const usePagination = (
   rows: Rows,
@@ -112,21 +47,21 @@ export const usePagination = (
       options.rowCount == null ? rows.length : options.rowCount,
     ),
   };
-  // const [state, dispatch] = useGridReducer(apiRef, 'pagination', paginationReducer, initialState);
-  const [state, dispatch] = React.useReducer(paginationReducer, initialState);
+  const [state, dispatch] = useGridReducer(apiRef, 'pagination', paginationReducer, initialState);
+  // const [state, dispatch] = React.useReducer(paginationReducer, initialState);
 
   const setPage = React.useCallback(
     (page: number) => {
       dispatch(setPageActionCreator(page, apiRef));
     },
-    [apiRef],
+    [apiRef, dispatch],
   );
 
   const setPageSize = React.useCallback(
     (pageSize: number) => {
       dispatch(setPageSizeActionCreator(pageSize, apiRef));
     },
-    [apiRef],
+    [apiRef, dispatch],
   );
 
   const onPageChange = React.useCallback(

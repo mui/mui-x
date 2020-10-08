@@ -1,9 +1,24 @@
 import * as React from 'react';
 import { GridComponentProps, GridOptionsProp } from '../../GridComponentProps';
-import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../models';
+import {ApiRef, DEFAULT_GRID_OPTIONS, GridOptions} from '../../models';
 import { mergeOptions } from '../../utils';
+import {useGridReducer} from "../features/core/useGridReducer";
 
-export function useOptionsProp(props: GridComponentProps): [GridOptions, Function] {
+
+// REDUCER
+export function optionsReducer(
+  state: GridOptions,
+  action: { type: string; payload?: Partial<GridOptions> },
+) {
+  switch (action.type) {
+    case 'options::UPDATE':
+      return mergeOptions(state, action.payload);
+    default:
+      throw new Error(`Material-UI: Action ${action.type} not found.`);
+  }
+}
+
+export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridOptions {
   // TODO Refactor to smaller objects
   const options: GridOptionsProp = React.useMemo(
     () => ({
@@ -98,12 +113,30 @@ export function useOptionsProp(props: GridComponentProps): [GridOptions, Functio
     ],
   );
 
-  const [internalOptions, setInternalOptions] = React.useState<GridOptions>(
-    mergeOptions(DEFAULT_GRID_OPTIONS, options),
-  );
-  React.useEffect(() => {
-    setInternalOptions((previousState) => mergeOptions(previousState, options));
-  }, [options]);
+  const [optionsState, dispatch] = useGridReducer(apiRef, 'options', optionsReducer, DEFAULT_GRID_OPTIONS)
+  //
+  // const [internalOptions, setInternalOptions] = React.useState<GridOptions>(
+  //   mergeOptions(DEFAULT_GRID_OPTIONS, options),
+  // );
 
-  return [internalOptions, setInternalOptions];
+  const updateOptions = React.useCallback((newOptions: Partial<GridOptions>)=> {
+    dispatch({type: 'options::UPDATE', payload: newOptions})
+  }, [dispatch])
+
+  React.useEffect(() => {
+    // setInternalOptions((previousState) => mergeOptions(previousState, options));
+    updateOptions(options);
+  }, [options, updateOptions]);
+
+  // Should we sync paginationState.pageSize with options.pageSize?
+  // React.useEffect(() => {
+  //   setInternalOptions((previousState) => {
+  //     if (previousState.pageSize !== paginationProps.pageSize) {
+  //       return { ...previousState, pageSize: paginationProps.pageSize };
+  //     }
+  //     return previousState;
+  //   });
+  // }, [paginationProps.pageSize, setInternalOptions]);
+
+  return optionsState;
 }

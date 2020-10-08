@@ -5,6 +5,7 @@
     "declarationDir": "./dist",
     "module": "es6",
     "noImplicitAny": false,
+    "noUnusedLocals": false,
     "strict": true,
     "outDir": "./dist",
     "target": "es6",
