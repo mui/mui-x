@@ -4,7 +4,10 @@ import { ScrollParams, useApiEventHandler } from '../hooks';
 import { ApiRef } from '../models';
 import { ApiContext } from './api-context';
 
-type ScrollDirection = 'left' | 'right';
+enum ScrollDirection {
+  Left = 'left',
+  Right = 'right',
+}
 
 interface ScrollAreaProps {
   scrollDirection: ScrollDirection;
@@ -14,7 +17,9 @@ export const ScrollArea: React.FC<ScrollAreaProps> = React.memo(
     const api = React.useContext(ApiContext);
     const cursorPossitionX = React.useRef<number | null>(null);
     const cssClass = `MuiDataGrid-scrollArea ${
-      scrollDirection === 'left' ? 'MuiDataGrid-scrollArea-left' : 'MuiDataGrid-scrollArea-right'
+      scrollDirection === ScrollDirection.Left
+        ? 'MuiDataGrid-scrollArea-left'
+        : 'MuiDataGrid-scrollArea-right'
     }`;
     const [isDragging, setIsDragging] = React.useState<boolean>(false);
     const scrollStep = React.useRef<number>(2);
@@ -38,13 +43,21 @@ export const ScrollArea: React.FC<ScrollAreaProps> = React.memo(
         }
 
         cursorPossitionX.current = event.clientX;
+        let newLeftScrollPosition: number;
+
+        if (currentScrollPosition.current!.left <= 0 && scrollDirection === ScrollDirection.Left) {
+          newLeftScrollPosition = 0;
+        } else {
+          newLeftScrollPosition =
+            currentScrollPosition.current!.left + scrollStep.current * scrollStepMultiplier;
+        }
 
         api!.current.scroll({
-          left: currentScrollPosition.current!.left + scrollStep.current * scrollStepMultiplier,
+          left: newLeftScrollPosition,
           top: currentScrollPosition.current!.top,
         });
       },
-      [currentScrollPosition, scrollStep, api],
+      [scrollDirection, currentScrollPosition, scrollStep, api],
     );
 
     const toggleIsDragging = React.useCallback(() => {
