@@ -4,10 +4,12 @@ import { ScrollParams, useApiEventHandler } from '../hooks';
 import { ApiRef } from '../models';
 import { ApiContext } from './api-context';
 
-enum ScrollDirection {
+enum Direction {
   Left = 'left',
   Right = 'right',
 }
+
+type ScrollDirection = 'left' | 'right';
 
 interface ScrollAreaProps {
   scrollDirection: ScrollDirection;
@@ -17,7 +19,7 @@ export const ScrollArea: React.FC<ScrollAreaProps> = React.memo(
     const api = React.useContext(ApiContext);
     const cursorPossitionX = React.useRef<number | null>(null);
     const cssClass = `MuiDataGrid-scrollArea ${
-      scrollDirection === ScrollDirection.Left
+      scrollDirection === Direction.Left
         ? 'MuiDataGrid-scrollArea-left'
         : 'MuiDataGrid-scrollArea-right'
     }`;
@@ -45,7 +47,7 @@ export const ScrollArea: React.FC<ScrollAreaProps> = React.memo(
         cursorPossitionX.current = event.clientX;
         let newLeftScrollPosition: number;
 
-        if (currentScrollPosition.current!.left <= 0 && scrollDirection === ScrollDirection.Left) {
+        if (currentScrollPosition.current!.left <= 0 && scrollDirection === Direction.Left) {
           newLeftScrollPosition = 0;
         } else {
           newLeftScrollPosition =
