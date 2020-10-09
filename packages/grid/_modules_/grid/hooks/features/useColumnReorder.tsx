@@ -111,16 +111,27 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
 
       clearTimeout(removeDnDStylesTimeout.current as NodeJS.Timeout);
 
-      if (col.field !== dragCol.current!.field && hasCursorPositionChanged(cursorPosition.current, coordinates)) {
+      if (
+        col.field !== dragCol.current!.field &&
+        hasCursorPositionChanged(cursorPosition.current, coordinates)
+      ) {
         const targetColIndex = apiRef.current.getColumnIndex(col.field, false);
         const dragColIndex = apiRef.current.getColumnIndex(dragCol.current!.field, false);
         const columnsSnapshot = apiRef.current.getAllColumns();
 
         if (
-          (getCursorMoveDirectionX(cursorPosition.current, coordinates) === CURSOR_MOVE_DIRECTION_RIGHT && dragColIndex < targetColIndex) ||
-          (getCursorMoveDirectionX(cursorPosition.current, coordinates) === CURSOR_MOVE_DIRECTION_LEFT && targetColIndex < dragColIndex)
+          (getCursorMoveDirectionX(cursorPosition.current, coordinates) ===
+            CURSOR_MOVE_DIRECTION_RIGHT &&
+            dragColIndex < targetColIndex) ||
+          (getCursorMoveDirectionX(cursorPosition.current, coordinates) ===
+            CURSOR_MOVE_DIRECTION_LEFT &&
+            targetColIndex < dragColIndex)
         ) {
-          const columnsReordered = reorderColDefArray(columnsSnapshot, targetColIndex, dragColIndex);
+          const columnsReordered = reorderColDefArray(
+            columnsSnapshot,
+            targetColIndex,
+            dragColIndex,
+          );
           apiRef.current.updateColumns(columnsReordered, true);
         }
 

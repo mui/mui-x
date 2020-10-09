@@ -42,7 +42,7 @@ export const ScrollArea: React.FC<ScrollAreaProps> = React.memo(
         api!.current.scroll({
           left: currentScrollPosition.current!.left + scrollStep.current * scrollStepMultiplier,
           top: currentScrollPosition.current!.top,
-        })
+        });
       },
       [currentScrollPosition, scrollStep, api],
     );

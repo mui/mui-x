@@ -189,10 +189,13 @@ export function useColumns(
   );
   const getAllColumns: () => Columns = () => stateRef.current.all;
   const getColumnsMeta: () => ColumnsMeta = () => stateRef.current.meta;
-  const getColumnIndex: (field: string, useVisibleColumns?: boolean) => number = (field, useVisibleColumns = true) =>
-    useVisibleColumns ?
-    stateRef.current.visible.findIndex((c) => c.field === field) :
-    stateRef.current.all.findIndex((c) => c.field === field);
+  const getColumnIndex: (field: string, useVisibleColumns?: boolean) => number = (
+    field,
+    useVisibleColumns = true,
+  ) =>
+    useVisibleColumns
+      ? stateRef.current.visible.findIndex((c) => c.field === field)
+      : stateRef.current.all.findIndex((c) => c.field === field);
   const getColumnPosition: (field: string) => number = (field) => {
     const index = getColumnIndex(field);
     return stateRef.current.meta.positions[index];

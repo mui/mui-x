@@ -89,7 +89,9 @@ export const ColumnsHeader = React.memo(
       }, [renderCtx, columns]);
 
       const handleDragOver =
-        onColumnHeaderDragOver && !disableColumnReorder ? (event) => onColumnHeaderDragOver(event) : undefined;
+        onColumnHeaderDragOver && !disableColumnReorder
+          ? (event) => onColumnHeaderDragOver(event)
+          : undefined;
 
       return (
         <React.Fragment>

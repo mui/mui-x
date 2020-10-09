@@ -61,9 +61,7 @@ export const ColumnHeaderItem = React.memo(
       onColumnDragStart && !disableColumnReorder
         ? (event) => onColumnDragStart(column, event.target)
         : undefined;
-    const handleDragEnter = onColumnDragEnter
-        ? (event) => onColumnDragEnter(event)
-        : undefined;
+    const handleDragEnter = onColumnDragEnter ? (event) => onColumnDragEnter(event) : undefined;
     const handleDragOver = onColumnDragOver
       ? (event) => {
           onColumnDragOver(column, {
@@ -97,7 +95,9 @@ export const ColumnHeaderItem = React.memo(
       >
         <div
           className="MuiDataGrid-colCell-draggable"
-          draggable={!disableColumnReorder && !!handleDragStart && !!handleDragEnter && !!handleDragOver}
+          draggable={
+            !disableColumnReorder && !!handleDragStart && !!handleDragEnter && !!handleDragOver
+          }
           onDragStart={handleDragStart}
           onDragOver={handleDragOver}
           onDragEnter={handleDragEnter}
