@@ -211,9 +211,10 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                       columns={internalColumns.visible || []}
                       hasScrollX={!!renderCtx?.hasScrollX}
                       onResizeColumn={onResizeColumn}
-                      onColumnDragOver={onColumnReorder.handleDragOver}
+                      onColumnHeaderDragOver={onColumnReorder.handleColumnHeaderDragOver}
                       onColumnDragStart={onColumnReorder.handleDragStart}
                       onColumnDragEnter={onColumnReorder.handleDragEnter}
+                      onColumnDragOver={onColumnReorder.handleDragOver}
                       renderCtx={renderCtx}
                     />
                   </GridColumnsContainer>

@@ -46,11 +46,7 @@ export const ScrollArea: React.FC<ScrollAreaProps> = React.memo(
     useApiEventHandler(api as ApiRef, COL_REORDER_START, toggleIsDragging);
     useApiEventHandler(api as ApiRef, COL_REORDER_STOP, toggleIsDragging);
 
-    return (
-      <React.Fragment>
-        {isDragging && <div className={cssClass} onDragOver={handleDragOver} />}
-      </React.Fragment>
-    );
+    return isDragging ? <div className={cssClass} onDragOver={handleDragOver} /> : null;
   },
 );
 ScrollArea.displayName = 'ScrollArea';

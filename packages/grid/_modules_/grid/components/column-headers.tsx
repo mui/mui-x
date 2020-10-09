@@ -11,10 +11,11 @@ export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
   onResizeColumn?: (col: ColDef) => void;
   onColumnDragStart?: (col: ColDef, htmlEL: HTMLElement) => void;
-  onColumnDragEnter?: (col: ColDef, pos: CursorCoordinates) => void;
+  onColumnDragEnter?: (event: Event) => void;
+  onColumnDragOver?: (col: ColDef, pos: CursorCoordinates) => void;
 }
 export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionProps> = React.memo(
-  ({ onResizeColumn, onColumnDragStart, onColumnDragEnter, columns }) => {
+  ({ onResizeColumn, onColumnDragStart, onColumnDragEnter, onColumnDragOver, columns }) => {
     const items = columns.map((col, idx) => (
       <ColumnHeaderItem
         key={col.field}
@@ -23,6 +24,7 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
         onResizeColumn={onResizeColumn}
         onColumnDragStart={onColumnDragStart}
         onColumnDragEnter={onColumnDragEnter}
+        onColumnDragOver={onColumnDragOver}
       />
     ));
 
@@ -35,9 +37,10 @@ export interface ColumnsHeaderProps {
   columns: Columns;
   hasScrollX: boolean;
   onResizeColumn?: (col: ColDef) => void;
-  onColumnDragOver?: (event: Event) => void;
+  onColumnHeaderDragOver?: (event: Event) => void;
+  onColumnDragOver?: (col: ColDef, pos: CursorCoordinates) => void;
   onColumnDragStart?: (col: ColDef, htmlEl: HTMLElement) => void;
-  onColumnDragEnter?: (col: ColDef, pos: CursorCoordinates) => void;
+  onColumnDragEnter?: (event: Event) => void;
   renderCtx: Partial<RenderContextProps> | null;
 }
 
@@ -48,6 +51,7 @@ export const ColumnsHeader = React.memo(
         columns,
         hasScrollX,
         onResizeColumn,
+        onColumnHeaderDragOver,
         onColumnDragOver,
         onColumnDragStart,
         onColumnDragEnter,
@@ -85,7 +89,7 @@ export const ColumnsHeader = React.memo(
       }, [renderCtx, columns]);
 
       const handleDragOver =
-        onColumnDragOver && !disableColumnReorder ? (event) => onColumnDragOver(event) : undefined;
+        onColumnHeaderDragOver && !disableColumnReorder ? (event) => onColumnHeaderDragOver(event) : undefined;
 
       return (
         <React.Fragment>
@@ -104,6 +108,7 @@ export const ColumnsHeader = React.memo(
               columns={renderedCols}
               onResizeColumn={onResizeColumn}
               onColumnDragStart={onColumnDragStart}
+              onColumnDragOver={onColumnDragOver}
               onColumnDragEnter={onColumnDragEnter}
             />
             <RightEmptyCell width={renderCtx?.rightEmptyWidth} />

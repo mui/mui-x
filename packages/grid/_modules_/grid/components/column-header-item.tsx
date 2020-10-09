@@ -14,7 +14,8 @@ interface ColumnHeaderItemProps {
   colIndex: number;
   onResizeColumn?: (c: any) => void;
   onColumnDragStart?: (c: ColDef, h: HTMLElement) => void;
-  onColumnDragEnter?: (c: ColDef, p: CursorCoordinates) => void;
+  onColumnDragEnter?: (event: Event) => void;
+  onColumnDragOver?: (c: ColDef, p: CursorCoordinates) => void;
 }
 const headerAlignPropToCss = {
   center: 'MuiDataGrid-colCellCenter',
@@ -27,6 +28,7 @@ export const ColumnHeaderItem = React.memo(
     onResizeColumn,
     onColumnDragStart,
     onColumnDragEnter,
+    onColumnDragOver,
   }: ColumnHeaderItemProps) => {
     const api = React.useContext(ApiContext);
     const { showColumnRightBorder, disableColumnResize, disableColumnReorder } = React.useContext(
@@ -60,8 +62,11 @@ export const ColumnHeaderItem = React.memo(
         ? (event) => onColumnDragStart(column, event.target)
         : undefined;
     const handleDragEnter = onColumnDragEnter
+        ? (event) => onColumnDragEnter(event)
+        : undefined;
+    const handleDragOver = onColumnDragOver
       ? (event) => {
-          onColumnDragEnter(column, {
+          onColumnDragOver(column, {
             x: event.clientX,
             y: event.clientY,
           });
@@ -92,8 +97,9 @@ export const ColumnHeaderItem = React.memo(
       >
         <div
           className="MuiDataGrid-colCell-draggable"
-          draggable={!disableColumnReorder && !!handleDragStart && !!handleDragEnter}
+          draggable={!disableColumnReorder && !!handleDragStart && !!handleDragEnter && !!handleDragOver}
           onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
           onDragEnter={handleDragEnter}
         >
           {column.type === 'number' && (

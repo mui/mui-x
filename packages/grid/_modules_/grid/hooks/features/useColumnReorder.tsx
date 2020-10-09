@@ -6,6 +6,7 @@ import {
   DRAGEND,
   COL_REORDER_START,
   COL_REORDER_DRAG_OVER,
+  COL_REORDER_DRAG_OVER_HEADER,
   COL_REORDER_DRAG_ENTER,
   COL_REORDER_STOP,
 } from '../../constants/eventsConstants';
@@ -34,7 +35,7 @@ const reorderColDefArray = (
   return columnsClone;
 };
 
-const getCursorNewMoveDirectionX = (currentCoordinates, nextCoordinates) => {
+const getCursorMoveDirectionX = (currentCoordinates, nextCoordinates) => {
   return currentCoordinates.x <= nextCoordinates.x
     ? CURSOR_MOVE_DIRECTION_RIGHT
     : CURSOR_MOVE_DIRECTION_LEFT;
@@ -51,7 +52,6 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
 
   const dragCol = React.useRef<ColDef | null>();
   const dragColNode = React.useRef<HTMLElement | null>();
-  const cursorXMoveDirection = React.useRef<string>('');
   const cursorPosition = React.useRef<CursorCoordinates>({
     x: 0,
     y: 0,
@@ -67,17 +67,6 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
     dragCol.current = null;
     dragColNode.current = null;
   }, [columnsRef, apiRef, logger]);
-
-  const handleDragOver = React.useCallback(
-    (event) => {
-      event.preventDefault();
-      logger.debug(`Dragging over col ${event.target}`);
-      apiRef.current.publishEvent(COL_REORDER_DRAG_OVER);
-
-      columnsRef.current?.classList.add(HEADER_CELL_DROP_ZONE_CSS_CLASS);
-    },
-    [columnsRef, apiRef, logger],
-  );
 
   const handleDragStart = React.useCallback(
     (col: ColDef, htmlEl: HTMLElement): void => {
@@ -95,38 +84,56 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
     [apiRef, handleDragEnd, logger],
   );
 
+  const handleColumnHeaderDragOver = React.useCallback(
+    (event) => {
+      event.preventDefault();
+      logger.debug(`Dragging over ${event.target}`);
+      apiRef.current.publishEvent(COL_REORDER_DRAG_OVER_HEADER);
+
+      columnsRef.current?.classList.add(HEADER_CELL_DROP_ZONE_CSS_CLASS);
+    },
+    [columnsRef, apiRef, logger],
+  );
+
   const handleDragEnter = React.useCallback(
-    (col: ColDef, coordinates: CursorCoordinates): void => {
-      logger.debug(`Enter dragging col ${col.field}`);
+    (event) => {
+      event.preventDefault();
+      logger.debug(`Enter dragging col ${event.target}`);
       apiRef.current.publishEvent(COL_REORDER_DRAG_ENTER);
+    },
+    [apiRef, logger],
+  );
+
+  const handleDragOver = React.useCallback(
+    (col: ColDef, coordinates: CursorCoordinates): void => {
+      logger.debug(`Dragging over col ${col.field}`);
+      apiRef.current.publishEvent(COL_REORDER_DRAG_OVER);
 
       clearTimeout(removeDnDStylesTimeout.current as NodeJS.Timeout);
 
-      if (
-        col.field !== dragCol.current!.field &&
-        hasCursorPositionChanged(cursorPosition.current, coordinates) &&
-        getCursorNewMoveDirectionX(cursorPosition.current, coordinates) !==
-          cursorXMoveDirection.current
-      ) {
-        cursorXMoveDirection.current = getCursorNewMoveDirectionX(
-          cursorPosition.current,
-          coordinates,
-        );
-        cursorPosition.current = coordinates;
-        const targetColIndex = apiRef.current.getColumnIndex(col.field);
-        const dragColIndex = apiRef.current.getColumnIndex(dragCol.current!.field);
-        const columnsSnapshot = apiRef.current.getVisibleColumns();
-        const columnsReordered = reorderColDefArray(columnsSnapshot, targetColIndex, dragColIndex);
+      if (col.field !== dragCol.current!.field && hasCursorPositionChanged(cursorPosition.current, coordinates)) {
+        const targetColIndex = apiRef.current.getColumnIndex(col.field, false);
+        const dragColIndex = apiRef.current.getColumnIndex(dragCol.current!.field, false);
+        const columnsSnapshot = apiRef.current.getAllColumns();
 
-        apiRef.current.updateColumns(columnsReordered, true);
+        if (
+          (getCursorMoveDirectionX(cursorPosition.current, coordinates) === CURSOR_MOVE_DIRECTION_RIGHT && dragColIndex < targetColIndex) ||
+          (getCursorMoveDirectionX(cursorPosition.current, coordinates) === CURSOR_MOVE_DIRECTION_LEFT && targetColIndex < dragColIndex)
+        ) {
+          const columnsReordered = reorderColDefArray(columnsSnapshot, targetColIndex, dragColIndex);
+          apiRef.current.updateColumns(columnsReordered, true);
+        }
+
+        cursorPosition.current = coordinates;
       }
     },
     [apiRef, logger],
   );
 
   return {
-    handleDragOver,
     handleDragStart,
+    handleColumnHeaderDragOver,
+    handleDragOver,
     handleDragEnter,
   };
 };

@@ -29,7 +29,7 @@ export interface ColumnApi {
    * Get the index position of the column in the array of [[ColDef]].
    * @param field
    */
-  getColumnIndex: (field: string) => number;
+  getColumnIndex: (field: string, useVisibleColumns?: boolean) => number;
   /**
    * Get the column left position in pixel relative to the left grid inner border.
    * @param field
