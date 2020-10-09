@@ -12,11 +12,13 @@ interface ScrollAreaProps {
 export const ScrollArea: React.FC<ScrollAreaProps> = React.memo(
   ({ scrollDirection }: ScrollAreaProps) => {
     const api = React.useContext(ApiContext);
+    const cursorPossitionX = React.useRef<number | null>(null);
     const cssClass = `MuiDataGrid-scrollArea ${
       scrollDirection === 'left' ? 'MuiDataGrid-scrollArea-left' : 'MuiDataGrid-scrollArea-right'
     }`;
     const [isDragging, setIsDragging] = React.useState<boolean>(false);
-    const scrollStep = scrollDirection === 'left' ? -10 : 10;
+    const scrollStep = React.useRef<number>(2);
+    const scrollStepMultiplier = 3;
     const currentScrollPosition = React.useRef<ScrollParams | null>({
       left: 0,
       top: 0,
@@ -30,11 +32,18 @@ export const ScrollArea: React.FC<ScrollAreaProps> = React.memo(
     );
 
     const handleDragOver = React.useCallback(
-      () =>
+      (event) => {
+        if (cursorPossitionX.current !== null) {
+          scrollStep.current += event.clientX - cursorPossitionX.current;
+        }
+
+        cursorPossitionX.current = event.clientX;
+
         api!.current.scroll({
-          left: currentScrollPosition.current!.left + scrollStep,
+          left: currentScrollPosition.current!.left + scrollStep.current * scrollStepMultiplier,
           top: currentScrollPosition.current!.top,
-        }),
+        })
+      },
       [currentScrollPosition, scrollStep, api],
     );
 
