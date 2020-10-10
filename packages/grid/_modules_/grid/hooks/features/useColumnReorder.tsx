@@ -56,7 +56,7 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
     x: 0,
     y: 0,
   });
-  const removeDnDStylesTimeout = React.useRef<NodeJS.Timeout>();
+  const removeDnDStylesTimeout = React.useRef<NodeJS.Timeout | number>();
 
   const handleDragEnd = React.useCallback((): void => {
     logger.debug(`End dragging col ${dragCol.current!.field}`);
