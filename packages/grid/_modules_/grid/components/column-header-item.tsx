@@ -13,7 +13,7 @@ interface ColumnHeaderItemProps {
   column: ColDef;
   colIndex: number;
   onResizeColumn?: (c: any) => void;
-  onColumnDragStart?: (col: ColDef, target: HTMLElement) => void;
+  onColumnDragStart?: (col: ColDef, currentTarget: HTMLElement) => void;
   onColumnDragEnter?: (event: Event) => void;
   onColumnDragOver?: (col: ColDef, coordinates: CursorCoordinates) => void;
 }
@@ -46,7 +46,7 @@ export const ColumnHeaderItem = React.memo(
       onResizeColumn && !disableColumnReorder ? () => onResizeColumn(column) : undefined;
     const handleDragStart =
       onColumnDragStart && !disableColumnReorder
-        ? (event) => onColumnDragStart(column, event.target)
+        ? (event) => onColumnDragStart(column, event.currentTarget)
         : undefined;
     const handleDragEnter = onColumnDragEnter ? (event) => onColumnDragEnter(event) : undefined;
     const handleDragOver = onColumnDragOver

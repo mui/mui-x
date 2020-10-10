@@ -71,12 +71,12 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
   }, [columnsRef, apiRef, logger]);
 
   const handleDragStart = React.useCallback(
-    (col: ColDef, htmlEl: HTMLElement): void => {
+    (col: ColDef, currentTarget: HTMLElement): void => {
       logger.debug(`Start dragging col ${col.field}`);
       apiRef.current.publishEvent(COL_REORDER_START);
 
       dragCol.current = col;
-      dragColNode.current = htmlEl;
+      dragColNode.current = currentTarget;
       dragColNode.current.addEventListener(DRAGEND, handleDragEnd, { once: true });
       dragColNode.current.classList.add(HEADER_CELL_DRAGGING_CSS_CLASS);
       removeDnDStylesTimeout.current = window.setTimeout(() => {
