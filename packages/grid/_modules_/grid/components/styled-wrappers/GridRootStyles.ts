@@ -60,7 +60,7 @@ export const useStyles = makeStyles(
           top: 0,
           zIndex: 101,
           width: 20,
-          height: '100%',
+          bottom: 0,
         },
         '& .MuiDataGrid-scrollArea-left': {
           left: 0,
@@ -225,7 +225,7 @@ export const useStyles = makeStyles(
           background: theme.palette.background.paper,
           padding: '0 12px',
           borderRadius: theme.shape.borderRadius,
-          opacity: 0.4,
+          opacity: theme.palette.action.disabledOpacity,
         },
       },
     };
