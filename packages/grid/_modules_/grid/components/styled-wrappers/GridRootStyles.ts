@@ -98,10 +98,10 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-sortIcon': {
           fontSize: 18,
         },
-        '& .MuiDataGrid-colCellCenter, & .MuiDataGrid-colCellCenter .MuiDataGrid-colCell-draggable': {
+        '& .MuiDataGrid-colCellCenter': {
           justifyContent: 'center',
         },
-        '& .MuiDataGrid-colCellRight, & .MuiDataGrid-colCellRight .MuiDataGrid-colCell-draggable': {
+        '& .MuiDataGrid-colCellRight': {
           justifyContent: 'flex-end',
         },
         '& .MuiDataGrid-colCellTitle': {
@@ -220,6 +220,7 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-colCell-draggable': {
           display: 'flex',
           width: '100%',
+          justifyContent: 'inherit',
         },
         '& .MuiDataGrid-colCell-dragging': {
           background: theme.palette.background.paper,
