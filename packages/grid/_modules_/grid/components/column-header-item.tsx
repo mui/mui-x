@@ -13,9 +13,9 @@ interface ColumnHeaderItemProps {
   column: ColDef;
   colIndex: number;
   onResizeColumn?: (c: any) => void;
-  onColumnDragStart?: (c: ColDef, h: HTMLElement) => void;
+  onColumnDragStart?: (col: ColDef, target: HTMLElement) => void;
   onColumnDragEnter?: (event: Event) => void;
-  onColumnDragOver?: (c: ColDef, p: CursorCoordinates) => void;
+  onColumnDragOver?: (col: ColDef, coordinates: CursorCoordinates) => void;
 }
 
 export const ColumnHeaderItem = React.memo(
