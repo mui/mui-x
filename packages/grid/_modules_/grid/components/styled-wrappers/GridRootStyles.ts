@@ -98,10 +98,10 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-sortIcon': {
           fontSize: 18,
         },
-        '& .MuiDataGrid-colCellCenter': {
+        '& .MuiDataGrid-colCellCenter, & .MuiDataGrid-colCellCenter .MuiDataGrid-colCell-draggable': {
           justifyContent: 'center',
         },
-        '& .MuiDataGrid-colCellRight': {
+        '& .MuiDataGrid-colCellRight, & .MuiDataGrid-colCellRight .MuiDataGrid-colCell-draggable': {
           justifyContent: 'flex-end',
         },
         '& .MuiDataGrid-colCellTitle': {
