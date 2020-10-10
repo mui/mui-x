@@ -110,6 +110,9 @@ export const useStyles = makeStyles(
           whiteSpace: 'nowrap',
           fontWeight: theme.typography.fontWeightMedium,
         },
+        '& .MuiDataGrid-colCellMoving': {
+          backgroundColor: theme.palette.action.hover,
+        },
         '& .MuiDataGrid-columnSeparator': {
           position: 'absolute',
           right: -12,

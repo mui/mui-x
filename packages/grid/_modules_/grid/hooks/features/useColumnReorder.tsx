@@ -50,8 +50,8 @@ const hasCursorPositionChanged = (
 export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, apiRef: ApiRef) => {
   const logger = useLogger('useColumnReorder');
 
-  const dragCol = React.useRef<ColDef | null>();
-  const dragColNode = React.useRef<HTMLElement>();
+  const dragCol = React.useRef<ColDef | null>(null);
+  const dragColNode = React.useRef<HTMLElement | null>(null);
   const cursorPosition = React.useRef<CursorCoordinates>({
     x: 0,
     y: 0,
@@ -65,9 +65,10 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
     clearTimeout(removeDnDStylesTimeout.current);
 
     columnsRef.current!.classList.remove(HEADER_CELL_DROP_ZONE_CSS_CLASS);
+    dragColNode.current!.parentElement!.classList.remove('MuiDataGrid-colCellMoving');
     dragColNode.current!.removeEventListener(DRAGEND, handleDragEnd);
     dragCol.current = null;
-    dragColNode.current = undefined;
+    dragColNode.current = null;
   }, [columnsRef, apiRef, logger]);
 
   const handleDragStart = React.useCallback(
@@ -79,6 +80,7 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
       dragColNode.current = currentTarget;
       dragColNode.current.addEventListener(DRAGEND, handleDragEnd, { once: true });
       dragColNode.current.classList.add(HEADER_CELL_DRAGGING_CSS_CLASS);
+      dragColNode.current.parentElement!.classList.add('MuiDataGrid-colCellMoving');
       removeDnDStylesTimeout.current = window.setTimeout(() => {
         dragColNode.current!.classList.remove(HEADER_CELL_DRAGGING_CSS_CLASS);
       }, 0);
