@@ -4,7 +4,8 @@ import { GridFooter } from './styled-wrappers/GridFooter';
 import { RowCount } from './row-count';
 import { SelectedRowCount } from './selected-row-count';
 import { ApiContext } from './api-context';
-import {useGridSelector} from "../hooks/features/core/useGridReducer";
+import {rowCountSelector} from "../hooks/features";
+import {useGridSelector} from "../hooks/features/core/useGridSelector";
 
 export interface DefaultFooterProps {
   options: GridOptions;
@@ -18,6 +19,7 @@ export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps
   function DefaultFooter(props, ref) {
     // const { options, rowCount, paginationComponent } = props;
     const apiRef = React.useContext(ApiContext);
+    const totalRowCount = useGridSelector(apiRef, rowCountSelector);
     // const [selectedRowCount, setSelectedCount] = React.useState(0);
 
     const pagination = useGridSelector(apiRef, paginationSelector);
@@ -46,7 +48,7 @@ export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps
     return (
       <GridFooter ref={ref}>
         {/*{!options.hideFooterRowCount && <RowCount rowCount={rowCount} />}*/}
-        {pagination?.rowCount}
+        {totalRowCount}
         {/*{!options.hideFooterSelectedRowCount && (*/}
         {/*  <SelectedRowCount selectedRowCount={selectedRowCount} />*/}
         {/*)}*/}

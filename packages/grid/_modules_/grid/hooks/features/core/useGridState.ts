@@ -1,37 +1,15 @@
-import {ApiRef} from "../../../models/api";
+import { ApiRef } from "../../../models/api";
+import { GridState, useGridApi } from "./useGridApi";
 import * as React from "react";
-import {DEFAULT_GRID_OPTIONS, GridOptions, RowId, RowModel} from "../../../models";
-import {RowsState} from "./useRowsReducer";
 
+export const useGridState = (apiRef: ApiRef): [GridState, (state: Partial<GridState>)=> void, React.Dispatch<any>] => {
+	const api = useGridApi(apiRef);
+	const [, forceUpdate] = React.useState();
 
-interface SelectedRowsState {
-	selectedRows: RowId[];
-}
-interface HiddenRowsState {
-	hiddenRows: RowId[];
-}
-interface PaginationState {
-	pagination: any;
-}
-interface GridOptionsState {
-	options: GridOptions;
-}
+	const updateState = React.useCallback((state: Partial<GridState>)=> {
+		const newState = {...api.state, ...state};
+		api.state = newState;
+	}, [api]);
 
-export type GridState = RowsState & SelectedRowsState & HiddenRowsState & PaginationState & GridOptionsState;
-
-const INITIAL_STATE: GridState = {
-	idRowsLookup: {},
-	allRows: [],
-	selectedRows: [],
-	hiddenRows: [],
-	pagination: {},
-	options: DEFAULT_GRID_OPTIONS
-}
-
-export const useGridState = (apiRef?: ApiRef): GridState => {
-	if(!apiRef) {
-		return INITIAL_STATE;
-	}
-
-	return apiRef.current.state;
+	return [api.state, updateState, forceUpdate];
 }

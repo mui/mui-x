@@ -2,41 +2,46 @@ import * as React from 'react';
 
 import {useGridReducer} from "./useGridReducer";
 import {ApiRef, RowApi} from "../../../models/api";
-import {createRowModel, RowData, RowId, RowModel, Rows, RowsProp} from "../../../models";
+import {createRowModel, GridOptions, RowData, RowId, RowModel, Rows, RowsProp} from "../../../models";
 import {ROWS_UPDATED, SCROLLING_START, SCROLLING_STOP, SORT_MODEL_CHANGE} from "../../../constants";
 import {useLogger, useRafUpdate} from "../../utils";
 import {useApiEventHandler, useApiMethod} from "../../root";
+import {useGridState} from "./useGridState";
 
 // type IdLookup = { [key: string]: number };
-export interface RowsState {
+export interface InternalRowsState {
   idRowsLookup: Record<RowId, RowModel>;
   allRows: RowId[];
+  totalRowCount: number;
 }
 
-const INITIAL_ROW_STATE: RowsState = {
+export const INITIAL_ROW_STATE: InternalRowsState = {
   idRowsLookup: {},
-  allRows: []
+  allRows: [],
+  totalRowCount: 0
 }
 const UPDATE_ROW_STATE = 'UPDATE_ROW_STATE';
-type UpdateRowStateAction = {type : 'UPDATE_ROW_STATE', payload: RowsState};
-const updateRowStateActionCreator = (state: RowsState): UpdateRowStateAction => ({ type: UPDATE_ROW_STATE , payload: state});
+type UpdateRowStateAction = {type : 'UPDATE_ROW_STATE', payload: InternalRowsState};
+const updateRowStateActionCreator = (state: InternalRowsState): UpdateRowStateAction => ({ type: UPDATE_ROW_STATE , payload: state});
 
 const ROW_PROP_CHANGED_ACTION = 'ROW_PROP_CHANGED';
-type RowPropChangedAction = {type : 'ROW_PROP_CHANGED', payload: RowsProp};
-const rowPropChangedActionCreator = (rows: RowsProp): RowPropChangedAction => ({ type: ROW_PROP_CHANGED_ACTION , payload: rows});
+type RowPropChangedAction = {type : 'ROW_PROP_CHANGED', payload: {rows: RowsProp, totalRowCount?: number}};
+const rowPropChangedActionCreator = (rows: RowsProp, totalRowCount?: number): RowPropChangedAction =>
+  ({ type: ROW_PROP_CHANGED_ACTION , payload: {rows, totalRowCount} });
 
-function convertRowsPropToState(rows: RowsProp): RowsState {
-  const state: RowsState = INITIAL_ROW_STATE;
+function convertRowsPropToState( {rows, totalRowCount}:{rows: RowsProp, totalRowCount?: number}): InternalRowsState {
+  const state: InternalRowsState = {...INITIAL_ROW_STATE};
   rows.reduce((idLookup, rowData, index) => {
     const model = createRowModel(rowData);
     state.idRowsLookup[model.id]= model;
     state.allRows = [...state.allRows, model.id];
+    state.totalRowCount = totalRowCount && totalRowCount > state.allRows.length ? totalRowCount : state.allRows.length;
     return state;
   }, state);
   return state;
 }
-
-export const rowReducer = (state: RowsState = INITIAL_ROW_STATE, action): RowsState => {
+type RowsActions = UpdateRowStateAction | RowPropChangedAction;
+export const rowReducer = (state: InternalRowsState = INITIAL_ROW_STATE, action: RowsActions): InternalRowsState => {
   switch(action.type) {
     case ROW_PROP_CHANGED_ACTION:
       return convertRowsPropToState(action.payload);
@@ -53,11 +58,12 @@ export const useRowsReducer = (
 ): RowModel[] => {
   const logger = useLogger('useRows');
 
-  const [rowsState, dispatch, globalState] = useGridReducer<RowsState>(apiRef, 'rows', rowReducer, INITIAL_ROW_STATE);
+  const {state, dispatch} = useGridReducer<InternalRowsState, RowsActions>(apiRef, 'rows', rowReducer, INITIAL_ROW_STATE);
+  const [gridState, setGridState ] = useGridState(apiRef);
 
   React.useEffect(()=> {
-    dispatch(rowPropChangedActionCreator(rows));
-  }, [rows, dispatch]);
+    dispatch(rowPropChangedActionCreator(rows, gridState.options?.rowCount));
+  }, [rows, gridState.options?.rowCount, dispatch]);
 
   const [, forceUpdate] = React.useState();
   const [rafUpdate] = useRafUpdate(() => forceUpdate((p: any) => !p));
@@ -75,19 +81,23 @@ export const useRowsReducer = (
   const updateAllRows = React.useCallback(
     (allNewRows: RowModel[]) => {
       logger.debug(`updating all rows, new length ${allNewRows.length}`);
-      apiRef.current.state.rows.idRowsLookup = allNewRows.reduce((lookup, row, index) => {
+
+
+      const idRowsLookup = allNewRows.reduce((lookup, row, index) => {
         lookup[row.id] = row;
         return lookup;
       }, {});
-      apiRef.current.state.rows.allRows = allNewRows.map(row=> row.id);
+      const allRows = allNewRows.map(row=> row.id);
+      const totalRowCount =  gridState.options &&  gridState.options.rowCount &&  gridState.options.rowCount > gridState.rows.allRows.length ?  gridState.options.rowCount : gridState.rows.allRows.length;
+      setGridState({rows: {idRowsLookup, allRows, totalRowCount}});
 
-      if (!apiRef.current.state.isScrolling) {
+      if (! gridState.isScrolling) {
         logger.info(`Setting row models to new rows with length ${allNewRows.length}`);
         // setRowModelsState(() => allNewRows);
-        dispatch(updateRowStateActionCreator(apiRef.current.state.rows))
+        dispatch(updateRowStateActionCreator( gridState.rows))
       }
     },
-    [apiRef, dispatch, logger],
+    [logger, gridState.options, gridState.rows, gridState.isScrolling, setGridState, dispatch],
   );
 
   // React.useEffect(() => {
@@ -96,7 +106,8 @@ export const useRowsReducer = (
   //   updateAllRows(rowModels);
   // }, [rows, logger, rowModels, updateAllRows]);
 
-  const getRowIndexFromId = React.useCallback((id: RowId): number => apiRef.current.state.rows.allRows.indexOf(id), [apiRef]);
+  const getRowIndexFromId = React.useCallback((id: RowId): number =>
+    apiRef.current.state.rows.allRows.indexOf(id), [apiRef]);
   const getRowIdFromRowIndex = React.useCallback(
     (index: number): RowId => apiRef.current.state.rows.allRows[index],
     [apiRef],
@@ -120,7 +131,11 @@ export const useRowsReducer = (
           addedRows.push(partialRow as RowModel);
           return;
         }
-        Object.assign(apiRef.current.state.rows.idRowsLookup[partialRow.id], partialRow);
+        //todo use setState here but first need to refactor event handler
+        // Object.assign(apiRef.current.state.rows.idRowsLookup[partialRow.id], partialRow);
+        const newRowsState = {...gridState.rows};
+        Object.assign(newRowsState.idRowsLookup[partialRow.id], partialRow);
+        setGridState({rows: newRowsState});
       });
 
       if (!apiRef.current.state.isScrolling && !isSortedRef.current) {
@@ -174,12 +189,9 @@ export const useRowsReducer = (
   }, []);
 
   const getRowModels = React.useCallback(() => Object.values<RowModel>(apiRef.current.state.rows.idRowsLookup), [apiRef]);
-  const getRowsCount = React.useCallback(() => apiRef.current.state.rows.allRows.length, [apiRef]);
+  const getRowsCount = React.useCallback(() => apiRef.current.state.rows.totalRowCount, [apiRef]);
   const getAllRowIds = React.useCallback(() => apiRef.current.state.rows.allRows, [apiRef]);
-
-  const setRowModels = React.useCallback((rowsParam: Rows) => updateAllRows(rowsParam), [
-    updateAllRows,
-  ]);
+  const setRowModels = React.useCallback((rowsParam: Rows) => updateAllRows(rowsParam), [updateAllRows]);
 
   const rowApi: RowApi = {
     getRowIndexFromId,
@@ -196,7 +208,7 @@ export const useRowsReducer = (
   useApiMethod(apiRef, rowApi, 'RowApi');
   useApiEventHandler(apiRef, SORT_MODEL_CHANGE, onSortModelUpdated);
 
-  const rowModelsState = React.useMemo(()=> Object.values<RowModel>(rowsState.idRowsLookup), [rowsState]);
+  const rowModelsState = React.useMemo(()=> Object.values<RowModel>(state.idRowsLookup), [state]);
 
   return rowModelsState;
 };

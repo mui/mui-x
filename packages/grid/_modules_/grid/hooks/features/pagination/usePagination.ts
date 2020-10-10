@@ -10,7 +10,7 @@ import {GridOptions} from '../../../models/gridOptions';
 import {PaginationApi} from '../../../models/api/paginationApi';
 import {ApiRef} from '../../../models/api';
 import {
-  getPageCount,
+  getPageCount, INITIAL_PAGINATION_STATE, PaginationActions,
   paginationReducer,
   PaginationState,
   setPageActionCreator,
@@ -19,6 +19,11 @@ import {
   setRowCountActionCreator
 } from "./usePaginationReducer";
 import {useGridReducer} from "../core/useGridReducer";
+import {createSelector} from "reselect";
+import {InternalRowsState} from "../core/useRowsReducer";
+import {useGridSelector} from "../core/useGridSelector";
+import {GridState} from "../core/useGridApi";
+import {useGridState} from "../core/useGridState";
 
 export interface PaginationProps {
   page: number;
@@ -29,26 +34,27 @@ export interface PaginationProps {
   setPageSize: (pageSize: number) => void;
 }
 
+const optionsSelector = (state: GridState)=> state.options; 
+const rowsSelector = (state: GridState)=> state.rows;
+export const rowCountSelector = createSelector<GridState, InternalRowsState, number>(rowsSelector,
+  (rows: InternalRowsState)=> rows && rows.totalRowCount);
+
 export const usePagination = (
   rows: Rows,
   columns: InternalColumns,
-  options: GridOptions,
   apiRef: ApiRef,
 ): PaginationProps => {
+
   const logger = useLogger('usePagination');
 
-  const initialState: PaginationState = {
-    paginationMode: options.paginationMode!,
-    pageSize: options.pageSize || 0,
-    rowCount: options.rowCount == null ? rows.length : options.rowCount,
-    page: options.page || 1,
-    pageCount: getPageCount(
-      options.pageSize,
-      options.rowCount == null ? rows.length : options.rowCount,
-    ),
-  };
-  const [state, dispatch] = useGridReducer(apiRef, 'pagination', paginationReducer, initialState);
-  // const [state, dispatch] = React.useReducer(paginationReducer, initialState);
+  const {state, dispatch} = useGridReducer<PaginationState, PaginationActions>(apiRef, 'pagination', paginationReducer, INITIAL_PAGINATION_STATE);
+  const options = useGridSelector(apiRef, optionsSelector);
+  const totalRowCount = useGridSelector(apiRef, rowCountSelector);
+  const [gridState, setGridState ] = useGridState(apiRef);
+
+  React.useEffect(()=> {
+    console.log('---------------------- YEHHAHAHHAAHHAHAHAHA -------------------------')
+  }, [gridState.options.autoPageSize]);
 
   const setPage = React.useCallback(
     (page: number) => {
@@ -89,26 +95,16 @@ export const usePagination = (
   }, [options.autoPageSize, apiRef, logger, setPageSize]);
 
   useApiEventHandler(apiRef, RESIZE, resetAutopageSize);
-  useApiEventHandler(apiRef, PAGE_CHANGED, options.onPageChange);
-  useApiEventHandler(apiRef, PAGESIZE_CHANGED, options.onPageSizeChange);
-
-  const updateRowCount = React.useCallback((rowModels: any[], totalRowCount = options.rowCount )=> {
-    const newRowCount = rowModels.length;
-    if(newRowCount !== state.rowCount || state.totalRowCount !== totalRowCount) {
-      logger.info(`row count changed ${newRowCount}`);
-      dispatch(setRowCountActionCreator({rowCount: newRowCount, totalRowCount, apiRef}));
-    }
-  }, [apiRef, logger, options.rowCount, state.rowCount, state.totalRowCount]);
-
-  useApiEventHandler(apiRef, ROWS_UPDATED, updateRowCount);
+  // useApiEventHandler(apiRef, PAGE_CHANGED, options.onPageChange);
+  // useApiEventHandler(apiRef, PAGESIZE_CHANGED, options.onPageSizeChange);
 
   React.useEffect(() => {
-    updateRowCount(rows, options.rowCount);
-  }, [options.rowCount, rows, rows.length, updateRowCount]);
+    dispatch(setRowCountActionCreator({totalRowCount}));
+  }, [dispatch, totalRowCount]);
 
   React.useEffect(() => {
     dispatch(setPaginationModeActionCreator(options.paginationMode!));
-  }, [options.paginationMode]);
+  }, [dispatch, options.paginationMode]);
 
   React.useEffect(() => {
     setPage(options.page != null ? options.page : 1);

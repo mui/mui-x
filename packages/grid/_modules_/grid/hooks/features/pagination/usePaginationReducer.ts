@@ -1,26 +1,40 @@
-import {ApiRef, FeatureModeConstant, PageChangeParams} from "../../../models";
+import {ApiRef, FeatureMode, FeatureModeConstant, PageChangeParams} from "../../../models";
 import {PAGE_CHANGED, PAGESIZE_CHANGED} from "../../../constants";
 
-export type PaginationState = PageChangeParams;
+export interface PaginationState {
+	page: number;
+	pageCount: number;
+	pageSize: number;
+	rowCount: number;
+	paginationMode: FeatureMode;
+}
+
 const SET_PAGE_ACTION = 'SetPage';
 const SET_PAGESIZE_ACTION = 'SetPageSize';
 const SET_PAGINATION_MODE_ACTION = 'SetPaginationMode';
 const SET_ROWCOUNT_ACTION = 'setRowCount';
 
+type SetPageAction = {type: 'SetPage', payload: {page: number, apiRef: ApiRef}}
+type SetPageSizeAction = {type: 'SetPageSize', payload: {pageSize: number, apiRef: ApiRef}}
+type SetPaginationModeAction = {type: 'SetPaginationMode', payload: {paginationMode: FeatureMode}}
+type SetRowCountAction = {type: 'setRowCount', payload: { totalRowCount: number }}
+
+export type PaginationActions = SetPageAction | SetPageSizeAction | SetPaginationModeAction | SetRowCountAction;
+
 // ACTION CREATORS
-export function setPageActionCreator(page: any, apiRef: ApiRef) {
+export function setPageActionCreator(page: any, apiRef: ApiRef):SetPageAction  {
 	return {type: SET_PAGE_ACTION, payload: {page, apiRef}};
 }
 
-export function setPageSizeActionCreator(pageSize: any, apiRef: ApiRef) {
+export function setPageSizeActionCreator(pageSize: any, apiRef: ApiRef): SetPageSizeAction {
 	return {type: SET_PAGESIZE_ACTION, payload: {pageSize, apiRef}};
 }
 
-export function setPaginationModeActionCreator(paginationMode: any) {
+export function setPaginationModeActionCreator(paginationMode: any): SetPaginationModeAction {
 	return {type: SET_PAGINATION_MODE_ACTION, payload: {paginationMode}};
 }
 
-export function setRowCountActionCreator(payload: { rowCount: number, totalRowCount?: number, apiRef: ApiRef }) {
+export function setRowCountActionCreator(payload: {totalRowCount: number}): SetRowCountAction {
 	return {type: SET_ROWCOUNT_ACTION, payload};
 }
 
@@ -88,26 +102,23 @@ const setPageSizeStateUpdate =
 		newState = setPageStateUpdate(newState, {page: newPage, apiRef});
 		return newState;
 	}
-const setRowCountStateUpdate = (state, payload) => {
-	const {totalRowCount, rowCount } = payload;
-	// const newVisibleRowCount = apiRef.current.getRowsCount(true);
-	const newRowCount = totalRowCount == null ?  rowCount : totalRowCount;
 
-	if (newRowCount !== state.rowCount) {
-		// logger.info(`Options or rows change, recalculating pageCount and rowCount`);
-		const newPageCount = getPageCount(state.pageSize, newRowCount);
-
-		const newState = {...state, pageCount: newPageCount, rowCount: newRowCount};
-		return newState;
+const setRowCountStateUpdate = (state, payload): PaginationState => {
+	const {totalRowCount} = payload;
+	if (state.rowCount !== totalRowCount) {
+		const newPageCount = getPageCount(state.pageSize, totalRowCount);
+		return {...state, pageCount: newPageCount, rowCount: totalRowCount};
 	}
 	return state;
 }
 
+export const INITIAL_PAGINATION_STATE: PaginationState = {page: 1, pageCount: 0, pageSize: 0, paginationMode:"client", rowCount: 0}
+
 // REDUCER
-export function paginationReducer(
-	state: PaginationState = {page: 1, pageCount: 0, pageSize: 0, paginationMode:"client", rowCount: 0},
-	action: { type: string; payload?: Partial<PaginationState> },
-) {
+export const paginationReducer = (
+	state: PaginationState = INITIAL_PAGINATION_STATE,
+	action: PaginationActions
+) => {
 	switch (action.type) {
 		case SET_PAGE_ACTION:
 			return setPageStateUpdate(state, action.payload);
@@ -118,6 +129,6 @@ export function paginationReducer(
 		case SET_ROWCOUNT_ACTION:
 			return setRowCountStateUpdate(state, action.payload);
 		default:
-			throw new Error(`Material-UI: Action ${action.type} not found.`);
+			throw new Error(`Material-UI: Action not found - ${JSON.stringify(action)}`);
 	}
 }
