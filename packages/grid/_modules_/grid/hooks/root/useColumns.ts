@@ -125,7 +125,7 @@ const getUpdatedColumnState = (
     newState.all = columnUpdates;
   } else {
     columnUpdates.forEach((newColumn) => {
-      const index = newState.all.findIndex((c) => c.field === newColumn.field);
+      const index = newState.all.findIndex((col) => col.field === newColumn.field);
       const columnUpdated = { ...newState.all[index], ...newColumn };
       newState.all[index] = columnUpdated;
       newState.all = [...newState.all];
@@ -194,8 +194,8 @@ export function useColumns(
     useVisibleColumns = true,
   ) =>
     useVisibleColumns
-      ? stateRef.current.visible.findIndex((c) => c.field === field)
-      : stateRef.current.all.findIndex((c) => c.field === field);
+      ? stateRef.current.visible.findIndex((col) => col.field === field)
+      : stateRef.current.all.findIndex((col) => col.field === field);
   const getColumnPosition: (field: string) => number = (field) => {
     const index = getColumnIndex(field);
     return stateRef.current.meta.positions[index];
