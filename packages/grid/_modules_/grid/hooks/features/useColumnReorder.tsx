@@ -28,7 +28,7 @@ const reorderColDefArray = (
   newColIndex: number,
   oldColIndex: number,
 ): ColDef[] => {
-  const columnsClone = [...columns];
+  const columnsClone = columns.slice();
 
   columnsClone.splice(newColIndex, 0, columnsClone.splice(oldColIndex, 1)[0]);
 
@@ -51,21 +51,23 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
   const logger = useLogger('useColumnReorder');
 
   const dragCol = React.useRef<ColDef | null>();
-  const dragColNode = React.useRef<HTMLElement | null>();
+  const dragColNode = React.useRef<HTMLElement>();
   const cursorPosition = React.useRef<CursorCoordinates>({
     x: 0,
     y: 0,
   });
-  const removeDnDStylesTimeout = React.useRef<NodeJS.Timeout | number>();
+  const removeDnDStylesTimeout = React.useRef<NodeJS.Timeout>();
 
   const handleDragEnd = React.useCallback((): void => {
     logger.debug(`End dragging col ${dragCol.current!.field}`);
     apiRef.current.publishEvent(COL_REORDER_STOP);
 
+    clearTimeout(removeDnDStylesTimeout.current as NodeJS.Timeout);
+
     columnsRef.current?.classList.remove(HEADER_CELL_DROP_ZONE_CSS_CLASS);
     dragColNode.current?.removeEventListener(DRAGEND, handleDragEnd);
     dragCol.current = null;
-    dragColNode.current = null;
+    dragColNode.current = undefined;
   }, [columnsRef, apiRef, logger]);
 
   const handleDragStart = React.useCallback(
@@ -108,8 +110,6 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
     (col: ColDef, coordinates: CursorCoordinates): void => {
       logger.debug(`Dragging over col ${col.field}`);
       apiRef.current.publishEvent(COL_REORDER_DRAG_OVER);
-
-      clearTimeout(removeDnDStylesTimeout.current as NodeJS.Timeout);
 
       if (
         col.field !== dragCol.current!.field &&
