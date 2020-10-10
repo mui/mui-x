@@ -64,8 +64,8 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
 
     clearTimeout(removeDnDStylesTimeout.current);
 
-    columnsRef.current?.classList.remove(HEADER_CELL_DROP_ZONE_CSS_CLASS);
-    dragColNode.current?.removeEventListener(DRAGEND, handleDragEnd);
+    columnsRef.current!.classList.remove(HEADER_CELL_DROP_ZONE_CSS_CLASS);
+    dragColNode.current!.removeEventListener(DRAGEND, handleDragEnd);
     dragCol.current = null;
     dragColNode.current = undefined;
   }, [columnsRef, apiRef, logger]);
@@ -77,10 +77,10 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
 
       dragCol.current = col;
       dragColNode.current = htmlEl;
-      dragColNode.current?.addEventListener(DRAGEND, handleDragEnd, { once: true });
-      dragColNode.current?.classList.add(HEADER_CELL_DRAGGING_CSS_CLASS);
+      dragColNode.current.addEventListener(DRAGEND, handleDragEnd, { once: true });
+      dragColNode.current.classList.add(HEADER_CELL_DRAGGING_CSS_CLASS);
       removeDnDStylesTimeout.current = window.setTimeout(() => {
-        dragColNode.current?.classList.remove(HEADER_CELL_DRAGGING_CSS_CLASS);
+        dragColNode.current!.classList.remove(HEADER_CELL_DRAGGING_CSS_CLASS);
       }, 0);
     },
     [apiRef, handleDragEnd, logger],
@@ -98,7 +98,7 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
       logger.debug(`Dragging over ${event.target}`);
       apiRef.current.publishEvent(COL_REORDER_DRAG_OVER_HEADER);
 
-      columnsRef.current?.classList.add(HEADER_CELL_DROP_ZONE_CSS_CLASS);
+      columnsRef.current!.classList.add(HEADER_CELL_DROP_ZONE_CSS_CLASS);
     },
     [columnsRef, apiRef, logger],
   );
