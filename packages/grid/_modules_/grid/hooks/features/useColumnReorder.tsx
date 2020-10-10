@@ -86,6 +86,12 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
     [apiRef, handleDragEnd, logger],
   );
 
+  React.useEffect(() => {
+    return () => {
+      clearTimeout(removeDnDStylesTimeout.current);
+    };
+  }, []);
+
   const handleColumnHeaderDragOver = React.useCallback(
     (event) => {
       event.preventDefault();
