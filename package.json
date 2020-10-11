@@ -76,7 +76,7 @@
     "format-util": "^1.0.5",
     "glob-gitignore": "^1.0.14",
     "jest": "^25.1.0",
-    "jest-cli": "^25.1.0",
+    "jest-cli": "^26.5.2",
     "jest-transform-stub": "^2.0.0",
     "karma": "^5.1.0",
     "karma-browserstack-launcher": "^1.6.0",
