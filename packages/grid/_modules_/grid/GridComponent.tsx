@@ -94,7 +94,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
   );
 
   const onColumnReorder = useColumnReorder(columnsHeaderRef, apiRef);
-  const onResizeColumn = useColumnResize(columnsHeaderRef, apiRef, internalOptions.headerHeight);
+  const separatorProps = useColumnResize(columnsHeaderRef, apiRef);
   const paginationProps = usePagination(internalRows, internalColumns, internalOptions, apiRef);
 
   React.useEffect(() => {
@@ -222,7 +222,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                       ref={columnsHeaderRef}
                       columns={internalColumns.visible || []}
                       hasScrollX={!!renderCtx?.hasScrollX}
-                      onResizeColumn={onResizeColumn}
+                      separatorProps={separatorProps}
                       onColumnHeaderDragOver={onColumnReorder.handleColumnHeaderDragOver}
                       onColumnDragStart={onColumnReorder.handleDragStart}
                       onColumnDragEnter={onColumnReorder.handleDragEnter}

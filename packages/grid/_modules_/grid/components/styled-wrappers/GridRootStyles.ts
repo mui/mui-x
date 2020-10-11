@@ -120,12 +120,15 @@ export const useStyles = makeStyles(
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-        },
-        '& .MuiDataGrid-iconSeparator': {
           color: borderColor,
         },
-        '& .MuiDataGrid-columnSeparator:hover .MuiDataGrid-resizable': {
+        '& .MuiDataGrid-columnSeparatorResizable': {
           cursor: 'col-resize',
+          '&:hover, &.Mui-resizing': {
+            color: theme.palette.text.primary,
+          },
+        },
+        '& .MuiDataGrid-iconSeparator': {
           color: 'inherit',
         },
         '& .MuiDataGrid-colCellWrapper.scroll .MuiDataGrid-colCell:last-child': {
