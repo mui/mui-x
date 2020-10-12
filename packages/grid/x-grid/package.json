@@ -28,7 +28,8 @@
     "precommit": "npm run lint",
     "lint": "../../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../.eslintrc.js && npm run lint:css",
     "lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../../.stylelintrc.js",
-    "typescript": "tsc -p tsconfig.json"
+    "typescript": "tsc -p tsconfig.json",
+    "build": "cd ../ && rollup --config rollup.x-grid.config.js"
   },
   "dependencies": {
     "@material-ui/x-license": "^4.0.0-alpha.6",
