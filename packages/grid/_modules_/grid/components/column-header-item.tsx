@@ -42,12 +42,10 @@ export const ColumnHeaderItem = React.memo(
       });
     }
 
-    const handleResize =
-      onResizeColumn && !disableColumnReorder ? () => onResizeColumn(column) : undefined;
-    const handleDragStart =
-      onColumnDragStart && !disableColumnReorder
-        ? (event) => onColumnDragStart(column, event.currentTarget)
-        : undefined;
+    const handleResize = onResizeColumn ? () => onResizeColumn(column) : undefined;
+    const handleDragStart = onColumnDragStart
+      ? (event) => onColumnDragStart(column, event.currentTarget)
+      : undefined;
     const handleDragEnter = onColumnDragEnter ? (event) => onColumnDragEnter(event) : undefined;
     const handleDragOver = onColumnDragOver
       ? (event) => {
