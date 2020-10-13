@@ -206,6 +206,8 @@ export const useVirtualRows = (
   const scrollingTimeout = React.useRef<any>(0);
   const onScroll: any = React.useCallback(
     (event: any) => {
+      if (event.target.scrollLeft < 0) return;
+
       realScrollRef.current = { left: event.target.scrollLeft, top: event.target.scrollTop };
       if (scrollingTimeout.current === 0) {
         apiRef.current.publishEvent(SCROLLING_START);
