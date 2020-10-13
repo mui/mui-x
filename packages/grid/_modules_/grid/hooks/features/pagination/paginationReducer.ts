@@ -120,7 +120,6 @@ export const paginationReducer = (
 	action: PaginationActions
 ) => {
 	const apiState = action.payload.apiRef.current.state;
-	console.log(`Pagination reducer with rowCount : ${state.rowCount} vs ${apiState.rows.totalRowCount}`, action);
 	switch (action.type) {
 		case SET_PAGE_ACTION:
 			return setPageStateUpdate(apiState.pagination, action.payload);
@@ -129,6 +128,8 @@ export const paginationReducer = (
 		case SET_PAGINATION_MODE_ACTION:
 			return {...apiState.pagination, ...{paginationMode: action.payload!.paginationMode!}};
 		case SET_ROWCOUNT_ACTION:
+			console.log(`Pagination reducer with rowCount, action: ${action.payload['totalRowCount']} vs state: ${apiState.rows.totalRowCount}`);
+
 			return setRowCountStateUpdate(apiState.pagination, action.payload);
 		default:
 			throw new Error(`Material-UI: Action not found - ${JSON.stringify(action)}`);

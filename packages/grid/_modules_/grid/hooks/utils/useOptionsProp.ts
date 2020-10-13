@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { GridComponentProps, GridOptionsProp } from '../../GridComponentProps';
-import {ApiRef, DEFAULT_GRID_OPTIONS, GridOptions} from '../../models';
+import { ApiRef, DEFAULT_GRID_OPTIONS, GridOptions } from '../../models';
 import { mergeOptions } from '../../utils';
-import {useGridReducer} from "../features/core/useGridReducer";
+import { GridState } from '../features/core/gridState';
+import { useGridReducer } from '../features/core/useGridReducer';
 
+export const optionsSelector = (state: GridState) => state.options;
 
 // REDUCER
 export function optionsReducer(
@@ -114,17 +116,12 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
   );
 
   const {gridState, dispatch} = useGridReducer(apiRef, 'options', optionsReducer, DEFAULT_GRID_OPTIONS)
-  //
-  // const [internalOptions, setInternalOptions] = React.useState<GridOptions>(
-  //   mergeOptions(DEFAULT_GRID_OPTIONS, options),
-  // );
 
   const updateOptions = React.useCallback((newOptions: Partial<GridOptions>)=> {
     dispatch({type: 'options::UPDATE', payload: newOptions})
   }, [dispatch])
 
   React.useEffect(() => {
-    // setInternalOptions((previousState) => mergeOptions(previousState, options));
     updateOptions(options);
   }, [options, updateOptions]);
 
@@ -140,3 +137,4 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
 
   return gridState.options;
 }
+

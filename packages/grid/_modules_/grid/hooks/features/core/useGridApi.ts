@@ -4,10 +4,9 @@ import { GridApi } from '../../../models/api/gridApi';
 import { getInitialState } from './gridState';
 
 export const useGridApi = (apiRef: ApiRef): GridApi => {
-	React.useState(()=> {
+	if(!apiRef.current.isInitialised) {
 		apiRef.current.state = getInitialState();
-		return apiRef.current.state;
-	});
+	}
 
 	return apiRef.current;
 }

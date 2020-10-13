@@ -1,7 +1,7 @@
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
 import { RowId } from '../../../models/rows';
-import { INITIAL_PAGINATION_STATE, PaginationState } from '../pagination/usePaginationReducer';
-import { getInitialRowState, InternalRowsState } from './useRowsReducer';
+import { INITIAL_PAGINATION_STATE, PaginationState } from '../pagination/paginationReducer';
+import { getInitialRowState, InternalRowsState } from '../rows/rowsReducer';
 
 interface RowsState {
 	rows: InternalRowsState;

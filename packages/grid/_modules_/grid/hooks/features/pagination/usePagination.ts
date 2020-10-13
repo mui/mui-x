@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { createSelector } from 'reselect';
 import { PAGE_CHANGED, PAGESIZE_CHANGED, RESIZE } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { PaginationApi } from '../../../models/api/paginationApi';
@@ -9,11 +8,10 @@ import { Rows } from '../../../models/rows';
 import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useLogger } from '../../utils/useLogger';
-import { GridState } from '../core/gridState';
+import { optionsSelector } from '../../utils/useOptionsProp';
 import { useGridReducer } from '../core/useGridReducer';
 import { useGridSelector } from '../core/useGridSelector';
-import { useGridState } from '../core/useGridState';
-import { InternalRowsState } from '../core/useRowsReducer';
+import { rowCountSelector } from '../rows/rowsSelector';
 import {
   INITIAL_PAGINATION_STATE,
   PaginationActions,
@@ -21,11 +19,9 @@ import {
   PaginationState,
   setPageActionCreator,
   setPageSizeActionCreator,
-  setPageSizeStateUpdate,
-  setPageStateUpdate,
   setPaginationModeActionCreator,
-  setRowCountActionCreator, setRowCountStateUpdate,
-} from './usePaginationReducer';
+  setRowCountActionCreator,
+} from './paginationReducer';
 
 export interface PaginationProps {
   page: number;
@@ -36,11 +32,6 @@ export interface PaginationProps {
   setPageSize: (pageSize: number) => void;
 }
 
-const optionsSelector = (state: GridState)=> state.options; 
-const rowsSelector = (state: GridState)=> state.rows;
-export const rowCountSelector = createSelector<GridState, InternalRowsState, number>(rowsSelector,
-  (rows: InternalRowsState)=> rows && rows.totalRowCount);
-
 export const usePagination = (
   rows: Rows,
   columns: InternalColumns,
@@ -50,21 +41,12 @@ export const usePagination = (
   const logger = useLogger('usePagination');
 
   const {gridState, dispatch} = useGridReducer<PaginationState, PaginationActions>(apiRef, 'pagination', paginationReducer, {...INITIAL_PAGINATION_STATE});
-  // const [gridState, setGridState, forceUpdate] = useGridState(apiRef)
   const options = useGridSelector(apiRef, optionsSelector);
   const totalRowCount = useGridSelector(apiRef, rowCountSelector);
 
   const setPage = React.useCallback(
     (page: number) => {
       dispatch(setPageActionCreator(page, apiRef));
-      //
-      // const newState = setPageStateUpdate(gridState.pagination, {page, apiRef});
-      // setGridState(oldState=> {
-      //   oldState.pagination = newState;
-      //   return oldState;
-      // })
-      // forceUpdate();
-
     },
     [apiRef, dispatch],
   );
@@ -72,13 +54,6 @@ export const usePagination = (
   const setPageSize = React.useCallback(
     (pageSize: number) => {
       dispatch(setPageSizeActionCreator(pageSize, apiRef));
-      // const newState = setPageSizeStateUpdate(gridState.pagination, {pageSize, apiRef});
-      // setGridState(oldState=> {
-      //   oldState.pagination = newState;
-      //   return oldState;
-      // })
-      // forceUpdate();
-
     },
     [apiRef, dispatch],
   );
@@ -113,27 +88,11 @@ export const usePagination = (
 
   React.useEffect(() => {
     dispatch(setRowCountActionCreator({totalRowCount, apiRef}));
-
-    // const newState = setRowCountStateUpdate(gridState.pagination, {totalRowCount, apiRef});
-    // setGridState(oldState=> {
-    //   oldState.pagination = newState;
-    //   return oldState;
-    // })
-    // forceUpdate();
-
-  }, [apiRef, dispatch, gridState.pagination, totalRowCount]);
+  }, [apiRef, dispatch, totalRowCount]);
 
   React.useEffect(() => {
     dispatch(setPaginationModeActionCreator({paginationMode: options.paginationMode!, apiRef }));
-
-    // const newState = {...gridState.pagination, ...{paginationMode: options.paginationMode! }};
-    // setGridState(oldState=> {
-    //   oldState.pagination = newState;
-    //   return oldState;
-    // })
-    // forceUpdate();
-
-  }, [apiRef, dispatch, gridState.pagination, options.paginationMode]);
+  }, [apiRef, dispatch, options.paginationMode]);
 
   React.useEffect(() => {
     setPage(options.page != null ? options.page : 1);
