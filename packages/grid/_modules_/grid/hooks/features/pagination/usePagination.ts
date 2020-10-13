@@ -4,7 +4,6 @@ import { ApiRef } from '../../../models/api/apiRef';
 import { PaginationApi } from '../../../models/api/paginationApi';
 import { InternalColumns } from '../../../models/colDef/colDef';
 import { PageChangeParams } from '../../../models/params/pageChangeParams';
-import { Rows } from '../../../models/rows';
 import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useLogger } from '../../utils/useLogger';
@@ -33,7 +32,6 @@ export interface PaginationProps {
 }
 
 export const usePagination = (
-  rows: Rows,
   columns: InternalColumns,
   apiRef: ApiRef,
 ): PaginationProps => {

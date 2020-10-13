@@ -1,6 +1,13 @@
 import * as React from 'react';
+import { createSelector } from 'reselect';
+import { GridState } from '../hooks/features/core/gridState';
+import { useGridSelector } from '../hooks/features/core/useGridSelector';
+import { InternalRowsState } from '../hooks/features/rows/rowsReducer';
+import { rowsSelector, sortedRowsSelector } from '../hooks/features/rows/rowsSelector';
+import { optionsSelector } from '../hooks/utils/useOptionsProp';
 import { Columns, GridOptions, RenderContextProps, RowModel } from '../models';
 import { useLogger } from '../hooks/utils/useLogger';
+import { ApiContext } from './api-context';
 import { RenderingZone } from './rendering-zone';
 import { LeftEmptyCell, RightEmptyCell } from './cell';
 import { Row } from './row';
@@ -9,19 +16,20 @@ import { StickyContainer } from './sticky-container';
 import { RenderContext } from './render-context';
 
 export interface ViewportProps {
-  rows: RowModel[];
   visibleColumns: Columns;
-  options: GridOptions;
-  children?: React.ReactNode;
 }
 
 type ViewportType = React.ForwardRefExoticComponent<
   ViewportProps & React.RefAttributes<HTMLDivElement>
 >;
+
 export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportProps>(
-  ({ options, rows, visibleColumns }, renderingZoneRef) => {
+  ({  visibleColumns }, renderingZoneRef) => {
     const logger = useLogger('Viewport');
     const renderCtx = React.useContext(RenderContext) as RenderContextProps;
+    const apiRef = React.useContext(ApiContext);
+    const rows = useGridSelector(apiRef, sortedRowsSelector);
+    const options = useGridSelector(apiRef, optionsSelector);
 
     const getRowsElements = () => {
       const renderedRows = rows.slice(renderCtx.firstRowIdx, renderCtx.lastRowIdx!);
