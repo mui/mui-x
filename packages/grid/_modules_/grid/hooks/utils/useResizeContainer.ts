@@ -34,7 +34,7 @@ export function useResizeContainer(apiRef) : (size: ElementSize)=> void {
 			}
 
 			gridLogger.info('resized...', size);
-			apiRef!.current.resize();
+			setImmediate(()=> apiRef!.current.resize());
 		},
 		[gridLogger, apiRef],
 	);

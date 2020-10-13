@@ -113,7 +113,7 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
     ],
   );
 
-  const {state, dispatch} = useGridReducer(apiRef, 'options', optionsReducer, DEFAULT_GRID_OPTIONS)
+  const {gridState, dispatch} = useGridReducer(apiRef, 'options', optionsReducer, DEFAULT_GRID_OPTIONS)
   //
   // const [internalOptions, setInternalOptions] = React.useState<GridOptions>(
   //   mergeOptions(DEFAULT_GRID_OPTIONS, options),
@@ -138,5 +138,5 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
   //   });
   // }, [paginationProps.pageSize, setInternalOptions]);
 
-  return state;
+  return gridState.options;
 }

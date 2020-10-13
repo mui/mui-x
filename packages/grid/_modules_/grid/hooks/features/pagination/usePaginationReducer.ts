@@ -16,8 +16,8 @@ const SET_ROWCOUNT_ACTION = 'setRowCount';
 
 type SetPageAction = {type: 'SetPage', payload: {page: number, apiRef: ApiRef}}
 type SetPageSizeAction = {type: 'SetPageSize', payload: {pageSize: number, apiRef: ApiRef}}
-type SetPaginationModeAction = {type: 'SetPaginationMode', payload: {paginationMode: FeatureMode}}
-type SetRowCountAction = {type: 'setRowCount', payload: { totalRowCount: number }}
+type SetPaginationModeAction = {type: 'SetPaginationMode', payload: {paginationMode: FeatureMode, apiRef: ApiRef}}
+type SetRowCountAction = {type: 'setRowCount', payload: { totalRowCount: number, apiRef: ApiRef }}
 
 export type PaginationActions = SetPageAction | SetPageSizeAction | SetPaginationModeAction | SetRowCountAction;
 
@@ -30,11 +30,11 @@ export function setPageSizeActionCreator(pageSize: any, apiRef: ApiRef): SetPage
 	return {type: SET_PAGESIZE_ACTION, payload: {pageSize, apiRef}};
 }
 
-export function setPaginationModeActionCreator(paginationMode: any): SetPaginationModeAction {
-	return {type: SET_PAGINATION_MODE_ACTION, payload: {paginationMode}};
+export function setPaginationModeActionCreator(payload: {paginationMode: any, apiRef: ApiRef}): SetPaginationModeAction {
+	return {type: SET_PAGINATION_MODE_ACTION, payload};
 }
 
-export function setRowCountActionCreator(payload: {totalRowCount: number}): SetRowCountAction {
+export function setRowCountActionCreator(payload: {totalRowCount: number, apiRef: ApiRef}): SetRowCountAction {
 	return {type: SET_ROWCOUNT_ACTION, payload};
 }
 
@@ -43,7 +43,7 @@ export const getPageCount = (pageSize: number | undefined, rowsCount: number) =>
 	return pageSize && rowsCount > 0 ? Math.ceil(rowsCount / pageSize!) : 1;
 };
 // STATE UPDATE PURE FUNCTIONS
-const setPageStateUpdate = (
+export const setPageStateUpdate = (
 	state: PaginationState,
 	payload: any): PaginationState => {
 	// eslint-disable-next-line prefer-const
@@ -72,7 +72,7 @@ const setPageStateUpdate = (
 	}
 	return state;
 }
-const setPageSizeStateUpdate =
+export const setPageSizeStateUpdate =
 	(state: PaginationState,
 	 payload: any): PaginationState => {
 		// eslint-disable-next-line prefer-const
@@ -103,7 +103,7 @@ const setPageSizeStateUpdate =
 		return newState;
 	}
 
-const setRowCountStateUpdate = (state, payload): PaginationState => {
+export const setRowCountStateUpdate = (state, payload): PaginationState => {
 	const {totalRowCount} = payload;
 	if (state.rowCount !== totalRowCount) {
 		const newPageCount = getPageCount(state.pageSize, totalRowCount);
@@ -116,18 +116,20 @@ export const INITIAL_PAGINATION_STATE: PaginationState = {page: 1, pageCount: 0,
 
 // REDUCER
 export const paginationReducer = (
-	state: PaginationState = INITIAL_PAGINATION_STATE,
+	state: PaginationState,
 	action: PaginationActions
 ) => {
+	const apiState = action.payload.apiRef.current.state;
+	console.log(`Pagination reducer with rowCount : ${state.rowCount} vs ${apiState.rows.totalRowCount}`, action);
 	switch (action.type) {
 		case SET_PAGE_ACTION:
-			return setPageStateUpdate(state, action.payload);
+			return setPageStateUpdate(apiState.pagination, action.payload);
 		case SET_PAGESIZE_ACTION:
-			return setPageSizeStateUpdate(state, action.payload);
+			return setPageSizeStateUpdate(apiState.pagination, action.payload);
 		case SET_PAGINATION_MODE_ACTION:
-			return {...state, ...{paginationMode: action.payload!.paginationMode!}};
+			return {...apiState.pagination, ...{paginationMode: action.payload!.paginationMode!}};
 		case SET_ROWCOUNT_ACTION:
-			return setRowCountStateUpdate(state, action.payload);
+			return setRowCountStateUpdate(apiState.pagination, action.payload);
 		default:
 			throw new Error(`Material-UI: Action not found - ${JSON.stringify(action)}`);
 	}

@@ -10,8 +10,8 @@ import {
   useSelection,
   useSorting,
 } from './hooks/features';
-import { ElementSize, RootContainerRef } from './models';
-import { COMPONENT_ERROR, DATA_CONTAINER_CSS_CLASS } from './constants';
+import { RootContainerRef } from './models';
+import { DATA_CONTAINER_CSS_CLASS } from './constants';
 import { GridRoot } from './components/styled-wrappers/GridRoot';
 import { GridDataContainer } from './components/styled-wrappers/GridDataContainer';
 import { GridColumnsContainer } from './components/styled-wrappers/GridColumnsContainer';
@@ -27,9 +27,8 @@ import {
   Watermark,
   GridWindow,
 } from './components';
-import { useApi, useColumns, useKeyboard, useRows } from './hooks/root';
+import { useApi, useColumns, useKeyboard} from './hooks/root';
 import { useLogger, useLoggerFactory } from './hooks/utils';
-import { debounce } from './utils';
 import { useEvents } from './hooks/root/useEvents';
 import { ErrorBoundary } from './components/error-boundary';
 import { useOptionsProp } from './hooks/utils/useOptionsProp';
@@ -64,9 +63,9 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
 
   const initialised = useApi(rootContainerRef, apiRef);
   const errorState =  useErrorHandler(apiRef, props)
+  useEvents(rootContainerRef, internalOptions, apiRef);
   const onResize = useResizeContainer(apiRef);
 
-  useEvents(rootContainerRef, internalOptions, apiRef);
   const internalColumns = useColumns(internalOptions, props.columns, apiRef);
 
   const internalRows = useRowsReducer(props.rows, apiRef);

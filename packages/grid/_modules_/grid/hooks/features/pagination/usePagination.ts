@@ -1,29 +1,31 @@
 import * as React from 'react';
-import {useLogger, useRafUpdate} from '../../utils';
-import {PAGE_CHANGED, PAGESIZE_CHANGED, RESIZE, ROWS_UPDATED} from '../../../constants/eventsConstants';
-import {useApiMethod} from '../../root/useApiMethod';
-import {useApiEventHandler} from '../../root/useApiEventHandler';
-import {PageChangeParams} from '../../../models/params/pageChangeParams';
-import {Rows} from '../../../models/rows';
-import {InternalColumns} from '../../../models/colDef/colDef';
-import {GridOptions} from '../../../models/gridOptions';
-import {PaginationApi} from '../../../models/api/paginationApi';
-import {ApiRef} from '../../../models/api';
+import { createSelector } from 'reselect';
+import { PAGE_CHANGED, PAGESIZE_CHANGED, RESIZE } from '../../../constants/eventsConstants';
+import { ApiRef } from '../../../models/api/apiRef';
+import { PaginationApi } from '../../../models/api/paginationApi';
+import { InternalColumns } from '../../../models/colDef/colDef';
+import { PageChangeParams } from '../../../models/params/pageChangeParams';
+import { Rows } from '../../../models/rows';
+import { useApiEventHandler } from '../../root/useApiEventHandler';
+import { useApiMethod } from '../../root/useApiMethod';
+import { useLogger } from '../../utils/useLogger';
+import { GridState } from '../core/gridState';
+import { useGridReducer } from '../core/useGridReducer';
+import { useGridSelector } from '../core/useGridSelector';
+import { useGridState } from '../core/useGridState';
+import { InternalRowsState } from '../core/useRowsReducer';
 import {
-  getPageCount, INITIAL_PAGINATION_STATE, PaginationActions,
+  INITIAL_PAGINATION_STATE,
+  PaginationActions,
   paginationReducer,
   PaginationState,
   setPageActionCreator,
   setPageSizeActionCreator,
+  setPageSizeStateUpdate,
+  setPageStateUpdate,
   setPaginationModeActionCreator,
-  setRowCountActionCreator
-} from "./usePaginationReducer";
-import {useGridReducer} from "../core/useGridReducer";
-import {createSelector} from "reselect";
-import {InternalRowsState} from "../core/useRowsReducer";
-import {useGridSelector} from "../core/useGridSelector";
-import {GridState} from "../core/useGridApi";
-import {useGridState} from "../core/useGridState";
+  setRowCountActionCreator, setRowCountStateUpdate,
+} from './usePaginationReducer';
 
 export interface PaginationProps {
   page: number;
@@ -47,18 +49,22 @@ export const usePagination = (
 
   const logger = useLogger('usePagination');
 
-  const {state, dispatch} = useGridReducer<PaginationState, PaginationActions>(apiRef, 'pagination', paginationReducer, INITIAL_PAGINATION_STATE);
+  const {gridState, dispatch} = useGridReducer<PaginationState, PaginationActions>(apiRef, 'pagination', paginationReducer, {...INITIAL_PAGINATION_STATE});
+  // const [gridState, setGridState, forceUpdate] = useGridState(apiRef)
   const options = useGridSelector(apiRef, optionsSelector);
   const totalRowCount = useGridSelector(apiRef, rowCountSelector);
-  const [gridState, setGridState ] = useGridState(apiRef);
-
-  React.useEffect(()=> {
-    console.log('---------------------- YEHHAHAHHAAHHAHAHAHA -------------------------')
-  }, [gridState.options.autoPageSize]);
 
   const setPage = React.useCallback(
     (page: number) => {
       dispatch(setPageActionCreator(page, apiRef));
+      //
+      // const newState = setPageStateUpdate(gridState.pagination, {page, apiRef});
+      // setGridState(oldState=> {
+      //   oldState.pagination = newState;
+      //   return oldState;
+      // })
+      // forceUpdate();
+
     },
     [apiRef, dispatch],
   );
@@ -66,6 +72,13 @@ export const usePagination = (
   const setPageSize = React.useCallback(
     (pageSize: number) => {
       dispatch(setPageSizeActionCreator(pageSize, apiRef));
+      // const newState = setPageSizeStateUpdate(gridState.pagination, {pageSize, apiRef});
+      // setGridState(oldState=> {
+      //   oldState.pagination = newState;
+      //   return oldState;
+      // })
+      // forceUpdate();
+
     },
     [apiRef, dispatch],
   );
@@ -95,16 +108,32 @@ export const usePagination = (
   }, [options.autoPageSize, apiRef, logger, setPageSize]);
 
   useApiEventHandler(apiRef, RESIZE, resetAutopageSize);
-  // useApiEventHandler(apiRef, PAGE_CHANGED, options.onPageChange);
-  // useApiEventHandler(apiRef, PAGESIZE_CHANGED, options.onPageSizeChange);
+  useApiEventHandler(apiRef, PAGE_CHANGED, options.onPageChange);
+  useApiEventHandler(apiRef, PAGESIZE_CHANGED, options.onPageSizeChange);
 
   React.useEffect(() => {
-    dispatch(setRowCountActionCreator({totalRowCount}));
-  }, [dispatch, totalRowCount]);
+    dispatch(setRowCountActionCreator({totalRowCount, apiRef}));
+
+    // const newState = setRowCountStateUpdate(gridState.pagination, {totalRowCount, apiRef});
+    // setGridState(oldState=> {
+    //   oldState.pagination = newState;
+    //   return oldState;
+    // })
+    // forceUpdate();
+
+  }, [apiRef, dispatch, gridState.pagination, totalRowCount]);
 
   React.useEffect(() => {
-    dispatch(setPaginationModeActionCreator(options.paginationMode!));
-  }, [dispatch, options.paginationMode]);
+    dispatch(setPaginationModeActionCreator({paginationMode: options.paginationMode!, apiRef }));
+
+    // const newState = {...gridState.pagination, ...{paginationMode: options.paginationMode! }};
+    // setGridState(oldState=> {
+    //   oldState.pagination = newState;
+    //   return oldState;
+    // })
+    // forceUpdate();
+
+  }, [apiRef, dispatch, gridState.pagination, options.paginationMode]);
 
   React.useEffect(() => {
     setPage(options.page != null ? options.page : 1);
@@ -127,9 +156,9 @@ export const usePagination = (
 
   React.useEffect(() => {
     if (apiRef.current?.isInitialised) {
-      apiRef.current.publishEvent(PAGE_CHANGED, state);
+      apiRef.current.publishEvent(PAGE_CHANGED, gridState.pagination);
     }
-  }, [apiRef, apiRef.current.isInitialised, state]);
+  }, [apiRef, apiRef.current.isInitialised, gridState.pagination]);
 
   const paginationApi: PaginationApi = {
     setPageSize,
@@ -141,7 +170,7 @@ export const usePagination = (
   useApiMethod(apiRef, paginationApi, 'paginationApi');
 
   return {
-    ...state,
+    ...gridState.pagination,
     setPage,
     setPageSize,
   };
