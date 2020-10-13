@@ -31,14 +31,15 @@ export interface PaginationProps {
   setPageSize: (pageSize: number) => void;
 }
 
-export const usePagination = (
-  columns: InternalColumns,
-  apiRef: ApiRef,
-): PaginationProps => {
-
+export const usePagination = (columns: InternalColumns, apiRef: ApiRef): PaginationProps => {
   const logger = useLogger('usePagination');
 
-  const {gridState, dispatch} = useGridReducer<PaginationState, PaginationActions>(apiRef, 'pagination', paginationReducer, {...INITIAL_PAGINATION_STATE});
+  const { gridState, dispatch } = useGridReducer<PaginationState, PaginationActions>(
+    apiRef,
+    'pagination',
+    paginationReducer,
+    { ...INITIAL_PAGINATION_STATE },
+  );
   const options = useGridSelector(apiRef, optionsSelector);
   const totalRowCount = useGridSelector(apiRef, rowCountSelector);
 
@@ -85,11 +86,11 @@ export const usePagination = (
   useApiEventHandler(apiRef, PAGESIZE_CHANGED, options.onPageSizeChange);
 
   React.useEffect(() => {
-    dispatch(setRowCountActionCreator({totalRowCount, apiRef}));
+    dispatch(setRowCountActionCreator({ totalRowCount, apiRef }));
   }, [apiRef, dispatch, totalRowCount]);
 
   React.useEffect(() => {
-    dispatch(setPaginationModeActionCreator({paginationMode: options.paginationMode!, apiRef }));
+    dispatch(setPaginationModeActionCreator({ paginationMode: options.paginationMode!, apiRef }));
   }, [apiRef, dispatch, options.paginationMode]);
 
   React.useEffect(() => {
@@ -97,10 +98,7 @@ export const usePagination = (
   }, [options.page, setPage]);
 
   React.useEffect(() => {
-    if (
-      !options.autoPageSize &&
-      options.pageSize
-    ) {
+    if (!options.autoPageSize && options.pageSize) {
       setPageSize(options.pageSize);
     }
   }, [options.autoPageSize, options.pageSize, logger, setPageSize]);

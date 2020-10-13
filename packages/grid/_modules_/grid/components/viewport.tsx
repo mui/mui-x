@@ -24,7 +24,7 @@ type ViewportType = React.ForwardRefExoticComponent<
 >;
 
 export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportProps>(
-  ({  visibleColumns }, renderingZoneRef) => {
+  ({ visibleColumns }, renderingZoneRef) => {
     const logger = useLogger('Viewport');
     const renderCtx = React.useContext(RenderContext) as RenderContextProps;
     const apiRef = React.useContext(ApiContext);

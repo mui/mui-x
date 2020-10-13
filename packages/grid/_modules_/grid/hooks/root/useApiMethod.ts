@@ -21,7 +21,7 @@ export function useApiMethod(apiRef: ApiRef, apiMethods: Partial<GridApi>, apiNa
         logger.debug(`Adding ${apiName}.${methodName} to apiRef`);
         apiRef.current[methodName] = (...args) => {
           return apiMethodsRef.current[methodName](...args);
-        }
+        };
       }
     });
   }, [apiMethods, apiName, apiRef, logger]);

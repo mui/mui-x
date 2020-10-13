@@ -10,10 +10,7 @@ const EventEmitter = require('events').EventEmitter;
 export function useApiRef(apiRefProp?: ApiRef): ApiRef {
   const internalApiRef = React.useRef<GridApi>(new EventEmitter());
 
-  const apiRef = React.useMemo(() => (apiRefProp || internalApiRef), [
-    apiRefProp,
-    internalApiRef,
-  ]);
+  const apiRef = React.useMemo(() => apiRefProp || internalApiRef, [apiRefProp, internalApiRef]);
 
   return apiRef;
 }

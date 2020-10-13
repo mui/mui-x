@@ -5,7 +5,6 @@ import { GridState } from '../../hooks/features/core/gridState';
  * The core API interface that is available in the grid [[apiRef]].
  */
 export interface CoreApi extends EventEmitter {
-
   state: GridState;
   /**
    * Property that comes true when the grid has its EventEmitter initialised.

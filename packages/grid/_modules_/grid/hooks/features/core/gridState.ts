@@ -4,42 +4,41 @@ import { INITIAL_PAGINATION_STATE, PaginationState } from '../pagination/paginat
 import { getInitialRowState, InternalRowsState } from '../rows/rowsReducer';
 
 interface RowsState {
-	rows: InternalRowsState;
+  rows: InternalRowsState;
 }
 
 interface SelectedRowsState {
-	selectedRows: RowId[];
+  selectedRows: RowId[];
 }
 
 interface HiddenRowsState {
-	hiddenRows: RowId[];
+  hiddenRows: RowId[];
 }
 
 interface GridPaginationState {
-	pagination: PaginationState;
+  pagination: PaginationState;
 }
 
 interface GridOptionsState {
-	options: GridOptions;
+  options: GridOptions;
 }
 
 interface ScrollingState {
-	isScrolling: boolean;
+  isScrolling: boolean;
 }
 
-export type GridState =
-	RowsState
-	& SelectedRowsState
-	& HiddenRowsState
-	& GridPaginationState
-	& GridOptionsState
-	& ScrollingState;
+export type GridState = RowsState &
+  SelectedRowsState &
+  HiddenRowsState &
+  GridPaginationState &
+  GridOptionsState &
+  ScrollingState;
 
 export const getInitialState: () => GridState = () => ({
-	rows: getInitialRowState(),
-	selectedRows: [],
-	hiddenRows: [],
-	pagination: {...INITIAL_PAGINATION_STATE},
-	options: {...DEFAULT_GRID_OPTIONS},
-	isScrolling: false
+  rows: getInitialRowState(),
+  selectedRows: [],
+  hiddenRows: [],
+  pagination: { ...INITIAL_PAGINATION_STATE },
+  options: { ...DEFAULT_GRID_OPTIONS },
+  isScrolling: false,
 });
