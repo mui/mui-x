@@ -204,23 +204,23 @@ export const useVirtualRows = (
   }, [containerPropsRef, apiRef, getContainerProps, reRender, updateViewport]);
 
   const scrollingTimeout = React.useRef<any>(0);
-  const onScroll: any = React.useCallback(
-    (event: any) => {
-      if (event.target.scrollLeft < 0) return;
+  const handleScroll = React.useCallback(() => {
+    if (windowRef.current!.scrollLeft < 0 || windowRef.current!.scrollTop < 0) return;
 
-      realScrollRef.current = { left: event.target.scrollLeft, top: event.target.scrollTop };
-      if (scrollingTimeout.current === 0) {
-        apiRef.current.publishEvent(SCROLLING_START);
-      }
-      clearTimeout(scrollingTimeout.current);
-      scrollingTimeout.current = setTimeout(() => {
-        scrollingTimeout.current = 0;
-        apiRef.current.publishEvent(SCROLLING_STOP);
-      }, 300);
-      updateViewport();
-    },
-    [apiRef, updateViewport, scrollingTimeout, realScrollRef],
-  );
+    realScrollRef.current = {
+      left: windowRef.current!.scrollLeft,
+      top: windowRef.current!.scrollTop,
+    };
+    if (scrollingTimeout.current === 0) {
+      apiRef.current.publishEvent(SCROLLING_START);
+    }
+    clearTimeout(scrollingTimeout.current);
+    scrollingTimeout.current = setTimeout(() => {
+      scrollingTimeout.current = 0;
+      apiRef.current.publishEvent(SCROLLING_STOP);
+    }, 300);
+    updateViewport();
+  }, [apiRef, updateViewport, scrollingTimeout, realScrollRef, windowRef]);
 
   const scrollToIndexes = React.useCallback(
     (params: CellIndexCoordinates) => {
@@ -333,7 +333,7 @@ export const useVirtualRows = (
   );
 
   useApiEventHandler(apiRef, RESIZE, onResize);
-  useNativeEventListener(apiRef, windowRef, SCROLL, onScroll, { passive: true });
+  useNativeEventListener(apiRef, windowRef, SCROLL, handleScroll, { passive: true });
   useNativeEventListener(
     apiRef,
     () => renderingZoneRef.current?.parentElement,
