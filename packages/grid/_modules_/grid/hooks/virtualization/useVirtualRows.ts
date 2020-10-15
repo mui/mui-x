@@ -288,9 +288,8 @@ export const useVirtualRows = (
         windowRef.current.scrollTop = params.top;
         logger.debug(`Scrolling top: ${params.top}`);
       }
-      updateViewport();
     },
-    [logger, windowRef, updateViewport, colRef],
+    [logger, windowRef, colRef],
   );
 
   const getContainerPropsState = React.useCallback(() => {
