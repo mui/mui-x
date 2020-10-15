@@ -133,15 +133,5 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
     updateOptions(options);
   }, [options, updateOptions]);
 
-  // Should we sync paginationState.pageSize with options.pageSize?
-  // React.useEffect(() => {
-  //   setInternalOptions((previousState) => {
-  //     if (previousState.pageSize !== paginationProps.pageSize) {
-  //       return { ...previousState, pageSize: paginationProps.pageSize };
-  //     }
-  //     return previousState;
-  //   });
-  // }, [paginationProps.pageSize, setInternalOptions]);
-
   return gridState.options;
 }
