@@ -83,7 +83,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
 
     const onColumnReorder = useColumnReorder(columnsHeaderRef, apiRef);
   const separatorProps = useColumnResize(columnsHeaderRef, apiRef);
-    const paginationProps = usePagination(internalColumns, apiRef);
+    const paginationProps = usePagination(apiRef);
 
     const customComponents = useComponents(
       internalColumns,
