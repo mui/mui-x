@@ -205,6 +205,7 @@ export const useVirtualRows = (
 
   const scrollingTimeout = React.useRef<any>(0);
   const handleScroll = React.useCallback(() => {
+    // On iOS the inertia scrolling allows to return negative values. 
     if (windowRef.current!.scrollLeft < 0 || windowRef.current!.scrollTop < 0) return;
 
     realScrollRef.current = {
