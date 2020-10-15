@@ -3,6 +3,7 @@ import { useForkRef } from '@material-ui/core/utils';
 import { GridComponentProps } from './GridComponentProps';
 import {
   useApiRef,
+  useColumnReorder,
   useColumnResize,
   useComponents,
   usePagination,
@@ -92,6 +93,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     apiRef,
   );
 
+  const onColumnReorder = useColumnReorder(columnsHeaderRef, apiRef);
   const onResizeColumn = useColumnResize(columnsHeaderRef, apiRef, internalOptions.headerHeight);
   const paginationProps = usePagination(internalRows, internalColumns, internalOptions, apiRef);
 
@@ -221,6 +223,10 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                       columns={internalColumns.visible || []}
                       hasScrollX={!!renderCtx?.hasScrollX}
                       onResizeColumn={onResizeColumn}
+                      onColumnHeaderDragOver={onColumnReorder.handleColumnHeaderDragOver}
+                      onColumnDragStart={onColumnReorder.handleDragStart}
+                      onColumnDragEnter={onColumnReorder.handleDragEnter}
+                      onColumnDragOver={onColumnReorder.handleDragOver}
                       renderCtx={renderCtx}
                     />
                   </GridColumnsContainer>

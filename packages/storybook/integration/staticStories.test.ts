@@ -61,6 +61,7 @@ const stories = [
   '/story/x-grid-tests-pagination--pagination-api-tests', // TODO click btns',
   '/story/x-grid-tests-pagination--auto-pagination', // TODO click btns',
 
+  '/story/x-grid-tests-reorder--reorder-small-dataset',
   '/story/x-grid-tests-resize--resize-small-dataset',
   '/story/x-grid-tests-resize--resize-large-dataset',
 

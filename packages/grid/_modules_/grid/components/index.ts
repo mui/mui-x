@@ -23,3 +23,4 @@ export * from './sticky-container';
 export * from './styled-wrappers';
 export * from './viewport';
 export * from './watermark';
+export * from './ScrollArea';

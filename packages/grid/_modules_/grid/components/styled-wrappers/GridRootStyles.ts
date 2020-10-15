@@ -55,6 +55,19 @@ export const useStyles = makeStyles(
           borderBottom: `1px solid ${borderColor}`,
           zIndex: 100,
         },
+        '& .MuiDataGrid-scrollArea': {
+          position: 'absolute',
+          top: 0,
+          zIndex: 101,
+          width: 20,
+          bottom: 0,
+        },
+        '& .MuiDataGrid-scrollArea-left': {
+          left: 0,
+        },
+        '& .MuiDataGrid-scrollArea-right': {
+          right: 0,
+        },
         '& .MuiDataGrid-colCellWrapper': {
           display: 'flex',
           width: '100%',
@@ -96,6 +109,9 @@ export const useStyles = makeStyles(
           overflow: 'hidden',
           whiteSpace: 'nowrap',
           fontWeight: theme.typography.fontWeightMedium,
+        },
+        '& .MuiDataGrid-colCellMoving': {
+          backgroundColor: theme.palette.action.hover,
         },
         '& .MuiDataGrid-columnSeparator': {
           position: 'absolute',
@@ -200,6 +216,20 @@ export const useStyles = makeStyles(
           [theme.breakpoints.up('md')]: {
             display: 'flex',
           },
+        },
+        '& .MuiDataGrid-colCell-dropZone .MuiDataGrid-colCell-draggable': {
+          cursor: 'move',
+        },
+        '& .MuiDataGrid-colCell-draggable': {
+          display: 'flex',
+          width: '100%',
+          justifyContent: 'inherit',
+        },
+        '& .MuiDataGrid-colCell-dragging': {
+          background: theme.palette.background.paper,
+          padding: '0 12px',
+          borderRadius: theme.shape.borderRadius,
+          opacity: theme.palette.action.disabledOpacity,
         },
       },
     };

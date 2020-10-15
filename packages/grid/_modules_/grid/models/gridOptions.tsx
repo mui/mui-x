@@ -76,6 +76,11 @@ export interface GridOptions {
    */
   disableColumnResize?: boolean;
   /**
+   * If `true`, reordering columns is disabled.
+   * @default false
+   */
+  disableColumnReorder?: boolean;
+  /**
    * If `true`, the right border of the cells are displayed.
    * @default false
    */

@@ -7,31 +7,29 @@ import { ColumnHeaderSortIcon } from './column-header-sort-icon';
 import { ColumnHeaderTitle } from './column-header-title';
 import { ColumnHeaderSeparator } from './column-header-separator';
 import { OptionsContext } from './options-context';
+import { CursorCoordinates } from '../hooks/features/useColumnReorder';
 
 interface ColumnHeaderItemProps {
   column: ColDef;
   colIndex: number;
   onResizeColumn?: (c: any) => void;
+  onColumnDragStart?: (col: ColDef, currentTarget: HTMLElement) => void;
+  onColumnDragEnter?: (event: Event) => void;
+  onColumnDragOver?: (col: ColDef, coordinates: CursorCoordinates) => void;
 }
-const headerAlignPropToCss = {
-  center: 'MuiDataGrid-colCellCenter',
-  right: 'MuiDataGrid-colCellRight',
-};
-export const ColumnHeaderItem = React.memo(
-  ({ column, colIndex, onResizeColumn }: ColumnHeaderItemProps) => {
-    const api = React.useContext(ApiContext);
-    const { headerHeight, showColumnRightBorder, disableColumnResize } = React.useContext(
-      OptionsContext,
-    );
 
-    const cssClass = classnames(
-      HEADER_CELL_CSS_CLASS,
-      showColumnRightBorder ? 'MuiDataGrid-withBorder' : '',
-      column.headerClassName,
-      column.headerAlign &&
-        column.headerAlign !== 'left' &&
-        headerAlignPropToCss[column.headerAlign],
-      { 'MuiDataGrid-colCellSortable': column.sortable },
+export const ColumnHeaderItem = React.memo(
+  ({
+    column,
+    colIndex,
+    onResizeColumn,
+    onColumnDragStart,
+    onColumnDragEnter,
+    onColumnDragOver,
+  }: ColumnHeaderItemProps) => {
+    const api = React.useContext(ApiContext);
+    const { showColumnRightBorder, disableColumnResize, disableColumnReorder } = React.useContext(
+      OptionsContext,
     );
 
     let headerComponent: React.ReactElement | null = null;
@@ -44,8 +42,21 @@ export const ColumnHeaderItem = React.memo(
       });
     }
 
-    const handleResize = onResizeColumn ? () => onResizeColumn(column) : undefined;
-
+    const handleResize = onResizeColumn && (() => onResizeColumn(column));
+    const dragConfig = {
+      draggable:
+        !disableColumnReorder && !!onColumnDragStart && !!onColumnDragEnter && !!onColumnDragOver,
+      onDragStart: onColumnDragStart && ((event) => onColumnDragStart(column, event.currentTarget)),
+      onDragEnter: onColumnDragEnter && ((event) => onColumnDragEnter(event)),
+      onDragOver:
+        onColumnDragOver &&
+        ((event) => {
+          onColumnDragOver(column, {
+            x: event.clientX,
+            y: event.clientY,
+          });
+        }),
+    };
     const width = column.width!;
 
     let ariaSort: any;
@@ -55,42 +66,49 @@ export const ColumnHeaderItem = React.memo(
 
     return (
       <div
-        className={cssClass}
+        className={classnames(
+          HEADER_CELL_CSS_CLASS,
+          showColumnRightBorder ? 'MuiDataGrid-withBorder' : '',
+          column.headerClassName,
+          column.headerAlign === 'center' && 'MuiDataGrid-colCellCenter',
+          column.headerAlign === 'right' && 'MuiDataGrid-colCellRight',
+          { 'MuiDataGrid-colCellSortable': column.sortable },
+        )}
         key={column.field}
         data-field={column.field}
         style={{
           width,
           minWidth: width,
           maxWidth: width,
-          maxHeight: headerHeight,
-          minHeight: headerHeight,
         }}
         role="columnheader"
         tabIndex={-1}
         aria-colindex={colIndex + 1}
         {...ariaSort}
       >
-        {column.type === 'number' && (
-          <ColumnHeaderSortIcon
-            direction={column.sortDirection}
-            index={column.sortIndex}
-            hide={column.hideSortIcons}
-          />
-        )}
-        {headerComponent || (
-          <ColumnHeaderTitle
-            label={column.headerName || column.field}
-            description={column.description}
-            columnWidth={width}
-          />
-        )}
-        {column.type !== 'number' && (
-          <ColumnHeaderSortIcon
-            direction={column.sortDirection}
-            index={column.sortIndex}
-            hide={column.hideSortIcons}
-          />
-        )}
+        <div className="MuiDataGrid-colCell-draggable" {...dragConfig}>
+          {column.type === 'number' && (
+            <ColumnHeaderSortIcon
+              direction={column.sortDirection}
+              index={column.sortIndex}
+              hide={column.hideSortIcons}
+            />
+          )}
+          {headerComponent || (
+            <ColumnHeaderTitle
+              label={column.headerName || column.field}
+              description={column.description}
+              columnWidth={width}
+            />
+          )}
+          {column.type !== 'number' && (
+            <ColumnHeaderSortIcon
+              direction={column.sortDirection}
+              index={column.sortIndex}
+              hide={column.hideSortIcons}
+            />
+          )}
+        </div>
         <ColumnHeaderSeparator
           resizable={!disableColumnResize && column.resizable}
           onResize={handleResize}
