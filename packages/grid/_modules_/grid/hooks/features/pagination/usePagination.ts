@@ -4,6 +4,7 @@ import { ApiRef } from '../../../models/api/apiRef';
 import { PaginationApi } from '../../../models/api/paginationApi';
 import { InternalColumns } from '../../../models/colDef/colDef';
 import { PageChangeParams } from '../../../models/params/pageChangeParams';
+import { columnsSelector, visibleColumnsLengthSelector } from '../../root/columns/columnsSelector';
 import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useLogger } from '../../utils/useLogger';
@@ -31,7 +32,7 @@ export interface PaginationProps {
   setPageSize: (pageSize: number) => void;
 }
 
-export const usePagination = (columns: InternalColumns, apiRef: ApiRef): PaginationProps => {
+export const usePagination = (apiRef: ApiRef): PaginationProps => {
   const logger = useLogger('usePagination');
 
   const { gridState, dispatch } = useGridReducer<PaginationState, PaginationActions>(
@@ -42,6 +43,7 @@ export const usePagination = (columns: InternalColumns, apiRef: ApiRef): Paginat
   );
   const options = useGridSelector(apiRef, optionsSelector);
   const totalRowCount = useGridSelector(apiRef, rowCountSelector);
+  const visibleColumnsLength = useGridSelector(apiRef, visibleColumnsLengthSelector);
 
   const setPage = React.useCallback(
     (page: number) => {
@@ -104,10 +106,10 @@ export const usePagination = (columns: InternalColumns, apiRef: ApiRef): Paginat
   }, [options.autoPageSize, options.pageSize, logger, setPageSize]);
 
   React.useEffect(() => {
-    if (options.autoPageSize && columns.visible.length > 0) {
+    if (options.autoPageSize && visibleColumnsLength > 0) {
       resetAutopageSize();
     }
-  }, [options.autoPageSize, resetAutopageSize, columns.visible.length]);
+  }, [options.autoPageSize, resetAutopageSize, visibleColumnsLength]);
 
   React.useEffect(() => {
     if (apiRef.current?.isInitialised) {
