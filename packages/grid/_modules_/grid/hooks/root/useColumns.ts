@@ -117,17 +117,23 @@ const getUpdatedColumnState = (
   logger: Logger,
   state: InternalColumns,
   columnUpdates: ColDef[],
+  resetColumnState = false,
 ): InternalColumns => {
   const newState = { ...state };
-  columnUpdates.forEach((newColumn) => {
-    const index = newState.all.findIndex((c) => c.field === newColumn.field);
-    const columnUpdated = { ...newState.all[index], ...newColumn };
-    newState.all[index] = columnUpdated;
-    newState.all = [...newState.all];
 
-    newState.lookup[newColumn.field] = columnUpdated;
-    newState.lookup = { ...newState.lookup };
-  });
+  if (resetColumnState) {
+    newState.all = columnUpdates;
+  } else {
+    columnUpdates.forEach((newColumn) => {
+      const index = newState.all.findIndex((col) => col.field === newColumn.field);
+      const columnUpdated = { ...newState.all[index], ...newColumn };
+      newState.all[index] = columnUpdated;
+      newState.all = [...newState.all];
+
+      newState.lookup[newColumn.field] = columnUpdated;
+      newState.lookup = { ...newState.lookup };
+    });
+  }
 
   const visible = filterVisible(logger, newState.all);
   const meta = toMeta(logger, visible);
@@ -183,8 +189,13 @@ export function useColumns(
   );
   const getAllColumns: () => Columns = () => stateRef.current.all;
   const getColumnsMeta: () => ColumnsMeta = () => stateRef.current.meta;
-  const getColumnIndex: (field: string) => number = (field) =>
-    stateRef.current.visible.findIndex((c) => c.field === field);
+  const getColumnIndex: (field: string, useVisibleColumns?: boolean) => number = (
+    field,
+    useVisibleColumns = true,
+  ) =>
+    useVisibleColumns
+      ? stateRef.current.visible.findIndex((col) => col.field === field)
+      : stateRef.current.all.findIndex((col) => col.field === field);
   const getColumnPosition: (field: string) => number = (field) => {
     const index = getColumnIndex(field);
     return stateRef.current.meta.positions[index];
@@ -193,8 +204,8 @@ export function useColumns(
   const getVisibleColumns: () => Columns = () => stateRef.current.visible;
 
   const updateColumns = React.useCallback(
-    (cols: ColDef[]) => {
-      const newState = getUpdatedColumnState(logger, stateRef.current, cols);
+    (cols: ColDef[], resetColumnState = false) => {
+      const newState = getUpdatedColumnState(logger, stateRef.current, cols, resetColumnState);
       updateState(newState, false);
     },
     [updateState, logger, stateRef],

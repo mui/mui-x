@@ -41,7 +41,7 @@ export async function getStoryPage(
   }
   const page = await browser.newPage();
   await page.goto(url);
-  await page.waitForSelector('.grid-root');
+  await page.waitForSelector('.MuiXGrid-root');
 
   return page;
 }

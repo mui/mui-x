@@ -6,6 +6,7 @@ export const FOCUS_OUT = 'focusout';
 export const KEYDOWN = 'keydown';
 export const KEYUP = 'keyup';
 export const SCROLL = 'scroll';
+export const DRAGEND = 'dragend';
 
 // XGRID events
 export const COMPONENT_ERROR = 'componentError';
@@ -28,6 +29,12 @@ export const SCROLLING_STOP = 'scrolling:stop';
 
 export const COL_RESIZE_START = 'colResizing:start';
 export const COL_RESIZE_STOP = 'colResizing:stop';
+
+export const COL_REORDER_START = 'colReordering:dragStart';
+export const COL_REORDER_DRAG_OVER_HEADER = 'colReordering:dragOverHeader';
+export const COL_REORDER_DRAG_OVER = 'colReordering:dragOver';
+export const COL_REORDER_DRAG_ENTER = 'colReordering:dragEnter';
+export const COL_REORDER_STOP = 'colReordering:dragStop';
 
 export const ROWS_UPDATED = 'rowsUpdated';
 export const COLUMNS_UPDATED = 'columnsUpdated';

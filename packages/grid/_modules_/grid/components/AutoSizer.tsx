@@ -70,8 +70,8 @@ export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(functi
     width: defaultWidth,
   });
 
-  const rootRef = React.useRef<HTMLDivElement>(null);
-  const parentElement = React.useRef(null) as React.MutableRefObject<HTMLElement | null>;
+  const rootRef = React.useRef<HTMLDivElement | null>(null);
+  const parentElement = React.useRef<HTMLElement | null>(null);
 
   const handleResize = useEventCallback(() => {
     // Guard against AutoSizer component being removed from the DOM immediately after being added.
