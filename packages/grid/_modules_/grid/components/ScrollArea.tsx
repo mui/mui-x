@@ -16,7 +16,6 @@ export const ScrollArea = React.memo(function ScrollArea(props: ScrollAreaProps)
   const { scrollDirection } = props;
   const rootRef = React.useRef<HTMLDivElement>(null);
   const api = React.useContext(ApiContext);
-  const rafRef = React.useRef(0);
   const timeout = React.useRef<number>();
   const [dragging, setDragging] = React.useState<boolean>(false);
   const scrollPosition = React.useRef<ScrollParams>({
@@ -42,17 +41,12 @@ export const ScrollArea = React.memo(function ScrollArea(props: ScrollAreaProps)
 
       offset = (offset - CLIFF) * SLOP + CLIFF;
 
-      // Throttle, max 60 Hz
-      cancelAnimationFrame(rafRef.current);
-
-      rafRef.current = requestAnimationFrame(() => {
-        // Wait for the frame to pain before updating the scroll position
-        clearTimeout(timeout.current);
-        timeout.current = setTimeout(() => {
-          api!.current.scroll({
-            left: scrollPosition.current.left + offset,
-            top: scrollPosition.current.top,
-          });
+      clearTimeout(timeout.current);
+      // Avoid freeze and inertia.
+      timeout.current = setTimeout(() => {
+        api!.current.scroll({
+          left: scrollPosition.current.left + offset,
+          top: scrollPosition.current.top,
         });
       });
     },
@@ -61,7 +55,6 @@ export const ScrollArea = React.memo(function ScrollArea(props: ScrollAreaProps)
 
   React.useEffect(() => {
     return () => {
-      cancelAnimationFrame(rafRef.current);
       clearTimeout(timeout.current);
     };
   }, []);
