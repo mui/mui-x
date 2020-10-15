@@ -42,20 +42,21 @@ export const ColumnHeaderItem = React.memo(
       });
     }
 
-    const handleResize = onResizeColumn ? () => onResizeColumn(column) : undefined;
-    const handleDragStart = onColumnDragStart
-      ? (event) => onColumnDragStart(column, event.currentTarget)
-      : undefined;
-    const handleDragEnter = onColumnDragEnter ? (event) => onColumnDragEnter(event) : undefined;
-    const handleDragOver = onColumnDragOver
-      ? (event) => {
+    const handleResize = onResizeColumn && (() => onResizeColumn(column));
+    const dragConfig = {
+      draggable:
+        !disableColumnReorder && !!onColumnDragStart && !!onColumnDragEnter && !!onColumnDragOver,
+      onDragStart: onColumnDragStart && ((event) => onColumnDragStart(column, event.currentTarget)),
+      onDragEnter: onColumnDragEnter && ((event) => onColumnDragEnter(event)),
+      onDragOver:
+        onColumnDragOver &&
+        ((event) => {
           onColumnDragOver(column, {
             x: event.clientX,
             y: event.clientY,
           });
-        }
-      : undefined;
-
+        }),
+    };
     const width = column.width!;
 
     let ariaSort: any;
@@ -85,15 +86,7 @@ export const ColumnHeaderItem = React.memo(
         aria-colindex={colIndex + 1}
         {...ariaSort}
       >
-        <div
-          className="MuiDataGrid-colCell-draggable"
-          draggable={
-            !disableColumnReorder && !!handleDragStart && !!handleDragEnter && !!handleDragOver
-          }
-          onDragStart={handleDragStart}
-          onDragOver={handleDragOver}
-          onDragEnter={handleDragEnter}
-        >
+        <div className="MuiDataGrid-colCell-draggable" {...dragConfig}>
           {column.type === 'number' && (
             <ColumnHeaderSortIcon
               direction={column.sortDirection}

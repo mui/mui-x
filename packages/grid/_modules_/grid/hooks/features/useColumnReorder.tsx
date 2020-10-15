@@ -81,9 +81,9 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
       dragColNode.current.addEventListener(DRAGEND, handleDragEnd, { once: true });
       dragColNode.current.classList.add(HEADER_CELL_DRAGGING_CSS_CLASS);
       dragColNode.current.parentElement!.classList.add('MuiDataGrid-colCellMoving');
-      removeDnDStylesTimeout.current = window.setTimeout(() => {
+      removeDnDStylesTimeout.current = setTimeout(() => {
         dragColNode.current!.classList.remove(HEADER_CELL_DRAGGING_CSS_CLASS);
-      }, 0);
+      });
     },
     [apiRef, handleDragEnd, logger],
   );

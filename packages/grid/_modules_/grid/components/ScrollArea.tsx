@@ -5,6 +5,9 @@ import { ApiRef } from '../models';
 import { classnames } from '../utils';
 import { ApiContext } from './api-context';
 
+const CLIFF = 1;
+const SLOP = 1.5;
+
 interface ScrollAreaProps {
   scrollDirection: 'left' | 'right';
 }
@@ -27,26 +30,27 @@ export const ScrollArea = React.memo(function ScrollArea(props: ScrollAreaProps)
 
   const handleDragOver = React.useCallback(
     (event) => {
-      let diff;
+      let offset;
 
       if (scrollDirection === 'left') {
-        diff = event.clientX - rootRef.current!.getBoundingClientRect().right;
+        offset = event.clientX - rootRef.current!.getBoundingClientRect().right;
       } else if (scrollDirection === 'right') {
-        diff = Math.max(1, event.clientX - rootRef.current!.getBoundingClientRect().left);
+        offset = Math.max(1, event.clientX - rootRef.current!.getBoundingClientRect().left);
       } else {
         throw new Error('wrong dir');
       }
 
-      diff = (diff - 1) * 1.5 + 1;
+      offset = (offset - CLIFF) * SLOP + CLIFF;
 
       // Throttle, max 60 Hz
       cancelAnimationFrame(rafRef.current);
+
       rafRef.current = requestAnimationFrame(() => {
         // Wait for the frame to pain before updating the scroll position
         clearTimeout(timeout.current);
         timeout.current = setTimeout(() => {
           api!.current.scroll({
-            left: scrollPosition.current.left + diff,
+            left: scrollPosition.current.left + offset,
             top: scrollPosition.current.top,
           });
         });
