@@ -23,6 +23,8 @@ type ViewportType = React.ForwardRefExoticComponent<
   ViewportProps & React.RefAttributes<HTMLDivElement>
 >;
 
+export const containerSizesSelector = (state: GridState)=> state.containerSizes;
+
 export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportProps>(
   ({ visibleColumns }, renderingZoneRef) => {
     const logger = useLogger('Viewport');
@@ -30,6 +32,7 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportP
     const apiRef = React.useContext(ApiContext);
     const rows = useGridSelector(apiRef, sortedRowsSelector);
     const options = useGridSelector(apiRef, optionsSelector);
+    const containerSizes = useGridSelector(apiRef, containerSizesSelector);
 
     const getRowsElements = () => {
       const renderedRows = rows.slice(renderCtx.firstRowIdx, renderCtx.lastRowIdx!);
@@ -47,8 +50,8 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportP
             row={r}
             firstColIdx={renderCtx.firstColIdx}
             lastColIdx={renderCtx.lastColIdx}
-            hasScroll={{ y: renderCtx.hasScrollY, x: renderCtx.hasScrollX }}
-            scrollSize={renderCtx.scrollBarSize}
+            hasScroll={{ y: containerSizes!.hasScrollY, x: containerSizes!.hasScrollX }}
+            scrollSize={containerSizes!.scrollBarSize}
             showCellRightBorder={!!options.showCellRightBorder}
             extendRowFullWidth={!options.disableExtendRowFullWidth}
             rowIndex={renderCtx.firstRowIdx + idx}
@@ -61,8 +64,8 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportP
 
     logger.debug('Rendering ViewPort');
     return (
-      <StickyContainer {...renderCtx.viewportSize}>
-        <RenderingZone ref={renderingZoneRef} {...renderCtx.renderingZone}>
+      <StickyContainer {...containerSizes!.viewportSize}>
+        <RenderingZone ref={renderingZoneRef} {...containerSizes!.renderingZone}>
           {getRowsElements()}
         </RenderingZone>
       </StickyContainer>

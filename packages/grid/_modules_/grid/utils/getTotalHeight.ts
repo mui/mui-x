@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { GridOptions } from '../models';
+import { ContainerProps, GridOptions } from '../models';
 
 //TODO Move that to renderContext and delete this
 export const getCurryTotalHeight = (
   internalOptions: GridOptions,
-  renderCtx: any,
+  containerSizes: ContainerProps | null,
   footerRef: React.RefObject<HTMLDivElement>,
 ) => (size: any) => {
-  const dataContainerHeight = (renderCtx && renderCtx.dataContainerSizes!.height) || 0;
+  const dataContainerHeight = (containerSizes && containerSizes.dataContainerSizes!.height) || 0;
   if (!internalOptions.autoHeight) {
     return size.height;
   }

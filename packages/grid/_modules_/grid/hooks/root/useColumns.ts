@@ -1,32 +1,28 @@
 import * as React from 'react';
-import {
-  checkboxSelectionColDef,
-  ColDef,
-  ColumnApi,
-  Columns,
-  ColumnsMeta,
-  getColDef,
-  GridOptions,
-  InternalColumns,
-  ApiRef,
-  ColumnTypesRecord,
-  SortModelParams,
-} from '../../models';
+import { ApiRef } from '../../models/api/apiRef';
+import { ColumnApi } from '../../models/api/columnApi';
+import { checkboxSelectionColDef } from '../../models/colDef/checkboxSelection';
+import { ColDef, Columns, ColumnsMeta, InternalColumns } from '../../models/colDef/colDef';
+import { ColumnTypesRecord } from '../../models/colDef/colTypeDef';
+import { getColDef } from '../../models/colDef/getColDef';
+import { GridOptions } from '../../models/gridOptions';
+import { SortModelParams } from '../../models/params/sortModelParams';
+import { isEqual } from '../../utils/utils';
+import { GridState } from '../features/core/gridState';
+import { useGridState } from '../features/core/useGridState';
 import { Logger, useLogger } from '../utils/useLogger';
 import { SORT_MODEL_CHANGE, COLUMNS_UPDATED } from '../../constants/eventsConstants';
-import { useRafUpdate } from '../utils';
-import { isEqual } from '../../utils';
 import { useApiMethod } from './useApiMethod';
 import { useApiEventHandler } from './useApiEventHandler';
 
-const initialState: InternalColumns = {
+export const getInitialColumnsState = (): InternalColumns => ({
   visible: [],
   all: [],
   lookup: {},
   hasVisibleColumns: false,
   hasColumns: false,
   meta: { positions: [], totalWidth: 0 },
-};
+});
 
 function hydrateColumns(
   columns: Columns,
@@ -96,7 +92,7 @@ const resetState = (
   apiRef: ApiRef,
 ): InternalColumns => {
   if (columns.length === 0) {
-    return initialState;
+    return getInitialColumnsState();
   }
 
   const all = hydrateColumns(columns, columnTypes, withCheckboxSelection, logger, apiRef);
@@ -147,48 +143,44 @@ const getUpdatedColumnState = (
 };
 
 export function useColumns(
-  options: GridOptions,
   columns: Columns,
   apiRef: ApiRef,
 ): InternalColumns {
   const logger = useLogger('useColumns');
-  const [, forceUpdate] = React.useState();
-  const [rafUpdate] = useRafUpdate(() => forceUpdate((p: any) => !p));
-
-  const [internalColumns, setInternalColumns] = React.useState<InternalColumns>(initialState);
-  const stateRef = React.useRef<InternalColumns>(initialState);
+  const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
 
   const updateState = React.useCallback(
     (newState: InternalColumns, emit = true) => {
       logger.debug('Updating columns state.');
-      setInternalColumns(() => newState);
-      stateRef.current = newState;
+      setGridState((oldState)=>  ({...oldState, columns: newState}));
 
       if (apiRef.current && emit) {
         apiRef.current.publishEvent(COLUMNS_UPDATED, newState.all);
       }
     },
-    [setInternalColumns, apiRef, logger, stateRef],
+    [logger, setGridState, apiRef],
   );
 
   React.useEffect(() => {
     logger.info(`Columns have change, new length ${columns.length}`);
     const newState = resetState(
       columns,
-      options.columnTypes,
-      !!options.checkboxSelection,
+      gridState.options.columnTypes,
+      !!gridState.options.checkboxSelection,
       logger,
       apiRef,
     );
     updateState(newState);
-  }, [columns, options.columnTypes, options.checkboxSelection, logger, apiRef, updateState]);
+  }, [columns, gridState.options.columnTypes, gridState.options.checkboxSelection, logger, apiRef, updateState]);
 
   const getColumnFromField: (field: string) => ColDef = React.useCallback(
-    (field) => stateRef.current.lookup[field],
-    [stateRef],
+    (field) => gridState.columns.lookup[field],
+    [gridState.columns],
   );
-  const getAllColumns: () => Columns = () => stateRef.current.all;
-  const getColumnsMeta: () => ColumnsMeta = () => stateRef.current.meta;
+  const getAllColumns: () => Columns = () => gridState.columns.all;
+  const getColumnsMeta: () => ColumnsMeta = () => gridState.columns.meta;
+  const getColumnIndex: (field: string) => number = (field) =>
+    gridState.columns.visible.findIndex((c) => c.field === field);
   const getColumnIndex: (field: string, useVisibleColumns?: boolean) => number = (
     field,
     useVisibleColumns = true,
@@ -198,17 +190,19 @@ export function useColumns(
       : stateRef.current.all.findIndex((col) => col.field === field);
   const getColumnPosition: (field: string) => number = (field) => {
     const index = getColumnIndex(field);
-    return stateRef.current.meta.positions[index];
+    return gridState.columns.meta.positions[index];
   };
 
-  const getVisibleColumns: () => Columns = () => stateRef.current.visible;
+  const getVisibleColumns: () => Columns = () => gridState.columns.visible;
 
   const updateColumns = React.useCallback(
+    (cols: ColDef[]) => {
+      const newState = getUpdatedColumnState(logger, gridState.columns, cols);
     (cols: ColDef[], resetColumnState = false) => {
       const newState = getUpdatedColumnState(logger, stateRef.current, cols, resetColumnState);
       updateState(newState, false);
     },
-    [updateState, logger, stateRef],
+    [updateState, logger, gridState.columns],
   );
 
   const updateColumn = React.useCallback((col: ColDef) => updateColumns([col]), [updateColumns]);
@@ -218,7 +212,7 @@ export function useColumns(
       logger.debug('Sort model change to ', sortModel);
       const updatedCols: ColDef[] = [];
 
-      const currentSortedCols = stateRef.current.all
+      const currentSortedCols = gridState.columns.all
         .filter((c) => c.sortDirection != null)
         .map((c) => ({ field: c.field, sort: c.sortDirection }));
       if (isEqual(currentSortedCols, sortModel)) {
@@ -239,9 +233,9 @@ export function useColumns(
         updateColumns(updatedCols);
       }
 
-      rafUpdate();
+      forceUpdate();
     },
-    [logger, rafUpdate, updateColumns],
+    [logger, gridState.columns.all, forceUpdate, updateColumns],
   );
 
   const colApi: ColumnApi = {
@@ -258,5 +252,5 @@ export function useColumns(
   useApiMethod(apiRef, colApi, 'ColApi');
   useApiEventHandler(apiRef, SORT_MODEL_CHANGE, onColumnsSorted);
 
-  return internalColumns;
+  return gridState.columns;
 }

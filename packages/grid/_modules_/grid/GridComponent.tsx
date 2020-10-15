@@ -10,6 +10,7 @@ import {
   useSelection,
   useSorting,
 } from './hooks/features';
+import { useGridState } from './hooks/features/core/useGridState';
 import { RootContainerRef } from './models';
 import { DATA_CONTAINER_CSS_CLASS } from './constants';
 import { GridRoot } from './components/styled-wrappers/GridRoot';
@@ -25,9 +26,9 @@ import {
   RenderContext,
   Viewport,
   Watermark,
-  GridWindow,
+  GridWindow, Pagination,
 } from './components';
-import { useApi, useColumns, useKeyboard } from './hooks/root';
+import { useApi, useColumns, useContainerProps, useKeyboard } from './hooks/root';
 import { useLogger, useLoggerFactory } from './hooks/utils';
 import { useEvents } from './hooks/root/useEvents';
 import { ErrorBoundary } from './components/error-boundary';
@@ -54,6 +55,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const renderingZoneRef = React.useRef<HTMLDivElement>(null);
 
     const apiRef = useApiRef(props.apiRef);
+    const [gridState] = useGridState(apiRef);
     const internalOptions = useOptionsProp(apiRef, props);
 
     useLoggerFactory(internalOptions.logger, internalOptions.logLevel);
@@ -64,20 +66,18 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useEvents(rootContainerRef, internalOptions, apiRef);
     const onResize = useResizeContainer(apiRef);
 
-    const internalColumns = useColumns(internalOptions, props.columns, apiRef);
+    const internalColumns = useColumns(props.columns, apiRef);
 
     const internalRows = useRowsReducer(props.rows, apiRef);
     useKeyboard(internalOptions, initialised, apiRef);
     useSelection(internalOptions, props.rows, initialised, apiRef);
     useSorting(internalOptions, props.rows, props.columns, apiRef);
 
+    useContainerProps(windowRef, apiRef);
     const renderCtx = useVirtualRows(
       columnsHeaderRef,
       windowRef,
       renderingZoneRef,
-      internalColumns,
-      internalRows,
-      internalOptions,
       apiRef,
     );
 
@@ -102,8 +102,8 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
 
     // TODO move that to renderCtx
     const getTotalHeight = React.useCallback(
-      (size) => getCurryTotalHeight(internalOptions, renderCtx, footerRef)(size),
-      [internalOptions, renderCtx, footerRef],
+      (size) => getCurryTotalHeight(internalOptions, gridState.containerSizes, footerRef)(size),
+      [internalOptions, gridState.containerSizes],
     );
 
     return (
@@ -143,7 +143,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                       <ColumnsHeader
                         ref={columnsHeaderRef}
                         columns={internalColumns.visible || []}
-                        hasScrollX={!!renderCtx?.hasScrollX}
+                        hasScrollX={!!gridState.containerSizes?.hasScrollX}
                         separatorProps={separatorProps}
                       onColumnHeaderDragOver={onColumnReorder.handleColumnHeaderDragOver}
                       onColumnDragStart={onColumnReorder.handleDragStart}
@@ -161,8 +161,8 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                         ref={gridRef}
                         className={DATA_CONTAINER_CSS_CLASS}
                         style={{
-                          minHeight: renderCtx?.dataContainerSizes?.height,
-                          minWidth: renderCtx?.dataContainerSizes?.width,
+                          minHeight: gridState.containerSizes?.dataContainerSizes?.height,
+                          minWidth: gridState.containerSizes?.dataContainerSizes?.width,
                         }}
                       >
                         {renderCtx != null && (
@@ -180,29 +180,21 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                     <DefaultFooter
                       ref={footerRef}
                       paginationComponent={
-                        // !!internalOptions.pagination &&
-                        // paginationProps.pageSize != null &&
-                        // !internalOptions.hideFooterPagination &&
-                        // (customComponents.paginationComponent || (
-                        //   <Pagination
-                        //     setPage={paginationProps.setPage}
-                        //     currentPage={paginationProps.page}
-                        //     pageCount={paginationProps.pageCount}
-                        //     pageSize={paginationProps.pageSize}
-                        //     rowCount={paginationProps.rowCount}
-                        //     setPageSize={paginationProps.setPageSize}
-                        //     rowsPerPageOptions={internalOptions.rowsPerPageOptions}
-                        //   />
-                        // ))
-                        null
+                        !!gridState.options.pagination &&
+                        gridState.pagination.pageSize != null &&
+                        !gridState.options.hideFooterPagination &&
+                        (customComponents.paginationComponent || (
+                          <Pagination
+                            setPage={apiRef.current.setPage}
+                            currentPage={gridState.pagination.page}
+                            pageCount={gridState.pagination.pageCount}
+                            pageSize={gridState.pagination.pageSize}
+                            rowCount={gridState.pagination.rowCount}
+                            setPageSize={apiRef.current.setPageSize}
+                            rowsPerPageOptions={gridState.options.rowsPerPageOptions}
+                          />
+                        ))
                       }
-                      rowCount={
-                        0
-                        // internalOptions.rowCount == null
-                        //   ? internalRows.length
-                        //   : internalOptions.rowCount
-                      }
-                      options={internalOptions}
                     />
                   )}
                 </OptionsContext.Provider>

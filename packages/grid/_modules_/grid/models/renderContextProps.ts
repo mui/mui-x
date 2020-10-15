@@ -57,7 +57,4 @@ export interface RenderPaginationProps {
 /**
  * The full rendering state.
  */
-export type RenderContextProps = ContainerProps &
-  RenderColumnsProps &
-  RenderRowProps &
-  RenderPaginationProps;
+export type RenderContextProps = RenderColumnsProps & RenderRowProps & RenderPaginationProps;

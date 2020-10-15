@@ -62,25 +62,14 @@ export const getPageCount = (pageSize: number | undefined, rowsCount: number) =>
 export const setPageStateUpdate = (state: PaginationState, payload: any): PaginationState => {
   // eslint-disable-next-line prefer-const
   let { page, apiRef } = payload;
-  let hasPageChanged = false;
   if (state.rowCount > 0) {
     page = state.pageCount >= page ? page : state.pageCount;
-    //TODO replace with dispatch action
-    apiRef.current.renderPage(state.paginationMode === FeatureModeConstant.client ? page : 1);
-    hasPageChanged = true;
-  }
-  const params: PageChangeParams = {
-    ...state,
-    page,
-  };
-  if (hasPageChanged && state.page !== page) {
-    //TODO replace with dispatch action
-    apiRef.current.publishEvent(PAGE_CHANGED, params);
-    // prevPageRef.current = page;
-  }
-  if (state.page !== page) {
-    const newSte = { ...state, page };
-    return newSte;
+
+    if (state.page !== page) {
+      const params: PageChangeParams = {...state, page};
+      apiRef.current.publishEvent(PAGE_CHANGED, params);
+      return {...state, page};
+    }
   }
   return state;
 };
@@ -97,9 +86,7 @@ export const setPageSizeStateUpdate = (state: PaginationState, payload: any): Pa
   let newPage = Math.floor(firstRowIdx / pageSize) + 1;
   newPage = newPage > newPageCount ? newPageCount : newPage;
   newPage = newPage < 1 ? 1 : newPage;
-  // logger.info(
-  //   `PageSize change to ${pageSize}, setting page to ${newPage}, total page count is ${newPageCount}`,
-  // );
+
   let newState: PaginationState = {
     ...state,
     page: newPage,
@@ -108,7 +95,6 @@ export const setPageSizeStateUpdate = (state: PaginationState, payload: any): Pa
   };
   apiRef.current.publishEvent(PAGESIZE_CHANGED, newState as PageChangeParams);
 
-  // updateState(newState);
   newState = setPageStateUpdate(newState, { page: newPage, apiRef });
   return newState;
 };
@@ -141,10 +127,6 @@ export const paginationReducer = (state: PaginationState, action: PaginationActi
     case SET_PAGINATION_MODE_ACTION:
       return { ...apiState.pagination, ...{ paginationMode: action.payload!.paginationMode! } };
     case SET_ROWCOUNT_ACTION:
-      console.log(
-        `Pagination reducer with rowCount, action: ${action.payload['totalRowCount']} vs state: ${apiState.rows.totalRowCount}`,
-      );
-
       return setRowCountStateUpdate(apiState.pagination, action.payload);
     default:
       throw new Error(`Material-UI: Action not found - ${JSON.stringify(action)}`);

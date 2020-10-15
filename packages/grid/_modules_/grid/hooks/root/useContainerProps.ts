@@ -1,30 +1,59 @@
+import { useEffect } from 'react';
 import * as React from 'react';
-import { ContainerProps, ElementSize, GridOptions } from '../../models';
+import { RESIZE } from '../../constants/eventsConstants';
+import { ApiRef, ContainerProps, ElementSize, GridOptions } from '../../models';
+import { isEqual } from '../../utils/utils';
+import { useGridSelector } from '../features/core/useGridSelector';
+import { useGridState } from '../features/core/useGridState';
+import { PaginationState } from '../features/pagination/paginationReducer';
+import { paginationSelector } from '../features/pagination/paginationSelector';
+import { rowCountSelector } from '../features/rows/rowsSelector';
 import { useLogger } from '../utils/useLogger';
+import { optionsSelector } from '../utils/useOptionsProp';
+import { columnsTotalWidthSelector } from './columns/columnsSelector';
+import { useApiEventHandler } from './useApiEventHandler';
 
-type ReturnType = (
-  options: GridOptions,
-  columnsTotalWidth: number,
-  rowsCount: number,
-) => ContainerProps | null; // [ContainerProps | null, () => void];
-
-export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>): ReturnType => {
+export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, apiRef: ApiRef) => {
   const logger = useLogger('useContainerProps');
-  const windowSizesRef = React.useRef<ElementSize>({ width: 0, height: 0 });
+  const [gridState, setGridState] = useGridState(apiRef);
+  const windowSizesRef = React.useRef<ElementSize>({width: 0, height: 0});
 
-  const getContainerProps = React.useCallback(
-    (options: GridOptions, columnsTotalWidth: number, rowsCount: number): ContainerProps | null => {
-      if (!windowRef || !windowRef.current) {
+  const options = useGridSelector(apiRef, optionsSelector);
+  const columnsTotalWidth = useGridSelector(apiRef, columnsTotalWidthSelector);
+  const totalRowsCount = useGridSelector(apiRef, rowCountSelector);
+  const paginationState = useGridSelector<PaginationState>(apiRef, paginationSelector);
+
+  const getVirtualRowCount = React.useCallback(() => {
+    const currentPage = paginationState.page;
+    let pageRowCount =
+      options.pagination && paginationState.pageSize
+        ? paginationState.pageSize
+        : null;
+
+    pageRowCount =
+      !pageRowCount || currentPage * pageRowCount <= totalRowsCount
+        ? pageRowCount
+        : totalRowsCount - (currentPage - 1) * pageRowCount;
+
+    const virtRowsCount =
+      pageRowCount == null || pageRowCount > totalRowsCount ? totalRowsCount : pageRowCount;
+
+    return virtRowsCount
+  }, [options.pagination, paginationState.page, paginationState.pageSize, totalRowsCount]);
+
+  const getContainerProps = React.useCallback((): ContainerProps | null => {
+      if (!windowRef || !windowRef.current || columnsTotalWidth === 0) {
         return null;
       }
 
       logger.debug('Calculating container sizes.');
       const window = windowRef.current.getBoundingClientRect();
-      windowSizesRef.current = { width: window.width, height: window.height };
+      windowSizesRef.current = {width: window.width, height: window.height};
       logger.debug(
         `window Size - W: ${windowSizesRef.current.width} H: ${windowSizesRef.current.height} `,
       );
 
+      const rowsCount = getVirtualRowCount();
       const rowHeight = options.rowHeight;
       const hasScrollY =
         options.autoPageSize || options.autoHeight
@@ -66,6 +95,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>): R
       }
 
       const indexes: ContainerProps = {
+        virtualRowsCount : options.autoPageSize ? viewportPageSize : rowsCount,
         renderingZonePageSize: rzPageSize,
         viewportPageSize,
         hasScrollY,
@@ -91,8 +121,26 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>): R
       logger.debug('returning container props', indexes);
       return indexes;
     },
-    [windowRef, logger],
+    [windowRef, logger, getVirtualRowCount, options.rowHeight, options.autoPageSize, options.autoHeight, options.scrollbarSize, options.pagination, columnsTotalWidth],
   );
 
-  return getContainerProps;
-};
+  const updateContainerState = React.useCallback((containerState: ContainerProps | null) => {
+    setGridState((state) => {
+      if (!isEqual(state.containerSizes, containerState)) {
+        state.containerSizes = containerState;
+      }
+      return state;
+    });
+  }, [setGridState])
+
+  const refreshContainerSizes = React.useCallback(() => {
+    const containerProps = getContainerProps();
+    updateContainerState(containerProps);
+  }, [getContainerProps, updateContainerState])
+
+  useEffect(()=> {
+    refreshContainerSizes();
+  },[gridState.options.hideFooter, refreshContainerSizes])
+
+  useApiEventHandler(apiRef, RESIZE, refreshContainerSizes);
+}

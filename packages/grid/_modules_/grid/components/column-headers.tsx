@@ -1,9 +1,11 @@
 import * as React from 'react';
+import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { Columns, RenderContextProps } from '../models';
 import { ColDef } from '../models/colDef';
 import { ColumnHeaderItem } from './column-header-item';
 import { ApiContext } from './api-context';
 import { LeftEmptyCell, RightEmptyCell } from './cell';
+import { containerSizesSelector } from './viewport';
 import { OptionsContext } from './options-context';
 import { ScrollArea } from './ScrollArea';
 import { CursorCoordinates } from '../hooks';
@@ -61,6 +63,7 @@ export const ColumnsHeader = React.memo(
     const wrapperCssClasses = `MuiDataGrid-colCellWrapper ${hasScrollX ? 'scroll' : ''}`;
     const api = React.useContext(ApiContext);
     const { disableColumnReorder } = React.useContext(OptionsContext);
+    const containerSizes = useGridSelector(api, containerSizesSelector);
 
     if (!api) {
       throw new Error('Material-UI: ApiRef was not found in context.');
@@ -102,7 +105,7 @@ export const ColumnsHeader = React.memo(
           className={wrapperCssClasses}
           aria-rowindex={1}
           role="row"
-          style={{ minWidth: renderCtx?.totalSizes?.width }}
+          style={{ minWidth: containerSizes?.totalSizes?.width }}
           onDragOver={handleDragOver}
         >
           <LeftEmptyCell width={renderCtx?.leftEmptyWidth} />

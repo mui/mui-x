@@ -1,5 +1,9 @@
+import { InternalColumns } from '../../../models/colDef/colDef';
+import { ContainerProps } from '../../../models/containerProps';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
 import { RowId } from '../../../models/rows';
+import { getInitialColumnsState } from '../../root/useColumns';
+import { getInitialRenderingState, InternalRenderingState } from '../../virtualization/useVirtualRows';
 import { INITIAL_PAGINATION_STATE, PaginationState } from '../pagination/paginationReducer';
 import { getInitialRowState, InternalRowsState } from '../rows/rowsReducer';
 
@@ -26,13 +30,23 @@ interface GridOptionsState {
 interface ScrollingState {
   isScrolling: boolean;
 }
+interface ColumnState {
+  columns: InternalColumns
+}
 
+interface RenderingState {
+  rendering: InternalRenderingState;
+}
 export type GridState = RowsState &
   SelectedRowsState &
   HiddenRowsState &
   GridPaginationState &
   GridOptionsState &
-  ScrollingState;
+  ScrollingState &
+  ColumnState &
+  RenderingState &
+  {containerSizes: ContainerProps | null}
+;
 
 export const getInitialState: () => GridState = () => ({
   rows: getInitialRowState(),
@@ -41,4 +55,7 @@ export const getInitialState: () => GridState = () => ({
   pagination: { ...INITIAL_PAGINATION_STATE },
   options: { ...DEFAULT_GRID_OPTIONS },
   isScrolling: false,
+  columns: getInitialColumnsState(),
+  rendering: getInitialRenderingState(),
+  containerSizes: null
 });

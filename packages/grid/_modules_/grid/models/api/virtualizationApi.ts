@@ -30,9 +30,4 @@ export interface VirtualizationApi {
    * Get the current renderContext.
    */
   getRenderContextState: () => Partial<RenderContextProps> | undefined;
-  /**
-   * Force the rendering engine to render a particular page. Not for pagination.
-   * @param page
-   */
-  renderPage: (page: number) => void;
 }

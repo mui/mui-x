@@ -28,7 +28,7 @@ export const useRowsReducer = (rows: RowsProp, apiRef: ApiRef): RowModel[] => {
 
   React.useEffect(() => {
     dispatch(rowPropChangedActionCreator(rows, gridState.options?.rowCount));
-  }, [rows, gridState.options?.rowCount, dispatch]);
+  }, [rows, gridState.options, dispatch]);
 
   const isSortedRef = React.useRef<boolean>(false);
 
