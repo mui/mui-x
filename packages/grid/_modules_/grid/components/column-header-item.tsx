@@ -36,11 +36,14 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
   );
 
   const [resizing, setResizing] = React.useState(false);
-  const handleResizeStart = React.useCallback((params) => {
-    if (column.field === params.field) {
-      setResizing(true);
-    }
-  }, [column.field]);
+  const handleResizeStart = React.useCallback(
+    (params) => {
+      if (column.field === params.field) {
+        setResizing(true);
+      }
+    },
+    [column.field],
+  );
   const handleResizeStop = React.useCallback(() => {
     setResizing(false);
   }, []);
