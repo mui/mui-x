@@ -21,16 +21,17 @@ import {
   ROWS_UPDATED,
   SORT_MODEL_CHANGE,
 } from '../../constants/eventsConstants';
+import { columnsSelector } from '../root/columns/columnsSelector';
 import { useLogger } from '../utils';
-import { buildCellParams, isDesc, nextSortDirection } from '../../utils';
+import { buildCellParams, isDesc, isEqual, nextSortDirection } from '../../utils';
 import { SortItem, SortModel } from '../../models/sortModel';
 import { useApiEventHandler } from '../root/useApiEventHandler';
 import { useApiMethod } from '../root/useApiMethod';
+import { optionsSelector } from '../utils/useOptionsProp';
+import { useGridSelector } from './core/useGridSelector';
+import { rowCountSelector, rowsSelector } from './rows/rowsSelector';
 
 export const useSorting = (
-  options: GridOptions,
-  rowsProp: RowsProp,
-  columnsProp: Columns,
   apiRef: ApiRef,
 ) => {
   const logger = useLogger('useSorting');
@@ -38,6 +39,9 @@ export const useSorting = (
   const allowMultipleSorting = React.useRef<boolean>(false);
   const originalOrder = React.useRef<RowId[]>([]);
   const comparatorList = React.useRef<FieldComparatorList>([]);
+  const options = useGridSelector(apiRef, optionsSelector);
+  const columns = useGridSelector(apiRef, columnsSelector);
+  const rowCount = useGridSelector(apiRef, rowCountSelector);
 
   const getSortModelParams = React.useCallback(
     (): SortModelParams => ({
@@ -135,7 +139,9 @@ export const useSorting = (
       sorted = sorted.sort(comparatorListAggregate);
     }
 
+    //TODO move that to sorting state;
     apiRef.current.setRowModels([...sorted]);
+
   }, [
     apiRef,
     sortModelRef,
@@ -148,13 +154,16 @@ export const useSorting = (
   const setSortModel = React.useCallback(
     (sortModel: SortModel) => {
       sortModelRef.current = sortModel;
+      if(columns.visible.length === 0) {
+        return;
+      }
       apiRef.current.publishEvent(SORT_MODEL_CHANGE, getSortModelParams());
 
       if (options.sortingMode === FeatureModeConstant.client) {
         applySorting();
       }
     },
-    [apiRef, applySorting, options.sortingMode, getSortModelParams],
+    [columns.visible.length, apiRef, getSortModelParams, options.sortingMode, applySorting],
   );
 
   const sortColumn = React.useCallback(
@@ -210,8 +219,6 @@ export const useSorting = (
     [apiRef],
   );
 
-  const [colState, setColState] = React.useState(columnsProp);
-
   useApiEventHandler(apiRef, COLUMN_HEADER_CLICK, headerClickHandler);
   useApiEventHandler(apiRef, ROWS_UPDATED, onRowsUpdated);
   useApiEventHandler(apiRef, MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
@@ -222,22 +229,17 @@ export const useSorting = (
   useApiMethod(apiRef, sortApi, 'SortApi');
 
   React.useEffect(() => {
-    setColState(columnsProp);
-    sortModelRef.current = [];
-  }, [columnsProp]);
-
-  React.useEffect(() => {
-    if (rowsProp.length > 0 && options.sortingMode === FeatureModeConstant.client) {
+    if (rowCount > 0 && options.sortingMode === FeatureModeConstant.client) {
       storeOriginalOrder();
       if (sortModelRef.current.length > 0) {
         logger.debug('row changed, applying sortModel');
         applySorting();
       }
     }
-  }, [rowsProp, applySorting, storeOriginalOrder, options.sortingMode, logger]);
+  }, [rowCount, applySorting, storeOriginalOrder, options.sortingMode, logger]);
 
   React.useEffect(() => {
-    if (columnsProp.length > 0) {
+    if (columns.visible.length > 0) {
       const sortedColumns = apiRef.current
         .getAllColumns()
         .filter((column) => column.sortDirection != null)
@@ -247,11 +249,11 @@ export const useSorting = (
         field: column.field,
         sort: column.sortDirection,
       }));
-      if (sortModel.length > 0) {
+      if (sortModel.length > 0 && !isEqual(sortModelRef.current, sortModel)) {
         setSortModel(sortModel);
       }
     }
-  }, [colState, setSortModel, apiRef, columnsProp]);
+  }, [columns, setSortModel, apiRef]);
 
   React.useEffect(() => {
     const model = options.sortModel || [];

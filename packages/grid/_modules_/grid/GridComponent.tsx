@@ -61,7 +61,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useLoggerFactory(internalOptions.logger, internalOptions.logLevel);
     const gridLogger = useLogger('GridComponent');
 
-    const initialised = useApi(rootContainerRef, apiRef);
+    useApi(rootContainerRef, apiRef);
     const errorState = useErrorHandler(apiRef, props);
     useEvents(rootContainerRef, internalOptions, apiRef);
     const onResize = useResizeContainer(apiRef);
@@ -69,9 +69,9 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const internalColumns = useColumns(props.columns, apiRef);
 
     const internalRows = useRowsReducer(props.rows, apiRef);
-    useKeyboard(internalOptions, initialised, apiRef);
-    useSelection(internalOptions, props.rows, initialised, apiRef);
-    useSorting(internalOptions, props.rows, props.columns, apiRef);
+    useKeyboard(apiRef);
+    useSelection(apiRef);
+    useSorting(apiRef);
 
     useContainerProps(windowRef, apiRef);
     const renderCtx = useVirtualRows(
@@ -167,10 +167,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                       >
                         {renderCtx != null && (
                           <RenderContext.Provider value={renderCtx}>
-                            <Viewport
-                              ref={renderingZoneRef}
-                              visibleColumns={internalColumns.visible}
-                            />
+                            <Viewport ref={renderingZoneRef} />
                           </RenderContext.Provider>
                         )}
                       </GridDataContainer>

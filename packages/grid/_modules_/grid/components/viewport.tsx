@@ -4,6 +4,7 @@ import { GridState } from '../hooks/features/core/gridState';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { InternalRowsState } from '../hooks/features/rows/rowsReducer';
 import { rowsSelector, sortedRowsSelector } from '../hooks/features/rows/rowsSelector';
+import { columnsSelector } from '../hooks/root/columns/columnsSelector';
 import { optionsSelector } from '../hooks/utils/useOptionsProp';
 import { Columns, GridOptions, RenderContextProps, RowModel } from '../models';
 import { useLogger } from '../hooks/utils/useLogger';
@@ -15,24 +16,19 @@ import { RowCells } from './row-cells';
 import { StickyContainer } from './sticky-container';
 import { RenderContext } from './render-context';
 
-export interface ViewportProps {
-  visibleColumns: Columns;
-}
-
-type ViewportType = React.ForwardRefExoticComponent<
-  ViewportProps & React.RefAttributes<HTMLDivElement>
->;
+type ViewportType = React.ForwardRefExoticComponent<React.RefAttributes<HTMLDivElement>>;
 
 export const containerSizesSelector = (state: GridState)=> state.containerSizes;
 
-export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportProps>(
-  ({ visibleColumns }, renderingZoneRef) => {
+export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
+  ( props, renderingZoneRef) => {
     const logger = useLogger('Viewport');
     const renderCtx = React.useContext(RenderContext) as RenderContextProps;
     const apiRef = React.useContext(ApiContext);
     const rows = useGridSelector(apiRef, sortedRowsSelector);
     const options = useGridSelector(apiRef, optionsSelector);
     const containerSizes = useGridSelector(apiRef, containerSizesSelector);
+    const columns = useGridSelector(apiRef, columnsSelector);
 
     const getRowsElements = () => {
       const renderedRows = rows.slice(renderCtx.firstRowIdx, renderCtx.lastRowIdx!);
@@ -46,7 +42,7 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportP
         >
           <LeftEmptyCell width={renderCtx.leftEmptyWidth} />
           <RowCells
-            columns={visibleColumns}
+            columns={columns.visible}
             row={r}
             firstColIdx={renderCtx.firstColIdx}
             lastColIdx={renderCtx.lastColIdx}

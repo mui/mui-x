@@ -1,4 +1,7 @@
 import * as React from 'react';
+import { containerSizesSelector } from '../../components/viewport';
+import { useGridSelector } from '../features/core/useGridSelector';
+import { sortedRowsSelector } from '../features/rows/rowsSelector';
 import { useLogger } from '../utils/useLogger';
 import {
   GRID_FOCUS_OUT,
@@ -23,6 +26,8 @@ import {
 } from '../../utils';
 import { CELL_CSS_CLASS, ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
 import { CellIndexCoordinates, GridOptions, ApiRef } from '../../models';
+import { optionsSelector } from '../utils/useOptionsProp';
+import { columnsSelector } from './columns/columnsSelector';
 import { useApiEventHandler } from './useApiEventHandler';
 
 const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
@@ -43,9 +48,10 @@ const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
   return { ...indexes, rowIndex: indexes.rowIndex + 1 };
 };
 
-export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: ApiRef): void => {
+export const useKeyboard = (apiRef: ApiRef): void => {
   const logger = useLogger('useKeyboard');
   const rafFocusOnCellRef = React.useRef(0);
+  const options = useGridSelector(apiRef, optionsSelector);
 
   const onMultipleKeyChange = React.useCallback(
     (isPressed: boolean) => {
