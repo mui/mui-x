@@ -104,6 +104,7 @@ describe('<DataGrid />', () => {
             </div>,
           );
           clock.tick(100);
+          // @ts-expect-error need to migrate helpers to TypeScript
         }).toWarnDev('useResizeContainer: The parent of the grid has an empty height.');
       });
 
@@ -117,6 +118,7 @@ describe('<DataGrid />', () => {
             </div>,
           );
           clock.tick(100);
+          // @ts-expect-error need to migrate helpers to TypeScript
         }).toWarnDev('useResizeContainer: The parent of the grid has an empty width.');
       });
     });
@@ -137,6 +139,7 @@ describe('<DataGrid />', () => {
           'prop',
           'MockedDataGrid',
         );
+        // @ts-expect-error need to migrate helpers to TypeScript
       }).toErrorDev('Material-UI: `<DataGrid pagination={false} />` is not a valid prop.');
     });
 
@@ -162,6 +165,7 @@ describe('<DataGrid />', () => {
             <DataGrid {...defaultProps} rows={rows} />
           </ErrorBoundary>,
         );
+        // @ts-expect-error need to migrate helpers to TypeScript
       }).toErrorDev([
         'The data grid component requires all rows to have a unique id property',
         'The above error occurred in the <ForwardRef(GridComponent)> component',

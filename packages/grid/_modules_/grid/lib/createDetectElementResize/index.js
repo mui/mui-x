@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 /**
  * Detect Element Resize.
  * https://github.com/sdecima/javascript-detect-element-resize

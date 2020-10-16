@@ -32,7 +32,7 @@ export default [
         cleaner({
           targets: ['./dist/'],
         }),
-      typescript(),
+      typescript({ tsconfig: 'tsconfig.build.json' }),
       commonjs(),
       !production && sourceMaps(),
       production && terser(),
