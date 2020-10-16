@@ -37,7 +37,7 @@ export function PageSize100() {
 }
 
 export function PaginationKnobs() {
-  const data = useData(100, 200);
+  const data = useData(2000, 200);
   const rowsPerPageOptions = array('Rows per page options', ['10', '20', '50', '100', '200'], ', ');
 
   return (

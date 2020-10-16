@@ -18,7 +18,7 @@ export const useGridReducer = <State, Action>(
       if (gridState[stateId] === undefined) {
         gridState[stateId] = initialState;
       }
-      const newLocalState = reducer(gridState[stateId], action);
+      const newLocalState = reducer(api.state[stateId], action);
       setGridState((oldState) => {
         const updatingState: any = {};
         updatingState[stateId] = { ...newLocalState };
@@ -28,7 +28,7 @@ export const useGridReducer = <State, Action>(
       });
       forceUpdate();
     },
-    [forceUpdate, gridState, initialState, reducer, setGridState, stateId],
+    [api, forceUpdate, gridState, initialState, reducer, setGridState, stateId],
   );
 
   const dispatchRef = useRef(gridDispatch);

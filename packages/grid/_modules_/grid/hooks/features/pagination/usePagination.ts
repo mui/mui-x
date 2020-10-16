@@ -32,12 +32,14 @@ export interface PaginationProps {
   setPageSize: (pageSize: number) => void;
 }
 
+const PAGINATION_STATE_ID = 'pagination';
+
 export const usePagination = (apiRef: ApiRef): PaginationProps => {
   const logger = useLogger('usePagination');
 
   const { gridState, dispatch } = useGridReducer<PaginationState, PaginationActions>(
     apiRef,
-    'pagination',
+    PAGINATION_STATE_ID,
     paginationReducer,
     { ...INITIAL_PAGINATION_STATE },
   );
@@ -47,14 +49,20 @@ export const usePagination = (apiRef: ApiRef): PaginationProps => {
 
   const setPage = React.useCallback(
     (page: number) => {
-      dispatch(setPageActionCreator(page, apiRef));
+      logger.debug(`Setting page to ${page}`);
+      dispatch(setPageActionCreator(page));
+
+      // we use getState here to avoid adding a dependency on gridState as a dispatch change the state, it would change this method and create an infinite loop
+      const params: PageChangeParams = apiRef.current.getState<PaginationState>(PAGINATION_STATE_ID) as PageChangeParams;
+      apiRef.current.publishEvent(PAGE_CHANGED, params);
     },
-    [apiRef, dispatch],
+    [apiRef, dispatch, logger],
   );
 
   const setPageSize = React.useCallback(
     (pageSize: number) => {
-      dispatch(setPageSizeActionCreator(pageSize, apiRef));
+      dispatch(setPageSizeActionCreator(pageSize));
+      apiRef.current.publishEvent(PAGESIZE_CHANGED, apiRef.current.getState<PaginationState>(PAGINATION_STATE_ID) as PageChangeParams);
     },
     [apiRef, dispatch],
   );
@@ -88,11 +96,11 @@ export const usePagination = (apiRef: ApiRef): PaginationProps => {
   useApiEventHandler(apiRef, PAGESIZE_CHANGED, options.onPageSizeChange);
 
   React.useEffect(() => {
-    dispatch(setRowCountActionCreator({ totalRowCount, apiRef }));
+    dispatch(setRowCountActionCreator({ totalRowCount }));
   }, [apiRef, dispatch, totalRowCount]);
 
   React.useEffect(() => {
-    dispatch(setPaginationModeActionCreator({ paginationMode: options.paginationMode!, apiRef }));
+    dispatch(setPaginationModeActionCreator({ paginationMode: options.paginationMode! }));
   }, [apiRef, dispatch, options.paginationMode]);
 
   React.useEffect(() => {

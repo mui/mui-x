@@ -69,6 +69,7 @@ export const useVirtualRows = (
   const [gridState, setGridState, forceUpdate]= useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
   const paginationState = useGridSelector<PaginationState>(apiRef, paginationSelector);
+  const totalRowCount = useGridSelector<number>(apiRef, rowCountSelector);
 
   const [, scrollColHeaderTo] = useScrollFn(colRef);
   const onDataScroll = (v: ScrollParams) => scrollColHeaderTo({ left: v.left, top: 0 });
@@ -172,17 +173,11 @@ export const useVirtualRows = (
 
       const pageChanged = gridState.rendering.renderContext && gridState.rendering.renderContext.paginationCurrentPage !== paginationState.page;
       if (requireRerender ||  pageChanged) {
+        forceUpdate();
         reRender();
       }
     }
-  }, [apiRef, gridState.containerSizes, gridState.rendering.renderContext, gridState.rendering.virtualPage, logger, paginationState.page, reRender, scrollTo, setRenderingState, updateRenderedCols, windowRef]);
-
-  useEnhancedEffect(() => {
-    if (renderingZoneRef && renderingZoneRef.current) {
-      logger.debug('applying scrollTop ', gridState.rendering.renderingZoneScroll.top);
-      scrollTo(gridState.rendering.renderingZoneScroll);
-    }
-  });
+  }, [apiRef, forceUpdate, gridState.containerSizes, gridState.rendering.renderContext, gridState.rendering.virtualPage, logger, paginationState.page, reRender, scrollTo, setRenderingState, updateRenderedCols, windowRef]);
 
   const resetScroll = React.useCallback(() => {
     scrollTo({ left: 0, top: 0 });
@@ -195,11 +190,6 @@ export const useVirtualRows = (
 
   }, [scrollTo, setRenderingState, windowRef]);
 
-React.useEffect(()=> {
-  if (gridState.containerSizes !== gridState.rendering.renderedSizes) {
-    updateViewport();
-  }
-}, [gridState.containerSizes, gridState.rendering.renderedSizes, logger, updateViewport]);
 
   const scrollingTimeout = React.useRef<any>(null);
   const handleScroll = React.useCallback(() => {
@@ -303,13 +293,33 @@ React.useEffect(()=> {
     return gridState.rendering.renderContext || undefined;
   }, [gridState.rendering.renderContext]);
 
+  useEnhancedEffect(() => {
+    if (renderingZoneRef && renderingZoneRef.current) {
+      logger.debug('applying scrollTop ', gridState.rendering.renderingZoneScroll.top);
+      scrollTo(gridState.rendering.renderingZoneScroll);
+    }
+  });
+
+  React.useEffect(()=> {
+    if (gridState.containerSizes !== gridState.rendering.renderedSizes) {
+      updateViewport();
+    }
+  }, [gridState.containerSizes, gridState.rendering.renderedSizes, logger, updateViewport]);
+
   React.useEffect(()=> {
     if(gridState.rendering.renderContext?.paginationCurrentPage !== gridState.pagination.page) {
       logger.debug(`State pagination.page changed to ${gridState.pagination.page}. `);
       updateViewport();
       resetScroll();
     }
-  }, [gridState.containerSizes, gridState.pagination.page, gridState.rendering.renderContext?.paginationCurrentPage, logger, resetScroll, updateViewport])
+  }, [gridState.pagination.page, gridState.rendering.renderContext?.paginationCurrentPage, logger, reRender, resetScroll, updateViewport])
+
+  React.useEffect(()=> {
+    logger.debug(`totalRowCount has changed to ${totalRowCount}, updating viewport.`);
+    updateViewport();
+    reRender();
+
+  }, [logger, reRender, totalRowCount, updateViewport]);
 
   const preventViewportScroll = React.useCallback(
     (event: any) => {
@@ -341,7 +351,6 @@ React.useEffect(()=> {
 
   useApiMethod(apiRef, virtualApi, 'VirtualizationApi');
 
-  //Not sure as it should look at containerSizes and update the viewport
   useApiEventHandler(apiRef, RESIZE, updateViewport);
 
   return gridState.rendering.renderContext;
