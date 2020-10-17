@@ -72,6 +72,7 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
       return;
     }
 
+    // Skip if the column isn't resizable
     if (!event.currentTarget.classList.contains('MuiDataGrid-columnSeparatorResizable')) {
       return;
     }
