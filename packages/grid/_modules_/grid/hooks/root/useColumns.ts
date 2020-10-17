@@ -15,7 +15,6 @@ import {
 import { Logger, useLogger } from '../utils/useLogger';
 import { SORT_MODEL_CHANGE, COLUMNS_UPDATED } from '../../constants/eventsConstants';
 import { useRafUpdate } from '../utils';
-import { isEqual } from '../../utils';
 import { useApiMethod } from './useApiMethod';
 import { useApiEventHandler } from './useApiEventHandler';
 
@@ -219,9 +218,10 @@ export function useColumns(
       const updatedCols: ColDef[] = [];
 
       const currentSortedCols = stateRef.current.all
-        .filter((c) => c.sortDirection != null)
-        .map((c) => ({ field: c.field, sort: c.sortDirection }));
-      if (isEqual(currentSortedCols, sortModel)) {
+        .filter((column) => column.sortDirection != null)
+        .map((column) => ({ field: column.field, sort: column.sortDirection }));
+
+      if (JSON.stringify(currentSortedCols) === JSON.stringify(sortModel)) {
         return;
       }
 
