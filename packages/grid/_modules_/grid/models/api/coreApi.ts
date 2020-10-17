@@ -1,4 +1,4 @@
-import { EventEmitter } from 'events';
+import { EventEmitter } from '../../utils/EventEmitter';
 
 /**
  * The core API interface that is available in the grid [[apiRef]].
