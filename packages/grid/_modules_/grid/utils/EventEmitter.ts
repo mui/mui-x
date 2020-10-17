@@ -1,5 +1,8 @@
 type Listener = (...args: any[]) => void;
 
+// Used https://gist.github.com/mudge/5830382 as a starting point.
+// See https://github.com/browserify/events/blob/master/events.js for
+// the Node.js polyfill used by webpack.
 export class EventEmitter {
   events: { [key: string]: Listener[] } = {};
 
