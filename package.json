@@ -44,7 +44,7 @@
     "@material-ui/monorepo": "https://github.com/mui-org/material-ui.git#next",
     "@rollup/plugin-node-resolve": "^8.0.1",
     "@rollup/plugin-replace": "^2.3.3",
-    "@testing-library/react": "^10.4.8",
+    "@testing-library/react": "^11.1.0",
     "@types/enzyme": "^3.10.5",
     "@types/enzyme-adapter-react-16": "^1.0.6",
     "@types/jest": "^26.0.14",
