@@ -1,9 +1,7 @@
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
+import { chainPropTypes } from '@material-ui/utils';
 import { GridComponent, GridComponentProps, classnames } from '../../_modules_/grid';
-
-// TODO: Refactor to import when moving to material-ui v5
-const chainPropTypes = require('@material-ui/utils').chainPropTypes;
 
 const FORCED_PROPS: Partial<GridComponentProps> = {
   disableColumnResize: true,
@@ -67,6 +65,8 @@ DataGrid2.propTypes = {
         ].join('\n'),
       );
     }
+
+    return null;
   }),
   columns: chainPropTypes(PropTypes.any, (props) => {
     if (props.columns && props.columns.some((column) => column.resizable)) {
@@ -79,6 +79,8 @@ DataGrid2.propTypes = {
         ].join('\n'),
       );
     }
+
+    return null;
   }),
   disableColumnReorder: chainPropTypes(PropTypes.bool, (props) => {
     if (props.disableColumnReorder === false) {
@@ -91,6 +93,8 @@ DataGrid2.propTypes = {
         ].join('\n'),
       );
     }
+
+    return null;
   }),
   disableColumnResize: chainPropTypes(PropTypes.bool, (props) => {
     if (props.disableColumnResize === false) {
@@ -103,6 +107,8 @@ DataGrid2.propTypes = {
         ].join('\n'),
       );
     }
+
+    return null;
   }),
   disableMultipleColumnsSorting: chainPropTypes(PropTypes.bool, (props) => {
     if (props.disableMultipleColumnsSorting === false) {
