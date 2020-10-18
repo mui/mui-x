@@ -23,12 +23,14 @@ const Splash = styled.div`
     padding-bottom: 0 !important;
     align-items: center !important;
   }
+
   .logo {
     width: 120px;
     height: 120px;
     flex-shrink: 0;
     margin-bottom: 16px;
   }
+
   @media (min-width: 960px) {
     .splash-container {
       text-align: left;
@@ -38,18 +40,21 @@ const Splash = styled.div`
       padding-bottom: 128px;
       max-width: 960px;
     }
+
     .logo {
       width: 195px;
       height: 175px;
       margin-right: 64px;
     }
   }
+
   @media (min-width: 600px) {
     .splash-container {
       padding-left: 24px;
       padding-right: 24px;
     }
   }
+
   .title {
     flex-grow: 1;
     font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
@@ -68,7 +73,7 @@ const Splash = styled.div`
     font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
     font-weight: 400;
     line-height: 1.334;
-    letter-spacing: 0em;
+    letter-spacing: 0;
   }
 
   .product-title {
@@ -77,6 +82,7 @@ const Splash = styled.div`
     font-weight: 500;
     text-shadow: -2px 1px 4px #929292;
   }
+
   .product-title-logo {
     color: ${(p) => p.theme.colors.secondApp};
     position: absolute;
@@ -89,9 +95,11 @@ const Splash = styled.div`
     display: none;
     text-shadow: -2px 1px 4px ${(p) => p.theme.colors.xShadowColor};
   }
+
   .logo-container {
     position: relative;
   }
+
   .main-action-button {
     margin-top: 32px;
     border: 1px solid rgba(25, 118, 210, 0.5);
