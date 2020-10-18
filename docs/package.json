@@ -71,7 +71,7 @@
     "jss-rtl": "^0.3.0",
     "lodash": "^4.17.15",
     "lz-string": "^1.4.4",
-    "markdown-to-jsx": "^6.10.2",
+    "markdown-to-jsx": "^7.0.1",
     "marked": "^1.0.0",
     "next": "^9.5.0",
     "nprogress": "^0.2.0",
