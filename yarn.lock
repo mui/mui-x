@@ -2939,7 +2939,7 @@
 
 "@material-ui/monorepo@https://github.com/mui-org/material-ui.git#next":
   version "5.0.0-alpha.13"
-  resolved "https://github.com/mui-org/material-ui.git#ed7f9db95088c96d6bbae851bb90877ecf7a612a"
+  resolved "https://github.com/mui-org/material-ui.git#13f3e9d8db81b40e1b08f43e4d45e37f3926c37d"
 
 "@material-ui/styles@^4.10.0":
   version "4.10.0"

@@ -1,4 +1,3 @@
-/* eslint-disable react/forbid-foreign-prop-types */
 import * as React from 'react';
 import PropTypes from 'prop-types';
 // @ts-expect-error need to migrate helpers to TypeScript
