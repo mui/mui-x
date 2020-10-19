@@ -20,8 +20,7 @@
     "precommit": "npm run lint",
     "build": "rollup -c",
     "start": "rollup -cw",
-    "lint": "../../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../.eslintrc.js && npm run lint:css",
-    "lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../../.stylelintrc.js"
+    "lint": "../../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../.eslintrc.js"
   },
   "dependencies": {
     "@types/chance": "^1.1.0",
