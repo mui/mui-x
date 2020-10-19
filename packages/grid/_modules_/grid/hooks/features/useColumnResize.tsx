@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { useEventCallback, ownerDocument } from '@material-ui/core/utils';
+import { ownerDocument } from '@material-ui/core/utils';
 import { ColDef } from '../../models/colDef';
 import { useLogger } from '../utils';
+import { useEventCallback } from '../../utils/material-ui-utils';
 import { COL_RESIZE_START, COL_RESIZE_STOP } from '../../constants/eventsConstants';
 import { HEADER_CELL_CSS_CLASS } from '../../constants/cssClassesConstants';
 import { findCellElementsFromCol } from '../../utils';
@@ -53,8 +54,7 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
   const handleResizeMouseMove = useEventCallback((nativeEvent) => {
     // Cancel move in case some other element consumed a mouseup event and it was not fired.
     if (nativeEvent.buttons === 0) {
-      // @ts-expect-error fixed in v5
-      handleResizeMouseUp(nativeEvent);
+      handleResizeMouseUp();
       return;
     }
 
@@ -105,18 +105,14 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
       (colDefRef.current.width as number) -
       (event.clientX - colElementRef.current!.getBoundingClientRect().left);
 
-    // @ts-expect-error fixed in v5
     doc.addEventListener('mousemove', handleResizeMouseMove);
-    // @ts-expect-error fixed in v5
     doc.addEventListener('mouseup', handleResizeMouseUp);
   });
 
   const stopListening = React.useCallback(() => {
     const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
     doc.body.style.removeProperty('cursor');
-    // @ts-expect-error fixed in v5
     doc.removeEventListener('mousemove', handleResizeMouseMove);
-    // @ts-expect-error fixed in v5
     doc.removeEventListener('mouseup', handleResizeMouseUp);
   }, [apiRef, handleResizeMouseMove, handleResizeMouseUp]);
 
@@ -127,7 +123,5 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
     };
   }, [stopListening]);
 
-  return React.useMemo(() => ({ onMouseDown: handleMouseDown }), [
-    handleMouseDown,
-  ]) as React.HTMLAttributes<HTMLDivElement>;
+  return React.useMemo(() => ({ onMouseDown: handleMouseDown }), [handleMouseDown]);
 };
