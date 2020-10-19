@@ -44,8 +44,7 @@
     "build": "./node_modules/.bin/webpack -p --config ./webpack.prod.js",
     "start": "./node_modules/.bin/webpack-dev-server  --config webpack.dev.js",
     "export": "mv dist ../../docs/export/demo",
-    "lint": "../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../.eslintrc.js && npm run lint:css",
-    "lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../.stylelintrc.js"
+    "lint": "../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../.eslintrc.js"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"

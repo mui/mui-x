@@ -9,13 +9,16 @@ export const MainContainer = styled.div`
     background-color: ${(p) => p.theme.colors.app} !important;
     color: ${(p) => p.theme.colors.secondApp} !important;
   }
+
   .ag-theme-balham .ag-header {
     background-color: ${(p) => p.theme.colors.grid.headerBackground} !important;
     color: ${(p) => p.theme.colors.grid.headerTitle} !important;
   }
+
   .ag-theme-balham .ag-root {
     border: none !important;
   }
+
   .grid-root {
     &.material-grid {
       .columns-container {
@@ -27,23 +30,29 @@ export const MainContainer = styled.div`
           border-right-color: ${(p) => p.theme.colors.grid.headerBorderRight};
         }
       }
+
       .window {
         .material-row {
           color: ${(p) => p.theme.colors.grid.rowColor};
+
           &.odd {
             background-color: ${(p) => p.theme.colors.grid.oddRowBackground};
           }
+
           &.even {
             background-color: ${(p) => p.theme.colors.grid.evenRowBackground};
           }
+
           .material-cell {
             border-right: none;
             border-bottom-color: #bdc3c773;
           }
+
           &:hover {
             background-color: ${(p) => p.theme.colors.grid.rowHoverBackground};
             color: ${(p) => p.theme.colors.grid.rowHoverColor};
           }
+
           &.selected {
             background-color: ${(p) => p.theme.colors.grid.rowSelectedBackground};
             color: ${(p) => p.theme.colors.grid.rowSelectedColor};
@@ -52,6 +61,7 @@ export const MainContainer = styled.div`
       }
     }
   }
+
   .splitter-panel {
     background-color: #cecece4f !important;
     color: rgb(53, 54, 58);
@@ -60,10 +70,12 @@ export const MainContainer = styled.div`
     .ag-header {
       border-top: 1px solid ${(p) => p.theme.colors.app} !important;
     }
+
     .grid-title .grid-logo.mui {
       margin: 5px;
     }
   }
+
   .splitter-handler-wrapper {
     border-right: 2px solid #2c2e2f !important;
   }
