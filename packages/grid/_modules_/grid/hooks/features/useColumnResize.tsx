@@ -127,5 +127,7 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
     };
   }, [stopListening]);
 
-  return React.useMemo(() => ({ onMouseDown: handleMouseDown }), [handleMouseDown]) as {};
+  return React.useMemo(() => ({ onMouseDown: handleMouseDown }), [
+    handleMouseDown,
+  ]) as React.HTMLAttributes<HTMLDivElement>;
 };
