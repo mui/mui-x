@@ -14,7 +14,6 @@ export function useScrollFn(
   onScroll?: ScrollFn,
 ): [ScrollFn, ScrollFn] {
   const logger = useLogger('useScrollFn');
-  const rafRef = React.useRef(0);
   const rafResetPointerRef = React.useRef(0);
   const previousValue = React.useRef<ScrollParams>();
   const [restorePointerEvents] = useRafUpdate(() => {
@@ -35,7 +34,6 @@ export function useScrollFn(
       }
 
       if (scrollingElementRef && scrollingElementRef.current) {
-        rafRef.current = 0;
         logger.debug(`Moving ${scrollingElementRef.current.className} to: ${v.left}-${v.top}`);
         if (scrollingElementRef.current!.style.pointerEvents !== 'none') {
           scrollingElementRef.current!.style.pointerEvents = 'none';
