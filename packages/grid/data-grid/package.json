@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/data-grid",
-  "version": "4.0.0-alpha.6",
+  "version": "4.0.0-alpha.7",
   "description": "The Material-UI community edition of the data grid component.",
   "author": "Material-UI Team",
   "main": "dist/index-cjs.js",
@@ -34,7 +34,6 @@
     "prop-types": "^15.7.2",
     "tslib": "^2.0.0"
   },
-  "devDependencies": {},
   "peerDependencies": {
     "@material-ui/core": "^4.9.12",
     "react": "^16.8.0"
