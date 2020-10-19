@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useForkRef, ownerWindow, useEventCallback } from '@material-ui/core/utils';
+import { useForkRef, ownerWindow } from '@material-ui/core/utils';
+import { useEventCallback } from '../utils/material-ui-utils';
 import createDetectElementResize from '../lib/createDetectElementResize';
 // TODO replace with https://caniuse.com/resizeobserver.
 
@@ -118,7 +119,6 @@ export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(functi
 
     const detectElementResize = createDetectElementResize(nonce, win);
     detectElementResize.addResizeListener(parentElement.current, handleResize);
-    // @ts-expect-error fixed in v5
     handleResize();
 
     return () => {
