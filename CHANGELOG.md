@@ -3,13 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [4.0.0-alpha.7](https://github.com/DanailH/material-ui-x/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (2020-10-19)
+## [4.0.0-alpha.7](https://github.com/DanailH/material-ui-x/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (Oct 19, 2020)
 
-**Note:** Version bump only for package material-ui-x
+### @material-ui/x-grid@v4.0.0-alpha.7 / @material-ui/data-grid@v4.0.0-alpha.7
 
+- [DataGrid] Add column reorder support (#165) @DanailH
+- [DataGrid] Fix iOS issue when scrolling left (#439) @DanailH
+- [DataGrid] Improve sizing logic (#350) @oliviertassinari
+- [DataGrid] Improve warning and docs for layouting (#405) @RobertAron
 
+### Docs
 
+- [docs] Remove id columns (#355) @oliviertassinari
+- [docs] Swap words to better match users' query (#354) @oliviertassinari
 
+### Core
+
+- [storybook] Fix warning and improve perf (#407) @dtassone
+- [core] Batch small changes (#403) @oliviertassinari
+- [core] Fix yarn warning (#421) @oliviertassinari
+- [core] Hoist duplicated dependencies (#341) @oliviertassinari
+- [core] Remove dead code (#454) @oliviertassinari
+- [core] Remove dead-code (#353) @oliviertassinari
+- [core] Sync supported browser with v5 (#453) @oliviertassinari
+- [test] Add end-to-end test missing id (#356) @oliviertassinari
+- [test] Add missing types linting for x-grid (#357) @oliviertassinari
+- [test] Run the karma tests in browserstack (#316) @oliviertassinari
 
 ## [4.0.0-alpha.6](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.2...v4.0.0-alpha.6) (Sep 25, 2020)
 
@@ -28,7 +47,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [4.0.0-alpha.2](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (Sep 18, 2020)
 
-- [DataGrid] Fix wrongly exported types (#298) @dtassone 
+- [DataGrid] Fix wrongly exported types (#298) @dtassone
 
 ## [4.0.0-alpha.1](https://github.com/mui-org/material-ui-x/compare/v0.1.67...v4.0.0-alpha.1) (Sep 17, 2020)
 
