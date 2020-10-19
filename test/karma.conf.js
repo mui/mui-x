@@ -122,9 +122,9 @@ module.exports = function setKarmaConfig(config) {
         BrowserStack_Chrome: {
           base: 'BrowserStack',
           os: 'OS X',
-          os_version: 'Sierra',
+          os_version: 'Catalina',
           browser: 'chrome',
-          browser_version: '83.0',
+          browser_version: '84.0',
         },
         BrowserStack_Firefox: {
           base: 'BrowserStack',
@@ -136,16 +136,18 @@ module.exports = function setKarmaConfig(config) {
         BrowserStack_Safari: {
           base: 'BrowserStack',
           os: 'OS X',
-          os_version: 'High Sierra',
+          os_version: 'Mojave',
           browser: 'safari',
-          browser_version: '11.1',
+          // On desktop we support 13.1 but on mobile we support 12.2.
+          // Using desktop 12.1 (12.2 is not available) as an approximation for mobile 12.2.
+          browser_version: '12.1',
         },
         BrowserStack_Edge: {
           base: 'BrowserStack',
           os: 'Windows',
           os_version: '10',
           browser: 'edge',
-          browser_version: '83.0',
+          browser_version: '85.0',
         },
       },
     };
