@@ -17,14 +17,16 @@ export class EventEmitter {
 
     this.events[eventName].push(listener);
 
-    if (this.events[eventName].length > this.maxListeners && this.warnOnce === false) {
-      this.warnOnce = true;
-      console.warn(
-        [
-          `Possible EventEmitter memory leak detected. ${this.events[eventName].length} ${eventName} listeners added.`,
-          `Use emitter.setMaxListeners() to increase limit.`,
-        ].join('\n'),
-      );
+    if (process.env.NODE_ENV !== 'production') {
+      if (this.events[eventName].length > this.maxListeners && this.warnOnce === false) {
+        this.warnOnce = true;
+        console.warn(
+          [
+            `Possible EventEmitter memory leak detected. ${this.events[eventName].length} ${eventName} listeners added.`,
+            `Use emitter.setMaxListeners() to increase limit.`,
+          ].join('\n'),
+        );
+      }
     }
   }
 
