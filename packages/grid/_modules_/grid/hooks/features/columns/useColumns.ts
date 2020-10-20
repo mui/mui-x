@@ -138,10 +138,16 @@ export function useColumns(columns: Columns, apiRef: ApiRef): InternalColumns {
       columns,
       gridState.options.columnTypes,
       !!gridState.options.checkboxSelection,
-      logger
+      logger,
     );
     updateState(newState);
-  }, [columns, gridState.options.columnTypes, gridState.options.checkboxSelection, logger, updateState]);
+  }, [
+    columns,
+    gridState.options.columnTypes,
+    gridState.options.checkboxSelection,
+    logger,
+    updateState,
+  ]);
 
   const getColumnFromField: (field: string) => ColDef = React.useCallback(
     (field) => gridState.columns.lookup[field],
