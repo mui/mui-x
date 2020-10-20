@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useForkRef } from '@material-ui/core/utils';
+import { debounce, useForkRef } from '@material-ui/core/utils';
 import { GridComponentProps } from './GridComponentProps';
 import {
   useApiRef,
@@ -30,7 +30,6 @@ import {
 } from './components';
 import { useApi, useColumns, useKeyboard, useRows } from './hooks/root';
 import { useLogger, useLoggerFactory } from './hooks/utils';
-import { debounce } from './utils';
 import { useEvents } from './hooks/root/useEvents';
 import { ErrorBoundary } from './components/error-boundary';
 import { useOptionsProp } from './hooks/utils/useOptionsProp';
@@ -148,12 +147,12 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     },
     [gridLogger, apiRef],
   );
-  const debouncedOnResize = React.useMemo(() => debounce(onResize, 100), [onResize]) as any;
+  const debouncedOnResize = React.useMemo(() => debounce(onResize, 100), [onResize]);
 
   React.useEffect(() => {
     return () => {
       gridLogger.info('canceling resize...');
-      debouncedOnResize.cancel();
+      debouncedOnResize.clear();
     };
   }, [gridLogger, debouncedOnResize]);
 
