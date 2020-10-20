@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useGridSelector } from '../hooks/features/core/useGridSelector';
+import { sortModelSelector } from '../hooks/features/sorting/sortingSelector';
 import { ColDef } from '../models/colDef';
 import { ApiRef } from '../models/api';
 import { ApiContext } from './api-context';
@@ -21,19 +23,19 @@ interface ColumnHeaderItemProps {
   separatorProps: React.HTMLAttributes<HTMLDivElement>;
 }
 
-export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
-  const {
-    colIndex,
-    column,
-    onColumnDragEnter,
-    onColumnDragOver,
-    onColumnDragStart,
-    separatorProps,
-  } = props;
-  const apiRef = React.useContext(ApiContext) as ApiRef;
-  const { showColumnRightBorder, disableColumnResize, disableColumnReorder } = React.useContext(
-    OptionsContext,
-  );
+export const ColumnHeaderItem = //React.memo(
+  ({ column, colIndex, onResizeColumn }: ColumnHeaderItemProps) => {
+    const api = React.useContext(ApiContext);
+    const gridSortModel = useGridSelector(api, sortModelSelector);
+    const columnSortModel = React.useMemo(()=> gridSortModel.filter(model=> model.field === column.field)
+      .map(item=> ({
+        sortDirection: item.sort,
+        ...gridSortModel.length <= 1 ? {} : { sortIndex: gridSortModel.indexOf(item) + 1}
+      }))[0] || {}, [column.field, gridSortModel]);
+
+    const { headerHeight, showColumnRightBorder, disableColumnResize } = React.useContext(
+      OptionsContext,
+    );
 
   const [resizing, setResizing] = React.useState(false);
   const handleResizeStart = React.useCallback(
@@ -76,10 +78,10 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
   };
   const width = column.width!;
 
-  let ariaSort: any;
-  if (column.sortDirection != null) {
-    ariaSort = { 'aria-sort': column.sortDirection === 'asc' ? 'ascending' : 'descending' };
-  }
+    let ariaSort: any;
+    if (columnSortModel.sortDirection != null) {
+      ariaSort = { 'aria-sort': columnSortModel.sortDirection === 'asc' ? 'ascending' : 'descending' };
+    }
 
   return (
     <div
@@ -106,8 +108,8 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
       <div className="MuiDataGrid-colCell-draggable" {...dragConfig}>
         {column.type === 'number' && (
           <ColumnHeaderSortIcon
-            direction={column.sortDirection}
-            index={column.sortIndex}
+            direction={columnSortModel.sortDirection}
+            index={columnSortModel.sortIndex}
             hide={column.hideSortIcons}
           />
         )}
@@ -120,8 +122,8 @@ export const ColumnHeaderItem = React.memo((props: ColumnHeaderItemProps) => {
         )}
         {column.type !== 'number' && (
           <ColumnHeaderSortIcon
-            direction={column.sortDirection}
-            index={column.sortIndex}
+            direction={columnSortModel.sortDirection}
+            index={columnSortModel.sortIndex}
             hide={column.hideSortIcons}
           />
         )}

@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { ROWS_UPDATED, SORT_MODEL_CHANGE } from '../../../constants/eventsConstants';
+import { ROWS_UPDATED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { RowApi } from '../../../models/api/rowApi';
 import { createRowModel, RowData, RowId, RowModel, Rows, RowsProp } from '../../../models/rows';
-import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useLogger } from '../../utils/useLogger';
 import { useGridReducer } from '../core/useGridReducer';
@@ -29,8 +28,6 @@ export const useRowsReducer = (rows: RowsProp, apiRef: ApiRef): RowModel[] => {
   React.useEffect(() => {
     dispatch(rowPropChangedActionCreator(rows, gridState.options?.rowCount));
   }, [rows, gridState.options, dispatch]);
-
-  const isSortedRef = React.useRef<boolean>(false);
 
   const updateAllRows = React.useCallback(
     (allNewRows: RowModel[]) => {
@@ -129,10 +126,6 @@ export const useRowsReducer = (rows: RowsProp, apiRef: ApiRef): RowModel[] => {
     [updateRowModels, logger, getRowFromId],
   );
 
-  const onSortModelUpdated = React.useCallback(({ sortModel }: any) => {
-    isSortedRef.current = sortModel.length > 0;
-  }, []);
-
   const getRowModels = React.useCallback(
     () => Object.values<RowModel>(apiRef.current.state.rows.idRowsLookup),
     [apiRef],
@@ -156,7 +149,6 @@ export const useRowsReducer = (rows: RowsProp, apiRef: ApiRef): RowModel[] => {
   };
 
   useApiMethod(apiRef, rowApi, 'RowApi');
-  useApiEventHandler(apiRef, SORT_MODEL_CHANGE, onSortModelUpdated);
 
   const rowModelsState = React.useMemo(() => Object.values<RowModel>(gridState.rows.idRowsLookup), [
     gridState.rows,

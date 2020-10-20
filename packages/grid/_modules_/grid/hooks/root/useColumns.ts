@@ -5,15 +5,10 @@ import { checkboxSelectionColDef } from '../../models/colDef/checkboxSelection';
 import { ColDef, Columns, ColumnsMeta, InternalColumns } from '../../models/colDef/colDef';
 import { ColumnTypesRecord } from '../../models/colDef/colTypeDef';
 import { getColDef } from '../../models/colDef/getColDef';
-import { GridOptions } from '../../models/gridOptions';
-import { SortModelParams } from '../../models/params/sortModelParams';
-import { isEqual } from '../../utils/utils';
-import { GridState } from '../features/core/gridState';
 import { useGridState } from '../features/core/useGridState';
 import { Logger, useLogger } from '../utils/useLogger';
-import { SORT_MODEL_CHANGE, COLUMNS_UPDATED } from '../../constants/eventsConstants';
+import {  COLUMNS_UPDATED } from '../../constants/eventsConstants';
 import { useApiMethod } from './useApiMethod';
-import { useApiEventHandler } from './useApiEventHandler';
 
 export const getInitialColumnsState = (): InternalColumns => ({
   visible: [],
@@ -28,33 +23,13 @@ function hydrateColumns(
   columns: Columns,
   columnTypes: ColumnTypesRecord,
   withCheckboxSelection: boolean,
-  logger: Logger,
-  apiRef: ApiRef,
+  logger: Logger
+
 ): Columns {
   logger.debug('Hydrating Columns with default definitions');
   let mappedCols = columns.map((c) => ({ ...getColDef(columnTypes, c.type), ...c }));
   if (withCheckboxSelection) {
     mappedCols = [checkboxSelectionColDef, ...mappedCols];
-  }
-  const sortedCols = mappedCols.filter((c) => c.sortDirection != null);
-  if (sortedCols.length > 1) {
-    // in case consumer missed to set the sort index
-    sortedCols.forEach((c, idx) => {
-      if (c.sortIndex == null) {
-        c.sortIndex = idx + 1;
-      }
-    });
-  }
-  // we check if someone called setSortModel using apiref to apply icons
-  if (apiRef.current && apiRef.current.getSortModel) {
-    const sortModel = apiRef.current.getSortModel();
-    sortModel.forEach((c, idx) => {
-      const col = mappedCols.find((mc) => mc.field === c.field);
-      if (col) {
-        col.sortDirection = c.sort;
-        col.sortIndex = sortModel.length > 1 ? idx + 1 : undefined;
-      }
-    });
   }
   return mappedCols;
 }
@@ -95,7 +70,7 @@ const resetState = (
     return getInitialColumnsState();
   }
 
-  const all = hydrateColumns(columns, columnTypes, withCheckboxSelection, logger, apiRef);
+  const all = hydrateColumns(columns, columnTypes, withCheckboxSelection, logger);
   const visible = filterVisible(logger, all);
   const meta = toMeta(logger, visible);
   const lookup = toLookup(logger, all);
@@ -207,37 +182,6 @@ export function useColumns(
 
   const updateColumn = React.useCallback((col: ColDef) => updateColumns([col]), [updateColumns]);
 
-  const onColumnsSorted = React.useCallback(
-    ({ sortModel }: SortModelParams) => {
-      logger.debug('Sort model change to ', sortModel);
-      const updatedCols: ColDef[] = [];
-
-      const currentSortedCols = gridState.columns.all
-        .filter((c) => c.sortDirection != null)
-        .map((c) => ({ field: c.field, sort: c.sortDirection }));
-      if (isEqual(currentSortedCols, sortModel)) {
-        return;
-      }
-
-      // We restore the previous columns
-      currentSortedCols.forEach((c) => {
-        updatedCols.push({ field: c.field, sortDirection: null, sortIndex: undefined });
-      });
-
-      sortModel.forEach((model, index) => {
-        const sortIndex = sortModel.length > 1 ? index + 1 : undefined;
-        updatedCols.push({ field: model.field, sortDirection: model.sort, sortIndex });
-      });
-
-      if (updatedCols.length > 0) {
-        updateColumns(updatedCols);
-      }
-
-      forceUpdate();
-    },
-    [logger, gridState.columns.all, forceUpdate, updateColumns],
-  );
-
   const colApi: ColumnApi = {
     getColumnFromField,
     getAllColumns,
@@ -250,7 +194,6 @@ export function useColumns(
   };
 
   useApiMethod(apiRef, colApi, 'ColApi');
-  useApiEventHandler(apiRef, SORT_MODEL_CHANGE, onColumnsSorted);
 
   return gridState.columns;
 }

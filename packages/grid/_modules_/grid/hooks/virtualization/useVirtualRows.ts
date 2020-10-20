@@ -4,7 +4,7 @@ import { useGridSelector } from '../features/core/useGridSelector';
 import { useGridState } from '../features/core/useGridState';
 import { PaginationState } from '../features/pagination/paginationReducer';
 import { paginationSelector } from '../features/pagination/paginationSelector';
-import { rowCountSelector, rowsSelector } from '../features/rows/rowsSelector';
+import { rowCountSelector, rowsStateSelector } from '../features/rows/rowsSelector';
 import { columnsTotalWidthSelector } from '../root/columns/columnsSelector';
 import { optionsSelector } from '../utils/useOptionsProp';
 import { useVirtualColumns } from './useVirtualColumns';

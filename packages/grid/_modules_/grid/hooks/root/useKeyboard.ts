@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { containerSizesSelector } from '../../components/viewport';
 import { useGridSelector } from '../features/core/useGridSelector';
-import { sortedRowsSelector } from '../features/rows/rowsSelector';
+import { sortedRowsSelector } from '../features/sorting/sortingSelector';
 import { useLogger } from '../utils/useLogger';
 import {
   GRID_FOCUS_OUT,

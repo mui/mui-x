@@ -3,20 +3,16 @@ import { RowId, RowModel } from '../../../models/rows';
 import { GridState } from '../core/gridState';
 import { InternalRowsState } from './rowsReducer';
 
-export const rowsSelector = (state: GridState) => state.rows;
+export const rowsStateSelector = (state: GridState) => state.rows;
 export const rowCountSelector = createSelector<GridState, InternalRowsState, number>(
-  rowsSelector,
+  rowsStateSelector,
   (rows: InternalRowsState) => rows && rows.totalRowCount,
 );
 export const rowsLookupSelector = createSelector<GridState, InternalRowsState, Record<RowId, RowModel>>(
-  rowsSelector,
+  rowsStateSelector,
   (rows: InternalRowsState) => rows && rows.idRowsLookup,
 );
-
-export const sortedRowsSelector = createSelector<GridState, InternalRowsState, RowModel[]>(
-  rowsSelector,
-  (rows: InternalRowsState) => {
-    const sortedRows = rows.allRows.map((id) => rows.idRowsLookup[id]);
-    return sortedRows;
-  },
+export const unorderedRowModelsSelector = createSelector<GridState, InternalRowsState, RowModel[]> (
+  rowsStateSelector,
+  (rows: InternalRowsState) => rows.allRows.map(id=> rows.idRowsLookup[id])
 );

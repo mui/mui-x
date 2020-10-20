@@ -6,6 +6,7 @@ import { getInitialColumnsState } from '../../root/useColumns';
 import { getInitialRenderingState, InternalRenderingState } from '../../virtualization/useVirtualRows';
 import { INITIAL_PAGINATION_STATE, PaginationState } from '../pagination/paginationReducer';
 import { getInitialRowState, InternalRowsState } from '../rows/rowsReducer';
+import { getInitialSortingState, SortingState } from '../useSorting';
 
 interface RowsState {
   rows: InternalRowsState;
@@ -45,7 +46,8 @@ export type GridState = RowsState &
   ScrollingState &
   ColumnState &
   RenderingState &
-  {containerSizes: ContainerProps | null}
+  {containerSizes: ContainerProps | null} &
+  {sorting: SortingState}
 ;
 
 export const getInitialState: () => GridState = () => ({
@@ -57,5 +59,6 @@ export const getInitialState: () => GridState = () => ({
   isScrolling: false,
   columns: getInitialColumnsState(),
   rendering: getInitialRenderingState(),
-  containerSizes: null
+  containerSizes: null,
+  sorting: getInitialSortingState()
 });

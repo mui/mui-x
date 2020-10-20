@@ -17,16 +17,13 @@ export interface ColumnHeadersItemCollectionProps {
   onColumnDragStart?: (col: ColDef, htmlEL: HTMLElement) => void;
   separatorProps: React.HTMLAttributes<HTMLDivElement>;
 }
-
-export const ColumnHeaderItemCollection = React.memo(function ColumnHeaderItemCollection(
-  props: ColumnHeadersItemCollectionProps,
-) {
-  const { separatorProps, onColumnDragStart, onColumnDragEnter, onColumnDragOver, columns } = props;
-  const items = columns.map((col, idx) => (
-    <ColumnHeaderItem
-      key={col.field}
-      column={col}
-      colIndex={idx}
+export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionProps> =
+  ({ onResizeColumn, columns }) => {
+    const items = columns.map((col, idx) => (
+      <ColumnHeaderItem
+        key={col.field}
+        column={col}
+        colIndex={idx}
       separatorProps={separatorProps}
       onColumnDragStart={onColumnDragStart}
       onColumnDragEnter={onColumnDragEnter}
@@ -34,8 +31,10 @@ export const ColumnHeaderItemCollection = React.memo(function ColumnHeaderItemCo
     />
   ));
 
-  return <React.Fragment>{items}</React.Fragment>;
-});
+    return <React.Fragment>{items}</React.Fragment>;
+  };
+// );
+ColumnHeaderItemCollection.displayName = 'ColumnHeaderItemCollection';
 
 export interface ColumnsHeaderProps {
   columns: Columns;
@@ -48,7 +47,7 @@ export interface ColumnsHeaderProps {
   renderCtx: Partial<RenderContextProps> | null;
 }
 
-export const ColumnsHeader = React.memo(
+export const ColumnsHeader =
   React.forwardRef<HTMLDivElement, ColumnsHeaderProps>((props, ref) => {
     const {
       columns,
@@ -121,6 +120,6 @@ export const ColumnsHeader = React.memo(
         <ScrollArea scrollDirection="right" />
       </React.Fragment>
     );
-  }),
+  }
 );
 ColumnsHeader.displayName = 'GridColumnsHeader';
