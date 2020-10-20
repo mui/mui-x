@@ -5,35 +5,41 @@ import { RowApi } from '../../../models/api/rowApi';
 import { createRowModel, RowData, RowId, RowModel, Rows, RowsProp } from '../../../models/rows';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useLogger } from '../../utils/useLogger';
-import { useGridReducer } from '../core/useGridReducer';
-import {
-  getInitialRowState,
-  InternalRowsState,
-  rowPropChangedActionCreator,
-  rowReducer,
-  RowsActions,
-  updateRowStateActionCreator,
-} from './rowsReducer';
+import { useGridState } from '../core/useGridState';
+import { InternalRowsState } from './rowsState';
 
-export const useRowsReducer = (rows: RowsProp, apiRef: ApiRef): RowModel[] => {
+export function convertRowsPropToState({ rows, totalRowCount}: { rows: RowsProp, totalRowCount?: number}): InternalRowsState {
+  const state: InternalRowsState = { allRows: [], idRowsLookup: {}, totalRowCount: 0 };
+  rows.reduce((idLookup, rowData, index) => {
+    const model = createRowModel(rowData);
+    state.idRowsLookup[model.id] = model;
+    state.allRows = [...state.allRows, model.id];
+    state.totalRowCount =
+      totalRowCount && totalRowCount > state.allRows.length ? totalRowCount : state.allRows.length;
+    return state;
+  }, state);
+  return state;
+}
+
+export const useRows = (rows: RowsProp, apiRef: ApiRef): RowModel[] => {
   const logger = useLogger('useRows');
+  const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
 
-  const { gridState, dispatch } = useGridReducer<InternalRowsState, RowsActions>(
-    apiRef,
-    'rows',
-    rowReducer,
-    getInitialRowState(),
-  );
+  const internalRowsState = React.useRef<InternalRowsState>(gridState.rows)
 
   React.useEffect(() => {
-    dispatch(rowPropChangedActionCreator(rows, gridState.options?.rowCount));
-  }, [rows, gridState.options, dispatch]);
+    setGridState(state=> {
+      internalRowsState.current = convertRowsPropToState({rows, totalRowCount: state.options.rowCount});
+      return {...state, rows: internalRowsState.current};
+    });
+
+  }, [rows, setGridState]);
 
   const updateAllRows = React.useCallback(
     (allNewRows: RowModel[]) => {
       logger.debug(`updating all rows, new length ${allNewRows.length}`);
 
-      const idRowsLookup = allNewRows.reduce((lookup, row, index) => {
+      const idRowsLookup = allNewRows.reduce((lookup, row) => {
         lookup[row.id] = row;
         return lookup;
       }, {});
@@ -45,9 +51,14 @@ export const useRowsReducer = (rows: RowsProp, apiRef: ApiRef): RowModel[] => {
           ? gridState.options.rowCount
           : allRows.length;
 
-      dispatch(updateRowStateActionCreator({ idRowsLookup, allRows, totalRowCount }));
+      internalRowsState.current = {idRowsLookup, allRows, totalRowCount};
+
+      if(!apiRef.current.state.isScrolling) {
+        setGridState(state=> ({...state, rows: internalRowsState.current}));
+        forceUpdate();
+      }
     },
-    [logger, gridState.options, dispatch],
+    [logger, gridState.options, apiRef, setGridState, forceUpdate],
   );
 
   const getRowIndexFromId = React.useCallback(
@@ -67,7 +78,7 @@ export const useRowsReducer = (rows: RowsProp, apiRef: ApiRef): RowModel[] => {
     (updates: Partial<RowModel>[]) => {
       logger.debug(`updating ${updates.length} row models`);
       const addedRows: RowModel[] = [];
-      const newRowsState = { ...apiRef.current.state.rows };
+      // const newRowsState = { ...apiRef.current.state.rows };
 
       updates.forEach((partialRow) => {
         if (partialRow.id == null) {
@@ -80,18 +91,22 @@ export const useRowsReducer = (rows: RowsProp, apiRef: ApiRef): RowModel[] => {
           return;
         }
 
-        Object.assign(newRowsState.idRowsLookup[partialRow.id!], partialRow);
+        Object.assign(internalRowsState.current.idRowsLookup[partialRow.id!], partialRow);
       });
-      dispatch(updateRowStateActionCreator(newRowsState));
+
+      if (!apiRef.current.state.isScrolling) {
+        setGridState(state=> ({...state, rows: internalRowsState.current}));
+       forceUpdate();
+      }
 
       if (addedRows.length > 0) {
-        const newRows = [...Object.values<RowModel>(newRowsState.idRowsLookup), ...addedRows];
+        const newRows = [...Object.values<RowModel>(internalRowsState.current.idRowsLookup), ...addedRows];
         updateAllRows(newRows);
       }
 
-      apiRef.current.publishEvent(ROWS_UPDATED, Object.values<RowModel>(newRowsState.idRowsLookup));
+      apiRef.current.publishEvent(ROWS_UPDATED, Object.values<RowModel>(internalRowsState.current.idRowsLookup));
     },
-    [logger, apiRef, dispatch, getRowIndexFromId, updateAllRows],
+    [logger, apiRef, setGridState, getRowIndexFromId, forceUpdate, updateAllRows],
   );
 
   const updateRowData = React.useCallback(

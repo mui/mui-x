@@ -1,34 +1,28 @@
 import * as React from 'react';
-import { containerSizesSelector } from '../../components/viewport';
-import { useGridSelector } from '../features/core/useGridSelector';
-import { sortedRowsSelector } from '../features/sorting/sortingSelector';
-import { useLogger } from '../utils/useLogger';
-import {
-  GRID_FOCUS_OUT,
-  KEYDOWN,
-  KEYUP,
-  MULTIPLE_KEY_PRESS_CHANGED,
-  SCROLLING,
-} from '../../constants/eventsConstants';
+import { CELL_CSS_CLASS, ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
+import { GRID_FOCUS_OUT, KEYDOWN, KEYUP, MULTIPLE_KEY_PRESS_CHANGED, SCROLLING } from '../../constants/eventsConstants';
+import { ApiRef } from '../../models/api/apiRef';
+import { CellIndexCoordinates } from '../../models/rows';
 import {
   findGridRootFromCurrent,
   findParentElementFromClassName,
   getCellElementFromIndexes,
   getIdFromRowElem,
-  isArrowKeys,
   isCell,
-  isHomeOrEndKeys,
-  isMultipleKey,
+} from '../../utils/domUtils';
+import {
+  isArrowKeys,
+  isHomeOrEndKeys, isMultipleKey,
   isNavigationKey,
   isPageKeys,
   isSpaceKey,
   isTabKey,
-} from '../../utils';
-import { CELL_CSS_CLASS, ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
-import { CellIndexCoordinates, GridOptions, ApiRef } from '../../models';
+} from '../../utils/keyboardUtils';
+import { useGridSelector } from '../features/core/useGridSelector';
+import { useLogger } from '../utils/useLogger';
 import { optionsSelector } from '../utils/useOptionsProp';
-import { columnsSelector } from './columns/columnsSelector';
 import { useApiEventHandler } from './useApiEventHandler';
+
 
 const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
   if (!isArrowKeys(code)) {

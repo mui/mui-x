@@ -3,7 +3,7 @@ import { RowId, RowModel } from '../../../models/rows';
 import { SortModel } from '../../../models/sortModel';
 import { GridState } from '../core/gridState';
 import { rowsLookupSelector, unorderedRowModelsSelector } from '../rows/rowsSelector';
-import { SortingState } from '../useSorting';
+import { SortingState } from './useSorting';
 
 const sortingStateSelector = (state: GridState) => state.sorting;
 export const sortedRowIdsSelector = createSelector<GridState, SortingState, RowId[]>(
@@ -24,3 +24,4 @@ export const sortModelSelector = createSelector<GridState, SortingState, SortMod
 	sortingStateSelector,
 	(sorting)=> sorting.sortModel
 );
+// export const isSorted

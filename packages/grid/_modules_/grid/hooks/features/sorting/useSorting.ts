@@ -1,36 +1,31 @@
 import * as React from 'react';
 import {
-  ApiRef,
-  CellValue,
-  ColDef,
-  ColParams,
-  Columns,
-  SortModelParams,
-  FeatureModeConstant,
-  FieldComparatorList,
-  GridOptions,
-  RowId,
-  RowModel,
-  RowsProp,
-  SortApi,
-  CellParams,
-} from '../../models';
-import {
   COLUMN_HEADER_CLICK,
   MULTIPLE_KEY_PRESS_CHANGED,
   ROWS_UPDATED,
   SORT_MODEL_CHANGE,
-} from '../../constants/eventsConstants';
-import { columnsSelector } from '../root/columns/columnsSelector';
-import { useLogger } from '../utils';
-import { buildCellParams, isDesc, isEqual, nextSortDirection } from '../../utils';
-import { SortItem, SortModel } from '../../models/sortModel';
-import { useApiEventHandler } from '../root/useApiEventHandler';
-import { useApiMethod } from '../root/useApiMethod';
-import { optionsSelector } from '../utils/useOptionsProp';
-import { useGridSelector } from './core/useGridSelector';
-import { useGridState } from './core/useGridState';
-import { rowCountSelector, rowsStateSelector, unorderedRowModelsSelector } from './rows/rowsSelector';
+} from '../../../constants/eventsConstants';
+import { ApiRef } from '../../../models/api/apiRef';
+import { SortApi } from '../../../models/api/sortApi';
+import { ColDef } from '../../../models/colDef/colDef';
+import { FeatureModeConstant } from '../../../models/featureMode';
+import { CellParams } from '../../../models/params/cellParams';
+import { ColParams } from '../../../models/params/colParams';
+import { SortModelParams } from '../../../models/params/sortModelParams';
+import { CellValue, RowId, RowModel } from '../../../models/rows';
+import { FieldComparatorList, SortItem, SortModel } from '../../../models/sortModel';
+import { buildCellParams } from '../../../utils/paramsUtils';
+import { isDesc, nextSortDirection } from '../../../utils/sortingUtils';
+import { isEqual } from '../../../utils/utils';
+import { useApiEventHandler } from '../../root/useApiEventHandler';
+import { useApiMethod } from '../../root/useApiMethod';
+import { useLogger } from '../../utils/useLogger';
+import { optionsSelector } from '../../utils/useOptionsProp';
+import { columnsSelector } from '../columns/columnsSelector';
+import { useGridSelector } from '../core/useGridSelector';
+import { useGridState } from '../core/useGridState';
+import { rowCountSelector, unorderedRowModelsSelector } from '../rows/rowsSelector';
+
 
 export interface SortingState {
   sortedRows: RowId[];

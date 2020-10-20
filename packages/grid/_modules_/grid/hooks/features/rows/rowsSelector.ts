@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import { RowId, RowModel } from '../../../models/rows';
 import { GridState } from '../core/gridState';
-import { InternalRowsState } from './rowsReducer';
+import { InternalRowsState } from './rowsState';
 
 export const rowsStateSelector = (state: GridState) => state.rows;
 export const rowCountSelector = createSelector<GridState, InternalRowsState, number>(

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { COL_RESIZE_START, COL_RESIZE_STOP } from '../constants/eventsConstants';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { Columns, RenderContextProps } from '../models';
 import { ColDef } from '../models/colDef';
@@ -8,7 +9,7 @@ import { LeftEmptyCell, RightEmptyCell } from './cell';
 import { containerSizesSelector } from './viewport';
 import { OptionsContext } from './options-context';
 import { ScrollArea } from './ScrollArea';
-import { CursorCoordinates } from '../hooks';
+import { CursorCoordinates, useApiEventHandler } from '../hooks';
 
 export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
@@ -18,12 +19,30 @@ export interface ColumnHeadersItemCollectionProps {
   separatorProps: React.HTMLAttributes<HTMLDivElement>;
 }
 export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionProps> =
-  ({ onResizeColumn, columns }) => {
-    const items = columns.map((col, idx) => (
+  ({ separatorProps, columns, onColumnDragStart, onColumnDragOver, onColumnDragEnter  }) => {
+    const [resizingColField, setResizingColField] = React.useState('');
+    const apiRef = React.useContext(ApiContext);
+
+    const handleResizeStart = React.useCallback(
+      (params) => {
+        setResizingColField(params.field);
+      },
+      [],
+    );
+    const handleResizeStop = React.useCallback(() => {
+      setResizingColField('');
+    }, []);
+
+    useApiEventHandler(apiRef!, COL_RESIZE_START, handleResizeStart);
+    useApiEventHandler(apiRef!, COL_RESIZE_STOP, handleResizeStop);
+
+
+  const items = columns.map((col, idx) => (
       <ColumnHeaderItem
         key={col.field}
         column={col}
         colIndex={idx}
+        isResizing={resizingColField === col.field}
       separatorProps={separatorProps}
       onColumnDragStart={onColumnDragStart}
       onColumnDragEnter={onColumnDragEnter}

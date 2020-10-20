@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { ApiRef } from '../../models/api/apiRef';
-import { ColumnApi } from '../../models/api/columnApi';
-import { checkboxSelectionColDef } from '../../models/colDef/checkboxSelection';
-import { ColDef, Columns, ColumnsMeta, InternalColumns } from '../../models/colDef/colDef';
-import { ColumnTypesRecord } from '../../models/colDef/colTypeDef';
-import { getColDef } from '../../models/colDef/getColDef';
-import { useGridState } from '../features/core/useGridState';
-import { Logger, useLogger } from '../utils/useLogger';
-import {  COLUMNS_UPDATED } from '../../constants/eventsConstants';
-import { useApiMethod } from './useApiMethod';
+import { COLUMNS_UPDATED } from '../../../constants/eventsConstants';
+import { ApiRef } from '../../../models/api/apiRef';
+import { ColumnApi } from '../../../models/api/columnApi';
+import { checkboxSelectionColDef } from '../../../models/colDef/checkboxSelection';
+import { ColDef, Columns, ColumnsMeta, InternalColumns } from '../../../models/colDef/colDef';
+import { ColumnTypesRecord } from '../../../models/colDef/colTypeDef';
+import { getColDef } from '../../../models/colDef/getColDef';
+import { useApiMethod } from '../../root/useApiMethod';
+import { Logger, useLogger } from '../../utils/useLogger';
+import { useGridState } from '../core/useGridState';
 
 export const getInitialColumnsState = (): InternalColumns => ({
   visible: [],
@@ -128,12 +128,13 @@ export function useColumns(
     (newState: InternalColumns, emit = true) => {
       logger.debug('Updating columns state.');
       setGridState((oldState)=>  ({...oldState, columns: newState}));
+      forceUpdate();
 
       if (apiRef.current && emit) {
         apiRef.current.publishEvent(COLUMNS_UPDATED, newState.all);
       }
     },
-    [logger, setGridState, apiRef],
+    [logger, setGridState, forceUpdate, apiRef],
   );
 
   React.useEffect(() => {
@@ -154,15 +155,14 @@ export function useColumns(
   );
   const getAllColumns: () => Columns = () => gridState.columns.all;
   const getColumnsMeta: () => ColumnsMeta = () => gridState.columns.meta;
-  const getColumnIndex: (field: string) => number = (field) =>
-    gridState.columns.visible.findIndex((c) => c.field === field);
   const getColumnIndex: (field: string, useVisibleColumns?: boolean) => number = (
     field,
     useVisibleColumns = true,
   ) =>
     useVisibleColumns
-      ? stateRef.current.visible.findIndex((col) => col.field === field)
-      : stateRef.current.all.findIndex((col) => col.field === field);
+      ? gridState.columns.visible.findIndex((col) => col.field === field)
+      : gridState.columns.all.findIndex((col) => col.field === field);
+
   const getColumnPosition: (field: string) => number = (field) => {
     const index = getColumnIndex(field);
     return gridState.columns.meta.positions[index];
@@ -171,10 +171,8 @@ export function useColumns(
   const getVisibleColumns: () => Columns = () => gridState.columns.visible;
 
   const updateColumns = React.useCallback(
-    (cols: ColDef[]) => {
-      const newState = getUpdatedColumnState(logger, gridState.columns, cols);
     (cols: ColDef[], resetColumnState = false) => {
-      const newState = getUpdatedColumnState(logger, stateRef.current, cols, resetColumnState);
+      const newState = getUpdatedColumnState(logger, gridState.columns, cols, resetColumnState);
       updateState(newState, false);
     },
     [updateState, logger, gridState.columns],

@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { paginationSelector } from '../hooks/features/pagination/paginationSelector';
-import { GridOptions } from '../models';
-import { GridFooter } from './styled-wrappers/GridFooter';
+import { useGridSelector } from '../hooks/features/core/useGridSelector';
+import { rowCountSelector } from '../hooks/features/rows/rowsSelector';
+import { optionsSelector } from '../hooks/utils/useOptionsProp';
+import { ApiContext } from './api-context';
 import { RowCount } from './row-count';
 import { SelectedRowCount } from './selected-row-count';
-import { ApiContext } from './api-context';
-import { optionsSelector, rowCountSelector } from '../hooks/features';
-import { useGridSelector } from '../hooks/features/core/useGridSelector';
+import { GridFooter } from './styled-wrappers/GridFooter';
 
 export interface DefaultFooterProps {
   paginationComponent: React.ReactNode;

@@ -1,47 +1,47 @@
-import * as React from 'react';
-import { useForkRef } from '@material-ui/core/utils';
-import { GridComponentProps } from './GridComponentProps';
-import {
-  useApiRef,
-  useColumnReorder,
-  useColumnResize,
-  useComponents,
-  usePagination,
-  useSelection,
-  useSorting,
-} from './hooks/features';
-import { useGridState } from './hooks/features/core/useGridState';
-import { RootContainerRef } from './models';
-import { DATA_CONTAINER_CSS_CLASS } from './constants';
-import { GridRoot } from './components/styled-wrappers/GridRoot';
-import { GridDataContainer } from './components/styled-wrappers/GridDataContainer';
-import { GridColumnsContainer } from './components/styled-wrappers/GridColumnsContainer';
-import { useVirtualRows } from './hooks/virtualization';
-import {
-  ApiContext,
-  AutoSizer,
-  ColumnsHeader,
-  DefaultFooter,
-  OptionsContext,
-  RenderContext,
-  Viewport,
-  Watermark,
-  GridWindow, Pagination,
-} from './components';
-import { useApi, useColumns, useContainerProps, useKeyboard } from './hooks/root';
-import { useLogger, useLoggerFactory } from './hooks/utils';
-import { useEvents } from './hooks/root/useEvents';
-import { ErrorBoundary } from './components/error-boundary';
-import { useOptionsProp } from './hooks/utils/useOptionsProp';
-import { useResizeContainer } from './hooks/utils/useResizeContainer';
-import { useErrorHandler } from './hooks/utils/useErrorHandler';
-import { getCurryTotalHeight } from './utils/getTotalHeight';
-import { useRowsReducer } from './hooks/features/rows/useRowsReducer';
-
 /**
  * Data Grid component implementing [[GridComponentProps]].
  * @returns JSX.Element
  */
+import useForkRef from '@material-ui/core/utils/useForkRef';
+import * as React from 'react';
+import { AutoSizer } from './components/AutoSizer';
+import { ColumnsHeader } from './components/column-headers';
+import { DefaultFooter } from './components/default-footer';
+import { ErrorBoundary } from './components/error-boundary';
+import { Pagination } from './components/pagination';
+import { GridColumnsContainer } from './components/styled-wrappers/GridColumnsContainer';
+import { GridDataContainer } from './components/styled-wrappers/GridDataContainer';
+import { GridRoot } from './components/styled-wrappers/GridRoot';
+import { GridWindow } from './components/styled-wrappers/GridWindow';
+import { Viewport } from './components/viewport';
+import { Watermark } from './components/watermark';
+import { DATA_CONTAINER_CSS_CLASS } from './constants/cssClassesConstants';
+import { GridComponentProps } from './GridComponentProps';
+import { useColumns } from './hooks/features/columns/useColumns';
+import { useGridState } from './hooks/features/core/useGridState';
+import { usePagination } from './hooks/features/pagination/usePagination';
+import { useRows } from './hooks/features/rows/useRows';
+import { useSorting } from './hooks/features/sorting/useSorting';
+import { useApiRef } from './hooks/features/useApiRef';
+import { useColumnReorder } from './hooks/features/useColumnReorder';
+import { useColumnResize } from './hooks/features/useColumnResize';
+import { useComponents } from './hooks/features/useComponents';
+import { useSelection } from './hooks/features/useSelection';
+import { useApi } from './hooks/root/useApi';
+import { useContainerProps } from './hooks/root/useContainerProps';
+import { useEvents } from './hooks/root/useEvents';
+import { useKeyboard } from './hooks/root/useKeyboard';
+import { useErrorHandler } from './hooks/utils/useErrorHandler';
+import { useLogger, useLoggerFactory } from './hooks/utils/useLogger';
+import { useOptionsProp } from './hooks/utils/useOptionsProp';
+import { useResizeContainer } from './hooks/utils/useResizeContainer';
+import { useVirtualRows } from './hooks/virtualization/useVirtualRows';
+import { RootContainerRef } from './models/rootContainerRef';
+import { getCurryTotalHeight } from './utils/getTotalHeight';
+import { ApiContext } from './components/api-context';
+import { OptionsContext } from './components/options-context';
+import { RenderContext } from './components/render-context';
+
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {
     const rootContainerRef: RootContainerRef = React.useRef<HTMLDivElement>(null);
@@ -68,7 +68,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
 
     const internalColumns = useColumns(props.columns, apiRef);
 
-    const internalRows = useRowsReducer(props.rows, apiRef);
+    const internalRows = useRows(props.rows, apiRef);
     useKeyboard(apiRef);
     useSelection(apiRef);
     useSorting(apiRef);

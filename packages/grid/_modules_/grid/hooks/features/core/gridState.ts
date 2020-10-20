@@ -1,12 +1,12 @@
 import { InternalColumns } from '../../../models/colDef/colDef';
-import { ContainerProps } from '../../../models/containerProps';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
 import { RowId } from '../../../models/rows';
-import { getInitialColumnsState } from '../../root/useColumns';
 import { getInitialRenderingState, InternalRenderingState } from '../../virtualization/useVirtualRows';
+import { getInitialColumnsState } from '../columns/useColumns';
 import { INITIAL_PAGINATION_STATE, PaginationState } from '../pagination/paginationReducer';
-import { getInitialRowState, InternalRowsState } from '../rows/rowsReducer';
-import { getInitialSortingState, SortingState } from '../useSorting';
+import { getInitialRowState, InternalRowsState } from '../rows/rowsState';
+import { getInitialSortingState, SortingState } from '../sorting/useSorting';
+import { ContainerProps } from '../../../models/containerProps';
 
 interface RowsState {
   rows: InternalRowsState;

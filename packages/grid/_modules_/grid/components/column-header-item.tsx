@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { sortModelSelector } from '../hooks/features/sorting/sortingSelector';
+import { optionsSelector } from '../hooks/utils/useOptionsProp';
 import { ColDef } from '../models/colDef';
 import { ApiRef } from '../models/api';
 import { ApiContext } from './api-context';
@@ -17,45 +18,29 @@ import { CursorCoordinates } from '../hooks/features/useColumnReorder';
 interface ColumnHeaderItemProps {
   colIndex: number;
   column: ColDef;
+  isResizing: boolean;
   onColumnDragEnter?: (event: Event) => void;
   onColumnDragOver?: (col: ColDef, coordinates: CursorCoordinates) => void;
   onColumnDragStart?: (col: ColDef, currentTarget: HTMLElement) => void;
   separatorProps: React.HTMLAttributes<HTMLDivElement>;
 }
 
-export const ColumnHeaderItem = //React.memo(
-  ({ column, colIndex, onResizeColumn }: ColumnHeaderItemProps) => {
-    const api = React.useContext(ApiContext);
-    const gridSortModel = useGridSelector(api, sortModelSelector);
+export const ColumnHeaderItem =
+  ({ column, colIndex, onColumnDragStart ,onColumnDragEnter, onColumnDragOver, isResizing, separatorProps }: ColumnHeaderItemProps) => {
+    const apiRef = React.useContext(ApiContext);
+    const gridSortModel = useGridSelector(apiRef, sortModelSelector);
+    const { disableColumnReorder, showColumnRightBorder, disableColumnResize } = useGridSelector(apiRef, optionsSelector);
+
     const columnSortModel = React.useMemo(()=> gridSortModel.filter(model=> model.field === column.field)
       .map(item=> ({
         sortDirection: item.sort,
         ...gridSortModel.length <= 1 ? {} : { sortIndex: gridSortModel.indexOf(item) + 1}
       }))[0] || {}, [column.field, gridSortModel]);
 
-    const { headerHeight, showColumnRightBorder, disableColumnResize } = React.useContext(
-      OptionsContext,
-    );
-
-  const [resizing, setResizing] = React.useState(false);
-  const handleResizeStart = React.useCallback(
-    (params) => {
-      if (column.field === params.field) {
-        setResizing(true);
-      }
-    },
-    [column.field],
-  );
-  const handleResizeStop = React.useCallback(() => {
-    setResizing(false);
-  }, []);
-  useApiEventHandler(apiRef, COL_RESIZE_START, handleResizeStart);
-  useApiEventHandler(apiRef, COL_RESIZE_STOP, handleResizeStop);
-
   let headerComponent: React.ReactElement | null = null;
   if (column.renderHeader) {
     headerComponent = column.renderHeader({
-      api: apiRef.current!,
+      api: apiRef!.current!,
       colDef: column,
       colIndex,
       field: column.field,
@@ -129,11 +114,11 @@ export const ColumnHeaderItem = //React.memo(
         )}
       </div>
       <ColumnHeaderSeparator
-        resizable={disableColumnResize ? false : Boolean(column.resizable)}
-        resizing={resizing}
+        resizable={!disableColumnResize && !!column.resizable}
+        resizing={isResizing}
         {...separatorProps}
       />
     </div>
   );
-});
+};
 ColumnHeaderItem.displayName = 'ColumnHeaderItem';

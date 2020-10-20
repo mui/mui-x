@@ -1,26 +1,19 @@
 import * as React from 'react';
-import { containerSizesSelector } from '../../components/viewport';
-import {
-  GridOptions,
-  RowId,
-  RowModel,
-  RowSelectedParams,
-  RowsProp,
-  SelectionChangeParams,
-  ApiRef,
-  RowParams,
-} from '../../models';
-import { columnsSelector } from '../root/columns/columnsSelector';
-import { useLogger } from '../utils/useLogger';
 import {
   MULTIPLE_KEY_PRESS_CHANGED,
   ROW_CLICK,
   ROW_SELECTED,
   SELECTION_CHANGED,
 } from '../../constants/eventsConstants';
+import { ApiRef } from '../../models/api/apiRef';
+import { SelectionApi } from '../../models/api/selectionApi';
+import { RowParams } from '../../models/params/rowParams';
+import { RowSelectedParams } from '../../models/params/rowSelectedParams';
+import { SelectionChangeParams } from '../../models/params/selectionChangeParams';
+import { RowId, RowModel } from '../../models/rows';
 import { useApiEventHandler } from '../root/useApiEventHandler';
 import { useApiMethod } from '../root/useApiMethod';
-import { SelectionApi } from '../../models/api/selectionApi';
+import { useLogger } from '../utils/useLogger';
 import { optionsSelector } from '../utils/useOptionsProp';
 import { useGridSelector } from './core/useGridSelector';
 import { rowsLookupSelector } from './rows/rowsSelector';

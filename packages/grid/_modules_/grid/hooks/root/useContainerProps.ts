@@ -1,8 +1,10 @@
-import { useEffect } from 'react';
 import * as React from 'react';
 import { RESIZE } from '../../constants/eventsConstants';
-import { ApiRef, ContainerProps, ElementSize, GridOptions } from '../../models';
+import { ApiRef } from '../../models/api/apiRef';
+import { ContainerProps } from '../../models/containerProps';
+import { ElementSize } from '../../models/elementSize';
 import { isEqual } from '../../utils/utils';
+import { columnsTotalWidthSelector } from '../features/columns/columnsSelector';
 import { useGridSelector } from '../features/core/useGridSelector';
 import { useGridState } from '../features/core/useGridState';
 import { PaginationState } from '../features/pagination/paginationReducer';
@@ -10,7 +12,6 @@ import { paginationSelector } from '../features/pagination/paginationSelector';
 import { rowCountSelector } from '../features/rows/rowsSelector';
 import { useLogger } from '../utils/useLogger';
 import { optionsSelector } from '../utils/useOptionsProp';
-import { columnsTotalWidthSelector } from './columns/columnsSelector';
 import { useApiEventHandler } from './useApiEventHandler';
 
 export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, apiRef: ApiRef) => {
@@ -138,7 +139,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
     updateContainerState(containerProps);
   }, [getContainerProps, updateContainerState])
 
-  useEffect(()=> {
+  React.useEffect(()=> {
     refreshContainerSizes();
   },[gridState.options.hideFooter, refreshContainerSizes])
 

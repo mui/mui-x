@@ -1,18 +1,18 @@
 import * as React from 'react';
+import { columnsSelector } from '../hooks/features/columns/columnsSelector';
 import { GridState } from '../hooks/features/core/gridState';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { sortedRowsSelector } from '../hooks/features/sorting/sortingSelector';
-import { columnsSelector } from '../hooks/root/columns/columnsSelector';
-import { optionsSelector } from '../hooks/utils/useOptionsProp';
-import { RenderContextProps } from '../models';
 import { useLogger } from '../hooks/utils/useLogger';
+import { optionsSelector } from '../hooks/utils/useOptionsProp';
+import { RenderContextProps } from '../models/renderContextProps';
 import { ApiContext } from './api-context';
-import { RenderingZone } from './rendering-zone';
 import { LeftEmptyCell, RightEmptyCell } from './cell';
+import { RenderContext } from './render-context';
+import { RenderingZone } from './rendering-zone';
 import { Row } from './row';
 import { RowCells } from './row-cells';
 import { StickyContainer } from './sticky-container';
-import { RenderContext } from './render-context';
 
 type ViewportType = React.ForwardRefExoticComponent<React.RefAttributes<HTMLDivElement>>;
 

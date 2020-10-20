@@ -1,37 +1,24 @@
 import * as React from 'react';
+import { RESIZE, SCROLL, SCROLLING } from '../../constants/eventsConstants';
+import { ApiRef } from '../../models/api/apiRef';
+import { VirtualizationApi } from '../../models/api/virtualizationApi';
+import { RenderContextProps, RenderRowProps } from '../../models/renderContextProps';
+import { CellIndexCoordinates } from '../../models/rows';
 import { isEqual } from '../../utils/utils';
 import { useGridSelector } from '../features/core/useGridSelector';
 import { useGridState } from '../features/core/useGridState';
 import { PaginationState } from '../features/pagination/paginationReducer';
 import { paginationSelector } from '../features/pagination/paginationSelector';
-import { rowCountSelector, rowsStateSelector } from '../features/rows/rowsSelector';
-import { columnsTotalWidthSelector } from '../root/columns/columnsSelector';
-import { optionsSelector } from '../utils/useOptionsProp';
-import { useVirtualColumns } from './useVirtualColumns';
-import {
-  CellIndexCoordinates,
-  ContainerProps,
-  GridOptions,
-  InternalColumns,
-  RenderContextProps,
-  RenderRowProps,
-  Rows,
-  VirtualizationApi,
-  ApiRef,
-} from '../../models';
-import { ScrollParams, useScrollFn } from '../utils';
-import { useLogger } from '../utils/useLogger';
-import {   useContainerProps } from '../root';
-import {
-  RESIZE,
-  SCROLL,
-  SCROLLING,
-  SCROLLING_START,
-  SCROLLING_STOP,
-} from '../../constants/eventsConstants';
+import { rowCountSelector } from '../features/rows/rowsSelector';
+import { useApiEventHandler } from '../root/useApiEventHandler';
 import { useApiMethod } from '../root/useApiMethod';
 import { useNativeEventListener } from '../root/useNativeEventListener';
-import { useApiEventHandler } from '../root/useApiEventHandler';
+import { useLogger } from '../utils/useLogger';
+import { optionsSelector } from '../utils/useOptionsProp';
+import { ScrollParams, useScrollFn } from '../utils/useScrollFn';
+import { useVirtualColumns } from './useVirtualColumns';
+import { ContainerProps } from '../../models/containerProps';
+
 
 type UseVirtualRowsReturnType = Partial<RenderContextProps> | null;
 
@@ -193,25 +180,28 @@ export const useVirtualRows = (
 
   const scrollingTimeout = React.useRef<any>(null);
   const handleScroll = React.useCallback(() => {
-    // On iOS the inertia scrolling allows to return negative values.
-    if (windowRef.current!.scrollLeft < 0 || windowRef.current!.scrollTop < 0) return;
+      // On iOS the inertia scrolling allows to return negative values.
+      if (windowRef.current!.scrollLeft < 0 || windowRef.current!.scrollTop < 0) return;
 
-    setRenderingState({realScroll: {
-      left: windowRef.current!.scrollLeft,
-      top: windowRef.current!.scrollTop,
-    }})
-    if (!scrollingTimeout.current) {
+      setRenderingState({
+        realScroll: {
+          left: windowRef.current!.scrollLeft,
+          top: windowRef.current!.scrollTop,
+        }
+      })
+      if (!scrollingTimeout.current) {
         apiRef.current.state.isScrolling = true;
       }
       clearTimeout(scrollingTimeout.current);
       scrollingTimeout.current = setTimeout(() => {
         scrollingTimeout.current = null;
         apiRef.current.state.isScrolling = false;
+        forceUpdate();
       }, 300);
 
       updateViewport();
     },
-    [setRenderingState, updateViewport, apiRef],
+    [windowRef, setRenderingState, updateViewport, apiRef, forceUpdate],
   );
 
   const scrollToIndexes = React.useCallback(
