@@ -14,11 +14,11 @@ export const useNativeEventListener = (
   const [added, setAdded] = React.useState(false);
   const handlerRef = React.useRef(handler);
 
-  const wrapHandler = React.useCallback((args)=> {
+  const wrapHandler = React.useCallback((args) => {
     return handlerRef.current && handlerRef.current(args);
-  }, [])
+  }, []);
 
-  React.useEffect(()=> {
+  React.useEffect(() => {
     handlerRef.current = handler;
   }, [handler]);
 

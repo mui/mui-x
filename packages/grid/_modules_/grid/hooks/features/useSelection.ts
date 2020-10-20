@@ -18,9 +18,7 @@ import { optionsSelector } from '../utils/useOptionsProp';
 import { useGridSelector } from './core/useGridSelector';
 import { rowsLookupSelector } from './rows/rowsSelector';
 
-export const useSelection = (
-  apiRef: ApiRef,
-): void => {
+export const useSelection = (apiRef: ApiRef): void => {
   const logger = useLogger('useSelection');
   const selectedItemsRef = React.useRef<RowId[]>([]);
   const options = useGridSelector(apiRef, optionsSelector);
@@ -107,11 +105,7 @@ export const useSelection = (
 
   const selectRows = React.useCallback(
     (ids: RowId[], isSelected = true, deSelectOthers = false) => {
-      if (
-        options.disableMultipleSelection &&
-        ids.length > 1 &&
-        !options.checkboxSelection
-      ) {
+      if (options.disableMultipleSelection && ids.length > 1 && !options.checkboxSelection) {
         return;
       }
       let updates = ids.map((id) => ({ id, selected: isSelected }));
@@ -186,6 +180,6 @@ export const useSelection = (
   }, [selectRows, selectedItemsRef]);
 
   React.useEffect(() => {
-    selectedItemsRef.current = selectedItemsRef.current.filter(id=> rowsLookup[id] != null);
+    selectedItemsRef.current = selectedItemsRef.current.filter((id) => rowsLookup[id] != null);
   }, [rowsLookup, apiRef]);
 };

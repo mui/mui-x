@@ -12,13 +12,15 @@ import { useGridReducer } from '../core/useGridReducer';
 import { useGridSelector } from '../core/useGridSelector';
 import { rowCountSelector } from '../rows/rowsSelector';
 import {
-  INITIAL_PAGINATION_STATE, PaginationActions,
+  INITIAL_PAGINATION_STATE,
+  PaginationActions,
   paginationReducer,
   PaginationState,
-  setPageActionCreator, setPageSizeActionCreator, setPaginationModeActionCreator,
+  setPageActionCreator,
+  setPageSizeActionCreator,
+  setPaginationModeActionCreator,
   setRowCountActionCreator,
 } from './paginationReducer';
-
 
 export interface PaginationProps {
   page: number;
@@ -50,7 +52,9 @@ export const usePagination = (apiRef: ApiRef): PaginationProps => {
       dispatch(setPageActionCreator(page));
 
       // we use getState here to avoid adding a dependency on gridState as a dispatch change the state, it would change this method and create an infinite loop
-      const params: PageChangeParams = apiRef.current.getState<PaginationState>(PAGINATION_STATE_ID) as PageChangeParams;
+      const params: PageChangeParams = apiRef.current.getState<PaginationState>(
+        PAGINATION_STATE_ID,
+      ) as PageChangeParams;
       apiRef.current.publishEvent(PAGE_CHANGED, params);
     },
     [apiRef, dispatch, logger],
@@ -59,7 +63,10 @@ export const usePagination = (apiRef: ApiRef): PaginationProps => {
   const setPageSize = React.useCallback(
     (pageSize: number) => {
       dispatch(setPageSizeActionCreator(pageSize));
-      apiRef.current.publishEvent(PAGESIZE_CHANGED, apiRef.current.getState<PaginationState>(PAGINATION_STATE_ID) as PageChangeParams);
+      apiRef.current.publishEvent(
+        PAGESIZE_CHANGED,
+        apiRef.current.getState<PaginationState>(PAGINATION_STATE_ID) as PageChangeParams,
+      );
     },
     [apiRef, dispatch],
   );

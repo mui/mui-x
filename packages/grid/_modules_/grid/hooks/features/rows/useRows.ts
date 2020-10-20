@@ -8,9 +8,15 @@ import { useLogger } from '../../utils/useLogger';
 import { useGridState } from '../core/useGridState';
 import { InternalRowsState } from './rowsState';
 
-export function convertRowsPropToState({ rows, totalRowCount}: { rows: RowsProp, totalRowCount?: number}): InternalRowsState {
+export function convertRowsPropToState({
+  rows,
+  totalRowCount,
+}: {
+  rows: RowsProp;
+  totalRowCount?: number;
+}): InternalRowsState {
   const state: InternalRowsState = { allRows: [], idRowsLookup: {}, totalRowCount: 0 };
-  rows.reduce((idLookup, rowData, index) => {
+  rows.reduce((idLookup, rowData) => {
     const model = createRowModel(rowData);
     state.idRowsLookup[model.id] = model;
     state.allRows = [...state.allRows, model.id];
@@ -25,14 +31,16 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): RowModel[] => {
   const logger = useLogger('useRows');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
 
-  const internalRowsState = React.useRef<InternalRowsState>(gridState.rows)
+  const internalRowsState = React.useRef<InternalRowsState>(gridState.rows);
 
   React.useEffect(() => {
-    setGridState(state=> {
-      internalRowsState.current = convertRowsPropToState({rows, totalRowCount: state.options.rowCount});
-      return {...state, rows: internalRowsState.current};
+    setGridState((state) => {
+      internalRowsState.current = convertRowsPropToState({
+        rows,
+        totalRowCount: state.options.rowCount,
+      });
+      return { ...state, rows: internalRowsState.current };
     });
-
   }, [rows, setGridState]);
 
   const updateAllRows = React.useCallback(
@@ -51,10 +59,10 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): RowModel[] => {
           ? gridState.options.rowCount
           : allRows.length;
 
-      internalRowsState.current = {idRowsLookup, allRows, totalRowCount};
+      internalRowsState.current = { idRowsLookup, allRows, totalRowCount };
 
-      if(!apiRef.current.state.isScrolling) {
-        setGridState(state=> ({...state, rows: internalRowsState.current}));
+      if (!apiRef.current.state.isScrolling) {
+        setGridState((state) => ({ ...state, rows: internalRowsState.current }));
         forceUpdate();
       }
     },
@@ -95,16 +103,22 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): RowModel[] => {
       });
 
       if (!apiRef.current.state.isScrolling) {
-        setGridState(state=> ({...state, rows: internalRowsState.current}));
-       forceUpdate();
+        setGridState((state) => ({ ...state, rows: internalRowsState.current }));
+        forceUpdate();
       }
 
       if (addedRows.length > 0) {
-        const newRows = [...Object.values<RowModel>(internalRowsState.current.idRowsLookup), ...addedRows];
+        const newRows = [
+          ...Object.values<RowModel>(internalRowsState.current.idRowsLookup),
+          ...addedRows,
+        ];
         updateAllRows(newRows);
       }
 
-      apiRef.current.publishEvent(ROWS_UPDATED, Object.values<RowModel>(internalRowsState.current.idRowsLookup));
+      apiRef.current.publishEvent(
+        ROWS_UPDATED,
+        Object.values<RowModel>(internalRowsState.current.idRowsLookup),
+      );
     },
     [logger, apiRef, setGridState, getRowIndexFromId, forceUpdate, updateAllRows],
   );

@@ -1,6 +1,12 @@
 import * as React from 'react';
 import { CELL_CSS_CLASS, ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
-import { GRID_FOCUS_OUT, KEYDOWN, KEYUP, MULTIPLE_KEY_PRESS_CHANGED, SCROLLING } from '../../constants/eventsConstants';
+import {
+  GRID_FOCUS_OUT,
+  KEYDOWN,
+  KEYUP,
+  MULTIPLE_KEY_PRESS_CHANGED,
+  SCROLLING,
+} from '../../constants/eventsConstants';
 import { ApiRef } from '../../models/api/apiRef';
 import { CellIndexCoordinates } from '../../models/rows';
 import {
@@ -12,7 +18,8 @@ import {
 } from '../../utils/domUtils';
 import {
   isArrowKeys,
-  isHomeOrEndKeys, isMultipleKey,
+  isHomeOrEndKeys,
+  isMultipleKey,
   isNavigationKey,
   isPageKeys,
   isSpaceKey,
@@ -22,7 +29,6 @@ import { useGridSelector } from '../features/core/useGridSelector';
 import { useLogger } from '../utils/useLogger';
 import { optionsSelector } from '../utils/useOptionsProp';
 import { useApiEventHandler } from './useApiEventHandler';
-
 
 const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
   if (!isArrowKeys(code)) {

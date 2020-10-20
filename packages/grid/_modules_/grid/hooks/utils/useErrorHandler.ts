@@ -2,8 +2,6 @@ import * as React from 'react';
 import { COMPONENT_ERROR } from '../../constants';
 import { ApiRef } from '../../models/api';
 
-//TODO useGridReducer
-
 export function useErrorHandler(apiRef: ApiRef, props) {
   const [errorState, setErrorState] = React.useState<any>(null);
 

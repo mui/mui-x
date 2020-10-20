@@ -3,16 +3,12 @@ import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { sortModelSelector } from '../hooks/features/sorting/sortingSelector';
 import { optionsSelector } from '../hooks/utils/useOptionsProp';
 import { ColDef } from '../models/colDef';
-import { ApiRef } from '../models/api';
 import { ApiContext } from './api-context';
 import { HEADER_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
-import { COL_RESIZE_START, COL_RESIZE_STOP } from '../constants/eventsConstants';
 import { classnames } from '../utils';
-import { useApiEventHandler } from '../hooks/root/useApiEventHandler';
 import { ColumnHeaderSortIcon } from './column-header-sort-icon';
 import { ColumnHeaderTitle } from './column-header-title';
 import { ColumnHeaderSeparator } from './column-header-separator';
-import { OptionsContext } from './options-context';
 import { CursorCoordinates } from '../hooks/features/useColumnReorder';
 
 interface ColumnHeaderItemProps {
@@ -25,17 +21,32 @@ interface ColumnHeaderItemProps {
   separatorProps: React.HTMLAttributes<HTMLDivElement>;
 }
 
-export const ColumnHeaderItem =
-  ({ column, colIndex, onColumnDragStart ,onColumnDragEnter, onColumnDragOver, isResizing, separatorProps }: ColumnHeaderItemProps) => {
-    const apiRef = React.useContext(ApiContext);
-    const gridSortModel = useGridSelector(apiRef, sortModelSelector);
-    const { disableColumnReorder, showColumnRightBorder, disableColumnResize } = useGridSelector(apiRef, optionsSelector);
+export const ColumnHeaderItem = ({
+  column,
+  colIndex,
+  onColumnDragStart,
+  onColumnDragEnter,
+  onColumnDragOver,
+  isResizing,
+  separatorProps,
+}: ColumnHeaderItemProps) => {
+  const apiRef = React.useContext(ApiContext);
+  const gridSortModel = useGridSelector(apiRef, sortModelSelector);
+  const { disableColumnReorder, showColumnRightBorder, disableColumnResize } = useGridSelector(
+    apiRef,
+    optionsSelector,
+  );
 
-    const columnSortModel = React.useMemo(()=> gridSortModel.filter(model=> model.field === column.field)
-      .map(item=> ({
-        sortDirection: item.sort,
-        ...gridSortModel.length <= 1 ? {} : { sortIndex: gridSortModel.indexOf(item) + 1}
-      }))[0] || {}, [column.field, gridSortModel]);
+  const columnSortModel = React.useMemo(
+    () =>
+      gridSortModel
+        .filter((model) => model.field === column.field)
+        .map((item) => ({
+          sortDirection: item.sort,
+          ...(gridSortModel.length <= 1 ? {} : { sortIndex: gridSortModel.indexOf(item) + 1 }),
+        }))[0] || {},
+    [column.field, gridSortModel],
+  );
 
   let headerComponent: React.ReactElement | null = null;
   if (column.renderHeader) {
@@ -63,10 +74,12 @@ export const ColumnHeaderItem =
   };
   const width = column.width!;
 
-    let ariaSort: any;
-    if (columnSortModel.sortDirection != null) {
-      ariaSort = { 'aria-sort': columnSortModel.sortDirection === 'asc' ? 'ascending' : 'descending' };
-    }
+  let ariaSort: any;
+  if (columnSortModel.sortDirection != null) {
+    ariaSort = {
+      'aria-sort': columnSortModel.sortDirection === 'asc' ? 'ascending' : 'descending',
+    };
+  }
 
   return (
     <div

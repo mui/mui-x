@@ -16,10 +16,10 @@ import { StickyContainer } from './sticky-container';
 
 type ViewportType = React.ForwardRefExoticComponent<React.RefAttributes<HTMLDivElement>>;
 
-export const containerSizesSelector = (state: GridState)=> state.containerSizes;
+export const containerSizesSelector = (state: GridState) => state.containerSizes;
 
 export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
-  ( props, renderingZoneRef) => {
+  (props, renderingZoneRef) => {
     const logger = useLogger('Viewport');
     const renderCtx = React.useContext(RenderContext) as RenderContextProps;
     const apiRef = React.useContext(ApiContext);

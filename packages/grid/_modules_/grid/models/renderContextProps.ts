@@ -1,5 +1,3 @@
-import { ContainerProps } from './containerProps';
-
 /**
  * The object containing the column properties of the rendering state.
  */

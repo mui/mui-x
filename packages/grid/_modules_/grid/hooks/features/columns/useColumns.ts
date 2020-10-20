@@ -23,8 +23,7 @@ function hydrateColumns(
   columns: Columns,
   columnTypes: ColumnTypesRecord,
   withCheckboxSelection: boolean,
-  logger: Logger
-
+  logger: Logger,
 ): Columns {
   logger.debug('Hydrating Columns with default definitions');
   let mappedCols = columns.map((c) => ({ ...getColDef(columnTypes, c.type), ...c }));
@@ -64,7 +63,6 @@ const resetState = (
   columnTypes: ColumnTypesRecord,
   withCheckboxSelection: boolean,
   logger: Logger,
-  apiRef: ApiRef,
 ): InternalColumns => {
   if (columns.length === 0) {
     return getInitialColumnsState();
@@ -117,17 +115,14 @@ const getUpdatedColumnState = (
   };
 };
 
-export function useColumns(
-  columns: Columns,
-  apiRef: ApiRef,
-): InternalColumns {
+export function useColumns(columns: Columns, apiRef: ApiRef): InternalColumns {
   const logger = useLogger('useColumns');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
 
   const updateState = React.useCallback(
     (newState: InternalColumns, emit = true) => {
       logger.debug('Updating columns state.');
-      setGridState((oldState)=>  ({...oldState, columns: newState}));
+      setGridState((oldState) => ({ ...oldState, columns: newState }));
       forceUpdate();
 
       if (apiRef.current && emit) {
@@ -143,11 +138,10 @@ export function useColumns(
       columns,
       gridState.options.columnTypes,
       !!gridState.options.checkboxSelection,
-      logger,
-      apiRef,
+      logger
     );
     updateState(newState);
-  }, [columns, gridState.options.columnTypes, gridState.options.checkboxSelection, logger, apiRef, updateState]);
+  }, [columns, gridState.options.columnTypes, gridState.options.checkboxSelection, logger, updateState]);
 
   const getColumnFromField: (field: string) => ColDef = React.useCallback(
     (field) => gridState.columns.lookup[field],

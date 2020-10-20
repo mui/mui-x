@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ContainerProps, GridOptions } from '../models';
 
-//TODO Move that to renderContext and delete this
+// TODO Move that to renderContext and delete this
 export const getCurryTotalHeight = (
   internalOptions: GridOptions,
   containerSizes: ContainerProps | null,

@@ -1,4 +1,4 @@
-import { ApiRef, FeatureMode  } from '../../../models';
+import { FeatureMode } from '../../../models';
 
 export interface PaginationState {
   page: number;
@@ -13,7 +13,7 @@ const SET_PAGESIZE_ACTION = 'SetPageSize';
 const SET_PAGINATION_MODE_ACTION = 'SetPaginationMode';
 const SET_ROWCOUNT_ACTION = 'setRowCount';
 
-type SetPageAction = { type: 'SetPage'; payload: { page: number; } };
+type SetPageAction = { type: 'SetPage'; payload: { page: number } };
 type SetPageSizeAction = { type: 'SetPageSize'; payload: { pageSize: number } };
 type SetPaginationModeAction = {
   type: 'SetPaginationMode';
@@ -39,7 +39,9 @@ export function setPageSizeActionCreator(pageSize: number): SetPageSizeAction {
   return { type: SET_PAGESIZE_ACTION, payload: { pageSize } };
 }
 
-export function setPaginationModeActionCreator(payload: { paginationMode: any }): SetPaginationModeAction {
+export function setPaginationModeActionCreator(payload: {
+  paginationMode: any;
+}): SetPaginationModeAction {
   return { type: SET_PAGINATION_MODE_ACTION, payload };
 }
 
@@ -52,17 +54,23 @@ export const getPageCount = (pageSize: number | undefined, rowsCount: number) =>
   return pageSize && rowsCount > 0 ? Math.ceil(rowsCount / pageSize!) : 1;
 };
 // STATE UPDATE PURE FUNCTIONS
-export const setPageStateUpdate = (state: PaginationState, { page } : { page: number }): PaginationState => {
-  return state.page !== page ? {...state, page} : state;
+export const setPageStateUpdate = (
+  state: PaginationState,
+  { page }: { page: number },
+): PaginationState => {
+  return state.page !== page ? { ...state, page } : state;
 };
 
-export const setPageSizeStateUpdate = (state: PaginationState, payload: { pageSize: number }): PaginationState => {
+export const setPageSizeStateUpdate = (
+  state: PaginationState,
+  payload: { pageSize: number },
+): PaginationState => {
   const { pageSize } = payload;
   if (state.pageSize === pageSize) {
     return state;
   }
 
-  const newState: PaginationState = {...state, pageSize};
+  const newState: PaginationState = { ...state, pageSize };
   return newState;
 };
 
@@ -91,7 +99,7 @@ export const paginationReducer = (state: PaginationState, action: PaginationActi
     case SET_PAGESIZE_ACTION:
       return setPageSizeStateUpdate(state, action.payload);
     case SET_PAGINATION_MODE_ACTION:
-      return { ...state,  paginationMode: action.payload!.paginationMode! };
+      return { ...state, paginationMode: action.payload!.paginationMode! };
     case SET_ROWCOUNT_ACTION:
       return setRowCountStateUpdate(state, action.payload);
     default:

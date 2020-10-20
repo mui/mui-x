@@ -1,5 +1,4 @@
 export * from './columns';
-export * from './columns';
 export * from './core';
 export * from './pagination';
 export * from './rows';

@@ -18,7 +18,7 @@ export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps
     const totalRowCount = useGridSelector(apiRef, rowCountSelector);
     const options = useGridSelector(apiRef, optionsSelector);
 
-    //TODO refactor to use gridState
+    // TODO refactor to use gridState
     const [selectedRowCount, setSelectedCount] = React.useState(0);
     React.useEffect(() => {
       return apiRef!.current.onSelectionChange(({ rows }) => {

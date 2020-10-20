@@ -12,7 +12,7 @@ export interface CoreApi extends EventEmitter {
   /**
    * allows to get the whole state of the grid if stateId is null or to get a part of the state if stateId has a value.
    */
-  getState: <T >(stateId?: string)=> T;
+  getState: <T>(stateId?: string) => T;
 
   /**
    * Property that comes true when the grid has its EventEmitter initialised.

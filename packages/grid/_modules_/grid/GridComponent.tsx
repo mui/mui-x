@@ -74,15 +74,10 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useSorting(apiRef);
 
     useContainerProps(windowRef, apiRef);
-    const renderCtx = useVirtualRows(
-      columnsHeaderRef,
-      windowRef,
-      renderingZoneRef,
-      apiRef,
-    );
+    const renderCtx = useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
 
     const onColumnReorder = useColumnReorder(columnsHeaderRef, apiRef);
-  const separatorProps = useColumnResize(columnsHeaderRef, apiRef);
+    const separatorProps = useColumnResize(columnsHeaderRef, apiRef);
     const paginationProps = usePagination(apiRef);
 
     const customComponents = useComponents(
@@ -145,10 +140,10 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                         columns={internalColumns.visible || []}
                         hasScrollX={!!gridState.containerSizes?.hasScrollX}
                         separatorProps={separatorProps}
-                      onColumnHeaderDragOver={onColumnReorder.handleColumnHeaderDragOver}
-                      onColumnDragStart={onColumnReorder.handleDragStart}
-                      onColumnDragEnter={onColumnReorder.handleDragEnter}
-                      onColumnDragOver={onColumnReorder.handleDragOver}
+                        onColumnHeaderDragOver={onColumnReorder.handleColumnHeaderDragOver}
+                        onColumnDragStart={onColumnReorder.handleDragStart}
+                        onColumnDragEnter={onColumnReorder.handleDragEnter}
+                        onColumnDragOver={onColumnReorder.handleDragOver}
                         renderCtx={renderCtx}
                       />
                     </GridColumnsContainer>
