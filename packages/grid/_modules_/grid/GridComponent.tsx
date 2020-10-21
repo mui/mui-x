@@ -77,7 +77,12 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
   }, [apiRef, props.error]);
 
   useEvents(rootContainerRef, internalOptions, apiRef);
-  const internalColumns = useColumns(internalOptions, props.columns, apiRef);
+  const internalColumns = useColumns(
+    internalOptions,
+    props.columns,
+    rootContainerRef.current?.clientWidth,
+    apiRef,
+  );
   const internalRows = useRows(internalOptions, props.rows, initialised, apiRef);
   useKeyboard(internalOptions, initialised, apiRef);
   useSelection(internalOptions, props.rows, initialised, apiRef);

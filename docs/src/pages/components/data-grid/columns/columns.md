@@ -49,6 +49,26 @@ To change the width of a column, use the `width` property available in `ColDef`.
 
 {{"demo": "pages/components/data-grid/columns/ColumnWidthGrid.js", "bg": "inline"}}
 
+## Column fluid width
+
+By default each column have a fixed width of 100 pixels but we can have fluid (responsive) columns by setting the `flex` propery avaibale in the `ColDef`.
+
+The `flex` propery accepts values between 0 and 1.
+
+The `flex` property works by dividing the remaining space in the grid among all flex columns in proportion to their `flex` value. For example, a grid with a total width of 500px that has three columns: the first with width: 200; the second with flex: 1; and third with flex: 0.5. The first column will be 200px wide, leaving 300px remaining. The column with flex: 1 has twice the size with flex: 0.5 which means that final sizes will be: 200px, 200px, 100px.
+
+The `flex` configuration does not work together with the `width` configuration. If you set both the `flex` and `width` inside the `ColDef` of column the `flex` will overwrite the `width`.
+
+The `flex` configuration does not work if the combined width of the columns that have `width` is more that the width of the grid itself. If that is the case a scroll bar will be visible and the columns that hava `flex` will default back to their base value of 100 pixels.
+
+{{"demo": "pages/components/data-grid/columns/ColumnFluidWidthGrid.js", "bg": "inline"}}
+
+<!--
+- https://ag-grid.com/javascript-grid-resizing/#column-flex
+- https://www.telerik.com/kendo-react-ui/components/grid/columns/width/
+- https://react-table-omega.vercel.app/docs/api/useFlexLayout
+-->
+
 ## Column resizing [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
 By default, `XGrid` allows all columns to be resized by dragging the right portion of the column separator.

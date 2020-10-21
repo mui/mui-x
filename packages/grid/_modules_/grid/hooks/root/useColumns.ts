@@ -28,15 +28,45 @@ const initialState: InternalColumns = {
   meta: { positions: [], totalWidth: 0 },
 };
 
+function mapColumns(
+  columns: Columns,
+  columnTypes: ColumnTypesRecord,
+  containerWidth: number,
+): Columns {
+  let extendedColumns = columns.map((c) => ({ ...getColDef(columnTypes, c.type), ...c }));
+  const numberOfFluidColumns = columns.filter((column) => !!column.flex).length;
+  let flexDivider = 0;
+
+  if (numberOfFluidColumns && containerWidth) {
+    extendedColumns.forEach((column) => {
+      if (!column.flex) {
+        containerWidth -= column.width!;
+      } else {
+        flexDivider += column.flex;
+      }
+    });
+  }
+
+  if (containerWidth > 0 && numberOfFluidColumns) {
+    const flexMultiplier = Math.floor(containerWidth / flexDivider);
+    extendedColumns = extendedColumns.map((c) => {
+      return { ...c, width: c.flex! ? Math.floor(flexMultiplier * c.flex!) : c.width };
+    });
+  }
+
+  return extendedColumns;
+}
+
 function hydrateColumns(
   columns: Columns,
   columnTypes: ColumnTypesRecord,
+  containerWidth: number,
   withCheckboxSelection: boolean,
   logger: Logger,
   apiRef: ApiRef,
 ): Columns {
   logger.debug('Hydrating Columns with default definitions');
-  let mappedCols = columns.map((c) => ({ ...getColDef(columnTypes, c.type), ...c }));
+  let mappedCols = mapColumns(columns, columnTypes, containerWidth);
   if (withCheckboxSelection) {
     mappedCols = [checkboxSelectionColDef, ...mappedCols];
   }
@@ -91,6 +121,7 @@ function toMeta(logger: Logger, visibleColumns: Columns): ColumnsMeta {
 const resetState = (
   columns: Columns,
   columnTypes: ColumnTypesRecord,
+  containerWidth: number,
   withCheckboxSelection: boolean,
   logger: Logger,
   apiRef: ApiRef,
@@ -99,7 +130,14 @@ const resetState = (
     return initialState;
   }
 
-  const all = hydrateColumns(columns, columnTypes, withCheckboxSelection, logger, apiRef);
+  const all = hydrateColumns(
+    columns,
+    columnTypes,
+    containerWidth,
+    withCheckboxSelection,
+    logger,
+    apiRef,
+  );
   const visible = filterVisible(logger, all);
   const meta = toMeta(logger, visible);
   const lookup = toLookup(logger, all);
@@ -149,6 +187,7 @@ const getUpdatedColumnState = (
 export function useColumns(
   options: GridOptions,
   columns: Columns,
+  containerWidth: number = 0,
   apiRef: ApiRef,
 ): InternalColumns {
   const logger = useLogger('useColumns');
@@ -176,12 +215,21 @@ export function useColumns(
     const newState = resetState(
       columns,
       options.columnTypes,
+      containerWidth,
       !!options.checkboxSelection,
       logger,
       apiRef,
     );
     updateState(newState);
-  }, [columns, options.columnTypes, options.checkboxSelection, logger, apiRef, updateState]);
+  }, [
+    columns,
+    options.columnTypes,
+    containerWidth,
+    options.checkboxSelection,
+    logger,
+    apiRef,
+    updateState,
+  ]);
 
   const getColumnFromField: (field: string) => ColDef = React.useCallback(
     (field) => stateRef.current.lookup[field],
