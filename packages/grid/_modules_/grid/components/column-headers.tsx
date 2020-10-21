@@ -95,11 +95,11 @@ export const ColumnsHeader = React.memo(
     return (
       <React.Fragment>
         <ScrollArea scrollDirection="left" />
+        {/* eslint-disable-next-line */}
         <div
           ref={ref}
           className={wrapperCssClasses}
           aria-rowindex={1}
-          tabIndex={-1}
           role="row"
           style={{ minWidth: renderCtx?.totalSizes?.width }}
           onDragOver={handleDragOver}
