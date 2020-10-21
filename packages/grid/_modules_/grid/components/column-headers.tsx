@@ -95,7 +95,8 @@ export const ColumnsHeader = React.memo(
     return (
       <React.Fragment>
         <ScrollArea scrollDirection="left" />
-        {/* eslint-disable-next-line */}
+        {/* Header row isn't interactive, cells are, event delegation */}
+        {/* eslint-disable-next-line jsx-a11y/interactive-supports-focus */}
         <div
           ref={ref}
           className={wrapperCssClasses}
