@@ -26,6 +26,7 @@ import {
   isTabKey,
 } from '../../utils/keyboardUtils';
 import { useGridSelector } from '../features/core/useGridSelector';
+import { rowCountSelector } from '../features/rows/rowsSelector';
 import { useLogger } from '../utils/useLogger';
 import { optionsSelector } from '../utils/useOptionsProp';
 import { useApiEventHandler } from './useApiEventHandler';
@@ -52,6 +53,7 @@ export const useKeyboard = (apiRef: ApiRef): void => {
   const logger = useLogger('useKeyboard');
   const rafFocusOnCellRef = React.useRef(0);
   const options = useGridSelector(apiRef, optionsSelector);
+  const totalRowCount = useGridSelector(apiRef, rowCountSelector);
 
   const onMultipleKeyChange = React.useCallback(
     (isPressed: boolean) => {
@@ -74,7 +76,7 @@ export const useKeyboard = (apiRef: ApiRef): void => {
       const autoPageSize = apiRef.current.getContainerPropsState()!.viewportPageSize;
       const pageSize =
         options.pagination && options.pageSize != null ? options.pageSize : autoPageSize;
-      const rowCount = options.pagination ? pageSize : apiRef.current.getRowsCount();
+      const rowCount = options.pagination ? pageSize : totalRowCount;
       const colCount = apiRef.current.getVisibleColumns().length;
 
       let nextCellIndexes: CellIndexCoordinates;
@@ -105,17 +107,19 @@ export const useKeyboard = (apiRef: ApiRef): void => {
 
       nextCellIndexes.rowIndex = nextCellIndexes.rowIndex <= 0 ? 0 : nextCellIndexes.rowIndex;
       nextCellIndexes.rowIndex =
-        nextCellIndexes.rowIndex >= rowCount ? rowCount - 1 : nextCellIndexes.rowIndex;
+        nextCellIndexes.rowIndex >= rowCount && rowCount > 0
+          ? rowCount - 1
+          : nextCellIndexes.rowIndex;
       nextCellIndexes.colIndex = nextCellIndexes.colIndex <= 0 ? 0 : nextCellIndexes.colIndex;
       nextCellIndexes.colIndex =
         nextCellIndexes.colIndex >= colCount ? colCount - 1 : nextCellIndexes.colIndex;
 
       if (rafFocusOnCellRef.current) {
-        cancelAnimationFrame(rafFocusOnCellRef.current);
+        clearTimeout(rafFocusOnCellRef.current);
       }
 
       apiRef.current.once(SCROLLING, () => {
-        rafFocusOnCellRef.current = requestAnimationFrame(() => {
+        rafFocusOnCellRef.current = window.setTimeout(() => {
           const nextCell = getCellElementFromIndexes(root, nextCellIndexes);
 
           if (nextCell) {
@@ -125,14 +129,14 @@ export const useKeyboard = (apiRef: ApiRef): void => {
             nextCell.tabIndex = 0;
             (nextCell as HTMLDivElement).focus();
           }
-        });
+        }, 0);
       });
 
       apiRef.current.scrollToIndexes(nextCellIndexes);
 
       return nextCellIndexes;
     },
-    [apiRef, options.pagination, options.pageSize, logger],
+    [apiRef, options.pagination, options.pageSize, totalRowCount, logger],
   );
 
   const selectActiveRow = React.useCallback(() => {

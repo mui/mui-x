@@ -58,7 +58,9 @@ export const useVirtualRows = (
   const totalRowCount = useGridSelector<number>(apiRef, rowCountSelector);
 
   const [, scrollColHeaderTo] = useScrollFn(colRef);
-  const onDataScroll = (v: ScrollParams) => scrollColHeaderTo({ left: v.left, top: 0 });
+  const onDataScroll = (scrollParams: ScrollParams) => {
+    scrollColHeaderTo({ left: scrollParams.left, top: 0 });
+  };
   const [scrollTo] = useScrollFn(renderingZoneRef, onDataScroll);
 
   const [renderedColRef, updateRenderedCols] = useVirtualColumns(options, apiRef);

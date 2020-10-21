@@ -57,7 +57,7 @@ describe('<DataGrid />', () => {
         );
       });
 
-      it('should apply the page prop correctly', () => {
+      it('should apply the page prop correctly', (done) => {
         const rows = [
           {
             id: 0,
@@ -77,8 +77,11 @@ describe('<DataGrid />', () => {
             <DataGrid {...defaultProps} rows={rows} page={2} pageSize={1} />
           </div>,
         );
-        const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
-        expect(cell).to.have.text('Addidas');
+        setTimeout(() => {
+          const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
+          expect(cell).to.have.text('Addidas');
+          done();
+        }, 50);
       });
     });
 
@@ -101,7 +104,7 @@ describe('<DataGrid />', () => {
             </div>,
           );
           clock.tick(100);
-        }).toWarnDev('Material-UI Data Grid: The parent of the grid has an empty height.');
+        }).toWarnDev('useResizeContainer: The parent of the grid has an empty height.');
       });
 
       it('should warn if the container has no intrinsic width', () => {
@@ -114,7 +117,7 @@ describe('<DataGrid />', () => {
             </div>,
           );
           clock.tick(100);
-        }).toWarnDev('Material-UI Data Grid: The parent of the grid has an empty width.');
+        }).toWarnDev('useResizeContainer: The parent of the grid has an empty width.');
       });
     });
   });
