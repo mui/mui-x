@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { useGridSelector } from '../hooks/features/core/useGridSelector';
-import { sortModelSelector } from '../hooks/features/sorting/sortingSelector';
-import { optionsSelector } from '../hooks/utils/useOptionsProp';
 import { ColDef } from '../models/colDef';
+import { GridOptions } from '../models/gridOptions';
+import { SortModel } from '../models/sortModel';
 import { ApiContext } from './api-context';
 import { HEADER_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import { classnames } from '../utils';
@@ -15,13 +14,15 @@ interface ColumnHeaderItemProps {
   colIndex: number;
   column: ColDef;
   isResizing: boolean;
+  sortModel: SortModel;
+  options: GridOptions;
   onColumnDragEnter?: (event: Event) => void;
   onColumnDragOver?: (col: ColDef, coordinates: CursorCoordinates) => void;
   onColumnDragStart?: (col: ColDef, currentTarget: HTMLElement) => void;
   separatorProps: React.HTMLAttributes<HTMLDivElement>;
 }
 
-export const ColumnHeaderItem = ({
+export const ColumnHeaderItem = React.memo(({
   column,
   colIndex,
   onColumnDragStart,
@@ -29,23 +30,21 @@ export const ColumnHeaderItem = ({
   onColumnDragOver,
   isResizing,
   separatorProps,
+  sortModel,
+  options
 }: ColumnHeaderItemProps) => {
   const apiRef = React.useContext(ApiContext);
-  const gridSortModel = useGridSelector(apiRef, sortModelSelector);
-  const { disableColumnReorder, showColumnRightBorder, disableColumnResize } = useGridSelector(
-    apiRef,
-    optionsSelector,
-  );
+  const { disableColumnReorder, showColumnRightBorder, disableColumnResize } = options;
 
   const columnSortModel = React.useMemo(
     () =>
-      gridSortModel
+      sortModel
         .filter((model) => model.field === column.field)
         .map((item) => ({
           sortDirection: item.sort,
-          ...(gridSortModel.length <= 1 ? {} : { sortIndex: gridSortModel.indexOf(item) + 1 }),
+          ...(sortModel.length <= 1 ? {} : { sortIndex: sortModel.indexOf(item) + 1 }),
         }))[0] || {},
-    [column.field, gridSortModel],
+    [column.field, sortModel],
   );
 
   let headerComponent: React.ReactElement | null = null;
@@ -133,5 +132,5 @@ export const ColumnHeaderItem = ({
       />
     </div>
   );
-};
+});
 ColumnHeaderItem.displayName = 'ColumnHeaderItem';

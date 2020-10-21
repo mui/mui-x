@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { COL_RESIZE_START, COL_RESIZE_STOP } from '../constants/eventsConstants';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
+import { optionsSelector } from '../hooks/utils/useOptionsProp';
 import { Columns, RenderContextProps } from '../models';
 import { ColDef } from '../models/colDef';
 import { ColumnHeaderItem } from './column-header-item';
@@ -9,7 +10,7 @@ import { LeftEmptyCell, RightEmptyCell } from './cell';
 import { containerSizesSelector } from './viewport';
 import { OptionsContext } from './options-context';
 import { ScrollArea } from './ScrollArea';
-import { CursorCoordinates, useApiEventHandler } from '../hooks';
+import { CursorCoordinates, sortModelSelector, useApiEventHandler } from '../hooks';
 
 export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
@@ -27,7 +28,8 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
 }) => {
   const [resizingColField, setResizingColField] = React.useState('');
   const apiRef = React.useContext(ApiContext);
-
+  const gridSortModel = useGridSelector(apiRef, sortModelSelector);
+  const options = useGridSelector(apiRef, optionsSelector);
   const handleResizeStart = React.useCallback((params) => {
     setResizingColField(params.field);
   }, []);
@@ -38,9 +40,11 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
   useApiEventHandler(apiRef!, COL_RESIZE_START, handleResizeStart);
   useApiEventHandler(apiRef!, COL_RESIZE_STOP, handleResizeStop);
 
-  const items = columns.map((col, idx) => (
+  const items = React.useMemo(()=> columns.map((col, idx) => (
     <ColumnHeaderItem
       key={col.field}
+      sortModel={gridSortModel}
+      options={options}
       column={col}
       colIndex={idx}
       isResizing={resizingColField === col.field}
@@ -49,7 +53,7 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
       onColumnDragEnter={onColumnDragEnter}
       onColumnDragOver={onColumnDragOver}
     />
-  ));
+  )), [columns, gridSortModel, onColumnDragEnter, onColumnDragOver, onColumnDragStart, resizingColField, separatorProps]);
 
   return <React.Fragment>{items}</React.Fragment>;
 };
