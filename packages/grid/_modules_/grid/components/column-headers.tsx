@@ -53,7 +53,6 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
 
   return <React.Fragment>{items}</React.Fragment>;
 };
-// );
 ColumnHeaderItemCollection.displayName = 'ColumnHeaderItemCollection';
 
 export interface ColumnsHeaderProps {
