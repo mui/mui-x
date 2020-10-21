@@ -1,6 +1,6 @@
 import * as React from 'react';
+import { debounce } from '@material-ui/core/utils';
 import { useLogger } from './useLogger';
-import { debounce } from '../../utils/utils';
 import { useRafUpdate } from './useRafUpdate';
 
 export interface ScrollParams {
@@ -25,7 +25,7 @@ export function useScrollFn(
 
   const debouncedResetPointerEvents = React.useMemo(() => debounce(restorePointerEvents, 300), [
     restorePointerEvents,
-  ]) as any;
+  ]);
 
   const scrollTo: (v: ScrollParams) => void = React.useCallback(
     (v) => {
@@ -54,7 +54,7 @@ export function useScrollFn(
 
   React.useEffect(() => {
     return () => {
-      debouncedResetPointerEvents.cancel();
+      debouncedResetPointerEvents.clear();
     };
   }, [scrollingElementRef, debouncedResetPointerEvents]);
 
