@@ -3,7 +3,13 @@ import { COLUMNS_UPDATED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { ColumnApi } from '../../../models/api/columnApi';
 import { checkboxSelectionColDef } from '../../../models/colDef/checkboxSelection';
-import { ColDef, Columns, ColumnsMeta, getInitialColumnsState, InternalColumns } from '../../../models/colDef/colDef';
+import {
+  ColDef,
+  Columns,
+  ColumnsMeta,
+  getInitialColumnsState,
+  InternalColumns,
+} from '../../../models/colDef/colDef';
 import { ColumnTypesRecord } from '../../../models/colDef/colTypeDef';
 import { getColDef } from '../../../models/colDef/getColDef';
 import { useApiMethod } from '../../root/useApiMethod';

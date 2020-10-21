@@ -1,6 +1,9 @@
 import { getInitialColumnsState, InternalColumns } from '../../../models/colDef/colDef';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
-import { getInitialRenderingState, InternalRenderingState } from '../../virtualization/renderingState';
+import {
+  getInitialRenderingState,
+  InternalRenderingState,
+} from '../../virtualization/renderingState';
 import { INITIAL_PAGINATION_STATE, PaginationState } from '../pagination/paginationReducer';
 import { getInitialRowState, InternalRowsState } from '../rows/rowsState';
 import { getInitialSortingState, SortingState } from '../sorting/sortingState';
@@ -13,7 +16,7 @@ export interface GridState {
   isScrolling: boolean;
   columns: InternalColumns;
   rendering: InternalRenderingState;
-  containerSizes: ContainerProps | null ;
+  containerSizes: ContainerProps | null;
   sorting: SortingState;
 }
 
