@@ -1,6 +1,6 @@
+import debounce from '@material-ui/core/utils/debounce';
 import * as React from 'react';
 import { ElementSize } from '../../models';
-import { debounce } from '../../utils';
 import { useLogger } from './useLogger';
 
 export function useResizeContainer(apiRef): (size: ElementSize) => void {
@@ -43,7 +43,7 @@ export function useResizeContainer(apiRef): (size: ElementSize) => void {
   React.useEffect(() => {
     return () => {
       gridLogger.info('canceling resize...');
-      debouncedOnResize.cancel();
+      debouncedOnResize.clear();
     };
   }, [gridLogger, debouncedOnResize]);
 

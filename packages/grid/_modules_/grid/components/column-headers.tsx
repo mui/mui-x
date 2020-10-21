@@ -117,12 +117,11 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps
     <React.Fragment>
       <ScrollArea scrollDirection="left" />
       {/* Header row isn't interactive, cells are, event delegation */}
-        {/* eslint-disable-next-line jsx-a11y/interactive-supports-focus */}
-        <div
+      {/* eslint-disable-next-line jsx-a11y/interactive-supports-focus */}
+      <div
         ref={ref}
         className={wrapperCssClasses}
         aria-rowindex={1}
-
         role="row"
         style={{ minWidth: containerSizes?.totalSizes?.width }}
         onDragOver={handleDragOver}
