@@ -3,21 +3,12 @@ import { COLUMNS_UPDATED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { ColumnApi } from '../../../models/api/columnApi';
 import { checkboxSelectionColDef } from '../../../models/colDef/checkboxSelection';
-import { ColDef, Columns, ColumnsMeta, InternalColumns } from '../../../models/colDef/colDef';
+import { ColDef, Columns, ColumnsMeta, getInitialColumnsState, InternalColumns } from '../../../models/colDef/colDef';
 import { ColumnTypesRecord } from '../../../models/colDef/colTypeDef';
 import { getColDef } from '../../../models/colDef/getColDef';
 import { useApiMethod } from '../../root/useApiMethod';
 import { Logger, useLogger } from '../../utils/useLogger';
 import { useGridState } from '../core/useGridState';
-
-export const getInitialColumnsState = (): InternalColumns => ({
-  visible: [],
-  all: [],
-  lookup: {},
-  hasVisibleColumns: false,
-  hasColumns: false,
-  meta: { positions: [], totalWidth: 0 },
-});
 
 function hydrateColumns(
   columns: Columns,

@@ -16,33 +16,13 @@ import { useNativeEventListener } from '../root/useNativeEventListener';
 import { useLogger } from '../utils/useLogger';
 import { optionsSelector } from '../utils/useOptionsProp';
 import { ScrollParams, useScrollFn } from '../utils/useScrollFn';
+import { InternalRenderingState } from './renderingState';
 import { useVirtualColumns } from './useVirtualColumns';
-import { ContainerProps } from '../../models/containerProps';
 
 type UseVirtualRowsReturnType = Partial<RenderContextProps> | null;
 
 // TODO v5: replace with @material-ui/core/utils/useEnhancedEffect.
 const useEnhancedEffect = typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
-
-export interface InternalRenderingState {
-  virtualPage: number;
-  virtualRowsCount: number;
-  renderContext: Partial<RenderContextProps> | null;
-  realScroll: ScrollParams;
-  renderingZoneScroll: ScrollParams;
-  renderedSizes: ContainerProps | null;
-}
-
-export const getInitialRenderingState = (): InternalRenderingState => {
-  return {
-    realScroll: { left: 0, top: 0 },
-    renderContext: null,
-    renderingZoneScroll: { left: 0, top: 0 },
-    virtualPage: 0,
-    virtualRowsCount: 0,
-    renderedSizes: null,
-  };
-};
 
 export const useVirtualRows = (
   colRef: React.MutableRefObject<HTMLDivElement | null>,

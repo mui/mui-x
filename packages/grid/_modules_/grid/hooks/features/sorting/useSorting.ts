@@ -12,7 +12,7 @@ import { FeatureModeConstant } from '../../../models/featureMode';
 import { CellParams } from '../../../models/params/cellParams';
 import { ColParams } from '../../../models/params/colParams';
 import { SortModelParams } from '../../../models/params/sortModelParams';
-import { CellValue, RowId, RowModel } from '../../../models/rows';
+import { CellValue, RowModel } from '../../../models/rows';
 import { FieldComparatorList, SortItem, SortModel } from '../../../models/sortModel';
 import { buildCellParams } from '../../../utils/paramsUtils';
 import { isDesc, nextSortDirection } from '../../../utils/sortingUtils';
@@ -25,15 +25,7 @@ import { columnsSelector } from '../columns/columnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { rowCountSelector, unorderedRowModelsSelector } from '../rows/rowsSelector';
-
-export interface SortingState {
-  sortedRows: RowId[];
-  sortModel: SortModel;
-}
-
-export function getInitialSortingState(): SortingState {
-  return { sortedRows: [], sortModel: [] };
-}
+import { SortingState } from './sortingState';
 
 export const useSorting = (apiRef: ApiRef) => {
   const logger = useLogger('useSorting');

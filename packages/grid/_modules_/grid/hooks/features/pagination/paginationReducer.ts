@@ -1,4 +1,4 @@
-import { FeatureMode } from '../../../models';
+import { FeatureMode } from '../../../models/featureMode';
 
 export interface PaginationState {
   page: number;

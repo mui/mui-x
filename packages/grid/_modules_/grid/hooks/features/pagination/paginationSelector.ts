@@ -1,3 +1,3 @@
-import { GridState } from '../core/gridState';
+import { PaginationState } from './paginationReducer';
 
-export const paginationSelector = (state: GridState) => state.pagination;
+export const paginationSelector = (state: any) : PaginationState => state.pagination;

@@ -53,7 +53,7 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
       onColumnDragEnter={onColumnDragEnter}
       onColumnDragOver={onColumnDragOver}
     />
-  )), [columns, gridSortModel, onColumnDragEnter, onColumnDragOver, onColumnDragStart, resizingColField, separatorProps]);
+  )), [columns, gridSortModel, onColumnDragEnter, onColumnDragOver, onColumnDragStart, options, resizingColField, separatorProps]);
 
   return <React.Fragment>{items}</React.Fragment>;
 };

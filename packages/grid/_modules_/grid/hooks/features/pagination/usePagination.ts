@@ -2,6 +2,7 @@ import * as React from 'react';
 import { PAGE_CHANGED, PAGESIZE_CHANGED, RESIZE } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { PaginationApi } from '../../../models/api/paginationApi';
+import { PaginationProps } from '../../../models/paginationProps';
 import { PageChangeParams } from '../../../models/params/pageChangeParams';
 import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
@@ -21,15 +22,6 @@ import {
   setPaginationModeActionCreator,
   setRowCountActionCreator,
 } from './paginationReducer';
-
-export interface PaginationProps {
-  page: number;
-  pageCount: number;
-  pageSize: number;
-  rowCount: number;
-  setPage: (page: number) => void;
-  setPageSize: (pageSize: number) => void;
-}
 
 const PAGINATION_STATE_ID = 'pagination';
 

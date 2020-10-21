@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useLogger } from '../utils';
-import { isFunction } from '../../utils';
-import { ApiRef } from '../../models';
+import { ApiRef } from '../../models/api/apiRef';
+import { isFunction } from '../../utils/utils';
+import { useLogger } from '../utils/useLogger';
 
 export const useNativeEventListener = (
   apiRef: ApiRef,

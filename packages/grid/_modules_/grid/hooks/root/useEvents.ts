@@ -1,4 +1,9 @@
 import * as React from 'react';
+import { ApiRef } from '../../models/api/apiRef';
+import { GridOptions } from '../../models/gridOptions';
+import { CellParams } from '../../models/params/cellParams';
+import { ColParams } from '../../models/params/colParams';
+import { RowParams } from '../../models/params/rowParams';
 import { useLogger } from '../utils/useLogger';
 import {
   CELL_CLICK,
@@ -19,7 +24,6 @@ import {
   GRID_FOCUS_OUT,
   COMPONENT_ERROR,
 } from '../../constants/eventsConstants';
-import { GridOptions, ApiRef, CellParams, ColParams, RowParams } from '../../models';
 import {
   CELL_CSS_CLASS,
   HEADER_CELL_CSS_CLASS,

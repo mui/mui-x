@@ -1,19 +1,9 @@
 import { EventEmitter } from 'events';
-import { GridState } from '../../hooks/features/core/gridState';
 
 /**
  * The core API interface that is available in the grid [[apiRef]].
  */
 export interface CoreApi extends EventEmitter {
-  /**
-   * Property that contains the whole state of the grid.
-   */
-  state: GridState;
-  /**
-   * allows to get the whole state of the grid if stateId is null or to get a part of the state if stateId has a value.
-   */
-  getState: <T>(stateId?: string) => T;
-
   /**
    * Property that comes true when the grid has its EventEmitter initialised.
    */

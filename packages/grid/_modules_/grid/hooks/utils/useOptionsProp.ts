@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { GridComponentProps, GridOptionsProp } from '../../GridComponentProps';
-import { ApiRef, DEFAULT_GRID_OPTIONS, GridOptions } from '../../models';
-import { mergeOptions } from '../../utils';
+import { ApiRef } from '../../models/api/apiRef';
+import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../models/gridOptions';
+import { mergeOptions } from '../../utils/mergeOptions';
 import { GridState } from '../features/core/gridState';
 import { useGridReducer } from '../features/core/useGridReducer';
 
