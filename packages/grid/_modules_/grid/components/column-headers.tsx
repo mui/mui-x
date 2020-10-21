@@ -95,11 +95,12 @@ export const ColumnsHeader = React.memo(
     return (
       <React.Fragment>
         <ScrollArea scrollDirection="left" />
+        {/* Header row isn't interactive, cells are, event delegation */}
+        {/* eslint-disable-next-line jsx-a11y/interactive-supports-focus */}
         <div
           ref={ref}
           className={wrapperCssClasses}
           aria-rowindex={1}
-          tabIndex={0}
           role="row"
           style={{ minWidth: renderCtx?.totalSizes?.width }}
           onDragOver={handleDragOver}
