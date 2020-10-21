@@ -6,27 +6,6 @@ import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
 
-async function sleep(duration: number) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, duration);
-  });
-}
-
-async function raf() {
-  return new Promise((resolve) => {
-    // Chrome and Safari have a bug where calling rAF once returns the current
-    // frame instead of the next frame, so we need to call a double rAF here.
-    // See crbug.com/675795 for more.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        resolve();
-      });
-    });
-  });
-}
-
 describe('<DataGrid />', () => {
   const render = createClientRender();
   const defaultProps = {
