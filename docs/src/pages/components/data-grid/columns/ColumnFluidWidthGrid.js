@@ -20,11 +20,11 @@ export default function ColumnFluidWidthGrid() {
           },
           {
             field: 'username',
-            width: 300,
+            width: 200,
           },
           {
             field: 'age',
-            flex: 0.2,
+            flex: 0.3,
           },
         ]}
         rows={rows}
