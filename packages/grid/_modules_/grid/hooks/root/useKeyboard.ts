@@ -266,13 +266,10 @@ export const useKeyboard = (apiRef: ApiRef): void => {
     [logger, onMultipleKeyChange],
   );
 
-  const onFocusOutHandler = React.useCallback(
-    () => {
-      logger.debug('Grid lost focus, releasing key press');
-      onMultipleKeyChange(false);
-    },
-    [logger, onMultipleKeyChange],
-  );
+  const onFocusOutHandler = React.useCallback(() => {
+    logger.debug('Grid lost focus, releasing key press');
+    onMultipleKeyChange(false);
+  }, [logger, onMultipleKeyChange]);
 
   useApiEventHandler(apiRef, KEYDOWN, onKeyDownHandler);
   useApiEventHandler(apiRef, KEYUP, onKeyUpHandler);
