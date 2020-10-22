@@ -30,7 +30,7 @@ import { useSelection } from './hooks/features/useSelection';
 import { useApi } from './hooks/root/useApi';
 import { useContainerProps } from './hooks/root/useContainerProps';
 import { useEvents } from './hooks/root/useEvents';
-import { useKeyboard } from './hooks/root/useKeyboard';
+import { useKeyboard } from './hooks/features/keyboard/useKeyboard';
 import { useErrorHandler } from './hooks/utils/useErrorHandler';
 import { useLogger, useLoggerFactory } from './hooks/utils/useLogger';
 import { useOptionsProp } from './hooks/utils/useOptionsProp';
@@ -69,7 +69,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const internalColumns = useColumns(props.columns, apiRef);
 
     const internalRows = useRows(props.rows, apiRef);
-    useKeyboard(apiRef);
+    useKeyboard(rootContainerRef, apiRef);
     useSelection(apiRef);
     useSorting(apiRef);
 

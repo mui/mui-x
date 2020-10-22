@@ -22,7 +22,7 @@ export function getData(rowLength: number, colLength: number): GridData {
       currencyPair: currencyPairs[idx],
     };
     for (let j = 1; j <= pricesColLength; j += 1) {
-      model[`price${j}M`] = `${i.toString()}, ${j} `; // randomPrice(0.7, 2);
+      model[`price${j}M`] = Number(`${i.toString()}${j}`); // randomPrice(0.7, 2);
     }
     data.push(model);
   }

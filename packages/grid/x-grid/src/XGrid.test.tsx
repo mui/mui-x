@@ -120,35 +120,34 @@ describe('<XGrid />', () => {
 
     it('cell navigation with arrows ', async () => {
       render(<KeyboardTest />);
-      await sleep(10);
+      await sleep(100);
       // @ts-ignore
       document.querySelector('[role="cell"][data-rowindex="0"][aria-colindex="0"]').focus();
       expect(getActiveCell()).to.equal('0-0');
       fireEvent.keyDown(document.activeElement, { code: 'ArrowRight' });
-      await sleep(10);
+      await sleep(100);
       expect(getActiveCell()).to.equal('0-1');
       fireEvent.keyDown(document.activeElement, { code: 'ArrowDown' });
-      await sleep(10);
+      await sleep(100);
       expect(getActiveCell()).to.equal('1-1');
       fireEvent.keyDown(document.activeElement, { code: 'ArrowLeft' });
-      await sleep(10);
+      await sleep(100);
       expect(getActiveCell()).to.equal('1-0');
       fireEvent.keyDown(document.activeElement, { code: 'ArrowUp' });
-      await sleep(10);
+      await sleep(100);
       expect(getActiveCell()).to.equal('0-0');
     });
 
     it('Home / End navigation', async () => {
       render(<KeyboardTest />);
-      await raf();
-
+      await sleep(100);
       // @ts-ignore
       document.querySelector('[role="cell"][data-rowindex="1"][aria-colindex="1"]').focus();
       expect(getActiveCell()).to.equal('1-1');
       fireEvent.keyDown(document.activeElement, { code: 'Home' });
-      await sleep(50);
+      await sleep(100);
       expect(getActiveCell()).to.equal('1-0');
-      await sleep(50);
+      await sleep(100);
       fireEvent.keyDown(document.activeElement, { code: 'End' });
       await sleep(150);
       expect(getActiveCell()).to.equal('1-19');

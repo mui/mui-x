@@ -10,6 +10,7 @@ export interface GridCellProps {
   formattedValue?: CellValue;
   width: number;
   showRightBorder?: boolean;
+  hasFocus?: boolean;
   align?: Alignement;
   cssClass?: string;
   tabIndex?: number;
@@ -28,6 +29,7 @@ export const Cell: React.FC<GridCellProps> = React.memo((props) => {
     children,
     colIndex,
     cssClass,
+    hasFocus,
     field,
     formattedValue,
     rowIndex,
@@ -39,9 +41,17 @@ export const Cell: React.FC<GridCellProps> = React.memo((props) => {
 
   const valueToRender = formattedValue || value;
   const { rowHeight } = React.useContext(OptionsContext);
+  const cellRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (hasFocus && cellRef.current) {
+      cellRef.current.focus();
+    }
+  }, [hasFocus]);
 
   return (
     <div
+      ref={cellRef}
       className={classnames(
         CELL_CSS_CLASS,
         cssClass,

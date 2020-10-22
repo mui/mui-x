@@ -4,6 +4,7 @@ import {
   getInitialRenderingState,
   InternalRenderingState,
 } from '../../virtualization/renderingState';
+import { KeyboardState } from '../keyboard/keyboardState';
 import { INITIAL_PAGINATION_STATE, PaginationState } from '../pagination/paginationReducer';
 import { getInitialRowState, InternalRowsState } from '../rows/rowsState';
 import { getInitialSortingState, SortingState } from '../sorting/sortingState';
@@ -18,6 +19,7 @@ export interface GridState {
   rendering: InternalRenderingState;
   containerSizes: ContainerProps | null;
   sorting: SortingState;
+  keyboard: KeyboardState;
 }
 
 export const getInitialState: () => GridState = () => ({
@@ -31,4 +33,5 @@ export const getInitialState: () => GridState = () => ({
   rendering: getInitialRenderingState(),
   containerSizes: null,
   sorting: getInitialSortingState(),
+  keyboard: { cell: null },
 });

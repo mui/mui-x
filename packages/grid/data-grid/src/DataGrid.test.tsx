@@ -121,7 +121,6 @@ describe('<DataGrid />', () => {
       });
     });
   });
-
   describe('warnings', () => {
     before(() => {
       PropTypes.resetWarningCache();

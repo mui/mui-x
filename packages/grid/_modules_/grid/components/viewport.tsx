@@ -2,6 +2,7 @@ import * as React from 'react';
 import { columnsSelector } from '../hooks/features/columns/columnsSelector';
 import { GridState } from '../hooks/features/core/gridState';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
+import { keyboardCellSelector } from '../hooks/features/keyboard/keyboardSelector';
 import { sortedRowsSelector } from '../hooks/features/sorting/sortingSelector';
 import { useLogger } from '../hooks/utils/useLogger';
 import { optionsSelector } from '../hooks/utils/useOptionsProp';
@@ -27,6 +28,7 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const options = useGridSelector(apiRef, optionsSelector);
     const containerSizes = useGridSelector(apiRef, containerSizesSelector);
     const columns = useGridSelector(apiRef, columnsSelector);
+    const cellFocus = useGridSelector(apiRef, keyboardCellSelector);
 
     const getRowsElements = () => {
       const renderedRows = rows.slice(renderCtx.firstRowIdx, renderCtx.lastRowIdx!);
@@ -49,6 +51,7 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
             showCellRightBorder={!!options.showCellRightBorder}
             extendRowFullWidth={!options.disableExtendRowFullWidth}
             rowIndex={renderCtx.firstRowIdx + idx}
+            cellFocus={cellFocus}
             domIndex={idx}
           />
           <RightEmptyCell width={renderCtx.rightEmptyWidth} />

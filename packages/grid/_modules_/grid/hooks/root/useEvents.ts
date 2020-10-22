@@ -214,7 +214,6 @@ export function useEvents(
 
       document.addEventListener(KEYDOWN, keyDownHandler);
       document.addEventListener(KEYUP, keyUpHandler);
-
       apiRef.current.isInitialised = true;
       const api = apiRef.current;
 

@@ -3,6 +3,7 @@ export * from './core';
 export * from './pagination';
 export * from './rows';
 export * from './sorting';
+export * from './keyboard';
 
 export * from './useApiRef';
 export * from './useComponents';
