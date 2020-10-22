@@ -150,7 +150,7 @@ describe('<XGrid />', () => {
       expect(getActiveCell()).to.equal('1-0');
       await sleep(50);
       fireEvent.keyDown(document.activeElement, { code: 'End' });
-      await sleep(50);
+      await sleep(150);
       expect(getActiveCell()).to.equal('1-19');
     });
     /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
