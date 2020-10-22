@@ -197,6 +197,7 @@ describe('<XGrid />', () => {
             ]}
             columns={[{ field: 'brand', width: 100 }]}
             checkboxSelection
+            hideFooter
           />
         </div>,
       );
@@ -215,6 +216,9 @@ describe('<XGrid />', () => {
       expect(row).to.not.have.class('Mui-selected');
       expect(checkbox).to.have.property('checked', false);
     });
+  });
+
+  describe('prop: apiRef', () => {
     it('should apply setPage correctly', async () => {
       const rows = [
         {

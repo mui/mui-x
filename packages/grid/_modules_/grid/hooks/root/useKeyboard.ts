@@ -267,8 +267,8 @@ export const useKeyboard = (apiRef: ApiRef): void => {
   );
 
   const onFocusOutHandler = React.useCallback(
-    (event: FocusEvent) => {
-      logger.debug('Grid lost focus, releasing key press', event);
+    () => {
+      logger.debug('Grid lost focus, releasing key press');
       onMultipleKeyChange(false);
     },
     [logger, onMultipleKeyChange],

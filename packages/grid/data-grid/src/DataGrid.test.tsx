@@ -141,6 +141,7 @@ describe('<DataGrid />', () => {
       }).toErrorDev('Material-UI: `<DataGrid pagination={false} />` is not a valid prop.');
     });
 
+    // eslint-disable-next-line mocha/no-skipped-tests
     xit('should throw if the rows has no id', function test() {
       // TODO is this fixed?
       if (!/jsdom/.test(window.navigator.userAgent)) {
