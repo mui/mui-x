@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.8](https://github.com/DanailH/material-ui-x/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (Oct 23, 2020)
+
+### @material-ui/x-grid@v4.0.0-alpha.8 / @material-ui/data-grid@v4.0.0-alpha.8
+
+- [DataGrid] Change ColumnsHeader component tabIndex to -1 (#478) @DanailH
+- [DataGrid] Reduce dependency on lodash, save 1kB gzipped (#450) @oliviertassinari
+- [XGrid] Second iteration on resizing logic (#436) @oliviertassinari
+
+### Core
+
+- [core] Remove usage of less (#467) @dependabot-preview
+- [core] Update to the latest version of the main repo (#456) @oliviertassinari
+
 ## [4.0.0-alpha.7](https://github.com/DanailH/material-ui-x/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (Oct 19, 2020)
 
 ### @material-ui/x-grid@v4.0.0-alpha.7 / @material-ui/data-grid@v4.0.0-alpha.7
