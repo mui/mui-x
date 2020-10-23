@@ -5,11 +5,11 @@ import {
   RenderColumnsProps,
   VirtualizationApi,
   ApiRef,
-} from '../../models';
-import { useLogger } from '../utils/useLogger';
-import { COLUMNS_UPDATED, RESIZE } from '../../constants/eventsConstants';
-import { useApiMethod } from '../root/useApiMethod';
-import { useApiEventHandler } from '../root/useApiEventHandler';
+} from '../../../models/index';
+import { useLogger } from '../../utils/useLogger';
+import { COLUMNS_UPDATED, RESIZE } from '../../../constants/eventsConstants';
+import { useApiMethod } from '../../root/useApiMethod';
+import { useApiEventHandler } from '../../root/useApiEventHandler';
 
 type UpdateRenderedColsFnType = (
   containerProps: ContainerProps | null,

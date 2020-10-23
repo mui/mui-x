@@ -35,7 +35,7 @@ import { useErrorHandler } from './hooks/utils/useErrorHandler';
 import { useLogger, useLoggerFactory } from './hooks/utils/useLogger';
 import { useOptionsProp } from './hooks/utils/useOptionsProp';
 import { useResizeContainer } from './hooks/utils/useResizeContainer';
-import { useVirtualRows } from './hooks/virtualization/useVirtualRows';
+import { useVirtualRows } from './hooks/features/virtualization/useVirtualRows';
 import { RootContainerRef } from './models/rootContainerRef';
 import { getCurryTotalHeight } from './utils/getTotalHeight';
 import { ApiContext } from './components/api-context';

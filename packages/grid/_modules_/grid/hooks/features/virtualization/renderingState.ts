@@ -1,6 +1,6 @@
-import { ContainerProps } from '../../models/containerProps';
-import { RenderContextProps } from '../../models/renderContextProps';
-import { ScrollParams } from '../utils/useScrollFn';
+import { ContainerProps } from '../../../models/containerProps';
+import { RenderContextProps } from '../../../models/renderContextProps';
+import { ScrollParams } from '../../utils/useScrollFn';
 
 export interface InternalRenderingState {
   virtualPage: number;
