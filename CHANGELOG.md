@@ -3,28 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [4.0.0-alpha.8](https://github.com/oliviertassinari/material-ui-x/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (2020-10-23)
-
-**Note:** Version bump only for package material-ui-x
-
-
-
-
-
-## [4.0.0-alpha.8](https://github.com/DanailH/material-ui-x/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (Oct 23, 2020)
+## [4.0.0-alpha.8](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (Oct 23, 2020)
 
 ### @material-ui/x-grid@v4.0.0-alpha.8 / @material-ui/data-grid@v4.0.0-alpha.8
 
-- [DataGrid] Change ColumnsHeader component tabIndex to -1 (#478) @DanailH
+- [DataGrid] Fix header row tabIndex (#478) @DanailH
 - [DataGrid] Reduce dependency on lodash, save 1kB gzipped (#450) @oliviertassinari
+  The DataGrid goes from [28.2 kB](https://bundlephobia.com/result?p=@material-ui/data-grid@4.0.0-alpha.7) gzipped down to [27.3 kB](https://bundlephobia.com/result?p=@material-ui/data-grid@4.0.0-alpha.8) gzipped.
 - [XGrid] Second iteration on resizing logic (#436) @oliviertassinari
+  Fix 8 bugs with the resizing.
 
 ### Core
 
-- [core] Remove usage of less (#467) @dependabot-preview
+- [core] Remove usage of LESS (#467) @dependabot-preview
 - [core] Update to the latest version of the main repo (#456) @oliviertassinari
 
-## [4.0.0-alpha.7](https://github.com/DanailH/material-ui-x/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (Oct 19, 2020)
+## [4.0.0-alpha.7](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (Oct 19, 2020)
 
 ### @material-ui/x-grid@v4.0.0-alpha.7 / @material-ui/data-grid@v4.0.0-alpha.7
 
