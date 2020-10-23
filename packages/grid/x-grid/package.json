@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/x-grid",
-  "version": "4.0.0-alpha.7",
+  "version": "4.0.0-alpha.8",
   "description": "The Material-UI X edition of the data grid component.",
   "author": "Material-UI Team",
   "main": "dist/index-cjs.js",
@@ -31,7 +31,7 @@
     "build": "cd ../ && rollup --config rollup.x-grid.config.js"
   },
   "dependencies": {
-    "@material-ui/x-license": "^4.0.0-alpha.7",
+    "@material-ui/x-license": "^4.0.0-alpha.8",
     "prop-types": "^15.7.2",
     "tslib": "^2.0.0"
   },
