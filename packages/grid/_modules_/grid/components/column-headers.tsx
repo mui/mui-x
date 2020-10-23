@@ -37,6 +37,7 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
     setResizingColField('');
   }, []);
 
+  // TODO refactor by putting resizing in the state so we avoid adding listeners.
   useApiEventHandler(apiRef!, COL_RESIZE_START, handleResizeStart);
   useApiEventHandler(apiRef!, COL_RESIZE_STOP, handleResizeStop);
 

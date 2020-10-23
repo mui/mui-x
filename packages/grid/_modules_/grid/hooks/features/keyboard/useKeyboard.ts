@@ -49,7 +49,7 @@ const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
 export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef: ApiRef): void => {
   const logger = useLogger('useKeyboard');
   const options = useGridSelector(apiRef, optionsSelector);
-  const [, setGridState] = useGridState(apiRef);
+  const [, setGridState, forceUpdate] = useGridState(apiRef);
   const paginationState = useGridSelector(apiRef, paginationSelector);
   const totalRowCount = useGridSelector(apiRef, rowCountSelector);
   const colCount = useGridSelector(apiRef, visibleColumnsLengthSelector);
@@ -90,10 +90,12 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
           nextCellIndexes = { colIndex: colIdx, rowIndex: currentRowIndex };
         } else {
           // In that case we go to first row, first col, or last row last col!
-          const rowIndex =
-            colIdx === 0
-              ? rowCount - (options.pagination ? paginationState.pageSize : 0)
-              : rowCount - 1;
+          let rowIndex = 0;
+          if (colIdx === 0) {
+            rowIndex = options.pagination ? rowCount - paginationState.pageSize : 0;
+          } else {
+            rowIndex = rowCount - 1;
+          }
           nextCellIndexes = { colIndex: colIdx, rowIndex };
         }
       } else if (isPageKeys(code) || isSpaceKey(code)) {
@@ -123,10 +125,22 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
         logger.debug(`Setting keyboard state, cell focus to ${JSON.stringify(nextCellIndexes)}`);
         return { ...state, keyboard: { cell: nextCellIndexes } };
       });
+      forceUpdate();
 
       return nextCellIndexes;
     },
-    [options.pagination, paginationState.pageSize, paginationState.page, totalRowCount, colCount, apiRef, setGridState, containerSizes, logger],
+    [
+      options.pagination,
+      paginationState.pageSize,
+      paginationState.page,
+      totalRowCount,
+      colCount,
+      apiRef,
+      setGridState,
+      forceUpdate,
+      containerSizes,
+      logger,
+    ],
   );
 
   const selectActiveRow = React.useCallback(() => {

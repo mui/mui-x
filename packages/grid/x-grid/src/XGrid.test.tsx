@@ -253,7 +253,7 @@ describe('<XGrid />', () => {
       };
       render(<GridTest />);
 
-      await raf();
+      await sleep(100);
       const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
       expect(cell).to.have.text('Addidas');
     });
@@ -268,7 +268,7 @@ describe('<XGrid />', () => {
       );
       await raf();
       const header = screen.getByRole('columnheader', { name: 'brand' });
-      await sleep(100);
+      // await sleep(100);
       expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       fireEvent.click(header);
       await sleep(100);
