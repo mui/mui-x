@@ -1,9 +1,6 @@
 import { getInitialColumnsState, InternalColumns } from '../../../models/colDef/colDef';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
-import {
-  getInitialRenderingState,
-  InternalRenderingState,
-} from '../virtualization/renderingState';
+import { getInitialRenderingState, InternalRenderingState } from '../virtualization/renderingState';
 import { KeyboardState } from '../keyboard/keyboardState';
 import { INITIAL_PAGINATION_STATE, PaginationState } from '../pagination/paginationReducer';
 import { getInitialRowState, InternalRowsState } from '../rows/rowsState';
