@@ -2987,7 +2987,7 @@
     prop-types "^15.7.2"
     react-is "^16.8.0"
 
-"@material-ui/utils@^5.0.0-alpha.1", "@material-ui/utils@^5.0.0-alpha.14":
+"@material-ui/utils@^5.0.0-alpha.14":
   version "5.0.0-alpha.14"
   resolved "https://registry.yarnpkg.com/@material-ui/utils/-/utils-5.0.0-alpha.14.tgz#1f4458b511d64c3bf1260b25cca6dde565986bde"
   integrity sha512-NIZNxDFUiTmr9cTA/iKYhqLBonlc3vgKfs+753NPjRoDhOj4aGr04yLvWegi4LbaIdu1veJTwGxXehypu1ud6Q==
