@@ -39,7 +39,7 @@ export const useSelection = (apiRef: ApiRef): void => {
       }
 
       logger.debug(`Selecting row ${row.id}`);
-      const rowIndex = 0;//apiRef.current.getRowIndexFromId(row.id);
+      const rowIndex = 0; //apiRef.current.getRowIndexFromId(row.id);
       // if checkboxSelection true then we allow click to deselect a row.
       let allowMultiSelect = allowMultipleSelectionKeyPressed.current || options.checkboxSelection;
       if (allowMultipleOverride) {

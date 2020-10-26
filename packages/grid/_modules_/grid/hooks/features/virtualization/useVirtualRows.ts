@@ -34,7 +34,7 @@ export const useVirtualRows = (
 
   const updateViewportRef = React.useRef<(...args: any[]) => void>();
   const [, forceUpdate] = React.useState();
-  const [gridState, setGridState] = useGridState(apiRef);
+  const [gridState, setGridState, rafUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
   const paginationState = useGridSelector<PaginationState>(apiRef, paginationSelector);
   const totalRowCount = useGridSelector<number>(apiRef, rowCountSelector);
@@ -109,10 +109,14 @@ export const useVirtualRows = (
     });
     if (hasChanged) {
       logger.debug('Force rendering');
-      // we force this update, the func makes react force run this state update and rerender
-      forceUpdate((p) => !p);
+      if (apiRef.current.state.isScrolling) {
+        rafUpdate();
+      } else {
+        // we force this update, the func makes react force run this state update and rerender
+        forceUpdate((p) => !p);
+      }
     }
-  }, [apiRef, forceUpdate, getRenderingState, logger, setRenderingState]);
+  }, [apiRef, getRenderingState, logger, rafUpdate, setRenderingState]);
 
   const updateViewport = React.useCallback(
     (forceReRender = false) => {

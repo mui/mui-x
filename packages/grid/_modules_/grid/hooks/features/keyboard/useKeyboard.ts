@@ -185,7 +185,7 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
         )
         .map((cur, idx) => apiRef.current.getRowIdFromRowIndex(cur + idx));
 
-      logger.debug('Selecting rows ', rowIds);
+      logger.debug('Selecting rows ');
 
       apiRef.current.selectRows(rowIds, true, true);
     },
