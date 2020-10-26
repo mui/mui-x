@@ -135,3 +135,12 @@ export interface InternalColumns {
   hasVisibleColumns: boolean;
   lookup: ColumnLookup;
 }
+
+export const getInitialColumnsState = (): InternalColumns => ({
+  visible: [],
+  all: [],
+  lookup: {},
+  hasVisibleColumns: false,
+  hasColumns: false,
+  meta: { positions: [], totalWidth: 0 },
+});

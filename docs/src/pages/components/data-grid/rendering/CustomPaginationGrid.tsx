@@ -11,16 +11,16 @@ const useStyles = makeStyles({
 });
 
 function CustomPagination(props: ComponentProps) {
-  const { paginationProps } = props;
+  const { pagination, api } = props;
   const classes = useStyles();
 
   return (
     <Pagination
       className={classes.root}
       color="primary"
-      page={paginationProps.page}
-      count={paginationProps.pageCount}
-      onChange={(event, value) => paginationProps.setPage(value)}
+      page={pagination.page}
+      count={pagination.pageCount}
+      onChange={(event, value) => api.current.setPage(value)}
     />
   );
 }

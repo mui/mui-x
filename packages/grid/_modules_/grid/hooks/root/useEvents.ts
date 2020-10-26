@@ -1,4 +1,9 @@
 import * as React from 'react';
+import { ApiRef } from '../../models/api/apiRef';
+import { CellParams } from '../../models/params/cellParams';
+import { ColParams } from '../../models/params/colParams';
+import { RowParams } from '../../models/params/rowParams';
+import { useGridSelector } from '../features/core/useGridSelector';
 import { useLogger } from '../utils/useLogger';
 import {
   CELL_CLICK,
@@ -19,7 +24,6 @@ import {
   GRID_FOCUS_OUT,
   COMPONENT_ERROR,
 } from '../../constants/eventsConstants';
-import { GridOptions, ApiRef, CellParams, ColParams, RowParams } from '../../models';
 import {
   CELL_CSS_CLASS,
   HEADER_CELL_CSS_CLASS,
@@ -32,19 +36,17 @@ import {
   isCell,
   isHeaderCell,
 } from '../../utils/domUtils';
+import { optionsSelector } from '../utils/useOptionsProp';
 import { useApiMethod } from './useApiMethod';
 import { useApiEventHandler } from './useApiEventHandler';
 import { buildCellParams, buildRowParams } from '../../utils/paramsUtils';
 import { EventsApi } from '../../models/api/eventsApi';
 
-export function useEvents(
-  gridRootRef: React.RefObject<HTMLDivElement>,
-  options: GridOptions,
-  apiRef: ApiRef,
-): void {
+export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: ApiRef): void {
   //  We use the isResizingRef to prevent the click on column header when the user is resizing the column
   const isResizingRef = React.useRef(false);
   const logger = useLogger('useEvents');
+  const options = useGridSelector(apiRef, optionsSelector);
 
   const getHandler = React.useCallback(
     (name: string) => (...args: any[]) => apiRef.current.publishEvent(name, ...args),
@@ -210,7 +212,6 @@ export function useEvents(
 
       document.addEventListener(KEYDOWN, keyDownHandler);
       document.addEventListener(KEYUP, keyUpHandler);
-
       apiRef.current.isInitialised = true;
       const api = apiRef.current;
 

@@ -97,21 +97,19 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
   const handleColumnHeaderDragOver = React.useCallback(
     (event) => {
       event.preventDefault();
-      logger.debug(`Dragging over ${event.target}`);
       apiRef.current.publishEvent(COL_REORDER_DRAG_OVER_HEADER);
 
       columnsRef.current!.classList.add(HEADER_CELL_DROP_ZONE_CSS_CLASS);
     },
-    [columnsRef, apiRef, logger],
+    [columnsRef, apiRef],
   );
 
   const handleDragEnter = React.useCallback(
     (event) => {
       event.preventDefault();
-      logger.debug(`Enter dragging col ${event.target}`);
       apiRef.current.publishEvent(COL_REORDER_DRAG_ENTER);
     },
-    [apiRef, logger],
+    [apiRef],
   );
 
   const handleDragOver = React.useCallback(

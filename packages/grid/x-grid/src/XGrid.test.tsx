@@ -39,7 +39,7 @@ async function raf() {
 }
 
 function getColumnValues() {
-  return Array.from(document.querySelectorAll('[aria-colindex="0"]')).map(
+  return Array.from(document.querySelectorAll('[role="cell"][aria-colindex="0"]')).map(
     (node) => node!.textContent,
   );
 }
@@ -63,6 +63,7 @@ describe('<XGrid />', () => {
       },
     ],
     columns: [{ field: 'brand', width: 100 }],
+    hideFooter: true,
   };
 
   before(function beforeHook() {
@@ -119,39 +120,36 @@ describe('<XGrid />', () => {
 
     it('cell navigation with arrows ', async () => {
       render(<KeyboardTest />);
+      await sleep(100);
       // @ts-ignore
       document.querySelector('[role="cell"][data-rowindex="0"][aria-colindex="0"]').focus();
       expect(getActiveCell()).to.equal('0-0');
-
       fireEvent.keyDown(document.activeElement, { code: 'ArrowRight' });
-      await raf();
+      await sleep(100);
       expect(getActiveCell()).to.equal('0-1');
-
       fireEvent.keyDown(document.activeElement, { code: 'ArrowDown' });
-      await raf();
+      await sleep(100);
       expect(getActiveCell()).to.equal('1-1');
-
       fireEvent.keyDown(document.activeElement, { code: 'ArrowLeft' });
-      await raf();
+      await sleep(100);
       expect(getActiveCell()).to.equal('1-0');
-
       fireEvent.keyDown(document.activeElement, { code: 'ArrowUp' });
-      await raf();
+      await sleep(100);
       expect(getActiveCell()).to.equal('0-0');
     });
 
     it('Home / End navigation', async () => {
       render(<KeyboardTest />);
+      await sleep(100);
       // @ts-ignore
       document.querySelector('[role="cell"][data-rowindex="1"][aria-colindex="1"]').focus();
       expect(getActiveCell()).to.equal('1-1');
-
       fireEvent.keyDown(document.activeElement, { code: 'Home' });
-      await raf();
+      await sleep(100);
       expect(getActiveCell()).to.equal('1-0');
-
+      await sleep(100);
       fireEvent.keyDown(document.activeElement, { code: 'End' });
-      await raf();
+      await sleep(150);
       expect(getActiveCell()).to.equal('1-19');
     });
     /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
@@ -169,6 +167,8 @@ describe('<XGrid />', () => {
 
     const { container, setProps } = render(<TestCase />);
     let rect;
+    await raf();
+
     // @ts-ignore
     rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
     expect(rect.width).to.equal(300 - 2);
@@ -184,7 +184,7 @@ describe('<XGrid />', () => {
   });
 
   describe('prop: checkboxSelection', () => {
-    it('should check and uncheck when double clicking the row', () => {
+    it('should check and uncheck when double clicking the row', async () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <XGrid
@@ -196,9 +196,11 @@ describe('<XGrid />', () => {
             ]}
             columns={[{ field: 'brand', width: 100 }]}
             checkboxSelection
+            hideFooter
           />
         </div>,
       );
+      await raf();
 
       const row = document.querySelector('[role="row"][aria-rowindex="2"]');
       const checkbox = row!.querySelector('input');
@@ -213,7 +215,10 @@ describe('<XGrid />', () => {
       expect(row).to.not.have.class('Mui-selected');
       expect(checkbox).to.have.property('checked', false);
     });
-    it('should apply setPage correctly', () => {
+  });
+
+  describe('prop: apiRef', () => {
+    it('should apply setPage correctly', async () => {
       const rows = [
         {
           id: 0,
@@ -232,7 +237,7 @@ describe('<XGrid />', () => {
         const apiRef = useApiRef();
         React.useEffect(() => {
           apiRef.current.setPage(2);
-        });
+        }, [apiRef]);
         return (
           <div style={{ width: 300, height: 300 }}>
             <XGrid
@@ -241,28 +246,35 @@ describe('<XGrid />', () => {
               columns={defaultProps.columns}
               pagination
               pageSize={1}
+              hideFooter
             />
           </div>
         );
       };
       render(<GridTest />);
+
+      await sleep(100);
       const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
       expect(cell).to.have.text('Addidas');
     });
   });
 
   describe('sorting', () => {
-    it('should sort when clicking the header cell', () => {
+    it('should sort when clicking the header cell', async () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <XGrid {...defaultProps} />
         </div>,
       );
+      await raf();
       const header = screen.getByRole('columnheader', { name: 'brand' });
+      // await sleep(100);
       expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       fireEvent.click(header);
+      await sleep(100);
       expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
       fireEvent.click(header);
+      await sleep(100);
       expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
     });
   });

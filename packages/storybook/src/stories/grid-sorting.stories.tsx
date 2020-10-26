@@ -381,6 +381,7 @@ function sortServerRows(rows: any[], params: SortModelParams): Promise<any[]> {
     setTimeout(() => {
       if (params.sortModel.length === 0) {
         resolve(getRows());
+        return;
       }
       const sortedCol = params.sortModel[0];
       const comparator = params.columns[0].sortComparator!;

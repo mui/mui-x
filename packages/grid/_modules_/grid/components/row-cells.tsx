@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { CellClassParams, Columns, RowModel, CellClassRules, CellParams } from '../models';
+import {
+  CellClassParams,
+  Columns,
+  RowModel,
+  CellClassRules,
+  CellParams,
+  CellIndexCoordinates,
+} from '../models';
 import { Cell, GridCellProps } from './cell';
 import { ApiContext } from './api-context';
 import { classnames, isFunction } from '../utils';
@@ -24,6 +31,7 @@ interface RowCellsProps {
   rowIndex: number;
   scrollSize: number;
   showCellRightBorder: boolean;
+  cellFocus: CellIndexCoordinates | null;
 }
 
 export const RowCells: React.FC<RowCellsProps> = React.memo((props) => {
@@ -36,6 +44,8 @@ export const RowCells: React.FC<RowCellsProps> = React.memo((props) => {
     row,
     rowIndex,
     scrollSize,
+    cellFocus,
+    showCellRightBorder,
   } = props;
   const api = React.useContext(ApiContext);
 
@@ -45,7 +55,7 @@ export const RowCells: React.FC<RowCellsProps> = React.memo((props) => {
     const width = removeScrollWidth ? column.width! - scrollSize : column.width!;
     const removeLastBorderRight = isLastColumn && hasScroll.x && !hasScroll.y;
     const showRightBorder = !isLastColumn
-      ? props.showCellRightBorder
+      ? showCellRightBorder
       : !removeLastBorderRight && !props.extendRowFullWidth;
 
     let value = row.data[column.field!];
@@ -100,6 +110,10 @@ export const RowCells: React.FC<RowCellsProps> = React.memo((props) => {
       rowIndex,
       colIndex: colIdx + firstColIdx,
       children: cellComponent,
+      hasFocus:
+        cellFocus !== null &&
+        cellFocus.rowIndex === rowIndex &&
+        cellFocus.colIndex === colIdx + firstColIdx,
     };
 
     return cellProps;

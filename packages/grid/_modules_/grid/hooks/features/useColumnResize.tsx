@@ -10,6 +10,7 @@ import { ApiRef } from '../../models';
 
 const MIN_COL_WIDTH = 50;
 
+// TODO improve experience for last column
 export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, apiRef: ApiRef) => {
   const logger = useLogger('useColumnResize');
   const colDefRef = React.useRef<ColDef>();

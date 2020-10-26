@@ -1,9 +1,27 @@
 import * as React from 'react';
 import { GridComponentProps, GridOptionsProp } from '../../GridComponentProps';
-import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../models';
-import { mergeOptions } from '../../utils';
+import { ApiRef } from '../../models/api/apiRef';
+import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../models/gridOptions';
+import { mergeOptions } from '../../utils/mergeOptions';
+import { GridState } from '../features/core/gridState';
+import { useGridReducer } from '../features/core/useGridReducer';
 
-export function useOptionsProp(props: GridComponentProps): [GridOptions, Function] {
+export const optionsSelector = (state: GridState) => state.options;
+
+// REDUCER
+export function optionsReducer(
+  state: GridOptions,
+  action: { type: string; payload?: Partial<GridOptions> },
+) {
+  switch (action.type) {
+    case 'options::UPDATE':
+      return mergeOptions(state, action.payload);
+    default:
+      throw new Error(`Material-UI: Action ${action.type} not found.`);
+  }
+}
+
+export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridOptions {
   // TODO Refactor to smaller objects
   const options: GridOptionsProp = React.useMemo(
     () => ({
@@ -98,12 +116,23 @@ export function useOptionsProp(props: GridComponentProps): [GridOptions, Functio
     ],
   );
 
-  const [internalOptions, setInternalOptions] = React.useState<GridOptions>(
-    mergeOptions(DEFAULT_GRID_OPTIONS, options),
+  const { gridState, dispatch } = useGridReducer(
+    apiRef,
+    'options',
+    optionsReducer,
+    DEFAULT_GRID_OPTIONS,
   );
-  React.useEffect(() => {
-    setInternalOptions((previousState) => mergeOptions(previousState, options));
-  }, [options]);
 
-  return [internalOptions, setInternalOptions];
+  const updateOptions = React.useCallback(
+    (newOptions: Partial<GridOptions>) => {
+      dispatch({ type: 'options::UPDATE', payload: newOptions });
+    },
+    [dispatch],
+  );
+
+  React.useEffect(() => {
+    updateOptions(options);
+  }, [options, updateOptions]);
+
+  return gridState.options;
 }

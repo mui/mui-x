@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useLogger } from '../utils';
-import { isFunction } from '../../utils';
-import { ApiRef } from '../../models';
+import { ApiRef } from '../../models/api/apiRef';
+import { isFunction } from '../../utils/utils';
+import { useLogger } from '../utils/useLogger';
 
 export const useNativeEventListener = (
   apiRef: ApiRef,
@@ -12,6 +12,15 @@ export const useNativeEventListener = (
 ) => {
   const logger = useLogger('useNativeEventListener');
   const [added, setAdded] = React.useState(false);
+  const handlerRef = React.useRef(handler);
+
+  const wrapHandler = React.useCallback((args) => {
+    return handlerRef.current && handlerRef.current(args);
+  }, []);
+
+  React.useEffect(() => {
+    handlerRef.current = handler;
+  }, [handler]);
 
   React.useEffect(() => {
     let targetElement: Element | null | undefined;
@@ -22,18 +31,18 @@ export const useNativeEventListener = (
       targetElement = ref && ref.current ? ref.current : null;
     }
 
-    if (targetElement && handler && eventName && !added) {
+    if (targetElement && wrapHandler && eventName && !added) {
       logger.debug(`Binding native ${eventName} event`);
-      targetElement.addEventListener(eventName, handler, options);
+      targetElement.addEventListener(eventName, wrapHandler, options);
       const bindedElem = targetElement;
       setAdded(true);
 
       const unsubscribe = () => {
         logger.debug(`Clearing native ${eventName} event`);
-        bindedElem.removeEventListener(eventName, handler, options);
+        bindedElem.removeEventListener(eventName, wrapHandler, options);
       };
 
       apiRef.current.onUnmount(unsubscribe);
     }
-  }, [ref, handler, eventName, added, logger, options, apiRef]);
+  }, [ref, wrapHandler, eventName, added, logger, options, apiRef]);
 };

@@ -15,8 +15,9 @@ export interface VirtualizationApi {
   /**
    * Trigger the grid viewport to scroll to a row of x y indexes.
    * @param params
+   * @returns boolean that indicates if the viewport has scrolled to reach the indexes
    */
-  scrollToIndexes: (params: CellIndexCoordinates) => void;
+  scrollToIndexes: (params: CellIndexCoordinates) => boolean;
   /**
    * Check if a column at index is currently visible in the viewport.
    * @param colIndex
@@ -30,9 +31,4 @@ export interface VirtualizationApi {
    * Get the current renderContext.
    */
   getRenderContextState: () => Partial<RenderContextProps> | undefined;
-  /**
-   * Force the rendering engine to render a particular page. Not for pagination.
-   * @param page
-   */
-  renderPage: (page: number) => void;
 }
