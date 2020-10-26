@@ -27,8 +27,8 @@ export const useSelection = (apiRef: ApiRef): void => {
   const allowMultipleSelectionKeyPressed = React.useRef<boolean>(false);
   const [, forceUpdate] = React.useState();
 
-  const getSelectedRows = React.useCallback((): RowModel[] => {
-    return selectedItemsRef.current.map((id) => apiRef.current.getRowFromId(id));
+  const getSelectedRows = React.useCallback((): any[] => {
+    return selectedItemsRef.current; //.map((id) => apiRef.current.getRowFromId(id));
   }, [selectedItemsRef, apiRef]);
 
   const selectRowModel = React.useCallback(
@@ -39,7 +39,7 @@ export const useSelection = (apiRef: ApiRef): void => {
       }
 
       logger.debug(`Selecting row ${row.id}`);
-      const rowIndex = apiRef.current.getRowIndexFromId(row.id);
+      const rowIndex = 0;// apiRef.current.getRowIndexFromId(row.id);
       // if checkboxSelection true then we allow click to deselect a row.
       let allowMultiSelect = allowMultipleSelectionKeyPressed.current || options.checkboxSelection;
       if (allowMultipleOverride) {
@@ -76,13 +76,13 @@ export const useSelection = (apiRef: ApiRef): void => {
       const rowSelectedParam: RowSelectedParams = {
         data: row.data,
         isSelected: isRowSelected,
-        rowIndex,
+        rowIndex: 0,
       };
-      const selectionChangeParam: SelectionChangeParams = {
-        rows: getSelectedRows().map((r) => r.data),
-      };
+      // const selectionChangeParam: SelectionChangeParams = {
+      //   rows: getSelectedRows().map((r) => r.data),
+      // };
       apiRef.current.publishEvent(ROW_SELECTED, rowSelectedParam);
-      apiRef.current.publishEvent(SELECTION_CHANGED, selectionChangeParam);
+      apiRef.current.publishEvent(SELECTION_CHANGED, {rows: selectedItemsRef.current});
 
       forceUpdate((p: any) => !p);
     },
@@ -119,12 +119,12 @@ export const useSelection = (apiRef: ApiRef): void => {
       forceUpdate((p: any) => !p);
 
       // We don't emit ROW_SELECTED on each row as it would be too consuming for large set of data.
-      const selectionChangeParam: SelectionChangeParams = {
-        rows: getSelectedRows().map((r) => r.data),
-      };
-      apiRef.current.publishEvent(SELECTION_CHANGED, selectionChangeParam);
+      // const selectionChangeParam: SelectionChangeParams = {
+      //   rows: getSelectedRows().map((r) => r.data),
+      // };
+      apiRef.current.publishEvent(SELECTION_CHANGED, {rows: selectedItemsRef.current});
     },
-    [options.disableMultipleSelection, options.checkboxSelection, apiRef, getSelectedRows],
+    [options.disableMultipleSelection, options.checkboxSelection, apiRef],
   );
 
   const rowClickHandler = React.useCallback(
@@ -175,9 +175,9 @@ export const useSelection = (apiRef: ApiRef): void => {
 
   React.useEffect(() => {
     if (selectedItemsRef.current.length > 0) {
-      selectRows(selectedItemsRef.current);
+      apiRef.current.selectRows(selectedItemsRef.current);
     }
-  }, [selectRows, selectedItemsRef]);
+  }, [apiRef, selectedItemsRef]);
 
   React.useEffect(() => {
     selectedItemsRef.current = selectedItemsRef.current.filter((id) => rowsLookup[id] != null);

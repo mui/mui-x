@@ -200,9 +200,9 @@ export const useSorting = (apiRef: ApiRef) => {
 
   const onRowsUpdated = React.useCallback(() => {
     if (gridState.sorting.sortModel.length > 0) {
-      applySorting();
+      apiRef.current.applySorting();
     }
-  }, [gridState.sorting.sortModel.length, applySorting]);
+  }, [gridState.sorting.sortModel.length, apiRef]);
 
   const getSortModel = React.useCallback(() => gridState.sorting.sortModel, [
     gridState.sorting.sortModel,
@@ -228,15 +228,15 @@ export const useSorting = (apiRef: ApiRef) => {
 
   useApiEventHandler(apiRef, SORT_MODEL_CHANGE, options.onSortModelChange);
 
-  const sortApi: SortApi = { getSortModel, setSortModel, onSortModelChange };
+  const sortApi: SortApi = { getSortModel, setSortModel, onSortModelChange, applySorting };
   useApiMethod(apiRef, sortApi, 'SortApi');
 
   React.useEffect(() => {
     if (rowCount > 0 && options.sortingMode === FeatureModeConstant.client) {
       logger.debug('row changed, applying sortModel');
-      applySorting();
+      apiRef.current.applySorting();
     }
-  }, [rowCount, applySorting, options.sortingMode, logger]);
+  }, [rowCount, apiRef, options.sortingMode, logger]);
 
   // TODO Remove if we deprecate column.sortDirection
   React.useEffect(() => {
