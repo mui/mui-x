@@ -171,4 +171,113 @@ describe('<DataGrid />', () => {
       );
     });
   });
+
+  describe.only('column width', () => {
+    it('should set the columns width to 100px by default', () => {
+      const rows = [
+        {
+          id: 1,
+          username: 'John Doe',
+          age: 30,
+        },
+      ];
+
+      const columns = [
+        {
+          field: 'id',
+        },
+        {
+          field: 'name',
+        },
+        {
+          field: 'age',
+        },
+      ];
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid columns={columns} rows={rows}/>
+        </div>,
+      );
+
+      const DOMColumns = document.querySelectorAll('.MuiDataGrid-colCell');
+      DOMColumns.forEach(col => {
+        expect(col.style.width).to.equal('100px');
+      })
+    });
+
+    it('should set the columns width value to what is provided', () => {
+      const rows = [
+        {
+          id: 1,
+          username: 'John Doe',
+          age: 30,
+        },
+      ];
+
+      const colWidthValues = [50, 50, 200];
+      const columns = [
+        {
+          field: 'id',
+          width: colWidthValues[0],
+        },
+        {
+          field: 'name',
+          width: colWidthValues[1],
+        },
+        {
+          field: 'age',
+          width: colWidthValues[2],
+        },
+      ];
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid columns={columns} rows={rows}/>
+        </div>,
+      );
+
+      const DOMColumns = document.querySelectorAll('.MuiDataGrid-colCell');
+      DOMColumns.forEach((col, index) => {
+        expect(col.style.width).to.equal(`${colWidthValues[index]}px`);
+      });
+    });
+
+    it('should set the first column width to be twise as bit as the second one', () => {
+      if (!/jsdom/.test(window.navigator.userAgent)) {
+        const rows = [
+          {
+            id: 1,
+            username: 'John Doe',
+            age: 30,
+          },
+        ];
+
+        const columns = [
+          {
+            field: 'id',
+            flex: 1,
+          },
+          {
+            field: 'name',
+            flex: 0.5,
+          },
+        ];
+
+        render(
+          <div style={{ width: 200, height: 300 }}>
+            <DataGrid columns={columns} rows={rows}/>
+          </div>,
+        );
+
+        const firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
+        const secondColumn = document.querySelector('[role="columnheader"][aria-colindex="2"]');
+
+        const firstColumnWidthVal = firstColumn.style.width.split('px')[0];
+        const secondColumnWidthVal = secondColumn.style.width.split('px')[0];
+
+        expect(parseInt(firstColumnWidthVal)).to.equal(2 * parseInt(secondColumnWidthVal));
+      }
+    });
+  })
 });
