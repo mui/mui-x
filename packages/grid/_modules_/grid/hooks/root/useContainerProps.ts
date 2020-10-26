@@ -153,9 +153,9 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
     refreshContainerSizes();
   }, [gridState.options.hideFooter, refreshContainerSizes]);
 
-  React.useEffect(()=> {
+  React.useEffect(() => {
     refreshContainerSizes();
-  }, [gridState.columns, refreshContainerSizes])
+  }, [gridState.columns, refreshContainerSizes]);
 
   useApiEventHandler(apiRef, RESIZE, refreshContainerSizes);
 };
