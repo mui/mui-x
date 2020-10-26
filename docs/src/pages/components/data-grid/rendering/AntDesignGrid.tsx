@@ -102,18 +102,18 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 function CustomPagination(props: ComponentProps) {
-  const { paginationProps } = props;
+  const { pagination, api } = props;
 
   return (
     <Pagination
       color="primary"
       variant="outlined"
       shape="rounded"
-      page={paginationProps.page}
-      count={paginationProps.pageCount}
+      page={pagination.page}
+      count={pagination.pageCount}
       // @ts-expect-error
       renderItem={(props2) => <PaginationItem {...props2} disableRipple />}
-      onChange={(event, value) => paginationProps.setPage(value)}
+      onChange={(event, value) => api.current.setPage(value)}
     />
   );
 }

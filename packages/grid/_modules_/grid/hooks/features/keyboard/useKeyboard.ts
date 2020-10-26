@@ -1,29 +1,32 @@
 import * as React from 'react';
-import { useLogger } from '../utils/useLogger';
+import { containerSizesSelector } from '../../../components/viewport';
+import { CELL_CSS_CLASS, ROW_CSS_CLASS } from '../../../constants/cssClassesConstants';
 import {
   GRID_FOCUS_OUT,
   KEYDOWN,
   KEYUP,
   MULTIPLE_KEY_PRESS_CHANGED,
-  SCROLLING,
-} from '../../constants/eventsConstants';
+} from '../../../constants/eventsConstants';
+import { ApiRef } from '../../../models/api/apiRef';
+import { CellIndexCoordinates } from '../../../models/rows';
+import { findParentElementFromClassName, getIdFromRowElem, isCell } from '../../../utils/domUtils';
 import {
-  findGridRootFromCurrent,
-  findParentElementFromClassName,
-  getCellElementFromIndexes,
-  getIdFromRowElem,
   isArrowKeys,
-  isCell,
   isHomeOrEndKeys,
   isMultipleKey,
   isNavigationKey,
   isPageKeys,
   isSpaceKey,
   isTabKey,
-} from '../../utils';
-import { CELL_CSS_CLASS, ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
-import { CellIndexCoordinates, GridOptions, ApiRef } from '../../models';
-import { useApiEventHandler } from './useApiEventHandler';
+} from '../../../utils/keyboardUtils';
+import { visibleColumnsLengthSelector } from '../columns/columnsSelector';
+import { useGridSelector } from '../core/useGridSelector';
+import { useGridState } from '../core/useGridState';
+import { paginationSelector } from '../pagination/paginationSelector';
+import { rowCountSelector } from '../rows/rowsSelector';
+import { useLogger } from '../../utils/useLogger';
+import { optionsSelector } from '../../utils/useOptionsProp';
+import { useApiEventHandler } from '../../root/useApiEventHandler';
 
 const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
   if (!isArrowKeys(code)) {
@@ -43,9 +46,14 @@ const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
   return { ...indexes, rowIndex: indexes.rowIndex + 1 };
 };
 
-export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: ApiRef): void => {
+export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef: ApiRef): void => {
   const logger = useLogger('useKeyboard');
-  const rafFocusOnCellRef = React.useRef(0);
+  const options = useGridSelector(apiRef, optionsSelector);
+  const [, setGridState, forceUpdate] = useGridState(apiRef);
+  const paginationState = useGridSelector(apiRef, paginationSelector);
+  const totalRowCount = useGridSelector(apiRef, rowCountSelector);
+  const colCount = useGridSelector(apiRef, visibleColumnsLengthSelector);
+  const containerSizes = useGridSelector(apiRef, containerSizesSelector);
 
   const onMultipleKeyChange = React.useCallback(
     (isPressed: boolean) => {
@@ -62,14 +70,11 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
       )! as HTMLElement;
       cellEl.tabIndex = -1;
 
-      const root = findGridRootFromCurrent(cellEl)!;
       const currentColIndex = Number(cellEl.getAttribute('aria-colindex'));
       const currentRowIndex = Number(cellEl.getAttribute('data-rowindex'));
-      const autoPageSize = apiRef.current.getContainerPropsState()!.viewportPageSize;
-      const pageSize =
-        options.pagination && options.pageSize != null ? options.pageSize : autoPageSize;
-      const rowCount = options.pagination ? pageSize : apiRef.current.getRowsCount();
-      const colCount = apiRef.current.getVisibleColumns().length;
+      const rowCount = options.pagination
+        ? paginationState.pageSize * paginationState.page
+        : totalRowCount;
 
       let nextCellIndexes: CellIndexCoordinates;
       if (isArrowKeys(code)) {
@@ -85,13 +90,20 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
           nextCellIndexes = { colIndex: colIdx, rowIndex: currentRowIndex };
         } else {
           // In that case we go to first row, first col, or last row last col!
-          const rowIndex = colIdx === 0 ? 0 : rowCount - 1;
+          let rowIndex = 0;
+          if (colIdx === 0) {
+            rowIndex = options.pagination ? rowCount - paginationState.pageSize : 0;
+          } else {
+            rowIndex = rowCount - 1;
+          }
           nextCellIndexes = { colIndex: colIdx, rowIndex };
         }
       } else if (isPageKeys(code) || isSpaceKey(code)) {
         const nextRowIndex =
           currentRowIndex +
-          (code.indexOf('Down') > -1 || isSpaceKey(code) ? autoPageSize : -1 * autoPageSize);
+          (code.indexOf('Down') > -1 || isSpaceKey(code)
+            ? containerSizes!.viewportPageSize
+            : -1 * containerSizes!.viewportPageSize);
         nextCellIndexes = { colIndex: currentColIndex, rowIndex: nextRowIndex };
       } else {
         throw new Error('Material-UI. Key not mapped to navigation behavior.');
@@ -99,34 +111,36 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
 
       nextCellIndexes.rowIndex = nextCellIndexes.rowIndex <= 0 ? 0 : nextCellIndexes.rowIndex;
       nextCellIndexes.rowIndex =
-        nextCellIndexes.rowIndex >= rowCount ? rowCount - 1 : nextCellIndexes.rowIndex;
+        nextCellIndexes.rowIndex >= rowCount && rowCount > 0
+          ? rowCount - 1
+          : nextCellIndexes.rowIndex;
+
       nextCellIndexes.colIndex = nextCellIndexes.colIndex <= 0 ? 0 : nextCellIndexes.colIndex;
       nextCellIndexes.colIndex =
         nextCellIndexes.colIndex >= colCount ? colCount - 1 : nextCellIndexes.colIndex;
 
-      if (rafFocusOnCellRef.current) {
-        cancelAnimationFrame(rafFocusOnCellRef.current);
-      }
-
-      apiRef.current.once(SCROLLING, () => {
-        rafFocusOnCellRef.current = requestAnimationFrame(() => {
-          const nextCell = getCellElementFromIndexes(root, nextCellIndexes);
-
-          if (nextCell) {
-            logger.debug(
-              `Focusing on cell with index ${nextCellIndexes.rowIndex} - ${nextCellIndexes.colIndex} `,
-            );
-            nextCell.tabIndex = 0;
-            (nextCell as HTMLDivElement).focus();
-          }
-        });
-      });
-
       apiRef.current.scrollToIndexes(nextCellIndexes);
+
+      setGridState((state) => {
+        logger.debug(`Setting keyboard state, cell focus to ${JSON.stringify(nextCellIndexes)}`);
+        return { ...state, keyboard: { cell: nextCellIndexes } };
+      });
+      forceUpdate();
 
       return nextCellIndexes;
     },
-    [apiRef, options.pagination, options.pageSize, logger],
+    [
+      options.pagination,
+      paginationState.pageSize,
+      paginationState.page,
+      totalRowCount,
+      colCount,
+      apiRef,
+      setGridState,
+      forceUpdate,
+      containerSizes,
+      logger,
+    ],
   );
 
   const selectActiveRow = React.useCallback(() => {
@@ -171,7 +185,7 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
         )
         .map((cur, idx) => apiRef.current.getRowIdFromRowIndex(cur + idx));
 
-      logger.debug('Selecting rows ', rowIds);
+      logger.debug('Selecting rows ');
 
       apiRef.current.selectRows(rowIds, true, true);
     },
@@ -256,13 +270,10 @@ export const useKeyboard = (options: GridOptions, initialised: boolean, apiRef: 
     [logger, onMultipleKeyChange],
   );
 
-  const onFocusOutHandler = React.useCallback(
-    (event: FocusEvent) => {
-      logger.debug('Grid lost focus, releasing key press', event);
-      onMultipleKeyChange(false);
-    },
-    [logger, onMultipleKeyChange],
-  );
+  const onFocusOutHandler = React.useCallback(() => {
+    logger.debug('Grid lost focus, releasing key press');
+    onMultipleKeyChange(false);
+  }, [logger, onMultipleKeyChange]);
 
   useApiEventHandler(apiRef, KEYDOWN, onKeyDownHandler);
   useApiEventHandler(apiRef, KEYUP, onKeyUpHandler);

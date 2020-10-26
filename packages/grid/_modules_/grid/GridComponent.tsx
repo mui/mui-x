@@ -1,290 +1,191 @@
-import * as React from 'react';
-import { debounce, useForkRef } from '@material-ui/core/utils';
-import { GridComponentProps } from './GridComponentProps';
-import {
-  useApiRef,
-  useColumnReorder,
-  useColumnResize,
-  useComponents,
-  usePagination,
-  useSelection,
-  useSorting,
-} from './hooks/features';
-import { ElementSize, RootContainerRef } from './models';
-import { COMPONENT_ERROR, DATA_CONTAINER_CSS_CLASS } from './constants';
-import { GridRoot } from './components/styled-wrappers/GridRoot';
-import { GridDataContainer } from './components/styled-wrappers/GridDataContainer';
-import { GridColumnsContainer } from './components/styled-wrappers/GridColumnsContainer';
-import { useVirtualRows } from './hooks/virtualization';
-import {
-  ApiContext,
-  AutoSizer,
-  ColumnsHeader,
-  DefaultFooter,
-  OptionsContext,
-  Pagination,
-  RenderContext,
-  Viewport,
-  Watermark,
-  GridWindow,
-} from './components';
-import { useApi, useColumns, useKeyboard, useRows } from './hooks/root';
-import { useLogger, useLoggerFactory } from './hooks/utils';
-import { useEvents } from './hooks/root/useEvents';
-import { ErrorBoundary } from './components/error-boundary';
-import { useOptionsProp } from './hooks/utils/useOptionsProp';
-
 /**
  * Data Grid component implementing [[GridComponentProps]].
  * @returns JSX.Element
  */
-export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(function DataGrid(
-  props,
-  ref,
-) {
-  const [internalOptions, setInternalOptions] = useOptionsProp(props);
-  useLoggerFactory(internalOptions?.logger, internalOptions?.logLevel);
-  const gridLogger = useLogger('Material-UI Data Grid');
+import useForkRef from '@material-ui/core/utils/useForkRef';
+import * as React from 'react';
+import { AutoSizer } from './components/AutoSizer';
+import { ColumnsHeader } from './components/column-headers';
+import { DefaultFooter } from './components/default-footer';
+import { ErrorBoundary } from './components/error-boundary';
+import { Pagination } from './components/pagination';
+import { GridColumnsContainer } from './components/styled-wrappers/GridColumnsContainer';
+import { GridDataContainer } from './components/styled-wrappers/GridDataContainer';
+import { GridRoot } from './components/styled-wrappers/GridRoot';
+import { GridWindow } from './components/styled-wrappers/GridWindow';
+import { Viewport } from './components/viewport';
+import { Watermark } from './components/watermark';
+import { DATA_CONTAINER_CSS_CLASS } from './constants/cssClassesConstants';
+import { GridComponentProps } from './GridComponentProps';
+import { useColumns } from './hooks/features/columns/useColumns';
+import { useGridState } from './hooks/features/core/useGridState';
+import { usePagination } from './hooks/features/pagination/usePagination';
+import { useRows } from './hooks/features/rows/useRows';
+import { useSorting } from './hooks/features/sorting/useSorting';
+import { useApiRef } from './hooks/features/useApiRef';
+import { useColumnReorder } from './hooks/features/useColumnReorder';
+import { useColumnResize } from './hooks/features/useColumnResize';
+import { useComponents } from './hooks/features/useComponents';
+import { useSelection } from './hooks/features/useSelection';
+import { useApi } from './hooks/root/useApi';
+import { useContainerProps } from './hooks/root/useContainerProps';
+import { useEvents } from './hooks/root/useEvents';
+import { useKeyboard } from './hooks/features/keyboard/useKeyboard';
+import { useErrorHandler } from './hooks/utils/useErrorHandler';
+import { useLogger, useLoggerFactory } from './hooks/utils/useLogger';
+import { useOptionsProp } from './hooks/utils/useOptionsProp';
+import { useResizeContainer } from './hooks/utils/useResizeContainer';
+import { useVirtualRows } from './hooks/features/virtualization/useVirtualRows';
+import { RootContainerRef } from './models/rootContainerRef';
+import { getCurryTotalHeight } from './utils/getTotalHeight';
+import { ApiContext } from './components/api-context';
+import { OptionsContext } from './components/options-context';
+import { RenderContext } from './components/render-context';
 
-  const rootContainerRef: RootContainerRef = React.useRef<HTMLDivElement>(null);
-  const handleRef = useForkRef(rootContainerRef, ref);
+export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
+  function GridComponent(props, ref) {
+    const rootContainerRef: RootContainerRef = React.useRef<HTMLDivElement>(null);
+    const handleRef = useForkRef(rootContainerRef, ref);
 
-  const footerRef = React.useRef<HTMLDivElement>(null);
-  const columnsHeaderRef = React.useRef<HTMLDivElement>(null);
-  const columnsContainerRef = React.useRef<HTMLDivElement>(null);
-  const windowRef = React.useRef<HTMLDivElement>(null);
-  const gridRef = React.useRef<HTMLDivElement>(null);
-  const renderingZoneRef = React.useRef<HTMLDivElement>(null);
-  const internalApiRef = useApiRef();
-  const [errorState, setErrorState] = React.useState<any>(null);
+    const footerRef = React.useRef<HTMLDivElement>(null);
+    const columnsHeaderRef = React.useRef<HTMLDivElement>(null);
+    const columnsContainerRef = React.useRef<HTMLDivElement>(null);
+    const windowRef = React.useRef<HTMLDivElement>(null);
+    const gridRef = React.useRef<HTMLDivElement>(null);
+    const renderingZoneRef = React.useRef<HTMLDivElement>(null);
 
-  const apiRef = React.useMemo(() => (!props.apiRef ? internalApiRef : props.apiRef), [
-    props.apiRef,
-    internalApiRef,
-  ]);
+    const apiRef = useApiRef(props.apiRef);
+    const [gridState] = useGridState(apiRef);
+    const internalOptions = useOptionsProp(apiRef, props);
 
-  const initialised = useApi(rootContainerRef, apiRef);
+    useLoggerFactory(internalOptions.logger, internalOptions.logLevel);
+    const logger = useLogger('GridComponent');
 
-  const errorHandler = (args: any) => {
-    // We are handling error here, to set up the handler as early as possible and be able to catch error thrown at init time.
-    setErrorState(args);
-  };
-  React.useEffect(() => apiRef!.current.subscribeEvent(COMPONENT_ERROR, errorHandler), [apiRef]);
+    useApi(rootContainerRef, apiRef);
+    const errorState = useErrorHandler(apiRef, props);
+    useEvents(rootContainerRef, apiRef);
+    const onResize = useResizeContainer(apiRef);
 
-  React.useEffect(() => {
-    apiRef!.current.showError(props.error);
-  }, [apiRef, props.error]);
+    useColumns(props.columns, apiRef);
+    useRows(props.rows, apiRef);
+    useKeyboard(rootContainerRef, apiRef);
+    useSelection(apiRef);
+    useSorting(apiRef);
 
-  useEvents(rootContainerRef, internalOptions, apiRef);
-  const internalColumns = useColumns(internalOptions, props.columns, apiRef);
-  const internalRows = useRows(internalOptions, props.rows, initialised, apiRef);
-  useKeyboard(internalOptions, initialised, apiRef);
-  useSelection(internalOptions, props.rows, initialised, apiRef);
-  useSorting(internalOptions, props.rows, props.columns, apiRef);
+    useContainerProps(windowRef, apiRef);
+    const renderCtx = useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
 
-  const renderCtx = useVirtualRows(
-    columnsHeaderRef,
-    windowRef,
-    renderingZoneRef,
-    internalColumns,
-    internalRows,
-    internalOptions,
-    apiRef,
-  );
+    const onColumnReorder = useColumnReorder(columnsHeaderRef, apiRef);
+    const separatorProps = useColumnResize(columnsHeaderRef, apiRef);
+    usePagination(apiRef);
 
-  const onColumnReorder = useColumnReorder(columnsHeaderRef, apiRef);
-  const separatorProps = useColumnResize(columnsHeaderRef, apiRef);
-  const paginationProps = usePagination(internalRows, internalColumns, internalOptions, apiRef);
+    const customComponents = useComponents(props.components, apiRef, rootContainerRef);
 
-  React.useEffect(() => {
-    setInternalOptions((previousState) => {
-      if (previousState.pageSize !== paginationProps.pageSize) {
-        return { ...previousState, pageSize: paginationProps.pageSize };
-      }
-      return previousState;
-    });
-  }, [paginationProps.pageSize, setInternalOptions]);
-
-  const customComponents = useComponents(
-    internalColumns,
-    internalRows,
-    internalOptions,
-    props.components,
-    paginationProps,
-    apiRef,
-    rootContainerRef,
-  );
-
-  const onResize = React.useCallback(
-    (size: ElementSize) => {
-      if (size.height === 0) {
-        gridLogger.warn(
-          [
-            'The parent of the grid has an empty height.',
-            'You need to make sure the container has an intrinsic height.',
-            'The grid displays with a height of 0px.',
-            '',
-            'You can find a solution in the docs:',
-            'https://material-ui.com/components/data-grid/rendering/#layout',
-          ].join('\n'),
-        );
-      }
-      if (size.width === 0) {
-        gridLogger.warn(
-          [
-            'The parent of the grid has an empty width.',
-            'You need to make sure the container has an intrinsic width.',
-            'The grid displays with a width of 0px.',
-            '',
-            'You can find a solution in the docs:',
-            'https://material-ui.com/components/data-grid/rendering/#layout',
-          ].join('\n'),
-        );
-      }
-
-      gridLogger.info('resized...', size);
-      apiRef!.current.resize();
-    },
-    [gridLogger, apiRef],
-  );
-  const debouncedOnResize = React.useMemo(() => debounce(onResize, 100), [onResize]);
-
-  React.useEffect(() => {
-    return () => {
-      gridLogger.info('canceling resize...');
-      debouncedOnResize.clear();
-    };
-  }, [gridLogger, debouncedOnResize]);
-
-  gridLogger.info(
-    `Rendering, page: ${renderCtx?.page}, col: ${renderCtx?.firstColIdx}-${renderCtx?.lastColIdx}, row: ${renderCtx?.firstRowIdx}-${renderCtx?.lastRowIdx}`,
-    renderCtx,
-  );
-
-  const getTotalHeight = React.useCallback(
-    (size) => {
-      if (!internalOptions.autoHeight) {
-        return size.height;
-      }
-      const footerHeight =
-        (footerRef.current && footerRef.current.getBoundingClientRect().height) || 0;
-      let dataHeight = (renderCtx && renderCtx.dataContainerSizes!.height) || 0;
-      if (dataHeight < internalOptions.rowHeight) {
-        dataHeight = internalOptions.rowHeight * 2; // If we have no rows, we give the size of 2 rows to display the no rows overlay
-      }
-
-      return footerHeight + dataHeight + internalOptions.headerHeight;
-    },
-    [
-      internalOptions.autoHeight,
-      internalOptions.headerHeight,
-      internalOptions.rowHeight,
+    logger.info(
+      `Rendering, page: ${renderCtx?.page}, col: ${renderCtx?.firstColIdx}-${renderCtx?.lastColIdx}, row: ${renderCtx?.firstRowIdx}-${renderCtx?.lastRowIdx}`,
       renderCtx,
-    ],
-  );
+    );
 
-  return (
-    <AutoSizer onResize={debouncedOnResize}>
-      {(size: any) => (
-        <GridRoot
-          ref={handleRef}
-          className={props.className}
-          style={{ width: size.width, height: getTotalHeight(size) }}
-          role="grid"
-          aria-colcount={internalColumns.visible.length}
-          aria-rowcount={internalRows.length + 1}
-          tabIndex={0}
-          aria-label="grid"
-          aria-multiselectable={!internalOptions.disableMultipleSelection}
-        >
-          <ErrorBoundary
-            hasError={errorState != null}
-            componentProps={errorState}
-            api={apiRef!}
-            logger={gridLogger}
-            render={(errorProps) => (
-              <div className="MuiDataGrid-mainGridContainer">
-                {customComponents.renderError(errorProps)}
-              </div>
-            )}
+    // TODO move that to renderCtx
+    const getTotalHeight = React.useCallback(
+      (size) => getCurryTotalHeight(gridState.options, gridState.containerSizes, footerRef)(size),
+      [gridState.options, gridState.containerSizes],
+    );
+
+    return (
+      <AutoSizer onResize={onResize}>
+        {(size: any) => (
+          <GridRoot
+            ref={handleRef}
+            className={props.className}
+            style={{ width: size.width, height: getTotalHeight(size) }}
+            role="grid"
+            aria-colcount={gridState.columns.visible.length}
+            aria-rowcount={gridState.rows.totalRowCount}
+            tabIndex={0}
+            aria-label="grid"
+            aria-multiselectable={!gridState.options.disableMultipleSelection}
           >
-            <ApiContext.Provider value={apiRef}>
-              <OptionsContext.Provider value={internalOptions}>
-                {customComponents.headerComponent}
+            <ErrorBoundary
+              hasError={errorState != null}
+              componentProps={errorState}
+              api={apiRef!}
+              logger={logger}
+              render={(errorProps) => (
                 <div className="MuiDataGrid-mainGridContainer">
-                  <Watermark licenseStatus={props.licenseStatus} />
-                  <GridColumnsContainer
-                    ref={columnsContainerRef}
-                    height={internalOptions.headerHeight}
-                  >
-                    <ColumnsHeader
-                      ref={columnsHeaderRef}
-                      columns={internalColumns.visible || []}
-                      hasScrollX={!!renderCtx?.hasScrollX}
-                      separatorProps={separatorProps}
-                      onColumnHeaderDragOver={onColumnReorder.handleColumnHeaderDragOver}
-                      onColumnDragStart={onColumnReorder.handleDragStart}
-                      onColumnDragEnter={onColumnReorder.handleDragEnter}
-                      onColumnDragOver={onColumnReorder.handleDragOver}
-                      renderCtx={renderCtx}
-                    />
-                  </GridColumnsContainer>
-                  {!props.loading && internalRows.length === 0 && customComponents.noRowsComponent}
-                  {props.loading && customComponents.loadingComponent}
-                  <GridWindow ref={windowRef}>
-                    <GridDataContainer
-                      ref={gridRef}
-                      className={DATA_CONTAINER_CSS_CLASS}
-                      style={{
-                        minHeight: renderCtx?.dataContainerSizes?.height,
-                        minWidth: renderCtx?.dataContainerSizes?.width,
-                      }}
-                    >
-                      {renderCtx != null && (
-                        <RenderContext.Provider value={renderCtx}>
-                          <Viewport
-                            ref={renderingZoneRef}
-                            options={internalOptions}
-                            rows={internalRows}
-                            visibleColumns={internalColumns.visible}
-                          />
-                        </RenderContext.Provider>
-                      )}
-                    </GridDataContainer>
-                  </GridWindow>
+                  {customComponents.renderError(errorProps)}
                 </div>
-                {customComponents.footerComponent || (
-                  <DefaultFooter
-                    ref={footerRef}
-                    paginationComponent={
-                      !!internalOptions.pagination &&
-                      paginationProps.pageSize != null &&
-                      !internalOptions.hideFooterPagination &&
-                      (customComponents.paginationComponent || (
-                        <Pagination
-                          setPage={paginationProps.setPage}
-                          currentPage={paginationProps.page}
-                          pageCount={paginationProps.pageCount}
-                          pageSize={paginationProps.pageSize}
-                          rowCount={paginationProps.rowCount}
-                          setPageSize={paginationProps.setPageSize}
-                          rowsPerPageOptions={internalOptions.rowsPerPageOptions}
-                        />
-                      ))
-                    }
-                    rowCount={
-                      internalOptions.rowCount == null
-                        ? internalRows.length
-                        : internalOptions.rowCount
-                    }
-                    options={internalOptions}
-                  />
-                )}
-              </OptionsContext.Provider>
-            </ApiContext.Provider>
-          </ErrorBoundary>
-        </GridRoot>
-      )}
-    </AutoSizer>
-  );
-});
+              )}
+            >
+              <ApiContext.Provider value={apiRef}>
+                <OptionsContext.Provider value={gridState.options}>
+                  {customComponents.headerComponent}
+                  <div className="MuiDataGrid-mainGridContainer">
+                    <Watermark licenseStatus={props.licenseStatus} />
+                    <GridColumnsContainer
+                      ref={columnsContainerRef}
+                      height={gridState.options.headerHeight}
+                    >
+                      <ColumnsHeader
+                        ref={columnsHeaderRef}
+                        columns={gridState.columns.visible || []}
+                        hasScrollX={!!gridState.containerSizes?.hasScrollX}
+                        separatorProps={separatorProps}
+                        onColumnHeaderDragOver={onColumnReorder.handleColumnHeaderDragOver}
+                        onColumnDragStart={onColumnReorder.handleDragStart}
+                        onColumnDragEnter={onColumnReorder.handleDragEnter}
+                        onColumnDragOver={onColumnReorder.handleDragOver}
+                        renderCtx={renderCtx}
+                      />
+                    </GridColumnsContainer>
+                    {!props.loading &&
+                      gridState.rows.totalRowCount === 0 &&
+                      customComponents.noRowsComponent}
+                    {props.loading && customComponents.loadingComponent}
+                    <GridWindow ref={windowRef}>
+                      <GridDataContainer
+                        ref={gridRef}
+                        className={DATA_CONTAINER_CSS_CLASS}
+                        style={{
+                          minHeight: gridState.containerSizes?.dataContainerSizes?.height,
+                          minWidth: gridState.containerSizes?.dataContainerSizes?.width,
+                        }}
+                      >
+                        {renderCtx != null && (
+                          <RenderContext.Provider value={renderCtx}>
+                            <Viewport ref={renderingZoneRef} />
+                          </RenderContext.Provider>
+                        )}
+                      </GridDataContainer>
+                    </GridWindow>
+                  </div>
+                  {customComponents.footerComponent || (
+                    <DefaultFooter
+                      ref={footerRef}
+                      paginationComponent={
+                        !!gridState.options.pagination &&
+                        gridState.pagination.pageSize != null &&
+                        !gridState.options.hideFooterPagination &&
+                        (customComponents.paginationComponent || (
+                          <Pagination
+                            setPage={apiRef.current.setPage}
+                            currentPage={gridState.pagination.page}
+                            pageCount={gridState.pagination.pageCount}
+                            pageSize={gridState.pagination.pageSize}
+                            rowCount={gridState.pagination.rowCount}
+                            setPageSize={apiRef.current.setPageSize}
+                            rowsPerPageOptions={gridState.options.rowsPerPageOptions}
+                          />
+                        ))
+                      }
+                    />
+                  )}
+                </OptionsContext.Provider>
+              </ApiContext.Provider>
+            </ErrorBoundary>
+          </GridRoot>
+        )}
+      </AutoSizer>
+    );
+  },
+);

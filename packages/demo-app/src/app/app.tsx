@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
-import './app.less';
 import { DemoAppBar } from './app-bar';
 import { AppDrawer } from './app-drawer';
 import { appReducer } from './app-reducer';

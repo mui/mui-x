@@ -134,3 +134,31 @@ export function Employee10000() {
     </div>
   );
 }
+
+export function MultipleEmployee100() {
+  const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
+
+  return (
+    <div className="grid-container" style={{ flexDirection: 'column' }}>
+      <div style={{ display: 'flex', flex: 'auto' }}>
+        <XGrid rows={data.rows} columns={data.columns} {...getGridOptions()} />
+      </div>
+      <div style={{ display: 'flex', flex: 'auto' }}>
+        <XGrid rows={data.rows} columns={data.columns} {...getGridOptions()} />
+      </div>
+    </div>
+  );
+}
+
+export function XGridDemo() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100000,
+  });
+
+  return (
+    <div className="grid-container">
+      <XGrid {...data} loading={data.rows.length === 0} rowHeight={38} checkboxSelection />
+    </div>
+  );
+}

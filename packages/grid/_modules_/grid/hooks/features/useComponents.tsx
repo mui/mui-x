@@ -1,37 +1,34 @@
 import * as React from 'react';
-import { PaginationProps } from './usePagination';
-import {
-  ComponentProps,
-  ApiRef,
-  GridComponentOverridesProp,
-  GridOptions,
-  RootContainerRef,
-  InternalColumns,
-  Rows,
-} from '../../models';
+import { ComponentProps, ApiRef, GridComponentOverridesProp, RootContainerRef } from '../../models';
 import { ErrorMessage } from '../../components/error-message';
 import { LoadingOverlay } from '../../components/loading-overlay';
 import { NoRowMessage } from '../../components/no-row-message';
+import { optionsSelector } from '../utils/useOptionsProp';
+import { visibleColumnsSelector } from './columns/columnsSelector';
+import { useGridSelector } from './core/useGridSelector';
+import { paginationSelector } from './pagination/paginationSelector';
+import { unorderedRowModelsSelector } from './rows/rowsSelector';
 
 export const useComponents = (
-  columns: InternalColumns,
-  rows: Rows,
-  options: GridOptions,
   componentOverrides: GridComponentOverridesProp | undefined,
-  paginationProps: PaginationProps,
   apiRef: ApiRef,
   gridRootRef: RootContainerRef,
 ) => {
+  const options = useGridSelector(apiRef, optionsSelector);
+  const rows = useGridSelector(apiRef, unorderedRowModelsSelector);
+  const columns = useGridSelector(apiRef, visibleColumnsSelector);
+  const pagination = useGridSelector(apiRef, paginationSelector);
+
   const componentProps: ComponentProps = React.useMemo(
     () => ({
-      paginationProps,
+      pagination,
       rows,
-      columns: columns.visible,
+      columns,
       options,
       api: apiRef,
       rootElement: gridRootRef,
     }),
-    [paginationProps, rows, columns, options, apiRef, gridRootRef],
+    [pagination, rows, columns, options, apiRef, gridRootRef],
   );
 
   const headerComponent = React.useMemo(

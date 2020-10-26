@@ -25,7 +25,7 @@
     "test:unit": "cross-env NODE_ENV=test mocha 'packages/**/*.test.tsx' --exclude '**/node_modules/**'",
     "test:watch": "yarn test:unit --watch",
     "lint": "yarn eslint && yarn jsonlint",
-    "eslint": "eslint . --cache --report-unused-disable-directives --ext .js,.ts,.tsx",
+    "eslint": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx",
     "eslint:ci": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx",
     "jsonlint": "node scripts/jsonlint.js",
     "typescript": "lerna run typescript --parallel",
