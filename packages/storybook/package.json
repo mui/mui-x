@@ -12,7 +12,7 @@
     "@material-ui/x-grid": "^4.0.0-alpha.8",
     "@material-ui/x-grid-data-generator": "^4.0.0-alpha.8",
     "@material-ui/x-license": "^4.0.0-alpha.8",
-    "react": "^16.13.1",
+    "react": "^17.0.1",
     "react-is": "^16.13.1",
     "rxjs": "^6.5.5",
     "styled-components": "^5.1.0"

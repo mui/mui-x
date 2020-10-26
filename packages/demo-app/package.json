@@ -9,7 +9,7 @@
     "@material-ui/x-grid": "^4.0.0-alpha.8",
     "@material-ui/x-grid-data-generator": "^4.0.0-alpha.8",
     "@trendmicro/react-interpolate": "^0.5.5",
-    "react": "^16.13.1",
+    "react": "^17.0.1",
     "react-dom": "^16.13.1",
     "react-is": "^16.13.1",
     "react-router-dom": "^5.1.2",
