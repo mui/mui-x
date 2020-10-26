@@ -1,16 +1,16 @@
 const path = require('path');
 const webpack = require('webpack');
 
-const env = process.env.NODE_ENV || 'development'
+const env = process.env.NODE_ENV || 'development';
 /* eslint-disable */
-const __DEV__ = env === 'development'
-const __PROD__ = env === 'production'
+const __DEV__ = env === 'development';
+const __PROD__ = env === 'production';
 /* eslint-enable */
 
 if (!(__DEV__ || __PROD__)) {
-  throw new Error(`Unknown env: ${env}.`)
+  throw new Error(`Unknown env: ${env}.`);
 }
-console.log(`Loading config for ${env}`)
+console.log(`Loading config for ${env}`);
 const maxAssetSize = 1024 * 1024;
 
 module.exports = {
@@ -25,16 +25,16 @@ module.exports = {
   ],
   typescript: {
     check: __DEV__, // Netlify is breaking the deploy with this settings on. So deactivate on release
-    reactDocgen: false
+    reactDocgen: false,
   },
-  webpackFinal: async config => {
+  webpackFinal: async (config) => {
     config.parallelism = 1;
     config.module.rules.push({
       test: /\.(ts|tsx)$/,
       use: [
         {
           loader: require.resolve('ts-loader'),
-        }
+        },
       ],
     });
     if (__DEV__) {
@@ -42,8 +42,8 @@ module.exports = {
         test: /\.(ts|tsx)$/,
         use: ['source-map-loader'],
         enforce: 'pre',
-        exclude:   /node_modules/,
-        include: path.resolve(__dirname, '../../../packages/grid/')
+        exclude: /node_modules/,
+        include: path.resolve(__dirname, '../../../packages/grid/'),
       });
     }
 
@@ -54,7 +54,7 @@ module.exports = {
           loader: require.resolve('@storybook/source-loader'),
           options: {
             parser: 'typescript',
-            prettierConfig: {printWidth: 80, singleQuote: true},
+            prettierConfig: { printWidth: 80, singleQuote: true },
             tsconfigPath: path.resolve(__dirname, '../tsconfig.json'),
           },
         },
@@ -68,7 +68,7 @@ module.exports = {
       options: {
         search: '__RELEASE_INFO__',
         replace: 'MTU5NjMxOTIwMDAwMA==', // 2020-08-02
-      }
+      },
     });
 
     config.optimization = {
@@ -76,17 +76,20 @@ module.exports = {
         chunks: 'all',
         minSize: 30 * 1024,
         maxSize: maxAssetSize,
-      }
+      },
     };
     config.performance = {
-      maxAssetSize: maxAssetSize
+      maxAssetSize: maxAssetSize,
     };
     config.resolve = {
       ...config.resolve,
       extensions: ['.js', '.ts', '.tsx'],
       alias: {
         '@material-ui/data-grid': path.resolve(__dirname, '../../../packages/grid/data-grid/src'),
-        '@material-ui/x-grid-data-generator': path.resolve(__dirname, '../../../packages/x-grid-data-generator/src'),
+        '@material-ui/x-grid-data-generator': path.resolve(
+          __dirname,
+          '../../../packages/x-grid-data-generator/src',
+        ),
         '@material-ui/x-grid': path.resolve(__dirname, '../../../packages/grid/x-grid/src'),
         '@material-ui/x-license': path.resolve(__dirname, '../../../packages/x-license/src'),
       },
