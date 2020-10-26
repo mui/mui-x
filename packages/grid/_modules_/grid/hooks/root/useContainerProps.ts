@@ -16,7 +16,7 @@ import { useApiEventHandler } from './useApiEventHandler';
 
 export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, apiRef: ApiRef) => {
   const logger = useLogger('useContainerProps');
-  const [gridState, setGridState] = useGridState(apiRef);
+  const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const windowSizesRef = React.useRef<ElementSize>({ width: 0, height: 0 });
 
   const options = useGridSelector(apiRef, optionsSelector);
@@ -136,11 +136,12 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
       setGridState((state) => {
         if (!isEqual(state.containerSizes, containerState)) {
           state.containerSizes = containerState;
+          forceUpdate();
         }
         return state;
       });
     },
-    [setGridState],
+    [forceUpdate, setGridState],
   );
 
   const refreshContainerSizes = React.useCallback(() => {
@@ -151,6 +152,10 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
   React.useEffect(() => {
     refreshContainerSizes();
   }, [gridState.options.hideFooter, refreshContainerSizes]);
+
+  React.useEffect(()=> {
+    refreshContainerSizes();
+  }, [gridState.columns, refreshContainerSizes])
 
   useApiEventHandler(apiRef, RESIZE, refreshContainerSizes);
 };
