@@ -120,7 +120,7 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): RowModel[] => {
         Object.values<RowModel>(internalRowsState.current.idRowsLookup),
       );
     },
-    [logger, apiRef, setGridState, getRowIndexFromId, forceUpdate, updateAllRows],
+    [logger, apiRef, getRowFromId, setGridState, forceUpdate, updateAllRows],
   );
 
   const updateRowData = React.useCallback(
