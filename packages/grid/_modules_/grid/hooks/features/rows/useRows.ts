@@ -15,15 +15,16 @@ export function convertRowsPropToState({
   rows: RowsProp;
   totalRowCount?: number;
 }): InternalRowsState {
-  const state: InternalRowsState = { allRows: [], idRowsLookup: {}, totalRowCount: 0 };
-  rows.reduce((idLookup, rowData) => {
-    const model = createRowModel(rowData);
-    state.idRowsLookup[model.id] = model;
-    state.allRows = [...state.allRows, model.id];
-    state.totalRowCount =
-      totalRowCount && totalRowCount > state.allRows.length ? totalRowCount : state.allRows.length;
-    return state;
-  }, state);
+  const state: InternalRowsState = {
+    allRows: [],
+    idRowsLookup: {},
+    totalRowCount: totalRowCount && totalRowCount > rows.length ? totalRowCount : rows.length,
+  };
+  rows.forEach((rowData) => {
+    const rowModel = createRowModel(rowData);
+    state.allRows.push(rowData.id);
+    state.idRowsLookup[rowModel.id] = rowModel;
+  });
   return state;
 }
 
@@ -92,8 +93,7 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): RowModel[] => {
         if (partialRow.id == null) {
           throw new Error('Material-UI: All rows need an id.');
         }
-        const idx = getRowIndexFromId(partialRow.id);
-        if (idx === -1) {
+        if (!getRowFromId(partialRow.id)) {
           // New row?
           addedRows.push(partialRow as RowModel);
           return;
