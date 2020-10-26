@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { DataGrid } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
@@ -11,19 +12,38 @@ const useStyles = makeStyles({
 });
 
 function CustomPagination(props) {
-  const { paginationProps } = props;
+  const { pagination, api } = props;
   const classes = useStyles();
 
   return (
     <Pagination
       className={classes.root}
       color="primary"
-      page={paginationProps.page}
-      count={paginationProps.pageCount}
-      onChange={(event, value) => paginationProps.setPage(value)}
+      page={pagination.page}
+      count={pagination.pageCount}
+      onChange={(event, value) => api.current.setPage(value)}
     />
   );
 }
+
+CustomPagination.propTypes = {
+  /**
+   * ApiRef that let you manipulate the grid.
+   */
+  api: PropTypes.shape({
+    current: PropTypes.object.isRequired,
+  }).isRequired,
+  /**
+   * The object containing all pagination details in [[PaginationState]].
+   */
+  pagination: PropTypes.shape({
+    page: PropTypes.number.isRequired,
+    pageCount: PropTypes.number.isRequired,
+    pageSize: PropTypes.number.isRequired,
+    paginationMode: PropTypes.oneOf(['client', 'server']).isRequired,
+    rowCount: PropTypes.number.isRequired,
+  }).isRequired,
+};
 
 export default function CustomPaginationGrid() {
   const { data } = useDemoData({
