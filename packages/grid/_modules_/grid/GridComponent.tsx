@@ -59,16 +59,15 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const internalOptions = useOptionsProp(apiRef, props);
 
     useLoggerFactory(internalOptions.logger, internalOptions.logLevel);
-    const gridLogger = useLogger('GridComponent');
+    const logger = useLogger('GridComponent');
 
     useApi(rootContainerRef, apiRef);
     const errorState = useErrorHandler(apiRef, props);
-    useEvents(rootContainerRef, internalOptions, apiRef);
+    useEvents(rootContainerRef, apiRef);
     const onResize = useResizeContainer(apiRef);
 
-    const internalColumns = useColumns(props.columns, apiRef);
-
-    const internalRows = useRows(props.rows, apiRef);
+    useColumns(props.columns, apiRef);
+    useRows(props.rows, apiRef);
     useKeyboard(rootContainerRef, apiRef);
     useSelection(apiRef);
     useSorting(apiRef);
@@ -78,27 +77,19 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
 
     const onColumnReorder = useColumnReorder(columnsHeaderRef, apiRef);
     const separatorProps = useColumnResize(columnsHeaderRef, apiRef);
-    const paginationProps = usePagination(apiRef);
+    usePagination(apiRef);
 
-    const customComponents = useComponents(
-      internalColumns,
-      internalRows,
-      internalOptions,
-      props.components,
-      paginationProps,
-      apiRef,
-      rootContainerRef,
-    );
+    const customComponents = useComponents(props.components, apiRef, rootContainerRef);
 
-    gridLogger.info(
+    logger.info(
       `Rendering, page: ${renderCtx?.page}, col: ${renderCtx?.firstColIdx}-${renderCtx?.lastColIdx}, row: ${renderCtx?.firstRowIdx}-${renderCtx?.lastRowIdx}`,
       renderCtx,
     );
 
     // TODO move that to renderCtx
     const getTotalHeight = React.useCallback(
-      (size) => getCurryTotalHeight(internalOptions, gridState.containerSizes, footerRef)(size),
-      [internalOptions, gridState.containerSizes],
+      (size) => getCurryTotalHeight(gridState.options, gridState.containerSizes, footerRef)(size),
+      [gridState.options, gridState.containerSizes],
     );
 
     return (
@@ -109,17 +100,17 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
             className={props.className}
             style={{ width: size.width, height: getTotalHeight(size) }}
             role="grid"
-            aria-colcount={internalColumns.visible.length}
-            aria-rowcount={internalRows.length + 1}
+            aria-colcount={gridState.columns.visible.length}
+            aria-rowcount={gridState.rows.totalRowCount}
             tabIndex={0}
             aria-label="grid"
-            aria-multiselectable={!internalOptions.disableMultipleSelection}
+            aria-multiselectable={!gridState.options.disableMultipleSelection}
           >
             <ErrorBoundary
               hasError={errorState != null}
               componentProps={errorState}
               api={apiRef!}
-              logger={gridLogger}
+              logger={logger}
               render={(errorProps) => (
                 <div className="MuiDataGrid-mainGridContainer">
                   {customComponents.renderError(errorProps)}
@@ -127,17 +118,17 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
               )}
             >
               <ApiContext.Provider value={apiRef}>
-                <OptionsContext.Provider value={internalOptions}>
+                <OptionsContext.Provider value={gridState.options}>
                   {customComponents.headerComponent}
                   <div className="MuiDataGrid-mainGridContainer">
                     <Watermark licenseStatus={props.licenseStatus} />
                     <GridColumnsContainer
                       ref={columnsContainerRef}
-                      height={internalOptions.headerHeight}
+                      height={gridState.options.headerHeight}
                     >
                       <ColumnsHeader
                         ref={columnsHeaderRef}
-                        columns={internalColumns.visible || []}
+                        columns={gridState.columns.visible || []}
                         hasScrollX={!!gridState.containerSizes?.hasScrollX}
                         separatorProps={separatorProps}
                         onColumnHeaderDragOver={onColumnReorder.handleColumnHeaderDragOver}
@@ -148,7 +139,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                       />
                     </GridColumnsContainer>
                     {!props.loading &&
-                      internalRows.length === 0 &&
+                      gridState.rows.totalRowCount === 0 &&
                       customComponents.noRowsComponent}
                     {props.loading && customComponents.loadingComponent}
                     <GridWindow ref={windowRef}>

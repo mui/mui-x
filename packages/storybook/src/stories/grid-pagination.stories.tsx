@@ -131,12 +131,12 @@ export function PaginationApiTests() {
           pageSize={myPageSize}
           autoPageSize={autosize}
           components={{
-            pagination: ({ paginationProps }) => (
+            pagination: ({ pagination }) => (
               <Pagination
                 className="my-custom-pagination"
-                page={paginationProps.page}
-                count={paginationProps.pageCount}
-                onChange={(e, value) => paginationProps.setPage(value)}
+                page={pagination.page}
+                count={pagination.pageCount}
+                onChange={(e, value) => apiRef.current.setPage(value)}
               />
             ),
           }}
