@@ -11,6 +11,5 @@ export function useApiRef(apiRefProp?: ApiRef): ApiRef {
 
   const apiRef = React.useMemo(() => apiRefProp || internalApiRef, [apiRefProp, internalApiRef]);
 
-
   return apiRef;
 }
