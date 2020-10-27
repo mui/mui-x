@@ -4,6 +4,15 @@
   "description": "Storybook components",
   "author": "Material-UI Team",
   "private": true,
+  "scripts": {
+    "start": "start-storybook -p 6006 --ci",
+    "build": "build-storybook -o dist/ -s storybook --quiet",
+    "export": "mv dist ../../docs/export/storybook",
+    "lint": "../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ./.eslintrc.js",
+    "test": "jest -c integration/setup/jest.config.js --detectOpenHandles --force-exit --runInBand",
+    "test:ci": "start-server-and-test start http://localhost:6006 test",
+    "typescript": "tsc -p tsconfig.json"
+  },
   "dependencies": {
     "@material-ui/core": "^4.9.12",
     "@material-ui/data-grid": "^4.0.0-alpha.8",
@@ -44,13 +53,5 @@
     "string-replace-loader": "^2.3.0",
     "ts-loader": "^8.0.2",
     "typescript": "^3.9.6"
-  },
-  "scripts": {
-    "start": "start-storybook -p 6006 --ci",
-    "build": "build-storybook -o dist/ -s storybook --quiet",
-    "export": "mv dist ../../docs/export/storybook",
-    "lint": "../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ./.eslintrc.js",
-    "test": "jest -c integration/setup/jest.config.js --detectOpenHandles --force-exit --runInBand",
-    "test:ci": "start-server-and-test start http://localhost:6006 test"
   }
 }
