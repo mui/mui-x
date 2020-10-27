@@ -31,6 +31,7 @@
     "build": "cd ../ && rollup --config rollup.data-grid.config.js"
   },
   "dependencies": {
+    "@material-ui/utils": "^5.0.0-alpha.14",
     "prop-types": "^15.7.2",
     "tslib": "^2.0.0"
   },

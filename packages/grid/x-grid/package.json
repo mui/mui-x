@@ -31,6 +31,7 @@
     "build": "cd ../ && rollup --config rollup.x-grid.config.js"
   },
   "dependencies": {
+    "@material-ui/utils": "^5.0.0-alpha.14",
     "@material-ui/x-license": "^4.0.0-alpha.8",
     "prop-types": "^15.7.2",
     "tslib": "^2.0.0"
