@@ -7,12 +7,13 @@ import {
 } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { SortApi } from '../../../models/api/sortApi';
+import { CellValue } from '../../../models/cell';
 import { ColDef } from '../../../models/colDef/colDef';
 import { FeatureModeConstant } from '../../../models/featureMode';
 import { CellParams } from '../../../models/params/cellParams';
 import { ColParams } from '../../../models/params/colParams';
 import { SortModelParams } from '../../../models/params/sortModelParams';
-import { CellValue, RowModel } from '../../../models/rows';
+import { RowModel } from '../../../models/rows';
 import { FieldComparatorList, SortItem, SortModel } from '../../../models/sortModel';
 import { buildCellParams } from '../../../utils/paramsUtils';
 import { isDesc, nextSortDirection } from '../../../utils/sortingUtils';

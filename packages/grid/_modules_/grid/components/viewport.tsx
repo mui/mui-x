@@ -3,6 +3,7 @@ import { columnsSelector } from '../hooks/features/columns/columnsSelector';
 import { GridState } from '../hooks/features/core/gridState';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { keyboardCellSelector } from '../hooks/features/keyboard/keyboardSelector';
+import { selectionStateSelector } from '../hooks/features/selection/selectionSelector';
 import { sortedRowsSelector } from '../hooks/features/sorting/sortingSelector';
 import { useLogger } from '../hooks/utils/useLogger';
 import { optionsSelector } from '../hooks/utils/useOptionsProp';
@@ -29,15 +30,17 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const containerSizes = useGridSelector(apiRef, containerSizesSelector);
     const columns = useGridSelector(apiRef, columnsSelector);
     const cellFocus = useGridSelector(apiRef, keyboardCellSelector);
+    const selectionState = useGridSelector(apiRef, selectionStateSelector);
 
     const getRowsElements = () => {
+      // TODO move that to selector
       const renderedRows = rows.slice(renderCtx.firstRowIdx, renderCtx.lastRowIdx!);
       return renderedRows.map((r, idx) => (
         <Row
           className={(renderCtx.firstRowIdx! + idx) % 2 === 0 ? 'Mui-even' : 'Mui-odd'}
           key={r.id}
           id={r.id}
-          selected={r.selected}
+          selected={!!selectionState[r.id]}
           rowIndex={renderCtx.firstRowIdx + idx}
         >
           <LeftEmptyCell width={renderCtx.leftEmptyWidth} />

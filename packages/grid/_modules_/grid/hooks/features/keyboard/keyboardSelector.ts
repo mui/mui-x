@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { CellIndexCoordinates } from '../../../models/rows';
+import { CellIndexCoordinates } from '../../../models/cell';
 import { GridState } from '../core/gridState';
 import { KeyboardState } from './keyboardState';
 
