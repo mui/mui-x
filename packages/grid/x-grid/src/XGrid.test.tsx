@@ -275,7 +275,7 @@ describe('<XGrid />', () => {
       );
       await raf();
       const header = screen.getByRole('columnheader', { name: 'brand' });
-      // await sleep(100);
+      await sleep(100);
       expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       fireEvent.click(header);
       await sleep(100);
