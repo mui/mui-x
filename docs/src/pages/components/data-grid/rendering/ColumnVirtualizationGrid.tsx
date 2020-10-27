@@ -11,7 +11,7 @@ export interface GridData {
   rows: DataRowModel[];
 }
 
-function useData(rowLength, columnLength) {
+function useData(rowLength: number, columnLength: number) {
   const [data, setData] = React.useState<GridData>({ columns: [], rows: [] });
 
   React.useEffect(() => {

@@ -5,7 +5,7 @@ import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';
 import PaginationItem from '@material-ui/lab/PaginationItem';
 
-function customCheckbox(theme) {
+function customCheckbox(theme: Theme) {
   return {
     '& .MuiCheckbox-root svg': {
       width: 16,

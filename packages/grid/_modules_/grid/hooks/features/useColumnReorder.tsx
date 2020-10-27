@@ -35,7 +35,10 @@ const reorderColDefArray = (
   return columnsClone;
 };
 
-const getCursorMoveDirectionX = (currentCoordinates, nextCoordinates) => {
+const getCursorMoveDirectionX = (
+  currentCoordinates: CursorCoordinates,
+  nextCoordinates: CursorCoordinates,
+) => {
   return currentCoordinates.x <= nextCoordinates.x
     ? CURSOR_MOVE_DIRECTION_RIGHT
     : CURSOR_MOVE_DIRECTION_LEFT;
