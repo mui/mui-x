@@ -10,15 +10,15 @@ export interface ScrollParams {
 export type ScrollFn = (v: ScrollParams) => void;
 
 export function useScrollFn(
-  scrollingElementRef: React.RefObject<HTMLDivElement>,
-  onScroll?: ScrollFn,
+  renderingZoneElementRef: React.RefObject<HTMLDivElement>,
+  columnHeadersElementRef: React.RefObject<HTMLDivElement>,
 ): [ScrollFn, ScrollFn] {
   const logger = useLogger('useScrollFn');
   const rafResetPointerRef = React.useRef(0);
   const previousValue = React.useRef<ScrollParams>();
   const [restorePointerEvents] = useRafUpdate(() => {
-    if (scrollingElementRef && scrollingElementRef.current) {
-      scrollingElementRef.current!.style.pointerEvents = 'unset';
+    if (renderingZoneElementRef && renderingZoneElementRef.current) {
+      renderingZoneElementRef.current!.style.pointerEvents = 'unset';
     }
     rafResetPointerRef.current = 0;
   });
@@ -33,21 +33,18 @@ export function useScrollFn(
         return;
       }
 
-      if (scrollingElementRef && scrollingElementRef.current) {
-        logger.debug(`Moving ${scrollingElementRef.current.className} to: ${v.left}-${v.top}`);
-        if (scrollingElementRef.current!.style.pointerEvents !== 'none') {
-          scrollingElementRef.current!.style.pointerEvents = 'none';
+      if (renderingZoneElementRef && renderingZoneElementRef.current) {
+        logger.debug(`Moving ${renderingZoneElementRef.current.className} to: ${v.left}-${v.top}`);
+        if (renderingZoneElementRef.current!.style.pointerEvents !== 'none') {
+          renderingZoneElementRef.current!.style.pointerEvents = 'none';
         }
-        scrollingElementRef.current!.style.transform = `translate(-${v.left}px, -${v.top}px)`;
+        renderingZoneElementRef.current!.style.transform = `translate(-${v.left}px, -${v.top}px)`;
+        columnHeadersElementRef.current!.style.transform = `translate(-${v.left}px, -0px)`;
         debouncedResetPointerEvents();
         previousValue.current = v;
-
-        if (onScroll) {
-          onScroll(v);
-        }
       }
     },
-    [scrollingElementRef, debouncedResetPointerEvents, logger, onScroll],
+    [renderingZoneElementRef, logger, columnHeadersElementRef, debouncedResetPointerEvents],
   );
 
   const [runScroll] = useRafUpdate(scrollTo);
@@ -56,7 +53,7 @@ export function useScrollFn(
     return () => {
       debouncedResetPointerEvents.clear();
     };
-  }, [scrollingElementRef, debouncedResetPointerEvents]);
+  }, [renderingZoneElementRef, debouncedResetPointerEvents]);
 
   return [runScroll, scrollTo];
 }
