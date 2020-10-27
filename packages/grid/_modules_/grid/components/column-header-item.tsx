@@ -8,7 +8,6 @@ import { classnames } from '../utils';
 import { ColumnHeaderSortIcon } from './column-header-sort-icon';
 import { ColumnHeaderTitle } from './column-header-title';
 import { ColumnHeaderSeparator } from './column-header-separator';
-import { CursorCoordinates } from '../hooks/features/useColumnReorder';
 
 interface ColumnHeaderItemProps {
   colIndex: number;
@@ -16,24 +15,11 @@ interface ColumnHeaderItemProps {
   isResizing: boolean;
   sortModel: SortModel;
   options: GridOptions;
-  onColumnDragEnter?: (event: Event) => void;
-  onColumnDragOver?: (col: ColDef, coordinates: CursorCoordinates) => void;
-  onColumnDragStart?: (col: ColDef, currentTarget: HTMLElement) => void;
   separatorProps: React.HTMLAttributes<HTMLDivElement>;
 }
 
 export const ColumnHeaderItem = React.memo(
-  ({
-    column,
-    colIndex,
-    onColumnDragStart,
-    onColumnDragEnter,
-    onColumnDragOver,
-    isResizing,
-    separatorProps,
-    sortModel,
-    options,
-  }: ColumnHeaderItemProps) => {
+  ({ column, colIndex, isResizing, separatorProps, sortModel, options }: ColumnHeaderItemProps) => {
     const apiRef = React.useContext(ApiContext);
     const { disableColumnReorder, showColumnRightBorder, disableColumnResize } = options;
 
@@ -60,13 +46,20 @@ export const ColumnHeaderItem = React.memo(
 
     const dragConfig = {
       draggable:
-        !disableColumnReorder && !!onColumnDragStart && !!onColumnDragEnter && !!onColumnDragOver,
-      onDragStart: onColumnDragStart && ((event) => onColumnDragStart(column, event.currentTarget)),
-      onDragEnter: onColumnDragEnter && ((event) => onColumnDragEnter(event)),
+        !disableColumnReorder &&
+        !!apiRef!.current.onColCellDragStart &&
+        !!apiRef!.current.onColCellDragEnter &&
+        !!apiRef!.current.onColCellDragOver,
+      onDragStart:
+        apiRef!.current.onColCellDragStart &&
+        ((event) => apiRef!.current.onColCellDragStart(column, event.currentTarget)),
+      onDragEnter:
+        apiRef!.current.onColCellDragEnter &&
+        ((event) => apiRef!.current.onColCellDragEnter(event)),
       onDragOver:
-        onColumnDragOver &&
+        apiRef!.current.onColCellDragOver &&
         ((event) => {
-          onColumnDragOver(column, {
+          apiRef!.current.onColCellDragOver(column, {
             x: event.clientX,
             y: event.clientY,
           });

@@ -13,6 +13,7 @@ export interface GridState {
   options: GridOptions;
   isScrolling: boolean;
   columns: InternalColumns;
+  columnReorder: any;
   rendering: InternalRenderingState;
   containerSizes: ContainerProps | null;
   sorting: SortingState;
@@ -27,6 +28,7 @@ export const getInitialState: () => GridState = () => ({
   options: { ...DEFAULT_GRID_OPTIONS },
   isScrolling: false,
   columns: getInitialColumnsState(),
+  columnReorder: [],
   rendering: getInitialRenderingState(),
   containerSizes: null,
   sorting: getInitialSortingState(),

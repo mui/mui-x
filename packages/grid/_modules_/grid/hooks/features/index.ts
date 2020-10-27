@@ -8,6 +8,6 @@ export * from './virtualization';
 
 export * from './useApiRef';
 export * from './useComponents';
-export * from './useColumnReorder';
+export * from './column-reorder';
 export * from './useColumnResize';
 export * from './useSelection';

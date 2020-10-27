@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { ColDef } from '../../models/colDef';
-import { useLogger } from '../utils';
-import { ApiRef } from '../../models';
+import { ColDef } from '../../../models/colDef';
+import { useLogger } from '../../utils';
+import { ApiRef } from '../../../models';
 import {
   DRAGEND,
   COL_REORDER_START,
@@ -9,16 +9,13 @@ import {
   COL_REORDER_DRAG_OVER_HEADER,
   COL_REORDER_DRAG_ENTER,
   COL_REORDER_STOP,
-} from '../../constants/eventsConstants';
+} from '../../../constants/eventsConstants';
 import {
   HEADER_CELL_DROP_ZONE_CSS_CLASS,
   HEADER_CELL_DRAGGING_CSS_CLASS,
-} from '../../constants/cssClassesConstants';
-
-export interface CursorCoordinates {
-  x: number;
-  y: number;
-}
+} from '../../../constants/cssClassesConstants';
+import { useApiMethod } from '../../root/useApiMethod';
+import { ColumnReorderApi, CursorCoordinates } from '../../../models/api/columnReorderApi';
 
 const CURSOR_MOVE_DIRECTION_LEFT = 'left';
 const CURSOR_MOVE_DIRECTION_RIGHT = 'right';
@@ -47,9 +44,10 @@ const hasCursorPositionChanged = (
 ): boolean =>
   currentCoordinates.x !== nextCoordinates.x || currentCoordinates.y !== nextCoordinates.y;
 
-export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, apiRef: ApiRef) => {
+export const useColumnReorder = (apiRef: ApiRef) => {
   const logger = useLogger('useColumnReorder');
 
+  const columnsHeaderRef = React.useRef<HTMLElement | null>(null);
   const dragCol = React.useRef<ColDef | null>(null);
   const dragColNode = React.useRef<HTMLElement | null>(null);
   const cursorPosition = React.useRef<CursorCoordinates>({
@@ -64,12 +62,12 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
 
     clearTimeout(removeDnDStylesTimeout.current);
 
-    columnsRef.current!.classList.remove(HEADER_CELL_DROP_ZONE_CSS_CLASS);
+    columnsHeaderRef.current!.classList.remove(HEADER_CELL_DROP_ZONE_CSS_CLASS);
     dragColNode.current!.parentElement!.classList.remove('MuiDataGrid-colCellMoving');
     dragColNode.current!.removeEventListener(DRAGEND, handleDragEnd);
     dragCol.current = null;
     dragColNode.current = null;
-  }, [columnsRef, apiRef, logger]);
+  }, [apiRef, logger]);
 
   const handleDragStart = React.useCallback(
     (col: ColDef, currentTarget: HTMLElement): void => {
@@ -95,17 +93,17 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
   }, []);
 
   const handleColumnHeaderDragOver = React.useCallback(
-    (event) => {
+    (event: Event, ref: React.RefObject<HTMLElement>) => {
       event.preventDefault();
       apiRef.current.publishEvent(COL_REORDER_DRAG_OVER_HEADER);
-
-      columnsRef.current!.classList.add(HEADER_CELL_DROP_ZONE_CSS_CLASS);
+      columnsHeaderRef.current = ref.current;
+      columnsHeaderRef.current!.classList.add(HEADER_CELL_DROP_ZONE_CSS_CLASS);
     },
-    [columnsRef, apiRef],
+    [apiRef],
   );
 
   const handleDragEnter = React.useCallback(
-    (event) => {
+    (event: Event) => {
       event.preventDefault();
       apiRef.current.publishEvent(COL_REORDER_DRAG_ENTER);
     },
@@ -146,6 +144,15 @@ export const useColumnReorder = (columnsRef: React.RefObject<HTMLDivElement>, ap
     },
     [apiRef, logger],
   );
+
+  const colReorderApi: ColumnReorderApi = {
+    onColCellDragStart: handleDragStart,
+    onColHeaderDragOver: handleColumnHeaderDragOver,
+    onColCellDragOver: handleDragOver,
+    onColCellDragEnter: handleDragEnter,
+  };
+
+  useApiMethod(apiRef, colReorderApi, 'ColReorderApi');
 
   return {
     handleDragStart,
