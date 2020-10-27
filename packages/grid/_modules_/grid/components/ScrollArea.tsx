@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { COL_REORDER_START, COL_REORDER_STOP, SCROLLING } from '../constants/eventsConstants';
-import { ScrollParams, useApiEventHandler } from '../hooks';
-import { ApiRef } from '../models';
-import { classnames } from '../utils';
+import { useApiEventHandler } from '../hooks/root/useApiEventHandler';
+import { ApiRef } from '../models/api/apiRef';
+import { ScrollParams } from '../models/params/scrollParams';
+import { classnames } from '../utils/classnames';
 import { ApiContext } from './api-context';
 
 const CLIFF = 1;
