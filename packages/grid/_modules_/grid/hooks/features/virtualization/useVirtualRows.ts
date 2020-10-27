@@ -39,11 +39,11 @@ export const useVirtualRows = (
   const paginationState = useGridSelector<PaginationState>(apiRef, paginationSelector);
   const totalRowCount = useGridSelector<number>(apiRef, rowCountSelector);
 
-  const [, scrollColHeaderTo] = useScrollFn(colRef);
+  const [, scrollColHeaderTo] = useScrollFn(apiRef, colRef);
   const onDataScroll = (scrollParams: ScrollParams) => {
     scrollColHeaderTo({ left: scrollParams.left, top: 0 });
   };
-  const [scrollTo] = useScrollFn(renderingZoneRef, onDataScroll);
+  const [scrollTo] = useScrollFn(apiRef, renderingZoneRef, onDataScroll);
 
   const [renderedColRef, updateRenderedCols] = useVirtualColumns(options, apiRef);
 

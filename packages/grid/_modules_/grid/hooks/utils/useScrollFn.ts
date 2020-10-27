@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { debounce } from '@material-ui/core/utils';
+import { ApiRef } from '../../models/api/apiRef';
 import { useLogger } from './useLogger';
 import { useRafUpdate } from './useRafUpdate';
 
@@ -10,13 +11,14 @@ export interface ScrollParams {
 export type ScrollFn = (v: ScrollParams) => void;
 
 export function useScrollFn(
+  apiRef: any,
   scrollingElementRef: React.RefObject<HTMLDivElement>,
   onScroll?: ScrollFn,
 ): [ScrollFn, ScrollFn] {
   const logger = useLogger('useScrollFn');
   const rafResetPointerRef = React.useRef(0);
   const previousValue = React.useRef<ScrollParams>();
-  const [restorePointerEvents] = useRafUpdate(() => {
+  const [restorePointerEvents] = useRafUpdate(apiRef, () => {
     if (scrollingElementRef && scrollingElementRef.current) {
       scrollingElementRef.current!.style.pointerEvents = 'unset';
     }
@@ -50,7 +52,7 @@ export function useScrollFn(
     [scrollingElementRef, debouncedResetPointerEvents, logger, onScroll],
   );
 
-  const [runScroll] = useRafUpdate(scrollTo);
+  const [runScroll] = useRafUpdate(apiRef, scrollTo);
 
   React.useEffect(() => {
     return () => {
