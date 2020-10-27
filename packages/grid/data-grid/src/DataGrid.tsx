@@ -1,9 +1,7 @@
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
+import { chainPropTypes } from '@material-ui/utils';
 import { GridComponent, GridComponentProps, classnames } from '../../_modules_/grid';
-
-// TODO: Refactor to import when moving to material-ui v5
-const chainPropTypes = require('@material-ui/utils').chainPropTypes;
 
 const FORCED_PROPS: Partial<GridComponentProps> = {
   disableColumnResize: true,
@@ -55,8 +53,8 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
   );
 });
 
-DataGrid2.propTypes = {
-  apiRef: chainPropTypes(PropTypes.any, (props) => {
+(DataGrid2 as any).propTypes = {
+  apiRef: chainPropTypes(PropTypes.any, (props: any) => {
     if (props.apiRef != null) {
       throw new Error(
         [
@@ -67,8 +65,9 @@ DataGrid2.propTypes = {
         ].join('\n'),
       );
     }
+    return null;
   }),
-  columns: chainPropTypes(PropTypes.any, (props) => {
+  columns: chainPropTypes(PropTypes.any, (props: any) => {
     if (props.columns && props.columns.some((column) => column.resizable)) {
       throw new Error(
         [
@@ -79,8 +78,9 @@ DataGrid2.propTypes = {
         ].join('\n'),
       );
     }
+    return null;
   }),
-  disableColumnReorder: chainPropTypes(PropTypes.bool, (props) => {
+  disableColumnReorder: chainPropTypes(PropTypes.bool, (props: any) => {
     if (props.disableColumnReorder === false) {
       throw new Error(
         [
@@ -91,8 +91,9 @@ DataGrid2.propTypes = {
         ].join('\n'),
       );
     }
+    return null;
   }),
-  disableColumnResize: chainPropTypes(PropTypes.bool, (props) => {
+  disableColumnResize: chainPropTypes(PropTypes.bool, (props: any) => {
     if (props.disableColumnResize === false) {
       throw new Error(
         [
@@ -103,8 +104,9 @@ DataGrid2.propTypes = {
         ].join('\n'),
       );
     }
+    return null;
   }),
-  disableMultipleColumnsSorting: chainPropTypes(PropTypes.bool, (props) => {
+  disableMultipleColumnsSorting: chainPropTypes(PropTypes.bool, (props: any) => {
     if (props.disableMultipleColumnsSorting === false) {
       throw new Error(
         [
@@ -115,10 +117,9 @@ DataGrid2.propTypes = {
         ].join('\n'),
       );
     }
-
     return null;
   }),
-  disableMultipleSelection: chainPropTypes(PropTypes.bool, (props) => {
+  disableMultipleSelection: chainPropTypes(PropTypes.bool, (props: any) => {
     if (props.disableMultipleSelection === false) {
       throw new Error(
         [
@@ -129,10 +130,9 @@ DataGrid2.propTypes = {
         ].join('\n'),
       );
     }
-
     return null;
   }),
-  pageSize: chainPropTypes(PropTypes.number, (props) => {
+  pageSize: chainPropTypes(PropTypes.number, (props: any) => {
     if (props.pageSize && props.pageSize > MAX_PAGE_SIZE) {
       throw new Error(
         [
@@ -143,10 +143,9 @@ DataGrid2.propTypes = {
         ].join('\n'),
       );
     }
-
     return null;
   }),
-  pagination: (props) => {
+  pagination: (props: any) => {
     if (props.pagination === false) {
       return new Error(
         [
