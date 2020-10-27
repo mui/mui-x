@@ -1,17 +1,11 @@
-import * as React from 'react';
 import { debounce } from '@material-ui/core/utils';
-import { ApiRef } from '../../models/api/apiRef';
+import * as React from 'react';
+import { ScrollFn, ScrollParams } from '../../models/params/scrollParams';
 import { useLogger } from './useLogger';
 import { useRafUpdate } from './useRafUpdate';
 
-export interface ScrollParams {
-  left: number;
-  top: number;
-}
-export type ScrollFn = (v: ScrollParams) => void;
-
 export function useScrollFn(
-  apiRef: ApiRef,
+  apiRef: any,
   renderingZoneElementRef: React.RefObject<HTMLDivElement>,
   columnHeadersElementRef: React.RefObject<HTMLDivElement>,
 ): [ScrollFn, ScrollFn] {

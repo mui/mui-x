@@ -1,10 +1,12 @@
 import * as React from 'react';
-import { ApiRef } from '../../models/api/apiRef';
 import { useLogger } from './useLogger';
 
 type UseRafUpdateReturnType = [(...args: any[]) => void, (fn: (args: any) => void) => void];
 
-export function useRafUpdate(apiRef: ApiRef, initialFn?: (...args: any) => void): UseRafUpdateReturnType {
+export function useRafUpdate(
+  apiRef: any,
+  initialFn?: (...args: any) => void,
+): UseRafUpdateReturnType {
   const logger = useLogger('useRafUpdate');
   const fn = React.useRef(initialFn);
 
