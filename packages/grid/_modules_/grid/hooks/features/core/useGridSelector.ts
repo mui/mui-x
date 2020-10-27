@@ -6,8 +6,9 @@ export const useGridSelector = <State>(
   apiRef: ApiRef | GridApi | undefined,
   selector: (state: any) => State,
 ) => {
-  const [state, ,] = useGridState(apiRef!.hasOwnProperty('current') ? apiRef! as ApiRef : {current: (<GridApi>apiRef!)});
+  const [state, ,] = useGridState(
+    apiRef!.hasOwnProperty('current') ? (apiRef! as ApiRef) : { current: <GridApi>apiRef! },
+  );
 
   return selector(state);
 };
-

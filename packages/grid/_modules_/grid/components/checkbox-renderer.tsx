@@ -9,21 +9,24 @@ import { CellParams } from '../models/params/cellParams';
 import { ApiContext } from './api-context';
 
 export const HeaderCheckbox: React.FC<ColParams> = () => {
-  const apiRef = useContext(ApiContext)
+  const apiRef = useContext(ApiContext);
 
   const totalSelectedRows = useGridSelector(apiRef, selectedRowsCountSelector);
   const totalRows = useGridSelector(apiRef, rowCountSelector);
 
-  const [isIndeterminate, setisIndeterminate] = React.useState(totalSelectedRows > 0 && totalSelectedRows !== totalRows);
-  const [isChecked, setChecked] = React.useState(totalSelectedRows === totalRows || isIndeterminate);
+  const [isIndeterminate, setisIndeterminate] = React.useState(
+    totalSelectedRows > 0 && totalSelectedRows !== totalRows,
+  );
+  const [isChecked, setChecked] = React.useState(
+    totalSelectedRows === totalRows || isIndeterminate,
+  );
 
-  React.useEffect(()=> {
-    const isNewIndeterminate =   totalSelectedRows > 0 && totalSelectedRows !== totalRows;
-    const isNewChecked =  totalSelectedRows === totalRows || isIndeterminate;
+  React.useEffect(() => {
+    const isNewIndeterminate = totalSelectedRows > 0 && totalSelectedRows !== totalRows;
+    const isNewChecked = totalSelectedRows === totalRows || isIndeterminate;
     setChecked(isNewChecked);
     setisIndeterminate(isNewIndeterminate);
-
-  },[isIndeterminate, totalRows, totalSelectedRows]);
+  }, [isIndeterminate, totalRows, totalSelectedRows]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     setChecked(checked);
@@ -44,7 +47,7 @@ export const HeaderCheckbox: React.FC<ColParams> = () => {
 HeaderCheckbox.displayName = 'HeaderCheckbox';
 
 export const CellCheckboxRenderer: React.FC<CellParams> = React.memo(({ rowModel, value }) => {
-  const apiRef = useContext(ApiContext)
+  const apiRef = useContext(ApiContext);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     apiRef!.current.selectRow(rowModel.id, checked, true);

@@ -7,6 +7,6 @@ export type CellValue = string | number | boolean | Date | null | undefined | ob
  * The coordinates of cell represented by their row and column indexes.
  */
 export interface CellIndexCoordinates {
-	colIndex: number;
-	rowIndex: number;
+  colIndex: number;
+  rowIndex: number;
 }

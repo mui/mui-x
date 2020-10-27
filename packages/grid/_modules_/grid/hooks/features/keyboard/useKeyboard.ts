@@ -62,7 +62,7 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
     (isPressed: boolean) => {
       setGridState((state) => {
         logger.debug(`Toggling keyboard multiple key pressed to ${isPressed}`);
-        const keyboardState: KeyboardState = {...state.keyboard, isMultipleKeyPressed: isPressed};
+        const keyboardState: KeyboardState = { ...state.keyboard, isMultipleKeyPressed: isPressed };
         return { ...state, keyboard: keyboardState };
       });
       forceUpdate();

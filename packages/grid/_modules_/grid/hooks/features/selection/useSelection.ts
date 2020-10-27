@@ -36,11 +36,11 @@ export const useSelection = (apiRef: ApiRef): void => {
   const selectRowModel = React.useCallback(
     (row: RowModel, allowMultipleOverride?: boolean, isSelected?: boolean) => {
       if (!apiRef.current.isInitialised) {
-        setGridState(state => {
+        setGridState((state) => {
           const selectionState: SelectionState = {};
           selectionState[row.id] = true;
-          return { ...state, selection: selectionState};
-        })
+          return { ...state, selection: selectionState };
+        });
         return;
       }
 
@@ -52,29 +52,28 @@ export const useSelection = (apiRef: ApiRef): void => {
       }
 
       if (allowMultiSelect) {
-          setGridState(state => {
-            const selectionState: SelectionState = {...state.selection};
-            let isRowSelected: boolean;
-            if (allowMultiSelect) {
-              isRowSelected = isSelected == null ? !selectionState[row.id] : isSelected;
-            } else {
-              isRowSelected = true;
-            }
+        setGridState((state) => {
+          const selectionState: SelectionState = { ...state.selection };
+          let isRowSelected: boolean;
+          if (allowMultiSelect) {
+            isRowSelected = isSelected == null ? !selectionState[row.id] : isSelected;
+          } else {
+            isRowSelected = true;
+          }
 
-            if (isRowSelected) {
-              selectionState[row.id] = true;
-            } else {
-              delete selectionState[row.id];
-            }
-            return { ...state, selection: selectionState};
-          });
-      } else {
-        setGridState(state => {
-          const selectionState: SelectionState = {};
+          if (isRowSelected) {
             selectionState[row.id] = true;
-          return { ...state, selection: selectionState};
+          } else {
+            delete selectionState[row.id];
+          }
+          return { ...state, selection: selectionState };
         });
-
+      } else {
+        setGridState((state) => {
+          const selectionState: SelectionState = {};
+          selectionState[row.id] = true;
+          return { ...state, selection: selectionState };
+        });
       }
       // apiRef.current.updateRowModels([...updatedRowModels, { ...row, selected: isRowSelected }]);
 
@@ -91,7 +90,7 @@ export const useSelection = (apiRef: ApiRef): void => {
       //   rows: getSelectedRows().map((r) => r.data),
       // };
       apiRef.current.publishEvent(ROW_SELECTED, rowSelectedParam);
-      apiRef.current.publishEvent(SELECTION_CHANGED, {rows: selectionState});
+      apiRef.current.publishEvent(SELECTION_CHANGED, { rows: selectionState });
 
       forceUpdate();
     },
@@ -111,17 +110,17 @@ export const useSelection = (apiRef: ApiRef): void => {
         return;
       }
 
-      setGridState(state => {
-        const selectionState: SelectionState = deSelectOthers ? {} : {...state.selection};
-          ids.reduce((newState, rowId)=> {
-            if(isSelected) {
-              newState[rowId] = true;
-            } else if(newState[rowId]) {
-              delete newState[rowId];
-            }
-            return newState;
-          }, selectionState);
-        return { ...state, selection: selectionState};
+      setGridState((state) => {
+        const selectionState: SelectionState = deSelectOthers ? {} : { ...state.selection };
+        ids.reduce((newState, rowId) => {
+          if (isSelected) {
+            newState[rowId] = true;
+          } else if (newState[rowId]) {
+            delete newState[rowId];
+          }
+          return newState;
+        }, selectionState);
+        return { ...state, selection: selectionState };
       });
 
       forceUpdate();
@@ -130,9 +129,17 @@ export const useSelection = (apiRef: ApiRef): void => {
       // const selectionChangeParam: SelectionChangeParams = {
       //   rows: getSelectedRows().map((r) => r.data),
       // };
-      apiRef.current.publishEvent(SELECTION_CHANGED, {rows: apiRef!.current!.getState<SelectionState>('selection')});
+      apiRef.current.publishEvent(SELECTION_CHANGED, {
+        rows: apiRef!.current!.getState<SelectionState>('selection'),
+      });
     },
-    [options.disableMultipleSelection, options.checkboxSelection, setGridState, forceUpdate, apiRef],
+    [
+      options.disableMultipleSelection,
+      options.checkboxSelection,
+      setGridState,
+      forceUpdate,
+      apiRef,
+    ],
   );
 
   const rowClickHandler = React.useCallback(
@@ -188,20 +195,20 @@ export const useSelection = (apiRef: ApiRef): void => {
   // }, [apiRef, selectedItemsRef]);
 
   React.useEffect(() => {
-    setGridState(state=> {
-      const newSelectionState ={...state.selection};
+    setGridState((state) => {
+      const newSelectionState = { ...state.selection };
       let hasChanged = false;
-      Object.keys(newSelectionState).forEach((id: RowId)=> {
-        if(!rowsLookup[id]) {
+      Object.keys(newSelectionState).forEach((id: RowId) => {
+        if (!rowsLookup[id]) {
           delete newSelectionState[id];
           hasChanged = true;
         }
       });
-      if(hasChanged) {
-        return {...state, selection: newSelectionState};
+      if (hasChanged) {
+        return { ...state, selection: newSelectionState };
       }
       return state;
-    })
+    });
     forceUpdate();
   }, [rowsLookup, apiRef, setGridState, forceUpdate]);
 };
