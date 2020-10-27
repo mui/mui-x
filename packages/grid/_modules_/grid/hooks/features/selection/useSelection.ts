@@ -27,9 +27,9 @@ export const useSelection = (apiRef: ApiRef): void => {
   const rowsLookup = useGridSelector(apiRef, rowsLookupSelector);
 
   const allowMultipleSelectionKeyPressed = React.useRef<boolean>(false);
-  //
+  
   const getSelectedRows = React.useCallback((): RowModel[] => {
-    //TODO replace with selector
+    // TODO replace with selector
     return Object.keys(gridState.selection).map((id) => apiRef.current.getRowFromId(id));
   }, [apiRef, gridState.selection]);
 
@@ -53,7 +53,8 @@ export const useSelection = (apiRef: ApiRef): void => {
 
       if (allowMultiSelect) {
         setGridState((state) => {
-          const selectionState: SelectionState = { ...state.selection };
+          // eslint-disable-next-line prefer-object-spread
+          const selectionState: SelectionState = Object.assign({}, state.selection);
           let isRowSelected: boolean;
           if (allowMultiSelect) {
             isRowSelected = isSelected == null ? !selectionState[row.id] : isSelected;
@@ -75,24 +76,18 @@ export const useSelection = (apiRef: ApiRef): void => {
           return { ...state, selection: selectionState };
         });
       }
-      // apiRef.current.updateRowModels([...updatedRowModels, { ...row, selected: isRowSelected }]);
+      forceUpdate();
 
-      // logger.info(
-      //   `Row at index ${rowIndex} has change to ${isRowSelected ? 'selected' : 'unselected'} `,
-      // );
       const selectionState = apiRef!.current!.getState<SelectionState>('selection');
       const rowSelectedParam: RowSelectedParams = {
         data: row.data,
         isSelected: !!selectionState[row.id],
-        // rowIndex: 0,
       };
-      // const selectionChangeParam: SelectionChangeParams = {
-      //   rows: getSelectedRows().map((r) => r.data),
-      // };
+      const selectionChangeParam: SelectionChangeParams = {
+        rowIds: Object.keys(selectionState),
+      };
       apiRef.current.publishEvent(ROW_SELECTED, rowSelectedParam);
-      apiRef.current.publishEvent(SELECTION_CHANGED, { rows: selectionState });
-
-      forceUpdate();
+      apiRef.current.publishEvent(SELECTION_CHANGED, selectionChangeParam);
     },
     [apiRef, logger, options.checkboxSelection, forceUpdate, setGridState],
   );
@@ -126,11 +121,8 @@ export const useSelection = (apiRef: ApiRef): void => {
       forceUpdate();
 
       // We don't emit ROW_SELECTED on each row as it would be too consuming for large set of data.
-      // const selectionChangeParam: SelectionChangeParams = {
-      //   rows: getSelectedRows().map((r) => r.data),
-      // };
       apiRef.current.publishEvent(SELECTION_CHANGED, {
-        rows: apiRef!.current!.getState<SelectionState>('selection'),
+        rowIds: Object.keys(apiRef!.current!.getState<SelectionState>('selection')),
       });
     },
     [
@@ -178,7 +170,6 @@ export const useSelection = (apiRef: ApiRef): void => {
   useApiEventHandler(apiRef, SELECTION_CHANGED, options.onSelectionChange);
 
   // TODO handle Cell Click/range selection?
-
   const selectionApi: SelectionApi = {
     selectRow,
     getSelectedRows,
@@ -187,12 +178,6 @@ export const useSelection = (apiRef: ApiRef): void => {
     onSelectionChange,
   };
   useApiMethod(apiRef, selectionApi, 'SelectionApi');
-
-  // React.useEffect(() => {
-  //   if (selectedItemsRef.current.length > 0) {
-  //     apiRef.current.selectRows(selectedItemsRef.current);
-  //   }
-  // }, [apiRef, selectedItemsRef]);
 
   React.useEffect(() => {
     setGridState((state) => {
