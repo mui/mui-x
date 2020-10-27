@@ -33,7 +33,7 @@ export interface ColDef {
    */
   width?: number;
   /**
-   * If set, it indicates that a column has fluid width. Range [0, 1].
+   * If set, it indicates that a column has fluid width. Range [0, ∞].
    */
   flex?: number;
   /**

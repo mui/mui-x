@@ -49,8 +49,11 @@ function mapColumns(
 
   if (containerWidth > 0 && numberOfFluidColumns) {
     const flexMultiplier = containerWidth / flexDivider;
-    extendedColumns = extendedColumns.map((c) => {
-      return { ...c, width: c.flex! ? Math.floor(flexMultiplier * c.flex!) : c.width };
+    extendedColumns = extendedColumns.map((column) => {
+      return {
+        ...column,
+        width: column.flex! ? Math.floor(flexMultiplier * column.flex!) : column.width,
+      };
     });
   }
 

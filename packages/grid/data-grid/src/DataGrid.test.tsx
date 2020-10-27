@@ -196,14 +196,14 @@ describe('<DataGrid />', () => {
 
       render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid columns={columns} rows={rows}/>
+          <DataGrid columns={columns} rows={rows} />
         </div>,
       );
 
       const DOMColumns = document.querySelectorAll('.MuiDataGrid-colCell');
-      DOMColumns.forEach(col => {
+      DOMColumns.forEach((col) => {
         expect(col.style.width).to.equal('100px');
-      })
+      });
     });
 
     it('should set the columns width value to what is provided', () => {
@@ -233,7 +233,7 @@ describe('<DataGrid />', () => {
 
       render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid columns={columns} rows={rows}/>
+          <DataGrid columns={columns} rows={rows} />
         </div>,
       );
 
@@ -266,7 +266,7 @@ describe('<DataGrid />', () => {
 
         render(
           <div style={{ width: 200, height: 300 }}>
-            <DataGrid columns={columns} rows={rows}/>
+            <DataGrid columns={columns} rows={rows} />
           </div>,
         );
 
@@ -279,5 +279,5 @@ describe('<DataGrid />', () => {
         expect(parseInt(firstColumnWidthVal)).to.equal(2 * parseInt(secondColumnWidthVal));
       }
     });
-  })
+  });
 });
