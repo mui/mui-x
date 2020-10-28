@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  ROW_CLICK,
-  ROW_SELECTED,
-  SELECTION_CHANGED,
-} from '../../../constants/eventsConstants';
+import { ROW_CLICK, ROW_SELECTED, SELECTION_CHANGED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { SelectionApi } from '../../../models/api/selectionApi';
 import { RowParams } from '../../../models/params/rowParams';

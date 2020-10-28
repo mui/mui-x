@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { CellCheckboxRenderer, HeaderCheckbox } from '../../components/checkbox-renderer';
+import { ColDef } from './colDef';
 
-export const checkboxSelectionColDef: any = {
+export const checkboxSelectionColDef: ColDef = {
   field: '__check__',
   description: 'Select Multiple Rows',
   type: 'checkboxSelection',
