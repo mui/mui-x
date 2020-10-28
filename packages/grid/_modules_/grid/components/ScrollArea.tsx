@@ -29,7 +29,7 @@ export const ScrollArea = React.memo(function ScrollArea(props: ScrollAreaProps)
 
   const handleDragOver = React.useCallback(
     (event) => {
-      let offset;
+      let offset: number;
 
       if (scrollDirection === 'left') {
         offset = event.clientX - rootRef.current!.getBoundingClientRect().right;

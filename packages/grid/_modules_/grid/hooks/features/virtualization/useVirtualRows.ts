@@ -39,12 +39,7 @@ export const useVirtualRows = (
   const paginationState = useGridSelector<PaginationState>(apiRef, paginationSelector);
   const totalRowCount = useGridSelector<number>(apiRef, rowCountSelector);
 
-  const [, scrollColHeaderTo] = useScrollFn(colRef);
-  const onDataScroll = (scrollParams: ScrollParams) => {
-    scrollColHeaderTo({ left: scrollParams.left, top: 0 });
-  };
-  const [scrollTo] = useScrollFn(renderingZoneRef, onDataScroll);
-
+  const [scrollTo] = useScrollFn(renderingZoneRef, colRef);
   const [renderedColRef, updateRenderedCols] = useVirtualColumns(options, apiRef);
 
   const setRenderingState = React.useCallback(
@@ -108,10 +103,11 @@ export const useVirtualRows = (
       renderedSizes: apiRef.current.state.containerSizes,
     });
     if (hasChanged) {
-      logger.debug('Force rendering');
       if (apiRef.current.state.isScrolling) {
+        logger.debug('reRender: Raf rendering');
         rafUpdate();
       } else {
+        logger.debug('reRender: Force rendering');
         // we force this update, the func makes react force run this state update and rerender
         forceUpdate((p) => !p);
       }

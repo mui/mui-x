@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-function pnlFormatter(value) {
+function pnlFormatter(value: number) {
   return value < 0 ? `(${Math.abs(value).toLocaleString()})` : value.toLocaleString();
 }
 

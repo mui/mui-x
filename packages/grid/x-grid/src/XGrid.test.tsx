@@ -2,7 +2,7 @@ import * as React from 'react';
 // @ts-expect-error need to migrate helpers to TypeScript
 import { screen, createClientRender, act, fireEvent } from 'test/utils';
 import { expect } from 'chai';
-import { XGrid, useApiRef } from '@material-ui/x-grid';
+import { XGrid, useApiRef, Columns } from '@material-ui/x-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
 function getActiveCell() {
@@ -109,7 +109,8 @@ describe('<XGrid />', () => {
     /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
     const KeyboardTest = () => {
       const data = useData(100, 20);
-      const transformColSizes = (columns) => columns.map((column) => ({ ...column, width: 60 }));
+      const transformColSizes = (columns: Columns) =>
+        columns.map((column) => ({ ...column, width: 60 }));
 
       return (
         <div style={{ width: 300, height: 300 }}>
@@ -156,7 +157,11 @@ describe('<XGrid />', () => {
   });
 
   it('should resize the width of the columns', async () => {
-    const TestCase = (props) => {
+    interface TestCaseProps {
+      width?: number;
+    }
+
+    const TestCase = (props: TestCaseProps) => {
       const { width = 300 } = props;
       return (
         <div style={{ width, height: 300 }}>
