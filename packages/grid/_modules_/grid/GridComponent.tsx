@@ -23,7 +23,7 @@ import { usePagination } from './hooks/features/pagination/usePagination';
 import { useRows } from './hooks/features/rows/useRows';
 import { useSorting } from './hooks/features/sorting/useSorting';
 import { useApiRef } from './hooks/features/useApiRef';
-import { useColumnReorder } from './hooks/features/column-reorder';
+import { useColumnReorder } from './hooks/features/columnReorder';
 import { useColumnResize } from './hooks/features/useColumnResize';
 import { useComponents } from './hooks/features/useComponents';
 import { useSelection } from './hooks/features/useSelection';

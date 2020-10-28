@@ -34,21 +34,17 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
   useApiEventHandler(apiRef!, COL_RESIZE_START, handleResizeStart);
   useApiEventHandler(apiRef!, COL_RESIZE_STOP, handleResizeStop);
 
-  const items = React.useMemo(
-    () =>
-      columns.map((col, idx) => (
-        <ColumnHeaderItem
-          key={col.field}
-          sortModel={gridSortModel}
-          options={options}
-          column={col}
-          colIndex={idx}
-          isResizing={resizingColField === col.field}
-          separatorProps={separatorProps}
-        />
-      )),
-    [columns, gridSortModel, options, resizingColField, separatorProps],
-  );
+  const items = columns.map((col, idx) => (
+    <ColumnHeaderItem
+      key={col.field}
+      sortModel={gridSortModel}
+      options={options}
+      column={col}
+      colIndex={idx}
+      isResizing={resizingColField === col.field}
+      separatorProps={separatorProps}
+    />
+  ));
 
   return <React.Fragment>{items}</React.Fragment>;
 };

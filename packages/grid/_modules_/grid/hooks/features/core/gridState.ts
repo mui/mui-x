@@ -9,7 +9,7 @@ import { ContainerProps } from '../../../models/containerProps';
 import {
   ColumnReorderState,
   getInitialColumnReorderState,
-} from '../column-reorder/columnReorderState';
+} from '../columnReorder/columnReorderState';
 
 export interface GridState {
   rows: InternalRowsState;

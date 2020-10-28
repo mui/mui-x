@@ -37,9 +37,4 @@ export interface ColumnReorderApi {
    * @returns void
    */
   onColCellDragEnter: (event: Event) => void;
-  /**
-   * Column cell drag end event handler.
-   * @returns void
-   */
-  onColCellDragEnd: () => void;
 }
