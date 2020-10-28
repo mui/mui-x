@@ -27,7 +27,7 @@ export const useSelection = (apiRef: ApiRef): void => {
   const rowsLookup = useGridSelector(apiRef, rowsLookupSelector);
 
   const allowMultipleSelectionKeyPressed = React.useRef<boolean>(false);
-  
+
   const getSelectedRows = React.useCallback((): RowModel[] => {
     // TODO replace with selector
     return Object.keys(gridState.selection).map((id) => apiRef.current.getRowFromId(id));

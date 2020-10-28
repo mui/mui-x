@@ -125,10 +125,10 @@ export const useSorting = (apiRef: ApiRef) => {
 
   const applySorting = React.useCallback(() => {
     const sortModel = apiRef.current.getState<GridState>().sorting.sortModel;
-    logger.info('Sorting rows with ',  sortModel);
+    logger.info('Sorting rows with ', sortModel);
 
     let sorted = [...unorderedRows];
-    if ( sortModel.length > 0) {
+    if (sortModel.length > 0) {
       comparatorList.current = buildComparatorList(sortModel);
       sorted = sorted.sort(comparatorListAggregate);
     }
@@ -140,7 +140,15 @@ export const useSorting = (apiRef: ApiRef) => {
       };
     });
     forceUpdate();
-  }, [apiRef, logger, unorderedRows, setGridState, forceUpdate, buildComparatorList, comparatorListAggregate]);
+  }, [
+    apiRef,
+    logger,
+    unorderedRows,
+    setGridState,
+    forceUpdate,
+    buildComparatorList,
+    comparatorListAggregate,
+  ]);
 
   const setSortModel = React.useCallback(
     (sortModel: SortModel) => {
@@ -165,7 +173,7 @@ export const useSorting = (apiRef: ApiRef) => {
       columns.visible.length,
       apiRef,
       getSortModelParams,
-      options.sortingMode
+      options.sortingMode,
     ],
   );
 

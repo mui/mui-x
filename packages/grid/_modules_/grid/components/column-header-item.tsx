@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ColDef } from '../models/colDef';
 import { GridOptions } from '../models/gridOptions';
-import { SortDirection, SortModel } from '../models/sortModel';
+import { SortDirection } from '../models/sortModel';
 import { ApiContext } from './api-context';
 import { HEADER_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import { classnames } from '../utils';
@@ -24,105 +24,104 @@ interface ColumnHeaderItemProps {
 }
 
 export const ColumnHeaderItem = ({
-    column,
-    colIndex,
-    onColumnDragStart,
-    onColumnDragEnter,
-    onColumnDragOver,
-    isResizing,
-    separatorProps,
-    sortDirection,
-    sortIndex,
-    options,
-  }: ColumnHeaderItemProps) => {
-    const apiRef = React.useContext(ApiContext);
-    const { disableColumnReorder, showColumnRightBorder, disableColumnResize } = options;
+  column,
+  colIndex,
+  onColumnDragStart,
+  onColumnDragEnter,
+  onColumnDragOver,
+  isResizing,
+  separatorProps,
+  sortDirection,
+  sortIndex,
+  options,
+}: ColumnHeaderItemProps) => {
+  const apiRef = React.useContext(ApiContext);
+  const { disableColumnReorder, showColumnRightBorder, disableColumnResize } = options;
 
+  let headerComponent: React.ReactElement | null = null;
+  if (column.renderHeader) {
+    headerComponent = column.renderHeader({
+      api: apiRef!.current!,
+      colDef: column,
+      colIndex,
+      field: column.field,
+    });
+  }
 
-    let headerComponent: React.ReactElement | null = null;
-    if (column.renderHeader) {
-      headerComponent = column.renderHeader({
-        api: apiRef!.current!,
-        colDef: column,
-        colIndex,
-        field: column.field,
-      });
-    }
-
-    const dragConfig = {
-      draggable:
-        !disableColumnReorder && !!onColumnDragStart && !!onColumnDragEnter && !!onColumnDragOver,
-      onDragStart: onColumnDragStart && ((event) => onColumnDragStart(column, event.currentTarget)),
-      onDragEnter: onColumnDragEnter && ((event) => onColumnDragEnter(event)),
-      onDragOver:
-        onColumnDragOver &&
-        ((event) => {
-          onColumnDragOver(column, {
-            x: event.clientX,
-            y: event.clientY,
-          });
-        }),
-    };
-    const width = column.width!;
-
-    let ariaSort: any;
-    if (sortDirection != null) {
-      ariaSort = {
-        'aria-sort': sortDirection === 'asc' ? 'ascending' : 'descending',
-      };
-    }
-
-    return (
-      <div
-        className={classnames(
-          HEADER_CELL_CSS_CLASS,
-          showColumnRightBorder ? 'MuiDataGrid-withBorder' : '',
-          column.headerClassName,
-          column.headerAlign === 'center' && 'MuiDataGrid-colCellCenter',
-          column.headerAlign === 'right' && 'MuiDataGrid-colCellRight',
-          { 'MuiDataGrid-colCellSortable': column.sortable },
-        )}
-        key={column.field}
-        data-field={column.field}
-        style={{
-          width,
-          minWidth: width,
-          maxWidth: width,
-        }}
-        role="columnheader"
-        tabIndex={-1}
-        aria-colindex={colIndex + 1}
-        {...ariaSort}
-      >
-        <div className="MuiDataGrid-colCell-draggable" {...dragConfig}>
-          {column.type === 'number' && (
-            <ColumnHeaderSortIcon
-              direction={sortDirection}
-              index={sortIndex}
-              hide={column.hideSortIcons}
-            />
-          )}
-          {headerComponent || (
-            <ColumnHeaderTitle
-              label={column.headerName || column.field}
-              description={column.description}
-              columnWidth={width}
-            />
-          )}
-          {column.type !== 'number' && (
-            <ColumnHeaderSortIcon
-              direction={sortDirection}
-              index={sortIndex}
-              hide={column.hideSortIcons}
-            />
-          )}
-        </div>
-        <ColumnHeaderSeparator
-          resizable={!disableColumnResize && !!column.resizable}
-          resizing={isResizing}
-          {...separatorProps}
-        />
-      </div>
-    );
+  const dragConfig = {
+    draggable:
+      !disableColumnReorder && !!onColumnDragStart && !!onColumnDragEnter && !!onColumnDragOver,
+    onDragStart: onColumnDragStart && ((event) => onColumnDragStart(column, event.currentTarget)),
+    onDragEnter: onColumnDragEnter && ((event) => onColumnDragEnter(event)),
+    onDragOver:
+      onColumnDragOver &&
+      ((event) => {
+        onColumnDragOver(column, {
+          x: event.clientX,
+          y: event.clientY,
+        });
+      }),
   };
+  const width = column.width!;
+
+  let ariaSort: any;
+  if (sortDirection != null) {
+    ariaSort = {
+      'aria-sort': sortDirection === 'asc' ? 'ascending' : 'descending',
+    };
+  }
+
+  return (
+    <div
+      className={classnames(
+        HEADER_CELL_CSS_CLASS,
+        showColumnRightBorder ? 'MuiDataGrid-withBorder' : '',
+        column.headerClassName,
+        column.headerAlign === 'center' && 'MuiDataGrid-colCellCenter',
+        column.headerAlign === 'right' && 'MuiDataGrid-colCellRight',
+        { 'MuiDataGrid-colCellSortable': column.sortable },
+      )}
+      key={column.field}
+      data-field={column.field}
+      style={{
+        width,
+        minWidth: width,
+        maxWidth: width,
+      }}
+      role="columnheader"
+      tabIndex={-1}
+      aria-colindex={colIndex + 1}
+      {...ariaSort}
+    >
+      <div className="MuiDataGrid-colCell-draggable" {...dragConfig}>
+        {column.type === 'number' && (
+          <ColumnHeaderSortIcon
+            direction={sortDirection}
+            index={sortIndex}
+            hide={column.hideSortIcons}
+          />
+        )}
+        {headerComponent || (
+          <ColumnHeaderTitle
+            label={column.headerName || column.field}
+            description={column.description}
+            columnWidth={width}
+          />
+        )}
+        {column.type !== 'number' && (
+          <ColumnHeaderSortIcon
+            direction={sortDirection}
+            index={sortIndex}
+            hide={column.hideSortIcons}
+          />
+        )}
+      </div>
+      <ColumnHeaderSeparator
+        resizable={!disableColumnResize && !!column.resizable}
+        resizing={isResizing}
+        {...separatorProps}
+      />
+    </div>
+  );
+};
 ColumnHeaderItem.displayName = 'ColumnHeaderItem';

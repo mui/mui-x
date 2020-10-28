@@ -10,7 +10,7 @@ import { LeftEmptyCell, RightEmptyCell } from './cell';
 import { containerSizesSelector } from './viewport';
 import { OptionsContext } from './options-context';
 import { ScrollArea } from './ScrollArea';
-import { CursorCoordinates, sortColumnLookupSelector, sortModelSelector, useApiEventHandler } from '../hooks';
+import { CursorCoordinates, sortColumnLookupSelector, useApiEventHandler } from '../hooks';
 
 export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
@@ -43,19 +43,19 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
   useApiEventHandler(apiRef!, COL_RESIZE_STOP, handleResizeStop);
 
   const items = columns.map((col, idx) => (
-        <ColumnHeaderItem
-          key={col.field}
-          {...sortColumnLookup[col.field]}
-          options={options}
-          column={col}
-          colIndex={idx}
-          isResizing={resizingColField === col.field}
-          separatorProps={separatorProps}
-          onColumnDragStart={onColumnDragStart}
-          onColumnDragEnter={onColumnDragEnter}
-          onColumnDragOver={onColumnDragOver}
-        />
-      ));
+    <ColumnHeaderItem
+      key={col.field}
+      {...sortColumnLookup[col.field]}
+      options={options}
+      column={col}
+      colIndex={idx}
+      isResizing={resizingColField === col.field}
+      separatorProps={separatorProps}
+      onColumnDragStart={onColumnDragStart}
+      onColumnDragEnter={onColumnDragEnter}
+      onColumnDragOver={onColumnDragOver}
+    />
+  ));
 
   return <React.Fragment>{items}</React.Fragment>;
 };
