@@ -17,6 +17,7 @@ import { useLogger } from '../../utils/useLogger';
 import { optionsSelector } from '../../utils/useOptionsProp';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
+import { keyboardMultipleKeySelector } from '../keyboard/keyboardSelector';
 import { rowsLookupSelector } from '../rows/rowsSelector';
 import { SelectionState } from './selectionState';
 
@@ -25,8 +26,14 @@ export const useSelection = (apiRef: ApiRef): void => {
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
   const rowsLookup = useGridSelector(apiRef, rowsLookupSelector);
+  const isMultipleKeyPressed = useGridSelector(apiRef, keyboardMultipleKeySelector);
 
   const allowMultipleSelectionKeyPressed = React.useRef<boolean>(false);
+
+  React.useEffect(() => {
+    allowMultipleSelectionKeyPressed.current =
+      !options.disableMultipleSelection && isMultipleKeyPressed;
+  }, [isMultipleKeyPressed, options.disableMultipleSelection]);
 
   const getSelectedRows = React.useCallback((): RowModel[] => {
     // TODO replace with selector
@@ -46,21 +53,17 @@ export const useSelection = (apiRef: ApiRef): void => {
 
       logger.debug(`Selecting row ${row.id}`);
 
-      let allowMultiSelect = allowMultipleSelectionKeyPressed.current || options.checkboxSelection;
-      if (allowMultipleOverride) {
-        allowMultiSelect = allowMultipleOverride;
-      }
+      const allowMultiSelect =
+        allowMultipleOverride ||
+        allowMultipleSelectionKeyPressed.current ||
+        options.checkboxSelection;
 
       if (allowMultiSelect) {
         setGridState((state) => {
           // eslint-disable-next-line prefer-object-spread
           const selectionState: SelectionState = Object.assign({}, state.selection);
-          let isRowSelected: boolean;
-          if (allowMultiSelect) {
-            isRowSelected = isSelected == null ? !selectionState[row.id] : isSelected;
-          } else {
-            isRowSelected = true;
-          }
+          const isRowSelected: boolean =
+            !allowMultiSelect || isSelected == null ? !selectionState[row.id] : isSelected;
 
           if (isRowSelected) {
             selectionState[row.id] = true;
@@ -143,13 +146,6 @@ export const useSelection = (apiRef: ApiRef): void => {
     [options.disableSelectionOnClick, selectRowModel],
   );
 
-  const onMultipleKeyPressed = React.useCallback(
-    (isPressed: boolean) => {
-      allowMultipleSelectionKeyPressed.current = !options.disableMultipleSelection && isPressed;
-    },
-    [options.disableMultipleSelection, allowMultipleSelectionKeyPressed],
-  );
-
   const onRowSelected = React.useCallback(
     (handler: (param: RowSelectedParams) => void): (() => void) => {
       return apiRef.current.subscribeEvent(ROW_SELECTED, handler);
@@ -164,8 +160,6 @@ export const useSelection = (apiRef: ApiRef): void => {
   );
 
   useApiEventHandler(apiRef, ROW_CLICK, rowClickHandler);
-  useApiEventHandler(apiRef, MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
-
   useApiEventHandler(apiRef, ROW_SELECTED, options.onRowSelected);
   useApiEventHandler(apiRef, SELECTION_CHANGED, options.onSelectionChange);
 

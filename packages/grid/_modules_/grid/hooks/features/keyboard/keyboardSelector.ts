@@ -9,3 +9,8 @@ export const keyboardCellSelector = createSelector<
   KeyboardState,
   CellIndexCoordinates | null
 >(keyboardStateSelector, (keyboard: KeyboardState) => keyboard.cell);
+
+export const keyboardMultipleKeySelector = createSelector<GridState, KeyboardState, boolean>(
+  keyboardStateSelector,
+  (keyboard: KeyboardState) => keyboard.isMultipleKeyPressed,
+);
