@@ -88,8 +88,10 @@ export const ColumnHeaderItem = ({
         column.headerClassName,
         column.headerAlign === 'center' && 'MuiDataGrid-colCellCenter',
         column.headerAlign === 'right' && 'MuiDataGrid-colCellRight',
-        { 'MuiDataGrid-colCellSortable': column.sortable },
-        { 'MuiDataGrid-colCellMoving': isDragging },
+        {
+          'MuiDataGrid-colCellSortable': column.sortable,
+          'MuiDataGrid-colCellMoving': isDragging,
+        },
       )}
       key={column.field}
       data-field={column.field}
