@@ -76,13 +76,13 @@ export const useColumnReorder = (apiRef: ApiRef): void => {
     setGridState((oldState) => {
       return {
         ...oldState,
-        columnReorder: { ...oldState.columnReorder, dragCol: null },
+        columnReorder: { ...oldState.columnReorder, dragCol: '' },
       };
     });
     forceUpdate();
   }, [apiRef, setGridState, forceUpdate, logger]);
 
-  const handleDragStart = React.useCallback(
+  const onColItemDragStart = React.useCallback(
     (col: ColDef, currentTarget: HTMLElement): void => {
       logger.debug(`Start dragging col ${col.field}`);
       apiRef.current.publishEvent(COL_REORDER_START);
@@ -94,7 +94,7 @@ export const useColumnReorder = (apiRef: ApiRef): void => {
       setGridState((oldState) => {
         return {
           ...oldState,
-          columnReorder: { ...oldState.columnReorder, dragCol: col },
+          columnReorder: { ...oldState.columnReorder, dragCol: col.field },
         };
       });
       forceUpdate();
@@ -112,7 +112,7 @@ export const useColumnReorder = (apiRef: ApiRef): void => {
     };
   }, []);
 
-  const handleColumnHeaderDragOver = React.useCallback(
+  const onColHeaderDragOver = React.useCallback(
     (event: Event, ref: React.RefObject<HTMLElement>) => {
       event.preventDefault();
       apiRef.current.publishEvent(COL_REORDER_DRAG_OVER_HEADER);
@@ -122,7 +122,7 @@ export const useColumnReorder = (apiRef: ApiRef): void => {
     [apiRef],
   );
 
-  const handleDragEnter = React.useCallback(
+  const onColItemDragEnter = React.useCallback(
     (event: Event) => {
       event.preventDefault();
       apiRef.current.publishEvent(COL_REORDER_DRAG_ENTER);
@@ -130,18 +130,14 @@ export const useColumnReorder = (apiRef: ApiRef): void => {
     [apiRef],
   );
 
-  const handleDragOver = React.useCallback(
+  const onColItemDragOver = React.useCallback(
     (col: ColDef, coordinates: CursorCoordinates): void => {
       logger.debug(`Dragging over col ${col.field}`);
       apiRef.current.publishEvent(COL_REORDER_DRAG_OVER);
 
-      if (
-        dragCol &&
-        col.field !== dragCol?.field &&
-        hasCursorPositionChanged(cursorPosition.current, coordinates)
-      ) {
+      if (col.field !== dragCol && hasCursorPositionChanged(cursorPosition.current, coordinates)) {
         const targetColIndex = apiRef.current.getColumnIndex(col.field, false);
-        const dragColIndex = apiRef.current.getColumnIndex(dragCol.field, false);
+        const dragColIndex = apiRef.current.getColumnIndex(dragCol, false);
         const columnsSnapshot = apiRef.current.getAllColumns();
 
         if (
@@ -167,10 +163,10 @@ export const useColumnReorder = (apiRef: ApiRef): void => {
   );
 
   const colReorderApi: ColumnReorderApi = {
-    onColCellDragStart: handleDragStart,
-    onColHeaderDragOver: handleColumnHeaderDragOver,
-    onColCellDragOver: handleDragOver,
-    onColCellDragEnter: handleDragEnter,
+    onColItemDragStart,
+    onColHeaderDragOver,
+    onColItemDragOver,
+    onColItemDragEnter,
   };
 
   useApiMethod(apiRef, colReorderApi, 'ColReorderApi');

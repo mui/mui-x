@@ -8,11 +8,11 @@ import { classnames } from '../utils';
 import { ColumnHeaderSortIcon } from './column-header-sort-icon';
 import { ColumnHeaderTitle } from './column-header-title';
 import { ColumnHeaderSeparator } from './column-header-separator';
-import { columnReorderDragColSelector, useGridSelector } from '../hooks/features';
 
 interface ColumnHeaderItemProps {
   colIndex: number;
   column: ColDef;
+  isDragging: boolean;
   isResizing: boolean;
   sortModel: SortModel;
   options: GridOptions;
@@ -21,6 +21,7 @@ interface ColumnHeaderItemProps {
 
 export const ColumnHeaderItem = ({
   column,
+  isDragging,
   colIndex,
   isResizing,
   separatorProps,
@@ -28,7 +29,6 @@ export const ColumnHeaderItem = ({
   options,
 }: ColumnHeaderItemProps) => {
   const apiRef = React.useContext(ApiContext);
-  const dragCol = useGridSelector(apiRef, columnReorderDragColSelector);
   const { disableColumnReorder, showColumnRightBorder, disableColumnResize } = options;
 
   const columnSortModel = React.useMemo(
@@ -55,18 +55,18 @@ export const ColumnHeaderItem = ({
   const dragConfig = {
     draggable:
       !disableColumnReorder &&
-      !!apiRef!.current.onColCellDragStart &&
-      !!apiRef!.current.onColCellDragEnter &&
-      !!apiRef!.current.onColCellDragOver,
+      !!apiRef!.current.onColItemDragStart &&
+      !!apiRef!.current.onColItemDragEnter &&
+      !!apiRef!.current.onColItemDragOver,
     onDragStart:
-      apiRef!.current.onColCellDragStart &&
-      ((event) => apiRef!.current.onColCellDragStart(column, event.currentTarget)),
+      apiRef!.current.onColItemDragStart &&
+      ((event) => apiRef!.current.onColItemDragStart(column, event.currentTarget)),
     onDragEnter:
-      apiRef!.current.onColCellDragEnter && ((event) => apiRef!.current.onColCellDragEnter(event)),
+      apiRef!.current.onColItemDragEnter && ((event) => apiRef!.current.onColItemDragEnter(event)),
     onDragOver:
-      apiRef!.current.onColCellDragOver &&
+      apiRef!.current.onColItemDragOver &&
       ((event) =>
-        apiRef!.current.onColCellDragOver(column, {
+        apiRef!.current.onColItemDragOver(column, {
           x: event.clientX,
           y: event.clientY,
         })),
@@ -85,11 +85,11 @@ export const ColumnHeaderItem = ({
       className={classnames(
         HEADER_CELL_CSS_CLASS,
         showColumnRightBorder ? 'MuiDataGrid-withBorder' : '',
-        column.field === dragCol?.field ? 'MuiDataGrid-colCellMoving' : '',
         column.headerClassName,
         column.headerAlign === 'center' && 'MuiDataGrid-colCellCenter',
         column.headerAlign === 'right' && 'MuiDataGrid-colCellRight',
         { 'MuiDataGrid-colCellSortable': column.sortable },
+        { 'MuiDataGrid-colCellMoving': isDragging },
       )}
       key={column.field}
       data-field={column.field}

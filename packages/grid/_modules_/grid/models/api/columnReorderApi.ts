@@ -11,12 +11,12 @@ export interface CursorCoordinates {
  */
 export interface ColumnReorderApi {
   /**
-   * Column cell drag start event handler.
+   * Column item drag start event handler.
    * @param column
    * @param target
    * @returns void
    */
-  onColCellDragStart: (column: ColDef, target: HTMLElement) => void;
+  onColItemDragStart: (column: ColDef, target: HTMLElement) => void;
   /**
    * Column header drag over event handler.
    * @param event
@@ -25,16 +25,16 @@ export interface ColumnReorderApi {
    */
   onColHeaderDragOver: (event: Event, ref: React.RefObject<HTMLElement>) => void;
   /**
-   * Column cell drag over event handler.
+   * Column item drag over event handler.
    * @param column
    * @param coordinates
    * @returns void
    */
-  onColCellDragOver: (column: ColDef, coordinates: CursorCoordinates) => void;
+  onColItemDragOver: (column: ColDef, coordinates: CursorCoordinates) => void;
   /**
-   * Column cell drag enter event handler.
+   * Column item drag enter event handler.
    * @param event
    * @returns void
    */
-  onColCellDragEnter: (event: Event) => void;
+  onColItemDragEnter: (event: Event) => void;
 }

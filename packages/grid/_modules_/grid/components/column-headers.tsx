@@ -9,7 +9,7 @@ import { LeftEmptyCell, RightEmptyCell } from './cell';
 import { containerSizesSelector } from './viewport';
 import { OptionsContext } from './options-context';
 import { ScrollArea } from './ScrollArea';
-import { sortModelSelector, useApiEventHandler } from '../hooks';
+import { sortModelSelector, useApiEventHandler, columnReorderDragColSelector } from '../hooks';
 
 export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
@@ -21,6 +21,7 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
 }) => {
   const [resizingColField, setResizingColField] = React.useState('');
   const apiRef = React.useContext(ApiContext);
+  const dragCol = useGridSelector(apiRef, columnReorderDragColSelector);
   const gridSortModel = useGridSelector(apiRef, sortModelSelector);
   const options = useGridSelector(apiRef, optionsSelector);
   const handleResizeStart = React.useCallback((params) => {
@@ -34,17 +35,22 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
   useApiEventHandler(apiRef!, COL_RESIZE_START, handleResizeStart);
   useApiEventHandler(apiRef!, COL_RESIZE_STOP, handleResizeStop);
 
-  const items = columns.map((col, idx) => (
-    <ColumnHeaderItem
-      key={col.field}
-      sortModel={gridSortModel}
-      options={options}
-      column={col}
-      colIndex={idx}
-      isResizing={resizingColField === col.field}
-      separatorProps={separatorProps}
-    />
-  ));
+  const items = React.useMemo(
+    () =>
+      columns.map((col, idx) => (
+        <ColumnHeaderItem
+          key={col.field}
+          isDragging={col.field === dragCol}
+          sortModel={gridSortModel}
+          options={options}
+          column={col}
+          colIndex={idx}
+          isResizing={resizingColField === col.field}
+          separatorProps={separatorProps}
+        />
+      )),
+    [columns, dragCol, gridSortModel, options, resizingColField, separatorProps],
+  );
 
   return <React.Fragment>{items}</React.Fragment>;
 };

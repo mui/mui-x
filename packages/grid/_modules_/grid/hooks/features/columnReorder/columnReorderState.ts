@@ -1,9 +1,9 @@
-import { ColDef } from '../../../models/colDef';
+// import { ColDef } from '../../../models/colDef';
 
 export interface ColumnReorderState {
-  dragCol: ColDef | null;
+  dragCol: string;
 }
 
 export function getInitialColumnReorderState(): ColumnReorderState {
-  return { dragCol: null };
+  return { dragCol: '' };
 }
