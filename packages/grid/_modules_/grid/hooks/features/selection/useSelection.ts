@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  MULTIPLE_KEY_PRESS_CHANGED,
   ROW_CLICK,
   ROW_SELECTED,
   SELECTION_CHANGED,
