@@ -58,12 +58,12 @@ export const ColumnHeaderItem = React.memo(
         ((event) => apiRef!.current.onColCellDragEnter(event)),
       onDragOver:
         apiRef!.current.onColCellDragOver &&
-        ((event) => {
+        ((event) =>
           apiRef!.current.onColCellDragOver(column, {
             x: event.clientX,
             y: event.clientY,
-          });
-        }),
+          })),
+      onDragEnd: apiRef!.current.onColCellDragEnd && (() => apiRef!.current.onColCellDragEnd()),
     };
     const width = column.width!;
 
