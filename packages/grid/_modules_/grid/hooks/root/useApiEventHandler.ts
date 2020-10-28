@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useLogger } from '../utils';
-import { ApiRef } from '../../models/api';
+import { ApiRef } from '../../models/api/apiRef';
+import { useLogger } from '../utils/useLogger';
 
 export function useApiEventHandler(
   apiRef: ApiRef,

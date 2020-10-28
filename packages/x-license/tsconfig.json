@@ -1,14 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "declaration": true,
-    "declarationDir": "./dist",
-    "module": "es6",
-    "noImplicitAny": false,
-    "outDir": "./dist",
-    "target": "es6",
-    "sourceMap": true
+    "noEmit": true
   },
-  "include": ["src"],
-  "exclude": ["__tests__", "**/*.test.ts", "**/*.tests.ts", "node_modules", "lib"]
+  "include": ["src"]
 }

@@ -167,7 +167,7 @@ export function ColumnsAlign() {
 
   const transformCols = React.useCallback((cols) => {
     if (cols.length > 0) {
-      cols.forEach((col: ColDef, idx) => {
+      cols.forEach((col: ColDef, idx: number) => {
         if (idx > 1 && idx % 2 === 1) {
           col.align = 'right';
           col.headerAlign = 'right';
@@ -199,7 +199,7 @@ export function NewColumnTypes() {
 
   const transformCols = React.useCallback((cols) => {
     if (cols.length > 0) {
-      cols.forEach((col, idx) => {
+      cols.forEach((col: ColDef, idx: number) => {
         if (idx > 1 && idx % 2 === 1) {
           col.type = 'price';
         } else if (idx > 1 && idx % 2 === 0) {

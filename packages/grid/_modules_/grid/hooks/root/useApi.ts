@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { ApiRef } from '../../models/api/apiRef';
 import { useLogger } from '../utils/useLogger';
 import { COMPONENT_ERROR, UNMOUNT } from '../../constants/eventsConstants';
-import { ApiRef } from '../../models';
 import { useApiMethod } from './useApiMethod';
 
 export function useApi(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: ApiRef): boolean {

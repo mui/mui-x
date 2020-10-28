@@ -1,7 +1,7 @@
+import { PaginationState } from '../../hooks/features/pagination/paginationReducer';
 import { Rows } from '../rows';
 import { Columns } from '../colDef/colDef';
 import { GridOptions } from '../gridOptions';
-import { PaginationProps } from '../../hooks/features/usePagination';
 import { RootContainerRef } from '../rootContainerRef';
 import { ApiRef } from '../api';
 
@@ -10,9 +10,9 @@ import { ApiRef } from '../api';
  */
 export interface ComponentProps {
   /**
-   * The object containing all pagination details in [[PaginationProps]].
+   * The object containing all pagination details in [[PaginationState]].
    */
-  paginationProps: PaginationProps;
+  pagination: PaginationState;
   /**
    * The full set of rows.
    */

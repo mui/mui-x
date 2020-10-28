@@ -57,7 +57,7 @@ describe('<DataGrid />', () => {
         );
       });
 
-      it('should apply the page prop correctly', () => {
+      it('should apply the page prop correctly', (done) => {
         const rows = [
           {
             id: 0,
@@ -77,8 +77,11 @@ describe('<DataGrid />', () => {
             <DataGrid {...defaultProps} rows={rows} page={2} pageSize={1} />
           </div>,
         );
-        const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
-        expect(cell).to.have.text('Addidas');
+        setTimeout(() => {
+          const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
+          expect(cell).to.have.text('Addidas');
+          done();
+        }, 50);
       });
     });
 
@@ -101,7 +104,7 @@ describe('<DataGrid />', () => {
             </div>,
           );
           clock.tick(100);
-        }).toWarnDev('Material-UI Data Grid: The parent of the grid has an empty height.');
+        }).toWarnDev('useResizeContainer: The parent of the grid has an empty height.');
       });
 
       it('should warn if the container has no intrinsic width', () => {
@@ -114,11 +117,10 @@ describe('<DataGrid />', () => {
             </div>,
           );
           clock.tick(100);
-        }).toWarnDev('Material-UI Data Grid: The parent of the grid has an empty width.');
+        }).toWarnDev('useResizeContainer: The parent of the grid has an empty width.');
       });
     });
   });
-
   describe('warnings', () => {
     before(() => {
       PropTypes.resetWarningCache();
@@ -162,8 +164,8 @@ describe('<DataGrid />', () => {
         );
       }).toErrorDev([
         'The data grid component requires all rows to have a unique id property',
-        'The above error occurred in the <ForwardRef(DataGrid)> component',
-        'The above error occurred in the <ForwardRef(DataGrid)> component',
+        'The above error occurred in the <ForwardRef(GridComponent)> component',
+        'The above error occurred in the <ForwardRef(GridComponent)> component',
       ]);
       expect((errorRef.current as any).errors).to.have.length(1);
       expect((errorRef.current as any).errors[0].toString()).to.include(
@@ -172,7 +174,7 @@ describe('<DataGrid />', () => {
     });
   });
 
-  describe.only('column width', () => {
+  describe('column width', () => {
     it('should set the columns width to 100px by default', () => {
       const rows = [
         {
@@ -202,7 +204,7 @@ describe('<DataGrid />', () => {
 
       const DOMColumns = document.querySelectorAll('.MuiDataGrid-colCell');
       DOMColumns.forEach((col) => {
-        expect(col.style.width).to.equal('100px');
+        expect(col).toHaveInlineStyle({ width: '100px' });
       });
     });
 
@@ -239,7 +241,7 @@ describe('<DataGrid />', () => {
 
       const DOMColumns = document.querySelectorAll('.MuiDataGrid-colCell');
       DOMColumns.forEach((col, index) => {
-        expect(col.style.width).to.equal(`${colWidthValues[index]}px`);
+        expect(col).toHaveInlineStyle({ width: `${colWidthValues[index]}px` });
       });
     });
 
@@ -271,12 +273,14 @@ describe('<DataGrid />', () => {
         );
 
         const firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
-        const secondColumn = document.querySelector('[role="columnheader"][aria-colindex="2"]');
+        const secondColumn: HTMLElement | null = document.querySelector(
+          '[role="columnheader"][aria-colindex="2"]',
+        );
+        const secondColumnWidthVal = secondColumn!.style.width.split('px')[0];
 
-        const firstColumnWidthVal = firstColumn.style.width.split('px')[0];
-        const secondColumnWidthVal = secondColumn.style.width.split('px')[0];
-
-        expect(parseInt(firstColumnWidthVal)).to.equal(2 * parseInt(secondColumnWidthVal));
+        expect(firstColumn).toHaveInlineStyle({
+          width: `${2 * parseInt(secondColumnWidthVal, 10)}px`,
+        });
       }
     });
   });

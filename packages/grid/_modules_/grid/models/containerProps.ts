@@ -13,6 +13,10 @@ export interface ContainerProps {
    */
   viewportPageSize: number;
   /**
+   * The number of rows allocated for the rendered zone.
+   */
+  virtualRowsCount: number;
+  /**
    * The last page number.
    */
   lastPage: number;

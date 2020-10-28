@@ -1,17 +1,12 @@
 {
   "extends": "../tsconfig.json",
-  "include": ["types", "src/pages/**/*"],
   "compilerOptions": {
-    "allowJs": false,
-    "isolatedModules": true,
     /* files are emitted by babel */
     "noEmit": true,
-    "noUnusedLocals": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": false,
-    "esModuleInterop": true,
     "types": ["react", "node"],
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "skipLibCheck": true
   },
-  "exclude": ["node_modules"]
+  "include": ["src/pages/**/*"],
+  "exclude": ["docs/.next", "docs/export"]
 }

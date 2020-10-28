@@ -7,4 +7,5 @@ export * from './paginationApi';
 export * from './rowApi';
 export * from './selectionApi';
 export * from './sortApi';
+export * from './stateApi';
 export * from './virtualizationApi';

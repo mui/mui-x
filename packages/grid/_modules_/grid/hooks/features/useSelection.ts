@@ -1,34 +1,29 @@
 import * as React from 'react';
 import {
-  GridOptions,
-  RowId,
-  RowModel,
-  RowSelectedParams,
-  RowsProp,
-  SelectionChangeParams,
-  ApiRef,
-  RowParams,
-} from '../../models';
-import { useLogger } from '../utils/useLogger';
-import {
   MULTIPLE_KEY_PRESS_CHANGED,
   ROW_CLICK,
   ROW_SELECTED,
   SELECTION_CHANGED,
 } from '../../constants/eventsConstants';
+import { ApiRef } from '../../models/api/apiRef';
+import { SelectionApi } from '../../models/api/selectionApi';
+import { RowParams } from '../../models/params/rowParams';
+import { RowSelectedParams } from '../../models/params/rowSelectedParams';
+import { SelectionChangeParams } from '../../models/params/selectionChangeParams';
+import { RowId, RowModel } from '../../models/rows';
 import { useApiEventHandler } from '../root/useApiEventHandler';
 import { useApiMethod } from '../root/useApiMethod';
-import { SelectionApi } from '../../models/api/selectionApi';
+import { useLogger } from '../utils/useLogger';
+import { optionsSelector } from '../utils/useOptionsProp';
+import { useGridSelector } from './core/useGridSelector';
+import { rowsLookupSelector } from './rows/rowsSelector';
 
-export const useSelection = (
-  options: GridOptions,
-  rowsProp: RowsProp,
-  initialised: boolean,
-  apiRef: ApiRef,
-): void => {
+export const useSelection = (apiRef: ApiRef): void => {
   const logger = useLogger('useSelection');
   const selectedItemsRef = React.useRef<RowId[]>([]);
-  const optionsRef = React.useRef<GridOptions>(options);
+  const options = useGridSelector(apiRef, optionsSelector);
+  const rowsLookup = useGridSelector(apiRef, rowsLookupSelector);
+
   const allowMultipleSelectionKeyPressed = React.useRef<boolean>(false);
   const [, forceUpdate] = React.useState();
 
@@ -110,11 +105,7 @@ export const useSelection = (
 
   const selectRows = React.useCallback(
     (ids: RowId[], isSelected = true, deSelectOthers = false) => {
-      if (
-        optionsRef.current.disableMultipleSelection &&
-        ids.length > 1 &&
-        !optionsRef.current.checkboxSelection
-      ) {
+      if (options.disableMultipleSelection && ids.length > 1 && !options.checkboxSelection) {
         return;
       }
       let updates = ids.map((id) => ({ id, selected: isSelected }));
@@ -133,7 +124,7 @@ export const useSelection = (
       };
       apiRef.current.publishEvent(SELECTION_CHANGED, selectionChangeParam);
     },
-    [apiRef, selectedItemsRef, getSelectedRows],
+    [options.disableMultipleSelection, options.checkboxSelection, apiRef, getSelectedRows],
   );
 
   const rowClickHandler = React.useCallback(
@@ -183,18 +174,12 @@ export const useSelection = (
   useApiMethod(apiRef, selectionApi, 'SelectionApi');
 
   React.useEffect(() => {
-    optionsRef.current = options;
-  }, [options]);
-
-  React.useEffect(() => {
-    if (initialised && selectedItemsRef.current.length > 0) {
+    if (selectedItemsRef.current.length > 0) {
       selectRows(selectedItemsRef.current);
     }
-  }, [initialised, selectRows, selectedItemsRef]);
+  }, [selectRows, selectedItemsRef]);
 
   React.useEffect(() => {
-    selectedItemsRef.current = [];
-    const selectionChangeParam: SelectionChangeParams = { rows: [] };
-    apiRef.current.publishEvent(SELECTION_CHANGED, selectionChangeParam);
-  }, [rowsProp, apiRef]);
+    selectedItemsRef.current = selectedItemsRef.current.filter((id) => rowsLookup[id] != null);
+  }, [rowsLookup, apiRef]);
 };

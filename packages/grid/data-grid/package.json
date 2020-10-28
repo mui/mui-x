@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/data-grid",
-  "version": "4.0.0-alpha.7",
+  "version": "4.0.0-alpha.8",
   "description": "The Material-UI community edition of the data grid component.",
   "author": "Material-UI Team",
   "main": "dist/index-cjs.js",
@@ -31,6 +31,7 @@
     "build": "cd ../ && rollup --config rollup.data-grid.config.js"
   },
   "dependencies": {
+    "@material-ui/utils": "^5.0.0-alpha.14",
     "prop-types": "^15.7.2",
     "tslib": "^2.0.0"
   },

@@ -1,22 +1,25 @@
 import * as React from 'react';
-import { GridOptions } from '../models';
-import { GridFooter } from './styled-wrappers/GridFooter';
+import { useGridSelector } from '../hooks/features/core/useGridSelector';
+import { rowCountSelector } from '../hooks/features/rows/rowsSelector';
+import { optionsSelector } from '../hooks/utils/useOptionsProp';
+import { ApiContext } from './api-context';
 import { RowCount } from './row-count';
 import { SelectedRowCount } from './selected-row-count';
-import { ApiContext } from './api-context';
+import { GridFooter } from './styled-wrappers/GridFooter';
 
 export interface DefaultFooterProps {
-  options: GridOptions;
   paginationComponent: React.ReactNode;
-  rowCount: number;
 }
 
 export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps>(
   function DefaultFooter(props, ref) {
-    const { options, rowCount, paginationComponent } = props;
+    const { paginationComponent } = props;
     const apiRef = React.useContext(ApiContext);
-    const [selectedRowCount, setSelectedCount] = React.useState(0);
+    const totalRowCount = useGridSelector(apiRef, rowCountSelector);
+    const options = useGridSelector(apiRef, optionsSelector);
 
+    // TODO refactor to use gridState
+    const [selectedRowCount, setSelectedCount] = React.useState(0);
     React.useEffect(() => {
       return apiRef!.current.onSelectionChange(({ rows }) => {
         setSelectedCount(rows.length);
@@ -29,7 +32,7 @@ export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps
 
     return (
       <GridFooter ref={ref}>
-        {!options.hideFooterRowCount && <RowCount rowCount={rowCount} />}
+        {!options.hideFooterRowCount && <RowCount rowCount={totalRowCount} />}
         {!options.hideFooterSelectedRowCount && (
           <SelectedRowCount selectedRowCount={selectedRowCount} />
         )}
