@@ -10,7 +10,7 @@ export interface SortApi {
    */
   getSortModel: () => SortModel;
   /**
-   * Apply the current sorting model to the rows;
+   * Apply the current sorting model to the rows.
    */
   applySorting: () => void;
   /**
