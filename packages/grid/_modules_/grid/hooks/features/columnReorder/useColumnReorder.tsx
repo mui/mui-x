@@ -64,7 +64,7 @@ export const useColumnReorder = (apiRef: ApiRef): void => {
   const removeDnDStylesTimeout = React.useRef<number>();
 
   const handleDragEnd = React.useCallback((): void => {
-    logger.debug(`End dragging col`);
+    logger.debug('End dragging col');
     apiRef.current.publishEvent(COL_REORDER_STOP);
 
     clearTimeout(removeDnDStylesTimeout.current);
