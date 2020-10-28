@@ -215,6 +215,7 @@ describe('<DataGrid />', () => {
 
       const DOMColumns = document.querySelectorAll('.MuiDataGrid-colCell');
       DOMColumns.forEach((col) => {
+        // @ts-expect-error need to migrate helpers to TypeScript
         expect(col).toHaveInlineStyle({ width: '100px' });
       });
     });
@@ -252,6 +253,7 @@ describe('<DataGrid />', () => {
 
       const DOMColumns = document.querySelectorAll('.MuiDataGrid-colCell');
       DOMColumns.forEach((col, index) => {
+        // @ts-expect-error need to migrate helpers to TypeScript
         expect(col).toHaveInlineStyle({ width: `${colWidthValues[index]}px` });
       });
     });
@@ -287,7 +289,7 @@ describe('<DataGrid />', () => {
         '[role="columnheader"][aria-colindex="2"]',
       );
       const secondColumnWidthVal = secondColumn!.style.width.split('px')[0];
-
+      // @ts-expect-error need to migrate helpers to TypeScript
       expect(firstColumn).toHaveInlineStyle({
         width: `${2 * parseInt(secondColumnWidthVal, 10)}px`,
       });
