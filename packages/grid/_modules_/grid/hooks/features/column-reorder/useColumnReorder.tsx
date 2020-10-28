@@ -73,10 +73,11 @@ export const useColumnReorder = (apiRef: ApiRef): void => {
     dragColNode.current!.parentElement!.classList.remove('MuiDataGrid-colCellMoving');
     dragColNode.current!.removeEventListener(DRAGEND, handleDragEnd);
     dragColNode.current = null;
+
     setGridState((oldState) => {
       return {
         ...oldState,
-        columnReorder: { dragCol: null },
+        columnReorder: { ...oldState.columnReorder, dragCol: null },
       };
     });
   }, [apiRef, dragCol, setGridState, logger]);
@@ -93,7 +94,7 @@ export const useColumnReorder = (apiRef: ApiRef): void => {
       setGridState((oldState) => {
         return {
           ...oldState,
-          columnReorder: { dragCol: col },
+          columnReorder: { ...oldState.columnReorder, dragCol: col },
         };
       });
 
