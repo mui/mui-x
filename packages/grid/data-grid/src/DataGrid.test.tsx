@@ -175,6 +175,13 @@ describe('<DataGrid />', () => {
   });
 
   describe('column width', () => {
+    before(function beforeHook() {
+      if (/jsdom/.test(window.navigator.userAgent)) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
     it('should set the columns width to 100px by default', () => {
       const rows = [
         {
@@ -246,42 +253,40 @@ describe('<DataGrid />', () => {
     });
 
     it('should set the first column width to be twise as bit as the second one', () => {
-      if (!/jsdom/.test(window.navigator.userAgent)) {
-        const rows = [
-          {
-            id: 1,
-            username: 'John Doe',
-            age: 30,
-          },
-        ];
+      const rows = [
+        {
+          id: 1,
+          username: 'John Doe',
+          age: 30,
+        },
+      ];
 
-        const columns = [
-          {
-            field: 'id',
-            flex: 1,
-          },
-          {
-            field: 'name',
-            flex: 0.5,
-          },
-        ];
+      const columns = [
+        {
+          field: 'id',
+          flex: 1,
+        },
+        {
+          field: 'name',
+          flex: 0.5,
+        },
+      ];
 
-        render(
-          <div style={{ width: 200, height: 300 }}>
-            <DataGrid columns={columns} rows={rows} />
-          </div>,
-        );
+      render(
+        <div style={{ width: 200, height: 300 }}>
+          <DataGrid columns={columns} rows={rows} />
+        </div>,
+      );
 
-        const firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
-        const secondColumn: HTMLElement | null = document.querySelector(
-          '[role="columnheader"][aria-colindex="2"]',
-        );
-        const secondColumnWidthVal = secondColumn!.style.width.split('px')[0];
+      const firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
+      const secondColumn: HTMLElement | null = document.querySelector(
+        '[role="columnheader"][aria-colindex="2"]',
+      );
+      const secondColumnWidthVal = secondColumn!.style.width.split('px')[0];
 
-        expect(firstColumn).toHaveInlineStyle({
-          width: `${2 * parseInt(secondColumnWidthVal, 10)}px`,
-        });
-      }
+      expect(firstColumn).toHaveInlineStyle({
+        width: `${2 * parseInt(secondColumnWidthVal, 10)}px`,
+      });
     });
   });
 });
