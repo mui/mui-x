@@ -23,6 +23,7 @@ import { useApiMethod } from '../../root/useApiMethod';
 import { useLogger } from '../../utils/useLogger';
 import { optionsSelector } from '../../utils/useOptionsProp';
 import { columnsSelector } from '../columns/columnsSelector';
+import { GridState } from '../core/gridState';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { rowCountSelector, unorderedRowModelsSelector } from '../rows/rowsSelector';
@@ -123,11 +124,12 @@ export const useSorting = (apiRef: ApiRef) => {
   );
 
   const applySorting = React.useCallback(() => {
-    logger.info('Sorting rows with ', gridState.sorting.sortModel);
+    const sortModel = apiRef.current.getState<GridState>().sorting.sortModel;
+    logger.info('Sorting rows with ',  sortModel);
 
     let sorted = [...unorderedRows];
-    if (gridState.sorting.sortModel.length > 0) {
-      comparatorList.current = buildComparatorList(gridState.sorting.sortModel);
+    if ( sortModel.length > 0) {
+      comparatorList.current = buildComparatorList(sortModel);
       sorted = sorted.sort(comparatorListAggregate);
     }
 
@@ -138,15 +140,7 @@ export const useSorting = (apiRef: ApiRef) => {
       };
     });
     forceUpdate();
-  }, [
-    logger,
-    gridState.sorting.sortModel,
-    unorderedRows,
-    setGridState,
-    forceUpdate,
-    buildComparatorList,
-    comparatorListAggregate,
-  ]);
+  }, [apiRef, logger, unorderedRows, setGridState, forceUpdate, buildComparatorList, comparatorListAggregate]);
 
   const setSortModel = React.useCallback(
     (sortModel: SortModel) => {
@@ -162,7 +156,7 @@ export const useSorting = (apiRef: ApiRef) => {
       apiRef.current.publishEvent(SORT_MODEL_CHANGE, getSortModelParams(sortModel));
 
       if (options.sortingMode === FeatureModeConstant.client) {
-        applySorting();
+        apiRef.current.applySorting();
       }
     },
     [
@@ -171,8 +165,7 @@ export const useSorting = (apiRef: ApiRef) => {
       columns.visible.length,
       apiRef,
       getSortModelParams,
-      options.sortingMode,
-      applySorting,
+      options.sortingMode
     ],
   );
 

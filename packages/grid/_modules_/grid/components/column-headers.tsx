@@ -10,7 +10,7 @@ import { LeftEmptyCell, RightEmptyCell } from './cell';
 import { containerSizesSelector } from './viewport';
 import { OptionsContext } from './options-context';
 import { ScrollArea } from './ScrollArea';
-import { CursorCoordinates, sortModelSelector, useApiEventHandler } from '../hooks';
+import { CursorCoordinates, sortColumnLookupSelector, sortModelSelector, useApiEventHandler } from '../hooks';
 
 export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
@@ -28,8 +28,9 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
 }) => {
   const [resizingColField, setResizingColField] = React.useState('');
   const apiRef = React.useContext(ApiContext);
-  const gridSortModel = useGridSelector(apiRef, sortModelSelector);
   const options = useGridSelector(apiRef, optionsSelector);
+  const sortColumnLookup = useGridSelector(apiRef, sortColumnLookupSelector);
+
   const handleResizeStart = React.useCallback((params) => {
     setResizingColField(params.field);
   }, []);
@@ -41,12 +42,10 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
   useApiEventHandler(apiRef!, COL_RESIZE_START, handleResizeStart);
   useApiEventHandler(apiRef!, COL_RESIZE_STOP, handleResizeStop);
 
-  const items = React.useMemo(
-    () =>
-      columns.map((col, idx) => (
+  const items = columns.map((col, idx) => (
         <ColumnHeaderItem
           key={col.field}
-          sortModel={gridSortModel}
+          {...sortColumnLookup[col.field]}
           options={options}
           column={col}
           colIndex={idx}
@@ -56,18 +55,7 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
           onColumnDragEnter={onColumnDragEnter}
           onColumnDragOver={onColumnDragOver}
         />
-      )),
-    [
-      columns,
-      gridSortModel,
-      onColumnDragEnter,
-      onColumnDragOver,
-      onColumnDragStart,
-      options,
-      resizingColField,
-      separatorProps,
-    ],
-  );
+      ));
 
   return <React.Fragment>{items}</React.Fragment>;
 };

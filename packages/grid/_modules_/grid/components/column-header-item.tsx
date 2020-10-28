@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ColDef } from '../models/colDef';
 import { GridOptions } from '../models/gridOptions';
-import { SortModel } from '../models/sortModel';
+import { SortDirection, SortModel } from '../models/sortModel';
 import { ApiContext } from './api-context';
 import { HEADER_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import { classnames } from '../utils';
@@ -14,7 +14,8 @@ interface ColumnHeaderItemProps {
   colIndex: number;
   column: ColDef;
   isResizing: boolean;
-  sortModel: SortModel;
+  sortDirection: SortDirection;
+  sortIndex?: number;
   options: GridOptions;
   onColumnDragEnter?: (event: Event) => void;
   onColumnDragOver?: (col: ColDef, coordinates: CursorCoordinates) => void;
@@ -22,8 +23,7 @@ interface ColumnHeaderItemProps {
   separatorProps: React.HTMLAttributes<HTMLDivElement>;
 }
 
-export const ColumnHeaderItem = React.memo(
-  ({
+export const ColumnHeaderItem = ({
     column,
     colIndex,
     onColumnDragStart,
@@ -31,22 +31,13 @@ export const ColumnHeaderItem = React.memo(
     onColumnDragOver,
     isResizing,
     separatorProps,
-    sortModel,
+    sortDirection,
+    sortIndex,
     options,
   }: ColumnHeaderItemProps) => {
     const apiRef = React.useContext(ApiContext);
     const { disableColumnReorder, showColumnRightBorder, disableColumnResize } = options;
 
-    const columnSortModel = React.useMemo(
-      () =>
-        sortModel
-          .filter((model) => model.field === column.field)
-          .map((item) => ({
-            sortDirection: item.sort,
-            ...(sortModel.length <= 1 ? {} : { sortIndex: sortModel.indexOf(item) + 1 }),
-          }))[0] || {},
-      [column.field, sortModel],
-    );
 
     let headerComponent: React.ReactElement | null = null;
     if (column.renderHeader) {
@@ -75,9 +66,9 @@ export const ColumnHeaderItem = React.memo(
     const width = column.width!;
 
     let ariaSort: any;
-    if (columnSortModel.sortDirection != null) {
+    if (sortDirection != null) {
       ariaSort = {
-        'aria-sort': columnSortModel.sortDirection === 'asc' ? 'ascending' : 'descending',
+        'aria-sort': sortDirection === 'asc' ? 'ascending' : 'descending',
       };
     }
 
@@ -106,8 +97,8 @@ export const ColumnHeaderItem = React.memo(
         <div className="MuiDataGrid-colCell-draggable" {...dragConfig}>
           {column.type === 'number' && (
             <ColumnHeaderSortIcon
-              direction={columnSortModel.sortDirection}
-              index={columnSortModel.sortIndex}
+              direction={sortDirection}
+              index={sortIndex}
               hide={column.hideSortIcons}
             />
           )}
@@ -120,8 +111,8 @@ export const ColumnHeaderItem = React.memo(
           )}
           {column.type !== 'number' && (
             <ColumnHeaderSortIcon
-              direction={columnSortModel.sortDirection}
-              index={columnSortModel.sortIndex}
+              direction={sortDirection}
+              index={sortIndex}
               hide={column.hideSortIcons}
             />
           )}
@@ -133,6 +124,5 @@ export const ColumnHeaderItem = React.memo(
         />
       </div>
     );
-  },
-);
+  };
 ColumnHeaderItem.displayName = 'ColumnHeaderItem';
