@@ -1,4 +1,5 @@
-import { RowModel, CellValue } from '../models/rows';
+import { CellValue } from '../models/cell';
+import { RowModel } from '../models/rows';
 import { ColDef } from '../models/colDef/colDef';
 import { GridApi } from '../models/api/gridApi';
 import { CellParams } from '../models/params/cellParams';

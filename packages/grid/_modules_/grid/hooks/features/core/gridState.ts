@@ -1,5 +1,6 @@
 import { getInitialColumnsState, InternalColumns } from '../../../models/colDef/colDef';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
+import { SelectionState } from '../selection/selectionState';
 import { getInitialRenderingState, InternalRenderingState } from '../virtualization/renderingState';
 import { KeyboardState } from '../keyboard/keyboardState';
 import { INITIAL_PAGINATION_STATE, PaginationState } from '../pagination/paginationReducer';
@@ -17,12 +18,11 @@ export interface GridState {
   containerSizes: ContainerProps | null;
   sorting: SortingState;
   keyboard: KeyboardState;
+  selection: SelectionState;
 }
 
 export const getInitialState: () => GridState = () => ({
   rows: getInitialRowState(),
-  selectedRows: [],
-  hiddenRows: [],
   pagination: { ...INITIAL_PAGINATION_STATE },
   options: { ...DEFAULT_GRID_OPTIONS },
   isScrolling: false,
@@ -30,5 +30,6 @@ export const getInitialState: () => GridState = () => ({
   rendering: getInitialRenderingState(),
   containerSizes: null,
   sorting: getInitialSortingState(),
-  keyboard: { cell: null },
+  keyboard: { cell: null, isMultipleKeyPressed: false },
+  selection: {},
 });

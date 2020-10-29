@@ -28,7 +28,7 @@ export function convertRowsPropToState({
   return state;
 }
 
-export const useRows = (rows: RowsProp, apiRef: ApiRef): RowModel[] => {
+export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
   const logger = useLogger('useRows');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
 
@@ -87,7 +87,6 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): RowModel[] => {
     (updates: Partial<RowModel>[]) => {
       logger.debug(`updating ${updates.length} row models`);
       const addedRows: RowModel[] = [];
-      // const newRowsState = { ...apiRef.current.state.rows };
 
       updates.forEach((partialRow) => {
         if (partialRow.id == null) {
@@ -115,10 +114,7 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): RowModel[] => {
         updateAllRows(newRows);
       }
 
-      apiRef.current.publishEvent(
-        ROWS_UPDATED,
-        Object.values<RowModel>(internalRowsState.current.idRowsLookup),
-      );
+      apiRef.current.publishEvent(ROWS_UPDATED);
     },
     [logger, apiRef, getRowFromId, setGridState, forceUpdate, updateAllRows],
   );
@@ -178,10 +174,4 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): RowModel[] => {
   };
 
   useApiMethod(apiRef, rowApi, 'RowApi');
-
-  const rowModelsState = React.useMemo(() => Object.values<RowModel>(gridState.rows.idRowsLookup), [
-    gridState.rows,
-  ]);
-
-  return rowModelsState;
 };

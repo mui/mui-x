@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { rowCountSelector } from '../hooks/features/rows/rowsSelector';
+import { selectedRowsCountSelector } from '../hooks/features/selection/selectionSelector';
 import { optionsSelector } from '../hooks/utils/useOptionsProp';
 import { ApiContext } from './api-context';
 import { RowCount } from './row-count';
@@ -17,14 +18,7 @@ export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps
     const apiRef = React.useContext(ApiContext);
     const totalRowCount = useGridSelector(apiRef, rowCountSelector);
     const options = useGridSelector(apiRef, optionsSelector);
-
-    // TODO refactor to use gridState
-    const [selectedRowCount, setSelectedCount] = React.useState(0);
-    React.useEffect(() => {
-      return apiRef!.current.onSelectionChange(({ rows }) => {
-        setSelectedCount(rows.length);
-      });
-    }, [apiRef]);
+    const selectedRowCount = useGridSelector(apiRef, selectedRowsCountSelector);
 
     if (options.hideFooter) {
       return null;

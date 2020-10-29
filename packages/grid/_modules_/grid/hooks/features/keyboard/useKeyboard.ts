@@ -8,7 +8,7 @@ import {
   MULTIPLE_KEY_PRESS_CHANGED,
 } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
-import { CellIndexCoordinates } from '../../../models/rows';
+import { CellIndexCoordinates } from '../../../models/cell';
 import { findParentElementFromClassName, getIdFromRowElem, isCell } from '../../../utils/domUtils';
 import {
   isArrowKeys,
@@ -27,6 +27,8 @@ import { rowCountSelector } from '../rows/rowsSelector';
 import { useLogger } from '../../utils/useLogger';
 import { optionsSelector } from '../../utils/useOptionsProp';
 import { useApiEventHandler } from '../../root/useApiEventHandler';
+import { selectionStateSelector } from '../selection/selectionSelector';
+import { KeyboardState } from './keyboardState';
 
 const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
   if (!isArrowKeys(code)) {
@@ -54,12 +56,20 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
   const totalRowCount = useGridSelector(apiRef, rowCountSelector);
   const colCount = useGridSelector(apiRef, visibleColumnsLengthSelector);
   const containerSizes = useGridSelector(apiRef, containerSizesSelector);
+  const selectionState = useGridSelector(apiRef, selectionStateSelector);
 
   const onMultipleKeyChange = React.useCallback(
     (isPressed: boolean) => {
+      setGridState((state) => {
+        logger.debug(`Toggling keyboard multiple key pressed to ${isPressed}`);
+        const keyboardState: KeyboardState = { ...state.keyboard, isMultipleKeyPressed: isPressed };
+        return { ...state, keyboard: keyboardState };
+      });
+      forceUpdate();
+
       apiRef.current.publishEvent(MULTIPLE_KEY_PRESS_CHANGED, isPressed);
     },
-    [apiRef],
+    [apiRef, forceUpdate, logger, setGridState],
   );
 
   const navigateCells = React.useCallback(
@@ -123,7 +133,7 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
 
       setGridState((state) => {
         logger.debug(`Setting keyboard state, cell focus to ${JSON.stringify(nextCellIndexes)}`);
-        return { ...state, keyboard: { cell: nextCellIndexes } };
+        return { ...state, keyboard: { ...state.keyboard, cell: nextCellIndexes } };
       });
       forceUpdate();
 
@@ -162,6 +172,8 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
 
       const currentRowIndex = Number(rowEl.getAttribute('data-rowindex'));
       let selectionFromRowIndex = currentRowIndex;
+
+      // TODO Refactor here to not use api call
       const selectedRows = apiRef.current.getSelectedRows();
       if (selectedRows.length > 0) {
         const selectedRowsIndex = selectedRows.map((row) =>
@@ -198,15 +210,15 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
       ROW_CSS_CLASS,
     )! as HTMLElement;
     const rowId = getIdFromRowElem(rowEl);
-    const rowModel = apiRef.current.getRowFromId(rowId);
+    const isRowSelected = selectionState[rowId];
 
-    if (rowModel.selected) {
+    if (isRowSelected) {
       window?.getSelection()?.selectAllChildren(rowEl);
     } else {
       window?.getSelection()?.selectAllChildren(document.activeElement!);
     }
     document.execCommand('copy');
-  }, [apiRef]);
+  }, [selectionState]);
 
   const onKeyDownHandler = React.useCallback(
     (event: KeyboardEvent) => {

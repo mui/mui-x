@@ -1,5 +1,5 @@
 import { ScrollParams } from '../../hooks/utils';
-import { CellIndexCoordinates } from '../rows';
+import { CellIndexCoordinates } from '../cell';
 import { ContainerProps } from '../containerProps';
 import { RenderContextProps } from '../renderContextProps';
 

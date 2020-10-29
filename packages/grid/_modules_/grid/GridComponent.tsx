@@ -26,7 +26,7 @@ import { useApiRef } from './hooks/features/useApiRef';
 import { useColumnReorder } from './hooks/features/useColumnReorder';
 import { useColumnResize } from './hooks/features/useColumnResize';
 import { useComponents } from './hooks/features/useComponents';
-import { useSelection } from './hooks/features/useSelection';
+import { useSelection } from './hooks/features/selection/useSelection';
 import { useApi } from './hooks/root/useApi';
 import { useContainerProps } from './hooks/root/useContainerProps';
 import { useEvents } from './hooks/root/useEvents';
