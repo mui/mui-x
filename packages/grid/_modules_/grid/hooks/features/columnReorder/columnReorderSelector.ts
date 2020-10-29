@@ -1,5 +1,4 @@
 import { createSelector } from 'reselect';
-// import { ColDef } from '../../../models/colDef';
 import { GridState } from '../core/gridState';
 import { ColumnReorderState } from './columnReorderState';
 
