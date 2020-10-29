@@ -3,7 +3,7 @@ import {
   DATA_CONTAINER_CSS_CLASS,
   HEADER_CELL_CSS_CLASS,
 } from '../constants/cssClassesConstants';
-import { CellIndexCoordinates } from '../models/rows';
+import { CellIndexCoordinates } from '../models/cell';
 
 export function isOverflown(element: Element): boolean {
   return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;

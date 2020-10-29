@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ColDef } from '../models/colDef';
 import { GridOptions } from '../models/gridOptions';
-import { SortModel } from '../models/sortModel';
+import { SortDirection } from '../models/sortModel';
 import { ApiContext } from './api-context';
 import { HEADER_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import { classnames } from '../utils';
@@ -14,33 +14,24 @@ interface ColumnHeaderItemProps {
   column: ColDef;
   isDragging: boolean;
   isResizing: boolean;
-  sortModel: SortModel;
+  sortDirection: SortDirection;
+  sortIndex?: number;
   options: GridOptions;
   separatorProps: React.HTMLAttributes<HTMLDivElement>;
 }
 
 export const ColumnHeaderItem = ({
   column,
-  isDragging,
   colIndex,
+  isDragging,
   isResizing,
   separatorProps,
-  sortModel,
+  sortDirection,
+  sortIndex,
   options,
 }: ColumnHeaderItemProps) => {
   const apiRef = React.useContext(ApiContext);
   const { disableColumnReorder, showColumnRightBorder, disableColumnResize } = options;
-
-  const columnSortModel = React.useMemo(
-    () =>
-      sortModel
-        .filter((model) => model.field === column.field)
-        .map((item) => ({
-          sortDirection: item.sort,
-          ...(sortModel.length <= 1 ? {} : { sortIndex: sortModel.indexOf(item) + 1 }),
-        }))[0] || {},
-    [column.field, sortModel],
-  );
 
   let headerComponent: React.ReactElement | null = null;
   if (column.renderHeader) {
@@ -77,9 +68,9 @@ export const ColumnHeaderItem = ({
   const width = column.width!;
 
   let ariaSort: any;
-  if (columnSortModel.sortDirection != null) {
+  if (sortDirection != null) {
     ariaSort = {
-      'aria-sort': columnSortModel.sortDirection === 'asc' ? 'ascending' : 'descending',
+      'aria-sort': sortDirection === 'asc' ? 'ascending' : 'descending',
     };
   }
 
@@ -111,8 +102,8 @@ export const ColumnHeaderItem = ({
       <div className="MuiDataGrid-colCell-draggable" {...dragConfig}>
         {column.type === 'number' && (
           <ColumnHeaderSortIcon
-            direction={columnSortModel.sortDirection}
-            index={columnSortModel.sortIndex}
+            direction={sortDirection}
+            index={sortIndex}
             hide={column.hideSortIcons}
           />
         )}
@@ -125,8 +116,8 @@ export const ColumnHeaderItem = ({
         )}
         {column.type !== 'number' && (
           <ColumnHeaderSortIcon
-            direction={columnSortModel.sortDirection}
-            index={columnSortModel.sortIndex}
+            direction={sortDirection}
+            index={sortIndex}
             hide={column.hideSortIcons}
           />
         )}

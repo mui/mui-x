@@ -213,11 +213,13 @@ describe('<XGrid />', () => {
       expect(checkbox).to.have.property('checked', false);
 
       fireEvent.click(screen.getByRole('cell', { name: 'Nike' }));
-      expect(row).to.have.class('Mui-selected');
+      await raf();
+      expect(row!.classList.contains('Mui-selected')).to.equal(true);
       expect(checkbox).to.have.property('checked', true);
 
       fireEvent.click(screen.getByRole('cell', { name: 'Nike' }));
-      expect(row).to.not.have.class('Mui-selected');
+      await raf();
+      expect(row!.classList.contains('Mui-selected')).to.equal(false);
       expect(checkbox).to.have.property('checked', false);
     });
   });

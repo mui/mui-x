@@ -1,4 +1,5 @@
-import { CellValue, RowData, RowModel } from '../rows';
+import { CellValue } from '../cell';
+import { RowData, RowModel } from '../rows';
 
 /**
  * Object passed as parameter in the column [[ColDef]] cell renderer.

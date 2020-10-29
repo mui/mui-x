@@ -41,7 +41,12 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
   }, [options.pagination, paginationState.page, paginationState.pageSize, totalRowsCount]);
 
   const getContainerProps = React.useCallback((): ContainerProps | null => {
-    if (!windowRef || !windowRef.current || columnsTotalWidth === 0) {
+    if (
+      !windowRef ||
+      !windowRef.current ||
+      columnsTotalWidth === 0 ||
+      Number.isNaN(columnsTotalWidth)
+    ) {
       return null;
     }
 

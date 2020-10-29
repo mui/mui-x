@@ -9,10 +9,6 @@ export interface RowSelectedParams {
    */
   data: RowData;
   /**
-   * The row index of the row that triggers the event.
-   */
-  rowIndex: number;
-  /**
    * The selected state of the row that triggers the event.
    */
   isSelected: boolean;
