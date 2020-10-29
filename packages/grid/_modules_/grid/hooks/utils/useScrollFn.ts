@@ -14,9 +14,7 @@ export function useScrollFn(
   const previousValue = React.useRef<ScrollParams>();
 
   const debouncedResetPointerEvents = React.useMemo(() => debounce(() => {
-      if (renderingZoneElementRef && renderingZoneElementRef.current) {
-        renderingZoneElementRef.current!.style.pointerEvents = 'unset';
-      }
+      renderingZoneElementRef.current!.style.pointerEvents = 'unset';
       rafResetPointerRef.current = 0;
     }, 300), [renderingZoneElementRef]);
 
