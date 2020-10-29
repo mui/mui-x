@@ -7,12 +7,13 @@ import {
 } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { SortApi } from '../../../models/api/sortApi';
+import { CellValue } from '../../../models/cell';
 import { ColDef } from '../../../models/colDef/colDef';
 import { FeatureModeConstant } from '../../../models/featureMode';
 import { CellParams } from '../../../models/params/cellParams';
 import { ColParams } from '../../../models/params/colParams';
 import { SortModelParams } from '../../../models/params/sortModelParams';
-import { CellValue, RowModel } from '../../../models/rows';
+import { RowModel } from '../../../models/rows';
 import { FieldComparatorList, SortItem, SortModel } from '../../../models/sortModel';
 import { buildCellParams } from '../../../utils/paramsUtils';
 import { isDesc, nextSortDirection } from '../../../utils/sortingUtils';
@@ -22,6 +23,7 @@ import { useApiMethod } from '../../root/useApiMethod';
 import { useLogger } from '../../utils/useLogger';
 import { optionsSelector } from '../../utils/useOptionsProp';
 import { columnsSelector } from '../columns/columnsSelector';
+import { GridState } from '../core/gridState';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { rowCountSelector, unorderedRowModelsSelector } from '../rows/rowsSelector';
@@ -122,11 +124,12 @@ export const useSorting = (apiRef: ApiRef) => {
   );
 
   const applySorting = React.useCallback(() => {
-    logger.info('Sorting rows with ', gridState.sorting.sortModel);
+    const sortModel = apiRef.current.getState<GridState>().sorting.sortModel;
+    logger.info('Sorting rows with ', sortModel);
 
     let sorted = [...unorderedRows];
-    if (gridState.sorting.sortModel.length > 0) {
-      comparatorList.current = buildComparatorList(gridState.sorting.sortModel);
+    if (sortModel.length > 0) {
+      comparatorList.current = buildComparatorList(sortModel);
       sorted = sorted.sort(comparatorListAggregate);
     }
 
@@ -138,8 +141,8 @@ export const useSorting = (apiRef: ApiRef) => {
     });
     forceUpdate();
   }, [
+    apiRef,
     logger,
-    gridState.sorting.sortModel,
     unorderedRows,
     setGridState,
     forceUpdate,
@@ -161,7 +164,7 @@ export const useSorting = (apiRef: ApiRef) => {
       apiRef.current.publishEvent(SORT_MODEL_CHANGE, getSortModelParams(sortModel));
 
       if (options.sortingMode === FeatureModeConstant.client) {
-        applySorting();
+        apiRef.current.applySorting();
       }
     },
     [
@@ -171,7 +174,6 @@ export const useSorting = (apiRef: ApiRef) => {
       apiRef,
       getSortModelParams,
       options.sortingMode,
-      applySorting,
     ],
   );
 
@@ -200,9 +202,9 @@ export const useSorting = (apiRef: ApiRef) => {
 
   const onRowsUpdated = React.useCallback(() => {
     if (gridState.sorting.sortModel.length > 0) {
-      applySorting();
+      apiRef.current.applySorting();
     }
-  }, [gridState.sorting.sortModel.length, applySorting]);
+  }, [gridState.sorting.sortModel.length, apiRef]);
 
   const getSortModel = React.useCallback(() => gridState.sorting.sortModel, [
     gridState.sorting.sortModel,
@@ -228,15 +230,15 @@ export const useSorting = (apiRef: ApiRef) => {
 
   useApiEventHandler(apiRef, SORT_MODEL_CHANGE, options.onSortModelChange);
 
-  const sortApi: SortApi = { getSortModel, setSortModel, onSortModelChange };
+  const sortApi: SortApi = { getSortModel, setSortModel, onSortModelChange, applySorting };
   useApiMethod(apiRef, sortApi, 'SortApi');
 
   React.useEffect(() => {
     if (rowCount > 0 && options.sortingMode === FeatureModeConstant.client) {
       logger.debug('row changed, applying sortModel');
-      applySorting();
+      apiRef.current.applySorting();
     }
-  }, [rowCount, applySorting, options.sortingMode, logger]);
+  }, [rowCount, apiRef, options.sortingMode, logger]);
 
   // TODO Remove if we deprecate column.sortDirection
   React.useEffect(() => {

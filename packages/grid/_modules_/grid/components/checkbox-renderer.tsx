@@ -1,36 +1,37 @@
+import { useContext } from 'react';
 import * as React from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
-import { SelectionChangeParams } from '../models/params/selectionChangeParams';
+import { useGridSelector } from '../hooks/features/core/useGridSelector';
+import { rowCountSelector } from '../hooks/features/rows/rowsSelector';
+import { selectedRowsCountSelector } from '../hooks/features/selection/selectionSelector';
 import { ColParams } from '../models/params/colParams';
 import { CellParams } from '../models/params/cellParams';
+import { ApiContext } from './api-context';
 
-export const HeaderCheckbox: React.FC<ColParams> = ({ api }) => {
-  const selectedRows = api.getSelectedRows();
-  const allRowsCount = api.getAllRowIds().length;
-  const isCurrentIndeterminate = selectedRows.length > 0 && selectedRows.length !== selectedRows;
-  const isCurrentChecked = selectedRows.length === allRowsCount || isCurrentIndeterminate;
+export const HeaderCheckbox: React.FC<ColParams> = () => {
+  const apiRef = useContext(ApiContext);
 
-  const [isChecked, setChecked] = React.useState(isCurrentChecked);
-  const [isIndeterminate, setIndeterminate] = React.useState(isCurrentIndeterminate);
+  const totalSelectedRows = useGridSelector(apiRef, selectedRowsCountSelector);
+  const totalRows = useGridSelector(apiRef, rowCountSelector);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-    setChecked(checked);
-    api.selectRows(api.getAllRowIds(), checked);
-  };
-  const selectionChange = React.useCallback(
-    (event: SelectionChangeParams) => {
-      const isAllSelected =
-        api.getAllRowIds().length === event.rows.length && event.rows.length > 0;
-      const hasNoneSelected = event.rows.length === 0;
-      setChecked(isAllSelected || !hasNoneSelected);
-      setIndeterminate(!isAllSelected && !hasNoneSelected);
-    },
-    [api],
+  const [isIndeterminate, setisIndeterminate] = React.useState(
+    totalSelectedRows > 0 && totalSelectedRows !== totalRows,
+  );
+  const [isChecked, setChecked] = React.useState(
+    totalSelectedRows === totalRows || isIndeterminate,
   );
 
   React.useEffect(() => {
-    return api.onSelectionChange(selectionChange);
-  }, [api, selectionChange]);
+    const isNewIndeterminate = totalSelectedRows > 0 && totalSelectedRows !== totalRows;
+    const isNewChecked = totalSelectedRows === totalRows || isIndeterminate;
+    setChecked(isNewChecked);
+    setisIndeterminate(isNewIndeterminate);
+  }, [isIndeterminate, totalRows, totalSelectedRows]);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    setChecked(checked);
+    apiRef!.current.selectRows(apiRef!.current.getAllRowIds(), checked);
+  };
 
   return (
     <Checkbox
@@ -45,9 +46,11 @@ export const HeaderCheckbox: React.FC<ColParams> = ({ api }) => {
 };
 HeaderCheckbox.displayName = 'HeaderCheckbox';
 
-export const CellCheckboxRenderer: React.FC<CellParams> = React.memo(({ api, rowModel, value }) => {
+export const CellCheckboxRenderer: React.FC<CellParams> = React.memo(({ rowModel, value }) => {
+  const apiRef = useContext(ApiContext);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-    api.selectRow(rowModel.id, checked, true);
+    apiRef!.current.selectRow(rowModel.id, checked, true);
   };
 
   return (

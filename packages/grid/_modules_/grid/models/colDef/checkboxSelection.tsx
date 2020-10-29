@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { ColDef } from './colDef';
 import { CellCheckboxRenderer, HeaderCheckbox } from '../../components/checkbox-renderer';
+import { ColDef } from './colDef';
 
 export const checkboxSelectionColDef: ColDef = {
   field: '__check__',
@@ -12,7 +12,7 @@ export const checkboxSelectionColDef: ColDef = {
   resizable: true,
   sortable: false,
   disableClickEventBubbling: true,
-  valueGetter: (params) => params.rowModel.selected,
+  valueGetter: (params) => params.api.getState().selection[params.rowModel.id],
   renderHeader: (params) => <HeaderCheckbox {...params} />,
   renderCell: (params) => <CellCheckboxRenderer {...params} />,
   cellClassName: 'MuiDataGrid-cellCheckbox',
