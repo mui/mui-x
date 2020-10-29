@@ -8,7 +8,6 @@ export interface RowSelectedParams {
    * The row data of the row that triggers the event.
    */
   data: RowData;
-
   /**
    * The selected state of the row that triggers the event.
    */
