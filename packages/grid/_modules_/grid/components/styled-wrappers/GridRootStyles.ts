@@ -214,11 +214,8 @@ export const useStyles = makeStyles(
         },
         '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
           alignItems: 'center',
-          display: 'none',
+          display: 'flex',
           margin: theme.spacing(0, 2),
-          [theme.breakpoints.up('md')]: {
-            display: 'flex',
-          },
         },
         '& .MuiDataGrid-colCell-dropZone .MuiDataGrid-colCell-draggable': {
           cursor: 'move',
