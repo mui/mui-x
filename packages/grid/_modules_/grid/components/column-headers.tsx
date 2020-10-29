@@ -3,33 +3,31 @@ import { COL_RESIZE_START, COL_RESIZE_STOP } from '../constants/eventsConstants'
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../hooks/utils/useOptionsProp';
 import { Columns, RenderContextProps } from '../models';
-import { ColDef } from '../models/colDef';
 import { ColumnHeaderItem } from './column-header-item';
 import { ApiContext } from './api-context';
 import { LeftEmptyCell, RightEmptyCell } from './cell';
 import { containerSizesSelector } from './viewport';
 import { OptionsContext } from './options-context';
 import { ScrollArea } from './ScrollArea';
-import { CursorCoordinates, sortColumnLookupSelector, useApiEventHandler } from '../hooks';
+import {
+  sortColumnLookupSelector,
+  useApiEventHandler,
+  columnReorderDragColSelector,
+} from '../hooks';
 
 export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
-  onColumnDragEnter?: (event: Event) => void;
-  onColumnDragOver?: (col: ColDef, pos: CursorCoordinates) => void;
-  onColumnDragStart?: (col: ColDef, htmlEL: HTMLElement) => void;
   separatorProps: React.HTMLAttributes<HTMLDivElement>;
 }
 export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionProps> = ({
   separatorProps,
   columns,
-  onColumnDragStart,
-  onColumnDragOver,
-  onColumnDragEnter,
 }) => {
   const [resizingColField, setResizingColField] = React.useState('');
   const apiRef = React.useContext(ApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
   const sortColumnLookup = useGridSelector(apiRef, sortColumnLookupSelector);
+  const dragCol = useGridSelector(apiRef, columnReorderDragColSelector);
 
   const handleResizeStart = React.useCallback((params) => {
     setResizingColField(params.field);
@@ -47,13 +45,11 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
       key={col.field}
       {...sortColumnLookup[col.field]}
       options={options}
+      isDragging={col.field === dragCol}
       column={col}
       colIndex={idx}
       isResizing={resizingColField === col.field}
       separatorProps={separatorProps}
-      onColumnDragStart={onColumnDragStart}
-      onColumnDragEnter={onColumnDragEnter}
-      onColumnDragOver={onColumnDragOver}
     />
   ));
 
@@ -65,24 +61,11 @@ export interface ColumnsHeaderProps {
   columns: Columns;
   hasScrollX: boolean;
   separatorProps: React.HTMLAttributes<HTMLDivElement>;
-  onColumnHeaderDragOver?: (event: Event) => void;
-  onColumnDragOver?: (col: ColDef, pos: CursorCoordinates) => void;
-  onColumnDragStart?: (col: ColDef, htmlEl: HTMLElement) => void;
-  onColumnDragEnter?: (event: Event) => void;
   renderCtx: Partial<RenderContextProps> | null;
 }
 
 export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps>((props, ref) => {
-  const {
-    columns,
-    hasScrollX,
-    onColumnDragEnter,
-    onColumnDragOver,
-    onColumnDragStart,
-    onColumnHeaderDragOver,
-    renderCtx,
-    separatorProps,
-  } = props;
+  const { columns, hasScrollX, renderCtx, separatorProps } = props;
   const wrapperCssClasses = `MuiDataGrid-colCellWrapper ${hasScrollX ? 'scroll' : ''}`;
   const api = React.useContext(ApiContext);
   const { disableColumnReorder } = React.useContext(OptionsContext);
@@ -113,10 +96,9 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps
     }
   }, [renderCtx, columns]);
 
-  const handleDragOver =
-    onColumnHeaderDragOver && !disableColumnReorder
-      ? (event) => onColumnHeaderDragOver(event)
-      : undefined;
+  const handleDragOver = !disableColumnReorder
+    ? (event) => api.current.onColHeaderDragOver(event, ref as React.RefObject<HTMLElement>)
+    : undefined;
 
   return (
     <React.Fragment>
@@ -132,13 +114,7 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps
         onDragOver={handleDragOver}
       >
         <LeftEmptyCell width={renderCtx?.leftEmptyWidth} />
-        <ColumnHeaderItemCollection
-          columns={renderedCols}
-          onColumnDragStart={onColumnDragStart}
-          onColumnDragOver={onColumnDragOver}
-          onColumnDragEnter={onColumnDragEnter}
-          separatorProps={separatorProps}
-        />
+        <ColumnHeaderItemCollection columns={renderedCols} separatorProps={separatorProps} />
         <RightEmptyCell width={renderCtx?.rightEmptyWidth} />
       </div>
       <ScrollArea scrollDirection="right" />

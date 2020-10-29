@@ -7,6 +7,10 @@ import { INITIAL_PAGINATION_STATE, PaginationState } from '../pagination/paginat
 import { getInitialRowState, InternalRowsState } from '../rows/rowsState';
 import { getInitialSortingState, SortingState } from '../sorting/sortingState';
 import { ContainerProps } from '../../../models/containerProps';
+import {
+  ColumnReorderState,
+  getInitialColumnReorderState,
+} from '../columnReorder/columnReorderState';
 
 export interface GridState {
   rows: InternalRowsState;
@@ -14,6 +18,7 @@ export interface GridState {
   options: GridOptions;
   isScrolling: boolean;
   columns: InternalColumns;
+  columnReorder: ColumnReorderState;
   rendering: InternalRenderingState;
   containerSizes: ContainerProps | null;
   sorting: SortingState;
@@ -27,6 +32,7 @@ export const getInitialState: () => GridState = () => ({
   options: { ...DEFAULT_GRID_OPTIONS },
   isScrolling: false,
   columns: getInitialColumnsState(),
+  columnReorder: getInitialColumnReorderState(),
   rendering: getInitialRenderingState(),
   containerSizes: null,
   sorting: getInitialSortingState(),
