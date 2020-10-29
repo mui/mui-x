@@ -12,16 +12,13 @@ export function useScrollFn(
   const logger = useLogger('useScrollFn');
   const rafResetPointerRef = React.useRef(0);
   const previousValue = React.useRef<ScrollParams>();
-  const [restorePointerEvents] = useRafUpdate(apiRef, () => {
-    if (renderingZoneElementRef && renderingZoneElementRef.current) {
-      renderingZoneElementRef.current!.style.pointerEvents = 'unset';
-    }
-    rafResetPointerRef.current = 0;
-  });
 
-  const debouncedResetPointerEvents = React.useMemo(() => debounce(restorePointerEvents, 300), [
-    restorePointerEvents,
-  ]);
+  const debouncedResetPointerEvents = React.useMemo(() => debounce(() => {
+      if (renderingZoneElementRef && renderingZoneElementRef.current) {
+        renderingZoneElementRef.current!.style.pointerEvents = 'unset';
+      }
+      rafResetPointerRef.current = 0;
+    }, 300), [renderingZoneElementRef]);
 
   const scrollTo: (v: ScrollParams) => void = React.useCallback(
     (v) => {
