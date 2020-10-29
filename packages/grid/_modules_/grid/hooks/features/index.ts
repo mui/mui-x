@@ -9,5 +9,5 @@ export * from './virtualization';
 
 export * from './useApiRef';
 export * from './useComponents';
-export * from './useColumnReorder';
+export * from './columnReorder';
 export * from './useColumnResize';

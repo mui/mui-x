@@ -23,7 +23,7 @@ import { usePagination } from './hooks/features/pagination/usePagination';
 import { useRows } from './hooks/features/rows/useRows';
 import { useSorting } from './hooks/features/sorting/useSorting';
 import { useApiRef } from './hooks/features/useApiRef';
-import { useColumnReorder } from './hooks/features/useColumnReorder';
+import { useColumnReorder } from './hooks/features/columnReorder';
 import { useColumnResize } from './hooks/features/useColumnResize';
 import { useComponents } from './hooks/features/useComponents';
 import { useSelection } from './hooks/features/selection/useSelection';
@@ -75,7 +75,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useContainerProps(windowRef, apiRef);
     const renderCtx = useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
 
-    const onColumnReorder = useColumnReorder(columnsHeaderRef, apiRef);
+    useColumnReorder(apiRef);
     const separatorProps = useColumnResize(columnsHeaderRef, apiRef);
     usePagination(apiRef);
 
@@ -131,10 +131,6 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                         columns={gridState.columns.visible || []}
                         hasScrollX={!!gridState.containerSizes?.hasScrollX}
                         separatorProps={separatorProps}
-                        onColumnHeaderDragOver={onColumnReorder.handleColumnHeaderDragOver}
-                        onColumnDragStart={onColumnReorder.handleDragStart}
-                        onColumnDragEnter={onColumnReorder.handleDragEnter}
-                        onColumnDragOver={onColumnReorder.handleDragOver}
                         renderCtx={renderCtx}
                       />
                     </GridColumnsContainer>

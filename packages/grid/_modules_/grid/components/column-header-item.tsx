@@ -8,27 +8,22 @@ import { classnames } from '../utils';
 import { ColumnHeaderSortIcon } from './column-header-sort-icon';
 import { ColumnHeaderTitle } from './column-header-title';
 import { ColumnHeaderSeparator } from './column-header-separator';
-import { CursorCoordinates } from '../hooks/features/useColumnReorder';
 
 interface ColumnHeaderItemProps {
   colIndex: number;
   column: ColDef;
+  isDragging: boolean;
   isResizing: boolean;
   sortDirection: SortDirection;
   sortIndex?: number;
   options: GridOptions;
-  onColumnDragEnter?: (event: Event) => void;
-  onColumnDragOver?: (col: ColDef, coordinates: CursorCoordinates) => void;
-  onColumnDragStart?: (col: ColDef, currentTarget: HTMLElement) => void;
   separatorProps: React.HTMLAttributes<HTMLDivElement>;
 }
 
 export const ColumnHeaderItem = ({
   column,
   colIndex,
-  onColumnDragStart,
-  onColumnDragEnter,
-  onColumnDragOver,
+  isDragging,
   isResizing,
   separatorProps,
   sortDirection,
@@ -48,19 +43,27 @@ export const ColumnHeaderItem = ({
     });
   }
 
-  const dragConfig = {
-    draggable:
-      !disableColumnReorder && !!onColumnDragStart && !!onColumnDragEnter && !!onColumnDragOver,
-    onDragStart: onColumnDragStart && ((event) => onColumnDragStart(column, event.currentTarget)),
-    onDragEnter: onColumnDragEnter && ((event) => onColumnDragEnter(event)),
-    onDragOver:
-      onColumnDragOver &&
-      ((event) => {
-        onColumnDragOver(column, {
-          x: event.clientX,
-          y: event.clientY,
-        });
+  const onDragStart = React.useCallback(
+    (event) => apiRef!.current.onColItemDragStart(column, event.currentTarget),
+    [apiRef, column],
+  );
+  const onDragEnter = React.useCallback((event) => apiRef!.current.onColItemDragEnter(event), [
+    apiRef,
+  ]);
+  const onDragOver = React.useCallback(
+    (event) =>
+      apiRef!.current.onColItemDragOver(column, {
+        x: event.clientX,
+        y: event.clientY,
       }),
+    [apiRef, column],
+  );
+
+  const dragConfig = {
+    draggable: !disableColumnReorder,
+    onDragStart,
+    onDragEnter,
+    onDragOver,
   };
   const width = column.width!;
 
@@ -79,7 +82,10 @@ export const ColumnHeaderItem = ({
         column.headerClassName,
         column.headerAlign === 'center' && 'MuiDataGrid-colCellCenter',
         column.headerAlign === 'right' && 'MuiDataGrid-colCellRight',
-        { 'MuiDataGrid-colCellSortable': column.sortable },
+        {
+          'MuiDataGrid-colCellSortable': column.sortable,
+          'MuiDataGrid-colCellMoving': isDragging,
+        },
       )}
       key={column.field}
       data-field={column.field}
