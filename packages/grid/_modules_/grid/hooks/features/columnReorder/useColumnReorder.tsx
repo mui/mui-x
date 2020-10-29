@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ColDef } from '../../../models/colDef';
-import { useLogger } from '../../utils';
+import { useLogger } from '../../utils/useLogger';
 import { ApiRef } from '../../../models/api/apiRef';
 import {
   DRAGEND,
@@ -73,12 +73,10 @@ export const useColumnReorder = (apiRef: ApiRef): void => {
     dragColNode.current!.removeEventListener(DRAGEND, handleDragEnd);
     dragColNode.current = null;
 
-    setGridState((oldState) => {
-      return {
-        ...oldState,
-        columnReorder: { ...oldState.columnReorder, dragCol: '' },
-      };
-    });
+    setGridState((oldState) => ({
+      ...oldState,
+      columnReorder: { ...oldState.columnReorder, dragCol: '' },
+    }));
     forceUpdate();
   }, [apiRef, setGridState, forceUpdate, logger]);
 
@@ -91,12 +89,10 @@ export const useColumnReorder = (apiRef: ApiRef): void => {
       dragColNode.current.addEventListener(DRAGEND, handleDragEnd, { once: true });
       dragColNode.current.classList.add(HEADER_CELL_DRAGGING_CSS_CLASS);
 
-      setGridState((oldState) => {
-        return {
-          ...oldState,
-          columnReorder: { ...oldState.columnReorder, dragCol: col.field },
-        };
-      });
+      setGridState((oldState) => ({
+        ...oldState,
+        columnReorder: { ...oldState.columnReorder, dragCol: col.field },
+      }));
       forceUpdate();
 
       removeDnDStylesTimeout.current = setTimeout(() => {

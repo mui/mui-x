@@ -52,24 +52,27 @@ export const ColumnHeaderItem = ({
     });
   }
 
+  const onDragStart = React.useCallback(
+    (event) => apiRef!.current.onColItemDragStart(column, event.currentTarget),
+    [apiRef, column],
+  );
+  const onDragEnter = React.useCallback((event) => apiRef!.current.onColItemDragEnter(event), [
+    apiRef,
+  ]);
+  const onDragOver = React.useCallback(
+    (event) =>
+      apiRef!.current.onColItemDragOver(column, {
+        x: event.clientX,
+        y: event.clientY,
+      }),
+    [apiRef, column],
+  );
+
   const dragConfig = {
-    draggable:
-      !disableColumnReorder &&
-      !!apiRef!.current.onColItemDragStart &&
-      !!apiRef!.current.onColItemDragEnter &&
-      !!apiRef!.current.onColItemDragOver,
-    onDragStart:
-      apiRef!.current.onColItemDragStart &&
-      ((event) => apiRef!.current.onColItemDragStart(column, event.currentTarget)),
-    onDragEnter:
-      apiRef!.current.onColItemDragEnter && ((event) => apiRef!.current.onColItemDragEnter(event)),
-    onDragOver:
-      apiRef!.current.onColItemDragOver &&
-      ((event) =>
-        apiRef!.current.onColItemDragOver(column, {
-          x: event.clientX,
-          y: event.clientY,
-        })),
+    draggable: !disableColumnReorder,
+    onDragStart,
+    onDragEnter,
+    onDragOver,
   };
   const width = column.width!;
 

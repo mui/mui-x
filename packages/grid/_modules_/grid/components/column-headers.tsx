@@ -95,10 +95,9 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps
     }
   }, [renderCtx, columns]);
 
-  const handleDragOver =
-    api.current.onColHeaderDragOver && !disableColumnReorder
-      ? (event) => api.current.onColHeaderDragOver(event, ref as React.RefObject<HTMLElement>)
-      : undefined;
+  const handleDragOver = !disableColumnReorder
+    ? (event) => api.current.onColHeaderDragOver(event, ref as React.RefObject<HTMLElement>)
+    : undefined;
 
   return (
     <React.Fragment>
