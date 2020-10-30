@@ -206,6 +206,7 @@ describe('<XGrid />', () => {
         </div>,
       );
       await raf();
+      await raf();
 
       const row = document.querySelector('[role="row"][aria-rowindex="2"]');
       const checkbox = row!.querySelector('input');
@@ -213,8 +214,8 @@ describe('<XGrid />', () => {
       expect(checkbox).to.have.property('checked', false);
 
       fireEvent.click(screen.getByRole('cell', { name: 'Nike' }));
-      await raf();
-      await raf();
+      await sleep(100);
+
       expect(row!.classList.contains('Mui-selected')).to.equal(true, 'class mui-selected 1');
       expect(checkbox).to.have.property('checked', true);
 
