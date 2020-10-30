@@ -10,14 +10,12 @@ export function useScrollFn(
   columnHeadersElementRef: React.RefObject<HTMLDivElement>,
 ): [ScrollFn, ScrollFn] {
   const logger = useLogger('useScrollFn');
-  const rafResetPointerRef = React.useRef(0);
   const previousValue = React.useRef<ScrollParams>();
 
   const debouncedResetPointerEvents = React.useMemo(
     () =>
       debounce(() => {
         renderingZoneElementRef.current!.style.pointerEvents = 'unset';
-        rafResetPointerRef.current = 0;
       }, 300),
     [renderingZoneElementRef],
   );
