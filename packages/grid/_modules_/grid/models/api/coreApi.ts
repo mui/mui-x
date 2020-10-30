@@ -27,7 +27,7 @@ export interface CoreApi extends EventEmitter {
   showError: (props: any) => void;
 
   /**
-   * Store the request animation timer, that coordinates all requestAnimationFrame()
+   * Store the request animation timer, that coordinates all requestAnimationFrame().
    */
   rafTimer: number;
 }
