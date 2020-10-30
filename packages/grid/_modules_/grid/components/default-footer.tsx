@@ -24,12 +24,17 @@ export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps
       return null;
     }
 
+    const showRowCount = !options.hideFooterRowCount && !paginationComponent && (
+      <RowCount rowCount={totalRowCount} />
+    );
+    const showSelectedRowCount = !options.hideFooterSelectedRowCount && !paginationComponent && (
+      <SelectedRowCount selectedRowCount={selectedRowCount} />
+    );
+
     return (
       <GridFooter ref={ref}>
-        {!options.hideFooterRowCount && <RowCount rowCount={totalRowCount} />}
-        {!options.hideFooterSelectedRowCount && (
-          <SelectedRowCount selectedRowCount={selectedRowCount} />
-        )}
+        {showRowCount}
+        {showSelectedRowCount}
         {paginationComponent}
       </GridFooter>
     );
