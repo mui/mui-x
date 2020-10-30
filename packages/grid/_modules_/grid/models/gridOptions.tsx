@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ArrowDownwardIcon, ArrowUpwardIcon, SeparatorIcon, FilterIcon } from '../components/icons/index';
+import { ArrowDownwardIcon, ArrowUpwardIcon, SeparatorIcon, MenuIcon, FilterIcon } from '../components/icons/index';
 import { Logger } from '../hooks/utils/useLogger';
 import { ColumnTypesRecord } from './colDef/colTypeDef';
 import { DEFAULT_COLUMN_TYPES } from './colDef/defaultColumnTypes';
@@ -19,6 +19,10 @@ import { SortDirection, SortModel } from './sortModel';
 export interface IconsOptions {
   /**
    * Icon displayed on the side of the column header title to display the filter input component.
+   */
+  columnMenu?: React.ElementType;
+  /**
+   * Icon displayed on the column menu filter tab.
    */
   columnFiltering?: React.ElementType;
   /**
@@ -277,9 +281,9 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   sortingMode: FeatureModeConstant.client,
   sortingOrder: ['asc', 'desc', null],
   columnTypes: DEFAULT_COLUMN_TYPES,
-  disableColumnFilter: true,
   icons: {
     columnFiltering: FilterIcon,
+    columnMenu: MenuIcon,
     columnSortedAscending: ArrowUpwardIcon,
     columnSortedDescending: ArrowDownwardIcon,
     columnResize: SeparatorIcon,

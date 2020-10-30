@@ -42,7 +42,7 @@ import { getCurryTotalHeight } from './utils/getTotalHeight';
 import { ApiContext } from './components/api-context';
 import { OptionsContext } from './components/options-context';
 import { RenderContext } from './components/render-context';
-import {useColumnFilter} from "./hooks/features/useColumnFilter";
+import {useFilter} from "./hooks/features/filter/useFilter";
 
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {
@@ -74,7 +74,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useKeyboard(rootContainerRef, apiRef);
     useSelection(apiRef);
     useSorting(apiRef);
-  useColumnFilter(apiRef, internalOptions, internalRows);
+    useFilter(apiRef);
 
     useContainerProps(windowRef, apiRef);
     const renderCtx = useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);

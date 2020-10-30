@@ -1,9 +1,5 @@
 import * as React from 'react';
 import IconButton from '@material-ui/core/IconButton';
-import { useIcons } from '../hooks/utils/useIcons';
-import {COLUMN_FILTER_BUTTON_CLICK, COLUMN_FILTER_CHANGED} from '../constants';
-import { ApiContext } from './api-context';
-import {ColDef, Columns} from '../models/colDef/colDef';
 import {
   Box, Chip, ChipProps,
   ClickAwayListener, Grid,
@@ -13,12 +9,13 @@ import {
   Tabs,
   TextField, Theme, Typography,
 } from '@material-ui/core';
-import { Search } from '@material-ui/icons';
-import ViewWeekIcon from '@material-ui/icons/ViewWeek';
-import MenuIcon from '@material-ui/icons/Menu';
 import {makeStyles} from "@material-ui/core/styles";
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import Switch from "@material-ui/core/Switch";
+import { useIcons } from '../hooks/utils/useIcons';
+import {COLUMN_FILTER_BUTTON_CLICK, COLUMN_FILTER_CHANGED} from '../constants';
+import { ApiContext } from './api-context';
+import {ColDef, Columns} from '../models/colDef/colDef';
+import { CheckCircleIcon, MenuIcon, SearchIcon, ViewWeekIcon } from './icons/index';
 
 function TabPanel(props) {
   const { children } = props;
@@ -105,7 +102,7 @@ export const ColumnFilterMenu: React.FC<ColumnFilterMenuProps> = ({columns} ) =>
   }, [apiRef, onColumnFilterClick]);
 
   React.useEffect(() => {
-    //If columns changed we want to use the latest version of our column
+    // If columns changed we want to use the latest version of our column
     setColDef(prevCol => {
       if(prevCol != null) {
         const newCol = columns.find(col=> col.field === prevCol.field);
@@ -148,7 +145,7 @@ export const ColumnFilterMenu: React.FC<ColumnFilterMenuProps> = ({columns} ) =>
                   size={'small'}
                 />
                 <IconButton color="primary" aria-label="Filter" component="span" onSubmit={applyFilter}>
-                  <Search />
+                  <SearchIcon />
                 </IconButton>
               </form>
               </div>

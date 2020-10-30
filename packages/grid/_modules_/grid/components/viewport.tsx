@@ -2,6 +2,7 @@ import * as React from 'react';
 import { columnsSelector } from '../hooks/features/columns/columnsSelector';
 import { GridState } from '../hooks/features/core/gridState';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
+import { visibleSortedRowsSelector } from '../hooks/features/filter/filterSelector';
 import { keyboardCellSelector } from '../hooks/features/keyboard/keyboardSelector';
 import { selectionStateSelector } from '../hooks/features/selection/selectionSelector';
 import { sortedRowsSelector } from '../hooks/features/sorting/sortingSelector';
@@ -27,7 +28,6 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const logger = useLogger('Viewport');
     const renderCtx = React.useContext(RenderContext) as RenderContextProps;
     const apiRef = React.useContext(ApiContext);
-    const rows = useGridSelector(apiRef, sortedRowsSelector);
     const options = useGridSelector(apiRef, optionsSelector);
     const containerSizes = useGridSelector(apiRef, containerSizesSelector);
     const viewportSizes = useGridSelector(apiRef, viewportSizesSelector);
@@ -35,11 +35,12 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const columns = useGridSelector(apiRef, columnsSelector);
     const cellFocus = useGridSelector(apiRef, keyboardCellSelector);
     const selectionState = useGridSelector(apiRef, selectionStateSelector);
-    const visibleRows = React.useMemo(()=> rows.filter(row=> !row.isHidden), [rows]);
+
+    const rows = useGridSelector(apiRef, visibleSortedRowsSelector);
 
     const getRowsElements = () => {
       // TODO move that to selector
-      const renderedRows = visibleRows.slice(renderCtx.firstRowIdx, renderCtx.lastRowIdx!);
+      const renderedRows = rows.slice(renderCtx.firstRowIdx, renderCtx.lastRowIdx!);
       return renderedRows.map((r, idx) => (
         <Row
           className={(renderCtx.firstRowIdx! + idx) % 2 === 0 ? 'Mui-even' : 'Mui-odd'}

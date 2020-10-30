@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ColDef } from '../models/colDef';
+import { ColDef, NUMBER_COLUMN_TYPE } from '../models/colDef';
 import { GridOptions } from '../models/gridOptions';
 import { SortDirection } from '../models/sortModel';
 import { ApiContext } from './api-context';
@@ -33,10 +33,10 @@ export const ColumnHeaderItem = React.memo(
     options,
   }: ColumnHeaderItemProps) => {
     const apiRef = React.useContext(ApiContext);
-    const { disableColumnReorder, showColumnRightBorder, disableColumnResize } = options;
+    const { disableColumnReorder, showColumnRightBorder, disableColumnResize, disableColumnFilter } = options;
     const isColumnSorted = column.sortDirection != null;
     //todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
-    const isColumnNumeric = column.type === 'number';
+    const isColumnNumeric = column.type === NUMBER_COLUMN_TYPE;
 
     let headerComponent: React.ReactElement | null = null;
     if (column.renderHeader) {
@@ -107,7 +107,7 @@ export const ColumnHeaderItem = React.memo(
       {...ariaSort}
     >
       <div className="MuiDataGrid-colCell-draggable" {...dragConfig}>
-        {isColumnNumeric && <ColumnHeaderFilterIcon column={column} />}
+        {!disableColumnFilter && isColumnNumeric && <ColumnHeaderFilterIcon column={column} />}
 
         <div className={'MuiDataGrid-colCellTitleContainer'}>
           {isColumnNumeric && (
@@ -126,14 +126,14 @@ export const ColumnHeaderItem = React.memo(
           )}
         </div>
         {!isColumnNumeric && (
-          <>
+          <React.Fragment>
             <ColumnHeaderSortIcon
               direction={sortDirection}
               index={sortIndex}
               hide={column.hideSortIcons}
             />
-            <ColumnHeaderFilterIcon column={column} />
-            </>
+            {!disableColumnFilter && <ColumnHeaderFilterIcon column={column} />}
+            </React.Fragment>
           )}
         </div>
         <ColumnHeaderSeparator

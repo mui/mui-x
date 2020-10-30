@@ -4,7 +4,6 @@ import { useIcons } from '../hooks/utils/useIcons';
 import { COLUMN_FILTER_BUTTON_CLICK } from '../constants';
 import { ApiContext } from './api-context';
 import { ColDef } from '../models/colDef/colDef';
-import {OptionsContext} from "./options-context";
 
 export interface ColumnHeaderFilterIconProps {
   column: ColDef;
@@ -13,9 +12,8 @@ export interface ColumnHeaderFilterIconProps {
 export const ColumnHeaderFilterIcon: React.FC<ColumnHeaderFilterIconProps> = React.memo(
   ({ column }) => {
     const icons = useIcons();
-    const icon = React.createElement(icons.columnFiltering!, {});
+    const icon = React.createElement(icons.columnMenu!, {});
     const apiRef = React.useContext(ApiContext);
-    const options = React.useContext(OptionsContext);
 
     const filterClick = React.useCallback(
       (event: React.MouseEvent<HTMLElement>) => {
@@ -26,10 +24,6 @@ export const ColumnHeaderFilterIcon: React.FC<ColumnHeaderFilterIconProps> = Rea
       },
       [apiRef, column],
     );
-
-    if(options.disableColumnFilter) {
-      return null;
-    }
 
     return (
       <div className={'MuiDataGrid-iconFilter'}>

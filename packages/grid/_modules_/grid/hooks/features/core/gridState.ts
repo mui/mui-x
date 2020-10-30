@@ -1,5 +1,6 @@
 import { getInitialColumnsState, InternalColumns } from '../../../models/colDef/colDef';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
+import { FilterState, getInitialFilterState } from '../filter/filterState';
 import { SelectionState } from '../selection/selectionState';
 import { getInitialRenderingState, InternalRenderingState } from '../virtualization/renderingState';
 import { KeyboardState } from '../keyboard/keyboardState';
@@ -26,6 +27,7 @@ export interface GridState {
   sorting: SortingState;
   keyboard: KeyboardState;
   selection: SelectionState;
+  filter: FilterState;
 }
 
 export const getInitialState: () => GridState = () => ({
@@ -42,4 +44,5 @@ export const getInitialState: () => GridState = () => ({
   sorting: getInitialSortingState(),
   keyboard: { cell: null, isMultipleKeyPressed: false },
   selection: {},
+  filter: getInitialFilterState()
 });
