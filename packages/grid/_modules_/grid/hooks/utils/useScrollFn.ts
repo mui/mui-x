@@ -13,10 +13,14 @@ export function useScrollFn(
   const rafResetPointerRef = React.useRef(0);
   const previousValue = React.useRef<ScrollParams>();
 
-  const debouncedResetPointerEvents = React.useMemo(() => debounce(() => {
-      renderingZoneElementRef.current!.style.pointerEvents = 'unset';
-      rafResetPointerRef.current = 0;
-    }, 300), [renderingZoneElementRef]);
+  const debouncedResetPointerEvents = React.useMemo(
+    () =>
+      debounce(() => {
+        renderingZoneElementRef.current!.style.pointerEvents = 'unset';
+        rafResetPointerRef.current = 0;
+      }, 300),
+    [renderingZoneElementRef],
+  );
 
   const scrollTo: (v: ScrollParams) => void = React.useCallback(
     (v) => {
