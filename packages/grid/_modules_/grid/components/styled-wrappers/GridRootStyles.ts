@@ -206,16 +206,24 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-cellCenter': {
           textAlign: 'center',
         },
+        '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
+          alignItems: 'center',
+          display: 'flex',
+          margin: theme.spacing(0, 2),
+        },
         '& .MuiDataGrid-footer': {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           minHeight: 52, // Match TablePagination min height
-        },
-        '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
-          alignItems: 'center',
-          display: 'flex',
-          margin: theme.spacing(0, 2),
+          '&.MuiDataGrid-footer-pagination-visible': {
+            '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
+              display: 'none',
+              [theme.breakpoints.up('md')]: {
+                display: 'flex',
+              },
+            },
+          },
         },
         '& .MuiDataGrid-colCell-dropZone .MuiDataGrid-colCell-draggable': {
           cursor: 'move',
