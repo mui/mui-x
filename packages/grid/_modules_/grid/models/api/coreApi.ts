@@ -25,7 +25,6 @@ export interface CoreApi extends EventEmitter {
    * Display the error overlay component.
    */
   showError: (props: any) => void;
-
   /**
    * Store the request animation timer, that coordinates all requestAnimationFrame().
    */
