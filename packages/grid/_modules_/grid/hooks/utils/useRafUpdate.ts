@@ -3,6 +3,7 @@ import { useLogger } from './useLogger';
 
 type UseRafUpdateReturnType = [(...args: any[]) => void, (fn: (args: any) => void) => void];
 
+// ⚠️ Usage STRICTLY reserved to `useGridState`.
 export function useRafUpdate(
   apiRef: any,
   initialFn?: (...args: any) => void,
