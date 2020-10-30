@@ -1,31 +1,24 @@
-import * as React from 'react';
 import { debounce } from '@material-ui/core/utils';
+import * as React from 'react';
+import { ScrollFn, ScrollParams } from '../../models/params/scrollParams';
 import { useLogger } from './useLogger';
 import { useRafUpdate } from './useRafUpdate';
 
-export interface ScrollParams {
-  left: number;
-  top: number;
-}
-export type ScrollFn = (v: ScrollParams) => void;
-
 export function useScrollFn(
+  apiRef: any,
   renderingZoneElementRef: React.RefObject<HTMLDivElement>,
   columnHeadersElementRef: React.RefObject<HTMLDivElement>,
 ): [ScrollFn, ScrollFn] {
   const logger = useLogger('useScrollFn');
-  const rafResetPointerRef = React.useRef(0);
   const previousValue = React.useRef<ScrollParams>();
-  const [restorePointerEvents] = useRafUpdate(() => {
-    if (renderingZoneElementRef && renderingZoneElementRef.current) {
-      renderingZoneElementRef.current!.style.pointerEvents = 'unset';
-    }
-    rafResetPointerRef.current = 0;
-  });
 
-  const debouncedResetPointerEvents = React.useMemo(() => debounce(restorePointerEvents, 300), [
-    restorePointerEvents,
-  ]);
+  const debouncedResetPointerEvents = React.useMemo(
+    () =>
+      debounce(() => {
+        renderingZoneElementRef.current!.style.pointerEvents = 'unset';
+      }, 300),
+    [renderingZoneElementRef],
+  );
 
   const scrollTo: (v: ScrollParams) => void = React.useCallback(
     (v) => {
@@ -47,7 +40,7 @@ export function useScrollFn(
     [renderingZoneElementRef, logger, columnHeadersElementRef, debouncedResetPointerEvents],
   );
 
-  const [runScroll] = useRafUpdate(scrollTo);
+  const [runScroll] = useRafUpdate(apiRef, scrollTo);
 
   React.useEffect(() => {
     return () => {
