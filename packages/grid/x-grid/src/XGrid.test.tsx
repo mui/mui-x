@@ -219,9 +219,7 @@ describe('<XGrid />', () => {
       expect(checkbox).to.have.property('checked', true);
 
       fireEvent.click(screen.getByRole('cell', { name: 'Nike' }));
-      await raf();
-      await raf();
-
+      await sleep(100);
       expect(row!.classList.contains('Mui-selected')).to.equal(false, 'class mui-selected 2');
       expect(checkbox).to.have.property('checked', false);
     });
