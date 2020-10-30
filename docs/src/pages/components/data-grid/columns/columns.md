@@ -59,7 +59,7 @@ The `flex` property works by dividing the remaining space in the grid among all 
 
 The `flex` configuration does not work together with the `width` configuration. If you set both the `flex` and `width` inside the `ColDef` of column the `flex` will overwrite the `width`.
 
-The `flex` configuration does not work if the combined width of the columns that have `width` is more that the width of the grid itself. If that is the case a scroll bar will be visible and the columns that hava `flex` will default back to their base value of 100 pixels.
+The `flex` configuration does not work if the combined width of the columns that have `width` is more than the width of the grid itself. If that is the case a scroll bar will be visible and the columns that hava `flex` will default back to their base value of 100 pixels.
 
 {{"demo": "pages/components/data-grid/columns/ColumnFluidWidthGrid.js", "bg": "inline"}}
 
