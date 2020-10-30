@@ -3,6 +3,7 @@ import { RESIZE, SCROLL, SCROLLING } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { VirtualizationApi } from '../../../models/api/virtualizationApi';
 import { CellIndexCoordinates } from '../../../models/cell';
+import { ScrollParams } from '../../../models/params/scrollParams';
 import { RenderContextProps, RenderRowProps } from '../../../models/renderContextProps';
 import { isEqual } from '../../../utils/utils';
 import { useGridSelector } from '../core/useGridSelector';
@@ -15,7 +16,7 @@ import { useApiMethod } from '../../root/useApiMethod';
 import { useNativeEventListener } from '../../root/useNativeEventListener';
 import { useLogger } from '../../utils/useLogger';
 import { optionsSelector } from '../../utils/useOptionsProp';
-import { ScrollParams, useScrollFn } from '../../utils/useScrollFn';
+import { useScrollFn } from '../../utils/useScrollFn';
 import { InternalRenderingState } from './renderingState';
 import { useVirtualColumns } from './useVirtualColumns';
 
@@ -39,7 +40,7 @@ export const useVirtualRows = (
   const paginationState = useGridSelector<PaginationState>(apiRef, paginationSelector);
   const totalRowCount = useGridSelector<number>(apiRef, rowCountSelector);
 
-  const [scrollTo] = useScrollFn(renderingZoneRef, colRef);
+  const [scrollTo] = useScrollFn(apiRef, renderingZoneRef, colRef);
   const [renderedColRef, updateRenderedCols] = useVirtualColumns(options, apiRef);
 
   const setRenderingState = React.useCallback(

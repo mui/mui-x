@@ -3,9 +3,12 @@ import { useLogger } from './useLogger';
 
 type UseRafUpdateReturnType = [(...args: any[]) => void, (fn: (args: any) => void) => void];
 
-export function useRafUpdate(initialFn?: (...args: any) => void): UseRafUpdateReturnType {
+// ⚠️ Usage STRICTLY reserved to `useGridState`.
+export function useRafUpdate(
+  apiRef: any,
+  initialFn?: (...args: any) => void,
+): UseRafUpdateReturnType {
   const logger = useLogger('useRafUpdate');
-  const rafRef = React.useRef(0);
   const fn = React.useRef(initialFn);
 
   const setUpdate = React.useCallback((updateFn: (...args: any[]) => void) => {
@@ -17,24 +20,24 @@ export function useRafUpdate(initialFn?: (...args: any) => void): UseRafUpdateRe
       if (!fn.current) {
         return;
       }
-      if (rafRef.current > 0) {
+      if (apiRef.current.rafTimer > 0) {
         logger.debug('Skipping previous update');
-        cancelAnimationFrame(rafRef.current);
+        cancelAnimationFrame(apiRef.current.rafTimer);
       }
       logger.debug('Queuing new update');
-      rafRef.current = requestAnimationFrame(() => {
+      apiRef.current.rafTimer = requestAnimationFrame(() => {
         fn.current!(...args);
-        rafRef.current = 0;
+        apiRef.current.rafTimer = 0;
       });
     },
-    [logger],
+    [apiRef, logger],
   );
 
   React.useEffect(() => {
     return () => {
-      cancelAnimationFrame(rafRef.current);
+      cancelAnimationFrame(apiRef!.current!.rafTimer);
     };
-  }, []);
+  }, [apiRef]);
 
   return [runUpdate, setUpdate];
 }

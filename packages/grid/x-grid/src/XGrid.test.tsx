@@ -206,6 +206,7 @@ describe('<XGrid />', () => {
         </div>,
       );
       await raf();
+      await raf();
 
       const row = document.querySelector('[role="row"][aria-rowindex="2"]');
       const checkbox = row!.querySelector('input');
@@ -213,13 +214,14 @@ describe('<XGrid />', () => {
       expect(checkbox).to.have.property('checked', false);
 
       fireEvent.click(screen.getByRole('cell', { name: 'Nike' }));
-      await raf();
-      expect(row!.classList.contains('Mui-selected')).to.equal(true);
+      await sleep(100);
+
+      expect(row!.classList.contains('Mui-selected')).to.equal(true, 'class mui-selected 1');
       expect(checkbox).to.have.property('checked', true);
 
       fireEvent.click(screen.getByRole('cell', { name: 'Nike' }));
-      await raf();
-      expect(row!.classList.contains('Mui-selected')).to.equal(false);
+      await sleep(100);
+      expect(row!.classList.contains('Mui-selected')).to.equal(false, 'class mui-selected 2');
       expect(checkbox).to.have.property('checked', false);
     });
   });
@@ -275,7 +277,7 @@ describe('<XGrid />', () => {
       );
       await raf();
       const header = screen.getByRole('columnheader', { name: 'brand' });
-      // await sleep(100);
+      await sleep(100);
       expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       fireEvent.click(header);
       await sleep(100);
