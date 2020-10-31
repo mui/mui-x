@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react';
 import * as React from 'react';
 import { ApiRef } from '../../../models/api/apiRef';
 import { useGridApi } from './useGridApi';
@@ -10,7 +9,7 @@ export const useGridReducer = <State, Action>(
   reducer: React.Reducer<State, Action>,
   initialState: State,
 ) => {
-  const api = useGridApi(apiRef);
+  const gridApi = useGridApi(apiRef);
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
 
   const gridDispatch = React.useCallback(
@@ -18,26 +17,23 @@ export const useGridReducer = <State, Action>(
       if (gridState[stateId] === undefined) {
         gridState[stateId] = initialState;
       }
-      const newLocalState = reducer(api.state[stateId], action);
       setGridState((oldState) => {
-        const updatingState: any = {};
-        updatingState[stateId] = { ...newLocalState };
-
-        oldState = { ...oldState, ...updatingState };
-        return oldState;
+        const newState = { ...oldState };
+        newState[stateId] = reducer(oldState[stateId], action);
+        return newState;
       });
       forceUpdate();
     },
-    [api, forceUpdate, gridState, initialState, reducer, setGridState, stateId],
+    [forceUpdate, gridState, initialState, reducer, setGridState, stateId],
   );
 
-  const dispatchRef = useRef(gridDispatch);
+  const dispatchRef = React.useRef(gridDispatch);
 
-  useEffect(() => {
+  React.useEffect(() => {
     dispatchRef.current = gridDispatch;
   }, [gridDispatch]);
 
   const dispatch = React.useCallback((args) => dispatchRef.current(args), []);
 
-  return { gridState, dispatch, gridApi: api };
+  return { gridState, dispatch, gridApi };
 };

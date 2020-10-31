@@ -8,19 +8,19 @@ export interface PaginationState {
   paginationMode: FeatureMode;
 }
 
-const SET_PAGE_ACTION = 'SetPage';
-const SET_PAGESIZE_ACTION = 'SetPageSize';
-const SET_PAGINATION_MODE_ACTION = 'SetPaginationMode';
-const SET_ROWCOUNT_ACTION = 'setRowCount';
+const SET_PAGE_ACTION = 'SET_PAGE_ACTION';
+const SET_PAGESIZE_ACTION = 'SET_PAGESIZE_ACTION';
+const SET_PAGINATION_MODE_ACTION = 'SET_PAGINATION_MODE_ACTION';
+const SET_ROWCOUNT_ACTION = 'SET_ROWCOUNT_ACTION';
 
-type SetPageAction = { type: 'SetPage'; payload: { page: number } };
-type SetPageSizeAction = { type: 'SetPageSize'; payload: { pageSize: number } };
+type SetPageAction = { type: typeof SET_PAGE_ACTION; payload: { page: number } };
+type SetPageSizeAction = { type: typeof SET_PAGESIZE_ACTION; payload: { pageSize: number } };
 type SetPaginationModeAction = {
-  type: 'SetPaginationMode';
+  type: typeof SET_PAGINATION_MODE_ACTION;
   payload: { paginationMode: FeatureMode };
 };
 type SetRowCountAction = {
-  type: 'setRowCount';
+  type: typeof SET_ROWCOUNT_ACTION;
   payload: { totalRowCount: number };
 };
 

@@ -6,6 +6,7 @@ import { CellIndexCoordinates } from '../../../models/cell';
 import { ScrollParams } from '../../../models/params/scrollParams';
 import { RenderContextProps, RenderRowProps } from '../../../models/renderContextProps';
 import { isEqual } from '../../../utils/utils';
+import { useEnhancedEffect } from '../../../utils/material-ui-utils';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { PaginationState } from '../pagination/paginationReducer';
@@ -21,9 +22,6 @@ import { InternalRenderingState } from './renderingState';
 import { useVirtualColumns } from './useVirtualColumns';
 
 type UseVirtualRowsReturnType = Partial<RenderContextProps> | null;
-
-// TODO v5: replace with @material-ui/core/utils/useEnhancedEffect.
-const useEnhancedEffect = typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
 
 export const useVirtualRows = (
   colRef: React.MutableRefObject<HTMLDivElement | null>,
