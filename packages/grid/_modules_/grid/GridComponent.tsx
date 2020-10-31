@@ -42,7 +42,7 @@ import { getCurryTotalHeight } from './utils/getTotalHeight';
 import { ApiContext } from './components/api-context';
 import { OptionsContext } from './components/options-context';
 import { RenderContext } from './components/render-context';
-import {useFilter} from "./hooks/features/filter/useFilter";
+import { useFilter } from './hooks/features/filter/useFilter';
 
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {

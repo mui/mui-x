@@ -33,10 +33,15 @@ export const ColumnHeaderItem = React.memo(
     options,
   }: ColumnHeaderItemProps) => {
     const apiRef = React.useContext(ApiContext);
-    const { disableColumnReorder, showColumnRightBorder, disableColumnResize, disableColumnFilter } = options;
-    const isColumnSorted = column.sortDirection != null;
-    //todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
-    const isColumnNumeric = column.type === NUMBER_COLUMN_TYPE;
+    const {
+    disableColumnReorder,
+    showColumnRightBorder,
+    disableColumnResize,
+    disableColumnFilter,
+  } = options;
+  const isColumnSorted = column.sortDirection != null;
+  // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
+  const isColumnNumeric = column.type === NUMBER_COLUMN_TYPE;
 
     let headerComponent: React.ReactElement | null = null;
     if (column.renderHeader) {
@@ -90,8 +95,8 @@ export const ColumnHeaderItem = React.memo(
         {
           'MuiDataGrid-colCellSortable': column.sortable,
           'MuiDataGrid-colCellMoving': isDragging,
-          'MuiDataGrid-colCellSorted': isColumnSorted ,
-          'MuiDataGrid-colCellNumeric': isColumnNumeric ,
+          'MuiDataGrid-colCellSorted': isColumnSorted,
+          'MuiDataGrid-colCellNumeric': isColumnNumeric,
         },
       )}
       key={column.field}
@@ -124,17 +129,15 @@ export const ColumnHeaderItem = React.memo(
               columnWidth={width}
             />
           )}
-        </div>
-        {!isColumnNumeric && (
-          <React.Fragment>
+          {!isColumnNumeric && (
             <ColumnHeaderSortIcon
               direction={sortDirection}
               index={sortIndex}
               hide={column.hideSortIcons}
             />
-            {!disableColumnFilter && <ColumnHeaderFilterIcon column={column} />}
-            </React.Fragment>
           )}
+        </div>
+        {!isColumnNumeric && !disableColumnFilter && <ColumnHeaderFilterIcon column={column} />}
         </div>
         <ColumnHeaderSeparator
           resizable={!disableColumnResize && !!column.resizable}

@@ -117,7 +117,7 @@ export interface ColDef {
    */
   disableClickEventBubbling?: boolean;
 
-  filterValue?: any[]
+  filterValue?: any[];
 
   // applyFilter: (filterValue: any, rows: Rows)=> void;
 }

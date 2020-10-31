@@ -44,5 +44,5 @@ export const getInitialState: () => GridState = () => ({
   sorting: getInitialSortingState(),
   keyboard: { cell: null, isMultipleKeyPressed: false },
   selection: {},
-  filter: getInitialFilterState()
+  filter: getInitialFilterState(),
 });

@@ -1,9 +1,9 @@
 import { RowId } from '../../../models/rows';
 
 export interface FilterState {
-	hiddenRows: RowId[];
+  hiddenRows: RowId[];
 }
 
 export const getInitialFilterState: () => FilterState = () => ({
-	hiddenRows: [],
+  hiddenRows: [],
 });

@@ -10,11 +10,10 @@ export const rowCountSelector = createSelector<GridState, InternalRowsState, num
   rowsStateSelector,
   (rows: InternalRowsState) => rows && rows.totalRowCount,
 );
-export const rowsLookupSelector = createSelector<
-  GridState,
-  InternalRowsState,
-	RowsLookup
->(rowsStateSelector, (rows: InternalRowsState) => rows && rows.idRowsLookup);
+export const rowsLookupSelector = createSelector<GridState, InternalRowsState, RowsLookup>(
+  rowsStateSelector,
+  (rows: InternalRowsState) => rows && rows.idRowsLookup,
+);
 export const unorderedRowModelsSelector = createSelector<GridState, InternalRowsState, RowModel[]>(
   rowsStateSelector,
   (rows: InternalRowsState) => rows.allRows.map((id) => rows.idRowsLookup[id]),

@@ -5,7 +5,6 @@ import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { visibleSortedRowsSelector } from '../hooks/features/filter/filterSelector';
 import { keyboardCellSelector } from '../hooks/features/keyboard/keyboardSelector';
 import { selectionStateSelector } from '../hooks/features/selection/selectionSelector';
-import { sortedRowsSelector } from '../hooks/features/sorting/sortingSelector';
 import { useLogger } from '../hooks/utils/useLogger';
 import { optionsSelector } from '../hooks/utils/useOptionsProp';
 import { RenderContextProps } from '../models/renderContextProps';
