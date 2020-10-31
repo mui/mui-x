@@ -106,7 +106,7 @@ describe('<DataGrid />', () => {
           clock.tick(100);
           // @ts-expect-error need to migrate helpers to TypeScript
         }).toWarnDev(
-          'Material-UI: useResizeContainer — The parent of the grid has an empty height.',
+          'Material-UI: useResizeContainer - The parent of the grid has an empty height.',
         );
       });
 
@@ -122,7 +122,7 @@ describe('<DataGrid />', () => {
           clock.tick(100);
           // @ts-expect-error need to migrate helpers to TypeScript
         }).toWarnDev(
-          'Material-UI: useResizeContainer — The parent of the grid has an empty width.',
+          'Material-UI: useResizeContainer - The parent of the grid has an empty width.',
         );
       });
     });
