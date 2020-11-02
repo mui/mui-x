@@ -53,7 +53,7 @@ To change the width of a column, use the `width` property available in `ColDef`.
 
 Each column has a fixed width of 100 pixels by default, but column fluidity (responsiveness) can be by achieved by setting the `flex` property in `ColDef`.
 
-The `flex` propery accepts values between 0 and ∞.
+The `flex` property accepts a value between 0 and ∞.
 
 The `flex` property works by dividing the remaining space in the grid among all flex columns in proportion to their `flex` value. For example, a grid with a total width of 500px that has three columns: the first with width: 200; the second with flex: 1; and third with flex: 0.5. The first column will be 200px wide, leaving 300px remaining. The column with flex: 1 has twice the size with flex: 0.5 which means that final sizes will be: 200px, 200px, 100px.
 
