@@ -31,8 +31,8 @@ export function useScrollFn(
         if (renderingZoneElementRef.current!.style.pointerEvents !== 'none') {
           renderingZoneElementRef.current!.style.pointerEvents = 'none';
         }
-        renderingZoneElementRef.current!.style.transform = `translate(-${v.left}px, -${v.top}px)`;
-        columnHeadersElementRef.current!.style.transform = `translate(-${v.left}px, -0px)`;
+        renderingZoneElementRef.current!.style.transform = `translate3d(-${v.left}px, -${v.top}px, 0)`;
+        columnHeadersElementRef.current!.style.transform = `translate3d(-${v.left}px, 0, 0)`;
         debouncedResetPointerEvents();
         previousValue.current = v;
       }
