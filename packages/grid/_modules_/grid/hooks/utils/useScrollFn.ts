@@ -31,6 +31,7 @@ export function useScrollFn(
         if (renderingZoneElementRef.current!.style.pointerEvents !== 'none') {
           renderingZoneElementRef.current!.style.pointerEvents = 'none';
         }
+        // Force the creation of a layer, avoid paint when changing the transform value   
         renderingZoneElementRef.current!.style.transform = `translate3d(-${v.left}px, -${v.top}px, 0)`;
         columnHeadersElementRef.current!.style.transform = `translate3d(-${v.left}px, 0, 0)`;
         debouncedResetPointerEvents();
