@@ -258,7 +258,7 @@ describe('<DataGrid />', () => {
       });
     });
 
-    it('should set the first column width to be twise as bit as the second one', () => {
+    it('should set the first column to be twice as wide as the second one', () => {
       const rows = [
         {
           id: 1,
