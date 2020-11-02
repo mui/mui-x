@@ -61,7 +61,7 @@ The first column will be 200px wide, leaving 300px remaining. The column with `f
 
 Note that `flex` doesn't work together with `width`. If you set both `flex` and `width` in `ColDef`, `flex` will override `width`.
 
-In addition, `flex` does not work if the combined width of the columns that have `width` is more than the width of the grid itself. If that is the case a scroll bar will be visible and the columns that have `flex` will default back to their base value of 100px.
+In addition, `flex` does not work if the combined width of the columns that have `width` is more than the width of the grid itself. If that is the case a scroll bar will be visible, and the columns that have `flex` will default back to their base value of 100px.
 
 {{"demo": "pages/components/data-grid/columns/ColumnFluidWidthGrid.js", "bg": "inline"}}
 
