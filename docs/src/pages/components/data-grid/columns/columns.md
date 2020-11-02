@@ -59,7 +59,7 @@ The `flex` property works by dividing the remaining space in the grid among all 
 For example, consider a grid with a total width of 500px that has three columns: the first with `width: 200`; the second with `flex: 1`; and third with `flex: 0.5`. 
 The first column will be 200px wide, leaving 300px remaining. The column with `flex: 1` is twice the size of `flex: 0.5`, which means that final sizes will be: 200px, 200px, 100px.
 
-The `flex` configuration does not work together with the `width` configuration. If you set both the `flex` and `width` inside the `ColDef` of column the `flex` will overwrite the `width`.
+Note that `flex` doesn't work together with `width`. If you set both `flex` and `width` in `ColDef`, `flex` will override `width`.
 
 The `flex` configuration does not work if the combined width of the columns that have `width` is more than the width of the grid itself. If that is the case a scroll bar will be visible and the columns that hava `flex` will default back to their base value of 100 pixels.
 
