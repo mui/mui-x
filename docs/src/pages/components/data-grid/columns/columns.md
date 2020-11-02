@@ -51,7 +51,7 @@ To change the width of a column, use the `width` property available in `ColDef`.
 
 ### Fluid width
 
-By default each column have a fixed width of 100 pixels, but column fluidity (responsiveness) can be by achieved setting the `flex` propery avaibale in the `ColDef`.
+Each column has a fixed width of 100 pixels by default, but column fluidity (responsiveness) can be by achieved by setting the `flex` property in `ColDef`.
 
 The `flex` propery accepts values between 0 and ∞.
 
