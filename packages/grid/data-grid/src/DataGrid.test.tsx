@@ -207,13 +207,13 @@ describe('<DataGrid />', () => {
         },
       ];
 
-      render(
+      const { getAllByRole } = render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid columns={columns} rows={rows} />
         </div>,
       );
 
-      const DOMColumns = document.querySelectorAll('.MuiDataGrid-colCell');
+      const DOMColumns = getAllByRole('columnheader');
       DOMColumns.forEach((col) => {
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(col).toHaveInlineStyle({ width: '100px' });
@@ -245,13 +245,13 @@ describe('<DataGrid />', () => {
         },
       ];
 
-      render(
+      const { getAllByRole } = render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid columns={columns} rows={rows} />
         </div>,
       );
 
-      const DOMColumns = document.querySelectorAll('.MuiDataGrid-colCell');
+      const DOMColumns = getAllByRole('columnheader');
       DOMColumns.forEach((col, index) => {
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(col).toHaveInlineStyle({ width: `${colWidthValues[index]}px` });
