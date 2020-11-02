@@ -26,16 +26,21 @@ export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps
     }
 
     const isPaginationAvailable = !!paginationComponent;
-    const showRowCount = !options.hideFooterRowCount && <RowCount rowCount={totalRowCount} />;
+    const showRowCount = !options.hideFooterRowCount && !isPaginationAvailable && (
+      <RowCount rowCount={totalRowCount} />
+    );
     const showSelectedRowCount = !options.hideFooterSelectedRowCount && (
       <SelectedRowCount selectedRowCount={selectedRowCount} />
     );
+    const justifyItemsRight =
+      !selectedRowCount && !options.hideFooterSelectedRowCount && isPaginationAvailable;
 
     return (
       <GridFooter
         ref={ref}
         className={classnames({
           'MuiDataGrid-footer-pagination-visible': isPaginationAvailable,
+          'MuiDataGrid-footer-justifyContent-right': justifyItemsRight,
         })}
       >
         {showRowCount}

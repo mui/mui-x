@@ -218,11 +218,14 @@ export const useStyles = makeStyles(
           minHeight: 52, // Match TablePagination min height
           '&.MuiDataGrid-footer-pagination-visible': {
             '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
-              display: 'none',
+              visibility: 'hidden',
               [theme.breakpoints.up('md')]: {
-                display: 'flex',
+                visibility: 'visible',
               },
             },
+          },
+          '&.MuiDataGrid-footer-justifyContent-right': {
+            justifyContent: 'flex-end',
           },
         },
         '& .MuiDataGrid-colCell-dropZone .MuiDataGrid-colCell-draggable': {
