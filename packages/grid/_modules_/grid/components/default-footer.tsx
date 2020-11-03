@@ -33,7 +33,7 @@ export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps
       <SelectedRowCount selectedRowCount={selectedRowCount} />
     );
     const justifyItemsEnd =
-      !selectedRowCount && !options.hideFooterSelectedRowCount && isPaginationAvailable;
+      !selectedRowCount && !options.hideFooterSelectedRowCount;
 
     return (
       <GridFooter
@@ -43,8 +43,8 @@ export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps
           'MuiDataGrid-footer-justifyContentEnd': justifyItemsEnd,
         })}
       >
-        {showRowCount}
         {showSelectedRowCount}
+        {showRowCount}
         {paginationComponent}
       </GridFooter>
     );
