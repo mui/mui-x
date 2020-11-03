@@ -48,9 +48,8 @@ export const useVirtualRows = (
       setGridState((oldState) => {
         const currentRenderingState = { ...oldState.rendering, ...state };
         if (!isEqual(oldState.rendering, currentRenderingState)) {
-          oldState.rendering = currentRenderingState;
           stateChanged = true;
-          return { ...oldState };
+          return { ...oldState, rendering: currentRenderingState };
         }
         return oldState;
       });
