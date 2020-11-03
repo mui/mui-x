@@ -32,8 +32,7 @@ export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps
     const showSelectedRowCount = !options.hideFooterSelectedRowCount && (
       <SelectedRowCount selectedRowCount={selectedRowCount} />
     );
-    const justifyItemsEnd =
-      !selectedRowCount && !options.hideFooterSelectedRowCount;
+    const justifyItemsEnd = !selectedRowCount && !options.hideFooterSelectedRowCount;
 
     return (
       <GridFooter
