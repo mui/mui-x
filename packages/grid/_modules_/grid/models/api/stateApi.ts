@@ -11,7 +11,7 @@ export interface StateApi {
    */
   getState: <T>(stateId?: string) => T;
   /**
-   * allows to force the grid to rerender after a state update
+   * Allows forcing the grid to rerender after a state update.
    */
   forceUpdate: React.Dispatch<any>;
 }
