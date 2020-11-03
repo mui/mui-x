@@ -155,7 +155,6 @@ describe('<XGrid />', () => {
     expect(rect.width).to.equal(300 - 2);
 
     rerender(<TestCase width={400} />);
-    fireEvent(window, new Event('resize'));
     await sleep(100);
     rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
     expect(rect.width).to.equal(400 - 2);

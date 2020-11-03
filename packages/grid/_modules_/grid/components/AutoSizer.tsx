@@ -119,12 +119,10 @@ export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(functi
 
     const detectElementResize = createDetectElementResize(nonce, win);
     detectElementResize.addResizeListener(parentElement.current, handleResize);
-    win.addEventListener('resize', handleResize);
     handleResize();
 
     return () => {
       detectElementResize.removeResizeListener(parentElement.current, handleResize);
-      win.removeEventListener('resize', handleResize);
     };
   }, [nonce, handleResize]);
 
