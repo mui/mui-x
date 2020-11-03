@@ -96,7 +96,7 @@ export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(functi
         (!disableHeight && state.height !== newHeight) ||
         (!disableWidth && state.width !== newWidth)
       ) {
-        setState(() => ({
+        setState({
           height: newHeight,
           width: newWidth,
         }));
