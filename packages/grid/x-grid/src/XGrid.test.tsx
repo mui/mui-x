@@ -18,6 +18,8 @@ async function raf() {
   });
 }
 
+const CLOCK_SYNC_FACTOR = 10;
+
 function getActiveCell() {
   const activeElement = document.activeElement;
 
@@ -169,7 +171,7 @@ describe('<XGrid />', () => {
 
     setProps({ width: 400 });
     await raf(); // wait for the AutoSize's dimension detection logic
-    await sleep(50); // wait for the resize event debounce (in useResizeContainer)
+    await sleep(50 + CLOCK_SYNC_FACTOR); // wait for the resize event debounce (in useResizeContainer)
     rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
     expect(rect.width).to.equal(400 - 2);
   });
