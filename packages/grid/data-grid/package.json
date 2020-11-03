@@ -33,6 +33,7 @@
   "dependencies": {
     "@material-ui/utils": "^5.0.0-alpha.14",
     "prop-types": "^15.7.2",
+    "reselect": "^4.0.0",
     "tslib": "^2.0.0"
   },
   "peerDependencies": {
