@@ -99,7 +99,7 @@ export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(functi
         setState({
           height: newHeight,
           width: newWidth,
-        }));
+        });
 
         if (onResize) {
           onResize({ height: newHeight, width: newWidth });
