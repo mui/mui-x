@@ -5,6 +5,19 @@ import { expect } from 'chai';
 import { XGrid, useApiRef, Columns } from '@material-ui/x-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
+async function raf() {
+  return new Promise((resolve) => {
+    // Chrome and Safari have a bug where calling rAF once returns the current
+    // frame instead of the next frame, so we need to call a double rAF here.
+    // See crbug.com/675795 for more.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        resolve();
+      });
+    });
+  });
+}
+
 function getActiveCell() {
   const activeElement = document.activeElement;
 
@@ -148,14 +161,15 @@ describe('<XGrid />', () => {
       );
     };
 
-    const { container, rerender } = render(<TestCase width={300} />);
+    const { container, setProps } = render(<TestCase width={300} />);
     let rect;
 
     rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
     expect(rect.width).to.equal(300 - 2);
 
-    rerender(<TestCase width={400} />);
-    await sleep(100);
+    setProps({ width: 400 });
+    await raf(); // wait for the AutoSize's dimension detection logic
+    await sleep(50); // wait for the resize event debounce (in useResizeContainer)
     rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
     expect(rect.width).to.equal(400 - 2);
   });
