@@ -216,7 +216,7 @@ export const useStyles = makeStyles(
           justifyContent: 'space-between',
           alignItems: 'center',
           minHeight: 52, // Match TablePagination min height
-          '&.MuiDataGrid-footer-pagination-visible': {
+          '&.MuiDataGrid-footer-paginationAvailable': {
             '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
               visibility: 'hidden',
               [theme.breakpoints.up('md')]: {
@@ -224,7 +224,7 @@ export const useStyles = makeStyles(
               },
             },
           },
-          '&.MuiDataGrid-footer-justifyContent-right': {
+          '&.MuiDataGrid-footer-justifyContentEnd': {
             justifyContent: 'flex-end',
           },
         },
