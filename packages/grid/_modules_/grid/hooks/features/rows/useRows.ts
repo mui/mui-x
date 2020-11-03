@@ -161,7 +161,7 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
       });
       return updateRowModels(rowModelUpdates);
     },
-    [updateRowModels, logger, getRowFromId],
+    [updateRowModels, getRowFromId],
   );
 
   const getRowModels = React.useCallback(
