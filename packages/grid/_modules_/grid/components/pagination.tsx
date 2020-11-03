@@ -57,7 +57,7 @@ export const Pagination: React.FC<PaginationComponentProps> = ({
       }
       rowsPerPage={pageSize}
       onChangeRowsPerPage={onPageSizeChange}
-      labelRowsPerPage={''}
+      labelRowsPerPage=""
       classes={classes}
     />
   );
