@@ -194,7 +194,7 @@ describe('<XGrid />', () => {
   });
 
   describe('prop: apiRef', () => {
-    it('should apply setPage correctly', async () => {
+    it('should apply setPage correctly', () => {
       const rows = [
         {
           id: 0,
