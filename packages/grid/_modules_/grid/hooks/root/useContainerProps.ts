@@ -141,9 +141,8 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
       let updated = false;
       setGridState((state) => {
         if (!isEqual(state.containerSizes, containerState)) {
-          state.containerSizes = containerState;
           updated = true;
-          return { ...state };
+          return { ...state, containerSizes: containerState};
         }
         return state;
       });
