@@ -235,7 +235,7 @@ describe('<XGrid />', () => {
   });
 
   describe('sorting', () => {
-    it('should sort when clicking the header cell', async (done) => {
+    it('should sort when clicking the header cell', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <XGrid {...defaultProps} />
@@ -247,7 +247,6 @@ describe('<XGrid />', () => {
       expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
       fireEvent.click(header);
       expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
-      done();
     });
   });
 });
