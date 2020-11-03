@@ -1,6 +1,6 @@
 import * as React from 'react';
 // @ts-expect-error need to migrate helpers to TypeScript
-import { screen, createClientRender, act, fireEvent } from 'test/utils';
+import { fireEvent, screen, createClientRender } from 'test/utils';
 import { expect } from 'chai';
 import { XGrid, useApiRef, Columns } from '@material-ui/x-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
@@ -22,19 +22,6 @@ async function sleep(duration: number) {
     setTimeout(() => {
       resolve();
     }, duration);
-  });
-}
-
-async function raf() {
-  return new Promise((resolve) => {
-    // Chrome and Safari have a bug where calling rAF once returns the current
-    // frame instead of the next frame, so we need to call a double rAF here.
-    // See crbug.com/675795 for more.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        resolve();
-      });
-    });
   });
 }
 
@@ -119,38 +106,30 @@ describe('<XGrid />', () => {
       );
     };
 
-    it('cell navigation with arrows ', async () => {
+    it('cell navigation with arrows ', () => {
       render(<KeyboardTest />);
-      await sleep(100);
       // @ts-ignore
       document.querySelector('[role="cell"][data-rowindex="0"][aria-colindex="0"]').focus();
       expect(getActiveCell()).to.equal('0-0');
-      fireEvent.keyDown(document.activeElement, { code: 'ArrowRight' });
-      await sleep(100);
+      fireEvent.keyDown(document.activeElement!, { code: 'ArrowRight' });
       expect(getActiveCell()).to.equal('0-1');
-      fireEvent.keyDown(document.activeElement, { code: 'ArrowDown' });
-      await sleep(100);
+      fireEvent.keyDown(document.activeElement!, { code: 'ArrowDown' });
       expect(getActiveCell()).to.equal('1-1');
-      fireEvent.keyDown(document.activeElement, { code: 'ArrowLeft' });
-      await sleep(100);
+      fireEvent.keyDown(document.activeElement!, { code: 'ArrowLeft' });
       expect(getActiveCell()).to.equal('1-0');
-      fireEvent.keyDown(document.activeElement, { code: 'ArrowUp' });
-      await sleep(100);
+      fireEvent.keyDown(document.activeElement!, { code: 'ArrowUp' });
       expect(getActiveCell()).to.equal('0-0');
     });
 
     it('Home / End navigation', async () => {
       render(<KeyboardTest />);
-      await sleep(100);
       // @ts-ignore
       document.querySelector('[role="cell"][data-rowindex="1"][aria-colindex="1"]').focus();
       expect(getActiveCell()).to.equal('1-1');
-      fireEvent.keyDown(document.activeElement, { code: 'Home' });
-      await sleep(100);
+      fireEvent.keyDown(document.activeElement!, { code: 'Home' });
       expect(getActiveCell()).to.equal('1-0');
-      await sleep(100);
-      fireEvent.keyDown(document.activeElement, { code: 'End' });
-      await sleep(150);
+      fireEvent.keyDown(document.activeElement!, { code: 'End' });
+      await sleep(50);
       expect(getActiveCell()).to.equal('1-19');
     });
     /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
@@ -170,26 +149,21 @@ describe('<XGrid />', () => {
       );
     };
 
-    const { container, setProps } = render(<TestCase />);
+    const { container, rerender } = render(<TestCase width={300} />);
     let rect;
-    await raf();
 
-    // @ts-ignore
     rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
     expect(rect.width).to.equal(300 - 2);
-    setProps({ width: 400 });
-    act(() => {
-      window.dispatchEvent(new window.Event('resize', {}));
-    });
-    await sleep(100); // resize debounce
-    await sleep(100); // Not sure why
-    // @ts-ignore
+
+    rerender(<TestCase width={400} />);
+    fireEvent(window, new Event('resize'));
+    await sleep(100);
     rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
     expect(rect.width).to.equal(400 - 2);
   });
 
   describe('prop: checkboxSelection', () => {
-    it('should check and uncheck when double clicking the row', async () => {
+    it('should check and uncheck when double clicking the row', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <XGrid
@@ -205,22 +179,16 @@ describe('<XGrid />', () => {
           />
         </div>,
       );
-      await raf();
-      await raf();
-
       const row = document.querySelector('[role="row"][aria-rowindex="2"]');
       const checkbox = row!.querySelector('input');
       expect(row).to.not.have.class('Mui-selected');
       expect(checkbox).to.have.property('checked', false);
 
       fireEvent.click(screen.getByRole('cell', { name: 'Nike' }));
-      await sleep(100);
-
       expect(row!.classList.contains('Mui-selected')).to.equal(true, 'class mui-selected 1');
       expect(checkbox).to.have.property('checked', true);
 
       fireEvent.click(screen.getByRole('cell', { name: 'Nike' }));
-      await sleep(100);
       expect(row!.classList.contains('Mui-selected')).to.equal(false, 'class mui-selected 2');
       expect(checkbox).to.have.property('checked', false);
     });
@@ -262,29 +230,25 @@ describe('<XGrid />', () => {
       };
       render(<GridTest />);
 
-      await sleep(100);
       const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
       expect(cell).to.have.text('Addidas');
     });
   });
 
   describe('sorting', () => {
-    it('should sort when clicking the header cell', async () => {
+    it('should sort when clicking the header cell', async (done) => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <XGrid {...defaultProps} />
         </div>,
       );
-      await raf();
       const header = screen.getByRole('columnheader', { name: 'brand' });
-      await sleep(100);
       expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       fireEvent.click(header);
-      await sleep(100);
       expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
       fireEvent.click(header);
-      await sleep(100);
       expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+      done();
     });
   });
 });

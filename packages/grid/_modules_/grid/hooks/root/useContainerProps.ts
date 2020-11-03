@@ -138,13 +138,18 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
 
   const updateContainerState = React.useCallback(
     (containerState: ContainerProps | null) => {
+      let updated = false;
       setGridState((state) => {
         if (!isEqual(state.containerSizes, containerState)) {
           state.containerSizes = containerState;
-          forceUpdate();
+          updated = true;
+          return { ...state };
         }
         return state;
       });
+      if (updated) {
+        forceUpdate();
+      }
     },
     [forceUpdate, setGridState],
   );

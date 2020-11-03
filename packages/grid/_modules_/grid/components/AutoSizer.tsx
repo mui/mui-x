@@ -96,13 +96,13 @@ export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(functi
         (!disableHeight && state.height !== newHeight) ||
         (!disableWidth && state.width !== newWidth)
       ) {
-        setState({
-          height: height - paddingTop - paddingBottom,
-          width: width - paddingLeft - paddingRight,
-        });
+        setState(() => ({
+          height: newHeight,
+          width: newWidth,
+        }));
 
         if (onResize) {
-          onResize({ height, width });
+          onResize({ height: newHeight, width: newWidth });
         }
       }
     }
@@ -119,10 +119,12 @@ export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(functi
 
     const detectElementResize = createDetectElementResize(nonce, win);
     detectElementResize.addResizeListener(parentElement.current, handleResize);
+    window.addEventListener('resize', handleResize);
     handleResize();
 
     return () => {
       detectElementResize.removeResizeListener(parentElement.current, handleResize);
+      window.removeEventListener('resize', handleResize);
     };
   }, [nonce, handleResize]);
 
@@ -143,7 +145,6 @@ export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(functi
   }
 
   const handleRef = useForkRef(rootRef, ref);
-
   return (
     <div
       ref={handleRef}
