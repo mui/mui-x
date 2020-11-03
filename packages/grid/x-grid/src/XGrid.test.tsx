@@ -178,9 +178,6 @@ describe('<XGrid />', () => {
     rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
     expect(rect.width).to.equal(300 - 2);
     setProps({ width: 400 });
-    act(() => {
-      window.dispatchEvent(new window.Event('resize', {}));
-    });
     await sleep(100); // resize debounce
     await sleep(100); // Not sure why
     // @ts-ignore
