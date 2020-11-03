@@ -30,6 +30,7 @@ export function AllEvents() {
     onPageChange: (params) => action('onPageChange')(params),
     onPageSizeChange: (params) => action('onPageSizeChange')(params),
     onSortModelChange: (params) => action('onSortModelChange')(params),
+    onStateChange: (params) => action('onStateChange')(params),
   };
 
   return <XGrid rows={data.rows} columns={data.columns} {...options} />;

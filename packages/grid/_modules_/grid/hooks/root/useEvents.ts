@@ -23,6 +23,7 @@ import {
   FOCUS_OUT,
   GRID_FOCUS_OUT,
   COMPONENT_ERROR,
+  STATE_CHANGE,
 } from '../../constants/eventsConstants';
 import {
   CELL_CSS_CLASS,
@@ -198,6 +199,7 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
   useApiEventHandler(apiRef, CELL_HOVER, options.onCellHover);
   useApiEventHandler(apiRef, ROW_HOVER, options.onRowHover);
   useApiEventHandler(apiRef, COMPONENT_ERROR, options.onError);
+  useApiEventHandler(apiRef, STATE_CHANGE, options.onStateChange);
 
   React.useEffect(() => {
     if (gridRootRef && gridRootRef.current && apiRef.current?.isInitialised) {

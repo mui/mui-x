@@ -258,4 +258,50 @@ describe('<XGrid />', () => {
       expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
     });
   });
+  describe('state', () => {
+    it('should allow to control the state using apiRef', () => {
+      function GridStateTest() {
+        const apiRef = useApiRef();
+        React.useEffect(() => {
+          apiRef.current.setState((prev) => ({
+            ...prev,
+            sorting: { ...prev.sorting, sortModel: [{ field: 'brand', sort: 'asc' }] },
+          }));
+        }, [apiRef]);
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid {...defaultProps} apiRef={apiRef} />
+          </div>
+        );
+      }
+
+      render(<GridStateTest />);
+      expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    });
+
+    it('should trigger on state change', () => {
+      let onStateParams ;
+      let apiRef;
+      function Test() {
+         apiRef = useApiRef();
+        const onStateChange = (params) => {
+          onStateParams = params
+        };
+
+        return(
+          <div style={{width: 300, height: 300}}>
+            <XGrid {...defaultProps} onStateChange={onStateChange} apiRef={apiRef}/>
+          </div>
+        );
+      }
+      render(<Test />);
+      const header = screen.getByRole('columnheader', { name: 'brand' });
+      fireEvent.click(header);
+      expect(onStateParams.api).to.eq(apiRef.current);
+      expect(onStateParams.state).to.eq(apiRef.current.state);
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      expect(onStateParams.state).to.not.be.empty;
+
+    });
+  });
 });

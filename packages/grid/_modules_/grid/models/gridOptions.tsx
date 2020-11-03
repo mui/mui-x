@@ -241,6 +241,10 @@ export interface GridOptions {
    */
   onError?: (args: any) => void;
   /**
+   * Callback fired when the state of the grid is updated.
+   */
+  onStateChange?: (params: any) => void;
+  /**
    * Set of icons used in the grid.
    */
   icons: IconsOptions;

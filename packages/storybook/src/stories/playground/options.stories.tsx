@@ -33,6 +33,7 @@ export const Options = () => {
         onSelectionChange: (params) => action('onSelectionChange', { depth: 1 })(params),
         onPageChange: (params) => action('onPageChange')(params),
         onPageSizeChange: (params) => action('onPageSizeChange')(params),
+        onStateChange: (params) => action('onStateChange')(params),
 
         autoHeight: boolean('autoHeight', false),
         pagination: boolean('pagination', true),

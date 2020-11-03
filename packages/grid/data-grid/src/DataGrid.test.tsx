@@ -4,15 +4,31 @@ import PropTypes from 'prop-types';
 import { createClientRender, ErrorBoundary } from 'test/utils';
 import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, GridState } from '@material-ui/data-grid';
+
+function getColumnValues() {
+  return Array.from(document.querySelectorAll('[role="cell"][aria-colindex="0"]')).map(
+    (node) => node!.textContent,
+  );
+}
 
 describe('<DataGrid />', () => {
   const render = createClientRender();
+
+
   const defaultProps = {
     rows: [
       {
         id: 0,
         brand: 'Nike',
+      },
+      {
+        id: 1,
+        brand: 'Adidas',
+      },
+      {
+        id: 2,
+        brand: 'Puma',
       },
     ],
     columns: [{ field: 'brand', width: 100 }],
@@ -288,6 +304,150 @@ describe('<DataGrid />', () => {
       expect((errorRef.current as any).errors[0].toString()).to.include(
         'The data grid component requires all rows to have a unique id property',
       );
+    });
+  });
+  describe('State', () => {
+    it('should allow to control the state using useState', () => {
+      function GridStateTest({direction, sortedRows}) {
+        const [gridState, setGridState] = React.useState<Partial<GridState>>({
+          sorting: {sortModel: [{field: 'brand', sort: direction}], sortedRows},
+        });
+
+        React.useEffect(() => {
+          setGridState({
+            sorting: {sortModel: [{field: 'brand', sort: direction}], sortedRows},
+          });
+        }, [direction, sortedRows]);
+
+        return (
+          <div style={{width: 300, height: 300}}>
+            <DataGrid {...defaultProps} state={gridState}/>
+          </div>
+        );
+      }
+
+      const {setProps} = render(<GridStateTest direction={'desc'} sortedRows={[2, 0, 1]}/>);
+      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+      setProps({direction: 'asc', sortedRows: [1, 0, 2]});
+      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas'].reverse());
+    });
+  });
+
+  describe('column width', () => {
+    before(function beforeHook() {
+      if (/jsdom/.test(window.navigator.userAgent)) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
+    it('should set the columns width to 100px by default', () => {
+      const rows = [
+        {
+          id: 1,
+          username: 'John Doe',
+          age: 30,
+        },
+      ];
+
+      const columns = [
+        {
+          field: 'id',
+        },
+        {
+          field: 'name',
+        },
+        {
+          field: 'age',
+        },
+      ];
+
+      const { getAllByRole } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid columns={columns} rows={rows} />
+        </div>,
+      );
+
+      const DOMColumns = getAllByRole('columnheader');
+      DOMColumns.forEach((col) => {
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(col).toHaveInlineStyle({ width: '100px' });
+      });
+    });
+
+    it('should set the columns width value to what is provided', () => {
+      const rows = [
+        {
+          id: 1,
+          username: 'John Doe',
+          age: 30,
+        },
+      ];
+
+      const colWidthValues = [50, 50, 200];
+      const columns = [
+        {
+          field: 'id',
+          width: colWidthValues[0],
+        },
+        {
+          field: 'name',
+          width: colWidthValues[1],
+        },
+        {
+          field: 'age',
+          width: colWidthValues[2],
+        },
+      ];
+
+      const { getAllByRole } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid columns={columns} rows={rows} />
+        </div>,
+      );
+
+      const DOMColumns = getAllByRole('columnheader');
+      DOMColumns.forEach((col, index) => {
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(col).toHaveInlineStyle({ width: `${colWidthValues[index]}px` });
+      });
+    });
+
+    it('should set the first column to be twice as wide as the second one', () => {
+      const rows = [
+        {
+          id: 1,
+          username: 'John Doe',
+          age: 30,
+        },
+      ];
+
+      const columns = [
+        {
+          field: 'id',
+          flex: 1,
+        },
+        {
+          field: 'name',
+          flex: 0.5,
+        },
+      ];
+
+      render(
+        <div style={{ width: 200, height: 300 }}>
+          <DataGrid columns={columns} rows={rows} />
+        </div>,
+      );
+
+      const firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
+      const secondColumn: HTMLElement | null = document.querySelector(
+        '[role="columnheader"][aria-colindex="2"]',
+      );
+      const secondColumnWidthVal = secondColumn!.style.width.split('px')[0];
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(firstColumn).toHaveInlineStyle({
+        width: `${2 * parseInt(secondColumnWidthVal, 10)}px`,
+      });
     });
   });
 });
