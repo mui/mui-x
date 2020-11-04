@@ -5,7 +5,6 @@ export const useGridSelector = <State>(
   apiRef: ApiRef | undefined,
   selector: (state: any) => State,
 ) => {
-  const [state, ,] = useGridState(apiRef!);
-
+  const [state] = useGridState(apiRef!);
   return selector(state);
 };
