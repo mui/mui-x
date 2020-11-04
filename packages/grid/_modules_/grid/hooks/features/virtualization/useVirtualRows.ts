@@ -34,8 +34,7 @@ export const useVirtualRows = (
   const logger = useLogger('useVirtualRows');
 
   const updateViewportRef = React.useRef<(...args: any[]) => void>();
-  const [, forceUpdate] = React.useState();
-  const [gridState, setGridState, rafUpdate] = useGridState(apiRef);
+  const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
   const paginationState = useGridSelector<PaginationState>(apiRef, paginationSelector);
   const totalRowCount = useGridSelector<number>(apiRef, rowCountSelector);
@@ -49,8 +48,8 @@ export const useVirtualRows = (
       setGridState((oldState) => {
         const currentRenderingState = { ...oldState.rendering, ...state };
         if (!isEqual(oldState.rendering, currentRenderingState)) {
-          oldState.rendering = currentRenderingState;
           stateChanged = true;
+          return { ...oldState, rendering: currentRenderingState };
         }
         return oldState;
       });
@@ -104,16 +103,10 @@ export const useVirtualRows = (
       renderedSizes: apiRef.current.state.containerSizes,
     });
     if (hasChanged) {
-      if (apiRef.current.state.isScrolling) {
-        logger.debug('reRender: Raf rendering');
-        rafUpdate();
-      } else {
-        logger.debug('reRender: Force rendering');
-        // we force this update, the func makes react force run this state update and rerender
-        forceUpdate((p) => !p);
-      }
+      logger.debug('reRender: trigger rendering');
+      forceUpdate();
     }
-  }, [apiRef, getRenderingState, logger, rafUpdate, setRenderingState]);
+  }, [apiRef, getRenderingState, logger, forceUpdate, setRenderingState]);
 
   const updateViewport = React.useCallback(
     (forceReRender = false) => {
@@ -272,8 +265,7 @@ export const useVirtualRows = (
     scrollingTimeout.current = setTimeout(() => {
       scrollingTimeout.current = null;
       apiRef.current.state.isScrolling = false;
-      // We let react decide to run this update.
-      forceUpdate(true);
+      forceUpdate();
     }, 300);
 
     if (updateViewportRef.current) {

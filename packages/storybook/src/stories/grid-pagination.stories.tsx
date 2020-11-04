@@ -179,7 +179,7 @@ export function AutoPagination() {
 
 function loadServerRows(params: PageChangeParams): Promise<GridData> {
   return new Promise<GridData>((resolve) => {
-    const data = getData(params.pageSize, 10);
+    const data = getData(params.pageSize * 5, 10);
 
     setTimeout(() => {
       const minId = (params.page - 1) * params.pageSize;

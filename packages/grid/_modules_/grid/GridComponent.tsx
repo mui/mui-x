@@ -81,15 +81,15 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
 
     const customComponents = useComponents(props.components, apiRef, rootContainerRef);
 
-    logger.info(
-      `Rendering, page: ${renderCtx?.page}, col: ${renderCtx?.firstColIdx}-${renderCtx?.lastColIdx}, row: ${renderCtx?.firstRowIdx}-${renderCtx?.lastRowIdx}`,
-      renderCtx,
-    );
-
     // TODO move that to renderCtx
     const getTotalHeight = React.useCallback(
       (size) => getCurryTotalHeight(gridState.options, gridState.containerSizes, footerRef)(size),
       [gridState.options, gridState.containerSizes],
+    );
+
+    logger.info(
+      `Rendering, page: ${renderCtx?.page}, col: ${renderCtx?.firstColIdx}-${renderCtx?.lastColIdx}, row: ${renderCtx?.firstRowIdx}-${renderCtx?.lastRowIdx}`,
+      apiRef.current.state,
     );
 
     return (

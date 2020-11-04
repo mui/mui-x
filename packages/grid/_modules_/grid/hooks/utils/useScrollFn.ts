@@ -2,13 +2,12 @@ import { debounce } from '@material-ui/core/utils';
 import * as React from 'react';
 import { ScrollFn, ScrollParams } from '../../models/params/scrollParams';
 import { useLogger } from './useLogger';
-import { useRafUpdate } from './useRafUpdate';
 
 export function useScrollFn(
   apiRef: any,
   renderingZoneElementRef: React.RefObject<HTMLDivElement>,
   columnHeadersElementRef: React.RefObject<HTMLDivElement>,
-): [ScrollFn, ScrollFn] {
+): [ScrollFn] {
   const logger = useLogger('useScrollFn');
   const previousValue = React.useRef<ScrollParams>();
 
@@ -40,13 +39,11 @@ export function useScrollFn(
     [renderingZoneElementRef, logger, columnHeadersElementRef, debouncedResetPointerEvents],
   );
 
-  const [runScroll] = useRafUpdate(apiRef, scrollTo);
-
   React.useEffect(() => {
     return () => {
       debouncedResetPointerEvents.clear();
     };
   }, [renderingZoneElementRef, debouncedResetPointerEvents]);
 
-  return [runScroll, scrollTo];
+  return [scrollTo];
 }

@@ -38,7 +38,7 @@ export function useResizeContainer(apiRef): (size: ElementSize) => void {
     },
     [gridLogger, apiRef],
   );
-  const debouncedOnResize = React.useMemo(() => debounce(onResize, 100), [onResize]) as any;
+  const debouncedOnResize = React.useMemo(() => debounce(onResize, 50), [onResize]);
 
   React.useEffect(() => {
     return () => {
