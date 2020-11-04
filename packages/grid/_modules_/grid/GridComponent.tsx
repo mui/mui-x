@@ -2,8 +2,8 @@
  * Data Grid component implementing [[GridComponentProps]].
  * @returns JSX.Element
  */
-import useForkRef from '@material-ui/core/utils/useForkRef';
 import * as React from 'react';
+import { useForkRef } from '@material-ui/core/utils';
 import { AutoSizer } from './components/AutoSizer';
 import { ColumnsHeader } from './components/column-headers';
 import { DefaultFooter } from './components/default-footer';

@@ -47,7 +47,7 @@ function getAppender(name: string, logLevel: string, appender: Logger = console)
       loggerObj[method] = (...args: any[]) => {
         const [message, ...rest] = args;
 
-        (appender as any)[method](`${name}: ${message}`, ...rest);
+        (appender as any)[method](`Material-UI: ${name} - ${message}`, ...rest);
       };
     } else {
       loggerObj[method] = noop;
