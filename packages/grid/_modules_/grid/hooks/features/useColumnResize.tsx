@@ -18,6 +18,7 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
   const colCellElementsRef = React.useRef<NodeListOf<Element>>();
   const initialOffset = React.useRef<number>();
   const stopResizeEventTimeout = React.useRef<number>();
+  const touchId = React.useRef<number>();
 
   const updateWidth = (newWidth: number) => {
     logger.debug(`Updating width to ${newWidth} for col ${colDefRef.current!.field}`);
@@ -110,12 +111,134 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
     doc.addEventListener('mouseup', handleResizeMouseUp);
   });
 
+  // TODO: remove support for Safari < 13.
+  // https://caniuse.com/#search=touch-action
+  //
+  // Safari, on iOS, supports touch action since v13.
+  // Over 80% of the iOS phones are compatible
+  // in August 2020.
+  let cachedSupportsTouchActionNone;
+  function doesSupportTouchActionNone() {
+    if (cachedSupportsTouchActionNone === undefined) {
+      const element = document.createElement('div');
+      element.style.touchAction = 'none';
+      document.body.appendChild(element);
+      cachedSupportsTouchActionNone = window.getComputedStyle(element).touchAction === 'none';
+      element.parentElement!.removeChild(element);
+    }
+    return cachedSupportsTouchActionNone;
+  }
+
+  function trackFinger(event, currentTouchId) {
+    if (currentTouchId !== undefined && event.changedTouches) {
+      for (let i = 0; i < event.changedTouches.length; i += 1) {
+        const touch = event.changedTouches[i];
+        if (touch.identifier === currentTouchId) {
+          return {
+            x: touch.clientX,
+            y: touch.clientY,
+          };
+        }
+      }
+
+      return false;
+    }
+
+    return {
+      x: event.clientX,
+      y: event.clientY,
+    };
+  }
+
+  const handleTouchEnd = useEventCallback((nativeEvent) => {
+    const finger = trackFinger(nativeEvent, touchId.current);
+
+    if (!finger) {
+      return;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    stopListening();
+
+    apiRef.current!.updateColumn(colDefRef.current as ColDef);
+
+    clearTimeout(stopResizeEventTimeout.current);
+    stopResizeEventTimeout.current = setTimeout(() => {
+      apiRef.current.publishEvent(COL_RESIZE_STOP);
+    });
+
+    logger.debug(
+      `Updating col ${colDefRef.current!.field} with new width: ${colDefRef.current!.width}`,
+    );
+  });
+
+  const handleTouchMove = useEventCallback((nativeEvent) => {
+    const finger = trackFinger(nativeEvent, touchId.current);
+    if (!finger) {
+      return;
+    }
+
+    // Cancel move in case some other element consumed a touchmove event and it was not fired.
+    if (nativeEvent.type === 'mousemove' && nativeEvent.buttons === 0) {
+      handleTouchEnd(nativeEvent);
+      return;
+    }
+
+    let newWidth =
+      initialOffset.current + finger.x - colElementRef.current!.getBoundingClientRect().left;
+    newWidth = Math.max(MIN_COL_WIDTH, newWidth);
+
+    updateWidth(newWidth);
+  });
+
+  const handleTouchStart = useEventCallback((event: React.TouchEvent<HTMLElement>) => {
+    // If touch-action: none; is not supported we need to prevent the scroll manually.
+    if (!doesSupportTouchActionNone()) {
+      event.preventDefault();
+    }
+
+    const touch = event.changedTouches[0];
+    if (touch != null) {
+      // A number that uniquely identifies the current finger in the touch session.
+      touchId.current = touch.identifier;
+    }
+    // const finger = trackFinger(event, touchId.current);
+
+    colElementRef.current = event.currentTarget.closest(
+      `.${HEADER_CELL_CSS_CLASS}`,
+    ) as HTMLDivElement;
+    const field = colElementRef.current.getAttribute('data-field') as string;
+    const colDef = apiRef.current.getColumnFromField(field);
+
+    logger.debug(`Start Resize on col ${colDef.field}`);
+    apiRef.current.publishEvent(COL_RESIZE_START, { field });
+
+    colDefRef.current = colDef;
+    colElementRef.current = columnsRef.current!.querySelector(
+      `[data-field="${colDef.field}"]`,
+    ) as HTMLDivElement;
+
+    colCellElementsRef.current = findCellElementsFromCol(colElementRef.current) as NodeListOf<
+      Element
+    >;
+
+    initialOffset.current =
+      (colDefRef.current.width as number) -
+      (touch.clientX - colElementRef.current!.getBoundingClientRect().left);
+
+    const doc = ownerDocument(event.currentTarget as HTMLElement);
+    doc.addEventListener('touchmove', handleTouchMove);
+    doc.addEventListener('touchend', handleTouchEnd);
+  });
+
   const stopListening = React.useCallback(() => {
     const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
     doc.body.style.removeProperty('cursor');
     doc.removeEventListener('mousemove', handleResizeMouseMove);
     doc.removeEventListener('mouseup', handleResizeMouseUp);
-  }, [apiRef, handleResizeMouseMove, handleResizeMouseUp]);
+    doc.removeEventListener('touchmove', handleTouchMove);
+    doc.removeEventListener('touchend', handleTouchEnd);
+  }, [apiRef, handleResizeMouseMove, handleResizeMouseUp, handleTouchMove, handleTouchEnd]);
 
   React.useEffect(() => {
     return () => {
@@ -124,5 +247,11 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
     };
   }, [stopListening]);
 
-  return React.useMemo(() => ({ onMouseDown: handleMouseDown }), [handleMouseDown]);
+  return React.useMemo(
+    () => ({
+      onMouseDown: handleMouseDown,
+      onTouchStart: handleTouchStart,
+    }),
+    [handleMouseDown, handleTouchStart],
+  );
 };
