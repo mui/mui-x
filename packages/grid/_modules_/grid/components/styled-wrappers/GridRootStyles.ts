@@ -10,6 +10,7 @@ export const useStyles = makeStyles(
     const gridStyle: { root: any } = {
       root: {
         flex: 1,
+        touchAction: 'none',
         boxSizing: 'border-box',
         position: 'relative',
         border: `1px solid ${borderColor}`,

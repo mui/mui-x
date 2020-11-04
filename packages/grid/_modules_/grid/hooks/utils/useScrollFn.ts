@@ -4,7 +4,6 @@ import { ScrollFn, ScrollParams } from '../../models/params/scrollParams';
 import { useLogger } from './useLogger';
 
 export function useScrollFn(
-  apiRef: any,
   renderingZoneElementRef: React.RefObject<HTMLDivElement>,
   columnHeadersElementRef: React.RefObject<HTMLDivElement>,
 ): [ScrollFn] {
