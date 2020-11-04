@@ -219,7 +219,7 @@ export const useStyles = makeStyles(
           '&.MuiDataGrid-footer-paginationAvailable': {
             '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
               visibility: 'hidden',
-              [theme.breakpoints.up('sm')]: {
+              [theme.breakpoints.up('md')]: {
                 visibility: 'visible',
               },
             },
