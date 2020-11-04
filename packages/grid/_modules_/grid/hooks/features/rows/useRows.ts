@@ -30,9 +30,24 @@ export function convertRowsPropToState({
 
 export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
   const logger = useLogger('useRows');
-  const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
+  const [gridState, setGridState, updateComponent] = useGridState(apiRef);
+  const updateTimeout = React.useRef<any>();
+
+  const forceUpdate = React.useCallback(() => {
+    if (updateTimeout!.current == null) {
+      updateTimeout!.current = setTimeout(() => {
+        logger.debug(`Updating component`);
+        updateTimeout.current = null;
+        return updateComponent();
+      }, 100);
+    }
+  }, [logger, updateComponent]);
 
   const internalRowsState = React.useRef<InternalRowsState>(gridState.rows);
+
+  React.useEffect(() => {
+    return () => clearTimeout(updateTimeout!.current);
+  }, []);
 
   React.useEffect(() => {
     setGridState((state) => {
@@ -85,7 +100,7 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
 
   const updateRowModels = React.useCallback(
     (updates: Partial<RowModel>[]) => {
-      logger.debug(`updating ${updates.length} row models`);
+      logger.debug(`updating row models`);
       const addedRows: RowModel[] = [];
 
       updates.forEach((partialRow) => {
@@ -121,8 +136,6 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
 
   const updateRowData = React.useCallback(
     (updates: RowData[]) => {
-      logger.debug(`updating rows data`);
-
       // we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
       const uniqUpdates = updates.reduce((uniq, update) => {
         if (update.id == null) {
@@ -148,7 +161,7 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
       });
       return updateRowModels(rowModelUpdates);
     },
-    [updateRowModels, logger, getRowFromId],
+    [updateRowModels, getRowFromId],
   );
 
   const getRowModels = React.useCallback(
