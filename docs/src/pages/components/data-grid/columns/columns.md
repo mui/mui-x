@@ -49,6 +49,22 @@ To change the width of a column, use the `width` property available in `ColDef`.
 
 {{"demo": "pages/components/data-grid/columns/ColumnWidthGrid.js", "bg": "inline"}}
 
+### Fluid width
+
+Each column has a fixed width of 100 pixels by default, but column fluidity (responsiveness) can be by achieved by setting the `flex` property in `ColDef`.
+
+The `flex` property accepts a value between 0 and ∞.
+
+The `flex` property works by dividing the remaining space in the grid among all flex columns in proportion to their `flex` value.
+For example, consider a grid with a total width of 500px that has three columns: the first with `width: 200`; the second with `flex: 1`; and third with `flex: 0.5`.
+The first column will be 200px wide, leaving 300px remaining. The column with `flex: 1` is twice the size of `flex: 0.5`, which means that final sizes will be: 200px, 200px, 100px.
+
+Note that `flex` doesn't work together with `width`. If you set both `flex` and `width` in `ColDef`, `flex` will override `width`.
+
+In addition, `flex` does not work if the combined width of the columns that have `width` is more than the width of the grid itself. If that is the case a scroll bar will be visible, and the columns that have `flex` will default back to their base value of 100px.
+
+{{"demo": "pages/components/data-grid/columns/ColumnFluidWidthGrid.js", "bg": "inline"}}
+
 ## Column resizing [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
 By default, `XGrid` allows all columns to be resized by dragging the right portion of the column separator.
