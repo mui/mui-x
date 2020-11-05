@@ -1,69 +1,38 @@
-# Material-UI X
+<p align="center">
+  <a href="https://material-ui.com/" rel="noopener" target="_blank"><img width="150" src="https://material-ui.com/static/logo.svg" alt="Material-UI logo"></a></p>
+</p>
+
+<h1 align="center">Material-UI X</h1>
 
 The Material-UI X mono-repo gathers Material-UI advanced components.
-
-### Overview
-Data tables display information in a grid-like format of rows and columns. They organize information in a way that’s easy to scan, so that users can look for patterns and insights. The data grid comes in 2 versions:
-<ul>
-<li>
-  
- ```DataGrid```<b>MIT licensed</b> as part of the community edition. It's an extension of ```@material-ui/core```.
- </li>
- 
-  <li>
-  
-  ```XGrid```<b>Commercially licensed</b> as part of the X product line offering.</li>
-</ul>
-
-The features only available in the commercial version are suffixed with a ⚡️ icon. You can check the [feature comparison](https://material-ui.com/components/data-grid/getting-started/#feature-comparison) for more details. See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on purchasing licenses.
-
-## Features
-<ul>
-  <li>
-    Built with and exclusively for React ⚛️
-  </li>
-
-  <li>
-    
-  Lightweight; less than [30 kb](https://bundlephobia.com/result?p=@material-ui/data-grid) gzipped with as few dependencies as possible.
-  </li>
-  <li>
-  
-[Pagination](https://material-ui.com/components/data-grid/pagination/)
-  </li>
-  <li>
-  
-[Sorting](https://material-ui.com/components/data-grid/rows/#row-sorting) and [multi-sort](https://material-ui.com/components/data-grid/rows/#multi-column-sorting) ⚡️
-</li>
-  <li>
-  
-[Selection](https://material-ui.com/components/data-grid/selection/)
-</li>
-  <li>
-  
-[Rows and column virtualization ⚡️](https://material-ui.com/components/data-grid/rendering/#virtualization)
-</li>
-  <li>
-  
-[Resizable columns ⚡️](https://material-ui.com/components/data-grid/columns/#column-resizing)
-</li>
-  <li>
-
-[100% customizable](https://material-ui.com/components/data-grid/rendering/#customization-example)
-</li>
-  <li>
-  Server side data
-</li>
-  <li>
-  
-[Column hiding](https://material-ui.com/components/data-grid/columns/#column-headers)
-</li>
-<li>
-  
-  [Accessible](https://material-ui.com/components/data-grid/accessibility/)
-  </li>
-</ul>
 
 ## Components
 
 - [DataGrid](https://material-ui.com/components/data-grid/)
+
+## Questions
+
+For _how-to_ questions and other non-issues,
+please use [StackOverflow](https://stackoverflow.com/questions/tagged/material-ui) instead of GitHub issues.
+There is a StackOverflow tag called "material-ui" that you can use to tag your questions.
+
+## Examples
+
+Are you looking for an example project to get started?
+[We host some](https://material-ui.com/getting-started/example-projects/).
+
+## Contributing
+
+Read our [contributing guide](/CONTRIBUTING.md) to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes to Material-UI.
+
+Notice that contributions go far beyond pull requests and commits.
+Although we love giving you the opportunity to put your stamp on Material-UI, we also are thrilled to receive a variety of [other contributions](https://material-ui.com/getting-started/faq/#material-ui-is-awesome-how-can-i-support-the-project).
+
+## Changelog
+
+Recently Updated?
+Please read the [changelog](https://github.com/mui-org/material-ui-x/releases).
+
+## Roadmap
+
+The future plans and high priority features and enhancements can be found in the [roadmap](https://material-ui.com/discover-more/roadmap/) file.
