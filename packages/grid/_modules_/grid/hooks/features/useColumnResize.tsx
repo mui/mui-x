@@ -7,8 +7,48 @@ import { COL_RESIZE_START, COL_RESIZE_STOP } from '../../constants/eventsConstan
 import { HEADER_CELL_CSS_CLASS } from '../../constants/cssClassesConstants';
 import { findCellElementsFromCol } from '../../utils';
 import { ApiRef } from '../../models';
+import { CursorCoordinates } from '../../models/api/columnReorderApi';
 
 const MIN_COL_WIDTH = 50;
+let cachedSupportsTouchActionNone = false;
+
+// TODO: remove support for Safari < 13.
+// https://caniuse.com/#search=touch-action
+//
+// Safari, on iOS, supports touch action since v13.
+// Over 80% of the iOS phones are compatible
+// in August 2020.
+function doesSupportTouchActionNone(): boolean {
+  if (!cachedSupportsTouchActionNone) {
+    const element = document.createElement('div');
+    element.style.touchAction = 'none';
+    document.body.appendChild(element);
+    cachedSupportsTouchActionNone = window.getComputedStyle(element).touchAction === 'none';
+    element.parentElement!.removeChild(element);
+  }
+  return cachedSupportsTouchActionNone;
+}
+
+function trackFinger(event, currentTouchId): CursorCoordinates | boolean {
+  if (currentTouchId !== undefined && event.changedTouches) {
+    for (let i = 0; i < event.changedTouches.length; i += 1) {
+      const touch = event.changedTouches[i];
+      if (touch.identifier === currentTouchId) {
+        return {
+          x: touch.clientX,
+          y: touch.clientY,
+        };
+      }
+    }
+
+    return false;
+  }
+
+  return {
+    x: event.clientX,
+    y: event.clientY,
+  };
+}
 
 // TODO improve experience for last column
 export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, apiRef: ApiRef) => {
@@ -111,45 +151,6 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
     doc.addEventListener('mouseup', handleResizeMouseUp);
   });
 
-  // TODO: remove support for Safari < 13.
-  // https://caniuse.com/#search=touch-action
-  //
-  // Safari, on iOS, supports touch action since v13.
-  // Over 80% of the iOS phones are compatible
-  // in August 2020.
-  let cachedSupportsTouchActionNone;
-  function doesSupportTouchActionNone() {
-    if (cachedSupportsTouchActionNone === undefined) {
-      const element = document.createElement('div');
-      element.style.touchAction = 'none';
-      document.body.appendChild(element);
-      cachedSupportsTouchActionNone = window.getComputedStyle(element).touchAction === 'none';
-      element.parentElement!.removeChild(element);
-    }
-    return cachedSupportsTouchActionNone;
-  }
-
-  function trackFinger(event, currentTouchId) {
-    if (currentTouchId !== undefined && event.changedTouches) {
-      for (let i = 0; i < event.changedTouches.length; i += 1) {
-        const touch = event.changedTouches[i];
-        if (touch.identifier === currentTouchId) {
-          return {
-            x: touch.clientX,
-            y: touch.clientY,
-          };
-        }
-      }
-
-      return false;
-    }
-
-    return {
-      x: event.clientX,
-      y: event.clientY,
-    };
-  }
-
   const handleTouchEnd = useEventCallback((nativeEvent) => {
     const finger = trackFinger(nativeEvent, touchId.current);
 
@@ -185,14 +186,21 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
     }
 
     let newWidth =
-      initialOffset.current + finger.x - colElementRef.current!.getBoundingClientRect().left;
+      initialOffset.current! +
+      (finger as CursorCoordinates).x -
+      colElementRef.current!.getBoundingClientRect().left;
     newWidth = Math.max(MIN_COL_WIDTH, newWidth);
 
     updateWidth(newWidth);
   });
 
-  const handleTouchStart = useEventCallback((event: React.TouchEvent<HTMLElement>) => {
+  const handleTouchStart = useEventCallback((event) => {
     // If touch-action: none; is not supported we need to prevent the scroll manually.
+    colElementRef.current = event.target.closest(`.${HEADER_CELL_CSS_CLASS}`) as HTMLDivElement;
+
+    // Let the event bubble if the target is not a col separator
+    if (!colElementRef.current) return;
+
     if (!doesSupportTouchActionNone()) {
       event.preventDefault();
     }
@@ -202,12 +210,8 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
       // A number that uniquely identifies the current finger in the touch session.
       touchId.current = touch.identifier;
     }
-    // const finger = trackFinger(event, touchId.current);
 
-    colElementRef.current = event.currentTarget.closest(
-      `.${HEADER_CELL_CSS_CLASS}`,
-    ) as HTMLDivElement;
-    const field = colElementRef.current.getAttribute('data-field') as string;
+    const field = colElementRef.current!.getAttribute('data-field') as string;
     const colDef = apiRef.current.getColumnFromField(field);
 
     logger.debug(`Start Resize on col ${colDef.field}`);
@@ -241,17 +245,23 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
   }, [apiRef, handleResizeMouseMove, handleResizeMouseUp, handleTouchMove, handleTouchEnd]);
 
   React.useEffect(() => {
+    const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
+    doc.addEventListener('touchstart', handleTouchStart, {
+      passive: doesSupportTouchActionNone(),
+    });
+
     return () => {
+      doc.removeEventListener('touchstart', handleTouchStart);
+
       clearTimeout(stopResizeEventTimeout.current);
       stopListening();
     };
-  }, [stopListening]);
+  }, [stopListening, apiRef, handleTouchStart]);
 
   return React.useMemo(
     () => ({
       onMouseDown: handleMouseDown,
-      onTouchStart: handleTouchStart,
     }),
-    [handleMouseDown, handleTouchStart],
+    [handleMouseDown],
   );
 };
