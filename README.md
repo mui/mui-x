@@ -16,11 +16,6 @@ For _how-to_ questions and other non-issues,
 please use [StackOverflow](https://stackoverflow.com/questions/tagged/material-ui) instead of GitHub issues.
 There is a StackOverflow tag called "material-ui" that you can use to tag your questions.
 
-## Examples
-
-Are you looking for an example project to get started?
-[We host some](https://material-ui.com/getting-started/example-projects/).
-
 ## Contributing
 
 Read our [contributing guide](/CONTRIBUTING.md) to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes to Material-UI.
@@ -30,8 +25,7 @@ Although we love giving you the opportunity to put your stamp on Material-UI, we
 
 ## Changelog
 
-Recently Updated?
-Please read the [changelog](https://github.com/mui-org/material-ui-x/releases).
+If you have recently updated, please read the [changelog](https://github.com/mui-org/material-ui-x/releases) for details of what has changed.
 
 ## Roadmap
 
