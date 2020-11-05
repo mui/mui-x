@@ -90,11 +90,9 @@ export const ColumnHeaderItem = ({
       key={column.field}
       data-field={column.field}
       style={{
-        flex: column.flex == null ? `0 0 ${column.width}` : `${column.flex} ${column.flex} `,
-
-        // width,
-        // minWidth: width,
-        // maxWidth: width,
+        width,
+        minWidth: width,
+        maxWidth: width,
       }}
       role="columnheader"
       tabIndex={-1}
