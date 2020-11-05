@@ -150,6 +150,8 @@ const getUpdatedColumnState = (
 export function useColumns(columns: Columns, apiRef: ApiRef): InternalColumns {
   const logger = useLogger('useColumns');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
+  const sizeRef = React.useRef<any>({ width: 0 });
+
   const updateState = React.useCallback(
     (newState: InternalColumns, emit = true) => {
       logger.debug('Updating columns state.');
@@ -185,8 +187,8 @@ export function useColumns(columns: Columns, apiRef: ApiRef): InternalColumns {
   );
 
   React.useEffect(() => {
-    resetColumns(gridState.containerSizes?.viewportSize.width || 0);
-  }, [gridState.containerSizes?.viewportSize.width, resetColumns]);
+    resetColumns(sizeRef.current.width);
+  }, [resetColumns]);
 
   const getColumnFromField: (field: string) => ColDef = React.useCallback(
     (field) => gridState.columns.lookup[field],
@@ -234,7 +236,10 @@ export function useColumns(columns: Columns, apiRef: ApiRef): InternalColumns {
 
   const onResize = React.useCallback(
     (size) => {
-      resetColumns(size.width);
+      if (size != null) {
+        sizeRef.current = size;
+        resetColumns(size.width);
+      }
     },
     [resetColumns],
   );
