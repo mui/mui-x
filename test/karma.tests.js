@@ -34,12 +34,12 @@ afterEach(function afterEachHook() {
 let pendingError = null;
 let pendingErrorNotice = null;
 
-window.addEventListener('error', event => {
+window.addEventListener('error', (event) => {
   pendingError = event.error;
   pendingErrorNotice = 'An uncaught exception was thrown between tests';
 });
 
-window.addEventListener('unhandledrejection', event => {
+window.addEventListener('unhandledrejection', (event) => {
   pendingError = event.reason;
   pendingErrorNotice = 'An uncaught promise rejection occurred between tests';
 });
