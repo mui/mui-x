@@ -412,42 +412,5 @@ describe('<DataGrid />', () => {
         expect(col).toHaveInlineStyle({ width: `${colWidthValues[index]}px` });
       });
     });
-
-    it('should set the first column to be twice as wide as the second one', () => {
-      const rows = [
-        {
-          id: 1,
-          username: 'John Doe',
-          age: 30,
-        },
-      ];
-
-      const columns = [
-        {
-          field: 'id',
-          flex: 1,
-        },
-        {
-          field: 'name',
-          flex: 0.5,
-        },
-      ];
-
-      render(
-        <div style={{ width: 200, height: 300 }}>
-          <DataGrid columns={columns} rows={rows} />
-        </div>,
-      );
-
-      const firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
-      const secondColumn: HTMLElement | null = document.querySelector(
-        '[role="columnheader"][aria-colindex="2"]',
-      );
-      const secondColumnWidthVal = secondColumn!.style.width.split('px')[0];
-      // @ts-expect-error need to migrate helpers to TypeScript
-      expect(firstColumn).toHaveInlineStyle({
-        width: `${2 * parseInt(secondColumnWidthVal, 10)}px`,
-      });
-    });
   });
 });
