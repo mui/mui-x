@@ -126,10 +126,6 @@ export const useStyles = makeStyles(
           cursor: 'col-resize',
           '&:hover, &.Mui-resizing': {
             color: theme.palette.text.primary,
-            // Reset on touch devices, it doesn't add specificity
-            '@media (hover: none)': {
-              color: borderColor,
-            },
           },
         },
         '& .MuiDataGrid-iconSeparator': {
