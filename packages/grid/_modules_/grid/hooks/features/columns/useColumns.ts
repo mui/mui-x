@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { COLUMNS_UPDATED } from '../../../constants/eventsConstants';
+import { COLUMNS_UPDATED, RESIZE } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { ColumnApi } from '../../../models/api/columnApi';
 import { checkboxSelectionColDef } from '../../../models/colDef/checkboxSelection';
@@ -12,6 +12,7 @@ import {
 } from '../../../models/colDef/colDef';
 import { ColumnTypesRecord } from '../../../models/colDef/colTypeDef';
 import { getColDef } from '../../../models/colDef/getColDef';
+import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
 import { Logger, useLogger } from '../../utils/useLogger';
 import { useGridState } from '../core/useGridState';
@@ -149,7 +150,6 @@ const getUpdatedColumnState = (
 export function useColumns(columns: Columns, apiRef: ApiRef): InternalColumns {
   const logger = useLogger('useColumns');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
-  const viewportWidth = gridState.containerSizes ? gridState.containerSizes.viewportSize.width : 0;
   const updateState = React.useCallback(
     (newState: InternalColumns, emit = true) => {
       logger.debug('Updating columns state.');
@@ -163,24 +163,30 @@ export function useColumns(columns: Columns, apiRef: ApiRef): InternalColumns {
     [logger, setGridState, forceUpdate, apiRef],
   );
 
-  React.useEffect(() => {
-    logger.info(`Columns have change, new length ${columns.length}`);
-    const newState = resetState(
+  const resetColumns = React.useCallback(
+    (width: number) => {
+      logger.info(`Columns have change, new length ${columns.length}`);
+      const newState = resetState(
+        columns,
+        gridState.options.columnTypes,
+        width,
+        !!gridState.options.checkboxSelection,
+        logger,
+      );
+      updateState(newState);
+    },
+    [
       columns,
+      gridState.options.checkboxSelection,
       gridState.options.columnTypes,
-      viewportWidth,
-      !!gridState.options.checkboxSelection,
       logger,
-    );
-    updateState(newState);
-  }, [
-    columns,
-    gridState.options.columnTypes,
-    gridState.options.checkboxSelection,
-    viewportWidth,
-    logger,
-    updateState,
-  ]);
+      updateState,
+    ],
+  );
+
+  React.useEffect(() => {
+    resetColumns(gridState.containerSizes?.viewportSize.width || 0);
+  }, [gridState.containerSizes?.viewportSize.width, resetColumns]);
 
   const getColumnFromField: (field: string) => ColDef = React.useCallback(
     (field) => gridState.columns.lookup[field],
@@ -225,6 +231,14 @@ export function useColumns(columns: Columns, apiRef: ApiRef): InternalColumns {
   };
 
   useApiMethod(apiRef, colApi, 'ColApi');
+
+  const onResize = React.useCallback(
+    (size) => {
+      resetColumns(size.width);
+    },
+    [resetColumns],
+  );
+  useApiEventHandler(apiRef, RESIZE, onResize);
 
   return gridState.columns;
 }
