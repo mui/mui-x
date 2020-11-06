@@ -19,6 +19,8 @@ import { StickyContainer } from './sticky-container';
 type ViewportType = React.ForwardRefExoticComponent<React.RefAttributes<HTMLDivElement>>;
 
 export const containerSizesSelector = (state: GridState) => state.containerSizes;
+export const viewportSizesSelector = (state: GridState) => state.viewportSizes;
+export const scrollBarSizeSelector = (state: GridState) => state.scrollBar;
 
 export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
   (props, renderingZoneRef) => {
@@ -28,6 +30,8 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const rows = useGridSelector(apiRef, sortedRowsSelector);
     const options = useGridSelector(apiRef, optionsSelector);
     const containerSizes = useGridSelector(apiRef, containerSizesSelector);
+    const viewportSizes = useGridSelector(apiRef, viewportSizesSelector);
+    const scrollBarState = useGridSelector(apiRef, scrollBarSizeSelector);
     const columns = useGridSelector(apiRef, columnsSelector);
     const cellFocus = useGridSelector(apiRef, keyboardCellSelector);
     const selectionState = useGridSelector(apiRef, selectionStateSelector);
@@ -43,31 +47,31 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
           selected={!!selectionState[r.id]}
           rowIndex={renderCtx.firstRowIdx + idx}
         >
-          <LeftEmptyCell width={renderCtx.leftEmptyWidth} />
+          <LeftEmptyCell width={renderCtx.leftEmptyWidth}/>
           <RowCells
             columns={columns.visible}
             row={r}
             firstColIdx={renderCtx.firstColIdx}
             lastColIdx={renderCtx.lastColIdx}
-            hasScroll={{ y: containerSizes!.hasScrollY, x: containerSizes!.hasScrollX }}
-            scrollSize={containerSizes!.scrollBarSize}
+            hasScroll={{y: scrollBarState!.hasScrollY, x: scrollBarState.hasScrollX}}
+            scrollSize={options.scrollbarSize}
             showCellRightBorder={!!options.showCellRightBorder}
             extendRowFullWidth={!options.disableExtendRowFullWidth}
             rowIndex={renderCtx.firstRowIdx + idx}
             cellFocus={cellFocus}
             domIndex={idx}
           />
-          <RightEmptyCell width={renderCtx.rightEmptyWidth} />
+          <RightEmptyCell width={renderCtx.rightEmptyWidth}/>
         </Row>
       ));
     };
 
     logger.debug('Rendering ViewPort');
     return (
-      <StickyContainer {...containerSizes!.viewportSize}>
-        <RenderingZone ref={renderingZoneRef} {...containerSizes!.renderingZone}>
-          {getRowsElements()}
-        </RenderingZone>
+      <StickyContainer {...viewportSizes}>
+          <RenderingZone ref={renderingZoneRef} {...containerSizes?.renderingZone || {width:0, height: 0}}>
+            {getRowsElements()}
+          </RenderingZone>
       </StickyContainer>
     );
   },

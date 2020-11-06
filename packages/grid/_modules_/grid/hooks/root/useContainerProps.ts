@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { RESIZE } from '../../constants/eventsConstants';
 import { ApiRef } from '../../models/api/apiRef';
-import { ContainerProps } from '../../models/containerProps';
+import { ContainerProps, ScrollBarState, ViewportSizeState } from '../../models/containerProps';
 import { ElementSize } from '../../models/elementSize';
 import { isEqual } from '../../utils/utils';
 import { columnsTotalWidthSelector } from '../features/columns/columnsSelector';
+import { GridState } from '../features/core/gridState';
 import { useGridSelector } from '../features/core/useGridSelector';
 import { useGridState } from '../features/core/useGridState';
 import { PaginationState } from '../features/pagination/paginationReducer';
@@ -40,7 +41,45 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
     return virtRowsCount;
   }, [options.pagination, paginationState.page, paginationState.pageSize, totalRowsCount]);
 
-  const getContainerProps = React.useCallback((): ContainerProps | null => {
+  const getScrollbar = React.useCallback((rowsCount:number )=> {
+    const hasScrollY =
+      options.autoPageSize || options.autoHeight
+        ? false
+        : windowSizesRef.current.height < rowsCount * options.rowHeight;
+    const hasScrollX = columnsTotalWidth > windowSizesRef.current.width;
+    const scrollBarSize = {
+      y: hasScrollY ? options.scrollbarSize : 0,
+      x: hasScrollX ? options.scrollbarSize : 0,
+    };
+    return {hasScrollX, hasScrollY, scrollBarSize};
+
+  }, [columnsTotalWidth, options.autoHeight, options.autoPageSize, options.rowHeight, options.scrollbarSize]);
+
+  const getViewport = React.useCallback((rowsCount: number, scrollBarState: ScrollBarState)=> {
+    if(!windowRef.current) {
+      return null;
+    }
+
+    logger.debug('Calculating container sizes.');
+
+    const window = windowRef.current.getBoundingClientRect();
+    windowSizesRef.current = { width: window.width, height: window.height };
+
+    logger.debug(
+      `window Size - W: ${windowSizesRef.current.width} H: ${windowSizesRef.current.height} `,
+    );
+
+    const viewportSize = {
+      width: windowSizesRef.current!.width - scrollBarState.scrollBarSize.y,
+      height: options.autoHeight
+        ? rowsCount * options.rowHeight
+        : windowSizesRef.current!.height - scrollBarState.scrollBarSize.x,
+    };
+    return viewportSize;
+  }, [logger, options.autoHeight, options.rowHeight, windowRef])
+
+
+  const getContainerProps = React.useCallback((rowsCount: number, viewportSizes: ViewportSizeState, scrollState: ScrollBarState ): ContainerProps | null => {
     if (
       !windowRef ||
       !windowRef.current ||
@@ -50,32 +89,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
       return null;
     }
 
-    logger.debug('Calculating container sizes.');
-    const window = windowRef.current.getBoundingClientRect();
-    windowSizesRef.current = { width: window.width, height: window.height };
-    logger.debug(
-      `window Size - W: ${windowSizesRef.current.width} H: ${windowSizesRef.current.height} `,
-    );
-
-    const rowsCount = getVirtualRowCount();
-    const rowHeight = options.rowHeight;
-    const hasScrollY =
-      options.autoPageSize || options.autoHeight
-        ? false
-        : windowSizesRef.current.height < rowsCount * rowHeight;
-    const hasScrollX = columnsTotalWidth > windowSizesRef.current.width;
-    const scrollBarSize = {
-      y: hasScrollY ? options.scrollbarSize : 0,
-      x: hasScrollX ? options.scrollbarSize : 0,
-    };
-    const viewportSize = {
-      width: windowSizesRef.current!.width - scrollBarSize.y,
-      height: options.autoHeight
-        ? rowsCount * rowHeight
-        : windowSizesRef.current!.height - scrollBarSize.x,
-    };
-
-    let viewportPageSize = viewportSize.height / rowHeight;
+    let viewportPageSize = viewportSizes.height / options.rowHeight;
     viewportPageSize = options.pagination
       ? Math.floor(viewportPageSize)
       : Math.round(viewportPageSize);
@@ -88,23 +102,20 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
     logger.debug(
       `viewportPageSize:  ${viewportPageSize}, rzPageSize: ${rzPageSize}, viewportMaxPage: ${viewportMaxPage}`,
     );
-    const renderingZoneHeight = rzPageSize * rowHeight + rowHeight + scrollBarSize.x;
-    const dataContainerWidth = columnsTotalWidth - scrollBarSize.y;
+    const renderingZoneHeight = rzPageSize * options.rowHeight + options.rowHeight + scrollState.scrollBarSize.x;
+    const dataContainerWidth = columnsTotalWidth - scrollState.scrollBarSize.y;
     let totalHeight =
-      (options.autoPageSize ? 1 : rowsCount / viewportPageSize) * viewportSize.height +
-      (hasScrollY ? scrollBarSize.x : 0);
+      (options.autoPageSize ? 1 : rowsCount / viewportPageSize) * viewportSizes.height +
+      (scrollState.hasScrollY ? scrollState.scrollBarSize.x : 0);
 
     if (options.autoHeight) {
-      totalHeight = rowsCount * rowHeight + scrollBarSize.x;
+      totalHeight = rowsCount * options.rowHeight + scrollState.scrollBarSize.x;
     }
 
     const indexes: ContainerProps = {
       virtualRowsCount: options.autoPageSize ? viewportPageSize : rowsCount,
       renderingZonePageSize: rzPageSize,
       viewportPageSize,
-      hasScrollY,
-      hasScrollX,
-      scrollBarSize: options.scrollbarSize,
       totalSizes: {
         width: columnsTotalWidth,
         height: totalHeight || 1,
@@ -118,46 +129,53 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
         height: renderingZoneHeight,
       },
       windowSizes: windowSizesRef.current,
-      viewportSize,
       lastPage: viewportMaxPage,
     };
 
     logger.debug('returning container props', indexes);
     return indexes;
-  }, [
-    windowRef,
-    logger,
-    getVirtualRowCount,
-    options.rowHeight,
-    options.autoPageSize,
-    options.autoHeight,
-    options.scrollbarSize,
-    options.pagination,
-    columnsTotalWidth,
-  ]);
+  }, [windowRef, columnsTotalWidth, options.rowHeight, options.pagination, options.autoPageSize, options.autoHeight, logger]);
 
-  const updateContainerState = React.useCallback(
-    (containerState: ContainerProps | null) => {
-      let updated = false;
+  const updateStateIfChanged = React.useCallback((
+    shouldUpdate: (oldState: GridState)=> boolean,
+  newStateUpdate: (state: GridState)=> GridState,
+    ) => {
+      let update = false;
       setGridState((state) => {
-        if (!isEqual(state.containerSizes, containerState)) {
-          state.containerSizes = containerState;
-          updated = true;
-          return { ...state };
+        update = shouldUpdate(state);
+        if (update) {
+          return newStateUpdate(state);
         }
         return state;
       });
-      if (updated) {
+      if (update) {
         forceUpdate();
       }
     },
     [forceUpdate, setGridState],
   );
 
+
   const refreshContainerSizes = React.useCallback(() => {
-    const containerProps = getContainerProps();
-    updateContainerState(containerProps);
-  }, [getContainerProps, updateContainerState]);
+    const rowsCount = getVirtualRowCount();
+    const scrollState = getScrollbar(rowsCount);
+
+    const viewportSize = getViewport(rowsCount, scrollState);
+    if (!viewportSize) {
+      return;
+    }
+
+    updateStateIfChanged((state) => state.scrollBar !== scrollState,
+      (state) => ({...state, scrollBar: scrollState}));
+
+    updateStateIfChanged((state) => state.viewportSizes !== viewportSize,
+      (state) => ({...state, viewportSizes: viewportSize}));
+
+    const containerState = getContainerProps(rowsCount, viewportSize, scrollState);
+    updateStateIfChanged((state) => !isEqual(state.containerSizes, containerState),
+      (state) => ({...state, containerSizes: containerState}));
+
+  }, [getContainerProps, getScrollbar, getViewport, updateStateIfChanged]);
 
   React.useEffect(() => {
     refreshContainerSizes();

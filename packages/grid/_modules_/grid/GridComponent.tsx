@@ -129,7 +129,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                       <ColumnsHeader
                         ref={columnsHeaderRef}
                         columns={gridState.columns.visible || []}
-                        hasScrollX={!!gridState.containerSizes?.hasScrollX}
+                        hasScrollX={!!gridState.scrollBar.hasScrollX}
                         separatorProps={separatorProps}
                         renderCtx={renderCtx}
                       />

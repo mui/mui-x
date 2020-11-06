@@ -10,6 +10,7 @@ import { useLogger } from '../../utils/useLogger';
 import { COLUMNS_UPDATED, RESIZE } from '../../../constants/eventsConstants';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useApiEventHandler } from '../../root/useApiEventHandler';
+import { useGridState } from '../core/useGridState';
 
 type UpdateRenderedColsFnType = (
   containerProps: ContainerProps | null,
@@ -25,8 +26,10 @@ export const useVirtualColumns = (
   apiRef: ApiRef,
 ): UseVirtualColumnsReturnType => {
   const logger = useLogger('useVirtualColumns');
+
   const renderedColRef = React.useRef<RenderColumnsProps | null>(null);
   const containerPropsRef = React.useRef<ContainerProps | null>(null);
+  const [gridState] = useGridState(apiRef);
   const lastScrollLeftRef = React.useRef<number>(0);
 
   const getColumnIdxFromScroll = React.useCallback(
@@ -116,14 +119,14 @@ export const useVirtualColumns = (
           rightEmptyWidth: 0,
         };
         newRenderedColState.leftEmptyWidth = columnsMeta.positions[newRenderedColState.firstColIdx];
-        if (containerProps.hasScrollX) {
+        if (gridState.scrollBar.hasScrollX) {
           newRenderedColState.rightEmptyWidth =
             columnsMeta.totalWidth -
             columnsMeta.positions[newRenderedColState.lastColIdx] -
             visibleColumns[newRenderedColState.lastColIdx].width!;
         } else if (!options.disableExtendRowFullWidth) {
           newRenderedColState.rightEmptyWidth =
-            containerProps.viewportSize.width - columnsMeta.totalWidth;
+            gridState.viewportSizes.width - columnsMeta.totalWidth;
         }
         renderedColRef.current = newRenderedColState;
         logger.debug('New columns state to render', newRenderedColState);
@@ -132,15 +135,7 @@ export const useVirtualColumns = (
       logger.debug(`No rendering needed on columns`);
       return false;
     },
-    [
-      renderedColRef,
-      logger,
-      apiRef,
-      getColumnFromScroll,
-      getColumnIdxFromScroll,
-      options.columnBuffer,
-      options.disableExtendRowFullWidth,
-    ],
+    [apiRef, logger, getColumnFromScroll, getColumnIdxFromScroll, options.columnBuffer, options.disableExtendRowFullWidth, gridState.scrollBar.hasScrollX, gridState.viewportSizes.width],
   );
   const virtualApi: Partial<VirtualizationApi> = {
     isColumnVisibleInWindow,
