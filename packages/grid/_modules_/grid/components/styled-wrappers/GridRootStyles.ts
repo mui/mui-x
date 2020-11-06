@@ -10,7 +10,6 @@ export const useStyles = makeStyles(
     const gridStyle: { root: any } = {
       root: {
         flex: 1,
-        touchAction: 'none',
         boxSizing: 'border-box',
         position: 'relative',
         border: `1px solid ${borderColor}`,
@@ -125,6 +124,7 @@ export const useStyles = makeStyles(
         },
         '& .MuiDataGrid-columnSeparatorResizable': {
           cursor: 'col-resize',
+          touchAction: 'none',
           '&:hover, &.Mui-resizing': {
             color: theme.palette.text.primary,
           },

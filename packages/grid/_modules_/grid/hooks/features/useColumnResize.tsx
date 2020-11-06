@@ -4,7 +4,10 @@ import { ColDef } from '../../models/colDef';
 import { useLogger } from '../utils';
 import { useEventCallback } from '../../utils/material-ui-utils';
 import { COL_RESIZE_START, COL_RESIZE_STOP } from '../../constants/eventsConstants';
-import { HEADER_CELL_CSS_CLASS } from '../../constants/cssClassesConstants';
+import {
+  HEADER_CELL_CSS_CLASS,
+  HEADER_CELL_SEPARATOR_RESIZABLE_CSS_CLASS,
+} from '../../constants/cssClassesConstants';
 import { findCellElementsFromCol } from '../../utils';
 import { ApiRef } from '../../models';
 import { CursorCoordinates } from '../../models/api/columnReorderApi';
@@ -195,12 +198,12 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
   });
 
   const handleTouchStart = useEventCallback((event) => {
-    // If touch-action: none; is not supported we need to prevent the scroll manually.
-    colElementRef.current = event.target.closest(`.${HEADER_CELL_CSS_CLASS}`) as HTMLDivElement;
-
+    const cellSeparator = event.target.closest(
+      `.${HEADER_CELL_SEPARATOR_RESIZABLE_CSS_CLASS}`,
+    ) as HTMLDivElement;
     // Let the event bubble if the target is not a col separator
-    if (!colElementRef.current) return;
-
+    if (!cellSeparator) return;
+    // If touch-action: none; is not supported we need to prevent the scroll manually.
     if (!doesSupportTouchActionNone()) {
       event.preventDefault();
     }
@@ -211,6 +214,7 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
       touchId.current = touch.identifier;
     }
 
+    colElementRef.current = event.target.closest(`.${HEADER_CELL_CSS_CLASS}`) as HTMLDivElement;
     const field = colElementRef.current!.getAttribute('data-field') as string;
     const colDef = apiRef.current.getColumnFromField(field);
 
