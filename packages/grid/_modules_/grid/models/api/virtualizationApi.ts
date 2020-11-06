@@ -15,7 +15,7 @@ export interface VirtualizationApi {
   /**
    * Trigger the grid viewport to scroll to a row of x y indexes.
    * @param params
-   * @returns boolean that indicates if the viewport has scrolled to reach the indexes
+   * @returns boolean Return if the index was outside of the viewport and the grid has to scroll to reach the target.
    */
   scrollToIndexes: (params: CellIndexCoordinates) => boolean;
   /**

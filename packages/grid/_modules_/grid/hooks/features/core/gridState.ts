@@ -28,8 +28,8 @@ export interface GridState {
 
 export const getInitialState: () => GridState = () => ({
   rows: getInitialRowState(),
-  pagination: { ...INITIAL_PAGINATION_STATE },
-  options: { ...DEFAULT_GRID_OPTIONS },
+  pagination: INITIAL_PAGINATION_STATE,
+  options: DEFAULT_GRID_OPTIONS,
   isScrolling: false,
   columns: getInitialColumnsState(),
   columnReorder: getInitialColumnReorderState(),

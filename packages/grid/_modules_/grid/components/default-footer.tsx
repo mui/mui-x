@@ -7,6 +7,7 @@ import { ApiContext } from './api-context';
 import { RowCount } from './row-count';
 import { SelectedRowCount } from './selected-row-count';
 import { GridFooter } from './styled-wrappers/GridFooter';
+import { classnames } from '../utils';
 
 export interface DefaultFooterProps {
   paginationComponent: React.ReactNode;
@@ -24,12 +25,25 @@ export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps
       return null;
     }
 
+    const isPaginationAvailable = !!paginationComponent;
+    const showRowCount = !options.hideFooterRowCount && !isPaginationAvailable && (
+      <RowCount rowCount={totalRowCount} />
+    );
+    const showSelectedRowCount = !options.hideFooterSelectedRowCount && (
+      <SelectedRowCount selectedRowCount={selectedRowCount} />
+    );
+    const justifyItemsEnd = !selectedRowCount && !options.hideFooterSelectedRowCount;
+
     return (
-      <GridFooter ref={ref}>
-        {!options.hideFooterRowCount && <RowCount rowCount={totalRowCount} />}
-        {!options.hideFooterSelectedRowCount && (
-          <SelectedRowCount selectedRowCount={selectedRowCount} />
-        )}
+      <GridFooter
+        ref={ref}
+        className={classnames({
+          'MuiDataGrid-footer-paginationAvailable': isPaginationAvailable,
+          'MuiDataGrid-footer-justifyContentEnd': justifyItemsEnd,
+        })}
+      >
+        {showSelectedRowCount}
+        {showRowCount}
         {paginationComponent}
       </GridFooter>
     );

@@ -105,7 +105,9 @@ describe('<DataGrid />', () => {
           );
           clock.tick(100);
           // @ts-expect-error need to migrate helpers to TypeScript
-        }).toWarnDev('useResizeContainer: The parent of the grid has an empty height.');
+        }).toWarnDev(
+          'Material-UI: useResizeContainer - The parent of the grid has an empty height.',
+        );
       });
 
       it('should warn if the container has no intrinsic width', () => {
@@ -119,7 +121,9 @@ describe('<DataGrid />', () => {
           );
           clock.tick(100);
           // @ts-expect-error need to migrate helpers to TypeScript
-        }).toWarnDev('useResizeContainer: The parent of the grid has an empty width.');
+        }).toWarnDev(
+          'Material-UI: useResizeContainer - The parent of the grid has an empty width.',
+        );
       });
     });
   });
