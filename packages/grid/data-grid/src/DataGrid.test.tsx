@@ -9,7 +9,6 @@ import { DataGrid } from '@material-ui/data-grid';
 describe('<DataGrid />', () => {
   const render = createClientRender();
 
-
   const defaultProps = {
     rows: [
       {

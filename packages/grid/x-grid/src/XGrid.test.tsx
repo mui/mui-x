@@ -281,17 +281,17 @@ describe('<XGrid />', () => {
     });
 
     it('should trigger on state change', () => {
-      let onStateParams ;
+      let onStateParams;
       let apiRef;
       function Test() {
-         apiRef = useApiRef();
+        apiRef = useApiRef();
         const onStateChange = (params) => {
-          onStateParams = params
+          onStateParams = params;
         };
 
-        return(
-          <div style={{width: 300, height: 300}}>
-            <XGrid {...defaultProps} onStateChange={onStateChange} apiRef={apiRef}/>
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid {...defaultProps} onStateChange={onStateChange} apiRef={apiRef} />
           </div>
         );
       }
@@ -302,30 +302,29 @@ describe('<XGrid />', () => {
       expect(onStateParams.state).to.eq(apiRef.current.state);
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       expect(onStateParams.state).to.not.be.empty;
-
     });
     it('should allow to control the state using useState', async () => {
-      function GridStateTest({direction, sortedRows}) {
+      function GridStateTest({ direction, sortedRows }) {
         const [gridState, setGridState] = React.useState<Partial<GridState>>({
-          sorting: {sortModel: [{field: 'brand', sort: direction}], sortedRows},
+          sorting: { sortModel: [{ field: 'brand', sort: direction }], sortedRows },
         });
 
         React.useEffect(() => {
           setGridState({
-            sorting: {sortModel: [{field: 'brand', sort: direction}], sortedRows},
+            sorting: { sortModel: [{ field: 'brand', sort: direction }], sortedRows },
           });
         }, [direction, sortedRows]);
 
         return (
-          <div style={{width: 300, height: 300}}>
-            <DataGrid {...defaultProps} state={gridState}/>
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...defaultProps} state={gridState} />
           </div>
         );
       }
 
-      const {setProps} = render(<GridStateTest direction={'desc'} sortedRows={[2, 0, 1]}/>);
+      const { setProps } = render(<GridStateTest direction={'desc'} sortedRows={[2, 0, 1]} />);
       expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
-      setProps({direction: 'asc', sortedRows: [1, 0, 2]});
+      setProps({ direction: 'asc', sortedRows: [1, 0, 2] });
       expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas'].reverse());
     });
   });
