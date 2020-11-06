@@ -1,8 +1,9 @@
+import { DataGrid } from '@material-ui/data-grid';
 import * as React from 'react';
 // @ts-expect-error need to migrate helpers to TypeScript
 import { fireEvent, screen, createClientRender } from 'test/utils';
 import { expect } from 'chai';
-import { XGrid, useApiRef, Columns } from '@material-ui/x-grid';
+import { XGrid, useApiRef, Columns, GridState } from '@material-ui/x-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
 async function raf() {
@@ -302,6 +303,30 @@ describe('<XGrid />', () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       expect(onStateParams.state).to.not.be.empty;
 
+    });
+    it('should allow to control the state using useState', async () => {
+      function GridStateTest({direction, sortedRows}) {
+        const [gridState, setGridState] = React.useState<Partial<GridState>>({
+          sorting: {sortModel: [{field: 'brand', sort: direction}], sortedRows},
+        });
+
+        React.useEffect(() => {
+          setGridState({
+            sorting: {sortModel: [{field: 'brand', sort: direction}], sortedRows},
+          });
+        }, [direction, sortedRows]);
+
+        return (
+          <div style={{width: 300, height: 300}}>
+            <DataGrid {...defaultProps} state={gridState}/>
+          </div>
+        );
+      }
+
+      const {setProps} = render(<GridStateTest direction={'desc'} sortedRows={[2, 0, 1]}/>);
+      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+      setProps({direction: 'asc', sortedRows: [1, 0, 2]});
+      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas'].reverse());
     });
   });
 });

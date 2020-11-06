@@ -4,13 +4,7 @@ import PropTypes from 'prop-types';
 import { createClientRender, ErrorBoundary } from 'test/utils';
 import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
-import { DataGrid, GridState } from '@material-ui/data-grid';
-
-function getColumnValues() {
-  return Array.from(document.querySelectorAll('[role="cell"][aria-colindex="0"]')).map(
-    (node) => node!.textContent,
-  );
-}
+import { DataGrid } from '@material-ui/data-grid';
 
 describe('<DataGrid />', () => {
   const render = createClientRender();
@@ -306,33 +300,6 @@ describe('<DataGrid />', () => {
       );
     });
   });
-  describe('State', () => {
-    it('should allow to control the state using useState', () => {
-      function GridStateTest({direction, sortedRows}) {
-        const [gridState, setGridState] = React.useState<Partial<GridState>>({
-          sorting: {sortModel: [{field: 'brand', sort: direction}], sortedRows},
-        });
-
-        React.useEffect(() => {
-          setGridState({
-            sorting: {sortModel: [{field: 'brand', sort: direction}], sortedRows},
-          });
-        }, [direction, sortedRows]);
-
-        return (
-          <div style={{width: 300, height: 300}}>
-            <DataGrid {...defaultProps} state={gridState}/>
-          </div>
-        );
-      }
-
-      const {setProps} = render(<GridStateTest direction={'desc'} sortedRows={[2, 0, 1]}/>);
-      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
-      setProps({direction: 'asc', sortedRows: [1, 0, 2]});
-      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas'].reverse());
-    });
-  });
-
   describe('column width', () => {
     before(function beforeHook() {
       if (/jsdom/.test(window.navigator.userAgent)) {
