@@ -141,21 +141,22 @@ export function useColumns(columns: Columns, apiRef: ApiRef): InternalColumns {
 
   const resetColumns = React.useCallback(
     (width: number) => {
-    logger.info(`Columns have change, new length ${columns.length}`);
-    const newState = resetState(
-      columns,
-      gridState.options.columnTypes,
+      logger.info(`Columns have change, new length ${columns.length}`);
+      const newState = resetState(
+        columns,
+        gridState.options.columnTypes,
         width,
-      !!gridState.options.checkboxSelection,
-      logger,
-    );
-    updateState(newState);
-  }, [
-    columns,
+        !!gridState.options.checkboxSelection,
+        logger,
+      );
+      updateState(newState);
+    },
+    [
+      columns,
       gridState.options.checkboxSelection,
-    gridState.options.columnTypes,
-    logger,
-    updateState,
+      gridState.options.columnTypes,
+      logger,
+      updateState,
     ],
   );
 

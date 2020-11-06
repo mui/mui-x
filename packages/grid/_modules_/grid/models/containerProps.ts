@@ -1,6 +1,5 @@
 import { ElementSize } from './elementSize';
 
-
 export interface ScrollBarState {
   /**
    * Indicates if a vertical scrollbar is visible.
@@ -13,7 +12,7 @@ export interface ScrollBarState {
   /**
    * The scrollbar size.
    */
-  scrollBarSize: { x: number, y: number };
+  scrollBarSize: { x: number; y: number };
 }
 
 /**

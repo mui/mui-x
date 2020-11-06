@@ -47,13 +47,13 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
           selected={!!selectionState[r.id]}
           rowIndex={renderCtx.firstRowIdx + idx}
         >
-          <LeftEmptyCell width={renderCtx.leftEmptyWidth}/>
+          <LeftEmptyCell width={renderCtx.leftEmptyWidth} />
           <RowCells
             columns={columns.visible}
             row={r}
             firstColIdx={renderCtx.firstColIdx}
             lastColIdx={renderCtx.lastColIdx}
-            hasScroll={{y: scrollBarState!.hasScrollY, x: scrollBarState.hasScrollX}}
+            hasScroll={{ y: scrollBarState!.hasScrollY, x: scrollBarState.hasScrollX }}
             scrollSize={options.scrollbarSize}
             showCellRightBorder={!!options.showCellRightBorder}
             extendRowFullWidth={!options.disableExtendRowFullWidth}
@@ -61,7 +61,7 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
             cellFocus={cellFocus}
             domIndex={idx}
           />
-          <RightEmptyCell width={renderCtx.rightEmptyWidth}/>
+          <RightEmptyCell width={renderCtx.rightEmptyWidth} />
         </Row>
       ));
     };
@@ -69,9 +69,12 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     logger.debug('Rendering ViewPort');
     return (
       <StickyContainer {...viewportSizes}>
-          <RenderingZone ref={renderingZoneRef} {...containerSizes?.renderingZone || {width:0, height: 0}}>
-            {getRowsElements()}
-          </RenderingZone>
+        <RenderingZone
+          ref={renderingZoneRef}
+          {...(containerSizes?.renderingZone || { width: 0, height: 0 })}
+        >
+          {getRowsElements()}
+        </RenderingZone>
       </StickyContainer>
     );
   },

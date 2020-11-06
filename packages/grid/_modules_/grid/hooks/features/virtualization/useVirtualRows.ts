@@ -153,7 +153,19 @@ export const useVirtualRows = (
         }
       }
     },
-    [apiRef, gridState.scrollBar.hasScrollX, gridState.scrollBar.hasScrollY, gridState.viewportSizes.height, logger, paginationState.page, reRender, scrollTo, setRenderingState, updateRenderedCols, windowRef],
+    [
+      apiRef,
+      gridState.scrollBar.hasScrollX,
+      gridState.scrollBar.hasScrollY,
+      gridState.viewportSizes.height,
+      logger,
+      paginationState.page,
+      reRender,
+      scrollTo,
+      setRenderingState,
+      updateRenderedCols,
+      windowRef,
+    ],
   );
 
   const scrollToIndexes = React.useCallback(
@@ -177,7 +189,7 @@ export const useVirtualRows = (
           scrollLeft =
             meta.positions[params.colIndex + 1] -
             gridState.containerSizes!.windowSizes.width +
-            (gridState.scrollBar!.scrollBarSize.y);
+            gridState.scrollBar!.scrollBarSize.y;
           logger.debug(`Scrolling to the right, scrollLeft: ${scrollLeft}`);
         }
         if (gridState.rendering.renderingZoneScroll.left > scrollLeft) {

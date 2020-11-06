@@ -135,7 +135,16 @@ export const useVirtualColumns = (
       logger.debug(`No rendering needed on columns`);
       return false;
     },
-    [apiRef, logger, getColumnFromScroll, getColumnIdxFromScroll, options.columnBuffer, options.disableExtendRowFullWidth, gridState.scrollBar.hasScrollX, gridState.viewportSizes.width],
+    [
+      apiRef,
+      logger,
+      getColumnFromScroll,
+      getColumnIdxFromScroll,
+      options.columnBuffer,
+      options.disableExtendRowFullWidth,
+      gridState.scrollBar.hasScrollX,
+      gridState.viewportSizes.width,
+    ],
   );
   const virtualApi: Partial<VirtualizationApi> = {
     isColumnVisibleInWindow,
