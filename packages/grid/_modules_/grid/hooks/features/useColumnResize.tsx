@@ -62,6 +62,7 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
   const initialOffset = React.useRef<number>();
   const stopResizeEventTimeout = React.useRef<number>();
   const touchId = React.useRef<number>();
+  const columnsHeaderElement = columnsRef.current;
 
   const updateWidth = (newWidth: number) => {
     logger.debug(`Updating width to ${newWidth} for col ${colDefRef.current!.field}`);
@@ -135,7 +136,7 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
     apiRef.current.publishEvent(COL_RESIZE_START, { field });
 
     colDefRef.current = colDef;
-    colElementRef.current = columnsRef.current!.querySelector(
+    colElementRef.current = columnsHeaderElement!.querySelector(
       `[data-field="${colDef.field}"]`,
     ) as HTMLDivElement;
 
@@ -222,7 +223,7 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
     apiRef.current.publishEvent(COL_RESIZE_START, { field });
 
     colDefRef.current = colDef;
-    colElementRef.current = columnsRef.current!.querySelector(
+    colElementRef.current = columnsHeaderElement!.querySelector(
       `[data-field="${colDef.field}"]`,
     ) as HTMLDivElement;
 
@@ -249,18 +250,17 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
   }, [apiRef, handleResizeMouseMove, handleResizeMouseUp, handleTouchMove, handleTouchEnd]);
 
   React.useEffect(() => {
-    const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
-    doc.addEventListener('touchstart', handleTouchStart, {
+    columnsHeaderElement?.addEventListener('touchstart', handleTouchStart, {
       passive: doesSupportTouchActionNone(),
     });
 
     return () => {
-      doc.removeEventListener('touchstart', handleTouchStart);
+      columnsHeaderElement?.removeEventListener('touchstart', handleTouchStart);
 
       clearTimeout(stopResizeEventTimeout.current);
       stopListening();
     };
-  }, [stopListening, apiRef, handleTouchStart]);
+  }, [columnsHeaderElement, handleTouchStart, stopListening]);
 
   return React.useMemo(
     () => ({
