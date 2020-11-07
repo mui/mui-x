@@ -6,7 +6,6 @@ import {
   VirtualizationApi,
   ApiRef,
 } from '../../../models/index';
-import { isEqual } from '../../../utils/utils';
 import { useLogger } from '../../utils/useLogger';
 import { COLUMNS_UPDATED, RESIZE } from '../../../constants/eventsConstants';
 import { useApiMethod } from '../../root/useApiMethod';
@@ -30,7 +29,6 @@ export const useVirtualColumns = (
 
   const renderedColRef = React.useRef<RenderColumnsProps | null>(null);
   const containerPropsRef = React.useRef<ContainerProps | null>(null);
-  const [gridState] = useGridState(apiRef);
   const lastScrollLeftRef = React.useRef<number>(0);
 
   const getColumnIdxFromScroll = React.useCallback(

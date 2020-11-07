@@ -1,4 +1,3 @@
-import debounce from '@material-ui/core/utils/debounce';
 import * as React from 'react';
 import { ElementSize } from '../../models';
 import { useLogger } from './useLogger';

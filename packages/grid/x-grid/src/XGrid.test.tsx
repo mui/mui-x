@@ -149,11 +149,10 @@ describe('<XGrid />', () => {
     /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
   });
 
-  it('should resize the width of the columns', async () => {
+  it('should resize the width of the columns', async function ResizeTest() {
     interface TestCaseProps {
       width?: number;
     }
-
     const TestCase = (props: TestCaseProps) => {
       const { width = 300 } = props;
       return (
@@ -165,12 +164,12 @@ describe('<XGrid />', () => {
 
     const { container, setProps } = render(<TestCase width={300} />);
     let rect;
-    await raf(); // wait for the AutoSize's dimension detection logic
-    await sleep(50 + CLOCK_SYNC_FACTOR); // wait for the resize event debounce (in useResizeContainer)
     rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
     expect(rect.width).to.equal(300 - 2);
 
     setProps({ width: 400 });
+    await raf();
+    await sleep(50 + CLOCK_SYNC_FACTOR);
     rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
     expect(rect.width).to.equal(400 - 2);
   });
@@ -208,7 +207,7 @@ describe('<XGrid />', () => {
   });
 
   describe('prop: apiRef', () => {
-    it('should apply setPage correctly', () => {
+    it('should apply setPage correctly', async () => {
       const rows = [
         {
           id: 0,
@@ -242,7 +241,6 @@ describe('<XGrid />', () => {
         );
       };
       render(<GridTest />);
-
       const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
       expect(cell).to.have.text('Addidas');
     });
