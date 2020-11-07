@@ -28,6 +28,7 @@ module.exports = {
     reactDocgen: false,
   },
   webpackFinal: async (config) => {
+    config.devtool = __DEV__ ? 'inline-source-map' : undefined;
     config.parallelism = 1;
     config.module.rules.push({
       test: /\.(ts|tsx)$/,

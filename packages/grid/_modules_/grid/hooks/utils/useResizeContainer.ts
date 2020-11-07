@@ -34,18 +34,12 @@ export function useResizeContainer(apiRef): (size: ElementSize) => void {
       }
 
       gridLogger.info('resized...', size);
-      apiRef!.current.resize();
+      if (apiRef!.current.resize) {
+        apiRef!.current.resize();
+      }
     },
     [gridLogger, apiRef],
   );
-  const debouncedOnResize = React.useMemo(() => debounce(onResize, 10), [onResize]);
 
-  React.useEffect(() => {
-    return () => {
-      gridLogger.info('canceling resize...');
-      debouncedOnResize.clear();
-    };
-  }, [gridLogger, debouncedOnResize]);
-
-  return debouncedOnResize;
+  return onResize;
 }

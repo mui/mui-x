@@ -6,6 +6,7 @@ import {
   VirtualizationApi,
   ApiRef,
 } from '../../../models/index';
+import { isEqual } from '../../../utils/utils';
 import { useLogger } from '../../utils/useLogger';
 import { COLUMNS_UPDATED, RESIZE } from '../../../constants/eventsConstants';
 import { useApiMethod } from '../../root/useApiMethod';
@@ -81,10 +82,13 @@ export const useVirtualColumns = (
       if (!containerProps) {
         return false;
       }
-      containerPropsRef.current = containerProps;
       const visibleColumns = apiRef.current.getVisibleColumns();
       const columnsMeta = apiRef.current.getColumnsMeta();
+      const windowSizeChanged =
+        containerPropsRef.current?.windowSizes.width !== containerProps.windowSizes.width;
+      containerPropsRef.current = containerProps;
       const windowWidth = containerProps.windowSizes.width;
+
       lastScrollLeftRef.current = scrollLeft;
       logger.debug(
         `Columns from ${getColumnFromScroll(scrollLeft)?.field} to ${
@@ -108,7 +112,7 @@ export const useVirtualColumns = (
 
       const renderNewColState = diffLast > tolerance || diffFirst > tolerance;
 
-      if (!renderedColRef || !renderedColRef.current || renderNewColState) {
+      if (windowSizeChanged || !renderedColRef || !renderedColRef.current || renderNewColState) {
         const newRenderedColState: RenderColumnsProps = {
           firstColIdx: firstDisplayedIdx - columnBuffer >= 0 ? firstDisplayedIdx - columnBuffer : 0,
           lastColIdx:
@@ -119,14 +123,14 @@ export const useVirtualColumns = (
           rightEmptyWidth: 0,
         };
         newRenderedColState.leftEmptyWidth = columnsMeta.positions[newRenderedColState.firstColIdx];
-        if (gridState.scrollBar.hasScrollX) {
+        if (apiRef.current.state.scrollBar.hasScrollX) {
           newRenderedColState.rightEmptyWidth =
             columnsMeta.totalWidth -
             columnsMeta.positions[newRenderedColState.lastColIdx] -
             visibleColumns[newRenderedColState.lastColIdx].width!;
         } else if (!options.disableExtendRowFullWidth) {
           newRenderedColState.rightEmptyWidth =
-            gridState.viewportSizes.width - columnsMeta.totalWidth;
+            apiRef.current.state.viewportSizes.width - columnsMeta.totalWidth;
         }
         renderedColRef.current = newRenderedColState;
         logger.debug('New columns state to render', newRenderedColState);
@@ -142,8 +146,6 @@ export const useVirtualColumns = (
       getColumnIdxFromScroll,
       options.columnBuffer,
       options.disableExtendRowFullWidth,
-      gridState.scrollBar.hasScrollX,
-      gridState.viewportSizes.width,
     ],
   );
   const virtualApi: Partial<VirtualizationApi> = {

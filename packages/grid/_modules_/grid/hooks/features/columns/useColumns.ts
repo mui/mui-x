@@ -17,23 +17,18 @@ import { Logger, useLogger } from '../../utils/useLogger';
 import { GridState } from '../core/gridState';
 import { useGridState } from '../core/useGridState';
 
-function mapColumns(
-  columns: Columns,
-  columnTypes: ColumnTypesRecord,
-  containerWidth: number,
-): Columns {
+function mapColumns(columns: Columns, columnTypes: ColumnTypesRecord): Columns {
   return columns.map((c) => ({ ...getColDef(columnTypes, c.type), ...c }));
 }
 
 function hydrateColumns(
   columns: Columns,
   columnTypes: ColumnTypesRecord,
-  containerWidth: number,
   withCheckboxSelection: boolean,
   logger: Logger,
 ): Columns {
   logger.debug('Hydrating Columns with default definitions');
-  let mappedCols = mapColumns(columns, columnTypes, containerWidth);
+  let mappedCols = mapColumns(columns, columnTypes);
   if (withCheckboxSelection) {
     mappedCols = [checkboxSelectionColDef, ...mappedCols];
   }
@@ -68,7 +63,6 @@ function toMeta(logger: Logger, visibleColumns: Columns): ColumnsMeta {
 const resetState = (
   columns: Columns,
   columnTypes: ColumnTypesRecord,
-  containerWidth: number,
   withCheckboxSelection: boolean,
   logger: Logger,
 ): InternalColumns => {
@@ -76,7 +70,7 @@ const resetState = (
     return getInitialColumnsState();
   }
 
-  const all = hydrateColumns(columns, columnTypes, containerWidth, withCheckboxSelection, logger);
+  const all = hydrateColumns(columns, columnTypes, withCheckboxSelection, logger);
   const visible = filterVisible(logger, all);
   const meta = toMeta(logger, visible);
   const lookup = toLookup(logger, all);
@@ -139,30 +133,26 @@ export function useColumns(columns: Columns, apiRef: ApiRef): InternalColumns {
     [logger, setGridState, forceUpdate, apiRef],
   );
 
-  const resetColumns = React.useCallback(
-    (width: number) => {
-      logger.info(`Columns have change, new length ${columns.length}`);
-      const newState = resetState(
-        columns,
-        gridState.options.columnTypes,
-        width,
-        !!gridState.options.checkboxSelection,
-        logger,
-      );
-      updateState(newState);
-    },
-    [
+  const resetColumns = React.useCallback(() => {
+    logger.info(`Columns have change, new length ${columns.length}`);
+    const newState = resetState(
       columns,
-      gridState.options.checkboxSelection,
       gridState.options.columnTypes,
+      !!gridState.options.checkboxSelection,
       logger,
-      updateState,
-    ],
-  );
+    );
+    updateState(newState);
+  }, [
+    columns,
+    gridState.options.checkboxSelection,
+    gridState.options.columnTypes,
+    logger,
+    updateState,
+  ]);
 
   React.useEffect(() => {
-    resetColumns(gridState.viewportSizes.width);
-  }, [gridState.viewportSizes.width, resetColumns]);
+    resetColumns();
+  }, [resetColumns]);
 
   const getColumnFromField: (field: string) => ColDef = React.useCallback(
     (field) => apiRef.current.getState<GridState>().columns.lookup[field],
@@ -221,14 +211,6 @@ export function useColumns(columns: Columns, apiRef: ApiRef): InternalColumns {
   };
 
   useApiMethod(apiRef, colApi, 'ColApi');
-
-  // const onResize = React.useCallback(
-  //   (size) => {
-  //     resetColumns(size.width);
-  //   },
-  //   [resetColumns],
-  // );
-  // useApiEventHandler(apiRef, RESIZE, onResize);
 
   return gridState.columns;
 }

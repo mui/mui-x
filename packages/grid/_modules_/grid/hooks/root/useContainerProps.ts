@@ -206,7 +206,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
       (state) => !isEqual(state.containerSizes, containerState),
       (state) => ({ ...state, containerSizes: containerState }),
     );
-  }, [getContainerProps, getScrollbar, getViewport, updateStateIfChanged]);
+  }, [getContainerProps, getScrollbar, getViewport, getVirtualRowCount, updateStateIfChanged]);
 
   React.useEffect(() => {
     refreshContainerSizes();

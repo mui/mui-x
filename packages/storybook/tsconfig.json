@@ -3,7 +3,8 @@
   "compilerOptions": {
     "outDir": "dist/",
     "rootDirs": ["src"],
-    "types": ["node", "jest", "jest-image-snapshot"]
+    "types": ["node", "jest", "jest-image-snapshot"],
+    "sourceMap": true
   },
   "include": ["src/**/*"],
   "exclude": ["__tests__", "**/*.test.ts", "node_modules", "lib", "build", "scripts"]
