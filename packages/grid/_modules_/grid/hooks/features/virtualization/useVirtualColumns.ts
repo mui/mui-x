@@ -10,7 +10,6 @@ import { useLogger } from '../../utils/useLogger';
 import { COLUMNS_UPDATED, RESIZE } from '../../../constants/eventsConstants';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useApiEventHandler } from '../../root/useApiEventHandler';
-import { useGridState } from '../core/useGridState';
 
 type UpdateRenderedColsFnType = (
   containerProps: ContainerProps | null,

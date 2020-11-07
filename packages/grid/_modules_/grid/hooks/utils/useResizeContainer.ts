@@ -2,12 +2,14 @@ import * as React from 'react';
 import { ElementSize } from '../../models';
 import { useLogger } from './useLogger';
 
+const isTestCoverageEnv = process.env.BABEL_ENV === 'coverage';
+
 export function useResizeContainer(apiRef): (size: ElementSize) => void {
   const gridLogger = useLogger('useResizeContainer');
 
   const onResize = React.useCallback(
     (size: ElementSize) => {
-      if (size.height === 0) {
+      if (!isTestCoverageEnv && size.height === 0) {
         gridLogger.warn(
           [
             'The parent of the grid has an empty height.',
@@ -19,7 +21,7 @@ export function useResizeContainer(apiRef): (size: ElementSize) => void {
           ].join('\n'),
         );
       }
-      if (size.width === 0) {
+      if (!isTestCoverageEnv && size.width === 0) {
         gridLogger.warn(
           [
             'The parent of the grid has an empty width.',
