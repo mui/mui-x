@@ -149,7 +149,7 @@ describe('<XGrid />', () => {
     /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
   });
 
-  it('should resize the width of the columns', async function ResizeTest() {
+  it('should resize the width of the columns', async () => {
     interface TestCaseProps {
       width?: number;
     }
@@ -168,8 +168,7 @@ describe('<XGrid />', () => {
     expect(rect.width).to.equal(300 - 2);
 
     setProps({ width: 400 });
-    await raf();
-    await sleep(50 + CLOCK_SYNC_FACTOR);
+    await raf(); // wait for the AutoSize's dimension detection logic
     rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
     expect(rect.width).to.equal(400 - 2);
   });
@@ -207,7 +206,7 @@ describe('<XGrid />', () => {
   });
 
   describe('prop: apiRef', () => {
-    it('should apply setPage correctly', async () => {
+    it('should apply setPage correctly', () => {
       const rows = [
         {
           id: 0,
