@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import * as React from 'react';
 import { ElementSize } from '../../models';
 import { useLogger } from './useLogger';
@@ -14,7 +13,7 @@ export function useResizeContainer(apiRef): (size: ElementSize) => void {
       clearTimeout(heightTimeout.current);
 
       if (size.height === 0) {
-        // We use setTimeout to give some time to resize the parent container.
+        // Use timeout to allow simpler tests in JSDOM.
         widthTimeout.current = setTimeout(() => {
           gridLogger.warn(
             [
@@ -26,10 +25,10 @@ export function useResizeContainer(apiRef): (size: ElementSize) => void {
               'https://material-ui.com/components/data-grid/rendering/#layout',
             ].join('\n'),
           );
-        }, 10);
+        });
       }
       if (size.width === 0) {
-        // We use setTimeout to give some time to resize the parent container.
+        // Use timeout to allow simpler tests in JSDOM.
         heightTimeout.current = setTimeout(() => {
           gridLogger.warn(
             [
@@ -41,7 +40,7 @@ export function useResizeContainer(apiRef): (size: ElementSize) => void {
               'https://material-ui.com/components/data-grid/rendering/#layout',
             ].join('\n'),
           );
-        }, 10);
+        });
       }
 
       gridLogger.info('resized...', size);
@@ -52,7 +51,7 @@ export function useResizeContainer(apiRef): (size: ElementSize) => void {
     [gridLogger, apiRef],
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     return () => {
       clearTimeout(widthTimeout.current);
       clearTimeout(heightTimeout.current);
