@@ -25,6 +25,7 @@ export const useVirtualColumns = (
   apiRef: ApiRef,
 ): UseVirtualColumnsReturnType => {
   const logger = useLogger('useVirtualColumns');
+
   const renderedColRef = React.useRef<RenderColumnsProps | null>(null);
   const containerPropsRef = React.useRef<ContainerProps | null>(null);
   const lastScrollLeftRef = React.useRef<number>(0);
@@ -78,10 +79,13 @@ export const useVirtualColumns = (
       if (!containerProps) {
         return false;
       }
-      containerPropsRef.current = containerProps;
       const visibleColumns = apiRef.current.getVisibleColumns();
       const columnsMeta = apiRef.current.getColumnsMeta();
+      const windowSizeChanged =
+        containerPropsRef.current?.windowSizes.width !== containerProps.windowSizes.width;
+      containerPropsRef.current = containerProps;
       const windowWidth = containerProps.windowSizes.width;
+
       lastScrollLeftRef.current = scrollLeft;
       logger.debug(
         `Columns from ${getColumnFromScroll(scrollLeft)?.field} to ${
@@ -105,7 +109,7 @@ export const useVirtualColumns = (
 
       const renderNewColState = diffLast > tolerance || diffFirst > tolerance;
 
-      if (!renderedColRef || !renderedColRef.current || renderNewColState) {
+      if (windowSizeChanged || !renderedColRef || !renderedColRef.current || renderNewColState) {
         const newRenderedColState: RenderColumnsProps = {
           firstColIdx: firstDisplayedIdx - columnBuffer >= 0 ? firstDisplayedIdx - columnBuffer : 0,
           lastColIdx:
@@ -116,14 +120,14 @@ export const useVirtualColumns = (
           rightEmptyWidth: 0,
         };
         newRenderedColState.leftEmptyWidth = columnsMeta.positions[newRenderedColState.firstColIdx];
-        if (containerProps.hasScrollX) {
+        if (apiRef.current.state.scrollBar.hasScrollX) {
           newRenderedColState.rightEmptyWidth =
             columnsMeta.totalWidth -
             columnsMeta.positions[newRenderedColState.lastColIdx] -
             visibleColumns[newRenderedColState.lastColIdx].width!;
         } else if (!options.disableExtendRowFullWidth) {
           newRenderedColState.rightEmptyWidth =
-            containerProps.viewportSize.width - columnsMeta.totalWidth;
+            apiRef.current.state.viewportSizes.width - columnsMeta.totalWidth;
         }
         renderedColRef.current = newRenderedColState;
         logger.debug('New columns state to render', newRenderedColState);
@@ -133,9 +137,8 @@ export const useVirtualColumns = (
       return false;
     },
     [
-      renderedColRef,
-      logger,
       apiRef,
+      logger,
       getColumnFromScroll,
       getColumnIdxFromScroll,
       options.columnBuffer,

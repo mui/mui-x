@@ -7,6 +7,7 @@ import { ScrollParams } from '../../../models/params/scrollParams';
 import { RenderContextProps, RenderRowProps } from '../../../models/renderContextProps';
 import { isEqual } from '../../../utils/utils';
 import { useEnhancedEffect } from '../../../utils/material-ui-utils';
+import { GridState } from '../core/gridState';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { PaginationState } from '../pagination/paginationReducer';
@@ -31,7 +32,6 @@ export const useVirtualRows = (
 ): UseVirtualRowsReturnType => {
   const logger = useLogger('useVirtualRows');
 
-  const updateViewportRef = React.useRef<(...args: any[]) => void>();
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
   const paginationState = useGridSelector<PaginationState>(apiRef, paginationSelector);
@@ -108,48 +108,50 @@ export const useVirtualRows = (
 
   const updateViewport = React.useCallback(
     (forceReRender = false) => {
-      const containerProps = apiRef.current.state.containerSizes;
+      const lastState = apiRef.current.getState<GridState>();
+      const containerProps = lastState.containerSizes;
+      if (!windowRef || !windowRef.current || !containerProps) {
+        return;
+      }
+      const viewportSizes = lastState.viewportSizes;
+      const scrollBar = lastState.scrollBar;
 
-      if (windowRef && windowRef.current && containerProps) {
-        const { scrollLeft, scrollTop } = windowRef.current;
-        logger.debug(`Handling scroll Left: ${scrollLeft} Top: ${scrollTop}`);
+      const { scrollLeft, scrollTop } = windowRef.current;
+      logger.debug(`Handling scroll Left: ${scrollLeft} Top: ${scrollTop}`);
 
-        let requireRerender = updateRenderedCols(containerProps, scrollLeft);
+      let requireRerender = updateRenderedCols(containerProps, scrollLeft);
 
-        const viewportHeight = containerProps.viewportSize.height;
-        const rzScrollLeft = scrollLeft;
-        let currentPage = scrollTop / viewportHeight;
-        const rzScrollTop = scrollTop % viewportHeight;
-        logger.debug(
-          ` viewportHeight:${viewportHeight}, rzScrollTop: ${rzScrollTop}, scrollTop: ${scrollTop}, current page = ${currentPage}`,
-        );
+      const rzScrollLeft = scrollLeft;
+      let currentPage = scrollTop / viewportSizes.height;
+      const rzScrollTop = scrollTop % viewportSizes.height;
+      logger.debug(
+        ` viewportHeight:${viewportSizes.height}, rzScrollTop: ${rzScrollTop}, scrollTop: ${scrollTop}, current page = ${currentPage}`,
+      );
 
-        const scrollParams = {
-          left: containerProps?.hasScrollX ? rzScrollLeft : 0,
-          top: containerProps?.hasScrollY ? rzScrollTop : 0,
-        };
+      const scrollParams = {
+        left: scrollBar.hasScrollX ? rzScrollLeft : 0,
+        top: scrollBar.hasScrollY ? rzScrollTop : 0,
+      };
 
-        const page = apiRef.current.state.rendering.virtualPage;
-        currentPage = Math.floor(currentPage);
+      const page = lastState.rendering.virtualPage;
+      currentPage = Math.floor(currentPage);
 
-        if (page !== currentPage) {
-          setRenderingState({ virtualPage: currentPage });
+      if (page !== currentPage) {
+        setRenderingState({ virtualPage: currentPage });
 
-          logger.debug(`Changing page from ${page} to ${currentPage}`);
-          requireRerender = true;
-        } else {
-          scrollTo(scrollParams);
-          apiRef.current.publishEvent(SCROLLING, scrollParams);
-        }
-        setRenderingState({ renderingZoneScroll: scrollParams });
+        logger.debug(`Changing page from ${page} to ${currentPage}`);
+        requireRerender = true;
+      } else {
+        scrollTo(scrollParams);
+        apiRef.current.publishEvent(SCROLLING, scrollParams);
+      }
+      setRenderingState({ renderingZoneScroll: scrollParams });
 
-        const pageChanged =
-          apiRef.current.state.rendering.renderContext &&
-          apiRef.current.state.rendering.renderContext.paginationCurrentPage !==
-            paginationState.page;
-        if (forceReRender || requireRerender || pageChanged) {
-          reRender();
-        }
+      const pageChanged =
+        lastState.rendering.renderContext &&
+        lastState.rendering.renderContext.paginationCurrentPage !== paginationState.page;
+      if (forceReRender || requireRerender || pageChanged) {
+        reRender();
       }
     },
     [
@@ -185,7 +187,7 @@ export const useVirtualRows = (
           scrollLeft =
             meta.positions[params.colIndex + 1] -
             gridState.containerSizes!.windowSizes.width +
-            (gridState.containerSizes!.hasScrollY ? gridState.containerSizes!.scrollBarSize : 0);
+            gridState.scrollBar!.scrollBarSize.y;
           logger.debug(`Scrolling to the right, scrollLeft: ${scrollLeft}`);
         }
         if (gridState.rendering.renderingZoneScroll.left > scrollLeft) {
@@ -199,8 +201,8 @@ export const useVirtualRows = (
       const currentRowPage =
         (params.rowIndex - (gridState.pagination.page - 1) * gridState.pagination.pageSize) /
         gridState.containerSizes!.viewportPageSize;
-      const scrollPosition = currentRowPage * gridState.containerSizes!.viewportSize.height;
-      const viewportHeight = gridState.containerSizes!.viewportSize.height;
+      const scrollPosition = currentRowPage * gridState!.viewportSizes.height;
+      const viewportHeight = gridState.viewportSizes.height;
 
       const isRowIndexAbove = windowRef.current!.scrollTop > scrollPosition;
       const isRowIndexBelow =
@@ -225,16 +227,7 @@ export const useVirtualRows = (
 
       return needScroll;
     },
-    [
-      logger,
-      apiRef,
-      gridState.pagination.page,
-      gridState.pagination.pageSize,
-      gridState.containerSizes,
-      gridState.rendering.renderingZoneScroll.left,
-      windowRef,
-      options.rowHeight,
-    ],
+    [logger, apiRef, gridState, windowRef, options.rowHeight],
   );
 
   const resetScroll = React.useCallback(() => {
@@ -246,10 +239,6 @@ export const useVirtualRows = (
     }
     setRenderingState({ renderingZoneScroll: { left: 0, top: 0 } });
   }, [scrollTo, setRenderingState, windowRef]);
-
-  React.useEffect(() => {
-    updateViewportRef.current = updateViewport;
-  }, [updateViewport]);
 
   const scrollingTimeout = React.useRef<any>(null);
   const handleScroll = React.useCallback(() => {
@@ -266,16 +255,10 @@ export const useVirtualRows = (
       forceUpdate();
     }, 300);
 
-    if (updateViewportRef.current) {
-      updateViewportRef.current();
+    if (apiRef.current.updateViewport) {
+      apiRef.current.updateViewport();
     }
   }, [windowRef, apiRef, forceUpdate]);
-
-  React.useEffect(() => {
-    return () => {
-      clearTimeout(scrollingTimeout.current);
-    };
-  }, []);
 
   const scroll = React.useCallback(
     (params: Partial<ScrollParams>) => {
@@ -308,26 +291,26 @@ export const useVirtualRows = (
     }
   });
 
-  React.useEffect(() => {
-    if (
-      gridState.containerSizes !== gridState.rendering.renderedSizes &&
-      updateViewportRef.current
-    ) {
-      logger.debug(`gridState.containerSizes updated, updating viewport. `);
-      updateViewportRef.current(true);
-    }
-  }, [gridState.containerSizes, gridState.rendering.renderedSizes, logger]);
+  const virtualApi: Partial<VirtualizationApi> = {
+    scroll,
+    scrollToIndexes,
+    getContainerPropsState,
+    getRenderContextState,
+    updateViewport,
+  };
+  useApiMethod(apiRef, virtualApi, 'VirtualizationApi');
 
   React.useEffect(() => {
     if (
       gridState.rendering.renderContext?.paginationCurrentPage !== gridState.pagination.page &&
-      updateViewportRef.current
+      apiRef.current.updateViewport
     ) {
       logger.debug(`State pagination.page changed to ${gridState.pagination.page}. `);
-      updateViewportRef.current(true);
+      apiRef.current.updateViewport(true);
       resetScroll();
     }
   }, [
+    apiRef,
     gridState.pagination.page,
     gridState.rendering.renderContext?.paginationCurrentPage,
     logger,
@@ -335,11 +318,34 @@ export const useVirtualRows = (
   ]);
 
   React.useEffect(() => {
-    if (updateViewportRef.current) {
-      logger.debug(`totalRowCount has changed to ${totalRowCount}, updating viewport.`);
-      updateViewportRef.current(true);
+    if (
+      gridState.containerSizes !== gridState.rendering.renderedSizes &&
+      apiRef.current.updateViewport
+    ) {
+      logger.debug(`gridState.containerSizes updated, updating viewport. `);
+      apiRef.current.updateViewport(true);
     }
-  }, [logger, totalRowCount]);
+  }, [apiRef, gridState.containerSizes, gridState.rendering.renderedSizes, logger]);
+
+  React.useEffect(() => {
+    if (apiRef.current.updateViewport) {
+      logger.debug(`totalRowCount has changed to ${totalRowCount}, updating viewport.`);
+      apiRef.current.updateViewport(true);
+    }
+  }, [
+    logger,
+    totalRowCount,
+    gridState.viewportSizes,
+    gridState.scrollBar,
+    gridState.containerSizes,
+    apiRef,
+  ]);
+
+  React.useEffect(() => {
+    return () => {
+      clearTimeout(scrollingTimeout.current);
+    };
+  }, []);
 
   const preventViewportScroll = React.useCallback(
     (event: any) => {
@@ -361,16 +367,6 @@ export const useVirtualRows = (
     SCROLL,
     preventViewportScroll,
   );
-
-  const virtualApi: Partial<VirtualizationApi> = {
-    scroll,
-    scrollToIndexes,
-    getContainerPropsState,
-    getRenderContextState,
-  };
-
-  useApiMethod(apiRef, virtualApi, 'VirtualizationApi');
-
   useApiEventHandler(apiRef, RESIZE, updateViewport);
 
   return gridState.rendering.renderContext;

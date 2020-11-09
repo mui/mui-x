@@ -18,8 +18,6 @@ async function raf() {
   });
 }
 
-const CLOCK_SYNC_FACTOR = 10;
-
 function getActiveCell() {
   const activeElement = document.activeElement;
 
@@ -153,7 +151,6 @@ describe('<XGrid />', () => {
     interface TestCaseProps {
       width?: number;
     }
-
     const TestCase = (props: TestCaseProps) => {
       const { width = 300 } = props;
       return (
@@ -165,13 +162,11 @@ describe('<XGrid />', () => {
 
     const { container, setProps } = render(<TestCase width={300} />);
     let rect;
-
     rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
     expect(rect.width).to.equal(300 - 2);
 
     setProps({ width: 400 });
     await raf(); // wait for the AutoSize's dimension detection logic
-    await sleep(50 + CLOCK_SYNC_FACTOR); // wait for the resize event debounce (in useResizeContainer)
     rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
     expect(rect.width).to.equal(400 - 2);
   });
@@ -243,7 +238,6 @@ describe('<XGrid />', () => {
         );
       };
       render(<GridTest />);
-
       const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
       expect(cell).to.have.text('Addidas');
     });
