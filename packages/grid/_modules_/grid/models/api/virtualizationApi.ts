@@ -31,7 +31,6 @@ export interface VirtualizationApi {
    * Get the current renderContext.
    */
   getRenderContextState: () => Partial<RenderContextProps> | undefined;
-
   /**
    * Refresh the viewport cells according to the scroll positions
    * @param forceRender
