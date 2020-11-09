@@ -17,7 +17,7 @@ export default function ControlledSelectionGrid() {
       <DataGrid
         checkboxSelection
         onSelectionChange={(newSelection) => {
-          setSelection(newSelection.rows);
+          setSelection(newSelection.rowIds);
         }}
         {...data}
       />

@@ -26,14 +26,13 @@ export default [
         sourcemap: !production,
       },
     ],
-
     external: [...Object.keys(pkg.peerDependencies || {})],
     plugins: [
       production &&
         cleaner({
           targets: ['./dist/'],
         }),
-      typescript(),
+      typescript({ tsconfig: 'tsconfig.build.json' }),
       commonjs(),
       !production && sourceMaps(),
       production && terser(),

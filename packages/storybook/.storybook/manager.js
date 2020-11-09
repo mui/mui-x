@@ -5,4 +5,5 @@ import muiTheme from './mui-theme';
 addons.setConfig({
   panelPosition: 'right',
   theme: muiTheme,
+  showRoots: true,
 });

@@ -101,33 +101,38 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CustomPagination(props) {
-  const { paginationProps } = props;
+  const { pagination, api } = props;
 
   return (
     <Pagination
       color="primary"
       variant="outlined"
       shape="rounded"
-      page={paginationProps.page}
-      count={paginationProps.pageCount}
+      page={pagination.page}
+      count={pagination.pageCount}
       // @ts-expect-error
       renderItem={(props2) => <PaginationItem {...props2} disableRipple />}
-      onChange={(event, value) => paginationProps.setPage(value)}
+      onChange={(event, value) => api.current.setPage(value)}
     />
   );
 }
 
 CustomPagination.propTypes = {
   /**
-   * The object containing all pagination details in [[PaginationProps]].
+   * ApiRef that let you manipulate the grid.
    */
-  paginationProps: PropTypes.shape({
+  api: PropTypes.shape({
+    current: PropTypes.object.isRequired,
+  }).isRequired,
+  /**
+   * The object containing all pagination details in [[PaginationState]].
+   */
+  pagination: PropTypes.shape({
     page: PropTypes.number.isRequired,
     pageCount: PropTypes.number.isRequired,
     pageSize: PropTypes.number.isRequired,
+    paginationMode: PropTypes.oneOf(['client', 'server']).isRequired,
     rowCount: PropTypes.number.isRequired,
-    setPage: PropTypes.func.isRequired,
-    setPageSize: PropTypes.func.isRequired,
   }).isRequired,
 };
 

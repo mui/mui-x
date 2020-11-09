@@ -4,7 +4,6 @@ import { randomCreatedDate, randomUpdatedDate } from '@material-ui/x-grid-data-g
 
 export default function ExceptionDemo() {
   const columns: Columns = [
-    { field: 'id', hide: true },
     { field: 'name', type: 'string' },
     {
       field: 'age',

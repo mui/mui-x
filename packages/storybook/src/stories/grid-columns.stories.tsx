@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { ColDef, XGrid, ColTypeDef } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
-import { withA11y } from '@storybook/addon-a11y';
 import CreateIcon from '@material-ui/icons/Create';
 import { Button } from '@material-ui/core';
 import { useData } from '../hooks/useData';
@@ -9,7 +8,7 @@ import { useData } from '../hooks/useData';
 export default {
   title: 'X-Grid Tests/Columns',
   component: XGrid,
-  decorators: [withKnobs, withA11y],
+  decorators: [withKnobs],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
@@ -168,7 +167,7 @@ export function ColumnsAlign() {
 
   const transformCols = React.useCallback((cols) => {
     if (cols.length > 0) {
-      cols.forEach((col: ColDef, idx) => {
+      cols.forEach((col: ColDef, idx: number) => {
         if (idx > 1 && idx % 2 === 1) {
           col.align = 'right';
           col.headerAlign = 'right';
@@ -200,7 +199,7 @@ export function NewColumnTypes() {
 
   const transformCols = React.useCallback((cols) => {
     if (cols.length > 0) {
-      cols.forEach((col, idx) => {
+      cols.forEach((col: ColDef, idx: number) => {
         if (idx > 1 && idx % 2 === 1) {
           col.type = 'price';
         } else if (idx > 1 && idx % 2 === 0) {

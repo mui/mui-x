@@ -4,7 +4,7 @@ const webpack = require('webpack');
 const browserStack = {
   username: process.env.BROWSERSTACK_USERNAME,
   accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
-  build: `material-ui-${new Date().toISOString()}`,
+  build: `material-ui-x-${new Date().toISOString()}`,
 };
 
 process.env.CHROME_BIN = require('puppeteer').executablePath();
@@ -54,8 +54,9 @@ module.exports = function setKarmaConfig(config) {
       plugins: [
         new webpack.DefinePlugin({
           'process.env': {
-            NODE_ENV: JSON.stringify('test'),
+            NODE_ENV: '"test"',
             CI: JSON.stringify(process.env.CI),
+            KARMA: 'true',
           },
         }),
       ],
@@ -122,30 +123,32 @@ module.exports = function setKarmaConfig(config) {
         BrowserStack_Chrome: {
           base: 'BrowserStack',
           os: 'OS X',
-          os_version: 'Sierra',
-          browser: 'Chrome',
-          browser_version: '49.0',
+          os_version: 'Catalina',
+          browser: 'chrome',
+          browser_version: '84.0',
         },
         BrowserStack_Firefox: {
           base: 'BrowserStack',
           os: 'Windows',
           os_version: '10',
-          browser: 'Firefox',
-          browser_version: '52.0',
+          browser: 'firefox',
+          browser_version: '78.0',
         },
         BrowserStack_Safari: {
           base: 'BrowserStack',
           os: 'OS X',
-          os_version: 'Sierra',
-          browser: 'Safari',
-          browser_version: '10.1',
+          os_version: 'Catalina',
+          browser: 'safari',
+          // We support 12.2 on iOS.
+          // However, 12.1 is very flaky on desktop (mobile is always flaky).
+          browser_version: '13.0',
         },
         BrowserStack_Edge: {
           base: 'BrowserStack',
           os: 'Windows',
           os_version: '10',
-          browser: 'Edge',
-          browser_version: '14.0',
+          browser: 'edge',
+          browser_version: '85.0',
         },
       },
     };

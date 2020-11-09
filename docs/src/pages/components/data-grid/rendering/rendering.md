@@ -27,7 +27,6 @@ function getFullName(params: ValueGetterParams) {
 }
 
 const columns: ColDef[] = [
-  { field: 'id', hide: true },
   { field: 'firstName', headerName: 'First name', width: 130 },
   { field: 'lastName', headerName: 'Last name', width: 130 },
   {
@@ -52,7 +51,6 @@ For instance, you might want to format a JavaScript date object into a string ye
 
 ```tsx
 const columns: ColDef[] = [
-  { field: 'id', hide: true },
   {
     field: 'date',
     headerName: 'Year',
@@ -81,16 +79,20 @@ However, it trades to be able to only render in a cell in exchange for allowing 
 
 ```tsx
 const columns: ColDef[] = [
-  { field: 'id', hide: true },
   {
     field: 'date',
     headerName: 'Year',
     renderCell: (params: ValueFormatterParams) => (
       <strong>
-        {(params.value as Date).getFullYear()}{' '}
-        <span role="img" aria-label="birthday">
-          🎂
-        </span>
+        {(params.value as Date).getFullYear()}
+        <Button
+          variant="contained"
+          color="primary"
+          size="small"
+          style={{ marginLeft: 16 }}
+        >
+          Open
+        </Button>
       </strong>
     ),
   },
@@ -106,7 +108,6 @@ It takes precedence over the `headerName` property.
 
 ```tsx
 const columns: ColDef[] = [
-  { field: 'id', hide: true },
   {
     field: 'date',
     width: 150,
@@ -134,7 +135,6 @@ The `ColDef` type has properties to apply class names and custom CSS on the head
 
 ```tsx
 const columns: Columns = [
-  { field: 'id', hide: true },
   {
     field: 'first',
     headerClassName: 'super-app-theme--header',
@@ -159,7 +159,6 @@ The `ColDef` type has properties to apply class names and custom CSS on the cell
 
 ```tsx
 const columns: Columns = [
-  { field: 'id', hide: true },
   {
     field: 'name',
     cellClassName: 'super-app-theme--cell',
@@ -181,6 +180,11 @@ const columns: Columns = [
 ## Layout
 
 By default, the grid has no intrinsic dimensions. It occupies the space its parent leaves.
+
+> ⚠️ When using % (**percentage**) for your height or width.<br> ><br>
+> You need to make sure the container you are putting the grid into also has an intrinsic dimension.
+> The browsers fit the element according to a percentage of the parent dimension.
+> If the parent has no dimensions, then the % will be zero.
 
 ### Flex layout
 

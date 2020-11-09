@@ -1,5 +1,5 @@
 ---
-title: Data Grid React component
+title: React Data Grid component
 components: DataGrid, XGrid
 ---
 
@@ -41,6 +41,9 @@ import { XGrid } from '@material-ui/x-grid';
 
 {{"demo": "pages/components/data-grid/overview/XGridDemo.js", "defaultCodeOpen": false, "disableAd": true, "bg": "inline"}}
 
+You can check the [feature comparison](/components/data-grid/getting-started/#feature-comparison) for more details.
+See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on purchasing licenses.
+
 ## Features
 
 - Built with and exclusively for React ⚛️
@@ -73,7 +76,7 @@ You can find more details on, the [feature comparison](/components/data-grid/get
 
 Here are some resources you might be interested in to learn more about the grid:
 
-- A [fullscreen demo](https://material-ui.com/components/data-grid/demo/#/grid)
+- A [fullscreen demo](https://muix-preview.netlify.app/#/grid)
 - The storybook used for [internal development](https://material-ui-x.netlify.app/storybook/)
 - The [source on GitHub](https://github.com/mui-org/material-ui-x/tree/master/packages/grid)
 - The [Material Design specification](https://material.io/design/components/data-tables.html) specification

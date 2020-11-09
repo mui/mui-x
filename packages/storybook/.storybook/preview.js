@@ -10,7 +10,7 @@ LicenseInfo.setLicenseKey(
 
 configureActions({
   depth: 3,
-  limit: 10
+  limit: 10,
 });
 
 addParameters({
@@ -20,11 +20,17 @@ addParameters({
      * @type {Boolean}
      */
     isToolshown: true,
-    showRoots: true,
-    storySort: (a, b) => (a[1].kind === b[1].kind ? 0 : a[1].id.localeCompare(b[1].id, undefined, { numeric: true })),
+    storySort: (a, b) =>
+      a[1].kind === b[1].kind ? 0 : a[1].id.localeCompare(b[1].id, undefined, { numeric: true }),
   },
   viewport: {
     viewports: INITIAL_VIEWPORTS,
+  },
+  a11y: {
+    element: '#root',
+    config: {},
+    options: {},
+    manual: true,
   },
   docs: {
     page: null,

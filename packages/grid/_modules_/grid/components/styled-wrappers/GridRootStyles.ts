@@ -55,6 +55,19 @@ export const useStyles = makeStyles(
           borderBottom: `1px solid ${borderColor}`,
           zIndex: 100,
         },
+        '& .MuiDataGrid-scrollArea': {
+          position: 'absolute',
+          top: 0,
+          zIndex: 101,
+          width: 20,
+          bottom: 0,
+        },
+        '& .MuiDataGrid-scrollArea-left': {
+          left: 0,
+        },
+        '& .MuiDataGrid-scrollArea-right': {
+          right: 0,
+        },
         '& .MuiDataGrid-colCellWrapper': {
           display: 'flex',
           width: '100%',
@@ -97,6 +110,9 @@ export const useStyles = makeStyles(
           whiteSpace: 'nowrap',
           fontWeight: theme.typography.fontWeightMedium,
         },
+        '& .MuiDataGrid-colCellMoving': {
+          backgroundColor: theme.palette.action.hover,
+        },
         '& .MuiDataGrid-columnSeparator': {
           position: 'absolute',
           right: -12,
@@ -104,12 +120,23 @@ export const useStyles = makeStyles(
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-        },
-        '& .MuiDataGrid-iconSeparator': {
           color: borderColor,
         },
-        '& .MuiDataGrid-columnSeparator:hover .MuiDataGrid-resizable': {
+        '& .MuiDataGrid-columnSeparatorResizable': {
           cursor: 'col-resize',
+          touchAction: 'none',
+          '&:hover': {
+            color: theme.palette.text.primary,
+            // Reset on touch devices, it doesn't add specificity
+            '@media (hover: none)': {
+              color: borderColor,
+            },
+          },
+          '&.Mui-resizing': {
+            color: theme.palette.text.primary,
+          },
+        },
+        '& .MuiDataGrid-iconSeparator': {
           color: 'inherit',
         },
         '& .MuiDataGrid-colCellWrapper.scroll .MuiDataGrid-colCell:last-child': {
@@ -187,19 +214,41 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-cellCenter': {
           textAlign: 'center',
         },
+        '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
+          alignItems: 'center',
+          display: 'flex',
+          margin: theme.spacing(0, 2),
+        },
         '& .MuiDataGrid-footer': {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           minHeight: 52, // Match TablePagination min height
-        },
-        '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
-          alignItems: 'center',
-          display: 'none',
-          margin: theme.spacing(0, 2),
-          [theme.breakpoints.up('md')]: {
-            display: 'flex',
+          '&.MuiDataGrid-footer-paginationAvailable': {
+            '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
+              visibility: 'hidden',
+              [theme.breakpoints.up('md')]: {
+                visibility: 'visible',
+              },
+            },
           },
+          '&.MuiDataGrid-footer-justifyContentEnd': {
+            justifyContent: 'flex-end',
+          },
+        },
+        '& .MuiDataGrid-colCell-dropZone .MuiDataGrid-colCell-draggable': {
+          cursor: 'move',
+        },
+        '& .MuiDataGrid-colCell-draggable': {
+          display: 'flex',
+          width: '100%',
+          justifyContent: 'inherit',
+        },
+        '& .MuiDataGrid-colCell-dragging': {
+          background: theme.palette.background.paper,
+          padding: '0 12px',
+          borderRadius: theme.shape.borderRadius,
+          opacity: theme.palette.action.disabledOpacity,
         },
       },
     };
@@ -227,6 +276,9 @@ export const useStyles = makeStyles(
           backgroundColor: active,
         },
         '& *::-webkit-scrollbar-thumb:active': {
+          backgroundColor: active,
+        },
+        '& *::-webkit-scrollbar-thumb:hover': {
           backgroundColor: active,
         },
         '& *::-webkit-scrollbar-corner': {

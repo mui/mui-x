@@ -1,5 +1,3 @@
-import { ContainerProps } from './containerProps';
-
 /**
  * The object containing the column properties of the rendering state.
  */
@@ -57,7 +55,4 @@ export interface RenderPaginationProps {
 /**
  * The full rendering state.
  */
-export type RenderContextProps = ContainerProps &
-  RenderColumnsProps &
-  RenderRowProps &
-  RenderPaginationProps;
+export type RenderContextProps = RenderColumnsProps & RenderRowProps & RenderPaginationProps;

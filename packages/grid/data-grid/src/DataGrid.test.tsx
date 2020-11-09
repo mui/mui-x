@@ -1,8 +1,8 @@
-/* eslint-disable react/forbid-foreign-prop-types */
 import * as React from 'react';
 import PropTypes from 'prop-types';
-// @ts-ignore
-import { createClientRender } from 'test/utils';
+// @ts-expect-error need to migrate helpers to TypeScript
+import { createClientRender, ErrorBoundary } from 'test/utils';
+import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
 
@@ -15,11 +15,9 @@ describe('<DataGrid />', () => {
         brand: 'Nike',
       },
     ],
-    columns: [
-      { field: 'id', hide: true },
-      { field: 'brand', width: 100 },
-    ],
+    columns: [{ field: 'brand', width: 100 }],
   };
+
   describe('layout', () => {
     before(function beforeHook() {
       if (/jsdom/.test(window.navigator.userAgent)) {
@@ -59,7 +57,7 @@ describe('<DataGrid />', () => {
         );
       });
 
-      it('should apply the page prop correctly', () => {
+      it('should apply the page prop correctly', (done) => {
         const rows = [
           {
             id: 0,
@@ -76,15 +74,59 @@ describe('<DataGrid />', () => {
         ];
         render(
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid rows={rows} columns={defaultProps.columns} page={2} pageSize={1} />
+            <DataGrid {...defaultProps} rows={rows} page={2} pageSize={1} />
           </div>,
         );
-        const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
-        expect(cell).to.have.text('Addidas');
+        setTimeout(() => {
+          const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
+          expect(cell).to.have.text('Addidas');
+          done();
+        }, 50);
+      });
+    });
+
+    describe('warnings', () => {
+      let clock;
+
+      beforeEach(() => {
+        clock = useFakeTimers();
+      });
+
+      afterEach(() => {
+        clock.restore();
+      });
+
+      it('should warn if the container has no intrinsic height', () => {
+        expect(() => {
+          render(
+            <div style={{ width: 300, height: 0 }}>
+              <DataGrid {...defaultProps} />
+            </div>,
+          );
+          clock.tick(100);
+          // @ts-expect-error need to migrate helpers to TypeScript
+        }).toWarnDev(
+          'Material-UI: useResizeContainer - The parent of the grid has an empty height.',
+        );
+      });
+
+      it('should warn if the container has no intrinsic width', () => {
+        expect(() => {
+          render(
+            <div style={{ width: 0 }}>
+              <div style={{ width: '100%', height: 300 }}>
+                <DataGrid {...defaultProps} />
+              </div>
+            </div>,
+          );
+          clock.tick(100);
+          // @ts-expect-error need to migrate helpers to TypeScript
+        }).toWarnDev(
+          'Material-UI: useResizeContainer - The parent of the grid has an empty width.',
+        );
       });
     });
   });
-
   describe('warnings', () => {
     before(() => {
       PropTypes.resetWarningCache();
@@ -101,7 +143,42 @@ describe('<DataGrid />', () => {
           'prop',
           'MockedDataGrid',
         );
+        // @ts-expect-error need to migrate helpers to TypeScript
       }).toErrorDev('Material-UI: `<DataGrid pagination={false} />` is not a valid prop.');
+    });
+
+    it('should throw if the rows has no id', function test() {
+      // TODO is this fixed?
+      if (!/jsdom/.test(window.navigator.userAgent)) {
+        // can't catch render errors in the browser for unknown reason
+        // tried try-catch + error boundary + window onError preventDefault
+        this.skip();
+      }
+
+      const rows = [
+        {
+          brand: 'Nike',
+        },
+      ];
+
+      const errorRef = React.createRef();
+      expect(() => {
+        render(
+          <ErrorBoundary ref={errorRef}>
+            {/* @ts-expect-error missing id */}
+            <DataGrid {...defaultProps} rows={rows} />
+          </ErrorBoundary>,
+        );
+        // @ts-expect-error need to migrate helpers to TypeScript
+      }).toErrorDev([
+        'The data grid component requires all rows to have a unique id property',
+        'The above error occurred in the <ForwardRef(GridComponent)> component',
+        'The above error occurred in the <ForwardRef(GridComponent)> component',
+      ]);
+      expect((errorRef.current as any).errors).to.have.length(1);
+      expect((errorRef.current as any).errors[0].toString()).to.include(
+        'The data grid component requires all rows to have a unique id property',
+      );
     });
   });
 });

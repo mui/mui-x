@@ -1,4 +1,4 @@
-import { CellValue } from './rows';
+import { CellValue } from './cell';
 import { CellParams } from './params/cellParams';
 
 export type SortDirection = 'asc' | 'desc' | null | undefined;

@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { ElementSize, XGrid } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
-import { withA11y } from '@storybook/addon-a11y';
 import '../style/grid-stories.css';
 import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/Resize',
   component: XGrid,
-  decorators: [withKnobs, withA11y],
+  decorators: [withKnobs],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
@@ -25,13 +24,13 @@ export const ResizeSmallDataset = () => {
       <div>
         <button
           type="button"
-          onClick={() => setSize((p) => ({ width: p.height, height: p.width }))}
+          onClick={() => setSize((p: ElementSize) => ({ width: p.height, height: p.width }))}
           style={{ padding: 5, textTransform: 'capitalize', margin: 10 }}
         >
           Switch sizes
         </button>
       </div>
-      <div style={{ width: size.width, height: size.height, display: 'flex' }}>
+      <div style={{ width: size.width, height: size.height }}>
         <XGrid rows={data.rows} columns={data.columns} />
       </div>
     </React.Fragment>
@@ -46,7 +45,7 @@ export const ResizeLargeDataset = () => {
       <div>
         <button
           type="button"
-          onClick={() => setSize((p) => ({ width: p.height, height: p.width }))}
+          onClick={() => setSize((p: ElementSize) => ({ width: p.height, height: p.width }))}
           style={{ padding: 5, textTransform: 'capitalize', margin: 10 }}
         >
           Switch sizes

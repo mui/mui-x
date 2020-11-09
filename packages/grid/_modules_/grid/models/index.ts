@@ -9,5 +9,6 @@ export * from './rows';
 export * from './sortModel';
 export * from './params';
 export * from './cellClass';
+export * from './cell';
 export * from './api';
 export * from './gridComponentOverridesProp';

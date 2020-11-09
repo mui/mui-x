@@ -5,4 +5,5 @@ export * from './componentParams';
 export * from './pageChangeParams';
 export * from './rowSelectedParams';
 export * from './rowParams';
+export * from './scrollParams';
 export * from './selectionChangeParams';

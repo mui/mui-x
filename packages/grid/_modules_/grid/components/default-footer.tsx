@@ -1,39 +1,49 @@
 import * as React from 'react';
-import { GridOptions } from '../models';
-import { GridFooter } from './styled-wrappers/GridFooter';
+import { useGridSelector } from '../hooks/features/core/useGridSelector';
+import { rowCountSelector } from '../hooks/features/rows/rowsSelector';
+import { selectedRowsCountSelector } from '../hooks/features/selection/selectionSelector';
+import { optionsSelector } from '../hooks/utils/useOptionsProp';
+import { ApiContext } from './api-context';
 import { RowCount } from './row-count';
 import { SelectedRowCount } from './selected-row-count';
-import { ApiContext } from './api-context';
+import { GridFooter } from './styled-wrappers/GridFooter';
+import { classnames } from '../utils';
 
 export interface DefaultFooterProps {
-  options: GridOptions;
   paginationComponent: React.ReactNode;
-  rowCount: number;
 }
 
 export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps>(
-  function DefaultFooter({ options, rowCount, paginationComponent }, ref) {
-    const api = React.useContext(ApiContext);
-    const [selectedRowCount, setSelectedCount] = React.useState(0);
-
-    React.useEffect(() => {
-      if (api && api.current) {
-        return api.current!.onSelectionChange(({ rows }) => setSelectedCount(rows.length));
-      }
-
-      return undefined;
-    }, [api, setSelectedCount]);
+  function DefaultFooter(props, ref) {
+    const { paginationComponent } = props;
+    const apiRef = React.useContext(ApiContext);
+    const totalRowCount = useGridSelector(apiRef, rowCountSelector);
+    const options = useGridSelector(apiRef, optionsSelector);
+    const selectedRowCount = useGridSelector(apiRef, selectedRowsCountSelector);
 
     if (options.hideFooter) {
       return null;
     }
 
+    const isPaginationAvailable = !!paginationComponent;
+    const showRowCount = !options.hideFooterRowCount && !isPaginationAvailable && (
+      <RowCount rowCount={totalRowCount} />
+    );
+    const showSelectedRowCount = !options.hideFooterSelectedRowCount && (
+      <SelectedRowCount selectedRowCount={selectedRowCount} />
+    );
+    const justifyItemsEnd = !selectedRowCount && !options.hideFooterSelectedRowCount;
+
     return (
-      <GridFooter ref={ref}>
-        {!options.hideFooterRowCount && <RowCount rowCount={rowCount} />}
-        {!options.hideFooterSelectedRowCount && (
-          <SelectedRowCount selectedRowCount={selectedRowCount} />
-        )}
+      <GridFooter
+        ref={ref}
+        className={classnames({
+          'MuiDataGrid-footer-paginationAvailable': isPaginationAvailable,
+          'MuiDataGrid-footer-justifyContentEnd': justifyItemsEnd,
+        })}
+      >
+        {showSelectedRowCount}
+        {showRowCount}
         {paginationComponent}
       </GridFooter>
     );

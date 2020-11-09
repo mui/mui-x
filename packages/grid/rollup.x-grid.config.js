@@ -25,7 +25,6 @@ export default [
         sourcemap: !production,
       },
     ],
-
     external: [...Object.keys(pkg.peerDependencies || {})],
     plugins: [
       replace({

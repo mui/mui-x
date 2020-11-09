@@ -30,6 +30,7 @@ const DemoAppBarStyled = styled(AppBar)`
     white-space: nowrap;
     letter-spacing: 0.3rem;
   }
+
   .product-title {
     margin-left: 10px;
     color: ${(p) => p.theme.colors.xColor};

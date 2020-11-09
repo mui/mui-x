@@ -8,13 +8,12 @@ import {
   useApiRef,
 } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
-import { withA11y } from '@storybook/addon-a11y';
 import { action } from '@storybook/addon-actions';
 
 export default {
   title: 'X-Grid Tests/Sorting',
   component: XGrid,
-  decorators: [withKnobs, withA11y],
+  decorators: [withKnobs],
   parameters: {
     options: { selectedPanel: 'storybook/action/panel' },
     docs: {
@@ -298,13 +297,10 @@ export const SortedEventsApi = () => {
   const cols = React.useMemo(() => getColumns(), []);
   const [loggedEvents, setEvents] = React.useState<any[]>([]);
 
-  const handleEvent = React.useCallback(
-    (name, params) => {
-      action(name)(params);
-      setEvents((prev: any[]) => [...prev, name]);
-    },
-    [setEvents],
-  );
+  const handleEvent = React.useCallback((name, params) => {
+    action(name)(params);
+    setEvents((prev: any[]) => [...prev, name]);
+  }, []);
 
   React.useEffect(() => {
     apiRef.current.onSortModelChange((params) => handleEvent('onSortModelChange', params));
@@ -337,13 +333,10 @@ export const SortedEventsOptions = () => {
   const cols = React.useMemo(() => getColumns(), []);
   const [loggedEvents, setEvents] = React.useState<any[]>([]);
 
-  const handleEvent = React.useCallback(
-    (name, params) => {
-      action(name)(params);
-      setEvents((prev: any[]) => [...prev, name]);
-    },
-    [setEvents],
-  );
+  const handleEvent = React.useCallback((name, params) => {
+    action(name)(params);
+    setEvents((prev: any[]) => [...prev, name]);
+  }, []);
 
   const onSortModelChange = React.useCallback(
     (params) => handleEvent('onSortModelChange', params),
@@ -388,6 +381,7 @@ function sortServerRows(rows: any[], params: SortModelParams): Promise<any[]> {
     setTimeout(() => {
       if (params.sortModel.length === 0) {
         resolve(getRows());
+        return;
       }
       const sortedCol = params.sortModel[0];
       const comparator = params.columns[0].sortComparator!;
@@ -418,7 +412,7 @@ export const ServerSideSorting = () => {
       setRows(newRows);
       setLoading(false);
     },
-    [setLoading, rows, setRows],
+    [rows],
   );
 
   // We use `useMemo` here, to keep the same ref and not trigger another sort on the next rendering

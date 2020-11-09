@@ -1,204 +1,281 @@
 import * as React from 'react';
+import { ownerDocument } from '@material-ui/core/utils';
 import { ColDef } from '../../models/colDef';
-import { ScrollParams, useLogger } from '../utils';
-import { COL_RESIZE_START, COL_RESIZE_STOP, SCROLLING } from '../../constants/eventsConstants';
-import { findCellElementsFromCol, findDataContainerFromCurrent } from '../../utils';
-import { useStateRef } from '../utils/useStateRef';
+import { useLogger } from '../utils';
+import { useEventCallback } from '../../utils/material-ui-utils';
+import { COL_RESIZE_START, COL_RESIZE_STOP } from '../../constants/eventsConstants';
+import {
+  HEADER_CELL_CSS_CLASS,
+  HEADER_CELL_SEPARATOR_RESIZABLE_CSS_CLASS,
+} from '../../constants/cssClassesConstants';
+import {
+  findCellElementsFromCol,
+  findParentElementFromClassName,
+  getFieldFromHeaderElem,
+  findHeaderElementFromField,
+} from '../../utils/domUtils';
 import { ApiRef } from '../../models';
+import { CursorCoordinates } from '../../models/api/columnReorderApi';
 
 const MIN_COL_WIDTH = 50;
-const MOUSE_LEFT_TIMEOUT = 1000;
+let cachedSupportsTouchActionNone = false;
+
+// TODO: remove support for Safari < 13.
+// https://caniuse.com/#search=touch-action
+//
+// Safari, on iOS, supports touch action since v13.
+// Over 80% of the iOS phones are compatible
+// in August 2020.
+function doesSupportTouchActionNone(): boolean {
+  if (!cachedSupportsTouchActionNone) {
+    const element = document.createElement('div');
+    element.style.touchAction = 'none';
+    document.body.appendChild(element);
+    cachedSupportsTouchActionNone = window.getComputedStyle(element).touchAction === 'none';
+    element.parentElement!.removeChild(element);
+  }
+  return cachedSupportsTouchActionNone;
+}
+
+function trackFinger(event, currentTouchId): CursorCoordinates | boolean {
+  if (currentTouchId !== undefined && event.changedTouches) {
+    for (let i = 0; i < event.changedTouches.length; i += 1) {
+      const touch = event.changedTouches[i];
+      if (touch.identifier === currentTouchId) {
+        return {
+          x: touch.clientX,
+          y: touch.clientY,
+        };
+      }
+    }
+
+    return false;
+  }
+
+  return {
+    x: event.clientX,
+    y: event.clientY,
+  };
+}
 
 // TODO improve experience for last column
-export const useColumnResize = (
-  columnsRef: React.RefObject<HTMLDivElement>,
-  apiRef: ApiRef,
-  headerHeight: number,
-) => {
+export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, apiRef: ApiRef) => {
   const logger = useLogger('useColumnResize');
+  const colDefRef = React.useRef<ColDef>();
+  const colElementRef = React.useRef<HTMLDivElement>();
+  const colCellElementsRef = React.useRef<NodeListOf<Element>>();
+  const initialOffset = React.useRef<number>();
+  const stopResizeEventTimeout = React.useRef<number>();
+  const touchId = React.useRef<number>();
+  const columnsHeaderElement = columnsRef.current;
 
-  const isResizing = React.useRef<boolean>(false);
-  const isLastColumn = React.useRef<boolean>(false);
-  const mouseLeftTimeout = React.useRef<any>();
-  const stopResizeEventTimeout = React.useRef<any>();
+  const updateWidth = (newWidth: number) => {
+    logger.debug(`Updating width to ${newWidth} for col ${colDefRef.current!.field}`);
 
-  const currentColDefRef = React.useRef<ColDef>();
-  const currentColElem = React.useRef<HTMLDivElement>();
-  const currentColPosition = React.useRef<number>();
-  const currentColPreviousWidth = React.useRef<number>();
-  const currentColCellsElems = React.useRef<NodeListOf<Element>>();
+    colDefRef.current!.width = newWidth;
 
-  const dataContainerElemRef = React.useRef<HTMLDivElement>();
-  const dataContainerPreviousWidth = React.useRef<number>();
-  const scrollOffset = React.useRef<number>(0);
-  const resizingMouseMove = React.useRef<{ x: number; y: number }>();
+    colElementRef.current!.style.width = `${newWidth}px`;
+    colElementRef.current!.style.minWidth = `${newWidth}px`;
+    colElementRef.current!.style.maxWidth = `${newWidth}px`;
 
-  const onScrollHandler = React.useCallback((params: ScrollParams) => {
-    scrollOffset.current = params.left;
-  }, []);
+    colCellElementsRef.current!.forEach((element) => {
+      const div = element as HTMLDivElement;
+      div.style.width = `${newWidth}px`;
+      div.style.minWidth = `${newWidth}px`;
+      div.style.maxWidth = `${newWidth}px`;
+    });
+  };
 
-  React.useEffect(() => {
-    return apiRef.current.subscribeEvent(SCROLLING, onScrollHandler);
-  }, [apiRef, onScrollHandler]);
+  const handleResizeMouseUp = useEventCallback(() => {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    stopListening();
 
-  const handleMouseDown = React.useCallback(
-    (col: ColDef): void => {
-      logger.debug(`Start Resize on col ${col.field}`);
-      apiRef.current.publishEvent(COL_RESIZE_START);
-      isResizing.current = true;
-      currentColDefRef.current = col;
-      currentColPreviousWidth.current = col.width;
-      currentColElem.current = columnsRef?.current?.querySelector(
-        `[data-field="${col.field}"]`,
-      ) as HTMLDivElement;
-      currentColCellsElems.current = findCellElementsFromCol(currentColElem.current) || undefined;
-      dataContainerElemRef.current =
-        findDataContainerFromCurrent(currentColElem.current) || undefined;
-      dataContainerPreviousWidth.current = Number(
-        dataContainerElemRef.current!.style.minWidth.replace('px', ''),
-      );
-      currentColPosition.current = apiRef.current.getColumnPosition(col.field);
-      isLastColumn.current =
-        apiRef.current.getColumnIndex(col.field) === apiRef.current.getVisibleColumns().length - 1;
-    },
-    [apiRef, columnsRef, logger],
-  );
+    apiRef.current!.updateColumn(colDefRef.current as ColDef);
 
-  const stopResize = React.useCallback((): void => {
-    isResizing.current = false;
-    currentColPosition.current = undefined;
-    currentColElem.current = undefined;
-    currentColCellsElems.current = undefined;
-    resizingMouseMove.current = undefined;
-    isLastColumn.current = false;
-    if (currentColDefRef.current) {
-      logger.debug(
-        `Updating col ${currentColDefRef.current.field} with new width: ${currentColDefRef.current.width}`,
-      );
-      apiRef?.current?.updateColumn(currentColDefRef.current);
-      currentColDefRef.current = undefined;
-    }
-
+    clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {
       apiRef.current.publishEvent(COL_RESIZE_STOP);
-    }, 200);
-  }, [apiRef, logger]);
+    });
 
-  const updateWidth = React.useCallback(
-    (newWidth: number) => {
-      logger.debug(`Updating width to ${newWidth} for col ${currentColDefRef.current!.field}`);
-      if (currentColDefRef.current) {
-        currentColDefRef.current.width = newWidth;
-      }
-      if (currentColElem.current) {
-        currentColElem.current.style.width = `${newWidth}px`;
-        currentColElem.current.style.minWidth = `${newWidth}px`;
-        currentColElem.current.style.maxWidth = `${newWidth}px`;
-      }
-      if (dataContainerElemRef.current) {
-        const diffWithPrev = newWidth - currentColPreviousWidth.current!;
-        dataContainerElemRef.current.style.minWidth = `${
-          dataContainerPreviousWidth.current! + diffWithPrev
-        }px`;
+    logger.debug(
+      `Updating col ${colDefRef.current!.field} with new width: ${colDefRef.current!.width}`,
+    );
+  });
 
-        if (isLastColumn.current) {
-          apiRef.current.scroll({ left: dataContainerPreviousWidth.current! + diffWithPrev });
-        }
-      }
-      if (currentColCellsElems.current) {
-        currentColCellsElems.current.forEach((el) => {
-          const div = el as HTMLDivElement;
-          div.style.width = `${newWidth}px`;
-          div.style.minWidth = `${newWidth}px`;
-          div.style.maxWidth = `${newWidth}px`;
-        });
-      }
-    },
-    [apiRef, logger],
-  );
-
-  const handleMouseEnter = React.useCallback((): void => {
-    if (mouseLeftTimeout.current != null) {
-      clearTimeout(mouseLeftTimeout.current);
+  const handleResizeMouseMove = useEventCallback((nativeEvent) => {
+    // Cancel move in case some other element consumed a mouseup event and it was not fired.
+    if (nativeEvent.buttons === 0) {
+      handleResizeMouseUp();
+      return;
     }
-  }, []);
-  const handleMouseLeave = React.useCallback((): void => {
-    if (
-      isLastColumn.current &&
-      resizingMouseMove.current &&
-      resizingMouseMove.current.y >= 0 &&
-      resizingMouseMove.current.y <= headerHeight &&
-      currentColDefRef.current
-    ) {
-      logger.debug(`Mouse left and same row, so extending last column width of 100`);
 
-      // we are resizing the last column outside the window
-      updateWidth(currentColDefRef.current.width! + 10);
-      mouseLeftTimeout.current = setTimeout(() => {
-        stopResize();
-      }, MOUSE_LEFT_TIMEOUT);
-    } else if (isResizing) {
-      mouseLeftTimeout.current = setTimeout(() => {
-        stopResize();
-      }, MOUSE_LEFT_TIMEOUT);
+    let newWidth =
+      initialOffset.current +
+      nativeEvent.clientX -
+      colElementRef.current!.getBoundingClientRect().left;
+    newWidth = Math.max(MIN_COL_WIDTH, newWidth);
+
+    updateWidth(newWidth);
+  });
+  const handleMouseDown = useEventCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    // Only handle left clicks
+    if (event.button !== 0) {
+      return;
     }
-  }, [headerHeight, logger, stopResize, updateWidth]);
 
-  const handleMouseMove = React.useCallback(
-    (ev: MouseEvent): void => {
-      if (isResizing.current) {
-        const target = ev.currentTarget! as HTMLDivElement;
-        const rect = target.getBoundingClientRect();
+    // Skip if the column isn't resizable
+    if (!event.currentTarget.classList.contains('MuiDataGrid-columnSeparatorResizable')) {
+      return;
+    }
 
-        resizingMouseMove.current = { x: ev.clientX - rect.left, y: ev.clientY - rect.top };
+    // Avoid text selection
+    event.preventDefault();
 
-        const offsetLeft = !isLastColumn.current ? rect.left : scrollOffset.current * -1;
+    colElementRef.current = findParentElementFromClassName(
+      event.currentTarget,
+      HEADER_CELL_CSS_CLASS,
+    ) as HTMLDivElement;
+    const field = colElementRef.current.getAttribute('data-field') as string;
+    const colDef = apiRef.current.getColumnFromField(field);
 
-        let newWidth = ev.clientX - offsetLeft - currentColPosition.current!;
-        newWidth = newWidth > MIN_COL_WIDTH ? newWidth : MIN_COL_WIDTH;
-        updateWidth(newWidth);
-      }
-    },
-    [updateWidth],
-  );
+    logger.debug(`Start Resize on col ${colDef.field}`);
+    apiRef.current.publishEvent(COL_RESIZE_START, { field });
 
-  // This a hack due to the limitation of react as I cannot put columnsRef in the dependency array of the effect adding the Event listener
-  const columnsRefState = useStateRef(columnsRef);
+    colDefRef.current = colDef;
+    colElementRef.current = columnsHeaderElement!.querySelector(
+      `[data-field="${colDef.field}"]`,
+    ) as HTMLDivElement;
+
+    colCellElementsRef.current = findCellElementsFromCol(colElementRef.current) as NodeListOf<
+      Element
+    >;
+
+    const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
+    doc.body.style.cursor = 'col-resize';
+
+    initialOffset.current =
+      (colDefRef.current.width as number) -
+      (event.clientX - colElementRef.current!.getBoundingClientRect().left);
+
+    doc.addEventListener('mousemove', handleResizeMouseMove);
+    doc.addEventListener('mouseup', handleResizeMouseUp);
+  });
+
+  const handleTouchEnd = useEventCallback((nativeEvent) => {
+    const finger = trackFinger(nativeEvent, touchId.current);
+
+    if (!finger) {
+      return;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    stopListening();
+
+    apiRef.current!.updateColumn(colDefRef.current as ColDef);
+
+    clearTimeout(stopResizeEventTimeout.current);
+    stopResizeEventTimeout.current = setTimeout(() => {
+      apiRef.current.publishEvent(COL_RESIZE_STOP);
+    });
+
+    logger.debug(
+      `Updating col ${colDefRef.current!.field} with new width: ${colDefRef.current!.width}`,
+    );
+  });
+
+  const handleTouchMove = useEventCallback((nativeEvent) => {
+    const finger = trackFinger(nativeEvent, touchId.current);
+    if (!finger) {
+      return;
+    }
+
+    // Cancel move in case some other element consumed a touchmove event and it was not fired.
+    if (nativeEvent.type === 'mousemove' && nativeEvent.buttons === 0) {
+      handleTouchEnd(nativeEvent);
+      return;
+    }
+
+    let newWidth =
+      initialOffset.current! +
+      (finger as CursorCoordinates).x -
+      colElementRef.current!.getBoundingClientRect().left;
+    newWidth = Math.max(MIN_COL_WIDTH, newWidth);
+
+    updateWidth(newWidth);
+  });
+
+  const handleTouchStart = useEventCallback((event) => {
+    const cellSeparator = findParentElementFromClassName(
+      event.target,
+      HEADER_CELL_SEPARATOR_RESIZABLE_CSS_CLASS,
+    );
+    // Let the event bubble if the target is not a col separator
+    if (!cellSeparator) return;
+    // If touch-action: none; is not supported we need to prevent the scroll manually.
+    if (!doesSupportTouchActionNone()) {
+      event.preventDefault();
+    }
+
+    const touch = event.changedTouches[0];
+    if (touch != null) {
+      // A number that uniquely identifies the current finger in the touch session.
+      touchId.current = touch.identifier;
+    }
+
+    colElementRef.current = findParentElementFromClassName(
+      event.target,
+      HEADER_CELL_CSS_CLASS,
+    ) as HTMLDivElement;
+    const field = getFieldFromHeaderElem(colElementRef.current!);
+    const colDef = apiRef.current.getColumnFromField(field);
+
+    logger.debug(`Start Resize on col ${colDef.field}`);
+    apiRef.current.publishEvent(COL_RESIZE_START, { field });
+
+    colDefRef.current = colDef;
+    colElementRef.current = findHeaderElementFromField(
+      columnsHeaderElement!,
+      colDef.field,
+    ) as HTMLDivElement;
+    colCellElementsRef.current = findCellElementsFromCol(colElementRef.current) as NodeListOf<
+      Element
+    >;
+
+    initialOffset.current =
+      (colDefRef.current.width as number) -
+      (touch.clientX - colElementRef.current!.getBoundingClientRect().left);
+
+    const doc = ownerDocument(event.currentTarget as HTMLElement);
+    doc.addEventListener('touchmove', handleTouchMove);
+    doc.addEventListener('touchend', handleTouchEnd);
+  });
+
+  const stopListening = React.useCallback(() => {
+    const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
+    doc.body.style.removeProperty('cursor');
+    doc.removeEventListener('mousemove', handleResizeMouseMove);
+    doc.removeEventListener('mouseup', handleResizeMouseUp);
+    doc.removeEventListener('touchmove', handleTouchMove);
+    doc.removeEventListener('touchend', handleTouchEnd);
+  }, [apiRef, handleResizeMouseMove, handleResizeMouseUp, handleTouchMove, handleTouchEnd]);
 
   React.useEffect(() => {
-    if (columnsRef && columnsRef.current) {
-      logger.info('Adding resizing event listener');
-      const columnsRefEvents = columnsRef.current;
-      columnsRef.current.addEventListener('mouseup', stopResize);
-      columnsRef.current.addEventListener('mouseleave', handleMouseLeave);
-      columnsRef.current.addEventListener('mouseenter', handleMouseEnter);
-      columnsRef.current.addEventListener('mousemove', handleMouseMove);
+    columnsHeaderElement?.addEventListener('touchstart', handleTouchStart, {
+      passive: doesSupportTouchActionNone(),
+    });
 
-      return () => {
-        columnsRefEvents.removeEventListener('mouseup', stopResize);
-        columnsRefEvents.removeEventListener('mouseleave', handleMouseLeave);
-        columnsRefEvents.removeEventListener('mouseenter', handleMouseEnter);
-        columnsRefEvents.removeEventListener('mousemove', handleMouseMove);
-      };
-    }
-    return undefined;
-  }, [
-    columnsRefState,
-    columnsRef,
-    handleMouseLeave,
-    handleMouseDown,
-    handleMouseMove,
-    handleMouseEnter,
-    logger,
-    stopResize,
-  ]);
-
-  React.useEffect(() => {
     return () => {
-      clearTimeout(mouseLeftTimeout.current);
-      clearTimeout(stopResizeEventTimeout.current);
-    };
-  }, []);
+      columnsHeaderElement?.removeEventListener('touchstart', handleTouchStart);
 
-  return handleMouseDown;
+      clearTimeout(stopResizeEventTimeout.current);
+      stopListening();
+    };
+  }, [columnsHeaderElement, handleTouchStart, stopListening]);
+
+  return React.useMemo(
+    () => ({
+      onMouseDown: handleMouseDown,
+    }),
+    [handleMouseDown],
+  );
 };

@@ -35,27 +35,24 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onApply, type, siz
     (e: React.ChangeEvent<{ name?: string; value: any }>) => {
       setType(e.target.value);
     },
-    [setType],
+    [],
   );
 
-  const onSizeChange = React.useCallback(
-    (e: React.ChangeEvent<{ name?: string; value: any }>) => {
-      setSize(Number(e.target.value));
-    },
-    [setSize],
-  );
+  const onSizeChange = React.useCallback((e: React.ChangeEvent<{ name?: string; value: any }>) => {
+    setSize(Number(e.target.value));
+  }, []);
   const onPaginationChange = React.useCallback(
     (e: React.ChangeEvent<{ name?: string; value: any }>) => {
       setSelectedPaginationValue(e.target.value);
       // setSize(Number(e.target.value));
     },
-    [setSelectedPaginationValue],
+    [],
   );
   const onSelectedThemeChange = React.useCallback(
     (e: React.ChangeEvent<{ name?: string; value: any }>) => {
       setSelectedTheme(e.target.value);
     },
-    [setSelectedTheme],
+    [],
   );
 
   return (

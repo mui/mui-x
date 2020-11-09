@@ -22,10 +22,6 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.less|\.css$/,
-        use: ['style-loader', 'css-loader', 'less-loader'],
-      },
-      {
         test: /\.(png|svg|jpg|jpeg|gif|ico)$/,
         exclude: /node_modules/,
         use: ['file-loader?name=[name].[ext]'],

@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/x-grid-data-generator",
-  "version": "4.0.0-alpha.6",
+  "version": "4.0.0-alpha.8",
   "description": "Data generator services for the grid",
   "author": "Material-UI Team",
   "main": "dist/cjs/index.js",
@@ -20,8 +20,7 @@
     "precommit": "npm run lint",
     "build": "rollup -c",
     "start": "rollup -cw",
-    "lint": "../../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../.eslintrc.js && npm run lint:css",
-    "lint:css": "stylelint 'src/**/*.{ts,tsx}' ../../../.stylelintrc.js"
+    "lint": "../../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../.eslintrc.js"
   },
   "dependencies": {
     "@types/chance": "^1.1.0",
@@ -32,16 +31,6 @@
     "lru-cache": "^6.0.0"
   },
   "devDependencies": {
-    "@types/node": "^14.0.13",
-    "rollup": "^2.6.1",
-    "rollup-plugin-cleaner": "^1.0.0",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-css-only": "^2.0.0",
-    "rollup-plugin-dts": "^1.4.7",
-    "rollup-plugin-postcss": "^3.1.2",
-    "rollup-plugin-sourcemaps": "^0.6.2",
-    "rollup-plugin-terser": "^5.3.0",
-    "rollup-plugin-typescript2": "^0.27.1",
     "tslib": "^2.0.0"
   },
   "peerDependencies": {
@@ -56,6 +45,6 @@
   ],
   "gitHead": "f1d56176bb6308bb55c69f5c2fd5593c4e4faebc",
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=10.0.0"
   }
 }

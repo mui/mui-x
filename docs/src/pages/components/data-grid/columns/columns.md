@@ -103,6 +103,22 @@ const usdPrice: ColTypeDef = {
 
 {{"demo": "pages/components/data-grid/columns/CustomColumnTypesGrid.js", "bg": "inline"}}
 
+## Column reorder [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
+
+By default, `XGrid` allows all column reordering by dragging the header cells and moving them left or right.
+
+To disable column reordering, set the prop `disableColumnReorder={true}`.
+
+In addition, column reordering emits the following events that can be imported:
+
+- `COL_REORDER_START`: emitted when dragging of a header cell starts.
+- `COL_REORDER_DRAG_ENTER`: emitted when the cursor enters another header cell while dragging.
+- `COL_REORDER_DRAG_OVER`: emitted when dragging a header cell over another header cell.
+- `COL_REORDER_DRAG_OVER_HEADER`: emitted when dragging a header cell over the `ColumnsHeader` component.
+- `COL_REORDER_STOP`: emitted when dragging of a header cell stops.
+
+{{"demo": "pages/components/data-grid/columns/ColumnOrderingGrid.js", "disableAd": true, "bg": "inline"}}
+
 ## 🚧 Column groups
 
 > ⚠️ This feature isn't implemented yet. It's coming.
@@ -110,14 +126,6 @@ const usdPrice: ColTypeDef = {
 > 👍 Upvote [issue #195](https://github.com/mui-org/material-ui-x/issues/195) if you want to see it land faster.
 
 Grouping columns allows you to have multiple levels of columns in your header and the ability, if needed, to 'open and close' column groups to show and hide additional columns.
-
-## 🚧 Column reorder [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
-
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #194](https://github.com/mui-org/material-ui-x/issues/194) if you want to see it land faster.
-
-Column reordering enables reordering the columns by dragging the header cells.
 
 ## 🚧 Column pinning [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 

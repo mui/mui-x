@@ -2,7 +2,6 @@ import * as React from 'react';
 import { DataGrid, ColDef } from '@material-ui/data-grid';
 
 const columns: ColDef[] = [
-  { field: 'id', hide: true },
   {
     field: 'date',
     width: 150,

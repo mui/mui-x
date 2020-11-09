@@ -13,18 +13,6 @@ export interface RowData extends ObjectWithId {
  */
 export type RowId = string | number;
 
-/**
- * The cell value type.
- */
-export type CellValue = string | number | boolean | Date | null | undefined | object;
-
-/**
- * The coordinates of cell represented by their row and column indexes.
- */
-export interface CellIndexCoordinates {
-  colIndex: number;
-  rowIndex: number;
-}
 export interface ObjectWithId {
   id: RowId;
 }
@@ -35,7 +23,6 @@ export interface ObjectWithId {
 export interface RowModel {
   id: RowId;
   data: RowData;
-  selected: boolean;
 }
 
 /**
@@ -58,7 +45,6 @@ export function createRowModel(rowData: RowData): RowModel {
   const row: RowModel = {
     id: rowData.id,
     data: rowData,
-    selected: false,
   };
   return row;
 }

@@ -2,7 +2,7 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "noEmit": true,
-    "types": ["mocha", "node"]
+    "types": ["mocha", "node", "chai", "chai-dom"]
   },
   "include": ["src"]
 }

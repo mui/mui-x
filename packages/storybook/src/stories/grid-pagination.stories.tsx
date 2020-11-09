@@ -4,14 +4,13 @@ import Button from '@material-ui/core/Button';
 import Pagination from '@material-ui/lab/Pagination';
 import { action } from '@storybook/addon-actions';
 import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
-import { withA11y } from '@storybook/addon-a11y';
 import { useData } from '../hooks/useData';
 import { getData, GridData } from '../data/data-service';
 
 export default {
   title: 'X-Grid Tests/Pagination',
   component: XGrid,
-  decorators: [withKnobs, withA11y],
+  decorators: [withKnobs],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
   },
@@ -38,7 +37,7 @@ export function PageSize100() {
 }
 
 export function PaginationKnobs() {
-  const data = useData(100, 200);
+  const data = useData(2000, 200);
   const rowsPerPageOptions = array('Rows per page options', ['10', '20', '50', '100', '200'], ', ');
 
   return (
@@ -132,12 +131,12 @@ export function PaginationApiTests() {
           pageSize={myPageSize}
           autoPageSize={autosize}
           components={{
-            pagination: ({ paginationProps }) => (
+            pagination: ({ pagination }) => (
               <Pagination
                 className="my-custom-pagination"
-                page={paginationProps.page}
-                count={paginationProps.pageCount}
-                onChange={(e, value) => paginationProps.setPage(value)}
+                page={pagination.page}
+                count={pagination.pageCount}
+                onChange={(e, value) => apiRef.current.setPage(value)}
               />
             ),
           }}
@@ -180,7 +179,7 @@ export function AutoPagination() {
 
 function loadServerRows(params: PageChangeParams): Promise<GridData> {
   return new Promise<GridData>((resolve) => {
-    const data = getData(params.pageSize, 10);
+    const data = getData(params.pageSize * 5, 10);
 
     setTimeout(() => {
       const minId = (params.page - 1) * params.pageSize;
@@ -236,17 +235,14 @@ export function ServerPaginationWithEventHandler() {
   const [rows, setRows] = React.useState<RowsProp>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
 
-  const onPageChange = React.useCallback(
-    (params) => {
-      action('onPageChange')(params);
-      setLoading(true);
-      loadServerRows(params).then((newData) => {
-        setRows(newData.rows);
-        setLoading(false);
-      });
-    },
-    [setRows, setLoading],
-  );
+  const onPageChange = React.useCallback((params) => {
+    action('onPageChange')(params);
+    setLoading(true);
+    loadServerRows(params).then((newData) => {
+      setRows(newData.rows);
+      setLoading(false);
+    });
+  }, []);
 
   return (
     <div className="grid-container">
@@ -316,3 +312,32 @@ export function Page2Api() {
     </div>
   );
 }
+
+const rows = [
+  {
+    id: 0,
+    brand: 'Nike',
+  },
+  {
+    id: 1,
+    brand: 'Addidas',
+  },
+  {
+    id: 2,
+    brand: 'Puma',
+  },
+];
+
+const columns = [{ field: 'brand' }];
+
+export const GridTest = () => {
+  const apiRef = useApiRef();
+  React.useEffect(() => {
+    apiRef.current.setPage(2);
+  }, [apiRef]);
+  return (
+    <div style={{ width: 300, height: 300 }}>
+      <XGrid rows={rows} apiRef={apiRef} columns={columns} pagination pageSize={1} hideFooter />
+    </div>
+  );
+};

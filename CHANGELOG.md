@@ -3,22 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [4.0.0-alpha.6](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.2...v4.0.0-alpha.6) (Sep 25, 2020)
+## [4.0.0-alpha.8](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (Oct 23, 2020)
+
+### @material-ui/x-grid@v4.0.0-alpha.8 / @material-ui/data-grid@v4.0.0-alpha.8
+
+- [DataGrid] Fix header row tabIndex (#478) @DanailH
+- [DataGrid] Reduce dependency on lodash, save 1kB gzipped (#450) @oliviertassinari
+  The DataGrid goes from [28.2 kB](https://bundlephobia.com/result?p=@material-ui/data-grid@4.0.0-alpha.7) gzipped down to [27.3 kB](https://bundlephobia.com/result?p=@material-ui/data-grid@4.0.0-alpha.8) gzipped.
+- [XGrid] Second iteration on resizing logic (#436) @oliviertassinari
+  Fix 8 bugs with the resizing.
+
+### Core
+
+- [core] Remove usage of LESS (#467) @dependabot-preview
+- [core] Update to the latest version of the main repo (#456) @oliviertassinari
+
+## [4.0.0-alpha.7](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (Oct 19, 2020)
+
+### @material-ui/x-grid@v4.0.0-alpha.7 / @material-ui/data-grid@v4.0.0-alpha.7
+
+- [DataGrid] Add column reorder support (#165) @DanailH
+- [DataGrid] Fix iOS issue when scrolling left (#439) @DanailH
+- [DataGrid] Improve sizing logic (#350) @oliviertassinari
+- [DataGrid] Improve warning and docs for layouting (#405) @RobertAron
+
+### Docs
+
+- [docs] Remove id columns (#355) @oliviertassinari
+- [docs] Swap words to better match users' query (#354) @oliviertassinari
+
+### Core
+
+- [storybook] Fix warning and improve perf (#407) @dtassone
+- [core] Batch small changes (#403) @oliviertassinari
+- [core] Fix yarn warning (#421) @oliviertassinari
+- [core] Hoist duplicated dependencies (#341) @oliviertassinari
+- [core] Remove dead code (#454) @oliviertassinari
+- [core] Remove dead-code (#353) @oliviertassinari
+- [core] Sync supported browser with v5 (#453) @oliviertassinari
+- [test] Add end-to-end test missing id (#356) @oliviertassinari
+- [test] Add missing types linting for x-grid (#357) @oliviertassinari
+- [test] Run the karma tests in browserstack (#316) @oliviertassinari
+
+## [4.0.0-alpha.6](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.2...v4.0.0-alpha.6) (Sep 25, 2020)
 
 ### @material-ui/x-grid@v4.0.0-alpha.6 / @material-ui/data-grid@v4.0.0-alpha.6
+
 - [DataGrid] Throw if rows id is missing (#349) @dtassone
 - [DataGrid] Fix valueGetter sorting (#348) @dtassone
 - [DataGrid] Fix typings and packages assets (#339) @dtassone
 - [DataGrid] Add npm keywords (#304) @oliviertassinari
 
 ### Docs
+
 - [docs] Avoid double borders (#340) @oliviertassinari
 - [docs] Fix layout jump issue (#338) @oliviertassinari
 - [docs] Fix short description warning (#302) @oliviertassinari
 
 ## [4.0.0-alpha.2](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (Sep 18, 2020)
 
-- [DataGrid] Fix wrongly exported types (#298) @dtassone 
+- [DataGrid] Fix wrongly exported types (#298) @dtassone
 
 ## [4.0.0-alpha.1](https://github.com/mui-org/material-ui-x/compare/v0.1.67...v4.0.0-alpha.1) (Sep 17, 2020)
 

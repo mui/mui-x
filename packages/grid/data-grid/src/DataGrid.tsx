@@ -1,12 +1,11 @@
 import * as React from 'react';
-import * as PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
+import { chainPropTypes } from '@material-ui/utils';
 import { GridComponent, GridComponentProps, classnames } from '../../_modules_/grid';
-
-// TODO: Refactor to import when moving to material-ui v5
-const chainPropTypes = require('@material-ui/utils').chainPropTypes;
 
 const FORCED_PROPS: Partial<GridComponentProps> = {
   disableColumnResize: true,
+  disableColumnReorder: true,
   disableMultipleColumnsSorting: true,
   disableMultipleSelection: true,
   pagination: true,
@@ -16,6 +15,7 @@ const FORCED_PROPS: Partial<GridComponentProps> = {
 export type DataGridProps = Omit<
   GridComponentProps,
   | 'disableColumnResize'
+  | 'disableColumnReorder'
   | 'disableMultipleColumnsSorting'
   | 'disableMultipleSelection'
   | 'licenseStatus'
@@ -24,6 +24,7 @@ export type DataGridProps = Omit<
   | 'pagination'
 > & {
   disableColumnResize?: true;
+  disableColumnReorder?: true;
   disableMultipleColumnsSorting?: true;
   disableMultipleSelection?: true;
   pagination?: true;
@@ -52,58 +53,73 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
   );
 });
 
-DataGrid2.propTypes = {
-  apiRef: chainPropTypes(PropTypes.any, (props) => {
+(DataGrid2 as any).propTypes = {
+  apiRef: chainPropTypes(PropTypes.any, (props: any) => {
     if (props.apiRef != null) {
       throw new Error(
         [
           `Material-UI: \`apiRef\` is not a valid prop.`,
-          'ApiRef is not available in the MIT version',
+          'ApiRef is not available in the MIT version.',
           '',
           'You need to upgrade to the XGrid component to unlock this feature.',
         ].join('\n'),
       );
     }
+    return null;
   }),
-  columns: chainPropTypes(PropTypes.any, (props) => {
+  columns: chainPropTypes(PropTypes.any, (props: any) => {
     if (props.columns && props.columns.some((column) => column.resizable)) {
       throw new Error(
         [
           `Material-UI: \`column.resizable = true\` is not a valid prop.`,
-          'Column resizing is not available in the MIT version',
+          'Column resizing is not available in the MIT version.',
           '',
           'You need to upgrade to the XGrid component to unlock this feature.',
         ].join('\n'),
       );
     }
+    return null;
   }),
-  disableColumnResize: chainPropTypes(PropTypes.bool, (props) => {
+  disableColumnReorder: chainPropTypes(PropTypes.bool, (props: any) => {
+    if (props.disableColumnReorder === false) {
+      throw new Error(
+        [
+          `Material-UI: \`<DataGrid disableColumnReorder={false} />\` is not a valid prop.`,
+          'Column reordering is not available in the MIT version.',
+          '',
+          'You need to upgrade to the XGrid component to unlock this feature.',
+        ].join('\n'),
+      );
+    }
+    return null;
+  }),
+  disableColumnResize: chainPropTypes(PropTypes.bool, (props: any) => {
     if (props.disableColumnResize === false) {
       throw new Error(
         [
           `Material-UI: \`<DataGrid disableColumnResize={false} />\` is not a valid prop.`,
-          'Column resizing is not available in the MIT version',
+          'Column resizing is not available in the MIT version.',
           '',
           'You need to upgrade to the XGrid component to unlock this feature.',
         ].join('\n'),
       );
     }
+    return null;
   }),
-  disableMultipleColumnsSorting: chainPropTypes(PropTypes.bool, (props) => {
+  disableMultipleColumnsSorting: chainPropTypes(PropTypes.bool, (props: any) => {
     if (props.disableMultipleColumnsSorting === false) {
       throw new Error(
         [
           `Material-UI: \`<DataGrid disableMultipleColumnsSorting={false} />\` is not a valid prop.`,
-          'Only single column sorting is available in the MIT version',
+          'Only single column sorting is available in the MIT version.',
           '',
           'You need to upgrade to the XGrid component to unlock this feature.',
         ].join('\n'),
       );
     }
-
     return null;
   }),
-  disableMultipleSelection: chainPropTypes(PropTypes.bool, (props) => {
+  disableMultipleSelection: chainPropTypes(PropTypes.bool, (props: any) => {
     if (props.disableMultipleSelection === false) {
       throw new Error(
         [
@@ -114,10 +130,9 @@ DataGrid2.propTypes = {
         ].join('\n'),
       );
     }
-
     return null;
   }),
-  pageSize: chainPropTypes(PropTypes.number, (props) => {
+  pageSize: chainPropTypes(PropTypes.number, (props: any) => {
     if (props.pageSize && props.pageSize > MAX_PAGE_SIZE) {
       throw new Error(
         [
@@ -128,10 +143,9 @@ DataGrid2.propTypes = {
         ].join('\n'),
       );
     }
-
     return null;
   }),
-  pagination: (props) => {
+  pagination: (props: any) => {
     if (props.pagination === false) {
       return new Error(
         [
