@@ -206,12 +206,12 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
       const keyUpHandler = getHandler(KEYUP);
       const gridRootElem = gridRootRef.current;
 
-      gridRootRef.current.addEventListener(CLICK, onClickHandler, { capture: true });
-      gridRootRef.current.addEventListener(MOUSE_HOVER, onHoverHandler, { capture: true });
-      gridRootRef.current.addEventListener(FOCUS_OUT, onFocusOutHandler);
+      gridRootElem.addEventListener(CLICK, onClickHandler, { capture: true });
+      gridRootElem.addEventListener(MOUSE_HOVER, onHoverHandler, { capture: true });
+      gridRootElem.addEventListener(FOCUS_OUT, onFocusOutHandler);
 
-      document.addEventListener(KEYDOWN, keyDownHandler);
-      document.addEventListener(KEYUP, keyUpHandler);
+      gridRootElem.addEventListener(KEYDOWN, keyDownHandler);
+      gridRootElem.addEventListener(KEYUP, keyUpHandler);
       apiRef.current.isInitialised = true;
       const api = apiRef.current;
 
@@ -221,8 +221,8 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
         gridRootElem.removeEventListener(CLICK, onClickHandler, { capture: true });
         gridRootElem.removeEventListener(MOUSE_HOVER, onHoverHandler, { capture: true });
         gridRootElem.removeEventListener(FOCUS_OUT, onFocusOutHandler);
-        document.removeEventListener(KEYDOWN, keyDownHandler);
-        document.removeEventListener(KEYUP, keyUpHandler);
+        gridRootElem.removeEventListener(KEYDOWN, keyDownHandler);
+        gridRootElem.removeEventListener(KEYUP, keyUpHandler);
         api.removeAllListeners();
       };
     }
