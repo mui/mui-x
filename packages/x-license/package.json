@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/x-license",
-  "version": "4.0.0-alpha.8",
+  "version": "4.0.0-alpha.9",
   "description": "Material-UI X License verification",
   "author": "Material-UI Team",
   "main": "dist/cjs/index.js",
@@ -28,7 +28,6 @@
     "commander": "^6.1.0",
     "esm": "^3.2.25"
   },
-  "devDependencies": {},
   "peerDependencies": {
     "react": "^16.13.1"
   },
