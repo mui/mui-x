@@ -8,7 +8,12 @@ import {
   HEADER_CELL_CSS_CLASS,
   HEADER_CELL_SEPARATOR_RESIZABLE_CSS_CLASS,
 } from '../../constants/cssClassesConstants';
-import { findCellElementsFromCol, findParentElementFromClassName } from '../../utils/domUtils';
+import {
+  findCellElementsFromCol,
+  findParentElementFromClassName,
+  getFieldFromHeaderElem,
+  findHeaderElementFromField,
+} from '../../utils/domUtils';
 import { ApiRef } from '../../models';
 import { CursorCoordinates } from '../../models/api/columnReorderApi';
 
@@ -221,17 +226,17 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
       event.target,
       HEADER_CELL_CSS_CLASS,
     ) as HTMLDivElement;
-    const field = colElementRef.current!.getAttribute('data-field') as string;
+    const field = getFieldFromHeaderElem(colElementRef.current!);
     const colDef = apiRef.current.getColumnFromField(field);
 
     logger.debug(`Start Resize on col ${colDef.field}`);
     apiRef.current.publishEvent(COL_RESIZE_START, { field });
 
     colDefRef.current = colDef;
-    colElementRef.current = columnsHeaderElement!.querySelector(
-      `[data-field="${colDef.field}"]`,
+    colElementRef.current = findHeaderElementFromField(
+      columnsHeaderElement!,
+      colDef.field,
     ) as HTMLDivElement;
-
     colCellElementsRef.current = findCellElementsFromCol(colElementRef.current) as NodeListOf<
       Element
     >;
