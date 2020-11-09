@@ -124,7 +124,15 @@ export const useStyles = makeStyles(
         },
         '& .MuiDataGrid-columnSeparatorResizable': {
           cursor: 'col-resize',
-          '&:hover, &.Mui-resizing': {
+          touchAction: 'none',
+          '&:hover': {
+            color: theme.palette.text.primary,
+            // Reset on touch devices, it doesn't add specificity
+            '@media (hover: none)': {
+              color: borderColor,
+            },
+          },
+          '&.Mui-resizing': {
             color: theme.palette.text.primary,
           },
         },
