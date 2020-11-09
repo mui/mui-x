@@ -278,6 +278,9 @@ export const useStyles = makeStyles(
         '& *::-webkit-scrollbar-thumb:active': {
           backgroundColor: active,
         },
+        '& *::-webkit-scrollbar-thumb:hover': {
+          backgroundColor: active,
+        },
         '& *::-webkit-scrollbar-corner': {
           backgroundColor: track,
         },
