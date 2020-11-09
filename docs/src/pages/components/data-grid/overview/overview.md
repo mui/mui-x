@@ -41,6 +41,9 @@ import { XGrid } from '@material-ui/x-grid';
 
 {{"demo": "pages/components/data-grid/overview/XGridDemo.js", "defaultCodeOpen": false, "disableAd": true, "bg": "inline"}}
 
+You can check the [feature comparison](/components/data-grid/getting-started/#feature-comparison) for more details.
+See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on purchasing licenses.
+
 ## Features
 
 - Built with and exclusively for React ⚛️
