@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.9](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.8...v4.0.0-alpha.9) (Nov 9, 2020)
+
+### @material-ui/x-grid@v4.0.0-alpha.9 / @material-ui/data-grid@v4.0.0-alpha.9
+
+- [DataGrid] Fix keyboard with multiple grids (#562) @dtassone
+- [DataGrid] Add touch support on column resize (#537) @danailH
+- [DataGrid] Refactor containerSizes in smaller state (#544) @dtassone
+- [DataGrid] Fix display of row count and selected rows on mobile (#508) @oliviertassinari
+- [DataGrid] Apply review from #412 (#515) @oliviertassinari
+- [DataGrid] Avoid paint step (#531) @oliviertassinari
+- [DataGrid] Refactor rendering, remove rafUpdate (#532) @Dtassone
+- [DataGrid] Add missing reselect dependency (#534) @dtassone
+- [DataGrid] Raf Timer stored in apiRef (#506) @dtassone
+- [DataGrid] Fix webpack v5 support (#449) @oliviertassinari
+- [DataGrid] Rework columnReorder to work with the new state management (#505) @danailH
+- [DataGrid] Fix performance issues (#501) @dtassone
+- [DataGrid] Refactor columns scrolling (#500) @dtassone
+- [DataGrid] Replace require with import (#455) @oliviertassinari
+- [DataGrid] Restore regression test (#503) @oliviertassinari
+- [DataGrid] Refactor state (#412) @dtassone
+
+### Docs
+
+- [docs] Fix links to GitHub (#538) @oliviertassinari
+- [docs] Add more information to readme (#539) @An-prog-hub 
+- [docs] Fix the Netlify proxy for localization of X (#536) @oliviertassinari
+- [docs] Add deploy script command @oliviertassinari
+
+### Core
+
+- [core] Batch small changes (#546) @oliviertassinari
+- [core] Improve types (#448) @olivertassinari
+- [core] Run prettier (#482) @oliviertassinari
+- [core] Disable generation of changelogs @oliviertassinari
+- [test] Karma should fail if errors are thrown (#543) @oliviertassinari
+
 ## [4.0.0-alpha.8](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (Oct 23, 2020)
 
 ### @material-ui/x-grid@v4.0.0-alpha.8 / @material-ui/data-grid@v4.0.0-alpha.8
