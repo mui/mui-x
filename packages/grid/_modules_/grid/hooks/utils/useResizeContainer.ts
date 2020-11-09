@@ -56,9 +56,8 @@ export function useResizeContainer(apiRef): (size: ElementSize) => void {
     return () => {
       clearTimeout(widthTimeout.current);
       clearTimeout(heightTimeout.current);
-    }
-
-  }, [])
+    };
+  }, []);
 
   return onResize;
 }
