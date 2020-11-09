@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import { createClientRender, ErrorBoundary } from 'test/utils';
 import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, GridState } from '@material-ui/data-grid';
+import { getColumnValues } from 'test/utils/helperFn';
 
 describe('<DataGrid />', () => {
   const render = createClientRender();
@@ -26,15 +27,14 @@ describe('<DataGrid />', () => {
     ],
     columns: [{ field: 'brand', width: 100 }],
   };
+  before(function beforeHook() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // Need layouting
+      this.skip();
+    }
+  });
 
   describe('layout', () => {
-    before(function beforeHook() {
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
     // Adapation of describeConformance()
     describe('Material-UI component API', () => {
       it(`attaches the ref`, () => {
@@ -300,13 +300,6 @@ describe('<DataGrid />', () => {
     });
   });
   describe('column width', () => {
-    before(function beforeHook() {
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
     it('should set the columns width to 100px by default', () => {
       const rows = [
         {
@@ -377,6 +370,32 @@ describe('<DataGrid />', () => {
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(col).toHaveInlineStyle({ width: `${colWidthValues[index]}px` });
       });
+    });
+  });
+  describe('State', () => {
+    it('should allow to control the state using useState', async () => {
+      function GridStateTest({ direction, sortedRows }) {
+        const [gridState, setGridState] = React.useState<Partial<GridState>>({
+          sorting: { sortModel: [{ field: 'brand', sort: direction }], sortedRows },
+        });
+
+        React.useEffect(() => {
+          setGridState({
+            sorting: { sortModel: [{ field: 'brand', sort: direction }], sortedRows },
+          });
+        }, [direction, sortedRows]);
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...defaultProps} state={gridState} />
+          </div>
+        );
+      }
+
+      const { setProps } = render(<GridStateTest direction={'desc'} sortedRows={[2, 0, 1]} />);
+      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+      setProps({ direction: 'asc', sortedRows: [1, 0, 2] });
+      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas'].reverse());
     });
   });
 });

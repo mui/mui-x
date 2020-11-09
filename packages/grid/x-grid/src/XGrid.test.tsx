@@ -1,49 +1,10 @@
-import { DataGrid } from '@material-ui/data-grid';
 import * as React from 'react';
 // @ts-expect-error need to migrate helpers to TypeScript
 import { fireEvent, screen, createClientRender } from 'test/utils';
+import { getActiveCell, sleep, CLOCK_SYNC_FACTOR, raf, getColumnValues } from 'test/utils/helperFn';
 import { expect } from 'chai';
-import { XGrid, useApiRef, Columns, GridState } from '@material-ui/x-grid';
+import { XGrid, useApiRef, Columns } from '@material-ui/x-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
-
-async function raf() {
-  return new Promise((resolve) => {
-    // Chrome and Safari have a bug where calling rAF once returns the current
-    // frame instead of the next frame, so we need to call a double rAF here.
-    // See crbug.com/675795 for more.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        resolve();
-      });
-    });
-  });
-}
-
-function getActiveCell() {
-  const activeElement = document.activeElement;
-
-  if (!activeElement) {
-    return null;
-  }
-
-  return `${activeElement.getAttribute('data-rowindex')}-${activeElement.getAttribute(
-    'aria-colindex',
-  )}`;
-}
-
-async function sleep(duration: number) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, duration);
-  });
-}
-
-function getColumnValues() {
-  return Array.from(document.querySelectorAll('[role="cell"][aria-colindex="0"]')).map(
-    (node) => node!.textContent,
-  );
-}
 
 describe('<XGrid />', () => {
   const render = createClientRender();
@@ -260,27 +221,7 @@ describe('<XGrid />', () => {
     });
   });
   describe('state', () => {
-    it('should allow to control the state using apiRef', () => {
-      function GridStateTest() {
-        const apiRef = useApiRef();
-        React.useEffect(() => {
-          apiRef.current.setState((prev) => ({
-            ...prev,
-            sorting: { ...prev.sorting, sortModel: [{ field: 'brand', sort: 'asc' }] },
-          }));
-        }, [apiRef]);
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <XGrid {...defaultProps} apiRef={apiRef} />
-          </div>
-        );
-      }
-
-      render(<GridStateTest />);
-      expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
-    });
-
-    it('should trigger on state change', () => {
+    it('should trigger on state change and pass the correct params', () => {
       let onStateParams;
       let apiRef;
       function Test() {
@@ -303,29 +244,24 @@ describe('<XGrid />', () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       expect(onStateParams.state).to.not.be.empty;
     });
-    it('should allow to control the state using useState', async () => {
-      function GridStateTest({ direction, sortedRows }) {
-        const [gridState, setGridState] = React.useState<Partial<GridState>>({
-          sorting: { sortModel: [{ field: 'brand', sort: direction }], sortedRows },
-        });
-
+    it('should allow to control the state using apiRef', () => {
+      function GridStateTest() {
+        const apiRef = useApiRef();
         React.useEffect(() => {
-          setGridState({
-            sorting: { sortModel: [{ field: 'brand', sort: direction }], sortedRows },
-          });
-        }, [direction, sortedRows]);
-
+          apiRef.current.setState((prev) => ({
+            ...prev,
+            sorting: { ...prev.sorting, sortModel: [{ field: 'brand', sort: 'asc' }] },
+          }));
+        }, [apiRef]);
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid {...defaultProps} state={gridState} />
+            <XGrid {...defaultProps} apiRef={apiRef} />
           </div>
         );
       }
 
-      const { setProps } = render(<GridStateTest direction={'desc'} sortedRows={[2, 0, 1]} />);
-      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
-      setProps({ direction: 'asc', sortedRows: [1, 0, 2] });
-      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas'].reverse());
+      render(<GridStateTest />);
+      expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     });
   });
 });
