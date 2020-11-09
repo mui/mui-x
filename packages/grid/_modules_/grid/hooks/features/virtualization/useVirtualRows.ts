@@ -37,7 +37,7 @@ export const useVirtualRows = (
   const paginationState = useGridSelector<PaginationState>(apiRef, paginationSelector);
   const totalRowCount = useGridSelector<number>(apiRef, rowCountSelector);
 
-  const [scrollTo] = useScrollFn(apiRef, renderingZoneRef, colRef);
+  const [scrollTo] = useScrollFn(renderingZoneRef, colRef);
   const [renderedColRef, updateRenderedCols] = useVirtualColumns(options, apiRef);
 
   const setRenderingState = React.useCallback(
