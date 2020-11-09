@@ -24,6 +24,13 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - [DataGrid] Restore regression test (#503) @oliviertassinari
 - [DataGrid] Refactor state (#412) @dtassone
 
+### Docs
+
+- [docs] Fix links to GitHub (#538) @oliviertassinari
+- [docs] Add more information to readme (#539) @An-prog-hub 
+- [docs] Fix the Netlify proxy for localization of X (#536) @oliviertassinari
+- [docs] Add deploy script command @oliviertassinari
+
 ### Core
 
 - [core] Batch small changes (#546) @oliviertassinari
@@ -31,13 +38,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - [core] Run prettier (#482) @oliviertassinari
 - [core] Disable generation of changelogs @oliviertassinari
 - [test] Karma should fail if errors are thrown (#543) @oliviertassinari
-
-### Docs
-
-- [docs] Fix links to GitHub (#538) @oliviertassinari
-- [docs] Add more information to readme (#539) @An-prog-hub 
-- [docs] Fix the Netlify proxy for localization of X (#536) @oliviertassinari
-- [docs] Add deploy script command @oliviertassinari
 
 ## [4.0.0-alpha.8](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (Oct 23, 2020)
 
