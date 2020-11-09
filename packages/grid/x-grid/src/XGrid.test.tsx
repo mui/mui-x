@@ -18,8 +18,6 @@ async function raf() {
   });
 }
 
-const CLOCK_SYNC_FACTOR = 10;
-
 function getActiveCell() {
   const activeElement = document.activeElement;
 
