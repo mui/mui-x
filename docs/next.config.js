@@ -36,6 +36,10 @@ module.exports = {
           CONTEXT: JSON.stringify(process.env.CONTEXT),
           LIB_VERSION: JSON.stringify(pkg.version),
           REACT_MODE: JSON.stringify(reactMode),
+          SOURCE_CODE_ROOT_URL: JSON.stringify(
+            'https://github.com/mui-org/material-ui-x/blob/master',
+          ),
+          SOURCE_CODE_REPO: JSON.stringify('https://github.com/mui-org/material-ui-x'),
         },
       }),
     ]);

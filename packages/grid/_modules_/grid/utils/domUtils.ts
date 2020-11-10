@@ -3,7 +3,7 @@ import {
   DATA_CONTAINER_CSS_CLASS,
   HEADER_CELL_CSS_CLASS,
 } from '../constants/cssClassesConstants';
-import { CellIndexCoordinates } from '../models/rows';
+import { CellIndexCoordinates } from '../models/cell';
 
 export function isOverflown(element: Element): boolean {
   return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
@@ -28,6 +28,11 @@ export function getIdFromRowElem(rowEl: Element): string {
 export function getFieldFromHeaderElem(colCellEl: Element): string {
   return colCellEl.getAttribute('data-field')!;
 }
+
+export function findHeaderElementFromField(elem: Element, field: string): Element | null {
+  return elem.querySelector(`[data-field="${field}"]`);
+}
+
 export function findCellElementsFromCol(col: HTMLElement): NodeListOf<Element> | null {
   const field = col.getAttribute('data-field');
   const root = findParentElementFromClassName(col, 'MuiDataGrid-root');

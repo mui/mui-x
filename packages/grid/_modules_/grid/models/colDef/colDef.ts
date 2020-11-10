@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { ComparatorFn, SortDirection } from '../sortModel';
-import { CellValue } from '../rows';
-import { ColType, NativeColTypes } from './colType';
+import { CellValue } from '../cell';
 import { CellClassNamePropType, CellClassRules } from '../cellClass';
-import { ColParams } from '../params/colParams';
 import { CellParams, ValueFormatterParams, ValueGetterParams } from '../params/cellParams';
+import { ColParams } from '../params/colParams';
+import { ComparatorFn, SortDirection } from '../sortModel';
+import { ColType, NativeColTypes } from './colType';
 
 /**
  * Alignement used in position elements in Cells.

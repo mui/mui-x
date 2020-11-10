@@ -2,8 +2,8 @@
  * Data Grid component implementing [[GridComponentProps]].
  * @returns JSX.Element
  */
-import useForkRef from '@material-ui/core/utils/useForkRef';
 import * as React from 'react';
+import { useForkRef } from '@material-ui/core/utils';
 import { AutoSizer } from './components/AutoSizer';
 import { ColumnsHeader } from './components/column-headers';
 import { DefaultFooter } from './components/default-footer';
@@ -23,10 +23,10 @@ import { usePagination } from './hooks/features/pagination/usePagination';
 import { useRows } from './hooks/features/rows/useRows';
 import { useSorting } from './hooks/features/sorting/useSorting';
 import { useApiRef } from './hooks/features/useApiRef';
-import { useColumnReorder } from './hooks/features/useColumnReorder';
+import { useColumnReorder } from './hooks/features/columnReorder';
 import { useColumnResize } from './hooks/features/useColumnResize';
 import { useComponents } from './hooks/features/useComponents';
-import { useSelection } from './hooks/features/useSelection';
+import { useSelection } from './hooks/features/selection/useSelection';
 import { useApi } from './hooks/root/useApi';
 import { useContainerProps } from './hooks/root/useContainerProps';
 import { useEvents } from './hooks/root/useEvents';
@@ -75,21 +75,21 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useContainerProps(windowRef, apiRef);
     const renderCtx = useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
 
-    const onColumnReorder = useColumnReorder(columnsHeaderRef, apiRef);
+    useColumnReorder(apiRef);
     const separatorProps = useColumnResize(columnsHeaderRef, apiRef);
     usePagination(apiRef);
 
     const customComponents = useComponents(props.components, apiRef, rootContainerRef);
 
-    logger.info(
-      `Rendering, page: ${renderCtx?.page}, col: ${renderCtx?.firstColIdx}-${renderCtx?.lastColIdx}, row: ${renderCtx?.firstRowIdx}-${renderCtx?.lastRowIdx}`,
-      renderCtx,
-    );
-
     // TODO move that to renderCtx
     const getTotalHeight = React.useCallback(
       (size) => getCurryTotalHeight(gridState.options, gridState.containerSizes, footerRef)(size),
       [gridState.options, gridState.containerSizes],
+    );
+
+    logger.info(
+      `Rendering, page: ${renderCtx?.page}, col: ${renderCtx?.firstColIdx}-${renderCtx?.lastColIdx}, row: ${renderCtx?.firstRowIdx}-${renderCtx?.lastRowIdx}`,
+      apiRef.current.state,
     );
 
     return (
@@ -129,12 +129,8 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                       <ColumnsHeader
                         ref={columnsHeaderRef}
                         columns={gridState.columns.visible || []}
-                        hasScrollX={!!gridState.containerSizes?.hasScrollX}
+                        hasScrollX={!!gridState.scrollBar.hasScrollX}
                         separatorProps={separatorProps}
-                        onColumnHeaderDragOver={onColumnReorder.handleColumnHeaderDragOver}
-                        onColumnDragStart={onColumnReorder.handleDragStart}
-                        onColumnDragEnter={onColumnReorder.handleDragEnter}
-                        onColumnDragOver={onColumnReorder.handleDragOver}
                         renderCtx={renderCtx}
                       />
                     </GridColumnsContainer>

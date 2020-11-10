@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import { RowId, RowModel } from '../../../models/rows';
-import { SortModel } from '../../../models/sortModel';
+import { SortDirection, SortModel } from '../../../models/sortModel';
 import { GridState } from '../core/gridState';
 import { rowsLookupSelector, unorderedRowModelsSelector } from '../rows/rowsSelector';
 import { SortingState } from './sortingState';
@@ -30,4 +30,20 @@ export const sortModelSelector = createSelector<GridState, SortingState, SortMod
   sortingStateSelector,
   (sorting) => sorting.sortModel,
 );
-// export const isSorted
+
+export type SortColumnLookup = Record<string, { sortDirection: SortDirection; sortIndex?: number }>;
+export const sortColumnLookupSelector = createSelector<
+  GridState,
+  SortingState,
+  SortModel,
+  SortColumnLookup
+>(sortingStateSelector, sortModelSelector, (state, sortModel: SortModel) => {
+  const result: SortColumnLookup = sortModel.reduce((res, sortItem, index) => {
+    res[sortItem.field] = {
+      sortDirection: sortItem.sort,
+      sortIndex: sortModel.length > 1 ? index + 1 : undefined,
+    };
+    return res;
+  }, {});
+  return result;
+});

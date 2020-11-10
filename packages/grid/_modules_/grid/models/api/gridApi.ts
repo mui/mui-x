@@ -1,5 +1,6 @@
 import { RowApi } from './rowApi';
 import { ColumnApi } from './columnApi';
+import { ColumnReorderApi } from './columnReorderApi';
 import { SelectionApi } from './selectionApi';
 import { SortApi } from './sortApi';
 import { PaginationApi } from './paginationApi';
@@ -16,6 +17,7 @@ export type GridApi = CoreApi &
   EventsApi &
   RowApi &
   ColumnApi &
+  ColumnReorderApi &
   SelectionApi &
   SortApi &
   VirtualizationApi &

@@ -179,7 +179,7 @@ export function AutoPagination() {
 
 function loadServerRows(params: PageChangeParams): Promise<GridData> {
   return new Promise<GridData>((resolve) => {
-    const data = getData(params.pageSize, 10);
+    const data = getData(params.pageSize * 5, 10);
 
     setTimeout(() => {
       const minId = (params.page - 1) * params.pageSize;
@@ -312,3 +312,32 @@ export function Page2Api() {
     </div>
   );
 }
+
+const rows = [
+  {
+    id: 0,
+    brand: 'Nike',
+  },
+  {
+    id: 1,
+    brand: 'Addidas',
+  },
+  {
+    id: 2,
+    brand: 'Puma',
+  },
+];
+
+const columns = [{ field: 'brand' }];
+
+export const GridTest = () => {
+  const apiRef = useApiRef();
+  React.useEffect(() => {
+    apiRef.current.setPage(2);
+  }, [apiRef]);
+  return (
+    <div style={{ width: 300, height: 300 }}>
+      <XGrid rows={rows} apiRef={apiRef} columns={columns} pagination pageSize={1} hideFooter />
+    </div>
+  );
+};

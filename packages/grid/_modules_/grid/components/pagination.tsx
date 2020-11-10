@@ -1,5 +1,6 @@
 import * as React from 'react';
 import TablePagination from '@material-ui/core/TablePagination';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 
 export interface PaginationComponentProps {
   pageCount: number;
@@ -11,6 +12,25 @@ export interface PaginationComponentProps {
   rowsPerPageOptions?: number[];
 }
 
+// Used to hide the drop down select from the TablePaginagion
+const useStyles = makeStyles((theme: Theme) => ({
+  caption: {
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'block',
+    },
+    '& ~ &': {
+      display: 'block',
+    },
+  },
+  input: {
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'block',
+    },
+  },
+}));
+
 export const Pagination: React.FC<PaginationComponentProps> = ({
   setPage,
   setPageSize,
@@ -19,6 +39,7 @@ export const Pagination: React.FC<PaginationComponentProps> = ({
   currentPage,
   rowsPerPageOptions,
 }) => {
+  const classes = useStyles();
   const onPageSizeChange = React.useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
       const newPageSize = Number(event.target.value);
@@ -36,6 +57,7 @@ export const Pagination: React.FC<PaginationComponentProps> = ({
 
   return (
     <TablePagination
+      classes={classes}
       component="div"
       count={rowCount}
       page={currentPage - 1}

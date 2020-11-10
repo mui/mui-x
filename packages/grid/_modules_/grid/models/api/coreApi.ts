@@ -1,4 +1,4 @@
-import { EventEmitter } from 'events';
+import { EventEmitter } from '../../utils/EventEmitter';
 
 /**
  * The core API interface that is available in the grid [[apiRef]].
@@ -25,4 +25,8 @@ export interface CoreApi extends EventEmitter {
    * Display the error overlay component.
    */
   showError: (props: any) => void;
+  /**
+   * Store the request animation timer, that coordinates all requestAnimationFrame().
+   */
+  rafTimer: number;
 }

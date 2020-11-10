@@ -1,7 +1,7 @@
 import { isDate } from '../../utils/utils';
 import { dateComparer } from '../../utils/sortingUtils';
+import { CellValue } from '../cell';
 import { STRING_COL_DEF } from './stringColDef';
-import { CellValue } from '../rows';
 import { ColTypeDef } from './colDef';
 
 export function dateFormatter({ value }: { value: CellValue }) {

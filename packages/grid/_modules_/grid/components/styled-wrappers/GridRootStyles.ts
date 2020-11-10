@@ -124,7 +124,15 @@ export const useStyles = makeStyles(
         },
         '& .MuiDataGrid-columnSeparatorResizable': {
           cursor: 'col-resize',
-          '&:hover, &.Mui-resizing': {
+          touchAction: 'none',
+          '&:hover': {
+            color: theme.palette.text.primary,
+            // Reset on touch devices, it doesn't add specificity
+            '@media (hover: none)': {
+              color: borderColor,
+            },
+          },
+          '&.Mui-resizing': {
             color: theme.palette.text.primary,
             // Reset on touch devices, it doesn't add specificity
             '@media (hover: none)': {
@@ -210,18 +218,26 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-cellCenter': {
           textAlign: 'center',
         },
+        '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
+          alignItems: 'center',
+          display: 'flex',
+          margin: theme.spacing(0, 2),
+        },
         '& .MuiDataGrid-footer': {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           minHeight: 52, // Match TablePagination min height
-        },
-        '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
-          alignItems: 'center',
-          display: 'none',
-          margin: theme.spacing(0, 2),
-          [theme.breakpoints.up('md')]: {
-            display: 'flex',
+          '&.MuiDataGrid-footer-paginationAvailable': {
+            '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
+              visibility: 'hidden',
+              [theme.breakpoints.up('md')]: {
+                visibility: 'visible',
+              },
+            },
+          },
+          '&.MuiDataGrid-footer-justifyContentEnd': {
+            justifyContent: 'flex-end',
           },
         },
         '& .MuiDataGrid-colCell-dropZone .MuiDataGrid-colCell-draggable': {
@@ -264,6 +280,9 @@ export const useStyles = makeStyles(
           backgroundColor: active,
         },
         '& *::-webkit-scrollbar-thumb:active': {
+          backgroundColor: active,
+        },
+        '& *::-webkit-scrollbar-thumb:hover': {
           backgroundColor: active,
         },
         '& *::-webkit-scrollbar-corner': {

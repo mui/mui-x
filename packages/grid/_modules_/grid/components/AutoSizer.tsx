@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useForkRef, ownerWindow } from '@material-ui/core/utils';
-import { useEventCallback } from '../utils/material-ui-utils';
+import { useEventCallback, useEnhancedEffect } from '../utils/material-ui-utils';
 import createDetectElementResize from '../lib/createDetectElementResize';
 // TODO replace with https://caniuse.com/resizeobserver.
 
@@ -46,9 +46,6 @@ export interface AutoSizerProps extends Omit<React.HTMLAttributes<HTMLDivElement
    */
   onResize?: (size: AutoSizerSize) => void;
 }
-
-// TODO v5: replace with @material-ui/core/utils/useEnhancedEffect.
-const useEnhancedEffect = typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
 
 export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(function AutoSizer(
   props,
@@ -97,12 +94,12 @@ export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(functi
         (!disableWidth && state.width !== newWidth)
       ) {
         setState({
-          height: height - paddingTop - paddingBottom,
-          width: width - paddingLeft - paddingRight,
+          height: newHeight,
+          width: newWidth,
         });
 
         if (onResize) {
-          onResize({ height, width });
+          onResize({ height: newHeight, width: newWidth });
         }
       }
     }
@@ -143,7 +140,6 @@ export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(functi
   }
 
   const handleRef = useForkRef(rootRef, ref);
-
   return (
     <div
       ref={handleRef}

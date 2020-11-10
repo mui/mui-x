@@ -1,16 +1,17 @@
 import * as React from 'react';
-import { SortDirection, SortModel } from './sortModel';
-import { Logger } from '../hooks/utils';
-import { ArrowDownwardIcon, ArrowUpwardIcon, SeparatorIcon } from '../components/icons';
-import { SortModelParams } from './params/sortModelParams';
+import { ArrowDownwardIcon, ArrowUpwardIcon, SeparatorIcon } from '../components/icons/index';
+import { Logger } from '../hooks/utils/useLogger';
+import { ColumnTypesRecord } from './colDef/colTypeDef';
+import { DEFAULT_COLUMN_TYPES } from './colDef/defaultColumnTypes';
+import { FeatureMode, FeatureModeConstant } from './featureMode';
+import { CellParams } from './params/cellParams';
+import { ColParams } from './params/colParams';
+import { PageChangeParams } from './params/pageChangeParams';
+import { RowParams } from './params/rowParams';
 import { RowSelectedParams } from './params/rowSelectedParams';
 import { SelectionChangeParams } from './params/selectionChangeParams';
-import { PageChangeParams } from './params/pageChangeParams';
-import { ColumnTypesRecord, DEFAULT_COLUMN_TYPES } from './colDef';
-import { FeatureMode, FeatureModeConstant } from './featureMode';
-import { ColParams } from './params/colParams';
-import { CellParams } from './params/cellParams';
-import { RowParams } from './params/rowParams';
+import { SortModelParams } from './params/sortModelParams';
+import { SortDirection, SortModel } from './sortModel';
 
 /**
  * Set of icons used in the grid component UI.
