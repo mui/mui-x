@@ -1,88 +1,115 @@
 import { ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
 import * as React from 'react';
-import { COLUMN_FILTER_BUTTON_CLICK, COLUMN_MENU_BUTTON_CLICK } from '../constants';
+import { COLUMN_FILTER_BUTTON_CLICK } from '../constants';
+import { columnsSelector } from '../hooks/features/columns/columnsSelector';
+import { GridState } from '../hooks/features/core/gridState';
+import { useGridSelector } from '../hooks/features/core/useGridSelector';
+import { useGridState } from '../hooks/features/core/useGridState';
+import { sortModelSelector } from '../hooks/features/sorting/sortingSelector';
+import { SortDirection } from '../models/sortModel';
+import { findHeaderElementFromField } from '../utils/domUtils';
 import { ApiContext } from './api-context';
 import { ColDef } from '../models/colDef/colDef';
 import { ColumnHeaderMenuIcon } from './column-header-menu-icon';
 
-export interface ColumnHeaderMenuProps {
-  columns: ColDef[];
+export interface ColumnMenuState {
+  open: boolean;
+  field?: string;
 }
 
-export const ColumnHeaderMenu: React.FC<ColumnHeaderMenuProps> = React.memo(
-  ({  columns }) => {
+const openMenuColumnSelector = (state: GridState): ColDef | null => {
+  const columnMenu = state.columnMenu;
+  if(columnMenu.open && columnMenu.field) {
+    const cols = columnsSelector(state);
+    return cols.lookup[columnMenu.field];
+  }
+  return null;
+}
+
+export const ColumnHeaderMenu: React.FC<{}> = () => {
     const apiRef = React.useContext(ApiContext);
-    const [isOpen, setIsOpen] = React.useState(false);
-    const [target, setTarget] = React.useState<HTMLElement | null>(null);
-    const [colDef, setColDef] = React.useState<ColDef | null>(null);
+    const [gridState, setGridState, forceUpdate] = useGridState(apiRef!);
+    const currentColumn = openMenuColumnSelector(gridState);
+    const sortModel = useGridSelector(apiRef, sortModelSelector);
+    const sortDirection = React.useMemo(()=> {
+      if(!currentColumn) {
+        return null;
+      }
+      const sortItem = sortModel.find(item=> item.field === currentColumn.field);
+      return sortItem?.sort;
+    }, [currentColumn, sortModel])
+    const [target, setTarget] = React.useState<Element | null>(null);
 
     const hideTimeout = React.useRef<any>();
-    const hidePopper = React.useCallback(() => {
-      hideTimeout.current = setTimeout(() => setIsOpen(() => false), 50);
-    }, []);
+    const hideMenu = React.useCallback(()=> {
+      setGridState(state=> ({...state, columnMenu: {open: false }}));
+      forceUpdate();
+    },[forceUpdate, setGridState])
 
-    const onColumnFilterClick = React.useCallback(
-      ({ element, column }) => {
-        setImmediate(() => clearTimeout(hideTimeout.current));
-        setIsOpen((p) => {
-          if (colDef == null || column.field !== colDef?.field) {
-            return true;
-          }
-          return !p;
-        });
-        setTarget(element);
-        setColDef(column);
+    const hideMenuDelayed = React.useCallback(() => {
+      hideTimeout.current = setTimeout(() => hideMenu(), 50);
+    }, [hideMenu]);
+
+    const updateColumnMenu = React.useCallback(
+      ({open, field }: ColumnMenuState) => {
+        if(field && open) {
+          setImmediate(() => clearTimeout(hideTimeout.current));
+
+          const headerCellEl = findHeaderElementFromField(apiRef!.current!.rootElementRef!.current!, field!);
+          setTarget(headerCellEl);
+        }
       },
-      [colDef],
+      [apiRef],
     );
+
     const showFilter = React.useCallback(
       () => {
-        setIsOpen(false);
+        hideMenu();
+
         apiRef!.current.publishEvent(COLUMN_FILTER_BUTTON_CLICK, {
           element: target,
-          column: colDef,
+          column: currentColumn,
         });
       },
-      [apiRef, colDef, target],
+      [apiRef, currentColumn, hideMenu, target],
     );
 
     const handleListKeyDown = React.useCallback((event: React.KeyboardEvent) => {
       if (event.key === 'Tab') {
         event.preventDefault();
-        setIsOpen(false);
+        hideMenu();
       }
-    }, []);
+    }, [hideMenu]);
+
+  const onSortMenuItemClick = React.useCallback((event: React.MouseEvent<HTMLElement>)=> {
+    hideMenu();
+    const direction =  event.currentTarget.getAttribute('data-value') || null;
+    apiRef?.current.sortColumn(currentColumn!, direction as SortDirection);
+  }, [apiRef, currentColumn, hideMenu]);
+
 
     React.useEffect(() => {
-      return apiRef?.current.subscribeEvent(COLUMN_MENU_BUTTON_CLICK, onColumnFilterClick);
-    }, [apiRef, onColumnFilterClick]);
+      updateColumnMenu(gridState.columnMenu)
 
-    React.useEffect(() => {
-      // If columns changed we want to use the latest version of our column
-      setColDef((prevCol) => {
-        if (prevCol != null) {
-          const newCol = columns.find((col) => col.field === prevCol.field);
-          return newCol || null;
-        }
-        return prevCol;
-      });
-    }, [columns]);
+    }, [gridState.columnMenu, updateColumnMenu])
 
     return (
-      <Popper open={isOpen} anchorEl={target} role={undefined} transition >
+      <Popper open={gridState.columnMenu.open} anchorEl={target} role={undefined} transition >
         {({ TransitionProps, placement }) => (
           <Grow
             {...TransitionProps}
             style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
           >
             <Paper>
-              <ClickAwayListener onClickAway={hidePopper}>
-                <MenuList autoFocusItem={isOpen} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                  <MenuItem onClick={hidePopper} className={'menu-item'}>Sort By Asc</MenuItem>
-                  <MenuItem onClick={hidePopper}>Sort By Desc</MenuItem>
+              <ClickAwayListener onClickAway={hideMenuDelayed}>
+                <MenuList autoFocusItem={gridState.columnMenu.open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
+                  <MenuItem onClick={onSortMenuItemClick}  disabled={sortDirection == null}>Unsort</MenuItem>
+                  <MenuItem onClick={onSortMenuItemClick} data-value = {'asc'} disabled={sortDirection === 'asc'}>Sort By Asc</MenuItem>
+                  <MenuItem onClick={onSortMenuItemClick} data-value = {'desc'} disabled={sortDirection === 'desc'}>Sort By Desc</MenuItem>
+                
                   <MenuItem onClick={showFilter}>Filter</MenuItem>
-                  <MenuItem onClick={hidePopper}>Auto size</MenuItem>
-                  <MenuItem onClick={hidePopper}>Hide</MenuItem>
+                  <MenuItem onClick={hideMenuDelayed} disabled >Auto size</MenuItem>
+                  <MenuItem onClick={hideMenuDelayed} disabled >Hide</MenuItem>
                 </MenuList>
               </ClickAwayListener>
             </Paper>
@@ -90,6 +117,5 @@ export const ColumnHeaderMenu: React.FC<ColumnHeaderMenuProps> = React.memo(
         )}
       </Popper>
     );
-  },
-);
+  };
 ColumnHeaderMenuIcon.displayName = 'ColumnHeaderFilterIcon';

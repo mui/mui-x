@@ -1,3 +1,4 @@
+import { ColumnMenuState } from '../../../components/column-header-menu';
 import { getInitialColumnsState, InternalColumns } from '../../../models/colDef/colDef';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
 import { FilterState, getInitialFilterState } from '../filter/filterState';
@@ -20,6 +21,7 @@ export interface GridState {
   isScrolling: boolean;
   columns: InternalColumns;
   columnReorder: ColumnReorderState;
+  columnMenu: ColumnMenuState;
   rendering: InternalRenderingState;
   containerSizes: ContainerProps | null;
   viewportSizes: ViewportSizeState;
@@ -45,4 +47,5 @@ export const getInitialState: () => GridState = () => ({
   keyboard: { cell: null, isMultipleKeyPressed: false },
   selection: {},
   filter: getInitialFilterState(),
+  columnMenu: {open: false}
 });

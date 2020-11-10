@@ -1,7 +1,7 @@
 import * as React from 'react';
 import IconButton from '@material-ui/core/IconButton';
+import { useGridState } from '../hooks/features/core/useGridState';
 import { useIcons } from '../hooks/utils/useIcons';
-import { COLUMN_MENU_BUTTON_CLICK } from '../constants';
 import { ApiContext } from './api-context';
 import { ColDef } from '../models/colDef/colDef';
 
@@ -14,20 +14,19 @@ export const ColumnHeaderMenuIcon: React.FC<ColumnHeaderFilterIconProps> = React
     const icons = useIcons();
     const icon = React.createElement(icons.columnMenu!, {});
     const apiRef = React.useContext(ApiContext);
+    const [, setGridState, forceUpdate] = useGridState(apiRef!);
 
-    const filterClick = React.useCallback(
-      (event: React.MouseEvent<HTMLElement>) => {
-        apiRef!.current.publishEvent(COLUMN_MENU_BUTTON_CLICK, {
-          element: event.currentTarget,
-          column,
-        });
+    const menuIconClick = React.useCallback(
+      () => {
+        setGridState(state=> ({...state, columnMenu: {open: true, field: column.field}}));
+        forceUpdate();
       },
-      [apiRef, column],
+      [column.field, forceUpdate, setGridState],
     );
 
     return (
-      <div className={'MuiDataGrid-iconFilter'}>
-        <IconButton aria-label="Sort" size="small" onClick={filterClick}>
+      <div className={'MuiDataGrid-menuIcon'}>
+        <IconButton aria-label="Sort" size="small" onClick={menuIconClick}>
           {icon}
         </IconButton>
       </div>

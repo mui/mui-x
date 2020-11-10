@@ -57,7 +57,7 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
 
   return (
     <React.Fragment>
-      <ColumnHeaderMenu columns={columns} />
+      <ColumnHeaderMenu />
       <ColumnFilterMenu columns={columns} />
       {items}
     </React.Fragment>

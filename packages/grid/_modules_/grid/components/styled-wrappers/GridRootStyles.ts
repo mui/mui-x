@@ -156,11 +156,11 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-iconSeparator': {
           color: 'inherit',
         },
-        '& .MuiDataGrid-iconFilter': {
+        '& .MuiDataGrid-menuIcon': {
           visibility: 'hidden',
           fontSize: 18,
         },
-        '& .MuiDataGrid-colCell:hover  .MuiDataGrid-iconFilter': {
+        '& .MuiDataGrid-colCell:hover  .MuiDataGrid-menuIcon': {
           visibility: 'visible',
         },
         '& .MuiDataGrid-colCellWrapper.scroll .MuiDataGrid-colCell:last-child': {
