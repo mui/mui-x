@@ -65,7 +65,7 @@ export const ColumnHeaderMenu: React.FC<{}> = () => {
     const showFilter = React.useCallback(
       () => {
         hideMenu();
-
+//TODO use State here
         apiRef!.current.publishEvent(COLUMN_FILTER_BUTTON_CLICK, {
           element: target,
           column: currentColumn,
@@ -94,7 +94,7 @@ export const ColumnHeaderMenu: React.FC<{}> = () => {
     }, [gridState.columnMenu, updateColumnMenu])
 
     return (
-      <Popper open={gridState.columnMenu.open} anchorEl={target} role={undefined} transition >
+      <Popper open={gridState.columnMenu.open} anchorEl={target} transition >
         {({ TransitionProps, placement }) => (
           <Grow
             {...TransitionProps}
@@ -118,4 +118,4 @@ export const ColumnHeaderMenu: React.FC<{}> = () => {
       </Popper>
     );
   };
-ColumnHeaderMenuIcon.displayName = 'ColumnHeaderFilterIcon';
+ColumnHeaderMenuIcon.displayName = 'ColumnHeaderMenuIcon';
