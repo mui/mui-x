@@ -27,14 +27,15 @@ describe('<DataGrid />', () => {
     ],
     columns: [{ field: 'brand', width: 100 }],
   };
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
 
   describe('layout', () => {
+    before(function beforeHook() {
+      if (/jsdom/.test(window.navigator.userAgent)) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
     // Adapation of describeConformance()
     describe('Material-UI component API', () => {
       it(`attaches the ref`, () => {
@@ -300,79 +301,6 @@ describe('<DataGrid />', () => {
     });
   });
 
-  describe('column width', () => {
-    it('should set the columns width to 100px by default', () => {
-      const rows = [
-        {
-          id: 1,
-          username: 'John Doe',
-          age: 30,
-        },
-      ];
-
-      const columns = [
-        {
-          field: 'id',
-        },
-        {
-          field: 'name',
-        },
-        {
-          field: 'age',
-        },
-      ];
-
-      const { getAllByRole } = render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid columns={columns} rows={rows} />
-        </div>,
-      );
-
-      getAllByRole('columnheader').forEach((col) => {
-        // @ts-expect-error need to migrate helpers to TypeScript
-        expect(col).toHaveInlineStyle({ width: '100px' });
-      });
-    });
-
-    it('should set the columns width value to what is provided', () => {
-      const rows = [
-        {
-          id: 1,
-          username: 'John Doe',
-          age: 30,
-        },
-      ];
-
-      const colWidthValues = [50, 50, 200];
-      const columns = [
-        {
-          field: 'id',
-          width: colWidthValues[0],
-        },
-        {
-          field: 'name',
-          width: colWidthValues[1],
-        },
-        {
-          field: 'age',
-          width: colWidthValues[2],
-        },
-      ];
-
-      const { getAllByRole } = render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid columns={columns} rows={rows} />
-        </div>,
-      );
-
-      const DOMColumns = getAllByRole('columnheader');
-      DOMColumns.forEach((col, index) => {
-        // @ts-expect-error need to migrate helpers to TypeScript
-        expect(col).toHaveInlineStyle({ width: `${colWidthValues[index]}px` });
-      });
-    });
-  });
-
   describe('state', () => {
     it('should allow to control the state using useState', async () => {
       function GridStateTest({ direction, sortedRows }) {
@@ -387,7 +315,7 @@ describe('<DataGrid />', () => {
         }, [direction, sortedRows]);
 
         return (
-          <div style={{ width: 300, height: 300 }}>
+          <div style={{ width: 300, height: 500 }}>
             <DataGrid {...defaultProps} state={gridState} />
           </div>
         );
