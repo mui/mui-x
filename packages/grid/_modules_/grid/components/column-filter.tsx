@@ -4,10 +4,10 @@ import {
   Box,
   Chip,
   ChipProps,
-  ClickAwayListener,
-  Grid,
+  ClickAwayListener, FormControl,
+  Grid, InputLabel, MenuItem,
   Paper,
-  Popper,
+  Popper, Select,
   Tab,
   Tabs,
   TextField,
@@ -17,7 +17,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import Switch from '@material-ui/core/Switch';
 import { useIcons } from '../hooks/utils/useIcons';
-import { COLUMN_FILTER_BUTTON_CLICK, COLUMN_FILTER_CHANGED } from '../constants';
+import { COLUMN_MENU_BUTTON_CLICK, COLUMN_FILTER_CHANGED, COLUMN_FILTER_BUTTON_CLICK } from '../constants';
 import { ApiContext } from './api-context';
 import { ColDef, Columns } from '../models/colDef/colDef';
 import { CheckCircleIcon, MenuIcon, SearchIcon, ViewWeekIcon } from './icons/index';
@@ -35,7 +35,7 @@ function TabPanel(props) {
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
-    width: 300,
+    width: 500,
     '& .tab': {
       minWidth: 50,
     },
@@ -63,10 +63,14 @@ export const ColumnFilterMenu: React.FC<ColumnFilterMenuProps> = ({ columns }) =
   const hidePopper = React.useCallback(() => {
     hideTimeout.current = setTimeout(() => setIsOpen(() => false), 50);
   }, []);
+  const dontHideFilters = React.useCallback(() => {
+    setImmediate(() => clearTimeout(hideTimeout.current));
+
+  }, []);
 
   const onColumnFilterClick = React.useCallback(
     ({ element, column }) => {
-      setImmediate(() => clearTimeout(hideTimeout.current));
+      dontHideFilters();
       setIsOpen((p) => {
         if (colDef == null || column.field !== colDef?.field) {
           setFilterValue('');
@@ -122,8 +126,12 @@ export const ColumnFilterMenu: React.FC<ColumnFilterMenuProps> = ({ columns }) =
     });
   }, [columns]);
 
+  const changeColFilter = React.useCallback((event: React.ChangeEvent<{ value: unknown }>) => {
+    setColDef(apiRef?.current.getColumnFromField(event.target.value as string)!);
+  }, [apiRef]);
+
   return (
-    <Popper placement="bottom" open={isOpen} anchorEl={target} disablePortal={false}>
+    <Popper placement="bottom" open={isOpen} anchorEl={target} disablePortal={false} >
       <ClickAwayListener onClickAway={hidePopper}>
         <Paper square className={classes.root}>
           <Tabs
@@ -134,22 +142,48 @@ export const ColumnFilterMenu: React.FC<ColumnFilterMenuProps> = ({ columns }) =
             scrollButtons="off"
             aria-label="scrollable prevent tabs example"
           >
-            <Tab value={1} icon={<MenuIcon />} fullWidth className="tab" />
             <Tab value={2} icon={filterIconElement} fullWidth className="tab" />
             <Tab value={3} icon={<ViewWeekIcon />} fullWidth className="tab" />
           </Tabs>
           <TabPanel value={2}>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <form onSubmit={applyFilter}>
+              <form onSubmit={applyFilter}>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <FormControl >
+                    <InputLabel id="columns-filter-select-label">Columns</InputLabel>
+                    <Select
+                      labelId="columns-filter-select-label"
+                      id="columns-filter-select"
+                      value={colDef?.field}
+                      onChange={changeColFilter}
+                      onOpen={dontHideFilters}
+                    >
+                      {columns.map(col=>
+                        <MenuItem key={col.field} value={col.field}>{col.headerName || col.field}</MenuItem>
+                      )}
+                    </Select>
+                  </FormControl>
+                  <FormControl >
+                    <InputLabel id="columns-operators-select-label">Operators</InputLabel>
+                    <Select
+                      labelId="columns-operators-select-label"
+                      id="columns-operators-select"
+                      value={0}
+                      disabled
+                    >
+                        <MenuItem value={0}>contains</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl >
                   <TextField
-                    label={`${colDef?.headerName || colDef?.field}`}
+                    label={'Value'}
                     placeholder={'Filter value'}
                     value={filterValue}
                     onChange={onFilterChange}
                     size={'small'}
                   />
-                  <IconButton
+                    </FormControl >
+                    <IconButton
                     color="primary"
                     aria-label="Filter"
                     component="span"
@@ -157,8 +191,9 @@ export const ColumnFilterMenu: React.FC<ColumnFilterMenuProps> = ({ columns }) =
                   >
                     <SearchIcon />
                   </IconButton>
+                  </div>
                 </form>
-              </div>
+
               <div
                 style={{
                   paddingTop: 5,

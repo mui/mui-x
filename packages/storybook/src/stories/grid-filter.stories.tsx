@@ -38,9 +38,11 @@ export function ColumnsAlign() {
     return cols;
   }, []);
 
+  const transformedCols = React.useMemo(()=> transformCols(data.columns), [transformCols, data]);
+
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={transformCols(data.columns)} />
+      <XGrid rows={data.rows} columns={transformedCols} />
     </div>
   );
 }

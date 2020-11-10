@@ -104,15 +104,10 @@ export const useStyles = makeStyles(
           overflow: 'hidden',
           whiteSpace: 'nowrap',
           display: 'inline-flex',
-        },
-        '& .MuiDataGrid-colCell:not(.MuiDataGrid-colCellSorted) .MuiDataGrid-colCellTitleContainer': {
           flex: 1,
         },
         '& .MuiDataGrid-colCellNumeric .MuiDataGrid-sortIconContainer': {
           paddingRight: 5,
-        },
-        '& .MuiDataGrid-colCellNumeric .MuiDataGrid-colCellTitleContainer': {
-          flex: 1,
         },
         '& .MuiDataGrid-colCellSortable': {
           cursor: 'pointer',

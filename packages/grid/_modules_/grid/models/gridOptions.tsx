@@ -4,7 +4,7 @@ import {
   ArrowUpwardIcon,
   SeparatorIcon,
   MenuIcon,
-  FilterIcon,
+  FilterIcon, TripleDotsVertical,
 } from '../components/icons/index';
 import { Logger } from '../hooks/utils/useLogger';
 import { ColumnTypesRecord } from './colDef/colTypeDef';
@@ -289,7 +289,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   columnTypes: DEFAULT_COLUMN_TYPES,
   icons: {
     columnFiltering: FilterIcon,
-    columnMenu: MenuIcon,
+    columnMenu: TripleDotsVertical,
     columnSortedAscending: ArrowUpwardIcon,
     columnSortedDescending: ArrowDownwardIcon,
     columnResize: SeparatorIcon,
