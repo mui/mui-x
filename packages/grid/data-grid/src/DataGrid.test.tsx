@@ -299,6 +299,7 @@ describe('<DataGrid />', () => {
       );
     });
   });
+
   describe('column width', () => {
     it('should set the columns width to 100px by default', () => {
       const rows = [
@@ -327,8 +328,7 @@ describe('<DataGrid />', () => {
         </div>,
       );
 
-      const DOMColumns = getAllByRole('columnheader');
-      DOMColumns.forEach((col) => {
+      getAllByRole('columnheader').forEach((col) => {
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(col).toHaveInlineStyle({ width: '100px' });
       });
@@ -372,7 +372,8 @@ describe('<DataGrid />', () => {
       });
     });
   });
-  describe('State', () => {
+
+  describe('state', () => {
     it('should allow to control the state using useState', async () => {
       function GridStateTest({ direction, sortedRows }) {
         const [gridState, setGridState] = React.useState<Partial<GridState>>({
