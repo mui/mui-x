@@ -126,6 +126,115 @@ describe('<DataGrid />', () => {
         );
       });
     });
+
+    describe('column width', () => {
+      it('should set the columns width to 100px by default', () => {
+        const rows = [
+          {
+            id: 1,
+            username: 'John Doe',
+            age: 30,
+          },
+        ];
+
+        const columns = [
+          {
+            field: 'id',
+          },
+          {
+            field: 'name',
+          },
+          {
+            field: 'age',
+          },
+        ];
+
+        const { getAllByRole } = render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid columns={columns} rows={rows} />
+          </div>,
+        );
+
+        getAllByRole('columnheader').forEach((col) => {
+          // @ts-expect-error need to migrate helpers to TypeScript
+          expect(col).toHaveInlineStyle({ width: '100px' });
+        });
+      });
+
+      it('should set the columns width value to what is provided', () => {
+        const rows = [
+          {
+            id: 1,
+            username: 'John Doe',
+            age: 30,
+          },
+        ];
+
+        const colWidthValues = [50, 50, 200];
+        const columns = [
+          {
+            field: 'id',
+            width: colWidthValues[0],
+          },
+          {
+            field: 'name',
+            width: colWidthValues[1],
+          },
+          {
+            field: 'age',
+            width: colWidthValues[2],
+          },
+        ];
+
+        const { getAllByRole } = render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid columns={columns} rows={rows} />
+          </div>,
+        );
+
+        getAllByRole('columnheader').forEach((col, index) => {
+          // @ts-expect-error need to migrate helpers to TypeScript
+          expect(col).toHaveInlineStyle({ width: `${colWidthValues[index]}px` });
+        });
+      });
+
+      it('should set the first column to be twice as wide as the second one', () => {
+        const rows = [
+          {
+            id: 1,
+            username: 'John Doe',
+            age: 30,
+          },
+        ];
+
+        const columns = [
+          {
+            field: 'id',
+            flex: 1,
+          },
+          {
+            field: 'name',
+            flex: 0.5,
+          },
+        ];
+
+        render(
+          <div style={{ width: 200, height: 300 }}>
+            <DataGrid columns={columns} rows={rows} />
+          </div>,
+        );
+
+        const firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
+        const secondColumn: HTMLElement | null = document.querySelector(
+          '[role="columnheader"][aria-colindex="2"]',
+        );
+        const secondColumnWidthVal = secondColumn!.style.width.split('px')[0];
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(firstColumn).toHaveInlineStyle({
+          width: `${2 * parseInt(secondColumnWidthVal, 10)}px`,
+        });
+      });
+    });
   });
   describe('warnings', () => {
     before(() => {

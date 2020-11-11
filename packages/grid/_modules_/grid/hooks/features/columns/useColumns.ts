@@ -17,18 +17,47 @@ import { Logger, useLogger } from '../../utils/useLogger';
 import { GridState } from '../core/gridState';
 import { useGridState } from '../core/useGridState';
 
-function mapColumns(columns: Columns, columnTypes: ColumnTypesRecord): Columns {
-  return columns.map((c) => ({ ...getColDef(columnTypes, c.type), ...c }));
+function mapColumns(
+  columns: Columns,
+  columnTypes: ColumnTypesRecord,
+  viewportWidth: number,
+): Columns {
+  let extendedColumns = columns.map((c) => ({ ...getColDef(columnTypes, c.type), ...c }));
+  const numberOfFluidColumns = columns.filter((column) => !!column.flex).length;
+  let flexDivider = 0;
+
+  if (numberOfFluidColumns && viewportWidth) {
+    extendedColumns.forEach((column) => {
+      if (!column.flex) {
+        viewportWidth -= column.width!;
+      } else {
+        flexDivider += column.flex;
+      }
+    });
+  }
+
+  if (viewportWidth > 0 && numberOfFluidColumns) {
+    const flexMultiplier = viewportWidth / flexDivider;
+    extendedColumns = extendedColumns.map((column) => {
+      return {
+        ...column,
+        width: column.flex! ? Math.floor(flexMultiplier * column.flex!) : column.width,
+      };
+    });
+  }
+
+  return extendedColumns;
 }
 
 function hydrateColumns(
   columns: Columns,
   columnTypes: ColumnTypesRecord,
+  viewportWidth: number,
   withCheckboxSelection: boolean,
   logger: Logger,
 ): Columns {
   logger.debug('Hydrating Columns with default definitions');
-  let mappedCols = mapColumns(columns, columnTypes);
+  let mappedCols = mapColumns(columns, columnTypes, viewportWidth);
   if (withCheckboxSelection) {
     mappedCols = [checkboxSelectionColDef, ...mappedCols];
   }
@@ -63,6 +92,7 @@ function toMeta(logger: Logger, visibleColumns: Columns): ColumnsMeta {
 const resetState = (
   columns: Columns,
   columnTypes: ColumnTypesRecord,
+  viewportWidth: number,
   withCheckboxSelection: boolean,
   logger: Logger,
 ): InternalColumns => {
@@ -70,7 +100,7 @@ const resetState = (
     return getInitialColumnsState();
   }
 
-  const all = hydrateColumns(columns, columnTypes, withCheckboxSelection, logger);
+  const all = hydrateColumns(columns, columnTypes, viewportWidth, withCheckboxSelection, logger);
   const visible = filterVisible(logger, all);
   const meta = toMeta(logger, visible);
   const lookup = toLookup(logger, all);
@@ -138,6 +168,7 @@ export function useColumns(columns: Columns, apiRef: ApiRef): InternalColumns {
     const newState = resetState(
       columns,
       gridState.options.columnTypes,
+      gridState.viewportSizes.width,
       !!gridState.options.checkboxSelection,
       logger,
     );
@@ -145,6 +176,7 @@ export function useColumns(columns: Columns, apiRef: ApiRef): InternalColumns {
   }, [
     columns,
     gridState.options.checkboxSelection,
+    gridState.viewportSizes.width,
     gridState.options.columnTypes,
     logger,
     updateState,
