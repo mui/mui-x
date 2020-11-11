@@ -244,6 +244,7 @@ describe('<XGrid />', () => {
       expect(onStateParams.state).to.equal(apiRef.current.state);
       expect(onStateParams.state).to.not.equal(undefined);
     });
+
     it('should allow to control the state using apiRef', () => {
       function GridStateTest() {
         const apiRef = useApiRef();

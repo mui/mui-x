@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { createClientRender, ErrorBoundary } from 'test/utils';
 import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
-import { DataGrid, GridState } from '@material-ui/data-grid';
+import { DataGrid } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
 describe('<DataGrid />', () => {
@@ -249,15 +249,9 @@ describe('<DataGrid />', () => {
     describe('state', () => {
       it('should allow to control the state using useState', async () => {
         function GridStateTest({ direction, sortedRows }) {
-          const [gridState, setGridState] = React.useState<Partial<GridState>>({
+          const gridState = {
             sorting: { sortModel: [{ field: 'brand', sort: direction }], sortedRows },
-          });
-
-          React.useEffect(() => {
-            setGridState({
-              sorting: { sortModel: [{ field: 'brand', sort: direction }], sortedRows },
-            });
-          }, [direction, sortedRows]);
+          };
 
           return (
             <div style={{ width: 300, height: 500 }}>
