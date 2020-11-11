@@ -12,6 +12,7 @@ export const checkboxSelectionColDef: ColDef = {
   resizable: true,
   sortable: false,
   disableClickEventBubbling: true,
+  disableColumnMenu: true,
   valueGetter: (params) => params.api.getState().selection[params.rowModel.id],
   renderHeader: (params) => <HeaderCheckbox {...params} />,
   renderCell: (params) => <CellCheckboxRenderer {...params} />,

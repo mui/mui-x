@@ -112,7 +112,7 @@ export const ColumnHeaderItem = React.memo(
       {...ariaSort}
     >
       <div className="MuiDataGrid-colCell-draggable" {...dragConfig}>
-        {!disableColumnFilter && isColumnNumeric && <ColumnHeaderMenuIcon column={column} />}
+        {!disableColumnFilter && isColumnNumeric && !column.disableColumnMenu && <ColumnHeaderMenuIcon column={column} />}
 
         <div className={'MuiDataGrid-colCellTitleContainer'}>
           {isColumnNumeric && (
@@ -137,7 +137,7 @@ export const ColumnHeaderItem = React.memo(
             />
           )}
         </div>
-        {!isColumnNumeric && !disableColumnFilter && <ColumnHeaderMenuIcon column={column} />}
+        {!isColumnNumeric && !disableColumnFilter && !column.disableColumnMenu && <ColumnHeaderMenuIcon column={column} />}
         </div>
         <ColumnHeaderSeparator
           resizable={!disableColumnResize && !!column.resizable}

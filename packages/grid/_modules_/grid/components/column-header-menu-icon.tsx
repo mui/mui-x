@@ -18,7 +18,7 @@ export const ColumnHeaderMenuIcon: React.FC<ColumnHeaderFilterIconProps> = React
 
     const menuIconClick = React.useCallback(
       () => {
-        setGridState(state=> ({...state, columnMenu: {open: true, field: column.field}}));
+        setGridState(state=> ({...state, columnMenu: {open: true, field: column.field}, preferencePanel: {open: false}}));
         forceUpdate();
       },
       [column.field, forceUpdate, setGridState],
@@ -26,7 +26,7 @@ export const ColumnHeaderMenuIcon: React.FC<ColumnHeaderFilterIconProps> = React
 
     return (
       <div className={'MuiDataGrid-menuIcon'}>
-        <IconButton aria-label="Sort" size="small" onClick={menuIconClick}>
+        <IconButton className={'MuiDataGrid-menuIconButton'} aria-label="Menu" size="small" onClick={menuIconClick}>
           {icon}
         </IconButton>
       </div>

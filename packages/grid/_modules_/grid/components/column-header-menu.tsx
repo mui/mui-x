@@ -1,16 +1,16 @@
 import { ClickAwayListener, Grow, MenuItem, MenuList, Paper, Popper } from '@material-ui/core';
 import * as React from 'react';
-import { COLUMN_FILTER_BUTTON_CLICK } from '../constants';
 import { columnsSelector } from '../hooks/features/columns/columnsSelector';
 import { GridState } from '../hooks/features/core/gridState';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { useGridState } from '../hooks/features/core/useGridState';
 import { sortModelSelector } from '../hooks/features/sorting/sortingSelector';
+import { ColDef } from '../models/colDef/colDef';
 import { SortDirection } from '../models/sortModel';
 import { findHeaderElementFromField } from '../utils/domUtils';
 import { ApiContext } from './api-context';
-import { ColDef } from '../models/colDef/colDef';
 import { ColumnHeaderMenuIcon } from './column-header-menu-icon';
+import { PreferencePanelsValue } from './tools/preferences';
 
 export interface ColumnMenuState {
   open: boolean;
@@ -37,9 +37,11 @@ export const ColumnHeaderMenu: React.FC<{}> = () => {
       }
       const sortItem = sortModel.find(item=> item.field === currentColumn.field);
       return sortItem?.sort;
-    }, [currentColumn, sortModel])
+    }, [currentColumn, sortModel]);
+
     const [target, setTarget] = React.useState<Element | null>(null);
 
+    // TODO: Fix issue with portal in V5
     const hideTimeout = React.useRef<any>();
     const hideMenu = React.useCallback(()=> {
       setGridState(state=> ({...state, columnMenu: {open: false }}));
@@ -56,7 +58,8 @@ export const ColumnHeaderMenu: React.FC<{}> = () => {
           setImmediate(() => clearTimeout(hideTimeout.current));
 
           const headerCellEl = findHeaderElementFromField(apiRef!.current!.rootElementRef!.current!, field!);
-          setTarget(headerCellEl);
+          const menuIconElement = headerCellEl!.querySelector('.MuiDataGrid-menuIconButton');
+          setTarget(menuIconElement);
         }
       },
       [apiRef],
@@ -65,13 +68,12 @@ export const ColumnHeaderMenu: React.FC<{}> = () => {
     const showFilter = React.useCallback(
       () => {
         hideMenu();
-//TODO use State here
-        apiRef!.current.publishEvent(COLUMN_FILTER_BUTTON_CLICK, {
-          element: target,
-          column: currentColumn,
-        });
+        setGridState(state=> ({...state, preferencePanel: {open: true, openedPanelValue: PreferencePanelsValue.filters, targetField:
+            currentColumn?.field
+        }}));
+        forceUpdate();
       },
-      [apiRef, currentColumn, hideMenu, target],
+      [currentColumn?.field, forceUpdate, hideMenu, setGridState],
     );
 
     const handleListKeyDown = React.useCallback((event: React.KeyboardEvent) => {
@@ -93,6 +95,9 @@ export const ColumnHeaderMenu: React.FC<{}> = () => {
 
     }, [gridState.columnMenu, updateColumnMenu])
 
+    if(!target) {
+      return null;
+    }
     return (
       <Popper open={gridState.columnMenu.open} anchorEl={target} transition >
         {({ TransitionProps, placement }) => (

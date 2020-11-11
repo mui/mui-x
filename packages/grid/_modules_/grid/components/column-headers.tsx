@@ -7,6 +7,7 @@ import { ColumnHeaderItem } from './column-header-item';
 import { ApiContext } from './api-context';
 import { LeftEmptyCell, RightEmptyCell } from './cell';
 import { ColumnHeaderMenu } from './column-header-menu';
+import { PreferencesPanel } from './tools/preferences';
 import { containerSizesSelector } from './viewport';
 import { OptionsContext } from './options-context';
 import { ScrollArea } from './ScrollArea';
@@ -15,7 +16,6 @@ import {
   useApiEventHandler,
   columnReorderDragColSelector,
 } from '../hooks';
-import { ColumnFilterMenu } from './column-filter';
 
 export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
@@ -58,7 +58,7 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
   return (
     <React.Fragment>
       <ColumnHeaderMenu />
-      <ColumnFilterMenu columns={columns} />
+      <PreferencesPanel />
       {items}
     </React.Fragment>
   );

@@ -1,4 +1,5 @@
 import { ColumnMenuState } from '../../../components/column-header-menu';
+import { PreferencePanelState } from '../../../components/tools/preferences';
 import { getInitialColumnsState, InternalColumns } from '../../../models/colDef/colDef';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
 import { FilterState, getInitialFilterState } from '../filter/filterState';
@@ -30,6 +31,7 @@ export interface GridState {
   keyboard: KeyboardState;
   selection: SelectionState;
   filter: FilterState;
+  preferencePanel: PreferencePanelState
 }
 
 export const getInitialState: () => GridState = () => ({
@@ -47,5 +49,6 @@ export const getInitialState: () => GridState = () => ({
   keyboard: { cell: null, isMultipleKeyPressed: false },
   selection: {},
   filter: getInitialFilterState(),
-  columnMenu: {open: false}
+  columnMenu: {open: false},
+  preferencePanel: {open: false}
 });

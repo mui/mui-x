@@ -119,6 +119,8 @@ export interface ColDef {
 
   filterValue?: any[];
 
+  disableColumnMenu?: boolean;
+
   // applyFilter: (filterValue: any, rows: Rows)=> void;
 }
 
