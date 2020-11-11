@@ -245,7 +245,35 @@ describe('<DataGrid />', () => {
         });
       });
     });
+
+    describe('state', () => {
+      it('should allow to control the state using useState', async () => {
+        function GridStateTest({ direction, sortedRows }) {
+          const [gridState, setGridState] = React.useState<Partial<GridState>>({
+            sorting: { sortModel: [{ field: 'brand', sort: direction }], sortedRows },
+          });
+
+          React.useEffect(() => {
+            setGridState({
+              sorting: { sortModel: [{ field: 'brand', sort: direction }], sortedRows },
+            });
+          }, [direction, sortedRows]);
+
+          return (
+            <div style={{ width: 300, height: 500 }}>
+              <DataGrid {...defaultProps} state={gridState} />
+            </div>
+          );
+        }
+
+        const { setProps } = render(<GridStateTest direction={'desc'} sortedRows={[2, 0, 1]} />);
+        expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+        setProps({ direction: 'asc', sortedRows: [1, 0, 2] });
+        expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas'].reverse());
+      });
+    });
   });
+
   describe('warnings', () => {
     before(() => {
       PropTypes.resetWarningCache();
@@ -298,33 +326,6 @@ describe('<DataGrid />', () => {
       expect((errorRef.current as any).errors[0].toString()).to.include(
         'The data grid component requires all rows to have a unique id property',
       );
-    });
-  });
-
-  describe('state', () => {
-    it('should allow to control the state using useState', async () => {
-      function GridStateTest({ direction, sortedRows }) {
-        const [gridState, setGridState] = React.useState<Partial<GridState>>({
-          sorting: { sortModel: [{ field: 'brand', sort: direction }], sortedRows },
-        });
-
-        React.useEffect(() => {
-          setGridState({
-            sorting: { sortModel: [{ field: 'brand', sort: direction }], sortedRows },
-          });
-        }, [direction, sortedRows]);
-
-        return (
-          <div style={{ width: 300, height: 500 }}>
-            <DataGrid {...defaultProps} state={gridState} />
-          </div>
-        );
-      }
-
-      const { setProps } = render(<GridStateTest direction={'desc'} sortedRows={[2, 0, 1]} />);
-      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
-      setProps({ direction: 'asc', sortedRows: [1, 0, 2] });
-      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas'].reverse());
     });
   });
 });

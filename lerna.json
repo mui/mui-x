@@ -6,8 +6,8 @@
     }
   },
   "packages": [
-    "packages/*",
     "!packages/grid",
+    "packages/*",
     "packages/grid/*"
   ],
   "version": "4.0.0-alpha.9",

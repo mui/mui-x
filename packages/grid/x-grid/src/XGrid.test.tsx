@@ -220,6 +220,7 @@ describe('<XGrid />', () => {
       expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
     });
   });
+
   describe('state', () => {
     it('should trigger on state change and pass the correct params', () => {
       let onStateParams;
@@ -239,10 +240,9 @@ describe('<XGrid />', () => {
       render(<Test />);
       const header = screen.getByRole('columnheader', { name: 'brand' });
       fireEvent.click(header);
-      expect(onStateParams.api).to.eq(apiRef.current);
-      expect(onStateParams.state).to.eq(apiRef.current.state);
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      expect(onStateParams.state).to.not.be.empty;
+      expect(onStateParams.api).to.equal(apiRef.current);
+      expect(onStateParams.state).to.equal(apiRef.current.state);
+      expect(onStateParams.state).to.not.equal(undefined);
     });
     it('should allow to control the state using apiRef', () => {
       function GridStateTest() {
