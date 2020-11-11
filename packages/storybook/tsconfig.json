@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "dist/",
+    "sourceMap": true,
     "rootDirs": ["src"],
     "types": ["node", "jest", "jest-image-snapshot"],
     "sourceMap": true

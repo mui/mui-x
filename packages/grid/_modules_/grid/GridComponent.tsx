@@ -55,7 +55,8 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const renderingZoneRef = React.useRef<HTMLDivElement>(null);
 
     const apiRef = useApiRef(props.apiRef);
-    const [gridState] = useGridState(apiRef);
+    const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
+
     const internalOptions = useOptionsProp(apiRef, props);
 
     useLoggerFactory(internalOptions.logger, internalOptions.logLevel);
@@ -86,6 +87,14 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
       (size) => getCurryTotalHeight(gridState.options, gridState.containerSizes, footerRef)(size),
       [gridState.options, gridState.containerSizes],
     );
+
+    React.useEffect(() => {
+      if (props.state != null && apiRef.current.state !== props.state) {
+        logger.debug('Overriding state with props.state');
+        setGridState((previousState) => ({ ...previousState, ...props.state! }));
+        forceUpdate();
+      }
+    }, [apiRef, forceUpdate, logger, props.state, setGridState]);
 
     logger.info(
       `Rendering, page: ${renderCtx?.page}, col: ${renderCtx?.firstColIdx}-${renderCtx?.lastColIdx}, row: ${renderCtx?.firstRowIdx}-${renderCtx?.lastRowIdx}`,

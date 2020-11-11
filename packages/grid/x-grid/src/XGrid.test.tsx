@@ -1,48 +1,10 @@
 import * as React from 'react';
 // @ts-expect-error need to migrate helpers to TypeScript
 import { fireEvent, screen, createClientRender } from 'test/utils';
+import { getActiveCell, sleep, raf, getColumnValues } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { XGrid, useApiRef, Columns } from '@material-ui/x-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
-
-async function raf() {
-  return new Promise((resolve) => {
-    // Chrome and Safari have a bug where calling rAF once returns the current
-    // frame instead of the next frame, so we need to call a double rAF here.
-    // See crbug.com/675795 for more.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        resolve();
-      });
-    });
-  });
-}
-
-function getActiveCell() {
-  const activeElement = document.activeElement;
-
-  if (!activeElement) {
-    return null;
-  }
-
-  return `${activeElement.getAttribute('data-rowindex')}-${activeElement.getAttribute(
-    'aria-colindex',
-  )}`;
-}
-
-async function sleep(duration: number) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, duration);
-  });
-}
-
-function getColumnValues() {
-  return Array.from(document.querySelectorAll('[role="cell"][aria-colindex="0"]')).map(
-    (node) => node!.textContent,
-  );
-}
 
 describe('<XGrid />', () => {
   const render = createClientRender();
@@ -256,6 +218,51 @@ describe('<XGrid />', () => {
       expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
       fireEvent.click(header);
       expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+    });
+  });
+
+  describe('state', () => {
+    it('should trigger on state change and pass the correct params', () => {
+      let onStateParams;
+      let apiRef;
+      function Test() {
+        apiRef = useApiRef();
+        const onStateChange = (params) => {
+          onStateParams = params;
+        };
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid {...defaultProps} onStateChange={onStateChange} apiRef={apiRef} />
+          </div>
+        );
+      }
+      render(<Test />);
+      const header = screen.getByRole('columnheader', { name: 'brand' });
+      fireEvent.click(header);
+      expect(onStateParams.api).to.equal(apiRef.current);
+      expect(onStateParams.state).to.equal(apiRef.current.state);
+      expect(onStateParams.state).to.not.equal(undefined);
+    });
+
+    it('should allow to control the state using apiRef', () => {
+      function GridStateTest() {
+        const apiRef = useApiRef();
+        React.useEffect(() => {
+          apiRef.current.setState((prev) => ({
+            ...prev,
+            sorting: { ...prev.sorting, sortModel: [{ field: 'brand', sort: 'asc' }] },
+          }));
+        }, [apiRef]);
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid {...defaultProps} apiRef={apiRef} />
+          </div>
+        );
+      }
+
+      render(<GridStateTest />);
+      expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     });
   });
 });

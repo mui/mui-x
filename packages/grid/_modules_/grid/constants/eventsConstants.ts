@@ -41,4 +41,6 @@ export const COLUMNS_UPDATED = 'columnsUpdated';
 
 export const SORT_MODEL_CHANGE = 'sortModelChange';
 
+export const STATE_CHANGE = 'stateChange';
+
 export const MULTIPLE_KEY_PRESS_CHANGED = 'multipleKeyPressChange';

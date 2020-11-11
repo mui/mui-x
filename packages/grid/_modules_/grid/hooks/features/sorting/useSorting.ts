@@ -112,6 +112,9 @@ export const useSorting = (apiRef: ApiRef) => {
     (sortModel: SortModel): FieldComparatorList => {
       const comparators = sortModel.map((item) => {
         const column = apiRef.current.getColumnFromField(item.field);
+        if (!column) {
+          throw new Error(`Error sorting: column with field '${item.field}' not found. `);
+        }
         const comparator = isDesc(item.sort)
           ? (v1: CellValue, v2: CellValue, cellParams1: CellParams, cellParams2: CellParams) =>
               -1 * column.sortComparator!(v1, v2, cellParams1, cellParams2)
@@ -204,7 +207,7 @@ export const useSorting = (apiRef: ApiRef) => {
     if (gridState.sorting.sortModel.length > 0) {
       apiRef.current.applySorting();
     }
-  }, [gridState.sorting.sortModel.length, apiRef]);
+  }, [gridState.sorting.sortModel, apiRef]);
 
   const getSortModel = React.useCallback(() => gridState.sorting.sortModel, [
     gridState.sorting.sortModel,
