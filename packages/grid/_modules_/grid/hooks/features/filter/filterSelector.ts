@@ -2,19 +2,20 @@ import { createSelector } from 'reselect';
 import { RowModel } from '../../../models/rows';
 import { GridState } from '../core/gridState';
 import { sortedRowsSelector } from '../sorting/sortingSelector';
-import { FilterState } from './filterState';
+import { HiddenRowsState } from './hiddenRowsState';
 
 export const filterStateSelector = (state: GridState) => state.filter;
 
 export const visibleSortedRowsSelector = createSelector<
   GridState,
-  FilterState,
+  // HiddenRowsState,
   RowModel[],
   RowModel[]
->(filterStateSelector, sortedRowsSelector, (filterState: FilterState, sortedRows: RowModel[]) => {
-  const visibleRows = [...sortedRows].filter(
-    (row) => filterState.hiddenRows.indexOf(row.id) === -1,
-  );
+>(sortedRowsSelector, (sortedRows: RowModel[]) => {
+  const visibleRows = [...sortedRows];
+  // .filter(
+  // (row) => filterState.hiddenRows.indexOf(row.id) === -1,
+  // );
   return visibleRows;
 });
 

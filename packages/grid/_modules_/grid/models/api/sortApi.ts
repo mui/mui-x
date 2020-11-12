@@ -25,5 +25,5 @@ export interface SortApi {
    */
   onSortModelChange: (handler: (param: SortModelParams) => void) => () => void;
 
-  sortColumn: (column: ColDef, direction?: SortDirection)=> void;
+  sortColumn: (column: ColDef, direction?: SortDirection) => void;
 }

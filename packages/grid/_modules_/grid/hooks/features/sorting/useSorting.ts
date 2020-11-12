@@ -72,15 +72,19 @@ export const useSorting = (apiRef: ApiRef) => {
       const existing = gridState.sorting.sortModel.find((c) => c.field === col.field);
 
       if (existing) {
-        const nextSort = directionOverride === undefined
-          ? nextSortDirection(options.sortingOrder, existing.sort)
-          : directionOverride;
+        const nextSort =
+          directionOverride === undefined
+            ? nextSortDirection(options.sortingOrder, existing.sort)
+            : directionOverride;
 
         return nextSort == null ? undefined : { ...existing, sort: nextSort };
       }
       return {
         field: col.field,
-        sort:  directionOverride === undefined ? nextSortDirection(options.sortingOrder) : directionOverride
+        sort:
+          directionOverride === undefined
+            ? nextSortDirection(options.sortingOrder)
+            : directionOverride,
       };
     },
     [gridState.sorting.sortModel, options.sortingOrder],
@@ -241,7 +245,13 @@ export const useSorting = (apiRef: ApiRef) => {
 
   useApiEventHandler(apiRef, SORT_MODEL_CHANGE, options.onSortModelChange);
 
-  const sortApi: SortApi = { getSortModel, setSortModel, sortColumn, onSortModelChange, applySorting };
+  const sortApi: SortApi = {
+    getSortModel,
+    setSortModel,
+    sortColumn,
+    onSortModelChange,
+    applySorting,
+  };
   useApiMethod(apiRef, sortApi, 'SortApi');
 
   React.useEffect(() => {

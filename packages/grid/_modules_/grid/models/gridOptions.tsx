@@ -4,7 +4,8 @@ import {
   ArrowUpwardIcon,
   SeparatorIcon,
   MenuIcon,
-  FilterIcon, TripleDotsVertical,
+  FilterIcon,
+  TripleDotsVertical,
 } from '../components/icons/index';
 import { Logger } from '../hooks/utils/useLogger';
 import { ColumnTypesRecord } from './colDef/colTypeDef';

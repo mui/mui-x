@@ -19,108 +19,132 @@ export interface ColumnMenuState {
 
 const openMenuColumnSelector = (state: GridState): ColDef | null => {
   const columnMenu = state.columnMenu;
-  if(columnMenu.open && columnMenu.field) {
+  if (columnMenu.open && columnMenu.field) {
     const cols = columnsSelector(state);
     return cols.lookup[columnMenu.field];
   }
   return null;
-}
+};
 
 export const ColumnHeaderMenu: React.FC<{}> = () => {
-    const apiRef = React.useContext(ApiContext);
-    const [gridState, setGridState, forceUpdate] = useGridState(apiRef!);
-    const currentColumn = openMenuColumnSelector(gridState);
-    const sortModel = useGridSelector(apiRef, sortModelSelector);
-    const sortDirection = React.useMemo(()=> {
-      if(!currentColumn) {
-        return null;
+  const apiRef = React.useContext(ApiContext);
+  const [gridState, setGridState, forceUpdate] = useGridState(apiRef!);
+  const currentColumn = openMenuColumnSelector(gridState);
+  const sortModel = useGridSelector(apiRef, sortModelSelector);
+  const sortDirection = React.useMemo(() => {
+    if (!currentColumn) {
+      return null;
+    }
+    const sortItem = sortModel.find((item) => item.field === currentColumn.field);
+    return sortItem?.sort;
+  }, [currentColumn, sortModel]);
+
+  const [target, setTarget] = React.useState<Element | null>(null);
+
+  // TODO: Fix issue with portal in V5
+  const hideTimeout = React.useRef<any>();
+  const hideMenu = React.useCallback(() => {
+    setGridState((state) => ({ ...state, columnMenu: { open: false } }));
+    forceUpdate();
+  }, [forceUpdate, setGridState]);
+
+  const hideMenuDelayed = React.useCallback(() => {
+    hideTimeout.current = setTimeout(() => hideMenu(), 50);
+  }, [hideMenu]);
+
+  const updateColumnMenu = React.useCallback(
+    ({ open, field }: ColumnMenuState) => {
+      if (field && open) {
+        setImmediate(() => clearTimeout(hideTimeout.current));
+
+        const headerCellEl = findHeaderElementFromField(
+          apiRef!.current!.rootElementRef!.current!,
+          field!,
+        );
+        const menuIconElement = headerCellEl!.querySelector('.MuiDataGrid-menuIconButton');
+        setTarget(menuIconElement);
       }
-      const sortItem = sortModel.find(item=> item.field === currentColumn.field);
-      return sortItem?.sort;
-    }, [currentColumn, sortModel]);
+    },
+    [apiRef],
+  );
 
-    const [target, setTarget] = React.useState<Element | null>(null);
+  const showFilter = React.useCallback(() => {
+    hideMenu();
+    apiRef!.current.upsertFilter({ columnField: currentColumn?.field });
+    apiRef!.current.showFilterPanel(currentColumn?.field);
+  }, [apiRef, currentColumn?.field, forceUpdate, hideMenu, setGridState]);
 
-    // TODO: Fix issue with portal in V5
-    const hideTimeout = React.useRef<any>();
-    const hideMenu = React.useCallback(()=> {
-      setGridState(state=> ({...state, columnMenu: {open: false }}));
-      forceUpdate();
-    },[forceUpdate, setGridState])
-
-    const hideMenuDelayed = React.useCallback(() => {
-      hideTimeout.current = setTimeout(() => hideMenu(), 50);
-    }, [hideMenu]);
-
-    const updateColumnMenu = React.useCallback(
-      ({open, field }: ColumnMenuState) => {
-        if(field && open) {
-          setImmediate(() => clearTimeout(hideTimeout.current));
-
-          const headerCellEl = findHeaderElementFromField(apiRef!.current!.rootElementRef!.current!, field!);
-          const menuIconElement = headerCellEl!.querySelector('.MuiDataGrid-menuIconButton');
-          setTarget(menuIconElement);
-        }
-      },
-      [apiRef],
-    );
-
-    const showFilter = React.useCallback(
-      () => {
-        hideMenu();
-        setGridState(state=> ({...state, preferencePanel: {open: true, openedPanelValue: PreferencePanelsValue.filters, targetField:
-            currentColumn?.field
-        }}));
-        forceUpdate();
-      },
-      [currentColumn?.field, forceUpdate, hideMenu, setGridState],
-    );
-
-    const handleListKeyDown = React.useCallback((event: React.KeyboardEvent) => {
+  const handleListKeyDown = React.useCallback(
+    (event: React.KeyboardEvent) => {
       if (event.key === 'Tab') {
         event.preventDefault();
         hideMenu();
       }
-    }, [hideMenu]);
+    },
+    [hideMenu],
+  );
 
-  const onSortMenuItemClick = React.useCallback((event: React.MouseEvent<HTMLElement>)=> {
-    hideMenu();
-    const direction =  event.currentTarget.getAttribute('data-value') || null;
-    apiRef?.current.sortColumn(currentColumn!, direction as SortDirection);
-  }, [apiRef, currentColumn, hideMenu]);
+  const onSortMenuItemClick = React.useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      hideMenu();
+      const direction = event.currentTarget.getAttribute('data-value') || null;
+      apiRef?.current.sortColumn(currentColumn!, direction as SortDirection);
+    },
+    [apiRef, currentColumn, hideMenu],
+  );
 
+  React.useEffect(() => {
+    updateColumnMenu(gridState.columnMenu);
+  }, [gridState.columnMenu, updateColumnMenu]);
 
-    React.useEffect(() => {
-      updateColumnMenu(gridState.columnMenu)
+  if (!target) {
+    return null;
+  }
+  return (
+    <Popper open={gridState.columnMenu.open} anchorEl={target} transition>
+      {({ TransitionProps, placement }) => (
+        <Grow
+          {...TransitionProps}
+          style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+        >
+          <Paper>
+            <ClickAwayListener onClickAway={hideMenuDelayed}>
+              <MenuList
+                autoFocusItem={gridState.columnMenu.open}
+                id="menu-list-grow"
+                onKeyDown={handleListKeyDown}
+              >
+                <MenuItem onClick={onSortMenuItemClick} disabled={sortDirection == null}>
+                  Unsort
+                </MenuItem>
+                <MenuItem
+                  onClick={onSortMenuItemClick}
+                  data-value={'asc'}
+                  disabled={sortDirection === 'asc'}
+                >
+                  Sort By Asc
+                </MenuItem>
+                <MenuItem
+                  onClick={onSortMenuItemClick}
+                  data-value={'desc'}
+                  disabled={sortDirection === 'desc'}
+                >
+                  Sort By Desc
+                </MenuItem>
 
-    }, [gridState.columnMenu, updateColumnMenu])
-
-    if(!target) {
-      return null;
-    }
-    return (
-      <Popper open={gridState.columnMenu.open} anchorEl={target} transition >
-        {({ TransitionProps, placement }) => (
-          <Grow
-            {...TransitionProps}
-            style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-          >
-            <Paper>
-              <ClickAwayListener onClickAway={hideMenuDelayed}>
-                <MenuList autoFocusItem={gridState.columnMenu.open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                  <MenuItem onClick={onSortMenuItemClick}  disabled={sortDirection == null}>Unsort</MenuItem>
-                  <MenuItem onClick={onSortMenuItemClick} data-value = {'asc'} disabled={sortDirection === 'asc'}>Sort By Asc</MenuItem>
-                  <MenuItem onClick={onSortMenuItemClick} data-value = {'desc'} disabled={sortDirection === 'desc'}>Sort By Desc</MenuItem>
-                
-                  <MenuItem onClick={showFilter}>Filter</MenuItem>
-                  <MenuItem onClick={hideMenuDelayed} disabled >Auto size</MenuItem>
-                  <MenuItem onClick={hideMenuDelayed} disabled >Hide</MenuItem>
-                </MenuList>
-              </ClickAwayListener>
-            </Paper>
-          </Grow>
-        )}
-      </Popper>
-    );
-  };
+                <MenuItem onClick={showFilter}>Filter</MenuItem>
+                <MenuItem onClick={hideMenuDelayed} disabled>
+                  Auto size
+                </MenuItem>
+                <MenuItem onClick={hideMenuDelayed} disabled>
+                  Hide
+                </MenuItem>
+              </MenuList>
+            </ClickAwayListener>
+          </Paper>
+        </Grow>
+      )}
+    </Popper>
+  );
+};
 ColumnHeaderMenuIcon.displayName = 'ColumnHeaderMenuIcon';

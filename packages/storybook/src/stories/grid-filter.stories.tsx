@@ -38,7 +38,7 @@ export function ColumnsAlign() {
     return cols;
   }, []);
 
-  const transformedCols = React.useMemo(()=> transformCols(data.columns), [transformCols, data]);
+  const transformedCols = React.useMemo(() => transformCols(data.columns), [transformCols, data]);
 
   return (
     <div className="grid-container">

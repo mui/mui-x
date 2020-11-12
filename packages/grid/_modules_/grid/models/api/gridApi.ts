@@ -1,3 +1,4 @@
+import { FilterApi } from './filterApi';
 import { RowApi } from './rowApi';
 import { ColumnApi } from './columnApi';
 import { ColumnReorderApi } from './columnReorderApi';
@@ -21,4 +22,5 @@ export type GridApi = CoreApi &
   SelectionApi &
   SortApi &
   VirtualizationApi &
-  PaginationApi;
+  PaginationApi &
+  FilterApi;
