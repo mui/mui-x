@@ -6,6 +6,7 @@ import * as React from 'react';
 import { useForkRef } from '@material-ui/core/utils';
 import { AutoSizer } from './components/AutoSizer';
 import { ColumnsHeader } from './components/column-headers';
+import { DefaultToolbar } from './components/DefaultToolbar';
 import { DefaultFooter } from './components/default-footer';
 import { ErrorBoundary } from './components/error-boundary';
 import { Pagination } from './components/pagination';
@@ -119,6 +120,11 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
             >
               <ApiContext.Provider value={apiRef}>
                 <OptionsContext.Provider value={gridState.options}>
+                  {customComponents.toolbarComponent || (
+                    <DefaultToolbar>
+                      {/* The components for the separate features go in here */}
+                    </DefaultToolbar>
+                  )}
                   {customComponents.headerComponent}
                   <div className="MuiDataGrid-mainGridContainer">
                     <Watermark licenseStatus={props.licenseStatus} />

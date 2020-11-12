@@ -38,6 +38,15 @@ export const useComponents = (
         : null,
     [componentOverrides, componentProps],
   );
+
+  const toolbarComponent = React.useMemo(
+    () =>
+      componentOverrides?.toolbar
+        ? React.createElement(componentOverrides.toolbar, componentProps)
+        : null,
+    [componentOverrides, componentProps],
+  );
+
   const footerComponent = React.useMemo(
     () =>
       componentOverrides?.footer
@@ -83,6 +92,7 @@ export const useComponents = (
 
   return {
     headerComponent,
+    toolbarComponent,
     footerComponent,
     loadingComponent,
     noRowsComponent,
