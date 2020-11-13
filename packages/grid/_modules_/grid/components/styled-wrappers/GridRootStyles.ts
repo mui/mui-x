@@ -44,6 +44,14 @@ export const useStyles = makeStyles(
             theme.palette.action.disabledOpacity,
           ),
         },
+        '& .MuiDataGrid-toolbar': {
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          minHeight: 35, // Match MUI Small Button height
+          backgroundColor: theme.palette.background.default,
+          border: `1px solid ${borderColor}`,
+        },
         '& .MuiDataGrid-columnsContainer': {
           position: 'absolute',
           top: 0,

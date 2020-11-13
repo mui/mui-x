@@ -317,3 +317,24 @@ export function StyledColumns() {
     </div>
   );
 }
+
+function ToolbarComponent() {
+  return <div>This is my custom toolbar!</div>;
+}
+
+export function CustomToolbar() {
+  const data = useData(2000, 200);
+
+  return (
+    <div className="grid-container">
+      <XGrid
+        rows={data.rows}
+        columns={data.columns}
+        pageSize={33}
+        components={{
+          header: ToolbarComponent,
+        }}
+      />
+    </div>
+  );
+}

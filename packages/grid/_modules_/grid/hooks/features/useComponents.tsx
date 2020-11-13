@@ -38,6 +38,7 @@ export const useComponents = (
         : null,
     [componentOverrides, componentProps],
   );
+
   const footerComponent = React.useMemo(
     () =>
       componentOverrides?.footer

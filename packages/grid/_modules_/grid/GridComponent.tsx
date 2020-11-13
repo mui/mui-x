@@ -13,6 +13,7 @@ import { GridColumnsContainer } from './components/styled-wrappers/GridColumnsCo
 import { GridDataContainer } from './components/styled-wrappers/GridDataContainer';
 import { GridRoot } from './components/styled-wrappers/GridRoot';
 import { GridWindow } from './components/styled-wrappers/GridWindow';
+import { GridToolbar } from './components/styled-wrappers/GridToolbar';
 import { Viewport } from './components/viewport';
 import { Watermark } from './components/watermark';
 import { DATA_CONTAINER_CSS_CLASS } from './constants/cssClassesConstants';
@@ -128,7 +129,11 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
             >
               <ApiContext.Provider value={apiRef}>
                 <OptionsContext.Provider value={gridState.options}>
-                  {customComponents.headerComponent}
+                  {customComponents.headerComponent || (
+                    <GridToolbar>
+                      {/* The components for the separate features go in here */}
+                    </GridToolbar>
+                  )}
                   <div className="MuiDataGrid-mainGridContainer">
                     <Watermark licenseStatus={props.licenseStatus} />
                     <GridColumnsContainer
