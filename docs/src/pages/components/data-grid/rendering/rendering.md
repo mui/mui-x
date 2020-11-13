@@ -275,11 +275,7 @@ This demo replaces it with the [Pagination](/components/pagination/) component.
 
 ### Toolbar
 
-The grid exposes props to hide specific elements of the UI:
-
-- `hideToolbar`: If `true`, the toolbar component is hidden.
-
-You can replace the default toolbar by providing your own implementation.
+You can replace the default toolbar by providing a `header` component.
 This demo showcases how this can be achieve.
 
 {{"demo": "pages/components/data-grid/rendering/CustomToolbarGrid.js", "bg": "inline"}}

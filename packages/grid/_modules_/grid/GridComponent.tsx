@@ -120,8 +120,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
             >
               <ApiContext.Provider value={apiRef}>
                 <OptionsContext.Provider value={gridState.options}>
-                  {customComponents.headerComponent}
-                  {customComponents.toolbarComponent || gridState.options.hideToolbar || (
+                  {customComponents.headerComponent || (
                     <GridToolbar>
                       {/* The components for the separate features go in here */}
                     </GridToolbar>
