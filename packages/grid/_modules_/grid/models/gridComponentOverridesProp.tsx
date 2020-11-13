@@ -18,10 +18,6 @@ export interface GridComponentOverridesProp {
    */
   noRowsOverlay?: React.ElementType<ComponentProps>;
   /**
-   * Toolbar component rendered at the top of the grid viewport.
-   */
-  toolbar?: React.ElementType<ComponentProps>;
-  /**
    * Footer component rendered at the bottom of the grid viewport.
    */
   footer?: React.ElementType<ComponentProps>;
