@@ -57,8 +57,8 @@ export const PreferencesPanel = () => {
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef!);
   const [target, setTarget] = React.useState<Element | null>(null);
 
-	const icons = useIcons();
-	const filterIconElement = React.createElement(icons.columnFiltering!, {});
+  const icons = useIcons();
+  const filterIconElement = React.createElement(icons.columnFiltering!, {});
 
   const hideTimeout = React.useRef<any>();
   const hidePreferences = React.useCallback(() => {
@@ -98,7 +98,7 @@ export const PreferencesPanel = () => {
       }
     },
     [apiRef],
-  )
+  );
 
   React.useEffect(() => {
     updateColumnTarget(gridState.preferencePanel);
@@ -115,7 +115,14 @@ export const PreferencesPanel = () => {
       anchorEl={target || apiRef?.current.rootElementRef!.current}
     >
       <ClickAwayListener onClickAway={hidePreferencesDelayed}>
-        <Paper square className={classes.root} style={{maxHeight: gridState.viewportSizes.height, maxWidth: gridState.viewportSizes.width}}>
+        <Paper
+          square
+          className={classes.root}
+          style={{
+            maxHeight: gridState.viewportSizes.height,
+            maxWidth: gridState.viewportSizes.width,
+          }}
+        >
           <Tabs
             value={gridState.preferencePanel.openedPanelValue}
             variant="fullWidth"

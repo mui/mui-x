@@ -58,9 +58,9 @@ export const FilterForm: React.FC<FilterFormProps> = ({
       const value = event.target.value;
       setFilterValueState(value);
       filterTimeout.current = setTimeout(() => {
-        setIsApplying(()=> true);
+        setIsApplying(() => true);
         applyFilterChanges({ ...item, value });
-        setIsApplying(()=> false);
+        setIsApplying(() => false);
       }, SUBMIT_FILTER_STROKE_TIME);
     },
     [applyFilterChanges, item],
@@ -131,7 +131,7 @@ export const FilterForm: React.FC<FilterFormProps> = ({
           value={filterValueState}
           onChange={onFilterChange}
           inputProps={{
-            endAdornment: applying &&  <CloseIcon /> //Not showing???
+            endAdornment: applying && <CloseIcon />, //Not showing???
           }}
         />
       </FormControl>
