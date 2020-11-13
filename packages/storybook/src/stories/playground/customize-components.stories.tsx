@@ -332,7 +332,7 @@ export function CustomToolbar() {
         columns={data.columns}
         pageSize={33}
         components={{
-          toolbar: ToolbarComponent,
+          header: ToolbarComponent,
         }}
       />
     </div>
