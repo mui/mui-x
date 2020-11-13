@@ -41,7 +41,6 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
       disableExtendRowFullWidth: props.disableExtendRowFullWidth,
       headerHeight: props.headerHeight,
       hideFooter: props.hideFooter,
-      hideToolbar: props.hideToolbar,
       hideFooterPagination: props.hideFooterPagination,
       hideFooterRowCount: props.hideFooterRowCount,
       hideFooterSelectedRowCount: props.hideFooterSelectedRowCount,
