@@ -148,11 +148,6 @@ export interface GridOptions {
    */
   hideFooter?: boolean;
   /**
-   * If `true`, the toolbar component is hidden.
-   * @default false
-   */
-  hideToolbar?: boolean;
-  /**
    * If `true`, the row count in the footer is hidden.
    * @default false
    */
