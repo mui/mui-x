@@ -245,6 +245,7 @@ As part of the customization API, the grid allows you to replace and override ne
 - `noRowsOverlay`: The component rendered when the rows react prop is empty or [].
 - `footer`: The component rendered below the viewport.
 - `pagination`: The component rendered for the pagination feature.
+- `toolbar`: The component rendered above the column header bar and the custom `header` component if provided.
 
 ### Loading overlay
 
@@ -272,6 +273,17 @@ By default, pagination uses the [TablePagination](/components/pagination/#table-
 This demo replaces it with the [Pagination](/components/pagination/) component.
 
 {{"demo": "pages/components/data-grid/rendering/CustomPaginationGrid.js", "bg": "inline"}}
+
+### Toolbar
+
+The grid exposes props to hide specific elements of the UI:
+
+- `hideToolbar`: If `true`, the toolbar component is hidden.
+
+By default, we provide a default toolbar with opinianted functionality. You can replace our default toolbar by providing your own implementation.
+This demo showcases how this can be achieve.
+
+{{"demo": "pages/components/data-grid/rendering/CustomToolbarGrid.js", "bg": "inline"}}
 
 ## Customization example
 
