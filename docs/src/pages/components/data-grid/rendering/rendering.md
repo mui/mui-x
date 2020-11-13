@@ -280,7 +280,7 @@ The grid exposes props to hide specific elements of the UI:
 
 - `hideToolbar`: If `true`, the toolbar component is hidden.
 
-By default, we provide a default toolbar with opinianted functionality. You can replace our default toolbar by providing your own implementation.
+By default, we provide a default toolbar. You can replace it by providing your own implementation.
 This demo showcases how this can be achieve.
 
 {{"demo": "pages/components/data-grid/rendering/CustomToolbarGrid.js", "bg": "inline"}}
