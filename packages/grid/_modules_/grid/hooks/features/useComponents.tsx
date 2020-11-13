@@ -92,7 +92,6 @@ export const useComponents = (
 
   return {
     headerComponent,
-    toolbarComponent,
     footerComponent,
     loadingComponent,
     noRowsComponent,
