@@ -7,6 +7,15 @@ export const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarProps>(fu
   props,
   ref,
 ) {
-  const { className, ...other } = props;
-  return <div ref={ref} className={classnames('MuiDataGrid-toolbar', className)} {...other} />;
+  const { className, children, ...other } = props;
+
+  if (!children) {
+    return null;
+  }
+
+  return (
+    <div ref={ref} className={classnames('MuiDataGrid-toolbar', className)} {...other}>
+      {children}
+    </div>
+  );
 });
