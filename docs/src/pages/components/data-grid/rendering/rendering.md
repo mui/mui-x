@@ -246,6 +246,13 @@ As part of the customization API, the grid allows you to replace and override ne
 - `footer`: The component rendered below the viewport.
 - `pagination`: The component rendered for the pagination feature.
 
+### Header
+
+You can replace the default toolbar by providing a `header` component.
+This demo showcases how this can be achieve.
+
+{{"demo": "pages/components/data-grid/rendering/CustomToolbarGrid.js", "bg": "inline"}}
+
 ### Loading overlay
 
 By default, the loading overlay displays a circular progress.
@@ -272,13 +279,6 @@ By default, pagination uses the [TablePagination](/components/pagination/#table-
 This demo replaces it with the [Pagination](/components/pagination/) component.
 
 {{"demo": "pages/components/data-grid/rendering/CustomPaginationGrid.js", "bg": "inline"}}
-
-### Toolbar
-
-You can replace the default toolbar by providing a `header` component.
-This demo showcases how this can be achieve.
-
-{{"demo": "pages/components/data-grid/rendering/CustomToolbarGrid.js", "bg": "inline"}}
 
 ## Customization example
 
