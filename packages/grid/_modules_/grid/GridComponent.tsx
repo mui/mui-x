@@ -120,12 +120,11 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
             >
               <ApiContext.Provider value={apiRef}>
                 <OptionsContext.Provider value={gridState.options}>
-                  {customComponents.toolbarComponent ||
-                    (gridState.options.hideToolbar || (
-                      <GridToolbar>
-                        {/* The components for the separate features go in here */}
-                      </GridToolbar>
-                    ))}
+                  {customComponents.toolbarComponent || gridState.options.hideToolbar || (
+                    <GridToolbar>
+                      {/* The components for the separate features go in here */}
+                    </GridToolbar>
+                  )}
                   {customComponents.headerComponent}
                   <div className="MuiDataGrid-mainGridContainer">
                     <Watermark licenseStatus={props.licenseStatus} />
