@@ -5,6 +5,7 @@ import { CellParams, ValueFormatterParams, ValueGetterParams } from '../params/c
 import { ColParams } from '../params/colParams';
 import { ComparatorFn, SortDirection } from '../sortModel';
 import { ColType, NativeColTypes } from './colType';
+import { FilterOperator } from './stringColDef';
 
 /**
  * Alignement used in position elements in Cells.
@@ -123,6 +124,8 @@ export interface ColDef {
 
   filterable?: boolean;
   // applyFilter: (filterValue: any, rows: Rows)=> void;
+
+  filterOperators?: FilterOperator[];
 }
 
 export type Columns = ColDef[];

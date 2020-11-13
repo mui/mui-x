@@ -4,9 +4,9 @@ import { getInitialColumnsState, InternalColumns } from '../../../models/colDef/
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
 import {
   FilterModelState,
-  HiddenRowsState,
-  getInitialFilterState,
-} from '../filter/hiddenRowsState';
+  VisibleRowsState,
+  getInitialFilterState, getInitialVisibleRowsState,
+} from '../filter/visibleRowsState';
 import { SelectionState } from '../selection/selectionState';
 import { getInitialRenderingState, InternalRenderingState } from '../virtualization/renderingState';
 import { KeyboardState } from '../keyboard/keyboardState';
@@ -35,6 +35,7 @@ export interface GridState {
   keyboard: KeyboardState;
   selection: SelectionState;
   filter: FilterModelState;
+  visibleRows: VisibleRowsState;
   preferencePanel: PreferencePanelState;
 }
 
@@ -55,4 +56,5 @@ export const getInitialState: () => GridState = () => ({
   filter: getInitialFilterState(),
   columnMenu: { open: false },
   preferencePanel: { open: false },
+  visibleRows: getInitialVisibleRowsState(),
 });

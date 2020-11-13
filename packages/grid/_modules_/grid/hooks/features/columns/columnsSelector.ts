@@ -11,6 +11,10 @@ export const visibleColumnsSelector = createSelector<GridState, InternalColumns,
   columnsSelector,
   (columns: InternalColumns) => columns.visible,
 );
+export const filterableColumnsSelector = createSelector<GridState, InternalColumns, Columns>(
+  columnsSelector,
+  (columns: InternalColumns) => columns.all.filter(col=> col.filterable)
+);
 export const visibleColumnsLengthSelector = createSelector<GridState, InternalColumns, number>(
   columnsSelector,
   (columns: InternalColumns) => columns.visible.length,

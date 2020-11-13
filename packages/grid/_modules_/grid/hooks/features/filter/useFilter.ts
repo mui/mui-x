@@ -1,48 +1,62 @@
 import * as React from 'react';
 import { PreferencePanelsValue } from '../../../components/tools/preferences';
-import { COLUMN_FILTER_CHANGED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
-import { ColDef } from '../../../models/colDef/colDef';
 import { isEqual } from '../../../utils/utils';
-import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useLogger } from '../../utils/useLogger';
+import { filterableColumnsSelector } from '../columns/columnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { sortedRowsSelector } from '../sorting/sortingSelector';
-import { FilterItem, getInitialFilterState, HiddenRowsState } from './hiddenRowsState';
+import { FilterItem, getInitialFilterState, getInitialVisibleRowsState } from './visibleRowsState';
 
 export const useFilter = (apiRef: ApiRef): void => {
   const logger = useLogger('useFilter');
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
+  const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
 
   const rows = useGridSelector(apiRef, sortedRowsSelector);
+  const filterableColumns = useGridSelector(apiRef, filterableColumnsSelector);
+  // const visibleRowsState = useGridSelector(apiRef, visibleRowsStateSelector);
 
-  const onColumnFilterChanged = React.useCallback(
-    ({ column, filterValues }: { column: ColDef; filterValues: string[] }) => {
-      logger.info(`Filtering column ${column.field} with ${filterValues.join(', ')} `);
-      const filterRegexes = filterValues.map((filterValue) => new RegExp(filterValue, 'ig'));
+  const applyFilter = React.useCallback((filterItem: FilterItem)=> {
+      if(!filterItem.columnField || !filterItem.operator || !filterItem.value) {
+        return;
+      }
+    logger.info(`Filtering column: ${filterItem.columnField} ${filterItem.operator.label} ${filterItem.value} `);
 
-      // setGridState((state) => {
-      //   const newFilterState: HiddenRowsState = { ...state.filter, hiddenRows: [] };
-      //   rows.forEach((row) => {
-      //     // const isShown = filterRegex.test(row.data[column.field]);
-      //     const isShown =
-      //       !filterRegexes.length ||
-      //       filterRegexes.some((regEx) => regEx.test(row.data[column.field]));
-      //
-      //     if (!isShown) {
-      //       newFilterState.hiddenRows.push(row.id);
-      //     }
-      //   });
-      //   return { ...state, filter: newFilterState };
-      // });
-      //
-      // apiRef.current.updateColumn({ ...column, filterValue: filterValues });
-      // forceUpdate();
-    },
-    [apiRef, forceUpdate, logger, rows, setGridState],
-  );
+    const column = apiRef.current.getColumnFromField(filterItem.columnField);
+      const filterOperators = column.filterOperators;
+      if(!filterOperators?.length) {
+        throw new Error(`No Filter operator found for column ${column.field}`);
+      }
+      const filterOperator = filterOperators.find(operator => operator.value === filterItem.operator!.value)!;
+
+    const applyFilterOnRow = filterOperator.getApplyFilterFn(filterItem)!;
+
+    setGridState(state=> {
+      const visibleRowsLookup = {...state.visibleRows.visibleRowsLookup};
+
+      rows.forEach((row) => {
+        const isShown = applyFilterOnRow(row);
+          visibleRowsLookup[row.id] =
+            visibleRowsLookup[row.id] == null ? isShown : visibleRowsLookup[row.id] || isShown; //if AND it might be better to take the visible rows
+      });
+      return {...state, visibleRows: {visibleRowsLookup, visibleRows: Object.keys(visibleRowsLookup)}};
+    });
+    // apiRef.current.updateColumn({ ...column, filterValue: filterValues }); ??? NOT SURE WHY IVE DONE THTA?
+    forceUpdate();
+  }, [apiRef, forceUpdate, logger, rows, setGridState]);
+
+  const applyFilters = React.useCallback((filterItems: FilterItem[])=> {
+    filterItems.forEach(filterItem => {
+      applyFilter(filterItem);
+    });
+  }, [applyFilter])
+
+  const applyAllFilters = React.useCallback(()=> {
+    const filterItems = gridState.filter.items;
+    applyFilters(filterItems);
+  },[applyFilters, gridState.filter.items]);
 
   const upsertFilter = React.useCallback(
     (item: FilterItem) => {
@@ -63,15 +77,24 @@ export const useFilter = (apiRef: ApiRef): void => {
           item.id = new Date().getTime();
         }
 
+        if(item.columnField == null) {
+          item.columnField = filterableColumns[0].field;
+        }
+        if(item.columnField != null && item.operator == null) {
+          // we select a default operator
+          item.operator = apiRef!.current!.getColumnFromField(item.columnField)!.filterOperators![0];
+        }
+
         const newState = {
           ...state,
           filter: { ...state.filter, items },
         };
         return newState;
       });
+      applyFilter(item);
       forceUpdate();
     },
-    [forceUpdate, setGridState],
+    [apiRef, applyFilter, filterableColumns, forceUpdate, setGridState],
   );
 
   const deleteFilter = React.useCallback(
@@ -82,18 +105,21 @@ export const useFilter = (apiRef: ApiRef): void => {
         const newState = {
           ...state,
           filter: { ...state.filter, items },
+          visibleRows: getInitialVisibleRowsState()
         };
+        applyFilters(items);
         return newState;
       });
       forceUpdate();
     },
-    [forceUpdate, setGridState],
+    [applyFilters, forceUpdate, setGridState],
   );
 
   const clearFilter = React.useCallback(() => {
     setGridState((state) => ({
       ...state,
       filter: getInitialFilterState(),
+      visibleRows: getInitialVisibleRowsState()
     }));
     forceUpdate();
   }, [forceUpdate, setGridState]);
@@ -113,7 +139,5 @@ export const useFilter = (apiRef: ApiRef): void => {
     [forceUpdate, setGridState],
   );
 
-  useApiMethod(apiRef, { upsertFilter, clearFilter, deleteFilter, showFilterPanel }, 'FilterApi');
-
-  useApiEventHandler(apiRef, COLUMN_FILTER_CHANGED, onColumnFilterChanged);
+  useApiMethod(apiRef, { applyFilter, upsertFilter, clearFilter, deleteFilter, showFilterPanel }, 'FilterApi');
 };

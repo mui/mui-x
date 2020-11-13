@@ -1,18 +1,16 @@
 import * as React from 'react';
 import { Button } from '@material-ui/core';
-import { allColumnsSelector } from '../../hooks/features/columns/columnsSelector';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { useGridState } from '../../hooks/features/core/useGridState';
 import { PREVENT_HIDE_PREFERENCES } from '../../constants/index';
-import { FilterItem } from '../../hooks/features/filter/hiddenRowsState';
+import { FilterItem } from '../../hooks/features/filter/visibleRowsState';
 import { ApiContext } from '../api-context';
-import { AddIcon } from '../icons/index';
+import { AddIcon, CloseIcon } from '../icons/index';
 import { FilterForm } from './filterForm';
 
 export const FilterPanel: React.FC<{}> = () => {
   const apiRef = React.useContext(ApiContext);
   const [gridState] = useGridState(apiRef!);
-  const columns = useGridSelector(apiRef, allColumnsSelector);
+  const hasMultipleFilters = React.useMemo(()=> gridState.filter.items.length > 1, [gridState.filter.items.length]);
 
   const dontHidePreferences = React.useCallback(
     (event: React.ChangeEvent<{}>) => {
@@ -47,14 +45,15 @@ export const FilterPanel: React.FC<{}> = () => {
   return (
     <React.Fragment>
       <div style={{ display: 'flex', flexDirection: 'column', overflow: 'auto', flex: '1 1' }}>
-        {gridState.filter.items.map((item) => (
+        {gridState.filter.items.map((item, index) => (
           <FilterForm
             key={item.id}
-            columns={columns}
             item={item}
             onSelectOpen={dontHidePreferences}
             applyFilterChanges={applyFilter}
             deleteFilter={deleteFilter}
+            showMultiFilterOperators={hasMultipleFilters && index > 0}
+            multiFilterOperator={gridState.filter.linkOperator}
           />
         ))}
       </div>
@@ -71,7 +70,7 @@ export const FilterPanel: React.FC<{}> = () => {
         <Button onClick={addNewFilter} startIcon={<AddIcon />}>
           Filter
         </Button>
-        <Button onClick={clearFilter} startIcon={<AddIcon />}>
+        <Button onClick={clearFilter} startIcon={<CloseIcon />}>
           Clear
         </Button>
       </div>

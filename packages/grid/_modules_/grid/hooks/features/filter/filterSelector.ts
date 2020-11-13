@@ -2,21 +2,17 @@ import { createSelector } from 'reselect';
 import { RowModel } from '../../../models/rows';
 import { GridState } from '../core/gridState';
 import { sortedRowsSelector } from '../sorting/sortingSelector';
-import { HiddenRowsState } from './hiddenRowsState';
+import { VisibleRowsState } from './visibleRowsState';
 
-export const filterStateSelector = (state: GridState) => state.filter;
+export const visibleRowsStateSelector = (state: GridState) => state.visibleRows;
 
 export const visibleSortedRowsSelector = createSelector<
   GridState,
-  // HiddenRowsState,
+  VisibleRowsState,
   RowModel[],
   RowModel[]
->(sortedRowsSelector, (sortedRows: RowModel[]) => {
-  const visibleRows = [...sortedRows];
-  // .filter(
-  // (row) => filterState.hiddenRows.indexOf(row.id) === -1,
-  // );
-  return visibleRows;
+>(visibleRowsStateSelector, sortedRowsSelector, (visibleRowsState, sortedRows: RowModel[]) => {
+  return [...sortedRows].filter((row) => visibleRowsState.visibleRowsLookup[row.id]!== false);
 });
 
 export const visibleRowCountSelector = createSelector<GridState, RowModel[], number>(
