@@ -1,4 +1,4 @@
-import { Box, ClickAwayListener, Paper, Popper, Tab, Tabs, Theme } from '@material-ui/core';
+import { Box, ClickAwayListener, FormControl, IconButton, Paper, Popper, Tab, Tabs, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { PREVENT_HIDE_PREFERENCES } from '../../constants/eventsConstants';
@@ -7,7 +7,7 @@ import { useApiEventHandler } from '../../hooks/root/useApiEventHandler';
 import { useIcons } from '../../hooks/utils/useIcons';
 import { findHeaderElementFromField } from '../../utils/domUtils';
 import { ApiContext } from '../api-context';
-import { ViewWeekIcon } from '../icons/index';
+import { CloseIcon, ViewWeekIcon } from '../icons/index';
 import { FilterPanel } from './filterPanel';
 
 export interface PreferencePanelState {
@@ -67,7 +67,7 @@ export const PreferencesPanel = () => {
   }, [forceUpdate, setGridState]);
 
   const hidePreferencesDelayed = React.useCallback(() => {
-    hideTimeout.current = setTimeout(() => hidePreferences(), 50);
+    hideTimeout.current = setTimeout(() => hidePreferences(), 100);
   }, [hidePreferences]);
   // This is to prevent the preferences from closing when you open a select box, issue with MUI core V4 => Fixed in V5
   const dontHidePanel = React.useCallback(() => {
@@ -113,8 +113,19 @@ export const PreferencesPanel = () => {
       placement="bottom"
       open={gridState.preferencePanel.open}
       anchorEl={target || apiRef?.current.rootElementRef!.current}
+      style ={{position: 'relative'}}
     >
-      <ClickAwayListener onClickAway={hidePreferencesDelayed}>
+      <div style={{position: 'absolute', left: 0, top: 0, zIndex: 10000}}>
+        <IconButton
+          color="primary"
+          aria-label="Close"
+          component="span"
+          onClick={hidePreferences}
+        >
+          <CloseIcon />
+        </IconButton>
+      </div>
+      {/*<ClickAwayListener onClickAway={hidePreferencesDelayed}>*/}
         <Paper
           square
           className={classes.root}
@@ -156,7 +167,7 @@ export const PreferencesPanel = () => {
             </TabPanel>
           )}
         </Paper>
-      </ClickAwayListener>
+      {/*</ClickAwayListener>*/}
     </Popper>
   );
 };

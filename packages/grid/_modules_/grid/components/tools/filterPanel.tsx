@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button } from '@material-ui/core';
 import { useGridState } from '../../hooks/features/core/useGridState';
 import { PREVENT_HIDE_PREFERENCES } from '../../constants/index';
-import { FilterItem } from '../../hooks/features/filter/visibleRowsState';
+import { FilterItem, LinkOperator } from '../../hooks/features/filter/visibleRowsState';
 import { ApiContext } from '../api-context';
 import { AddIcon, CloseIcon } from '../icons/index';
 import { FilterForm } from './filterForm';
@@ -27,12 +27,19 @@ export const FilterPanel: React.FC<{}> = () => {
     [apiRef],
   );
 
+  const applyFilterLinkOperator = React.useCallback(
+    (operator: LinkOperator) => {
+      apiRef!.current.applyFilterLinkOperator(operator);
+    },
+    [apiRef],
+  );
+
   const addNewFilter = React.useCallback(() => {
     apiRef!.current.upsertFilter({});
   }, [apiRef]);
 
   const clearFilter = React.useCallback(() => {
-    apiRef!.current.clearFilter();
+    apiRef!.current.clearFilters();
   }, [apiRef]);
 
   const deleteFilter = React.useCallback(
@@ -54,6 +61,8 @@ export const FilterPanel: React.FC<{}> = () => {
             deleteFilter={deleteFilter}
             showMultiFilterOperators={hasMultipleFilters && index > 0}
             multiFilterOperator={gridState.filter.linkOperator}
+            disableMultiFilterOperator = {index !== 1}
+            applyMultiFilterOperatorChanges={applyFilterLinkOperator}
           />
         ))}
       </div>

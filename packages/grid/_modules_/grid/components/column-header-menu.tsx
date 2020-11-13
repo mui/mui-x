@@ -33,6 +33,7 @@ export const ColumnHeaderMenu: React.FC<{}> = () => {
   const currentColumn = openMenuColumnSelector(gridState);
   const options = useGridSelector(apiRef, optionsSelector);
   const sortModel = useGridSelector(apiRef, sortModelSelector);
+
   const sortDirection = React.useMemo(() => {
     if (!currentColumn) {
       return null;
@@ -72,9 +73,12 @@ export const ColumnHeaderMenu: React.FC<{}> = () => {
 
   const showFilter = React.useCallback(() => {
     hideMenu();
-    apiRef!.current.upsertFilter({ columnField: currentColumn?.field });
+    const lastFilter = gridState.filter.items.length > 0 ? gridState.filter.items[gridState.filter.items.length - 1] : null;
+    if(!lastFilter || lastFilter.columnField !== currentColumn?.field) {
+      apiRef!.current.upsertFilter({columnField: currentColumn?.field});
+    }
     apiRef!.current.showFilterPanel(currentColumn?.field);
-  }, [apiRef, currentColumn?.field, hideMenu]);
+  }, [apiRef, currentColumn?.field, gridState.filter.items, hideMenu]);
 
   const handleListKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {

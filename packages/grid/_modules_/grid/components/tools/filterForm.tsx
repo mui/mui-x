@@ -12,15 +12,17 @@ import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { FilterItem, LinkOperator } from '../../hooks/features/filter/visibleRowsState';
 import { ColDef } from '../../models/colDef/colDef';
 import { ApiContext } from '../api-context';
-import { CloseIcon } from '../icons/index';
+import { CloseIcon, LoadIcon } from '../icons/index';
 
 export interface FilterFormProps {
   item: FilterItem;
 
   showMultiFilterOperators?: boolean;
   multiFilterOperator?: LinkOperator;
+  disableMultiFilterOperator?: boolean;
 
   applyFilterChanges: (item: FilterItem) => void;
+  applyMultiFilterOperatorChanges: (operator: LinkOperator) => void;
   deleteFilter: (item: FilterItem) => void;
   onSelectOpen: (event: React.ChangeEvent<{}>) => void;
 }
@@ -32,7 +34,8 @@ export const FilterForm: React.FC<FilterFormProps> = ({
   deleteFilter,
   applyFilterChanges,
   multiFilterOperator,
-  showMultiFilterOperators,
+  showMultiFilterOperators,disableMultiFilterOperator,
+                                                        applyMultiFilterOperatorChanges,
 }) => {
   const apiRef = React.useContext(ApiContext);
   const filterableColumns = useGridSelector(apiRef, filterableColumnsSelector);
@@ -68,9 +71,10 @@ export const FilterForm: React.FC<FilterFormProps> = ({
 
   const changeLinkOperator = React.useCallback(
     (event: React.ChangeEvent<{ value: unknown }>) => {
-      // applyFilterChanges();
+      const linkOperator = (event.target.value as string) === LinkOperator.And.toString() ? LinkOperator.And : LinkOperator.Or;
+      applyMultiFilterOperatorChanges(linkOperator)
     },
-    [applyFilterChanges, currentColumn, item],
+    [applyMultiFilterOperatorChanges],
   );
 
   const onFilterChange = React.useCallback(
@@ -78,10 +82,10 @@ export const FilterForm: React.FC<FilterFormProps> = ({
       clearTimeout(filterTimeout.current);
       const value = event.target.value;
       setFilterValueState(value);
+      setIsApplying( true);
       filterTimeout.current = setTimeout(() => {
-        setIsApplying(() => true);
         applyFilterChanges({ ...item, value });
-        setIsApplying(() => false);
+        setIsApplying(false);
       }, SUBMIT_FILTER_STROKE_TIME);
     },
     [applyFilterChanges, item],
@@ -108,7 +112,7 @@ export const FilterForm: React.FC<FilterFormProps> = ({
             value={multiFilterOperator}
             onOpen={onSelectOpen}
             onChange={changeLinkOperator}
-            disabled
+            disabled = {!!disableMultiFilterOperator}
           >
             <MenuItem key={LinkOperator.And.toString()} value={LinkOperator.And.toString()}>And</MenuItem>
             <MenuItem key={LinkOperator.Or.toString()} value={LinkOperator.Or.toString()}>Or</MenuItem>
@@ -152,7 +156,7 @@ export const FilterForm: React.FC<FilterFormProps> = ({
           value={filterValueState}
           onChange={onFilterChange}
           InputProps={{
-            endAdornment: applying && <CloseIcon />, // Not showing???
+            endAdornment: applying && <LoadIcon />, // Not showing???
           }}
         />
       </FormControl>

@@ -8,7 +8,7 @@ import { filterableColumnsSelector } from '../columns/columnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { sortedRowsSelector } from '../sorting/sortingSelector';
-import { FilterItem, getInitialFilterState, getInitialVisibleRowsState } from './visibleRowsState';
+import { FilterItem, getInitialFilterState, getInitialVisibleRowsState, LinkOperator } from './visibleRowsState';
 
 export const useFilter = (apiRef: ApiRef): void => {
   const logger = useLogger('useFilter');
@@ -18,7 +18,24 @@ export const useFilter = (apiRef: ApiRef): void => {
   const filterableColumns = useGridSelector(apiRef, filterableColumnsSelector);
   // const visibleRowsState = useGridSelector(apiRef, visibleRowsStateSelector);
 
-  const applyFilter = React.useCallback((filterItem: FilterItem)=> {
+  const clearFilteredRows = React.useCallback(() => {
+    setGridState((state) => ({
+      ...state,
+      visibleRows: getInitialVisibleRowsState()
+    }));
+  }, [setGridState]);
+
+  const clearFilters = React.useCallback(() => {
+    setGridState((state) => ({
+      ...state,
+      filter: getInitialFilterState(),
+    }));
+    clearFilteredRows();
+    apiRef.current.upsertFilter({});
+    forceUpdate();
+  }, [apiRef, clearFilteredRows, forceUpdate, setGridState]);
+
+  const applyFilter = React.useCallback((filterItem: FilterItem, linkOperator: LinkOperator)=> {
       if(!filterItem.columnField || !filterItem.operator || !filterItem.value) {
         return;
       }
@@ -39,7 +56,10 @@ export const useFilter = (apiRef: ApiRef): void => {
       rows.forEach((row) => {
         const isShown = applyFilterOnRow(row);
           visibleRowsLookup[row.id] =
-            visibleRowsLookup[row.id] == null ? isShown : visibleRowsLookup[row.id] || isShown; //if AND it might be better to take the visible rows
+            // eslint-disable-next-line no-nested-ternary
+            visibleRowsLookup[row.id] == null ? isShown : (
+              linkOperator === LinkOperator.And ? (visibleRowsLookup[row.id] && isShown) : (visibleRowsLookup[row.id] || isShown)
+            );
       });
       return {...state, visibleRows: {visibleRowsLookup, visibleRows: Object.keys(visibleRowsLookup)}};
     });
@@ -47,16 +67,15 @@ export const useFilter = (apiRef: ApiRef): void => {
     forceUpdate();
   }, [apiRef, forceUpdate, logger, rows, setGridState]);
 
-  const applyFilters = React.useCallback((filterItems: FilterItem[])=> {
-    filterItems.forEach(filterItem => {
-      applyFilter(filterItem);
+  const applyFilters = React.useCallback(()=> {
+    clearFilteredRows();
+    const {items, linkOperator} = apiRef.current.state.filter;
+    items.forEach(filterItem => {
+      applyFilter(filterItem, linkOperator);
     });
-  }, [applyFilter])
+    forceUpdate();
 
-  const applyAllFilters = React.useCallback(()=> {
-    const filterItems = gridState.filter.items;
-    applyFilters(filterItems);
-  },[applyFilters, gridState.filter.items]);
+  },[apiRef, applyFilter, clearFilteredRows, forceUpdate]);
 
   const upsertFilter = React.useCallback(
     (item: FilterItem) => {
@@ -91,10 +110,9 @@ export const useFilter = (apiRef: ApiRef): void => {
         };
         return newState;
       });
-      applyFilter(item);
-      forceUpdate();
+      applyFilters();
     },
-    [apiRef, applyFilter, filterableColumns, forceUpdate, setGridState],
+    [apiRef, applyFilters, filterableColumns, setGridState],
   );
 
   const deleteFilter = React.useCallback(
@@ -105,24 +123,13 @@ export const useFilter = (apiRef: ApiRef): void => {
         const newState = {
           ...state,
           filter: { ...state.filter, items },
-          visibleRows: getInitialVisibleRowsState()
         };
-        applyFilters(items);
         return newState;
       });
-      forceUpdate();
+      applyFilters()
     },
-    [applyFilters, forceUpdate, setGridState],
+    [applyFilters, setGridState],
   );
-
-  const clearFilter = React.useCallback(() => {
-    setGridState((state) => ({
-      ...state,
-      filter: getInitialFilterState(),
-      visibleRows: getInitialVisibleRowsState()
-    }));
-    forceUpdate();
-  }, [forceUpdate, setGridState]);
 
   const showFilterPanel = React.useCallback(
     (targetColumnField?: string) => {
@@ -139,5 +146,13 @@ export const useFilter = (apiRef: ApiRef): void => {
     [forceUpdate, setGridState],
   );
 
-  useApiMethod(apiRef, { applyFilter, upsertFilter, clearFilter, deleteFilter, showFilterPanel }, 'FilterApi');
+  const applyFilterLinkOperator = React.useCallback((linkOperator: LinkOperator)=> {
+    setGridState((state) => ({
+      ...state,
+      filter: {...state.filter, linkOperator }
+    }));
+    applyFilters();
+  },[applyFilters, setGridState]);
+
+  useApiMethod(apiRef, {applyFilterLinkOperator, applyFilters, upsertFilter, clearFilters, deleteFilter, showFilterPanel }, 'FilterApi');
 };
