@@ -37,7 +37,7 @@ export const ColumnHeaderItem = React.memo(
     disableColumnReorder,
     showColumnRightBorder,
     disableColumnResize,
-    disableColumnFilter,
+    disableColumnMenu,
   } = options;
   const isColumnSorted = column.sortDirection != null;
   // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
@@ -112,7 +112,7 @@ export const ColumnHeaderItem = React.memo(
       {...ariaSort}
     >
       <div className="MuiDataGrid-colCell-draggable" {...dragConfig}>
-        {!disableColumnFilter && isColumnNumeric && !column.disableColumnMenu && (
+        {!disableColumnMenu && isColumnNumeric && !column.disableColumnMenu && (
           <ColumnHeaderMenuIcon column={column} />
         )}
 
@@ -139,7 +139,7 @@ export const ColumnHeaderItem = React.memo(
             />
           )}
         </div>
-        {!isColumnNumeric && !disableColumnFilter && !column.disableColumnMenu && (
+        {!isColumnNumeric && !disableColumnMenu && !column.disableColumnMenu && (
           <ColumnHeaderMenuIcon column={column} />
         )}
         </div>

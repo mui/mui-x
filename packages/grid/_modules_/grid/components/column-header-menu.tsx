@@ -5,6 +5,7 @@ import { GridState } from '../hooks/features/core/gridState';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { useGridState } from '../hooks/features/core/useGridState';
 import { sortModelSelector } from '../hooks/features/sorting/sortingSelector';
+import { optionsSelector } from '../hooks/utils/useOptionsProp';
 import { ColDef } from '../models/colDef/colDef';
 import { SortDirection } from '../models/sortModel';
 import { findHeaderElementFromField } from '../utils/domUtils';
@@ -30,6 +31,7 @@ export const ColumnHeaderMenu: React.FC<{}> = () => {
   const apiRef = React.useContext(ApiContext);
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef!);
   const currentColumn = openMenuColumnSelector(gridState);
+  const options = useGridSelector(apiRef, optionsSelector);
   const sortModel = useGridSelector(apiRef, sortModelSelector);
   const sortDirection = React.useMemo(() => {
     if (!currentColumn) {
@@ -72,7 +74,7 @@ export const ColumnHeaderMenu: React.FC<{}> = () => {
     hideMenu();
     apiRef!.current.upsertFilter({ columnField: currentColumn?.field });
     apiRef!.current.showFilterPanel(currentColumn?.field);
-  }, [apiRef, currentColumn?.field, forceUpdate, hideMenu, setGridState]);
+  }, [apiRef, currentColumn?.field, hideMenu]);
 
   const handleListKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
@@ -131,8 +133,9 @@ export const ColumnHeaderMenu: React.FC<{}> = () => {
                 >
                   Sort By Desc
                 </MenuItem>
-
-                <MenuItem onClick={showFilter}>Filter</MenuItem>
+                {!options.disableColumnFilter && currentColumn?.filterable && (
+                  <MenuItem onClick={showFilter}>Filter</MenuItem>
+                )}
                 <MenuItem onClick={hideMenuDelayed} disabled>
                   Auto size
                 </MenuItem>

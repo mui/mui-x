@@ -97,6 +97,11 @@ export interface GridOptions {
    */
   disableColumnFilter?: boolean;
   /**
+   * If `true`, column Menu is disabled.
+   * @default false
+   */
+  disableColumnMenu?: boolean;
+  /**
    * If `true`, reordering columns is disabled.
    * @default false
    */

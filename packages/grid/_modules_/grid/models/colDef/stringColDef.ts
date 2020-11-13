@@ -6,6 +6,7 @@ export const STRING_COL_DEF: ColTypeDef = {
   hide: false,
   sortable: true,
   resizable: true,
+  filterable: true,
   sortDirection: null,
   sortComparator: stringNumberComparer,
   type: 'string',

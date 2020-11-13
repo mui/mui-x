@@ -11,6 +11,7 @@ export const checkboxSelectionColDef: ColDef = {
   headerAlign: 'center',
   resizable: true,
   sortable: false,
+  filterable: false,
   disableClickEventBubbling: true,
   disableColumnMenu: true,
   valueGetter: (params) => params.api.getState().selection[params.rowModel.id],

@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
     width: 500,
-    height: 300,
+    minHeight: 200,
     display: 'flex',
     flexDirection: 'column',
     '& .tab': {
@@ -115,7 +115,7 @@ export const PreferencesPanel = () => {
       anchorEl={target || apiRef?.current.rootElementRef!.current}
     >
       <ClickAwayListener onClickAway={hidePreferencesDelayed}>
-        <Paper square className={classes.root}>
+        <Paper square className={classes.root} style={{maxHeight: gridState.viewportSizes.height, maxWidth: gridState.viewportSizes.width}}>
           <Tabs
             value={gridState.preferencePanel.openedPanelValue}
             variant="fullWidth"
