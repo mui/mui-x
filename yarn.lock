@@ -20635,9 +20635,9 @@ webpack-log@^2.0.0:
     uuid "^3.3.2"
 
 webpack-merge@^5.1.4:
-  version "5.1.4"
-  resolved "https://registry.yarnpkg.com/webpack-merge/-/webpack-merge-5.1.4.tgz#a2c3a0c38ac2c02055c47bb1d42de1f072f1aea4"
-  integrity sha512-LSmRD59mxREGkCBm9PCW3AaV4doDqxykGlx1NvioEE0FgkT2GQI54Wyvg39ptkiq2T11eRVoV39udNPsQvK+QQ==
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/webpack-merge/-/webpack-merge-5.4.0.tgz#81bef0a7d23fc1e6c24b06ad8bf22ddeb533a3a3"
+  integrity sha512-/scBgu8LVPlHDgqH95Aw1xS+L+PHrpHKOwYVGFaNOQl4Q4wwwWDarwB1WdZAbLQ24SKhY3Awe7VZGYAdp+N+gQ==
   dependencies:
     clone-deep "^4.0.1"
     wildcard "^2.0.0"
