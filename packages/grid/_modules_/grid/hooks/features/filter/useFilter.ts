@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { PreferencePanelsValue } from '../../../components/tools/preferences';
 import { ApiRef } from '../../../models/api/apiRef';
+import { buildCellParams } from '../../../utils/paramsUtils';
 import { isEqual } from '../../../utils/utils';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useLogger } from '../../utils/useLogger';
@@ -48,13 +49,22 @@ export const useFilter = (apiRef: ApiRef): void => {
       }
       const filterOperator = filterOperators.find(operator => operator.value === filterItem.operator!.value)!;
 
-    const applyFilterOnRow = filterOperator.getApplyFilterFn(filterItem)!;
+    const applyFilterOnRow = filterOperator.getApplyFilterFn(filterItem, column)!;
 
     setGridState(state=> {
       const visibleRowsLookup = {...state.visibleRows.visibleRowsLookup};
 
-      rows.forEach((row) => {
-        const isShown = applyFilterOnRow(row);
+
+      rows.forEach((row, rowIndex) => {
+        const params = buildCellParams({
+          rowModel: row,
+          colDef: column,
+          rowIndex,
+          value: row.data[column.field],
+          api: apiRef!.current!,
+        });
+
+        const isShown = applyFilterOnRow(params);
           visibleRowsLookup[row.id] =
             // eslint-disable-next-line no-nested-ternary
             visibleRowsLookup[row.id] == null ? isShown : (

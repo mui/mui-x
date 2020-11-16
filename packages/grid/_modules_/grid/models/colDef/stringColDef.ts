@@ -1,53 +1,71 @@
 import { FilterItem } from '../../hooks/features/filter/visibleRowsState';
 import { stringNumberComparer } from '../../utils/sortingUtils';
-import { RowData, RowModel } from '../rows';
-import { ColTypeDef } from './colDef';
+import { CellParams } from '../params/cellParams';
+import { ColDef, ColTypeDef } from './colDef';
 
+// TODO add FilterValueInputComponent
 export interface FilterOperator {
   label: string;
   value: string | number;
-  getApplyFilterFn: (filterItem: FilterItem) => (null | ((row: RowModel) => boolean));
+  getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => (null | ((params: CellParams) => boolean));
 }
 
 export const STRING_OPERATORS: FilterOperator [] = [
   {
     label: 'Contains',
     value: 'contains',
-    getApplyFilterFn: (filterItem: FilterItem) => {
+    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operator) {
         return null;
       }
 
       const filterRegex = new RegExp(filterItem.value, 'i');
-      return (row): boolean => {
-        return filterRegex.test(row.data[filterItem.columnField!])
+      return (params): boolean => {
+        const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
+        return filterRegex.test(rowValue?.toString() || '');
       }
     }
-  }, {
+  },
+  {
+    label: 'Equals',
+    value: 'equals',
+    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
+      if (!filterItem.columnField || !filterItem.value || !filterItem.operator) {
+        return null;
+      }
+      return (params): boolean => {
+        const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
+        return filterItem.value?.localeCompare(rowValue?.toString() || '', undefined, { sensitivity: 'base' }) == 0;
+      }
+    }
+  },
+  {
     label: 'Starts With',
     value: 'start',
-    getApplyFilterFn: (filterItem: FilterItem) => {
+    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operator) {
         return null;
       }
 
       const filterRegex = new RegExp(`^${filterItem.value}.*$`, 'i');
-      return (row): boolean => {
-        return filterRegex.test(row.data[filterItem.columnField!])
+      return (params): boolean => {
+        const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
+        return filterRegex.test(rowValue?.toString() || '');
       }
     }
   },
   {
     label: 'Ends With',
     value: 'end',
-    getApplyFilterFn: (filterItem: FilterItem) => {
+    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operator) {
         return null;
       }
 
       const filterRegex = new RegExp(`.*${filterItem.value}$`, 'i');
-      return (row): boolean => {
-        return filterRegex.test(row.data[filterItem.columnField!])
+      return (params): boolean => {
+        const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
+        return filterRegex.test(rowValue?.toString() || '');
       }
     }
   }
