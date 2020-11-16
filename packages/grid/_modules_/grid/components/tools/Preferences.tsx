@@ -1,4 +1,14 @@
-import { Box, ClickAwayListener, FormControl, IconButton, Paper, Popper, Tab, Tabs, Theme } from '@material-ui/core';
+import {
+  Box,
+  ClickAwayListener,
+  FormControl,
+  IconButton,
+  Paper,
+  Popper,
+  Tab,
+  Tabs,
+  Theme,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { PREVENT_HIDE_PREFERENCES } from '../../constants/eventsConstants';
@@ -104,7 +114,6 @@ export const PreferencesPanel = () => {
     updateColumnTarget(gridState.preferencePanel);
   }, [gridState.preferencePanel, updateColumnTarget]);
 
-
   const isColumnsTabOpen =
     gridState.preferencePanel.openedPanelValue === PreferencePanelsValue.columns;
   const isFiltersTabOpen = !isColumnsTabOpen;
@@ -114,61 +123,56 @@ export const PreferencesPanel = () => {
       placement="bottom"
       open={gridState.preferencePanel.open}
       anchorEl={target || apiRef?.current.rootElementRef!.current}
-      style ={{position: 'relative'}}
+      style={{ position: 'relative' }}
     >
-      <div style={{position: 'absolute', left: 0, top: 0, zIndex: 10000}}>
-        <IconButton
-          color="primary"
-          aria-label="Close"
-          component="span"
-          onClick={hidePreferences}
-        >
+      <div style={{ position: 'absolute', left: 0, top: 0, zIndex: 10000 }}>
+        <IconButton color="primary" aria-label="Close" component="span" onClick={hidePreferences}>
           <CloseIcon />
         </IconButton>
       </div>
       {/*// This one is creating issues,when interacting with the <Select...> in FilterForm*/}
       {/*<ClickAwayListener onClickAway={hidePreferencesDelayed}>*/}
-        <Paper
-          square
-          className={classes.root}
-          style={{
-            maxHeight: gridState.viewportSizes.height,
-            maxWidth: gridState.viewportSizes.width,
-          }}
+      <Paper
+        square
+        className={classes.root}
+        style={{
+          maxHeight: gridState.viewportSizes.height,
+          maxWidth: gridState.viewportSizes.width,
+        }}
+      >
+        <Tabs
+          value={gridState.preferencePanel.openedPanelValue}
+          variant="fullWidth"
+          indicatorColor="primary"
+          textColor="primary"
+          scrollButtons="off"
+          aria-label="scrollable prevent tabs example"
+          onChange={changeTab}
         >
-          <Tabs
-            value={gridState.preferencePanel.openedPanelValue}
-            variant="fullWidth"
-            indicatorColor="primary"
-            textColor="primary"
-            scrollButtons="off"
-            aria-label="scrollable prevent tabs example"
-            onChange={changeTab}
-          >
-            <Tab
-              value={PreferencePanelsValue.filters}
-              icon={filterIconElement}
-              fullWidth
-              className="tab"
-              label={'Filters'}
-            />
-            <Tab
-              value={PreferencePanelsValue.columns}
-              icon={<ViewWeekIcon />}
-              fullWidth
-              className="tab"
-              label={'Columns'}
-            />
-          </Tabs>
-          {isColumnsTabOpen && (
-            <TabPanel value={PreferencePanelsValue.columns}>Column Picker here</TabPanel>
-          )}
-          {isFiltersTabOpen && (
-            <TabPanel value={PreferencePanelsValue.filters}>
-              <FilterPanel />
-            </TabPanel>
-          )}
-        </Paper>
+          <Tab
+            value={PreferencePanelsValue.filters}
+            icon={filterIconElement}
+            fullWidth
+            className="tab"
+            label={'Filters'}
+          />
+          <Tab
+            value={PreferencePanelsValue.columns}
+            icon={<ViewWeekIcon />}
+            fullWidth
+            className="tab"
+            label={'Columns'}
+          />
+        </Tabs>
+        {isColumnsTabOpen && (
+          <TabPanel value={PreferencePanelsValue.columns}>Column Picker here</TabPanel>
+        )}
+        {isFiltersTabOpen && (
+          <TabPanel value={PreferencePanelsValue.filters}>
+            <FilterPanel />
+          </TabPanel>
+        )}
+      </Paper>
       {/*</ClickAwayListener>*/}
     </Popper>
   );

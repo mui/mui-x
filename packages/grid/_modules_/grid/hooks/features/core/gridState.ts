@@ -1,11 +1,12 @@
-import { ColumnMenuState } from '../../../components/column-header-menu';
+import { ColumnMenuState } from '../../../components/menu/columnMenu/GridColumnHeaderMenu';
 import { PreferencePanelState } from '../../../components/tools/Preferences';
 import { getInitialColumnsState, InternalColumns } from '../../../models/colDef/colDef';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
 import {
   FilterModelState,
   VisibleRowsState,
-  getInitialFilterState, getInitialVisibleRowsState,
+  getInitialFilterState,
+  getInitialVisibleRowsState,
 } from '../filter/visibleRowsState';
 import { SelectionState } from '../selection/selectionState';
 import { getInitialRenderingState, InternalRenderingState } from '../virtualization/renderingState';

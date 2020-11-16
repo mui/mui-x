@@ -6,7 +6,7 @@ import { Columns, RenderContextProps } from '../models';
 import { ColumnHeaderItem } from './column-header-item';
 import { ApiContext } from './api-context';
 import { LeftEmptyCell, RightEmptyCell } from './cell';
-import { ColumnHeaderMenu } from './column-header-menu';
+import { GridColumnHeaderMenu } from './menu/columnMenu/GridColumnHeaderMenu';
 import { PreferencesPanel } from './tools/Preferences';
 import { containerSizesSelector } from './viewport';
 import { OptionsContext } from './options-context';
@@ -57,7 +57,7 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
 
   return (
     <React.Fragment>
-      <ColumnHeaderMenu />
+      <GridColumnHeaderMenu />
       <PreferencesPanel />
       {items}
     </React.Fragment>

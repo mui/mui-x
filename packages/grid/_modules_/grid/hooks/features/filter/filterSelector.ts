@@ -12,7 +12,7 @@ export const visibleSortedRowsSelector = createSelector<
   RowModel[],
   RowModel[]
 >(visibleRowsStateSelector, sortedRowsSelector, (visibleRowsState, sortedRows: RowModel[]) => {
-  return [...sortedRows].filter((row) => visibleRowsState.visibleRowsLookup[row.id]!== false);
+  return [...sortedRows].filter((row) => visibleRowsState.visibleRowsLookup[row.id] !== false);
 });
 
 export const visibleRowCountSelector = createSelector<GridState, RowModel[], number>(

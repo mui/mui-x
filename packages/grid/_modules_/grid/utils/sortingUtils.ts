@@ -20,7 +20,12 @@ export const nillComparer = (v1: CellValue, v2: CellValue): number | null => {
   return null;
 };
 
-export const stringNumberComparer: ComparatorFn = (v1: CellValue, v2: CellValue, cellParams1, cellParams2) => {
+export const stringNumberComparer: ComparatorFn = (
+  v1: CellValue,
+  v2: CellValue,
+  cellParams1,
+  cellParams2,
+) => {
   const value1 = cellParams1.getValue(cellParams1.field);
   const value2 = cellParams2.getValue(cellParams2.field);
 
@@ -35,7 +40,12 @@ export const stringNumberComparer: ComparatorFn = (v1: CellValue, v2: CellValue,
   return (value1 as any) - (value2 as any);
 };
 
-export const numberComparer: ComparatorFn = (v1: CellValue, v2: CellValue, cellParams1, cellParams2) => {
+export const numberComparer: ComparatorFn = (
+  v1: CellValue,
+  v2: CellValue,
+  cellParams1,
+  cellParams2,
+) => {
   const value1 = cellParams1.getValue(cellParams1.field);
   const value2 = cellParams2.getValue(cellParams2.field);
 

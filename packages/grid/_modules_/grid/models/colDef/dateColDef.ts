@@ -23,7 +23,7 @@ export const DATE_COL_DEF: ColTypeDef = {
   type: 'date',
   sortComparator: dateComparer,
   valueFormatter: dateFormatter,
-  filterable: false
+  filterable: false,
 };
 
 export const DATETIME_COL_DEF: ColTypeDef = {
@@ -31,5 +31,5 @@ export const DATETIME_COL_DEF: ColTypeDef = {
   type: 'dateTime',
   sortComparator: dateComparer,
   valueFormatter: dateTimeFormatter,
-  filterable: false
+  filterable: false,
 };

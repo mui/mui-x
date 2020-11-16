@@ -9,7 +9,12 @@ import { filterableColumnsSelector } from '../columns/columnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { sortedRowsSelector } from '../sorting/sortingSelector';
-import { FilterItem, getInitialFilterState, getInitialVisibleRowsState, LinkOperator } from './visibleRowsState';
+import {
+  FilterItem,
+  getInitialFilterState,
+  getInitialVisibleRowsState,
+  LinkOperator,
+} from './visibleRowsState';
 
 export const useFilter = (apiRef: ApiRef): void => {
   const logger = useLogger('useFilter');
@@ -22,7 +27,7 @@ export const useFilter = (apiRef: ApiRef): void => {
   const clearFilteredRows = React.useCallback(() => {
     setGridState((state) => ({
       ...state,
-      visibleRows: getInitialVisibleRowsState()
+      visibleRows: getInitialVisibleRowsState(),
     }));
   }, [setGridState]);
 
@@ -36,54 +41,65 @@ export const useFilter = (apiRef: ApiRef): void => {
     forceUpdate();
   }, [apiRef, clearFilteredRows, forceUpdate, setGridState]);
 
-  const applyFilter = React.useCallback((filterItem: FilterItem, linkOperator: LinkOperator)=> {
-      if(!filterItem.columnField || !filterItem.operator || !filterItem.value) {
+  const applyFilter = React.useCallback(
+    (filterItem: FilterItem, linkOperator: LinkOperator) => {
+      if (!filterItem.columnField || !filterItem.operator || !filterItem.value) {
         return;
       }
-    logger.info(`Filtering column: ${filterItem.columnField} ${filterItem.operator.label} ${filterItem.value} `);
+      logger.info(
+        `Filtering column: ${filterItem.columnField} ${filterItem.operator.label} ${filterItem.value} `,
+      );
 
-    const column = apiRef.current.getColumnFromField(filterItem.columnField);
+      const column = apiRef.current.getColumnFromField(filterItem.columnField);
       const filterOperators = column.filterOperators;
-      if(!filterOperators?.length) {
+      if (!filterOperators?.length) {
         throw new Error(`No Filter operator found for column ${column.field}`);
       }
-      const filterOperator = filterOperators.find(operator => operator.value === filterItem.operator!.value)!;
+      const filterOperator = filterOperators.find(
+        (operator) => operator.value === filterItem.operator!.value,
+      )!;
 
-    const applyFilterOnRow = filterOperator.getApplyFilterFn(filterItem, column)!;
+      const applyFilterOnRow = filterOperator.getApplyFilterFn(filterItem, column)!;
 
-    setGridState(state=> {
-      const visibleRowsLookup = {...state.visibleRows.visibleRowsLookup};
+      setGridState((state) => {
+        const visibleRowsLookup = { ...state.visibleRows.visibleRowsLookup };
 
-      rows.forEach((row, rowIndex) => {
-        const params = buildCellParams({
-          rowModel: row,
-          colDef: column,
-          rowIndex,
-          value: row.data[column.field],
-          api: apiRef!.current!,
-        });
+        rows.forEach((row, rowIndex) => {
+          const params = buildCellParams({
+            rowModel: row,
+            colDef: column,
+            rowIndex,
+            value: row.data[column.field],
+            api: apiRef!.current!,
+          });
 
-        const isShown = applyFilterOnRow(params);
+          const isShown = applyFilterOnRow(params);
           visibleRowsLookup[row.id] =
             // eslint-disable-next-line no-nested-ternary
-            visibleRowsLookup[row.id] == null ? isShown : (
-              linkOperator === LinkOperator.And ? (visibleRowsLookup[row.id] && isShown) : (visibleRowsLookup[row.id] || isShown)
-            );
+            visibleRowsLookup[row.id] == null
+              ? isShown
+              : linkOperator === LinkOperator.And
+              ? visibleRowsLookup[row.id] && isShown
+              : visibleRowsLookup[row.id] || isShown;
+        });
+        return {
+          ...state,
+          visibleRows: { visibleRowsLookup, visibleRows: Object.keys(visibleRowsLookup) },
+        };
       });
-      return {...state, visibleRows: {visibleRowsLookup, visibleRows: Object.keys(visibleRowsLookup)}};
-    });
-    forceUpdate();
-  }, [apiRef, forceUpdate, logger, rows, setGridState]);
+      forceUpdate();
+    },
+    [apiRef, forceUpdate, logger, rows, setGridState],
+  );
 
-  const applyFilters = React.useCallback(()=> {
+  const applyFilters = React.useCallback(() => {
     clearFilteredRows();
-    const {items, linkOperator} = apiRef.current.state.filter;
-    items.forEach(filterItem => {
+    const { items, linkOperator } = apiRef.current.state.filter;
+    items.forEach((filterItem) => {
       applyFilter(filterItem, linkOperator);
     });
     forceUpdate();
-
-  },[apiRef, applyFilter, clearFilteredRows, forceUpdate]);
+  }, [apiRef, applyFilter, clearFilteredRows, forceUpdate]);
 
   const upsertFilter = React.useCallback(
     (item: FilterItem) => {
@@ -104,12 +120,14 @@ export const useFilter = (apiRef: ApiRef): void => {
           item.id = new Date().getTime();
         }
 
-        if(item.columnField == null) {
+        if (item.columnField == null) {
           item.columnField = filterableColumns[0].field;
         }
-        if(item.columnField != null && item.operator == null) {
+        if (item.columnField != null && item.operator == null) {
           // we select a default operator
-          item.operator = apiRef!.current!.getColumnFromField(item.columnField)!.filterOperators![0];
+          item.operator = apiRef!.current!.getColumnFromField(
+            item.columnField,
+          )!.filterOperators![0];
         }
 
         const newState = {
@@ -134,7 +152,7 @@ export const useFilter = (apiRef: ApiRef): void => {
         };
         return newState;
       });
-      applyFilters()
+      applyFilters();
     },
     [applyFilters, setGridState],
   );
@@ -154,13 +172,27 @@ export const useFilter = (apiRef: ApiRef): void => {
     [forceUpdate, setGridState],
   );
 
-  const applyFilterLinkOperator = React.useCallback((linkOperator: LinkOperator)=> {
-    setGridState((state) => ({
-      ...state,
-      filter: {...state.filter, linkOperator }
-    }));
-    applyFilters();
-  },[applyFilters, setGridState]);
+  const applyFilterLinkOperator = React.useCallback(
+    (linkOperator: LinkOperator) => {
+      setGridState((state) => ({
+        ...state,
+        filter: { ...state.filter, linkOperator },
+      }));
+      applyFilters();
+    },
+    [applyFilters, setGridState],
+  );
 
-  useApiMethod(apiRef, {applyFilterLinkOperator, applyFilters, upsertFilter, clearFilters, deleteFilter, showFilterPanel }, 'FilterApi');
+  useApiMethod(
+    apiRef,
+    {
+      applyFilterLinkOperator,
+      applyFilters,
+      upsertFilter,
+      clearFilters,
+      deleteFilter,
+      showFilterPanel,
+    },
+    'FilterApi',
+  );
 };

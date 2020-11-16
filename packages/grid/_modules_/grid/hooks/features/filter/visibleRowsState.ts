@@ -10,12 +10,12 @@ export interface FilterItem {
 
 export enum LinkOperator {
   And = 'and',
-  Or = 'or'
+  Or = 'or',
 }
 
 export interface FilterModelState {
   items: FilterItem[];
-  linkOperator: LinkOperator
+  linkOperator: LinkOperator;
 }
 
 export interface VisibleRowsState {
@@ -31,5 +31,5 @@ export const getInitialVisibleRowsState: () => VisibleRowsState = () => ({
 
 export const getInitialFilterState: () => FilterModelState = () => ({
   items: [],
-  linkOperator: LinkOperator.And
+  linkOperator: LinkOperator.And,
 });

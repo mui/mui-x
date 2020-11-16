@@ -26,17 +26,19 @@ export function buildCellParams({
     field: colDef?.field,
     getValue: (field: string) => {
       const col = api.getColumnFromField(field);
-      if(!col.valueGetter) {
+      if (!col.valueGetter) {
         return rowModel.data[field];
       }
-      return col.valueGetter(buildCellParams({
-        value: rowModel.data[field],
-        colDef: col,
-        rowIndex,
-        element,
-        rowModel,
-        api
-      }));
+      return col.valueGetter(
+        buildCellParams({
+          value: rowModel.data[field],
+          colDef: col,
+          rowIndex,
+          element,
+          rowModel,
+          api,
+        }),
+      );
     },
     data: rowModel.data,
     rowModel,

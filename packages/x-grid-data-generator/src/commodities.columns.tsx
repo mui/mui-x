@@ -191,7 +191,7 @@ export const commodityColumns: any[] = [
     field: 'counterPartyCountry',
     headerName: 'Counterparty Country',
     generateData: randomCountry,
-    valueGetter: ({value})=> value.label,
+    valueGetter: ({ value }) => value.label,
     renderCell: renderCountry,
     width: 120,
   },

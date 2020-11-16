@@ -33,19 +33,19 @@ export const FilterForm: React.FC<FilterFormProps> = ({
   deleteFilter,
   applyFilterChanges,
   multiFilterOperator,
-  showMultiFilterOperators,disableMultiFilterOperator,
-                                                        applyMultiFilterOperatorChanges,
+  showMultiFilterOperators,
+  disableMultiFilterOperator,
+  applyMultiFilterOperatorChanges,
 }) => {
   const apiRef = React.useContext(ApiContext);
   const filterableColumns = useGridSelector(apiRef, filterableColumnsSelector);
 
-  const [currentColumn, setCurrentColumn] = React.useState<ColDef | null>(()=> {
-    if(!item.columnField) {
+  const [currentColumn, setCurrentColumn] = React.useState<ColDef | null>(() => {
+    if (!item.columnField) {
       return null;
     }
     return apiRef!.current.getColumnFromField(item.columnField)!;
-  })
-
+  });
 
   const changeColumn = React.useCallback(
     (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -53,22 +53,30 @@ export const FilterForm: React.FC<FilterFormProps> = ({
       const column = apiRef!.current.getColumnFromField(columnField)!;
       setCurrentColumn(column);
 
-      applyFilterChanges({ ...item, columnField});
+      applyFilterChanges({ ...item, columnField });
     },
     [apiRef, applyFilterChanges, item],
   );
 
   const changeOperator = React.useCallback(
     (event: React.ChangeEvent<{ value: unknown }>) => {
-      applyFilterChanges({ ...item, operator: currentColumn!.filterOperators!.find(op=> op.value === event.target.value as string)! });
+      applyFilterChanges({
+        ...item,
+        operator: currentColumn!.filterOperators!.find(
+          (op) => op.value === (event.target.value as string),
+        )!,
+      });
     },
     [applyFilterChanges, currentColumn, item],
   );
 
   const changeLinkOperator = React.useCallback(
     (event: React.ChangeEvent<{ value: unknown }>) => {
-      const linkOperator = (event.target.value as string) === LinkOperator.And.toString() ? LinkOperator.And : LinkOperator.Or;
-      applyMultiFilterOperatorChanges(linkOperator)
+      const linkOperator =
+        (event.target.value as string) === LinkOperator.And.toString()
+          ? LinkOperator.And
+          : LinkOperator.Or;
+      applyMultiFilterOperatorChanges(linkOperator);
     },
     [applyMultiFilterOperatorChanges],
   );
@@ -79,20 +87,26 @@ export const FilterForm: React.FC<FilterFormProps> = ({
 
   return (
     <div style={{ display: 'flex', justifyContent: 'space-around', padding: '10px' }}>
-        <FormControl style={{ width: 60, visibility: (showMultiFilterOperators ? 'visible' : 'hidden') }}>
-          <InputLabel id="columns-filter-operator-select-label">Operators</InputLabel>
-          <Select
-            labelId="columns-filter-operator-select-label"
-            id="columns-filter-operator-select"
-            value={multiFilterOperator}
-            onOpen={onSelectOpen}
-            onChange={changeLinkOperator}
-            disabled = {!!disableMultiFilterOperator}
-          >
-            <MenuItem key={LinkOperator.And.toString()} value={LinkOperator.And.toString()}>And</MenuItem>
-            <MenuItem key={LinkOperator.Or.toString()} value={LinkOperator.Or.toString()}>Or</MenuItem>
-          </Select>
-        </FormControl>
+      <FormControl
+        style={{ width: 60, visibility: showMultiFilterOperators ? 'visible' : 'hidden' }}
+      >
+        <InputLabel id="columns-filter-operator-select-label">Operators</InputLabel>
+        <Select
+          labelId="columns-filter-operator-select-label"
+          id="columns-filter-operator-select"
+          value={multiFilterOperator}
+          onOpen={onSelectOpen}
+          onChange={changeLinkOperator}
+          disabled={!!disableMultiFilterOperator}
+        >
+          <MenuItem key={LinkOperator.And.toString()} value={LinkOperator.And.toString()}>
+            And
+          </MenuItem>
+          <MenuItem key={LinkOperator.Or.toString()} value={LinkOperator.Or.toString()}>
+            Or
+          </MenuItem>
+        </Select>
+      </FormControl>
       <FormControl style={{ width: 150 }}>
         <InputLabel id="columns-filter-select-label">Columns</InputLabel>
         <Select
@@ -118,13 +132,19 @@ export const FilterForm: React.FC<FilterFormProps> = ({
           onOpen={onSelectOpen}
           onChange={changeOperator}
         >
-          {currentColumn?.filterOperators?.map(operator=> (
-            <MenuItem  key={operator.value} value={operator.value}>{operator.label}</MenuItem>
+          {currentColumn?.filterOperators?.map((operator) => (
+            <MenuItem key={operator.value} value={operator.value}>
+              {operator.label}
+            </MenuItem>
           ))}
         </Select>
       </FormControl>
       <FormControl style={{ width: 120 }}>
-        { item.operator && React.createElement(item.operator?.InputComponent, {item, applyValue: applyFilterChanges })}
+        {item.operator &&
+          React.createElement(item.operator?.InputComponent, {
+            item,
+            applyValue: applyFilterChanges,
+          })}
       </FormControl>
       <FormControl>
         <IconButton

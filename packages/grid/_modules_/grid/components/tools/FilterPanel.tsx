@@ -10,7 +10,9 @@ import { FilterForm } from './FilterForm';
 export const FilterPanel: React.FC<{}> = () => {
   const apiRef = React.useContext(ApiContext);
   const [gridState] = useGridState(apiRef!);
-  const hasMultipleFilters = React.useMemo(()=> gridState.filter.items.length > 1, [gridState.filter.items.length]);
+  const hasMultipleFilters = React.useMemo(() => gridState.filter.items.length > 1, [
+    gridState.filter.items.length,
+  ]);
 
   const dontHidePreferences = React.useCallback(
     (event: React.ChangeEvent<{}>) => {
@@ -61,7 +63,7 @@ export const FilterPanel: React.FC<{}> = () => {
             deleteFilter={deleteFilter}
             showMultiFilterOperators={hasMultipleFilters && index > 0}
             multiFilterOperator={gridState.filter.linkOperator}
-            disableMultiFilterOperator = {index !== 1}
+            disableMultiFilterOperator={index !== 1}
             applyMultiFilterOperatorChanges={applyFilterLinkOperator}
           />
         ))}
