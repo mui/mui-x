@@ -68,6 +68,7 @@ describe('<XGrid />', () => {
   });
 
   describe('keyboard', () => {
+    /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
     const KeyboardTest = () => {
       const data = useData(100, 20);
       const transformColSizes = (columns: Columns) =>
