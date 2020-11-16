@@ -19,5 +19,5 @@ export const getCurryTotalHeight = (
     dataHeight = internalOptions.rowHeight * 2; // If we have no rows, we give the size of 2 rows to display the no rows overlay
   }
 
-  return headerHeight + footerHeight + dataHeight + internalOptions.headerHeight;
+  return headerHeight + footerHeight + dataHeight;
 };
