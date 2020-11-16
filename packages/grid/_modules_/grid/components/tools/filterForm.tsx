@@ -102,9 +102,8 @@ export const FilterForm: React.FC<FilterFormProps> = ({
   }, []);
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-      {showMultiFilterOperators && (
-        <FormControl style={{ width: 100 }}>
+    <div style={{ display: 'flex', justifyContent: 'space-around', padding: '10px' }}>
+        <FormControl style={{ width: 60, visibility: (showMultiFilterOperators ? 'visible' : 'hidden') }}>
           <InputLabel id="columns-filter-operator-select-label">Operators</InputLabel>
           <Select
             labelId="columns-filter-operator-select-label"
@@ -118,8 +117,7 @@ export const FilterForm: React.FC<FilterFormProps> = ({
             <MenuItem key={LinkOperator.Or.toString()} value={LinkOperator.Or.toString()}>Or</MenuItem>
           </Select>
         </FormControl>
-      )}
-      <FormControl style={{ minWidth: 100 }}>
+      <FormControl style={{ width: 150 }}>
         <InputLabel id="columns-filter-select-label">Columns</InputLabel>
         <Select
           labelId="columns-filter-select-label"
@@ -135,7 +133,7 @@ export const FilterForm: React.FC<FilterFormProps> = ({
           ))}
         </Select>
       </FormControl>
-      <FormControl style={{ minWidth: 100 }}>
+      <FormControl style={{ width: 120 }}>
         <InputLabel id="columns-operators-select-label">Operators</InputLabel>
         <Select
           labelId="columns-operators-select-label"
@@ -149,7 +147,7 @@ export const FilterForm: React.FC<FilterFormProps> = ({
           ))}
         </Select>
       </FormControl>
-      <FormControl style={{ minWidth: 100 }}>
+      <FormControl style={{ width: 120 }}>
         <TextField
           label={'Value'}
           placeholder={'Filter value'}

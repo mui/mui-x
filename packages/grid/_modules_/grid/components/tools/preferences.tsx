@@ -36,7 +36,7 @@ export function TabPanel(props) {
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
-    width: 500,
+    width: 600,
     minHeight: 200,
     display: 'flex',
     flexDirection: 'column',
@@ -103,6 +103,7 @@ export const PreferencesPanel = () => {
   React.useEffect(() => {
     updateColumnTarget(gridState.preferencePanel);
   }, [gridState.preferencePanel, updateColumnTarget]);
+
 
   const isColumnsTabOpen =
     gridState.preferencePanel.openedPanelValue === PreferencePanelsValue.columns;
