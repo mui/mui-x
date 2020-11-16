@@ -49,6 +49,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const handleRef = useForkRef(rootContainerRef, ref);
 
     const footerRef = React.useRef<HTMLDivElement>(null);
+    const headerRef = React.useRef<HTMLDivElement>(null);
     const columnsHeaderRef = React.useRef<HTMLDivElement>(null);
     const columnsContainerRef = React.useRef<HTMLDivElement>(null);
     const windowRef = React.useRef<HTMLDivElement>(null);
@@ -85,7 +86,13 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
 
     // TODO move that to renderCtx
     const getTotalHeight = React.useCallback(
-      (size) => getCurryTotalHeight(gridState.options, gridState.containerSizes, footerRef)(size),
+      (size) =>
+        getCurryTotalHeight(
+          gridState.options,
+          gridState.containerSizes,
+          headerRef,
+          footerRef,
+        )(size),
       [gridState.options, gridState.containerSizes],
     );
 
@@ -129,8 +136,10 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
             >
               <ApiContext.Provider value={apiRef}>
                 <OptionsContext.Provider value={gridState.options}>
-                  {customComponents.headerComponent || (
-                    <GridToolbar>
+                  {customComponents.headerComponent ? (
+                    <div ref={headerRef}>{customComponents.headerComponent}</div>
+                  ) : (
+                    <GridToolbar ref={headerRef}>
                       {/* The components for the separate features go in here */}
                     </GridToolbar>
                   )}
@@ -169,7 +178,9 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                       </GridDataContainer>
                     </GridWindow>
                   </div>
-                  {customComponents.footerComponent || (
+                  {customComponents.footerComponent ? (
+                    <div ref={footerRef}>{customComponents.footerComponent}</div>
+                  ) : (
                     <DefaultFooter
                       ref={footerRef}
                       paginationComponent={
