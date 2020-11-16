@@ -3,7 +3,6 @@ import {
   ArrowDownwardIcon,
   ArrowUpwardIcon,
   SeparatorIcon,
-  MenuIcon,
   FilterIcon,
   TripleDotsVertical,
 } from '../components/icons/index';

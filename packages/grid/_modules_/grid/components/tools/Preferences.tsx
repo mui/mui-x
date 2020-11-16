@@ -1,7 +1,4 @@
 import {
-  Box,
-  ClickAwayListener,
-  FormControl,
   IconButton,
   Paper,
   Popper,
@@ -58,8 +55,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
 }));
-// const preferenceSelector = (state: GridState) => state.preferencePanel;
-
+//TODO refactor tab to navigation with a showNav prop on the component
+//TODO Extract Panel component?
 export const PreferencesPanel = () => {
   const classes = useStyles();
   const apiRef = React.useContext(ApiContext);
