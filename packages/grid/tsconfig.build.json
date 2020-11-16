@@ -10,5 +10,5 @@
     "rootDir": "./"
   },
   "include": ["./data-grid/src", "./x-grid/src", "./_modules_/**/*"],
-  "exclude": ["__tests__", "**/*.test.ts", "node_modules"]
+  "exclude": ["__tests__", "**/*.test.*", "node_modules"]
 }
