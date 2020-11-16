@@ -7,20 +7,6 @@ components: DataGrid, XGrid
 
 <p class="description">The Date Grid will support users from different locale, with formating, RTL, and localized strings.</p>
 
-## 🚧 Locale text
-
-> ⚠️ This feature isn't implemented yet. It's coming.
+> ⚠️ This feature is only available in v4, head to the [v4 documentation page](https://material-ui.com/components/data-grid/) for more details.
 >
-> 👍 Upvote [issue #196](https://github.com/mui-org/material-ui-x/issues/196) if you want to see it land faster.
-
-The grid will support localization with a single prop that includes all the translated messages.
-You will be able to follow [this guide](/guides/localization/#locale-text) to use them.
-
-## 🚧 RTL Support
-
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #196](https://github.com/mui-org/material-ui-x/issues/196) if you want to see it land faster.
-
-Right-to-left languages such as Arabic, Persian, or Hebrew will be supported.
-You will be able to follow [this guide](/guides/right-to-left/) to use them.
+> You can follow [issue #441](https://github.com/mui-org/material-ui-x/issues/441) to be notified once we migrate the data grid from v4 to v5.

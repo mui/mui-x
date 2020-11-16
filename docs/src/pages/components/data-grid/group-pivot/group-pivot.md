@@ -7,42 +7,6 @@ components: DataGrid, XGrid
 
 <p class="description">Use grouping, pivoting and more to analyse the data in depth.</p>
 
-## 🚧 Tree data [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
-
-> ⚠️ This feature isn't implemented yet. It's coming.
+> ⚠️ This feature is only available in v4, head to the [v4 documentation page](https://material-ui.com/components/data-grid/) for more details.
 >
-> 👍 Upvote [issue #210](https://github.com/mui-org/material-ui-x/issues/210) if you want to see it land faster.
-
-Tree data allows to visualize self-referential hierarchical (tree-like structure) data.
-
-## 🚧 Master detail [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
-
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #211](https://github.com/mui-org/material-ui-x/issues/211) if you want to see it land faster.
-
-The feature allows to display row details on an expandable pane.
-
-## 🚧 Grouping [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
-
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #212](https://github.com/mui-org/material-ui-x/issues/212) if you want to see it land faster.
-
-Group rows together that share a column value, this creates a visible header for each group and allows the end-user to collapse groups that they don't want to see.
-
-## 🚧 Aggregation [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
-
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #213](https://github.com/mui-org/material-ui-x/issues/213) if you want to see it land faster.
-
-When grouping, you will be able to apply an aggregation function to populate the group row with values.
-
-## 🚧 Pivoting [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
-
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #214](https://github.com/mui-org/material-ui-x/issues/214) if you want to see it land faster.
-
-Pivoting will allow you to take a columns values and turn them into columns.
+> You can follow [issue #441](https://github.com/mui-org/material-ui-x/issues/441) to be notified once we migrate the data grid from v4 to v5.

@@ -7,19 +7,6 @@ components: DataGrid, XGrid
 
 <p class="description">Data Grid will provide full support to create, read, update, and delete operations (CRUD).</p>
 
-## 🚧 Row editing
-
-> ⚠️ This feature isn't implemented yet. It's coming.
+> ⚠️ This feature is only available in v4, head to the [v4 documentation page](https://material-ui.com/components/data-grid/) for more details.
 >
-> 👍 Upvote [issue #204](https://github.com/mui-org/material-ui-x/issues/204) if you want to see it land faster.
-
-Row editing allows to edit all the cells of a row at once.
-The edition can be performed directly in the cells or in a popup or a modal.
-
-## 🚧 Cell editing
-
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #203](https://github.com/mui-org/material-ui-x/issues/203) if you want to see it land faster.
-
-Cell editing allows to edit the value of one cell at the time.
+> You can follow [issue #441](https://github.com/mui-org/material-ui-x/issues/441) to be notified once we migrate the data grid from v4 to v5.

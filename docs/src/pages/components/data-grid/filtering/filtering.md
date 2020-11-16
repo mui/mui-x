@@ -7,19 +7,6 @@ components: DataGrid, XGrid
 
 <p class="description">Filtering helps view particular or related records in the Data Grid.</p>
 
-## 🚧 Column filter
-
-> ⚠️ This feature isn't implemented yet. It's coming.
+> ⚠️ This feature is only available in v4, head to the [v4 documentation page](https://material-ui.com/components/data-grid/) for more details.
 >
-> 👍 Upvote [issue #201](https://github.com/mui-org/material-ui-x/issues/201) if you want to see it land faster.
-
-Column filters are filters that are applied to the data at the column level.
-
-## 🚧 Quick filter
-
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #202](https://github.com/mui-org/material-ui-x/issues/202) if you want to see it land faster.
-
-In addition to the column specific filtering, a global quick filtering will also be available.
-The provided search text will match against all the cells.
+> You can follow [issue #441](https://github.com/mui-org/material-ui-x/issues/441) to be notified once we migrate the data grid from v4 to v5.
