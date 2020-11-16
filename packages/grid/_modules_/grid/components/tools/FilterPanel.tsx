@@ -5,7 +5,7 @@ import { PREVENT_HIDE_PREFERENCES } from '../../constants/index';
 import { FilterItem, LinkOperator } from '../../hooks/features/filter/visibleRowsState';
 import { ApiContext } from '../api-context';
 import { AddIcon, CloseIcon } from '../icons/index';
-import { FilterForm } from './filterForm';
+import { FilterForm } from './FilterForm';
 
 export const FilterPanel: React.FC<{}> = () => {
   const apiRef = React.useContext(ApiContext);

@@ -26,7 +26,6 @@ export interface FilterFormProps {
   deleteFilter: (item: FilterItem) => void;
   onSelectOpen: (event: React.ChangeEvent<{}>) => void;
 }
-const SUBMIT_FILTER_STROKE_TIME = 500;
 
 export const FilterForm: React.FC<FilterFormProps> = ({
   item,
@@ -40,8 +39,6 @@ export const FilterForm: React.FC<FilterFormProps> = ({
   const apiRef = React.useContext(ApiContext);
   const filterableColumns = useGridSelector(apiRef, filterableColumnsSelector);
 
-  const [filterValueState, setFilterValueState] = React.useState(item.value || '');
-  const [applying, setIsApplying] = React.useState(false);
   const [currentColumn, setCurrentColumn] = React.useState<ColDef | null>(()=> {
     if(!item.columnField) {
       return null;
@@ -49,7 +46,6 @@ export const FilterForm: React.FC<FilterFormProps> = ({
     return apiRef!.current.getColumnFromField(item.columnField)!;
   })
 
-  const filterTimeout = React.useRef<any>();
 
   const changeColumn = React.useCallback(
     (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -77,29 +73,9 @@ export const FilterForm: React.FC<FilterFormProps> = ({
     [applyMultiFilterOperatorChanges],
   );
 
-  const onFilterChange = React.useCallback(
-    (event) => {
-      clearTimeout(filterTimeout.current);
-      const value = event.target.value;
-      setFilterValueState(value);
-      setIsApplying( true);
-      filterTimeout.current = setTimeout(() => {
-        applyFilterChanges({ ...item, value });
-        setIsApplying(false);
-      }, SUBMIT_FILTER_STROKE_TIME);
-    },
-    [applyFilterChanges, item],
-  );
-
   const handleDeleteFilter = React.useCallback(() => {
     deleteFilter(item);
   }, [deleteFilter, item]);
-
-  React.useEffect(() => {
-    return () => {
-      clearTimeout(filterTimeout.current);
-    };
-  }, []);
 
   return (
     <div style={{ display: 'flex', justifyContent: 'space-around', padding: '10px' }}>
@@ -148,15 +124,7 @@ export const FilterForm: React.FC<FilterFormProps> = ({
         </Select>
       </FormControl>
       <FormControl style={{ width: 120 }}>
-        <TextField
-          label={'Value'}
-          placeholder={'Filter value'}
-          value={filterValueState}
-          onChange={onFilterChange}
-          InputProps={{
-            endAdornment: applying && <LoadIcon />, // Not showing???
-          }}
-        />
+        { item.operator && React.createElement(item.operator?.InputComponent, {item, applyValue: applyFilterChanges })}
       </FormControl>
       <FormControl>
         <IconButton

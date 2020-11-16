@@ -8,7 +8,7 @@ import { useIcons } from '../../hooks/utils/useIcons';
 import { findHeaderElementFromField } from '../../utils/domUtils';
 import { ApiContext } from '../api-context';
 import { CloseIcon, ViewWeekIcon } from '../icons/index';
-import { FilterPanel } from './filterPanel';
+import { FilterPanel } from './FilterPanel';
 
 export interface PreferencePanelState {
   open: boolean;
@@ -126,6 +126,7 @@ export const PreferencesPanel = () => {
           <CloseIcon />
         </IconButton>
       </div>
+      {/*// This one is creating issues,when interacting with the <Select...> in FilterForm*/}
       {/*<ClickAwayListener onClickAway={hidePreferencesDelayed}>*/}
         <Paper
           square

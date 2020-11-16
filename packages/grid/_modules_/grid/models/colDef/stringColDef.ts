@@ -1,13 +1,15 @@
+import * as React from 'react';
+import { FilterInputValueProps, StringFilterInputValue } from '../../components/tools/StringFilterInputValue';
 import { FilterItem } from '../../hooks/features/filter/visibleRowsState';
 import { stringNumberComparer } from '../../utils/sortingUtils';
 import { CellParams } from '../params/cellParams';
 import { ColDef, ColTypeDef } from './colDef';
 
-// TODO add FilterValueInputComponent
 export interface FilterOperator {
   label: string;
   value: string | number;
   getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => (null | ((params: CellParams) => boolean));
+  InputComponent: React.ComponentType<FilterInputValueProps>
 }
 
 export const STRING_OPERATORS: FilterOperator [] = [
@@ -24,7 +26,8 @@ export const STRING_OPERATORS: FilterOperator [] = [
         const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
         return filterRegex.test(rowValue?.toString() || '');
       }
-    }
+    },
+    InputComponent: StringFilterInputValue
   },
   {
     label: 'Equals',
@@ -35,9 +38,10 @@ export const STRING_OPERATORS: FilterOperator [] = [
       }
       return (params): boolean => {
         const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
-        return filterItem.value?.localeCompare(rowValue?.toString() || '', undefined, { sensitivity: 'base' }) == 0;
+        return filterItem.value?.localeCompare(rowValue?.toString() || '', undefined, { sensitivity: 'base' }) === 0;
       }
-    }
+    },
+    InputComponent: StringFilterInputValue
   },
   {
     label: 'Starts With',
@@ -52,7 +56,8 @@ export const STRING_OPERATORS: FilterOperator [] = [
         const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
         return filterRegex.test(rowValue?.toString() || '');
       }
-    }
+    },
+    InputComponent: StringFilterInputValue
   },
   {
     label: 'Ends With',
@@ -67,7 +72,8 @@ export const STRING_OPERATORS: FilterOperator [] = [
         const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
         return filterRegex.test(rowValue?.toString() || '');
       }
-    }
+    },
+    InputComponent: StringFilterInputValue
   }
 ];
 export const STRING_COL_DEF: ColTypeDef = {

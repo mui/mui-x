@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PreferencePanelsValue } from '../../../components/tools/preferences';
+import { PreferencePanelsValue } from '../../../components/tools/Preferences';
 import { ApiRef } from '../../../models/api/apiRef';
 import { buildCellParams } from '../../../utils/paramsUtils';
 import { isEqual } from '../../../utils/utils';
@@ -54,7 +54,6 @@ export const useFilter = (apiRef: ApiRef): void => {
     setGridState(state=> {
       const visibleRowsLookup = {...state.visibleRows.visibleRowsLookup};
 
-
       rows.forEach((row, rowIndex) => {
         const params = buildCellParams({
           rowModel: row,
@@ -73,7 +72,6 @@ export const useFilter = (apiRef: ApiRef): void => {
       });
       return {...state, visibleRows: {visibleRowsLookup, visibleRows: Object.keys(visibleRowsLookup)}};
     });
-    // apiRef.current.updateColumn({ ...column, filterValue: filterValues }); ??? NOT SURE WHY IVE DONE THTA?
     forceUpdate();
   }, [apiRef, forceUpdate, logger, rows, setGridState]);
 

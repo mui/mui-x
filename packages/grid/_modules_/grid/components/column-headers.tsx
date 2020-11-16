@@ -7,7 +7,7 @@ import { ColumnHeaderItem } from './column-header-item';
 import { ApiContext } from './api-context';
 import { LeftEmptyCell, RightEmptyCell } from './cell';
 import { ColumnHeaderMenu } from './column-header-menu';
-import { PreferencesPanel } from './tools/preferences';
+import { PreferencesPanel } from './tools/Preferences';
 import { containerSizesSelector } from './viewport';
 import { OptionsContext } from './options-context';
 import { ScrollArea } from './ScrollArea';

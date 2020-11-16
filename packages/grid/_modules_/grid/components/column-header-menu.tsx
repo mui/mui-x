@@ -11,7 +11,7 @@ import { SortDirection } from '../models/sortModel';
 import { findHeaderElementFromField } from '../utils/domUtils';
 import { ApiContext } from './api-context';
 import { ColumnHeaderMenuIcon } from './column-header-menu-icon';
-import { PreferencePanelsValue } from './tools/preferences';
+import { PreferencePanelsValue } from './tools/Preferences';
 
 export interface ColumnMenuState {
   open: boolean;

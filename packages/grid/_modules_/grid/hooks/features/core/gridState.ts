@@ -1,5 +1,5 @@
 import { ColumnMenuState } from '../../../components/column-header-menu';
-import { PreferencePanelState } from '../../../components/tools/preferences';
+import { PreferencePanelState } from '../../../components/tools/Preferences';
 import { getInitialColumnsState, InternalColumns } from '../../../models/colDef/colDef';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
 import {
