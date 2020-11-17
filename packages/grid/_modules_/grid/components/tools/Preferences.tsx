@@ -1,13 +1,13 @@
-import { ClickAwayListener, IconButton, Paper, Popper, Tab, Tabs, Theme } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 import * as React from 'react';
+import { ClickAwayListener, Paper, Popper, Tab, Tabs, Theme } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { PREVENT_HIDE_PREFERENCES } from '../../constants/eventsConstants';
 import { useGridState } from '../../hooks/features/core/useGridState';
 import { useApiEventHandler } from '../../hooks/root/useApiEventHandler';
 import { useIcons } from '../../hooks/utils/useIcons';
 import { findHeaderElementFromField } from '../../utils/domUtils';
 import { ApiContext } from '../api-context';
-import { CloseIcon, ViewWeekIcon } from '../icons/index';
+import { ViewWeekIcon } from '../icons/index';
 import { FilterPanel } from './FilterPanel';
 
 export interface PreferencePanelState {
@@ -115,11 +115,6 @@ export const PreferencesPanel = () => {
       anchorEl={target || apiRef?.current.rootElementRef!.current}
       style={{ position: 'relative' }}
     >
-      {/*<div style={{ position: 'absolute', left: 0, top: 0, zIndex: 10000 }}>*/}
-      {/*  <IconButton color="primary" aria-label="Close" component="span" onClick={hidePreferences}>*/}
-      {/*    <CloseIcon />*/}
-      {/*  </IconButton>*/}
-      {/*</div>*/}
       <ClickAwayListener onClickAway={hidePreferencesDelayed}>
         <Paper
           square
