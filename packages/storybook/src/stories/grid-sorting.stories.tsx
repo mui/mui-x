@@ -1,5 +1,5 @@
 import { Button } from '@material-ui/core';
-import { randomId, randomInt } from '@material-ui/x-grid-data-generator';
+import { randomInt } from '@material-ui/x-grid-data-generator';
 import * as React from 'react';
 import {
   ColDef,
