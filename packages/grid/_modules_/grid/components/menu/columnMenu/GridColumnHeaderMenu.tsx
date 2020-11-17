@@ -84,7 +84,6 @@ export const GridColumnHeaderMenu: React.FC<{}> = () => {
     >
       <SortMenuItems onClick={hideMenu} column={currentColumn!} />
       <FilterMenuItem onClick={hideMenu} column={currentColumn!} />
-
       <MenuItem onClick={hideMenuDelayed} disabled>
         Auto size
       </MenuItem>

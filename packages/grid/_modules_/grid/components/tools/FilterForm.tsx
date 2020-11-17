@@ -3,29 +3,46 @@ import {
   IconButton,
   InputLabel,
   MenuItem,
-  Select,
-  TextField,
+  Select, Theme,
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { filterableColumnsSelector } from '../../hooks/features/columns/columnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { FilterItem, LinkOperator } from '../../hooks/features/filter/visibleRowsState';
 import { ColDef } from '../../models/colDef/colDef';
 import { ApiContext } from '../api-context';
-import { CloseIcon, LoadIcon } from '../icons/index';
+import { CloseIcon } from '../icons/index';
 
 export interface FilterFormProps {
   item: FilterItem;
-
   showMultiFilterOperators?: boolean;
   multiFilterOperator?: LinkOperator;
   disableMultiFilterOperator?: boolean;
-
   applyFilterChanges: (item: FilterItem) => void;
   applyMultiFilterOperatorChanges: (operator: LinkOperator) => void;
   deleteFilter: (item: FilterItem) => void;
   onSelectOpen: (event: React.ChangeEvent<{}>) => void;
 }
+
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    display: 'flex', justifyContent: 'space-around', padding: '10px'
+  },
+  linkOperatorSelect: {
+    width: 60,
+  },
+  columnSelect: {
+    width: 150,
+  },
+  operatorSelect: {
+    width: 120,
+  },
+  FilterValueInput: {
+    width: 120,
+  },
+}));
 
 export const FilterForm: React.FC<FilterFormProps> = ({
   item,
@@ -37,6 +54,7 @@ export const FilterForm: React.FC<FilterFormProps> = ({
   disableMultiFilterOperator,
   applyMultiFilterOperatorChanges,
 }) => {
+  const classes = useStyles();
   const apiRef = React.useContext(ApiContext);
   const filterableColumns = useGridSelector(apiRef, filterableColumnsSelector);
 
@@ -86,8 +104,9 @@ export const FilterForm: React.FC<FilterFormProps> = ({
   }, [deleteFilter, item]);
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-around', padding: '10px' }}>
+    <div className={classes.root}>
       <FormControl
+        className={classes.linkOperatorSelect}
         style={{ width: 60, visibility: showMultiFilterOperators ? 'visible' : 'hidden' }}
       >
         <InputLabel id="columns-filter-operator-select-label">Operators</InputLabel>
@@ -107,7 +126,9 @@ export const FilterForm: React.FC<FilterFormProps> = ({
           </MenuItem>
         </Select>
       </FormControl>
-      <FormControl style={{ width: 150 }}>
+      <FormControl
+        className={classes.columnSelect}
+      >
         <InputLabel id="columns-filter-select-label">Columns</InputLabel>
         <Select
           labelId="columns-filter-select-label"
@@ -123,7 +144,9 @@ export const FilterForm: React.FC<FilterFormProps> = ({
           ))}
         </Select>
       </FormControl>
-      <FormControl style={{ width: 120 }}>
+      <FormControl
+        className={classes.operatorSelect}
+      >
         <InputLabel id="columns-operators-select-label">Operators</InputLabel>
         <Select
           labelId="columns-operators-select-label"
@@ -139,7 +162,9 @@ export const FilterForm: React.FC<FilterFormProps> = ({
           ))}
         </Select>
       </FormControl>
-      <FormControl style={{ width: 120 }}>
+      <FormControl
+        className={classes.FilterValueInput}
+      >
         {item.operator &&
           React.createElement(item.operator?.InputComponent, {
             item,

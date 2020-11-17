@@ -115,8 +115,7 @@ export const ColumnHeaderItem = React.memo(
         {!disableColumnMenu && isColumnNumeric && !column.disableColumnMenu && (
           <ColumnHeaderMenuIcon column={column} />
         )}
-
-        <div className={'MuiDataGrid-colCellTitleContainer'}>
+        <div className="MuiDataGrid-colCellTitleContainer">
           {isColumnNumeric && (
             <ColumnHeaderSortIcon
               direction={sortDirection}
