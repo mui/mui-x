@@ -1,10 +1,4 @@
-import {
-  FormControl,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  Select, Theme,
-} from '@material-ui/core';
+import { FormControl, IconButton, InputLabel, MenuItem, Select, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { filterableColumnsSelector } from '../../hooks/features/columns/columnsSelector';
@@ -25,10 +19,11 @@ export interface FilterFormProps {
   onSelectOpen: (event: React.ChangeEvent<{}>) => void;
 }
 
-
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    display: 'flex', justifyContent: 'space-around', padding: '10px'
+    display: 'flex',
+    justifyContent: 'space-around',
+    padding: '10px',
   },
   linkOperatorSelect: {
     width: 60,
@@ -117,18 +112,17 @@ export const FilterForm: React.FC<FilterFormProps> = ({
           onOpen={onSelectOpen}
           onChange={changeLinkOperator}
           disabled={!!disableMultiFilterOperator}
+          native
         >
-          <MenuItem key={LinkOperator.And.toString()} value={LinkOperator.And.toString()}>
+          <option key={LinkOperator.And.toString()} value={LinkOperator.And.toString()}>
             And
-          </MenuItem>
-          <MenuItem key={LinkOperator.Or.toString()} value={LinkOperator.Or.toString()}>
+          </option>
+          <option key={LinkOperator.Or.toString()} value={LinkOperator.Or.toString()}>
             Or
-          </MenuItem>
+          </option>
         </Select>
       </FormControl>
-      <FormControl
-        className={classes.columnSelect}
-      >
+      <FormControl className={classes.columnSelect}>
         <InputLabel id="columns-filter-select-label">Columns</InputLabel>
         <Select
           labelId="columns-filter-select-label"
@@ -136,17 +130,16 @@ export const FilterForm: React.FC<FilterFormProps> = ({
           value={item.columnField || ''}
           onChange={changeColumn}
           onOpen={onSelectOpen}
+          native
         >
           {filterableColumns.map((col) => (
-            <MenuItem key={col.field} value={col.field}>
+            <option key={col.field} value={col.field}>
               {col.headerName || col.field}
-            </MenuItem>
+            </option>
           ))}
         </Select>
       </FormControl>
-      <FormControl
-        className={classes.operatorSelect}
-      >
+      <FormControl className={classes.operatorSelect}>
         <InputLabel id="columns-operators-select-label">Operators</InputLabel>
         <Select
           labelId="columns-operators-select-label"
@@ -154,17 +147,16 @@ export const FilterForm: React.FC<FilterFormProps> = ({
           value={item.operator?.value}
           onOpen={onSelectOpen}
           onChange={changeOperator}
+          native
         >
           {currentColumn?.filterOperators?.map((operator) => (
-            <MenuItem key={operator.value} value={operator.value}>
+            <option key={operator.value} value={operator.value}>
               {operator.label}
-            </MenuItem>
+            </option>
           ))}
         </Select>
       </FormControl>
-      <FormControl
-        className={classes.FilterValueInput}
-      >
+      <FormControl className={classes.FilterValueInput}>
         {item.operator &&
           React.createElement(item.operator?.InputComponent, {
             item,

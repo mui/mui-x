@@ -143,15 +143,19 @@ export const useFilter = (apiRef: ApiRef): void => {
 
   const deleteFilter = React.useCallback(
     (item: FilterItem) => {
+      let hasNoItem = false;
       setGridState((state) => {
         const items = [...state.filter.items.filter((filterItem) => filterItem.id !== item.id)];
-
+        hasNoItem = items.length === 0;
         const newState = {
           ...state,
           filter: { ...state.filter, items },
         };
         return newState;
       });
+      if (hasNoItem) {
+        upsertFilter({});
+      }
       applyFilters();
     },
     [applyFilters, setGridState],

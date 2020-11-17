@@ -1,5 +1,6 @@
+import { makeStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-import { Button } from '@material-ui/core';
+import { Button, Theme } from '@material-ui/core';
 import { useGridState } from '../../hooks/features/core/useGridState';
 import { PREVENT_HIDE_PREFERENCES } from '../../constants/index';
 import { FilterItem, LinkOperator } from '../../hooks/features/filter/visibleRowsState';
@@ -7,7 +8,26 @@ import { ApiContext } from '../api-context';
 import { AddIcon, CloseIcon } from '../icons/index';
 import { FilterForm } from './FilterForm';
 
+const useStyles = makeStyles((theme: Theme) => ({
+  filterPanelMainContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'auto',
+    flex: '1 1',
+  },
+  filterPanelFooter: {
+    paddingTop: 5,
+    display: 'inline-flex',
+    flexFlow: 'wrap',
+    alignItems: 'baseline',
+    justifyContent: 'space-between',
+    flex: '0 1 50px',
+  },
+}));
+
 export const FilterPanel: React.FC<{}> = () => {
+  const classes = useStyles();
+
   const apiRef = React.useContext(ApiContext);
   const [gridState] = useGridState(apiRef!);
   const hasMultipleFilters = React.useMemo(() => gridState.filter.items.length > 1, [
@@ -53,7 +73,7 @@ export const FilterPanel: React.FC<{}> = () => {
 
   return (
     <React.Fragment>
-      <div style={{ display: 'flex', flexDirection: 'column', overflow: 'auto', flex: '1 1' }}>
+      <div className={classes.filterPanelMainContainer}>
         {gridState.filter.items.map((item, index) => (
           <FilterForm
             key={item.id}
@@ -68,16 +88,7 @@ export const FilterPanel: React.FC<{}> = () => {
           />
         ))}
       </div>
-      <div
-        style={{
-          paddingTop: 5,
-          display: 'inline-flex',
-          flexFlow: 'wrap',
-          alignItems: 'baseline',
-          justifyContent: 'space-between',
-          flex: '0 1 50px',
-        }}
-      >
+      <div className={classes.filterPanelFooter}>
         <Button onClick={addNewFilter} startIcon={<AddIcon />}>
           Filter
         </Button>
