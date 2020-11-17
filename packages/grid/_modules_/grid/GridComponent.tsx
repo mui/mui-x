@@ -136,13 +136,15 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
             >
               <ApiContext.Provider value={apiRef}>
                 <OptionsContext.Provider value={gridState.options}>
-                  {customComponents.headerComponent ? (
-                    <div ref={headerRef}>{customComponents.headerComponent}</div>
-                  ) : (
-                    <GridToolbar ref={headerRef}>
-                      {/* The components for the separate features go in here */}
-                    </GridToolbar>
-                  )}
+                  <div ref={headerRef}>
+                    {customComponents.headerComponent ? (
+                      customComponents.headerComponent
+                    ) : (
+                      <GridToolbar>
+                        {/* The components for the separate features go in here */}
+                      </GridToolbar>
+                    )}
+                  </div>
                   <div className="MuiDataGrid-mainGridContainer">
                     <Watermark licenseStatus={props.licenseStatus} />
                     <GridColumnsContainer
@@ -178,29 +180,30 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                       </GridDataContainer>
                     </GridWindow>
                   </div>
-                  {customComponents.footerComponent ? (
-                    <div ref={footerRef}>{customComponents.footerComponent}</div>
-                  ) : (
-                    <DefaultFooter
-                      ref={footerRef}
-                      paginationComponent={
-                        !!gridState.options.pagination &&
-                        gridState.pagination.pageSize != null &&
-                        !gridState.options.hideFooterPagination &&
-                        (customComponents.paginationComponent || (
-                          <Pagination
-                            setPage={apiRef.current.setPage}
-                            currentPage={gridState.pagination.page}
-                            pageCount={gridState.pagination.pageCount}
-                            pageSize={gridState.pagination.pageSize}
-                            rowCount={gridState.pagination.rowCount}
-                            setPageSize={apiRef.current.setPageSize}
-                            rowsPerPageOptions={gridState.options.rowsPerPageOptions}
-                          />
-                        ))
-                      }
-                    />
-                  )}
+                  <div ref={footerRef}>
+                    {customComponents.footerComponent ? (
+                      customComponents.footerComponent
+                    ) : (
+                      <DefaultFooter
+                        paginationComponent={
+                          !!gridState.options.pagination &&
+                          gridState.pagination.pageSize != null &&
+                          !gridState.options.hideFooterPagination &&
+                          (customComponents.paginationComponent || (
+                            <Pagination
+                              setPage={apiRef.current.setPage}
+                              currentPage={gridState.pagination.page}
+                              pageCount={gridState.pagination.pageCount}
+                              pageSize={gridState.pagination.pageSize}
+                              rowCount={gridState.pagination.rowCount}
+                              setPageSize={apiRef.current.setPageSize}
+                              rowsPerPageOptions={gridState.options.rowsPerPageOptions}
+                            />
+                          ))
+                        }
+                      />
+                    )}
+                  </div>
                 </OptionsContext.Provider>
               </ApiContext.Provider>
             </ErrorBoundary>

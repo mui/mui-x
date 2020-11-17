@@ -13,13 +13,11 @@ export const getCurryTotalHeight = (
     return size.height;
   }
   const footerHeight = (footerRef.current && footerRef.current.getBoundingClientRect().height) || 0;
-  const headerHeight =
-    (headerRef.current && headerRef.current.getBoundingClientRect().height) ||
-    internalOptions.headerHeight;
+  const headerHeight = (headerRef.current && headerRef.current.getBoundingClientRect().height) || 0;
   let dataHeight = dataContainerHeight;
   if (dataHeight < internalOptions.rowHeight) {
     dataHeight = internalOptions.rowHeight * 2; // If we have no rows, we give the size of 2 rows to display the no rows overlay
   }
 
-  return headerHeight + footerHeight + dataHeight;
+  return headerHeight + footerHeight + dataHeight + internalOptions.headerHeight;
 };
