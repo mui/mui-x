@@ -452,7 +452,7 @@ export const ResetSortingRows = () => {
   const createRandomRows = () => {
     const randomRows: any[] = [];
 
-    for (let i = 0; i < 10; i+=1) {
+    for (let i = 0; i < 10; i += 1) {
       const id = randomInt(0, 100000).toString();
       randomRows.push({ id, name: 'name test', team: id });
     }
