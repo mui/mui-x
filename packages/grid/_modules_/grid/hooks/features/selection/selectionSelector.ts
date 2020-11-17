@@ -1,13 +1,9 @@
-import { createSelector, OutputSelector } from 'reselect';
+import { createSelector } from 'reselect';
 import { GridState } from '../core/gridState';
 import { SelectionState } from './selectionState';
 
 export const selectionStateSelector = (state: GridState) => state.selection;
-export const selectedRowsCountSelector: OutputSelector<
-  GridState,
-  number,
-  (res: SelectionState) => number
-> = createSelector<GridState, SelectionState, number>(
+export const selectedRowsCountSelector = createSelector<GridState, SelectionState, number>(
   selectionStateSelector,
   (selection) => Object.keys(selection).length,
 );

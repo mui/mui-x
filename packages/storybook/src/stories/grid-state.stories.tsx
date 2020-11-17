@@ -2,14 +2,12 @@ import { Button } from '@material-ui/core';
 import { useState } from 'react';
 import * as React from 'react';
 import { GridState, SortingState, useApiRef, XGrid } from '@material-ui/x-grid';
-import { withKnobs } from '@storybook/addon-knobs';
 import { StateChangeParams } from '../../../grid/_modules_/grid/models/params/stateChangeParams';
 import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/State',
   component: XGrid,
-  decorators: [withKnobs],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {

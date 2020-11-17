@@ -28,6 +28,7 @@
     "precommit": "npm run lint",
     "lint": "eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../.eslintrc.js",
     "typescript": "tsc -p tsconfig.json",
+    "types": "tsc -p ../tsconfig.build.json",
     "build": "cd ../ && rollup --config rollup.data-grid.config.js"
   },
   "dependencies": {

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { action } from '@storybook/addon-actions';
 import { GridOptionsProp, XGrid, useApiRef } from '@material-ui/x-grid';
-import { withKnobs } from '@storybook/addon-knobs';
 import { interval } from 'rxjs';
 import { randomInt, randomUserName } from '@material-ui/x-grid-data-generator';
 import { FeedGrid } from '../components/feed-grid';
@@ -10,7 +9,6 @@ import { PricingGrid } from '../components/pricing-grid';
 export default {
   title: 'X-Grid Tests/Streaming',
   component: XGrid,
-  decorators: [withKnobs],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
