@@ -11,7 +11,7 @@ export interface ColumnHeaderSortIconProps {
 }
 
 function getIcon(icons: IconsOptions, direction: SortDirection) {
-  const Icon = direction === 'asc' ? icons!.columnSortedAscending! : icons!.columnSortedDescending!;
+  const Icon = direction === 'asc' ? icons!.ColumnSortedAscending! : icons!.ColumnSortedDescending!;
   return <Icon className="MuiDataGrid-sortIcon" />;
 }
 

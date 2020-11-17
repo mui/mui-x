@@ -26,23 +26,23 @@ export interface IconsOptions {
   /**
    * Icon displayed on the side of the column header title to display the filter input component.
    */
-  columnMenu?: React.ElementType;
+  ColumnMenu?: React.ElementType;
   /**
    * Icon displayed on the column menu filter tab.
    */
-  columnFiltering?: React.ElementType;
+  ColumnFiltering?: React.ElementType;
   /**
    * Icon displayed on the side of the column header title when sorted in Ascending order.
    */
-  columnSortedAscending?: React.ElementType;
+  ColumnSortedAscending?: React.ElementType;
   /**
    * Icon displayed on the side of the column header title when sorted in Descending order.
    */
-  columnSortedDescending?: React.ElementType;
+  ColumnSortedDescending?: React.ElementType;
   /**
    * Icon displayed in between 2 column headers that allows to resize the column header.
    */
-  columnResize?: React.ElementType<{ className: string }>;
+  ColumnResize?: React.ElementType<{ className: string }>;
 }
 
 // TODO add multiSortKey
@@ -293,10 +293,10 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   sortingOrder: ['asc', 'desc', null],
   columnTypes: DEFAULT_COLUMN_TYPES,
   icons: {
-    columnFiltering: FilterIcon,
-    columnMenu: TripleDotsVerticalIcon,
-    columnSortedAscending: ArrowUpwardIcon,
-    columnSortedDescending: ArrowDownwardIcon,
-    columnResize: SeparatorIcon,
+    ColumnFiltering: FilterIcon,
+    ColumnMenu: TripleDotsVerticalIcon,
+    ColumnSortedAscending: ArrowUpwardIcon,
+    ColumnSortedDescending: ArrowDownwardIcon,
+    ColumnResize: SeparatorIcon,
   },
 };

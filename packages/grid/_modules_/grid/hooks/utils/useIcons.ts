@@ -8,7 +8,7 @@ export function useIcons(): IconsOptions {
   if (!icons) {
     throw new Error('Missing set of icons in grid options');
   }
-  if (!icons.columnSortedAscending || !icons.columnSortedDescending || !icons.columnResize) {
+  if (!icons.ColumnSortedAscending || !icons.ColumnSortedDescending || !icons.ColumnResize) {
     throw new Error('Missing icons in options or default options.');
   }
   return icons;

@@ -14,7 +14,7 @@ export const ColumnHeaderSeparator = React.memo(function ColumnHeaderSeparator(
   const { resizable, resizing, ...other } = props;
   const icons = useIcons();
   const { showColumnRightBorder, headerHeight } = React.useContext(OptionsContext);
-  const Icon = icons!.columnResize!;
+  const Icon = icons!.ColumnResize!;
 
   return (
     <div

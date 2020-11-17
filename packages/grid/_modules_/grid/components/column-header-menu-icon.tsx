@@ -12,7 +12,7 @@ export interface ColumnHeaderFilterIconProps {
 export const ColumnHeaderMenuIcon: React.FC<ColumnHeaderFilterIconProps> = React.memo(
   ({ column }) => {
     const icons = useIcons();
-    const icon = React.createElement(icons.columnMenu!, {});
+    const icon = React.createElement(icons.ColumnMenu!, {});
     const apiRef = React.useContext(ApiContext);
     const [, setGridState, forceUpdate] = useGridState(apiRef!);
 

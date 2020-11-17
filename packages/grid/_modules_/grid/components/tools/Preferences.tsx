@@ -58,7 +58,7 @@ export const PreferencesPanel = () => {
   const [target, setTarget] = React.useState<Element | null>(null);
 
   const icons = useIcons();
-  const filterIconElement = React.createElement(icons.columnFiltering!, {});
+  const filterIconElement = React.createElement(icons.ColumnFiltering!, {});
 
   const hideTimeout = React.useRef<any>();
   const hidePreferences = React.useCallback(() => {
