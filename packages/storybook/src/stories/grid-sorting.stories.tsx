@@ -450,9 +450,9 @@ export const ResetSortingRows = () => {
   const [rows, setRows] = React.useState<RowsProp>([]);
 
   const createRandomRows = () => {
-    const randomRows: RowsProp[] = [];
+    const randomRows: any[] = [];
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 10; i+=1) {
       const id = randomInt(0, 100000).toString();
       randomRows.push({ id, name: 'name test', team: id });
     }
