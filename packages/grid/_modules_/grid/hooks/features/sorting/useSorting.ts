@@ -13,7 +13,7 @@ import { FeatureModeConstant } from '../../../models/featureMode';
 import { CellParams } from '../../../models/params/cellParams';
 import { ColParams } from '../../../models/params/colParams';
 import { SortModelParams } from '../../../models/params/sortModelParams';
-import { RowModel } from '../../../models/rows';
+import { RowModel, RowsProp } from '../../../models/rows';
 import { FieldComparatorList, SortItem, SortModel } from '../../../models/sortModel';
 import { buildCellParams } from '../../../utils/paramsUtils';
 import { isDesc, nextSortDirection } from '../../../utils/sortingUtils';
@@ -29,7 +29,7 @@ import { useGridState } from '../core/useGridState';
 import { rowCountSelector, unorderedRowModelsSelector } from '../rows/rowsSelector';
 import { SortingState } from './sortingState';
 
-export const useSorting = (apiRef: ApiRef) => {
+export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   const logger = useLogger('useSorting');
   const allowMultipleSorting = React.useRef<boolean>(false);
   const comparatorList = React.useRef<FieldComparatorList>([]);
@@ -235,6 +235,14 @@ export const useSorting = (apiRef: ApiRef) => {
 
   const sortApi: SortApi = { getSortModel, setSortModel, onSortModelChange, applySorting };
   useApiMethod(apiRef, sortApi, 'SortApi');
+
+  React.useEffect(() => {
+    // When the rows prop change, we reset the sortedRows state.
+    setGridState((state) => ({
+      ...state,
+      sorting: { ...state.sorting, sortedRows: rowsProp.map((row) => row.id) },
+    }));
+  }, [apiRef, forceUpdate, rowsProp, setGridState]);
 
   React.useEffect(() => {
     if (rowCount > 0 && options.sortingMode === FeatureModeConstant.client) {

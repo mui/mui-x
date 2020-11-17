@@ -1,3 +1,5 @@
+import { Button } from '@material-ui/core';
+import { randomId, randomInt } from '@material-ui/x-grid-data-generator';
 import * as React from 'react';
 import {
   ColDef,
@@ -6,6 +8,7 @@ import {
   SortModelParams,
   SortModel,
   useApiRef,
+  GridOverlay,
 } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { action } from '@storybook/addon-actions';
@@ -428,6 +431,61 @@ export const ServerSideSorting = () => {
         disableMultipleColumnsSorting
         sortModel={sortBy}
         loading={loading}
+      />
+    </div>
+  );
+};
+
+export const ResetSortingRows = () => {
+  const columns = [
+    {
+      field: 'name',
+      width: 200,
+    },
+    {
+      field: 'team',
+      width: 200,
+    },
+  ];
+  const [rows, setRows] = React.useState<RowsProp>([]);
+
+  const createRandomRows = () => {
+    const randomRows: RowsProp[] = [];
+
+    for (let i = 0; i < 10; i++) {
+      const id = randomInt(0, 100000).toString();
+      randomRows.push({ id, name: 'name test', team: id });
+    }
+
+    setRows(randomRows);
+  };
+
+  return (
+    <div
+      style={{
+        height: '1000px',
+      }}
+    >
+      <Button onClick={() => createRandomRows()}>Random Rows</Button>
+      <XGrid
+        rows={rows}
+        columns={columns}
+        loading={rows.length === 0}
+        rowHeight={56}
+        hideFooter
+        showCellRightBorder
+        showColumnRightBorder
+        disableExtendRowFullWidth
+        onColumnHeaderClick={() => {}}
+        sortModel={[
+          {
+            field: 'name',
+            sort: 'asc',
+          },
+        ]}
+        components={{
+          noRowsOverlay: () => <GridOverlay>No Data</GridOverlay>,
+        }}
       />
     </div>
   );

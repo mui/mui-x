@@ -220,6 +220,47 @@ describe('<XGrid />', () => {
       fireEvent.click(header);
       expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
     });
+
+    it('should reset the sortedRows state when rows prop change', async () => {
+      interface TestCaseProps {
+        rows: any[];
+      }
+      let apiRef;
+      const TestCase = (props: TestCaseProps) => {
+        const { rows } = props;
+        apiRef = useApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid {...defaultProps} rows={rows} apiRef={apiRef} />
+          </div>
+        );
+      };
+
+      const { setProps } = render(<TestCase rows={defaultProps.rows} />);
+
+      let state = apiRef.current.getState();
+      expect(state.sorting.sortedRows).to.deep.equal([0, 1, 2]);
+
+      setProps({
+        rows: [
+          {
+            id: 3,
+            brand: 'Asics',
+          },
+          {
+            id: 4,
+            brand: 'RedBull',
+          },
+          {
+            id: 5,
+            brand: 'Hugo',
+          },
+        ],
+      });
+      await raf(); // wait for the AutoSize's dimension detection logic
+      state = apiRef.current.getState();
+      expect(state.sorting.sortedRows).to.deep.equal([3, 4, 5]);
+    });
   });
 
   describe('state', () => {
