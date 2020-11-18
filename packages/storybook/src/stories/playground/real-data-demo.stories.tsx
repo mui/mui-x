@@ -47,11 +47,7 @@ const DemoTemplate: Story<GridOptionsProp & DemoDataOptions> = ({
 }) => {
   const { data } = useDemoData({ rowLength, dataSet, maxColumns });
 
-  return (
-    <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} {...args} />
-    </div>
-  );
+  return <XGrid rows={data.rows} columns={data.columns} {...args} />;
 };
 
 export const Commodity500 = DemoTemplate.bind({});
@@ -118,3 +114,4 @@ XGridDemo.args = {
   rowHeight: 38,
   checkboxSelection: true,
 };
+XGridDemo.decorators = [gridContainer];
