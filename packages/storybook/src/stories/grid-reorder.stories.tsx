@@ -1,13 +1,11 @@
 import * as React from 'react';
 import { ElementSize, XGrid } from '@material-ui/x-grid';
-import { withA11y } from '@storybook/addon-a11y';
 import '../style/grid-stories.css';
 import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/Reorder',
   component: XGrid,
-  decorators: [withA11y],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
