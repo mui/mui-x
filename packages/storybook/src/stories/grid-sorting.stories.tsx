@@ -483,9 +483,6 @@ export const ResetSortingRows = () => {
             sort: 'asc',
           },
         ]}
-        components={{
-          noRowsOverlay: () => <GridOverlay>No Data</GridOverlay>,
-        }}
       />
     </div>
   );
