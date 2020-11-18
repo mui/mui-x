@@ -206,22 +206,6 @@ describe('<XGrid />', () => {
     });
   });
 
-  describe('sorting', () => {
-    it('should sort when clicking the header cell', () => {
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <XGrid {...defaultProps} />
-        </div>,
-      );
-      const header = screen.getByRole('columnheader', { name: 'brand' });
-      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-      fireEvent.click(header);
-      expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
-      fireEvent.click(header);
-      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
-    });
-  });
-
   describe('state', () => {
     it('should trigger on state change and pass the correct params', () => {
       let onStateParams;

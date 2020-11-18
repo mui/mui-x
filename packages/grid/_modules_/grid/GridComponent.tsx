@@ -73,7 +73,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useRows(props.rows, apiRef);
     useKeyboard(rootContainerRef, apiRef);
     useSelection(apiRef);
-    useSorting(apiRef);
+    useSorting(apiRef, props.rows);
 
     useContainerProps(windowRef, apiRef);
     const renderCtx = useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
