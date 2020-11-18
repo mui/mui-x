@@ -470,13 +470,6 @@ export const ResetSortingRows = () => {
       <XGrid
         rows={rows}
         columns={columns}
-        loading={rows.length === 0}
-        rowHeight={56}
-        hideFooter
-        showCellRightBorder
-        showColumnRightBorder
-        disableExtendRowFullWidth
-        onColumnHeaderClick={() => {}}
         sortModel={[
           {
             field: 'name',
