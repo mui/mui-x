@@ -8,7 +8,6 @@ import {
   SortModelParams,
   SortModel,
   useApiRef,
-  GridOverlay,
 } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { action } from '@storybook/addon-actions';
