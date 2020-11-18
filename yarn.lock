@@ -3233,17 +3233,17 @@
     regenerator-runtime "^0.13.3"
 
 "@storybook/addon-storysource@^6.0.4":
-  version "6.0.27"
-  resolved "https://registry.yarnpkg.com/@storybook/addon-storysource/-/addon-storysource-6.0.27.tgz#6557281f7eb62d6bd871b498b7c767827648d3d0"
-  integrity sha512-VYdXaCVRlY9S9l+iAHE88pFLasnRVvLH5KRbSjJ9bpRR2+rhQDqqeJjCIRQN1xFST+0R7N+HV9bJSl/UktOdNg==
+  version "6.0.28"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-storysource/-/addon-storysource-6.0.28.tgz#aea78da499bddb29b39c4a8722cdac82d5ce57c3"
+  integrity sha512-Y3IL8pY0gPlZobcp5A6teuiwshgSAmMju9EqliGIJPdeZ3tB0ZD8L0lL0UTV4nQZli2KPvkrAarY8UHLDV6L+A==
   dependencies:
-    "@storybook/addons" "6.0.27"
-    "@storybook/api" "6.0.27"
-    "@storybook/client-logger" "6.0.27"
-    "@storybook/components" "6.0.27"
-    "@storybook/router" "6.0.27"
-    "@storybook/source-loader" "6.0.27"
-    "@storybook/theming" "6.0.27"
+    "@storybook/addons" "6.0.28"
+    "@storybook/api" "6.0.28"
+    "@storybook/client-logger" "6.0.28"
+    "@storybook/components" "6.0.28"
+    "@storybook/router" "6.0.28"
+    "@storybook/source-loader" "6.0.28"
+    "@storybook/theming" "6.0.28"
     core-js "^3.0.1"
     estraverse "^4.2.0"
     loader-utils "^2.0.0"
@@ -4192,6 +4192,22 @@
     prettier "~2.0.5"
     regenerator-runtime "^0.13.3"
 
+"@storybook/source-loader@6.0.28":
+  version "6.0.28"
+  resolved "https://registry.yarnpkg.com/@storybook/source-loader/-/source-loader-6.0.28.tgz#35bcf3ddaf10ee1fd14f3029895321935388f3df"
+  integrity sha512-oBWQlIS6fgkcPt5CzE7ASqNKKxlks/1b1GxPr95fLiIhAkPs64DdvZ+6QP1req62CI4zBOyFj4wZHX/sYpfPzQ==
+  dependencies:
+    "@storybook/addons" "6.0.28"
+    "@storybook/client-logger" "6.0.28"
+    "@storybook/csf" "0.0.1"
+    core-js "^3.0.1"
+    estraverse "^4.2.0"
+    global "^4.3.2"
+    loader-utils "^2.0.0"
+    lodash "^4.17.15"
+    prettier "~2.0.5"
+    regenerator-runtime "^0.13.3"
+
 "@storybook/theming@5.3.21":
   version "5.3.21"
   resolved "https://registry.yarnpkg.com/@storybook/theming/-/theming-5.3.21.tgz#ae2dc101aa57c3be4df1724ae729e11bad118e0b"
@@ -4228,7 +4244,7 @@
     resolve-from "^5.0.0"
     ts-dedent "^1.1.1"
 
-"@storybook/theming@6.0.27", "@storybook/theming@^6.0.4":
+"@storybook/theming@6.0.27":
   version "6.0.27"
   resolved "https://registry.yarnpkg.com/@storybook/theming/-/theming-6.0.27.tgz#dc09d02b7f6c70db079f4aa3fb50c2fe3e3fe9b9"
   integrity sha512-6jm7tJuGUZzSftRQce776fS9/Pt5OAypmaTOj035z3RWswoQ1pj8olXVnSNxSt6jyYoWrJru8kiCl7w78q0rPg==
@@ -4246,7 +4262,7 @@
     resolve-from "^5.0.0"
     ts-dedent "^1.1.1"
 
-"@storybook/theming@6.0.28":
+"@storybook/theming@6.0.28", "@storybook/theming@^6.0.4":
   version "6.0.28"
   resolved "https://registry.yarnpkg.com/@storybook/theming/-/theming-6.0.28.tgz#8403333c68c44729eb677ef7c934aaa06e269f33"
   integrity sha512-dcZXDkO1LYcnWUejAzvjl3OPBnAB1m2+fzmRx0dBrgm2O+fcNXTadQ6SXZYKaSz37lS+aGtYG7I9nurwhXMMXA==
