@@ -160,7 +160,7 @@ export const useStyles = makeStyles(
           visibility: 'hidden',
           fontSize: 18,
         },
-        '& .MuiDataGrid-colCell:hover  .MuiDataGrid-menuIcon': {
+        '& .MuiDataGrid-colCell:hover .MuiDataGrid-menuIcon': {
           visibility: 'visible',
         },
         '& .MuiDataGrid-colCellWrapper.scroll .MuiDataGrid-colCell:last-child': {
