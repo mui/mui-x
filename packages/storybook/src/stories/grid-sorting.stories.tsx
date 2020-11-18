@@ -445,6 +445,7 @@ export const ResetSortingRows = () => {
     {
       field: 'team',
       width: 200,
+      type: 'number',
     },
   ];
   const [rows, setRows] = React.useState<RowsProp>([]);
@@ -461,31 +462,12 @@ export const ResetSortingRows = () => {
   };
 
   return (
-    <div
-      style={{
-        height: '1000px',
-      }}
-    >
+    <div className="grid-container" style={{flexDirection: 'column'}}>
       <Button onClick={() => createRandomRows()}>Random Rows</Button>
       <XGrid
         rows={rows}
         columns={columns}
-        loading={rows.length === 0}
-        rowHeight={56}
-        hideFooter
-        showCellRightBorder
-        showColumnRightBorder
-        disableExtendRowFullWidth
-        onColumnHeaderClick={() => {}}
-        sortModel={[
-          {
-            field: 'name',
-            sort: 'asc',
-          },
-        ]}
-        components={{
-          noRowsOverlay: () => <GridOverlay>No Data</GridOverlay>,
-        }}
+        sortModel={[{field: 'team', sort: 'asc'}]}
       />
     </div>
   );
