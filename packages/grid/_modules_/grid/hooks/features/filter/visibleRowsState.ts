@@ -10,4 +10,3 @@ export const getInitialVisibleRowsState: () => VisibleRowsState = () => ({
   visibleRows: [],
   visibleRowsLookup: {},
 });
-

@@ -1,4 +1,4 @@
 export enum PreferencePanelsValue {
-	filters = 'filters',
-	columns = 'columns',
+  filters = 'filters',
+  columns = 'columns',
 }

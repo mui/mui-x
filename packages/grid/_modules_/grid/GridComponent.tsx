@@ -22,6 +22,7 @@ import { useColumnMenu } from './hooks/features/columnMenu/useColumnMenu';
 import { useColumns } from './hooks/features/columns/useColumns';
 import { useGridState } from './hooks/features/core/useGridState';
 import { usePagination } from './hooks/features/pagination/usePagination';
+import { usePreferencesPanel } from './hooks/features/preferencesPanel/usePreferencesPanel';
 import { useRows } from './hooks/features/rows/useRows';
 import { useSorting } from './hooks/features/sorting/useSorting';
 import { useApiRef } from './hooks/features/useApiRef';
@@ -76,6 +77,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useSelection(apiRef);
     useSorting(apiRef);
     useColumnMenu(apiRef);
+    usePreferencesPanel(apiRef);
     useFilter(apiRef);
 
     useContainerProps(windowRef, apiRef);

@@ -10,11 +10,8 @@ import { filterableColumnsSelector } from '../columns/columnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { sortedRowsSelector } from '../sorting/sortingSelector';
-import { getInitialFilterState} from './FilterModelState';
-import {
-  getInitialVisibleRowsState,
-
-} from './visibleRowsState';
+import { getInitialFilterState } from './FilterModelState';
+import { getInitialVisibleRowsState } from './visibleRowsState';
 
 export const useFilter = (apiRef: ApiRef): void => {
   const logger = useLogger('useFilter');
@@ -42,11 +39,11 @@ export const useFilter = (apiRef: ApiRef): void => {
 
   const applyFilter = React.useCallback(
     (filterItem: FilterItem, linkOperator: LinkOperator) => {
-      if (!filterItem.columnField || !filterItem.operator || !filterItem.value) {
+      if (!filterItem.columnField || !filterItem.operatorValue || !filterItem.value) {
         return;
       }
       logger.info(
-        `Filtering column: ${filterItem.columnField} ${filterItem.operator.label} ${filterItem.value} `,
+        `Filtering column: ${filterItem.columnField} ${filterItem.operatorValue} ${filterItem.value} `,
       );
 
       const column = apiRef.current.getColumnFromField(filterItem.columnField);
@@ -55,7 +52,7 @@ export const useFilter = (apiRef: ApiRef): void => {
         throw new Error(`No Filter operator found for column ${column.field}`);
       }
       const filterOperator = filterOperators.find(
-        (operator) => operator.value === filterItem.operator!.value,
+        (operator) => operator.value === filterItem.operatorValue,
       )!;
 
       const applyFilterOnRow = filterOperator.getApplyFilterFn(filterItem, column)!;
@@ -122,11 +119,11 @@ export const useFilter = (apiRef: ApiRef): void => {
         if (item.columnField == null) {
           item.columnField = filterableColumns[0].field;
         }
-        if (item.columnField != null && item.operator == null) {
+        if (item.columnField != null && item.operatorValue == null) {
           // we select a default operator
-          item.operator = apiRef!.current!.getColumnFromField(
+          item.operatorValue = apiRef!.current!.getColumnFromField(
             item.columnField,
-          )!.filterOperators![0];
+          )!.filterOperators![0].value!;
         }
 
         const newState = {

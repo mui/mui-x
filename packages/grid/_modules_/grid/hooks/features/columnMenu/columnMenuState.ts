@@ -1,4 +1,4 @@
 export interface ColumnMenuState {
-	open: boolean;
-	field?: string;
+  open: boolean;
+  field?: string;
 }

@@ -3,10 +3,7 @@ import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
 import { ColumnMenuState } from '../columnMenu/columnMenuState';
 import { PreferencePanelState } from '../preferencesPanel/preferencePanelState';
 import { FilterModelState, getInitialFilterState } from '../filter/FilterModelState';
-import {
-  VisibleRowsState,
-  getInitialVisibleRowsState,
-} from '../filter/visibleRowsState';
+import { VisibleRowsState, getInitialVisibleRowsState } from '../filter/visibleRowsState';
 import { SelectionState } from '../selection/selectionState';
 import { getInitialRenderingState, InternalRenderingState } from '../virtualization/renderingState';
 import { KeyboardState } from '../keyboard/keyboardState';

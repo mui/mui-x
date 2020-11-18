@@ -1,4 +1,3 @@
-
 import { FilterItem, LinkOperator } from '../filterItem';
 
 export interface FilterApi {

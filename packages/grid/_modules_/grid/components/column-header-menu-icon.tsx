@@ -15,7 +15,7 @@ export const ColumnHeaderMenuIcon: React.FC<ColumnHeaderFilterIconProps> = React
     const apiRef = React.useContext(ApiContext);
 
     const menuIconClick = React.useCallback(() => {
-      apiRef?.current.showColumnMenu(column.field)
+      apiRef?.current.showColumnMenu(column.field);
     }, [apiRef, column.field]);
 
     return (

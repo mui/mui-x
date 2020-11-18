@@ -75,16 +75,15 @@ export const PreferencesPanel = () => {
     [apiRef],
   );
 
-  const hidePreferences = React.useCallback(()=> {
+  const hidePreferences = React.useCallback(() => {
     apiRef?.current.hidePreferences();
-  }, [apiRef])
+  }, [apiRef]);
 
   React.useEffect(() => {
     updateColumnTarget(preferencePanelState);
   }, [preferencePanelState, updateColumnTarget]);
 
-  const isColumnsTabOpen =
-    preferencePanelState.openedPanelValue === PreferencePanelsValue.columns;
+  const isColumnsTabOpen = preferencePanelState.openedPanelValue === PreferencePanelsValue.columns;
   const isFiltersTabOpen = !isColumnsTabOpen;
 
   return (

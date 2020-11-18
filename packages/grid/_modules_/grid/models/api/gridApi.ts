@@ -26,5 +26,5 @@ export type GridApi = CoreApi &
   VirtualizationApi &
   PaginationApi &
   FilterApi &
-	ColumnMenuApi &
-	PreferencesPanelApi;
+  ColumnMenuApi &
+  PreferencesPanelApi;

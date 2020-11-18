@@ -5,6 +5,7 @@ import { filterableColumnsSelector } from '../../hooks/features/columns/columnsS
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { ColDef } from '../../models/colDef/colDef';
 import { FilterItem, LinkOperator } from '../../models/filterItem';
+import { FilterOperator } from '../../models/filterOperator';
 import { ApiContext } from '../api-context';
 import { CloseIcon } from '../icons/index';
 
@@ -52,12 +53,21 @@ export const FilterForm: React.FC<FilterFormProps> = ({
   const classes = useStyles();
   const apiRef = React.useContext(ApiContext);
   const filterableColumns = useGridSelector(apiRef, filterableColumnsSelector);
-
   const [currentColumn, setCurrentColumn] = React.useState<ColDef | null>(() => {
     if (!item.columnField) {
       return null;
     }
     return apiRef!.current.getColumnFromField(item.columnField)!;
+  });
+  const [currentOperator, setCurrentOperator] = React.useState<FilterOperator | null>(() => {
+    if (!item.operatorValue || !currentColumn) {
+      return null;
+    }
+
+    return (
+      currentColumn.filterOperators?.find((operator) => operator.value === item.operatorValue) ||
+      null
+    );
   });
 
   const changeColumn = React.useCallback(
@@ -75,10 +85,12 @@ export const FilterForm: React.FC<FilterFormProps> = ({
     (event: React.ChangeEvent<{ value: unknown }>) => {
       applyFilterChanges({
         ...item,
-        operator: currentColumn!.filterOperators!.find(
-          (op) => op.value === (event.target.value as string),
-        )!,
+        operatorValue: event.target.value as string,
       });
+      const newOperator =
+        currentColumn!.filterOperators?.find((operator) => operator.value === item.operatorValue) ||
+        null;
+      setCurrentOperator(newOperator);
     },
     [applyFilterChanges, currentColumn, item],
   );
@@ -144,7 +156,7 @@ export const FilterForm: React.FC<FilterFormProps> = ({
         <Select
           labelId="columns-operators-select-label"
           id="columns-operators-select"
-          value={item.operator?.value}
+          value={item.operatorValue}
           onOpen={onSelectOpen}
           onChange={changeOperator}
           native
@@ -157,8 +169,8 @@ export const FilterForm: React.FC<FilterFormProps> = ({
         </Select>
       </FormControl>
       <FormControl className={classes.FilterValueInput}>
-        {item.operator &&
-          React.createElement(item.operator?.InputComponent, {
+        {currentOperator &&
+          React.createElement(currentOperator.InputComponent, {
             item,
             applyValue: applyFilterChanges,
           })}

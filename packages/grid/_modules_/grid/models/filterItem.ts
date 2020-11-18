@@ -1,13 +1,11 @@
-import { FilterOperator } from './filterOperator';
-
 export interface FilterItem {
-	id?: number;
-	columnField?: string;
-	value?: string;
-	operator?: FilterOperator; // Contains...
+  id?: number;
+  columnField?: string;
+  value?: string;
+  operatorValue?: string;
 }
 
 export enum LinkOperator {
-	And = 'and',
-	Or = 'or',
+  And = 'and',
+  Or = 'or',
 }

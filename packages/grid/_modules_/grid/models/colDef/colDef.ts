@@ -117,13 +117,18 @@ export interface ColDef {
    * Allows to disable the click event in cells.
    */
   disableClickEventBubbling?: boolean;
-
-  filterValue?: any[];
-
+  /**
+   * Allows to disable the column menu for this column.
+   */
   disableColumnMenu?: boolean;
-
+  /**
+   * If `true`, the column is filterable.
+   * @default true
+   */
   filterable?: boolean;
-
+  /**
+   * Allows to set the filterOperators for this column
+   */
   filterOperators?: FilterOperator[];
 }
 

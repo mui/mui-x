@@ -10,12 +10,14 @@ import { GridMenu } from '../GridMenu';
 import { FilterMenuItem } from './FilterMenuItem';
 import { SortMenuItems } from './SortMenuItems';
 
-const columnMenuStateSelector = (state: GridState)=> state.columnMenu;
+const columnMenuStateSelector = (state: GridState) => state.columnMenu;
 
 export const GridColumnHeaderMenu: React.FC<{}> = () => {
   const apiRef = React.useContext(ApiContext);
-  const columnMenuState = useGridSelector(apiRef!,  columnMenuStateSelector);
-  const currentColumn = columnMenuState.field ? apiRef?.current.getColumnFromField(columnMenuState.field) : null;
+  const columnMenuState = useGridSelector(apiRef!, columnMenuStateSelector);
+  const currentColumn = columnMenuState.field
+    ? apiRef?.current.getColumnFromField(columnMenuState.field)
+    : null;
   const [target, setTarget] = React.useState<Element | null>(null);
 
   // TODO: Fix issue with portal in V5
