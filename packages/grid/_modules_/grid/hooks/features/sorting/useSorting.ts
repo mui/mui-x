@@ -130,10 +130,10 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
     const sortModel = apiRef.current.getState<GridState>().sorting.sortModel;
     logger.info('Sorting rows with ', sortModel);
 
-    let sorted = [...unorderedRows];
+    const sorted = [...unorderedRows];
     if (sortModel.length > 0) {
       comparatorList.current = buildComparatorList(sortModel);
-      sorted = sorted.sort(comparatorListAggregate);
+      sorted.sort(comparatorListAggregate);
     }
 
     setGridState((oldState) => {
