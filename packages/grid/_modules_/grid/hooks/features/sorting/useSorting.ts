@@ -242,7 +242,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
       ...state,
       sorting: { ...state.sorting, sortedRows: rowsProp.map((row) => row.id) },
     }));
-  }, [apiRef, forceUpdate, rowsProp, setGridState]);
+  }, [rowsProp, setGridState]);
 
   React.useEffect(() => {
     if (rowCount > 0 && options.sortingMode === FeatureModeConstant.client) {
