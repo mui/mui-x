@@ -18,7 +18,6 @@ const config: StorybookConfig = {
   addons: ['@storybook/addon-essentials', '@storybook/addon-storysource', '@storybook/addon-a11y'],
   typescript: {
     check: isDevelopment, // Netlify is breaking the deploy with this settings on. So deactivate on release
-    // reactDocgen: false,
   },
   webpackFinal: async (config) => {
     config.devtool = isDevelopment ? 'inline-source-map' : undefined;
