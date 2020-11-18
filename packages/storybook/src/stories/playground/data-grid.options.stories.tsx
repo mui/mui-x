@@ -1,86 +1,64 @@
 import * as React from 'react';
-import { ColDef, DataGrid, DataGridProps, SortDirection } from '@material-ui/data-grid';
-import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
-import { action } from '@storybook/addon-actions';
+import { Story, Meta } from '@storybook/react';
+import { DataGrid, DataGridProps, SortDirection } from '@material-ui/data-grid';
 import { useData } from '../../hooks/useData';
 
 export default {
   title: 'Data-Grid Demos/Options Events',
   component: DataGrid,
-  decorators: [withKnobs],
   parameters: {
-    options: { selectedPanel: 'storybook/knobs/panel' },
+    options: { selectedPanel: 'storybook/controls/panel' },
     docs: {
       page: null,
     },
   },
-};
+} as Meta;
 
-export const Options = () => {
-  const { columns, rows } = useData(2000, 200);
-  const rowsPerPageOptions = array('rowsPerPageOptions', ['25', '50', '100'], ', ');
-  const sortingOrder = array('sortingOrder', ['asc', 'desc', 'null'], ', ');
+interface StoryExtraArgs {
+  resizable: boolean;
+}
 
-  const dataGridProps: Partial<DataGridProps> = {
-    onRowClick: (params) => action('onRowClick')(params),
-    onCellClick: (params) => action('onCellClick')(params),
-    onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
-    onRowSelected: (params) => action('onRowSelected')(params),
-    onSelectionChange: (params) => action('onSelectionChange', { depth: 1 })(params),
-    onPageChange: (params) => action('onPageChange')(params),
-    onPageSizeChange: (params) => action('onPageSizeChange')(params),
-    onSortModelChange: (params) => action('onSortModelChange')(params),
-    pageSize: number('pageSize', 100),
-    autoPageSize: boolean('autoPageSize', false),
-    rowsPerPageOptions: rowsPerPageOptions.map((value) => parseInt(value, 10)),
-    hideFooterRowCount: boolean('hideFooterRowCount', false),
-    hideFooterPagination: boolean('hideFooterPagination', false),
-    hideFooter: boolean('hideFooter', false),
-    disableExtendRowFullWidth: boolean('disableExtendRowFullWidth', false),
-    showCellRightBorder: boolean('showCellRightBorder', false),
-    showColumnRightBorder: boolean('showColumnRightBorder', false),
-    checkboxSelection: boolean('checkboxSelection', true),
-    disableSelectionOnClick: boolean('disableSelectionOnClick', false),
-    sortingOrder: sortingOrder.map((value) => (value === 'null' ? null : (value as SortDirection))),
-    headerHeight: number('headerHeight', 56),
-    rowHeight: number('rowHeight', 52),
-  };
-
-  return <DataGrid rows={rows} columns={columns as ColDef[]} {...dataGridProps} />;
-};
-export const Events = () => {
+const Template: Story<Omit<DataGridProps, 'columns' | 'rows'> & StoryExtraArgs> = ({
+  resizable,
+  sortingOrder,
+  ...args
+}) => {
   const { rows, columns } = useData(2000, 200);
-
-  const options: Partial<DataGridProps> = {
-    onRowClick: (params) => action('onRowClick')(params),
-    onCellClick: (params) => action('onCellClick')(params),
-    onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
-    onRowSelected: (params) => action('onRowSelected')(params),
-    onSelectionChange: (params) => action('onSelectionChange', { depth: 1 })(params),
-    onPageChange: (params) => action('onPageChange')(params),
-    onPageSizeChange: (params) => action('onPageSizeChange')(params),
-    onSortModelChange: (params) => action('onSortModelChange')(params),
-  };
-
-  return <DataGrid rows={rows} columns={columns as ColDef[]} {...options} />;
+  if (resizable) {
+    columns.forEach((c) => {
+      c.resizable = true;
+    });
+  }
+  return (
+    <DataGrid
+      rows={rows}
+      columns={columns}
+      sortingOrder={sortingOrder?.map((value) => ((value as string) === 'null' ? null : value))}
+      {...args}
+    />
+  );
 };
 
-export const ResizableValidation = () => {
-  const { rows, columns } = useData(2000, 200);
-  columns.forEach((c) => {
-    c.resizable = true;
-  });
+export const Options = Template.bind({});
+Options.args = {
+  pageSize: 100,
+  autoPageSize: false,
+  rowsPerPageOptions: [25, 50, 100],
+  hideFooterRowCount: false,
+  hideFooterPagination: false,
+  hideFooter: false,
+  disableExtendRowFullWidth: false,
+  showCellRightBorder: false,
+  showColumnRightBorder: false,
+  checkboxSelection: true,
+  disableSelectionOnClick: false,
+  sortingOrder: ['asc', 'desc', 'null' as SortDirection],
+  headerHeight: 56,
+  rowHeight: 52,
+};
 
-  const options: Partial<DataGridProps> = {
-    onRowClick: (params) => action('onRowClick')(params),
-    onCellClick: (params) => action('onCellClick')(params),
-    onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
-    onRowSelected: (params) => action('onRowSelected')(params),
-    onSelectionChange: (params) => action('onSelectionChange', { depth: 1 })(params),
-    onPageChange: (params) => action('onPageChange')(params),
-    onPageSizeChange: (params) => action('onPageSizeChange')(params),
-    onSortModelChange: (params) => action('onSortModelChange')(params),
-  };
-
-  return <DataGrid rows={rows} columns={columns as ColDef[]} {...options} />;
+export const ResizableValidation = Template.bind({});
+ResizableValidation.args = {
+  ...Options.args,
+  resizable: true,
 };

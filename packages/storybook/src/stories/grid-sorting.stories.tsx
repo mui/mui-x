@@ -7,13 +7,11 @@ import {
   SortModel,
   useApiRef,
 } from '@material-ui/x-grid';
-import { withKnobs } from '@storybook/addon-knobs';
 import { action } from '@storybook/addon-actions';
 
 export default {
   title: 'X-Grid Tests/Sorting',
   component: XGrid,
-  decorators: [withKnobs],
   parameters: {
     options: { selectedPanel: 'storybook/action/panel' },
     docs: {
