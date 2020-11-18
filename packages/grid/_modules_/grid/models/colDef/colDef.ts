@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { CellValue } from '../cell';
 import { CellClassNamePropType, CellClassRules } from '../cellClass';
+import { FilterOperator } from '../filterOperator';
 import { CellParams, ValueFormatterParams, ValueGetterParams } from '../params/cellParams';
 import { ColParams } from '../params/colParams';
 import { ComparatorFn, SortDirection } from '../sortModel';
 import { ColType, NativeColTypes } from './colType';
-import { FilterOperator } from './stringColDef';
 
 /**
  * Alignement used in position elements in Cells.
@@ -123,7 +123,6 @@ export interface ColDef {
   disableColumnMenu?: boolean;
 
   filterable?: boolean;
-  // applyFilter: (filterValue: any, rows: Rows)=> void;
 
   filterOperators?: FilterOperator[];
 }

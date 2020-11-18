@@ -1,25 +1,18 @@
-import * as React from 'react';
 import { ClickAwayListener, Paper, Popper, Tab, Tabs, Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { PREVENT_HIDE_PREFERENCES } from '../../constants/eventsConstants';
-import { useGridState } from '../../hooks/features/core/useGridState';
-import { useApiEventHandler } from '../../hooks/root/useApiEventHandler';
+import * as React from 'react';
+import {
+  preferencePanelStateSelector,
+  viewportSizeStateSelector,
+} from '../../hooks/features/preferencesPanel/preferencePanelSelector';
+import { PreferencePanelState } from '../../hooks/features/preferencesPanel/preferencePanelState';
+import { PreferencePanelsValue } from '../../hooks/features/preferencesPanel/preferencesPanelValue';
+import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { useIcons } from '../../hooks/utils/useIcons';
 import { findHeaderElementFromField } from '../../utils/domUtils';
 import { ApiContext } from '../api-context';
 import { ViewWeekIcon } from '../icons/index';
 import { FilterPanel } from './FilterPanel';
-
-export interface PreferencePanelState {
-  open: boolean;
-  openedPanelValue?: PreferencePanelsValue;
-  targetField?: string;
-}
-
-export enum PreferencePanelsValue {
-  filters = 'filters',
-  columns = 'columns',
-}
 
 export function TabPanel(props) {
   const { children } = props;
@@ -48,43 +41,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
 }));
-//TODO refactor tab to navigation with a showNav prop on the component
-//TODO Extract Panel component?
+// TODO refactor tab to navigation with a showNav prop on the component
+// TODO Extract Panel component?
+
 export const PreferencesPanel = () => {
   const classes = useStyles();
   const apiRef = React.useContext(ApiContext);
 
-  const [gridState, setGridState, forceUpdate] = useGridState(apiRef!);
+  const preferencePanelState = useGridSelector(apiRef, preferencePanelStateSelector);
+  const viewportSizes = useGridSelector(apiRef, viewportSizeStateSelector);
   const [target, setTarget] = React.useState<Element | null>(null);
 
   const icons = useIcons();
   const filterIconElement = React.createElement(icons.ColumnFiltering!, {});
 
-  const hideTimeout = React.useRef<any>();
-  const hidePreferences = React.useCallback(() => {
-    setGridState((state) => ({ ...state, preferencePanel: { open: false } }));
-    forceUpdate();
-  }, [forceUpdate, setGridState]);
-
-  const hidePreferencesDelayed = React.useCallback(() => {
-    hideTimeout.current = setTimeout(() => hidePreferences(), 100);
-  }, [hidePreferences]);
-  // This is to prevent the preferences from closing when you open a select box, issue with MUI core V4 => Fixed in V5
-  const dontHidePanel = React.useCallback(() => {
-    setImmediate(() => clearTimeout(hideTimeout.current));
-  }, []);
-
-  useApiEventHandler(apiRef!, PREVENT_HIDE_PREFERENCES, dontHidePanel);
-
   const changeTab = React.useCallback(
     (event: React.ChangeEvent<{}>, newValue: PreferencePanelsValue) => {
-      setGridState((state) => ({
-        ...state,
-        preferencePanel: { ...state.preferencePanel, open: true, openedPanelValue: newValue },
-      }));
-      forceUpdate();
+      apiRef?.current.showPreferences(newValue);
     },
-    [forceUpdate, setGridState],
+    [apiRef],
   );
 
   const updateColumnTarget = React.useCallback(
@@ -100,32 +75,36 @@ export const PreferencesPanel = () => {
     [apiRef],
   );
 
+  const hidePreferences = React.useCallback(()=> {
+    apiRef?.current.hidePreferences();
+  }, [apiRef])
+
   React.useEffect(() => {
-    updateColumnTarget(gridState.preferencePanel);
-  }, [gridState.preferencePanel, updateColumnTarget]);
+    updateColumnTarget(preferencePanelState);
+  }, [preferencePanelState, updateColumnTarget]);
 
   const isColumnsTabOpen =
-    gridState.preferencePanel.openedPanelValue === PreferencePanelsValue.columns;
+    preferencePanelState.openedPanelValue === PreferencePanelsValue.columns;
   const isFiltersTabOpen = !isColumnsTabOpen;
 
   return (
     <Popper
       placement="bottom"
-      open={gridState.preferencePanel.open}
+      open={preferencePanelState.open}
       anchorEl={target || apiRef?.current.rootElementRef!.current}
       style={{ position: 'relative' }}
     >
-      <ClickAwayListener onClickAway={hidePreferencesDelayed}>
+      <ClickAwayListener onClickAway={hidePreferences}>
         <Paper
           square
           className={classes.root}
           style={{
-            maxHeight: gridState.viewportSizes.height,
-            maxWidth: gridState.viewportSizes.width,
+            maxHeight: viewportSizes.height,
+            maxWidth: viewportSizes.width,
           }}
         >
           <Tabs
-            value={gridState.preferencePanel.openedPanelValue}
+            value={preferencePanelState.openedPanelValue}
             variant="fullWidth"
             indicatorColor="primary"
             textColor="primary"

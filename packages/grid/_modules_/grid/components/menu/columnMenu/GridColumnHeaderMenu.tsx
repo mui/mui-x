@@ -1,9 +1,8 @@
 import { MenuItem } from '@material-ui/core';
 import * as React from 'react';
-import { columnsSelector } from '../../../hooks/features/columns/columnsSelector';
+import { ColumnMenuState } from '../../../hooks/features/columnMenu/columnMenuState';
 import { GridState } from '../../../hooks/features/core/gridState';
-import { useGridState } from '../../../hooks/features/core/useGridState';
-import { ColDef } from '../../../models/colDef/colDef';
+import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { findHeaderElementFromField } from '../../../utils/domUtils';
 import { ApiContext } from '../../api-context';
 import { ColumnHeaderMenuIcon } from '../../column-header-menu-icon';
@@ -11,35 +10,22 @@ import { GridMenu } from '../GridMenu';
 import { FilterMenuItem } from './FilterMenuItem';
 import { SortMenuItems } from './SortMenuItems';
 
-export interface ColumnMenuState {
-  open: boolean;
-  field?: string;
-}
-
-const openMenuColumnSelector = (state: GridState): ColDef | null => {
-  const columnMenu = state.columnMenu;
-  if (columnMenu.open && columnMenu.field) {
-    const cols = columnsSelector(state);
-    return cols.lookup[columnMenu.field];
-  }
-  return null;
-};
+const columnMenuStateSelector = (state: GridState)=> state.columnMenu;
 
 export const GridColumnHeaderMenu: React.FC<{}> = () => {
   const apiRef = React.useContext(ApiContext);
-  const [gridState, setGridState, forceUpdate] = useGridState(apiRef!);
-  const currentColumn = openMenuColumnSelector(gridState);
+  const columnMenuState = useGridSelector(apiRef!,  columnMenuStateSelector);
+  const currentColumn = columnMenuState.field ? apiRef?.current.getColumnFromField(columnMenuState.field) : null;
   const [target, setTarget] = React.useState<Element | null>(null);
 
   // TODO: Fix issue with portal in V5
   const hideTimeout = React.useRef<any>();
   const hideMenu = React.useCallback(() => {
-    setGridState((state) => ({ ...state, columnMenu: { open: false } }));
-    forceUpdate();
-  }, [forceUpdate, setGridState]);
+    apiRef?.current.hideColumnMenu();
+  }, [apiRef]);
 
   const hideMenuDelayed = React.useCallback(() => {
-    hideTimeout.current = setTimeout(() => hideMenu(), 50);
+    hideTimeout.current = setTimeout(hideMenu, 50);
   }, [hideMenu]);
 
   const updateColumnMenu = React.useCallback(
@@ -69,15 +55,15 @@ export const GridColumnHeaderMenu: React.FC<{}> = () => {
   );
 
   React.useEffect(() => {
-    updateColumnMenu(gridState.columnMenu);
-  }, [gridState.columnMenu, updateColumnMenu]);
+    updateColumnMenu(columnMenuState);
+  }, [columnMenuState, updateColumnMenu]);
 
   if (!target) {
     return null;
   }
   return (
     <GridMenu
-      open={gridState.columnMenu.open}
+      open={columnMenuState.open}
       target={target}
       onKeyDown={handleListKeyDown}
       onClickAway={hideMenuDelayed}

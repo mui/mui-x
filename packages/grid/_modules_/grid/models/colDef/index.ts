@@ -7,3 +7,5 @@ export * from './numericColDef';
 export * from './stringColDef';
 export * from './colTypeDef';
 export * from './defaultColumnTypes';
+export { FilterOperator } from '../filterOperator';
+export { STRING_OPERATORS } from './stringOperators';

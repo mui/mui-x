@@ -1,14 +1,14 @@
-import { makeStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-import { Button, Theme } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import { Button } from '@material-ui/core';
 import { useGridState } from '../../hooks/features/core/useGridState';
 import { PREVENT_HIDE_PREFERENCES } from '../../constants/index';
-import { FilterItem, LinkOperator } from '../../hooks/features/filter/visibleRowsState';
+import { FilterItem, LinkOperator } from '../../models/filterItem';
 import { ApiContext } from '../api-context';
 import { AddIcon, CloseIcon } from '../icons/index';
 import { FilterForm } from './FilterForm';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   filterPanelMainContainer: {
     display: 'flex',
     flexDirection: 'column',

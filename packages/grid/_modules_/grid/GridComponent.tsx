@@ -18,6 +18,7 @@ import { Viewport } from './components/viewport';
 import { Watermark } from './components/watermark';
 import { DATA_CONTAINER_CSS_CLASS } from './constants/cssClassesConstants';
 import { GridComponentProps } from './GridComponentProps';
+import { useColumnMenu } from './hooks/features/columnMenu/useColumnMenu';
 import { useColumns } from './hooks/features/columns/useColumns';
 import { useGridState } from './hooks/features/core/useGridState';
 import { usePagination } from './hooks/features/pagination/usePagination';
@@ -74,6 +75,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useKeyboard(rootContainerRef, apiRef);
     useSelection(apiRef);
     useSorting(apiRef);
+    useColumnMenu(apiRef);
     useFilter(apiRef);
 
     useContainerProps(windowRef, apiRef);

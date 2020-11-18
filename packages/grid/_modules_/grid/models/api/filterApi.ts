@@ -1,4 +1,5 @@
-import { FilterItem, LinkOperator } from '../../hooks/features/filter/visibleRowsState';
+
+import { FilterItem, LinkOperator } from '../filterItem';
 
 export interface FilterApi {
   showFilterPanel: (targetColumnField?: string) => void;

@@ -1,14 +1,9 @@
-import * as React from 'react';
 import { TextField } from '@material-ui/core';
-import { FilterItem } from '../../hooks/features/filter/visibleRowsState';
+import * as React from 'react';
 import { LoadIcon } from '../icons/index';
+import { FilterInputValueProps } from './StringFilterInputValueProps';
 
 const SUBMIT_FILTER_STROKE_TIME = 500;
-
-export interface FilterInputValueProps {
-  item: FilterItem;
-  applyValue: (value: FilterItem) => void;
-}
 
 export const StringFilterInputValue: React.FC<FilterInputValueProps> = ({ item, applyValue }) => {
   const filterTimeout = React.useRef<any>();

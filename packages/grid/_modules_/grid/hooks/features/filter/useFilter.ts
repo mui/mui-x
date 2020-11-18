@@ -1,28 +1,27 @@
 import * as React from 'react';
-import { PreferencePanelsValue } from '../../../components/tools/Preferences';
 import { ApiRef } from '../../../models/api/apiRef';
+import { FilterItem, LinkOperator } from '../../../models/filterItem';
 import { buildCellParams } from '../../../utils/paramsUtils';
 import { isEqual } from '../../../utils/utils';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useLogger } from '../../utils/useLogger';
+import { PreferencePanelsValue } from '../preferencesPanel/preferencesPanelValue';
 import { filterableColumnsSelector } from '../columns/columnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { sortedRowsSelector } from '../sorting/sortingSelector';
+import { getInitialFilterState} from './FilterModelState';
 import {
-  FilterItem,
-  getInitialFilterState,
   getInitialVisibleRowsState,
-  LinkOperator,
+
 } from './visibleRowsState';
 
 export const useFilter = (apiRef: ApiRef): void => {
   const logger = useLogger('useFilter');
-  const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
+  const [, setGridState, forceUpdate] = useGridState(apiRef);
 
   const rows = useGridSelector(apiRef, sortedRowsSelector);
   const filterableColumns = useGridSelector(apiRef, filterableColumnsSelector);
-  // const visibleRowsState = useGridSelector(apiRef, visibleRowsStateSelector);
 
   const clearFilteredRows = React.useCallback(() => {
     setGridState((state) => ({
@@ -158,7 +157,7 @@ export const useFilter = (apiRef: ApiRef): void => {
       }
       applyFilters();
     },
-    [applyFilters, setGridState],
+    [applyFilters, setGridState, upsertFilter],
   );
 
   const showFilterPanel = React.useCallback(

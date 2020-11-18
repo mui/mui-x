@@ -1,10 +1,10 @@
-import { FormControl, IconButton, InputLabel, MenuItem, Select, Theme } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 import * as React from 'react';
+import { FormControl, IconButton, InputLabel, Select } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { filterableColumnsSelector } from '../../hooks/features/columns/columnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { FilterItem, LinkOperator } from '../../hooks/features/filter/visibleRowsState';
 import { ColDef } from '../../models/colDef/colDef';
+import { FilterItem, LinkOperator } from '../../models/filterItem';
 import { ApiContext } from '../api-context';
 import { CloseIcon } from '../icons/index';
 
@@ -19,7 +19,7 @@ export interface FilterFormProps {
   onSelectOpen: (event: React.ChangeEvent<{}>) => void;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     justifyContent: 'space-around',

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { OptionsContext } from '../../components/options-context';
-import { IconsOptions } from '../../models';
+import { IconsOptions } from '../../models/gridOptions';
 
 export function useIcons(): IconsOptions {
   const options = React.useContext(OptionsContext);

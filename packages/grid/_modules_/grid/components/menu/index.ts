@@ -1,2 +1,2 @@
-export * from './columnMenu/';
+export * from './columnMenu';
 export * from './GridMenu';
