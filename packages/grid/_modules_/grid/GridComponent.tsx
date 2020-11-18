@@ -42,6 +42,7 @@ import { getCurryTotalHeight } from './utils/getTotalHeight';
 import { ApiContext } from './components/api-context';
 import { OptionsContext } from './components/options-context';
 import { RenderContext } from './components/render-context';
+import { DensityPicker } from './components/DensityPicker';
 
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {
@@ -132,6 +133,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                   {customComponents.headerComponent || (
                     <GridToolbar>
                       {/* The components for the separate features go in here */}
+                      <DensityPicker />
                     </GridToolbar>
                   )}
                   <div className="MuiDataGrid-mainGridContainer">

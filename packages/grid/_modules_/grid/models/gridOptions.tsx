@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { ArrowDownwardIcon, ArrowUpwardIcon, SeparatorIcon } from '../components/icons/index';
+import {
+  ArrowDownwardIcon,
+  ArrowUpwardIcon,
+  SeparatorIcon,
+  ViewHeadlineIcon,
+  TableRowsIcon,
+  ViewStreamIcon,
+} from '../components/icons/index';
 import { Logger } from '../hooks/utils/useLogger';
 import { ColumnTypesRecord } from './colDef/colTypeDef';
 import { DEFAULT_COLUMN_TYPES } from './colDef/defaultColumnTypes';
@@ -12,6 +19,17 @@ import { RowSelectedParams } from './params/rowSelectedParams';
 import { SelectionChangeParams } from './params/selectionChangeParams';
 import { SortModelParams } from './params/sortModelParams';
 import { SortDirection, SortModel } from './sortModel';
+
+export enum DensityTypes {
+  Short = 'short',
+  Medium = 'medium',
+  Tall = 'tall',
+}
+
+export interface DensityOption {
+  icon: React.ReactElement;
+  label: DensityTypes;
+}
 
 /**
  * Set of icons used in the grid component UI.
@@ -29,6 +47,12 @@ export interface IconsOptions {
    * Icon displayed in between 2 column headers that allows to resize the column header.
    */
   columnResize?: React.ElementType<{ className: string }>;
+
+  densityShort?: React.ElementType;
+
+  densityMedium?: React.ElementType;
+
+  densityTall?: React.ElementType;
 }
 
 // TODO add multiSortKey
@@ -252,6 +276,8 @@ export interface GridOptions {
    * Extend native column types with your new column types.
    */
   columnTypes: ColumnTypesRecord;
+
+  density: DensityTypes;
 }
 
 /**
@@ -268,9 +294,13 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   sortingMode: FeatureModeConstant.client,
   sortingOrder: ['asc', 'desc', null],
   columnTypes: DEFAULT_COLUMN_TYPES,
+  density: DensityTypes.Medium,
   icons: {
     columnSortedAscending: ArrowUpwardIcon,
     columnSortedDescending: ArrowDownwardIcon,
     columnResize: SeparatorIcon,
+    densityShort: ViewHeadlineIcon,
+    densityMedium: TableRowsIcon,
+    densityTall: ViewStreamIcon,
   },
 };

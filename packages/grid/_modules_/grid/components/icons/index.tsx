@@ -12,3 +12,18 @@ export const ArrowDownwardIcon = createSvgIcon(
 );
 
 export const SeparatorIcon = createSvgIcon(<path d="M11 19V5h2v14z" />, 'Separator');
+
+export const ViewHeadlineIcon = createSvgIcon(
+  <path d="M4 15h16v-2H4v2zm0 4h16v-2H4v2zm0-8h16V9H4v2zm0-6v2h16V5H4z" />,
+  'ViewHeadline',
+);
+
+export const TableRowsIcon = createSvgIcon(
+  <path d="M21,8H3V4h18V8z M21,10H3v4h18V10z M21,16H3v4h18V16z" />,
+  'TableRows',
+);
+
+export const ViewStreamIcon = createSvgIcon(
+  <React.Fragment><path d="M0 0h24v24H0z" fill="none"/><path d="M4 18h17v-6H4v6zM4 5v6h17V5H4z"/></React.Fragment>,
+  'ViewStream',
+);

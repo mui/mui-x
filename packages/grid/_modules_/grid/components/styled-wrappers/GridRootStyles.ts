@@ -52,6 +52,9 @@ export const useStyles = makeStyles(
           backgroundColor: theme.palette.background.default,
           border: `1px solid ${borderColor}`,
         },
+        '& .MuiDataGrid-toolbarElement': {
+          padding: theme.spacing(1),
+        },
         '& .MuiDataGrid-columnsContainer': {
           position: 'absolute',
           top: 0,
