@@ -1,3 +1,5 @@
+import { Button } from '@material-ui/core';
+import { randomInt } from '@material-ui/x-grid-data-generator';
 import * as React from 'react';
 import {
   ColDef,
@@ -429,6 +431,39 @@ export const ServerSideSorting = () => {
         sortModel={sortBy}
         loading={loading}
       />
+    </div>
+  );
+};
+
+export const ResetSortingRows = () => {
+  const columns = [
+    {
+      field: 'name',
+      width: 200,
+    },
+    {
+      field: 'team',
+      width: 200,
+      type: 'number',
+    },
+  ];
+  const [rows, setRows] = React.useState<RowsProp>([]);
+
+  const createRandomRows = () => {
+    const randomRows: any[] = [];
+
+    for (let i = 0; i < 10; i += 1) {
+      const id = randomInt(0, 100000).toString();
+      randomRows.push({ id, name: 'name test', team: id });
+    }
+
+    setRows(randomRows);
+  };
+
+  return (
+    <div className="grid-container" style={{ flexDirection: 'column' }}>
+      <Button onClick={() => createRandomRows()}>Random Rows</Button>
+      <XGrid rows={rows} columns={columns} sortModel={[{ field: 'team', sort: 'asc' }]} />
     </div>
   );
 };
