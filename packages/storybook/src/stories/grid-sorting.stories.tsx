@@ -462,13 +462,9 @@ export const ResetSortingRows = () => {
   };
 
   return (
-    <div className="grid-container" style={{flexDirection: 'column'}}>
+    <div className="grid-container" style={{ flexDirection: 'column' }}>
       <Button onClick={() => createRandomRows()}>Random Rows</Button>
-      <XGrid
-        rows={rows}
-        columns={columns}
-        sortModel={[{field: 'team', sort: 'asc'}]}
-      />
+      <XGrid rows={rows} columns={columns} sortModel={[{ field: 'team', sort: 'asc' }]} />
     </div>
   );
 };

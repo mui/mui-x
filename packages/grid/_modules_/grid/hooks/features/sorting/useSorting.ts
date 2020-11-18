@@ -26,7 +26,7 @@ import { columnsSelector } from '../columns/columnsSelector';
 import { GridState } from '../core/gridState';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
-import { rowCountSelector, unorderedRowModelsSelector } from '../rows/rowsSelector';
+import { rowCountSelector } from '../rows/rowsSelector';
 import { SortingState } from './sortingState';
 
 export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
@@ -38,7 +38,6 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   const options = useGridSelector(apiRef, optionsSelector);
   const columns = useGridSelector(apiRef, columnsSelector);
   const rowCount = useGridSelector(apiRef, rowCountSelector);
-  const unorderedRows = useGridSelector(apiRef, unorderedRowModelsSelector);
 
   const getSortModelParams = React.useCallback(
     (sortModel: SortModel): SortModelParams => ({
@@ -127,10 +126,11 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   );
 
   const applySorting = React.useCallback(() => {
+    const rowModels = apiRef.current.getRowModels();
     const sortModel = apiRef.current.getState<GridState>().sorting.sortModel;
     logger.info('Sorting rows with ', sortModel);
 
-    const sorted = [...unorderedRows];
+    const sorted = [...rowModels];
     if (sortModel.length > 0) {
       comparatorList.current = buildComparatorList(sortModel);
       sorted.sort(comparatorListAggregate);
@@ -143,15 +143,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
       };
     });
     forceUpdate();
-  }, [
-    apiRef,
-    logger,
-    unorderedRows,
-    setGridState,
-    forceUpdate,
-    buildComparatorList,
-    comparatorListAggregate,
-  ]);
+  }, [apiRef, logger, setGridState, forceUpdate, buildComparatorList, comparatorListAggregate]);
 
   const setSortModel = React.useCallback(
     (sortModel: SortModel) => {
@@ -237,12 +229,9 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   useApiMethod(apiRef, sortApi, 'SortApi');
 
   React.useEffect(() => {
-    // When the rows prop change, we reset the sortedRows state.
-    setGridState((state) => ({
-      ...state,
-      sorting: { ...state.sorting, sortedRows: rowsProp.map((row) => row.id) },
-    }));
-  }, [rowsProp, setGridState]);
+    // When the rows prop change, we re apply the sorting.
+    apiRef.current.applySorting();
+  }, [apiRef, rowsProp]);
 
   React.useEffect(() => {
     if (rowCount > 0 && options.sortingMode === FeatureModeConstant.client) {
@@ -276,7 +265,8 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
 
   React.useEffect(() => {
     const sortModel = options.sortModel || [];
-    if (sortModel.length > 0) {
+    const oldSortModel = apiRef.current.state.sorting.sortModel;
+    if (sortModel.length > 0 && !isEqual(sortModel, oldSortModel)) {
       // we use apiRef to avoid watching setSortModel as it will trigger an update on every state change
       apiRef.current.setSortModel(sortModel);
     }
