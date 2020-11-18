@@ -14,7 +14,7 @@ export interface CellParams {
    */
   field: string;
   /**
-   * The cell value.
+   * The cell value, but if the column has valueGetter, use getValue.
    */
   value: CellValue;
   /**
