@@ -90,7 +90,7 @@ export const PreferencesPanel = () => {
   }, [apiRef]);
 
   React.useEffect(() => {
-    if(columns.length > 0) {
+    if (columns.length > 0) {
       updateColumnTarget(preferencePanelState);
     }
   }, [preferencePanelState, updateColumnTarget, columns]);

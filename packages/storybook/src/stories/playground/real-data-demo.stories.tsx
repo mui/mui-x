@@ -167,7 +167,12 @@ export function CommodityPreferencesDefaultOpen() {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} {...getGridOptions()} state={{preferencePanel: {open: true}}}/>
+      <XGrid
+        rows={data.rows}
+        columns={data.columns}
+        {...getGridOptions()}
+        state={{ preferencePanel: { open: true } }}
+      />
     </div>
   );
 }
@@ -177,7 +182,18 @@ export function CommodityPreferences() {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} {...getGridOptions()} state={{preferencePanel: {open: true, targetField: 'commodity', openedPanelValue:PreferencePanelsValue.columns}}}/>
+      <XGrid
+        rows={data.rows}
+        columns={data.columns}
+        {...getGridOptions()}
+        state={{
+          preferencePanel: {
+            open: true,
+            targetField: 'commodity',
+            openedPanelValue: PreferencePanelsValue.columns,
+          },
+        }}
+      />
     </div>
   );
 }

@@ -2,13 +2,15 @@ import { getInitialColumnsState, InternalColumns } from '../../../models/colDef/
 import { ContainerProps, ScrollBarState, ViewportSizeState } from '../../../models/containerProps';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
 import { ColumnMenuState } from '../columnMenu/columnMenuState';
-import { ColumnReorderState, getInitialColumnReorderState } from '../columnReorder/columnReorderState';
+import {
+  ColumnReorderState,
+  getInitialColumnReorderState,
+} from '../columnReorder/columnReorderState';
 import { FilterModelState, getInitialFilterState } from '../filter/FilterModelState';
 import { getInitialVisibleRowsState, VisibleRowsState } from '../filter/visibleRowsState';
 import { KeyboardState } from '../keyboard/keyboardState';
 import { INITIAL_PAGINATION_STATE, PaginationState } from '../pagination/paginationReducer';
 import { PreferencePanelState } from '../preferencesPanel/preferencePanelState';
-import { PreferencePanelsValue } from '../preferencesPanel/preferencesPanelValue';
 import { getInitialRowState, InternalRowsState } from '../rows/rowsState';
 import { SelectionState } from '../selection/selectionState';
 import { getInitialSortingState, SortingState } from '../sorting/sortingState';

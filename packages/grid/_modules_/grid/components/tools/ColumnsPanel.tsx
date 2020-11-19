@@ -1,4 +1,3 @@
-import { Grid } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -29,15 +28,15 @@ const useStyles = makeStyles(() => ({
     flex: '0 1 50px',
   },
   gridListRoot: {
-    maxWidth: '100%'
-  }
+    maxWidth: '100%',
+  },
 }));
 
 export const ColumnsPanel: React.FC<{}> = () => {
   const classes = useStyles();
 
   const apiRef = React.useContext(ApiContext);
-  const columns = useGridSelector(apiRef, allColumnsSelector)
+  const columns = useGridSelector(apiRef, allColumnsSelector);
 
   const dontHidePreferences = React.useCallback(
     (event: React.ChangeEvent<{}>) => {
@@ -47,38 +46,48 @@ export const ColumnsPanel: React.FC<{}> = () => {
     [apiRef],
   );
 
-  const toggleColumn = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    dontHidePreferences(event);
-    apiRef!.current.toggleColumn(event.target.name, !event.target.checked);
-  }, [apiRef, dontHidePreferences]);
+  const toggleColumn = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      dontHidePreferences(event);
+      apiRef!.current.toggleColumn(event.target.name, !event.target.checked);
+    },
+    [apiRef, dontHidePreferences],
+  );
 
-  const showAllColumns = React.useCallback((event: React.MouseEvent<HTMLElement>) => {
-    dontHidePreferences(event);
-    apiRef!.current.updateColumns(columns.filter(col=> col.hide).map(col=> {
-      col.hide = false;
-      return col;
-    }));
-  }, [apiRef, columns, dontHidePreferences]);
+  const showAllColumns = React.useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      dontHidePreferences(event);
+      apiRef!.current.updateColumns(
+        columns
+          .filter((col) => col.hide)
+          .map((col) => {
+            col.hide = false;
+            return col;
+          }),
+      );
+    },
+    [apiRef, columns, dontHidePreferences],
+  );
 
   return (
     <React.Fragment>
       <div className={classes.panelMainContainer}>
-        <GridList cellHeight={'auto'} className={classes.gridListRoot} >
-        {columns.map((column) => (
-          <ListItem key={column.field}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={!column.hide}
-                  onChange={toggleColumn}
-                  name={column.field}
-                  color="primary"
-                />
-              }
-              label={column.headerName || column.field}
-            />
-          </ListItem>
-        ))}
+        <GridList cellHeight={'auto'} className={classes.gridListRoot}>
+          {columns.map((column) => (
+            <ListItem key={column.field}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={!column.hide}
+                    onChange={toggleColumn}
+                    name={column.field}
+                    color="primary"
+                  />
+                }
+                label={column.headerName || column.field}
+              />
+            </ListItem>
+          ))}
         </GridList>
       </div>
       <div className={classes.panelFooter}>

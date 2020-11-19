@@ -230,12 +230,15 @@ export function useColumns(columns: Columns, apiRef: ApiRef): InternalColumns {
   );
 
   const updateColumn = React.useCallback((col: ColDef) => updateColumns([col]), [updateColumns]);
-  const toggleColumn = React.useCallback((field: string, hide: boolean) => {
-    const col = getColumnFromField(field);
-    const updatedCol = {...col, hide};
-    updateColumns([updatedCol])
-    forceUpdate();
-  }, [forceUpdate, getColumnFromField, updateColumns]);
+  const toggleColumn = React.useCallback(
+    (field: string, hide: boolean) => {
+      const col = getColumnFromField(field);
+      const updatedCol = { ...col, hide };
+      updateColumns([updatedCol]);
+      forceUpdate();
+    },
+    [forceUpdate, getColumnFromField, updateColumns],
+  );
 
   const colApi: ColumnApi = {
     getColumnFromField,
@@ -246,7 +249,7 @@ export function useColumns(columns: Columns, apiRef: ApiRef): InternalColumns {
     getColumnsMeta,
     updateColumn,
     updateColumns,
-    toggleColumn
+    toggleColumn,
   };
 
   useApiMethod(apiRef, colApi, 'ColApi');

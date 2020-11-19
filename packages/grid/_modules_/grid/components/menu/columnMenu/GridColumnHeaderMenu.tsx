@@ -1,4 +1,3 @@
-import { MenuItem } from '@material-ui/core';
 import * as React from 'react';
 import { ColumnMenuState } from '../../../hooks/features/columnMenu/columnMenuState';
 import { GridState } from '../../../hooks/features/core/gridState';
@@ -73,10 +72,7 @@ export const GridColumnHeaderMenu: React.FC<{}> = () => {
     >
       <SortMenuItems onClick={hideMenu} column={currentColumn!} />
       <FilterMenuItem onClick={hideMenu} column={currentColumn!} />
-      {/*<MenuItem onClick={hideMenuDelayed} disabled>*/}
-      {/*  Auto size*/}
-      {/*</MenuItem>*/}
-     <HideColMenuItem onClick={hideMenu} column={currentColumn!} />
+      <HideColMenuItem onClick={hideMenu} column={currentColumn!} />
     </GridMenu>
   );
 };

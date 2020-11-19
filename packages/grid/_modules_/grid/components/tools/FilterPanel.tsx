@@ -72,7 +72,7 @@ export const FilterPanel: React.FC<{}> = () => {
   );
 
   React.useEffect(() => {
-    if(gridState.filter.items.length === 0 ) {
+    if (gridState.filter.items.length === 0) {
       addNewFilter();
     }
   }, [addNewFilter, gridState.filter.items.length]);
