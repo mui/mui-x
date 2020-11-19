@@ -71,6 +71,12 @@ export const FilterPanel: React.FC<{}> = () => {
     [apiRef],
   );
 
+  React.useEffect(() => {
+    if(gridState.filter.items.length === 0 ) {
+      addNewFilter();
+    }
+  }, [addNewFilter, gridState.filter.items.length]);
+
   return (
     <React.Fragment>
       <div className={classes.filterPanelMainContainer}>

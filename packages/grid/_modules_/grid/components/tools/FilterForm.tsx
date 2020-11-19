@@ -36,7 +36,7 @@ const useStyles = makeStyles(() => ({
     width: 120,
   },
   FilterValueInput: {
-    width: 120,
+    width: 190,
   },
 }));
 
@@ -74,21 +74,29 @@ export const FilterForm: React.FC<FilterFormProps> = ({
     (event: React.ChangeEvent<{ value: unknown }>) => {
       const columnField = event.target.value as string;
       const column = apiRef!.current.getColumnFromField(columnField)!;
+      const newOperator = column.filterOperators![0];
+      setCurrentOperator(newOperator);
       setCurrentColumn(column);
 
-      applyFilterChanges({ ...item, columnField });
+      applyFilterChanges({
+        ...item,
+        value: undefined,
+        columnField,
+        operatorValue: newOperator.value,
+      });
     },
     [apiRef, applyFilterChanges, item],
   );
 
   const changeOperator = React.useCallback(
     (event: React.ChangeEvent<{ value: unknown }>) => {
+      const operatorValue = event.target.value as string;
       applyFilterChanges({
         ...item,
-        operatorValue: event.target.value as string,
+        operatorValue,
       });
       const newOperator =
-        currentColumn!.filterOperators?.find((operator) => operator.value === item.operatorValue) ||
+        currentColumn!.filterOperators?.find((operator) => operator.value === operatorValue) ||
         null;
       setCurrentOperator(newOperator);
     },
@@ -169,10 +177,12 @@ export const FilterForm: React.FC<FilterFormProps> = ({
         </Select>
       </FormControl>
       <FormControl className={classes.FilterValueInput}>
-        {currentOperator &&
+        {currentColumn &&
+          currentOperator &&
           React.createElement(currentOperator.InputComponent, {
             item,
             applyValue: applyFilterChanges,
+            ...currentOperator.InputComponentProps,
           })}
       </FormControl>
       <FormControl>

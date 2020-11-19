@@ -1,11 +1,19 @@
 import * as React from 'react';
 import TextField from '@material-ui/core/TextField';
 import { LoadIcon } from '../icons/index';
-import { FilterInputValueProps } from './StringFilterInputValueProps';
+import { FilterInputValueProps } from './FilterInputValueProps';
 
 const SUBMIT_FILTER_STROKE_TIME = 500;
 
-export const StringFilterInputValue: React.FC<FilterInputValueProps> = ({ item, applyValue }) => {
+export interface TypeFilterInputValueProps extends FilterInputValueProps {
+  type?: 'text' | 'number' | 'date' | 'datetime-local';
+}
+
+export const FilterInputValue: React.FC<TypeFilterInputValueProps> = ({
+  item,
+  applyValue,
+  type,
+}) => {
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
   const [applying, setIsApplying] = React.useState(false);
@@ -30,14 +38,18 @@ export const StringFilterInputValue: React.FC<FilterInputValueProps> = ({ item, 
     };
   }, []);
 
+  const inputProps = applying ? { endAdornment: <LoadIcon /> } : undefined;
+
   return (
     <TextField
       label={'Value'}
       placeholder={'Filter value'}
       value={filterValueState}
       onChange={onFilterChange}
-      InputProps={{
-        endAdornment: applying && <LoadIcon />,
+      type={type || 'text'}
+      InputProps={inputProps}
+      InputLabelProps={{
+        shrink: true,
       }}
     />
   );

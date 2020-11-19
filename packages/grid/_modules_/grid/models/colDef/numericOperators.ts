@@ -3,71 +3,101 @@ import { FilterItem } from '../filterItem';
 import { FilterOperator } from '../filterOperator';
 import { ColDef } from './colDef';
 
-export const STRING_OPERATORS: FilterOperator[] = [
+export const NUMERIC_OPERATORS: FilterOperator[] = [
   {
-    label: 'contains',
-    value: 'contains',
+    label: '=',
+    value: '=',
     getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
 
-      const filterRegex = new RegExp(filterItem.value, 'i');
       return (params): boolean => {
         const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
-        return filterRegex.test(rowValue?.toString() || '');
+        return Number(rowValue) === Number(filterItem.value);
       };
     },
     InputComponent: FilterInputValue,
+    InputComponentProps: { type: 'number' },
   },
   {
-    label: 'equals',
-    value: 'equals',
-    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
-      if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
-        return null;
-      }
-      return (params): boolean => {
-        const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
-        return (
-          filterItem.value?.localeCompare(rowValue?.toString() || '', undefined, {
-            sensitivity: 'base',
-          }) === 0
-        );
-      };
-    },
-    InputComponent: FilterInputValue,
-  },
-  {
-    label: 'starts with',
-    value: 'start',
+    label: '!=',
+    value: '!=',
     getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
 
-      const filterRegex = new RegExp(`^${filterItem.value}.*$`, 'i');
       return (params): boolean => {
         const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
-        return filterRegex.test(rowValue?.toString() || '');
+        return Number(rowValue) !== Number(filterItem.value);
       };
     },
     InputComponent: FilterInputValue,
+    InputComponentProps: { type: 'number' },
   },
   {
-    label: 'ends with',
-    value: 'end',
+    label: '>',
+    value: '>',
     getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
 
-      const filterRegex = new RegExp(`.*${filterItem.value}$`, 'i');
       return (params): boolean => {
         const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
-        return filterRegex.test(rowValue?.toString() || '');
+        return Number(rowValue) > Number(filterItem.value);
       };
     },
     InputComponent: FilterInputValue,
+    InputComponentProps: { type: 'number' },
+  },
+  {
+    label: '>=',
+    value: '>=',
+    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
+      if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
+        return null;
+      }
+
+      return (params): boolean => {
+        const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
+        return Number(rowValue) >= Number(filterItem.value);
+      };
+    },
+    InputComponent: FilterInputValue,
+    InputComponentProps: { type: 'number' },
+  },
+  {
+    label: '<',
+    value: '<',
+    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
+      if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
+        return null;
+      }
+
+      return (params): boolean => {
+        const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
+        return Number(rowValue) < Number(filterItem.value);
+      };
+    },
+    InputComponent: FilterInputValue,
+    InputComponentProps: { type: 'number' },
+  },
+  {
+    label: '<=',
+    value: '<=',
+    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
+      if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
+        return null;
+      }
+
+      return (params): boolean => {
+        const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
+        return Number(rowValue) <= Number(filterItem.value);
+      };
+    },
+    InputComponent: FilterInputValue,
+    InputComponentProps: { type: 'number' },
   },
 ];
