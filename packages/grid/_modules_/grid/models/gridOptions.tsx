@@ -20,17 +20,6 @@ import { SelectionChangeParams } from './params/selectionChangeParams';
 import { SortModelParams } from './params/sortModelParams';
 import { SortDirection, SortModel } from './sortModel';
 
-export enum DensityTypes {
-  Short = 'short',
-  Medium = 'medium',
-  Tall = 'tall',
-}
-
-export interface DensityOption {
-  icon: React.ReactElement;
-  label: DensityTypes;
-}
-
 /**
  * Set of icons used in the grid component UI.
  */
@@ -53,6 +42,20 @@ export interface IconsOptions {
   densityMedium?: React.ElementType;
 
   densityTall?: React.ElementType;
+}
+
+/**
+ * Available density types.
+ */
+export type Density = 'short' | 'medium' | 'tall';
+
+/**
+ * Density enum.
+ */
+export enum DensityTypes {
+  Short = 'short',
+  Medium = 'medium',
+  Tall = 'tall',
 }
 
 // TODO add multiSortKey
@@ -276,8 +279,10 @@ export interface GridOptions {
    * Extend native column types with your new column types.
    */
   columnTypes: ColumnTypesRecord;
-
-  density: DensityTypes;
+  /**
+   * Set the density of the grid.
+   */
+  density: Density;
 }
 
 /**

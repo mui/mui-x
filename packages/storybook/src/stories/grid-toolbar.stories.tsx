@@ -21,7 +21,7 @@ export const DensityPicker = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} />
+      <XGrid rows={data.rows} columns={data.columns} rowHeight={30} />
     </div>
   );
 };

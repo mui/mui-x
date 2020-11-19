@@ -5,13 +5,36 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { useIcons } from '../hooks/utils/useIcons';
-import { OptionsContext } from './options-context';
-import { DensityTypes, DensityOption } from '../models/gridOptions';
+import { ApiContext } from './api-context';
+import { DensityTypes, Density } from '../models/gridOptions';
+import { useGridSelector } from '../hooks/features/core/useGridSelector';
+import { optionsSelector } from '../hooks/utils/useOptionsProp';
+import { useGridState } from '../hooks/features/core/useGridState';
+
+interface DensityConfig {
+  density: Density;
+  headerHeight: number;
+  rowHeight: number;
+}
+
+interface DensityOption {
+  icon: React.ReactElement;
+  label: DensityTypes;
+}
+
+const DENSITY_DIVISOR = 2;
+const DENSITY_MULTIPLIER = 1.5;
 
 export const DensityPicker = React.memo(function DensityPicker() {
-  const { density } = React.useContext(OptionsContext);
-  const [ selectedDensity, setSelectedDensity ] = React.useState(density);
-  const [ anchorEl, setAnchorEl ] = React.useState(null);
+  const api = React.useContext(ApiContext);
+  const options = useGridSelector(api, optionsSelector);
+  const [, setGridState, forceUpdate] = useGridState(api!);
+  const initialDensityConfig = React.useRef<DensityConfig>({
+    density: options.density,
+    headerHeight: options.headerHeight,
+    rowHeight: options.rowHeight,
+  });
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const icons = useIcons();
 
   const DensityShortIcon = icons!.densityShort!;
@@ -33,29 +56,63 @@ export const DensityPicker = React.memo(function DensityPicker() {
     },
   ];
 
-  const handleDensityPickerOpen = (event) => {
-    setAnchorEl(event.currentTarget);
+  const getUpdatedDensityConfig = (newDensity: Density): DensityConfig => {
+    switch (newDensity) {
+      case DensityTypes.Short:
+        return {
+          density: newDensity,
+          headerHeight: Math.floor(initialDensityConfig.current.headerHeight / DENSITY_DIVISOR),
+          rowHeight: Math.floor(initialDensityConfig.current.rowHeight / DENSITY_DIVISOR),
+        };
+      case DensityTypes.Tall:
+        return {
+          density: newDensity,
+          headerHeight: Math.floor(initialDensityConfig.current.headerHeight * DENSITY_MULTIPLIER),
+          rowHeight: Math.floor(initialDensityConfig.current.rowHeight * DENSITY_MULTIPLIER),
+        };
+      default:
+        return {
+          ...initialDensityConfig.current,
+          density: newDensity,
+        };
+    }
   };
 
-  const handleDensityPickerClose = () => {
+  const handleDensityPickerOpen = (event) => setAnchorEl(event.currentTarget);
+  const handleDensityPickerClose = () => setAnchorEl(null);
+
+  const handleUpdateDensity = (newDensity: DensityTypes) => {
     setAnchorEl(null);
+    setGridState((oldState) => ({
+      ...oldState,
+      options: {
+        ...oldState.options,
+        ...getUpdatedDensityConfig(newDensity),
+      },
+    }));
+    forceUpdate();
   };
 
-  const handleSelectDensity = (newDensity) => {
-    // TODO: Update the rowHeight option
-    setSelectedDensity(newDensity);
-    setAnchorEl(null);
-  };
+  React.useEffect(() => {
+    if (initialDensityConfig.current.density !== DensityTypes.Medium) {
+      setGridState((oldState) => ({
+        ...oldState,
+        options: {
+          ...oldState.options,
+          ...getUpdatedDensityConfig(initialDensityConfig.current.density),
+        },
+      }));
+      forceUpdate();
+    }
+  }, [setGridState, forceUpdate]);
 
-  const renderdensityOptions: Array<React.ReactElement> = DensityOptions.map((option, index) => (
+  const renderDensityOptions: Array<React.ReactElement> = DensityOptions.map((option, index) => (
     <MenuItem
       key={index}
-      onClick={() => handleSelectDensity(option.label)}
-      selected={option.label === selectedDensity}
+      onClick={() => handleUpdateDensity(option.label)}
+      selected={option.label === options.density}
     >
-      <ListItemIcon>
-        {option.icon}
-      </ListItemIcon>
+      <ListItemIcon>{option.icon}</ListItemIcon>
       <ListItemText primary={option.label} />
     </MenuItem>
   ));
@@ -88,7 +145,7 @@ export const DensityPicker = React.memo(function DensityPicker() {
         open={Boolean(anchorEl)}
         onClose={handleDensityPickerClose}
       >
-        {renderdensityOptions}
+        {renderDensityOptions}
       </Menu>
     </div>
   );

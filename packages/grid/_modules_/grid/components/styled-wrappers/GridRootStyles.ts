@@ -83,6 +83,8 @@ export const useStyles = makeStyles(
           display: 'flex',
           width: '100%',
           alignItems: 'center',
+          justifyContent: 'center',
+          overflowX: 'hidden',
         },
         '& .MuiDataGrid-colCell, & .MuiDataGrid-cell': {
           WebkitTapHighlightColor: 'transparent',

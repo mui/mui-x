@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GridComponentProps, GridOptionsProp } from '../../GridComponentProps';
 import { ApiRef } from '../../models/api/apiRef';
-import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../models/gridOptions';
+import { DEFAULT_GRID_OPTIONS, DensityTypes, GridOptions } from '../../models/gridOptions';
 import { mergeOptions } from '../../utils/mergeOptions';
 import { GridState } from '../features/core/gridState';
 import { useGridReducer } from '../features/core/useGridReducer';
@@ -69,6 +69,7 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
       showColumnRightBorder: props.showColumnRightBorder,
       sortingOrder: props.sortingOrder,
       sortModel: props.sortModel,
+      density: DensityTypes.Medium,
     }),
     [
       props.pageSize,
