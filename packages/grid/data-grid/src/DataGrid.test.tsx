@@ -25,7 +25,7 @@ describe('<DataGrid />', () => {
         brand: 'Puma',
       },
     ],
-    columns: [{ field: 'brand', width: 180 }],
+    columns: [{ field: 'brand' }],
   };
 
   describe('layout', () => {

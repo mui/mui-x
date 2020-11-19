@@ -1,5 +1,5 @@
-import { TextField } from '@material-ui/core';
 import * as React from 'react';
+import TextField from '@material-ui/core/TextField';
 import { LoadIcon } from '../icons/index';
 import { FilterInputValueProps } from './StringFilterInputValueProps';
 

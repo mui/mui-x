@@ -1,6 +1,10 @@
-import { ClickAwayListener, Paper, Popper, Tab, Tabs, Theme } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 import * as React from 'react';
+import { makeStyles, Theme } from '@material-ui/core/styles';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Paper from '@material-ui/core/Paper';
+import Popper from '@material-ui/core/Popper';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
 import {
   preferencePanelStateSelector,
   viewportSizeStateSelector,
@@ -14,32 +18,36 @@ import { ApiContext } from '../api-context';
 import { ViewWeekIcon } from '../icons/index';
 import { FilterPanel } from './FilterPanel';
 
-export function TabPanel(props) {
-  const { children } = props;
+export const TabPanel: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props) => {
+  const { children, ...rest } = props;
 
   return (
-    <div
-      role="tabpanel"
-      style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', flex: 1 }}
-    >
+    <div role="tabpanel" {...rest}>
       {children}
     </div>
   );
-}
+};
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
+  paper: {
     backgroundColor: theme.palette.background.paper,
     width: 600,
     minHeight: 200,
     display: 'flex',
     flexDirection: 'column',
-    '& .tab': {
-      minWidth: 50,
-    },
-    '& .chip': {
-      margin: 2,
-    },
   },
+  tabsRoot: {
+    flexShrink: 0,
+  },
+  tab: {
+    minWidth: 50,
+  },
+  tabPanel: {
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
+    flex: 1,
+  },
+  // },
 }));
 // TODO refactor tab to navigation with a showNav prop on the component
 // TODO Extract Panel component?
@@ -96,7 +104,7 @@ export const PreferencesPanel = () => {
       <ClickAwayListener onClickAway={hidePreferences}>
         <Paper
           square
-          className={classes.root}
+          className={classes.paper}
           style={{
             maxHeight: viewportSizes.height,
             maxWidth: viewportSizes.width,
@@ -104,6 +112,7 @@ export const PreferencesPanel = () => {
         >
           <Tabs
             value={preferencePanelState.openedPanelValue}
+            className={classes.tabsRoot}
             variant="fullWidth"
             indicatorColor="primary"
             textColor="primary"
@@ -115,22 +124,20 @@ export const PreferencesPanel = () => {
               value={PreferencePanelsValue.filters}
               icon={filterIconElement}
               fullWidth
-              className="tab"
+              className={classes.tab}
               label={'Filters'}
             />
             <Tab
               value={PreferencePanelsValue.columns}
               icon={<ViewWeekIcon />}
               fullWidth
-              className="tab"
+              className={classes.tab}
               label={'Columns'}
             />
           </Tabs>
-          {isColumnsTabOpen && (
-            <TabPanel value={PreferencePanelsValue.columns}>Column Picker here</TabPanel>
-          )}
+          {isColumnsTabOpen && <TabPanel className={classes.tabPanel}>Column Picker here</TabPanel>}
           {isFiltersTabOpen && (
-            <TabPanel value={PreferencePanelsValue.filters}>
+            <TabPanel className={classes.tabPanel}>
               <FilterPanel />
             </TabPanel>
           )}

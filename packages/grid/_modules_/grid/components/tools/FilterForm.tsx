@@ -176,12 +176,7 @@ export const FilterForm: React.FC<FilterFormProps> = ({
           })}
       </FormControl>
       <FormControl>
-        <IconButton
-          color="primary"
-          aria-label="Delete"
-          component="span"
-          onClick={handleDeleteFilter}
-        >
+        <IconButton aria-label="Delete" title="Delete" onClick={handleDeleteFilter} size="small">
           <CloseIcon />
         </IconButton>
       </FormControl>

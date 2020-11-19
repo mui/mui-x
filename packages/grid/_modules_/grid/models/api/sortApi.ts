@@ -25,7 +25,7 @@ export interface SortApi {
    */
   onSortModelChange: (handler: (param: SortModelParams) => void) => () => void;
   /**
-   * Set the sort direction of a column
+   * Set the sort direction of a column.
    * @param column
    * @param direction
    */

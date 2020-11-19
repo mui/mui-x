@@ -158,7 +158,10 @@ export const useStyles = makeStyles(
         },
         '& .MuiDataGrid-menuIcon': {
           visibility: 'hidden',
-          fontSize: 18,
+          fontSize: 20,
+          marginRight: '-6px',
+          display: 'flex',
+          alignItems: 'center',
         },
         '& .MuiDataGrid-colCell:hover .MuiDataGrid-menuIcon': {
           visibility: 'visible',

@@ -5,7 +5,7 @@ import { PreferencePanelsValue } from '../../hooks/features/preferencesPanel/pre
  */
 export interface PreferencesPanelApi {
   /**
-   * Display the preferences panel with the PreferencePanelsValue opened .
+   * Display the preferences panel with the PreferencePanelsValue opened.
    * @param newValue
    */
   showPreferences: (newValue: PreferencePanelsValue) => void;

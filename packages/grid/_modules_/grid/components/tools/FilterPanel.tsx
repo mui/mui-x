@@ -89,10 +89,10 @@ export const FilterPanel: React.FC<{}> = () => {
         ))}
       </div>
       <div className={classes.filterPanelFooter}>
-        <Button onClick={addNewFilter} startIcon={<AddIcon />}>
+        <Button onClick={addNewFilter} startIcon={<AddIcon />} color="primary">
           Filter
         </Button>
-        <Button onClick={clearFilter} startIcon={<CloseIcon />}>
+        <Button onClick={clearFilter} startIcon={<CloseIcon />} color="primary">
           Clear
         </Button>
       </div>
