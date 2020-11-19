@@ -1,21 +1,23 @@
-import * as React from 'react';
-import { makeStyles, Theme } from '@material-ui/core/styles';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
+import * as React from 'react';
+import { allColumnsSelector } from '../../hooks/features/columns/columnsSelector';
+import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import {
   preferencePanelStateSelector,
   viewportSizeStateSelector,
 } from '../../hooks/features/preferencesPanel/preferencePanelSelector';
 import { PreferencePanelState } from '../../hooks/features/preferencesPanel/preferencePanelState';
 import { PreferencePanelsValue } from '../../hooks/features/preferencesPanel/preferencesPanelValue';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { useIcons } from '../../hooks/utils/useIcons';
 import { findHeaderElementFromField } from '../../utils/domUtils';
 import { ApiContext } from '../api-context';
 import { ViewWeekIcon } from '../icons/index';
+import { ColumnsPanel } from './ColumnsPanel';
 import { FilterPanel } from './FilterPanel';
 
 export const TabPanel: React.FC<React.HTMLAttributes<HTMLDivElement>> = (props) => {
@@ -55,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const PreferencesPanel = () => {
   const classes = useStyles();
   const apiRef = React.useContext(ApiContext);
-
+  const columns = useGridSelector(apiRef, allColumnsSelector);
   const preferencePanelState = useGridSelector(apiRef, preferencePanelStateSelector);
   const viewportSizes = useGridSelector(apiRef, viewportSizeStateSelector);
   const [target, setTarget] = React.useState<Element | null>(null);
@@ -72,15 +74,15 @@ export const PreferencesPanel = () => {
 
   const updateColumnTarget = React.useCallback(
     ({ open, targetField }: PreferencePanelState) => {
-      if (targetField && open) {
+      if (open && columns.length > 0) {
         const headerCellEl = findHeaderElementFromField(
           apiRef!.current!.rootElementRef!.current!,
-          targetField!,
+          targetField || columns[0].field,
         );
         setTarget(headerCellEl);
       }
     },
-    [apiRef],
+    [apiRef, columns],
   );
 
   const hidePreferences = React.useCallback(() => {
@@ -88,16 +90,18 @@ export const PreferencesPanel = () => {
   }, [apiRef]);
 
   React.useEffect(() => {
-    updateColumnTarget(preferencePanelState);
-  }, [preferencePanelState, updateColumnTarget]);
+    if(columns.length > 0) {
+      updateColumnTarget(preferencePanelState);
+    }
+  }, [preferencePanelState, updateColumnTarget, columns]);
 
   const isColumnsTabOpen = preferencePanelState.openedPanelValue === PreferencePanelsValue.columns;
-  const isFiltersTabOpen = !isColumnsTabOpen;
+  const isFiltersTabOpen = !preferencePanelState.openedPanelValue || !isColumnsTabOpen;
 
   return (
     <Popper
       placement="bottom"
-      open={preferencePanelState.open}
+      open={columns.length > 0 && preferencePanelState.open}
       anchorEl={target || apiRef?.current.rootElementRef!.current}
       style={{ position: 'relative' }}
     >
@@ -111,7 +115,7 @@ export const PreferencesPanel = () => {
           }}
         >
           <Tabs
-            value={preferencePanelState.openedPanelValue}
+            value={preferencePanelState.openedPanelValue || PreferencePanelsValue.filters}
             className={classes.tabsRoot}
             variant="fullWidth"
             indicatorColor="primary"
@@ -135,7 +139,11 @@ export const PreferencesPanel = () => {
               label={'Columns'}
             />
           </Tabs>
-          {isColumnsTabOpen && <TabPanel className={classes.tabPanel}>Column Picker here</TabPanel>}
+          {isColumnsTabOpen && (
+            <TabPanel className={classes.tabPanel}>
+              <ColumnsPanel />
+            </TabPanel>
+          )}
           {isFiltersTabOpen && (
             <TabPanel className={classes.tabPanel}>
               <FilterPanel />

@@ -292,6 +292,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   sortingMode: FeatureModeConstant.client,
   sortingOrder: ['asc', 'desc', null],
   columnTypes: DEFAULT_COLUMN_TYPES,
+  disableColumnMenu: process.env.NODE_ENV === 'production',
   icons: {
     ColumnFiltering: FilterIcon,
     ColumnMenu: TripleDotsVerticalIcon,

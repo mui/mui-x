@@ -8,6 +8,7 @@ import { ApiContext } from '../../api-context';
 import { ColumnHeaderMenuIcon } from '../../column-header-menu-icon';
 import { GridMenu } from '../GridMenu';
 import { FilterMenuItem } from './FilterMenuItem';
+import { HideColMenuItem } from './HideColMenuItem';
 import { SortMenuItems } from './SortMenuItems';
 
 const columnMenuStateSelector = (state: GridState) => state.columnMenu;
@@ -72,12 +73,10 @@ export const GridColumnHeaderMenu: React.FC<{}> = () => {
     >
       <SortMenuItems onClick={hideMenu} column={currentColumn!} />
       <FilterMenuItem onClick={hideMenu} column={currentColumn!} />
-      <MenuItem onClick={hideMenuDelayed} disabled>
-        Auto size
-      </MenuItem>
-      <MenuItem onClick={hideMenuDelayed} disabled>
-        Hide
-      </MenuItem>
+      {/*<MenuItem onClick={hideMenuDelayed} disabled>*/}
+      {/*  Auto size*/}
+      {/*</MenuItem>*/}
+     <HideColMenuItem onClick={hideMenu} column={currentColumn!} />
     </GridMenu>
   );
 };

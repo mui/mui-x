@@ -1,20 +1,18 @@
 import { getInitialColumnsState, InternalColumns } from '../../../models/colDef/colDef';
+import { ContainerProps, ScrollBarState, ViewportSizeState } from '../../../models/containerProps';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
 import { ColumnMenuState } from '../columnMenu/columnMenuState';
-import { PreferencePanelState } from '../preferencesPanel/preferencePanelState';
+import { ColumnReorderState, getInitialColumnReorderState } from '../columnReorder/columnReorderState';
 import { FilterModelState, getInitialFilterState } from '../filter/FilterModelState';
-import { VisibleRowsState, getInitialVisibleRowsState } from '../filter/visibleRowsState';
-import { SelectionState } from '../selection/selectionState';
-import { getInitialRenderingState, InternalRenderingState } from '../virtualization/renderingState';
+import { getInitialVisibleRowsState, VisibleRowsState } from '../filter/visibleRowsState';
 import { KeyboardState } from '../keyboard/keyboardState';
 import { INITIAL_PAGINATION_STATE, PaginationState } from '../pagination/paginationReducer';
+import { PreferencePanelState } from '../preferencesPanel/preferencePanelState';
+import { PreferencePanelsValue } from '../preferencesPanel/preferencesPanelValue';
 import { getInitialRowState, InternalRowsState } from '../rows/rowsState';
+import { SelectionState } from '../selection/selectionState';
 import { getInitialSortingState, SortingState } from '../sorting/sortingState';
-import { ContainerProps, ScrollBarState, ViewportSizeState } from '../../../models/containerProps';
-import {
-  ColumnReorderState,
-  getInitialColumnReorderState,
-} from '../columnReorder/columnReorderState';
+import { getInitialRenderingState, InternalRenderingState } from '../virtualization/renderingState';
 
 export interface GridState {
   rows: InternalRowsState;

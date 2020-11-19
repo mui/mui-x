@@ -4,6 +4,7 @@ import { ColDef } from './colDef';
 
 export const checkboxSelectionColDef: ColDef = {
   field: '__check__',
+  headerName:'Checkbox Selection',
   description: 'Select Multiple Rows',
   type: 'checkboxSelection',
   width: 48,
