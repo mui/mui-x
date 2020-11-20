@@ -159,7 +159,7 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-menuIcon': {
           visibility: 'hidden',
           fontSize: 20,
-          marginRight: '-6px',
+          marginRight: -6,
           display: 'flex',
           alignItems: 'center',
         },

@@ -16,8 +16,8 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column',
     overflow: 'auto',
     flex: '1 1',
-    paddingTop: 10,
-    paddingLeft: 10,
+    paddingTop: 12,
+    paddingLeft: 12,
   },
   panelFooter: {
     paddingTop: 5,

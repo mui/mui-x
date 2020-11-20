@@ -4,7 +4,6 @@ import { GridState } from '../../../hooks/features/core/gridState';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { findHeaderElementFromField } from '../../../utils/domUtils';
 import { ApiContext } from '../../api-context';
-import { ColumnHeaderMenuIcon } from '../../column-header-menu-icon';
 import { GridMenu } from '../GridMenu';
 import { FilterMenuItem } from './FilterMenuItem';
 import { HideColMenuItem } from './HideColMenuItem';
@@ -76,4 +75,3 @@ export const GridColumnHeaderMenu: React.FC<{}> = () => {
     </GridMenu>
   );
 };
-ColumnHeaderMenuIcon.displayName = 'ColumnHeaderMenuIcon';

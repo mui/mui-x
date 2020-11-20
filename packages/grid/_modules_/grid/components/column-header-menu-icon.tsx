@@ -32,4 +32,4 @@ export const ColumnHeaderMenuIcon: React.FC<ColumnHeaderFilterIconProps> = React
     );
   },
 );
-ColumnHeaderMenuIcon.displayName = 'ColumnHeaderFilterIcon';
+ColumnHeaderMenuIcon.displayName = 'ColumnHeaderMenuIcon';

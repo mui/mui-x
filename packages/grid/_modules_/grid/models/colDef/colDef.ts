@@ -127,7 +127,7 @@ export interface ColDef {
    */
   filterable?: boolean;
   /**
-   * Allows to set the filterOperators for this column
+   * Allows setting the filter operators for this column.
    */
   filterOperators?: FilterOperator[];
 }
