@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.10](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.9...v4.0.0-alpha.10) (Nov 20, 2020)
+
+### @material-ui/x-grid@v4.0.0-alpha.10 / @material-ui/data-grid@v4.0.0-alpha.10
+
+- [DataGrid] Add fluid columns width support (#566) @DanailH
+- [DataGrid] Default toolbar setup (#574) @DanailH
+- [DataGrid] Fix autoHeight computation for custom headers and footers (#597) @DanailH
+- [DataGrid] Fix type definitions (#596) @tooppaaa
+- [DataGrid] Reset sortedRows state on prop change (#599) @dtassone
+
+### Docs
+
+- [docs] Update feature comparison table for Column reorder @DanailH
+
+### Core
+
+- [core] Prepare work for a future public state api (#533) @dtassone
+- [core] Fix yarn prettier write @oliviertassinari
+- [test] Share karma setup (#576) @oliviertassinari
+
 ## [4.0.0-alpha.9](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.8...v4.0.0-alpha.9) (Nov 9, 2020)
 
 ### @material-ui/x-grid@v4.0.0-alpha.9 / @material-ui/data-grid@v4.0.0-alpha.9
@@ -27,7 +47,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Docs
 
 - [docs] Fix links to GitHub (#538) @oliviertassinari
-- [docs] Add more information to readme (#539) @An-prog-hub 
+- [docs] Add more information to readme (#539) @An-prog-hub
 - [docs] Fix the Netlify proxy for localization of X (#536) @oliviertassinari
 - [docs] Add deploy script command @oliviertassinari
 
