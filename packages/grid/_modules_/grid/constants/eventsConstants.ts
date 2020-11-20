@@ -22,6 +22,8 @@ export const COLUMN_HEADER_CLICK = 'columnClick';
 export const COLUMN_HEADER_HOVER = 'columnHeaderHover';
 export const PAGE_CHANGED = 'pageChange';
 export const PAGESIZE_CHANGED = 'pageSizeChange';
+export const COLUMN_FILTER_BUTTON_CLICK = 'colFilterButtonClick';
+export const COLUMN_MENU_BUTTON_CLICK = 'colMenuButtonClick';
 
 export const SCROLLING_START = 'scrolling:start';
 export const SCROLLING = 'scrolling';
@@ -44,3 +46,4 @@ export const SORT_MODEL_CHANGE = 'sortModelChange';
 export const STATE_CHANGE = 'stateChange';
 
 export const MULTIPLE_KEY_PRESS_CHANGED = 'multipleKeyPressChange';
+export const PREVENT_HIDE_PREFERENCES = 'preventHidePreferences';

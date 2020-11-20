@@ -59,7 +59,7 @@ const getColumns: () => ColDef[] = () => [
     description: 'this column has a value getter and is not sortable',
     sortable: false,
     valueGetter: (params) =>
-      `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
+      `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`.trim(),
   },
   {
     field: 'isRegistered',

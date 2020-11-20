@@ -1,13 +1,7 @@
-import * as React from 'react';
-
 /**
  * The events API interface that is available in the grid [[apiRef]].
  */
 export interface EventsApi {
-  /**
-   * The react ref of the grid root container div element.
-   */
-  rootElementRef?: React.RefObject<HTMLDivElement>;
   /**
    * Add a handler that will be triggered when the component unmount.
    * @param handler
