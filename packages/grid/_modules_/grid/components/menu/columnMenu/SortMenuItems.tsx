@@ -2,16 +2,11 @@ import { MenuItem } from '@material-ui/core';
 import * as React from 'react';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { sortModelSelector } from '../../../hooks/features/sorting/sortingSelector';
-import { ColDef } from '../../../models/colDef/colDef';
 import { SortDirection } from '../../../models/sortModel';
 import { ApiContext } from '../../api-context';
+import { FilterItemProps } from './FilterItemProps';
 
-export interface SortMenuItemsProps {
-  column: ColDef;
-  onClick: (event: React.MouseEvent<any>) => void;
-}
-
-export const SortMenuItems: React.FC<SortMenuItemsProps> = ({ column, onClick }) => {
+export const SortMenuItems: React.FC<FilterItemProps> = ({ column, onClick }) => {
   const apiRef = React.useContext(ApiContext);
   const sortModel = useGridSelector(apiRef, sortModelSelector);
 

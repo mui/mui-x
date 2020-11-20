@@ -11,6 +11,7 @@ import { CloseIcon } from '../icons/index';
 
 export interface FilterFormProps {
   item: FilterItem;
+  hasMultipleFilters: boolean;
   showMultiFilterOperators?: boolean;
   multiFilterOperator?: LinkOperator;
   disableMultiFilterOperator?: boolean;
@@ -42,6 +43,7 @@ const useStyles = makeStyles(() => ({
 
 export const FilterForm: React.FC<FilterFormProps> = ({
   item,
+  hasMultipleFilters,
   onSelectOpen,
   deleteFilter,
   applyFilterChanges,
@@ -122,7 +124,11 @@ export const FilterForm: React.FC<FilterFormProps> = ({
     <div className={classes.root}>
       <FormControl
         className={classes.linkOperatorSelect}
-        style={{ width: 60, visibility: showMultiFilterOperators ? 'visible' : 'hidden' }}
+        style={{
+          width: 60,
+          display: hasMultipleFilters ? 'block' : 'none',
+          visibility: showMultiFilterOperators ? 'visible' : 'hidden',
+        }}
       >
         <InputLabel id="columns-filter-operator-select-label">Operators</InputLabel>
         <Select

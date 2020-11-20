@@ -189,7 +189,6 @@ export function CommodityPreferences() {
         state={{
           preferencePanel: {
             open: true,
-            targetField: 'commodity',
             openedPanelValue: PreferencePanelsValue.columns,
           },
         }}

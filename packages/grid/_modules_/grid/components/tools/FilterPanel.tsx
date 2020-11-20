@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import { useGridState } from '../../hooks/features/core/useGridState';
 import { PREVENT_HIDE_PREFERENCES } from '../../constants/index';
@@ -8,26 +7,7 @@ import { ApiContext } from '../api-context';
 import { AddIcon, CloseIcon } from '../icons/index';
 import { FilterForm } from './FilterForm';
 
-const useStyles = makeStyles(() => ({
-  filterPanelMainContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    overflow: 'auto',
-    flex: '1 1',
-  },
-  filterPanelFooter: {
-    paddingTop: 5,
-    display: 'inline-flex',
-    flexFlow: 'wrap',
-    alignItems: 'baseline',
-    justifyContent: 'space-between',
-    flex: '0 1 50px',
-  },
-}));
-
 export const FilterPanel: React.FC<{}> = () => {
-  const classes = useStyles();
-
   const apiRef = React.useContext(ApiContext);
   const [gridState] = useGridState(apiRef!);
   const hasMultipleFilters = React.useMemo(() => gridState.filter.items.length > 1, [
@@ -79,7 +59,7 @@ export const FilterPanel: React.FC<{}> = () => {
 
   return (
     <React.Fragment>
-      <div className={classes.filterPanelMainContainer}>
+      <div className="panelMainContainer">
         {gridState.filter.items.map((item, index) => (
           <FilterForm
             key={item.id}
@@ -87,19 +67,20 @@ export const FilterPanel: React.FC<{}> = () => {
             onSelectOpen={dontHidePreferences}
             applyFilterChanges={applyFilter}
             deleteFilter={deleteFilter}
-            showMultiFilterOperators={hasMultipleFilters && index > 0}
+            hasMultipleFilters={hasMultipleFilters}
+            showMultiFilterOperators={index > 0}
             multiFilterOperator={gridState.filter.linkOperator}
             disableMultiFilterOperator={index !== 1}
             applyMultiFilterOperatorChanges={applyFilterLinkOperator}
           />
         ))}
       </div>
-      <div className={classes.filterPanelFooter}>
-        <Button onClick={addNewFilter} startIcon={<AddIcon />} color="primary">
-          Filter
-        </Button>
+      <div className="panelFooter">
         <Button onClick={clearFilter} startIcon={<CloseIcon />} color="primary">
           Clear
+        </Button>
+        <Button onClick={addNewFilter} startIcon={<AddIcon />} color="primary">
+          Filter
         </Button>
       </div>
     </React.Fragment>

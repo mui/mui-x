@@ -11,12 +11,10 @@ import {
   preferencePanelStateSelector,
   viewportSizeStateSelector,
 } from '../../hooks/features/preferencesPanel/preferencePanelSelector';
-import { PreferencePanelState } from '../../hooks/features/preferencesPanel/preferencePanelState';
 import { PreferencePanelsValue } from '../../hooks/features/preferencesPanel/preferencesPanelValue';
 import { useIcons } from '../../hooks/utils/useIcons';
-import { findHeaderElementFromField } from '../../utils/domUtils';
+import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { ApiContext } from '../api-context';
-import { ViewWeekIcon } from '../icons/index';
 import { ColumnsPanel } from './ColumnsPanel';
 import { FilterPanel } from './FilterPanel';
 
@@ -36,6 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     minHeight: 200,
     display: 'flex',
     flexDirection: 'column',
+    boxShadow: '0px 5px 5px 0px #00000070',
   },
   tabsRoot: {
     flexShrink: 0,
@@ -48,8 +47,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     overflow: 'hidden',
     flex: 1,
+    '& .panelMainContainer': {
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'auto',
+      flex: '1 1',
+      paddingTop: 12,
+      paddingLeft: 12,
+    },
+    '& .panelFooter': {
+      padding: 12,
+      display: 'inline-flex',
+      flexFlow: 'wrap',
+      alignItems: 'baseline',
+      justifyContent: 'space-between',
+      flex: '0 1 50px',
+    },
   },
-  // },
 }));
 // TODO refactor tab to navigation with a showNav prop on the component
 // TODO Extract Panel component?
@@ -58,12 +72,13 @@ export const PreferencesPanel = () => {
   const classes = useStyles();
   const apiRef = React.useContext(ApiContext);
   const columns = useGridSelector(apiRef, allColumnsSelector);
+  const options = useGridSelector(apiRef, optionsSelector);
   const preferencePanelState = useGridSelector(apiRef, preferencePanelStateSelector);
   const viewportSizes = useGridSelector(apiRef, viewportSizeStateSelector);
-  const [target, setTarget] = React.useState<Element | null>(null);
 
   const icons = useIcons();
   const filterIconElement = React.createElement(icons.ColumnFiltering!, {});
+  const columnsIconElement = React.createElement(icons.ColumnSelector!, {});
 
   const changeTab = React.useCallback(
     (event: React.ChangeEvent<{}>, newValue: PreferencePanelsValue) => {
@@ -72,37 +87,27 @@ export const PreferencesPanel = () => {
     [apiRef],
   );
 
-  const updateColumnTarget = React.useCallback(
-    ({ open, targetField }: PreferencePanelState) => {
-      if (open && columns.length > 0) {
-        const headerCellEl = findHeaderElementFromField(
-          apiRef!.current!.rootElementRef!.current!,
-          targetField || columns[0].field,
-        );
-        setTarget(headerCellEl);
-      }
-    },
-    [apiRef, columns],
-  );
-
   const hidePreferences = React.useCallback(() => {
     apiRef?.current.hidePreferences();
   }, [apiRef]);
 
-  React.useEffect(() => {
-    if (columns.length > 0) {
-      updateColumnTarget(preferencePanelState);
-    }
-  }, [preferencePanelState, updateColumnTarget, columns]);
-
   const isColumnsTabOpen = preferencePanelState.openedPanelValue === PreferencePanelsValue.columns;
   const isFiltersTabOpen = !preferencePanelState.openedPanelValue || !isColumnsTabOpen;
+
+  let anchorEl;
+  if (apiRef?.current && apiRef?.current.columnHeadersElementRef!.current) {
+    anchorEl = apiRef?.current.columnHeadersElementRef!.current;
+  }
+
+  if (!anchorEl) {
+    return null;
+  }
 
   return (
     <Popper
       placement="bottom"
       open={columns.length > 0 && preferencePanelState.open}
-      anchorEl={target || apiRef?.current.rootElementRef!.current}
+      anchorEl={anchorEl}
       style={{ position: 'relative' }}
     >
       <ClickAwayListener onClickAway={hidePreferences}>
@@ -124,27 +129,31 @@ export const PreferencesPanel = () => {
             aria-label="scrollable prevent tabs example"
             onChange={changeTab}
           >
-            <Tab
-              value={PreferencePanelsValue.filters}
-              icon={filterIconElement}
-              fullWidth
-              className={classes.tab}
-              label={'Filters'}
-            />
-            <Tab
-              value={PreferencePanelsValue.columns}
-              icon={<ViewWeekIcon />}
-              fullWidth
-              className={classes.tab}
-              label={'Columns'}
-            />
+            {!options.disableColumnFilter && (
+              <Tab
+                value={PreferencePanelsValue.filters}
+                icon={filterIconElement}
+                fullWidth
+                className={classes.tab}
+                label={'Filters'}
+              />
+            )}
+            {!options.disableColumnSelector && (
+              <Tab
+                value={PreferencePanelsValue.columns}
+                icon={columnsIconElement}
+                fullWidth
+                className={classes.tab}
+                label={'Columns'}
+              />
+            )}
           </Tabs>
-          {isColumnsTabOpen && (
+          {!options.disableColumnSelector && isColumnsTabOpen && (
             <TabPanel className={classes.tabPanel}>
               <ColumnsPanel />
             </TabPanel>
           )}
-          {isFiltersTabOpen && (
+          {!options.disableColumnFilter && isFiltersTabOpen && (
             <TabPanel className={classes.tabPanel}>
               <FilterPanel />
             </TabPanel>

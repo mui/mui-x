@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { EventEmitter } from '../../utils/EventEmitter';
 
 /**
@@ -8,6 +9,14 @@ export interface CoreApi extends EventEmitter {
    * Property that comes true when the grid has its EventEmitter initialised.
    */
   isInitialised: boolean;
+  /**
+   * The react ref of the grid root container div element.
+   */
+  rootElementRef?: React.RefObject<HTMLDivElement>;
+  /**
+   * The react ref of the grid column container div element.
+   */
+  columnHeadersElementRef?: React.RefObject<HTMLDivElement>;
   /**
    * Allows to register a handler for an event.
    * @param event

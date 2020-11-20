@@ -11,22 +11,6 @@ import { PREVENT_HIDE_PREFERENCES } from '../../constants/index';
 import { ApiContext } from '../api-context';
 
 const useStyles = makeStyles(() => ({
-  panelMainContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    overflow: 'auto',
-    flex: '1 1',
-    paddingTop: 12,
-    paddingLeft: 12,
-  },
-  panelFooter: {
-    paddingTop: 5,
-    display: 'inline-flex',
-    flexFlow: 'wrap',
-    alignItems: 'baseline',
-    justifyContent: 'space-between',
-    flex: '0 1 50px',
-  },
   gridListRoot: {
     maxWidth: '100%',
   },
@@ -54,24 +38,23 @@ export const ColumnsPanel: React.FC<{}> = () => {
     [apiRef, dontHidePreferences],
   );
 
-  const showAllColumns = React.useCallback(
-    (event: React.MouseEvent<HTMLElement>) => {
-      dontHidePreferences(event);
+  const toggleAllColumns = React.useCallback(
+    (value: boolean) => {
       apiRef!.current.updateColumns(
-        columns
-          .filter((col) => col.hide)
-          .map((col) => {
-            col.hide = false;
-            return col;
-          }),
+        columns.map((col) => {
+          col.hide = value;
+          return col;
+        }),
       );
     },
-    [apiRef, columns, dontHidePreferences],
+    [apiRef, columns],
   );
+  const showAllColumns = React.useCallback(() => toggleAllColumns(false), [toggleAllColumns]);
+  const hideAllColumns = React.useCallback(() => toggleAllColumns(true), [toggleAllColumns]);
 
   return (
     <React.Fragment>
-      <div className={classes.panelMainContainer}>
+      <div className="panelMainContainer">
         <GridList cellHeight={'auto'} className={classes.gridListRoot}>
           {columns.map((column) => (
             <ListItem key={column.field}>
@@ -90,7 +73,10 @@ export const ColumnsPanel: React.FC<{}> = () => {
           ))}
         </GridList>
       </div>
-      <div className={classes.panelFooter}>
+      <div className="panelFooter">
+        <Button onClick={hideAllColumns} color="primary">
+          Hide All
+        </Button>
         <Button onClick={showAllColumns} color="primary">
           Show All
         </Button>

@@ -5,6 +5,7 @@ import {
   SeparatorIcon,
   FilterIcon,
   TripleDotsVerticalIcon,
+  ColumnIcon,
 } from '../components/icons/index';
 import { Logger } from '../hooks/utils/useLogger';
 import { ColumnTypesRecord } from './colDef/colTypeDef';
@@ -31,6 +32,10 @@ export interface IconsOptions {
    * Icon displayed on the column menu filter tab.
    */
   ColumnFiltering?: React.ElementType;
+  /**
+   * Icon displayed on the column menu selector tab.
+   */
+  ColumnSelector?: React.ElementType;
   /**
    * Icon displayed on the side of the column header title when sorted in Ascending order.
    */
@@ -105,6 +110,11 @@ export interface GridOptions {
    * @default false
    */
   disableColumnReorder?: boolean;
+  /**
+   * If `true`, hiding/showing columns is disabled.
+   * @default false
+   */
+  disableColumnSelector?: boolean;
   /**
    * If `true`, the right border of the cells are displayed.
    * @default false
@@ -186,6 +196,11 @@ export interface GridOptions {
    * @default false
    */
   hideFooterPagination?: boolean;
+  /**
+   * If `true`, the toolbar component is hidden.
+   * @default false
+   */
+  hideToolbar?: boolean;
   /**
    * If `true`, the grid get a first column with a checkbox that allows to select rows.
    * @default false
@@ -293,8 +308,12 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   sortingOrder: ['asc', 'desc', null],
   columnTypes: DEFAULT_COLUMN_TYPES,
   disableColumnMenu: process.env.NODE_ENV === 'production',
+  disableColumnFilter: process.env.NODE_ENV === 'production',
+  disableColumnSelector: process.env.NODE_ENV === 'production',
+  hideToolbar: process.env.NODE_ENV === 'production',
   icons: {
     ColumnFiltering: FilterIcon,
+    ColumnSelector: ColumnIcon,
     ColumnMenu: TripleDotsVerticalIcon,
     ColumnSortedAscending: ArrowUpwardIcon,
     ColumnSortedDescending: ArrowDownwardIcon,

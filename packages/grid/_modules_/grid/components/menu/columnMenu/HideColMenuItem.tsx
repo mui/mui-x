@@ -1,15 +1,9 @@
 import { MenuItem } from '@material-ui/core';
 import * as React from 'react';
-import { ColDef } from '../../../models/colDef/colDef';
 import { ApiContext } from '../../api-context';
-import { SortMenuItemsProps } from './SortMenuItems';
+import { FilterItemProps } from './FilterItemProps';
 
-export interface FilterItemProps {
-  column: ColDef;
-  onClick: (event: React.MouseEvent<any>) => void;
-}
-
-export const HideColMenuItem: React.FC<SortMenuItemsProps> = ({ column, onClick }) => {
+export const HideColMenuItem: React.FC<FilterItemProps> = ({ column, onClick }) => {
   const apiRef = React.useContext(ApiContext);
 
   const toggleColumn = React.useCallback(

@@ -14,6 +14,8 @@ import { GridDataContainer } from './components/styled-wrappers/GridDataContaine
 import { GridRoot } from './components/styled-wrappers/GridRoot';
 import { GridWindow } from './components/styled-wrappers/GridWindow';
 import { GridToolbar } from './components/styled-wrappers/GridToolbar';
+import { ColumnsToolbarButton } from './components/toolbar/columnsToolbarButton';
+import { FilterToolbarButton } from './components/toolbar/filterToolbarButton';
 import { Viewport } from './components/viewport';
 import { Watermark } from './components/watermark';
 import { DATA_CONTAINER_CSS_CLASS } from './constants/cssClassesConstants';
@@ -67,7 +69,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useLoggerFactory(internalOptions.logger, internalOptions.logLevel);
     const logger = useLogger('GridComponent');
 
-    useApi(rootContainerRef, apiRef);
+    useApi(rootContainerRef, columnsContainerRef, apiRef);
     const errorState = useErrorHandler(apiRef, props);
     useEvents(rootContainerRef, apiRef);
     const onResize = useResizeContainer(apiRef);
@@ -111,7 +113,6 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
 
     logger.info(
       `Rendering, page: ${renderCtx?.page}, col: ${renderCtx?.firstColIdx}-${renderCtx?.lastColIdx}, row: ${renderCtx?.firstRowIdx}-${renderCtx?.lastRowIdx}`,
-      apiRef.current.state,
     );
 
     return (
@@ -145,9 +146,16 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                     {customComponents.headerComponent ? (
                       customComponents.headerComponent
                     ) : (
-                      <GridToolbar>
-                        {/* The components for the separate features go in here */}
-                      </GridToolbar>
+                      <React.Fragment>
+                        {!gridState.options.hideToolbar &&
+                          (!gridState.options.disableColumnFilter ||
+                            !gridState.options.disableColumnSelector) && (
+                            <GridToolbar>
+                              {!gridState.options.disableColumnSelector && <ColumnsToolbarButton />}
+                              {!gridState.options.disableColumnFilter && <FilterToolbarButton />}
+                            </GridToolbar>
+                          )}
+                      </React.Fragment>
                     )}
                   </div>
                   <div className="MuiDataGrid-mainGridContainer">

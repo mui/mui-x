@@ -15,7 +15,7 @@ import { getInitialVisibleRowsState } from './visibleRowsState';
 
 export const useFilter = (apiRef: ApiRef): void => {
   const logger = useLogger('useFilter');
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
+  const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
 
   const rows = useGridSelector(apiRef, sortedRowsSelector);
   const filterableColumns = useGridSelector(apiRef, filterableColumnsSelector);
@@ -159,17 +159,19 @@ export const useFilter = (apiRef: ApiRef): void => {
 
   const showFilterPanel = React.useCallback(
     (targetColumnField?: string) => {
-      setGridState((state) => ({
-        ...state,
-        preferencePanel: {
-          open: true,
-          openedPanelValue: PreferencePanelsValue.filters,
-          targetField: targetColumnField,
-        },
-      }));
+      if (targetColumnField) {
+        const lastFilter =
+          gridState.filter.items.length > 0
+            ? gridState.filter.items[gridState.filter.items.length - 1]
+            : null;
+        if (!lastFilter || lastFilter.columnField !== targetColumnField) {
+          apiRef!.current.upsertFilter({ columnField: targetColumnField });
+        }
+      }
+      apiRef.current.showPreferences(PreferencePanelsValue.filters);
       forceUpdate();
     },
-    [forceUpdate, setGridState],
+    [apiRef, forceUpdate, gridState.filter.items],
   );
 
   const applyFilterLinkOperator = React.useCallback(
