@@ -15,7 +15,7 @@ configureActions({
 });
 
 export const parameters = {
-  actions: { argTypesRegex: "^on.*" },
+  actions: { argTypesRegex: '^on.*' },
   options: {
     /**
      * display the top-level grouping as a "root" in the sidebar
