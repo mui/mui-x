@@ -28,7 +28,7 @@
     "eslint": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx",
     "eslint:ci": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx",
     "jsonlint": "node scripts/jsonlint.js",
-    "typescript": "lerna run typescript --parallel",
+    "typescript": "lerna run --no-bail --parallel typescript",
     "build:codesandbox": "yarn build",
     "build": "cd packages/x-license && yarn build && cd ../grid/x-grid && yarn build && cd ../data-grid && yarn build && cd ../../x-grid-data-generator && yarn build",
     "release": "yarn build && lerna publish --no-changelog",
