@@ -17963,12 +17963,14 @@ rollup-plugin-commonjs@^10.1.0:
     resolve "^1.11.0"
     rollup-pluginutils "^2.8.1"
 
-rollup-plugin-dts@^1.4.7:
-  version "1.4.7"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-dts/-/rollup-plugin-dts-1.4.7.tgz#6255147ac777314c0725a1efcb42df10fe282243"
-  integrity sha512-QkunbJ96yUNkW95k/Vd6SdTjCbWSG0rMVUtpHSCwfg078Z7vbDaBnfz/gkSqR5h8WFMxoccBT4aodHm6387Jvg==
+rollup-plugin-dts@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-dts/-/rollup-plugin-dts-2.0.0.tgz#9acc9b8320587cd5f0fafa1d9062833064e899e1"
+  integrity sha512-kDicSNT9m2z6swvJVqYnkgcVBusnlRD5qCtloqWlalmi4T/gS6mQqICYAEs+YzeBw0sn+9ZIrwu2UeDpV3uyLQ==
+  dependencies:
+    magic-string "^0.25.7"
   optionalDependencies:
-    "@babel/code-frame" "^7.8.3"
+    "@babel/code-frame" "^7.10.4"
 
 rollup-plugin-sourcemaps@^0.6.2:
   version "0.6.3"
@@ -20101,10 +20103,10 @@ typescript@3.8.3:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.8.3.tgz#409eb8544ea0335711205869ec458ab109ee1061"
   integrity sha512-MYlEfn5VrLNsgudQTVJeNaQFUAI7DkhnOjdpAp4T+ku1TfQClewlbSuTVHiA+8skNBgaf02TL/kLOvig4y3G8w==
 
-typescript@^3.9.6:
-  version "3.9.7"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.7.tgz#98d600a5ebdc38f40cb277522f12dc800e9e25fa"
-  integrity sha512-BLbiRkiBzAwsjut4x/dsibSTB6yWpwT5qWmC2OfuCg3GgVQCSgMs4vEctYPhsaGtd0AeuuHMkjZ2h2WG8MSzRw==
+typescript@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.1.2.tgz#6369ef22516fe5e10304aae5a5c4862db55380e9"
+  integrity sha512-thGloWsGH3SOxv1SoY7QojKi0tc+8FnOmiarEGMbd/lar7QOEd3hvlx3Fp5y6FlDUGl9L+pd4n2e+oToGMmhRQ==
 
 typical@^5.0.0, typical@^5.2.0:
   version "5.2.0"
