@@ -17941,12 +17941,14 @@ rollup-plugin-commonjs@^10.1.0:
     resolve "^1.11.0"
     rollup-pluginutils "^2.8.1"
 
-rollup-plugin-dts@^1.4.7:
-  version "1.4.7"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-dts/-/rollup-plugin-dts-1.4.7.tgz#6255147ac777314c0725a1efcb42df10fe282243"
-  integrity sha512-QkunbJ96yUNkW95k/Vd6SdTjCbWSG0rMVUtpHSCwfg078Z7vbDaBnfz/gkSqR5h8WFMxoccBT4aodHm6387Jvg==
+rollup-plugin-dts@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-dts/-/rollup-plugin-dts-2.0.0.tgz#9acc9b8320587cd5f0fafa1d9062833064e899e1"
+  integrity sha512-kDicSNT9m2z6swvJVqYnkgcVBusnlRD5qCtloqWlalmi4T/gS6mQqICYAEs+YzeBw0sn+9ZIrwu2UeDpV3uyLQ==
+  dependencies:
+    magic-string "^0.25.7"
   optionalDependencies:
-    "@babel/code-frame" "^7.8.3"
+    "@babel/code-frame" "^7.10.4"
 
 rollup-plugin-sourcemaps@^0.6.2:
   version "0.6.3"
