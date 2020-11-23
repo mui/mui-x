@@ -3,6 +3,7 @@ import { Columns, InternalColumns } from '../../../models/colDef/colDef';
 import { GridState } from '../core/gridState';
 
 export const columnsSelector = (state: GridState) => state.columns;
+export const columnLookupSelector = (state: GridState) => state.columns.lookup;
 export const allColumnsSelector = createSelector<GridState, InternalColumns, Columns>(
   columnsSelector,
   (columns: InternalColumns) => columns.all,
