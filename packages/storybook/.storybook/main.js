@@ -77,7 +77,7 @@ module.exports = {
         'process.env': {
           ENABLE_EXPERIMENTAL: JSON.stringify(
             // Set by Netlify
-            process.env.CONTEXT === 'production' ? 'false' : 'true',
+            process.env.PULL_REQUEST === 'false' ? 'false' : 'true',
           ),
         },
       }),
