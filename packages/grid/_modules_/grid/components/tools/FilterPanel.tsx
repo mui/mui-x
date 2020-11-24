@@ -2,7 +2,6 @@ import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { useGridState } from '../../hooks/features/core/useGridState';
-import { PREVENT_HIDE_PREFERENCES } from '../../constants/index';
 import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { FilterItem, LinkOperator } from '../../models/filterItem';
 import { ApiContext } from '../api-context';
@@ -17,14 +16,6 @@ export const FilterPanel: React.FC<{}> = () => {
   const hasMultipleFilters = React.useMemo(() => gridState.filter.items.length > 1, [
     gridState.filter.items.length,
   ]);
-
-  const dontHidePreferences = React.useCallback(
-    (event: React.ChangeEvent<{}>) => {
-      apiRef!.current.publishEvent(PREVENT_HIDE_PREFERENCES, {});
-      event.preventDefault();
-    },
-    [apiRef],
-  );
 
   const applyFilter = React.useCallback(
     (item: FilterItem) => {
@@ -59,12 +50,11 @@ export const FilterPanel: React.FC<{}> = () => {
 
   return (
     <React.Fragment>
-      <div className="MuiDataGridPreferencesPanels-container">
+      <div className="MuiDataGridPanel-container">
         {gridState.filter.items.map((item, index) => (
           <FilterForm
             key={item.id}
             item={item}
-            onSelectOpen={dontHidePreferences}
             applyFilterChanges={applyFilter}
             deleteFilter={deleteFilter}
             hasMultipleFilters={hasMultipleFilters}
@@ -76,7 +66,7 @@ export const FilterPanel: React.FC<{}> = () => {
         ))}
       </div>
       {!disableMultipleColumnsFiltering && (
-        <div className="MuiDataGridPreferencesPanels-footer">
+        <div className="MuiDataGridPanel-footer">
           <Button onClick={addNewFilter} startIcon={<AddIcon />} color="primary">
             Add Filter
           </Button>

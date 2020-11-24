@@ -8,7 +8,6 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import { allColumnsSelector } from '../../hooks/features/columns/columnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { PREVENT_HIDE_PREFERENCES } from '../../constants/index';
 import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { ApiContext } from '../api-context';
 import { DragIcon } from '../icons/index';
@@ -40,21 +39,12 @@ export const ColumnsPanel: React.FC<{}> = () => {
   const { disableColumnReorder } = useGridSelector(apiRef, optionsSelector);
   const [searchValue, setSearchValue] = React.useState('');
 
-  const dontHidePreferences = React.useCallback(
-    (event: React.ChangeEvent<{}>) => {
-      apiRef!.current.publishEvent(PREVENT_HIDE_PREFERENCES, {});
-      event.preventDefault();
-    },
-    [apiRef],
-  );
-
   const toggleColumn = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
-      dontHidePreferences(event);
       const { name } = event.target as HTMLInputElement;
       apiRef!.current.toggleColumn(name);
     },
-    [apiRef, dontHidePreferences],
+    [apiRef],
   );
 
   const toggleAllColumns = React.useCallback(
@@ -95,7 +85,7 @@ export const ColumnsPanel: React.FC<{}> = () => {
 
   return (
     <React.Fragment>
-      <div className="MuiDataGridPreferencesPanels-header">
+      <div className="MuiDataGridPanel-header">
         <TextField
           label="Find column"
           placeholder="Column Title"
@@ -106,7 +96,7 @@ export const ColumnsPanel: React.FC<{}> = () => {
           fullWidth
         />
       </div>
-      <div className="MuiDataGridPreferencesPanels-container">
+      <div className="MuiDataGridPanel-container">
         <div className={classes.columnsListContainer}>
           {currentColumns.map((column) => (
             <div key={column.field} className={classes.column}>
@@ -139,7 +129,7 @@ export const ColumnsPanel: React.FC<{}> = () => {
           ))}
         </div>
       </div>
-      <div className="MuiDataGridPreferencesPanels-footer">
+      <div className="MuiDataGridPanel-footer">
         <Button onClick={hideAllColumns} color="primary">
           Hide All
         </Button>

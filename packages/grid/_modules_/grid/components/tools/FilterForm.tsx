@@ -21,7 +21,6 @@ export interface FilterFormProps {
   applyFilterChanges: (item: FilterItem) => void;
   applyMultiFilterOperatorChanges: (operator: LinkOperator) => void;
   deleteFilter: (item: FilterItem) => void;
-  onSelectOpen: (event: React.ChangeEvent<{}>) => void;
 }
 
 const useStyles = makeStyles(() => ({
@@ -50,7 +49,6 @@ const useStyles = makeStyles(() => ({
 export const FilterForm: React.FC<FilterFormProps> = ({
   item,
   hasMultipleFilters,
-  onSelectOpen,
   deleteFilter,
   applyFilterChanges,
   multiFilterOperator,
@@ -140,7 +138,6 @@ export const FilterForm: React.FC<FilterFormProps> = ({
           labelId="columns-filter-operator-select-label"
           id="columns-filter-operator-select"
           value={multiFilterOperator}
-          onOpen={onSelectOpen}
           onChange={changeLinkOperator}
           disabled={!!disableMultiFilterOperator}
           native
@@ -160,7 +157,6 @@ export const FilterForm: React.FC<FilterFormProps> = ({
           id="columns-filter-select"
           value={item.columnField || ''}
           onChange={changeColumn}
-          onOpen={onSelectOpen}
           native
         >
           {filterableColumns.map((col) => (
@@ -176,7 +172,6 @@ export const FilterForm: React.FC<FilterFormProps> = ({
           labelId="columns-operators-select-label"
           id="columns-operators-select"
           value={item.operatorValue}
-          onOpen={onSelectOpen}
           onChange={changeOperator}
           native
         >
