@@ -24,7 +24,22 @@ export function buildCellParams({
     element,
     value,
     field: colDef?.field,
-    getValue: (field: string) => rowModel.data[field],
+    getValue: (field: string) => {
+      const col = api.getColumnFromField(field);
+      if (!col.valueGetter) {
+        return rowModel.data[field];
+      }
+      return col.valueGetter(
+        buildCellParams({
+          value: rowModel.data[field],
+          colDef: col,
+          rowIndex,
+          element,
+          rowModel,
+          api,
+        }),
+      );
+    },
     data: rowModel.data,
     rowModel,
     colDef,

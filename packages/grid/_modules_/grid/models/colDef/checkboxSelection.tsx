@@ -4,6 +4,7 @@ import { ColDef } from './colDef';
 
 export const checkboxSelectionColDef: ColDef = {
   field: '__check__',
+  headerName: 'Checkbox Selection',
   description: 'Select Multiple Rows',
   type: 'checkboxSelection',
   width: 48,
@@ -11,7 +12,9 @@ export const checkboxSelectionColDef: ColDef = {
   headerAlign: 'center',
   resizable: true,
   sortable: false,
+  filterable: false,
   disableClickEventBubbling: true,
+  disableColumnMenu: true,
   valueGetter: (params) => params.api.getState().selection[params.rowModel.id],
   renderHeader: (params) => <HeaderCheckbox {...params} />,
   renderCell: (params) => <CellCheckboxRenderer {...params} />,

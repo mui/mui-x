@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { CellValue } from '../cell';
 import { CellClassNamePropType, CellClassRules } from '../cellClass';
+import { FilterOperator } from '../filterOperator';
 import { CellParams, ValueFormatterParams, ValueGetterParams } from '../params/cellParams';
 import { ColParams } from '../params/colParams';
 import { ComparatorFn, SortDirection } from '../sortModel';
@@ -116,6 +117,19 @@ export interface ColDef {
    * Allows to disable the click event in cells.
    */
   disableClickEventBubbling?: boolean;
+  /**
+   * Allows to disable the column menu for this column.
+   */
+  disableColumnMenu?: boolean;
+  /**
+   * If `true`, the column is filterable.
+   * @default true
+   */
+  filterable?: boolean;
+  /**
+   * Allows setting the filter operators for this column.
+   */
+  filterOperators?: FilterOperator[];
 }
 
 export type Columns = ColDef[];

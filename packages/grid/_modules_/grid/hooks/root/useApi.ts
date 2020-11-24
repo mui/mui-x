@@ -4,7 +4,11 @@ import { useLogger } from '../utils/useLogger';
 import { COMPONENT_ERROR, UNMOUNT } from '../../constants/eventsConstants';
 import { useApiMethod } from './useApiMethod';
 
-export function useApi(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: ApiRef): boolean {
+export function useApi(
+  gridRootRef: React.RefObject<HTMLDivElement>,
+  columnHeadersContainerRef: React.RefObject<HTMLDivElement>,
+  apiRef: ApiRef,
+): boolean {
   const [initialised, setInit] = React.useState(false);
   const logger = useLogger('useApi');
 
@@ -39,6 +43,7 @@ export function useApi(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: Api
     logger.debug('Initializing grid api.');
     apiRef.current.isInitialised = true;
     apiRef.current.rootElementRef = gridRootRef;
+    apiRef.current.columnHeadersElementRef = columnHeadersContainerRef;
 
     setInit(true);
     const api = apiRef.current;
@@ -49,7 +54,7 @@ export function useApi(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: Api
       logger.debug('Clearing all events listeners');
       api.removeAllListeners();
     };
-  }, [gridRootRef, logger, apiRef]);
+  }, [gridRootRef, logger, apiRef, columnHeadersContainerRef]);
 
   useApiMethod(apiRef, { subscribeEvent, publishEvent, showError }, 'CoreApi');
 

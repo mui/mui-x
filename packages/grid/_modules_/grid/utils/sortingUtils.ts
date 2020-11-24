@@ -20,33 +20,53 @@ export const nillComparer = (v1: CellValue, v2: CellValue): number | null => {
   return null;
 };
 
-export const stringNumberComparer: ComparatorFn = (v1: CellValue, v2: CellValue) => {
-  const nillResult = nillComparer(v1, v2);
+export const stringNumberComparer: ComparatorFn = (
+  v1: CellValue,
+  v2: CellValue,
+  cellParams1,
+  cellParams2,
+) => {
+  const value1 = cellParams1.getValue(cellParams1.field);
+  const value2 = cellParams2.getValue(cellParams2.field);
+
+  const nillResult = nillComparer(value1, value2);
   if (nillResult !== null) {
     return nillResult;
   }
 
-  if (typeof v1 === 'string') {
-    return v1.localeCompare(v2!.toString());
+  if (typeof value1 === 'string') {
+    return value1.localeCompare(value2!.toString());
   }
-  return (v1 as any) - (v2 as any);
+  return (value1 as any) - (value2 as any);
 };
 
-export const numberComparer: ComparatorFn = (v1: CellValue, v2: CellValue) => {
-  const nillResult = nillComparer(v1, v2);
+export const numberComparer: ComparatorFn = (
+  v1: CellValue,
+  v2: CellValue,
+  cellParams1,
+  cellParams2,
+) => {
+  const value1 = cellParams1.getValue(cellParams1.field);
+  const value2 = cellParams2.getValue(cellParams2.field);
+
+  const nillResult = nillComparer(value1, value2);
   if (nillResult !== null) {
     return nillResult;
   }
-  return Number(v1) - Number(v2);
+
+  return Number(value1) - Number(value2);
 };
 
-export const dateComparer = (v1: CellValue, v2: CellValue): number => {
-  const nillResult = nillComparer(v1, v2);
+export const dateComparer = (v1: CellValue, v2: CellValue, cellParams1, cellParams2): number => {
+  const value1 = cellParams1.getValue(cellParams1.field);
+  const value2 = cellParams2.getValue(cellParams2.field);
+
+  const nillResult = nillComparer(value1, value2);
   if (nillResult !== null) {
     return nillResult;
   }
 
-  if (v1! > v2!) return 1;
-  if (v1! < v2!) return -1;
+  if (value1! > value2!) return 1;
+  if (value1! < value2!) return -1;
   return 0;
 };

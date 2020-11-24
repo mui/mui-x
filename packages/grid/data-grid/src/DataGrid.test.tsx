@@ -25,7 +25,7 @@ describe('<DataGrid />', () => {
         brand: 'Puma',
       },
     ],
-    columns: [{ field: 'brand', width: 100 }],
+    columns: [{ field: 'brand' }],
   };
 
   describe('layout', () => {
@@ -274,7 +274,9 @@ describe('<DataGrid />', () => {
             <DataGrid {...defaultProps} />
           </div>,
         );
-        const header = screen.getByRole('columnheader', { name: 'brand' });
+        const header = screen
+          .getByRole('columnheader', { name: 'brand' })
+          .querySelector('.MuiDataGrid-colCellTitleContainer');
         expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
         fireEvent.click(header);
         expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);

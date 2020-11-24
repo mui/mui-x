@@ -47,7 +47,6 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-toolbar': {
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
           minHeight: 35, // Match MUI Small Button height
           backgroundColor: theme.palette.background.default,
           border: `1px solid ${borderColor}`,
@@ -61,7 +60,6 @@ export const useStyles = makeStyles(
           display: 'flex',
           flexDirection: 'column',
           borderBottom: `1px solid ${borderColor}`,
-          zIndex: 100,
         },
         '& .MuiDataGrid-scrollArea': {
           position: 'absolute',
@@ -100,16 +98,26 @@ export const useStyles = makeStyles(
           position: 'relative',
           display: 'flex',
         },
+        '& .MuiDataGrid-colCellTitleContainer': {
+          textOverflow: 'ellipsis',
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+          display: 'inline-flex',
+          flex: 1,
+        },
+        '& .MuiDataGrid-colCellNumeric .MuiDataGrid-sortIconContainer': {
+          paddingRight: 5,
+        },
         '& .MuiDataGrid-colCellSortable': {
           cursor: 'pointer',
         },
         '& .MuiDataGrid-sortIcon': {
           fontSize: 18,
         },
-        '& .MuiDataGrid-colCellCenter': {
+        '& .MuiDataGrid-colCellCenter .MuiDataGrid-colCellTitleContainer': {
           justifyContent: 'center',
         },
-        '& .MuiDataGrid-colCellRight': {
+        '& .MuiDataGrid-colCellRight .MuiDataGrid-colCellTitleContainer': {
           justifyContent: 'flex-end',
         },
         '& .MuiDataGrid-colCellTitle': {
@@ -146,6 +154,16 @@ export const useStyles = makeStyles(
         },
         '& .MuiDataGrid-iconSeparator': {
           color: 'inherit',
+        },
+        '& .MuiDataGrid-menuIcon': {
+          visibility: 'hidden',
+          fontSize: 20,
+          marginRight: -6,
+          display: 'flex',
+          alignItems: 'center',
+        },
+        '& .MuiDataGrid-colCell:hover .MuiDataGrid-menuIcon': {
+          visibility: 'visible',
         },
         '& .MuiDataGrid-colCellWrapper.scroll .MuiDataGrid-colCell:last-child': {
           borderRight: 'none',

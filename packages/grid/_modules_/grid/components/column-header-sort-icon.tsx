@@ -11,7 +11,7 @@ export interface ColumnHeaderSortIconProps {
 }
 
 function getIcon(icons: IconsOptions, direction: SortDirection) {
-  const Icon = direction === 'asc' ? icons!.columnSortedAscending! : icons!.columnSortedDescending!;
+  const Icon = direction === 'asc' ? icons!.ColumnSortedAscending! : icons!.ColumnSortedDescending!;
   return <Icon className="MuiDataGrid-sortIcon" />;
 }
 
@@ -24,20 +24,22 @@ export const ColumnHeaderSortIcon: React.FC<ColumnHeaderSortIconProps> = React.m
     }
 
     return (
-      <span>
-        {index != null && (
-          <Badge badgeContent={index} color="default">
+      <div className="MuiDataGrid-sortIconContainer">
+        <div>
+          {index != null && (
+            <Badge badgeContent={index} color="default">
+              <IconButton aria-label="Sort" size="small">
+                {getIcon(icons, direction)}
+              </IconButton>
+            </Badge>
+          )}
+          {index == null && (
             <IconButton aria-label="Sort" size="small">
               {getIcon(icons, direction)}
             </IconButton>
-          </Badge>
-        )}
-        {index == null && (
-          <IconButton aria-label="Sort" size="small">
-            {getIcon(icons, direction)}
-          </IconButton>
-        )}
-      </span>
+          )}
+        </div>
+      </div>
     );
   },
 );

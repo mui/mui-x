@@ -8,9 +8,9 @@ import { columnsTotalWidthSelector } from '../features/columns/columnsSelector';
 import { GridState } from '../features/core/gridState';
 import { useGridSelector } from '../features/core/useGridSelector';
 import { useGridState } from '../features/core/useGridState';
+import { visibleRowCountSelector } from '../features/filter/filterSelector';
 import { PaginationState } from '../features/pagination/paginationReducer';
 import { paginationSelector } from '../features/pagination/paginationSelector';
-import { rowCountSelector } from '../features/rows/rowsSelector';
 import { useLogger } from '../utils/useLogger';
 import { optionsSelector } from '../utils/useOptionsProp';
 import { useApiEventHandler } from './useApiEventHandler';
@@ -22,7 +22,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
 
   const options = useGridSelector(apiRef, optionsSelector);
   const columnsTotalWidth = useGridSelector(apiRef, columnsTotalWidthSelector);
-  const totalRowsCount = useGridSelector(apiRef, rowCountSelector);
+  const visibleRowsCount = useGridSelector(apiRef, visibleRowCountSelector);
   const paginationState = useGridSelector<PaginationState>(apiRef, paginationSelector);
 
   const getVirtualRowCount = React.useCallback(() => {
@@ -31,15 +31,15 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
       options.pagination && paginationState.pageSize ? paginationState.pageSize : null;
 
     pageRowCount =
-      !pageRowCount || currentPage * pageRowCount <= totalRowsCount
+      !pageRowCount || currentPage * pageRowCount <= visibleRowsCount
         ? pageRowCount
-        : totalRowsCount - (currentPage - 1) * pageRowCount;
+        : visibleRowsCount - (currentPage - 1) * pageRowCount;
 
     const virtRowsCount =
-      pageRowCount == null || pageRowCount > totalRowsCount ? totalRowsCount : pageRowCount;
+      pageRowCount == null || pageRowCount > visibleRowsCount ? visibleRowsCount : pageRowCount;
 
     return virtRowsCount;
-  }, [options.pagination, paginationState.page, paginationState.pageSize, totalRowsCount]);
+  }, [options.pagination, paginationState.page, paginationState.pageSize, visibleRowsCount]);
 
   const getScrollBar = React.useCallback(
     (rowsCount: number) => {
@@ -210,11 +210,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
 
   React.useEffect(() => {
     refreshContainerSizes();
-  }, [gridState.options.hideFooter, refreshContainerSizes]);
-
-  React.useEffect(() => {
-    refreshContainerSizes();
-  }, [gridState.columns, refreshContainerSizes]);
+  }, [gridState.columns, gridState.options.hideFooter, refreshContainerSizes, visibleRowsCount]);
 
   useApiEventHandler(apiRef, RESIZE, refreshContainerSizes);
 };

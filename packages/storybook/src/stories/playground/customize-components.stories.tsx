@@ -95,8 +95,8 @@ export function Icons() {
         rows={rows}
         columns={columns}
         icons={{
-          columnSortedDescending: SortedDescending,
-          columnSortedAscending: SortedAscending,
+          ColumnSortedDescending: SortedDescending,
+          ColumnSortedAscending: SortedAscending,
         }}
       />
     </div>

@@ -1,11 +1,11 @@
-import * as React from 'react';
-import { XGrid, GridOptionsProp, SortDirection } from '@material-ui/x-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
 import Button from '@material-ui/core/Button';
-import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
-import { action } from '@storybook/addon-actions';
-import { randomInt } from '../../data/random-generator';
+import { GridOptionsProp, PreferencePanelsValue, SortDirection, XGrid } from '@material-ui/x-grid';
+import { useDemoData } from '@material-ui/x-grid-data-generator';
 import '@material-ui/x-grid-data-generator/style/real-data-stories.css';
+import { action } from '@storybook/addon-actions';
+import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
+import * as React from 'react';
+import { randomInt } from '../../data/random-generator';
 
 export default {
   title: 'X-Grid Demos/Playground',
@@ -159,6 +159,40 @@ export function XGridDemo() {
   return (
     <div className="grid-container">
       <XGrid {...data} loading={data.rows.length === 0} rowHeight={38} checkboxSelection />
+    </div>
+  );
+}
+export function CommodityPreferencesDefaultOpen() {
+  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 500 });
+
+  return (
+    <div className="grid-container">
+      <XGrid
+        rows={data.rows}
+        columns={data.columns}
+        {...getGridOptions()}
+        state={{ preferencePanel: { open: true } }}
+      />
+    </div>
+  );
+}
+
+export function CommodityPreferences() {
+  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 500 });
+
+  return (
+    <div className="grid-container">
+      <XGrid
+        rows={data.rows}
+        columns={data.columns}
+        {...getGridOptions()}
+        state={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: PreferencePanelsValue.columns,
+          },
+        }}
+      />
     </div>
   );
 }
