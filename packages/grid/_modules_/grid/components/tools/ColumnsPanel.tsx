@@ -1,18 +1,30 @@
+import { FormControl, IconButton, Switch } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import GridList from '@material-ui/core/GridList';
-import ListItem from '@material-ui/core/ListItem';
+import TextField from '@material-ui/core/TextField';
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { allColumnsSelector } from '../../hooks/features/columns/columnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { PREVENT_HIDE_PREFERENCES } from '../../constants/index';
 import { ApiContext } from '../api-context';
+import { DragIcon } from '../icons/index';
 
 const useStyles = makeStyles(() => ({
-  gridListRoot: {
-    maxWidth: '100%',
+  columnsListContainer: {
+    paddingTop: 8,
+    paddingLeft: 12,
+  },
+  column: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '2px 4px',
+  },
+  switch: {
+    marginRight: 4,
+  },
+  dragIconRoot: {
+    justifyContent: 'flex-end',
   },
 }));
 
@@ -20,7 +32,9 @@ export const ColumnsPanel: React.FC<{}> = () => {
   const classes = useStyles();
 
   const apiRef = React.useContext(ApiContext);
+  const searchTextRef = React.useRef<HTMLInputElement>(null);
   const columns = useGridSelector(apiRef, allColumnsSelector);
+  const [searchValue, setSearchValue] = React.useState('');
 
   const dontHidePreferences = React.useCallback(
     (event: React.ChangeEvent<{}>) => {
@@ -52,26 +66,67 @@ export const ColumnsPanel: React.FC<{}> = () => {
   const showAllColumns = React.useCallback(() => toggleAllColumns(false), [toggleAllColumns]);
   const hideAllColumns = React.useCallback(() => toggleAllColumns(true), [toggleAllColumns]);
 
+  const onSearchColumnValueChange = React.useCallback((event) => {
+    setSearchValue(event.target.value.toLowerCase());
+  }, []);
+
+  const currentColumns = React.useMemo(
+    () =>
+      !searchValue
+        ? columns
+        : columns.filter(
+            (column) =>
+              column.field.toLowerCase().indexOf(searchValue) > -1 ||
+              (column.headerName && column.headerName.toLowerCase().indexOf(searchValue) > -1),
+          ),
+    [columns, searchValue],
+  );
+
+  React.useEffect(() => {
+    if (searchTextRef && searchTextRef.current) {
+      searchTextRef!.current!.focus();
+    }
+  });
+
   return (
     <React.Fragment>
+      <div className="panelHeader">
+        <TextField
+          ref={searchTextRef}
+          label={'Find column'}
+          placeholder={'Column Title'}
+          value={searchValue}
+          onChange={onSearchColumnValueChange}
+          type={'text'}
+          autoFocus
+          fullWidth
+        />
+      </div>
       <div className="panelMainContainer">
-        <GridList cellHeight={'auto'} className={classes.gridListRoot}>
-          {columns.map((column) => (
-            <ListItem key={column.field}>
+        <div className={classes.columnsListContainer}>
+          {currentColumns.map((column) => (
+            <div key={column.field} className={classes.column}>
               <FormControlLabel
                 control={
-                  <Checkbox
+                  <Switch
+                    className={classes.switch}
                     checked={!column.hide}
                     onChange={toggleColumn}
                     name={column.field}
                     color="primary"
+                    size="small"
                   />
                 }
                 label={column.headerName || column.field}
               />
-            </ListItem>
+              <FormControl className={classes.dragIconRoot}>
+                <IconButton aria-label="Drag to reorder column" title="Reorder Column" size="small">
+                  <DragIcon />
+                </IconButton>
+              </FormControl>
+            </div>
           ))}
-        </GridList>
+        </div>
       </div>
       <div className="panelFooter">
         <Button onClick={hideAllColumns} color="primary">

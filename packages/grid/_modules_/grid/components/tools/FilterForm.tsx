@@ -36,8 +36,11 @@ const useStyles = makeStyles(() => ({
   operatorSelect: {
     width: 120,
   },
-  FilterValueInput: {
+  filterValueInput: {
     width: 190,
+  },
+  closeIconRoot: {
+    justifyContent: 'flex-end',
   },
 }));
 
@@ -182,7 +185,7 @@ export const FilterForm: React.FC<FilterFormProps> = ({
           ))}
         </Select>
       </FormControl>
-      <FormControl className={classes.FilterValueInput}>
+      <FormControl className={classes.filterValueInput}>
         {currentColumn &&
           currentOperator &&
           React.createElement(currentOperator.InputComponent, {
@@ -191,7 +194,7 @@ export const FilterForm: React.FC<FilterFormProps> = ({
             ...currentOperator.InputComponentProps,
           })}
       </FormControl>
-      <FormControl>
+      <FormControl className={classes.closeIconRoot}>
         <IconButton aria-label="Delete" title="Delete" onClick={handleDeleteFilter} size="small">
           <CloseIcon />
         </IconButton>

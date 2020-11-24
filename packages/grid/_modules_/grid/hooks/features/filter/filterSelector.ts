@@ -22,14 +22,15 @@ export const visibleRowCountSelector = createSelector<GridState, RowModel[], num
   (rows) => rows.length,
 );
 
-export const filterStateSelector: (state: GridState)=> FilterModelState  = (state)=> state.filter;
+export const filterStateSelector: (state: GridState) => FilterModelState = (state) => state.filter;
 
-export const activeFilterItemsSelector   = createSelector<GridState,FilterModelState, FilterItem[]>(
+export const activeFilterItemsSelector = createSelector<GridState, FilterModelState, FilterItem[]>(
   filterStateSelector,
-  (filterModel)=> filterModel.items?.filter(item=> item.value != null && item.value?.toString() !== '') // allows to count false or 0
+  (filterModel) =>
+    filterModel.items?.filter((item) => item.value != null && item.value?.toString() !== ''), // allows to count false or 0
 );
 
 export const filterItemsCounterSelector = createSelector<GridState, FilterItem[], number>(
   activeFilterItemsSelector,
-  ( activeFilters)=> activeFilters.length
-  );
+  (activeFilters) => activeFilters.length,
+);

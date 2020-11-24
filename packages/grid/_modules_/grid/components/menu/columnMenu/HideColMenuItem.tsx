@@ -14,5 +14,9 @@ export const HideColMenuItem: React.FC<FilterItemProps> = ({ column, onClick }) 
     [apiRef, column?.field, onClick],
   );
 
+  if (!column) {
+    return null;
+  }
+
   return <MenuItem onClick={toggleColumn}>Hide</MenuItem>;
 };

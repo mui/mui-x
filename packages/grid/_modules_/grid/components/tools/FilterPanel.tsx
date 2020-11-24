@@ -4,7 +4,7 @@ import { useGridState } from '../../hooks/features/core/useGridState';
 import { PREVENT_HIDE_PREFERENCES } from '../../constants/index';
 import { FilterItem, LinkOperator } from '../../models/filterItem';
 import { ApiContext } from '../api-context';
-import { AddIcon, CloseIcon } from '../icons/index';
+import { AddIcon } from '../icons/index';
 import { FilterForm } from './FilterForm';
 
 export const FilterPanel: React.FC<{}> = () => {
@@ -40,10 +40,6 @@ export const FilterPanel: React.FC<{}> = () => {
     apiRef!.current.upsertFilter({});
   }, [apiRef]);
 
-  const clearFilter = React.useCallback(() => {
-    apiRef!.current.clearFilters();
-  }, [apiRef]);
-
   const deleteFilter = React.useCallback(
     (item: FilterItem) => {
       apiRef!.current.deleteFilter(item);
@@ -76,11 +72,8 @@ export const FilterPanel: React.FC<{}> = () => {
         ))}
       </div>
       <div className="panelFooter">
-        <Button onClick={clearFilter} startIcon={<CloseIcon />} color="primary">
-          Clear
-        </Button>
         <Button onClick={addNewFilter} startIcon={<AddIcon />} color="primary">
-          Filter
+          Add Filter
         </Button>
       </div>
     </React.Fragment>

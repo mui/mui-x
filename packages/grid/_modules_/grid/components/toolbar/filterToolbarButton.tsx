@@ -1,5 +1,6 @@
 import { IconButton } from '@material-ui/core';
 import Badge from '@material-ui/core/Badge';
+import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import * as React from 'react';
 import { columnLookupSelector } from '../../hooks/features/columns/columnsSelector';
@@ -16,21 +17,26 @@ export const FilterToolbarButton: React.FC<{}> = () => {
   const apiRef = React.useContext(ApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
   const counter = useGridSelector(apiRef, filterItemsCounterSelector);
-  const activeFilters = useGridSelector(apiRef, activeFilterItemsSelector)
+  const activeFilters = useGridSelector(apiRef, activeFilterItemsSelector);
   const lookup = useGridSelector(apiRef, columnLookupSelector);
   const tooltipContentNode = React.useMemo(() => {
     if (counter === 0) {
-      return 'No filter applied';
+      return 'Show Filters';
     }
-    return (<div>
-      {counter} active filter(s)
-      <ul>
-        {...activeFilters.map(item => (
-          <li>{lookup[item.columnField!].headerName || item.columnField} {item.operatorValue} {item.value}</li>
-        ))}
-      </ul>
-    </div>);
-  }, [counter, activeFilters, lookup])
+    return (
+      <div>
+        {counter} active filter(s)
+        <ul>
+          {...activeFilters.map((item) => (
+            <li>
+              {lookup[item.columnField!].headerName || item.columnField} {item.operatorValue}{' '}
+              {item.value}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }, [counter, activeFilters, lookup]);
 
   const icons = useIcons();
   const filterIconElement = React.createElement(icons.ColumnFiltering!, {});
@@ -44,11 +50,18 @@ export const FilterToolbarButton: React.FC<{}> = () => {
 
   return (
     <Tooltip title={tooltipContentNode} enterDelay={1000}>
-      <IconButton onClick={showFilter} color="primary" aria-label="Show Filters">
-        <Badge badgeContent={counter} color="primary">
-          {filterIconElement}
-        </Badge>
-      </IconButton>
+      <Button
+        onClick={showFilter}
+        color="primary"
+        aria-label="Show Filters"
+        startIcon={
+          <Badge badgeContent={counter} color="primary">
+            {filterIconElement}
+          </Badge>
+        }
+      >
+        Filters
+      </Button>
     </Tooltip>
   );
 };

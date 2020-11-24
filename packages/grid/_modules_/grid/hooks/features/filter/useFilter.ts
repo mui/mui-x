@@ -27,16 +27,6 @@ export const useFilter = (apiRef: ApiRef): void => {
     }));
   }, [setGridState]);
 
-  const clearFilters = React.useCallback(() => {
-    setGridState((state) => ({
-      ...state,
-      filter: getInitialFilterState(),
-    }));
-    clearFilteredRows();
-    apiRef.current.upsertFilter({});
-    forceUpdate();
-  }, [apiRef, clearFilteredRows, forceUpdate, setGridState]);
-
   const applyFilter = React.useCallback(
     (filterItem: FilterItem, linkOperator: LinkOperator) => {
       if (!filterItem.columnField || !filterItem.operatorValue || !filterItem.value) {
@@ -169,9 +159,8 @@ export const useFilter = (apiRef: ApiRef): void => {
         }
       }
       apiRef.current.showPreferences(PreferencePanelsValue.filters);
-      forceUpdate();
     },
-    [apiRef, forceUpdate, gridState.filter.items],
+    [apiRef, gridState.filter.items],
   );
 
   const applyFilterLinkOperator = React.useCallback(
@@ -191,7 +180,6 @@ export const useFilter = (apiRef: ApiRef): void => {
       applyFilterLinkOperator,
       applyFilters,
       upsertFilter,
-      clearFilters,
       deleteFilter,
       showFilterPanel,
     },
