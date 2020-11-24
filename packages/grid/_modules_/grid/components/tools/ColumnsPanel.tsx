@@ -35,6 +35,7 @@ export const ColumnsPanel: React.FC<{}> = () => {
   const classes = useStyles();
 
   const apiRef = React.useContext(ApiContext);
+  const searchInputRef = React.useRef<HTMLInputElement>(null);
   const columns = useGridSelector(apiRef, allColumnsSelector);
   const { disableColumnReorder } = useGridSelector(apiRef, optionsSelector);
   const [searchValue, setSearchValue] = React.useState('');
@@ -86,16 +87,22 @@ export const ColumnsPanel: React.FC<{}> = () => {
     [columns, searchValue],
   );
 
+  React.useEffect(() => {
+    if (searchInputRef && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  });
+
   return (
     <React.Fragment>
       <div className="MuiDataGridPreferencesPanels-header">
         <TextField
           label="Find column"
           placeholder="Column Title"
+          inputRef={searchInputRef}
           value={searchValue}
           onChange={onSearchColumnValueChange}
           type="text"
-          autoFocus
           fullWidth
         />
       </div>
