@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { allColumnsSelector } from '../../hooks/features/columns/columnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { PREVENT_HIDE_PREFERENCES } from '../../constants/index';
+import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { ApiContext } from '../api-context';
 import { DragIcon } from '../icons/index';
 
@@ -33,6 +34,7 @@ export const ColumnsPanel: React.FC<{}> = () => {
 
   const apiRef = React.useContext(ApiContext);
   const columns = useGridSelector(apiRef, allColumnsSelector);
+  const { disableColumnReorder } = useGridSelector(apiRef, optionsSelector);
   const [searchValue, setSearchValue] = React.useState('');
 
   const dontHidePreferences = React.useCallback(
@@ -112,11 +114,18 @@ export const ColumnsPanel: React.FC<{}> = () => {
                 }
                 label={column.headerName || column.field}
               />
-              <FormControl className={classes.dragIconRoot}>
-                <IconButton aria-label="Drag to reorder column" title="Reorder Column" size="small">
-                  <DragIcon />
-                </IconButton>
-              </FormControl>
+              {!disableColumnReorder && (
+                <FormControl draggable className={classes.dragIconRoot}>
+                  <IconButton
+                    aria-label="Drag to reorder column"
+                    title="Reorder Column"
+                    size="small"
+                    disabled
+                  >
+                    <DragIcon />
+                  </IconButton>
+                </FormControl>
+              )}
             </div>
           ))}
         </div>
