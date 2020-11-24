@@ -99,4 +99,4 @@ export function PreferencesPanel() {
       </ClickAwayListener>
     </Popper>
   );
-};
+}
