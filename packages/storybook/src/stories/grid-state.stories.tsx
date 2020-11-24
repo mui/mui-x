@@ -1,6 +1,5 @@
-import { Button } from '@material-ui/core';
-import { useState } from 'react';
 import * as React from 'react';
+import Button from '@material-ui/core/Button';
 import { GridState, SortingState, useApiRef, XGrid } from '@material-ui/x-grid';
 import { withKnobs } from '@storybook/addon-knobs';
 import { StateChangeParams } from '../../../grid/_modules_/grid/models/params/stateChangeParams';
@@ -107,7 +106,7 @@ const defaultProps = {
 };
 
 export function InitialState() {
-  const [gridState, setGridState] = useState<Partial<GridState>>({
+  const [gridState, setGridState] = React.useState<Partial<GridState>>({
     sorting: { sortModel: [{ field: 'brand', sort: 'desc' }], sortedRows: [2, 0, 1] },
   });
 
