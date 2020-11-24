@@ -15,39 +15,42 @@ import { ApiContext } from '../api-context';
 import { ColumnsPanel } from './ColumnsPanel';
 import { FilterPanel } from './FilterPanel';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  paper: {
-    backgroundColor: theme.palette.background.paper,
-    minWidth: 300,
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  tabsRoot: {
-    flexShrink: 0,
-  },
-  tab: {
-    minWidth: 50,
-  },
-  panel: {
-    display: 'flex',
-    flexDirection: 'column',
-    overflow: 'hidden',
-    flex: 1,
-    '& .MuiDataGrid-panelMainContainer': {
+const useStyles = makeStyles(
+  (theme: Theme) => ({
+    paper: {
+      backgroundColor: theme.palette.background.paper,
+      minWidth: 300,
       display: 'flex',
       flexDirection: 'column',
-      overflow: 'auto',
-      flex: '1 1',
     },
-    '& .MuiDataGrid-panelFooter, .MuiDataGrid-panelHeader': {
-      padding: 8,
-      display: 'inline-flex',
-      justifyContent: 'space-between',
+    tabsRoot: {
+      flexShrink: 0,
     },
-  },
-}));
+    tab: {
+      minWidth: 50,
+    },
+    panel: {
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden',
+      flex: 1,
+      '& .MuiDataGridPreferencesPanels-container': {
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'auto',
+        flex: '1 1',
+      },
+      '& .MuiDataGridPreferencesPanels-footer, .MuiDataGridPreferencesPanels-header': {
+        padding: 8,
+        display: 'inline-flex',
+        justifyContent: 'space-between',
+      },
+    },
+  }),
+  { name: 'MuiDataGridPreferencesPanel' },
+);
 
-export const PreferencesPanel = () => {
+export function PreferencesPanel() {
   const classes = useStyles();
   const apiRef = React.useContext(ApiContext);
   const columns = useGridSelector(apiRef, allColumnsSelector);

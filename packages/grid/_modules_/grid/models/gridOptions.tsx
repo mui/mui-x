@@ -86,15 +86,15 @@ export interface GridOptions {
    */
   disableMultipleSelection?: boolean;
   /**
-   * If `true`, sorting with multiple columns is disabled.
-   * @default false
-   */
-  disableMultipleColumnsSorting?: boolean;
-  /**
    * If `true`, filtering with multiple columns is disabled.
    * @default false
    */
   disableMultipleColumnsFiltering?: boolean;
+  /**
+   * If `true`, sorting with multiple columns is disabled.
+   * @default false
+   */
+  disableMultipleColumnsSorting?: boolean;
   /**
    * If `true`, resizing columns is disabled.
    * @default false

@@ -59,7 +59,7 @@ export const FilterPanel: React.FC<{}> = () => {
 
   return (
     <React.Fragment>
-      <div className="MuiDataGrid-panelMainContainer">
+      <div className="MuiDataGridPreferencesPanels-container">
         {gridState.filter.items.map((item, index) => (
           <FilterForm
             key={item.id}
@@ -76,7 +76,7 @@ export const FilterPanel: React.FC<{}> = () => {
         ))}
       </div>
       {!disableMultipleColumnsFiltering && (
-        <div className="MuiDataGrid-panelFooter">
+        <div className="MuiDataGridPreferencesPanels-footer">
           <Button onClick={addNewFilter} startIcon={<AddIcon />} color="primary">
             Add Filter
           </Button>

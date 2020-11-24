@@ -86,7 +86,7 @@ export const ColumnsPanel: React.FC<{}> = () => {
 
   return (
     <React.Fragment>
-      <div className="MuiDataGrid-panelHeader">
+      <div className="MuiDataGridPreferencesPanels-header">
         <TextField
           label="Find column"
           placeholder="Column Title"
@@ -97,7 +97,7 @@ export const ColumnsPanel: React.FC<{}> = () => {
           fullWidth
         />
       </div>
-      <div className="MuiDataGrid-panelMainContainer">
+      <div className="MuiDataGridPreferencesPanels-container">
         <div className={classes.columnsListContainer}>
           {currentColumns.map((column) => (
             <div key={column.field} className={classes.column}>
@@ -123,7 +123,7 @@ export const ColumnsPanel: React.FC<{}> = () => {
           ))}
         </div>
       </div>
-      <div className="MuiDataGrid-panelFooter">
+      <div className="MuiDataGridPreferencesPanels-footer">
         <Button onClick={hideAllColumns} color="primary">
           Hide All
         </Button>
