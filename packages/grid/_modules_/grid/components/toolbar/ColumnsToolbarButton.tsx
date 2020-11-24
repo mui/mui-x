@@ -1,5 +1,5 @@
-import Button from '@material-ui/core/Button';
 import * as React from 'react';
+import Button from '@material-ui/core/Button';
 import { PreferencePanelsValue } from '../../hooks/features/preferencesPanel/preferencesPanelValue';
 import { useIcons } from '../../hooks/utils/useIcons';
 import { ApiContext } from '../api-context';

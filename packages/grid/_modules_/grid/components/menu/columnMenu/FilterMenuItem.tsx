@@ -1,5 +1,5 @@
-import { MenuItem } from '@material-ui/core';
 import * as React from 'react';
+import MenuItem from '@material-ui/core/MenuItem';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../../hooks/utils/useOptionsProp';
 import { ApiContext } from '../../api-context';

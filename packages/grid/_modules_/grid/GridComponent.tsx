@@ -14,8 +14,8 @@ import { GridDataContainer } from './components/styled-wrappers/GridDataContaine
 import { GridRoot } from './components/styled-wrappers/GridRoot';
 import { GridWindow } from './components/styled-wrappers/GridWindow';
 import { GridToolbar } from './components/styled-wrappers/GridToolbar';
-import { ColumnsToolbarButton } from './components/toolbar/columnsToolbarButton';
-import { FilterToolbarButton } from './components/toolbar/filterToolbarButton';
+import { ColumnsToolbarButton } from './components/toolbar/ColumnsToolbarButton';
+import { FilterToolbarButton } from './components/toolbar/FilterToolbarButton';
 import { Viewport } from './components/viewport';
 import { Watermark } from './components/watermark';
 import { DATA_CONTAINER_CSS_CLASS } from './constants/cssClassesConstants';

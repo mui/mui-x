@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { FormControl, IconButton, Switch } from '@material-ui/core';
+import FormControl from '@material-ui/core/FormControl';
+import IconButton from '@material-ui/core/IconButton';
+import Switch from '@material-ui/core/Switch';
 import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
@@ -86,7 +88,7 @@ export const ColumnsPanel: React.FC<{}> = () => {
 
   return (
     <React.Fragment>
-      <div className="MuiDataGrid-panelHeader">
+      <div className="MuiDataGridPreferencesPanels-header">
         <TextField
           label="Find column"
           placeholder="Column Title"
@@ -97,7 +99,7 @@ export const ColumnsPanel: React.FC<{}> = () => {
           fullWidth
         />
       </div>
-      <div className="MuiDataGrid-panelMainContainer">
+      <div className="MuiDataGridPreferencesPanels-container">
         <div className={classes.columnsListContainer}>
           {currentColumns.map((column) => (
             <div key={column.field} className={classes.column}>
@@ -130,7 +132,7 @@ export const ColumnsPanel: React.FC<{}> = () => {
           ))}
         </div>
       </div>
-      <div className="MuiDataGrid-panelFooter">
+      <div className="MuiDataGridPreferencesPanels-footer">
         <Button onClick={hideAllColumns} color="primary">
           Hide All
         </Button>
