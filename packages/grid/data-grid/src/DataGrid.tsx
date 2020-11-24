@@ -8,6 +8,7 @@ const FORCED_PROPS: Partial<GridComponentProps> = {
   disableColumnReorder: true,
   disableMultipleColumnsSorting: true,
   disableMultipleSelection: true,
+  disableMultipleColumnsFiltering: true,
   pagination: true,
   apiRef: undefined,
 };
@@ -17,6 +18,7 @@ export type DataGridProps = Omit<
   | 'disableColumnResize'
   | 'disableColumnReorder'
   | 'disableMultipleColumnsSorting'
+  | 'disableMultipleColumnsFiltering'
   | 'disableMultipleSelection'
   | 'licenseStatus'
   | 'apiRef'
@@ -26,6 +28,7 @@ export type DataGridProps = Omit<
   disableColumnResize?: true;
   disableColumnReorder?: true;
   disableMultipleColumnsSorting?: true;
+  disableMultipleColumnsFiltering?: true;
   disableMultipleSelection?: true;
   pagination?: true;
   apiRef?: undefined;
@@ -99,6 +102,19 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
         [
           `Material-UI: \`<DataGrid disableColumnResize={false} />\` is not a valid prop.`,
           'Column resizing is not available in the MIT version.',
+          '',
+          'You need to upgrade to the XGrid component to unlock this feature.',
+        ].join('\n'),
+      );
+    }
+    return null;
+  }),
+  disableMultipleColumnsFiltering: chainPropTypes(PropTypes.bool, (props: any) => {
+    if (props.disableMultipleColumnsFiltering === false) {
+      throw new Error(
+        [
+          `Material-UI: \`<DataGrid disableMultipleColumnsFiltering={false} />\` is not a valid prop.`,
+          'Only single column sorting is available in the MIT version.',
           '',
           'You need to upgrade to the XGrid component to unlock this feature.',
         ].join('\n'),

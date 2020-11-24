@@ -2,8 +2,6 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
 import * as React from 'react';
 import { allColumnsSelector } from '../../hooks/features/columns/columnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
@@ -12,7 +10,6 @@ import {
   viewportSizeStateSelector,
 } from '../../hooks/features/preferencesPanel/preferencePanelSelector';
 import { PreferencePanelsValue } from '../../hooks/features/preferencesPanel/preferencesPanelValue';
-import { useIcons } from '../../hooks/utils/useIcons';
 import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { ApiContext } from '../api-context';
 import { ColumnsPanel } from './ColumnsPanel';

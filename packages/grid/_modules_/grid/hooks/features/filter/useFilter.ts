@@ -5,12 +5,12 @@ import { buildCellParams } from '../../../utils/paramsUtils';
 import { isEqual } from '../../../utils/utils';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useLogger } from '../../utils/useLogger';
+import { optionsSelector } from '../../utils/useOptionsProp';
 import { PreferencePanelsValue } from '../preferencesPanel/preferencesPanelValue';
 import { filterableColumnsSelector } from '../columns/columnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { sortedRowsSelector } from '../sorting/sortingSelector';
-import { getInitialFilterState } from './FilterModelState';
 import { getInitialVisibleRowsState } from './visibleRowsState';
 
 export const useFilter = (apiRef: ApiRef): void => {
@@ -19,6 +19,7 @@ export const useFilter = (apiRef: ApiRef): void => {
 
   const rows = useGridSelector(apiRef, sortedRowsSelector);
   const filterableColumns = useGridSelector(apiRef, filterableColumnsSelector);
+  const { disableMultipleColumnsFiltering } = useGridSelector(apiRef, optionsSelector);
 
   const clearFilteredRows = React.useCallback(() => {
     setGridState((state) => ({
@@ -115,7 +116,9 @@ export const useFilter = (apiRef: ApiRef): void => {
             item.columnField,
           )!.filterOperators![0].value!;
         }
-
+        if (disableMultipleColumnsFiltering && items.length > 1) {
+          items.length = 1;
+        }
         const newState = {
           ...state,
           filter: { ...state.filter, items },
@@ -124,7 +127,7 @@ export const useFilter = (apiRef: ApiRef): void => {
       });
       applyFilters();
     },
-    [apiRef, applyFilters, filterableColumns, setGridState],
+    [apiRef, applyFilters, disableMultipleColumnsFiltering, filterableColumns, setGridState],
   );
 
   const deleteFilter = React.useCallback(

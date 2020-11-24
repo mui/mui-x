@@ -1,4 +1,3 @@
-import { IconButton } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import * as React from 'react';
 import { PreferencePanelsValue } from '../../hooks/features/preferencesPanel/preferencesPanelValue';

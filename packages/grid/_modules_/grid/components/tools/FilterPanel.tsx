@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { Button } from '@material-ui/core';
+import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { useGridState } from '../../hooks/features/core/useGridState';
 import { PREVENT_HIDE_PREFERENCES } from '../../constants/index';
+import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { FilterItem, LinkOperator } from '../../models/filterItem';
 import { ApiContext } from '../api-context';
 import { AddIcon } from '../icons/index';
@@ -10,6 +12,8 @@ import { FilterForm } from './FilterForm';
 export const FilterPanel: React.FC<{}> = () => {
   const apiRef = React.useContext(ApiContext);
   const [gridState] = useGridState(apiRef!);
+  const { disableMultipleColumnsFiltering } = useGridSelector(apiRef, optionsSelector);
+
   const hasMultipleFilters = React.useMemo(() => gridState.filter.items.length > 1, [
     gridState.filter.items.length,
   ]);
@@ -71,11 +75,13 @@ export const FilterPanel: React.FC<{}> = () => {
           />
         ))}
       </div>
-      <div className="panelFooter">
-        <Button onClick={addNewFilter} startIcon={<AddIcon />} color="primary">
-          Add Filter
-        </Button>
-      </div>
+      {!disableMultipleColumnsFiltering && (
+        <div className="panelFooter">
+          <Button onClick={addNewFilter} startIcon={<AddIcon />} color="primary">
+            Add Filter
+          </Button>
+        </div>
+      )}
     </React.Fragment>
   );
 };

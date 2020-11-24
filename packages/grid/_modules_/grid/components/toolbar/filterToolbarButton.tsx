@@ -1,4 +1,3 @@
-import { IconButton } from '@material-ui/core';
 import Badge from '@material-ui/core/Badge';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -27,8 +26,8 @@ export const FilterToolbarButton: React.FC<{}> = () => {
       <div>
         {counter} active filter(s)
         <ul>
-          {...activeFilters.map((item) => (
-            <li>
+          {activeFilters.map((item) => (
+            <li key={item.id}>
               {lookup[item.columnField!].headerName || item.columnField} {item.operatorValue}{' '}
               {item.value}
             </li>
