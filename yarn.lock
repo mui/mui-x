@@ -2734,8 +2734,8 @@
     react-is "^16.8.0"
 
 "@material-ui/monorepo@https://github.com/mui-org/material-ui.git#master":
-  version "4.11.0"
-  resolved "https://github.com/mui-org/material-ui.git#41898e1318b0315e5a61e2df7780b6019f3b44f6"
+  version "4.11.1"
+  resolved "https://github.com/mui-org/material-ui.git#b8092ce09e164a1cb2fec2f3a5b6aa6e2dc6cbbd"
 
 "@material-ui/monorepo@https://github.com/mui-org/material-ui.git#next":
   version "5.0.0-alpha.16"
