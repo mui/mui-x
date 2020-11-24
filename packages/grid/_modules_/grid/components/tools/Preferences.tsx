@@ -33,13 +33,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     overflow: 'hidden',
     flex: 1,
-    '& .panelMainContainer': {
+    '& .MuiDataGrid-panelMainContainer': {
       display: 'flex',
       flexDirection: 'column',
       overflow: 'auto',
       flex: '1 1',
     },
-    '& .panelFooter, .panelHeader': {
+    '& .MuiDataGrid-panelFooter, .MuiDataGrid-panelHeader': {
       padding: 8,
       display: 'inline-flex',
       flexFlow: 'wrap',

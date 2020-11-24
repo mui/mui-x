@@ -84,18 +84,18 @@ export const ColumnsPanel: React.FC<{}> = () => {
 
   return (
     <React.Fragment>
-      <div className="panelHeader">
+      <div className="MuiDataGrid-panelHeader">
         <TextField
-          label={'Find column'}
-          placeholder={'Column Title'}
+          label="Find column"
+          placeholder="Column Title"
           value={searchValue}
           onChange={onSearchColumnValueChange}
-          type={'text'}
+          type="text"
           autoFocus
           fullWidth
         />
       </div>
-      <div className="panelMainContainer">
+      <div className="MuiDataGrid-panelMainContainer">
         <div className={classes.columnsListContainer}>
           {currentColumns.map((column) => (
             <div key={column.field} className={classes.column}>
@@ -121,7 +121,7 @@ export const ColumnsPanel: React.FC<{}> = () => {
           ))}
         </div>
       </div>
-      <div className="panelFooter">
+      <div className="MuiDataGrid-panelFooter">
         <Button onClick={hideAllColumns} color="primary">
           Hide All
         </Button>
