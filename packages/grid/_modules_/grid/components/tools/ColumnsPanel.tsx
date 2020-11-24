@@ -46,7 +46,7 @@ export const ColumnsPanel: React.FC<{}> = () => {
   const toggleColumn = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       dontHidePreferences(event);
-      const {name} = event.target as HTMLInputElement;
+      const { name } = event.target as HTMLInputElement;
       apiRef!.current.toggleColumn(name);
     },
     [apiRef, dontHidePreferences],

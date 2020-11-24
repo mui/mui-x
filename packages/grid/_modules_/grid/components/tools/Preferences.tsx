@@ -42,10 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& .MuiDataGrid-panelFooter, .MuiDataGrid-panelHeader': {
       padding: 8,
       display: 'inline-flex',
-      flexFlow: 'wrap',
-      alignItems: 'baseline',
       justifyContent: 'space-between',
-      flex: '0 1 50px',
     },
   },
 }));

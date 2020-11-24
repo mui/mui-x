@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     justifyContent: 'space-around',
-    padding: '10px',
+    padding: 8,
   },
   linkOperatorSelect: {
     width: 60,
@@ -128,7 +128,6 @@ export const FilterForm: React.FC<FilterFormProps> = ({
       <FormControl
         className={classes.linkOperatorSelect}
         style={{
-          width: 60,
           display: hasMultipleFilters ? 'block' : 'none',
           visibility: showMultiFilterOperators ? 'visible' : 'hidden',
         }}
