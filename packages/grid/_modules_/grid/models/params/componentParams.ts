@@ -1,9 +1,9 @@
 import { PaginationState } from '../../hooks/features/pagination/paginationReducer';
-import { Rows } from '../rows';
+import { ApiRef } from '../api/apiRef';
 import { Columns } from '../colDef/colDef';
 import { GridOptions } from '../gridOptions';
 import { RootContainerRef } from '../rootContainerRef';
-import { ApiRef } from '../api';
+import { Rows } from '../rows';
 
 /**
  * Object passed as React prop in the component override.

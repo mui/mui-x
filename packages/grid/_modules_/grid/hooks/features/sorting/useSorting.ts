@@ -14,7 +14,7 @@ import { CellParams } from '../../../models/params/cellParams';
 import { ColParams } from '../../../models/params/colParams';
 import { SortModelParams } from '../../../models/params/sortModelParams';
 import { RowModel, RowsProp } from '../../../models/rows';
-import { FieldComparatorList, SortItem, SortModel } from '../../../models/sortModel';
+import { FieldComparatorList, SortItem, SortModel, SortDirection } from '../../../models/sortModel';
 import { buildCellParams } from '../../../utils/paramsUtils';
 import { isDesc, nextSortDirection } from '../../../utils/sortingUtils';
 import { isEqual } from '../../../utils/utils';
@@ -67,13 +67,24 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   );
 
   const createSortItem = React.useCallback(
-    (col: ColDef): SortItem | undefined => {
+    (col: ColDef, directionOverride?: SortDirection): SortItem | undefined => {
       const existing = gridState.sorting.sortModel.find((c) => c.field === col.field);
+
       if (existing) {
-        const nextSort = nextSortDirection(options.sortingOrder, existing.sort);
+        const nextSort =
+          directionOverride === undefined
+            ? nextSortDirection(options.sortingOrder, existing.sort)
+            : directionOverride;
+
         return nextSort == null ? undefined : { ...existing, sort: nextSort };
       }
-      return { field: col.field, sort: nextSortDirection(options.sortingOrder) };
+      return {
+        field: col.field,
+        sort:
+          directionOverride === undefined
+            ? nextSortDirection(options.sortingOrder)
+            : directionOverride,
+      };
     },
     [gridState.sorting.sortModel, options.sortingOrder],
   );
@@ -173,8 +184,11 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   );
 
   const sortColumn = React.useCallback(
-    (column: ColDef) => {
-      const sortItem = createSortItem(column);
+    (column: ColDef, direction?: SortDirection) => {
+      if (!column.sortable) {
+        return;
+      }
+      const sortItem = createSortItem(column, direction);
       let sortModel;
       if (!allowMultipleSorting.current) {
         sortModel = !sortItem ? [] : [sortItem];
@@ -188,9 +202,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
 
   const headerClickHandler = React.useCallback(
     ({ colDef }: ColParams) => {
-      if (colDef.sortable) {
-        sortColumn(colDef);
-      }
+      sortColumn(colDef);
     },
     [sortColumn],
   );
@@ -225,7 +237,13 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
 
   useApiEventHandler(apiRef, SORT_MODEL_CHANGE, options.onSortModelChange);
 
-  const sortApi: SortApi = { getSortModel, setSortModel, onSortModelChange, applySorting };
+  const sortApi: SortApi = {
+    getSortModel,
+    setSortModel,
+    sortColumn,
+    onSortModelChange,
+    applySorting,
+  };
   useApiMethod(apiRef, sortApi, 'SortApi');
 
   React.useEffect(() => {

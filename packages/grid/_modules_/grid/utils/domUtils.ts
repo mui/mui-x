@@ -1,7 +1,7 @@
 import {
   CELL_CSS_CLASS,
   DATA_CONTAINER_CSS_CLASS,
-  HEADER_CELL_CSS_CLASS,
+  HEADER_CELL_TITLE_CSS_CLASS,
 } from '../constants/cssClassesConstants';
 import { CellIndexCoordinates } from '../models/cell';
 
@@ -17,8 +17,8 @@ export function isCell(elem: Element | null): boolean {
   return elem != null && findParentElementFromClassName(elem, CELL_CSS_CLASS) !== null;
 }
 
-export function isHeaderCell(elem: Element): boolean {
-  return elem && findParentElementFromClassName(elem, HEADER_CELL_CSS_CLASS) !== null;
+export function isHeaderTitleContainer(elem: Element): boolean {
+  return elem && findParentElementFromClassName(elem, HEADER_CELL_TITLE_CSS_CLASS) !== null;
 }
 
 export function getIdFromRowElem(rowEl: Element): string {

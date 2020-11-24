@@ -10,7 +10,7 @@ import { getInitialState, GridState } from './gridState';
 
 export const useGridApi = (apiRef: ApiRef): GridApi => {
   const logger = useLogger('useGridApi');
-  const [, forceUpdate] = React.useState();
+  const [, forceUpdate] = React.useState<GridState>();
   if (!apiRef.current.isInitialised && !apiRef.current.state) {
     logger.info('Initialising state.');
     apiRef.current.state = getInitialState();

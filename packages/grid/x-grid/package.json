@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/x-grid",
-  "version": "4.0.0-alpha.9",
+  "version": "4.0.0-alpha.10",
   "description": "The Material-UI X edition of the data grid component.",
   "author": "Material-UI Team",
   "main": "dist/index-cjs.js",
@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@material-ui/utils": "^5.0.0-alpha.14",
-    "@material-ui/x-license": "^4.0.0-alpha.9",
+    "@material-ui/x-license": "^4.0.0-alpha.10",
     "prop-types": "^15.7.2",
     "reselect": "^4.0.0",
     "tslib": "^2.0.0"
