@@ -6,9 +6,9 @@ import { GridComponent, GridComponentProps, classnames } from '../../_modules_/g
 const FORCED_PROPS: Partial<GridComponentProps> = {
   disableColumnResize: true,
   disableColumnReorder: true,
+  disableMultipleColumnsFiltering: true,
   disableMultipleColumnsSorting: true,
   disableMultipleSelection: true,
-  disableMultipleColumnsFiltering: true,
   pagination: true,
   apiRef: undefined,
 };
@@ -17,8 +17,8 @@ export type DataGridProps = Omit<
   GridComponentProps,
   | 'disableColumnResize'
   | 'disableColumnReorder'
-  | 'disableMultipleColumnsSorting'
   | 'disableMultipleColumnsFiltering'
+  | 'disableMultipleColumnsSorting'
   | 'disableMultipleSelection'
   | 'licenseStatus'
   | 'apiRef'
@@ -27,8 +27,8 @@ export type DataGridProps = Omit<
 > & {
   disableColumnResize?: true;
   disableColumnReorder?: true;
-  disableMultipleColumnsSorting?: true;
   disableMultipleColumnsFiltering?: true;
+  disableMultipleColumnsSorting?: true;
   disableMultipleSelection?: true;
   pagination?: true;
   apiRef?: undefined;

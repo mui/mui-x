@@ -49,6 +49,7 @@ export interface ColumnApi {
   /**
    * Allows to toggle a column.
    * @param field
+   * @param forceHide optional value, if not provided the column will toggle
    */
-  toggleColumn: (field: string, hide: boolean) => void;
+  toggleColumn: (field: string, forceHide?: boolean) => void;
 }

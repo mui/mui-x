@@ -231,9 +231,9 @@ export function useColumns(columns: Columns, apiRef: ApiRef): InternalColumns {
 
   const updateColumn = React.useCallback((col: ColDef) => updateColumns([col]), [updateColumns]);
   const toggleColumn = React.useCallback(
-    (field: string, hide: boolean) => {
+    (field: string, hide?: boolean) => {
       const col = getColumnFromField(field);
-      const updatedCol = { ...col, hide };
+      const updatedCol = { ...col, hide: hide == null ? !col.hide : hide };
       updateColumns([updatedCol]);
       forceUpdate();
     },

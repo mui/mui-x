@@ -1,8 +1,8 @@
+import * as React from 'react';
 import { FormControl, IconButton, Switch } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
-import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { allColumnsSelector } from '../../hooks/features/columns/columnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
@@ -32,7 +32,6 @@ export const ColumnsPanel: React.FC<{}> = () => {
   const classes = useStyles();
 
   const apiRef = React.useContext(ApiContext);
-  const searchTextRef = React.useRef<HTMLInputElement>(null);
   const columns = useGridSelector(apiRef, allColumnsSelector);
   const [searchValue, setSearchValue] = React.useState('');
 
@@ -45,9 +44,10 @@ export const ColumnsPanel: React.FC<{}> = () => {
   );
 
   const toggleColumn = React.useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    (event: React.MouseEvent<HTMLButtonElement>) => {
       dontHidePreferences(event);
-      apiRef!.current.toggleColumn(event.target.name, !event.target.checked);
+      const {name} = event.target as HTMLInputElement;
+      apiRef!.current.toggleColumn(name);
     },
     [apiRef, dontHidePreferences],
   );
@@ -82,17 +82,10 @@ export const ColumnsPanel: React.FC<{}> = () => {
     [columns, searchValue],
   );
 
-  React.useEffect(() => {
-    if (searchTextRef && searchTextRef.current) {
-      searchTextRef!.current!.focus();
-    }
-  });
-
   return (
     <React.Fragment>
       <div className="panelHeader">
         <TextField
-          ref={searchTextRef}
           label={'Find column'}
           placeholder={'Column Title'}
           value={searchValue}
@@ -111,7 +104,7 @@ export const ColumnsPanel: React.FC<{}> = () => {
                   <Switch
                     className={classes.switch}
                     checked={!column.hide}
-                    onChange={toggleColumn}
+                    onClick={toggleColumn}
                     name={column.field}
                     color="primary"
                     size="small"
