@@ -25,7 +25,7 @@ export const useColumnMenu = (apiRef: ApiRef): void => {
     logger.debug('Hiding Column Menu');
     setGridState((state) => ({
       ...state,
-      columnMenu: { open: false },
+      columnMenu: { ...state.columnMenu, open: false },
     }));
     forceUpdate();
   }, [forceUpdate, logger, setGridState]);
