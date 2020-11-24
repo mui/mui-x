@@ -9,4 +9,3 @@ export * from './renderProgress';
 export * from './renderRating';
 export * from './renderStatus';
 export * from './renderTotalPrice';
-export * from './renderBatteryPercentage';
