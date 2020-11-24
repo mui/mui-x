@@ -72,6 +72,17 @@ module.exports = {
       },
     });
 
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        'process.env': {
+          ENABLE_EXPERIMENTAL: JSON.stringify(
+            // Set by Netlify
+            process.env.PULL_REQUEST === 'false' ? 'false' : 'true',
+          ),
+        },
+      }),
+    );
+
     config.optimization = {
       splitChunks: {
         chunks: 'all',

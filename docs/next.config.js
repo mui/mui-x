@@ -36,7 +36,10 @@ module.exports = {
           CONTEXT: JSON.stringify(process.env.CONTEXT),
           LIB_VERSION: JSON.stringify(pkg.version),
           REACT_MODE: JSON.stringify(reactMode),
-          ENABLE_EXPERIMENTAL: JSON.stringify(process.env.PULL_REQUEST),
+          ENABLE_EXPERIMENTAL: JSON.stringify(
+            // Set by Netlify
+            process.env.PULL_REQUEST === 'false' ? 'false' : 'true',
+          ),
           SOURCE_CODE_ROOT_URL: JSON.stringify(
             'https://github.com/mui-org/material-ui-x/blob/master',
           ),
