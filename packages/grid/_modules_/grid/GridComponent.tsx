@@ -41,6 +41,7 @@ import { useLogger, useLoggerFactory } from './hooks/utils/useLogger';
 import { useOptionsProp } from './hooks/utils/useOptionsProp';
 import { useResizeContainer } from './hooks/utils/useResizeContainer';
 import { useVirtualRows } from './hooks/features/virtualization/useVirtualRows';
+import { useDensityPicker } from './hooks/features/densityPicker';
 import { RootContainerRef } from './models/rootContainerRef';
 import { getCurryTotalHeight } from './utils/getTotalHeight';
 import { ApiContext } from './components/api-context';
@@ -84,6 +85,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     usePreferencesPanel(apiRef);
     useFilter(apiRef);
     useContainerProps(windowRef, apiRef);
+    useDensityPicker(apiRef);
     const renderCtx = useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
 
     useColumnReorder(apiRef);
@@ -150,12 +152,12 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                       <React.Fragment>
                         {!gridState.options.hideToolbar &&
                           (!gridState.options.disableColumnFilter ||
-                            !gridState.options.disableColumnSelector) && (
+                            !gridState.options.disableColumnSelector ||
+                            !gridState.options.disableDensityPicker) && (
                             <GridToolbar>
                               {!gridState.options.disableColumnSelector && <ColumnsToolbarButton />}
                               {!gridState.options.disableColumnFilter && <FilterToolbarButton />}
-                              {/* TODO: do the same as above */}
-                              <DensityPicker />
+                              {!gridState.options.disableDensityPicker && <DensityPicker />}
                             </GridToolbar>
                           )}
                       </React.Fragment>

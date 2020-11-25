@@ -52,25 +52,25 @@ export interface IconsOptions {
    */
   ColumnResize?: React.ElementType<{ className: string }>;
 
-  densityShort?: React.ElementType;
+  DensitySmall?: React.ElementType;
 
-  densityMedium?: React.ElementType;
+  DensityMedium?: React.ElementType;
 
-  densityTall?: React.ElementType;
+  DensityLarge?: React.ElementType;
 }
 
 /**
  * Available density types.
  */
-export type Density = 'short' | 'medium' | 'tall';
+export type Density = 'small' | 'medium' | 'large';
 
 /**
  * Density enum.
  */
 export enum DensityTypes {
-  Short = 'short',
+  Small = 'small',
   Medium = 'medium',
-  Tall = 'tall',
+  Large = 'large',
 }
 
 // TODO add multiSortKey
@@ -128,6 +128,11 @@ export interface GridOptions {
    * @default false
    */
   disableColumnMenu?: boolean;
+  /**
+   * If `true`, density selection is disabled.
+   * @default false
+   */
+  disableDensityPicker?: boolean;
   /**
    * If `true`, reordering columns is disabled.
    * @default false
@@ -346,8 +351,8 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
     ColumnSortedAscending: ArrowUpwardIcon,
     ColumnSortedDescending: ArrowDownwardIcon,
     ColumnResize: SeparatorIcon,
-    densityShort: ViewHeadlineIcon,
-    densityMedium: TableRowsIcon,
-    densityTall: ViewStreamIcon,
+    DensitySmall: ViewHeadlineIcon,
+    DensityMedium: TableRowsIcon,
+    DensityLarge: ViewStreamIcon,
   },
 };
