@@ -1,17 +1,16 @@
 import * as React from 'react';
-import { PAGE_CHANGED, PAGESIZE_CHANGED, RESIZE } from '../../../constants/eventsConstants';
+import { containerSizesSelector } from '../../../components/viewport';
+import { PAGE_CHANGED, PAGESIZE_CHANGED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { PaginationApi } from '../../../models/api/paginationApi';
-import { PaginationProps } from '../../../models/paginationProps';
 import { PageChangeParams } from '../../../models/params/pageChangeParams';
 import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useLogger } from '../../utils/useLogger';
 import { optionsSelector } from '../../utils/useOptionsProp';
-import { visibleColumnsLengthSelector } from '../columns/columnsSelector';
 import { useGridReducer } from '../core/useGridReducer';
 import { useGridSelector } from '../core/useGridSelector';
-import { rowCountSelector } from '../rows/rowsSelector';
+import { visibleRowCountSelector } from '../filter/filterSelector';
 import {
   INITIAL_PAGINATION_STATE,
   PaginationActions,
@@ -25,7 +24,7 @@ import {
 
 const PAGINATION_STATE_ID = 'pagination';
 
-export const usePagination = (apiRef: ApiRef): PaginationProps => {
+export const usePagination = (apiRef: ApiRef): void => {
   const logger = useLogger('usePagination');
 
   const { gridState, dispatch } = useGridReducer<PaginationState, PaginationActions>(
@@ -35,8 +34,8 @@ export const usePagination = (apiRef: ApiRef): PaginationProps => {
     { ...INITIAL_PAGINATION_STATE },
   );
   const options = useGridSelector(apiRef, optionsSelector);
-  const totalRowCount = useGridSelector(apiRef, rowCountSelector);
-  const visibleColumnsLength = useGridSelector(apiRef, visibleColumnsLengthSelector);
+  const visibleRowCount = useGridSelector(apiRef, visibleRowCountSelector);
+  const containerSizes = useGridSelector(apiRef, containerSizesSelector);
 
   const setPage = React.useCallback(
     (page: number) => {
@@ -76,24 +75,8 @@ export const usePagination = (apiRef: ApiRef): PaginationProps => {
     [apiRef],
   );
 
-  const resetAutopageSize = React.useCallback(() => {
-    if (options.autoPageSize) {
-      const containerProps = apiRef?.current?.getContainerPropsState();
-      const autoPagesize = containerProps?.viewportPageSize;
-      if (autoPagesize) {
-        logger.debug(`Setting autoPagesize to ${autoPagesize}`);
-        setPageSize(autoPagesize);
-      }
-    }
-  }, [options.autoPageSize, apiRef, logger, setPageSize]);
-
-  useApiEventHandler(apiRef, RESIZE, resetAutopageSize);
   useApiEventHandler(apiRef, PAGE_CHANGED, options.onPageChange);
   useApiEventHandler(apiRef, PAGESIZE_CHANGED, options.onPageSizeChange);
-
-  React.useEffect(() => {
-    dispatch(setRowCountActionCreator({ totalRowCount }));
-  }, [apiRef, dispatch, totalRowCount]);
 
   React.useEffect(() => {
     dispatch(setPaginationModeActionCreator({ paginationMode: options.paginationMode! }));
@@ -110,10 +93,14 @@ export const usePagination = (apiRef: ApiRef): PaginationProps => {
   }, [options.autoPageSize, options.pageSize, logger, setPageSize]);
 
   React.useEffect(() => {
-    if (options.autoPageSize && visibleColumnsLength > 0) {
-      resetAutopageSize();
+    if (options.autoPageSize && containerSizes && containerSizes?.viewportPageSize > 0) {
+      setPageSize(containerSizes?.viewportPageSize);
     }
-  }, [options.autoPageSize, resetAutopageSize, visibleColumnsLength]);
+  }, [containerSizes, options.autoPageSize, setPageSize]);
+
+  React.useEffect(() => {
+    dispatch(setRowCountActionCreator({ totalRowCount: visibleRowCount }));
+  }, [apiRef, dispatch, visibleRowCount]);
 
   React.useEffect(() => {
     if (apiRef.current?.isInitialised) {
@@ -129,10 +116,4 @@ export const usePagination = (apiRef: ApiRef): PaginationProps => {
   };
 
   useApiMethod(apiRef, paginationApi, 'paginationApi');
-
-  return {
-    ...gridState.pagination,
-    setPage,
-    setPageSize,
-  };
 };
