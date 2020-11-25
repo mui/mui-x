@@ -81,7 +81,13 @@ export const useVirtualRows = (
       const rowProps: RenderRowProps = { page, firstRowIdx, lastRowIdx };
       return rowProps;
     },
-    [apiRef, options.pagination, paginationState.pageSize, paginationState.paginationMode, paginationState.page],
+    [
+      apiRef,
+      options.pagination,
+      paginationState.pageSize,
+      paginationState.paginationMode,
+      paginationState.page,
+    ],
   );
 
   const getRenderingState = React.useCallback((): Partial<RenderContextProps> | null => {

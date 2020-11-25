@@ -40,9 +40,9 @@ describe('<DataGrid />', () => {
     describe('Material-UI component API', () => {
       it(`attaches the ref`, () => {
         const ref = React.createRef<HTMLDivElement>();
-        const {container} = render(
-          <div style={{width: 300, height: 300}}>
-            <DataGrid {...defaultProps} ref={ref}/>
+        const { container } = render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...defaultProps} ref={ref} />
           </div>,
         );
         expect(ref.current).to.be.instanceof(window.HTMLDivElement);
@@ -56,9 +56,9 @@ describe('<DataGrid />', () => {
       it('applies the className to the root component', () => {
         const className = randomStringValue();
 
-        const {container} = render(
-          <div style={{width: 300, height: 300}}>
-            <DataGrid {...defaultProps} className={className}/>
+        const { container } = render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...defaultProps} className={className} />
           </div>,
         );
 
@@ -83,8 +83,8 @@ describe('<DataGrid />', () => {
           },
         ];
         render(
-          <div style={{width: 300, height: 300}}>
-            <DataGrid {...defaultProps} rows={rows} page={2} pageSize={1}/>
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...defaultProps} rows={rows} page={2} pageSize={1} />
           </div>,
         );
         setTimeout(() => {
@@ -127,7 +127,7 @@ describe('<DataGrid />', () => {
           }, [page]);
 
           return (
-            <div style={{height: 300, width: 300}}>
+            <div style={{ height: 300, width: 300 }}>
               <DataGrid
                 {...defaultProps}
                 rows={rows}
@@ -141,9 +141,9 @@ describe('<DataGrid />', () => {
           );
         };
 
-        render(<ServerPaginationGrid/>);
+        render(<ServerPaginationGrid />);
         expect(getColumnValues()).to.deep.equal(['Nike 1']);
-        fireEvent.click(screen.getByRole('button', {name: /next page/i}));
+        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
         expect(getColumnValues()).to.deep.equal(['Nike 2']);
       });
     });
