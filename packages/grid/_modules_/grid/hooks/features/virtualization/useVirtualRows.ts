@@ -62,7 +62,11 @@ export const useVirtualRows = (
         return null;
       }
       let minRowIdx = 0;
-      if (options.pagination && paginationState.pageSize != null) {
+      if (
+        options.pagination &&
+        paginationState.pageSize != null &&
+        paginationState.paginationMode === 'client'
+      ) {
         minRowIdx =
           paginationState.pageSize * (paginationState.page - 1 > 0 ? paginationState.page - 1 : 0);
       }
