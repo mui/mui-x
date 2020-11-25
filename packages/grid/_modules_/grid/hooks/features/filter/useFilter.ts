@@ -1,8 +1,11 @@
 import * as React from 'react';
+import { ROWS_UPDATED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { FilterItem, LinkOperator } from '../../../models/filterItem';
+import { RowsProp } from '../../../models/rows';
 import { buildCellParams } from '../../../utils/paramsUtils';
 import { isEqual } from '../../../utils/utils';
+import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useLogger } from '../../utils/useLogger';
 import { optionsSelector } from '../../utils/useOptionsProp';
@@ -13,7 +16,7 @@ import { useGridState } from '../core/useGridState';
 import { sortedRowsSelector } from '../sorting/sortingSelector';
 import { getInitialVisibleRowsState } from './visibleRowsState';
 
-export const useFilter = (apiRef: ApiRef): void => {
+export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
   const logger = useLogger('useFilter');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
 
@@ -177,6 +180,13 @@ export const useFilter = (apiRef: ApiRef): void => {
     [applyFilters, setGridState],
   );
 
+  const onRowsUpdated = React.useCallback(() => {
+    if (gridState.filter.items.length > 0) {
+      apiRef.current.applyFilters();
+    }
+  }, [gridState.filter.items.length, apiRef]);
+
+  useApiEventHandler(apiRef, ROWS_UPDATED, onRowsUpdated);
   useApiMethod(
     apiRef,
     {
@@ -188,4 +198,12 @@ export const useFilter = (apiRef: ApiRef): void => {
     },
     'FilterApi',
   );
+
+  React.useEffect(() => {
+    if(apiRef.current) {
+      // When the rows prop change, we reapply the filters.
+      apiRef.current.applyFilters();
+    }
+  }, [apiRef, rowsProp]);
+
 };

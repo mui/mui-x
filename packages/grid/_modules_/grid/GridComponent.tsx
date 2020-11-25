@@ -81,7 +81,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useSorting(apiRef, props.rows);
     useColumnMenu(apiRef);
     usePreferencesPanel(apiRef);
-    useFilter(apiRef);
+    useFilter(apiRef, props.rows);
     useContainerProps(windowRef, apiRef);
     const renderCtx = useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
 
