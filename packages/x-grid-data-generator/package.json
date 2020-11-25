@@ -1,7 +1,7 @@
 {
   "name": "@material-ui/x-grid-data-generator",
   "version": "4.0.0-alpha.10",
-  "description": "Data generator services for the grid",
+  "description": "Generate fake data for demo purposes only.",
   "author": "Material-UI Team",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",

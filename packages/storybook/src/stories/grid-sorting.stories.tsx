@@ -1,6 +1,6 @@
-import { Button } from '@material-ui/core';
-import { randomInt } from '@material-ui/x-grid-data-generator';
 import * as React from 'react';
+import Button from '@material-ui/core/Button';
+import { randomInt } from '@material-ui/x-grid-data-generator';
 import {
   ColDef,
   XGrid,
