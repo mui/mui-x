@@ -384,4 +384,47 @@ describe('<DataGrid />', () => {
       );
     });
   });
+
+  describe('toolbar', () => {
+    before(function beforeHook() {
+      if (/jsdom/.test(window.navigator.userAgent)) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
+    it('should increase grid density by 50% when selecting small density', () => {
+      const rowHeight = 30;
+      const { getByText } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...defaultProps} rowHeight={rowHeight} />
+        </div>,
+      );
+
+      fireEvent.click(getByText('Density'));
+      fireEvent.click(getByText('small'));
+
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
+        maxHeight: `${Math.floor(rowHeight / 2)}px`,
+      });
+    });
+
+    it('should decrease grid density by 50% when selecting large density', () => {
+      const rowHeight = 30;
+      const { getByText } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...defaultProps} rowHeight={rowHeight} />
+        </div>,
+      );
+
+      fireEvent.click(getByText('Density'));
+      fireEvent.click(getByText('large'));
+
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(firstGridRow).toHaveInlineStyle({
+        maxHeight: `${Math.floor(rowHeight * 1.5)}px`,
+      });
+    });
+  });
 });

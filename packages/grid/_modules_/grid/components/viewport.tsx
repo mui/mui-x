@@ -2,6 +2,7 @@ import * as React from 'react';
 import { columnsSelector } from '../hooks/features/columns/columnsSelector';
 import { GridState } from '../hooks/features/core/gridState';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
+import { densityRowHeightSelector } from '../hooks/features/density/densitySelector';
 import { visibleSortedRowsSelector } from '../hooks/features/filter/filterSelector';
 import { keyboardCellSelector } from '../hooks/features/keyboard/keyboardSelector';
 import { selectionStateSelector } from '../hooks/features/selection/selectionSelector';
@@ -34,8 +35,8 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const columns = useGridSelector(apiRef, columnsSelector);
     const cellFocus = useGridSelector(apiRef, keyboardCellSelector);
     const selectionState = useGridSelector(apiRef, selectionStateSelector);
-
     const rows = useGridSelector(apiRef, visibleSortedRowsSelector);
+    const rowHeight = useGridSelector(apiRef, densityRowHeightSelector);
 
     const getRowsElements = () => {
       // TODO move that to selector
@@ -48,7 +49,7 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
           selected={!!selectionState[r.id]}
           rowIndex={renderCtx.firstRowIdx + idx}
         >
-          <LeftEmptyCell width={renderCtx.leftEmptyWidth} />
+          <LeftEmptyCell width={renderCtx.leftEmptyWidth} height={rowHeight} />
           <RowCells
             columns={columns.visible}
             row={r}
@@ -62,7 +63,7 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
             cellFocus={cellFocus}
             domIndex={idx}
           />
-          <RightEmptyCell width={renderCtx.rightEmptyWidth} />
+          <RightEmptyCell width={renderCtx.rightEmptyWidth} height={rowHeight} />
         </Row>
       ));
     };

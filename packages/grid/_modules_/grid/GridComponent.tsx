@@ -41,13 +41,13 @@ import { useLogger, useLoggerFactory } from './hooks/utils/useLogger';
 import { useOptionsProp } from './hooks/utils/useOptionsProp';
 import { useResizeContainer } from './hooks/utils/useResizeContainer';
 import { useVirtualRows } from './hooks/features/virtualization/useVirtualRows';
-import { useDensityPicker } from './hooks/features/densityPicker';
+import { useDensity } from './hooks/features/density';
 import { RootContainerRef } from './models/rootContainerRef';
 import { getCurryTotalHeight } from './utils/getTotalHeight';
 import { ApiContext } from './components/api-context';
 import { OptionsContext } from './components/options-context';
 import { RenderContext } from './components/render-context';
-import { DensityPicker } from './components/DensityPicker';
+import { DensityPicker } from './components/toolbar/DensityPicker';
 import { useFilter } from './hooks/features/filter/useFilter';
 
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
@@ -85,7 +85,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     usePreferencesPanel(apiRef);
     useFilter(apiRef);
     useContainerProps(windowRef, apiRef);
-    useDensityPicker(apiRef);
+    useDensity(apiRef);
     const renderCtx = useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
 
     useColumnReorder(apiRef);
@@ -167,7 +167,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                     <Watermark licenseStatus={props.licenseStatus} />
                     <GridColumnsContainer
                       ref={columnsContainerRef}
-                      height={gridState.options.headerHeight}
+                      height={gridState.density.headerHeight}
                     >
                       <ColumnsHeader
                         ref={columnsHeaderRef}

@@ -207,6 +207,22 @@ This means that the number of rows will drive the height of the grid and consequ
 
 {{"demo": "pages/components/data-grid/rendering/AutoHeightGrid.js", "bg": "inline"}}
 
+## Density
+
+`DataGrid` provides an option to set the density of the rows and the columns header.
+
+### Density prop
+
+There are three possible density options to choose from: `small`, `medium` and `large`. By default the density of the `DataGrid` is set to `medium`. The default grid density can be changed by setting the `density` propery. The `density` propery works with relation to the `rowHeight` and `headerHeight` properties. This means that it will respect the values provided using `rowHeight` or `headerHeight` properties.
+
+{{"demo": "pages/components/data-grid/rendering/DensityPickerSmallGrid.js", "bg": "inline"}}
+
+### Density Picker button
+
+The default way to change the density of the `DataGrid` is by using the `DensityPicker` component from the toolbar. In addition there is a property to hide the `DensityPicker` from the toolbar.
+
+{{"demo": "pages/components/data-grid/rendering/DensityPickerHiddenGrid.js", "bg": "inline"}}
+
 ## Virtualization
 
 DOM virtualization is the feature that allows the grid to handle an unlimited\* number of rows and columns.

@@ -11,6 +11,8 @@ import { Cell, GridCellProps } from './cell';
 import { ApiContext } from './api-context';
 import { classnames, isFunction } from '../utils';
 import { buildCellParams } from '../utils/paramsUtils';
+import { densityRowHeightSelector } from '../hooks/features/density/densitySelector';
+import { useGridSelector } from '../hooks/features/core/useGridSelector';
 
 function applyCssClassRules(cellClassRules: CellClassRules, params: CellClassParams) {
   return Object.entries(cellClassRules).reduce((appliedCss, entry) => {
@@ -48,6 +50,7 @@ export const RowCells: React.FC<RowCellsProps> = React.memo((props) => {
     showCellRightBorder,
   } = props;
   const api = React.useContext(ApiContext);
+  const rowHeight = useGridSelector(api, densityRowHeightSelector);
 
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const isLastColumn = firstColIdx + colIdx === columns.length - 1;
@@ -102,6 +105,7 @@ export const RowCells: React.FC<RowCellsProps> = React.memo((props) => {
       value,
       field: column.field,
       width,
+      height: rowHeight,
       showRightBorder,
       ...formattedValueProp,
       align: column.align,

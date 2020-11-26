@@ -4,16 +4,18 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { useIcons } from '../hooks/utils/useIcons';
-import { ApiContext } from './api-context';
-import { DensityTypes, Density } from '../models/gridOptions';
-import { useGridSelector } from '../hooks/features/core/useGridSelector';
-import { optionsSelector } from '../hooks/utils/useOptionsProp';
-import { DensityOption } from '../models/api/densityPickerApi';
+import { useIcons } from '../../hooks/utils/useIcons';
+import { ApiContext } from '../api-context';
+import { DensityTypes, Density } from '../../models/gridOptions';
+import { useGridSelector } from '../../hooks/features/core/useGridSelector';
+import { optionsSelector } from '../../hooks/utils/useOptionsProp';
+import { DensityOption } from '../../models/api/densityApi';
+import { densitySizeSelector } from '../../hooks/features/density';
 
 export const DensityPicker = React.memo(function DensityPicker() {
   const apiRef = React.useContext(ApiContext);
-  const options = useGridSelector(apiRef, optionsSelector);
+  const { density, rowHeight, headerHeight } = useGridSelector(apiRef, optionsSelector);
+  const densitySize = useGridSelector(apiRef, densitySizeSelector);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const icons = useIcons();
 
@@ -36,8 +38,12 @@ export const DensityPicker = React.memo(function DensityPicker() {
     },
   ];
 
+  React.useEffect(() => {
+    apiRef!.current.setDensity(density, headerHeight, rowHeight);
+  }, [apiRef, density, rowHeight, headerHeight]);
+
   const getSelectedDensityIcon = React.useCallback((): React.ReactElement => {
-    switch (options.density) {
+    switch (densitySize) {
       case DensityTypes.Small:
         return <DensitySmallIcon />;
       case DensityTypes.Large:
@@ -45,13 +51,13 @@ export const DensityPicker = React.memo(function DensityPicker() {
       default:
         return <DensityMediumIcon />;
     }
-  }, [options.density]);
+  }, [densitySize]);
 
   const handleDensityPickerOpen = (event) => setAnchorEl(event.currentTarget);
   const handleDensityPickerClose = () => setAnchorEl(null);
   const handleDensityUpdate = React.useCallback(
-    (density: Density) => {
-      apiRef!.current.setDensity(density);
+    (newDensity: Density) => {
+      apiRef!.current.setDensity(newDensity);
       setAnchorEl(null);
     },
     [apiRef],
@@ -61,7 +67,7 @@ export const DensityPicker = React.memo(function DensityPicker() {
     <MenuItem
       key={index}
       onClick={() => handleDensityUpdate(option.label)}
-      selected={option.label === options.density}
+      selected={option.label === densitySize}
     >
       <ListItemIcon>{option.icon}</ListItemIcon>
       <ListItemText primary={option.label} />
@@ -87,10 +93,7 @@ export const DensityPicker = React.memo(function DensityPicker() {
           vertical: 'bottom',
           horizontal: 'left',
         }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
+        transitionDuration={0}
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleDensityPickerClose}

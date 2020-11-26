@@ -13,13 +13,13 @@ export interface DensityOption {
 }
 
 /**
- * The density picker API interface that is available in the grid [[apiRef]].
+ * The density API interface that is available in the grid [[apiRef]].
  */
-export interface DensityPickerApi {
+export interface DensityApi {
   /**
    * Set density of the grid.
    * @param density
    * @returns void
    */
-  setDensity: (density: Density) => void;
+  setDensity: (density: Density, headerHeight?, rowHeight?) => void;
 }
