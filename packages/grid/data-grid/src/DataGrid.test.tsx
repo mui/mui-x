@@ -399,6 +399,7 @@ describe('<DataGrid />', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid {...defaultProps} rowHeight={rowHeight} />
         </div>,
+        { strict: false },
       );
 
       fireEvent.click(getByText('Density'));
@@ -416,13 +417,14 @@ describe('<DataGrid />', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid {...defaultProps} rowHeight={rowHeight} />
         </div>,
+        { strict: false },
       );
 
       fireEvent.click(getByText('Density'));
       fireEvent.click(getByText('large'));
 
       // @ts-expect-error need to migrate helpers to TypeScript
-      expect(firstGridRow).toHaveInlineStyle({
+      expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
         maxHeight: `${Math.floor(rowHeight * 1.5)}px`,
       });
     });
