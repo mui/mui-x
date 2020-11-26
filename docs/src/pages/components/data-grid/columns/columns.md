@@ -9,7 +9,7 @@ components: DataGrid, XGrid
 
 ## Column definitions
 
-Grid columns are definied with the `columns` prop.
+Grid columns are defined with the `columns` prop.
 `columns` expects an array of objects.
 The columns should have this type: `ColDef[]`.
 
