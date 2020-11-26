@@ -9,6 +9,8 @@ components: DataGrid, XGrid
 
 ## 🚧 Column filter
 
+{{"demo": "pages/components/data-grid/filtering/BasicFilters.js", "bg": "inline"}}
+
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
 > 👍 Upvote [issue #201](https://github.com/mui-org/material-ui-x/issues/201) if you want to see it land faster.
