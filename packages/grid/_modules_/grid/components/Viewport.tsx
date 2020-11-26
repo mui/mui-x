@@ -10,11 +10,10 @@ import { renderStateSelector } from '../hooks/features/virtualization/renderingS
 import { useLogger } from '../hooks/utils/useLogger';
 import { optionsSelector } from '../hooks/utils/useOptionsProp';
 import { ApiContext } from './api-context';
-import { LeftEmptyCell, RightEmptyCell } from './Cell';
 import { RenderingZone } from './RenderingZone';
-import { Row } from './Row';
-import { RowCells } from './RowCells';
 import { StickyContainer } from './StickyContainer';
+import { RowElements } from './RowElements';
+import { RenderContextProps } from '../models';
 
 type ViewportType = React.ForwardRefExoticComponent<React.RefAttributes<HTMLDivElement>>;
 
@@ -43,37 +42,25 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
       if (renderState.renderContext == null) {
         return null;
       }
+      const renderContext = renderState.renderContext as RenderContextProps
 
       const renderedRows = rows.slice(
-        renderState.renderContext.firstRowIdx,
-        renderState.renderContext.lastRowIdx!,
+        renderContext.firstRowIdx,
+        renderContext.lastRowIdx,
       );
       return renderedRows.map((r, idx) => (
-        <Row
-          className={
-            (renderState.renderContext!.firstRowIdx! + idx) % 2 === 0 ? 'Mui-even' : 'Mui-odd'
-          }
+        <RowElements
           key={r.id}
-          id={r.id}
+          row={r}
+          domIndex={idx}
+          renderContext={renderContext}
+          options={options}
+          columns={visibleColumns}
+          cellFocus={cellFocus}
+          hasScroll={hasScroll}
           selected={!!selectionState[r.id]}
-          rowIndex={renderState.renderContext!.firstRowIdx! + idx}
-        >
-          <LeftEmptyCell width={renderState.renderContext!.leftEmptyWidth} height={rowHeight} />
-          <RowCells
-            columns={visibleColumns}
-            row={r}
-            firstColIdx={renderState.renderContext!.firstColIdx!}
-            lastColIdx={renderState.renderContext!.lastColIdx!}
-            hasScroll={hasScroll}
-            scrollSize={options.scrollbarSize}
-            showCellRightBorder={!!options.showCellRightBorder}
-            extendRowFullWidth={!options.disableExtendRowFullWidth}
-            rowIndex={renderState.renderContext!.firstRowIdx! + idx}
-            cellFocus={cellFocus}
-            domIndex={idx}
-          />
-          <RightEmptyCell width={renderState.renderContext!.rightEmptyWidth} height={rowHeight} />
-        </Row>
+          rowHeight={rowHeight}
+        />
       ));
     };
 
