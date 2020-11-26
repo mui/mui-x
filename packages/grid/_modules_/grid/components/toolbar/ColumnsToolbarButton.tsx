@@ -1,5 +1,5 @@
-import { IconButton } from '@material-ui/core';
 import * as React from 'react';
+import Button from '@material-ui/core/Button';
 import { PreferencePanelsValue } from '../../hooks/features/preferencesPanel/preferencesPanelValue';
 import { useIcons } from '../../hooks/utils/useIcons';
 import { ApiContext } from '../api-context';
@@ -14,8 +14,13 @@ export const ColumnsToolbarButton: React.FC<{}> = () => {
   }, [apiRef]);
 
   return (
-    <IconButton onClick={showColumns} color="primary" aria-label="Show Column Selector">
-      {iconElement}
-    </IconButton>
+    <Button
+      onClick={showColumns}
+      color="primary"
+      aria-label="Show Column Selector"
+      startIcon={iconElement}
+    >
+      Columns
+    </Button>
   );
 };

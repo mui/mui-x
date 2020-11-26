@@ -1,5 +1,9 @@
-import { ClickAwayListener, Grow, MenuList, Paper, Popper } from '@material-ui/core';
 import * as React from 'react';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Grow from '@material-ui/core/Grow';
+import MenuList from '@material-ui/core/MenuList';
+import Paper from '@material-ui/core/Paper';
+import Popper from '@material-ui/core/Popper';
 
 export interface MenuProps {
   open: boolean;

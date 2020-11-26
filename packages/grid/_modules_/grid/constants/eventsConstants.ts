@@ -46,4 +46,3 @@ export const SORT_MODEL_CHANGE = 'sortModelChange';
 export const STATE_CHANGE = 'stateChange';
 
 export const MULTIPLE_KEY_PRESS_CHANGED = 'multipleKeyPressChange';
-export const PREVENT_HIDE_PREFERENCES = 'preventHidePreferences';
