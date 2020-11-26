@@ -93,7 +93,6 @@ export const DensityPicker = React.memo(function DensityPicker() {
           vertical: 'bottom',
           horizontal: 'left',
         }}
-        transitionDuration={0}
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleDensityPickerClose}
