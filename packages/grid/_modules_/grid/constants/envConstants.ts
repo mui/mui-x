@@ -1,13 +1,9 @@
 import { localStorageAvailable } from '../utils/utils';
 
-const forceEnabled = localStorageAvailable()
-  ? Boolean(window.localStorage.getItem('EXPERIMENTAL_ENABLED'))
-  : null;
-
 let experimentalEnabled;
 
-if (forceEnabled !== null) {
-  experimentalEnabled = forceEnabled;
+if (localStorageAvailable() && window.localStorage.getItem('EXPERIMENTAL_ENABLED')) {
+  experimentalEnabled = window.localStorage.getItem('EXPERIMENTAL_ENABLED') === 'true';
 } else {
   experimentalEnabled = process.env.EXPERIMENTAL_ENABLED === 'true';
 }
