@@ -19,6 +19,7 @@ import { RowSelectedParams } from './params/rowSelectedParams';
 import { SelectionChangeParams } from './params/selectionChangeParams';
 import { SortModelParams } from './params/sortModelParams';
 import { SortDirection, SortModel } from './sortModel';
+import { EXPERIMENTAL_ENABLED } from '../constants/envConstants';
 
 /**
  * Set of icons used in the grid component UI.
@@ -312,10 +313,10 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   sortingMode: FeatureModeConstant.client,
   sortingOrder: ['asc', 'desc', null],
   columnTypes: DEFAULT_COLUMN_TYPES,
-  disableColumnMenu: process.env.NODE_ENV === 'production',
-  disableColumnFilter: process.env.NODE_ENV === 'production',
-  disableColumnSelector: process.env.NODE_ENV === 'production',
-  hideToolbar: process.env.NODE_ENV === 'production',
+  disableColumnMenu: !EXPERIMENTAL_ENABLED,
+  disableColumnFilter: !EXPERIMENTAL_ENABLED,
+  disableColumnSelector: !EXPERIMENTAL_ENABLED,
+  hideToolbar: !EXPERIMENTAL_ENABLED,
   icons: {
     ColumnFiltering: FilterIcon,
     ColumnSelector: ColumnIcon,
