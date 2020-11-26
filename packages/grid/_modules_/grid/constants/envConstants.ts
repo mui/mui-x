@@ -1,8 +1,15 @@
 import { localStorageAvailable } from '../utils/utils';
 
-const force =
-  localStorageAvailable() && window.localStorage.getItem('EXPERIMENTAL_ENABLED') != null;
+const forceEnabled = localStorageAvailable()
+  ? Boolean(window.localStorage.getItem('EXPERIMENTAL_ENABLED'))
+  : null;
 
-export const EXPERIMENTAL_ENABLED =
-  process.env.EXPERIMENTAL_ENABLED !== undefined &&
-  (process.env.EXPERIMENTAL_ENABLED === 'true' || force);
+let experimentalEnabled;
+
+if (forceEnabled !== null) {
+  experimentalEnabled = forceEnabled;
+} else {
+  experimentalEnabled = process.env.EXPERIMENTAL_ENABLED === 'true';
+}
+
+export const EXPERIMENTAL_ENABLED = experimentalEnabled;
