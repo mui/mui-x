@@ -122,7 +122,7 @@ const pages = [
             pathname: '/components',
             subheader: '/components/data-grid',
             children:
-              process.env.CONTEXT === 'production'
+              process.env.PULL_REQUEST === 'false'
                 ? [
                     {
                       pathname: '/components/data-grid',

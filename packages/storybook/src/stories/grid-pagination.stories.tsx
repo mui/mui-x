@@ -1,3 +1,5 @@
+import { DataGrid } from '@material-ui/data-grid';
+import { useDemoData } from '@material-ui/x-grid-data-generator';
 import * as React from 'react';
 import { ApiRef, useApiRef, XGrid, PageChangeParams, RowsProp } from '@material-ui/x-grid';
 import Button from '@material-ui/core/Button';
@@ -193,7 +195,7 @@ function loadServerRows(params: PageChangeParams): Promise<GridData> {
 
 export function ServerPaginationWithApi() {
   const apiRef: ApiRef = useApiRef();
-  const data = useData(100, 10);
+  const data = useData(1000, 10);
   const [rows, setRows] = React.useState<RowsProp>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
 
@@ -221,7 +223,7 @@ export function ServerPaginationWithApi() {
         apiRef={apiRef}
         pagination
         pageSize={50}
-        rowCount={552}
+        rowCount={1000}
         paginationMode={'server'}
         loading={loading}
       />
@@ -313,7 +315,7 @@ export function Page2Api() {
   );
 }
 
-const rows = [
+const gridTestRows = [
   {
     id: 0,
     brand: 'Nike',
@@ -337,7 +339,71 @@ export const GridTest = () => {
   }, [apiRef]);
   return (
     <div style={{ width: 300, height: 300 }}>
-      <XGrid rows={rows} apiRef={apiRef} columns={columns} pagination pageSize={1} hideFooter />
+      <XGrid
+        rows={gridTestRows}
+        apiRef={apiRef}
+        columns={columns}
+        pagination
+        pageSize={1}
+        hideFooter
+      />
     </div>
   );
 };
+function loadDocsDemoServerRows(page: number, data: any): Promise<any> {
+  return new Promise<any>((resolve) => {
+    setTimeout(() => {
+      resolve(data.rows.slice((page - 1) * 5, page * 5));
+    }, Math.random() * 500 + 100); // simulate network latency
+  });
+}
+
+export function ServerPaginationDocsDemo() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+    maxColumns: 6,
+  });
+  const [page, setPage] = React.useState(1);
+  const [rows, setRows] = React.useState<RowsProp>([]);
+  const [loading, setLoading] = React.useState<boolean>(false);
+
+  const handlePageChange = (params: PageChangeParams) => {
+    setPage(params.page);
+  };
+
+  React.useEffect(() => {
+    let active = true;
+
+    (async () => {
+      setLoading(true);
+      const newRows = await loadDocsDemoServerRows(page, data);
+
+      if (!active) {
+        return;
+      }
+
+      setRows(newRows);
+      setLoading(false);
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [page, data]);
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid
+        rows={rows}
+        columns={data.columns}
+        pagination
+        pageSize={5}
+        rowCount={100}
+        paginationMode="server"
+        onPageChange={handlePageChange}
+        loading={loading}
+      />
+    </div>
+  );
+}
