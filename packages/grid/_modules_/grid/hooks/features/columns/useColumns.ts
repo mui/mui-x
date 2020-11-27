@@ -23,11 +23,12 @@ function mapColumns(
   viewportWidth: number,
   withCheckboxSelection = false,
 ): Columns {
-  let availableViewportWidth = withCheckboxSelection ? viewportWidth - checkboxSelectionColDef.width! : viewportWidth;
+  let availableViewportWidth = withCheckboxSelection
+    ? viewportWidth - checkboxSelectionColDef.width!
+    : viewportWidth;
   let extendedColumns = columns.map((c) => ({ ...getColDef(columnTypes, c.type), ...c }));
   const numberOfFluidColumns = columns.filter((column) => !!column.flex).length;
   let flexDivider = 0;
-
 
   if (numberOfFluidColumns && availableViewportWidth) {
     extendedColumns.forEach((column) => {

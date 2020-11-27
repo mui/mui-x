@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { createClientRender, fireEvent, screen, ErrorBoundary } from 'test/utils';
 import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
-import { checkboxSelectionColDef, DataGrid } from '@material-ui/data-grid';
+import { DataGrid, RowsProp, checkboxSelectionColDef } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
 describe('<DataGrid />', () => {
@@ -92,6 +92,59 @@ describe('<DataGrid />', () => {
           expect(cell).to.have.text('Addidas');
           done();
         }, 50);
+      });
+
+      it('should support server side pagination', () => {
+        const ServerPaginationGrid = () => {
+          const [page, setPage] = React.useState(1);
+          const [rows, setRows] = React.useState<RowsProp>([]);
+
+          const handlePageChange = (params) => {
+            setPage(params.page);
+          };
+
+          React.useEffect(() => {
+            let active = true;
+
+            (async () => {
+              const newRows = [
+                {
+                  id: page,
+                  brand: `Nike ${page}`,
+                },
+              ];
+
+              if (!active) {
+                return;
+              }
+
+              setRows(newRows);
+            })();
+
+            return () => {
+              active = false;
+            };
+          }, [page]);
+
+          return (
+            <div style={{ height: 300, width: 300 }}>
+              <DataGrid
+                {...defaultProps}
+                rows={rows}
+                pagination
+                pageSize={1}
+                rowCount={3}
+                paginationMode="server"
+                onPageChange={handlePageChange}
+              />
+            </div>
+          );
+        };
+
+        render(<ServerPaginationGrid />);
+        expect(getColumnValues()).to.deep.equal(['Nike 1']);
+        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+        expect(getColumnValues()).to.deep.equal(['Nike 2']);
       });
     });
 
@@ -271,14 +324,18 @@ describe('<DataGrid />', () => {
           </div>,
         );
 
-        const columnsHeader: HTMLElement | null = document.querySelector('.MuiDataGrid-colCellWrapper');
-        const allColumnsExceptCheckbox = document.querySelectorAll('[role="columnheader"]:not([aria-colindex="1"])');
+        const columnsHeader: HTMLElement | null = document.querySelector(
+          '.MuiDataGrid-colCellWrapper',
+        );
+        const allColumnsExceptCheckbox = document.querySelectorAll(
+          '[role="columnheader"]:not([aria-colindex="1"])',
+        );
         const availableColumnsWidth = checkboxSelectionColDef.width
           ? columnsHeader!.offsetWidth - checkboxSelectionColDef!.width
           : columnsHeader!.offsetWidth;
         let columnsWidth = 0;
 
-        allColumnsExceptCheckbox.forEach(col => {
+        allColumnsExceptCheckbox.forEach((col) => {
           columnsWidth += (col as HTMLElement).offsetWidth;
         });
 
