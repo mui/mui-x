@@ -47,9 +47,7 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-toolbar': {
           display: 'flex',
           alignItems: 'center',
-          minHeight: 35, // Match MUI Small Button height
-          backgroundColor: theme.palette.background.default,
-          border: `1px solid ${borderColor}`,
+          padding: 4,
         },
         '& .MuiDataGrid-columnsContainer': {
           position: 'absolute',

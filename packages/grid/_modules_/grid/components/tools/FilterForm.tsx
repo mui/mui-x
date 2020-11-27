@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { FormControl, IconButton, InputLabel, Select } from '@material-ui/core';
+import FormControl from '@material-ui/core/FormControl';
+import IconButton from '@material-ui/core/IconButton';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
 import { filterableColumnsSelector } from '../../hooks/features/columns/columnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
@@ -18,14 +21,13 @@ export interface FilterFormProps {
   applyFilterChanges: (item: FilterItem) => void;
   applyMultiFilterOperatorChanges: (operator: LinkOperator) => void;
   deleteFilter: (item: FilterItem) => void;
-  onSelectOpen: (event: React.ChangeEvent<{}>) => void;
 }
 
 const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     justifyContent: 'space-around',
-    padding: '10px',
+    padding: 8,
   },
   linkOperatorSelect: {
     width: 60,
@@ -36,15 +38,17 @@ const useStyles = makeStyles(() => ({
   operatorSelect: {
     width: 120,
   },
-  FilterValueInput: {
+  filterValueInput: {
     width: 190,
+  },
+  closeIconRoot: {
+    justifyContent: 'flex-end',
   },
 }));
 
 export const FilterForm: React.FC<FilterFormProps> = ({
   item,
   hasMultipleFilters,
-  onSelectOpen,
   deleteFilter,
   applyFilterChanges,
   multiFilterOperator,
@@ -125,7 +129,6 @@ export const FilterForm: React.FC<FilterFormProps> = ({
       <FormControl
         className={classes.linkOperatorSelect}
         style={{
-          width: 60,
           display: hasMultipleFilters ? 'block' : 'none',
           visibility: showMultiFilterOperators ? 'visible' : 'hidden',
         }}
@@ -135,7 +138,6 @@ export const FilterForm: React.FC<FilterFormProps> = ({
           labelId="columns-filter-operator-select-label"
           id="columns-filter-operator-select"
           value={multiFilterOperator}
-          onOpen={onSelectOpen}
           onChange={changeLinkOperator}
           disabled={!!disableMultiFilterOperator}
           native
@@ -155,7 +157,6 @@ export const FilterForm: React.FC<FilterFormProps> = ({
           id="columns-filter-select"
           value={item.columnField || ''}
           onChange={changeColumn}
-          onOpen={onSelectOpen}
           native
         >
           {filterableColumns.map((col) => (
@@ -171,7 +172,6 @@ export const FilterForm: React.FC<FilterFormProps> = ({
           labelId="columns-operators-select-label"
           id="columns-operators-select"
           value={item.operatorValue}
-          onOpen={onSelectOpen}
           onChange={changeOperator}
           native
         >
@@ -182,7 +182,7 @@ export const FilterForm: React.FC<FilterFormProps> = ({
           ))}
         </Select>
       </FormControl>
-      <FormControl className={classes.FilterValueInput}>
+      <FormControl className={classes.filterValueInput}>
         {currentColumn &&
           currentOperator &&
           React.createElement(currentOperator.InputComponent, {
@@ -191,7 +191,7 @@ export const FilterForm: React.FC<FilterFormProps> = ({
             ...currentOperator.InputComponentProps,
           })}
       </FormControl>
-      <FormControl>
+      <FormControl className={classes.closeIconRoot}>
         <IconButton aria-label="Delete" title="Delete" onClick={handleDeleteFilter} size="small">
           <CloseIcon />
         </IconButton>

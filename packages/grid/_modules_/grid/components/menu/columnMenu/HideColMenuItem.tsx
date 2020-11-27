@@ -1,5 +1,5 @@
-import { MenuItem } from '@material-ui/core';
 import * as React from 'react';
+import MenuItem from '@material-ui/core/MenuItem';
 import { ApiContext } from '../../api-context';
 import { FilterItemProps } from './FilterItemProps';
 
@@ -13,6 +13,10 @@ export const HideColMenuItem: React.FC<FilterItemProps> = ({ column, onClick }) 
     },
     [apiRef, column?.field, onClick],
   );
+
+  if (!column) {
+    return null;
+  }
 
   return <MenuItem onClick={toggleColumn}>Hide</MenuItem>;
 };

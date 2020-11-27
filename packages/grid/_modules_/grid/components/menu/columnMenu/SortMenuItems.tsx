@@ -1,5 +1,5 @@
-import { MenuItem } from '@material-ui/core';
 import * as React from 'react';
+import MenuItem from '@material-ui/core/MenuItem';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { sortModelSelector } from '../../../hooks/features/sorting/sortingSelector';
 import { SortDirection } from '../../../models/sortModel';
