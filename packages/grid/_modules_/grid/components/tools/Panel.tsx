@@ -67,7 +67,6 @@ export const Panel: React.FC<PanelProps> = ({ children, open }) => {
     >
       <ClickAwayListener onClickAway={hidePreferences}>
         <Paper
-          square
           className={classes.paper}
           style={{
             maxHeight: viewportSizes.height,
