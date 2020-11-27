@@ -397,7 +397,7 @@ describe('<DataGrid />', () => {
       const rowHeight = 30;
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...defaultProps} rowHeight={rowHeight} />
+          <DataGrid {...defaultProps} hideToolbar={false} rowHeight={rowHeight} />
         </div>,
         { strict: false },
       );
@@ -415,7 +415,7 @@ describe('<DataGrid />', () => {
       const rowHeight = 30;
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...defaultProps} rowHeight={rowHeight} />
+          <DataGrid {...defaultProps} hideToolbar={false} rowHeight={rowHeight} />
         </div>,
         { strict: false },
       );
