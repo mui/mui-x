@@ -324,7 +324,12 @@ describe('<DataGrid />', () => {
           </div>,
         );
 
-        expect(Array.from(document.querySelectorAll('[role="columnheader"]')).reduce((width, item) => width + item.clientWidth, 0)).to.equal(200 - 2);
+        expect(
+          Array.from(document.querySelectorAll('[role="columnheader"]')).reduce(
+            (width, item) => width + item.clientWidth,
+            0,
+          ),
+        ).to.equal(200 - 2);
       });
     });
 
