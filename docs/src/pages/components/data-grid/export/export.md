@@ -1,9 +1,9 @@
 ---
-title: Data Grid - Export & Import
+title: Data Grid - Export
 components: DataGrid, XGrid
 ---
 
-# Data Grid - Export & Import
+# Data Grid - Export
 
 <p class="description">Easily export the rows in various file formats such as CSV, Excel, or PDF.</p>
 
