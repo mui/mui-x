@@ -324,22 +324,7 @@ describe('<DataGrid />', () => {
           </div>,
         );
 
-        const columnsHeader: HTMLElement | null = document.querySelector(
-          '.MuiDataGrid-colCellWrapper',
-        );
-        const allColumnsExceptCheckbox = document.querySelectorAll(
-          '[role="columnheader"]:not([aria-colindex="1"])',
-        );
-        const availableColumnsWidth = checkboxSelectionColDef.width
-          ? columnsHeader!.offsetWidth - checkboxSelectionColDef!.width
-          : columnsHeader!.offsetWidth;
-        let columnsWidth = 0;
-
-        allColumnsExceptCheckbox.forEach((col) => {
-          columnsWidth += (col as HTMLElement).offsetWidth;
-        });
-
-        expect(availableColumnsWidth).to.equal(columnsWidth);
+        expect(Array.from(document.querySelectorAll('[role="columnheader"]')).reduce((width, item) => width + item.clientWidth, 0)).to.equal(200 - 2);
       });
     });
 
