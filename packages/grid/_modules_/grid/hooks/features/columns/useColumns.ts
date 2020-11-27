@@ -21,23 +21,26 @@ function mapColumns(
   columns: Columns,
   columnTypes: ColumnTypesRecord,
   viewportWidth: number,
+  withCheckboxSelection = false,
 ): Columns {
+  let availableViewportWidth = withCheckboxSelection ? viewportWidth - checkboxSelectionColDef.width! : viewportWidth;
   let extendedColumns = columns.map((c) => ({ ...getColDef(columnTypes, c.type), ...c }));
   const numberOfFluidColumns = columns.filter((column) => !!column.flex).length;
   let flexDivider = 0;
 
-  if (numberOfFluidColumns && viewportWidth) {
+
+  if (numberOfFluidColumns && availableViewportWidth) {
     extendedColumns.forEach((column) => {
       if (!column.flex) {
-        viewportWidth -= column.width!;
+        availableViewportWidth -= column.width!;
       } else {
         flexDivider += column.flex;
       }
     });
   }
 
-  if (viewportWidth > 0 && numberOfFluidColumns) {
-    const flexMultiplier = viewportWidth / flexDivider;
+  if (availableViewportWidth > 0 && numberOfFluidColumns) {
+    const flexMultiplier = availableViewportWidth / flexDivider;
     extendedColumns = extendedColumns.map((column) => {
       return {
         ...column,
@@ -57,7 +60,7 @@ function hydrateColumns(
   logger: Logger,
 ): Columns {
   logger.debug('Hydrating Columns with default definitions');
-  let mappedCols = mapColumns(columns, columnTypes, viewportWidth);
+  let mappedCols = mapColumns(columns, columnTypes, viewportWidth, withCheckboxSelection);
   if (withCheckboxSelection) {
     mappedCols = [checkboxSelectionColDef, ...mappedCols];
   }
