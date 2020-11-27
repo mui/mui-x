@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { createClientRender, fireEvent, screen, ErrorBoundary } from 'test/utils';
 import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
-import { DataGrid } from '@material-ui/data-grid';
+import { checkboxSelectionColDef, DataGrid } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
 describe('<DataGrid />', () => {
@@ -243,6 +243,46 @@ describe('<DataGrid />', () => {
         expect(firstColumn).toHaveInlineStyle({
           width: `${2 * parseInt(secondColumnWidthVal, 10)}px`,
         });
+      });
+
+      it('should set the columns width so that if fills the remaining width when "checkboxSelection" is used and the columns have "flex" set', () => {
+        const rows = [
+          {
+            id: 1,
+            username: 'John Doe',
+            age: 30,
+          },
+        ];
+
+        const columns = [
+          {
+            field: 'id',
+            flex: 1,
+          },
+          {
+            field: 'name',
+            flex: 0.5,
+          },
+        ];
+
+        render(
+          <div style={{ width: 200, height: 300 }}>
+            <DataGrid columns={columns} rows={rows} checkboxSelection />
+          </div>,
+        );
+
+        const columnsHeader: HTMLElement | null = document.querySelector('.MuiDataGrid-colCellWrapper');
+        const allColumnsExceptCheckbox = document.querySelectorAll('[role="columnheader"]:not([aria-colindex="1"])');
+        const availableColumnsWidth = checkboxSelectionColDef.width
+          ? columnsHeader!.offsetWidth - checkboxSelectionColDef!.width
+          : columnsHeader!.offsetWidth;
+        let columnsWidth = 0;
+
+        allColumnsExceptCheckbox.forEach(col => {
+          columnsWidth += (col as HTMLElement).offsetWidth;
+        });
+
+        expect(availableColumnsWidth).to.equal(columnsWidth);
       });
     });
 
