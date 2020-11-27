@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import * as React from 'react';
 import TablePagination from '@material-ui/core/TablePagination';
 import { makeStyles, Theme } from '@material-ui/core/styles';
@@ -28,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export function Pagination() {
   const classes = useStyles();
-  const apiRef = useContext(ApiContext);
+  const apiRef = React.useContext(ApiContext);
   const paginationState = useGridSelector(apiRef, paginationSelector);
   const options = useGridSelector(apiRef, optionsSelector);
 
