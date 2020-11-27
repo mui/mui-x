@@ -17,12 +17,14 @@ import { Logger, useLogger } from '../../utils/useLogger';
 import { GridState } from '../core/gridState';
 import { useGridState } from '../core/useGridState';
 
-function mapColumns(
+function hydrateColumns(
   columns: Columns,
   columnTypes: ColumnTypesRecord,
   viewportWidth: number,
-  withCheckboxSelection = false,
+  withCheckboxSelection: boolean,
+  logger: Logger,
 ): Columns {
+  logger.debug('Hydrating Columns with default definitions');
   let availableViewportWidth = withCheckboxSelection
     ? viewportWidth - checkboxSelectionColDef.width!
     : viewportWidth;
@@ -50,22 +52,11 @@ function mapColumns(
     });
   }
 
-  return extendedColumns;
-}
-
-function hydrateColumns(
-  columns: Columns,
-  columnTypes: ColumnTypesRecord,
-  viewportWidth: number,
-  withCheckboxSelection: boolean,
-  logger: Logger,
-): Columns {
-  logger.debug('Hydrating Columns with default definitions');
-  let mappedCols = mapColumns(columns, columnTypes, viewportWidth, withCheckboxSelection);
   if (withCheckboxSelection) {
-    mappedCols = [checkboxSelectionColDef, ...mappedCols];
+    return [checkboxSelectionColDef, ...extendedColumns];
   }
-  return mappedCols;
+
+  return extendedColumns;
 }
 
 function toLookup(logger: Logger, allColumns: Columns) {

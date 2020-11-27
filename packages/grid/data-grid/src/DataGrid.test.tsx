@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { createClientRender, fireEvent, screen, ErrorBoundary } from 'test/utils';
 import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
-import { DataGrid, RowsProp, checkboxSelectionColDef } from '@material-ui/data-grid';
+import { DataGrid, RowsProp } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
 describe('<DataGrid />', () => {
