@@ -1,23 +1,25 @@
 import * as React from 'react';
+import { ROWS_UPDATED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
+import { FilterApi } from '../../../models/api/filterApi';
 import { FilterItem, LinkOperator } from '../../../models/filterItem';
+import { RowId, RowsProp } from '../../../models/rows';
 import { buildCellParams } from '../../../utils/paramsUtils';
 import { isEqual } from '../../../utils/utils';
+import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useLogger } from '../../utils/useLogger';
 import { optionsSelector } from '../../utils/useOptionsProp';
-import { PreferencePanelsValue } from '../preferencesPanel/preferencesPanelValue';
 import { filterableColumnsSelector } from '../columns/columnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
+import { PreferencePanelsValue } from '../preferencesPanel/preferencesPanelValue';
 import { sortedRowsSelector } from '../sorting/sortingSelector';
 import { getInitialVisibleRowsState } from './visibleRowsState';
 
-export const useFilter = (apiRef: ApiRef): void => {
+export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
   const logger = useLogger('useFilter');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
-
-  const rows = useGridSelector(apiRef, sortedRowsSelector);
   const filterableColumns = useGridSelector(apiRef, filterableColumnsSelector);
   const { disableMultipleColumnsFiltering } = useGridSelector(apiRef, optionsSelector);
 
@@ -29,7 +31,7 @@ export const useFilter = (apiRef: ApiRef): void => {
   }, [setGridState]);
 
   const applyFilter = React.useCallback(
-    (filterItem: FilterItem, linkOperator: LinkOperator) => {
+    (filterItem: FilterItem, linkOperator: LinkOperator = LinkOperator.And) => {
       if (!filterItem.columnField || !filterItem.operatorValue || !filterItem.value) {
         return;
       }
@@ -50,6 +52,10 @@ export const useFilter = (apiRef: ApiRef): void => {
 
       setGridState((state) => {
         const visibleRowsLookup = { ...state.visibleRows.visibleRowsLookup };
+        const visibleRows: RowId[] = [];
+        // We run the selector on the state here to avoid rendering the rows and then filtering again.
+        // This way we have latest rows on the first rendering
+        const rows = sortedRowsSelector(state);
 
         rows.forEach((row, rowIndex) => {
           const params = buildCellParams({
@@ -61,22 +67,26 @@ export const useFilter = (apiRef: ApiRef): void => {
           });
 
           const isShown = applyFilterOnRow(params);
-          visibleRowsLookup[row.id] =
-            // eslint-disable-next-line no-nested-ternary
-            visibleRowsLookup[row.id] == null
-              ? isShown
-              : linkOperator === LinkOperator.And
-              ? visibleRowsLookup[row.id] && isShown
-              : visibleRowsLookup[row.id] || isShown;
+          if (visibleRowsLookup[row.id] == null) {
+            visibleRowsLookup[row.id] = isShown;
+          } else {
+            visibleRowsLookup[row.id] =
+              linkOperator === LinkOperator.And
+                ? visibleRowsLookup[row.id] && isShown
+                : visibleRowsLookup[row.id] || isShown;
+          }
+          if (isShown) {
+            visibleRows.push(row.id);
+          }
         });
         return {
           ...state,
-          visibleRows: { visibleRowsLookup, visibleRows: Object.keys(visibleRowsLookup) },
+          visibleRows: { visibleRowsLookup, visibleRows },
         };
       });
       forceUpdate();
     },
-    [apiRef, forceUpdate, logger, rows, setGridState],
+    [apiRef, forceUpdate, logger, setGridState],
   );
 
   const applyFilters = React.useCallback(() => {
@@ -177,15 +187,27 @@ export const useFilter = (apiRef: ApiRef): void => {
     [applyFilters, setGridState],
   );
 
-  useApiMethod(
-    apiRef,
-    {
-      applyFilterLinkOperator,
-      applyFilters,
-      upsertFilter,
-      deleteFilter,
-      showFilterPanel,
-    },
-    'FilterApi',
-  );
+  const onRowsUpdated = React.useCallback(() => {
+    if (gridState.filter.items.length > 0) {
+      apiRef.current.applyFilters();
+    }
+  }, [gridState.filter.items.length, apiRef]);
+
+  useApiEventHandler(apiRef, ROWS_UPDATED, onRowsUpdated);
+  const filterApi: FilterApi = {
+    applyFilterLinkOperator,
+    applyFilters,
+    applyFilter,
+    upsertFilter,
+    deleteFilter,
+    showFilterPanel,
+  };
+  useApiMethod(apiRef, filterApi, 'FilterApi');
+
+  React.useEffect(() => {
+    if (apiRef.current) {
+      // When the rows prop change, we reapply the filters.
+      apiRef.current.applyFilters();
+    }
+  }, [apiRef, rowsProp]);
 };
