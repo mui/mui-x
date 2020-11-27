@@ -9,6 +9,6 @@ export interface FilterApi {
   applyFilter: (item: FilterItem, linkOperator?: LinkOperator) => void;
   deleteFilter: (item: FilterItem) => void;
   applyFilterLinkOperator: (operator: LinkOperator) => void;
-  onFilterModelChange: (handler: (params: FilterModelParams)=> void)=> void
-  setFilterModel: (model: FilterModel)=> void;
+  onFilterModelChange: (handler: (params: FilterModelParams) => void) => void;
+  setFilterModel: (model: FilterModel) => void;
 }

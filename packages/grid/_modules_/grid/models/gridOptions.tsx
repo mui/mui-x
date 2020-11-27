@@ -327,6 +327,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   pageSize: 100,
   paginationMode: FeatureModeConstant.client,
   sortingMode: FeatureModeConstant.client,
+  filterMode: FeatureModeConstant.client,
   sortingOrder: ['asc', 'desc', null],
   columnTypes: DEFAULT_COLUMN_TYPES,
   disableColumnMenu: !EXPERIMENTAL_ENABLED,

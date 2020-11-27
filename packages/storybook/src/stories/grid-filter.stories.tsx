@@ -1,5 +1,14 @@
 import Button from '@material-ui/core/Button';
-import { ColDef, ColTypeDef, LinkOperator, PreferencePanelsValue, XGrid } from '@material-ui/x-grid';
+import {
+  ColDef,
+  ColTypeDef,
+  LinkOperator,
+  PreferencePanelsValue,
+  RowData,
+  RowModel,
+  useApiRef,
+  XGrid,
+} from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { withA11y } from '@storybook/addon-a11y';
 import { withKnobs } from '@storybook/addon-knobs';
@@ -55,9 +64,11 @@ export function CommodityWithOpenFiltersAndState() {
             openedPanelValue: PreferencePanelsValue.filters,
           },
           filter: {
-            items: [{ id: 123, columnField: 'commodity', value:'soy', operatorValue:'startsWith'}],
-            linkOperator:LinkOperator.And
-          }
+            items: [
+              { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
+            ],
+            linkOperator: LinkOperator.And,
+          },
         }}
       />
     </div>
@@ -71,15 +82,15 @@ export function CommodityWithOpenFiltersAndModel() {
       <XGrid
         rows={data.rows}
         columns={data.columns}
-        filterModel= {{
-          items: [{id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith'}],
-          linkOperator: LinkOperator.And
+        filterModel={{
+          items: [{ id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' }],
+          linkOperator: LinkOperator.And,
         }}
         state={{
           preferencePanel: {
             open: true,
             openedPanelValue: PreferencePanelsValue.filters,
-          }
+          },
         }}
       />
     </div>
@@ -99,17 +110,67 @@ export function CommodityWithNewRowsViaProps() {
         </Button>
       </div>
       <div className="grid-container">
-        <XGrid rows={data.rows} columns={data.columns}
-               filterModel= {{
-                 items: [{id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith'}],
-                 linkOperator: LinkOperator.And
-               }}
-               state={{
-                 preferencePanel: {
-                   open: true,
-                   openedPanelValue: PreferencePanelsValue.filters,
-                 }
-               }}
+        <XGrid
+          rows={data.rows}
+          columns={data.columns}
+          filterModel={{
+            items: [
+              { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
+            ],
+            linkOperator: LinkOperator.And,
+          }}
+          state={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: PreferencePanelsValue.filters,
+            },
+          }}
+        />
+      </div>
+    </React.Fragment>
+  );
+}
+
+export function CommodityWithNewRowsViaApi() {
+  const apiRef = useApiRef();
+  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
+  const apiDemoData = useDemoData({ dataSet: 'Commodity', rowLength: 150 });
+  const [rows, setRows] = React.useState<RowData[]>(data.rows);
+
+  React.useEffect(() => {
+    setRows(data.rows);
+  }, [data.rows]);
+  React.useEffect(() => {
+    apiRef.current.setRowModels(apiDemoData.data.rows.map((row) => ({ id: row.id, data: row })));
+  }, [apiDemoData.data.rows, apiRef]);
+
+  return (
+    <React.Fragment>
+      <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+        <Button color="primary" onClick={apiDemoData.loadNewData}>
+          Load New Rows
+        </Button>
+        <Button color="primary" onClick={() => apiDemoData.setRowLength(randomInt(100, 500))}>
+          Load New Rows with new length
+        </Button>
+      </div>
+      <div className="grid-container">
+        <XGrid
+          rows={rows}
+          columns={data.columns}
+          apiRef={apiRef}
+          filterModel={{
+            items: [
+              { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
+            ],
+            linkOperator: LinkOperator.And,
+          }}
+          state={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: PreferencePanelsValue.filters,
+            },
+          }}
         />
       </div>
     </React.Fragment>
