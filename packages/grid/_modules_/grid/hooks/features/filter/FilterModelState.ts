@@ -5,6 +5,8 @@ export interface FilterModelState {
   linkOperator: LinkOperator;
 }
 
+export type FilterModel = FilterModelState;
+
 export const getInitialFilterState: () => FilterModelState = () => ({
   items: [],
   linkOperator: LinkOperator.And,

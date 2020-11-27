@@ -27,10 +27,12 @@ export const FilterToolbarButton: React.FC<{}> = () => {
         {counter} active filter(s)
         <ul>
           {activeFilters.map((item) => (
-            <li key={item.id}>
-              {lookup[item.columnField!].headerName || item.columnField} {item.operatorValue}{' '}
-              {item.value}
-            </li>
+            {...lookup[item.columnField!] && (
+              <li key={item.id}>
+                {lookup[item.columnField!].headerName || item.columnField} {item.operatorValue}{' '}
+                {item.value}
+              </li>
+            )}
           ))}
         </ul>
       </div>

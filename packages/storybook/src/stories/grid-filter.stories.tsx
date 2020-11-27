@@ -1,7 +1,10 @@
-import * as React from 'react';
-import { ColDef, XGrid, ColTypeDef } from '@material-ui/x-grid';
-import { withKnobs } from '@storybook/addon-knobs';
+import Button from '@material-ui/core/Button';
+import { ColDef, ColTypeDef, LinkOperator, PreferencePanelsValue, XGrid } from '@material-ui/x-grid';
+import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { withA11y } from '@storybook/addon-a11y';
+import { withKnobs } from '@storybook/addon-knobs';
+import * as React from 'react';
+import { randomInt } from '../data/random-generator';
 import { useData } from '../hooks/useData';
 
 export default {
@@ -15,6 +18,104 @@ export default {
     },
   },
 };
+
+// server filters
+// with new rows from apiRef
+// with new columns (partial and complete)
+
+export function CommodityWithOpenFilters() {
+  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 500 });
+
+  return (
+    <div className="grid-container">
+      <XGrid
+        rows={data.rows}
+        columns={data.columns}
+        state={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: PreferencePanelsValue.filters,
+          },
+        }}
+      />
+    </div>
+  );
+}
+export function CommodityWithOpenFiltersAndState() {
+  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 500 });
+
+  return (
+    <div className="grid-container">
+      <XGrid
+        rows={data.rows}
+        columns={data.columns}
+        state={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: PreferencePanelsValue.filters,
+          },
+          filter: {
+            items: [{ id: 123, columnField: 'commodity', value:'soy', operatorValue:'startsWith'}],
+            linkOperator:LinkOperator.And
+          }
+        }}
+      />
+    </div>
+  );
+}
+export function CommodityWithOpenFiltersAndModel() {
+  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 500 });
+
+  return (
+    <div className="grid-container">
+      <XGrid
+        rows={data.rows}
+        columns={data.columns}
+        filterModel= {{
+          items: [{id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith'}],
+          linkOperator: LinkOperator.And
+        }}
+        state={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: PreferencePanelsValue.filters,
+          }
+        }}
+      />
+    </div>
+  );
+}
+export function CommodityWithNewRowsViaProps() {
+  const { data, setRowLength, loadNewData } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
+
+  return (
+    <React.Fragment>
+      <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+        <Button color="primary" onClick={loadNewData}>
+          Load New Rows
+        </Button>
+        <Button color="primary" onClick={() => setRowLength(randomInt(100, 500))}>
+          Load New Rows with new length
+        </Button>
+      </div>
+      <div className="grid-container">
+        <XGrid rows={data.rows} columns={data.columns}
+               filterModel= {{
+                 items: [{id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith'}],
+                 linkOperator: LinkOperator.And
+               }}
+               state={{
+                 preferencePanel: {
+                   open: true,
+                   openedPanelValue: PreferencePanelsValue.filters,
+                 }
+               }}
+        />
+      </div>
+    </React.Fragment>
+  );
+}
+
 export function ColumnsAlign() {
   const data = useData(100, 6);
 

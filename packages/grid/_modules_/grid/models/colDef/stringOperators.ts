@@ -40,7 +40,7 @@ export const STRING_OPERATORS: FilterOperator[] = [
   },
   {
     label: 'starts with',
-    value: 'start',
+    value: 'startsWith',
     getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
@@ -56,7 +56,7 @@ export const STRING_OPERATORS: FilterOperator[] = [
   },
   {
     label: 'ends with',
-    value: 'end',
+    value: 'endsWith',
     getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;

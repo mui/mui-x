@@ -7,6 +7,7 @@ import {
   TripleDotsVerticalIcon,
   ColumnIcon,
 } from '../components/icons/index';
+import { FilterModel } from '../hooks/features/filter/FilterModelState';
 import { Logger } from '../hooks/utils/useLogger';
 import { ColumnTypesRecord } from './colDef/colTypeDef';
 import { DEFAULT_COLUMN_TYPES } from './colDef/defaultColumnTypes';
@@ -182,6 +183,12 @@ export interface GridOptions {
    */
   sortingMode?: FeatureMode;
   /**
+   * Filtering can be processed on the server or client-side.
+   * Set it to 'client' if you would like to handle Filtering on the client-side.
+   * Set it to 'server' if you would like to handle Filtering on the server-side.
+   */
+  filterMode?: FeatureMode;
+  /**
    * If `true`, the footer component is hidden.
    * @default false
    */
@@ -231,6 +238,10 @@ export interface GridOptions {
    */
   sortModel?: SortModel;
   /**
+   * Set the filter model of the grid.
+   */
+  filterModel?: FilterModel;
+  /**
    * Callback fired when a click event comes from a cell element.
    * @param param With all properties from [[CellParams]].
    */
@@ -270,6 +281,11 @@ export interface GridOptions {
    * @param param With all properties from [[SortModelParams]].
    */
   onSortModelChange?: (params: SortModelParams) => void;
+  /**
+   * Callback fired when the Filter model changes before the filters are applied.
+   * @param param With all properties from [[FilterModelParams]].
+   */
+  onFilterModelChange?: (params: SortModelParams) => void;
   /**
    * Callback fired when the current page has changed.
    * @param param With all properties from [[PageChangeParams]].
