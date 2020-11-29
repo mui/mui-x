@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Story, Meta, DecoratorFn } from '@storybook/react';
-import { GridOptionsProp, PreferencePanelsValue, XGrid } from '@material-ui/x-grid';
+import { XGridProps, PreferencePanelsValue, XGrid, GridOptionsProp } from '@material-ui/x-grid';
 import { useDemoData, DemoDataOptions } from '@material-ui/x-grid-data-generator';
 import Button from '@material-ui/core/Button';
 import '@material-ui/x-grid-data-generator/style/real-data-stories.css';
@@ -19,7 +19,7 @@ export default {
 
 const gridContainer: DecoratorFn = (storyFn) => <div className="grid-container">{storyFn()}</div>;
 
-export const Commodity: Story<GridOptionsProp> = (args) => {
+export const Commodity: Story<XGridProps> = ({ rows, columns, ...args }) => {
   const { data, setRowLength, loadNewData } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
 
   return (
@@ -39,7 +39,9 @@ export const Commodity: Story<GridOptionsProp> = (args) => {
   );
 };
 
-const DemoTemplate: Story<GridOptionsProp & DemoDataOptions> = ({
+const DemoTemplate: Story<XGridProps & DemoDataOptions> = ({
+  rows,
+  columns,
   rowLength,
   dataSet,
   maxColumns,

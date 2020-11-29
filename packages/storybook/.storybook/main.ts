@@ -1,4 +1,5 @@
 import path from 'path';
+import webpack from 'webpack';
 import type { StorybookConfig } from '@storybook/core/types';
 
 const env = process.env.NODE_ENV || 'development';
