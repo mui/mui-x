@@ -1,6 +1,7 @@
 import { isDate } from '../../utils/utils';
 import { dateComparer } from '../../utils/sortingUtils';
 import { CellValue } from '../cell';
+import { getDateOperators } from './dateOperators';
 import { STRING_COL_DEF } from './stringColDef';
 import { ColTypeDef } from './colDef';
 
@@ -23,6 +24,7 @@ export const DATE_COL_DEF: ColTypeDef = {
   type: 'date',
   sortComparator: dateComparer,
   valueFormatter: dateFormatter,
+  filterOperators: getDateOperators(),
 };
 
 export const DATETIME_COL_DEF: ColTypeDef = {
@@ -30,4 +32,5 @@ export const DATETIME_COL_DEF: ColTypeDef = {
   type: 'dateTime',
   sortComparator: dateComparer,
   valueFormatter: dateTimeFormatter,
+  filterOperators: getDateOperators(true),
 };

@@ -14,13 +14,17 @@ import { GridDataContainer } from './components/styled-wrappers/GridDataContaine
 import { GridRoot } from './components/styled-wrappers/GridRoot';
 import { GridWindow } from './components/styled-wrappers/GridWindow';
 import { GridToolbar } from './components/styled-wrappers/GridToolbar';
+import { ColumnsToolbarButton } from './components/toolbar/ColumnsToolbarButton';
+import { FilterToolbarButton } from './components/toolbar/FilterToolbarButton';
 import { Viewport } from './components/viewport';
 import { Watermark } from './components/watermark';
 import { DATA_CONTAINER_CSS_CLASS } from './constants/cssClassesConstants';
 import { GridComponentProps } from './GridComponentProps';
+import { useColumnMenu } from './hooks/features/columnMenu/useColumnMenu';
 import { useColumns } from './hooks/features/columns/useColumns';
 import { useGridState } from './hooks/features/core/useGridState';
 import { usePagination } from './hooks/features/pagination/usePagination';
+import { usePreferencesPanel } from './hooks/features/preferencesPanel/usePreferencesPanel';
 import { useRows } from './hooks/features/rows/useRows';
 import { useSorting } from './hooks/features/sorting/useSorting';
 import { useApiRef } from './hooks/features/useApiRef';
@@ -42,6 +46,7 @@ import { getCurryTotalHeight } from './utils/getTotalHeight';
 import { ApiContext } from './components/api-context';
 import { OptionsContext } from './components/options-context';
 import { RenderContext } from './components/render-context';
+import { useFilter } from './hooks/features/filter/useFilter';
 
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {
@@ -49,6 +54,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const handleRef = useForkRef(rootContainerRef, ref);
 
     const footerRef = React.useRef<HTMLDivElement>(null);
+    const headerRef = React.useRef<HTMLDivElement>(null);
     const columnsHeaderRef = React.useRef<HTMLDivElement>(null);
     const columnsContainerRef = React.useRef<HTMLDivElement>(null);
     const windowRef = React.useRef<HTMLDivElement>(null);
@@ -63,7 +69,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useLoggerFactory(internalOptions.logger, internalOptions.logLevel);
     const logger = useLogger('GridComponent');
 
-    useApi(rootContainerRef, apiRef);
+    useApi(rootContainerRef, columnsContainerRef, apiRef);
     const errorState = useErrorHandler(apiRef, props);
     useEvents(rootContainerRef, apiRef);
     const onResize = useResizeContainer(apiRef);
@@ -72,8 +78,10 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useRows(props.rows, apiRef);
     useKeyboard(rootContainerRef, apiRef);
     useSelection(apiRef);
-    useSorting(apiRef);
-
+    useSorting(apiRef, props.rows);
+    useColumnMenu(apiRef);
+    usePreferencesPanel(apiRef);
+    useFilter(apiRef, props.rows);
     useContainerProps(windowRef, apiRef);
     const renderCtx = useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
 
@@ -85,7 +93,13 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
 
     // TODO move that to renderCtx
     const getTotalHeight = React.useCallback(
-      (size) => getCurryTotalHeight(gridState.options, gridState.containerSizes, footerRef)(size),
+      (size) =>
+        getCurryTotalHeight(
+          gridState.options,
+          gridState.containerSizes,
+          headerRef,
+          footerRef,
+        )(size),
       [gridState.options, gridState.containerSizes],
     );
 
@@ -99,7 +113,6 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
 
     logger.info(
       `Rendering, page: ${renderCtx?.page}, col: ${renderCtx?.firstColIdx}-${renderCtx?.lastColIdx}, row: ${renderCtx?.firstRowIdx}-${renderCtx?.lastRowIdx}`,
-      apiRef.current.state,
     );
 
     return (
@@ -129,11 +142,22 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
             >
               <ApiContext.Provider value={apiRef}>
                 <OptionsContext.Provider value={gridState.options}>
-                  {customComponents.headerComponent || (
-                    <GridToolbar>
-                      {/* The components for the separate features go in here */}
-                    </GridToolbar>
-                  )}
+                  <div ref={headerRef}>
+                    {customComponents.headerComponent ? (
+                      customComponents.headerComponent
+                    ) : (
+                      <React.Fragment>
+                        {!gridState.options.hideToolbar &&
+                          (!gridState.options.disableColumnFilter ||
+                            !gridState.options.disableColumnSelector) && (
+                            <GridToolbar>
+                              {!gridState.options.disableColumnSelector && <ColumnsToolbarButton />}
+                              {!gridState.options.disableColumnFilter && <FilterToolbarButton />}
+                            </GridToolbar>
+                          )}
+                      </React.Fragment>
+                    )}
+                  </div>
                   <div className="MuiDataGrid-mainGridContainer">
                     <Watermark licenseStatus={props.licenseStatus} />
                     <GridColumnsContainer
@@ -169,27 +193,20 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                       </GridDataContainer>
                     </GridWindow>
                   </div>
-                  {customComponents.footerComponent || (
-                    <DefaultFooter
-                      ref={footerRef}
-                      paginationComponent={
-                        !!gridState.options.pagination &&
-                        gridState.pagination.pageSize != null &&
-                        !gridState.options.hideFooterPagination &&
-                        (customComponents.paginationComponent || (
-                          <Pagination
-                            setPage={apiRef.current.setPage}
-                            currentPage={gridState.pagination.page}
-                            pageCount={gridState.pagination.pageCount}
-                            pageSize={gridState.pagination.pageSize}
-                            rowCount={gridState.pagination.rowCount}
-                            setPageSize={apiRef.current.setPageSize}
-                            rowsPerPageOptions={gridState.options.rowsPerPageOptions}
-                          />
-                        ))
-                      }
-                    />
-                  )}
+                  <div ref={footerRef}>
+                    {customComponents.footerComponent ? (
+                      customComponents.footerComponent
+                    ) : (
+                      <DefaultFooter
+                        paginationComponent={
+                          !!gridState.options.pagination &&
+                          gridState.pagination.pageSize != null &&
+                          !gridState.options.hideFooterPagination &&
+                          (customComponents.paginationComponent || <Pagination />)
+                        }
+                      />
+                    )}
+                  </div>
                 </OptionsContext.Provider>
               </ApiContext.Provider>
             </ErrorBoundary>

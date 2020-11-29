@@ -1,3 +1,8 @@
+export * from './icons';
+export * from './menu';
+export * from './styled-wrappers';
+export * from './tools';
+
 export * from './api-context';
 export * from './AutoSizer';
 export * from './cell';
@@ -8,7 +13,6 @@ export * from './column-header-sort-icon';
 export * from './column-header-title';
 export * from './column-headers';
 export * from './default-footer';
-export * from './icons';
 export * from './loading-overlay';
 export * from './no-row-message';
 export * from './options-context';
@@ -20,7 +24,6 @@ export * from './row-count';
 export * from './row';
 export * from './selected-row-count';
 export * from './sticky-container';
-export * from './styled-wrappers';
 export * from './viewport';
 export * from './watermark';
 export * from './ScrollArea';

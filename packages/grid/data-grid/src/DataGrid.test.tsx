@@ -1,10 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 // @ts-expect-error need to migrate helpers to TypeScript
-import { createClientRender, ErrorBoundary } from 'test/utils';
+import { createClientRender, fireEvent, screen, ErrorBoundary } from 'test/utils';
 import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, RowsProp } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
 describe('<DataGrid />', () => {
@@ -25,7 +25,7 @@ describe('<DataGrid />', () => {
         brand: 'Puma',
       },
     ],
-    columns: [{ field: 'brand', width: 100 }],
+    columns: [{ field: 'brand' }],
   };
 
   describe('layout', () => {
@@ -92,6 +92,59 @@ describe('<DataGrid />', () => {
           expect(cell).to.have.text('Addidas');
           done();
         }, 50);
+      });
+
+      it('should support server side pagination', () => {
+        const ServerPaginationGrid = () => {
+          const [page, setPage] = React.useState(1);
+          const [rows, setRows] = React.useState<RowsProp>([]);
+
+          const handlePageChange = (params) => {
+            setPage(params.page);
+          };
+
+          React.useEffect(() => {
+            let active = true;
+
+            (async () => {
+              const newRows = [
+                {
+                  id: page,
+                  brand: `Nike ${page}`,
+                },
+              ];
+
+              if (!active) {
+                return;
+              }
+
+              setRows(newRows);
+            })();
+
+            return () => {
+              active = false;
+            };
+          }, [page]);
+
+          return (
+            <div style={{ height: 300, width: 300 }}>
+              <DataGrid
+                {...defaultProps}
+                rows={rows}
+                pagination
+                pageSize={1}
+                rowCount={3}
+                paginationMode="server"
+                onPageChange={handlePageChange}
+              />
+            </div>
+          );
+        };
+
+        render(<ServerPaginationGrid />);
+        expect(getColumnValues()).to.deep.equal(['Nike 1']);
+        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+        expect(getColumnValues()).to.deep.equal(['Nike 2']);
       });
     });
 
@@ -264,6 +317,68 @@ describe('<DataGrid />', () => {
         expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
         setProps({ direction: 'asc', sortedRows: [1, 0, 2] });
         expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas'].reverse());
+      });
+    });
+
+    describe('sorting', () => {
+      it('should sort when clicking the header cell', () => {
+        render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...defaultProps} />
+          </div>,
+        );
+        const header = screen
+          .getByRole('columnheader', { name: 'brand' })
+          .querySelector('.MuiDataGrid-colCellTitleContainer');
+        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+        fireEvent.click(header);
+        expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+        fireEvent.click(header);
+        expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+      });
+
+      it('should keep rows sorted when rows prop change', () => {
+        interface TestCaseProps {
+          rows: any[];
+        }
+        const TestCase = (props: TestCaseProps) => {
+          const { rows } = props;
+          return (
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid
+                {...defaultProps}
+                rows={rows}
+                sortModel={[
+                  {
+                    field: 'brand',
+                    sort: 'asc',
+                  },
+                ]}
+              />
+            </div>
+          );
+        };
+
+        const { setProps } = render(<TestCase rows={defaultProps.rows} />);
+        expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+
+        setProps({
+          rows: [
+            {
+              id: 3,
+              brand: 'Asics',
+            },
+            {
+              id: 4,
+              brand: 'RedBull',
+            },
+            {
+              id: 5,
+              brand: 'Hugo',
+            },
+          ],
+        });
+        expect(getColumnValues()).to.deep.equal(['Asics', 'Hugo', 'RedBull']);
       });
     });
   });

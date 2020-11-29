@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Story, Meta, DecoratorFn } from '@storybook/react';
-import { XGrid, GridOptionsProp } from '@material-ui/x-grid';
+import { GridOptionsProp, PreferencePanelsValue, XGrid } from '@material-ui/x-grid';
 import { useDemoData, DemoDataOptions } from '@material-ui/x-grid-data-generator';
 import Button from '@material-ui/core/Button';
-import { randomInt } from '../../data/random-generator';
 import '@material-ui/x-grid-data-generator/style/real-data-stories.css';
+import { randomInt } from '../../data/random-generator';
 
 export default {
   title: 'X-Grid Demos/Playground',
@@ -115,3 +115,24 @@ XGridDemo.args = {
   checkboxSelection: true,
 };
 XGridDemo.decorators = [gridContainer];
+
+export const CommodityPreferencesDefaultOpen = DemoTemplate.bind({});
+CommodityPreferencesDefaultOpen.args = {
+  dataSet: 'Commodity',
+  rowLength: 500,
+  state: { preferencePanel: { open: true } },
+};
+CommodityPreferencesDefaultOpen.decorators = [gridContainer];
+
+export const CommodityPreferences = DemoTemplate.bind({});
+CommodityPreferences.args = {
+  dataSet: 'Commodity',
+  rowLength: 500,
+  state: {
+    preferencePanel: {
+      open: true,
+      openedPanelValue: PreferencePanelsValue.columns,
+    },
+  },
+};
+CommodityPreferences.decorators = [gridContainer];

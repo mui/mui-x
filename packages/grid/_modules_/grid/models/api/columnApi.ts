@@ -46,4 +46,10 @@ export interface ColumnApi {
    * @param resetState
    */
   updateColumns: (cols: ColDef[], resetColumnState?: boolean) => void;
+  /**
+   * Allows to toggle a column.
+   * @param field
+   * @param forceHide Optional value, if not provided the column will toggle.
+   */
+  toggleColumn: (field: string, forceHide?: boolean) => void;
 }

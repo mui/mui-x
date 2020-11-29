@@ -1,16 +1,20 @@
 import { getInitialColumnsState, InternalColumns } from '../../../models/colDef/colDef';
-import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
-import { SelectionState } from '../selection/selectionState';
-import { getInitialRenderingState, InternalRenderingState } from '../virtualization/renderingState';
-import { KeyboardState } from '../keyboard/keyboardState';
-import { INITIAL_PAGINATION_STATE, PaginationState } from '../pagination/paginationReducer';
-import { getInitialRowState, InternalRowsState } from '../rows/rowsState';
-import { getInitialSortingState, SortingState } from '../sorting/sortingState';
 import { ContainerProps, ScrollBarState, ViewportSizeState } from '../../../models/containerProps';
+import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
+import { ColumnMenuState } from '../columnMenu/columnMenuState';
 import {
   ColumnReorderState,
   getInitialColumnReorderState,
 } from '../columnReorder/columnReorderState';
+import { FilterModelState, getInitialFilterState } from '../filter/FilterModelState';
+import { getInitialVisibleRowsState, VisibleRowsState } from '../filter/visibleRowsState';
+import { KeyboardState } from '../keyboard/keyboardState';
+import { INITIAL_PAGINATION_STATE, PaginationState } from '../pagination/paginationReducer';
+import { PreferencePanelState } from '../preferencesPanel/preferencePanelState';
+import { getInitialRowState, InternalRowsState } from '../rows/rowsState';
+import { SelectionState } from '../selection/selectionState';
+import { getInitialSortingState, SortingState } from '../sorting/sortingState';
+import { getInitialRenderingState, InternalRenderingState } from '../virtualization/renderingState';
 
 export interface GridState {
   rows: InternalRowsState;
@@ -19,6 +23,7 @@ export interface GridState {
   isScrolling: boolean;
   columns: InternalColumns;
   columnReorder: ColumnReorderState;
+  columnMenu: ColumnMenuState;
   rendering: InternalRenderingState;
   containerSizes: ContainerProps | null;
   viewportSizes: ViewportSizeState;
@@ -26,6 +31,9 @@ export interface GridState {
   sorting: SortingState;
   keyboard: KeyboardState;
   selection: SelectionState;
+  filter: FilterModelState;
+  visibleRows: VisibleRowsState;
+  preferencePanel: PreferencePanelState;
 }
 
 export const getInitialState: () => GridState = () => ({
@@ -42,4 +50,8 @@ export const getInitialState: () => GridState = () => ({
   sorting: getInitialSortingState(),
   keyboard: { cell: null, isMultipleKeyPressed: false },
   selection: {},
+  filter: getInitialFilterState(),
+  columnMenu: { open: false },
+  preferencePanel: { open: false },
+  visibleRows: getInitialVisibleRowsState(),
 });

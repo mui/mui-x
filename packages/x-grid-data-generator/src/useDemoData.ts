@@ -50,7 +50,7 @@ function extrapolateSeed(rowLength, columns, data) {
 }
 
 async function sleep(duration: number) {
-  return new Promise((resolve) => {
+  return new Promise<void>((resolve) => {
     setTimeout(() => {
       resolve();
     }, duration);

@@ -100,8 +100,8 @@ export const Icons = Template.bind({});
 Icons.args = {
   ...defaultData,
   icons: {
-    columnSortedDescending: SortedDescending,
-    columnSortedAscending: SortedAscending,
+    ColumnSortedDescending: SortedDescending,
+    ColumnSortedAscending: SortedAscending,
   },
 };
 

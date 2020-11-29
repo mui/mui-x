@@ -46,7 +46,8 @@ export const HeaderCheckbox: React.FC<ColParams> = () => {
 };
 HeaderCheckbox.displayName = 'HeaderCheckbox';
 
-export const CellCheckboxRenderer: React.FC<CellParams> = React.memo(({ rowModel, value }) => {
+export const CellCheckboxRenderer: React.FC<CellParams> = React.memo((props) => {
+  const { rowModel, getValue, field } = props;
   const apiRef = useContext(ApiContext);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
@@ -55,7 +56,7 @@ export const CellCheckboxRenderer: React.FC<CellParams> = React.memo(({ rowModel
 
   return (
     <Checkbox
-      checked={!!value}
+      checked={!!getValue(field)}
       onChange={handleChange}
       className="MuiDataGrid-checkboxInput"
       color="primary"

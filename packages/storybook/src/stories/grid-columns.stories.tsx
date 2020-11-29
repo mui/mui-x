@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ColDef, XGrid, ColTypeDef } from '@material-ui/x-grid';
 import CreateIcon from '@material-ui/icons/Create';
-import { Button } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import { useData } from '../hooks/useData';
 
 export default {

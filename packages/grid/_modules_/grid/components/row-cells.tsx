@@ -67,17 +67,6 @@ export const RowCells: React.FC<RowCellsProps> = React.memo((props) => {
       api: api!.current!,
     });
 
-    if (column.valueGetter) {
-      // Value getter override the original value
-      value = column.valueGetter(cellParams);
-      cellParams.value = value;
-    }
-
-    let formattedValueProp = {};
-    if (column.valueFormatter) {
-      formattedValueProp = { formattedValue: column.valueFormatter(cellParams) };
-    }
-
     let cssClassProp = { cssClass: '' };
     if (column.cellClassName) {
       if (!isFunction(column.cellClassName)) {
@@ -96,6 +85,17 @@ export const RowCells: React.FC<RowCellsProps> = React.memo((props) => {
     if (column.renderCell) {
       cellComponent = column.renderCell(cellParams);
       cssClassProp = { cssClass: `${cssClassProp.cssClass} MuiDataGrid-cellWithRenderer` };
+    }
+
+    if (column.valueGetter) {
+      // Value getter override the original value
+      value = column.valueGetter(cellParams);
+      cellParams.value = value;
+    }
+
+    let formattedValueProp = {};
+    if (column.valueFormatter) {
+      formattedValueProp = { formattedValue: column.valueFormatter(cellParams) };
     }
 
     const cellProps: GridCellProps & { children: any } = {

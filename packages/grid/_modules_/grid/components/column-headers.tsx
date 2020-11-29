@@ -6,6 +6,8 @@ import { Columns, RenderContextProps } from '../models';
 import { ColumnHeaderItem } from './column-header-item';
 import { ApiContext } from './api-context';
 import { LeftEmptyCell, RightEmptyCell } from './cell';
+import { GridColumnHeaderMenu } from './menu/columnMenu/GridColumnHeaderMenu';
+import { PreferencesPanel } from './tools/Preferences';
 import { containerSizesSelector } from './viewport';
 import { OptionsContext } from './options-context';
 import { ScrollArea } from './ScrollArea';
@@ -53,8 +55,15 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
     />
   ));
 
-  return <React.Fragment>{items}</React.Fragment>;
+  return (
+    <React.Fragment>
+      <GridColumnHeaderMenu />
+      <PreferencesPanel />
+      {items}
+    </React.Fragment>
+  );
 };
+
 ColumnHeaderItemCollection.displayName = 'ColumnHeaderItemCollection';
 
 export interface ColumnsHeaderProps {

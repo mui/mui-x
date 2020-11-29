@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { ArrowDownwardIcon, ArrowUpwardIcon, SeparatorIcon } from '../components/icons/index';
+import {
+  ArrowDownwardIcon,
+  ArrowUpwardIcon,
+  SeparatorIcon,
+  FilterIcon,
+  TripleDotsVerticalIcon,
+  ColumnIcon,
+} from '../components/icons/index';
 import { Logger } from '../hooks/utils/useLogger';
 import { ColumnTypesRecord } from './colDef/colTypeDef';
 import { DEFAULT_COLUMN_TYPES } from './colDef/defaultColumnTypes';
@@ -12,23 +19,36 @@ import { RowSelectedParams } from './params/rowSelectedParams';
 import { SelectionChangeParams } from './params/selectionChangeParams';
 import { SortModelParams } from './params/sortModelParams';
 import { SortDirection, SortModel } from './sortModel';
+import { EXPERIMENTAL_ENABLED } from '../constants/envConstants';
 
 /**
  * Set of icons used in the grid component UI.
  */
 export interface IconsOptions {
   /**
+   * Icon displayed on the side of the column header title to display the filter input component.
+   */
+  ColumnMenu?: React.ElementType;
+  /**
+   * Icon displayed on the column menu filter tab.
+   */
+  ColumnFiltering?: React.ElementType;
+  /**
+   * Icon displayed on the column menu selector tab.
+   */
+  ColumnSelector?: React.ElementType;
+  /**
    * Icon displayed on the side of the column header title when sorted in Ascending order.
    */
-  columnSortedAscending?: React.ElementType;
+  ColumnSortedAscending?: React.ElementType;
   /**
    * Icon displayed on the side of the column header title when sorted in Descending order.
    */
-  columnSortedDescending?: React.ElementType;
+  ColumnSortedDescending?: React.ElementType;
   /**
    * Icon displayed in between 2 column headers that allows to resize the column header.
    */
-  columnResize?: React.ElementType<{ className: string }>;
+  ColumnResize?: React.ElementType<{ className: string }>;
 }
 
 // TODO add multiSortKey
@@ -67,6 +87,11 @@ export interface GridOptions {
    */
   disableMultipleSelection?: boolean;
   /**
+   * If `true`, filtering with multiple columns is disabled.
+   * @default false
+   */
+  disableMultipleColumnsFiltering?: boolean;
+  /**
    * If `true`, sorting with multiple columns is disabled.
    * @default false
    */
@@ -77,10 +102,25 @@ export interface GridOptions {
    */
   disableColumnResize?: boolean;
   /**
+   * If `true`, column filters are disabled.
+   * @default false
+   */
+  disableColumnFilter?: boolean;
+  /**
+   * If `true`, column Menu is disabled.
+   * @default false
+   */
+  disableColumnMenu?: boolean;
+  /**
    * If `true`, reordering columns is disabled.
    * @default false
    */
   disableColumnReorder?: boolean;
+  /**
+   * If `true`, hiding/showing columns is disabled.
+   * @default false
+   */
+  disableColumnSelector?: boolean;
   /**
    * If `true`, the right border of the cells are displayed.
    * @default false
@@ -162,6 +202,11 @@ export interface GridOptions {
    * @default false
    */
   hideFooterPagination?: boolean;
+  /**
+   * If `true`, the toolbar component is hidden.
+   * @default false
+   */
+  hideToolbar?: boolean;
   /**
    * If `true`, the grid get a first column with a checkbox that allows to select rows.
    * @default false
@@ -268,9 +313,16 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   sortingMode: FeatureModeConstant.client,
   sortingOrder: ['asc', 'desc', null],
   columnTypes: DEFAULT_COLUMN_TYPES,
+  disableColumnMenu: !EXPERIMENTAL_ENABLED,
+  disableColumnFilter: !EXPERIMENTAL_ENABLED,
+  disableColumnSelector: !EXPERIMENTAL_ENABLED,
+  hideToolbar: !EXPERIMENTAL_ENABLED,
   icons: {
-    columnSortedAscending: ArrowUpwardIcon,
-    columnSortedDescending: ArrowDownwardIcon,
-    columnResize: SeparatorIcon,
+    ColumnFiltering: FilterIcon,
+    ColumnSelector: ColumnIcon,
+    ColumnMenu: TripleDotsVerticalIcon,
+    ColumnSortedAscending: ArrowUpwardIcon,
+    ColumnSortedDescending: ArrowDownwardIcon,
+    ColumnResize: SeparatorIcon,
   },
 };

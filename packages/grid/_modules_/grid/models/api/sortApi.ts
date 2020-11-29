@@ -1,4 +1,5 @@
-import { SortModel } from '../sortModel';
+import { ColDef } from '../colDef/colDef';
+import { SortDirection, SortModel } from '../sortModel';
 import { SortModelParams } from '../params/sortModelParams';
 
 /**
@@ -23,4 +24,10 @@ export interface SortApi {
    * @param handler
    */
   onSortModelChange: (handler: (param: SortModelParams) => void) => () => void;
+  /**
+   * Set the sort direction of a column.
+   * @param column
+   * @param direction
+   */
+  sortColumn: (column: ColDef, direction?: SortDirection) => void;
 }
