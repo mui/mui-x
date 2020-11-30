@@ -1,13 +1,11 @@
 import * as React from 'react';
 import { action } from '@storybook/addon-actions';
 import { XGrid, GridOptionsProp } from '@material-ui/x-grid';
-import { withKnobs } from '@storybook/addon-knobs';
 import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/Events',
   component: XGrid,
-  decorators: [withKnobs],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {

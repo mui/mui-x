@@ -1,13 +1,11 @@
 import * as React from 'react';
 import { ElementSize, XGrid } from '@material-ui/x-grid';
-import { withKnobs } from '@storybook/addon-knobs';
 import '../style/grid-stories.css';
 import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/Resize',
   component: XGrid,
-  decorators: [withKnobs],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {

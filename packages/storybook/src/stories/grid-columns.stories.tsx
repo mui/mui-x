@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { ColDef, XGrid, ColTypeDef } from '@material-ui/x-grid';
-import { withKnobs } from '@storybook/addon-knobs';
 import CreateIcon from '@material-ui/icons/Create';
 import Button from '@material-ui/core/Button';
 import { useData } from '../hooks/useData';
@@ -8,7 +7,6 @@ import { useData } from '../hooks/useData';
 export default {
   title: 'X-Grid Tests/Columns',
   component: XGrid,
-  decorators: [withKnobs],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {

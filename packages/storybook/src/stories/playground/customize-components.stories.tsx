@@ -1,27 +1,32 @@
 import * as React from 'react';
-import { ColDef, XGrid, GridOverlay, GridFooter, useApiRef, ApiRef } from '@material-ui/x-grid';
+import { Story, Meta } from '@storybook/react';
+import { ColDef, XGrid, GridOverlay, GridFooter, XGridProps } from '@material-ui/x-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CodeIcon from '@material-ui/icons/Code';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import Pagination from '@material-ui/lab/Pagination';
-import { withKnobs } from '@storybook/addon-knobs';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
 import CreateIcon from '@material-ui/icons/Create';
-import { useData } from '../../hooks/useData';
+import { getData } from '../../data/data-service';
 
 export default {
   title: 'X-Grid Demos/Custom-Components',
   component: XGrid,
-  decorators: [withKnobs],
   parameters: {
-    options: { selectedPanel: 'storybook/knobs/panel' },
     docs: {
       page: null,
     },
   },
-};
+  decorators: [
+    (StoryFn) => (
+      <div className="grid-container">
+        <StoryFn />
+      </div>
+    ),
+  ],
+} as Meta;
 
 const columns: ColDef[] = [
   { field: 'id' },
@@ -39,6 +44,12 @@ const rows = [
   { id: 7, name: '', age: 42 },
 ];
 
+const defaultData = { columns, rows };
+
+const Template: Story<XGridProps> = (args) => {
+  return <XGrid {...args} />;
+};
+
 function LoadingComponent() {
   return (
     <GridOverlay className="custom-overlay">
@@ -49,18 +60,14 @@ function LoadingComponent() {
   );
 }
 
-export function Loading() {
-  return (
-    <div className="grid-container">
-      <XGrid
-        rows={rows}
-        columns={columns}
-        components={{ loadingOverlay: LoadingComponent }}
-        loading
-      />
-    </div>
-  );
-}
+export const Loading = Template.bind({});
+Loading.args = {
+  ...defaultData,
+  loading: true,
+  components: {
+    loadingOverlay: LoadingComponent,
+  },
+};
 
 function NoRowsComponent() {
   return (
@@ -72,13 +79,14 @@ function NoRowsComponent() {
   );
 }
 
-export function NoRows() {
-  return (
-    <div className="grid-container">
-      <XGrid rows={[]} columns={columns} components={{ noRowsOverlay: NoRowsComponent }} />
-    </div>
-  );
-}
+export const NoRows = Template.bind({});
+NoRows.args = {
+  rows: [],
+  columns,
+  components: {
+    noRowsOverlay: NoRowsComponent,
+  },
+};
 
 function SortedDescending() {
   return <ExpandMoreIcon className="icon" />;
@@ -88,20 +96,14 @@ function SortedAscending() {
   return <ExpandLessIcon className="icon" />;
 }
 
-export function Icons() {
-  return (
-    <div className="grid-container">
-      <XGrid
-        rows={rows}
-        columns={columns}
-        icons={{
-          ColumnSortedDescending: SortedDescending,
-          ColumnSortedAscending: SortedAscending,
-        }}
-      />
-    </div>
-  );
-}
+export const Icons = Template.bind({});
+Icons.args = {
+  ...defaultData,
+  icons: {
+    ColumnSortedDescending: SortedDescending,
+    ColumnSortedAscending: SortedAscending,
+  },
+};
 
 function PaginationComponent(props) {
   const { paginationProps } = props;
@@ -115,25 +117,15 @@ function PaginationComponent(props) {
   );
 }
 
-export function CustomPagination() {
-  const apiRef: ApiRef = useApiRef();
-  const data = useData(2000, 200);
-
-  return (
-    <div className="grid-container">
-      <XGrid
-        rows={data.rows}
-        columns={data.columns}
-        apiRef={apiRef}
-        pagination
-        pageSize={50}
-        components={{
-          pagination: PaginationComponent,
-        }}
-      />
-    </div>
-  );
-}
+export const CustomPagination = Template.bind({});
+CustomPagination.args = {
+  ...getData(2000, 200),
+  pagination: true,
+  pageSize: 50,
+  components: {
+    pagination: PaginationComponent,
+  },
+};
 
 function FooterComponent(props) {
   const { paginationProps } = props;
@@ -152,25 +144,17 @@ function FooterComponent(props) {
   );
 }
 
-export function CustomFooter() {
-  const data = useData(2000, 200);
-
-  return (
-    <div className="grid-container">
-      <XGrid
-        rows={data.rows}
-        columns={data.columns}
-        pagination
-        hideFooterPagination
-        hideFooter
-        pageSize={33}
-        components={{
-          footer: FooterComponent,
-        }}
-      />
-    </div>
-  );
-}
+export const CustomFooter = Template.bind({});
+CustomFooter.args = {
+  ...getData(2000, 200),
+  pagination: true,
+  hideFooterPagination: true,
+  hideFooter: true,
+  pageSize: 33,
+  components: {
+    footer: FooterComponent,
+  },
+};
 
 function FooterComponent2(props) {
   const { paginationProps } = props;
@@ -188,25 +172,17 @@ function CustomHeader(props) {
   );
 }
 
-export function HeaderAndFooter() {
-  const data = useData(2000, 200);
-
-  return (
-    <div className="grid-container">
-      <XGrid
-        rows={data.rows}
-        columns={data.columns}
-        pagination
-        hideFooterPagination
-        pageSize={33}
-        components={{
-          header: CustomHeader,
-          footer: FooterComponent2,
-        }}
-      />
-    </div>
-  );
-}
+export const HeaderAndFooter = Template.bind({});
+HeaderAndFooter.args = {
+  ...getData(2000, 200),
+  pagination: true,
+  hideFooterPagination: true,
+  pageSize: 33,
+  components: {
+    header: CustomHeader,
+    footer: FooterComponent2,
+  },
+};
 
 function IsDone(props: { value?: boolean }) {
   return props.value ? <DoneIcon fontSize="small" /> : <ClearIcon fontSize="small" />;
@@ -216,8 +192,9 @@ function RegisteredComponent() {
   return <CreateIcon className="icon" />;
 }
 
-export function StyledColumns() {
-  const storyColumns: ColDef[] = [
+export const StyledColumns = Template.bind({});
+StyledColumns.args = {
+  columns: [
     { field: 'id' },
     { field: 'firstName' },
     { field: 'lastName' },
@@ -260,9 +237,8 @@ export function StyledColumns() {
       type: 'dateTime',
       width: 200,
     },
-  ];
-
-  const storyRows = [
+  ],
+  rows: [
     { id: 1, firstName: 'alice', age: 40 },
     {
       id: 2,
@@ -309,32 +285,18 @@ export function StyledColumns() {
       lastLoginDate: new Date(2020, 5, 20, 15, 35, 10),
     },
     { id: 7, lastName: 'Smith', firstName: '', isRegistered: true, age: 40 },
-  ];
-
-  return (
-    <div className="grid-container">
-      <XGrid rows={storyRows} columns={storyColumns} />
-    </div>
-  );
-}
+  ],
+};
 
 function ToolbarComponent() {
   return <div>This is my custom toolbar!</div>;
 }
 
-export function CustomToolbar() {
-  const data = useData(2000, 200);
-
-  return (
-    <div className="grid-container">
-      <XGrid
-        rows={data.rows}
-        columns={data.columns}
-        pageSize={33}
-        components={{
-          header: ToolbarComponent,
-        }}
-      />
-    </div>
-  );
-}
+export const CustomToolbar = Template.bind({});
+CustomToolbar.args = {
+  ...getData(2000, 200),
+  pageSize: 33,
+  components: {
+    header: ToolbarComponent,
+  },
+};
