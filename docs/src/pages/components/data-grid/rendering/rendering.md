@@ -219,7 +219,7 @@ There are three possible density options to choose from: `small`, `medium`, and 
 
 ### Density picker button
 
-The default way to change the density of the data grid is by using the `DensityPicker` component from the toolbar. In addition, there is a prop to hide the `DensityPicker`.
+The default way for a user to change the density of the data grid is by using the density picker component from the toolbar. In addition, there is a prop to hide the density picker.
 
 {{"demo": "pages/components/data-grid/rendering/DensityPickerHiddenGrid.js", "bg": "inline"}}
 
