@@ -21,7 +21,7 @@ export const DensityPickerSmall = () => {
 
   return (
     <div style={{ height: 600 }}>
-      <XGrid rows={data.rows} columns={data.columns} density="small" />
+      <XGrid rows={data.rows} columns={data.columns} size="small" />
     </div>
   );
 };
@@ -30,7 +30,7 @@ export const DensityPickerLarge = () => {
 
   return (
     <div style={{ height: 600 }}>
-      <XGrid rows={data.rows} columns={data.columns} density="large" />
+      <XGrid rows={data.rows} columns={data.columns} size="large" />
     </div>
   );
 };

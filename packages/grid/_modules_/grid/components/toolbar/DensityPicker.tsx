@@ -6,7 +6,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { useIcons } from '../../hooks/utils/useIcons';
 import { ApiContext } from '../api-context';
-import { DensityTypes, Density } from '../../models/gridOptions';
+import { SizeTypes, Size } from '../../models/gridOptions';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { DensityOption } from '../../models/api/densityApi';
@@ -14,50 +14,50 @@ import { densitySizeSelector } from '../../hooks/features/density';
 
 export const DensityPicker = React.memo(function DensityPicker() {
   const apiRef = React.useContext(ApiContext);
-  const { density, rowHeight, headerHeight } = useGridSelector(apiRef, optionsSelector);
+  const { size, rowHeight, headerHeight } = useGridSelector(apiRef, optionsSelector);
   const densitySize = useGridSelector(apiRef, densitySizeSelector);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const icons = useIcons();
 
-  const DensitySmallIcon = icons!.DensitySmall!;
-  const DensityMediumIcon = icons!.DensityMedium!;
-  const DensityLargeIcon = icons!.DensityLarge!;
+  const DensitySizeSmallIcon = icons!.DensitySizeSmall!;
+  const DensitySizeMediumIcon = icons!.DensitySizeMedium!;
+  const DensitySizeLargeIcon = icons!.DensitySizeLarge!;
 
   const DensityOptions: Array<DensityOption> = [
     {
-      icon: <DensitySmallIcon />,
-      label: DensityTypes.Small,
+      icon: <DensitySizeSmallIcon />,
+      label: SizeTypes.Small,
     },
     {
-      icon: <DensityMediumIcon />,
-      label: DensityTypes.Medium,
+      icon: <DensitySizeMediumIcon />,
+      label: SizeTypes.Medium,
     },
     {
-      icon: <DensityLargeIcon />,
-      label: DensityTypes.Large,
+      icon: <DensitySizeLargeIcon />,
+      label: SizeTypes.Large,
     },
   ];
 
   React.useEffect(() => {
-    apiRef!.current.setDensity(density, headerHeight, rowHeight);
-  }, [apiRef, density, rowHeight, headerHeight]);
+    apiRef!.current.setDensity(size, headerHeight, rowHeight);
+  }, [apiRef, size, rowHeight, headerHeight]);
 
   const getSelectedDensityIcon = React.useCallback((): React.ReactElement => {
     switch (densitySize) {
-      case DensityTypes.Small:
-        return <DensitySmallIcon />;
-      case DensityTypes.Large:
-        return <DensityLargeIcon />;
+      case SizeTypes.Small:
+        return <DensitySizeSmallIcon />;
+      case SizeTypes.Large:
+        return <DensitySizeLargeIcon />;
       default:
-        return <DensityMediumIcon />;
+        return <DensitySizeMediumIcon />;
     }
   }, [densitySize]);
 
   const handleDensityPickerOpen = (event) => setAnchorEl(event.currentTarget);
   const handleDensityPickerClose = () => setAnchorEl(null);
   const handleDensityUpdate = React.useCallback(
-    (newDensity: Density) => {
-      apiRef!.current.setDensity(newDensity);
+    (newDensitySize: Size) => {
+      apiRef!.current.setDensity(newDensitySize);
       setAnchorEl(null);
     },
     [apiRef],

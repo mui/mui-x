@@ -75,7 +75,7 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
       showColumnRightBorder: props.showColumnRightBorder,
       sortingOrder: props.sortingOrder,
       sortModel: props.sortModel,
-      density: props.density,
+      size: props.size,
     }),
     [
       props.pageSize,
@@ -128,7 +128,7 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
       props.showColumnRightBorder,
       props.sortingOrder,
       props.sortModel,
-      props.density,
+      props.size,
     ],
   );
 

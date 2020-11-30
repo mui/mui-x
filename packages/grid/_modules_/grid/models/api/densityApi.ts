@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { DensityTypes, Density } from '../gridOptions';
+import { SizeTypes, Size } from '../gridOptions';
 
 export interface DensityOption {
   icon: React.ReactElement;
-  label: DensityTypes;
+  label: SizeTypes;
 }
 
 /**
@@ -12,8 +12,8 @@ export interface DensityOption {
 export interface DensityApi {
   /**
    * Set density of the grid.
-   * @param density
+   * @param size
    * @returns void
    */
-  setDensity: (density: Density, headerHeight?, rowHeight?) => void;
+  setDensity: (size: Size, headerHeight?, rowHeight?) => void;
 }

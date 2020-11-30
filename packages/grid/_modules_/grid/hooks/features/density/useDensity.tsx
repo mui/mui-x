@@ -5,7 +5,7 @@ import { useApiMethod } from '../../root/useApiMethod';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { DensityApi } from '../../../models/api/densityApi';
-import { Density, DensityTypes } from '../../../models';
+import { Size, SizeTypes } from '../../../models';
 import { optionsSelector } from '../../utils/useOptionsProp';
 import { DensityState } from './densityState';
 
@@ -18,15 +18,17 @@ export const useDensity = (apiRef: ApiRef): void => {
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
   const getUpdatedDensityState = React.useCallback(
-    (densitySize: Density, newHeaderHeight: number, newRowHeight: number): DensityState => {
+    (densitySize: Size, newHeaderHeight: number, newRowHeight: number): DensityState => {
       switch (densitySize) {
-        case DensityTypes.Small:
+        case SizeTypes.Small:
           return {
             size: densitySize,
             headerHeight: Math.floor(newHeaderHeight / DENSITY_DIVISOR),
             rowHeight: Math.floor(newRowHeight / DENSITY_DIVISOR),
           };
-        case DensityTypes.Large:
+        case SizeTypes.Large:
+          console.log(Math.floor(newHeaderHeight * DENSITY_MULTIPLIER));
+          console.log(Math.floor(newRowHeight * DENSITY_MULTIPLIER));
           return {
             size: densitySize,
             headerHeight: Math.floor(newHeaderHeight * DENSITY_MULTIPLIER),
@@ -44,7 +46,7 @@ export const useDensity = (apiRef: ApiRef): void => {
   );
 
   const setDensity = React.useCallback(
-    (densitySize: Density, newHeaderHeight = headerHeight, newRowHeight = rowHeight): void => {
+    (densitySize: Size, newHeaderHeight = headerHeight, newRowHeight = rowHeight): void => {
       logger.debug(`Set grid density to ${densitySize}`);
       setGridState((oldState) => ({
         ...oldState,

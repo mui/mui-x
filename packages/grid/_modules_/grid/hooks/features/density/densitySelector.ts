@@ -1,11 +1,11 @@
 import { createSelector } from 'reselect';
-import { Density } from '../../../models/gridOptions';
+import { Size } from '../../../models/gridOptions';
 import { GridState } from '../core/gridState';
 import { DensityState } from './densityState';
 
 export const densitySelector = (state: GridState) => state.density;
 
-export const densitySizeSelector = createSelector<GridState, DensityState, Density>(
+export const densitySizeSelector = createSelector<GridState, DensityState, Size>(
   densitySelector,
   (density) => density.size,
 );

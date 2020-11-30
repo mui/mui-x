@@ -53,22 +53,22 @@ export interface IconsOptions {
    */
   ColumnResize?: React.ElementType<{ className: string }>;
 
-  DensitySmall?: React.ElementType;
+  DensitySizeSmall?: React.ElementType;
 
-  DensityMedium?: React.ElementType;
+  DensitySizeMedium?: React.ElementType;
 
-  DensityLarge?: React.ElementType;
+  DensitySizeLarge?: React.ElementType;
 }
 
 /**
  * Available densities.
  */
-export type Density = 'small' | 'medium' | 'large';
+export type Size = 'small' | 'medium' | 'large';
 
 /**
- * Density enum.
+ * Size enum.
  */
-export enum DensityTypes {
+export enum SizeTypes {
   Small = 'small',
   Medium = 'medium',
   Large = 'large',
@@ -326,9 +326,9 @@ export interface GridOptions {
    */
   columnTypes: ColumnTypesRecord;
   /**
-   * Set the density of the grid.
+   * Set the size of the grid.
    */
-  density: Density;
+  size: Size;
 }
 
 /**
@@ -345,7 +345,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   sortingMode: FeatureModeConstant.client,
   sortingOrder: ['asc', 'desc', null],
   columnTypes: DEFAULT_COLUMN_TYPES,
-  density: DensityTypes.Medium,
+  size: SizeTypes.Medium,
   disableColumnMenu: !EXPERIMENTAL_ENABLED,
   disableColumnFilter: !EXPERIMENTAL_ENABLED,
   disableColumnSelector: !EXPERIMENTAL_ENABLED,
@@ -357,8 +357,8 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
     ColumnSortedAscending: ArrowUpwardIcon,
     ColumnSortedDescending: ArrowDownwardIcon,
     ColumnResize: SeparatorIcon,
-    DensitySmall: ViewHeadlineIcon,
-    DensityMedium: TableRowsIcon,
-    DensityLarge: ViewStreamIcon,
+    DensitySizeSmall: ViewHeadlineIcon,
+    DensitySizeMedium: TableRowsIcon,
+    DensitySizeLarge: ViewStreamIcon,
   },
 };

@@ -11,7 +11,7 @@ export default function DensityPickerSmallGrid() {
 
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid {...data} density="small" />
+      <DataGrid {...data} size="small" />
     </div>
   );
 }
