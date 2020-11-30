@@ -4,7 +4,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { paginationSelector } from '../hooks/features/pagination/paginationSelector';
 import { optionsSelector } from '../hooks/utils/useOptionsProp';
-import { ApiRef } from '../models/api/apiRef';
+import { ApiContext } from './api-context';
 
 // Used to hide the drop down select from the TablePaginagion
 const useStyles = makeStyles((theme: Theme) => ({
@@ -25,13 +25,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface PaginationProps {
-  apiRef?: ApiRef;
-}
-
-export function Pagination(props: PaginationProps) {
+export function Pagination() {
   const classes = useStyles();
-  const { apiRef } = props;
+  const apiRef = React.useContext(ApiContext);
   const paginationState = useGridSelector(apiRef, paginationSelector);
   const options = useGridSelector(apiRef, optionsSelector);
 

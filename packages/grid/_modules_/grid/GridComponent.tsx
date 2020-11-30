@@ -202,7 +202,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                           !!gridState.options.pagination &&
                           gridState.pagination.pageSize != null &&
                           !gridState.options.hideFooterPagination &&
-                          (customComponents.paginationComponent || <Pagination apiRef={apiRef} />)
+                          (customComponents.paginationComponent || <Pagination />)
                         }
                       />
                     )}

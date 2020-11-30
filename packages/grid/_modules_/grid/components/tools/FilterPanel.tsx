@@ -4,16 +4,12 @@ import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { useGridState } from '../../hooks/features/core/useGridState';
 import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { FilterItem, LinkOperator } from '../../models/filterItem';
-import { ApiRef } from '../../models/api/apiRef';
+import { ApiContext } from '../api-context';
 import { AddIcon } from '../icons/index';
 import { FilterForm } from './FilterForm';
 
-interface FilterPanelProps {
-  apiRef?: ApiRef;
-}
-
-export function FilterPanel(props: FilterPanelProps) {
-  const { apiRef } = props;
+export function FilterPanel() {
+  const apiRef = React.useContext(ApiContext);
   const [gridState] = useGridState(apiRef!);
   const { disableMultipleColumnsFiltering } = useGridSelector(apiRef, optionsSelector);
 

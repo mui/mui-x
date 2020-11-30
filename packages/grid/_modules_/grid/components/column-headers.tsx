@@ -57,10 +57,8 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
 
   return (
     <React.Fragment>
-      {/* apiRef deopt for plugin-transform-react-constant-elements */}
-      <GridColumnHeaderMenu apiRef={apiRef} />
-      {/* apiRef deopt for plugin-transform-react-constant-elements */}
-      <PreferencesPanel apiRef={apiRef} />
+      <GridColumnHeaderMenu />
+      <PreferencesPanel />
       {items}
     </React.Fragment>
   );

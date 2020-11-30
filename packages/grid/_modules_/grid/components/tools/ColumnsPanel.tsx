@@ -9,7 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { allColumnsSelector } from '../../hooks/features/columns/columnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../hooks/utils/useOptionsProp';
-import { ApiRef } from '../../models/api/apiRef';
+import { ApiContext } from '../api-context';
 import { DragIcon } from '../icons/index';
 
 const useStyles = makeStyles(
@@ -33,13 +33,9 @@ const useStyles = makeStyles(
   { name: 'MuiDataGridColumnsPanel' },
 );
 
-interface ColumnsPanelProps {
-  apiRef?: ApiRef;
-}
-
-export function ColumnsPanel(props: ColumnsPanelProps) {
+export function ColumnsPanel() {
   const classes = useStyles();
-  const { apiRef } = props;
+  const apiRef = React.useContext(ApiContext);
   const searchInputRef = React.useRef<HTMLInputElement>(null);
   const columns = useGridSelector(apiRef, allColumnsSelector);
   const { disableColumnReorder } = useGridSelector(apiRef, optionsSelector);
