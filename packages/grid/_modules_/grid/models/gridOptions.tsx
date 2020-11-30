@@ -49,7 +49,7 @@ export interface IconsOptions {
    */
   ColumnSortedDescending?: React.ElementType;
   /**
-   * Icon displayed in between 2 column headers that allows to resize the column header.
+   * Icon displayed in between two column headers that allows to resize the column header.
    */
   ColumnResize?: React.ElementType<{ className: string }>;
 
