@@ -213,13 +213,13 @@ You can change the density of the rows and the column header.
 
 ### Size prop
 
-There are three possible density options to choose from: `small`, `medium`, and `large`. By default, the density of the `DataGrid` is set to `medium`. The default grid density can be changed by applying the `size` prop. The `size` prop will respect the values provided using the `rowHeight` or `headerHeight` props.
+There are three possible density options to choose from: `small`, `medium`, and `large`. By default, the density of the data grid is set to `medium`. The default grid density can be changed by applying the `size` prop. The `size` prop will respect the values provided using the `rowHeight` or `headerHeight` props.
 
 {{"demo": "pages/components/data-grid/rendering/DensityPickerSmallGrid.js", "bg": "inline"}}
 
 ### Density picker button
 
-The default way to change the density of the data grid is by using the `DensityPicker` component from the toolbar. In addition, there is a prop to hide the `DensityPicker`.
+The default way for a user to change the density of the data grid is by using the density picker component from the toolbar. In addition, there is a prop to hide the density picker.
 
 {{"demo": "pages/components/data-grid/rendering/DensityPickerHiddenGrid.js", "bg": "inline"}}
 
