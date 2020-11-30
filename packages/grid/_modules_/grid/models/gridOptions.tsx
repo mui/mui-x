@@ -52,11 +52,17 @@ export interface IconsOptions {
    * Icon displayed in between two column headers that allows to resize the column header.
    */
   ColumnResize?: React.ElementType<{ className: string }>;
-
+  /**
+   * Icon displayed on the small density option in the Density picker menu.
+   */
   DensitySizeSmall?: React.ElementType;
-
+  /**
+   * Icon displayed on the medium density option in the Density picker menu.
+   */
   DensitySizeMedium?: React.ElementType;
-
+  /**
+   * Icon displayed on the large density option in the Density picker menu.
+   */
   DensitySizeLarge?: React.ElementType;
 }
 
