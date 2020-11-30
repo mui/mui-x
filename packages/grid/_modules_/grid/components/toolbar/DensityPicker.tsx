@@ -75,7 +75,7 @@ export const DensityPicker = React.memo(function DensityPicker() {
   ));
 
   return (
-    <div className="MuiDataGrid-toolbarElement">
+    <React.Fragment>
       <Button
         color="primary"
         size="small"
