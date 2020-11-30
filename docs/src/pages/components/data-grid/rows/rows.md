@@ -31,7 +31,7 @@ It replaces the previous values. This approach has some drawbacks:
 ### The apiRef
 
 The second way to update rows is to use the apiRef.
-This is an imperative API that is designed to solve the previous two limitations of the declarative `rows` prop. `apiRef.current.updateRowData()`, updates the rows to the grid. It **merges** the new rows with the previous ones.
+This is an imperative API that is designed to solve the previous two limitations of the declarative `rows` prop. `apiRef.current.updateRows()`, updates the rows to the grid. It **merges** the new rows with the previous ones.
 
 The following demo updates the rows every 200ms.
 
