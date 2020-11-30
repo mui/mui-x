@@ -38,6 +38,10 @@ export const FilterInputValue: React.FC<TypeFilterInputValueProps> = ({
     };
   }, []);
 
+  React.useEffect(() => {
+    setFilterValueState(item.value || '');
+  }, [item.value]);
+
   const inputProps = applying ? { endAdornment: <LoadIcon /> } : undefined;
 
   return (
