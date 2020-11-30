@@ -86,7 +86,6 @@ export const DensityPicker = React.memo(function DensityPicker() {
       >
         Density
       </Button>
-
       <Menu
         getContentAnchorEl={null}
         anchorOrigin={{
