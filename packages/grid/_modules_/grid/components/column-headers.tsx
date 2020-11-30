@@ -7,7 +7,7 @@ import { ColumnHeaderItem } from './column-header-item';
 import { ApiContext } from './api-context';
 import { LeftEmptyCell, RightEmptyCell } from './cell';
 import { GridColumnHeaderMenu } from './menu/columnMenu/GridColumnHeaderMenu';
-import { PreferencesPanel } from './tools/Preferences';
+import { PreferencesPanel } from './tools/PreferencesPanel';
 import { containerSizesSelector } from './viewport';
 import { OptionsContext } from './options-context';
 import { ScrollArea } from './ScrollArea';
@@ -57,8 +57,10 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
 
   return (
     <React.Fragment>
-      <GridColumnHeaderMenu />
-      <PreferencesPanel />
+      {/* apiRef deopt for plugin-transform-react-constant-elements */}
+      <GridColumnHeaderMenu apiRef={apiRef} />
+      {/* apiRef deopt for plugin-transform-react-constant-elements */}
+      <PreferencesPanel apiRef={apiRef} />
       {items}
     </React.Fragment>
   );

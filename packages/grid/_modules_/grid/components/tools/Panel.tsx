@@ -37,10 +37,12 @@ const useStyles = makeStyles(
 );
 
 export interface PanelProps {
+  children?: React.ReactNode;
   open: boolean;
 }
 
-export const Panel: React.FC<PanelProps> = ({ children, open }) => {
+export function Panel(props: PanelProps) {
+  const { children, open } = props;
   const classes = useStyles();
   const apiRef = React.useContext(ApiContext);
   const viewportSizes = useGridSelector(apiRef, viewportSizeStateSelector);
@@ -80,4 +82,4 @@ export const Panel: React.FC<PanelProps> = ({ children, open }) => {
       </ClickAwayListener>
     </Popper>
   );
-};
+}

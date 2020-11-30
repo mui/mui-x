@@ -4,13 +4,17 @@ import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { preferencePanelStateSelector } from '../../hooks/features/preferencesPanel/preferencePanelSelector';
 import { PreferencePanelsValue } from '../../hooks/features/preferencesPanel/preferencesPanelValue';
 import { optionsSelector } from '../../hooks/utils/useOptionsProp';
-import { ApiContext } from '../api-context';
+import { ApiRef } from '../../models/api/apiRef';
 import { ColumnsPanel } from './ColumnsPanel';
 import { FilterPanel } from './FilterPanel';
 import { Panel } from './Panel';
 
-export function PreferencesPanel() {
-  const apiRef = React.useContext(ApiContext);
+interface PreferencesPanelProps {
+  apiRef?: ApiRef;
+}
+
+export function PreferencesPanel(props: PreferencesPanelProps) {
+  const { apiRef } = props;
   const columns = useGridSelector(apiRef, allColumnsSelector);
   const options = useGridSelector(apiRef, optionsSelector);
   const preferencePanelState = useGridSelector(apiRef, preferencePanelStateSelector);
@@ -20,8 +24,10 @@ export function PreferencesPanel() {
 
   return (
     <Panel open={columns.length > 0 && preferencePanelState.open}>
-      {!options.disableColumnSelector && isColumnsTabOpen && <ColumnsPanel />}
-      {!options.disableColumnFilter && isFiltersTabOpen && <FilterPanel />}
+      {/* apiRef deopt for plugin-transform-react-constant-elements */}
+      {!options.disableColumnSelector && isColumnsTabOpen && <ColumnsPanel apiRef={apiRef} />}
+      {/* apiRef deopt for plugin-transform-react-constant-elements */}
+      {!options.disableColumnFilter && isFiltersTabOpen && <FilterPanel apiRef={apiRef} />}
     </Panel>
   );
 }

@@ -2,8 +2,8 @@ import * as React from 'react';
 import { ColumnMenuState } from '../../../hooks/features/columnMenu/columnMenuState';
 import { GridState } from '../../../hooks/features/core/gridState';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
+import { ApiRef } from '../../../models/api/apiRef';
 import { findHeaderElementFromField } from '../../../utils/domUtils';
-import { ApiContext } from '../../api-context';
 import { GridMenu } from '../GridMenu';
 import { FilterMenuItem } from './FilterMenuItem';
 import { HideColMenuItem } from './HideColMenuItem';
@@ -11,8 +11,12 @@ import { SortMenuItems } from './SortMenuItems';
 
 const columnMenuStateSelector = (state: GridState) => state.columnMenu;
 
-export const GridColumnHeaderMenu: React.FC<{}> = () => {
-  const apiRef = React.useContext(ApiContext);
+interface GridColumnHeaderMenuProps {
+  apiRef?: ApiRef;
+}
+
+export function GridColumnHeaderMenu(props: GridColumnHeaderMenuProps) {
+  const { apiRef } = props;
   const columnMenuState = useGridSelector(apiRef!, columnMenuStateSelector);
   const currentColumn = columnMenuState.field
     ? apiRef?.current.getColumnFromField(columnMenuState.field)
@@ -74,4 +78,4 @@ export const GridColumnHeaderMenu: React.FC<{}> = () => {
       <HideColMenuItem onClick={hideMenu} column={currentColumn!} />
     </GridMenu>
   );
-};
+}

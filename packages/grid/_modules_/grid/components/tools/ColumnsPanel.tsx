@@ -9,31 +9,37 @@ import { makeStyles } from '@material-ui/core/styles';
 import { allColumnsSelector } from '../../hooks/features/columns/columnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../hooks/utils/useOptionsProp';
-import { ApiContext } from '../api-context';
+import { ApiRef } from '../../models/api/apiRef';
 import { DragIcon } from '../icons/index';
 
-const useStyles = makeStyles(() => ({
-  columnsListContainer: {
-    paddingTop: 8,
-    paddingLeft: 12,
+const useStyles = makeStyles(
+  {
+    columnsListContainer: {
+      paddingTop: 8,
+      paddingLeft: 12,
+    },
+    column: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      padding: '2px 4px',
+    },
+    switch: {
+      marginRight: 4,
+    },
+    dragIconRoot: {
+      justifyContent: 'flex-end',
+    },
   },
-  column: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '2px 4px',
-  },
-  switch: {
-    marginRight: 4,
-  },
-  dragIconRoot: {
-    justifyContent: 'flex-end',
-  },
-}));
+  { name: 'MuiDataGridColumnsPanel' },
+);
 
-export const ColumnsPanel: React.FC<{}> = () => {
+interface ColumnsPanelProps {
+  apiRef?: ApiRef;
+}
+
+export function ColumnsPanel(props: ColumnsPanelProps) {
   const classes = useStyles();
-
-  const apiRef = React.useContext(ApiContext);
+  const { apiRef } = props;
   const searchInputRef = React.useRef<HTMLInputElement>(null);
   const columns = useGridSelector(apiRef, allColumnsSelector);
   const { disableColumnReorder } = useGridSelector(apiRef, optionsSelector);
@@ -139,4 +145,4 @@ export const ColumnsPanel: React.FC<{}> = () => {
       </div>
     </React.Fragment>
   );
-};
+}
