@@ -95,6 +95,6 @@ export const DensityPicker = React.memo(function DensityPicker() {
       >
         {renderDensityOptions}
       </GridMenu>
-    </div>
+    </React.Fragment>
   );
 });
