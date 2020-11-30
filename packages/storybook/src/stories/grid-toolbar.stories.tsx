@@ -16,12 +16,21 @@ export default {
     },
   },
 };
-export const DensityPicker = () => {
+export const DensityPickerSmall = () => {
   const data = useData(100, 50);
 
   return (
     <div style={{ height: 600 }}>
-      <XGrid rows={data.rows} columns={data.columns} />
+      <XGrid rows={data.rows} columns={data.columns} density="small" />
+    </div>
+  );
+};
+export const DensityPickerLarge = () => {
+  const data = useData(100, 50);
+
+  return (
+    <div style={{ height: 600 }}>
+      <XGrid rows={data.rows} columns={data.columns} density="large" />
     </div>
   );
 };

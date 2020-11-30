@@ -1,12 +1,6 @@
 import * as React from 'react';
 import { DensityTypes, Density } from '../gridOptions';
 
-export interface DensityConfig {
-  density: Density;
-  headerHeight: number;
-  rowHeight: number;
-}
-
 export interface DensityOption {
   icon: React.ReactElement;
   label: DensityTypes;

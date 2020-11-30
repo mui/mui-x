@@ -76,7 +76,6 @@ export const useStyles = makeStyles(
           display: 'flex',
           width: '100%',
           alignItems: 'center',
-          justifyContent: 'center',
           overflow: 'hidden',
         },
         '& .MuiDataGrid-colCell, & .MuiDataGrid-cell': {
