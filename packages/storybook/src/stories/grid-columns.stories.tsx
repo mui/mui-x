@@ -222,6 +222,23 @@ export function NewColumnTypes() {
   );
 }
 
+export const FlexColumnsWithCheckbox = () => {
+  const data = useData(20, 3);
+  const transformColSizes = React.useCallback(
+    (columns: ColDef[]) =>
+      columns.map((col, index) =>
+        index % 2 === 0 ? { ...col, flex: index + 1 } : { ...col, width: 200 },
+      ),
+    [],
+  );
+
+  return (
+    <div className="grid-container">
+      <XGrid rows={data.rows} columns={transformColSizes(data.columns)} checkboxSelection />
+    </div>
+  );
+};
+
 export const FewFlexColumns = () => {
   const data = useData(20, 3);
   const transformColSizes = React.useCallback(

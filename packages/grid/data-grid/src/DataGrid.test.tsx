@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { createClientRender, fireEvent, screen, ErrorBoundary } from 'test/utils';
 import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, RowsProp } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
 describe('<DataGrid />', () => {
@@ -92,6 +92,59 @@ describe('<DataGrid />', () => {
           expect(cell).to.have.text('Addidas');
           done();
         }, 50);
+      });
+
+      it('should support server side pagination', () => {
+        const ServerPaginationGrid = () => {
+          const [page, setPage] = React.useState(1);
+          const [rows, setRows] = React.useState<RowsProp>([]);
+
+          const handlePageChange = (params) => {
+            setPage(params.page);
+          };
+
+          React.useEffect(() => {
+            let active = true;
+
+            (async () => {
+              const newRows = [
+                {
+                  id: page,
+                  brand: `Nike ${page}`,
+                },
+              ];
+
+              if (!active) {
+                return;
+              }
+
+              setRows(newRows);
+            })();
+
+            return () => {
+              active = false;
+            };
+          }, [page]);
+
+          return (
+            <div style={{ height: 300, width: 300 }}>
+              <DataGrid
+                {...defaultProps}
+                rows={rows}
+                pagination
+                pageSize={1}
+                rowCount={3}
+                paginationMode="server"
+                onPageChange={handlePageChange}
+              />
+            </div>
+          );
+        };
+
+        render(<ServerPaginationGrid />);
+        expect(getColumnValues()).to.deep.equal(['Nike 1']);
+        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+        expect(getColumnValues()).to.deep.equal(['Nike 2']);
       });
     });
 
@@ -243,6 +296,40 @@ describe('<DataGrid />', () => {
         expect(firstColumn).toHaveInlineStyle({
           width: `${2 * parseInt(secondColumnWidthVal, 10)}px`,
         });
+      });
+
+      it('should set the columns width so that if fills the remaining width when "checkboxSelection" is used and the columns have "flex" set', () => {
+        const rows = [
+          {
+            id: 1,
+            username: 'John Doe',
+            age: 30,
+          },
+        ];
+
+        const columns = [
+          {
+            field: 'id',
+            flex: 1,
+          },
+          {
+            field: 'name',
+            flex: 0.5,
+          },
+        ];
+
+        render(
+          <div style={{ width: 200, height: 300 }}>
+            <DataGrid columns={columns} rows={rows} checkboxSelection />
+          </div>,
+        );
+
+        expect(
+          Array.from(document.querySelectorAll('[role="columnheader"]')).reduce(
+            (width, item) => width + item.clientWidth,
+            0,
+          ),
+        ).to.equal(200 - 2);
       });
     });
 

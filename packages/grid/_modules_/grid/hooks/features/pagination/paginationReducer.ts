@@ -70,7 +70,11 @@ export const setPageSizeStateUpdate = (
     return state;
   }
 
-  const newState: PaginationState = { ...state, pageSize };
+  const newState: PaginationState = {
+    ...state,
+    pageSize,
+    pageCount: getPageCount(pageSize, state.rowCount),
+  };
   return newState;
 };
 
@@ -78,7 +82,12 @@ export const setRowCountStateUpdate = (state, payload): PaginationState => {
   const { totalRowCount } = payload;
   if (state.rowCount !== totalRowCount) {
     const newPageCount = getPageCount(state.pageSize, totalRowCount);
-    return { ...state, pageCount: newPageCount, rowCount: totalRowCount };
+    return {
+      ...state,
+      pageCount: newPageCount,
+      rowCount: totalRowCount,
+      page: state.page > newPageCount ? newPageCount : state.page,
+    };
   }
   return state;
 };

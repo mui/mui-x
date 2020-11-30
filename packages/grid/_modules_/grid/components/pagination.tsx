@@ -1,16 +1,10 @@
 import * as React from 'react';
 import TablePagination from '@material-ui/core/TablePagination';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-
-export interface PaginationComponentProps {
-  pageCount: number;
-  setPage: (pageCount: number) => void;
-  setPageSize: (pageSize: number) => void;
-  currentPage: number;
-  rowCount: number;
-  pageSize: number;
-  rowsPerPageOptions?: number[];
-}
+import { useGridSelector } from '../hooks/features/core/useGridSelector';
+import { paginationSelector } from '../hooks/features/pagination/paginationSelector';
+import { optionsSelector } from '../hooks/utils/useOptionsProp';
+import { ApiContext } from './api-context';
 
 // Used to hide the drop down select from the TablePaginagion
 const useStyles = makeStyles((theme: Theme) => ({
@@ -31,42 +25,42 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const Pagination: React.FC<PaginationComponentProps> = ({
-  setPage,
-  setPageSize,
-  pageSize,
-  rowCount,
-  currentPage,
-  rowsPerPageOptions,
-}) => {
+export function Pagination() {
   const classes = useStyles();
+  const apiRef = React.useContext(ApiContext);
+  const paginationState = useGridSelector(apiRef, paginationSelector);
+  const options = useGridSelector(apiRef, optionsSelector);
+
   const onPageSizeChange = React.useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
       const newPageSize = Number(event.target.value);
-      setPageSize(newPageSize);
+      apiRef!.current!.setPageSize(newPageSize);
     },
-    [setPageSize],
+    [apiRef],
   );
 
   const onPageChange = React.useCallback(
     (event: any, page: number) => {
-      setPage(page + 1);
+      apiRef!.current!.setPage(page + 1);
     },
-    [setPage],
+    [apiRef],
   );
 
   return (
     <TablePagination
       classes={classes}
       component="div"
-      count={rowCount}
-      page={currentPage - 1}
+      count={paginationState.rowCount}
+      page={paginationState.page - 1}
       onChangePage={onPageChange}
       rowsPerPageOptions={
-        rowsPerPageOptions && rowsPerPageOptions.indexOf(pageSize) > -1 ? rowsPerPageOptions : []
+        options.rowsPerPageOptions &&
+        options.rowsPerPageOptions.indexOf(paginationState.pageSize) > -1
+          ? options.rowsPerPageOptions
+          : []
       }
-      rowsPerPage={pageSize}
+      rowsPerPage={paginationState.pageSize}
       onChangeRowsPerPage={onPageSizeChange}
     />
   );
-};
+}
