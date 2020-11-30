@@ -9,8 +9,8 @@ import { Size, SizeTypes } from '../../../models';
 import { optionsSelector } from '../../utils/useOptionsProp';
 import { DensityState } from './densityState';
 
-const DENSITY_FACTOR_SMALL = 0.7;
-const DENSITY_FACTOR_LARGE = 1.3;
+export const DENSITY_FACTOR_SMALL = 0.7;
+export const DENSITY_FACTOR_LARGE = 1.3;
 
 export const useDensity = (apiRef: ApiRef): void => {
   const logger = useLogger('useDensity');

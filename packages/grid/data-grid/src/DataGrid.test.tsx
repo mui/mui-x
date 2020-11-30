@@ -6,6 +6,10 @@ import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
 import { DataGrid, RowsProp } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
+import {
+  DENSITY_FACTOR_LARGE,
+  DENSITY_FACTOR_SMALL,
+} from 'packages/grid/_modules_/grid/hooks/features/density/useDensity';
 
 describe('<DataGrid />', () => {
   const render = createClientRender();
@@ -494,7 +498,7 @@ describe('<DataGrid />', () => {
 
       // @ts-expect-error need to migrate helpers to TypeScript
       expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight / 2)}px`,
+        maxHeight: `${Math.floor(rowHeight * DENSITY_FACTOR_SMALL)}px`,
       });
     });
 
@@ -512,7 +516,7 @@ describe('<DataGrid />', () => {
 
       // @ts-expect-error need to migrate helpers to TypeScript
       expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * 1.5)}px`,
+        maxHeight: `${Math.floor(rowHeight * DENSITY_FACTOR_LARGE)}px`,
       });
     });
   });
