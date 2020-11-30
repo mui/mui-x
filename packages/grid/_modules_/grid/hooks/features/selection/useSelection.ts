@@ -78,7 +78,7 @@ export const useSelection = (apiRef: ApiRef): void => {
 
       const selectionState = apiRef!.current!.getState<SelectionState>('selection');
       const rowSelectedParam: RowSelectedParams = {
-        data: row.data,
+        data: row,
         isSelected: !!selectionState[row.id],
       };
       const selectionChangeParam: SelectionChangeParams = {
@@ -135,7 +135,7 @@ export const useSelection = (apiRef: ApiRef): void => {
   const rowClickHandler = React.useCallback(
     (params: RowParams) => {
       if (!options.disableSelectionOnClick) {
-        selectRowModel(params.rowModel);
+        selectRowModel(params.row);
       }
     },
     [options.disableSelectionOnClick, selectRowModel],

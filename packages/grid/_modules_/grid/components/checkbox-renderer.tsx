@@ -47,11 +47,11 @@ export const HeaderCheckbox: React.FC<ColParams> = () => {
 HeaderCheckbox.displayName = 'HeaderCheckbox';
 
 export const CellCheckboxRenderer: React.FC<CellParams> = React.memo((props) => {
-  const { rowModel, getValue, field } = props;
+  const { row, getValue, field } = props;
   const apiRef = useContext(ApiContext);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-    apiRef!.current.selectRow(rowModel.id, checked, true);
+    apiRef!.current.selectRow(row.id, checked, true);
   };
 
   return (

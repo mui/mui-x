@@ -236,8 +236,8 @@ export function StyledColumns() {
       valueGetter: (params) =>
         `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
       cellClassRules: {
-        common: (params) => params.data.lastName === 'Smith',
-        unknown: (params) => !params.data.lastName,
+        common: (params) => params.row.lastName === 'Smith',
+        unknown: (params) => !params.row.lastName,
       },
     },
     {
