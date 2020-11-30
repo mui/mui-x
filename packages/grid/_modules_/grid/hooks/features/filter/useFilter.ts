@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { FILTER_MODEL_CHANGE } from '../../../constants/eventsConstants';
-import { ROWS_UPDATED } from '../../../constants/eventsConstants';
+import { FILTER_MODEL_CHANGE, ROWS_UPDATED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { FilterApi } from '../../../models/api/filterApi';
 import { FeatureModeConstant } from '../../../models/featureMode';
@@ -13,7 +12,7 @@ import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useLogger } from '../../utils/useLogger';
 import { optionsSelector } from '../../utils/useOptionsProp';
-import { columnsSelector, filterableColumnsSelector } from '../columns/columnsSelector';
+import { filterableColumnsSelector } from '../columns/columnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { PreferencePanelsValue } from '../preferencesPanel/preferencesPanelValue';
@@ -266,17 +265,18 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
     const filterModel = options.filterModel;
     const oldFilterModel = apiRef.current.state.filter;
     if (filterModel && filterModel.items.length > 0 && !isEqual(filterModel, oldFilterModel)) {
-      // we use apiRef to avoid watching setFilterMOdel as it will trigger an update on every state change
+      // we use apiRef to avoid watching setFilterModel as it will trigger an update on every state change
       apiRef.current.setFilterModel(filterModel);
     }
   }, [apiRef, options.filterModel]);
 
   React.useEffect(() => {
     if (apiRef.current) {
+      clearFilteredRows();
       // When the rows prop change, we reapply the filters.
       apiRef.current.applyFilters();
     }
-  }, [apiRef, rowsProp]);
+  }, [apiRef, clearFilteredRows, rowsProp]);
 
   React.useEffect(() => {
     if (apiRef && apiRef.current && columns.length > 0) {
