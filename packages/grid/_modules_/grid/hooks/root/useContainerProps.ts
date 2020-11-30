@@ -118,7 +118,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
       let totalHeight =
         (options.autoPageSize ? 1 : rowsCount / viewportPageSize) * viewportSizes.height +
         (scrollState.hasScrollY ? scrollState.scrollBarSize.x : 0);
-        // console.log(totalHeight)
+
       if (options.autoHeight) {
         totalHeight = rowsCount * rowHeight + scrollState.scrollBarSize.x;
       }

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -11,6 +10,7 @@ import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { DensityOption } from '../../models/api/densityApi';
 import { densitySizeSelector } from '../../hooks/features/density';
+import { GridMenu } from '../menu/GridMenu';
 
 export const DensityPicker = React.memo(function DensityPicker() {
   const apiRef = React.useContext(ApiContext);
@@ -86,18 +86,15 @@ export const DensityPicker = React.memo(function DensityPicker() {
       >
         Density
       </Button>
-      <Menu
-        getContentAnchorEl={null}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        anchorEl={anchorEl}
+
+      <GridMenu
         open={Boolean(anchorEl)}
-        onClose={handleDensityPickerClose}
+        target={anchorEl}
+        onClickAway={handleDensityPickerClose}
+        onKeyDown={handleDensityPickerClose}
       >
         {renderDensityOptions}
-      </Menu>
+      </GridMenu>
     </div>
   );
 });

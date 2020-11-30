@@ -27,8 +27,6 @@ export const useDensity = (apiRef: ApiRef): void => {
             rowHeight: Math.floor(newRowHeight / DENSITY_DIVISOR),
           };
         case SizeTypes.Large:
-          console.log(Math.floor(newHeaderHeight * DENSITY_MULTIPLIER));
-          console.log(Math.floor(newRowHeight * DENSITY_MULTIPLIER));
           return {
             size: densitySize,
             headerHeight: Math.floor(newHeaderHeight * DENSITY_MULTIPLIER),
