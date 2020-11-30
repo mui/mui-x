@@ -61,7 +61,7 @@ export interface IconsOptions {
 }
 
 /**
- * Available density types.
+ * Available densities.
  */
 export type Density = 'small' | 'medium' | 'large';
 
