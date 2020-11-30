@@ -114,9 +114,11 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
         if (!oldRow) {
           addedRows.push(partialRow as RowModel);
           return;
-
         }
-        Object.assign(internalRowsState.current.idRowsLookup[partialRow.id!], { ...oldRow,  ...partialRow });
+        Object.assign(internalRowsState.current.idRowsLookup[partialRow.id!], {
+          ...oldRow,
+          ...partialRow,
+        });
       });
 
       if (!apiRef.current.state.isScrolling) {

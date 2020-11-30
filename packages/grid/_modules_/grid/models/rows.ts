@@ -22,7 +22,10 @@ export interface ObjectWithId {
  * @param rowData Row as [[RowData]].
  * @returns a boolean
  */
-export function checkRowHasId(rowData: RowModel | Partial<RowModel>, detailErrorMessage?: string): boolean {
+export function checkRowHasId(
+  rowData: RowModel | Partial<RowModel>,
+  detailErrorMessage?: string,
+): boolean {
   if (rowData.id == null) {
     throw new Error(
       [
