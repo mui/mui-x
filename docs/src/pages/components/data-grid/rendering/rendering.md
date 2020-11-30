@@ -209,7 +209,7 @@ This means that the number of rows will drive the height of the grid and consequ
 
 ## Density
 
-`DataGrid` provides an option to set the density of the rows and the columns header.
+You can change the density of the rows and the column header.
 
 ### Density prop
 
