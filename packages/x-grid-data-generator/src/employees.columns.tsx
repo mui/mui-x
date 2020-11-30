@@ -34,7 +34,6 @@ export const employeeColumns: any[] = [
     field: 'name',
     headerName: 'Name',
     generateData: generateName,
-    // valueGetter: (params=> params.rowModel['avatar']),
     sortDirection: 'asc',
     sortIndex: 1,
     width: 120,
