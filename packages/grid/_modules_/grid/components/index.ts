@@ -1,3 +1,4 @@
+export * from './filterPanel';
 export * from './icons';
 export * from './menu';
 export * from './styled-wrappers';

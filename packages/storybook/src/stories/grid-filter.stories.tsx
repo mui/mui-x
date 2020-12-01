@@ -1,14 +1,17 @@
 import Button from '@material-ui/core/Button';
 import {
   ColDef,
-  ColTypeDef,
+  ColTypeDef, FilterItem, FilterModel,
   LinkOperator,
-  PreferencePanelsValue,
+  PreferencePanelsValue, RowModel,
   useApiRef,
   XGrid,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { action } from '@storybook/addon-actions';
+import { useState } from 'react';
 import * as React from 'react';
+import { FilterModelParams } from '../../../grid/_modules_/grid/models/params/filterModelParams';
 import { randomInt } from '../data/random-generator';
 import { useData } from '../hooks/useData';
 
@@ -125,7 +128,64 @@ export function CommodityWithNewRowsViaProps() {
     </React.Fragment>
   );
 }
+export function ServerFilterViaProps() {
+  const demoServer = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
+  const [rows, setRows] = useState<RowModel[]>(demoServer.data.rows);
+  const [filterModel, setFilterModel] = useState<FilterModel>({items:[{ id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'contains' }]});
+  const [loading, setLoading] = useState(false);
 
+  const applyFilter = React.useCallback(()=> {
+    if(!filterModel.items.length) {
+      setRows(demoServer.data.rows);
+    } else {
+      const newRows = demoServer.data.rows.filter(row =>
+        row[filterModel.items[0].columnField!].toString().toLowerCase()
+          .indexOf(filterModel.items[0].value) > -1);
+      setRows(newRows);
+    }
+    setLoading(false);
+
+  }, [demoServer.data.rows, filterModel]);
+
+  //TODO allow to filter operators using string value
+  // columnTypes={{string: {filterOperators: ['contains']}}}
+
+  const onFilterChange = React.useCallback( (params: FilterModelParams)=> {
+    const hasChanged = params.filterModel.items[0].value !== filterModel.items[0].value;
+    setLoading(hasChanged);
+    if (!hasChanged) {
+      return;
+    }
+    setTimeout(() => {
+      action('onFilterChange')(params);
+      setFilterModel({items: [params.filterModel.items[0]]})
+    }, 1500);
+  }, [filterModel.items]);
+
+  React.useEffect(()=> {
+    applyFilter();
+  }, [applyFilter, demoServer.data.rows])
+
+  return (
+      <div className="grid-container">
+        <XGrid
+          rows={rows}
+          columns={demoServer.data.columns}
+          filterMode={'server'}
+          onFilterModelChange={onFilterChange}
+          disableMultipleColumnsFiltering
+          filterModel={filterModel}
+          loading={loading}
+          state={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: PreferencePanelsValue.filters,
+            },
+          }}
+        />
+      </div>
+  );
+}
 export function CommodityWithNewRowsViaApi() {
   const apiRef = useApiRef();
   const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
@@ -134,7 +194,7 @@ export function CommodityWithNewRowsViaApi() {
   const setNewRows = React.useCallback(()=> {
     apiDemoData.setRowLength(randomInt(100, 500));
     apiDemoData.loadNewData();
-    apiRef.current.setRowModels(apiDemoData.data.rows.map((row) => ({ id: row.id, data: row })));
+    apiRef.current.setRows(apiDemoData.data.rows);
   }, [apiDemoData, apiRef]);
 
   return (

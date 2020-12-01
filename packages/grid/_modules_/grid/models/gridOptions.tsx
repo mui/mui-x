@@ -14,6 +14,7 @@ import { DEFAULT_COLUMN_TYPES } from './colDef/defaultColumnTypes';
 import { FeatureMode, FeatureModeConstant } from './featureMode';
 import { CellParams } from './params/cellParams';
 import { ColParams } from './params/colParams';
+import { FilterModelParams } from './params/filterModelParams';
 import { PageChangeParams } from './params/pageChangeParams';
 import { RowParams } from './params/rowParams';
 import { RowSelectedParams } from './params/rowSelectedParams';
@@ -286,7 +287,7 @@ export interface GridOptions {
    * Callback fired when the Filter model changes before the filters are applied.
    * @param param With all properties from [[FilterModelParams]].
    */
-  onFilterModelChange?: (params: SortModelParams) => void;
+  onFilterModelChange?: (params: FilterModelParams) => void;
   /**
    * Callback fired when the current page has changed.
    * @param param With all properties from [[PageChangeParams]].

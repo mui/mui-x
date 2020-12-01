@@ -58,6 +58,7 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
         return;
       }
       const filterOperators = column.filterOperators;
+
       if (!filterOperators?.length) {
         throw new Error(`No Filter operator found for column ${column.field}`);
       }
@@ -210,7 +211,7 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
   );
 
   const applyFilterLinkOperator = React.useCallback(
-    (linkOperator: LinkOperator) => {
+    (linkOperator: LinkOperator = LinkOperator.And) => {
       setGridState((state) => ({
         ...state,
         filter: { ...state.filter, linkOperator },

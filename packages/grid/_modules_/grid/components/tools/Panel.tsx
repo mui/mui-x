@@ -63,7 +63,7 @@ export const Panel: React.FC<PanelProps> = ({ children, open }) => {
       placement={'bottom-start'}
       open={open}
       anchorEl={anchorEl}
-      style={{ position: 'relative' }}
+      style={{ position: 'relative', zIndex: 100 }}
     >
       <ClickAwayListener onClickAway={hidePreferences}>
         <Paper

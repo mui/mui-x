@@ -2,7 +2,7 @@ import { FilterItem, LinkOperator } from '../../../models/filterItem';
 
 export interface FilterModelState {
   items: FilterItem[];
-  linkOperator: LinkOperator;
+  linkOperator?: LinkOperator;
 }
 
 export type FilterModel = FilterModelState;
