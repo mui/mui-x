@@ -23,40 +23,44 @@ export interface FilterFormProps {
   deleteFilter: (item: FilterItem) => void;
 }
 
-const useStyles = makeStyles(() => ({
-  root: {
-    display: 'flex',
-    justifyContent: 'space-around',
-    padding: 8,
-  },
-  linkOperatorSelect: {
-    width: 60,
-  },
-  columnSelect: {
-    width: 150,
-  },
-  operatorSelect: {
-    width: 120,
-  },
-  filterValueInput: {
-    width: 190,
-  },
-  closeIconRoot: {
-    flexShrink: 0,
-    justifyContent: 'flex-end',
-  },
-}));
+const useStyles = makeStyles(
+  () => ({
+    root: {
+      display: 'flex',
+      justifyContent: 'space-around',
+      padding: 8,
+    },
+    linkOperatorSelect: {
+      width: 60,
+    },
+    columnSelect: {
+      width: 150,
+    },
+    operatorSelect: {
+      width: 120,
+    },
+    filterValueInput: {
+      width: 190,
+    },
+    closeIconRoot: {
+      flexShrink: 0,
+      justifyContent: 'flex-end',
+    },
+  }),
+  { name: 'MuiDataGridFilterForm' },
+);
 
-export const FilterForm: React.FC<FilterFormProps> = ({
-  item,
-  hasMultipleFilters,
-  deleteFilter,
-  applyFilterChanges,
-  multiFilterOperator,
-  showMultiFilterOperators,
-  disableMultiFilterOperator,
-  applyMultiFilterOperatorChanges,
-}) => {
+export function FilterForm(props: FilterFormProps) {
+  const {
+    item,
+    hasMultipleFilters,
+    deleteFilter,
+    applyFilterChanges,
+    multiFilterOperator,
+    showMultiFilterOperators,
+    disableMultiFilterOperator,
+    applyMultiFilterOperatorChanges,
+  } = props;
   const classes = useStyles();
   const apiRef = React.useContext(ApiContext);
   const filterableColumns = useGridSelector(apiRef, filterableColumnsSelector);
@@ -199,4 +203,4 @@ export const FilterForm: React.FC<FilterFormProps> = ({
       </FormControl>
     </div>
   );
-};
+}

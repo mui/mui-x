@@ -12,27 +12,29 @@ import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { ApiContext } from '../api-context';
 import { DragIcon } from '../icons/index';
 
-const useStyles = makeStyles(() => ({
-  columnsListContainer: {
-    paddingTop: 8,
-    paddingLeft: 12,
+const useStyles = makeStyles(
+  {
+    columnsListContainer: {
+      paddingTop: 8,
+      paddingLeft: 12,
+    },
+    column: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      padding: '2px 4px',
+    },
+    switch: {
+      marginRight: 4,
+    },
+    dragIconRoot: {
+      justifyContent: 'flex-end',
+    },
   },
-  column: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '2px 4px',
-  },
-  switch: {
-    marginRight: 4,
-  },
-  dragIconRoot: {
-    justifyContent: 'flex-end',
-  },
-}));
+  { name: 'MuiDataGridColumnsPanel' },
+);
 
-export const ColumnsPanel: React.FC<{}> = () => {
+export function ColumnsPanel() {
   const classes = useStyles();
-
   const apiRef = React.useContext(ApiContext);
   const searchInputRef = React.useRef<HTMLInputElement>(null);
   const columns = useGridSelector(apiRef, allColumnsSelector);
@@ -139,4 +141,4 @@ export const ColumnsPanel: React.FC<{}> = () => {
       </div>
     </React.Fragment>
   );
-};
+}
