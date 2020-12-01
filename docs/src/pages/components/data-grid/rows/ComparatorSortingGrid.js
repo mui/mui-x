@@ -14,7 +14,7 @@ const columns = [
       `${params.getValue('name') || 'unknown'} - ${
         params.getValue('age') || 'x'
       }`,
-    sortComparator: (v1, v2, row1, row2) => row1.data.age - row2.data.age,
+    sortComparator: (v1, v2, param1, param2) => param1.row.age - param2.row.age,
     width: 150,
   },
   { field: 'dateCreated', type: 'date', width: 180 },

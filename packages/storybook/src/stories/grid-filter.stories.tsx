@@ -8,8 +8,6 @@ import {
   XGrid,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
-import { withA11y } from '@storybook/addon-a11y';
-import { withKnobs } from '@storybook/addon-knobs';
 import * as React from 'react';
 import { randomInt } from '../data/random-generator';
 import { useData } from '../hooks/useData';
@@ -17,7 +15,6 @@ import { useData } from '../hooks/useData';
 export default {
   title: 'X-Grid Tests/Filter',
   component: XGrid,
-  decorators: [withKnobs, withA11y],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {

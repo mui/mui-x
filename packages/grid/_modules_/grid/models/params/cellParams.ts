@@ -1,5 +1,5 @@
 import { CellValue } from '../cell';
-import { RowData, RowModel } from '../rows';
+import { RowModel } from '../rows';
 
 /**
  * Object passed as parameter in the column [[ColDef]] cell renderer.
@@ -23,13 +23,9 @@ export interface CellParams {
    */
   getValue: (field: string) => CellValue;
   /**
-   * The full set of data of the row that the current cell belongs to.
-   */
-  data: RowData;
-  /**
    * The row model of the row that the current cell belongs to.
    */
-  rowModel: RowModel;
+  row: RowModel;
   /**
    * The column of the row that the current cell belongs to.
    */

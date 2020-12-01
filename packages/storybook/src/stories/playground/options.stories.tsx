@@ -1,83 +1,53 @@
 import * as React from 'react';
-import { XGrid, GridOptionsProp, SortDirection } from '@material-ui/x-grid';
-import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
-import { action } from '@storybook/addon-actions';
+import { Story, Meta } from '@storybook/react';
+import { XGrid, SortDirection, GridOptionsProp } from '@material-ui/x-grid';
 import { useData } from '../../hooks/useData';
 
 export default {
   title: 'X-Grid Demos/Options-Events',
   component: XGrid,
-  decorators: [withKnobs],
   parameters: {
-    options: { selectedPanel: 'storybook/knobs/panel' },
+    options: { selectedPanel: 'storybook/controls/panel' },
     docs: {
       page: null,
     },
   },
-};
+} as Meta;
 
-export const Options = () => {
+const Template: Story<GridOptionsProp> = ({ sortingOrder, ...args }) => {
   const data = useData(2000, 200);
-  const rowsPerPageOptions = array('rowsPerPageOptions', ['25', '50', '100'], ', ');
-  const sortingOrder = array('sortingOrder', ['asc', 'desc', 'null'], ', ');
-
   return (
     <XGrid
       rows={data.rows}
       columns={data.columns}
-      {...{
-        onRowClick: (params) => action('onRowClick')(params),
-        onCellClick: (params) => action('onCellClick')(params),
-        onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
-        onRowSelected: (params) => action('onRowSelected')(params),
-        onSelectionChange: (params) => action('onSelectionChange', { depth: 1 })(params),
-        onPageChange: (params) => action('onPageChange')(params),
-        onPageSizeChange: (params) => action('onPageSizeChange')(params),
-        onStateChange: (params) => action('onStateChange')(params),
-
-        autoHeight: boolean('autoHeight', false),
-        checkboxSelection: boolean('checkboxSelection', true),
-        pagination: boolean('pagination', true),
-        pageSize: number('pageSize', 100),
-        autoPageSize: boolean('autoPageSize', false),
-        rowsPerPageOptions: rowsPerPageOptions.map((value) => parseInt(value, 10)),
-        hideFooterRowCount: boolean('hideFooterRowCount', false),
-        hideFooterPagination: boolean('hideFooterPagination', false),
-        hideFooter: boolean('hideFooter', false),
-        hideToolbar: boolean('hideToolbar', false),
-        showCellRightBorder: boolean('showCellRightBorder', false),
-        showColumnRightBorder: boolean('showColumnRightBorder', false),
-        disableMultipleSelection: boolean('disableMultipleSelection', false),
-        disableExtendRowFullWidth: boolean('disableExtendRowFullWidth', false),
-        disableSelectionOnClick: boolean('disableSelectionOnClick', false),
-        disableMultipleColumnsSorting: boolean('disableMultipleColumnsSorting', false),
-        disableColumnMenu: boolean('disableColumnMenu', false),
-        disableColumnFilter: boolean('disableColumnFilter', false),
-        disableColumnSelector: boolean('disableColumnSelector', false),
-        sortingOrder: sortingOrder.map((value) =>
-          value === 'null' ? null : (value as SortDirection),
-        ),
-        headerHeight: number('headerHeight', 56),
-        rowHeight: number('rowHeight', 52),
-      }}
+      sortingOrder={sortingOrder?.map((value) => ((value as string) === 'null' ? null : value))}
+      {...args}
     />
   );
 };
-export const Events = () => {
-  const data = useData(2000, 200);
 
-  const options: GridOptionsProp = {
-    onRowClick: (params) => action('onRowClick')(params),
-    onRowHover: (params) => action('onRowHover')(params),
-    onCellClick: (params) => action('onCellClick')(params),
-    onCellHover: (params) => action('onCellHover')(params),
-    onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
-    onRowSelected: (params) => action('onRowSelected')(params),
-    onSelectionChange: (params) => action('onSelectionChange', { depth: 1 })(params),
-    onPageChange: (params) => action('onPageChange')(params),
-    onPageSizeChange: (params) => action('onPageSizeChange')(params),
-    onSortModelChange: (params) => action('onSortModelChange')(params),
-  };
-
-  return <XGrid rows={data.rows} columns={data.columns} {...options} />;
+export const Options = Template.bind({});
+Options.args = {
+  autoHeight: false,
+  pagination: true,
+  pageSize: 100,
+  autoPageSize: false,
+  rowsPerPageOptions: [25, 50, 100],
+  hideFooterRowCount: false,
+  hideFooterPagination: false,
+  hideFooter: false,
+  hideToolbar: false,
+  disableExtendRowFullWidth: false,
+  disableColumnMenu: false,
+  disableColumnFilter: false,
+  disableColumnSelector: false,
+  showCellRightBorder: false,
+  showColumnRightBorder: false,
+  disableMultipleSelection: false,
+  checkboxSelection: true,
+  disableSelectionOnClick: false,
+  disableMultipleColumnsSorting: false,
+  sortingOrder: ['asc', 'desc', 'null' as SortDirection],
+  headerHeight: 56,
+  rowHeight: 52,
 };

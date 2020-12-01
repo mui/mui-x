@@ -27,11 +27,11 @@ export function buildCellParams({
     getValue: (field: string) => {
       const col = api.getColumnFromField(field);
       if (!col.valueGetter) {
-        return rowModel.data[field];
+        return rowModel[field];
       }
       return col.valueGetter(
         buildCellParams({
-          value: rowModel.data[field],
+          value: rowModel[field],
           colDef: col,
           rowIndex,
           element,
@@ -40,8 +40,7 @@ export function buildCellParams({
         }),
       );
     },
-    data: rowModel.data,
-    rowModel,
+    row: rowModel,
     colDef,
     rowIndex,
     api,
@@ -63,9 +62,8 @@ export function buildRowParams({
   return {
     element,
     columns: api.getAllColumns(),
-    getValue: (field: string) => rowModel.data[field],
-    data: rowModel.data,
-    rowModel,
+    getValue: (field: string) => rowModel[field],
+    row: rowModel,
     rowIndex,
     api,
   };

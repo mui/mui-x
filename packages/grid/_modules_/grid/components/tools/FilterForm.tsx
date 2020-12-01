@@ -42,6 +42,7 @@ const useStyles = makeStyles(() => ({
     width: 190,
   },
   closeIconRoot: {
+    flexShrink: 0,
     justifyContent: 'flex-end',
   },
 }));

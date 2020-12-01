@@ -297,6 +297,40 @@ describe('<DataGrid />', () => {
           width: `${2 * parseInt(secondColumnWidthVal, 10)}px`,
         });
       });
+
+      it('should set the columns width so that if fills the remaining width when "checkboxSelection" is used and the columns have "flex" set', () => {
+        const rows = [
+          {
+            id: 1,
+            username: 'John Doe',
+            age: 30,
+          },
+        ];
+
+        const columns = [
+          {
+            field: 'id',
+            flex: 1,
+          },
+          {
+            field: 'name',
+            flex: 0.5,
+          },
+        ];
+
+        render(
+          <div style={{ width: 200, height: 300 }}>
+            <DataGrid columns={columns} rows={rows} checkboxSelection />
+          </div>,
+        );
+
+        expect(
+          Array.from(document.querySelectorAll('[role="columnheader"]')).reduce(
+            (width, item) => width + item.clientWidth,
+            0,
+          ),
+        ).to.equal(200 - 2);
+      });
     });
 
     describe('state', () => {

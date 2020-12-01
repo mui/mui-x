@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { ColDef, XGrid, ColTypeDef } from '@material-ui/x-grid';
-import { withKnobs } from '@storybook/addon-knobs';
 import CreateIcon from '@material-ui/icons/Create';
 import Button from '@material-ui/core/Button';
 import { useData } from '../hooks/useData';
@@ -8,7 +7,6 @@ import { useData } from '../hooks/useData';
 export default {
   title: 'X-Grid Tests/Columns',
   component: XGrid,
-  decorators: [withKnobs],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
@@ -221,6 +219,23 @@ export function NewColumnTypes() {
     </div>
   );
 }
+
+export const FlexColumnsWithCheckbox = () => {
+  const data = useData(20, 3);
+  const transformColSizes = React.useCallback(
+    (columns: ColDef[]) =>
+      columns.map((col, index) =>
+        index % 2 === 0 ? { ...col, flex: index + 1 } : { ...col, width: 200 },
+      ),
+    [],
+  );
+
+  return (
+    <div className="grid-container">
+      <XGrid rows={data.rows} columns={transformColSizes(data.columns)} checkboxSelection />
+    </div>
+  );
+};
 
 export const FewFlexColumns = () => {
   const data = useData(20, 3);

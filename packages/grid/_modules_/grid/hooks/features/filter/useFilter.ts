@@ -79,7 +79,7 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
             rowModel: row,
             colDef: column,
             rowIndex,
-            value: row.data[column.field],
+            value: row[column.field],
             api: apiRef!.current!,
           });
 
