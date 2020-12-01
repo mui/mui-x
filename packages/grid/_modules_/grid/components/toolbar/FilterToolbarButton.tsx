@@ -3,12 +3,12 @@ import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import * as React from 'react';
 import { columnLookupSelector } from '../../hooks/features/columns/columnsSelector';
-import { GridState } from '../../hooks/features/core/gridState';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import {
   activeFilterItemsSelector,
   filterItemsCounterSelector,
 } from '../../hooks/features/filter/filterSelector';
+import { preferencePanelStateSelector } from '../../hooks/features/preferencesPanel/preferencePanelSelector';
 import { PreferencePanelsValue } from '../../hooks/features/preferencesPanel/preferencesPanelValue';
 import { useIcons } from '../../hooks/utils/useIcons';
 import { optionsSelector } from '../../hooks/utils/useOptionsProp';
@@ -20,7 +20,12 @@ export const FilterToolbarButton: React.FC<{}> = () => {
   const counter = useGridSelector(apiRef, filterItemsCounterSelector);
   const activeFilters = useGridSelector(apiRef, activeFilterItemsSelector);
   const lookup = useGridSelector(apiRef, columnLookupSelector);
+  const preferencePanel = useGridSelector(apiRef, preferencePanelStateSelector);
+
   const tooltipContentNode = React.useMemo(() => {
+    if(preferencePanel.open) {
+      return 'Hide Filters';
+    }
     if (counter === 0) {
       return 'Show Filters';
     }
@@ -39,18 +44,18 @@ export const FilterToolbarButton: React.FC<{}> = () => {
         </ul>
       </div>
     );
-  }, [counter, activeFilters, lookup]);
+  }, [preferencePanel.open, counter, activeFilters, lookup]);
 
   const icons = useIcons();
   const filterIconElement = React.createElement(icons.ColumnFiltering!, {});
   const toggleFilter = React.useCallback(() => {
-    const {open, openedPanelValue} = apiRef?.current.getState<GridState>().preferencePanel!;
+    const {open, openedPanelValue} = preferencePanel;
     if(open && openedPanelValue ===  PreferencePanelsValue.filters) {
       apiRef!.current.hideFilterPanel();
     } else {
       apiRef!.current.showFilterPanel();
     }
-  }, [apiRef]);
+  }, [apiRef, preferencePanel]);
 
   if (options.disableColumnFilter) {
     return null;

@@ -21,6 +21,7 @@ export const GridColumnHeaderMenu: React.FC<{}> = () => {
 
   // TODO: Fix issue with portal in V5
   const hideTimeout = React.useRef<any>();
+  const immediateTimeout = React.useRef<any>();
   const hideMenu = React.useCallback(() => {
     apiRef?.current.hideColumnMenu();
   }, [apiRef]);
@@ -32,7 +33,7 @@ export const GridColumnHeaderMenu: React.FC<{}> = () => {
   const updateColumnMenu = React.useCallback(
     ({ open, field }: ColumnMenuState) => {
       if (field && open) {
-        setImmediate(() => clearTimeout(hideTimeout.current));
+        immediateTimeout.current = setTimeout(() => clearTimeout(hideTimeout.current), 0);
 
         const headerCellEl = findHeaderElementFromField(
           apiRef!.current!.rootElementRef!.current!,
@@ -58,6 +59,13 @@ export const GridColumnHeaderMenu: React.FC<{}> = () => {
   React.useEffect(() => {
     updateColumnMenu(columnMenuState);
   }, [columnMenuState, updateColumnMenu]);
+
+  React.useEffect(()=> {
+      return () => {
+        clearTimeout(hideTimeout.current);
+        clearTimeout(immediateTimeout.current);
+      }
+    }, [])
 
   if (!target) {
     return null;

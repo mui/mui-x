@@ -47,7 +47,7 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-toolbar': {
           display: 'flex',
           alignItems: 'center',
-          padding: 4,
+          padding: '4px 4px 0',
         },
         '& .MuiDataGrid-columnsContainer': {
           position: 'absolute',
