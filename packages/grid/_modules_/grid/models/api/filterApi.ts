@@ -4,6 +4,7 @@ import { FilterModelParams } from '../params/filterModelParams';
 
 export interface FilterApi {
   showFilterPanel: (targetColumnField?: string) => void;
+  hideFilterPanel: () => void;
   upsertFilter: (item: FilterItem) => void;
   applyFilters: () => void;
   applyFilter: (item: FilterItem, linkOperator?: LinkOperator) => void;

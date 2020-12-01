@@ -1,9 +1,11 @@
 import Button from '@material-ui/core/Button';
 import {
   ColDef,
-  ColTypeDef, FilterItem, FilterModel,
+  ColTypeDef,
+  FilterModel,
   LinkOperator,
-  PreferencePanelsValue, RowModel,
+  PreferencePanelsValue,
+  RowModel,
   useApiRef,
   XGrid,
 } from '@material-ui/x-grid';
@@ -131,59 +133,67 @@ export function CommodityWithNewRowsViaProps() {
 export function ServerFilterViaProps() {
   const demoServer = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
   const [rows, setRows] = useState<RowModel[]>(demoServer.data.rows);
-  const [filterModel, setFilterModel] = useState<FilterModel>({items:[{ id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'contains' }]});
+  const [filterModel, setFilterModel] = useState<FilterModel>({
+    items: [{ id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'contains' }],
+  });
   const [loading, setLoading] = useState(false);
 
-  const applyFilter = React.useCallback(()=> {
-    if(!filterModel.items.length) {
+  const applyFilter = React.useCallback(() => {
+    if (!filterModel.items.length) {
       setRows(demoServer.data.rows);
     } else {
-      const newRows = demoServer.data.rows.filter(row =>
-        row[filterModel.items[0].columnField!].toString().toLowerCase()
-          .indexOf(filterModel.items[0].value) > -1);
+      const newRows = demoServer.data.rows.filter(
+        (row) =>
+          row[filterModel.items[0].columnField!]
+            .toString()
+            .toLowerCase()
+            .indexOf(filterModel.items[0].value) > -1,
+      );
       setRows(newRows);
     }
     setLoading(false);
-
   }, [demoServer.data.rows, filterModel]);
 
   //TODO allow to filter operators using string value
   // columnTypes={{string: {filterOperators: ['contains']}}}
 
-  const onFilterChange = React.useCallback( (params: FilterModelParams)=> {
-    const hasChanged = params.filterModel.items[0].value !== filterModel.items[0].value;
-    setLoading(hasChanged);
-    if (!hasChanged) {
-      return;
-    }
-    setTimeout(() => {
-      action('onFilterChange')(params);
-      setFilterModel({items: [params.filterModel.items[0]]})
-    }, 1500);
-  }, [filterModel.items]);
+  const onFilterChange = React.useCallback(
+    (params: FilterModelParams) => {
+      const hasChanged = params.filterModel.items[0].value !== filterModel.items[0].value;
+      setLoading(hasChanged);
+      if (!hasChanged) {
+        return;
+      }
+      setTimeout(() => {
+        action('onFilterChange')(params);
+        setFilterModel({ items: [params.filterModel.items[0]] });
+      }, 1500);
+    },
+    [filterModel.items],
+  );
 
-  React.useEffect(()=> {
+  React.useEffect(() => {
     applyFilter();
-  }, [applyFilter, demoServer.data.rows])
+  }, [applyFilter, demoServer.data.rows]);
 
   return (
-      <div className="grid-container">
-        <XGrid
-          rows={rows}
-          columns={demoServer.data.columns}
-          filterMode={'server'}
-          onFilterModelChange={onFilterChange}
-          disableMultipleColumnsFiltering
-          filterModel={filterModel}
-          loading={loading}
-          state={{
-            preferencePanel: {
-              open: true,
-              openedPanelValue: PreferencePanelsValue.filters,
-            },
-          }}
-        />
-      </div>
+    <div className="grid-container">
+      <XGrid
+        rows={rows}
+        columns={demoServer.data.columns}
+        filterMode={'server'}
+        onFilterModelChange={onFilterChange}
+        disableMultipleColumnsFiltering
+        filterModel={filterModel}
+        loading={loading}
+        state={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: PreferencePanelsValue.filters,
+          },
+        }}
+      />
+    </div>
   );
 }
 export function CommodityWithNewRowsViaApi() {
@@ -191,7 +201,7 @@ export function CommodityWithNewRowsViaApi() {
   const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
   const apiDemoData = useDemoData({ dataSet: 'Commodity', rowLength: 150 });
 
-  const setNewRows = React.useCallback(()=> {
+  const setNewRows = React.useCallback(() => {
     apiDemoData.setRowLength(randomInt(100, 500));
     apiDemoData.loadNewData();
     apiRef.current.setRows(apiDemoData.data.rows);

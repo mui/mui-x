@@ -209,6 +209,10 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
     },
     [apiRef, gridState.filter.items],
   );
+  const hideFilterPanel = React.useCallback(()=> {
+    apiRef?.current.hidePreferences();
+
+  },[apiRef])
 
   const applyFilterLinkOperator = React.useCallback(
     (linkOperator: LinkOperator = LinkOperator.And) => {
@@ -249,6 +253,7 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
       onFilterModelChange,
       setFilterModel,
       showFilterPanel,
+      hideFilterPanel,
     },
     'FilterApi',
   );
