@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, RowData } from '@material-ui/data-grid';
+import { DataGrid, RowModel } from '@material-ui/data-grid';
 
 export default function RowsGrid() {
   return (
@@ -10,7 +10,7 @@ export default function RowsGrid() {
           [
             { id: 1, name: 'React' },
             { id: 2, name: 'Material-UI' },
-          ] as RowData[]
+          ] as RowModel[]
         }
       />
     </div>

@@ -17,38 +17,6 @@ import { Logger, useLogger } from '../../utils/useLogger';
 import { GridState } from '../core/gridState';
 import { useGridState } from '../core/useGridState';
 
-function mapColumns(
-  columns: Columns,
-  columnTypes: ColumnTypesRecord,
-  viewportWidth: number,
-): Columns {
-  let extendedColumns = columns.map((c) => ({ ...getColDef(columnTypes, c.type), ...c }));
-  const numberOfFluidColumns = columns.filter((column) => !!column.flex).length;
-  let flexDivider = 0;
-
-  if (numberOfFluidColumns && viewportWidth) {
-    extendedColumns.forEach((column) => {
-      if (!column.flex) {
-        viewportWidth -= column.width!;
-      } else {
-        flexDivider += column.flex;
-      }
-    });
-  }
-
-  if (viewportWidth > 0 && numberOfFluidColumns) {
-    const flexMultiplier = viewportWidth / flexDivider;
-    extendedColumns = extendedColumns.map((column) => {
-      return {
-        ...column,
-        width: column.flex! ? Math.floor(flexMultiplier * column.flex!) : column.width,
-      };
-    });
-  }
-
-  return extendedColumns;
-}
-
 function hydrateColumns(
   columns: Columns,
   columnTypes: ColumnTypesRecord,
@@ -57,11 +25,38 @@ function hydrateColumns(
   logger: Logger,
 ): Columns {
   logger.debug('Hydrating Columns with default definitions');
-  let mappedCols = mapColumns(columns, columnTypes, viewportWidth);
-  if (withCheckboxSelection) {
-    mappedCols = [checkboxSelectionColDef, ...mappedCols];
+  let availableViewportWidth = withCheckboxSelection
+    ? viewportWidth - checkboxSelectionColDef.width!
+    : viewportWidth;
+  let extendedColumns = columns.map((c) => ({ ...getColDef(columnTypes, c.type), ...c }));
+  const numberOfFluidColumns = columns.filter((column) => !!column.flex).length;
+  let flexDivider = 0;
+
+  if (numberOfFluidColumns && availableViewportWidth) {
+    extendedColumns.forEach((column) => {
+      if (!column.flex) {
+        availableViewportWidth -= column.width!;
+      } else {
+        flexDivider += column.flex;
+      }
+    });
   }
-  return mappedCols;
+
+  if (availableViewportWidth > 0 && numberOfFluidColumns) {
+    const flexMultiplier = availableViewportWidth / flexDivider;
+    extendedColumns = extendedColumns.map((column) => {
+      return {
+        ...column,
+        width: column.flex! ? Math.floor(flexMultiplier * column.flex!) : column.width,
+      };
+    });
+  }
+
+  if (withCheckboxSelection) {
+    return [checkboxSelectionColDef, ...extendedColumns];
+  }
+
+  return extendedColumns;
 }
 
 function toLookup(logger: Logger, allColumns: Columns) {

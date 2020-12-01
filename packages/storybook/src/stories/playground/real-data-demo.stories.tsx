@@ -1,61 +1,25 @@
-import Button from '@material-ui/core/Button';
-import { GridOptionsProp, PreferencePanelsValue, SortDirection, XGrid } from '@material-ui/x-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
-import '@material-ui/x-grid-data-generator/style/real-data-stories.css';
-import { action } from '@storybook/addon-actions';
-import { array, boolean, number, withKnobs } from '@storybook/addon-knobs';
 import * as React from 'react';
+import { Story, Meta, DecoratorFn } from '@storybook/react';
+import { XGridProps, PreferencePanelsValue, XGrid, GridOptionsProp } from '@material-ui/x-grid';
+import { useDemoData, DemoDataOptions } from '@material-ui/x-grid-data-generator';
+import Button from '@material-ui/core/Button';
+import '@material-ui/x-grid-data-generator/style/real-data-stories.css';
 import { randomInt } from '../../data/random-generator';
 
 export default {
   title: 'X-Grid Demos/Playground',
   component: XGrid,
-  decorators: [withKnobs],
   parameters: {
-    options: { selectedPanel: 'storybook/knobs/panel' },
+    options: { selectedPanel: 'storybook/controls/panel' },
     docs: {
       page: null,
     },
   },
-};
+} as Meta;
 
-const getGridOptions: () => GridOptionsProp = () => {
-  const rowsPerPageOptions = array('rowsPerPageOptions', ['25', '50', '100'], ', ');
-  const sortingOrder = array('sortingOrder', ['asc', 'desc', 'null'], ', ');
+const gridContainer: DecoratorFn = (storyFn) => <div className="grid-container">{storyFn()}</div>;
 
-  return {
-    onRowClick: (params) => action('onRowClick')(params),
-    onCellClick: (params) => action('onCellClick')(params),
-    onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
-    onRowSelected: (params) => action('onRowSelected')(params),
-    onSelectionChange: (params) =>
-      action('onSelectionChange', {
-        depth: 1,
-      })(params),
-    onPageChange: (params) => action('onPageChange')(params),
-    onPageSizeChange: (params) => action('onPageSizeChange')(params),
-
-    pagination: boolean('pagination', false),
-    pageSize: number('pageSize', 100),
-    autoPageSize: boolean('autoPageSize', false),
-    rowsPerPageOptions: rowsPerPageOptions.map((value) => parseInt(value, 10)),
-    hideFooterRowCount: boolean('hideFooterRowCount', false),
-    hideFooterPagination: boolean('hideFooterPagination', false),
-    hideFooter: boolean('hideFooter', false),
-    disableExtendRowFullWidth: boolean('disableExtendRowFullWidth', false),
-    showCellRightBorder: boolean('showCellRightBorder', false),
-    showColumnRightBorder: boolean('showColumnRightBorder', false),
-    disableMultipleSelection: boolean('disableMultipleSelection', false),
-    checkboxSelection: boolean('checkboxSelection', true),
-    disableSelectionOnClick: boolean('disableSelectionOnClick', true),
-    disableMultipleColumnsSorting: boolean('disableMultipleColumnsSorting', false),
-    sortingOrder: sortingOrder.map((value) => (value === 'null' ? null : (value as SortDirection))),
-    headerHeight: number('headerHeight', 56),
-    rowHeight: number('rowHeight', 52),
-  };
-};
-
-export function Commodity() {
+export const Commodity: Story<XGridProps> = ({ rows, columns, ...args }) => {
   const { data, setRowLength, loadNewData } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
 
   return (
@@ -69,130 +33,108 @@ export function Commodity() {
         </Button>
       </div>
       <div className="grid-container">
-        <XGrid rows={data.rows} columns={data.columns} {...getGridOptions()} />
+        <XGrid rows={data.rows} columns={data.columns} {...args} />
       </div>
     </React.Fragment>
   );
-}
+};
 
-export function Commodity500() {
-  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 500 });
+const DemoTemplate: Story<XGridProps & DemoDataOptions> = ({
+  rows,
+  columns,
+  rowLength,
+  dataSet,
+  maxColumns,
+  ...args
+}) => {
+  const { data } = useDemoData({ rowLength, dataSet, maxColumns });
 
-  return (
-    <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} {...getGridOptions()} />
-    </div>
-  );
-}
+  return <XGrid rows={data.rows} columns={data.columns} {...args} />;
+};
 
-export function Commodity1000() {
-  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 1000 });
+export const Commodity500 = DemoTemplate.bind({});
+Commodity500.args = {
+  rowLength: 500,
+  dataSet: 'Commodity',
+};
+Commodity500.decorators = [gridContainer];
 
-  return (
-    <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} {...getGridOptions()} />
-    </div>
-  );
-}
+export const Commodity1000 = DemoTemplate.bind({});
+Commodity1000.args = {
+  rowLength: 1000,
+  dataSet: 'Commodity',
+};
+Commodity1000.decorators = [gridContainer];
 
-export function Commodity10000() {
-  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 10000 });
+export const Commodity10000 = DemoTemplate.bind({});
+Commodity10000.args = {
+  rowLength: 10000,
+  dataSet: 'Commodity',
+};
+Commodity10000.decorators = [gridContainer];
 
-  return (
-    <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} {...getGridOptions()} />
-    </div>
-  );
-}
+export const Employee100 = DemoTemplate.bind({});
+Employee100.args = {
+  rowLength: 500,
+  dataSet: 'Employee',
+};
+Employee100.decorators = [gridContainer];
 
-export function Employee100() {
-  const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
+export const Employee1000 = DemoTemplate.bind({});
+Employee1000.args = {
+  rowLength: 1000,
+  dataSet: 'Employee',
+};
+Employee1000.decorators = [gridContainer];
 
-  return (
-    <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} {...getGridOptions()} />
-    </div>
-  );
-}
+export const Employee10000 = DemoTemplate.bind({});
+Employee10000.args = {
+  rowLength: 10000,
+  dataSet: 'Commodity',
+};
+Employee10000.decorators = [gridContainer];
 
-export function Employee1000() {
-  const { data } = useDemoData({ dataSet: 'Employee', rowLength: 1000 });
-
-  return (
-    <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} {...getGridOptions()} />
-    </div>
-  );
-}
-
-export function Employee10000() {
-  const { data } = useDemoData({ dataSet: 'Employee', rowLength: 10000 });
-
-  return (
-    <div className="grid-container">
-      <XGrid rows={data.rows} columns={data.columns} {...getGridOptions()} />
-    </div>
-  );
-}
-
-export function MultipleEmployee100() {
+export const MultipleEmployee100: Story<GridOptionsProp> = (args) => {
   const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
 
   return (
     <div className="grid-container" style={{ flexDirection: 'column' }}>
       <div style={{ display: 'flex', flex: 'auto' }}>
-        <XGrid rows={data.rows} columns={data.columns} {...getGridOptions()} />
+        <XGrid rows={data.rows} columns={data.columns} {...args} />
       </div>
       <div style={{ display: 'flex', flex: 'auto' }}>
-        <XGrid rows={data.rows} columns={data.columns} {...getGridOptions()} />
+        <XGrid rows={data.rows} columns={data.columns} {...args} />
       </div>
     </div>
   );
-}
+};
 
-export function XGridDemo() {
-  const { data } = useDemoData({
-    dataSet: 'Commodity',
-    rowLength: 100000,
-  });
+export const XGridDemo = DemoTemplate.bind({});
+XGridDemo.args = {
+  dataSet: 'Commodity',
+  rowLength: 100000,
+  rowHeight: 38,
+  checkboxSelection: true,
+};
+XGridDemo.decorators = [gridContainer];
 
-  return (
-    <div className="grid-container">
-      <XGrid {...data} loading={data.rows.length === 0} rowHeight={38} checkboxSelection />
-    </div>
-  );
-}
-export function CommodityPreferencesDefaultOpen() {
-  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 500 });
+export const CommodityPreferencesDefaultOpen = DemoTemplate.bind({});
+CommodityPreferencesDefaultOpen.args = {
+  dataSet: 'Commodity',
+  rowLength: 500,
+  state: { preferencePanel: { open: true } },
+};
+CommodityPreferencesDefaultOpen.decorators = [gridContainer];
 
-  return (
-    <div className="grid-container">
-      <XGrid
-        rows={data.rows}
-        columns={data.columns}
-        {...getGridOptions()}
-        state={{ preferencePanel: { open: true } }}
-      />
-    </div>
-  );
-}
-
-export function CommodityPreferences() {
-  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 500 });
-
-  return (
-    <div className="grid-container">
-      <XGrid
-        rows={data.rows}
-        columns={data.columns}
-        {...getGridOptions()}
-        state={{
-          preferencePanel: {
-            open: true,
-            openedPanelValue: PreferencePanelsValue.columns,
-          },
-        }}
-      />
-    </div>
-  );
-}
+export const CommodityPreferences = DemoTemplate.bind({});
+CommodityPreferences.args = {
+  dataSet: 'Commodity',
+  rowLength: 500,
+  state: {
+    preferencePanel: {
+      open: true,
+      openedPanelValue: PreferencePanelsValue.columns,
+    },
+  },
+};
+CommodityPreferences.decorators = [gridContainer];

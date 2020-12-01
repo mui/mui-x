@@ -62,7 +62,11 @@ export const useVirtualRows = (
         return null;
       }
       let minRowIdx = 0;
-      if (options.pagination && paginationState.pageSize != null) {
+      if (
+        options.pagination &&
+        paginationState.pageSize != null &&
+        paginationState.paginationMode === 'client'
+      ) {
         minRowIdx =
           paginationState.pageSize * (paginationState.page - 1 > 0 ? paginationState.page - 1 : 0);
       }
@@ -77,7 +81,13 @@ export const useVirtualRows = (
       const rowProps: RenderRowProps = { page, firstRowIdx, lastRowIdx };
       return rowProps;
     },
-    [apiRef, options.pagination, paginationState.pageSize, paginationState.page],
+    [
+      apiRef,
+      options.pagination,
+      paginationState.pageSize,
+      paginationState.paginationMode,
+      paginationState.page,
+    ],
   );
 
   const getRenderingState = React.useCallback((): Partial<RenderContextProps> | null => {

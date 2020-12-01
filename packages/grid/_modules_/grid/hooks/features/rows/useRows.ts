@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ROWS_UPDATED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { RowApi } from '../../../models/api/rowApi';
-import { createRowModel, RowData, RowId, RowModel, Rows, RowsProp } from '../../../models/rows';
+import { checkRowHasId, RowModel, RowId, RowsProp } from '../../../models/rows';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useLogger } from '../../utils/useLogger';
 import { useGridState } from '../core/useGridState';
@@ -21,9 +21,9 @@ export function convertRowsPropToState({
     totalRowCount: totalRowCount && totalRowCount > rows.length ? totalRowCount : rows.length,
   };
   rows.forEach((rowData) => {
-    const rowModel = createRowModel(rowData);
+    checkRowHasId(rowData);
     state.allRows.push(rowData.id);
-    state.idRowsLookup[rowModel.id] = rowModel;
+    state.idRowsLookup[rowData.id] = rowData;
   });
   return state;
 }
@@ -59,7 +59,20 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
     });
   }, [rows, setGridState]);
 
-  const updateAllRows = React.useCallback(
+  const getRowIndexFromId = React.useCallback(
+    (id: RowId): number => apiRef.current.state.rows.allRows.indexOf(id),
+    [apiRef],
+  );
+  const getRowIdFromRowIndex = React.useCallback(
+    (index: number): RowId => apiRef.current.state.rows.allRows[index],
+    [apiRef],
+  );
+  const getRowFromId = React.useCallback(
+    (id: RowId): RowModel => apiRef.current.state.rows.idRowsLookup[id],
+    [apiRef],
+  );
+
+  const setRows = React.useCallback(
     (allNewRows: RowModel[]) => {
       logger.debug(`updating all rows, new length ${allNewRows.length}`);
 
@@ -85,35 +98,27 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
     [logger, gridState.options, apiRef, setGridState, forceUpdate],
   );
 
-  const getRowIndexFromId = React.useCallback(
-    (id: RowId): number => apiRef.current.state.rows.allRows.indexOf(id),
-    [apiRef],
-  );
-  const getRowIdFromRowIndex = React.useCallback(
-    (index: number): RowId => apiRef.current.state.rows.allRows[index],
-    [apiRef],
-  );
-  const getRowFromId = React.useCallback(
-    (id: RowId): RowModel => apiRef.current.state.rows.idRowsLookup[id],
-    [apiRef],
-  );
-
-  const updateRowModels = React.useCallback(
+  const updateRows = React.useCallback(
     (updates: Partial<RowModel>[]) => {
-      logger.debug(`updating row models`);
+      // we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
+      const uniqUpdates = updates.reduce((uniq, update) => {
+        checkRowHasId(update, 'A row was provided without id when calling updateRows():');
+        uniq[update.id!] = uniq[update.id!] != null ? { ...uniq[update.id!], ...update } : update;
+        return uniq;
+      }, {} as { [id: string]: any });
+
       const addedRows: RowModel[] = [];
 
-      updates.forEach((partialRow) => {
-        if (partialRow.id == null) {
-          throw new Error('Material-UI: All rows need an id.');
-        }
-        if (!getRowFromId(partialRow.id)) {
-          // New row?
+      Object.values<RowModel>(uniqUpdates).forEach((partialRow) => {
+        const oldRow = getRowFromId(partialRow.id!);
+        if (!oldRow) {
           addedRows.push(partialRow as RowModel);
           return;
         }
-
-        Object.assign(internalRowsState.current.idRowsLookup[partialRow.id!], partialRow);
+        Object.assign(internalRowsState.current.idRowsLookup[partialRow.id!], {
+          ...oldRow,
+          ...partialRow,
+        });
       });
 
       if (!apiRef.current.state.isScrolling) {
@@ -126,42 +131,12 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
           ...Object.values<RowModel>(internalRowsState.current.idRowsLookup),
           ...addedRows,
         ];
-        updateAllRows(newRows);
+        setRows(newRows);
       }
 
       apiRef.current.publishEvent(ROWS_UPDATED);
     },
-    [logger, apiRef, getRowFromId, setGridState, forceUpdate, updateAllRows],
-  );
-
-  const updateRowData = React.useCallback(
-    (updates: RowData[]) => {
-      // we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
-      const uniqUpdates = updates.reduce((uniq, update) => {
-        if (update.id == null) {
-          throw new Error(
-            [
-              'Material-UI: The data grid component requires all rows to have a unique id property.',
-              'A row was provided without when calling updateRowData():',
-              JSON.stringify(update),
-            ].join('\n'),
-          );
-        }
-
-        uniq[update.id] = uniq[update.id] != null ? { ...uniq[update.id], ...update } : update;
-        return uniq;
-      }, {} as { [id: string]: any });
-
-      const rowModelUpdates = Object.values<RowData>(uniqUpdates).map((partialRow) => {
-        const oldRow = getRowFromId(partialRow.id!);
-        if (!oldRow) {
-          return createRowModel(partialRow);
-        }
-        return { ...oldRow, data: { ...oldRow.data, ...partialRow } };
-      });
-      return updateRowModels(rowModelUpdates);
-    },
-    [updateRowModels, getRowFromId],
+    [apiRef, forceUpdate, getRowFromId, setGridState, setRows],
   );
 
   const getRowModels = React.useCallback(
@@ -170,20 +145,16 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
   );
   const getRowsCount = React.useCallback(() => apiRef.current.state.rows.totalRowCount, [apiRef]);
   const getAllRowIds = React.useCallback(() => apiRef.current.state.rows.allRows, [apiRef]);
-  const setRowModels = React.useCallback((rowsParam: Rows) => updateAllRows(rowsParam), [
-    updateAllRows,
-  ]);
 
   const rowApi: RowApi = {
     getRowIndexFromId,
     getRowIdFromRowIndex,
     getRowFromId,
-    updateRowModels,
-    updateRowData,
     getRowModels,
     getRowsCount,
     getAllRowIds,
-    setRowModels,
+    setRows,
+    updateRows,
   };
 
   useApiMethod(apiRef, rowApi, 'RowApi');

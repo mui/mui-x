@@ -17,7 +17,7 @@ export type DemoDataReturnType = {
 
 type DataSet = 'Commodity' | 'Employee';
 
-interface DemoDataOptions {
+export interface DemoDataOptions {
   dataSet: DataSet;
   rowLength: number;
   maxColumns?: number;
