@@ -154,8 +154,8 @@ export const ColumnCellClassRules = () => {
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
   cols[4].cellClassRules = {
-    common: (params) => params.data.lastName === 'Smith',
-    unknown: (params) => !params.data.lastName,
+    common: (params) => params.row.lastName === 'Smith',
+    unknown: (params) => !params.row.lastName,
     border: true,
   };
 

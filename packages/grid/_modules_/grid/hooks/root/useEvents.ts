@@ -79,7 +79,7 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
         const column = apiRef.current.getColumnFromField(field);
         if (!column || !column.disableClickEventBubbling) {
           const commonParams = {
-            data: rowModel.data,
+            data: rowModel,
             rowIndex,
             colDef: column,
             rowModel,

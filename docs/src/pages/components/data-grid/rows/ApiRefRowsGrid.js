@@ -21,7 +21,7 @@ export default function ApiRefRowsGrid() {
 
   React.useEffect(() => {
     const subscription = interval(200).subscribe(() => {
-      apiRef.current.updateRowData([
+      apiRef.current.updateRows([
         {
           id: randomInt(1, 4),
           username: randomUserName(),

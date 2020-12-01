@@ -96,19 +96,19 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
         res =
           res ||
           comparator(
-            row1.data[field],
-            row2.data[field],
+            row1[field],
+            row2[field],
             buildCellParams({
               api: apiRef.current,
               colDef: apiRef.current.getColumnFromField(field),
               rowModel: row1,
-              value: row1.data[field],
+              value: row1[field],
             }),
             buildCellParams({
               api: apiRef.current,
               colDef: apiRef.current.getColumnFromField(field),
               rowModel: row2,
-              value: row2.data[field],
+              value: row2[field],
             }),
           );
         return res;
