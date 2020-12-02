@@ -46,5 +46,3 @@ export const ColumnHeaderMenuIcon: React.FC<ColumnHeaderFilterIconProps> = ({ co
     </div>
   );
 };
-
-ColumnHeaderMenuIcon.displayName = 'ColumnHeaderMenuIcon';

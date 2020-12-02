@@ -82,30 +82,18 @@ export const ColumnHeaderItem = ({
     apiRef!.current.publishEvent(COLUMN_HEADER_CLICK, colHeaderParams);
   }, [apiRef, colIndex, column]);
 
-  const cssClasses = React.useMemo(
-    () =>
-      classnames(
-        HEADER_CELL_CSS_CLASS,
-        showColumnRightBorder ? 'MuiDataGrid-withBorder' : '',
-        column.headerClassName,
-        column.headerAlign === 'center' && 'MuiDataGrid-colCellCenter',
-        column.headerAlign === 'right' && 'MuiDataGrid-colCellRight',
-        {
-          'MuiDataGrid-colCellSortable': column.sortable,
-          'MuiDataGrid-colCellMoving': isDragging,
-          'MuiDataGrid-colCellSorted': isColumnSorted,
-          'MuiDataGrid-colCellNumeric': isColumnNumeric,
-        },
-      ),
-    [
-      column.headerAlign,
-      column.headerClassName,
-      column.sortable,
-      isColumnNumeric,
-      isColumnSorted,
-      isDragging,
-      showColumnRightBorder,
-    ],
+  const cssClasses = classnames(
+    HEADER_CELL_CSS_CLASS,
+    column.headerClassName,
+    column.headerAlign === 'center' && 'MuiDataGrid-colCellCenter',
+    column.headerAlign === 'right' && 'MuiDataGrid-colCellRight',
+    {
+      'MuiDataGrid-colCellSortable': column.sortable,
+      'MuiDataGrid-colCellMoving': isDragging,
+      'MuiDataGrid-colCellSorted': isColumnSorted,
+      'MuiDataGrid-colCellNumeric': isColumnNumeric,
+      'MuiDataGrid-withBorder': showColumnRightBorder,
+    },
   );
 
   const dragConfig = {

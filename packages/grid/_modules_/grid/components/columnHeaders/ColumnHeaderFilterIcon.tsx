@@ -1,4 +1,4 @@
-import { IconButton } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import Tooltip from '@material-ui/core/Tooltip';
 import * as React from 'react';
@@ -18,10 +18,6 @@ export const ColumnHeaderFilterIcon: React.FC<ColumnHeaderFilterIconProps> = (pr
   const apiRef = React.useContext(ApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
   const preferencePanel = useGridSelector(apiRef, preferencePanelStateSelector);
-
-  const tooltipContentNode = React.useMemo(() => {
-    return <div>{counter} active filter(s)</div>;
-  }, [counter]);
 
   const icons = useIcons();
   const filteredColumnIconElement = React.createElement(icons.ColumnFiltered!, {
@@ -53,7 +49,7 @@ export const ColumnHeaderFilterIcon: React.FC<ColumnHeaderFilterIconProps> = (pr
   );
 
   return (
-    <Tooltip title={tooltipContentNode} enterDelay={1000}>
+    <Tooltip title={`${counter} active filter(s)`} enterDelay={1000}>
       <div className="MuiDataGrid-sortIconContainer">
         <div>
           {counter > 1 && (
