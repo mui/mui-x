@@ -8,7 +8,7 @@ import { columnsTotalWidthSelector } from '../features/columns/columnsSelector';
 import { GridState } from '../features/core/gridState';
 import { useGridSelector } from '../features/core/useGridSelector';
 import { useGridState } from '../features/core/useGridState';
-import { densityRowHeightSelector } from '../features/density/densitySelector';
+import { sizeRowHeightSelector } from '../features/size/sizeSelector';
 import { visibleRowCountSelector } from '../features/filter/filterSelector';
 import { PaginationState } from '../features/pagination/paginationReducer';
 import { paginationSelector } from '../features/pagination/paginationSelector';
@@ -22,7 +22,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
   const windowSizesRef = React.useRef<ElementSize>({ width: 0, height: 0 });
 
   const options = useGridSelector(apiRef, optionsSelector);
-  const rowHeight = useGridSelector(apiRef, densityRowHeightSelector);
+  const rowHeight = useGridSelector(apiRef, sizeRowHeightSelector);
   const columnsTotalWidth = useGridSelector(apiRef, columnsTotalWidthSelector);
   const visibleRowsCount = useGridSelector(apiRef, visibleRowCountSelector);
   const paginationState = useGridSelector<PaginationState>(apiRef, paginationSelector);

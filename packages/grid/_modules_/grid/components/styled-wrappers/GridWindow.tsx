@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { densityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
+import { sizeHeaderHeightSelector } from '../../hooks/features/size/sizeSelector';
 import { classnames } from '../../utils';
 import { ApiContext } from '../api-context';
 import { OptionsContext } from '../options-context';
@@ -14,7 +14,7 @@ export const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(func
   const { className, ...other } = props;
   const { autoHeight } = React.useContext(OptionsContext);
   const apiRef = React.useContext(ApiContext);
-  const headerHeight = useGridSelector(apiRef, densityHeaderHeightSelector);
+  const headerHeight = useGridSelector(apiRef, sizeHeaderHeightSelector);
   return (
     <div
       ref={ref}

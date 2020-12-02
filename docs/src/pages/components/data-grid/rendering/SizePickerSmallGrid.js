@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
-export default function DensityPickerHiddenGrid() {
+export default function SizePickerSmallGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 4,
@@ -11,7 +11,7 @@ export default function DensityPickerHiddenGrid() {
 
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid {...data} disableDensityPicker />
+      <DataGrid {...data} size="small" />
     </div>
   );
 }

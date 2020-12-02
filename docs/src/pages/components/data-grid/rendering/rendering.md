@@ -207,21 +207,21 @@ This means that the number of rows will drive the height of the grid and consequ
 
 {{"demo": "pages/components/data-grid/rendering/AutoHeightGrid.js", "bg": "inline"}}
 
-## Density
+## Size
 
-You can change the density of the rows and the column header.
+You can change the size of the rows and the column header.
 
 ### Size prop
 
-The vertical density of the data grid can be set using the `size` prop. Regardless of its setting, the `size` prop will respect values provided using the `rowHeight` or `headerHeight` props.
+The vertical size of the data grid can be set using the `size` prop. Regardless of its setting, the `size` prop will respect values provided using the `rowHeight` or `headerHeight` props.
 
-{{"demo": "pages/components/data-grid/rendering/DensityPickerSmallGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/rendering/SizePickerSmallGrid.js", "bg": "inline"}}
 
-### Density picker button
+### Size picker button
 
-The default way for a user to change the density of the data grid is by using the density picker component from the toolbar. In addition, there is a prop to hide the density picker.
+The default way for a user to change the size of the data grid is by using the size picker component from the toolbar. In addition, there is a prop to hide the size picker.
 
-{{"demo": "pages/components/data-grid/rendering/DensityPickerHiddenGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/rendering/SizePickerHiddenGrid.js", "bg": "inline"}}
 
 ## Virtualization
 

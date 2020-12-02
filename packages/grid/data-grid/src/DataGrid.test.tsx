@@ -7,9 +7,9 @@ import { expect } from 'chai';
 import { DataGrid, RowsProp } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 import {
-  DENSITY_FACTOR_LARGE,
-  DENSITY_FACTOR_SMALL,
-} from 'packages/grid/_modules_/grid/hooks/features/density/useDensity';
+  SIZE_FACTOR_LARGE,
+  SIZE_FACTOR_SMALL,
+} from 'packages/grid/_modules_/grid/hooks/features/size/useSize';
 
 describe('<DataGrid />', () => {
   const render = createClientRender();
@@ -484,7 +484,7 @@ describe('<DataGrid />', () => {
       }
     });
 
-    it('should increase grid density by 50% when selecting small density', () => {
+    it('should increase grid size by 50% when selecting small size', () => {
       const rowHeight = 30;
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
@@ -493,16 +493,16 @@ describe('<DataGrid />', () => {
         { strict: false },
       );
 
-      fireEvent.click(getByText('Density'));
+      fireEvent.click(getByText('Size'));
       fireEvent.click(getByText('small'));
 
       // @ts-expect-error need to migrate helpers to TypeScript
       expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * DENSITY_FACTOR_SMALL)}px`,
+        maxHeight: `${Math.floor(rowHeight * SIZE_FACTOR_SMALL)}px`,
       });
     });
 
-    it('should decrease grid density by 50% when selecting large density', () => {
+    it('should decrease grid size by 50% when selecting large size', () => {
       const rowHeight = 30;
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
@@ -511,12 +511,12 @@ describe('<DataGrid />', () => {
         { strict: false },
       );
 
-      fireEvent.click(getByText('Density'));
+      fireEvent.click(getByText('Size'));
       fireEvent.click(getByText('large'));
 
       // @ts-expect-error need to migrate helpers to TypeScript
       expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * DENSITY_FACTOR_LARGE)}px`,
+        maxHeight: `${Math.floor(rowHeight * SIZE_FACTOR_LARGE)}px`,
       });
     });
   });

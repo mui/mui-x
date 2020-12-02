@@ -21,7 +21,7 @@ import { optionsSelector } from '../../utils/useOptionsProp';
 import { useScrollFn } from '../../utils/useScrollFn';
 import { InternalRenderingState } from './renderingState';
 import { useVirtualColumns } from './useVirtualColumns';
-import { densityRowHeightSelector } from '../density/densitySelector';
+import { sizeRowHeightSelector } from '../size/sizeSelector';
 
 type UseVirtualRowsReturnType = Partial<RenderContextProps> | null;
 
@@ -35,7 +35,7 @@ export const useVirtualRows = (
 
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
-  const rowHeight = useGridSelector(apiRef, densityRowHeightSelector);
+  const rowHeight = useGridSelector(apiRef, sizeRowHeightSelector);
   const paginationState = useGridSelector<PaginationState>(apiRef, paginationSelector);
   const totalRowCount = useGridSelector<number>(apiRef, rowCountSelector);
 

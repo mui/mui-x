@@ -16,7 +16,7 @@ export default {
     },
   },
 };
-export const DensityPickerSmall = () => {
+export const SizePickerSmall = () => {
   const data = useData(100, 50);
 
   return (
@@ -25,7 +25,7 @@ export const DensityPickerSmall = () => {
     </div>
   );
 };
-export const DensityPickerLarge = () => {
+export const SizePickerLarge = () => {
   const data = useData(100, 50);
 
   return (

@@ -53,17 +53,17 @@ export interface IconsOptions {
    */
   ColumnResize?: React.ElementType<{ className: string }>;
   /**
-   * Icon displayed on the small density option in the Density picker menu.
+   * Icon displayed on the small size option in the Size picker menu.
    */
-  DensitySizeSmall?: React.ElementType;
+  SizeSmall?: React.ElementType;
   /**
-   * Icon displayed on the medium density option in the Density picker menu.
+   * Icon displayed on the medium size option in the Size picker menu.
    */
-  DensitySizeMedium?: React.ElementType;
+  SizeMedium?: React.ElementType;
   /**
-   * Icon displayed on the large density option in the Density picker menu.
+   * Icon displayed on the large size option in the Size picker menu.
    */
-  DensitySizeLarge?: React.ElementType;
+  SizeLarge?: React.ElementType;
 }
 
 /**
@@ -141,10 +141,10 @@ export interface GridOptions {
    */
   disableColumnMenu?: boolean;
   /**
-   * If `true`, density selection is disabled.
+   * If `true`, size selection is disabled.
    * @default false
    */
-  disableDensityPicker?: boolean;
+  disableSizePicker?: boolean;
   /**
    * If `true`, reordering columns is disabled.
    * @default false
@@ -363,8 +363,8 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
     ColumnSortedAscending: ArrowUpwardIcon,
     ColumnSortedDescending: ArrowDownwardIcon,
     ColumnResize: SeparatorIcon,
-    DensitySizeSmall: ViewHeadlineIcon,
-    DensitySizeMedium: TableRowsIcon,
-    DensitySizeLarge: ViewStreamIcon,
+    SizeSmall: ViewHeadlineIcon,
+    SizeMedium: TableRowsIcon,
+    SizeLarge: ViewStreamIcon,
   },
 };

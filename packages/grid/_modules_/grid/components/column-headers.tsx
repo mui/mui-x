@@ -16,7 +16,7 @@ import {
   useApiEventHandler,
   columnReorderDragColSelector,
 } from '../hooks';
-import { densityHeaderHeightSelector } from '../hooks/features/density/densitySelector';
+import { sizeHeaderHeightSelector } from '../hooks/features/size/sizeSelector';
 
 export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
@@ -80,7 +80,7 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps
   const api = React.useContext(ApiContext);
   const { disableColumnReorder } = React.useContext(OptionsContext);
   const containerSizes = useGridSelector(api, containerSizesSelector);
-  const headerHeight = useGridSelector(api, densityHeaderHeightSelector);
+  const headerHeight = useGridSelector(api, sizeHeaderHeightSelector);
 
   if (!api) {
     throw new Error('Material-UI: ApiRef was not found in context.');

@@ -11,14 +11,14 @@ import { StateApi } from './stateApi';
 import { VirtualizationApi } from './virtualizationApi';
 import { CoreApi } from './coreApi';
 import { EventsApi } from './eventsApi';
-import { DensityApi } from './densityApi';
+import { SizeApi } from './sizeApi';
 
 /**
  * The full grid API.
  */
 export type GridApi = CoreApi &
   StateApi &
-  DensityApi &
+  SizeApi &
   EventsApi &
   RowApi &
   ColumnApi &

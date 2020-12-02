@@ -1,14 +1,14 @@
 import { DEFAULT_GRID_OPTIONS, Size } from '../../../models/gridOptions';
 
-export interface DensityState {
-  size: Size;
+export interface SizeState {
+  value: Size;
   rowHeight: number;
   headerHeight: number;
 }
 
-export function getInitialDensityState(): DensityState {
+export function getInitialSizeState(): SizeState {
   return {
-    size: DEFAULT_GRID_OPTIONS.size,
+    value: DEFAULT_GRID_OPTIONS.size,
     rowHeight: DEFAULT_GRID_OPTIONS.rowHeight,
     headerHeight: DEFAULT_GRID_OPTIONS.headerHeight,
   };
