@@ -41,7 +41,7 @@ export const ColumnHeaderFilterIcon: React.FC<ColumnHeaderFilterIconProps> = (pr
     }
   }, [apiRef, preferencePanel]);
 
-  if (!counter || options.disableColumnFilter) {
+  if (!counter || options.disableColumnFilter || !options.hideToolbar) {
     return null;
   }
 

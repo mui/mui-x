@@ -5,6 +5,7 @@ import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { findHeaderElementFromField } from '../../../utils/domUtils';
 import { ApiContext } from '../../api-context';
 import { GridMenu } from '../GridMenu';
+import { ColumnsMenuItem } from './ColumnsMenuItem';
 import { FilterMenuItem } from './FilterMenuItem';
 import { HideColMenuItem } from './HideColMenuItem';
 import { SortMenuItems } from './SortMenuItems';
@@ -80,6 +81,7 @@ export const GridColumnHeaderMenu: React.FC<{}> = () => {
       <SortMenuItems onClick={hideMenu} column={currentColumn!} />
       <FilterMenuItem onClick={hideMenu} column={currentColumn!} />
       <HideColMenuItem onClick={hideMenu} column={currentColumn!} />
+      <ColumnsMenuItem onClick={hideMenu} column={currentColumn!} />
     </GridMenu>
   );
 };

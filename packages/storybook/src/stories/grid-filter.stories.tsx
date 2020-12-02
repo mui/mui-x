@@ -130,6 +130,41 @@ export function CommodityWithNewRowsViaProps() {
     </React.Fragment>
   );
 }
+export function CommodityNoToolbar() {
+  const { data, setRowLength, loadNewData } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
+
+  return (
+    <React.Fragment>
+      <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+        <Button color="primary" onClick={loadNewData}>
+          Load New Rows
+        </Button>
+        <Button color="primary" onClick={() => setRowLength(randomInt(100, 500))}>
+          Load New Rows with new length
+        </Button>
+      </div>
+      <div className="grid-container">
+        <XGrid
+          rows={data.rows}
+          columns={data.columns}
+          hideToolbar
+          filterModel={{
+            items: [
+              { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
+            ],
+            linkOperator: LinkOperator.And,
+          }}
+          state={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: PreferencePanelsValue.filters,
+            },
+          }}
+        />
+      </div>
+    </React.Fragment>
+  );
+}
 export function ServerFilterViaProps() {
   const demoServer = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
   const [rows, setRows] = useState<RowModel[]>(demoServer.data.rows);
