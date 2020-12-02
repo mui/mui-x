@@ -3,7 +3,7 @@ import { ApiRef } from '../api/apiRef';
 import { Columns } from '../colDef/colDef';
 import { GridOptions } from '../gridOptions';
 import { RootContainerRef } from '../rootContainerRef';
-import { Rows } from '../rows';
+import { RowModel } from '../rows';
 
 /**
  * Object passed as React prop in the component override.
@@ -16,7 +16,7 @@ export interface ComponentProps {
   /**
    * The full set of rows.
    */
-  rows: Rows;
+  rows: RowModel[];
   /**
    * The full set of columns.
    */

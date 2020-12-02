@@ -2,14 +2,12 @@ import * as React from 'react';
 import { XGrid, GridOptionsProp, ColDef } from '@material-ui/x-grid';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
-import { withKnobs } from '@storybook/addon-knobs';
 import { useData } from '../hooks/useData';
 import '../style/grid-stories.css';
 
 export default {
   title: 'X-Grid Tests/Styling',
   component: XGrid,
-  decorators: [withKnobs],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {
@@ -156,8 +154,8 @@ export const ColumnCellClassRules = () => {
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
   cols[4].cellClassRules = {
-    common: (params) => params.data.lastName === 'Smith',
-    unknown: (params) => !params.data.lastName,
+    common: (params) => params.row.lastName === 'Smith',
+    unknown: (params) => !params.row.lastName,
     border: true,
   };
 

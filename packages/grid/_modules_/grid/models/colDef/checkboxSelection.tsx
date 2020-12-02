@@ -15,7 +15,7 @@ export const checkboxSelectionColDef: ColDef = {
   filterable: false,
   disableClickEventBubbling: true,
   disableColumnMenu: true,
-  valueGetter: (params) => params.api.getState().selection[params.rowModel.id],
+  valueGetter: (params) => params.api.getState().selection[params.row.id],
   renderHeader: (params) => <HeaderCheckbox {...params} />,
   renderCell: (params) => <CellCheckboxRenderer {...params} />,
   cellClassName: 'MuiDataGrid-cellCheckbox',

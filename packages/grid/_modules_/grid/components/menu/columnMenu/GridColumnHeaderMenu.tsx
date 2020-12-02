@@ -11,7 +11,7 @@ import { SortMenuItems } from './SortMenuItems';
 
 const columnMenuStateSelector = (state: GridState) => state.columnMenu;
 
-export const GridColumnHeaderMenu: React.FC<{}> = () => {
+export function GridColumnHeaderMenu() {
   const apiRef = React.useContext(ApiContext);
   const columnMenuState = useGridSelector(apiRef!, columnMenuStateSelector);
   const currentColumn = columnMenuState.field
@@ -74,4 +74,4 @@ export const GridColumnHeaderMenu: React.FC<{}> = () => {
       <HideColMenuItem onClick={hideMenu} column={currentColumn!} />
     </GridMenu>
   );
-};
+}

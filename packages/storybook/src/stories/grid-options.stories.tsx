@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { ColDef, XGrid } from '@material-ui/x-grid';
-import { withKnobs } from '@storybook/addon-knobs';
 import { useData } from '../hooks/useData';
 
 export default {
   title: 'X-Grid Tests/Options',
   component: XGrid,
-  decorators: [withKnobs],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
   },

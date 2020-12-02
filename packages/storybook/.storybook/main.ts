@@ -1,34 +1,27 @@
-const path = require('path');
-const webpack = require('webpack');
+import path from 'path';
+import webpack from 'webpack';
+import type { StorybookConfig } from '@storybook/core/types';
 
 const env = process.env.NODE_ENV || 'development';
 /* eslint-disable */
-const __DEV__ = env === 'development';
-const __PROD__ = env === 'production';
+const isDevelopment = env === 'development';
+const isProduction = env === 'production';
 /* eslint-enable */
 
-if (!(__DEV__ || __PROD__)) {
+if (!(isDevelopment || isProduction)) {
   throw new Error(`Unknown env: ${env}.`);
 }
 console.log(`Loading config for ${env}`);
 const maxAssetSize = 1024 * 1024;
 
-module.exports = {
+const config: StorybookConfig = {
   stories: ['../src/**/*.stories.*'],
-  addons: [
-    '@storybook/addon-docs',
-    '@storybook/addon-viewport/register',
-    '@storybook/addon-knobs/register',
-    '@storybook/addon-actions/register',
-    '@storybook/addon-storysource/register',
-    '@storybook/addon-a11y/register',
-  ],
+  addons: ['@storybook/addon-essentials', '@storybook/addon-storysource', '@storybook/addon-a11y'],
   typescript: {
-    check: __DEV__, // Netlify is breaking the deploy with this settings on. So deactivate on release
-    reactDocgen: false,
+    check: isDevelopment, // Netlify is breaking the deploy with this settings on. So deactivate on release
   },
   webpackFinal: async (config) => {
-    config.devtool = __DEV__ ? 'inline-source-map' : undefined;
+    config.devtool = isDevelopment ? 'inline-source-map' : undefined;
     config.parallelism = 1;
     config.module.rules.push({
       test: /\.(ts|tsx)$/,
@@ -38,7 +31,7 @@ module.exports = {
         },
       ],
     });
-    if (__DEV__) {
+    if (isDevelopment) {
       config.module.rules.push({
         test: /\.(ts|tsx)$/,
         use: ['source-map-loader'],
@@ -109,3 +102,5 @@ module.exports = {
     return config;
   },
 };
+
+export default config;
