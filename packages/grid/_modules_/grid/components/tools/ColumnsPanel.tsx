@@ -28,7 +28,7 @@ const useStyles = makeStyles(() => ({
   dragIconRoot: {
     justifyContent: 'flex-end',
   },
-}));
+}), { name: 'MuiDataGridColumnsPanel' });
 
 export const ColumnsPanel: React.FC<{}> = () => {
   const classes = useStyles();

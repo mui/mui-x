@@ -45,7 +45,7 @@ const useStyles = makeStyles(() => ({
     flexShrink: 0,
     justifyContent: 'flex-end',
   },
-}));
+}), { name: 'MuiDataGridFilterPanelForm' });
 
 export const FilterForm: React.FC<FilterFormProps> = ({
   item,
