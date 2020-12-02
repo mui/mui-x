@@ -9,11 +9,8 @@ export interface TypeFilterInputValueProps extends FilterInputValueProps {
   type?: 'text' | 'number' | 'date' | 'datetime-local';
 }
 
-export const FilterInputValue: React.FC<TypeFilterInputValueProps> = ({
-  item,
-  applyValue,
-  type,
-}) => {
+export function FilterInputValue(props: TypeFilterInputValueProps) {
+  const { item, applyValue, type } = props;
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
   const [applying, setIsApplying] = React.useState(false);
@@ -57,4 +54,4 @@ export const FilterInputValue: React.FC<TypeFilterInputValueProps> = ({
       }}
     />
   );
-};
+}

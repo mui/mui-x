@@ -8,7 +8,7 @@ import { ApiContext } from '../api-context';
 import { AddIcon } from '../icons/index';
 import { FilterForm } from './FilterForm';
 
-export const FilterPanel: React.FC<{}> = () => {
+export function FilterPanel() {
   const apiRef = React.useContext(ApiContext);
   const [gridState] = useGridState(apiRef!);
   const { disableMultipleColumnsFiltering } = useGridSelector(apiRef, optionsSelector);
@@ -74,4 +74,4 @@ export const FilterPanel: React.FC<{}> = () => {
       )}
     </React.Fragment>
   );
-};
+}
