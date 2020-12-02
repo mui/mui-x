@@ -3,9 +3,9 @@ import {
   ArrowDownwardIcon,
   ArrowUpwardIcon,
   SeparatorIcon,
-  FilterIcon,
+  FilterListIcon,
   TripleDotsVerticalIcon,
-  ColumnIcon,
+  ColumnIcon, FilterAltIcon,
 } from '../components/icons/index';
 import { FilterModel } from '../hooks/features/filter/FilterModelState';
 import { Logger } from '../hooks/utils/useLogger';
@@ -32,9 +32,13 @@ export interface IconsOptions {
    */
   ColumnMenu?: React.ElementType;
   /**
-   * Icon displayed on the column menu filter tab.
+   * Icon displayed on the open filter button present in the toolbar by default
    */
-  ColumnFiltering?: React.ElementType;
+  OpenFilterButtonIcon?: React.ElementType;
+  /**
+   * Icon displayed on the column header menu to show that a filer has been applied to the column.
+   */
+  ColumnFiltered?: React.ElementType;
   /**
    * Icon displayed on the column menu selector tab.
    */
@@ -336,7 +340,8 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   disableColumnSelector: !EXPERIMENTAL_ENABLED,
   hideToolbar: !EXPERIMENTAL_ENABLED,
   icons: {
-    ColumnFiltering: FilterIcon,
+    OpenFilterButtonIcon: FilterListIcon,
+    ColumnFiltered: FilterAltIcon,
     ColumnSelector: ColumnIcon,
     ColumnMenu: TripleDotsVerticalIcon,
     ColumnSortedAscending: ArrowUpwardIcon,

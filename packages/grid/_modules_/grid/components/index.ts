@@ -1,3 +1,4 @@
+export * from './columnHeaders';
 export * from './filterPanel';
 export * from './icons';
 export * from './menu';
@@ -8,11 +9,6 @@ export * from './api-context';
 export * from './AutoSizer';
 export * from './cell';
 export * from './checkbox-renderer';
-export * from './column-header-item';
-export * from './column-header-separator';
-export * from './column-header-sort-icon';
-export * from './column-header-title';
-export * from './column-headers';
 export * from './default-footer';
 export * from './loading-overlay';
 export * from './no-row-message';

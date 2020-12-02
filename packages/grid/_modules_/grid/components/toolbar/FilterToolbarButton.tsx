@@ -47,7 +47,7 @@ export const FilterToolbarButton: React.FC<{}> = () => {
   }, [preferencePanel.open, counter, activeFilters, lookup]);
 
   const icons = useIcons();
-  const filterIconElement = React.createElement(icons.ColumnFiltering!, {});
+  const filterIconElement = React.createElement(icons.OpenFilterButtonIcon!, {});
   const toggleFilter = React.useCallback(() => {
     const {open, openedPanelValue} = preferencePanel;
     if(open && openedPanelValue ===  PreferencePanelsValue.filters) {

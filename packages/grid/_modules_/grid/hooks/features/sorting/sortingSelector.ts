@@ -34,10 +34,9 @@ export const sortModelSelector = createSelector<GridState, SortingState, SortMod
 export type SortColumnLookup = Record<string, { sortDirection: SortDirection; sortIndex?: number }>;
 export const sortColumnLookupSelector = createSelector<
   GridState,
-  SortingState,
   SortModel,
   SortColumnLookup
->(sortingStateSelector, sortModelSelector, (state, sortModel: SortModel) => {
+>( sortModelSelector, (sortModel: SortModel) => {
   const result: SortColumnLookup = sortModel.reduce((res, sortItem, index) => {
     res[sortItem.field] = {
       sortDirection: sortItem.sort,

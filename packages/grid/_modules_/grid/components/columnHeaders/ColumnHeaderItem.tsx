@@ -1,14 +1,17 @@
 import * as React from 'react';
-import { ColDef, NUMBER_COLUMN_TYPE } from '../models/colDef';
-import { GridOptions } from '../models/gridOptions';
-import { SortDirection } from '../models/sortModel';
-import { ApiContext } from './api-context';
-import { HEADER_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
-import { classnames } from '../utils';
-import { ColumnHeaderSortIcon } from './column-header-sort-icon';
-import { ColumnHeaderTitle } from './column-header-title';
-import { ColumnHeaderSeparator } from './column-header-separator';
-import { ColumnHeaderMenuIcon } from './column-header-menu-icon';
+import { COLUMN_HEADER_CLICK } from '../../constants/eventsConstants';
+import { ColDef, NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
+import { GridOptions } from '../../models/gridOptions';
+import { ColParams } from '../../models/params/colParams';
+import { SortDirection } from '../../models/sortModel';
+import { ApiContext } from '../api-context';
+import { HEADER_CELL_CSS_CLASS } from '../../constants/cssClassesConstants';
+import { classnames } from '../../utils/index';
+import { ColumnHeaderSortIcon } from './ColumnHeaderSortIcon';
+import { ColumnHeaderTitle } from './ColumnHeaderTitle';
+import { ColumnHeaderSeparator } from './ColumnHeaderSeparator';
+import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
+import { ColumnHeaderFilterIcon } from './ColumnHeaderFilterIcon';
 
 interface ColumnHeaderItemProps {
   colIndex: number;
@@ -19,9 +22,10 @@ interface ColumnHeaderItemProps {
   sortIndex?: number;
   options: GridOptions;
   separatorProps: React.HTMLAttributes<HTMLDivElement>;
+  filterItemsCounter?: number;
 }
 
-export const ColumnHeaderItem = React.memo(
+export const ColumnHeaderItem =
   ({
     column,
     colIndex,
@@ -31,6 +35,7 @@ export const ColumnHeaderItem = React.memo(
     sortDirection,
     sortIndex,
     options,
+    filterItemsCounter
   }: ColumnHeaderItemProps) => {
     const apiRef = React.useContext(ApiContext);
     const {
@@ -68,6 +73,30 @@ export const ColumnHeaderItem = React.memo(
         }),
       [apiRef, column],
     );
+    const onHeaderTitleClick = React.useCallback(()=> {
+      const colHeaderParams: ColParams = {
+        field: column.field,
+        colDef: column,
+        colIndex,
+        api: apiRef!.current,
+      };
+      apiRef!.current.publishEvent(COLUMN_HEADER_CLICK, colHeaderParams);
+
+    }, [apiRef, colIndex, column]);
+
+    const cssClasses = React.useMemo(()=> classnames(
+        HEADER_CELL_CSS_CLASS,
+        showColumnRightBorder ? 'MuiDataGrid-withBorder' : '',
+        column.headerClassName,
+        column.headerAlign === 'center' && 'MuiDataGrid-colCellCenter',
+        column.headerAlign === 'right' && 'MuiDataGrid-colCellRight',
+        {
+          'MuiDataGrid-colCellSortable': column.sortable,
+          'MuiDataGrid-colCellMoving': isDragging,
+          'MuiDataGrid-colCellSorted': isColumnSorted,
+          'MuiDataGrid-colCellNumeric': isColumnNumeric,
+        },
+      ), [column.headerAlign, column.headerClassName, column.sortable, isColumnNumeric, isColumnSorted, isDragging, showColumnRightBorder]);
 
     const dragConfig = {
       draggable: !disableColumnReorder,
@@ -84,21 +113,22 @@ export const ColumnHeaderItem = React.memo(
       };
     }
 
+    const columnTitleIconButtons = (
+      <React.Fragment>
+        <ColumnHeaderSortIcon
+          direction={sortDirection}
+          index={sortIndex}
+          hide={column.hideSortIcons}
+        />
+        <ColumnHeaderFilterIcon counter={filterItemsCounter} />
+      </React.Fragment>
+    );
+    const columnMenuIconButton = <ColumnHeaderMenuIcon column={column} />;
+
     return (
+      // eslint-disable-next-line jsx-a11y/click-events-have-key-events
       <div
-        className={classnames(
-          HEADER_CELL_CSS_CLASS,
-          showColumnRightBorder ? 'MuiDataGrid-withBorder' : '',
-          column.headerClassName,
-          column.headerAlign === 'center' && 'MuiDataGrid-colCellCenter',
-          column.headerAlign === 'right' && 'MuiDataGrid-colCellRight',
-          {
-            'MuiDataGrid-colCellSortable': column.sortable,
-            'MuiDataGrid-colCellMoving': isDragging,
-            'MuiDataGrid-colCellSorted': isColumnSorted,
-            'MuiDataGrid-colCellNumeric': isColumnNumeric,
-          },
-        )}
+        className={cssClasses}
         key={column.field}
         data-field={column.field}
         style={{
@@ -110,19 +140,13 @@ export const ColumnHeaderItem = React.memo(
         tabIndex={-1}
         aria-colindex={colIndex + 1}
         {...ariaSort}
+        onClick={onHeaderTitleClick}
       >
         <div className="MuiDataGrid-colCell-draggable" {...dragConfig}>
-          {!disableColumnMenu && isColumnNumeric && !column.disableColumnMenu && (
-            <ColumnHeaderMenuIcon column={column} />
-          )}
+          {!disableColumnMenu && isColumnNumeric && !column.disableColumnMenu && columnMenuIconButton}
+
           <div className="MuiDataGrid-colCellTitleContainer">
-            {isColumnNumeric && (
-              <ColumnHeaderSortIcon
-                direction={sortDirection}
-                index={sortIndex}
-                hide={column.hideSortIcons}
-              />
-            )}
+            {isColumnNumeric && columnTitleIconButtons}
             {headerComponent || (
               <ColumnHeaderTitle
                 label={column.headerName || column.field}
@@ -130,18 +154,12 @@ export const ColumnHeaderItem = React.memo(
                 columnWidth={width}
               />
             )}
-            {!isColumnNumeric && (
-              <ColumnHeaderSortIcon
-                direction={sortDirection}
-                index={sortIndex}
-                hide={column.hideSortIcons}
-              />
-            )}
+            {!isColumnNumeric && columnTitleIconButtons}
           </div>
-          {!isColumnNumeric && !disableColumnMenu && !column.disableColumnMenu && (
-            <ColumnHeaderMenuIcon column={column} />
-          )}
+
+          {!isColumnNumeric && !disableColumnMenu && !column.disableColumnMenu && columnMenuIconButton}
         </div>
+
         <ColumnHeaderSeparator
           resizable={!disableColumnResize && !!column.resizable}
           resizing={isResizing}
@@ -149,6 +167,5 @@ export const ColumnHeaderItem = React.memo(
         />
       </div>
     );
-  },
-);
+  };
 ColumnHeaderItem.displayName = 'ColumnHeaderItem';
