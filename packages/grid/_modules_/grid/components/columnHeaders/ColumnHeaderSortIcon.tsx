@@ -24,7 +24,7 @@ export const ColumnHeaderSortIcon: React.FC<ColumnHeaderSortIconProps> = React.m
     }
 
     return (
-      <div className="MuiDataGrid-sortIconContainer">
+      <div className="MuiDataGrid-iconButtonContainer">
         <div>
           {index != null && (
             <Badge badgeContent={index} color="default">

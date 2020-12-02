@@ -103,7 +103,7 @@ export const useStyles = makeStyles(
           display: 'inline-flex',
           flex: 1,
         },
-        '& .MuiDataGrid-colCellNumeric .MuiDataGrid-sortIconContainer': {
+        '& .MuiDataGrid-colCellNumeric .MuiDataGrid-iconButtonContainer': {
           paddingRight: 5,
         },
         '& .MuiDataGrid-colCellSortable': {

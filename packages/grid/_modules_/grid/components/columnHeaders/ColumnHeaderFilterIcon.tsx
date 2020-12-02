@@ -50,7 +50,7 @@ export const ColumnHeaderFilterIcon: React.FC<ColumnHeaderFilterIconProps> = (pr
 
   return (
     <Tooltip title={`${counter} active filter(s)`} enterDelay={1000}>
-      <div className="MuiDataGrid-sortIconContainer">
+      <div className="MuiDataGrid-iconButtonContainer">
         <div>
           {counter > 1 && (
             <Badge badgeContent={counter} color="default">
