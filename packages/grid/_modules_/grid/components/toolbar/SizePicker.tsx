@@ -81,10 +81,10 @@ export const SizePicker = React.memo(function SizePicker() {
         size="small"
         startIcon={getSelectedSizeIcon()}
         onClick={handleSizePickerOpen}
-        aria-label="Size"
+        aria-label="Density"
         aria-haspopup="true"
       >
-        Size
+        Density
       </Button>
       <GridMenu
         open={Boolean(anchorEl)}

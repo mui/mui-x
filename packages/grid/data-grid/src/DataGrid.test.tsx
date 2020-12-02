@@ -493,7 +493,7 @@ describe('<DataGrid />', () => {
         { strict: false },
       );
 
-      fireEvent.click(getByText('Size'));
+      fireEvent.click(getByText('Density'));
       fireEvent.click(getByText('small'));
 
       // @ts-expect-error need to migrate helpers to TypeScript
@@ -511,7 +511,7 @@ describe('<DataGrid />', () => {
         { strict: false },
       );
 
-      fireEvent.click(getByText('Size'));
+      fireEvent.click(getByText('Density'));
       fireEvent.click(getByText('large'));
 
       // @ts-expect-error need to migrate helpers to TypeScript

@@ -11,7 +11,7 @@ export default function SizePickerSmallGrid() {
 
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid {...data} size="small" />
+      <DataGrid {...data} hideToolbar={false} size="small" />
     </div>
   );
 }

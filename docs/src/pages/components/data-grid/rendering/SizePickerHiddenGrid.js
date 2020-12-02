@@ -11,7 +11,7 @@ export default function SizePickerHiddenGrid() {
 
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid {...data} disableSizePicker />
+      <DataGrid {...data} hideToolbar={false} disableSizePicker />
     </div>
   );
 }
