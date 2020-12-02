@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -11,6 +12,12 @@ import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { SizeOption } from '../../models/api/sizeApi';
 import { sizeValueSelector } from '../../hooks/features/size';
 import { GridMenu } from '../menu/GridMenu';
+
+const SizePickerListItemText = withStyles({
+  root: {
+    textTransform: 'uppercase',
+  },
+})(ListItemText);
 
 export function SizePicker() {
   const apiRef = React.useContext(ApiContext);
@@ -63,6 +70,13 @@ export function SizePicker() {
     [apiRef],
   );
 
+  const handleListKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Tab' || event.key === 'Escape') {
+      event.preventDefault();
+      handleSizePickerClose();
+    }
+  };
+
   const renderSizeOptions: Array<React.ReactElement> = SizeOptions.map((option, index) => (
     <MenuItem
       key={index}
@@ -70,7 +84,7 @@ export function SizePicker() {
       selected={option.label === sizeValue}
     >
       <ListItemIcon>{option.icon}</ListItemIcon>
-      <ListItemText primary={option.label} />
+      <SizePickerListItemText primary={option.label} />
     </MenuItem>
   ));
 
@@ -90,7 +104,7 @@ export function SizePicker() {
         open={Boolean(anchorEl)}
         target={anchorEl}
         onClickAway={handleSizePickerClose}
-        onKeyDown={handleSizePickerClose}
+        onKeyDown={handleListKeyDown}
       >
         {renderSizeOptions}
       </GridMenu>
