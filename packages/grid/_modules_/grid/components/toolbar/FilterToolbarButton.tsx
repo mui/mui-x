@@ -23,7 +23,7 @@ export const FilterToolbarButton: React.FC<{}> = () => {
   const preferencePanel = useGridSelector(apiRef, preferencePanelStateSelector);
 
   const tooltipContentNode = React.useMemo(() => {
-    if(preferencePanel.open) {
+    if (preferencePanel.open) {
       return 'Hide Filters';
     }
     if (counter === 0) {
@@ -49,8 +49,8 @@ export const FilterToolbarButton: React.FC<{}> = () => {
   const icons = useIcons();
   const filterIconElement = React.createElement(icons.OpenFilterButtonIcon!, {});
   const toggleFilter = React.useCallback(() => {
-    const {open, openedPanelValue} = preferencePanel;
-    if(open && openedPanelValue ===  PreferencePanelsValue.filters) {
+    const { open, openedPanelValue } = preferencePanel;
+    if (open && openedPanelValue === PreferencePanelsValue.filters) {
       apiRef!.current.hideFilterPanel();
     } else {
       apiRef!.current.showFilterPanel();

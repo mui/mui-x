@@ -25,15 +25,8 @@ import {
   COMPONENT_ERROR,
   STATE_CHANGE,
 } from '../../constants/eventsConstants';
-import {
-  CELL_CSS_CLASS,
-  ROW_CSS_CLASS,
-} from '../../constants/cssClassesConstants';
-import {
-  findParentElementFromClassName,
-  getIdFromRowElem,
-  isCell,
-} from '../../utils/domUtils';
+import { CELL_CSS_CLASS, ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
+import { findParentElementFromClassName, getIdFromRowElem, isCell } from '../../utils/domUtils';
 import { optionsSelector } from '../utils/useOptionsProp';
 import { useApiMethod } from './useApiMethod';
 import { useApiEventHandler } from './useApiEventHandler';

@@ -11,15 +11,15 @@ export const HideColMenuItem: React.FC<FilterItemProps> = ({ column, onClick }) 
     (event: React.MouseEvent<HTMLElement>) => {
       onClick(event);
       // time for the transition
-      timeoutRef.current = setTimeout(()=> {
+      timeoutRef.current = setTimeout(() => {
         apiRef!.current.toggleColumn(column?.field, true);
       }, 10);
     },
     [apiRef, column?.field, onClick],
   );
-  React.useEffect(()=> {
-    return ()=> clearTimeout(timeoutRef.current);
-  },[]);
+  React.useEffect(() => {
+    return () => clearTimeout(timeoutRef.current);
+  }, []);
 
   if (!column) {
     return null;

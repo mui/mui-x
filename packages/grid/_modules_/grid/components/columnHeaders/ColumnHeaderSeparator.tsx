@@ -16,10 +16,10 @@ export const ColumnHeaderSeparator = React.memo(function ColumnHeaderSeparator(
   const { showColumnRightBorder, headerHeight } = React.useContext(OptionsContext);
   const Icon = icons!.ColumnResize!;
 
-  const stopClick = React.useCallback((event: React.MouseEvent<HTMLDivElement>)=> {
+  const stopClick = React.useCallback((event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
     event.stopPropagation();
-  },[]);
+  }, []);
 
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions

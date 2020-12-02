@@ -5,7 +5,8 @@ import {
   SeparatorIcon,
   FilterListIcon,
   TripleDotsVerticalIcon,
-  ColumnIcon, FilterAltIcon,
+  ColumnIcon,
+  FilterAltIcon,
 } from '../components/icons/index';
 import { FilterModel } from '../hooks/features/filter/FilterModelState';
 import { Logger } from '../hooks/utils/useLogger';

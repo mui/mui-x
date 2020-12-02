@@ -16,23 +16,25 @@ export const ColumnHeaderMenuIcon: React.FC<ColumnHeaderFilterIconProps> = ({ co
   const icons = useIcons();
   const apiRef = React.useContext(ApiContext);
   const columnMenuState = useGridSelector(apiRef, columnMenuStateSelector);
-  const icon = React.createElement(icons.ColumnMenu!, {fontSize: "small"});
+  const icon = React.createElement(icons.ColumnMenu!, { fontSize: 'small' });
 
-  const menuIconClick = React.useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-    const lastMenuState = apiRef!.current.getState<GridState>().columnMenu
-    if(!lastMenuState.open || lastMenuState.field !== column.field) {
-      apiRef?.current.showColumnMenu(column.field);
-    } else {
-      apiRef?.current.hideColumnMenu();
-    }
-
-  }, [apiRef, column.field]);
+  const menuIconClick = React.useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const lastMenuState = apiRef!.current.getState<GridState>().columnMenu;
+      if (!lastMenuState.open || lastMenuState.field !== column.field) {
+        apiRef?.current.showColumnMenu(column.field);
+      } else {
+        apiRef?.current.hideColumnMenu();
+      }
+    },
+    [apiRef, column.field],
+  );
 
   const isOpen = columnMenuState.open && columnMenuState.field === column.field;
   return (
-    <div className={classnames('MuiDataGrid-menuIcon', {'MuiDataGrid-menuOpen': isOpen})}>
+    <div className={classnames('MuiDataGrid-menuIcon', { 'MuiDataGrid-menuOpen': isOpen })}>
       <IconButton
         className={'MuiDataGrid-menuIconButton'}
         aria-label="Menu"

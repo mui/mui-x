@@ -3,7 +3,7 @@ export * from './filterPanel';
 export * from './icons';
 export * from './menu';
 export * from './styled-wrappers';
-export * from './tools';
+export * from './panel';
 
 export * from './api-context';
 export * from './AutoSizer';

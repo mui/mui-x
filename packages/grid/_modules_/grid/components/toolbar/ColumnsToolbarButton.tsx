@@ -10,10 +10,10 @@ export const ColumnsToolbarButton: React.FC<{}> = () => {
   const apiRef = React.useContext(ApiContext);
   const icons = useIcons();
   const iconElement = React.createElement(icons.ColumnSelector!, {});
-  const {open, openedPanelValue} = useGridSelector(apiRef, preferencePanelStateSelector);
+  const { open, openedPanelValue } = useGridSelector(apiRef, preferencePanelStateSelector);
 
   const showColumns = React.useCallback(() => {
-    if(open && openedPanelValue ===  PreferencePanelsValue.columns) {
+    if (open && openedPanelValue === PreferencePanelsValue.columns) {
       apiRef!.current.hidePreferences();
     } else {
       apiRef!.current.showPreferences(PreferencePanelsValue.columns);

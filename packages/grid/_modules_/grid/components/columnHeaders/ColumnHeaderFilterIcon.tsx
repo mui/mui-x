@@ -14,32 +14,33 @@ export interface ColumnHeaderFilterIconProps {
 }
 
 export const ColumnHeaderFilterIcon: React.FC<ColumnHeaderFilterIconProps> = (props) => {
-  const {counter} = props;
+  const { counter } = props;
   const apiRef = React.useContext(ApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
   const preferencePanel = useGridSelector(apiRef, preferencePanelStateSelector);
 
   const tooltipContentNode = React.useMemo(() => {
-    return (
-      <div>
-        {counter} active filter(s)
-      </div>
-    );
+    return <div>{counter} active filter(s)</div>;
   }, [counter]);
 
   const icons = useIcons();
-  const filteredColumnIconElement = React.createElement(icons.ColumnFiltered!, {fontSize: "small" });
-  const toggleFilter = React.useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
+  const filteredColumnIconElement = React.createElement(icons.ColumnFiltered!, {
+    fontSize: 'small',
+  });
+  const toggleFilter = React.useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.preventDefault();
+      event.stopPropagation();
 
-    const {open, openedPanelValue} = preferencePanel;
-    if (open && openedPanelValue === PreferencePanelsValue.filters) {
-      apiRef!.current.hideFilterPanel();
-    } else {
-      apiRef!.current.showFilterPanel();
-    }
-  }, [apiRef, preferencePanel]);
+      const { open, openedPanelValue } = preferencePanel;
+      if (open && openedPanelValue === PreferencePanelsValue.filters) {
+        apiRef!.current.hideFilterPanel();
+      } else {
+        apiRef!.current.showFilterPanel();
+      }
+    },
+    [apiRef, preferencePanel],
+  );
 
   if (!counter || options.disableColumnFilter || !options.hideToolbar) {
     return null;

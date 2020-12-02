@@ -61,12 +61,12 @@ export function GridColumnHeaderMenu() {
     updateColumnMenu(columnMenuState);
   }, [columnMenuState, updateColumnMenu]);
 
-  React.useEffect(()=> {
-      return () => {
-        clearTimeout(hideTimeout.current);
-        clearTimeout(immediateTimeout.current);
-      }
-    }, [])
+  React.useEffect(() => {
+    return () => {
+      clearTimeout(hideTimeout.current);
+      clearTimeout(immediateTimeout.current);
+    };
+  }, []);
 
   if (!target) {
     return null;

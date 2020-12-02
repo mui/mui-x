@@ -30,11 +30,11 @@ export const useColumnMenu = (apiRef: ApiRef): void => {
     forceUpdate();
   }, [forceUpdate, logger, setGridState]);
 
-  React.useEffect(()=> {
-    if(gridState.isScrolling) {
+  React.useEffect(() => {
+    if (gridState.isScrolling) {
       hideColumnMenu();
     }
-  }, [gridState.isScrolling, hideColumnMenu])
+  }, [gridState.isScrolling, hideColumnMenu]);
 
   useApiMethod(
     apiRef,

@@ -9,57 +9,57 @@ import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { Columns } from '../../models/colDef/colDef';
 import { ApiContext } from '../api-context';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
-import { PreferencesPanel } from '../tools/Preferences';
+import { PreferencesPanel } from '../panel/PreferencesPanel';
 import { ColumnHeaderItem } from './ColumnHeaderItem';
 
 export interface ColumnHeadersItemCollectionProps {
-	columns: Columns;
-	separatorProps: React.HTMLAttributes<HTMLDivElement>;
+  columns: Columns;
+  separatorProps: React.HTMLAttributes<HTMLDivElement>;
 }
 
 export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionProps> = ({
-	                                                                                       separatorProps,
-	                                                                                       columns,
-                                                                                       }) => {
-	const [resizingColField, setResizingColField] = React.useState('');
-	const apiRef = React.useContext(ApiContext);
-	const options = useGridSelector(apiRef, optionsSelector);
-	const sortColumnLookup = useGridSelector(apiRef, sortColumnLookupSelector);
-	const filterColumnLookup = useGridSelector(apiRef, filterColumnLookupSelector);
-	const dragCol = useGridSelector(apiRef, columnReorderDragColSelector);
+  separatorProps,
+  columns,
+}) => {
+  const [resizingColField, setResizingColField] = React.useState('');
+  const apiRef = React.useContext(ApiContext);
+  const options = useGridSelector(apiRef, optionsSelector);
+  const sortColumnLookup = useGridSelector(apiRef, sortColumnLookupSelector);
+  const filterColumnLookup = useGridSelector(apiRef, filterColumnLookupSelector);
+  const dragCol = useGridSelector(apiRef, columnReorderDragColSelector);
 
-	const handleResizeStart = React.useCallback((params) => {
-		setResizingColField(params.field);
-	}, []);
-	const handleResizeStop = React.useCallback(() => {
-		setResizingColField('');
-	}, []);
+  const handleResizeStart = React.useCallback((params) => {
+    setResizingColField(params.field);
+  }, []);
+  const handleResizeStop = React.useCallback(() => {
+    setResizingColField('');
+  }, []);
 
-	// TODO refactor by putting resizing in the state so we avoid adding listeners.
-	useApiEventHandler(apiRef!, COL_RESIZE_START, handleResizeStart);
-	useApiEventHandler(apiRef!, COL_RESIZE_STOP, handleResizeStop);
+  // TODO refactor by putting resizing in the state so we avoid adding listeners.
+  useApiEventHandler(apiRef!, COL_RESIZE_START, handleResizeStart);
+  useApiEventHandler(apiRef!, COL_RESIZE_STOP, handleResizeStop);
 
-	const items = columns.map((col, idx) => (
-		<ColumnHeaderItem
-			key={col.field}
-			{...sortColumnLookup[col.field]}
-			filterItemsCounter={filterColumnLookup[col.field] && filterColumnLookup[col.field].length}
-			options={options}
-			isDragging={col.field === dragCol}
-			column={col}
-			colIndex={idx}
-			isResizing={resizingColField === col.field}
-			separatorProps={separatorProps}
-		/>
-	));
+  const items = columns.map((col, idx) => (
+    <ColumnHeaderItem
+      key={col.field}
+      {...sortColumnLookup[col.field]}
+      filterItemsCounter={filterColumnLookup[col.field] && filterColumnLookup[col.field].length}
+      options={options}
+      isDragging={col.field === dragCol}
+      column={col}
+      colIndex={idx}
+      isResizing={resizingColField === col.field}
+      separatorProps={separatorProps}
+    />
+  ));
 
-	return (
-		<React.Fragment>
-			<GridColumnHeaderMenu/>
-			<PreferencesPanel/>
-			{items}
-		</React.Fragment>
-	);
+  return (
+    <React.Fragment>
+      <GridColumnHeaderMenu />
+      <PreferencesPanel />
+      {items}
+    </React.Fragment>
+  );
 };
 
 ColumnHeaderItemCollection.displayName = 'ColumnHeaderItemCollection';

@@ -25,66 +25,66 @@ interface ColumnHeaderItemProps {
   filterItemsCounter?: number;
 }
 
-export const ColumnHeaderItem =
-  ({
-    column,
-    colIndex,
-    isDragging,
-    isResizing,
-    separatorProps,
-    sortDirection,
-    sortIndex,
-    options,
-    filterItemsCounter
-  }: ColumnHeaderItemProps) => {
-    const apiRef = React.useContext(ApiContext);
-    const {
-      disableColumnReorder,
-      showColumnRightBorder,
-      disableColumnResize,
-      disableColumnMenu,
-    } = options;
-    const isColumnSorted = column.sortDirection != null;
-    // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
-    const isColumnNumeric = column.type === NUMBER_COLUMN_TYPE;
+export const ColumnHeaderItem = ({
+  column,
+  colIndex,
+  isDragging,
+  isResizing,
+  separatorProps,
+  sortDirection,
+  sortIndex,
+  options,
+  filterItemsCounter,
+}: ColumnHeaderItemProps) => {
+  const apiRef = React.useContext(ApiContext);
+  const {
+    disableColumnReorder,
+    showColumnRightBorder,
+    disableColumnResize,
+    disableColumnMenu,
+  } = options;
+  const isColumnSorted = column.sortDirection != null;
+  // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
+  const isColumnNumeric = column.type === NUMBER_COLUMN_TYPE;
 
-    let headerComponent: React.ReactElement | null = null;
-    if (column.renderHeader) {
-      headerComponent = column.renderHeader({
-        api: apiRef!.current!,
-        colDef: column,
-        colIndex,
-        field: column.field,
-      });
-    }
+  let headerComponent: React.ReactElement | null = null;
+  if (column.renderHeader) {
+    headerComponent = column.renderHeader({
+      api: apiRef!.current!,
+      colDef: column,
+      colIndex,
+      field: column.field,
+    });
+  }
 
-    const onDragStart = React.useCallback(
-      (event) => apiRef!.current.onColItemDragStart(column, event.currentTarget),
-      [apiRef, column],
-    );
-    const onDragEnter = React.useCallback((event) => apiRef!.current.onColItemDragEnter(event), [
-      apiRef,
-    ]);
-    const onDragOver = React.useCallback(
-      (event) =>
-        apiRef!.current.onColItemDragOver(column, {
-          x: event.clientX,
-          y: event.clientY,
-        }),
-      [apiRef, column],
-    );
-    const onHeaderTitleClick = React.useCallback(()=> {
-      const colHeaderParams: ColParams = {
-        field: column.field,
-        colDef: column,
-        colIndex,
-        api: apiRef!.current,
-      };
-      apiRef!.current.publishEvent(COLUMN_HEADER_CLICK, colHeaderParams);
+  const onDragStart = React.useCallback(
+    (event) => apiRef!.current.onColItemDragStart(column, event.currentTarget),
+    [apiRef, column],
+  );
+  const onDragEnter = React.useCallback((event) => apiRef!.current.onColItemDragEnter(event), [
+    apiRef,
+  ]);
+  const onDragOver = React.useCallback(
+    (event) =>
+      apiRef!.current.onColItemDragOver(column, {
+        x: event.clientX,
+        y: event.clientY,
+      }),
+    [apiRef, column],
+  );
+  const onHeaderTitleClick = React.useCallback(() => {
+    const colHeaderParams: ColParams = {
+      field: column.field,
+      colDef: column,
+      colIndex,
+      api: apiRef!.current,
+    };
+    apiRef!.current.publishEvent(COLUMN_HEADER_CLICK, colHeaderParams);
+  }, [apiRef, colIndex, column]);
 
-    }, [apiRef, colIndex, column]);
-
-    const cssClasses = React.useMemo(()=> classnames(
+  const cssClasses = React.useMemo(
+    () =>
+      classnames(
         HEADER_CELL_CSS_CLASS,
         showColumnRightBorder ? 'MuiDataGrid-withBorder' : '',
         column.headerClassName,
@@ -96,76 +96,89 @@ export const ColumnHeaderItem =
           'MuiDataGrid-colCellSorted': isColumnSorted,
           'MuiDataGrid-colCellNumeric': isColumnNumeric,
         },
-      ), [column.headerAlign, column.headerClassName, column.sortable, isColumnNumeric, isColumnSorted, isDragging, showColumnRightBorder]);
+      ),
+    [
+      column.headerAlign,
+      column.headerClassName,
+      column.sortable,
+      isColumnNumeric,
+      isColumnSorted,
+      isDragging,
+      showColumnRightBorder,
+    ],
+  );
 
-    const dragConfig = {
-      draggable: !disableColumnReorder,
-      onDragStart,
-      onDragEnter,
-      onDragOver,
+  const dragConfig = {
+    draggable: !disableColumnReorder,
+    onDragStart,
+    onDragEnter,
+    onDragOver,
+  };
+  const width = column.width!;
+
+  let ariaSort: any;
+  if (sortDirection != null) {
+    ariaSort = {
+      'aria-sort': sortDirection === 'asc' ? 'ascending' : 'descending',
     };
-    const width = column.width!;
+  }
 
-    let ariaSort: any;
-    if (sortDirection != null) {
-      ariaSort = {
-        'aria-sort': sortDirection === 'asc' ? 'ascending' : 'descending',
-      };
-    }
+  const columnTitleIconButtons = (
+    <React.Fragment>
+      <ColumnHeaderSortIcon
+        direction={sortDirection}
+        index={sortIndex}
+        hide={column.hideSortIcons}
+      />
+      <ColumnHeaderFilterIcon counter={filterItemsCounter} />
+    </React.Fragment>
+  );
+  const columnMenuIconButton = <ColumnHeaderMenuIcon column={column} />;
 
-    const columnTitleIconButtons = (
-      <React.Fragment>
-        <ColumnHeaderSortIcon
-          direction={sortDirection}
-          index={sortIndex}
-          hide={column.hideSortIcons}
-        />
-        <ColumnHeaderFilterIcon counter={filterItemsCounter} />
-      </React.Fragment>
-    );
-    const columnMenuIconButton = <ColumnHeaderMenuIcon column={column} />;
+  return (
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+    <div
+      className={cssClasses}
+      key={column.field}
+      data-field={column.field}
+      style={{
+        width,
+        minWidth: width,
+        maxWidth: width,
+      }}
+      role="columnheader"
+      tabIndex={-1}
+      aria-colindex={colIndex + 1}
+      {...ariaSort}
+      onClick={onHeaderTitleClick}
+    >
+      <div className="MuiDataGrid-colCell-draggable" {...dragConfig}>
+        {!disableColumnMenu && isColumnNumeric && !column.disableColumnMenu && columnMenuIconButton}
 
-    return (
-      // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-      <div
-        className={cssClasses}
-        key={column.field}
-        data-field={column.field}
-        style={{
-          width,
-          minWidth: width,
-          maxWidth: width,
-        }}
-        role="columnheader"
-        tabIndex={-1}
-        aria-colindex={colIndex + 1}
-        {...ariaSort}
-        onClick={onHeaderTitleClick}
-      >
-        <div className="MuiDataGrid-colCell-draggable" {...dragConfig}>
-          {!disableColumnMenu && isColumnNumeric && !column.disableColumnMenu && columnMenuIconButton}
-
-          <div className="MuiDataGrid-colCellTitleContainer">
-            {isColumnNumeric && columnTitleIconButtons}
-            {headerComponent || (
-              <ColumnHeaderTitle
-                label={column.headerName || column.field}
-                description={column.description}
-                columnWidth={width}
-              />
-            )}
-            {!isColumnNumeric && columnTitleIconButtons}
-          </div>
-
-          {!isColumnNumeric && !disableColumnMenu && !column.disableColumnMenu && columnMenuIconButton}
+        <div className="MuiDataGrid-colCellTitleContainer">
+          {isColumnNumeric && columnTitleIconButtons}
+          {headerComponent || (
+            <ColumnHeaderTitle
+              label={column.headerName || column.field}
+              description={column.description}
+              columnWidth={width}
+            />
+          )}
+          {!isColumnNumeric && columnTitleIconButtons}
         </div>
 
-        <ColumnHeaderSeparator
-          resizable={!disableColumnResize && !!column.resizable}
-          resizing={isResizing}
-          {...separatorProps}
-        />
+        {!isColumnNumeric &&
+          !disableColumnMenu &&
+          !column.disableColumnMenu &&
+          columnMenuIconButton}
       </div>
-    );
-  };
+
+      <ColumnHeaderSeparator
+        resizable={!disableColumnResize && !!column.resizable}
+        resizing={isResizing}
+        {...separatorProps}
+      />
+    </div>
+  );
+};
 ColumnHeaderItem.displayName = 'ColumnHeaderItem';
