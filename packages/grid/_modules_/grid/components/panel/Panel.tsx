@@ -71,7 +71,7 @@ export function Panel(props: PanelProps) {
         <Paper
           className={classes.paper}
           style={{
-            maxHeight: viewportSizes.height,
+            maxHeight: viewportSizes.height > 600 ? 600 : viewportSizes.height,
             maxWidth: viewportSizes.width,
           }}
           elevation={8}
