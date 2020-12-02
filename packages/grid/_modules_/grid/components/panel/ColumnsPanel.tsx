@@ -80,10 +80,8 @@ export function ColumnsPanel() {
   );
 
   React.useEffect(() => {
-    if (searchInputRef && searchInputRef.current) {
-      searchInputRef.current.focus();
-    }
-  });
+    searchInputRef.current!.focus();
+  }, []);
 
   return (
     <React.Fragment>
