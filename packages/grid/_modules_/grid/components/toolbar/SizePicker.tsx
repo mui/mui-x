@@ -96,4 +96,4 @@ export function SizePicker() {
       </GridMenu>
     </React.Fragment>
   );
-};
+}
