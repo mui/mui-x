@@ -189,7 +189,7 @@ export function ServerFilterViaProps() {
     setLoading(false);
   }, [demoServer.data.rows, filterModel]);
 
-  //TODO allow to filter operators using string value
+  // TODO allow to filter operators using string value
   // columnTypes={{string: {filterOperators: ['contains']}}}
 
   const onFilterChange = React.useCallback(
