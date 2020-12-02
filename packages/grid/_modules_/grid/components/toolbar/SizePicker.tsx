@@ -12,7 +12,7 @@ import { SizeOption } from '../../models/api/sizeApi';
 import { sizeValueSelector } from '../../hooks/features/size';
 import { GridMenu } from '../menu/GridMenu';
 
-export const SizePicker = React.memo(function SizePicker() {
+export function SizePicker() {
   const apiRef = React.useContext(ApiContext);
   const { size, rowHeight, headerHeight } = useGridSelector(apiRef, optionsSelector);
   const sizeValue = useGridSelector(apiRef, sizeValueSelector);
@@ -96,4 +96,4 @@ export const SizePicker = React.memo(function SizePicker() {
       </GridMenu>
     </React.Fragment>
   );
-});
+};
