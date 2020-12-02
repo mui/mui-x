@@ -208,10 +208,8 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   );
 
   const onRowsUpdated = React.useCallback(() => {
-    if (gridState.sorting.sortModel.length > 0) {
-      apiRef.current.applySorting();
-    }
-  }, [gridState.sorting.sortModel, apiRef]);
+    apiRef.current.applySorting();
+  }, [apiRef]);
 
   const getSortModel = React.useCallback(() => gridState.sorting.sortModel, [
     gridState.sorting.sortModel,

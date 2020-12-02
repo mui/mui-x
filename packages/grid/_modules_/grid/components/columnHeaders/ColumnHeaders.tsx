@@ -1,70 +1,12 @@
 import * as React from 'react';
-import { COL_RESIZE_START, COL_RESIZE_STOP } from '../constants/eventsConstants';
-import { useGridSelector } from '../hooks/features/core/useGridSelector';
-import { optionsSelector } from '../hooks/utils/useOptionsProp';
-import { Columns, RenderContextProps } from '../models';
-import { ColumnHeaderItem } from './column-header-item';
-import { ApiContext } from './api-context';
-import { LeftEmptyCell, RightEmptyCell } from './cell';
-import { GridColumnHeaderMenu } from './menu/columnMenu/GridColumnHeaderMenu';
-import { PreferencesPanel } from './tools/PreferencesPanel';
-import { containerSizesSelector } from './viewport';
-import { OptionsContext } from './options-context';
-import { ScrollArea } from './ScrollArea';
-import {
-  sortColumnLookupSelector,
-  useApiEventHandler,
-  columnReorderDragColSelector,
-} from '../hooks';
-
-export interface ColumnHeadersItemCollectionProps {
-  columns: Columns;
-  separatorProps: React.HTMLAttributes<HTMLDivElement>;
-}
-export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionProps> = ({
-  separatorProps,
-  columns,
-}) => {
-  const [resizingColField, setResizingColField] = React.useState('');
-  const apiRef = React.useContext(ApiContext);
-  const options = useGridSelector(apiRef, optionsSelector);
-  const sortColumnLookup = useGridSelector(apiRef, sortColumnLookupSelector);
-  const dragCol = useGridSelector(apiRef, columnReorderDragColSelector);
-
-  const handleResizeStart = React.useCallback((params) => {
-    setResizingColField(params.field);
-  }, []);
-  const handleResizeStop = React.useCallback(() => {
-    setResizingColField('');
-  }, []);
-
-  // TODO refactor by putting resizing in the state so we avoid adding listeners.
-  useApiEventHandler(apiRef!, COL_RESIZE_START, handleResizeStart);
-  useApiEventHandler(apiRef!, COL_RESIZE_STOP, handleResizeStop);
-
-  const items = columns.map((col, idx) => (
-    <ColumnHeaderItem
-      key={col.field}
-      {...sortColumnLookup[col.field]}
-      options={options}
-      isDragging={col.field === dragCol}
-      column={col}
-      colIndex={idx}
-      isResizing={resizingColField === col.field}
-      separatorProps={separatorProps}
-    />
-  ));
-
-  return (
-    <React.Fragment>
-      <GridColumnHeaderMenu />
-      <PreferencesPanel />
-      {items}
-    </React.Fragment>
-  );
-};
-
-ColumnHeaderItemCollection.displayName = 'ColumnHeaderItemCollection';
+import { useGridSelector } from '../../hooks/features/core/useGridSelector';
+import { Columns, RenderContextProps } from '../../models/index';
+import { ApiContext } from '../api-context';
+import { LeftEmptyCell, RightEmptyCell } from '../cell';
+import { OptionsContext } from '../options-context';
+import { ScrollArea } from '../ScrollArea';
+import { containerSizesSelector } from '../viewport';
+import { ColumnHeaderItemCollection } from './ColumnHeadersItemCollection';
 
 export interface ColumnsHeaderProps {
   columns: Columns;

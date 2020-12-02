@@ -3,16 +3,19 @@ import {
   ArrowDownwardIcon,
   ArrowUpwardIcon,
   SeparatorIcon,
-  FilterIcon,
+  FilterListIcon,
   TripleDotsVerticalIcon,
   ColumnIcon,
+  FilterAltIcon,
 } from '../components/icons/index';
+import { FilterModel } from '../hooks/features/filter/FilterModelState';
 import { Logger } from '../hooks/utils/useLogger';
 import { ColumnTypesRecord } from './colDef/colTypeDef';
 import { DEFAULT_COLUMN_TYPES } from './colDef/defaultColumnTypes';
 import { FeatureMode, FeatureModeConstant } from './featureMode';
 import { CellParams } from './params/cellParams';
 import { ColParams } from './params/colParams';
+import { FilterModelParams } from './params/filterModelParams';
 import { PageChangeParams } from './params/pageChangeParams';
 import { RowParams } from './params/rowParams';
 import { RowSelectedParams } from './params/rowSelectedParams';
@@ -30,9 +33,13 @@ export interface IconsOptions {
    */
   ColumnMenu?: React.ElementType;
   /**
-   * Icon displayed on the column menu filter tab.
+   * Icon displayed on the open filter button present in the toolbar by default
    */
-  ColumnFiltering?: React.ElementType;
+  OpenFilterButtonIcon?: React.ElementType;
+  /**
+   * Icon displayed on the column header menu to show that a filer has been applied to the column.
+   */
+  ColumnFiltered?: React.ElementType;
   /**
    * Icon displayed on the column menu selector tab.
    */
@@ -183,6 +190,12 @@ export interface GridOptions {
    */
   sortingMode?: FeatureMode;
   /**
+   * Filtering can be processed on the server or client-side.
+   * Set it to 'client' if you would like to handle filtering on the client-side.
+   * Set it to 'server' if you would like to handle filtering on the server-side.
+   */
+  filterMode?: FeatureMode;
+  /**
    * If `true`, the footer component is hidden.
    * @default false
    */
@@ -232,6 +245,10 @@ export interface GridOptions {
    */
   sortModel?: SortModel;
   /**
+   * Set the filter model of the grid.
+   */
+  filterModel?: FilterModel;
+  /**
    * Callback fired when a click event comes from a cell element.
    * @param param With all properties from [[CellParams]].
    */
@@ -272,6 +289,11 @@ export interface GridOptions {
    */
   onSortModelChange?: (params: SortModelParams) => void;
   /**
+   * Callback fired when the Filter model changes before the filters are applied.
+   * @param param With all properties from [[FilterModelParams]].
+   */
+  onFilterModelChange?: (params: FilterModelParams) => void;
+  /**
    * Callback fired when the current page has changed.
    * @param param With all properties from [[PageChangeParams]].
    */
@@ -311,6 +333,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   pageSize: 100,
   paginationMode: FeatureModeConstant.client,
   sortingMode: FeatureModeConstant.client,
+  filterMode: FeatureModeConstant.client,
   sortingOrder: ['asc', 'desc', null],
   columnTypes: DEFAULT_COLUMN_TYPES,
   disableColumnMenu: !EXPERIMENTAL_ENABLED,
@@ -318,7 +341,8 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   disableColumnSelector: !EXPERIMENTAL_ENABLED,
   hideToolbar: !EXPERIMENTAL_ENABLED,
   icons: {
-    ColumnFiltering: FilterIcon,
+    OpenFilterButtonIcon: FilterListIcon,
+    ColumnFiltered: FilterAltIcon,
     ColumnSelector: ColumnIcon,
     ColumnMenu: TripleDotsVerticalIcon,
     ColumnSortedAscending: ArrowUpwardIcon,

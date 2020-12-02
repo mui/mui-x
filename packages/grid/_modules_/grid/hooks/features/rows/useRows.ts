@@ -90,10 +90,9 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
 
       internalRowsState.current = { idRowsLookup, allRows, totalRowCount };
 
-      if (!apiRef.current.state.isScrolling) {
-        setGridState((state) => ({ ...state, rows: internalRowsState.current }));
-        forceUpdate();
-      }
+      setGridState((state) => ({ ...state, rows: internalRowsState.current }));
+      forceUpdate();
+      apiRef.current.publishEvent(ROWS_UPDATED);
     },
     [logger, gridState.options, apiRef, setGridState, forceUpdate],
   );
@@ -121,10 +120,8 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
         });
       });
 
-      if (!apiRef.current.state.isScrolling) {
-        setGridState((state) => ({ ...state, rows: internalRowsState.current }));
-        forceUpdate();
-      }
+      setGridState((state) => ({ ...state, rows: internalRowsState.current }));
+      forceUpdate();
 
       if (addedRows.length > 0) {
         const newRows = [
@@ -132,9 +129,9 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
           ...addedRows,
         ];
         setRows(newRows);
+      } else {
+        apiRef.current.publishEvent(ROWS_UPDATED);
       }
-
-      apiRef.current.publishEvent(ROWS_UPDATED);
     },
     [apiRef, forceUpdate, getRowFromId, setGridState, setRows],
   );

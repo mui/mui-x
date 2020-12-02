@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Badge from '@material-ui/core/Badge';
 import IconButton from '@material-ui/core/IconButton';
-import { IconsOptions, SortDirection } from '../models';
-import { useIcons } from '../hooks/utils/useIcons';
+import { IconsOptions, SortDirection } from '../../models/index';
+import { useIcons } from '../../hooks/utils/useIcons';
 
 export interface ColumnHeaderSortIconProps {
   direction: SortDirection;
@@ -24,7 +24,7 @@ export const ColumnHeaderSortIcon: React.FC<ColumnHeaderSortIconProps> = React.m
     }
 
     return (
-      <div className="MuiDataGrid-sortIconContainer">
+      <div className="MuiDataGrid-iconButtonContainer">
         <div>
           {index != null && (
             <Badge badgeContent={index} color="default">

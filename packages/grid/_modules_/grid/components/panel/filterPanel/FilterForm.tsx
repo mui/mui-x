@@ -4,13 +4,13 @@ import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
-import { filterableColumnsSelector } from '../../hooks/features/columns/columnsSelector';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { ColDef } from '../../models/colDef/colDef';
-import { FilterItem, LinkOperator } from '../../models/filterItem';
-import { FilterOperator } from '../../models/filterOperator';
-import { ApiContext } from '../api-context';
-import { CloseIcon } from '../icons/index';
+import { filterableColumnsSelector } from '../../../hooks/features/columns/columnsSelector';
+import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
+import { ColDef } from '../../../models/colDef/colDef';
+import { FilterItem, LinkOperator } from '../../../models/filterItem';
+import { FilterOperator } from '../../../models/filterOperator';
+import { ApiContext } from '../../api-context';
+import { CloseIcon } from '../../icons/index';
 
 export interface FilterFormProps {
   item: FilterItem;

@@ -65,14 +65,13 @@ export function Panel(props: PanelProps) {
       placement={'bottom-start'}
       open={open}
       anchorEl={anchorEl}
-      style={{ position: 'relative' }}
+      style={{ position: 'relative', zIndex: 100 }}
     >
       <ClickAwayListener onClickAway={hidePreferences}>
         <Paper
-          square
           className={classes.paper}
           style={{
-            maxHeight: viewportSizes.height,
+            maxHeight: viewportSizes.height > 600 ? 600 : viewportSizes.height,
             maxWidth: viewportSizes.width,
           }}
           elevation={8}
