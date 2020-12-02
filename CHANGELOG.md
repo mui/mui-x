@@ -3,6 +3,61 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.11](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.10...v4.0.0-alpha.11) (Dec 2, 2020)
+
+Big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐛 Fix bugs from recently released features.
+- 🧪 Iterate on the upcoming filtering feature under an undocumented prop.
+
+### @material-ui/x-grid@v4.0.0-alpha.11 / @material-ui/data-grid@v4.0.0-alpha.11
+
+#### Breaking changes
+
+- [XGrid] Rows refactoring, flatten RowModel, remove RowData (#668) @dtassone
+
+  These changes simplify the API and avoid confusion between `RowData` and `RowModel`.
+  Now we only have RowModel which is a flat object containing an id and the row data. It is the same object as the items of the `rows` prop array.
+
+  The API to change update the rows using apiRef has changed:
+
+  ```diff
+  -apiRef.current.updateRowDate()
+  +apiRef.current.updateRows()
+  ```
+  ```diff
+  -apiRef.current.setRowModels()
+  +apiRef.current.setRows()
+  ```
+
+  `apiRef.current.updateRowModels` has been removed, please use `apiRef.current.updateRows`.
+
+#### Changes
+
+- [DataGrid] Fix server-side pagination (#639) @dtassone
+- [DataGrid] Fix flex columns not taking into account "checkboxSelection" prop @DanailH
+- [DataGrid] First iteration on filtering, basic support (#411) @dtassone
+- [DataGrid] Improve filters (#635) @dtassone
+- [DataGrid] Fix filters on rendering new rows (#642) @dtassone
+- [DataGrid] Fix filters flex-shrink (#664) @oliviertassinari
+
+### Docs
+
+- [docs] Data Grid depends on side effects (#666) @oliviertassinari
+- [docs] Clarify the purpose of x-grid-data-generator (#634) @Elius94
+- [docs] Data Grid is in the lab (#612) @oliviertassinari
+- [docs] Fix Demo app, downgrade webpack-cli, known issue in latest version (#647) @dtassone
+- [docs] Fix typo in columns.md @stojy
+- [docs] Reduce confusion on /export page (#646) @SerdarMustafa1
+
+### Core
+
+- [core] Introduce a feature toggle (#637) @oliviertassinari
+- [core] Remove gitHead (#669) @oliviertassinari
+- [core] Remove react-select (#658) @dependabot-preview
+- [core] Replace Storybook knobs for args (#601) @tooppaaa
+- [core] Update to Material-UI v4.11.1 (#636) @oliviertassinari
+
 ## [4.0.0-alpha.10](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.9...v4.0.0-alpha.10) (Nov 20, 2020)
 
 ### @material-ui/x-grid@v4.0.0-alpha.10 / @material-ui/data-grid@v4.0.0-alpha.10
