@@ -25,11 +25,12 @@ export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps
       return null;
     }
 
-    const showSelectedRowCount = !options.hideFooterSelectedRowCount && selectedRowCount > 0 ? (
-      <SelectedRowCount selectedRowCount={selectedRowCount} />
-    ) : (
-      <div />
-    );
+    const showSelectedRowCount =
+      !options.hideFooterSelectedRowCount && selectedRowCount > 0 ? (
+        <SelectedRowCount selectedRowCount={selectedRowCount} />
+      ) : (
+        <div />
+      );
 
     const showRowCount =
       !options.hideFooterRowCount && !paginationComponent ? (
