@@ -1,4 +1,4 @@
-import { FilterInputValue } from '../../components/tools/FilterInputValue';
+import { FilterInputValue } from '../../components/panel/filterPanel/FilterInputValue';
 import { FilterItem } from '../filterItem';
 import { FilterOperator } from '../filterOperator';
 import { ColDef } from './colDef';
@@ -40,7 +40,7 @@ export const STRING_OPERATORS: FilterOperator[] = [
   },
   {
     label: 'starts with',
-    value: 'start',
+    value: 'startsWith',
     getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
@@ -56,7 +56,7 @@ export const STRING_OPERATORS: FilterOperator[] = [
   },
   {
     label: 'ends with',
-    value: 'end',
+    value: 'endsWith',
     getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;

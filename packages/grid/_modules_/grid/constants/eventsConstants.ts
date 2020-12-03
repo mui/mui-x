@@ -42,6 +42,7 @@ export const ROWS_UPDATED = 'rowsUpdated';
 export const COLUMNS_UPDATED = 'columnsUpdated';
 
 export const SORT_MODEL_CHANGE = 'sortModelChange';
+export const FILTER_MODEL_CHANGE = 'filterModelChange';
 
 export const STATE_CHANGE = 'stateChange';
 

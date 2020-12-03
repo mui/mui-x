@@ -11,9 +11,13 @@ export const ArrowDownwardIcon = createSvgIcon(
   'ArrowDownward',
 );
 
-export const FilterIcon = createSvgIcon(
+export const FilterListIcon = createSvgIcon(
   <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" />,
-  'Filter',
+  'FilterList',
+);
+export const FilterAltIcon = createSvgIcon(
+  <path d="M4.25 5.61C6.27 8.2 10 13 10 13v6c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-6s3.72-4.8 5.74-7.39c.51-.66.04-1.61-.79-1.61H5.04c-.83 0-1.3.95-.79 1.61z" />,
+  'FilterAlt',
 );
 
 export const SearchIcon = createSvgIcon(

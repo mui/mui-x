@@ -1,11 +1,11 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { useGridState } from '../../hooks/features/core/useGridState';
-import { optionsSelector } from '../../hooks/utils/useOptionsProp';
-import { FilterItem, LinkOperator } from '../../models/filterItem';
-import { ApiContext } from '../api-context';
-import { AddIcon } from '../icons/index';
+import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
+import { useGridState } from '../../../hooks/features/core/useGridState';
+import { optionsSelector } from '../../../hooks/utils/useOptionsProp';
+import { FilterItem, LinkOperator } from '../../../models/filterItem';
+import { ApiContext } from '../../api-context';
+import { AddIcon } from '../../icons/index';
 import { FilterForm } from './FilterForm';
 
 export function FilterPanel() {

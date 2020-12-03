@@ -44,3 +44,21 @@ export const filterItemsCounterSelector = createSelector<GridState, FilterItem[]
   activeFilterItemsSelector,
   (activeFilters) => activeFilters.length,
 );
+
+export type FilterColumnLookup = Record<string, FilterItem[]>;
+export const filterColumnLookupSelector = createSelector<
+  GridState,
+  FilterItem[],
+  FilterColumnLookup
+>(activeFilterItemsSelector, (activeFilters) => {
+  const result: FilterColumnLookup = activeFilters.reduce((res, filterItem) => {
+    if (!res[filterItem.columnField!]) {
+      res[filterItem.columnField!] = [filterItem];
+    } else {
+      res[filterItem.columnField!].push(filterItem);
+    }
+    return res;
+  }, {} as FilterColumnLookup);
+
+  return result;
+});

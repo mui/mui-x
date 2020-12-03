@@ -25,18 +25,8 @@ import {
   COMPONENT_ERROR,
   STATE_CHANGE,
 } from '../../constants/eventsConstants';
-import {
-  CELL_CSS_CLASS,
-  HEADER_CELL_CSS_CLASS,
-  ROW_CSS_CLASS,
-} from '../../constants/cssClassesConstants';
-import {
-  findParentElementFromClassName,
-  getFieldFromHeaderElem,
-  getIdFromRowElem,
-  isCell,
-  isHeaderTitleContainer,
-} from '../../utils/domUtils';
+import { CELL_CSS_CLASS, ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
+import { findParentElementFromClassName, getIdFromRowElem, isCell } from '../../utils/domUtils';
 import { optionsSelector } from '../utils/useOptionsProp';
 import { useApiMethod } from './useApiMethod';
 import { useApiEventHandler } from './useApiEventHandler';
@@ -95,18 +85,6 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
             element: rowEl,
           });
         }
-      } else if (isHeaderTitleContainer(elem) && !isResizingRef.current) {
-        const headerCell = findParentElementFromClassName(elem, HEADER_CELL_CSS_CLASS)!;
-        const field = getFieldFromHeaderElem(headerCell);
-        const column = apiRef.current.getColumnFromField(field);
-        const colIndex = apiRef.current.getColumnIndex(field);
-        const colHeaderParams: ColParams = {
-          field,
-          colDef: column,
-          colIndex,
-          api: apiRef.current,
-        };
-        eventParams.header = colHeaderParams;
       }
       return eventParams;
     },
@@ -126,9 +104,6 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
       }
       if (eventParams.row) {
         apiRef.current.publishEvent(ROW_CLICK, eventParams.row);
-      }
-      if (eventParams.header) {
-        apiRef.current.publishEvent(COLUMN_HEADER_CLICK, eventParams.header);
       }
     },
     [apiRef, getEventParams],

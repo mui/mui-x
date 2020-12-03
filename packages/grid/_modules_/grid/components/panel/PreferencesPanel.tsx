@@ -6,7 +6,7 @@ import { PreferencePanelsValue } from '../../hooks/features/preferencesPanel/pre
 import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { ApiContext } from '../api-context';
 import { ColumnsPanel } from './ColumnsPanel';
-import { FilterPanel } from './FilterPanel';
+import { FilterPanel } from './filterPanel/FilterPanel';
 import { Panel } from './Panel';
 
 export function PreferencesPanel() {

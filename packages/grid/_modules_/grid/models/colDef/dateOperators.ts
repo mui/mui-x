@@ -1,4 +1,4 @@
-import { FilterInputValue } from '../../components/tools/FilterInputValue';
+import { FilterInputValue } from '../../components/panel/filterPanel/FilterInputValue';
 import { FilterItem } from '../filterItem';
 import { FilterOperator } from '../filterOperator';
 import { ColDef } from './colDef';

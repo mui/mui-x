@@ -1,4 +1,4 @@
-import { FilterItem } from '../../models/filterItem';
+import { FilterItem } from '../../../models/filterItem';
 
 export interface FilterInputValueProps {
   item: FilterItem;
