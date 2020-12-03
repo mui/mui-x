@@ -18,19 +18,15 @@ export const visibleSortedRowsSelector = createSelector<
   return [...sortedRows].filter((row) => visibleRowsState.visibleRowsLookup[row.id] !== false);
 });
 
-export const visibleRowCountSelector = createSelector<
-  GridState,
-  VisibleRowsState,
-  number,
-  number
->(
-  visibleRowsStateSelector, rowCountSelector,
+export const visibleRowCountSelector = createSelector<GridState, VisibleRowsState, number, number>(
+  visibleRowsStateSelector,
+  rowCountSelector,
   (visibleRowsState, totalRowsCount) => {
     if (visibleRowsState.visibleRows == null) {
       return totalRowsCount;
     }
     return visibleRowsState.visibleRows.length;
-  }
+  },
 );
 
 export const filterStateSelector: (state: GridState) => FilterModelState = (state) => state.filter;

@@ -106,22 +106,25 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
     [apiRef, forceUpdate, logger, setGridState],
   );
 
-  const applyFilters = React.useCallback((noRerender = false) => {
-    if (options.filterMode === FeatureModeConstant.server) {
-      return;
-    }
+  const applyFilters = React.useCallback(
+    (noRerender = false) => {
+      if (options.filterMode === FeatureModeConstant.server) {
+        return;
+      }
 
-    clearFilteredRows();
+      clearFilteredRows();
 
-    const { items, linkOperator } = apiRef.current.state.filter;
-    items.forEach((filterItem) => {
-      applyFilter(filterItem, linkOperator);
-    });
+      const { items, linkOperator } = apiRef.current.state.filter;
+      items.forEach((filterItem) => {
+        applyFilter(filterItem, linkOperator);
+      });
 
-    if(!noRerender) {
-      forceUpdate();
-    }
-  }, [apiRef, applyFilter, clearFilteredRows, forceUpdate, options.filterMode]);
+      if (!noRerender) {
+        forceUpdate();
+      }
+    },
+    [apiRef, applyFilter, clearFilteredRows, forceUpdate, options.filterMode],
+  );
 
   const upsertFilter = React.useCallback(
     (item: FilterItem) => {

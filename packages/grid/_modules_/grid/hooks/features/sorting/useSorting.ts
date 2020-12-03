@@ -136,27 +136,30 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
     [apiRef],
   );
 
-  const applySorting = React.useCallback((noRerender = false) => {
-    const rowModels = apiRef.current.getRowModels();
-    const sortModel = apiRef.current.getState<GridState>().sorting.sortModel;
-    logger.info('Sorting rows with ', sortModel);
+  const applySorting = React.useCallback(
+    (noRerender = false) => {
+      const rowModels = apiRef.current.getRowModels();
+      const sortModel = apiRef.current.getState<GridState>().sorting.sortModel;
+      logger.info('Sorting rows with ', sortModel);
 
-    const sorted = [...rowModels];
-    if (sortModel.length > 0) {
-      comparatorList.current = buildComparatorList(sortModel);
-      sorted.sort(comparatorListAggregate);
-    }
+      const sorted = [...rowModels];
+      if (sortModel.length > 0) {
+        comparatorList.current = buildComparatorList(sortModel);
+        sorted.sort(comparatorListAggregate);
+      }
 
-    setGridState((oldState) => {
-      return {
-        ...oldState,
-        sorting: { ...oldState.sorting, sortedRows: [...sorted.map((row) => row.id)] },
-      };
-    });
-    if(!noRerender) {
-      forceUpdate();
-    }
-  }, [apiRef, logger, setGridState, forceUpdate, buildComparatorList, comparatorListAggregate]);
+      setGridState((oldState) => {
+        return {
+          ...oldState,
+          sorting: { ...oldState.sorting, sortedRows: [...sorted.map((row) => row.id)] },
+        };
+      });
+      if (!noRerender) {
+        forceUpdate();
+      }
+    },
+    [apiRef, logger, setGridState, forceUpdate, buildComparatorList, comparatorListAggregate],
+  );
 
   const setSortModel = React.useCallback(
     (sortModel: SortModel) => {

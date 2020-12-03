@@ -33,18 +33,21 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
   const [gridState, setGridState, updateComponent] = useGridState(apiRef);
   const updateTimeout = React.useRef<any>();
 
-  const forceUpdate = React.useCallback((callback?: Function) => {
-    if (updateTimeout!.current == null) {
-      updateTimeout!.current = setTimeout(() => {
-        logger.debug(`Updating component`);
-        updateTimeout.current = null;
-        updateComponent();
-        if(callback) {
-          callback();
-        }
-      }, 100);
-    }
-  }, [logger, updateComponent]);
+  const forceUpdate = React.useCallback(
+    (callback?: Function) => {
+      if (updateTimeout!.current == null) {
+        updateTimeout!.current = setTimeout(() => {
+          logger.debug(`Updating component`);
+          updateTimeout.current = null;
+          updateComponent();
+          if (callback) {
+            callback();
+          }
+        }, 100);
+      }
+    },
+    [logger, updateComponent],
+  );
 
   const internalRowsState = React.useRef<InternalRowsState>(gridState.rows);
 
@@ -91,14 +94,13 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
           ? gridState.options.rowCount
           : allRows.length;
 
-      internalRowsState.current = {idRowsLookup, allRows, totalRowCount};
+      internalRowsState.current = { idRowsLookup, allRows, totalRowCount };
 
-      setGridState((state) => ({...state, rows: internalRowsState.current}));
+      setGridState((state) => ({ ...state, rows: internalRowsState.current }));
 
       apiRef.current.applySorting(true);
       apiRef.current.applyFilters(true);
       forceUpdate(() => apiRef.current.publishEvent(ROWS_UPDATED));
-
     },
     [logger, gridState.options, apiRef, setGridState, forceUpdate],
   );
@@ -135,7 +137,7 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
         ];
         setRows(newRows);
       } else {
-        forceUpdate(()=> apiRef.current.publishEvent(ROWS_UPDATED));
+        forceUpdate(() => apiRef.current.publishEvent(ROWS_UPDATED));
       }
     },
     [apiRef, forceUpdate, getRowFromId, setGridState, setRows],
