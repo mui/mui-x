@@ -426,12 +426,16 @@ describe('<DataGrid />', () => {
     });
 
     it('should be able to type in an child input', () => {
+      const handleInputKeyDown = spy();
+
       const columns = [
         {
           field: 'name',
           headerName: 'Name',
           width: 200,
-          renderCell: () => <input type="text" className="custom-input" />,
+          renderCell: () => (
+            <input type="text" className="custom-input" onKeyDown={handleInputKeyDown} />
+          ),
         },
       ];
 
@@ -451,9 +455,8 @@ describe('<DataGrid />', () => {
       const keydownEvent = createEvent.keyDown(input, {
         key: 'a',
       });
-      keydownEvent.preventDefault = spy();
       fireEvent(input, keydownEvent);
-      expect(keydownEvent.preventDefault.callCount).to.equal(0);
+      expect(handleInputKeyDown.callCount).to.equal(1);
     });
   });
 

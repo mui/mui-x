@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { XGrid } from '@material-ui/x-grid';
 import '../style/grid-stories.css';
+import { action } from '@storybook/addon-actions';
 
 export default {
   title: 'X-Grid Tests/Rendering',
@@ -13,8 +14,7 @@ export default {
   },
 };
 export const RenderInputInCell = () => {
-  // eslint-disable-next-line no-console
-  const handleInputKeyDown = (event) => console.log(event.target.value);
+  const handleInputKeyDown = (event) => action('InputChange')(event.target.value);
 
   const columns = [
     {
