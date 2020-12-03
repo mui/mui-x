@@ -7,7 +7,6 @@ import { ApiContext } from './api-context';
 import { RowCount } from './row-count';
 import { SelectedRowCount } from './selected-row-count';
 import { GridFooter } from './styled-wrappers/GridFooter';
-import { classnames } from '../utils';
 
 export interface DefaultFooterProps {
   paginationComponent: React.ReactNode;
