@@ -53,31 +53,31 @@ export interface IconsOptions {
    */
   ColumnResize?: React.ElementType<{ className: string }>;
   /**
-   * Icon displayed on the small size option in the Size picker menu.
+   * Icon displayed on the compact density option in the Density picker menu.
    */
-  SizeSmall?: React.ElementType;
+  DensityCompact?: React.ElementType;
   /**
-   * Icon displayed on the medium size option in the Size picker menu.
+   * Icon displayed on the standard density option in the Density picker menu.
    */
-  SizeMedium?: React.ElementType;
+  DensityStandard?: React.ElementType;
   /**
-   * Icon displayed on the large size option in the Size picker menu.
+   * Icon displayed on the comfortable density option in the Density picker menu.
    */
-  SizeLarge?: React.ElementType;
+  DensityComfortable?: React.ElementType;
 }
 
 /**
  * Available densities.
  */
-export type Size = 'small' | 'medium' | 'large';
+export type Density = 'compact' | 'standard' | 'comfortable';
 
 /**
- * Size enum.
+ * Density enum.
  */
-export enum SizeTypes {
-  Small = 'small',
-  Medium = 'medium',
-  Large = 'large',
+export enum DensityTypes {
+  Compact = 'compact',
+  Standard = 'standard',
+  Comfortable = 'comfortable',
 }
 
 // TODO add multiSortKey
@@ -141,10 +141,10 @@ export interface GridOptions {
    */
   disableColumnMenu?: boolean;
   /**
-   * If `true`, size selection is disabled.
+   * If `true`, density selection is disabled.
    * @default false
    */
-  disableSizePicker?: boolean;
+  disableDensitySelector?: boolean;
   /**
    * If `true`, reordering columns is disabled.
    * @default false
@@ -332,9 +332,9 @@ export interface GridOptions {
    */
   columnTypes: ColumnTypesRecord;
   /**
-   * Set the size of the grid.
+   * Set the density of the grid.
    */
-  size: Size;
+  density: Density;
 }
 
 /**
@@ -351,7 +351,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   sortingMode: FeatureModeConstant.client,
   sortingOrder: ['asc', 'desc', null],
   columnTypes: DEFAULT_COLUMN_TYPES,
-  size: SizeTypes.Medium,
+  density: DensityTypes.Standard,
   disableColumnMenu: !EXPERIMENTAL_ENABLED,
   disableColumnFilter: !EXPERIMENTAL_ENABLED,
   disableColumnSelector: !EXPERIMENTAL_ENABLED,
@@ -363,8 +363,8 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
     ColumnSortedAscending: ArrowUpwardIcon,
     ColumnSortedDescending: ArrowDownwardIcon,
     ColumnResize: SeparatorIcon,
-    SizeSmall: ViewHeadlineIcon,
-    SizeMedium: TableRowsIcon,
-    SizeLarge: ViewStreamIcon,
+    DensityCompact: ViewHeadlineIcon,
+    DensityStandard: TableRowsIcon,
+    DensityComfortable: ViewStreamIcon,
   },
 };

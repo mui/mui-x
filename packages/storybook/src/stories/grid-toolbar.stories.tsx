@@ -21,7 +21,7 @@ export const SizePickerSmall = () => {
 
   return (
     <div style={{ height: 600 }}>
-      <XGrid rows={data.rows} columns={data.columns} size="small" />
+      <XGrid rows={data.rows} columns={data.columns} density="compact" />
     </div>
   );
 };
@@ -30,7 +30,7 @@ export const SizePickerLarge = () => {
 
   return (
     <div style={{ height: 600 }}>
-      <XGrid rows={data.rows} columns={data.columns} size="large" />
+      <XGrid rows={data.rows} columns={data.columns} density="comfortable" />
     </div>
   );
 };

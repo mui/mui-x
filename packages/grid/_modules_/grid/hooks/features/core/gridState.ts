@@ -6,7 +6,7 @@ import {
   ColumnReorderState,
   getInitialColumnReorderState,
 } from '../columnReorder/columnReorderState';
-import { SizeState, getInitialSizeState } from '../size/sizeState';
+import { DensityState, getInitialDensityState } from '../density/densityState';
 import { FilterModelState, getInitialFilterState } from '../filter/FilterModelState';
 import { getInitialVisibleRowsState, VisibleRowsState } from '../filter/visibleRowsState';
 import { KeyboardState } from '../keyboard/keyboardState';
@@ -35,7 +35,7 @@ export interface GridState {
   filter: FilterModelState;
   visibleRows: VisibleRowsState;
   preferencePanel: PreferencePanelState;
-  size: SizeState;
+  density: DensityState;
 }
 
 export const getInitialState: () => GridState = () => ({
@@ -56,5 +56,5 @@ export const getInitialState: () => GridState = () => ({
   columnMenu: { open: false },
   preferencePanel: { open: false },
   visibleRows: getInitialVisibleRowsState(),
-  size: getInitialSizeState(),
+  density: getInitialDensityState(),
 });

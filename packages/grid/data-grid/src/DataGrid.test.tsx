@@ -9,7 +9,7 @@ import { getColumnValues } from 'test/utils/helperFn';
 import {
   SIZE_FACTOR_LARGE,
   SIZE_FACTOR_SMALL,
-} from 'packages/grid/_modules_/grid/hooks/features/size/useSize';
+} from 'packages/grid/_modules_/grid/hooks/features/density/useDensity';
 
 describe('<DataGrid />', () => {
   const render = createClientRender();
@@ -484,7 +484,7 @@ describe('<DataGrid />', () => {
       }
     });
 
-    it('should increase grid size by 50% when selecting small size', () => {
+    it('should increase grid density by 50% when selecting compact density', () => {
       const rowHeight = 30;
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
@@ -494,7 +494,7 @@ describe('<DataGrid />', () => {
       );
 
       fireEvent.click(getByText('Density'));
-      fireEvent.click(getByText('small'));
+      fireEvent.click(getByText('compact'));
 
       // @ts-expect-error need to migrate helpers to TypeScript
       expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
@@ -502,7 +502,7 @@ describe('<DataGrid />', () => {
       });
     });
 
-    it('should decrease grid size by 50% when selecting large size', () => {
+    it('should decrease grid density by 50% when selecting comfortable density', () => {
       const rowHeight = 30;
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
@@ -512,7 +512,7 @@ describe('<DataGrid />', () => {
       );
 
       fireEvent.click(getByText('Density'));
-      fireEvent.click(getByText('large'));
+      fireEvent.click(getByText('comfortable'));
 
       // @ts-expect-error need to migrate helpers to TypeScript
       expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
