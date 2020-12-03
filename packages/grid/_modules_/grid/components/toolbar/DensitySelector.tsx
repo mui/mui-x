@@ -1,9 +1,7 @@
 import * as React from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import { useIcons } from '../../hooks/utils/useIcons';
 import { ApiContext } from '../api-context';
 import { DensityTypes, Density } from '../../models/gridOptions';
@@ -12,12 +10,6 @@ import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { DensityOption } from '../../models/api/densityApi';
 import { densityValueSelector } from '../../hooks/features/density';
 import { GridMenu } from '../menu/GridMenu';
-
-const DensitySelectorListItemText = withStyles({
-  root: {
-    textTransform: 'capitalize',
-  },
-})(ListItemText);
 
 export function DensitySelector() {
   const apiRef = React.useContext(ApiContext);
@@ -33,15 +25,18 @@ export function DensitySelector() {
   const DensityOptions: Array<DensityOption> = [
     {
       icon: <DensityCompactIcon />,
-      label: DensityTypes.Compact,
+      label: 'Compact',
+      value: DensityTypes.Compact,
     },
     {
       icon: <DensityStandardIcon />,
-      label: DensityTypes.Standard,
+      label: 'Standard',
+      value: DensityTypes.Standard,
     },
     {
       icon: <DensityComfortableIcon />,
-      label: DensityTypes.Comfortable,
+      label: 'Comfortable',
+      value: DensityTypes.Comfortable,
     },
   ];
 
@@ -62,13 +57,10 @@ export function DensitySelector() {
 
   const handleDensitySelectorOpen = (event) => setAnchorEl(event.currentTarget);
   const handleDensitySelectorClose = () => setAnchorEl(null);
-  const handleDensityUpdate = React.useCallback(
-    (newDensity: Density) => {
-      apiRef!.current.setDensity(newDensity);
-      setAnchorEl(null);
-    },
-    [apiRef],
-  );
+  const handleDensityUpdate = (newDensity: Density) => {
+    apiRef!.current.setDensity(newDensity);
+    setAnchorEl(null);
+  };
 
   const handleListKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Tab' || event.key === 'Escape') {
@@ -80,14 +72,15 @@ export function DensitySelector() {
   const renderDensityOptions: Array<React.ReactElement> = DensityOptions.map((option, index) => (
     <MenuItem
       key={index}
-      onClick={() => handleDensityUpdate(option.label)}
-      selected={option.label === densityValue}
+      onClick={() => handleDensityUpdate(option.value)}
+      selected={option.value === densityValue}
     >
       <ListItemIcon>{option.icon}</ListItemIcon>
-      <DensitySelectorListItemText
+      {/* <DensitySelectorListItemText
         primaryTypographyProps={{ variant: 'body2' }}
         primary={option.label}
-      />
+      /> */}
+      {option.label}
     </MenuItem>
   ));
 

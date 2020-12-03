@@ -9,8 +9,8 @@ import { Density, DensityTypes } from '../../../models';
 import { optionsSelector } from '../../utils/useOptionsProp';
 import { DensityState } from './densityState';
 
-export const SIZE_FACTOR_SMALL = 0.7;
-export const SIZE_FACTOR_LARGE = 1.3;
+export const COMPACT_DENSITY_FACTOR = 0.7;
+export const COMFORTABLE_DENSITY_FACTOR = 1.3;
 
 export const useDensity = (apiRef: ApiRef): void => {
   const logger = useLogger('useDensity');
@@ -23,14 +23,14 @@ export const useDensity = (apiRef: ApiRef): void => {
         case DensityTypes.Compact:
           return {
             value: density,
-            headerHeight: Math.floor(newHeaderHeight * SIZE_FACTOR_SMALL),
-            rowHeight: Math.floor(newRowHeight * SIZE_FACTOR_SMALL),
+            headerHeight: Math.floor(newHeaderHeight * COMPACT_DENSITY_FACTOR),
+            rowHeight: Math.floor(newRowHeight * COMPACT_DENSITY_FACTOR),
           };
         case DensityTypes.Comfortable:
           return {
             value: density,
-            headerHeight: Math.floor(newHeaderHeight * SIZE_FACTOR_LARGE),
-            rowHeight: Math.floor(newRowHeight * SIZE_FACTOR_LARGE),
+            headerHeight: Math.floor(newHeaderHeight * COMFORTABLE_DENSITY_FACTOR),
+            rowHeight: Math.floor(newRowHeight * COMFORTABLE_DENSITY_FACTOR),
           };
         default:
           return {

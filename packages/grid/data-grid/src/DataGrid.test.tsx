@@ -7,8 +7,8 @@ import { expect } from 'chai';
 import { DataGrid, RowsProp } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 import {
-  SIZE_FACTOR_LARGE,
-  SIZE_FACTOR_SMALL,
+  COMFORTABLE_DENSITY_FACTOR,
+  COMPACT_DENSITY_FACTOR,
 } from 'packages/grid/_modules_/grid/hooks/features/density/useDensity';
 
 describe('<DataGrid />', () => {
@@ -498,7 +498,7 @@ describe('<DataGrid />', () => {
 
       // @ts-expect-error need to migrate helpers to TypeScript
       expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * SIZE_FACTOR_SMALL)}px`,
+        maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
       });
     });
 
@@ -516,7 +516,7 @@ describe('<DataGrid />', () => {
 
       // @ts-expect-error need to migrate helpers to TypeScript
       expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * SIZE_FACTOR_LARGE)}px`,
+        maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
       });
     });
   });
