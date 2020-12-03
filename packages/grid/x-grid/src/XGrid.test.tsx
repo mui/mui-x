@@ -108,7 +108,6 @@ describe('<XGrid />', () => {
       await sleep(50);
       expect(getActiveCell()).to.equal('1-19');
     });
-    /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
 
     it('events comming from a component rendered in a cell', async () => {
       const columns = [
@@ -116,9 +115,7 @@ describe('<XGrid />', () => {
           field: 'name',
           headerName: 'Name',
           width: 200,
-          renderCell: () => (
-            <input type="text" />
-          ),
+          renderCell: () => <input type="text" />,
         },
       ];
 
@@ -142,6 +139,7 @@ describe('<XGrid />', () => {
       fireEvent(input, keydownEvent);
       expect(keydownEvent.preventDefault.callCount).to.equal(0);
     });
+    /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
   });
 
   it('should resize the width of the columns', async () => {

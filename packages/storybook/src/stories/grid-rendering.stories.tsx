@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ElementSize, XGrid } from '@material-ui/x-grid';
+import { XGrid } from '@material-ui/x-grid';
 import '../style/grid-stories.css';
 
 export default {
@@ -13,9 +13,8 @@ export default {
   },
 };
 export const RenderInputInCell = () => {
-  const size: ElementSize = { width: 800, height: 600 };
-
-  const handleInputKeyDown = () => {};
+  // eslint-disable-next-line no-console
+  const handleInputKeyDown = (event) => console.log(event.target.value);
 
   const columns = [
     {
@@ -23,7 +22,7 @@ export const RenderInputInCell = () => {
       headerName: 'Name',
       width: 200,
       renderCell: (params) => (
-        <input type="text" placeholder={params.value} onKeyDown={() => handleInputKeyDown()} />
+        <input type="text" placeholder={params.value} onKeyDown={handleInputKeyDown} />
       ),
     },
   ];
@@ -33,14 +32,10 @@ export const RenderInputInCell = () => {
       id: 1,
       name: 'John',
     },
-    {
-      id: 2,
-      name: 'Jane',
-    },
   ];
 
   return (
-    <div style={{ width: size.width, height: size.height, display: 'flex' }}>
+    <div className="grid-container">
       <XGrid rows={rows} columns={columns} hideToolbar />
     </div>
   );
