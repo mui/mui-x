@@ -53,15 +53,15 @@ export interface IconsOptions {
    */
   ColumnResize?: React.ElementType<{ className: string }>;
   /**
-   * Icon displayed on the compact density option in the Density picker menu.
+   * Icon displayed on the compact density option in the toolbar.
    */
   DensityCompact?: React.ElementType;
   /**
-   * Icon displayed on the standard density option in the Density picker menu.
+   * Icon displayed on the standard density option in the toolbar.
    */
   DensityStandard?: React.ElementType;
   /**
-   * Icon displayed on the comfortable density option in the Density picker menu.
+   * Icon displayed on the comfortable density option in the toolbar.
    */
   DensityComfortable?: React.ElementType;
 }
