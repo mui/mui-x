@@ -136,7 +136,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
     [apiRef],
   );
 
-  const applySorting = React.useCallback(() => {
+  const applySorting = React.useCallback((noRerender = false) => {
     const rowModels = apiRef.current.getRowModels();
     const sortModel = apiRef.current.getState<GridState>().sorting.sortModel;
     logger.info('Sorting rows with ', sortModel);
@@ -153,7 +153,9 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
         sorting: { ...oldState.sorting, sortedRows: [...sorted.map((row) => row.id)] },
       };
     });
-    forceUpdate();
+    if(!noRerender) {
+      forceUpdate();
+    }
   }, [apiRef, logger, setGridState, forceUpdate, buildComparatorList, comparatorListAggregate]);
 
   const setSortModel = React.useCallback(

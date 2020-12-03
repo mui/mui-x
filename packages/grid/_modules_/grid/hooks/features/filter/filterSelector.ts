@@ -20,16 +20,17 @@ export const visibleSortedRowsSelector = createSelector<
 
 export const visibleRowCountSelector = createSelector<
   GridState,
-  RowModel[],
-  RowModel[],
+  VisibleRowsState,
   number,
   number
 >(
-  visibleSortedRowsSelector,
-  sortedRowsSelector,
-  rowCountSelector,
-  (visibleRows, sortedRows, totalRowsCount) =>
-    totalRowsCount - (sortedRows.length - visibleRows.length),
+  visibleRowsStateSelector, rowCountSelector,
+  (visibleRowsState, totalRowsCount) => {
+    if (visibleRowsState.visibleRows == null) {
+      return totalRowsCount;
+    }
+    return visibleRowsState.visibleRows.length;
+  }
 );
 
 export const filterStateSelector: (state: GridState) => FilterModelState = (state) => state.filter;

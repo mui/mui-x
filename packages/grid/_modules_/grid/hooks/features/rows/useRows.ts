@@ -33,12 +33,15 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
   const [gridState, setGridState, updateComponent] = useGridState(apiRef);
   const updateTimeout = React.useRef<any>();
 
-  const forceUpdate = React.useCallback(() => {
+  const forceUpdate = React.useCallback((callback?: Function) => {
     if (updateTimeout!.current == null) {
       updateTimeout!.current = setTimeout(() => {
         logger.debug(`Updating component`);
         updateTimeout.current = null;
-        return updateComponent();
+        updateComponent();
+        if(callback) {
+          callback();
+        }
       }, 100);
     }
   }, [logger, updateComponent]);
@@ -88,11 +91,14 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
           ? gridState.options.rowCount
           : allRows.length;
 
-      internalRowsState.current = { idRowsLookup, allRows, totalRowCount };
+      internalRowsState.current = {idRowsLookup, allRows, totalRowCount};
 
-      setGridState((state) => ({ ...state, rows: internalRowsState.current }));
-      forceUpdate();
-      apiRef.current.publishEvent(ROWS_UPDATED);
+      setGridState((state) => ({...state, rows: internalRowsState.current}));
+
+      apiRef.current.applySorting(true);
+      apiRef.current.applyFilters(true);
+      forceUpdate(() => apiRef.current.publishEvent(ROWS_UPDATED));
+
     },
     [logger, gridState.options, apiRef, setGridState, forceUpdate],
   );
@@ -121,7 +127,6 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
       });
 
       setGridState((state) => ({ ...state, rows: internalRowsState.current }));
-      forceUpdate();
 
       if (addedRows.length > 0) {
         const newRows = [
@@ -130,7 +135,7 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
         ];
         setRows(newRows);
       } else {
-        apiRef.current.publishEvent(ROWS_UPDATED);
+        forceUpdate(()=> apiRef.current.publishEvent(ROWS_UPDATED));
       }
     },
     [apiRef, forceUpdate, getRowFromId, setGridState, setRows],
