@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 // @ts-expect-error need to migrate helpers to TypeScript
-import { fireEvent, screen, createClientRender, createEvent } from 'test/utils';
+import { fireEvent, screen, createClientRender } from 'test/utils';
 import { getActiveCell, sleep, raf, getColumnValues } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { XGrid, useApiRef, Columns } from '@material-ui/x-grid';
@@ -107,37 +106,6 @@ describe('<XGrid />', () => {
       fireEvent.keyDown(document.activeElement!, { code: 'End' });
       await sleep(50);
       expect(getActiveCell()).to.equal('1-19');
-    });
-
-    it('events comming from a component rendered in a cell', async () => {
-      const columns = [
-        {
-          field: 'name',
-          headerName: 'Name',
-          width: 200,
-          renderCell: () => <input type="text" />,
-        },
-      ];
-
-      const rows = [
-        {
-          id: 1,
-          name: 'John',
-        },
-      ];
-
-      const { getByRole } = render(
-        <div style={{ width: 300, height: 300 }}>
-          <XGrid rows={rows} columns={columns} hideToolbar />
-        </div>,
-      );
-      const input = getByRole('textbox');
-      const keydownEvent = createEvent.keyDown(input, {
-        key: 'a',
-      });
-      keydownEvent.preventDefault = spy();
-      fireEvent(input, keydownEvent);
-      expect(keydownEvent.preventDefault.callCount).to.equal(0);
     });
     /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
   });

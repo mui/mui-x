@@ -1,8 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 // @ts-expect-error need to migrate helpers to TypeScript
-import { createClientRender, fireEvent, screen, ErrorBoundary } from 'test/utils';
-import { useFakeTimers } from 'sinon';
+import { createClientRender, fireEvent, screen, ErrorBoundary, createEvent } from 'test/utils';
+import { useFakeTimers, spy } from 'sinon';
 import { expect } from 'chai';
 import { DataGrid, RowsProp } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
@@ -414,6 +414,46 @@ describe('<DataGrid />', () => {
         });
         expect(getColumnValues()).to.deep.equal(['Asics', 'Hugo', 'RedBull']);
       });
+    });
+  });
+
+  describe('keyboard', () => {
+    before(function beforeHook() {
+      if (/jsdom/.test(window.navigator.userAgent)) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
+    it('should be able to type in an child input', () => {
+      const columns = [
+        {
+          field: 'name',
+          headerName: 'Name',
+          width: 200,
+          renderCell: () => <input type="text" className="custom-input" />,
+        },
+      ];
+
+      const rows = [
+        {
+          id: 1,
+          name: 'John',
+        },
+      ];
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid rows={rows} columns={columns} hideToolbar />
+        </div>,
+      );
+      const input = document.querySelector('.custom-input');
+      const keydownEvent = createEvent.keyDown(input, {
+        key: 'a',
+      });
+      keydownEvent.preventDefault = spy();
+      fireEvent(input, keydownEvent);
+      expect(keydownEvent.preventDefault.callCount).to.equal(0);
     });
   });
 
