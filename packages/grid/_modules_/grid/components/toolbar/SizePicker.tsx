@@ -15,7 +15,7 @@ import { GridMenu } from '../menu/GridMenu';
 
 const SizePickerListItemText = withStyles({
   root: {
-    textTransform: 'uppercase',
+    textTransform: 'capitalize',
   },
 })(ListItemText);
 
@@ -84,7 +84,7 @@ export function SizePicker() {
       selected={option.label === sizeValue}
     >
       <ListItemIcon>{option.icon}</ListItemIcon>
-      <SizePickerListItemText primary={option.label} />
+      <SizePickerListItemText primaryTypographyProps={{variant: 'body2'}} primary={option.label} />
     </MenuItem>
   ));
 
