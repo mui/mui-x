@@ -494,7 +494,7 @@ describe('<DataGrid />', () => {
       );
 
       fireEvent.click(getByText('Density'));
-      fireEvent.click(getByText('compact'));
+      fireEvent.click(getByText('Compact'));
 
       // @ts-expect-error need to migrate helpers to TypeScript
       expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
@@ -512,7 +512,7 @@ describe('<DataGrid />', () => {
       );
 
       fireEvent.click(getByText('Density'));
-      fireEvent.click(getByText('comfortable'));
+      fireEvent.click(getByText('Comfortable'));
 
       // @ts-expect-error need to migrate helpers to TypeScript
       expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
