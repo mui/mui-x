@@ -434,7 +434,7 @@ describe('<DataGrid />', () => {
           headerName: 'Name',
           width: 200,
           renderCell: () => (
-            <input type="text" className="custom-input" onKeyDown={handleInputKeyDown} />
+            <input type="text" data-testid="custom-input" onKeyDown={handleInputKeyDown} />
           ),
         },
       ];
@@ -451,7 +451,8 @@ describe('<DataGrid />', () => {
           <DataGrid rows={rows} columns={columns} hideToolbar />
         </div>,
       );
-      const input = document.querySelector('.custom-input');
+      const input = screen.getByTestId('custom-input');
+      input.focus();
       const keydownEvent = createEvent.keyDown(input, {
         key: 'a',
       });
