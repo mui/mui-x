@@ -154,13 +154,14 @@ export function useColumns(columns: Columns, apiRef: ApiRef): void {
 
   const moveColumn = React.useCallback(
     (field: string, targetIndexPosition: number) => {
+      logger.debug(`Moving column ${field} to index ${targetIndexPosition}`)
       const oldIndexPosition = gridState.columns.all.findIndex((col) => col === field);
 
-      const updatedColumns = gridState.columns.all.slice();
+      const updatedColumns = [...gridState.columns.all];
       updatedColumns.splice(targetIndexPosition, 0, updatedColumns.splice(oldIndexPosition, 1)[0]);
       updateState({ ...gridState.columns, all: updatedColumns }, false);
     },
-    [gridState.columns, updateState],
+    [gridState.columns, logger, updateState],
   );
 
   const colApi: ColumnApi = {

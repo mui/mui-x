@@ -131,7 +131,7 @@ export const useColumnReorder = (apiRef: ApiRef): void => {
             CURSOR_MOVE_DIRECTION_LEFT &&
             targetColIndex < dragColIndex)
         ) {
-          apiRef.current.moveColumn(col.field, targetColIndex);
+          apiRef.current.moveColumn(dragCol, targetColIndex);
         }
 
         cursorPosition.current = coordinates;
