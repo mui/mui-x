@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   COLUMN_HEADER_CLICK,
   MULTIPLE_KEY_PRESS_CHANGED,
+  RESET_ROWS,
   ROWS_UPDATED,
   SORT_MODEL_CHANGE,
 } from '../../../constants/eventsConstants';
@@ -136,25 +137,30 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
     [apiRef],
   );
 
-  const applySorting = React.useCallback(() => {
-    const rowModels = apiRef.current.getRowModels();
-    const sortModel = apiRef.current.getState<GridState>().sorting.sortModel;
-    logger.info('Sorting rows with ', sortModel);
+  const applySorting = React.useCallback(
+    (noRerender = false) => {
+      const rowModels = apiRef.current.getRowModels();
+      const sortModel = apiRef.current.getState<GridState>().sorting.sortModel;
+      logger.info('Sorting rows with ', sortModel);
 
-    const sorted = [...rowModels];
-    if (sortModel.length > 0) {
-      comparatorList.current = buildComparatorList(sortModel);
-      sorted.sort(comparatorListAggregate);
-    }
+      const sorted = [...rowModels];
+      if (sortModel.length > 0) {
+        comparatorList.current = buildComparatorList(sortModel);
+        sorted.sort(comparatorListAggregate);
+      }
 
-    setGridState((oldState) => {
-      return {
-        ...oldState,
-        sorting: { ...oldState.sorting, sortedRows: [...sorted.map((row) => row.id)] },
-      };
-    });
-    forceUpdate();
-  }, [apiRef, logger, setGridState, forceUpdate, buildComparatorList, comparatorListAggregate]);
+      setGridState((oldState) => {
+        return {
+          ...oldState,
+          sorting: { ...oldState.sorting, sortedRows: [...sorted.map((row) => row.id)] },
+        };
+      });
+      if (!noRerender) {
+        forceUpdate();
+      }
+    },
+    [apiRef, logger, setGridState, forceUpdate, buildComparatorList, comparatorListAggregate],
+  );
 
   const setSortModel = React.useCallback(
     (sortModel: SortModel) => {
@@ -211,6 +217,10 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
     apiRef.current.applySorting();
   }, [apiRef]);
 
+  const onResetRows = React.useCallback(() => {
+    apiRef.current.applySorting(true);
+  }, [apiRef]);
+
   const getSortModel = React.useCallback(() => gridState.sorting.sortModel, [
     gridState.sorting.sortModel,
   ]);
@@ -230,6 +240,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   );
 
   useApiEventHandler(apiRef, COLUMN_HEADER_CLICK, headerClickHandler);
+  useApiEventHandler(apiRef, RESET_ROWS, onResetRows);
   useApiEventHandler(apiRef, ROWS_UPDATED, onRowsUpdated);
   useApiEventHandler(apiRef, MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
 
