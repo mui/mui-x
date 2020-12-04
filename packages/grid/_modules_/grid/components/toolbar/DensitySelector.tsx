@@ -76,10 +76,6 @@ export function DensitySelector() {
       selected={option.value === densityValue}
     >
       <ListItemIcon>{option.icon}</ListItemIcon>
-      {/* <DensitySelectorListItemText
-        primaryTypographyProps={{ variant: 'body2' }}
-        primary={option.label}
-      /> */}
       {option.label}
     </MenuItem>
   ));
@@ -101,6 +97,7 @@ export function DensitySelector() {
         target={anchorEl}
         onClickAway={handleDensitySelectorClose}
         onKeyDown={handleListKeyDown}
+        position="bottom-start"
       >
         {renderDensityOptions}
       </GridMenu>
