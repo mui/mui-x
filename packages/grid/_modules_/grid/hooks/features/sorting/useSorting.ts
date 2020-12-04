@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   COLUMN_HEADER_CLICK,
   MULTIPLE_KEY_PRESS_CHANGED,
+  RESET_ROWS,
   ROWS_UPDATED,
   SORT_MODEL_CHANGE,
 } from '../../../constants/eventsConstants';
@@ -216,6 +217,10 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
     apiRef.current.applySorting();
   }, [apiRef]);
 
+  const onResetRows = React.useCallback(() => {
+    apiRef.current.applySorting(true);
+  }, [apiRef]);
+
   const getSortModel = React.useCallback(() => gridState.sorting.sortModel, [
     gridState.sorting.sortModel,
   ]);
@@ -235,6 +240,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   );
 
   useApiEventHandler(apiRef, COLUMN_HEADER_CLICK, headerClickHandler);
+  useApiEventHandler(apiRef, RESET_ROWS, onResetRows);
   useApiEventHandler(apiRef, ROWS_UPDATED, onRowsUpdated);
   useApiEventHandler(apiRef, MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
 

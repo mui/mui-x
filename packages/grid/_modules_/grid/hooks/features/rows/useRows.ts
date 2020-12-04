@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ROWS_UPDATED } from '../../../constants/eventsConstants';
+import { RESET_ROWS, ROWS_UPDATED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { RowApi } from '../../../models/api/rowApi';
 import { checkRowHasId, RowModel, RowId, RowsProp } from '../../../models/rows';
@@ -35,8 +35,8 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
 
   const forceUpdate = React.useCallback(
     (callback?: Function) => {
-      if (updateTimeout!.current == null) {
-        updateTimeout!.current = setTimeout(() => {
+      if (updateTimeout.current == null) {
+        updateTimeout.current = setTimeout(() => {
           logger.debug(`Updating component`);
           updateTimeout.current = null;
           updateComponent();
@@ -98,9 +98,8 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
 
       setGridState((state) => ({ ...state, rows: internalRowsState.current }));
 
-      apiRef.current.applySorting(true);
-      apiRef.current.applyFilters(true);
-      forceUpdate(() => apiRef.current.publishEvent(ROWS_UPDATED));
+      apiRef.current.publishEvent(RESET_ROWS);
+      forceUpdate();
     },
     [logger, gridState.options, apiRef, setGridState, forceUpdate],
   );

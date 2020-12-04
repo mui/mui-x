@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FILTER_MODEL_CHANGE, ROWS_UPDATED } from '../../../constants/eventsConstants';
+import { FILTER_MODEL_CHANGE, RESET_ROWS, ROWS_UPDATED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { FilterApi } from '../../../models/api/filterApi';
 import { FeatureModeConstant } from '../../../models/featureMode';
@@ -268,6 +268,11 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
     }
   }, [gridState.filter.items.length, apiRef]);
 
+  const onResetRows = React.useCallback(() => {
+    apiRef.current.applyFilters(true);
+  }, [apiRef]);
+
+  useApiEventHandler(apiRef, RESET_ROWS, onResetRows);
   useApiEventHandler(apiRef, ROWS_UPDATED, onRowsUpdated);
   useApiEventHandler(apiRef, FILTER_MODEL_CHANGE, options.onFilterModelChange);
 
