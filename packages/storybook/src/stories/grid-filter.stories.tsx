@@ -135,13 +135,13 @@ export function CommodityWithNewColsViaProps() {
 
   const [cols, setCols] = React.useState<ColDef[]>([]);
 
-  React.useEffect(()=> {
-    setCols(data.columns)
+  React.useEffect(() => {
+    setCols(data.columns);
   }, [data.columns]);
 
-  const removeCommodity = React.useCallback(()=> {
-    setCols(data.columns.filter(col=> col.field !== 'commodity'));
-  }, [data.columns])
+  const removeCommodity = React.useCallback(() => {
+    setCols(data.columns.filter((col) => col.field !== 'commodity'));
+  }, [data.columns]);
 
   return (
     <React.Fragment>

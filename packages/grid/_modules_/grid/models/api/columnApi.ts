@@ -52,4 +52,10 @@ export interface ColumnApi {
    * @param forceHide Optional value, if not provided the column will toggle.
    */
   toggleColumn: (field: string, forceHide?: boolean) => void;
+  /**
+   * Allows to move a column to another position in the column array.
+   * @param field
+   * @param targetIndexPosition .
+   */
+  moveColumn: (field: string, targetIndexPosition: number) => void;
 }

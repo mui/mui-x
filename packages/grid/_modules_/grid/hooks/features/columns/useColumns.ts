@@ -14,10 +14,13 @@ import { ColumnTypesRecord } from '../../../models/colDef/colTypeDef';
 import { getColDef } from '../../../models/colDef/getColDef';
 import { useApiMethod } from '../../root/useApiMethod';
 import { Logger, useLogger } from '../../utils/useLogger';
+import { optionsSelector } from '../../utils/useOptionsProp';
 import { GridState } from '../core/gridState';
+import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
+import { allColumnsSelector, columnsMetaSelector, visibleColumnsSelector } from './columnsSelector';
 
-function updateColumnsWidth(columns: Columns,   viewportWidth: number) {
+function updateColumnsWidth(columns: Columns, viewportWidth: number) {
   const numberOfFluidColumns = columns.filter((column) => !!column.flex).length;
   let flexDivider = 0;
 
@@ -69,85 +72,29 @@ function toLookup(logger: Logger, allColumns: Columns) {
   }, {} as { [key: string]: ColDef });
 }
 
-function filterVisible(logger: Logger, allColumns: Columns) {
-  logger.debug('Calculating visibleColumns');
-  return allColumns.filter((c) => c.field != null && !c.hide);
-}
+const upsertColumnsState = (state: InternalColumns, columnUpdates: ColDef[]): InternalColumns => {
+  const newState = { all: [...state.all], lookup: { ...state.lookup } };
 
-function toMeta(logger: Logger, visibleColumns: Columns): ColumnsMeta {
-  logger.debug('Calculating columnsMeta');
-  let totalWidth = 0;
-  const positions: number[] = [];
-
-  totalWidth = visibleColumns.reduce((totalW, curCol) => {
-    positions.push(totalW);
-    return totalW + curCol.width!;
-  }, 0);
-  logger.debug(`Meta totalWidth ${totalWidth}`);
-
-  return { totalWidth, positions };
-}
-
-const resetState = (
-  columns: Columns,
-  columnTypes: ColumnTypesRecord,
-  viewportWidth: number,
-  withCheckboxSelection: boolean,
-  logger: Logger,
-): InternalColumns => {
-  let all = hydrateColumns(columns, columnTypes, withCheckboxSelection, logger);
-  all = updateColumnsWidth(all, viewportWidth);
-
-  const visible = filterVisible(logger, all);
-  const meta = toMeta(logger, visible);
-  const lookup = toLookup(logger, all);
-  return {
-    all,
-    visible,
-    meta,
-    lookup,
-  };
-};
-
-const getUpdatedColumnState = (
-  logger: Logger,
-  state: InternalColumns,
-  columnUpdates: ColDef[],
-  resetColumnState = false,
-): InternalColumns => {
-  const newState = { ...state };
-
-  if (resetColumnState) {
-    newState.all = columnUpdates;
-  } else {
-    columnUpdates.forEach((newColumn) => {
-      const index = newState.all.findIndex((col) => col.field === newColumn.field);
-      if(index === -1) {
-        // new column
-        newState.all.push(newColumn);
-        newState.lookup[newColumn.field] = newColumn;
-      } else {
-        const columnUpdated = {...newState.all[index], ...newColumn};
-        newState.all[index] = columnUpdated;
-        newState.lookup[newColumn.field] = columnUpdated;
-      }
-    });
-    newState.all = [...newState.all];
-    newState.lookup = { ...newState.lookup };
-  }
-
-  const visible = filterVisible(logger, newState.all);
-  const meta = toMeta(logger, visible);
-  return {
-    ...newState,
-    visible,
-    meta,
-  };
+  columnUpdates.forEach((newColumn) => {
+    if (newState.lookup[newColumn.field] == null) {
+      // New Column
+      newState.lookup[newColumn.field] = newColumn;
+      newState.all.push(newColumn.field);
+    } else {
+      newState.lookup[newColumn.field] = { ...newState.lookup[newColumn.field], ...newColumn };
+    }
+  });
+  return newState;
 };
 
 export function useColumns(columns: Columns, apiRef: ApiRef): void {
   const logger = useLogger('useColumns');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
+  const columnsMeta = useGridSelector(apiRef, columnsMetaSelector);
+  const allColumns = useGridSelector(apiRef, allColumnsSelector);
+  const visibleColumns = useGridSelector(apiRef, visibleColumnsSelector);
+  const options = useGridSelector(apiRef, optionsSelector);
+
   const updateState = React.useCallback(
     (newState: InternalColumns, emit = true) => {
       logger.debug('Updating columns state.');
@@ -161,64 +108,37 @@ export function useColumns(columns: Columns, apiRef: ApiRef): void {
     [logger, setGridState, forceUpdate, apiRef],
   );
 
-  const resetColumns = React.useCallback(() => {
-    logger.info(`Columns have changed, new length ${columns.length}`);
-    const currentViewportWidth = apiRef.current.getState<GridState>().viewportSizes.width;
-    const newState = resetState(
-      columns,
-      gridState.options.columnTypes,
-      currentViewportWidth,
-      !!gridState.options.checkboxSelection,
-      logger,
-    );
-    updateState(newState);
-  }, [logger, columns, apiRef, gridState.options.columnTypes, gridState.options.checkboxSelection, updateState]);
-
-  React.useEffect(() => {
-    resetColumns();
-  }, [resetColumns]);
-
   const getColumnFromField: (field: string) => ColDef = React.useCallback(
-    (field) => apiRef.current.getState<GridState>().columns.lookup[field],
-    [apiRef],
+    (field) => gridState.columns.lookup[field],
+    [gridState.columns.lookup],
   );
-  const getAllColumns: () => Columns = React.useCallback(
-    () => apiRef.current.getState<GridState>().columns.all,
-    [apiRef],
-  );
-  const getColumnsMeta: () => ColumnsMeta = React.useCallback(
-    () => apiRef.current.getState<GridState>().columns.meta,
-    [apiRef],
-  );
+
+  const getAllColumns: () => Columns = React.useCallback(() => allColumns, [allColumns]);
+  const getVisibleColumns = React.useCallback(() => visibleColumns, [visibleColumns]);
+  const getColumnsMeta: () => ColumnsMeta = React.useCallback(() => columnsMeta, [columnsMeta]);
+
   const getColumnIndex: (field: string, useVisibleColumns?: boolean) => number = React.useCallback(
     (field, useVisibleColumns = true) =>
       useVisibleColumns
-        ? apiRef.current
-            .getState<GridState>()
-            .columns.visible.findIndex((col) => col.field === field)
-        : apiRef.current.getState<GridState>().columns.all.findIndex((col) => col.field === field),
-    [apiRef],
+        ? visibleColumns.findIndex((col) => col.field === field)
+        : allColumns.findIndex((col) => col.field === field),
+    [allColumns, visibleColumns],
   );
 
   const getColumnPosition: (field: string) => number = React.useCallback(
     (field) => {
       const index = getColumnIndex(field);
-      return apiRef.current.getState<GridState>().columns.meta.positions[index];
+      return columnsMeta.positions[index];
     },
-    [apiRef, getColumnIndex],
-  );
-
-  const getVisibleColumns: () => Columns = React.useCallback(
-    () => apiRef.current.getState<GridState>().columns.visible,
-    [apiRef],
+    [columnsMeta.positions, getColumnIndex],
   );
 
   const updateColumns = React.useCallback(
-    (cols: ColDef[], resetColumnState = false) => {
-      const newState = getUpdatedColumnState(logger, gridState.columns, cols, resetColumnState);
+    (cols: ColDef[]) => {
+      const newState = upsertColumnsState(gridState.columns, cols);
       updateState(newState, false);
     },
-    [updateState, logger, gridState.columns],
+    [updateState, gridState.columns],
   );
 
   const updateColumn = React.useCallback((col: ColDef) => updateColumns([col]), [updateColumns]);
@@ -232,6 +152,17 @@ export function useColumns(columns: Columns, apiRef: ApiRef): void {
     [forceUpdate, getColumnFromField, updateColumns],
   );
 
+  const moveColumn = React.useCallback(
+    (field: string, targetIndexPosition: number) => {
+      const oldIndexPosition = gridState.columns.all.findIndex((col) => col === field);
+
+      const updatedColumns = gridState.columns.all.slice();
+      updatedColumns.splice(targetIndexPosition, 0, updatedColumns.splice(oldIndexPosition, 1)[0]);
+      updateState({ ...gridState.columns, all: updatedColumns }, false);
+    },
+    [gridState.columns, updateState],
+  );
+
   const colApi: ColumnApi = {
     getColumnFromField,
     getAllColumns,
@@ -242,16 +173,37 @@ export function useColumns(columns: Columns, apiRef: ApiRef): void {
     updateColumn,
     updateColumns,
     toggleColumn,
+    moveColumn,
   };
 
   useApiMethod(apiRef, colApi, 'ColApi');
 
   React.useEffect(() => {
+    logger.info(`Columns have changed, new length ${columns.length}`);
+
+    if (columns.length > 0) {
+      const hydratedColumns = hydrateColumns(
+        columns,
+        options.columnTypes,
+        !!options.checkboxSelection,
+        logger,
+      );
+
+      updateState({
+        all: hydratedColumns.map((col) => col.field),
+        lookup: toLookup(logger, hydratedColumns),
+      });
+    } else {
+      updateState(getInitialColumnsState());
+    }
+  }, [logger, columns, options.columnTypes, options.checkboxSelection, updateState]);
+
+  React.useEffect(() => {
     logger.debug(`Columns gridState.viewportSizes.width, changed ${gridState.viewportSizes.width}`);
-    const currentColumns = apiRef.current.getState<GridState>().columns.all;
+    // Avoid dependency on gridState as I only want to update cols when viewport size changed.
+    const currentColumns = allColumnsSelector(apiRef.current.getState<GridState>());
 
     const updatedCols = updateColumnsWidth(currentColumns, gridState.viewportSizes.width);
     apiRef.current.updateColumns(updatedCols);
-
   }, [apiRef, gridState.viewportSizes.width, logger]);
 }

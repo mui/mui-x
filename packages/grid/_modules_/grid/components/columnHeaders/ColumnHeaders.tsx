@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { visibleColumnsSelector } from '../../hooks/features/columns/columnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { Columns, RenderContextProps } from '../../models/index';
+import { RenderContextProps } from '../../models/renderContextProps';
 import { ApiContext } from '../api-context';
 import { LeftEmptyCell, RightEmptyCell } from '../cell';
 import { OptionsContext } from '../options-context';
@@ -9,20 +10,20 @@ import { containerSizesSelector } from '../viewport';
 import { ColumnHeaderItemCollection } from './ColumnHeadersItemCollection';
 
 export interface ColumnsHeaderProps {
-  columns: Columns;
   hasScrollX: boolean;
   separatorProps: React.HTMLAttributes<HTMLDivElement>;
   renderCtx: Partial<RenderContextProps> | null;
 }
 
 export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps>((props, ref) => {
-  const { columns, hasScrollX, renderCtx, separatorProps } = props;
+  const { hasScrollX, renderCtx, separatorProps } = props;
+  const apiRef = React.useContext(ApiContext);
+  const columns = useGridSelector(apiRef, visibleColumnsSelector);
   const wrapperCssClasses = `MuiDataGrid-colCellWrapper ${hasScrollX ? 'scroll' : ''}`;
-  const api = React.useContext(ApiContext);
   const { disableColumnReorder } = React.useContext(OptionsContext);
-  const containerSizes = useGridSelector(api, containerSizesSelector);
+  const containerSizes = useGridSelector(apiRef, containerSizesSelector);
 
-  if (!api) {
+  if (!apiRef) {
     throw new Error('Material-UI: ApiRef was not found in context.');
   }
   const lastRenderedColIndexes = React.useRef({
@@ -48,7 +49,7 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps
   }, [renderCtx, columns]);
 
   const handleDragOver = !disableColumnReorder
-    ? (event) => api.current.onColHeaderDragOver(event, ref as React.RefObject<HTMLElement>)
+    ? (event) => apiRef.current.onColHeaderDragOver(event, ref as React.RefObject<HTMLElement>)
     : undefined;
 
   return (
