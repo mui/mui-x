@@ -94,7 +94,7 @@ export default function createDetectElementResize(nonce, hostWindow) {
   var animationStyle = keyframeprefix + 'animation: 1ms ' + animationName + '; ';
 
   var createStyles = function createStyles(doc) {
-    if (!doc.getElementById('detectElementResize')) {
+    if (!doc.getElementById('muiDetectElementResize')) {
       //opacity:0 works around a chrome bug https://code.google.com/p/chromium/issues/detail?id=286360
       var css =
           (animationKeyframes ? animationKeyframes : '') +
@@ -105,7 +105,7 @@ export default function createDetectElementResize(nonce, hostWindow) {
         head = doc.head || doc.getElementsByTagName('head')[0],
         style = doc.createElement('style');
 
-      style.id = 'detectElementResize';
+      style.id = 'muiDetectElementResize';
       style.type = 'text/css';
 
       if (nonce != null) {
