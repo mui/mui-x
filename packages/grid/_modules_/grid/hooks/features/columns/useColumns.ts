@@ -17,40 +17,42 @@ import { Logger, useLogger } from '../../utils/useLogger';
 import { GridState } from '../core/gridState';
 import { useGridState } from '../core/useGridState';
 
-function hydrateColumns(
-  columns: Columns,
-  columnTypes: ColumnTypesRecord,
-  viewportWidth: number,
-  withCheckboxSelection: boolean,
-  logger: Logger,
-): Columns {
-  logger.debug('Hydrating Columns with default definitions');
-  let availableViewportWidth = withCheckboxSelection
-    ? viewportWidth - checkboxSelectionColDef.width!
-    : viewportWidth;
-  let extendedColumns = columns.map((c) => ({ ...getColDef(columnTypes, c.type), ...c }));
+function updateColumnsWidth(columns: Columns,   viewportWidth: number) {
   const numberOfFluidColumns = columns.filter((column) => !!column.flex).length;
   let flexDivider = 0;
 
-  if (numberOfFluidColumns && availableViewportWidth) {
-    extendedColumns.forEach((column) => {
+  if (numberOfFluidColumns && viewportWidth) {
+    columns.forEach((column) => {
       if (!column.flex) {
-        availableViewportWidth -= column.width!;
+        viewportWidth -= column.width!;
       } else {
         flexDivider += column.flex;
       }
     });
   }
 
-  if (availableViewportWidth > 0 && numberOfFluidColumns) {
-    const flexMultiplier = availableViewportWidth / flexDivider;
-    extendedColumns = extendedColumns.map((column) => {
+  let newColumns = [...columns];
+  if (viewportWidth > 0 && numberOfFluidColumns) {
+    const flexMultiplier = viewportWidth / flexDivider;
+    newColumns = columns.map((column) => {
       return {
         ...column,
         width: column.flex! ? Math.floor(flexMultiplier * column.flex!) : column.width,
       };
     });
   }
+  return newColumns;
+}
+
+function hydrateColumns(
+  columns: Columns,
+  columnTypes: ColumnTypesRecord,
+  withCheckboxSelection: boolean,
+  logger: Logger,
+): Columns {
+  logger.debug('Hydrating Columns with default definitions');
+
+  const extendedColumns = columns.map((c) => ({ ...getColDef(columnTypes, c.type), ...c }));
 
   if (withCheckboxSelection) {
     return [checkboxSelectionColDef, ...extendedColumns];
@@ -81,6 +83,8 @@ function toMeta(logger: Logger, visibleColumns: Columns): ColumnsMeta {
     positions.push(totalW);
     return totalW + curCol.width!;
   }, 0);
+  logger.debug(`Meta totalWidth ${totalWidth}`);
+
   return { totalWidth, positions };
 }
 
@@ -91,11 +95,9 @@ const resetState = (
   withCheckboxSelection: boolean,
   logger: Logger,
 ): InternalColumns => {
-  if (columns.length === 0) {
-    return getInitialColumnsState();
-  }
+  let all = hydrateColumns(columns, columnTypes, withCheckboxSelection, logger);
+  all = updateColumnsWidth(all, viewportWidth);
 
-  const all = hydrateColumns(columns, columnTypes, viewportWidth, withCheckboxSelection, logger);
   const visible = filterVisible(logger, all);
   const meta = toMeta(logger, visible);
   const lookup = toLookup(logger, all);
@@ -104,8 +106,6 @@ const resetState = (
     visible,
     meta,
     lookup,
-    hasColumns: all.length > 0,
-    hasVisibleColumns: visible.length > 0,
   };
 };
 
@@ -122,13 +122,18 @@ const getUpdatedColumnState = (
   } else {
     columnUpdates.forEach((newColumn) => {
       const index = newState.all.findIndex((col) => col.field === newColumn.field);
-      const columnUpdated = { ...newState.all[index], ...newColumn };
-      newState.all[index] = columnUpdated;
-      newState.all = [...newState.all];
-
-      newState.lookup[newColumn.field] = columnUpdated;
-      newState.lookup = { ...newState.lookup };
+      if(index === -1) {
+        // new column
+        newState.all.push(newColumn);
+        newState.lookup[newColumn.field] = newColumn;
+      } else {
+        const columnUpdated = {...newState.all[index], ...newColumn};
+        newState.all[index] = columnUpdated;
+        newState.lookup[newColumn.field] = columnUpdated;
+      }
     });
+    newState.all = [...newState.all];
+    newState.lookup = { ...newState.lookup };
   }
 
   const visible = filterVisible(logger, newState.all);
@@ -137,12 +142,10 @@ const getUpdatedColumnState = (
     ...newState,
     visible,
     meta,
-    hasColumns: newState.all.length > 0,
-    hasVisibleColumns: visible.length > 0,
   };
 };
 
-export function useColumns(columns: Columns, apiRef: ApiRef): InternalColumns {
+export function useColumns(columns: Columns, apiRef: ApiRef): void {
   const logger = useLogger('useColumns');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const updateState = React.useCallback(
@@ -159,23 +162,17 @@ export function useColumns(columns: Columns, apiRef: ApiRef): InternalColumns {
   );
 
   const resetColumns = React.useCallback(() => {
-    logger.info(`Columns have change, new length ${columns.length}`);
+    logger.info(`Columns have changed, new length ${columns.length}`);
+    const currentViewportWidth = apiRef.current.getState<GridState>().viewportSizes.width;
     const newState = resetState(
       columns,
       gridState.options.columnTypes,
-      gridState.viewportSizes.width,
+      currentViewportWidth,
       !!gridState.options.checkboxSelection,
       logger,
     );
     updateState(newState);
-  }, [
-    columns,
-    gridState.options.checkboxSelection,
-    gridState.viewportSizes.width,
-    gridState.options.columnTypes,
-    logger,
-    updateState,
-  ]);
+  }, [logger, columns, apiRef, gridState.options.columnTypes, gridState.options.checkboxSelection, updateState]);
 
   React.useEffect(() => {
     resetColumns();
@@ -249,5 +246,12 @@ export function useColumns(columns: Columns, apiRef: ApiRef): InternalColumns {
 
   useApiMethod(apiRef, colApi, 'ColApi');
 
-  return gridState.columns;
+  React.useEffect(() => {
+    logger.debug(`Columns gridState.viewportSizes.width, changed ${gridState.viewportSizes.width}`);
+    const currentColumns = apiRef.current.getState<GridState>().columns.all;
+
+    const updatedCols = updateColumnsWidth(currentColumns, gridState.viewportSizes.width);
+    apiRef.current.updateColumns(updatedCols);
+
+  }, [apiRef, gridState.viewportSizes.width, logger]);
 }

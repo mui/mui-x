@@ -48,7 +48,7 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
       if (!filterItem.columnField || !filterItem.operatorValue || !filterItem.value) {
         return;
       }
-      logger.info(
+      logger.debug(
         `Filtering column: ${filterItem.columnField} ${filterItem.operatorValue} ${filterItem.value} `,
       );
 
@@ -68,7 +68,7 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
       const applyFilterOnRow = filterOperator.getApplyFilterFn(filterItem, column)!;
 
       setGridState((state) => {
-        const visibleRowsLookup = { ...state.visibleRows.visibleRowsLookup };
+        const visibleRowsLookup = {...state.visibleRows.visibleRowsLookup};
         const visibleRows: RowId[] = [];
         // We run the selector on the state here to avoid rendering the rows and then filtering again.
         // This way we have latest rows on the first rendering
@@ -98,7 +98,7 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
         });
         return {
           ...state,
-          visibleRows: { visibleRowsLookup, visibleRows },
+          visibleRows: {visibleRowsLookup, visibleRows},
         };
       });
       forceUpdate();
@@ -114,7 +114,7 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
 
       clearFilteredRows();
 
-      const { items, linkOperator } = apiRef.current.state.filter;
+      const {items, linkOperator} = apiRef.current.state.filter;
       items.forEach((filterItem) => {
         applyFilter(filterItem, linkOperator);
       });
@@ -159,7 +159,7 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
         }
         const newState = {
           ...state,
-          filter: { ...state.filter, items },
+          filter: {...state.filter, items},
         };
         return newState;
       });
@@ -185,7 +185,7 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
         hasNoItem = items.length === 0;
         const newState = {
           ...state,
-          filter: { ...state.filter, items },
+          filter: {...state.filter, items},
         };
         return newState;
       });
@@ -207,7 +207,7 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
             ? gridState.filter.items[gridState.filter.items.length - 1]
             : null;
         if (!lastFilter || lastFilter.columnField !== targetColumnField) {
-          apiRef!.current.upsertFilter({ columnField: targetColumnField });
+          apiRef!.current.upsertFilter({columnField: targetColumnField});
         }
       }
       apiRef.current.showPreferences(PreferencePanelsValue.filters);
@@ -222,7 +222,7 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
     (linkOperator: LinkOperator = LinkOperator.And) => {
       setGridState((state) => ({
         ...state,
-        filter: { ...state.filter, linkOperator },
+        filter: {...state.filter, linkOperator},
       }));
       applyFilters();
     },
@@ -294,5 +294,17 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
     }
   }, [apiRef, clearFilteredRows, logger, rowsProp]);
 
-  // TODO reapply filters when columns changed. (Needs columns refactoring)
+  React.useEffect(() => {
+    const filterState = apiRef.current.getState<FilterModelState>('filter');
+    if (filterState.items.length > 0 && filterableColumns.length > 0) {
+      logger.debug('Columns changed, applying filters');
+
+      filterState.items.forEach(filter => {
+        if (!filterableColumns.find(col => col.field === filter.columnField)) {
+          deleteFilter(filter);
+        }
+      });
+      apiRef.current.applyFilters();
+    }
+  }, [apiRef, deleteFilter, filterableColumns, logger])
 };
