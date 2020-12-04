@@ -213,13 +213,13 @@ You can change the density of the rows and the column header.
 
 ### Density prop
 
-The vertical density of the data grid can be set using the `density` prop. Regardless of its setting, the `density` prop will respect values provided using the `rowHeight` or `headerHeight` props.
+The vertical density of the data grid can be set using the `density` prop. The `density` prop applies the values determined by the `rowHeight` and `headerHeight` props, if supplied.  The user can override this setting with the toolbar density selector, if provided. 
 
 {{"demo": "pages/components/data-grid/rendering/DensitySelectorSmallGrid.js", "bg": "inline"}}
 
-### Density selector button
+### Density selector
 
-The default way for a user to change the density of the data grid is by using the density selector component from the toolbar. In addition, there is a prop to hide the density selector.
+The user can change the density of the data grid  by using the density selector from the toolbar. This can be hidden with the `disableDensitySelector` prop.
 
 {{"demo": "pages/components/data-grid/rendering/DensitySelectorHiddenGrid.js", "bg": "inline"}}
 
