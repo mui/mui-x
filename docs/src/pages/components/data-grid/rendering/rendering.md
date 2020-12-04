@@ -217,7 +217,7 @@ The vertical density of the data grid can be set using the `density` prop. The `
 
 {{"demo": "pages/components/data-grid/rendering/DensitySelectorSmallGrid.js", "bg": "inline"}}
 
-### Density selector button
+### Density selector
 
 The user can change the density of the data grid  by using the density selector from the toolbar. This can be hidden with the `disableDensitySelector` prop.
 
