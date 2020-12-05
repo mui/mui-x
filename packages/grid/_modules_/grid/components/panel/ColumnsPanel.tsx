@@ -1,5 +1,4 @@
 import * as React from 'react';
-import FormControl from '@material-ui/core/FormControl';
 import IconButton from '@material-ui/core/IconButton';
 import Switch from '@material-ui/core/Switch';
 import Button from '@material-ui/core/Button';
@@ -14,19 +13,18 @@ import { DragIcon } from '../icons/index';
 
 const useStyles = makeStyles(
   {
-    columnsListContainer: {
-      paddingTop: 8,
-      paddingLeft: 12,
+    container: {
+      padding: '8px 0px 8px 8px',
     },
     column: {
       display: 'flex',
       justifyContent: 'space-between',
-      padding: '2px 4px',
+      padding: '1px 8px 1px 7px',
     },
     switch: {
       marginRight: 4,
     },
-    dragIconRoot: {
+    dragIcon: {
       justifyContent: 'flex-end',
     },
   },
@@ -63,8 +61,8 @@ export function ColumnsPanel() {
   const showAllColumns = React.useCallback(() => toggleAllColumns(false), [toggleAllColumns]);
   const hideAllColumns = React.useCallback(() => toggleAllColumns(true), [toggleAllColumns]);
 
-  const onSearchColumnValueChange = React.useCallback((event) => {
-    setSearchValue(event.target.value.toLowerCase());
+  const handleSearchValueChange = React.useCallback((event) => {
+    setSearchValue(event.target.value);
   }, []);
 
   const currentColumns = React.useMemo(
@@ -73,8 +71,9 @@ export function ColumnsPanel() {
         ? columns
         : columns.filter(
             (column) =>
-              column.field.toLowerCase().indexOf(searchValue) > -1 ||
-              (column.headerName && column.headerName.toLowerCase().indexOf(searchValue) > -1),
+              column.field.toLowerCase().indexOf(searchValue.toLowerCase()) > -1 ||
+              (column.headerName &&
+                column.headerName.toLowerCase().indexOf(searchValue.toLowerCase()) > -1),
           ),
     [columns, searchValue],
   );
@@ -88,16 +87,15 @@ export function ColumnsPanel() {
       <div className="MuiDataGridPanel-header">
         <TextField
           label="Find column"
-          placeholder="Column Title"
+          placeholder="Column title"
           inputRef={searchInputRef}
           value={searchValue}
-          onChange={onSearchColumnValueChange}
-          type="text"
+          onChange={handleSearchValueChange}
           fullWidth
         />
       </div>
       <div className="MuiDataGridPanel-container">
-        <div className={classes.columnsListContainer}>
+        <div className={classes.container}>
           {currentColumns.map((column) => (
             <div key={column.field} className={classes.column}>
               <FormControlLabel
@@ -114,16 +112,16 @@ export function ColumnsPanel() {
                 label={column.headerName || column.field}
               />
               {!disableColumnReorder && (
-                <FormControl draggable className={classes.dragIconRoot}>
-                  <IconButton
-                    aria-label="Drag to reorder column"
-                    title="Reorder Column"
-                    size="small"
-                    disabled
-                  >
-                    <DragIcon />
-                  </IconButton>
-                </FormControl>
+                <IconButton
+                  draggable
+                  className={classes.dragIcon}
+                  aria-label="Drag to reorder column"
+                  title="Reorder Column"
+                  size="small"
+                  disabled
+                >
+                  <DragIcon />
+                </IconButton>
               )}
             </div>
           ))}

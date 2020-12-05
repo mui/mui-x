@@ -36,15 +36,11 @@ export const SortMenuItems: React.FC<FilterItemProps> = ({ column, onClick }) =>
       <MenuItem onClick={onSortMenuItemClick} disabled={sortDirection == null}>
         Unsort
       </MenuItem>
-      <MenuItem onClick={onSortMenuItemClick} data-value={'asc'} disabled={sortDirection === 'asc'}>
-        Sort By Asc
+      <MenuItem onClick={onSortMenuItemClick} data-value="asc" disabled={sortDirection === 'asc'}>
+        Sort by Asc
       </MenuItem>
-      <MenuItem
-        onClick={onSortMenuItemClick}
-        data-value={'desc'}
-        disabled={sortDirection === 'desc'}
-      >
-        Sort By Desc
+      <MenuItem onClick={onSortMenuItemClick} data-value="desc" disabled={sortDirection === 'desc'}>
+        Sort by Desc
       </MenuItem>
     </React.Fragment>
   );

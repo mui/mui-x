@@ -42,9 +42,11 @@ const useStyles = makeStyles(
     filterValueInput: {
       width: 190,
     },
-    closeIconRoot: {
+    closeIcon: {
       flexShrink: 0,
       justifyContent: 'flex-end',
+      marginRight: 6,
+      marginBottom: 2,
     },
   }),
   { name: 'MuiDataGridFilterForm' },
@@ -131,6 +133,11 @@ export function FilterForm(props: FilterFormProps) {
 
   return (
     <div className={classes.root}>
+      <FormControl className={classes.closeIcon}>
+        <IconButton aria-label="Delete" title="Delete" onClick={handleDeleteFilter} size="small">
+          <CloseIcon fontSize="small" />
+        </IconButton>
+      </FormControl>
       <FormControl
         className={classes.linkOperatorSelect}
         style={{
@@ -195,11 +202,6 @@ export function FilterForm(props: FilterFormProps) {
             applyValue: applyFilterChanges,
             ...currentOperator.InputComponentProps,
           })}
-      </FormControl>
-      <FormControl className={classes.closeIconRoot}>
-        <IconButton aria-label="Delete" title="Delete" onClick={handleDeleteFilter} size="small">
-          <CloseIcon />
-        </IconButton>
       </FormControl>
     </div>
   );
