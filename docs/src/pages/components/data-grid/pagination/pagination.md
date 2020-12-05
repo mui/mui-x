@@ -48,6 +48,18 @@ Finally, you need to handle the `onPageChange` callback to load the rows for the
 
 {{"demo": "pages/components/data-grid/pagination/ServerPaginationGrid.js", "bg": "inline"}}
 
+## Rendering
+
+You can customize the rendered of the pagination following [this section](/components/data-grid/rendering/#footer) of the documentation.
+
+## Paginate > 100 rows [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
+
+The `DataGrid` component can display up to 100 rows per page.
+The `XGrid` component removes this limitation.
+The following demo displays 200 rows per page:
+
+{{"demo": "pages/components/data-grid/pagination/200PaginationGrid.js", "disableAd": true, "bg": "inline"}}
+
 ## apiRef [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
 The grid exposes a set of methods that enables all of these features using the imperative apiRef.
@@ -62,11 +74,3 @@ The grid exposes a set of methods that enables all of these features using the i
 Below is an example of how you can reset the page using the imperative `setPage` method.
 
 {{"demo": "pages/components/data-grid/pagination/ApiRefPaginationGrid.js", "bg": "inline"}}
-
-## Paginate > 100 rows [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
-
-The `DataGrid` component can display up to 100 rows per page.
-The `XGrid` component removes this limitation.
-The following demo displays 200 rows per page:
-
-{{"demo": "pages/components/data-grid/pagination/200PaginationGrid.js", "disableAd": true, "bg": "inline"}}
