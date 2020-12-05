@@ -1,13 +1,14 @@
 import * as React from 'react';
 // @ts-expect-error need to migrate helpers to TypeScript
-import { fireEvent, screen, createClientRender } from 'test/utils';
+import { fireEvent, screen, createClientRenderStrictMode } from 'test/utils';
 import { getActiveCell, sleep, raf, getColumnValues } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { XGrid, useApiRef, Columns } from '@material-ui/x-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
 describe('<XGrid />', () => {
-  const render = createClientRender();
+  // TODO v5: replace with createClientRender
+  const render = createClientRenderStrictMode();
 
   const defaultProps = {
     rows: [
