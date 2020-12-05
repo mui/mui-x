@@ -122,8 +122,8 @@ async function annotateComponentDefinition(component, api) {
       }
 
       const { leadingComments = [] } = node;
-      const [jsdocBlock, ...rest] = leadingComments;
-      if (rest.length > 0) {
+      const [jsdocBlock, ...other] = leadingComments;
+      if (other.length > 0) {
         throw new Error('Should only have a single leading jsdoc block');
       }
       if (jsdocBlock !== undefined) {
