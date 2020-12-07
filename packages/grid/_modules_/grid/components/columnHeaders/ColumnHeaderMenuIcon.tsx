@@ -17,17 +17,17 @@ export function ColumnHeaderMenuIcon(props: ColumnHeaderFilterIconProps) {
   const icons = useIcons();
   const apiRef = React.useContext(ApiContext);
   const columnMenuState = useGridSelector(apiRef, columnMenuStateSelector);
-  const icon = React.createElement(icons.ColumnMenu!, { fontSize: 'small' });
+  const Icon = icons.ColumnMenu as React.ElementType;
 
-  const menuIconClick = React.useCallback(
+  const handleMenuIconClick = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       event.stopPropagation();
       const lastMenuState = apiRef!.current.getState<GridState>().columnMenu;
       if (!lastMenuState.open || lastMenuState.field !== column.field) {
-        apiRef?.current.showColumnMenu(column.field);
+        apiRef!.current.showColumnMenu(column.field);
       } else {
-        apiRef?.current.hideColumnMenu();
+        apiRef!.current.hideColumnMenu();
       }
     },
     [apiRef, column.field],
@@ -37,12 +37,13 @@ export function ColumnHeaderMenuIcon(props: ColumnHeaderFilterIconProps) {
   return (
     <div className={classnames('MuiDataGrid-menuIcon', { 'MuiDataGrid-menuOpen': open })}>
       <IconButton
-        className={'MuiDataGrid-menuIconButton'}
+        className="MuiDataGrid-menuIconButton"
         aria-label="Menu"
+        title="Menu"
         size="small"
-        onClick={menuIconClick}
+        onClick={handleMenuIconClick}
       >
-        {icon}
+        <Icon fontSize="small" />
       </IconButton>
     </div>
   );
