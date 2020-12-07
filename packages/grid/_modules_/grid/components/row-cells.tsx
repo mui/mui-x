@@ -61,7 +61,7 @@ export const RowCells: React.FC<RowCellsProps> = React.memo((props) => {
       ? showCellRightBorder
       : !removeLastBorderRight && !props.extendRowFullWidth;
 
-    let value = row.data[column.field!];
+    let value = row[column.field!];
     const cellParams: CellParams = buildCellParams({
       rowModel: row,
       colDef: column,

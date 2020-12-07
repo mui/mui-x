@@ -1,4 +1,4 @@
-import { RowData, RowId, RowModel, Rows } from '../rows';
+import { RowModel, RowId } from '../rows';
 
 /**
  * The Row API interface that is available in the grid [[apiRef]].
@@ -8,7 +8,7 @@ export interface RowApi {
    * Get the full set of rows as [[Rows]].
    * @returns [[Rows]]
    */
-  getRowModels: () => Rows;
+  getRowModels: () => RowModel[];
   /**
    * Get the total number of rows in the grid.
    */
@@ -21,17 +21,12 @@ export interface RowApi {
    * Set a new set of Rows.
    * @param rows
    */
-  setRowModels: (rows: Rows) => void;
-  /**
-   * Update any properties of the current set of Rows.
-   * @param updates
-   */
-  updateRowModels: (updates: Partial<RowModel>[]) => void;
+  setRows: (rows: RowModel[]) => void;
   /**
    * Update any properties of the current set of RowData[].
    * @param updates
    */
-  updateRowData: (updates: RowData[]) => void;
+  updateRows: (updates: Partial<RowModel>[]) => void;
   /**
    * Get the RowId of a row at a specific position.
    * @param index

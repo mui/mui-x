@@ -1,6 +1,6 @@
 import * as React from 'react';
 import TextField from '@material-ui/core/TextField';
-import { LoadIcon } from '../icons/index';
+import { LoadIcon } from '../../icons/index';
 import { FilterInputValueProps } from './FilterInputValueProps';
 
 const SUBMIT_FILTER_STROKE_TIME = 500;
@@ -9,11 +9,8 @@ export interface TypeFilterInputValueProps extends FilterInputValueProps {
   type?: 'text' | 'number' | 'date' | 'datetime-local';
 }
 
-export const FilterInputValue: React.FC<TypeFilterInputValueProps> = ({
-  item,
-  applyValue,
-  type,
-}) => {
+export function FilterInputValue(props: TypeFilterInputValueProps) {
+  const { item, applyValue, type } = props;
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
   const [applying, setIsApplying] = React.useState(false);
@@ -57,4 +54,4 @@ export const FilterInputValue: React.FC<TypeFilterInputValueProps> = ({
       }}
     />
   );
-};
+}

@@ -47,7 +47,7 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-toolbar': {
           display: 'flex',
           alignItems: 'center',
-          padding: 4,
+          padding: '4px 4px 0',
         },
         '& .MuiDataGrid-columnsContainer': {
           position: 'absolute',
@@ -105,7 +105,7 @@ export const useStyles = makeStyles(
           display: 'inline-flex',
           flex: 1,
         },
-        '& .MuiDataGrid-colCellNumeric .MuiDataGrid-sortIconContainer': {
+        '& .MuiDataGrid-colCellNumeric .MuiDataGrid-iconButtonContainer': {
           paddingRight: 5,
         },
         '& .MuiDataGrid-colCellSortable': {
@@ -162,7 +162,7 @@ export const useStyles = makeStyles(
           display: 'flex',
           alignItems: 'center',
         },
-        '& .MuiDataGrid-colCell:hover .MuiDataGrid-menuIcon': {
+        '& .MuiDataGrid-colCell:hover .MuiDataGrid-menuIcon, .MuiDataGrid-menuOpen': {
           visibility: 'visible',
         },
         '& .MuiDataGrid-colCellWrapper.scroll .MuiDataGrid-colCell:last-child': {

@@ -1,3 +1,4 @@
+// @ts-ignore
 import { LicenseInfo } from '@material-ui/x-grid';
 import { addParameters } from '@storybook/react';
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
@@ -13,7 +14,8 @@ configureActions({
   limit: 10,
 });
 
-addParameters({
+export const parameters = {
+  actions: { argTypesRegex: '^on.*' },
   options: {
     /**
      * display the top-level grouping as a "root" in the sidebar
@@ -35,4 +37,4 @@ addParameters({
   docs: {
     page: null,
   },
-});
+};

@@ -6,7 +6,7 @@ import { useGridState } from '../core/useGridState';
 
 export const useColumnMenu = (apiRef: ApiRef): void => {
   const logger = useLogger('useColumnMenu');
-  const [, setGridState, forceUpdate] = useGridState(apiRef);
+  const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
 
   const showColumnMenu = React.useCallback(
     (field: string) => {
@@ -29,6 +29,12 @@ export const useColumnMenu = (apiRef: ApiRef): void => {
     }));
     forceUpdate();
   }, [forceUpdate, logger, setGridState]);
+
+  React.useEffect(() => {
+    if (gridState.isScrolling) {
+      hideColumnMenu();
+    }
+  }, [gridState.isScrolling, hideColumnMenu]);
 
   useApiMethod(
     apiRef,

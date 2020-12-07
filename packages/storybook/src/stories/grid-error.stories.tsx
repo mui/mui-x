@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { XGrid, ColDef, useApiRef, GridOverlay } from '@material-ui/x-grid';
-import { withKnobs } from '@storybook/addon-knobs';
 import '../style/grid-stories.css';
 
 export default {
   title: 'X-Grid Tests/Error Handling',
   component: XGrid,
-  decorators: [withKnobs],
   parameters: {
     options: { selectedPanel: 'storybook/storysource/panel' },
     docs: {

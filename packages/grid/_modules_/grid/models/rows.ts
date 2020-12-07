@@ -1,10 +1,9 @@
-export type RowsProp = RowData[];
-export type Rows = RowModel[];
+export type RowsProp = RowModel[];
 
 /**
  * The key value object representing the data of a row.
  */
-export interface RowData extends ObjectWithId {
+export interface RowModel extends ObjectWithId {
   [key: string]: any;
 }
 
@@ -18,33 +17,24 @@ export interface ObjectWithId {
 }
 
 /**
- * The internal model of a row containing its state and data.
- */
-export interface RowModel {
-  id: RowId;
-  data: RowData;
-}
-
-/**
- * An helper function allowing to create [[RowModel]] from [[RowData]].
+ * An helper function allowing to check if [[RowData]] is valid.
  *
  * @param rowData Row as [[RowData]].
- * @returns A row as [[RowModel]].
+ * @returns a boolean
  */
-export function createRowModel(rowData: RowData): RowModel {
+export function checkRowHasId(
+  rowData: RowModel | Partial<RowModel>,
+  detailErrorMessage?: string,
+): boolean {
   if (rowData.id == null) {
     throw new Error(
       [
         'Material-UI: The data grid component requires all rows to have a unique id property.',
-        'A row was provided without in the rows prop:',
+        detailErrorMessage || 'A row was provided without id in the rows prop:',
         JSON.stringify(rowData),
       ].join('\n'),
     );
   }
 
-  const row: RowModel = {
-    id: rowData.id,
-    data: rowData,
-  };
-  return row;
+  return true;
 }

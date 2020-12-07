@@ -4,13 +4,13 @@ import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
-import { filterableColumnsSelector } from '../../hooks/features/columns/columnsSelector';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { ColDef } from '../../models/colDef/colDef';
-import { FilterItem, LinkOperator } from '../../models/filterItem';
-import { FilterOperator } from '../../models/filterOperator';
-import { ApiContext } from '../api-context';
-import { CloseIcon } from '../icons/index';
+import { filterableColumnsSelector } from '../../../hooks/features/columns/columnsSelector';
+import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
+import { ColDef } from '../../../models/colDef/colDef';
+import { FilterItem, LinkOperator } from '../../../models/filterItem';
+import { FilterOperator } from '../../../models/filterOperator';
+import { ApiContext } from '../../api-context';
+import { CloseIcon } from '../../icons/index';
 
 export interface FilterFormProps {
   item: FilterItem;
@@ -23,39 +23,46 @@ export interface FilterFormProps {
   deleteFilter: (item: FilterItem) => void;
 }
 
-const useStyles = makeStyles(() => ({
-  root: {
-    display: 'flex',
-    justifyContent: 'space-around',
-    padding: 8,
-  },
-  linkOperatorSelect: {
-    width: 60,
-  },
-  columnSelect: {
-    width: 150,
-  },
-  operatorSelect: {
-    width: 120,
-  },
-  filterValueInput: {
-    width: 190,
-  },
-  closeIconRoot: {
-    justifyContent: 'flex-end',
-  },
-}));
+const useStyles = makeStyles(
+  () => ({
+    root: {
+      display: 'flex',
+      justifyContent: 'space-around',
+      padding: 8,
+    },
+    linkOperatorSelect: {
+      width: 60,
+    },
+    columnSelect: {
+      width: 150,
+    },
+    operatorSelect: {
+      width: 120,
+    },
+    filterValueInput: {
+      width: 190,
+    },
+    closeIcon: {
+      flexShrink: 0,
+      justifyContent: 'flex-end',
+      marginRight: 6,
+      marginBottom: 2,
+    },
+  }),
+  { name: 'MuiDataGridFilterForm' },
+);
 
-export const FilterForm: React.FC<FilterFormProps> = ({
-  item,
-  hasMultipleFilters,
-  deleteFilter,
-  applyFilterChanges,
-  multiFilterOperator,
-  showMultiFilterOperators,
-  disableMultiFilterOperator,
-  applyMultiFilterOperatorChanges,
-}) => {
+export function FilterForm(props: FilterFormProps) {
+  const {
+    item,
+    hasMultipleFilters,
+    deleteFilter,
+    applyFilterChanges,
+    multiFilterOperator,
+    showMultiFilterOperators,
+    disableMultiFilterOperator,
+    applyMultiFilterOperatorChanges,
+  } = props;
   const classes = useStyles();
   const apiRef = React.useContext(ApiContext);
   const filterableColumns = useGridSelector(apiRef, filterableColumnsSelector);
@@ -126,6 +133,11 @@ export const FilterForm: React.FC<FilterFormProps> = ({
 
   return (
     <div className={classes.root}>
+      <FormControl className={classes.closeIcon}>
+        <IconButton aria-label="Delete" title="Delete" onClick={handleDeleteFilter} size="small">
+          <CloseIcon fontSize="small" />
+        </IconButton>
+      </FormControl>
       <FormControl
         className={classes.linkOperatorSelect}
         style={{
@@ -191,11 +203,6 @@ export const FilterForm: React.FC<FilterFormProps> = ({
             ...currentOperator.InputComponentProps,
           })}
       </FormControl>
-      <FormControl className={classes.closeIconRoot}>
-        <IconButton aria-label="Delete" title="Delete" onClick={handleDeleteFilter} size="small">
-          <CloseIcon />
-        </IconButton>
-      </FormControl>
     </div>
   );
-};
+}

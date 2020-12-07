@@ -18,18 +18,15 @@ export const visibleSortedRowsSelector = createSelector<
   return [...sortedRows].filter((row) => visibleRowsState.visibleRowsLookup[row.id] !== false);
 });
 
-export const visibleRowCountSelector = createSelector<
-  GridState,
-  RowModel[],
-  RowModel[],
-  number,
-  number
->(
-  visibleSortedRowsSelector,
-  sortedRowsSelector,
+export const visibleRowCountSelector = createSelector<GridState, VisibleRowsState, number, number>(
+  visibleRowsStateSelector,
   rowCountSelector,
-  (visibleRows, sortedRows, totalRowsCount) =>
-    totalRowsCount - (sortedRows.length - visibleRows.length),
+  (visibleRowsState, totalRowsCount) => {
+    if (visibleRowsState.visibleRows == null) {
+      return totalRowsCount;
+    }
+    return visibleRowsState.visibleRows.length;
+  },
 );
 
 export const filterStateSelector: (state: GridState) => FilterModelState = (state) => state.filter;
@@ -44,3 +41,21 @@ export const filterItemsCounterSelector = createSelector<GridState, FilterItem[]
   activeFilterItemsSelector,
   (activeFilters) => activeFilters.length,
 );
+
+export type FilterColumnLookup = Record<string, FilterItem[]>;
+export const filterColumnLookupSelector = createSelector<
+  GridState,
+  FilterItem[],
+  FilterColumnLookup
+>(activeFilterItemsSelector, (activeFilters) => {
+  const result: FilterColumnLookup = activeFilters.reduce((res, filterItem) => {
+    if (!res[filterItem.columnField!]) {
+      res[filterItem.columnField!] = [filterItem];
+    } else {
+      res[filterItem.columnField!].push(filterItem);
+    }
+    return res;
+  }, {} as FilterColumnLookup);
+
+  return result;
+});

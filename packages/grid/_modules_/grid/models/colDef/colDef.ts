@@ -132,6 +132,10 @@ export interface ColDef {
   filterOperators?: FilterOperator[];
 }
 
+export interface ColumnProp extends Omit<ColDef, 'filterOperators'> {
+  filterOperators?: FilterOperator[] | string;
+}
+
 export type Columns = ColDef[];
 export type ColTypeDef = Omit<ColDef, 'field'> & { extendType?: NativeColTypes };
 

@@ -15,7 +15,8 @@ import { localStorageAvailable } from '../utils/utils';
 // - 'true' => force it to be enabled
 // - 'false' => force it to be disabled
 //
-// Developers (users) can enable the experimental feature by setting the EXPERIMENTAL_ENABLED env.
+// Developers (users) are discouraged to enable the experimental feature by setting the EXPERIMENTAL_ENABLED env.
+// Instead, prefer exposing experimental APIs, for instance, a prop or a new `unstable_` module.
 
 let experimentalEnabled;
 

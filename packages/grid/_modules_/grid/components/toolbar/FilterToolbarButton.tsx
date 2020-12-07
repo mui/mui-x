@@ -8,6 +8,8 @@ import {
   activeFilterItemsSelector,
   filterItemsCounterSelector,
 } from '../../hooks/features/filter/filterSelector';
+import { preferencePanelStateSelector } from '../../hooks/features/preferencesPanel/preferencePanelSelector';
+import { PreferencePanelsValue } from '../../hooks/features/preferencesPanel/preferencesPanelValue';
 import { useIcons } from '../../hooks/utils/useIcons';
 import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { ApiContext } from '../api-context';
@@ -18,7 +20,12 @@ export const FilterToolbarButton: React.FC<{}> = () => {
   const counter = useGridSelector(apiRef, filterItemsCounterSelector);
   const activeFilters = useGridSelector(apiRef, activeFilterItemsSelector);
   const lookup = useGridSelector(apiRef, columnLookupSelector);
+  const preferencePanel = useGridSelector(apiRef, preferencePanelStateSelector);
+
   const tooltipContentNode = React.useMemo(() => {
+    if (preferencePanel.open) {
+      return 'Hide Filters';
+    }
     if (counter === 0) {
       return 'Show Filters';
     }
@@ -26,22 +33,29 @@ export const FilterToolbarButton: React.FC<{}> = () => {
       <div>
         {counter} active filter(s)
         <ul>
-          {activeFilters.map((item) => (
-            <li key={item.id}>
-              {lookup[item.columnField!].headerName || item.columnField} {item.operatorValue}{' '}
-              {item.value}
-            </li>
-          ))}
+          {activeFilters.map((item) => ({
+            ...(lookup[item.columnField!] && (
+              <li key={item.id}>
+                {lookup[item.columnField!].headerName || item.columnField} {item.operatorValue}{' '}
+                {item.value}
+              </li>
+            )),
+          }))}
         </ul>
       </div>
     );
-  }, [counter, activeFilters, lookup]);
+  }, [preferencePanel.open, counter, activeFilters, lookup]);
 
   const icons = useIcons();
-  const filterIconElement = React.createElement(icons.ColumnFiltering!, {});
-  const showFilter = React.useCallback(() => {
-    apiRef!.current.showFilterPanel();
-  }, [apiRef]);
+  const filterIconElement = React.createElement(icons.OpenFilterButtonIcon!, {});
+  const toggleFilter = React.useCallback(() => {
+    const { open, openedPanelValue } = preferencePanel;
+    if (open && openedPanelValue === PreferencePanelsValue.filters) {
+      apiRef!.current.hideFilterPanel();
+    } else {
+      apiRef!.current.showFilterPanel();
+    }
+  }, [apiRef, preferencePanel]);
 
   if (options.disableColumnFilter) {
     return null;
@@ -50,7 +64,7 @@ export const FilterToolbarButton: React.FC<{}> = () => {
   return (
     <Tooltip title={tooltipContentNode} enterDelay={1000}>
       <Button
-        onClick={showFilter}
+        onClick={toggleFilter}
         color="primary"
         aria-label="Show Filters"
         startIcon={

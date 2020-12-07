@@ -60,7 +60,8 @@ module.exports = {
   env: {
     production: {
       plugins: [
-        '@babel/plugin-transform-react-constant-elements',
+        // TODO fix useGridSelector side effect and enable back.
+        // '@babel/plugin-transform-react-constant-elements',
         ['babel-plugin-react-remove-properties', { properties: ['data-mui-test'] }],
         ['babel-plugin-transform-react-remove-prop-types', { mode: 'remove' }],
       ],
