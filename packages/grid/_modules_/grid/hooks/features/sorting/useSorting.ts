@@ -139,15 +139,21 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
 
   const applySorting = React.useCallback(
     (noRerender = false) => {
+      const rowModels = apiRef.current.getRowModels();
+
       if (options.sortingMode === FeatureModeConstant.server) {
         logger.info('Skipping sorting rows as sortingMode = server');
+        setGridState((oldState) => {
+          return {
+            ...oldState,
+            sorting: { ...oldState.sorting, sortedRows: rowModels.map((row) => row.id) },
+          };
+        });
         return;
       }
 
-      const rowModels = apiRef.current.getRowModels();
       const sortModel = apiRef.current.getState<GridState>().sorting.sortModel;
       logger.info('Sorting rows with ', sortModel);
-
       const sorted = [...rowModels];
       if (sortModel.length > 0) {
         comparatorList.current = buildComparatorList(sortModel);
@@ -157,7 +163,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
       setGridState((oldState) => {
         return {
           ...oldState,
-          sorting: { ...oldState.sorting, sortedRows: [...sorted.map((row) => row.id)] },
+          sorting: { ...oldState.sorting, sortedRows: sorted.map((row) => row.id) },
         };
       });
       if (!noRerender) {
