@@ -1,5 +1,5 @@
-import MenuItem from '@material-ui/core/MenuItem';
 import * as React from 'react';
+import MenuItem from '@material-ui/core/MenuItem';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { PreferencePanelsValue } from '../../../hooks/features/preferencesPanel/preferencesPanelValue';
 import { optionsSelector } from '../../../hooks/utils/useOptionsProp';
@@ -22,5 +22,5 @@ export const ColumnsMenuItem: React.FC<FilterItemProps> = ({ onClick }) => {
     return null;
   }
 
-  return <MenuItem onClick={showColumns}>Show Columns</MenuItem>;
+  return <MenuItem onClick={showColumns}>Show columns</MenuItem>;
 };

@@ -17,10 +17,8 @@ export interface ColumnHeadersItemCollectionProps {
   separatorProps: React.HTMLAttributes<HTMLDivElement>;
 }
 
-export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionProps> = ({
-  separatorProps,
-  columns,
-}) => {
+export function ColumnHeaderItemCollection(props: ColumnHeadersItemCollectionProps) {
+  const { separatorProps, columns } = props;
   const [resizingColField, setResizingColField] = React.useState('');
   const apiRef = React.useContext(ApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
@@ -60,4 +58,4 @@ export const ColumnHeaderItemCollection: React.FC<ColumnHeadersItemCollectionPro
       {items}
     </React.Fragment>
   );
-};
+}

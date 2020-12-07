@@ -15,32 +15,32 @@ function getIcon(icons: IconsOptions, direction: SortDirection) {
   return <Icon className="MuiDataGrid-sortIcon" />;
 }
 
-export const ColumnHeaderSortIcon: React.FC<ColumnHeaderSortIconProps> = React.memo(
-  ({ direction, index, hide }) => {
-    const icons = useIcons();
+export const ColumnHeaderSortIcon = React.memo(function ColumnHeaderSortIcon(
+  props: ColumnHeaderSortIconProps,
+) {
+  const { direction, index, hide } = props;
+  const icons = useIcons();
 
-    if (hide || direction == null) {
-      return null;
-    }
+  if (hide || direction == null) {
+    return null;
+  }
 
-    return (
-      <div className="MuiDataGrid-iconButtonContainer">
-        <div>
-          {index != null && (
-            <Badge badgeContent={index} color="default">
-              <IconButton aria-label="Sort" size="small">
-                {getIcon(icons, direction)}
-              </IconButton>
-            </Badge>
-          )}
-          {index == null && (
-            <IconButton aria-label="Sort" size="small">
+  return (
+    <div className="MuiDataGrid-iconButtonContainer">
+      <div>
+        {index != null && (
+          <Badge badgeContent={index} color="default">
+            <IconButton aria-label="Sort" title="Sort" size="small">
               {getIcon(icons, direction)}
             </IconButton>
-          )}
-        </div>
+          </Badge>
+        )}
+        {index == null && (
+          <IconButton aria-label="Sort" title="Sort" size="small">
+            {getIcon(icons, direction)}
+          </IconButton>
+        )}
       </div>
-    );
-  },
-);
-ColumnHeaderSortIcon.displayName = 'ColumnHeaderSortIcon';
+    </div>
+  );
+});

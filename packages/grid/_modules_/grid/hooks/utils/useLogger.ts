@@ -31,9 +31,9 @@ function getAppender(name: string, logLevel: string, appender: Logger = console)
   const logger = LOG_LEVELS.reduce((loggerObj, method, idx) => {
     if (idx >= minLogLevelIdx) {
       loggerObj[method] = (...args: any[]) => {
-        const [message, ...rest] = args;
+        const [message, ...other] = args;
 
-        (appender as any)[method](`Material-UI: ${name} - ${message}`, ...rest);
+        (appender as any)[method](`Material-UI: ${name} - ${message}`, ...other);
       };
     } else {
       loggerObj[method] = noop;
