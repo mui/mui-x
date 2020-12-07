@@ -18,11 +18,11 @@ export interface ColumnsHeaderProps {
 export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps>(
   function ColumnsHeader(props, ref) {
     const { hasScrollX, renderCtx, separatorProps } = props;
-  const apiRef = React.useContext(ApiContext);
-  const columns = useGridSelector(apiRef, visibleColumnsSelector);
-  const wrapperCssClasses = `MuiDataGrid-colCellWrapper ${hasScrollX ? 'scroll' : ''}`;
-  const { disableColumnReorder } = React.useContext(OptionsContext);
-  const containerSizes = useGridSelector(apiRef, containerSizesSelector);
+    const apiRef = React.useContext(ApiContext);
+    const columns = useGridSelector(apiRef, visibleColumnsSelector);
+    const wrapperCssClasses = `MuiDataGrid-colCellWrapper ${hasScrollX ? 'scroll' : ''}`;
+    const { disableColumnReorder } = React.useContext(OptionsContext);
+    const containerSizes = useGridSelector(apiRef, containerSizesSelector);
 
     if (!apiRef) {
       throw new Error('Material-UI: ApiRef was not found in context.');
