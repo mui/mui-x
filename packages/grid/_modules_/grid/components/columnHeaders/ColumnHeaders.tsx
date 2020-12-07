@@ -34,7 +34,10 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps
     const [renderedCols, setRenderedCols] = React.useState(columns);
 
     React.useEffect(() => {
-      if (renderCtx && renderCtx.firstColIdx != null && renderCtx.lastColIdx != null &&
+      if (
+        renderCtx &&
+        renderCtx.firstColIdx != null &&
+        renderCtx.lastColIdx != null &&
         (lastRenderedColIndexes.current.first !== renderCtx.firstColIdx ||
           lastRenderedColIndexes.current.last !== renderCtx.lastColIdx)
       ) {
