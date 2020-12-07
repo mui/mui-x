@@ -2,7 +2,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { chainPropTypes } from '@material-ui/utils';
 import { GridComponent, GridComponentProps, classnames } from '../../_modules_/grid';
-import getScrollbarSize from '@material-ui/utils/getScrollbarSize';
 
 const FORCED_PROPS: Partial<GridComponentProps> = {
   disableColumnResize: true,
@@ -44,11 +43,8 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
   if (pageSize && pageSize > MAX_PAGE_SIZE) {
     pageSize = MAX_PAGE_SIZE;
   }
-  
-  
+
   return (
-    <>
-    {/* {console.log("primero: " + getScrollbarSize)} */}
     <GridComponent
       ref={ref}
       className={classnames('MuiDataGrid-root', className)}
@@ -58,9 +54,6 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
       licenseStatus="Valid"
       scrollbarSize={20}
     />
-    {/* {console.log("segundo: " + getScrollbarSize)} */}
-    </>
-    
   );
 });
 
