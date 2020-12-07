@@ -195,7 +195,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
         return;
       }
       const sortItem = createSortItem(column, direction);
-      let sortModel;
+      let sortModel: SortItem | SortItem[];
       if (!allowMultipleSorting.current) {
         sortModel = !sortItem ? [] : [sortItem];
       } else {
@@ -214,12 +214,16 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   );
 
   const onRowsUpdated = React.useCallback(() => {
-    apiRef.current.applySorting();
-  }, [apiRef]);
+    if (options.sortingMode === FeatureModeConstant.client) {
+      apiRef.current.applySorting();
+    }
+  }, [apiRef, options.sortingMode]);
 
   const onResetRows = React.useCallback(() => {
-    apiRef.current.applySorting(true);
-  }, [apiRef]);
+    if (options.sortingMode === FeatureModeConstant.client) {
+      apiRef.current.applySorting(true);
+    }
+  }, [apiRef, options.sortingMode]);
 
   const getSortModel = React.useCallback(() => gridState.sorting.sortModel, [
     gridState.sorting.sortModel,
@@ -257,8 +261,10 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
 
   React.useEffect(() => {
     // When the rows prop change, we re apply the sorting.
-    apiRef.current.applySorting();
-  }, [apiRef, rowsProp]);
+    if (options.sortingMode === FeatureModeConstant.client) {
+      apiRef.current.applySorting();
+    }
+  }, [apiRef, rowsProp, options.sortingMode]);
 
   React.useEffect(() => {
     if (rowCount > 0 && options.sortingMode === FeatureModeConstant.client) {
