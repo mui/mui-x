@@ -142,7 +142,6 @@ export const ColumnHeaderItem = ({
     >
       <div className="MuiDataGrid-colCell-draggable" {...dragConfig}>
         {!disableColumnMenu && isColumnNumeric && !column.disableColumnMenu && columnMenuIconButton}
-
         <div className="MuiDataGrid-colCellTitleContainer">
           {isColumnNumeric && columnTitleIconButtons}
           {headerComponent || (
@@ -154,13 +153,11 @@ export const ColumnHeaderItem = ({
           )}
           {!isColumnNumeric && columnTitleIconButtons}
         </div>
-
         {!isColumnNumeric &&
           !disableColumnMenu &&
           !column.disableColumnMenu &&
           columnMenuIconButton}
       </div>
-
       <ColumnHeaderSeparator
         resizable={!disableColumnResize && !!column.resizable}
         resizing={isResizing}
@@ -169,4 +166,3 @@ export const ColumnHeaderItem = ({
     </div>
   );
 };
-ColumnHeaderItem.displayName = 'ColumnHeaderItem';

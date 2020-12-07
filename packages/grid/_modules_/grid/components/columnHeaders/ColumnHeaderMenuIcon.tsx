@@ -12,7 +12,8 @@ export interface ColumnHeaderFilterIconProps {
   column: ColDef;
 }
 
-export const ColumnHeaderMenuIcon: React.FC<ColumnHeaderFilterIconProps> = ({ column }) => {
+export function ColumnHeaderMenuIcon(props: ColumnHeaderFilterIconProps) {
+  const { column } = props;
   const icons = useIcons();
   const apiRef = React.useContext(ApiContext);
   const columnMenuState = useGridSelector(apiRef, columnMenuStateSelector);
@@ -32,9 +33,9 @@ export const ColumnHeaderMenuIcon: React.FC<ColumnHeaderFilterIconProps> = ({ co
     [apiRef, column.field],
   );
 
-  const isOpen = columnMenuState.open && columnMenuState.field === column.field;
+  const open = columnMenuState.open && columnMenuState.field === column.field;
   return (
-    <div className={classnames('MuiDataGrid-menuIcon', { 'MuiDataGrid-menuOpen': isOpen })}>
+    <div className={classnames('MuiDataGrid-menuIcon', { 'MuiDataGrid-menuOpen': open })}>
       <IconButton
         className={'MuiDataGrid-menuIconButton'}
         aria-label="Menu"
@@ -45,4 +46,4 @@ export const ColumnHeaderMenuIcon: React.FC<ColumnHeaderFilterIconProps> = ({ co
       </IconButton>
     </div>
   );
-};
+}

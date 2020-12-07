@@ -1,3 +1,4 @@
+import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import {
   ColDef,
@@ -11,8 +12,6 @@ import {
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
-import { useState } from 'react';
-import * as React from 'react';
 import { FilterModelParams } from '../../../grid/_modules_/grid/models/params/filterModelParams';
 import { randomInt } from '../data/random-generator';
 import { useData } from '../hooks/useData';
@@ -165,13 +164,14 @@ export function CommodityNoToolbar() {
     </React.Fragment>
   );
 }
+
 export function ServerFilterViaProps() {
   const demoServer = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
-  const [rows, setRows] = useState<RowModel[]>(demoServer.data.rows);
-  const [filterModel, setFilterModel] = useState<FilterModel>({
+  const [rows, setRows] = React.useState<RowModel[]>(demoServer.data.rows);
+  const [filterModel, setFilterModel] = React.useState<FilterModel>({
     items: [{ id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'contains' }],
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   const applyFilter = React.useCallback(() => {
     if (!filterModel.items.length) {
