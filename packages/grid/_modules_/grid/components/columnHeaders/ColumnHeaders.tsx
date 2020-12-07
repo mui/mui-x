@@ -34,18 +34,15 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps
     const [renderedCols, setRenderedCols] = React.useState(columns);
 
     React.useEffect(() => {
-      if (renderCtx && renderCtx.firstColIdx != null && renderCtx.lastColIdx != null) {
+      if (renderCtx && renderCtx.firstColIdx != null && renderCtx.lastColIdx != null &&
+        (lastRenderedColIndexes.current.first !== renderCtx.firstColIdx ||
+          lastRenderedColIndexes.current.last !== renderCtx.lastColIdx)
+      ) {
         setRenderedCols(columns.slice(renderCtx.firstColIdx, renderCtx.lastColIdx + 1));
-
-        if (
-          lastRenderedColIndexes.current.first !== renderCtx.firstColIdx ||
-          lastRenderedColIndexes.current.last !== renderCtx.lastColIdx
-        ) {
-          lastRenderedColIndexes.current = {
-            first: renderCtx.firstColIdx,
-            last: renderCtx.lastColIdx,
-          };
-        }
+        lastRenderedColIndexes.current = {
+          first: renderCtx.firstColIdx,
+          last: renderCtx.lastColIdx,
+        };
       }
     }, [renderCtx, columns]);
 

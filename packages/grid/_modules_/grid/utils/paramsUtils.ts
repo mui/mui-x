@@ -25,13 +25,15 @@ export function buildCellParams({
     value,
     field: colDef?.field,
     getValue: (field: string) => {
-      if (!colDef.valueGetter) {
+      // We are getting the value of another column here, field
+      const col = api.getColumnFromField(field);
+      if (!col.valueGetter) {
         return rowModel[field];
       }
-      return colDef.valueGetter(
+      return col.valueGetter(
         buildCellParams({
           value: rowModel[field],
-          colDef,
+          colDef: col,
           rowIndex,
           element,
           rowModel,
