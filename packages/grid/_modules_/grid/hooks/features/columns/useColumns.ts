@@ -109,8 +109,8 @@ export function useColumns(columns: Columns, apiRef: ApiRef): void {
   );
 
   const getColumnFromField: (field: string) => ColDef = React.useCallback(
-    (field) => gridState.columns.lookup[field],
-    [gridState.columns.lookup],
+    (field) => apiRef.current.state.columns.lookup[field],
+    [apiRef],
   );
 
   const getAllColumns: () => Columns = React.useCallback(() => allColumns, [allColumns]);
@@ -154,7 +154,7 @@ export function useColumns(columns: Columns, apiRef: ApiRef): void {
 
   const moveColumn = React.useCallback(
     (field: string, targetIndexPosition: number) => {
-      logger.debug(`Moving column ${field} to index ${targetIndexPosition}`)
+      logger.debug(`Moving column ${field} to index ${targetIndexPosition}`);
       const oldIndexPosition = gridState.columns.all.findIndex((col) => col === field);
 
       const updatedColumns = [...gridState.columns.all];

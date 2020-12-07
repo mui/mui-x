@@ -40,6 +40,7 @@ export function CommodityWithOpenFilters() {
       <XGrid
         rows={data.rows}
         columns={data.columns}
+        checkboxSelection
         state={{
           preferencePanel: {
             open: true,

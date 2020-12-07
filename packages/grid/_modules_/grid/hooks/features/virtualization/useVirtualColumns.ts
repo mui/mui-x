@@ -6,6 +6,7 @@ import {
   VirtualizationApi,
   ApiRef,
 } from '../../../models/index';
+import { isEqual } from '../../../utils/utils';
 import { useLogger } from '../../utils/useLogger';
 import { COLUMNS_UPDATED, RESIZE } from '../../../constants/eventsConstants';
 import { useApiMethod } from '../../root/useApiMethod';
@@ -77,7 +78,7 @@ export const useVirtualColumns = (
 
       return colIndex >= firstColIndex && colIndex <= lastColIndex;
     },
-    [containerPropsRef, getColumnFromScroll, apiRef],
+    [getColumnFromScroll, visibleColumns],
   );
 
   const updateRenderedCols: UpdateRenderedColsFnType = React.useCallback(
@@ -85,8 +86,7 @@ export const useVirtualColumns = (
       if (!containerProps) {
         return false;
       }
-      const windowSizeChanged =
-        containerPropsRef.current?.windowSizes.width !== containerProps.windowSizes.width;
+
       containerPropsRef.current = containerProps;
       const windowWidth = containerProps.windowSizes.width;
 
@@ -113,26 +113,31 @@ export const useVirtualColumns = (
 
       const renderNewColState = diffLast > tolerance || diffFirst > tolerance;
 
-      if (windowSizeChanged || !renderedColRef || !renderedColRef.current || renderNewColState) {
-        const newRenderedColState: RenderColumnsProps = {
+      let newRenderedColState: RenderColumnsProps | null = renderedColRef.current;
+
+      if (renderNewColState || newRenderedColState == null) {
+        newRenderedColState = {
+          leftEmptyWidth: 0,
+          rightEmptyWidth: 0,
           firstColIdx: firstDisplayedIdx - columnBuffer >= 0 ? firstDisplayedIdx - columnBuffer : 0,
           lastColIdx:
             lastDisplayedIdx + columnBuffer >= visibleColumns.length - 1
               ? visibleColumns.length - 1
               : lastDisplayedIdx + columnBuffer,
-          leftEmptyWidth: 0,
-          rightEmptyWidth: 0,
         };
-        newRenderedColState.leftEmptyWidth = columnsMeta.positions[newRenderedColState.firstColIdx];
-        if (apiRef.current.state.scrollBar.hasScrollX) {
-          newRenderedColState.rightEmptyWidth =
-            columnsMeta.totalWidth -
-            columnsMeta.positions[newRenderedColState.lastColIdx] -
-            visibleColumns[newRenderedColState.lastColIdx].width!;
-        } else if (!options.disableExtendRowFullWidth) {
-          newRenderedColState.rightEmptyWidth =
-            apiRef.current.state.viewportSizes.width - columnsMeta.totalWidth;
-        }
+      }
+      newRenderedColState.leftEmptyWidth = columnsMeta.positions[newRenderedColState.firstColIdx];
+      if (apiRef.current.state.scrollBar.hasScrollX) {
+        newRenderedColState.rightEmptyWidth =
+          columnsMeta.totalWidth -
+          columnsMeta.positions[newRenderedColState.lastColIdx] -
+          visibleColumns[newRenderedColState.lastColIdx].width!;
+      } else if (!options.disableExtendRowFullWidth) {
+        newRenderedColState.rightEmptyWidth =
+          apiRef.current.state.viewportSizes.width - columnsMeta.totalWidth;
+      }
+
+      if (!isEqual(newRenderedColState, renderedColRef.current)) {
         renderedColRef.current = newRenderedColState;
         logger.debug('New columns state to render', newRenderedColState);
         return true;
