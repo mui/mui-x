@@ -6,9 +6,9 @@ import * as React from 'react';
 import { useForkRef } from '@material-ui/core/utils';
 import { AutoSizer } from './components/AutoSizer';
 import { ColumnsHeader } from './components/columnHeaders/ColumnHeaders';
-import { DefaultFooter } from './components/default-footer';
-import { ErrorBoundary } from './components/error-boundary';
-import { Pagination } from './components/pagination';
+import { DefaultFooter } from './components/DefaultFooter';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { Pagination } from './components/Pagination';
 import { GridColumnsContainer } from './components/styled-wrappers/GridColumnsContainer';
 import { GridDataContainer } from './components/styled-wrappers/GridDataContainer';
 import { GridRoot } from './components/styled-wrappers/GridRoot';
@@ -16,8 +16,8 @@ import { GridWindow } from './components/styled-wrappers/GridWindow';
 import { GridToolbar } from './components/styled-wrappers/GridToolbar';
 import { ColumnsToolbarButton } from './components/toolbar/ColumnsToolbarButton';
 import { FilterToolbarButton } from './components/toolbar/FilterToolbarButton';
-import { Viewport } from './components/viewport';
-import { Watermark } from './components/watermark';
+import { Viewport } from './components/Viewport';
+import { Watermark } from './components/Watermark';
 import { DATA_CONTAINER_CSS_CLASS } from './constants/cssClassesConstants';
 import { GridComponentProps } from './GridComponentProps';
 import { useColumnMenu } from './hooks/features/columnMenu/useColumnMenu';
@@ -47,8 +47,6 @@ import { useDensity } from './hooks/features/density';
 import { RootContainerRef } from './models/rootContainerRef';
 import { getCurryTotalHeight } from './utils/getTotalHeight';
 import { ApiContext } from './components/api-context';
-import { OptionsContext } from './components/options-context';
-import { RenderContext } from './components/render-context';
 import { DensitySelector } from './components/toolbar/DensitySelector';
 import { useFilter } from './hooks/features/filter/useFilter';
 
@@ -148,7 +146,6 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
               )}
             >
               <ApiContext.Provider value={apiRef}>
-                <OptionsContext.Provider value={gridState.options}>
                   <div ref={headerRef}>
                     {customComponents.headerComponent ? (
                       customComponents.headerComponent
@@ -193,10 +190,8 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                           minWidth: gridState.containerSizes?.dataContainerSizes?.width,
                         }}
                       >
-                        {renderCtx != null && (
-                          <RenderContext.Provider value={renderCtx}>
+                        {gridState.rendering.renderContext != null && (
                             <Viewport ref={renderingZoneRef} />
-                          </RenderContext.Provider>
                         )}
                       </GridDataContainer>
                     </GridWindow>
@@ -215,7 +210,6 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                       />
                     )}
                   </div>
-                </OptionsContext.Provider>
               </ApiContext.Provider>
             </ErrorBoundary>
           </GridRoot>

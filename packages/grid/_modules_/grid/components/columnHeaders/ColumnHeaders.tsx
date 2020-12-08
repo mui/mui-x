@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { visibleColumnsSelector } from '../../hooks/features/columns/columnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
+import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { RenderContextProps } from '../../models/renderContextProps';
 import { ApiContext } from '../api-context';
-import { LeftEmptyCell, RightEmptyCell } from '../cell';
-import { OptionsContext } from '../options-context';
+import { LeftEmptyCell, RightEmptyCell } from '../Cell';
 import { ScrollArea } from '../ScrollArea';
-import { containerSizesSelector } from '../viewport';
+import { containerSizesSelector } from '../Viewport';
 import { ColumnHeaderItemCollection } from './ColumnHeadersItemCollection';
 import { densityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 
@@ -22,7 +22,7 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps
     const apiRef = React.useContext(ApiContext);
     const columns = useGridSelector(apiRef, visibleColumnsSelector);
     const wrapperCssClasses = `MuiDataGrid-colCellWrapper ${hasScrollX ? 'scroll' : ''}`;
-    const { disableColumnReorder } = React.useContext(OptionsContext);
+    const { disableColumnReorder } = useGridSelector(apiRef, optionsSelector)
     const containerSizes = useGridSelector(apiRef, containerSizesSelector);
     const headerHeight = useGridSelector(apiRef, densityHeaderHeightSelector);
 

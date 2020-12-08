@@ -4,8 +4,8 @@ import { rowCountSelector } from '../hooks/features/rows/rowsSelector';
 import { selectedRowsCountSelector } from '../hooks/features/selection/selectionSelector';
 import { optionsSelector } from '../hooks/utils/useOptionsProp';
 import { ApiContext } from './api-context';
-import { RowCount } from './row-count';
-import { SelectedRowCount } from './selected-row-count';
+import { RowCount } from './RowCount';
+import { SelectedRowCount } from './SelectedRowCount';
 import { GridFooter } from './styled-wrappers/GridFooter';
 
 export interface DefaultFooterProps {
