@@ -7,6 +7,7 @@ import { ScrollParams } from '../../../models/params/scrollParams';
 import { RenderContextProps, RenderRowProps } from '../../../models/renderContextProps';
 import { isEqual } from '../../../utils/utils';
 import { useEnhancedEffect } from '../../../utils/material-ui-utils';
+import { columnsMetaSelector, visibleColumnsSelector } from '../columns/columnsSelector';
 import { GridState } from '../core/gridState';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
@@ -21,6 +22,7 @@ import { optionsSelector } from '../../utils/useOptionsProp';
 import { useScrollFn } from '../../utils/useScrollFn';
 import { InternalRenderingState } from './renderingState';
 import { useVirtualColumns } from './useVirtualColumns';
+import { densityRowHeightSelector } from '../density/densitySelector';
 
 type UseVirtualRowsReturnType = Partial<RenderContextProps> | null;
 
@@ -34,8 +36,11 @@ export const useVirtualRows = (
 
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
+  const rowHeight = useGridSelector(apiRef, densityRowHeightSelector);
   const paginationState = useGridSelector<PaginationState>(apiRef, paginationSelector);
   const totalRowCount = useGridSelector<number>(apiRef, rowCountSelector);
+  const visibleColumns = useGridSelector(apiRef, visibleColumnsSelector);
+  const columnsMeta = useGridSelector(apiRef, columnsMetaSelector);
 
   const [scrollTo] = useScrollFn(renderingZoneRef, colRef);
   const [renderedColRef, updateRenderedCols] = useVirtualColumns(options, apiRef);
@@ -184,24 +189,23 @@ export const useVirtualRows = (
       const isColVisible = apiRef.current.isColumnVisibleInWindow(params.colIndex);
       logger.debug(`Column ${params.colIndex} is ${isColVisible ? 'already' : 'not'} visible.`);
       if (!isColVisible) {
-        const meta = apiRef.current.getColumnsMeta();
-        const isLastCol = params.colIndex + 1 === meta.positions.length;
+        const isLastCol = params.colIndex + 1 === columnsMeta.positions.length;
 
         if (isLastCol) {
-          const lastColWidth = apiRef.current.getVisibleColumns()[params.colIndex].width!;
+          const lastColWidth = visibleColumns[params.colIndex].width!;
           scrollLeft =
-            meta.positions[params.colIndex] +
+            columnsMeta.positions[params.colIndex] +
             lastColWidth -
             gridState.containerSizes!.windowSizes.width;
         } else {
           scrollLeft =
-            meta.positions[params.colIndex + 1] -
+            columnsMeta.positions[params.colIndex + 1] -
             gridState.containerSizes!.windowSizes.width +
             gridState.scrollBar!.scrollBarSize.y;
           logger.debug(`Scrolling to the right, scrollLeft: ${scrollLeft}`);
         }
         if (gridState.rendering.renderingZoneScroll.left > scrollLeft) {
-          scrollLeft = meta.positions[params.colIndex];
+          scrollLeft = columnsMeta.positions[params.colIndex];
           logger.debug(`Scrolling to the left, scrollLeft: ${scrollLeft}`);
         }
       }
@@ -216,14 +220,14 @@ export const useVirtualRows = (
 
       const isRowIndexAbove = windowRef.current!.scrollTop > scrollPosition;
       const isRowIndexBelow =
-        windowRef.current!.scrollTop + viewportHeight < scrollPosition + options.rowHeight;
+        windowRef.current!.scrollTop + viewportHeight < scrollPosition + rowHeight;
 
       if (isRowIndexAbove) {
         scrollTop = scrollPosition; // We put it at the top of the page
         logger.debug(`Row is above, setting scrollTop to ${scrollTop}`);
       } else if (isRowIndexBelow) {
         // We make sure the row is not half visible
-        scrollTop = scrollPosition - viewportHeight + options.rowHeight;
+        scrollTop = scrollPosition - viewportHeight + rowHeight;
         logger.debug(`Row is below, setting scrollTop to ${scrollTop}`);
       }
 
@@ -237,7 +241,7 @@ export const useVirtualRows = (
 
       return needScroll;
     },
-    [logger, apiRef, gridState, windowRef, options.rowHeight],
+    [logger, apiRef, gridState, windowRef, rowHeight, columnsMeta.positions, visibleColumns],
   );
 
   const resetScroll = React.useCallback(() => {

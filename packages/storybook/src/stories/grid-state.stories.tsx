@@ -64,7 +64,7 @@ export function PartialControlApiRef() {
   const onStateChange = React.useCallback(
     (params: StateChangeParams) => {
       if (
-        params.state.columns.visible.length > 0 &&
+        params.state.columns.all.length > 0 &&
         (params.state.sorting.sortModel.length === 0 ||
           !params.state.sorting.sortModel.some((sort) => sort.field === 'currencyPair'))
       ) {

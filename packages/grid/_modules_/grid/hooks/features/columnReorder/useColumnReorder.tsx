@@ -23,18 +23,6 @@ import { columnReorderDragColSelector } from './columnReorderSelector';
 const CURSOR_MOVE_DIRECTION_LEFT = 'left';
 const CURSOR_MOVE_DIRECTION_RIGHT = 'right';
 
-const reorderColDefArray = (
-  columns: ColDef[],
-  newColIndex: number,
-  oldColIndex: number,
-): ColDef[] => {
-  const columnsClone = columns.slice();
-
-  columnsClone.splice(newColIndex, 0, columnsClone.splice(oldColIndex, 1)[0]);
-
-  return columnsClone;
-};
-
 const getCursorMoveDirectionX = (
   currentCoordinates: CursorCoordinates,
   nextCoordinates: CursorCoordinates,
@@ -134,7 +122,6 @@ export const useColumnReorder = (apiRef: ApiRef): void => {
       if (col.field !== dragCol && hasCursorPositionChanged(cursorPosition.current, coordinates)) {
         const targetColIndex = apiRef.current.getColumnIndex(col.field, false);
         const dragColIndex = apiRef.current.getColumnIndex(dragCol, false);
-        const columnsSnapshot = apiRef.current.getAllColumns();
 
         if (
           (getCursorMoveDirectionX(cursorPosition.current, coordinates) ===
@@ -144,12 +131,7 @@ export const useColumnReorder = (apiRef: ApiRef): void => {
             CURSOR_MOVE_DIRECTION_LEFT &&
             targetColIndex < dragColIndex)
         ) {
-          const columnsReordered = reorderColDefArray(
-            columnsSnapshot,
-            targetColIndex,
-            dragColIndex,
-          );
-          apiRef.current.updateColumns(columnsReordered, true);
+          apiRef.current.moveColumn(dragCol, targetColIndex);
         }
 
         cursorPosition.current = coordinates;

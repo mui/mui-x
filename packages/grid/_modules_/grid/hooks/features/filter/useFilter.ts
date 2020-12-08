@@ -48,7 +48,7 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
       if (!filterItem.columnField || !filterItem.operatorValue || !filterItem.value) {
         return;
       }
-      logger.info(
+      logger.debug(
         `Filtering column: ${filterItem.columnField} ${filterItem.operatorValue} ${filterItem.value} `,
       );
 
@@ -294,5 +294,17 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
     }
   }, [apiRef, clearFilteredRows, logger, rowsProp]);
 
-  // TODO reapply filters when columns changed. (Needs columns refactoring)
+  React.useEffect(() => {
+    const filterState = apiRef.current.getState<FilterModelState>('filter');
+    if (filterState.items.length > 0 && filterableColumns.length > 0) {
+      logger.debug('Columns changed, applying filters');
+
+      filterState.items.forEach((filter) => {
+        if (!filterableColumns.find((col) => col.field === filter.columnField)) {
+          deleteFilter(filter);
+        }
+      });
+      apiRef.current.applyFilters();
+    }
+  }, [apiRef, deleteFilter, filterableColumns, logger]);
 };

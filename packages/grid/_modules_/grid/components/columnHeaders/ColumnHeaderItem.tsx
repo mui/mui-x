@@ -12,6 +12,8 @@ import { ColumnHeaderTitle } from './ColumnHeaderTitle';
 import { ColumnHeaderSeparator } from './ColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { ColumnHeaderFilterIcon } from './ColumnHeaderFilterIcon';
+import { useGridSelector } from '../../hooks/features/core/useGridSelector';
+import { densityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 
 interface ColumnHeaderItemProps {
   colIndex: number;
@@ -37,6 +39,7 @@ export const ColumnHeaderItem = ({
   filterItemsCounter,
 }: ColumnHeaderItemProps) => {
   const apiRef = React.useContext(ApiContext);
+  const headerHeight = useGridSelector(apiRef, densityHeaderHeightSelector);
   const {
     disableColumnReorder,
     showColumnRightBorder,
@@ -161,6 +164,7 @@ export const ColumnHeaderItem = ({
       <ColumnHeaderSeparator
         resizable={!disableColumnResize && !!column.resizable}
         resizing={isResizing}
+        height={headerHeight}
         {...separatorProps}
       />
     </div>

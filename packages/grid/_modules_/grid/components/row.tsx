@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { RowId } from '../models';
 import { ROW_CSS_CLASS } from '../constants/cssClassesConstants';
-import { OptionsContext } from './options-context';
 import { classnames } from '../utils';
+import { densityRowHeightSelector } from '../hooks/features/density';
+import { ApiContext } from './api-context';
+import { useGridSelector } from '../hooks/features/core/useGridSelector';
 
 export interface RowProps {
   id: RowId;
@@ -13,7 +15,8 @@ export interface RowProps {
 
 export const Row: React.FC<RowProps> = ({ selected, id, className, rowIndex, children }) => {
   const ariaRowIndex = rowIndex + 2; // 1 for the header row and 1 as it's 1 based
-  const { rowHeight } = React.useContext(OptionsContext);
+  const apiRef = React.useContext(ApiContext);
+  const rowHeight = useGridSelector(apiRef, densityRowHeightSelector);
 
   return (
     <div

@@ -3,6 +3,9 @@ import {
   ArrowDownwardIcon,
   ArrowUpwardIcon,
   SeparatorIcon,
+  ViewHeadlineIcon,
+  TableRowsIcon,
+  ViewStreamIcon,
   FilterListIcon,
   TripleDotsVerticalIcon,
   ColumnIcon,
@@ -53,9 +56,35 @@ export interface IconsOptions {
    */
   ColumnSortedDescending?: React.ElementType;
   /**
-   * Icon displayed in between 2 column headers that allows to resize the column header.
+   * Icon displayed in between two column headers that allows to resize the column header.
    */
   ColumnResize?: React.ElementType<{ className: string }>;
+  /**
+   * Icon displayed on the compact density option in the toolbar.
+   */
+  DensityCompact?: React.ElementType;
+  /**
+   * Icon displayed on the standard density option in the toolbar.
+   */
+  DensityStandard?: React.ElementType;
+  /**
+   * Icon displayed on the comfortable density option in the toolbar.
+   */
+  DensityComfortable?: React.ElementType;
+}
+
+/**
+ * Available densities.
+ */
+export type Density = 'compact' | 'standard' | 'comfortable';
+
+/**
+ * Density enum.
+ */
+export enum DensityTypes {
+  Compact = 'compact',
+  Standard = 'standard',
+  Comfortable = 'comfortable',
 }
 
 // TODO add multiSortKey
@@ -118,6 +147,11 @@ export interface GridOptions {
    * @default false
    */
   disableColumnMenu?: boolean;
+  /**
+   * If `true`, density selection is disabled.
+   * @default false
+   */
+  disableDensitySelector?: boolean;
   /**
    * If `true`, reordering columns is disabled.
    * @default false
@@ -319,6 +353,10 @@ export interface GridOptions {
    * Extend native column types with your new column types.
    */
   columnTypes: ColumnTypesRecord;
+  /**
+   * Set the density of the grid.
+   */
+  density: Density;
 }
 
 /**
@@ -336,6 +374,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   filterMode: FeatureModeConstant.client,
   sortingOrder: ['asc', 'desc', null],
   columnTypes: DEFAULT_COLUMN_TYPES,
+  density: DensityTypes.Standard,
   disableColumnMenu: !EXPERIMENTAL_ENABLED,
   disableColumnFilter: !EXPERIMENTAL_ENABLED,
   disableColumnSelector: !EXPERIMENTAL_ENABLED,
@@ -348,5 +387,8 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
     ColumnSortedAscending: ArrowUpwardIcon,
     ColumnSortedDescending: ArrowDownwardIcon,
     ColumnResize: SeparatorIcon,
+    DensityCompact: ViewHeadlineIcon,
+    DensityStandard: TableRowsIcon,
+    DensityComfortable: ViewStreamIcon,
   },
 };

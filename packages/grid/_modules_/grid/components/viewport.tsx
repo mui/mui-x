@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { columnsSelector } from '../hooks/features/columns/columnsSelector';
+import { visibleColumnsSelector } from '../hooks/features/columns/columnsSelector';
 import { GridState } from '../hooks/features/core/gridState';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
+import { densityRowHeightSelector } from '../hooks/features/density/densitySelector';
 import { visibleSortedRowsSelector } from '../hooks/features/filter/filterSelector';
 import { keyboardCellSelector } from '../hooks/features/keyboard/keyboardSelector';
 import { selectionStateSelector } from '../hooks/features/selection/selectionSelector';
@@ -31,11 +32,11 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const containerSizes = useGridSelector(apiRef, containerSizesSelector);
     const viewportSizes = useGridSelector(apiRef, viewportSizesSelector);
     const scrollBarState = useGridSelector(apiRef, scrollBarSizeSelector);
-    const columns = useGridSelector(apiRef, columnsSelector);
+    const visibleColumns = useGridSelector(apiRef, visibleColumnsSelector);
     const cellFocus = useGridSelector(apiRef, keyboardCellSelector);
     const selectionState = useGridSelector(apiRef, selectionStateSelector);
-
     const rows = useGridSelector(apiRef, visibleSortedRowsSelector);
+    const rowHeight = useGridSelector(apiRef, densityRowHeightSelector);
 
     const getRowsElements = () => {
       // TODO move that to selector
@@ -48,9 +49,9 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
           selected={!!selectionState[r.id]}
           rowIndex={renderCtx.firstRowIdx + idx}
         >
-          <LeftEmptyCell width={renderCtx.leftEmptyWidth} />
+          <LeftEmptyCell width={renderCtx.leftEmptyWidth} height={rowHeight} />
           <RowCells
-            columns={columns.visible}
+            columns={visibleColumns}
             row={r}
             firstColIdx={renderCtx.firstColIdx}
             lastColIdx={renderCtx.lastColIdx}
@@ -62,7 +63,7 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
             cellFocus={cellFocus}
             domIndex={idx}
           />
-          <RightEmptyCell width={renderCtx.rightEmptyWidth} />
+          <RightEmptyCell width={renderCtx.rightEmptyWidth} height={rowHeight} />
         </Row>
       ));
     };
