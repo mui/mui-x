@@ -544,7 +544,6 @@ describe('<DataGrid />', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid {...defaultProps} hideToolbar={false} rowHeight={rowHeight} />
         </div>,
-        { strict: false },
       );
 
       fireEvent.click(getByText('Density'));
@@ -562,7 +561,6 @@ describe('<DataGrid />', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid {...defaultProps} hideToolbar={false} rowHeight={rowHeight} />
         </div>,
-        { strict: false },
       );
 
       fireEvent.click(getByText('Density'));
