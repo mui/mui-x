@@ -140,9 +140,20 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   const applySorting = React.useCallback(
     (noRerender = false) => {
       const rowModels = apiRef.current.getRowModels();
+
+      if (options.sortingMode === FeatureModeConstant.server) {
+        logger.info('Skipping sorting rows as sortingMode = server');
+        setGridState((oldState) => {
+          return {
+            ...oldState,
+            sorting: { ...oldState.sorting, sortedRows: rowModels.map((row) => row.id) },
+          };
+        });
+        return;
+      }
+
       const sortModel = apiRef.current.getState<GridState>().sorting.sortModel;
       logger.info('Sorting rows with ', sortModel);
-
       const sorted = [...rowModels];
       if (sortModel.length > 0) {
         comparatorList.current = buildComparatorList(sortModel);
@@ -152,14 +163,22 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
       setGridState((oldState) => {
         return {
           ...oldState,
-          sorting: { ...oldState.sorting, sortedRows: [...sorted.map((row) => row.id)] },
+          sorting: { ...oldState.sorting, sortedRows: sorted.map((row) => row.id) },
         };
       });
       if (!noRerender) {
         forceUpdate();
       }
     },
-    [apiRef, logger, setGridState, forceUpdate, buildComparatorList, comparatorListAggregate],
+    [
+      apiRef,
+      logger,
+      setGridState,
+      forceUpdate,
+      buildComparatorList,
+      comparatorListAggregate,
+      options.sortingMode,
+    ],
   );
 
   const setSortModel = React.useCallback(
@@ -174,19 +193,9 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
         return;
       }
       apiRef.current.publishEvent(SORT_MODEL_CHANGE, getSortModelParams(sortModel));
-
-      if (options.sortingMode === FeatureModeConstant.client) {
-        apiRef.current.applySorting();
-      }
+      apiRef.current.applySorting();
     },
-    [
-      setGridState,
-      forceUpdate,
-      visibleColumns.length,
-      apiRef,
-      getSortModelParams,
-      options.sortingMode,
-    ],
+    [setGridState, forceUpdate, visibleColumns.length, apiRef, getSortModelParams],
   );
 
   const sortColumn = React.useCallback(
@@ -195,7 +204,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
         return;
       }
       const sortItem = createSortItem(column, direction);
-      let sortModel;
+      let sortModel: SortItem | SortItem[];
       if (!allowMultipleSorting.current) {
         sortModel = !sortItem ? [] : [sortItem];
       } else {
@@ -261,11 +270,11 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   }, [apiRef, rowsProp]);
 
   React.useEffect(() => {
-    if (rowCount > 0 && options.sortingMode === FeatureModeConstant.client) {
+    if (rowCount > 0) {
       logger.debug('row changed, applying sortModel');
       apiRef.current.applySorting();
     }
-  }, [rowCount, apiRef, options.sortingMode, logger]);
+  }, [rowCount, apiRef, logger]);
 
   // TODO Remove if we deprecate column.sortDirection
   React.useEffect(() => {
