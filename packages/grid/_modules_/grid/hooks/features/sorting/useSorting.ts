@@ -23,7 +23,7 @@ import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useLogger } from '../../utils/useLogger';
 import { optionsSelector } from '../../utils/useOptionsProp';
-import { columnsSelector } from '../columns/columnsSelector';
+import { visibleColumnsSelector } from '../columns/columnsSelector';
 import { GridState } from '../core/gridState';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
@@ -37,7 +37,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
 
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
-  const columns = useGridSelector(apiRef, columnsSelector);
+  const visibleColumns = useGridSelector(apiRef, visibleColumnsSelector);
   const rowCount = useGridSelector(apiRef, rowCountSelector);
 
   const getSortModelParams = React.useCallback(
@@ -170,7 +170,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
       });
       forceUpdate();
 
-      if (columns.visible.length === 0) {
+      if (visibleColumns.length === 0) {
         return;
       }
       apiRef.current.publishEvent(SORT_MODEL_CHANGE, getSortModelParams(sortModel));
@@ -182,7 +182,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
     [
       setGridState,
       forceUpdate,
-      columns.visible.length,
+      visibleColumns.length,
       apiRef,
       getSortModelParams,
       options.sortingMode,
@@ -269,7 +269,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
 
   // TODO Remove if we deprecate column.sortDirection
   React.useEffect(() => {
-    if (columns.visible.length > 0) {
+    if (visibleColumns.length > 0) {
       const sortedColumns = apiRef.current
         .getAllColumns()
         .filter((column) => column.sortDirection != null)
@@ -288,7 +288,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
         apiRef.current.setSortModel(sortModel);
       }
     }
-  }, [apiRef, columns]);
+  }, [apiRef, visibleColumns]);
 
   React.useEffect(() => {
     const sortModel = options.sortModel || [];
