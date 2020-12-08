@@ -76,6 +76,7 @@ export const useStyles = makeStyles(
           display: 'flex',
           width: '100%',
           alignItems: 'center',
+          overflow: 'hidden',
         },
         '& .MuiDataGrid-colCell, & .MuiDataGrid-cell': {
           WebkitTapHighlightColor: 'transparent',
@@ -95,6 +96,7 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-colCell': {
           position: 'relative',
           display: 'flex',
+          alignItems: 'center',
         },
         '& .MuiDataGrid-colCellTitleContainer': {
           textOverflow: 'ellipsis',
@@ -248,16 +250,13 @@ export const useStyles = makeStyles(
           justifyContent: 'space-between',
           alignItems: 'center',
           minHeight: 52, // Match TablePagination min height
-          '&.MuiDataGrid-footer-paginationAvailable': {
-            '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
-              visibility: 'hidden',
-              [theme.breakpoints.up('md')]: {
-                visibility: 'visible',
-              },
+          '& .MuiDataGrid-selectedRowCount': {
+            visibility: 'hidden',
+            width: 0,
+            [theme.breakpoints.up('sm')]: {
+              visibility: 'visible',
+              width: 'auto',
             },
-          },
-          '&.MuiDataGrid-footer-justifyContentEnd': {
-            justifyContent: 'flex-end',
           },
         },
         '& .MuiDataGrid-colCell-dropZone .MuiDataGrid-colCell-draggable': {

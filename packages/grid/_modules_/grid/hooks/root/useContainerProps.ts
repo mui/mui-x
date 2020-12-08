@@ -8,6 +8,7 @@ import { columnsTotalWidthSelector } from '../features/columns/columnsSelector';
 import { GridState } from '../features/core/gridState';
 import { useGridSelector } from '../features/core/useGridSelector';
 import { useGridState } from '../features/core/useGridState';
+import { densityRowHeightSelector } from '../features/density/densitySelector';
 import { visibleRowCountSelector } from '../features/filter/filterSelector';
 import { PaginationState } from '../features/pagination/paginationReducer';
 import { paginationSelector } from '../features/pagination/paginationSelector';
@@ -21,6 +22,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
   const windowSizesRef = React.useRef<ElementSize>({ width: 0, height: 0 });
 
   const options = useGridSelector(apiRef, optionsSelector);
+  const rowHeight = useGridSelector(apiRef, densityRowHeightSelector);
   const columnsTotalWidth = useGridSelector(apiRef, columnsTotalWidthSelector);
   const visibleRowsCount = useGridSelector(apiRef, visibleRowCountSelector);
   const paginationState = useGridSelector<PaginationState>(apiRef, paginationSelector);
@@ -46,7 +48,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
       const hasScrollY =
         options.autoPageSize || options.autoHeight
           ? false
-          : windowSizesRef.current.height < rowsCount * options.rowHeight;
+          : windowSizesRef.current.height < rowsCount * rowHeight;
       const hasScrollX = columnsTotalWidth > windowSizesRef.current.width;
       const scrollBarSize = {
         y: hasScrollY ? options.scrollbarSize : 0,
@@ -54,13 +56,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
       };
       return { hasScrollX, hasScrollY, scrollBarSize };
     },
-    [
-      columnsTotalWidth,
-      options.autoHeight,
-      options.autoPageSize,
-      options.rowHeight,
-      options.scrollbarSize,
-    ],
+    [columnsTotalWidth, options.autoHeight, options.autoPageSize, rowHeight, options.scrollbarSize],
   );
 
   const getViewport = React.useCallback(
@@ -81,12 +77,12 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
       const viewportSize = {
         width: windowSizesRef.current!.width - scrollBarState.scrollBarSize.y,
         height: options.autoHeight
-          ? rowsCount * options.rowHeight
+          ? rowsCount * rowHeight
           : windowSizesRef.current!.height - scrollBarState.scrollBarSize.x,
       };
       return viewportSize;
     },
-    [logger, options.autoHeight, options.rowHeight, windowRef],
+    [logger, options.autoHeight, rowHeight, windowRef],
   );
 
   const getContainerProps = React.useCallback(
@@ -104,7 +100,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
         return null;
       }
 
-      let viewportPageSize = viewportSizes.height / options.rowHeight;
+      let viewportPageSize = viewportSizes.height / rowHeight;
       viewportPageSize = options.pagination
         ? Math.floor(viewportPageSize)
         : Math.round(viewportPageSize);
@@ -117,15 +113,14 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
       logger.debug(
         `viewportPageSize:  ${viewportPageSize}, rzPageSize: ${rzPageSize}, viewportMaxPage: ${viewportMaxPage}`,
       );
-      const renderingZoneHeight =
-        rzPageSize * options.rowHeight + options.rowHeight + scrollState.scrollBarSize.x;
+      const renderingZoneHeight = rzPageSize * rowHeight + rowHeight + scrollState.scrollBarSize.x;
       const dataContainerWidth = columnsTotalWidth - scrollState.scrollBarSize.y;
       let totalHeight =
         (options.autoPageSize ? 1 : rowsCount / viewportPageSize) * viewportSizes.height +
         (scrollState.hasScrollY ? scrollState.scrollBarSize.x : 0);
 
       if (options.autoHeight) {
-        totalHeight = rowsCount * options.rowHeight + scrollState.scrollBarSize.x;
+        totalHeight = rowsCount * rowHeight + scrollState.scrollBarSize.x;
       }
 
       const indexes: ContainerProps = {
@@ -154,7 +149,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
     [
       windowRef,
       columnsTotalWidth,
-      options.rowHeight,
+      rowHeight,
       options.pagination,
       options.autoPageSize,
       options.autoHeight,

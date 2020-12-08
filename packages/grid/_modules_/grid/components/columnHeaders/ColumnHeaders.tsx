@@ -8,6 +8,7 @@ import { OptionsContext } from '../options-context';
 import { ScrollArea } from '../ScrollArea';
 import { containerSizesSelector } from '../viewport';
 import { ColumnHeaderItemCollection } from './ColumnHeadersItemCollection';
+import { densityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 
 export interface ColumnsHeaderProps {
   hasScrollX: boolean;
@@ -22,7 +23,8 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps
     const columns = useGridSelector(apiRef, visibleColumnsSelector);
     const wrapperCssClasses = `MuiDataGrid-colCellWrapper ${hasScrollX ? 'scroll' : ''}`;
     const { disableColumnReorder } = React.useContext(OptionsContext);
-    const containerSizes = useGridSelector(apiRef, containerSizesSelector);
+    const containerSizes = useGridSelector(api, containerSizesSelector);
+    const headerHeight = useGridSelector(api, densityHeaderHeightSelector);
 
     const renderedCols = React.useMemo(() => {
       if (renderCtx == null) {
@@ -49,9 +51,9 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps
           style={{ minWidth: containerSizes?.totalSizes?.width }}
           onDragOver={handleDragOver}
         >
-          <LeftEmptyCell width={renderCtx?.leftEmptyWidth} />
+          <LeftEmptyCell width={renderCtx?.leftEmptyWidth} height={headerHeight} />
           <ColumnHeaderItemCollection columns={renderedCols} separatorProps={separatorProps} />
-          <RightEmptyCell width={renderCtx?.rightEmptyWidth} />
+          <RightEmptyCell width={renderCtx?.rightEmptyWidth} height={headerHeight} />
         </div>
         <ScrollArea scrollDirection="right" />
       </React.Fragment>
