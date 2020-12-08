@@ -13,7 +13,7 @@ export const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(func
 ) {
   const { className, ...other } = props;
   const apiRef = React.useContext(ApiContext);
-  const { autoHeight } = useGridSelector(apiRef, optionsSelector)
+  const { autoHeight } = useGridSelector(apiRef, optionsSelector);
   const headerHeight = useGridSelector(apiRef, densityHeaderHeightSelector);
   return (
     <div

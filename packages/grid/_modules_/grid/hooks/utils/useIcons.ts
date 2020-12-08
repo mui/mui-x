@@ -6,7 +6,7 @@ import { optionsSelector } from './useOptionsProp';
 
 export function useIcons(): IconsOptions {
   const apiRef = React.useContext(ApiContext);
-  const { icons } = useGridSelector(apiRef, optionsSelector)
+  const { icons } = useGridSelector(apiRef, optionsSelector);
 
   if (!icons) {
     throw new Error('Missing set of icons in grid options');

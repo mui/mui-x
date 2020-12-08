@@ -18,7 +18,6 @@ import { ColumnsToolbarButton } from './components/toolbar/ColumnsToolbarButton'
 import { FilterToolbarButton } from './components/toolbar/FilterToolbarButton';
 import { Viewport } from './components/Viewport';
 import { Watermark } from './components/Watermark';
-import { DATA_CONTAINER_CSS_CLASS } from './constants/cssClassesConstants';
 import { GridComponentProps } from './GridComponentProps';
 import { useColumnMenu } from './hooks/features/columnMenu/useColumnMenu';
 import { visibleColumnsLengthSelector } from './hooks/features/columns/columnsSelector';
@@ -110,11 +109,17 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
       [gridState.options, gridState.containerSizes],
     );
 
-    if(gridState.rendering.renderContext != null) {
-        const {page, firstColIdx, lastColIdx, firstRowIdx, lastRowIdx} = gridState.rendering.renderContext!;
-        logger.info(
-          `Rendering, page: ${page}, col: ${firstColIdx}-${lastColIdx}, row: ${firstRowIdx}-${lastRowIdx}`,
-        );
+    if (gridState.rendering.renderContext != null) {
+      const {
+        page,
+        firstColIdx,
+        lastColIdx,
+        firstRowIdx,
+        lastRowIdx,
+      } = gridState.rendering.renderContext!;
+      logger.info(
+        `Rendering, page: ${page}, col: ${firstColIdx}-${lastColIdx}, row: ${firstRowIdx}-${lastRowIdx}`,
+      );
     }
 
     return (
@@ -143,64 +148,57 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
               )}
             >
               <ApiContext.Provider value={apiRef}>
-                  <div ref={headerRef}>
-                    {customComponents.headerComponent ? (
-                      customComponents.headerComponent
-                    ) : (
-                      <React.Fragment>
-                        {!gridState.options.hideToolbar &&
-                          (!gridState.options.disableColumnFilter ||
-                            !gridState.options.disableColumnSelector ||
-                            !gridState.options.disableDensitySelector) && (
-                            <GridToolbar>
-                              {!gridState.options.disableColumnSelector && <ColumnsToolbarButton />}
-                              {!gridState.options.disableColumnFilter && <FilterToolbarButton />}
-                              {!gridState.options.disableDensitySelector && <DensitySelector />}
-                            </GridToolbar>
-                          )}
-                      </React.Fragment>
-                    )}
-                  </div>
-                  <div className="MuiDataGrid-mainGridContainer">
-                    <Watermark licenseStatus={props.licenseStatus} />
-                    <GridColumnsContainer
-                      ref={columnsContainerRef}
-                    >
-                      <ColumnsHeader ref={columnsHeaderRef}/>
-                    </GridColumnsContainer>
-                    {!props.loading &&
-                      gridState.rows.totalRowCount === 0 &&
-                      customComponents.noRowsComponent}
-                    {props.loading && customComponents.loadingComponent}
-                    <GridWindow ref={windowRef}>
-                      <GridDataContainer
-                        ref={gridRef}
-                        className={DATA_CONTAINER_CSS_CLASS}
-                        style={{
-                          minHeight: gridState.containerSizes?.dataContainerSizes?.height,
-                          minWidth: gridState.containerSizes?.dataContainerSizes?.width,
-                        }}
-                      >
-                        {gridState.rendering.renderContext != null && (
-                            <Viewport ref={renderingZoneRef} />
+                <div ref={headerRef}>
+                  {customComponents.headerComponent || (
+                    <React.Fragment>
+                      {!gridState.options.hideToolbar &&
+                        (!gridState.options.disableColumnFilter ||
+                          !gridState.options.disableColumnSelector ||
+                          !gridState.options.disableDensitySelector) && (
+                          <GridToolbar>
+                            {!gridState.options.disableColumnSelector && <ColumnsToolbarButton />}
+                            {!gridState.options.disableColumnFilter && <FilterToolbarButton />}
+                            {!gridState.options.disableDensitySelector && <DensitySelector />}
+                          </GridToolbar>
                         )}
-                      </GridDataContainer>
-                    </GridWindow>
-                  </div>
-                  <div ref={footerRef}>
-                    {customComponents.footerComponent ? (
-                      customComponents.footerComponent
-                    ) : (
-                      <DefaultFooter
-                        paginationComponent={
-                          !!gridState.options.pagination &&
-                          gridState.pagination.pageSize != null &&
-                          !gridState.options.hideFooterPagination &&
-                          (customComponents.paginationComponent || <Pagination />)
-                        }
-                      />
-                    )}
-                  </div>
+                    </React.Fragment>
+                  )}
+                </div>
+                <div className="MuiDataGrid-mainGridContainer">
+                  <Watermark licenseStatus={props.licenseStatus} />
+                  <GridColumnsContainer ref={columnsContainerRef}>
+                    <ColumnsHeader ref={columnsHeaderRef} />
+                  </GridColumnsContainer>
+                  {!props.loading &&
+                    gridState.rows.totalRowCount === 0 &&
+                    customComponents.noRowsComponent}
+                  {props.loading && customComponents.loadingComponent}
+                  <GridWindow ref={windowRef}>
+                    <GridDataContainer
+                      ref={gridRef}
+                      style={{
+                        minHeight: gridState.containerSizes?.dataContainerSizes?.height,
+                        minWidth: gridState.containerSizes?.dataContainerSizes?.width,
+                      }}
+                    >
+                      {gridState.rendering.renderContext != null && (
+                        <Viewport ref={renderingZoneRef} />
+                      )}
+                    </GridDataContainer>
+                  </GridWindow>
+                </div>
+                <div ref={footerRef}>
+                  {customComponents.footerComponent || (
+                    <DefaultFooter
+                      paginationComponent={
+                        !!gridState.options.pagination &&
+                        gridState.pagination.pageSize != null &&
+                        !gridState.options.hideFooterPagination &&
+                        (customComponents.paginationComponent || <Pagination />)
+                      }
+                    />
+                  )}
+                </div>
               </ApiContext.Provider>
             </ErrorBoundary>
           </GridRoot>

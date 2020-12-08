@@ -12,7 +12,7 @@ export const GridColumnsContainer = React.forwardRef<HTMLDivElement, GridColumns
     const { className, style, ...other } = props;
 
     const apiRef = React.useContext(ApiContext);
-    const height = useGridSelector(apiRef, densityHeaderHeightSelector)
+    const height = useGridSelector(apiRef, densityHeaderHeightSelector);
 
     return (
       <div

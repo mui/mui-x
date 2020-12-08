@@ -39,14 +39,19 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const rowHeight = useGridSelector(apiRef, densityRowHeightSelector);
 
     const getRowsElements = () => {
-      if(renderState.renderContext == null) {
+      if (renderState.renderContext == null) {
         return null;
       }
 
-      const renderedRows = rows.slice(renderState.renderContext.firstRowIdx, renderState.renderContext.lastRowIdx!);
+      const renderedRows = rows.slice(
+        renderState.renderContext.firstRowIdx,
+        renderState.renderContext.lastRowIdx!,
+      );
       return renderedRows.map((r, idx) => (
         <Row
-          className={(renderState.renderContext!.firstRowIdx! + idx) % 2 === 0 ? 'Mui-even' : 'Mui-odd'}
+          className={
+            (renderState.renderContext!.firstRowIdx! + idx) % 2 === 0 ? 'Mui-even' : 'Mui-odd'
+          }
           key={r.id}
           id={r.id}
           selected={!!selectionState[r.id]}

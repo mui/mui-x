@@ -17,7 +17,7 @@ export const ColumnHeaderSeparator = React.memo(function ColumnHeaderSeparator(
   const { resizable, resizing, height, ...other } = props;
   const icons = useIcons();
   const apiRef = React.useContext(ApiContext);
-  const { showColumnRightBorder } = useGridSelector(apiRef, optionsSelector)
+  const { showColumnRightBorder } = useGridSelector(apiRef, optionsSelector);
   const Icon = icons!.ColumnResize!;
 
   const stopClick = React.useCallback((event: React.MouseEvent<HTMLDivElement>) => {

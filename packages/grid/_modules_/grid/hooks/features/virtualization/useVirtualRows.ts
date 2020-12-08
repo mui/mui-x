@@ -24,14 +24,12 @@ import { InternalRenderingState } from './renderingState';
 import { useVirtualColumns } from './useVirtualColumns';
 import { densityRowHeightSelector } from '../density/densitySelector';
 
-type UseVirtualRowsReturnType = Partial<RenderContextProps> | null;
-
 export const useVirtualRows = (
   colRef: React.MutableRefObject<HTMLDivElement | null>,
   windowRef: React.MutableRefObject<HTMLDivElement | null>,
   renderingZoneRef: React.MutableRefObject<HTMLDivElement | null>,
   apiRef: ApiRef,
-): UseVirtualRowsReturnType => {
+): void => {
   const logger = useLogger('useVirtualRows');
 
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
@@ -382,6 +380,4 @@ export const useVirtualRows = (
     preventViewportScroll,
   );
   useApiEventHandler(apiRef, RESIZE, updateViewport);
-
-  return gridState.rendering.renderContext;
 };

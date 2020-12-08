@@ -30,5 +30,5 @@ export type GridApi = CoreApi &
   PaginationApi &
   FilterApi &
   ColumnMenuApi &
-	ColumnResizeApi &
+  ColumnResizeApi &
   PreferencesPanelApi;

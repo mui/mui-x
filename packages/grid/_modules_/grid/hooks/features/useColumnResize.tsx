@@ -274,5 +274,9 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
     };
   }, [columnsHeaderElement, handleTouchStart, stopListening]);
 
-  useApiMethod<ColumnResizeApi>(apiRef, { startResizeOnMouseDown: handleMouseDown }, 'columnResizeApi')
+  useApiMethod<ColumnResizeApi>(
+    apiRef,
+    { startResizeOnMouseDown: handleMouseDown },
+    'columnResizeApi',
+  );
 };
