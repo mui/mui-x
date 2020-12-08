@@ -24,34 +24,17 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps
     const { disableColumnReorder } = React.useContext(OptionsContext);
     const containerSizes = useGridSelector(apiRef, containerSizesSelector);
 
-    if (!apiRef) {
-      throw new Error('Material-UI: ApiRef was not found in context.');
-    }
-    const lastRenderedColIndexes = React.useRef({
-      first: renderCtx?.firstColIdx,
-      last: renderCtx?.lastColIdx,
-    });
-    const [renderedCols, setRenderedCols] = React.useState(columns);
-
-    React.useEffect(() => {
-      if (
-        renderCtx &&
-        renderCtx.firstColIdx != null &&
-        renderCtx.lastColIdx != null &&
-        (lastRenderedColIndexes.current.first !== renderCtx.firstColIdx ||
-          lastRenderedColIndexes.current.last !== renderCtx.lastColIdx)
-      ) {
-        setRenderedCols(columns.slice(renderCtx.firstColIdx, renderCtx.lastColIdx + 1));
-        lastRenderedColIndexes.current = {
-          first: renderCtx.firstColIdx,
-          last: renderCtx.lastColIdx,
-        };
+    const renderedCols = React.useMemo(() => {
+      if (renderCtx == null) {
+        return [];
       }
-    }, [renderCtx, columns]);
+      return columns.slice(renderCtx.firstColIdx, renderCtx.lastColIdx! + 1);
+    }, [columns, renderCtx]);
 
-    const handleDragOver = !disableColumnReorder
-      ? (event) => apiRef.current.onColHeaderDragOver(event, ref as React.RefObject<HTMLElement>)
-      : undefined;
+    const handleDragOver =
+      !disableColumnReorder && apiRef
+        ? (event) => apiRef.current.onColHeaderDragOver(event, ref as React.RefObject<HTMLElement>)
+        : undefined;
 
     return (
       <React.Fragment>
