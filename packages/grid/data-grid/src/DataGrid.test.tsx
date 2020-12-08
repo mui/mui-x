@@ -463,7 +463,7 @@ describe('<DataGrid />', () => {
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGrid
-              {...defaultProps}
+              {...baselineProps}
               sortingMode="server"
               rows={rows}
               sortModel={[
