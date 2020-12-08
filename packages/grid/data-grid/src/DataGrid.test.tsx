@@ -1,7 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-// @ts-expect-error need to migrate helpers to TypeScript
-import { createClientRender, fireEvent, screen, ErrorBoundary, createEvent } from 'test/utils';
+import {
+  createClientRenderStrictMode,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  fireEvent,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  screen,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  ErrorBoundary,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  createEvent,
+} from 'test/utils';
 import { useFakeTimers, spy } from 'sinon';
 import { expect } from 'chai';
 import { DataGrid, RowsProp } from '@material-ui/data-grid';
@@ -12,7 +21,8 @@ import {
 } from 'packages/grid/_modules_/grid/hooks/features/density/useDensity';
 
 describe('<DataGrid />', () => {
-  const render = createClientRender();
+  // TODO v5: replace with createClientRender
+  const render = createClientRenderStrictMode();
 
   const defaultProps = {
     rows: [
@@ -534,7 +544,6 @@ describe('<DataGrid />', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid {...defaultProps} hideToolbar={false} rowHeight={rowHeight} />
         </div>,
-        { strict: false },
       );
 
       fireEvent.click(getByText('Density'));
@@ -552,7 +561,6 @@ describe('<DataGrid />', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid {...defaultProps} hideToolbar={false} rowHeight={rowHeight} />
         </div>,
-        { strict: false },
       );
 
       fireEvent.click(getByText('Density'));
