@@ -76,6 +76,7 @@ export const useStyles = makeStyles(
           display: 'flex',
           width: '100%',
           alignItems: 'center',
+          overflow: 'hidden',
         },
         '& .MuiDataGrid-colCell, & .MuiDataGrid-cell': {
           WebkitTapHighlightColor: 'transparent',
@@ -95,6 +96,7 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-colCell': {
           position: 'relative',
           display: 'flex',
+          alignItems: 'center',
         },
         '& .MuiDataGrid-colCellTitleContainer': {
           textOverflow: 'ellipsis',

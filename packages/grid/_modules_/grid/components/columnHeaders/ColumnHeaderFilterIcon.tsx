@@ -1,7 +1,7 @@
+import * as React from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import Tooltip from '@material-ui/core/Tooltip';
-import * as React from 'react';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { preferencePanelStateSelector } from '../../hooks/features/preferencesPanel/preferencePanelSelector';
 import { PreferencePanelsValue } from '../../hooks/features/preferencesPanel/preferencesPanelValue';
@@ -13,7 +13,7 @@ export interface ColumnHeaderFilterIconProps {
   counter?: number;
 }
 
-export const ColumnHeaderFilterIcon: React.FC<ColumnHeaderFilterIconProps> = (props) => {
+export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
   const { counter } = props;
   const apiRef = React.useContext(ApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
@@ -62,4 +62,4 @@ export const ColumnHeaderFilterIcon: React.FC<ColumnHeaderFilterIconProps> = (pr
       </div>
     </Tooltip>
   );
-};
+}

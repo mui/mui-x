@@ -6,8 +6,9 @@ import { randomInt, randomUserName } from '@material-ui/x-grid-data-generator';
 const columns = [
   { field: 'id' },
   { field: 'username', width: 150 },
-  { field: 'age', width: 80 },
+  { field: 'age', width: 80, type: 'number' },
 ];
+
 const rows = [
   { id: 1, username: randomUserName(), age: randomInt(10, 80) },
   { id: 2, username: randomUserName(), age: randomInt(10, 80) },

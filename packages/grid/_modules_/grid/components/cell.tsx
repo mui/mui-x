@@ -2,13 +2,13 @@ import * as React from 'react';
 import { Alignement, CellValue } from '../models';
 import { CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import { classnames } from '../utils';
-import { OptionsContext } from './options-context';
 
 export interface GridCellProps {
   field?: string;
   value?: CellValue;
   formattedValue?: CellValue;
   width: number;
+  height: number;
   showRightBorder?: boolean;
   hasFocus?: boolean;
   align?: Alignement;
@@ -37,10 +37,10 @@ export const Cell: React.FC<GridCellProps> = React.memo((props) => {
     tabIndex,
     value,
     width,
+    height,
   } = props;
 
   const valueToRender = formattedValue || value;
-  const { rowHeight } = React.useContext(OptionsContext);
   const cellRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -66,9 +66,9 @@ export const Cell: React.FC<GridCellProps> = React.memo((props) => {
       style={{
         minWidth: width,
         maxWidth: width,
-        lineHeight: `${rowHeight - 1}px`,
-        minHeight: rowHeight,
-        maxHeight: rowHeight,
+        lineHeight: `${height - 1}px`,
+        minHeight: height,
+        maxHeight: height,
       }}
       tabIndex={tabIndex}
     >
@@ -79,12 +79,18 @@ export const Cell: React.FC<GridCellProps> = React.memo((props) => {
 
 Cell.displayName = 'GridCell';
 
-export const LeftEmptyCell: React.FC<{ width?: number }> = React.memo(({ width }) =>
-  !width ? null : <Cell width={width} />,
+export const LeftEmptyCell: React.FC<{
+  width?: number;
+  height?: number;
+}> = React.memo(({ width, height }) =>
+  !width || !height ? null : <Cell width={width} height={height} />,
 );
 LeftEmptyCell.displayName = 'LeftEmptyCell';
 
-export const RightEmptyCell: React.FC<{ width?: number }> = React.memo(({ width }) =>
-  !width ? null : <Cell width={width} />,
+export const RightEmptyCell: React.FC<{
+  width?: number;
+  height?: number;
+}> = React.memo(({ width, height }) =>
+  !width || !height ? null : <Cell width={width} height={height} />,
 );
 RightEmptyCell.displayName = 'RightEmptyCell';

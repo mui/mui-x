@@ -94,6 +94,8 @@ const stories = [
   '/story/x-grid-tests-styling--column-header-class',
   '/story/x-grid-tests-styling--column-cell-class-rules',
   '/story/x-grid-tests-styling--column-cell-renderer',
+
+  '/story/x-grid-tests-toolbar--density-picker',
 ];
 
 describe('snapshotTest', () => {

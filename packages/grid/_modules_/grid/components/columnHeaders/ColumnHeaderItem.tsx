@@ -12,6 +12,8 @@ import { ColumnHeaderTitle } from './ColumnHeaderTitle';
 import { ColumnHeaderSeparator } from './ColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { ColumnHeaderFilterIcon } from './ColumnHeaderFilterIcon';
+import { useGridSelector } from '../../hooks/features/core/useGridSelector';
+import { densityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 
 interface ColumnHeaderItemProps {
   colIndex: number;
@@ -37,6 +39,7 @@ export const ColumnHeaderItem = ({
   filterItemsCounter,
 }: ColumnHeaderItemProps) => {
   const apiRef = React.useContext(ApiContext);
+  const headerHeight = useGridSelector(apiRef, densityHeaderHeightSelector);
   const {
     disableColumnReorder,
     showColumnRightBorder,
@@ -142,7 +145,6 @@ export const ColumnHeaderItem = ({
     >
       <div className="MuiDataGrid-colCell-draggable" {...dragConfig}>
         {!disableColumnMenu && isColumnNumeric && !column.disableColumnMenu && columnMenuIconButton}
-
         <div className="MuiDataGrid-colCellTitleContainer">
           {isColumnNumeric && columnTitleIconButtons}
           {headerComponent || (
@@ -154,19 +156,17 @@ export const ColumnHeaderItem = ({
           )}
           {!isColumnNumeric && columnTitleIconButtons}
         </div>
-
         {!isColumnNumeric &&
           !disableColumnMenu &&
           !column.disableColumnMenu &&
           columnMenuIconButton}
       </div>
-
       <ColumnHeaderSeparator
         resizable={!disableColumnResize && !!column.resizable}
         resizing={isResizing}
+        height={headerHeight}
         {...separatorProps}
       />
     </div>
   );
 };
-ColumnHeaderItem.displayName = 'ColumnHeaderItem';

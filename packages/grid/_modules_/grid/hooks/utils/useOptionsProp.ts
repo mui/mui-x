@@ -39,6 +39,7 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
       disableMultipleSelection: props.disableMultipleSelection,
       disableMultipleColumnsFiltering: props.disableMultipleColumnsFiltering,
       disableColumnResize: props.disableColumnResize,
+      disableDensitySelector: props.disableDensitySelector,
       disableColumnReorder: props.disableColumnReorder,
       disableColumnFilter: props.disableColumnFilter,
       disableColumnMenu: props.disableColumnMenu,
@@ -76,6 +77,7 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
       showColumnRightBorder: props.showColumnRightBorder,
       sortingOrder: props.sortingOrder,
       sortModel: props.sortModel,
+      density: props.density,
       filterModel: props.filterModel,
     }),
     [
@@ -93,6 +95,7 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
       props.disableMultipleSelection,
       props.disableMultipleColumnsFiltering,
       props.disableColumnResize,
+      props.disableDensitySelector,
       props.disableColumnReorder,
       props.disableColumnFilter,
       props.disableColumnMenu,
@@ -130,6 +133,7 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
       props.showColumnRightBorder,
       props.sortingOrder,
       props.sortModel,
+      props.density,
       props.filterModel,
     ],
   );

@@ -20,6 +20,7 @@ import { create } from 'jss';
 import rtl from 'jss-rtl';
 import { useRouter } from 'next/router';
 import { StylesProvider, jssPreset } from '@material-ui/styles';
+import { ponyfillGlobal } from '@material-ui/utils';
 import pages from 'docsx/src/pages';
 import initRedux from 'docs/src/modules/redux/initRedux';
 import PageContext from 'docs/src/modules/components/PageContext';
@@ -28,6 +29,48 @@ import loadScript from 'docs/src/modules/utils/loadScript';
 import { ThemeProvider } from 'docs/src/modules/components/ThemeContext';
 import { pathnameToLanguage, getCookie } from 'docs/src/modules/utils/helpers';
 import { ACTION_TYPES, CODE_VARIANTS } from 'docs/src/modules/constants';
+
+function getMuiPackageVersion(packageName, commitRef) {
+  if (commitRef === undefined) {
+    return 'latest';
+  }
+  const shortSha = commitRef.slice(0, 8);
+  return `https://pkg.csb.dev/mui-org/material-ui-x/commit/${shortSha}/@material-ui/${packageName}`;
+}
+
+ponyfillGlobal.muiDocConfig = {
+  csbIncludePeerDependencies: (deps, { versions }) => {
+    const newDeps = { ...deps };
+
+    if (
+      newDeps['@material-ui/x'] ||
+      newDeps['@material-ui/x-grid'] ||
+      newDeps['@material-ui/data-grid']
+    ) {
+      newDeps['@material-ui/core'] = versions['@material-ui/core'];
+    }
+
+    if (newDeps['@material-ui/x-grid-data-generator']) {
+      newDeps['@material-ui/core'] = versions['@material-ui/core'];
+      newDeps['@material-ui/icons'] = versions['@material-ui/icons'];
+      newDeps['@material-ui/lab'] = versions['@material-ui/lab'];
+    }
+
+    return newDeps;
+  },
+  csbGetVersions: (versions, { muiCommitRef }) => {
+    const output = {
+      ...versions,
+      '@material-ui/x-grid': getMuiPackageVersion('x-grid', muiCommitRef),
+      '@material-ui/x-grid-data-generator': getMuiPackageVersion(
+        'x-grid-data-generator',
+        muiCommitRef,
+      ),
+      '@material-ui/data-grid': getMuiPackageVersion('data-grid', muiCommitRef),
+    };
+    return output;
+  },
+};
 
 // Configure JSS
 const jss = create({

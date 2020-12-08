@@ -21,6 +21,7 @@ import { optionsSelector } from '../../utils/useOptionsProp';
 import { useScrollFn } from '../../utils/useScrollFn';
 import { InternalRenderingState } from './renderingState';
 import { useVirtualColumns } from './useVirtualColumns';
+import { densityRowHeightSelector } from '../density/densitySelector';
 
 type UseVirtualRowsReturnType = Partial<RenderContextProps> | null;
 
@@ -34,6 +35,7 @@ export const useVirtualRows = (
 
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
+  const rowHeight = useGridSelector(apiRef, densityRowHeightSelector);
   const paginationState = useGridSelector<PaginationState>(apiRef, paginationSelector);
   const totalRowCount = useGridSelector<number>(apiRef, rowCountSelector);
 
@@ -216,14 +218,14 @@ export const useVirtualRows = (
 
       const isRowIndexAbove = windowRef.current!.scrollTop > scrollPosition;
       const isRowIndexBelow =
-        windowRef.current!.scrollTop + viewportHeight < scrollPosition + options.rowHeight;
+        windowRef.current!.scrollTop + viewportHeight < scrollPosition + rowHeight;
 
       if (isRowIndexAbove) {
         scrollTop = scrollPosition; // We put it at the top of the page
         logger.debug(`Row is above, setting scrollTop to ${scrollTop}`);
       } else if (isRowIndexBelow) {
         // We make sure the row is not half visible
-        scrollTop = scrollPosition - viewportHeight + options.rowHeight;
+        scrollTop = scrollPosition - viewportHeight + rowHeight;
         logger.debug(`Row is below, setting scrollTop to ${scrollTop}`);
       }
 
@@ -237,7 +239,7 @@ export const useVirtualRows = (
 
       return needScroll;
     },
-    [logger, apiRef, gridState, windowRef, options.rowHeight],
+    [logger, apiRef, gridState, windowRef, rowHeight],
   );
 
   const resetScroll = React.useCallback(() => {

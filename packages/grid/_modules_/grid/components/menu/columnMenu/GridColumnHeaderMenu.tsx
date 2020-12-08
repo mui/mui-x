@@ -71,8 +71,10 @@ export function GridColumnHeaderMenu() {
   if (!target) {
     return null;
   }
+
   return (
     <GridMenu
+      placement={`bottom-${currentColumn!.align === 'right' ? 'start' : 'end'}` as any}
       open={columnMenuState.open}
       target={target}
       onKeyDown={handleListKeyDown}

@@ -1,11 +1,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 // @ts-expect-error need to migrate helpers to TypeScript
-import { createClientRender, fireEvent, screen, ErrorBoundary } from 'test/utils';
-import { useFakeTimers } from 'sinon';
+import { createClientRender, fireEvent, screen, ErrorBoundary, createEvent } from 'test/utils';
+import { useFakeTimers, spy } from 'sinon';
 import { expect } from 'chai';
 import { DataGrid, RowsProp } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
+import {
+  COMFORTABLE_DENSITY_FACTOR,
+  COMPACT_DENSITY_FACTOR,
+} from 'packages/grid/_modules_/grid/hooks/features/density/useDensity';
 
 describe('<DataGrid />', () => {
   const render = createClientRender();
@@ -417,6 +421,50 @@ describe('<DataGrid />', () => {
     });
   });
 
+  describe('keyboard', () => {
+    before(function beforeHook() {
+      if (/jsdom/.test(window.navigator.userAgent)) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
+    it('should be able to type in an child input', () => {
+      const handleInputKeyDown = spy();
+
+      const columns = [
+        {
+          field: 'name',
+          headerName: 'Name',
+          width: 200,
+          renderCell: () => (
+            <input type="text" data-testid="custom-input" onKeyDown={handleInputKeyDown} />
+          ),
+        },
+      ];
+
+      const rows = [
+        {
+          id: 1,
+          name: 'John',
+        },
+      ];
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid rows={rows} columns={columns} hideToolbar />
+        </div>,
+      );
+      const input = screen.getByTestId('custom-input');
+      input.focus();
+      const keydownEvent = createEvent.keyDown(input, {
+        key: 'a',
+      });
+      fireEvent(input, keydownEvent);
+      expect(handleInputKeyDown.callCount).to.equal(1);
+    });
+  });
+
   describe('warnings', () => {
     before(() => {
       PropTypes.resetWarningCache();
@@ -469,6 +517,51 @@ describe('<DataGrid />', () => {
       expect((errorRef.current as any).errors[0].toString()).to.include(
         'The data grid component requires all rows to have a unique id property',
       );
+    });
+  });
+
+  describe('toolbar', () => {
+    before(function beforeHook() {
+      if (/jsdom/.test(window.navigator.userAgent)) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
+    it('should increase grid density by 50% when selecting compact density', () => {
+      const rowHeight = 30;
+      const { getByText } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...defaultProps} hideToolbar={false} rowHeight={rowHeight} />
+        </div>,
+        { strict: false },
+      );
+
+      fireEvent.click(getByText('Density'));
+      fireEvent.click(getByText('Compact'));
+
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
+        maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
+      });
+    });
+
+    it('should decrease grid density by 50% when selecting comfortable density', () => {
+      const rowHeight = 30;
+      const { getByText } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...defaultProps} hideToolbar={false} rowHeight={rowHeight} />
+        </div>,
+        { strict: false },
+      );
+
+      fireEvent.click(getByText('Density'));
+      fireEvent.click(getByText('Comfortable'));
+
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
+        maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
+      });
     });
   });
 });

@@ -146,9 +146,9 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
       `[data-field="${colDef.field}"]`,
     ) as HTMLDivElement;
 
-    colCellElementsRef.current = findCellElementsFromCol(colElementRef.current) as NodeListOf<
-      Element
-    >;
+    colCellElementsRef.current = findCellElementsFromCol(
+      colElementRef.current,
+    ) as NodeListOf<Element>;
 
     const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
     doc.body.style.cursor = 'col-resize';
@@ -237,9 +237,9 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
       columnsHeaderElement!,
       colDef.field,
     ) as HTMLDivElement;
-    colCellElementsRef.current = findCellElementsFromCol(colElementRef.current) as NodeListOf<
-      Element
-    >;
+    colCellElementsRef.current = findCellElementsFromCol(
+      colElementRef.current,
+    ) as NodeListOf<Element>;
 
     initialOffset.current =
       (colDefRef.current.width as number) -

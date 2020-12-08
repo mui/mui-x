@@ -41,11 +41,13 @@ import { useLogger, useLoggerFactory } from './hooks/utils/useLogger';
 import { useOptionsProp } from './hooks/utils/useOptionsProp';
 import { useResizeContainer } from './hooks/utils/useResizeContainer';
 import { useVirtualRows } from './hooks/features/virtualization/useVirtualRows';
+import { useDensity } from './hooks/features/density';
 import { RootContainerRef } from './models/rootContainerRef';
 import { getCurryTotalHeight } from './utils/getTotalHeight';
 import { ApiContext } from './components/api-context';
 import { OptionsContext } from './components/options-context';
 import { RenderContext } from './components/render-context';
+import { DensitySelector } from './components/toolbar/DensitySelector';
 import { useFilter } from './hooks/features/filter/useFilter';
 
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
@@ -83,6 +85,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     usePreferencesPanel(apiRef);
     useFilter(apiRef, props.rows);
     useContainerProps(windowRef, apiRef);
+    useDensity(apiRef);
     const renderCtx = useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
 
     useColumnReorder(apiRef);
@@ -149,10 +152,12 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                       <React.Fragment>
                         {!gridState.options.hideToolbar &&
                           (!gridState.options.disableColumnFilter ||
-                            !gridState.options.disableColumnSelector) && (
+                            !gridState.options.disableColumnSelector ||
+                            !gridState.options.disableDensitySelector) && (
                             <GridToolbar>
                               {!gridState.options.disableColumnSelector && <ColumnsToolbarButton />}
                               {!gridState.options.disableColumnFilter && <FilterToolbarButton />}
+                              {!gridState.options.disableDensitySelector && <DensitySelector />}
                             </GridToolbar>
                           )}
                       </React.Fragment>
@@ -162,7 +167,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                     <Watermark licenseStatus={props.licenseStatus} />
                     <GridColumnsContainer
                       ref={columnsContainerRef}
-                      height={gridState.options.headerHeight}
+                      height={gridState.density.headerHeight}
                     >
                       <ColumnsHeader
                         ref={columnsHeaderRef}
