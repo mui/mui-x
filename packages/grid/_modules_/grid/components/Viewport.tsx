@@ -6,6 +6,7 @@ import { densityRowHeightSelector } from '../hooks/features/density/densitySelec
 import { visibleSortedRowsSelector } from '../hooks/features/filter/filterSelector';
 import { keyboardCellSelector } from '../hooks/features/keyboard/keyboardSelector';
 import { selectionStateSelector } from '../hooks/features/selection/selectionSelector';
+import { renderStateSelector } from '../hooks/features/virtualization/renderingStateSelector';
 import { useLogger } from '../hooks/utils/useLogger';
 import { optionsSelector } from '../hooks/utils/useOptionsProp';
 import { ApiContext } from './api-context';
@@ -20,7 +21,6 @@ type ViewportType = React.ForwardRefExoticComponent<React.RefAttributes<HTMLDivE
 export const containerSizesSelector = (state: GridState) => state.containerSizes;
 export const viewportSizesSelector = (state: GridState) => state.viewportSizes;
 export const scrollBarSizeSelector = (state: GridState) => state.scrollBar;
-export const renderStateSelector = (state: GridState) => state.rendering;
 
 export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
   (props, renderingZoneRef) => {

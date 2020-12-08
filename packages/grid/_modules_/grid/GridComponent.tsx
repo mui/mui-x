@@ -44,6 +44,7 @@ import { useOptionsProp } from './hooks/utils/useOptionsProp';
 import { useResizeContainer } from './hooks/utils/useResizeContainer';
 import { useVirtualRows } from './hooks/features/virtualization/useVirtualRows';
 import { useDensity } from './hooks/features/density';
+import { useStateProp } from './hooks/utils/useStateProp';
 import { RootContainerRef } from './models/rootContainerRef';
 import { getCurryTotalHeight } from './utils/getTotalHeight';
 import { ApiContext } from './components/api-context';
@@ -64,7 +65,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const renderingZoneRef = React.useRef<HTMLDivElement>(null);
 
     const apiRef = useApiRef(props.apiRef);
-    const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
+    const [gridState] = useGridState(apiRef);
 
     const internalOptions = useOptionsProp(apiRef, props);
 
@@ -86,13 +87,16 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useFilter(apiRef, props.rows);
     useContainerProps(windowRef, apiRef);
     useDensity(apiRef);
-    const renderCtx = useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
+    useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
 
     useColumnReorder(apiRef);
-    const separatorProps = useColumnResize(columnsHeaderRef, apiRef);
+    useColumnResize(columnsHeaderRef, apiRef);
     usePagination(apiRef);
 
     const customComponents = useComponents(props.components, apiRef, rootContainerRef);
+    useStateProp(apiRef, props.state);
+
+    const visibleColumnsLength = useGridSelector(apiRef, visibleColumnsLengthSelector);
 
     // TODO move that to renderCtx
     const getTotalHeight = React.useCallback(
@@ -106,19 +110,12 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
       [gridState.options, gridState.containerSizes],
     );
 
-    React.useEffect(() => {
-      if (props.state != null && apiRef.current.state !== props.state) {
-        logger.debug('Overriding state with props.state');
-        setGridState((previousState) => ({ ...previousState, ...props.state! }));
-        forceUpdate();
-      }
-    }, [apiRef, forceUpdate, logger, props.state, setGridState]);
-
-    logger.info(
-      `Rendering, page: ${renderCtx?.page}, col: ${renderCtx?.firstColIdx}-${renderCtx?.lastColIdx}, row: ${renderCtx?.firstRowIdx}-${renderCtx?.lastRowIdx}`,
-    );
-
-    const visibleColumnsLength = useGridSelector(apiRef, visibleColumnsLengthSelector);
+    if(gridState.rendering.renderContext != null) {
+        const {page, firstColIdx, lastColIdx, firstRowIdx, lastRowIdx} = gridState.rendering.renderContext!;
+        logger.info(
+          `Rendering, page: ${page}, col: ${firstColIdx}-${lastColIdx}, row: ${firstRowIdx}-${lastRowIdx}`,
+        );
+    }
 
     return (
       <AutoSizer onResize={onResize}>
@@ -168,14 +165,8 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                     <Watermark licenseStatus={props.licenseStatus} />
                     <GridColumnsContainer
                       ref={columnsContainerRef}
-                      height={gridState.density.headerHeight}
                     >
-                      <ColumnsHeader
-                        ref={columnsHeaderRef}
-                        hasScrollX={!!gridState.scrollBar.hasScrollX}
-                        separatorProps={separatorProps}
-                        renderCtx={renderCtx}
-                      />
+                      <ColumnsHeader ref={columnsHeaderRef}/>
                     </GridColumnsContainer>
                     {!props.loading &&
                       gridState.rows.totalRowCount === 0 &&
