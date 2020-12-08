@@ -5,11 +5,27 @@ import MenuList from '@material-ui/core/MenuList';
 import Paper from '@material-ui/core/Paper';
 import Popper, { PopperProps } from '@material-ui/core/Popper';
 
+type MenuPosition =
+  | 'bottom-end'
+  | 'bottom-start'
+  | 'bottom'
+  | 'left-end'
+  | 'left-start'
+  | 'left'
+  | 'right-end'
+  | 'right-start'
+  | 'right'
+  | 'top-end'
+  | 'top-start'
+  | 'top'
+  | undefined;
+
 export interface MenuProps extends Omit<PopperProps, 'onKeyDown'> {
   open: boolean;
   target: React.ReactNode;
   onKeyDown: (event: React.KeyboardEvent<HTMLUListElement>) => void;
   onClickAway: (event: React.MouseEvent<Document, MouseEvent>) => void;
+  position?: MenuPosition;
 }
 
 const transformOrigin = {
@@ -23,10 +39,11 @@ export const GridMenu: React.FC<MenuProps> = ({
   onKeyDown,
   onClickAway,
   children,
+  position,
   ...other
 }) => {
   return (
-    <Popper open={open} anchorEl={target as any} transition {...other}>
+    <Popper open={open} anchorEl={target as any} transition placement={position} {...other}>
       {({ TransitionProps, placement }) => (
         <Grow {...TransitionProps} style={{ transformOrigin: transformOrigin[placement] }}>
           <Paper>

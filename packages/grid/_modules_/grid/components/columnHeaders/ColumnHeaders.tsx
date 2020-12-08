@@ -7,6 +7,7 @@ import { OptionsContext } from '../options-context';
 import { ScrollArea } from '../ScrollArea';
 import { containerSizesSelector } from '../viewport';
 import { ColumnHeaderItemCollection } from './ColumnHeadersItemCollection';
+import { densityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 
 export interface ColumnsHeaderProps {
   columns: Columns;
@@ -22,6 +23,7 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps
     const api = React.useContext(ApiContext);
     const { disableColumnReorder } = React.useContext(OptionsContext);
     const containerSizes = useGridSelector(api, containerSizesSelector);
+    const headerHeight = useGridSelector(api, densityHeaderHeightSelector);
 
     if (!api) {
       throw new Error('Material-UI: ApiRef was not found in context.');
@@ -65,9 +67,9 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps
           style={{ minWidth: containerSizes?.totalSizes?.width }}
           onDragOver={handleDragOver}
         >
-          <LeftEmptyCell width={renderCtx?.leftEmptyWidth} />
+          <LeftEmptyCell width={renderCtx?.leftEmptyWidth} height={headerHeight} />
           <ColumnHeaderItemCollection columns={renderedCols} separatorProps={separatorProps} />
-          <RightEmptyCell width={renderCtx?.rightEmptyWidth} />
+          <RightEmptyCell width={renderCtx?.rightEmptyWidth} height={headerHeight} />
         </div>
         <ScrollArea scrollDirection="right" />
       </React.Fragment>
