@@ -195,13 +195,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
       apiRef.current.publishEvent(SORT_MODEL_CHANGE, getSortModelParams(sortModel));
       apiRef.current.applySorting();
     },
-    [
-      setGridState,
-      forceUpdate,
-      visibleColumns.length,
-      apiRef,
-      getSortModelParams,
-    ],
+    [setGridState, forceUpdate, visibleColumns.length, apiRef, getSortModelParams],
   );
 
   const sortColumn = React.useCallback(
