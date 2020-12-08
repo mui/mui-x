@@ -250,16 +250,13 @@ export const useStyles = makeStyles(
           justifyContent: 'space-between',
           alignItems: 'center',
           minHeight: 52, // Match TablePagination min height
-          '&.MuiDataGrid-footer-paginationAvailable': {
-            '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
-              visibility: 'hidden',
-              [theme.breakpoints.up('md')]: {
-                visibility: 'visible',
-              },
+          '& .MuiDataGrid-selectedRowCount': {
+            visibility: 'hidden',
+            width: 0,
+            [theme.breakpoints.up('sm')]: {
+              visibility: 'visible',
+              width: 'auto',
             },
-          },
-          '&.MuiDataGrid-footer-justifyContentEnd': {
-            justifyContent: 'flex-end',
           },
         },
         '& .MuiDataGrid-colCell-dropZone .MuiDataGrid-colCell-draggable': {
