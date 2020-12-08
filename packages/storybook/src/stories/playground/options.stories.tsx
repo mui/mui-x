@@ -36,7 +36,7 @@ Options.args = {
   hideFooterRowCount: false,
   hideFooterPagination: false,
   hideFooter: false,
-  hideToolbar: false,
+  showToolbar: false,
   disableExtendRowFullWidth: false,
   disableColumnMenu: false,
   disableColumnFilter: false,

@@ -36,7 +36,7 @@ export const RenderInputInCell = () => {
 
   return (
     <div className="grid-container">
-      <XGrid rows={rows} columns={columns} hideToolbar />
+      <XGrid rows={rows} columns={columns} />
     </div>
   );
 };

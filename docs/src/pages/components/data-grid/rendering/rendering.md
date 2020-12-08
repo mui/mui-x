@@ -213,7 +213,7 @@ You can change the density of the rows and the column header.
 
 ### Density prop
 
-The vertical density of the data grid can be set using the `density` prop. The `density` prop applies the values determined by the `rowHeight` and `headerHeight` props, if supplied. The user can override this setting with the toolbar density selector, if provided.
+To enable the density selector you need to add the `showToolbar` prop to the data grid. The vertical density of the data grid can be set using the `density` prop. The `density` prop applies the values determined by the `rowHeight` and `headerHeight` props, if supplied. The user can override this setting with the toolbar density selector, if provided.
 
 {{"demo": "pages/components/data-grid/rendering/DensitySelectorSmallGrid.js", "bg": "inline"}}
 
@@ -264,7 +264,7 @@ As part of the customization API, the grid allows you to replace and override ne
 
 ### Header
 
-You can replace the default toolbar by providing a `header` component.
+To enable the toolbar you need to add the `showToolbar` prop to the data grid. You can replace the default toolbar by providing a `header` component.
 This demo showcases how this can be achieve.
 
 {{"demo": "pages/components/data-grid/rendering/CustomToolbarGrid.js", "bg": "inline"}}

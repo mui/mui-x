@@ -30,4 +30,4 @@ if (
   experimentalEnabled = process.env.EXPERIMENTAL_ENABLED === 'true';
 }
 
-export const EXPERIMENTAL_ENABLED = experimentalEnabled as Boolean;
+export const EXPERIMENTAL_ENABLED = experimentalEnabled as boolean;

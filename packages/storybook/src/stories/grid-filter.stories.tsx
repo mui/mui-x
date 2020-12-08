@@ -146,7 +146,6 @@ export function CommodityNoToolbar() {
         <XGrid
           rows={data.rows}
           columns={data.columns}
-          hideToolbar
           filterModel={{
             items: [
               { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
