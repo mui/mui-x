@@ -95,7 +95,7 @@ export default function App() {
 }
 ```
 
-{{"demo": "pages/components/data-grid/getting-started/Codesandbox.js", "bg": true}}
+{{"demo": "pages/components/data-grid/getting-started/Codesandbox.js", "hideToolbar": true, "bg": true}}
 
 ## Enterprise ⚡️
 
