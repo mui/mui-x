@@ -23,8 +23,8 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps
     const columns = useGridSelector(apiRef, visibleColumnsSelector);
     const wrapperCssClasses = `MuiDataGrid-colCellWrapper ${hasScrollX ? 'scroll' : ''}`;
     const { disableColumnReorder } = React.useContext(OptionsContext);
-    const containerSizes = useGridSelector(api, containerSizesSelector);
-    const headerHeight = useGridSelector(api, densityHeaderHeightSelector);
+    const containerSizes = useGridSelector(apiRef, containerSizesSelector);
+    const headerHeight = useGridSelector(apiRef, densityHeaderHeightSelector);
 
     const renderedCols = React.useMemo(() => {
       if (renderCtx == null) {

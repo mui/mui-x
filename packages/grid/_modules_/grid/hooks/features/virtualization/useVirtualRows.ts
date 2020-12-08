@@ -241,15 +241,7 @@ export const useVirtualRows = (
 
       return needScroll;
     },
-    [
-      logger,
-      apiRef,
-      gridState,
-      windowRef,
-      rowHeight,
-      columnsMeta.positions,
-      visibleColumns,
-    ],
+    [logger, apiRef, gridState, windowRef, rowHeight, columnsMeta.positions, visibleColumns],
   );
 
   const resetScroll = React.useCallback(() => {
