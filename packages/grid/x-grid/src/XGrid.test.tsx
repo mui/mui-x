@@ -10,7 +10,7 @@ describe('<XGrid />', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
-  const defaultProps = {
+  const baselineProps = {
     rows: [
       {
         id: 0,
@@ -26,7 +26,6 @@ describe('<XGrid />', () => {
       },
     ],
     columns: [{ field: 'brand', width: 100 }],
-    hideFooter: true,
   };
 
   before(function beforeHook() {
@@ -42,7 +41,7 @@ describe('<XGrid />', () => {
       const ref = React.createRef<HTMLDivElement>();
       const { container } = render(
         <div style={{ width: 300, height: 300 }}>
-          <XGrid {...defaultProps} ref={ref} />
+          <XGrid {...baselineProps} ref={ref} />
         </div>,
       );
       expect(ref.current).to.be.instanceof(window.HTMLDivElement);
@@ -58,7 +57,7 @@ describe('<XGrid />', () => {
 
       const { container } = render(
         <div style={{ width: 300, height: 300 }}>
-          <XGrid {...defaultProps} className={className} />
+          <XGrid {...baselineProps} className={className} />
         </div>,
       );
 
@@ -119,7 +118,7 @@ describe('<XGrid />', () => {
       const { width = 300 } = props;
       return (
         <div style={{ width, height: 300 }}>
-          <XGrid {...defaultProps} />
+          <XGrid {...baselineProps} />
         </div>
       );
     };
@@ -193,7 +192,7 @@ describe('<XGrid />', () => {
             <XGrid
               rows={rows}
               apiRef={apiRef}
-              columns={defaultProps.columns}
+              columns={baselineProps.columns}
               pagination
               pageSize={1}
               hideFooter
@@ -219,7 +218,7 @@ describe('<XGrid />', () => {
 
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid {...defaultProps} onStateChange={onStateChange} apiRef={apiRef} />
+            <XGrid {...baselineProps} onStateChange={onStateChange} apiRef={apiRef} />
           </div>
         );
       }
@@ -242,7 +241,7 @@ describe('<XGrid />', () => {
         }, [apiRef]);
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid {...defaultProps} apiRef={apiRef} />
+            <XGrid {...baselineProps} apiRef={apiRef} />
           </div>
         );
       }
