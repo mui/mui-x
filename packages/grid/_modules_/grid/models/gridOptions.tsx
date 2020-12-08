@@ -378,7 +378,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   disableColumnMenu: !EXPERIMENTAL_ENABLED,
   disableColumnFilter: !EXPERIMENTAL_ENABLED,
   disableColumnSelector: !EXPERIMENTAL_ENABLED,
-  showToolbar: EXPERIMENTAL_ENABLED,
+  showToolbar: false,
   icons: {
     OpenFilterButtonIcon: FilterListIcon,
     ColumnFiltered: FilterAltIcon,

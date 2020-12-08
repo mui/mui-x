@@ -211,17 +211,19 @@ This means that the number of rows will drive the height of the grid and consequ
 
 You can change the density of the rows and the column header.
 
-### Density prop
-
-To enable the density selector you need to add the `showToolbar` prop to the data grid. The vertical density of the data grid can be set using the `density` prop. The `density` prop applies the values determined by the `rowHeight` and `headerHeight` props, if supplied. The user can override this setting with the toolbar density selector, if provided.
-
-{{"demo": "pages/components/data-grid/rendering/DensitySelectorSmallGrid.js", "bg": "inline"}}
-
 ### Density selector
 
-The user can change the density of the data grid by using the density selector from the toolbar. This can be hidden with the `disableDensitySelector` prop.
+To enable the density selector you need to add the `showToolbar` prop to the data grid. The user can change the density of the data grid by using the density selector from the toolbar.
 
-{{"demo": "pages/components/data-grid/rendering/DensitySelectorHiddenGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/rendering/VisibleToolbarGrid.js", "bg": "inline"}}
+
+To hide the density selector add the `disableDensitySelector` prop to the data grid.
+
+### Density prop
+
+The vertical density of the data grid can be set using the `density` prop. The `density` prop applies the values determined by the `rowHeight` and `headerHeight` props, if supplied. The user can override this setting with the toolbar density selector, if provided.
+
+{{"demo": "pages/components/data-grid/rendering/DensitySelectorSmallGrid.js", "bg": "inline"}}
 
 ## Virtualization
 
@@ -264,7 +266,7 @@ As part of the customization API, the grid allows you to replace and override ne
 
 ### Header
 
-To enable the toolbar you need to add the `showToolbar` prop to the data grid. You can replace the default toolbar by providing a `header` component.
+You can replace the default toolbar by providing a `header` component.
 This demo showcases how this can be achieve.
 
 {{"demo": "pages/components/data-grid/rendering/CustomToolbarGrid.js", "bg": "inline"}}
