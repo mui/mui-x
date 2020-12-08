@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { containerSizesSelector } from '../../../components/viewport';
+import { containerSizesSelector } from '../../../components/Viewport';
 import { PAGE_CHANGED, PAGESIZE_CHANGED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { PaginationApi } from '../../../models/api/paginationApi';

@@ -14,11 +14,10 @@ import { ColumnHeaderItem } from './ColumnHeaderItem';
 
 export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
-  separatorProps: React.HTMLAttributes<HTMLDivElement>;
 }
 
 export function ColumnHeaderItemCollection(props: ColumnHeadersItemCollectionProps) {
-  const { separatorProps, columns } = props;
+  const { columns } = props;
   const [resizingColField, setResizingColField] = React.useState('');
   const apiRef = React.useContext(ApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
@@ -47,7 +46,6 @@ export function ColumnHeaderItemCollection(props: ColumnHeadersItemCollectionPro
       column={col}
       colIndex={idx}
       isResizing={resizingColField === col.field}
-      separatorProps={separatorProps}
     />
   ));
 

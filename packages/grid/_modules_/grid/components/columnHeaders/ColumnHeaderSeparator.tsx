@@ -1,7 +1,9 @@
 import * as React from 'react';
+import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { useIcons } from '../../hooks/utils/useIcons';
+import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { classnames } from '../../utils/index';
-import { OptionsContext } from '../options-context';
+import { ApiContext } from '../api-context';
 
 export interface ColumnHeaderSeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
   resizable: boolean;
@@ -14,7 +16,8 @@ export const ColumnHeaderSeparator = React.memo(function ColumnHeaderSeparator(
 ) {
   const { resizable, resizing, height, ...other } = props;
   const icons = useIcons();
-  const { showColumnRightBorder } = React.useContext(OptionsContext);
+  const apiRef = React.useContext(ApiContext);
+  const { showColumnRightBorder } = useGridSelector(apiRef, optionsSelector);
   const Icon = icons!.ColumnResize!;
 
   const stopClick = React.useCallback((event: React.MouseEvent<HTMLDivElement>) => {

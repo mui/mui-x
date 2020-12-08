@@ -6,16 +6,15 @@ import { densityRowHeightSelector } from '../hooks/features/density/densitySelec
 import { visibleSortedRowsSelector } from '../hooks/features/filter/filterSelector';
 import { keyboardCellSelector } from '../hooks/features/keyboard/keyboardSelector';
 import { selectionStateSelector } from '../hooks/features/selection/selectionSelector';
+import { renderStateSelector } from '../hooks/features/virtualization/renderingStateSelector';
 import { useLogger } from '../hooks/utils/useLogger';
 import { optionsSelector } from '../hooks/utils/useOptionsProp';
-import { RenderContextProps } from '../models/renderContextProps';
 import { ApiContext } from './api-context';
-import { LeftEmptyCell, RightEmptyCell } from './cell';
-import { RenderContext } from './render-context';
-import { RenderingZone } from './rendering-zone';
-import { Row } from './row';
-import { RowCells } from './row-cells';
-import { StickyContainer } from './sticky-container';
+import { LeftEmptyCell, RightEmptyCell } from './Cell';
+import { RenderingZone } from './RenderingZone';
+import { Row } from './Row';
+import { RowCells } from './RowCells';
+import { StickyContainer } from './StickyContainer';
 
 type ViewportType = React.ForwardRefExoticComponent<React.RefAttributes<HTMLDivElement>>;
 
@@ -26,44 +25,53 @@ export const scrollBarSizeSelector = (state: GridState) => state.scrollBar;
 export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
   (props, renderingZoneRef) => {
     const logger = useLogger('Viewport');
-    const renderCtx = React.useContext(RenderContext) as RenderContextProps;
     const apiRef = React.useContext(ApiContext);
+
     const options = useGridSelector(apiRef, optionsSelector);
     const containerSizes = useGridSelector(apiRef, containerSizesSelector);
     const viewportSizes = useGridSelector(apiRef, viewportSizesSelector);
     const scrollBarState = useGridSelector(apiRef, scrollBarSizeSelector);
     const visibleColumns = useGridSelector(apiRef, visibleColumnsSelector);
+    const renderState = useGridSelector(apiRef, renderStateSelector);
     const cellFocus = useGridSelector(apiRef, keyboardCellSelector);
     const selectionState = useGridSelector(apiRef, selectionStateSelector);
     const rows = useGridSelector(apiRef, visibleSortedRowsSelector);
     const rowHeight = useGridSelector(apiRef, densityRowHeightSelector);
 
     const getRowsElements = () => {
-      // TODO move that to selector
-      const renderedRows = rows.slice(renderCtx.firstRowIdx, renderCtx.lastRowIdx!);
+      if (renderState.renderContext == null) {
+        return null;
+      }
+
+      const renderedRows = rows.slice(
+        renderState.renderContext.firstRowIdx,
+        renderState.renderContext.lastRowIdx!,
+      );
       return renderedRows.map((r, idx) => (
         <Row
-          className={(renderCtx.firstRowIdx! + idx) % 2 === 0 ? 'Mui-even' : 'Mui-odd'}
+          className={
+            (renderState.renderContext!.firstRowIdx! + idx) % 2 === 0 ? 'Mui-even' : 'Mui-odd'
+          }
           key={r.id}
           id={r.id}
           selected={!!selectionState[r.id]}
-          rowIndex={renderCtx.firstRowIdx + idx}
+          rowIndex={renderState.renderContext!.firstRowIdx! + idx}
         >
-          <LeftEmptyCell width={renderCtx.leftEmptyWidth} height={rowHeight} />
+          <LeftEmptyCell width={renderState.renderContext!.leftEmptyWidth} height={rowHeight} />
           <RowCells
             columns={visibleColumns}
             row={r}
-            firstColIdx={renderCtx.firstColIdx}
-            lastColIdx={renderCtx.lastColIdx}
+            firstColIdx={renderState.renderContext!.firstColIdx!}
+            lastColIdx={renderState.renderContext!.lastColIdx!}
             hasScroll={{ y: scrollBarState!.hasScrollY, x: scrollBarState.hasScrollX }}
             scrollSize={options.scrollbarSize}
             showCellRightBorder={!!options.showCellRightBorder}
             extendRowFullWidth={!options.disableExtendRowFullWidth}
-            rowIndex={renderCtx.firstRowIdx + idx}
+            rowIndex={renderState.renderContext!.firstRowIdx! + idx}
             cellFocus={cellFocus}
             domIndex={idx}
           />
-          <RightEmptyCell width={renderCtx.rightEmptyWidth} height={rowHeight} />
+          <RightEmptyCell width={renderState.renderContext!.rightEmptyWidth} height={rowHeight} />
         </Row>
       ));
     };

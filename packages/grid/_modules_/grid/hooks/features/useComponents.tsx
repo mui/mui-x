@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { ComponentProps, ApiRef, GridComponentOverridesProp, RootContainerRef } from '../../models';
-import { ErrorMessage } from '../../components/error-message';
-import { LoadingOverlay } from '../../components/loading-overlay';
-import { NoRowMessage } from '../../components/no-row-message';
+import { ErrorMessage } from '../../components/ErrorMessage';
+import { LoadingOverlay } from '../../components/LoadingOverlay';
+import { NoRowMessage } from '../../components/NoRowMessage';
 import { optionsSelector } from '../utils/useOptionsProp';
 import { visibleColumnsSelector } from './columns/columnsSelector';
 import { useGridSelector } from './core/useGridSelector';

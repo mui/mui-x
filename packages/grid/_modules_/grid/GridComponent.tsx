@@ -6,9 +6,9 @@ import * as React from 'react';
 import { useForkRef } from '@material-ui/core/utils';
 import { AutoSizer } from './components/AutoSizer';
 import { ColumnsHeader } from './components/columnHeaders/ColumnHeaders';
-import { DefaultFooter } from './components/default-footer';
-import { ErrorBoundary } from './components/error-boundary';
-import { Pagination } from './components/pagination';
+import { DefaultFooter } from './components/DefaultFooter';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { Pagination } from './components/Pagination';
 import { GridColumnsContainer } from './components/styled-wrappers/GridColumnsContainer';
 import { GridDataContainer } from './components/styled-wrappers/GridDataContainer';
 import { GridRoot } from './components/styled-wrappers/GridRoot';
@@ -16,9 +16,8 @@ import { GridWindow } from './components/styled-wrappers/GridWindow';
 import { GridToolbar } from './components/styled-wrappers/GridToolbar';
 import { ColumnsToolbarButton } from './components/toolbar/ColumnsToolbarButton';
 import { FilterToolbarButton } from './components/toolbar/FilterToolbarButton';
-import { Viewport } from './components/viewport';
-import { Watermark } from './components/watermark';
-import { DATA_CONTAINER_CSS_CLASS } from './constants/cssClassesConstants';
+import { Viewport } from './components/Viewport';
+import { Watermark } from './components/Watermark';
 import { GridComponentProps } from './GridComponentProps';
 import { useColumnMenu } from './hooks/features/columnMenu/useColumnMenu';
 import { visibleColumnsLengthSelector } from './hooks/features/columns/columnsSelector';
@@ -44,11 +43,10 @@ import { useOptionsProp } from './hooks/utils/useOptionsProp';
 import { useResizeContainer } from './hooks/utils/useResizeContainer';
 import { useVirtualRows } from './hooks/features/virtualization/useVirtualRows';
 import { useDensity } from './hooks/features/density';
+import { useStateProp } from './hooks/utils/useStateProp';
 import { RootContainerRef } from './models/rootContainerRef';
 import { getCurryTotalHeight } from './utils/getTotalHeight';
 import { ApiContext } from './components/api-context';
-import { OptionsContext } from './components/options-context';
-import { RenderContext } from './components/render-context';
 import { DensitySelector } from './components/toolbar/DensitySelector';
 import { useFilter } from './hooks/features/filter/useFilter';
 
@@ -66,7 +64,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const renderingZoneRef = React.useRef<HTMLDivElement>(null);
 
     const apiRef = useApiRef(props.apiRef);
-    const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
+    const [gridState] = useGridState(apiRef);
 
     const internalOptions = useOptionsProp(apiRef, props);
 
@@ -88,13 +86,16 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useFilter(apiRef, props.rows);
     useContainerProps(windowRef, apiRef);
     useDensity(apiRef);
-    const renderCtx = useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
+    useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
 
     useColumnReorder(apiRef);
-    const separatorProps = useColumnResize(columnsHeaderRef, apiRef);
+    useColumnResize(columnsHeaderRef, apiRef);
     usePagination(apiRef);
 
     const customComponents = useComponents(props.components, apiRef, rootContainerRef);
+    useStateProp(apiRef, props.state);
+
+    const visibleColumnsLength = useGridSelector(apiRef, visibleColumnsLengthSelector);
 
     // TODO move that to renderCtx
     const getTotalHeight = React.useCallback(
@@ -108,19 +109,18 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
       [gridState.options, gridState.containerSizes],
     );
 
-    React.useEffect(() => {
-      if (props.state != null && apiRef.current.state !== props.state) {
-        logger.debug('Overriding state with props.state');
-        setGridState((previousState) => ({ ...previousState, ...props.state! }));
-        forceUpdate();
-      }
-    }, [apiRef, forceUpdate, logger, props.state, setGridState]);
-
-    logger.info(
-      `Rendering, page: ${renderCtx?.page}, col: ${renderCtx?.firstColIdx}-${renderCtx?.lastColIdx}, row: ${renderCtx?.firstRowIdx}-${renderCtx?.lastRowIdx}`,
-    );
-
-    const visibleColumnsLength = useGridSelector(apiRef, visibleColumnsLengthSelector);
+    if (gridState.rendering.renderContext != null) {
+      const {
+        page,
+        firstColIdx,
+        lastColIdx,
+        firstRowIdx,
+        lastRowIdx,
+      } = gridState.rendering.renderContext!;
+      logger.info(
+        `Rendering, page: ${page}, col: ${firstColIdx}-${lastColIdx}, row: ${firstRowIdx}-${lastRowIdx}`,
+      );
+    }
 
     return (
       <AutoSizer onResize={onResize}>
@@ -148,74 +148,57 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
               )}
             >
               <ApiContext.Provider value={apiRef}>
-                <OptionsContext.Provider value={gridState.options}>
-                  <div ref={headerRef}>
-                    {customComponents.headerComponent ? (
-                      customComponents.headerComponent
-                    ) : (
-                      <React.Fragment>
-                        {!gridState.options.hideToolbar &&
-                          (!gridState.options.disableColumnFilter ||
-                            !gridState.options.disableColumnSelector ||
-                            !gridState.options.disableDensitySelector) && (
-                            <GridToolbar>
-                              {!gridState.options.disableColumnSelector && <ColumnsToolbarButton />}
-                              {!gridState.options.disableColumnFilter && <FilterToolbarButton />}
-                              {!gridState.options.disableDensitySelector && <DensitySelector />}
-                            </GridToolbar>
-                          )}
-                      </React.Fragment>
-                    )}
-                  </div>
-                  <div className="MuiDataGrid-mainGridContainer">
-                    <Watermark licenseStatus={props.licenseStatus} />
-                    <GridColumnsContainer
-                      ref={columnsContainerRef}
-                      height={gridState.density.headerHeight}
-                    >
-                      <ColumnsHeader
-                        ref={columnsHeaderRef}
-                        hasScrollX={!!gridState.scrollBar.hasScrollX}
-                        separatorProps={separatorProps}
-                        renderCtx={renderCtx}
-                      />
-                    </GridColumnsContainer>
-                    {!props.loading &&
-                      gridState.rows.totalRowCount === 0 &&
-                      customComponents.noRowsComponent}
-                    {props.loading && customComponents.loadingComponent}
-                    <GridWindow ref={windowRef}>
-                      <GridDataContainer
-                        ref={gridRef}
-                        className={DATA_CONTAINER_CSS_CLASS}
-                        style={{
-                          minHeight: gridState.containerSizes?.dataContainerSizes?.height,
-                          minWidth: gridState.containerSizes?.dataContainerSizes?.width,
-                        }}
-                      >
-                        {renderCtx != null && (
-                          <RenderContext.Provider value={renderCtx}>
-                            <Viewport ref={renderingZoneRef} />
-                          </RenderContext.Provider>
+                <div ref={headerRef}>
+                  {customComponents.headerComponent || (
+                    <React.Fragment>
+                      {!gridState.options.hideToolbar &&
+                        (!gridState.options.disableColumnFilter ||
+                          !gridState.options.disableColumnSelector ||
+                          !gridState.options.disableDensitySelector) && (
+                          <GridToolbar>
+                            {!gridState.options.disableColumnSelector && <ColumnsToolbarButton />}
+                            {!gridState.options.disableColumnFilter && <FilterToolbarButton />}
+                            {!gridState.options.disableDensitySelector && <DensitySelector />}
+                          </GridToolbar>
                         )}
-                      </GridDataContainer>
-                    </GridWindow>
-                  </div>
-                  <div ref={footerRef}>
-                    {customComponents.footerComponent ? (
-                      customComponents.footerComponent
-                    ) : (
-                      <DefaultFooter
-                        paginationComponent={
-                          !!gridState.options.pagination &&
-                          gridState.pagination.pageSize != null &&
-                          !gridState.options.hideFooterPagination &&
-                          (customComponents.paginationComponent || <Pagination />)
-                        }
-                      />
-                    )}
-                  </div>
-                </OptionsContext.Provider>
+                    </React.Fragment>
+                  )}
+                </div>
+                <div className="MuiDataGrid-mainGridContainer">
+                  <Watermark licenseStatus={props.licenseStatus} />
+                  <GridColumnsContainer ref={columnsContainerRef}>
+                    <ColumnsHeader ref={columnsHeaderRef} />
+                  </GridColumnsContainer>
+                  {!props.loading &&
+                    gridState.rows.totalRowCount === 0 &&
+                    customComponents.noRowsComponent}
+                  {props.loading && customComponents.loadingComponent}
+                  <GridWindow ref={windowRef}>
+                    <GridDataContainer
+                      ref={gridRef}
+                      style={{
+                        minHeight: gridState.containerSizes?.dataContainerSizes?.height,
+                        minWidth: gridState.containerSizes?.dataContainerSizes?.width,
+                      }}
+                    >
+                      {gridState.rendering.renderContext != null && (
+                        <Viewport ref={renderingZoneRef} />
+                      )}
+                    </GridDataContainer>
+                  </GridWindow>
+                </div>
+                <div ref={footerRef}>
+                  {customComponents.footerComponent || (
+                    <DefaultFooter
+                      paginationComponent={
+                        !!gridState.options.pagination &&
+                        gridState.pagination.pageSize != null &&
+                        !gridState.options.hideFooterPagination &&
+                        (customComponents.paginationComponent || <Pagination />)
+                      }
+                    />
+                  )}
+                </div>
               </ApiContext.Provider>
             </ErrorBoundary>
           </GridRoot>

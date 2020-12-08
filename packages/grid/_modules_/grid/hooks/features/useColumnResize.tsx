@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { ownerDocument } from '@material-ui/core/utils';
+import { ColumnResizeApi } from '../../models/api/columnResizeApi';
 import { ColDef } from '../../models/colDef';
+import { useApiMethod } from '../root/useApiMethod';
 import { useLogger } from '../utils';
 import { useEventCallback } from '../../utils/material-ui-utils';
 import { COL_RESIZE_START, COL_RESIZE_STOP } from '../../constants/eventsConstants';
@@ -272,10 +274,9 @@ export const useColumnResize = (columnsRef: React.RefObject<HTMLDivElement>, api
     };
   }, [columnsHeaderElement, handleTouchStart, stopListening]);
 
-  return React.useMemo(
-    () => ({
-      onMouseDown: handleMouseDown,
-    }),
-    [handleMouseDown],
+  useApiMethod<ColumnResizeApi>(
+    apiRef,
+    { startResizeOnMouseDown: handleMouseDown },
+    'columnResizeApi',
   );
 };

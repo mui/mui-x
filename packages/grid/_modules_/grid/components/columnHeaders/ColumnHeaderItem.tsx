@@ -23,7 +23,6 @@ interface ColumnHeaderItemProps {
   sortDirection: SortDirection;
   sortIndex?: number;
   options: GridOptions;
-  separatorProps: React.HTMLAttributes<HTMLDivElement>;
   filterItemsCounter?: number;
 }
 
@@ -32,7 +31,6 @@ export const ColumnHeaderItem = ({
   colIndex,
   isDragging,
   isResizing,
-  separatorProps,
   sortDirection,
   sortIndex,
   options,
@@ -165,7 +163,7 @@ export const ColumnHeaderItem = ({
         resizable={!disableColumnResize && !!column.resizable}
         resizing={isResizing}
         height={headerHeight}
-        {...separatorProps}
+        onMouseDown={apiRef?.current.startResizeOnMouseDown}
       />
     </div>
   );
