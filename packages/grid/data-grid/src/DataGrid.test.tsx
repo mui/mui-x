@@ -24,7 +24,7 @@ describe('<DataGrid />', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
-  const defaultProps = {
+  const baselineProps = {
     rows: [
       {
         id: 0,
@@ -56,7 +56,7 @@ describe('<DataGrid />', () => {
         const ref = React.createRef<HTMLDivElement>();
         const { container } = render(
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid {...defaultProps} ref={ref} />
+            <DataGrid {...baselineProps} ref={ref} />
           </div>,
         );
         expect(ref.current).to.be.instanceof(window.HTMLDivElement);
@@ -72,7 +72,7 @@ describe('<DataGrid />', () => {
 
         const { container } = render(
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid {...defaultProps} className={className} />
+            <DataGrid {...baselineProps} className={className} />
           </div>,
         );
 
@@ -98,7 +98,7 @@ describe('<DataGrid />', () => {
         ];
         render(
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid {...defaultProps} rows={rows} page={2} pageSize={1} />
+            <DataGrid {...baselineProps} rows={rows} page={2} pageSize={1} />
           </div>,
         );
         setTimeout(() => {
@@ -143,7 +143,7 @@ describe('<DataGrid />', () => {
           return (
             <div style={{ height: 300, width: 300 }}>
               <DataGrid
-                {...defaultProps}
+                {...baselineProps}
                 rows={rows}
                 pagination
                 pageSize={1}
@@ -159,6 +159,30 @@ describe('<DataGrid />', () => {
         expect(getColumnValues()).to.deep.equal(['Nike 1']);
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
         expect(getColumnValues()).to.deep.equal(['Nike 2']);
+      });
+
+      it('should support columns.valueGetter', () => {
+        const columns = [
+          { field: 'id', hide: true },
+          { field: 'firstName', hide: true },
+          { field: 'lastName', hide: true },
+          {
+            field: 'fullName',
+            valueGetter: (params) =>
+              `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
+          },
+        ];
+
+        const rows = [
+          { id: 1, lastName: 'Snow', firstName: 'Jon' },
+          { id: 2, lastName: 'Lannister', firstName: 'Cersei' },
+        ];
+        render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid rows={rows} columns={columns} />
+          </div>,
+        );
+        expect(getColumnValues()).to.deep.equal(['Jon Snow', 'Cersei Lannister']);
       });
     });
 
@@ -177,7 +201,7 @@ describe('<DataGrid />', () => {
         expect(() => {
           render(
             <div style={{ width: 300, height: 0 }}>
-              <DataGrid {...defaultProps} />
+              <DataGrid {...baselineProps} />
             </div>,
           );
           clock.tick(100);
@@ -192,7 +216,7 @@ describe('<DataGrid />', () => {
           render(
             <div style={{ width: 0 }}>
               <div style={{ width: '100%', height: 300 }}>
-                <DataGrid {...defaultProps} />
+                <DataGrid {...baselineProps} />
               </div>
             </div>,
           );
@@ -356,7 +380,7 @@ describe('<DataGrid />', () => {
 
           return (
             <div style={{ width: 300, height: 500 }}>
-              <DataGrid {...defaultProps} state={gridState} />
+              <DataGrid {...baselineProps} state={gridState} />
             </div>
           );
         }
@@ -372,7 +396,7 @@ describe('<DataGrid />', () => {
       it('should sort when clicking the header cell', () => {
         render(
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid {...defaultProps} />
+            <DataGrid {...baselineProps} />
           </div>,
         );
         const header = screen
@@ -394,7 +418,7 @@ describe('<DataGrid />', () => {
           return (
             <div style={{ width: 300, height: 300 }}>
               <DataGrid
-                {...defaultProps}
+                {...baselineProps}
                 rows={rows}
                 sortModel={[
                   {
@@ -407,7 +431,7 @@ describe('<DataGrid />', () => {
           );
         };
 
-        const { setProps } = render(<TestCase rows={defaultProps.rows} />);
+        const { setProps } = render(<TestCase rows={baselineProps.rows} />);
         expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
 
         setProps({
@@ -514,7 +538,7 @@ describe('<DataGrid />', () => {
         render(
           <ErrorBoundary ref={errorRef}>
             {/* @ts-expect-error missing id */}
-            <DataGrid {...defaultProps} rows={rows} />
+            <DataGrid {...baselineProps} rows={rows} />
           </ErrorBoundary>,
         );
         // @ts-expect-error need to migrate helpers to TypeScript
@@ -542,7 +566,7 @@ describe('<DataGrid />', () => {
       const rowHeight = 30;
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...defaultProps} hideToolbar={false} rowHeight={rowHeight} />
+          <DataGrid {...baselineProps} hideToolbar={false} rowHeight={rowHeight} />
         </div>,
       );
 
@@ -559,7 +583,7 @@ describe('<DataGrid />', () => {
       const rowHeight = 30;
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...defaultProps} hideToolbar={false} rowHeight={rowHeight} />
+          <DataGrid {...baselineProps} hideToolbar={false} rowHeight={rowHeight} />
         </div>,
       );
 
