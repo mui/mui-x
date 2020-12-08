@@ -201,7 +201,6 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
       visibleColumns.length,
       apiRef,
       getSortModelParams,
-      options.sortingMode,
     ],
   );
 
