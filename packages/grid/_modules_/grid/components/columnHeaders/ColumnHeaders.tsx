@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { visibleColumnsSelector } from '../../hooks/features/columns/columnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { Columns, RenderContextProps } from '../../models/index';
+import { RenderContextProps } from '../../models/renderContextProps';
 import { ApiContext } from '../api-context';
 import { LeftEmptyCell, RightEmptyCell } from '../cell';
 import { OptionsContext } from '../options-context';
@@ -10,7 +11,6 @@ import { ColumnHeaderItemCollection } from './ColumnHeadersItemCollection';
 import { densityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 
 export interface ColumnsHeaderProps {
-  columns: Columns;
   hasScrollX: boolean;
   separatorProps: React.HTMLAttributes<HTMLDivElement>;
   renderCtx: Partial<RenderContextProps> | null;
@@ -18,41 +18,25 @@ export interface ColumnsHeaderProps {
 
 export const ColumnsHeader = React.forwardRef<HTMLDivElement, ColumnsHeaderProps>(
   function ColumnsHeader(props, ref) {
-    const { columns, hasScrollX, renderCtx, separatorProps } = props;
+    const { hasScrollX, renderCtx, separatorProps } = props;
+    const apiRef = React.useContext(ApiContext);
+    const columns = useGridSelector(apiRef, visibleColumnsSelector);
     const wrapperCssClasses = `MuiDataGrid-colCellWrapper ${hasScrollX ? 'scroll' : ''}`;
-    const api = React.useContext(ApiContext);
     const { disableColumnReorder } = React.useContext(OptionsContext);
-    const containerSizes = useGridSelector(api, containerSizesSelector);
-    const headerHeight = useGridSelector(api, densityHeaderHeightSelector);
+    const containerSizes = useGridSelector(apiRef, containerSizesSelector);
+    const headerHeight = useGridSelector(apiRef, densityHeaderHeightSelector);
 
-    if (!api) {
-      throw new Error('Material-UI: ApiRef was not found in context.');
-    }
-    const lastRenderedColIndexes = React.useRef({
-      first: renderCtx?.firstColIdx,
-      last: renderCtx?.lastColIdx,
-    });
-    const [renderedCols, setRenderedCols] = React.useState(columns);
-
-    React.useEffect(() => {
-      if (renderCtx && renderCtx.firstColIdx != null && renderCtx.lastColIdx != null) {
-        setRenderedCols(columns.slice(renderCtx.firstColIdx, renderCtx.lastColIdx + 1));
-
-        if (
-          lastRenderedColIndexes.current.first !== renderCtx.firstColIdx ||
-          lastRenderedColIndexes.current.last !== renderCtx.lastColIdx
-        ) {
-          lastRenderedColIndexes.current = {
-            first: renderCtx.firstColIdx,
-            last: renderCtx.lastColIdx,
-          };
-        }
+    const renderedCols = React.useMemo(() => {
+      if (renderCtx == null) {
+        return [];
       }
-    }, [renderCtx, columns]);
+      return columns.slice(renderCtx.firstColIdx, renderCtx.lastColIdx! + 1);
+    }, [columns, renderCtx]);
 
-    const handleDragOver = !disableColumnReorder
-      ? (event) => api.current.onColHeaderDragOver(event, ref as React.RefObject<HTMLElement>)
-      : undefined;
+    const handleDragOver =
+      !disableColumnReorder && apiRef
+        ? (event) => apiRef.current.onColHeaderDragOver(event, ref as React.RefObject<HTMLElement>)
+        : undefined;
 
     return (
       <React.Fragment>

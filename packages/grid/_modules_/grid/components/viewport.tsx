@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { columnsSelector } from '../hooks/features/columns/columnsSelector';
+import { visibleColumnsSelector } from '../hooks/features/columns/columnsSelector';
 import { GridState } from '../hooks/features/core/gridState';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { densityRowHeightSelector } from '../hooks/features/density/densitySelector';
@@ -32,7 +32,7 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const containerSizes = useGridSelector(apiRef, containerSizesSelector);
     const viewportSizes = useGridSelector(apiRef, viewportSizesSelector);
     const scrollBarState = useGridSelector(apiRef, scrollBarSizeSelector);
-    const columns = useGridSelector(apiRef, columnsSelector);
+    const visibleColumns = useGridSelector(apiRef, visibleColumnsSelector);
     const cellFocus = useGridSelector(apiRef, keyboardCellSelector);
     const selectionState = useGridSelector(apiRef, selectionStateSelector);
     const rows = useGridSelector(apiRef, visibleSortedRowsSelector);
@@ -51,7 +51,7 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
         >
           <LeftEmptyCell width={renderCtx.leftEmptyWidth} height={rowHeight} />
           <RowCells
-            columns={columns.visible}
+            columns={visibleColumns}
             row={r}
             firstColIdx={renderCtx.firstColIdx}
             lastColIdx={renderCtx.lastColIdx}

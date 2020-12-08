@@ -7,10 +7,6 @@ interface SelectedRowCountProps {
 export function SelectedRowCount(props: SelectedRowCountProps) {
   const { selectedRowCount } = props;
 
-  if (selectedRowCount === 0) {
-    return null;
-  }
-
   return (
     <div className="MuiDataGrid-selectedRowCount">
       {`${selectedRowCount.toLocaleString()} ${selectedRowCount > 1 ? 'rows' : 'row'} selected`}

@@ -21,7 +21,9 @@ import { Watermark } from './components/watermark';
 import { DATA_CONTAINER_CSS_CLASS } from './constants/cssClassesConstants';
 import { GridComponentProps } from './GridComponentProps';
 import { useColumnMenu } from './hooks/features/columnMenu/useColumnMenu';
+import { visibleColumnsLengthSelector } from './hooks/features/columns/columnsSelector';
 import { useColumns } from './hooks/features/columns/useColumns';
+import { useGridSelector } from './hooks/features/core/useGridSelector';
 import { useGridState } from './hooks/features/core/useGridState';
 import { usePagination } from './hooks/features/pagination/usePagination';
 import { usePreferencesPanel } from './hooks/features/preferencesPanel/usePreferencesPanel';
@@ -118,6 +120,8 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
       `Rendering, page: ${renderCtx?.page}, col: ${renderCtx?.firstColIdx}-${renderCtx?.lastColIdx}, row: ${renderCtx?.firstRowIdx}-${renderCtx?.lastRowIdx}`,
     );
 
+    const visibleColumnsLength = useGridSelector(apiRef, visibleColumnsLengthSelector);
+
     return (
       <AutoSizer onResize={onResize}>
         {(size: any) => (
@@ -126,7 +130,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
             className={props.className}
             style={{ width: size.width, height: getTotalHeight(size) }}
             role="grid"
-            aria-colcount={gridState.columns.visible.length}
+            aria-colcount={visibleColumnsLength}
             aria-rowcount={gridState.rows.totalRowCount}
             tabIndex={0}
             aria-label="grid"
@@ -171,7 +175,6 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                     >
                       <ColumnsHeader
                         ref={columnsHeaderRef}
-                        columns={gridState.columns.visible || []}
                         hasScrollX={!!gridState.scrollBar.hasScrollX}
                         separatorProps={separatorProps}
                         renderCtx={renderCtx}

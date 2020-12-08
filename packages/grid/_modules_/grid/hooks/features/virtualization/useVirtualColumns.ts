@@ -6,10 +6,17 @@ import {
   VirtualizationApi,
   ApiRef,
 } from '../../../models/index';
+import { isEqual } from '../../../utils/utils';
 import { useLogger } from '../../utils/useLogger';
 import { COLUMNS_UPDATED, RESIZE } from '../../../constants/eventsConstants';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useApiEventHandler } from '../../root/useApiEventHandler';
+import {
+  columnsMetaSelector,
+  visibleColumnsLengthSelector,
+  visibleColumnsSelector,
+} from '../columns/columnsSelector';
+import { useGridSelector } from '../core/useGridSelector';
 
 type UpdateRenderedColsFnType = (
   containerProps: ContainerProps | null,
@@ -29,31 +36,32 @@ export const useVirtualColumns = (
   const renderedColRef = React.useRef<RenderColumnsProps | null>(null);
   const containerPropsRef = React.useRef<ContainerProps | null>(null);
   const lastScrollLeftRef = React.useRef<number>(0);
+  const columnsMeta = useGridSelector(apiRef, columnsMetaSelector);
+  const visibleColumnCount = useGridSelector(apiRef, visibleColumnsLengthSelector);
+  const visibleColumns = useGridSelector(apiRef, visibleColumnsSelector);
 
   const getColumnIdxFromScroll = React.useCallback(
     (left: number) => {
-      const positions = apiRef.current.getColumnsMeta().positions;
-      const hasColumns = apiRef.current.getVisibleColumns().length;
+      const positions = columnsMeta.positions;
 
-      if (!hasColumns) {
+      if (!visibleColumnCount) {
         return -1;
       }
       let colIdx = [...positions].reverse().findIndex((p) => left >= p);
       colIdx = positions.length - 1 - colIdx;
       return colIdx;
     },
-    [apiRef],
+    [columnsMeta.positions, visibleColumnCount],
   );
 
   const getColumnFromScroll = React.useCallback(
     (left: number) => {
-      const visibleColumns = apiRef.current.getVisibleColumns();
       if (!visibleColumns.length) {
         return null;
       }
       return visibleColumns[getColumnIdxFromScroll(left)];
     },
-    [apiRef, getColumnIdxFromScroll],
+    [getColumnIdxFromScroll, visibleColumns],
   );
 
   const isColumnVisibleInWindow = React.useCallback(
@@ -65,13 +73,12 @@ export const useVirtualColumns = (
       const firstCol = getColumnFromScroll(lastScrollLeftRef.current);
       const lastCol = getColumnFromScroll(lastScrollLeftRef.current + windowWidth);
 
-      const visibleColumns = apiRef.current.getVisibleColumns();
       const firstColIndex = visibleColumns.findIndex((col) => col.field === firstCol?.field) + 1;
       const lastColIndex = visibleColumns.findIndex((col) => col.field === lastCol?.field) - 1; // We ensure the last col is completely visible
 
       return colIndex >= firstColIndex && colIndex <= lastColIndex;
     },
-    [containerPropsRef, getColumnFromScroll, apiRef],
+    [getColumnFromScroll, visibleColumns],
   );
 
   const updateRenderedCols: UpdateRenderedColsFnType = React.useCallback(
@@ -79,10 +86,7 @@ export const useVirtualColumns = (
       if (!containerProps) {
         return false;
       }
-      const visibleColumns = apiRef.current.getVisibleColumns();
-      const columnsMeta = apiRef.current.getColumnsMeta();
-      const windowSizeChanged =
-        containerPropsRef.current?.windowSizes.width !== containerProps.windowSizes.width;
+
       containerPropsRef.current = containerProps;
       const windowWidth = containerProps.windowSizes.width;
 
@@ -109,26 +113,31 @@ export const useVirtualColumns = (
 
       const renderNewColState = diffLast > tolerance || diffFirst > tolerance;
 
-      if (windowSizeChanged || !renderedColRef || !renderedColRef.current || renderNewColState) {
-        const newRenderedColState: RenderColumnsProps = {
+      let newRenderedColState: RenderColumnsProps | null = renderedColRef.current;
+
+      if (renderNewColState || newRenderedColState == null) {
+        newRenderedColState = {
+          leftEmptyWidth: 0,
+          rightEmptyWidth: 0,
           firstColIdx: firstDisplayedIdx - columnBuffer >= 0 ? firstDisplayedIdx - columnBuffer : 0,
           lastColIdx:
             lastDisplayedIdx + columnBuffer >= visibleColumns.length - 1
               ? visibleColumns.length - 1
               : lastDisplayedIdx + columnBuffer,
-          leftEmptyWidth: 0,
-          rightEmptyWidth: 0,
         };
-        newRenderedColState.leftEmptyWidth = columnsMeta.positions[newRenderedColState.firstColIdx];
-        if (apiRef.current.state.scrollBar.hasScrollX) {
-          newRenderedColState.rightEmptyWidth =
-            columnsMeta.totalWidth -
-            columnsMeta.positions[newRenderedColState.lastColIdx] -
-            visibleColumns[newRenderedColState.lastColIdx].width!;
-        } else if (!options.disableExtendRowFullWidth) {
-          newRenderedColState.rightEmptyWidth =
-            apiRef.current.state.viewportSizes.width - columnsMeta.totalWidth;
-        }
+      }
+      newRenderedColState.leftEmptyWidth = columnsMeta.positions[newRenderedColState.firstColIdx];
+      if (apiRef.current.state.scrollBar.hasScrollX) {
+        newRenderedColState.rightEmptyWidth =
+          columnsMeta.totalWidth -
+          columnsMeta.positions[newRenderedColState.lastColIdx] -
+          visibleColumns[newRenderedColState.lastColIdx].width!;
+      } else if (!options.disableExtendRowFullWidth) {
+        newRenderedColState.rightEmptyWidth =
+          apiRef.current.state.viewportSizes.width - columnsMeta.totalWidth;
+      }
+
+      if (!isEqual(newRenderedColState, renderedColRef.current)) {
         renderedColRef.current = newRenderedColState;
         logger.debug('New columns state to render', newRenderedColState);
         return true;
@@ -137,12 +146,15 @@ export const useVirtualColumns = (
       return false;
     },
     [
-      apiRef,
       logger,
       getColumnFromScroll,
       getColumnIdxFromScroll,
       options.columnBuffer,
       options.disableExtendRowFullWidth,
+      visibleColumns,
+      columnsMeta.positions,
+      columnsMeta.totalWidth,
+      apiRef,
     ],
   );
   const virtualApi: Partial<VirtualizationApi> = {

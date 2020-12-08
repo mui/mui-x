@@ -39,6 +39,7 @@ export function CommodityWithOpenFilters() {
       <XGrid
         rows={data.rows}
         columns={data.columns}
+        checkboxSelection
         state={{
           preferencePanel: {
             open: true,
@@ -117,6 +118,49 @@ export function CommodityWithNewRowsViaProps() {
               { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
             ],
             linkOperator: LinkOperator.And,
+          }}
+          state={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: PreferencePanelsValue.filters,
+            },
+          }}
+        />
+      </div>
+    </React.Fragment>
+  );
+}
+export function CommodityWithNewColsViaProps() {
+  const { data, setRowLength } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
+
+  const [cols, setCols] = React.useState<ColDef[]>([]);
+
+  React.useEffect(() => {
+    setCols(data.columns);
+  }, [data.columns]);
+
+  const removeCommodity = React.useCallback(() => {
+    setCols(data.columns.filter((col) => col.field !== 'commodity'));
+  }, [data.columns]);
+
+  return (
+    <React.Fragment>
+      <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+        <Button color="primary" onClick={removeCommodity}>
+          removeCommodity
+        </Button>
+        <Button color="primary" onClick={() => setRowLength(randomInt(100, 500))}>
+          Load New Rows with new length
+        </Button>
+      </div>
+      <div className="grid-container">
+        <XGrid
+          rows={data.rows}
+          columns={cols}
+          filterModel={{
+            items: [
+              { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
+            ],
           }}
           state={{
             preferencePanel: {

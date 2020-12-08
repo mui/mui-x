@@ -150,19 +150,11 @@ export interface ColumnsMeta {
 export type ColumnLookup = { [field: string]: ColDef };
 
 export interface InternalColumns {
-  all: Columns;
-  visible: Columns;
-  meta: ColumnsMeta;
-  hasColumns: boolean;
-  hasVisibleColumns: boolean;
+  all: string[];
   lookup: ColumnLookup;
 }
 
 export const getInitialColumnsState = (): InternalColumns => ({
-  visible: [],
   all: [],
   lookup: {},
-  hasVisibleColumns: false,
-  hasColumns: false,
-  meta: { positions: [], totalWidth: 0 },
 });

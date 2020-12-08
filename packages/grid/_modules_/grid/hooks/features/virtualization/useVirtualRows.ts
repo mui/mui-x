@@ -7,6 +7,7 @@ import { ScrollParams } from '../../../models/params/scrollParams';
 import { RenderContextProps, RenderRowProps } from '../../../models/renderContextProps';
 import { isEqual } from '../../../utils/utils';
 import { useEnhancedEffect } from '../../../utils/material-ui-utils';
+import { columnsMetaSelector, visibleColumnsSelector } from '../columns/columnsSelector';
 import { GridState } from '../core/gridState';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
@@ -38,6 +39,8 @@ export const useVirtualRows = (
   const rowHeight = useGridSelector(apiRef, densityRowHeightSelector);
   const paginationState = useGridSelector<PaginationState>(apiRef, paginationSelector);
   const totalRowCount = useGridSelector<number>(apiRef, rowCountSelector);
+  const visibleColumns = useGridSelector(apiRef, visibleColumnsSelector);
+  const columnsMeta = useGridSelector(apiRef, columnsMetaSelector);
 
   const [scrollTo] = useScrollFn(renderingZoneRef, colRef);
   const [renderedColRef, updateRenderedCols] = useVirtualColumns(options, apiRef);
@@ -186,24 +189,23 @@ export const useVirtualRows = (
       const isColVisible = apiRef.current.isColumnVisibleInWindow(params.colIndex);
       logger.debug(`Column ${params.colIndex} is ${isColVisible ? 'already' : 'not'} visible.`);
       if (!isColVisible) {
-        const meta = apiRef.current.getColumnsMeta();
-        const isLastCol = params.colIndex + 1 === meta.positions.length;
+        const isLastCol = params.colIndex + 1 === columnsMeta.positions.length;
 
         if (isLastCol) {
-          const lastColWidth = apiRef.current.getVisibleColumns()[params.colIndex].width!;
+          const lastColWidth = visibleColumns[params.colIndex].width!;
           scrollLeft =
-            meta.positions[params.colIndex] +
+            columnsMeta.positions[params.colIndex] +
             lastColWidth -
             gridState.containerSizes!.windowSizes.width;
         } else {
           scrollLeft =
-            meta.positions[params.colIndex + 1] -
+            columnsMeta.positions[params.colIndex + 1] -
             gridState.containerSizes!.windowSizes.width +
             gridState.scrollBar!.scrollBarSize.y;
           logger.debug(`Scrolling to the right, scrollLeft: ${scrollLeft}`);
         }
         if (gridState.rendering.renderingZoneScroll.left > scrollLeft) {
-          scrollLeft = meta.positions[params.colIndex];
+          scrollLeft = columnsMeta.positions[params.colIndex];
           logger.debug(`Scrolling to the left, scrollLeft: ${scrollLeft}`);
         }
       }
@@ -239,7 +241,7 @@ export const useVirtualRows = (
 
       return needScroll;
     },
-    [logger, apiRef, gridState, windowRef, rowHeight],
+    [logger, apiRef, gridState, windowRef, rowHeight, columnsMeta.positions, visibleColumns],
   );
 
   const resetScroll = React.useCallback(() => {
