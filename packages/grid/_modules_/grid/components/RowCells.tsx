@@ -7,7 +7,7 @@ import {
   CellParams,
   CellIndexCoordinates,
 } from '../models';
-import { Cell, GridCellProps } from './cell';
+import { Cell, GridCellProps } from './Cell';
 import { ApiContext } from './api-context';
 import { classnames, isFunction } from '../utils';
 import { buildCellParams } from '../utils/paramsUtils';

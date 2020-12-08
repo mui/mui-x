@@ -1,4 +1,5 @@
 import { ColumnMenuApi } from './columnMenuApi';
+import { ColumnResizeApi } from './columnResizeApi';
 import { FilterApi } from './filterApi';
 import { PreferencesPanelApi } from './preferencesPanelApi';
 import { RowApi } from './rowApi';
@@ -29,4 +30,5 @@ export type GridApi = CoreApi &
   PaginationApi &
   FilterApi &
   ColumnMenuApi &
+  ColumnResizeApi &
   PreferencesPanelApi;

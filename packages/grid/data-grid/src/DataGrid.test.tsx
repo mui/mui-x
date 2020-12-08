@@ -453,6 +453,50 @@ describe('<DataGrid />', () => {
         expect(getColumnValues()).to.deep.equal(['Asics', 'Hugo', 'RedBull']);
       });
     });
+
+    it('should support server-side sorting', () => {
+      interface TestCaseProps {
+        rows: any[];
+      }
+      const TestCase = (props: TestCaseProps) => {
+        const { rows } = props;
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid
+              {...baselineProps}
+              sortingMode="server"
+              rows={rows}
+              sortModel={[
+                {
+                  field: 'brand',
+                  sort: 'desc',
+                },
+              ]}
+            />
+          </div>
+        );
+      };
+
+      const rows = [
+        {
+          id: 3,
+          brand: 'Asics',
+        },
+        {
+          id: 4,
+          brand: 'RedBull',
+        },
+        {
+          id: 5,
+          brand: 'Hugo',
+        },
+      ];
+
+      const { setProps } = render(<TestCase rows={[rows[0], rows[1]]} />);
+      expect(getColumnValues()).to.deep.equal(['Asics', 'RedBull']);
+      setProps({ rows });
+      expect(getColumnValues()).to.deep.equal(['Asics', 'RedBull', 'Hugo']);
+    });
   });
 
   describe('keyboard', () => {

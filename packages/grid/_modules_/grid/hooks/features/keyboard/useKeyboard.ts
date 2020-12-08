@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { containerSizesSelector } from '../../../components/viewport';
+import { containerSizesSelector } from '../../../components/Viewport';
 import { CELL_CSS_CLASS, ROW_CSS_CLASS } from '../../../constants/cssClassesConstants';
 import {
   GRID_FOCUS_OUT,
