@@ -5,12 +5,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [4.0.0-alpha.12](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.11...v4.0.0-alpha.12) (Dec 9, 2020)
 
+Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🔍 Add a new data grid [density selector](https://material-ui.com/components/data-grid/rendering/#density) feature (#606) @DanailH.
+- 💄 A first iteration on the data grid's toolbar.
+- 🧪 Continue the iteration on the data grid filtering feature, soon to be released @dtassone.
+
 ### @material-ui/x-grid@v4.0.0-alpha.12 / @material-ui/data-grid@v4.0.0-alpha.12
 
 #### Changes
 
 - [DataGrid] Add Density selector (#606) @DanailH
-- [DataGrid] Do not swallow keyboard events (#673) @DanailH
+- [DataGrid] Fix swallowing of keyboard events (#673) @DanailH
 - [DataGrid] Fix collision with react-virtualized on detectElementResize (#678) @tifosiblack
 - [DataGrid] Fix component name, rm context,  refact gridComponent (#707) @dtassone
 - [DataGrid] Fix infinite loop with multiple grid, and fix performance (#679) @dtassone
@@ -19,8 +25,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - [DataGrid] Improve the DX of popups (#686) @oliviertassinari
 - [DataGrid] Refactor cols (#682) @dtassone
 - [DataGrid] Rename hideToolbar prop to showToolbar (#706) @DanailH
-- [DataGrid] Server filters (#649) @dtassone
-- [DataGrid] Simplify footer logic (#676) @oliviertassinari
+- [DataGrid] Prepare server filters (#649) @dtassone
+- [DataGrid] Fix display of selected rows in footer (#676) @oliviertassinari
 
 ### Docs
 
@@ -30,7 +36,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - [core] Batch small changes (#683) @oliviertassinari
 - [test] Add regression test (#705) @oliviertassinari
-- [test] Allow running all the tests in strict mode (#684) @oliviertassinari"
+- [test] Allow running all the tests in strict mode (#684) @oliviertassinari
 
 ## [4.0.0-alpha.11](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.10...v4.0.0-alpha.11) (Dec 2, 2020)
 
