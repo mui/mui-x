@@ -12,4 +12,4 @@
   NODE_OPTIONS = "--max_old_space_size=4096"
 
 [[plugins]]
-  package = "./node_modules/@material-ui/monorepo/packages/netlify-plugin-cache-docs"
+  package = "./node_modules/netlify-plugin-cache-docs"
