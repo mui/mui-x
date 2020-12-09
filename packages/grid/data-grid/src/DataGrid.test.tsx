@@ -530,7 +530,7 @@ describe('<DataGrid />', () => {
 
       render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid rows={rows} columns={columns} hideToolbar />
+          <DataGrid rows={rows} columns={columns} />
         </div>,
       );
       const input = screen.getByTestId('custom-input');
@@ -610,7 +610,7 @@ describe('<DataGrid />', () => {
       const rowHeight = 30;
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} hideToolbar={false} rowHeight={rowHeight} />
+          <DataGrid {...baselineProps} showToolbar rowHeight={rowHeight} />
         </div>,
       );
 
@@ -627,7 +627,7 @@ describe('<DataGrid />', () => {
       const rowHeight = 30;
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} hideToolbar={false} rowHeight={rowHeight} />
+          <DataGrid {...baselineProps} showToolbar rowHeight={rowHeight} />
         </div>,
       );
 

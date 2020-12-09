@@ -151,7 +151,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                 <div ref={headerRef}>
                   {customComponents.headerComponent || (
                     <React.Fragment>
-                      {!gridState.options.hideToolbar &&
+                      {gridState.options.showToolbar &&
                         (!gridState.options.disableColumnFilter ||
                           !gridState.options.disableColumnSelector ||
                           !gridState.options.disableDensitySelector) && (

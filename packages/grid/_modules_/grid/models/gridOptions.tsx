@@ -250,10 +250,10 @@ export interface GridOptions {
    */
   hideFooterPagination?: boolean;
   /**
-   * If `true`, the toolbar component is hidden.
+   * If `true`, the toolbar component is visible.
    * @default false
    */
-  hideToolbar?: boolean;
+  showToolbar?: boolean;
   /**
    * If `true`, the grid get a first column with a checkbox that allows to select rows.
    * @default false
@@ -378,7 +378,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   disableColumnMenu: !EXPERIMENTAL_ENABLED,
   disableColumnFilter: !EXPERIMENTAL_ENABLED,
   disableColumnSelector: !EXPERIMENTAL_ENABLED,
-  hideToolbar: !EXPERIMENTAL_ENABLED,
+  showToolbar: false,
   icons: {
     OpenFilterButtonIcon: FilterListIcon,
     ColumnFiltered: FilterAltIcon,

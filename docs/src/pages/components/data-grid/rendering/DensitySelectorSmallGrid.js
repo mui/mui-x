@@ -11,7 +11,7 @@ export default function DensitySelectorSmallGrid() {
 
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid {...data} hideToolbar={false} density="compact" />
+      <DataGrid {...data} showToolbar density="compact" />
     </div>
   );
 }
