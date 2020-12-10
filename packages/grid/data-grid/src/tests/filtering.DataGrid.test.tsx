@@ -6,8 +6,11 @@ import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
 import { getColumnValues, raf, sleep } from 'test/utils/helperFn';
 
-describe('<DataGrid />', () => {
+describe('<DataGrid />', function() {
+  this.timeout(30000);
   // TODO v5: replace with createClientRender
+  const render = createClientRenderStrictMode();
+
   const baselineProps = {
     rows: [
       {
@@ -36,12 +39,13 @@ describe('<DataGrid />', () => {
       }
     });
 
-    const TestCase = (props: {  operator?: string, value?: string }) => {
-      const {operator, value} = props;
+    const TestCase = (props: { rows?: any[], operator?: string, value?: string }) => {
+      const {operator, value, rows} = props;
       return (
         <div style={{width: 300, height: 300}}>
           <DataGrid
             {...baselineProps}
+            rows = { rows || baselineProps.rows}
             filterModel={{
               items: [{
                 columnField: 'brand', value, operatorValue: operator
@@ -53,7 +57,6 @@ describe('<DataGrid />', () => {
       );
     };
     beforeEach(()=> {
-      const render = createClientRenderStrictMode();
       const renderResult = render(<TestCase value={'a'} operator={'contains'}/>);
       setProps = renderResult.setProps;
     })
@@ -61,7 +64,26 @@ describe('<DataGrid />', () => {
     it('should apply the filterModel prop correctly', () => {
       expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
     });
-    it('should apply the filterModel prop correctly when row changes', () => {
+    it('should apply the filterModel prop correctly when row prop changes', () => {
+      setProps({
+        rows: [
+          {
+            id: 3,
+            brand: 'Asics',
+          },
+          {
+            id: 4,
+            brand: 'RedBull',
+          },
+          {
+            id: 5,
+            brand: 'Hugo',
+          },
+        ],
+      });
+      expect(getColumnValues()).to.deep.equal(['Asics']);
+    });
+    it('should apply the filterModel prop correctly on ApiRef setRows', () => {
       setProps({
         rows: [
           {
@@ -81,12 +103,10 @@ describe('<DataGrid />', () => {
       expect(getColumnValues()).to.deep.equal(['Asics']);
     });
 
-    it.only('should allow operator startsWith', async () => {
-      // const renderResult = render(<TestCase value={'a'} operator={'startsWith'}/>);
+    it('should allow operator startsWith', async () => {
       setProps({
         operator: 'startsWith'
       });
-      await sleep(100);
       expect(getColumnValues()).to.deep.equal(['Adidas']);
     });
     it('should allow operator endsWith', () => {

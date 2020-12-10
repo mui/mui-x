@@ -34,15 +34,15 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
   const updateTimeout = React.useRef<any>();
 
   const forceUpdate = React.useCallback(
-    (callback?: Function) => {
+    (preUpdateCallback?: Function) => {
       if (updateTimeout.current == null) {
         updateTimeout.current = setTimeout(() => {
           logger.debug(`Updating component`);
           updateTimeout.current = null;
-          updateComponent();
-          if (callback) {
-            callback();
+          if (preUpdateCallback) {
+            preUpdateCallback();
           }
+          updateComponent();
         }, 100);
       }
     },
@@ -98,8 +98,7 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
 
       setGridState((state) => ({ ...state, rows: internalRowsState.current }));
 
-      apiRef.current.publishEvent(RESET_ROWS);
-      forceUpdate();
+      forceUpdate(() => apiRef.current.publishEvent(RESET_ROWS));
     },
     [logger, gridState.options, apiRef, setGridState, forceUpdate],
   );

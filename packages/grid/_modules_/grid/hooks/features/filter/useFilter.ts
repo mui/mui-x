@@ -17,7 +17,7 @@ import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { PreferencePanelsValue } from '../preferencesPanel/preferencesPanelValue';
 import { sortedRowsSelector } from '../sorting/sortingSelector';
-import { FilterModel, FilterModelState } from './FilterModelState';
+import { FilterModel, FilterModelState, getInitialFilterState } from './FilterModelState';
 import { getInitialVisibleRowsState } from './visibleRowsState';
 
 export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
@@ -44,7 +44,7 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
   }, [setGridState]);
 
   const applyFilter = React.useCallback(
-    (filterItem: FilterItem, linkOperator: LinkOperator = LinkOperator.And) => {
+    (filterItem: FilterItem, linkOperator: LinkOperator = LinkOperator.And, noRerender= false) => {
       if (!filterItem.columnField || !filterItem.operatorValue || !filterItem.value) {
         return;
       }
@@ -101,7 +101,9 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
           visibleRows: { visibleRowsLookup, visibleRows },
         };
       });
-      forceUpdate();
+      if(noRerender) {
+        forceUpdate();
+      }
     },
     [apiRef, forceUpdate, logger, setGridState],
   );
@@ -116,7 +118,7 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
 
       const { items, linkOperator } = apiRef.current.state.filter;
       items.forEach((filterItem) => {
-        applyFilter(filterItem, linkOperator);
+        applyFilter(filterItem, linkOperator, noRerender);
       });
 
       if (!noRerender) {
@@ -229,14 +231,20 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
     [applyFilters, setGridState],
   );
 
+  const clearFilterModel = React.useCallback(()=> {
+    clearFilteredRows();
+    setGridState(state => ({...state, filter: getInitialFilterState()}));
+  }, [clearFilteredRows, setGridState]);
+
   const setFilterModel = React.useCallback(
     (model: FilterModel) => {
+      clearFilterModel();
       applyFilterLinkOperator(model.linkOperator);
       model.items.forEach((item) => upsertFilter(item));
 
       apiRef.current.publishEvent(FILTER_MODEL_CHANGE, getFilterModelParams());
     },
-    [apiRef, applyFilterLinkOperator, getFilterModelParams, upsertFilter],
+    [apiRef, applyFilterLinkOperator, clearFilterModel, getFilterModelParams, upsertFilter],
   );
 
   const onFilterModelChange = React.useCallback(
