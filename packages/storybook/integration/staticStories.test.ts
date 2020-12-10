@@ -96,6 +96,8 @@ const stories = [
   '/story/x-grid-tests-styling--column-cell-renderer',
 
   '/story/x-grid-tests-toolbar--density-picker',
+
+  '/story/x-grid-tests-i18n--custom-locale-text',
 ];
 
 describe('snapshotTest', () => {

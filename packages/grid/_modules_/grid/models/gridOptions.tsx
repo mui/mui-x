@@ -26,6 +26,7 @@ import { SelectionChangeParams } from './params/selectionChangeParams';
 import { SortModelParams } from './params/sortModelParams';
 import { SortDirection, SortModel } from './sortModel';
 import { EXPERIMENTAL_ENABLED } from '../constants/envConstants';
+import { DEFAULT_LOCALE_TEXT } from '../constants/i18nConstants';
 
 /**
  * Set of icons used in the grid component UI.
@@ -357,6 +358,10 @@ export interface GridOptions {
    * Set the density of the grid.
    */
   density: Density;
+  /**
+   * Set the locale text of the grid.
+   */
+  localeText: object;
 }
 
 /**
@@ -379,6 +384,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   disableColumnFilter: !EXPERIMENTAL_ENABLED,
   disableColumnSelector: !EXPERIMENTAL_ENABLED,
   showToolbar: false,
+  localeText: DEFAULT_LOCALE_TEXT,
   icons: {
     OpenFilterButtonIcon: FilterListIcon,
     ColumnFiltered: FilterAltIcon,
