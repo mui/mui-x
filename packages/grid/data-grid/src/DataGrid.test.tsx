@@ -639,5 +639,33 @@ describe('<DataGrid />', () => {
         maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
       });
     });
+
+    it('should increase grid density by 50% even if toolbar is not enabled', () => {
+      const rowHeight = 30;
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} rowHeight={rowHeight} density="compact" />
+        </div>,
+      );
+
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
+        maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
+      });
+    });
+
+    it('should decrease grid density by 50% even if toolbar is not enabled', () => {
+      const rowHeight = 30;
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} rowHeight={rowHeight} density="comfortable" />
+        </div>,
+      );
+
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
+        maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
+      });
+    });
   });
 });
