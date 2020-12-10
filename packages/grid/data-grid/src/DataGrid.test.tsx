@@ -606,7 +606,7 @@ describe('<DataGrid />', () => {
       }
     });
 
-    it('should increase grid density by 50% when selecting compact density', () => {
+    it('should increase grid density when selecting compact density', () => {
       const rowHeight = 30;
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
@@ -623,7 +623,7 @@ describe('<DataGrid />', () => {
       });
     });
 
-    it('should decrease grid density by 50% when selecting comfortable density', () => {
+    it('should decrease grid density when selecting comfortable density', () => {
       const rowHeight = 30;
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
@@ -640,7 +640,7 @@ describe('<DataGrid />', () => {
       });
     });
 
-    it('should increase grid density by 50% even if toolbar is not enabled', () => {
+    it('should increase grid density even if toolbar is not enabled', () => {
       const rowHeight = 30;
       render(
         <div style={{ width: 300, height: 300 }}>
@@ -654,7 +654,7 @@ describe('<DataGrid />', () => {
       });
     });
 
-    it('should decrease grid density by 50% even if toolbar is not enabled', () => {
+    it('should decrease grid density even if toolbar is not enabled', () => {
       const rowHeight = 30;
       render(
         <div style={{ width: 300, height: 300 }}>
