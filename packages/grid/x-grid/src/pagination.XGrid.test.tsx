@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
-import { raf, sleep } from 'test/utils/helperFn';
+import { sleep } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { XGrid, useApiRef } from '@material-ui/x-grid';
 
