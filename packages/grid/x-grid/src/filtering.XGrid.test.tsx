@@ -3,32 +3,12 @@ import { XGrid } from '@material-ui/x-grid/XGrid';
 import { render } from '@testing-library/react';
 import { expect } from 'chai';
 import * as React from 'react';
-import { getColumnValues, raf, sleep } from 'test/utils/helperFn';
-import { createClientRenderStrictMode } from 'test/utils/index';
+import { getColumnValues, sleep } from 'test/utils/helperFn';
 
-describe.only('<XGrid />', function() {
+describe('<XGrid />', function() {
   this.timeout(30000);
 
-  const baselineProps = {
-    rows: [
-      {
-        id: 0,
-        brand: 'Nike',
-      },
-      {
-        id: 1,
-        brand: 'Adidas',
-      },
-      {
-        id: 2,
-        brand: 'Puma',
-      },
-    ],
-    columns: [{field: 'brand'}],
-  };
-
   describe('Filter: ', () => {
-    let setProps: any;
     let apiRef: ApiRef;
 
     before(function beforeHook() {
@@ -39,6 +19,24 @@ describe.only('<XGrid />', function() {
     });
 
     const TestCase = (props: { rows?: any[], model: FilterModel }) => {
+      const baselineProps = {
+        rows: [
+          {
+            id: 0,
+            brand: 'Nike',
+          },
+          {
+            id: 1,
+            brand: 'Adidas',
+          },
+          {
+            id: 2,
+            brand: 'Puma',
+          },
+        ],
+        columns: [{field: 'brand'}],
+      };
+
       const {model, rows} = props;
       apiRef = useApiRef();
       return (
@@ -53,7 +51,8 @@ describe.only('<XGrid />', function() {
         </div>
       );
     };
-    beforeEach(() => {
+
+    const renderBrandContainsA=()=> {
       const model = {
         items: [{
           columnField: 'brand', value: 'a', operatorValue: 'contains'
@@ -61,14 +60,15 @@ describe.only('<XGrid />', function() {
       };
 
       render(<TestCase model={model}/>);
-      // setProps = renderResult.setProps;
-    });
+    }
 
     it('should apply the filterModel prop correctly', () => {
+      renderBrandContainsA();
       expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
     });
 
     it('should apply the filterModel prop correctly on ApiRef setRows', async () => {
+      renderBrandContainsA();
       const newRows = [
         {
           id: 3,
@@ -89,29 +89,23 @@ describe.only('<XGrid />', function() {
     });
 
     it('should apply the filterModel prop correctly on ApiRef update row data', async () => {
+      renderBrandContainsA();
       apiRef.current.updateRows([{id:1, brand: 'Fila' }]);
       apiRef.current.updateRows([{id: 0, brand: 'Patagonia' }]);
       await sleep(100);
-      apiRef.current.getRowModels().map(
-        row=> console.log(`${row.id} ${row.brand}`)
-      );
-      apiRef.current.onFilterModelChange((params)=> {
-        params.filterModel.items.map(item=> JSON.stringify(item));
-      })
       expect(getColumnValues()).to.deep.equal(['Patagonia', 'Fila', 'Puma']);
     });
 
     it('should allow apiRef to setFilterModel', async () => {
+      renderBrandContainsA();
       apiRef.current.setFilterModel({
         items: [{
           columnField: 'brand', value: 'a', operatorValue: 'startsWith'
         }]
       });
-      await sleep(100);
-
       expect(getColumnValues()).to.deep.equal(['Adidas']);
     });
-    it('should allow multiple filter', async () => {
+    it('should allow multiple filter and default to AND', async () => {
       const model = {
         items: [{
           columnField: 'brand', value: 'a', operatorValue: 'contains'
@@ -121,12 +115,12 @@ describe.only('<XGrid />', function() {
           }]
       };
       render(<TestCase model={model}/>);
-      await sleep(100);
 
       expect(getColumnValues()).to.deep.equal(['Puma']);
     });
 
     it('should allow multiple filter via apiRef', async () => {
+      renderBrandContainsA();
       const model = {
         items: [{
           columnField: 'brand', value: 'a', operatorValue: 'startsWith'
@@ -136,12 +130,10 @@ describe.only('<XGrid />', function() {
           }]
       };
       apiRef.current.setFilterModel(model);
-      await sleep(100);
       expect(getColumnValues()).to.deep.equal(['Adidas']);
     });
 
     it('should allow multiple filter and changing the LinkOperator', async () => {
-
       const model: FilterModel = {
         items: [{
           columnField: 'brand', value: 'a', operatorValue: 'startsWith'
@@ -152,7 +144,6 @@ describe.only('<XGrid />', function() {
         linkOperator:LinkOperator.Or
       };
       render(<TestCase model={model}/>);
-      await sleep(100);
 
       expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
     });
