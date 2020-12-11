@@ -1,6 +1,5 @@
 import { act, render } from '@testing-library/react';
 import * as React from 'react';
-import { sleep } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { XGrid, useApiRef } from '@material-ui/x-grid';
 
@@ -46,10 +45,10 @@ describe('<XGrid /> - Pagination', () => {
 
     let cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
     expect(cell).to.have.text('Nike');
-    act(()=> {
+    act(() => {
       apiRef.current.setPage(2);
     });
-    
+
     cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
     expect(cell).to.have.text('Adidas');
   });

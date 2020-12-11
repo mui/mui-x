@@ -2,7 +2,7 @@ import { XGrid } from '@material-ui/x-grid/XGrid';
 import { waitFor } from '@testing-library/react';
 import { expect } from 'chai';
 import * as React from 'react';
-import { getActiveCell, sleep } from '../../../../test/utils/helperFn';
+import { getActiveCell } from '../../../../test/utils/helperFn';
 // @ts-expect-error need to migrate helpers to TypeScript
 import { createClientRenderStrictMode, fireEvent } from '../../../../test/utils/index';
 import { useData } from '../../../storybook/src/hooks/useData';
@@ -55,7 +55,9 @@ describe('<XGrid /> - Keyboard ', () => {
     fireEvent.keyDown(document.activeElement!, { code: 'Home' });
     expect(getActiveCell()).to.equal('1-0');
     fireEvent.keyDown(document.activeElement!, { code: 'End' });
-    await waitFor(() => document.querySelector('[role="cell"][data-rowindex="1"][aria-colindex="19"]'))
+    await waitFor(() =>
+      document.querySelector('[role="cell"][data-rowindex="1"][aria-colindex="19"]'),
+    );
     expect(getActiveCell()).to.equal('1-19');
   });
   /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
