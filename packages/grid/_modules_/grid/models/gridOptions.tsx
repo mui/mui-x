@@ -27,6 +27,7 @@ import { SortModelParams } from './params/sortModelParams';
 import { SortDirection, SortModel } from './sortModel';
 import { EXPERIMENTAL_ENABLED } from '../constants/envConstants';
 import { DEFAULT_LOCALE_TEXT } from '../constants/i18nConstants';
+import { LocaleTextValue } from './api/i18nApi';
 
 /**
  * Set of icons used in the grid component UI.
@@ -361,7 +362,7 @@ export interface GridOptions {
   /**
    * Set the locale text of the grid.
    */
-  localeText: Record<string, string>;
+  localeText: Record<string, LocaleTextValue>;
 }
 
 /**
