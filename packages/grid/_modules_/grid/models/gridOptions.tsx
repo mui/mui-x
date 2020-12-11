@@ -361,7 +361,7 @@ export interface GridOptions {
   /**
    * Set the locale text of the grid.
    */
-  localeText: object;
+  localeText: Record<string, string>;
 }
 
 /**

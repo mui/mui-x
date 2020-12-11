@@ -25,17 +25,17 @@ export function DensitySelector() {
   const DensityOptions: Array<DensityOption> = [
     {
       icon: <DensityCompactIcon />,
-      label: apiRef!.current.getText('densityOptionCompact') as string,
+      label: apiRef!.current.getText('densityOptionCompact'),
       value: DensityTypes.Compact,
     },
     {
       icon: <DensityStandardIcon />,
-      label: apiRef!.current.getText('densityOptionStandard') as string,
+      label: apiRef!.current.getText('densityOptionStandard'),
       value: DensityTypes.Standard,
     },
     {
       icon: <DensityComfortableIcon />,
-      label: apiRef!.current.getText('densityOptionComfortable') as string,
+      label: apiRef!.current.getText('densityOptionComfortable'),
       value: DensityTypes.Comfortable,
     },
   ];
