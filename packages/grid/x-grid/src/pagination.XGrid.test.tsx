@@ -38,13 +38,7 @@ describe('<XGrid />', () => {
 
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid
-              {...baselineProps}
-              apiRef={apiRef}
-              pagination
-              pageSize={1}
-              hideFooter
-            />
+            <XGrid {...baselineProps} apiRef={apiRef} pagination pageSize={1} hideFooter />
           </div>
         );
       };
@@ -54,7 +48,7 @@ describe('<XGrid />', () => {
       let cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
       expect(cell).to.have.text('Nike');
       apiRef.current.setPage(2);
-      await raf()
+      await raf();
 
       cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
       expect(cell).to.have.text('Adidas');

@@ -19,7 +19,7 @@ describe('<XGrid />', () => {
     describe('prop: checkboxSelection', () => {
       it('should check and uncheck when double clicking the row', () => {
         render(
-          <div style={{width: 300, height: 300}}>
+          <div style={{ width: 300, height: 300 }}>
             <XGrid
               rows={[
                 {
@@ -27,7 +27,7 @@ describe('<XGrid />', () => {
                   brand: 'Nike',
                 },
               ]}
-              columns={[{field: 'brand', width: 100}]}
+              columns={[{ field: 'brand', width: 100 }]}
               checkboxSelection
               hideFooter
             />
@@ -38,11 +38,11 @@ describe('<XGrid />', () => {
         expect(row).to.not.have.class('Mui-selected');
         expect(checkbox).to.have.property('checked', false);
 
-        fireEvent.click(screen.getByRole('cell', {name: 'Nike'}));
+        fireEvent.click(screen.getByRole('cell', { name: 'Nike' }));
         expect(row!.classList.contains('Mui-selected')).to.equal(true, 'class mui-selected 1');
         expect(checkbox).to.have.property('checked', true);
 
-        fireEvent.click(screen.getByRole('cell', {name: 'Nike'}));
+        fireEvent.click(screen.getByRole('cell', { name: 'Nike' }));
         expect(row!.classList.contains('Mui-selected')).to.equal(false, 'class mui-selected 2');
         expect(checkbox).to.have.property('checked', false);
       });
