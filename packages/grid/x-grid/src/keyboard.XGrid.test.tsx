@@ -1,4 +1,5 @@
 import { XGrid } from '@material-ui/x-grid/XGrid';
+import { waitFor } from '@testing-library/react';
 import { expect } from 'chai';
 import * as React from 'react';
 import { getActiveCell, sleep } from '../../../../test/utils/helperFn';
@@ -54,7 +55,7 @@ describe('<XGrid /> - Keyboard ', () => {
     fireEvent.keyDown(document.activeElement!, { code: 'Home' });
     expect(getActiveCell()).to.equal('1-0');
     fireEvent.keyDown(document.activeElement!, { code: 'End' });
-    await sleep(50);
+    await waitFor(() => document.querySelector('[role="cell"][data-rowindex="1"][aria-colindex="19"]'))
     expect(getActiveCell()).to.equal('1-19');
   });
   /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
