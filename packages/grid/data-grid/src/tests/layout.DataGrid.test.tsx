@@ -3,24 +3,14 @@ import PropTypes from 'prop-types';
 import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
-  fireEvent,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  screen,
-  // @ts-expect-error need to migrate helpers to TypeScript
   ErrorBoundary,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  createEvent,
 } from 'test/utils/index';
-import { useFakeTimers, spy } from 'sinon';
+import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
-import { DataGrid, RowsProp } from '@material-ui/data-grid';
+import { DataGrid } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
-import {
-  COMFORTABLE_DENSITY_FACTOR,
-  COMPACT_DENSITY_FACTOR,
-} from 'packages/grid/_modules_/grid/hooks/features/density/useDensity';
 
-describe('<DataGrid />', () => {
+describe('<DataGrid /> - Layout & Warnings', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -42,7 +32,7 @@ describe('<DataGrid />', () => {
     columns: [{ field: 'brand' }],
   };
 
-  describe('layout', () => {
+  describe('Layout', () => {
     before(function beforeHook() {
       if (/jsdom/.test(window.navigator.userAgent)) {
         // Need layouting
@@ -290,7 +280,6 @@ describe('<DataGrid />', () => {
         ).to.equal(200 - 2);
       });
     });
-
   });
 
   describe('warnings', () => {

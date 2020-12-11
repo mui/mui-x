@@ -1,26 +1,16 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
   fireEvent,
   // @ts-expect-error need to migrate helpers to TypeScript
   screen,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  ErrorBoundary,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  createEvent,
 } from 'test/utils/index';
-import { useFakeTimers, spy } from 'sinon';
 import { expect } from 'chai';
 import { DataGrid, RowsProp } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
-import {
-  COMFORTABLE_DENSITY_FACTOR,
-  COMPACT_DENSITY_FACTOR,
-} from 'packages/grid/_modules_/grid/hooks/features/density/useDensity';
 
-describe('<DataGrid />', () => {
+describe('<DataGrid /> - Pagination', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -66,8 +56,8 @@ describe('<DataGrid />', () => {
         },
       ];
       render(
-        <div style={{width: 300, height: 300}}>
-          <DataGrid {...baselineProps} rows={rows} page={2} pageSize={1}/>
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} rows={rows} page={2} pageSize={1} />
         </div>,
       );
       setTimeout(() => {
@@ -110,7 +100,7 @@ describe('<DataGrid />', () => {
         }, [page]);
 
         return (
-          <div style={{height: 300, width: 300}}>
+          <div style={{ height: 300, width: 300 }}>
             <DataGrid
               {...baselineProps}
               rows={rows}
@@ -124,9 +114,9 @@ describe('<DataGrid />', () => {
         );
       };
 
-      render(<ServerPaginationGrid/>);
+      render(<ServerPaginationGrid />);
       expect(getColumnValues()).to.deep.equal(['Nike 1']);
-      fireEvent.click(screen.getByRole('button', {name: /next page/i}));
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(getColumnValues()).to.deep.equal(['Nike 2']);
     });
   });
