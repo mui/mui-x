@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createClientRenderStrictMode } from 'test/utils';
+import { createClientRenderStrictMode } from 'test/utils/index';
 import { raf } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { XGrid } from '@material-ui/x-grid';

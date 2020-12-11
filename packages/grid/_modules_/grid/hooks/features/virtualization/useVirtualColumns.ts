@@ -111,11 +111,13 @@ export const useVirtualColumns = (
       );
       logger.debug(`Difference with first: ${diffFirst} and last: ${diffLast} `);
 
-      const renderNewColState = lastDisplayedIdx > 0 && (diffLast > tolerance || diffFirst > tolerance);
+      const renderNewColState =
+        lastDisplayedIdx > 0 && (diffLast > tolerance || diffFirst > tolerance);
 
-      let newRenderedColState: RenderColumnsProps | null = renderedColRef.current!= null ?  {...renderedColRef.current} : null;
+      let newRenderedColState: RenderColumnsProps | null =
+        renderedColRef.current != null ? { ...renderedColRef.current } : null;
 
-      const lastVisibleIndex = visibleColumns.length > 0 ? visibleColumns.length -1 : 0;
+      const lastVisibleIndex = visibleColumns.length > 0 ? visibleColumns.length - 1 : 0;
       if (renderNewColState || newRenderedColState == null) {
         newRenderedColState = {
           leftEmptyWidth: 0,

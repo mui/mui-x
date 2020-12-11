@@ -69,7 +69,9 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
 
       setGridState((state) => {
         const visibleRowsLookup = { ...state.visibleRows.visibleRowsLookup };
-        const visibleRows: RowId[] = !state.visibleRows.visibleRows ? [] : [...state.visibleRows.visibleRows];
+        const visibleRows: RowId[] = !state.visibleRows.visibleRows
+          ? []
+          : [...state.visibleRows.visibleRows];
         // We run the selector on the state here to avoid rendering the rows and then filtering again.
         // This way we have latest rows on the first rendering
 
@@ -108,23 +110,19 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
     [apiRef, forceUpdate, logger, setGridState],
   );
 
-  const applyFilters = React.useCallback(
-    () => {
-      if (options.filterMode === FeatureModeConstant.server) {
-        return;
-      }
+  const applyFilters = React.useCallback(() => {
+    if (options.filterMode === FeatureModeConstant.server) {
+      return;
+    }
 
-      clearFilteredRows();
+    clearFilteredRows();
 
-      const { items, linkOperator } = apiRef.current.state.filter;
-      items.forEach((filterItem) => {
-        apiRef.current.applyFilter(filterItem, linkOperator);
-      });
-      forceUpdate();
-
-    },
-    [apiRef, clearFilteredRows, forceUpdate, options.filterMode],
-  );
+    const { items, linkOperator } = apiRef.current.state.filter;
+    items.forEach((filterItem) => {
+      apiRef.current.applyFilter(filterItem, linkOperator);
+    });
+    forceUpdate();
+  }, [apiRef, clearFilteredRows, forceUpdate, options.filterMode]);
 
   const upsertFilter = React.useCallback(
     (item: FilterItem) => {
@@ -229,9 +227,9 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
     [applyFilters, setGridState],
   );
 
-  const clearFilterModel = React.useCallback(()=> {
+  const clearFilterModel = React.useCallback(() => {
     clearFilteredRows();
-    setGridState(state => ({...state, filter: getInitialFilterState()}));
+    setGridState((state) => ({ ...state, filter: getInitialFilterState() }));
   }, [clearFilteredRows, setGridState]);
 
   const setFilterModel = React.useCallback(

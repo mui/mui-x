@@ -137,7 +137,6 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
       }
 
       forceUpdate(() => apiRef.current.publishEvent(ROWS_UPDATED));
-
     },
     [apiRef, forceUpdate, getRowFromId, setGridState, setRows],
   );
