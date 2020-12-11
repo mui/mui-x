@@ -4,7 +4,7 @@ import { raf } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { XGrid } from '@material-ui/x-grid';
 
-describe('<XGrid />', () => {
+describe('<XGrid /> - Layout', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 

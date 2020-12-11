@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
-describe('<DataGrid />', () => {
+describe('<DataGrid /> - State', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -26,30 +26,28 @@ describe('<DataGrid />', () => {
     columns: [{ field: 'brand' }],
   };
 
-  describe('state', () => {
-    before(function beforeHook() {
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        // Need layouting
-        this.skip();
-      }
-    });
-    it('should allow to control the state using useState', async () => {
-      function GridStateTest({ direction, sortedRows }) {
-        const gridState = {
-          sorting: { sortModel: [{ field: 'brand', sort: direction }], sortedRows },
-        };
+  before(function beforeHook() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // Need layouting
+      this.skip();
+    }
+  });
+  it('should allow to control the state using useState', async () => {
+    function GridStateTest({ direction, sortedRows }) {
+      const gridState = {
+        sorting: { sortModel: [{ field: 'brand', sort: direction }], sortedRows },
+      };
 
-        return (
-          <div style={{ width: 300, height: 500 }}>
-            <DataGrid {...baselineProps} state={gridState} />
-          </div>
-        );
-      }
+      return (
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid {...baselineProps} state={gridState} />
+        </div>
+      );
+    }
 
-      const { setProps } = render(<GridStateTest direction={'desc'} sortedRows={[2, 0, 1]} />);
-      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
-      setProps({ direction: 'asc', sortedRows: [1, 0, 2] });
-      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas'].reverse());
-    });
+    const { setProps } = render(<GridStateTest direction={'desc'} sortedRows={[2, 0, 1]} />);
+    expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+    setProps({ direction: 'asc', sortedRows: [1, 0, 2] });
+    expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas'].reverse());
   });
 });

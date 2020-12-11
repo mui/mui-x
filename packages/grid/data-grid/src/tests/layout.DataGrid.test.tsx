@@ -10,7 +10,7 @@ import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
-describe('<DataGrid />', () => {
+describe('<DataGrid /> - Layout & Warnings', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -32,7 +32,7 @@ describe('<DataGrid />', () => {
     columns: [{ field: 'brand' }],
   };
 
-  describe('layout', () => {
+  describe('Layout', () => {
     before(function beforeHook() {
       if (/jsdom/.test(window.navigator.userAgent)) {
         // Need layouting

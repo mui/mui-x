@@ -4,7 +4,7 @@ import { sleep } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { XGrid, useApiRef } from '@material-ui/x-grid';
 
-describe('<XGrid />', () => {
+describe('<XGrid /> - Pagination', () => {
   const baselineProps = {
     rows: [
       {
@@ -30,28 +30,26 @@ describe('<XGrid />', () => {
     }
   });
 
-  describe('Pagination', () => {
-    it('should apply setPage correctly', async () => {
-      let apiRef;
-      const GridTest = () => {
-        apiRef = useApiRef();
+  it('should apply setPage correctly', async () => {
+    let apiRef;
+    const GridTest = () => {
+      apiRef = useApiRef();
 
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <XGrid {...baselineProps} apiRef={apiRef} pagination pageSize={1} hideFooter />
-          </div>
-        );
-      };
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid {...baselineProps} apiRef={apiRef} pagination pageSize={1} hideFooter />
+        </div>
+      );
+    };
 
-      render(<GridTest />);
+    render(<GridTest />);
 
-      let cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
-      expect(cell).to.have.text('Nike');
-      apiRef.current.setPage(2);
-      await sleep(100);
+    let cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
+    expect(cell).to.have.text('Nike');
+    apiRef.current.setPage(2);
+    await sleep(100);
 
-      cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
-      expect(cell).to.have.text('Adidas');
-    });
+    cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
+    expect(cell).to.have.text('Adidas');
   });
 });

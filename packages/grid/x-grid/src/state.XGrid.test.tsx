@@ -5,7 +5,7 @@ import { getColumnValues } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { XGrid, useApiRef } from '@material-ui/x-grid';
 
-describe('<XGrid />', () => {
+describe('<XGrid /> - State', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -34,48 +34,48 @@ describe('<XGrid />', () => {
     }
   });
 
-  describe('state', () => {
-    it('should trigger on state change and pass the correct params', () => {
-      let onStateParams;
-      let apiRef;
-      function Test() {
-        apiRef = useApiRef();
-        const onStateChange = (params) => {
-          onStateParams = params;
-        };
+  it('should trigger on state change and pass the correct params', () => {
+    let onStateParams;
+    let apiRef;
 
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <XGrid {...baselineProps} onStateChange={onStateChange} apiRef={apiRef} />
-          </div>
-        );
-      }
-      render(<Test />);
-      const header = screen.getByRole('columnheader', { name: 'brand' });
-      fireEvent.click(header);
-      expect(onStateParams.api).to.equal(apiRef.current);
-      expect(onStateParams.state).to.equal(apiRef.current.state);
-      expect(onStateParams.state).to.not.equal(undefined);
-    });
+    function Test() {
+      apiRef = useApiRef();
+      const onStateChange = (params) => {
+        onStateParams = params;
+      };
 
-    it('should allow to control the state using apiRef', () => {
-      function GridStateTest() {
-        const apiRef = useApiRef();
-        React.useEffect(() => {
-          apiRef.current.setState((prev) => ({
-            ...prev,
-            sorting: { ...prev.sorting, sortModel: [{ field: 'brand', sort: 'asc' }] },
-          }));
-        }, [apiRef]);
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <XGrid {...baselineProps} apiRef={apiRef} />
-          </div>
-        );
-      }
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid {...baselineProps} onStateChange={onStateChange} apiRef={apiRef} />
+        </div>
+      );
+    }
 
-      render(<GridStateTest />);
-      expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
-    });
+    render(<Test />);
+    const header = screen.getByRole('columnheader', { name: 'brand' });
+    fireEvent.click(header);
+    expect(onStateParams.api).to.equal(apiRef.current);
+    expect(onStateParams.state).to.equal(apiRef.current.state);
+    expect(onStateParams.state).to.not.equal(undefined);
+  });
+
+  it('should allow to control the state using apiRef', () => {
+    function GridStateTest() {
+      const apiRef = useApiRef();
+      React.useEffect(() => {
+        apiRef.current.setState((prev) => ({
+          ...prev,
+          sorting: { ...prev.sorting, sortModel: [{ field: 'brand', sort: 'asc' }] },
+        }));
+      }, [apiRef]);
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid {...baselineProps} apiRef={apiRef} />
+        </div>
+      );
+    }
+
+    render(<GridStateTest />);
+    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
   });
 });

@@ -7,7 +7,7 @@ import { createClientRenderStrictMode, fireEvent } from '../../../../test/utils/
 import { useData } from '../../../storybook/src/hooks/useData';
 import { Columns } from '../../_modules_/grid/models/colDef/colDef';
 
-describe('<XGrid />', () => {
+describe('<XGrid /> - Keyboard ', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -18,46 +18,44 @@ describe('<XGrid />', () => {
     }
   });
 
-  describe('keyboard', () => {
-    /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
-    const KeyboardTest = () => {
-      const data = useData(100, 20);
-      const transformColSizes = (columns: Columns) =>
-        columns.map((column) => ({ ...column, width: 60 }));
+  /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
+  const KeyboardTest = () => {
+    const data = useData(100, 20);
+    const transformColSizes = (columns: Columns) =>
+      columns.map((column) => ({ ...column, width: 60 }));
 
-      return (
-        <div style={{ width: 300, height: 300 }}>
-          <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />
-        </div>
-      );
-    };
+    return (
+      <div style={{ width: 300, height: 300 }}>
+        <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />
+      </div>
+    );
+  };
 
-    it('cell navigation with arrows ', () => {
-      render(<KeyboardTest />);
-      // @ts-ignore
-      document.querySelector('[role="cell"][data-rowindex="0"][aria-colindex="0"]').focus();
-      expect(getActiveCell()).to.equal('0-0');
-      fireEvent.keyDown(document.activeElement!, { code: 'ArrowRight' });
-      expect(getActiveCell()).to.equal('0-1');
-      fireEvent.keyDown(document.activeElement!, { code: 'ArrowDown' });
-      expect(getActiveCell()).to.equal('1-1');
-      fireEvent.keyDown(document.activeElement!, { code: 'ArrowLeft' });
-      expect(getActiveCell()).to.equal('1-0');
-      fireEvent.keyDown(document.activeElement!, { code: 'ArrowUp' });
-      expect(getActiveCell()).to.equal('0-0');
-    });
-
-    it('Home / End navigation', async () => {
-      render(<KeyboardTest />);
-      // @ts-ignore
-      document.querySelector('[role="cell"][data-rowindex="1"][aria-colindex="1"]').focus();
-      expect(getActiveCell()).to.equal('1-1');
-      fireEvent.keyDown(document.activeElement!, { code: 'Home' });
-      expect(getActiveCell()).to.equal('1-0');
-      fireEvent.keyDown(document.activeElement!, { code: 'End' });
-      await sleep(50);
-      expect(getActiveCell()).to.equal('1-19');
-    });
-    /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
+  it('cell navigation with arrows ', () => {
+    render(<KeyboardTest />);
+    // @ts-ignore
+    document.querySelector('[role="cell"][data-rowindex="0"][aria-colindex="0"]').focus();
+    expect(getActiveCell()).to.equal('0-0');
+    fireEvent.keyDown(document.activeElement!, { code: 'ArrowRight' });
+    expect(getActiveCell()).to.equal('0-1');
+    fireEvent.keyDown(document.activeElement!, { code: 'ArrowDown' });
+    expect(getActiveCell()).to.equal('1-1');
+    fireEvent.keyDown(document.activeElement!, { code: 'ArrowLeft' });
+    expect(getActiveCell()).to.equal('1-0');
+    fireEvent.keyDown(document.activeElement!, { code: 'ArrowUp' });
+    expect(getActiveCell()).to.equal('0-0');
   });
+
+  it('Home / End navigation', async () => {
+    render(<KeyboardTest />);
+    // @ts-ignore
+    document.querySelector('[role="cell"][data-rowindex="1"][aria-colindex="1"]').focus();
+    expect(getActiveCell()).to.equal('1-1');
+    fireEvent.keyDown(document.activeElement!, { code: 'Home' });
+    expect(getActiveCell()).to.equal('1-0');
+    fireEvent.keyDown(document.activeElement!, { code: 'End' });
+    await sleep(50);
+    expect(getActiveCell()).to.equal('1-19');
+  });
+  /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
 });
