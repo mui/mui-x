@@ -3,24 +3,14 @@ import PropTypes from 'prop-types';
 import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
-  fireEvent,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  screen,
-  // @ts-expect-error need to migrate helpers to TypeScript
   ErrorBoundary,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  createEvent,
-} from 'test/utils';
-import { useFakeTimers, spy } from 'sinon';
+} from 'test/utils/index';
+import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
-import { DataGrid, RowsProp } from '@material-ui/data-grid';
+import { DataGrid } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
-import {
-  COMFORTABLE_DENSITY_FACTOR,
-  COMPACT_DENSITY_FACTOR,
-} from 'packages/grid/_modules_/grid/hooks/features/density/useDensity';
 
-describe('<DataGrid />', () => {
+describe('<DataGrid /> - Layout & Warnings', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -42,7 +32,7 @@ describe('<DataGrid />', () => {
     columns: [{ field: 'brand' }],
   };
 
-  describe('layout', () => {
+  describe('Layout', () => {
     before(function beforeHook() {
       if (/jsdom/.test(window.navigator.userAgent)) {
         // Need layouting
@@ -79,86 +69,6 @@ describe('<DataGrid />', () => {
         expect(document.querySelector(`.${className}`)).to.equal(
           container.firstChild.firstChild.firstChild,
         );
-      });
-
-      it('should apply the page prop correctly', (done) => {
-        const rows = [
-          {
-            id: 0,
-            brand: 'Nike',
-          },
-          {
-            id: 1,
-            brand: 'Addidas',
-          },
-          {
-            id: 2,
-            brand: 'Puma',
-          },
-        ];
-        render(
-          <div style={{ width: 300, height: 300 }}>
-            <DataGrid {...baselineProps} rows={rows} page={2} pageSize={1} />
-          </div>,
-        );
-        setTimeout(() => {
-          const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
-          expect(cell).to.have.text('Addidas');
-          done();
-        }, 50);
-      });
-
-      it('should support server side pagination', () => {
-        const ServerPaginationGrid = () => {
-          const [page, setPage] = React.useState(1);
-          const [rows, setRows] = React.useState<RowsProp>([]);
-
-          const handlePageChange = (params) => {
-            setPage(params.page);
-          };
-
-          React.useEffect(() => {
-            let active = true;
-
-            (async () => {
-              const newRows = [
-                {
-                  id: page,
-                  brand: `Nike ${page}`,
-                },
-              ];
-
-              if (!active) {
-                return;
-              }
-
-              setRows(newRows);
-            })();
-
-            return () => {
-              active = false;
-            };
-          }, [page]);
-
-          return (
-            <div style={{ height: 300, width: 300 }}>
-              <DataGrid
-                {...baselineProps}
-                rows={rows}
-                pagination
-                pageSize={1}
-                rowCount={3}
-                paginationMode="server"
-                onPageChange={handlePageChange}
-              />
-            </div>
-          );
-        };
-
-        render(<ServerPaginationGrid />);
-        expect(getColumnValues()).to.deep.equal(['Nike 1']);
-        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-        expect(getColumnValues()).to.deep.equal(['Nike 2']);
       });
 
       it('should support columns.valueGetter', () => {
@@ -370,177 +280,6 @@ describe('<DataGrid />', () => {
         ).to.equal(200 - 2);
       });
     });
-
-    describe('state', () => {
-      it('should allow to control the state using useState', async () => {
-        function GridStateTest({ direction, sortedRows }) {
-          const gridState = {
-            sorting: { sortModel: [{ field: 'brand', sort: direction }], sortedRows },
-          };
-
-          return (
-            <div style={{ width: 300, height: 500 }}>
-              <DataGrid {...baselineProps} state={gridState} />
-            </div>
-          );
-        }
-
-        const { setProps } = render(<GridStateTest direction={'desc'} sortedRows={[2, 0, 1]} />);
-        expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
-        setProps({ direction: 'asc', sortedRows: [1, 0, 2] });
-        expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas'].reverse());
-      });
-    });
-
-    describe('sorting', () => {
-      it('should sort when clicking the header cell', () => {
-        render(
-          <div style={{ width: 300, height: 300 }}>
-            <DataGrid {...baselineProps} />
-          </div>,
-        );
-        const header = screen
-          .getByRole('columnheader', { name: 'brand' })
-          .querySelector('.MuiDataGrid-colCellTitleContainer');
-        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-        fireEvent.click(header);
-        expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
-        fireEvent.click(header);
-        expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
-      });
-
-      it('should keep rows sorted when rows prop change', () => {
-        interface TestCaseProps {
-          rows: any[];
-        }
-        const TestCase = (props: TestCaseProps) => {
-          const { rows } = props;
-          return (
-            <div style={{ width: 300, height: 300 }}>
-              <DataGrid
-                {...baselineProps}
-                rows={rows}
-                sortModel={[
-                  {
-                    field: 'brand',
-                    sort: 'asc',
-                  },
-                ]}
-              />
-            </div>
-          );
-        };
-
-        const { setProps } = render(<TestCase rows={baselineProps.rows} />);
-        expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
-
-        setProps({
-          rows: [
-            {
-              id: 3,
-              brand: 'Asics',
-            },
-            {
-              id: 4,
-              brand: 'RedBull',
-            },
-            {
-              id: 5,
-              brand: 'Hugo',
-            },
-          ],
-        });
-        expect(getColumnValues()).to.deep.equal(['Asics', 'Hugo', 'RedBull']);
-      });
-    });
-
-    it('should support server-side sorting', () => {
-      interface TestCaseProps {
-        rows: any[];
-      }
-      const TestCase = (props: TestCaseProps) => {
-        const { rows } = props;
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGrid
-              {...baselineProps}
-              sortingMode="server"
-              rows={rows}
-              sortModel={[
-                {
-                  field: 'brand',
-                  sort: 'desc',
-                },
-              ]}
-            />
-          </div>
-        );
-      };
-
-      const rows = [
-        {
-          id: 3,
-          brand: 'Asics',
-        },
-        {
-          id: 4,
-          brand: 'RedBull',
-        },
-        {
-          id: 5,
-          brand: 'Hugo',
-        },
-      ];
-
-      const { setProps } = render(<TestCase rows={[rows[0], rows[1]]} />);
-      expect(getColumnValues()).to.deep.equal(['Asics', 'RedBull']);
-      setProps({ rows });
-      expect(getColumnValues()).to.deep.equal(['Asics', 'RedBull', 'Hugo']);
-    });
-  });
-
-  describe('keyboard', () => {
-    before(function beforeHook() {
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
-    it('should be able to type in an child input', () => {
-      const handleInputKeyDown = spy();
-
-      const columns = [
-        {
-          field: 'name',
-          headerName: 'Name',
-          width: 200,
-          renderCell: () => (
-            <input type="text" data-testid="custom-input" onKeyDown={handleInputKeyDown} />
-          ),
-        },
-      ];
-
-      const rows = [
-        {
-          id: 1,
-          name: 'John',
-        },
-      ];
-
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid rows={rows} columns={columns} />
-        </div>,
-      );
-      const input = screen.getByTestId('custom-input');
-      input.focus();
-      const keydownEvent = createEvent.keyDown(input, {
-        key: 'a',
-      });
-      fireEvent(input, keydownEvent);
-      expect(handleInputKeyDown.callCount).to.equal(1);
-    });
   });
 
   describe('warnings', () => {
@@ -595,49 +334,6 @@ describe('<DataGrid />', () => {
       expect((errorRef.current as any).errors[0].toString()).to.include(
         'The data grid component requires all rows to have a unique id property',
       );
-    });
-  });
-
-  describe('toolbar', () => {
-    before(function beforeHook() {
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
-    it('should increase grid density by 50% when selecting compact density', () => {
-      const rowHeight = 30;
-      const { getByText } = render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} showToolbar rowHeight={rowHeight} />
-        </div>,
-      );
-
-      fireEvent.click(getByText('Density'));
-      fireEvent.click(getByText('Compact'));
-
-      // @ts-expect-error need to migrate helpers to TypeScript
-      expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
-      });
-    });
-
-    it('should decrease grid density by 50% when selecting comfortable density', () => {
-      const rowHeight = 30;
-      const { getByText } = render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} showToolbar rowHeight={rowHeight} />
-        </div>,
-      );
-
-      fireEvent.click(getByText('Density'));
-      fireEvent.click(getByText('Comfortable'));
-
-      // @ts-expect-error need to migrate helpers to TypeScript
-      expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
-        maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
-      });
     });
   });
 });
