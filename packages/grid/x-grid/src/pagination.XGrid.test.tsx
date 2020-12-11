@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
-import { raf } from 'test/utils/helperFn';
+import { raf, sleep } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { XGrid, useApiRef } from '@material-ui/x-grid';
 
@@ -48,7 +48,7 @@ describe('<XGrid />', () => {
       let cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
       expect(cell).to.have.text('Nike');
       apiRef.current.setPage(2);
-      await raf();
+      await sleep(100);
 
       cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
       expect(cell).to.have.text('Adidas');
