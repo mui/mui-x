@@ -2,6 +2,7 @@ import { XGrid } from '@material-ui/x-grid/XGrid';
 import { expect } from 'chai';
 import * as React from 'react';
 import { getActiveCell, sleep } from '../../../../test/utils/helperFn';
+// @ts-expect-error need to migrate helpers to TypeScript
 import { createClientRenderStrictMode, fireEvent } from '../../../../test/utils/index';
 import { useData } from '../../../storybook/src/hooks/useData';
 import { Columns } from '../../_modules_/grid/models/colDef/colDef';
