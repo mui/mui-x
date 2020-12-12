@@ -75,7 +75,7 @@ Cell.displayName = 'GridCell';
 interface EmptyCellProps {
   width?: number;
   height?: number;
-  align: Alignment;
+  align?: Alignment;
 }
 
 export const LeftEmptyCell: React.FC<EmptyCellProps> = React.memo(
