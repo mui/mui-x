@@ -48,6 +48,10 @@ export interface GridComponentProps extends GridOptionsProp {
    */
   error?: any;
   /**
+   * Nonce of the inlined stylesheets for [Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute).
+   */
+  nonce?: string;
+  /**
    * Set the whole state of the grid.
    */
   state?: Partial<GridState>;
