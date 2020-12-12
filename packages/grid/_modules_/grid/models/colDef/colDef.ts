@@ -8,9 +8,9 @@ import { ComparatorFn, SortDirection } from '../sortModel';
 import { ColType, NativeColTypes } from './colType';
 
 /**
- * Alignement used in position elements in Cells.
+ * Alignment used in position elements in Cells.
  */
-export type Alignement = 'left' | 'right' | 'center';
+export type Alignment = 'left' | 'right' | 'center';
 
 /**
  * Column Definition interface.
@@ -72,7 +72,7 @@ export interface ColDef {
   /**
    * Allows to align the column values in cells.
    */
-  align?: Alignement;
+  align?: Alignment;
   /**
    * Function that allows to get a specific data instead of field to render in the cell.
    * @param params
@@ -108,7 +108,7 @@ export interface ColDef {
   /**
    * Header cell element alignment.
    */
-  headerAlign?: Alignement;
+  headerAlign?: Alignment;
   /**
    * Toggle the visibility of the sort icons.
    */

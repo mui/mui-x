@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Alignement, CellValue } from '../models';
+import { Alignment, CellValue } from '../models';
 import { CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import { classnames } from '../utils';
 
@@ -11,7 +11,7 @@ export interface GridCellProps {
   height: number;
   showRightBorder?: boolean;
   hasFocus?: boolean;
-  align?: Alignement;
+  align?: Alignment;
   cssClass?: string;
   tabIndex?: number;
   colIndex?: number;
