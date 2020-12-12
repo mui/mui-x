@@ -1,7 +1,7 @@
 # Proxies
 
 ## material-ui-x is configured to be hosted at the root.
-/static/* https://material-ui.netlify.app/static/:splat 200
+/static/* https://material-ui-docs.netlify.app/static/:splat 200
 
 ## Localization
 /fr/* /:splat 200
