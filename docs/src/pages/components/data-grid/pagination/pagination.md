@@ -37,7 +37,7 @@ By default, this feature is off.
 
 ## Custom pagination component
 
-Head to the [rendering section](/components/data-grid/rendering/#pagination) of the documentation for customizing the pagination component.
+Head to the [rendering section](/components/data-grid/rendering/#footer) of the documentation for customizing the pagination component.
 
 ## Server-side pagination
 
