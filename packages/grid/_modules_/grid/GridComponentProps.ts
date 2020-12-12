@@ -16,9 +16,9 @@ export type GridOptionsProp = Partial<GridOptions>;
  */
 export interface GridComponentProps extends GridOptionsProp {
   /**
-   * Set of rows of type [[RowsProp]].
+   * The ref object that allows grid manipulation. Can be instantiated with [[useApiRef()]].
    */
-  rows: RowsProp;
+  apiRef?: ApiRef;
   /**
    * Set of columns of type [[Columns]].
    */
@@ -28,21 +28,9 @@ export interface GridComponentProps extends GridOptionsProp {
    */
   components?: GridComponentOverridesProp;
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with [[useApiRef()]].
-   */
-  apiRef?: ApiRef;
-  /**
-   * If `true`, a  loading overlay is displayed.
-   */
-  loading?: boolean;
-  /**
    * @ignore
    */
   className?: string;
-  /**
-   * @internal enum
-   */
-  licenseStatus: string;
   /**
    * An error that will turn the grid into its error state and display the error component.
    */
@@ -52,11 +40,23 @@ export interface GridComponentProps extends GridOptionsProp {
    */
   nonce?: string;
   /**
-   * Set the whole state of the grid.
+   * @internal enum
    */
-  state?: Partial<GridState>;
+  licenseStatus: string;
+  /**
+   * If `true`, a  loading overlay is displayed.
+   */
+  loading?: boolean;
   /**
    * Set a callback fired when the state of the grid is updated.
    */
   onStateChange?: (params: StateChangeParams) => void; // We are overriding the handler in GridOptions to fix the params type and avoid the cycle dependency
+  /**
+   * Set of rows of type [[RowsProp]].
+   */
+  rows: RowsProp;
+  /**
+   * Set the whole state of the grid.
+   */
+  state?: Partial<GridState>;
 }
