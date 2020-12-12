@@ -108,7 +108,7 @@ export const RowCells: React.FC<RowCellsProps> = React.memo((props) => {
       height: rowHeight,
       showRightBorder,
       ...formattedValueProp,
-      align: column.align,
+      align: column.align || 'left',
       ...cssClassProp,
       tabIndex: domIndex === 0 && colIdx === 0 ? 0 : -1,
       rowIndex,

@@ -12,7 +12,7 @@ export interface GridCellProps {
   height: number;
   showRightBorder?: boolean;
   hasFocus?: boolean;
-  align?: Alignment;
+  align: Alignment;
   cssClass?: string;
   tabIndex?: number;
   colIndex?: number;
@@ -21,7 +21,7 @@ export interface GridCellProps {
 
 export const Cell: React.FC<GridCellProps> = React.memo((props) => {
   const {
-    align = 'left',
+    align,
     children,
     colIndex,
     cssClass,
@@ -72,18 +72,20 @@ export const Cell: React.FC<GridCellProps> = React.memo((props) => {
 
 Cell.displayName = 'GridCell';
 
-export const LeftEmptyCell: React.FC<{
+interface EmptyCellProps {
   width?: number;
   height?: number;
-}> = React.memo(({ width, height }) =>
-  !width || !height ? null : <Cell width={width} height={height} />,
+  align: Alignment;
+}
+
+export const LeftEmptyCell: React.FC<EmptyCellProps> = React.memo(
+  ({ width, height, align = 'left' }) =>
+    !width || !height ? null : <Cell width={width} height={height} align={align} />,
 );
 LeftEmptyCell.displayName = 'LeftEmptyCell';
 
-export const RightEmptyCell: React.FC<{
-  width?: number;
-  height?: number;
-}> = React.memo(({ width, height }) =>
-  !width || !height ? null : <Cell width={width} height={height} />,
+export const RightEmptyCell: React.FC<EmptyCellProps> = React.memo(
+  ({ width, height, align = 'left' }) =>
+    !width || !height ? null : <Cell width={width} height={height} align={align} />,
 );
 RightEmptyCell.displayName = 'RightEmptyCell';
