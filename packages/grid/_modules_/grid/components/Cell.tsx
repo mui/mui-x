@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { capitalize } from '@material-ui/core/utils';
 import { Alignment, CellValue } from '../models';
 import { CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import { classnames } from '../utils';
@@ -18,14 +19,9 @@ export interface GridCellProps {
   rowIndex?: number;
 }
 
-const alignPropToCssClass = {
-  center: 'MuiDataGrid-cellCenter',
-  right: 'MuiDataGrid-cellRight',
-};
-
 export const Cell: React.FC<GridCellProps> = React.memo((props) => {
   const {
-    align,
+    align = 'left',
     children,
     colIndex,
     cssClass,
@@ -52,12 +48,9 @@ export const Cell: React.FC<GridCellProps> = React.memo((props) => {
   return (
     <div
       ref={cellRef}
-      className={classnames(
-        CELL_CSS_CLASS,
-        cssClass,
-        { 'MuiDataGrid-withBorder': showRightBorder },
-        align && align !== 'left' ? alignPropToCssClass[align] : '',
-      )}
+      className={classnames(CELL_CSS_CLASS, cssClass, `MuiDataGrid-cell${capitalize(align)}`, {
+        'MuiDataGrid-withBorder': showRightBorder,
+      })}
       role="cell"
       data-value={value}
       data-field={field}
