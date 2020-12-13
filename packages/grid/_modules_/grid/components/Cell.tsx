@@ -75,17 +75,14 @@ Cell.displayName = 'GridCell';
 interface EmptyCellProps {
   width?: number;
   height?: number;
-  align?: Alignment;
 }
 
-export const LeftEmptyCell: React.FC<EmptyCellProps> = React.memo(
-  ({ width, height, align = 'left' }) =>
-    !width || !height ? null : <Cell width={width} height={height} align={align} />,
+export const LeftEmptyCell: React.FC<EmptyCellProps> = React.memo(({ width, height }) =>
+  !width || !height ? null : <Cell width={width} height={height} align="left" />,
 );
 LeftEmptyCell.displayName = 'LeftEmptyCell';
 
-export const RightEmptyCell: React.FC<EmptyCellProps> = React.memo(
-  ({ width, height, align = 'left' }) =>
-    !width || !height ? null : <Cell width={width} height={height} align={align} />,
+export const RightEmptyCell: React.FC<EmptyCellProps> = React.memo(({ width, height }) =>
+  !width || !height ? null : <Cell width={width} height={height} align="left" />,
 );
 RightEmptyCell.displayName = 'RightEmptyCell';
