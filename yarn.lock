@@ -4411,7 +4411,7 @@
     regenerator-runtime "^0.13.7"
     source-map "^0.7.3"
 
-"@storybook/theming@6.1.11":
+"@storybook/theming@6.1.11", "@storybook/theming@^6.1.9":
   version "6.1.11"
   resolved "https://registry.yarnpkg.com/@storybook/theming/-/theming-6.1.11.tgz#0e757e0562aedefc96bd1d12714d4c8e92823467"
   integrity sha512-zRChacVgKoU2BmpvwK1ntiF3KIpc8QblJT7IGiKfP/BNpy9gNeXbLPLk3g/tkHszOvVYtkaZhEXni4Od8tqy1A==
@@ -4429,7 +4429,7 @@
     resolve-from "^5.0.0"
     ts-dedent "^2.0.0"
 
-"@storybook/theming@6.1.9", "@storybook/theming@^6.1.9":
+"@storybook/theming@6.1.9":
   version "6.1.9"
   resolved "https://registry.yarnpkg.com/@storybook/theming/-/theming-6.1.9.tgz#8c584aa623f3d6e33b1e3b3de2ec1f41bdc5d9ab"
   integrity sha512-orzMQkyEhAQEi0E9iwmUkzh5yPHoYGBz17t2aydDeT6oGKii6if8Mq2oPVycfVKZ84QO7GFAS9q1nVCRcuD8oA==
