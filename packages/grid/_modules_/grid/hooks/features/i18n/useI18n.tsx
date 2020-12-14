@@ -14,7 +14,11 @@ export const useI18n = (apiRef: ApiRef): void => {
     (key: string): LocaleTextValue => {
       logger.debug(`Get grid text with key ${key}`);
 
-      return localeText[key] || '';
+      if (process.env.NODE_ENV !== 'production' && localeText.getOwnProperty(key)) {
+        throw new Error(`Wrong key used for internal purposes ${key}`);
+      }
+
+      return localeText[key];
     },
     [logger, localeText],
   );
