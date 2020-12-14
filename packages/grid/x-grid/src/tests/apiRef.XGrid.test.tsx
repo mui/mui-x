@@ -1,11 +1,12 @@
-import {ApiRef, useApiRef, XGrid } from '@material-ui/x-grid';
+import { ApiRef, useApiRef, XGrid } from '@material-ui/x-grid';
 import { expect } from 'chai';
 import * as React from 'react';
 import { getColumnValues, sleep } from 'test/utils/helperFn';
 import { createClientRenderStrictMode } from 'test/utils';
 
 describe('<XGrid /> - ApiRef', () => {
- const render = createClientRenderStrictMode();
+  // TODO v5: replace with createClientRender
+  const render = createClientRenderStrictMode();
 
   before(function beforeHook() {
     if (/jsdom/.test(window.navigator.userAgent)) {
@@ -44,7 +45,7 @@ describe('<XGrid /> - ApiRef', () => {
   };
 
   it('should allow to reset rows with setRows and render after 100ms', async () => {
-    render(<TestCase />,  { strict: false });
+    render(<TestCase />, { strict: false });
     const newRows = [
       {
         id: 3,
@@ -60,9 +61,9 @@ describe('<XGrid /> - ApiRef', () => {
 
   it('should allow to update row data', async () => {
     render(<TestCase />, { strict: false });
-    apiRef.current.updateRows([{id: 1, brand: 'Fila'}]);
-    apiRef.current.updateRows([{id: 0, brand: 'Pata'}]);
-    apiRef.current.updateRows([{id: 2, brand: 'Pum'}]);
+    apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
+    apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]);
+    apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]);
     await sleep(100);
     expect(getColumnValues()).to.deep.equal(['Pata', 'Fila', 'Pum']);
   });

@@ -1,11 +1,13 @@
-import { ApiRef, FilterModel, LinkOperator, useApiRef , XGrid } from '@material-ui/x-grid';
+import { ApiRef, FilterModel, LinkOperator, useApiRef, XGrid } from '@material-ui/x-grid';
 import { expect } from 'chai';
 import * as React from 'react';
 import { getColumnValues, sleep } from 'test/utils/helperFn';
 import { createClientRenderStrictMode } from 'test/utils';
 
 describe('<XGrid /> - Filter', () => {
+  // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
+
   before(function beforeHook() {
     if (/jsdom/.test(window.navigator.userAgent)) {
       // Need layouting
@@ -60,7 +62,7 @@ describe('<XGrid /> - Filter', () => {
       ],
     };
 
-    render(<TestCase model={model} />, {strict: false});
+    render(<TestCase model={model} />, { strict: false });
   };
 
   it('should apply the filterModel prop correctly', () => {
