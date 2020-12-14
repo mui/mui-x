@@ -3,6 +3,8 @@ import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
   fireEvent,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  screen,
 } from 'test/utils/index';
 import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
@@ -52,7 +54,7 @@ describe('<DataGrid /> - Toolbar', () => {
     fireEvent.click(getByText('Compact'));
 
     // @ts-expect-error need to migrate helpers to TypeScript
-    expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
+    expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
       maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
     });
   });
@@ -69,7 +71,7 @@ describe('<DataGrid /> - Toolbar', () => {
     fireEvent.click(getByText('Comfortable'));
 
     // @ts-expect-error need to migrate helpers to TypeScript
-    expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
+    expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
       maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
     });
   });
@@ -83,7 +85,7 @@ describe('<DataGrid /> - Toolbar', () => {
     );
 
     // @ts-expect-error need to migrate helpers to TypeScript
-    expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
+    expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
       maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
     });
   });
@@ -97,7 +99,7 @@ describe('<DataGrid /> - Toolbar', () => {
     );
 
     // @ts-expect-error need to migrate helpers to TypeScript
-    expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
+    expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
       maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
     });
   });
