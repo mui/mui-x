@@ -14,27 +14,27 @@ export const COMFORTABLE_DENSITY_FACTOR = 1.3;
 
 export const useDensity = (apiRef: ApiRef): void => {
   const logger = useLogger('useDensity');
-  const { rowHeight, headerHeight } = useGridSelector(apiRef, optionsSelector);
+  const { density, rowHeight, headerHeight } = useGridSelector(apiRef, optionsSelector);
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
   const getUpdatedDensityState = React.useCallback(
-    (density: Density, newHeaderHeight: number, newRowHeight: number): DensityState => {
-      switch (density) {
+    (newDensity: Density, newHeaderHeight: number, newRowHeight: number): DensityState => {
+      switch (newDensity) {
         case DensityTypes.Compact:
           return {
-            value: density,
+            value: newDensity,
             headerHeight: Math.floor(newHeaderHeight * COMPACT_DENSITY_FACTOR),
             rowHeight: Math.floor(newRowHeight * COMPACT_DENSITY_FACTOR),
           };
         case DensityTypes.Comfortable:
           return {
-            value: density,
+            value: newDensity,
             headerHeight: Math.floor(newHeaderHeight * COMFORTABLE_DENSITY_FACTOR),
             rowHeight: Math.floor(newRowHeight * COMFORTABLE_DENSITY_FACTOR),
           };
         default:
           return {
-            value: density,
+            value: newDensity,
             headerHeight: newHeaderHeight,
             rowHeight: newRowHeight,
           };
@@ -44,19 +44,23 @@ export const useDensity = (apiRef: ApiRef): void => {
   );
 
   const setDensity = React.useCallback(
-    (density: Density, newHeaderHeight = headerHeight, newRowHeight = rowHeight): void => {
-      logger.debug(`Set grid density to ${density}`);
+    (newDensity: Density, newHeaderHeight = headerHeight, newRowHeight = rowHeight): void => {
+      logger.debug(`Set grid density to ${newDensity}`);
       setGridState((oldState) => ({
         ...oldState,
         density: {
           ...oldState.density,
-          ...getUpdatedDensityState(density, newHeaderHeight, newRowHeight),
+          ...getUpdatedDensityState(newDensity, newHeaderHeight, newRowHeight),
         },
       }));
       forceUpdate();
     },
     [logger, setGridState, forceUpdate, getUpdatedDensityState, headerHeight, rowHeight],
   );
+
+  React.useEffect(() => {
+    setDensity(density, headerHeight, rowHeight);
+  }, [setDensity, density, rowHeight, headerHeight]);
 
   const densityApi: DensityApi = {
     setDensity,
