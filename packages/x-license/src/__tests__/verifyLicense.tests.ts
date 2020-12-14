@@ -19,7 +19,8 @@ const mockLocation = (fakeLocation: any) => {
   });
 };
 const RELEASE_INFO = generateReleaseInfo();
-describe('License: verifyLicense ', () => {
+
+describe('License: verifyLicense', () => {
   const validLicense = generateLicence({
     expiryDate: new Date(new Date().getTime() + oneYear),
     orderNumber: 'MUI-123',

@@ -24,4 +24,23 @@ module.exports = {
     // TODO
     'no-restricted-imports': 'off',
   },
+  overrides: [
+    ...baseline.overrides,
+    {
+      files: [
+        // matching the pattern of the test runner
+        '*.test.js',
+        '*.test.ts',
+        '*.test.tsx',
+      ],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: ['@testing-library/react', 'test/utils/index'],
+          },
+        ],
+      },
+    },
+  ],
 };

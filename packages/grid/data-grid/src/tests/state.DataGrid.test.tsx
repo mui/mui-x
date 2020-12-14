@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createClientRenderStrictMode } from 'test/utils/index';
+import { createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
@@ -32,6 +32,7 @@ describe('<DataGrid /> - State', () => {
       this.skip();
     }
   });
+
   it('should allow to control the state using useState', async () => {
     function GridStateTest({ direction, sortedRows }) {
       const gridState = {
