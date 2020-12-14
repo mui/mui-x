@@ -3,6 +3,8 @@ import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
   fireEvent,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  screen,
 } from 'test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
@@ -40,7 +42,7 @@ describe('<DataGrid /> - Toolbar', () => {
     }
   });
 
-  it('should increase grid density by 50% when selecting compact density', () => {
+  it('should increase grid density when selecting compact density', () => {
     const rowHeight = 30;
     const { getByText } = render(
       <div style={{ width: 300, height: 300 }}>
@@ -52,12 +54,12 @@ describe('<DataGrid /> - Toolbar', () => {
     fireEvent.click(getByText('Compact'));
 
     // @ts-expect-error need to migrate helpers to TypeScript
-    expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
+    expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
       maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
     });
   });
 
-  it('should decrease grid density by 50% when selecting comfortable density', () => {
+  it('should decrease grid density when selecting comfortable density', () => {
     const rowHeight = 30;
     const { getByText } = render(
       <div style={{ width: 300, height: 300 }}>
@@ -69,7 +71,35 @@ describe('<DataGrid /> - Toolbar', () => {
     fireEvent.click(getByText('Comfortable'));
 
     // @ts-expect-error need to migrate helpers to TypeScript
-    expect(document.querySelector('.MuiDataGrid-row')).toHaveInlineStyle({
+    expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
+      maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
+    });
+  });
+
+  it('should increase grid density even if toolbar is not enabled', () => {
+    const rowHeight = 30;
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid {...baselineProps} rowHeight={rowHeight} density="compact" />
+      </div>,
+    );
+
+    // @ts-expect-error need to migrate helpers to TypeScript
+    expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
+      maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
+    });
+  });
+
+  it('should decrease grid density even if toolbar is not enabled', () => {
+    const rowHeight = 30;
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid {...baselineProps} rowHeight={rowHeight} density="comfortable" />
+      </div>,
+    );
+
+    // @ts-expect-error need to migrate helpers to TypeScript
+    expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
       maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
     });
   });

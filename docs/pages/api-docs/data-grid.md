@@ -44,6 +44,8 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">disableSelectionOnClick</span> | <span class="prop-type">boolean</span> | false | If `true`, the selection on click on a row or cell is disabled. |
 | <span class="prop-name">logger</span> | <span class="prop-type">Logger</span> | null | Pass a custom logger in the components that implements the 'Logger' interface. |
 | <span class="prop-name">logLevel</span> | <span class="prop-type">string | false</span> | false | Allows to pass the logging level or false to turn off logging. |
+| <span class="prop-name">showToolbar</span> | <span class="prop-type">boolean</span> | false | If `true`, the default toolbar component is shown. |
+| <span class="prop-name">density</span> | <span class="prop-type">Density</span> | standard | Sets the density of the grid. |
 | <span class="prop-name">sortModel</span> | <span class="prop-type">SortModel</span> |   | Set the sort model of the grid. |
 | <span class="prop-name">onCellClick</span> | <span class="prop-type">(param: CellParams) => void</span> |   | Callback fired when a click event comes from a cell element. |
 | <span class="prop-name">onCellHover</span> | <span class="prop-type">(param: CellParams) => void</span> |   | Callback fired when a hover event comes from a cell element. |

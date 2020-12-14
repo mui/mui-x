@@ -32,6 +32,7 @@ describe('<DataGrid /> - State', () => {
       this.skip();
     }
   });
+
   it('should allow to control the state using useState', async () => {
     function GridStateTest({ direction, sortedRows }) {
       const gridState = {

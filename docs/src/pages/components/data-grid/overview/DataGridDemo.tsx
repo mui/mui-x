@@ -18,9 +18,7 @@ const columns: ColDef[] = [
     sortable: false,
     width: 160,
     valueGetter: (params: ValueGetterParams) =>
-      `${params.getValue('firstName') || ''} ${
-        params.getValue('lastName') || ''
-      }`,
+      `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
   },
 ];
 

@@ -4,11 +4,11 @@ import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
   ErrorBoundary,
-} from 'test/utils/index';
+} from 'test/utils';
 import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
-import { getColumnValues } from 'test/utils/helperFn';
+import { getColumnValues, raf } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
   // TODO v5: replace with createClientRender
@@ -38,6 +38,30 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         // Need layouting
         this.skip();
       }
+    });
+
+    it('should resize the width of the columns', async () => {
+      interface TestCaseProps {
+        width?: number;
+      }
+      const TestCase = (props: TestCaseProps) => {
+        const { width = 300 } = props;
+        return (
+          <div style={{ width, height: 300 }}>
+            <DataGrid {...baselineProps} />
+          </div>
+        );
+      };
+
+      const { container, setProps } = render(<TestCase width={300} />);
+      let rect;
+      rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
+      expect(rect.width).to.equal(300 - 2);
+
+      setProps({ width: 400 });
+      await raf(); // wait for the AutoSize's dimension detection logic
+      rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
+      expect(rect.width).to.equal(400 - 2);
     });
 
     // Adapation of describeConformance()

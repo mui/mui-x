@@ -6,14 +6,12 @@ import { useIcons } from '../../hooks/utils/useIcons';
 import { ApiContext } from '../api-context';
 import { DensityTypes, Density } from '../../models/gridOptions';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { DensityOption } from '../../models/api/densityApi';
 import { densityValueSelector } from '../../hooks/features/density';
 import { GridMenu } from '../menu/GridMenu';
 
 export function DensitySelector() {
   const apiRef = React.useContext(ApiContext);
-  const { density, rowHeight, headerHeight } = useGridSelector(apiRef, optionsSelector);
   const densityValue = useGridSelector(apiRef, densityValueSelector);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const icons = useIcons();
@@ -39,10 +37,6 @@ export function DensitySelector() {
       value: DensityTypes.Comfortable,
     },
   ];
-
-  React.useEffect(() => {
-    apiRef!.current.setDensity(density, headerHeight, rowHeight);
-  }, [apiRef, density, rowHeight, headerHeight]);
 
   const getSelectedDensityIcon = React.useCallback((): React.ReactElement => {
     switch (densityValue) {

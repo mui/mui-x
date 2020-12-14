@@ -1,10 +1,14 @@
-import { act } from '@testing-library/react';
+import {
+  createClientRenderStrictMode,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  act,
+} from 'test/utils';
 import * as React from 'react';
 import { expect } from 'chai';
 import { XGrid, useApiRef } from '@material-ui/x-grid';
-import { createClientRenderStrictMode } from 'test/utils';
 
 describe('<XGrid /> - Pagination', () => {
+  // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
@@ -32,7 +36,7 @@ describe('<XGrid /> - Pagination', () => {
     }
   });
 
-  it('should apply setPage correctly', async () => {
+  it('should apply setPage correctly', () => {
     let apiRef;
     const GridTest = () => {
       apiRef = useApiRef();
@@ -44,13 +48,15 @@ describe('<XGrid /> - Pagination', () => {
       );
     };
 
-    render(<GridTest />, {strict: false});
+    // TODO fix StrictMode support
+    render(<GridTest />, { strict: false });
 
     let cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
     expect(cell).to.have.text('Nike');
-    act(()=> {
+    act(() => {
       apiRef.current.setPage(2);
     });
+
     cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
     expect(cell).to.have.text('Adidas');
   });
