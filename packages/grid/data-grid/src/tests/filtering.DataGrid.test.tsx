@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createClientRenderStrictMode } from 'test/utils/index';
+import { createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
@@ -60,7 +60,6 @@ describe('<DataGrid /> - Filter', () => {
     const renderResult = render(<TestCase value={'a'} operator={'contains'} />);
     setProps = renderResult.setProps;
   });
-
   it('should apply the filterModel prop correctly', () => {
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
   });
@@ -102,8 +101,7 @@ describe('<DataGrid /> - Filter', () => {
     });
     expect(getColumnValues()).to.deep.equal(['Asics']);
   });
-
-  it('should allow operator startsWith', async () => {
+  it('should allow operator startsWith', () => {
     setProps({
       operator: 'startsWith',
     });

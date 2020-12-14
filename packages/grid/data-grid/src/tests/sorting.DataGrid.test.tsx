@@ -5,7 +5,7 @@ import {
   fireEvent,
   // @ts-expect-error need to migrate helpers to TypeScript
   screen,
-} from 'test/utils/index';
+} from 'test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';

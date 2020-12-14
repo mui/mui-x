@@ -7,7 +7,7 @@ import {
   screen,
   // @ts-expect-error need to migrate helpers to TypeScript
   createEvent,
-} from 'test/utils/index';
+} from 'test/utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';

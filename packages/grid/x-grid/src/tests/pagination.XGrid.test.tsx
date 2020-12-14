@@ -1,9 +1,12 @@
-import { act, render } from '@testing-library/react';
+import { act } from '@testing-library/react';
 import * as React from 'react';
 import { expect } from 'chai';
 import { XGrid, useApiRef } from '@material-ui/x-grid';
+import { createClientRenderStrictMode } from 'test/utils';
 
 describe('<XGrid /> - Pagination', () => {
+  const render = createClientRenderStrictMode();
+
   const baselineProps = {
     rows: [
       {
@@ -41,14 +44,13 @@ describe('<XGrid /> - Pagination', () => {
       );
     };
 
-    render(<GridTest />);
+    render(<GridTest />, {strict: false});
 
     let cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
     expect(cell).to.have.text('Nike');
-    act(() => {
+    act(()=> {
       apiRef.current.setPage(2);
     });
-
     cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
     expect(cell).to.have.text('Adidas');
   });
