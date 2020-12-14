@@ -19,9 +19,7 @@ function loadServerRows(sortModel: SortModel, data: GridData): Promise<any> {
 
       let sortedRows = [
         ...data.rows.sort((a, b) =>
-          String(a[sortedColumn.field]).localeCompare(
-            String(b[sortedColumn.field]),
-          ),
+          String(a[sortedColumn.field]).localeCompare(String(b[sortedColumn.field])),
         ),
       ];
 
