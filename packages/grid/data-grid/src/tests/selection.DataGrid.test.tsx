@@ -2,9 +2,9 @@ import * as React from 'react';
 // @ts-expect-error need to migrate helpers to TypeScript
 import { fireEvent, screen, createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
-import { XGrid } from '@material-ui/x-grid';
+import { DataGrid } from '@material-ui/data-grid';
 
-describe('<XGrid /> - Selection', () => {
+describe('<DataGrid /> - Selection', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -19,7 +19,7 @@ describe('<XGrid /> - Selection', () => {
     it('should check and uncheck when double clicking the row', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
-          <XGrid
+          <DataGrid
             rows={[
               {
                 id: 0,
