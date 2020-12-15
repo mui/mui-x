@@ -1,12 +1,20 @@
 import { ApiRef, useApiRef, XGrid } from '@material-ui/x-grid';
 import { expect } from 'chai';
 import * as React from 'react';
-import { getColumnValues, sleep } from 'test/utils/helperFn';
+import { useFakeTimers } from 'sinon';
+import { getColumnValues } from 'test/utils/helperFn';
 import { createClientRenderStrictMode } from 'test/utils';
 
 describe('<XGrid /> - ApiRef', () => {
-  // TODO v5: replace with createClientRender
-  const render = createClientRenderStrictMode();
+  let clock;
+
+  beforeEach(() => {
+    clock = useFakeTimers();
+  });
+
+  afterEach(() => {
+    clock.restore();
+  });
 
   before(function beforeHook() {
     if (/jsdom/.test(window.navigator.userAgent)) {
@@ -14,6 +22,9 @@ describe('<XGrid /> - ApiRef', () => {
       this.skip();
     }
   });
+
+  // TODO v5: replace with createClientRender
+  const render = createClientRenderStrictMode();
 
   const baselineProps = {
     rows: [
@@ -53,9 +64,10 @@ describe('<XGrid /> - ApiRef', () => {
       },
     ];
     apiRef.current.setRows(newRows);
-    await sleep(50);
+
+    clock.tick(50);
     expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
-    await sleep(50);
+    clock.tick(50);
     expect(getColumnValues()).to.deep.equal(['Asics']);
   });
 
@@ -64,7 +76,7 @@ describe('<XGrid /> - ApiRef', () => {
     apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
     apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]);
     apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]);
-    await sleep(100);
+    clock.tick(100);
     expect(getColumnValues()).to.deep.equal(['Pata', 'Fila', 'Pum']);
   });
   it('update row data can also add rows', async () => {
@@ -73,7 +85,7 @@ describe('<XGrid /> - ApiRef', () => {
     apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]);
     apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]);
     apiRef.current.updateRows([{ id: 3, brand: 'Jordan' }]);
-    await sleep(100);
+    clock.tick(100);
     expect(getColumnValues()).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
   });
 });
