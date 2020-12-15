@@ -17,9 +17,7 @@ const columns: Columns = [
   {
     field: 'username',
     valueGetter: (params: ValueGetterParams) =>
-      `${params.getValue('name') || 'unknown'} - ${
-        params.getValue('age') || 'x'
-      }`,
+      `${params.getValue('name') || 'unknown'} - ${params.getValue('age') || 'x'}`,
     sortComparator: (v1, v2, param1, param2) => param1.row.age - param2.row.age,
     width: 150,
   },

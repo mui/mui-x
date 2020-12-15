@@ -13,21 +13,21 @@ export default {
     },
   },
 };
-export const SizePickerSmall = () => {
+export const DensitySelectorCompact = () => {
   const data = useData(100, 50);
 
   return (
     <div style={{ height: 600 }}>
-      <XGrid rows={data.rows} columns={data.columns} density="compact" />
+      <XGrid rows={data.rows} showToolbar columns={data.columns} density="compact" />
     </div>
   );
 };
-export const SizePickerLarge = () => {
+export const DensitySelectorComfortable = () => {
   const data = useData(100, 50);
 
   return (
     <div style={{ height: 600 }}>
-      <XGrid rows={data.rows} columns={data.columns} density="comfortable" />
+      <XGrid rows={data.rows} showToolbar columns={data.columns} density="comfortable" />
     </div>
   );
 };
