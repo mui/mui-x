@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  FILTER_MODEL_CHANGE,
-  ROWS_SET,
-  ROWS_UPDATED,
-} from '../../../constants/eventsConstants';
+import { FILTER_MODEL_CHANGE, ROWS_SET, ROWS_UPDATED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { FilterApi } from '../../../models/api/filterApi';
 import { FeatureModeConstant } from '../../../models/featureMode';
