@@ -14,10 +14,12 @@ import { ColumnHeaderItem } from './ColumnHeaderItem';
 
 export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
+  hasScroll: { y: boolean; x: boolean };
+  scrollSize: number;
 }
 
 export function ColumnHeaderItemCollection(props: ColumnHeadersItemCollectionProps) {
-  const { columns } = props;
+  const { columns, hasScroll, scrollSize } = props;
   const [resizingColField, setResizingColField] = React.useState('');
   const apiRef = React.useContext(ApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
@@ -35,19 +37,24 @@ export function ColumnHeaderItemCollection(props: ColumnHeadersItemCollectionPro
   // TODO refactor by putting resizing in the state so we avoid adding listeners.
   useApiEventHandler(apiRef!, COL_RESIZE_START, handleResizeStart);
   useApiEventHandler(apiRef!, COL_RESIZE_STOP, handleResizeStop);
-
-  const items = columns.map((col, idx) => (
-    <ColumnHeaderItem
-      key={col.field}
-      {...sortColumnLookup[col.field]}
-      filterItemsCounter={filterColumnLookup[col.field] && filterColumnLookup[col.field].length}
-      options={options}
-      isDragging={col.field === dragCol}
-      column={col}
-      colIndex={idx}
-      isResizing={resizingColField === col.field}
-    />
-  ));
+  const items = columns.map((col, idx) => {
+    const isLastColumn = idx === columns.length - 1;
+    const removeScrollWidth = isLastColumn && hasScroll.y && hasScroll.x;
+    const width = removeScrollWidth ? Math.abs(col.width! - scrollSize * 2) : col.width!;
+    return (
+      <ColumnHeaderItem
+        key={col.field}
+        {...sortColumnLookup[col.field]}
+        filterItemsCounter={filterColumnLookup[col.field] && filterColumnLookup[col.field].length}
+        options={options}
+        isDragging={col.field === dragCol}
+        column={col}
+        colIndex={idx}
+        width={width}
+        isResizing={resizingColField === col.field}
+      />
+    );
+  });
 
   return (
     <React.Fragment>

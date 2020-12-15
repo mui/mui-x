@@ -24,6 +24,7 @@ interface ColumnHeaderItemProps {
   sortIndex?: number;
   options: GridOptions;
   filterItemsCounter?: number;
+  width: number;
 }
 
 export const ColumnHeaderItem = ({
@@ -35,6 +36,7 @@ export const ColumnHeaderItem = ({
   sortIndex,
   options,
   filterItemsCounter,
+  width,
 }: ColumnHeaderItemProps) => {
   const apiRef = React.useContext(ApiContext);
   const headerHeight = useGridSelector(apiRef, densityHeaderHeightSelector);
@@ -103,7 +105,6 @@ export const ColumnHeaderItem = ({
     onDragEnter,
     onDragOver,
   };
-  const width = column.width!;
 
   let ariaSort: any;
   if (sortDirection != null) {
