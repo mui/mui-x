@@ -88,6 +88,18 @@ export enum DensityTypes {
   Comfortable = 'comfortable',
 }
 
+/**
+ * Sets the types of the texts in the grid.
+ */
+export interface LocaleText {
+  // Density selector toolbar button text
+  densityText?: string | React.ReactNode;
+  densityLabelText?: string;
+  densityOptionTextCompact?: string;
+  densityOptionTextStandard?: string;
+  densityOptionTextComfortable?: string;
+}
+
 // TODO add multiSortKey
 /**
  * Grid options react prop, containing all the setting for the grid.
@@ -361,13 +373,7 @@ export interface GridOptions {
   /**
    * Set the locale text of the grid.
    */
-  localeText: {
-    // Density selector toolbar button text
-    densityLabel?: string | React.ReactNode;
-    densityOptionCompact?: string;
-    densityOptionStandard?: string;
-    densityOptionComfortable?: string;
-  };
+  localeText: LocaleText;
 }
 
 /**

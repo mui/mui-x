@@ -12,6 +12,8 @@ components: DataGrid, XGrid
 The grid will support localization with a single prop that includes all the translated messages.
 You will be able to follow [this guide](/guides/localization/#locale-text) to use them.
 
+You can use the `localeText` prop to pass in your own text and translations. The default translations are for en_EN.
+
 {{"demo": "pages/components/data-grid/localization/CustomLocaleTextGrid.js", "bg": "inline"}}
 
 ## 🚧 RTL Support

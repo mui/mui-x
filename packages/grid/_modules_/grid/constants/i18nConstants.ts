@@ -1,6 +1,7 @@
 export const DEFAULT_LOCALE_TEXT = {
-  densityLabel: 'Density',
-  densityOptionCompact: 'Compact',
-  densityOptionStandard: 'Standard',
-  densityOptionComfortable: 'Comfortable',
+  densityText: 'Density',
+  densityLabelText: 'Density',
+  densityOptionTextCompact: 'Compact',
+  densityOptionTextStandard: 'Standard',
+  densityOptionTextComfortable: 'Comfortable',
 };

@@ -18,7 +18,11 @@ export default function OrderSortingGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid sortingOrder={['desc', 'asc']} sortModel={sortModel} {...data} />
+      <DataGrid
+        sortingOrder={['desc', 'asc']}
+        sortModel={sortModel}
+        {...data}
+      />
     </div>
   );
 }

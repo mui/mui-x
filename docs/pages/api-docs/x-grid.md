@@ -64,6 +64,7 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">onPageSizeChange</span> | <span class="prop-type">(param: PageChangeParams) => void</span> |   | Callback fired when the page size has changed. |
 | <span class="prop-name">onError</span> | <span class="prop-type">(args: any) => void</span> |   | Callback fired when an exception is thrown in the grid, or when the `showError` API method is called. |
 | <span class="prop-name">icons</span> | <span class="prop-type">IconsOptions</span> |   | Set of icons used in the grid. |
+| <span class="prop-name">localeText</span> | <span class="prop-type">LocaleText</span> |   | Set of text labels used in the grid. |
 
 The `ref` is forwarded to the root element.
 

@@ -23,17 +23,17 @@ export function DensitySelector() {
   const DensityOptions: Array<DensityOption> = [
     {
       icon: <DensityCompactIcon />,
-      label: apiRef!.current.getText('densityOptionCompact') as string,
+      label: apiRef!.current.getText('densityOptionTextCompact') as string,
       value: DensityTypes.Compact,
     },
     {
       icon: <DensityStandardIcon />,
-      label: apiRef!.current.getText('densityOptionStandard') as string,
+      label: apiRef!.current.getText('densityOptionTextStandard') as string,
       value: DensityTypes.Standard,
     },
     {
       icon: <DensityComfortableIcon />,
-      label: apiRef!.current.getText('densityOptionComfortable') as string,
+      label: apiRef!.current.getText('densityOptionTextComfortable') as string,
       value: DensityTypes.Comfortable,
     },
   ];
@@ -81,10 +81,10 @@ export function DensitySelector() {
         size="small"
         startIcon={getSelectedDensityIcon()}
         onClick={handleDensitySelectorOpen}
-        aria-label="Density"
+        aria-label={apiRef!.current.getText('densityLabelText') as string}
         aria-haspopup="true"
       >
-        {apiRef!.current.getText('densityLabel')}
+        {apiRef!.current.getText('densityText')}
       </Button>
       <GridMenu
         open={Boolean(anchorEl)}
