@@ -362,6 +362,13 @@ describe('<DataGrid /> - Layout & Warnings', () => {
   });
 
   describe('i18n', () => {
+    before(function beforeHook() {
+      if (/jsdom/.test(window.navigator.userAgent)) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
     it('should replace the Density Selector button label text to "Size"', () => {
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
