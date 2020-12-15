@@ -85,30 +85,30 @@ export function SetCommodityRowsViaApi() {
 }
 
 export function ChangeRowsAndColumns() {
-  const [rows, setRows] = React.useState(baselineProps.rows)
-  const [cols, setCols] = React.useState(baselineProps.columns)
+  const [rows, setRows] = React.useState<any[]>(baselineProps.rows);
+  const [cols, setCols] = React.useState<any[]>(baselineProps.columns);
 
   const changeDataSet = React.useCallback(() => {
-   const newData = {
-     rows: [
-       {
-         id: 0,
-         country: 'France',
-       },
-       {
-         id: 1,
-         country: 'UK',
-       },
-       {
-         id: 12,
-         country: 'US',
-       },
-     ],
-     columns: [{field: 'country'}],
-   }
+    const newData = {
+      rows: [
+        {
+          id: 0,
+          country: 'France',
+        },
+        {
+          id: 1,
+          country: 'UK',
+        },
+        {
+          id: 12,
+          country: 'US',
+        },
+      ],
+      columns: [{ field: 'country' }],
+    };
 
-   setRows(newData.rows);
-   setCols(newData.columns);
+    setRows(newData.rows);
+    setCols(newData.columns);
   }, []);
 
   return (

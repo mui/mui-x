@@ -145,20 +145,17 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnValues()).to.deep.equal(['Asics', 'RedBull', 'Hugo']);
   });
 
-  it('should support new dataset', ()=> {
-    const TestCase = (props: { rows: any[], columns: any[] }) => {
+  it('should support new dataset', () => {
+    const TestCase = (props: { rows: any[]; columns: any[] }) => {
       const { rows, columns } = props;
       return (
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-          />
+          <DataGrid rows={rows} columns={columns} />
         </div>
       );
     };
 
-    const {setProps} = render(<TestCase {...baselineProps} />);
+    const { setProps } = render(<TestCase {...baselineProps} />);
 
     const header = screen
       .getByRole('columnheader', { name: 'brand' })
@@ -181,9 +178,9 @@ describe('<DataGrid /> - Sorting', () => {
           country: 'US',
         },
       ],
-      columns: [{field: 'country'}],
-    }
-    setProps({...newData });
+      columns: [{ field: 'country' }],
+    };
+    setProps({ ...newData });
     expect(getColumnValues()).to.deep.equal(['France', 'UK', 'US']);
   });
 });

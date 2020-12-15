@@ -1,7 +1,9 @@
 import * as React from 'react';
 import {
-  COLUMN_HEADER_CLICK, COLUMNS_UPDATED,
-  MULTIPLE_KEY_PRESS_CHANGED, ROWS_CLEARED,
+  COLUMN_HEADER_CLICK,
+  COLUMNS_UPDATED,
+  MULTIPLE_KEY_PRESS_CHANGED,
+  ROWS_CLEARED,
   ROWS_SET,
   ROWS_UPDATED,
   SORT_MODEL_CHANGE,
@@ -138,47 +140,44 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
     [apiRef],
   );
 
-  const applySorting = React.useCallback(
-    () => {
-      const rowModels = apiRef.current.getRowModels();
+  const applySorting = React.useCallback(() => {
+    const rowModels = apiRef.current.getRowModels();
 
-      if (options.sortingMode === FeatureModeConstant.server) {
-        logger.info('Skipping sorting rows as sortingMode = server');
-        setGridState((oldState) => {
-          return {
-            ...oldState,
-            sorting: {...oldState.sorting, sortedRows: rowModels.map((row) => row.id)},
-          };
-        });
-        return;
-      }
-
-      const sortModel = apiRef.current.getState<GridState>().sorting.sortModel;
-      logger.info('Sorting rows with ', sortModel);
-      const sorted = [...rowModels];
-      if (sortModel.length > 0) {
-        comparatorList.current = buildComparatorList(sortModel);
-        sorted.sort(comparatorListAggregate);
-      }
-
+    if (options.sortingMode === FeatureModeConstant.server) {
+      logger.info('Skipping sorting rows as sortingMode = server');
       setGridState((oldState) => {
         return {
           ...oldState,
-          sorting: {...oldState.sorting, sortedRows: sorted.map((row) => row.id)},
+          sorting: { ...oldState.sorting, sortedRows: rowModels.map((row) => row.id) },
         };
       });
-      forceUpdate();
-    },
-    [
-      apiRef,
-      logger,
-      setGridState,
-      forceUpdate,
-      buildComparatorList,
-      comparatorListAggregate,
-      options.sortingMode,
-    ],
-  );
+      return;
+    }
+
+    const sortModel = apiRef.current.getState<GridState>().sorting.sortModel;
+    logger.info('Sorting rows with ', sortModel);
+    const sorted = [...rowModels];
+    if (sortModel.length > 0) {
+      comparatorList.current = buildComparatorList(sortModel);
+      sorted.sort(comparatorListAggregate);
+    }
+
+    setGridState((oldState) => {
+      return {
+        ...oldState,
+        sorting: { ...oldState.sorting, sortedRows: sorted.map((row) => row.id) },
+      };
+    });
+    forceUpdate();
+  }, [
+    apiRef,
+    logger,
+    setGridState,
+    forceUpdate,
+    buildComparatorList,
+    comparatorListAggregate,
+    options.sortingMode,
+  ]);
 
   const setSortModel = React.useCallback(
     (sortModel: SortModel) => {
@@ -222,8 +221,8 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   );
 
   const onRowsCleared = React.useCallback(() => {
-    setGridState(state=> {
-      return {...state, sorting: {...state.sorting, sortedRows: []}};
+    setGridState((state) => {
+      return { ...state, sorting: { ...state.sorting, sortedRows: [] } };
     });
   }, [setGridState]);
 
@@ -245,32 +244,31 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
     [apiRef],
   );
 
-  const onColUpdated = React.useCallback(()=> {
-      // When the columns change we check that the sorted columns are still part of the dataset
-      setGridState(state => {
-        const sortModel = state.sorting.sortModel;
-        const latestColumns = allColumnsSelector(state);
-        let newModel = sortModel;
-        if (sortModel.length > 0) {
-          newModel = sortModel.reduce((model, sortedCol) => {
-            const exist = latestColumns.find(col => col.field === sortedCol.field);
-            if (exist) {
-              model.push(sortedCol);
-            }
-            return model;
-          }, [] as SortModel);
-        }
+  const onColUpdated = React.useCallback(() => {
+    // When the columns change we check that the sorted columns are still part of the dataset
+    setGridState((state) => {
+      const sortModel = state.sorting.sortModel;
+      const latestColumns = allColumnsSelector(state);
+      let newModel = sortModel;
+      if (sortModel.length > 0) {
+        newModel = sortModel.reduce((model, sortedCol) => {
+          const exist = latestColumns.find((col) => col.field === sortedCol.field);
+          if (exist) {
+            model.push(sortedCol);
+          }
+          return model;
+        }, [] as SortModel);
+      }
 
-        return {...state, sorting: {...state.sorting, sortModel: newModel}}
-      })
-    }, [setGridState]);
-
+      return { ...state, sorting: { ...state.sorting, sortModel: newModel } };
+    });
+  }, [setGridState]);
 
   useApiEventHandler(apiRef, COLUMN_HEADER_CLICK, headerClickHandler);
   useApiEventHandler(apiRef, ROWS_SET, apiRef.current.applySorting);
   useApiEventHandler(apiRef, ROWS_CLEARED, onRowsCleared);
   useApiEventHandler(apiRef, ROWS_UPDATED, apiRef.current.applySorting);
-  useApiEventHandler(apiRef, COLUMNS_UPDATED, onColUpdated );
+  useApiEventHandler(apiRef, COLUMNS_UPDATED, onColUpdated);
   useApiEventHandler(apiRef, MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
 
   useApiEventHandler(apiRef, SORT_MODEL_CHANGE, options.onSortModelChange);

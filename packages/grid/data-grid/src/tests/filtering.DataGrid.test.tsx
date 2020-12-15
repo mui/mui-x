@@ -3,7 +3,6 @@ import { createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
-import { fireEvent, screen } from '../../../../../test/utils/index';
 
 describe('<DataGrid /> - Filter', () => {
   // TODO v5: replace with createClientRender
@@ -36,7 +35,12 @@ describe('<DataGrid /> - Filter', () => {
     }
   });
 
-  const TestCase = (props: { rows?: any[]; columns?: any[]; operator?: string; value?: string }) => {
+  const TestCase = (props: {
+    rows?: any[];
+    columns?: any[];
+    operator?: string;
+    value?: string;
+  }) => {
     const { operator, value, rows, columns } = props;
     return (
       <div style={{ width: 300, height: 300 }}>
@@ -122,7 +126,7 @@ describe('<DataGrid /> - Filter', () => {
     expect(getColumnValues()).to.deep.equal(['Nike']);
   });
 
-  it('should support new dataset', ()=> {
+  it('should support new dataset', () => {
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
     const newData = {
       rows: [
@@ -139,9 +143,9 @@ describe('<DataGrid /> - Filter', () => {
           country: 'US',
         },
       ],
-      columns: [{field: 'country'}],
-    }
-    setProps({...newData });
+      columns: [{ field: 'country' }],
+    };
+    setProps({ ...newData });
     expect(getColumnValues()).to.deep.equal(['France', 'UK', 'US']);
   });
 });

@@ -82,7 +82,7 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
     (allNewRows: RowModel[]) => {
       logger.debug(`updating all rows, new length ${allNewRows.length}`);
 
-      if(internalRowsState.current.allRows.length > 0) {
+      if (internalRowsState.current.allRows.length > 0) {
         apiRef.current.publishEvent(ROWS_CLEARED);
       }
 
