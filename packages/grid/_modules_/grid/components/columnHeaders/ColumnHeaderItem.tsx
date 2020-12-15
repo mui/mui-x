@@ -26,7 +26,7 @@ interface ColumnHeaderItemProps {
   filterItemsCounter?: number;
 }
 
-export const ColumnHeaderItem = ({
+export const ColumnHeaderItem = React.memo(({
   column,
   colIndex,
   isDragging,
@@ -167,4 +167,5 @@ export const ColumnHeaderItem = ({
       />
     </div>
   );
-};
+});
+ColumnHeaderItem.displayName = 'ColumnHeaderItem';
