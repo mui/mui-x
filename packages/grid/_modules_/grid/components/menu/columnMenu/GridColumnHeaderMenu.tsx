@@ -68,7 +68,7 @@ export function GridColumnHeaderMenu() {
     };
   }, []);
 
-  if (!target) {
+  if (!target || !currentColumn) {
     return null;
   }
 

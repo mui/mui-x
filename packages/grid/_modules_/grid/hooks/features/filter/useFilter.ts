@@ -1,18 +1,19 @@
 import * as React from 'react';
-import { FILTER_MODEL_CHANGE, RESET_ROWS, ROWS_UPDATED } from '../../../constants/eventsConstants';
+import { COLUMNS_UPDATED, FILTER_MODEL_CHANGE, ROWS_SET, ROWS_UPDATED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { FilterApi } from '../../../models/api/filterApi';
 import { FeatureModeConstant } from '../../../models/featureMode';
 import { FilterItem, LinkOperator } from '../../../models/filterItem';
 import { FilterModelParams } from '../../../models/params/filterModelParams';
 import { RowId, RowsProp } from '../../../models/rows';
+import { SortModel } from '../../../models/sortModel';
 import { buildCellParams } from '../../../utils/paramsUtils';
 import { isEqual } from '../../../utils/utils';
 import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useLogger } from '../../utils/useLogger';
 import { optionsSelector } from '../../utils/useOptionsProp';
-import { filterableColumnsSelector } from '../columns/columnsSelector';
+import { allColumnsSelector, filterableColumnsSelector } from '../columns/columnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { PreferencePanelsValue } from '../preferencesPanel/preferencesPanelValue';
@@ -266,7 +267,7 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
     'FilterApi',
   );
 
-  useApiEventHandler(apiRef, RESET_ROWS, apiRef.current.applyFilters);
+  useApiEventHandler(apiRef, ROWS_SET, apiRef.current.applyFilters);
   useApiEventHandler(apiRef, ROWS_UPDATED, apiRef.current.applyFilters);
   useApiEventHandler(apiRef, FILTER_MODEL_CHANGE, options.onFilterModelChange);
 

@@ -39,7 +39,8 @@ export const COL_REORDER_DRAG_ENTER = 'colReordering:dragEnter';
 export const COL_REORDER_STOP = 'colReordering:dragStop';
 
 export const ROWS_UPDATED = 'rowsUpdated';
-export const RESET_ROWS = 'resetRows';
+export const ROWS_SET = 'rowsSet';
+export const ROWS_CLEARED = 'rowsCleared';
 export const COLUMNS_UPDATED = 'columnsUpdated';
 
 export const SORT_MODEL_CHANGE = 'sortModelChange';

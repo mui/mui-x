@@ -83,3 +83,44 @@ export function SetCommodityRowsViaApi() {
     </React.Fragment>
   );
 }
+
+export function ChangeRowsAndColumns() {
+  const [rows, setRows] = React.useState(baselineProps.rows)
+  const [cols, setCols] = React.useState(baselineProps.columns)
+
+  const changeDataSet = React.useCallback(() => {
+   const newData = {
+     rows: [
+       {
+         id: 0,
+         country: 'France',
+       },
+       {
+         id: 1,
+         country: 'UK',
+       },
+       {
+         id: 12,
+         country: 'US',
+       },
+     ],
+     columns: [{field: 'country'}],
+   }
+
+   setRows(newData.rows);
+   setCols(newData.columns);
+  }, []);
+
+  return (
+    <React.Fragment>
+      <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+        <Button color="primary" onClick={changeDataSet}>
+          Load New DataSet
+        </Button>
+      </div>
+      <div className="grid-container">
+        <XGrid rows={rows} columns={cols} />
+      </div>
+    </React.Fragment>
+  );
+}

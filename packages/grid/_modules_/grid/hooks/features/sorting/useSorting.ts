@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {
-  COLUMN_HEADER_CLICK,
-  MULTIPLE_KEY_PRESS_CHANGED,
-  RESET_ROWS,
+  COLUMN_HEADER_CLICK, COLUMNS_UPDATED,
+  MULTIPLE_KEY_PRESS_CHANGED, ROWS_CLEARED,
+  ROWS_SET,
   ROWS_UPDATED,
   SORT_MODEL_CHANGE,
 } from '../../../constants/eventsConstants';
@@ -23,7 +23,7 @@ import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useLogger } from '../../utils/useLogger';
 import { optionsSelector } from '../../utils/useOptionsProp';
-import { visibleColumnsSelector } from '../columns/columnsSelector';
+import { allColumnsSelector, visibleColumnsSelector } from '../columns/columnsSelector';
 import { GridState } from '../core/gridState';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
@@ -38,6 +38,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
   const visibleColumns = useGridSelector(apiRef, visibleColumnsSelector);
+  const allColumns = useGridSelector(apiRef, allColumnsSelector);
   const rowCount = useGridSelector(apiRef, rowCountSelector);
 
   const getSortModelParams = React.useCallback(
@@ -138,7 +139,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   );
 
   const applySorting = React.useCallback(
-    (noRerender = false) => {
+    () => {
       const rowModels = apiRef.current.getRowModels();
 
       if (options.sortingMode === FeatureModeConstant.server) {
@@ -146,7 +147,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
         setGridState((oldState) => {
           return {
             ...oldState,
-            sorting: { ...oldState.sorting, sortedRows: rowModels.map((row) => row.id) },
+            sorting: {...oldState.sorting, sortedRows: rowModels.map((row) => row.id)},
           };
         });
         return;
@@ -163,12 +164,10 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
       setGridState((oldState) => {
         return {
           ...oldState,
-          sorting: { ...oldState.sorting, sortedRows: sorted.map((row) => row.id) },
+          sorting: {...oldState.sorting, sortedRows: sorted.map((row) => row.id)},
         };
       });
-      if (!noRerender) {
-        forceUpdate();
-      }
+      forceUpdate();
     },
     [
       apiRef,
@@ -222,13 +221,11 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
     [sortColumn],
   );
 
-  const onRowsUpdated = React.useCallback(() => {
-    apiRef.current.applySorting();
-  }, [apiRef]);
-
-  const onResetRows = React.useCallback(() => {
-    apiRef.current.applySorting(true);
-  }, [apiRef]);
+  const onRowsCleared = React.useCallback(() => {
+    setGridState(state=> {
+      return {...state, sorting: {...state.sorting, sortedRows: []}};
+    });
+  }, [setGridState]);
 
   const getSortModel = React.useCallback(() => gridState.sorting.sortModel, [
     gridState.sorting.sortModel,
@@ -248,9 +245,32 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
     [apiRef],
   );
 
+  const onColUpdated = React.useCallback(()=> {
+      // When the columns change we check that the sorted columns are still part of the dataset
+      setGridState(state => {
+        const sortModel = state.sorting.sortModel;
+        const latestColumns = allColumnsSelector(state);
+        let newModel = sortModel;
+        if (sortModel.length > 0) {
+          newModel = sortModel.reduce((model, sortedCol) => {
+            const exist = latestColumns.find(col => col.field === sortedCol.field);
+            if (exist) {
+              model.push(sortedCol);
+            }
+            return model;
+          }, [] as SortModel);
+        }
+
+        return {...state, sorting: {...state.sorting, sortModel: newModel}}
+      })
+    }, [setGridState]);
+
+
   useApiEventHandler(apiRef, COLUMN_HEADER_CLICK, headerClickHandler);
-  useApiEventHandler(apiRef, RESET_ROWS, onResetRows);
-  useApiEventHandler(apiRef, ROWS_UPDATED, onRowsUpdated);
+  useApiEventHandler(apiRef, ROWS_SET, apiRef.current.applySorting);
+  useApiEventHandler(apiRef, ROWS_CLEARED, onRowsCleared);
+  useApiEventHandler(apiRef, ROWS_UPDATED, apiRef.current.applySorting);
+  useApiEventHandler(apiRef, COLUMNS_UPDATED, onColUpdated );
   useApiEventHandler(apiRef, MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
 
   useApiEventHandler(apiRef, SORT_MODEL_CHANGE, options.onSortModelChange);

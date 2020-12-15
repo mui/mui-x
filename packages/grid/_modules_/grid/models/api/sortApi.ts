@@ -12,9 +12,8 @@ export interface SortApi {
   getSortModel: () => SortModel;
   /**
    * Apply the current sorting model to the rows.
-   * @param noRender: if true the grid will refresh its state, but not repaint, default false;
    */
-  applySorting: (noRerender?: boolean) => void;
+  applySorting: () => void;
   /**
    * Set the sort model and trigger the sorting of rows.
    * @param model
