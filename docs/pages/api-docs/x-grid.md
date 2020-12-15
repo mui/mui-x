@@ -13,57 +13,58 @@ import { XGrid } from '@material-ui/x-grid';
 
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
-| <span class="prop-name required">rows<abbr title="required">*</abbr></span> | <span class="prop-type">RowsProp</span> |  | Set of rows of type 'RowsProp'. |
+| <span class="prop-name">apiRef</span> | <span class="prop-type">ApiRef</span> |   | The ref object that allows grid manipulation. Can be instantiated with 'useApiRef()'. |
+| <span class="prop-name">autoHeight</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid height is dynamic and follow the number of rows in the grid. |
+| <span class="prop-name">autoPageSize</span> | <span class="prop-type">boolean</span> | false | If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar. |
+| <span class="prop-name">checkboxSelection</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid get a first column with a checkbox that allows to select rows. |
+| <span class="prop-name">className</span> | <span class="prop-type">string</span> |   | Css classname to add on the outer container. |
 | <span class="prop-name required">columns<abbr title="required">*</abbr></span> | <span class="prop-type">Columns</span> |   | Set of columns of type 'Columns'. |
+| <span class="prop-name">columnBuffer</span> | <span class="prop-type">number</span> | 2 | Number of columns rendered outside the grid viewport. |
 | <span class="prop-name">columnTypes</span> | <span class="prop-type">ColumnTypesRecord</span> |   | Extend native column types with your new column types. |
 | <span class="prop-name">components</span> | <span class="prop-type">GridComponentOverridesProp</span> |   | Overrideable components. |
-| <span class="prop-name">apiRef</span> | <span class="prop-type">ApiRef</span> |   | The ref object that allows grid manipulation. Can be instantiated with 'useApiRef()'. |
-| <span class="prop-name">loading</span> | <span class="prop-type">boolean</span> |  false | If `true`, a  loading overlay is displayed.. |
-| <span class="prop-name">className</span> | <span class="prop-type">string</span> |   | Css classname to add on the outer container. |
-| <span class="prop-name">error</span> | <span class="prop-type">any</span> |   | An error that will turn the grid into its error state and display the error component. |
-| <span class="prop-name">autoHeight</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid height is dynamic and follow the number of rows in the grid. |
-| <span class="prop-name">rowHeight</span> | <span class="prop-type">number</span> | 52 | Set the height in pixel of a row in the grid. |
-| <span class="prop-name">headerHeight</span> | <span class="prop-type">number</span> | 56 | Set the height in pixel of the column headers in the grid. |
-| <span class="prop-name">scrollbarSize</span> | <span class="prop-type">number</span> | 15 | Set the height/width of the grid inner scrollbar. |
-| <span class="prop-name">columnBuffer</span> | <span class="prop-type">number</span> | 2 | Number of columns rendered outside the grid viewport. |
-| <span class="prop-name">disableMultipleSelection</span> | <span class="prop-type">boolean</span> | false | If `true`, multiple selection using the CTRL or CMD key is disabled. |
-| <span class="prop-name">disableMultipleColumnsSorting</span> | <span class="prop-type">boolean</span> | false | If `true`, sorting with multiple columns is disabled. |
+| <span class="prop-name">density</span> | <span class="prop-type">Density</span> | standard | Sets the density of the grid. |
 | <span class="prop-name">disableColumnResize</span> | <span class="prop-type">boolean</span> | false | If `true`, resizing columns is disabled. |
-| <span class="prop-name">showCellRightBorder</span> | <span class="prop-type">boolean</span> | false | If `true`, the right border of the cells are displayed. |
-| <span class="prop-name">showColumnRightBorder</span> | <span class="prop-type">boolean</span> | false | If `true`, the right border of the column headers are displayed. |
 | <span class="prop-name">disableExtendRowFullWidth</span> | <span class="prop-type">boolean</span> | false | If `true`, rows will not be extended to fill the full width of the grid container. |
-| <span class="prop-name">sortingOrder</span> | <span class="prop-type">SortDirection[]</span> | ['asc', 'desc', null] | The order of the sorting sequence. |
-| <span class="prop-name">pagination</span> | <span class="prop-type">boolean</span> | false | If `true`, pagination is enabled. |
-| <span class="prop-name">pageSize</span> | <span class="prop-type">number</span> | 100 | Set the number of rows in one page. |
-| <span class="prop-name">autoPageSize</span> | <span class="prop-type">boolean</span> | false | If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar. |
-| <span class="prop-name">rowsPerPageOptions</span> | <span class="prop-type">number[]</span> | [25, 50, 100] | Select the pageSize dynamically using the component UI. |
-| <span class="prop-name">paginationMode</span> | <span class="prop-type">FeatureMode</span> | 'client' | Pagination can be processed on the server or client-side. Set it to 'client' if you would like to handle the pagination on the client-side. Set it to 'server' if you would like to handle the pagination on the server-side. |
-| <span class="prop-name">rowCount</span> | <span class="prop-type">number</span> |   |  Set the total number of rows, if it is different than the length of the value `rows` prop. |
-| <span class="prop-name">page</span> | <span class="prop-type">number</span> | 1   |  Set the current page. |
-| <span class="prop-name">sortingMode</span> | <span class="prop-type">FeatureMode</span> | 'client' |  Sorting can be processed on the server or client-side. Set it to 'client' if you would like to handle sorting on the client-side. Set it to 'server' if you would like to handle sorting on the server-side. |
+| <span class="prop-name">disableMultipleColumnsSorting</span> | <span class="prop-type">boolean</span> | false | If `true`, sorting with multiple columns is disabled. |
+| <span class="prop-name">disableMultipleSelection</span> | <span class="prop-type">boolean</span> | false | If `true`, multiple selection using the CTRL or CMD key is disabled. |
+| <span class="prop-name">disableSelectionOnClick</span> | <span class="prop-type">boolean</span> | false | If `true`, the selection on click on a row or cell is disabled. |
+| <span class="prop-name">error</span> | <span class="prop-type">any</span> |   | An error that will turn the grid into its error state and display the error component. |
+| <span class="prop-name">headerHeight</span> | <span class="prop-type">number</span> | 56 | Set the height in pixel of the column headers in the grid. |
 | <span class="prop-name">hideFooter</span> | <span class="prop-type">boolean</span> | false | If `true`, the footer component is hidden. |
+| <span class="prop-name">hideFooterPagination</span> | <span class="prop-type">boolean</span> | false | If `true`, the pagination component in the footer is hidden. |
 | <span class="prop-name">hideFooterRowCount</span> | <span class="prop-type">boolean</span> | false | If `true`, the row count in the footer is hidden. |
 | <span class="prop-name">hideFooterSelectedRowCount</span> | <span class="prop-type">boolean</span> | false | If `true`, the selected row count in the footer is hidden. |
-| <span class="prop-name">hideFooterPagination</span> | <span class="prop-type">boolean</span> | false | If `true`, the pagination component in the footer is hidden. |
-| <span class="prop-name">checkboxSelection</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid get a first column with a checkbox that allows to select rows. |
-| <span class="prop-name">disableSelectionOnClick</span> | <span class="prop-type">boolean</span> | false | If `true`, the selection on click on a row or cell is disabled. |
+| <span class="prop-name">icons</span> | <span class="prop-type">IconsOptions</span> |   | Set of icons used in the grid. |
+| <span class="prop-name">loading</span> | <span class="prop-type">boolean</span> |  false | If `true`, a  loading overlay is displayed.. |
 | <span class="prop-name">logger</span> | <span class="prop-type">Logger</span> | null | Pass a custom logger in the components that implements the 'Logger' interface. |
 | <span class="prop-name">logLevel</span> | <span class="prop-type">string | false</span> | false | Allows to pass the logging level or false to turn off logging. |
-| <span class="prop-name">sortModel</span> | <span class="prop-type">SortModel</span> |   | Set the sort model of the grid. |
-| <span class="prop-name">showToolbar</span> | <span class="prop-type">boolean</span> | false | If `true`, the default toolbar component is shown. |
-| <span class="prop-name">density</span> | <span class="prop-type">Density</span> | standard | Sets the density of the grid. |
+| <span class="prop-name">nonce</span> | <span class="prop-type">string</span> |   | Nonce of the inline styles for [Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute). |
 | <span class="prop-name">onCellClick</span> | <span class="prop-type">(param: CellParams) => void</span> |   | Callback fired when a click event comes from a cell element. |
 | <span class="prop-name">onCellHover</span> | <span class="prop-type">(param: CellParams) => void</span> |   | Callback fired when a hover event comes from a cell element. |
+| <span class="prop-name">onColumnHeaderClick</span> | <span class="prop-type">(param: ColParams) => void</span> |   | Callback fired when a click event comes from a column header element. |
+| <span class="prop-name">onError</span> | <span class="prop-type">(args: any) => void</span> |   | Callback fired when an exception is thrown in the grid, or when the `showError` API method is called. |
+| <span class="prop-name">onPageChange</span> | <span class="prop-type">(param: PageChangeParams) => void</span> |   | Callback fired when the current page has changed. |
+| <span class="prop-name">onPageSizeChange</span> | <span class="prop-type">(param: PageChangeParams) => void</span> |   | Callback fired when the page size has changed. |
 | <span class="prop-name">onRowClick</span> | <span class="prop-type">(param: RowParams) => void</span> |   | Callback fired when a click event comes from a row container element. |
 | <span class="prop-name">onRowHover</span> | <span class="prop-type">(param: RowParams) => void</span> |   | Callback fired when a hover event comes from a row container element. |
 | <span class="prop-name">onRowSelected</span> | <span class="prop-type">(param: RowSelectedParams) => void</span> |   | Callback fired when one row is selected. |
 | <span class="prop-name">onSelectionChange</span> | <span class="prop-type">(param: SelectionChangeParams) => void</span> |   | Callback fired when the selection state of one or multiple rows changes. |
-| <span class="prop-name">onColumnHeaderClick</span> | <span class="prop-type">(param: ColParams) => void</span> |   | Callback fired when a click event comes from a column header element. |
 | <span class="prop-name">onSortModelChange</span> | <span class="prop-type">(param: SortModelParams) => void</span> |   | Callback fired when the sort model changes before a column is sorted. |
-| <span class="prop-name">onPageChange</span> | <span class="prop-type">(param: PageChangeParams) => void</span> |   | Callback fired when the current page has changed. |
-| <span class="prop-name">onPageSizeChange</span> | <span class="prop-type">(param: PageChangeParams) => void</span> |   | Callback fired when the page size has changed. |
-| <span class="prop-name">onError</span> | <span class="prop-type">(args: any) => void</span> |   | Callback fired when an exception is thrown in the grid, or when the `showError` API method is called. |
-| <span class="prop-name">icons</span> | <span class="prop-type">IconsOptions</span> |   | Set of icons used in the grid. |
+| <span class="prop-name">page</span> | <span class="prop-type">number</span> | 1   |  Set the current page. |
+| <span class="prop-name">pageSize</span> | <span class="prop-type">number</span> | 100 | Set the number of rows in one page. |
+| <span class="prop-name">pagination</span> | <span class="prop-type">boolean</span> | false | If `true`, pagination is enabled. |
+| <span class="prop-name">paginationMode</span> | <span class="prop-type">FeatureMode</span> | 'client' | Pagination can be processed on the server or client-side. Set it to 'client' if you would like to handle the pagination on the client-side. Set it to 'server' if you would like to handle the pagination on the server-side. |
+| <span class="prop-name required">rows<abbr title="required">*</abbr></span> | <span class="prop-type">RowsProp</span> |  | Set of rows of type 'RowsProp'. |
+| <span class="prop-name">rowCount</span> | <span class="prop-type">number</span> |   |  Set the total number of rows, if it is different than the length of the value `rows` prop. |
+| <span class="prop-name">rowHeight</span> | <span class="prop-type">number</span> | 52 | Set the height in pixel of a row in the grid. |
+| <span class="prop-name">rowsPerPageOptions</span> | <span class="prop-type">number[]</span> | [25, 50, 100] | Select the pageSize dynamically using the component UI. |
+| <span class="prop-name">scrollbarSize</span> | <span class="prop-type">number</span> | 15 | Set the height/width of the grid inner scrollbar. |
+| <span class="prop-name">showCellRightBorder</span> | <span class="prop-type">boolean</span> | false | If `true`, the right border of the cells are displayed. |
+| <span class="prop-name">showColumnRightBorder</span> | <span class="prop-type">boolean</span> | false | If `true`, the right border of the column headers are displayed. |
+| <span class="prop-name">showToolbar</span> | <span class="prop-type">boolean</span> | false | If `true`, the default toolbar component is shown. |
+| <span class="prop-name">sortingMode</span> | <span class="prop-type">FeatureMode</span> | 'client' |  Sorting can be processed on the server or client-side. Set it to 'client' if you would like to handle sorting on the client-side. Set it to 'server' if you would like to handle sorting on the server-side. |
+| <span class="prop-name">sortingOrder</span> | <span class="prop-type">SortDirection[]</span> | ['asc', 'desc', null] | The order of the sorting sequence. |
+| <span class="prop-name">sortModel</span> | <span class="prop-type">SortModel</span> |   | Set the sort model of the grid. |
 
 The `ref` is forwarded to the root element.
 

@@ -123,7 +123,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     }
 
     return (
-      <AutoSizer onResize={onResize}>
+      <AutoSizer onResize={onResize} nonce={props.nonce}>
         {(size: any) => (
           <GridRoot
             ref={handleRef}
