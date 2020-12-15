@@ -14,12 +14,10 @@ import { ColumnHeaderItem } from './ColumnHeaderItem';
 
 export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
-  hasScroll: { y: boolean; x: boolean };
-  scrollSize: number;
 }
 
 export function ColumnHeaderItemCollection(props: ColumnHeadersItemCollectionProps) {
-  const { columns, hasScroll, scrollSize } = props;
+  const { columns } = props;
   const [resizingColField, setResizingColField] = React.useState('');
   const apiRef = React.useContext(ApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
@@ -39,8 +37,6 @@ export function ColumnHeaderItemCollection(props: ColumnHeadersItemCollectionPro
   useApiEventHandler(apiRef!, COL_RESIZE_STOP, handleResizeStop);
   const items = columns.map((col, idx) => {
     const isLastColumn = idx === columns.length - 1;
-    const removeScrollWidth = isLastColumn && hasScroll.y && hasScroll.x;
-    const width = removeScrollWidth ? Math.abs(col.width! - scrollSize * 2) : col.width!;
     return (
       <ColumnHeaderItem
         key={col.field}
@@ -50,7 +46,7 @@ export function ColumnHeaderItemCollection(props: ColumnHeadersItemCollectionPro
         isDragging={col.field === dragCol}
         column={col}
         colIndex={idx}
-        width={width}
+        isLastColumn={isLastColumn}
         isResizing={resizingColField === col.field}
       />
     );

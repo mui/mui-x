@@ -14,6 +14,7 @@ import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { ColumnHeaderFilterIcon } from './ColumnHeaderFilterIcon';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { densityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
+import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 
 interface ColumnHeaderItemProps {
   colIndex: number;
@@ -24,7 +25,7 @@ interface ColumnHeaderItemProps {
   sortIndex?: number;
   options: GridOptions;
   filterItemsCounter?: number;
-  width: number;
+  isLastColumn: boolean;
 }
 
 export const ColumnHeaderItem = ({
@@ -36,10 +37,11 @@ export const ColumnHeaderItem = ({
   sortIndex,
   options,
   filterItemsCounter,
-  width,
+  isLastColumn,
 }: ColumnHeaderItemProps) => {
   const apiRef = React.useContext(ApiContext);
   const headerHeight = useGridSelector(apiRef, densityHeaderHeightSelector);
+  const { scrollbarSize } = useGridSelector(apiRef, optionsSelector);
   const {
     disableColumnReorder,
     showColumnRightBorder,
@@ -105,6 +107,7 @@ export const ColumnHeaderItem = ({
     onDragEnter,
     onDragOver,
   };
+  const width = column.width!;
 
   let ariaSort: any;
   if (sortDirection != null) {
@@ -166,6 +169,7 @@ export const ColumnHeaderItem = ({
         height={headerHeight}
         onMouseDown={apiRef?.current.startResizeOnMouseDown}
       />
+      {isLastColumn && <div style={{ width: scrollbarSize }} />}
     </div>
   );
 };

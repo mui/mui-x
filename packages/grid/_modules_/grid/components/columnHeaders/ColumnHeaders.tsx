@@ -19,11 +19,11 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function Colum
 ) {
   const apiRef = React.useContext(ApiContext);
   const columns = useGridSelector(apiRef, visibleColumnsSelector);
-  const { disableColumnReorder, scrollbarSize } = useGridSelector(apiRef, optionsSelector);
+  const { disableColumnReorder } = useGridSelector(apiRef, optionsSelector);
   const containerSizes = useGridSelector(apiRef, containerSizesSelector);
   const headerHeight = useGridSelector(apiRef, densityHeaderHeightSelector);
   const renderCtx = useGridSelector(apiRef, renderStateSelector).renderContext;
-  const { hasScrollX, hasScrollY } = useGridSelector(apiRef, scrollbarStateSelector);
+  const { hasScrollX } = useGridSelector(apiRef, scrollbarStateSelector);
   const wrapperCssClasses = `MuiDataGrid-colCellWrapper ${hasScrollX ? 'scroll' : ''}`;
 
   const renderedCols = React.useMemo(() => {
@@ -52,11 +52,7 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function Colum
         onDragOver={handleDragOver}
       >
         <LeftEmptyCell width={renderCtx?.leftEmptyWidth} height={headerHeight} />
-        <ColumnHeaderItemCollection
-          hasScroll={{ x: hasScrollX, y: hasScrollY }}
-          columns={renderedCols}
-          scrollSize={scrollbarSize}
-        />
+        <ColumnHeaderItemCollection columns={renderedCols} />
         <RightEmptyCell width={renderCtx?.rightEmptyWidth} height={headerHeight} />
       </div>
       <ScrollArea scrollDirection="right" />
