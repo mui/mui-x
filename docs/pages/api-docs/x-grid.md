@@ -95,6 +95,7 @@ The `ref` is forwarded to the root element.
 |  | <span class="prop-name">.Mui-selected</span> | Styles applied to the selected row element.|
 |  | <span class="prop-name">.MuiDataGrid-cellWithRenderer</span> | Styles applied to the customised cell element.|
 |  | <span class="prop-name">.MuiDataGrid-withBorder</span> | Styles applied to the cell element that has right border displayed.|
+|  | <span class="prop-name">.MuiDataGrid-cellLeft</span> | Styles applied to the aligned left cell element.|
 |  | <span class="prop-name">.MuiDataGrid-cellRight</span> | Styles applied to the aligned right cell element.|
 |  | <span class="prop-name">.MuiDataGrid-cellCenter</span> | Styles applied to the centered cell element.|
 |  | <span class="prop-name">.MuiDataGrid-footer</span> | Styles applied to the footer element.|

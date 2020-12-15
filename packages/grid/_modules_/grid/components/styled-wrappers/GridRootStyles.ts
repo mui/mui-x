@@ -234,6 +234,9 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-withBorder': {
           borderRight: `1px solid ${borderColor}`,
         },
+        '& .MuiDataGrid-cellLeft': {
+          textAlign: 'left',
+        },
         '& .MuiDataGrid-cellRight': {
           textAlign: 'right',
         },
