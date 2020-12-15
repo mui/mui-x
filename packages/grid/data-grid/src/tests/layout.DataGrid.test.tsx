@@ -360,4 +360,16 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       );
     });
   });
+
+  describe('i18n', () => {
+    it('should replace the Density Selector button label text to "Size"', () => {
+      const { getByText } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} showToolbar localeText={{ densityLabel: 'Size' }} />
+        </div>,
+      );
+
+      expect(getByText('Size')).not.to.equal(null);
+    });
+  });
 });
