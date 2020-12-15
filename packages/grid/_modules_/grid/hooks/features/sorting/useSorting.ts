@@ -40,7 +40,6 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
   const visibleColumns = useGridSelector(apiRef, visibleColumnsSelector);
-  const allColumns = useGridSelector(apiRef, allColumnsSelector);
   const rowCount = useGridSelector(apiRef, rowCountSelector);
 
   const getSortModelParams = React.useCallback(
