@@ -375,8 +375,6 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   sortingOrder: ['asc', 'desc', null],
   columnTypes: DEFAULT_COLUMN_TYPES,
   density: DensityTypes.Standard,
-  disableColumnMenu: !EXPERIMENTAL_ENABLED,
-  disableColumnFilter: !EXPERIMENTAL_ENABLED,
   disableColumnSelector: !EXPERIMENTAL_ENABLED,
   showToolbar: false,
   icons: {

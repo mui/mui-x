@@ -29,14 +29,28 @@ export const employeeColumns: any[] = [
     sortable: false,
     generateData: randomAvatar,
     renderCell: renderAvatar,
+    filterable: false,
   },
   {
     field: 'name',
     headerName: 'Name',
     generateData: generateName,
-    sortDirection: 'asc',
-    sortIndex: 1,
     width: 120,
+  },
+  {
+    field: 'website',
+    headerName: 'website',
+    generateData: randomUrl,
+    renderCell: renderLink,
+    width: 160,
+  },
+  {
+    field: 'rating',
+    headerName: 'Rating',
+    generateData: randomRating,
+    renderCell: renderRating,
+    width: 180,
+    type: 'number'
   },
   {
     field: 'email',
@@ -57,22 +71,6 @@ export const employeeColumns: any[] = [
     headerName: 'Username',
     generateData: randomUserName,
     width: 150,
-  },
-  {
-    field: 'website',
-    headerName: 'website',
-    generateData: randomUrl,
-    renderCell: renderLink,
-    width: 160,
-  },
-  {
-    field: 'rating',
-    headerName: 'Rating',
-    generateData: randomRating,
-    renderCell: renderRating,
-    sortDirection: 'desc',
-    sortIndex: 0,
-    width: 180,
   },
   {
     field: 'city',

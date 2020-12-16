@@ -1,18 +1,21 @@
+import makeStyles from '@material-ui/core/styles/makeStyles';
+import { Rating } from '@material-ui/lab';
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import {
   ColDef,
-  ColTypeDef,
+  ColTypeDef, FilterInputValueProps,
   FilterModel,
   LinkOperator,
   PreferencePanelsValue,
   RowModel,
   useApiRef,
   XGrid,
+  NUMERIC_OPERATORS,
+  FilterModelParams
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
-import { FilterModelParams } from '../../../grid/_modules_/grid/models/params/filterModelParams';
 import { randomInt } from '../data/random-generator';
 import { useData } from '../hooks/useData';
 
@@ -319,6 +322,82 @@ export function CommodityWithNewRowsViaApi() {
         />
       </div>
     </React.Fragment>
+  );
+}
+
+const useStyles = makeStyles({
+  ratingContainer: {
+    display: 'inline-flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 48,
+    paddingLeft: 20
+  }
+});
+
+function RatingInputValue(props: FilterInputValueProps) {
+  const classes = useStyles();
+  const {item, applyValue} = props;
+  const [filterValueState, setFilterValueState] = React.useState<number>(Number(item.value));
+
+  const onFilterChange = React.useCallback(
+    (event) => {
+      const value = event.target.value;
+      setFilterValueState(value);
+      applyValue({...item, value});
+    },
+    [applyValue, item],
+  );
+
+  React.useEffect(() => {
+    setFilterValueState(Number(item.value));
+  }, [item.value]);
+
+  return (
+    <div className={classes.ratingContainer}>
+      <Rating
+        placeholder={'Filter value'}
+        value={filterValueState}
+        onChange={onFilterChange}
+        precision={0.1}
+      />
+    </div>
+  );
+}
+
+export function CustomFilterOperator() {
+  const {data} = useDemoData({dataSet: 'Employee', rowLength: 100});
+
+  React.useEffect(()=> {
+    if(data.columns.length > 0) {
+      const ratingColumn = data.columns.find(col => col.field === 'rating');
+      const ratingOperators = [...NUMERIC_OPERATORS].map(operator => {
+        operator.InputComponent = RatingInputValue;
+        return operator;
+      });
+      ratingColumn!.filterOperators = ratingOperators;
+    }
+
+  }, [data.columns])
+
+  return (
+    <div className="grid-container">
+      <XGrid
+        rows={data.rows}
+        columns={data.columns}
+        filterModel={{
+          items: [
+            {columnField: 'rating', value: '3.5', operatorValue: '>='},
+          ],
+        }}
+        state={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: PreferencePanelsValue.filters,
+          },
+        }}
+      />
+    </div>
   );
 }
 
