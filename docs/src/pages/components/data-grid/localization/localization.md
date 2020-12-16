@@ -7,14 +7,20 @@ components: DataGrid, XGrid
 
 <p class="description">The Date Grid will support users from different locale, with formating, RTL, and localized strings.</p>
 
-## Locale text
+The default locale of Material-UI is English (United States). If you want to use other locales, follow the instructions below.
 
-The grid will support localization with a single prop that includes all the translated messages.
-You will be able to follow [this guide](/guides/localization/#locale-text) to use them.
+## Translation keys
 
-You can use the `localeText` prop to pass in your own text and translations. The default translations are for en-US.
+You can use the `localeText` prop to pass in your own text and translations.
+You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/i18nConstants.ts) in the GitHub repository.
+In the following example, the labels of the density selector are customized.
 
 {{"demo": "pages/components/data-grid/localization/CustomLocaleTextGrid.js", "bg": "inline"}}
+
+## 🚧 Locale text
+
+The data grid will support dozens of locales with a simple import that includes all the translated messages.
+You will be able to follow [this guide](/guides/localization/#locale-text) to use them.
 
 ## 🚧 RTL Support
 
