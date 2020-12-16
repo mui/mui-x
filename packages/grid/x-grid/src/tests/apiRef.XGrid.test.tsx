@@ -79,6 +79,7 @@ describe('<XGrid /> - apiRef', () => {
     clock.tick(100);
     expect(getColumnValues()).to.deep.equal(['Pata', 'Fila', 'Pum']);
   });
+
   it('update row data can also add rows', () => {
     render(<TestCase />, { strict: false });
     apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);

@@ -26,8 +26,6 @@ describe('<DataGrid /> - Filter', () => {
     columns: [{ field: 'brand' }],
   };
 
-  let setProps: any;
-
   before(function beforeHook() {
     if (/jsdom/.test(window.navigator.userAgent)) {
       // Need layouting
@@ -61,60 +59,38 @@ describe('<DataGrid /> - Filter', () => {
       </div>
     );
   };
-  function renderTestContainsA() {
-    const renderResult = render(<TestCase value={'a'} operator={'contains'} />);
-    setProps = renderResult.setProps;
-  }
 
   it('should apply the filterModel prop correctly', () => {
-    renderTestContainsA();
+    render(<TestCase value={'a'} operator={'contains'} />);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
   });
 
   it('should apply the filterModel prop correctly when row prop changes', () => {
-    renderTestContainsA();
-    setProps({
-      rows: [
-        {
-          id: 3,
-          brand: 'Asics',
-        },
-        {
-          id: 4,
-          brand: 'RedBull',
-        },
-        {
-          id: 5,
-          brand: 'Hugo',
-        },
-      ],
-    });
-    expect(getColumnValues()).to.deep.equal(['Asics']);
-  });
-
-  it('should apply the filterModel prop correctly on ApiRef setRows', () => {
-    renderTestContainsA();
-    setProps({
-      rows: [
-        {
-          id: 3,
-          brand: 'Asics',
-        },
-        {
-          id: 4,
-          brand: 'RedBull',
-        },
-        {
-          id: 5,
-          brand: 'Hugo',
-        },
-      ],
-    });
+    render(
+      <TestCase
+        value={'a'}
+        operator={'contains'}
+        rows={[
+          {
+            id: 3,
+            brand: 'Asics',
+          },
+          {
+            id: 4,
+            brand: 'RedBull',
+          },
+          {
+            id: 5,
+            brand: 'Hugo',
+          },
+        ]}
+      />,
+    );
     expect(getColumnValues()).to.deep.equal(['Asics']);
   });
 
   it('should allow operator startsWith', () => {
-    renderTestContainsA();
+    const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
     setProps({
       operator: 'startsWith',
     });
@@ -122,7 +98,7 @@ describe('<DataGrid /> - Filter', () => {
   });
 
   it('should allow operator endsWith', () => {
-    renderTestContainsA();
+    const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
     setProps({
       operator: 'endsWith',
     });
@@ -130,7 +106,7 @@ describe('<DataGrid /> - Filter', () => {
   });
 
   it('should allow operator equal', () => {
-    renderTestContainsA();
+    const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
     setProps({
       operator: 'equals',
       value: 'nike',
@@ -139,9 +115,9 @@ describe('<DataGrid /> - Filter', () => {
   });
 
   it('should support new dataset', () => {
-    renderTestContainsA();
+    const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
-    const newData = {
+    setProps({
       rows: [
         {
           id: 0,
@@ -157,8 +133,7 @@ describe('<DataGrid /> - Filter', () => {
         },
       ],
       columns: [{ field: 'country' }],
-    };
-    setProps(newData);
+    });
     expect(getColumnValues()).to.deep.equal(['France', 'UK', 'US']);
   });
 });

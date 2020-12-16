@@ -62,27 +62,25 @@ describe('<XGrid /> - Filter', () => {
     );
   };
 
-  const renderBrandContainsA = (strict = true) => {
-    const model = {
-      items: [
-        {
-          columnField: 'brand',
-          value: 'a',
-          operatorValue: 'contains',
-        },
-      ],
-    };
-
-    render(<TestCase model={model} />, { strict });
+  const model = {
+    items: [
+      {
+        columnField: 'brand',
+        value: 'a',
+        operatorValue: 'contains',
+      },
+    ],
   };
 
   it('should apply the filterModel prop correctly', () => {
-    renderBrandContainsA();
+    render(<TestCase model={model} />);
+
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
   });
 
   it('should apply the filterModel prop correctly on ApiRef setRows', () => {
-    renderBrandContainsA(false);
+    render(<TestCase model={model} />, { strict: false });
+
     const newRows = [
       {
         id: 3,
@@ -103,7 +101,7 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should apply the filterModel prop correctly on ApiRef update row data', () => {
-    renderBrandContainsA(false);
+    render(<TestCase model={model} />, { strict: false });
     apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
     apiRef.current.updateRows([{ id: 0, brand: 'Patagonia' }]);
     clock.tick(100);
@@ -111,7 +109,7 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should allow apiRef to setFilterModel', () => {
-    renderBrandContainsA(false);
+    render(<TestCase model={model} />, { strict: false });
     apiRef.current.setFilterModel({
       items: [
         {
@@ -123,8 +121,9 @@ describe('<XGrid /> - Filter', () => {
     });
     expect(getColumnValues()).to.deep.equal(['Adidas']);
   });
+
   it('should allow multiple filter and default to AND', () => {
-    const model = {
+    const newModel = {
       items: [
         {
           columnField: 'brand',
@@ -138,14 +137,14 @@ describe('<XGrid /> - Filter', () => {
         },
       ],
     };
-    render(<TestCase model={model} />);
+    render(<TestCase model={newModel} />);
 
     expect(getColumnValues()).to.deep.equal(['Puma']);
   });
 
   it('should allow multiple filter via apiRef', () => {
-    renderBrandContainsA(false);
-    const model = {
+    render(<TestCase model={model} />, { strict: false });
+    const newModel = {
       items: [
         {
           columnField: 'brand',
@@ -159,12 +158,12 @@ describe('<XGrid /> - Filter', () => {
         },
       ],
     };
-    apiRef.current.setFilterModel(model);
+    apiRef.current.setFilterModel(newModel);
     expect(getColumnValues()).to.deep.equal(['Adidas']);
   });
 
   it('should allow multiple filter and changing the LinkOperator', () => {
-    const model: FilterModel = {
+    const newModel: FilterModel = {
       items: [
         {
           columnField: 'brand',
@@ -179,8 +178,7 @@ describe('<XGrid /> - Filter', () => {
       ],
       linkOperator: LinkOperator.Or,
     };
-    render(<TestCase model={model} />);
-
+    render(<TestCase model={newModel} />);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
   });
 });
