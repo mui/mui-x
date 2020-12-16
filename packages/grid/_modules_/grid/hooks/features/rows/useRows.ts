@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RESET_ROWS, ROWS_UPDATED } from '../../../constants/eventsConstants';
+import { ROWS_CLEARED, ROWS_SET, ROWS_UPDATED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { RowApi } from '../../../models/api/rowApi';
 import { checkRowHasId, RowModel, RowId, RowsProp } from '../../../models/rows';
@@ -34,15 +34,15 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
   const updateTimeout = React.useRef<any>();
 
   const forceUpdate = React.useCallback(
-    (callback?: Function) => {
+    (preUpdateCallback?: Function) => {
       if (updateTimeout.current == null) {
         updateTimeout.current = setTimeout(() => {
           logger.debug(`Updating component`);
           updateTimeout.current = null;
-          updateComponent();
-          if (callback) {
-            callback();
+          if (preUpdateCallback) {
+            preUpdateCallback();
           }
+          updateComponent();
         }, 100);
       }
     },
@@ -82,6 +82,10 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
     (allNewRows: RowModel[]) => {
       logger.debug(`updating all rows, new length ${allNewRows.length}`);
 
+      if (internalRowsState.current.allRows.length > 0) {
+        apiRef.current.publishEvent(ROWS_CLEARED);
+      }
+
       const idRowsLookup = allNewRows.reduce((lookup, row) => {
         lookup[row.id] = row;
         return lookup;
@@ -98,8 +102,7 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
 
       setGridState((state) => ({ ...state, rows: internalRowsState.current }));
 
-      apiRef.current.publishEvent(RESET_ROWS);
-      forceUpdate();
+      forceUpdate(() => apiRef.current.publishEvent(ROWS_SET));
     },
     [logger, gridState.options, apiRef, setGridState, forceUpdate],
   );
@@ -135,9 +138,9 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
           ...addedRows,
         ];
         setRows(newRows);
-      } else {
-        forceUpdate(() => apiRef.current.publishEvent(ROWS_UPDATED));
       }
+
+      forceUpdate(() => apiRef.current.publishEvent(ROWS_UPDATED));
     },
     [apiRef, forceUpdate, getRowFromId, setGridState, setRows],
   );

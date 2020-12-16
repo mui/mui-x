@@ -38,7 +38,6 @@ export const useStyles = makeStyles(
           alignSelf: 'center',
           alignItems: 'center',
           justifyContent: 'center',
-          zIndex: 10,
           backgroundColor: fade(
             theme.palette.background.default,
             theme.palette.action.disabledOpacity,

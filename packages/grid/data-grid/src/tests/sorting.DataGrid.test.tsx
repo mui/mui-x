@@ -144,4 +144,43 @@ describe('<DataGrid /> - Sorting', () => {
     setProps({ rows });
     expect(getColumnValues()).to.deep.equal(['Asics', 'RedBull', 'Hugo']);
   });
+
+  it('should support new dataset', () => {
+    const TestCase = (props: { rows: any[]; columns: any[] }) => {
+      const { rows, columns } = props;
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid rows={rows} columns={columns} />
+        </div>
+      );
+    };
+
+    const { setProps } = render(<TestCase {...baselineProps} />);
+
+    const header = screen
+      .getByRole('columnheader', { name: 'brand' })
+      .querySelector('.MuiDataGrid-colCellTitleContainer');
+    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    fireEvent.click(header);
+    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    const newData = {
+      rows: [
+        {
+          id: 0,
+          country: 'France',
+        },
+        {
+          id: 1,
+          country: 'UK',
+        },
+        {
+          id: 12,
+          country: 'US',
+        },
+      ],
+      columns: [{ field: 'country' }],
+    };
+    setProps(newData);
+    expect(getColumnValues()).to.deep.equal(['France', 'UK', 'US']);
+  });
 });

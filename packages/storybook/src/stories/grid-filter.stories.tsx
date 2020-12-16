@@ -74,26 +74,33 @@ export function CommodityWithOpenFiltersAndState() {
     </div>
   );
 }
-export function CommodityWithOpenFiltersAndModel() {
+export function WithNewOperator() {
   const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 500 });
-
+  const [operator, setOps] = React.useState('contains');
   return (
-    <div className="grid-container">
-      <XGrid
-        rows={data.rows}
-        columns={data.columns}
-        filterModel={{
-          items: [{ id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' }],
-          linkOperator: LinkOperator.And,
-        }}
-        state={{
-          preferencePanel: {
-            open: true,
-            openedPanelValue: PreferencePanelsValue.filters,
-          },
-        }}
-      />
-    </div>
+    <React.Fragment>
+      <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+        <Button color="primary" onClick={() => setOps('startsWith')}>
+          Load New Ops
+        </Button>
+      </div>
+      <div className="grid-container">
+        <XGrid
+          rows={data.rows}
+          columns={data.columns}
+          filterModel={{
+            items: [{ id: 123, columnField: 'commodity', value: 'co', operatorValue: operator }],
+            linkOperator: LinkOperator.And,
+          }}
+          state={{
+            preferencePanel: {
+              open: true,
+              openedPanelValue: PreferencePanelsValue.filters,
+            },
+          }}
+        />
+      </div>
+    </React.Fragment>
   );
 }
 export function CommodityWithNewRowsViaProps() {

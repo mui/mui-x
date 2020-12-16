@@ -181,9 +181,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                         minWidth: gridState.containerSizes?.dataContainerSizes?.width,
                       }}
                     >
-                      {gridState.rendering.renderContext != null && (
-                        <Viewport ref={renderingZoneRef} />
-                      )}
+                      <Viewport ref={renderingZoneRef} />
                     </GridDataContainer>
                   </GridWindow>
                 </div>

@@ -111,18 +111,21 @@ export const useVirtualColumns = (
       );
       logger.debug(`Difference with first: ${diffFirst} and last: ${diffLast} `);
 
-      const renderNewColState = diffLast > tolerance || diffFirst > tolerance;
+      const renderNewColState =
+        lastDisplayedIdx > 0 && (diffLast > tolerance || diffFirst > tolerance);
 
-      let newRenderedColState: RenderColumnsProps | null = renderedColRef.current;
+      let newRenderedColState: RenderColumnsProps | null =
+        renderedColRef.current != null ? { ...renderedColRef.current } : null;
 
+      const lastVisibleIndex = visibleColumns.length > 0 ? visibleColumns.length - 1 : 0;
       if (renderNewColState || newRenderedColState == null) {
         newRenderedColState = {
           leftEmptyWidth: 0,
           rightEmptyWidth: 0,
           firstColIdx: firstDisplayedIdx - columnBuffer >= 0 ? firstDisplayedIdx - columnBuffer : 0,
           lastColIdx:
-            lastDisplayedIdx + columnBuffer >= visibleColumns.length - 1
-              ? visibleColumns.length - 1
+            lastDisplayedIdx + columnBuffer >= lastVisibleIndex
+              ? lastVisibleIndex
               : lastDisplayedIdx + columnBuffer,
         };
       }
