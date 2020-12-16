@@ -12,8 +12,6 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 
 ### @material-ui/x-grid@v4.0.0-alpha.13 / @material-ui/data-grid@v4.0.0-alpha.13
 
-#### Changes
-
 - [DataGrid] Fix density prop when toolbar is hidden (#717) @DanailH
 - [DataGrid] Fix row cells leaking CSS 'text-align' from parent (#728) @ZeeshanTamboli
 - [DataGrid] Add 'nonce' prop to allow inline style if user has CSP (#724) @ZeeshanTamboli
