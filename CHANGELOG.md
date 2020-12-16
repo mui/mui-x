@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.13](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.12...v4.0.0-alpha.13) (Dec 16, 2020)
+
+Big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🐛 Fix bugs from recently released features.
+- 🧪 Continue the iteration on the data grid filtering feature, soon to be released @dtassone.
+
+### @material-ui/x-grid@v4.0.0-alpha.13 / @material-ui/data-grid@v4.0.0-alpha.13
+
+- [DataGrid] Fix density prop when toolbar is hidden (#717) @DanailH
+- [DataGrid] Fix row cells leaking CSS 'text-align' from parent (#728) @ZeeshanTamboli
+- [DataGrid] Add 'nonce' prop to allow inline style if user has CSP (#724) @ZeeshanTamboli
+
+### Docs
+
+- [docs] Add missing props to DataGrid and XGrid api pages (#721) @DanailH
+- [docs] Fix wrong link anchor @oliviertassinari
+- [docs] Proxy production version @oliviertassinari
+
+### Core
+
+- [security] Bump ini from 1.3.5 to 1.3.7 (#719) @dependabot-preview
+- [core] Update monorepository (#725) @oliviertassinari
+- [test] Polish refactor (#723) @oliviertassinari
+- [test] Split data grid tests in multiple files (#722) @dtassone
+- [test] Add tests for DataGrid filtering feature (#715) @dtassone
+
 ## [4.0.0-alpha.12](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.11...v4.0.0-alpha.12) (Dec 9, 2020)
 
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
