@@ -1,12 +1,8 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import { Rating } from '@material-ui/lab';
-import {
-  PreferencePanelsValue,
-  DataGrid,
-  FilterInputValueProps,
-  NUMERIC_OPERATORS,
-} from '@material-ui/data-grid';
+import { DataGrid, NUMERIC_OPERATORS } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
 const useStyles = makeStyles({
@@ -49,6 +45,16 @@ function RatingInputValue(props) {
   );
 }
 
+RatingInputValue.propTypes = {
+  applyValue: PropTypes.func.isRequired,
+  item: PropTypes.shape({
+    columnField: PropTypes.string,
+    id: PropTypes.number,
+    operatorValue: PropTypes.string,
+    value: PropTypes.string,
+  }).isRequired,
+};
+
 const filterModel = {
   items: [{ columnField: 'rating', value: '3.5', operatorValue: '>=' }],
 };
@@ -64,6 +70,7 @@ export default function CustomFilterOperator() {
         return operator;
       });
       ratingColumn.filterOperators = ratingOperators;
+
       // Just hidding some columns for demo clarity
       data.columns
         .filter(
