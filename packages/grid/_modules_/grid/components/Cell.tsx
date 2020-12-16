@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Alignement, CellValue } from '../models';
+import { capitalize } from '@material-ui/core/utils';
+import { Alignment, CellValue } from '../models';
 import { CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import { classnames } from '../utils';
 
@@ -11,17 +12,12 @@ export interface GridCellProps {
   height: number;
   showRightBorder?: boolean;
   hasFocus?: boolean;
-  align?: Alignement;
+  align: Alignment;
   cssClass?: string;
   tabIndex?: number;
   colIndex?: number;
   rowIndex?: number;
 }
-
-const alignPropToCssClass = {
-  center: 'MuiDataGrid-cellCenter',
-  right: 'MuiDataGrid-cellRight',
-};
 
 export const Cell: React.FC<GridCellProps> = React.memo((props) => {
   const {
@@ -52,12 +48,9 @@ export const Cell: React.FC<GridCellProps> = React.memo((props) => {
   return (
     <div
       ref={cellRef}
-      className={classnames(
-        CELL_CSS_CLASS,
-        cssClass,
-        { 'MuiDataGrid-withBorder': showRightBorder },
-        align && align !== 'left' ? alignPropToCssClass[align] : '',
-      )}
+      className={classnames(CELL_CSS_CLASS, cssClass, `MuiDataGrid-cell${capitalize(align)}`, {
+        'MuiDataGrid-withBorder': showRightBorder,
+      })}
       role="cell"
       data-value={value}
       data-field={field}
@@ -79,18 +72,17 @@ export const Cell: React.FC<GridCellProps> = React.memo((props) => {
 
 Cell.displayName = 'GridCell';
 
-export const LeftEmptyCell: React.FC<{
+interface EmptyCellProps {
   width?: number;
   height?: number;
-}> = React.memo(({ width, height }) =>
-  !width || !height ? null : <Cell width={width} height={height} />,
+}
+
+export const LeftEmptyCell: React.FC<EmptyCellProps> = React.memo(({ width, height }) =>
+  !width || !height ? null : <Cell width={width} height={height} align="left" />,
 );
 LeftEmptyCell.displayName = 'LeftEmptyCell';
 
-export const RightEmptyCell: React.FC<{
-  width?: number;
-  height?: number;
-}> = React.memo(({ width, height }) =>
-  !width || !height ? null : <Cell width={width} height={height} />,
+export const RightEmptyCell: React.FC<EmptyCellProps> = React.memo(({ width, height }) =>
+  !width || !height ? null : <Cell width={width} height={height} align="left" />,
 );
 RightEmptyCell.displayName = 'RightEmptyCell';
