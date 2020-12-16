@@ -15,7 +15,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 - [DataGrid] Fix density prop when toolbar is hidden (#717) @DanailH
 - [DataGrid] Fix row cells leaking CSS 'text-align' from parent (#728) @ZeeshanTamboli
 - [DataGrid] Add 'nonce' prop to allow inline style if user has CSP (#724) @ZeeshanTamboli
--
+
 ### Docs
 
 - [docs] Add missing props to DataGrid and XGrid api pages (#721) @DanailH
