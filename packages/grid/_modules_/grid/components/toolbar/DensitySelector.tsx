@@ -23,17 +23,17 @@ export function DensitySelector() {
   const DensityOptions: Array<DensityOption> = [
     {
       icon: <DensityCompactIcon />,
-      label: apiRef!.current.getText('toolbarDensityCompact') as string,
+      label: apiRef!.current.getText('toolbarDensityCompact'),
       value: DensityTypes.Compact,
     },
     {
       icon: <DensityStandardIcon />,
-      label: apiRef!.current.getText('toolbarDensityStandard') as string,
+      label: apiRef!.current.getText('toolbarDensityStandard'),
       value: DensityTypes.Standard,
     },
     {
       icon: <DensityComfortableIcon />,
-      label: apiRef!.current.getText('toolbarDensityComfortable') as string,
+      label: apiRef!.current.getText('toolbarDensityComfortable'),
       value: DensityTypes.Comfortable,
     },
   ];
@@ -81,7 +81,7 @@ export function DensitySelector() {
         size="small"
         startIcon={getSelectedDensityIcon()}
         onClick={handleDensitySelectorOpen}
-        aria-label={apiRef!.current.getText('toolbarDensityLabel') as string}
+        aria-label={apiRef!.current.getText('toolbarDensityLabel')}
         aria-haspopup="true"
       >
         {apiRef!.current.getText('toolbarDensity')}

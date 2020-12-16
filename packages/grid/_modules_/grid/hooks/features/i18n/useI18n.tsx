@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useLogger } from '../../utils/useLogger';
 import { ApiRef } from '../../../models/api/apiRef';
-import { I18nApi, LocaleTextValue } from '../../../models/api/i18nApi';
+import { I18nApi } from '../../../models/api/i18nApi';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useGridSelector } from '../core/useGridSelector';
 import { optionsSelector } from '../../utils/useOptionsProp';
@@ -11,7 +11,7 @@ export const useI18n = (apiRef: ApiRef): void => {
   const { localeText } = useGridSelector(apiRef, optionsSelector);
 
   const getText = React.useCallback(
-    (key: string): LocaleTextValue => {
+    (key: any): any => {
       logger.debug(`Get grid text with key ${key}`);
 
       if (process.env.NODE_ENV !== 'production' && !localeText.hasOwnProperty(key)) {
