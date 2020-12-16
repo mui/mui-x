@@ -369,10 +369,10 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       }
     });
 
-    it('should replace the Density Selector button label text to "Size"', () => {
+    it('should replace the density selector button label text to "Size"', () => {
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} showToolbar localeText={{ densityText: 'Size' }} />
+          <DataGrid {...baselineProps} showToolbar localeText={{ toolbarDensity: 'Size' }} />
         </div>,
       );
 

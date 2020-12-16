@@ -93,11 +93,11 @@ export enum DensityTypes {
  */
 export interface LocaleText {
   // Density selector toolbar button text
-  densityText?: string | React.ReactNode;
-  densityLabelText?: string;
-  densityOptionTextCompact?: string;
-  densityOptionTextStandard?: string;
-  densityOptionTextComfortable?: string;
+  toolbarDensity?: React.ReactNode;
+  toolbarDensityLabel?: string;
+  toolbarDensityCompact?: string;
+  toolbarDensityStandard?: string;
+  toolbarDensityComfortable?: string;
 }
 
 // TODO add multiSortKey

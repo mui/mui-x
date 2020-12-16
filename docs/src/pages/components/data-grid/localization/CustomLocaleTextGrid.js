@@ -15,11 +15,11 @@ export default function CustomLocaleTextGrid() {
         {...data}
         showToolbar
         localeText={{
-          densityText: 'Size',
-          densityLabelText: 'Size',
-          densityOptionTextCompact: 'Small',
-          densityOptionTextStandard: 'Medium',
-          densityOptionTextComfortable: 'Large',
+          toolbarDensity: 'Size',
+          toolbarDensityLabel: 'Size',
+          toolbarDensityCompact: 'Small',
+          toolbarDensityStandard: 'Medium',
+          toolbarDensityComfortable: 'Large',
         }}
       />
     </div>
