@@ -180,7 +180,7 @@ describe('<DataGrid /> - Sorting', () => {
       ],
       columns: [{ field: 'country' }],
     };
-    setProps({ ...newData });
+    setProps(newData);
     expect(getColumnValues()).to.deep.equal(['France', 'UK', 'US']);
   });
 });

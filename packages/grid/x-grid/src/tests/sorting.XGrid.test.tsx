@@ -2,10 +2,21 @@ import { ApiRef, SortModel, useApiRef } from '@material-ui/data-grid';
 import { XGrid } from '@material-ui/x-grid/XGrid';
 import { expect } from 'chai';
 import * as React from 'react';
-import { getColumnValues, sleep } from 'test/utils/helperFn';
+import { useFakeTimers } from 'sinon';
+import { getColumnValues } from 'test/utils/helperFn';
 import { createClientRenderStrictMode } from 'test/utils';
 
 describe('<XGrid /> - Sorting', () => {
+  let clock;
+
+  beforeEach(() => {
+    clock = useFakeTimers();
+  });
+
+  afterEach(() => {
+    clock.restore();
+  });
+
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -65,7 +76,7 @@ describe('<XGrid /> - Sorting', () => {
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
   });
 
-  it('should apply the sortModel prop correctly on ApiRef setRows', async () => {
+  it('should apply the sortModel prop correctly on ApiRef setRows', () => {
     renderBrandSortedAsc();
     const newRows = [
       {
@@ -82,15 +93,15 @@ describe('<XGrid /> - Sorting', () => {
       },
     ];
     apiRef.current.setRows(newRows);
-    await sleep(100);
+    clock.tick(100);
     expect(getColumnValues()).to.deep.equal(['Asics', 'Hugo', 'RedBull']);
   });
 
-  it('should apply the sortModel prop correctly on ApiRef update row data', async () => {
+  it('should apply the sortModel prop correctly on ApiRef update row data', () => {
     renderBrandSortedAsc();
     apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
     apiRef.current.updateRows([{ id: 0, brand: 'Patagonia' }]);
-    await sleep(100);
+    clock.tick(100);
     expect(getColumnValues()).to.deep.equal(['Fila', 'Patagonia', 'Puma']);
   });
 

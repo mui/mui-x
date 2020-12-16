@@ -5,7 +5,7 @@ import { useFakeTimers } from 'sinon';
 import { getColumnValues } from 'test/utils/helperFn';
 import { createClientRenderStrictMode } from 'test/utils';
 
-describe('<XGrid /> - ApiRef', () => {
+describe('<XGrid /> - apiRef', () => {
   let clock;
 
   beforeEach(() => {
@@ -55,7 +55,7 @@ describe('<XGrid /> - ApiRef', () => {
     );
   };
 
-  it('should allow to reset rows with setRows and render after 100ms', async () => {
+  it('should allow to reset rows with setRows and render after 100ms', () => {
     render(<TestCase />, { strict: false });
     const newRows = [
       {
@@ -71,7 +71,7 @@ describe('<XGrid /> - ApiRef', () => {
     expect(getColumnValues()).to.deep.equal(['Asics']);
   });
 
-  it('should allow to update row data', async () => {
+  it('should allow to update row data', () => {
     render(<TestCase />, { strict: false });
     apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
     apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]);
@@ -79,7 +79,7 @@ describe('<XGrid /> - ApiRef', () => {
     clock.tick(100);
     expect(getColumnValues()).to.deep.equal(['Pata', 'Fila', 'Pum']);
   });
-  it('update row data can also add rows', async () => {
+  it('update row data can also add rows', () => {
     render(<TestCase />, { strict: false });
     apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
     apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]);

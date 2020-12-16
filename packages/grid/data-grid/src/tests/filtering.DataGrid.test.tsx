@@ -61,14 +61,18 @@ describe('<DataGrid /> - Filter', () => {
       </div>
     );
   };
-  beforeEach(() => {
+  function renderTestContainsA() {
     const renderResult = render(<TestCase value={'a'} operator={'contains'} />);
     setProps = renderResult.setProps;
-  });
+  }
+
   it('should apply the filterModel prop correctly', () => {
+    renderTestContainsA();
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
   });
+
   it('should apply the filterModel prop correctly when row prop changes', () => {
+    renderTestContainsA();
     setProps({
       rows: [
         {
@@ -87,7 +91,9 @@ describe('<DataGrid /> - Filter', () => {
     });
     expect(getColumnValues()).to.deep.equal(['Asics']);
   });
+
   it('should apply the filterModel prop correctly on ApiRef setRows', () => {
+    renderTestContainsA();
     setProps({
       rows: [
         {
@@ -106,19 +112,25 @@ describe('<DataGrid /> - Filter', () => {
     });
     expect(getColumnValues()).to.deep.equal(['Asics']);
   });
+
   it('should allow operator startsWith', () => {
+    renderTestContainsA();
     setProps({
       operator: 'startsWith',
     });
     expect(getColumnValues()).to.deep.equal(['Adidas']);
   });
+
   it('should allow operator endsWith', () => {
+    renderTestContainsA();
     setProps({
       operator: 'endsWith',
     });
     expect(getColumnValues()).to.deep.equal(['Puma']);
   });
+
   it('should allow operator equal', () => {
+    renderTestContainsA();
     setProps({
       operator: 'equals',
       value: 'nike',
@@ -127,6 +139,7 @@ describe('<DataGrid /> - Filter', () => {
   });
 
   it('should support new dataset', () => {
+    renderTestContainsA();
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
     const newData = {
       rows: [
@@ -145,7 +158,7 @@ describe('<DataGrid /> - Filter', () => {
       ],
       columns: [{ field: 'country' }],
     };
-    setProps({ ...newData });
+    setProps(newData);
     expect(getColumnValues()).to.deep.equal(['France', 'UK', 'US']);
   });
 });
