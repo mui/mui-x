@@ -10,7 +10,7 @@ export const useI18n = (apiRef: ApiRef): void => {
   const logger = useLogger('useI18n');
   const { localeText } = useGridSelector(apiRef, optionsSelector);
 
-  const getText = React.useCallback(
+  const getLocaleText = React.useCallback(
     (key: any): any => {
       logger.debug(`Get grid text with key ${key}`);
 
@@ -24,7 +24,7 @@ export const useI18n = (apiRef: ApiRef): void => {
   );
 
   const i18nApi: I18nApi = {
-    getText,
+    getLocaleText,
   };
 
   useApiMethod(apiRef, i18nApi, 'I18nApi');

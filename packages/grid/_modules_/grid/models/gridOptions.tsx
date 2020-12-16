@@ -93,11 +93,11 @@ export enum DensityTypes {
  */
 export interface LocaleText {
   // Density selector toolbar button text
-  toolbarDensity?: React.ReactNode;
-  toolbarDensityLabel?: string;
-  toolbarDensityCompact?: string;
-  toolbarDensityStandard?: string;
-  toolbarDensityComfortable?: string;
+  toolbarDensity: React.ReactNode;
+  toolbarDensityLabel: string;
+  toolbarDensityCompact: string;
+  toolbarDensityStandard: string;
+  toolbarDensityComfortable: string;
 }
 
 // TODO add multiSortKey
@@ -374,7 +374,7 @@ export interface GridOptions {
    * Set the locale text of the grid.
    * You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/i18nConstants.ts) in the GitHub repository.
    */
-  localeText: LocaleText;
+  localeText: Partial<LocaleText>;
 }
 
 /**
