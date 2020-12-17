@@ -15,7 +15,7 @@ export default function BasicFilteringGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid {...data} filterModel={riceFilterModel} />
+      <DataGrid {...data} filterModel={riceFilterModel} showToolbar />
     </div>
   );
 }

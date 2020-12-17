@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Rating } from '@material-ui/lab';
 import { DataGrid, NUMERIC_OPERATORS } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { getNumericColumnOperators } from '../../../../../../packages/grid/_modules_/grid/models/colDef';
 
 const useStyles = makeStyles({
   root: {
@@ -55,11 +56,12 @@ export default function CustomRatingFilterOperator() {
   React.useEffect(() => {
     if (data.columns.length > 0) {
       const ratingColumn = data.columns.find((col) => col.field === 'rating');
-      const ratingOperators = [...NUMERIC_OPERATORS].map((operator) => {
+      const ratingOperators = getNumericColumnOperators();
+
+      ratingColumn.filterOperators = ratingOperators.map((operator) => {
         operator.InputComponent = RatingInputValue;
         return operator;
       });
-      ratingColumn.filterOperators = ratingOperators;
 
       // Just hidding some columns for demo clarity
       data.columns

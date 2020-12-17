@@ -42,7 +42,13 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
       pageRowCount == null || pageRowCount > visibleRowsCount ? visibleRowsCount : pageRowCount;
 
     return virtRowsCount;
-  }, [logger, options.pagination, paginationState.page, paginationState.pageSize, visibleRowsCount]);
+  }, [
+    logger,
+    options.pagination,
+    paginationState.page,
+    paginationState.pageSize,
+    visibleRowsCount,
+  ]);
 
   const getScrollBar = React.useCallback(
     (rowsCount: number) => {
@@ -58,7 +64,14 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
       };
       return { hasScrollX, hasScrollY, scrollBarSize };
     },
-    [logger, options.autoPageSize, options.autoHeight, options.scrollbarSize, rowHeight, columnsTotalWidth],
+    [
+      logger,
+      options.autoPageSize,
+      options.autoHeight,
+      options.scrollbarSize,
+      rowHeight,
+      columnsTotalWidth,
+    ],
   );
 
   const getViewport = React.useCallback(
@@ -204,7 +217,14 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
       (state) => !isEqual(state.containerSizes, containerState),
       (state) => ({ ...state, containerSizes: containerState }),
     );
-  }, [getContainerProps, getScrollBar, getViewport, getVirtualRowCount, logger, updateStateIfChanged]);
+  }, [
+    getContainerProps,
+    getScrollBar,
+    getViewport,
+    getVirtualRowCount,
+    logger,
+    updateStateIfChanged,
+  ]);
 
   React.useEffect(() => {
     refreshContainerSizes();

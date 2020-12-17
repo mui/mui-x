@@ -12,7 +12,7 @@ import {
   RowModel,
   useApiRef,
   XGrid,
-  NUMERIC_OPERATORS,
+  getNumericColumnOperators,
   FilterModelParams,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
@@ -366,11 +366,11 @@ export function CustomFilterOperator() {
   React.useEffect(() => {
     if (data.columns.length > 0) {
       const ratingColumn = data.columns.find((col) => col.field === 'rating');
-      const ratingOperators = [...NUMERIC_OPERATORS].map((operator) => {
+      const ratingOperators = getNumericColumnOperators();
+      ratingColumn!.filterOperators = ratingOperators.map((operator) => {
         operator.InputComponent = RatingInputValue;
         return operator;
       });
-      ratingColumn!.filterOperators = ratingOperators;
     }
   }, [data.columns]);
 
