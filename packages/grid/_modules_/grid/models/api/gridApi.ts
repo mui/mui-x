@@ -13,7 +13,7 @@ import { VirtualizationApi } from './virtualizationApi';
 import { CoreApi } from './coreApi';
 import { EventsApi } from './eventsApi';
 import { DensityApi } from './densityApi';
-import { I18nApi } from './i18nApi';
+import { LocaleTextApi } from './localeTextApi';
 
 /**
  * The full grid API.
@@ -33,4 +33,4 @@ export type GridApi = CoreApi &
   ColumnMenuApi &
   ColumnResizeApi &
   PreferencesPanelApi &
-  I18nApi;
+  LocaleTextApi;

@@ -361,7 +361,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
   });
 
-  describe('i18n', () => {
+  describe('localeText', () => {
     before(function beforeHook() {
       if (/jsdom/.test(window.navigator.userAgent)) {
         // Need layouting

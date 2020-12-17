@@ -26,7 +26,7 @@ import { SelectionChangeParams } from './params/selectionChangeParams';
 import { SortModelParams } from './params/sortModelParams';
 import { SortDirection, SortModel } from './sortModel';
 import { EXPERIMENTAL_ENABLED } from '../constants/envConstants';
-import { DEFAULT_LOCALE_TEXT } from '../constants/i18nConstants';
+import { DEFAULT_LOCALE_TEXT } from '../constants/localeTextConstants';
 
 /**
  * Set of icons used in the grid component UI.
@@ -372,7 +372,7 @@ export interface GridOptions {
   density: Density;
   /**
    * Set the locale text of the grid.
-   * You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/i18nConstants.ts) in the GitHub repository.
+   * You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText: Partial<LocaleText>;
 }

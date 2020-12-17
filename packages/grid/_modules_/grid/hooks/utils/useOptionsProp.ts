@@ -5,7 +5,7 @@ import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../models/gridOptions';
 import { mergeOptions } from '../../utils/mergeOptions';
 import { GridState } from '../features/core/gridState';
 import { useGridReducer } from '../features/core/useGridReducer';
-import { DEFAULT_LOCALE_TEXT } from '../../constants/i18nConstants';
+import { DEFAULT_LOCALE_TEXT } from '../../constants/localeTextConstants';
 
 export const optionsSelector = (state: GridState) => state.options;
 

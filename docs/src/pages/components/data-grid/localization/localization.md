@@ -12,7 +12,7 @@ The default locale of Material-UI is English (United States). If you want to use
 ## Translation keys
 
 You can use the `localeText` prop to pass in your own text and translations.
-You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/i18nConstants.ts) in the GitHub repository.
+You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
 In the following example, the labels of the density selector are customized.
 
 {{"demo": "pages/components/data-grid/localization/CustomLocaleTextGrid.js", "bg": "inline"}}

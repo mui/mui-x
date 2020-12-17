@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { useLogger } from '../../utils/useLogger';
 import { ApiRef } from '../../../models/api/apiRef';
-import { I18nApi } from '../../../models/api/i18nApi';
+import { LocaleTextApi } from '../../../models/api/localeTextApi';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useGridSelector } from '../core/useGridSelector';
 import { optionsSelector } from '../../utils/useOptionsProp';
 
-export const useI18n = (apiRef: ApiRef): void => {
-  const logger = useLogger('useI18n');
+export const useLocaleText = (apiRef: ApiRef): void => {
+  const logger = useLogger('useLocaleText');
   const { localeText } = useGridSelector(apiRef, optionsSelector);
 
   const getLocaleText = React.useCallback(
@@ -23,9 +23,9 @@ export const useI18n = (apiRef: ApiRef): void => {
     [logger, localeText],
   );
 
-  const i18nApi: I18nApi = {
+  const localeTextApi: LocaleTextApi = {
     getLocaleText,
   };
 
-  useApiMethod(apiRef, i18nApi, 'I18nApi');
+  useApiMethod(apiRef, localeTextApi, 'LocaleTextApi');
 };
