@@ -5,7 +5,7 @@ export type LocaleTextValue = string | React.ReactNode | Function;
 export type TranslationKeys = keyof LocaleText;
 
 /**
- * The i18n API interface that is available in the grid [[apiRef]].
+ * The grid i18n API [[apiRef]].
  */
 export interface I18nApi {
   /**
