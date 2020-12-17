@@ -89,7 +89,7 @@ export enum DensityTypes {
 }
 
 /**
- * Sets the types of the texts in the grid.
+ * Set the types of the texts in the grid.
  */
 export interface LocaleText {
   // Density selector toolbar button text
