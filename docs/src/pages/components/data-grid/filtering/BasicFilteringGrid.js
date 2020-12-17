@@ -6,7 +6,7 @@ const filterModel = {
   items: [{ columnField: 'commodity', operatorValue: 'contains', value: 'rice' }],
 };
 
-export default function BasicSortingGrid() {
+export default function BasicFilteringGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,

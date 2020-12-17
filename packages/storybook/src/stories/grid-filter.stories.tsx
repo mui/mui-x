@@ -339,26 +339,20 @@ const useStyles = makeStyles({
 function RatingInputValue(props: FilterInputValueProps) {
   const classes = useStyles();
   const { item, applyValue } = props;
-  const [filterValueState, setFilterValueState] = React.useState<number>(Number(item.value));
 
   const onFilterChange = React.useCallback(
     (event) => {
       const value = event.target.value;
-      setFilterValueState(value);
       applyValue({ ...item, value });
     },
     [applyValue, item],
   );
 
-  React.useEffect(() => {
-    setFilterValueState(Number(item.value));
-  }, [item.value]);
-
   return (
     <div className={classes.ratingContainer}>
       <Rating
         placeholder={'Filter value'}
-        value={filterValueState}
+        value={Number(item.value)}
         onChange={onFilterChange}
         precision={0.1}
       />
