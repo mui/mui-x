@@ -15,9 +15,11 @@ const useStyles = makeStyles({
 });
 
 function RatingInputValue(props: FilterInputValueProps) {
-	const classes = useStyles();
-	const {item, applyValue} = props;
-	const [filterValueState, setFilterValueState] = React.useState<number>(Number(item.value));
+  const classes = useStyles();
+  const { item, applyValue } = props;
+  const [filterValueState, setFilterValueState] = React.useState<number>(
+    Number(item.value),
+  );
 
 	const handleFilterChange = (event) => {
 			const value = event.target.value;
@@ -25,9 +27,9 @@ function RatingInputValue(props: FilterInputValueProps) {
 			applyValue({...item, value});
 	};
 
-	React.useEffect(() => {
-		setFilterValueState(Number(item.value));
-	}, [item.value]);
+  React.useEffect(() => {
+    setFilterValueState(Number(item.value));
+  }, [item.value]);
 
 	return (
 		<div className={classes.root}>
@@ -42,37 +44,38 @@ function RatingInputValue(props: FilterInputValueProps) {
 }
 
 const filterModel = {
-	items: [
-		{columnField: 'rating', value: '3.5', operatorValue: '>='},
-	],
+  items: [{ columnField: 'rating', value: '3.5', operatorValue: '>=' }],
 };
 
 export default function CustomRatingFilterOperator() {
 	const {data} = useDemoData({dataSet: 'Employee', rowLength: 100});
 
-	React.useEffect(()=> {
-		if(data.columns.length > 0) {
-			const ratingColumn = data.columns.find(col => col.field === 'rating');
-			const ratingOperators = [...NUMERIC_OPERATORS].map(operator => {
-				operator.InputComponent = RatingInputValue;
-				return operator;
-			});
-			ratingColumn!.filterOperators = ratingOperators;
+  React.useEffect(() => {
+    if (data.columns.length > 0) {
+      const ratingColumn = data.columns.find((col) => col.field === 'rating');
+      const ratingOperators = [...NUMERIC_OPERATORS].map((operator) => {
+        operator.InputComponent = RatingInputValue;
+        return operator;
+      });
+      ratingColumn!.filterOperators = ratingOperators;
 
-			// Just hidding some columns for demo clarity
-			data.columns.filter(col => col.field === 'phone' || col.field === 'email' || col.field === 'username').forEach(col => {
-				col.hide = true;
-			});
-		}
-	}, [data.columns])
+      // Just hidding some columns for demo clarity
+      data.columns
+        .filter(
+          (col) =>
+            col.field === 'phone' ||
+            col.field === 'email' ||
+            col.field === 'username',
+        )
+        .forEach((col) => {
+          col.hide = true;
+        });
+    }
+  }, [data.columns]);
 
-	return (
-		<div style={{ height: 400, width: '100%' }}>
-		<DataGrid
-				rows={data.rows}
-				columns={data.columns}
-				filterModel={filterModel}
-			/>
-		</div>
-	);
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid rows={data.rows} columns={data.columns} filterModel={filterModel} />
+    </div>
+  );
 }

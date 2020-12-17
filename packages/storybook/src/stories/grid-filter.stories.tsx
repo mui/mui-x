@@ -4,7 +4,8 @@ import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import {
   ColDef,
-  ColTypeDef, FilterInputValueProps,
+  ColTypeDef,
+  FilterInputValueProps,
   FilterModel,
   LinkOperator,
   PreferencePanelsValue,
@@ -12,7 +13,7 @@ import {
   useApiRef,
   XGrid,
   NUMERIC_OPERATORS,
-  FilterModelParams
+  FilterModelParams,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
@@ -331,20 +332,20 @@ const useStyles = makeStyles({
     flexDirection: 'row',
     alignItems: 'center',
     height: 48,
-    paddingLeft: 20
-  }
+    paddingLeft: 20,
+  },
 });
 
 function RatingInputValue(props: FilterInputValueProps) {
   const classes = useStyles();
-  const {item, applyValue} = props;
+  const { item, applyValue } = props;
   const [filterValueState, setFilterValueState] = React.useState<number>(Number(item.value));
 
   const onFilterChange = React.useCallback(
     (event) => {
       const value = event.target.value;
       setFilterValueState(value);
-      applyValue({...item, value});
+      applyValue({ ...item, value });
     },
     [applyValue, item],
   );
@@ -366,19 +367,18 @@ function RatingInputValue(props: FilterInputValueProps) {
 }
 
 export function CustomFilterOperator() {
-  const {data} = useDemoData({dataSet: 'Employee', rowLength: 100});
+  const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
 
-  React.useEffect(()=> {
-    if(data.columns.length > 0) {
-      const ratingColumn = data.columns.find(col => col.field === 'rating');
-      const ratingOperators = [...NUMERIC_OPERATORS].map(operator => {
+  React.useEffect(() => {
+    if (data.columns.length > 0) {
+      const ratingColumn = data.columns.find((col) => col.field === 'rating');
+      const ratingOperators = [...NUMERIC_OPERATORS].map((operator) => {
         operator.InputComponent = RatingInputValue;
         return operator;
       });
       ratingColumn!.filterOperators = ratingOperators;
     }
-
-  }, [data.columns])
+  }, [data.columns]);
 
   return (
     <div className="grid-container">
@@ -386,9 +386,7 @@ export function CustomFilterOperator() {
         rows={data.rows}
         columns={data.columns}
         filterModel={{
-          items: [
-            {columnField: 'rating', value: '3.5', operatorValue: '>='},
-          ],
+          items: [{ columnField: 'rating', value: '3.5', operatorValue: '>=' }],
         }}
         state={{
           preferencePanel: {

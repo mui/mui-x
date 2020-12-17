@@ -50,7 +50,7 @@ export const employeeColumns: any[] = [
     generateData: randomRating,
     renderCell: renderRating,
     width: 180,
-    type: 'number'
+    type: 'number',
   },
   {
     field: 'email',

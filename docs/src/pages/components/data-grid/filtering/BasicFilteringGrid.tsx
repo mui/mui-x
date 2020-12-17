@@ -3,7 +3,7 @@ import { DataGrid, FilterModel } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
 const filterModel: FilterModel = {
-  items:[{columnField: 'commodity', operatorValue: 'contains', value: 'rice'}]
+  items: [{ columnField: 'commodity', operatorValue: 'contains', value: 'rice' }],
 };
 
 export default function BasicFilteringGrid() {

@@ -10,14 +10,14 @@ components: DataGrid, XGrid
 
 ## Basic filtering
 
-Column filters can be set using the column menu and clicking the filter menu item. 
+Column filters can be set using the column menu and clicking the filter menu item.
 Alternatively, if the grid has the toolbar displayed, just need to click on the filter button.
 
 A filtered column can be can pre-configured using the filterModel prop:
 
 ```ts
 const filterModel: FilterModel = {
-  items:[{columnField: 'commodity', operatorValue: 'contains', value: 'rice'}]
+  items: [{ columnField: 'commodity', operatorValue: 'contains', value: 'rice' }],
 };
 ```
 
