@@ -1,11 +1,11 @@
 import * as React from 'react';
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import { makeStyles } from '@material-ui/core/styles';
 import { Rating } from '@material-ui/lab';
 import { PreferencePanelsValue, DataGrid, FilterInputValueProps, NUMERIC_OPERATORS } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
 const useStyles = makeStyles({
-	ratingContainer: {
+	root: {
 		display: 'inline-flex',
 		flexDirection: 'row',
 		alignItems: 'center',
@@ -19,26 +19,22 @@ function RatingInputValue(props) {
 	const {item, applyValue} = props;
 	const [filterValueState, setFilterValueState] = React.useState(Number(item.value));
 
-	const onFilterChange = React.useCallback(
-		(event) => {
+	const handleFilterChange = (event) => {
 			const value = event.target.value;
 			setFilterValueState(value);
 			applyValue({...item, value});
-		},
-		[applyValue, item],
-	);
-
+	};
 	React.useEffect(() => {
 		setFilterValueState(Number(item.value));
 	}, [item.value]);
 
 	return (
-		<div className={classes.ratingContainer}>
+		<div className={classes.root}>
 			<Rating
 				placeholder={'Filter value'}
 				value={filterValueState}
-				onChange={onFilterChange}
-				precision={0.1}
+				onChange={handleFilterChange}
+				precision={0.5}
 			/>
 		</div>
 	);
@@ -50,7 +46,7 @@ const filterModel = {
 	],
 };
 
-export default function CustomFilterOperator() {
+export default function CustomRatingFilterOperator() {
 	const {data} = useDemoData({dataSet: 'Employee', rowLength: 100});
 
 	React.useEffect(() => {

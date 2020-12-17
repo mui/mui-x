@@ -1,4 +1,4 @@
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import { makeStyles } from '@material-ui/core/styles';
 import { Rating } from '@material-ui/lab';
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
