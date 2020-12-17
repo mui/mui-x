@@ -20,7 +20,7 @@ In the following example, the labels of the density selector are customized.
 ## 🚧 Locale text
 
 The data grid will support dozens of locales with a simple import that includes all the translated messages.
-You will be able to follow [this guide](/guides/localization/#locale-text) to use them.
+You can follow [this guide](/guides/localization/#locale-text) to use them.
 
 ## 🚧 RTL Support
 
