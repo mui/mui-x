@@ -1,14 +1,14 @@
 /* eslint-disable no-console */
 import * as fs from 'fs';
 import * as program from 'commander';
-import { commodityColumns } from './commodities.columns';
-import { employeeColumns } from './employees.columns';
+import { getCommodityColumns } from './commodities.columns';
+import { getEmployeeColumns } from './employees.columns';
 import { getRealData } from './services';
 
 const loadData = async (size: number, dataset: string): Promise<any> => {
   const result = await getRealData(
     Number(size),
-    dataset.toLowerCase() === 'commodity' ? commodityColumns : employeeColumns,
+    dataset.toLowerCase() === 'commodity' ? getCommodityColumns() : getEmployeeColumns(),
   );
 
   return result.rows;

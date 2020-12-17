@@ -42,7 +42,7 @@ import {
   renderTotalPrice,
 } from './renderer';
 
-export const commodityColumns: any[] = [
+export const getCommodityColumns: () => any[] = () => [
   {
     field: 'id',
     generateData: randomId,

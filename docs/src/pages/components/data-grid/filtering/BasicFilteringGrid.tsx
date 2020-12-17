@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DataGrid, FilterModel } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
-const filterModel: FilterModel = {
+const riceFilterModel: FilterModel = {
   items: [{ columnField: 'commodity', operatorValue: 'contains', value: 'rice' }],
 };
 
@@ -15,7 +15,7 @@ export default function BasicFilteringGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid filterModel={filterModel} {...data} />
+      <DataGrid className={'BasicGrid'} {...data} filterModel={riceFilterModel} />
     </div>
   );
 }

@@ -12,7 +12,7 @@ import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useLogger } from '../../utils/useLogger';
 import { optionsSelector } from '../../utils/useOptionsProp';
-import { filterableColumnsSelector } from '../columns/columnsSelector';
+import { filterableColumnsIdsSelector } from '../columns/columnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { PreferencePanelsValue } from '../preferencesPanel/preferencesPanelValue';
@@ -23,7 +23,7 @@ import { getInitialVisibleRowsState } from './visibleRowsState';
 export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
   const logger = useLogger('useFilter');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
-  const filterableColumns = useGridSelector(apiRef, filterableColumnsSelector);
+  const filterableColumnsIds = useGridSelector(apiRef, filterableColumnsIdsSelector);
   const options = useGridSelector(apiRef, optionsSelector);
 
   const getFilterModelParams = React.useCallback(
@@ -144,7 +144,7 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
         }
 
         if (item.columnField == null) {
-          item.columnField = filterableColumns[0].field;
+          item.columnField = filterableColumnsIds[0];
         }
         if (item.columnField != null && item.operatorValue == null) {
           // we select a default operator
@@ -171,7 +171,7 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
       getFilterModelParams,
       applyFilters,
       options.disableMultipleColumnsFiltering,
-      filterableColumns,
+      filterableColumnsIds,
     ],
   );
 
@@ -288,17 +288,23 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
     }
   }, [apiRef, clearFilteredRows, logger, rowsProp]);
 
+  const prevCols = React.useRef<any[]>([]);
   React.useEffect(() => {
     const filterState = apiRef.current.getState<FilterModelState>('filter');
-    if (filterState.items.length > 0 && filterableColumns.length > 0) {
+    if (
+      filterState.items.length > 0 &&
+      filterableColumnsIds.length > 0 &&
+      isEqual(prevCols.current, filterableColumnsIds)
+    ) {
       logger.debug('Columns changed, applying filters');
+      prevCols.current = filterableColumnsIds;
 
       filterState.items.forEach((filter) => {
-        if (!filterableColumns.find((col) => col.field === filter.columnField)) {
-          deleteFilter(filter);
+        if (!filterableColumnsIds.find((field) => field === filter.columnField)) {
+          apiRef.current.deleteFilter(filter);
         }
       });
       apiRef.current.applyFilters();
     }
-  }, [apiRef, deleteFilter, filterableColumns, logger]);
+  }, [apiRef, filterableColumnsIds, logger]);
 };

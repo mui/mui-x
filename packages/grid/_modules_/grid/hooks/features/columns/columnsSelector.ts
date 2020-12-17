@@ -31,6 +31,13 @@ export const filterableColumnsSelector = createSelector<GridState, Columns, Colu
   allColumnsSelector,
   (columns: Columns) => columns.filter((col) => col.filterable),
 );
+export const filterableColumnsIdsSelector = createSelector<GridState, Columns, string[]>(
+  filterableColumnsSelector,
+  (columns: Columns) => {
+    return columns.map((col) => col.field);
+  },
+);
+
 export const visibleColumnsLengthSelector = createSelector<GridState, Columns, number>(
   visibleColumnsSelector,
   (visibleColumns: Columns) => visibleColumns.length,

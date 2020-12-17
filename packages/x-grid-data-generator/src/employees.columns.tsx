@@ -17,7 +17,7 @@ import {
 } from './services';
 import { renderAvatar, renderCountry, renderEmail, renderLink, renderRating } from './renderer';
 
-export const employeeColumns: any[] = [
+export const getEmployeeColumns: () => any[] = () => [
   {
     field: 'id',
     generateData: randomId,
