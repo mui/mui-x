@@ -1,6 +1,6 @@
+import * as React from 'react';
 import { FilterModel, XGrid } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
-import * as React from 'react';
 
 const filterModel: FilterModel = {
   items: [
