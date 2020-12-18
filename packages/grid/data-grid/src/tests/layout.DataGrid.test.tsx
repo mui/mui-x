@@ -131,15 +131,15 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         ];
 
         const rows = [
-          { id: 1, lastName: 'Snow', firstName: 'Jon' },
-          { id: 2, lastName: 'Lannister', firstName: 'Cersei' },
+          { id: 1, lastName: 'Snow', firstName: 'Jon', age: 1 },
+          { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 2 },
         ];
         render(
           <div style={{ width: 300, height: 300 }}>
             <DataGrid rows={rows} columns={columns} />
           </div>,
         );
-        expect(getColumnValues()).to.deep.equal(['', '']);
+        expect(getColumnValues()).to.deep.equal(['1', '2']);
       });
     });
 
