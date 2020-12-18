@@ -7,6 +7,7 @@ import {
 } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { FilterApi } from '../../../models/api/filterApi';
+import { Columns } from '../../../models/colDef/colDef';
 import { FeatureModeConstant } from '../../../models/featureMode';
 import { FilterItem, LinkOperator } from '../../../models/filterItem';
 import { FilterModelParams } from '../../../models/params/filterModelParams';
@@ -156,9 +157,10 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
         }
         if (newItem.columnField != null && newItem.operatorValue == null) {
           // we select a default operator
-          newItem.operatorValue = apiRef!.current!.getColumnFromField(
+          const column = apiRef!.current!.getColumnFromField(
             newItem.columnField,
-          )!.filterOperators![0].value!;
+          );
+          newItem.operatorValue = column && column!.filterOperators![0].value!;
         }
         if (options.disableMultipleColumnsFiltering && items.length > 1) {
           items.length = 1;
@@ -307,16 +309,14 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
     logger.debug('onColUpdated - Columns changed, applying filters');
     const filterState = apiRef.current.getState<FilterModelState>('filter');
     const columnsIds = filterableColumnsIdsSelector(apiRef.current.state);
-    if (filterState.items.length > 0 && columnsIds.length > 0) {
-      logger.debug('Columns changed, applying filters');
+    logger.debug('Columns changed, applying filters');
 
-      filterState.items.forEach((filter) => {
-        if (!columnsIds.find((field) => field === filter.columnField)) {
-          apiRef.current.deleteFilter(filter);
-        }
-      });
-      apiRef.current.applyFilters();
-    }
+    filterState.items.forEach((filter) => {
+      if (!columnsIds.find((field) => field === filter.columnField)) {
+        apiRef.current.deleteFilter(filter);
+      }
+    });
+    apiRef.current.applyFilters();
   }, [apiRef, logger]);
 
   useApiEventHandler(apiRef, COLUMNS_UPDATED, onColUpdated);

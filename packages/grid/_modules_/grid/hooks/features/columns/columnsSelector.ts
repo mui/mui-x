@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { ColumnLookup, Columns, ColumnsMeta, InternalColumns } from '../../../models/colDef/colDef';
+import { ColumnLookup, Columns, ColumnsMeta } from '../../../models/colDef/colDef';
 import { GridState } from '../core/gridState';
 
 export const columnsSelector = (state: GridState) => state.columns;
