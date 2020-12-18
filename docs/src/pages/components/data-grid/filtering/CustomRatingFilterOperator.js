@@ -26,7 +26,8 @@ function RatingInputValue(props) {
   return (
     <div className={classes.root}>
       <Rating
-        placeholder={'Filter value'}
+        name="custom-rating-filter-operator"
+        placeholder="Filter value"
         value={Number(item.value)}
         onChange={handleFilterChange}
         precision={0.5}
