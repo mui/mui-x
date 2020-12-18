@@ -25,7 +25,7 @@ export const getEmployeeColumns: () => any[] = () => [
   },
   {
     field: 'avatar',
-    headerName: '',
+    headerName: 'Avatar',
     sortable: false,
     generateData: randomAvatar,
     renderCell: renderAvatar,
@@ -39,7 +39,7 @@ export const getEmployeeColumns: () => any[] = () => [
   },
   {
     field: 'website',
-    headerName: 'website',
+    headerName: 'Website',
     generateData: randomUrl,
     renderCell: renderLink,
     width: 160,
@@ -62,7 +62,7 @@ export const getEmployeeColumns: () => any[] = () => [
   },
   {
     field: 'phone',
-    headerName: 'phone',
+    headerName: 'Phone',
     generateData: randomPhoneNumber,
     width: 150,
   },

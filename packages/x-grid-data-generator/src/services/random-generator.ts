@@ -107,7 +107,7 @@ export const randomCreatedDate = () => datePast();
 export const randomUpdatedDate = () => dateRecent();
 export const randomAvatar = () => ({ name: chance.name(), color: randomColor() });
 export const randomJobTitle = () => chance.profession();
-export const randomRating = () => random(0, 5);
+export const randomRating = () => Math.round(random(0, 5) * 10) / 10;
 
 export const generateName = (data) => data.avatar.name;
 export const generateFilledQuantity = (data) =>

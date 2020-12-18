@@ -10,7 +10,7 @@ const filterModel: FilterModel = {
   linkOperator: LinkOperator.Or,
 };
 
-export default function MultiFilteringGrid() {
+export default function MultiFilteringWithOrGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,

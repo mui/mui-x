@@ -52,6 +52,7 @@ export const getCommodityColumns: () => any[] = () => [
     field: 'desk',
     headerName: 'Desk',
     generateData: randomDesk,
+    width: 110,
   },
   {
     field: 'commodity',
@@ -77,7 +78,7 @@ export const getCommodityColumns: () => any[] = () => [
     field: 'quantity',
     headerName: 'Quantity',
     type: 'number',
-    width: 110,
+    width: 140,
     generateData: randomQuantity,
   },
   {

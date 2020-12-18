@@ -144,7 +144,7 @@ The following table summarizes the features available in the community `DataGrid
 | [Multi-row selection](/components/data-grid/selection/#multiple-row-selection)          | ❌        | ✅             |
 | [Range selection](/components/data-grid/selection/#range-selection)                     | ❌        | 🚧             |
 | **Filtering**                                                                           |           |                |
-| [Column filter](/components/data-grid/filtering/#column-filter)                         | 🚧        | 🚧             |
+| [Column filters](/components/data-grid/filtering/#column-filters)                       | ✅        | ✅             |
 | [Quick filter](/components/data-grid/filtering/#quick-filter)                           | 🚧        | 🚧             |
 | **Pagination**                                                                          |           |                |
 | [Pagination](/components/data-grid/pagination/)                                         | ✅        | ✅             |

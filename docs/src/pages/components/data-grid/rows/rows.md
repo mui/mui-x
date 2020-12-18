@@ -46,15 +46,6 @@ Repeat this action to change the sorting direction.
 
 A sorted column can be can pre-configured using the `sortModel` prop of the `ColDef` interface:
 
-```ts
-const sortModel = [
-  {
-    field: 'commodity',
-    sort: 'asc' as SortDirection,
-  },
-];
-```
-
 {{"demo": "pages/components/data-grid/rows/BasicSortingGrid.js", "bg": "inline"}}
 
 ### Custom comparator
@@ -112,19 +103,6 @@ Then you need to handle the `onSortModelChange` callback, sort the rows on the s
 
 You can sort by multiple columns at the same time using `XGrid`.
 Hold the <kbd>CTRL</kbd> key down while clicking the column header.
-
-```ts
-const sortModel = [
-  {
-    field: 'commodity',
-    sort: 'asc' as SortDirection,
-  },
-  {
-    field: 'desk',
-    sort: 'desc' as SortDirection,
-  },
-];
-```
 
 {{"demo": "pages/components/data-grid/rows/MultiSortingGrid.js", "disableAd": true, "bg": "inline"}}
 

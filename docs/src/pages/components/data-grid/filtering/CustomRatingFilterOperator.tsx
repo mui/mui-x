@@ -29,7 +29,8 @@ function RatingInputValue(props: FilterInputValueProps) {
   return (
     <div className={classes.root}>
       <Rating
-        placeholder={'Filter value'}
+        name="custom-rating-filter-operator"
+        placeholder="Filter value"
         value={Number(item.value)}
         onChange={handleFilterChange}
         precision={0.5}
@@ -44,24 +45,24 @@ const filterModel = {
 
 export default function CustomRatingFilterOperator() {
   const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
-  const [cols, setCols] = React.useState(data.columns);
+  const [columns, setColumns] = React.useState(data.columns);
 
   React.useEffect(() => {
     if (data.columns.length > 0) {
-      const ratingColumn = data.columns.find((col) => col.field === 'rating')!;
+      const ratingColumn = data.columns.find((column) => column.field === 'rating')!;
 
-      ratingColumn.filterOperators = getNumericColumnOperators();
-      ratingColumn.filterOperators.forEach((operator) => {
-        operator.InputComponent = RatingInputValue;
-      });
+      ratingColumn.filterOperators = getNumericColumnOperators().map((operator) => ({
+        ...operator,
+        InputComponent: RatingInputValue,
+      }));
 
-      setCols(data.columns);
+      setColumns(data.columns);
     }
   }, [data.columns]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid rows={data.rows} columns={cols} filterModel={filterModel} />
+      <DataGrid {...data} columns={columns} filterModel={filterModel} />
     </div>
   );
 }

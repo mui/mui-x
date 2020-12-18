@@ -6,7 +6,7 @@ const riceFilterModel = {
   items: [{ columnField: 'commodity', operatorValue: 'contains', value: 'rice' }],
 };
 
-export default function BasicFilteringGrid() {
+export default function BasicToolbarFilteringGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,

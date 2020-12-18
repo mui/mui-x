@@ -5,24 +5,22 @@ components: DataGrid, XGrid
 
 # Data Grid - Filtering
 
-<p class="description">Filtering helps view particular or related records in the Data Grid.</p>
+<p class="description">Filtering helps view particular or related records in the data grid.</p>
 
-## Basic filtering
+## Column filters
+
+### Basic filter
 
 Column filters can be set using the column menu and clicking the filter menu item.
 Alternatively, if the grid has the toolbar displayed, just need to click on the filter button.
 
-A filtered column can be can pre-configured using the filterModel prop:
-
-```ts
-const filterModel: FilterModel = {
-  items: [{ columnField: 'commodity', operatorValue: 'contains', value: 'rice' }],
-};
-```
+A filtered column can be can pre-configured using the `filterModel` prop:
 
 {{"demo": "pages/components/data-grid/filtering/BasicFilteringGrid.js", "bg": "inline"}}
 
-### With the toolbar
+### Toolbar
+
+In addition to the column menu that allows users to apply a filter, you can also show a toolbar:
 
 {{"demo": "pages/components/data-grid/filtering/BasicToolbarFilteringGrid.js", "bg": "inline"}}
 
@@ -38,7 +36,7 @@ Filters are enabled by default, but you can easily disable this feature by setti
 
 #### Per column
 
-You can disable the filter on a column by setting the `filterable` prop of the `ColDef` to `false`;
+You can disable the filter on a column by setting the `filterable` property of the `ColDef` to `false`;
 
 ```js
 const columns = [{ field: 'image', filterable: false }];
@@ -55,17 +53,17 @@ In this demo, you will see how to reuse the numeric filter and customize the inp
 
 {{"demo": "pages/components/data-grid/filtering/CustomRatingFilterOperator.js", "bg": "inline"}}
 
-Demo filter with new column type
+<!-- Demo filter with new column type
 
-Demo filter with new operator
+Demo filter with new operator -->
 
-### Server-side filter
+<!-- ### Server-side filter -->
 
-### Controlled filtering
+<!-- ### Controlled filtering -->
 
 ### Multi-filtering ⚡️
 
-XGrid allows filtering by multiple columns.
+`XGrid` allows filtering by multiple columns.
 The default operator that will be applied between filters is an And.
 
 {{"demo": "pages/components/data-grid/filtering/MultiFilteringGrid.js", "bg": "inline"}}
@@ -84,8 +82,15 @@ const filterModel: FilterModel = {
 
 {{"demo": "pages/components/data-grid/filtering/MultiFilteringWithOrGrid.js", "bg": "inline"}}
 
-### apiRef ⚡️
+<!-- ### apiRef ⚡️
 
-https://master--material-ui-x.netlify.app/components/data-grid/rows/#apiref
+https://master--material-ui-x.netlify.app/components/data-grid/rows/#apiref -->
 
-## Quick filter
+## 🚧 Quick filter
+
+> ⚠️ This feature isn't implemented yet. It's coming.
+>
+> 👍 Upvote [issue #202](https://github.com/mui-org/material-ui-x/issues/202) if you want to see it land faster.
+
+In addition to the column specific filtering, a global quick filtering will also be available.
+The provided search text will match against all the cells.
