@@ -15,21 +15,22 @@ import { getColDef } from '../../../models/colDef/getColDef';
 import { useApiMethod } from '../../root/useApiMethod';
 import { Logger, useLogger } from '../../utils/useLogger';
 import { optionsSelector } from '../../utils/useOptionsProp';
-import { GridState } from '../core/gridState';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { allColumnsSelector, columnsMetaSelector, visibleColumnsSelector } from './columnsSelector';
 
 function updateColumnsWidth(columns: Columns, viewportWidth: number) {
-  const numberOfFluidColumns = columns.filter((column) => !!column.flex).length;
+  const numberOfFluidColumns = columns.filter((column) => !!column.flex && !column.hide).length;
   let flexDivider = 0;
 
   if (numberOfFluidColumns && viewportWidth) {
     columns.forEach((column) => {
-      if (!column.flex) {
-        viewportWidth -= column.width!;
-      } else {
-        flexDivider += column.flex;
+      if (!column.hide) {
+        if (!column.flex) {
+          viewportWidth -= column.width!;
+        } else {
+          flexDivider += column.flex;
+        }
       }
     });
   }
@@ -189,22 +190,21 @@ export function useColumns(columns: Columns, apiRef: ApiRef): void {
         !!options.checkboxSelection,
         logger,
       );
+      const updatedCols = updateColumnsWidth(hydratedColumns, gridState.viewportSizes.width);
 
       updateState({
-        all: hydratedColumns.map((col) => col.field),
-        lookup: toLookup(logger, hydratedColumns),
+        all: updatedCols.map((col) => col.field),
+        lookup: toLookup(logger, updatedCols),
       });
     } else {
       updateState(getInitialColumnsState());
     }
-  }, [logger, columns, options.columnTypes, options.checkboxSelection, updateState]);
-
-  React.useEffect(() => {
-    logger.debug(`Columns gridState.viewportSizes.width, changed ${gridState.viewportSizes.width}`);
-    // Avoid dependency on gridState as I only want to update cols when viewport size changed.
-    const currentColumns = allColumnsSelector(apiRef.current.getState<GridState>());
-
-    const updatedCols = updateColumnsWidth(currentColumns, gridState.viewportSizes.width);
-    apiRef.current.updateColumns(updatedCols);
-  }, [apiRef, gridState.viewportSizes.width, logger]);
+  }, [
+    logger,
+    columns,
+    options.columnTypes,
+    options.checkboxSelection,
+    gridState.viewportSizes.width,
+    updateState,
+  ]);
 }

@@ -8,7 +8,7 @@ import {
 import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
-import { getColumnValues, raf } from 'test/utils/helperFn';
+import { getColumnValues, raf, sleep } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
   // TODO v5: replace with createClientRender
@@ -267,6 +267,52 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         // @ts-expect-error need to migrate helpers to TypeScript
         expect(firstColumn).toHaveInlineStyle({
           width: `${2 * parseInt(secondColumnWidthVal, 10)}px`,
+        });
+      });
+
+      it('should set the first column to be full width if the second one is hidden', async () => {
+        const Test = () => {
+          const [visible, setVisible] = React.useState(true);
+          const rows = [
+            {
+              id: 1,
+              username: 'John Doe',
+              age: 30,
+            },
+          ];
+
+          const columns = [
+            {
+              field: 'id',
+              flex: 1,
+            },
+            {
+              field: 'name',
+              hide: !visible,
+            },
+          ];
+
+          React.useEffect(() => {
+            setTimeout(() => {
+              setVisible(false);
+            }, 100);
+          }, []);
+
+          return (
+            <div style={{ width: 200, height: 300 }}>
+              <DataGrid columns={columns} rows={rows} />
+            </div>
+          );
+        };
+
+        render(<Test />);
+
+        await sleep(100);
+
+        const firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(firstColumn).toHaveInlineStyle({
+          width: '198px', // because of the 2px border
         });
       });
 
