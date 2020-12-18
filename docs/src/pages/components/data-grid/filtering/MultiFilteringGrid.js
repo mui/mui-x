@@ -9,7 +9,7 @@ const filterModel = {
   ],
 };
 
-export default function BasicFilteringGrid() {
+export default function MultiFilteringGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,

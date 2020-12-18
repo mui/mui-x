@@ -44,6 +44,7 @@ const filterModel = {
 
 export default function CustomRatingFilterOperator() {
   const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
+  const [cols, setCols] = React.useState(data.columns);
 
   React.useEffect(() => {
     if (data.columns.length > 0) {
@@ -66,12 +67,13 @@ export default function CustomRatingFilterOperator() {
         .forEach((col) => {
           col.hide = true;
         });
+      setCols(data.columns)
     }
   }, [data.columns]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid rows={data.rows} columns={data.columns} filterModel={filterModel} />
+      <DataGrid rows={data.rows} columns={cols} filterModel={filterModel} />
     </div>
   );
 }

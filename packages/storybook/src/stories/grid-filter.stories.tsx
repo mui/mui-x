@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { DataGrid } from '@material-ui/data-grid';
 import { Rating } from '@material-ui/lab';
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
@@ -455,6 +456,68 @@ export function NewColumnTypes() {
         columns={transformCols(data.columns)}
         columnTypes={{ price: priceColumnType, unknownPrice: unknownPriceColumnType }}
       />
+    </div>
+  );
+}
+
+
+
+
+const filterModel = {
+  items: [{ columnField: 'rating', value: '3.5', operatorValue: '>=' }],
+};
+
+export  function DemoCustomRatingFilterOperator() {
+  const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
+
+  React.useEffect(() => {
+    if (data.columns.length > 0) {
+      const ratingColumn = data.columns.find((col) => col.field === 'rating');
+
+      const ratingOperators = getNumericColumnOperators();
+      ratingColumn!.filterOperators = ratingOperators.map((operator) => {
+        operator.InputComponent = RatingInputValue;
+        return operator;
+      });
+
+      // Just hidding some columns for demo clarity
+      data.columns
+        .filter(
+          (col) =>
+            col.field === 'phone' ||
+            col.field === 'email' ||
+            col.field === 'username',
+        )
+        .forEach((col) => {
+          col.hide = true;
+        });
+    }
+  }, [data.columns]);
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid rows={data.rows} columns={data.columns} filterModel={filterModel} />
+    </div>
+  );
+}
+
+const demoFilterModel: FilterModel = {
+  items: [
+    { id: 123, columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
+    { id: 12, columnField: 'quantity', operatorValue: '>=', value: '20000' },
+  ],
+};
+
+export function DemoMultiFilteringGrid() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+    maxColumns: 6,
+  });
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <XGrid filterModel={demoFilterModel} {...data} />
     </div>
   );
 }
