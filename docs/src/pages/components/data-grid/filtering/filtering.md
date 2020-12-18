@@ -49,17 +49,20 @@ const columns = [{ field: 'image', filterable: false }];
 The data grid supports different operators for the native column types.
 However, you can extend the operator and add your own, customize the input component or set your own operator for a new column type.
 
-In this demo, you will see how to reuse the numeric filter and customize the input filter value component.
+1. **Custom input**. In this demo, you will see how to reuse the numeric filter and customize the input filter value component.
 
 {{"demo": "pages/components/data-grid/filtering/CustomRatingFilterOperator.js", "bg": "inline"}}
 
-<!-- Demo filter with new column type
+2. **Custom column type**. WIP
+3. **Custom operator**. WIP
 
-Demo filter with new operator -->
+### Server-side filter
 
-<!-- ### Server-side filter -->
+WIP
 
-<!-- ### Controlled filtering -->
+### Controlled filtering
+
+WIP
 
 ### Multi-filtering ⚡️
 
@@ -82,9 +85,9 @@ const filterModel: FilterModel = {
 
 {{"demo": "pages/components/data-grid/filtering/MultiFilteringWithOrGrid.js", "bg": "inline"}}
 
-<!-- ### apiRef ⚡️
+### apiRef ⚡️
 
-https://master--material-ui-x.netlify.app/components/data-grid/rows/#apiref -->
+<!-- https://master--material-ui-x.netlify.app/components/data-grid/rows/#apiref -->
 
 ## 🚧 Quick filter
 
