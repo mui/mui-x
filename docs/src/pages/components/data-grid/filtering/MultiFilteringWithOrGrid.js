@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { XGrid } from '@material-ui/x-grid';
+import { LinkOperator, XGrid } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
+import * as React from 'react';
 
 const filterModel = {
   items: [
     { columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
     { columnField: 'commodity', operatorValue: 'startsWith', value: 'soy' },
   ],
-  linkOperator: 'or',
+  linkOperator: LinkOperator.Or,
 };
 
 export default function MultiFilteringGrid() {
@@ -19,7 +19,7 @@ export default function MultiFilteringGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid filterModel={filterModel} {...data} />
+      <XGrid {...data} filterModel={filterModel} />
     </div>
   );
 }
