@@ -7,7 +7,6 @@ import {
 } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { FilterApi } from '../../../models/api/filterApi';
-import { Columns } from '../../../models/colDef/colDef';
 import { FeatureModeConstant } from '../../../models/featureMode';
 import { FilterItem, LinkOperator } from '../../../models/filterItem';
 import { FilterModelParams } from '../../../models/params/filterModelParams';
