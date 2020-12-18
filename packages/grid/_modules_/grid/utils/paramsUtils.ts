@@ -27,7 +27,7 @@ export function buildCellParams({
     getValue: (field: string) => {
       // We are getting the value of another column here, field
       const col = api.getColumnFromField(field);
-      if (!col.valueGetter) {
+      if (!col || !col.valueGetter) {
         return rowModel[field];
       }
       return col.valueGetter(

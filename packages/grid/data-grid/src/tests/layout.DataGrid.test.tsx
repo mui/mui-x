@@ -118,6 +118,29 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         );
         expect(getColumnValues()).to.deep.equal(['Jon Snow', 'Cersei Lannister']);
       });
+
+      it('should support columns.valueGetter even if field param supplied is incorrect resulting in no data to be rendered', () => {
+        const columns = [
+          { field: 'id', hide: true },
+          { field: 'firstName', hide: true },
+          { field: 'lastName', hide: true },
+          {
+            field: 'fullName',
+            valueGetter: (params) => params.getValue('age'), // incorrect field parameter supplied to 'getValue'
+          },
+        ];
+
+        const rows = [
+          { id: 1, lastName: 'Snow', firstName: 'Jon' },
+          { id: 2, lastName: 'Lannister', firstName: 'Cersei' },
+        ];
+        render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid rows={rows} columns={columns} />
+          </div>,
+        );
+        expect(getColumnValues()).to.deep.equal(['', '']);
+      });
     });
 
     describe('warnings', () => {
