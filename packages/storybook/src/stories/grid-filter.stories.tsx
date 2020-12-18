@@ -460,14 +460,11 @@ export function NewColumnTypes() {
   );
 }
 
-
-
-
 const filterModel = {
   items: [{ columnField: 'rating', value: '3.5', operatorValue: '>=' }],
 };
 
-export  function DemoCustomRatingFilterOperator() {
+export function DemoCustomRatingFilterOperator() {
   const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
 
   React.useEffect(() => {
@@ -482,12 +479,7 @@ export  function DemoCustomRatingFilterOperator() {
 
       // Just hidding some columns for demo clarity
       data.columns
-        .filter(
-          (col) =>
-            col.field === 'phone' ||
-            col.field === 'email' ||
-            col.field === 'username',
-        )
+        .filter((col) => col.field === 'phone' || col.field === 'email' || col.field === 'username')
         .forEach((col) => {
           col.hide = true;
         });

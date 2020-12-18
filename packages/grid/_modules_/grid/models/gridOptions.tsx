@@ -14,7 +14,7 @@ import {
 import { FilterModel } from '../hooks/features/filter/FilterModelState';
 import { Logger } from '../hooks/utils/useLogger';
 import { ColumnTypesRecord } from './colDef/colTypeDef';
-import { DEFAULT_COLUMN_TYPES } from './colDef/defaultColumnTypes';
+import { getDefaultColumnTypes } from './colDef/defaultColumnTypes';
 import { FeatureMode, FeatureModeConstant } from './featureMode';
 import { CellParams } from './params/cellParams';
 import { ColParams } from './params/colParams';
@@ -373,7 +373,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   sortingMode: FeatureModeConstant.client,
   filterMode: FeatureModeConstant.client,
   sortingOrder: ['asc', 'desc', null],
-  columnTypes: DEFAULT_COLUMN_TYPES,
+  columnTypes: getDefaultColumnTypes(),
   density: DensityTypes.Standard,
   disableColumnSelector: !EXPERIMENTAL_ENABLED,
   showToolbar: false,

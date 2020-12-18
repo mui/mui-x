@@ -48,26 +48,14 @@ export default function CustomRatingFilterOperator() {
 
   React.useEffect(() => {
     if (data.columns.length > 0) {
-      const ratingColumn = data.columns.find((col) => col.field === 'rating');
+      const ratingColumn = data.columns.find((col) => col.field === 'rating')!;
 
-      const ratingOperators = getNumericColumnOperators();
-      ratingColumn!.filterOperators = ratingOperators.map((operator) => {
+      ratingColumn.filterOperators = getNumericColumnOperators();
+      ratingColumn.filterOperators.forEach((operator) => {
         operator.InputComponent = RatingInputValue;
-        return operator;
       });
 
-      // Just hidding some columns for demo clarity
-      data.columns
-        .filter(
-          (col) =>
-            col.field === 'phone' ||
-            col.field === 'email' ||
-            col.field === 'username',
-        )
-        .forEach((col) => {
-          col.hide = true;
-        });
-      setCols(data.columns)
+      setCols(data.columns);
     }
   }, [data.columns]);
 

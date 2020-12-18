@@ -138,12 +138,9 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
     ],
   );
 
-  const { gridState, dispatch } = useGridReducer(
-    apiRef,
-    'options',
-    optionsReducer,
-    DEFAULT_GRID_OPTIONS,
-  );
+  const { gridState, dispatch } = useGridReducer(apiRef, 'options', optionsReducer, {
+    ...DEFAULT_GRID_OPTIONS,
+  });
 
   const updateOptions = React.useCallback(
     (newOptions: Partial<GridOptions>) => {

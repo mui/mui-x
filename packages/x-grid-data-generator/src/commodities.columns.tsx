@@ -57,7 +57,7 @@ export const getCommodityColumns: () => any[] = () => [
     field: 'commodity',
     headerName: 'Commodity',
     generateData: randomCommodity,
-    width: 120,
+    width: 180,
   },
   {
     field: 'traderName',

@@ -82,6 +82,8 @@ const filterModel: FilterModel = {
 };
 ```
 
+{{"demo": "pages/components/data-grid/filtering/MultiFilteringWithOrGrid.js", "bg": "inline"}}
+
 ### apiRef ⚡️
 
 https://master--material-ui-x.netlify.app/components/data-grid/rows/#apiref

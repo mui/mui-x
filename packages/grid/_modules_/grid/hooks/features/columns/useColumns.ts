@@ -73,12 +73,11 @@ function toLookup(logger: Logger, allColumns: Columns) {
 }
 
 const upsertColumnsState = (state: InternalColumns, columnUpdates: ColDef[]): InternalColumns => {
-  const newState = state;
+  const newState = { all: [...state.all], lookup: { ...state.lookup } };
 
   columnUpdates.forEach((newColumn) => {
     if (newState.lookup[newColumn.field] == null) {
       // New Column
-      state = { all: [...state.all], lookup: { ...state.lookup } };
       newState.lookup[newColumn.field] = newColumn;
       newState.all.push(newColumn.field);
     } else {

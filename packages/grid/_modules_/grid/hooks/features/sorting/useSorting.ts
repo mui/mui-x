@@ -143,7 +143,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
     const rowModels = apiRef.current.getRowModels();
 
     if (options.sortingMode === FeatureModeConstant.server) {
-      logger.info('Skipping sorting rows as sortingMode = server');
+      logger.debug('Skipping sorting rows as sortingMode = server');
       setGridState((oldState) => {
         return {
           ...oldState,
@@ -154,7 +154,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
     }
 
     const sortModel = apiRef.current.getState<GridState>().sorting.sortModel;
-    logger.info('Sorting rows with ', sortModel);
+    logger.debug('Sorting rows with ', sortModel);
     const sorted = [...rowModels];
     if (sortModel.length > 0) {
       comparatorList.current = buildComparatorList(sortModel);

@@ -2,9 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Rating } from '@material-ui/lab';
-import { DataGrid, NUMERIC_OPERATORS } from '@material-ui/data-grid';
+import { DataGrid, getNumericColumnOperators } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
-import { getNumericColumnOperators } from '../../../../../../packages/grid/_modules_/grid/models/colDef';
 
 const useStyles = makeStyles({
   root: {
@@ -58,25 +57,12 @@ export default function CustomRatingFilterOperator() {
     if (data.columns.length > 0) {
       const ratingColumn = data.columns.find((col) => col.field === 'rating');
 
-      const ratingOperators = getNumericColumnOperators();
-      ratingColumn.filterOperators = ratingOperators.map((operator) => {
+      ratingColumn.filterOperators = getNumericColumnOperators();
+      ratingColumn.filterOperators.forEach((operator) => {
         operator.InputComponent = RatingInputValue;
-        return operator;
       });
 
-      // Just hidding some columns for demo clarity
-      data.columns
-        .filter(
-          (col) =>
-            col.field === 'phone' ||
-            col.field === 'email' ||
-            col.field === 'username',
-        )
-        .forEach((col) => {
-          col.hide = true;
-        });
-      setCols(data.columns)
-
+      setCols(data.columns);
     }
   }, [data.columns]);
 
