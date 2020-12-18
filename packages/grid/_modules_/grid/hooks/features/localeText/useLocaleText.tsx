@@ -14,10 +14,6 @@ export const useLocaleText = (apiRef: ApiRef): void => {
     (key: any): any => {
       logger.debug(`Get grid text with key ${key}`);
 
-      if (process.env.NODE_ENV !== 'production' && !localeText.hasOwnProperty(key)) {
-        throw new Error(`Wrong key used for internal purposes ${key}`);
-      }
-
       return localeText[key];
     },
     [logger, localeText],
