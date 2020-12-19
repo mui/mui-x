@@ -64,9 +64,9 @@ WIP
 
 WIP
 
-### Multi-filtering ⚡️
+### Multi-column filtering ⚡️
 
-`XGrid` allows filtering by multiple columns.
+`XGrid` supports filtering by multiple columns.
 The default operator that will be applied between filters is an And.
 
 {{"demo": "pages/components/data-grid/filtering/MultiFilteringGrid.js", "bg": "inline"}}
