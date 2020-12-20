@@ -44,7 +44,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.54",
     "@material-ui/monorepo": "https://github.com/mui-org/material-ui.git#next",
-    "@rollup/plugin-node-resolve": "^8.0.1",
+    "@rollup/plugin-node-resolve": "^11.0.1",
     "@rollup/plugin-replace": "^2.3.3",
     "@testing-library/react": "^11.1.0",
     "@types/chai": "^4.2.3",
