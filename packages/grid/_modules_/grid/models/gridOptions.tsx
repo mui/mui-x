@@ -27,6 +27,7 @@ import { SortModelParams } from './params/sortModelParams';
 import { SortDirection, SortModel } from './sortModel';
 import { EXPERIMENTAL_ENABLED } from '../constants/envConstants';
 import { DEFAULT_LOCALE_TEXT } from '../constants/localeTextConstants';
+import { LocaleText } from './api/localeTextApi';
 
 /**
  * Set of icons used in the grid component UI.
@@ -86,18 +87,6 @@ export enum DensityTypes {
   Compact = 'compact',
   Standard = 'standard',
   Comfortable = 'comfortable',
-}
-
-/**
- * Set the types of the texts in the grid.
- */
-export interface LocaleText {
-  // Density selector toolbar button text
-  toolbarDensity: React.ReactNode;
-  toolbarDensityLabel: string;
-  toolbarDensityCompact: string;
-  toolbarDensityStandard: string;
-  toolbarDensityComfortable: string;
 }
 
 // TODO add multiSortKey
