@@ -21,12 +21,3 @@ In the following example, the labels of the density selector are customized.
 
 The data grid will support dozens of locales with a simple import that includes all the translated messages.
 You can follow [this guide](/guides/localization/#locale-text) to use them.
-
-## 🚧 RTL Support
-
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #196](https://github.com/mui-org/material-ui-x/issues/196) if you want to see it land faster.
-
-Right-to-left languages such as Arabic, Persian, or Hebrew will be supported.
-You will be able to follow [this guide](/guides/right-to-left/) to use them.
