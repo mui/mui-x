@@ -138,7 +138,8 @@ describe('<DataGrid /> - Layout & Warnings', () => {
               <DataGrid {...baselineProps} />
             </div>,
           );
-          clock.tick(100);
+          // Use timeout to allow simpler tests in JSDOM.
+          clock.tick(0);
           // @ts-expect-error need to migrate helpers to TypeScript
         }).toWarnDev(
           'Material-UI: useResizeContainer - The parent of the grid has an empty height.',
@@ -154,7 +155,8 @@ describe('<DataGrid /> - Layout & Warnings', () => {
               </div>
             </div>,
           );
-          clock.tick(100);
+          // Use timeout to allow simpler tests in JSDOM.
+          clock.tick(0);
           // @ts-expect-error need to migrate helpers to TypeScript
         }).toWarnDev(
           'Material-UI: useResizeContainer - The parent of the grid has an empty width.',
