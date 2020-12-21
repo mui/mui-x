@@ -34,7 +34,7 @@ function updateColumnsWidth(columns: Columns, viewportWidth: number) {
     });
   }
 
-  let newColumns = [...columns];
+  let newColumns = columns;
   if (viewportWidth > 0 && numberOfFluidColumns) {
     const flexMultiplier = viewportWidth / flexDivider;
     newColumns = columns.map((column) => {
