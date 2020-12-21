@@ -5,6 +5,8 @@ import { GridApi } from '../models/api/gridApi';
 import { CellParams } from '../models/params/cellParams';
 import { RowParams } from '../models/params/rowParams';
 
+let warnedOnce = false;
+
 export function buildCellParams({
   element,
   value,
@@ -27,9 +29,23 @@ export function buildCellParams({
     getValue: (field: string) => {
       // We are getting the value of another column here, field
       const col = api.getColumnFromField(field);
-      if (!col.valueGetter) {
+
+      if (process.env.NODE_ENV !== 'production') {
+        if (!col && !warnedOnce) {
+          console.warn(
+            [
+              `Material-UI: You are calling getValue('${field}') but the column \`${field}\` is not defined.`,
+              `Instead, you can access the data from \`params.row.${field}\`.`,
+            ].join('\n'),
+          );
+          warnedOnce = true;
+        }
+      }
+
+      if (!col || !col.valueGetter) {
         return rowModel[field];
       }
+
       return col.valueGetter(
         buildCellParams({
           value: rowModel[field],
