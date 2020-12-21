@@ -7,7 +7,7 @@ import {
 } from 'test/utils';
 import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, ValueGetterParams } from '@material-ui/data-grid';
 import { getColumnValues, raf } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
@@ -118,29 +118,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         );
         expect(getColumnValues()).to.deep.equal(['Jon Snow', 'Cersei Lannister']);
       });
-
-      it('should support columns.valueGetter even if field param supplied is incorrect resulting in no data to be rendered', () => {
-        const columns = [
-          { field: 'id', hide: true },
-          { field: 'firstName', hide: true },
-          { field: 'lastName', hide: true },
-          {
-            field: 'fullName',
-            valueGetter: (params) => params.getValue('age'), // incorrect field parameter supplied to 'getValue'
-          },
-        ];
-
-        const rows = [
-          { id: 1, lastName: 'Snow', firstName: 'Jon', age: 1 },
-          { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 2 },
-        ];
-        render(
-          <div style={{ width: 300, height: 300 }}>
-            <DataGrid rows={rows} columns={columns} />
-          </div>,
-        );
-        expect(getColumnValues()).to.deep.equal(['1', '2']);
-      });
     });
 
     describe('warnings', () => {
@@ -182,6 +159,29 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         }).toWarnDev(
           'Material-UI: useResizeContainer - The parent of the grid has an empty width.',
         );
+      });
+
+      it('should warn when CellParams.valueGetter is called with a missing column', () => {
+        const rows = [
+          { id: 1, age: 1 },
+          { id: 2, age: 2 },
+        ];
+        const columns = [
+          { field: 'id', hide: true },
+          {
+            field: 'fullName',
+            valueGetter: (params: ValueGetterParams) => params.getValue('age'),
+          },
+        ];
+        expect(() => {
+          render(
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid rows={rows} columns={columns} />
+            </div>,
+          );
+          // @ts-expect-error need to migrate helpers to TypeScript
+        }).toWarnDev(["You are calling getValue('age') but the column `age` is not defined"]);
+        expect(getColumnValues()).to.deep.equal(['1', '2']);
       });
     });
 
