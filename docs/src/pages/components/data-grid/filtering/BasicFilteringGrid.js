@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { XGrid } from '@material-ui/x-grid';
+import { DataGrid } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
-export default function MultiSortingGrid() {
+export default function BasicFilteringGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
@@ -11,18 +11,13 @@ export default function MultiSortingGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid
+      <DataGrid
         {...data}
-        sortModel={[
-          {
-            field: 'commodity',
-            sort: 'asc',
-          },
-          {
-            field: 'desk',
-            sort: 'desc',
-          },
-        ]}
+        filterModel={{
+          items: [
+            { columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
+          ],
+        }}
       />
     </div>
   );

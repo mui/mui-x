@@ -1,12 +1,16 @@
 import { createSelector } from 'reselect';
-import { Columns, ColumnsMeta, InternalColumns } from '../../../models/colDef/colDef';
+import { ColumnLookup, Columns, ColumnsMeta } from '../../../models/colDef/colDef';
 import { GridState } from '../core/gridState';
 
 export const columnsSelector = (state: GridState) => state.columns;
+export const allColumnsFieldsSelector = (state: GridState) => state.columns.all;
 export const columnLookupSelector = (state: GridState) => state.columns.lookup;
-export const allColumnsSelector = createSelector<GridState, InternalColumns, Columns>(
-  columnsSelector,
-  (columns: InternalColumns) => columns.all.map((field) => columns.lookup[field]),
+export const allColumnsSelector = createSelector<GridState, string[], ColumnLookup, Columns>(
+  allColumnsFieldsSelector,
+  columnLookupSelector,
+  (allFields, lookup) => {
+    return allFields.map((field) => lookup[field]);
+  },
 );
 export const visibleColumnsSelector = createSelector<GridState, Columns, Columns>(
   allColumnsSelector,
@@ -31,6 +35,13 @@ export const filterableColumnsSelector = createSelector<GridState, Columns, Colu
   allColumnsSelector,
   (columns: Columns) => columns.filter((col) => col.filterable),
 );
+export const filterableColumnsIdsSelector = createSelector<GridState, Columns, string[]>(
+  filterableColumnsSelector,
+  (columns: Columns) => {
+    return columns.map((col) => col.field);
+  },
+);
+
 export const visibleColumnsLengthSelector = createSelector<GridState, Columns, number>(
   visibleColumnsSelector,
   (visibleColumns: Columns) => visibleColumns.length,

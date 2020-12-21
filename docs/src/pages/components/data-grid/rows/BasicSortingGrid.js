@@ -2,13 +2,6 @@ import * as React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
-const sortModel = [
-  {
-    field: 'commodity',
-    sort: 'asc',
-  },
-];
-
 export default function BasicSortingGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
@@ -18,7 +11,15 @@ export default function BasicSortingGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid sortModel={sortModel} {...data} />
+      <DataGrid
+        {...data}
+        sortModel={[
+          {
+            field: 'commodity',
+            sort: 'asc',
+          },
+        ]}
+      />
     </div>
   );
 }

@@ -28,6 +28,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
   const paginationState = useGridSelector<PaginationState>(apiRef, paginationSelector);
 
   const getVirtualRowCount = React.useCallback(() => {
+    logger.debug('Calculating virtual row count.');
     const currentPage = paginationState.page;
     let pageRowCount =
       options.pagination && paginationState.pageSize ? paginationState.pageSize : null;
@@ -41,10 +42,17 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
       pageRowCount == null || pageRowCount > visibleRowsCount ? visibleRowsCount : pageRowCount;
 
     return virtRowsCount;
-  }, [options.pagination, paginationState.page, paginationState.pageSize, visibleRowsCount]);
+  }, [
+    logger,
+    options.pagination,
+    paginationState.page,
+    paginationState.pageSize,
+    visibleRowsCount,
+  ]);
 
   const getScrollBar = React.useCallback(
     (rowsCount: number) => {
+      logger.debug('Calculating scrollbar sizes.');
       const hasScrollY =
         options.autoPageSize || options.autoHeight
           ? false
@@ -56,7 +64,14 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
       };
       return { hasScrollX, hasScrollY, scrollBarSize };
     },
-    [columnsTotalWidth, options.autoHeight, options.autoPageSize, rowHeight, options.scrollbarSize],
+    [
+      logger,
+      options.autoPageSize,
+      options.autoHeight,
+      options.scrollbarSize,
+      rowHeight,
+      columnsTotalWidth,
+    ],
   );
 
   const getViewport = React.useCallback(
@@ -178,6 +193,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
   );
 
   const refreshContainerSizes = React.useCallback(() => {
+    logger.debug('Refreshing container sizes');
     const rowsCount = getVirtualRowCount();
     const scrollBar = getScrollBar(rowsCount);
 
@@ -201,7 +217,14 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
       (state) => !isEqual(state.containerSizes, containerState),
       (state) => ({ ...state, containerSizes: containerState }),
     );
-  }, [getContainerProps, getScrollBar, getViewport, getVirtualRowCount, updateStateIfChanged]);
+  }, [
+    getContainerProps,
+    getScrollBar,
+    getViewport,
+    getVirtualRowCount,
+    logger,
+    updateStateIfChanged,
+  ]);
 
   React.useEffect(() => {
     refreshContainerSizes();

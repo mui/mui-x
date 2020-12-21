@@ -1,8 +1,8 @@
 import * as React from 'react';
 import LRUCache from 'lru-cache';
 import { GridData, getRealData } from './services/real-data-service';
-import { commodityColumns } from './commodities.columns';
-import { employeeColumns } from './employees.columns';
+import { getCommodityColumns } from './commodities.columns';
+import { getEmployeeColumns } from './employees.columns';
 
 const dataCache = new LRUCache({
   max: 10,
@@ -77,7 +77,7 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
 
     (async () => {
       await sleep(100);
-      let columns = options.dataSet === 'Commodity' ? commodityColumns : employeeColumns;
+      let columns = options.dataSet === 'Commodity' ? getCommodityColumns() : getEmployeeColumns();
 
       if (options.maxColumns) {
         columns = columns.slice(0, options.maxColumns);

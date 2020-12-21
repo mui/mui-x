@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
-export default function OrderSortingGrid() {
+export default function DisableFilteringGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 10,
@@ -12,14 +12,11 @@ export default function OrderSortingGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        sortingOrder={['desc', 'asc']}
-        sortModel={[
-          {
-            field: 'commodity',
-            sort: 'asc',
-          },
-        ]}
         {...data}
+        columns={data.columns.map((column) => ({
+          ...column,
+          filterable: false,
+        }))}
       />
     </div>
   );

@@ -1,18 +1,23 @@
+import { makeStyles } from '@material-ui/core/styles';
+import { DataGrid } from '@material-ui/data-grid';
+import { Rating } from '@material-ui/lab';
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import {
   ColDef,
   ColTypeDef,
+  FilterInputValueProps,
   FilterModel,
   LinkOperator,
   PreferencePanelsValue,
   RowModel,
   useApiRef,
   XGrid,
+  getNumericColumnOperators,
+  FilterModelParams,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
-import { FilterModelParams } from '../../../grid/_modules_/grid/models/params/filterModelParams';
 import { randomInt } from '../data/random-generator';
 import { useData } from '../hooks/useData';
 
@@ -322,6 +327,73 @@ export function CommodityWithNewRowsViaApi() {
   );
 }
 
+const useStyles = makeStyles({
+  ratingContainer: {
+    display: 'inline-flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 48,
+    paddingLeft: 20,
+  },
+});
+
+function RatingInputValue(props: FilterInputValueProps) {
+  const classes = useStyles();
+  const { item, applyValue } = props;
+
+  const onFilterChange = React.useCallback(
+    (event) => {
+      const value = event.target.value;
+      applyValue({ ...item, value });
+    },
+    [applyValue, item],
+  );
+
+  return (
+    <div className={classes.ratingContainer}>
+      <Rating
+        placeholder={'Filter value'}
+        value={Number(item.value)}
+        onChange={onFilterChange}
+        precision={0.1}
+      />
+    </div>
+  );
+}
+
+export function CustomFilterOperator() {
+  const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
+
+  React.useEffect(() => {
+    if (data.columns.length > 0) {
+      const ratingColumn = data.columns.find((col) => col.field === 'rating');
+      const ratingOperators = getNumericColumnOperators();
+      ratingColumn!.filterOperators = ratingOperators.map((operator) => {
+        operator.InputComponent = RatingInputValue;
+        return operator;
+      });
+    }
+  }, [data.columns]);
+
+  return (
+    <div className="grid-container">
+      <XGrid
+        rows={data.rows}
+        columns={data.columns}
+        filterModel={{
+          items: [{ columnField: 'rating', value: '3.5', operatorValue: '>=' }],
+        }}
+        state={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: PreferencePanelsValue.filters,
+          },
+        }}
+      />
+    </div>
+  );
+}
+
 export function ColumnsAlign() {
   const data = useData(100, 6);
 
@@ -384,6 +456,60 @@ export function NewColumnTypes() {
         columns={transformCols(data.columns)}
         columnTypes={{ price: priceColumnType, unknownPrice: unknownPriceColumnType }}
       />
+    </div>
+  );
+}
+
+const filterModel = {
+  items: [{ columnField: 'rating', value: '3.5', operatorValue: '>=' }],
+};
+
+export function DemoCustomRatingFilterOperator() {
+  const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
+
+  React.useEffect(() => {
+    if (data.columns.length > 0) {
+      const ratingColumn = data.columns.find((col) => col.field === 'rating');
+
+      const ratingOperators = getNumericColumnOperators();
+      ratingColumn!.filterOperators = ratingOperators.map((operator) => {
+        operator.InputComponent = RatingInputValue;
+        return operator;
+      });
+
+      // Just hidding some columns for demo clarity
+      data.columns
+        .filter((col) => col.field === 'phone' || col.field === 'email' || col.field === 'username')
+        .forEach((col) => {
+          col.hide = true;
+        });
+    }
+  }, [data.columns]);
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid rows={data.rows} columns={data.columns} filterModel={filterModel} />
+    </div>
+  );
+}
+
+const demoFilterModel: FilterModel = {
+  items: [
+    { id: 123, columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
+    { id: 12, columnField: 'quantity', operatorValue: '>=', value: '20000' },
+  ],
+};
+
+export function DemoMultiFilteringGrid() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+    maxColumns: 6,
+  });
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <XGrid filterModel={demoFilterModel} {...data} />
     </div>
   );
 }

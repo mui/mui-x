@@ -135,10 +135,11 @@ export function useColumns(columns: Columns, apiRef: ApiRef): void {
 
   const updateColumns = React.useCallback(
     (cols: ColDef[]) => {
+      logger.debug('updating Columns with new state');
       const newState = upsertColumnsState(gridState.columns, cols);
       updateState(newState, false);
     },
-    [updateState, gridState.columns],
+    [logger, gridState.columns, updateState],
   );
 
   const updateColumn = React.useCallback((col: ColDef) => updateColumns([col]), [updateColumns]);

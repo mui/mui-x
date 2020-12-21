@@ -20,6 +20,7 @@ export const useGridState = (
 
       // We always assign it as we mutate rows for perf reason.
       apiRef.current.state = newState;
+      // TODO deepFreeze(newState);
 
       if (hasChanged && apiRef.current.publishEvent) {
         const params: StateChangeParams = { api: apiRef.current, state: newState };

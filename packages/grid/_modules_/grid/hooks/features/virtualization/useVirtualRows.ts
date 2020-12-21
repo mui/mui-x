@@ -258,19 +258,19 @@ export const useVirtualRows = (
     if (windowRef.current!.scrollLeft < 0 || windowRef.current!.scrollTop < 0) return;
 
     if (!scrollingTimeout.current) {
-      apiRef.current.state.isScrolling = true;
+      setGridState((state) => ({ ...state, isScrolling: true }));
     }
     clearTimeout(scrollingTimeout.current);
     scrollingTimeout.current = setTimeout(() => {
       scrollingTimeout.current = null;
-      apiRef.current.state.isScrolling = false;
+      setGridState((state) => ({ ...state, isScrolling: false }));
       forceUpdate();
     }, 300);
 
     if (apiRef.current.updateViewport) {
       apiRef.current.updateViewport();
     }
-  }, [windowRef, apiRef, forceUpdate]);
+  }, [windowRef, apiRef, setGridState, forceUpdate]);
 
   const scroll = React.useCallback(
     (params: Partial<ScrollParams>) => {

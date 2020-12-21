@@ -3,7 +3,7 @@ import { FilterItem } from '../filterItem';
 import { FilterOperator } from '../filterOperator';
 import { ColDef } from './colDef';
 
-export const NUMERIC_OPERATORS: FilterOperator[] = [
+export const getNumericColumnOperators: () => FilterOperator[] = () => [
   {
     label: '=',
     value: '=',

@@ -17,7 +17,7 @@ import {
 } from './services';
 import { renderAvatar, renderCountry, renderEmail, renderLink, renderRating } from './renderer';
 
-export const employeeColumns: any[] = [
+export const getEmployeeColumns: () => any[] = () => [
   {
     field: 'id',
     generateData: randomId,
@@ -25,18 +25,32 @@ export const employeeColumns: any[] = [
   },
   {
     field: 'avatar',
-    headerName: '',
+    headerName: 'Avatar',
     sortable: false,
     generateData: randomAvatar,
     renderCell: renderAvatar,
+    filterable: false,
   },
   {
     field: 'name',
     headerName: 'Name',
     generateData: generateName,
-    sortDirection: 'asc',
-    sortIndex: 1,
     width: 120,
+  },
+  {
+    field: 'website',
+    headerName: 'Website',
+    generateData: randomUrl,
+    renderCell: renderLink,
+    width: 160,
+  },
+  {
+    field: 'rating',
+    headerName: 'Rating',
+    generateData: randomRating,
+    renderCell: renderRating,
+    width: 180,
+    type: 'number',
   },
   {
     field: 'email',
@@ -48,7 +62,7 @@ export const employeeColumns: any[] = [
   },
   {
     field: 'phone',
-    headerName: 'phone',
+    headerName: 'Phone',
     generateData: randomPhoneNumber,
     width: 150,
   },
@@ -57,22 +71,6 @@ export const employeeColumns: any[] = [
     headerName: 'Username',
     generateData: randomUserName,
     width: 150,
-  },
-  {
-    field: 'website',
-    headerName: 'website',
-    generateData: randomUrl,
-    renderCell: renderLink,
-    width: 160,
-  },
-  {
-    field: 'rating',
-    headerName: 'Rating',
-    generateData: randomRating,
-    renderCell: renderRating,
-    sortDirection: 'desc',
-    sortIndex: 0,
-    width: 180,
   },
   {
     field: 'city',

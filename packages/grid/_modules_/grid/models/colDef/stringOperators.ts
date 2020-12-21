@@ -3,7 +3,7 @@ import { FilterItem } from '../filterItem';
 import { FilterOperator } from '../filterOperator';
 import { ColDef } from './colDef';
 
-export const STRING_OPERATORS: FilterOperator[] = [
+export const getStringOperators: () => FilterOperator[] = () => [
   {
     label: 'contains',
     value: 'contains',
