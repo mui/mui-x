@@ -170,7 +170,7 @@ The following table summarizes the features available in the community `DataGrid
 | **Misc**                                                                                |           |                |
 | [Accessibility](/components/data-grid/accessibility/)                                   | ✅        | ✅             |
 | [Keyboard navigation](/components/data-grid/accessibility/#keyboard-navigation)         | ✅        | ✅             |
-| [Localization](/components/data-grid/localization/)                                     | 🚧        | 🚧             |
+| [Localization](/components/data-grid/localization/)                                     | ✅        | ✅             |
 | RTL                                                                                     | 🚧        | 🚧             |
 
 ### License key installation

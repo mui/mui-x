@@ -5,6 +5,7 @@ import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../models/gridOptions';
 import { mergeOptions } from '../../utils/mergeOptions';
 import { GridState } from '../features/core/gridState';
 import { useGridReducer } from '../features/core/useGridReducer';
+import { DEFAULT_LOCALE_TEXT } from '../../constants/localeTextConstants';
 
 export const optionsSelector = (state: GridState) => state.options;
 
@@ -79,6 +80,7 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
       sortModel: props.sortModel,
       density: props.density,
       filterModel: props.filterModel,
+      localeText: { ...DEFAULT_LOCALE_TEXT, ...props.localeText },
     }),
     [
       props.pageSize,
@@ -135,6 +137,7 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
       props.sortModel,
       props.density,
       props.filterModel,
+      props.localeText,
     ],
   );
 

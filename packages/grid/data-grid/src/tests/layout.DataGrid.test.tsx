@@ -360,4 +360,23 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       );
     });
   });
+
+  describe('localeText', () => {
+    before(function beforeHook() {
+      if (/jsdom/.test(window.navigator.userAgent)) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
+    it('should replace the density selector button label text to "Size"', () => {
+      const { getByText } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} showToolbar localeText={{ toolbarDensity: 'Size' }} />
+        </div>,
+      );
+
+      expect(getByText('Size')).not.to.equal(null);
+    });
+  });
 });

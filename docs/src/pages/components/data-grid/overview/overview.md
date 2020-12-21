@@ -59,6 +59,7 @@ See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on
 - Server side data
 - [Column hiding](/components/data-grid/columns/#column-headers)
 - [Accessible](/components/data-grid/accessibility/)
+- [Localization](/components/data-grid/localization/)
 
 ### 🚧 Upcoming features
 
@@ -66,7 +67,6 @@ While development of the data grid component is moving fast, there are still man
 
 - [Cell editing](/components/data-grid/editing/)
 - Headless
-- [Localization](/components/data-grid/localization/)
 - [Group & Pivot](/components/data-grid/group-pivot/) ⚡️
 - [Export](/components/data-grid/export/)
 

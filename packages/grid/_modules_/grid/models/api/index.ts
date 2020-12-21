@@ -10,3 +10,4 @@ export * from './selectionApi';
 export * from './sortApi';
 export * from './stateApi';
 export * from './virtualizationApi';
+export * from './localeTextApi';

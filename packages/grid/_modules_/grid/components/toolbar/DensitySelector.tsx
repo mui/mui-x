@@ -23,17 +23,17 @@ export function DensitySelector() {
   const DensityOptions: Array<DensityOption> = [
     {
       icon: <DensityCompactIcon />,
-      label: 'Compact',
+      label: apiRef!.current.getLocaleText('toolbarDensityCompact'),
       value: DensityTypes.Compact,
     },
     {
       icon: <DensityStandardIcon />,
-      label: 'Standard',
+      label: apiRef!.current.getLocaleText('toolbarDensityStandard'),
       value: DensityTypes.Standard,
     },
     {
       icon: <DensityComfortableIcon />,
-      label: 'Comfortable',
+      label: apiRef!.current.getLocaleText('toolbarDensityComfortable'),
       value: DensityTypes.Comfortable,
     },
   ];
@@ -81,10 +81,10 @@ export function DensitySelector() {
         size="small"
         startIcon={getSelectedDensityIcon()}
         onClick={handleDensitySelectorOpen}
-        aria-label="Density"
+        aria-label={apiRef!.current.getLocaleText('toolbarDensityLabel')}
         aria-haspopup="true"
       >
-        Density
+        {apiRef!.current.getLocaleText('toolbarDensity')}
       </Button>
       <GridMenu
         open={Boolean(anchorEl)}

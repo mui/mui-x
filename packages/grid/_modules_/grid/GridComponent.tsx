@@ -49,6 +49,7 @@ import { getCurryTotalHeight } from './utils/getTotalHeight';
 import { ApiContext } from './components/api-context';
 import { DensitySelector } from './components/toolbar/DensitySelector';
 import { useFilter } from './hooks/features/filter/useFilter';
+import { useLocaleText } from './hooks/features/localeText/useLocaleText';
 
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {
@@ -87,7 +88,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useContainerProps(windowRef, apiRef);
     useDensity(apiRef);
     useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
-
+    useLocaleText(apiRef);
     useColumnReorder(apiRef);
     useColumnResize(columnsHeaderRef, apiRef);
     usePagination(apiRef);
