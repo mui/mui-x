@@ -192,14 +192,19 @@ export function useColumns(columns: Columns, apiRef: ApiRef): void {
         logger,
       );
 
+      const updatedCols = updateColumnsWidth(
+        hydratedColumns,
+        apiRef.current.getState<GridState>().viewportSizes.width,
+      );
+
       updateState({
-        all: hydratedColumns.map((col) => col.field),
-        lookup: toLookup(logger, hydratedColumns),
+        all: updatedCols.map((col) => col.field),
+        lookup: toLookup(logger, updatedCols),
       });
     } else {
       updateState(getInitialColumnsState());
     }
-  }, [logger, columns, options.columnTypes, options.checkboxSelection, updateState]);
+  }, [logger, apiRef, columns, options.columnTypes, options.checkboxSelection, updateState]);
 
   React.useEffect(() => {
     logger.debug(`Columns gridState.viewportSizes.width, changed ${gridState.viewportSizes.width}`);
@@ -208,5 +213,5 @@ export function useColumns(columns: Columns, apiRef: ApiRef): void {
 
     const updatedCols = updateColumnsWidth(currentColumns, gridState.viewportSizes.width);
     apiRef.current.updateColumns(updatedCols);
-  }, [apiRef, gridState.viewportSizes.width, columns, logger]);
+  }, [apiRef, gridState.viewportSizes.width, logger]);
 }
