@@ -21,15 +21,17 @@ import { useGridState } from '../core/useGridState';
 import { allColumnsSelector, columnsMetaSelector, visibleColumnsSelector } from './columnsSelector';
 
 function updateColumnsWidth(columns: Columns, viewportWidth: number) {
-  const numberOfFluidColumns = columns.filter((column) => !!column.flex).length;
+  const numberOfFluidColumns = columns.filter((column) => !!column.flex && !column.hide).length;
   let flexDivider = 0;
 
   if (numberOfFluidColumns && viewportWidth) {
     columns.forEach((column) => {
-      if (!column.flex) {
-        viewportWidth -= column.width!;
-      } else {
-        flexDivider += column.flex;
+      if (!column.hide) {
+        if (!column.flex) {
+          viewportWidth -= column.width!;
+        } else {
+          flexDivider += column.flex;
+        }
       }
     });
   }
@@ -191,14 +193,19 @@ export function useColumns(columns: Columns, apiRef: ApiRef): void {
         logger,
       );
 
+      const updatedCols = updateColumnsWidth(
+        hydratedColumns,
+        apiRef.current.getState<GridState>().viewportSizes.width,
+      );
+
       updateState({
-        all: hydratedColumns.map((col) => col.field),
-        lookup: toLookup(logger, hydratedColumns),
+        all: updatedCols.map((col) => col.field),
+        lookup: toLookup(logger, updatedCols),
       });
     } else {
       updateState(getInitialColumnsState());
     }
-  }, [logger, columns, options.columnTypes, options.checkboxSelection, updateState]);
+  }, [logger, apiRef, columns, options.columnTypes, options.checkboxSelection, updateState]);
 
   React.useEffect(() => {
     logger.debug(`Columns gridState.viewportSizes.width, changed ${gridState.viewportSizes.width}`);

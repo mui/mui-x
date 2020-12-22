@@ -38,3 +38,9 @@ export function getColumnValues() {
     (node) => node!.textContent,
   );
 }
+
+export function getColumnHeaders() {
+  return Array.from(document.querySelectorAll('[role="columnheader"]')).map(
+    (node) => node!.textContent,
+  );
+}
