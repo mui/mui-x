@@ -270,44 +270,42 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         });
       });
 
-      it('should set the first column to be full width if the second one is hidden', async () => {
+      it('should handle hidden columns', () => {
+        const rows = [{ id: 1, firstName: 'Jon' }];
+        const columns = [
+          { field: 'id', headerName: 'ID', flex: 1 },
+          {
+            field: 'firstName',
+            headerName: 'First name',
+            hide: true,
+          },
+        ];
+
+        render(
+          <div style={{ width: 200, height: 300 }}>
+            <DataGrid rows={rows} columns={columns} />
+          </div>,
+        );
+
+        const firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
+        // @ts-expect-error need to migrate helpers to TypeScript
+        expect(firstColumn).toHaveInlineStyle({
+          width: '198px', // because of the 2px border
+        });
+      });
+
+      it('should be rerender invariant', () => {
         const Test = () => {
-          const [visible, setVisible] = React.useState(true);
-          const rows = [
-            {
-              id: 1,
-              username: 'John Doe',
-              age: 30,
-            },
-          ];
-
-          const columns = [
-            {
-              field: 'id',
-              flex: 1,
-            },
-            {
-              field: 'name',
-              hide: !visible,
-            },
-          ];
-
-          React.useEffect(() => {
-            setTimeout(() => {
-              setVisible(false);
-            }, 100);
-          }, []);
-
+          const columns = [{ field: 'id', headerName: 'ID', flex: 1 }];
           return (
             <div style={{ width: 200, height: 300 }}>
-              <DataGrid columns={columns} rows={rows} />
+              <DataGrid rows={[]} columns={columns} />
             </div>
           );
         };
 
-        render(<Test />);
-
-        await sleep(100);
+        const { setProps } = render(<Test />);
+        setProps();
 
         const firstColumn = document.querySelector('[role="columnheader"][aria-colindex="1"]');
         // @ts-expect-error need to migrate helpers to TypeScript

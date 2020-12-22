@@ -48,7 +48,7 @@ describe('<XGrid /> - Reorder', () => {
       expect(getColumnHeaders()).to.deep.equal(['id', 'brand']);
       act(() => {
         apiRef!.current.moveColumn('id', 1);
-      })
+      });
       setProps({ width: 200 });
       await raf();
       expect(getColumnHeaders()).to.deep.equal(['brand', 'id']);
