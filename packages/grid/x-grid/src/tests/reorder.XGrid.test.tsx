@@ -19,10 +19,7 @@ describe('<XGrid /> - Reorder', () => {
         brand: 'Adidas',
       },
     ],
-    columns: [
-      { field: 'id' },
-      { field: 'brand' },
-    ],
+    columns: [{ field: 'id' }, { field: 'brand' }],
   };
 
   let apiRef: ApiRef;
