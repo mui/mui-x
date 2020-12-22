@@ -8,7 +8,7 @@ import {
 import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
-import { getColumnValues, raf, sleep } from 'test/utils/helperFn';
+import { getColumnValues, raf } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
   // TODO v5: replace with createClientRender

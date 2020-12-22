@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { createClientRenderStrictMode, act } from 'test/utils';
+import {
+  createClientRenderStrictMode,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  act,
+} from 'test/utils';
 import { getColumnHeaders, raf } from 'test/utils/helperFn';
 import { ApiRef, useApiRef, XGrid } from '@material-ui/x-grid';
 
