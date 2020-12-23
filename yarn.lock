@@ -3166,7 +3166,7 @@
 
 "@material-ui/monorepo@https://github.com/mui-org/material-ui.git#master":
   version "4.11.1"
-  resolved "https://github.com/mui-org/material-ui.git#34be88ec011d91d7f0fe6ddb0ec04e588149bdfe"
+  resolved "https://github.com/mui-org/material-ui.git#7fe8a4254155c5475c3e14971b0c01d88f57efa8"
 
 "@material-ui/monorepo@https://github.com/mui-org/material-ui.git#next":
   version "5.0.0-alpha.18"
