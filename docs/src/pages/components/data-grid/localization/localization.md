@@ -19,5 +19,9 @@ In the following example, the labels of the density selector are customized.
 
 ## 🚧 Locale text
 
+> ⚠️ This feature isn't implemented yet. It's coming.
+>
+> 👍 Upvote [issue #777](https://github.com/mui-org/material-ui-x/issues/777) if you want to see it land faster.
+
 The data grid will support dozens of locales with a simple import that includes all the translated messages.
-You can follow [this guide](/guides/localization/#locale-text) to use them.
+You will be able to follow [this guide](/guides/localization/#locale-text) to use them.

@@ -10,7 +10,7 @@ export default function CustomLocaleTextGrid() {
   });
 
   return (
-    <div style={{ height: 300, width: '100%' }}>
+    <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
         showToolbar

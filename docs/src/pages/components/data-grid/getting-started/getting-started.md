@@ -97,7 +97,7 @@ export default function App() {
 
 {{"demo": "pages/components/data-grid/getting-started/Codesandbox.js", "hideToolbar": true, "bg": true}}
 
-## Enterprise ⚡️
+## Enterprise [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
 The data grid comes in 2 versions:
 
@@ -145,6 +145,7 @@ The following table summarizes the features available in the community `DataGrid
 | [Range selection](/components/data-grid/selection/#range-selection)                     | ❌        | 🚧             |
 | **Filtering**                                                                           |           |                |
 | [Column filters](/components/data-grid/filtering/#column-filters)                       | ✅        | ✅             |
+| [Multi-column filtering](/components/data-grid/filtering/#multi-column-filtering)       | ❌        | ✅             |
 | [Quick filter](/components/data-grid/filtering/#quick-filter)                           | 🚧        | 🚧             |
 | **Pagination**                                                                          |           |                |
 | [Pagination](/components/data-grid/pagination/)                                         | ✅        | ✅             |
@@ -171,7 +172,6 @@ The following table summarizes the features available in the community `DataGrid
 | [Accessibility](/components/data-grid/accessibility/)                                   | ✅        | ✅             |
 | [Keyboard navigation](/components/data-grid/accessibility/#keyboard-navigation)         | ✅        | ✅             |
 | [Localization](/components/data-grid/localization/)                                     | ✅        | ✅             |
-| RTL                                                                                     | 🚧        | 🚧             |
 
 ### License key installation
 

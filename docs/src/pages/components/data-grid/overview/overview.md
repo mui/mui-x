@@ -49,14 +49,14 @@ See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on
 - Built with and exclusively for React ⚛️
 - High performance 🚀
 - Lightweight; less than [30 kB](https://bundlephobia.com/result?p=@material-ui/data-grid) gzipped with as few dependencies as possible.
-- [Filtering](/components/data-grid/filtering/)
+- [Filtering](/components/data-grid/filtering/) and [multi-filtering](/components/data-grid/filtering/#multi-column-filtering) ⚡️
 - [Pagination](/components/data-grid/pagination/)
 - [Sorting](/components/data-grid/rows/#row-sorting) and [multi-sort](/components/data-grid/rows/#multi-column-sorting) ⚡️
 - [Selection](/components/data-grid/selection/)
-- [Rows and column virtualization](/components/data-grid/rendering/#virtualization) ⚡️
+- [Column virtualization](/components/data-grid/rendering/#virtualization) and [rows virtualization](/components/data-grid/rendering/#virtualization) ⚡️
 - [Resizable columns](/components/data-grid/columns/#column-resizing) ⚡️
 - [100% customizable](/components/data-grid/rendering/#customization-example)
-- Server side data
+- Server-side data
 - [Column hiding](/components/data-grid/columns/#column-headers)
 - [Accessible](/components/data-grid/accessibility/)
 - [Localization](/components/data-grid/localization/)
@@ -66,7 +66,7 @@ See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on
 While development of the data grid component is moving fast, there are still many additional features that we plan to implement:
 
 - [Cell editing](/components/data-grid/editing/)
-- Headless
+- Headless (hooks only)
 - [Group & Pivot](/components/data-grid/group-pivot/) ⚡️
 - [Export](/components/data-grid/export/)
 
