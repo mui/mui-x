@@ -25,5 +25,9 @@ export const HideColMenuItem: React.FC<FilterItemProps> = ({ column, onClick }) 
     return null;
   }
 
-  return <MenuItem onClick={toggleColumn}>Hide</MenuItem>;
+  return (
+    <MenuItem onClick={toggleColumn}>
+      {apiRef!.current.getLocaleText('columnMenuHideColumn')}
+    </MenuItem>
+  );
 };

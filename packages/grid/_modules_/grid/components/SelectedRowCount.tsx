@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiContext } from './api-context';
 
 interface SelectedRowCountProps {
   selectedRowCount: number;
@@ -6,10 +7,15 @@ interface SelectedRowCountProps {
 
 export function SelectedRowCount(props: SelectedRowCountProps) {
   const { selectedRowCount } = props;
+  const apiRef = React.useContext(ApiContext);
+  const rowSelectedText =
+    selectedRowCount > 1
+      ? apiRef!.current.getLocaleText('footerRowSelectedPlural')
+      : apiRef!.current.getLocaleText('footerRowSelected');
 
   return (
     <div className="MuiDataGrid-selectedRowCount">
-      {`${selectedRowCount.toLocaleString()} ${selectedRowCount > 1 ? 'rows' : 'row'} selected`}
+      {`${selectedRowCount.toLocaleString()} ${rowSelectedText}`}
     </div>
   );
 }

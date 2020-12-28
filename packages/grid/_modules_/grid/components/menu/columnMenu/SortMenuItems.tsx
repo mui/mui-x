@@ -34,13 +34,13 @@ export const SortMenuItems: React.FC<FilterItemProps> = ({ column, onClick }) =>
   return (
     <React.Fragment>
       <MenuItem onClick={onSortMenuItemClick} disabled={sortDirection == null}>
-        Unsort
+        {apiRef!.current.getLocaleText('columnMenuUnsort')}
       </MenuItem>
       <MenuItem onClick={onSortMenuItemClick} data-value="asc" disabled={sortDirection === 'asc'}>
-        Sort by Asc
+        {apiRef!.current.getLocaleText('columnMenuSortAsc')}
       </MenuItem>
       <MenuItem onClick={onSortMenuItemClick} data-value="desc" disabled={sortDirection === 'desc'}>
-        Sort by Desc
+        {apiRef!.current.getLocaleText('columnMenuSortDesc')}
       </MenuItem>
     </React.Fragment>
   );
