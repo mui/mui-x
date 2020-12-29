@@ -52,9 +52,8 @@ export const DEFAULT_LOCALE_TEXT: LocaleText = {
   columnHeaderSortIconLabel: 'Sort',
 
   // Rows selected footer text
-  footerRowSelected: 'row selected',
-  footerRowSelectedPlural: (count) =>
-    count > 1
+  footerRowSelected: (count) =>
+    count !== 1
       ? `${count.toLocaleString()} rows selected`
       : `${count.toLocaleString()} row selected`,
 

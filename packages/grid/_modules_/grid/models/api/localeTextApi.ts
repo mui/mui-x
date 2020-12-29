@@ -21,7 +21,7 @@ export interface LocaleText {
   toolbarFiltersLabel: string;
   toolbarFiltersTooltipHide: React.ReactNode;
   toolbarFiltersTooltipShow: React.ReactNode;
-  toolbarFiltersTooltipActive: Function;
+  toolbarFiltersTooltipActive: (count: number) => React.ReactNode;
 
   // Columns panel text
   columnsPanelTextFieldLabel: string;
@@ -48,13 +48,12 @@ export interface LocaleText {
   columnMenuSortDesc: React.ReactNode;
 
   // Column header text
-  columnHeaderFiltersTooltipActive: Function;
+  columnHeaderFiltersTooltipActive: (count: number) => React.ReactNode;
   columnHeaderFiltersLabel: string;
   columnHeaderSortIconLabel: string;
 
   // Rows selected footer text
-  footerRowSelected: React.ReactNode;
-  footerRowSelectedPlural: Function;
+  footerRowSelected: (count: number) => React.ReactNode;
 
   // Total rows footer text
   footerTotalRows: React.ReactNode;

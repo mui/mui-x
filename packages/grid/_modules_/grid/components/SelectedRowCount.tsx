@@ -8,9 +8,7 @@ interface SelectedRowCountProps {
 export function SelectedRowCount(props: SelectedRowCountProps) {
   const { selectedRowCount } = props;
   const apiRef = React.useContext(ApiContext);
-  const rowSelectedText = apiRef!.current.getLocaleText('footerRowSelectedPlural')(
-    selectedRowCount,
-  );
+  const rowSelectedText = apiRef!.current.getLocaleText('footerRowSelected')(selectedRowCount);
 
   return <div className="MuiDataGrid-selectedRowCount">{rowSelectedText}</div>;
 }
