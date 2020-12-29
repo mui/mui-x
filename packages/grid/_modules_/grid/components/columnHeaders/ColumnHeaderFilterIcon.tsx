@@ -55,7 +55,7 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
 
   return (
     <Tooltip
-      title={`${counter} ${apiRef!.current.getLocaleText('columnHeaderFiltersTooltipActive')}`}
+      title={apiRef!.current.getLocaleText('columnHeaderFiltersTooltipActive')(counter)}
       enterDelay={1000}
     >
       <div className="MuiDataGrid-iconButtonContainer">

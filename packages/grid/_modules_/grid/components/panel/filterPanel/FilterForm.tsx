@@ -136,7 +136,7 @@ export function FilterForm(props: FilterFormProps) {
       <FormControl className={classes.closeIcon}>
         <IconButton
           aria-label={apiRef!.current.getLocaleText('filterPanelDeleteIconLabel')}
-          title={apiRef!.current.getLocaleText('filterPanelDeleteIconTitle')}
+          title={apiRef!.current.getLocaleText('filterPanelDeleteIconLabel')}
           onClick={handleDeleteFilter}
           size="small"
         >

@@ -21,19 +21,17 @@ export interface LocaleText {
   toolbarFiltersLabel: string;
   toolbarFiltersTooltipHide: React.ReactNode;
   toolbarFiltersTooltipShow: React.ReactNode;
-  toolbarFiltersTooltipActive: React.ReactNode;
+  toolbarFiltersTooltipActive: Function;
 
   // Columns panel text
   columnsPanelTextFieldLabel: string;
   columnsPanelTextFieldPlaceholder: string;
-  columnsPanelDragIconTitle: string;
   columnsPanelDragIconLabel: string;
   columnsPanelShowAllButton: React.ReactNode;
   columnsPanelHideAllButton: React.ReactNode;
 
   // Filter panel text
   filterPanelAddFilter: React.ReactNode;
-  filterPanelDeleteIconTitle: string;
   filterPanelDeleteIconLabel: string;
   filterPanelOperators: React.ReactNode;
   filterPanelOperatorAnd: React.ReactNode;
@@ -41,7 +39,6 @@ export interface LocaleText {
   filterPanelColumns: React.ReactNode;
 
   // Column menu text
-  columnMenuTitle: string;
   columnMenuLabel: string;
   columnMenuShowColumns: React.ReactNode;
   columnMenuFilter: React.ReactNode;
@@ -51,14 +48,13 @@ export interface LocaleText {
   columnMenuSortDesc: React.ReactNode;
 
   // Column header text
-  columnHeaderFiltersTooltipActive: React.ReactNode;
+  columnHeaderFiltersTooltipActive: Function;
   columnHeaderFiltersLabel: string;
-  columnHeaderSortIconTitle: string;
   columnHeaderSortIconLabel: string;
 
   // Rows selected footer text
   footerRowSelected: React.ReactNode;
-  footerRowSelectedPlural: React.ReactNode;
+  footerRowSelectedPlural: Function;
 
   // Total rows footer text
   footerTotalRows: React.ReactNode;

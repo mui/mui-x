@@ -31,7 +31,7 @@ export const FilterToolbarButton: React.FC<{}> = () => {
     }
     return (
       <div>
-        {counter} {apiRef!.current.getLocaleText('toolbarFiltersTooltipActive')}
+        {apiRef!.current.getLocaleText('toolbarFiltersTooltipActive')(counter)}
         <ul>
           {activeFilters.map((item) => ({
             ...(lookup[item.columnField!] && (

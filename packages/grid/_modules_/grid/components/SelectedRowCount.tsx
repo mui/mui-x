@@ -8,14 +8,9 @@ interface SelectedRowCountProps {
 export function SelectedRowCount(props: SelectedRowCountProps) {
   const { selectedRowCount } = props;
   const apiRef = React.useContext(ApiContext);
-  const rowSelectedText =
-    selectedRowCount > 1
-      ? apiRef!.current.getLocaleText('footerRowSelectedPlural')
-      : apiRef!.current.getLocaleText('footerRowSelected');
-
-  return (
-    <div className="MuiDataGrid-selectedRowCount">
-      {`${selectedRowCount.toLocaleString()} ${rowSelectedText}`}
-    </div>
+  const rowSelectedText = apiRef!.current.getLocaleText('footerRowSelectedPlural')(
+    selectedRowCount,
   );
+
+  return <div className="MuiDataGrid-selectedRowCount">{rowSelectedText}</div>;
 }

@@ -34,7 +34,7 @@ export const ColumnHeaderSortIcon = React.memo(function ColumnHeaderSortIcon(
           <Badge badgeContent={index} color="default">
             <IconButton
               aria-label={apiRef!.current.getLocaleText('columnHeaderSortIconLabel')}
-              title={apiRef!.current.getLocaleText('columnHeaderSortIconTitle')}
+              title={apiRef!.current.getLocaleText('columnHeaderSortIconLabel')}
               size="small"
             >
               {getIcon(icons, direction)}
@@ -44,7 +44,7 @@ export const ColumnHeaderSortIcon = React.memo(function ColumnHeaderSortIcon(
         {index == null && (
           <IconButton
             aria-label={apiRef!.current.getLocaleText('columnHeaderSortIconLabel')}
-            title={apiRef!.current.getLocaleText('columnHeaderSortIconTitle')}
+            title={apiRef!.current.getLocaleText('columnHeaderSortIconLabel')}
             size="small"
           >
             {getIcon(icons, direction)}

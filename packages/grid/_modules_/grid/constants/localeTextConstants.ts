@@ -20,19 +20,17 @@ export const DEFAULT_LOCALE_TEXT: LocaleText = {
   toolbarFiltersLabel: 'Show Filters',
   toolbarFiltersTooltipHide: 'Hide Filters',
   toolbarFiltersTooltipShow: 'Show Filters',
-  toolbarFiltersTooltipActive: 'active filter(s)',
+  toolbarFiltersTooltipActive: (count) => `${count} active filter(s)`,
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Find column',
   columnsPanelTextFieldPlaceholder: 'Column title',
-  columnsPanelDragIconTitle: 'Reorder Column',
-  columnsPanelDragIconLabel: 'Drag to reorder column',
+  columnsPanelDragIconLabel: 'Reorder Column',
   columnsPanelShowAllButton: 'Show All',
   columnsPanelHideAllButton: 'Hide All',
 
   // Filter panel text
   filterPanelAddFilter: 'Add Filter',
-  filterPanelDeleteIconTitle: 'Delete',
   filterPanelDeleteIconLabel: 'Delete',
   filterPanelOperators: 'Operators',
   filterPanelOperatorAnd: 'And',
@@ -40,7 +38,6 @@ export const DEFAULT_LOCALE_TEXT: LocaleText = {
   filterPanelColumns: 'Columns',
 
   // Column menu text
-  columnMenuTitle: 'Menu',
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Show columns',
   columnMenuFilter: 'Filter',
@@ -50,14 +47,16 @@ export const DEFAULT_LOCALE_TEXT: LocaleText = {
   columnMenuSortDesc: 'Sort by Desc',
 
   // Column header text
-  columnHeaderFiltersTooltipActive: 'active filter(s)',
+  columnHeaderFiltersTooltipActive: (count) => `${count} active filter(s)`,
   columnHeaderFiltersLabel: 'Show Filters',
-  columnHeaderSortIconTitle: 'Sort',
   columnHeaderSortIconLabel: 'Sort',
 
   // Rows selected footer text
   footerRowSelected: 'row selected',
-  footerRowSelectedPlural: 'rows selected',
+  footerRowSelectedPlural: (count) =>
+    count > 1
+      ? `${count.toLocaleString()} rows selected`
+      : `${count.toLocaleString()} row selected`,
 
   // Total rows footer text
   footerTotalRows: 'Total Rows:',

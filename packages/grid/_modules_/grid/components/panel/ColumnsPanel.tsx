@@ -116,7 +116,7 @@ export function ColumnsPanel() {
                   draggable
                   className={classes.dragIcon}
                   aria-label={apiRef!.current.getLocaleText('columnsPanelDragIconLabel')}
-                  title={apiRef!.current.getLocaleText('columnsPanelDragIconTitle')}
+                  title={apiRef!.current.getLocaleText('columnsPanelDragIconLabel')}
                   size="small"
                   disabled
                 >
