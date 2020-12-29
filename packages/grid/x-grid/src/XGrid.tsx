@@ -25,7 +25,7 @@ export const XGrid = React.memo(
     return (
       <GridComponent
         ref={ref}
-        className={classnames('MuiXGrid-root', className)}
+        className={classnames('MuiDataGrid-root', className)}
         {...other}
         licenseStatus={licenseStatus.toString()}
       />
