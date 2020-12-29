@@ -21,5 +21,7 @@ export const FilterMenuItem: React.FC<FilterItemProps> = ({ column, onClick }) =
     return null;
   }
 
-  return <MenuItem onClick={showFilter}>Filter</MenuItem>;
+  return (
+    <MenuItem onClick={showFilter}>{apiRef!.current.getLocaleText('columnMenuFilter')}</MenuItem>
+  );
 };

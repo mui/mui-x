@@ -68,7 +68,7 @@ export function FilterPanel() {
       {!disableMultipleColumnsFiltering && (
         <div className="MuiDataGridPanel-footer">
           <Button onClick={addNewFilter} startIcon={<AddIcon />} color="primary">
-            Add Filter
+            {apiRef!.current.getLocaleText('filterPanelAddFilter')}
           </Button>
         </div>
       )}

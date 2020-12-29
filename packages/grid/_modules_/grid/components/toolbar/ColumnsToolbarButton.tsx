@@ -24,10 +24,10 @@ export const ColumnsToolbarButton: React.FC<{}> = () => {
     <Button
       onClick={showColumns}
       color="primary"
-      aria-label="Show Column Selector"
+      aria-label={apiRef!.current.getLocaleText('toolbarColumnsLabel')}
       startIcon={iconElement}
     >
-      Columns
+      {apiRef!.current.getLocaleText('toolbarColumns')}
     </Button>
   );
 };

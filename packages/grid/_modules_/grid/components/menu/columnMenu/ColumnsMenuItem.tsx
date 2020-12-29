@@ -22,5 +22,9 @@ export const ColumnsMenuItem: React.FC<FilterItemProps> = ({ onClick }) => {
     return null;
   }
 
-  return <MenuItem onClick={showColumns}>Show columns</MenuItem>;
+  return (
+    <MenuItem onClick={showColumns}>
+      {apiRef!.current.getLocaleText('columnMenuShowColumns')}
+    </MenuItem>
+  );
 };

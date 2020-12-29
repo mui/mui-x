@@ -24,14 +24,14 @@ export const FilterToolbarButton: React.FC<{}> = () => {
 
   const tooltipContentNode = React.useMemo(() => {
     if (preferencePanel.open) {
-      return 'Hide Filters';
+      return apiRef!.current.getLocaleText('toolbarFiltersTooltipHide') as React.ReactElement;
     }
     if (counter === 0) {
-      return 'Show Filters';
+      return apiRef!.current.getLocaleText('toolbarFiltersTooltipShow') as React.ReactElement;
     }
     return (
       <div>
-        {counter} active filter(s)
+        {apiRef!.current.getLocaleText('toolbarFiltersTooltipActive')(counter)}
         <ul>
           {activeFilters.map((item) => ({
             ...(lookup[item.columnField!] && (
@@ -44,7 +44,7 @@ export const FilterToolbarButton: React.FC<{}> = () => {
         </ul>
       </div>
     );
-  }, [preferencePanel.open, counter, activeFilters, lookup]);
+  }, [apiRef, preferencePanel.open, counter, activeFilters, lookup]);
 
   const icons = useIcons();
   const filterIconElement = React.createElement(icons.OpenFilterButtonIcon!, {});
@@ -66,14 +66,14 @@ export const FilterToolbarButton: React.FC<{}> = () => {
       <Button
         onClick={toggleFilter}
         color="primary"
-        aria-label="Show Filters"
+        aria-label={apiRef!.current.getLocaleText('toolbarFiltersLabel')}
         startIcon={
           <Badge badgeContent={counter} color="primary">
             {filterIconElement}
           </Badge>
         }
       >
-        Filters
+        {apiRef!.current.getLocaleText('toolbarFilters')}
       </Button>
     </Tooltip>
   );

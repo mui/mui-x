@@ -3,6 +3,7 @@ import Badge from '@material-ui/core/Badge';
 import IconButton from '@material-ui/core/IconButton';
 import { IconsOptions, SortDirection } from '../../models/index';
 import { useIcons } from '../../hooks/utils/useIcons';
+import { ApiContext } from '../api-context';
 
 export interface ColumnHeaderSortIconProps {
   direction: SortDirection;
@@ -20,6 +21,7 @@ export const ColumnHeaderSortIcon = React.memo(function ColumnHeaderSortIcon(
 ) {
   const { direction, index, hide } = props;
   const icons = useIcons();
+  const apiRef = React.useContext(ApiContext);
 
   if (hide || direction == null) {
     return null;
@@ -30,13 +32,21 @@ export const ColumnHeaderSortIcon = React.memo(function ColumnHeaderSortIcon(
       <div>
         {index != null && (
           <Badge badgeContent={index} color="default">
-            <IconButton aria-label="Sort" title="Sort" size="small">
+            <IconButton
+              aria-label={apiRef!.current.getLocaleText('columnHeaderSortIconLabel')}
+              title={apiRef!.current.getLocaleText('columnHeaderSortIconLabel')}
+              size="small"
+            >
               {getIcon(icons, direction)}
             </IconButton>
           </Badge>
         )}
         {index == null && (
-          <IconButton aria-label="Sort" title="Sort" size="small">
+          <IconButton
+            aria-label={apiRef!.current.getLocaleText('columnHeaderSortIconLabel')}
+            title={apiRef!.current.getLocaleText('columnHeaderSortIconLabel')}
+            size="small"
+          >
             {getIcon(icons, direction)}
           </IconButton>
         )}

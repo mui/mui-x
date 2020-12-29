@@ -134,7 +134,12 @@ export function FilterForm(props: FilterFormProps) {
   return (
     <div className={classes.root}>
       <FormControl className={classes.closeIcon}>
-        <IconButton aria-label="Delete" title="Delete" onClick={handleDeleteFilter} size="small">
+        <IconButton
+          aria-label={apiRef!.current.getLocaleText('filterPanelDeleteIconLabel')}
+          title={apiRef!.current.getLocaleText('filterPanelDeleteIconLabel')}
+          onClick={handleDeleteFilter}
+          size="small"
+        >
           <CloseIcon fontSize="small" />
         </IconButton>
       </FormControl>
@@ -145,7 +150,9 @@ export function FilterForm(props: FilterFormProps) {
           visibility: showMultiFilterOperators ? 'visible' : 'hidden',
         }}
       >
-        <InputLabel id="columns-filter-operator-select-label">Operators</InputLabel>
+        <InputLabel id="columns-filter-operator-select-label">
+          {apiRef!.current.getLocaleText('filterPanelOperators')}
+        </InputLabel>
         <Select
           labelId="columns-filter-operator-select-label"
           id="columns-filter-operator-select"
@@ -155,15 +162,17 @@ export function FilterForm(props: FilterFormProps) {
           native
         >
           <option key={LinkOperator.And.toString()} value={LinkOperator.And.toString()}>
-            And
+            {apiRef!.current.getLocaleText('filterPanelOperatorAnd')}
           </option>
           <option key={LinkOperator.Or.toString()} value={LinkOperator.Or.toString()}>
-            Or
+            {apiRef!.current.getLocaleText('filterPanelOperatorOr')}
           </option>
         </Select>
       </FormControl>
       <FormControl className={classes.columnSelect}>
-        <InputLabel id="columns-filter-select-label">Columns</InputLabel>
+        <InputLabel id="columns-filter-select-label">
+          {apiRef!.current.getLocaleText('filterPanelColumns')}
+        </InputLabel>
         <Select
           labelId="columns-filter-select-label"
           id="columns-filter-select"
@@ -179,7 +188,9 @@ export function FilterForm(props: FilterFormProps) {
         </Select>
       </FormControl>
       <FormControl className={classes.operatorSelect}>
-        <InputLabel id="columns-operators-select-label">Operators</InputLabel>
+        <InputLabel id="columns-operators-select-label">
+          {apiRef!.current.getLocaleText('filterPanelOperators')}
+        </InputLabel>
         <Select
           labelId="columns-operators-select-label"
           id="columns-operators-select"

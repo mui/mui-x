@@ -86,8 +86,8 @@ export function ColumnsPanel() {
     <React.Fragment>
       <div className="MuiDataGridPanel-header">
         <TextField
-          label="Find column"
-          placeholder="Column title"
+          label={apiRef!.current.getLocaleText('columnsPanelTextFieldLabel')}
+          placeholder={apiRef!.current.getLocaleText('columnsPanelTextFieldPlaceholder')}
           inputRef={searchInputRef}
           value={searchValue}
           onChange={handleSearchValueChange}
@@ -115,8 +115,8 @@ export function ColumnsPanel() {
                 <IconButton
                   draggable
                   className={classes.dragIcon}
-                  aria-label="Drag to reorder column"
-                  title="Reorder Column"
+                  aria-label={apiRef!.current.getLocaleText('columnsPanelDragIconLabel')}
+                  title={apiRef!.current.getLocaleText('columnsPanelDragIconLabel')}
                   size="small"
                   disabled
                 >
@@ -129,10 +129,10 @@ export function ColumnsPanel() {
       </div>
       <div className="MuiDataGridPanel-footer">
         <Button onClick={hideAllColumns} color="primary">
-          Hide All
+          {apiRef!.current.getLocaleText('columnsPanelHideAllButton')}
         </Button>
         <Button onClick={showAllColumns} color="primary">
-          Show All
+          {apiRef!.current.getLocaleText('columnsPanelShowAllButton')}
         </Button>
       </div>
     </React.Fragment>

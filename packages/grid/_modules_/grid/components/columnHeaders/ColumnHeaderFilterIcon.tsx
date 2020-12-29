@@ -43,13 +43,25 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
   }
 
   const iconButton = (
-    <IconButton onClick={toggleFilter} color="default" aria-label="Show Filters" size="small">
+    <IconButton
+      onClick={toggleFilter}
+      color="default"
+      aria-label={apiRef!.current.getLocaleText('columnHeaderFiltersLabel')}
+      size="small"
+    >
       {filteredColumnIconElement}
     </IconButton>
   );
 
   return (
-    <Tooltip title={`${counter} active filter(s)`} enterDelay={1000}>
+    <Tooltip
+      title={
+        apiRef!.current.getLocaleText('columnHeaderFiltersTooltipActive')(
+          counter,
+        ) as React.ReactElement
+      }
+      enterDelay={1000}
+    >
       <div className="MuiDataGrid-iconButtonContainer">
         <div>
           {counter > 1 && (

@@ -134,7 +134,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
             aria-colcount={visibleColumnsLength}
             aria-rowcount={gridState.rows.totalRowCount}
             tabIndex={0}
-            aria-label="grid"
+            aria-label={apiRef!.current.getLocaleText('rootGridLabel')}
             aria-multiselectable={!gridState.options.disableMultipleSelection}
           >
             <ErrorBoundary
