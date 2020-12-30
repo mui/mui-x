@@ -29,7 +29,7 @@ describe('<DataGrid /> - Keyboard', () => {
   });
 
   it('should be able to type in an child input', () => {
-    const handleInputKeyDown = spy();
+    const handleInputKeyDown = spy((event) => event.defaultPrevented);
 
     const columns = [
       {
@@ -60,7 +60,7 @@ describe('<DataGrid /> - Keyboard', () => {
       key: 'a',
     });
     fireEvent(input, keydownEvent);
-    expect(handleInputKeyDown.callCount).to.equal(1);
+    expect(handleInputKeyDown.returnValues).to.deep.equal([false]);
   });
 
   /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
