@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.14](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.12...v4.0.0-alpha.13) (Dec 31, 2020)
+
+Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🌎 Add support for internationalization (#718) @DanailH
+
+  You can use the `localeText` prop to provide custom wordings in the data grid.
+  Check the documentation for [a demo](https://material-ui.com/components/data-grid/localization/#translation-keys).
+
+- 📚 Start documenting the filtering feature 🧪 (#754) @dtassone
+
+  The work in progress filtering feature and documentation can be found following [this link](https://material-ui.com/components/data-grid/filtering/). Early feedback are welcome.
+
+### @material-ui/x-grid@v4.0.0-alpha.14 / @material-ui/data-grid@v4.0.0-alpha.14
+
+- [DataGrid] Convert remaining text to use locale text API (#791) @DanailH
+- [DataGrid] Fix column width calculation after data changes (#756) @DanailH
+- [DataGrid] Setup internationalization (#718) @DanailH
+- [DataGrid] getValueError in valueGetter if incorrect field is supplied (#755) @ZeeshanTamboli
+- [XGrid] Fix support for custom class name generators (#793) @DanailH
+
+### Docs
+
+- [docs] Polish docs (#778) @oliviertassinari
+- [docs] Start documentation for the data grid filter features (#754) @dtassone
+- [docs] Sync with docs to fix images (#776) @oliviertassinari
+
+### Core
+
+- [test] We don't need to wait 100ms (#773) @oliviertassinari
+- [core] Remove useless clone (#757) @oliviertassinari
+
 ## [4.0.0-alpha.13](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.12...v4.0.0-alpha.13) (Dec 16, 2020)
 
 Big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
