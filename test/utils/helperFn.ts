@@ -14,7 +14,12 @@ export async function raf() {
 export const CLOCK_SYNC_FACTOR = 10;
 
 export function getActiveCell() {
-  const activeElement = document.activeElement;
+  let activeElement: Element | null;
+  if (document.activeElement && document.activeElement.getAttribute('role') === 'cell') {
+    activeElement = document.activeElement;
+  } else {
+    activeElement = document.activeElement && document.activeElement.closest('[role="cell"]');
+  }
 
   if (!activeElement) {
     return null;

@@ -9,7 +9,12 @@ import {
 } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { CellIndexCoordinates } from '../../../models/cell';
-import { findParentElementFromClassName, getIdFromRowElem, isCell } from '../../../utils/domUtils';
+import {
+  findParentElementFromClassName,
+  getIdFromRowElem,
+  isCell,
+  isFormElement,
+} from '../../../utils/domUtils';
 import {
   isArrowKeys,
   isHomeOrEndKeys,
@@ -243,7 +248,11 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
         return;
       }
 
-      if (isNavigationKey(event.code) && !event.shiftKey) {
+      if (
+        isNavigationKey(event.code) &&
+        !event.shiftKey &&
+        !isFormElement(document.activeElement)
+      ) {
         navigateCells(event.code, event.ctrlKey || event.metaKey);
         return;
       }

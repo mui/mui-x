@@ -21,6 +21,10 @@ export function isHeaderTitleContainer(elem: Element): boolean {
   return elem && findParentElementFromClassName(elem, HEADER_CELL_TITLE_CSS_CLASS) !== null;
 }
 
+export function isFormElement(elem: Element | null): boolean {
+  return elem !== null && /^(?:input|select|textarea|button|fieldset|option)$/i.test(elem.nodeName);
+}
+
 export function getIdFromRowElem(rowEl: Element): string {
   return rowEl.getAttribute('data-id')!;
 }
