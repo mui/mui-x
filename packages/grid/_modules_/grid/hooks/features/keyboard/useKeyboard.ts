@@ -252,17 +252,25 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
         navigateCells(event.code, event.ctrlKey || event.metaKey);
         return;
       }
-      if (isNavigationKey(event.code) && event.shiftKey) {
+      if (isNavigationKey(event.code) && event.shiftKey && isCellActive(document.activeElement)) {
         expandSelection(event.code);
         return;
       }
 
-      if (event.key.toLowerCase() === 'c' && (event.ctrlKey || event.metaKey)) {
+      if (
+        event.key.toLowerCase() === 'c' &&
+        (event.ctrlKey || event.metaKey) &&
+        isCellActive(document.activeElement)
+      ) {
         handleCopy();
         return;
       }
 
-      if (event.key.toLowerCase() === 'a' && (event.ctrlKey || event.metaKey)) {
+      if (
+        event.key.toLowerCase() === 'a' &&
+        (event.ctrlKey || event.metaKey) &&
+        isCellActive(document.activeElement)
+      ) {
         apiRef.current.selectRows(apiRef.current.getAllRowIds(), true);
       }
     },
