@@ -88,13 +88,13 @@ describe('<DataGrid /> - Keyboard', () => {
     const input = screen.getByTestId('custom-input');
     input.focus();
     expect(getActiveCell()).to.equal('0-0');
-    fireEvent.keyDown(input, { code: 'ArrowRight' });
+    fireEvent.keyDown(input, { key: 'ArrowRight' });
     expect(getActiveCell()).to.equal('0-0');
-    fireEvent.keyDown(input, { code: 'ArrowDown' });
+    fireEvent.keyDown(input, { key: 'ArrowDown' });
     expect(getActiveCell()).to.equal('0-0');
-    fireEvent.keyDown(input, { code: 'ArrowLeft' });
+    fireEvent.keyDown(input, { key: 'ArrowLeft' });
     expect(getActiveCell()).to.equal('0-0');
-    fireEvent.keyDown(input, { code: 'ArrowUp' });
+    fireEvent.keyDown(input, { key: 'ArrowUp' });
     expect(getActiveCell()).to.equal('0-0');
   });
 
@@ -116,13 +116,13 @@ describe('<DataGrid /> - Keyboard', () => {
     // @ts-ignore
     document.querySelector('[role="cell"][data-rowindex="0"][aria-colindex="0"]').focus();
     expect(getActiveCell()).to.equal('0-0');
-    fireEvent.keyDown(document.activeElement!, { code: 'ArrowRight' });
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
     expect(getActiveCell()).to.equal('0-1');
-    fireEvent.keyDown(document.activeElement!, { code: 'ArrowDown' });
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
     expect(getActiveCell()).to.equal('1-1');
-    fireEvent.keyDown(document.activeElement!, { code: 'ArrowLeft' });
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
     expect(getActiveCell()).to.equal('1-0');
-    fireEvent.keyDown(document.activeElement!, { code: 'ArrowUp' });
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
     expect(getActiveCell()).to.equal('0-0');
   });
 
@@ -131,9 +131,9 @@ describe('<DataGrid /> - Keyboard', () => {
     // @ts-ignore
     document.querySelector('[role="cell"][data-rowindex="1"][aria-colindex="1"]').focus();
     expect(getActiveCell()).to.equal('1-1');
-    fireEvent.keyDown(document.activeElement!, { code: 'Home' });
+    fireEvent.keyDown(document.activeElement!, { key: 'Home' });
     expect(getActiveCell()).to.equal('1-0');
-    fireEvent.keyDown(document.activeElement!, { code: 'End' });
+    fireEvent.keyDown(document.activeElement!, { key: 'End' });
     await waitFor(() =>
       document.querySelector('[role="cell"][data-rowindex="1"][aria-colindex="19"]'),
     );

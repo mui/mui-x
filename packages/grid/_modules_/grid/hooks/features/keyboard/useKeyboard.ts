@@ -12,7 +12,6 @@ import { CellIndexCoordinates } from '../../../models/cell';
 import {
   findParentElementFromClassName,
   getIdFromRowElem,
-  isCell,
   isCellActive,
 } from '../../../utils/domUtils';
 import {
@@ -22,7 +21,6 @@ import {
   isNavigationKey,
   isPageKeys,
   isSpaceKey,
-  isTabKey,
 } from '../../../utils/keyboardUtils';
 import { visibleColumnsLengthSelector } from '../columns/columnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
@@ -236,18 +234,18 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
         return;
       }
 
-      if (isSpaceKey(event.code) && event.shiftKey) {
+      if (isSpaceKey(event.key) && event.shiftKey) {
         selectActiveRow();
         return;
       }
 
-      if (isNavigationKey(event.code) && !event.shiftKey) {
-        navigateCells(event.code, event.ctrlKey || event.metaKey);
+      if (isNavigationKey(event.key) && !event.shiftKey) {
+        navigateCells(event.key, event.ctrlKey || event.metaKey);
         return;
       }
 
-      if (isNavigationKey(event.code) && event.shiftKey) {
-        expandSelection(event.code);
+      if (isNavigationKey(event.key) && event.shiftKey) {
+        expandSelection(event.key);
         return;
       }
 
