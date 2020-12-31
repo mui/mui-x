@@ -230,7 +230,6 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
       if (isMultipleKey(event.key)) {
         logger.debug('Multiple Select key pressed');
         onMultipleKeyChange(true);
-        return;
       }
 
       if (!isCellActive(document.activeElement)) {
