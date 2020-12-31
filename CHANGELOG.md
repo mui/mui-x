@@ -3,7 +3,9 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [4.0.0-alpha.14](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.12...v4.0.0-alpha.13) (Dec 31, 2020)
+## [4.0.0-alpha.14](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.12...v4.0.0-alpha.13)
+
+###### _Dec 31, 2020_
 
 Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
@@ -35,7 +37,9 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [test] We don't need to wait 100ms (#773) @oliviertassinari
 - [core] Remove useless clone (#757) @oliviertassinari
 
-## [4.0.0-alpha.13](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.12...v4.0.0-alpha.13) (Dec 16, 2020)
+## [4.0.0-alpha.13](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.12...v4.0.0-alpha.13)
+
+###### _Dec 16, 2020_
 
 Big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
@@ -62,7 +66,9 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 - [test] Split data grid tests in multiple files (#722) @dtassone
 - [test] Add tests for DataGrid filtering feature (#715) @dtassone
 
-## [4.0.0-alpha.12](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.11...v4.0.0-alpha.12) (Dec 9, 2020)
+## [4.0.0-alpha.12](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.11...v4.0.0-alpha.12)
+
+###### _Dec 9, 2020_
 
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
@@ -97,7 +103,9 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [test] Add regression test (#705) @oliviertassinari
 - [test] Allow running all the tests in strict mode (#684) @oliviertassinari
 
-## [4.0.0-alpha.11](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.10...v4.0.0-alpha.11) (Dec 2, 2020)
+## [4.0.0-alpha.11](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.10...v4.0.0-alpha.11)
+
+###### _Dec 2, 2020_
 
 Big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
@@ -152,7 +160,9 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [core] Replace Storybook knobs for args (#601) @tooppaaa
 - [core] Update to Material-UI v4.11.1 (#636) @oliviertassinari
 
-## [4.0.0-alpha.10](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.9...v4.0.0-alpha.10) (Nov 20, 2020)
+## [4.0.0-alpha.10](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.9...v4.0.0-alpha.10)
+
+###### _Nov 20, 2020_
 
 ### @material-ui/x-grid@v4.0.0-alpha.10 / @material-ui/data-grid@v4.0.0-alpha.10
 
@@ -172,7 +182,9 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [core] Fix yarn prettier write @oliviertassinari
 - [test] Share karma setup (#576) @oliviertassinari
 
-## [4.0.0-alpha.9](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.8...v4.0.0-alpha.9) (Nov 9, 2020)
+## [4.0.0-alpha.9](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.8...v4.0.0-alpha.9)
+
+###### _Nov 9, 2020_
 
 ### @material-ui/x-grid@v4.0.0-alpha.9 / @material-ui/data-grid@v4.0.0-alpha.9
 
@@ -208,7 +220,9 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [core] Disable generation of changelogs @oliviertassinari
 - [test] Karma should fail if errors are thrown (#543) @oliviertassinari
 
-## [4.0.0-alpha.8](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.7...v4.0.0-alpha.8) (Oct 23, 2020)
+## [4.0.0-alpha.8](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.7...v4.0.0-alpha.8)
+
+###### _Oct 23, 2020_
 
 ### @material-ui/x-grid@v4.0.0-alpha.8 / @material-ui/data-grid@v4.0.0-alpha.8
 
@@ -223,7 +237,9 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [core] Remove usage of LESS (#467) @dependabot-preview
 - [core] Update to the latest version of the main repo (#456) @oliviertassinari
 
-## [4.0.0-alpha.7](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.6...v4.0.0-alpha.7) (Oct 19, 2020)
+## [4.0.0-alpha.7](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.6...v4.0.0-alpha.7)
+
+###### _Oct 19, 2020_
 
 ### @material-ui/x-grid@v4.0.0-alpha.7 / @material-ui/data-grid@v4.0.0-alpha.7
 
@@ -250,7 +266,9 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [test] Add missing types linting for x-grid (#357) @oliviertassinari
 - [test] Run the karma tests in browserstack (#316) @oliviertassinari
 
-## [4.0.0-alpha.6](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.2...v4.0.0-alpha.6) (Sep 25, 2020)
+## [4.0.0-alpha.6](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.2...v4.0.0-alpha.6)
+
+###### _Sep 25, 2020_
 
 ### @material-ui/x-grid@v4.0.0-alpha.6 / @material-ui/data-grid@v4.0.0-alpha.6
 
@@ -265,11 +283,15 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [docs] Fix layout jump issue (#338) @oliviertassinari
 - [docs] Fix short description warning (#302) @oliviertassinari
 
-## [4.0.0-alpha.2](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.1...v4.0.0-alpha.2) (Sep 18, 2020)
+## [4.0.0-alpha.2](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.1...v4.0.0-alpha.2)
+
+###### _Sep 18, 2020_
 
 - [DataGrid] Fix wrongly exported types (#298) @dtassone
 
-## [4.0.0-alpha.1](https://github.com/mui-org/material-ui-x/compare/v0.1.67...v4.0.0-alpha.1) (Sep 17, 2020)
+## [4.0.0-alpha.1](https://github.com/mui-org/material-ui-x/compare/v0.1.67...v4.0.0-alpha.1)
+
+###### _Sep 17, 2020_
 
 This is the first public alpha release of the component after 6 months of development since the initial commit (March 15th 2020).
 `@material-ui/data-grid` is licensed under MIT while `@material-ui/x-grid` is licensed under a commercial license.
