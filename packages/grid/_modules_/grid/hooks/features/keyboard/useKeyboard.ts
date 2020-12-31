@@ -235,16 +235,19 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
       }
 
       if (isSpaceKey(event.key) && event.shiftKey) {
+        event.preventDefault();
         selectActiveRow();
         return;
       }
 
       if (isNavigationKey(event.key) && !event.shiftKey) {
+        event.preventDefault();
         navigateCells(event.key, event.ctrlKey || event.metaKey);
         return;
       }
 
       if (isNavigationKey(event.key) && event.shiftKey) {
+        event.preventDefault();
         expandSelection(event.key);
         return;
       }
@@ -255,6 +258,7 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
       }
 
       if (event.key.toLowerCase() === 'a' && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
         apiRef.current.selectRows(apiRef.current.getAllRowIds(), true);
       }
     },
