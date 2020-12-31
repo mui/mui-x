@@ -233,7 +233,7 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
         return;
       }
 
-      if (!isCell(document.activeElement)) {
+      if (!isCellActive(document.activeElement)) {
         return;
       }
 
@@ -242,29 +242,22 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
         return;
       }
 
-      if (isNavigationKey(event.code) && !event.shiftKey && isCellActive(document.activeElement)) {
+      if (isNavigationKey(event.code) && !event.shiftKey) {
         navigateCells(event.code, event.ctrlKey || event.metaKey);
         return;
       }
-      if (isNavigationKey(event.code) && event.shiftKey && isCellActive(document.activeElement)) {
+
+      if (isNavigationKey(event.code) && event.shiftKey) {
         expandSelection(event.code);
         return;
       }
 
-      if (
-        event.key.toLowerCase() === 'c' &&
-        (event.ctrlKey || event.metaKey) &&
-        isCellActive(document.activeElement)
-      ) {
+      if (event.key.toLowerCase() === 'c' && (event.ctrlKey || event.metaKey)) {
         handleCopy();
         return;
       }
 
-      if (
-        event.key.toLowerCase() === 'a' &&
-        (event.ctrlKey || event.metaKey) &&
-        isCellActive(document.activeElement)
-      ) {
+      if (event.key.toLowerCase() === 'a' && (event.ctrlKey || event.metaKey)) {
         apiRef.current.selectRows(apiRef.current.getAllRowIds(), true);
       }
     },
