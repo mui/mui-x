@@ -13,7 +13,7 @@ import {
   findParentElementFromClassName,
   getIdFromRowElem,
   isCell,
-  isFormElement,
+  isCellActive,
 } from '../../../utils/domUtils';
 import {
   isArrowKeys,
@@ -248,11 +248,7 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
         return;
       }
 
-      if (
-        isNavigationKey(event.code) &&
-        !event.shiftKey &&
-        !isFormElement(document.activeElement)
-      ) {
+      if (isNavigationKey(event.code) && !event.shiftKey && isCellActive(document.activeElement)) {
         navigateCells(event.code, event.ctrlKey || event.metaKey);
         return;
       }

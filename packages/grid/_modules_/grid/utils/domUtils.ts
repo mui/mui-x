@@ -17,12 +17,12 @@ export function isCell(elem: Element | null): boolean {
   return elem != null && findParentElementFromClassName(elem, CELL_CSS_CLASS) !== null;
 }
 
-export function isHeaderTitleContainer(elem: Element): boolean {
-  return elem && findParentElementFromClassName(elem, HEADER_CELL_TITLE_CSS_CLASS) !== null;
+export function isCellActive(elem: Element | null): boolean {
+  return elem != null && elem.classList.contains(CELL_CSS_CLASS);
 }
 
-export function isFormElement(elem: Element | null): boolean {
-  return elem !== null && /^(?:input|select|textarea|button|fieldset|option)$/i.test(elem.nodeName);
+export function isHeaderTitleContainer(elem: Element): boolean {
+  return elem && findParentElementFromClassName(elem, HEADER_CELL_TITLE_CSS_CLASS) !== null;
 }
 
 export function getIdFromRowElem(rowEl: Element): string {
