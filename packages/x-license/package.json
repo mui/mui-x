@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/x-license",
-  "version": "4.0.0-alpha.13",
+  "version": "4.0.0-alpha.14",
   "description": "Material-UI X License verification",
   "author": "Material-UI Team",
   "main": "dist/cjs/index.js",
