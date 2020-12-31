@@ -12,7 +12,7 @@ import { CellIndexCoordinates } from '../../../models/cell';
 import {
   findParentElementFromClassName,
   getIdFromRowElem,
-  isCellActive,
+  isCellRoot,
 } from '../../../utils/domUtils';
 import {
   isArrowKeys,
@@ -230,7 +230,7 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
         onMultipleKeyChange(true);
       }
 
-      if (!isCellActive(document.activeElement)) {
+      if (!isCellRoot(document.activeElement)) {
         return;
       }
 

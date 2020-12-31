@@ -17,7 +17,7 @@ export function isCell(elem: Element | null): boolean {
   return elem != null && findParentElementFromClassName(elem, CELL_CSS_CLASS) !== null;
 }
 
-export function isCellActive(elem: Element | null): boolean {
+export function isCellRoot(elem: Element | null): boolean {
   return elem != null && elem.classList.contains(CELL_CSS_CLASS);
 }
 
