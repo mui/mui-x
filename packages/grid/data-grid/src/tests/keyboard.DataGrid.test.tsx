@@ -63,12 +63,13 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(handleInputKeyDown.callCount).to.equal(1);
   });
 
-  it('should prevent cell navigation if active element is an input', () => {
+  it('should ignore key shortcuts if activeElement is not a cell', () => {
     const columns = [
       {
+        field: 'id',
+      },
+      {
         field: 'name',
-        headerName: 'Name',
-        width: 200,
         renderCell: () => <input type="text" data-testid="custom-input" />,
       },
     ];
@@ -87,15 +88,9 @@ describe('<DataGrid /> - Keyboard', () => {
     );
     const input = screen.getByTestId('custom-input');
     input.focus();
-    expect(getActiveCell()).to.equal('0-0');
-    fireEvent.keyDown(input, { key: 'ArrowRight' });
-    expect(getActiveCell()).to.equal('0-0');
-    fireEvent.keyDown(input, { key: 'ArrowDown' });
-    expect(getActiveCell()).to.equal('0-0');
+    expect(getActiveCell()).to.equal('0-1');
     fireEvent.keyDown(input, { key: 'ArrowLeft' });
-    expect(getActiveCell()).to.equal('0-0');
-    fireEvent.keyDown(input, { key: 'ArrowUp' });
-    expect(getActiveCell()).to.equal('0-0');
+    expect(getActiveCell()).to.equal('0-1');
   });
 
   /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
