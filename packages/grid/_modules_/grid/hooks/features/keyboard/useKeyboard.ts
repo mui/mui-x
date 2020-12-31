@@ -237,12 +237,6 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
         return;
       }
 
-      if (!isTabKey(event.code) && !isCell(document.activeElement)) {
-        // WE prevent default behavior for all key shortcut except tab when the current active element is a cell
-        event.preventDefault();
-        event.stopPropagation();
-      }
-
       if (isSpaceKey(event.code) && event.shiftKey) {
         selectActiveRow();
         return;
