@@ -94,6 +94,36 @@ describe('<DataGrid /> - Keyboard', () => {
   });
 
   /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
+  it('should call preventDefault when using keyboard navigation', () => {
+    const event = { key: 'ArrowRight', preventDefault: spy() };
+
+    const columns = [
+      {
+        field: 'id',
+      },
+      {
+        field: 'name',
+      },
+    ];
+
+    const rows = [
+      {
+        id: 1,
+        name: 'John',
+      },
+    ];
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid rows={rows} columns={columns} />
+      </div>,
+    );
+    // @ts-ignore
+    document.querySelector('[role="cell"][data-rowindex="0"][aria-colindex="0"]').focus();
+    fireEvent.keyDown(document.activeElement!, event);
+    expect(event.preventDefault.called).to.equal(true);
+  });
+
   const KeyboardTest = () => {
     const data = useData(100, 20);
     const transformColSizes = (columns: Columns) =>
