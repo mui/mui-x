@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { CellParams } from '@material-ui/x-grid';
-import { Rating } from '@material-ui/lab';
+import Rating from '@material-ui/lab/Rating';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

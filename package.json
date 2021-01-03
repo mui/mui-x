@@ -70,7 +70,7 @@
     "enzyme-adapter-react-16": "^1.15.2",
     "eslint": "^7.4.0",
     "eslint-config-airbnb-typescript": "^9.0.0",
-    "eslint-config-prettier": "^6.11.0",
+    "eslint-config-prettier": "^7.1.0",
     "eslint-import-resolver-webpack": "^0.12.2",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jsx-a11y": "^6.3.1",
