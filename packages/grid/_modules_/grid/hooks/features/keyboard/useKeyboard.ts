@@ -9,7 +9,11 @@ import {
 } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { CellIndexCoordinates } from '../../../models/cell';
-import { findParentElementFromClassName, getIdFromRowElem, isCell } from '../../../utils/domUtils';
+import {
+  findParentElementFromClassName,
+  getIdFromRowElem,
+  isCellRoot,
+} from '../../../utils/domUtils';
 import {
   isArrowKeys,
   isHomeOrEndKeys,
@@ -17,7 +21,6 @@ import {
   isNavigationKey,
   isPageKeys,
   isSpaceKey,
-  isTabKey,
 } from '../../../utils/keyboardUtils';
 import { visibleColumnsLengthSelector } from '../columns/columnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
@@ -225,30 +228,27 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
       if (isMultipleKey(event.key)) {
         logger.debug('Multiple Select key pressed');
         onMultipleKeyChange(true);
+      }
+
+      if (!isCellRoot(document.activeElement)) {
         return;
       }
 
-      if (!isCell(document.activeElement)) {
-        return;
-      }
-
-      if (!isTabKey(event.code) && !isCell(document.activeElement)) {
-        // WE prevent default behavior for all key shortcut except tab when the current active element is a cell
+      if (isSpaceKey(event.key) && event.shiftKey) {
         event.preventDefault();
-        event.stopPropagation();
-      }
-
-      if (isSpaceKey(event.code) && event.shiftKey) {
         selectActiveRow();
         return;
       }
 
-      if (isNavigationKey(event.code) && !event.shiftKey) {
-        navigateCells(event.code, event.ctrlKey || event.metaKey);
+      if (isNavigationKey(event.key) && !event.shiftKey) {
+        event.preventDefault();
+        navigateCells(event.key, event.ctrlKey || event.metaKey);
         return;
       }
-      if (isNavigationKey(event.code) && event.shiftKey) {
-        expandSelection(event.code);
+
+      if (isNavigationKey(event.key) && event.shiftKey) {
+        event.preventDefault();
+        expandSelection(event.key);
         return;
       }
 
@@ -258,6 +258,7 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
       }
 
       if (event.key.toLowerCase() === 'a' && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
         apiRef.current.selectRows(apiRef.current.getAllRowIds(), true);
       }
     },

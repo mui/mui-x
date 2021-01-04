@@ -63,7 +63,68 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(handleInputKeyDown.returnValues).to.deep.equal([false]);
   });
 
-  /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
+  it('should ignore key shortcuts if activeElement is not a cell', () => {
+    const columns = [
+      {
+        field: 'id',
+      },
+      {
+        field: 'name',
+        renderCell: () => <input type="text" data-testid="custom-input" />,
+      },
+    ];
+
+    const rows = [
+      {
+        id: 1,
+        name: 'John',
+      },
+    ];
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid rows={rows} columns={columns} />
+      </div>,
+    );
+    const input = screen.getByTestId('custom-input');
+    input.focus();
+    expect(getActiveCell()).to.equal('0-1');
+    fireEvent.keyDown(input, { key: 'ArrowLeft' });
+    expect(getActiveCell()).to.equal('0-1');
+  });
+
+  it('should call preventDefault when using keyboard navigation', () => {
+    const handleKeyDown = spy((event) => event.defaultPrevented);
+
+    const columns = [
+      {
+        field: 'id',
+      },
+      {
+        field: 'name',
+      },
+    ];
+
+    const rows = [
+      {
+        id: 1,
+        name: 'John',
+      },
+    ];
+
+    render(
+      <div style={{ width: 300, height: 300 }} onKeyDown={handleKeyDown}>
+        <DataGrid rows={rows} columns={columns} />
+      </div>,
+    );
+    const firstCell = document.querySelector(
+      '[role="cell"][data-rowindex="0"][aria-colindex="0"]',
+    ) as HTMLElement;
+    firstCell.focus();
+    fireEvent.keyDown(firstCell, { key: 'ArrowRight' });
+    expect(handleKeyDown.returnValues).to.deep.equal([true]);
+  });
+
   const KeyboardTest = () => {
     const data = useData(100, 20);
     const transformColSizes = (columns: Columns) =>
@@ -76,18 +137,19 @@ describe('<DataGrid /> - Keyboard', () => {
     );
   };
 
+  /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
   it('cell navigation with arrows', () => {
     render(<KeyboardTest />);
     // @ts-ignore
     document.querySelector('[role="cell"][data-rowindex="0"][aria-colindex="0"]').focus();
     expect(getActiveCell()).to.equal('0-0');
-    fireEvent.keyDown(document.activeElement!, { code: 'ArrowRight' });
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
     expect(getActiveCell()).to.equal('0-1');
-    fireEvent.keyDown(document.activeElement!, { code: 'ArrowDown' });
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
     expect(getActiveCell()).to.equal('1-1');
-    fireEvent.keyDown(document.activeElement!, { code: 'ArrowLeft' });
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
     expect(getActiveCell()).to.equal('1-0');
-    fireEvent.keyDown(document.activeElement!, { code: 'ArrowUp' });
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
     expect(getActiveCell()).to.equal('0-0');
   });
 
@@ -96,9 +158,9 @@ describe('<DataGrid /> - Keyboard', () => {
     // @ts-ignore
     document.querySelector('[role="cell"][data-rowindex="1"][aria-colindex="1"]').focus();
     expect(getActiveCell()).to.equal('1-1');
-    fireEvent.keyDown(document.activeElement!, { code: 'Home' });
+    fireEvent.keyDown(document.activeElement!, { key: 'Home' });
     expect(getActiveCell()).to.equal('1-0');
-    fireEvent.keyDown(document.activeElement!, { code: 'End' });
+    fireEvent.keyDown(document.activeElement!, { key: 'End' });
     await waitFor(() =>
       document.querySelector('[role="cell"][data-rowindex="1"][aria-colindex="19"]'),
     );
