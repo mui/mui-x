@@ -93,9 +93,8 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(getActiveCell()).to.equal('0-1');
   });
 
-  /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
   it('should call preventDefault when using keyboard navigation', () => {
-    const event = { key: 'ArrowRight', preventDefault: spy() };
+    const handleKeyDown = spy((event) => event.defaultPrevented);
 
     const columns = [
       {
@@ -114,14 +113,16 @@ describe('<DataGrid /> - Keyboard', () => {
     ];
 
     render(
-      <div style={{ width: 300, height: 300 }}>
+      <div style={{ width: 300, height: 300 }} onKeyDown={handleKeyDown}>
         <DataGrid rows={rows} columns={columns} />
       </div>,
     );
-    // @ts-ignore
-    document.querySelector('[role="cell"][data-rowindex="0"][aria-colindex="0"]').focus();
-    fireEvent.keyDown(document.activeElement!, event);
-    expect(event.preventDefault.called).to.equal(true);
+    const firstCell = document.querySelector(
+      '[role="cell"][data-rowindex="0"][aria-colindex="0"]',
+    ) as HTMLElement;
+    firstCell.focus();
+    fireEvent.keyDown(firstCell, { key: 'ArrowRight' });
+    expect(handleKeyDown.returnValues).to.deep.equal([true]);
   });
 
   const KeyboardTest = () => {
@@ -136,6 +137,7 @@ describe('<DataGrid /> - Keyboard', () => {
     );
   };
 
+  /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
   it('cell navigation with arrows', () => {
     render(<KeyboardTest />);
     // @ts-ignore
