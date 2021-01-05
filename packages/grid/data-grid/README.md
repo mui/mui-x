@@ -19,7 +19,7 @@ This component has 2 peer dependencies that you will need to install as well.
 ```json
 "peerDependencies": {
   "@material-ui/core": "^4.9.12",
-  "react": "^16.8.0"
+  "react": "^16.8.0 || ^17.0.0"
 },
 ```
 
