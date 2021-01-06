@@ -41,12 +41,6 @@ You can configure the headers with:
 
 For more advanced header configuration, go to the [rendering section](/components/data-grid/rendering/#header-cell).
 
-## Column menu
-
-By default, each column header displays a column menu. The column menu allows actions to be performed in the context of the target column, e.g. filtering. To disable it set the prop `disableColumnMenu={true}`.
-
-{{"demo": "pages/components/data-grid/columns/ColumnMenuGrid.js", "bg": "inline"}}
-
 ## Column width
 
 By default, the columns have a width of 100 pixels.
@@ -124,6 +118,12 @@ const usdPrice: ColTypeDef = {
 ```
 
 {{"demo": "pages/components/data-grid/columns/CustomColumnTypesGrid.js", "bg": "inline"}}
+
+## Column menu
+
+By default, each column header displays a column menu. The column menu allows actions to be performed in the context of the target column, e.g. filtering. To disable it set the prop `disableColumnMenu={true}`.
+
+{{"demo": "pages/components/data-grid/columns/ColumnMenuGrid.js", "bg": "inline"}}
 
 ## Column reorder [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
