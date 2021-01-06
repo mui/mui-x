@@ -145,7 +145,7 @@ export interface GridOptions {
    */
   disableColumnFilter?: boolean;
   /**
-   * If `true`, column Menu is disabled.
+   * If `true`, the column menu is disabled.
    * @default false
    */
   disableColumnMenu?: boolean;
