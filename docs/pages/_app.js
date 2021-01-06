@@ -25,6 +25,7 @@ import pages from 'docsx/src/pages';
 import initRedux from 'docs/src/modules/redux/initRedux';
 import PageContext from 'docs/src/modules/components/PageContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
+import XWrapper from 'docsx/src/modules/XWrapper';
 import loadScript from 'docs/src/modules/utils/loadScript';
 import { ThemeProvider } from 'docs/src/modules/components/ThemeContext';
 import { pathnameToLanguage, getCookie } from 'docs/src/modules/utils/helpers';
@@ -365,7 +366,9 @@ function AppWrapper(props) {
       <ReduxProvider store={redux}>
         <PageContext.Provider value={{ activePage, pages, versions: pageProps.versions }}>
           <StylesProvider jss={jss}>
-            <ThemeProvider>{children}</ThemeProvider>
+            <ThemeProvider>
+              <XWrapper>{children}</XWrapper>
+            </ThemeProvider>
           </StylesProvider>
         </PageContext.Provider>
         <LanguageNegotiation />

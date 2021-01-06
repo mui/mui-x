@@ -65,7 +65,7 @@ In addition, `flex` does not work if the combined width of the columns that have
 
 {{"demo": "pages/components/data-grid/columns/ColumnFluidWidthGrid.js", "bg": "inline"}}
 
-## Column resizing [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
+## Column resizing [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
 
 By default, `XGrid` allows all columns to be resized by dragging the right portion of the column separator.
 
@@ -125,7 +125,7 @@ By default, each column header displays a column menu. The column menu allows ac
 
 {{"demo": "pages/components/data-grid/columns/ColumnMenuGrid.js", "bg": "inline"}}
 
-## Column reorder [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
+## Column reorder [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
 
 By default, `XGrid` allows all column reordering by dragging the header cells and moving them left or right.
 
@@ -149,7 +149,7 @@ In addition, column reordering emits the following events that can be imported:
 
 Grouping columns allows you to have multiple levels of columns in your header and the ability, if needed, to 'open and close' column groups to show and hide additional columns.
 
-## 🚧 Column pinning [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
+## 🚧 Column pinning [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >

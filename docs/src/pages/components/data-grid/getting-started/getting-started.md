@@ -97,14 +97,14 @@ export default function App() {
 
 {{"demo": "pages/components/data-grid/getting-started/Codesandbox.js", "hideToolbar": true, "bg": true}}
 
-## Enterprise [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
+## Enterprise
 
 The data grid comes in 2 versions:
 
 - `DataGrid` **MIT licensed** as part of the community edition. It's an extension of `@material-ui/core`.
 - `XGrid` **Commercially licensed** as part of the X product line offering.
 
-The features only available in the commercial version are suffixed with a <span style="font-size: 26px" role="img" title="Enterprise">⚡️</span> icon.
+The features only available in the commercial version are suffixed with a <span style="font-size: 14px" role="img" title="Pro" class="pro"></span> icon for the pro plan or a <span style="font-size: 14px" role="img" title="Premium" class="premium"></span> icon for the premium plan.
 
 <img src="/static/x/header-icon.png" style="width: 454px; margin-bottom: 2rem;" alt="">
 
@@ -126,52 +126,52 @@ If you have an enterprise grid running with an expired or missing license key, t
 
 The following table summarizes the features available in the community `DataGrid` and enterprise `XGrid` components. All the features of the community version are available in the enterprise one. The enterprise components comes in two plans: Pro and Premium.
 
-| Features                                                                                | Community | Pro ⚡️ | Premium ⚡️ |
-| :-------------------------------------------------------------------------------------- | --------- | ------- | ----------- |
-| **Column**                                                                              |           |         |
-| [Column resizing](/components/data-grid/columns/#column-resizing)                       | ❌        | ✅      | ✅          |
-| [Column groups](/components/data-grid/columns/#column-groups)                           | 🚧        | 🚧      | 🚧          |
-| [Column reorder](/components/data-grid/columns/#column-reorder)                         | ❌        | ✅      | ✅          |
-| [Column pinning](/components/data-grid/columns/#column-pinning)                         | ❌        | 🚧      | 🚧          |
-| [Column spanning](/components/data-grid/columns/#column-spanning)                       | 🚧        | 🚧      | 🚧          |
-| **Rows**                                                                                |           |         |             |
-| [Rows sorting](/components/data-grid/rows/#row-sorting)                                 | ✅        | ✅      | ✅          |
-| [Rows height](/components/data-grid/rows/#row-height)                                   | ✅        | ✅      | ✅          |
-| [Rows spanning](/components/data-grid/rows/#row-spanning)                               | 🚧        | 🚧      | 🚧          |
-| [Rows reorder](/components/data-grid/rows/#row-reorder)                                 | ❌        | 🚧      | 🚧          |
-| **Selection**                                                                           |           |         |             |
-| [Row selection](/components/data-grid/selection/#single-row-selection)                  | ✅        | ✅      | ✅          |
-| [Multi-row selection](/components/data-grid/selection/#multiple-row-selection)          | ❌        | ✅      | ✅          |
-| [Range selection](/components/data-grid/selection/#range-selection)                     | ❌        | ❌      | 🚧          |
-| **Filtering**                                                                           |           |         |             |
-| [Column filters](/components/data-grid/filtering/#column-filters)                       | ✅        | ✅      | ✅          |
-| [Multi-column filtering](/components/data-grid/filtering/#multi-column-filtering)       | ❌        | ✅      | ✅          |
-| [Quick filter](/components/data-grid/filtering/#quick-filter)                           | 🚧        | 🚧      | 🚧          |
-| **Pagination**                                                                          |           |         |             |
-| [Pagination](/components/data-grid/pagination/)                                         | ✅        | ✅      | ✅          |
-| [Pagination > 100 rows per page](/components/data-grid/pagination/)                     | ❌        | ✅      | ✅          |
-| **Editing**                                                                             |           |         |             |
-| [Row edition](/components/data-grid/editing/#row-editing)                               | 🚧        | 🚧      | 🚧          |
-| [Cell editing](/components/data-grid/editing/#cell-editing)                             | 🚧        | 🚧      | 🚧          |
-| **Import & export**                                                                     |           |         |             |
-| [CSV export](/components/data-grid/export/#csv-export)                                  | 🚧        | 🚧      | 🚧          |
-| [Print](/components/data-grid/export/#print)                                            | 🚧        | 🚧      | 🚧          |
-| [Excel export](/components/data-grid/export/#excel-export)                              | ❌        | ❌      | 🚧          |
-| [Clipboard](/components/data-grid/export/#clipboard)                                    | ❌        | ❌      | 🚧          |
-| **Rendering**                                                                           |           |         |             |
-| [Column virtualization](/components/data-grid/rendering/#column-virtualization)         | ✅        | ✅      | ✅          |
-| [Row virtualization > 100 rows](/components/data-grid/rendering/#column-virtualization) | ❌        | ✅      | ✅          |
-| [Components](/components/data-grid/rendering/#components)                               | ✅        | ✅      | ✅          |
-| **Group & Pivot**                                                                       |           |         |             |
-| [Tree data](/components/data-grid/group-pivot/#tree-data)                               | ❌        | 🚧      | 🚧          |
-| [Master detail](/components/data-grid/group-pivot/#master-detail)                       | ❌        | 🚧      | 🚧          |
-| [Grouping](/components/data-grid/group-pivot/#grouping)                                 | ❌        | ❌      | 🚧          |
-| [Aggregation](/components/data-grid/group-pivot/#aggregation)                           | ❌        | ❌      | 🚧          |
-| [Pivoting](/components/data-grid/group-pivot/#pivoting)                                 | ❌        | ❌      | 🚧          |
-| **Misc**                                                                                |           |         |             |
-| [Accessibility](/components/data-grid/accessibility/)                                   | ✅        | ✅      | ✅          |
-| [Keyboard navigation](/components/data-grid/accessibility/#keyboard-navigation)         | ✅        | ✅      | ✅          |
-| [Localization](/components/data-grid/localization/)                                     | ✅        | ✅      | ✅          |
+| Features                                                                                | Community | Pro <span class="pro"></span> | Premium <span class="premium"></span> |
+| :-------------------------------------------------------------------------------------- | :-------: | :---------------------------: | :-----------------------------------: |
+| **Column**                                                                              |           |                               |
+| [Column resizing](/components/data-grid/columns/#column-resizing)                       |    ❌     |              ✅               |                  ✅                   |
+| [Column groups](/components/data-grid/columns/#column-groups)                           |    🚧     |              🚧               |                  🚧                   |
+| [Column reorder](/components/data-grid/columns/#column-reorder)                         |    ❌     |              ✅               |                  ✅                   |
+| [Column pinning](/components/data-grid/columns/#column-pinning)                         |    ❌     |              🚧               |                  🚧                   |
+| [Column spanning](/components/data-grid/columns/#column-spanning)                       |    🚧     |              🚧               |                  🚧                   |
+| **Rows**                                                                                |           |                               |                                       |
+| [Rows sorting](/components/data-grid/rows/#row-sorting)                                 |    ✅     |              ✅               |                  ✅                   |
+| [Rows height](/components/data-grid/rows/#row-height)                                   |    ✅     |              ✅               |                  ✅                   |
+| [Rows spanning](/components/data-grid/rows/#row-spanning)                               |    🚧     |              🚧               |                  🚧                   |
+| [Rows reorder](/components/data-grid/rows/#row-reorder)                                 |    ❌     |              🚧               |                  🚧                   |
+| **Selection**                                                                           |           |                               |                                       |
+| [Row selection](/components/data-grid/selection/#single-row-selection)                  |    ✅     |              ✅               |                  ✅                   |
+| [Multi-row selection](/components/data-grid/selection/#multiple-row-selection)          |    ❌     |              ✅               |                  ✅                   |
+| [Range selection](/components/data-grid/selection/#range-selection)                     |    ❌     |              ❌               |                  🚧                   |
+| **Filtering**                                                                           |           |                               |                                       |
+| [Column filters](/components/data-grid/filtering/#column-filters)                       |    ✅     |              ✅               |                  ✅                   |
+| [Multi-column filtering](/components/data-grid/filtering/#multi-column-filtering)       |    ❌     |              ✅               |                  ✅                   |
+| [Quick filter](/components/data-grid/filtering/#quick-filter)                           |    🚧     |              🚧               |                  🚧                   |
+| **Pagination**                                                                          |           |                               |                                       |
+| [Pagination](/components/data-grid/pagination/)                                         |    ✅     |              ✅               |                  ✅                   |
+| [Pagination > 100 rows per page](/components/data-grid/pagination/)                     |    ❌     |              ✅               |                  ✅                   |
+| **Editing**                                                                             |           |                               |                                       |
+| [Row edition](/components/data-grid/editing/#row-editing)                               |    🚧     |              🚧               |                  🚧                   |
+| [Cell editing](/components/data-grid/editing/#cell-editing)                             |    🚧     |              🚧               |                  🚧                   |
+| **Import & export**                                                                     |           |                               |                                       |
+| [CSV export](/components/data-grid/export/#csv-export)                                  |    🚧     |              🚧               |                  🚧                   |
+| [Print](/components/data-grid/export/#print)                                            |    🚧     |              🚧               |                  🚧                   |
+| [Excel export](/components/data-grid/export/#excel-export)                              |    ❌     |              ❌               |                  🚧                   |
+| [Clipboard](/components/data-grid/export/#clipboard)                                    |    ❌     |              ❌               |                  🚧                   |
+| **Rendering**                                                                           |           |                               |                                       |
+| [Column virtualization](/components/data-grid/rendering/#column-virtualization)         |    ✅     |              ✅               |                  ✅                   |
+| [Row virtualization > 100 rows](/components/data-grid/rendering/#column-virtualization) |    ❌     |              ✅               |                  ✅                   |
+| [Components](/components/data-grid/rendering/#components)                               |    ✅     |              ✅               |                  ✅                   |
+| **Group & Pivot**                                                                       |           |                               |                                       |
+| [Tree data](/components/data-grid/group-pivot/#tree-data)                               |    ❌     |              🚧               |                  🚧                   |
+| [Master detail](/components/data-grid/group-pivot/#master-detail)                       |    ❌     |              🚧               |                  🚧                   |
+| [Grouping](/components/data-grid/group-pivot/#grouping)                                 |    ❌     |              ❌               |                  🚧                   |
+| [Aggregation](/components/data-grid/group-pivot/#aggregation)                           |    ❌     |              ❌               |                  🚧                   |
+| [Pivoting](/components/data-grid/group-pivot/#pivoting)                                 |    ❌     |              ❌               |                  🚧                   |
+| **Misc**                                                                                |           |                               |                                       |
+| [Accessibility](/components/data-grid/accessibility/)                                   |    ✅     |              ✅               |                  ✅                   |
+| [Keyboard navigation](/components/data-grid/accessibility/#keyboard-navigation)         |    ✅     |              ✅               |                  ✅                   |
+| [Localization](/components/data-grid/localization/)                                     |    ✅     |              ✅               |                  ✅                   |
 
 ### License key installation
 
