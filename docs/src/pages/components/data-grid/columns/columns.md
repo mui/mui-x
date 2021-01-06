@@ -41,6 +41,14 @@ You can configure the headers with:
 
 For more advanced header configuration, go to the [rendering section](/components/data-grid/rendering/#header-cell).
 
+## Column menu
+
+By default, for each column header a column menu is shown that allows filters to be set in the context of the target column. To disable it set the prop `disableColumnMenu={true}`.
+
+{{"demo": "pages/components/data-grid/columns/ColumnMenuGrid.js", "bg": "inline"}}
+
+For more advanced filtering configuration, go to the [filtering section](/components/data-grid/filtering/#basic-filter).
+
 ## Column width
 
 By default, the columns have a width of 100 pixels.
