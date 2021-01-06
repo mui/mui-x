@@ -43,7 +43,7 @@ For more advanced header configuration, go to the [rendering section](/component
 
 ## Column menu
 
-By default, for each column header a column menu is shown that allows filters to be set in the context of the target column. To disable it set the prop `disableColumnMenu={true}`.
+By default, each column header displays a column menu. The column menu allows actions to be performed in the context of the target column, e.g. filtering. To disable it set the prop `disableColumnMenu={true}`.
 
 {{"demo": "pages/components/data-grid/columns/ColumnMenuGrid.js", "bg": "inline"}}
 
