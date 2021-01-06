@@ -47,8 +47,6 @@ By default, for each column header a column menu is shown that allows filters to
 
 {{"demo": "pages/components/data-grid/columns/ColumnMenuGrid.js", "bg": "inline"}}
 
-For more advanced filtering configuration, go to the [filtering section](/components/data-grid/filtering/#basic-filter).
-
 ## Column width
 
 By default, the columns have a width of 100 pixels.
