@@ -118,7 +118,7 @@ export interface ColDef {
    */
   disableClickEventBubbling?: boolean;
   /**
-   * Allows to disable the column menu for this column.
+   * If `true`, the column menu is disabled for this column.
    */
   disableColumnMenu?: boolean;
   /**
