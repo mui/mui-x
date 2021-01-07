@@ -3,7 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [4.0.0-alpha.14](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.12...v4.0.0-alpha.13)
+## [4.0.0-alpha.15](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.14...v4.0.0-alpha.15)
+
+###### _Jan 7, 2021_
+
+Big thanks to the 2 contributors who made this release possible. Here are some highlights ✨:
+
+- 🔗 Update peer dependencies for React 17 (#814) @DanailH
+- 🐛 Fix keyboard event collisions inside DataGrid cells (#794) @DanailH
+
+### @material-ui/x-grid@v4.0.0-alpha.15 / @material-ui/data-grid@v4.0.0-alpha.15
+
+- [DataGrid] Fix keyboard event collisions (#794) @DanailH
+
+### Docs
+
+- [docs] Add documentation for the column menu (#815) @DanailH
+
+### Core
+
+- [core] Update peer dependencies for React 17 (#814) @DanailH
+- [core] Batch small changes (#800) @oliviertassinari
+- [CHANGELOG] Use the format of the main repository @oliviertassinari
+
+## [4.0.0-alpha.14](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.13...v4.0.0-alpha.14)
 
 ###### _Dec 31, 2020_
 
