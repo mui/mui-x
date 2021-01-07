@@ -1,13 +1,13 @@
 {
   "name": "demo-app",
-  "version": "4.0.0-alpha.14",
+  "version": "4.0.0-alpha.15",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.9.12",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.54",
-    "@material-ui/x-grid": "^4.0.0-alpha.14",
-    "@material-ui/x-grid-data-generator": "^4.0.0-alpha.14",
+    "@material-ui/x-grid": "^4.0.0-alpha.15",
+    "@material-ui/x-grid-data-generator": "^4.0.0-alpha.15",
     "@trendmicro/react-interpolate": "^0.5.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
