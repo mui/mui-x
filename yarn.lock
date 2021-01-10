@@ -3202,9 +3202,9 @@
     react-is "^16.8.0 || ^17.0.0"
 
 "@material-ui/utils@^5.0.0-alpha.14":
-  version "5.0.0-alpha.21"
-  resolved "https://registry.yarnpkg.com/@material-ui/utils/-/utils-5.0.0-alpha.21.tgz#f060a16ca37cd89338734b38952af356ad696022"
-  integrity sha512-vpfxzH4+lNkD5WS9LpDlTzm0qduyU1X2mbzv43mSwrhx5eXBYscO4sFH6FczSKkTc+Xaaq5GXNDhsbCDPYcdiQ==
+  version "5.0.0-alpha.22"
+  resolved "https://registry.yarnpkg.com/@material-ui/utils/-/utils-5.0.0-alpha.22.tgz#048ab44c95d9bcafb262ff100646c9bf9a73c118"
+  integrity sha512-Qx5GnmYc/AW5TcvsyxYMB47it2qDk5l58dhOq4lgZdkwrFK70BvGmzBUgjhwf0phMO2kN2YkPUgjCjU5N0hbFg==
   dependencies:
     "@babel/runtime" "^7.4.4"
     "@types/prop-types" "^15.7.3"
