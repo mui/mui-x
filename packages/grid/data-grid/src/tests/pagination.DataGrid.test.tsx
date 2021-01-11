@@ -91,7 +91,28 @@ describe('<DataGrid /> - Pagination', () => {
       expect(onPageChange.callCount).to.equal(1);
     });
 
-    it('should not trigger onPageChange on initialisation and rendering of the first and default page', () => {
+    it('should trigger onPageChange when clicking on next page in Server mode', () => {
+      const onPageChange = spy();
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            {...baselineProps}
+            onPageChange={onPageChange}
+            pageSize={1}
+            paginationMode={'server'}
+          />
+        </div>,
+      );
+      // First time on init
+      expect(onPageChange.callCount).to.equal(1);
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(onPageChange.callCount).to.equal(2);
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(onPageChange.callCount).to.equal(3);
+    });
+
+    it('should not trigger onPageChange on initialisation and rendering of the first and default page if Client mode', () => {
       const onPageChange = spy();
 
       render(
@@ -100,6 +121,21 @@ describe('<DataGrid /> - Pagination', () => {
         </div>,
       );
       expect(onPageChange.callCount).to.equal(0);
+    });
+    it('should trigger onPageChange on initialisation and rendering of the first and default page if Server mode', () => {
+      const onPageChange = spy();
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            {...baselineProps}
+            onPageChange={onPageChange}
+            pageSize={1}
+            paginationMode={'server'}
+          />
+        </div>,
+      );
+      expect(onPageChange.callCount).to.equal(1);
     });
 
     it('should support server side pagination', () => {

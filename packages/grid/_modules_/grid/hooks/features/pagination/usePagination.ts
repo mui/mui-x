@@ -3,6 +3,7 @@ import { containerSizesSelector } from '../../../components/Viewport';
 import { PAGE_CHANGED, PAGESIZE_CHANGED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { PaginationApi } from '../../../models/api/paginationApi';
+import { FeatureModeConstant } from '../../../models/featureMode';
 import { PageChangeParams } from '../../../models/params/pageChangeParams';
 import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
@@ -84,7 +85,7 @@ export const usePagination = (apiRef: ApiRef): void => {
 
   React.useEffect(() => {
     setPage(options.page != null ? options.page : 1);
-  }, [options.page, setPage]);
+  }, [apiRef, options.page, setPage]);
 
   React.useEffect(() => {
     if (!options.autoPageSize && options.pageSize) {
@@ -101,6 +102,13 @@ export const usePagination = (apiRef: ApiRef): void => {
   React.useEffect(() => {
     dispatch(setRowCountActionCreator({ totalRowCount: visibleRowCount }));
   }, [apiRef, dispatch, visibleRowCount]);
+
+  React.useEffect(() => {
+    if (apiRef.current?.isInitialised && options.paginationMode === FeatureModeConstant.server) {
+      // Allows server mode to load the first page.
+      apiRef.current.setPage(1);
+    }
+  }, [apiRef, apiRef.current.isInitialised, options.paginationMode]);
 
   const paginationApi: PaginationApi = {
     setPageSize,
