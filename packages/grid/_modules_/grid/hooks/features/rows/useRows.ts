@@ -146,7 +146,7 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
   );
 
   const getRowModels = React.useCallback(
-    () => Object.values<RowModel>(apiRef.current.state.rows.idRowsLookup),
+    () => apiRef.current.state.rows.allRows.map((id) => apiRef.current.state.rows.idRowsLookup[id]),
     [apiRef],
   );
   const getRowsCount = React.useCallback(() => apiRef.current.state.rows.totalRowCount, [apiRef]);

@@ -39,6 +39,18 @@ describe('<DataGrid /> - Sorting', () => {
     }
   });
 
+  it('should keep the initial order', () => {
+    const cols = [{ field: 'id' }];
+    const rows = [{ id: 10 }, { id: 0 }, { id: 5 }];
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid columns={cols} rows={rows} />
+      </div>,
+    );
+    expect(getColumnValues()).to.deep.equal(['10', '0', '5']);
+  });
+
   it('should sort when clicking the header cell', () => {
     render(
       <div style={{ width: 300, height: 300 }}>
