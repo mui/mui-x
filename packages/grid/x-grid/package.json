@@ -34,8 +34,7 @@
     "@material-ui/utils": "^5.0.0-alpha.14",
     "@material-ui/x-license": "^4.0.0-alpha.15",
     "prop-types": "^15.7.2",
-    "reselect": "^4.0.0",
-    "tslib": "^2.0.0"
+    "reselect": "^4.0.0"
   },
   "peerDependencies": {
     "@material-ui/core": "^4.9.12",
