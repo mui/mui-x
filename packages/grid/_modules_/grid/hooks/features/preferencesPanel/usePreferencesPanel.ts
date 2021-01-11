@@ -19,7 +19,7 @@ export const usePreferencesPanel = (apiRef: ApiRef): void => {
 
   // This is to prevent the preferences from closing when you open a select box or another panel,
   // The issue is in MUI core V4 => Fixed in V5
-  const dontHidePanel = React.useCallback(() => {
+  const doNotHidePanel = React.useCallback(() => {
     immediateTimeout.current = setTimeout(() => clearTimeout(hideTimeout.current), 0);
   }, []);
 
@@ -32,14 +32,14 @@ export const usePreferencesPanel = (apiRef: ApiRef): void => {
   const showPreferences = React.useCallback(
     (newValue: PreferencePanelsValue) => {
       logger.debug('Opening Preferences Panel');
-      dontHidePanel();
+      doNotHidePanel();
       setGridState((state) => ({
         ...state,
         preferencePanel: { ...state.preferencePanel, open: true, openedPanelValue: newValue },
       }));
       forceUpdate();
     },
-    [dontHidePanel, forceUpdate, logger, setGridState],
+    [doNotHidePanel, forceUpdate, logger, setGridState],
   );
 
   useApiMethod(

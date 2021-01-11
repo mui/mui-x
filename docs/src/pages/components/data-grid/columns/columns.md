@@ -125,6 +125,12 @@ By default, each column header displays a column menu. The column menu allows ac
 
 {{"demo": "pages/components/data-grid/columns/ColumnMenuGrid.js", "bg": "inline"}}
 
+## Column selector
+
+To enable the column selector you need to add the showToolbar prop to the data grid. The user can choose which columns to be visible using the column selector from the toolbar.
+
+{{"demo": "pages/components/data-grid/columns/ColumnSelectorGrid.js", "bg": "inline"}}
+
 ## Column reorder [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
 
 By default, `XGrid` allows all column reordering by dragging the header cells and moving them left or right.
