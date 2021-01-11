@@ -100,7 +100,7 @@ describe('<DataGrid /> - Pagination', () => {
             {...baselineProps}
             onPageChange={onPageChange}
             pageSize={1}
-            paginationMode={'server'}
+            paginationMode="server"
           />
         </div>,
       );
@@ -122,6 +122,7 @@ describe('<DataGrid /> - Pagination', () => {
       );
       expect(onPageChange.callCount).to.equal(0);
     });
+
     it('should trigger onPageChange on initialisation and rendering of the first and default page if Server mode', () => {
       const onPageChange = spy();
 
@@ -131,7 +132,7 @@ describe('<DataGrid /> - Pagination', () => {
             {...baselineProps}
             onPageChange={onPageChange}
             pageSize={1}
-            paginationMode={'server'}
+            paginationMode="server"
           />
         </div>,
       );
