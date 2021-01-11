@@ -157,7 +157,7 @@ The following table summarizes the features available in the community `DataGrid
 | [CSV export](/components/data-grid/export/#csv-export)                                  |    🚧     |              🚧               |                  🚧                   |
 | [Print](/components/data-grid/export/#print)                                            |    🚧     |              🚧               |                  🚧                   |
 | [Excel export](/components/data-grid/export/#excel-export)                              |    ❌     |              ❌               |                  🚧                   |
-| [Clipboard](/components/data-grid/export/#clipboard)                                    |    ❌     |              ❌               |                  🚧                   |
+| [Clipboard](/components/data-grid/export/#clipboard)                                    |    ❌     |              🚧               |                  🚧                   |
 | **Rendering**                                                                           |           |                               |                                       |
 | [Column virtualization](/components/data-grid/rendering/#column-virtualization)         |    ✅     |              ✅               |                  ✅                   |
 | [Row virtualization > 100 rows](/components/data-grid/rendering/#column-virtualization) |    ❌     |              ✅               |                  ✅                   |
