@@ -9,6 +9,7 @@ import {
 import { expect } from 'chai';
 import { DataGrid, RowsProp } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
+import { spy } from 'sinon';
 
 describe('<DataGrid /> - Pagination', () => {
   // TODO v5: replace with createClientRender
@@ -65,6 +66,40 @@ describe('<DataGrid /> - Pagination', () => {
         expect(cell).to.have.text('Addidas');
         done();
       }, 50);
+    });
+
+    it('should trigger onPageChange once if page prop is set', ()=> {
+      const onPageChange = spy();
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} page={1} onPageChange={onPageChange} pageSize={1} />
+        </div>,
+      );
+      expect(onPageChange.calledOnce).to.be.true;
+    });
+
+    it('should trigger onPageChange when clicking on next page', ()=> {
+      const onPageChange = spy();
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} onPageChange={onPageChange} pageSize={1} />
+        </div>,
+      );
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(onPageChange.calledOnce).to.be.true;
+    });
+
+    it('should not trigger onPageChange on initialisation and rendering of the first and default page', ()=> {
+      const onPageChange = spy();
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} onPageChange={onPageChange} pageSize={1} />
+        </div>,
+      );
+      expect(onPageChange.calledOnce).to.be.false;
     });
 
     it('should support server side pagination', () => {
