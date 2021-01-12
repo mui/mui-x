@@ -20,10 +20,6 @@ export const DefaultFooter = React.forwardRef<HTMLDivElement, DefaultFooterProps
     const options = useGridSelector(apiRef, optionsSelector);
     const selectedRowCount = useGridSelector(apiRef, selectedRowsCountSelector);
 
-    if (options.hideFooter) {
-      return null;
-    }
-
     const showSelectedRowCount =
       !options.hideFooterSelectedRowCount && selectedRowCount > 0 ? (
         <SelectedRowCount selectedRowCount={selectedRowCount} />
