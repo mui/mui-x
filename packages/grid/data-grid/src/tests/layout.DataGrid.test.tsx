@@ -450,6 +450,13 @@ describe('<DataGrid /> - Layout & Warnings', () => {
   });
 
   describe('Error', () => {
+    before(function beforeHook() {
+      if (/jsdom/.test(window.navigator.userAgent)) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
     it('should display error message when error prop set', () => {
       const message = 'Error can also be set in props!';
       render(
