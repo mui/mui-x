@@ -28,7 +28,7 @@ It replaces the previous values. This approach has some drawbacks:
 - You need to provide all the rows.
 - You might create a performance bottleneck when preparing the rows array to provide to the grid.
 
-### apiRef [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
+### apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
 
 The second way to update rows is to use the apiRef.
 This is an imperative API that is designed to solve the previous two limitations of the declarative `rows` prop. `apiRef.current.updateRows()`, updates the rows to the grid. It **merges** the new rows with the previous ones.
@@ -99,14 +99,14 @@ Then you need to handle the `onSortModelChange` callback, sort the rows on the s
 
 {{"demo": "pages/components/data-grid/rows/ServerSortingGrid.js", "bg": "inline"}}
 
-### Multi-column sorting [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
+### Multi-column sorting [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
 
 You can sort by multiple columns at the same time using `XGrid`.
 Hold the <kbd>CTRL</kbd> key down while clicking the column header.
 
 {{"demo": "pages/components/data-grid/rows/MultiSortingGrid.js", "disableAd": true, "bg": "inline"}}
 
-### apiRef [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
+### apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
 
 The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 
@@ -136,7 +136,7 @@ Row spanning allows to change this default behavior.
 It allows cells to span multiple rows.
 This is very close to the "row spanning" in an HTML `<table>`.
 
-## 🚧 Row reorder [<span role="img" title="Enterprise">⚡️</span>](https://material-ui.com/store/items/material-ui-x/)
+## 🚧 Row reorder [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >

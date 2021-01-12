@@ -64,7 +64,7 @@ WIP
 
 WIP
 
-### Multi-column filtering ⚡️
+### Multi-column filtering <span class="pro"></span>
 
 `XGrid` supports filtering by multiple columns.
 The default operator that will be applied between filters is an And.
@@ -85,7 +85,7 @@ const filterModel: FilterModel = {
 
 {{"demo": "pages/components/data-grid/filtering/MultiFilteringWithOrGrid.js", "bg": "inline"}}
 
-### apiRef ⚡️
+### apiRef <span class="pro"></span>
 
 <!-- https://master--material-ui-x.netlify.app/components/data-grid/rows/#apiref -->
 
