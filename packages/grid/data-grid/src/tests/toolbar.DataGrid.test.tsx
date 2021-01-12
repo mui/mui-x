@@ -121,7 +121,7 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      expect(getAllByRole('columnheader')[0].innerText).to.equal('id');
+      expect(getAllByRole('columnheader')[0].innerText.trim()).to.equal('id');
 
       fireEvent.click(getByText('Columns'));
       fireEvent.click(document.querySelectorAll('[role="tooltip"] [name="id"]')[0]);
@@ -166,7 +166,7 @@ describe('<DataGrid /> - Toolbar', () => {
       fireEvent.click(getByText('Show All'));
 
       getAllByRole('columnheader').forEach((col, index) => {
-        expect(col.innerText).to.equal(customColumns[index].field);
+        expect(col.innerText.trim()).to.equal(customColumns[index].field);
       });
     });
   });
