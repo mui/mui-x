@@ -88,7 +88,7 @@ describe('<DataGrid /> - Pagination', () => {
         </div>,
       );
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      expect(onPageChange.callCount).to.equal(1)
+      expect(onPageChange.callCount).to.equal(1;
 
       fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
       expect(onPageChange.callCount).to.equal(2);
@@ -103,7 +103,7 @@ describe('<DataGrid /> - Pagination', () => {
             {...baselineProps}
             onPageChange={onPageChange}
             pageSize={1}
-            paginationMode={'server'}
+            paginationMode="server"
           />
         </div>,
       );
