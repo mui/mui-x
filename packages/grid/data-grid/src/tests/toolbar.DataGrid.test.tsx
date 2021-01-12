@@ -50,7 +50,7 @@ describe('<DataGrid /> - Toolbar', () => {
     }
   });
 
-  describe('<DataGrid /> - Density selector', () => {
+  describe('Density selector', () => {
     it('should increase grid density when selecting compact density', () => {
       const rowHeight = 30;
       const { getByText } = render(
@@ -114,7 +114,7 @@ describe('<DataGrid /> - Toolbar', () => {
     });
   });
 
-  describe('<DataGrid /> - Column selector', () => {
+  describe('Column selector', () => {
     it('should hide "id" column when hiding it from the column selector', () => {
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
@@ -125,7 +125,7 @@ describe('<DataGrid /> - Toolbar', () => {
       expect(getColumnHeaders()).to.deep.equal(['id', 'brand']);
 
       fireEvent.click(getByText('Columns'));
-      fireEvent.click(document.querySelectorAll('[role="tooltip"] [name="id"]')[0]);
+      fireEvent.click(document.querySelector('[role="tooltip"] [name="id"]'));
 
       expect(getColumnHeaders()).to.deep.equal(['brand']);
     });
@@ -157,7 +157,7 @@ describe('<DataGrid /> - Toolbar', () => {
         },
       ];
 
-      const { getByText, getAllByRole } = render(
+      const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid {...baselineProps} columns={customColumns} showToolbar />
         </div>,
@@ -166,9 +166,7 @@ describe('<DataGrid /> - Toolbar', () => {
       fireEvent.click(getByText('Columns'));
       fireEvent.click(getByText('Show All'));
 
-      getAllByRole('columnheader').forEach((col, index) => {
-        expect(col.innerText.trim()).to.equal(customColumns[index].field);
-      });
+      expect(getColumnHeaders()).to.deep.equal(['id', 'brand']);
     });
   });
 });
