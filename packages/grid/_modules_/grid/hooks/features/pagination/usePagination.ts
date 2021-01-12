@@ -103,13 +103,6 @@ export const usePagination = (apiRef: ApiRef): void => {
     dispatch(setRowCountActionCreator({ totalRowCount: visibleRowCount }));
   }, [apiRef, dispatch, visibleRowCount]);
 
-  React.useEffect(() => {
-    if (apiRef.current?.isInitialised && options.paginationMode === FeatureModeConstant.server) {
-      // Allows server mode to load the first page.
-      apiRef.current.setPage(1);
-    }
-  }, [apiRef, apiRef.current.isInitialised, options.paginationMode]);
-
   const paginationApi: PaginationApi = {
     setPageSize,
     setPage,
