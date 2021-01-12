@@ -25,7 +25,6 @@ import { RowSelectedParams } from './params/rowSelectedParams';
 import { SelectionChangeParams } from './params/selectionChangeParams';
 import { SortModelParams } from './params/sortModelParams';
 import { SortDirection, SortModel } from './sortModel';
-import { EXPERIMENTAL_ENABLED } from '../constants/envConstants';
 import { DEFAULT_LOCALE_TEXT } from '../constants/localeTextConstants';
 import { LocaleText } from './api/localeTextApi';
 
@@ -382,7 +381,6 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   sortingOrder: ['asc', 'desc', null],
   columnTypes: getDefaultColumnTypes(),
   density: DensityTypes.Standard,
-  disableColumnSelector: !EXPERIMENTAL_ENABLED,
   showToolbar: false,
   localeText: DEFAULT_LOCALE_TEXT,
   icons: {

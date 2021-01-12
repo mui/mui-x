@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/x-grid-data-generator",
-  "version": "4.0.0-alpha.14",
+  "version": "4.0.0-alpha.15",
   "description": "Generate fake data for demo purposes only.",
   "author": "Material-UI Team",
   "main": "dist/cjs/index.js",
@@ -29,9 +29,6 @@
     "commander": "^6.1.0",
     "esm": "^3.2.25",
     "lru-cache": "^6.0.0"
-  },
-  "devDependencies": {
-    "tslib": "^2.0.0"
   },
   "peerDependencies": {
     "@material-ui/core": "^4.9.12",
