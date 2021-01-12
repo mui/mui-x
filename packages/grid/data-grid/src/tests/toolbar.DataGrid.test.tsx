@@ -126,7 +126,7 @@ describe('<DataGrid /> - Toolbar', () => {
       fireEvent.click(getByText('Columns'));
       fireEvent.click(document.querySelectorAll('[role="tooltip"] [name="id"]')[0]);
 
-      expect(getAllByRole('columnheader')[0].innerText).to.equal('brand');
+      expect(getAllByRole('columnheader')[0].innerText.trim()).to.equal('brand');
     });
 
     it('should hide all columns when clicking "HIDE ALL" from the column selector', () => {
