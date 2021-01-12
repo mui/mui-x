@@ -6,6 +6,7 @@ import {
   // @ts-expect-error need to migrate helpers to TypeScript
   screen,
 } from 'test/utils';
+import { getColumnHeaders } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
 import {
@@ -115,33 +116,33 @@ describe('<DataGrid /> - Toolbar', () => {
 
   describe('<DataGrid /> - Column selector', () => {
     it('should hide "id" column when hiding it from the column selector', () => {
-      const { getByText, getAllByRole } = render(
+      const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid {...baselineProps} showToolbar />
         </div>,
       );
 
-      expect(getAllByRole('columnheader')[0].innerText.trim()).to.equal('id');
+      expect(getColumnHeaders()).to.deep.equal(['id', 'brand']);
 
       fireEvent.click(getByText('Columns'));
       fireEvent.click(document.querySelectorAll('[role="tooltip"] [name="id"]')[0]);
 
-      expect(getAllByRole('columnheader')[0].innerText.trim()).to.equal('brand');
+      expect(getColumnHeaders()).to.deep.equal(['brand']);
     });
 
     it('should hide all columns when clicking "HIDE ALL" from the column selector', () => {
-      const { getByText, queryAllByRole } = render(
+      const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid {...baselineProps} showToolbar />
         </div>,
       );
 
-      expect(queryAllByRole('columnheader')).to.not.deep.equal([]);
+      expect(getColumnHeaders()).to.deep.equal(['id', 'brand']);
 
       fireEvent.click(getByText('Columns'));
       fireEvent.click(getByText('Hide All'));
 
-      expect(queryAllByRole('columnheader')).to.deep.equal([]);
+      expect(getColumnHeaders()).to.deep.equal([]);
     });
 
     it('should show all columns when clicking "SHOW ALL" from the column selector', () => {
