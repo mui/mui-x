@@ -137,18 +137,18 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
             aria-label={apiRef!.current.getLocaleText('rootGridLabel')}
             aria-multiselectable={!gridState.options.disableMultipleSelection}
           >
-            <ErrorBoundary
-              hasError={errorState != null}
-              componentProps={errorState}
-              api={apiRef!}
-              logger={logger}
-              render={(errorProps) => (
-                <div className="MuiDataGrid-mainGridContainer">
-                  {customComponents.renderError(errorProps)}
-                </div>
-              )}
-            >
-              <ApiContext.Provider value={apiRef}>
+            <ApiContext.Provider value={apiRef}>
+              <ErrorBoundary
+                hasError={errorState != null}
+                componentProps={errorState}
+                api={apiRef!}
+                logger={logger}
+                render={(errorProps) => (
+                  <div className="MuiDataGrid-mainGridContainer">
+                    {customComponents.renderError(errorProps)}
+                  </div>
+                )}
+              >
                 <div ref={headerRef}>
                   {customComponents.headerComponent || (
                     <React.Fragment>
@@ -198,8 +198,8 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                     />
                   )}
                 </div>
-              </ApiContext.Provider>
-            </ErrorBoundary>
+              </ErrorBoundary>
+            </ApiContext.Provider>
           </GridRoot>
         )}
       </AutoSizer>

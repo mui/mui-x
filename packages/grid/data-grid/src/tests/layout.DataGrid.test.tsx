@@ -448,4 +448,16 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       expect(getByText('Size')).not.to.equal(null);
     });
   });
+
+  describe('Error', () => {
+    it('should display error message when error prop set', () => {
+      const message = 'Error can also be set in props!';
+      render(
+        <div style={{ width: 300, height: 500 }}>
+          <DataGrid {...baselineProps} error={{ message }} />
+        </div>,
+      );
+      expect(document.querySelectorAll('.MuiDataGrid-overlay')[0].textContent).to.equal(message);
+    });
+  });
 });
