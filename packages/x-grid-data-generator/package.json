@@ -30,9 +30,6 @@
     "esm": "^3.2.25",
     "lru-cache": "^6.0.0"
   },
-  "devDependencies": {
-    "tslib": "^2.0.0"
-  },
   "peerDependencies": {
     "@material-ui/core": "^4.9.12",
     "@material-ui/icons": "^4.9.1",

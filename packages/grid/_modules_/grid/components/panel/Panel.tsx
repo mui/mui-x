@@ -57,7 +57,16 @@ export function Panel(props: PanelProps) {
   }
 
   return (
-    <Popper placement="bottom-start" open={open} anchorEl={anchorEl}>
+    <Popper
+      placement="bottom-start"
+      open={open}
+      anchorEl={anchorEl}
+      modifiers={{
+        flip: {
+          enabled: false,
+        },
+      }}
+    >
       <ClickAwayListener onClickAway={handleClickAway}>
         <Paper className={classes.root} elevation={8}>
           {children}

@@ -464,3 +464,14 @@ export const ResetSortingRows = () => {
     </div>
   );
 };
+
+export const OriginalOrder = () => {
+  const idOnlyCols = [{ field: 'id' }];
+  const simpleRows = [{ id: 10 }, { id: 0 }, { id: 5 }];
+
+  return (
+    <div className="grid-container" style={{ flexDirection: 'column' }}>
+      <XGrid rows={simpleRows} columns={idOnlyCols} />
+    </div>
+  );
+};
