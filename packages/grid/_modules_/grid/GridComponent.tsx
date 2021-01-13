@@ -149,23 +149,22 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                   </div>
                 )}
               >
-                {gridState.options.showToolbar && (
-                  <div ref={headerRef}>
-                    {customComponents.headerComponent || (
-                      <React.Fragment>
-                        {!gridState.options.disableColumnFilter ||
+                <div ref={headerRef}>
+                  {customComponents.headerComponent || (
+                    <React.Fragment>
+                      {gridState.options.showToolbar &&
+                        (!gridState.options.disableColumnFilter ||
                           !gridState.options.disableColumnSelector ||
-                          (!gridState.options.disableDensitySelector && (
-                            <GridToolbar>
-                              {!gridState.options.disableColumnSelector && <ColumnsToolbarButton />}
-                              {!gridState.options.disableColumnFilter && <FilterToolbarButton />}
-                              {!gridState.options.disableDensitySelector && <DensitySelector />}
-                            </GridToolbar>
-                          ))}
-                      </React.Fragment>
-                    )}
-                  </div>
-                )}
+                          !gridState.options.disableDensitySelector) && (
+                          <GridToolbar>
+                            {!gridState.options.disableColumnSelector && <ColumnsToolbarButton />}
+                            {!gridState.options.disableColumnFilter && <FilterToolbarButton />}
+                            {!gridState.options.disableDensitySelector && <DensitySelector />}
+                          </GridToolbar>
+                        )}
+                    </React.Fragment>
+                  )}
+                </div>
                 <div className="MuiDataGrid-mainGridContainer">
                   <Watermark licenseStatus={props.licenseStatus} />
                   <GridColumnsContainer ref={columnsContainerRef}>
