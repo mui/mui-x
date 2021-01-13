@@ -291,6 +291,7 @@ function ToolbarComponent() {
 export const CustomToolbar = Template.bind({});
 CustomToolbar.args = {
   pageSize: 33,
+  showToolbar: true,
   components: {
     header: ToolbarComponent,
   },
