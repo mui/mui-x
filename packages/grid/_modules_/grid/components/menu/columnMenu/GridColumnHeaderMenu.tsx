@@ -10,11 +10,11 @@ import { GridMenu } from '../GridMenu';
 const columnMenuStateSelector = (state: GridState) => state.columnMenu;
 
 export interface GridColumnHeaderMenuItemProps {
-  hideMenu: ()=> void;
+  hideMenu: () => void;
   currentColumn: ColDef;
 }
 export interface GridColumnHeaderMenuProps {
-  renderColumnMenu: ({hideMenu, currentColumn}: GridColumnHeaderMenuItemProps)=> JSX.Element;
+  renderColumnMenu: ({ hideMenu, currentColumn }: GridColumnHeaderMenuItemProps) => JSX.Element;
 }
 
 export function GridColumnHeaderMenu({ renderColumnMenu }: GridColumnHeaderMenuProps) {
@@ -85,7 +85,7 @@ export function GridColumnHeaderMenu({ renderColumnMenu }: GridColumnHeaderMenuP
       onKeyDown={handleListKeyDown}
       onClickAway={hideMenuDelayed}
     >
-      {renderColumnMenu({hideMenu, currentColumn})}
+      {renderColumnMenu({ hideMenu, currentColumn })}
     </GridMenu>
   );
 }

@@ -1,6 +1,13 @@
 import * as React from 'react';
 import { Story, Meta } from '@storybook/react';
-import { ColDef, XGrid, GridOverlay, GridFooter, XGridProps, HideColMenuItem } from '@material-ui/x-grid';
+import {
+  ColDef,
+  XGrid,
+  GridOverlay,
+  GridFooter,
+  XGridProps,
+  HideColMenuItem,
+} from '@material-ui/x-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CodeIcon from '@material-ui/icons/Code';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -301,9 +308,14 @@ function ColumnMenuComponent(props) {
     return <HideColMenuItem onClick={props.hideMenu} column={props.currentColumn!} />;
   }
   if (props.currentColumn.field === 'currencyPair') {
-    return <div style={{background: '#ccc'}}> This is my currency pair column Menu!</div>;
+    return <div style={{ background: '#ccc' }}> This is my currency pair column Menu!</div>;
   }
-  return <DefaultGridColumnHeaderMenuItems hideMenu={props.hideMenu} currentColumn={props.currentColumn}/>
+  return (
+    <DefaultGridColumnHeaderMenuItems
+      hideMenu={props.hideMenu}
+      currentColumn={props.currentColumn}
+    />
+  );
 }
 
 export const CustomColumnMenu = Template.bind({});
