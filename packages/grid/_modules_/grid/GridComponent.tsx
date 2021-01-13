@@ -8,7 +8,15 @@ import { AutoSizer } from './components/AutoSizer';
 import { ColumnsHeader } from './components/columnHeaders/ColumnHeaders';
 import { DefaultFooter } from './components/DefaultFooter';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { ColumnsMenuItem } from './components/menu/columnMenu/ColumnsMenuItem';
+import { DefaultGridColumnHeaderMenuItems } from './components/menu/columnMenu/DefaultGridColumnHeaderMenuItems';
+import { FilterMenuItem } from './components/menu/columnMenu/FilterMenuItem';
+import { GridColumnHeaderMenu } from './components/menu/columnMenu/GridColumnHeaderMenu';
+import { HideColMenuItem } from './components/menu/columnMenu/HideColMenuItem';
+import { SortMenuItems } from './components/menu/columnMenu/SortMenuItems';
+import { GridMenu } from './components/menu/GridMenu';
 import { Pagination } from './components/Pagination';
+import { PreferencesPanel } from './components/panel/PreferencesPanel';
 import { GridColumnsContainer } from './components/styled-wrappers/GridColumnsContainer';
 import { GridDataContainer } from './components/styled-wrappers/GridDataContainer';
 import { GridRoot } from './components/styled-wrappers/GridRoot';
@@ -166,6 +174,8 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                   )}
                 </div>
                 <div className="MuiDataGrid-mainGridContainer">
+                  <GridColumnHeaderMenu renderColumnMenu={customComponents.renderColumnMenu} />
+                  <PreferencesPanel />
                   <Watermark licenseStatus={props.licenseStatus} />
                   <GridColumnsContainer ref={columnsContainerRef}>
                     <ColumnsHeader ref={columnsHeaderRef} />

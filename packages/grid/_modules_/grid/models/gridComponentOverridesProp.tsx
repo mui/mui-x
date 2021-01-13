@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { GridColumnHeaderMenuItemProps } from '../components/menu/columnMenu/GridColumnHeaderMenu';
 import { ComponentProps } from './params';
 
 /**
@@ -29,4 +30,8 @@ export interface GridComponentOverridesProp {
    * Error overlay component rendered above the grid when an error is caught.
    */
   errorOverlay?: React.ElementType<ComponentProps>;
+  /**
+   * ColumnMenu component rendered by clicking on the 3 dots icon in column headers.
+   */
+  columnMenu?: React.ElementType<ComponentProps & GridColumnHeaderMenuItemProps>;
 }

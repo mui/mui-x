@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { DefaultGridColumnHeaderMenuItems } from '../../components/menu/columnMenu/DefaultGridColumnHeaderMenuItems';
+import { GridColumnHeaderMenuItemProps } from '../../components/menu/columnMenu/GridColumnHeaderMenu';
 import { ComponentProps, ApiRef, GridComponentOverridesProp, RootContainerRef } from '../../models';
 import { ErrorMessage } from '../../components/ErrorMessage';
 import { LoadingOverlay } from '../../components/LoadingOverlay';
@@ -52,7 +54,7 @@ export const useComponents = (
       componentOverrides?.loadingOverlay ? (
         React.createElement(componentOverrides.loadingOverlay, componentProps)
       ) : (
-        <LoadingOverlay />
+        <LoadingOverlay/>
       ),
     [componentOverrides, componentProps],
   );
@@ -61,7 +63,7 @@ export const useComponents = (
       componentOverrides?.noRowsOverlay ? (
         React.createElement(componentOverrides.noRowsOverlay, componentProps)
       ) : (
-        <NoRowMessage />
+        <NoRowMessage/>
       ),
     [componentOverrides, componentProps],
   );
@@ -82,6 +84,15 @@ export const useComponents = (
     [componentOverrides?.errorOverlay, componentProps],
   );
 
+  const renderColumnMenu = React.useCallback(
+    (props: GridColumnHeaderMenuItemProps) => {
+      return componentOverrides?.columnMenu
+        ? React.createElement(componentOverrides.columnMenu, {...componentProps, ...props})
+        : <DefaultGridColumnHeaderMenuItems hideMenu={props.hideMenu} currentColumn={props.currentColumn}/>;
+    },
+    [componentOverrides, componentProps],
+  );
+
   return {
     headerComponent,
     footerComponent,
@@ -89,5 +100,6 @@ export const useComponents = (
     noRowsComponent,
     paginationComponent,
     renderError,
+    renderColumnMenu,
   };
 };

@@ -8,8 +8,6 @@ import { useApiEventHandler } from '../../hooks/root/useApiEventHandler';
 import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { Columns } from '../../models/colDef/colDef';
 import { ApiContext } from '../api-context';
-import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
-import { PreferencesPanel } from '../panel/PreferencesPanel';
 import { ColumnHeaderItem } from './ColumnHeaderItem';
 
 export interface ColumnHeadersItemCollectionProps {
@@ -49,11 +47,5 @@ export function ColumnHeaderItemCollection(props: ColumnHeadersItemCollectionPro
     />
   ));
 
-  return (
-    <React.Fragment>
-      <GridColumnHeaderMenu />
-      <PreferencesPanel />
-      {items}
-    </React.Fragment>
-  );
+  return <React.Fragment>{items}</React.Fragment>;
 }

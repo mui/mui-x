@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Story, Meta } from '@storybook/react';
-import { ColDef, XGrid, GridOverlay, GridFooter, XGridProps } from '@material-ui/x-grid';
+import { ColDef, XGrid, GridOverlay, GridFooter, XGridProps, HideColMenuItem } from '@material-ui/x-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CodeIcon from '@material-ui/icons/Code';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -9,6 +9,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
 import CreateIcon from '@material-ui/icons/Create';
+import { DefaultGridColumnHeaderMenuItems } from '../../../../grid/_modules_/grid/components/menu/columnMenu/DefaultGridColumnHeaderMenuItems';
 import { useData } from '../../hooks/useData';
 
 export default {
@@ -290,8 +291,24 @@ function ToolbarComponent() {
 
 export const CustomToolbar = Template.bind({});
 CustomToolbar.args = {
-  pageSize: 33,
   components: {
     header: ToolbarComponent,
+  },
+};
+
+function ColumnMenuComponent(props) {
+  if (props.currentColumn.field === 'id') {
+    return <HideColMenuItem onClick={props.hideMenu} column={props.currentColumn!} />;
+  }
+  if (props.currentColumn.field === 'currencyPair') {
+    return <div style={{background: '#ccc'}}> This is my currency pair column Menu!</div>;
+  }
+  return <DefaultGridColumnHeaderMenuItems hideMenu={props.hideMenu} currentColumn={props.currentColumn}/>
+}
+
+export const CustomColumnMenu = Template.bind({});
+CustomColumnMenu.args = {
+  components: {
+    columnMenu: ColumnMenuComponent,
   },
 };

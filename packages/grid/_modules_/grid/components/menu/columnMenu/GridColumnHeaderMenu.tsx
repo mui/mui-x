@@ -2,17 +2,22 @@ import * as React from 'react';
 import { ColumnMenuState } from '../../../hooks/features/columnMenu/columnMenuState';
 import { GridState } from '../../../hooks/features/core/gridState';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
+import { ColDef } from '../../../models/colDef/colDef';
 import { findHeaderElementFromField } from '../../../utils/domUtils';
 import { ApiContext } from '../../api-context';
 import { GridMenu } from '../GridMenu';
-import { ColumnsMenuItem } from './ColumnsMenuItem';
-import { FilterMenuItem } from './FilterMenuItem';
-import { HideColMenuItem } from './HideColMenuItem';
-import { SortMenuItems } from './SortMenuItems';
 
 const columnMenuStateSelector = (state: GridState) => state.columnMenu;
 
-export function GridColumnHeaderMenu() {
+export interface GridColumnHeaderMenuItemProps {
+  hideMenu: ()=> void;
+  currentColumn: ColDef;
+}
+export interface GridColumnHeaderMenuProps {
+  renderColumnMenu: ({hideMenu, currentColumn}: GridColumnHeaderMenuItemProps)=> JSX.Element;
+}
+
+export function GridColumnHeaderMenu({ renderColumnMenu }: GridColumnHeaderMenuProps) {
   const apiRef = React.useContext(ApiContext);
   const columnMenuState = useGridSelector(apiRef!, columnMenuStateSelector);
   const currentColumn = columnMenuState.field
@@ -80,10 +85,7 @@ export function GridColumnHeaderMenu() {
       onKeyDown={handleListKeyDown}
       onClickAway={hideMenuDelayed}
     >
-      <SortMenuItems onClick={hideMenu} column={currentColumn!} />
-      <FilterMenuItem onClick={hideMenu} column={currentColumn!} />
-      <HideColMenuItem onClick={hideMenu} column={currentColumn!} />
-      <ColumnsMenuItem onClick={hideMenu} column={currentColumn!} />
+      {renderColumnMenu({hideMenu, currentColumn})}
     </GridMenu>
   );
 }
