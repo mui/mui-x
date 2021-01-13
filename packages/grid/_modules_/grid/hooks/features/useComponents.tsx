@@ -39,8 +39,6 @@ export const useComponents = (
   const headerComponent = componentOverrides?.Header
     ? React.createElement(componentOverrides.Header, componentProps)
     : options.showToolbar && <DefaultToolbar />;
-  // [componentOverrides?.Header, componentProps, options.showToolbar],
-  // );
 
   const loadingComponent = React.useMemo(
     () =>
@@ -76,7 +74,6 @@ export const useComponents = (
   ) : (
     <DefaultFooter paginationComponent={paginationComponent} />
   );
-  // [componentOverrides?.Footer, componentProps, paginationComponent], ;
 
   const renderError = React.useCallback(
     (props) => {
