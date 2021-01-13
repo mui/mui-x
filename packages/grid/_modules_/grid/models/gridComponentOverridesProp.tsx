@@ -9,29 +9,29 @@ export interface GridComponentOverridesProp {
   /**
    * Pagination component rendered in the grid footer by default.
    */
-  pagination?: React.ElementType<ComponentProps>;
+  Pagination?: React.ElementType<ComponentProps>;
   /**
    * Loading overlay component rendered when the grid is in a loading state.
    */
-  loadingOverlay?: React.ElementType<ComponentProps>;
+  LoadingOverlay?: React.ElementType<ComponentProps>;
   /**
    * No rows overlay component rendered when the grid has no rows.
    */
-  noRowsOverlay?: React.ElementType<ComponentProps>;
+  NoRowsOverlay?: React.ElementType<ComponentProps>;
   /**
    * Footer component rendered at the bottom of the grid viewport.
    */
-  footer?: React.ElementType<ComponentProps>;
+  Footer?: React.ElementType<ComponentProps>;
   /**
    * Header component rendered above the grid column header bar.
    */
-  header?: React.ElementType<ComponentProps>;
+  Header?: React.ElementType<ComponentProps>;
   /**
    * Error overlay component rendered above the grid when an error is caught.
    */
-  errorOverlay?: React.ElementType<ComponentProps>;
+  ErrorOverlay?: React.ElementType<ComponentProps>;
   /**
    * ColumnMenu component rendered by clicking on the 3 dots icon in column headers.
    */
-  columnMenu?: React.ElementType<ComponentProps & GridColumnHeaderMenuItemProps>;
+  ColumnMenu?: React.ElementType<ComponentProps & GridColumnHeaderMenuItemProps>;
 }

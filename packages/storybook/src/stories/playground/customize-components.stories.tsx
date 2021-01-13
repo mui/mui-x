@@ -1,6 +1,13 @@
 import * as React from 'react';
 import { Story, Meta } from '@storybook/react';
-import { ColDef, XGrid, GridOverlay, GridFooter, XGridProps, HideColMenuItem } from '@material-ui/x-grid';
+import {
+  ColDef,
+  XGrid,
+  GridOverlay,
+  GridFooter,
+  XGridProps,
+  HideColMenuItem,
+} from '@material-ui/x-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CodeIcon from '@material-ui/icons/Code';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -48,7 +55,7 @@ const rows = [
 const defaultData = { columns, rows };
 
 const Template: Story<XGridProps> = (args) => {
-  const data = useData(2000, 200);
+  const data = useData(500, 50);
   return <XGrid {...data} {...args} />;
 };
 
@@ -67,7 +74,7 @@ Loading.args = {
   ...defaultData,
   loading: true,
   components: {
-    loadingOverlay: LoadingComponent,
+    LoadingOverlay: LoadingComponent,
   },
 };
 
@@ -86,7 +93,7 @@ NoRows.args = {
   rows: [],
   columns,
   components: {
-    noRowsOverlay: NoRowsComponent,
+    NoRowsOverlay: NoRowsComponent,
   },
 };
 
@@ -124,7 +131,7 @@ CustomPagination.args = {
   pagination: true,
   pageSize: 50,
   components: {
-    pagination: PaginationComponent,
+    Pagination: PaginationComponent,
   },
 };
 
@@ -152,7 +159,7 @@ CustomFooter.args = {
   hideFooter: true,
   pageSize: 33,
   components: {
-    footer: FooterComponent,
+    Footer: FooterComponent,
   },
 };
 
@@ -176,8 +183,8 @@ HeaderAndFooter.args = {
   hideFooterPagination: true,
   pageSize: 33,
   components: {
-    header: CustomHeader,
-    footer: FooterComponent2,
+    Header: CustomHeader,
+    Footer: FooterComponent2,
   },
 };
 
@@ -292,7 +299,7 @@ function ToolbarComponent() {
 export const CustomToolbar = Template.bind({});
 CustomToolbar.args = {
   components: {
-    header: ToolbarComponent,
+    Header: ToolbarComponent,
   },
 };
 
@@ -301,14 +308,19 @@ function ColumnMenuComponent(props) {
     return <HideColMenuItem onClick={props.hideMenu} column={props.currentColumn!} />;
   }
   if (props.currentColumn.field === 'currencyPair') {
-    return <div style={{background: '#ccc'}}> This is my currency pair column Menu!</div>;
+    return <div style={{ background: '#ccc' }}> This is my currency pair column Menu!</div>;
   }
-  return <DefaultGridColumnHeaderMenuItems hideMenu={props.hideMenu} currentColumn={props.currentColumn}/>
+  return (
+    <DefaultGridColumnHeaderMenuItems
+      hideMenu={props.hideMenu}
+      currentColumn={props.currentColumn}
+    />
+  );
 }
 
 export const CustomColumnMenu = Template.bind({});
 CustomColumnMenu.args = {
   components: {
-    columnMenu: ColumnMenuComponent,
+    ColumnMenu: ColumnMenuComponent,
   },
 };

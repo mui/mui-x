@@ -1,6 +1,9 @@
 import * as React from 'react';
+import { DefaultFooter } from '../../components/DefaultFooter';
 import { DefaultGridColumnHeaderMenuItems } from '../../components/menu/columnMenu/DefaultGridColumnHeaderMenuItems';
 import { GridColumnHeaderMenuItemProps } from '../../components/menu/columnMenu/GridColumnHeaderMenu';
+import { Pagination } from '../../components/Pagination';
+import { DefaultToolbar } from '../../components/toolbar/DefaultToolbar';
 import { ComponentProps, ApiRef, GridComponentOverridesProp, RootContainerRef } from '../../models';
 import { ErrorMessage } from '../../components/ErrorMessage';
 import { LoadingOverlay } from '../../components/LoadingOverlay';
@@ -33,62 +36,66 @@ export const useComponents = (
     [pagination, rows, columns, options, apiRef, gridRootRef],
   );
 
-  const headerComponent = React.useMemo(
-    () =>
-      componentOverrides?.header
-        ? React.createElement(componentOverrides.header, componentProps)
-        : null,
-    [componentOverrides, componentProps],
-  );
-
-  const footerComponent = React.useMemo(
-    () =>
-      componentOverrides?.footer
-        ? React.createElement(componentOverrides.footer, componentProps)
-        : null,
-    [componentOverrides, componentProps],
-  );
+  const headerComponent = componentOverrides?.Header
+    ? React.createElement(componentOverrides.Header, componentProps)
+    : options.showToolbar && <DefaultToolbar />;
+  // [componentOverrides?.Header, componentProps, options.showToolbar],
+  // );
 
   const loadingComponent = React.useMemo(
     () =>
-      componentOverrides?.loadingOverlay ? (
-        React.createElement(componentOverrides.loadingOverlay, componentProps)
+      componentOverrides?.LoadingOverlay ? (
+        React.createElement(componentOverrides.LoadingOverlay, componentProps)
       ) : (
-        <LoadingOverlay/>
+        <LoadingOverlay />
       ),
     [componentOverrides, componentProps],
   );
   const noRowsComponent = React.useMemo(
     () =>
-      componentOverrides?.noRowsOverlay ? (
-        React.createElement(componentOverrides.noRowsOverlay, componentProps)
+      componentOverrides?.NoRowsOverlay ? (
+        React.createElement(componentOverrides.NoRowsOverlay, componentProps)
       ) : (
-        <NoRowMessage/>
+        <NoRowMessage />
       ),
     [componentOverrides, componentProps],
   );
 
   const paginationComponent = React.useMemo(
     () =>
-      componentOverrides?.pagination
-        ? React.createElement(componentOverrides.pagination, componentProps)
-        : null,
+      componentOverrides?.Pagination ? (
+        React.createElement(componentOverrides.Pagination, componentProps)
+      ) : (
+        <Pagination />
+      ),
     [componentOverrides, componentProps],
   );
 
+  const footerComponent = componentOverrides?.Footer ? (
+    React.createElement(componentOverrides.Footer, componentProps)
+  ) : (
+    <DefaultFooter paginationComponent={paginationComponent} />
+  );
+  // [componentOverrides?.Footer, componentProps, paginationComponent], ;
+
   const renderError = React.useCallback(
     (props) => {
-      const ErrorOverlay = componentOverrides?.errorOverlay || ErrorMessage;
+      const ErrorOverlay = componentOverrides?.ErrorOverlay || ErrorMessage;
       return <ErrorOverlay {...componentProps} {...props} />;
     },
-    [componentOverrides?.errorOverlay, componentProps],
+    [componentOverrides?.ErrorOverlay, componentProps],
   );
 
   const renderColumnMenu = React.useCallback(
     (props: GridColumnHeaderMenuItemProps) => {
-      return componentOverrides?.columnMenu
-        ? React.createElement(componentOverrides.columnMenu, {...componentProps, ...props})
-        : <DefaultGridColumnHeaderMenuItems hideMenu={props.hideMenu} currentColumn={props.currentColumn}/>;
+      return componentOverrides?.ColumnMenu ? (
+        React.createElement(componentOverrides.ColumnMenu, { ...componentProps, ...props })
+      ) : (
+        <DefaultGridColumnHeaderMenuItems
+          hideMenu={props.hideMenu}
+          currentColumn={props.currentColumn}
+        />
+      );
     },
     [componentOverrides, componentProps],
   );

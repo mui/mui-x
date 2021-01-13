@@ -171,7 +171,7 @@ export const CustomError = () => {
         columns={cols}
         apiRef={api}
         components={{
-          errorOverlay: CustomErrorOverlay,
+          ErrorOverlay: CustomErrorOverlay,
         }}
       />
     </div>
@@ -195,7 +195,7 @@ export const CustomErrorWithException = () => {
         rows={rows}
         columns={cols}
         components={{
-          errorOverlay: CustomErrorOverlay,
+          ErrorOverlay: CustomErrorOverlay,
         }}
       />
     </div>

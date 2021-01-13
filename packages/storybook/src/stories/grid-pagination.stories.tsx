@@ -127,7 +127,7 @@ export function PaginationApiTests() {
           pageSize={myPageSize}
           autoPageSize={autosize}
           components={{
-            pagination: ({ pagination }) => (
+            Pagination: ({ pagination }) => (
               <Pagination
                 className="my-custom-pagination"
                 page={pagination.page}
