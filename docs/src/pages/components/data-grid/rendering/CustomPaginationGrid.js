@@ -58,7 +58,7 @@ export default function CustomPaginationGrid() {
         pagination
         pageSize={5}
         components={{
-          pagination: CustomPagination,
+          Pagination: CustomPagination,
         }}
         {...data}
       />
