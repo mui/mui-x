@@ -186,18 +186,20 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                     </GridDataContainer>
                   </GridWindow>
                 </div>
-                <div ref={footerRef}>
-                  {customComponents.footerComponent || (
-                    <DefaultFooter
-                      paginationComponent={
-                        !!gridState.options.pagination &&
-                        gridState.pagination.pageSize != null &&
-                        !gridState.options.hideFooterPagination &&
-                        (customComponents.paginationComponent || <Pagination />)
-                      }
-                    />
-                  )}
-                </div>
+                {!gridState.options.hideFooter && (
+                  <div ref={footerRef}>
+                    {customComponents.footerComponent || (
+                      <DefaultFooter
+                        paginationComponent={
+                          !!gridState.options.pagination &&
+                          gridState.pagination.pageSize != null &&
+                          !gridState.options.hideFooterPagination &&
+                          (customComponents.paginationComponent || <Pagination />)
+                        }
+                      />
+                    )}
+                  </div>
+                )}
               </ErrorBoundary>
             </ApiContext.Provider>
           </GridRoot>

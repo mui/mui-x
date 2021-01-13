@@ -9,7 +9,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
 import CreateIcon from '@material-ui/icons/Create';
-import { getData } from '../../data/data-service';
+import { useData } from '../../hooks/useData';
 
 export default {
   title: 'X-Grid Demos/Custom-Components',
@@ -47,7 +47,8 @@ const rows = [
 const defaultData = { columns, rows };
 
 const Template: Story<XGridProps> = (args) => {
-  return <XGrid {...args} />;
+  const data = useData(2000, 200);
+  return <XGrid {...data} {...args} />;
 };
 
 function LoadingComponent() {
@@ -106,20 +107,19 @@ Icons.args = {
 };
 
 function PaginationComponent(props) {
-  const { paginationProps } = props;
+  const { pagination } = props;
   return (
     <Pagination
       className="my-custom-pagination"
-      page={paginationProps.page}
-      count={paginationProps.pageCount}
-      onChange={(event, value) => paginationProps.setPage(value)}
+      page={pagination.page}
+      count={pagination.pageCount}
+      onChange={(event, value) => pagination.setPage(value)}
     />
   );
 }
 
 export const CustomPagination = Template.bind({});
 CustomPagination.args = {
-  ...getData(2000, 200),
   pagination: true,
   pageSize: 50,
   components: {
@@ -128,7 +128,7 @@ CustomPagination.args = {
 };
 
 function FooterComponent(props) {
-  const { paginationProps } = props;
+  const { pagination } = props;
   return (
     <GridFooter className="my-custom-footer">
       <span style={{ display: 'flex', alignItems: 'center' }}>
@@ -136,9 +136,9 @@ function FooterComponent(props) {
       </span>
       <Pagination
         className="my-custom-pagination"
-        page={paginationProps.page}
-        count={paginationProps.pageCount}
-        onChange={(event, value) => paginationProps.setPage(value)}
+        page={pagination.page}
+        count={pagination.pageCount}
+        onChange={(event, value) => pagination.setPage(value)}
       />
     </GridFooter>
   );
@@ -146,7 +146,6 @@ function FooterComponent(props) {
 
 export const CustomFooter = Template.bind({});
 CustomFooter.args = {
-  ...getData(2000, 200),
   pagination: true,
   hideFooterPagination: true,
   hideFooter: true,
@@ -157,11 +156,9 @@ CustomFooter.args = {
 };
 
 function FooterComponent2(props) {
-  const { paginationProps } = props;
+  const { pagination } = props;
 
-  return (
-    <div className="footer my-custom-footer"> I counted {paginationProps.rowCount} row(s) </div>
-  );
+  return <div className="footer my-custom-footer"> I counted {pagination.rowCount} row(s) </div>;
 }
 
 function CustomHeader(props) {
@@ -174,7 +171,6 @@ function CustomHeader(props) {
 
 export const HeaderAndFooter = Template.bind({});
 HeaderAndFooter.args = {
-  ...getData(2000, 200),
   pagination: true,
   hideFooterPagination: true,
   pageSize: 33,
@@ -294,7 +290,6 @@ function ToolbarComponent() {
 
 export const CustomToolbar = Template.bind({});
 CustomToolbar.args = {
-  ...getData(2000, 200),
   pageSize: 33,
   components: {
     header: ToolbarComponent,
