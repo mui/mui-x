@@ -133,6 +133,8 @@ In addition, the column selector can be shown by using the "Show columns" menu i
 
 The user can choose which columns are visible using the column selector from the toolbar.
 
+To disable the column selector, set the prop `disableColumnSelector={true}`.
+
 {{"demo": "pages/components/data-grid/columns/ColumnSelectorGrid.js", "bg": "inline"}}
 
 ## Column reorder [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
