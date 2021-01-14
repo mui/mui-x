@@ -9,18 +9,16 @@ import { ColumnsHeader } from './components/columnHeaders/ColumnHeaders';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { GridColumnHeaderMenu } from './components/menu/columnMenu/GridColumnHeaderMenu';
 import { PreferencesPanel } from './components/panel/PreferencesPanel';
-import { GridColumnsContainer } from './components/styled-wrappers/GridColumnsContainer';
-import { GridDataContainer } from './components/styled-wrappers/GridDataContainer';
-import { GridMainContainer } from './components/styled-wrappers/GridMainContainer';
-import { GridRoot } from './components/styled-wrappers/GridRoot';
-import { GridWindow } from './components/styled-wrappers/GridWindow';
+import { GridColumnsContainer } from './components/containers/GridColumnsContainer';
+import { GridDataContainer } from './components/containers/GridDataContainer';
+import { GridMainContainer } from './components/containers/GridMainContainer';
+import { GridRoot } from './components/containers/GridRoot';
+import { GridWindow } from './components/containers/GridWindow';
 import { Viewport } from './components/Viewport';
 import { Watermark } from './components/Watermark';
 import { GridComponentProps } from './GridComponentProps';
 import { useColumnMenu } from './hooks/features/columnMenu/useColumnMenu';
-import { visibleColumnsLengthSelector } from './hooks/features/columns/columnsSelector';
 import { useColumns } from './hooks/features/columns/useColumns';
-import { useGridSelector } from './hooks/features/core/useGridSelector';
 import { useGridState } from './hooks/features/core/useGridState';
 import { usePagination } from './hooks/features/pagination/usePagination';
 import { usePreferencesPanel } from './hooks/features/preferencesPanel/usePreferencesPanel';
@@ -38,12 +36,12 @@ import { useKeyboard } from './hooks/features/keyboard/useKeyboard';
 import { useErrorHandler } from './hooks/utils/useErrorHandler';
 import { useLogger, useLoggerFactory } from './hooks/utils/useLogger';
 import { useOptionsProp } from './hooks/utils/useOptionsProp';
+import { useRenderInfoLog } from './hooks/utils/useRenderInfoLog';
 import { useResizeContainer } from './hooks/utils/useResizeContainer';
 import { useVirtualRows } from './hooks/features/virtualization/useVirtualRows';
 import { useDensity } from './hooks/features/density';
 import { useStateProp } from './hooks/utils/useStateProp';
 import { RootContainerRef } from './models/rootContainerRef';
-import { getCurryTotalHeight } from './utils/getTotalHeight';
 import { ApiContext } from './components/api-context';
 import { useFilter } from './hooks/features/filter/useFilter';
 import { useLocaleText } from './hooks/features/localeText/useLocaleText';
@@ -91,49 +89,20 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
 
     const components = useComponents(props.components, apiRef, rootContainerRef);
     useStateProp(apiRef, props.state);
+    useRenderInfoLog(apiRef, logger);
 
-    const visibleColumnsLength = useGridSelector(apiRef, visibleColumnsLengthSelector);
-
-    // TODO move that to renderCtx
-    const getTotalHeight = React.useCallback(
-      (size) =>
-        getCurryTotalHeight(
-          gridState.options,
-          gridState.containerSizes,
-          headerRef,
-          footerRef,
-        )(size),
-      [gridState.options, gridState.containerSizes],
-    );
-
-    if (gridState.rendering.renderContext != null) {
-      const {
-        page,
-        firstColIdx,
-        lastColIdx,
-        firstRowIdx,
-        lastRowIdx,
-      } = gridState.rendering.renderContext!;
-      logger.info(
-        `Rendering, page: ${page}, col: ${firstColIdx}-${lastColIdx}, row: ${firstRowIdx}-${lastRowIdx}`,
-      );
-    }
     const showNoRowsOverlay = !props.loading && gridState.rows.totalRowCount === 0;
     return (
-      <AutoSizer onResize={onResize} nonce={props.nonce}>
-        {(size: any) => (
-          <GridRoot
-            ref={handleRef}
-            className={props.className}
-            style={{ width: size.width, height: getTotalHeight(size) }}
-            role="grid"
-            aria-colcount={visibleColumnsLength}
-            aria-rowcount={gridState.rows.totalRowCount}
-            tabIndex={0}
-            aria-label={apiRef!.current.getLocaleText('rootGridLabel')}
-            aria-multiselectable={!gridState.options.disableMultipleSelection}
-          >
-            <ApiContext.Provider value={apiRef}>
+      <ApiContext.Provider value={apiRef}>
+        <AutoSizer onResize={onResize} nonce={props.nonce}>
+          {(size: any) => (
+            <GridRoot
+              ref={handleRef}
+              className={props.className}
+              size={size}
+              header={headerRef}
+              footer={footerRef}
+            >
               <ErrorBoundary
                 hasError={errorState != null}
                 componentProps={errorState}
@@ -163,10 +132,10 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                   <div ref={footerRef}>{components.footerComponent}</div>
                 )}
               </ErrorBoundary>
-            </ApiContext.Provider>
-          </GridRoot>
-        )}
-      </AutoSizer>
+            </GridRoot>
+          )}
+        </AutoSizer>
+      </ApiContext.Provider>
     );
   },
 );

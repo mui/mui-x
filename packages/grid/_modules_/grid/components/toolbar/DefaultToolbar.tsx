@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { ApiContext } from '../api-context';
-import { GridToolbar } from '../styled-wrappers/GridToolbar';
+import { GridToolbar } from '../containers/GridToolbar';
 import { ColumnsToolbarButton } from './ColumnsToolbarButton';
 import { DensitySelector } from './DensitySelector';
 import { FilterToolbarButton } from './FilterToolbarButton';
