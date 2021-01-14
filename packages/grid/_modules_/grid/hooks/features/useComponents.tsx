@@ -1,109 +1,80 @@
 import * as React from 'react';
-import { DefaultFooter } from '../../components/DefaultFooter';
+import { DefaultFooter, DefaultFooterProps } from '../../components/DefaultFooter';
 import { DefaultGridColumnHeaderMenuItems } from '../../components/menu/columnMenu/DefaultGridColumnHeaderMenuItems';
 import { GridColumnHeaderMenuItemProps } from '../../components/menu/columnMenu/GridColumnHeaderMenu';
-import { Pagination } from '../../components/Pagination';
+import { Pagination as DefaultPagination } from '../../components/Pagination';
 import { DefaultToolbar } from '../../components/toolbar/DefaultToolbar';
-import { ComponentProps, ApiRef, GridComponentOverridesProp, RootContainerRef } from '../../models';
-import { ErrorMessage } from '../../components/ErrorMessage';
-import { LoadingOverlay } from '../../components/LoadingOverlay';
+import { BaseComponentProps, ApiRef, GridSlotsComponent, RootContainerRef } from '../../models';
+import { ErrorMessage, ErrorMessageProps } from '../../components/ErrorMessage';
+import { LoadingOverlay as DefaultLoading } from '../../components/LoadingOverlay';
 import { NoRowMessage } from '../../components/NoRowMessage';
 import { optionsSelector } from '../utils/useOptionsProp';
 import { visibleColumnsSelector } from './columns/columnsSelector';
 import { useGridSelector } from './core/useGridSelector';
-import { paginationSelector } from './pagination/paginationSelector';
+import { useGridState } from './core/useGridState';
 import { unorderedRowModelsSelector } from './rows/rowsSelector';
 
 export const useComponents = (
-  componentOverrides: GridComponentOverridesProp | undefined,
+  componentsProp: GridSlotsComponent | undefined,
   apiRef: ApiRef,
   gridRootRef: RootContainerRef,
 ) => {
   const options = useGridSelector(apiRef, optionsSelector);
   const rows = useGridSelector(apiRef, unorderedRowModelsSelector);
   const columns = useGridSelector(apiRef, visibleColumnsSelector);
-  const pagination = useGridSelector(apiRef, paginationSelector);
+  const [state] = useGridState(apiRef!);
 
-  const componentProps: ComponentProps = React.useMemo(
+  const baseComponentProps: BaseComponentProps = React.useMemo(
     () => ({
-      pagination,
+      state,
       rows,
       columns,
       options,
       api: apiRef,
       rootElement: gridRootRef,
     }),
-    [pagination, rows, columns, options, apiRef, gridRootRef],
+    [state, rows, columns, options, apiRef, gridRootRef],
   );
 
-  const headerComponent = componentOverrides?.Header
-    ? React.createElement(componentOverrides.Header, componentProps)
-    : options.showToolbar && <DefaultToolbar />;
+  const components = React.useMemo(() => {
+    const ColumnMenu = componentsProp?.ColumnMenu || DefaultGridColumnHeaderMenuItems;
+    const Header = componentsProp?.Header || DefaultToolbar;
+    const LoadingOverlay = componentsProp?.LoadingOverlay || DefaultLoading;
+    const NoRowsOverlay = componentsProp?.NoRowsOverlay || NoRowMessage;
+    const Pagination = componentsProp?.Pagination || DefaultPagination;
+    const Footer = componentsProp?.Footer || DefaultFooter;
+    const Error = componentsProp?.ErrorOverlay || ErrorMessage;
 
-  const loadingComponent = React.useMemo(
-    () =>
-      componentOverrides?.LoadingOverlay ? (
-        React.createElement(componentOverrides.LoadingOverlay, componentProps)
-      ) : (
-        <LoadingOverlay />
-      ),
-    [componentOverrides, componentProps],
-  );
-  const noRowsComponent = React.useMemo(
-    () =>
-      componentOverrides?.NoRowsOverlay ? (
-        React.createElement(componentOverrides.NoRowsOverlay, componentProps)
-      ) : (
-        <NoRowMessage />
-      ),
-    [componentOverrides, componentProps],
-  );
+    const wrapWithBaseProps: <TProps>(
+      Component: React.ElementType<TProps & BaseComponentProps>,
+    ) => React.ElementType<TProps> = <TProps extends {}>(Component) => {
+      const ComponentWithBase: React.ElementType<TProps> = (props: TProps) => {
+        const propsWithBase = { ...baseComponentProps, ...props };
+        return <Component {...propsWithBase} />;
+      };
 
-  const paginationComponent = React.useMemo(
-    () =>
-      componentOverrides?.Pagination ? (
-        React.createElement(componentOverrides.Pagination, componentProps)
-      ) : (
-        <Pagination />
-      ),
-    [componentOverrides, componentProps],
-  );
+      return ComponentWithBase;
+    };
 
-  const footerComponent = componentOverrides?.Footer ? (
-    React.createElement(componentOverrides.Footer, componentProps)
-  ) : (
-    <DefaultFooter paginationComponent={paginationComponent} />
-  );
+    return {
+      ColumnMenu: wrapWithBaseProps<GridColumnHeaderMenuItemProps>(ColumnMenu),
+      Header: wrapWithBaseProps<{}>(Header),
+      LoadingOverlay: wrapWithBaseProps<{}>(LoadingOverlay),
+      NoRowsOverlay: wrapWithBaseProps<{}>(NoRowsOverlay),
+      Pagination: wrapWithBaseProps<{}>(Pagination),
+      Error: wrapWithBaseProps<ErrorMessageProps>(Error),
+      Footer: wrapWithBaseProps<DefaultFooterProps>(Footer),
+    };
+  }, [
+    baseComponentProps,
+    componentsProp?.ColumnMenu,
+    componentsProp?.ErrorOverlay,
+    componentsProp?.Footer,
+    componentsProp?.Header,
+    componentsProp?.LoadingOverlay,
+    componentsProp?.NoRowsOverlay,
+    componentsProp?.Pagination,
+  ]);
 
-  const renderError = React.useCallback(
-    (props) => {
-      const ErrorOverlay = componentOverrides?.ErrorOverlay || ErrorMessage;
-      return <ErrorOverlay {...componentProps} {...props} />;
-    },
-    [componentOverrides?.ErrorOverlay, componentProps],
-  );
-
-  const renderColumnMenu = React.useCallback(
-    (props: GridColumnHeaderMenuItemProps) => {
-      return componentOverrides?.ColumnMenu ? (
-        React.createElement(componentOverrides.ColumnMenu, { ...componentProps, ...props })
-      ) : (
-        <DefaultGridColumnHeaderMenuItems
-          hideMenu={props.hideMenu}
-          currentColumn={props.currentColumn}
-        />
-      );
-    },
-    [componentOverrides, componentProps],
-  );
-
-  return {
-    headerComponent,
-    footerComponent,
-    loadingComponent,
-    noRowsComponent,
-    paginationComponent,
-    renderError,
-    renderColumnMenu,
-  };
+  return components;
 };

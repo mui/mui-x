@@ -109,27 +109,31 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                 api={apiRef!}
                 logger={logger}
                 render={(errorProps) => (
-                  <GridMainContainer>{components.renderError(errorProps)}</GridMainContainer>
+                  <GridMainContainer>
+                    <components.Error {...errorProps} />
+                  </GridMainContainer>
                 )}
               >
-                <div ref={headerRef}>{components.headerComponent}</div>
+                <div ref={headerRef}>
+                  <components.Header />
+                </div>
                 <GridMainContainer>
-                  <GridColumnHeaderMenu renderColumnMenu={components.renderColumnMenu} />
+                  <GridColumnHeaderMenu ContentComponent={components.ColumnMenu} />
                   <PreferencesPanel />
                   <Watermark licenseStatus={props.licenseStatus} />
                   <GridColumnsContainer ref={columnsContainerRef}>
                     <ColumnsHeader ref={columnsHeaderRef} />
                   </GridColumnsContainer>
-                  {showNoRowsOverlay && components.noRowsComponent}
-                  {props.loading && components.loadingComponent}
+                  {showNoRowsOverlay && <components.NoRowsOverlay />}
+                  {props.loading && <components.LoadingOverlay />}
                   <GridWindow ref={windowRef}>
-                    <GridDataContainer>
-                      <Viewport ref={renderingZoneRef} />
-                    </GridDataContainer>
+                    <Viewport ref={renderingZoneRef} />
                   </GridWindow>
                 </GridMainContainer>
                 {!gridState.options.hideFooter && (
-                  <div ref={footerRef}>{components.footerComponent}</div>
+                  <div ref={footerRef}>
+                    <components.Footer PaginationComponent={<components.Pagination />} />
+                  </div>
                 )}
               </ErrorBoundary>
             </GridRoot>

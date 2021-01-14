@@ -7,6 +7,7 @@ import {
   GridFooter,
   XGridProps,
   HideColMenuItem,
+  ColumnMenuProps, BaseComponentProps,
 } from '@material-ui/x-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CodeIcon from '@material-ui/icons/Code';
@@ -114,14 +115,14 @@ Icons.args = {
   },
 };
 
-function PaginationComponent(props) {
-  const { pagination } = props;
+function PaginationComponent(props: BaseComponentProps) {
+  const { state, api } = props;
   return (
     <Pagination
       className="my-custom-pagination"
-      page={pagination.page}
-      count={pagination.pageCount}
-      onChange={(event, value) => pagination.setPage(value)}
+      page={state.pagination.page}
+      count={state.pagination.pageCount}
+      onChange={(event, value) => api.current.setPage(value)}
     />
   );
 }
@@ -136,7 +137,7 @@ CustomPagination.args = {
 };
 
 function FooterComponent(props) {
-  const { pagination } = props;
+  const { state, api } = props;
   return (
     <GridFooter className="my-custom-footer">
       <span style={{ display: 'flex', alignItems: 'center' }}>
@@ -144,9 +145,9 @@ function FooterComponent(props) {
       </span>
       <Pagination
         className="my-custom-pagination"
-        page={pagination.page}
-        count={pagination.pageCount}
-        onChange={(event, value) => pagination.setPage(value)}
+        page={state.pagination.page}
+        count={state.pagination.pageCount}
+        onChange={(event, value) => api.current.setPage(value)}
       />
     </GridFooter>
   );
@@ -155,8 +156,6 @@ function FooterComponent(props) {
 export const CustomFooter = Template.bind({});
 CustomFooter.args = {
   pagination: true,
-  hideFooterPagination: true,
-  hideFooter: true,
   pageSize: 33,
   components: {
     Footer: FooterComponent,
@@ -164,9 +163,9 @@ CustomFooter.args = {
 };
 
 function FooterComponent2(props) {
-  const { pagination } = props;
+  const { state } = props;
 
-  return <div className="footer my-custom-footer"> I counted {pagination.rowCount} row(s) </div>;
+  return <div className="footer my-custom-footer"> I counted {state.pagination.rowCount} row(s) </div>;
 }
 
 function CustomHeader(props) {
@@ -303,12 +302,16 @@ CustomToolbar.args = {
   },
 };
 
-function ColumnMenuComponent(props) {
+function ColumnMenuComponent(props: ColumnMenuProps & { color?: string }) {
   if (props.currentColumn.field === 'id') {
     return <HideColMenuItem onClick={props.hideMenu} column={props.currentColumn!} />;
   }
   if (props.currentColumn.field === 'currencyPair') {
-    return <div style={{ background: '#ccc' }}> This is my currency pair column Menu!</div>;
+    return (
+      <div style={{ background: props.color || '#ccc' }}>
+        This is my currency pair column Menu!
+      </div>
+    );
   }
   return (
     <DefaultGridColumnHeaderMenuItems
@@ -323,4 +326,7 @@ CustomColumnMenu.args = {
   components: {
     ColumnMenu: ColumnMenuComponent,
   },
+  // componentsProps: {
+  //   ColumnMenu: {color: 'red'}
+  // }
 };

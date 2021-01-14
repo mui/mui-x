@@ -3,10 +3,7 @@ import { classnames } from '../../utils';
 
 type GridFooterProps = React.HTMLAttributes<HTMLDivElement>;
 
-export const GridFooter = React.forwardRef<HTMLDivElement, GridFooterProps>(function GridFooter(
-  props,
-  ref,
-) {
+export const GridFooter = function GridFooter(props: GridFooterProps) {
   const { className, ...other } = props;
-  return <div ref={ref} className={classnames('MuiDataGrid-footer', className)} {...other} />;
-});
+  return <div className={classnames('MuiDataGrid-footer', className)} {...other} />;
+};

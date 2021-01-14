@@ -13,9 +13,8 @@ export function DefaultToolbar() {
   const options = useGridSelector(apiRef, optionsSelector);
 
   if (
-    options.disableColumnFilter &&
-    options.disableColumnSelector &&
-    options.disableDensitySelector
+    !options.showToolbar ||
+    (options.disableColumnFilter && options.disableColumnSelector && options.disableDensitySelector)
   ) {
     return null;
   }
