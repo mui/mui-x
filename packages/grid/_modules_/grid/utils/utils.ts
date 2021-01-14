@@ -1,3 +1,4 @@
+import * as styles from '@material-ui/core/styles';
 import isEqual from '../lib/lodash/isEqual';
 
 export { isEqual };
@@ -33,6 +34,11 @@ export function isObject(value: any): value is Record<string, any> {
 
 export function getThemePaletteMode(palette: any): string {
   return palette.type || palette.mode;
+}
+
+export function isMuiV5(): boolean {
+  // @ts-ignore TODO remove once upgraded v4 support is dropped
+  return !!styles.alpha;
 }
 
 export function localStorageAvailable() {
