@@ -1,9 +1,10 @@
 import { darken, fade, lighten, makeStyles, Theme } from '@material-ui/core/styles';
+import { getThemePaletteMode } from '../../utils';
 
 export const useStyles = makeStyles(
   (theme: Theme) => {
     const borderColor =
-      theme.palette.type === 'light'
+      getThemePaletteMode(theme.palette) === 'light'
         ? lighten(fade(theme.palette.divider, 1), 0.88)
         : darken(fade(theme.palette.divider, 1), 0.68);
 
@@ -278,7 +279,7 @@ export const useStyles = makeStyles(
       },
     };
 
-    if (theme.palette.type === 'dark') {
+    if (getThemePaletteMode(theme.palette) === 'dark') {
       // Values coming from mac OS.
       const track = '#202022';
       const thumb = '#585859';

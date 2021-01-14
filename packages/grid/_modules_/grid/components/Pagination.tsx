@@ -46,13 +46,26 @@ export function Pagination() {
     [apiRef],
   );
 
+  let paginationChangeHandlers;
+
+  try {
+    paginationChangeHandlers = {
+      onPageChange,
+      onRowsPerPageChange: onPageSizeChange,
+    };
+  } catch (err) {
+    paginationChangeHandlers = {
+      onChangePage: onPageChange,
+      onChangeRowsPerPage: onPageSizeChange,
+    };
+  }
+
   return (
     <TablePagination
       classes={classes}
       component="div"
       count={paginationState.rowCount}
       page={paginationState.page - 1}
-      onChangePage={onPageChange}
       rowsPerPageOptions={
         options.rowsPerPageOptions &&
         options.rowsPerPageOptions.indexOf(paginationState.pageSize) > -1
@@ -60,8 +73,8 @@ export function Pagination() {
           : []
       }
       rowsPerPage={paginationState.pageSize}
-      onChangeRowsPerPage={onPageSizeChange}
       labelRowsPerPage={apiRef!.current.getLocaleText('footerPaginationRowsPerPage')}
+      {...paginationChangeHandlers}
     />
   );
 }

@@ -31,10 +31,12 @@
     "lru-cache": "^6.0.0"
   },
   "peerDependencies": {
-    "@material-ui/core": "^4.9.12",
+    "@material-ui/core": "^4.9.12 || ^5.0.0-alpha.22",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.54",
     "@material-ui/x-grid": "^4.0.0-alpha.1",
+    "@emotion/react": "^11.1.4",
+    "@emotion/styled": "^11.0.0",
     "react": "^16.8.0 || ^17.0.0"
   },
   "setupFiles": [

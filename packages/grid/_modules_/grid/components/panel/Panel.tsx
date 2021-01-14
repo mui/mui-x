@@ -43,6 +43,27 @@ export function Panel(props: PanelProps) {
   const classes = useStyles();
   const apiRef = React.useContext(ApiContext);
 
+  const getPopperModifiers = () => {
+    let modifiers;
+
+    try {
+      modifiers = [
+        {
+          name: 'flip',
+          enabled: false,
+        },
+      ];
+    } catch(err) {
+      modifiers = {
+        flip: {
+          enabled: false,
+        },
+      };
+    }
+
+    return modifiers;
+  }
+
   const handleClickAway = React.useCallback(() => {
     apiRef!.current.hidePreferences();
   }, [apiRef]);
@@ -61,11 +82,7 @@ export function Panel(props: PanelProps) {
       placement="bottom-start"
       open={open}
       anchorEl={anchorEl}
-      modifiers={{
-        flip: {
-          enabled: false,
-        },
-      }}
+      modifiers={getPopperModifiers()}
     >
       <ClickAwayListener onClickAway={handleClickAway}>
         <Paper className={classes.root} elevation={8}>

@@ -31,6 +31,10 @@ export function isObject(value: any): value is Record<string, any> {
   return typeof value === 'object';
 }
 
+export function getThemePaletteMode(palette: any): string {
+  return palette.type || palette.mode;
+}
+
 export function localStorageAvailable() {
   try {
     // Incognito mode might reject access to the localStorage for security reasons.
