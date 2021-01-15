@@ -47,19 +47,19 @@ export function Pagination() {
     [apiRef],
   );
 
-   const getPaginationChangeHandlers = () => {
-     if (isMuiV5()) {
-       return {
-         onPageChange,
-         onRowsPerPageChange: onPageSizeChange,
-       };
-     }
+  const getPaginationChangeHandlers = () => {
+    if (isMuiV5()) {
+      return {
+        onPageChange,
+        onRowsPerPageChange: onPageSizeChange,
+      };
+    }
 
-     return {
-       onChangePage: onPageChange,
-       onChangeRowsPerPage: onPageSizeChange,
-     };
-   };
+    return {
+      onChangePage: onPageChange,
+      onChangeRowsPerPage: onPageSizeChange,
+    };
+  };
 
   return (
     // @ts-ignore TODO remove once upgraded v4 support is dropped
