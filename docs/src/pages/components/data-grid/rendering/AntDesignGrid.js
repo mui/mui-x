@@ -122,16 +122,6 @@ CustomPagination.propTypes = {
   api: PropTypes.shape({
     current: PropTypes.object.isRequired,
   }).isRequired,
-  /**
-   * The object containing all pagination details in [[PaginationState]].
-   */
-  pagination: PropTypes.shape({
-    page: PropTypes.number.isRequired,
-    pageCount: PropTypes.number.isRequired,
-    pageSize: PropTypes.number.isRequired,
-    paginationMode: PropTypes.oneOf(['client', 'server']).isRequired,
-    rowCount: PropTypes.number.isRequired,
-  }).isRequired,
 };
 
 export default function AntDesignGrid() {
