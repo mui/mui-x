@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { DefaultFooter, DefaultFooterProps } from '../components/DefaultFooter';
-import { ErrorMessage, ErrorMessageProps } from '../components/ErrorMessage';
-import { DefaultGridColumnHeaderMenuItems } from '../components/menu/columnMenu/DefaultGridColumnHeaderMenuItems';
+import { GridFooter, GridFooterProps } from '../components/GridFooter';
+import { ErrorOverlay, ErrorOverlayProps } from '../components/ErrorOverlay';
+import { GridColumnHeaderMenuItems } from '../components/menu/columnMenu/GridColumnHeaderMenuItems';
 import { GridColumnHeaderMenuItemProps } from '../components/menu/columnMenu/GridColumnHeaderMenu';
-import { NoRowMessage } from '../components/NoRowMessage';
-import { Pagination as DefaultPagination } from '../components/Pagination';
-import { DefaultToolbar } from '../components/toolbar/DefaultToolbar';
+import { NoRowOverlay } from '../components/NoRowOverlay';
+import { Pagination } from '../components/Pagination';
+import { GridToolbar } from '../components/toolbar/GridToolbar';
 import { BaseComponentProps } from './params/componentParams';
-import { LoadingOverlay as DefaultLoading } from '../components/LoadingOverlay';
+import { LoadingOverlay } from '../components/LoadingOverlay';
 
 export type ColumnMenuProps = BaseComponentProps & GridColumnHeaderMenuItemProps;
 
@@ -26,11 +26,11 @@ export interface GridSlotsComponent {
   /**
    * No rows overlay component rendered when the grid has no rows.
    */
-  NoRowsOverlay?: React.ElementType<BaseComponentProps>;
+  NoRowOverlay?: React.ElementType<BaseComponentProps>;
   /**
    * Footer component rendered at the bottom of the grid viewport.
    */
-  Footer?: React.ElementType<BaseComponentProps & DefaultFooterProps>;
+  Footer?: React.ElementType<BaseComponentProps & GridFooterProps>;
   /**
    * Header component rendered above the grid column header bar.
    */
@@ -38,7 +38,7 @@ export interface GridSlotsComponent {
   /**
    * Error overlay component rendered above the grid when an error is caught.
    */
-  ErrorOverlay?: React.ElementType<BaseComponentProps & ErrorMessageProps>;
+  ErrorOverlay?: React.ElementType<BaseComponentProps & ErrorOverlayProps>;
   /**
    * ColumnMenu component rendered by clicking on the 3 dots icon in column headers.
    */
@@ -46,11 +46,11 @@ export interface GridSlotsComponent {
 }
 
 export const DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
-  ColumnMenu: DefaultGridColumnHeaderMenuItems,
-  Header: DefaultToolbar,
-  LoadingOverlay: DefaultLoading,
-  NoRowsOverlay: NoRowMessage,
-  Pagination: DefaultPagination,
-  Footer: DefaultFooter,
-  ErrorOverlay: ErrorMessage,
+  ColumnMenu: GridColumnHeaderMenuItems,
+  Header: GridToolbar,
+  LoadingOverlay,
+  NoRowOverlay,
+  Pagination,
+  Footer: GridFooter,
+  ErrorOverlay,
 };

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DefaultFooterProps } from '../../components/DefaultFooter';
+import { GridFooterProps } from '../../components/GridFooter';
 import { GridColumnHeaderMenuItemProps } from '../../components/menu/columnMenu/GridColumnHeaderMenu';
 import {
   BaseComponentProps,
@@ -8,7 +8,7 @@ import {
   RootContainerRef,
   DEFAULT_SLOTS_COMPONENTS,
 } from '../../models';
-import { ErrorMessageProps } from '../../components/ErrorMessage';
+import { ErrorOverlayProps } from '../../components/ErrorOverlay';
 import { optionsSelector } from '../utils/optionsSelector';
 import { visibleColumnsSelector } from './columns/columnsSelector';
 import { useGridSelector } from './core/useGridSelector';
@@ -62,10 +62,10 @@ export const useComponents = (
       ColumnMenu: wrapWithBaseProps<GridColumnHeaderMenuItemProps>(allComponents.ColumnMenu),
       Header: wrapWithBaseProps<{}>(allComponents.Header),
       LoadingOverlay: wrapWithBaseProps<{}>(allComponents.LoadingOverlay),
-      NoRowsOverlay: wrapWithBaseProps<{}>(allComponents.NoRowsOverlay),
+      NoRowsOverlay: wrapWithBaseProps<{}>(allComponents.NoRowOverlay),
       Pagination: wrapWithBaseProps<{}>(allComponents.Pagination),
-      Error: wrapWithBaseProps<ErrorMessageProps>(allComponents.ErrorOverlay),
-      Footer: wrapWithBaseProps<DefaultFooterProps>(allComponents.Footer),
+      Error: wrapWithBaseProps<ErrorOverlayProps>(allComponents.ErrorOverlay),
+      Footer: wrapWithBaseProps<GridFooterProps>(allComponents.Footer),
     };
   }, [baseComponentProps, componentsProp]);
 

@@ -3,12 +3,12 @@ import * as React from 'react';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { ApiContext } from '../api-context';
-import { GridToolbar } from '../containers/GridToolbar';
+import { GridToolbarContainer } from '../containers/GridToolbarContainer';
 import { ColumnsToolbarButton } from './ColumnsToolbarButton';
 import { DensitySelector } from './DensitySelector';
 import { FilterToolbarButton } from './FilterToolbarButton';
 
-export function DefaultToolbar() {
+export function GridToolbar() {
   const apiRef = useContext(ApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
 
@@ -20,10 +20,10 @@ export function DefaultToolbar() {
   }
 
   return (
-    <GridToolbar>
+    <GridToolbarContainer>
       {!options.disableColumnSelector && <ColumnsToolbarButton />}
       {!options.disableColumnFilter && <FilterToolbarButton />}
       {!options.disableDensitySelector && <DensitySelector />}
-    </GridToolbar>
+    </GridToolbarContainer>
   );
 }

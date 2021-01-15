@@ -3,7 +3,7 @@ import { classnames } from '../../utils';
 
 type GridFooterProps = React.HTMLAttributes<HTMLDivElement>;
 
-export const GridFooter = function GridFooter(props: GridFooterProps) {
+export const GridFooterContainer = function GridFooter(props: GridFooterProps) {
   const { className, ...other } = props;
   return <div className={classnames('MuiDataGrid-footer', className)} {...other} />;
 };

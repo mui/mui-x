@@ -5,7 +5,7 @@ import { GridColumnHeaderMenuItemProps } from './GridColumnHeaderMenu';
 import { HideColMenuItem } from './HideColMenuItem';
 import { SortMenuItems } from './SortMenuItems';
 
-export function DefaultGridColumnHeaderMenuItems({
+export function GridColumnHeaderMenuItems({
   hideMenu,
   currentColumn,
 }: GridColumnHeaderMenuItemProps) {

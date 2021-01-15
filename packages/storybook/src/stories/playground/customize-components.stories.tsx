@@ -4,7 +4,7 @@ import {
   ColDef,
   XGrid,
   GridOverlay,
-  GridFooter,
+  GridFooterContainer,
   XGridProps,
   HideColMenuItem,
   ColumnMenuProps,
@@ -18,7 +18,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
 import CreateIcon from '@material-ui/icons/Create';
-import { DefaultGridColumnHeaderMenuItems } from '../../../../grid/_modules_/grid/components/menu/columnMenu/DefaultGridColumnHeaderMenuItems';
+import { GridColumnHeaderMenuItems } from '../../../../grid/_modules_/grid/components/menu/columnMenu/GridColumnHeaderMenuItems';
 import { useData } from '../../hooks/useData';
 
 export default {
@@ -95,7 +95,7 @@ NoRows.args = {
   rows: [],
   columns,
   components: {
-    NoRowsOverlay: NoRowsComponent,
+    NoRowOverlay: NoRowsComponent,
   },
 };
 
@@ -140,7 +140,7 @@ CustomPagination.args = {
 function FooterComponent(props) {
   const { state, api } = props;
   return (
-    <GridFooter className="my-custom-footer">
+    <GridFooterContainer className="my-custom-footer">
       <span style={{ display: 'flex', alignItems: 'center' }}>
         This is my custom footer and pagination here!{' '}
       </span>
@@ -150,7 +150,7 @@ function FooterComponent(props) {
         count={state.pagination.pageCount}
         onChange={(event, value) => api.current.setPage(value)}
       />
-    </GridFooter>
+    </GridFooterContainer>
   );
 }
 
@@ -315,10 +315,7 @@ function ColumnMenuComponent(props: ColumnMenuProps & { color?: string }) {
     );
   }
   return (
-    <DefaultGridColumnHeaderMenuItems
-      hideMenu={props.hideMenu}
-      currentColumn={props.currentColumn}
-    />
+    <GridColumnHeaderMenuItems hideMenu={props.hideMenu} currentColumn={props.currentColumn} />
   );
 }
 
@@ -339,7 +336,7 @@ UndefinedAllComponent.args = {
     Footer: undefined,
     Header: undefined,
     ErrorOverlay: undefined,
-    NoRowsOverlay: undefined,
+    NoRowOverlay: undefined,
     LoadingOverlay: undefined,
   },
   // componentsProps: {
