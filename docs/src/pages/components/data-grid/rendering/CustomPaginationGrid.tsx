@@ -11,15 +11,15 @@ const useStyles = makeStyles({
 });
 
 function CustomPagination(props: BaseComponentProps) {
-  const { pagination, api } = props;
+  const { state, api } = props;
   const classes = useStyles();
 
   return (
     <Pagination
       className={classes.root}
       color="primary"
-      page={pagination.page}
-      count={pagination.pageCount}
+      page={state.pagination.page}
+      count={state.pagination.pageCount}
       onChange={(event, value) => api.current.setPage(value)}
     />
   );
