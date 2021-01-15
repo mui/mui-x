@@ -123,7 +123,7 @@ CustomPagination.propTypes = {
     current: PropTypes.object.isRequired,
   }).isRequired,
   /**
-   * State that let you extract the current state of the grid.
+   * The GridState object containing the grid current state.
    */
   state: PropTypes.shape({
     columnMenu: PropTypes.shape({
