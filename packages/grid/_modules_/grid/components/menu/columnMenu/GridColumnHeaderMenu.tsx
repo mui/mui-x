@@ -15,9 +15,10 @@ export interface GridColumnHeaderMenuItemProps {
 }
 export interface GridColumnHeaderMenuProps {
   ContentComponent: React.ElementType<GridColumnHeaderMenuItemProps>;
+  contentComponentProps?: any;
 }
 
-export function GridColumnHeaderMenu({ ContentComponent }: GridColumnHeaderMenuProps) {
+export function GridColumnHeaderMenu({ ContentComponent, contentComponentProps }: GridColumnHeaderMenuProps) {
   const apiRef = React.useContext(ApiContext);
   const columnMenuState = useGridSelector(apiRef!, columnMenuStateSelector);
   const currentColumn = columnMenuState.field
@@ -85,7 +86,7 @@ export function GridColumnHeaderMenu({ ContentComponent }: GridColumnHeaderMenuP
       onKeyDown={handleListKeyDown}
       onClickAway={hideMenuDelayed}
     >
-      <ContentComponent currentColumn={currentColumn} hideMenu={hideMenu} />
+      <ContentComponent currentColumn={currentColumn} hideMenu={hideMenu} {...contentComponentProps} />
     </GridMenu>
   );
 }

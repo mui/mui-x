@@ -1,3 +1,4 @@
+import { background } from '@storybook/theming';
 import * as React from 'react';
 import { Story, Meta } from '@storybook/react';
 import {
@@ -116,12 +117,13 @@ Icons.args = {
   },
 };
 
-function PaginationComponent(props: BaseComponentProps) {
+function PaginationComponent(props: BaseComponentProps & {color?: 'primary'}) {
   const { state, api } = props;
   return (
     <Pagination
       className="my-custom-pagination"
       page={state.pagination.page}
+      color={props.color}
       count={state.pagination.pageCount}
       onChange={(event, value) => api.current.setPage(value)}
     />
@@ -135,13 +137,16 @@ CustomPagination.args = {
   components: {
     Pagination: PaginationComponent,
   },
+  componentsProps: {
+    Pagination: {color: 'primary'}
+  }
 };
 
 function FooterComponent(props) {
   const { state, api } = props;
   return (
     <GridFooterContainer className="my-custom-footer">
-      <span style={{ display: 'flex', alignItems: 'center' }}>
+      <span style={{ display: 'flex', alignItems: 'center', background: props.color }}>
         This is my custom footer and pagination here!{' '}
       </span>
       <Pagination
@@ -161,6 +166,9 @@ CustomFooter.args = {
   components: {
     Footer: FooterComponent,
   },
+  componentsProps: {
+    Footer: {color: 'blue'}
+  }
 };
 
 function FooterComponent2(props) {
@@ -188,6 +196,9 @@ HeaderAndFooter.args = {
     Header: CustomHeader,
     Footer: FooterComponent2,
   },
+  componentsProps: {
+    Header: {color: 'primary'}
+  }
 };
 
 function IsDone(props: { value?: boolean }) {
@@ -294,8 +305,8 @@ StyledColumns.args = {
   ],
 };
 
-function ToolbarComponent() {
-  return <div>This is my custom toolbar!</div>;
+function ToolbarComponent(props: any) {
+  return <div style={{background: props.color}}>This is my custom toolbar!</div>;
 }
 
 export const CustomToolbar = Template.bind({});
@@ -303,6 +314,9 @@ CustomToolbar.args = {
   components: {
     Header: ToolbarComponent,
   },
+  componentsProps: {
+    Header: {color: 'red'}
+  }
 };
 
 function ColumnMenuComponent(props: ColumnMenuProps & { color?: string }) {
@@ -324,10 +338,11 @@ CustomColumnMenu.args = {
   components: {
     ColumnMenu: ColumnMenuComponent,
   },
-  // componentsProps: {
-  //   ColumnMenu: {color: 'red'}
-  // }
+  componentsProps: {
+    ColumnMenu: {color: 'red'}
+  }
 };
+
 export const UndefinedAllComponent = Template.bind({});
 UndefinedAllComponent.args = {
   components: {
@@ -339,7 +354,4 @@ UndefinedAllComponent.args = {
     NoRowOverlay: undefined,
     LoadingOverlay: undefined,
   },
-  // componentsProps: {
-  //   ColumnMenu: {color: 'red'}
-  // }
 };

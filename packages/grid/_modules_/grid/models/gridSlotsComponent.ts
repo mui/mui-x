@@ -54,3 +54,13 @@ export const DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   Footer: GridFooter,
   ErrorOverlay,
 };
+
+export interface GridSlotsComponentProps {
+  ColumnMenu?: any;
+  Header?: any;
+  LoadingOverlay?: any;
+  NoRowOverlay?: any;
+  Pagination?: any;
+  Footer?: any;
+  ErrorOverlay?: any;
+}

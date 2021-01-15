@@ -62,7 +62,7 @@ export const useComponents = (
       ColumnMenu: wrapWithBaseProps<GridColumnHeaderMenuItemProps>(allComponents.ColumnMenu),
       Header: wrapWithBaseProps<{}>(allComponents.Header),
       LoadingOverlay: wrapWithBaseProps<{}>(allComponents.LoadingOverlay),
-      NoRowsOverlay: wrapWithBaseProps<{}>(allComponents.NoRowOverlay),
+      NoRowOverlay: wrapWithBaseProps<{}>(allComponents.NoRowOverlay),
       Pagination: wrapWithBaseProps<{}>(allComponents.Pagination),
       Error: wrapWithBaseProps<ErrorOverlayProps>(allComponents.ErrorOverlay),
       Footer: wrapWithBaseProps<GridFooterProps>(allComponents.Footer),

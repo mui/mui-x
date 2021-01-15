@@ -55,7 +55,7 @@ export const GridMenu: React.FC<MenuProps> = ({
           menuListRef.current.focus();
         }
       }
-    }, 0);
+    }, 10);
   }, [target, open, menuListRef]);
 
   React.useEffect(() => {
