@@ -7,7 +7,8 @@ import {
   GridFooter,
   XGridProps,
   HideColMenuItem,
-  ColumnMenuProps, BaseComponentProps,
+  ColumnMenuProps,
+  BaseComponentProps,
 } from '@material-ui/x-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CodeIcon from '@material-ui/icons/Code';
@@ -165,7 +166,9 @@ CustomFooter.args = {
 function FooterComponent2(props) {
   const { state } = props;
 
-  return <div className="footer my-custom-footer"> I counted {state.pagination.rowCount} row(s) </div>;
+  return (
+    <div className="footer my-custom-footer"> I counted {state.pagination.rowCount} row(s) </div>
+  );
 }
 
 function CustomHeader(props) {
@@ -308,9 +311,7 @@ function ColumnMenuComponent(props: ColumnMenuProps & { color?: string }) {
   }
   if (props.currentColumn.field === 'currencyPair') {
     return (
-      <div style={{ background: props.color || '#ccc' }}>
-        This is my currency pair column Menu!
-      </div>
+      <div style={{ background: props.color || '#ccc' }}>This is my currency pair column Menu!</div>
     );
   }
   return (

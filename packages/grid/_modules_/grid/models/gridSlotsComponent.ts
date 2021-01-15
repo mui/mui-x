@@ -52,5 +52,5 @@ export const DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   NoRowsOverlay: NoRowMessage,
   Pagination: DefaultPagination,
   Footer: DefaultFooter,
-  ErrorOverlay: ErrorMessage
-}
+  ErrorOverlay: ErrorMessage,
+};

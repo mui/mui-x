@@ -1,5 +1,5 @@
 import { Density } from '../../../models/density';
-import { DEFAULT_GRID_OPTIONS} from '../../../models/gridOptions';
+import { DEFAULT_GRID_OPTIONS } from '../../../models/gridOptions';
 
 export interface DensityState {
   value: Density;

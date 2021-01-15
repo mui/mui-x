@@ -38,7 +38,7 @@ export const useComponents = (
   );
 
   const components = React.useMemo(() => {
-    const allComponents = {...DEFAULT_SLOTS_COMPONENTS, ...componentsProp};
+    const allComponents = { ...DEFAULT_SLOTS_COMPONENTS, ...componentsProp };
 
     const wrapWithBaseProps: <TProps>(
       Component: React.ElementType<TProps & BaseComponentProps>,
