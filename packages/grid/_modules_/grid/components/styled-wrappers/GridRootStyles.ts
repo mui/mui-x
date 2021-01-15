@@ -1,12 +1,12 @@
-import { darken, fade, lighten, makeStyles, Theme } from '@material-ui/core/styles';
-import { getThemePaletteMode } from '../../utils';
+import { darken, lighten, makeStyles, Theme } from '@material-ui/core/styles';
+import { getThemePaletteMode, muiStyleAlpha } from '../../utils';
 
 export const useStyles = makeStyles(
   (theme: Theme) => {
     const borderColor =
       getThemePaletteMode(theme.palette) === 'light'
-        ? lighten(fade(theme.palette.divider, 1), 0.88)
-        : darken(fade(theme.palette.divider, 1), 0.68);
+        ? lighten(muiStyleAlpha(theme.palette.divider, 1), 0.88)
+        : darken(muiStyleAlpha(theme.palette.divider, 1), 0.68);
 
     const gridStyle: { root: any } = {
       root: {
@@ -39,7 +39,7 @@ export const useStyles = makeStyles(
           alignSelf: 'center',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: fade(
+          backgroundColor: muiStyleAlpha(
             theme.palette.background.default,
             theme.palette.action.disabledOpacity,
           ),
@@ -200,15 +200,18 @@ export const useStyles = makeStyles(
             },
           },
           '&.Mui-selected': {
-            backgroundColor: fade(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+            backgroundColor: muiStyleAlpha(
+              theme.palette.primary.main,
+              theme.palette.action.selectedOpacity,
+            ),
             '&:hover': {
-              backgroundColor: fade(
+              backgroundColor: muiStyleAlpha(
                 theme.palette.primary.main,
                 theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
               ),
               // Reset on touch devices, it doesn't add specificity
               '@media (hover: none)': {
-                backgroundColor: fade(
+                backgroundColor: muiStyleAlpha(
                   theme.palette.primary.main,
                   theme.palette.action.selectedOpacity,
                 ),
