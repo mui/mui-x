@@ -10,7 +10,6 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { GridColumnHeaderMenu } from './components/menu/columnMenu/GridColumnHeaderMenu';
 import { PreferencesPanel } from './components/panel/PreferencesPanel';
 import { GridColumnsContainer } from './components/containers/GridColumnsContainer';
-import { GridDataContainer } from './components/containers/GridDataContainer';
 import { GridMainContainer } from './components/containers/GridMainContainer';
 import { GridRoot } from './components/containers/GridRoot';
 import { GridWindow } from './components/containers/GridWindow';

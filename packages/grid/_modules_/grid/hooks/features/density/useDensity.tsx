@@ -1,12 +1,12 @@
 import * as React from 'react';
+import { Density, DensityTypes } from '../../../models/density';
+import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
 import { ApiRef } from '../../../models/api/apiRef';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { DensityApi } from '../../../models/api/densityApi';
-import { Density, DensityTypes } from '../../../models';
-import { optionsSelector } from '../../utils/useOptionsProp';
 import { DensityState } from './densityState';
 
 export const COMPACT_DENSITY_FACTOR = 0.7;

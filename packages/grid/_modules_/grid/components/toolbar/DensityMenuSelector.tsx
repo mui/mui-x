@@ -2,15 +2,15 @@ import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+import { densityValueSelector } from '../../hooks/features/density/densitySelector';
 import { useIcons } from '../../hooks/utils/useIcons';
+import { Density, DensityTypes } from '../../models/density';
 import { ApiContext } from '../api-context';
-import { DensityTypes, Density } from '../../models/gridOptions';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { DensityOption } from '../../models/api/densityApi';
-import { densityValueSelector } from '../../hooks/features/density';
 import { GridMenu } from '../menu/GridMenu';
 
-export function DensitySelector() {
+export function DensityMenuSelector() {
   const apiRef = React.useContext(ApiContext);
   const densityValue = useGridSelector(apiRef, densityValueSelector);
   const [anchorEl, setAnchorEl] = React.useState(null);

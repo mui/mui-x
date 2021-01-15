@@ -3,7 +3,7 @@ import { visibleColumnsSelector } from '../../hooks/features/columns/columnsSele
 import { GridState } from '../../hooks/features/core/gridState';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { renderStateSelector } from '../../hooks/features/virtualization/renderingStateSelector';
-import { optionsSelector } from '../../hooks/utils/useOptionsProp';
+import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { ApiContext } from '../api-context';
 import { LeftEmptyCell, RightEmptyCell } from '../Cell';
 import { ScrollArea } from '../ScrollArea';

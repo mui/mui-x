@@ -4,6 +4,7 @@ import { CellParams } from '../../models/params/cellParams';
 import { ColParams } from '../../models/params/colParams';
 import { RowParams } from '../../models/params/rowParams';
 import { useGridSelector } from '../features/core/useGridSelector';
+import { optionsSelector } from '../utils/optionsSelector';
 import { useLogger } from '../utils/useLogger';
 import {
   CELL_CLICK,
@@ -27,7 +28,6 @@ import {
 } from '../../constants/eventsConstants';
 import { CELL_CSS_CLASS, ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
 import { findParentElementFromClassName, getIdFromRowElem, isCell } from '../../utils/domUtils';
-import { optionsSelector } from '../utils/useOptionsProp';
 import { useApiMethod } from './useApiMethod';
 import { useApiEventHandler } from './useApiEventHandler';
 import { buildCellParams, buildRowParams } from '../../utils/paramsUtils';

@@ -8,8 +8,8 @@ import { SelectionChangeParams } from '../../../models/params/selectionChangePar
 import { RowId, RowModel } from '../../../models/rows';
 import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
+import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
-import { optionsSelector } from '../../utils/useOptionsProp';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { keyboardMultipleKeySelector } from '../keyboard/keyboardSelector';

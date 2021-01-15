@@ -10,8 +10,8 @@ import {
 } from '../../hooks/features/filter/filterSelector';
 import { preferencePanelStateSelector } from '../../hooks/features/preferencesPanel/preferencePanelSelector';
 import { PreferencePanelsValue } from '../../hooks/features/preferencesPanel/preferencesPanelValue';
+import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { useIcons } from '../../hooks/utils/useIcons';
-import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { ApiContext } from '../api-context';
 
 export const FilterToolbarButton: React.FC<{}> = () => {

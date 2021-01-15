@@ -5,7 +5,7 @@ import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { filterColumnLookupSelector } from '../../hooks/features/filter/filterSelector';
 import { sortColumnLookupSelector } from '../../hooks/features/sorting/sortingSelector';
 import { useApiEventHandler } from '../../hooks/root/useApiEventHandler';
-import { optionsSelector } from '../../hooks/utils/useOptionsProp';
+import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { Columns } from '../../models/colDef/colDef';
 import { ApiContext } from '../api-context';
 import { ColumnHeaderItem } from './ColumnHeaderItem';

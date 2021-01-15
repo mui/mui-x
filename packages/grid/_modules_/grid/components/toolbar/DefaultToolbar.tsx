@@ -1,11 +1,11 @@
 import { useContext } from 'react';
 import * as React from 'react';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { optionsSelector } from '../../hooks/utils/useOptionsProp';
+import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { ApiContext } from '../api-context';
 import { GridToolbar } from '../containers/GridToolbar';
 import { ColumnsToolbarButton } from './ColumnsToolbarButton';
-import { DensitySelector } from './DensitySelector';
+import { DensityMenuSelector } from './DensityMenuSelector';
 import { FilterToolbarButton } from './FilterToolbarButton';
 
 export function DefaultToolbar() {
@@ -23,7 +23,7 @@ export function DefaultToolbar() {
     <GridToolbar>
       {!options.disableColumnSelector && <ColumnsToolbarButton />}
       {!options.disableColumnFilter && <FilterToolbarButton />}
-      {!options.disableDensitySelector && <DensitySelector />}
+      {!options.disableDensitySelector && <DensityMenuSelector />}
     </GridToolbar>
   );
 }

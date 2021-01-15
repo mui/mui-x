@@ -1,14 +1,15 @@
 import * as React from 'react';
-import { DefaultFooter, DefaultFooterProps } from '../../components/DefaultFooter';
-import { DefaultGridColumnHeaderMenuItems } from '../../components/menu/columnMenu/DefaultGridColumnHeaderMenuItems';
+import { DefaultFooterProps } from '../../components/DefaultFooter';
 import { GridColumnHeaderMenuItemProps } from '../../components/menu/columnMenu/GridColumnHeaderMenu';
-import { Pagination as DefaultPagination } from '../../components/Pagination';
-import { DefaultToolbar } from '../../components/toolbar/DefaultToolbar';
-import { BaseComponentProps, ApiRef, GridSlotsComponent, RootContainerRef } from '../../models';
-import { ErrorMessage, ErrorMessageProps } from '../../components/ErrorMessage';
-import { LoadingOverlay as DefaultLoading } from '../../components/LoadingOverlay';
-import { NoRowMessage } from '../../components/NoRowMessage';
-import { optionsSelector } from '../utils/useOptionsProp';
+import {
+  BaseComponentProps,
+  ApiRef,
+  GridSlotsComponent,
+  RootContainerRef,
+  DEFAULT_SLOTS_COMPONENTS,
+} from '../../models';
+import { ErrorMessageProps } from '../../components/ErrorMessage';
+import { optionsSelector } from '../utils/optionsSelector';
 import { visibleColumnsSelector } from './columns/columnsSelector';
 import { useGridSelector } from './core/useGridSelector';
 import { useGridState } from './core/useGridState';
@@ -37,13 +38,7 @@ export const useComponents = (
   );
 
   const components = React.useMemo(() => {
-    const ColumnMenu = componentsProp?.ColumnMenu || DefaultGridColumnHeaderMenuItems;
-    const Header = componentsProp?.Header || DefaultToolbar;
-    const LoadingOverlay = componentsProp?.LoadingOverlay || DefaultLoading;
-    const NoRowsOverlay = componentsProp?.NoRowsOverlay || NoRowMessage;
-    const Pagination = componentsProp?.Pagination || DefaultPagination;
-    const Footer = componentsProp?.Footer || DefaultFooter;
-    const Error = componentsProp?.ErrorOverlay || ErrorMessage;
+    const allComponents = {...DEFAULT_SLOTS_COMPONENTS, ...componentsProp};
 
     const wrapWithBaseProps: <TProps>(
       Component: React.ElementType<TProps & BaseComponentProps>,
@@ -57,24 +52,15 @@ export const useComponents = (
     };
 
     return {
-      ColumnMenu: wrapWithBaseProps<GridColumnHeaderMenuItemProps>(ColumnMenu),
-      Header: wrapWithBaseProps<{}>(Header),
-      LoadingOverlay: wrapWithBaseProps<{}>(LoadingOverlay),
-      NoRowsOverlay: wrapWithBaseProps<{}>(NoRowsOverlay),
-      Pagination: wrapWithBaseProps<{}>(Pagination),
-      Error: wrapWithBaseProps<ErrorMessageProps>(Error),
-      Footer: wrapWithBaseProps<DefaultFooterProps>(Footer),
+      ColumnMenu: wrapWithBaseProps<GridColumnHeaderMenuItemProps>(allComponents.ColumnMenu!),
+      Header: wrapWithBaseProps<{}>(allComponents.Header!),
+      LoadingOverlay: wrapWithBaseProps<{}>(allComponents.LoadingOverlay!),
+      NoRowsOverlay: wrapWithBaseProps<{}>(allComponents.NoRowsOverlay!),
+      Pagination: wrapWithBaseProps<{}>(allComponents.Pagination!),
+      Error: wrapWithBaseProps<ErrorMessageProps>(allComponents.ErrorOverlay!),
+      Footer: wrapWithBaseProps<DefaultFooterProps>(allComponents.Footer!),
     };
-  }, [
-    baseComponentProps,
-    componentsProp?.ColumnMenu,
-    componentsProp?.ErrorOverlay,
-    componentsProp?.Footer,
-    componentsProp?.Header,
-    componentsProp?.LoadingOverlay,
-    componentsProp?.NoRowsOverlay,
-    componentsProp?.Pagination,
-  ]);
+  }, [baseComponentProps, componentsProp]);
 
   return components;
 };

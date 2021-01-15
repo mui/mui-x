@@ -3,7 +3,7 @@ import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { paginationSelector } from '../hooks/features/pagination/paginationSelector';
 import { rowCountSelector } from '../hooks/features/rows/rowsSelector';
 import { selectedRowsCountSelector } from '../hooks/features/selection/selectionSelector';
-import { optionsSelector } from '../hooks/utils/useOptionsProp';
+import { optionsSelector } from '../hooks/utils/optionsSelector';
 import { ApiContext } from './api-context';
 import { RowCount } from './RowCount';
 import { SelectedRowCount } from './SelectedRowCount';

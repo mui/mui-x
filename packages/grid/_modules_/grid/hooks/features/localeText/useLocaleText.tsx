@@ -1,10 +1,10 @@
 import * as React from 'react';
+import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
 import { ApiRef } from '../../../models/api/apiRef';
 import { LocaleTextApi } from '../../../models/api/localeTextApi';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useGridSelector } from '../core/useGridSelector';
-import { optionsSelector } from '../../utils/useOptionsProp';
 
 export const useLocaleText = (apiRef: ApiRef): void => {
   const logger = useLogger('useLocaleText');
