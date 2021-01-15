@@ -15,6 +15,10 @@ import { useGridSelector } from './core/useGridSelector';
 import { useGridState } from './core/useGridState';
 import { unorderedRowModelsSelector } from './rows/rowsSelector';
 
+const EmptyComponent = function () {
+  return null;
+}
+
 export const useComponents = (
   componentsProp: GridSlotsComponent | undefined,
   apiRef: ApiRef,
@@ -41,8 +45,11 @@ export const useComponents = (
     const allComponents = { ...DEFAULT_SLOTS_COMPONENTS, ...componentsProp };
 
     const wrapWithBaseProps: <TProps>(
-      Component: React.ElementType<TProps & BaseComponentProps>,
+      Component: React.ElementType<TProps & BaseComponentProps> | undefined | null,
     ) => React.ElementType<TProps> = <TProps extends {}>(Component) => {
+      if(Component == null) {
+        return EmptyComponent;
+      }
       const ComponentWithBase: React.ElementType<TProps> = (props: TProps) => {
         const propsWithBase = { ...baseComponentProps, ...props };
         return <Component {...propsWithBase} />;
@@ -52,13 +59,13 @@ export const useComponents = (
     };
 
     return {
-      ColumnMenu: wrapWithBaseProps<GridColumnHeaderMenuItemProps>(allComponents.ColumnMenu!),
-      Header: wrapWithBaseProps<{}>(allComponents.Header!),
-      LoadingOverlay: wrapWithBaseProps<{}>(allComponents.LoadingOverlay!),
-      NoRowsOverlay: wrapWithBaseProps<{}>(allComponents.NoRowsOverlay!),
-      Pagination: wrapWithBaseProps<{}>(allComponents.Pagination!),
-      Error: wrapWithBaseProps<ErrorMessageProps>(allComponents.ErrorOverlay!),
-      Footer: wrapWithBaseProps<DefaultFooterProps>(allComponents.Footer!),
+      ColumnMenu: wrapWithBaseProps<GridColumnHeaderMenuItemProps>(allComponents.ColumnMenu),
+      Header: wrapWithBaseProps<{}>(allComponents.Header),
+      LoadingOverlay: wrapWithBaseProps<{}>(allComponents.LoadingOverlay),
+      NoRowsOverlay: wrapWithBaseProps<{}>(allComponents.NoRowsOverlay),
+      Pagination: wrapWithBaseProps<{}>(allComponents.Pagination),
+      Error: wrapWithBaseProps<ErrorMessageProps>(allComponents.ErrorOverlay),
+      Footer: wrapWithBaseProps<DefaultFooterProps>(allComponents.Footer),
     };
   }, [baseComponentProps, componentsProp]);
 

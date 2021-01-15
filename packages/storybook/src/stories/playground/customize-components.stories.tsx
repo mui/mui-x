@@ -331,3 +331,18 @@ CustomColumnMenu.args = {
   //   ColumnMenu: {color: 'red'}
   // }
 };
+export const UndefinedAllComponent = Template.bind({});
+UndefinedAllComponent.args = {
+  components: {
+    ColumnMenu: undefined,
+    Pagination: undefined,
+    Footer: undefined,
+    Header: undefined,
+    ErrorOverlay: undefined,
+    NoRowsOverlay: undefined,
+    LoadingOverlay: undefined,
+  },
+  // componentsProps: {
+  //   ColumnMenu: {color: 'red'}
+  // }
+};
