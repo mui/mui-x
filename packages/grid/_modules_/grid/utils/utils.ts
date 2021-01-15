@@ -42,10 +42,9 @@ export function isMuiV5(): boolean {
 
 export function muiStyleAlpha(color: string, value: number): string {
   if (isMuiV5()) {
-    return (styles as any).alpha(color, value);
+    return (styles as any)?.alpha(color, value);
   }
-
-  return (styles as any).fade(color, value);
+  return (styles as any)?.fade(color, value);
 }
 
 export function localStorageAvailable() {
