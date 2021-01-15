@@ -5,7 +5,7 @@ import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { ApiContext } from '../api-context';
 import { GridToolbar } from '../containers/GridToolbar';
 import { ColumnsToolbarButton } from './ColumnsToolbarButton';
-import { DensityMenuSelector } from './DensityMenuSelector';
+import { DensitySelector } from './DensitySelector';
 import { FilterToolbarButton } from './FilterToolbarButton';
 
 export function DefaultToolbar() {
@@ -23,7 +23,7 @@ export function DefaultToolbar() {
     <GridToolbar>
       {!options.disableColumnSelector && <ColumnsToolbarButton />}
       {!options.disableColumnFilter && <FilterToolbarButton />}
-      {!options.disableDensitySelector && <DensityMenuSelector />}
+      {!options.disableDensitySelector && <DensitySelector />}
     </GridToolbar>
   );
 }

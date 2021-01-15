@@ -10,7 +10,7 @@ import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { DensityOption } from '../../models/api/densityApi';
 import { GridMenu } from '../menu/GridMenu';
 
-export function DensityMenuSelector() {
+export function DensitySelector() {
   const apiRef = React.useContext(ApiContext);
   const densityValue = useGridSelector(apiRef, densityValueSelector);
   const [anchorEl, setAnchorEl] = React.useState(null);
