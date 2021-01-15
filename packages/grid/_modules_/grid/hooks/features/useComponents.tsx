@@ -17,7 +17,7 @@ import { unorderedRowModelsSelector } from './rows/rowsSelector';
 
 const EmptyComponent = function () {
   return null;
-}
+};
 
 export const useComponents = (
   componentsProp: GridSlotsComponent | undefined,
@@ -47,7 +47,7 @@ export const useComponents = (
     const wrapWithBaseProps: <TProps>(
       Component: React.ElementType<TProps & BaseComponentProps> | undefined | null,
     ) => React.ElementType<TProps> = <TProps extends {}>(Component) => {
-      if(Component == null) {
+      if (Component == null) {
         return EmptyComponent;
       }
       const ComponentWithBase: React.ElementType<TProps> = (props: TProps) => {
