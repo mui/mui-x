@@ -37,8 +37,7 @@ export function getThemePaletteMode(palette: any): string {
 }
 
 export function isMuiV5(): boolean {
-  // @ts-ignore TODO remove once upgraded v4 support is dropped
-  return !!styles.alpha;
+  return 'alpha' in styles;
 }
 
 export function localStorageAvailable() {
