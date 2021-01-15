@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.17](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.15...v4.0.0-alpha.17)
+
+###### _Jan 14, 2021_
+
+### @material-ui/x-grid@v4.0.0-alpha.17 / @material-ui/data-grid@v4.0.0-alpha.17
+
+- [DataGrid] Fix custom footer hiding issue #821, and custom component stories (#846) @dtassone
+- [DataGrid] Remove tslib (#832) @dependabot-preview
+- [DataGrid] Add docs for Column selector (#837) @DanailH
+- [DataGrid] Add tests for column selector (#845) @DanailH
+- [DataGrid] Fix error handling (#843) @dtassone
+- [DataGrid] Fix onPageChange firing too often (#838) @dtassone
+- [DataGrid] Fix wrong initial sort order (#841) @dtassone
+
+### Docs
+
+- [docs] Clarify feature split between pro and premium (#779) @oliviertassinari
+
 ## [4.0.0-alpha.15](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.14...v4.0.0-alpha.15)
 
 ###### _Jan 7, 2021_
