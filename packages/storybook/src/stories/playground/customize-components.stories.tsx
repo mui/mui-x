@@ -117,7 +117,7 @@ Icons.args = {
   },
 };
 
-function PaginationComponent(props: BaseComponentProps & {color?: 'primary'}) {
+function PaginationComponent(props: BaseComponentProps & { color?: 'primary' }) {
   const { state, api } = props;
   return (
     <Pagination
@@ -138,8 +138,8 @@ CustomPagination.args = {
     Pagination: PaginationComponent,
   },
   componentsProps: {
-    Pagination: {color: 'primary'}
-  }
+    Pagination: { color: 'primary' },
+  },
 };
 
 function FooterComponent(props) {
@@ -167,8 +167,8 @@ CustomFooter.args = {
     Footer: FooterComponent,
   },
   componentsProps: {
-    Footer: {color: 'blue'}
-  }
+    Footer: { color: 'blue' },
+  },
 };
 
 function FooterComponent2(props) {
@@ -197,8 +197,8 @@ HeaderAndFooter.args = {
     Footer: FooterComponent2,
   },
   componentsProps: {
-    Header: {color: 'primary'}
-  }
+    Header: { color: 'primary' },
+  },
 };
 
 function IsDone(props: { value?: boolean }) {
@@ -306,7 +306,7 @@ StyledColumns.args = {
 };
 
 function ToolbarComponent(props: any) {
-  return <div style={{background: props.color}}>This is my custom toolbar!</div>;
+  return <div style={{ background: props.color }}>This is my custom toolbar!</div>;
 }
 
 export const CustomToolbar = Template.bind({});
@@ -315,8 +315,8 @@ CustomToolbar.args = {
     Header: ToolbarComponent,
   },
   componentsProps: {
-    Header: {color: 'red'}
-  }
+    Header: { color: 'red' },
+  },
 };
 
 function ColumnMenuComponent(props: ColumnMenuProps & { color?: string }) {
@@ -339,8 +339,8 @@ CustomColumnMenu.args = {
     ColumnMenu: ColumnMenuComponent,
   },
   componentsProps: {
-    ColumnMenu: {color: 'red'}
-  }
+    ColumnMenu: { color: 'red' },
+  },
 };
 
 export const UndefinedAllComponent = Template.bind({});

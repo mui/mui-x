@@ -109,29 +109,41 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                 logger={logger}
                 render={(errorProps) => (
                   <GridMainContainer>
-                    <components.Error {...errorProps} {...props.componentsProps?.ErrorOverlay}/>
+                    <components.Error {...errorProps} {...props.componentsProps?.ErrorOverlay} />
                   </GridMainContainer>
                 )}
               >
                 <div ref={headerRef}>
-                  <components.Header {...props.componentsProps?.Header}/>
+                  <components.Header {...props.componentsProps?.Header} />
                 </div>
                 <GridMainContainer>
-                  <GridColumnHeaderMenu ContentComponent={components.ColumnMenu} contentComponentProps={props.componentsProps?.ColumnMenu} />
+                  <GridColumnHeaderMenu
+                    ContentComponent={components.ColumnMenu}
+                    contentComponentProps={props.componentsProps?.ColumnMenu}
+                  />
                   <PreferencesPanel />
                   <Watermark licenseStatus={props.licenseStatus} />
                   <GridColumnsContainer ref={columnsContainerRef}>
                     <ColumnsHeader ref={columnsHeaderRef} />
                   </GridColumnsContainer>
-                  {showNoRowsOverlay && <components.NoRowOverlay {...props.componentsProps?.NoRowOverlay}/>}
-                  {props.loading && <components.LoadingOverlay {...props.componentsProps?.LoadingOverlay}/>}
+                  {showNoRowsOverlay && (
+                    <components.NoRowOverlay {...props.componentsProps?.NoRowOverlay} />
+                  )}
+                  {props.loading && (
+                    <components.LoadingOverlay {...props.componentsProps?.LoadingOverlay} />
+                  )}
                   <GridWindow ref={windowRef}>
                     <Viewport ref={renderingZoneRef} />
                   </GridWindow>
                 </GridMainContainer>
                 {!gridState.options.hideFooter && (
                   <div ref={footerRef}>
-                    <components.Footer PaginationComponent={<components.Pagination {...props.componentsProps?.Pagination}/>} {...props.componentsProps?.Footer} />
+                    <components.Footer
+                      PaginationComponent={
+                        <components.Pagination {...props.componentsProps?.Pagination} />
+                      }
+                      {...props.componentsProps?.Footer}
+                    />
                   </div>
                 )}
               </ErrorBoundary>
