@@ -33,6 +33,10 @@ CustomPagination.propTypes = {
   api: PropTypes.shape({
     current: PropTypes.object.isRequired,
   }).isRequired,
+  /**
+   * State that let you extract the current state of the grid.
+   */
+  state: PropTypes.object.isRequired,
 };
 
 export default function CustomPaginationGrid() {
