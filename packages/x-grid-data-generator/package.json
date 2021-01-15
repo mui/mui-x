@@ -37,10 +37,6 @@
     "@material-ui/x-grid": "^4.0.0-alpha.1",
     "react": "^16.8.0 || ^17.0.0"
   },
-  "optionalDependencies": {
-    "@emotion/react": "^11.1.4",
-    "@emotion/styled": "^11.0.0"
-  },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
   ],
