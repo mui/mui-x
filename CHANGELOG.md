@@ -7,19 +7,31 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ###### _Jan 14, 2021_
 
+Big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎛 Add support for Column selector (#837) @DanailH @dtassone.
+  The feature can be triggered from the toolbar or the column menu. Check [the documentation](https://material-ui.com/components/data-grid/columns/#column-selector).
+
+  ![column selector](https://user-images.githubusercontent.com/3165635/104791267-6ff77300-579a-11eb-9338-11a8fde83258.gif)
+
+- 🐛 A focus on fixing regressions from previous releases refactoring and bugs.
+
 ### @material-ui/x-grid@v4.0.0-alpha.17 / @material-ui/data-grid@v4.0.0-alpha.17
 
-- [DataGrid] Fix custom footer hiding issue #821, and custom component stories (#846) @dtassone
-- [DataGrid] Remove tslib (#832) @dependabot-preview
-- [DataGrid] Add docs for Column selector (#837) @DanailH
-- [DataGrid] Add tests for column selector (#845) @DanailH
-- [DataGrid] Fix error handling (#843) @dtassone
-- [DataGrid] Fix onPageChange firing too often (#838) @dtassone
+- [DataGrid] Fix `onPageChange` firing too often (#838) @dtassone
+- [DataGrid] Fix behavior of the `hideFooter` prop (#846) @dtassone
+- [DataGrid] Fix the display logic for "error messages" (#843) @dtassone
 - [DataGrid] Fix wrong initial sort order (#841) @dtassone
+- [DataGrid] Remove tslib dependency from packages (#832) @oliviertassinari
 
 ### Docs
 
+- [docs] Add docs for data grid column selector (#837) @DanailH
 - [docs] Clarify feature split between pro and premium (#779) @oliviertassinari
+
+### Core
+
+- [core] Add tests for Column selector feature (#845) @DanailH
 
 ## [4.0.0-alpha.15](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.14...v4.0.0-alpha.15)
 
