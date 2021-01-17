@@ -25,7 +25,7 @@
     "licensegen": "./bin/license-gen-script.js"
   },
   "dependencies": {
-    "commander": "^6.1.0",
+    "commander": "^7.0.0",
     "esm": "^3.2.25"
   },
   "peerDependencies": {
