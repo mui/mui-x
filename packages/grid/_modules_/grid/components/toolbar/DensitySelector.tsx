@@ -1,5 +1,5 @@
-import MenuList from '@material-ui/core/MenuList';
 import * as React from 'react';
+import MenuList from '@material-ui/core/MenuList';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
