@@ -6,7 +6,7 @@ import { FilterMenuItem } from './FilterMenuItem';
 import { HideColMenuItem } from './HideColMenuItem';
 import { SortMenuItems } from './SortMenuItems';
 
-export interface GridColumnHeaderMenuItemProps {
+export interface GridColumnHeaderMenuItemsProps {
   hideMenu: () => void;
   currentColumn: ColDef;
 }
@@ -14,7 +14,7 @@ export interface GridColumnHeaderMenuItemProps {
 export function GridColumnHeaderMenuItems({
   hideMenu,
   currentColumn,
-}: GridColumnHeaderMenuItemProps) {
+}: GridColumnHeaderMenuItemsProps) {
   const handleListKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
       if (event.key === 'Tab') {
