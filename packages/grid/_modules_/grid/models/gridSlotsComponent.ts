@@ -18,17 +18,13 @@ export type ColumnMenuProps = BaseComponentProps & GridColumnHeaderMenuItemProps
  */
 export interface GridSlotsComponent {
   /**
-   * Pagination component rendered in the grid footer by default.
+   * Column menu component rendered by clicking on the 3 dots icon in column headers.
    */
-  Pagination?: React.ElementType<BaseComponentProps>;
+  ColumnMenu?: React.ElementType<ColumnMenuProps>;
   /**
-   * Loading overlay component rendered when the grid is in a loading state.
+   * Error overlay component rendered above the grid when an error is caught.
    */
-  LoadingOverlay?: React.ElementType<BaseComponentProps>;
-  /**
-   * No rows overlay component rendered when the grid has no rows.
-   */
-  NoRowsOverlay?: React.ElementType<BaseComponentProps>;
+  ErrorOverlay?: React.ElementType<BaseComponentProps & ErrorOverlayProps>;
   /**
    * Footer component rendered at the bottom of the grid viewport.
    */
@@ -38,31 +34,35 @@ export interface GridSlotsComponent {
    */
   Header?: React.ElementType<BaseComponentProps>;
   /**
-   * Error overlay component rendered above the grid when an error is caught.
+   * Loading overlay component rendered when the grid is in a loading state.
    */
-  ErrorOverlay?: React.ElementType<BaseComponentProps & ErrorOverlayProps>;
+  LoadingOverlay?: React.ElementType<BaseComponentProps>;
   /**
-   * Column menu component rendered by clicking on the 3 dots icon in column headers.
+   * No rows overlay component rendered when the grid has no rows.
    */
-  ColumnMenu?: React.ElementType<ColumnMenuProps>;
+  NoRowsOverlay?: React.ElementType<BaseComponentProps>;
+  /**
+   * Pagination component rendered in the grid footer by default.
+   */
+  Pagination?: React.ElementType<BaseComponentProps>;
 }
 
 export const DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   ColumnMenu: GridColumnHeaderMenuItems,
+  ErrorOverlay,
+  Footer: GridFooter,
   Header: GridToolbar,
   LoadingOverlay,
   NoRowsOverlay,
   Pagination,
-  Footer: GridFooter,
-  ErrorOverlay,
 };
 
 export interface GridSlotsComponentProps {
   columnMenu?: any;
+  errorOverlay?: any;
+  footer?: any;
   header?: any;
   loadingOverlay?: any;
   noRowsOverlay?: any;
   pagination?: any;
-  footer?: any;
-  errorOverlay?: any;
 }

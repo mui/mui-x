@@ -60,12 +60,12 @@ export const useComponents = (
 
     return {
       ColumnMenu: wrapWithBaseProps<GridColumnHeaderMenuItemProps>(allComponents.ColumnMenu),
+      Error: wrapWithBaseProps<ErrorOverlayProps>(allComponents.ErrorOverlay),
+      Footer: wrapWithBaseProps<GridFooterProps>(allComponents.Footer),
       Header: wrapWithBaseProps<{}>(allComponents.Header),
       LoadingOverlay: wrapWithBaseProps<{}>(allComponents.LoadingOverlay),
       NoRowsOverlay: wrapWithBaseProps<{}>(allComponents.NoRowsOverlay),
       Pagination: wrapWithBaseProps<{}>(allComponents.Pagination),
-      Error: wrapWithBaseProps<ErrorOverlayProps>(allComponents.ErrorOverlay),
-      Footer: wrapWithBaseProps<GridFooterProps>(allComponents.Footer),
     };
   }, [baseComponentProps, componentsProp]);
 
