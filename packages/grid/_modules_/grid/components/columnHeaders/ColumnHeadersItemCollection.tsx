@@ -10,11 +10,11 @@ import { Columns } from '../../models/colDef/colDef';
 import { ApiContext } from '../api-context';
 import { ColumnHeaderItem } from './ColumnHeaderItem';
 
-export interface ColumnHeaderItemCollectionProps {
+export interface ColumnHeadersItemCollectionProps {
   columns: Columns;
 }
 
-export function ColumnHeaderItemCollection(props: ColumnHeaderItemCollectionProps) {
+export function ColumnHeadersItemCollection(props: ColumnHeadersItemCollectionProps) {
   const { columns } = props;
   const [resizingColField, setResizingColField] = React.useState('');
   const apiRef = React.useContext(ApiContext);
