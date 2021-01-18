@@ -10,7 +10,7 @@ import { RowModel } from '../rows';
  */
 export interface BaseComponentProps {
   /**
-   * The GridState object containing the grid current state.
+   * The GridState object containing the current grid state.
    */
   state: GridState;
   /**
