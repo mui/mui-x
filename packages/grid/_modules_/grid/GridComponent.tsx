@@ -127,7 +127,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                     <ColumnsHeader ref={columnsHeaderRef} />
                   </GridColumnsContainer>
                   {showNoRowsOverlay && (
-                    <components.NoRowOverlay {...props.componentsProps?.noRowOverlay} />
+                    <components.NoRowsOverlay {...props.componentsProps?.noRowsOverlay} />
                   )}
                   {props.loading && (
                     <components.LoadingOverlay {...props.componentsProps?.loadingOverlay} />

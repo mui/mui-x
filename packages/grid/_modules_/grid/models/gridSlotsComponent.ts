@@ -5,7 +5,7 @@ import {
   GridColumnHeaderMenuItemProps,
   GridColumnHeaderMenuItems,
 } from '../components/menu/columnMenu/GridColumnHeaderMenuItems';
-import { NoRowOverlay } from '../components/NoRowOverlay';
+import { NoRowsOverlay } from '../components/NoRowsOverlay';
 import { Pagination } from '../components/Pagination';
 import { GridToolbar } from '../components/toolbar/GridToolbar';
 import { BaseComponentProps } from './params/componentParams';
@@ -28,7 +28,7 @@ export interface GridSlotsComponent {
   /**
    * No rows overlay component rendered when the grid has no rows.
    */
-  NoRowOverlay?: React.ElementType<BaseComponentProps>;
+  NoRowsOverlay?: React.ElementType<BaseComponentProps>;
   /**
    * Footer component rendered at the bottom of the grid viewport.
    */
@@ -51,7 +51,7 @@ export const DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   ColumnMenu: GridColumnHeaderMenuItems,
   Header: GridToolbar,
   LoadingOverlay,
-  NoRowOverlay,
+  NoRowsOverlay,
   Pagination,
   Footer: GridFooter,
   ErrorOverlay,
@@ -61,7 +61,7 @@ export interface GridSlotsComponentProps {
   columnMenu?: any;
   header?: any;
   loadingOverlay?: any;
-  noRowOverlay?: any;
+  noRowsOverlay?: any;
   pagination?: any;
   footer?: any;
   errorOverlay?: any;

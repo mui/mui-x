@@ -95,7 +95,7 @@ NoRows.args = {
   rows: [],
   columns,
   components: {
-    NoRowOverlay: NoRowsComponent,
+    NoRowsOverlay: NoRowsComponent,
   },
 };
 
@@ -350,7 +350,7 @@ UndefinedAllComponent.args = {
     Footer: undefined,
     Header: undefined,
     ErrorOverlay: undefined,
-    NoRowOverlay: undefined,
+    NoRowsOverlay: undefined,
     LoadingOverlay: undefined,
   },
 };

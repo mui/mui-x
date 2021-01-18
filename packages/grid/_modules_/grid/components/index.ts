@@ -10,7 +10,7 @@ export * from './Cell';
 export * from './CheckboxRenderer';
 export * from './GridFooter';
 export * from './LoadingOverlay';
-export * from './NoRowOverlay';
+export * from './NoRowsOverlay';
 export * from './Pagination';
 export * from './RenderingZone';
 export * from './RowCells';
