@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { GridFooter, GridFooterProps } from '../components/GridFooter';
 import { ErrorOverlay, ErrorOverlayProps } from '../components/ErrorOverlay';
-import { GridColumnHeaderMenuItems } from '../components/menu/columnMenu/GridColumnHeaderMenuItems';
-import { GridColumnHeaderMenuItemProps } from '../components/menu/columnMenu/GridColumnHeaderMenu';
+import {
+  GridColumnHeaderMenuItemProps,
+  GridColumnHeaderMenuItems,
+} from '../components/menu/columnMenu/GridColumnHeaderMenuItems';
 import { NoRowOverlay } from '../components/NoRowOverlay';
 import { Pagination } from '../components/Pagination';
 import { GridToolbar } from '../components/toolbar/GridToolbar';

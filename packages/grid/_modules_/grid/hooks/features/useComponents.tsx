@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridFooterProps } from '../../components/GridFooter';
-import { GridColumnHeaderMenuItemProps } from '../../components/menu/columnMenu/GridColumnHeaderMenu';
+import { GridColumnHeaderMenuItemProps } from '../../components/menu/columnMenu/GridColumnHeaderMenuItems';
 import {
   BaseComponentProps,
   ApiRef,

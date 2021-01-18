@@ -2,17 +2,13 @@ import * as React from 'react';
 import { ColumnMenuState } from '../../../hooks/features/columnMenu/columnMenuState';
 import { GridState } from '../../../hooks/features/core/gridState';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
-import { ColDef } from '../../../models/colDef/colDef';
 import { findHeaderElementFromField } from '../../../utils/domUtils';
 import { ApiContext } from '../../api-context';
 import { GridMenu } from '../GridMenu';
+import { GridColumnHeaderMenuItemProps } from './GridColumnHeaderMenuItems';
 
 const columnMenuStateSelector = (state: GridState) => state.columnMenu;
 
-export interface GridColumnHeaderMenuItemProps {
-  hideMenu: () => void;
-  currentColumn: ColDef;
-}
 export interface GridColumnHeaderMenuProps {
   ContentComponent: React.ElementType<GridColumnHeaderMenuItemProps>;
   contentComponentProps?: any;
@@ -92,6 +88,8 @@ export function GridColumnHeaderMenu({
       <ContentComponent
         currentColumn={currentColumn}
         hideMenu={hideMenu}
+        open={columnMenuState.open}
+        onKeyDown={handleListKeyDown}
         {...contentComponentProps}
       />
     </GridMenu>
