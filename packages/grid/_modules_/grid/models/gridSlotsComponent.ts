@@ -42,7 +42,7 @@ export interface GridSlotsComponent {
    */
   ErrorOverlay?: React.ElementType<BaseComponentProps & ErrorOverlayProps>;
   /**
-   * ColumnMenu component rendered by clicking on the 3 dots icon in column headers.
+   * Column menu component rendered by clicking on the 3 dots icon in column headers.
    */
   ColumnMenu?: React.ElementType<ColumnMenuProps>;
 }
