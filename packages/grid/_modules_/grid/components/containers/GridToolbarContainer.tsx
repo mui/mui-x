@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { classnames } from '../../utils';
 
-type GridToolbarProps = React.HTMLAttributes<HTMLDivElement>;
+type GridToolbarContainerProps = React.HTMLAttributes<HTMLDivElement>;
 
-export const GridToolbarContainer = React.forwardRef<HTMLDivElement, GridToolbarProps>(
+export const GridToolbarContainer = React.forwardRef<HTMLDivElement, GridToolbarContainerProps>(
   function GridToolbar(props, ref) {
     const { className, children, ...other } = props;
 

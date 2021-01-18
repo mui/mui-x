@@ -109,17 +109,17 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                 logger={logger}
                 render={(errorProps) => (
                   <GridMainContainer>
-                    <components.Error {...errorProps} {...props.componentsProps?.ErrorOverlay} />
+                    <components.Error {...errorProps} {...props.componentsProps?.errorOverlay} />
                   </GridMainContainer>
                 )}
               >
                 <div ref={headerRef}>
-                  <components.Header {...props.componentsProps?.Header} />
+                  <components.Header {...props.componentsProps?.header} />
                 </div>
                 <GridMainContainer>
                   <GridColumnHeaderMenu
                     ContentComponent={components.ColumnMenu}
-                    contentComponentProps={props.componentsProps?.ColumnMenu}
+                    contentComponentProps={props.componentsProps?.columnMenu}
                   />
                   <PreferencesPanel />
                   <Watermark licenseStatus={props.licenseStatus} />
@@ -127,10 +127,10 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                     <ColumnsHeader ref={columnsHeaderRef} />
                   </GridColumnsContainer>
                   {showNoRowsOverlay && (
-                    <components.NoRowOverlay {...props.componentsProps?.NoRowOverlay} />
+                    <components.NoRowOverlay {...props.componentsProps?.noRowOverlay} />
                   )}
                   {props.loading && (
-                    <components.LoadingOverlay {...props.componentsProps?.LoadingOverlay} />
+                    <components.LoadingOverlay {...props.componentsProps?.loadingOverlay} />
                   )}
                   <GridWindow ref={windowRef}>
                     <Viewport ref={renderingZoneRef} />
@@ -140,9 +140,9 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                   <div ref={footerRef}>
                     <components.Footer
                       PaginationComponent={
-                        <components.Pagination {...props.componentsProps?.Pagination} />
+                        <components.Pagination {...props.componentsProps?.pagination} />
                       }
-                      {...props.componentsProps?.Footer}
+                      {...props.componentsProps?.footer}
                     />
                   </div>
                 )}

@@ -17,7 +17,7 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
   props,
   ref,
 ) {
-  const { className, ...other } = props;
+  const { className, style, ...other } = props;
   const classes = useStyles();
   const apiRef = React.useContext(ApiContext);
   const visibleColumnsLength = useGridSelector(apiRef, visibleColumnsLengthSelector);
@@ -44,7 +44,7 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
       tabIndex={0}
       aria-label={apiRef!.current.getLocaleText('rootGridLabel')}
       aria-multiselectable={!gridState.options.disableMultipleSelection}
-      style={{ width: props.size.width, height: getTotalHeight(props.size) }}
+      style={{ width: props.size.width, height: getTotalHeight(props.size), ...style }}
       {...other}
     />
   );

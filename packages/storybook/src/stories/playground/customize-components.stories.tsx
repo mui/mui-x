@@ -137,7 +137,7 @@ CustomPagination.args = {
     Pagination: PaginationComponent,
   },
   componentsProps: {
-    Pagination: { color: 'primary' },
+    pagination: { color: 'primary' },
   },
 };
 
@@ -166,7 +166,7 @@ CustomFooter.args = {
     Footer: FooterComponent,
   },
   componentsProps: {
-    Footer: { color: 'blue' },
+    footer: { color: 'blue' },
   },
 };
 
@@ -196,7 +196,7 @@ HeaderAndFooter.args = {
     Footer: FooterComponent2,
   },
   componentsProps: {
-    Header: { color: 'primary' },
+    header: { color: 'primary' },
   },
 };
 
@@ -314,7 +314,7 @@ CustomToolbar.args = {
     Header: ToolbarComponent,
   },
   componentsProps: {
-    Header: { color: 'red' },
+    header: { color: 'red' },
   },
 };
 
@@ -338,7 +338,7 @@ CustomColumnMenu.args = {
     ColumnMenu: ColumnMenuComponent,
   },
   componentsProps: {
-    ColumnMenu: { color: 'red' },
+    columnMenu: { color: 'red' },
   },
 };
 

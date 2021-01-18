@@ -22,7 +22,6 @@ type MenuPosition =
 export interface MenuProps extends Omit<PopperProps, 'onKeyDown'> {
   open: boolean;
   target: React.ReactNode;
-  onKeyDown: (event: React.KeyboardEvent<HTMLUListElement>) => void;
   onClickAway: (event: React.MouseEvent<Document, MouseEvent>) => void;
   position?: MenuPosition;
 }
@@ -35,7 +34,6 @@ const transformOrigin = {
 export const GridMenu: React.FC<MenuProps> = ({
   open,
   target,
-  onKeyDown,
   onClickAway,
   children,
   position,

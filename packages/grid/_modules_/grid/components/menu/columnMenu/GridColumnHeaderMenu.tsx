@@ -52,16 +52,6 @@ export function GridColumnHeaderMenu({
     [apiRef],
   );
 
-  const handleListKeyDown = React.useCallback(
-    (event: React.KeyboardEvent) => {
-      if (event.key === 'Tab') {
-        event.preventDefault();
-        hideMenu();
-      }
-    },
-    [hideMenu],
-  );
-
   React.useEffect(() => {
     updateColumnMenu(columnMenuState);
   }, [columnMenuState, updateColumnMenu]);
@@ -82,14 +72,12 @@ export function GridColumnHeaderMenu({
       placement={`bottom-${currentColumn!.align === 'right' ? 'start' : 'end'}` as any}
       open={columnMenuState.open}
       target={target}
-      onKeyDown={handleListKeyDown}
       onClickAway={hideMenuDelayed}
     >
       <ContentComponent
         currentColumn={currentColumn}
         hideMenu={hideMenu}
         open={columnMenuState.open}
-        onKeyDown={handleListKeyDown}
         {...contentComponentProps}
       />
     </GridMenu>

@@ -9,40 +9,23 @@ import { SortMenuItems } from './SortMenuItems';
 export interface GridColumnHeaderMenuItemProps {
   hideMenu: () => void;
   currentColumn: ColDef;
-  open: boolean;
-  onKeyDown: (event: React.KeyboardEvent<HTMLUListElement>) => void;
 }
 
 export function GridColumnHeaderMenuItems({
   hideMenu,
   currentColumn,
-  open,
-  onKeyDown,
 }: GridColumnHeaderMenuItemProps) {
-  const menuListRef = React.useRef<HTMLUListElement | null>(null);
-  const focusTimeout = React.useRef<any>();
-
-  React.useEffect(() => {
-    focusTimeout.current = setTimeout(() => {
-      if (open && menuListRef.current) {
-        const firstItem = menuListRef.current.querySelector('li:first-child');
-        if (firstItem) {
-          (firstItem as HTMLLIElement).focus();
-        } else {
-          menuListRef.current.focus();
-        }
+  const handleListKeyDown = React.useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Tab') {
+        event.preventDefault();
+        hideMenu();
       }
-    }, 10);
-  });
-
-  React.useEffect(() => {
-    return () => {
-      clearTimeout(focusTimeout.current);
-    };
-  }, []);
-
+    },
+    [hideMenu],
+  );
   return (
-    <MenuList ref={menuListRef} id="menu-list-grow" onKeyDown={onKeyDown}>
+    <MenuList id="menu-list-grow" onKeyDown={handleListKeyDown}>
       <SortMenuItems onClick={hideMenu} column={currentColumn!} />
       <FilterMenuItem onClick={hideMenu} column={currentColumn!} />
       <HideColMenuItem onClick={hideMenu} column={currentColumn!} />

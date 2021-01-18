@@ -1,3 +1,4 @@
+import MenuList from '@material-ui/core/MenuList';
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -90,10 +91,11 @@ export function DensitySelector() {
         open={Boolean(anchorEl)}
         target={anchorEl}
         onClickAway={handleDensitySelectorClose}
-        onKeyDown={handleListKeyDown}
         position="bottom-start"
       >
-        {renderDensityOptions}
+        <MenuList id="menu-list-grow" onKeyDown={handleListKeyDown}>
+          {renderDensityOptions}
+        </MenuList>
       </GridMenu>
     </React.Fragment>
   );
