@@ -17,7 +17,7 @@ import { unorderedRowModelsSelector } from './rows/rowsSelector';
 
 function EmptyComponent() {
   return null;
-};
+}
 
 export const useComponents = (
   componentsProp: GridSlotsComponent | undefined,
