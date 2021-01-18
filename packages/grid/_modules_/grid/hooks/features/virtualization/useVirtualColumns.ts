@@ -39,6 +39,8 @@ export const useVirtualColumns = (
   const columnsMeta = useGridSelector(apiRef, columnsMetaSelector);
   const visibleColumnCount = useGridSelector(apiRef, visibleColumnsLengthSelector);
   const visibleColumns = useGridSelector(apiRef, visibleColumnsSelector);
+  const getLastVisibleColIndex = (columns) => (columns.length > 0 ? columns.length - 1 : 0);
+  const lastVisibleIndex = React.useRef<number>(getLastVisibleColIndex(visibleColumns));
 
   const getColumnIdxFromScroll = React.useCallback(
     (left: number) => {
@@ -115,17 +117,22 @@ export const useVirtualColumns = (
         lastDisplayedIdx > 0 && (diffLast > tolerance || diffFirst > tolerance);
 
       let newRenderedColState: RenderColumnsProps | null =
-        renderedColRef.current != null ? { ...renderedColRef.current } : null;
+        renderedColRef.current !== null ? { ...renderedColRef.current } : null;
 
-      const lastVisibleIndex = visibleColumns.length > 0 ? visibleColumns.length - 1 : 0;
-      if (renderNewColState || newRenderedColState == null) {
+      const newLastVisibleIndex = getLastVisibleColIndex(visibleColumns);
+      if (
+        renderNewColState ||
+        newRenderedColState == null ||
+        newLastVisibleIndex !== lastVisibleIndex.current
+      ) {
+        lastVisibleIndex.current = newLastVisibleIndex;
         newRenderedColState = {
           leftEmptyWidth: 0,
           rightEmptyWidth: 0,
           firstColIdx: firstDisplayedIdx - columnBuffer >= 0 ? firstDisplayedIdx - columnBuffer : 0,
           lastColIdx:
-            lastDisplayedIdx + columnBuffer >= lastVisibleIndex
-              ? lastVisibleIndex
+            lastDisplayedIdx + columnBuffer >= lastVisibleIndex.current
+              ? lastVisibleIndex.current
               : lastDisplayedIdx + columnBuffer,
         };
       }
