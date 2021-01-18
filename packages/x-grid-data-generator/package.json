@@ -26,9 +26,11 @@
     "@types/chance": "^1.1.0",
     "chance": "^1.1.6",
     "clsx": "^1.0.4",
-    "commander": "^6.1.0",
-    "esm": "^3.2.25",
     "lru-cache": "^6.0.0"
+  },
+  "devDependencies": {
+    "esm": "^3.2.25",
+    "yargs": "^15.0.0"
   },
   "peerDependencies": {
     "@material-ui/core": "^4.9.12",

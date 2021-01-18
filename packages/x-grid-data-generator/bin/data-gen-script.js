@@ -4,4 +4,4 @@
 require = require('esm')(module);
 
 // eslint-disable-next-line import/no-unresolved
-require('../dist/index-cjs').datagenCli(process.argv);
+require('../dist/index-cjs').datagenCli();
