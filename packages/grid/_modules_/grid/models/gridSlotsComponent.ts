@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridFooter, GridFooterProps } from '../components/GridFooter';
 import { ErrorOverlay, ErrorOverlayProps } from '../components/ErrorOverlay';
 import {
-  GridColumnHeaderMenuItemProps,
+  GridColumnHeaderMenuItemsProps,
   GridColumnHeaderMenuItems,
 } from '../components/menu/columnMenu/GridColumnHeaderMenuItems';
 import { NoRowsOverlay } from '../components/NoRowsOverlay';
@@ -11,7 +11,7 @@ import { GridToolbar } from '../components/toolbar/GridToolbar';
 import { BaseComponentProps } from './params/componentParams';
 import { LoadingOverlay } from '../components/LoadingOverlay';
 
-export type ColumnMenuProps = BaseComponentProps & GridColumnHeaderMenuItemProps;
+export type ColumnMenuProps = BaseComponentProps & GridColumnHeaderMenuItemsProps;
 
 /**
  * Grid components React prop interface containing all the overridable components.

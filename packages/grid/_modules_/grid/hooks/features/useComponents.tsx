@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridFooterProps } from '../../components/GridFooter';
-import { GridColumnHeaderMenuItemProps } from '../../components/menu/columnMenu/GridColumnHeaderMenuItems';
+import { GridColumnHeaderMenuItemsProps } from '../../components/menu/columnMenu/GridColumnHeaderMenuItems';
 import {
   BaseComponentProps,
   ApiRef,
@@ -59,7 +59,7 @@ export const useComponents = (
     };
 
     return {
-      ColumnMenu: wrapWithBaseProps<GridColumnHeaderMenuItemProps>(allComponents.ColumnMenu),
+      ColumnMenu: wrapWithBaseProps<GridColumnHeaderMenuItemsProps>(allComponents.ColumnMenu),
       Error: wrapWithBaseProps<ErrorOverlayProps>(allComponents.ErrorOverlay),
       Footer: wrapWithBaseProps<GridFooterProps>(allComponents.Footer),
       Header: wrapWithBaseProps<{}>(allComponents.Header),

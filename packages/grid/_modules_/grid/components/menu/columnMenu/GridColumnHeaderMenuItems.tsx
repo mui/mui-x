@@ -11,10 +11,8 @@ export interface GridColumnHeaderMenuItemsProps {
   currentColumn: ColDef;
 }
 
-export function GridColumnHeaderMenuItems({
-  hideMenu,
-  currentColumn,
-}: GridColumnHeaderMenuItemsProps) {
+export function GridColumnHeaderMenuItems(props: GridColumnHeaderMenuItemsProps) {
+  const { hideMenu, currentColumn } = props;
   const handleListKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
       if (event.key === 'Tab') {

@@ -8,7 +8,7 @@ import { ApiContext } from '../api-context';
 import { LeftEmptyCell, RightEmptyCell } from '../Cell';
 import { ScrollArea } from '../ScrollArea';
 import { containerSizesSelector } from '../Viewport';
-import { ColumnHeaderItemCollection } from './ColumnHeadersItemCollection';
+import { ColumnHeadersItemCollection } from './ColumnHeadersItemCollection';
 import { densityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 
 export const scrollbarStateSelector = (state: GridState) => state.scrollBar;
@@ -52,7 +52,7 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function Colum
         onDragOver={handleDragOver}
       >
         <LeftEmptyCell width={renderCtx?.leftEmptyWidth} height={headerHeight} />
-        <ColumnHeaderItemCollection columns={renderedCols} />
+        <ColumnHeadersItemCollection columns={renderedCols} />
         <RightEmptyCell width={renderCtx?.rightEmptyWidth} height={headerHeight} />
       </div>
       <ScrollArea scrollDirection="right" />
