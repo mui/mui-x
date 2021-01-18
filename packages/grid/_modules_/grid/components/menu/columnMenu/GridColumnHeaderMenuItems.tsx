@@ -17,7 +17,7 @@ export function GridColumnHeaderMenuItems({
   hideMenu,
   currentColumn,
   open,
-  onKeyDown
+  onKeyDown,
 }: GridColumnHeaderMenuItemProps) {
   const menuListRef = React.useRef<HTMLUListElement | null>(null);
   const focusTimeout = React.useRef<any>();
@@ -41,7 +41,7 @@ export function GridColumnHeaderMenuItems({
     };
   }, []);
 
-    return (
+  return (
     <MenuList ref={menuListRef} id="menu-list-grow" onKeyDown={onKeyDown}>
       <SortMenuItems onClick={hideMenu} column={currentColumn!} />
       <FilterMenuItem onClick={hideMenu} column={currentColumn!} />

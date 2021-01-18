@@ -1,4 +1,3 @@
-import { background } from '@storybook/theming';
 import * as React from 'react';
 import { Story, Meta } from '@storybook/react';
 import {

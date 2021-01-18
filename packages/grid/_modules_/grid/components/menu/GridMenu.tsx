@@ -1,7 +1,6 @@
 import * as React from 'react';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
-import MenuList from '@material-ui/core/MenuList';
 import Paper from '@material-ui/core/Paper';
 import Popper, { PopperProps } from '@material-ui/core/Popper';
 
@@ -48,9 +47,7 @@ export const GridMenu: React.FC<MenuProps> = ({
         <Grow {...TransitionProps} style={{ transformOrigin: transformOrigin[placement] }}>
           <Paper>
             <ClickAwayListener onClickAway={onClickAway}>
-              <div>
-                {children}
-              </div>
+              <div>{children}</div>
             </ClickAwayListener>
           </Paper>
         </Grow>

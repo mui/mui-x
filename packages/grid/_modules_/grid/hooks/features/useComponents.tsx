@@ -15,7 +15,7 @@ import { useGridSelector } from './core/useGridSelector';
 import { useGridState } from './core/useGridState';
 import { unorderedRowModelsSelector } from './rows/rowsSelector';
 
-const EmptyComponent = function () {
+function EmptyComponent() {
   return null;
 };
 
