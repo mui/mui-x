@@ -109,7 +109,10 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                 logger={logger}
                 render={(errorProps) => (
                   <GridMainContainer>
-                    <components.Error {...errorProps} {...props.componentsProps?.errorOverlay} />
+                    <components.ErrorOverlay
+                      {...errorProps}
+                      {...props.componentsProps?.errorOverlay}
+                    />
                   </GridMainContainer>
                 )}
               >
