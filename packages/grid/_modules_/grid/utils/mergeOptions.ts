@@ -33,15 +33,11 @@ export function removeUndefinedProps(options: Object) {
 // We intentionally set the types to any to avoid circular deps
 export function mergeOptions(defaultOptions: any, options?: any) {
   options = removeUndefinedProps(options);
-  const defaultIcons = defaultOptions.icons;
-  const optionsIcons = options?.icons;
-  const mergedIcons = { ...defaultIcons, ...optionsIcons };
   const mergedColTypes = mergeColTypes(defaultOptions.columnTypes, options?.columnTypes);
   const mergedOptions = {
     ...defaultOptions,
     ...options,
   };
-  mergedOptions.icons = mergedIcons;
   mergedOptions.columnTypes = mergedColTypes;
   return mergedOptions;
 }

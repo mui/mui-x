@@ -4,7 +4,6 @@ import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { densityValueSelector } from '../../hooks/features/density/densitySelector';
-import { useIcons } from '../../hooks/utils/useIcons';
 import { Density, DensityTypes } from '../../models/density';
 import { ApiContext } from '../api-context';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
@@ -15,11 +14,10 @@ export function DensitySelector() {
   const apiRef = React.useContext(ApiContext);
   const densityValue = useGridSelector(apiRef, densityValueSelector);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const icons = useIcons();
 
-  const DensityCompactIcon = icons!.DensityCompact!;
-  const DensityStandardIcon = icons!.DensityStandard!;
-  const DensityComfortableIcon = icons!.DensityComfortable!;
+  const DensityCompactIcon = apiRef!.current.components!.DensityCompactIcon!;
+  const DensityStandardIcon = apiRef!.current.components!.DensityStandardIcon!;
+  const DensityComfortableIcon = apiRef!.current.components!.DensityComfortableIcon!;
 
   const DensityOptions: Array<DensityOption> = [
     {

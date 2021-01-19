@@ -59,6 +59,7 @@ export const useComponents = (
     };
 
     return {
+      ...allComponents,
       ColumnMenu: wrapWithBaseProps<GridColumnHeaderMenuItemsProps>(allComponents.ColumnMenu),
       ErrorOverlay: wrapWithBaseProps<ErrorOverlayProps>(allComponents.ErrorOverlay),
       Footer: wrapWithBaseProps<GridFooterProps>(allComponents.Footer),
@@ -68,6 +69,12 @@ export const useComponents = (
       Pagination: wrapWithBaseProps<{}>(allComponents.Pagination),
     };
   }, [baseComponentProps, componentsProp]);
+
+  React.useEffect(() => {
+    if (apiRef && apiRef.current) {
+      apiRef.current.components = components;
+    }
+  }, [apiRef, components]);
 
   return components;
 };

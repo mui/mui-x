@@ -110,9 +110,9 @@ function SortedAscending() {
 export const Icons = Template.bind({});
 Icons.args = {
   ...defaultData,
-  icons: {
-    ColumnSortedDescending: SortedDescending,
-    ColumnSortedAscending: SortedAscending,
+  components: {
+    ColumnSortedDescendingIcon: SortedDescending,
+    ColumnSortedAscendingIcon: SortedAscending,
   },
 };
 
