@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Badge from '@material-ui/core/Badge';
 import IconButton from '@material-ui/core/IconButton';
-import { IconSlotsComponent } from '../../models/gridSlotsComponent';
+import { GridIconSlotsComponent } from '../../models/gridIconSlotsComponent';
 import { SortDirection } from '../../models/sortModel';
 import { ApiContext } from '../api-context';
 
@@ -11,7 +11,7 @@ export interface ColumnHeaderSortIconProps {
   hide?: boolean;
 }
 
-function getIcon(icons: IconSlotsComponent, direction: SortDirection) {
+function getIcon(icons: GridIconSlotsComponent, direction: SortDirection) {
   const Icon =
     direction === 'asc' ? icons!.ColumnSortedAscendingIcon! : icons!.ColumnSortedDescendingIcon!;
   return <Icon className="MuiDataGrid-sortIcon" />;

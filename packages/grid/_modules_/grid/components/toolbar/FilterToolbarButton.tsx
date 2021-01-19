@@ -4,6 +4,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import * as React from 'react';
 import { columnLookupSelector } from '../../hooks/features/columns/columnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
+import { densityValueSelector } from '../../hooks/features/density/densitySelector';
 import {
   activeFilterItemsSelector,
   filterItemsCounterSelector,
@@ -63,6 +64,7 @@ export const FilterToolbarButton: React.FC<{}> = () => {
     <Tooltip title={tooltipContentNode} enterDelay={1000}>
       <Button
         onClick={toggleFilter}
+        size="small"
         color="primary"
         aria-label={apiRef!.current.getLocaleText('toolbarFiltersLabel')}
         startIcon={

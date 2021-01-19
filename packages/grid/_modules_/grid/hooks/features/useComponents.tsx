@@ -1,14 +1,12 @@
 import * as React from 'react';
 import { GridFooterProps } from '../../components/GridFooter';
-import { GridColumnHeaderMenuItemsProps } from '../../components/menu/columnMenu/GridColumnHeaderMenuItems';
-import {
-  BaseComponentProps,
-  ApiRef,
-  GridSlotsComponent,
-  RootContainerRef,
-  DEFAULT_SLOTS_COMPONENTS,
-} from '../../models';
 import { ErrorOverlayProps } from '../../components/ErrorOverlay';
+import { GridColumnHeaderMenuItemsProps } from '../../components/menu/columnMenu/GridColumnHeaderMenuItems';
+import { ApiRef } from '../../models/api/apiRef';
+import { ApiRefComponentsProperty } from '../../models/api/componentsApi';
+import { DEFAULT_SLOTS_COMPONENTS, GridSlotsComponent } from '../../models/gridSlotsComponent';
+import { BaseComponentProps } from '../../models/params/baseComponentProps';
+import { RootContainerRef } from '../../models/rootContainerRef';
 import { optionsSelector } from '../utils/optionsSelector';
 import { visibleColumnsSelector } from './columns/columnsSelector';
 import { useGridSelector } from './core/useGridSelector';
@@ -41,7 +39,7 @@ export const useComponents = (
     [state, rows, columns, options, apiRef, gridRootRef],
   );
 
-  const components = React.useMemo(() => {
+  const components: ApiRefComponentsProperty = React.useMemo(() => {
     const allComponents = { ...DEFAULT_SLOTS_COMPONENTS, ...componentsProp };
 
     const wrapWithBaseProps: <TProps>(

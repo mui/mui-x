@@ -17,17 +17,17 @@ export function GridColumnHeaderMenuItems(props: GridColumnHeaderMenuItemsProps)
     (event: React.KeyboardEvent) => {
       if (event.key === 'Tab') {
         event.preventDefault();
-        hideMenu();
+        hideMenu!();
       }
     },
     [hideMenu],
   );
   return (
     <MenuList id="menu-list-grow" onKeyDown={handleListKeyDown}>
-      <SortMenuItems onClick={hideMenu} column={currentColumn!} />
-      <FilterMenuItem onClick={hideMenu} column={currentColumn!} />
-      <HideColMenuItem onClick={hideMenu} column={currentColumn!} />
-      <ColumnsMenuItem onClick={hideMenu} column={currentColumn!} />
+      <SortMenuItems onClick={hideMenu!} column={currentColumn!} />
+      <FilterMenuItem onClick={hideMenu!} column={currentColumn!} />
+      <HideColMenuItem onClick={hideMenu!} column={currentColumn!} />
+      <ColumnsMenuItem onClick={hideMenu!} column={currentColumn!} />
     </MenuList>
   );
 }

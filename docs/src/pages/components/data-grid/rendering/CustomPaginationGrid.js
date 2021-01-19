@@ -31,7 +31,7 @@ CustomPagination.propTypes = {
    * ApiRef that let you manipulate the grid.
    */
   api: PropTypes.shape({
-    current: PropTypes.object.isRequired,
+    current: PropTypes.any.isRequired,
   }).isRequired,
   /**
    * The GridState object containing the current grid state.

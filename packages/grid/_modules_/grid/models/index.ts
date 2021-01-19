@@ -13,5 +13,6 @@ export * from './params';
 export * from './cellClass';
 export * from './cell';
 export * from './api';
+export * from './gridIconSlotsComponent';
 export * from './gridSlotsComponent';
 export * from './density';

@@ -7,7 +7,7 @@ import { ApiContext } from '../api-context';
 
 export const ColumnsToolbarButton: React.FC<{}> = () => {
   const apiRef = React.useContext(ApiContext);
-  const ColumnSelectorIcon = apiRef!.current.components.ColumnSelectorIcon!;
+  const ColumnSelectorIcon = React.createElement(apiRef!.current.components.ColumnSelectorIcon!);
   const { open, openedPanelValue } = useGridSelector(apiRef, preferencePanelStateSelector);
 
   const showColumns = React.useCallback(() => {
@@ -21,6 +21,7 @@ export const ColumnsToolbarButton: React.FC<{}> = () => {
   return (
     <Button
       onClick={showColumns}
+      size="small"
       color="primary"
       aria-label={apiRef!.current.getLocaleText('toolbarColumnsLabel')}
       startIcon={ColumnSelectorIcon}
