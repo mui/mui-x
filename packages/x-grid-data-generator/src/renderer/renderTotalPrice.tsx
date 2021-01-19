@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { makeStyles, createStyles, Theme, fade } from '@material-ui/core/styles';
-import { CellParams } from '@material-ui/x-grid';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { CellParams, muiStyleAlpha } from '@material-ui/x-grid';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -11,10 +11,10 @@ const useStyles = makeStyles((theme: Theme) =>
       fontVariantNumeric: 'tabular-nums',
     },
     good: {
-      backgroundColor: fade(theme.palette.success.main, 0.3),
+      backgroundColor: muiStyleAlpha(theme.palette.success.main, 0.3),
     },
     bad: {
-      backgroundColor: fade(theme.palette.error.main, 0.3),
+      backgroundColor: muiStyleAlpha(theme.palette.error.main, 0.3),
     },
   }),
 );

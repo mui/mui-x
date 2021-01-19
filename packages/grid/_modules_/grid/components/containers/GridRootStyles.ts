@@ -1,11 +1,12 @@
-import { darken, fade, lighten, makeStyles, Theme } from '@material-ui/core/styles';
+import { darken, lighten, makeStyles, Theme } from '@material-ui/core/styles';
+import { getThemePaletteMode, muiStyleAlpha } from '../../utils';
 
 export const useStyles = makeStyles(
   (theme: Theme) => {
     const borderColor =
-      theme.palette.type === 'light'
-        ? lighten(fade(theme.palette.divider, 1), 0.88)
-        : darken(fade(theme.palette.divider, 1), 0.68);
+      getThemePaletteMode(theme.palette) === 'light'
+        ? lighten(muiStyleAlpha(theme.palette.divider, 1), 0.88)
+        : darken(muiStyleAlpha(theme.palette.divider, 1), 0.68);
 
     const gridStyle: { root: any } = {
       root: {
@@ -38,7 +39,7 @@ export const useStyles = makeStyles(
           alignSelf: 'center',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: fade(
+          backgroundColor: muiStyleAlpha(
             theme.palette.background.default,
             theme.palette.action.disabledOpacity,
           ),
@@ -199,15 +200,18 @@ export const useStyles = makeStyles(
             },
           },
           '&.Mui-selected': {
-            backgroundColor: fade(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+            backgroundColor: muiStyleAlpha(
+              theme.palette.primary.main,
+              theme.palette.action.selectedOpacity,
+            ),
             '&:hover': {
-              backgroundColor: fade(
+              backgroundColor: muiStyleAlpha(
                 theme.palette.primary.main,
                 theme.palette.action.selectedOpacity + theme.palette.action.hoverOpacity,
               ),
               // Reset on touch devices, it doesn't add specificity
               '@media (hover: none)': {
-                backgroundColor: fade(
+                backgroundColor: muiStyleAlpha(
                   theme.palette.primary.main,
                   theme.palette.action.selectedOpacity,
                 ),
@@ -278,7 +282,7 @@ export const useStyles = makeStyles(
       },
     };
 
-    if (theme.palette.type === 'dark') {
+    if (getThemePaletteMode(theme.palette) === 'dark') {
       // Values coming from mac OS.
       const track = '#202022';
       const thumb = '#585859';

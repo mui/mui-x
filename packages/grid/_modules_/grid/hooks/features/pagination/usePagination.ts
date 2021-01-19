@@ -27,7 +27,7 @@ const PAGINATION_STATE_ID = 'pagination';
 export const usePagination = (apiRef: ApiRef): void => {
   const logger = useLogger('usePagination');
 
-  const { gridState, dispatch } = useGridReducer<PaginationState, PaginationActions>(
+  const { dispatch } = useGridReducer<PaginationState, PaginationActions>(
     apiRef,
     PAGINATION_STATE_ID,
     paginationReducer,
@@ -84,7 +84,7 @@ export const usePagination = (apiRef: ApiRef): void => {
 
   React.useEffect(() => {
     setPage(options.page != null ? options.page : 1);
-  }, [options.page, setPage]);
+  }, [apiRef, options.page, setPage]);
 
   React.useEffect(() => {
     if (!options.autoPageSize && options.pageSize) {
@@ -101,12 +101,6 @@ export const usePagination = (apiRef: ApiRef): void => {
   React.useEffect(() => {
     dispatch(setRowCountActionCreator({ totalRowCount: visibleRowCount }));
   }, [apiRef, dispatch, visibleRowCount]);
-
-  React.useEffect(() => {
-    if (apiRef.current?.isInitialised) {
-      apiRef.current.publishEvent(PAGE_CHANGED, gridState.pagination);
-    }
-  }, [apiRef, apiRef.current.isInitialised, gridState.pagination]);
 
   const paginationApi: PaginationApi = {
     setPageSize,

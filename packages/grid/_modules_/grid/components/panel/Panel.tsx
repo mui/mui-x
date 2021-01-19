@@ -4,6 +4,7 @@ import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { ApiContext } from '../api-context';
+import { isMuiV5 } from '../../utils';
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
@@ -43,6 +44,23 @@ export function Panel(props: PanelProps) {
   const classes = useStyles();
   const apiRef = React.useContext(ApiContext);
 
+  const getPopperModifiers = (): any => {
+    if (isMuiV5()) {
+      return [
+        {
+          name: 'flip',
+          enabled: false,
+        },
+      ];
+    }
+
+    return {
+      flip: {
+        enabled: false,
+      },
+    };
+  };
+
   const handleClickAway = React.useCallback(() => {
     apiRef!.current.hidePreferences();
   }, [apiRef]);
@@ -61,11 +79,7 @@ export function Panel(props: PanelProps) {
       placement="bottom-start"
       open={open}
       anchorEl={anchorEl}
-      modifiers={{
-        flip: {
-          enabled: false,
-        },
-      }}
+      modifiers={getPopperModifiers()}
     >
       <ClickAwayListener onClickAway={handleClickAway}>
         <Paper className={classes.root} elevation={8}>
