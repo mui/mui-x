@@ -18,7 +18,7 @@ export type ColumnMenuProps = BaseComponentProps & GridColumnHeaderMenuItemsProp
  */
 export interface GridSlotsComponent {
   /**
-   * Column menu component rendered by clicking on the 3 dots icon in column headers.
+   * Column menu component rendered by clicking on the 3 dots "kebab" icon in column headers.
    */
   ColumnMenu?: React.ElementType<ColumnMenuProps>;
   /**
