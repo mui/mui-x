@@ -48,6 +48,7 @@ export function FilterInputValue(props: TypeFilterInputValueProps) {
       value={filterValueState}
       onChange={onFilterChange}
       type={type || 'text'}
+      variant="standard"
       InputProps={inputProps}
       InputLabelProps={{
         shrink: true,

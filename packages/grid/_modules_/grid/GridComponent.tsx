@@ -6,23 +6,18 @@ import * as React from 'react';
 import { useForkRef } from '@material-ui/core/utils';
 import { AutoSizer } from './components/AutoSizer';
 import { ColumnsHeader } from './components/columnHeaders/ColumnHeaders';
-import { DefaultFooter } from './components/DefaultFooter';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { Pagination } from './components/Pagination';
-import { GridColumnsContainer } from './components/styled-wrappers/GridColumnsContainer';
-import { GridDataContainer } from './components/styled-wrappers/GridDataContainer';
-import { GridRoot } from './components/styled-wrappers/GridRoot';
-import { GridWindow } from './components/styled-wrappers/GridWindow';
-import { GridToolbar } from './components/styled-wrappers/GridToolbar';
-import { ColumnsToolbarButton } from './components/toolbar/ColumnsToolbarButton';
-import { FilterToolbarButton } from './components/toolbar/FilterToolbarButton';
+import { GridColumnHeaderMenu } from './components/menu/columnMenu/GridColumnHeaderMenu';
+import { PreferencesPanel } from './components/panel/PreferencesPanel';
+import { GridColumnsContainer } from './components/containers/GridColumnsContainer';
+import { GridMainContainer } from './components/containers/GridMainContainer';
+import { GridRoot } from './components/containers/GridRoot';
+import { GridWindow } from './components/containers/GridWindow';
 import { Viewport } from './components/Viewport';
 import { Watermark } from './components/Watermark';
 import { GridComponentProps } from './GridComponentProps';
 import { useColumnMenu } from './hooks/features/columnMenu/useColumnMenu';
-import { visibleColumnsLengthSelector } from './hooks/features/columns/columnsSelector';
 import { useColumns } from './hooks/features/columns/useColumns';
-import { useGridSelector } from './hooks/features/core/useGridSelector';
 import { useGridState } from './hooks/features/core/useGridState';
 import { usePagination } from './hooks/features/pagination/usePagination';
 import { usePreferencesPanel } from './hooks/features/preferencesPanel/usePreferencesPanel';
@@ -40,14 +35,13 @@ import { useKeyboard } from './hooks/features/keyboard/useKeyboard';
 import { useErrorHandler } from './hooks/utils/useErrorHandler';
 import { useLogger, useLoggerFactory } from './hooks/utils/useLogger';
 import { useOptionsProp } from './hooks/utils/useOptionsProp';
+import { useRenderInfoLog } from './hooks/utils/useRenderInfoLog';
 import { useResizeContainer } from './hooks/utils/useResizeContainer';
 import { useVirtualRows } from './hooks/features/virtualization/useVirtualRows';
 import { useDensity } from './hooks/features/density';
 import { useStateProp } from './hooks/utils/useStateProp';
 import { RootContainerRef } from './models/rootContainerRef';
-import { getCurryTotalHeight } from './utils/getTotalHeight';
 import { ApiContext } from './components/api-context';
-import { DensitySelector } from './components/toolbar/DensitySelector';
 import { useFilter } from './hooks/features/filter/useFilter';
 import { useLocaleText } from './hooks/features/localeText/useLocaleText';
 
@@ -61,7 +55,6 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const columnsHeaderRef = React.useRef<HTMLDivElement>(null);
     const columnsContainerRef = React.useRef<HTMLDivElement>(null);
     const windowRef = React.useRef<HTMLDivElement>(null);
-    const gridRef = React.useRef<HTMLDivElement>(null);
     const renderingZoneRef = React.useRef<HTMLDivElement>(null);
 
     const apiRef = useApiRef(props.apiRef);
@@ -93,118 +86,74 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useColumnResize(columnsHeaderRef, apiRef);
     usePagination(apiRef);
 
-    const customComponents = useComponents(props.components, apiRef, rootContainerRef);
+    const components = useComponents(props.components, apiRef, rootContainerRef);
     useStateProp(apiRef, props.state);
+    useRenderInfoLog(apiRef, logger);
 
-    const visibleColumnsLength = useGridSelector(apiRef, visibleColumnsLengthSelector);
-
-    // TODO move that to renderCtx
-    const getTotalHeight = React.useCallback(
-      (size) =>
-        getCurryTotalHeight(
-          gridState.options,
-          gridState.containerSizes,
-          headerRef,
-          footerRef,
-        )(size),
-      [gridState.options, gridState.containerSizes],
-    );
-
-    if (gridState.rendering.renderContext != null) {
-      const {
-        page,
-        firstColIdx,
-        lastColIdx,
-        firstRowIdx,
-        lastRowIdx,
-      } = gridState.rendering.renderContext!;
-      logger.info(
-        `Rendering, page: ${page}, col: ${firstColIdx}-${lastColIdx}, row: ${firstRowIdx}-${lastRowIdx}`,
-      );
-    }
-
+    const showNoRowsOverlay = !props.loading && gridState.rows.totalRowCount === 0;
     return (
-      <AutoSizer onResize={onResize} nonce={props.nonce}>
-        {(size: any) => (
-          <GridRoot
-            ref={handleRef}
-            className={props.className}
-            style={{ width: size.width, height: getTotalHeight(size) }}
-            role="grid"
-            aria-colcount={visibleColumnsLength}
-            aria-rowcount={gridState.rows.totalRowCount}
-            tabIndex={0}
-            aria-label={apiRef!.current.getLocaleText('rootGridLabel')}
-            aria-multiselectable={!gridState.options.disableMultipleSelection}
-          >
-            <ApiContext.Provider value={apiRef}>
+      <ApiContext.Provider value={apiRef}>
+        <AutoSizer onResize={onResize} nonce={props.nonce}>
+          {(size: any) => (
+            <GridRoot
+              ref={handleRef}
+              className={props.className}
+              size={size}
+              header={headerRef}
+              footer={footerRef}
+            >
               <ErrorBoundary
                 hasError={errorState != null}
                 componentProps={errorState}
                 api={apiRef!}
                 logger={logger}
                 render={(errorProps) => (
-                  <div className="MuiDataGrid-mainGridContainer">
-                    {customComponents.renderError(errorProps)}
-                  </div>
+                  <GridMainContainer>
+                    <components.ErrorOverlay
+                      {...errorProps}
+                      {...props.componentsProps?.errorOverlay}
+                    />
+                  </GridMainContainer>
                 )}
               >
                 <div ref={headerRef}>
-                  {customComponents.headerComponent || (
-                    <React.Fragment>
-                      {gridState.options.showToolbar &&
-                        (!gridState.options.disableColumnFilter ||
-                          !gridState.options.disableColumnSelector ||
-                          !gridState.options.disableDensitySelector) && (
-                          <GridToolbar>
-                            {!gridState.options.disableColumnSelector && <ColumnsToolbarButton />}
-                            {!gridState.options.disableColumnFilter && <FilterToolbarButton />}
-                            {!gridState.options.disableDensitySelector && <DensitySelector />}
-                          </GridToolbar>
-                        )}
-                    </React.Fragment>
-                  )}
+                  <components.Header {...props.componentsProps?.header} />
                 </div>
-                <div className="MuiDataGrid-mainGridContainer">
+                <GridMainContainer>
+                  <GridColumnHeaderMenu
+                    ContentComponent={components.ColumnMenu}
+                    contentComponentProps={props.componentsProps?.columnMenu}
+                  />
+                  <PreferencesPanel />
                   <Watermark licenseStatus={props.licenseStatus} />
                   <GridColumnsContainer ref={columnsContainerRef}>
                     <ColumnsHeader ref={columnsHeaderRef} />
                   </GridColumnsContainer>
-                  {!props.loading &&
-                    gridState.rows.totalRowCount === 0 &&
-                    customComponents.noRowsComponent}
-                  {props.loading && customComponents.loadingComponent}
+                  {showNoRowsOverlay && (
+                    <components.NoRowsOverlay {...props.componentsProps?.noRowsOverlay} />
+                  )}
+                  {props.loading && (
+                    <components.LoadingOverlay {...props.componentsProps?.loadingOverlay} />
+                  )}
                   <GridWindow ref={windowRef}>
-                    <GridDataContainer
-                      ref={gridRef}
-                      style={{
-                        minHeight: gridState.containerSizes?.dataContainerSizes?.height,
-                        minWidth: gridState.containerSizes?.dataContainerSizes?.width,
-                      }}
-                    >
-                      <Viewport ref={renderingZoneRef} />
-                    </GridDataContainer>
+                    <Viewport ref={renderingZoneRef} />
                   </GridWindow>
-                </div>
+                </GridMainContainer>
                 {!gridState.options.hideFooter && (
                   <div ref={footerRef}>
-                    {customComponents.footerComponent || (
-                      <DefaultFooter
-                        paginationComponent={
-                          !!gridState.options.pagination &&
-                          gridState.pagination.pageSize != null &&
-                          !gridState.options.hideFooterPagination &&
-                          (customComponents.paginationComponent || <Pagination />)
-                        }
-                      />
-                    )}
+                    <components.Footer
+                      PaginationComponent={
+                        <components.Pagination {...props.componentsProps?.pagination} />
+                      }
+                      {...props.componentsProps?.footer}
+                    />
                   </div>
                 )}
               </ErrorBoundary>
-            </ApiContext.Provider>
-          </GridRoot>
-        )}
-      </AutoSizer>
+            </GridRoot>
+          )}
+        </AutoSizer>
+      </ApiContext.Provider>
     );
   },
 );

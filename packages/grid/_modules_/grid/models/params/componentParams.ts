@@ -1,4 +1,4 @@
-import { PaginationState } from '../../hooks/features/pagination/paginationReducer';
+import { GridState } from '../../hooks/features/core/gridState';
 import { ApiRef } from '../api/apiRef';
 import { Columns } from '../colDef/colDef';
 import { GridOptions } from '../gridOptions';
@@ -8,11 +8,11 @@ import { RowModel } from '../rows';
 /**
  * Object passed as React prop in the component override.
  */
-export interface ComponentProps {
+export interface BaseComponentProps {
   /**
-   * The object containing all pagination details in [[PaginationState]].
+   * The GridState object containing the current grid state.
    */
-  pagination: PaginationState;
+  state: GridState;
   /**
    * The full set of rows.
    */

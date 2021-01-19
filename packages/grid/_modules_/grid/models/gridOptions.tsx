@@ -2,19 +2,22 @@ import * as React from 'react';
 import {
   ArrowDownwardIcon,
   ArrowUpwardIcon,
-  SeparatorIcon,
-  ViewHeadlineIcon,
-  TableRowsIcon,
-  ViewStreamIcon,
-  FilterListIcon,
-  TripleDotsVerticalIcon,
   ColumnIcon,
   FilterAltIcon,
+  FilterListIcon,
+  SeparatorIcon,
+  TableRowsIcon,
+  TripleDotsVerticalIcon,
+  ViewHeadlineIcon,
+  ViewStreamIcon,
 } from '../components/icons/index';
+import { DEFAULT_LOCALE_TEXT } from '../constants/localeTextConstants';
 import { FilterModel } from '../hooks/features/filter/FilterModelState';
 import { Logger } from '../hooks/utils/useLogger';
+import { LocaleText } from './api/localeTextApi';
 import { ColumnTypesRecord } from './colDef/colTypeDef';
 import { getDefaultColumnTypes } from './colDef/defaultColumnTypes';
+import { Density, DensityTypes } from './density';
 import { FeatureMode, FeatureModeConstant } from './featureMode';
 import { CellParams } from './params/cellParams';
 import { ColParams } from './params/colParams';
@@ -25,8 +28,6 @@ import { RowSelectedParams } from './params/rowSelectedParams';
 import { SelectionChangeParams } from './params/selectionChangeParams';
 import { SortModelParams } from './params/sortModelParams';
 import { SortDirection, SortModel } from './sortModel';
-import { DEFAULT_LOCALE_TEXT } from '../constants/localeTextConstants';
-import { LocaleText } from './api/localeTextApi';
 
 /**
  * Set of icons used in the grid component UI.
@@ -72,20 +73,6 @@ export interface IconsOptions {
    * Icon displayed on the comfortable density option in the toolbar.
    */
   DensityComfortable?: React.ElementType;
-}
-
-/**
- * Available densities.
- */
-export type Density = 'compact' | 'standard' | 'comfortable';
-
-/**
- * Density enum.
- */
-export enum DensityTypes {
-  Compact = 'compact',
-  Standard = 'standard',
-  Comfortable = 'comfortable',
 }
 
 // TODO add multiSortKey

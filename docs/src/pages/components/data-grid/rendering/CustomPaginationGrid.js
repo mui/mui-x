@@ -12,15 +12,15 @@ const useStyles = makeStyles({
 });
 
 function CustomPagination(props) {
-  const { pagination, api } = props;
+  const { state, api } = props;
   const classes = useStyles();
 
   return (
     <Pagination
       className={classes.root}
       color="primary"
-      page={pagination.page}
-      count={pagination.pageCount}
+      page={state.pagination.page}
+      count={state.pagination.pageCount}
       onChange={(event, value) => api.current.setPage(value)}
     />
   );
@@ -34,15 +34,9 @@ CustomPagination.propTypes = {
     current: PropTypes.object.isRequired,
   }).isRequired,
   /**
-   * The object containing all pagination details in [[PaginationState]].
+   * The GridState object containing the current grid state.
    */
-  pagination: PropTypes.shape({
-    page: PropTypes.number.isRequired,
-    pageCount: PropTypes.number.isRequired,
-    pageSize: PropTypes.number.isRequired,
-    paginationMode: PropTypes.oneOf(['client', 'server']).isRequired,
-    rowCount: PropTypes.number.isRequired,
-  }).isRequired,
+  state: PropTypes.object.isRequired,
 };
 
 export default function CustomPaginationGrid() {
@@ -58,7 +52,7 @@ export default function CustomPaginationGrid() {
         pagination
         pageSize={5}
         components={{
-          pagination: CustomPagination,
+          Pagination: CustomPagination,
         }}
         {...data}
       />

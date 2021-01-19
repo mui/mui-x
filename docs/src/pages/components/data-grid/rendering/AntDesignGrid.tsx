@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, ComponentProps } from '@material-ui/data-grid';
+import { DataGrid, BaseComponentProps } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';
@@ -101,16 +101,16 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-function CustomPagination(props: ComponentProps) {
-  const { pagination, api } = props;
+function CustomPagination(props: BaseComponentProps) {
+  const { state, api } = props;
 
   return (
     <Pagination
       color="primary"
       variant="outlined"
       shape="rounded"
-      page={pagination.page}
-      count={pagination.pageCount}
+      page={state.pagination.page}
+      count={state.pagination.pageCount}
       // @ts-expect-error
       renderItem={(props2) => <PaginationItem {...props2} disableRipple />}
       onChange={(event, value) => api.current.setPage(value)}
@@ -133,7 +133,7 @@ export default function AntDesignGrid() {
         checkboxSelection
         pageSize={5}
         components={{
-          pagination: CustomPagination,
+          Pagination: CustomPagination,
         }}
         {...data}
       />

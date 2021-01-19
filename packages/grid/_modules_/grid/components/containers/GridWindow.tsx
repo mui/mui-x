@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { densityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
-import { optionsSelector } from '../../hooks/utils/useOptionsProp';
+import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { classnames } from '../../utils';
 import { ApiContext } from '../api-context';
 

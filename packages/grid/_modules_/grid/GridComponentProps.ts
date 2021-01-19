@@ -1,7 +1,7 @@
 import { GridState } from './hooks/features/core/gridState';
 import { ApiRef } from './models/api/apiRef';
 import { Columns } from './models/colDef/colDef';
-import { GridComponentOverridesProp } from './models/gridComponentOverridesProp';
+import { GridSlotsComponent, GridSlotsComponentProps } from './models/gridSlotsComponent';
 import { GridOptions } from './models/gridOptions';
 import { StateChangeParams } from './models/params/stateChangeParams';
 import { RowsProp } from './models/rows';
@@ -26,7 +26,8 @@ export interface GridComponentProps extends GridOptionsProp {
   /**
    * Overrideable components.
    */
-  components?: GridComponentOverridesProp;
+  components?: GridSlotsComponent;
+  componentsProps?: GridSlotsComponentProps;
   /**
    * @ignore
    */

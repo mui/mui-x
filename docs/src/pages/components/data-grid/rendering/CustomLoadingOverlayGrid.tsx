@@ -24,7 +24,7 @@ export default function CustomLoadingOverlayGrid() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         components={{
-          loadingOverlay: CustomLoadingOverlay,
+          LoadingOverlay: CustomLoadingOverlay,
         }}
         loading
         {...data}

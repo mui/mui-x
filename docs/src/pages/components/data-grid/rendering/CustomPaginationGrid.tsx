@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { DataGrid, ComponentProps } from '@material-ui/data-grid';
+import { DataGrid, BaseComponentProps } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import Pagination from '@material-ui/lab/Pagination';
 
@@ -10,16 +10,16 @@ const useStyles = makeStyles({
   },
 });
 
-function CustomPagination(props: ComponentProps) {
-  const { pagination, api } = props;
+function CustomPagination(props: BaseComponentProps) {
+  const { state, api } = props;
   const classes = useStyles();
 
   return (
     <Pagination
       className={classes.root}
       color="primary"
-      page={pagination.page}
-      count={pagination.pageCount}
+      page={state.pagination.page}
+      count={state.pagination.pageCount}
       onChange={(event, value) => api.current.setPage(value)}
     />
   );
@@ -38,7 +38,7 @@ export default function CustomPaginationGrid() {
         pagination
         pageSize={5}
         components={{
-          pagination: CustomPagination,
+          Pagination: CustomPagination,
         }}
         {...data}
       />

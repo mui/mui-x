@@ -4,6 +4,8 @@
 export interface LocaleText {
   // Root
   rootGridLabel: string;
+  noRowsLabel: string;
+  errorOverlayDefaultLabel: string;
 
   // Density selector toolbar button text
   toolbarDensity: React.ReactNode;
