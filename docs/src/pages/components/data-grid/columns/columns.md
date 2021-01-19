@@ -7,4 +7,4 @@ components: DataGrid, XGrid
 
 <p class="description">This section goes in details on the aspects of the columns you need to know.</p>
 
-> ⚠️ This feature is now available in v5, head to the [v4 documentation page](https://material-ui.com/components/data-grid/) for more details.
+> ⚠️ The data grid components are supporting v5 and v4. However, no documentation is available for v5 yet. You can use the [documentation of v4](https://material-ui.com/components/data-grid/) instead.
