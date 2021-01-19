@@ -72,7 +72,7 @@ export const DEFAULT_SLOTS_ICONS: GridIconSlotsComponent = {
   DensityCompactIcon: ViewHeadlineIcon,
   DensityStandardIcon: TableRowsIcon,
   DensityComfortableIcon: ViewStreamIcon,
-}
+};
 
 export const DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   ...DEFAULT_SLOTS_ICONS,
@@ -94,4 +94,3 @@ export interface GridSlotsComponentProps {
   noRowsOverlay?: any;
   pagination?: any;
 }
-
