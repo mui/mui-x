@@ -3,7 +3,7 @@ import { LocaleText } from '../models/api/localeTextApi';
 export const DEFAULT_LOCALE_TEXT: LocaleText = {
   // Root
   rootGridLabel: 'grid',
-  noRowsLabel: 'No Rows',
+  noRowsLabel: 'No rows',
   errorOverlayDefaultLabel: 'An error occurred.',
 
   // Density selector toolbar button text
