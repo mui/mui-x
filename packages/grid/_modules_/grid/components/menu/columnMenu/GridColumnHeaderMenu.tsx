@@ -5,14 +5,19 @@ import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { findHeaderElementFromField } from '../../../utils/domUtils';
 import { ApiContext } from '../../api-context';
 import { GridMenu } from '../GridMenu';
-import { ColumnsMenuItem } from './ColumnsMenuItem';
-import { FilterMenuItem } from './FilterMenuItem';
-import { HideColMenuItem } from './HideColMenuItem';
-import { SortMenuItems } from './SortMenuItems';
+import { GridColumnHeaderMenuItemsProps } from './GridColumnHeaderMenuItems';
 
 const columnMenuStateSelector = (state: GridState) => state.columnMenu;
 
-export function GridColumnHeaderMenu() {
+export interface GridColumnHeaderMenuProps {
+  ContentComponent: React.ElementType<GridColumnHeaderMenuItemsProps>;
+  contentComponentProps?: any;
+}
+
+export function GridColumnHeaderMenu({
+  ContentComponent,
+  contentComponentProps,
+}: GridColumnHeaderMenuProps) {
   const apiRef = React.useContext(ApiContext);
   const columnMenuState = useGridSelector(apiRef!, columnMenuStateSelector);
   const currentColumn = columnMenuState.field
@@ -47,16 +52,6 @@ export function GridColumnHeaderMenu() {
     [apiRef],
   );
 
-  const handleListKeyDown = React.useCallback(
-    (event: React.KeyboardEvent) => {
-      if (event.key === 'Tab') {
-        event.preventDefault();
-        hideMenu();
-      }
-    },
-    [hideMenu],
-  );
-
   React.useEffect(() => {
     updateColumnMenu(columnMenuState);
   }, [columnMenuState, updateColumnMenu]);
@@ -77,13 +72,14 @@ export function GridColumnHeaderMenu() {
       placement={`bottom-${currentColumn!.align === 'right' ? 'start' : 'end'}` as any}
       open={columnMenuState.open}
       target={target}
-      onKeyDown={handleListKeyDown}
       onClickAway={hideMenuDelayed}
     >
-      <SortMenuItems onClick={hideMenu} column={currentColumn!} />
-      <FilterMenuItem onClick={hideMenu} column={currentColumn!} />
-      <HideColMenuItem onClick={hideMenu} column={currentColumn!} />
-      <ColumnsMenuItem onClick={hideMenu} column={currentColumn!} />
+      <ContentComponent
+        currentColumn={currentColumn}
+        hideMenu={hideMenu}
+        open={columnMenuState.open}
+        {...contentComponentProps}
+      />
     </GridMenu>
   );
 }

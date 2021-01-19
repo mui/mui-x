@@ -55,7 +55,7 @@ export default function CustomErrorDemo() {
       columns={columns}
       autoHeight
       components={{
-        errorOverlay: CustomErrorOverlay,
+        ErrorOverlay: CustomErrorOverlay,
       }}
       className="demo"
     />

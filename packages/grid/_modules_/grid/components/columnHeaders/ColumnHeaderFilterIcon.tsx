@@ -5,8 +5,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { preferencePanelStateSelector } from '../../hooks/features/preferencesPanel/preferencePanelSelector';
 import { PreferencePanelsValue } from '../../hooks/features/preferencesPanel/preferencesPanelValue';
+import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { useIcons } from '../../hooks/utils/useIcons';
-import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { ApiContext } from '../api-context';
 
 export interface ColumnHeaderFilterIconProps {

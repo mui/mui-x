@@ -46,7 +46,7 @@ describe('<DataGrid /> - Components', () => {
       const CustomFooter = () => <div className="customFooter">Custom Footer</div>;
       render(
         <div style={{ width: 300, height: 500 }}>
-          <DataGrid {...baselineProps} hideFooter components={{ footer: CustomFooter }} />
+          <DataGrid {...baselineProps} hideFooter components={{ Footer: CustomFooter }} />
         </div>,
       );
       expect(document.querySelectorAll('.customFooter').length).to.equal(0);

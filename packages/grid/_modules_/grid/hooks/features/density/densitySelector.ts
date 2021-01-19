@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { Density } from '../../../models/gridOptions';
+import { Density } from '../../../models/density';
 import { GridState } from '../core/gridState';
 import { DensityState } from './densityState';
 

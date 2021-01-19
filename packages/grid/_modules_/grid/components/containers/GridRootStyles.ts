@@ -23,7 +23,7 @@ export const useStyles = makeStyles(
         '& *, & *::before, & *::after': {
           boxSizing: 'inherit',
         },
-        '& .MuiDataGrid-mainGridContainer': {
+        '& .MuiDataGrid-main': {
           position: 'relative',
           flexGrow: 1,
           display: 'flex',

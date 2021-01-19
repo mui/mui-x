@@ -3,19 +3,19 @@
  */
 export interface RenderColumnsProps {
   /**
-   * The column index of the first rendered column.
+   * The index of the first rendered column.
    */
   firstColIdx: number;
   /**
-   * The column index of the last rendered column.
+   * The index of the last rendered column.
    */
   lastColIdx: number;
   /**
-   * The left empty width required to position the viewport at the beginning of the first rendered column.
+   * The left offset required to position the viewport at the beginning of the first rendered column.
    */
   leftEmptyWidth: number;
   /**
-   * The right empty width limit the position the viewport to the end of the last rendered column.
+   * The right offset required to position the viewport to the end of the last rendered column.
    */
   rightEmptyWidth: number;
 }
@@ -25,15 +25,15 @@ export interface RenderColumnsProps {
  */
 export interface RenderRowProps {
   /**
-   * The rendering zone page calculated with the scroll position
+   * The rendering zone page calculated from the scroll position.
    */
   page: number;
   /**
-   * The first rendered row in the rendering zone
+   * The index of the first rendered row.
    */
   firstRowIdx: number;
   /**
-   * The last rendered row in the rendering zone
+   * The index of the last rendered row.
    */
   lastRowIdx: number;
 }
@@ -47,7 +47,7 @@ export interface RenderPaginationProps {
    */
   paginationCurrentPage?: number;
   /**
-   * The current page size if pagination is enabled.
+   * The page size if pagination is enabled.
    */
   pageSize?: number;
 }
