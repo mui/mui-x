@@ -91,6 +91,7 @@ export function ColumnsPanel() {
           inputRef={searchInputRef}
           value={searchValue}
           onChange={handleSearchValueChange}
+          variant="standard"
           fullWidth
         />
       </div>

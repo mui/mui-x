@@ -5,6 +5,7 @@ import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { paginationSelector } from '../hooks/features/pagination/paginationSelector';
 import { optionsSelector } from '../hooks/utils/useOptionsProp';
 import { ApiContext } from './api-context';
+import { isMuiV5 } from '../utils';
 
 // Used to hide the drop down select from the TablePaginagion
 const useStyles = makeStyles((theme: Theme) => ({
@@ -46,13 +47,27 @@ export function Pagination() {
     [apiRef],
   );
 
+  const getPaginationChangeHandlers = () => {
+    if (isMuiV5()) {
+      return {
+        onPageChange,
+        onRowsPerPageChange: onPageSizeChange,
+      };
+    }
+
+    return {
+      onChangePage: onPageChange,
+      onChangeRowsPerPage: onPageSizeChange,
+    };
+  };
+
   return (
+    // @ts-ignore TODO remove once upgraded v4 support is dropped
     <TablePagination
       classes={classes}
       component="div"
       count={paginationState.rowCount}
       page={paginationState.page - 1}
-      onChangePage={onPageChange}
       rowsPerPageOptions={
         options.rowsPerPageOptions &&
         options.rowsPerPageOptions.indexOf(paginationState.pageSize) > -1
@@ -60,8 +75,8 @@ export function Pagination() {
           : []
       }
       rowsPerPage={paginationState.pageSize}
-      onChangeRowsPerPage={onPageSizeChange}
       labelRowsPerPage={apiRef!.current.getLocaleText('footerPaginationRowsPerPage')}
+      {...getPaginationChangeHandlers()}
     />
   );
 }
