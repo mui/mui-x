@@ -25,7 +25,6 @@ export const scrollBarSizeSelector = (state: GridState) => state.scrollBar;
 
 export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
   (props, renderingZoneRef) => {
-    const logger = useLogger('Viewport');
     const apiRef = React.useContext(ApiContext);
 
     const options = useGridSelector(apiRef, optionsSelector);
@@ -77,7 +76,6 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
       ));
     };
 
-    logger.debug('Rendering ViewPort');
     return (
       <GridDataContainer>
         <StickyContainer {...viewportSizes}>
