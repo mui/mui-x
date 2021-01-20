@@ -67,7 +67,7 @@ export const useComponents = (
       DensityComfortableIcon: allComponents.DensityComfortableIcon || EmptyComponent,
       DensityCompactIcon: allComponents.DensityCompactIcon || EmptyComponent,
       DensityStandardIcon: allComponents.DensityStandardIcon || EmptyComponent,
-      OpenFilterButtonIcon: allComponents.DensityStandardIcon || EmptyComponent,
+      OpenFilterButtonIcon: allComponents.OpenFilterButtonIcon || EmptyComponent,
       ColumnMenu: wrapWithProps<GridColumnHeaderMenuItemsProps, BaseComponentProps>(
         allComponents.ColumnMenu,
         baseComponentProps,
