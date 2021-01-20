@@ -17,6 +17,21 @@ function EmptyComponent() {
   return null;
 }
 
+const wrapWithProps: <TProps, StaticProps>(
+  Component: React.ElementType<TProps & StaticProps> | undefined | null,
+  baseComponentProps: StaticProps,
+) => React.ElementType<TProps> = <TProps extends {}>(Component, baseComponentProps) => {
+  if (Component == null) {
+    return EmptyComponent;
+  }
+  const ComponentWithBase: React.ElementType<TProps> = (props: TProps) => {
+    const propsWithBase = { ...baseComponentProps, ...props };
+    return <Component {...propsWithBase} />;
+  };
+
+  return ComponentWithBase;
+};
+
 export const useComponents = (
   componentsProp: GridSlotsComponent | undefined,
   apiRef: ApiRef,
@@ -42,21 +57,7 @@ export const useComponents = (
   const components: ApiRefComponentsProperty = React.useMemo(() => {
     const allComponents = { ...DEFAULT_SLOTS_COMPONENTS, ...componentsProp };
 
-    const wrapWithBaseProps: <TProps>(
-      Component: React.ElementType<TProps> | undefined | null,
-    ) => React.ElementType<TProps> = <TProps extends {}>(Component) => {
-      if (Component == null) {
-        return EmptyComponent;
-      }
-      const ComponentWithBase: React.ElementType<TProps> = (props: TProps) => {
-        const propsWithBase = { ...baseComponentProps, ...props };
-        return <Component {...propsWithBase} />;
-      };
-
-      return ComponentWithBase;
-    };
-
-    return {
+    const mappedComponents = {
       ColumnFilteredIcon: allComponents.ColumnFilteredIcon || EmptyComponent,
       ColumnMenuIcon: allComponents.ColumnMenuIcon || EmptyComponent,
       ColumnResizeIcon: allComponents.ColumnResizeIcon || EmptyComponent,
@@ -67,25 +68,37 @@ export const useComponents = (
       DensityCompactIcon: allComponents.DensityCompactIcon || EmptyComponent,
       DensityStandardIcon: allComponents.DensityStandardIcon || EmptyComponent,
       OpenFilterButtonIcon: allComponents.DensityStandardIcon || EmptyComponent,
-      ColumnMenu: wrapWithBaseProps<GridColumnHeaderMenuItemsProps & BaseComponentProps>(
+      ColumnMenu: wrapWithProps<GridColumnHeaderMenuItemsProps, BaseComponentProps>(
         allComponents.ColumnMenu,
+        baseComponentProps,
       ),
-      ErrorOverlay: wrapWithBaseProps<ErrorOverlayProps & BaseComponentProps>(
+      ErrorOverlay: wrapWithProps<ErrorOverlayProps, BaseComponentProps>(
         allComponents.ErrorOverlay,
+        baseComponentProps,
       ),
-      Footer: wrapWithBaseProps<GridFooterProps & BaseComponentProps>(allComponents.Footer),
-      Header: wrapWithBaseProps<BaseComponentProps>(allComponents.Header),
-      LoadingOverlay: wrapWithBaseProps<BaseComponentProps>(allComponents.LoadingOverlay),
-      NoRowsOverlay: wrapWithBaseProps<BaseComponentProps>(allComponents.NoRowsOverlay),
-      Pagination: wrapWithBaseProps<BaseComponentProps>(allComponents.Pagination),
+      Footer: wrapWithProps<GridFooterProps, BaseComponentProps>(
+        allComponents.Footer,
+        baseComponentProps,
+      ),
+      Header: wrapWithProps<{}, BaseComponentProps>(allComponents.Header, baseComponentProps),
+      LoadingOverlay: wrapWithProps<{}, BaseComponentProps>(
+        allComponents.LoadingOverlay,
+        baseComponentProps,
+      ),
+      NoRowsOverlay: wrapWithProps<{}, BaseComponentProps>(
+        allComponents.NoRowsOverlay,
+        baseComponentProps,
+      ),
+      Pagination: wrapWithProps<{}, BaseComponentProps>(
+        allComponents.Pagination,
+        baseComponentProps,
+      ),
     };
-  }, [baseComponentProps, componentsProp]);
 
-  React.useEffect(() => {
-    if (apiRef && apiRef.current) {
-      apiRef.current.components = components;
-    }
-  }, [apiRef, components]);
+    apiRef.current.components = mappedComponents;
+
+    return mappedComponents;
+  }, [apiRef, baseComponentProps, componentsProp]);
 
   return components;
 };
