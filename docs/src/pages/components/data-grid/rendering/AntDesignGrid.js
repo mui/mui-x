@@ -99,15 +99,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CustomPagination(props) {
-  const { pagination, api } = props;
+  const { state, api } = props;
 
   return (
     <Pagination
       color="primary"
       variant="outlined"
       shape="rounded"
-      page={pagination.page}
-      count={pagination.pageCount}
+      page={state.pagination.page}
+      count={state.pagination.pageCount}
       // @ts-expect-error
       renderItem={(props2) => <PaginationItem {...props2} disableRipple />}
       onChange={(event, value) => api.current.setPage(value)}
@@ -123,15 +123,9 @@ CustomPagination.propTypes = {
     current: PropTypes.object.isRequired,
   }).isRequired,
   /**
-   * The object containing all pagination details in [[PaginationState]].
+   * The GridState object containing the current grid state.
    */
-  pagination: PropTypes.shape({
-    page: PropTypes.number.isRequired,
-    pageCount: PropTypes.number.isRequired,
-    pageSize: PropTypes.number.isRequired,
-    paginationMode: PropTypes.oneOf(['client', 'server']).isRequired,
-    rowCount: PropTypes.number.isRequired,
-  }).isRequired,
+  state: PropTypes.object.isRequired,
 };
 
 export default function AntDesignGrid() {
@@ -150,7 +144,7 @@ export default function AntDesignGrid() {
         checkboxSelection
         pageSize={5}
         components={{
-          pagination: CustomPagination,
+          Pagination: CustomPagination,
         }}
         {...data}
       />

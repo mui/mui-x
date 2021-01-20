@@ -7,10 +7,11 @@ import { visibleSortedRowsSelector } from '../hooks/features/filter/filterSelect
 import { keyboardCellSelector } from '../hooks/features/keyboard/keyboardSelector';
 import { selectionStateSelector } from '../hooks/features/selection/selectionSelector';
 import { renderStateSelector } from '../hooks/features/virtualization/renderingStateSelector';
+import { optionsSelector } from '../hooks/utils/optionsSelector';
 import { useLogger } from '../hooks/utils/useLogger';
-import { optionsSelector } from '../hooks/utils/useOptionsProp';
 import { ApiContext } from './api-context';
 import { LeftEmptyCell, RightEmptyCell } from './Cell';
+import { GridDataContainer } from './containers/GridDataContainer';
 import { RenderingZone } from './RenderingZone';
 import { Row } from './Row';
 import { RowCells } from './RowCells';
@@ -78,14 +79,16 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
 
     logger.debug('Rendering ViewPort');
     return (
-      <StickyContainer {...viewportSizes}>
-        <RenderingZone
-          ref={renderingZoneRef}
-          {...(containerSizes?.renderingZone || { width: 0, height: 0 })}
-        >
-          {getRowsElements()}
-        </RenderingZone>
-      </StickyContainer>
+      <GridDataContainer>
+        <StickyContainer {...viewportSizes}>
+          <RenderingZone
+            ref={renderingZoneRef}
+            {...(containerSizes?.renderingZone || { width: 0, height: 0 })}
+          >
+            {getRowsElements()}
+          </RenderingZone>
+        </StickyContainer>
+      </GridDataContainer>
     );
   },
 );

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ApiContext } from '../../components/api-context';
 import { IconsOptions } from '../../models/gridOptions';
 import { useGridSelector } from '../features/core/useGridSelector';
-import { optionsSelector } from './useOptionsProp';
+import { optionsSelector } from './optionsSelector';
 
 export function useIcons(): IconsOptions {
   const apiRef = React.useContext(ApiContext);

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
+import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { useIcons } from '../../hooks/utils/useIcons';
-import { optionsSelector } from '../../hooks/utils/useOptionsProp';
 import { classnames } from '../../utils/index';
 import { ApiContext } from '../api-context';
 

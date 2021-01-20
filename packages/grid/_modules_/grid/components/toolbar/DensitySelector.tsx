@@ -1,13 +1,14 @@
 import * as React from 'react';
+import MenuList from '@material-ui/core/MenuList';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+import { densityValueSelector } from '../../hooks/features/density/densitySelector';
 import { useIcons } from '../../hooks/utils/useIcons';
+import { Density, DensityTypes } from '../../models/density';
 import { ApiContext } from '../api-context';
-import { DensityTypes, Density } from '../../models/gridOptions';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { DensityOption } from '../../models/api/densityApi';
-import { densityValueSelector } from '../../hooks/features/density';
 import { GridMenu } from '../menu/GridMenu';
 
 export function DensitySelector() {
@@ -90,10 +91,11 @@ export function DensitySelector() {
         open={Boolean(anchorEl)}
         target={anchorEl}
         onClickAway={handleDensitySelectorClose}
-        onKeyDown={handleListKeyDown}
         position="bottom-start"
       >
-        {renderDensityOptions}
+        <MenuList id="menu-list-grow" onKeyDown={handleListKeyDown}>
+          {renderDensityOptions}
+        </MenuList>
       </GridMenu>
     </React.Fragment>
   );

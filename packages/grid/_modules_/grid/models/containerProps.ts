@@ -25,7 +25,7 @@ export type ViewportSizeState = ElementSize;
  */
 export interface ContainerProps {
   /**
-   * Our rendering zone constitute the maximum number of rows that will be rendered at any given time in the grid.
+   * The maximum number of rows that will be rendered at any given time in the grid.
    */
   renderingZonePageSize: number;
   /**
@@ -41,7 +41,7 @@ export interface ContainerProps {
    */
   lastPage: number;
   /**
-   * The total element size required to render the set of rows including scrollbars.
+   * The total element size required to render the set of rows, including scrollbars.
    */
   totalSizes: ElementSize;
   /**
@@ -53,7 +53,7 @@ export interface ContainerProps {
    */
   renderingZone: ElementSize;
   /**
-   * The total Element size required to render the full set of rows minus the scrollbars.
+   * The total element size required to render the full set of rows and columns, minus the scrollbars.
    */
   dataContainerSizes: ElementSize;
 }

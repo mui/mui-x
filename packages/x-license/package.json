@@ -25,11 +25,11 @@
     "licensegen": "./bin/license-gen-script.js"
   },
   "dependencies": {
-    "commander": "^6.1.0",
+    "yargs": "^15.0.0",
     "esm": "^3.2.25"
   },
   "peerDependencies": {
-    "react": "^16.13.1 || ^17.0.0"
+    "react": "^16.8.0 || ^17.0.0"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"

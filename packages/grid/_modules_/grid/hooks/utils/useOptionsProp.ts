@@ -1,13 +1,10 @@
 import * as React from 'react';
+import { DEFAULT_LOCALE_TEXT } from '../../constants/localeTextConstants';
 import { GridComponentProps, GridOptionsProp } from '../../GridComponentProps';
 import { ApiRef } from '../../models/api/apiRef';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../models/gridOptions';
 import { mergeOptions } from '../../utils/mergeOptions';
-import { GridState } from '../features/core/gridState';
 import { useGridReducer } from '../features/core/useGridReducer';
-import { DEFAULT_LOCALE_TEXT } from '../../constants/localeTextConstants';
-
-export const optionsSelector = (state: GridState) => state.options;
 
 // REDUCER
 export function optionsReducer(

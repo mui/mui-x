@@ -22,13 +22,13 @@ import {
   isPageKeys,
   isSpaceKey,
 } from '../../../utils/keyboardUtils';
+import { optionsSelector } from '../../utils/optionsSelector';
 import { visibleColumnsLengthSelector } from '../columns/columnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { paginationSelector } from '../pagination/paginationSelector';
 import { rowCountSelector } from '../rows/rowsSelector';
 import { useLogger } from '../../utils/useLogger';
-import { optionsSelector } from '../../utils/useOptionsProp';
 import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { selectionStateSelector } from '../selection/selectionSelector';
 import { KeyboardState } from './keyboardState';

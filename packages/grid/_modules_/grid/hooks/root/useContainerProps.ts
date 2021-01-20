@@ -12,8 +12,8 @@ import { densityRowHeightSelector } from '../features/density/densitySelector';
 import { visibleRowCountSelector } from '../features/filter/filterSelector';
 import { PaginationState } from '../features/pagination/paginationReducer';
 import { paginationSelector } from '../features/pagination/paginationSelector';
+import { optionsSelector } from '../utils/optionsSelector';
 import { useLogger } from '../utils/useLogger';
-import { optionsSelector } from '../utils/useOptionsProp';
 import { useApiEventHandler } from './useApiEventHandler';
 
 export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, apiRef: ApiRef) => {

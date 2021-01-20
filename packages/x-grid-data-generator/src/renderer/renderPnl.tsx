@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { CellParams } from '@material-ui/x-grid';
+import { CellParams, getThemePaletteMode } from '@material-ui/x-grid';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -11,10 +11,15 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     positive: {
       color:
-        theme.palette.type === 'light' ? theme.palette.success.dark : theme.palette.success.light,
+        getThemePaletteMode(theme.palette) === 'light'
+          ? theme.palette.success.dark
+          : theme.palette.success.light,
     },
     negative: {
-      color: theme.palette.type === 'light' ? theme.palette.error.dark : theme.palette.error.light,
+      color:
+        getThemePaletteMode(theme.palette) === 'light'
+          ? theme.palette.error.dark
+          : theme.palette.error.light,
     },
   }),
 );

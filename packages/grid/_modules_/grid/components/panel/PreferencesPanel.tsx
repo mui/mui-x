@@ -3,7 +3,7 @@ import { allColumnsSelector } from '../../hooks/features/columns/columnsSelector
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { preferencePanelStateSelector } from '../../hooks/features/preferencesPanel/preferencePanelSelector';
 import { PreferencePanelsValue } from '../../hooks/features/preferencesPanel/preferencesPanelValue';
-import { optionsSelector } from '../../hooks/utils/useOptionsProp';
+import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { ApiContext } from '../api-context';
 import { ColumnsPanel } from './ColumnsPanel';
 import { FilterPanel } from './filterPanel/FilterPanel';
