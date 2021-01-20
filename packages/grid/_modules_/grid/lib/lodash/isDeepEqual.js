@@ -38,8 +38,8 @@ import baseIsEqual from './_baseIsEqual.js';
  * object === other;
  * // => false
  */
-function isEqual(value, other) {
+function isDeepEqual(value, other) {
   return baseIsEqual(value, other);
 }
 
-export default isEqual;
+export default isDeepEqual;

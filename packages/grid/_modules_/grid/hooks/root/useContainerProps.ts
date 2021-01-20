@@ -3,7 +3,7 @@ import { RESIZE } from '../../constants/eventsConstants';
 import { ApiRef } from '../../models/api/apiRef';
 import { ContainerProps, ScrollBarState, ViewportSizeState } from '../../models/containerProps';
 import { ElementSize } from '../../models/elementSize';
-import { isEqual } from '../../utils/utils';
+import { isDeepEqual } from '../../utils/utils';
 import { columnsTotalWidthSelector } from '../features/columns/columnsSelector';
 import { GridState } from '../features/core/gridState';
 import { useGridSelector } from '../features/core/useGridSelector';
@@ -214,7 +214,7 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
 
     const containerState = getContainerProps(rowsCount, viewportSizes, scrollBar);
     updateStateIfChanged(
-      (state) => !isEqual(state.containerSizes, containerState),
+      (state) => !isDeepEqual(state.containerSizes, containerState),
       (state) => ({ ...state, containerSizes: containerState }),
     );
   }, [
