@@ -43,7 +43,7 @@ export const useComponents = (
     const allComponents = { ...DEFAULT_SLOTS_COMPONENTS, ...componentsProp };
 
     const wrapWithBaseProps: <TProps>(
-      Component: React.ElementType<TProps & BaseComponentProps> | undefined | null,
+      Component: React.ElementType<TProps> | undefined | null,
     ) => React.ElementType<TProps> = <TProps extends {}>(Component) => {
       if (Component == null) {
         return EmptyComponent;
@@ -57,14 +57,26 @@ export const useComponents = (
     };
 
     return {
-      ...allComponents,
-      ColumnMenu: wrapWithBaseProps<GridColumnHeaderMenuItemsProps>(allComponents.ColumnMenu),
-      ErrorOverlay: wrapWithBaseProps<ErrorOverlayProps>(allComponents.ErrorOverlay),
-      Footer: wrapWithBaseProps<GridFooterProps>(allComponents.Footer),
-      Header: wrapWithBaseProps<{}>(allComponents.Header),
-      LoadingOverlay: wrapWithBaseProps<{}>(allComponents.LoadingOverlay),
-      NoRowsOverlay: wrapWithBaseProps<{}>(allComponents.NoRowsOverlay),
-      Pagination: wrapWithBaseProps<{}>(allComponents.Pagination),
+      ColumnFilteredIcon: wrapWithBaseProps<{}>(allComponents.ColumnFilteredIcon),
+      ColumnMenuIcon: wrapWithBaseProps<{}>(allComponents.ColumnMenuIcon),
+      ColumnResizeIcon: wrapWithBaseProps<{}>(allComponents.ColumnResizeIcon),
+      ColumnSelectorIcon: wrapWithBaseProps<{}>(allComponents.ColumnSelectorIcon),
+      ColumnSortedAscendingIcon: wrapWithBaseProps<{}>(allComponents.ColumnSortedAscendingIcon),
+      ColumnSortedDescendingIcon: wrapWithBaseProps<{}>(allComponents.ColumnSortedDescendingIcon),
+      DensityComfortableIcon: wrapWithBaseProps<{}>(allComponents.DensityComfortableIcon),
+      DensityCompactIcon: wrapWithBaseProps<{}>(allComponents.DensityCompactIcon),
+      DensityStandardIcon: wrapWithBaseProps<{}>(allComponents.DensityStandardIcon),
+      ColumnMenu: wrapWithBaseProps<GridColumnHeaderMenuItemsProps & BaseComponentProps>(
+        allComponents.ColumnMenu,
+      ),
+      ErrorOverlay: wrapWithBaseProps<ErrorOverlayProps & BaseComponentProps>(
+        allComponents.ErrorOverlay,
+      ),
+      Footer: wrapWithBaseProps<GridFooterProps & BaseComponentProps>(allComponents.Footer),
+      Header: wrapWithBaseProps<BaseComponentProps>(allComponents.Header),
+      LoadingOverlay: wrapWithBaseProps<BaseComponentProps>(allComponents.LoadingOverlay),
+      NoRowsOverlay: wrapWithBaseProps<BaseComponentProps>(allComponents.NoRowsOverlay),
+      Pagination: wrapWithBaseProps<BaseComponentProps>(allComponents.Pagination),
     };
   }, [baseComponentProps, componentsProp]);
 

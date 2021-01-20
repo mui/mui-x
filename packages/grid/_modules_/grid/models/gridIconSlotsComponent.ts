@@ -31,7 +31,7 @@ export interface GridIconSlotsComponent {
   /**
    * Icon displayed in between two column headers that allows to resize the column header.
    */
-  ColumnResizeIcon?: React.ElementType<{ className: string }>;
+  ColumnResizeIcon?: React.ElementType;
   /**
    * Icon displayed on the compact density option in the toolbar.
    */
