@@ -8,7 +8,6 @@ import { keyboardCellSelector } from '../hooks/features/keyboard/keyboardSelecto
 import { selectionStateSelector } from '../hooks/features/selection/selectionSelector';
 import { renderStateSelector } from '../hooks/features/virtualization/renderingStateSelector';
 import { optionsSelector } from '../hooks/utils/optionsSelector';
-import { useLogger } from '../hooks/utils/useLogger';
 import { ApiContext } from './api-context';
 import { LeftEmptyCell, RightEmptyCell } from './Cell';
 import { GridDataContainer } from './containers/GridDataContainer';
