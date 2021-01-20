@@ -370,37 +370,39 @@ export function DynamicIconUpdate() {
 
   return (
     <React.Fragment>
-      <div>
-        <Button
-          component="button"
-          color="primary"
-          variant="outlined"
-          onClick={() => {
-            setIcon(() => MyIcon2);
-          }}
-        >
-          Change Icon
-        </Button>
-        <Button
-          component="button"
-          color="primary"
-          variant="outlined"
-          onClick={() => {
-            setIcon(undefined);
-          }}
-        >
-          Clear icon
-        </Button>
-      </div>
-      <div className="grid-container">
-        <XGrid
-          {...data}
-          components={{
-            DensityStandardIcon: icon,
-          }}
-          showToolbar
-        />
-      </div>
+      <React.StrictMode>
+        <div>
+          <Button
+            component="button"
+            color="primary"
+            variant="outlined"
+            onClick={() => {
+              setIcon(() => MyIcon2);
+            }}
+          >
+            Change Icon
+          </Button>
+          <Button
+            component="button"
+            color="primary"
+            variant="outlined"
+            onClick={() => {
+              setIcon(undefined);
+            }}
+          >
+            Clear icon
+          </Button>
+        </div>
+        <div className="grid-container">
+          <XGrid
+            {...data}
+            components={{
+              DensityStandardIcon: icon,
+            }}
+            showToolbar
+          />
+        </div>
+      </React.StrictMode>
     </React.Fragment>
   );
 }
