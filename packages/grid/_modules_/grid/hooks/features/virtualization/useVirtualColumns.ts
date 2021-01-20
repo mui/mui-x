@@ -39,8 +39,6 @@ export const useVirtualColumns = (
   const columnsMeta = useGridSelector(apiRef, columnsMetaSelector);
   const visibleColumnCount = useGridSelector(apiRef, visibleColumnsLengthSelector);
   const visibleColumns = useGridSelector(apiRef, visibleColumnsSelector);
-  // const getLastVisibleColIndex = (columns) => (columns.length > 0 ? columns.length - 1 : 0);
-  // const lastVisibleIndex = React.useRef<number>(getLastVisibleColIndex(visibleColumns));
 
   const getColumnIdxFromScroll = React.useCallback(
     (left: number) => {
