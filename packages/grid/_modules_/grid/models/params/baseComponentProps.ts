@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { GridState } from '../../hooks/features/core/gridState';
+import { ApiRef } from '../api/apiRef';
 import { Columns } from '../colDef/colDef';
 import { GridOptions } from '../gridOptions';
 import { RootContainerRef } from '../rootContainerRef';
@@ -28,7 +28,7 @@ export interface BaseComponentProps {
   /**
    * ApiRef that let you manipulate the grid.
    */
-  api: React.RefObject<any>;
+  api: ApiRef;
   /**
    * The ref of the inner div Element of the grid.
    */

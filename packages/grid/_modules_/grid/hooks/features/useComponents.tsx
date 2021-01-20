@@ -57,15 +57,16 @@ export const useComponents = (
     };
 
     return {
-      ColumnFilteredIcon: wrapWithBaseProps<{}>(allComponents.ColumnFilteredIcon),
-      ColumnMenuIcon: wrapWithBaseProps<{}>(allComponents.ColumnMenuIcon),
-      ColumnResizeIcon: wrapWithBaseProps<{}>(allComponents.ColumnResizeIcon),
-      ColumnSelectorIcon: wrapWithBaseProps<{}>(allComponents.ColumnSelectorIcon),
-      ColumnSortedAscendingIcon: wrapWithBaseProps<{}>(allComponents.ColumnSortedAscendingIcon),
-      ColumnSortedDescendingIcon: wrapWithBaseProps<{}>(allComponents.ColumnSortedDescendingIcon),
-      DensityComfortableIcon: wrapWithBaseProps<{}>(allComponents.DensityComfortableIcon),
-      DensityCompactIcon: wrapWithBaseProps<{}>(allComponents.DensityCompactIcon),
-      DensityStandardIcon: wrapWithBaseProps<{}>(allComponents.DensityStandardIcon),
+      ColumnFilteredIcon: allComponents.ColumnFilteredIcon || EmptyComponent,
+      ColumnMenuIcon: allComponents.ColumnMenuIcon || EmptyComponent,
+      ColumnResizeIcon: allComponents.ColumnResizeIcon || EmptyComponent,
+      ColumnSelectorIcon: allComponents.ColumnSelectorIcon || EmptyComponent,
+      ColumnSortedAscendingIcon: allComponents.ColumnSortedAscendingIcon || EmptyComponent,
+      ColumnSortedDescendingIcon: allComponents.ColumnSortedDescendingIcon || EmptyComponent,
+      DensityComfortableIcon: allComponents.DensityComfortableIcon || EmptyComponent,
+      DensityCompactIcon: allComponents.DensityCompactIcon || EmptyComponent,
+      DensityStandardIcon: allComponents.DensityStandardIcon || EmptyComponent,
+      OpenFilterButtonIcon: allComponents.DensityStandardIcon || EmptyComponent,
       ColumnMenu: wrapWithBaseProps<GridColumnHeaderMenuItemsProps & BaseComponentProps>(
         allComponents.ColumnMenu,
       ),
