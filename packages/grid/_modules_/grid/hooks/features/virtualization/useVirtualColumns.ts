@@ -6,7 +6,7 @@ import {
   VirtualizationApi,
   ApiRef,
 } from '../../../models/index';
-import { isEqual } from '../../../utils/utils';
+import { isDeepEqual } from '../../../utils/utils';
 import { useLogger } from '../../utils/useLogger';
 import { COLUMNS_UPDATED, RESIZE } from '../../../constants/eventsConstants';
 import { useApiMethod } from '../../root/useApiMethod';
@@ -111,25 +111,19 @@ export const useVirtualColumns = (
       );
       logger.debug(`Difference with first: ${diffFirst} and last: ${diffLast} `);
 
-      const renderNewColState =
-        lastDisplayedIdx > 0 && (diffLast > tolerance || diffFirst > tolerance);
+      const lastVisibleColIdx = visibleColumns.length > 0 ? visibleColumns.length - 1 : 0;
+      const firstColIdx =
+        firstDisplayedIdx - columnBuffer >= 0 ? firstDisplayedIdx - columnBuffer : 0;
+      const newRenderedColState = {
+        leftEmptyWidth: columnsMeta.positions[firstColIdx],
+        rightEmptyWidth: 0,
+        firstColIdx,
+        lastColIdx:
+          lastDisplayedIdx + columnBuffer >= lastVisibleColIdx
+            ? lastVisibleColIdx
+            : lastDisplayedIdx + columnBuffer,
+      };
 
-      let newRenderedColState: RenderColumnsProps | null =
-        renderedColRef.current != null ? { ...renderedColRef.current } : null;
-
-      const lastVisibleIndex = visibleColumns.length > 0 ? visibleColumns.length - 1 : 0;
-      if (renderNewColState || newRenderedColState == null) {
-        newRenderedColState = {
-          leftEmptyWidth: 0,
-          rightEmptyWidth: 0,
-          firstColIdx: firstDisplayedIdx - columnBuffer >= 0 ? firstDisplayedIdx - columnBuffer : 0,
-          lastColIdx:
-            lastDisplayedIdx + columnBuffer >= lastVisibleIndex
-              ? lastVisibleIndex
-              : lastDisplayedIdx + columnBuffer,
-        };
-      }
-      newRenderedColState.leftEmptyWidth = columnsMeta.positions[newRenderedColState.firstColIdx];
       if (apiRef.current.state.scrollBar.hasScrollX) {
         newRenderedColState.rightEmptyWidth =
           columnsMeta.totalWidth -
@@ -140,7 +134,7 @@ export const useVirtualColumns = (
           apiRef.current.state.viewportSizes.width - columnsMeta.totalWidth;
       }
 
-      if (!isEqual(newRenderedColState, renderedColRef.current)) {
+      if (!isDeepEqual(newRenderedColState, renderedColRef.current)) {
         renderedColRef.current = newRenderedColState;
         logger.debug('New columns state to render', newRenderedColState);
         return true;

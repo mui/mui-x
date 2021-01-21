@@ -20,7 +20,7 @@ import { RowModel, RowsProp } from '../../../models/rows';
 import { FieldComparatorList, SortItem, SortModel, SortDirection } from '../../../models/sortModel';
 import { buildCellParams } from '../../../utils/paramsUtils';
 import { isDesc, nextSortDirection } from '../../../utils/sortingUtils';
-import { isEqual } from '../../../utils/utils';
+import { isDeepEqual } from '../../../utils/utils';
 import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
@@ -308,7 +308,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
 
       if (
         sortModel.length > 0 &&
-        !isEqual(apiRef.current.getState<SortingState>('sorting').sortModel, sortModel)
+        !isDeepEqual(apiRef.current.getState<SortingState>('sorting').sortModel, sortModel)
       ) {
         // we use apiRef to avoid watching setSortModel as it will trigger an infinite loop
         apiRef.current.setSortModel(sortModel);
@@ -319,7 +319,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   React.useEffect(() => {
     const sortModel = options.sortModel || [];
     const oldSortModel = apiRef.current.state.sorting.sortModel;
-    if (sortModel.length > 0 && !isEqual(sortModel, oldSortModel)) {
+    if (sortModel.length > 0 && !isDeepEqual(sortModel, oldSortModel)) {
       // we use apiRef to avoid watching setSortModel as it will trigger an update on every state change
       apiRef.current.setSortModel(sortModel);
     }
