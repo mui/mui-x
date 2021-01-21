@@ -8,7 +8,6 @@ import { AutoSizer } from './components/AutoSizer';
 import { ColumnsHeader } from './components/columnHeaders/ColumnHeaders';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { GridColumnHeaderMenu } from './components/menu/columnMenu/GridColumnHeaderMenu';
-import { PreferencesPanel } from './components/panel/PreferencesPanel';
 import { GridColumnsContainer } from './components/containers/GridColumnsContainer';
 import { GridMainContainer } from './components/containers/GridMainContainer';
 import { GridRoot } from './components/containers/GridRoot';
@@ -86,7 +85,12 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useColumnResize(columnsHeaderRef, apiRef);
     usePagination(apiRef);
 
-    const components = useComponents(props.components, props.componentsProps, apiRef, rootContainerRef);
+    const components = useComponents(
+      props.components,
+      props.componentsProps,
+      apiRef,
+      rootContainerRef,
+    );
     useStateProp(apiRef, props.state);
     useRenderInfoLog(apiRef, logger);
 
@@ -124,7 +128,6 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                     ContentComponent={components.ColumnMenu}
                     contentComponentProps={props.componentsProps?.columnMenu}
                   />
-                  <PreferencesPanel />
                   <Watermark licenseStatus={props.licenseStatus} />
                   <GridColumnsContainer ref={columnsContainerRef}>
                     <ColumnsHeader ref={columnsHeaderRef} />
@@ -141,12 +144,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                 </GridMainContainer>
                 {!gridState.options.hideFooter && (
                   <div ref={footerRef}>
-                    <components.Footer
-                      PaginationComponent={
-                        <components.Pagination {...props.componentsProps?.pagination} />
-                      }
-                      {...props.componentsProps?.footer}
-                    />
+                    <components.Footer {...props.componentsProps?.footer} />
                   </div>
                 )}
               </ErrorBoundary>

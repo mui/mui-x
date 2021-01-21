@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ErrorOverlay, ErrorOverlayProps } from '../components/ErrorOverlay';
-import { GridFooter, GridFooterProps } from '../components/GridFooter';
+import { GridFooter } from '../components/GridFooter';
+import { GridHeader } from '../components/GridHeader';
 import {
   ArrowDownwardIcon,
   ArrowUpwardIcon,
@@ -22,7 +23,7 @@ import { NoRowsOverlay } from '../components/NoRowsOverlay';
 import { Pagination } from '../components/Pagination';
 import { ColumnsPanel } from '../components/panel/ColumnsPanel';
 import { FilterPanel } from '../components/panel/filterPanel/FilterPanel';
-import { GridToolbar } from '../components/toolbar/GridToolbar';
+import { Panel, PanelProps } from '../components/panel/Panel';
 import { GridIconSlotsComponent } from './gridIconSlotsComponent';
 import { BaseComponentProps } from './params/baseComponentProps';
 
@@ -44,7 +45,7 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
   /**
    * Footer component rendered at the bottom of the grid viewport.
    */
-  Footer?: React.ElementType<BaseComponentProps & GridFooterProps>;
+  Footer?: React.ElementType<BaseComponentProps>;
   /**
    * Header component rendered above the grid column header bar.
    */
@@ -61,9 +62,18 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    * Pagination component rendered in the grid footer by default.
    */
   Pagination?: React.ElementType<BaseComponentProps>;
-
+  /**
+   * FilterPanel component rendered when clicking the filter button.
+   */
   FilterPanel?: React.ElementType<BaseComponentProps>;
+  /**
+   * ColumnsPanel component rendered when clicking the columns button.
+   */
   ColumnsPanel?: React.ElementType<BaseComponentProps>;
+  /**
+   * Panel component wrapping the filters and columns panels.
+   */
+  Panel?: React.ElementType<BaseComponentProps & PanelProps>;
 }
 
 export const DEFAULT_SLOTS_ICONS: GridIconSlotsComponent = {
@@ -84,11 +94,11 @@ export const DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   ColumnMenu: GridColumnHeaderMenuItems,
   ErrorOverlay,
   Footer: GridFooter,
-  Header: GridToolbar,
+  Header: GridHeader,
   LoadingOverlay,
   NoRowsOverlay,
   Pagination,
   FilterPanel,
   ColumnsPanel,
+  Panel,
 };
-

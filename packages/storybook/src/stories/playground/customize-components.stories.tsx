@@ -11,6 +11,9 @@ import {
   ColumnMenuProps,
   BaseComponentProps,
   GridColumnHeaderMenuItems,
+  PanelProps,
+  PreferencesPanel,
+  GridFooter,
 } from '@material-ui/x-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CodeIcon from '@material-ui/icons/Code';
@@ -20,6 +23,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
 import CreateIcon from '@material-ui/icons/Create';
+import { GridToolbar } from '../../../../grid/_modules_/grid/components/toolbar/GridToolbar';
 import { useData } from '../../hooks/useData';
 
 export default {
@@ -407,25 +411,65 @@ export function DynamicIconUpdate() {
   );
 }
 
-function CustomFilterPanel(props: {bg?: string} & BaseComponentProps) {
+function CustomFilterPanel(props: { bg?: string } & BaseComponentProps) {
   return (
-    <div style={{width: 500, height: 100, background: props.bg, color: 'white'}}><h1>My Custom Filter Panel</h1></div>
-  )
+    <div style={{ width: 500, height: 100, background: props.bg, color: 'white' }}>
+      <h1>My Custom Filter Panel</h1>
+    </div>
+  );
 }
-function CustomColumnsPanel(props: {bg?: string} & BaseComponentProps) {
+function CustomColumnsPanel(props: { bg?: string } & BaseComponentProps) {
   return (
-    <div style={{width: 500, height: 300, background: props.bg}}><h1>My Custom Columns Panel</h1></div>
-  )
+    <div style={{ width: 500, height: 300, background: props.bg }}>
+      <h1>My Custom Columns Panel</h1>
+    </div>
+  );
 }
-export const CustomPanels = Template.bind({});
-CustomPanels.args = {
+export const CustomFilterColumnsPanels = Template.bind({});
+CustomFilterColumnsPanels.args = {
   showToolbar: true,
   components: {
     FilterPanel: CustomFilterPanel,
     ColumnsPanel: CustomColumnsPanel,
   },
   componentsProps: {
-    filterPanel: { bg: 'blue'},
-    columnsPanel: { bg: 'red'},
+    filterPanel: { bg: 'blue' },
+    columnsPanel: { bg: 'red' },
+  },
+};
+function CustomPanelComponent(props: BaseComponentProps & PanelProps) {
+  if (!props.open) {
+    return null;
   }
+
+  return (
+    <div style={{ maxHeight: 500, overflow: 'auto', display: 'flex' }}>
+      <div>{props.children}</div>
+    </div>
+  );
+}
+export const CustomPanel = Template.bind({});
+CustomPanel.args = {
+  showToolbar: true,
+  components: {
+    Panel: CustomPanelComponent,
+  },
+};
+
+function FooterWithPanel() {
+  return (
+    <React.Fragment>
+      <GridFooter />
+      <PreferencesPanel />
+    </React.Fragment>
+  );
+}
+export const CustomPanelInFooter = Template.bind({});
+CustomPanelInFooter.args = {
+  showToolbar: true,
+  components: {
+    Panel: CustomPanelComponent,
+    Footer: FooterWithPanel,
+    Header: GridToolbar,
+  },
 };

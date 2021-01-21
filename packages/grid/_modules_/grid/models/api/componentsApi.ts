@@ -31,8 +31,18 @@ export interface ApiRefComponentsProperty extends GridIconSlotsComponent {
    * Pagination component rendered in the grid footer by default.
    */
   Pagination: React.ElementType;
+  /**
+   * FilterPanel component rendered when clicking the filter button.
+   */
   FilterPanel: React.ElementType;
+  /**
+   * ColumnsPanel component rendered when clicking the columns button.
+   */
   ColumnsPanel: React.ElementType;
+  /**
+   * Panel component wrapping the filters and columns panels.
+   */
+  Panel: React.ElementType;
 }
 
 export interface ComponentsApi {
@@ -40,5 +50,8 @@ export interface ComponentsApi {
    * The set of overridable components used in the grid.
    */
   components: ApiRefComponentsProperty;
+  /**
+   * Overrideable components props dynamic passed to the component at rendering.
+   */
   componentsProps?: GridSlotsComponentProps;
 }

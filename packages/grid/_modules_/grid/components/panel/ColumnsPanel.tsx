@@ -84,7 +84,7 @@ export function ColumnsPanel() {
 
   return (
     <React.Fragment>
-      <div className="MuiDataGridPanel-header">
+      <div className="MuiDataGrid-panelHeader">
         <TextField
           label={apiRef!.current.getLocaleText('columnsPanelTextFieldLabel')}
           placeholder={apiRef!.current.getLocaleText('columnsPanelTextFieldPlaceholder')}
@@ -95,7 +95,7 @@ export function ColumnsPanel() {
           fullWidth
         />
       </div>
-      <div className="MuiDataGridPanel-container">
+      <div className="MuiDataGrid-panelContainer">
         <div className={classes.container}>
           {currentColumns.map((column) => (
             <div key={column.field} className={classes.column}>
@@ -128,7 +128,7 @@ export function ColumnsPanel() {
           ))}
         </div>
       </div>
-      <div className="MuiDataGridPanel-footer">
+      <div className="MuiDataGrid-panelFooter">
         <Button onClick={hideAllColumns} color="primary">
           {apiRef!.current.getLocaleText('columnsPanelHideAllButton')}
         </Button>

@@ -9,11 +9,7 @@ import { RowCount } from './RowCount';
 import { SelectedRowCount } from './SelectedRowCount';
 import { GridFooterContainer } from './containers/GridFooterContainer';
 
-export interface GridFooterProps {
-  PaginationComponent?: React.ReactNode;
-}
-
-export function GridFooter(props: GridFooterProps) {
+export function GridFooter() {
   const apiRef = React.useContext(ApiContext);
   const totalRowCount = useGridSelector(apiRef, rowCountSelector);
   const options = useGridSelector(apiRef, optionsSelector);
@@ -32,11 +28,15 @@ export function GridFooter(props: GridFooterProps) {
       <RowCount rowCount={totalRowCount} />
     ) : null;
 
-  const PaginationElement =
+  const PaginationComponent =
     !!options.pagination &&
     pagination.pageSize != null &&
     !options.hideFooterPagination &&
-    props.PaginationComponent;
+    apiRef?.current.components.Pagination;
+
+  const PaginationElement = PaginationComponent && (
+    <PaginationComponent {...apiRef?.current.componentsProps?.pagination} />
+  );
 
   return (
     <GridFooterContainer>

@@ -49,6 +49,29 @@ export const useStyles = makeStyles(
           alignItems: 'center',
           padding: '4px 4px 0',
         },
+        '& .MuiDataGrid-panel': {
+          backgroundColor: theme.palette.background.paper,
+          minWidth: 300,
+          maxHeight: 450,
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+        },
+        '& .MuiDataGrid-panelHeader': {
+          padding: 8,
+        },
+        '& .MuiDataGrid-panelContainer': {
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'auto',
+          flex: '1 1',
+        },
+        '& .MuiDataGrid-panelFooter': {
+          padding: 4,
+          display: 'flex',
+          justifyContent: 'space-between',
+        },
+
         '& .MuiDataGrid-columnsContainer': {
           position: 'absolute',
           top: 0,

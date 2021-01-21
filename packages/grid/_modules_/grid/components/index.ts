@@ -9,6 +9,7 @@ export * from './AutoSizer';
 export * from './Cell';
 export * from './CheckboxRenderer';
 export * from './GridFooter';
+export * from './GridHeader';
 export * from './LoadingOverlay';
 export * from './NoRowsOverlay';
 export * from './Pagination';

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { GridFooterProps } from '../../components/GridFooter';
 import { ErrorOverlayProps } from '../../components/ErrorOverlay';
 import { GridColumnHeaderMenuItemsProps } from '../../components/menu/columnMenu/GridColumnHeaderMenuItems';
+import { PanelProps } from '../../components/panel/Panel';
 import { ApiRef } from '../../models/api/apiRef';
 import { ApiRefComponentsProperty } from '../../models/api/componentsApi';
 import { DEFAULT_SLOTS_COMPONENTS, GridSlotsComponent } from '../../models/gridSlotsComponent';
@@ -78,10 +78,7 @@ export const useComponents = (
         allComponents.ErrorOverlay,
         baseComponentProps,
       ),
-      Footer: wrapWithProps<GridFooterProps, BaseComponentProps>(
-        allComponents.Footer,
-        baseComponentProps,
-      ),
+      Footer: wrapWithProps<{}, BaseComponentProps>(allComponents.Footer, baseComponentProps),
       Header: wrapWithProps<{}, BaseComponentProps>(allComponents.Header, baseComponentProps),
       LoadingOverlay: wrapWithProps<{}, BaseComponentProps>(
         allComponents.LoadingOverlay,
@@ -103,6 +100,7 @@ export const useComponents = (
         allComponents.ColumnsPanel,
         baseComponentProps,
       ),
+      Panel: wrapWithProps<PanelProps, BaseComponentProps>(allComponents.Panel, baseComponentProps),
     };
 
     apiRef.current.components = mappedComponents;

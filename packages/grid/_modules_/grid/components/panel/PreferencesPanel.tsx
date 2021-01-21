@@ -5,7 +5,6 @@ import { preferencePanelStateSelector } from '../../hooks/features/preferencesPa
 import { PreferencePanelsValue } from '../../hooks/features/preferencesPanel/preferencesPanelValue';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { ApiContext } from '../api-context';
-import { Panel } from './Panel';
 
 export function PreferencesPanel() {
   const apiRef = React.useContext(ApiContext);
@@ -18,10 +17,18 @@ export function PreferencesPanel() {
 
   const ColumnSelectorComponent = apiRef!.current.components.ColumnsPanel!;
   const FilterPanelComponent = apiRef!.current.components.FilterPanel!;
+  const Panel = apiRef!.current.components.Panel!;
   return (
-    <Panel open={columns.length > 0 && preferencePanelState.open}>
-      {!options.disableColumnSelector && isColumnsTabOpen && <ColumnSelectorComponent {...apiRef?.current.componentsProps?.columnsPanel} />}
-      {!options.disableColumnFilter && isFiltersTabOpen && <FilterPanelComponent {...apiRef?.current.componentsProps?.filterPanel}/>}
+    <Panel
+      open={columns.length > 0 && preferencePanelState.open}
+      {...apiRef?.current.componentsProps?.panel}
+    >
+      {!options.disableColumnSelector && isColumnsTabOpen && (
+        <ColumnSelectorComponent {...apiRef?.current.componentsProps?.columnsPanel} />
+      )}
+      {!options.disableColumnFilter && isFiltersTabOpen && (
+        <FilterPanelComponent {...apiRef?.current.componentsProps?.filterPanel} />
+      )}
     </Panel>
   );
 }
