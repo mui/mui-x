@@ -14,6 +14,7 @@ import {
   PanelProps,
   PreferencesPanel,
   GridFooter,
+  GridToolbar
 } from '@material-ui/x-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CodeIcon from '@material-ui/icons/Code';
@@ -23,7 +24,6 @@ import Pagination from '@material-ui/lab/Pagination';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
 import CreateIcon from '@material-ui/icons/Create';
-import { GridToolbar } from '../../../../grid/_modules_/grid/components/toolbar/GridToolbar';
 import { useData } from '../../hooks/useData';
 
 export default {

@@ -3,6 +3,7 @@ export * from './icons';
 export * from './menu';
 export * from './containers';
 export * from './panel';
+export * from './toolbar';
 
 export * from './api-context';
 export * from './AutoSizer';
