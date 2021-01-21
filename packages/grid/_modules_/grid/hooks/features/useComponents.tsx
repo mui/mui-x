@@ -5,6 +5,7 @@ import { GridColumnHeaderMenuItemsProps } from '../../components/menu/columnMenu
 import { ApiRef } from '../../models/api/apiRef';
 import { ApiRefComponentsProperty } from '../../models/api/componentsApi';
 import { DEFAULT_SLOTS_COMPONENTS, GridSlotsComponent } from '../../models/gridSlotsComponent';
+import { GridSlotsComponentProps } from '../../models/gridSlotsComponentProps';
 import { BaseComponentProps } from '../../models/params/baseComponentProps';
 import { RootContainerRef } from '../../models/rootContainerRef';
 import { optionsSelector } from '../utils/optionsSelector';
@@ -33,7 +34,8 @@ const wrapWithProps: <TProps, StaticProps>(
 };
 
 export const useComponents = (
-  componentsProp: GridSlotsComponent | undefined,
+  componentSlotsProp: GridSlotsComponent | undefined,
+  componentsProp: GridSlotsComponentProps | undefined,
   apiRef: ApiRef,
   gridRootRef: RootContainerRef,
 ) => {
@@ -55,7 +57,7 @@ export const useComponents = (
   );
 
   const components: ApiRefComponentsProperty = React.useMemo(() => {
-    const allComponents = { ...DEFAULT_SLOTS_COMPONENTS, ...componentsProp };
+    const allComponents = { ...DEFAULT_SLOTS_COMPONENTS, ...componentSlotsProp };
 
     const mappedComponents = {
       ColumnFilteredIcon: allComponents.ColumnFilteredIcon || EmptyComponent,
@@ -93,12 +95,22 @@ export const useComponents = (
         allComponents.Pagination,
         baseComponentProps,
       ),
+      FilterPanel: wrapWithProps<{}, BaseComponentProps>(
+        allComponents.FilterPanel,
+        baseComponentProps,
+      ),
+      ColumnsPanel: wrapWithProps<{}, BaseComponentProps>(
+        allComponents.ColumnsPanel,
+        baseComponentProps,
+      ),
     };
 
     apiRef.current.components = mappedComponents;
 
     return mappedComponents;
-  }, [apiRef, baseComponentProps, componentsProp]);
+  }, [apiRef, baseComponentProps, componentSlotsProp]);
+
+  apiRef.current.componentsProps = componentsProp;
 
   return components;
 };

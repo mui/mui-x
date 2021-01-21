@@ -406,3 +406,26 @@ export function DynamicIconUpdate() {
     </React.Fragment>
   );
 }
+
+function CustomFilterPanel(props: {bg?: string} & BaseComponentProps) {
+  return (
+    <div style={{width: 500, height: 100, background: props.bg, color: 'white'}}><h1>My Custom Filter Panel</h1></div>
+  )
+}
+function CustomColumnsPanel(props: {bg?: string} & BaseComponentProps) {
+  return (
+    <div style={{width: 500, height: 300, background: props.bg}}><h1>My Custom Columns Panel</h1></div>
+  )
+}
+export const CustomPanels = Template.bind({});
+CustomPanels.args = {
+  showToolbar: true,
+  components: {
+    FilterPanel: CustomFilterPanel,
+    ColumnsPanel: CustomColumnsPanel,
+  },
+  componentsProps: {
+    filterPanel: { bg: 'blue'},
+    columnsPanel: { bg: 'red'},
+  }
+};

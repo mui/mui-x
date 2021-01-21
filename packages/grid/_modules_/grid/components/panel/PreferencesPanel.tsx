@@ -5,8 +5,6 @@ import { preferencePanelStateSelector } from '../../hooks/features/preferencesPa
 import { PreferencePanelsValue } from '../../hooks/features/preferencesPanel/preferencesPanelValue';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { ApiContext } from '../api-context';
-import { ColumnsPanel } from './ColumnsPanel';
-import { FilterPanel } from './filterPanel/FilterPanel';
 import { Panel } from './Panel';
 
 export function PreferencesPanel() {
@@ -18,10 +16,12 @@ export function PreferencesPanel() {
   const isColumnsTabOpen = preferencePanelState.openedPanelValue === PreferencePanelsValue.columns;
   const isFiltersTabOpen = !preferencePanelState.openedPanelValue || !isColumnsTabOpen;
 
+  const ColumnSelectorComponent = apiRef!.current.components.ColumnsPanel!;
+  const FilterPanelComponent = apiRef!.current.components.FilterPanel!;
   return (
     <Panel open={columns.length > 0 && preferencePanelState.open}>
-      {!options.disableColumnSelector && isColumnsTabOpen && <ColumnsPanel />}
-      {!options.disableColumnFilter && isFiltersTabOpen && <FilterPanel />}
+      {!options.disableColumnSelector && isColumnsTabOpen && <ColumnSelectorComponent {...apiRef?.current.componentsProps?.columnsPanel} />}
+      {!options.disableColumnFilter && isFiltersTabOpen && <FilterPanelComponent {...apiRef?.current.componentsProps?.filterPanel}/>}
     </Panel>
   );
 }

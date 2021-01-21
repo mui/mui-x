@@ -86,7 +86,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useColumnResize(columnsHeaderRef, apiRef);
     usePagination(apiRef);
 
-    const components = useComponents(props.components, apiRef, rootContainerRef);
+    const components = useComponents(props.components, props.componentsProps, apiRef, rootContainerRef);
     useStateProp(apiRef, props.state);
     useRenderInfoLog(apiRef, logger);
 

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { GridIconSlotsComponent } from '../gridIconSlotsComponent';
+import { GridSlotsComponentProps } from '../gridSlotsComponentProps';
 
 export interface ApiRefComponentsProperty extends GridIconSlotsComponent {
   /**
@@ -30,6 +31,8 @@ export interface ApiRefComponentsProperty extends GridIconSlotsComponent {
    * Pagination component rendered in the grid footer by default.
    */
   Pagination: React.ElementType;
+  FilterPanel: React.ElementType;
+  ColumnsPanel: React.ElementType;
 }
 
 export interface ComponentsApi {
@@ -37,4 +40,5 @@ export interface ComponentsApi {
    * The set of overridable components used in the grid.
    */
   components: ApiRefComponentsProperty;
+  componentsProps?: GridSlotsComponentProps;
 }

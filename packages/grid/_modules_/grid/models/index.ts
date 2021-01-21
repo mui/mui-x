@@ -16,3 +16,4 @@ export * from './api';
 export * from './gridIconSlotsComponent';
 export * from './gridSlotsComponent';
 export * from './density';
+export * from './gridSlotsComponentProps';

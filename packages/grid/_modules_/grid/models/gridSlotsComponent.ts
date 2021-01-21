@@ -20,6 +20,8 @@ import {
 } from '../components/menu/columnMenu/GridColumnHeaderMenuItems';
 import { NoRowsOverlay } from '../components/NoRowsOverlay';
 import { Pagination } from '../components/Pagination';
+import { ColumnsPanel } from '../components/panel/ColumnsPanel';
+import { FilterPanel } from '../components/panel/filterPanel/FilterPanel';
 import { GridToolbar } from '../components/toolbar/GridToolbar';
 import { GridIconSlotsComponent } from './gridIconSlotsComponent';
 import { BaseComponentProps } from './params/baseComponentProps';
@@ -59,6 +61,9 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    * Pagination component rendered in the grid footer by default.
    */
   Pagination?: React.ElementType<BaseComponentProps>;
+
+  FilterPanel?: React.ElementType<BaseComponentProps>;
+  ColumnsPanel?: React.ElementType<BaseComponentProps>;
 }
 
 export const DEFAULT_SLOTS_ICONS: GridIconSlotsComponent = {
@@ -83,14 +88,7 @@ export const DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
   LoadingOverlay,
   NoRowsOverlay,
   Pagination,
+  FilterPanel,
+  ColumnsPanel,
 };
 
-export interface GridSlotsComponentProps {
-  columnMenu?: any;
-  errorOverlay?: any;
-  footer?: any;
-  header?: any;
-  loadingOverlay?: any;
-  noRowsOverlay?: any;
-  pagination?: any;
-}
