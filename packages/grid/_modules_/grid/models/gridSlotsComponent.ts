@@ -1,22 +1,36 @@
 import * as React from 'react';
-import { GridFooter, GridFooterProps } from '../components/GridFooter';
 import { ErrorOverlay, ErrorOverlayProps } from '../components/ErrorOverlay';
+import { GridFooter, GridFooterProps } from '../components/GridFooter';
 import {
-  GridColumnHeaderMenuItemsProps,
+  ArrowDownwardIcon,
+  ArrowUpwardIcon,
+  ColumnIcon,
+  FilterAltIcon,
+  FilterListIcon,
+  SeparatorIcon,
+  TableRowsIcon,
+  TripleDotsVerticalIcon,
+  ViewHeadlineIcon,
+  ViewStreamIcon,
+} from '../components/icons/index';
+import { LoadingOverlay } from '../components/LoadingOverlay';
+import {
   GridColumnHeaderMenuItems,
+  GridColumnHeaderMenuItemsProps,
 } from '../components/menu/columnMenu/GridColumnHeaderMenuItems';
 import { NoRowsOverlay } from '../components/NoRowsOverlay';
 import { Pagination } from '../components/Pagination';
 import { GridToolbar } from '../components/toolbar/GridToolbar';
-import { BaseComponentProps } from './params/componentParams';
-import { LoadingOverlay } from '../components/LoadingOverlay';
+import { GridIconSlotsComponent } from './gridIconSlotsComponent';
+import { BaseComponentProps } from './params/baseComponentProps';
 
 export type ColumnMenuProps = BaseComponentProps & GridColumnHeaderMenuItemsProps;
 
 /**
  * Grid components React prop interface containing all the overridable components.
+ *
  */
-export interface GridSlotsComponent {
+export interface GridSlotsComponent extends GridIconSlotsComponent {
   /**
    * Column menu component rendered by clicking on the 3 dots "kebab" icon in column headers.
    */
@@ -47,7 +61,21 @@ export interface GridSlotsComponent {
   Pagination?: React.ElementType<BaseComponentProps>;
 }
 
+export const DEFAULT_SLOTS_ICONS: GridIconSlotsComponent = {
+  OpenFilterButtonIcon: FilterListIcon,
+  ColumnFilteredIcon: FilterAltIcon,
+  ColumnSelectorIcon: ColumnIcon,
+  ColumnMenuIcon: TripleDotsVerticalIcon,
+  ColumnSortedAscendingIcon: ArrowUpwardIcon,
+  ColumnSortedDescendingIcon: ArrowDownwardIcon,
+  ColumnResizeIcon: SeparatorIcon,
+  DensityCompactIcon: ViewHeadlineIcon,
+  DensityStandardIcon: TableRowsIcon,
+  DensityComfortableIcon: ViewStreamIcon,
+};
+
 export const DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
+  ...DEFAULT_SLOTS_ICONS,
   ColumnMenu: GridColumnHeaderMenuItems,
   ErrorOverlay,
   Footer: GridFooter,

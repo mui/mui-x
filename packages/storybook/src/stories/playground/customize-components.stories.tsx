@@ -1,3 +1,4 @@
+import Button from '@material-ui/core/Button';
 import * as React from 'react';
 import { Story, Meta } from '@storybook/react';
 import {
@@ -9,6 +10,7 @@ import {
   HideColMenuItem,
   ColumnMenuProps,
   BaseComponentProps,
+  GridColumnHeaderMenuItems,
 } from '@material-ui/x-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CodeIcon from '@material-ui/icons/Code';
@@ -18,7 +20,6 @@ import Pagination from '@material-ui/lab/Pagination';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
 import CreateIcon from '@material-ui/icons/Create';
-import { GridColumnHeaderMenuItems } from '../../../../grid/_modules_/grid/components/menu/columnMenu/GridColumnHeaderMenuItems';
 import { useData } from '../../hooks/useData';
 
 export default {
@@ -29,13 +30,7 @@ export default {
       page: null,
     },
   },
-  decorators: [
-    (StoryFn) => (
-      <div className="grid-container">
-        <StoryFn />
-      </div>
-    ),
-  ],
+  decorators: [(StoryFn) => <StoryFn />],
 } as Meta;
 
 const columns: ColDef[] = [
@@ -58,7 +53,11 @@ const defaultData = { columns, rows };
 
 const Template: Story<XGridProps> = (args) => {
   const data = useData(500, 50);
-  return <XGrid {...data} {...args} />;
+  return (
+    <div className="grid-container">
+      <XGrid {...data} {...args} />
+    </div>
+  );
 };
 
 function LoadingComponent() {
@@ -110,9 +109,9 @@ function SortedAscending() {
 export const Icons = Template.bind({});
 Icons.args = {
   ...defaultData,
-  icons: {
-    ColumnSortedDescending: SortedDescending,
-    ColumnSortedAscending: SortedAscending,
+  components: {
+    ColumnSortedDescendingIcon: SortedDescending,
+    ColumnSortedAscendingIcon: SortedAscending,
   },
 };
 
@@ -354,3 +353,56 @@ UndefinedAllComponent.args = {
     LoadingOverlay: undefined,
   },
 };
+
+function MyIcon1() {
+  // eslint-disable-next-line jsx-a11y/accessible-emoji
+  return <span role="img">✅</span>;
+}
+
+function MyIcon2() {
+  // eslint-disable-next-line jsx-a11y/accessible-emoji
+  return <span role="img">💥</span>;
+}
+
+export function DynamicIconUpdate() {
+  const data = useData(2000, 200);
+  const [icon, setIcon] = React.useState<any>(() => MyIcon1);
+
+  return (
+    <React.Fragment>
+      <React.StrictMode>
+        <div>
+          <Button
+            component="button"
+            color="primary"
+            variant="outlined"
+            onClick={() => {
+              setIcon(() => MyIcon2);
+            }}
+          >
+            Change Icon
+          </Button>
+          <Button
+            component="button"
+            color="primary"
+            variant="outlined"
+            onClick={() => {
+              setIcon(undefined);
+            }}
+          >
+            Clear icon
+          </Button>
+        </div>
+        <div className="grid-container">
+          <XGrid
+            {...data}
+            components={{
+              DensityStandardIcon: icon,
+            }}
+            showToolbar
+          />
+        </div>
+      </React.StrictMode>
+    </React.Fragment>
+  );
+}

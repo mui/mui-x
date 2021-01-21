@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Badge from '@material-ui/core/Badge';
 import IconButton from '@material-ui/core/IconButton';
-import { IconsOptions, SortDirection } from '../../models/index';
-import { useIcons } from '../../hooks/utils/useIcons';
+import { GridIconSlotsComponent } from '../../models/gridIconSlotsComponent';
+import { SortDirection } from '../../models/sortModel';
 import { ApiContext } from '../api-context';
 
 export interface ColumnHeaderSortIconProps {
@@ -11,8 +11,9 @@ export interface ColumnHeaderSortIconProps {
   hide?: boolean;
 }
 
-function getIcon(icons: IconsOptions, direction: SortDirection) {
-  const Icon = direction === 'asc' ? icons!.ColumnSortedAscending! : icons!.ColumnSortedDescending!;
+function getIcon(icons: GridIconSlotsComponent, direction: SortDirection) {
+  const Icon =
+    direction === 'asc' ? icons!.ColumnSortedAscendingIcon! : icons!.ColumnSortedDescendingIcon!;
   return <Icon className="MuiDataGrid-sortIcon" />;
 }
 
@@ -20,7 +21,6 @@ export const ColumnHeaderSortIcon = React.memo(function ColumnHeaderSortIcon(
   props: ColumnHeaderSortIconProps,
 ) {
   const { direction, index, hide } = props;
-  const icons = useIcons();
   const apiRef = React.useContext(ApiContext);
 
   if (hide || direction == null) {
@@ -37,7 +37,7 @@ export const ColumnHeaderSortIcon = React.memo(function ColumnHeaderSortIcon(
               title={apiRef!.current.getLocaleText('columnHeaderSortIconLabel')}
               size="small"
             >
-              {getIcon(icons, direction)}
+              {getIcon(apiRef!.current.components, direction)}
             </IconButton>
           </Badge>
         )}
@@ -47,7 +47,7 @@ export const ColumnHeaderSortIcon = React.memo(function ColumnHeaderSortIcon(
             title={apiRef!.current.getLocaleText('columnHeaderSortIconLabel')}
             size="small"
           >
-            {getIcon(icons, direction)}
+            {getIcon(apiRef!.current.components, direction)}
           </IconButton>
         )}
       </div>

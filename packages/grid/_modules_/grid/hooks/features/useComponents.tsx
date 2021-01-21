@@ -1,14 +1,12 @@
 import * as React from 'react';
 import { GridFooterProps } from '../../components/GridFooter';
-import { GridColumnHeaderMenuItemsProps } from '../../components/menu/columnMenu/GridColumnHeaderMenuItems';
-import {
-  BaseComponentProps,
-  ApiRef,
-  GridSlotsComponent,
-  RootContainerRef,
-  DEFAULT_SLOTS_COMPONENTS,
-} from '../../models';
 import { ErrorOverlayProps } from '../../components/ErrorOverlay';
+import { GridColumnHeaderMenuItemsProps } from '../../components/menu/columnMenu/GridColumnHeaderMenuItems';
+import { ApiRef } from '../../models/api/apiRef';
+import { ApiRefComponentsProperty } from '../../models/api/componentsApi';
+import { DEFAULT_SLOTS_COMPONENTS, GridSlotsComponent } from '../../models/gridSlotsComponent';
+import { BaseComponentProps } from '../../models/params/baseComponentProps';
+import { RootContainerRef } from '../../models/rootContainerRef';
 import { optionsSelector } from '../utils/optionsSelector';
 import { visibleColumnsSelector } from './columns/columnsSelector';
 import { useGridSelector } from './core/useGridSelector';
@@ -18,6 +16,21 @@ import { unorderedRowModelsSelector } from './rows/rowsSelector';
 function EmptyComponent() {
   return null;
 }
+
+const wrapWithProps: <TProps, StaticProps>(
+  Component: React.ElementType<TProps & StaticProps> | undefined | null,
+  baseComponentProps: StaticProps,
+) => React.ElementType<TProps> = <TProps extends {}>(Component, baseComponentProps) => {
+  if (Component == null) {
+    return EmptyComponent;
+  }
+  const ComponentWithBase: React.ElementType<TProps> = (props: TProps) => {
+    const propsWithBase = { ...baseComponentProps, ...props };
+    return <Component {...propsWithBase} />;
+  };
+
+  return ComponentWithBase;
+};
 
 export const useComponents = (
   componentsProp: GridSlotsComponent | undefined,
@@ -41,33 +54,51 @@ export const useComponents = (
     [state, rows, columns, options, apiRef, gridRootRef],
   );
 
-  const components = React.useMemo(() => {
+  const components: ApiRefComponentsProperty = React.useMemo(() => {
     const allComponents = { ...DEFAULT_SLOTS_COMPONENTS, ...componentsProp };
 
-    const wrapWithBaseProps: <TProps>(
-      Component: React.ElementType<TProps & BaseComponentProps> | undefined | null,
-    ) => React.ElementType<TProps> = <TProps extends {}>(Component) => {
-      if (Component == null) {
-        return EmptyComponent;
-      }
-      const ComponentWithBase: React.ElementType<TProps> = (props: TProps) => {
-        const propsWithBase = { ...baseComponentProps, ...props };
-        return <Component {...propsWithBase} />;
-      };
-
-      return ComponentWithBase;
+    const mappedComponents = {
+      ColumnFilteredIcon: allComponents.ColumnFilteredIcon || EmptyComponent,
+      ColumnMenuIcon: allComponents.ColumnMenuIcon || EmptyComponent,
+      ColumnResizeIcon: allComponents.ColumnResizeIcon || EmptyComponent,
+      ColumnSelectorIcon: allComponents.ColumnSelectorIcon || EmptyComponent,
+      ColumnSortedAscendingIcon: allComponents.ColumnSortedAscendingIcon || EmptyComponent,
+      ColumnSortedDescendingIcon: allComponents.ColumnSortedDescendingIcon || EmptyComponent,
+      DensityComfortableIcon: allComponents.DensityComfortableIcon || EmptyComponent,
+      DensityCompactIcon: allComponents.DensityCompactIcon || EmptyComponent,
+      DensityStandardIcon: allComponents.DensityStandardIcon || EmptyComponent,
+      OpenFilterButtonIcon: allComponents.OpenFilterButtonIcon || EmptyComponent,
+      ColumnMenu: wrapWithProps<GridColumnHeaderMenuItemsProps, BaseComponentProps>(
+        allComponents.ColumnMenu,
+        baseComponentProps,
+      ),
+      ErrorOverlay: wrapWithProps<ErrorOverlayProps, BaseComponentProps>(
+        allComponents.ErrorOverlay,
+        baseComponentProps,
+      ),
+      Footer: wrapWithProps<GridFooterProps, BaseComponentProps>(
+        allComponents.Footer,
+        baseComponentProps,
+      ),
+      Header: wrapWithProps<{}, BaseComponentProps>(allComponents.Header, baseComponentProps),
+      LoadingOverlay: wrapWithProps<{}, BaseComponentProps>(
+        allComponents.LoadingOverlay,
+        baseComponentProps,
+      ),
+      NoRowsOverlay: wrapWithProps<{}, BaseComponentProps>(
+        allComponents.NoRowsOverlay,
+        baseComponentProps,
+      ),
+      Pagination: wrapWithProps<{}, BaseComponentProps>(
+        allComponents.Pagination,
+        baseComponentProps,
+      ),
     };
 
-    return {
-      ColumnMenu: wrapWithBaseProps<GridColumnHeaderMenuItemsProps>(allComponents.ColumnMenu),
-      ErrorOverlay: wrapWithBaseProps<ErrorOverlayProps>(allComponents.ErrorOverlay),
-      Footer: wrapWithBaseProps<GridFooterProps>(allComponents.Footer),
-      Header: wrapWithBaseProps<{}>(allComponents.Header),
-      LoadingOverlay: wrapWithBaseProps<{}>(allComponents.LoadingOverlay),
-      NoRowsOverlay: wrapWithBaseProps<{}>(allComponents.NoRowsOverlay),
-      Pagination: wrapWithBaseProps<{}>(allComponents.Pagination),
-    };
-  }, [baseComponentProps, componentsProp]);
+    apiRef.current.components = mappedComponents;
+
+    return mappedComponents;
+  }, [apiRef, baseComponentProps, componentsProp]);
 
   return components;
 };

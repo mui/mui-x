@@ -1,5 +1,6 @@
 import { ColumnMenuApi } from './columnMenuApi';
 import { ColumnResizeApi } from './columnResizeApi';
+import { ComponentsApi } from './componentsApi';
 import { FilterApi } from './filterApi';
 import { PreferencesPanelApi } from './preferencesPanelApi';
 import { RowApi } from './rowApi';
@@ -19,6 +20,7 @@ import { LocaleTextApi } from './localeTextApi';
  * The full grid API.
  */
 export type GridApi = CoreApi &
+  ComponentsApi &
   StateApi &
   DensityApi &
   EventsApi &

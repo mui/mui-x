@@ -1,16 +1,3 @@
-import * as React from 'react';
-import {
-  ArrowDownwardIcon,
-  ArrowUpwardIcon,
-  ColumnIcon,
-  FilterAltIcon,
-  FilterListIcon,
-  SeparatorIcon,
-  TableRowsIcon,
-  TripleDotsVerticalIcon,
-  ViewHeadlineIcon,
-  ViewStreamIcon,
-} from '../components/icons/index';
 import { DEFAULT_LOCALE_TEXT } from '../constants/localeTextConstants';
 import { FilterModel } from '../hooks/features/filter/FilterModelState';
 import { Logger } from '../hooks/utils/useLogger';
@@ -28,52 +15,6 @@ import { RowSelectedParams } from './params/rowSelectedParams';
 import { SelectionChangeParams } from './params/selectionChangeParams';
 import { SortModelParams } from './params/sortModelParams';
 import { SortDirection, SortModel } from './sortModel';
-
-/**
- * Set of icons used in the grid component UI.
- */
-export interface IconsOptions {
-  /**
-   * Icon displayed on the side of the column header title to display the filter input component.
-   */
-  ColumnMenu?: React.ElementType;
-  /**
-   * Icon displayed on the open filter button present in the toolbar by default
-   */
-  OpenFilterButtonIcon?: React.ElementType;
-  /**
-   * Icon displayed on the column header menu to show that a filer has been applied to the column.
-   */
-  ColumnFiltered?: React.ElementType;
-  /**
-   * Icon displayed on the column menu selector tab.
-   */
-  ColumnSelector?: React.ElementType;
-  /**
-   * Icon displayed on the side of the column header title when sorted in Ascending order.
-   */
-  ColumnSortedAscending?: React.ElementType;
-  /**
-   * Icon displayed on the side of the column header title when sorted in Descending order.
-   */
-  ColumnSortedDescending?: React.ElementType;
-  /**
-   * Icon displayed in between two column headers that allows to resize the column header.
-   */
-  ColumnResize?: React.ElementType<{ className: string }>;
-  /**
-   * Icon displayed on the compact density option in the toolbar.
-   */
-  DensityCompact?: React.ElementType;
-  /**
-   * Icon displayed on the standard density option in the toolbar.
-   */
-  DensityStandard?: React.ElementType;
-  /**
-   * Icon displayed on the comfortable density option in the toolbar.
-   */
-  DensityComfortable?: React.ElementType;
-}
 
 // TODO add multiSortKey
 /**
@@ -334,10 +275,6 @@ export interface GridOptions {
    */
   onStateChange?: (params: any) => void;
   /**
-   * Set of icons used in the grid.
-   */
-  icons: IconsOptions;
-  /**
    * Extend native column types with your new column types.
    */
   columnTypes: ColumnTypesRecord;
@@ -370,16 +307,4 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   density: DensityTypes.Standard,
   showToolbar: false,
   localeText: DEFAULT_LOCALE_TEXT,
-  icons: {
-    OpenFilterButtonIcon: FilterListIcon,
-    ColumnFiltered: FilterAltIcon,
-    ColumnSelector: ColumnIcon,
-    ColumnMenu: TripleDotsVerticalIcon,
-    ColumnSortedAscending: ArrowUpwardIcon,
-    ColumnSortedDescending: ArrowDownwardIcon,
-    ColumnResize: SeparatorIcon,
-    DensityCompact: ViewHeadlineIcon,
-    DensityStandard: TableRowsIcon,
-    DensityComfortable: ViewStreamIcon,
-  },
 };

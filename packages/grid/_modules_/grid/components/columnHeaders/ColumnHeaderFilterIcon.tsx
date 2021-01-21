@@ -6,7 +6,6 @@ import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { preferencePanelStateSelector } from '../../hooks/features/preferencesPanel/preferencePanelSelector';
 import { PreferencePanelsValue } from '../../hooks/features/preferencesPanel/preferencesPanelValue';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
-import { useIcons } from '../../hooks/utils/useIcons';
 import { ApiContext } from '../api-context';
 
 export interface ColumnHeaderFilterIconProps {
@@ -19,10 +18,8 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
   const options = useGridSelector(apiRef, optionsSelector);
   const preferencePanel = useGridSelector(apiRef, preferencePanelStateSelector);
 
-  const icons = useIcons();
-  const filteredColumnIconElement = React.createElement(icons.ColumnFiltered!, {
-    fontSize: 'small',
-  });
+  const FilteredColumnIconElement = apiRef!.current.components.ColumnFilteredIcon!;
+
   const toggleFilter = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
@@ -49,7 +46,7 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
       aria-label={apiRef!.current.getLocaleText('columnHeaderFiltersLabel')}
       size="small"
     >
-      {filteredColumnIconElement}
+      <FilteredColumnIconElement fontSize="small" />
     </IconButton>
   );
 

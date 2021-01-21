@@ -5,12 +5,11 @@ import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { findHeaderElementFromField } from '../../../utils/domUtils';
 import { ApiContext } from '../../api-context';
 import { GridMenu } from '../GridMenu';
-import { GridColumnHeaderMenuItemsProps } from './GridColumnHeaderMenuItems';
 
 const columnMenuStateSelector = (state: GridState) => state.columnMenu;
 
 export interface GridColumnHeaderMenuProps {
-  ContentComponent: React.ElementType<GridColumnHeaderMenuItemsProps>;
+  ContentComponent: React.ElementType;
   contentComponentProps?: any;
 }
 
