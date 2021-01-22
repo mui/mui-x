@@ -11,7 +11,10 @@ import pkg from './x-grid-data-generator/package.json';
 const production = !process.env.ROLLUP_WATCH;
 export default [
   {
-    input: { index: 'src/index.ts', 'datagen-cli': 'src/datagen-cli.ts' },
+    input: {
+      index: './x-grid-data-generator/src/index.ts',
+      'datagen-cli': './x-grid-data-generator/src/datagen-cli.ts',
+    },
     output: [
       {
         dir: './x-grid-data-generator/dist/esm',
