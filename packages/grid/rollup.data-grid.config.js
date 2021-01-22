@@ -46,6 +46,7 @@ export default [
             `rm -rf ./data-grid/dist/data-grid/`,
             `rm -rf ./data-grid/dist/_modules_ `,
             `rm -rf ./data-grid/dist/x-grid`,
+            `rm -rf ./data-grid/dist/x-grid-data-generator`,
           ],
           {
             exitOnFail: true,

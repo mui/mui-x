@@ -18,9 +18,10 @@
   },
   "scripts": {
     "precommit": "npm run lint",
-    "build": "rollup -c",
-    "start": "rollup -cw",
-    "lint": "../../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../.eslintrc.js"
+    "build": "cd ../ && rollup --config rollup.x-grid-data-generator.config.js",
+    "start": "cd ../ && rollup --cw rollup.x-grid-data-generator.config.js",
+    "lint": "../../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../.eslintrc.js",
+    "typescript": "tsc -p tsconfig.json"
   },
   "dependencies": {
     "@types/chance": "^1.1.0",

@@ -4,7 +4,7 @@ import sourceMaps from 'rollup-plugin-sourcemaps';
 import { terser } from 'rollup-plugin-terser';
 import commonjs from 'rollup-plugin-commonjs';
 import dts from 'rollup-plugin-dts';
-import pkg from './package.json';
+import pkg from './x-grid-data-generator/package.json';
 
 // dev build if watching, prod build if not
 const production = !process.env.ROLLUP_WATCH;
