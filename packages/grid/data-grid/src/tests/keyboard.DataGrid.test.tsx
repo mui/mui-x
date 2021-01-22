@@ -120,9 +120,9 @@ describe('<DataGrid /> - Keyboard', () => {
         <DataGrid rows={rows} columns={columns} />
       </div>,
     );
-    getCell(0, 0).focus();
-    // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
-    fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+    const firstCell = getCell(0, 0);
+    firstCell.focus();
+    fireEvent.keyDown(firstCell, { key: 'ArrowRight' });
     expect(handleKeyDown.returnValues).to.deep.equal([true]);
   });
 
