@@ -76,7 +76,7 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
   );
 
   const navigateCells = React.useCallback(
-    (code: string, isCtrlPressed: boolean) => {
+    (key: string, isCtrlPressed: boolean) => {
       const cellEl = findParentElementFromClassName(
         document.activeElement as HTMLDivElement,
         CELL_CSS_CLASS,
@@ -90,13 +90,13 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
         : totalRowCount;
 
       let nextCellIndexes: CellIndexCoordinates;
-      if (isArrowKeys(code)) {
-        nextCellIndexes = getNextCellIndexes(code, {
+      if (isArrowKeys(key)) {
+        nextCellIndexes = getNextCellIndexes(key, {
           colIndex: currentColIndex,
           rowIndex: currentRowIndex,
         });
-      } else if (isHomeOrEndKeys(code)) {
-        const colIdx = code === 'Home' ? 0 : colCount - 1;
+      } else if (isHomeOrEndKeys(key)) {
+        const colIdx = key === 'Home' ? 0 : colCount - 1;
 
         if (!isCtrlPressed) {
           // we go to the current row, first col, or last col!
@@ -111,10 +111,10 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
           }
           nextCellIndexes = { colIndex: colIdx, rowIndex };
         }
-      } else if (isPageKeys(code) || isSpaceKey(code)) {
+      } else if (isPageKeys(key) || isSpaceKey(key)) {
         const nextRowIndex =
           currentRowIndex +
-          (code.indexOf('Down') > -1 || isSpaceKey(code)
+          (key.indexOf('Down') > -1 || isSpaceKey(key)
             ? containerSizes!.viewportPageSize
             : -1 * containerSizes!.viewportPageSize);
         nextCellIndexes = { colIndex: currentColIndex, rowIndex: nextRowIndex };
@@ -167,7 +167,7 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
   }, [apiRef]);
 
   const expandSelection = React.useCallback(
-    (code: string) => {
+    (key: string) => {
       const rowEl = findParentElementFromClassName(
         document.activeElement as HTMLDivElement,
         ROW_CSS_CLASS,
@@ -190,7 +190,7 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
         selectionFromRowIndex = selectedRowsIndex[diffWithCurrentIndex.indexOf(minIndex)];
       }
 
-      const nextCellIndexes = navigateCells(code, false);
+      const nextCellIndexes = navigateCells(key, false);
       // We select the rows in between
       const rowIds = Array(Math.abs(nextCellIndexes.rowIndex - selectionFromRowIndex) + 1)
         .fill(

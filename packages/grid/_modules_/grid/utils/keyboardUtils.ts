@@ -1,10 +1,10 @@
 export const MULTIPLE_SELECTION_KEYS = ['Meta', 'Control'];
-export const isMultipleKey = (code: string): boolean => MULTIPLE_SELECTION_KEYS.indexOf(code) > -1;
-export const isTabKey = (code: string): boolean => code === 'Tab';
-export const isSpaceKey = (code: string): boolean => code === 'Space';
-export const isArrowKeys = (code: string): boolean => code.indexOf('Arrow') === 0;
-export const isHomeOrEndKeys = (code: string): boolean => code === 'Home' || code === 'End';
-export const isPageKeys = (code: string): boolean => code.indexOf('Page') === 0;
+export const isMultipleKey = (key: string): boolean => MULTIPLE_SELECTION_KEYS.indexOf(key) > -1;
+export const isTabKey = (key: string): boolean => key === 'Tab';
+export const isSpaceKey = (key: string): boolean => key === ' ';
+export const isArrowKeys = (key: string): boolean => key.indexOf('Arrow') === 0;
+export const isHomeOrEndKeys = (key: string): boolean => key === 'Home' || key === 'End';
+export const isPageKeys = (key: string): boolean => key.indexOf('Page') === 0;
 
-export const isNavigationKey = (code: string) =>
-  isHomeOrEndKeys(code) || isArrowKeys(code) || isPageKeys(code) || isSpaceKey(code);
+export const isNavigationKey = (key: string) =>
+  isHomeOrEndKeys(key) || isArrowKeys(key) || isPageKeys(key) || isSpaceKey(key);
