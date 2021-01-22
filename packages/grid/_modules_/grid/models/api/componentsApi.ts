@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridIconSlotsComponent } from '../gridIconSlotsComponent';
-import { GridSlotsComponentProps } from '../gridSlotsComponentProps';
+import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 
 export interface ApiRefComponentsProperty extends GridIconSlotsComponent {
   /**
@@ -53,5 +53,5 @@ export interface ComponentsApi {
   /**
    * Overrideable components props dynamic passed to the component at rendering.
    */
-  componentsProps?: GridSlotsComponentProps;
+  componentsProps?: GridSlotsComponentsProps;
 }

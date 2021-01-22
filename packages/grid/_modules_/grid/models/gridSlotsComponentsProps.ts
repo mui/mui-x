@@ -1,7 +1,7 @@
 /**
  * Overrideable components props dynamic passed to the component at rendering.
  */
-export interface GridSlotsComponentProps {
+export interface GridSlotsComponentsProps {
   columnMenu?: any;
   errorOverlay?: any;
   footer?: any;

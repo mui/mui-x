@@ -5,7 +5,7 @@ import { PanelProps } from '../../components/panel/Panel';
 import { ApiRef } from '../../models/api/apiRef';
 import { ApiRefComponentsProperty } from '../../models/api/componentsApi';
 import { DEFAULT_SLOTS_COMPONENTS, GridSlotsComponent } from '../../models/gridSlotsComponent';
-import { GridSlotsComponentProps } from '../../models/gridSlotsComponentProps';
+import { GridSlotsComponentsProps } from '../../models/gridSlotsComponentsProps';
 import { BaseComponentProps } from '../../models/params/baseComponentProps';
 import { RootContainerRef } from '../../models/rootContainerRef';
 import { optionsSelector } from '../utils/optionsSelector';
@@ -35,7 +35,7 @@ const wrapWithProps: <TProps, StaticProps>(
 
 export const useComponents = (
   componentSlotsProp: GridSlotsComponent | undefined,
-  componentsProp: GridSlotsComponentProps | undefined,
+  componentsProps: GridSlotsComponentsProps | undefined,
   apiRef: ApiRef,
   gridRootRef: RootContainerRef,
 ) => {
@@ -108,7 +108,7 @@ export const useComponents = (
     return mappedComponents;
   }, [apiRef, baseComponentProps, componentSlotsProp]);
 
-  apiRef.current.componentsProps = componentsProp;
+  apiRef.current.componentsProps = componentsProps;
 
   return components;
 };
