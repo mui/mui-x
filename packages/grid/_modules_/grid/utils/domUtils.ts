@@ -13,12 +13,15 @@ export function findParentElementFromClassName(elem: Element, className: string)
   return elem.closest(`.${className}`);
 }
 
-export function isCell(elem: Element | null): boolean {
-  return elem != null && findParentElementFromClassName(elem, CELL_CSS_CLASS) !== null;
-}
-
 export function isCellRoot(elem: Element | null): boolean {
   return elem != null && elem.classList.contains(CELL_CSS_CLASS);
+}
+
+export function isCell(elem: Element | null): boolean {
+  return (
+    elem != null &&
+    (isCellRoot(elem) || findParentElementFromClassName(elem, CELL_CSS_CLASS) !== null)
+  );
 }
 
 export function isHeaderTitleContainer(elem: Element): boolean {
