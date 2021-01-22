@@ -10,13 +10,13 @@ import { isMuiV5 } from '../utils';
 // Used to hide the drop down select from the TablePaginagion
 const useStyles = makeStyles((theme: Theme) => ({
   caption: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'block',
-    },
-    '& ~ &': {
-      display: 'block',
-    },
+    // input label
+    ['&[id]']: {
+      display: 'none',
+      [theme.breakpoints.up('md')]: {
+        display: 'block',
+      },
+    }
   },
   input: {
     display: 'none',
