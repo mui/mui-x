@@ -48,10 +48,10 @@ export default [
       production &&
         command(
           [
-            `rm -rf ./data-grid/dist/data-grid/`,
-            `rm -rf ./data-grid/dist/_modules_ `,
-            `rm -rf ./data-grid/dist/x-grid`,
-            `rm -rf ./data-grid/dist/x-grid-data-generator`,
+            `rm -rf ./x-grid-data-generator/dist/data-grid/`,
+            `rm -rf ./x-grid-data-generator/dist/_modules_ `,
+            `rm -rf ./x-grid-data-generator/dist/x-grid`,
+            `rm -rf ./x-grid-data-generator/dist/x-grid-data-generator`,
           ],
           {
             exitOnFail: true,
