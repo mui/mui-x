@@ -56,8 +56,10 @@ export const useStyles = makeStyles(
           display: 'flex',
           flexDirection: 'column',
           flex: 1,
+          boxSizing: 'content-box',
         },
         '& .MuiDataGrid-panelHeader': {
+          boxSizing: 'content-box',
           padding: 8,
         },
         '& .MuiDataGrid-panelContainer': {
@@ -65,8 +67,10 @@ export const useStyles = makeStyles(
           flexDirection: 'column',
           overflow: 'auto',
           flex: '1 1',
+          boxSizing: 'content-box',
         },
         '& .MuiDataGrid-panelFooter': {
+          boxSizing: 'content-box',
           padding: 4,
           display: 'flex',
           justifyContent: 'space-between',
