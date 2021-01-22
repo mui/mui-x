@@ -1,3 +1,5 @@
+import { expect } from "chai";
+
 export async function raf() {
   return new Promise<void>((resolve) => {
     // Chrome and Safari have a bug where calling rAF once returns the current
@@ -58,10 +60,7 @@ export function getCell(rowIndex: number, colIndex: number): HTMLElement {
   }
   return cell as HTMLElement;
 }
-export function focusCell(rowIndex: number, colIndex: number) {
-  const cell = getCell(rowIndex, colIndex);
-  cell.focus();
-}
+
 export function getRow(rowIndex: number): HTMLElement {
   const row = document.querySelector(`[role="row"][data-rowindex="${rowIndex}"]`);
   if (row == null) {

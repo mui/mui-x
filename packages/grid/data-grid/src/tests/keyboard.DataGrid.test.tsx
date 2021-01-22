@@ -12,7 +12,7 @@ import {
 } from 'test/utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { focusCell, getActiveCell, getCell, getRow } from 'test/utils/helperFn';
+import { getActiveCell, getCell, getRow } from 'test/utils/helperFn';
 import { DataGrid } from '@material-ui/data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { Columns } from 'packages/grid/_modules_/grid/models/colDef/colDef';
@@ -120,8 +120,8 @@ describe('<DataGrid /> - Keyboard', () => {
         <DataGrid rows={rows} columns={columns} />
       </div>,
     );
-    focusCell(0, 0);
-    expect(getActiveCell()).to.equal('0-0');
+    getCell(0, 0).focus();
+    // eslint-disable-next-line material-ui/disallow-active-element-as-key-event-target
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
     expect(handleKeyDown.returnValues).to.deep.equal([true]);
   });
@@ -141,7 +141,7 @@ describe('<DataGrid /> - Keyboard', () => {
   /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
   it('cell navigation with arrows', () => {
     render(<KeyboardTest />);
-    focusCell(0, 0);
+    getCell(0, 0).focus();
     expect(getActiveCell()).to.equal('0-0');
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
     expect(getActiveCell()).to.equal('0-1');
@@ -155,7 +155,7 @@ describe('<DataGrid /> - Keyboard', () => {
 
   it('Shift + Space should select a row', () => {
     render(<KeyboardTest />);
-    focusCell(0, 0);
+    getCell(0, 0).focus();
     expect(getActiveCell()).to.equal('0-0');
     fireEvent.keyDown(document.activeElement!, SHIFT_SPACE_KEY);
     const row = getRow(0);
@@ -165,7 +165,7 @@ describe('<DataGrid /> - Keyboard', () => {
 
   it('Space only should go to the bottom of the page', async () => {
     render(<KeyboardTest />);
-    focusCell(0, 0);
+    getCell(0, 0).focus();
     expect(getActiveCell()).to.equal('0-0');
     fireEvent.keyDown(document.activeElement!, SPACE_KEY);
     expect(getActiveCell()).to.equal('3-0');
@@ -173,7 +173,7 @@ describe('<DataGrid /> - Keyboard', () => {
 
   it('Home / End navigation', async () => {
     render(<KeyboardTest />);
-    focusCell(1, 1);
+    getCell(1, 1).focus();
     expect(getActiveCell()).to.equal('1-1');
     fireEvent.keyDown(document.activeElement!, { key: 'Home' });
     expect(getActiveCell()).to.equal('1-0');
