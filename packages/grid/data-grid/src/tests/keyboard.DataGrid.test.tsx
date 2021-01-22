@@ -163,7 +163,7 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(isSelected).to.equal(true);
   });
 
-  it('Space only should go to the bottom of the page', async () => {
+  it('Space only should go to the bottom of the page', () => {
     render(<KeyboardTest />);
     getCell(0, 0).focus();
     expect(getActiveCell()).to.equal('0-0');
