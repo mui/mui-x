@@ -4,6 +4,7 @@ import sourceMaps from 'rollup-plugin-sourcemaps';
 import { terser } from 'rollup-plugin-terser';
 import commonjs from 'rollup-plugin-commonjs';
 import dts from 'rollup-plugin-dts';
+import command from 'rollup-plugin-command';
 import pkg from './x-grid-data-generator/package.json';
 
 // dev build if watching, prod build if not
@@ -13,12 +14,12 @@ export default [
     input: { index: 'src/index.ts', 'datagen-cli': 'src/datagen-cli.ts' },
     output: [
       {
-        dir: 'dist/esm',
+        dir: './x-grid-data-generator/dist/esm',
         format: 'esm',
         sourcemap: !production,
       },
       {
-        dir: 'dist/cjs',
+        dir: './x-grid-data-generator/dist/cjs',
         format: 'cjs',
         sourcemap: !production,
       },
@@ -27,7 +28,7 @@ export default [
     plugins: [
       production &&
         cleaner({
-          targets: ['./dist/'],
+          targets: ['./x-grid-data-generator/dist/'],
         }),
       typescript({ tsconfig: 'tsconfig.build.json' }),
       commonjs(),
@@ -36,8 +37,23 @@ export default [
     ],
   },
   {
-    input: './dist/esm/index.d.ts',
-    output: [{ file: 'dist/esm/x-grid-data-generator.d.ts', format: 'es' }],
-    plugins: [dts(), !production && sourceMaps()],
+    input: './x-grid-data-generator/dist/esm/index.d.ts',
+    output: [{ file: './x-grid-data-generator/dist/esm/x-grid-data-generator.d.ts', format: 'es' }],
+    plugins: [
+      dts(),
+      !production && sourceMaps(),
+      production &&
+        command(
+          [
+            `rm -rf ./data-grid/dist/data-grid/`,
+            `rm -rf ./data-grid/dist/_modules_ `,
+            `rm -rf ./data-grid/dist/x-grid`,
+            `rm -rf ./data-grid/dist/x-grid-data-generator`,
+          ],
+          {
+            exitOnFail: true,
+            wait: true,
+          },
+        ),],
   },
 ];
