@@ -54,6 +54,7 @@ export default [
             exitOnFail: true,
             wait: true,
           },
-        ),],
+        ),
+    ],
   },
 ];
