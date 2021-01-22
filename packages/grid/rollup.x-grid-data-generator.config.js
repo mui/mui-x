@@ -40,7 +40,7 @@ export default [
     ],
   },
   {
-    input: './x-grid-data-generator/dist/esm/index.d.ts',
+    input: './x-grid-data-generator/dist/esm/x-grid-data-generator/src/index.d.ts',
     output: [{ file: './x-grid-data-generator/dist/esm/x-grid-data-generator.d.ts', format: 'es' }],
     plugins: [
       dts(),
