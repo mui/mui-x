@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       [theme.breakpoints.up('md')]: {
         display: 'block',
       },
-    }
+    },
   },
   input: {
     display: 'none',
