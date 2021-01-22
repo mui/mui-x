@@ -1,5 +1,3 @@
-import { expect } from 'chai';
-
 export async function raf() {
   return new Promise<void>((resolve) => {
     // Chrome and Safari have a bug where calling rAF once returns the current
