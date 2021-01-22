@@ -49,6 +49,7 @@ export function getColumnHeaders() {
     (node) => node!.textContent,
   );
 }
+
 export function getCell(rowIndex: number, colIndex: number): HTMLElement {
   const cell = document.querySelector(
     `[role="cell"][data-rowindex="${rowIndex}"][aria-colindex="${colIndex}"]`,
