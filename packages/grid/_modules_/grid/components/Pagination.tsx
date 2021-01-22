@@ -7,7 +7,7 @@ import { optionsSelector } from '../hooks/utils/optionsSelector';
 import { ApiContext } from './api-context';
 import { isMuiV5 } from '../utils';
 
-// Used to hide the drop down select from the TablePaginagion
+// Used to hide the Rows per page selector on small devices
 const useStyles = makeStyles((theme: Theme) => ({
   caption: {
     // input label
