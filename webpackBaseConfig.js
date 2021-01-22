@@ -10,7 +10,7 @@ module.exports = {
       '@material-ui/data-grid': path.resolve(__dirname, './packages/grid/data-grid/src'),
       '@material-ui/x-grid-data-generator': path.resolve(
         __dirname,
-        './packages/x-grid-data-generator/src',
+        './packages/grid/x-grid-data-generator/src',
       ),
       '@material-ui/x-grid': path.resolve(__dirname, './packages/grid/x-grid/src'),
       '@material-ui/x-license': path.resolve(__dirname, './packages/x-license/src'),
