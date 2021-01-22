@@ -14,7 +14,7 @@ import {
   PanelProps,
   PreferencesPanel,
   GridFooter,
-  GridToolbar
+  GridToolbar,
 } from '@material-ui/x-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CodeIcon from '@material-ui/icons/Code';
