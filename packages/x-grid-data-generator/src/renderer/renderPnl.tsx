@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { CellParams, getThemePaletteMode } from '@material-ui/data-grid';
+import { CellParams, getThemePaletteMode } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
