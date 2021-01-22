@@ -11,7 +11,7 @@ import { isMuiV5 } from '../utils';
 const useStyles = makeStyles((theme: Theme) => ({
   caption: {
     // input label
-    ['&[id]']: {
+    '&[id]': {
       display: 'none',
       [theme.breakpoints.up('md')]: {
         display: 'block',
