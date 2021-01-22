@@ -63,11 +63,11 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   Pagination?: React.ElementType<BaseComponentProps>;
   /**
-   * FilterPanel component rendered when clicking the filter button.
+   * Filter panel component rendered when clicking the filter button.
    */
   FilterPanel?: React.ElementType<BaseComponentProps>;
   /**
-   * ColumnsPanel component rendered when clicking the columns button.
+   * Columns panel component rendered when clicking the columns button.
    */
   ColumnsPanel?: React.ElementType<BaseComponentProps>;
   /**
