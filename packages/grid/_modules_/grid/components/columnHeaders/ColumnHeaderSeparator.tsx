@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
-import { useIcons } from '../../hooks/utils/useIcons';
 import { classnames } from '../../utils/index';
 import { ApiContext } from '../api-context';
 
@@ -15,10 +14,9 @@ export const ColumnHeaderSeparator = React.memo(function ColumnHeaderSeparator(
   props: ColumnHeaderSeparatorProps,
 ) {
   const { resizable, resizing, height, ...other } = props;
-  const icons = useIcons();
   const apiRef = React.useContext(ApiContext);
   const { showColumnRightBorder } = useGridSelector(apiRef, optionsSelector);
-  const Icon = icons!.ColumnResize!;
+  const ColumnResizeIcon = apiRef!.current.components!.ColumnResizeIcon!;
 
   const stopClick = React.useCallback((event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -36,7 +34,7 @@ export const ColumnHeaderSeparator = React.memo(function ColumnHeaderSeparator(
       {...other}
       onClick={stopClick}
     >
-      <Icon className="MuiDataGrid-iconSeparator" />
+      <ColumnResizeIcon className="MuiDataGrid-iconSeparator" />
     </div>
   );
 });

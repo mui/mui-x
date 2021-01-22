@@ -1,7 +1,7 @@
 import * as styles from '@material-ui/core/styles';
-import isEqual from '../lib/lodash/isEqual';
+import isDeepEqual from '../lib/lodash/isDeepEqual';
 
-export { isEqual };
+export { isDeepEqual };
 
 export interface DebouncedFunction extends Function {
   cancel: () => void;

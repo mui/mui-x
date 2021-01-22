@@ -3,7 +3,6 @@ import IconButton from '@material-ui/core/IconButton';
 import { columnMenuStateSelector } from '../../hooks/features/columnMenu/columnMenuSelector';
 import { GridState } from '../../hooks/features/core/gridState';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { useIcons } from '../../hooks/utils/useIcons';
 import { classnames } from '../../utils/classnames';
 import { ApiContext } from '../api-context';
 import { ColDef } from '../../models/colDef/colDef';
@@ -14,10 +13,9 @@ export interface ColumnHeaderFilterIconProps {
 
 export function ColumnHeaderMenuIcon(props: ColumnHeaderFilterIconProps) {
   const { column } = props;
-  const icons = useIcons();
   const apiRef = React.useContext(ApiContext);
   const columnMenuState = useGridSelector(apiRef, columnMenuStateSelector);
-  const Icon = icons.ColumnMenu as React.ElementType;
+  const ColumnMenuIcon = apiRef!.current.components.ColumnMenuIcon!;
 
   const handleMenuIconClick = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -43,7 +41,7 @@ export function ColumnHeaderMenuIcon(props: ColumnHeaderFilterIconProps) {
         size="small"
         onClick={handleMenuIconClick}
       >
-        <Icon fontSize="small" />
+        <ColumnMenuIcon fontSize="small" />
       </IconButton>
     </div>
   );

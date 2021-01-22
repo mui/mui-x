@@ -3,7 +3,7 @@ export { default as isArguments } from './isArguments.js';
 export { default as isArray } from './isArray.js';
 export { default as isArrayLike } from './isArrayLike.js';
 export { default as isBuffer } from './isBuffer.js';
-export { default as isEqual } from './isEqual.js';
+export { default as isDeepEqual } from './isDeepEqual.js';
 export { default as isFunction } from './isFunction.js';
 export { default as isLength } from './isLength.js';
 export { default as isObject } from './isObject.js';

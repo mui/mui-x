@@ -5,7 +5,7 @@ import { VirtualizationApi } from '../../../models/api/virtualizationApi';
 import { CellIndexCoordinates } from '../../../models/cell';
 import { ScrollParams } from '../../../models/params/scrollParams';
 import { RenderContextProps, RenderRowProps } from '../../../models/renderContextProps';
-import { isEqual } from '../../../utils/utils';
+import { isDeepEqual } from '../../../utils/utils';
 import { useEnhancedEffect } from '../../../utils/material-ui-utils';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { columnsMetaSelector, visibleColumnsSelector } from '../columns/columnsSelector';
@@ -48,7 +48,7 @@ export const useVirtualRows = (
       let stateChanged = false;
       setGridState((oldState) => {
         const currentRenderingState = { ...oldState.rendering, ...state };
-        if (!isEqual(oldState.rendering, currentRenderingState)) {
+        if (!isDeepEqual(oldState.rendering, currentRenderingState)) {
           stateChanged = true;
           return { ...oldState, rendering: currentRenderingState };
         }
