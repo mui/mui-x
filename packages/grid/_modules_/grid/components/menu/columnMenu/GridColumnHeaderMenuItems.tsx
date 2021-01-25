@@ -23,7 +23,13 @@ export function GridColumnHeaderMenuItems(props: GridColumnHeaderMenuItemsProps)
     [hideMenu],
   );
   return (
-    <MenuList aria-labelledby={`menu-button-${currentColumn.field}`} autoFocus autoFocusItem id="menu-list-grow" onKeyDown={handleListKeyDown}>
+    <MenuList
+      aria-labelledby={`menu-button-${currentColumn.field}`}
+      autoFocus
+      autoFocusItem
+      id="menu-list-grow"
+      onKeyDown={handleListKeyDown}
+    >
       <SortMenuItems onClick={hideMenu} column={currentColumn!} />
       <FilterMenuItem onClick={hideMenu} column={currentColumn!} />
       <HideColMenuItem onClick={hideMenu} column={currentColumn!} />
