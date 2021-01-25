@@ -374,7 +374,6 @@ export function DynamicIconUpdate() {
 
   return (
     <React.Fragment>
-      <React.StrictMode>
         <div>
           <Button
             component="button"
@@ -406,7 +405,6 @@ export function DynamicIconUpdate() {
             showToolbar
           />
         </div>
-      </React.StrictMode>
     </React.Fragment>
   );
 }
@@ -414,14 +412,14 @@ export function DynamicIconUpdate() {
 function CustomFilterPanel(props: { bg?: string } & BaseComponentProps) {
   return (
     <div style={{ width: 500, height: 100, background: props.bg, color: 'white' }}>
-      <h1>My Custom Filter Panel</h1>
+      My Custom Filter Panel
     </div>
   );
 }
 function CustomColumnsPanel(props: { bg?: string } & BaseComponentProps) {
   return (
     <div style={{ width: 500, height: 300, background: props.bg }}>
-      <h1>My Custom Columns Panel</h1>
+      My Custom Columns Panel
     </div>
   );
 }
@@ -444,7 +442,7 @@ function CustomPanelComponent(props: BaseComponentProps & PanelProps) {
 
   return (
     <div style={{ maxHeight: 500, overflow: 'auto', display: 'flex' }}>
-      <div>{props.children}</div>
+      {props.children}
     </div>
   );
 }
