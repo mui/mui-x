@@ -3,6 +3,7 @@ import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { paginationSelector } from '../hooks/features/pagination/paginationSelector';
 import { rowCountSelector } from '../hooks/features/rows/rowsSelector';
 import { selectedRowsCountSelector } from '../hooks/features/selection/selectionSelector';
+import { useBaseComponentProps } from '../hooks/features/useBaseComponentProps';
 import { optionsSelector } from '../hooks/utils/optionsSelector';
 import { ApiContext } from './api-context';
 import { RowCount } from './RowCount';
@@ -15,6 +16,7 @@ export function GridFooter() {
   const options = useGridSelector(apiRef, optionsSelector);
   const selectedRowCount = useGridSelector(apiRef, selectedRowsCountSelector);
   const pagination = useGridSelector(apiRef, paginationSelector);
+  const baseProps = useBaseComponentProps(apiRef);
 
   const SelectedRowCountElement =
     !options.hideFooterSelectedRowCount && selectedRowCount > 0 ? (
@@ -35,7 +37,7 @@ export function GridFooter() {
     apiRef?.current.components.Pagination;
 
   const PaginationElement = PaginationComponent && (
-    <PaginationComponent {...apiRef?.current.componentsProps?.pagination} />
+    <PaginationComponent {...baseProps} {...apiRef?.current.componentsProps?.pagination} />
   );
 
   return (

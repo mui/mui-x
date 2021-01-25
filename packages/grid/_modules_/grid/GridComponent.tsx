@@ -24,6 +24,7 @@ import { useRows } from './hooks/features/rows/useRows';
 import { useSorting } from './hooks/features/sorting/useSorting';
 import { useApiRef } from './hooks/features/useApiRef';
 import { useColumnReorder } from './hooks/features/columnReorder';
+import { useBaseComponentProps } from './hooks/features/useBaseComponentProps';
 import { useColumnResize } from './hooks/features/useColumnResize';
 import { useComponents } from './hooks/features/useComponents';
 import { useSelection } from './hooks/features/selection/useSelection';
@@ -85,14 +86,10 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useColumnResize(columnsHeaderRef, apiRef);
     usePagination(apiRef);
 
-    const components = useComponents(
-      props.components,
-      props.componentsProps,
-      apiRef,
-      rootContainerRef,
-    );
+    const components = useComponents(props.components, props.componentsProps, apiRef);
     useStateProp(apiRef, props.state);
     useRenderInfoLog(apiRef, logger);
+    const componentBaseProps = useBaseComponentProps(apiRef);
 
     const showNoRowsOverlay = !props.loading && gridState.rows.totalRowCount === 0;
     return (
@@ -115,28 +112,38 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                   <GridMainContainer>
                     <components.ErrorOverlay
                       {...errorProps}
+                      {...componentBaseProps}
                       {...props.componentsProps?.errorOverlay}
                     />
                   </GridMainContainer>
                 )}
               >
                 <div ref={headerRef}>
-                  <components.Header {...props.componentsProps?.header} />
+                  <components.Header {...componentBaseProps} {...props.componentsProps?.header} />
                 </div>
                 <GridMainContainer>
                   <GridColumnHeaderMenu
                     ContentComponent={components.ColumnMenu}
-                    contentComponentProps={props.componentsProps?.columnMenu}
+                    contentComponentProps={{
+                      ...componentBaseProps,
+                      ...props.componentsProps?.columnMenu,
+                    }}
                   />
                   <Watermark licenseStatus={props.licenseStatus} />
                   <GridColumnsContainer ref={columnsContainerRef}>
                     <ColumnsHeader ref={columnsHeaderRef} />
                   </GridColumnsContainer>
                   {showNoRowsOverlay && (
-                    <components.NoRowsOverlay {...props.componentsProps?.noRowsOverlay} />
+                    <components.NoRowsOverlay
+                      {...componentBaseProps}
+                      {...props.componentsProps?.noRowsOverlay}
+                    />
                   )}
                   {props.loading && (
-                    <components.LoadingOverlay {...props.componentsProps?.loadingOverlay} />
+                    <components.LoadingOverlay
+                      {...componentBaseProps}
+                      {...props.componentsProps?.loadingOverlay}
+                    />
                   )}
                   <GridWindow ref={windowRef}>
                     <Viewport ref={renderingZoneRef} />
@@ -144,7 +151,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                 </GridMainContainer>
                 {!gridState.options.hideFooter && (
                   <div ref={footerRef}>
-                    <components.Footer {...props.componentsProps?.footer} />
+                    <components.Footer {...componentBaseProps} {...props.componentsProps?.footer} />
                   </div>
                 )}
               </ErrorBoundary>

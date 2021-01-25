@@ -8,7 +8,7 @@ import { useStyles } from '../containers/GridRootStyles';
 
 export interface PanelProps {
   children?: React.ReactNode;
-  open?: boolean;
+  open: boolean;
 }
 
 export function Panel(props: PanelProps) {
@@ -49,7 +49,7 @@ export function Panel(props: PanelProps) {
   return (
     <Popper
       placement="bottom-start"
-      open={!!open}
+      open={open}
       anchorEl={anchorEl}
       modifiers={getPopperModifiers()}
       className={classes.root}
