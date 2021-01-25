@@ -1,11 +1,11 @@
 import * as React from 'react';
+import { useStyles } from './GridRootStyles';
 import { visibleColumnsLengthSelector } from '../../hooks/features/columns/columnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { useGridState } from '../../hooks/features/core/useGridState';
 import { classnames } from '../../utils';
 import { getCurryTotalHeight } from '../../utils/getTotalHeight';
 import { ApiContext } from '../api-context';
-import { useStyles } from './GridRootStyles';
 
 export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
   size: { width: number; height: number };

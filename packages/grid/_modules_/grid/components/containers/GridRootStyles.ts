@@ -1,5 +1,5 @@
 import { darken, lighten, makeStyles, Theme } from '@material-ui/core/styles';
-import { getThemePaletteMode, muiStyleAlpha } from '../../utils';
+import { getThemePaletteMode, muiStyleAlpha } from '../../utils/utils';
 
 export const useStyles = makeStyles(
   (theme: Theme) => {
@@ -49,33 +49,6 @@ export const useStyles = makeStyles(
           alignItems: 'center',
           padding: '4px 4px 0',
         },
-        '& .MuiDataGrid-panel': {
-          backgroundColor: theme.palette.background.paper,
-          minWidth: 300,
-          maxHeight: 450,
-          display: 'flex',
-          flexDirection: 'column',
-          flex: 1,
-          boxSizing: 'content-box',
-        },
-        '& .MuiDataGrid-panelHeader': {
-          boxSizing: 'content-box',
-          padding: 8,
-        },
-        '& .MuiDataGrid-panelContainer': {
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'auto',
-          flex: '1 1',
-          boxSizing: 'content-box',
-        },
-        '& .MuiDataGrid-panelFooter': {
-          boxSizing: 'content-box',
-          padding: 4,
-          display: 'flex',
-          justifyContent: 'space-between',
-        },
-
         '& .MuiDataGrid-columnsContainer': {
           position: 'absolute',
           top: 0,

@@ -1,15 +1,26 @@
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import * as React from 'react';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import { ApiContext } from '../api-context';
 import { isMuiV5 } from '../../utils';
-import { useStyles } from '../containers/GridRootStyles';
 
 export interface PanelProps {
   children?: React.ReactNode;
   open: boolean;
 }
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    backgroundColor: theme.palette.background.paper,
+    minWidth: 300,
+    maxHeight: 450,
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
+  }
+}), {name: 'MuiDataGridPanel'})
 
 export function Panel(props: PanelProps) {
   const classes = useStyles();
