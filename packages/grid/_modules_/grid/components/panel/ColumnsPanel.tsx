@@ -78,8 +78,12 @@ export function ColumnsPanel() {
     [columns, searchValue],
   );
 
+  const timeoutFocus = React.useRef<any>(0);
   React.useEffect(() => {
-    searchInputRef.current!.focus();
+    timeoutFocus.current = setTimeout(() => searchInputRef.current!.focus(), 0);
+    return () => {
+      clearTimeout(timeoutFocus.current);
+    };
   }, []);
 
   return (
