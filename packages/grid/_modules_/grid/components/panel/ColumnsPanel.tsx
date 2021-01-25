@@ -81,7 +81,7 @@ export function ColumnsPanel() {
     [columns, searchValue],
   );
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     searchInputRef.current!.focus();
   }, []);
 
