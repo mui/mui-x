@@ -49,3 +49,21 @@ export function getColumnHeaders() {
     (node) => node!.textContent,
   );
 }
+
+export function getCell(rowIndex: number, colIndex: number): HTMLElement {
+  const cell = document.querySelector(
+    `[role="cell"][data-rowindex="${rowIndex}"][aria-colindex="${colIndex}"]`,
+  );
+  if (cell == null) {
+    throw new Error(`Cell ${rowIndex} ${colIndex} not found`);
+  }
+  return cell as HTMLElement;
+}
+
+export function getRow(rowIndex: number): HTMLElement {
+  const row = document.querySelector(`[role="row"][data-rowindex="${rowIndex}"]`);
+  if (row == null) {
+    throw new Error(`Row ${rowIndex} not found`);
+  }
+  return row as HTMLElement;
+}

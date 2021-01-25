@@ -12,10 +12,13 @@ import {
 } from 'test/utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { getActiveCell } from 'test/utils/helperFn';
+import { getActiveCell, getCell, getRow } from 'test/utils/helperFn';
 import { DataGrid } from '@material-ui/data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { Columns } from 'packages/grid/_modules_/grid/models/colDef/colDef';
+
+const SPACE_KEY = { key: ' ', code: 'Space', shiftKey: false };
+const SHIFT_SPACE_KEY = { ...SPACE_KEY, shiftKey: true };
 
 describe('<DataGrid /> - Keyboard', () => {
   // TODO v5: replace with createClientRender
@@ -117,9 +120,7 @@ describe('<DataGrid /> - Keyboard', () => {
         <DataGrid rows={rows} columns={columns} />
       </div>,
     );
-    const firstCell = document.querySelector(
-      '[role="cell"][data-rowindex="0"][aria-colindex="0"]',
-    ) as HTMLElement;
+    const firstCell = getCell(0, 0);
     firstCell.focus();
     fireEvent.keyDown(firstCell, { key: 'ArrowRight' });
     expect(handleKeyDown.returnValues).to.deep.equal([true]);
@@ -140,8 +141,7 @@ describe('<DataGrid /> - Keyboard', () => {
   /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
   it('cell navigation with arrows', () => {
     render(<KeyboardTest />);
-    // @ts-ignore
-    document.querySelector('[role="cell"][data-rowindex="0"][aria-colindex="0"]').focus();
+    getCell(0, 0).focus();
     expect(getActiveCell()).to.equal('0-0');
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
     expect(getActiveCell()).to.equal('0-1');
@@ -153,17 +153,32 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(getActiveCell()).to.equal('0-0');
   });
 
+  it('Shift + Space should select a row', () => {
+    render(<KeyboardTest />);
+    getCell(0, 0).focus();
+    expect(getActiveCell()).to.equal('0-0');
+    fireEvent.keyDown(document.activeElement!, SHIFT_SPACE_KEY);
+    const row = getRow(0);
+    const isSelected = row.classList.contains('Mui-selected');
+    expect(isSelected).to.equal(true);
+  });
+
+  it('Space only should go to the bottom of the page', () => {
+    render(<KeyboardTest />);
+    getCell(0, 0).focus();
+    expect(getActiveCell()).to.equal('0-0');
+    fireEvent.keyDown(document.activeElement!, SPACE_KEY);
+    expect(getActiveCell()).to.equal('3-0');
+  });
+
   it('Home / End navigation', async () => {
     render(<KeyboardTest />);
-    // @ts-ignore
-    document.querySelector('[role="cell"][data-rowindex="1"][aria-colindex="1"]').focus();
+    getCell(1, 1).focus();
     expect(getActiveCell()).to.equal('1-1');
     fireEvent.keyDown(document.activeElement!, { key: 'Home' });
     expect(getActiveCell()).to.equal('1-0');
     fireEvent.keyDown(document.activeElement!, { key: 'End' });
-    await waitFor(() =>
-      document.querySelector('[role="cell"][data-rowindex="1"][aria-colindex="19"]'),
-    );
+    await waitFor(() => getCell(1, 19));
     expect(getActiveCell()).to.equal('1-19');
   });
   /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
