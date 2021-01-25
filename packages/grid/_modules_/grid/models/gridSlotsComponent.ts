@@ -24,6 +24,7 @@ import { Pagination } from '../components/Pagination';
 import { ColumnsPanel } from '../components/panel/ColumnsPanel';
 import { FilterPanel } from '../components/panel/filterPanel/FilterPanel';
 import { Panel, PanelProps } from '../components/panel/Panel';
+import { ApiRefComponentsProperty } from './api/componentsApi';
 import { GridIconSlotsComponent } from './gridIconSlotsComponent';
 import { BaseComponentProps } from './params/baseComponentProps';
 
@@ -89,7 +90,7 @@ export const DEFAULT_SLOTS_ICONS: GridIconSlotsComponent = {
   DensityComfortableIcon: ViewStreamIcon,
 };
 
-export const DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
+export const DEFAULT_SLOTS_COMPONENTS: ApiRefComponentsProperty = {
   ...DEFAULT_SLOTS_ICONS,
   ColumnMenu: GridColumnHeaderMenuItems,
   ErrorOverlay,
