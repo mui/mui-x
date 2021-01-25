@@ -11,16 +11,19 @@ export interface PanelProps {
   open: boolean;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    backgroundColor: theme.palette.background.paper,
-    minWidth: 300,
-    maxHeight: 450,
-    display: 'flex',
-    flexDirection: 'column',
-    flex: 1,
-  }
-}), {name: 'MuiDataGridPanel'})
+const useStyles = makeStyles(
+  (theme: Theme) => ({
+    root: {
+      backgroundColor: theme.palette.background.paper,
+      minWidth: 300,
+      maxHeight: 450,
+      display: 'flex',
+      flexDirection: 'column',
+      flex: 1,
+    },
+  }),
+  { name: 'MuiDataGridPanel' },
+);
 
 export function Panel(props: PanelProps) {
   const classes = useStyles();

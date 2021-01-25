@@ -374,37 +374,37 @@ export function DynamicIconUpdate() {
 
   return (
     <React.Fragment>
-        <div>
-          <Button
-            component="button"
-            color="primary"
-            variant="outlined"
-            onClick={() => {
-              setIcon(() => MyIcon2);
-            }}
-          >
-            Change Icon
-          </Button>
-          <Button
-            component="button"
-            color="primary"
-            variant="outlined"
-            onClick={() => {
-              setIcon(undefined);
-            }}
-          >
-            Clear icon
-          </Button>
-        </div>
-        <div className="grid-container">
-          <XGrid
-            {...data}
-            components={{
-              DensityStandardIcon: icon,
-            }}
-            showToolbar
-          />
-        </div>
+      <div>
+        <Button
+          component="button"
+          color="primary"
+          variant="outlined"
+          onClick={() => {
+            setIcon(() => MyIcon2);
+          }}
+        >
+          Change Icon
+        </Button>
+        <Button
+          component="button"
+          color="primary"
+          variant="outlined"
+          onClick={() => {
+            setIcon(undefined);
+          }}
+        >
+          Clear icon
+        </Button>
+      </div>
+      <div className="grid-container">
+        <XGrid
+          {...data}
+          components={{
+            DensityStandardIcon: icon,
+          }}
+          showToolbar
+        />
+      </div>
     </React.Fragment>
   );
 }
@@ -418,9 +418,7 @@ function CustomFilterPanel(props: { bg?: string } & BaseComponentProps) {
 }
 function CustomColumnsPanel(props: { bg?: string } & BaseComponentProps) {
   return (
-    <div style={{ width: 500, height: 300, background: props.bg }}>
-      My Custom Columns Panel
-    </div>
+    <div style={{ width: 500, height: 300, background: props.bg }}>My Custom Columns Panel</div>
   );
 }
 export const CustomFilterColumnsPanels = Template.bind({});
@@ -440,11 +438,7 @@ function CustomPanelComponent(props: BaseComponentProps & PanelProps) {
     return null;
   }
 
-  return (
-    <div style={{ maxHeight: 500, overflow: 'auto', display: 'flex' }}>
-      {props.children}
-    </div>
-  );
+  return <div style={{ maxHeight: 500, overflow: 'auto', display: 'flex' }}>{props.children}</div>;
 }
 export const CustomPanel = Template.bind({});
 CustomPanel.args = {
