@@ -106,3 +106,13 @@ export const AutoHeightLarge = () => {
     </div>
   );
 };
+
+export const AutoHeightElementAfterGrid = () => {
+  const data = useData(8, 12);
+  return (
+    <div>
+      <XGrid rows={data.rows} columns={data.columns} autoHeight />
+      <div>This block is after the grid!</div>
+    </div>
+  );
+};

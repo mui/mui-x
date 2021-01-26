@@ -135,7 +135,7 @@ export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(functi
   }
 
   if (!disableWidth) {
-    outerStyle.width = 'auto';
+    outerStyle.width = 0;
     childParams.width = state.width;
   }
 
