@@ -18,8 +18,8 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
   The first prop allows to swapping specific components used in slots the grid, like the checkboxes.
   The second one allows providing extra props to each slot. It avoids the need for using the React context to access information from outside the data grid.
 
-  See the [RFC](https://github.com/mui-org/material-ui/issues/21453#issuecomment-752226808) for more details.
-- 🐛 Polish the existing features, fix 3 issues.
+  See the [RFC](https://github.com/mui-org/material-ui/issues/21453) for more details.
+- 🐛 Polish existing features, fix 3 issues.
 
 #### Breaking changes
 
@@ -30,8 +30,8 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
   ```diff
   <DataGrid
     components={{
-  -  noRowsOverlay: CustomNoRowsOverlay,
-  +  NoRowOverlay: CustomNoRowsOverlay,
+  -   noRowsOverlay: CustomNoRowsOverlay,
+  +   NoRowOverlay: CustomNoRowsOverlay,
     }}
   />
   ```
@@ -41,10 +41,10 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
   ```diff
   <DataGrid
   - icons: {{
-  -  ColumnSortedAscending: SortedAscending,
+  -   ColumnSortedAscending: SortedAscending,
   - }},
   + components={{
-  +  ColumnSortedAscendingIcon: SortedAscending,
+  +   ColumnSortedAscendingIcon: SortedAscending,
   + }}
   />
   ```
@@ -53,16 +53,16 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
   ```diff
   -function CustomPagination(props: ComponentProps) {
-  - const { pagination, api } = props;
+  -  const { pagination, api } = props;
   +function CustomPagination(props: BaseComponentProps) {
-  + const { state, api } = props;
+  +  const { state, api } = props;
 
-    return (
-      <Pagination
-  -    page={pagination.page}
-  -    count={pagination.pageCount}
-  +    page={state.pagination.page}
-  +    count={state.pagination.pageCount}
+     return (
+       <Pagination
+  -      page={pagination.page}
+  -      count={pagination.pageCount}
+  +      page={state.pagination.page}
+  +      count={state.pagination.pageCount}
 
   // ...
 
@@ -77,7 +77,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [DataGrid] Fix <kbd>Shift</kbd> + <kbd>Space</kbd> keyboard regression to select row (#897) @dtassone
 - [DataGrid] Fix footer count not shown on small screen (#899) @mnajdova
 
-# docs
+### docs
 
 - [docs] Fix imports for x-grid-data-generator (#887) @DanailH
 - [docs] Skip download of playwright for docs @oliviertassinari
