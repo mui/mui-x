@@ -7,8 +7,6 @@ components: DataGrid, XGrid
 
 <p class="description">Sorting allows ordering records in the data grid.</p>
 
-# Row sorting
-
 ## Basic sorting
 
 Single column sorting can be triggered with by clicking a column header.
