@@ -10,7 +10,7 @@ import { getInitialState, GridState } from './gridState';
 
 export const useGridApi = (apiRef: ApiRef): GridApi => {
   const logger = useLogger('useGridApi');
-  const [, forceUpdate] = React.useState<GridState>();
+  const [state, forceUpdate] = React.useState<GridState>();
   if (!apiRef.current.isInitialised && !apiRef.current.state) {
     logger.info('Initialising state.');
     apiRef.current.state = getInitialState();
@@ -32,19 +32,25 @@ export const useGridApi = (apiRef: ApiRef): GridApi => {
 
   const setState = React.useCallback(
     (stateOrFunc: GridState | ((oldState: GridState) => GridState)) => {
-      let state: GridState;
+      let internalState: GridState;
       if (isFunction(stateOrFunc)) {
-        state = stateOrFunc(apiRef.current.state);
+        internalState = stateOrFunc(apiRef.current.state);
       } else {
-        state = stateOrFunc;
+        internalState = stateOrFunc;
       }
-      apiRef.current.state = state;
-      forceUpdate(() => state);
-      const params: StateChangeParams = { api: apiRef.current, state };
+      apiRef.current.state = {...internalState};
+      forceUpdate(() => internalState);
+      const params: StateChangeParams = { api: apiRef.current, state: internalState };
       apiRef.current.publishEvent(STATE_CHANGE, params);
     },
     [apiRef],
   );
+
+  React.useEffect(()=> {
+    if(apiRef && apiRef.current && apiRef.current.state) {
+      // apiRef.current.state = state!;
+    }
+  }, [apiRef, state]);
 
   useApiMethod(apiRef, { getState, onStateChange, setState }, 'StateApi');
 

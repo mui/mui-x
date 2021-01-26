@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import { GridState, SortingState, useApiRef, XGrid } from '@material-ui/x-grid';
+import { ApiContext, GridState, SortingState, StateContext, useApiRef, XGrid } from '@material-ui/x-grid';
 import { StateChangeParams } from '../../../grid/_modules_/grid/models/params/stateChangeParams';
 import { useData } from '../hooks/useData';
 
@@ -145,5 +145,51 @@ export function InitialStateWithApiRef() {
     <div style={{ width: 300, height: 300 }}>
       <XGrid {...defaultProps} apiRef={apiRef} />
     </div>
+  );
+}
+
+const columns = [
+  {
+    field: "id"
+  },
+  {
+    field: "name"
+  },
+  {
+    field: "data"
+  }
+];
+
+const rows = [
+  {
+    id: 1,
+    name: "1",
+    data: "123"
+  },
+  {
+    id: 2,
+    name: "2",
+    data: "23"
+  },
+  {
+    id: 3,
+    name: "3",
+    data: "3"
+  }
+];
+
+export function StrictDemo() {
+  const apiRef = useApiRef();
+  const [state] = React.useState<any>();
+
+  return (
+    <React.StrictMode>
+      <div style={{ width: 300, height: 300 }}>
+        <ApiContext.Provider value={apiRef}>
+
+        <XGrid rows={rows} columns={columns} state={state}  />
+        </ApiContext.Provider>
+      </div>
+    </React.StrictMode>
   );
 }

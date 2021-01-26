@@ -14,9 +14,12 @@ import { GridRoot } from './components/containers/GridRoot';
 import { GridWindow } from './components/containers/GridWindow';
 import { Viewport } from './components/Viewport';
 import { Watermark } from './components/Watermark';
+import { COLUMN_HEADER_CLICK } from './constants/eventsConstants';
 import { GridComponentProps } from './GridComponentProps';
 import { useColumnMenu } from './hooks/features/columnMenu/useColumnMenu';
+import { visibleColumnsSelector } from './hooks/features/columns/columnsSelector';
 import { useColumns } from './hooks/features/columns/useColumns';
+import { useGridSelector } from './hooks/features/core/useGridSelector';
 import { useGridState } from './hooks/features/core/useGridState';
 import { usePagination } from './hooks/features/pagination/usePagination';
 import { usePreferencesPanel } from './hooks/features/preferencesPanel/usePreferencesPanel';
@@ -40,15 +43,45 @@ import { useResizeContainer } from './hooks/utils/useResizeContainer';
 import { useVirtualRows } from './hooks/features/virtualization/useVirtualRows';
 import { useDensity } from './hooks/features/density';
 import { useStateProp } from './hooks/utils/useStateProp';
+import { ColParams } from './models/params/colParams';
 import { RootContainerRef } from './models/rootContainerRef';
-import { ApiContext } from './components/api-context';
+import { ApiContext, StateContext } from './components/api-context';
 import { useFilter } from './hooks/features/filter/useFilter';
 import { useLocaleText } from './hooks/features/localeText/useLocaleText';
+
+function ItemFoo(props) {
+  const apiRef = React.useContext(ApiContext);
+  const [gridState, setGridState, update] = useGridState(apiRef!)
+  const [originalState, setState] = React.useState<any>();
+  // const columns = useGridSelector(apiRef, visibleColumnsSelector);
+  const onHeaderTitleClick = React.useCallback((field) => {
+
+    setGridState(old => {
+      const newState = {...old, ...{sorting: {...old.sorting, sortModel: [{field, sort: 'asc' as 'asc'}]}}};
+      // setState(() => newState);
+      return newState;
+    });
+update();
+  }, [setGridState, update]);
+
+  // const sortModel = gridState.sorting.sortModel;
+  // const sortBy = sortModel.length > 0 ? sortModel[0].field : '';
+  return (
+    <div>
+      sort: {props.sortBy}
+      <br />
+      {...gridState.columns.all.map(c=> (
+        <li key={c} onClick = {()=> onHeaderTitleClick(c) }>{c}</li>
+      ))}
+    </div>
+  )
+}
 
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {
     const rootContainerRef: RootContainerRef = React.useRef<HTMLDivElement>(null);
     const handleRef = useForkRef(rootContainerRef, ref);
+    const [dummyState, setDummyState] = React.useState<any>();
 
     const footerRef = React.useRef<HTMLDivElement>(null);
     const headerRef = React.useRef<HTMLDivElement>(null);
@@ -66,99 +99,54 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const logger = useLogger('GridComponent');
 
     useApi(rootContainerRef, columnsContainerRef, apiRef);
-    const errorState = useErrorHandler(apiRef, props);
+    // const errorState = useErrorHandler(apiRef, props);
     useEvents(rootContainerRef, apiRef);
-    const onResize = useResizeContainer(apiRef);
+    // const onResize = useResizeContainer(apiRef);
 
     useColumns(props.columns, apiRef);
     useRows(props.rows, apiRef);
-    useKeyboard(rootContainerRef, apiRef);
-    useSelection(apiRef);
+    // useKeyboard(rootContainerRef, apiRef);
+    // useSelection(apiRef);
     useSorting(apiRef, props.rows);
-    useColumnMenu(apiRef);
-    usePreferencesPanel(apiRef);
-    useFilter(apiRef, props.rows);
-    useContainerProps(windowRef, apiRef);
-    useDensity(apiRef);
-    useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
-    useLocaleText(apiRef);
-    useColumnReorder(apiRef);
-    useColumnResize(columnsHeaderRef, apiRef);
-    usePagination(apiRef);
+    // useColumnMenu(apiRef);
+    // usePreferencesPanel(apiRef);
+    // useFilter(apiRef, props.rows);
+    // useContainerProps(windowRef, apiRef);
+    // useDensity(apiRef);
+    // useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
+    // useLocaleText(apiRef);
+    // useColumnReorder(apiRef);
+    // useColumnResize(columnsHeaderRef, apiRef);
+    // usePagination(apiRef);
 
-    const components = useComponents(props.components, props.componentsProps, apiRef);
-    useStateProp(apiRef, props.state);
-    useRenderInfoLog(apiRef, logger);
-    const componentBaseProps = useBaseComponentProps(apiRef);
+    // const components = useComponents(props.components, props.componentsProps, apiRef);
+    // useStateProp(apiRef, props.state);
+    // useRenderInfoLog(apiRef, logger);
+    // const componentBaseProps = useBaseComponentProps(apiRef);
 
-    const showNoRowsOverlay = !props.loading && gridState.rows.totalRowCount === 0;
+    // const showNoRowsOverlay = !props.loading && gridState.rows.totalRowCount === 0;
+    // React.useEffect(()=> {
+    //     setDummyState(()=> gridState);
+    // }, [gridState])
+
+    const testLog = JSON.stringify(gridState?.sorting?.sortModel);
+    console.log(testLog);
+    const sortModel = gridState.sorting.sortModel;
+    const sortBy = sortModel.length > 0 ? sortModel[0].field : '';
+    console.log(`sortBy: ${sortBy} `);
+
     return (
-      <ApiContext.Provider value={apiRef}>
-        <AutoSizer onResize={onResize} nonce={props.nonce}>
-          {(size: any) => (
-            <GridRoot
-              ref={handleRef}
-              className={props.className}
-              size={size}
-              header={headerRef}
-              footer={footerRef}
-            >
-              <ErrorBoundary
-                hasError={errorState != null}
-                componentProps={errorState}
-                api={apiRef!}
-                logger={logger}
-                render={(errorProps) => (
-                  <GridMainContainer>
-                    <components.ErrorOverlay
-                      {...errorProps}
-                      {...componentBaseProps}
-                      {...props.componentsProps?.errorOverlay}
-                    />
-                  </GridMainContainer>
-                )}
-              >
-                <div ref={headerRef}>
-                  <components.Header {...componentBaseProps} {...props.componentsProps?.header} />
-                </div>
-                <GridMainContainer>
-                  <GridColumnHeaderMenu
-                    ContentComponent={components.ColumnMenu}
-                    contentComponentProps={{
-                      ...componentBaseProps,
-                      ...props.componentsProps?.columnMenu,
-                    }}
-                  />
-                  <Watermark licenseStatus={props.licenseStatus} />
-                  <GridColumnsContainer ref={columnsContainerRef}>
-                    <ColumnsHeader ref={columnsHeaderRef} />
-                  </GridColumnsContainer>
-                  {showNoRowsOverlay && (
-                    <components.NoRowsOverlay
-                      {...componentBaseProps}
-                      {...props.componentsProps?.noRowsOverlay}
-                    />
-                  )}
-                  {props.loading && (
-                    <components.LoadingOverlay
-                      {...componentBaseProps}
-                      {...props.componentsProps?.loadingOverlay}
-                    />
-                  )}
-                  <GridWindow ref={windowRef}>
-                    <Viewport ref={renderingZoneRef} />
-                  </GridWindow>
-                </GridMainContainer>
-                {!gridState.options.hideFooter && (
-                  <div ref={footerRef}>
-                    <components.Footer {...componentBaseProps} {...props.componentsProps?.footer} />
-                  </div>
-                )}
-              </ErrorBoundary>
-            </GridRoot>
-          )}
-        </AutoSizer>
-      </ApiContext.Provider>
+      <div>
+        <div>{testLog} & {sortBy}</div>
+        <StateContext.Provider value={dummyState}>
+            <div>
+              <ItemFoo sortBy={sortBy} />
+              <GridColumnsContainer ref={columnsContainerRef}>
+                <ColumnsHeader ref={columnsHeaderRef}/>
+              </GridColumnsContainer>
+            </div>
+        </StateContext.Provider>
+      </div>
     );
   },
 );
