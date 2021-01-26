@@ -7,8 +7,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ###### _Jan 26, 2021_
 
-### @material-ui/x-grid@v4.0.0-alpha.18 / @material-ui/data-grid@v4.0.0-alpha.18
-
 Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Add support for Material-UI v5-alpha (#855) @DanailH.
@@ -20,6 +18,8 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
   See the [RFC](https://github.com/mui-org/material-ui/issues/21453) for more details.
 - 🐛 Polish existing features, fix 3 issues.
+
+### @material-ui/x-grid@v4.0.0-alpha.18 / @material-ui/data-grid@v4.0.0-alpha.18
 
 #### Breaking changes
 
