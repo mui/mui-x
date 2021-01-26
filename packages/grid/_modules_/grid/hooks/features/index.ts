@@ -14,3 +14,4 @@ export * from './virtualization';
 export * from './useApiRef';
 export * from './useColumnResize';
 export * from './useComponents';
+export * from './useBaseComponentProps';

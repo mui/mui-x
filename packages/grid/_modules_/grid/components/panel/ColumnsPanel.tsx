@@ -10,6 +10,10 @@ import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { ApiContext } from '../api-context';
 import { DragIcon } from '../icons/index';
+import { PanelContent } from './PanelContent';
+import { PanelFooter } from './PanelFooter';
+import { PanelHeader } from './PanelHeader';
+import { PanelWrapper } from './PanelWrapper';
 
 const useStyles = makeStyles(
   {
@@ -83,8 +87,8 @@ export function ColumnsPanel() {
   }, []);
 
   return (
-    <React.Fragment>
-      <div className="MuiDataGridPanel-header">
+    <PanelWrapper>
+      <PanelHeader>
         <TextField
           label={apiRef!.current.getLocaleText('columnsPanelTextFieldLabel')}
           placeholder={apiRef!.current.getLocaleText('columnsPanelTextFieldPlaceholder')}
@@ -94,8 +98,8 @@ export function ColumnsPanel() {
           variant="standard"
           fullWidth
         />
-      </div>
-      <div className="MuiDataGridPanel-container">
+      </PanelHeader>
+      <PanelContent>
         <div className={classes.container}>
           {currentColumns.map((column) => (
             <div key={column.field} className={classes.column}>
@@ -127,15 +131,15 @@ export function ColumnsPanel() {
             </div>
           ))}
         </div>
-      </div>
-      <div className="MuiDataGridPanel-footer">
+      </PanelContent>
+      <PanelFooter>
         <Button onClick={hideAllColumns} color="primary">
           {apiRef!.current.getLocaleText('columnsPanelHideAllButton')}
         </Button>
         <Button onClick={showAllColumns} color="primary">
           {apiRef!.current.getLocaleText('columnsPanelShowAllButton')}
         </Button>
-      </div>
-    </React.Fragment>
+      </PanelFooter>
+    </PanelWrapper>
   );
 }

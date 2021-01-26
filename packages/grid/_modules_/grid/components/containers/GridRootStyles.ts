@@ -1,5 +1,5 @@
 import { darken, lighten, makeStyles, Theme } from '@material-ui/core/styles';
-import { getThemePaletteMode, muiStyleAlpha } from '../../utils';
+import { getThemePaletteMode, muiStyleAlpha } from '../../utils/utils';
 
 export const useStyles = makeStyles(
   (theme: Theme) => {
