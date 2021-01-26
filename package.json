@@ -30,7 +30,7 @@
     "jsonlint": "node scripts/jsonlint.js",
     "typescript": "lerna run --no-bail --parallel typescript",
     "build:codesandbox": "yarn build",
-    "build": "cd packages/x-license && yarn build && cd ../grid/x-grid && yarn build && cd ../data-grid && yarn build && cd ../../x-grid-data-generator && yarn build",
+    "build": "cd packages/x-license && yarn build && cd ../grid/x-grid && yarn build && cd ../data-grid && yarn build && cd ../x-grid-data-generator && yarn build",
     "release": "yarn build && lerna publish --no-changelog",
     "release:dry-run": "yarn build && lerna publish --no-changelog --no-git-tag-version --no-push --registry=\"http://localhost:4873/\""
   },

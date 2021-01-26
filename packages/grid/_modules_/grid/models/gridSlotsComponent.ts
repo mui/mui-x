@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ErrorOverlay, ErrorOverlayProps } from '../components/ErrorOverlay';
-import { GridFooter, GridFooterProps } from '../components/GridFooter';
+import { GridFooter } from '../components/GridFooter';
+import { GridHeader } from '../components/GridHeader';
 import {
   ArrowDownwardIcon,
   ArrowUpwardIcon,
@@ -20,7 +21,10 @@ import {
 } from '../components/menu/columnMenu/GridColumnHeaderMenuItems';
 import { NoRowsOverlay } from '../components/NoRowsOverlay';
 import { Pagination } from '../components/Pagination';
-import { GridToolbar } from '../components/toolbar/GridToolbar';
+import { ColumnsPanel } from '../components/panel/ColumnsPanel';
+import { FilterPanel } from '../components/panel/filterPanel/FilterPanel';
+import { Panel, PanelProps } from '../components/panel/Panel';
+import { ApiRefComponentsProperty } from './api/componentsApi';
 import { GridIconSlotsComponent } from './gridIconSlotsComponent';
 import { BaseComponentProps } from './params/baseComponentProps';
 
@@ -42,7 +46,7 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
   /**
    * Footer component rendered at the bottom of the grid viewport.
    */
-  Footer?: React.ElementType<BaseComponentProps & GridFooterProps>;
+  Footer?: React.ElementType<BaseComponentProps>;
   /**
    * Header component rendered above the grid column header bar.
    */
@@ -59,6 +63,18 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    * Pagination component rendered in the grid footer by default.
    */
   Pagination?: React.ElementType<BaseComponentProps>;
+  /**
+   * Filter panel component rendered when clicking the filter button.
+   */
+  FilterPanel?: React.ElementType<BaseComponentProps>;
+  /**
+   * Columns panel component rendered when clicking the columns button.
+   */
+  ColumnsPanel?: React.ElementType<BaseComponentProps>;
+  /**
+   * Panel component wrapping the filters and columns panels.
+   */
+  Panel?: React.ElementType<BaseComponentProps & PanelProps>;
 }
 
 export const DEFAULT_SLOTS_ICONS: GridIconSlotsComponent = {
@@ -74,23 +90,16 @@ export const DEFAULT_SLOTS_ICONS: GridIconSlotsComponent = {
   DensityComfortableIcon: ViewStreamIcon,
 };
 
-export const DEFAULT_SLOTS_COMPONENTS: GridSlotsComponent = {
+export const DEFAULT_SLOTS_COMPONENTS: ApiRefComponentsProperty = {
   ...DEFAULT_SLOTS_ICONS,
   ColumnMenu: GridColumnHeaderMenuItems,
   ErrorOverlay,
   Footer: GridFooter,
-  Header: GridToolbar,
+  Header: GridHeader,
   LoadingOverlay,
   NoRowsOverlay,
   Pagination,
+  FilterPanel,
+  ColumnsPanel,
+  Panel,
 };
-
-export interface GridSlotsComponentProps {
-  columnMenu?: any;
-  errorOverlay?: any;
-  footer?: any;
-  header?: any;
-  loadingOverlay?: any;
-  noRowsOverlay?: any;
-  pagination?: any;
-}

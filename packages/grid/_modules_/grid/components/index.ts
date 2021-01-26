@@ -1,14 +1,16 @@
+export * from './containers';
 export * from './columnHeaders';
 export * from './icons';
 export * from './menu';
-export * from './containers';
 export * from './panel';
+export * from './toolbar';
 
 export * from './api-context';
 export * from './AutoSizer';
 export * from './Cell';
 export * from './CheckboxRenderer';
 export * from './GridFooter';
+export * from './GridHeader';
 export * from './LoadingOverlay';
 export * from './NoRowsOverlay';
 export * from './Pagination';

@@ -18,9 +18,10 @@
   },
   "scripts": {
     "precommit": "npm run lint",
-    "build": "rollup -c",
-    "start": "rollup -cw",
-    "lint": "../../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../.eslintrc.js"
+    "build": "cd ../ && rollup --config rollup.x-grid-data-generator.config.js",
+    "start": "cd ../ && rollup --cw rollup.x-grid-data-generator.config.js",
+    "lint": "../../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../.eslintrc.js",
+    "typescript": "tsc -p tsconfig.json"
   },
   "dependencies": {
     "@types/chance": "^1.1.0",
@@ -36,7 +37,6 @@
     "@material-ui/core": "^4.9.12 || ^5.0.0-alpha.22",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.54",
-    "@material-ui/x-grid": "^4.0.0-alpha.1",
     "react": "^16.8.0 || ^17.0.0"
   },
   "setupFiles": [

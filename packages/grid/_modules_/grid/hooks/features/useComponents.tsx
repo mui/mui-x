@@ -1,104 +1,76 @@
 import * as React from 'react';
-import { GridFooterProps } from '../../components/GridFooter';
-import { ErrorOverlayProps } from '../../components/ErrorOverlay';
-import { GridColumnHeaderMenuItemsProps } from '../../components/menu/columnMenu/GridColumnHeaderMenuItems';
 import { ApiRef } from '../../models/api/apiRef';
 import { ApiRefComponentsProperty } from '../../models/api/componentsApi';
 import { DEFAULT_SLOTS_COMPONENTS, GridSlotsComponent } from '../../models/gridSlotsComponent';
-import { BaseComponentProps } from '../../models/params/baseComponentProps';
-import { RootContainerRef } from '../../models/rootContainerRef';
-import { optionsSelector } from '../utils/optionsSelector';
-import { visibleColumnsSelector } from './columns/columnsSelector';
-import { useGridSelector } from './core/useGridSelector';
-import { useGridState } from './core/useGridState';
-import { unorderedRowModelsSelector } from './rows/rowsSelector';
-
-function EmptyComponent() {
-  return null;
-}
-
-const wrapWithProps: <TProps, StaticProps>(
-  Component: React.ElementType<TProps & StaticProps> | undefined | null,
-  baseComponentProps: StaticProps,
-) => React.ElementType<TProps> = <TProps extends {}>(Component, baseComponentProps) => {
-  if (Component == null) {
-    return EmptyComponent;
-  }
-  const ComponentWithBase: React.ElementType<TProps> = (props: TProps) => {
-    const propsWithBase = { ...baseComponentProps, ...props };
-    return <Component {...propsWithBase} />;
-  };
-
-  return ComponentWithBase;
-};
+import { GridSlotsComponentsProps } from '../../models/gridSlotsComponentsProps';
 
 export const useComponents = (
-  componentsProp: GridSlotsComponent | undefined,
+  componentSlotsProp: GridSlotsComponent | undefined,
+  componentsProps: GridSlotsComponentsProps | undefined,
   apiRef: ApiRef,
-  gridRootRef: RootContainerRef,
 ) => {
-  const options = useGridSelector(apiRef, optionsSelector);
-  const rows = useGridSelector(apiRef, unorderedRowModelsSelector);
-  const columns = useGridSelector(apiRef, visibleColumnsSelector);
-  const [state] = useGridState(apiRef!);
-
-  const baseComponentProps: BaseComponentProps = React.useMemo(
-    () => ({
-      state,
-      rows,
-      columns,
-      options,
-      api: apiRef,
-      rootElement: gridRootRef,
-    }),
-    [state, rows, columns, options, apiRef, gridRootRef],
-  );
-
   const components: ApiRefComponentsProperty = React.useMemo(() => {
-    const allComponents = { ...DEFAULT_SLOTS_COMPONENTS, ...componentsProp };
-
     const mappedComponents = {
-      ColumnFilteredIcon: allComponents.ColumnFilteredIcon || EmptyComponent,
-      ColumnMenuIcon: allComponents.ColumnMenuIcon || EmptyComponent,
-      ColumnResizeIcon: allComponents.ColumnResizeIcon || EmptyComponent,
-      ColumnSelectorIcon: allComponents.ColumnSelectorIcon || EmptyComponent,
-      ColumnSortedAscendingIcon: allComponents.ColumnSortedAscendingIcon || EmptyComponent,
-      ColumnSortedDescendingIcon: allComponents.ColumnSortedDescendingIcon || EmptyComponent,
-      DensityComfortableIcon: allComponents.DensityComfortableIcon || EmptyComponent,
-      DensityCompactIcon: allComponents.DensityCompactIcon || EmptyComponent,
-      DensityStandardIcon: allComponents.DensityStandardIcon || EmptyComponent,
-      OpenFilterButtonIcon: allComponents.OpenFilterButtonIcon || EmptyComponent,
-      ColumnMenu: wrapWithProps<GridColumnHeaderMenuItemsProps, BaseComponentProps>(
-        allComponents.ColumnMenu,
-        baseComponentProps,
-      ),
-      ErrorOverlay: wrapWithProps<ErrorOverlayProps, BaseComponentProps>(
-        allComponents.ErrorOverlay,
-        baseComponentProps,
-      ),
-      Footer: wrapWithProps<GridFooterProps, BaseComponentProps>(
-        allComponents.Footer,
-        baseComponentProps,
-      ),
-      Header: wrapWithProps<{}, BaseComponentProps>(allComponents.Header, baseComponentProps),
-      LoadingOverlay: wrapWithProps<{}, BaseComponentProps>(
-        allComponents.LoadingOverlay,
-        baseComponentProps,
-      ),
-      NoRowsOverlay: wrapWithProps<{}, BaseComponentProps>(
-        allComponents.NoRowsOverlay,
-        baseComponentProps,
-      ),
-      Pagination: wrapWithProps<{}, BaseComponentProps>(
-        allComponents.Pagination,
-        baseComponentProps,
-      ),
+      ColumnFilteredIcon:
+        (componentSlotsProp && componentSlotsProp.ColumnFilteredIcon) ||
+        DEFAULT_SLOTS_COMPONENTS.ColumnFilteredIcon,
+      ColumnMenuIcon:
+        (componentSlotsProp && componentSlotsProp.ColumnMenuIcon) ||
+        DEFAULT_SLOTS_COMPONENTS.ColumnMenuIcon,
+      ColumnResizeIcon:
+        (componentSlotsProp && componentSlotsProp.ColumnResizeIcon) ||
+        DEFAULT_SLOTS_COMPONENTS.ColumnResizeIcon,
+      ColumnSelectorIcon:
+        (componentSlotsProp && componentSlotsProp.ColumnSelectorIcon) ||
+        DEFAULT_SLOTS_COMPONENTS.ColumnSelectorIcon,
+      ColumnSortedAscendingIcon:
+        (componentSlotsProp && componentSlotsProp.ColumnSortedAscendingIcon) ||
+        DEFAULT_SLOTS_COMPONENTS.ColumnSortedAscendingIcon,
+      ColumnSortedDescendingIcon:
+        (componentSlotsProp && componentSlotsProp.ColumnSortedDescendingIcon) ||
+        DEFAULT_SLOTS_COMPONENTS.ColumnSortedDescendingIcon,
+      DensityComfortableIcon:
+        (componentSlotsProp && componentSlotsProp.DensityComfortableIcon) ||
+        DEFAULT_SLOTS_COMPONENTS.DensityComfortableIcon,
+      DensityCompactIcon:
+        (componentSlotsProp && componentSlotsProp.DensityCompactIcon) ||
+        DEFAULT_SLOTS_COMPONENTS.DensityCompactIcon,
+      DensityStandardIcon:
+        (componentSlotsProp && componentSlotsProp.DensityStandardIcon) ||
+        DEFAULT_SLOTS_COMPONENTS.DensityStandardIcon,
+      OpenFilterButtonIcon:
+        (componentSlotsProp && componentSlotsProp.OpenFilterButtonIcon) ||
+        DEFAULT_SLOTS_COMPONENTS.OpenFilterButtonIcon,
+      ColumnMenu:
+        (componentSlotsProp && componentSlotsProp.ColumnMenu) ||
+        DEFAULT_SLOTS_COMPONENTS.ColumnMenu,
+      ErrorOverlay:
+        (componentSlotsProp && componentSlotsProp.ErrorOverlay) ||
+        DEFAULT_SLOTS_COMPONENTS.ErrorOverlay,
+      Footer: (componentSlotsProp && componentSlotsProp.Footer) || DEFAULT_SLOTS_COMPONENTS.Footer,
+      Header: (componentSlotsProp && componentSlotsProp.Header) || DEFAULT_SLOTS_COMPONENTS.Header,
+      LoadingOverlay:
+        (componentSlotsProp && componentSlotsProp.LoadingOverlay) ||
+        DEFAULT_SLOTS_COMPONENTS.LoadingOverlay,
+      NoRowsOverlay:
+        (componentSlotsProp && componentSlotsProp.NoRowsOverlay) ||
+        DEFAULT_SLOTS_COMPONENTS.NoRowsOverlay,
+      Pagination:
+        (componentSlotsProp && componentSlotsProp.Pagination) ||
+        DEFAULT_SLOTS_COMPONENTS.Pagination,
+      FilterPanel:
+        (componentSlotsProp && componentSlotsProp.FilterPanel) ||
+        DEFAULT_SLOTS_COMPONENTS.FilterPanel,
+      ColumnsPanel:
+        (componentSlotsProp && componentSlotsProp.ColumnsPanel) ||
+        DEFAULT_SLOTS_COMPONENTS.ColumnsPanel,
+      Panel: (componentSlotsProp && componentSlotsProp.Panel) || DEFAULT_SLOTS_COMPONENTS.Panel,
     };
-
     apiRef.current.components = mappedComponents;
-
     return mappedComponents;
-  }, [apiRef, baseComponentProps, componentsProp]);
+  }, [apiRef, componentSlotsProp]);
+
+  apiRef.current.componentsProps = componentsProps;
 
   return components;
 };
