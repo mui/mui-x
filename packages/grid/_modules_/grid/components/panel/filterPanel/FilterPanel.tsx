@@ -8,6 +8,7 @@ import { ApiContext } from '../../api-context';
 import { AddIcon } from '../../icons/index';
 import { PanelContent } from '../PanelContent';
 import { PanelFooter } from '../PanelFooter';
+import { PanelWrapper } from '../PanelWrapper';
 import { FilterForm } from './FilterForm';
 
 export function FilterPanel() {
@@ -51,7 +52,7 @@ export function FilterPanel() {
   }, [addNewFilter, gridState.filter.items.length]);
 
   return (
-    <React.Fragment>
+    <PanelWrapper>
       <PanelContent>
         {gridState.filter.items.map((item, index) => (
           <FilterForm
@@ -74,6 +75,6 @@ export function FilterPanel() {
           </Button>
         </PanelFooter>
       )}
-    </React.Fragment>
+    </PanelWrapper>
   );
 }

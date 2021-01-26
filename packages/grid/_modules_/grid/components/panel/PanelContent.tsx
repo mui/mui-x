@@ -17,10 +17,6 @@ const useStyles = makeStyles(
 
 export function PanelContent(props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) {
   const classes = useStyles();
-  const { children, className, ...otherProps } = props;
-  return (
-    <div className={classnames(classes.root, className)} {...otherProps}>
-      {children}
-    </div>
-  );
+  const { className, ...other } = props;
+  return <div className={classnames(classes.root, className)} {...other} />;
 }

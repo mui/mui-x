@@ -5,15 +5,15 @@ import { classnames } from '../../utils/classnames';
 const useStyles = makeStyles(
   () => ({
     root: {
-      padding: 4,
       display: 'flex',
-      justifyContent: 'space-between',
+      flexDirection: 'column',
+      flex: 1,
     },
   }),
-  { name: 'MuiDataGridPanelFooter' },
+  { name: 'MuiDataGridPanelWrapper' },
 );
 
-export function PanelFooter(props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) {
+export function PanelWrapper(props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) {
   const classes = useStyles();
   const { className, ...other } = props;
   return <div className={classnames(classes.root, className)} {...other} />;

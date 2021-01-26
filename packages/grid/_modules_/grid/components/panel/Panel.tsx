@@ -18,8 +18,6 @@ const useStyles = makeStyles(
       minWidth: 300,
       maxHeight: 450,
       display: 'flex',
-      flexDirection: 'column',
-      flex: 1,
     },
   }),
   { name: 'MuiDataGridPanel' },
@@ -66,10 +64,9 @@ export function Panel(props: PanelProps) {
       open={open}
       anchorEl={anchorEl}
       modifiers={getPopperModifiers()}
-      className={classes.root}
     >
       <ClickAwayListener onClickAway={handleClickAway}>
-        <Paper className="MuiDataGrid-panel" elevation={8}>
+        <Paper className={classes.root} elevation={8}>
           {children}
         </Paper>
       </ClickAwayListener>

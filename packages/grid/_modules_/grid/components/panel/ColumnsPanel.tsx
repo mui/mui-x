@@ -13,6 +13,7 @@ import { DragIcon } from '../icons/index';
 import { PanelContent } from './PanelContent';
 import { PanelFooter } from './PanelFooter';
 import { PanelHeader } from './PanelHeader';
+import { PanelWrapper } from './PanelWrapper';
 
 const useStyles = makeStyles(
   {
@@ -86,7 +87,7 @@ export function ColumnsPanel() {
   }, []);
 
   return (
-    <React.Fragment>
+    <PanelWrapper>
       <PanelHeader>
         <TextField
           label={apiRef!.current.getLocaleText('columnsPanelTextFieldLabel')}
@@ -139,6 +140,6 @@ export function ColumnsPanel() {
           {apiRef!.current.getLocaleText('columnsPanelShowAllButton')}
         </Button>
       </PanelFooter>
-    </React.Fragment>
+    </PanelWrapper>
   );
 }

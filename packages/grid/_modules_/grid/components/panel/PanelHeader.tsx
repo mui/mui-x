@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import { classnames } from '../../utils/classnames';
 
 const useStyles = makeStyles(
-  () => ({
+  (theme: Theme) => ({
     root: {
-      padding: 8,
+      padding: theme.spacing(1),
     },
   }),
   { name: 'MuiDataGridPanelHeader' },
@@ -13,10 +13,6 @@ const useStyles = makeStyles(
 
 export function PanelHeader(props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>) {
   const classes = useStyles();
-  const { children, className, ...otherProps } = props;
-  return (
-    <div className={classnames(classes.root, className)} {...otherProps}>
-      {children}
-    </div>
-  );
+  const { className, ...other } = props;
+  return <div className={classnames(classes.root, className)} {...other} />;
 }

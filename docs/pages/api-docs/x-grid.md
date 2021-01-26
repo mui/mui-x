@@ -22,7 +22,7 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">columnBuffer</span> | <span class="prop-type">number</span> | 2 | Number of columns rendered outside the grid viewport. |
 | <span class="prop-name">columnTypes</span> | <span class="prop-type">ColumnTypesRecord</span> |   | Extend native column types with your new column types. |
 | <span class="prop-name">components</span> | <span class="prop-type">GridSlotsComponent</span> |   | Overrideable components. |
-| <span class="prop-name">componentsProps</span> | <span class="prop-type">GridSlotsComponentProps</span> |   | Overrideable components Props. |
+| <span class="prop-name">componentsProps</span> | <span class="prop-type">GridSlotsComponentProps</span> |   | Overrideable components props dynamic passed to the component at rendering. |
 | <span class="prop-name">density</span> | <span class="prop-type">Density</span> | standard | Sets the density of the grid. |
 | <span class="prop-name">disableColumnMenu</span> | <span class="prop-type">boolean</span> | false | If `true`, the column menu is disabled. |
 | <span class="prop-name">disableColumnSelector</span> | <span class="prop-type">boolean</span> | false | If `true`, the column selector is disabled. |
