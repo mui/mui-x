@@ -20,13 +20,13 @@ export function useApiMethod<T extends Partial<GridApi>>(
       return;
     }
 
-  Object.keys(apiMethods).forEach((methodName) => {
-    if (!apiRef.current.hasOwnProperty(methodName)) {
-      logger.debug(`Adding ${apiName}.${methodName} to apiRef`);
-      apiRef.current[methodName] = (...args) => {
-        return apiMethodsRef.current[methodName](...args);
-      };
-    }
-  });
+    Object.keys(apiMethods).forEach((methodName) => {
+      if (!apiRef.current.hasOwnProperty(methodName)) {
+        logger.debug(`Adding ${apiName}.${methodName} to apiRef`);
+        apiRef.current[methodName] = (...args) => {
+          return apiMethodsRef.current[methodName](...args);
+        };
+      }
+    });
   }, [apiMethods, apiName, apiRef, logger]);
 }
