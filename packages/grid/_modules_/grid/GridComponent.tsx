@@ -15,6 +15,7 @@ import { GridRoot } from './components/containers/GridRoot';
 import { GridWindow } from './components/containers/GridWindow';
 import { Viewport } from './components/Viewport';
 import { Watermark } from './components/Watermark';
+import { GridContainer } from './components/containers/GridContainer';
 import { GridComponentProps } from './GridComponentProps';
 import { useColumnMenu } from './hooks/features/columnMenu/useColumnMenu';
 import { useColumns } from './hooks/features/columns/useColumns';
@@ -93,66 +94,68 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const showNoRowsOverlay = !props.loading && gridState.rows.totalRowCount === 0;
     return (
       <ApiContext.Provider value={apiRef}>
-        <AutoSizer onResize={onResize} nonce={props.nonce}>
-          {(size: any) => (
-            <GridRoot
-              ref={handleRef}
-              className={props.className}
-              size={size}
-              header={headerRef}
-              footer={footerRef}
-            >
-              <ErrorBoundary
-                hasError={errorState != null}
-                componentProps={errorState}
-                api={apiRef!}
-                logger={logger}
-                render={(errorProps) => (
-                  <GridMainContainer>
-                    <components.ErrorOverlay
-                      {...errorProps}
-                      {...props.componentsProps?.errorOverlay}
-                    />
-                  </GridMainContainer>
-                )}
+        <GridContainer>
+          <AutoSizer onResize={onResize} nonce={props.nonce}>
+            {(size: any) => (
+              <GridRoot
+                ref={handleRef}
+                className={props.className}
+                size={size}
+                header={headerRef}
+                footer={footerRef}
               >
-                <div ref={headerRef}>
-                  <components.Header {...props.componentsProps?.header} />
-                </div>
-                <GridMainContainer>
-                  <GridColumnHeaderMenu
-                    ContentComponent={components.ColumnMenu}
-                    contentComponentProps={props.componentsProps?.columnMenu}
-                  />
-                  <PreferencesPanel />
-                  <Watermark licenseStatus={props.licenseStatus} />
-                  <GridColumnsContainer ref={columnsContainerRef}>
-                    <ColumnsHeader ref={columnsHeaderRef} />
-                  </GridColumnsContainer>
-                  {showNoRowsOverlay && (
-                    <components.NoRowsOverlay {...props.componentsProps?.noRowsOverlay} />
+                <ErrorBoundary
+                  hasError={errorState != null}
+                  componentProps={errorState}
+                  api={apiRef!}
+                  logger={logger}
+                  render={(errorProps) => (
+                    <GridMainContainer>
+                      <components.ErrorOverlay
+                        {...errorProps}
+                        {...props.componentsProps?.errorOverlay}
+                      />
+                    </GridMainContainer>
                   )}
-                  {props.loading && (
-                    <components.LoadingOverlay {...props.componentsProps?.loadingOverlay} />
-                  )}
-                  <GridWindow ref={windowRef}>
-                    <Viewport ref={renderingZoneRef} />
-                  </GridWindow>
-                </GridMainContainer>
-                {!gridState.options.hideFooter && (
-                  <div ref={footerRef}>
-                    <components.Footer
-                      PaginationComponent={
-                        <components.Pagination {...props.componentsProps?.pagination} />
-                      }
-                      {...props.componentsProps?.footer}
-                    />
+                >
+                  <div ref={headerRef}>
+                    <components.Header {...props.componentsProps?.header} />
                   </div>
-                )}
-              </ErrorBoundary>
-            </GridRoot>
-          )}
-        </AutoSizer>
+                  <GridMainContainer>
+                    <GridColumnHeaderMenu
+                      ContentComponent={components.ColumnMenu}
+                      contentComponentProps={props.componentsProps?.columnMenu}
+                    />
+                    <PreferencesPanel />
+                    <Watermark licenseStatus={props.licenseStatus} />
+                    <GridColumnsContainer ref={columnsContainerRef}>
+                      <ColumnsHeader ref={columnsHeaderRef} />
+                    </GridColumnsContainer>
+                    {showNoRowsOverlay && (
+                      <components.NoRowsOverlay {...props.componentsProps?.noRowsOverlay} />
+                    )}
+                    {props.loading && (
+                      <components.LoadingOverlay {...props.componentsProps?.loadingOverlay} />
+                    )}
+                    <GridWindow ref={windowRef}>
+                      <Viewport ref={renderingZoneRef} />
+                    </GridWindow>
+                  </GridMainContainer>
+                  {!gridState.options.hideFooter && (
+                    <div ref={footerRef}>
+                      <components.Footer
+                        PaginationComponent={
+                          <components.Pagination {...props.componentsProps?.pagination} />
+                        }
+                        {...props.componentsProps?.footer}
+                      />
+                    </div>
+                  )}
+                </ErrorBoundary>
+              </GridRoot>
+            )}
+          </AutoSizer>
+        </GridContainer>
       </ApiContext.Provider>
     );
   },

@@ -467,4 +467,23 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       expect(document.querySelectorAll('.MuiDataGrid-overlay')[0].textContent).to.equal(message);
     });
   });
+
+  describe('autoHeight', () => {
+    before(function beforeHook() {
+      if (/jsdom/.test(window.navigator.userAgent)) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
+    it('Grid container should have height different from 0', () => {
+      const { getByRole } = render(
+        <div style={{ width: 300 }}>
+          <DataGrid {...baselineProps} autoHeight />
+        </div>,
+      );
+
+      expect(getByRole('grid').parentElement.clientHeight).to.not.equal(0);
+    });
+  });
 });
