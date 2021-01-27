@@ -1,4 +1,4 @@
-import { ApiRefProvider, DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import * as React from 'react';
 import { Story, Meta } from '@storybook/react';

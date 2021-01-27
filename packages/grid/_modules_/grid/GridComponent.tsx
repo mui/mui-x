@@ -40,13 +40,10 @@ import { useResizeContainer } from './hooks/utils/useResizeContainer';
 import { useVirtualRows } from './hooks/features/virtualization/useVirtualRows';
 import { useDensity } from './hooks/features/density';
 import { useStateProp } from './hooks/utils/useStateProp';
-import { ApiRef } from './models/api/apiRef';
-import { GridApi } from './models/api/gridApi';
 import { RootContainerRef } from './models/rootContainerRef';
 import { ApiContext } from './components/api-context';
 import { useFilter } from './hooks/features/filter/useFilter';
 import { useLocaleText } from './hooks/features/localeText/useLocaleText';
-import { EventEmitter } from './utils/EventEmitter';
 
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {
@@ -165,12 +162,3 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     );
   },
 );
-
-interface ApiRefProviderProp {
-  apiRef: ApiRef;
-  children?: any;
-}
-
-export function ApiRefProvider(props: ApiRefProviderProp) {
-  return <ApiContext.Provider value={props.apiRef}>{props.children}</ApiContext.Provider>;
-}

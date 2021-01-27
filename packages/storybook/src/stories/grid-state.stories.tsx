@@ -1,15 +1,6 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import {
-  ApiContext,
-  ApiRefProvider,
-  GridComponent,
-  GridState,
-  SortingState,
-  useApiRef,
-  StateChangeParams,
-  XGrid,
-} from '@material-ui/x-grid';
+import { GridState, SortingState, useApiRef, StateChangeParams, XGrid } from '@material-ui/x-grid';
 import { useData } from '../hooks/useData';
 
 export default {
@@ -188,7 +179,6 @@ const rows = [
 
 export function StrictDemo() {
   const apiRef = useApiRef();
-  apiRef.current.id = 123;
 
   return (
     <React.StrictMode>
