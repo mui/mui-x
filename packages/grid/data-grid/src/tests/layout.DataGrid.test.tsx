@@ -74,7 +74,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </div>,
         );
         expect(ref.current).to.be.instanceof(window.HTMLDivElement);
-        expect(ref.current).to.equal(container.firstChild.firstChild.firstChild);
+        expect(ref.current).to.equal(container.firstChild.firstChild);
       });
 
       function randomStringValue() {
@@ -90,9 +90,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </div>,
         );
 
-        expect(document.querySelector(`.${className}`)).to.equal(
-          container.firstChild.firstChild.firstChild,
-        );
+        expect(document.querySelector(`.${className}`)).to.equal(container.firstChild.firstChild);
       });
 
       it('should support columns.valueGetter', () => {
