@@ -23,16 +23,16 @@ export function ColumnHeadersItemCollection(props: ColumnHeadersItemCollectionPr
   const filterColumnLookup = useGridSelector(apiRef, filterColumnLookupSelector);
   const dragCol = useGridSelector(apiRef, columnReorderDragColSelector);
 
-  // const handleResizeStart = React.useCallback((params) => {
-  //   setResizingColField(params.field);
-  // }, []);
-  // const handleResizeStop = React.useCallback(() => {
-  //   setResizingColField('');
-  // }, []);
+  const handleResizeStart = React.useCallback((params) => {
+    setResizingColField(params.field);
+  }, []);
+  const handleResizeStop = React.useCallback(() => {
+    setResizingColField('');
+  }, []);
 
   // TODO refactor by putting resizing in the state so we avoid adding listeners.
-  // useApiEventHandler(apiRef!, COL_RESIZE_START, handleResizeStart);
-  // useApiEventHandler(apiRef!, COL_RESIZE_STOP, handleResizeStop);
+  useApiEventHandler(apiRef!, COL_RESIZE_START, handleResizeStart);
+  useApiEventHandler(apiRef!, COL_RESIZE_STOP, handleResizeStop);
 
   const items = columns.map((col, idx) => (
     <ColumnHeaderItem

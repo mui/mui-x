@@ -40,14 +40,22 @@ export const ColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function Colum
 
   return (
     <React.Fragment>
+      <ScrollArea scrollDirection="left" />
       {/* Header row isn't interactive, cells are, event delegation */}
       {/* eslint-disable-next-line jsx-a11y/interactive-supports-focus */}
       <div
         ref={ref}
-
+        className={wrapperCssClasses}
+        aria-rowindex={1}
+        role="row"
+        style={{ minWidth: containerSizes?.totalSizes?.width }}
+        onDragOver={handleDragOver}
       >
+        <LeftEmptyCell width={renderCtx?.leftEmptyWidth} height={headerHeight} />
         <ColumnHeadersItemCollection columns={renderedCols} />
+        <RightEmptyCell width={renderCtx?.rightEmptyWidth} height={headerHeight} />
       </div>
+      <ScrollArea scrollDirection="right" />
     </React.Fragment>
   );
 });

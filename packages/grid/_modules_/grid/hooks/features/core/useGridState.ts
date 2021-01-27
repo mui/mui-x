@@ -10,7 +10,7 @@ export const useGridState = (
 ): [GridState, (stateUpdaterFn: (oldState: GridState) => GridState) => void, () => void] => {
   useGridApi(apiRef);
   const forceUpdate = React.useCallback(
-    () => apiRef.current.forceUpdate(()=> apiRef.current.state),
+    () => apiRef.current.forceUpdate(() => apiRef.current.state),
     [apiRef],
   );
   const setGridState = React.useCallback(

@@ -193,7 +193,6 @@ export function StrictDemo() {
     <React.StrictMode>
       <div style={{width: 300, height: 300}}>
         <ApiRefProvider apiRef={apiRef}>
-
           <XGrid rows={rows} columns={columns}/>
         </ApiRefProvider>
       </div>
