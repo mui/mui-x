@@ -6,10 +6,7 @@ import { useGridState } from '../../hooks/features/core/useGridState';
 import { classnames } from '../../utils';
 import { ApiContext } from '../api-context';
 
-export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
-  header: React.RefObject<HTMLDivElement>;
-  footer: React.RefObject<HTMLDivElement>;
-}
+export type GridRootProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(
   props,
@@ -24,7 +21,9 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
   return (
     <div
       ref={ref}
-      className={classnames(classes.root, className)}
+      className={classnames(classes.root, className, {
+        'MuiDataGrid-autoHeight': gridState.options.autoHeight,
+      })}
       role="grid"
       aria-colcount={visibleColumnsLength}
       aria-rowcount={gridState.rows.totalRowCount}

@@ -24,6 +24,9 @@ export const useStyles = makeStyles(
         '& *, & *::before, & *::after': {
           boxSizing: 'inherit',
         },
+        '&.MuiDataGrid-autoHeight': {
+          height: 'auto',
+        },
         '& .MuiDataGrid-main': {
           position: 'relative',
           flexGrow: 1,
