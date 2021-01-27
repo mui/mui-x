@@ -9,18 +9,16 @@ export function useApiMethod<T extends Partial<GridApi>>(
   apiName: string,
 ) {
   const logger = useLogger('useApiMethod');
-
   const apiMethodsRef = React.useRef(apiMethods);
-  // apiMethodsRef.current = apiMethods;
 
   React.useEffect(() => {
     apiMethodsRef.current = apiMethods;
   }, [apiMethods]);
 
-  // React.useEffect(() => {
-  //   if (!apiRef.current.isInitialised) {
-  //     return;
-  //   }
+  React.useEffect(() => {
+    if (!apiRef.current.isInitialised) {
+      return;
+    }
 
   Object.keys(apiMethods).forEach((methodName) => {
     if (!apiRef.current.hasOwnProperty(methodName)) {
@@ -30,5 +28,5 @@ export function useApiMethod<T extends Partial<GridApi>>(
       };
     }
   });
-  // }, [apiMethods, apiName, apiRef, logger]);
+  }, [apiMethods, apiName, apiRef, logger]);
 }

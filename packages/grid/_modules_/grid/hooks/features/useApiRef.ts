@@ -7,9 +7,7 @@ import { EventEmitter } from '../../utils/EventEmitter';
  * Hook that instantiate an ApiRef to pass in component prop.
  */
 function createGridApi(): GridApi {
-  const api = new EventEmitter() as GridApi;
-
-  return api;
+  return new EventEmitter() as GridApi;
 }
 
 export function useApiRef(apiRefProp?: ApiRef): ApiRef {
