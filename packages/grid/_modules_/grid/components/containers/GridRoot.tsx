@@ -4,11 +4,9 @@ import { visibleColumnsLengthSelector } from '../../hooks/features/columns/colum
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { useGridState } from '../../hooks/features/core/useGridState';
 import { classnames } from '../../utils';
-import { getCurryTotalHeight } from '../../utils/getTotalHeight';
 import { ApiContext } from '../api-context';
 
 export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
-  size: { width: number; height: number };
   header: React.RefObject<HTMLDivElement>;
   footer: React.RefObject<HTMLDivElement>;
 }
@@ -17,22 +15,11 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
   props,
   ref,
 ) {
-  const { className, style, ...other } = props;
+  const { className, ...other } = props;
   const classes = useStyles();
   const apiRef = React.useContext(ApiContext);
   const visibleColumnsLength = useGridSelector(apiRef, visibleColumnsLengthSelector);
   const [gridState] = useGridState(apiRef!);
-
-  const getTotalHeight = React.useCallback(
-    (size) =>
-      getCurryTotalHeight(
-        gridState.options,
-        gridState.containerSizes,
-        props.header,
-        props.footer,
-      )(size),
-    [gridState.options, gridState.containerSizes, props.header, props.footer],
-  );
 
   return (
     <div
@@ -44,7 +31,6 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
       tabIndex={0}
       aria-label={apiRef!.current.getLocaleText('rootGridLabel')}
       aria-multiselectable={!gridState.options.disableMultipleSelection}
-      style={{ width: props.size.width, height: getTotalHeight(props.size), ...style }}
       {...other}
     />
   );

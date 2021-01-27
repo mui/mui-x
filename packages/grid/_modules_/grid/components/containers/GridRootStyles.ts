@@ -18,6 +18,7 @@ export const useStyles = makeStyles(
         color: theme.palette.text.primary,
         ...theme.typography.body2,
         outline: 'none',
+        height: '100%',
         display: 'flex',
         flexDirection: 'column',
         '& *, & *::before, & *::after': {
