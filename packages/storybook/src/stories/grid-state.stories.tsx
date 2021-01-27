@@ -187,13 +187,12 @@ const rows = [
 
 export function StrictDemo() {
   const apiRef = useApiRef();
+  apiRef.current.id = 123;
 
   return (
     <React.StrictMode>
       <div style={{width: 300, height: 300}}>
-        <ApiRefProvider apiRef={apiRef}>
-          <XGrid rows={rows} columns={columns}/>
-        </ApiRefProvider>
+          <XGrid rows={rows} columns={columns} apiRef={apiRef}/>
       </div>
     </React.StrictMode>
   );

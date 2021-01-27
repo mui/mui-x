@@ -9,6 +9,7 @@ export interface CoreApi extends EventEmitter {
    * Property that comes true when the grid has its EventEmitter initialised.
    */
   isInitialised: boolean;
+  id?: number;
   /**
    * The react ref of the grid root container div element.
    */

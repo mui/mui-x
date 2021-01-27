@@ -14,12 +14,9 @@ import { GridRoot } from './components/containers/GridRoot';
 import { GridWindow } from './components/containers/GridWindow';
 import { Viewport } from './components/Viewport';
 import { Watermark } from './components/Watermark';
-import { COLUMN_HEADER_CLICK } from './constants/eventsConstants';
 import { GridComponentProps } from './GridComponentProps';
 import { useColumnMenu } from './hooks/features/columnMenu/useColumnMenu';
-import { visibleColumnsSelector } from './hooks/features/columns/columnsSelector';
 import { useColumns } from './hooks/features/columns/useColumns';
-import { useGridSelector } from './hooks/features/core/useGridSelector';
 import { useGridState } from './hooks/features/core/useGridState';
 import { usePagination } from './hooks/features/pagination/usePagination';
 import { usePreferencesPanel } from './hooks/features/preferencesPanel/usePreferencesPanel';
@@ -43,46 +40,18 @@ import { useResizeContainer } from './hooks/utils/useResizeContainer';
 import { useVirtualRows } from './hooks/features/virtualization/useVirtualRows';
 import { useDensity } from './hooks/features/density';
 import { useStateProp } from './hooks/utils/useStateProp';
-import { ColParams } from './models/params/colParams';
+import { ApiRef } from './models/api/apiRef';
+import { GridApi } from './models/api/gridApi';
 import { RootContainerRef } from './models/rootContainerRef';
 import { ApiContext } from './components/api-context';
 import { useFilter } from './hooks/features/filter/useFilter';
 import { useLocaleText } from './hooks/features/localeText/useLocaleText';
-
-function ItemFoo(props) {
-  const apiRef = React.useContext(ApiContext);
-  const [gridState, setGridState, update] = useGridState(apiRef!)
-  const [originalState, setState] = React.useState<any>();
-  // const columns = useGridSelector(apiRef, visibleColumnsSelector);
-  const onHeaderTitleClick = React.useCallback((field) => {
-
-    setGridState(old => {
-      const newState = {...old, ...{sorting: {...old.sorting, sortModel: [{field, sort: 'asc' as 'asc'}]}}};
-      // setState(() => newState);
-      return newState;
-    });
-update();
-  }, [setGridState, update]);
-
-  // const sortModel = gridState.sorting.sortModel;
-  // const sortBy = sortModel.length > 0 ? sortModel[0].field : '';
-  return (
-    <div>
-      This is ITemFoo
-      sort: {props.sortBy}
-      <br />
-      {...gridState.columns.all.map(c=> (
-        <li key={c} onClick = {()=> onHeaderTitleClick(c) }>{c}</li>
-      ))}
-    </div>
-  )
-}
+import { EventEmitter } from './utils/EventEmitter';
 
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {
     const rootContainerRef: RootContainerRef = React.useRef<HTMLDivElement>(null);
     const handleRef = useForkRef(rootContainerRef, ref);
-    const [dummyState, setDummyState] = React.useState<any>();
 
     const footerRef = React.useRef<HTMLDivElement>(null);
     const headerRef = React.useRef<HTMLDivElement>(null);
@@ -91,7 +60,11 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const windowRef = React.useRef<HTMLDivElement>(null);
     const renderingZoneRef = React.useRef<HTMLDivElement>(null);
 
+    const apiContext = React.useContext(ApiContext);
+    console.log('API Prop: ', props.apiRef, apiContext?.current.id);
     const apiRef = useApiRef(props.apiRef);
+    // const apiRef = apiContext!; //|| internalApiRef;
+
     const [gridState] = useGridState(apiRef);
 
     const internalOptions = useOptionsProp(apiRef, props);
@@ -100,73 +73,126 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const logger = useLogger('GridComponent');
 
     useApi(rootContainerRef, columnsContainerRef, apiRef);
-    // const errorState = useErrorHandler(apiRef, props);
+    const errorState = useErrorHandler(apiRef, props);
     useEvents(rootContainerRef, apiRef);
-    // const onResize = useResizeContainer(apiRef);
+    const onResize = useResizeContainer(apiRef);
 
     useColumns(props.columns, apiRef);
     useRows(props.rows, apiRef);
-    // useKeyboard(rootContainerRef, apiRef);
-    // useSelection(apiRef);
+    useKeyboard(rootContainerRef, apiRef);
+    useSelection(apiRef);
     useSorting(apiRef, props.rows);
-    // useColumnMenu(apiRef);
-    // usePreferencesPanel(apiRef);
-    // useFilter(apiRef, props.rows);
-    // useContainerProps(windowRef, apiRef);
-    // useDensity(apiRef);
-    // useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
-    // useLocaleText(apiRef);
-    // useColumnReorder(apiRef);
-    // useColumnResize(columnsHeaderRef, apiRef);
-    // usePagination(apiRef);
+    useColumnMenu(apiRef);
+    usePreferencesPanel(apiRef);
+    useFilter(apiRef, props.rows);
+    useContainerProps(windowRef, apiRef);
+    useDensity(apiRef);
+    useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
+    useLocaleText(apiRef);
+    useColumnReorder(apiRef);
+    useColumnResize(columnsHeaderRef, apiRef);
+    usePagination(apiRef);
 
-    // const components = useComponents(props.components, props.componentsProps, apiRef);
-    // useStateProp(apiRef, props.state);
-    // useRenderInfoLog(apiRef, logger);
-    // const componentBaseProps = useBaseComponentProps(apiRef);
+    const components = useComponents(props.components, props.componentsProps, apiRef);
+    useStateProp(apiRef, props.state);
+    useRenderInfoLog(apiRef, logger);
+    const componentBaseProps = useBaseComponentProps(apiRef);
 
-    // const showNoRowsOverlay = !props.loading && gridState.rows.totalRowCount === 0;
-    // React.useEffect(()=> {
-    //     setDummyState(()=> gridState);
-    // }, [gridState])
-
-    const testLog = JSON.stringify(gridState?.sorting?.sortModel);
-    console.log(testLog);
-    const sortModel = gridState.sorting.sortModel;
-    const sortBy = sortModel.length > 0 ? sortModel[0].field : '';
-    console.log(`sortBy: ${sortBy} `);
-
-    React.useEffect(()=> {
-      console.log('sortmodel changed', gridState.sorting.sortModel)
-    }, [gridState.sorting.sortModel]);
-
+    const showNoRowsOverlay = !props.loading && gridState.rows.totalRowCount === 0;
     return (
-      <div>
-        <ApiContext.Provider value={props.apiRef || apiRef}>
-          <div>{testLog} & {sortBy}</div>
-          <div>
-            <ItemFoo sortBy={sortBy}/>
-            <GridColumnsContainer ref={columnsContainerRef}>
-              <ColumnsHeader ref={columnsHeaderRef}/>
-            </GridColumnsContainer>
-          </div>
-        </ApiContext.Provider>
-      </div>
+      <ApiContext.Provider value={apiRef}>
+          <AutoSizer onResize={onResize} nonce={props.nonce}>
+          {(size: any) => (
+            <GridRoot
+              ref={handleRef}
+              className={props.className}
+              size={size}
+              header={headerRef}
+              footer={footerRef}
+            >
+              <ErrorBoundary
+                hasError={errorState != null}
+                componentProps={errorState}
+                api={apiRef!}
+                logger={logger}
+                render={(errorProps) => (
+                  <GridMainContainer>
+                    <components.ErrorOverlay
+                      {...errorProps}
+                      {...componentBaseProps}
+                      {...props.componentsProps?.errorOverlay}
+                    />
+                  </GridMainContainer>
+                )}
+              >
+                <div ref={headerRef}>
+                  <components.Header {...componentBaseProps} {...props.componentsProps?.header} />
+                </div>
+                <GridMainContainer>
+                  <GridColumnHeaderMenu
+                    ContentComponent={components.ColumnMenu}
+                    contentComponentProps={{
+                      ...componentBaseProps,
+                      ...props.componentsProps?.columnMenu,
+                    }}
+                  />
+                  <Watermark licenseStatus={props.licenseStatus} />
+                  <GridColumnsContainer ref={columnsContainerRef}>
+                    <ColumnsHeader ref={columnsHeaderRef} />
+                  </GridColumnsContainer>
+                  {showNoRowsOverlay && (
+                    <components.NoRowsOverlay
+                      {...componentBaseProps}
+                      {...props.componentsProps?.noRowsOverlay}
+                    />
+                  )}
+                  {props.loading && (
+                    <components.LoadingOverlay
+                      {...componentBaseProps}
+                      {...props.componentsProps?.loadingOverlay}
+                    />
+                  )}
+                  <GridWindow ref={windowRef}>
+                    <Viewport ref={renderingZoneRef} />
+                  </GridWindow>
+                </GridMainContainer>
+                {!gridState.options.hideFooter && (
+                  <div ref={footerRef}>
+                    <components.Footer {...componentBaseProps} {...props.componentsProps?.footer} />
+                  </div>
+                )}
+              </ErrorBoundary>
+            </GridRoot>
+          )}
+        </AutoSizer>
+      </ApiContext.Provider>
     );
   },
 );
-export function ApiRefProvider(props) {
-  const apiRef = useApiRef(props.apiRef);
-  return (
-    <ApiContext.Provider value={props.apiRef || apiRef}>
+
+function createGridApi(): GridApi {
+    return new EventEmitter() as GridApi;
+}
+
+interface ApiRefProviderProp {
+    apiRef: ApiRef;
+    children?: any;
+}
+
+export function ApiRefProvider(props: ApiRefProviderProp) {
+  // const apiRef = useApiRef(props.apiRef);
+    // const internalApiRef = React.useRef<GridApi>(createGridApi());
+    const internalApiRef = React.useRef<GridApi>(createGridApi());
+
+    // const handleRef = useForkRef(props.apiRef, internalApiRef);
+
+    React.useEffect(()=> {
+        // internalApiRef.current = props.apiRef.current;
+    });
+
+    return (
+    <ApiContext.Provider value={props.apiRef}>
       {props.children}
     </ApiContext.Provider>
     )
 }
-
-// export function GridComponent(props) {
-// return (
-//     <GridInternalComponent {...props} />
-//
-// )
-// }

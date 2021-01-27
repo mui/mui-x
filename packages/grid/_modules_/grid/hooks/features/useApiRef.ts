@@ -15,8 +15,21 @@ function createGridApi(): GridApi {
 
 export function useApiRef(apiRefProp?: ApiRef): ApiRef {
   const internalApiRef = React.useRef<GridApi>(createGridApi());
-  const apiRef = React.useMemo(() => apiRefProp || internalApiRef, [apiRefProp, internalApiRef]);
-  return apiRef;
+  // const [state, setState] = React.useState(internalApiRef);
+
+  // const apiRef = React.useMemo(() => apiRefProp || internalApiRef, [apiRefProp, internalApiRef]);
+  // eslint-disable-next-line no-console
+  // console.log(`Apiref Id: ${apiRef.current.id}`)
+
+
+
+  React.useEffect(()=> {
+    if(apiRefProp) {
+      apiRefProp.current = internalApiRef.current;
+    }
+  });
+
+  return internalApiRef;
 
   // const apiRef = React.useContext(ApiContext);
   // const internalApiRef = React.useRef<GridApi>(createGridApi());

@@ -1,4 +1,4 @@
-import { DataGrid } from '@material-ui/data-grid';
+import { ApiRefProvider, DataGrid } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import * as React from 'react';
 import { Story, Meta } from '@storybook/react';
@@ -72,11 +72,14 @@ export function HiddenPagination() {
 
 export function PaginationApiTests() {
   const apiRef: ApiRef = useApiRef();
+  apiRef.current.id = 123;
   const data = useData(2000, 200);
   const [autosize, setAutoSize] = React.useState(false);
 
   React.useEffect(() => {
-    return apiRef.current.onPageChange(action('pageChange'));
+    if (apiRef.current.onPageChange) {
+      return apiRef.current.onPageChange(action('pageChange'));
+    }
   }, [apiRef, data]);
 
   const backToFirstPage = () => {
@@ -94,7 +97,8 @@ export function PaginationApiTests() {
   };
   return (
     <React.Fragment>
-      <div>
+      <React.StrictMode>
+        <div>
         <Button component="button" color="primary" variant="outlined" onClick={backToFirstPage}>
           Back to first page
         </Button>
@@ -120,9 +124,9 @@ export function PaginationApiTests() {
       </div>
       <div className="grid-container">
         <XGrid
+          apiRef={apiRef}
           rows={data.rows}
           columns={data.columns}
-          apiRef={apiRef}
           pagination
           pageSize={myPageSize}
           autoPageSize={autosize}
@@ -138,6 +142,7 @@ export function PaginationApiTests() {
           }}
         />
       </div>
+      </React.StrictMode>
     </React.Fragment>
   );
 }
