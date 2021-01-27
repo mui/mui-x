@@ -96,12 +96,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     return (
       <ApiContext.Provider value={apiRef}>
         <NoSsr>
-          <GridRoot
-            ref={handleRef}
-            className={props.className}
-            header={headerRef}
-            footer={footerRef}
-          >
+          <GridRoot ref={handleRef} className={props.className}>
             <ErrorBoundary
               hasError={errorState != null}
               componentProps={errorState}
