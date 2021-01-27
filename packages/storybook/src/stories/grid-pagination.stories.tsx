@@ -72,14 +72,11 @@ export function HiddenPagination() {
 
 export function PaginationApiTests() {
   const apiRef: ApiRef = useApiRef();
-  apiRef.current.id = 123;
   const data = useData(2000, 200);
   const [autosize, setAutoSize] = React.useState(false);
 
   React.useEffect(() => {
-    if (apiRef.current.onPageChange) {
-      return apiRef.current.onPageChange(action('pageChange'));
-    }
+    return apiRef.current.onPageChange(action('pageChange'));
   }, [apiRef, data]);
 
   const backToFirstPage = () => {
