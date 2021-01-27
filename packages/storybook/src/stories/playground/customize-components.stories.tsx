@@ -15,6 +15,9 @@ import {
   PreferencesPanel,
   GridFooter,
   GridToolbar,
+  useApiRef,
+  ApiRefProvider,
+  FilterToolbarButton,
 } from '@material-ui/x-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CodeIcon from '@material-ui/icons/Code';
@@ -465,3 +468,22 @@ CustomPanelInFooter.args = {
     Header: GridToolbar,
   },
 };
+
+export function CustomLayout() {
+  const apiRef = useApiRef();
+  apiRef.current.id = 123;
+
+  return (
+    <React.StrictMode>
+      <ApiRefProvider apiRef={apiRef}>
+        <div>
+          This button is outside Xgrid!
+          <FilterToolbarButton />
+        </div>
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid rows={rows} columns={columns} apiRef={apiRef} />
+        </div>
+      </ApiRefProvider>
+    </React.StrictMode>
+  );
+}
