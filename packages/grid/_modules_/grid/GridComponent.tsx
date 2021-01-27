@@ -68,6 +68,7 @@ update();
   // const sortBy = sortModel.length > 0 ? sortModel[0].field : '';
   return (
     <div>
+      This is ITemFoo
       sort: {props.sortBy}
       <br />
       {...gridState.columns.all.map(c=> (
@@ -135,18 +136,37 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const sortBy = sortModel.length > 0 ? sortModel[0].field : '';
     console.log(`sortBy: ${sortBy} `);
 
+    React.useEffect(()=> {
+      console.log('sortmodel changed', gridState.sorting.sortModel)
+    }, [gridState.sorting.sortModel]);
+
     return (
       <div>
-        <div>{testLog} & {sortBy}</div>
-        <StateContext.Provider value={dummyState}>
-            <div>
-              <ItemFoo sortBy={sortBy} />
-              <GridColumnsContainer ref={columnsContainerRef}>
-                <ColumnsHeader ref={columnsHeaderRef}/>
-              </GridColumnsContainer>
-            </div>
-        </StateContext.Provider>
+        <ApiContext.Provider value={props.apiRef || apiRef}>
+          <div>{testLog} & {sortBy}</div>
+          <div>
+            <ItemFoo sortBy={sortBy}/>
+            <GridColumnsContainer ref={columnsContainerRef}>
+              <ColumnsHeader ref={columnsHeaderRef}/>
+            </GridColumnsContainer>
+          </div>
+        </ApiContext.Provider>
       </div>
     );
   },
 );
+export function ApiRefProvider(props) {
+  const apiRef = useApiRef(props.apiRef);
+  return (
+    <ApiContext.Provider value={props.apiRef || apiRef}>
+      {props.children}
+    </ApiContext.Provider>
+    )
+}
+
+// export function GridComponent(props) {
+// return (
+//     <GridInternalComponent {...props} />
+//
+// )
+// }

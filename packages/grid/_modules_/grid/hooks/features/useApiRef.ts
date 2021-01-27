@@ -14,20 +14,21 @@ function createGridApi(): GridApi {
 }
 
 export function useApiRef(apiRefProp?: ApiRef): ApiRef {
-  // const internalApiRef = React.useRef<GridApi>(createGridApi());
-  // const apiRef = React.useMemo(() => apiRefProp || internalApiRef, [apiRefProp, internalApiRef]);
-  // return apiRef;
-
-  const apiRef = React.useContext(ApiContext);
   const internalApiRef = React.useRef<GridApi>(createGridApi());
+  const apiRef = React.useMemo(() => apiRefProp || internalApiRef, [apiRefProp, internalApiRef]);
+  return apiRef;
+
+  // const apiRef = React.useContext(ApiContext);
+  // const internalApiRef = React.useRef<GridApi>(createGridApi());
+  // if(apiRef) {
+  //   return apiRef
+  // }
   // if(apiRefProp) {
   //   return apiRefProp;
   // }
+//
+// return internalApiRef
 
-if(apiRef) {
-  return apiRef
-}
-return internalApiRef
   // const apiRef = useForkRef(internalApiRef, apiRefProp);
     
     //React.useMemo(() => apiRefProp || internalApiRef, [apiRefProp, internalApiRef]);

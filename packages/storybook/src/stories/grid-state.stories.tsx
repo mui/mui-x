@@ -1,6 +1,14 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import { ApiContext, GridState, SortingState, StateContext, useApiRef, XGrid } from '@material-ui/x-grid';
+import {
+  ApiContext, ApiRefProvider,
+  GridComponent,
+  GridState,
+  SortingState,
+  StateContext,
+  useApiRef,
+  XGrid,
+} from '@material-ui/x-grid';
 import { StateChangeParams } from '../../../grid/_modules_/grid/models/params/stateChangeParams';
 import { useData } from '../hooks/useData';
 
@@ -180,15 +188,14 @@ const rows = [
 
 export function StrictDemo() {
   const apiRef = useApiRef();
-  const [state] = React.useState<any>();
 
   return (
     <React.StrictMode>
-      <div style={{ width: 300, height: 300 }}>
-        <ApiContext.Provider value={apiRef}>
+      <div style={{width: 300, height: 300}}>
+        <ApiRefProvider apiRef={apiRef}>
 
-        <XGrid rows={rows} columns={columns} state={state}  />
-        </ApiContext.Provider>
+          <XGrid rows={rows} columns={columns}/>
+        </ApiRefProvider>
       </div>
     </React.StrictMode>
   );
