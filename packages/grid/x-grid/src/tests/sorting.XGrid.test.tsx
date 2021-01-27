@@ -111,7 +111,7 @@ describe('<XGrid /> - Sorting', () => {
     expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
   });
 
-  it.only('should allow multiple sort columns and', () => {
+  it('should allow multiple sort columns and', () => {
     const sortModel: SortModel = [
       { field: 'year', sort: 'desc' },
       { field: 'brand', sort: 'asc' },
