@@ -1,7 +1,8 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import {
-  ApiContext, ApiRefProvider,
+  ApiContext,
+  ApiRefProvider,
   GridComponent,
   GridState,
   SortingState,
@@ -157,32 +158,32 @@ export function InitialStateWithApiRef() {
 
 const columns = [
   {
-    field: "id"
+    field: 'id',
   },
   {
-    field: "name"
+    field: 'name',
   },
   {
-    field: "data"
-  }
+    field: 'data',
+  },
 ];
 
 const rows = [
   {
     id: 1,
-    name: "1",
-    data: "123"
+    name: '1',
+    data: '123',
   },
   {
     id: 2,
-    name: "2",
-    data: "23"
+    name: '2',
+    data: '23',
   },
   {
     id: 3,
-    name: "3",
-    data: "3"
-  }
+    name: '3',
+    data: '3',
+  },
 ];
 
 export function StrictDemo() {
@@ -191,8 +192,8 @@ export function StrictDemo() {
 
   return (
     <React.StrictMode>
-      <div style={{width: 300, height: 300}}>
-          <XGrid rows={rows} columns={columns} apiRef={apiRef}/>
+      <div style={{ width: 300, height: 300 }}>
+        <XGrid rows={rows} columns={columns} apiRef={apiRef} />
       </div>
     </React.StrictMode>
   );

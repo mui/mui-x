@@ -60,11 +60,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const windowRef = React.useRef<HTMLDivElement>(null);
     const renderingZoneRef = React.useRef<HTMLDivElement>(null);
 
-    const apiContext = React.useContext(ApiContext);
-    console.log('API Prop: ', props.apiRef, apiContext?.current.id);
     const apiRef = useApiRef(props.apiRef);
-    // const apiRef = apiContext!; //|| internalApiRef;
-
     const [gridState] = useGridState(apiRef);
 
     const internalOptions = useOptionsProp(apiRef, props);
@@ -75,6 +71,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useApi(rootContainerRef, columnsContainerRef, apiRef);
     const errorState = useErrorHandler(apiRef, props);
     useEvents(rootContainerRef, apiRef);
+    useLocaleText(apiRef);
     const onResize = useResizeContainer(apiRef);
 
     useColumns(props.columns, apiRef);
@@ -88,7 +85,6 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useContainerProps(windowRef, apiRef);
     useDensity(apiRef);
     useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
-    useLocaleText(apiRef);
     useColumnReorder(apiRef);
     useColumnResize(columnsHeaderRef, apiRef);
     usePagination(apiRef);
@@ -101,7 +97,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const showNoRowsOverlay = !props.loading && gridState.rows.totalRowCount === 0;
     return (
       <ApiContext.Provider value={apiRef}>
-          <AutoSizer onResize={onResize} nonce={props.nonce}>
+        <AutoSizer onResize={onResize} nonce={props.nonce}>
           {(size: any) => (
             <GridRoot
               ref={handleRef}
@@ -170,29 +166,11 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
   },
 );
 
-function createGridApi(): GridApi {
-    return new EventEmitter() as GridApi;
-}
-
 interface ApiRefProviderProp {
-    apiRef: ApiRef;
-    children?: any;
+  apiRef: ApiRef;
+  children?: any;
 }
 
 export function ApiRefProvider(props: ApiRefProviderProp) {
-  // const apiRef = useApiRef(props.apiRef);
-    // const internalApiRef = React.useRef<GridApi>(createGridApi());
-    const internalApiRef = React.useRef<GridApi>(createGridApi());
-
-    // const handleRef = useForkRef(props.apiRef, internalApiRef);
-
-    React.useEffect(()=> {
-        // internalApiRef.current = props.apiRef.current;
-    });
-
-    return (
-    <ApiContext.Provider value={props.apiRef}>
-      {props.children}
-    </ApiContext.Provider>
-    )
+  return <ApiContext.Provider value={props.apiRef}>{props.children}</ApiContext.Provider>;
 }
