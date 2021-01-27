@@ -11,6 +11,10 @@ import {
   ColumnMenuProps,
   BaseComponentProps,
   GridColumnHeaderMenuItems,
+  PanelProps,
+  PreferencesPanel,
+  GridFooter,
+  GridToolbar,
 } from '@material-ui/x-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CodeIcon from '@material-ui/icons/Code';
@@ -370,39 +374,94 @@ export function DynamicIconUpdate() {
 
   return (
     <React.Fragment>
-      <React.StrictMode>
-        <div>
-          <Button
-            component="button"
-            color="primary"
-            variant="outlined"
-            onClick={() => {
-              setIcon(() => MyIcon2);
-            }}
-          >
-            Change Icon
-          </Button>
-          <Button
-            component="button"
-            color="primary"
-            variant="outlined"
-            onClick={() => {
-              setIcon(undefined);
-            }}
-          >
-            Clear icon
-          </Button>
-        </div>
-        <div className="grid-container">
-          <XGrid
-            {...data}
-            components={{
-              DensityStandardIcon: icon,
-            }}
-            showToolbar
-          />
-        </div>
-      </React.StrictMode>
+      <div>
+        <Button
+          component="button"
+          color="primary"
+          variant="outlined"
+          onClick={() => {
+            setIcon(() => MyIcon2);
+          }}
+        >
+          Change Icon
+        </Button>
+        <Button
+          component="button"
+          color="primary"
+          variant="outlined"
+          onClick={() => {
+            setIcon(undefined);
+          }}
+        >
+          Clear icon
+        </Button>
+      </div>
+      <div className="grid-container">
+        <XGrid
+          {...data}
+          components={{
+            DensityStandardIcon: icon,
+          }}
+          showToolbar
+        />
+      </div>
     </React.Fragment>
   );
 }
+
+function CustomFilterPanel(props: { bg?: string } & BaseComponentProps) {
+  return (
+    <div style={{ width: 500, height: 100, background: props.bg, color: 'white' }}>
+      My Custom Filter Panel
+    </div>
+  );
+}
+function CustomColumnsPanel(props: { bg?: string } & BaseComponentProps) {
+  return (
+    <div style={{ width: 500, height: 300, background: props.bg }}>My Custom Columns Panel</div>
+  );
+}
+export const CustomFilterColumnsPanels = Template.bind({});
+CustomFilterColumnsPanels.args = {
+  showToolbar: true,
+  components: {
+    FilterPanel: CustomFilterPanel,
+    ColumnsPanel: CustomColumnsPanel,
+  },
+  componentsProps: {
+    filterPanel: { bg: 'blue' },
+    columnsPanel: { bg: 'red' },
+  },
+};
+function CustomPanelComponent(props: BaseComponentProps & PanelProps) {
+  if (!props.open) {
+    return null;
+  }
+
+  return <div style={{ maxHeight: 500, overflow: 'auto', display: 'flex' }}>{props.children}</div>;
+}
+export const CustomPanel = Template.bind({});
+CustomPanel.args = {
+  showToolbar: true,
+  components: {
+    Panel: CustomPanelComponent,
+  },
+};
+
+function FooterWithPanel() {
+  return (
+    <React.Fragment>
+      <GridFooter />
+      <PreferencesPanel />
+    </React.Fragment>
+  );
+}
+export const CustomPanelInFooter = Template.bind({});
+CustomPanelInFooter.args = {
+  showToolbar: true,
+  components: {
+    Panel: CustomPanelComponent,
+    Footer: FooterWithPanel,
+    Header: GridToolbar,
+  },
+};

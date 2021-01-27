@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/x-license",
-  "version": "4.0.0-alpha.17",
+  "version": "4.0.0-alpha.18",
   "description": "Material-UI X License verification",
   "author": "Material-UI Team",
   "main": "dist/cjs/index.js",
@@ -25,8 +25,8 @@
     "licensegen": "./bin/license-gen-script.js"
   },
   "dependencies": {
-    "yargs": "^15.0.0",
-    "esm": "^3.2.25"
+    "esm": "^3.2.25",
+    "yargs": "^15.0.0"
   },
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0"

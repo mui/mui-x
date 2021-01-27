@@ -3,6 +3,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.18](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.17...v4.0.0-alpha.18)
+
+###### _Jan 26, 2021_
+
+Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add support for Material-UI v5-alpha (#855) @DanailH.
+  The data grid supports Material-UI v4 and v5. We aim to retain the support for v4 as long as v5 hasn't reached the beta phase.
+- 💅 Update the customization API to be closer to Material-UI v5.
+  The date grid accepts two props: `components` and `componentsProps`.
+  The first prop allows to swapping specific components used in slots the grid, like the checkboxes.
+  The second one allows providing extra props to each slot. It avoids the need for using the React context to access information from outside the data grid.
+
+  See the [RFC](https://github.com/mui-org/material-ui/issues/21453) for more details.
+- 🐛 Polish existing features, fix 3 issues.
+
+### @material-ui/x-grid@v4.0.0-alpha.18 / @material-ui/data-grid@v4.0.0-alpha.18
+
+#### Breaking changes
+
+- [DataGrid] Implement customization pattern of Material-UI v5 (#851, #879) @dtassone
+
+  - Capitalize the keys of the `components` prop. This change aims to bring consistency with the customization pattern of Material-UI v5:
+
+  ```diff
+  <DataGrid
+    components={{
+  -   noRowsOverlay: CustomNoRowsOverlay,
+  +   NoRowOverlay: CustomNoRowsOverlay,
+    }}
+  />
+  ```
+
+  - Move all the icon components overrides in the `components` prop. And added the suffix 'Icon' on each icon component. This change aims to bring consistency with the customization pattern of Material-UI v5:
+
+  ```diff
+  <DataGrid
+  - icons: {{
+  -   ColumnSortedAscending: SortedAscending,
+  - }},
+  + components={{
+  +   ColumnSortedAscendingIcon: SortedAscending,
+  + }}
+  />
+  ```
+
+  - Change the props provided to the component of the `components` prop. Expose the whole state instead of an arbitrary set of props:
+
+  ```diff
+  -function CustomPagination(props: ComponentProps) {
+  -  const { pagination, api } = props;
+  +function CustomPagination(props: BaseComponentProps) {
+  +  const { state, api } = props;
+
+     return (
+       <Pagination
+  -      page={pagination.page}
+  -      count={pagination.pageCount}
+  +      page={state.pagination.page}
+  +      count={state.pagination.pageCount}
+
+  // ...
+
+  <DataGrid components={{ Pagination: CustomPagination }} />
+  ```
+
+#### Changes
+
+- [DataGrid] Add customisation on panels (#890) @dtassone
+- [DataGrid] Add support for Material-UI v5-alpha (#855) @DanailH
+- [DataGrid] Fix footer count not shown on small screen (#899) @mnajdova
+- [DataGrid] Fix column selector crash when hiding columns (#875) @DanailH
+- [DataGrid] Fix <kbd>Shift</kbd> + <kbd>Space</kbd> keyboard regression to select row (#897) @dtassone
+
+### docs
+
+- [docs] Fix imports for x-grid-data-generator (#887) @DanailH
+- [docs] Skip download of playwright for docs @oliviertassinari
+- [CHANGELOG] Polish @oliviertassinari
+
+### core
+
+- [core] Automation for duplicate issues (#878) @oliviertassinari
+- [core] Replace commander with yargs (#872) @dependabot-preview
+- [core] Update monorepo (#884) @oliviertassinari
+
 ## [4.0.0-alpha.17](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.15...v4.0.0-alpha.17)
 
 ###### _Jan 14, 2021_

@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   input: {
     display: 'none',
     [theme.breakpoints.up('md')]: {
-      display: 'block',
+      display: 'inline-flex',
     },
   },
 }));
