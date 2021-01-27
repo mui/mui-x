@@ -259,9 +259,11 @@ export const useStyles = makeStyles(
           '& .MuiDataGrid-selectedRowCount': {
             visibility: 'hidden',
             width: 0,
+            height: 0,
             [theme.breakpoints.up('sm')]: {
               visibility: 'visible',
               width: 'auto',
+              height: 'auto',
             },
           },
         },
