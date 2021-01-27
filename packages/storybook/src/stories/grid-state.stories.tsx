@@ -5,11 +5,10 @@ import {
   GridComponent,
   GridState,
   SortingState,
-  StateContext,
   useApiRef,
+  StateChangeParams,
   XGrid,
 } from '@material-ui/x-grid';
-import { StateChangeParams } from '../../../grid/_modules_/grid/models/params/stateChangeParams';
 import { useData } from '../hooks/useData';
 
 export default {

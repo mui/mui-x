@@ -45,7 +45,7 @@ import { useDensity } from './hooks/features/density';
 import { useStateProp } from './hooks/utils/useStateProp';
 import { ColParams } from './models/params/colParams';
 import { RootContainerRef } from './models/rootContainerRef';
-import { ApiContext, StateContext } from './components/api-context';
+import { ApiContext } from './components/api-context';
 import { useFilter } from './hooks/features/filter/useFilter';
 import { useLocaleText } from './hooks/features/localeText/useLocaleText';
 
