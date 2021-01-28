@@ -94,52 +94,50 @@ export function PaginationApiTests() {
   };
   return (
     <React.Fragment>
-      <React.StrictMode>
-        <div>
-          <Button component="button" color="primary" variant="outlined" onClick={backToFirstPage}>
-            Back to first page
-          </Button>
-          <Button
-            component="button"
-            color="primary"
-            variant="outlined"
-            onClick={changePageSizeWithOptionProp}
-          >
-            Change pageSize with Options
-          </Button>
-          <Button
-            component="button"
-            color="primary"
-            variant="outlined"
-            onClick={changePageSizeWithApi}
-          >
-            Change pageSize with Api
-          </Button>
-          <Button color="primary" variant="outlined" onClick={() => setAutoSize((p) => !p)}>
-            toggle pageAutoSize
-          </Button>
-        </div>
-        <div className="grid-container">
-          <XGrid
-            apiRef={apiRef}
-            rows={data.rows}
-            columns={data.columns}
-            pagination
-            pageSize={myPageSize}
-            autoPageSize={autosize}
-            components={{
-              Pagination: ({ state }) => (
-                <Pagination
-                  className="my-custom-pagination"
-                  page={state.pagination.page}
-                  count={state.pagination.pageCount}
-                  onChange={(e, value) => apiRef.current.setPage(value)}
-                />
-              ),
-            }}
-          />
-        </div>
-      </React.StrictMode>
+      <div>
+        <Button component="button" color="primary" variant="outlined" onClick={backToFirstPage}>
+          Back to first page
+        </Button>
+        <Button
+          component="button"
+          color="primary"
+          variant="outlined"
+          onClick={changePageSizeWithOptionProp}
+        >
+          Change pageSize with Options
+        </Button>
+        <Button
+          component="button"
+          color="primary"
+          variant="outlined"
+          onClick={changePageSizeWithApi}
+        >
+          Change pageSize with Api
+        </Button>
+        <Button color="primary" variant="outlined" onClick={() => setAutoSize((p) => !p)}>
+          toggle pageAutoSize
+        </Button>
+      </div>
+      <div className="grid-container">
+        <XGrid
+          apiRef={apiRef}
+          rows={data.rows}
+          columns={data.columns}
+          pagination
+          pageSize={myPageSize}
+          autoPageSize={autosize}
+          components={{
+            Pagination: ({ state }) => (
+              <Pagination
+                className="my-custom-pagination"
+                page={state.pagination.page}
+                count={state.pagination.pageCount}
+                onChange={(e, value) => apiRef.current.setPage(value)}
+              />
+            ),
+          }}
+        />
+      </div>
     </React.Fragment>
   );
 }
