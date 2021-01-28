@@ -48,8 +48,7 @@ describe('<XGrid /> - Pagination', () => {
       );
     };
 
-    // TODO fix StrictMode support
-    render(<GridTest />, { strict: false });
+    render(<GridTest />);
 
     let cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
     expect(cell).to.have.text('Nike');

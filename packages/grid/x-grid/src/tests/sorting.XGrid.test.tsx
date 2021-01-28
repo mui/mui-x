@@ -68,7 +68,7 @@ describe('<XGrid /> - Sorting', () => {
   const renderBrandSortedAsc = () => {
     const model: SortModel = [{ field: 'brand', sort: 'asc' }];
 
-    render(<TestCase model={model} />, { strict: false });
+    render(<TestCase model={model} />);
   };
 
   it('should apply the sortModel prop correctly', () => {

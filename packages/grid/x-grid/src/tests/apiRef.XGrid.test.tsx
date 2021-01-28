@@ -56,7 +56,7 @@ describe('<XGrid /> - apiRef', () => {
   };
 
   it('should allow to reset rows with setRows and render after 100ms', () => {
-    render(<TestCase />, { strict: false });
+    render(<TestCase />);
     const newRows = [
       {
         id: 3,
@@ -72,7 +72,7 @@ describe('<XGrid /> - apiRef', () => {
   });
 
   it('should allow to update row data', () => {
-    render(<TestCase />, { strict: false });
+    render(<TestCase />);
     apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
     apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]);
     apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]);
@@ -81,7 +81,7 @@ describe('<XGrid /> - apiRef', () => {
   });
 
   it('update row data can also add rows', () => {
-    render(<TestCase />, { strict: false });
+    render(<TestCase />);
     apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
     apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]);
     apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]);
