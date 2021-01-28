@@ -380,7 +380,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         }
       });
 
-      it('Grid wrapper should have height different from 0', () => {
+      it('Grid wrapper should have height different from 0 when autoHeight', () => {
         const { getByRole } = render(
           <div style={{ width: 300 }}>
             <DataGrid {...baselineProps} autoHeight />
