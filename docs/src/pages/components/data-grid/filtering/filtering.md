@@ -49,7 +49,11 @@ const columns = [{ field: 'image', filterable: false }];
 The data grid supports different operators for the native column types.
 However, you can extend the operator and add your own, customize the input component or set your own operator for a new column type.
 
-1. **Custom input**. In this demo, you will see how to reuse the numeric filter and customize the input filter value component.
+1. **Custom input**.
+
+In this demo, you will see how to reuse the numeric filter and customize the input filter value component.
+
+The rating column reuses the numeric operator, but the input value is a new rating component.
 
 {{"demo": "pages/components/data-grid/filtering/ExtendNumericOperator.js", "bg": "inline"}}
 
@@ -57,19 +61,21 @@ However, you can extend the operator and add your own, customize the input compo
 
 In this demo, you will see how to extend an existing column type, add your own filter operators with filter input value props.
 
-If you open the filter panel for the `totalPrice` column, you will see that it only contains 2 operators `<`, `>`, and that the input field is prefixed with '$'.
+As you can see in the filter panel, the `totalPrice` column only contains 2 operators `<`, `>`, and the input field is prefixed with `$`.
 
 {{"demo": "pages/components/data-grid/filtering/ColumnTypeFilteringGrid.js", "bg": "inline"}}
 
 3. **Custom operator**.
 
-In this last demo, you will see how to create a complete new operator for a specific column.
+In this demo, you will see how to create a complete new operator for a specific column.
+
+The rating column contains new `From` operator as you can see in the filter panel.
 
 {{"demo": "pages/components/data-grid/filtering/CustomRatingOperator.js", "bg": "inline"}}
 
 ### Server-side filter
 
-As in the sort feature, filter can be run server side by setting the 'filterMode' prop to 'server', and implementing the 'onFilterChange' handler.
+As in the sort feature, filter can be run server side by setting the `filterMode` prop to `server`, and implementing the `onFilterChange` handler.
 
 ```tsx
 <DataGrid
