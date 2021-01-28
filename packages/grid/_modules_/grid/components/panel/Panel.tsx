@@ -50,8 +50,8 @@ export function Panel(props: PanelProps) {
   }, [apiRef]);
 
   let anchorEl;
-  if (apiRef!.current && apiRef!.current.columnHeadersElementRef!.current) {
-    anchorEl = apiRef?.current.columnHeadersElementRef!.current;
+  if (apiRef!.current && apiRef!.current.columnHeadersElementRef?.current) {
+    anchorEl = apiRef?.current.columnHeadersElementRef?.current;
   }
 
   if (!anchorEl) {

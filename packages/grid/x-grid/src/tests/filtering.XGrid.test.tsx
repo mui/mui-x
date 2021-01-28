@@ -79,7 +79,7 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should apply the filterModel prop correctly on ApiRef setRows', () => {
-    render(<TestCase model={model} />, { strict: false });
+    render(<TestCase model={model} />);
 
     const newRows = [
       {
@@ -101,7 +101,7 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should apply the filterModel prop correctly on ApiRef update row data', () => {
-    render(<TestCase model={model} />, { strict: false });
+    render(<TestCase model={model} />);
     apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
     apiRef.current.updateRows([{ id: 0, brand: 'Patagonia' }]);
     clock.tick(100);
@@ -109,7 +109,7 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should allow apiRef to setFilterModel', () => {
-    render(<TestCase model={model} />, { strict: false });
+    render(<TestCase model={model} />);
     apiRef.current.setFilterModel({
       items: [
         {
@@ -143,7 +143,7 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should allow multiple filter via apiRef', () => {
-    render(<TestCase model={model} />, { strict: false });
+    render(<TestCase model={model} />);
     const newModel = {
       items: [
         {

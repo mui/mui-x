@@ -120,9 +120,9 @@ export function PaginationApiTests() {
       </div>
       <div className="grid-container">
         <XGrid
+          apiRef={apiRef}
           rows={data.rows}
           columns={data.columns}
-          apiRef={apiRef}
           pagination
           pageSize={myPageSize}
           autoPageSize={autosize}

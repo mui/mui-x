@@ -68,6 +68,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useApi(rootContainerRef, columnsContainerRef, apiRef);
     const errorState = useErrorHandler(apiRef, props);
     useEvents(rootContainerRef, apiRef);
+    useLocaleText(apiRef);
     const onResize = useResizeContainer(apiRef);
 
     useColumns(props.columns, apiRef);
@@ -81,7 +82,6 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useContainerProps(windowRef, apiRef);
     useDensity(apiRef);
     useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
-    useLocaleText(apiRef);
     useColumnReorder(apiRef);
     useColumnResize(columnsHeaderRef, apiRef);
     usePagination(apiRef);

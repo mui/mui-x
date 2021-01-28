@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import { GridState, SortingState, useApiRef, XGrid } from '@material-ui/x-grid';
-import { StateChangeParams } from '../../../grid/_modules_/grid/models/params/stateChangeParams';
+import { GridState, SortingState, useApiRef, StateChangeParams, XGrid } from '@material-ui/x-grid';
 import { useData } from '../hooks/useData';
 
 export default {

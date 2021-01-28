@@ -1,6 +1,5 @@
-// @ts-ignore
+import * as React from 'react';
 import { LicenseInfo } from '@material-ui/x-grid';
-import { addParameters } from '@storybook/react';
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 import { configureActions } from '@storybook/addon-actions';
 
@@ -38,3 +37,11 @@ export const parameters = {
     page: null,
   },
 };
+
+export const decorators = [
+  (Story) => (
+    <React.StrictMode>
+      <Story />
+    </React.StrictMode>
+  ),
+];

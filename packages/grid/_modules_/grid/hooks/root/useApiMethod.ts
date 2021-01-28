@@ -9,7 +9,6 @@ export function useApiMethod<T extends Partial<GridApi>>(
   apiName: string,
 ) {
   const logger = useLogger('useApiMethod');
-
   const apiMethodsRef = React.useRef(apiMethods);
 
   React.useEffect(() => {
