@@ -10,7 +10,7 @@ export interface TypeFilterInputValueProps extends FilterInputValueProps {
 }
 
 export function FilterInputValue(props: TypeFilterInputValueProps) {
-  const { item, applyValue, type } = props;
+  const { item, applyValue, type, ...others } = props;
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
   const [applying, setIsApplying] = React.useState(false);
@@ -39,7 +39,7 @@ export function FilterInputValue(props: TypeFilterInputValueProps) {
     setFilterValueState(item.value || '');
   }, [item.value]);
 
-  const inputProps = applying ? { endAdornment: <LoadIcon /> } : undefined;
+  const inputProps = applying ? { endAdornment: <LoadIcon /> } : others['inputProps'];
 
   return (
     <TextField
@@ -53,6 +53,7 @@ export function FilterInputValue(props: TypeFilterInputValueProps) {
       InputLabelProps={{
         shrink: true,
       }}
+      {...others}
     />
   );
 }

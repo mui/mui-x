@@ -51,14 +51,39 @@ However, you can extend the operator and add your own, customize the input compo
 
 1. **Custom input**. In this demo, you will see how to reuse the numeric filter and customize the input filter value component.
 
-{{"demo": "pages/components/data-grid/filtering/CustomRatingFilterOperator.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/filtering/ExtendNumericOperator.js", "bg": "inline"}}
 
-2. **Custom column type**. WIP
-3. **Custom operator**. WIP
+2. **Custom column type**.
+
+In this demo, you will see how to extend an existing column type, add your own filter operators with filter input value props.
+
+If you open the filter panel for the `totalPrice` column, you will see that it only contains 2 operators `<`, `>`, and that the input field is prefixed with '$'.
+
+{{"demo": "pages/components/data-grid/filtering/ColumnTypeFilteringGrid.js", "bg": "inline"}}
+
+3. **Custom operator**.
+
+In this last demo, you will see how to create a complete new operator for a specific column.
+
+{{"demo": "pages/components/data-grid/filtering/CustomRatingOperator.js", "bg": "inline"}}
 
 ### Server-side filter
 
-WIP
+As in the sort feature, filter can be run server side by setting the 'filterMode' prop to 'server', and implementing the 'onFilterChange' handler.
+
+```tsx
+<DataGrid
+  rows={rows}
+  columns={columns}
+  filterMode="server"
+  onFilterModelChange={onFilterChange}
+  loading={loading}
+/>
+```
+
+Below is very simple demo on how you could achieve server side filtering.
+
+{{"demo": "pages/components/data-grid/filtering/ServerFilterGrid.js", "bg": "inline"}}
 
 ### Controlled filtering
 
