@@ -371,6 +371,25 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         ).to.equal(200 - 2);
       });
     });
+
+    describe('grid height', () => {
+      before(function beforeHook() {
+        if (/jsdom/.test(window.navigator.userAgent)) {
+          // Need layouting
+          this.skip();
+        }
+      });
+
+      it('Grid wrapper should have height different from 0', () => {
+        const { getByRole } = render(
+          <div style={{ width: 300 }}>
+            <DataGrid {...baselineProps} autoHeight />
+          </div>,
+        );
+
+        expect(getByRole('grid').clientHeight).to.not.equal(0);
+      });
+    });
   });
 
   describe('warnings', () => {
@@ -425,6 +444,24 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       expect((errorRef.current as any).errors[0].toString()).to.include(
         'The data grid component requires all rows to have a unique id property',
       );
+    });
+
+    it('should throw if the parent container has no intrinsic height', function test() {
+      // TODO is this fixed?
+      if (!/jsdom/.test(window.navigator.userAgent)) {
+        // can't catch render errors in the browser for unknown reason
+        // tried try-catch + error boundary + window onError preventDefault
+        this.skip();
+      }
+
+      expect(() => {
+        render(
+          <div>
+            <DataGrid {...baselineProps} />
+          </div>,
+        );
+        // @ts-expect-error need to migrate helpers to TypeScript
+      }).toWarnDev();
     });
   });
 
