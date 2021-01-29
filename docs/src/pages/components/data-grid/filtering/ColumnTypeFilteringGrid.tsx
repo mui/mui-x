@@ -30,7 +30,10 @@ export default function ColumnTypeFilteringGrid() {
     if (data.columns.length > 0) {
       const visibleFields = ['desk', 'commodity', 'totalPrice'];
       const mappedColumns = data.columns.map((dataColumn) => {
-        const mappedColumn = { ...dataColumn, hide: visibleFields.indexOf(dataColumn.field) === -1 };
+        const mappedColumn = {
+          ...dataColumn,
+          hide: visibleFields.indexOf(dataColumn.field) === -1,
+        };
         if (mappedColumn.field === 'totalPrice') {
           mappedColumn.type = 'price';
         }
