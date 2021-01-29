@@ -15,7 +15,7 @@ export function GridColumnHeaderMenuItems(props: GridColumnHeaderMenuItemsProps)
   const { hideMenu, currentColumn } = props;
   const handleListKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
-      if (event.key === 'Tab') {
+      if (event.key === 'Tab' || event.key === 'Escape') {
         event.preventDefault();
         hideMenu();
       }
@@ -23,7 +23,13 @@ export function GridColumnHeaderMenuItems(props: GridColumnHeaderMenuItemsProps)
     [hideMenu],
   );
   return (
-    <MenuList id="menu-list-grow" onKeyDown={handleListKeyDown}>
+    <MenuList
+      aria-labelledby={`menu-button-${currentColumn.field}`}
+      autoFocus
+      autoFocusItem
+      id="menu-list-grow"
+      onKeyDown={handleListKeyDown}
+    >
       <SortMenuItems onClick={hideMenu} column={currentColumn!} />
       <FilterMenuItem onClick={hideMenu} column={currentColumn!} />
       <HideColMenuItem onClick={hideMenu} column={currentColumn!} />
