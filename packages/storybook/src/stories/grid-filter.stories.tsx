@@ -535,7 +535,7 @@ const priceColumnType: ColTypeDef = {
       return {
         ...operator,
         InputComponentProps: {
-          inputProps: { endAdornment: <InputAdornment position="end">USD</InputAdornment> },
+          InputProps: { endAdornment: <InputAdornment position="end">USD</InputAdornment> },
         },
       };
     }),

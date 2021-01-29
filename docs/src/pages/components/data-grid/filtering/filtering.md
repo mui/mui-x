@@ -82,7 +82,7 @@ As in the sort feature, filter can be run server side by setting the `filterMode
   rows={rows}
   columns={columns}
   filterMode="server"
-  onFilterModelChange={onFilterChange}
+  onFilterModelChange={handleFilterModelChange}
   loading={loading}
 />
 ```

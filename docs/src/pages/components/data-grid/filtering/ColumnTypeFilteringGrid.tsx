@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { InputAdornment } from '@material-ui/core';
+import InputAdornment  from '@material-ui/core/InputAdornment';
 import {
   DataGrid,
   ColTypeDef,
@@ -16,7 +16,7 @@ const priceColumnType: ColTypeDef = {
       return {
         ...operator,
         InputComponentProps: {
-          inputProps: {
+          InputProps: {
             startAdornment: <InputAdornment position="start">$</InputAdornment>,
           },
         },
@@ -24,7 +24,7 @@ const priceColumnType: ColTypeDef = {
     }),
 };
 
-export default function NewColumnTypes() {
+export default function ColumnTypeFilteringGrid() {
   const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
   const [cols, setCols] = React.useState(data.columns);
 

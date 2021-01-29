@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { InputAdornment } from '@material-ui/core';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import {
   DataGrid,
   getNumericColumnOperators,
@@ -23,7 +23,7 @@ const priceColumnType = {
     }),
 };
 
-export default function NewColumnTypes() {
+export default function ColumnTypeFilteringGrid() {
   const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
   const [cols, setCols] = React.useState(data.columns);
 

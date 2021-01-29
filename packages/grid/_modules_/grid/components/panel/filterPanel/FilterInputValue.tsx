@@ -1,5 +1,5 @@
 import * as React from 'react';
-import TextField from '@material-ui/core/TextField';
+import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import { LoadIcon } from '../../icons/index';
 import { FilterInputValueProps } from './FilterInputValueProps';
 
@@ -9,7 +9,7 @@ export interface TypeFilterInputValueProps extends FilterInputValueProps {
   type?: 'text' | 'number' | 'date' | 'datetime-local';
 }
 
-export function FilterInputValue(props: TypeFilterInputValueProps) {
+export function FilterInputValue(props: TypeFilterInputValueProps & TextFieldProps) {
   const { item, applyValue, type, ...others } = props;
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
@@ -39,7 +39,7 @@ export function FilterInputValue(props: TypeFilterInputValueProps) {
     setFilterValueState(item.value || '');
   }, [item.value]);
 
-  const inputProps = applying ? { endAdornment: <LoadIcon /> } : others['inputProps'];
+  const InputProps = applying ? { endAdornment: <LoadIcon /> } : others.InputProps;
 
   return (
     <TextField
@@ -49,7 +49,7 @@ export function FilterInputValue(props: TypeFilterInputValueProps) {
       onChange={onFilterChange}
       type={type || 'text'}
       variant="standard"
-      InputProps={inputProps}
+      InputProps={InputProps}
       InputLabelProps={{
         shrink: true,
       }}

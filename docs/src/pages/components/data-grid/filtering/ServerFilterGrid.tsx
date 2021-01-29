@@ -1,10 +1,10 @@
+import * as React from 'react';
 import {
   ColDef,
   DataGrid,
   FilterModelParams,
   RowModel,
 } from '@material-ui/data-grid';
-import * as React from 'react';
 
 function getRowsFromServer(commodityFilterValue?: string) {
   const serverRows = [
