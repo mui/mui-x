@@ -8,7 +8,7 @@ import {
 import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
 import { DataGrid, ValueGetterParams } from '@material-ui/data-grid';
-import { getColumnValues, raf } from 'test/utils/helperFn';
+import { getColumnValues, raf, sleep } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
   // TODO v5: replace with createClientRender
@@ -182,6 +182,25 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           // @ts-expect-error need to migrate helpers to TypeScript
         }).toWarnDev(["You are calling getValue('age') but the column `age` is not defined"]);
         expect(getColumnValues()).to.deep.equal(['1', '2']);
+      });
+
+      it('should have a stable height if the parent container has no intrinsic height', () => {
+        expect(async () => {
+          const { getByRole } = render(
+            <div style={{ width: 100 }}>
+              <DataGrid {...baselineProps} />
+            </div>,
+          );
+          // Use timeout to allow simpler tests in JSDOM.
+          clock.tick(0);
+          const firstHeight = getByRole('grid').clientHeight;
+          await sleep(10);
+          const secondHeight = getByRole('grid').clientHeight;
+          expect(firstHeight).to.equal(secondHeight);
+          // @ts-expect-error need to migrate helpers to TypeScript
+        }).toWarnDev(
+          'Material-UI: useResizeContainer - The parent of the grid has an empty height.',
+        );
       });
     });
 
