@@ -8,6 +8,7 @@ import {
   ColTypeDef,
   FilterInputValueProps,
   FilterModel,
+  FilterItem,
   LinkOperator,
   PreferencePanelsValue,
   RowModel,
@@ -18,6 +19,7 @@ import {
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import { randomInt } from '../data/random-generator';
 import { useData } from '../hooks/useData';
 
@@ -286,6 +288,62 @@ export function ServerFilterViaProps() {
     </div>
   );
 }
+
+function getRowsFromServer(commodityFilterValue?: string) {
+  const serverRows = [
+    { id: '1', commodity: 'rice' },
+    { id: '2', commodity: 'soybeans' },
+    { id: '3', commodity: 'milk' },
+    { id: '4', commodity: 'wheat' },
+    { id: '5', commodity: 'oats' },
+  ];
+
+  return new Promise<RowModel[]>((resolve) => {
+    setTimeout(() => {
+      if (!commodityFilterValue) {
+        resolve(serverRows);
+      }
+      resolve(
+        serverRows.filter((row) => row.commodity.toLowerCase().indexOf(commodityFilterValue!) > -1),
+      );
+    }, 500);
+  });
+}
+export function SimpleServerFilter() {
+  const [columns] = React.useState<ColDef[]>([{ field: 'commodity', width: 150 }]);
+  const [rows, setRows] = React.useState<RowModel[]>([]);
+  const [loading, setLoading] = React.useState(false);
+
+  const fetchRows = React.useCallback(async (filterValue?: string) => {
+    setLoading(true);
+    const serverRows = await getRowsFromServer(filterValue);
+    setRows(serverRows);
+    setLoading(false);
+  }, []);
+
+  const onFilterChange = React.useCallback(
+    async (params: FilterModelParams) => {
+      await fetchRows(params.filterModel.items[0].value);
+    },
+    [fetchRows],
+  );
+
+  React.useEffect(() => {
+    fetchRows();
+  }, [fetchRows]);
+
+  return (
+    <div className="grid-container">
+      <XGrid
+        rows={rows}
+        columns={columns}
+        filterMode={'server'}
+        onFilterModelChange={onFilterChange}
+        loading={loading}
+      />
+    </div>
+  );
+}
 export function CommodityWithNewRowsViaApi() {
   const apiRef = useApiRef();
   const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
@@ -364,16 +422,14 @@ function RatingInputValue(props: FilterInputValueProps) {
 export function CustomFilterOperator() {
   const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
 
-  React.useEffect(() => {
-    if (data.columns.length > 0) {
-      const ratingColumn = data.columns.find((col) => col.field === 'rating');
-      const ratingOperators = getNumericColumnOperators();
-      ratingColumn!.filterOperators = ratingOperators.map((operator) => {
-        operator.InputComponent = RatingInputValue;
-        return operator;
-      });
-    }
-  }, [data.columns]);
+  if (data.columns.length > 0) {
+    const ratingColumn = data.columns.find((col) => col.field === 'rating');
+    const ratingOperators = getNumericColumnOperators();
+    ratingColumn!.filterOperators = ratingOperators.map((operator) => {
+      operator.InputComponent = RatingInputValue;
+      return operator;
+    });
+  }
 
   return (
     <div className="grid-container">
@@ -393,7 +449,51 @@ export function CustomFilterOperator() {
     </div>
   );
 }
+const RatingOnlyOperators = [
+  {
+    label: 'From',
+    value: 'from',
+    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
+      if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
+        return null;
+      }
 
+      return (params): boolean => {
+        const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
+        return Number(rowValue) >= Number(filterItem.value);
+      };
+    },
+    InputComponent: RatingInputValue,
+    InputComponentProps: { type: 'number' },
+  },
+];
+
+export function RatingOperator() {
+  const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
+
+  if (data.columns.length > 0) {
+    const ratingColumn = data.columns.find((col) => col.field === 'rating');
+    ratingColumn!.filterOperators = RatingOnlyOperators;
+  }
+
+  return (
+    <div className="grid-container">
+      <XGrid
+        rows={data.rows}
+        columns={data.columns}
+        filterModel={{
+          items: [{ columnField: 'rating', value: '3.5', operatorValue: 'from' }],
+        }}
+        state={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: PreferencePanelsValue.filters,
+          },
+        }}
+      />
+    </div>
+  );
+}
 export function ColumnsAlign() {
   const data = useData(100, 6);
 
@@ -429,33 +529,39 @@ export function ColumnsAlign() {
 const priceColumnType: ColTypeDef = {
   extendType: 'number',
   valueFormatter: ({ value }) => `${value} USD`,
+  filterOperators: getNumericColumnOperators()
+    .filter((operator) => operator.value === '>' || operator.value === '<')
+    .map((operator) => {
+      return {
+        ...operator,
+        InputComponentProps: {
+          InputProps: { endAdornment: <InputAdornment position="end">USD</InputAdornment> },
+        },
+      };
+    }),
 };
-const unknownPriceColumnType: ColTypeDef = { ...priceColumnType, cellClassName: 'unknown' };
 
 export function NewColumnTypes() {
-  const data = useData(100, 5);
+  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
+  const [cols, setCols] = React.useState(data.columns);
 
-  const transformCols = React.useCallback((cols) => {
-    if (cols.length > 0) {
-      cols.forEach((col, idx) => {
-        if (idx > 1 && idx % 2 === 1) {
-          col.type = 'price';
-        } else if (idx > 1 && idx % 2 === 0) {
-          col.type = 'unknownPrice';
+  React.useEffect(() => {
+    if (data.columns.length > 0) {
+      const visibleFields = ['desk', 'commodity', 'quantity', 'totalPrice'];
+      const demoCols = data.columns.map((col) => {
+        const newCol = { ...col, hide: visibleFields.indexOf(col.field) === -1 };
+        if (newCol.field === 'totalPrice') {
+          newCol.type = 'price';
         }
-        col.width = 180;
+        return newCol;
       });
+      setCols(demoCols);
     }
-    return cols;
-  }, []);
+  }, [data]);
 
   return (
     <div className="grid-container">
-      <XGrid
-        rows={data.rows}
-        columns={transformCols(data.columns)}
-        columnTypes={{ price: priceColumnType, unknownPrice: unknownPriceColumnType }}
-      />
+      <DataGrid rows={data.rows} columns={cols} columnTypes={{ price: priceColumnType }} />
     </div>
   );
 }

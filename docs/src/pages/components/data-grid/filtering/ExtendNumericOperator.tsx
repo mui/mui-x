@@ -5,6 +5,7 @@ import {
   DataGrid,
   FilterInputValueProps,
   getNumericColumnOperators,
+  PreferencePanelsValue,
 } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
@@ -43,26 +44,29 @@ const filterModel = {
   items: [{ columnField: 'rating', value: '3.5', operatorValue: '>=' }],
 };
 
-export default function CustomRatingFilterOperator() {
+export default function ExtendNumericOperator() {
   const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
-  const [columns, setColumns] = React.useState(data.columns);
 
-  React.useEffect(() => {
-    if (data.columns.length > 0) {
-      const ratingColumn = data.columns.find((column) => column.field === 'rating')!;
+  if (data.columns.length > 0) {
+    const ratingColumn = data.columns.find((column) => column.field === 'rating')!;
 
-      ratingColumn.filterOperators = getNumericColumnOperators().map((operator) => ({
-        ...operator,
-        InputComponent: RatingInputValue,
-      }));
-
-      setColumns(data.columns);
-    }
-  }, [data.columns]);
-
+    ratingColumn.filterOperators = getNumericColumnOperators().map((operator) => ({
+      ...operator,
+      InputComponent: RatingInputValue,
+    }));
+  }
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid {...data} columns={columns} filterModel={filterModel} />
+      <DataGrid
+        {...data}
+        filterModel={filterModel}
+        state={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: PreferencePanelsValue.filters,
+          },
+        }}
+      />
     </div>
   );
 }

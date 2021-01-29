@@ -49,16 +49,47 @@ const columns = [{ field: 'image', filterable: false }];
 The data grid supports different operators for the native column types.
 However, you can extend the operator and add your own, customize the input component or set your own operator for a new column type.
 
-1. **Custom input**. In this demo, you will see how to reuse the numeric filter and customize the input filter value component.
+1. **Custom input**.
 
-{{"demo": "pages/components/data-grid/filtering/CustomRatingFilterOperator.js", "bg": "inline"}}
+In this demo you will see how to reuse the numeric filter and customize the input filter value component.
 
-2. **Custom column type**. WIP
-3. **Custom operator**. WIP
+The rating column reuses the numeric operator, but the input value is a new rating component.
+
+{{"demo": "pages/components/data-grid/filtering/ExtendNumericOperator.js", "bg": "inline"}}
+
+2. **Custom column type**.
+
+In this demo you will see how to extend an existing column type, adding your own filter operators with filter input value props.
+
+As you can see in the filter panel, the `totalPrice` column only contains 2 operators `<`, & `>`, and the input field is prefixed with `$`.
+
+{{"demo": "pages/components/data-grid/filtering/ColumnTypeFilteringGrid.js", "bg": "inline"}}
+
+3. **Custom operator**.
+
+In this demo you will see how to create a complete new operator for a specific column.
+
+The rating column contains a new `From` operator, as you can see in the filter panel.
+
+{{"demo": "pages/components/data-grid/filtering/CustomRatingOperator.js", "bg": "inline"}}
 
 ### Server-side filter
 
-WIP
+Filtering can be run server-side by setting the `filterMode` prop to `server`, and implementing the `onFilterModelChange` handler.
+
+```tsx
+<DataGrid
+  rows={rows}
+  columns={columns}
+  filterMode="server"
+  onFilterModelChange={handleFilterModelChange}
+  loading={loading}
+/>
+```
+
+Below is very simple demo on how you could achieve server side filtering.
+
+{{"demo": "pages/components/data-grid/filtering/ServerFilterGrid.js", "bg": "inline"}}
 
 ### Controlled filtering
 
