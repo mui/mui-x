@@ -75,7 +75,7 @@ The rating column contains a new `From` operator, as you can see in the filter p
 
 ### Server-side filter
 
-As with the sort feature, filtering can be run server side by setting the `filterMode` prop to `server`, and implementing the `onFilterChange` handler.
+Filtering can be run server-side by setting the `filterMode` prop to `server`, and implementing the `onFilterModelChange` handler.
 
 ```tsx
 <DataGrid
