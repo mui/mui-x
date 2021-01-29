@@ -372,16 +372,20 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       });
     });
 
+    it('Grid wrapper should have height different from 0 when autoHeight', () => {
+      const { getByRole, getAllByRole } = render(
+        <div style={{ width: 300 }}>
+          <DataGrid {...baselineProps} autoHeight />
+        </div>,
+      );
 
-      it('Grid wrapper should have height different from 0 when autoHeight', () => {
-        const { getByRole } = render(
-          <div style={{ width: 300 }}>
-            <DataGrid {...baselineProps} autoHeight />
-          </div>,
-        );
+      const colHeaderRowHeight = getAllByRole('row')[0].clientHeight;
+      const totalRowsHeight = getAllByRole('row')[1].clientHeight * 3;
+      const footerHeight = document.querySelector('.MuiDataGrid-footer')?.clientHeight;
 
-        expect(getByRole('grid').clientHeight).to.not.equal(0);
-      });
+      expect(getByRole('grid').clientHeight).to.equal(
+        colHeaderRowHeight + totalRowsHeight + footerHeight + 1, // The 1 is to compensate, needs to be fixed
+      );
     });
   });
 
@@ -437,24 +441,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       expect((errorRef.current as any).errors[0].toString()).to.include(
         'The data grid component requires all rows to have a unique id property',
       );
-    });
-
-    it('should throw if the parent container has no intrinsic height', function test() {
-      // TODO is this fixed?
-      if (!/jsdom/.test(window.navigator.userAgent)) {
-        // can't catch render errors in the browser for unknown reason
-        // tried try-catch + error boundary + window onError preventDefault
-        this.skip();
-      }
-
-      expect(() => {
-        render(
-          <div>
-            <DataGrid {...baselineProps} />
-          </div>,
-        );
-        // @ts-expect-error need to migrate helpers to TypeScript
-      }).toWarnDev();
     });
   });
 
