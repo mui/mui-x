@@ -391,7 +391,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       });
     });
 
-    it('Grid wrapper should have height different from 0 when autoHeight', () => {
+    it('should have the correct intrinsic height when autoHeight={true}', () => {
       render(
         <div style={{ width: 300 }}>
           <DataGrid {...baselineProps} headerHeight={40} rowHeight={30} autoHeight />
