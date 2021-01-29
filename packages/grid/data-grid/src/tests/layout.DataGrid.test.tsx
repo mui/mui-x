@@ -185,16 +185,16 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       });
 
       it('should have a stable height if the parent container has no intrinsic height', () => {
-        expect(async () => {
+        expect(() => {
           const { getByRole } = render(
-            <div style={{ width: 100 }}>
+            <div>
+              <p>The table keeps growing... and growing...</p>
               <DataGrid {...baselineProps} />
             </div>,
           );
+          const firstHeight = getByRole('grid').clientHeight;
           // Use timeout to allow simpler tests in JSDOM.
           clock.tick(0);
-          const firstHeight = getByRole('grid').clientHeight;
-          await sleep(10);
           const secondHeight = getByRole('grid').clientHeight;
           expect(firstHeight).to.equal(secondHeight);
           // @ts-expect-error need to migrate helpers to TypeScript
