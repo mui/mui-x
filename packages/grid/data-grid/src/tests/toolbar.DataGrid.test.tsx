@@ -8,7 +8,7 @@ import {
 } from 'test/utils';
 import { getColumnHeaders } from 'test/utils/helperFn';
 import { expect } from 'chai';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, GridHeader } from '@material-ui/data-grid';
 import {
   COMFORTABLE_DENSITY_FACTOR,
   COMPACT_DENSITY_FACTOR,
@@ -55,7 +55,13 @@ describe('<DataGrid /> - Toolbar', () => {
       const rowHeight = 30;
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} showToolbar rowHeight={rowHeight} />
+          <DataGrid
+            {...baselineProps}
+            rowHeight={rowHeight}
+            components={{
+              Header: GridHeader,
+            }}
+          />
         </div>,
       );
 
@@ -72,7 +78,13 @@ describe('<DataGrid /> - Toolbar', () => {
       const rowHeight = 30;
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} showToolbar rowHeight={rowHeight} />
+          <DataGrid
+            {...baselineProps}
+            rowHeight={rowHeight}
+            components={{
+              Header: GridHeader,
+            }}
+          />
         </div>,
       );
 
@@ -118,7 +130,12 @@ describe('<DataGrid /> - Toolbar', () => {
     it('should hide "id" column when hiding it from the column selector', () => {
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} showToolbar />
+          <DataGrid
+            {...baselineProps}
+            components={{
+              Header: GridHeader,
+            }}
+          />
         </div>,
       );
 
@@ -133,7 +150,12 @@ describe('<DataGrid /> - Toolbar', () => {
     it('should hide all columns when clicking "HIDE ALL" from the column selector', () => {
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} showToolbar />
+          <DataGrid
+            {...baselineProps}
+            components={{
+              Header: GridHeader,
+            }}
+          />
         </div>,
       );
 
@@ -159,7 +181,13 @@ describe('<DataGrid /> - Toolbar', () => {
 
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} columns={customColumns} showToolbar />
+          <DataGrid
+            {...baselineProps}
+            columns={customColumns}
+            components={{
+              Header: GridHeader,
+            }}
+          />
         </div>,
       );
 

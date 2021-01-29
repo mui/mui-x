@@ -119,7 +119,9 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                 )}
               >
                 <div ref={headerRef}>
-                  <components.Header {...componentBaseProps} {...props.componentsProps?.header} />
+                  {components.Header && (
+                    <components.Header {...componentBaseProps} {...props.componentsProps?.header} />
+                  )}
                 </div>
                 <GridMainContainer>
                   <GridColumnHeaderMenu

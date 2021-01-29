@@ -14,7 +14,7 @@ import {
   PanelProps,
   PreferencesPanel,
   GridFooter,
-  GridToolbar,
+  GridHeader,
 } from '@material-ui/x-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CodeIcon from '@material-ui/icons/Code';
@@ -400,9 +400,9 @@ export function DynamicIconUpdate() {
         <XGrid
           {...data}
           components={{
+            Header: GridHeader,
             DensityStandardIcon: icon,
           }}
-          showToolbar
         />
       </div>
     </React.Fragment>
@@ -423,10 +423,10 @@ function CustomColumnsPanel(props: { bg?: string } & BaseComponentProps) {
 }
 export const CustomFilterColumnsPanels = Template.bind({});
 CustomFilterColumnsPanels.args = {
-  showToolbar: true,
   components: {
     FilterPanel: CustomFilterPanel,
     ColumnsPanel: CustomColumnsPanel,
+    Header: GridHeader,
   },
   componentsProps: {
     filterPanel: { bg: 'blue' },
@@ -442,9 +442,9 @@ function CustomPanelComponent(props: BaseComponentProps & PanelProps) {
 }
 export const CustomPanel = Template.bind({});
 CustomPanel.args = {
-  showToolbar: true,
   components: {
     Panel: CustomPanelComponent,
+    Header: GridHeader,
   },
 };
 
@@ -458,10 +458,9 @@ function FooterWithPanel() {
 }
 export const CustomPanelInFooter = Template.bind({});
 CustomPanelInFooter.args = {
-  showToolbar: true,
   components: {
     Panel: CustomPanelComponent,
     Footer: FooterWithPanel,
-    Header: GridToolbar,
+    Header: GridHeader,
   },
 };

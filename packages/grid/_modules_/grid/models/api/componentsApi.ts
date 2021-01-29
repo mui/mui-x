@@ -18,7 +18,7 @@ export interface ApiRefComponentsProperty extends GridIconSlotsComponent {
   /**
    * Header component rendered above the grid column header bar.
    */
-  Header: React.ElementType;
+  Header?: React.ElementType;
   /**
    * Loading overlay component rendered when the grid is in a loading state.
    */

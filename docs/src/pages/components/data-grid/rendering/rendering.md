@@ -213,7 +213,9 @@ You can change the density of the rows and the column header.
 
 ### Density selector
 
-To enable the density selector you need to add the `showToolbar` prop to the data grid. The user can change the density of the data grid by using the density selector from the toolbar.
+To enable the density selector you need to add the `Header: GridHeader` the `components` grid prop.
+
+The user can change the density of the data grid by using the density selector from the toolbar.
 
 {{"demo": "pages/components/data-grid/rendering/VisibleToolbarGrid.js", "bg": "inline"}}
 

@@ -228,7 +228,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [DataGrid] Fix server-side sorting (#704) @akandels
 - [DataGrid] Improve the DX of popups (#686) @oliviertassinari
 - [DataGrid] Refactor cols (#682) @dtassone
-- [DataGrid] Rename hideToolbar prop to showToolbar (#706) @DanailH
+- [DataGrid] Rename hideToolbar prop to  (#706) @DanailH
 - [DataGrid] Prepare server filters (#649) @dtassone
 - [DataGrid] Fix display of selected rows in footer (#676) @oliviertassinari
 

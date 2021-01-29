@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { ErrorOverlay, ErrorOverlayProps } from '../components/ErrorOverlay';
 import { GridFooter } from '../components/GridFooter';
-import { GridHeader } from '../components/GridHeader';
 import {
   ArrowDownwardIcon,
   ArrowUpwardIcon,
@@ -95,7 +94,6 @@ export const DEFAULT_SLOTS_COMPONENTS: ApiRefComponentsProperty = {
   ColumnMenu: GridColumnHeaderMenuItems,
   ErrorOverlay,
   Footer: GridFooter,
-  Header: GridHeader,
   LoadingOverlay,
   NoRowsOverlay,
   Pagination,

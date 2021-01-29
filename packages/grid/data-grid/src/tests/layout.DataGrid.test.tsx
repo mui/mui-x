@@ -7,7 +7,7 @@ import {
 } from 'test/utils';
 import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
-import { DataGrid, ValueGetterParams } from '@material-ui/data-grid';
+import { DataGrid, GridHeader, ValueGetterParams } from '@material-ui/data-grid';
 import { getColumnValues, raf } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
@@ -441,7 +441,13 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     it('should replace the density selector button label text to "Size"', () => {
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} showToolbar localeText={{ toolbarDensity: 'Size' }} />
+          <DataGrid
+            {...baselineProps}
+            localeText={{ toolbarDensity: 'Size' }}
+            components={{
+              Header: GridHeader,
+            }}
+          />
         </div>,
       );
 
