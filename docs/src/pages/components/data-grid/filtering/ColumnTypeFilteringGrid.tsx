@@ -26,27 +26,26 @@ const priceColumnType: ColTypeDef = {
 
 export default function ColumnTypeFilteringGrid() {
   const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
-  const [cols, setCols] = React.useState(data.columns);
-
-  React.useEffect(() => {
+  const columns = React.useMemo(() => {
     if (data.columns.length > 0) {
       const visibleFields = ['desk', 'commodity', 'totalPrice'];
-      const demoCols = data.columns.map((col) => {
-        const newCol = { ...col, hide: visibleFields.indexOf(col.field) === -1 };
-        if (newCol.field === 'totalPrice') {
-          newCol.type = 'price';
+      const mappedColumns = data.columns.map((dataColumn) => {
+        const mappedColumn = { ...dataColumn, hide: visibleFields.indexOf(dataColumn.field) === -1 };
+        if (mappedColumn.field === 'totalPrice') {
+          mappedColumn.type = 'price';
         }
-        return newCol;
+        return mappedColumn;
       });
-      setCols(demoCols);
+      return mappedColumns;
     }
-  }, [data]);
+    return [];
+  }, [data.columns]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         rows={data.rows}
-        columns={cols}
+        columns={columns}
         columnTypes={{ price: priceColumnType }}
         filterModel={{
           items: [
