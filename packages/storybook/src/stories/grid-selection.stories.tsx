@@ -67,8 +67,8 @@ export const MultipleSelectWithCheckboxNoClick = () => {
 
 export function HandleSelection() {
   const { data } = useDemoData({
-    dataSet: "Commodity",
-    rowLength: 100000
+    dataSet: 'Commodity',
+    rowLength: 100000,
   });
 
   const [myState, setMyState] = React.useState(false);
@@ -76,11 +76,5 @@ export function HandleSelection() {
     setMyState(!myState);
   }, [myState]);
 
-  return (
-      <XGrid
-        {...data}
-        checkboxSelection
-        onSelectionChange={handleSelection}
-      />
-  );
+  return <XGrid {...data} checkboxSelection onSelectionChange={handleSelection} />;
 }
