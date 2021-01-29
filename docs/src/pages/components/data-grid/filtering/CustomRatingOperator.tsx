@@ -65,6 +65,7 @@ const RatingOnlyOperators = [
     InputComponentProps: { type: 'number' },
   },
 ];
+
 export default function CustomRatingOperator() {
   const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
 
