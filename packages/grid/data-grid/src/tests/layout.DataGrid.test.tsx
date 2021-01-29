@@ -372,13 +372,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       });
     });
 
-    describe('grid height', () => {
-      before(function beforeHook() {
-        if (/jsdom/.test(window.navigator.userAgent)) {
-          // Need layouting
-          this.skip();
-        }
-      });
 
       it('Grid wrapper should have height different from 0 when autoHeight', () => {
         const { getByRole } = render(
