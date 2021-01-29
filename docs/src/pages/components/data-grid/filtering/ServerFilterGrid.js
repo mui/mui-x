@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 
-function getRowsFromServer(commodityFilterValue) {
+function loadServerRows(commodityFilterValue) {
   const serverRows = [
     { id: '1', commodity: 'rice' },
     { id: '2', commodity: 'soybeans' },
@@ -14,44 +14,53 @@ function getRowsFromServer(commodityFilterValue) {
     setTimeout(() => {
       if (!commodityFilterValue) {
         resolve(serverRows);
+        return;
       }
       resolve(
         serverRows.filter(
           (row) => row.commodity.toLowerCase().indexOf(commodityFilterValue) > -1,
         ),
       );
-    }, 500);
+    }, Math.random() * 500 + 100); // simulate network latency
   });
 }
+
 export default function ServerFilterGrid() {
   const [columns] = React.useState([{ field: 'commodity', width: 150 }]);
   const [rows, setRows] = React.useState([]);
+  const [filterValue, setFilterValue] = React.useState();
   const [loading, setLoading] = React.useState(false);
 
-  const fetchRows = React.useCallback(async (filterValue) => {
-    setLoading(true);
-    const serverRows = await getRowsFromServer(filterValue);
-    setRows(serverRows);
-    setLoading(false);
+  const onFilterChange = React.useCallback((params) => {
+    setFilterValue(params.filterModel.items[0].value);
   }, []);
 
-  const onFilterChange = React.useCallback(
-    async (params) => {
-      await fetchRows(params.filterModel.items[0].value);
-    },
-    [fetchRows],
-  );
-
   React.useEffect(() => {
-    fetchRows();
-  }, [fetchRows]);
+    let active = true;
+
+    (async () => {
+      setLoading(true);
+      const newRows = await loadServerRows(filterValue);
+
+      if (!active) {
+        return;
+      }
+
+      setRows(newRows);
+      setLoading(false);
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [filterValue]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         rows={rows}
         columns={columns}
-        filterMode={'server'}
+        filterMode="server"
         onFilterModelChange={onFilterChange}
         loading={loading}
       />

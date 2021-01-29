@@ -15,7 +15,7 @@ const priceColumnType = {
       return {
         ...operator,
         InputComponentProps: {
-          inputProps: {
+          InputProps: {
             startAdornment: <InputAdornment position="start">$</InputAdornment>,
           },
         },
