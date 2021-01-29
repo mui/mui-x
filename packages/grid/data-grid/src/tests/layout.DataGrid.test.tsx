@@ -373,18 +373,13 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
 
     it('Grid wrapper should have height different from 0 when autoHeight', () => {
-      const { getByRole, getAllByRole } = render(
+      render(
         <div style={{ width: 300 }}>
-          <DataGrid {...baselineProps} autoHeight />
+          <DataGrid {...baselineProps} headerHeight={40} rowHeight={30} autoHeight />
         </div>,
       );
-
-      const colHeaderRowHeight = getAllByRole('row')[0].clientHeight;
-      const totalRowsHeight = getAllByRole('row')[1].clientHeight * 3;
-      const footerHeight = document.querySelector('.MuiDataGrid-footer')?.clientHeight;
-
-      expect(getByRole('grid').clientHeight).to.equal(
-        colHeaderRowHeight + totalRowsHeight + footerHeight + 1, // The 1 is to compensate, needs to be fixed
+      expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
+        40 + 30 * baselineProps.rows.length,
       );
     });
   });
