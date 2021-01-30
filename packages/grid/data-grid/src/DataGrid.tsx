@@ -59,7 +59,7 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
 (DataGrid2 as any).propTypes = {
   apiRef: chainPropTypes(PropTypes.any, (props: any) => {
     if (props.apiRef != null) {
-      throw new Error(
+      return new Error(
         [
           `Material-UI: \`apiRef\` is not a valid prop.`,
           'ApiRef is not available in the MIT version.',
@@ -72,7 +72,7 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
   }),
   columns: chainPropTypes(PropTypes.any, (props: any) => {
     if (props.columns && props.columns.some((column) => column.resizable)) {
-      throw new Error(
+      return new Error(
         [
           `Material-UI: \`column.resizable = true\` is not a valid prop.`,
           'Column resizing is not available in the MIT version.',
@@ -85,7 +85,7 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
   }),
   disableColumnReorder: chainPropTypes(PropTypes.bool, (props: any) => {
     if (props.disableColumnReorder === false) {
-      throw new Error(
+      return new Error(
         [
           `Material-UI: \`<DataGrid disableColumnReorder={false} />\` is not a valid prop.`,
           'Column reordering is not available in the MIT version.',
@@ -98,7 +98,7 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
   }),
   disableColumnResize: chainPropTypes(PropTypes.bool, (props: any) => {
     if (props.disableColumnResize === false) {
-      throw new Error(
+      return new Error(
         [
           `Material-UI: \`<DataGrid disableColumnResize={false} />\` is not a valid prop.`,
           'Column resizing is not available in the MIT version.',
@@ -111,7 +111,7 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
   }),
   disableMultipleColumnsFiltering: chainPropTypes(PropTypes.bool, (props: any) => {
     if (props.disableMultipleColumnsFiltering === false) {
-      throw new Error(
+      return new Error(
         [
           `Material-UI: \`<DataGrid disableMultipleColumnsFiltering={false} />\` is not a valid prop.`,
           'Only single column sorting is available in the MIT version.',
@@ -124,7 +124,7 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
   }),
   disableMultipleColumnsSorting: chainPropTypes(PropTypes.bool, (props: any) => {
     if (props.disableMultipleColumnsSorting === false) {
-      throw new Error(
+      return new Error(
         [
           `Material-UI: \`<DataGrid disableMultipleColumnsSorting={false} />\` is not a valid prop.`,
           'Only single column sorting is available in the MIT version.',
@@ -137,7 +137,7 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
   }),
   disableMultipleSelection: chainPropTypes(PropTypes.bool, (props: any) => {
     if (props.disableMultipleSelection === false) {
-      throw new Error(
+      return new Error(
         [
           `Material-UI: \`<DataGrid disableMultipleSelection={false} />\` is not a valid prop.`,
           'Only single column selection is available in the MIT version.',
@@ -150,7 +150,7 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
   }),
   pageSize: chainPropTypes(PropTypes.number, (props: any) => {
     if (props.pageSize && props.pageSize > MAX_PAGE_SIZE) {
-      throw new Error(
+      return new Error(
         [
           `Material-UI: \`<DataGrid pageSize={${props.pageSize}} />\` is not a valid prop.`,
           `Only page size below ${MAX_PAGE_SIZE} is available in the MIT version.`,
