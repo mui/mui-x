@@ -8,6 +8,7 @@
     "docs:export": "yarn workspace docs export",
     "docs:typescript:formatted": "yarn workspace docs typescript:transpile",
     "docs:importDocsStatic": "node scripts/importDocsStatic.js",
+    "docs:size-why": "cross-env DOCS_STATS_ENABLED=true yarn docs:build",
     "docs:deploy": "yarn workspace docs deploy",
     "storybook:dev": "yarn workspace storybook start",
     "storybook:build": "yarn workspace storybook build",
