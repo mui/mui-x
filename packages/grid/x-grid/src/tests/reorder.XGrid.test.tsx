@@ -58,4 +58,27 @@ describe('<XGrid /> - Reorder', () => {
       expect(getColumnHeaders()).to.deep.equal(['brand', 'id']);
     });
   });
+
+  it('should not reset the column order when a prop change', () => {
+    let apiRef: ApiRef;
+    const rows = [{ id: 0, brand: 'Nike' }];
+    const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
+
+    const Test = () => {
+      apiRef = useApiRef();
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid apiRef={apiRef} rows={rows} columns={columns} onPageChange={() => {}} />
+        </div>
+      );
+    };
+
+    const { forceUpdate } = render(<Test />);
+    expect(getColumnHeaders()).to.deep.equal(['brand', 'desc', 'type']);
+    apiRef!.current.moveColumn('brand', 2);
+    expect(getColumnHeaders()).to.deep.equal(['desc', 'type', 'brand']);
+    forceUpdate(); // test stability
+    expect(getColumnHeaders()).to.deep.equal(['desc', 'type', 'brand']);
+  });
 });

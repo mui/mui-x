@@ -1,3 +1,4 @@
+import { useDemoData } from '@material-ui/x-grid-data-generator';
 import * as React from 'react';
 import { action } from '@storybook/addon-actions';
 import { XGrid, GridOptionsProp, useApiRef } from '@material-ui/x-grid';
@@ -63,3 +64,17 @@ export const MultipleSelectWithCheckboxNoClick = () => {
     <XGrid rows={data.rows} columns={data.columns} checkboxSelection disableSelectionOnClick />
   );
 };
+
+export function HandleSelection() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+  });
+
+  const [myState, setMyState] = React.useState(false);
+  const handleSelection = React.useCallback(() => {
+    setMyState(!myState);
+  }, [myState]);
+
+  return <XGrid {...data} checkboxSelection onSelectionChange={handleSelection} />;
+}
