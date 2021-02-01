@@ -256,7 +256,7 @@ You can disable column virtualization by setting the column buffer to a higher n
 
 ## Components prop
 
-As part of the customization API, the grid allows you to replace and override nested components with the `components` prop. 
+As part of the customization API, the grid allows you to replace and override nested components with the `components` prop.
 The prop accepts an object of type [GridSlotsComponent](/api/x-grid/#slots) .
 
 ### Header

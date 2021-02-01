@@ -330,9 +330,7 @@ function ColumnMenuComponent(props: ColumnMenuProps & { color?: string }) {
       <div style={{ background: props.color || '#ccc' }}>This is my currency pair column Menu!</div>
     );
   }
-  return (
-    <GridColumnMenu hideMenu={props.hideMenu} currentColumn={props.currentColumn} />
-  );
+  return <GridColumnMenu hideMenu={props.hideMenu} currentColumn={props.currentColumn} />;
 }
 
 export const CustomColumnMenu = Template.bind({});

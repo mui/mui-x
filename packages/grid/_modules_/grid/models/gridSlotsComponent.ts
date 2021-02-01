@@ -15,10 +15,7 @@ import {
   ViewStreamIcon,
 } from '../components/icons/index';
 import { LoadingOverlay } from '../components/LoadingOverlay';
-import {
-  GridColumnMenu,
-  GridColumnMenuProps,
-} from '../components/menu/columnMenu/GridColumnMenu';
+import { GridColumnMenu, GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenu';
 import { NoRowsOverlay } from '../components/NoRowsOverlay';
 import { Pagination } from '../components/Pagination';
 import { ColumnsPanel } from '../components/panel/ColumnsPanel';
