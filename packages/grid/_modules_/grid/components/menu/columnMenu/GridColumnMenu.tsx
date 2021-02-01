@@ -6,12 +6,12 @@ import { FilterMenuItem } from './FilterMenuItem';
 import { HideColMenuItem } from './HideColMenuItem';
 import { SortMenuItems } from './SortMenuItems';
 
-export interface GridColumnHeaderMenuItemsProps {
+export interface GridColumnMenuProps {
   hideMenu: () => void;
   currentColumn: ColDef;
 }
 
-export function GridColumnHeaderMenuItems(props: GridColumnHeaderMenuItemsProps) {
+export function GridColumnMenu(props: GridColumnMenuProps) {
   const { hideMenu, currentColumn } = props;
   const handleListKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {

@@ -10,7 +10,7 @@ import {
   HideColMenuItem,
   ColumnMenuProps,
   BaseComponentProps,
-  GridColumnHeaderMenuItems,
+  GridColumnMenu,
   PanelProps,
   PreferencesPanel,
   GridFooter,
@@ -331,7 +331,7 @@ function ColumnMenuComponent(props: ColumnMenuProps & { color?: string }) {
     );
   }
   return (
-    <GridColumnHeaderMenuItems hideMenu={props.hideMenu} currentColumn={props.currentColumn} />
+    <GridColumnMenu hideMenu={props.hideMenu} currentColumn={props.currentColumn} />
   );
 }
 
