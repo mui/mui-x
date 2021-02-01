@@ -66,6 +66,7 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">sortModel</span> | <span class="prop-type">SortModel</span> |   | Set the sort model of the grid. |
 
 The `ref` is forwarded to the root element.
+
 ## Slots
 
 Api of the `components` props of type `GridSlotsComponent`
