@@ -11,5 +11,8 @@ __diff_output__
 /coverage
 /docs/.next
 /docs/export
+build
+# TODO `dist` should be replaced with `build`, per convention
 dist
 node_modules
+size-snapshot.json
