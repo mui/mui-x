@@ -3,7 +3,7 @@ import { XGrid, useApiRef, ApiRef } from '@material-ui/x-grid';
 // @ts-expect-error need to migrate helpers to TypeScript
 import { fireEvent, createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
-import { getCell, getColumnHeaders, getRow } from '../../../../../test/utils/helperFn';
+import { getCell, getColumnHeaders, getRow } from 'test/utils/helperFn';
 
 describe('<XGrid /> - Selection', () => {
   // TODO v5: replace with createClientRender
