@@ -2,35 +2,38 @@ import * as React from 'react';
 import { ROWS_CLEARED, ROWS_SET, ROWS_UPDATED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { RowApi } from '../../../models/api/rowApi';
-import { checkRowHasId, RowModel, RowId, RowsProp } from '../../../models/rows';
+import { checkRowHasId, RowModel, RowId, RowsProp, RowIdGetter, RowData } from '../../../models/rows';
 import { useApiMethod } from '../../root/useApiMethod';
+import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
+import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
-import { InternalRowsState } from './rowsState';
+import { getInitialRowState, InternalRowsState } from './rowsState';
 
-export function convertRowsPropToState({
-  rows,
-  totalRowCount,
-}: {
-  rows: RowsProp;
-  totalRowCount?: number;
-}): InternalRowsState {
+export function addRowId(getRowId: RowIdGetter, rowData: RowData): RowModel {
+  // checkRowHasId(rowData, getRowId);
+  return {...rowData, id: getRowId(rowData) };
+}
+
+export function convertRowsPropToState(rows: RowsProp, rowIdGetter: RowIdGetter,  totalRowCount?: number,): InternalRowsState {
   const state: InternalRowsState = {
-    allRows: [],
-    idRowsLookup: {},
+    ...getInitialRowState(),
     totalRowCount: totalRowCount && totalRowCount > rows.length ? totalRowCount : rows.length,
   };
+
   rows.forEach((rowData) => {
-    checkRowHasId(rowData);
-    state.allRows.push(rowData.id);
-    state.idRowsLookup[rowData.id] = rowData;
+    const row = addRowId(rowIdGetter, rowData);
+    state.allRows.push(row.id);
+    state.idRowsLookup[row.id] = row;
   });
+
   return state;
 }
 
 export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
   const logger = useLogger('useRows');
   const [gridState, setGridState, updateComponent] = useGridState(apiRef);
+  const {getRowId} = gridState.options; //useGridSelector(apiRef, optionsSelector);
   const updateTimeout = React.useRef<any>();
 
   const forceUpdate = React.useCallback(
@@ -57,13 +60,10 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
 
   React.useEffect(() => {
     setGridState((state) => {
-      internalRowsState.current = convertRowsPropToState({
-        rows,
-        totalRowCount: state.options.rowCount,
-      });
+      internalRowsState.current = convertRowsPropToState(rows, getRowId, state.options.rowCount);
       return { ...state, rows: internalRowsState.current };
     });
-  }, [rows, setGridState]);
+  }, [getRowId, rows, setGridState]);
 
   const getRowIndexFromId = React.useCallback(
     (id: RowId): number => apiRef.current.state.rows.allRows.indexOf(id),
@@ -87,10 +87,11 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
       }
 
       const idRowsLookup = allNewRows.reduce((lookup, row) => {
+        row = addRowId(getRowId, row)
         lookup[row.id] = row;
         return lookup;
       }, {});
-      const allRows = allNewRows.map((row) => row.id);
+      const allRows = allNewRows.map((row) => getRowId(row));
       const totalRowCount =
         gridState.options &&
         gridState.options.rowCount &&
@@ -104,27 +105,28 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
 
       forceUpdate(() => apiRef.current.publishEvent(ROWS_SET));
     },
-    [logger, gridState.options, apiRef, setGridState, forceUpdate],
+    [logger, gridState.options, setGridState, forceUpdate, apiRef, getRowId],
   );
 
   const updateRows = React.useCallback(
     (updates: Partial<RowModel>[]) => {
       // we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
       const uniqUpdates = updates.reduce((uniq, update) => {
-        checkRowHasId(update, 'A row was provided without id when calling updateRows():');
-        uniq[update.id!] = uniq[update.id!] != null ? { ...uniq[update.id!], ...update } : update;
+        checkRowHasId(update, getRowId, 'A row was provided without id when calling updateRows():');
+        const id = getRowId(update);
+        uniq[id] = uniq[id] != null ? { ...uniq[id!], ...update } : update;
         return uniq;
       }, {} as { [id: string]: any });
 
       const addedRows: RowModel[] = [];
 
-      Object.values<RowModel>(uniqUpdates).forEach((partialRow) => {
-        const oldRow = getRowFromId(partialRow.id!);
+      Object.entries<RowModel>(uniqUpdates).forEach(([id, partialRow]) => {
+        const oldRow = getRowFromId(id);
         if (!oldRow) {
           addedRows.push(partialRow as RowModel);
           return;
         }
-        Object.assign(internalRowsState.current.idRowsLookup[partialRow.id!], {
+        Object.assign(internalRowsState.current.idRowsLookup[id], {
           ...oldRow,
           ...partialRow,
         });
@@ -142,7 +144,7 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
 
       forceUpdate(() => apiRef.current.publishEvent(ROWS_UPDATED));
     },
-    [apiRef, forceUpdate, getRowFromId, setGridState, setRows],
+    [apiRef, forceUpdate, getRowFromId, getRowId, setGridState, setRows],
   );
 
   const getRowModels = React.useCallback(

@@ -39,6 +39,29 @@ const baselineProps = {
   columns: [{ field: 'brand' }],
 };
 
+function getStoryRowId (row) {
+  return row.brand;
+}
+export function NoId() {
+  const [rows] = React.useState([
+    {
+      brand: 'Nike',
+    },
+    {
+      brand: 'Adidas',
+    },
+    {
+      brand: 'Puma',
+    },
+  ]);
+
+  return (
+  <div className="grid-container">
+    <XGrid columns={baselineProps.columns} rows={rows} getRowId={getStoryRowId} />
+  </div>
+  );
+}
+
 export function SetRowsViaApi() {
   const apiRef = useApiRef();
 

@@ -77,6 +77,7 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
       density: props.density,
       filterModel: props.filterModel,
       localeText: { ...DEFAULT_LOCALE_TEXT, ...props.localeText },
+      getRowId: props.getRowId,
     }),
     [
       props.pageSize,
@@ -133,6 +134,7 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
       props.density,
       props.filterModel,
       props.localeText,
+      props.getRowId,
     ],
   );
 
