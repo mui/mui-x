@@ -16,28 +16,32 @@ describe('<XGrid /> - Selection', () => {
     }
   });
 
-  it('should not reset the column order', () => {
+  it('should not reset the column order when onSelectionChange is binded', () => {
     let apiRef: ApiRef;
-    const Test = (props) => {
+    const Test = () => {
       apiRef = useApiRef();
+      const [rows] = React.useState([{ id: 0, brand: 'Nike' }]);
+      const [columns] = React.useState([{ field: 'brand' }, { field: 'desc' }, { field: 'type' }]);
+
+      const [myState, setMyState] = React.useState(false);
+      const handleSelection = React.useCallback(() => {
+        setMyState(!myState);
+      }, [myState]);
 
       return (
-        <div style={{width: 300, height: 300}}>
+        <div style={{ width: 300, height: 300 }}>
           <XGrid
             apiRef={apiRef}
-            rows={[
-              {
-                id: 0,
-                brand: 'Nike',
-              },
-            ]}
-            columns={[{field: 'brand'}, {field: 'desc'}, {field: 'type'}]}
+            rows={rows}
+            columns={columns}
+            onSelectionChange={handleSelection}
           />
         </div>
       );
     };
 
-    render(<Test/>);
+    render(<Test />);
+    expect(getColumnHeaders()).to.deep.equal(['brand', 'desc', 'type']);
     apiRef!.current.moveColumn('brand', 2);
     expect(getColumnHeaders()).to.deep.equal(['desc', 'type', 'brand']);
     fireEvent.click(getCell(0, 0));

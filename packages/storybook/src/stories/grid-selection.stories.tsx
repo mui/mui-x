@@ -68,7 +68,7 @@ export const MultipleSelectWithCheckboxNoClick = () => {
 export function HandleSelection() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
-    rowLength: 100000,
+    rowLength: 100,
   });
 
   const [myState, setMyState] = React.useState(false);
