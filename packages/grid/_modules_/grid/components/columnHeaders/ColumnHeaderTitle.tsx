@@ -8,14 +8,7 @@ const ColumnHeaderInnerTitle = React.forwardRef<
 >(function ColumnHeaderInnerTitle(props, ref) {
   const { className, ...other } = props;
 
-  return (
-    <div
-      ref={ref}
-      className={classnames('MuiDataGrid-colCellTitle', className)}
-      aria-label={String(other.children)}
-      {...other}
-    />
-  );
+  return <div ref={ref} className={classnames('MuiDataGrid-colCellTitle', className)} {...other} />;
 });
 
 export interface ColumnHeaderTitleProps {
