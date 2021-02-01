@@ -58,6 +58,7 @@ describe('<XGrid /> - Reorder', () => {
       expect(getColumnHeaders()).to.deep.equal(['brand', 'id']);
     });
   });
+
   it('should not reset the column order when a prop change', () => {
     let apiRef: ApiRef;
     const rows = [{ id: 0, brand: 'Nike' }];
