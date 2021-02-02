@@ -12,9 +12,9 @@ export type RowModel = ObjectWithId & RowData;
 export type RowId = string | number;
 
 /**
- * The function to retrieve the id of a [[RowModel]].
+ * The function to retrieve the id of a [[RowData]].
  */
-export type RowIdGetter = (row: Partial<RowModel>)=> RowId;
+export type RowIdGetter = (row: RowData)=> RowId;
 
 export interface ObjectWithId {
   id: RowId;
@@ -28,10 +28,9 @@ export interface ObjectWithId {
  */
 export function checkRowHasId(
   row: RowModel | Partial<RowModel>,
-  getRowId: RowIdGetter,
   detailErrorMessage?: string,
 ): boolean {
-  if (getRowId(row) == null) {
+  if (row.id == null) {
     throw new Error(
       [
         'Material-UI: The data grid component requires all rows to have a unique id property.',

@@ -20,6 +20,7 @@ import { useColumns } from './hooks/features/columns/useColumns';
 import { useGridState } from './hooks/features/core/useGridState';
 import { usePagination } from './hooks/features/pagination/usePagination';
 import { usePreferencesPanel } from './hooks/features/preferencesPanel/usePreferencesPanel';
+import { useGetRowId } from './hooks/features/rows/useGetRowId';
 import { useRows } from './hooks/features/rows/useRows';
 import { useSorting } from './hooks/features/sorting/useSorting';
 import { useApiRef } from './hooks/features/useApiRef';
@@ -72,6 +73,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const onResize = useResizeContainer(apiRef);
 
     useColumns(props.columns, apiRef);
+    useGetRowId(apiRef, props.getRowId)
     useRows(props.rows, apiRef);
     useKeyboard(rootContainerRef, apiRef);
     useSelection(apiRef);
