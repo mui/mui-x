@@ -17,7 +17,7 @@ export default function CustomToolbarGrid() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         components={{
-          Header: CustomToolbar,
+          Toolbar: CustomToolbar,
         }}
         {...data}
       />
