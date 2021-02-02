@@ -21,9 +21,9 @@ export function GridToolbar() {
 
   return (
     <GridToolbarContainer>
-      {!options.disableColumnSelector && <ColumnsToolbarButton />}
-      {!options.disableColumnFilter && <FilterToolbarButton />}
-      {!options.disableDensitySelector && <DensitySelector />}
+      <ColumnsToolbarButton />
+      <FilterToolbarButton />
+      <DensitySelector />
     </GridToolbarContainer>
   );
 }
