@@ -24,6 +24,12 @@ In addition to the column menu that allows users to apply a filter, you can also
 
 {{"demo": "pages/components/data-grid/filtering/BasicToolbarFilteringGrid.js", "bg": "inline"}}
 
+### Filter Operators
+
+By default the string operator is used for filtering. Additionally numerical and date operators are available:
+
+{{"demo": "pages/components/data-grid/filtering/FilterOperators.js", "bg": "inline"}}
+
 ### Disable filter
 
 #### Globally
