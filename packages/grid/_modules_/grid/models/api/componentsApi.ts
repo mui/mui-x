@@ -16,10 +16,6 @@ export interface ApiRefComponentsProperty extends GridIconSlotsComponent {
    */
   Footer: React.ElementType;
   /**
-   * Header component rendered above the grid column header bar.
-   */
-  Header: React.ElementType;
-  /**
    * Toolbar component rendered inside the Header component.
    */
   Toolbar?: React.ElementType;
