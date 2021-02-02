@@ -1,47 +1,31 @@
 import * as React from 'react';
-import {
-  DataGrid,
-  getNumericColumnOperators,
-  getDateOperators,
-} from '@material-ui/data-grid';
+import { DataGrid } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
+
+const columns = [
+  { field: 'name', headerName: 'Name', width: 180 },
+  {
+    field: 'rating',
+    headerName: 'Rating',
+    type: 'number',
+  },
+  {
+    field: 'dateCreated',
+    headerName: 'Created on',
+    width: 180,
+    type: 'date',
+  },
+];
 
 export default function FilterOperators() {
   const { data } = useDemoData({
     dataSet: 'Employee',
-    rowLength: 100,
+    rowLength: 10,
   });
-
-  const rows = data.rows;
-
-  const columns = [
-    { field: 'name', headerName: 'Name', width: 180 },
-    { field: 'email', headerName: 'Email', width: 180 },
-    {
-      field: 'rating',
-      headerName: 'Rating',
-      width: 180,
-      type: 'number',
-      filterOperators: getNumericColumnOperators(),
-    },
-    {
-      field: 'dateCreated',
-      headerName: 'Created on',
-      width: 180,
-      type: 'date',
-      filterOperators: getDateOperators(),
-    },
-  ];
-
-  const dateFilterModel = {
-    items: [
-      { columnField: 'dateCreated', operatorValue: 'after', value: '2020-10-01' },
-    ],
-  };
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} filterModel={dateFilterModel} />
+      <DataGrid rows={data.rows} columns={columns} />
     </div>
   );
 }

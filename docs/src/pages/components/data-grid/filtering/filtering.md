@@ -26,7 +26,7 @@ In addition to the column menu that allows users to apply a filter, you can also
 
 ### Filter Operators
 
-By default the string operator is used for filtering. Additionally numerical and date operators are available:
+The type of the column is used for adapting the filtering. You can find the different supported types in the [columns section](/components/data-grid/columns/#column-types).
 
 {{"demo": "pages/components/data-grid/filtering/FilterOperators.js", "bg": "inline"}}
 
