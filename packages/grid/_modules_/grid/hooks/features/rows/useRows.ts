@@ -31,6 +31,7 @@ export function convertRowsPropToState(
 
   rows.forEach((rowData) => {
     const row = addRowId(rowIdGetter, rowData);
+    checkRowHasId(row);
     state.allRows.push(row.id);
     state.idRowsLookup[row.id] = row;
   });
@@ -42,6 +43,7 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
   const logger = useLogger('useRows');
   const [gridState, setGridState, updateComponent] = useGridState(apiRef);
   const updateTimeout = React.useRef<any>();
+  const getRowId = React.useCallback((row: RowData) => apiRef.current.getRowId(row), [apiRef]);
 
   const forceUpdate = React.useCallback(
     (preUpdateCallback?: Function) => {
@@ -60,13 +62,6 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
   );
 
   const internalRowsState = React.useRef<InternalRowsState>(gridState.rows);
-
-  const getRowId = React.useCallback(
-    (row: RowData) => {
-      return apiRef.current.getRowId(row);
-    },
-    [apiRef],
-  );
 
   React.useEffect(() => {
     return () => clearTimeout(updateTimeout!.current);
@@ -129,7 +124,7 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
       const uniqUpdates = updates.reduce((uniq, update) => {
         const { id } = addRowId(getRowId, update);
         const udpateWithId = { id, ...update };
-        checkRowHasId(udpateWithId);
+        checkRowHasId(udpateWithId, 'A row was provided without id when calling updateRows():');
         uniq[id] = uniq[id] != null ? { ...uniq[id!], ...udpateWithId } : udpateWithId;
         return uniq;
       }, {} as { [id: string]: any });

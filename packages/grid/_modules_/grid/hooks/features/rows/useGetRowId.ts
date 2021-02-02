@@ -8,10 +8,10 @@ const getDefaultRowId = (row: RowData) => row.id;
 export const useGetRowId = (apiRef: ApiRef, getRowIdProp?: RowIdGetter) => {
   const getRowId = React.useCallback(
     (row: RowData) => {
-      if (getRowIdProp != null) {
-        return getRowIdProp(row);
+      if (!getRowIdProp) {
+        return getDefaultRowId(row);
       }
-      return getDefaultRowId(row);
+      return getRowIdProp(row);
     },
     [getRowIdProp],
   );
