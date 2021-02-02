@@ -18,7 +18,13 @@ export default function FilterOperators() {
   const columns = [
     { field: 'name', headerName: 'Name', width: 180 },
     { field: 'email', headerName: 'Email', width: 180 },
-    { field: 'rating', headerName: 'Rating', width: 180 },
+    {
+      field: 'rating',
+      headerName: 'Rating',
+      width: 180,
+      type: 'number',
+      filterOperators: getNumericColumnOperators(),
+    },
     {
       field: 'dateCreated',
       headerName: 'Created on',

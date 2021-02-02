@@ -21,6 +21,7 @@ export default function FilterOperators() {
       field: 'rating',
       headerName: 'Rating',
       width: 180,
+      type: 'number',
       filterOperators: getNumericColumnOperators(),
     },
     {
