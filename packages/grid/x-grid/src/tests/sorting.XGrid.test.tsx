@@ -1,7 +1,7 @@
-import { ApiRef, SortModel, useApiRef } from '@material-ui/data-grid';
-import { XGrid } from '@material-ui/x-grid/XGrid';
-import { expect } from 'chai';
 import * as React from 'react';
+import { ApiRef, SortModel, useApiRef } from '@material-ui/data-grid';
+import { XGrid } from '@material-ui/x-grid';
+import { expect } from 'chai';
 import { useFakeTimers } from 'sinon';
 import { getColumnValues } from 'test/utils/helperFn';
 import { createClientRenderStrictMode } from 'test/utils';
@@ -29,7 +29,7 @@ describe('<XGrid /> - Sorting', () => {
 
   let apiRef: ApiRef;
 
-  const TestCase = (props: { rows?: any[]; model: SortModel }) => {
+  const TestCase = (props: { rows?: any[]; sortModel: SortModel }) => {
     const baselineProps = {
       rows: [
         {
@@ -51,7 +51,7 @@ describe('<XGrid /> - Sorting', () => {
       columns: [{ field: 'brand' }, { field: 'year', type: 'number' }],
     };
 
-    const { model, rows } = props;
+    const { sortModel, rows } = props;
     apiRef = useApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
@@ -59,16 +59,16 @@ describe('<XGrid /> - Sorting', () => {
           apiRef={apiRef}
           {...baselineProps}
           rows={rows || baselineProps.rows}
-          sortModel={model}
+          sortModel={sortModel}
         />
       </div>
     );
   };
 
   const renderBrandSortedAsc = () => {
-    const model: SortModel = [{ field: 'brand', sort: 'asc' }];
+    const sortModel: SortModel = [{ field: 'brand', sort: 'asc' }];
 
-    render(<TestCase model={model} />);
+    render(<TestCase sortModel={sortModel} />);
   };
 
   it('should apply the sortModel prop correctly', () => {
@@ -112,24 +112,23 @@ describe('<XGrid /> - Sorting', () => {
   });
 
   it('should allow multiple sort columns and', () => {
-    const model: SortModel = [
+    const sortModel: SortModel = [
       { field: 'year', sort: 'desc' },
       { field: 'brand', sort: 'asc' },
     ];
-    render(<TestCase model={model} />);
-
+    render(<TestCase sortModel={sortModel} />);
     expect(getColumnValues()).to.deep.equal(['Puma', 'Adidas', 'Nike']);
   });
 
   it('should allow to set multiple Sort items via apiRef', () => {
     renderBrandSortedAsc();
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
-    const model: SortModel = [
+    const sortModel: SortModel = [
       { field: 'year', sort: 'desc' },
       { field: 'brand', sort: 'asc' },
     ];
 
-    apiRef.current.setSortModel(model);
+    apiRef.current.setSortModel(sortModel);
     expect(getColumnValues()).to.deep.equal(['Puma', 'Adidas', 'Nike']);
   });
 });

@@ -42,7 +42,7 @@ describe('<XGrid /> - Layout', () => {
         </div>,
       );
       expect(ref.current).to.be.instanceof(window.HTMLDivElement);
-      expect(ref.current).to.equal(container.firstChild.firstChild.firstChild);
+      expect(ref.current).to.equal(container.firstChild.firstChild);
     });
 
     function randomStringValue() {
@@ -58,9 +58,7 @@ describe('<XGrid /> - Layout', () => {
         </div>,
       );
 
-      expect(document.querySelector(`.${className}`)).to.equal(
-        container.firstChild.firstChild.firstChild,
-      );
+      expect(document.querySelector(`.${className}`)).to.equal(container.firstChild.firstChild);
     });
   });
 });

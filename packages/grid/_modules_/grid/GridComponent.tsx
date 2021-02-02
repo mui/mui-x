@@ -4,6 +4,7 @@
  */
 import * as React from 'react';
 import { useForkRef } from '@material-ui/core/utils';
+import NoSsr from '@material-ui/core/NoSsr';
 import { AutoSizer } from './components/AutoSizer';
 import { ColumnsHeader } from './components/columnHeaders/ColumnHeaders';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -94,70 +95,66 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const showNoRowsOverlay = !props.loading && gridState.rows.totalRowCount === 0;
     return (
       <ApiContext.Provider value={apiRef}>
-        <AutoSizer onResize={onResize} nonce={props.nonce}>
-          {(size: any) => (
-            <GridRoot
-              ref={handleRef}
-              className={props.className}
-              size={size}
-              header={headerRef}
-              footer={footerRef}
-            >
-              <ErrorBoundary
-                hasError={errorState != null}
-                componentProps={errorState}
-                api={apiRef!}
-                logger={logger}
-                render={(errorProps) => (
-                  <GridMainContainer>
-                    <components.ErrorOverlay
-                      {...errorProps}
-                      {...componentBaseProps}
-                      {...props.componentsProps?.errorOverlay}
-                    />
-                  </GridMainContainer>
-                )}
-              >
-                <div ref={headerRef}>
-                  <components.Header {...componentBaseProps} {...props.componentsProps?.header} />
-                </div>
+        <NoSsr>
+          <GridRoot ref={handleRef} className={props.className}>
+            <ErrorBoundary
+              hasError={errorState != null}
+              componentProps={errorState}
+              api={apiRef!}
+              logger={logger}
+              render={(errorProps) => (
                 <GridMainContainer>
-                  <GridColumnHeaderMenu
-                    ContentComponent={components.ColumnMenu}
-                    contentComponentProps={{
-                      ...componentBaseProps,
-                      ...props.componentsProps?.columnMenu,
-                    }}
+                  <components.ErrorOverlay
+                    {...errorProps}
+                    {...componentBaseProps}
+                    {...props.componentsProps?.errorOverlay}
                   />
-                  <Watermark licenseStatus={props.licenseStatus} />
-                  <GridColumnsContainer ref={columnsContainerRef}>
-                    <ColumnsHeader ref={columnsHeaderRef} />
-                  </GridColumnsContainer>
-                  {showNoRowsOverlay && (
-                    <components.NoRowsOverlay
-                      {...componentBaseProps}
-                      {...props.componentsProps?.noRowsOverlay}
-                    />
-                  )}
-                  {props.loading && (
-                    <components.LoadingOverlay
-                      {...componentBaseProps}
-                      {...props.componentsProps?.loadingOverlay}
-                    />
-                  )}
-                  <GridWindow ref={windowRef}>
-                    <Viewport ref={renderingZoneRef} />
-                  </GridWindow>
                 </GridMainContainer>
-                {!gridState.options.hideFooter && (
-                  <div ref={footerRef}>
-                    <components.Footer {...componentBaseProps} {...props.componentsProps?.footer} />
-                  </div>
+              )}
+            >
+              <div ref={headerRef}>
+                <components.Header {...componentBaseProps} {...props.componentsProps?.header} />
+              </div>
+              <GridMainContainer>
+                <GridColumnHeaderMenu
+                  ContentComponent={components.ColumnMenu}
+                  contentComponentProps={{
+                    ...componentBaseProps,
+                    ...props.componentsProps?.columnMenu,
+                  }}
+                />
+                <Watermark licenseStatus={props.licenseStatus} />
+                <GridColumnsContainer ref={columnsContainerRef}>
+                  <ColumnsHeader ref={columnsHeaderRef} />
+                </GridColumnsContainer>
+                {showNoRowsOverlay && (
+                  <components.NoRowsOverlay
+                    {...componentBaseProps}
+                    {...props.componentsProps?.noRowsOverlay}
+                  />
                 )}
-              </ErrorBoundary>
-            </GridRoot>
-          )}
-        </AutoSizer>
+                {props.loading && (
+                  <components.LoadingOverlay
+                    {...componentBaseProps}
+                    {...props.componentsProps?.loadingOverlay}
+                  />
+                )}
+                <AutoSizer onResize={onResize} nonce={props.nonce} disableHeight={props.autoHeight}>
+                  {(size: any) => (
+                    <GridWindow ref={windowRef} size={size}>
+                      <Viewport ref={renderingZoneRef} />
+                    </GridWindow>
+                  )}
+                </AutoSizer>
+              </GridMainContainer>
+              {!gridState.options.hideFooter && (
+                <div ref={footerRef}>
+                  <components.Footer {...componentBaseProps} {...props.componentsProps?.footer} />
+                </div>
+              )}
+            </ErrorBoundary>
+          </GridRoot>
+        </NoSsr>
       </ApiContext.Provider>
     );
   },
