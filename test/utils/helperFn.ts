@@ -38,8 +38,8 @@ export async function sleep(duration: number) {
   });
 }
 
-export function getColumnValues() {
-  return Array.from(document.querySelectorAll('[role="cell"][aria-colindex="0"]')).map(
+export function getColumnValues(colIndex: number = 0) {
+  return Array.from(document.querySelectorAll(`[role="cell"][aria-colindex="${colIndex}"]`)).map(
     (node) => node!.textContent,
   );
 }

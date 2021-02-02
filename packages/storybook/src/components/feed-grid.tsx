@@ -52,6 +52,8 @@ export const FeedGrid: React.FC<FeedGridProps> = (p) => {
       subscribeToStream();
     }
   };
+  const getRowId = React.useCallback((row) => row.idfield, []);
+
   return (
     <React.Fragment>
       <div>
@@ -65,7 +67,7 @@ export const FeedGrid: React.FC<FeedGridProps> = (p) => {
         </button>
       </div>
       <div style={{ width: 800, height: 600 }}>
-        <XGrid rows={rows} columns={columns} apiRef={apiRef} {...p} />
+        <XGrid rows={rows} columns={columns} apiRef={apiRef} {...p} getRowId={getRowId} />
       </div>
     </React.Fragment>
   );

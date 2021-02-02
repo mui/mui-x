@@ -39,7 +39,7 @@ const baselineProps = {
   columns: [{ field: 'brand' }],
 };
 
-function getStoryRowId (row) {
+function getStoryRowId(row) {
   return row.brand;
 }
 export function NoId() {
@@ -56,18 +56,22 @@ export function NoId() {
   ]);
 
   return (
-  <div className="grid-container">
-    <XGrid columns={baselineProps.columns} rows={rows} getRowId={getStoryRowId} />
-  </div>
+    <div className="grid-container">
+      <XGrid columns={baselineProps.columns} rows={rows} getRowId={getStoryRowId} />
+    </div>
   );
 }
 export function CommodityNewRowId() {
   const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
-  const getRowId = React.useCallback((row: RowData)=> (`${row.desk}-${row.commodity}`), [])
+  const getRowId = React.useCallback((row: RowData) => `${row.desk}-${row.commodity}`, []);
   return (
-      <div className="grid-container">
-        <XGrid rows={data.rows} columns={data.columns.filter(c=> c.field !=='id')} getRowId={getRowId} />
-      </div>
+    <div className="grid-container">
+      <XGrid
+        rows={data.rows}
+        columns={data.columns.filter((c) => c.field !== 'id')}
+        getRowId={getRowId}
+      />
+    </div>
   );
 }
 export function SetRowsViaApi() {

@@ -30,7 +30,7 @@ export const pricingColumns = [
   { field: 'price5y', type: 'number' },
 ];
 
-export function randomPricingModel():PricingModel {
+export function randomPricingModel(): PricingModel {
   return {
     idfield: random(0, currencyPairs.length).toFixed(),
     currencyPair: currencyPairs[random(0, currencyPairs.length).toFixed()],
@@ -42,9 +42,8 @@ export function randomPricingModel():PricingModel {
     price1y: randomPrice(),
     price2y: randomPrice(),
     price5y: randomPrice(),
-  }
+  };
 }
-
 
 export function subscribeCurrencyPair(
   currencyPair: string,

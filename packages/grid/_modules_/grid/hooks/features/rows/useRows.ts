@@ -2,17 +2,28 @@ import * as React from 'react';
 import { ROWS_CLEARED, ROWS_SET, ROWS_UPDATED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { RowApi } from '../../../models/api/rowApi';
-import { checkRowHasId, RowModel, RowId, RowsProp, RowIdGetter, RowData } from '../../../models/rows';
+import {
+  checkRowHasId,
+  RowModel,
+  RowId,
+  RowsProp,
+  RowIdGetter,
+  RowData,
+} from '../../../models/rows';
 import { useApiMethod } from '../../root/useApiMethod';
 import { useLogger } from '../../utils/useLogger';
 import { useGridState } from '../core/useGridState';
 import { getInitialRowState, InternalRowsState } from './rowsState';
 
 export function addRowId(getRowId: RowIdGetter, rowData: RowData): RowModel {
-  return {...rowData, id: getRowId(rowData) };
+  return { ...rowData, id: getRowId(rowData) };
 }
 
-export function convertRowsPropToState(rows: RowsProp, rowIdGetter: RowIdGetter,  totalRowCount?: number,): InternalRowsState {
+export function convertRowsPropToState(
+  rows: RowsProp,
+  rowIdGetter: RowIdGetter,
+  totalRowCount?: number,
+): InternalRowsState {
   const state: InternalRowsState = {
     ...getInitialRowState(),
     totalRowCount: totalRowCount && totalRowCount > rows.length ? totalRowCount : rows.length,
@@ -50,9 +61,12 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
 
   const internalRowsState = React.useRef<InternalRowsState>(gridState.rows);
 
-  const getRowId = React.useCallback((row: RowData)=> {
-    return apiRef.current.getRowId(row);
-  }, [apiRef]);
+  const getRowId = React.useCallback(
+    (row: RowData) => {
+      return apiRef.current.getRowId(row);
+    },
+    [apiRef],
+  );
 
   React.useEffect(() => {
     return () => clearTimeout(updateTimeout!.current);
@@ -113,10 +127,10 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
     (updates: Partial<RowModel>[]) => {
       // we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
       const uniqUpdates = updates.reduce((uniq, update) => {
-        const {id} = addRowId(getRowId, update);
-        const udpateWithId = {id, ...update};
+        const { id } = addRowId(getRowId, update);
+        const udpateWithId = { id, ...update };
         checkRowHasId(udpateWithId);
-        uniq[id] = uniq[id] != null ? {...uniq[id!], ...udpateWithId } : udpateWithId;
+        uniq[id] = uniq[id] != null ? { ...uniq[id!], ...udpateWithId } : udpateWithId;
         return uniq;
       }, {} as { [id: string]: any });
 

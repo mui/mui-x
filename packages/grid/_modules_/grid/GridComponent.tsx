@@ -68,12 +68,12 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
 
     useApi(rootContainerRef, columnsContainerRef, apiRef);
     const errorState = useErrorHandler(apiRef, props);
+    useGetRowId(apiRef, props.getRowId);
     useEvents(rootContainerRef, apiRef);
     useLocaleText(apiRef);
     const onResize = useResizeContainer(apiRef);
 
     useColumns(props.columns, apiRef);
-    useGetRowId(apiRef, props.getRowId)
     useRows(props.rows, apiRef);
     useKeyboard(rootContainerRef, apiRef);
     useSelection(apiRef);

@@ -14,7 +14,6 @@ import { RowParams } from './params/rowParams';
 import { RowSelectedParams } from './params/rowSelectedParams';
 import { SelectionChangeParams } from './params/selectionChangeParams';
 import { SortModelParams } from './params/sortModelParams';
-import { RowIdGetter } from './rows';
 import { SortDirection, SortModel } from './sortModel';
 
 // TODO add multiSortKey
@@ -288,8 +287,6 @@ export interface GridOptions {
    * You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText: Partial<LocaleText>;
-
-  getRowId: RowIdGetter
 }
 
 /**
@@ -310,5 +307,4 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   density: DensityTypes.Standard,
   showToolbar: false,
   localeText: DEFAULT_LOCALE_TEXT,
-  getRowId: row => row.id!
 };

@@ -54,7 +54,7 @@ export const PricingGrid: React.FC<PricingGridProps> = (props) => {
       subscribeToStream();
     }
   };
-  const getRowId = React.useCallback((row)=> row.idfield, []);
+  const getRowId = React.useCallback((row) => row.idfield, []);
   return (
     <React.Fragment>
       <div>

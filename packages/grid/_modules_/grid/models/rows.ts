@@ -1,5 +1,5 @@
 export type RowsProp = RowData[];
-export type RowData = {[key: string]: any};
+export type RowData = { [key: string]: any };
 
 /**
  * The key value object representing the data of a row.
@@ -14,7 +14,7 @@ export type RowId = string | number;
 /**
  * The function to retrieve the id of a [[RowData]].
  */
-export type RowIdGetter = (row: RowData)=> RowId;
+export type RowIdGetter = (row: RowData) => RowId;
 
 export interface ObjectWithId {
   id: RowId;
