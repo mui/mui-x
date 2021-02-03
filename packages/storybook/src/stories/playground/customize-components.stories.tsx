@@ -195,7 +195,7 @@ HeaderAndFooter.args = {
   hideFooterPagination: true,
   pageSize: 33,
   components: {
-    Toolbar: CustomHeader,
+    Header: CustomHeader,
     Footer: FooterComponent2,
   },
   componentsProps: {
@@ -314,7 +314,7 @@ function ToolbarComponent(props: any) {
 export const CustomToolbar = Template.bind({});
 CustomToolbar.args = {
   components: {
-    Toolbar: ToolbarComponent,
+    Header: ToolbarComponent,
   },
   componentsProps: {
     header: { color: 'red' },
@@ -351,7 +351,7 @@ UndefinedAllComponent.args = {
     ColumnMenu: undefined,
     Pagination: undefined,
     Footer: undefined,
-    Toolbar: undefined,
+    Header: undefined,
     ErrorOverlay: undefined,
     NoRowsOverlay: undefined,
     LoadingOverlay: undefined,
@@ -462,6 +462,6 @@ CustomPanelInFooter.args = {
   components: {
     Panel: CustomPanelComponent,
     Footer: FooterWithPanel,
-    Toolbar: GridToolbar,
+    Header: GridToolbar,
   },
 };

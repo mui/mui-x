@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ErrorOverlay, ErrorOverlayProps } from '../components/ErrorOverlay';
 import { GridFooter } from '../components/GridFooter';
+import { GridHeader } from '../components/GridHeader';
 import { PreferencesPanel } from '../components/panel/PreferencesPanel';
 import {
   ArrowDownwardIcon,
@@ -47,6 +48,10 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    * Footer component rendered at the bottom of the grid viewport.
    */
   Footer?: React.ElementType<BaseComponentProps>;
+  /**
+   * Header component rendered above the grid column header bar.
+   */
+  Header?: React.ElementType<BaseComponentProps>;
   /**
    * Toolbar component rendered inside the Header component.
    */
@@ -99,6 +104,7 @@ export const DEFAULT_SLOTS_COMPONENTS: ApiRefComponentsProperty = {
   ColumnMenu: GridColumnHeaderMenuItems,
   ErrorOverlay,
   Footer: GridFooter,
+  Header: GridHeader,
   PreferencesPanel,
   LoadingOverlay,
   NoRowsOverlay,

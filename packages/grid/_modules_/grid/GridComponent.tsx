@@ -44,7 +44,6 @@ import { RootContainerRef } from './models/rootContainerRef';
 import { ApiContext } from './components/api-context';
 import { useFilter } from './hooks/features/filter/useFilter';
 import { useLocaleText } from './hooks/features/localeText/useLocaleText';
-import { GridHeader } from './components';
 
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {
@@ -120,7 +119,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                 )}
               >
                 <div ref={headerRef}>
-                  <GridHeader />
+                  <components.Header {...componentBaseProps} {...props.componentsProps?.header} />
                 </div>
                 <GridMainContainer>
                   <GridColumnHeaderMenu

@@ -48,6 +48,7 @@ export const useComponents = (
         (componentSlotsProp && componentSlotsProp.ErrorOverlay) ||
         DEFAULT_SLOTS_COMPONENTS.ErrorOverlay,
       Footer: (componentSlotsProp && componentSlotsProp.Footer) || DEFAULT_SLOTS_COMPONENTS.Footer,
+      Header: (componentSlotsProp && componentSlotsProp.Header) || DEFAULT_SLOTS_COMPONENTS.Header,
       Toolbar: componentSlotsProp && componentSlotsProp.Toolbar,
       PreferencesPanel:
         (componentSlotsProp && componentSlotsProp.PreferencesPanel) ||
