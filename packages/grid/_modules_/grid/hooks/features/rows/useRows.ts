@@ -39,11 +39,15 @@ export function convertRowsPropToState(
   return state;
 }
 
-export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
+export const useRows = (apiRef: ApiRef, rows: RowsProp, getRowIdProp?: RowIdGetter): void => {
   const logger = useLogger('useRows');
   const [gridState, setGridState, updateComponent] = useGridState(apiRef);
   const updateTimeout = React.useRef<any>();
-  const getRowId = React.useCallback((row: RowData) => apiRef.current.getRowId(row), [apiRef]);
+
+  const getRowId = React.useCallback(
+    (row: RowData) => (!getRowIdProp ? row.id : getRowIdProp(row)),
+    [getRowIdProp],
+  );
 
   const forceUpdate = React.useCallback(
     (preUpdateCallback?: Function) => {
@@ -95,13 +99,15 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
         apiRef.current.publishEvent(ROWS_CLEARED);
       }
 
+      const allRows: RowId[] = [];
       const idRowsLookup = allNewRows.reduce((lookup, row) => {
         row = addRowId(getRowId, row);
         checkRowHasId(row);
         lookup[row.id] = row;
+        allRows.push(row.id);
         return lookup;
       }, {});
-      const allRows = allNewRows.map((row) => getRowId(row));
+
       const totalRowCount =
         gridState.options &&
         gridState.options.rowCount &&
@@ -174,7 +180,7 @@ export const useRows = (rows: RowsProp, apiRef: ApiRef): void => {
     getAllRowIds,
     setRows,
     updateRows,
+    getRowId,
   };
-
   useApiMethod(apiRef, rowApi, 'RowApi');
 };
