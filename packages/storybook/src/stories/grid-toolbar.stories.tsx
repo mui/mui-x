@@ -20,12 +20,12 @@ export const DensitySelectorCompact = () => {
     <div style={{ height: 600 }}>
       <XGrid
         rows={data.rows}
+        columns={data.columns}
+        showToolbar
+        density="compact"
         components={{
           Toolbar: GridToolbar,
         }}
-        showToolbar
-        columns={data.columns}
-        density="compact"
       />
     </div>
   );
@@ -35,7 +35,15 @@ export const DensitySelectorComfortable = () => {
 
   return (
     <div style={{ height: 600 }}>
-      <XGrid rows={data.rows} showToolbar columns={data.columns} density="comfortable" />
+      <XGrid
+        columns={data.columns}
+        rows={data.rows}
+        showToolbar
+        density="comfortable"
+        components={{
+          Toolbar: GridToolbar,
+        }}
+      />
     </div>
   );
 };

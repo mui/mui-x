@@ -13,10 +13,10 @@ export default function VisibleToolbarGrid() {
     <div style={{ height: 300, width: '100%' }}>
       <DataGrid
         {...data}
+        showToolbar
         components={{
           Toolbar: GridToolbar,
         }}
-        showToolbar
       />
     </div>
   );

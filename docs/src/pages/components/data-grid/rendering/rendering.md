@@ -258,15 +258,15 @@ You can disable column virtualization by setting the column buffer to a higher n
 
 As part of the customization API, the grid allows you to replace and override nested components with the `components` prop. The prop accepts an object with the following keys:
 
-- `header`: The component rendered above the column header bar.
+- `toolbar`: The component rendered above the column header bar.
 - `loadingOverlay`: The component rendered when the loading react prop is set to true.
 - `noRowsOverlay`: The component rendered when the rows react prop is empty or [].
 - `footer`: The component rendered below the viewport.
 - `pagination`: The component rendered for the pagination feature.
 
-### Header
+### Toolbar
 
-You can replace the default toolbar by providing a `header` component.
+You can provide your own toolbar by passing it to the `Toolbar` component.
 This demo showcases how this can be achieve.
 
 {{"demo": "pages/components/data-grid/rendering/CustomToolbarGrid.js", "bg": "inline"}}

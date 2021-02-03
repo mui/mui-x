@@ -401,6 +401,7 @@ export function DynamicIconUpdate() {
           {...data}
           components={{
             DensityStandardIcon: icon,
+            Toolbar: GridToolbar,
           }}
           showToolbar
         />
@@ -427,6 +428,7 @@ CustomFilterColumnsPanels.args = {
   components: {
     FilterPanel: CustomFilterPanel,
     ColumnsPanel: CustomColumnsPanel,
+    Toolbar: GridToolbar,
   },
   componentsProps: {
     filterPanel: { bg: 'blue' },
@@ -445,6 +447,7 @@ CustomPanel.args = {
   showToolbar: true,
   components: {
     Panel: CustomPanelComponent,
+    Toolbar: GridToolbar,
   },
 };
 
@@ -462,6 +465,6 @@ CustomPanelInFooter.args = {
   components: {
     Panel: CustomPanelComponent,
     Footer: FooterWithPanel,
-    Header: GridToolbar,
+    Toolbar: GridToolbar,
   },
 };
