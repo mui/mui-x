@@ -1,18 +1,21 @@
 import * as React from 'react';
 import { ElementSize } from '../../models';
 import { useLogger } from './useLogger';
+import { useGridSelector } from '../features/core/useGridSelector';
+import { optionsSelector } from './optionsSelector';
 
 export function useResizeContainer(apiRef): (size: ElementSize) => void {
   const gridLogger = useLogger('useResizeContainer');
   const widthTimeout = React.useRef<any>();
   const heightTimeout = React.useRef<any>();
+  const { autoHeight } = useGridSelector(apiRef, optionsSelector);
 
   const onResize = React.useCallback(
     (size: ElementSize) => {
       clearTimeout(widthTimeout.current);
       clearTimeout(heightTimeout.current);
 
-      if (size.height === 0) {
+      if (size.height === 0 && !autoHeight) {
         // Use timeout to allow simpler tests in JSDOM.
         widthTimeout.current = setTimeout(() => {
           gridLogger.warn(
@@ -48,7 +51,7 @@ export function useResizeContainer(apiRef): (size: ElementSize) => void {
         apiRef!.current.resize();
       }
     },
-    [gridLogger, apiRef],
+    [gridLogger, apiRef, autoHeight],
   );
 
   React.useEffect(() => {
