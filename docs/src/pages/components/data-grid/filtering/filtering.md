@@ -24,6 +24,12 @@ In addition to the column menu that allows users to apply a filter, you can also
 
 {{"demo": "pages/components/data-grid/filtering/BasicToolbarFilteringGrid.js", "bg": "inline"}}
 
+### Column types
+
+The type of the column is used for adapting the filtering. You can find the different supported types in the [columns section](/components/data-grid/columns/#column-types).
+
+{{"demo": "pages/components/data-grid/filtering/FilterOperators.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Disable filter
 
 #### Globally
