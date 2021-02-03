@@ -92,8 +92,10 @@ export const ColumnRightBorder = () => {
 export const AutoHeightSmall = () => {
   const data = useData(8, 12);
   return (
-    <div>
+    <div className="grid-container">
+      <p style={{ backgroundColor: 'red', height: 50 }}>before DataGrid</p>
       <XGrid rows={data.rows} columns={data.columns} autoHeight />
+      <p style={{ backgroundColor: 'red' }}>after DataGrid</p>
     </div>
   );
 };
@@ -101,8 +103,10 @@ export const AutoHeightSmall = () => {
 export const AutoHeightLarge = () => {
   const data = useData(75, 20);
   return (
-    <div>
+    <div className="grid-container">
+      <p style={{ backgroundColor: 'red', height: 50 }}>before DataGrid</p>
       <XGrid rows={data.rows} columns={data.columns} autoHeight />
+      <p style={{ backgroundColor: 'red' }}>after DataGrid</p>
     </div>
   );
 };

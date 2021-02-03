@@ -138,6 +138,7 @@ export function UpdateColumnsBtn() {
       </div>
       <div className="grid-container">
         <XGrid rows={rows} columns={cols} />
+        <p style={{ backgroundColor: 'red' }}>after DataGrid</p>
       </div>
     </React.Fragment>
   );

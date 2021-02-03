@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { useForkRef, ownerWindow } from '@material-ui/core/utils';
+import { useGridState } from '../hooks/features/core/useGridState';
 import { useEventCallback, useEnhancedEffect } from '../utils/material-ui-utils';
 import createDetectElementResize from '../lib/createDetectElementResize';
+import { ApiContext } from './api-context';
 // TODO replace with https://caniuse.com/resizeobserver.
 
 export interface AutoSizerSize {
@@ -68,6 +70,8 @@ export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(functi
     width: defaultWidth,
   });
 
+  const apiRef = React.useContext(ApiContext);
+
   const rootRef = React.useRef<HTMLDivElement | null>(null);
   const parentElement = React.useRef<HTMLElement | null>(null);
 
@@ -93,10 +97,11 @@ export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(functi
         (!disableHeight && state.height !== newHeight) ||
         (!disableWidth && state.width !== newWidth)
       ) {
-        setState({
+        const size = {
           height: newHeight,
           width: newWidth,
-        });
+        };
+        setState(size);
 
         if (onResize) {
           onResize({ height: newHeight, width: newWidth });
@@ -141,15 +146,19 @@ export const AutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(functi
 
   const handleRef = useForkRef(rootRef, ref);
   return (
-    <div
-      ref={handleRef}
-      style={{
-        ...outerStyle,
-        ...style,
-      }}
-      {...other}
-    >
-      {state.height === null && state.width === null ? null : children(childParams)}
+    <div style={{ display: 'flex', flexGrow: 1 }}>
+      <div
+        className="autosizer-container"
+        ref={handleRef}
+        style={{
+          ...outerStyle,
+          ...style,
+        }}
+        {...other}
+      >
+        {state.height === null && state.width === null ? null : children(childParams)}
+      </div>
     </div>
   );
 });
+

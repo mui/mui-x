@@ -58,3 +58,4 @@ export const getInitialState: () => GridState = () => ({
   visibleRows: getInitialVisibleRowsState(),
   density: getInitialDensityState(),
 });
+
