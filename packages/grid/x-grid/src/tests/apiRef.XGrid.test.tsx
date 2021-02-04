@@ -89,6 +89,7 @@ describe('<XGrid /> - apiRef', () => {
     clock.tick(100);
     expect(getColumnValues()).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
   });
+
   it('update row data can also add rows in bulk', () => {
     render(<TestCase />);
     apiRef.current.updateRows([
@@ -100,21 +101,23 @@ describe('<XGrid /> - apiRef', () => {
     clock.tick(100);
     expect(getColumnValues()).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
   });
+
   it('update row data can also delete rows', () => {
     render(<TestCase />);
-    apiRef.current.updateRows([{ id: 1, action: 'delete' }]);
+    apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
     apiRef.current.updateRows([{ id: 0, brand: 'Apple' }]);
-    apiRef.current.updateRows([{ id: 2, action: 'delete' }]);
+    apiRef.current.updateRows([{ id: 2, _action: 'delete' }]);
     apiRef.current.updateRows([{ id: 5, brand: 'Atari' }]);
     clock.tick(100);
     expect(getColumnValues()).to.deep.equal(['Apple', 'Atari']);
   });
+
   it('update row data can also delete rows in bulk', () => {
     render(<TestCase />);
     apiRef.current.updateRows([
-      { id: 1, action: 'delete' },
+      { id: 1, _action: 'delete' },
       { id: 0, brand: 'Apple' },
-      { id: 2, action: 'delete' },
+      { id: 2, _action: 'delete' },
       { id: 5, brand: 'Atari' },
     ]);
     clock.tick(100);

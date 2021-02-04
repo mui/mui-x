@@ -139,7 +139,8 @@ export const useRows = (apiRef: ApiRef, rows: RowsProp, getRowIdProp?: RowIdGett
       const deletedRows: RowModel[] = [];
 
       Object.entries<RowModelUpdate>(uniqUpdates).forEach(([id, partialRow]) => {
-        if (partialRow.action === 'delete') {
+        // eslint-disable-next-line no-underscore-dangle
+        if (partialRow._action === 'delete') {
           deletedRows.push(partialRow);
           return;
         }
