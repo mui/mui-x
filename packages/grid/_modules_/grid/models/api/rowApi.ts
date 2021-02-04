@@ -1,4 +1,4 @@
-import { RowModel, RowId, RowIdGetter } from '../rows';
+import { RowModel, RowId } from '../rows';
 
 /**
  * The Row API interface that is available in the grid [[apiRef]].
