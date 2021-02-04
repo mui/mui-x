@@ -46,19 +46,26 @@ const filterModel = {
 
 export default function ExtendNumericOperator() {
   const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
+  const columns = [...data.columns];
 
-  if (data.columns.length > 0) {
-    const ratingColumn = data.columns.find((column) => column.field === 'rating')!;
+  if (columns.length > 0) {
+    const ratingColumn = columns.find((column) => column.field === 'rating')!;
+    const ratingColIndex = columns.findIndex((col) => col.field === 'rating');
 
-    ratingColumn.filterOperators = getNumericColumnOperators().map((operator) => ({
+    const ratingFilterOperators = getNumericColumnOperators().map((operator) => ({
       ...operator,
       InputComponent: RatingInputValue,
     }));
+    columns[ratingColIndex] = {
+      ...ratingColumn,
+      filterOperators: ratingFilterOperators,
+    };
   }
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        {...data}
+        rows={data.rows}
+        columns={columns}
         filterModel={filterModel}
         state={{
           preferencePanel: {
