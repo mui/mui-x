@@ -15,14 +15,14 @@ import { useLogger } from '../../utils/useLogger';
 import { useGridState } from '../core/useGridState';
 import { getInitialRowState, InternalRowsState } from './rowsState';
 
-export function addRowId(getRowId: RowIdGetter, rowData: RowData): RowModel {
-  return { ...rowData, id: getRowId(rowData) };
+export function addRowId(rowData: RowData, getRowId?: RowIdGetter): RowModel {
+  return getRowId == null ? (rowData as RowModel) : { id: getRowId(rowData), ...rowData };
 }
 
 export function convertRowsPropToState(
   rows: RowsProp,
-  rowIdGetter: RowIdGetter,
   totalRowCount?: number,
+  rowIdGetter?: RowIdGetter,
 ): InternalRowsState {
   const state: InternalRowsState = {
     ...getInitialRowState(),
@@ -30,7 +30,7 @@ export function convertRowsPropToState(
   };
 
   rows.forEach((rowData) => {
-    const row = addRowId(rowIdGetter, rowData);
+    const row = addRowId(rowData, rowIdGetter);
     checkRowHasId(row);
     state.allRows.push(row.id);
     state.idRowsLookup[row.id] = row;
@@ -43,11 +43,6 @@ export const useRows = (apiRef: ApiRef, rows: RowsProp, getRowIdProp?: RowIdGett
   const logger = useLogger('useRows');
   const [gridState, setGridState, updateComponent] = useGridState(apiRef);
   const updateTimeout = React.useRef<any>();
-
-  const getRowId = React.useCallback(
-    (row: RowData) => (!getRowIdProp ? row.id : getRowIdProp(row)),
-    [getRowIdProp],
-  );
 
   const forceUpdate = React.useCallback(
     (preUpdateCallback?: Function) => {
@@ -73,10 +68,14 @@ export const useRows = (apiRef: ApiRef, rows: RowsProp, getRowIdProp?: RowIdGett
 
   React.useEffect(() => {
     setGridState((state) => {
-      internalRowsState.current = convertRowsPropToState(rows, getRowId, state.options.rowCount);
+      internalRowsState.current = convertRowsPropToState(
+        rows,
+        state.options.rowCount,
+        getRowIdProp,
+      );
       return { ...state, rows: internalRowsState.current };
     });
-  }, [getRowId, rows, setGridState]);
+  }, [getRowIdProp, rows, setGridState]);
 
   const getRowIndexFromId = React.useCallback(
     (id: RowId): number => apiRef.current.state.rows.allRows.indexOf(id),
@@ -101,7 +100,7 @@ export const useRows = (apiRef: ApiRef, rows: RowsProp, getRowIdProp?: RowIdGett
 
       const allRows: RowId[] = [];
       const idRowsLookup = allNewRows.reduce((lookup, row) => {
-        row = addRowId(getRowId, row);
+        row = addRowId(row, getRowIdProp);
         checkRowHasId(row);
         lookup[row.id] = row;
         allRows.push(row.id);
@@ -121,15 +120,15 @@ export const useRows = (apiRef: ApiRef, rows: RowsProp, getRowIdProp?: RowIdGett
 
       forceUpdate(() => apiRef.current.publishEvent(ROWS_SET));
     },
-    [logger, gridState.options, setGridState, forceUpdate, apiRef, getRowId],
+    [logger, gridState.options, setGridState, forceUpdate, apiRef, getRowIdProp],
   );
 
   const updateRows = React.useCallback(
     (updates: Partial<RowModel>[]) => {
       // we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
       const uniqUpdates = updates.reduce((uniq, update) => {
-        const { id } = addRowId(getRowId, update);
-        const udpateWithId = { id, ...update };
+        const udpateWithId = addRowId(update, getRowIdProp);
+        const id = udpateWithId.id;
         checkRowHasId(udpateWithId, 'A row was provided without id when calling updateRows():');
         uniq[id] = uniq[id] != null ? { ...uniq[id!], ...udpateWithId } : udpateWithId;
         return uniq;
@@ -161,7 +160,7 @@ export const useRows = (apiRef: ApiRef, rows: RowsProp, getRowIdProp?: RowIdGett
 
       forceUpdate(() => apiRef.current.publishEvent(ROWS_UPDATED));
     },
-    [apiRef, forceUpdate, getRowFromId, getRowId, setGridState, setRows],
+    [apiRef, forceUpdate, getRowFromId, getRowIdProp, setGridState, setRows],
   );
 
   const getRowModels = React.useCallback(
@@ -180,7 +179,6 @@ export const useRows = (apiRef: ApiRef, rows: RowsProp, getRowIdProp?: RowIdGett
     getAllRowIds,
     setRows,
     updateRows,
-    getRowId,
   };
   useApiMethod(apiRef, rowApi, 'RowApi');
 };

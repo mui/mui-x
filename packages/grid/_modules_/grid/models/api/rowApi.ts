@@ -42,8 +42,4 @@ export interface RowApi {
    * @param id
    */
   getRowFromId: (id: RowId) => RowModel;
-  /**
-   * Return the id of a given [[RowData]].
-   */
-  getRowId: RowIdGetter;
 }

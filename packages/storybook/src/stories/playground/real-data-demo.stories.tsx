@@ -68,7 +68,7 @@ Commodity1000.decorators = [gridContainer];
 
 export const Commodity10000 = DemoTemplate.bind({});
 Commodity10000.args = {
-  rowLength: 10000,
+  rowLength: 100000,
   dataSet: 'Commodity',
 };
 Commodity10000.decorators = [gridContainer];
