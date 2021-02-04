@@ -6,6 +6,11 @@ export type RowData = { [key: string]: any };
  */
 export type RowModel = ObjectWithId & RowData;
 
+export type GridUpdateAction = 'delete' | 'upsert';
+export interface RowModelUpdate extends RowModel {
+  action?: GridUpdateAction;
+}
+
 /**
  * The type of Id supported by the grid.
  */
