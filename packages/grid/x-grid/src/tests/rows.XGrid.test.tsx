@@ -61,7 +61,7 @@ describe('<XGrid /> - Rows ', () => {
         };
         render(<Test />);
         expect(getColumnValues()).to.deep.equal(['c1', 'c2', 'c3']);
-        apiRef.current.updateRows([
+        apiRef!.current.updateRows([
           { clientId: 'c2', age: 30 },
           { clientId: 'c3', age: 31 },
         ]);
