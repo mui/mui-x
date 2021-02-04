@@ -15,10 +15,7 @@ import {
   ViewStreamIcon,
 } from '../components/icons/index';
 import { LoadingOverlay } from '../components/LoadingOverlay';
-import {
-  GridColumnHeaderMenuItems,
-  GridColumnHeaderMenuItemsProps,
-} from '../components/menu/columnMenu/GridColumnHeaderMenuItems';
+import { GridColumnMenu, GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenu';
 import { NoRowsOverlay } from '../components/NoRowsOverlay';
 import { Pagination } from '../components/Pagination';
 import { ColumnsPanel } from '../components/panel/ColumnsPanel';
@@ -28,7 +25,7 @@ import { ApiRefComponentsProperty } from './api/componentsApi';
 import { GridIconSlotsComponent } from './gridIconSlotsComponent';
 import { BaseComponentProps } from './params/baseComponentProps';
 
-export type ColumnMenuProps = BaseComponentProps & GridColumnHeaderMenuItemsProps;
+export type ColumnMenuProps = BaseComponentProps & GridColumnMenuProps;
 
 /**
  * Grid components React prop interface containing all the overridable components.
@@ -92,14 +89,14 @@ export const DEFAULT_SLOTS_ICONS: GridIconSlotsComponent = {
 
 export const DEFAULT_SLOTS_COMPONENTS: ApiRefComponentsProperty = {
   ...DEFAULT_SLOTS_ICONS,
-  ColumnMenu: GridColumnHeaderMenuItems,
+  ColumnMenu: GridColumnMenu,
+  ColumnsPanel,
   ErrorOverlay,
+  FilterPanel,
   Footer: GridFooter,
   Header: GridHeader,
   LoadingOverlay,
   NoRowsOverlay,
   Pagination,
-  FilterPanel,
-  ColumnsPanel,
   Panel,
 };
