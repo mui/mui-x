@@ -66,6 +66,7 @@ export default function ExtendNumericOperator() {
       ...operator,
       InputComponent: RatingInputValue,
     }));
+
     columns[ratingColIndex] = {
       ...ratingColumn,
       filterOperators: ratingFilterOperators,

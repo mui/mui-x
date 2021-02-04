@@ -81,6 +81,7 @@ export default function CustomRatingOperator() {
       ...ratingColumn,
       filterOperators: RatingOnlyOperators,
     };
+
     const ratingColIndex = columns.findIndex((col) => col.field === 'rating');
     columns[ratingColIndex] = newRatingColumn;
   }
