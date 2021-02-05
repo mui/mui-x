@@ -27,7 +27,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [DataGrid] Fix column reorder instability (#950) @dtassone
 - [DataGrid] Fix footer visual regression (#932) @dtassone
 - [DataGrid] Fix strict mode issue with apiRef (#933) @dtassone
-- [DataGrid] Fix the accessibility of the column menu (#900) @zj9495
+- [DataGrid] Work on the accessibility of the column menu (#900) @zj9495
 - [DataGrid] Fix timing guarentee (#981) @oliviertassinari
 - [DataGrid] Fix unstable footer height (#937) @oliviertassinari
 - [DataGrid] Fix usage of the prop-types API (#955) @oliviertassinari
