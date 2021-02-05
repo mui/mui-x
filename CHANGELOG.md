@@ -31,7 +31,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [DataGrid] Fix timing guarentee (#981) @oliviertassinari
 - [DataGrid] Fix unstable footer height (#937) @oliviertassinari
 - [DataGrid] Fix usage of the prop-types API (#955) @oliviertassinari
-- [DataGrid] Fix duplicate aria-label (#953) @oliviertassinari@dtassone
+- [DataGrid] Fix duplicate aria-label (#953) @oliviertassinari
 
 ### docs
 
