@@ -7,7 +7,6 @@ import { RowSelectedParams } from '../../../models/params/rowSelectedParams';
 import { SelectionChangeParams } from '../../../models/params/selectionChangeParams';
 import { RowId, RowModel } from '../../../models/rows';
 import { SelectionModel } from '../../../models/selectionModel';
-import { isDeepEqual } from '../../../utils/utils';
 import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
@@ -79,12 +78,15 @@ export const useSelection = (apiRef: ApiRef): void => {
       forceUpdate();
 
       const selectionState = apiRef!.current!.getState<SelectionState>('selection');
+
       const rowSelectedParam: RowSelectedParams = {
+        api: apiRef,
         data: row,
         isSelected: !!selectionState[row.id],
       };
       const selectionChangeParam: SelectionChangeParams = {
-        rowIds: Object.keys(selectionState),
+        api: apiRef,
+        selectedRows: Object.keys(selectionState).map((id) => apiRef.current.getRowFromId(id)),
       };
       apiRef.current.publishEvent(ROW_SELECTED, rowSelectedParam);
       apiRef.current.publishEvent(SELECTION_CHANGED, selectionChangeParam);
@@ -122,7 +124,10 @@ export const useSelection = (apiRef: ApiRef): void => {
 
       // We don't emit ROW_SELECTED on each row as it would be too consuming for large set of data.
       apiRef.current.publishEvent(SELECTION_CHANGED, {
-        rowIds: Object.keys(apiRef!.current!.getState<SelectionState>('selection')),
+        api: apiRef,
+        selectedRows: Object.keys(
+          apiRef!.current!.getState<SelectionState>('selection'),
+        ).map((id) => apiRef.current.getRowFromId(id)),
       });
     },
     [

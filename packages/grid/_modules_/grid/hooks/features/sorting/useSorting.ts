@@ -26,7 +26,6 @@ import { useApiMethod } from '../../root/useApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
 import { allColumnsSelector, visibleColumnsSelector } from '../columns/columnsSelector';
-import { GridState } from '../core/gridState';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { rowCountSelector } from '../rows/rowsSelector';
@@ -153,7 +152,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
       return;
     }
 
-    const sortModel = apiRef.current.getState<GridState>().sorting.sortModel;
+    const sortModel = apiRef.current.getState().sorting.sortModel;
     logger.debug('Sorting rows with ', sortModel);
     const sorted = [...rowModels];
     if (sortModel.length > 0) {

@@ -24,7 +24,6 @@ import {
 } from '../../../utils/keyboardUtils';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { visibleColumnsLengthSelector } from '../columns/columnsSelector';
-import { GridState } from '../core/gridState';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { paginationSelector } from '../pagination/paginationSelector';
@@ -287,7 +286,7 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
   const onFocusOutHandler = React.useCallback(
     (args) => {
       logger.debug('Grid lost focus, releasing key press', args);
-      if (apiRef.current.getState<GridState>().keyboard.isMultipleKeyPressed) {
+      if (apiRef.current.getState().keyboard.isMultipleKeyPressed) {
         onMultipleKeyChange(false);
       }
     },

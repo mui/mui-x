@@ -17,7 +17,6 @@ import { mergeColTypes } from '../../../utils/mergeUtils';
 import { useApiMethod } from '../../root/useApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { Logger, useLogger } from '../../utils/useLogger';
-import { GridState } from '../core/gridState';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { allColumnsSelector, columnsMetaSelector, visibleColumnsSelector } from './columnsSelector';
@@ -197,7 +196,7 @@ export function useColumns(columns: Columns, apiRef: ApiRef): void {
 
       const updatedCols = updateColumnsWidth(
         hydratedColumns,
-        apiRef.current.getState<GridState>().viewportSizes.width,
+        apiRef.current.getState().viewportSizes.width,
       );
 
       updateState({
@@ -212,7 +211,7 @@ export function useColumns(columns: Columns, apiRef: ApiRef): void {
   React.useEffect(() => {
     logger.debug(`Columns gridState.viewportSizes.width, changed ${gridState.viewportSizes.width}`);
     // Avoid dependency on gridState as I only want to update cols when viewport size changed.
-    const currentColumns = allColumnsSelector(apiRef.current.getState<GridState>());
+    const currentColumns = allColumnsSelector(apiRef.current.getState());
 
     const updatedCols = updateColumnsWidth(currentColumns, gridState.viewportSizes.width);
     apiRef.current.updateColumns(updatedCols);
