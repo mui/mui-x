@@ -10,15 +10,16 @@ export default function ControlledSelectionGrid() {
   });
 
   // TODO: https://github.com/mui-org/material-ui-x/issues/246
-  const [, setSelection] = React.useState<RowId[]>([]);
+  const [selectionModel, setSelectionModel] = React.useState<RowId[]>([]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         checkboxSelection
         onSelectionChange={(newSelection) => {
-          setSelection(newSelection.rowIds);
+          setSelectionModel(newSelection.selectedRows.map((row) => row.id));
         }}
+        selectionModel={selectionModel}
         {...data}
       />
     </div>
