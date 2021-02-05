@@ -65,11 +65,17 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
       const filterOperators = column.filterOperators;
 
       if (!filterOperators?.length) {
-        throw new Error(`No Filter operator found for column ${column.field}`);
+        throw new Error(`Material-UI: No filter operators found for column '${column.field}'.`);
       }
       const filterOperator = filterOperators.find(
         (operator) => operator.value === filterItem.operatorValue,
       )!;
+
+      if (!filterOperator) {
+        throw new Error(
+          `Material-UI: No filter operator found for column '${column.field}' and operator value '${filterItem.operatorValue}'.`,
+        );
+      }
 
       const applyFilterOnRow = filterOperator.getApplyFilterFn(filterItem, column)!;
 

@@ -57,6 +57,24 @@ async function sleep(duration: number) {
   });
 }
 
+function deepFreeze(object) {
+  // Retrieve the property names defined on object
+  const propNames = Object.getOwnPropertyNames(object);
+
+  // Freeze properties before freezing self
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const name of propNames) {
+    const value = object[name];
+
+    if (value && typeof value === 'object') {
+      deepFreeze(value);
+    }
+  }
+
+  return Object.freeze(object);
+}
+
 export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
   const [data, setData] = React.useState<GridData>({ columns: [], rows: [] });
   const [rowLength, setRowLength] = React.useState(options.rowLength);
@@ -96,6 +114,8 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
       if (!active) {
         return;
       }
+
+      deepFreeze(newData);
 
       dataCache.set(cacheKey, newData);
       setData(newData);

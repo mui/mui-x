@@ -56,7 +56,7 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
   );
 });
 
-(DataGrid2 as any).propTypes = {
+DataGrid2.propTypes = {
   apiRef: chainPropTypes(PropTypes.any, (props: any) => {
     if (props.apiRef != null) {
       return new Error(
@@ -174,7 +174,7 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
     }
     return null;
   },
-};
+} as any;
 
 export const DataGrid = React.memo(DataGrid2);
 
