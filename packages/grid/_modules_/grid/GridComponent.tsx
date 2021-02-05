@@ -73,7 +73,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const onResize = useResizeContainer(apiRef);
 
     useColumns(props.columns, apiRef);
-    useRows(props.rows, apiRef);
+    useRows(apiRef, props.rows, props.getRowId);
     useKeyboard(rootContainerRef, apiRef);
     useSelection(apiRef);
     useSorting(apiRef, props.rows);

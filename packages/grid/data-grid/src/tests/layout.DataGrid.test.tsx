@@ -446,7 +446,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       expect(() => {
         render(
           <ErrorBoundary ref={errorRef}>
-            {/* @ts-expect-error missing id */}
             <DataGrid {...baselineProps} rows={rows} />
           </ErrorBoundary>,
         );

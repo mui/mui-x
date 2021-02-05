@@ -2,8 +2,8 @@ import * as React from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { ColDef, GridOptionsProp, XGrid, useApiRef } from '@material-ui/x-grid';
-import { PricingModel } from '../data/streaming/pricing-service';
-import { feedColumns, subscribeFeed } from '../data/streaming/single-subscription-service';
+import { pricingColumns, PricingModel } from '../data/streaming/pricing-service';
+import { subscribeFeed } from '../data/streaming/single-subscription-service';
 
 export interface FeedGridProps {
   min?: number;
@@ -11,7 +11,7 @@ export interface FeedGridProps {
   options?: GridOptionsProp;
 }
 export const FeedGrid: React.FC<FeedGridProps> = (p) => {
-  const [columns] = React.useState<ColDef[]>(feedColumns);
+  const [columns] = React.useState<ColDef[]>(pricingColumns);
   const [rows] = React.useState<PricingModel[]>([]);
 
   const [started, setStarted] = React.useState<boolean>(false);
@@ -52,6 +52,8 @@ export const FeedGrid: React.FC<FeedGridProps> = (p) => {
       subscribeToStream();
     }
   };
+  const getRowId = React.useCallback((row) => row.idfield, []);
+
   return (
     <React.Fragment>
       <div>
@@ -65,7 +67,7 @@ export const FeedGrid: React.FC<FeedGridProps> = (p) => {
         </button>
       </div>
       <div style={{ width: 800, height: 600 }}>
-        <XGrid rows={rows} columns={columns} apiRef={apiRef} {...p} />
+        <XGrid rows={rows} columns={columns} apiRef={apiRef} {...p} getRowId={getRowId} />
       </div>
     </React.Fragment>
   );

@@ -54,6 +54,7 @@ export const PricingGrid: React.FC<PricingGridProps> = (props) => {
       subscribeToStream();
     }
   };
+  const getRowId = React.useCallback((row) => row.idfield, []);
   return (
     <React.Fragment>
       <div>
@@ -67,7 +68,7 @@ export const PricingGrid: React.FC<PricingGridProps> = (props) => {
         </button>
       </div>
       <div style={{ width: 800, height: 600 }}>
-        <XGrid rows={rows} columns={columns} apiRef={apiRef} {...props} />
+        <XGrid rows={rows} columns={columns} apiRef={apiRef} {...props} getRowId={getRowId} />
       </div>
     </React.Fragment>
   );
