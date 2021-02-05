@@ -7,7 +7,6 @@ import { RowSelectedParams } from '../../../models/params/rowSelectedParams';
 import { SelectionChangeParams } from '../../../models/params/selectionChangeParams';
 import { RowId, RowModel } from '../../../models/rows';
 import { SelectionModel } from '../../../models/selectionModel';
-import { isDeepEqual } from '../../../utils/utils';
 import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
