@@ -18,8 +18,6 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
 ### @material-ui/x-grid@v4.0.0-alpha.19 / @material-ui/data-grid@v4.0.0-alpha.19
 
-#### Changes
-
 - [DataGrid] Add component slots for toolbar and preference panel (#971) @DanailH
 - [DataGrid] Add getRowId prop (#972) @dtassone
 - [DataGrid] Add streaming delete row api (#980) @dtassone
