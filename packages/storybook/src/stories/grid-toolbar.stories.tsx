@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { XGrid } from '@material-ui/x-grid';
+import { XGrid, GridToolbar } from '@material-ui/x-grid';
 import '../style/grid-stories.css';
 import { useData } from '../hooks/useData';
 
@@ -18,7 +18,15 @@ export const DensitySelectorCompact = () => {
 
   return (
     <div style={{ height: 600 }}>
-      <XGrid rows={data.rows} showToolbar columns={data.columns} density="compact" />
+      <XGrid
+        rows={data.rows}
+        columns={data.columns}
+        showToolbar
+        density="compact"
+        components={{
+          Toolbar: GridToolbar,
+        }}
+      />
     </div>
   );
 };
@@ -27,7 +35,15 @@ export const DensitySelectorComfortable = () => {
 
   return (
     <div style={{ height: 600 }}>
-      <XGrid rows={data.rows} showToolbar columns={data.columns} density="comfortable" />
+      <XGrid
+        columns={data.columns}
+        rows={data.rows}
+        showToolbar
+        density="comfortable"
+        components={{
+          Toolbar: GridToolbar,
+        }}
+      />
     </div>
   );
 };

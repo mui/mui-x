@@ -17,8 +17,17 @@ export interface ApiRefComponentsProperty extends GridIconSlotsComponent {
   Footer: React.ElementType;
   /**
    * Header component rendered above the grid column header bar.
+   * Prefer using the `Toolbar` slot. You should never need to use this slot. TODO remove.
    */
   Header: React.ElementType;
+  /**
+   * Toolbar component rendered inside the Header component.
+   */
+  Toolbar?: React.ElementType;
+  /**
+   * PreferencesPanel component rendered inside the Header component.
+   */
+  PreferencesPanel: React.ElementType;
   /**
    * Loading overlay component rendered when the grid is in a loading state.
    */

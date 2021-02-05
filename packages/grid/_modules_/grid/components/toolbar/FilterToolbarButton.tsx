@@ -54,6 +54,7 @@ export const FilterToolbarButton: React.FC<{}> = () => {
     }
   }, [apiRef, preferencePanel]);
 
+  // Disable the button if the corresponding is disabled
   if (options.disableColumnFilter) {
     return null;
   }

@@ -259,9 +259,9 @@ You can disable column virtualization by setting the column buffer to a higher n
 As part of the customization API, the grid allows you to replace and override nested components with the `components` prop.
 The prop accepts an object of type [GridSlotsComponent](/api/data-grid/#slots) .
 
-### Header
+### Toolbar
 
-You can replace the default toolbar by providing a `header` component.
+You can provide your own toolbar by passing it to the `Toolbar` component.
 This demo showcases how this can be achieve.
 
 {{"demo": "pages/components/data-grid/rendering/CustomToolbarGrid.js", "bg": "inline"}}

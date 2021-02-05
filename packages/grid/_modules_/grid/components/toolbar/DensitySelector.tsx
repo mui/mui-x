@@ -7,11 +7,13 @@ import { densityValueSelector } from '../../hooks/features/density/densitySelect
 import { Density, DensityTypes } from '../../models/density';
 import { ApiContext } from '../api-context';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
+import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { DensityOption } from '../../models/api/densityApi';
 import { GridMenu } from '../menu/GridMenu';
 
 export function DensitySelector() {
   const apiRef = React.useContext(ApiContext);
+  const options = useGridSelector(apiRef, optionsSelector);
   const densityValue = useGridSelector(apiRef, densityValueSelector);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -61,6 +63,11 @@ export function DensitySelector() {
       handleDensitySelectorClose();
     }
   };
+
+  // Disable the button if the corresponding is disabled
+  if (options.disableColumnFilter) {
+    return null;
+  }
 
   const renderDensityOptions: Array<React.ReactElement> = DensityOptions.map((option, index) => (
     <MenuItem
