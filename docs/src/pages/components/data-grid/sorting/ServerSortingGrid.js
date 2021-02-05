@@ -12,11 +12,9 @@ function loadServerRows(sortModel, data) {
 
       const sortedColumn = sortModel[0];
 
-      let sortedRows = [
-        ...data.rows.sort((a, b) =>
-          String(a[sortedColumn.field]).localeCompare(String(b[sortedColumn.field])),
-        ),
-      ];
+      let sortedRows = [...data.rows].sort((a, b) =>
+        String(a[sortedColumn.field]).localeCompare(String(b[sortedColumn.field])),
+      );
 
       if (sortModel[0].sort === 'desc') {
         sortedRows = sortedRows.reverse();
