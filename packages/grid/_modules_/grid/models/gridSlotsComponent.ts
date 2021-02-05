@@ -46,6 +46,7 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   Footer?: React.ElementType<BaseComponentProps>;
   /**
+   * Header component rendered above the grid column header bar.
    * Prefer using the `Toolbar` slot. You should never need to use this slot. TODO remove.
    */
   Header?: React.ElementType<BaseComponentProps>;
