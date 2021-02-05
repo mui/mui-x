@@ -3,7 +3,7 @@ import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { densityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { useGridState } from '../../hooks/features/core/useGridState';
-import { getCurryTotalHeight } from '../../utils/getTotalHeight';
+import { getTotalHeight } from '../../utils/getTotalHeight';
 import { classnames } from '../../utils';
 import { ApiContext } from '../api-context';
 
@@ -21,11 +21,18 @@ export const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(func
   const headerHeight = useGridSelector(apiRef, densityHeaderHeightSelector);
   const [gridState] = useGridState(apiRef!);
 
+  React.useEffect(() => {
+    // refs are run before effect. Waiting for an effect guarentees that
+    // windowRef is resolved first.
+    // Once windowRef is resolved, we can update the size of the container.
+    apiRef!.current.resize();
+  }, [apiRef]);
+
   return (
     <div
       style={{
-        width: props.size.width,
-        height: getCurryTotalHeight(gridState.options, gridState.containerSizes)(size),
+        width: size.width,
+        height: getTotalHeight(gridState.options, gridState.containerSizes, size.height),
       }}
     >
       <div

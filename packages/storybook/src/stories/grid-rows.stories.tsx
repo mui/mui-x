@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import { useApiRef, XGrid } from '@material-ui/x-grid';
+import { RowData, useApiRef, XGrid } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { randomInt } from '../data/random-generator';
 
@@ -39,6 +39,41 @@ const baselineProps = {
   columns: [{ field: 'brand' }],
 };
 
+function getStoryRowId(row) {
+  return row.brand;
+}
+export function NoId() {
+  const [rows] = React.useState([
+    {
+      brand: 'Nike',
+    },
+    {
+      brand: 'Adidas',
+    },
+    {
+      brand: 'Puma',
+    },
+  ]);
+
+  return (
+    <div className="grid-container">
+      <XGrid columns={baselineProps.columns} rows={rows} getRowId={getStoryRowId} />
+    </div>
+  );
+}
+export function CommodityNewRowId() {
+  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
+  const getRowId = React.useCallback((row: RowData) => `${row.desk}-${row.commodity}`, []);
+  return (
+    <div className="grid-container">
+      <XGrid
+        rows={data.rows}
+        columns={data.columns.filter((c) => c.field !== 'id')}
+        getRowId={getRowId}
+      />
+    </div>
+  );
+}
 export function SetRowsViaApi() {
   const apiRef = useApiRef();
 
