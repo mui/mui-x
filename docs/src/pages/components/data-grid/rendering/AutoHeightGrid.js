@@ -12,6 +12,7 @@ export default function AutoHeightGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid autoHeight {...data} />
+      <p>more content</p>
     </div>
   );
 }
