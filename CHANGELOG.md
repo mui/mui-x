@@ -48,7 +48,6 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [core] Improve prop-types handling (#978) @oliviertassinari
 - [core] Investigate bundle size (#954) @oliviertassinari
 
-
 ## [4.0.0-alpha.18](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.17...v4.0.0-alpha.18)
 
 ###### _Jan 26, 2021_
