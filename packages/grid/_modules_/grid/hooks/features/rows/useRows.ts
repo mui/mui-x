@@ -5,6 +5,7 @@ import { RowApi } from '../../../models/api/rowApi';
 import {
   checkRowHasId,
   RowModel,
+  RowModelUpdate,
   RowId,
   RowsProp,
   RowIdGetter,
@@ -124,7 +125,7 @@ export const useRows = (apiRef: ApiRef, rows: RowsProp, getRowIdProp?: RowIdGett
   );
 
   const updateRows = React.useCallback(
-    (updates: Partial<RowModel>[]) => {
+    (updates: RowModelUpdate[]) => {
       // we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
       const uniqUpdates = updates.reduce((uniq, update) => {
         const udpateWithId = addRowId(update, getRowIdProp);
@@ -132,14 +133,21 @@ export const useRows = (apiRef: ApiRef, rows: RowsProp, getRowIdProp?: RowIdGett
         checkRowHasId(udpateWithId, 'A row was provided without id when calling updateRows():');
         uniq[id] = uniq[id] != null ? { ...uniq[id!], ...udpateWithId } : udpateWithId;
         return uniq;
-      }, {} as { [id: string]: any });
+      }, {} as { [id: string]: RowModel });
 
       const addedRows: RowModel[] = [];
+      const deletedRows: RowModel[] = [];
 
       Object.entries<RowModel>(uniqUpdates).forEach(([id, partialRow]) => {
+        // eslint-disable-next-line no-underscore-dangle
+        if (partialRow._action === 'delete') {
+          deletedRows.push(partialRow);
+          return;
+        }
+
         const oldRow = getRowFromId(id);
         if (!oldRow) {
-          addedRows.push(partialRow as RowModel);
+          addedRows.push(partialRow);
           return;
         }
         Object.assign(internalRowsState.current.idRowsLookup[id], {
@@ -150,14 +158,16 @@ export const useRows = (apiRef: ApiRef, rows: RowsProp, getRowIdProp?: RowIdGett
 
       setGridState((state) => ({ ...state, rows: internalRowsState.current }));
 
-      if (addedRows.length > 0) {
+      if (deletedRows.length > 0 || addedRows.length > 0) {
+        deletedRows.forEach((row) => {
+          delete internalRowsState.current.idRowsLookup[row.id];
+        });
         const newRows = [
           ...Object.values<RowModel>(internalRowsState.current.idRowsLookup),
           ...addedRows,
         ];
         setRows(newRows);
       }
-
       forceUpdate(() => apiRef.current.publishEvent(ROWS_UPDATED));
     },
     [apiRef, forceUpdate, getRowFromId, getRowIdProp, setGridState, setRows],
