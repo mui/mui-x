@@ -11,6 +11,7 @@ import { FilterItem, LinkOperator } from '../../../models/filterItem';
 import { FilterOperator } from '../../../models/filterOperator';
 import { ApiContext } from '../../api-context';
 import { CloseIcon } from '../../icons/index';
+import { TranslationKeys } from '../../../models/api/localeTextApi';
 
 export interface FilterFormProps {
   item: FilterItem;
@@ -200,7 +201,7 @@ export function FilterForm(props: FilterFormProps) {
         >
           {currentColumn?.filterOperators?.map((operator) => (
             <option key={operator.value} value={operator.value}>
-              {operator.label}
+              {apiRef!.current.getLocaleText(operator.value as TranslationKeys)}
             </option>
           ))}
         </Select>

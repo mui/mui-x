@@ -4,7 +4,6 @@ import { FilterItem } from './filterItem';
 import { CellParams } from './params/cellParams';
 
 export interface FilterOperator {
-  label: string;
   value: string;
   getApplyFilterFn: (
     filterItem: FilterItem,
