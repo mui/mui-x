@@ -8,8 +8,6 @@ import { createClientRenderStrictMode } from 'test/utils';
 describe('<XGrid /> - apiRef', () => {
   let clock;
 
-
-
   afterEach(() => {
     clock.restore();
   });
@@ -42,7 +40,7 @@ describe('<XGrid /> - apiRef', () => {
           brand: 'Puma',
         },
       ],
-      columns: [{field: 'brand'}],
+      columns: [{ field: 'brand' }],
     };
   });
 
@@ -129,10 +127,15 @@ describe('<XGrid /> - apiRef', () => {
   it('update row data should process getRowId', () => {
     const TestCaseGetRowId = () => {
       apiRef = useApiRef();
-      const getRowId = React.useCallback((row: RowData)=> row.idField, []);
+      const getRowId = React.useCallback((row: RowData) => row.idField, []);
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid apiRef={apiRef} columns={baselineProps.columns} rows={baselineProps.rows.map(row=> ({idField: row.id, brand: row.brand}))} getRowId={getRowId} />
+          <XGrid
+            apiRef={apiRef}
+            columns={baselineProps.columns}
+            rows={baselineProps.rows.map((row) => ({ idField: row.id, brand: row.brand }))}
+            getRowId={getRowId}
+          />
         </div>
       );
     };
