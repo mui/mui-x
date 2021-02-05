@@ -14,6 +14,7 @@ import { RowParams } from './params/rowParams';
 import { RowSelectedParams } from './params/rowSelectedParams';
 import { SelectionChangeParams } from './params/selectionChangeParams';
 import { SortModelParams } from './params/sortModelParams';
+import { SelectionModel } from './selectionModel';
 import { SortDirection, SortModel } from './sortModel';
 
 // TODO add multiSortKey
@@ -211,6 +212,8 @@ export interface GridOptions {
    * Set the filter model of the grid.
    */
   filterModel?: FilterModel;
+
+  selectionModel?: SelectionModel;
   /**
    * Callback fired when a click event comes from a cell element.
    * @param param With all properties from [[CellParams]].

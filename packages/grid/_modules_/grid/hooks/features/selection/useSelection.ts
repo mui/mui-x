@@ -6,6 +6,8 @@ import { RowParams } from '../../../models/params/rowParams';
 import { RowSelectedParams } from '../../../models/params/rowSelectedParams';
 import { SelectionChangeParams } from '../../../models/params/selectionChangeParams';
 import { RowId, RowModel } from '../../../models/rows';
+import { SelectionModel } from '../../../models/selectionModel';
+import { isDeepEqual } from '../../../utils/utils';
 import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
@@ -132,6 +134,13 @@ export const useSelection = (apiRef: ApiRef): void => {
     ],
   );
 
+  const setSelectionModel = React.useCallback(
+    (model: SelectionModel) => {
+      apiRef.current.selectRows(model, true, true);
+    },
+    [apiRef],
+  );
+
   const rowClickHandler = React.useCallback(
     (params: RowParams) => {
       if (!options.disableSelectionOnClick) {
@@ -163,6 +172,7 @@ export const useSelection = (apiRef: ApiRef): void => {
     selectRow,
     getSelectedRows,
     selectRows,
+    setSelectionModel,
     onRowSelected,
     onSelectionChange,
   };
@@ -185,4 +195,10 @@ export const useSelection = (apiRef: ApiRef): void => {
     });
     forceUpdate();
   }, [rowsLookup, apiRef, setGridState, forceUpdate]);
+
+  React.useEffect(() => {
+    if (options.selectionModel != null) {
+      apiRef.current.setSelectionModel(options.selectionModel);
+    }
+  }, [apiRef, options.selectionModel]);
 };

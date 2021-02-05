@@ -35,4 +35,9 @@ export interface SelectionApi {
    * @param handler
    */
   onSelectionChange: (handler: (param: SelectionChangeParams) => void) => () => void;
+  /**
+   * Reset the selected rows to the array of ids passed in parameter
+   * @param RowId[]
+   */
+  setSelectionModel: (rowIds: RowId[]) => void;
 }

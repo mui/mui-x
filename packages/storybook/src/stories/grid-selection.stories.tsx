@@ -78,3 +78,8 @@ export function HandleSelection() {
 
   return <XGrid {...data} checkboxSelection onSelectionChange={handleSelection} />;
 }
+export const SelectionModel = () => {
+  const data = useData(200, 200);
+
+  return <XGrid rows={data.rows} columns={data.columns} selectionModel={[1, 2, 3]} />;
+};
