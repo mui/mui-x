@@ -133,12 +133,12 @@ export const useRows = (apiRef: ApiRef, rows: RowsProp, getRowIdProp?: RowIdGett
         checkRowHasId(udpateWithId, 'A row was provided without id when calling updateRows():');
         uniq[id] = uniq[id] != null ? { ...uniq[id!], ...udpateWithId } : udpateWithId;
         return uniq;
-      }, {} as { [id: string]: RowModelUpdate });
+      }, {} as { [id: string]: RowModel });
 
       const addedRows: RowModel[] = [];
       const deletedRows: RowModel[] = [];
 
-      Object.entries<RowModelUpdate>(uniqUpdates).forEach(([id, partialRow]) => {
+      Object.entries<RowModel>(uniqUpdates).forEach(([id, partialRow]) => {
         // eslint-disable-next-line no-underscore-dangle
         if (partialRow._action === 'delete') {
           deletedRows.push(partialRow);
@@ -147,7 +147,7 @@ export const useRows = (apiRef: ApiRef, rows: RowsProp, getRowIdProp?: RowIdGett
 
         const oldRow = getRowFromId(id);
         if (!oldRow) {
-          addedRows.push(partialRow as RowModel);
+          addedRows.push(partialRow);
           return;
         }
         Object.assign(internalRowsState.current.idRowsLookup[id], {

@@ -7,7 +7,7 @@ export type RowData = { [key: string]: any };
 export type RowModel = ObjectWithId & RowData;
 
 export type GridUpdateAction = 'delete' | 'upsert';
-export interface RowModelUpdate extends RowModel {
+export interface RowModelUpdate extends RowData {
   _action?: GridUpdateAction;
 }
 
