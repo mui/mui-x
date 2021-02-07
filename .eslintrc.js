@@ -21,7 +21,9 @@ module.exports = {
   rules: {
     ...baseline.rules,
     'import/prefer-default-export': 'off',
-    // TODO
+    // TODO figure why it's not needed in the main repo
+    '@typescript-eslint/return-await': 'off',
+    // TODO move rule into main repo to allow deep @material-ui/monorepo imports
     'no-restricted-imports': 'off',
   },
   overrides: [
