@@ -45,7 +45,7 @@
     "jest": "^26.0.1",
     "jest-image-snapshot": "^4.1.0",
     "jest-puppeteer": "^4.4.0",
-    "puppeteer": "^4.0.0",
+    "puppeteer": "^7.0.1",
     "react-docgen-typescript-loader": "^3.7.2",
     "source-map-loader": "^1.0.2",
     "start-server-and-test": "^1.11.3",
