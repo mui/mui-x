@@ -8,7 +8,7 @@ import {
 } from 'test/utils';
 import { getColumnHeaders } from 'test/utils/helperFn';
 import { expect } from 'chai';
-import { DataGrid, GridHeader } from '@material-ui/data-grid';
+import { DataGrid, GridToolbar } from '@material-ui/data-grid';
 import {
   COMFORTABLE_DENSITY_FACTOR,
   COMPACT_DENSITY_FACTOR,
@@ -57,10 +57,10 @@ describe('<DataGrid /> - Toolbar', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            rowHeight={rowHeight}
             components={{
-              Header: GridHeader,
+              Toolbar: GridToolbar,
             }}
+            rowHeight={rowHeight}
           />
         </div>,
       );
@@ -80,10 +80,10 @@ describe('<DataGrid /> - Toolbar', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            rowHeight={rowHeight}
             components={{
-              Header: GridHeader,
+              Toolbar: GridToolbar,
             }}
+            rowHeight={rowHeight}
           />
         </div>,
       );
@@ -133,7 +133,7 @@ describe('<DataGrid /> - Toolbar', () => {
           <DataGrid
             {...baselineProps}
             components={{
-              Header: GridHeader,
+              Toolbar: GridToolbar,
             }}
           />
         </div>,
@@ -153,7 +153,7 @@ describe('<DataGrid /> - Toolbar', () => {
           <DataGrid
             {...baselineProps}
             components={{
-              Header: GridHeader,
+              Toolbar: GridToolbar,
             }}
           />
         </div>,
@@ -185,7 +185,7 @@ describe('<DataGrid /> - Toolbar', () => {
             {...baselineProps}
             columns={customColumns}
             components={{
-              Header: GridHeader,
+              Toolbar: GridToolbar,
             }}
           />
         </div>,

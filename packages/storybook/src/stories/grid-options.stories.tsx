@@ -92,7 +92,7 @@ export const ColumnRightBorder = () => {
 export const AutoHeightSmall = () => {
   const data = useData(8, 12);
   return (
-    <div className="grid-container">
+    <div>
       <XGrid rows={data.rows} columns={data.columns} autoHeight />
     </div>
   );
@@ -101,7 +101,7 @@ export const AutoHeightSmall = () => {
 export const AutoHeightLarge = () => {
   const data = useData(75, 20);
   return (
-    <div className="grid-container">
+    <div>
       <XGrid rows={data.rows} columns={data.columns} autoHeight />
     </div>
   );

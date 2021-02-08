@@ -6,6 +6,8 @@ export interface GridSlotsComponentsProps {
   errorOverlay?: any;
   footer?: any;
   header?: any;
+  toolbar?: any;
+  preferencesPanel?: any;
   loadingOverlay?: any;
   noRowsOverlay?: any;
   pagination?: any;

@@ -10,11 +10,11 @@ import {
   HideColMenuItem,
   ColumnMenuProps,
   BaseComponentProps,
-  GridColumnHeaderMenuItems,
+  GridColumnMenu,
   PanelProps,
   PreferencesPanel,
   GridFooter,
-  GridHeader,
+  GridToolbar,
 } from '@material-ui/x-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CodeIcon from '@material-ui/icons/Code';
@@ -330,9 +330,7 @@ function ColumnMenuComponent(props: ColumnMenuProps & { color?: string }) {
       <div style={{ background: props.color || '#ccc' }}>This is my currency pair column Menu!</div>
     );
   }
-  return (
-    <GridColumnHeaderMenuItems hideMenu={props.hideMenu} currentColumn={props.currentColumn} />
-  );
+  return <GridColumnMenu hideMenu={props.hideMenu} currentColumn={props.currentColumn} />;
 }
 
 export const CustomColumnMenu = Template.bind({});
@@ -400,8 +398,8 @@ export function DynamicIconUpdate() {
         <XGrid
           {...data}
           components={{
-            Header: GridHeader,
             DensityStandardIcon: icon,
+            Toolbar: GridToolbar,
           }}
         />
       </div>
@@ -426,7 +424,7 @@ CustomFilterColumnsPanels.args = {
   components: {
     FilterPanel: CustomFilterPanel,
     ColumnsPanel: CustomColumnsPanel,
-    Header: GridHeader,
+    Toolbar: GridToolbar,
   },
   componentsProps: {
     filterPanel: { bg: 'blue' },
@@ -444,7 +442,7 @@ export const CustomPanel = Template.bind({});
 CustomPanel.args = {
   components: {
     Panel: CustomPanelComponent,
-    Header: GridHeader,
+    Toolbar: GridToolbar,
   },
 };
 
@@ -461,6 +459,6 @@ CustomPanelInFooter.args = {
   components: {
     Panel: CustomPanelComponent,
     Footer: FooterWithPanel,
-    Header: GridHeader,
+    Toolbar: GridToolbar,
   },
 };

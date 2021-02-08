@@ -415,7 +415,7 @@ export const ServerSideSorting = () => {
   );
 
   // We use `useMemo` here, to keep the same ref and not trigger another sort on the next rendering
-  const sortBy: SortModel = React.useMemo(() => [{ field: 'age', sort: 'desc' }], []);
+  const sortModel: SortModel = React.useMemo(() => [{ field: 'age', sort: 'desc' }], []);
 
   return (
     <div className="grid-container">
@@ -425,7 +425,7 @@ export const ServerSideSorting = () => {
         onSortModelChange={onSortModelChange}
         sortingMode="server"
         disableMultipleColumnsSorting
-        sortModel={sortBy}
+        sortModel={sortModel}
         loading={loading}
       />
     </div>

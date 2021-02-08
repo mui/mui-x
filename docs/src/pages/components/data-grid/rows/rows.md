@@ -35,7 +35,7 @@ This is an imperative API that is designed to solve the previous two limitations
 
 The following demo updates the rows every 200ms.
 
-{{"demo": "pages/components/data-grid/rows/ApiRefRowsGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/rows/ApiRefRowsGrid.js", "bg": "inline", "disableAd": true}}
 
 ## Row height
 

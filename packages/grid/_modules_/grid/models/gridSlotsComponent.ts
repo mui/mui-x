@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { ErrorOverlay, ErrorOverlayProps } from '../components/ErrorOverlay';
 import { GridFooter } from '../components/GridFooter';
+import { GridHeader } from '../components/GridHeader';
+import { PreferencesPanel } from '../components/panel/PreferencesPanel';
 import {
   ArrowDownwardIcon,
   ArrowUpwardIcon,
@@ -14,10 +16,7 @@ import {
   ViewStreamIcon,
 } from '../components/icons/index';
 import { LoadingOverlay } from '../components/LoadingOverlay';
-import {
-  GridColumnHeaderMenuItems,
-  GridColumnHeaderMenuItemsProps,
-} from '../components/menu/columnMenu/GridColumnHeaderMenuItems';
+import { GridColumnMenu, GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenu';
 import { NoRowsOverlay } from '../components/NoRowsOverlay';
 import { Pagination } from '../components/Pagination';
 import { ColumnsPanel } from '../components/panel/ColumnsPanel';
@@ -27,7 +26,7 @@ import { ApiRefComponentsProperty } from './api/componentsApi';
 import { GridIconSlotsComponent } from './gridIconSlotsComponent';
 import { BaseComponentProps } from './params/baseComponentProps';
 
-export type ColumnMenuProps = BaseComponentProps & GridColumnHeaderMenuItemsProps;
+export type ColumnMenuProps = BaseComponentProps & GridColumnMenuProps;
 
 /**
  * Grid components React prop interface containing all the overridable components.
@@ -48,8 +47,17 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
   Footer?: React.ElementType<BaseComponentProps>;
   /**
    * Header component rendered above the grid column header bar.
+   * Prefer using the `Toolbar` slot. You should never need to use this slot. TODO remove.
    */
   Header?: React.ElementType<BaseComponentProps>;
+  /**
+   * Toolbar component rendered inside the Header component.
+   */
+  Toolbar?: React.ElementType<BaseComponentProps>;
+  /**
+   * PreferencesPanel component rendered inside the Header component.
+   */
+  PreferencesPanel?: React.ElementType<BaseComponentProps>;
   /**
    * Loading overlay component rendered when the grid is in a loading state.
    */
@@ -91,13 +99,15 @@ export const DEFAULT_SLOTS_ICONS: GridIconSlotsComponent = {
 
 export const DEFAULT_SLOTS_COMPONENTS: ApiRefComponentsProperty = {
   ...DEFAULT_SLOTS_ICONS,
-  ColumnMenu: GridColumnHeaderMenuItems,
+  ColumnMenu: GridColumnMenu,
+  ColumnsPanel,
   ErrorOverlay,
+  FilterPanel,
   Footer: GridFooter,
+  Header: GridHeader,
+  PreferencesPanel,
   LoadingOverlay,
   NoRowsOverlay,
   Pagination,
-  FilterPanel,
-  ColumnsPanel,
   Panel,
 };

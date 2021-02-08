@@ -5,10 +5,10 @@ import {
   // @ts-expect-error need to migrate helpers to TypeScript
   ErrorBoundary,
 } from 'test/utils';
-import { useFakeTimers } from 'sinon';
+import { useFakeTimers, stub } from 'sinon';
 import { expect } from 'chai';
-import { DataGrid, GridHeader, ValueGetterParams } from '@material-ui/data-grid';
-import { getColumnValues, raf } from 'test/utils/helperFn';
+import { DataGrid, ValueGetterParams, GridToolbar } from '@material-ui/data-grid';
+import { getColumnValues, raf, sleep } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
   // TODO v5: replace with createClientRender
@@ -74,7 +74,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </div>,
         );
         expect(ref.current).to.be.instanceof(window.HTMLDivElement);
-        expect(ref.current).to.equal(container.firstChild.firstChild.firstChild);
+        expect(ref.current).to.equal(container.firstChild.firstChild);
       });
 
       function randomStringValue() {
@@ -90,9 +90,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </div>,
         );
 
-        expect(document.querySelector(`.${className}`)).to.equal(
-          container.firstChild.firstChild.firstChild,
-        );
+        expect(document.querySelector(`.${className}`)).to.equal(container.firstChild.firstChild);
       });
 
       it('should support columns.valueGetter', () => {
@@ -184,6 +182,30 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           // @ts-expect-error need to migrate helpers to TypeScript
         }).toWarnDev(["You are calling getValue('age') but the column `age` is not defined"]);
         expect(getColumnValues()).to.deep.equal(['1', '2']);
+      });
+    });
+
+    describe('swallow warnings', () => {
+      beforeEach(() => {
+        stub(console, 'warn');
+      });
+
+      afterEach(() => {
+        // @ts-expect-error beforeEach side effect
+        console.warn.restore();
+      });
+
+      it('should have a stable height if the parent container has no intrinsic height', async () => {
+        const { getByRole } = render(
+          <div>
+            <p>The table keeps growing... and growing...</p>
+            <DataGrid {...baselineProps} />
+          </div>,
+        );
+        const firstHeight = getByRole('grid').clientHeight;
+        await sleep(10);
+        const secondHeight = getByRole('grid').clientHeight;
+        expect(firstHeight).to.equal(secondHeight);
       });
     });
 
@@ -373,6 +395,17 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         ).to.equal(200 - 2);
       });
     });
+
+    it('should have the correct intrinsic height when autoHeight={true}', () => {
+      render(
+        <div style={{ width: 300 }}>
+          <DataGrid {...baselineProps} headerHeight={40} rowHeight={30} autoHeight />
+        </div>,
+      );
+      expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
+        40 + 30 * baselineProps.rows.length,
+      );
+    });
   });
 
   describe('warnings', () => {
@@ -413,7 +446,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       expect(() => {
         render(
           <ErrorBoundary ref={errorRef}>
-            {/* @ts-expect-error missing id */}
             <DataGrid {...baselineProps} rows={rows} />
           </ErrorBoundary>,
         );
@@ -443,10 +475,10 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            localeText={{ toolbarDensity: 'Size' }}
             components={{
-              Header: GridHeader,
+              Toolbar: GridToolbar,
             }}
+            localeText={{ toolbarDensity: 'Size' }}
           />
         </div>,
       );

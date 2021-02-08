@@ -5,7 +5,7 @@ import { GridSlotsComponent } from './models/gridSlotsComponent';
 import { GridOptions } from './models/gridOptions';
 import { GridSlotsComponentsProps } from './models/gridSlotsComponentsProps';
 import { StateChangeParams } from './models/params/stateChangeParams';
-import { RowsProp } from './models/rows';
+import { RowIdGetter, RowsProp } from './models/rows';
 
 /**
  * Partial set of [[GridOptions]].
@@ -64,4 +64,8 @@ export interface GridComponentProps extends GridOptionsProp {
    * Set the whole state of the grid.
    */
   state?: Partial<GridState>;
+  /**
+   * Return the id of a given [[RowData]].
+   */
+  getRowId?: RowIdGetter;
 }
