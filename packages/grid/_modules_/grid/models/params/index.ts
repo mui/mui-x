@@ -6,6 +6,6 @@ export * from './pageChangeParams';
 export * from './rowParams';
 export * from './rowSelectedParams';
 export * from './scrollParams';
-export * from './selectionChangeParams';
+export * from './selectionModelChangeParams';
 export * from './sortModelParams';
 export * from './stateChangeParams';

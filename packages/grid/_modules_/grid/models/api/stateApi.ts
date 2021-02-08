@@ -10,7 +10,7 @@ export interface StateApi {
   /**
    * Allows to get the whole state of the grid if stateId is null or to get a part of the state if stateId has a value.
    */
-  getState: <T>(stateId?: string) => T;
+  getState: <T = GridState>(stateId?: string) => T;
   /**
    * Allows to set/reset the whole state of the grid.
    */

@@ -12,4 +12,8 @@ export interface RowSelectedParams {
    * The selected state of the row that triggers the event.
    */
   isSelected: boolean;
+  /**
+   * ApiRef that let you manipulate the grid.
+   */
+  api: any;
 }

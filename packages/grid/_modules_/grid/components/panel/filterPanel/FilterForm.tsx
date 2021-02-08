@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { capitalize } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
 import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -11,6 +12,7 @@ import { FilterItem, LinkOperator } from '../../../models/filterItem';
 import { FilterOperator } from '../../../models/filterOperator';
 import { ApiContext } from '../../api-context';
 import { CloseIcon } from '../../icons/index';
+import { TranslationKeys } from '../../../models/api/localeTextApi';
 
 export interface FilterFormProps {
   item: FilterItem;
@@ -200,7 +202,9 @@ export function FilterForm(props: FilterFormProps) {
         >
           {currentColumn?.filterOperators?.map((operator) => (
             <option key={operator.value} value={operator.value}>
-              {operator.label}
+              {apiRef!.current.getLocaleText(
+                `filterOperator${capitalize(operator.value)}` as TranslationKeys,
+              )}
             </option>
           ))}
         </Select>

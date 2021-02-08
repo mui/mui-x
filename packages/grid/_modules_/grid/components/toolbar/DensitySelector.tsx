@@ -48,7 +48,7 @@ export function DensitySelector() {
       default:
         return <DensityStandardIcon />;
     }
-  }, [densityValue]);
+  }, [densityValue, DensityCompactIcon, DensityComfortableIcon, DensityStandardIcon]);
 
   const handleDensitySelectorOpen = (event) => setAnchorEl(event.currentTarget);
   const handleDensitySelectorClose = () => setAnchorEl(null);

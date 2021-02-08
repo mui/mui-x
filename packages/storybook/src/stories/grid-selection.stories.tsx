@@ -1,7 +1,13 @@
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import * as React from 'react';
 import { action } from '@storybook/addon-actions';
-import { XGrid, GridOptionsProp, useApiRef } from '@material-ui/x-grid';
+import {
+  XGrid,
+  GridOptionsProp,
+  useApiRef,
+  SelectionModelChangeParams,
+  RowId,
+} from '@material-ui/x-grid';
 import { getData, GridData } from '../data/data-service';
 import { useData } from '../hooks/useData';
 
@@ -38,7 +44,7 @@ export const EventsMapped = () => {
   const data = useData(200, 200);
 
   const options: GridOptionsProp = {
-    onSelectionChange: (params) => action('onSelectionChange', { depth: 1 })(params),
+    onSelectionModelChange: (params) => action('onSelectionChange', { depth: 1 })(params),
     onRowSelected: (params) => action('onRowSelected')(params),
   };
 
@@ -71,10 +77,25 @@ export function HandleSelection() {
     rowLength: 100,
   });
 
-  const [myState, setMyState] = React.useState(false);
-  const handleSelection = React.useCallback(() => {
-    setMyState(!myState);
-  }, [myState]);
+  const [selectionModel, setSelectionModel] = React.useState<RowId[]>([]);
+  const handleSelection = React.useCallback(
+    (params: SelectionModelChangeParams) => {
+      setSelectionModel(params.selectionModel);
+    },
+    [setSelectionModel],
+  );
 
-  return <XGrid {...data} checkboxSelection onSelectionChange={handleSelection} />;
+  return (
+    <XGrid
+      {...data}
+      checkboxSelection
+      selectionModel={selectionModel}
+      onSelectionModelChange={handleSelection}
+    />
+  );
 }
+export const SelectionModel = () => {
+  const data = useData(200, 200);
+
+  return <XGrid rows={data.rows} columns={data.columns} selectionModel={[1, 2, 3]} />;
+};

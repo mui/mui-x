@@ -24,7 +24,7 @@ export function AllEvents() {
     onRowHover: (params) => action('onRowHover')(params),
     onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
     onRowSelected: (params) => action('onRowSelected')(params),
-    onSelectionChange: (params) => action('onSelectionChange', { depth: 1 })(params),
+    onSelectionModelChange: (params) => action('onSelectionChange', { depth: 1 })(params),
     onPageChange: (params) => action('onPageChange')(params),
     onPageSizeChange: (params) => action('onPageSizeChange')(params),
     onSortModelChange: (params) => action('onSortModelChange')(params),

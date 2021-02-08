@@ -5,7 +5,6 @@ import { ColDef } from './colDef';
 
 export const getDateOperators: (showTime?: boolean) => FilterOperator[] = (showTime) => [
   {
-    label: 'is',
     value: 'is',
     getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
@@ -28,7 +27,6 @@ export const getDateOperators: (showTime?: boolean) => FilterOperator[] = (showT
     InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
   },
   {
-    label: 'is not',
     value: 'not',
     getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
@@ -51,7 +49,6 @@ export const getDateOperators: (showTime?: boolean) => FilterOperator[] = (showT
     InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
   },
   {
-    label: 'is after',
     value: 'after',
     getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
@@ -74,7 +71,6 @@ export const getDateOperators: (showTime?: boolean) => FilterOperator[] = (showT
     InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
   },
   {
-    label: 'is on or after',
     value: 'onOrAfter',
     getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
@@ -97,7 +93,6 @@ export const getDateOperators: (showTime?: boolean) => FilterOperator[] = (showT
     InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
   },
   {
-    label: 'is before',
     value: 'before',
     getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
@@ -120,7 +115,6 @@ export const getDateOperators: (showTime?: boolean) => FilterOperator[] = (showT
     InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
   },
   {
-    label: 'is on or before',
     value: 'onOrBefore',
     getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {

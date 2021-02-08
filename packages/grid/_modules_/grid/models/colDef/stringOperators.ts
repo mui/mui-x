@@ -5,7 +5,6 @@ import { ColDef } from './colDef';
 
 export const getStringOperators: () => FilterOperator[] = () => [
   {
-    label: 'contains',
     value: 'contains',
     getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
@@ -21,7 +20,6 @@ export const getStringOperators: () => FilterOperator[] = () => [
     InputComponent: FilterInputValue,
   },
   {
-    label: 'equals',
     value: 'equals',
     getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
@@ -39,7 +37,6 @@ export const getStringOperators: () => FilterOperator[] = () => [
     InputComponent: FilterInputValue,
   },
   {
-    label: 'starts with',
     value: 'startsWith',
     getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
@@ -55,7 +52,6 @@ export const getStringOperators: () => FilterOperator[] = () => [
     InputComponent: FilterInputValue,
   },
   {
-    label: 'ends with',
     value: 'endsWith',
     getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {

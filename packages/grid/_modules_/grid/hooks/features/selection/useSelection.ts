@@ -4,8 +4,10 @@ import { ApiRef } from '../../../models/api/apiRef';
 import { SelectionApi } from '../../../models/api/selectionApi';
 import { RowParams } from '../../../models/params/rowParams';
 import { RowSelectedParams } from '../../../models/params/rowSelectedParams';
-import { SelectionChangeParams } from '../../../models/params/selectionChangeParams';
+import { SelectionModelChangeParams } from '../../../models/params/selectionModelChangeParams';
 import { RowId, RowModel } from '../../../models/rows';
+import { SelectionModel } from '../../../models/selectionModel';
+import { isDeepEqual } from '../../../utils/utils';
 import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
@@ -77,12 +79,14 @@ export const useSelection = (apiRef: ApiRef): void => {
       forceUpdate();
 
       const selectionState = apiRef!.current!.getState<SelectionState>('selection');
+
       const rowSelectedParam: RowSelectedParams = {
+        api: apiRef,
         data: row,
         isSelected: !!selectionState[row.id],
       };
-      const selectionChangeParam: SelectionChangeParams = {
-        rowIds: Object.keys(selectionState),
+      const selectionChangeParam: SelectionModelChangeParams = {
+        selectionModel: Object.keys(selectionState),
       };
       apiRef.current.publishEvent(ROW_SELECTED, rowSelectedParam);
       apiRef.current.publishEvent(SELECTION_CHANGED, selectionChangeParam);
@@ -118,10 +122,11 @@ export const useSelection = (apiRef: ApiRef): void => {
 
       forceUpdate();
 
+      const params: SelectionModelChangeParams = {
+        selectionModel: Object.keys(apiRef!.current!.getState<SelectionState>('selection')),
+      };
       // We don't emit ROW_SELECTED on each row as it would be too consuming for large set of data.
-      apiRef.current.publishEvent(SELECTION_CHANGED, {
-        rowIds: Object.keys(apiRef!.current!.getState<SelectionState>('selection')),
-      });
+      apiRef.current.publishEvent(SELECTION_CHANGED, params);
     },
     [
       options.disableMultipleSelection,
@@ -130,6 +135,13 @@ export const useSelection = (apiRef: ApiRef): void => {
       forceUpdate,
       apiRef,
     ],
+  );
+
+  const setSelectionModel = React.useCallback(
+    (model: SelectionModel) => {
+      apiRef.current.selectRows(model, true, true);
+    },
+    [apiRef],
   );
 
   const rowClickHandler = React.useCallback(
@@ -147,8 +159,8 @@ export const useSelection = (apiRef: ApiRef): void => {
     },
     [apiRef],
   );
-  const onSelectionChange = React.useCallback(
-    (handler: (param: SelectionChangeParams) => void): (() => void) => {
+  const onSelectionModelChange = React.useCallback(
+    (handler: (param: SelectionModelChangeParams) => void): (() => void) => {
       return apiRef.current.subscribeEvent(SELECTION_CHANGED, handler);
     },
     [apiRef],
@@ -156,15 +168,16 @@ export const useSelection = (apiRef: ApiRef): void => {
 
   useApiEventHandler(apiRef, ROW_CLICK, rowClickHandler);
   useApiEventHandler(apiRef, ROW_SELECTED, options.onRowSelected);
-  useApiEventHandler(apiRef, SELECTION_CHANGED, options.onSelectionChange);
+  useApiEventHandler(apiRef, SELECTION_CHANGED, options.onSelectionModelChange);
 
   // TODO handle Cell Click/range selection?
   const selectionApi: SelectionApi = {
     selectRow,
     getSelectedRows,
     selectRows,
+    setSelectionModel,
     onRowSelected,
-    onSelectionChange,
+    onSelectionModelChange,
   };
   useApiMethod(apiRef, selectionApi, 'SelectionApi');
 
@@ -185,4 +198,11 @@ export const useSelection = (apiRef: ApiRef): void => {
     });
     forceUpdate();
   }, [rowsLookup, apiRef, setGridState, forceUpdate]);
+
+  React.useEffect(() => {
+    const currentModel = Object.keys(apiRef.current.getState().selection);
+    if (!isDeepEqual(currentModel, options.selectionModel)) {
+      apiRef.current.setSelectionModel(options.selectionModel || []);
+    }
+  }, [apiRef, options.selectionModel]);
 };
