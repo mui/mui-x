@@ -6,6 +6,14 @@ import {
 } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
+function CustomToolbar() {
+  return (
+    <GridToolbarContainer>
+      <DensitySelector />
+    </GridToolbarContainer>
+  );
+}
+
 export default function DensitySelectorGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
@@ -18,11 +26,7 @@ export default function DensitySelectorGrid() {
       <DataGrid
         {...data}
         components={{
-          Toolbar: () => (
-            <GridToolbarContainer>
-              <DensitySelector />
-            </GridToolbarContainer>
-          ),
+          Toolbar: CustomToolbar,
         }}
       />
     </div>

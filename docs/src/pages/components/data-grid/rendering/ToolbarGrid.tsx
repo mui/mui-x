@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DataGrid, GridToolbar } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
-export default function CustomToolbarGrid() {
+export default function ToolbarGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
