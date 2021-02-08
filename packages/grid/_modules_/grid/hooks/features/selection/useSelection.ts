@@ -4,7 +4,7 @@ import { ApiRef } from '../../../models/api/apiRef';
 import { SelectionApi } from '../../../models/api/selectionApi';
 import { RowParams } from '../../../models/params/rowParams';
 import { RowSelectedParams } from '../../../models/params/rowSelectedParams';
-import { SelectionChangeParams } from '../../../models/params/selectionChangeParams';
+import { SelectionModelChangeParams } from '../../../models/params/selectionModelChangeParams';
 import { RowId, RowModel } from '../../../models/rows';
 import { SelectionModel } from '../../../models/selectionModel';
 import { useApiEventHandler } from '../../root/useApiEventHandler';
@@ -84,9 +84,8 @@ export const useSelection = (apiRef: ApiRef): void => {
         data: row,
         isSelected: !!selectionState[row.id],
       };
-      const selectionChangeParam: SelectionChangeParams = {
-        api: apiRef,
-        selectedRows: Object.keys(selectionState).map((id) => apiRef.current.getRowFromId(id)),
+      const selectionChangeParam: SelectionModelChangeParams = {
+        selectionModel: Object.keys(selectionState),
       };
       apiRef.current.publishEvent(ROW_SELECTED, rowSelectedParam);
       apiRef.current.publishEvent(SELECTION_CHANGED, selectionChangeParam);
@@ -122,13 +121,11 @@ export const useSelection = (apiRef: ApiRef): void => {
 
       forceUpdate();
 
+      const params: SelectionModelChangeParams = {
+        selectionModel: Object.keys(apiRef!.current!.getState<SelectionState>('selection')),
+      };
       // We don't emit ROW_SELECTED on each row as it would be too consuming for large set of data.
-      apiRef.current.publishEvent(SELECTION_CHANGED, {
-        api: apiRef,
-        selectedRows: Object.keys(
-          apiRef!.current!.getState<SelectionState>('selection'),
-        ).map((id) => apiRef.current.getRowFromId(id)),
-      });
+      apiRef.current.publishEvent(SELECTION_CHANGED, params);
     },
     [
       options.disableMultipleSelection,
@@ -161,8 +158,8 @@ export const useSelection = (apiRef: ApiRef): void => {
     },
     [apiRef],
   );
-  const onSelectionChange = React.useCallback(
-    (handler: (param: SelectionChangeParams) => void): (() => void) => {
+  const onSelectionModelChange = React.useCallback(
+    (handler: (param: SelectionModelChangeParams) => void): (() => void) => {
       return apiRef.current.subscribeEvent(SELECTION_CHANGED, handler);
     },
     [apiRef],
@@ -170,7 +167,7 @@ export const useSelection = (apiRef: ApiRef): void => {
 
   useApiEventHandler(apiRef, ROW_CLICK, rowClickHandler);
   useApiEventHandler(apiRef, ROW_SELECTED, options.onRowSelected);
-  useApiEventHandler(apiRef, SELECTION_CHANGED, options.onSelectionChange);
+  useApiEventHandler(apiRef, SELECTION_CHANGED, options.onSelectionModelChange);
 
   // TODO handle Cell Click/range selection?
   const selectionApi: SelectionApi = {
@@ -179,7 +176,7 @@ export const useSelection = (apiRef: ApiRef): void => {
     selectRows,
     setSelectionModel,
     onRowSelected,
-    onSelectionChange,
+    onSelectionModelChange,
   };
   useApiMethod(apiRef, selectionApi, 'SelectionApi');
 

@@ -12,7 +12,7 @@ import { FilterModelParams } from './params/filterModelParams';
 import { PageChangeParams } from './params/pageChangeParams';
 import { RowParams } from './params/rowParams';
 import { RowSelectedParams } from './params/rowSelectedParams';
-import { SelectionChangeParams } from './params/selectionChangeParams';
+import { SelectionModelChangeParams } from './params/selectionModelChangeParams';
 import { SortModelParams } from './params/sortModelParams';
 import { SelectionModel } from './selectionModel';
 import { SortDirection, SortModel } from './sortModel';
@@ -212,7 +212,9 @@ export interface GridOptions {
    * Set the filter model of the grid.
    */
   filterModel?: FilterModel;
-
+  /**
+   * Set the selection model of the grid.
+   */
   selectionModel?: SelectionModel;
   /**
    * Callback fired when a click event comes from a cell element.
@@ -243,7 +245,7 @@ export interface GridOptions {
    * Callback fired when the selection state of one or multiple rows changes.
    * @param param With all properties from [[SelectionChangeParams]].
    */
-  onSelectionChange?: (param: SelectionChangeParams) => void;
+  onSelectionModelChange?: (param: SelectionModelChangeParams) => void;
   /**
    * Callback fired when a click event comes from a column header element.
    * @param param With all properties from [[ColParams]].

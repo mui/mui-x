@@ -38,7 +38,7 @@ export const EventsMapped = () => {
   const data = useData(200, 200);
 
   const options: GridOptionsProp = {
-    onSelectionChange: (params) => action('onSelectionChange', { depth: 1 })(params),
+    onSelectionModelChange: (params) => action('onSelectionChange', { depth: 1 })(params),
     onRowSelected: (params) => action('onRowSelected')(params),
   };
 
@@ -76,7 +76,7 @@ export function HandleSelection() {
     setMyState(!myState);
   }, [myState]);
 
-  return <XGrid {...data} checkboxSelection onSelectionChange={handleSelection} />;
+  return <XGrid {...data} checkboxSelection onSelectionModelChange={handleSelection} />;
 }
 export const SelectionModel = () => {
   const data = useData(200, 200);
