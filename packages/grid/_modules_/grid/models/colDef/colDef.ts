@@ -57,14 +57,6 @@ export interface ColDef {
    */
   sortComparator?: ComparatorFn;
   /**
-   * Sort the rows in a specific direction.
-   */
-  sortDirection?: SortDirection;
-  /**
-   * If multiple columns are sorted, this setting allows to order the columns sorting sequence.
-   */
-  sortIndex?: number;
-  /**
    * Type allows to merge this object with a default definition [[ColDef]].
    * @default string
    */
