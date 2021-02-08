@@ -40,15 +40,15 @@ export const DEFAULT_LOCALE_TEXT: LocaleText = {
   filterPanelColumns: 'Columns',
 
   // Filter operators text
-  contains: 'contains',
-  equals: 'equals',
-  startsWith: 'starts with',
-  endsWith: 'ends with',
-  is: 'is',
-  not: 'is not',
-  onOrAfter: 'is on or after',
-  before: 'is before',
-  onOrBefore: 'is on or before',
+  filterOperatorContains: 'contains',
+  filterOperatorEquals: 'equals',
+  filterOperatorStartsWith: 'starts with',
+  filterOperatorEndsWith: 'ends with',
+  filterOperatorIs: 'is',
+  filterOperatorNot: 'is not',
+  filterOperatorOnOrAfter: 'is on or after',
+  filterOperatorBefore: 'is before',
+  filterOperatorOnOrBefore: 'is on or before',
 
   // Column menu text
   columnMenuLabel: 'Menu',

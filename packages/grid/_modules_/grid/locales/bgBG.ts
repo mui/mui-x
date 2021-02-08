@@ -1,84 +1,78 @@
-export const bgBG = {
-  components: {
-    MuiDataGrid: {
-      defaultProps: {
-        localeText: {
-          // Root
-          rootGridLabel: 'мрежа',
-          noRowsLabel: 'Няма редове',
-          errorOverlayDefaultLabel: 'Възникна грешка.',
+import { getLocalization, Localization } from '../utils';
 
-          // Density selector toolbar button text
-          toolbarDensity: 'Гъстота',
-          toolbarDensityLabel: 'Гъстота',
-          toolbarDensityCompact: 'Компактна',
-          toolbarDensityStandard: 'Стандартна',
-          toolbarDensityComfortable: 'Комфортна',
+export const bgBG: Localization = getLocalization({
+  // Root
+  rootGridLabel: 'мрежа',
+  noRowsLabel: 'Няма редове',
+  errorOverlayDefaultLabel: 'Възникна грешка.',
 
-          // Columns selector toolbar button text
-          toolbarColumns: 'Колони',
-          toolbarColumnsLabel: 'Покажи селектора на колони',
+  // Density selector toolbar button text
+  toolbarDensity: 'Гъстота',
+  toolbarDensityLabel: 'Гъстота',
+  toolbarDensityCompact: 'Компактна',
+  toolbarDensityStandard: 'Стандартна',
+  toolbarDensityComfortable: 'Комфортна',
 
-          // Filters toolbar button text
-          toolbarFilters: 'Филтри',
-          toolbarFiltersLabel: 'Покажи Филтрите',
-          toolbarFiltersTooltipHide: 'Скрий Филтрите',
-          toolbarFiltersTooltipShow: 'Покажи Филтрите',
-          toolbarFiltersTooltipActive: (count) => `${count} активни филтри`,
+  // Columns selector toolbar button text
+  toolbarColumns: 'Колони',
+  toolbarColumnsLabel: 'Покажи селектора на колони',
 
-          // Columns panel text
-          columnsPanelTextFieldLabel: 'Намери колона',
-          columnsPanelTextFieldPlaceholder: 'Заглавие на колона',
-          columnsPanelDragIconLabel: 'Пренареди на колона',
-          columnsPanelShowAllButton: 'Покажи Всички',
-          columnsPanelHideAllButton: 'Скрий Всички',
+  // Filters toolbar button text
+  toolbarFilters: 'Филтри',
+  toolbarFiltersLabel: 'Покажи Филтрите',
+  toolbarFiltersTooltipHide: 'Скрий Филтрите',
+  toolbarFiltersTooltipShow: 'Покажи Филтрите',
+  toolbarFiltersTooltipActive: (count) => `${count} активни филтри`,
 
-          // Filter panel text
-          filterPanelAddFilter: 'Добави Филтър',
-          filterPanelDeleteIconLabel: 'Изтрий',
-          filterPanelOperators: 'Оператори',
-          filterPanelOperatorAnd: 'И',
-          filterPanelOperatorOr: 'Или',
-          filterPanelColumns: 'Колони',
+  // Columns panel text
+  columnsPanelTextFieldLabel: 'Намери колона',
+  columnsPanelTextFieldPlaceholder: 'Заглавие на колона',
+  columnsPanelDragIconLabel: 'Пренареди на колона',
+  columnsPanelShowAllButton: 'Покажи Всички',
+  columnsPanelHideAllButton: 'Скрий Всички',
 
-          // Filter operators text
-          contains: 'съдържа',
-          equals: 'равно',
-          startsWith: 'започва с',
-          endsWith: 'завършва с',
-          is: 'е',
-          not: 'не е',
-          onOrAfter: 'е на или след',
-          before: 'е преди',
-          onOrBefore: 'е на или преди',
+  // Filter panel text
+  filterPanelAddFilter: 'Добави Филтър',
+  filterPanelDeleteIconLabel: 'Изтрий',
+  filterPanelOperators: 'Оператори',
+  filterPanelOperatorAnd: 'И',
+  filterPanelOperatorOr: 'Или',
+  filterPanelColumns: 'Колони',
 
-          // Column menu text
-          columnMenuLabel: 'Меню',
-          columnMenuShowColumns: 'Покажи колоните',
-          columnMenuFilter: 'Филтри',
-          columnMenuHideColumn: 'Скрий',
-          columnMenuUnsort: 'Отмени сортирането',
-          columnMenuSortAsc: 'Сортирай по възходящ ред',
-          columnMenuSortDesc: 'Сортирай по низходящ ред',
+  // Filter operators text
+  filterOperatorContains: 'съдържа',
+  filterOperatorEquals: 'равно',
+  filterOperatorStartsWith: 'започва с',
+  filterOperatorEndsWith: 'завършва с',
+  filterOperatorIs: 'е',
+  filterOperatorNot: 'не е',
+  filterOperatorOnOrAfter: 'е на или след',
+  filterOperatorBefore: 'е преди',
+  filterOperatorOnOrBefore: 'е на или преди',
 
-          // Column header text
-          columnHeaderFiltersTooltipActive: (count) => `${count} активни филтри`,
-          columnHeaderFiltersLabel: 'Покажи Филтрите',
-          columnHeaderSortIconLabel: 'Сортирай',
+  // Column menu text
+  columnMenuLabel: 'Меню',
+  columnMenuShowColumns: 'Покажи колоните',
+  columnMenuFilter: 'Филтри',
+  columnMenuHideColumn: 'Скрий',
+  columnMenuUnsort: 'Отмени сортирането',
+  columnMenuSortAsc: 'Сортирай по възходящ ред',
+  columnMenuSortDesc: 'Сортирай по низходящ ред',
 
-          // Rows selected footer text
-          footerRowSelected: (count) =>
-            count !== 1
-              ? `${count.toLocaleString()} избрани редове`
-              : `${count.toLocaleString()} избран ред`,
+  // Column header text
+  columnHeaderFiltersTooltipActive: (count) => `${count} активни филтри`,
+  columnHeaderFiltersLabel: 'Покажи Филтрите',
+  columnHeaderSortIconLabel: 'Сортирай',
 
-          // Total rows footer text
-          footerTotalRows: 'Общо Rедове:',
+  // Rows selected footer text
+  footerRowSelected: (count) =>
+    count !== 1
+      ? `${count.toLocaleString()} избрани редове`
+      : `${count.toLocaleString()} избран ред`,
 
-          // Pagination footer text
-          footerPaginationRowsPerPage: 'Редове на страница:',
-        },
-      },
-    },
-  },
-};
+  // Total rows footer text
+  footerTotalRows: 'Общо Rедове:',
+
+  // Pagination footer text
+  footerPaginationRowsPerPage: 'Редове на страница:',
+});
