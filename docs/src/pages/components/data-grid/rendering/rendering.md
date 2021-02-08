@@ -268,7 +268,18 @@ This demo showcases how this can be achieve.
 
 {{"demo": "pages/components/data-grid/rendering/ToolbarGrid.js", "bg": "inline"}}
 
-Alternatively you can compose your own toolbar.
+Alternatively, you can compose your own toolbar.
+
+```jsx
+function CustomToolbar() {
+  return (
+    <GridToolbarContainer>
+      <ColumnsToolbarButton />
+      <FilterToolbarButton />
+    </GridToolbarContainer>
+  );
+}
+```
 
 {{"demo": "pages/components/data-grid/rendering/CustomToolbarGrid.js", "bg": "inline"}}
 
