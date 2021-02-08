@@ -19,7 +19,7 @@ In the following example, the labels of the density selector are customized.
 
 ## Locale text
 
-The default locale of Material-UI is English (United States). 
+The default locale of Material-UI is English (United States).
 You can find all the locales supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/locales) in the GitHub repository.
 
 ### Supported locales
@@ -27,9 +27,6 @@ You can find all the locales supported in [the source](https://github.com/mui-or
 | Locale    | BCP 47 language tag | Import name |
 | :-------- | :------------------ | :---------- |
 | Bulgarian | bg-BG               | `bgBG`      |
-
->
-> 👍 Upvote [issue #777](https://github.com/mui-org/material-ui-x/issues/777) if you want to see it land faster.
 
 The data grid will support dozens of locales with a simple import that includes all the translated messages.
 You will be able to follow [this guide](/guides/localization/#locale-text) to use them.
