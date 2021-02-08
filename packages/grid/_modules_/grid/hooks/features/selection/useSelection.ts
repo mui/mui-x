@@ -1,3 +1,4 @@
+import { deepEqual } from 'assert';
 import * as React from 'react';
 import { ROW_CLICK, ROW_SELECTED, SELECTION_CHANGED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
@@ -7,6 +8,7 @@ import { RowSelectedParams } from '../../../models/params/rowSelectedParams';
 import { SelectionModelChangeParams } from '../../../models/params/selectionModelChangeParams';
 import { RowId, RowModel } from '../../../models/rows';
 import { SelectionModel } from '../../../models/selectionModel';
+import { isDeepEqual } from '../../../utils/utils';
 import { useApiEventHandler } from '../../root/useApiEventHandler';
 import { useApiMethod } from '../../root/useApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
@@ -199,8 +201,9 @@ export const useSelection = (apiRef: ApiRef): void => {
   }, [rowsLookup, apiRef, setGridState, forceUpdate]);
 
   React.useEffect(() => {
-    if (options.selectionModel != null) {
-      apiRef.current.setSelectionModel(options.selectionModel);
+    const currentModel = Object.keys(apiRef.current.getState().selection);
+    if (!isDeepEqual(currentModel, options.selectionModel)) {
+      apiRef.current.setSelectionModel(options.selectionModel || []);
     }
   }, [apiRef, options.selectionModel]);
 };
