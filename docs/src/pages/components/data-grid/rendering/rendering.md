@@ -213,11 +213,11 @@ You can change the density of the rows and the column header.
 
 ### Density selector
 
-To enable the density selector you need to add the `Header: GridHeader` to the `components` grid prop.
+To enable the density selector you need to compose your own toolbar using the `DensitySelector` and provide it to the `Toolbar` in the `components` grid prop.
 
 The user can change the density of the data grid by using the density selector from the toolbar.
 
-{{"demo": "pages/components/data-grid/rendering/VisibleToolbarGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/rendering/DensitySelectorGrid.js", "bg": "inline"}}
 
 To hide the density selector add the `disableDensitySelector` prop to the data grid.
 
@@ -263,8 +263,12 @@ The prop accepts an object of type [GridSlotsComponent](/api/data-grid/#slots) .
 
 ### Toolbar
 
-You can provide your own toolbar by passing it to the `Toolbar` component.
+To enable the toolbar you need to add the `Toolbar: GridHeader` to the `components` grid prop.
 This demo showcases how this can be achieve.
+
+{{"demo": "pages/components/data-grid/rendering/ToolbarGrid.js", "bg": "inline"}}
+
+Alternatively you can compose your own toolbar.
 
 {{"demo": "pages/components/data-grid/rendering/CustomToolbarGrid.js", "bg": "inline"}}
 
