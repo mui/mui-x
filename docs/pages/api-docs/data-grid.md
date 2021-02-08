@@ -49,7 +49,7 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">onRowClick</span> | <span class="prop-type">(param: RowParams) => void</span> |   | Callback fired when a click event comes from a row container element. |
 | <span class="prop-name">onRowHover</span> | <span class="prop-type">(param: RowParams) => void</span> |   | Callback fired when a hover event comes from a row container element. |
 | <span class="prop-name">onRowSelected</span> | <span class="prop-type">(param: RowSelectedParams) => void</span> |   | Callback fired when one row is selected. |
-| <span class="prop-name">onSelectionChange</span> | <span class="prop-type">(param: SelectionChangeParams) => void</span> |   | Callback fired when the selection state of one or multiple rows changes. |
+| <span class="prop-name">onSelectionModelChange</span> | <span class="prop-type">(param: SelectionModelChangeParams) => void</span> |   | Callback fired when the selection state of one or multiple rows changes. |
 | <span class="prop-name">onSortModelChange</span> | <span class="prop-type">(param: SortModelParams) => void</span> |   | Callback fired when the sort model changes before a column is sorted. |
 | <span class="prop-name">page</span> | <span class="prop-type">number</span> | 1   |  Set the current page. |
 | <span class="prop-name">pageSize</span> | <span class="prop-type">number</span> | 100 | Set the number of rows in one page. |
@@ -62,6 +62,7 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">showCellRightBorder</span> | <span class="prop-type">boolean</span> | false | If `true`, the right border of the cells are displayed. |
 | <span class="prop-name">showColumnRightBorder</span> | <span class="prop-type">boolean</span> | false | If `true`, the right border of the column headers are displayed. |
 | <span class="prop-name">showToolbar</span> | <span class="prop-type">boolean</span> | false | If `true`, the default toolbar component is shown. |
+| <span class="prop-name">selectionModel</span> | <span class="prop-type">SelectionModel</span> |   | Set the selection model of the grid. |
 | <span class="prop-name">sortingMode</span> | <span class="prop-type">FeatureMode</span> | 'client' |  Sorting can be processed on the server or client-side. Set it to 'client' if you would like to handle sorting on the client-side. Set it to 'server' if you would like to handle sorting on the server-side. |
 | <span class="prop-name">sortingOrder</span> | <span class="prop-type">SortDirection[]</span> | ['asc', 'desc', null] | The order of the sorting sequence. |
 | <span class="prop-name">sortModel</span> | <span class="prop-type">SortModel</span> |   | Set the sort model of the grid. |
