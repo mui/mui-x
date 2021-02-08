@@ -120,7 +120,7 @@ const filterModel: FilterModel = {
 };
 ```
 
-{{"demo": "pages/components/data-grid/filtering/MultiFilteringWithOrGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/filtering/MultiFilteringWithOrGrid.js", "bg": "inline", "disableAd": true}}
 
 ### apiRef <span class="pro"></span>
 
