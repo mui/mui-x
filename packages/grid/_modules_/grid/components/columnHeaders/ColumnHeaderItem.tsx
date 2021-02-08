@@ -44,7 +44,7 @@ export const ColumnHeaderItem = ({
     disableColumnResize,
     disableColumnMenu,
   } = options;
-  const isColumnSorted = column.sortDirection != null;
+  const isColumnSorted = sortDirection != null;
   // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
   const isColumnNumeric = column.type === NUMBER_COLUMN_TYPE;
 

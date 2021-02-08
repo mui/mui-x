@@ -12,8 +12,8 @@ export default {
 
 const columns: ColDef[] = [
   { field: 'id' },
-  { field: 'name', sortDirection: 'asc' },
-  { field: 'age', sortDirection: 'desc' },
+  { field: 'name' },
+  { field: 'age' },
 ];
 
 const rows = [

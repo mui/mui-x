@@ -292,29 +292,6 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
     }
   }, [rowCount, apiRef, logger]);
 
-  // TODO Remove if we deprecate column.sortDirection
-  React.useEffect(() => {
-    if (visibleColumns.length > 0) {
-      const sortedColumns = apiRef.current
-        .getAllColumns()
-        .filter((column) => column.sortDirection != null)
-        .sort((a, b) => a.sortIndex! - b.sortIndex!);
-
-      const sortModel = sortedColumns.map((column) => ({
-        field: column.field,
-        sort: column.sortDirection,
-      }));
-
-      if (
-        sortModel.length > 0 &&
-        !isDeepEqual(apiRef.current.getState<SortingState>('sorting').sortModel, sortModel)
-      ) {
-        // we use apiRef to avoid watching setSortModel as it will trigger an infinite loop
-        apiRef.current.setSortModel(sortModel);
-      }
-    }
-  }, [apiRef, visibleColumns]);
-
   React.useEffect(() => {
     const sortModel = options.sortModel || [];
     const oldSortModel = apiRef.current.state.sorting.sortModel;
