@@ -40,6 +40,17 @@ export interface LocaleText {
   filterPanelOperatorOr: React.ReactNode;
   filterPanelColumns: React.ReactNode;
 
+  // Filter operators text
+  filterOperatorContains: string;
+  filterOperatorEquals: string;
+  filterOperatorStartsWith: string;
+  filterOperatorEndsWith: string;
+  filterOperatorIs: string;
+  filterOperatorNot: string;
+  filterOperatorOnOrAfter: string;
+  filterOperatorBefore: string;
+  filterOperatorOnOrBefore: string;
+
   // Column menu text
   columnMenuLabel: string;
   columnMenuShowColumns: React.ReactNode;

@@ -39,6 +39,17 @@ export const DEFAULT_LOCALE_TEXT: LocaleText = {
   filterPanelOperatorOr: 'Or',
   filterPanelColumns: 'Columns',
 
+  // Filter operators text
+  filterOperatorContains: 'contains',
+  filterOperatorEquals: 'equals',
+  filterOperatorStartsWith: 'starts with',
+  filterOperatorEndsWith: 'ends with',
+  filterOperatorIs: 'is',
+  filterOperatorNot: 'is not',
+  filterOperatorOnOrAfter: 'is on or after',
+  filterOperatorBefore: 'is before',
+  filterOperatorOnOrBefore: 'is on or before',
+
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Show columns',
