@@ -20,7 +20,6 @@ export function optionsReducer(
 }
 
 export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridOptions {
-  // TODO Refactor to smaller objects
   const options: GridOptionsProp = React.useMemo(
     () => ({
       ...props,

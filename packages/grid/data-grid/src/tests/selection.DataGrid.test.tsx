@@ -48,7 +48,7 @@ describe('<DataGrid /> - Selection', () => {
     });
   });
 
-  describe('props:selectionModel', () => {
+  describe('props: selectionModel', () => {
     it('should select rows when initialised', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
@@ -69,7 +69,7 @@ describe('<DataGrid /> - Selection', () => {
         </div>,
       );
       const row = getRow(1);
-      expect(row!.classList.contains('Mui-selected')).to.equal(true);
+      expect(row).to.have.class('Mui-selected');
     });
 
     it('should deselect other selected rows', () => {
@@ -97,15 +97,17 @@ describe('<DataGrid /> - Selection', () => {
       const { setProps } = render(<Demo />);
 
       const row1 = getRow(1);
-      expect(row1!.classList.contains('Mui-selected')).to.equal(false);
+      expect(row1).to.not.have.class('Mui-selected');
 
       fireEvent.click(getCell(0, 0));
       const row0 = getRow(0);
-      expect(row0!.classList.contains('Mui-selected')).to.equal(true);
+      expect(row0).to.have.class('Mui-selected');
 
       setProps({ selectionModel: [1] });
-      expect(row0!.classList.contains('Mui-selected')).to.equal(false);
-      expect(row1!.classList.contains('Mui-selected')).to.equal(true);
+      // TODO fix this assertion. The model is forced from the outside, hence shouldn't change.
+      // https://github.com/mui-org/material-ui-x/issues/190
+      expect(row0).to.not.have.class('Mui-selected');
+      expect(row1).to.have.class('Mui-selected');
     });
   });
 });

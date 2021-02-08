@@ -9,7 +9,6 @@ export default function ControlledSelectionGrid() {
     maxColumns: 6,
   });
 
-  // TODO: https://github.com/mui-org/material-ui-x/issues/246
   const [selectionModel, setSelectionModel] = React.useState([]);
 
   return (
