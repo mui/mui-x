@@ -1,4 +1,3 @@
-import { deepEqual } from 'assert';
 import * as React from 'react';
 import { ROW_CLICK, ROW_SELECTED, SELECTION_CHANGED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
