@@ -53,7 +53,7 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">onRowClick</span> | <span class="prop-type">(param: RowParams) => void</span> |   | Callback fired when a click event comes from a row container element. |
 | <span class="prop-name">onRowHover</span> | <span class="prop-type">(param: RowParams) => void</span> |   | Callback fired when a hover event comes from a row container element. |
 | <span class="prop-name">onRowSelected</span> | <span class="prop-type">(param: RowSelectedParams) => void</span> |   | Callback fired when one row is selected. |
-| <span class="prop-name">onSelectionChange</span> | <span class="prop-type">(param: SelectionChangeParams) => void</span> |   | Callback fired when the selection state of one or multiple rows changes. |
+| <span class="prop-name">onSelectionModelChange</span> | <span class="prop-type">(param: SelectionModelChangeParams) => void</span> |   | Callback fired when the selection state of one or multiple rows changes. |
 | <span class="prop-name">onSortModelChange</span> | <span class="prop-type">(param: SortModelParams) => void</span> |   | Callback fired when the sort model changes before a column is sorted. |
 | <span class="prop-name">page</span> | <span class="prop-type">number</span> | 1   |  Set the current page. |
 | <span class="prop-name">pageSize</span> | <span class="prop-type">number</span> | 100 | Set the number of rows in one page. |
@@ -64,6 +64,7 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">rowHeight</span> | <span class="prop-type">number</span> | 52 | Set the height in pixel of a row in the grid. |
 | <span class="prop-name">rowsPerPageOptions</span> | <span class="prop-type">number[]</span> | [25, 50, 100] | Select the pageSize dynamically using the component UI. |
 | <span class="prop-name">scrollbarSize</span> | <span class="prop-type">number</span> | 15 | Set the height/width of the grid inner scrollbar. |
+| <span class="prop-name">selectionModel</span> | <span class="prop-type">SelectionModel</span> |   | Set the selection model of the grid. |
 | <span class="prop-name">showCellRightBorder</span> | <span class="prop-type">boolean</span> | false | If `true`, the right border of the cells are displayed. |
 | <span class="prop-name">showColumnRightBorder</span> | <span class="prop-type">boolean</span> | false | If `true`, the right border of the column headers are displayed. |
 | <span class="prop-name">showToolbar</span> | <span class="prop-type">boolean</span> | false | If `true`, the default toolbar component is shown. |

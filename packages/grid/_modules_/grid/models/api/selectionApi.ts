@@ -1,6 +1,6 @@
 import { RowId, RowModel } from '../rows';
 import { RowSelectedParams } from '../params/rowSelectedParams';
-import { SelectionChangeParams } from '../params/selectionChangeParams';
+import { SelectionModelChangeParams } from '../params/selectionModelChangeParams';
 
 /**
  * The selection API interface that is available in the grid [[apiRef]].
@@ -34,5 +34,10 @@ export interface SelectionApi {
    * Callback fired after one or multiple rows had a selection state change.
    * @param handler
    */
-  onSelectionChange: (handler: (param: SelectionChangeParams) => void) => () => void;
+  onSelectionModelChange: (handler: (param: SelectionModelChangeParams) => void) => () => void;
+  /**
+   * Reset the selected rows to the array of ids passed in parameter
+   * @param RowId[]
+   */
+  setSelectionModel: (rowIds: RowId[]) => void;
 }

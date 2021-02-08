@@ -20,7 +20,6 @@ export interface PageChangeParams {
    * The total number of rows.
    */
   rowCount: number;
-
   /**
    * The pagination mode set in options.
    * 'client' means that the pagination is handled on the client-side.

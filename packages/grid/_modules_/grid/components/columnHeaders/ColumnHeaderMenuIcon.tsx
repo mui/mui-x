@@ -1,7 +1,6 @@
 import * as React from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import { columnMenuStateSelector } from '../../hooks/features/columnMenu/columnMenuSelector';
-import { GridState } from '../../hooks/features/core/gridState';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { classnames } from '../../utils/classnames';
 import { ApiContext } from '../api-context';
@@ -21,7 +20,7 @@ export function ColumnHeaderMenuIcon(props: ColumnHeaderFilterIconProps) {
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       event.stopPropagation();
-      const lastMenuState = apiRef!.current.getState<GridState>().columnMenu;
+      const lastMenuState = apiRef!.current.getState().columnMenu;
       if (!lastMenuState.open || lastMenuState.field !== column.field) {
         apiRef!.current.showColumnMenu(column.field);
       } else {

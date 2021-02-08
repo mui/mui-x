@@ -9,7 +9,6 @@ import { isDeepEqual } from '../../../utils/utils';
 import { useEnhancedEffect } from '../../../utils/material-ui-utils';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { columnsMetaSelector, visibleColumnsSelector } from '../columns/columnsSelector';
-import { GridState } from '../core/gridState';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { PaginationState } from '../pagination/paginationReducer';
@@ -121,7 +120,7 @@ export const useVirtualRows = (
 
   const updateViewport = React.useCallback(
     (forceReRender = false) => {
-      const lastState = apiRef.current.getState<GridState>();
+      const lastState = apiRef.current.getState();
       const containerProps = lastState.containerSizes;
       if (!windowRef || !windowRef.current || !containerProps) {
         return;
