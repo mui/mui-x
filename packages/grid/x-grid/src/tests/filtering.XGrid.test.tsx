@@ -7,7 +7,14 @@ import {
   // @ts-expect-error need to migrate helpers to TypeScript
   fireEvent,
 } from 'test/utils';
-import { ApiRef, FilterModel,GridComponentProps, LinkOperator, useApiRef, XGrid } from '@material-ui/x-grid';
+import {
+  ApiRef,
+  FilterModel,
+  GridComponentProps,
+  LinkOperator,
+  useApiRef,
+  XGrid,
+} from '@material-ui/x-grid';
 
 describe('<XGrid /> - Filter', () => {
   let clock;
@@ -186,36 +193,36 @@ describe('<XGrid /> - Filter', () => {
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
   });
 
-  it('should only select visible rows', ()=> {
+  it('should only select visible rows', () => {
     const newModel: FilterModel = {
       items: [
         {
           columnField: 'brand',
           value: 'a',
           operatorValue: 'startsWith',
-        }
+        },
       ],
       linkOperator: LinkOperator.Or,
     };
     render(<TestCase checkboxSelection filterModel={newModel} />);
     const checkAllCell = getColumnHeaderCell(1).querySelector('input');
     fireEvent.click(checkAllCell);
-    expect(apiRef.current.getState().selection).to.deep.eq({1: true});
+    expect(apiRef.current.getState().selection).to.deep.eq({ 1: true });
   });
 
-  it('should allow to clear filters by passing an empty filter model', ()=> {
+  it('should allow to clear filters by passing an empty filter model', () => {
     const newModel: FilterModel = {
       items: [
         {
           columnField: 'brand',
           value: 'a',
           operatorValue: 'startsWith',
-        }
+        },
       ],
     };
     const { setProps } = render(<TestCase filterModel={newModel} />);
     expect(getColumnValues()).to.deep.equal(['Adidas']);
-    setProps({filterModel: {items: []}});
+    setProps({ filterModel: { items: [] } });
     expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 });

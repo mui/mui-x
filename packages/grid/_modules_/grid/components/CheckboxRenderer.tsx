@@ -31,7 +31,10 @@ export const HeaderCheckbox: React.FC<ColParams> = () => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     setChecked(checked);
-    apiRef!.current.selectRows(visibleRows.map(row=> row.id), checked);
+    apiRef!.current.selectRows(
+      visibleRows.map((row) => row.id),
+      checked,
+    );
   };
 
   return (

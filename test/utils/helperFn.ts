@@ -45,9 +45,7 @@ export function getColumnValues(colIndex: number = 0) {
 }
 
 export function getColumnHeaderCell(colIndex: number): HTMLElement {
-  const columnHeader = document.querySelector(
-    `[role="columnheader"][aria-colindex="${colIndex}"]`,
-  );
+  const columnHeader = document.querySelector(`[role="columnheader"][aria-colindex="${colIndex}"]`);
   if (columnHeader == null) {
     throw new Error(`columnheader ${colIndex} not found`);
   }
