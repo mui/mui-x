@@ -293,7 +293,7 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
   React.useEffect(() => {
     const filterModel = options.filterModel;
     const oldFilterModel = apiRef.current.state.filter;
-    if (filterModel && filterModel.items.length > 0 && !isDeepEqual(filterModel, oldFilterModel)) {
+    if (filterModel && !isDeepEqual(filterModel, oldFilterModel)) {
       logger.debug('filterModel prop changed, applying filters');
       // we use apiRef to avoid watching setFilterModel as it will trigger an update on every state change
       apiRef.current.setFilterModel(filterModel);

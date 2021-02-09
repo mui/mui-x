@@ -9,7 +9,7 @@ import { VisibleRowsState } from './visibleRowsState';
 
 export const visibleRowsStateSelector = (state: GridState) => state.visibleRows;
 
-export const visibleSortedRowsSelector = createSelector<
+export const  visibleSortedRowsSelector = createSelector<
   GridState,
   VisibleRowsState,
   RowModel[],
