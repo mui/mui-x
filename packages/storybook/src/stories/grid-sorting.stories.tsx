@@ -94,105 +94,136 @@ export const SortingOrderOverrideOption = () => {
 
 export const StringSortingAsc = () => {
   const columns = getColumns();
-  columns[1] = { ...columns[1], sortDirection: 'asc' };
 
   return (
     <div className="grid-container">
-      <XGrid rows={getRows()} columns={columns} />
+      <XGrid
+        rows={getRows()}
+        columns={columns}
+        sortModel={[{ field: columns[1].field, sort: 'asc' }]}
+      />
     </div>
   );
 };
 export const StringSortingDesc = () => {
   const columns = getColumns();
-  columns[1] = { ...columns[1], sortDirection: 'desc' };
 
   return (
     <div className="grid-container">
-      <XGrid rows={getRows()} columns={columns} />
+      <XGrid
+        rows={getRows()}
+        columns={columns}
+        sortModel={[{ field: columns[1].field, sort: 'desc' }]}
+      />
     </div>
   );
 };
 export const NumberSortingAsc = () => {
   const columns = getColumns();
-  columns[2] = { ...columns[2], sortDirection: 'asc' };
-
   return (
     <div className="grid-container">
-      <XGrid rows={getRows()} columns={columns} />
+      <XGrid
+        rows={getRows()}
+        columns={columns}
+        sortModel={[{ field: columns[2].field, sort: 'asc' }]}
+      />
     </div>
   );
 };
 export const NumberSortingDesc = () => {
   const columns = getColumns();
-  columns[2] = { ...columns[2], sortDirection: 'desc' };
 
   return (
     <div className="grid-container">
-      <XGrid rows={getRows()} columns={columns} />
+      <XGrid
+        rows={getRows()}
+        columns={columns}
+        sortModel={[{ field: columns[2].field, sort: 'desc' }]}
+      />
     </div>
   );
 };
 export const DateSortingAsc = () => {
   const columns = getColumns();
-  columns[3] = { ...columns[3], sortDirection: 'asc' };
-
   return (
     <div className="grid-container">
-      <XGrid rows={getRows()} columns={columns} />
+      <XGrid
+        rows={getRows()}
+        columns={columns}
+        sortModel={[{ field: columns[3].field, sort: 'asc' }]}
+      />
     </div>
   );
 };
 export const DateSortingDesc = () => {
   const columns = getColumns();
-  columns[3] = { ...columns[3], sortDirection: 'desc' };
 
   return (
     <div className="grid-container">
-      <XGrid rows={getRows()} columns={columns} />
+      <XGrid
+        rows={getRows()}
+        columns={columns}
+        sortModel={[{ field: columns[3].field, sort: 'desc' }]}
+      />
     </div>
   );
 };
 export const DateTimeSortingAsc = () => {
   const columns = getColumns();
-  columns[4] = { ...columns[4], sortDirection: 'asc' };
 
   return (
     <div className="grid-container">
-      <XGrid rows={getRows()} columns={columns} />
+      <XGrid
+        rows={getRows()}
+        columns={columns}
+        sortModel={[{ field: columns[4].field, sort: 'asc' }]}
+      />
     </div>
   );
 };
 export const DateTimeSortingDesc = () => {
   const columns = getColumns();
-  columns[4] = { ...columns[4], sortDirection: 'desc' };
 
   return (
     <div className="grid-container">
-      <XGrid rows={getRows()} columns={columns} />
+      <XGrid
+        rows={getRows()}
+        columns={columns}
+        sortModel={[{ field: columns[4].field, sort: 'desc' }]}
+      />
     </div>
   );
 };
 
 export const MultipleSorting = () => {
   const columns = getColumns();
-  columns[1] = { ...columns[1], sortDirection: 'asc' };
-  columns[2] = { ...columns[2], sortDirection: 'desc' };
-
   return (
     <div className="grid-container">
-      <XGrid rows={getRows()} columns={columns} />
+      <XGrid
+        rows={getRows()}
+        columns={columns}
+        sortModel={[
+          { field: columns[1].field, sort: 'asc' },
+          { field: columns[2].field, sort: 'desc' },
+        ]}
+      />
     </div>
   );
 };
 
 export const MultipleAndSortIndex = () => {
   const columns = getColumns();
-  columns[1] = { ...columns[1], sortDirection: 'asc', sortIndex: 2 };
-  columns[2] = { ...columns[2], sortDirection: 'desc', sortIndex: 1 };
 
   return (
     <div className="grid-container">
-      <XGrid rows={getRows()} columns={columns} />
+      <XGrid
+        rows={getRows()}
+        columns={columns}
+        sortModel={[
+          { field: columns[2].field, sort: 'desc' },
+          { field: columns[1].field, sort: 'asc' },
+        ]}
+      />
     </div>
   );
 };
@@ -221,13 +252,16 @@ export const CustomComparator = () => {
     valueGetter: (params) =>
       `${params.getValue('name') || 'unknown'}_${params.getValue('age') || 'x'}`,
     sortComparator: (v1, v2, cellParams1, cellParams2) => cellParams1.row.age - cellParams2.row.age,
-    sortDirection: 'asc',
     width: 150,
   };
 
   return (
     <div className="grid-container">
-      <XGrid rows={getRows()} columns={columns} />
+      <XGrid
+        rows={getRows()}
+        columns={columns}
+        sortModel={[{ field: columns[columns.length - 1].field, sort: 'asc' }]}
+      />
     </div>
   );
 };
@@ -236,13 +270,16 @@ export const SortingWithFormatter = () => {
   const columns = getColumns();
   columns[2] = {
     ...columns[2],
-    sortDirection: 'desc',
     valueFormatter: (params) => (params.value ? `${params.value} years ` : 'unknown'),
   };
 
   return (
     <div className="grid-container">
-      <XGrid rows={getRows()} columns={columns} />
+      <XGrid
+        rows={getRows()}
+        columns={columns}
+        sortModel={[{ field: columns[2].field, sort: 'desc' }]}
+      />
     </div>
   );
 };

@@ -37,6 +37,15 @@ The following demo updates the rows every 200ms.
 
 {{"demo": "pages/components/data-grid/rows/ApiRefRowsGrid.js", "bg": "inline", "disableAd": true}}
 
+The default behavior of `updateRows` API is to upsert rows.
+So if a row has an id that is not in the current list of rows then it will be added to the grid.
+
+Alternatively, if you would like to delete a row, you would need to pass an extra `_action` property in the update object as below.
+
+```ts
+apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
+```
+
 ## Row height
 
 By default, the rows have a height of 52 pixels.
