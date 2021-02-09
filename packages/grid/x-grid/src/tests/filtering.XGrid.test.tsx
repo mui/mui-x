@@ -58,17 +58,16 @@ describe('<XGrid /> - Filter', () => {
       columns: [{ field: 'brand' }],
     };
 
-    const { filterModel, rows, ...others } = props;
+    const { rows, ...other } = props;
     apiRef = useApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
         <XGrid
           apiRef={apiRef}
           {...baselineProps}
-          {...others}
           rows={rows || baselineProps.rows}
-          filterModel={filterModel}
           disableColumnFilter={false}
+          {...other}
         />
       </div>
     );
@@ -207,7 +206,7 @@ describe('<XGrid /> - Filter', () => {
     render(<TestCase checkboxSelection filterModel={newModel} />);
     const checkAllCell = getColumnHeaderCell(1).querySelector('input');
     fireEvent.click(checkAllCell);
-    expect(apiRef.current.getState().selection).to.deep.eq({ 1: true });
+    expect(apiRef.current.getState().selection).to.deep.equal({ 1: true });
   });
 
   it('should allow to clear filters by passing an empty filter model', () => {
