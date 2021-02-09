@@ -69,8 +69,7 @@ export const useVirtualRows = (
         paginationState.pageSize != null &&
         paginationState.paginationMode === 'client'
       ) {
-        minRowIdx =
-          paginationState.pageSize * (paginationState.page - 1 > 0 ? paginationState.page - 1 : 0);
+        minRowIdx = paginationState.pageSize * paginationState.page;
       }
 
       const firstRowIdx = page * apiRef.current.state.containerSizes.viewportPageSize + minRowIdx;
@@ -210,7 +209,7 @@ export const useVirtualRows = (
       let scrollTop;
 
       const currentRowPage =
-        (params.rowIndex - (gridState.pagination.page - 1) * gridState.pagination.pageSize) /
+        (params.rowIndex - gridState.pagination.page * gridState.pagination.pageSize) /
         gridState.containerSizes!.viewportPageSize;
       const scrollPosition = currentRowPage * gridState!.viewportSizes.height;
       const viewportHeight = gridState.viewportSizes.height;

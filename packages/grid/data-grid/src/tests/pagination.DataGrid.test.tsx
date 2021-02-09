@@ -41,7 +41,7 @@ describe('<DataGrid /> - Pagination', () => {
       }
     });
 
-    it('should apply the page prop correctly', (done) => {
+    it('should apply the page prop correctly', () => {
       const rows = [
         {
           id: 0,
@@ -58,14 +58,11 @@ describe('<DataGrid /> - Pagination', () => {
       ];
       render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} rows={rows} page={2} pageSize={1} />
+          <DataGrid {...baselineProps} rows={rows} page={1} pageSize={1} />
         </div>,
       );
-      setTimeout(() => {
-        const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
-        expect(cell).to.have.text('Addidas');
-        done();
-      }, 50);
+      const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
+      expect(cell).to.have.text('Addidas');
     });
 
     it('should trigger onPageChange once if page prop is set', () => {
@@ -126,7 +123,7 @@ describe('<DataGrid /> - Pagination', () => {
 
     it('should support server side pagination', () => {
       const ServerPaginationGrid = () => {
-        const [page, setPage] = React.useState(1);
+        const [page, setPage] = React.useState(0);
         const [rows, setRows] = React.useState<RowsProp>([]);
 
         const handlePageChange = (params) => {
@@ -172,9 +169,9 @@ describe('<DataGrid /> - Pagination', () => {
       };
 
       render(<ServerPaginationGrid />);
-      expect(getColumnValues()).to.deep.equal(['Nike 1']);
+      expect(getColumnValues()).to.deep.equal(['Nike 0']);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      expect(getColumnValues()).to.deep.equal(['Nike 2']);
+      expect(getColumnValues()).to.deep.equal(['Nike 1']);
     });
   });
 });

@@ -45,7 +45,7 @@ export const PaginationArgs: Story = (args) => {
 PaginationArgs.args = {
   pagination: true,
   pageSize: 100,
-  page: 1,
+  page: 0,
   rowCount: 2000,
   autoPageSize: false,
   rowsPerPageOptions: [10, 20, 50, 100, 200],
@@ -130,9 +130,9 @@ export function PaginationApiTests() {
             Pagination: ({ state }) => (
               <Pagination
                 className="my-custom-pagination"
-                page={state.pagination.page}
+                page={state.pagination.page + 1}
                 count={state.pagination.pageCount}
-                onChange={(e, value) => apiRef.current.setPage(value)}
+                onChange={(e, value) => apiRef.current.setPage(value - 1)}
               />
             ),
           }}
@@ -347,7 +347,7 @@ export const GridTest = () => {
 function loadDocsDemoServerRows(page: number, data: any): Promise<any> {
   return new Promise<any>((resolve) => {
     setTimeout(() => {
-      resolve(data.rows.slice((page - 1) * 5, page * 5));
+      resolve(data.rows.slice(page * 5, (page + 1) * 5));
     }, Math.random() * 500 + 100); // simulate network latency
   });
 }
@@ -358,7 +358,7 @@ export function ServerPaginationDocsDemo() {
     rowLength: 100,
     maxColumns: 6,
   });
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = React.useState(0);
   const [rows, setRows] = React.useState<RowsProp>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
 
