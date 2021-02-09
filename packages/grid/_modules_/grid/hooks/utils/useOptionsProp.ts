@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { getThemeProps } from '@material-ui/styles';
+import { useTheme } from '@material-ui/core/styles';
 import { DEFAULT_LOCALE_TEXT } from '../../constants/localeTextConstants';
 import { GridComponentProps, GridOptionsProp } from '../../GridComponentProps';
 import { ApiRef } from '../../models/api/apiRef';
@@ -20,13 +22,21 @@ export function optionsReducer(
 }
 
 export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridOptions {
-  const options: GridOptionsProp = React.useMemo(
-    () => ({
-      ...props,
-      localeText: { ...DEFAULT_LOCALE_TEXT, ...props.localeText },
-    }),
-    [props],
-  );
+  const contextTheme: any = useTheme();
+
+  const options: GridOptionsProp = React.useMemo(() => {
+    const copiedProps = { ...props };
+    const extendedProps = getThemeProps({
+      theme: contextTheme,
+      name: 'MuiDataGrid',
+      props: copiedProps,
+    });
+
+    return {
+      ...extendedProps,
+      localeText: { ...DEFAULT_LOCALE_TEXT, ...extendedProps.localeText },
+    };
+  }, [props, contextTheme]);
 
   const { gridState, dispatch } = useGridReducer(apiRef, 'options', optionsReducer, {
     ...DEFAULT_GRID_OPTIONS,
