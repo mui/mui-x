@@ -37,11 +37,7 @@ export default {
   decorators: [(StoryFn) => <StoryFn />],
 } as Meta;
 
-const columns: ColDef[] = [
-  { field: 'id' },
-  { field: 'name', sortDirection: 'asc' },
-  { field: 'age', sortDirection: 'desc' },
-];
+const columns: ColDef[] = [{ field: 'id' }, { field: 'name' }, { field: 'age' }];
 
 const rows = [
   { id: 1, name: 'alice', age: 40 },
@@ -53,7 +49,14 @@ const rows = [
   { id: 7, name: '', age: 42 },
 ];
 
-const defaultData = { columns, rows };
+const defaultData = {
+  columns,
+  rows,
+  sortModel: [
+    { field: 'name', sort: 'asc' as 'asc' },
+    { field: 'age', sort: 'desc' as 'desc' },
+  ],
+};
 
 const Template: Story<XGridProps> = (args) => {
   const data = useData(500, 50);
@@ -222,7 +225,6 @@ StyledColumns.args = {
       cellClassName: ['age', 'shine'],
       headerClassName: ['age', 'shine'],
       type: 'number',
-      sortDirection: 'desc',
     },
     {
       field: 'fullName',
@@ -247,7 +249,6 @@ StyledColumns.args = {
     {
       field: 'registerDate',
       headerName: 'Registered on',
-      sortDirection: 'asc',
       type: 'date',
     },
     {
@@ -256,6 +257,10 @@ StyledColumns.args = {
       type: 'dateTime',
       width: 200,
     },
+  ],
+  sortModel: [
+    { field: 'age', sort: 'desc' },
+    { field: 'registerDate', sort: 'asc' },
   ],
   rows: [
     { id: 1, firstName: 'alice', age: 40 },

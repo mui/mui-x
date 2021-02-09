@@ -4,7 +4,7 @@ import { CellClassNamePropType, CellClassRules } from '../cellClass';
 import { FilterOperator } from '../filterOperator';
 import { CellParams, ValueFormatterParams, ValueGetterParams } from '../params/cellParams';
 import { ColParams } from '../params/colParams';
-import { ComparatorFn, SortDirection } from '../sortModel';
+import { ComparatorFn } from '../sortModel';
 import { ColType, NativeColTypes } from './colType';
 
 /**
@@ -56,14 +56,6 @@ export interface ColDef {
    * A comparator function used to sort rows.
    */
   sortComparator?: ComparatorFn;
-  /**
-   * Sort the rows in a specific direction.
-   */
-  sortDirection?: SortDirection;
-  /**
-   * If multiple columns are sorted, this setting allows to order the columns sorting sequence.
-   */
-  sortIndex?: number;
   /**
    * Type allows to merge this object with a default definition [[ColDef]].
    * @default string

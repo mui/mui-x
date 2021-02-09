@@ -10,11 +10,7 @@ export default {
   },
 };
 
-const columns: ColDef[] = [
-  { field: 'id' },
-  { field: 'name', sortDirection: 'asc' },
-  { field: 'age', sortDirection: 'desc' },
-];
+const columns: ColDef[] = [{ field: 'id' }, { field: 'name' }, { field: 'age' }];
 
 const rows = [
   { id: 1, name: 'alice', age: 40 },

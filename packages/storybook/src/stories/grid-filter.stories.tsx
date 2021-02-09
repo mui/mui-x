@@ -511,7 +511,6 @@ export function ColumnsAlign() {
           col.align = 'left';
         }
         col.width = 180;
-        col.sortDirection = 'asc';
       });
     }
     return cols;
