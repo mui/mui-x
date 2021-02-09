@@ -10,14 +10,17 @@ function createGridApi(): GridApi {
   return new EventEmitter() as GridApi;
 }
 
-export function useApiRef(apiRefProp?: ApiRef): ApiRef {
-  const apiRef = React.useRef<GridApi>(createGridApi());
+// Public developers facing overload
+export function useApiRef(): ApiRef;
 
-  React.useEffect(() => {
-    if (apiRefProp?.current) {
-      apiRefProp.current = apiRef.current;
-    }
-  });
+// Internal grid facing overload
+export function useApiRef(apiRefProp: ApiRef | undefined): ApiRef;
+
+export function useApiRef(...args): any {
+  const apiRefProp = args[0];
+  const apiRef = React.useRef<GridApi>(args.length === 0 ? null : createGridApi());
+
+  React.useImperativeHandle(apiRefProp, () => apiRef.current, [apiRef]);
 
   return apiRef;
 }
