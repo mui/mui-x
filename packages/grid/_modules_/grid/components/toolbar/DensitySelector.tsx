@@ -39,7 +39,7 @@ export function DensitySelector() {
     },
   ];
 
-  const getSelectedDensityIcon = (): React.ReactElement => {
+  const getSelectedDensityIcon = React.useCallback((): React.ReactElement => {
     switch (densityValue) {
       case DensityTypes.Compact:
         return <DensityCompactIcon />;
@@ -48,7 +48,7 @@ export function DensitySelector() {
       default:
         return <DensityStandardIcon />;
     }
-  };
+  }, [densityValue, DensityCompactIcon, DensityComfortableIcon, DensityStandardIcon]);
 
   const handleDensitySelectorOpen = (event) => setAnchorEl(event.currentTarget);
   const handleDensitySelectorClose = () => setAnchorEl(null);

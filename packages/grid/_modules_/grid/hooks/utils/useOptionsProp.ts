@@ -25,7 +25,7 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
       ...props,
       localeText: { ...DEFAULT_LOCALE_TEXT, ...props.localeText },
     }),
-    [props]
+    [props],
   );
 
   const { gridState, dispatch } = useGridReducer(apiRef, 'options', optionsReducer, {

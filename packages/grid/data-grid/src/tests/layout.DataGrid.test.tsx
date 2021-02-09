@@ -7,8 +7,7 @@ import {
 } from 'test/utils';
 import { useFakeTimers, stub } from 'sinon';
 import { expect } from 'chai';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import { DataGrid, ValueGetterParams, GridToolbar, bgBG } from '@material-ui/data-grid';
+import { DataGrid, ValueGetterParams, GridToolbar } from '@material-ui/data-grid';
 import { getColumnValues, raf, sleep } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
@@ -486,26 +485,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       );
 
       expect(getByText('Size')).not.to.equal(null);
-    });
-
-    it('should pass translations using the ThemeProvider', () => {
-      const theme = createMuiTheme({}, bgBG);
-
-      const { getByText } = render(
-        <div style={{ width: 300, height: 300 }}>
-          <ThemeProvider theme={theme}>
-            <DataGrid
-              {...baselineProps}
-              showToolbar
-              components={{
-                Toolbar: GridToolbar,
-              }}
-            />
-          </ThemeProvider>
-        </div>,
-      );
-
-      expect(getByText('Гъстота')).not.to.equal(null);
     });
   });
 

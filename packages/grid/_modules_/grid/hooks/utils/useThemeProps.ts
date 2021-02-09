@@ -1,6 +1,7 @@
 import { getThemeProps } from '@material-ui/styles';
 import { useTheme } from '@material-ui/core/styles';
 
+// TODO: To be removed once we migrate to v5
 export function useThemeProps({ props: inputProps, name }) {
   const props = { ...inputProps };
 
@@ -10,7 +11,7 @@ export function useThemeProps({ props: inputProps, name }) {
 
   const theme = more.theme || contextTheme;
   const isRtl = theme.direction === 'rtl';
-  console.log(more)
+
   return {
     theme,
     isRtl,
