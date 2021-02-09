@@ -29,7 +29,6 @@ import { allColumnsSelector, visibleColumnsSelector } from '../columns/columnsSe
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { rowCountSelector } from '../rows/rowsSelector';
-import { SortingState } from './sortingState';
 
 export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   const logger = useLogger('useSorting');

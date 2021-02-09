@@ -4,7 +4,7 @@ import { CellClassNamePropType, CellClassRules } from '../cellClass';
 import { FilterOperator } from '../filterOperator';
 import { CellParams, ValueFormatterParams, ValueGetterParams } from '../params/cellParams';
 import { ColParams } from '../params/colParams';
-import { ComparatorFn, SortDirection } from '../sortModel';
+import { ComparatorFn } from '../sortModel';
 import { ColType, NativeColTypes } from './colType';
 
 /**
