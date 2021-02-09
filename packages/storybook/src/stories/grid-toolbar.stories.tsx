@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { XGrid, GridToolbar } from '@material-ui/x-grid';
-import { DataGrid, bgBG } from '@material-ui/data-grid';
 import '../style/grid-stories.css';
 import { useData } from '../hooks/useData';
 
@@ -46,25 +44,6 @@ export const DensitySelectorComfortable = () => {
           Toolbar: GridToolbar,
         }}
       />
-    </div>
-  );
-};
-export const ThemeProps = () => {
-  const data = useData(100, 50);
-  const theme = createMuiTheme({}, bgBG);
-
-  return (
-    <div style={{ height: 600 }}>
-      <ThemeProvider theme={theme}>
-        <DataGrid
-          columns={data.columns}
-          rows={data.rows}
-          showToolbar
-          components={{
-            Toolbar: GridToolbar,
-          }}
-        />
-      </ThemeProvider>
     </div>
   );
 };
