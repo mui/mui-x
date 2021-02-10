@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { LicenseInfo, useLicenseVerifier } from '@material-ui/x-license';
 import { ponyfillGlobal } from '@material-ui/utils';
-import { GridComponent, GridComponentProps, classnames } from '../../_modules_/grid';
+import { GridComponent, GridComponentProps, classnames, useThemeProps } from '../../_modules_/grid';
 
 // This is the package release date. Each package version should update this const
 // automatically when a new version is published on npm.
@@ -18,7 +18,8 @@ LicenseInfo.setReleaseInfo(RELEASE_INFO);
 export type XGridProps = Omit<GridComponentProps, 'licenseStatus'>;
 
 export const XGrid = React.memo(
-  React.forwardRef<HTMLDivElement, XGridProps>(function XGrid(props, ref) {
+  React.forwardRef<HTMLDivElement, XGridProps>(function XGrid(inProps, ref) {
+    const props = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
     const { className, ...other } = props;
     const licenseStatus = useLicenseVerifier();
 
