@@ -22,6 +22,7 @@ import { useGridState } from './hooks/features/core/useGridState';
 import { useGridPagination } from './hooks/features/pagination/useGridPagination';
 import { useGridPreferencesPanel } from './hooks/features/preferencesPanel/useGridPreferencesPanel';
 import { useGridRows } from './hooks/features/rows/useGridRows';
+import { useEditRows } from './hooks/features/rows/useEditRows';
 import { useGridSorting } from './hooks/features/sorting/useGridSorting';
 import { useGridApiRef } from './hooks/features/useGridApiRef';
 import { useGridColumnReorder } from './hooks/features/columnReorder';

@@ -1,5 +1,6 @@
 import { GRID_DEFAULT_LOCALE_TEXT } from '../constants/localeTextConstants';
 import { FilterModel } from '../hooks/features/filter/FilterModelState';
+import { EditRowsModel } from '../hooks/features/rows/useEditRows';
 import { Logger } from '../hooks/utils/useLogger';
 import { GridLocaleText } from './api/gridLocaleTextApi';
 import { GridColumnTypesRecord } from './colDef/gridColTypeDef';
@@ -216,6 +217,11 @@ export interface GridOptions {
    */
   onCellClick?: (param: GridCellParams) => void;
   /**
+   * Callback fired when a double click event comes from a cell element.
+   * @param param With all properties from [[CellParams]].
+   */
+  onCellDoubleClick?: (param: CellParams) => void;
+  /**
    * Callback fired when a hover event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
    */
@@ -225,6 +231,11 @@ export interface GridOptions {
    * @param param With all properties from [[GridRowParams]].
    */
   onRowClick?: (param: GridRowParams) => void;
+  /**
+   * Callback fired when a click event comes from a row container element.
+   * @param param With all properties from [[RowParams]].
+   */
+  onRowDoubleClick?: (param: RowParams) => void;
   /**
    * Callback fired when a hover event comes from a row container element.
    * @param param With all properties from [[GridRowParams]].
@@ -273,6 +284,17 @@ export interface GridOptions {
    * Callback fired when the state of the grid is updated.
    */
   onStateChange?: (params: any) => void;
+
+  editRowsModel?: EditRowsModel;
+  /**
+   * Callback fired when the cell is rendered.
+   */
+  isCellEditable?: (params: CellParams) => boolean;
+  onCellModeChange?: ({ id: RowId, field: string, api: any, mode: CellMode }) => void;
+  onEditCellValueChange?: (params: { api: any; update: RowModelUpdate }) => void;
+  onEditCellValueChangeCommitted?: (params: { api: any; update: RowModelUpdate }) => void;
+  onEditRowModelChange?: (model: EditRowsModel) => void;
+
   /**
    * Extend native column types with your new column types.
    */

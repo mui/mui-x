@@ -10,6 +10,10 @@ export class EventEmitter {
 
   events: { [key: string]: Listener[] } = {};
 
+  hasListener(eventName: string): boolean {
+    return this.events[eventName].length > 0;
+  }
+
   on(eventName: string, listener: Listener): void {
     if (!Array.isArray(this.events[eventName])) {
       this.events[eventName] = [];

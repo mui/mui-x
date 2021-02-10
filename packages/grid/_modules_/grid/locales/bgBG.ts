@@ -48,6 +48,7 @@ export const bgBG: Localization = getGridLocalization({
   filterOperatorNot: 'не е',
   filterOperatorAfter: 'е след',
   filterOperatorOnOrAfter: 'е на или след',
+  filterOperatorAfter: 'е след',
   filterOperatorBefore: 'е преди',
   filterOperatorOnOrBefore: 'е на или преди',
   filterPanelInputLabel: 'Стойност',
