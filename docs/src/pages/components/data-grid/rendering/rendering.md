@@ -263,7 +263,7 @@ The prop accepts an object of type [GridSlotsComponent](/api/data-grid/#slots) .
 
 ### Toolbar
 
-To enable the toolbar you need to add the `Toolbar: GridHeader` to the `components` grid prop.
+To enable the toolbar you need to add the `Toolbar: GridToolbar` to the grid `components` prop.
 This demo showcases how this can be achieve.
 
 {{"demo": "pages/components/data-grid/rendering/ToolbarGrid.js", "bg": "inline"}}
