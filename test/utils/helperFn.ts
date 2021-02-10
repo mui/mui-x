@@ -44,7 +44,15 @@ export function getColumnValues(colIndex: number = 0) {
   );
 }
 
-export function getColumnHeaders() {
+export function getColumnHeaderCell(colIndex: number): HTMLElement {
+  const columnHeader = document.querySelector(`[role="columnheader"][aria-colindex="${colIndex}"]`);
+  if (columnHeader == null) {
+    throw new Error(`columnheader ${colIndex} not found`);
+  }
+  return columnHeader as HTMLElement;
+}
+
+export function getColumnHeadersTextContent() {
   return Array.from(document.querySelectorAll('[role="columnheader"]')).map(
     (node) => node!.textContent,
   );

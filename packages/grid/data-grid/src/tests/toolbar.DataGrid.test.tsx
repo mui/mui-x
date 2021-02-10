@@ -6,7 +6,7 @@ import {
   // @ts-expect-error need to migrate helpers to TypeScript
   screen,
 } from 'test/utils';
-import { getColumnHeaders } from 'test/utils/helperFn';
+import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { expect } from 'chai';
 import { DataGrid, GridToolbar } from '@material-ui/data-grid';
 import {
@@ -142,12 +142,12 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      expect(getColumnHeaders()).to.deep.equal(['id', 'brand']);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
       fireEvent.click(getByText('Columns'));
       fireEvent.click(document.querySelector('[role="tooltip"] [name="id"]'));
 
-      expect(getColumnHeaders()).to.deep.equal(['brand']);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['brand']);
     });
 
     it('should hide all columns when clicking "HIDE ALL" from the column selector', () => {
@@ -163,12 +163,12 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      expect(getColumnHeaders()).to.deep.equal(['id', 'brand']);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
       fireEvent.click(getByText('Columns'));
       fireEvent.click(getByText('Hide All'));
 
-      expect(getColumnHeaders()).to.deep.equal([]);
+      expect(getColumnHeadersTextContent()).to.deep.equal([]);
     });
 
     it('should show all columns when clicking "SHOW ALL" from the column selector', () => {
@@ -199,7 +199,7 @@ describe('<DataGrid /> - Toolbar', () => {
       fireEvent.click(getByText('Columns'));
       fireEvent.click(getByText('Show All'));
 
-      expect(getColumnHeaders()).to.deep.equal(['id', 'brand']);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
     });
   });
 });

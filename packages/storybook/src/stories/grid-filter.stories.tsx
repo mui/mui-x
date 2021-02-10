@@ -614,7 +614,7 @@ export function DemoMultiFilteringGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid filterModel={demoFilterModel} {...data} />
+      <XGrid filterModel={demoFilterModel} {...data} checkboxSelection />
     </div>
   );
 }

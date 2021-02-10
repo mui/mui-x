@@ -1,9 +1,20 @@
-import { ApiRef, FilterModel, LinkOperator, useApiRef, XGrid } from '@material-ui/x-grid';
 import { expect } from 'chai';
 import * as React from 'react';
 import { useFakeTimers } from 'sinon';
-import { getColumnValues } from 'test/utils/helperFn';
-import { createClientRenderStrictMode } from 'test/utils';
+import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
+import {
+  createClientRenderStrictMode,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  fireEvent,
+} from 'test/utils';
+import {
+  ApiRef,
+  FilterModel,
+  GridComponentProps,
+  LinkOperator,
+  useApiRef,
+  XGrid,
+} from '@material-ui/x-grid';
 
 describe('<XGrid /> - Filter', () => {
   let clock;
@@ -28,7 +39,7 @@ describe('<XGrid /> - Filter', () => {
 
   let apiRef: ApiRef;
 
-  const TestCase = (props: { rows?: any[]; model: FilterModel }) => {
+  const TestCase = (props: Partial<GridComponentProps>) => {
     const baselineProps = {
       rows: [
         {
@@ -47,7 +58,7 @@ describe('<XGrid /> - Filter', () => {
       columns: [{ field: 'brand' }],
     };
 
-    const { model, rows } = props;
+    const { rows, ...other } = props;
     apiRef = useApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
@@ -55,8 +66,8 @@ describe('<XGrid /> - Filter', () => {
           apiRef={apiRef}
           {...baselineProps}
           rows={rows || baselineProps.rows}
-          filterModel={model}
           disableColumnFilter={false}
+          {...other}
         />
       </div>
     );
@@ -73,13 +84,13 @@ describe('<XGrid /> - Filter', () => {
   };
 
   it('should apply the filterModel prop correctly', () => {
-    render(<TestCase model={model} />);
+    render(<TestCase filterModel={model} />);
 
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
   });
 
   it('should apply the filterModel prop correctly on ApiRef setRows', () => {
-    render(<TestCase model={model} />);
+    render(<TestCase filterModel={model} />);
 
     const newRows = [
       {
@@ -101,7 +112,7 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should apply the filterModel prop correctly on ApiRef update row data', () => {
-    render(<TestCase model={model} />);
+    render(<TestCase filterModel={model} />);
     apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
     apiRef.current.updateRows([{ id: 0, brand: 'Patagonia' }]);
     clock.tick(100);
@@ -109,7 +120,7 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should allow apiRef to setFilterModel', () => {
-    render(<TestCase model={model} />);
+    render(<TestCase filterModel={model} />);
     apiRef.current.setFilterModel({
       items: [
         {
@@ -137,13 +148,12 @@ describe('<XGrid /> - Filter', () => {
         },
       ],
     };
-    render(<TestCase model={newModel} />);
-
+    render(<TestCase filterModel={newModel} />);
     expect(getColumnValues()).to.deep.equal(['Puma']);
   });
 
   it('should allow multiple filter via apiRef', () => {
-    render(<TestCase model={model} />);
+    render(<TestCase filterModel={model} />);
     const newModel = {
       items: [
         {
@@ -178,7 +188,40 @@ describe('<XGrid /> - Filter', () => {
       ],
       linkOperator: LinkOperator.Or,
     };
-    render(<TestCase model={newModel} />);
+    render(<TestCase filterModel={newModel} />);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
+  });
+
+  it('should only select visible rows', () => {
+    const newModel: FilterModel = {
+      items: [
+        {
+          columnField: 'brand',
+          value: 'a',
+          operatorValue: 'startsWith',
+        },
+      ],
+      linkOperator: LinkOperator.Or,
+    };
+    render(<TestCase checkboxSelection filterModel={newModel} />);
+    const checkAllCell = getColumnHeaderCell(1).querySelector('input');
+    fireEvent.click(checkAllCell);
+    expect(apiRef.current.getState().selection).to.deep.equal({ 1: true });
+  });
+
+  it('should allow to clear filters by passing an empty filter model', () => {
+    const newModel: FilterModel = {
+      items: [
+        {
+          columnField: 'brand',
+          value: 'a',
+          operatorValue: 'startsWith',
+        },
+      ],
+    };
+    const { setProps } = render(<TestCase filterModel={newModel} />);
+    expect(getColumnValues()).to.deep.equal(['Adidas']);
+    setProps({ filterModel: { items: [] } });
+    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 });
