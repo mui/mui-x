@@ -42,7 +42,7 @@ export function Pagination() {
 
   const onPageChange = React.useCallback(
     (event: any, page: number) => {
-      apiRef!.current!.setPage(page + 1);
+      apiRef!.current!.setPage(page);
     },
     [apiRef],
   );
@@ -67,7 +67,7 @@ export function Pagination() {
       classes={classes}
       component="div"
       count={paginationState.rowCount}
-      page={paginationState.page - 1}
+      page={paginationState.page}
       rowsPerPageOptions={
         options.rowsPerPageOptions &&
         options.rowsPerPageOptions.indexOf(paginationState.pageSize) > -1

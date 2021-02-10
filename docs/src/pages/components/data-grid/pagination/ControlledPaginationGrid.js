@@ -9,7 +9,7 @@ export default function ControlledPaginationGrid() {
     maxColumns: 6,
   });
 
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = React.useState(0);
 
   return (
     <div style={{ height: 400, width: '100%' }}>

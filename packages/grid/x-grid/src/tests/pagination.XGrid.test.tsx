@@ -53,7 +53,7 @@ describe('<XGrid /> - Pagination', () => {
     let cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
     expect(cell).to.have.text('Nike');
     act(() => {
-      apiRef.current.setPage(2);
+      apiRef.current.setPage(1);
     });
 
     cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;

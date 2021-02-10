@@ -83,7 +83,7 @@ export const usePagination = (apiRef: ApiRef): void => {
   }, [apiRef, dispatch, options.paginationMode]);
 
   React.useEffect(() => {
-    setPage(options.page != null ? options.page : 1);
+    setPage(options.page != null ? options.page : 0);
   }, [apiRef, options.page, setPage]);
 
   React.useEffect(() => {

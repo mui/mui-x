@@ -5,7 +5,7 @@ import { useDemoData, GridData } from '@material-ui/x-grid-data-generator';
 function loadServerRows(page: number, data: GridData): Promise<any> {
   return new Promise<any>((resolve) => {
     setTimeout(() => {
-      resolve(data.rows.slice((page - 1) * 5, page * 5));
+      resolve(data.rows.slice(page * 5, (page + 1) * 5));
     }, Math.random() * 500 + 100); // simulate network latency
   });
 }
@@ -16,7 +16,7 @@ export default function ServerPaginationGrid() {
     rowLength: 100,
     maxColumns: 6,
   });
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = React.useState(0);
   const [rows, setRows] = React.useState<RowsProp>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
 

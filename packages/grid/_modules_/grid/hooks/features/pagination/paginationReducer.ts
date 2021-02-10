@@ -93,7 +93,7 @@ export const setRowCountStateUpdate = (state, payload): PaginationState => {
 };
 
 export const INITIAL_PAGINATION_STATE: PaginationState = {
-  page: 1,
+  page: 0,
   pageCount: 0,
   pageSize: 0,
   paginationMode: 'client',

@@ -86,7 +86,7 @@ export const useKeyboard = (gridRootRef: React.RefObject<HTMLDivElement>, apiRef
       const currentColIndex = Number(cellEl.getAttribute('aria-colindex'));
       const currentRowIndex = Number(cellEl.getAttribute('data-rowindex'));
       const rowCount = options.pagination
-        ? paginationState.pageSize * paginationState.page
+        ? paginationState.pageSize * (paginationState.page + 1)
         : totalRowCount;
 
       let nextCellIndexes: CellIndexCoordinates;
