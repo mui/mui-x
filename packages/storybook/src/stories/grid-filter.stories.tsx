@@ -417,21 +417,28 @@ function RatingInputValue(props: FilterInputValueProps) {
 
 export function CustomFilterOperator() {
   const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
+  const [columns, setColumns] = React.useState(data.columns);
 
+  React.useEffect(()=> {
   if (data.columns.length > 0) {
-    const ratingColumn = data.columns.find((col) => col.field === 'rating');
+    let newColumns = [...data.columns];
+    const ratingColumn = { ...newColumns.find((col) => col.field === 'rating') };
+
     const ratingOperators = getNumericColumnOperators();
     ratingColumn!.filterOperators = ratingOperators.map((operator) => {
       operator.InputComponent = RatingInputValue;
       return operator;
     });
+
+    setColumns(newColumns);
   }
+  }, [data.columns]);
 
   return (
     <div className="grid-container">
       <XGrid
         rows={data.rows}
-        columns={data.columns}
+        columns={columns}
         filterModel={{
           items: [{ columnField: 'rating', value: '3.5', operatorValue: '>=' }],
         }}
