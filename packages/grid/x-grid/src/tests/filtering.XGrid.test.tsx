@@ -253,8 +253,9 @@ describe('<XGrid /> - Filter', () => {
         });
       }
 
+      const columns = [{ field: 'commodity', width: 150 }];
+
       function AddServerFilterGrid() {
-        const [columns] = React.useState([{ field: 'commodity', width: 150 }]);
         const [rows, setRows] = React.useState<RowModel[]>([]);
         const [filterValue, setFilterValue] = React.useState();
         const [loading, setLoading] = React.useState(false);
