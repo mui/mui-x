@@ -1,3 +1,6 @@
+import * as React from 'react';
+import { expect } from 'chai';
+import { useFakeTimers } from 'sinon';
 import {
   ApiRef,
   FilterModel,
@@ -8,9 +11,6 @@ import {
   useApiRef,
   XGrid,
 } from '@material-ui/x-grid';
-import { expect } from 'chai';
-import * as React from 'react';
-import { useFakeTimers } from 'sinon';
 import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
@@ -239,17 +239,15 @@ describe('<XGrid /> - Filter', () => {
         ];
 
         return new Promise<RowModel[]>((resolve) => {
-          setTimeout(() => {
-            if (!commodityFilterValue) {
-              resolve(serverRows);
-              return;
-            }
-            resolve(
-              serverRows.filter(
-                (row) => row.commodity.toLowerCase().indexOf(commodityFilterValue) > -1,
-              ),
-            );
-          }, Math.random() * 500 + 100); // simulate network latency
+          if (!commodityFilterValue) {
+            resolve(serverRows);
+            return;
+          }
+          resolve(
+            serverRows.filter(
+              (row) => row.commodity.toLowerCase().indexOf(commodityFilterValue) > -1,
+            ),
+          );
         });
       }
 
@@ -299,12 +297,12 @@ describe('<XGrid /> - Filter', () => {
         );
       }
 
-      render(<AddServerFilterGrid />);
-      const addButton = document.querySelector(`.MuiAddFilterButton`);
+      const { getByText } = render(<AddServerFilterGrid />);
+      const addButton = getByText('Add Filter');
       clock.tick(100);
       fireEvent.click(addButton);
       const filterForms = document.querySelectorAll(`.MuiDataGridFilterForm-root`);
-      expect(filterForms.length).to.eq(2);
+      expect(filterForms).to.have.length(2);
     });
   });
 });

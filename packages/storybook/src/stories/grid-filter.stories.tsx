@@ -572,7 +572,7 @@ export function DemoCustomRatingFilterOperator() {
   React.useEffect(() => {
     if (data.columns.length > 0) {
       let newColumns = [...data.columns];
-      const ratingColumn = {...newColumns.find((col) => col.field === 'rating')};
+      const ratingColumn = { ...newColumns.find((col) => col.field === 'rating') };
 
       const ratingOperators = getNumericColumnOperators();
       ratingColumn!.filterOperators = ratingOperators.map((operator) => {
@@ -583,7 +583,7 @@ export function DemoCustomRatingFilterOperator() {
       // Just hidding some columns for demo clarity
       newColumns = newColumns
         .filter((col) => col.field === 'phone' || col.field === 'email' || col.field === 'username')
-        .map((col) => ({...col, hide : true}));
+        .map((col) => ({ ...col, hide: true }));
       setColumns(newColumns);
     }
   }, [data.columns]);

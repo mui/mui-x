@@ -70,12 +70,7 @@ export function FilterPanel() {
       </PanelContent>
       {!disableMultipleColumnsFiltering && (
         <PanelFooter>
-          <Button
-            onClick={addNewFilter}
-            startIcon={<AddIcon />}
-            color="primary"
-            className="MuiAddFilterButton"
-          >
+          <Button onClick={addNewFilter} startIcon={<AddIcon />} color="primary">
             {apiRef!.current.getLocaleText('filterPanelAddFilter')}
           </Button>
         </PanelFooter>
