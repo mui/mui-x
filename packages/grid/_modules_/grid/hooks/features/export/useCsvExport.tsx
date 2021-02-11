@@ -5,7 +5,7 @@ import { useGridSelector } from '../core/useGridSelector';
 import { visibleColumnsSelector } from '../columns';
 import { visibleSortedRowsSelector } from '../filter';
 import { selectionStateSelector } from '../selection';
-import { CsvExportApi } from '../../../models';
+import { Columns, CsvExportApi, RowId, RowModel } from '../../../models';
 import { useLogger } from '../../utils/useLogger';
 import { exportAs } from '../../../utils';
 
@@ -15,23 +15,48 @@ export const useCsvExport = (apiRef: ApiRef): void => {
   const visibleSortedRows = useGridSelector(apiRef, visibleSortedRowsSelector);
   const selection = useGridSelector(apiRef, selectionStateSelector);
 
+  const buildRow = (row: RowModel, columns: Columns) => {
+    const mappedRow: RowModel[] = [];
+    columns.forEach((column) => column.field !== '__check__' && mappedRow.push(row[column.field]));
+    return mappedRow;
+  };
+
+  const buildCSV = React.useCallback(
+    (columns: Columns, rows: RowModel[], selectedRows: Record<RowId, boolean>) => {
+      const selectedRowsIds = Object.keys(selectedRows);
+
+      if (selectedRowsIds.length) {
+        rows = rows.filter((row) => selectedRowsIds.includes(`${row.id}`));
+      }
+
+      const CSVHead = `${columns
+        .filter((column) => column.field !== '__check__')
+        .map((column) => column.headerName)
+        .toString()}\r\n`;
+      const CSVBody = rows
+        .reduce((soFar, row) => `${soFar}${buildRow(row, columns)}\r\n`, '')
+        .trim();
+      const csv = `${CSVHead}${CSVBody}`.trim();
+
+      return csv;
+    },
+    [],
+  );
+
   const exportDataAsCsv = React.useCallback((): void => {
     logger.debug(`Export data as CSV`);
-    // const csv = buildCSV(visibleColumns, visibleSortedRows, selection);
-    // const blob = new Blob([csv], { type: 'text/csv' });
+    const csv = buildCSV(visibleColumns, visibleSortedRows, selection);
+    const blob = new Blob([csv], { type: 'text/csv' });
 
-    // exportAs(blob, 'csv', 'data');
-    console.log(visibleColumns);
-    console.log(visibleSortedRows);
-    console.log(selection);
-  }, [logger, visibleColumns, visibleSortedRows, selection]);
+    exportAs(blob, 'csv', 'data');
+  }, [logger, visibleColumns, visibleSortedRows, selection, buildCSV]);
 
   const getDataAsCsv = React.useCallback(() => {
     logger.debug(`Get data as CSV`);
-    // const csv = buildCSV(visibleColumns, visibleSortedRows, selection);
+    const csv = buildCSV(visibleColumns, visibleSortedRows, selection);
 
-    // return csv;
-  }, [logger, visibleColumns, visibleSortedRows, selection]);
+    return csv;
+  }, [logger, visibleColumns, visibleSortedRows, selection, buildCSV]);
 
   const csvExportApi: CsvExportApi = {
     exportDataAsCsv,

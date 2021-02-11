@@ -1,5 +1,4 @@
 export const exportAs = (blob: Blob, extension: string, filename: string): void => {
-  console.log(blob)
   /* taken from react-csv */
   if (navigator && navigator.msSaveOrOpenBlob) {
     navigator.msSaveOrOpenBlob(blob, filename);
@@ -11,7 +10,8 @@ export const exportAs = (blob: Blob, extension: string, filename: string): void 
     }
 
     const URL = window.URL || window.webkitURL;
-    const downloadURI = typeof URL.createObjectURL === 'undefined' ? dataURI : URL.createObjectURL(blob);
+    const downloadURI =
+      typeof URL.createObjectURL === 'undefined' ? dataURI : URL.createObjectURL(blob);
 
     const link = document.createElement('a');
     link.setAttribute('href', downloadURI);
