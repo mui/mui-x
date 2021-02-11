@@ -475,7 +475,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            showToolbar
             components={{
               Toolbar: GridToolbar,
             }}

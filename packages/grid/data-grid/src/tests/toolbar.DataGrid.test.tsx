@@ -57,7 +57,6 @@ describe('<DataGrid /> - Toolbar', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            showToolbar
             components={{
               Toolbar: GridToolbar,
             }}
@@ -81,7 +80,6 @@ describe('<DataGrid /> - Toolbar', () => {
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
-            showToolbar
             components={{
               Toolbar: GridToolbar,
             }}
@@ -137,7 +135,6 @@ describe('<DataGrid /> - Toolbar', () => {
             components={{
               Toolbar: GridToolbar,
             }}
-            showToolbar
           />
         </div>,
       );
@@ -158,7 +155,6 @@ describe('<DataGrid /> - Toolbar', () => {
             components={{
               Toolbar: GridToolbar,
             }}
-            showToolbar
           />
         </div>,
       );
@@ -191,7 +187,6 @@ describe('<DataGrid /> - Toolbar', () => {
             components={{
               Toolbar: GridToolbar,
             }}
-            showToolbar
           />
         </div>,
       );

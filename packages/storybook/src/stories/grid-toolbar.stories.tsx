@@ -21,7 +21,6 @@ export const DensitySelectorCompact = () => {
       <XGrid
         rows={data.rows}
         columns={data.columns}
-        showToolbar
         density="compact"
         components={{
           Toolbar: GridToolbar,
@@ -38,7 +37,6 @@ export const DensitySelectorComfortable = () => {
       <XGrid
         columns={data.columns}
         rows={data.rows}
-        showToolbar
         density="comfortable"
         components={{
           Toolbar: GridToolbar,

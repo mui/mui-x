@@ -13,7 +13,6 @@ export default function CustomLocaleTextGrid() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        showToolbar
         localeText={{
           toolbarDensity: 'Size',
           toolbarDensityLabel: 'Size',

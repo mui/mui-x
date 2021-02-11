@@ -18,7 +18,6 @@ export default function BasicToolbarFilteringGrid() {
       <DataGrid
         {...data}
         filterModel={riceFilterModel}
-        showToolbar
         components={{
           Toolbar: GridToolbar,
         }}

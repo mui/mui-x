@@ -67,7 +67,6 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">selectionModel</span> | <span class="prop-type">SelectionModel</span> |   | Set the selection model of the grid. |
 | <span class="prop-name">showCellRightBorder</span> | <span class="prop-type">boolean</span> | false | If `true`, the right border of the cells are displayed. |
 | <span class="prop-name">showColumnRightBorder</span> | <span class="prop-type">boolean</span> | false | If `true`, the right border of the column headers are displayed. |
-| <span class="prop-name">showToolbar</span> | <span class="prop-type">boolean</span> | false | If `true`, the default toolbar component is shown. |
 | <span class="prop-name">sortingMode</span> | <span class="prop-type">FeatureMode</span> | 'client' |  Sorting can be processed on the server or client-side. Set it to 'client' if you would like to handle sorting on the client-side. Set it to 'server' if you would like to handle sorting on the server-side. |
 | <span class="prop-name">sortingOrder</span> | <span class="prop-type">SortDirection[]</span> | ['asc', 'desc', null] | The order of the sorting sequence. |
 | <span class="prop-name">sortModel</span> | <span class="prop-type">SortModel</span> |   | Set the sort model of the grid. |

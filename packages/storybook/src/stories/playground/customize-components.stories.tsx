@@ -406,7 +406,6 @@ export function DynamicIconUpdate() {
             DensityStandardIcon: icon,
             Toolbar: GridToolbar,
           }}
-          showToolbar
         />
       </div>
     </React.Fragment>
@@ -427,7 +426,6 @@ function CustomColumnsPanel(props: { bg?: string } & BaseComponentProps) {
 }
 export const CustomFilterColumnsPanels = Template.bind({});
 CustomFilterColumnsPanels.args = {
-  showToolbar: true,
   components: {
     FilterPanel: CustomFilterPanel,
     ColumnsPanel: CustomColumnsPanel,
@@ -447,7 +445,6 @@ function CustomPanelComponent(props: BaseComponentProps & PanelProps) {
 }
 export const CustomPanel = Template.bind({});
 CustomPanel.args = {
-  showToolbar: true,
   components: {
     Panel: CustomPanelComponent,
     Toolbar: GridToolbar,
@@ -464,7 +461,6 @@ function FooterWithPanel() {
 }
 export const CustomPanelInFooter = Template.bind({});
 CustomPanelInFooter.args = {
-  showToolbar: true,
   components: {
     Panel: CustomPanelComponent,
     Footer: FooterWithPanel,

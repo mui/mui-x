@@ -185,11 +185,6 @@ export interface GridOptions {
    */
   hideFooterPagination?: boolean;
   /**
-   * If `true`, the toolbar component is visible.
-   * @default false
-   */
-  showToolbar?: boolean;
-  /**
    * If `true`, the grid get a first column with a checkbox that allows to select rows.
    * @default false
    */
@@ -315,6 +310,5 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   sortingOrder: ['asc', 'desc', null],
   columnTypes: getDefaultColumnTypes(),
   density: DensityTypes.Standard,
-  showToolbar: false,
   localeText: DEFAULT_LOCALE_TEXT,
 };

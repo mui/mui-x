@@ -213,9 +213,11 @@ You can change the density of the rows and the column header.
 
 ### Density selector
 
-To enable the density selector you need to add the `showToolbar` prop to the data grid. The user can change the density of the data grid by using the density selector from the toolbar.
+To enable the density selector you need to compose a toolbar containing the `DensitySelector` component, and apply it using the `Toolbar` key in the grid `components` prop.
 
-{{"demo": "pages/components/data-grid/rendering/VisibleToolbarGrid.js", "bg": "inline"}}
+The user can change the density of the data grid by using the density selector from the toolbar.
+
+{{"demo": "pages/components/data-grid/rendering/DensitySelectorGrid.js", "bg": "inline"}}
 
 To hide the density selector add the `disableDensitySelector` prop to the data grid.
 
@@ -261,8 +263,23 @@ The prop accepts an object of type [GridSlotsComponent](/api/data-grid/#slots) .
 
 ### Toolbar
 
-You can provide your own toolbar by passing it to the `Toolbar` component.
+To enable the toolbar you need to add the `Toolbar: GridToolbar` to the grid `components` prop.
 This demo showcases how this can be achieve.
+
+{{"demo": "pages/components/data-grid/rendering/ToolbarGrid.js", "bg": "inline"}}
+
+Alternatively, you can compose your own toolbar.
+
+```jsx
+function CustomToolbar() {
+  return (
+    <GridToolbarContainer>
+      <ColumnsToolbarButton />
+      <FilterToolbarButton />
+    </GridToolbarContainer>
+  );
+}
+```
 
 {{"demo": "pages/components/data-grid/rendering/CustomToolbarGrid.js", "bg": "inline"}}
 
