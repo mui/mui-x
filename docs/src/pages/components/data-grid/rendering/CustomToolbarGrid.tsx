@@ -1,9 +1,19 @@
 import * as React from 'react';
-import { DataGrid } from '@material-ui/data-grid';
+import {
+  DataGrid,
+  GridToolbarContainer,
+  ColumnsToolbarButton,
+  FilterToolbarButton,
+} from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
 function CustomToolbar() {
-  return <div>This is my custom Toolbar!</div>;
+  return (
+    <GridToolbarContainer>
+      <ColumnsToolbarButton />
+      <FilterToolbarButton />
+    </GridToolbarContainer>
+  );
 }
 
 export default function CustomToolbarGrid() {
@@ -16,10 +26,10 @@ export default function CustomToolbarGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
+        {...data}
         components={{
           Toolbar: CustomToolbar,
         }}
-        {...data}
       />
     </div>
   );

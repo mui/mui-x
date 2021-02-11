@@ -35,7 +35,7 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
     [apiRef, preferencePanel],
   );
 
-  if (!counter || options.disableColumnFilter || options.showToolbar) {
+  if (!counter || options.disableColumnFilter) {
     return null;
   }
 

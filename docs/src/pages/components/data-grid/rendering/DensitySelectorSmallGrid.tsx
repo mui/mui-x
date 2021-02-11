@@ -1,6 +1,18 @@
 import * as React from 'react';
-import { DataGrid, GridToolbar } from '@material-ui/data-grid';
+import {
+  DataGrid,
+  GridToolbarContainer,
+  DensitySelector,
+} from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
+
+function CustomToolbar() {
+  return (
+    <GridToolbarContainer>
+      <DensitySelector />
+    </GridToolbarContainer>
+  );
+}
 
 export default function DensitySelectorSmallGrid() {
   const { data } = useDemoData({
@@ -13,10 +25,9 @@ export default function DensitySelectorSmallGrid() {
     <div style={{ height: 300, width: '100%' }}>
       <DataGrid
         {...data}
-        showToolbar
         density="compact"
         components={{
-          Toolbar: GridToolbar,
+          Toolbar: CustomToolbar,
         }}
       />
     </div>

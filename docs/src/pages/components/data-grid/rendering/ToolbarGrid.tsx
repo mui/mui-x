@@ -2,18 +2,17 @@ import * as React from 'react';
 import { DataGrid, GridToolbar } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
-export default function VisibleToolbarGrid() {
+export default function ToolbarGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
-    rowLength: 4,
+    rowLength: 100,
     maxColumns: 6,
   });
 
   return (
-    <div style={{ height: 300, width: '100%' }}>
+    <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         {...data}
-        showToolbar
         components={{
           Toolbar: GridToolbar,
         }}

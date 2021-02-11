@@ -127,7 +127,7 @@ By default, each column header displays a column menu. The column menu allows ac
 
 ## Column selector
 
-To enable the column selector in the toolbar you need to add the `showToolbar` prop to the data grid.
+To enable the the toolbar you need to add `Toolbar: GridToolbar` to the grid `components` prop.
 
 In addition, the column selector can be shown by using the "Show columns" menu item in the column menu.
 
