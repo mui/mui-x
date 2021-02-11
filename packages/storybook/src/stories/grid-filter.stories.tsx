@@ -34,10 +34,6 @@ export default {
   },
 };
 
-// server filters
-// with new rows from apiRef
-// with new columns (partial and complete)
-
 export function CommodityWithOpenFilters() {
   const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 500 });
 
