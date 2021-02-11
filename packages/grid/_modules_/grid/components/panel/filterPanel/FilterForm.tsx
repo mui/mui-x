@@ -202,9 +202,10 @@ export function FilterForm(props: FilterFormProps) {
         >
           {currentColumn?.filterOperators?.map((operator) => (
             <option key={operator.value} value={operator.value}>
-              {apiRef!.current.getLocaleText(
-                `filterOperator${capitalize(operator.value)}` as TranslationKeys,
-              )}
+              {operator.label ||
+                apiRef!.current.getLocaleText(
+                  `filterOperator${capitalize(operator.value)}` as TranslationKeys,
+                )}
             </option>
           ))}
         </Select>
