@@ -258,7 +258,6 @@ describe('<XGrid /> - Filter', () => {
       function AddServerFilterGrid() {
         const [rows, setRows] = React.useState<RowModel[]>([]);
         const [filterValue, setFilterValue] = React.useState();
-        const [loading, setLoading] = React.useState(false);
 
         const onFilterChange = React.useCallback((params) => {
           setFilterValue(params.filterModel.items[0].value);
@@ -268,7 +267,6 @@ describe('<XGrid /> - Filter', () => {
           let active = true;
 
           (async () => {
-            setLoading(true);
             const newRows = await loadServerRows(filterValue);
 
             if (!active) {
@@ -276,7 +274,6 @@ describe('<XGrid /> - Filter', () => {
             }
 
             setRows(newRows);
-            setLoading(false);
           })();
 
           return () => {
@@ -291,7 +288,6 @@ describe('<XGrid /> - Filter', () => {
               columns={columns}
               filterMode="server"
               onFilterModelChange={onFilterChange}
-              loading={loading}
               state={{
                 preferencePanel: { open: true, openedPanelValue: PreferencePanelsValue.filters },
               }}
