@@ -18,15 +18,16 @@ import { localStorageAvailable } from '../utils/utils';
 // Developers (users) are discouraged to enable the experimental feature by setting the EXPERIMENTAL_ENABLED env.
 // Instead, prefer exposing experimental APIs, for instance, a prop or a new `unstable_` module.
 
-let experimentalEnabled;
+let experimentalEnabled = false;
 
 if (
+  typeof process !== 'undefined' &&
   process.env.EXPERIMENTAL_ENABLED !== undefined &&
   localStorageAvailable() &&
   window.localStorage.getItem('EXPERIMENTAL_ENABLED')
 ) {
   experimentalEnabled = window.localStorage.getItem('EXPERIMENTAL_ENABLED') === 'true';
-} else {
+} else if (typeof process !== 'undefined') {
   experimentalEnabled = process.env.EXPERIMENTAL_ENABLED === 'true';
 }
 
