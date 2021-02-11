@@ -54,7 +54,6 @@ export const CsvExport = () => {
         columns={data.columns}
         rows={data.rows}
         checkboxSelection
-        showToolbar
         components={{
           Toolbar: GridToolbar,
         }}
