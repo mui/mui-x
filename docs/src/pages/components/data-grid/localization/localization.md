@@ -42,6 +42,9 @@ const theme = createMuiTheme(
 </ThemeProvider>;
 ```
 
+Note that `createMuiTheme` accepts any number of arguments.
+If you are already using the translations of the core components, you can add `bgBG` as a new argument.
+The same import works with `XGrid` as it's an extension of `DataGrid`.
 ### Supported locales
 
 | Locale    | BCP 47 language tag | Import name |
