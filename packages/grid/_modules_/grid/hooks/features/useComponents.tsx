@@ -38,6 +38,9 @@ export const useComponents = (
       DensityStandardIcon:
         (componentSlotsProp && componentSlotsProp.DensityStandardIcon) ||
         DEFAULT_SLOTS_COMPONENTS.DensityStandardIcon,
+      ExportIcon:
+        (componentSlotsProp && componentSlotsProp.ExportIcon) ||
+        DEFAULT_SLOTS_COMPONENTS.ExportIcon,
       OpenFilterButtonIcon:
         (componentSlotsProp && componentSlotsProp.OpenFilterButtonIcon) ||
         DEFAULT_SLOTS_COMPONENTS.OpenFilterButtonIcon,

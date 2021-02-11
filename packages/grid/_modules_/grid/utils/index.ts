@@ -7,3 +7,4 @@ export * from './mergeUtils';
 export * from './paramsUtils';
 export * from './getLocalization';
 export * from './material-ui-utils';
+export * from './exportAs';

@@ -65,7 +65,7 @@ export function DensitySelector() {
   };
 
   // Disable the button if the corresponding is disabled
-  if (options.disableColumnFilter) {
+  if (options.disableDensitySelector) {
     return null;
   }
 

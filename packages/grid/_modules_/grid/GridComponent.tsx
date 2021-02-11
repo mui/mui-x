@@ -45,6 +45,7 @@ import { RootContainerRef } from './models/rootContainerRef';
 import { ApiContext } from './components/api-context';
 import { useFilter } from './hooks/features/filter/useFilter';
 import { useLocaleText } from './hooks/features/localeText/useLocaleText';
+import { useCsvExport } from './hooks/features/export';
 
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {
@@ -85,6 +86,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
     useColumnReorder(apiRef);
     useColumnResize(columnsHeaderRef, apiRef);
+    useCsvExport(apiRef);
     usePagination(apiRef);
 
     const components = useComponents(props.components, props.componentsProps, apiRef);

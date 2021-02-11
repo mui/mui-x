@@ -7,6 +7,7 @@ import { GridToolbarContainer } from '../containers/GridToolbarContainer';
 import { ColumnsToolbarButton } from './ColumnsToolbarButton';
 import { DensitySelector } from './DensitySelector';
 import { FilterToolbarButton } from './FilterToolbarButton';
+import { ExportSelector } from './ExportSelector';
 
 export function GridToolbar() {
   const apiRef = useContext(ApiContext);
@@ -14,7 +15,10 @@ export function GridToolbar() {
 
   if (
     !options.showToolbar ||
-    (options.disableColumnFilter && options.disableColumnSelector && options.disableDensitySelector)
+    (options.disableColumnFilter &&
+      options.disableColumnSelector &&
+      options.disableDensitySelector &&
+      options.disableCsvExport)
   ) {
     return null;
   }
@@ -24,6 +28,7 @@ export function GridToolbar() {
       <ColumnsToolbarButton />
       <FilterToolbarButton />
       <DensitySelector />
+      <ExportSelector />
     </GridToolbarContainer>
   );
 }

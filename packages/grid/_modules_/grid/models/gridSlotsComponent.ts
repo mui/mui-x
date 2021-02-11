@@ -14,6 +14,7 @@ import {
   TripleDotsVerticalIcon,
   ViewHeadlineIcon,
   ViewStreamIcon,
+  DownloadIcon,
 } from '../components/icons/index';
 import { LoadingOverlay } from '../components/LoadingOverlay';
 import { GridColumnMenu, GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenu';
@@ -95,6 +96,7 @@ export const DEFAULT_SLOTS_ICONS: GridIconSlotsComponent = {
   DensityCompactIcon: ViewHeadlineIcon,
   DensityStandardIcon: TableRowsIcon,
   DensityComfortableIcon: ViewStreamIcon,
+  ExportIcon: DownloadIcon,
 };
 
 export const DEFAULT_SLOTS_COMPONENTS: ApiRefComponentsProperty = {
