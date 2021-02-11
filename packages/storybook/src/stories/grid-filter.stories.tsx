@@ -567,10 +567,12 @@ const filterModel = {
 
 export function DemoCustomRatingFilterOperator() {
   const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
+  const [columns, setColumns] = React.useState(data.columns);
 
   React.useEffect(() => {
     if (data.columns.length > 0) {
-      const ratingColumn = data.columns.find((col) => col.field === 'rating');
+      let newColumns = [...data.columns];
+      const ratingColumn = {...newColumns.find((col) => col.field === 'rating')};
 
       const ratingOperators = getNumericColumnOperators();
       ratingColumn!.filterOperators = ratingOperators.map((operator) => {
@@ -579,17 +581,16 @@ export function DemoCustomRatingFilterOperator() {
       });
 
       // Just hidding some columns for demo clarity
-      data.columns
+      newColumns = newColumns
         .filter((col) => col.field === 'phone' || col.field === 'email' || col.field === 'username')
-        .forEach((col) => {
-          col.hide = true;
-        });
+        .map((col) => ({...col, hide : true}));
+      setColumns(newColumns);
     }
   }, [data.columns]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid rows={data.rows} columns={data.columns} filterModel={filterModel} />
+      <DataGrid rows={data.rows} columns={columns} filterModel={filterModel} />
     </div>
   );
 }
