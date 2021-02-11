@@ -12,6 +12,8 @@ import {
   XGrid,
 } from '@material-ui/x-grid';
 import {
+  // @ts-expect-error need to migrate helpers to TypeScript
+  screen,
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
   fireEvent,
@@ -297,8 +299,8 @@ describe('<XGrid /> - Filter', () => {
         );
       }
 
-      const { getByText } = render(<AddServerFilterGrid />);
-      const addButton = getByText('Add Filter');
+      render(<AddServerFilterGrid />);
+      const addButton = screen.getByRole('button', { name: /Add Filter/i });
       clock.tick(100);
       fireEvent.click(addButton);
       const filterForms = document.querySelectorAll(`.MuiDataGridFilterForm-root`);
