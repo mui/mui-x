@@ -58,7 +58,10 @@ export function ExportSelector() {
         startIcon={<ExportIcon />}
         onClick={handleExportSelectorOpen}
         aria-label={apiRef!.current.getLocaleText('toolbarExportLabel')}
-        aria-haspopup="true"
+        aria-expanded="true"
+        aria-haspopup="listbox"
+        aria-labelledby="MuiDataGrid-export-selector-menu"
+        id="MuiDataGrid-export-selector-button"
       >
         {apiRef!.current.getLocaleText('toolbarExport')}
       </Button>
@@ -68,7 +71,13 @@ export function ExportSelector() {
         onClickAway={handleExportSelectorClose}
         position="bottom-start"
       >
-        <MenuList id="menu-list-grow" onKeyDown={handleListKeyDown}>
+        <MenuList
+          id="MuiDataGrid-export-selector-menu"
+          role="listbox"
+          aria-labelledby="MuiDataGrid-export-selector-button"
+          onKeyDown={handleListKeyDown}
+          autoFocusItem={Boolean(anchorEl)}
+        >
           {renderExportOptions}
         </MenuList>
       </GridMenu>
