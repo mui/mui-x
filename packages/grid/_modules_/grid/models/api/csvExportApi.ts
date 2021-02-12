@@ -9,7 +9,7 @@ export interface CsvExportApi {
   exportDataAsCsv: () => void;
   /**
    * Get the grid data as CSV.
-   * @returns
+   * @returns string
    */
   getDataAsCsv: () => string;
 }
