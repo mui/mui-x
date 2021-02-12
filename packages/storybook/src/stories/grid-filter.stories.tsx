@@ -1,25 +1,25 @@
-import * as React from 'react';
+import Button from '@material-ui/core/Button';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import { makeStyles } from '@material-ui/core/styles';
 import { DataGrid } from '@material-ui/data-grid';
 import Rating from '@material-ui/lab/Rating';
-import Button from '@material-ui/core/Button';
 import {
   ColDef,
   ColTypeDef,
   FilterInputValueProps,
-  FilterModel,
   FilterItem,
+  FilterModel,
+  FilterModelParams,
+  getNumericColumnOperators,
   LinkOperator,
   PreferencePanelsValue,
   RowModel,
   useApiRef,
   XGrid,
-  getNumericColumnOperators,
-  FilterModelParams,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import * as React from 'react';
 import { randomInt } from '../data/random-generator';
 import { useData } from '../hooks/useData';
 
@@ -33,10 +33,6 @@ export default {
     },
   },
 };
-
-// server filters
-// with new rows from apiRef
-// with new columns (partial and complete)
 
 export function CommodityWithOpenFilters() {
   const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 500 });
@@ -421,21 +417,31 @@ function RatingInputValue(props: FilterInputValueProps) {
 
 export function CustomFilterOperator() {
   const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
+  const [columns, setColumns] = React.useState(data.columns);
 
-  if (data.columns.length > 0) {
-    const ratingColumn = data.columns.find((col) => col.field === 'rating');
-    const ratingOperators = getNumericColumnOperators();
-    ratingColumn!.filterOperators = ratingOperators.map((operator) => {
-      operator.InputComponent = RatingInputValue;
-      return operator;
-    });
-  }
+  React.useEffect(() => {
+    if (data.columns.length > 0) {
+      let newColumns: ColDef[] = [...data.columns];
+      const ratingColumn = { ...newColumns.find((col) => col.field === 'rating') };
+
+      const ratingOperators = getNumericColumnOperators();
+      ratingColumn!.filterOperators = ratingOperators.map((operator) => {
+        operator.InputComponent = RatingInputValue;
+        return operator;
+      });
+
+      newColumns = newColumns.map((col) =>
+        col.field === 'rating' ? ratingColumn : col,
+      ) as ColDef[];
+      setColumns(newColumns);
+    }
+  }, [data.columns]);
 
   return (
     <div className="grid-container">
       <XGrid
         rows={data.rows}
-        columns={data.columns}
+        columns={columns}
         filterModel={{
           items: [{ columnField: 'rating', value: '3.5', operatorValue: '>=' }],
         }}
@@ -470,17 +476,25 @@ const RatingOnlyOperators = [
 
 export function RatingOperator() {
   const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
+  const [columns, setColumns] = React.useState(data.columns);
 
-  if (data.columns.length > 0) {
-    const ratingColumn = data.columns.find((col) => col.field === 'rating');
-    ratingColumn!.filterOperators = RatingOnlyOperators;
-  }
+  React.useEffect(() => {
+    if (data.columns.length > 0) {
+      let newColumns: ColDef[] = [...data.columns];
+      const ratingColumn = { ...newColumns.find((col) => col.field === 'rating') };
+      ratingColumn!.filterOperators = RatingOnlyOperators;
 
+      newColumns = newColumns.map((col) =>
+        col.field === 'rating' ? ratingColumn : col,
+      ) as ColDef[];
+      setColumns(newColumns);
+    }
+  }, [data.columns]);
   return (
     <div className="grid-container">
       <XGrid
         rows={data.rows}
-        columns={data.columns}
+        columns={columns}
         filterModel={{
           items: [{ columnField: 'rating', value: '3.5', operatorValue: 'from' }],
         }}
@@ -560,7 +574,15 @@ export function NewColumnTypes() {
 
   return (
     <div className="grid-container">
-      <DataGrid rows={data.rows} columns={cols} columnTypes={{ price: priceColumnType }} />
+      <DataGrid
+        rows={data.rows}
+        columns={cols}
+        columnTypes={{ price: priceColumnType }}
+        filterModel={{
+          items: [{ id: 1, columnField: 'totalPrice', operatorValue: '>', value: '1000000' }],
+        }}
+        state={{ preferencePanel: { openedPanelValue: PreferencePanelsValue.filters, open: true } }}
+      />
     </div>
   );
 }
@@ -571,10 +593,12 @@ const filterModel = {
 
 export function DemoCustomRatingFilterOperator() {
   const { data } = useDemoData({ dataSet: 'Employee', rowLength: 100 });
+  const [columns, setColumns] = React.useState(data.columns);
 
   React.useEffect(() => {
     if (data.columns.length > 0) {
-      const ratingColumn = data.columns.find((col) => col.field === 'rating');
+      let newColumns = [...data.columns];
+      const ratingColumn = { ...newColumns.find((col) => col.field === 'rating') };
 
       const ratingOperators = getNumericColumnOperators();
       ratingColumn!.filterOperators = ratingOperators.map((operator) => {
@@ -582,18 +606,17 @@ export function DemoCustomRatingFilterOperator() {
         return operator;
       });
 
-      // Just hidding some columns for demo clarity
-      data.columns
-        .filter((col) => col.field === 'phone' || col.field === 'email' || col.field === 'username')
-        .forEach((col) => {
-          col.hide = true;
-        });
+      newColumns = newColumns.map((col) =>
+        col.field === 'rating' ? ratingColumn : col,
+      ) as ColDef[];
+
+      setColumns(newColumns);
     }
   }, [data.columns]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid rows={data.rows} columns={data.columns} filterModel={filterModel} />
+      <DataGrid rows={data.rows} columns={columns} filterModel={filterModel} />
     </div>
   );
 }
