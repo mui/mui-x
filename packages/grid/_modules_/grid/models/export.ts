@@ -7,6 +7,6 @@ export type ExportFormat = 'csv';
  * Export option interface
  */
 export interface ExportOption {
-  label: string;
+  label: React.ReactNode;
   format: ExportFormat;
 }

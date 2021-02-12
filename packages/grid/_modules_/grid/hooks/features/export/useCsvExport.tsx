@@ -42,24 +42,23 @@ export const useCsvExport = (apiRef: ApiRef): void => {
   const visibleSortedRows = useGridSelector(apiRef, visibleSortedRowsSelector);
   const selection = useGridSelector(apiRef, selectionStateSelector);
 
+  const getDataAsCsv = React.useCallback((): string => {
+    logger.debug(`Get data as CSV`);
+
+    return buildCSV(visibleColumns, visibleSortedRows, selection);
+  }, [logger, visibleColumns, visibleSortedRows, selection]);
+
   const exportDataAsCsv = React.useCallback((): void => {
     logger.debug(`Export data as CSV`);
-    const csv = buildCSV(visibleColumns, visibleSortedRows, selection);
+    const csv = getDataAsCsv();
     const blob = new Blob([csv], { type: 'text/csv' });
 
     exportAs(blob, 'csv', 'data');
-  }, [logger, visibleColumns, visibleSortedRows, selection]);
-
-  const getDataAsCsv = React.useCallback((): string => {
-    logger.debug(`Get data as CSV`);
-    const csv = buildCSV(visibleColumns, visibleSortedRows, selection);
-
-    return csv;
-  }, [logger, visibleColumns, visibleSortedRows, selection]);
+  }, [logger, getDataAsCsv]);
 
   const csvExportApi: CsvExportApi = {
-    exportDataAsCsv,
     getDataAsCsv,
+    exportDataAsCsv,
   };
 
   useApiMethod(apiRef, csvExportApi, 'CsvExportApi');

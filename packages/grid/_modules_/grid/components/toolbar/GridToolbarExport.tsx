@@ -8,7 +8,7 @@ import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridMenu } from '../menu/GridMenu';
 import { ExportOption } from '../../models';
 
-export function ExportSelector() {
+export function GridToolbarExport() {
   const apiRef = React.useContext(ApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
   const [anchorEl, setAnchorEl] = React.useState(null);

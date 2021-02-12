@@ -1,5 +1,5 @@
 export * from './ColumnsToolbarButton';
 export * from './DensitySelector';
-export * from './ExportSelector';
+export * from './GridToolbarExport';
 export * from './FilterToolbarButton';
 export * from './GridToolbar';
