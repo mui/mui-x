@@ -18,7 +18,7 @@ export interface LocalizationV5 {
 
 export type Localization = LocalizationV4 | LocalizationV5;
 
-export const getLocalization = (translations: LocaleText): Localization => {
+export const getLocalization = (translations: Partial<LocaleText>): Localization => {
   if (isMuiV5()) {
     return {
       components: {
