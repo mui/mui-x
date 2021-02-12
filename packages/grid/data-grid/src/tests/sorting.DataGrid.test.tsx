@@ -7,7 +7,7 @@ import {
   screen,
 } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, DataGridProps } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Sorting', () => {
@@ -212,5 +212,21 @@ describe('<DataGrid /> - Sorting', () => {
     };
     setProps(newData);
     expect(getColumnValues()).to.deep.equal(['France', 'UK', 'US']);
+  });
+
+  it('should clear the sorting col when passing an empty sortModel', () => {
+    const TestCase = (props: Partial<DataGridProps>) => {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} {...props} />
+        </div>
+      );
+    };
+
+    const { setProps } = render(<TestCase sortModel={[{ field: 'brand', sort: 'asc' }]} />);
+
+    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    setProps({ sortModel: [] });
+    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 });

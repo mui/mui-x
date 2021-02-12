@@ -294,7 +294,7 @@ export const useSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   React.useEffect(() => {
     const sortModel = options.sortModel || [];
     const oldSortModel = apiRef.current.state.sorting.sortModel;
-    if (sortModel.length > 0 && !isDeepEqual(sortModel, oldSortModel)) {
+    if (!isDeepEqual(sortModel, oldSortModel)) {
       // we use apiRef to avoid watching setSortModel as it will trigger an update on every state change
       apiRef.current.setSortModel(sortModel);
     }
