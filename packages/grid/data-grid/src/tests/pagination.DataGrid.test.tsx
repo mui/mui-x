@@ -7,7 +7,13 @@ import {
   screen,
 } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid, DataGridProps, DataGridProps, GridComponentProps, RowsProp } from '@material-ui/data-grid';
+import {
+  DataGrid,
+  DataGridProps,
+  DataGridProps,
+  GridComponentProps,
+  RowsProp,
+} from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 
@@ -110,9 +116,9 @@ describe('<DataGrid /> - Pagination', () => {
         );
       }
 
-      const {setProps} = render(<Test page={1} pageSize={1} onPageChange={onPageChange}  />);
+      const { setProps } = render(<Test page={1} pageSize={1} onPageChange={onPageChange} />);
       expect(onPageChange.callCount).to.equal(0);
-      setProps({page: 2})
+      setProps({ page: 2 });
       expect(onPageChange.callCount).to.equal(0);
     });
 
@@ -127,9 +133,11 @@ describe('<DataGrid /> - Pagination', () => {
         );
       }
 
-      const {setProps} = render(<Test onPageSizeChange={onPageSizeChange} pageSize={1} page={1} />);
+      const { setProps } = render(
+        <Test onPageSizeChange={onPageSizeChange} pageSize={1} page={1} />,
+      );
       expect(onPageSizeChange.callCount).to.equal(0);
-      setProps({pageSize: 2})
+      setProps({ pageSize: 2 });
       expect(onPageSizeChange.callCount).to.equal(0);
     });
 
@@ -186,5 +194,4 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues()).to.deep.equal(['Nike 1']);
     });
   });
-
 });

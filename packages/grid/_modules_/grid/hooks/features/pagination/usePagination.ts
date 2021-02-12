@@ -85,7 +85,7 @@ export const usePagination = (apiRef: ApiRef): void => {
   React.useEffect(() => {
     const newPage = options.page != null ? options.page : 0;
     dispatch(setPageActionCreator(newPage));
-  }, [ dispatch, options.page]);
+  }, [dispatch, options.page]);
 
   React.useEffect(() => {
     if (!options.autoPageSize && options.pageSize) {
