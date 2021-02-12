@@ -25,6 +25,11 @@ export interface LocaleText {
   toolbarFiltersTooltipShow: React.ReactNode;
   toolbarFiltersTooltipActive: (count: number) => React.ReactNode;
 
+  // Export selector toolbar button text
+  toolbarExport: React.ReactNode;
+  toolbarExportLabel: string;
+  toolbarExportCSV: string;
+
   // Columns panel text
   columnsPanelTextFieldLabel: string;
   columnsPanelTextFieldPlaceholder: string;

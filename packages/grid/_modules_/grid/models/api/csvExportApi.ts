@@ -11,5 +11,5 @@ export interface CsvExportApi {
    * Get the grid data as CSV.
    * @returns
    */
-  getDataAsCsv: () => any;
+  getDataAsCsv: () => string;
 }

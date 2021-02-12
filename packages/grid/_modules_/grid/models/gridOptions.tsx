@@ -83,7 +83,7 @@ export interface GridOptions {
    */
   disableDensitySelector?: boolean;
   /**
-   * If `true`, csv export option is disabled.
+   * If `true`, CSV export option is disabled.
    * @default false
    */
   disableCsvExport?: boolean;

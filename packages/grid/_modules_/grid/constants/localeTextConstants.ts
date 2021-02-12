@@ -24,6 +24,11 @@ export const DEFAULT_LOCALE_TEXT: LocaleText = {
   toolbarFiltersTooltipShow: 'Show Filters',
   toolbarFiltersTooltipActive: (count) => `${count} active filter(s)`,
 
+  // Export selector toolbar button text
+  toolbarExport: 'Export',
+  toolbarExportLabel: 'Export',
+  toolbarExportCSV: 'CSV',
+
   // Columns panel text
   columnsPanelTextFieldLabel: 'Find column',
   columnsPanelTextFieldPlaceholder: 'Column title',

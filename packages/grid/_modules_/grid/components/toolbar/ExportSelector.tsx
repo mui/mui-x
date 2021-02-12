@@ -17,7 +17,7 @@ export function ExportSelector() {
 
   const ExportOptions: Array<ExportOption> = [
     {
-      label: 'CSV',
+      label: apiRef!.current.getLocaleText('toolbarExportCSV'),
       format: 'csv',
     },
   ];
@@ -57,10 +57,10 @@ export function ExportSelector() {
         size="small"
         startIcon={<ExportIcon />}
         onClick={handleExportSelectorOpen}
-        aria-label=""
+        aria-label={apiRef!.current.getLocaleText('toolbarExportLabel')}
         aria-haspopup="true"
       >
-        {'EXPORT'}
+        {apiRef!.current.getLocaleText('toolbarExport')}
       </Button>
       <GridMenu
         open={Boolean(anchorEl)}
