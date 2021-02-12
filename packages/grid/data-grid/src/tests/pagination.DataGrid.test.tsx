@@ -7,11 +7,7 @@ import {
   screen,
 } from 'test/utils';
 import { expect } from 'chai';
-import {
-  DataGrid,
-  DataGridProps,
-  RowsProp,
-} from '@material-ui/data-grid';
+import { DataGrid, DataGridProps, RowsProp } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 
