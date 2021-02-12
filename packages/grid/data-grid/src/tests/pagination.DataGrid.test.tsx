@@ -7,7 +7,7 @@ import {
   screen,
 } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid, RowsProp } from '@material-ui/data-grid';
+import { DataGrid, DataGridProps, DataGridProps, GridComponentProps, RowsProp } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 
@@ -102,15 +102,15 @@ describe('<DataGrid /> - Pagination', () => {
     it('should not trigger onPageChange on initialisation or on page prop change', () => {
       const onPageChange = spy();
 
-      function Test({page, pageSize}) {
+      function Test(props: Partial<DataGridProps>) {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid {...baselineProps} onPageChange={onPageChange} pageSize={pageSize} page={page} />
+            <DataGrid {...baselineProps} {...props} />
           </div>
         );
       }
 
-      const {setProps} = render(<Test page={1} pageSize={1} />);
+      const {setProps} = render(<Test page={1} pageSize={1} onPageChange={onPageChange}  />);
       expect(onPageChange.callCount).to.equal(0);
       setProps({page: 2})
       expect(onPageChange.callCount).to.equal(0);
@@ -119,15 +119,15 @@ describe('<DataGrid /> - Pagination', () => {
     it('should not trigger onPageSizeChange on initialisation or on pageSize prop change', () => {
       const onPageSizeChange = spy();
 
-      function Test({page, pageSize}) {
+      function Test(props: Partial<DataGridProps>) {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid {...baselineProps} onPageSizeChange={onPageSizeChange} pageSize={pageSize} page={page} />
+            <DataGrid {...baselineProps} {...props} />
           </div>
         );
       }
 
-      const {setProps} = render(<Test page={1} pageSize={1} />);
+      const {setProps} = render(<Test onPageSizeChange={onPageSizeChange} pageSize={1} page={1} />);
       expect(onPageSizeChange.callCount).to.equal(0);
       setProps({pageSize: 2})
       expect(onPageSizeChange.callCount).to.equal(0);
