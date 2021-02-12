@@ -9,13 +9,17 @@ import { Columns, CsvExportApi, RowId, RowModel } from '../../../models';
 import { useLogger } from '../../utils/useLogger';
 import { exportAs } from '../../../utils';
 
-const buildRow = (row: RowModel, columns: Columns) => {
+const buildRow = (row: RowModel, columns: Columns): Array<RowModel> => {
   const mappedRow: RowModel[] = [];
   columns.forEach((column) => column.field !== '__check__' && mappedRow.push(row[column.field]));
   return mappedRow;
 };
 
-const buildCSV = (columns: Columns, rows: RowModel[], selectedRows: Record<RowId, boolean>) => {
+const buildCSV = (
+  columns: Columns,
+  rows: RowModel[],
+  selectedRows: Record<RowId, boolean>,
+): string => {
   const selectedRowsIds = Object.keys(selectedRows);
 
   if (selectedRowsIds.length) {
@@ -46,7 +50,7 @@ export const useCsvExport = (apiRef: ApiRef): void => {
     exportAs(blob, 'csv', 'data');
   }, [logger, visibleColumns, visibleSortedRows, selection]);
 
-  const getDataAsCsv = React.useCallback(() => {
+  const getDataAsCsv = React.useCallback((): string => {
     logger.debug(`Get data as CSV`);
     const csv = buildCSV(visibleColumns, visibleSortedRows, selection);
 
