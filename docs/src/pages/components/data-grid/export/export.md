@@ -11,9 +11,7 @@ components: DataGrid, XGrid
 
 You are able to export the displayed data to CSV with an API call, or using the grid UI.
 
-### Export selector
-
-To enable the export selector you need to compose a toolbar containing the `GridToolbarExport` component, and apply it using the `Toolbar` key in the grid `components` prop.
+To enable the CSV export you need to compose a toolbar containing the `GridToolbarExport` component, and apply it using the `Toolbar` key in the grid `components` prop.
 
 {{"demo": "pages/components/data-grid/export/ExportSelectorGrid.js", "bg": "inline"}}
 
