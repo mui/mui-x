@@ -28,7 +28,7 @@ export interface LocaleText {
   // Export selector toolbar button text
   toolbarExport: React.ReactNode;
   toolbarExportLabel: string;
-  toolbarExportCSV: string;
+  toolbarExportCSV: React.ReactNode;
 
   // Columns panel text
   columnsPanelTextFieldLabel: string;
