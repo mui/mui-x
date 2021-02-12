@@ -76,7 +76,7 @@ export function PaginationApiTests() {
   const [autosize, setAutoSize] = React.useState(false);
 
   React.useEffect(() => {
-    return apiRef.current.onPageChange(action('pageChange'));
+    return apiRef.current.onPageChange(action('apiRef: onPageChange'));
   }, [apiRef, data]);
 
   const backToFirstPage = () => {
@@ -126,6 +126,8 @@ export function PaginationApiTests() {
           pagination
           pageSize={myPageSize}
           autoPageSize={autosize}
+          onPageChange={action('prop: onPageChange')}
+          onPageSizeChange={action('prop: onPageSizeChange')}
           components={{
             Pagination: ({ state }) => (
               <Pagination

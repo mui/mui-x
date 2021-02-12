@@ -83,20 +83,21 @@ export const usePagination = (apiRef: ApiRef): void => {
   }, [apiRef, dispatch, options.paginationMode]);
 
   React.useEffect(() => {
-    setPage(options.page != null ? options.page : 0);
-  }, [apiRef, options.page, setPage]);
+    const newPage = options.page != null ? options.page : 0;
+    dispatch(setPageActionCreator(newPage));
+  }, [dispatch, options.page]);
 
   React.useEffect(() => {
     if (!options.autoPageSize && options.pageSize) {
-      setPageSize(options.pageSize);
+      dispatch(setPageSizeActionCreator(options.pageSize));
     }
-  }, [options.autoPageSize, options.pageSize, logger, setPageSize]);
+  }, [options.autoPageSize, options.pageSize, logger, dispatch]);
 
   React.useEffect(() => {
     if (options.autoPageSize && containerSizes && containerSizes?.viewportPageSize > 0) {
-      setPageSize(containerSizes?.viewportPageSize);
+      dispatch(setPageSizeActionCreator(containerSizes?.viewportPageSize));
     }
-  }, [containerSizes, options.autoPageSize, setPageSize]);
+  }, [containerSizes, dispatch, options.autoPageSize]);
 
   React.useEffect(() => {
     dispatch(setRowCountActionCreator({ totalRowCount: visibleRowCount }));
