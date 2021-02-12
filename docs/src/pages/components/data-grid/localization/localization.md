@@ -22,6 +22,30 @@ In the following example, the labels of the density selector are customized.
 The default locale of Material-UI is English (United States).
 You can find all the locales supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/locales) in the GitHub repository.
 
+You can use the theme to configure the locale text:
+
+```jsx
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { DataGrid, bgBG } from '@material-ui/data-grid';
+
+const theme = createMuiTheme(
+  {
+    palette: {
+      primary: { main: '#1976d2' },
+    },
+  },
+  bgBG,
+);
+
+<ThemeProvider theme={theme}>
+  <DataGrid />
+</ThemeProvider>;
+```
+
+Note that `createMuiTheme` accepts any number of arguments.
+If you are already using the translations of the core components, you can add `bgBG` as a new argument.
+The same import works with `XGrid` as it's an extension of `DataGrid`.
+
 ### Supported locales
 
 | Locale    | BCP 47 language tag | Import name |

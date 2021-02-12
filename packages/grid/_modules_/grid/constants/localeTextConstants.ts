@@ -43,6 +43,8 @@ export const DEFAULT_LOCALE_TEXT: LocaleText = {
   filterPanelOperatorAnd: 'And',
   filterPanelOperatorOr: 'Or',
   filterPanelColumns: 'Columns',
+  filterPanelInputLabel: 'Value',
+  filterPanelInputPlaceholder: 'Filter value',
 
   // Filter operators text
   filterOperatorContains: 'contains',

@@ -49,6 +49,8 @@ export const bgBG: Localization = getLocalization({
   filterOperatorOnOrAfter: 'е на или след',
   filterOperatorBefore: 'е преди',
   filterOperatorOnOrBefore: 'е на или преди',
+  filterPanelInputLabel: 'Стойност',
+  filterPanelInputPlaceholder: 'Стойност на филтъра',
 
   // Column menu text
   columnMenuLabel: 'Меню',

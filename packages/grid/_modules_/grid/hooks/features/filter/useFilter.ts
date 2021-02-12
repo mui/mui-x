@@ -123,6 +123,7 @@ export const useFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
 
   const applyFilters = React.useCallback(() => {
     if (options.filterMode === FeatureModeConstant.server) {
+      forceUpdate();
       return;
     }
 

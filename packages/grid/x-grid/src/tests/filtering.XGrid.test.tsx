@@ -1,20 +1,24 @@
-import { expect } from 'chai';
 import * as React from 'react';
+import { expect } from 'chai';
 import { useFakeTimers } from 'sinon';
-import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
-import {
-  createClientRenderStrictMode,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  fireEvent,
-} from 'test/utils';
 import {
   ApiRef,
   FilterModel,
   GridComponentProps,
   LinkOperator,
+  PreferencePanelsValue,
+  RowModel,
   useApiRef,
   XGrid,
 } from '@material-ui/x-grid';
+import {
+  // @ts-expect-error need to migrate helpers to TypeScript
+  screen,
+  createClientRenderStrictMode,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  fireEvent,
+} from 'test/utils';
+import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
 describe('<XGrid /> - Filter', () => {
   let clock;
@@ -223,5 +227,81 @@ describe('<XGrid /> - Filter', () => {
     expect(getColumnValues()).to.deep.equal(['Adidas']);
     setProps({ filterModel: { items: [] } });
     expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+  });
+
+  describe('Server', () => {
+    it('should refresh the filter panel when adding filters', () => {
+      function loadServerRows(commodityFilterValue) {
+        const serverRows = [
+          { id: '1', commodity: 'rice' },
+          { id: '2', commodity: 'soybeans' },
+          { id: '3', commodity: 'milk' },
+          { id: '4', commodity: 'wheat' },
+          { id: '5', commodity: 'oats' },
+        ];
+
+        return new Promise<RowModel[]>((resolve) => {
+          if (!commodityFilterValue) {
+            resolve(serverRows);
+            return;
+          }
+          resolve(
+            serverRows.filter(
+              (row) => row.commodity.toLowerCase().indexOf(commodityFilterValue) > -1,
+            ),
+          );
+        });
+      }
+
+      const columns = [{ field: 'commodity', width: 150 }];
+
+      function AddServerFilterGrid() {
+        const [rows, setRows] = React.useState<RowModel[]>([]);
+        const [filterValue, setFilterValue] = React.useState();
+
+        const onFilterChange = React.useCallback((params) => {
+          setFilterValue(params.filterModel.items[0].value);
+        }, []);
+
+        React.useEffect(() => {
+          let active = true;
+
+          (async () => {
+            const newRows = await loadServerRows(filterValue);
+
+            if (!active) {
+              return;
+            }
+
+            setRows(newRows);
+          })();
+
+          return () => {
+            active = false;
+          };
+        }, [filterValue]);
+
+        return (
+          <div style={{ height: 400, width: 400 }}>
+            <XGrid
+              rows={rows}
+              columns={columns}
+              filterMode="server"
+              onFilterModelChange={onFilterChange}
+              state={{
+                preferencePanel: { open: true, openedPanelValue: PreferencePanelsValue.filters },
+              }}
+            />
+          </div>
+        );
+      }
+
+      render(<AddServerFilterGrid />);
+      const addButton = screen.getByRole('button', { name: /Add Filter/i });
+      clock.tick(100);
+      fireEvent.click(addButton);
+      const filterForms = document.querySelectorAll(`.MuiDataGridFilterForm-root`);
+      expect(filterForms).to.have.length(2);
+    });
   });
 });
