@@ -214,6 +214,7 @@ export function FilterForm(props: FilterFormProps) {
         {currentColumn &&
           currentOperator &&
           React.createElement(currentOperator.InputComponent, {
+            apiRef,
             item,
             applyValue: applyFilterChanges,
             ...currentOperator.InputComponentProps,

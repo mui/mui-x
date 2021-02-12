@@ -10,7 +10,7 @@ export interface TypeFilterInputValueProps extends FilterInputValueProps {
 }
 
 export function FilterInputValue(props: TypeFilterInputValueProps & TextFieldProps) {
-  const { item, applyValue, type, ...others } = props;
+  const { item, applyValue, type, apiRef, ...others } = props;
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
   const [applying, setIsApplying] = React.useState(false);
@@ -43,8 +43,8 @@ export function FilterInputValue(props: TypeFilterInputValueProps & TextFieldPro
 
   return (
     <TextField
-      label={'Value'}
-      placeholder={'Filter value'}
+      label={apiRef.current.getLocaleText('filterPanelInputLabel')}
+      placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
       value={filterValueState}
       onChange={onFilterChange}
       type={type || 'text'}

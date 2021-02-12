@@ -39,6 +39,8 @@ export interface LocaleText {
   filterPanelOperatorAnd: React.ReactNode;
   filterPanelOperatorOr: React.ReactNode;
   filterPanelColumns: React.ReactNode;
+  filterPanelInputLabel: string;
+  filterPanelInputPlaceholder: string;
 
   // Filter operators text
   filterOperatorContains: string;
