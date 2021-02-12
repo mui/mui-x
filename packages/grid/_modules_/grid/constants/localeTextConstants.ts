@@ -27,7 +27,7 @@ export const DEFAULT_LOCALE_TEXT: LocaleText = {
   // Export selector toolbar button text
   toolbarExport: 'Export',
   toolbarExportLabel: 'Export',
-  toolbarExportCSV: 'CSV',
+  toolbarExportCSV: 'Download as CSV',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Find column',
