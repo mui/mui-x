@@ -57,7 +57,6 @@ export function ExportSelector() {
         size="small"
         startIcon={<ExportIcon />}
         onClick={handleExportSelectorOpen}
-        aria-label={apiRef!.current.getLocaleText('toolbarExportLabel')}
         aria-expanded="true"
         aria-haspopup="listbox"
         aria-labelledby="MuiDataGrid-export-selector-menu"
