@@ -10,8 +10,6 @@ import { expect } from 'chai';
 import {
   DataGrid,
   DataGridProps,
-  DataGridProps,
-  GridComponentProps,
   RowsProp,
 } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
