@@ -9,6 +9,13 @@ const browserStack = {
 
 process.env.CHROME_BIN = require('puppeteer').executablePath();
 
+// BrowserStack rate limit after 1600 calls every 5 minutes.
+// Per second, https://www.browserstack.com/docs/automate/api-reference/selenium/introduction#rest-api-projects
+const MAX_REQUEST_BROWSERSTACK = 1600 / (60 * 5);
+// Estimate the max number of concurrent karma builds.
+// CircleCI accepts up to 80 concurrent builds, for each PR, 6 concurrent builds are used.
+const MAX_KARMA_CONCURRENT_BUILD = 80 / 6;
+
 // Karma configuration
 module.exports = function setKarmaConfig(config) {
   const baseConfig = {
@@ -153,6 +160,11 @@ module.exports = function setKarmaConfig(config) {
         },
       },
     };
+
+    // default 1000, Avoid Rate Limit Exceeded
+    newConfig.pollingTimeout =
+      ((MAX_KARMA_CONCURRENT_BUILD * (newConfig.browsers.length - 1)) / MAX_REQUEST_BROWSERSTACK) *
+      1000;
   }
 
   config.set(newConfig);
