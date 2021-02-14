@@ -1,10 +1,16 @@
 const path = require('path');
 const webpack = require('webpack');
 
+let build = `material-ui-x local ${new Date().toISOString()}`;
+
+if (process.env.CIRCLE_BUILD_URL) {
+  build = process.env.CIRCLE_BUILD_URL;
+}
+
 const browserStack = {
   username: process.env.BROWSERSTACK_USERNAME,
   accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
-  build: `material-ui-x-${new Date().toISOString()}`,
+  build,
 };
 
 process.env.CHROME_BIN = require('puppeteer').executablePath();
