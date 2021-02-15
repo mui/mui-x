@@ -4,7 +4,7 @@ import { DEFAULT_LOCALE_TEXT } from '../../constants/localeTextConstants';
 import { GridComponentProps, GridOptionsProp } from '../../GridComponentProps';
 import { ApiRef } from '../../models/api/apiRef';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../models/gridOptions';
-import { getScrollbarSize } from '../../utils/material-ui-utils';
+import { getScrollbarSize, useEnhancedEffect } from '../../utils/material-ui-utils';
 import { mergeOptions } from '../../utils/mergeUtils';
 import { useGridReducer } from '../features/core/useGridReducer';
 import { useLogger } from './useLogger';
@@ -24,8 +24,9 @@ export function optionsReducer(
 let memoizedScrollBar: any = null;
 export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridOptions {
   const logger = useLogger('useOptionsProp');
+  const [browserScrollBar, setBrowserScrollBar ] = React.useState(0);
 
-  const detectedScrollSize = React.useMemo(() => {
+  const detectScrollSize = React.useCallback(() => {
     if (memoizedScrollBar != null) {
       // We are using the memoized value for all grids of a document.
       return memoizedScrollBar;
@@ -39,13 +40,17 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiRef, logger, apiRef.current?.rootElementRef?.current]);
 
+  useEnhancedEffect(()=> {
+    setBrowserScrollBar(detectScrollSize());
+  }, [detectScrollSize])
+
   const options: GridOptionsProp = React.useMemo(
     () => ({
       ...props,
       localeText: { ...DEFAULT_LOCALE_TEXT, ...props.localeText },
-      scrollbarSize: props.scrollbarSize == null ? detectedScrollSize : props.scrollbarSize || 0,
+      scrollbarSize: props.scrollbarSize == null ? browserScrollBar : props.scrollbarSize || 0,
     }),
-    [detectedScrollSize, props],
+    [browserScrollBar, props],
   );
 
   const { gridState, dispatch } = useGridReducer(apiRef, 'options', optionsReducer, {
