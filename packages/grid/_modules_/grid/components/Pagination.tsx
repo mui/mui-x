@@ -71,13 +71,7 @@ export function Pagination() {
     // @ts-ignore TODO remove once upgraded v4 support is dropped
     <TablePagination
       classes={{
-        ...(isMuiV5()
-          ? {
-              selectLabel: classes.selectLabel,
-            }
-          : {
-              caption: classes.caption,
-            }),
+        ...(isMuiV5() ? { selectLabel: classes.selectLabel } : { caption: classes.caption }),
         input: classes.input,
       }}
       component="div"
