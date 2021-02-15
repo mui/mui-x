@@ -90,8 +90,6 @@ export function DensitySelector() {
         aria-label={apiRef!.current.getLocaleText('toolbarDensityLabel')}
         aria-expanded="true"
         aria-haspopup="listbox"
-        aria-labelledby="MuiDataGrid-density-selector-menu"
-        id="MuiDataGrid-density-selector-button"
       >
         {apiRef!.current.getLocaleText('toolbarDensity')}
       </Button>
@@ -101,13 +99,7 @@ export function DensitySelector() {
         onClickAway={handleDensitySelectorClose}
         position="bottom-start"
       >
-        <MenuList
-          id="MuiDataGrid-density-selector-menu"
-          role="listbox"
-          aria-labelledby="MuiDataGrid-density-selector-button"
-          onKeyDown={handleListKeyDown}
-          autoFocusItem={Boolean(anchorEl)}
-        >
+        <MenuList role="listbox" onKeyDown={handleListKeyDown} autoFocusItem={Boolean(anchorEl)}>
           {renderDensityOptions}
         </MenuList>
       </GridMenu>

@@ -12,7 +12,6 @@ export function GridToolbarExport() {
   const apiRef = React.useContext(ApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
   const [anchorEl, setAnchorEl] = React.useState(null);
-
   const ExportIcon = apiRef!.current.components!.ExportIcon!;
 
   const ExportOptions: Array<ExportOption> = [
@@ -59,8 +58,6 @@ export function GridToolbarExport() {
         onClick={handleExportSelectorOpen}
         aria-expanded="true"
         aria-haspopup="listbox"
-        aria-labelledby="MuiDataGrid-export-selector-menu"
-        id="MuiDataGrid-export-selector-button"
       >
         {apiRef!.current.getLocaleText('toolbarExport')}
       </Button>
@@ -70,13 +67,7 @@ export function GridToolbarExport() {
         onClickAway={handleExportSelectorClose}
         position="bottom-start"
       >
-        <MenuList
-          id="MuiDataGrid-export-selector-menu"
-          role="listbox"
-          aria-labelledby="MuiDataGrid-export-selector-button"
-          onKeyDown={handleListKeyDown}
-          autoFocusItem={Boolean(anchorEl)}
-        >
+        <MenuList role="listbox" onKeyDown={handleListKeyDown} autoFocusItem={Boolean(anchorEl)}>
           {renderExportOptions}
         </MenuList>
       </GridMenu>
