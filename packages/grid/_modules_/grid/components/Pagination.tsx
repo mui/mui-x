@@ -9,6 +9,12 @@ import { isMuiV5 } from '../utils';
 
 // Used to hide the Rows per page selector on small devices
 const useStyles = makeStyles((theme: Theme) => ({
+  selectLabel: {
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'block',
+    },
+  },
   caption: {
     // input label
     '&[id]': {
@@ -64,7 +70,10 @@ export function Pagination() {
   return (
     // @ts-ignore TODO remove once upgraded v4 support is dropped
     <TablePagination
-      classes={classes}
+      classes={{
+        ...(isMuiV5() ? { selectLabel: classes.selectLabel } : { caption: classes.caption }),
+        input: classes.input,
+      }}
       component="div"
       count={paginationState.rowCount}
       page={paginationState.page}
