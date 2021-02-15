@@ -1,13 +1,12 @@
 import * as React from 'react';
+import { ownerDocument } from '@material-ui/core/utils';
 import { DEFAULT_LOCALE_TEXT } from '../../constants/localeTextConstants';
 import { GridComponentProps, GridOptionsProp } from '../../GridComponentProps';
 import { ApiRef } from '../../models/api/apiRef';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../models/gridOptions';
 import { getScrollbarSize } from '../../utils/domUtils';
-import { useEnhancedEffect } from '../../utils/material-ui-utils';
 import { mergeOptions } from '../../utils/mergeUtils';
 import { useGridReducer } from '../features/core/useGridReducer';
-import { ownerDocument } from '@material-ui/core/utils';
 import { useLogger } from './useLogger';
 
 // REDUCER
