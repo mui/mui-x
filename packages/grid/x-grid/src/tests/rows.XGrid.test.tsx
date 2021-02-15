@@ -72,13 +72,14 @@ describe('<XGrid /> - Rows ', () => {
     };
     render(<Test />);
 
-    const viewport = document.querySelector('.MuiDataGrid-viewport')!;
     const scrollbarState = apiRef!.current.state.scrollBar.scrollBarSize;
     const scrollbar = apiRef!.current.state.options.scrollbarSize;
 
-    expect(viewport.clientWidth).to.equal(583);
-    expect(scrollbarState).to.deep.equal({ y: 15, x: 0 });
-    expect(scrollbar).to.equal(15);
+    const acceptableScrollSize = [15, 17];
+
+    expect(acceptableScrollSize.indexOf(scrollbar!)).to.be.greaterThan(-1);
+    const expectedSize = acceptableScrollSize[acceptableScrollSize.indexOf(scrollbar!)];
+    expect(scrollbarState).to.deep.equal({ y: expectedSize, x: 0 });
   });
 
   describe('getRowId', () => {
