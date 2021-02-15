@@ -88,7 +88,7 @@ export function DensitySelector() {
         startIcon={getSelectedDensityIcon()}
         onClick={handleDensitySelectorOpen}
         aria-label={apiRef!.current.getLocaleText('toolbarDensityLabel')}
-        aria-expanded={Boolean(anchorEl)}
+        aria-expanded={anchorEl ? 'true' : undefined}
         aria-haspopup="listbox"
       >
         {apiRef!.current.getLocaleText('toolbarDensity')}
