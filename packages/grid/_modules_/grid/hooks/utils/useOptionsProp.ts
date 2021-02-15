@@ -24,7 +24,7 @@ export function optionsReducer(
 let memoizedScrollBar: any = null;
 export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridOptions {
   const logger = useLogger('useOptionsProp');
-  const [browserScrollBar, setBrowserScrollBar ] = React.useState(0);
+  const [browserScrollBar, setBrowserScrollBar] = React.useState(0);
 
   const detectScrollSize = React.useCallback(() => {
     if (memoizedScrollBar != null) {
@@ -40,9 +40,9 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiRef, logger, apiRef.current?.rootElementRef?.current]);
 
-  useEnhancedEffect(()=> {
+  useEnhancedEffect(() => {
     setBrowserScrollBar(detectScrollSize());
-  }, [detectScrollSize])
+  }, [detectScrollSize]);
 
   const options: GridOptionsProp = React.useMemo(
     () => ({
