@@ -3,6 +3,7 @@ import { DEFAULT_LOCALE_TEXT } from '../../constants/localeTextConstants';
 import { GridComponentProps, GridOptionsProp } from '../../GridComponentProps';
 import { ApiRef } from '../../models/api/apiRef';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../models/gridOptions';
+import { getScrollbarSize } from '../../utils/domUtils';
 import { mergeOptions } from '../../utils/mergeUtils';
 import { useGridReducer } from '../features/core/useGridReducer';
 
@@ -24,6 +25,7 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
     () => ({
       ...props,
       localeText: { ...DEFAULT_LOCALE_TEXT, ...props.localeText },
+      scrollbarSize: props.scrollbarSize == null ? getScrollbarSize(document) : props.scrollbarSize,
     }),
     [props],
   );

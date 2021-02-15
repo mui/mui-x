@@ -20,7 +20,6 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
   const logger = useLogger('useContainerProps');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const windowSizesRef = React.useRef<ElementSize>({ width: 0, height: 0 });
-
   const options = useGridSelector(apiRef, optionsSelector);
   const rowHeight = useGridSelector(apiRef, densityRowHeightSelector);
   const columnsTotalWidth = useGridSelector(apiRef, columnsTotalWidthSelector);
@@ -59,8 +58,8 @@ export const useContainerProps = (windowRef: React.RefObject<HTMLDivElement>, ap
           : windowSizesRef.current.height < rowsCount * rowHeight;
       const hasScrollX = columnsTotalWidth > windowSizesRef.current.width;
       const scrollBarSize = {
-        y: hasScrollY ? options.scrollbarSize : 0,
-        x: hasScrollX ? options.scrollbarSize : 0,
+        y: hasScrollY ? options.scrollbarSize! : 0,
+        x: hasScrollX ? options.scrollbarSize! : 0,
       };
       return { hasScrollX, hasScrollY, scrollBarSize };
     },
