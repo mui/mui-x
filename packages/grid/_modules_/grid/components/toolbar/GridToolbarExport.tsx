@@ -56,8 +56,8 @@ export function GridToolbarExport() {
         size="small"
         startIcon={<ExportIcon />}
         onClick={handleExportSelectorOpen}
-        aria-expanded="true"
-        aria-haspopup="listbox"
+        aria-expanded={Boolean(anchorEl)}
+        aria-haspopup="true"
       >
         {apiRef!.current.getLocaleText('toolbarExport')}
       </Button>
@@ -67,7 +67,7 @@ export function GridToolbarExport() {
         onClickAway={handleExportSelectorClose}
         position="bottom-start"
       >
-        <MenuList role="listbox" onKeyDown={handleListKeyDown} autoFocusItem={Boolean(anchorEl)}>
+        <MenuList onKeyDown={handleListKeyDown} autoFocusItem={Boolean(anchorEl)}>
           {renderExportOptions}
         </MenuList>
       </GridMenu>

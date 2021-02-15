@@ -56,7 +56,7 @@ export const GridMenu: React.FC<MenuProps> = ({
       {({ TransitionProps, placement }) => (
         <Grow {...TransitionProps} style={{ transformOrigin: transformOrigin[placement] }}>
           <Paper>
-            <ClickAwayListener onClickAway={onClickAway}>{children}</ClickAwayListener>
+            <ClickAwayListener onClickAway={onClickAway}><div>{children}</div></ClickAwayListener>
           </Paper>
         </Grow>
       )}
