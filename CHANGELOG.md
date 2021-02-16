@@ -56,7 +56,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 
   return (
     <div className="grid-container">
-     <DataGrid rows={rows} columns={columns} page={page} />
+      <DataGrid rows={rows} columns={columns} page={page} />
     </div>
   ```
 
