@@ -15,8 +15,6 @@ To enable the CSV export you need to compose a toolbar containing the `GridToolb
 
 {{"demo": "pages/components/data-grid/export/ExportSelectorGrid.js", "bg": "inline"}}
 
-To hide the CSV export add the `disableCsvExport` prop to the data grid.
-
 ## 🚧 Print
 
 > ⚠️ This feature isn't implemented yet. It's coming.

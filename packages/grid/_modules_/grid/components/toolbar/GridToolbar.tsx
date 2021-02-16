@@ -16,8 +16,7 @@ export function GridToolbar() {
   if (
     options.disableColumnFilter &&
     options.disableColumnSelector &&
-    options.disableDensitySelector &&
-    options.disableCsvExport
+    options.disableDensitySelector
   ) {
     return null;
   }

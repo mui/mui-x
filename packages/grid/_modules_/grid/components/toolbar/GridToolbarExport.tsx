@@ -3,14 +3,11 @@ import MenuList from '@material-ui/core/MenuList';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import { ApiContext } from '../api-context';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridMenu } from '../menu/GridMenu';
 import { ExportOption } from '../../models';
 
 export function GridToolbarExport() {
   const apiRef = React.useContext(ApiContext);
-  const options = useGridSelector(apiRef, optionsSelector);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const ExportIcon = apiRef!.current.components!.ExportIcon!;
 
@@ -37,11 +34,6 @@ export function GridToolbarExport() {
       handleExportSelectorClose();
     }
   };
-
-  // Disable the button if the corresponding is disabled
-  if (options.disableCsvExport) {
-    return null;
-  }
 
   const renderExportOptions: Array<React.ReactElement> = ExportOptions.map((option, index) => (
     <MenuItem key={index} onClick={() => handleExport(option.format)}>
