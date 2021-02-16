@@ -46,42 +46,6 @@ describe('<XGrid /> - Rows ', () => {
     }
   });
 
-  it('should not display an horizontal scrollbar', () => {
-    const rows: any = [
-      { id: 1, col1: 'Hello', col2: 'World' },
-      { id: 2, col1: 'XGrid', col2: 'is Awesome' },
-      { id: 3, col1: 'Material-UI', col2: 'is Amazing' },
-      { id: 4, col1: 'Hello', col2: 'World' },
-      { id: 5, col1: 'XGrid', col2: 'is Awesome' },
-      { id: 6, col1: 'Material-UI', col2: 'is Amazing' },
-    ];
-
-    const columns: any[] = [
-      { field: 'id', hide: true },
-      { field: 'col1', headerName: 'Column 1', width: 150 },
-      { field: 'col2', headerName: 'Column 2', width: 150 },
-    ];
-    let apiRef: ApiRef;
-    const Test = () => {
-      apiRef = useApiRef();
-      return (
-        <div style={{ height: 300, width: 600 }}>
-          <XGrid rows={rows} columns={columns} apiRef={apiRef} />
-        </div>
-      );
-    };
-    render(<Test />);
-
-    const scrollbarState = apiRef!.current.state.scrollBar.scrollBarSize;
-    const scrollbar = apiRef!.current.state.options.scrollbarSize;
-
-    const acceptableScrollSize = [15, 17];
-
-    expect(acceptableScrollSize.indexOf(scrollbar!)).to.be.greaterThan(-1);
-    const expectedSize = acceptableScrollSize[acceptableScrollSize.indexOf(scrollbar!)];
-    expect(scrollbarState).to.deep.equal({ y: expectedSize, x: 0 });
-  });
-
   describe('getRowId', () => {
     describe('updateRows', () => {
       it('should apply getRowId before updating rows', () => {
