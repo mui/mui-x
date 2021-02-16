@@ -7,7 +7,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ###### _Feb 16, 2021_
  
-Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+Big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+Please do consider contributing new translations back to Material-UI by opening a pull request. However, Material-UI aims to support the 100 most popular locales, we might not accept contributions for locales that are not frequently used, for instance gl-ES that has "only" 2.5 million native speakers.
+See the [Docs](https://material-ui.com/components/data-grid/localization/) for more details.
 
 - 🎁 Add new `selectionModel` prop (#986) @dtassone
   The prop can be used to control the selected rows in the data grid. [See the docs](https://material-ui.com/components/data-grid/selection/#controlled-selection).

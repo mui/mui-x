@@ -19,9 +19,6 @@ In the following example, the labels of the density selector are customized.
 
 ## Locale text
 
-Please do consider contributing new translations back to Material-UI X by opening a pull request.
-However, Material-UI aims to support the 100 most popular locales, we might not accept contributions for locales that are not frequently used, for instance gl-ES that has "only" 2.5 million native speakers.
-
 The default locale of Material-UI is English (United States).
 You can find all the locales supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/locales) in the GitHub repository.
 
