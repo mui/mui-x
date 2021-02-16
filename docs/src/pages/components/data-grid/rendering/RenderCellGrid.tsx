@@ -1,13 +1,13 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import { DataGrid, ColDef, ValueFormatterParams } from '@material-ui/data-grid';
+import { DataGrid, ColDef, CellParams } from '@material-ui/data-grid';
 
 const columns: ColDef[] = [
   {
     field: 'date',
     headerName: 'Year',
     width: 150,
-    renderCell: (params: ValueFormatterParams) => (
+    renderCell: (params: CellParams) => (
       <strong>
         {(params.value as Date).getFullYear()}
         <Button

@@ -82,7 +82,7 @@ const columns: ColDef[] = [
   {
     field: 'date',
     headerName: 'Year',
-    renderCell: (params: ValueFormatterParams) => (
+    renderCell: (params: CellParams) => (
       <strong>
         {(params.value as Date).getFullYear()}
         <Button
