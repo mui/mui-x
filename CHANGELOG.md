@@ -21,21 +21,54 @@ See the [Docs](https://material-ui.com/components/data-grid/localization/) for m
 ### @material-ui/x-grid@v4.0.0-alpha.19 / @material-ui/data-grid@v4.0.0-alpha.19
 
 #### Breaking changes
+- [DataGrid] Remove `sortDirection` from column definitions. Consolidate around fewer ways of doing the same thing. (#1015) @dtassone
 
+  ```diff
+  -columns[1] = { ...columns[1], sortDirection: 'asc' };
+
+  return (
+    <div className="grid-container">
+  -   <DataGrid rows={rows} columns={columns} />
+  +   <DataGrid rows={rows} columns={columns} sortModel={[{field: columns[1].field, sort: 'asc'}]} />
+    </div>
+  ```
+
+- [DataGrid] Rename the `onSelectionChange` prop to `onSelectionModelChange` for consistency. (#986) @dtassone
+
+    ```diff
+  -   <DataGrid onSelectionChange={selectionChangeHandler} />
+  +   <DataGrid onSelectionModelChange={onSelectionModelChangeHandler} />
+    ```
+
+- [DataGrid] Remove showToolbar prop (#948) @DanailH
+  
+    ```diff
+  -   <DataGrid showToolbar />
+  +   <DataGrid components={{ Toolbar: MyToolbar }} />
+    ```
+  
+- [DataGrid] Change page index base, from 1 to 0. This change is done for consistency with `TablePagination` and JavaScript arrays that are 0-based. Material-UI still uses a 1-base page for the `Pagination` component that matches the URL's query. (#1021) @dtassone
+
+  ```diff
+  -const [page, setPage] = React.useState(1);
+  +const [page, setPage] = React.useState(0);
+  
+  return (
+    <div className="grid-container">
+     <DataGrid rows={rows} columns={columns} page={page} />
+    </div>
+  ```
+  
 #### Changes
 
 - [DataGrid] Add bgBG locale (#983) @DanailH
 - [DataGrid] Add last of the missing translations (#1033) @DanailH
-- [DataGrid] Add new selectionModel prop (#986) @dtassone
 - [DataGrid] Add support for default props from theme (#1019) @DanailH
-- [DataGrid] Change page index base, from 1 to 0 (#1021) @dtassone
 - [DataGrid] Fix controllable filters and select all rows with filters (#1020) @dtassone
 - [DataGrid] Fix onPageChange and onPageSizeChange event trigger (#1034) @dtassone
 - [DataGrid] Fix process is not defined (EXPERIMENTAL_ENABLED) (#1027) @leontastic
 - [DataGrid] Fix scrollbar size on windows (#1061) @dtassone
 - [DataGrid] Fix warning with v5 (#1038) @oliviertassinari
-- [DataGrid] Remove showToolbar prop (#948) @DanailH
-- [DataGrid] Remove sortDirection from column definitions (#1015) @dtassone
 - [DataGrid] Resolve the api ref at the same time as any other ref (#990) @oliviertassinari
 - [DataGrid] Use the disableDensitySelector to disable the DensitySelector (#1031) @DanailH
 - [DataGrid] Fix passing [] or undefined in sortModel prop (#1035) @dtassone
