@@ -27,9 +27,9 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
   -columns[1] = { ...columns[1], sortDirection: 'asc' };
 
   return (
-    <div className="grid-container">
+    <div>
   -   <DataGrid rows={rows} columns={columns} />
-  +   <DataGrid rows={rows} columns={columns} sortModel={[{field: columns[1].field, sort: 'asc'}]} />
+  +   <DataGrid rows={rows} columns={columns} sortModel={[{ field: columns[1].field, sort: 'asc' }]} />
     </div>
   ```
 
