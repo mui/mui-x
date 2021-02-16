@@ -1,10 +1,13 @@
 import * as React from 'react';
+import { ownerDocument } from '@material-ui/core/utils';
 import { DEFAULT_LOCALE_TEXT } from '../../constants/localeTextConstants';
 import { GridComponentProps, GridOptionsProp } from '../../GridComponentProps';
 import { ApiRef } from '../../models/api/apiRef';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../models/gridOptions';
+import { getScrollbarSize, useEnhancedEffect } from '../../utils/material-ui-utils';
 import { mergeOptions } from '../../utils/mergeUtils';
 import { useGridReducer } from '../features/core/useGridReducer';
+import { useLogger } from './useLogger';
 
 // REDUCER
 export function optionsReducer(
@@ -18,14 +21,32 @@ export function optionsReducer(
       throw new Error(`Material-UI: Action ${action.type} not found.`);
   }
 }
-
 export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridOptions {
+  const logger = useLogger('useOptionsProp');
+  const [browserScrollBar, setBrowserScrollBar] = React.useState(0);
+
+  const getBrowserScrollBar = React.useCallback(() => {
+    if (apiRef.current?.rootElementRef?.current) {
+      const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
+      const scrollbarSize = getScrollbarSize(doc);
+      logger.debug(`Detected Scroll Bar size ${scrollbarSize}.`);
+      return scrollbarSize;
+    }
+    return 0;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiRef, logger, apiRef.current?.rootElementRef?.current]);
+
+  useEnhancedEffect(() => {
+    setBrowserScrollBar(getBrowserScrollBar());
+  }, [getBrowserScrollBar]);
+
   const options: GridOptionsProp = React.useMemo(
     () => ({
       ...props,
       localeText: { ...DEFAULT_LOCALE_TEXT, ...props.localeText },
+      scrollbarSize: props.scrollbarSize == null ? browserScrollBar : props.scrollbarSize || 0,
     }),
-    [props],
+    [browserScrollBar, props],
   );
 
   const { gridState, dispatch } = useGridReducer(apiRef, 'options', optionsReducer, {

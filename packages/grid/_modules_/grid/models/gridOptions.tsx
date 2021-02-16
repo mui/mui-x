@@ -38,10 +38,9 @@ export interface GridOptions {
    */
   headerHeight: number;
   /**
-   * Set the height/width of the grid inner scrollbar.
-   * @default 15
+   * Override the height/width of the grid inner scrollbar.
    */
-  scrollbarSize: number;
+  scrollbarSize?: number;
   /**
    * Number of columns rendered outside the grid viewport.
    * @default 2
@@ -295,7 +294,6 @@ export interface GridOptions {
 export const DEFAULT_GRID_OPTIONS: GridOptions = {
   rowHeight: 52,
   headerHeight: 56,
-  scrollbarSize: 15,
   columnBuffer: 2,
   rowsPerPageOptions: [25, 50, 100],
   pageSize: 100,
