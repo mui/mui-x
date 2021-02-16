@@ -6,12 +6,11 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ## [4.0.0-alpha.20](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.19...v4.0.0-alpha.20)
 
 ###### _Feb 16, 2021_
- 
+
 Big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
 
-Please do consider contributing new translations back to Material-UI by opening a pull request. However, Material-UI aims to support the 100 most popular locales, we might not accept contributions for locales that are not frequently used, for instance gl-ES that has "only" 2.5 million native speakers.
-See the [Docs](https://material-ui.com/components/data-grid/localization/) for more details.
-
+- 📍 Add support for default locales (#983) @DanailH
+  We have built the infrastructure to support around 100 [default locales](https://material-ui.com/components/data-grid/localization/#supported-locales). If you have localized the data grid in your application. Please do consider contributing new translations back to Material-UI by opening a pull request.
 - 🎁 Add new `selectionModel` prop (#986) @dtassone
   The prop can be used to control the selected rows in the data grid. [See the docs](https://material-ui.com/components/data-grid/selection/#controlled-selection).
 - 💅 Add support for default props from theme (#1019) @DanailH
@@ -21,6 +20,7 @@ See the [Docs](https://material-ui.com/components/data-grid/localization/) for m
 ### @material-ui/x-grid@v4.0.0-alpha.19 / @material-ui/data-grid@v4.0.0-alpha.19
 
 #### Breaking changes
+
 - [DataGrid] Remove `sortDirection` from column definitions. Consolidate around fewer ways of doing the same thing. (#1015) @dtassone
 
   ```diff
@@ -35,30 +35,31 @@ See the [Docs](https://material-ui.com/components/data-grid/localization/) for m
 
 - [DataGrid] Rename the `onSelectionChange` prop to `onSelectionModelChange` for consistency. (#986) @dtassone
 
-    ```diff
-  -   <DataGrid onSelectionChange={selectionChangeHandler} />
-  +   <DataGrid onSelectionModelChange={onSelectionModelChangeHandler} />
-    ```
+  ```diff
+  -<DataGrid onSelectionChange={selectionChangeHandler} />
+  +<DataGrid onSelectionModelChange={onSelectionModelChangeHandler} />
+  ```
 
-- [DataGrid] Remove showToolbar prop (#948) @DanailH
-  
-    ```diff
-  -   <DataGrid showToolbar />
-  +   <DataGrid components={{ Toolbar: MyToolbar }} />
-    ```
-  
-- [DataGrid] Change page index base, from 1 to 0. This change is done for consistency with `TablePagination` and JavaScript arrays that are 0-based. Material-UI still uses a 1-base page for the `Pagination` component that matches the URL's query. (#1021) @dtassone
+- [DataGrid] Remove `showToolbar` prop (#948) @DanailH
+
+  ```diff
+  -<DataGrid showToolbar />
+  +<DataGrid components={{ Toolbar: MyToolbar }} />
+  ```
+
+- [DataGrid] Change page index base, from 1 to 0. (#1021) @dtassone
+  This change is done for consistency with `TablePagination` and JavaScript arrays that are 0-based. Material-UI still uses a 1-base page for the `Pagination` component that matches the URL's query.
 
   ```diff
   -const [page, setPage] = React.useState(1);
   +const [page, setPage] = React.useState(0);
-  
+
   return (
     <div className="grid-container">
      <DataGrid rows={rows} columns={columns} page={page} />
     </div>
   ```
-  
+
 #### Changes
 
 - [DataGrid] Add bgBG locale (#983) @DanailH
