@@ -51,9 +51,9 @@ The same import works with `XGrid` as it's an extension of `DataGrid`.
 | :-------- | :------------------ | :---------- |
 | Bulgarian | bg-BG               | `bgBG`      |
 
-You can find all the locales supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/locales) in the GitHub repository.
+You can [find the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/locales) in the GitHub repository.
 
 To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
 
-Please do consider contributing new translations back to Material-UI by opening a pull request. However, Material-UI aims to support the 100 most popular locales, we might not accept contributions for locales that are not frequently used, for instance `gl-ES` that has "only" 2.5 million native speakers.
+Please do consider contributing new translations back to Material-UI by opening a pull request. However, Material-UI aims to support the 100 most popular locales. We might not accept contributions for locales that are not frequently used, for instance, `gl-ES` that has "only" 2.5 million native speakers.
 See the [Docs](https://material-ui.com/components/data-grid/localization/) for more details.
