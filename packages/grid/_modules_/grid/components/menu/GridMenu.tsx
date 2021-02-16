@@ -40,14 +40,14 @@ export const GridMenu: React.FC<MenuProps> = ({
   ...other
 }) => {
   const prevTarget = React.useRef(target);
-  const preOpen = React.useRef(open);
+  const prevOpen = React.useRef(open);
 
   React.useEffect(() => {
-    if (preOpen.current && prevTarget.current) {
+    if (prevOpen.current && prevTarget.current) {
       (prevTarget.current as HTMLElement).focus();
     }
 
-    preOpen.current = open;
+    prevOpen.current = open;
     prevTarget.current = target;
   }, [open, target]);
 
