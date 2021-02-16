@@ -4,7 +4,7 @@ import { DEFAULT_LOCALE_TEXT } from '../../constants/localeTextConstants';
 import { GridComponentProps, GridOptionsProp } from '../../GridComponentProps';
 import { ApiRef } from '../../models/api/apiRef';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../models/gridOptions';
-import { getScrollbarSize } from '../../utils/material-ui-utils';
+import { getScrollbarSize, useEnhancedEffect } from '../../utils/material-ui-utils';
 import { mergeOptions } from '../../utils/mergeUtils';
 import { useGridReducer } from '../features/core/useGridReducer';
 import { useLogger } from './useLogger';
@@ -21,23 +21,24 @@ export function optionsReducer(
       throw new Error(`Material-UI: Action ${action.type} not found.`);
   }
 }
-let memoizedScrollBar: any = null;
 export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridOptions {
   const logger = useLogger('useOptionsProp');
+  const [browserScrollBar, setBrowserScrollBar] = React.useState(0);
 
-  const browserScrollBar = React.useMemo(() => {
-    if (memoizedScrollBar != null) {
-      // We are using the memoized value for all grids of a document.
-      return memoizedScrollBar;
-    }
+  const getBrowserScrollBar = React.useCallback(() => {
     if (apiRef.current?.rootElementRef?.current) {
       const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
-      memoizedScrollBar = getScrollbarSize(doc);
-      logger.debug(`Detected Scroll Bar size ${memoizedScrollBar}.`);
+      const scrollbarSize = getScrollbarSize(doc);
+      logger.debug(`Detected Scroll Bar size ${scrollbarSize}.`);
+      return scrollbarSize;
     }
     return 0;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiRef, logger, apiRef.current?.rootElementRef?.current]);
+
+  useEnhancedEffect(() => {
+    setBrowserScrollBar(getBrowserScrollBar());
+  }, [getBrowserScrollBar]);
 
   const options: GridOptionsProp = React.useMemo(
     () => ({
