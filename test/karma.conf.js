@@ -13,8 +13,8 @@ process.env.CHROME_BIN = require('puppeteer').executablePath();
 // Per second, https://www.browserstack.com/docs/automate/api-reference/selenium/introduction#rest-api-projects
 const MAX_REQUEST_PER_SECOND_BROWSERSTACK = 1600 / (60 * 5);
 // Estimate the max number of concurrent karma builds
-// For each PR, 3 concurrent builds are used, only one is usng BrowserStack.
-const AVERAGE_KARMA_BUILD = 1 / 3;
+// For each PR, 4 concurrent builds are used, only one is using BrowserStack.
+const AVERAGE_KARMA_BUILD = 1 / 4;
 // CircleCI accepts up to 83 concurrent builds.
 const MAX_CIRCLE_CI_CONCURRENCY = 83;
 
