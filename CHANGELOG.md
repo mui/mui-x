@@ -43,8 +43,11 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 - [DataGrid] Remove `showToolbar` prop (#948) @DanailH
 
   ```diff
+  -import { DataGrid } from '@material-ui/data-grid';
+  +import { DataGrid, GridToolbar } from '@material-ui/data-grid';
+
   -<DataGrid showToolbar />
-  +<DataGrid components={{ Toolbar: MyToolbar }} />
+  +<DataGrid components={{ Toolbar: GridToolbar }} />
   ```
 
 - [DataGrid] Change page index base, from 1 to 0. (#1021) @dtassone
