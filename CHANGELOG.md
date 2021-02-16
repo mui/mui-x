@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.20](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.19...v4.0.0-alpha.20)
+
+###### _Feb 16, 2021_
+ 
+Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add new selectionModel prop (#986) @dtassone
+- 🚀 Fix controllable filters and select all rows with filters (#1020) @dtassone
+- 💅 Add support for default props from theme (#1019) @DanailH
+- 🙌 Fix scrollbar size on windows (#1061) @dtassone
+- ⚡️ Fix server-side multi filters (#1029) @dtassone
+- 🐛 Polish existing features, fix 9 issues.
+
+### @material-ui/x-grid@v4.0.0-alpha.19 / @material-ui/data-grid@v4.0.0-alpha.19
+
+- [DataGrid] Add bgBG locale (#983) @DanailH
+- [DataGrid] Add last of the missing translations (#1033) @DanailH
+- [DataGrid] Add new selectionModel prop (#986) @dtassone
+- [DataGrid] Add support for default props from theme (#1019) @DanailH
+- [DataGrid] Change page index base, from 1 to 0 (#1021) @dtassone
+- [DataGrid] Fix controllable filters and select all rows with filters (#1020) @dtassone
+- [DataGrid] Fix onPageChange and onPageSizeChange event trigger (#1034) @dtassone
+- [DataGrid] Fix process is not defined (EXPERIMENTAL_ENABLED) (#1027) @leontastic
+- [DataGrid] Fix scrollbar size on windows (#1061) @dtassone
+- [DataGrid] Fix warning with v5 (#1038) @oliviertassinari
+- [DataGrid] Remove showToolbar prop (#948) @DanailH
+- [DataGrid] Remove sortDirection from column definitions (#1015) @dtassone
+- [DataGrid] Resolve the api ref at the same time as any other ref (#990) @oliviertassinari
+- [DataGrid] Use the disableDensitySelector to disable the DensitySelector (#1031) @DanailH
+- [DataGrid] fix passing [] or undefined in sortModel prop (#1035) @dtassone
+- [XGrid] Fix server-side multi filters (#1029) @dtassone
+
+### docs
+
+- [docs] Add code snippet for localization docs in the data grid (#1024) @DanailH
+- [docs] Fix usage of the wrong type (#1062) @oliviertassinari
+- [docs] Reduce fears around license upfront @oliviertassinari
+- [docs] Update streaming docs (#1013) @dtassone
+
+### core
+
+- [core] Batch small changes (#991) @oliviertassinari
+- [core] Save/restore actual yarn cache folder (#1039) @oliviertassinari
+
+### test
+
+- [test] Increase yarn timeout (#1023) @oliviertassinari
+- [test] Link CircleCI URL in BS (#1060) @oliviertassinari
+
 ## [4.0.0-alpha.19](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.18...v4.0.0-alpha.19)
 
 ###### _Feb 5, 2021_
