@@ -20,7 +20,6 @@ In the following example, the labels of the density selector are customized.
 ## Locale text
 
 The default locale of Material-UI is English (United States).
-You can find all the locales supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/locales) in the GitHub repository.
 
 You can use the theme to configure the locale text:
 
@@ -43,7 +42,7 @@ const theme = createMuiTheme(
 ```
 
 Note that `createMuiTheme` accepts any number of arguments.
-If you are already using the translations of the core components, you can add `bgBG` as a new argument.
+If you are already using the [translations of the core components](/guides/localization/#locale-text), you can add `bgBG` as a new argument.
 The same import works with `XGrid` as it's an extension of `DataGrid`.
 
 ### Supported locales
@@ -52,5 +51,9 @@ The same import works with `XGrid` as it's an extension of `DataGrid`.
 | :-------- | :------------------ | :---------- |
 | Bulgarian | bg-BG               | `bgBG`      |
 
-The data grid will support dozens of locales with a simple import that includes all the translated messages.
-You will be able to follow [this guide](/guides/localization/#locale-text) to use them.
+You can [find the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/locales) in the GitHub repository.
+
+To create your own translation or to customize the English text, copy this file to your project, make any changes needed and import the locale from there.
+
+Please do consider contributing new translations back to Material-UI by opening a pull request. However, Material-UI aims to support the 100 most popular locales. We might not accept contributions for locales that are not frequently used, for instance, `gl-ES` that has "only" 2.5 million native speakers.
+See the [Docs](https://material-ui.com/components/data-grid/localization/) for more details.
