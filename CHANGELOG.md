@@ -3,6 +3,95 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.20](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.19...v4.0.0-alpha.20)
+
+_Feb 17, 2021_
+
+Big thanks to the 4 contributors who made this release possible. Here are some highlights ✨:
+
+- 📍 Add support for default locales (#983) @DanailH
+  We have built the infrastructure to support around 100 [default locales](https://material-ui.com/components/data-grid/localization/#supported-locales). If you have localized the data grid in your application. Please do consider contributing new translations back to Material-UI by opening a pull request.
+- 🎁 Add new `selectionModel` prop (#986) @dtassone
+  The prop can be used to control the selected rows in the data grid. [See the docs](https://material-ui.com/components/data-grid/selection/#controlled-selection).
+- 💅 Add support for default props from theme (#1019) @DanailH
+- 🙌 Fix scrollbar size on windows (#1061) @dtassone
+- 🐛 Polish existing features, fix 9 issues.
+
+### @material-ui/x-grid@v4.0.0-alpha.19 / @material-ui/data-grid@v4.0.0-alpha.19
+
+#### Breaking changes
+
+- [DataGrid] Remove `sortDirection` from column definitions. Consolidate around fewer ways of doing the same thing. (#1015) @dtassone
+
+  ```diff
+  -columns[1] = { ...columns[1], sortDirection: 'asc' };
+
+  return (
+    <div>
+  -   <DataGrid rows={rows} columns={columns} />
+  +   <DataGrid rows={rows} columns={columns} sortModel={[{ field: columns[1].field, sort: 'asc' }]} />
+    </div>
+  ```
+
+- [DataGrid] Rename the `onSelectionChange` prop to `onSelectionModelChange` for consistency. (#986) @dtassone
+
+  ```diff
+  -<DataGrid onSelectionChange={selectionChangeHandler} />
+  +<DataGrid onSelectionModelChange={onSelectionModelChangeHandler} />
+  ```
+
+- [DataGrid] Remove `showToolbar` prop (#948) @DanailH
+
+  ```diff
+  -import { DataGrid } from '@material-ui/data-grid';
+  +import { DataGrid, GridToolbar } from '@material-ui/data-grid';
+
+  -<DataGrid showToolbar />
+  +<DataGrid components={{ Toolbar: GridToolbar }} />
+  ```
+
+- [DataGrid] Change page index base, from 1 to 0. (#1021) @dtassone
+  This change is done for consistency with `TablePagination` and JavaScript arrays that are 0-based. Material-UI still uses a 1-base page for the `Pagination` component that matches the URL's query.
+
+  ```diff
+  -const [page, setPage] = React.useState(1);
+  +const [page, setPage] = React.useState(0);
+
+  return (
+    <div className="grid-container">
+      <DataGrid rows={rows} columns={columns} page={page} />
+    </div>
+  ```
+
+#### Changes
+
+- [DataGrid] Add bgBG locale (#983) @DanailH
+- [DataGrid] Add last of the missing translations (#1033) @DanailH
+- [DataGrid] Add support for default props from theme (#1019) @DanailH
+- [DataGrid] Fix controllable filters and select all rows with filters (#1020) @dtassone
+- [DataGrid] Fix onPageChange and onPageSizeChange event trigger (#1034) @dtassone
+- [DataGrid] Fix process is not defined (EXPERIMENTAL_ENABLED) (#1027) @leontastic
+- [DataGrid] Fix scrollbar size on windows (#1061) @dtassone
+- [DataGrid] Fix warning with v5 (#1038) @oliviertassinari
+- [DataGrid] Resolve the api ref at the same time as any other ref (#990) @oliviertassinari
+- [DataGrid] Use the disableDensitySelector to disable the DensitySelector (#1031) @DanailH
+- [DataGrid] Fix passing [] or undefined in sortModel prop (#1035) @dtassone
+- [XGrid] Fix server-side multi filters (#1029) @dtassone
+
+### Docs
+
+- [docs] Add code snippet for localization docs in the data grid (#1024) @DanailH
+- [docs] Fix usage of the wrong type (#1062) @oliviertassinari
+- [docs] Reduce fears around license upfront @oliviertassinari
+- [docs] Update streaming docs (#1013) @dtassone
+
+### Core
+
+- [core] Batch small changes (#991) @oliviertassinari
+- [core] Save/restore actual yarn cache folder (#1039) @oliviertassinari
+- [test] Increase yarn timeout (#1023) @oliviertassinari
+- [test] Link CircleCI URL in BS (#1060) @oliviertassinari
+
 ## [4.0.0-alpha.19](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.18...v4.0.0-alpha.19)
 
 ###### _Feb 5, 2021_
