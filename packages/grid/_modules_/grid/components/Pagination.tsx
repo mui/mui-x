@@ -86,6 +86,7 @@ export function Pagination() {
       rowsPerPage={paginationState.pageSize}
       labelRowsPerPage={apiRef!.current.getLocaleText('footerPaginationRowsPerPage')}
       {...getPaginationChangeHandlers()}
+      {...apiRef!.current.componentsProps?.pagination}
     />
   );
 }
