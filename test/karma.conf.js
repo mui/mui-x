@@ -1,6 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
 
+const CI = Boolean(process.env.CI);
+
 let build = `material-ui-x local ${new Date().toISOString()}`;
 
 if (process.env.CIRCLE_BUILD_URL) {
@@ -66,7 +68,7 @@ module.exports = function setKarmaConfig(config) {
     reporters: ['dots'],
     webpack: {
       mode: 'development',
-      devtool: 'inline-source-map',
+      devtool: CI ? 'inline-source-map' : 'eval-source-map',
       plugins: [
         new webpack.DefinePlugin({
           'process.env': {
@@ -110,7 +112,7 @@ module.exports = function setKarmaConfig(config) {
     },
     webpackMiddleware: {
       noInfo: true,
-      writeToDisk: Boolean(process.env.CI),
+      writeToDisk: CI,
     },
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
@@ -118,7 +120,7 @@ module.exports = function setKarmaConfig(config) {
         flags: ['--no-sandbox'],
       },
     },
-    singleRun: Boolean(process.env.CI),
+    singleRun: CI,
   };
 
   let newConfig = baseConfig;
