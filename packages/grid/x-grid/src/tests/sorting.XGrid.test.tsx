@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApiRef, SortModel, useApiRef } from '@material-ui/data-grid';
+import { ApiRef, SortModel, useGridApiRef } from '@material-ui/data-grid';
 import { XGrid } from '@material-ui/x-grid';
 import { expect } from 'chai';
 import { useFakeTimers } from 'sinon';
@@ -52,7 +52,7 @@ describe('<XGrid /> - Sorting', () => {
     };
 
     const { sortModel, rows } = props;
-    apiRef = useApiRef();
+    apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
         <XGrid

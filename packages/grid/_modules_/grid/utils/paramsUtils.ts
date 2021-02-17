@@ -7,7 +7,7 @@ import { RowParams } from '../models/params/rowParams';
 
 let warnedOnce = false;
 
-export function buildCellParams({
+export function buildGridCellParams({
   element,
   value,
   rowIndex,
@@ -47,7 +47,7 @@ export function buildCellParams({
       }
 
       return col.valueGetter(
-        buildCellParams({
+        buildGridCellParams({
           value: rowModel[field],
           colDef: col,
           rowIndex,
@@ -64,7 +64,7 @@ export function buildCellParams({
   };
 }
 
-export function buildRowParams({
+export function buildGridRowParams({
   element,
   rowIndex,
   rowModel,

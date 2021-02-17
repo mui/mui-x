@@ -10,11 +10,11 @@ import {
   FilterItem,
   FilterModel,
   FilterModelParams,
-  getNumericColumnOperators,
-  LinkOperator,
-  PreferencePanelsValue,
+  getGridNumericColumnOperators,
+  GridLinkOperator,
+  GridPreferencePanelsValue,
   RowModel,
-  useApiRef,
+  useGridApiRef,
   XGrid,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
@@ -46,7 +46,7 @@ export function CommodityWithOpenFilters() {
         state={{
           preferencePanel: {
             open: true,
-            openedPanelValue: PreferencePanelsValue.filters,
+            openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
       />
@@ -64,13 +64,13 @@ export function CommodityWithOpenFiltersAndState() {
         state={{
           preferencePanel: {
             open: true,
-            openedPanelValue: PreferencePanelsValue.filters,
+            openedPanelValue: GridPreferencePanelsValue.filters,
           },
           filter: {
             items: [
               { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
             ],
-            linkOperator: LinkOperator.And,
+            linkOperator: GridLinkOperator.And,
           },
         }}
       />
@@ -93,12 +93,12 @@ export function WithNewOperator() {
           columns={data.columns}
           filterModel={{
             items: [{ id: 123, columnField: 'commodity', value: 'co', operatorValue: operator }],
-            linkOperator: LinkOperator.And,
+            linkOperator: GridLinkOperator.And,
           }}
           state={{
             preferencePanel: {
               open: true,
-              openedPanelValue: PreferencePanelsValue.filters,
+              openedPanelValue: GridPreferencePanelsValue.filters,
             },
           }}
         />
@@ -127,12 +127,12 @@ export function CommodityWithNewRowsViaProps() {
             items: [
               { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
             ],
-            linkOperator: LinkOperator.And,
+            linkOperator: GridLinkOperator.And,
           }}
           state={{
             preferencePanel: {
               open: true,
-              openedPanelValue: PreferencePanelsValue.filters,
+              openedPanelValue: GridPreferencePanelsValue.filters,
             },
           }}
         />
@@ -175,7 +175,7 @@ export function CommodityWithNewColsViaProps() {
           state={{
             preferencePanel: {
               open: true,
-              openedPanelValue: PreferencePanelsValue.filters,
+              openedPanelValue: GridPreferencePanelsValue.filters,
             },
           }}
         />
@@ -204,12 +204,12 @@ export function CommodityNoToolbar() {
             items: [
               { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
             ],
-            linkOperator: LinkOperator.And,
+            linkOperator: GridLinkOperator.And,
           }}
           state={{
             preferencePanel: {
               open: true,
-              openedPanelValue: PreferencePanelsValue.filters,
+              openedPanelValue: GridPreferencePanelsValue.filters,
             },
           }}
         />
@@ -277,7 +277,7 @@ export function ServerFilterViaProps() {
         state={{
           preferencePanel: {
             open: true,
-            openedPanelValue: PreferencePanelsValue.filters,
+            openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
       />
@@ -341,7 +341,7 @@ export function SimpleServerFilter() {
   );
 }
 export function CommodityWithNewRowsViaApi() {
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
   const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
   const apiDemoData = useDemoData({ dataSet: 'Commodity', rowLength: 150 });
 
@@ -367,12 +367,12 @@ export function CommodityWithNewRowsViaApi() {
             items: [
               { id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'startsWith' },
             ],
-            linkOperator: LinkOperator.And,
+            linkOperator: GridLinkOperator.And,
           }}
           state={{
             preferencePanel: {
               open: true,
-              openedPanelValue: PreferencePanelsValue.filters,
+              openedPanelValue: GridPreferencePanelsValue.filters,
             },
           }}
         />
@@ -424,7 +424,7 @@ export function CustomFilterOperator() {
       let newColumns: ColDef[] = [...data.columns];
       const ratingColumn = { ...newColumns.find((col) => col.field === 'rating') };
 
-      const ratingOperators = getNumericColumnOperators();
+      const ratingOperators = getGridNumericColumnOperators();
       ratingColumn!.filterOperators = ratingOperators.map((operator) => {
         operator.InputComponent = RatingInputValue;
         return operator;
@@ -448,7 +448,7 @@ export function CustomFilterOperator() {
         state={{
           preferencePanel: {
             open: true,
-            openedPanelValue: PreferencePanelsValue.filters,
+            openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
       />
@@ -501,7 +501,7 @@ export function RatingOperator() {
         state={{
           preferencePanel: {
             open: true,
-            openedPanelValue: PreferencePanelsValue.filters,
+            openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
       />
@@ -542,7 +542,7 @@ export function ColumnsAlign() {
 const priceColumnType: ColTypeDef = {
   extendType: 'number',
   valueFormatter: ({ value }) => `${value} USD`,
-  filterOperators: getNumericColumnOperators()
+  filterOperators: getGridNumericColumnOperators()
     .filter((operator) => operator.value === '>' || operator.value === '<')
     .map((operator) => {
       return {
@@ -581,7 +581,9 @@ export function NewColumnTypes() {
         filterModel={{
           items: [{ id: 1, columnField: 'totalPrice', operatorValue: '>', value: '1000000' }],
         }}
-        state={{ preferencePanel: { openedPanelValue: PreferencePanelsValue.filters, open: true } }}
+        state={{
+          preferencePanel: { openedPanelValue: GridPreferencePanelsValue.filters, open: true },
+        }}
       />
     </div>
   );
@@ -600,7 +602,7 @@ export function DemoCustomRatingFilterOperator() {
       let newColumns = [...data.columns];
       const ratingColumn = { ...newColumns.find((col) => col.field === 'rating') };
 
-      const ratingOperators = getNumericColumnOperators();
+      const ratingOperators = getGridNumericColumnOperators();
       ratingColumn!.filterOperators = ratingOperators.map((operator) => {
         operator.InputComponent = RatingInputValue;
         return operator;

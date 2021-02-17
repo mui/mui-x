@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Story, Meta, DecoratorFn } from '@storybook/react';
-import { XGridProps, PreferencePanelsValue, XGrid, GridOptionsProp } from '@material-ui/x-grid';
+import { XGridProps, GridPreferencePanelsValue, XGrid, GridOptionsProp } from '@material-ui/x-grid';
 import { useDemoData, DemoDataOptions } from '@material-ui/x-grid-data-generator';
 import Button from '@material-ui/core/Button';
 import '@material-ui/x-grid-data-generator/style/real-data-stories.css';
@@ -133,7 +133,7 @@ CommodityPreferences.args = {
   state: {
     preferencePanel: {
       open: true,
-      openedPanelValue: PreferencePanelsValue.columns,
+      openedPanelValue: GridPreferencePanelsValue.columns,
     },
   },
 };

@@ -1,6 +1,12 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import { GridState, SortingState, useApiRef, StateChangeParams, XGrid } from '@material-ui/x-grid';
+import {
+  GridState,
+  GridSortingState,
+  useGridApiRef,
+  StateChangeParams,
+  XGrid,
+} from '@material-ui/x-grid';
 import { useData } from '../hooks/useData';
 
 export default {
@@ -42,11 +48,11 @@ export function PartialControlUseState() {
 
 export function SetStateApi() {
   const data = useData(2000, 200);
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
 
   React.useEffect(() => {
     apiRef.current.setState((previousState: GridState) => {
-      const sorting: SortingState = {
+      const sorting: GridSortingState = {
         ...previousState.sorting,
         sortModel: [{ field: 'currencyPair', sort: 'asc' }],
       };
@@ -58,7 +64,7 @@ export function SetStateApi() {
 }
 export function PartialControlApiRef() {
   const data = useData(2000, 200);
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
 
   const onStateChange = React.useCallback(
     (params: StateChangeParams) => {
@@ -68,7 +74,7 @@ export function PartialControlApiRef() {
           !params.state.sorting.sortModel.some((sort) => sort.field === 'currencyPair'))
       ) {
         apiRef.current.setState((previousState: GridState) => {
-          const sorting: SortingState = {
+          const sorting: GridSortingState = {
             ...previousState.sorting,
             sortModel: [{ field: 'currencyPair', sort: 'asc' }],
           };
@@ -131,7 +137,7 @@ export function InitialState() {
 }
 
 export function InitialStateWithApiRef() {
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
 
   React.useEffect(() => {
     apiRef.current.setState((prev) => ({

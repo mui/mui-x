@@ -5,5 +5,5 @@ export * from './classnames';
 export * from './keyboardUtils';
 export * from './mergeUtils';
 export * from './paramsUtils';
-export * from './getLocalization';
+export * from './getGridLocalization';
 export * from './material-ui-utils';

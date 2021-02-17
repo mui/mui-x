@@ -7,7 +7,7 @@ import {
   RowsProp,
   SortModelParams,
   SortModel,
-  useApiRef,
+  useGridApiRef,
 } from '@material-ui/x-grid';
 import { action } from '@storybook/addon-actions';
 
@@ -300,7 +300,7 @@ export const SortModelOptionsMultiple = () => {
   );
 };
 export const ApiSingleSorted = () => {
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
   React.useEffect(() => {
     apiRef.current.setSortModel([{ field: 'name', sort: 'asc' }]);
   }, [apiRef]);
@@ -312,7 +312,7 @@ export const ApiSingleSorted = () => {
   );
 };
 export const ApiMultipleSorted = () => {
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
   React.useEffect(() => {
     apiRef.current.setSortModel([
       { field: 'age', sort: 'desc' },
@@ -328,7 +328,7 @@ export const ApiMultipleSorted = () => {
 };
 
 export const SortedEventsApi = () => {
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
   const [loggedEvents, setEvents] = React.useState<any[]>([]);

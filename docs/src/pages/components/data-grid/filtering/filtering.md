@@ -116,7 +116,7 @@ const filterModel: FilterModel = {
     { columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
     { columnField: 'commodity', operatorValue: 'startsWith', value: 'Soy' },
   ],
-  linkOperator: LinkOperator.Or,
+  linkOperator: GridLinkOperator.Or,
 };
 ```
 

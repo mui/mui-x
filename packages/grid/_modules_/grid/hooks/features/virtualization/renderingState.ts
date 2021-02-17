@@ -11,7 +11,7 @@ export interface InternalRenderingState {
   renderedSizes: ContainerProps | null;
 }
 
-export const getInitialRenderingState = (): InternalRenderingState => {
+export const getInitialGridRenderingState = (): InternalRenderingState => {
   return {
     realScroll: { left: 0, top: 0 },
     renderContext: null,

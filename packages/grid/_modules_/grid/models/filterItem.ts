@@ -5,7 +5,7 @@ export interface FilterItem {
   operatorValue?: string;
 }
 
-export enum LinkOperator {
+export enum GridLinkOperator {
   And = 'and',
   Or = 'or',
 }

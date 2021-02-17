@@ -17,7 +17,7 @@ export type GridOptionsProp = Partial<GridOptions>;
  */
 export interface GridComponentProps extends GridOptionsProp {
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with [[useApiRef()]].
+   * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
    */
   apiRef?: ApiRef;
   /**

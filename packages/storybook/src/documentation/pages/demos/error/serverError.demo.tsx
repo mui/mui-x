@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Columns, useApiRef, XGrid } from '@material-ui/x-grid';
+import { Columns, useGridApiRef, XGrid } from '@material-ui/x-grid';
 
 const columns: Columns = [
   { field: 'name', type: 'string' },
@@ -18,7 +18,7 @@ function loadServerRows(): Promise<any> {
 }
 
 export default function ServerErrorDemo() {
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
   const [loading, setLoading] = React.useState<boolean>(false);
 
   React.useEffect(() => {

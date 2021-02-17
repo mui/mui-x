@@ -1,6 +1,6 @@
-import { getLocalization, Localization } from '../utils';
+import { getGridLocalization, Localization } from '../utils';
 
-export const bgBG: Localization = getLocalization({
+export const bgBG: Localization = getGridLocalization({
   // Root
   rootGridLabel: 'мрежа',
   noRowsLabel: 'Няма редове',

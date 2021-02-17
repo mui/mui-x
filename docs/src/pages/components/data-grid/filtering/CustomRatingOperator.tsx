@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Rating } from '@material-ui/lab';
 import {
   FilterInputValueProps,
-  PreferencePanelsValue,
+  GridPreferencePanelsValue,
   DataGrid,
   FilterItem,
   ColDef,
@@ -91,7 +91,7 @@ export default function CustomRatingOperator() {
         state={{
           preferencePanel: {
             open: true,
-            openedPanelValue: PreferencePanelsValue.filters,
+            openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
       />

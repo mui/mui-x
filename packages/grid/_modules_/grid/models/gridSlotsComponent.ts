@@ -2,26 +2,26 @@ import * as React from 'react';
 import { ErrorOverlay, ErrorOverlayProps } from '../components/ErrorOverlay';
 import { GridFooter } from '../components/GridFooter';
 import { GridHeader } from '../components/GridHeader';
-import { PreferencesPanel } from '../components/panel/PreferencesPanel';
+import { GridPreferencesPanel } from '../components/panel/GridPreferencesPanel';
 import {
-  ArrowDownwardIcon,
-  ArrowUpwardIcon,
-  ColumnIcon,
-  FilterAltIcon,
-  FilterListIcon,
-  SeparatorIcon,
-  TableRowsIcon,
-  TripleDotsVerticalIcon,
-  ViewHeadlineIcon,
-  ViewStreamIcon,
+  GridArrowDownwardIcon,
+  GridArrowUpwardIcon,
+  GridColumnIcon,
+  GridFilterAltIcon,
+  GridFilterListIcon,
+  GridSeparatorIcon,
+  GridTableRowsIcon,
+  GridTripleDotsVerticalIcon,
+  GridViewHeadlineIcon,
+  GridViewStreamIcon,
 } from '../components/icons/index';
-import { LoadingOverlay } from '../components/LoadingOverlay';
+import { GridLoadingOverlay } from '../components/GridLoadingOverlay';
 import { GridColumnMenu, GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenu';
-import { NoRowsOverlay } from '../components/NoRowsOverlay';
-import { Pagination } from '../components/Pagination';
-import { ColumnsPanel } from '../components/panel/ColumnsPanel';
-import { FilterPanel } from '../components/panel/filterPanel/FilterPanel';
-import { Panel, PanelProps } from '../components/panel/Panel';
+import { GridNoRowsOverlay } from '../components/GridNoRowsOverlay';
+import { GridPagination } from '../components/GridPagination';
+import { GridColumnsPanel } from '../components/panel/GridColumnsPanel';
+import { GridFilterPanel } from '../components/panel/filterPanel/GridFilterPanel';
+import { GridPanel, GridPanelProps } from '../components/panel/GridPanel';
 import { ApiRefComponentsProperty } from './api/componentsApi';
 import { GridIconSlotsComponent } from './gridIconSlotsComponent';
 import { BaseComponentProps } from './params/baseComponentProps';
@@ -81,33 +81,33 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
   /**
    * Panel component wrapping the filters and columns panels.
    */
-  Panel?: React.ElementType<BaseComponentProps & PanelProps>;
+  Panel?: React.ElementType<BaseComponentProps & GridPanelProps>;
 }
 
-export const DEFAULT_SLOTS_ICONS: GridIconSlotsComponent = {
-  OpenFilterButtonIcon: FilterListIcon,
-  ColumnFilteredIcon: FilterAltIcon,
-  ColumnSelectorIcon: ColumnIcon,
-  ColumnMenuIcon: TripleDotsVerticalIcon,
-  ColumnSortedAscendingIcon: ArrowUpwardIcon,
-  ColumnSortedDescendingIcon: ArrowDownwardIcon,
-  ColumnResizeIcon: SeparatorIcon,
-  DensityCompactIcon: ViewHeadlineIcon,
-  DensityStandardIcon: TableRowsIcon,
-  DensityComfortableIcon: ViewStreamIcon,
+export const DEFAULT_GRID_SLOTS_ICONS: GridIconSlotsComponent = {
+  OpenFilterButtonIcon: GridFilterListIcon,
+  ColumnFilteredIcon: GridFilterAltIcon,
+  ColumnSelectorIcon: GridColumnIcon,
+  ColumnMenuIcon: GridTripleDotsVerticalIcon,
+  ColumnSortedAscendingIcon: GridArrowUpwardIcon,
+  ColumnSortedDescendingIcon: GridArrowDownwardIcon,
+  ColumnResizeIcon: GridSeparatorIcon,
+  DensityCompactIcon: GridViewHeadlineIcon,
+  DensityStandardIcon: GridTableRowsIcon,
+  DensityComfortableIcon: GridViewStreamIcon,
 };
 
-export const DEFAULT_SLOTS_COMPONENTS: ApiRefComponentsProperty = {
-  ...DEFAULT_SLOTS_ICONS,
+export const DEFAULT_GRID_SLOTS_COMPONENTS: ApiRefComponentsProperty = {
+  ...DEFAULT_GRID_SLOTS_ICONS,
   ColumnMenu: GridColumnMenu,
-  ColumnsPanel,
+  ColumnsPanel: GridColumnsPanel,
   ErrorOverlay,
-  FilterPanel,
+  FilterPanel: GridFilterPanel,
   Footer: GridFooter,
   Header: GridHeader,
-  PreferencesPanel,
-  LoadingOverlay,
-  NoRowsOverlay,
-  Pagination,
-  Panel,
+  PreferencesPanel: GridPreferencesPanel,
+  LoadingOverlay: GridLoadingOverlay,
+  NoRowsOverlay: GridNoRowsOverlay,
+  Pagination: GridPagination,
+  Panel: GridPanel,
 };

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import { RowData, useApiRef, XGrid } from '@material-ui/x-grid';
+import { RowData, useGridApiRef, XGrid } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { randomInt } from '../data/random-generator';
 
@@ -75,7 +75,7 @@ export function CommodityNewRowId() {
   );
 }
 export function SetRowsViaApi() {
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
 
   const setNewRows = React.useCallback(() => {
     apiRef.current.setRows(newRows);
@@ -95,7 +95,7 @@ export function SetRowsViaApi() {
   );
 }
 export function SetCommodityRowsViaApi() {
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
   const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
   const apiDemoData = useDemoData({ dataSet: 'Commodity', rowLength: 150 });
 

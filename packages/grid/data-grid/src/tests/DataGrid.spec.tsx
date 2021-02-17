@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { DataGrid, useApiRef } from '@material-ui/data-grid';
+import { DataGrid, useGridApiRef } from '@material-ui/data-grid';
 
 function EnterpriseTest() {
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
   return (
     <div>
       <DataGrid rows={[]} columns={[]} />

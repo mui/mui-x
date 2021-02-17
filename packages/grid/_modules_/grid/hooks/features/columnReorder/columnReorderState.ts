@@ -2,6 +2,6 @@ export interface ColumnReorderState {
   dragCol: string;
 }
 
-export function getInitialColumnReorderState(): ColumnReorderState {
+export function getInitialGridColumnReorderState(): ColumnReorderState {
   return { dragCol: '' };
 }

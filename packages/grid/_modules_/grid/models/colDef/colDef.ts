@@ -146,7 +146,7 @@ export interface InternalColumns {
   lookup: ColumnLookup;
 }
 
-export const getInitialColumnsState = (): InternalColumns => ({
+export const getInitialGridColumnsState = (): InternalColumns => ({
   all: [],
   lookup: {},
 });

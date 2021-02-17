@@ -1,8 +1,11 @@
 import * as React from 'react';
-import { CellCheckboxRenderer, HeaderCheckbox } from '../../components/CheckboxRenderer';
+import {
+  GridCellCheckboxRenderer,
+  GridHeaderCheckbox,
+} from '../../components/GridCheckboxRenderer';
 import { ColDef } from './colDef';
 
-export const checkboxSelectionColDef: ColDef = {
+export const gridCheckboxSelectionColDef: ColDef = {
   field: '__check__',
   headerName: 'Checkbox Selection',
   description: 'Select Multiple Rows',
@@ -16,8 +19,8 @@ export const checkboxSelectionColDef: ColDef = {
   disableClickEventBubbling: true,
   disableColumnMenu: true,
   valueGetter: (params) => params.api.getState().selection[params.row.id],
-  renderHeader: (params) => <HeaderCheckbox {...params} />,
-  renderCell: (params) => <CellCheckboxRenderer {...params} />,
+  renderHeader: (params) => <GridHeaderCheckbox {...params} />,
+  renderCell: (params) => <GridCellCheckboxRenderer {...params} />,
   cellClassName: 'MuiDataGrid-cellCheckbox',
   headerClassName: 'MuiDataGrid-colCellCheckbox',
 };

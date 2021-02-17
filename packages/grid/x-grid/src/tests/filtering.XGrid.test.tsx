@@ -5,10 +5,10 @@ import {
   ApiRef,
   FilterModel,
   GridComponentProps,
-  LinkOperator,
-  PreferencePanelsValue,
+  GridLinkOperator,
+  GridPreferencePanelsValue,
   RowModel,
-  useApiRef,
+  useGridApiRef,
   XGrid,
 } from '@material-ui/x-grid';
 import {
@@ -63,7 +63,7 @@ describe('<XGrid /> - Filter', () => {
     };
 
     const { rows, ...other } = props;
-    apiRef = useApiRef();
+    apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
         <XGrid
@@ -176,7 +176,7 @@ describe('<XGrid /> - Filter', () => {
     expect(getColumnValues()).to.deep.equal(['Adidas']);
   });
 
-  it('should allow multiple filter and changing the LinkOperator', () => {
+  it('should allow multiple filter and changing the linkOperator', () => {
     const newModel: FilterModel = {
       items: [
         {
@@ -190,7 +190,7 @@ describe('<XGrid /> - Filter', () => {
           operatorValue: 'endsWith',
         },
       ],
-      linkOperator: LinkOperator.Or,
+      linkOperator: GridLinkOperator.Or,
     };
     render(<TestCase filterModel={newModel} />);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
@@ -205,7 +205,7 @@ describe('<XGrid /> - Filter', () => {
           operatorValue: 'startsWith',
         },
       ],
-      linkOperator: LinkOperator.Or,
+      linkOperator: GridLinkOperator.Or,
     };
     render(<TestCase checkboxSelection filterModel={newModel} />);
     const checkAllCell = getColumnHeaderCell(1).querySelector('input');
@@ -289,7 +289,10 @@ describe('<XGrid /> - Filter', () => {
               filterMode="server"
               onFilterModelChange={onFilterChange}
               state={{
-                preferencePanel: { open: true, openedPanelValue: PreferencePanelsValue.filters },
+                preferencePanel: {
+                  open: true,
+                  openedPanelValue: GridPreferencePanelsValue.filters,
+                },
               }}
             />
           </div>

@@ -1,19 +1,19 @@
 import * as React from 'react';
-import { STATE_CHANGE } from '../../../constants/eventsConstants';
+import { XGRID_STATE_CHANGE } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { GridApi } from '../../../models/api/gridApi';
 import { StateChangeParams } from '../../../models/params/stateChangeParams';
 import { isFunction } from '../../../utils/utils';
-import { useApiMethod } from '../../root/useApiMethod';
+import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useLogger } from '../../utils/useLogger';
-import { getInitialState, GridState } from './gridState';
+import { getInitialGridState, GridState } from './gridState';
 
 export const useGridApi = (apiRef: ApiRef): GridApi => {
   const logger = useLogger('useGridApi');
   const [, forceUpdate] = React.useState<GridState>();
   if (!apiRef.current.isInitialised && !apiRef.current.state) {
     logger.info('Initialising state.');
-    apiRef.current.state = getInitialState();
+    apiRef.current.state = getInitialGridState();
     apiRef.current.forceUpdate = forceUpdate;
   }
 
@@ -25,7 +25,7 @@ export const useGridApi = (apiRef: ApiRef): GridApi => {
 
   const onStateChange = React.useCallback(
     (handler: (param: StateChangeParams) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(STATE_CHANGE, handler);
+      return apiRef.current.subscribeEvent(XGRID_STATE_CHANGE, handler);
     },
     [apiRef],
   );
@@ -41,12 +41,12 @@ export const useGridApi = (apiRef: ApiRef): GridApi => {
       apiRef.current.state = state;
       forceUpdate(() => state);
       const params: StateChangeParams = { api: apiRef.current, state };
-      apiRef.current.publishEvent(STATE_CHANGE, params);
+      apiRef.current.publishEvent(XGRID_STATE_CHANGE, params);
     },
     [apiRef],
   );
 
-  useApiMethod(apiRef, { getState, onStateChange, setState }, 'StateApi');
+  useGridApiMethod(apiRef, { getState, onStateChange, setState }, 'StateApi');
 
   return apiRef.current;
 };

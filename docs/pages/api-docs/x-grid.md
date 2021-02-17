@@ -13,7 +13,7 @@ import { XGrid } from '@material-ui/x-grid';
 
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
-| <span class="prop-name">apiRef</span> | <span class="prop-type">ApiRef</span> |   | The ref object that allows grid manipulation. Can be instantiated with 'useApiRef()'. |
+| <span class="prop-name">apiRef</span> | <span class="prop-type">ApiRef</span> |   | The ref object that allows grid manipulation. Can be instantiated with 'useGridApiRef()'. |
 | <span class="prop-name">autoHeight</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid height is dynamic and follow the number of rows in the grid. |
 | <span class="prop-name">autoPageSize</span> | <span class="prop-type">boolean</span> | false | If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar. |
 | <span class="prop-name">checkboxSelection</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid get a first column with a checkbox that allows to select rows. |
@@ -58,7 +58,7 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">page</span> | <span class="prop-type">number</span> | 1   |  Set the current page. |
 | <span class="prop-name">pageSize</span> | <span class="prop-type">number</span> | 100 | Set the number of rows in one page. |
 | <span class="prop-name">pagination</span> | <span class="prop-type">boolean</span> | false | If `true`, pagination is enabled. |
-| <span class="prop-name">paginationMode</span> | <span class="prop-type">FeatureMode</span> | 'client' | Pagination can be processed on the server or client-side. Set it to 'client' if you would like to handle the pagination on the client-side. Set it to 'server' if you would like to handle the pagination on the server-side. |
+| <span class="prop-name">paginationMode</span> | <span class="prop-type">GridFeatureMode</span> | 'client' | Pagination can be processed on the server or client-side. Set it to 'client' if you would like to handle the pagination on the client-side. Set it to 'server' if you would like to handle the pagination on the server-side. |
 | <span class="prop-name required">rows<abbr title="required">*</abbr></span> | <span class="prop-type">RowsProp</span> |  | Set of rows of type 'RowsProp'. |
 | <span class="prop-name">rowCount</span> | <span class="prop-type">number</span> |   |  Set the total number of rows, if it is different than the length of the value `rows` prop. |
 | <span class="prop-name">rowHeight</span> | <span class="prop-type">number</span> | 52 | Set the height in pixel of a row in the grid. |
@@ -67,7 +67,7 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">selectionModel</span> | <span class="prop-type">SelectionModel</span> |   | Set the selection model of the grid. |
 | <span class="prop-name">showCellRightBorder</span> | <span class="prop-type">boolean</span> | false | If `true`, the right border of the cells are displayed. |
 | <span class="prop-name">showColumnRightBorder</span> | <span class="prop-type">boolean</span> | false | If `true`, the right border of the column headers are displayed. |
-| <span class="prop-name">sortingMode</span> | <span class="prop-type">FeatureMode</span> | 'client' |  Sorting can be processed on the server or client-side. Set it to 'client' if you would like to handle sorting on the client-side. Set it to 'server' if you would like to handle sorting on the server-side. |
+| <span class="prop-name">sortingMode</span> | <span class="prop-type">GridFeatureMode</span> | 'client' |  Sorting can be processed on the server or client-side. Set it to 'client' if you would like to handle sorting on the client-side. Set it to 'server' if you would like to handle sorting on the server-side. |
 | <span class="prop-name">sortingOrder</span> | <span class="prop-type">SortDirection[]</span> | ['asc', 'desc', null] | The order of the sorting sequence. |
 | <span class="prop-name">sortModel</span> | <span class="prop-type">SortModel</span> |   | Set the sort model of the grid. |
 
@@ -89,7 +89,7 @@ Api of the `components` props of type `GridSlotsComponent`
 | <span class="prop-name">LoadingOverlay</span> | <span class="prop-type">React.ElementType&lt;BaseComponentProps></span> | <span class="prop-type">LoadingOverlay</span> | Loading overlay component rendered when the grid is in a loading state.|
 | <span class="prop-name">NoRowsOverlay</span> | <span class="prop-type">React.ElementType&lt;BaseComponentProps></span> | <span class="prop-type">NoRowsOverlay</span> | No rows overlay component rendered when the grid has no rows.|
 | <span class="prop-name">Pagination</span> | <span class="prop-type">React.ElementType&lt;BaseComponentProps></span> | <span class="prop-type">Pagination</span> | Pagination component rendered in the grid footer by default.|
-| <span class="prop-name">Panel</span> | <span class="prop-type">React.ElementType<BaseComponentProps & PanelProps></span> | <span class="prop-type">Panel</span> | Panel component wrapping the filters and columns panels. |
+| <span class="prop-name">Panel</span> | <span class="prop-type">React.ElementType<BaseComponentProps & GridPanelProps></span> | <span class="prop-type">Panel</span> | Panel component wrapping the filters and columns panels. |
 
 ### Icons Slots
 

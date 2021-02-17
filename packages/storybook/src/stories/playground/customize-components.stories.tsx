@@ -7,12 +7,12 @@ import {
   GridOverlay,
   GridFooterContainer,
   XGridProps,
-  HideColMenuItem,
+  HideGridColMenuItem,
   ColumnMenuProps,
   BaseComponentProps,
   GridColumnMenu,
-  PanelProps,
-  PreferencesPanel,
+  GridPanelProps,
+  GridPreferencesPanel,
   GridFooter,
   GridToolbar,
 } from '@material-ui/x-grid';
@@ -328,7 +328,7 @@ CustomToolbar.args = {
 
 function ColumnMenuComponent(props: ColumnMenuProps & { color?: string }) {
   if (props.currentColumn.field === 'id') {
-    return <HideColMenuItem onClick={props.hideMenu} column={props.currentColumn!} />;
+    return <HideGridColMenuItem onClick={props.hideMenu} column={props.currentColumn!} />;
   }
   if (props.currentColumn.field === 'currencyPair') {
     return (
@@ -436,7 +436,7 @@ CustomFilterColumnsPanels.args = {
     columnsPanel: { bg: 'red' },
   },
 };
-function CustomPanelComponent(props: BaseComponentProps & PanelProps) {
+function CustomPanelComponent(props: BaseComponentProps & GridPanelProps) {
   if (!props.open) {
     return null;
   }
@@ -455,7 +455,7 @@ function FooterWithPanel() {
   return (
     <React.Fragment>
       <GridFooter />
-      <PreferencesPanel />
+      <GridPreferencesPanel />
     </React.Fragment>
   );
 }

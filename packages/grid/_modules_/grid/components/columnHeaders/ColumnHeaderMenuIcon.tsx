@@ -1,9 +1,9 @@
 import * as React from 'react';
 import IconButton from '@material-ui/core/IconButton';
-import { columnMenuStateSelector } from '../../hooks/features/columnMenu/columnMenuSelector';
+import { gridColumnMenuStateSelector } from '../../hooks/features/columnMenu/columnMenuSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { classnames } from '../../utils/classnames';
-import { ApiContext } from '../api-context';
+import { GridApiContext } from '../GridApiContext';
 import { ColDef } from '../../models/colDef/colDef';
 
 export interface ColumnHeaderFilterIconProps {
@@ -12,8 +12,8 @@ export interface ColumnHeaderFilterIconProps {
 
 export function ColumnHeaderMenuIcon(props: ColumnHeaderFilterIconProps) {
   const { column } = props;
-  const apiRef = React.useContext(ApiContext);
-  const columnMenuState = useGridSelector(apiRef, columnMenuStateSelector);
+  const apiRef = React.useContext(GridApiContext);
+  const columnMenuState = useGridSelector(apiRef, gridColumnMenuStateSelector);
   const ColumnMenuIcon = apiRef!.current.components.ColumnMenuIcon!;
 
   const handleMenuIconClick = React.useCallback(

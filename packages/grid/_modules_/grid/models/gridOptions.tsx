@@ -1,11 +1,11 @@
-import { DEFAULT_LOCALE_TEXT } from '../constants/localeTextConstants';
+import { GRID_DEFAULT_LOCALE_TEXT } from '../constants/localeTextConstants';
 import { FilterModel } from '../hooks/features/filter/FilterModelState';
 import { Logger } from '../hooks/utils/useLogger';
 import { LocaleText } from './api/localeTextApi';
 import { ColumnTypesRecord } from './colDef/colTypeDef';
-import { getDefaultColumnTypes } from './colDef/defaultColumnTypes';
-import { Density, DensityTypes } from './density';
-import { FeatureMode, FeatureModeConstant } from './featureMode';
+import { getGridDefaultColumnTypes } from './colDef/defaultGridColumnTypes';
+import { Density, GridDensityTypes } from './density';
+import { GridFeatureMode, GridFeatureModeConstant } from './gridFeatureMode';
 import { CellParams } from './params/cellParams';
 import { ColParams } from './params/colParams';
 import { FilterModelParams } from './params/filterModelParams';
@@ -137,7 +137,7 @@ export interface GridOptions {
    * Set it to 'client' if you would like to handle the pagination on the client-side.
    * Set it to 'server' if you would like to handle the pagination on the server-side.
    */
-  paginationMode?: FeatureMode;
+  paginationMode?: GridFeatureMode;
   /**
    * Set the total number of rows, if it is different than the length of the value `rows` prop.
    */
@@ -152,13 +152,13 @@ export interface GridOptions {
    * Set it to 'client' if you would like to handle sorting on the client-side.
    * Set it to 'server' if you would like to handle sorting on the server-side.
    */
-  sortingMode?: FeatureMode;
+  sortingMode?: GridFeatureMode;
   /**
    * Filtering can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle filtering on the client-side.
    * Set it to 'server' if you would like to handle filtering on the server-side.
    */
-  filterMode?: FeatureMode;
+  filterMode?: GridFeatureMode;
   /**
    * If `true`, the footer component is hidden.
    * @default false
@@ -299,11 +299,11 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   columnBuffer: 2,
   rowsPerPageOptions: [25, 50, 100],
   pageSize: 100,
-  paginationMode: FeatureModeConstant.client,
-  sortingMode: FeatureModeConstant.client,
-  filterMode: FeatureModeConstant.client,
+  paginationMode: GridFeatureModeConstant.client,
+  sortingMode: GridFeatureModeConstant.client,
+  filterMode: GridFeatureModeConstant.client,
   sortingOrder: ['asc', 'desc', null],
-  columnTypes: getDefaultColumnTypes(),
-  density: DensityTypes.Standard,
-  localeText: DEFAULT_LOCALE_TEXT,
+  columnTypes: getGridDefaultColumnTypes(),
+  density: GridDensityTypes.Standard,
+  localeText: GRID_DEFAULT_LOCALE_TEXT,
 };

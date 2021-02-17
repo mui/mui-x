@@ -1,7 +1,7 @@
 import { CellValue } from '../models/cell';
 import { SortDirection, ComparatorFn } from '../models/sortModel';
 
-export const nextSortDirection = (sortingOrder: SortDirection[], current?: SortDirection) => {
+export const nextGridSortDirection = (sortingOrder: SortDirection[], current?: SortDirection) => {
   const currentIdx = sortingOrder.indexOf(current);
   if (!current || currentIdx === -1 || currentIdx + 1 === sortingOrder.length) {
     return sortingOrder[0];
@@ -12,7 +12,7 @@ export const nextSortDirection = (sortingOrder: SortDirection[], current?: SortD
 
 export const isDesc = (direction: SortDirection) => direction === 'desc';
 
-export const nillComparer = (v1: CellValue, v2: CellValue): number | null => {
+export const gridNillComparer = (v1: CellValue, v2: CellValue): number | null => {
   if (v1 == null && v2 != null) return -1;
   if (v2 == null && v1 != null) return 1;
   if (v1 == null && v2 == null) return 0;
@@ -20,7 +20,7 @@ export const nillComparer = (v1: CellValue, v2: CellValue): number | null => {
   return null;
 };
 
-export const stringNumberComparer: ComparatorFn = (
+export const gridStringNumberComparer: ComparatorFn = (
   v1: CellValue,
   v2: CellValue,
   cellParams1,
@@ -29,7 +29,7 @@ export const stringNumberComparer: ComparatorFn = (
   const value1 = cellParams1.getValue(cellParams1.field);
   const value2 = cellParams2.getValue(cellParams2.field);
 
-  const nillResult = nillComparer(value1, value2);
+  const nillResult = gridNillComparer(value1, value2);
   if (nillResult !== null) {
     return nillResult;
   }
@@ -40,7 +40,7 @@ export const stringNumberComparer: ComparatorFn = (
   return (value1 as any) - (value2 as any);
 };
 
-export const numberComparer: ComparatorFn = (
+export const gridNumberComparer: ComparatorFn = (
   v1: CellValue,
   v2: CellValue,
   cellParams1,
@@ -49,7 +49,7 @@ export const numberComparer: ComparatorFn = (
   const value1 = cellParams1.getValue(cellParams1.field);
   const value2 = cellParams2.getValue(cellParams2.field);
 
-  const nillResult = nillComparer(value1, value2);
+  const nillResult = gridNillComparer(value1, value2);
   if (nillResult !== null) {
     return nillResult;
   }
@@ -57,11 +57,16 @@ export const numberComparer: ComparatorFn = (
   return Number(value1) - Number(value2);
 };
 
-export const dateComparer = (v1: CellValue, v2: CellValue, cellParams1, cellParams2): number => {
+export const gridDateComparer = (
+  v1: CellValue,
+  v2: CellValue,
+  cellParams1,
+  cellParams2,
+): number => {
   const value1 = cellParams1.getValue(cellParams1.field);
   const value2 = cellParams2.getValue(cellParams2.field);
 
-  const nillResult = nillComparer(value1, value2);
+  const nillResult = gridNillComparer(value1, value2);
   if (nillResult !== null) {
     return nillResult;
   }

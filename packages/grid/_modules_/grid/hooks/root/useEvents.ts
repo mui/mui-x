@@ -7,30 +7,30 @@ import { useGridSelector } from '../features/core/useGridSelector';
 import { optionsSelector } from '../utils/optionsSelector';
 import { useLogger } from '../utils/useLogger';
 import {
-  CELL_CLICK,
-  CLICK,
-  COL_RESIZE_START,
-  COL_RESIZE_STOP,
-  COLUMN_HEADER_CLICK,
-  UNMOUNT,
-  KEYDOWN,
-  KEYUP,
-  RESIZE,
-  ROW_CLICK,
-  MOUSE_HOVER,
-  CELL_HOVER,
-  ROW_HOVER,
-  COLUMN_HEADER_HOVER,
-  FOCUS_OUT,
+  XGRID_CELL_CLICK,
+  GRID_CLICK,
+  XGRID_COL_RESIZE_START,
+  XGRID_COL_RESIZE_STOP,
+  XGRID_COLUMN_HEADER_CLICK,
+  XGRID_UNMOUNT,
+  GRID_KEYDOWN,
+  GRID_KEYUP,
+  GRID_RESIZE,
+  XGRID_ROW_CLICK,
+  GRID_MOUSE_HOVER,
+  XGRID_CELL_HOVER,
+  XGRID_ROW_HOVER,
+  XGRID_COLUMN_HEADER_HOVER,
   GRID_FOCUS_OUT,
-  COMPONENT_ERROR,
-  STATE_CHANGE,
+  XGRID_FOCUS_OUT,
+  XGRID_COMPONENT_ERROR,
+  XGRID_STATE_CHANGE,
 } from '../../constants/eventsConstants';
-import { CELL_CSS_CLASS, ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
-import { findParentElementFromClassName, getIdFromRowElem, isCell } from '../../utils/domUtils';
-import { useApiMethod } from './useApiMethod';
-import { useApiEventHandler } from './useApiEventHandler';
-import { buildCellParams, buildRowParams } from '../../utils/paramsUtils';
+import { GRID_CELL_CSS_CLASS, GRID_ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
+import { findParentElementFromClassName, getIdFromRowElem, isGridCell } from '../../utils/domUtils';
+import { useGridApiMethod } from './useGridApiMethod';
+import { useGridApiEventHandler } from './useGridApiEventHandler';
+import { buildGridCellParams, buildGridRowParams } from '../../utils/paramsUtils';
 import { EventsApi } from '../../models/api/eventsApi';
 
 export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: ApiRef): void {
@@ -55,9 +55,9 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
       const elem = event.target as HTMLElement;
       const eventParams: { cell?: CellParams; row?: RowParams; header?: ColParams } = {};
 
-      if (isCell(elem)) {
-        const cellEl = findParentElementFromClassName(elem, CELL_CSS_CLASS)! as HTMLElement;
-        const rowEl = findParentElementFromClassName(elem, ROW_CSS_CLASS)! as HTMLElement;
+      if (isGridCell(elem)) {
+        const cellEl = findParentElementFromClassName(elem, GRID_CELL_CSS_CLASS)! as HTMLElement;
+        const rowEl = findParentElementFromClassName(elem, GRID_ROW_CSS_CLASS)! as HTMLElement;
         if (rowEl == null) {
           return null;
         }
@@ -75,12 +75,12 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
             rowModel,
             api: apiRef.current,
           };
-          eventParams.cell = buildCellParams({
+          eventParams.cell = buildGridCellParams({
             ...commonParams,
             element: cellEl,
             value,
           });
-          eventParams.row = buildRowParams({
+          eventParams.row = buildGridRowParams({
             ...commonParams,
             element: rowEl,
           });
@@ -100,10 +100,10 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
       }
 
       if (eventParams.cell) {
-        apiRef.current.publishEvent(CELL_CLICK, eventParams.cell);
+        apiRef.current.publishEvent(XGRID_CELL_CLICK, eventParams.cell);
       }
       if (eventParams.row) {
-        apiRef.current.publishEvent(ROW_CLICK, eventParams.row);
+        apiRef.current.publishEvent(XGRID_ROW_CLICK, eventParams.row);
       }
     },
     [apiRef, getEventParams],
@@ -118,13 +118,13 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
       }
 
       if (eventParams.cell) {
-        apiRef.current.publishEvent(CELL_HOVER, eventParams.cell);
+        apiRef.current.publishEvent(XGRID_CELL_HOVER, eventParams.cell);
       }
       if (eventParams.row) {
-        apiRef.current.publishEvent(ROW_HOVER, eventParams.row);
+        apiRef.current.publishEvent(XGRID_ROW_HOVER, eventParams.row);
       }
       if (eventParams.header) {
-        apiRef.current.publishEvent(COLUMN_HEADER_HOVER, eventParams.header);
+        apiRef.current.publishEvent(XGRID_COLUMN_HEADER_HOVER, eventParams.header);
       }
     },
     [apiRef, getEventParams],
@@ -132,9 +132,9 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
 
   const onFocusOutHandler = React.useCallback(
     (event: FocusEvent) => {
-      apiRef.current.publishEvent(FOCUS_OUT, event);
+      apiRef.current.publishEvent(GRID_FOCUS_OUT, event);
       if (event.relatedTarget === null) {
-        apiRef.current.publishEvent(GRID_FOCUS_OUT, event);
+        apiRef.current.publishEvent(XGRID_FOCUS_OUT, event);
       }
     },
     [apiRef],
@@ -142,13 +142,13 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
 
   const onUnmount = React.useCallback(
     (handler: (param: any) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(UNMOUNT, handler);
+      return apiRef.current.subscribeEvent(XGRID_UNMOUNT, handler);
     },
     [apiRef],
   );
   const onResize = React.useCallback(
     (handler: (param: any) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(RESIZE, handler);
+      return apiRef.current.subscribeEvent(GRID_RESIZE, handler);
     },
     [apiRef],
   );
@@ -161,45 +161,45 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
     isResizingRef.current = false;
   }, []);
 
-  const resize = React.useCallback(() => apiRef.current.publishEvent(RESIZE), [apiRef]);
+  const resize = React.useCallback(() => apiRef.current.publishEvent(GRID_RESIZE), [apiRef]);
   const eventsApi: EventsApi = { resize, onUnmount, onResize };
-  useApiMethod(apiRef, eventsApi, 'EventsApi');
+  useGridApiMethod(apiRef, eventsApi, 'EventsApi');
 
-  useApiEventHandler(apiRef, COL_RESIZE_START, handleResizeStart);
-  useApiEventHandler(apiRef, COL_RESIZE_STOP, handleResizeStop);
+  useGridApiEventHandler(apiRef, XGRID_COL_RESIZE_START, handleResizeStart);
+  useGridApiEventHandler(apiRef, XGRID_COL_RESIZE_STOP, handleResizeStop);
 
-  useApiEventHandler(apiRef, COLUMN_HEADER_CLICK, options.onColumnHeaderClick);
-  useApiEventHandler(apiRef, CELL_CLICK, options.onCellClick);
-  useApiEventHandler(apiRef, ROW_CLICK, options.onRowClick);
-  useApiEventHandler(apiRef, CELL_HOVER, options.onCellHover);
-  useApiEventHandler(apiRef, ROW_HOVER, options.onRowHover);
-  useApiEventHandler(apiRef, COMPONENT_ERROR, options.onError);
-  useApiEventHandler(apiRef, STATE_CHANGE, options.onStateChange);
+  useGridApiEventHandler(apiRef, XGRID_COLUMN_HEADER_CLICK, options.onColumnHeaderClick);
+  useGridApiEventHandler(apiRef, XGRID_CELL_CLICK, options.onCellClick);
+  useGridApiEventHandler(apiRef, XGRID_ROW_CLICK, options.onRowClick);
+  useGridApiEventHandler(apiRef, XGRID_CELL_HOVER, options.onCellHover);
+  useGridApiEventHandler(apiRef, XGRID_ROW_HOVER, options.onRowHover);
+  useGridApiEventHandler(apiRef, XGRID_COMPONENT_ERROR, options.onError);
+  useGridApiEventHandler(apiRef, XGRID_STATE_CHANGE, options.onStateChange);
 
   React.useEffect(() => {
     if (gridRootRef && gridRootRef.current && apiRef.current?.isInitialised) {
       logger.debug('Binding events listeners');
-      const keyDownHandler = getHandler(KEYDOWN);
-      const keyUpHandler = getHandler(KEYUP);
+      const keyDownHandler = getHandler(GRID_KEYDOWN);
+      const keyUpHandler = getHandler(GRID_KEYUP);
       const gridRootElem = gridRootRef.current;
 
-      gridRootElem.addEventListener(CLICK, onClickHandler, { capture: true });
-      gridRootElem.addEventListener(MOUSE_HOVER, onHoverHandler, { capture: true });
-      gridRootElem.addEventListener(FOCUS_OUT, onFocusOutHandler);
+      gridRootElem.addEventListener(GRID_CLICK, onClickHandler, { capture: true });
+      gridRootElem.addEventListener(GRID_MOUSE_HOVER, onHoverHandler, { capture: true });
+      gridRootElem.addEventListener(GRID_FOCUS_OUT, onFocusOutHandler);
 
-      gridRootElem.addEventListener(KEYDOWN, keyDownHandler);
-      gridRootElem.addEventListener(KEYUP, keyUpHandler);
+      gridRootElem.addEventListener(GRID_KEYDOWN, keyDownHandler);
+      gridRootElem.addEventListener(GRID_KEYUP, keyUpHandler);
       apiRef.current.isInitialised = true;
       const api = apiRef.current;
 
       return () => {
         logger.debug('Clearing all events listeners');
-        api.publishEvent(UNMOUNT);
-        gridRootElem.removeEventListener(CLICK, onClickHandler, { capture: true });
-        gridRootElem.removeEventListener(MOUSE_HOVER, onHoverHandler, { capture: true });
-        gridRootElem.removeEventListener(FOCUS_OUT, onFocusOutHandler);
-        gridRootElem.removeEventListener(KEYDOWN, keyDownHandler);
-        gridRootElem.removeEventListener(KEYUP, keyUpHandler);
+        api.publishEvent(XGRID_UNMOUNT);
+        gridRootElem.removeEventListener(GRID_CLICK, onClickHandler, { capture: true });
+        gridRootElem.removeEventListener(GRID_MOUSE_HOVER, onHoverHandler, { capture: true });
+        gridRootElem.removeEventListener(GRID_FOCUS_OUT, onFocusOutHandler);
+        gridRootElem.removeEventListener(GRID_KEYDOWN, keyDownHandler);
+        gridRootElem.removeEventListener(GRID_KEYUP, keyUpHandler);
         api.removeAllListeners();
       };
     }

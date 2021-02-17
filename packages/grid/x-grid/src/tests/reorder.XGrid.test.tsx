@@ -6,7 +6,7 @@ import {
   act,
 } from 'test/utils';
 import { getColumnHeadersTextContent, raf } from 'test/utils/helperFn';
-import { ApiRef, useApiRef, XGrid } from '@material-ui/x-grid';
+import { ApiRef, useGridApiRef, XGrid } from '@material-ui/x-grid';
 
 describe('<XGrid /> - Reorder', () => {
   // TODO v5: replace with createClientRender
@@ -39,7 +39,7 @@ describe('<XGrid /> - Reorder', () => {
 
       const TestCase = (props: { width: number }) => {
         const { width } = props;
-        apiRef = useApiRef();
+        apiRef = useGridApiRef();
         return (
           <div style={{ width, height: 300 }}>
             <XGrid apiRef={apiRef} columns={baselineProps.columns} rows={baselineProps.rows} />
@@ -65,7 +65,7 @@ describe('<XGrid /> - Reorder', () => {
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
     const Test = () => {
-      apiRef = useApiRef();
+      apiRef = useGridApiRef();
 
       return (
         <div style={{ width: 300, height: 300 }}>

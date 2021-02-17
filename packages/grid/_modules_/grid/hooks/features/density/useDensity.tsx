@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Density, DensityTypes } from '../../../models/density';
+import { Density, GridDensityTypes } from '../../../models/density';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
 import { ApiRef } from '../../../models/api/apiRef';
-import { useApiMethod } from '../../root/useApiMethod';
+import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { DensityApi } from '../../../models/api/densityApi';
@@ -20,13 +20,13 @@ export const useDensity = (apiRef: ApiRef): void => {
   const getUpdatedDensityState = React.useCallback(
     (newDensity: Density, newHeaderHeight: number, newRowHeight: number): DensityState => {
       switch (newDensity) {
-        case DensityTypes.Compact:
+        case GridDensityTypes.Compact:
           return {
             value: newDensity,
             headerHeight: Math.floor(newHeaderHeight * COMPACT_DENSITY_FACTOR),
             rowHeight: Math.floor(newRowHeight * COMPACT_DENSITY_FACTOR),
           };
-        case DensityTypes.Comfortable:
+        case GridDensityTypes.Comfortable:
           return {
             value: newDensity,
             headerHeight: Math.floor(newHeaderHeight * COMFORTABLE_DENSITY_FACTOR),
@@ -66,5 +66,5 @@ export const useDensity = (apiRef: ApiRef): void => {
     setDensity,
   };
 
-  useApiMethod(apiRef, densityApi, 'DensityApi');
+  useGridApiMethod(apiRef, densityApi, 'DensityApi');
 };

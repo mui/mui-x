@@ -32,7 +32,7 @@ export interface ObjectWithId {
  * @param row Row as [[RowData]].
  * @returns a boolean
  */
-export function checkRowHasId(
+export function checkGridRowHasId(
   row: RowModel | Partial<RowModel>,
   detailErrorMessage?: string,
 ): boolean {

@@ -1,6 +1,6 @@
 import { LocaleText } from '../models/api/localeTextApi';
 
-export const DEFAULT_LOCALE_TEXT: LocaleText = {
+export const GRID_DEFAULT_LOCALE_TEXT: LocaleText = {
   // Root
   rootGridLabel: 'grid',
   noRowsLabel: 'No rows',

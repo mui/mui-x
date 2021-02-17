@@ -68,7 +68,7 @@ const config: StorybookConfig = {
     config.plugins.push(
       new webpack.DefinePlugin({
         'process.env': {
-          EXPERIMENTAL_ENABLED: JSON.stringify(
+          GRID_EXPERIMENTAL_ENABLED: JSON.stringify(
             // Set by Netlify
             process.env.PULL_REQUEST === 'false' ? 'false' : 'true',
           ),

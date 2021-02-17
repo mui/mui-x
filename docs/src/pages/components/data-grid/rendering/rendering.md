@@ -213,7 +213,7 @@ You can change the density of the rows and the column header.
 
 ### Density selector
 
-To enable the density selector you need to compose a toolbar containing the `DensitySelector` component, and apply it using the `Toolbar` key in the grid `components` prop.
+To enable the density selector you need to compose a toolbar containing the `GridDensitySelector` component, and apply it using the `Toolbar` key in the grid `components` prop.
 
 The user can change the density of the data grid by using the density selector from the toolbar.
 
@@ -274,8 +274,8 @@ Alternatively, you can compose your own toolbar.
 function CustomToolbar() {
   return (
     <GridToolbarContainer>
-      <ColumnsToolbarButton />
-      <FilterToolbarButton />
+      <GridColumnsToolbarButton />
+      <GridFilterToolbarButton />
     </GridToolbarContainer>
   );
 }

@@ -3,14 +3,14 @@ import { CellIndexCoordinates } from '../../../models/cell';
 import { GridState } from '../core/gridState';
 import { KeyboardState } from './keyboardState';
 
-export const keyboardStateSelector = (state: GridState) => state.keyboard;
-export const keyboardCellSelector = createSelector<
+export const gridKeyboardStateSelector = (state: GridState) => state.keyboard;
+export const gridKeyboardCellSelector = createSelector<
   GridState,
   KeyboardState,
   CellIndexCoordinates | null
->(keyboardStateSelector, (keyboard: KeyboardState) => keyboard.cell);
+>(gridKeyboardStateSelector, (keyboard: KeyboardState) => keyboard.cell);
 
-export const keyboardMultipleKeySelector = createSelector<GridState, KeyboardState, boolean>(
-  keyboardStateSelector,
+export const gridKeyboardMultipleKeySelector = createSelector<GridState, KeyboardState, boolean>(
+  gridKeyboardStateSelector,
   (keyboard: KeyboardState) => keyboard.isMultipleKeyPressed,
 );

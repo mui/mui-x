@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Density, DensityTypes } from '../density';
+import { Density, GridDensityTypes } from '../density';
 
 export interface DensityOption {
   icon: React.ReactElement;
   label: string;
-  value: DensityTypes;
+  value: GridDensityTypes;
 }
 
 /**

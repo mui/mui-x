@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useStyles } from './GridRootStyles';
-import { visibleColumnsLengthSelector } from '../../hooks/features/columns/columnsSelector';
+import { visibleGridColumnsLengthSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { useGridState } from '../../hooks/features/core/useGridState';
 import { classnames } from '../../utils';
-import { ApiContext } from '../api-context';
+import { GridApiContext } from '../GridApiContext';
 
 export type GridRootProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -14,8 +14,8 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
 ) {
   const { className, ...other } = props;
   const classes = useStyles();
-  const apiRef = React.useContext(ApiContext);
-  const visibleColumnsLength = useGridSelector(apiRef, visibleColumnsLengthSelector);
+  const apiRef = React.useContext(GridApiContext);
+  const visibleColumnsLength = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
   const [gridState] = useGridState(apiRef!);
 
   return (

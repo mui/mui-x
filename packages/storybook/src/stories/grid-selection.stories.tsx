@@ -4,7 +4,7 @@ import { action } from '@storybook/addon-actions';
 import {
   XGrid,
   GridOptionsProp,
-  useApiRef,
+  useGridApiRef,
   SelectionModelChangeParams,
   RowId,
 } from '@material-ui/x-grid';
@@ -23,7 +23,7 @@ export default {
 };
 
 export const ApiPreSelectedRows = () => {
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
   const [data, setData] = React.useState<GridData>({ rows: [], columns: [] });
 
   React.useEffect(() => {
