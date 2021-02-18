@@ -50,12 +50,13 @@ describe('<DataGrid /> - Selection', () => {
     it('with no rows, the checkbox should not be checked', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid rows={[]} columns={[{ field: 'brand', width: 100 }]} />
+          <DataGrid rows={[]} checkboxSelection columns={[{ field: 'brand', width: 100 }]} />
         </div>,
       );
-      const checkedIcon = document.querySelector('[data-testid="CheckBoxOutlineBlankIcon"]');
-
-      expect(checkedIcon).to.not.be.instanceof(window.HTMLDivElement);
+      const selectAll = screen.getByRole('checkbox', {
+        name: /select all rows checkbox/i,
+      });
+      expect(selectAll).to.have.property('checked', false);
     });
   });
 
