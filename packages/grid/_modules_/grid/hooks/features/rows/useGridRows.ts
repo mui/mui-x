@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {
-  XGRID_ROWS_CLEARED,
-  XGRID_ROWS_SET,
-  XGRID_ROWS_UPDATED,
+  GRID_ROWS_CLEARED,
+  GRID_ROWS_SET,
+  GRID_ROWS_UPDATED,
 } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { RowApi } from '../../../models/api/rowApi';
@@ -100,7 +100,7 @@ export const useGridRows = (apiRef: ApiRef, rows: RowsProp, getRowIdProp?: RowId
       logger.debug(`updating all rows, new length ${allNewRows.length}`);
 
       if (internalRowsState.current.allRows.length > 0) {
-        apiRef.current.publishEvent(XGRID_ROWS_CLEARED);
+        apiRef.current.publishEvent(GRID_ROWS_CLEARED);
       }
 
       const allRows: RowId[] = [];
@@ -123,7 +123,7 @@ export const useGridRows = (apiRef: ApiRef, rows: RowsProp, getRowIdProp?: RowId
 
       setGridState((state) => ({ ...state, rows: internalRowsState.current }));
 
-      forceUpdate(() => apiRef.current.publishEvent(XGRID_ROWS_SET));
+      forceUpdate(() => apiRef.current.publishEvent(GRID_ROWS_SET));
     },
     [logger, gridState.options, setGridState, forceUpdate, apiRef, getRowIdProp],
   );
@@ -172,7 +172,7 @@ export const useGridRows = (apiRef: ApiRef, rows: RowsProp, getRowIdProp?: RowId
         ];
         setRows(newRows);
       }
-      forceUpdate(() => apiRef.current.publishEvent(XGRID_ROWS_UPDATED));
+      forceUpdate(() => apiRef.current.publishEvent(GRID_ROWS_UPDATED));
     },
     [apiRef, forceUpdate, getRowFromId, getRowIdProp, setGridState, setRows],
   );

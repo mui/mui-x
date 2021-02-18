@@ -2,10 +2,10 @@ import * as React from 'react';
 import { gridContainerSizesSelector } from '../../../components/GridViewport';
 import { GRID_CELL_CSS_CLASS, GRID_ROW_CSS_CLASS } from '../../../constants/cssClassesConstants';
 import {
-  XGRID_FOCUS_OUT,
+  GRID_ELEMENT_FOCUS_OUT,
   GRID_KEYDOWN,
   GRID_KEYUP,
-  XGRID_MULTIPLE_KEY_PRESS_CHANGED,
+  GRID_MULTIPLE_KEY_PRESS_CHANGED,
 } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { CellIndexCoordinates } from '../../../models/cell';
@@ -73,7 +73,7 @@ export const useGridKeyboard = (
       });
       forceUpdate();
 
-      apiRef.current.publishEvent(XGRID_MULTIPLE_KEY_PRESS_CHANGED, isPressed);
+      apiRef.current.publishEvent(GRID_MULTIPLE_KEY_PRESS_CHANGED, isPressed);
     },
     [apiRef, forceUpdate, logger, setGridState],
   );
@@ -298,5 +298,5 @@ export const useGridKeyboard = (
 
   useGridApiEventHandler(apiRef, GRID_KEYDOWN, onKeyDownHandler);
   useGridApiEventHandler(apiRef, GRID_KEYUP, onKeyUpHandler);
-  useGridApiEventHandler(apiRef, XGRID_FOCUS_OUT, onFocusOutHandler);
+  useGridApiEventHandler(apiRef, GRID_ELEMENT_FOCUS_OUT, onFocusOutHandler);
 };

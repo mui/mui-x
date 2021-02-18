@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ApiRef } from '../../models/api/apiRef';
 import { useLogger } from '../utils/useLogger';
-import { XGRID_COMPONENT_ERROR, XGRID_UNMOUNT } from '../../constants/eventsConstants';
+import { GRID_COMPONENT_ERROR, GRID_UNMOUNT } from '../../constants/eventsConstants';
 import { useGridApiMethod } from './useGridApiMethod';
 
 export function useApi(
@@ -34,7 +34,7 @@ export function useApi(
 
   const showError = React.useCallback(
     (args) => {
-      publishEvent(XGRID_COMPONENT_ERROR, args);
+      publishEvent(GRID_COMPONENT_ERROR, args);
     },
     [publishEvent],
   );
@@ -50,7 +50,7 @@ export function useApi(
 
     return () => {
       logger.debug('Unmounting Grid component');
-      api.emit(XGRID_UNMOUNT);
+      api.emit(GRID_UNMOUNT);
       logger.debug('Clearing all events listeners');
       api.removeAllListeners();
     };

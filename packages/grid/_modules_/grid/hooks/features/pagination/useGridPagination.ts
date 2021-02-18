@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { gridContainerSizesSelector } from '../../../components/GridViewport';
-import { XGRID_PAGE_CHANGED, XGRID_PAGESIZE_CHANGED } from '../../../constants/eventsConstants';
+import { GRID_PAGE_CHANGED, GRID_PAGESIZE_CHANGED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { PaginationApi } from '../../../models/api/paginationApi';
 import { PageChangeParams } from '../../../models/params/pageChangeParams';
@@ -46,7 +46,7 @@ export const useGridPagination = (apiRef: ApiRef): void => {
       const params: PageChangeParams = apiRef.current.getState<PaginationState>(
         PAGINATION_STATE_ID,
       ) as PageChangeParams;
-      apiRef.current.publishEvent(XGRID_PAGE_CHANGED, params);
+      apiRef.current.publishEvent(GRID_PAGE_CHANGED, params);
     },
     [apiRef, dispatch, logger],
   );
@@ -55,7 +55,7 @@ export const useGridPagination = (apiRef: ApiRef): void => {
     (pageSize: number) => {
       dispatch(setGridPageSizeActionCreator(pageSize));
       apiRef.current.publishEvent(
-        XGRID_PAGESIZE_CHANGED,
+        GRID_PAGESIZE_CHANGED,
         apiRef.current.getState<PaginationState>(PAGINATION_STATE_ID) as PageChangeParams,
       );
     },
@@ -64,19 +64,19 @@ export const useGridPagination = (apiRef: ApiRef): void => {
 
   const onPageChange = React.useCallback(
     (handler: (param: PageChangeParams) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(XGRID_PAGE_CHANGED, handler);
+      return apiRef.current.subscribeEvent(GRID_PAGE_CHANGED, handler);
     },
     [apiRef],
   );
   const onPageSizeChange = React.useCallback(
     (handler: (param: PageChangeParams) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(XGRID_PAGESIZE_CHANGED, handler);
+      return apiRef.current.subscribeEvent(GRID_PAGESIZE_CHANGED, handler);
     },
     [apiRef],
   );
 
-  useGridApiEventHandler(apiRef, XGRID_PAGE_CHANGED, options.onPageChange);
-  useGridApiEventHandler(apiRef, XGRID_PAGESIZE_CHANGED, options.onPageSizeChange);
+  useGridApiEventHandler(apiRef, GRID_PAGE_CHANGED, options.onPageChange);
+  useGridApiEventHandler(apiRef, GRID_PAGESIZE_CHANGED, options.onPageSizeChange);
 
   React.useEffect(() => {
     dispatch(setGridPaginationModeActionCreator({ paginationMode: options.paginationMode! }));

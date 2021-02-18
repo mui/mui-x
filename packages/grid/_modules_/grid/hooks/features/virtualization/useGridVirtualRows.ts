@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GRID_RESIZE, GRID_SCROLL, XGRID_SCROLLING } from '../../../constants/eventsConstants';
+import { GRID_RESIZE, GRID_SCROLL, GRID_SCROLLING } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { VirtualizationApi } from '../../../models/api/virtualizationApi';
 import { CellIndexCoordinates } from '../../../models/cell';
@@ -157,7 +157,7 @@ export const useGridVirtualRows = (
         requireRerender = true;
       } else {
         scrollTo(scrollParams);
-        apiRef.current.publishEvent(XGRID_SCROLLING, scrollParams);
+        apiRef.current.publishEvent(GRID_SCROLLING, scrollParams);
       }
       setRenderingState({ renderingZoneScroll: scrollParams });
 

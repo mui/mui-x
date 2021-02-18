@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {
-  XGRID_COLUMNS_UPDATED,
-  XGRID_FILTER_MODEL_CHANGE,
-  XGRID_ROWS_SET,
-  XGRID_ROWS_UPDATED,
+  GRID_COLUMNS_UPDATED,
+  GRID_FILTER_MODEL_CHANGE,
+  GRID_ROWS_SET,
+  GRID_ROWS_UPDATED,
 } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { FilterApi } from '../../../models/api/filterApi';
@@ -175,7 +175,7 @@ export const useGridFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
         };
         return newState;
       });
-      apiRef.current.publishEvent(XGRID_FILTER_MODEL_CHANGE, getFilterModelParams());
+      apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
 
       applyFilters();
     },
@@ -206,7 +206,7 @@ export const useGridFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
       if (hasNoItem) {
         upsertFilter({});
       }
-      apiRef.current.publishEvent(XGRID_FILTER_MODEL_CHANGE, getFilterModelParams());
+      apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
 
       applyFilters();
     },
@@ -259,14 +259,14 @@ export const useGridFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
       applyFilterLinkOperator(model.linkOperator);
       model.items.forEach((item) => upsertFilter(item));
 
-      apiRef.current.publishEvent(XGRID_FILTER_MODEL_CHANGE, getFilterModelParams());
+      apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
     [apiRef, applyFilterLinkOperator, clearFilterModel, getFilterModelParams, logger, upsertFilter],
   );
 
   const onFilterModelChange = React.useCallback(
     (handler: (param: FilterModelParams) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(XGRID_FILTER_MODEL_CHANGE, handler);
+      return apiRef.current.subscribeEvent(GRID_FILTER_MODEL_CHANGE, handler);
     },
     [apiRef],
   );
@@ -287,9 +287,9 @@ export const useGridFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
     'FilterApi',
   );
 
-  useGridApiEventHandler(apiRef, XGRID_ROWS_SET, apiRef.current.applyFilters);
-  useGridApiEventHandler(apiRef, XGRID_ROWS_UPDATED, apiRef.current.applyFilters);
-  useGridApiEventHandler(apiRef, XGRID_FILTER_MODEL_CHANGE, options.onFilterModelChange);
+  useGridApiEventHandler(apiRef, GRID_ROWS_SET, apiRef.current.applyFilters);
+  useGridApiEventHandler(apiRef, GRID_ROWS_UPDATED, apiRef.current.applyFilters);
+  useGridApiEventHandler(apiRef, GRID_FILTER_MODEL_CHANGE, options.onFilterModelChange);
 
   React.useEffect(() => {
     const filterModel = options.filterModel;
@@ -323,5 +323,5 @@ export const useGridFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
     apiRef.current.applyFilters();
   }, [apiRef, logger]);
 
-  useGridApiEventHandler(apiRef, XGRID_COLUMNS_UPDATED, onColUpdated);
+  useGridApiEventHandler(apiRef, GRID_COLUMNS_UPDATED, onColUpdated);
 };

@@ -5,7 +5,7 @@ import { ColDef } from '../../models/colDef';
 import { useGridApiMethod } from '../root/useGridApiMethod';
 import { useLogger } from '../utils';
 import { useEventCallback } from '../../utils/material-ui-utils';
-import { XGRID_COL_RESIZE_START, XGRID_COL_RESIZE_STOP } from '../../constants/eventsConstants';
+import { GRID_COL_RESIZE_START, GRID_COL_RESIZE_STOP } from '../../constants/eventsConstants';
 import {
   GRID_HEADER_CELL_CSS_CLASS,
   GRID_HEADER_CELL_SEPARATOR_RESIZABLE_CSS_CLASS,
@@ -99,7 +99,7 @@ export const useGridColumnResize = (
 
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {
-      apiRef.current.publishEvent(XGRID_COL_RESIZE_STOP);
+      apiRef.current.publishEvent(GRID_COL_RESIZE_STOP);
     });
 
     logger.debug(
@@ -144,7 +144,7 @@ export const useGridColumnResize = (
     const colDef = apiRef.current.getColumnFromField(field);
 
     logger.debug(`Start Resize on col ${colDef.field}`);
-    apiRef.current.publishEvent(XGRID_COL_RESIZE_START, { field });
+    apiRef.current.publishEvent(GRID_COL_RESIZE_START, { field });
 
     colDefRef.current = colDef;
     colElementRef.current = columnsHeaderElement!.querySelector(
@@ -180,7 +180,7 @@ export const useGridColumnResize = (
 
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {
-      apiRef.current.publishEvent(XGRID_COL_RESIZE_STOP);
+      apiRef.current.publishEvent(GRID_COL_RESIZE_STOP);
     });
 
     logger.debug(
@@ -235,7 +235,7 @@ export const useGridColumnResize = (
     const colDef = apiRef.current.getColumnFromField(field);
 
     logger.debug(`Start Resize on col ${colDef.field}`);
-    apiRef.current.publishEvent(XGRID_COL_RESIZE_START, { field });
+    apiRef.current.publishEvent(GRID_COL_RESIZE_START, { field });
 
     colDefRef.current = colDef;
     colElementRef.current = findHeaderElementFromField(

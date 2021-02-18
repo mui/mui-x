@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { XGRID_COLUMN_HEADER_CLICK } from '../../constants/eventsConstants';
+import { GRID_COLUMN_HEADER_CLICK } from '../../constants/eventsConstants';
 import { ColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
 import { GridOptions } from '../../models/gridOptions';
 import { ColParams } from '../../models/params/colParams';
@@ -80,7 +80,7 @@ export const GridColumnHeaderItem = ({
       colIndex,
       api: apiRef!.current,
     };
-    apiRef!.current.publishEvent(XGRID_COLUMN_HEADER_CLICK, colHeaderParams);
+    apiRef!.current.publishEvent(GRID_COLUMN_HEADER_CLICK, colHeaderParams);
   }, [apiRef, colIndex, column]);
 
   const cssClasses = classnames(

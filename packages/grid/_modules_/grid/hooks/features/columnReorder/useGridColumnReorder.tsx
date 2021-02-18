@@ -4,11 +4,11 @@ import { useLogger } from '../../utils/useLogger';
 import { ApiRef } from '../../../models/api/apiRef';
 import {
   GRID_DRAGEND,
-  XGRID_COL_REORDER_START,
-  XGRID_COL_REORDER_DRAG_OVER,
-  XGRID_COL_REORDER_DRAG_OVER_HEADER,
-  XGRID_COL_REORDER_DRAG_ENTER,
-  XGRID_COL_REORDER_STOP,
+  GRID_COL_REORDER_START,
+  GRID_COL_REORDER_DRAG_OVER,
+  GRID_COL_REORDER_DRAG_OVER_HEADER,
+  GRID_COL_REORDER_DRAG_ENTER,
+  GRID_COL_REORDER_STOP,
 } from '../../../constants/eventsConstants';
 import {
   GRID_HEADER_CELL_DROP_ZONE_CSS_CLASS,
@@ -53,7 +53,7 @@ export const useGridColumnReorder = (apiRef: ApiRef): void => {
 
   const handleDragEnd = React.useCallback((): void => {
     logger.debug('End dragging col');
-    apiRef.current.publishEvent(XGRID_COL_REORDER_STOP);
+    apiRef.current.publishEvent(GRID_COL_REORDER_STOP);
 
     clearTimeout(removeDnDStylesTimeout.current);
 
@@ -71,7 +71,7 @@ export const useGridColumnReorder = (apiRef: ApiRef): void => {
   const onColItemDragStart = React.useCallback(
     (col: ColDef, currentTarget: HTMLElement): void => {
       logger.debug(`Start dragging col ${col.field}`);
-      apiRef.current.publishEvent(XGRID_COL_REORDER_START);
+      apiRef.current.publishEvent(GRID_COL_REORDER_START);
 
       dragColNode.current = currentTarget;
       dragColNode.current.addEventListener(GRID_DRAGEND, handleDragEnd, { once: true });
@@ -99,7 +99,7 @@ export const useGridColumnReorder = (apiRef: ApiRef): void => {
   const onColHeaderDragOver = React.useCallback(
     (event: Event, ref: React.RefObject<HTMLElement>) => {
       event.preventDefault();
-      apiRef.current.publishEvent(XGRID_COL_REORDER_DRAG_OVER_HEADER);
+      apiRef.current.publishEvent(GRID_COL_REORDER_DRAG_OVER_HEADER);
       columnsHeaderRef.current = ref.current;
       columnsHeaderRef.current!.classList.add(GRID_HEADER_CELL_DROP_ZONE_CSS_CLASS);
     },
@@ -109,7 +109,7 @@ export const useGridColumnReorder = (apiRef: ApiRef): void => {
   const onColItemDragEnter = React.useCallback(
     (event: Event) => {
       event.preventDefault();
-      apiRef.current.publishEvent(XGRID_COL_REORDER_DRAG_ENTER);
+      apiRef.current.publishEvent(GRID_COL_REORDER_DRAG_ENTER);
     },
     [apiRef],
   );
@@ -117,7 +117,7 @@ export const useGridColumnReorder = (apiRef: ApiRef): void => {
   const onColItemDragOver = React.useCallback(
     (col: ColDef, coordinates: CursorCoordinates): void => {
       logger.debug(`Dragging over col ${col.field}`);
-      apiRef.current.publishEvent(XGRID_COL_REORDER_DRAG_OVER);
+      apiRef.current.publishEvent(GRID_COL_REORDER_DRAG_OVER);
 
       if (col.field !== dragCol && hasCursorPositionChanged(cursorPosition.current, coordinates)) {
         const targetColIndex = apiRef.current.getColumnIndex(col.field, false);

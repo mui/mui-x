@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { XGRID_COLUMNS_UPDATED } from '../../../constants/eventsConstants';
+import { GRID_COLUMNS_UPDATED } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { ColumnApi } from '../../../models/api/columnApi';
 import { gridCheckboxSelectionColDef } from '../../../models/colDef/checkboxSelection';
@@ -109,7 +109,7 @@ export function useGridColumns(columns: Columns, apiRef: ApiRef): void {
       forceUpdate();
 
       if (apiRef.current && emit) {
-        apiRef.current.publishEvent(XGRID_COLUMNS_UPDATED, newState.all);
+        apiRef.current.publishEvent(GRID_COLUMNS_UPDATED, newState.all);
       }
     },
     [logger, setGridState, forceUpdate, apiRef],

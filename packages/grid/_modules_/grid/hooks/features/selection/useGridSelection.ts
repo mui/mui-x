@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {
-  XGRID_ROW_CLICK,
-  XGRID_ROW_SELECTED,
-  XGRID_SELECTION_CHANGED,
+  GRID_ROW_CLICK,
+  GRID_ROW_SELECTED,
+  GRID_SELECTION_CHANGED,
 } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { SelectionApi } from '../../../models/api/selectionApi';
@@ -92,8 +92,8 @@ export const useGridSelection = (apiRef: ApiRef): void => {
       const selectionChangeParam: SelectionModelChangeParams = {
         selectionModel: Object.keys(selectionState),
       };
-      apiRef.current.publishEvent(XGRID_ROW_SELECTED, rowSelectedParam);
-      apiRef.current.publishEvent(XGRID_SELECTION_CHANGED, selectionChangeParam);
+      apiRef.current.publishEvent(GRID_ROW_SELECTED, rowSelectedParam);
+      apiRef.current.publishEvent(GRID_SELECTION_CHANGED, selectionChangeParam);
     },
     [apiRef, logger, options.checkboxSelection, forceUpdate, setGridState],
   );
@@ -129,8 +129,8 @@ export const useGridSelection = (apiRef: ApiRef): void => {
       const params: SelectionModelChangeParams = {
         selectionModel: Object.keys(apiRef!.current!.getState<GridSelectionState>('selection')),
       };
-      // We don't emit XGRID_ROW_SELECTED on each row as it would be too consuming for large set of data.
-      apiRef.current.publishEvent(XGRID_SELECTION_CHANGED, params);
+      // We don't emit GRID_ROW_SELECTED on each row as it would be too consuming for large set of data.
+      apiRef.current.publishEvent(GRID_SELECTION_CHANGED, params);
     },
     [
       options.disableMultipleSelection,
@@ -159,20 +159,20 @@ export const useGridSelection = (apiRef: ApiRef): void => {
 
   const onRowSelected = React.useCallback(
     (handler: (param: RowSelectedParams) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(XGRID_ROW_SELECTED, handler);
+      return apiRef.current.subscribeEvent(GRID_ROW_SELECTED, handler);
     },
     [apiRef],
   );
   const onSelectionModelChange = React.useCallback(
     (handler: (param: SelectionModelChangeParams) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(XGRID_SELECTION_CHANGED, handler);
+      return apiRef.current.subscribeEvent(GRID_SELECTION_CHANGED, handler);
     },
     [apiRef],
   );
 
-  useGridApiEventHandler(apiRef, XGRID_ROW_CLICK, rowClickHandler);
-  useGridApiEventHandler(apiRef, XGRID_ROW_SELECTED, options.onRowSelected);
-  useGridApiEventHandler(apiRef, XGRID_SELECTION_CHANGED, options.onSelectionModelChange);
+  useGridApiEventHandler(apiRef, GRID_ROW_CLICK, rowClickHandler);
+  useGridApiEventHandler(apiRef, GRID_ROW_SELECTED, options.onRowSelected);
+  useGridApiEventHandler(apiRef, GRID_SELECTION_CHANGED, options.onSelectionModelChange);
 
   // TODO handle Cell Click/range selection?
   const selectionApi: SelectionApi = {

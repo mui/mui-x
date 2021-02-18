@@ -1,12 +1,12 @@
 import * as React from 'react';
 import {
-  XGRID_COLUMN_HEADER_CLICK,
-  XGRID_COLUMNS_UPDATED,
-  XGRID_MULTIPLE_KEY_PRESS_CHANGED,
-  XGRID_ROWS_CLEARED,
-  XGRID_ROWS_SET,
-  XGRID_ROWS_UPDATED,
-  XGRID_SORT_MODEL_CHANGE,
+  GRID_COLUMN_HEADER_CLICK,
+  GRID_COLUMNS_UPDATED,
+  GRID_MULTIPLE_KEY_PRESS_CHANGED,
+  GRID_ROWS_CLEARED,
+  GRID_ROWS_SET,
+  GRID_ROWS_UPDATED,
+  GRID_SORT_MODEL_CHANGE,
 } from '../../../constants/eventsConstants';
 import { ApiRef } from '../../../models/api/apiRef';
 import { SortApi } from '../../../models/api/sortApi';
@@ -187,7 +187,7 @@ export const useGridSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
       if (visibleColumns.length === 0) {
         return;
       }
-      apiRef.current.publishEvent(XGRID_SORT_MODEL_CHANGE, getSortModelParams(sortModel));
+      apiRef.current.publishEvent(GRID_SORT_MODEL_CHANGE, getSortModelParams(sortModel));
       apiRef.current.applySorting();
     },
     [setGridState, forceUpdate, visibleColumns.length, apiRef, getSortModelParams],
@@ -236,7 +236,7 @@ export const useGridSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
 
   const onSortModelChange = React.useCallback(
     (handler: (param: SortModelParams) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(XGRID_SORT_MODEL_CHANGE, handler);
+      return apiRef.current.subscribeEvent(GRID_SORT_MODEL_CHANGE, handler);
     },
     [apiRef],
   );
@@ -261,14 +261,14 @@ export const useGridSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
     });
   }, [setGridState]);
 
-  useGridApiEventHandler(apiRef, XGRID_COLUMN_HEADER_CLICK, headerClickHandler);
-  useGridApiEventHandler(apiRef, XGRID_ROWS_SET, apiRef.current.applySorting);
-  useGridApiEventHandler(apiRef, XGRID_ROWS_CLEARED, onRowsCleared);
-  useGridApiEventHandler(apiRef, XGRID_ROWS_UPDATED, apiRef.current.applySorting);
-  useGridApiEventHandler(apiRef, XGRID_COLUMNS_UPDATED, onColUpdated);
-  useGridApiEventHandler(apiRef, XGRID_MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_CLICK, headerClickHandler);
+  useGridApiEventHandler(apiRef, GRID_ROWS_SET, apiRef.current.applySorting);
+  useGridApiEventHandler(apiRef, GRID_ROWS_CLEARED, onRowsCleared);
+  useGridApiEventHandler(apiRef, GRID_ROWS_UPDATED, apiRef.current.applySorting);
+  useGridApiEventHandler(apiRef, GRID_COLUMNS_UPDATED, onColUpdated);
+  useGridApiEventHandler(apiRef, GRID_MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
 
-  useGridApiEventHandler(apiRef, XGRID_SORT_MODEL_CHANGE, options.onSortModelChange);
+  useGridApiEventHandler(apiRef, GRID_SORT_MODEL_CHANGE, options.onSortModelChange);
 
   const sortApi: SortApi = {
     getSortModel,

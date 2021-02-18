@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {
-  XGRID_COL_REORDER_START,
-  XGRID_COL_REORDER_STOP,
-  XGRID_SCROLLING,
+  GRID_COL_REORDER_START,
+  GRID_COL_REORDER_STOP,
+  GRID_SCROLLING,
 } from '../constants/eventsConstants';
 import { useGridApiEventHandler } from '../hooks/root/useGridApiEventHandler';
 import { ApiRef } from '../models/api/apiRef';
@@ -68,9 +68,9 @@ export const GridScrollArea = React.memo(function GridScrollArea(props: ScrollAr
     setDragging((prevdragging) => !prevdragging);
   }, []);
 
-  useGridApiEventHandler(api as ApiRef, XGRID_SCROLLING, handleScrolling);
-  useGridApiEventHandler(api as ApiRef, XGRID_COL_REORDER_START, toggleDragging);
-  useGridApiEventHandler(api as ApiRef, XGRID_COL_REORDER_STOP, toggleDragging);
+  useGridApiEventHandler(api as ApiRef, GRID_SCROLLING, handleScrolling);
+  useGridApiEventHandler(api as ApiRef, GRID_COL_REORDER_START, toggleDragging);
+  useGridApiEventHandler(api as ApiRef, GRID_COL_REORDER_STOP, toggleDragging);
 
   return dragging ? (
     <div
