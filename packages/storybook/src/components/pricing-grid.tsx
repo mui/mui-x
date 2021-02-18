@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
-import { XGrid, ColDef, GridOptionsProp, useGridApiRef } from '@material-ui/x-grid';
+import { XGrid, GridColDef, GridOptionsProp, useGridApiRef } from '@material-ui/x-grid';
 import {
   PricingModel,
   subscribeCurrencyPair,
@@ -15,7 +15,7 @@ export interface PricingGridProps {
   options?: GridOptionsProp;
 }
 export const PricingGrid: React.FC<PricingGridProps> = (props) => {
-  const [columns] = React.useState<ColDef[]>(pricingColumns);
+  const [columns] = React.useState<GridColDef[]>(pricingColumns);
   const [rows] = React.useState<PricingModel[]>([]);
 
   const [started, setStarted] = React.useState<boolean>(false);

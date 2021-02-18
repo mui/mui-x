@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {
-  ColDef,
+  GridColDef,
   DataGrid,
-  FilterModelParams,
-  RowModel,
+  GridFilterModelParams,
+  GridRowModel,
 } from '@material-ui/data-grid';
 
 function loadServerRows(commodityFilterValue?: string): Promise<any> {
@@ -31,12 +31,14 @@ function loadServerRows(commodityFilterValue?: string): Promise<any> {
 }
 
 export default function ServerFilterGrid() {
-  const [columns] = React.useState<ColDef[]>([{ field: 'commodity', width: 150 }]);
-  const [rows, setRows] = React.useState<RowModel[]>([]);
+  const [columns] = React.useState<GridColDef[]>([
+    { field: 'commodity', width: 150 },
+  ]);
+  const [rows, setRows] = React.useState<GridRowModel[]>([]);
   const [filterValue, setFilterValue] = React.useState<string | undefined>();
   const [loading, setLoading] = React.useState(false);
 
-  const onFilterChange = React.useCallback((params: FilterModelParams) => {
+  const onFilterChange = React.useCallback((params: GridFilterModelParams) => {
     setFilterValue(params.filterModel.items[0].value);
   }, []);
 

@@ -1,7 +1,7 @@
-import { FilterItem, GridLinkOperator } from '../../../models/filterItem';
+import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 
 export interface FilterModelState {
-  items: FilterItem[];
+  items: GridFilterItem[];
   linkOperator?: GridLinkOperator;
 }
 

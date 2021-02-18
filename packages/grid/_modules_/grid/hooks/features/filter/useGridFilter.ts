@@ -5,12 +5,12 @@ import {
   GRID_ROWS_SET,
   GRID_ROWS_UPDATED,
 } from '../../../constants/eventsConstants';
-import { ApiRef } from '../../../models/api/apiRef';
+import { GridApiRef } from '../../../models/api/gridApiRef';
 import { FilterApi } from '../../../models/api/filterApi';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
-import { FilterItem, GridLinkOperator } from '../../../models/filterItem';
-import { FilterModelParams } from '../../../models/params/filterModelParams';
-import { RowsProp } from '../../../models/rows';
+import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
+import { GridFilterModelParams } from '../../../models/params/gridFilterModelParams';
+import { GridRowsProp } from '../../../models/gridRows';
 import { buildGridCellParams } from '../../../utils/paramsUtils';
 import { isDeepEqual } from '../../../utils/utils';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
@@ -25,14 +25,14 @@ import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
 import { FilterModel, FilterModelState, getInitialGridFilterState } from './FilterModelState';
 import { getInitialVisibleGridRowsState } from './visibleGridRowsState';
 
-export const useGridFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
+export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void => {
   const logger = useLogger('useGridFilter');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const filterableColumnsIds = useGridSelector(apiRef, filterableGridColumnsIdsSelector);
   const options = useGridSelector(apiRef, optionsSelector);
 
   const getFilterModelParams = React.useCallback(
-    (): FilterModelParams => ({
+    (): GridFilterModelParams => ({
       filterModel: apiRef.current.getState<FilterModelState>('filter'),
       api: apiRef.current,
       columns: apiRef.current.getAllColumns(),
@@ -50,7 +50,7 @@ export const useGridFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
   }, [logger, setGridState]);
 
   const applyFilter = React.useCallback(
-    (filterItem: FilterItem, linkOperator: GridLinkOperator = GridLinkOperator.And) => {
+    (filterItem: GridFilterItem, linkOperator: GridLinkOperator = GridLinkOperator.And) => {
       if (!filterItem.columnField || !filterItem.operatorValue || !filterItem.value) {
         return;
       }
@@ -137,7 +137,7 @@ export const useGridFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
   }, [apiRef, clearFilteredRows, forceUpdate, options.filterMode]);
 
   const upsertFilter = React.useCallback(
-    (item: FilterItem) => {
+    (item: GridFilterItem) => {
       logger.debug('Upserting filter');
 
       setGridState((state) => {
@@ -191,7 +191,7 @@ export const useGridFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
   );
 
   const deleteFilter = React.useCallback(
-    (item: FilterItem) => {
+    (item: GridFilterItem) => {
       logger.debug(`Deleting filter on column ${item.columnField} with value ${item.value}`);
       let hasNoItem = false;
       setGridState((state) => {
@@ -265,7 +265,7 @@ export const useGridFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
   );
 
   const onFilterModelChange = React.useCallback(
-    (handler: (param: FilterModelParams) => void): (() => void) => {
+    (handler: (param: GridFilterModelParams) => void): (() => void) => {
       return apiRef.current.subscribeEvent(GRID_FILTER_MODEL_CHANGE, handler);
     },
     [apiRef],
@@ -310,10 +310,10 @@ export const useGridFilter = (apiRef: ApiRef, rowsProp: RowsProp): void => {
   }, [apiRef, clearFilteredRows, logger, rowsProp]);
 
   const onColUpdated = React.useCallback(() => {
-    logger.debug('onColUpdated - Columns changed, applying filters');
+    logger.debug('onColUpdated - GridColumns changed, applying filters');
     const filterState = apiRef.current.getState<FilterModelState>('filter');
     const columnsIds = filterableGridColumnsIdsSelector(apiRef.current.state);
-    logger.debug('Columns changed, applying filters');
+    logger.debug('GridColumns changed, applying filters');
 
     filterState.items.forEach((filter) => {
       if (!columnsIds.find((field) => field === filter.columnField)) {

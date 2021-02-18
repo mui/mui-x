@@ -4,10 +4,10 @@ import { gridColumnMenuStateSelector } from '../../hooks/features/columnMenu/col
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { classnames } from '../../utils/classnames';
 import { GridApiContext } from '../GridApiContext';
-import { ColDef } from '../../models/colDef/colDef';
+import { GridColDef } from '../../models/colDef/gridColDef';
 
 export interface ColumnHeaderFilterIconProps {
-  column: ColDef;
+  column: GridColDef;
 }
 
 export function ColumnHeaderMenuIcon(props: ColumnHeaderFilterIconProps) {

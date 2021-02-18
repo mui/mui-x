@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { ApiRef } from '../../../models/api/apiRef';
+import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useLogger } from '../../utils/useLogger';
 import { useGridState } from '../core/useGridState';
 
-export const useGridColumnMenu = (apiRef: ApiRef): void => {
+export const useGridColumnMenu = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridColumnMenu');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
 

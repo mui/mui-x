@@ -2,14 +2,14 @@ import Button from '@material-ui/core/Button';
 import * as React from 'react';
 import { Story, Meta } from '@storybook/react';
 import {
-  ColDef,
+  GridColDef,
   XGrid,
   GridOverlay,
   GridFooterContainer,
   XGridProps,
   HideGridColMenuItem,
   ColumnMenuProps,
-  BaseComponentProps,
+  GridBaseComponentProps,
   GridColumnMenu,
   GridPanelProps,
   GridPreferencesPanel,
@@ -37,7 +37,7 @@ export default {
   decorators: [(StoryFn) => <StoryFn />],
 } as Meta;
 
-const columns: ColDef[] = [{ field: 'id' }, { field: 'name' }, { field: 'age' }];
+const columns: GridColDef[] = [{ field: 'id' }, { field: 'name' }, { field: 'age' }];
 
 const rows = [
   { id: 1, name: 'alice', age: 40 },
@@ -122,7 +122,7 @@ Icons.args = {
   },
 };
 
-function PaginationComponent(props: BaseComponentProps & { color?: 'primary' }) {
+function PaginationComponent(props: GridBaseComponentProps & { color?: 'primary' }) {
   const { state, api } = props;
   return (
     <Pagination
@@ -412,16 +412,16 @@ export function DynamicIconUpdate() {
   );
 }
 
-function CustomFilterPanel(props: { bg?: string } & BaseComponentProps) {
+function CustomFilterPanel(props: { bg?: string } & GridBaseComponentProps) {
   return (
     <div style={{ width: 500, height: 100, background: props.bg, color: 'white' }}>
       My Custom Filter Panel
     </div>
   );
 }
-function CustomColumnsPanel(props: { bg?: string } & BaseComponentProps) {
+function CustomColumnsPanel(props: { bg?: string } & GridBaseComponentProps) {
   return (
-    <div style={{ width: 500, height: 300, background: props.bg }}>My Custom Columns Panel</div>
+    <div style={{ width: 500, height: 300, background: props.bg }}>My Custom GridColumns Panel</div>
   );
 }
 export const CustomFilterColumnsPanels = Template.bind({});
@@ -436,7 +436,7 @@ CustomFilterColumnsPanels.args = {
     columnsPanel: { bg: 'red' },
   },
 };
-function CustomPanelComponent(props: BaseComponentProps & GridPanelProps) {
+function CustomPanelComponent(props: GridBaseComponentProps & GridPanelProps) {
   if (!props.open) {
     return null;
   }

@@ -13,7 +13,7 @@ export const bgBG: Localization = getGridLocalization({
   toolbarDensityStandard: 'Стандартна',
   toolbarDensityComfortable: 'Комфортна',
 
-  // Columns selector toolbar button text
+  // GridColumns selector toolbar button text
   toolbarColumns: 'Колони',
   toolbarColumnsLabel: 'Покажи селектора на колони',
 
@@ -24,7 +24,7 @@ export const bgBG: Localization = getGridLocalization({
   toolbarFiltersTooltipShow: 'Покажи Филтрите',
   toolbarFiltersTooltipActive: (count) => `${count} активни филтри`,
 
-  // Columns panel text
+  // GridColumns panel text
   columnsPanelTextFieldLabel: 'Намери колона',
   columnsPanelTextFieldPlaceholder: 'Заглавие на колона',
   columnsPanelDragIconLabel: 'Пренареди на колона',

@@ -1,4 +1,4 @@
 import * as React from 'react';
-import { ApiRef } from '../models/api/apiRef';
+import { GridApiRef } from '../models/api/gridApiRef';
 
-export const GridApiContext = React.createContext<ApiRef | undefined>(undefined);
+export const GridApiContext = React.createContext<GridApiRef | undefined>(undefined);

@@ -5,8 +5,8 @@ import {
   FilterInputValueProps,
   GridPreferencePanelsValue,
   DataGrid,
-  FilterItem,
-  ColDef,
+  GridFilterItem,
+  GridColDef,
 } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
@@ -45,7 +45,7 @@ const RatingOnlyOperators = [
   {
     label: 'From',
     value: 'from',
-    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
+    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
       if (
         !filterItem.columnField ||
         !filterItem.value ||

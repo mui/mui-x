@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
-import { ColDef, GridOptionsProp, XGrid, useGridApiRef } from '@material-ui/x-grid';
+import { GridColDef, GridOptionsProp, XGrid, useGridApiRef } from '@material-ui/x-grid';
 import { pricingColumns, PricingModel } from '../data/streaming/pricing-service';
 import { subscribeFeed } from '../data/streaming/single-subscription-service';
 
@@ -11,7 +11,7 @@ export interface FeedGridProps {
   options?: GridOptionsProp;
 }
 export const FeedGrid: React.FC<FeedGridProps> = (p) => {
-  const [columns] = React.useState<ColDef[]>(pricingColumns);
+  const [columns] = React.useState<GridColDef[]>(pricingColumns);
   const [rows] = React.useState<PricingModel[]>([]);
 
   const [started, setStarted] = React.useState<boolean>(false);

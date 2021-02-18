@@ -1,20 +1,20 @@
 import * as React from 'react';
 import {
-  CellClassParams,
-  Columns,
-  RowModel,
-  CellClassRules,
-  CellParams,
-  CellIndexCoordinates,
+  GridCellClassParams,
+  GridColumns,
+  GridRowModel,
+  GridCellClassRules,
+  GridCellParams,
+  GridCellIndexCoordinates,
 } from '../models';
 import { GridCell, GridCellProps } from './GridCell';
 import { GridApiContext } from './GridApiContext';
 import { classnames, isFunction } from '../utils';
 import { buildGridCellParams } from '../utils/paramsUtils';
-import { densityRowHeightSelector } from '../hooks/features/density/densitySelector';
+import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 
-function applyCssClassRules(cellClassRules: CellClassRules, params: CellClassParams) {
+function applyCssClassRules(cellClassRules: GridCellClassRules, params: GridCellClassParams) {
   return Object.entries(cellClassRules).reduce((appliedCss, entry) => {
     const shouldApplyCss: boolean = isFunction(entry[1]) ? entry[1](params) : entry[1];
     appliedCss += shouldApplyCss ? `${entry[0]} ` : '';
@@ -23,17 +23,17 @@ function applyCssClassRules(cellClassRules: CellClassRules, params: CellClassPar
 }
 
 interface RowCellsProps {
-  columns: Columns;
+  columns: GridColumns;
   domIndex: number;
   extendRowFullWidth: boolean;
   firstColIdx: number;
   hasScroll: { y: boolean; x: boolean };
   lastColIdx: number;
-  row: RowModel;
+  row: GridRowModel;
   rowIndex: number;
   scrollSize: number;
   showCellRightBorder: boolean;
-  cellFocus: CellIndexCoordinates | null;
+  cellFocus: GridCellIndexCoordinates | null;
 }
 
 export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
@@ -50,7 +50,7 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
     showCellRightBorder,
   } = props;
   const api = React.useContext(GridApiContext);
-  const rowHeight = useGridSelector(api, densityRowHeightSelector);
+  const rowHeight = useGridSelector(api, gridDensityRowHeightSelector);
 
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const isLastColumn = firstColIdx + colIdx === columns.length - 1;
@@ -62,7 +62,7 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
       : !removeLastBorderRight && !props.extendRowFullWidth;
 
     let value = row[column.field!];
-    const cellParams: CellParams = buildGridCellParams({
+    const cellParams: GridCellParams = buildGridCellParams({
       rowModel: row,
       colDef: column,
       rowIndex,

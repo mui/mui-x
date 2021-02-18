@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { GRID_RESIZE, GRID_SCROLL, GRID_SCROLLING } from '../../../constants/eventsConstants';
-import { ApiRef } from '../../../models/api/apiRef';
-import { VirtualizationApi } from '../../../models/api/virtualizationApi';
-import { CellIndexCoordinates } from '../../../models/cell';
-import { ScrollParams } from '../../../models/params/scrollParams';
-import { RenderContextProps, RenderRowProps } from '../../../models/renderContextProps';
+import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridVirtualizationApi } from '../../../models/api/gridVirtualizationApi';
+import { GridCellIndexCoordinates } from '../../../models/gridCell';
+import { GridScrollParams } from '../../../models/params/gridScrollParams';
+import { GridRenderContextProps, GridRenderRowProps } from '../../../models/gridRenderContextProps';
 import { isDeepEqual } from '../../../utils/utils';
 import { useEnhancedEffect } from '../../../utils/material-ui-utils';
 import { optionsSelector } from '../../utils/optionsSelector';
@@ -24,19 +24,19 @@ import { useLogger } from '../../utils/useLogger';
 import { useGridScrollFn } from '../../utils/useGridScrollFn';
 import { InternalRenderingState } from './renderingState';
 import { useGridVirtualColumns } from './useGridVirtualColumns';
-import { densityRowHeightSelector } from '../density/densitySelector';
+import { gridDensityRowHeightSelector } from '../density/densitySelector';
 
 export const useGridVirtualRows = (
   colRef: React.MutableRefObject<HTMLDivElement | null>,
   windowRef: React.MutableRefObject<HTMLDivElement | null>,
   renderingZoneRef: React.MutableRefObject<HTMLDivElement | null>,
-  apiRef: ApiRef,
+  apiRef: GridApiRef,
 ): void => {
   const logger = useLogger('useGridVirtualRows');
 
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
-  const rowHeight = useGridSelector(apiRef, densityRowHeightSelector);
+  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const paginationState = useGridSelector<PaginationState>(apiRef, gridPaginationSelector);
   const totalRowCount = useGridSelector<number>(apiRef, gridRowCountSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
@@ -82,7 +82,7 @@ export const useGridVirtualRows = (
         lastRowIdx = maxIndex;
       }
 
-      const rowProps: RenderRowProps = { page, firstRowIdx, lastRowIdx };
+      const rowProps: GridRenderRowProps = { page, firstRowIdx, lastRowIdx };
       return rowProps;
     },
     [
@@ -94,12 +94,12 @@ export const useGridVirtualRows = (
     ],
   );
 
-  const getRenderingState = React.useCallback((): Partial<RenderContextProps> | null => {
+  const getRenderingState = React.useCallback((): Partial<GridRenderContextProps> | null => {
     if (apiRef.current.state.containerSizes == null) {
       return null;
     }
 
-    const newRenderCtx: Partial<RenderContextProps> = {
+    const newRenderCtx: Partial<GridRenderContextProps> = {
       ...renderedColRef.current,
       ...getRenderRowProps(apiRef.current.state.rendering.virtualPage),
       paginationCurrentPage: paginationState.page,
@@ -181,7 +181,7 @@ export const useGridVirtualRows = (
   );
 
   const scrollToIndexes = React.useCallback(
-    (params: CellIndexCoordinates) => {
+    (params: GridCellIndexCoordinates) => {
       logger.debug(`Scrolling to cell at row ${params.rowIndex}, col: ${params.colIndex} `);
 
       let scrollLeft;
@@ -274,7 +274,7 @@ export const useGridVirtualRows = (
   }, [windowRef, apiRef, setGridState, forceUpdate]);
 
   const scroll = React.useCallback(
-    (params: Partial<ScrollParams>) => {
+    (params: Partial<GridScrollParams>) => {
       if (windowRef.current && params.left != null && colRef.current) {
         colRef.current.scrollLeft = params.left;
         windowRef.current.scrollLeft = params.left;
@@ -304,14 +304,14 @@ export const useGridVirtualRows = (
     }
   });
 
-  const virtualApi: Partial<VirtualizationApi> = {
+  const virtualApi: Partial<GridVirtualizationApi> = {
     scroll,
     scrollToIndexes,
     getContainerPropsState,
     getRenderContextState,
     updateViewport,
   };
-  useGridApiMethod(apiRef, virtualApi, 'VirtualizationApi');
+  useGridApiMethod(apiRef, virtualApi, 'GridVirtualizationApi');
 
   React.useEffect(() => {
     if (

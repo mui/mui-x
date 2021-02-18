@@ -1,9 +1,9 @@
-import { RowId } from '../../../models/rows';
+import { GridRowId } from '../../../models/gridRows';
 
 export interface VisibleGridRowsState {
-  visibleRowsLookup: Record<RowId, boolean>;
+  visibleRowsLookup: Record<GridRowId, boolean>;
 
-  visibleRows?: RowId[];
+  visibleRows?: GridRowId[];
 }
 
 export const getInitialVisibleGridRowsState: () => VisibleGridRowsState = () => ({

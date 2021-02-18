@@ -3,7 +3,7 @@ import {
   GRID_DATA_CONTAINER_CSS_CLASS,
   GRID_HEADER_CELL_TITLE_CSS_CLASS,
 } from '../constants/cssClassesConstants';
-import { CellIndexCoordinates } from '../models/cell';
+import { GridCellIndexCoordinates } from '../models/gridCell';
 
 export function isOverflown(element: Element): boolean {
   return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
@@ -68,7 +68,7 @@ export function findGridDataContainerFromCurrent(elem: Element): HTMLDivElement 
 
 export function getGridCellElementFromIndexes(
   root: Element,
-  { colIndex, rowIndex }: CellIndexCoordinates,
+  { colIndex, rowIndex }: GridCellIndexCoordinates,
 ) {
   return root.querySelector(
     `:scope .${GRID_CELL_CSS_CLASS}[aria-colIndex='${colIndex}'][data-rowIndex='${rowIndex}']`,

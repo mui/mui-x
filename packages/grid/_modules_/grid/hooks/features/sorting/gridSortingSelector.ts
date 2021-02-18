@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
-import { RowId, RowModel } from '../../../models/rows';
-import { SortDirection, SortModel } from '../../../models/sortModel';
+import { GridRowId, GridRowModel } from '../../../models/gridRows';
+import { GridSortDirection, GridSortModel } from '../../../models/gridSortModel';
 import { GridState } from '../core/gridState';
 import {
   GridRowsLookup,
@@ -10,7 +10,7 @@ import {
 import { GridSortingState } from './gridSortingState';
 
 const sortingGridStateSelector = (state: GridState) => state.sorting;
-export const sortedGridRowIdsSelector = createSelector<GridState, GridSortingState, RowId[]>(
+export const sortedGridRowIdsSelector = createSelector<GridState, GridSortingState, GridRowId[]>(
   sortingGridStateSelector,
   (sortingState: GridSortingState) => {
     return sortingState.sortedRows;
@@ -18,32 +18,32 @@ export const sortedGridRowIdsSelector = createSelector<GridState, GridSortingSta
 );
 export const sortedGridRowsSelector = createSelector<
   GridState,
-  RowId[],
+  GridRowId[],
   GridRowsLookup,
-  RowModel[],
-  RowModel[]
+  GridRowModel[],
+  GridRowModel[]
 >(
   sortedGridRowIdsSelector,
   gridRowsLookupSelector,
   unorderedGridRowModelsSelector,
-  (sortedIds: RowId[], idRowsLookup, unordered) => {
+  (sortedIds: GridRowId[], idRowsLookup, unordered) => {
     return sortedIds.length > 0 ? sortedIds.map((id) => idRowsLookup[id]) : unordered;
   },
 );
-export const gridSortModelSelector = createSelector<GridState, GridSortingState, SortModel>(
+export const gridSortModelSelector = createSelector<GridState, GridSortingState, GridSortModel>(
   sortingGridStateSelector,
   (sorting) => sorting.sortModel,
 );
 
 export type GridSortColumnLookup = Record<
   string,
-  { sortDirection: SortDirection; sortIndex?: number }
+  { sortDirection: GridSortDirection; sortIndex?: number }
 >;
 export const gridSortColumnLookupSelector = createSelector<
   GridState,
-  SortModel,
+  GridSortModel,
   GridSortColumnLookup
->(gridSortModelSelector, (sortModel: SortModel) => {
+>(gridSortModelSelector, (sortModel: GridSortModel) => {
   const result: GridSortColumnLookup = sortModel.reduce((res, sortItem, index) => {
     res[sortItem.field] = {
       sortDirection: sortItem.sort,

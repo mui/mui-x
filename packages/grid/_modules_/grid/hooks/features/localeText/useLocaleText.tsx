@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { optionsSelector } from '../../utils/optionsSelector';
-import { ApiRef } from '../../../models/api/apiRef';
-import { LocaleTextApi } from '../../../models/api/localeTextApi';
+import { GridApiRef } from '../../../models/api/gridApiRef';
+import { LocaleTextApi } from '../../../models/api/gridLocaleTextApi';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridSelector } from '../core/useGridSelector';
 
-export const useLocaleText = (apiRef: ApiRef): void => {
+export const useLocaleText = (apiRef: GridApiRef): void => {
   const { localeText } = useGridSelector(apiRef, optionsSelector);
   const getLocaleText = React.useCallback(
     (key: any): any => {

@@ -2,16 +2,16 @@ import * as React from 'react';
 import Badge from '@material-ui/core/Badge';
 import IconButton from '@material-ui/core/IconButton';
 import { GridIconSlotsComponent } from '../../models/gridIconSlotsComponent';
-import { SortDirection } from '../../models/sortModel';
+import { GridSortDirection } from '../../models/gridSortModel';
 import { GridApiContext } from '../GridApiContext';
 
 export interface ColumnHeaderSortIconProps {
-  direction: SortDirection;
+  direction: GridSortDirection;
   index: number | undefined;
   hide?: boolean;
 }
 
-function getIcon(icons: GridIconSlotsComponent, direction: SortDirection) {
+function getIcon(icons: GridIconSlotsComponent, direction: GridSortDirection) {
   const Icon =
     direction === 'asc' ? icons!.ColumnSortedAscendingIcon! : icons!.ColumnSortedDescendingIcon!;
   return <Icon className="MuiDataGrid-sortIcon" />;

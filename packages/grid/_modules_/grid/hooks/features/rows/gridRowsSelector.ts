@@ -1,9 +1,9 @@
 import { createSelector } from 'reselect';
-import { RowId, RowModel } from '../../../models/rows';
+import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { GridState } from '../core/gridState';
 import { InternalGridRowsState } from './gridRowsState';
 
-export type GridRowsLookup = Record<RowId, RowModel>;
+export type GridRowsLookup = Record<GridRowId, GridRowModel>;
 
 export const gridRowsStateSelector = (state: GridState) => state.rows;
 export const gridRowCountSelector = createSelector<GridState, InternalGridRowsState, number>(
@@ -18,7 +18,7 @@ export const gridRowsLookupSelector = createSelector<
 export const unorderedGridRowModelsSelector = createSelector<
   GridState,
   InternalGridRowsState,
-  RowModel[]
+  GridRowModel[]
 >(gridRowsStateSelector, (rows: InternalGridRowsState) =>
   rows.allRows.map((id) => rows.idRowsLookup[id]),
 );

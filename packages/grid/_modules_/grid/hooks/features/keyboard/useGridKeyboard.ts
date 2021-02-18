@@ -7,8 +7,8 @@ import {
   GRID_KEYUP,
   GRID_MULTIPLE_KEY_PRESS_CHANGED,
 } from '../../../constants/eventsConstants';
-import { ApiRef } from '../../../models/api/apiRef';
-import { CellIndexCoordinates } from '../../../models/cell';
+import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridCellIndexCoordinates } from '../../../models/gridCell';
 import {
   findParentElementFromClassName,
   getIdFromRowElem,
@@ -33,7 +33,7 @@ import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { gridSelectionStateSelector } from '../selection/gridSelectionSelector';
 import { KeyboardState } from './keyboardState';
 
-const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
+const getNextCellIndexes = (code: string, indexes: GridCellIndexCoordinates) => {
   if (!isArrowKeys(code)) {
     throw new Error('Material-UI: The first argument (code) should be an arrow key code.');
   }
@@ -53,7 +53,7 @@ const getNextCellIndexes = (code: string, indexes: CellIndexCoordinates) => {
 
 export const useGridKeyboard = (
   gridRootRef: React.RefObject<HTMLDivElement>,
-  apiRef: ApiRef,
+  apiRef: GridApiRef,
 ): void => {
   const logger = useLogger('useGridKeyboard');
   const options = useGridSelector(apiRef, optionsSelector);
@@ -92,7 +92,7 @@ export const useGridKeyboard = (
         ? paginationState.pageSize * (paginationState.page + 1)
         : totalRowCount;
 
-      let nextCellIndexes: CellIndexCoordinates;
+      let nextCellIndexes: GridCellIndexCoordinates;
       if (isArrowKeys(key)) {
         nextCellIndexes = getNextCellIndexes(key, {
           colIndex: currentColIndex,

@@ -1,6 +1,6 @@
 import MenuList from '@material-ui/core/MenuList';
 import * as React from 'react';
-import { ColDef } from '../../../models/colDef/colDef';
+import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridColumnsMenuItem } from './GridColumnsMenuItem';
 import { GridFilterMenuItem } from './GridFilterMenuItem';
 import { HideGridColMenuItem } from './HideGridColMenuItem';
@@ -8,7 +8,7 @@ import { SortGridMenuItems } from './SortGridMenuItems';
 
 export interface GridColumnMenuProps {
   hideMenu: () => void;
-  currentColumn: ColDef;
+  currentColumn: GridColDef;
 }
 
 export function GridColumnMenu(props: GridColumnMenuProps) {

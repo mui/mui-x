@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { capitalize } from '@material-ui/core/utils';
-import { Alignment, CellValue } from '../models';
+import { GridAlignment, GridCellValue } from '../models';
 import { GRID_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import { classnames } from '../utils';
 
 export interface GridCellProps {
   field?: string;
-  value?: CellValue;
-  formattedValue?: CellValue;
+  value?: GridCellValue;
+  formattedValue?: GridCellValue;
   width: number;
   height: number;
   showRightBorder?: boolean;
   hasFocus?: boolean;
-  align: Alignment;
+  align: GridAlignment;
   cssClass?: string;
   tabIndex?: number;
   colIndex?: number;

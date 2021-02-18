@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { ColDef } from '../../../models/colDef';
+import { GridColDef } from '../../../models/colDef';
 import { useLogger } from '../../utils/useLogger';
-import { ApiRef } from '../../../models/api/apiRef';
+import { GridApiRef } from '../../../models/api/gridApiRef';
 import {
   GRID_DRAGEND,
   GRID_COL_REORDER_START,
@@ -38,7 +38,7 @@ const hasCursorPositionChanged = (
 ): boolean =>
   currentCoordinates.x !== nextCoordinates.x || currentCoordinates.y !== nextCoordinates.y;
 
-export const useGridColumnReorder = (apiRef: ApiRef): void => {
+export const useGridColumnReorder = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridColumnReorder');
 
   const [, setGridState, forceUpdate] = useGridState(apiRef);
@@ -69,7 +69,7 @@ export const useGridColumnReorder = (apiRef: ApiRef): void => {
   }, [apiRef, setGridState, forceUpdate, logger]);
 
   const onColItemDragStart = React.useCallback(
-    (col: ColDef, currentTarget: HTMLElement): void => {
+    (col: GridColDef, currentTarget: HTMLElement): void => {
       logger.debug(`Start dragging col ${col.field}`);
       apiRef.current.publishEvent(GRID_COL_REORDER_START);
 
@@ -115,7 +115,7 @@ export const useGridColumnReorder = (apiRef: ApiRef): void => {
   );
 
   const onColItemDragOver = React.useCallback(
-    (col: ColDef, coordinates: CursorCoordinates): void => {
+    (col: GridColDef, coordinates: CursorCoordinates): void => {
       logger.debug(`Dragging over col ${col.field}`);
       apiRef.current.publishEvent(GRID_COL_REORDER_DRAG_OVER);
 

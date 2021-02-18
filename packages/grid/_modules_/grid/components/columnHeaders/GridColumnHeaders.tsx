@@ -9,7 +9,7 @@ import { GridLeftEmptyCell, GridRightEmptyCell } from '../GridCell';
 import { GridScrollArea } from '../GridScrollArea';
 import { gridContainerSizesSelector } from '../GridViewport';
 import { GridColumnHeadersItemCollection } from './GridColumnHeadersItemCollection';
-import { densityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
+import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 
 export const gridScrollbarStateSelector = (state: GridState) => state.scrollBar;
 
@@ -21,7 +21,7 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function G
   const columns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const { disableColumnReorder } = useGridSelector(apiRef, optionsSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
-  const headerHeight = useGridSelector(apiRef, densityHeaderHeightSelector);
+  const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
   const renderCtx = useGridSelector(apiRef, renderStateSelector).renderContext;
   const { hasScrollX } = useGridSelector(apiRef, gridScrollbarStateSelector);
   const wrapperCssClasses = `MuiDataGrid-colCellWrapper ${hasScrollX ? 'scroll' : ''}`;

@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { useGridState } from '../../../hooks/features/core/useGridState';
 import { optionsSelector } from '../../../hooks/utils/optionsSelector';
-import { FilterItem, GridLinkOperator } from '../../../models/filterItem';
+import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { GridApiContext } from '../../GridApiContext';
 import { GridAddIcon } from '../../icons/index';
 import { GridPanelContent } from '../GridPanelContent';
@@ -21,7 +21,7 @@ export function GridFilterPanel() {
   ]);
 
   const applyFilter = React.useCallback(
-    (item: FilterItem) => {
+    (item: GridFilterItem) => {
       apiRef!.current.upsertFilter(item);
     },
     [apiRef],
@@ -39,7 +39,7 @@ export function GridFilterPanel() {
   }, [apiRef]);
 
   const deleteFilter = React.useCallback(
-    (item: FilterItem) => {
+    (item: GridFilterItem) => {
       apiRef!.current.deleteFilter(item);
     },
     [apiRef],

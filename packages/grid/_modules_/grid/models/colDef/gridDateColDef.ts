@@ -1,25 +1,25 @@
 import { isDate } from '../../utils/utils';
 import { gridDateComparer } from '../../utils/sortingUtils';
-import { CellValue } from '../cell';
+import { GridCellValue } from '../gridCell';
 import { getGridDateOperators } from './gridDateOperators';
 import { GRID_STRING_COL_DEF } from './gridStringColDef';
-import { ColTypeDef } from './colDef';
+import { GridColTypeDef } from './gridColDef';
 
-export function gridDateFormatter({ value }: { value: CellValue }) {
+export function gridDateFormatter({ value }: { value: GridCellValue }) {
   if (isDate(value)) {
     return value.toLocaleDateString();
   }
   return value;
 }
 
-export function gridDateTimeFormatter({ value }: { value: CellValue }) {
+export function gridDateTimeFormatter({ value }: { value: GridCellValue }) {
   if (isDate(value)) {
     return value.toLocaleString();
   }
   return value;
 }
 
-export const GRID_DATE_COL_DEF: ColTypeDef = {
+export const GRID_DATE_COL_DEF: GridColTypeDef = {
   ...GRID_STRING_COL_DEF,
   type: 'date',
   sortComparator: gridDateComparer,
@@ -27,7 +27,7 @@ export const GRID_DATE_COL_DEF: ColTypeDef = {
   filterOperators: getGridDateOperators(),
 };
 
-export const GRID_DATETIME_COL_DEF: ColTypeDef = {
+export const GRID_DATETIME_COL_DEF: GridColTypeDef = {
   ...GRID_STRING_COL_DEF,
   type: 'dateTime',
   sortComparator: gridDateComparer,

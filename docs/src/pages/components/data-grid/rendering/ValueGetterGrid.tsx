@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, ColDef, ValueGetterParams } from '@material-ui/data-grid';
+import { DataGrid, GridColDef, ValueGetterParams } from '@material-ui/data-grid';
 
 function getFullName(params: ValueGetterParams) {
   return `${params.getValue('firstName') || ''} ${
@@ -7,7 +7,7 @@ function getFullName(params: ValueGetterParams) {
   }`;
 }
 
-const columns: ColDef[] = [
+const columns: GridColDef[] = [
   { field: 'firstName', headerName: 'First name', width: 130 },
   { field: 'lastName', headerName: 'Last name', width: 130 },
   {

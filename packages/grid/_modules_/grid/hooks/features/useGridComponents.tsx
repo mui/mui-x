@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { ApiRef } from '../../models/api/apiRef';
-import { ApiRefComponentsProperty } from '../../models/api/componentsApi';
+import { GridApiRef } from '../../models/api/gridApiRef';
+import { GridApiRefComponentsProperty } from '../../models/api/gridComponentsApi';
 import { DEFAULT_GRID_SLOTS_COMPONENTS, GridSlotsComponent } from '../../models/gridSlotsComponent';
 import { GridSlotsComponentsProps } from '../../models/gridSlotsComponentsProps';
 
 export const useGridComponents = (
   componentSlotsProp: GridSlotsComponent | undefined,
   componentsProps: GridSlotsComponentsProps | undefined,
-  apiRef: ApiRef,
+  apiRef: GridApiRef,
 ) => {
-  const components: ApiRefComponentsProperty = React.useMemo(() => {
+  const components: GridApiRefComponentsProperty = React.useMemo(() => {
     const mappedComponents = {
       ColumnFilteredIcon:
         (componentSlotsProp && componentSlotsProp.ColumnFilteredIcon) ||

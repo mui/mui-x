@@ -22,11 +22,11 @@ import { GridPagination } from '../components/GridPagination';
 import { GridColumnsPanel } from '../components/panel/GridColumnsPanel';
 import { GridFilterPanel } from '../components/panel/filterPanel/GridFilterPanel';
 import { GridPanel, GridPanelProps } from '../components/panel/GridPanel';
-import { ApiRefComponentsProperty } from './api/componentsApi';
+import { GridApiRefComponentsProperty } from './api/gridComponentsApi';
 import { GridIconSlotsComponent } from './gridIconSlotsComponent';
-import { BaseComponentProps } from './params/baseComponentProps';
+import { GridBaseComponentProps } from './params/gridBaseComponentProps';
 
-export type ColumnMenuProps = BaseComponentProps & GridColumnMenuProps;
+export type ColumnMenuProps = GridBaseComponentProps & GridColumnMenuProps;
 
 /**
  * Grid components React prop interface containing all the overridable components.
@@ -40,48 +40,48 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
   /**
    * Error overlay component rendered above the grid when an error is caught.
    */
-  ErrorOverlay?: React.ElementType<BaseComponentProps & ErrorOverlayProps>;
+  ErrorOverlay?: React.ElementType<GridBaseComponentProps & ErrorOverlayProps>;
   /**
    * Footer component rendered at the bottom of the grid viewport.
    */
-  Footer?: React.ElementType<BaseComponentProps>;
+  Footer?: React.ElementType<GridBaseComponentProps>;
   /**
    * Header component rendered above the grid column header bar.
    * Prefer using the `Toolbar` slot. You should never need to use this slot. TODO remove.
    */
-  Header?: React.ElementType<BaseComponentProps>;
+  Header?: React.ElementType<GridBaseComponentProps>;
   /**
    * Toolbar component rendered inside the Header component.
    */
-  Toolbar?: React.ElementType<BaseComponentProps>;
+  Toolbar?: React.ElementType<GridBaseComponentProps>;
   /**
    * PreferencesPanel component rendered inside the Header component.
    */
-  PreferencesPanel?: React.ElementType<BaseComponentProps>;
+  PreferencesPanel?: React.ElementType<GridBaseComponentProps>;
   /**
    * Loading overlay component rendered when the grid is in a loading state.
    */
-  LoadingOverlay?: React.ElementType<BaseComponentProps>;
+  LoadingOverlay?: React.ElementType<GridBaseComponentProps>;
   /**
    * No rows overlay component rendered when the grid has no rows.
    */
-  NoRowsOverlay?: React.ElementType<BaseComponentProps>;
+  NoRowsOverlay?: React.ElementType<GridBaseComponentProps>;
   /**
    * Pagination component rendered in the grid footer by default.
    */
-  Pagination?: React.ElementType<BaseComponentProps>;
+  Pagination?: React.ElementType<GridBaseComponentProps>;
   /**
    * Filter panel component rendered when clicking the filter button.
    */
-  FilterPanel?: React.ElementType<BaseComponentProps>;
+  FilterPanel?: React.ElementType<GridBaseComponentProps>;
   /**
-   * Columns panel component rendered when clicking the columns button.
+   * GridColumns panel component rendered when clicking the columns button.
    */
-  ColumnsPanel?: React.ElementType<BaseComponentProps>;
+  ColumnsPanel?: React.ElementType<GridBaseComponentProps>;
   /**
    * Panel component wrapping the filters and columns panels.
    */
-  Panel?: React.ElementType<BaseComponentProps & GridPanelProps>;
+  Panel?: React.ElementType<GridBaseComponentProps & GridPanelProps>;
 }
 
 export const DEFAULT_GRID_SLOTS_ICONS: GridIconSlotsComponent = {
@@ -97,7 +97,7 @@ export const DEFAULT_GRID_SLOTS_ICONS: GridIconSlotsComponent = {
   DensityComfortableIcon: GridViewStreamIcon,
 };
 
-export const DEFAULT_GRID_SLOTS_COMPONENTS: ApiRefComponentsProperty = {
+export const DEFAULT_GRID_SLOTS_COMPONENTS: GridApiRefComponentsProperty = {
   ...DEFAULT_GRID_SLOTS_ICONS,
   ColumnMenu: GridColumnMenu,
   ColumnsPanel: GridColumnsPanel,

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import { RowData, useGridApiRef, XGrid } from '@material-ui/x-grid';
+import { GridRowData, useGridApiRef, XGrid } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { randomInt } from '../data/random-generator';
 
@@ -63,7 +63,7 @@ export function NoId() {
 }
 export function CommodityNewRowId() {
   const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
-  const getRowId = React.useCallback((row: RowData) => `${row.desk}-${row.commodity}`, []);
+  const getRowId = React.useCallback((row: GridRowData) => `${row.desk}-${row.commodity}`, []);
   return (
     <div className="grid-container">
       <XGrid

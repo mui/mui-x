@@ -3,7 +3,7 @@ import { ownerDocument } from '@material-ui/core/utils';
 import { GRID_DEFAULT_LOCALE_TEXT } from '../../constants/localeTextConstants';
 import { mergeGridOptions } from '../../utils/mergeUtils';
 import { GridComponentProps, GridOptionsProp } from '../../GridComponentProps';
-import { ApiRef } from '../../models/api/apiRef';
+import { GridApiRef } from '../../models/api/gridApiRef';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../models/gridOptions';
 import { getScrollbarSize, useEnhancedEffect } from '../../utils/material-ui-utils';
 import { useGridReducer } from '../features/core/useGridReducer';
@@ -21,7 +21,7 @@ export function optionsReducer(
       throw new Error(`Material-UI: Action ${action.type} not found.`);
   }
 }
-export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridOptions {
+export function useOptionsProp(apiRef: GridApiRef, props: GridComponentProps): GridOptions {
   const logger = useLogger('useOptionsProp');
   const [browserScrollBar, setBrowserScrollBar] = React.useState(0);
 

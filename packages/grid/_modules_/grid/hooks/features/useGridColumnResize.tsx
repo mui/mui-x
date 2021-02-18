@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ownerDocument } from '@material-ui/core/utils';
 import { ColumnResizeApi } from '../../models/api/columnResizeApi';
-import { ColDef } from '../../models/colDef';
+import { GridColDef } from '../../models/colDef';
 import { useGridApiMethod } from '../root/useGridApiMethod';
 import { useLogger } from '../utils';
 import { useEventCallback } from '../../utils/material-ui-utils';
@@ -16,7 +16,7 @@ import {
   getFieldFromHeaderElem,
   findHeaderElementFromField,
 } from '../../utils/domUtils';
-import { ApiRef } from '../../models';
+import { GridApiRef } from '../../models';
 import { CursorCoordinates } from '../../models/api/columnReorderApi';
 
 const MIN_COL_WIDTH = 50;
@@ -63,10 +63,10 @@ function trackFinger(event, currentTouchId): CursorCoordinates | boolean {
 // TODO improve experience for last column
 export const useGridColumnResize = (
   columnsRef: React.RefObject<HTMLDivElement>,
-  apiRef: ApiRef,
+  apiRef: GridApiRef,
 ) => {
   const logger = useLogger('useGridColumnResize');
-  const colDefRef = React.useRef<ColDef>();
+  const colDefRef = React.useRef<GridColDef>();
   const colElementRef = React.useRef<HTMLDivElement>();
   const colCellElementsRef = React.useRef<NodeListOf<Element>>();
   const initialOffset = React.useRef<number>();
@@ -95,7 +95,7 @@ export const useGridColumnResize = (
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
 
-    apiRef.current!.updateColumn(colDefRef.current as ColDef);
+    apiRef.current!.updateColumn(colDefRef.current as GridColDef);
 
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {
@@ -176,7 +176,7 @@ export const useGridColumnResize = (
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     stopListening();
 
-    apiRef.current!.updateColumn(colDefRef.current as ColDef);
+    apiRef.current!.updateColumn(colDefRef.current as GridColDef);
 
     clearTimeout(stopResizeEventTimeout.current);
     stopResizeEventTimeout.current = setTimeout(() => {

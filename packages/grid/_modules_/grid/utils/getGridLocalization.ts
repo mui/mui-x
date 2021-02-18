@@ -1,4 +1,4 @@
-import { LocaleText } from '../models/api/localeTextApi';
+import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { GridOptions } from '../models/gridOptions';
 import { isMuiV5 } from './utils';
 
@@ -18,7 +18,7 @@ export interface LocalizationV5 {
 
 export type Localization = LocalizationV4 | LocalizationV5;
 
-export const getGridLocalization = (translations: Partial<LocaleText>): Localization => {
+export const getGridLocalization = (translations: Partial<GridLocaleText>): Localization => {
   if (isMuiV5()) {
     return {
       components: {

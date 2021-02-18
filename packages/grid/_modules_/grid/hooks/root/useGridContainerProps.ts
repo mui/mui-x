@@ -1,14 +1,18 @@
 import * as React from 'react';
 import { GRID_RESIZE } from '../../constants/eventsConstants';
-import { ApiRef } from '../../models/api/apiRef';
-import { ContainerProps, ScrollBarState, ViewportSizeState } from '../../models/containerProps';
+import { GridApiRef } from '../../models/api/gridApiRef';
+import {
+  GridContainerProps,
+  GridScrollBarState,
+  GridViewportSizeState,
+} from '../../models/gridContainerProps';
 import { ElementSize } from '../../models/elementSize';
 import { isDeepEqual } from '../../utils/utils';
 import { gridColumnsTotalWidthSelector } from '../features/columns/gridColumnsSelector';
 import { GridState } from '../features/core/gridState';
 import { useGridSelector } from '../features/core/useGridSelector';
 import { useGridState } from '../features/core/useGridState';
-import { densityRowHeightSelector } from '../features/density/densitySelector';
+import { gridDensityRowHeightSelector } from '../features/density/densitySelector';
 import { visibleGridRowCountSelector } from '../features/filter/gridFilterSelector';
 import { PaginationState } from '../features/pagination/gridPaginationReducer';
 import { gridPaginationSelector } from '../features/pagination/gridPaginationSelector';
@@ -18,13 +22,13 @@ import { useGridApiEventHandler } from './useGridApiEventHandler';
 
 export const useGridContainerProps = (
   windowRef: React.RefObject<HTMLDivElement>,
-  apiRef: ApiRef,
+  apiRef: GridApiRef,
 ) => {
   const logger = useLogger('useGridContainerProps');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const windowSizesRef = React.useRef<ElementSize>({ width: 0, height: 0 });
   const options = useGridSelector(apiRef, optionsSelector);
-  const rowHeight = useGridSelector(apiRef, densityRowHeightSelector);
+  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const visibleRowsCount = useGridSelector(apiRef, visibleGridRowCountSelector);
   const paginationState = useGridSelector<PaginationState>(apiRef, gridPaginationSelector);
@@ -77,7 +81,7 @@ export const useGridContainerProps = (
   );
 
   const getViewport = React.useCallback(
-    (rowsCount: number, scrollBarState: ScrollBarState) => {
+    (rowsCount: number, scrollBarState: GridScrollBarState) => {
       if (!windowRef.current) {
         return null;
       }
@@ -105,9 +109,9 @@ export const useGridContainerProps = (
   const getContainerProps = React.useCallback(
     (
       rowsCount: number,
-      viewportSizes: ViewportSizeState,
-      scrollState: ScrollBarState,
-    ): ContainerProps | null => {
+      viewportSizes: GridViewportSizeState,
+      scrollState: GridScrollBarState,
+    ): GridContainerProps | null => {
       if (
         !windowRef ||
         !windowRef.current ||
@@ -140,7 +144,7 @@ export const useGridContainerProps = (
         totalHeight = rowsCount * rowHeight + scrollState.scrollBarSize.x;
       }
 
-      const indexes: ContainerProps = {
+      const indexes: GridContainerProps = {
         virtualRowsCount: options.autoPageSize ? viewportPageSize : rowsCount,
         renderingZonePageSize: rzPageSize,
         viewportPageSize,

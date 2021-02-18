@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { GRID_COLUMN_HEADER_CLICK } from '../../constants/eventsConstants';
-import { ColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
+import { GridColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
 import { GridOptions } from '../../models/gridOptions';
-import { ColParams } from '../../models/params/colParams';
-import { SortDirection } from '../../models/sortModel';
+import { GridColParams } from '../../models/params/gridColParams';
+import { GridSortDirection } from '../../models/gridSortModel';
 import { GridApiContext } from '../GridApiContext';
 import { GRID_HEADER_CELL_CSS_CLASS } from '../../constants/cssClassesConstants';
 import { classnames } from '../../utils/index';
@@ -13,14 +13,14 @@ import { GridColumnHeaderSeparator } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { ColumnHeaderFilterIcon } from './ColumnHeaderFilterIcon';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { densityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
+import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
-  column: ColDef;
+  column: GridColDef;
   isDragging: boolean;
   isResizing: boolean;
-  sortDirection: SortDirection;
+  sortDirection: GridSortDirection;
   sortIndex?: number;
   options: GridOptions;
   filterItemsCounter?: number;
@@ -37,7 +37,7 @@ export const GridColumnHeaderItem = ({
   filterItemsCounter,
 }: GridColumnHeaderItemProps) => {
   const apiRef = React.useContext(GridApiContext);
-  const headerHeight = useGridSelector(apiRef, densityHeaderHeightSelector);
+  const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
   const {
     disableColumnReorder,
     showColumnRightBorder,
@@ -74,7 +74,7 @@ export const GridColumnHeaderItem = ({
     [apiRef, column],
   );
   const onHeaderTitleClick = React.useCallback(() => {
-    const colHeaderParams: ColParams = {
+    const colHeaderParams: GridColParams = {
       field: column.field,
       colDef: column,
       colIndex,

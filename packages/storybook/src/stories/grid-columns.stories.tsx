@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ColDef, XGrid, ColTypeDef } from '@material-ui/x-grid';
+import { GridColDef, XGrid, GridColTypeDef } from '@material-ui/x-grid';
 import CreateIcon from '@material-ui/icons/Create';
 import Button from '@material-ui/core/Button';
 import { useData } from '../hooks/useData';
@@ -17,19 +17,19 @@ export default {
 
 export function SmallColSizes() {
   const data = useData(100, 20);
-  const transformColSizes = (columns: ColDef[]) => columns.map((c) => ({ ...c, width: 60 }));
+  const transformColSizes = (columns: GridColDef[]) => columns.map((c) => ({ ...c, width: 60 }));
 
   return <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />;
 }
 
 export function VerySmallColSizes() {
   const data = useData(100, 20);
-  const transformColSizes = (columns: ColDef[]) => columns.map((c) => ({ ...c, width: 50 }));
+  const transformColSizes = (columns: GridColDef[]) => columns.map((c) => ({ ...c, width: 50 }));
   return <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />;
 }
 export function ColumnDescriptionTooltip() {
   const data = useData(100, 20);
-  const transformColSizes = (columns: ColDef[]) =>
+  const transformColSizes = (columns: GridColDef[]) =>
     columns.map((c) => {
       if (c.field === 'currencyPair') {
         return { ...c, width: 80, description: 'This is the currency pair column' };
@@ -42,13 +42,13 @@ export function ColumnDescriptionTooltip() {
 
 export function HiddenColumns() {
   const data = useData(100, 20);
-  const transformColSizes = (columns: ColDef[]) =>
+  const transformColSizes = (columns: GridColDef[]) =>
     columns.map((c, idx) => ({ ...c, hide: idx % 2 === 0 }));
   return <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />;
 }
 
 export function UpdateColumnsBtn() {
-  const columns: ColDef[] = [
+  const columns: GridColDef[] = [
     { field: 'id' },
     { field: 'firstName' },
     { field: 'lastName' },
@@ -165,7 +165,7 @@ export function ColumnsAlign() {
 
   const transformCols = React.useCallback((cols) => {
     if (cols.length > 0) {
-      cols.forEach((col: ColDef, idx: number) => {
+      cols.forEach((col: GridColDef, idx: number) => {
         if (idx > 1 && idx % 2 === 1) {
           col.align = 'right';
           col.headerAlign = 'right';
@@ -186,18 +186,18 @@ export function ColumnsAlign() {
   );
 }
 
-const priceColumnType: ColTypeDef = {
+const priceColumnType: GridColTypeDef = {
   extendType: 'number',
   valueFormatter: ({ value }) => `${value} USD`,
 };
-const unknownPriceColumnType: ColTypeDef = { ...priceColumnType, cellClassName: 'unknown' };
+const unknownPriceColumnType: GridColTypeDef = { ...priceColumnType, cellClassName: 'unknown' };
 
 export function NewColumnTypes() {
   const data = useData(100, 5);
 
   const transformCols = React.useCallback((cols) => {
     if (cols.length > 0) {
-      cols.forEach((col: ColDef, idx: number) => {
+      cols.forEach((col: GridColDef, idx: number) => {
         if (idx > 1 && idx % 2 === 1) {
           col.type = 'price';
         } else if (idx > 1 && idx % 2 === 0) {
@@ -223,7 +223,7 @@ export function NewColumnTypes() {
 export const FlexColumnsWithCheckbox = () => {
   const data = useData(20, 3);
   const transformColSizes = React.useCallback(
-    (columns: ColDef[]) =>
+    (columns: GridColDef[]) =>
       columns.map((col, index) =>
         index % 2 === 0 ? { ...col, flex: index + 1 } : { ...col, width: 200 },
       ),
@@ -240,7 +240,7 @@ export const FlexColumnsWithCheckbox = () => {
 export const FewFlexColumns = () => {
   const data = useData(20, 3);
   const transformColSizes = React.useCallback(
-    (columns: ColDef[]) =>
+    (columns: GridColDef[]) =>
       columns.map((col, index) =>
         index % 2 === 0 ? { ...col, flex: index + 1 } : { ...col, width: 200 },
       ),
@@ -257,7 +257,7 @@ export const FewFlexColumns = () => {
 export const SeveralFlexColumn = () => {
   const data = useData(20, 7);
   const transformColSizes = React.useCallback(
-    (columns: ColDef[]) =>
+    (columns: GridColDef[]) =>
       columns.map((col, index) =>
         index % 3 !== 0 ? { ...col, flex: index } : { ...col, flex: 1 },
       ),
@@ -274,7 +274,7 @@ export const SeveralFlexColumn = () => {
 export const FlexColumnWidth2000 = () => {
   const data = useData(20, 3);
   const transformColSizes = React.useCallback(
-    (columns: ColDef[]) =>
+    (columns: GridColDef[]) =>
       columns.map((col, index) =>
         index % 2 !== 0 ? { ...col, width: 2000 } : { ...col, flex: index + 1 },
       ),

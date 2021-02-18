@@ -9,7 +9,7 @@ function EnterpriseTest() {
       <DataGrid rows={[]} columns={[]} pagination />
       {/* @ts-expect-error Type 'false' is not assignable to type 'true | undefined' */}
       <DataGrid pagination={false} />
-      {/* @ts-expect-error Type 'ApiRef' is not assignable to type 'undefined' */}
+      {/* @ts-expect-error Type 'GridApiRef' is not assignable to type 'undefined' */}
       <DataGrid apiRef={apiRef} />
     </div>
   );

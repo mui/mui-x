@@ -39,16 +39,16 @@ import { useOptionsProp } from './hooks/utils/useOptionsProp';
 import { useRenderInfoLog } from './hooks/utils/useRenderInfoLog';
 import { useResizeContainer } from './hooks/utils/useResizeContainer';
 import { useGridVirtualRows } from './hooks/features/virtualization/useGridVirtualRows';
-import { useDensity } from './hooks/features/density';
+import { useGridDensity } from './hooks/features/density';
 import { useStateProp } from './hooks/utils/useStateProp';
-import { RootContainerRef } from './models/rootContainerRef';
+import { GridRootContainerRef } from './models/gridRootContainerRef';
 import { GridApiContext } from './components/GridApiContext';
 import { useGridFilter } from './hooks/features/filter/useGridFilter';
 import { useLocaleText } from './hooks/features/localeText/useLocaleText';
 
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {
-    const rootContainerRef: RootContainerRef = React.useRef<HTMLDivElement>(null);
+    const rootContainerRef: GridRootContainerRef = React.useRef<HTMLDivElement>(null);
     const handleRef = useForkRef(rootContainerRef, ref);
 
     const footerRef = React.useRef<HTMLDivElement>(null);
@@ -81,7 +81,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useGridPreferencesPanel(apiRef);
     useGridFilter(apiRef, props.rows);
     useGridContainerProps(windowRef, apiRef);
-    useDensity(apiRef);
+    useGridDensity(apiRef);
     useGridVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
     useGridColumnReorder(apiRef);
     useGridColumnResize(columnsHeaderRef, apiRef);

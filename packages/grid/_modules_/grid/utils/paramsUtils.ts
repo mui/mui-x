@@ -1,9 +1,9 @@
-import { CellValue } from '../models/cell';
-import { RowModel } from '../models/rows';
-import { ColDef } from '../models/colDef/colDef';
+import { GridCellValue } from '../models/gridCell';
+import { GridRowModel } from '../models/gridRows';
+import { GridColDef } from '../models/colDef/gridColDef';
 import { GridApi } from '../models/api/gridApi';
-import { CellParams } from '../models/params/cellParams';
-import { RowParams } from '../models/params/rowParams';
+import { GridCellParams } from '../models/params/gridCellParams';
+import { GridRowParams } from '../models/params/gridRowParams';
 
 let warnedOnce = false;
 
@@ -15,13 +15,13 @@ export function buildGridCellParams({
   colDef,
   api,
 }: {
-  rowModel: RowModel;
-  colDef: ColDef;
+  rowModel: GridRowModel;
+  colDef: GridColDef;
   rowIndex?: number;
-  value: CellValue;
+  value: GridCellValue;
   api: GridApi;
   element?: HTMLElement;
-}): CellParams {
+}): GridCellParams {
   return {
     element,
     value,
@@ -70,12 +70,12 @@ export function buildGridRowParams({
   rowModel,
   api,
 }: {
-  rowModel: RowModel;
-  colDef: ColDef;
+  rowModel: GridRowModel;
+  colDef: GridColDef;
   rowIndex: number;
   api: GridApi;
   element?: HTMLElement;
-}): RowParams {
+}): GridRowParams {
   return {
     element,
     columns: api.getAllColumns(),

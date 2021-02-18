@@ -2,7 +2,7 @@ import * as React from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { gridSortModelSelector } from '../../../hooks/features/sorting/gridSortingSelector';
-import { SortDirection } from '../../../models/sortModel';
+import { GridSortDirection } from '../../../models/gridSortModel';
 import { GridApiContext } from '../../GridApiContext';
 import { FilterItemProps } from './FilterItemProps';
 
@@ -22,7 +22,7 @@ export const SortGridMenuItems: React.FC<FilterItemProps> = ({ column, onClick }
     (event: React.MouseEvent<HTMLElement>) => {
       onClick(event);
       const direction = event.currentTarget.getAttribute('data-value') || null;
-      apiRef?.current.sortColumn(column!, direction as SortDirection);
+      apiRef?.current.sortColumn(column!, direction as GridSortDirection);
     },
     [apiRef, column, onClick],
   );

@@ -4,16 +4,16 @@ import { makeStyles } from '@material-ui/core/styles';
 import { DataGrid } from '@material-ui/data-grid';
 import Rating from '@material-ui/lab/Rating';
 import {
-  ColDef,
-  ColTypeDef,
+  GridColDef,
+  GridColTypeDef,
   FilterInputValueProps,
-  FilterItem,
+  GridFilterItem,
   FilterModel,
-  FilterModelParams,
+  GridFilterModelParams,
   getGridNumericColumnOperators,
   GridLinkOperator,
   GridPreferencePanelsValue,
-  RowModel,
+  GridRowModel,
   useGridApiRef,
   XGrid,
 } from '@material-ui/x-grid';
@@ -143,7 +143,7 @@ export function CommodityWithNewRowsViaProps() {
 export function CommodityWithNewColsViaProps() {
   const { data, setRowLength } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
 
-  const [cols, setCols] = React.useState<ColDef[]>([]);
+  const [cols, setCols] = React.useState<GridColDef[]>([]);
 
   React.useEffect(() => {
     setCols(data.columns);
@@ -220,7 +220,7 @@ export function CommodityNoToolbar() {
 
 export function ServerFilterViaProps() {
   const demoServer = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
-  const [rows, setRows] = React.useState<RowModel[]>(demoServer.data.rows);
+  const [rows, setRows] = React.useState<GridRowModel[]>(demoServer.data.rows);
   const [filterModel, setFilterModel] = React.useState<FilterModel>({
     items: [{ id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'contains' }],
   });
@@ -246,7 +246,7 @@ export function ServerFilterViaProps() {
   // columnTypes={{string: {filterOperators: ['contains']}}}
 
   const onFilterChange = React.useCallback(
-    (params: FilterModelParams) => {
+    (params: GridFilterModelParams) => {
       const hasChanged = params.filterModel.items[0].value !== filterModel.items[0].value;
       setLoading(hasChanged);
       if (!hasChanged) {
@@ -294,7 +294,7 @@ function getRowsFromServer(commodityFilterValue?: string) {
     { id: '5', commodity: 'oats' },
   ];
 
-  return new Promise<RowModel[]>((resolve) => {
+  return new Promise<GridRowModel[]>((resolve) => {
     setTimeout(() => {
       if (!commodityFilterValue) {
         resolve(serverRows);
@@ -306,8 +306,8 @@ function getRowsFromServer(commodityFilterValue?: string) {
   });
 }
 export function SimpleServerFilter() {
-  const [columns] = React.useState<ColDef[]>([{ field: 'commodity', width: 150 }]);
-  const [rows, setRows] = React.useState<RowModel[]>([]);
+  const [columns] = React.useState<GridColDef[]>([{ field: 'commodity', width: 150 }]);
+  const [rows, setRows] = React.useState<GridRowModel[]>([]);
   const [loading, setLoading] = React.useState(false);
 
   const fetchRows = React.useCallback(async (filterValue?: string) => {
@@ -318,7 +318,7 @@ export function SimpleServerFilter() {
   }, []);
 
   const onFilterChange = React.useCallback(
-    async (params: FilterModelParams) => {
+    async (params: GridFilterModelParams) => {
       await fetchRows(params.filterModel.items[0].value);
     },
     [fetchRows],
@@ -421,7 +421,7 @@ export function CustomFilterOperator() {
 
   React.useEffect(() => {
     if (data.columns.length > 0) {
-      let newColumns: ColDef[] = [...data.columns];
+      let newColumns: GridColDef[] = [...data.columns];
       const ratingColumn = { ...newColumns.find((col) => col.field === 'rating') };
 
       const ratingOperators = getGridNumericColumnOperators();
@@ -432,7 +432,7 @@ export function CustomFilterOperator() {
 
       newColumns = newColumns.map((col) =>
         col.field === 'rating' ? ratingColumn : col,
-      ) as ColDef[];
+      ) as GridColDef[];
       setColumns(newColumns);
     }
   }, [data.columns]);
@@ -459,7 +459,7 @@ const RatingOnlyOperators = [
   {
     label: 'From',
     value: 'from',
-    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
+    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
@@ -480,13 +480,13 @@ export function RatingOperator() {
 
   React.useEffect(() => {
     if (data.columns.length > 0) {
-      let newColumns: ColDef[] = [...data.columns];
+      let newColumns: GridColDef[] = [...data.columns];
       const ratingColumn = { ...newColumns.find((col) => col.field === 'rating') };
       ratingColumn!.filterOperators = RatingOnlyOperators;
 
       newColumns = newColumns.map((col) =>
         col.field === 'rating' ? ratingColumn : col,
-      ) as ColDef[];
+      ) as GridColDef[];
       setColumns(newColumns);
     }
   }, [data.columns]);
@@ -513,7 +513,7 @@ export function ColumnsAlign() {
 
   const transformCols = React.useCallback((cols) => {
     if (cols.length > 0) {
-      cols.forEach((col: ColDef, idx) => {
+      cols.forEach((col: GridColDef, idx) => {
         if (idx > 1 && idx % 2 === 1 && idx < 5) {
           col.align = 'right';
           col.headerAlign = 'right';
@@ -539,7 +539,7 @@ export function ColumnsAlign() {
   );
 }
 
-const priceColumnType: ColTypeDef = {
+const priceColumnType: GridColTypeDef = {
   extendType: 'number',
   valueFormatter: ({ value }) => `${value} USD`,
   filterOperators: getGridNumericColumnOperators()
@@ -610,7 +610,7 @@ export function DemoCustomRatingFilterOperator() {
 
       newColumns = newColumns.map((col) =>
         col.field === 'rating' ? ratingColumn : col,
-      ) as ColDef[];
+      ) as GridColDef[];
 
       setColumns(newColumns);
     }

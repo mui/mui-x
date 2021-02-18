@@ -8,16 +8,21 @@ import {
   GRID_ROWS_UPDATED,
   GRID_SORT_MODEL_CHANGE,
 } from '../../../constants/eventsConstants';
-import { ApiRef } from '../../../models/api/apiRef';
-import { SortApi } from '../../../models/api/sortApi';
-import { CellValue } from '../../../models/cell';
-import { ColDef } from '../../../models/colDef/colDef';
+import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridSortApi } from '../../../models/api/gridSortApi';
+import { GridCellValue } from '../../../models/gridCell';
+import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
-import { CellParams } from '../../../models/params/cellParams';
-import { ColParams } from '../../../models/params/colParams';
-import { SortModelParams } from '../../../models/params/sortModelParams';
-import { RowModel, RowsProp } from '../../../models/rows';
-import { FieldComparatorList, SortItem, SortModel, SortDirection } from '../../../models/sortModel';
+import { GridCellParams } from '../../../models/params/gridCellParams';
+import { GridColParams } from '../../../models/params/gridColParams';
+import { GridSortModelParams } from '../../../models/params/gridSortModelParams';
+import { GridRowModel, GridRowsProp } from '../../../models/gridRows';
+import {
+  GridFieldComparatorList,
+  GridSortItem,
+  GridSortModel,
+  GridSortDirection,
+} from '../../../models/gridSortModel';
 import { buildGridCellParams } from '../../../utils/paramsUtils';
 import { isDesc, nextGridSortDirection } from '../../../utils/sortingUtils';
 import { isDeepEqual } from '../../../utils/utils';
@@ -30,10 +35,10 @@ import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 
-export const useGridSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
+export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   const logger = useLogger('useGridSorting');
   const allowMultipleSorting = React.useRef<boolean>(false);
-  const comparatorList = React.useRef<FieldComparatorList>([]);
+  const comparatorList = React.useRef<GridFieldComparatorList>([]);
 
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
@@ -41,7 +46,7 @@ export const useGridSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   const rowCount = useGridSelector(apiRef, gridRowCountSelector);
 
   const getSortModelParams = React.useCallback(
-    (sortModel: SortModel): SortModelParams => ({
+    (sortModel: GridSortModel): GridSortModelParams => ({
       sortModel,
       api: apiRef.current,
       columns: apiRef.current.getAllColumns(),
@@ -50,7 +55,7 @@ export const useGridSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   );
 
   const upsertSortModel = React.useCallback(
-    (field: string, sortItem?: SortItem): SortModel => {
+    (field: string, sortItem?: GridSortItem): GridSortModel => {
       const existingIdx = gridState.sorting.sortModel.findIndex((c) => c.field === field);
       let newSortModel = [...gridState.sorting.sortModel];
       if (existingIdx > -1) {
@@ -68,7 +73,7 @@ export const useGridSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   );
 
   const createSortItem = React.useCallback(
-    (col: ColDef, directionOverride?: SortDirection): SortItem | undefined => {
+    (col: GridColDef, directionOverride?: GridSortDirection): GridSortItem | undefined => {
       const existing = gridState.sorting.sortModel.find((c) => c.field === col.field);
 
       if (existing) {
@@ -91,7 +96,7 @@ export const useGridSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   );
 
   const comparatorListAggregate = React.useCallback(
-    (row1: RowModel, row2: RowModel) => {
+    (row1: GridRowModel, row2: GridRowModel) => {
       const result = comparatorList.current.reduce((res, colComparator) => {
         const { field, comparator } = colComparator;
         res =
@@ -120,15 +125,19 @@ export const useGridSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   );
 
   const buildComparatorList = React.useCallback(
-    (sortModel: SortModel): FieldComparatorList => {
+    (sortModel: GridSortModel): GridFieldComparatorList => {
       const comparators = sortModel.map((item) => {
         const column = apiRef.current.getColumnFromField(item.field);
         if (!column) {
           throw new Error(`Error sorting: column with field '${item.field}' not found. `);
         }
         const comparator = isDesc(item.sort)
-          ? (v1: CellValue, v2: CellValue, cellParams1: CellParams, cellParams2: CellParams) =>
-              -1 * column.sortComparator!(v1, v2, cellParams1, cellParams2)
+          ? (
+              v1: GridCellValue,
+              v2: GridCellValue,
+              cellParams1: GridCellParams,
+              cellParams2: GridCellParams,
+            ) => -1 * column.sortComparator!(v1, v2, cellParams1, cellParams2)
           : column.sortComparator!;
         return { field: column.field, comparator };
       });
@@ -177,7 +186,7 @@ export const useGridSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   ]);
 
   const setSortModel = React.useCallback(
-    (sortModel: SortModel) => {
+    (sortModel: GridSortModel) => {
       setGridState((oldState) => {
         const sortingState = { ...oldState.sorting, sortModel };
         return { ...oldState, sorting: { ...sortingState } };
@@ -194,12 +203,12 @@ export const useGridSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   );
 
   const sortColumn = React.useCallback(
-    (column: ColDef, direction?: SortDirection) => {
+    (column: GridColDef, direction?: GridSortDirection) => {
       if (!column.sortable) {
         return;
       }
       const sortItem = createSortItem(column, direction);
-      let sortModel: SortItem | SortItem[];
+      let sortModel: GridSortItem | GridSortItem[];
       if (!allowMultipleSorting.current) {
         sortModel = !sortItem ? [] : [sortItem];
       } else {
@@ -211,7 +220,7 @@ export const useGridSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   );
 
   const headerClickHandler = React.useCallback(
-    ({ colDef }: ColParams) => {
+    ({ colDef }: GridColParams) => {
       sortColumn(colDef);
     },
     [sortColumn],
@@ -235,7 +244,7 @@ export const useGridSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
   );
 
   const onSortModelChange = React.useCallback(
-    (handler: (param: SortModelParams) => void): (() => void) => {
+    (handler: (param: GridSortModelParams) => void): (() => void) => {
       return apiRef.current.subscribeEvent(GRID_SORT_MODEL_CHANGE, handler);
     },
     [apiRef],
@@ -254,7 +263,7 @@ export const useGridSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
             model.push(sortedCol);
           }
           return model;
-        }, [] as SortModel);
+        }, [] as GridSortModel);
       }
 
       return { ...state, sorting: { ...state.sorting, sortModel: newModel } };
@@ -270,14 +279,14 @@ export const useGridSorting = (apiRef: ApiRef, rowsProp: RowsProp) => {
 
   useGridApiEventHandler(apiRef, GRID_SORT_MODEL_CHANGE, options.onSortModelChange);
 
-  const sortApi: SortApi = {
+  const sortApi: GridSortApi = {
     getSortModel,
     setSortModel,
     sortColumn,
     onSortModelChange,
     applySorting,
   };
-  useGridApiMethod(apiRef, sortApi, 'SortApi');
+  useGridApiMethod(apiRef, sortApi, 'GridSortApi');
 
   React.useEffect(() => {
     // When the rows prop change, we re apply the sorting.

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { gridContainerSizesSelector } from '../../../components/GridViewport';
 import { GRID_PAGE_CHANGED, GRID_PAGESIZE_CHANGED } from '../../../constants/eventsConstants';
-import { ApiRef } from '../../../models/api/apiRef';
-import { PaginationApi } from '../../../models/api/paginationApi';
-import { PageChangeParams } from '../../../models/params/pageChangeParams';
+import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridPaginationApi } from '../../../models/api/gridPaginationApi';
+import { GridPageChangeParams } from '../../../models/params/gridPageChangeParams';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
@@ -24,7 +24,7 @@ import {
 
 const PAGINATION_STATE_ID = 'pagination';
 
-export const useGridPagination = (apiRef: ApiRef): void => {
+export const useGridPagination = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridPagination');
 
   const { dispatch } = useGridReducer<PaginationState, PaginationActions>(
@@ -43,9 +43,9 @@ export const useGridPagination = (apiRef: ApiRef): void => {
       dispatch(setGridPageActionCreator(page));
 
       // we use getState here to avoid adding a dependency on gridState as a dispatch change the state, it would change this method and create an infinite loop
-      const params: PageChangeParams = apiRef.current.getState<PaginationState>(
+      const params: GridPageChangeParams = apiRef.current.getState<PaginationState>(
         PAGINATION_STATE_ID,
-      ) as PageChangeParams;
+      ) as GridPageChangeParams;
       apiRef.current.publishEvent(GRID_PAGE_CHANGED, params);
     },
     [apiRef, dispatch, logger],
@@ -56,20 +56,20 @@ export const useGridPagination = (apiRef: ApiRef): void => {
       dispatch(setGridPageSizeActionCreator(pageSize));
       apiRef.current.publishEvent(
         GRID_PAGESIZE_CHANGED,
-        apiRef.current.getState<PaginationState>(PAGINATION_STATE_ID) as PageChangeParams,
+        apiRef.current.getState<PaginationState>(PAGINATION_STATE_ID) as GridPageChangeParams,
       );
     },
     [apiRef, dispatch],
   );
 
   const onPageChange = React.useCallback(
-    (handler: (param: PageChangeParams) => void): (() => void) => {
+    (handler: (param: GridPageChangeParams) => void): (() => void) => {
       return apiRef.current.subscribeEvent(GRID_PAGE_CHANGED, handler);
     },
     [apiRef],
   );
   const onPageSizeChange = React.useCallback(
-    (handler: (param: PageChangeParams) => void): (() => void) => {
+    (handler: (param: GridPageChangeParams) => void): (() => void) => {
       return apiRef.current.subscribeEvent(GRID_PAGESIZE_CHANGED, handler);
     },
     [apiRef],
@@ -103,7 +103,7 @@ export const useGridPagination = (apiRef: ApiRef): void => {
     dispatch(setGridRowCountActionCreator({ totalRowCount: visibleRowCount }));
   }, [apiRef, dispatch, visibleRowCount]);
 
-  const paginationApi: PaginationApi = {
+  const paginationApi: GridPaginationApi = {
     setPageSize,
     setPage,
     onPageChange,

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { GRID_STATE_CHANGE } from '../../../constants/eventsConstants';
-import { ApiRef } from '../../../models/api/apiRef';
-import { StateChangeParams } from '../../../models/params/stateChangeParams';
+import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridStateChangeParams } from '../../../models/params/gridStateChangeParams';
 import { GridState } from './gridState';
 import { useGridApi } from './useGridApi';
 
 export const useGridState = (
-  apiRef: ApiRef,
+  apiRef: GridApiRef,
 ): [GridState, (stateUpdaterFn: (oldState: GridState) => GridState) => void, () => void] => {
   useGridApi(apiRef);
   const forceUpdate = React.useCallback(
@@ -23,7 +23,7 @@ export const useGridState = (
       // TODO deepFreeze(newState);
 
       if (hasChanged && apiRef.current.publishEvent) {
-        const params: StateChangeParams = { api: apiRef.current, state: newState };
+        const params: GridStateChangeParams = { api: apiRef.current, state: newState };
         apiRef.current.publishEvent(GRID_STATE_CHANGE, params);
       }
     },

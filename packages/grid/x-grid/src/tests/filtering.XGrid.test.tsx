@@ -2,12 +2,12 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { useFakeTimers } from 'sinon';
 import {
-  ApiRef,
+  GridApiRef,
   FilterModel,
   GridComponentProps,
   GridLinkOperator,
   GridPreferencePanelsValue,
-  RowModel,
+  GridRowModel,
   useGridApiRef,
   XGrid,
 } from '@material-ui/x-grid';
@@ -41,7 +41,7 @@ describe('<XGrid /> - Filter', () => {
     }
   });
 
-  let apiRef: ApiRef;
+  let apiRef: GridApiRef;
 
   const TestCase = (props: Partial<GridComponentProps>) => {
     const baselineProps = {
@@ -93,7 +93,7 @@ describe('<XGrid /> - Filter', () => {
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
   });
 
-  it('should apply the filterModel prop correctly on ApiRef setRows', () => {
+  it('should apply the filterModel prop correctly on GridApiRef setRows', () => {
     render(<TestCase filterModel={model} />);
 
     const newRows = [
@@ -115,7 +115,7 @@ describe('<XGrid /> - Filter', () => {
     expect(getColumnValues()).to.deep.equal(['Asics']);
   });
 
-  it('should apply the filterModel prop correctly on ApiRef update row data', () => {
+  it('should apply the filterModel prop correctly on GridApiRef update row data', () => {
     render(<TestCase filterModel={model} />);
     apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
     apiRef.current.updateRows([{ id: 0, brand: 'Patagonia' }]);
@@ -240,7 +240,7 @@ describe('<XGrid /> - Filter', () => {
           { id: '5', commodity: 'oats' },
         ];
 
-        return new Promise<RowModel[]>((resolve) => {
+        return new Promise<GridRowModel[]>((resolve) => {
           if (!commodityFilterValue) {
             resolve(serverRows);
             return;
@@ -256,7 +256,7 @@ describe('<XGrid /> - Filter', () => {
       const columns = [{ field: 'commodity', width: 150 }];
 
       function AddServerFilterGrid() {
-        const [rows, setRows] = React.useState<RowModel[]>([]);
+        const [rows, setRows] = React.useState<GridRowModel[]>([]);
         const [filterValue, setFilterValue] = React.useState();
 
         const onFilterChange = React.useCallback((params) => {

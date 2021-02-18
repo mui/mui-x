@@ -12,7 +12,7 @@ import { DataGrid, GridToolbar } from '@material-ui/data-grid';
 import {
   COMFORTABLE_DENSITY_FACTOR,
   COMPACT_DENSITY_FACTOR,
-} from 'packages/grid/_modules_/grid/hooks/features/density/useDensity';
+} from 'packages/grid/_modules_/grid/hooks/features/density/useGridDensity';
 
 describe('<DataGrid /> - Toolbar', () => {
   // TODO v5: replace with createClientRender
@@ -141,7 +141,7 @@ describe('<DataGrid /> - Toolbar', () => {
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
-      fireEvent.click(getByText('Columns'));
+      fireEvent.click(getByText('GridColumns'));
       fireEvent.click(document.querySelector('[role="tooltip"] [name="id"]'));
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand']);
@@ -161,7 +161,7 @@ describe('<DataGrid /> - Toolbar', () => {
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
-      fireEvent.click(getByText('Columns'));
+      fireEvent.click(getByText('GridColumns'));
       fireEvent.click(getByText('Hide All'));
 
       expect(getColumnHeadersTextContent()).to.deep.equal([]);
@@ -191,7 +191,7 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      fireEvent.click(getByText('Columns'));
+      fireEvent.click(getByText('GridColumns'));
       fireEvent.click(getByText('Show All'));
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);

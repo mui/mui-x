@@ -1,8 +1,8 @@
-import { ApiRef } from '../../../models/api/apiRef';
+import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridState } from './useGridState';
 
 export const useGridSelector = <State>(
-  apiRef: ApiRef | undefined,
+  apiRef: GridApiRef | undefined,
   selector: (state: any) => State,
 ) => {
   const [state] = useGridState(apiRef!);

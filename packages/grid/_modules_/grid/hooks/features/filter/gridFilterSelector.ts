@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
-import { FilterItem } from '../../../models/filterItem';
-import { RowModel } from '../../../models/rows';
+import { GridFilterItem } from '../../../models/gridFilterItem';
+import { GridRowModel } from '../../../models/gridRows';
 import { GridState } from '../core/gridState';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
@@ -12,12 +12,12 @@ export const visibleGridRowsStateSelector = (state: GridState) => state.visibleR
 export const visibleSortedGridRowsSelector = createSelector<
   GridState,
   VisibleGridRowsState,
-  RowModel[],
-  RowModel[]
+  GridRowModel[],
+  GridRowModel[]
 >(
   visibleGridRowsStateSelector,
   sortedGridRowsSelector,
-  (visibleRowsState, sortedRows: RowModel[]) => {
+  (visibleRowsState, sortedRows: GridRowModel[]) => {
     return [...sortedRows].filter((row) => visibleRowsState.visibleRowsLookup[row.id] !== false);
   },
 );
@@ -40,22 +40,22 @@ export const filterGridStateSelector: (state: GridState) => FilterModelState = (
 export const activeGridFilterItemsSelector = createSelector<
   GridState,
   FilterModelState,
-  FilterItem[]
+  GridFilterItem[]
 >(
   filterGridStateSelector,
   (filterModel) =>
     filterModel.items?.filter((item) => item.value != null && item.value?.toString() !== ''), // allows to count false or 0
 );
 
-export const filterGridItemsCounterSelector = createSelector<GridState, FilterItem[], number>(
+export const filterGridItemsCounterSelector = createSelector<GridState, GridFilterItem[], number>(
   activeGridFilterItemsSelector,
   (activeFilters) => activeFilters.length,
 );
 
-export type FilterColumnLookup = Record<string, FilterItem[]>;
+export type FilterColumnLookup = Record<string, GridFilterItem[]>;
 export const filterGridColumnLookupSelector = createSelector<
   GridState,
-  FilterItem[],
+  GridFilterItem[],
   FilterColumnLookup
 >(activeGridFilterItemsSelector, (activeFilters) => {
   const result: FilterColumnLookup = activeFilters.reduce((res, filterItem) => {

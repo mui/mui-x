@@ -6,12 +6,12 @@ import { filterGridColumnLookupSelector } from '../../hooks/features/filter/grid
 import { gridSortColumnLookupSelector } from '../../hooks/features/sorting/gridSortingSelector';
 import { useGridApiEventHandler } from '../../hooks/root/useGridApiEventHandler';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
-import { Columns } from '../../models/colDef/colDef';
+import { GridColumns } from '../../models/colDef/gridColDef';
 import { GridApiContext } from '../GridApiContext';
 import { GridColumnHeaderItem } from './GridColumnHeaderItem';
 
 export interface GridColumnHeadersItemCollectionProps {
-  columns: Columns;
+  columns: GridColumns;
 }
 
 export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemCollectionProps) {

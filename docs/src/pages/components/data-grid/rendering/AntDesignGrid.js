@@ -117,7 +117,7 @@ function CustomPagination(props) {
 
 CustomPagination.propTypes = {
   /**
-   * ApiRef that let you manipulate the grid.
+   * GridApiRef that let you manipulate the grid.
    */
   api: PropTypes.shape({
     current: PropTypes.object.isRequired,

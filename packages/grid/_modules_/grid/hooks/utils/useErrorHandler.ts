@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { GRID_COMPONENT_ERROR } from '../../constants';
-import { ApiRef } from '../../models/api';
+import { GridApiRef } from '../../models/api';
 
-export function useErrorHandler(apiRef: ApiRef, props) {
+export function useErrorHandler(apiRef: GridApiRef, props) {
   const [errorState, setErrorState] = React.useState<any>(null);
 
   const errorHandler = (args: any) => {

@@ -1,12 +1,12 @@
 import { GridFilterInputValue } from '../../components/panel/filterPanel/GridFilterInputValue';
-import { FilterItem } from '../filterItem';
-import { FilterOperator } from '../filterOperator';
-import { ColDef } from './colDef';
+import { GridFilterItem } from '../gridFilterItem';
+import { GridFilterOperator } from '../gridFilterOperator';
+import { GridColDef } from './gridColDef';
 
-export const getGridStringOperators: () => FilterOperator[] = () => [
+export const getGridStringOperators: () => GridFilterOperator[] = () => [
   {
     value: 'contains',
-    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
+    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
@@ -21,7 +21,7 @@ export const getGridStringOperators: () => FilterOperator[] = () => [
   },
   {
     value: 'equals',
-    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
+    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
@@ -38,7 +38,7 @@ export const getGridStringOperators: () => FilterOperator[] = () => [
   },
   {
     value: 'startsWith',
-    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
+    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
@@ -53,7 +53,7 @@ export const getGridStringOperators: () => FilterOperator[] = () => [
   },
   {
     value: 'endsWith',
-    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
+    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }

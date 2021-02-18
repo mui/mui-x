@@ -7,22 +7,22 @@ import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core/styles';
 import { filterableGridColumnsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
-import { ColDef } from '../../../models/colDef/colDef';
-import { FilterItem, GridLinkOperator } from '../../../models/filterItem';
-import { FilterOperator } from '../../../models/filterOperator';
+import { GridColDef } from '../../../models/colDef/gridColDef';
+import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
+import { GridFilterOperator } from '../../../models/gridFilterOperator';
 import { GridApiContext } from '../../GridApiContext';
 import { GridCloseIcon } from '../../icons/index';
-import { TranslationKeys } from '../../../models/api/localeTextApi';
+import { TranslationKeys } from '../../../models/api/gridLocaleTextApi';
 
 export interface GridFilterFormProps {
-  item: FilterItem;
+  item: GridFilterItem;
   hasMultipleFilters: boolean;
   showMultiFilterOperators?: boolean;
   multiFilterOperator?: GridLinkOperator;
   disableMultiFilterOperator?: boolean;
-  applyFilterChanges: (item: FilterItem) => void;
+  applyFilterChanges: (item: GridFilterItem) => void;
   applyMultiFilterOperatorChanges: (operator: GridLinkOperator) => void;
-  deleteFilter: (item: FilterItem) => void;
+  deleteFilter: (item: GridFilterItem) => void;
 }
 
 const useStyles = makeStyles(
@@ -68,13 +68,13 @@ export function GridFilterForm(props: GridFilterFormProps) {
   const classes = useStyles();
   const apiRef = React.useContext(GridApiContext);
   const filterableColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
-  const [currentColumn, setCurrentColumn] = React.useState<ColDef | null>(() => {
+  const [currentColumn, setCurrentColumn] = React.useState<GridColDef | null>(() => {
     if (!item.columnField) {
       return null;
     }
     return apiRef!.current.getColumnFromField(item.columnField)!;
   });
-  const [currentOperator, setCurrentOperator] = React.useState<FilterOperator | null>(() => {
+  const [currentOperator, setCurrentOperator] = React.useState<GridFilterOperator | null>(() => {
     if (!item.operatorValue || !currentColumn) {
       return null;
     }

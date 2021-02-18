@@ -2,7 +2,7 @@ import * as React from 'react';
 import { visibleGridColumnsSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { GridState } from '../hooks/features/core/gridState';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
-import { densityRowHeightSelector } from '../hooks/features/density/densitySelector';
+import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
 import { visibleSortedGridRowsSelector } from '../hooks/features/filter/gridFilterSelector';
 import { gridKeyboardCellSelector } from '../hooks/features/keyboard/keyboardSelector';
 import { gridSelectionStateSelector } from '../hooks/features/selection/gridSelectionSelector';
@@ -35,7 +35,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const cellFocus = useGridSelector(apiRef, gridKeyboardCellSelector);
     const selectionState = useGridSelector(apiRef, gridSelectionStateSelector);
     const rows = useGridSelector(apiRef, visibleSortedGridRowsSelector);
-    const rowHeight = useGridSelector(apiRef, densityRowHeightSelector);
+    const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
 
     const getRowsElements = () => {
       if (renderState.renderContext == null) {

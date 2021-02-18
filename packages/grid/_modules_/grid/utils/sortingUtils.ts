@@ -1,7 +1,10 @@
-import { CellValue } from '../models/cell';
-import { SortDirection, ComparatorFn } from '../models/sortModel';
+import { GridCellValue } from '../models/gridCell';
+import { GridSortDirection, GridComparatorFn } from '../models/gridSortModel';
 
-export const nextGridSortDirection = (sortingOrder: SortDirection[], current?: SortDirection) => {
+export const nextGridSortDirection = (
+  sortingOrder: GridSortDirection[],
+  current?: GridSortDirection,
+) => {
   const currentIdx = sortingOrder.indexOf(current);
   if (!current || currentIdx === -1 || currentIdx + 1 === sortingOrder.length) {
     return sortingOrder[0];
@@ -10,9 +13,9 @@ export const nextGridSortDirection = (sortingOrder: SortDirection[], current?: S
   return sortingOrder[currentIdx + 1];
 };
 
-export const isDesc = (direction: SortDirection) => direction === 'desc';
+export const isDesc = (direction: GridSortDirection) => direction === 'desc';
 
-export const gridNillComparer = (v1: CellValue, v2: CellValue): number | null => {
+export const gridNillComparer = (v1: GridCellValue, v2: GridCellValue): number | null => {
   if (v1 == null && v2 != null) return -1;
   if (v2 == null && v1 != null) return 1;
   if (v1 == null && v2 == null) return 0;
@@ -20,9 +23,9 @@ export const gridNillComparer = (v1: CellValue, v2: CellValue): number | null =>
   return null;
 };
 
-export const gridStringNumberComparer: ComparatorFn = (
-  v1: CellValue,
-  v2: CellValue,
+export const gridStringNumberComparer: GridComparatorFn = (
+  v1: GridCellValue,
+  v2: GridCellValue,
   cellParams1,
   cellParams2,
 ) => {
@@ -40,9 +43,9 @@ export const gridStringNumberComparer: ComparatorFn = (
   return (value1 as any) - (value2 as any);
 };
 
-export const gridNumberComparer: ComparatorFn = (
-  v1: CellValue,
-  v2: CellValue,
+export const gridNumberComparer: GridComparatorFn = (
+  v1: GridCellValue,
+  v2: GridCellValue,
   cellParams1,
   cellParams2,
 ) => {
@@ -58,8 +61,8 @@ export const gridNumberComparer: ComparatorFn = (
 };
 
 export const gridDateComparer = (
-  v1: CellValue,
-  v2: CellValue,
+  v1: GridCellValue,
+  v2: GridCellValue,
   cellParams1,
   cellParams2,
 ): number => {

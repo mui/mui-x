@@ -1,14 +1,14 @@
 import { debounce } from '@material-ui/core/utils';
 import * as React from 'react';
-import { ScrollFn, ScrollParams } from '../../models/params/scrollParams';
+import { GridScrollFn, GridScrollParams } from '../../models/params/gridScrollParams';
 import { useLogger } from './useLogger';
 
 export function useGridScrollFn(
   renderingZoneElementRef: React.RefObject<HTMLDivElement>,
   columnHeadersElementRef: React.RefObject<HTMLDivElement>,
-): [ScrollFn] {
+): [GridScrollFn] {
   const logger = useLogger('useGridScrollFn');
-  const previousValue = React.useRef<ScrollParams>();
+  const previousValue = React.useRef<GridScrollParams>();
 
   const debouncedResetPointerEvents = React.useMemo(
     () =>
@@ -20,7 +20,7 @@ export function useGridScrollFn(
     [renderingZoneElementRef],
   );
 
-  const scrollTo: (v: ScrollParams) => void = React.useCallback(
+  const scrollTo: (v: GridScrollParams) => void = React.useCallback(
     (v) => {
       if (v.left === previousValue.current?.left && v.top === previousValue.current.top) {
         return;

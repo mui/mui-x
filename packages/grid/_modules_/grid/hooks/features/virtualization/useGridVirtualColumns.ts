@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {
-  ContainerProps,
+  GridContainerProps,
   GridOptions,
-  RenderColumnsProps,
-  VirtualizationApi,
-  ApiRef,
+  GridRenderColumnsProps,
+  GridVirtualizationApi,
+  GridApiRef,
 } from '../../../models/index';
 import { isDeepEqual } from '../../../utils/utils';
 import { useLogger } from '../../utils/useLogger';
@@ -19,22 +19,22 @@ import {
 import { useGridSelector } from '../core/useGridSelector';
 
 type UpdateRenderedColsFnType = (
-  containerProps: ContainerProps | null,
+  containerProps: GridContainerProps | null,
   scrollLeft: number,
 ) => boolean;
 type UseVirtualColumnsReturnType = [
-  React.MutableRefObject<RenderColumnsProps | null>,
+  React.MutableRefObject<GridRenderColumnsProps | null>,
   UpdateRenderedColsFnType,
 ];
 
 export const useGridVirtualColumns = (
   options: GridOptions,
-  apiRef: ApiRef,
+  apiRef: GridApiRef,
 ): UseVirtualColumnsReturnType => {
   const logger = useLogger('useGridVirtualColumns');
 
-  const renderedColRef = React.useRef<RenderColumnsProps | null>(null);
-  const containerPropsRef = React.useRef<ContainerProps | null>(null);
+  const renderedColRef = React.useRef<GridRenderColumnsProps | null>(null);
+  const containerPropsRef = React.useRef<GridContainerProps | null>(null);
   const lastScrollLeftRef = React.useRef<number>(0);
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
   const visibleColumnCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
@@ -82,7 +82,7 @@ export const useGridVirtualColumns = (
   );
 
   const updateRenderedCols: UpdateRenderedColsFnType = React.useCallback(
-    (containerProps: ContainerProps | null, scrollLeft: number) => {
+    (containerProps: GridContainerProps | null, scrollLeft: number) => {
       if (!containerProps) {
         return false;
       }
@@ -92,7 +92,7 @@ export const useGridVirtualColumns = (
 
       lastScrollLeftRef.current = scrollLeft;
       logger.debug(
-        `Columns from ${getColumnFromScroll(scrollLeft)?.field} to ${
+        `GridColumns from ${getColumnFromScroll(scrollLeft)?.field} to ${
           getColumnFromScroll(scrollLeft + windowWidth)?.field
         }`,
       );
@@ -154,7 +154,7 @@ export const useGridVirtualColumns = (
       apiRef,
     ],
   );
-  const virtualApi: Partial<VirtualizationApi> = {
+  const virtualApi: Partial<GridVirtualizationApi> = {
     isColumnVisibleInWindow,
   };
   useGridApiMethod(apiRef, virtualApi, 'ColumnVirtualizationApi');

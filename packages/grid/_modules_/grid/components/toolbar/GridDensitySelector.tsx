@@ -3,25 +3,25 @@ import MenuList from '@material-ui/core/MenuList';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import { densityValueSelector } from '../../hooks/features/density/densitySelector';
-import { Density, GridDensityTypes } from '../../models/density';
+import { gridDensityValueSelector } from '../../hooks/features/density/densitySelector';
+import { GridDensity, GridDensityTypes } from '../../models/gridDensity';
 import { GridApiContext } from '../GridApiContext';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
-import { DensityOption } from '../../models/api/densityApi';
+import { GridDensityOption } from '../../models/api/gridDensityApi';
 import { GridMenu } from '../menu/GridMenu';
 
 export function GridDensitySelector() {
   const apiRef = React.useContext(GridApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
-  const densityValue = useGridSelector(apiRef, densityValueSelector);
+  const densityValue = useGridSelector(apiRef, gridDensityValueSelector);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const DensityCompactIcon = apiRef!.current.components!.DensityCompactIcon!;
   const DensityStandardIcon = apiRef!.current.components!.DensityStandardIcon!;
   const DensityComfortableIcon = apiRef!.current.components!.DensityComfortableIcon!;
 
-  const DensityOptions: Array<DensityOption> = [
+  const DensityOptions: Array<GridDensityOption> = [
     {
       icon: <DensityCompactIcon />,
       label: apiRef!.current.getLocaleText('toolbarDensityCompact'),
@@ -52,7 +52,7 @@ export function GridDensitySelector() {
 
   const handleDensitySelectorOpen = (event) => setAnchorEl(event.currentTarget);
   const handleDensitySelectorClose = () => setAnchorEl(null);
-  const handleDensityUpdate = (newDensity: Density) => {
+  const handleDensityUpdate = (newDensity: GridDensity) => {
     apiRef!.current.setDensity(newDensity);
     setAnchorEl(null);
   };

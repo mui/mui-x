@@ -5,8 +5,8 @@ import {
   XGrid,
   GridOptionsProp,
   useGridApiRef,
-  SelectionModelChangeParams,
-  RowId,
+  GridSelectionModelChangeParams,
+  GridRowId,
 } from '@material-ui/x-grid';
 import { getData, GridData } from '../data/data-service';
 import { useData } from '../hooks/useData';
@@ -77,9 +77,9 @@ export function HandleSelection() {
     rowLength: 100,
   });
 
-  const [selectionModel, setSelectionModel] = React.useState<RowId[]>([]);
+  const [selectionModel, setSelectionModel] = React.useState<GridRowId[]>([]);
   const handleSelection = React.useCallback(
-    (params: SelectionModelChangeParams) => {
+    (params: GridSelectionModelChangeParams) => {
       setSelectionModel(params.selectionModel);
     },
     [setSelectionModel],
@@ -94,7 +94,7 @@ export function HandleSelection() {
     />
   );
 }
-export const SelectionModel = () => {
+export const GridSelectionModel = () => {
   const data = useData(200, 200);
 
   return <XGrid rows={data.rows} columns={data.columns} selectionModel={[1, 2, 3]} />;

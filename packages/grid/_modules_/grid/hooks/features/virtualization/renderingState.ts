@@ -1,14 +1,14 @@
-import { ContainerProps } from '../../../models/containerProps';
-import { ScrollParams } from '../../../models/params/scrollParams';
-import { RenderContextProps } from '../../../models/renderContextProps';
+import { GridContainerProps } from '../../../models/gridContainerProps';
+import { GridScrollParams } from '../../../models/params/gridScrollParams';
+import { GridRenderContextProps } from '../../../models/gridRenderContextProps';
 
 export interface InternalRenderingState {
   virtualPage: number;
   virtualRowsCount: number;
-  renderContext: Partial<RenderContextProps> | null;
-  realScroll: ScrollParams;
-  renderingZoneScroll: ScrollParams;
-  renderedSizes: ContainerProps | null;
+  renderContext: Partial<GridRenderContextProps> | null;
+  realScroll: GridScrollParams;
+  renderingZoneScroll: GridScrollParams;
+  renderedSizes: GridContainerProps | null;
 }
 
 export const getInitialGridRenderingState = (): InternalRenderingState => {

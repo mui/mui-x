@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { ApiRef } from '../../../models/api/apiRef';
+import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridApi } from './useGridApi';
 import { useGridState } from './useGridState';
 
 export const useGridReducer = <State, Action>(
-  apiRef: ApiRef,
+  apiRef: GridApiRef,
   stateId,
   reducer: React.Reducer<State, Action>,
   initialState: State,

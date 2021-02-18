@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { XGrid, ColDef, useGridApiRef, GridOverlay } from '@material-ui/x-grid';
+import { XGrid, GridColDef, useGridApiRef, GridOverlay } from '@material-ui/x-grid';
 import '../style/grid-stories.css';
 
 export default {
@@ -13,7 +13,7 @@ export default {
   },
 };
 
-const getColumns: () => ColDef[] = () => [
+const getColumns: () => GridColDef[] = () => [
   { field: 'id' },
   { field: 'firstName' },
   { field: 'lastName' },

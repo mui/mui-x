@@ -1,23 +1,24 @@
 import { createSelector } from 'reselect';
-import { ColumnLookup, Columns, ColumnsMeta } from '../../../models/colDef/colDef';
+import { GridColumnLookup, GridColumns, GridColumnsMeta } from '../../../models/colDef/gridColDef';
 import { GridState } from '../core/gridState';
 
 export const gridColumnsSelector = (state: GridState) => state.columns;
 export const allGridColumnsFieldsSelector = (state: GridState) => state.columns.all;
 export const gridColumnLookupSelector = (state: GridState) => state.columns.lookup;
-export const allGridColumnsSelector = createSelector<GridState, string[], ColumnLookup, Columns>(
-  allGridColumnsFieldsSelector,
-  gridColumnLookupSelector,
-  (allFields, lookup) => {
-    return allFields.map((field) => lookup[field]);
-  },
-);
-export const visibleGridColumnsSelector = createSelector<GridState, Columns, Columns>(
+export const allGridColumnsSelector = createSelector<
+  GridState,
+  string[],
+  GridColumnLookup,
+  GridColumns
+>(allGridColumnsFieldsSelector, gridColumnLookupSelector, (allFields, lookup) => {
+  return allFields.map((field) => lookup[field]);
+});
+export const visibleGridColumnsSelector = createSelector<GridState, GridColumns, GridColumns>(
   allGridColumnsSelector,
-  (columns: Columns) => columns.filter((c) => c.field != null && !c.hide),
+  (columns: GridColumns) => columns.filter((c) => c.field != null && !c.hide),
 );
 
-export const gridColumnsMetaSelector = createSelector<GridState, Columns, ColumnsMeta>(
+export const gridColumnsMetaSelector = createSelector<GridState, GridColumns, GridColumnsMeta>(
   visibleGridColumnsSelector,
   (visibleColumns) => {
     const positions: number[] = [];
@@ -31,22 +32,22 @@ export const gridColumnsMetaSelector = createSelector<GridState, Columns, Column
   },
 );
 
-export const filterableGridColumnsSelector = createSelector<GridState, Columns, Columns>(
+export const filterableGridColumnsSelector = createSelector<GridState, GridColumns, GridColumns>(
   allGridColumnsSelector,
-  (columns: Columns) => columns.filter((col) => col.filterable),
+  (columns: GridColumns) => columns.filter((col) => col.filterable),
 );
-export const filterableGridColumnsIdsSelector = createSelector<GridState, Columns, string[]>(
+export const filterableGridColumnsIdsSelector = createSelector<GridState, GridColumns, string[]>(
   filterableGridColumnsSelector,
-  (columns: Columns) => {
+  (columns: GridColumns) => {
     return columns.map((col) => col.field);
   },
 );
 
-export const visibleGridColumnsLengthSelector = createSelector<GridState, Columns, number>(
+export const visibleGridColumnsLengthSelector = createSelector<GridState, GridColumns, number>(
   visibleGridColumnsSelector,
-  (visibleColumns: Columns) => visibleColumns.length,
+  (visibleColumns: GridColumns) => visibleColumns.length,
 );
-export const gridColumnsTotalWidthSelector = createSelector<GridState, ColumnsMeta, number>(
+export const gridColumnsTotalWidthSelector = createSelector<GridState, GridColumnsMeta, number>(
   gridColumnsMetaSelector,
-  (meta: ColumnsMeta) => meta.totalWidth,
+  (meta: GridColumnsMeta) => meta.totalWidth,
 );

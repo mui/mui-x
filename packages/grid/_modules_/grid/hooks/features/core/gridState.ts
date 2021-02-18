@@ -1,12 +1,16 @@
-import { getInitialGridColumnsState, InternalColumns } from '../../../models/colDef/colDef';
-import { ContainerProps, ScrollBarState, ViewportSizeState } from '../../../models/containerProps';
+import { getInitialGridColumnsState, GridInternalColumns } from '../../../models/colDef/gridColDef';
+import {
+  GridContainerProps,
+  GridScrollBarState,
+  GridViewportSizeState,
+} from '../../../models/gridContainerProps';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
 import { ColumnMenuState } from '../columnMenu/columnMenuState';
 import {
   ColumnReorderState,
   getInitialGridColumnReorderState,
 } from '../columnReorder/columnReorderState';
-import { DensityState, getInitialDensityState } from '../density/densityState';
+import { GridGridDensity, getInitialGridDensityState } from '../density/densityState';
 import { FilterModelState, getInitialGridFilterState } from '../filter/FilterModelState';
 import {
   getInitialVisibleGridRowsState,
@@ -31,20 +35,20 @@ export interface GridState {
   pagination: PaginationState;
   options: GridOptions;
   isScrolling: boolean;
-  columns: InternalColumns;
+  columns: GridInternalColumns;
   columnReorder: ColumnReorderState;
   columnMenu: ColumnMenuState;
   rendering: InternalRenderingState;
-  containerSizes: ContainerProps | null;
-  viewportSizes: ViewportSizeState;
-  scrollBar: ScrollBarState;
+  containerSizes: GridContainerProps | null;
+  viewportSizes: GridViewportSizeState;
+  scrollBar: GridScrollBarState;
   sorting: GridSortingState;
   keyboard: KeyboardState;
   selection: GridSelectionState;
   filter: FilterModelState;
   visibleRows: VisibleGridRowsState;
   preferencePanel: GridPreferencePanelState;
-  density: DensityState;
+  density: GridGridDensity;
 }
 
 export const getInitialGridState: () => GridState = () => ({
@@ -65,5 +69,5 @@ export const getInitialGridState: () => GridState = () => ({
   columnMenu: { open: false },
   preferencePanel: { open: false },
   visibleRows: getInitialVisibleGridRowsState(),
-  density: getInitialDensityState(),
+  density: getInitialGridDensityState(),
 });

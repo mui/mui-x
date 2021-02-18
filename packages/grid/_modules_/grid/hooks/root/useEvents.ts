@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { ApiRef } from '../../models/api/apiRef';
-import { CellParams } from '../../models/params/cellParams';
-import { ColParams } from '../../models/params/colParams';
-import { RowParams } from '../../models/params/rowParams';
+import { GridApiRef } from '../../models/api/gridApiRef';
+import { GridCellParams } from '../../models/params/gridCellParams';
+import { GridColParams } from '../../models/params/gridColParams';
+import { GridRowParams } from '../../models/params/gridRowParams';
 import { useGridSelector } from '../features/core/useGridSelector';
 import { optionsSelector } from '../utils/optionsSelector';
 import { useLogger } from '../utils/useLogger';
@@ -31,9 +31,9 @@ import { findParentElementFromClassName, getIdFromRowElem, isGridCell } from '..
 import { useGridApiMethod } from './useGridApiMethod';
 import { useGridApiEventHandler } from './useGridApiEventHandler';
 import { buildGridCellParams, buildGridRowParams } from '../../utils/paramsUtils';
-import { EventsApi } from '../../models/api/eventsApi';
+import { GridEventsApi } from '../../models/api/gridEventsApi';
 
-export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: ApiRef): void {
+export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: GridApiRef): void {
   //  We use the isResizingRef to prevent the click on column header when the user is resizing the column
   const isResizingRef = React.useRef(false);
   const logger = useLogger('useEvents');
@@ -53,7 +53,11 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
       }
 
       const elem = event.target as HTMLElement;
-      const eventParams: { cell?: CellParams; row?: RowParams; header?: ColParams } = {};
+      const eventParams: {
+        cell?: GridCellParams;
+        row?: GridRowParams;
+        header?: GridColParams;
+      } = {};
 
       if (isGridCell(elem)) {
         const cellEl = findParentElementFromClassName(elem, GRID_CELL_CSS_CLASS)! as HTMLElement;
@@ -162,8 +166,8 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
   }, []);
 
   const resize = React.useCallback(() => apiRef.current.publishEvent(GRID_RESIZE), [apiRef]);
-  const eventsApi: EventsApi = { resize, onUnmount, onResize };
-  useGridApiMethod(apiRef, eventsApi, 'EventsApi');
+  const eventsApi: GridEventsApi = { resize, onUnmount, onResize };
+  useGridApiMethod(apiRef, eventsApi, 'GridEventsApi');
 
   useGridApiEventHandler(apiRef, GRID_COL_RESIZE_START, handleResizeStart);
   useGridApiEventHandler(apiRef, GRID_COL_RESIZE_STOP, handleResizeStop);

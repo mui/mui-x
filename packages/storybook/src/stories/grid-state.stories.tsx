@@ -4,7 +4,7 @@ import {
   GridState,
   GridSortingState,
   useGridApiRef,
-  StateChangeParams,
+  GridStateChangeParams,
   XGrid,
 } from '@material-ui/x-grid';
 import { useData } from '../hooks/useData';
@@ -25,7 +25,7 @@ export function PartialControlUseState() {
   const [gridState, setGridState] = React.useState<GridState | undefined>();
   const colToSort = 'currencyPair';
 
-  const onStateChange = React.useCallback((params: StateChangeParams) => {
+  const onStateChange = React.useCallback((params: GridStateChangeParams) => {
     if (
       params.state.sorting.sortModel.length > 0 &&
       !params.state.sorting.sortModel.some((sort) => sort.field === colToSort)
@@ -67,7 +67,7 @@ export function PartialControlApiRef() {
   const apiRef = useGridApiRef();
 
   const onStateChange = React.useCallback(
-    (params: StateChangeParams) => {
+    (params: GridStateChangeParams) => {
       if (
         params.state.columns.all.length > 0 &&
         (params.state.sorting.sortModel.length === 0 ||

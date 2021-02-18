@@ -1,8 +1,8 @@
-import { FilterItem } from '../../../models/filterItem';
+import { GridFilterItem } from '../../../models/gridFilterItem';
 
 export interface FilterInputValueProps {
-  item: FilterItem;
-  applyValue: (value: FilterItem) => void;
-  // Is any because if typed as ApiRef a dep cycle occurs. Same happens if ApiContext is used.
+  item: GridFilterItem;
+  applyValue: (value: GridFilterItem) => void;
+  // Is any because if typed as GridApiRef a dep cycle occurs. Same happens if ApiContext is used.
   apiRef: any;
 }

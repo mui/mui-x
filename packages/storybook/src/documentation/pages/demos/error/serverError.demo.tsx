@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Columns, useGridApiRef, XGrid } from '@material-ui/x-grid';
+import { GridColumns, useGridApiRef, XGrid } from '@material-ui/x-grid';
 
-const columns: Columns = [
+const columns: GridColumns = [
   { field: 'name', type: 'string' },
   { field: 'email', type: 'string' },
   { field: 'age', type: 'number' },

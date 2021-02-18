@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApiRef } from '../../models/api/apiRef';
+import { GridApiRef } from '../../models/api/gridApiRef';
 import { useLogger } from '../utils/useLogger';
 import { GRID_COMPONENT_ERROR, GRID_UNMOUNT } from '../../constants/eventsConstants';
 import { useGridApiMethod } from './useGridApiMethod';
@@ -7,7 +7,7 @@ import { useGridApiMethod } from './useGridApiMethod';
 export function useApi(
   gridRootRef: React.RefObject<HTMLDivElement>,
   columnHeadersContainerRef: React.RefObject<HTMLDivElement>,
-  apiRef: ApiRef,
+  apiRef: GridApiRef,
 ): boolean {
   const [initialised, setInit] = React.useState(false);
   const logger = useLogger('useApi');
@@ -56,7 +56,7 @@ export function useApi(
     };
   }, [gridRootRef, logger, apiRef, columnHeadersContainerRef]);
 
-  useGridApiMethod(apiRef, { subscribeEvent, publishEvent, showError }, 'CoreApi');
+  useGridApiMethod(apiRef, { subscribeEvent, publishEvent, showError }, 'GridCoreApi');
 
   return initialised;
 }

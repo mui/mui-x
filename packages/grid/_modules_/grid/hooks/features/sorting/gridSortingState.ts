@@ -1,9 +1,9 @@
-import { RowId } from '../../../models/rows';
-import { SortModel } from '../../../models/sortModel';
+import { GridRowId } from '../../../models/gridRows';
+import { GridSortModel } from '../../../models/gridSortModel';
 
 export interface GridSortingState {
-  sortedRows: RowId[];
-  sortModel: SortModel;
+  sortedRows: GridRowId[];
+  sortModel: GridSortModel;
 }
 
 export function getInitialGridSortingState(): GridSortingState {

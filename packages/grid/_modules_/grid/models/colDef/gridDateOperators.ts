@@ -1,12 +1,12 @@
 import { GridFilterInputValue } from '../../components/panel/filterPanel/GridFilterInputValue';
-import { FilterItem } from '../filterItem';
-import { FilterOperator } from '../filterOperator';
-import { ColDef } from './colDef';
+import { GridFilterItem } from '../gridFilterItem';
+import { GridFilterOperator } from '../gridFilterOperator';
+import { GridColDef } from './gridColDef';
 
-export const getGridDateOperators: (showTime?: boolean) => FilterOperator[] = (showTime) => [
+export const getGridDateOperators: (showTime?: boolean) => GridFilterOperator[] = (showTime) => [
   {
     value: 'is',
-    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
+    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
@@ -28,7 +28,7 @@ export const getGridDateOperators: (showTime?: boolean) => FilterOperator[] = (s
   },
   {
     value: 'not',
-    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
+    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
@@ -50,7 +50,7 @@ export const getGridDateOperators: (showTime?: boolean) => FilterOperator[] = (s
   },
   {
     value: 'after',
-    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
+    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
@@ -72,7 +72,7 @@ export const getGridDateOperators: (showTime?: boolean) => FilterOperator[] = (s
   },
   {
     value: 'onOrAfter',
-    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
+    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
@@ -94,7 +94,7 @@ export const getGridDateOperators: (showTime?: boolean) => FilterOperator[] = (s
   },
   {
     value: 'before',
-    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
+    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
@@ -116,7 +116,7 @@ export const getGridDateOperators: (showTime?: boolean) => FilterOperator[] = (s
   },
   {
     value: 'onOrBefore',
-    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
+    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }

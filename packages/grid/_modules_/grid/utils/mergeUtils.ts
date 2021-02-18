@@ -1,12 +1,12 @@
-import { ColumnTypesRecord } from '../models/colDef/colTypeDef';
-import { DEFAULT_GRID_COL_TYPE_KEY } from '../models/colDef/defaultGridColumnTypes';
+import { GridColumnTypesRecord } from '../models/colDef/gridColTypeDef';
+import { DEFAULT_GRID_COL_TYPE_KEY } from '../models/colDef/gridDefaultColumnTypes';
 
 export function mergeGridColTypes(
-  defaultColumnTypes: ColumnTypesRecord,
-  optionsColTypes: ColumnTypesRecord,
-): ColumnTypesRecord {
+  defaultColumnTypes: GridColumnTypesRecord,
+  optionsColTypes: GridColumnTypesRecord,
+): GridColumnTypesRecord {
   const mergedColTypes = { ...defaultColumnTypes, ...optionsColTypes };
-  const hydratedOptionColTypes: ColumnTypesRecord = {};
+  const hydratedOptionColTypes: GridColumnTypesRecord = {};
 
   Object.entries(mergedColTypes).forEach(([colType, colTypeDef]: [string, any]) => {
     if (colTypeDef.extendType) {

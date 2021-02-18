@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { GRID_STATE_CHANGE } from '../../../constants/eventsConstants';
-import { ApiRef } from '../../../models/api/apiRef';
+import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridApi } from '../../../models/api/gridApi';
-import { StateChangeParams } from '../../../models/params/stateChangeParams';
+import { GridStateChangeParams } from '../../../models/params/gridStateChangeParams';
 import { isFunction } from '../../../utils/utils';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useLogger } from '../../utils/useLogger';
 import { getInitialGridState, GridState } from './gridState';
 
-export const useGridApi = (apiRef: ApiRef): GridApi => {
+export const useGridApi = (apiRef: GridApiRef): GridApi => {
   const logger = useLogger('useGridApi');
   const [, forceUpdate] = React.useState<GridState>();
   if (!apiRef.current.isInitialised && !apiRef.current.state) {
@@ -24,7 +24,7 @@ export const useGridApi = (apiRef: ApiRef): GridApi => {
   );
 
   const onStateChange = React.useCallback(
-    (handler: (param: StateChangeParams) => void): (() => void) => {
+    (handler: (param: GridStateChangeParams) => void): (() => void) => {
       return apiRef.current.subscribeEvent(GRID_STATE_CHANGE, handler);
     },
     [apiRef],
@@ -40,13 +40,13 @@ export const useGridApi = (apiRef: ApiRef): GridApi => {
       }
       apiRef.current.state = state;
       forceUpdate(() => state);
-      const params: StateChangeParams = { api: apiRef.current, state };
+      const params: GridStateChangeParams = { api: apiRef.current, state };
       apiRef.current.publishEvent(GRID_STATE_CHANGE, params);
     },
     [apiRef],
   );
 
-  useGridApiMethod(apiRef, { getState, onStateChange, setState }, 'StateApi');
+  useGridApiMethod(apiRef, { getState, onStateChange, setState }, 'GridStateApi');
 
   return apiRef.current;
 };
