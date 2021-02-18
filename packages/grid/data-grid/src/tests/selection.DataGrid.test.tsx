@@ -46,6 +46,17 @@ describe('<DataGrid /> - Selection', () => {
       expect(row!.classList.contains('Mui-selected')).to.equal(false, 'class mui-selected 2');
       expect(checkbox).to.have.property('checked', false);
     });
+
+    it('with no rows, the checkbox should not be checked', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid rows={[]} columns={[{ field: 'brand', width: 100 }]} />
+        </div>,
+      );
+      const checkedIcon = document.querySelector('[data-testid="CheckBoxOutlineBlankIcon"]');
+
+      expect(checkedIcon).to.not.be.instanceof(window.HTMLDivElement);
+    });
   });
 
   describe('props: selectionModel', () => {
