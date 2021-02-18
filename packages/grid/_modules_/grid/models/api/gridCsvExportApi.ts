@@ -1,7 +1,7 @@
 /**
  * The csv export API interface that is available in the grid [[apiRef]].
  */
-export interface CsvExportApi {
+export interface GridCsvExportApi {
   /**
    * Get the grid data as CSV.
    * @returns string

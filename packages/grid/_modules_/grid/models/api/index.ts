@@ -2,7 +2,7 @@ export * from './apiRef';
 export * from './coreApi';
 export * from './columnApi';
 export * from './componentsApi';
-export * from './csvExportApi';
+export * from './gridCsvExportApi';
 export * from './densityApi';
 export * from './eventsApi';
 export * from './gridApi';

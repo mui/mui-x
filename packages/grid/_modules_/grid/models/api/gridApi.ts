@@ -15,14 +15,14 @@ import { CoreApi } from './coreApi';
 import { EventsApi } from './eventsApi';
 import { DensityApi } from './densityApi';
 import { LocaleTextApi } from './localeTextApi';
-import { CsvExportApi } from './csvExportApi';
+import { GridCsvExportApi } from './gridCsvExportApi';
 
 /**
  * The full grid API.
  */
 export type GridApi = CoreApi &
   ComponentsApi &
-  CsvExportApi &
+  GridCsvExportApi &
   StateApi &
   DensityApi &
   EventsApi &
