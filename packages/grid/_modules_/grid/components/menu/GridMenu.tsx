@@ -39,16 +39,16 @@ export const GridMenu: React.FC<MenuProps> = ({
   position,
   ...other
 }) => {
-  const targetRef = React.useRef(target);
-  const openRef = React.useRef(open);
+  const prevTarget = React.useRef(target);
+  const prevOpen = React.useRef(open);
 
   React.useEffect(() => {
-    if (openRef.current && targetRef.current) {
-      (targetRef.current as HTMLElement).focus();
+    if (prevOpen.current && prevTarget.current) {
+      (prevTarget.current as HTMLElement).focus();
     }
 
-    openRef.current = open;
-    targetRef.current = target;
+    prevOpen.current = open;
+    prevTarget.current = target;
   }, [open, target]);
 
   return (
@@ -56,9 +56,7 @@ export const GridMenu: React.FC<MenuProps> = ({
       {({ TransitionProps, placement }) => (
         <Grow {...TransitionProps} style={{ transformOrigin: transformOrigin[placement] }}>
           <Paper>
-            <ClickAwayListener onClickAway={onClickAway}>
-              <div>{children}</div>
-            </ClickAwayListener>
+            <ClickAwayListener onClickAway={onClickAway}>{children}</ClickAwayListener>
           </Paper>
         </Grow>
       )}
