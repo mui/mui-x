@@ -23,8 +23,8 @@ export const ptBR: Localization = getLocalization({
     toolbarFiltersTooltipHide: 'Ocultar Filtros',
     toolbarFiltersTooltipShow: 'Exibir Filtros',
     toolbarFiltersTooltipActive: count =>
-        `${count} ${count > 1 ? 'filtros' : 'filtro'} ${
-            count > 1 ? 'ativos' : 'ativo'
+        `${count} ${count !== 1 ? 'filtros' : 'filtro'} ${
+            count !== 1 ? 'ativos' : 'ativo'
         }`,
     
     // Columns panel text
@@ -66,8 +66,8 @@ export const ptBR: Localization = getLocalization({
     
     // Column header text
     columnHeaderFiltersTooltipActive: count =>
-        `${count} ${count > 1 ? 'filtros' : 'filtro'} ${
-            count > 1 ? 'ativos' : 'ativo'
+        `${count} ${count !== 1 ? 'filtros' : 'filtro'} ${
+            count !== 1 ? 'ativos' : 'ativo'
         }`,
     columnHeaderFiltersLabel: 'Exibir Filtros',
     columnHeaderSortIconLabel: 'Ordenar',
