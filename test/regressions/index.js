@@ -15,7 +15,9 @@ LicenseInfo.setLicenseKey(
 );
 
 const blacklist = [
-  'stories-grid-data/Grid100000.png', // Too slow
+  'stories-grid-data/Grid100000.png', // Generating data is too slow
+  'stories-grid-pagination/PaginationApiTests.png', // Demo is broken, infinite rendering loops
+  'stories-grid-pagination/Page1Prop.png', // Demo is broken, infinite rendering loops
   // 'docs-system-typography', // Unit tests are enough
   // /^docs-guides-.*/, // No public components
 ];
