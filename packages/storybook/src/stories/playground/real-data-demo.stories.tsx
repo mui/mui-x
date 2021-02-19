@@ -3,7 +3,6 @@ import { Story, Meta, DecoratorFn } from '@storybook/react';
 import { XGridProps, GridPreferencePanelsValue, XGrid, GridOptionsProp } from '@material-ui/x-grid';
 import { useDemoData, DemoDataOptions } from '@material-ui/x-grid-data-generator';
 import Button from '@material-ui/core/Button';
-import '@material-ui/x-grid-data-generator/style/real-data-stories.css';
 import { randomInt } from '../../data/random-generator';
 
 export default {
