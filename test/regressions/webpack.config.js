@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+const webpack = require('webpack');
 const webpackBaseConfig = require('../../webpackBaseConfig');
 
 module.exports = {
@@ -19,6 +20,11 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, './template.html'),
+    }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        DISABLE_CHANCE_RANDOM: JSON.stringify(true),
+      },
     }),
   ],
   module: {
