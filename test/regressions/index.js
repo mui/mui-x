@@ -4,6 +4,10 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { LicenseInfo } from '@material-ui/x-grid';
 import webfontloader from 'webfontloader';
 import TestViewer from 'test/regressions/TestViewer';
+import addons, { mockChannel } from '@storybook/addons';
+
+// See https://storybook.js.org/docs/react/workflows/faq#why-is-there-no-addons-channel
+addons.setChannel(mockChannel());
 
 // Remove the license warning from demonstration purposes
 LicenseInfo.setLicenseKey(
