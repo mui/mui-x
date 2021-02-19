@@ -67,14 +67,14 @@ Then you need to handle the `onSortModelChange` callback, sort the rows on the s
 
 {{"demo": "pages/components/data-grid/sorting/ServerSortingGrid.js", "bg": "inline"}}
 
-## Multi-column sorting [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
+## Multi-column sorting [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 You can sort by multiple columns at the same time using `XGrid`.
 Hold the <kbd>CTRL</kbd> key down while clicking the column header.
 
 {{"demo": "pages/components/data-grid/sorting/MultiSortingGrid.js", "disableAd": true, "bg": "inline"}}
 
-## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
+## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 

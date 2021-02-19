@@ -4,12 +4,24 @@
 
 <h1 align="center">Material-UI X</h1>
 
-The Material-UI X mono-repo gathers Material-UI advanced components.
+The [main repository](https://github.com/mui-org/material-ui) of Material-UI focuses on providing a ready-to-use design system, as well as empowering developers to build their own.
+
+This Material-UI X mono-repo gathers the Material-UI advanced components. It's an extension of the core. The most fundamental features are MIT licensed and the most advanced ones commercial.
+
+## How do we decide if a feature is MIT or commercial?
+
+We have been building MIT React components since 2014. we have learned a lot about the strength and weaknesses of the MIT license model. We believe that any open source project will ultimately become the dominant and best solution in any market it enters. The **ultimately** aspect is very important. While for the simple components, we have reached this point a long time ago. We believe that advanced components won't reach this point before multiple decades. So what should we do? Wait? No! We are using a commercial license to sustain the development of the most advanced features, where the open-source model can't.
+
+We provide three options:
+
+- Community. This plan contains the MIT components that are sustainable by the contributions of the open-source community. Free and forever.
+- Pro. This plan contains the features that are at the limit of what the open-source model can sustain. For instance, providing a very comprehensive set of components. From a price perspective, the plan is designed to be accessible by most professionals.
+- Premium. This plan contains the most advanced features.
 
 ## Components
 
-- [DataGrid](https://material-ui.com/components/data-grid/) MIT
-- [XGrid](https://material-ui.com/components/data-grid/#commercial-version) Commercial license
+- [DataGrid](https://material-ui.com/components/data-grid/), publised under `@material-ui/data-grid`, MIT licensed.
+- [XGrid](https://material-ui.com/components/data-grid/#commercial-version), publised under `@material-ui/x-grid`, Commercial license.
 
 ## Questions
 

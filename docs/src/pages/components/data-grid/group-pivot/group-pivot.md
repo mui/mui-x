@@ -7,7 +7,7 @@ components: DataGrid, XGrid
 
 <p class="description">Use grouping, pivoting and more to analyse the data in depth.</p>
 
-## 🚧 Tree data [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
+## 🚧 Tree data [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
@@ -15,7 +15,7 @@ components: DataGrid, XGrid
 
 Tree data allows to visualize self-referential hierarchical (tree-like structure) data.
 
-## 🚧 Master detail [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
+## 🚧 Master detail [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
@@ -23,7 +23,7 @@ Tree data allows to visualize self-referential hierarchical (tree-like structure
 
 The feature allows to display row details on an expandable pane.
 
-## 🚧 Grouping [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-x/)
+## 🚧 Grouping [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
@@ -31,7 +31,7 @@ The feature allows to display row details on an expandable pane.
 
 Group rows together that share a column value, this creates a visible header for each group and allows the end-user to collapse groups that they don't want to see.
 
-## 🚧 Aggregation [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-x/)
+## 🚧 Aggregation [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
@@ -39,7 +39,7 @@ Group rows together that share a column value, this creates a visible header for
 
 When grouping, you will be able to apply an aggregation function to populate the group row with values.
 
-## 🚧 Pivoting [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-x/)
+## 🚧 Pivoting [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >

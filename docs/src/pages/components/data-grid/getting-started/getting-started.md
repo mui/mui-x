@@ -109,7 +109,7 @@ The features only available in the commercial version are suffixed with a <span 
 <img src="/static/x/header-icon.png" style="width: 454px; margin-bottom: 2rem;" alt="">
 
 You can check the [feature comparison](#feature-comparison) for more details.
-See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on purchasing licenses.
+See [Pricing](https://material-ui.com/store/items/material-ui-pro/) for details on purchasing licenses.
 
 ### Try XGrid for free
 
