@@ -1,13 +1,13 @@
-import { FilterItem, LinkOperator } from '../../../models/filterItem';
+import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 
 export interface FilterModelState {
-  items: FilterItem[];
-  linkOperator?: LinkOperator;
+  items: GridFilterItem[];
+  linkOperator?: GridLinkOperator;
 }
 
 export type FilterModel = FilterModelState;
 
-export const getInitialFilterState: () => FilterModelState = () => ({
+export const getInitialGridFilterState: () => FilterModelState = () => ({
   items: [],
-  linkOperator: LinkOperator.And,
+  linkOperator: GridLinkOperator.And,
 });

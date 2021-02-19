@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { XGrid, SortDirection } from '@material-ui/x-grid';
+import { XGrid, GridSortDirection } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
 export default function MultiSortingGrid() {
@@ -16,11 +16,11 @@ export default function MultiSortingGrid() {
         sortModel={[
           {
             field: 'commodity',
-            sort: 'asc' as SortDirection,
+            sort: 'asc' as GridSortDirection,
           },
           {
             field: 'desk',
-            sort: 'desc' as SortDirection,
+            sort: 'desc' as GridSortDirection,
           },
         ]}
       />

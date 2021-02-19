@@ -1,15 +1,15 @@
-import { Columns, RowId, RowModel } from '../../../../models';
+import { GridColumns, GridRowId, GridRowModel } from '../../../../models';
 
-export function buildRow(row: RowModel, columns: Columns): Array<RowModel> {
-  const mappedRow: RowModel[] = [];
+export function buildRow(row: GridRowModel, columns: GridColumns): Array<GridRowModel> {
+  const mappedRow: GridRowModel[] = [];
   columns.forEach((column) => column.field !== '__check__' && mappedRow.push(row[column.field]));
   return mappedRow;
 }
 
 export function buildCSV(
-  columns: Columns,
-  rows: RowModel[],
-  selectedRows: Record<RowId, boolean>,
+  columns: GridColumns,
+  rows: GridRowModel[],
+  selectedRows: Record<GridRowId, boolean>,
 ): string {
   const selectedRowsIds = Object.keys(selectedRows);
 

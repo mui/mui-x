@@ -1,2 +1,2 @@
-export * from './columnsSelector';
-export * from './useColumns';
+export * from './gridColumnsSelector';
+export * from './useGridColumns';

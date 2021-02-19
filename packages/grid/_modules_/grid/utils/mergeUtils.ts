@@ -1,18 +1,18 @@
-import { ColumnTypesRecord } from '../models/colDef/colTypeDef';
-import { DEFAULT_COL_TYPE_KEY } from '../models/colDef/defaultColumnTypes';
+import { GridColumnTypesRecord } from '../models/colDef/gridColTypeDef';
+import { DEFAULT_GRID_COL_TYPE_KEY } from '../models/colDef/gridDefaultColumnTypes';
 
-export function mergeColTypes(
-  defaultColumnTypes: ColumnTypesRecord,
-  optionsColTypes: ColumnTypesRecord,
-): ColumnTypesRecord {
+export function mergeGridColTypes(
+  defaultColumnTypes: GridColumnTypesRecord,
+  optionsColTypes: GridColumnTypesRecord,
+): GridColumnTypesRecord {
   const mergedColTypes = { ...defaultColumnTypes, ...optionsColTypes };
-  const hydratedOptionColTypes: ColumnTypesRecord = {};
+  const hydratedOptionColTypes: GridColumnTypesRecord = {};
 
   Object.entries(mergedColTypes).forEach(([colType, colTypeDef]: [string, any]) => {
     if (colTypeDef.extendType) {
       colTypeDef = { ...mergedColTypes[colTypeDef.extendType], ...colTypeDef, type: colType };
     } else {
-      colTypeDef = { ...mergedColTypes[DEFAULT_COL_TYPE_KEY], ...colTypeDef, type: colType };
+      colTypeDef = { ...mergedColTypes[DEFAULT_GRID_COL_TYPE_KEY], ...colTypeDef, type: colType };
     }
     hydratedOptionColTypes[colType] = colTypeDef;
   });
@@ -31,7 +31,7 @@ export function removeUndefinedProps(options: Object) {
 }
 
 // We intentionally set the types to any to avoid circular deps
-export function mergeOptions(defaultOptions: any, options?: any) {
+export function mergeGridOptions(defaultOptions: any, options?: any) {
   options = removeUndefinedProps(options);
   const mergedOptions = {
     ...defaultOptions,

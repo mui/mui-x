@@ -1,11 +1,11 @@
 import { interval, Observable } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
-import { RowId } from '@material-ui/x-grid';
+import { GridRowId } from '@material-ui/x-grid';
 import { currencyPairs } from '../currency-pairs';
 import { random, randomPrice } from '../random-generator';
 
 export interface PricingModel {
-  idfield: RowId;
+  idfield: GridRowId;
   currencyPair: string;
   priceSpot?: number;
   price1m: number;

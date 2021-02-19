@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {
-  Columns,
-  RowsProp,
+  GridColumns,
+  GridRowsProp,
   DataGrid,
-  SortDirection,
+  GridSortDirection,
   ValueGetterParams,
 } from '@material-ui/data-grid';
 import {
@@ -11,7 +11,7 @@ import {
   randomUpdatedDate,
 } from '@material-ui/x-grid-data-generator';
 
-const columns: Columns = [
+const columns: GridColumns = [
   { field: 'name' },
   { field: 'age', type: 'number' },
   {
@@ -25,7 +25,7 @@ const columns: Columns = [
   { field: 'lastLogin', type: 'dateTime', width: 180 },
 ];
 
-const rows: RowsProp = [
+const rows: GridRowsProp = [
   {
     id: 1,
     name: 'Damien',
@@ -73,7 +73,7 @@ const rows: RowsProp = [
 const sortModel = [
   {
     field: 'username',
-    sort: 'asc' as SortDirection,
+    sort: 'asc' as GridSortDirection,
   },
 ];
 

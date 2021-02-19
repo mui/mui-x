@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { CellParams, getThemePaletteMode } from '../../../_modules_/grid';
+import { GridCellParams, getThemePaletteMode } from '../../../_modules_/grid';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -48,6 +48,6 @@ const Pnl = React.memo(function Pnl(props: PnlProps) {
   );
 });
 
-export function renderPnl(params: CellParams) {
+export function renderPnl(params: GridCellParams) {
   return <Pnl value={params.value as any} />;
 }

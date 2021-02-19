@@ -1,3 +1,3 @@
-export * from './sortingSelector';
-export * from './useSorting';
-export * from './sortingState';
+export * from './gridSortingSelector';
+export * from './useGridSorting';
+export * from './gridSortingState';

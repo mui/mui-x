@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { CellParams } from '@material-ui/x-grid';
+import { GridCellParams } from '@material-ui/x-grid';
 import Rating from '@material-ui/lab/Rating';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -32,6 +32,6 @@ const RatingValue = React.memo(function RatingValue(props: RatingValueProps) {
   );
 });
 
-export function renderRating(params: CellParams) {
+export function renderRating(params: GridCellParams) {
   return <RatingValue value={Number(params.value)} name={params.row.id.toString()} />;
 }

@@ -12,7 +12,7 @@ components: DataGrid, XGrid
 Single column sorting can be triggered with by clicking a column header.
 Repeat this action to change the sorting direction.
 
-A sorted column can be can pre-configured using the `sortModel` prop of the `ColDef` interface:
+A sorted column can be can pre-configured using the `sortModel` prop of the `GridColDef` interface:
 
 {{"demo": "pages/components/data-grid/sorting/BasicSortingGrid.js", "bg": "inline"}}
 
@@ -26,7 +26,7 @@ The component handles sorting natively for the following types:
 - date
 - dateTime
 
-To extend or modify this behavior in a specific column, you can pass in a custom comparator, and override the `sortComparator` prop of the `ColDef` interface.
+To extend or modify this behavior in a specific column, you can pass in a custom comparator, and override the `sortComparator` prop of the `GridColDef` interface.
 
 In the example below, the `username` column combines `name` and `age`, but it is sorted by `age` using a custom comparator:
 
@@ -51,10 +51,10 @@ In the example below columns are only sortable in descending or ascending order.
 ## Disable sorting
 
 By default, all columns are sortable.
-This can be revoked using the sortable prop of the `ColDef` interface:
+This can be revoked using the sortable prop of the `GridColDef` interface:
 
 ```tsx
-const columns: ColDef = [{ field: 'name', sortable: false }];
+const columns: GridColDef = [{ field: 'name', sortable: false }];
 ```
 
 {{"demo": "pages/components/data-grid/sorting/DisableSortingGrid.js", "bg": "inline"}}

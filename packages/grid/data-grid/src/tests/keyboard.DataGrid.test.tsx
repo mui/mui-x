@@ -15,7 +15,7 @@ import { expect } from 'chai';
 import { getActiveCell, getCell, getRow } from 'test/utils/helperFn';
 import { DataGrid } from '@material-ui/data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
-import { Columns } from 'packages/grid/_modules_/grid/models/colDef/colDef';
+import { GridColumns } from 'packages/grid/_modules_/grid/models/colDef/gridColDef';
 
 const SPACE_KEY = { key: ' ', code: 'Space', shiftKey: false };
 const SHIFT_SPACE_KEY = { ...SPACE_KEY, shiftKey: true };
@@ -128,7 +128,7 @@ describe('<DataGrid /> - Keyboard', () => {
 
   const KeyboardTest = () => {
     const data = useData(100, 20);
-    const transformColSizes = (columns: Columns) =>
+    const transformColSizes = (columns: GridColumns) =>
       columns.map((column) => ({ ...column, width: 60 }));
 
     return (

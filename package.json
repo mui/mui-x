@@ -88,7 +88,7 @@
     "jest": "^26.6.1",
     "jest-cli": "^26.5.2",
     "jest-transform-stub": "^2.0.0",
-    "karma": "^5.1.0",
+    "karma": "^6.1.1",
     "karma-browserstack-launcher": "^1.6.0",
     "karma-chrome-launcher": "^3.1.0",
     "karma-mocha": "^2.0.1",

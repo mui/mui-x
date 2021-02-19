@@ -1,38 +1,38 @@
 import { ColumnMenuApi } from './columnMenuApi';
 import { ColumnResizeApi } from './columnResizeApi';
-import { ComponentsApi } from './componentsApi';
+import { ComponentsApi } from './gridComponentsApi';
 import { FilterApi } from './filterApi';
 import { PreferencesPanelApi } from './preferencesPanelApi';
-import { RowApi } from './rowApi';
-import { ColumnApi } from './columnApi';
+import { GridRowApi } from './gridRowApi';
+import { GridColumnApi } from './gridColumnApi';
 import { ColumnReorderApi } from './columnReorderApi';
-import { SelectionApi } from './selectionApi';
-import { SortApi } from './sortApi';
-import { PaginationApi } from './paginationApi';
-import { StateApi } from './stateApi';
-import { VirtualizationApi } from './virtualizationApi';
-import { CoreApi } from './coreApi';
-import { EventsApi } from './eventsApi';
-import { DensityApi } from './densityApi';
-import { LocaleTextApi } from './localeTextApi';
+import { GridSelectionApi } from './gridSelectionApi';
+import { GridSortApi } from './gridSortApi';
+import { GridPaginationApi } from './gridPaginationApi';
+import { GridStateApi } from './gridStateApi';
+import { GridVirtualizationApi } from './gridVirtualizationApi';
+import { GridCoreApi } from './gridCoreApi';
+import { GridEventsApi } from './gridEventsApi';
+import { GridDensityApi } from './gridDensityApi';
+import { LocaleTextApi } from './gridLocaleTextApi';
 import { GridCsvExportApi } from './gridCsvExportApi';
 
 /**
  * The full grid API.
  */
-export type GridApi = CoreApi &
+export type GridApi = GridCoreApi &
   ComponentsApi &
-  GridCsvExportApi &
-  StateApi &
-  DensityApi &
-  EventsApi &
-  RowApi &
-  ColumnApi &
+  GridStateApi &
+  GridDensityApi &
+  GridEventsApi &
+  GridRowApi &
+  GridColumnApi &
   ColumnReorderApi &
-  SelectionApi &
-  SortApi &
-  VirtualizationApi &
-  PaginationApi &
+  GridSelectionApi &
+  GridSortApi &
+  GridVirtualizationApi &
+  GridPaginationApi &
+  GridCsvExportApi &
   FilterApi &
   ColumnMenuApi &
   ColumnResizeApi &

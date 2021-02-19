@@ -8,7 +8,8 @@ The Material-UI X mono-repo gathers Material-UI advanced components.
 
 ## Components
 
-- [DataGrid](https://material-ui.com/components/data-grid/)
+- [DataGrid](https://material-ui.com/components/data-grid/) MIT
+- [XGrid](https://material-ui.com/components/data-grid/#commercial-version) Commercial license
 
 ## Questions
 

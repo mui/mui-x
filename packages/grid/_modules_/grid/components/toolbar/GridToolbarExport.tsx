@@ -2,16 +2,16 @@ import * as React from 'react';
 import MenuList from '@material-ui/core/MenuList';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
-import { ApiContext } from '../api-context';
+import { GridApiContext } from '../GridApiContext';
 import { GridMenu } from '../menu/GridMenu';
-import { ExportOption } from '../../models';
+import { GridExportOption } from '../../models';
 
 export function GridToolbarExport() {
-  const apiRef = React.useContext(ApiContext);
+  const apiRef = React.useContext(GridApiContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const ExportIcon = apiRef!.current.components!.ExportIcon!;
 
-  const ExportOptions: Array<ExportOption> = [
+  const ExportOptions: Array<GridExportOption> = [
     {
       label: apiRef!.current.getLocaleText('toolbarExportCSV'),
       format: 'csv',

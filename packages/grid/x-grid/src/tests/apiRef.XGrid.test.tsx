@@ -1,4 +1,4 @@
-import { ApiRef, RowData, useApiRef, XGrid } from '@material-ui/x-grid';
+import { GridApiRef, GridRowData, useGridApiRef, XGrid } from '@material-ui/x-grid';
 import { expect } from 'chai';
 import * as React from 'react';
 import { useFakeTimers } from 'sinon';
@@ -44,10 +44,10 @@ describe('<XGrid /> - apiRef', () => {
     };
   });
 
-  let apiRef: ApiRef;
+  let apiRef: GridApiRef;
 
   const TestCase = () => {
-    apiRef = useApiRef();
+    apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
         <XGrid apiRef={apiRef} columns={baselineProps.columns} rows={baselineProps.rows} />
@@ -126,8 +126,8 @@ describe('<XGrid /> - apiRef', () => {
 
   it('update row data should process getRowId', () => {
     const TestCaseGetRowId = () => {
-      apiRef = useApiRef();
-      const getRowId = React.useCallback((row: RowData) => row.idField, []);
+      apiRef = useGridApiRef();
+      const getRowId = React.useCallback((row: GridRowData) => row.idField, []);
       return (
         <div style={{ width: 300, height: 300 }}>
           <XGrid

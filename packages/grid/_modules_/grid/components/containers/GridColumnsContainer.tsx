@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { densityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
+import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 import { classnames } from '../../utils';
-import { ApiContext } from '../api-context';
+import { GridApiContext } from '../GridApiContext';
 
 type GridColumnsContainerProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -10,8 +10,8 @@ export const GridColumnsContainer = React.forwardRef<HTMLDivElement, GridColumns
   function GridColumnsContainer(props, ref) {
     const { className, style, ...other } = props;
 
-    const apiRef = React.useContext(ApiContext);
-    const height = useGridSelector(apiRef, densityHeaderHeightSelector);
+    const apiRef = React.useContext(GridApiContext);
+    const height = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
 
     return (
       <div

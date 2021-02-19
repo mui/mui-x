@@ -1,11 +1,10 @@
 import * as React from 'react';
-
-import { ApiContext } from './api-context';
-import { useBaseComponentProps } from '../hooks/features/useBaseComponentProps';
+import { GridApiContext } from './GridApiContext';
+import { useGridBaseComponentProps } from '../hooks/features/useGridBaseComponentProps';
 
 export function GridHeader() {
-  const apiRef = React.useContext(ApiContext);
-  const baseProps = useBaseComponentProps(apiRef);
+  const apiRef = React.useContext(GridApiContext);
+  const baseProps = useGridBaseComponentProps(apiRef);
 
   const PreferencesPanelComponent = apiRef?.current.components.PreferencesPanel;
   const PreferencesPanelElement = PreferencesPanelComponent && (

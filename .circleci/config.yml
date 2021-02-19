@@ -31,11 +31,19 @@ commands:
             yarn --version
       - restore_cache:
           keys:
-            - v2-yarn-sha-{{ checksum "yarn.lock" }}
-            - v2-yarn-sha-
+            - v6-yarn-sha-{{ checksum "yarn.lock" }}
+            - v6-yarn-sha-
+      - run:
+          name: Set yarn cache folder
+          command: |
+            # Keep path in sync with `save_cache` for key "v6-yarn-sha-"
+            yarn config set cache-folder ~/.cache/yarn
+            # Debug information
+            yarn cache dir
+            yarn cache list
       - run:
           name: Install js dependencies
-          command: yarn
+          command: yarn install --verbose
   prepare_chrome_headless:
     steps:
       - run:
@@ -58,9 +66,11 @@ jobs:
           name: Check for duplicated packages
           command: yarn deduplicate
       - save_cache:
-          key: v2-yarn-sha-{{ checksum "yarn.lock" }}
+          key: v6-yarn-sha-{{ checksum "yarn.lock" }}
           paths:
-            - ~/.cache/yarn/v4
+          # Keep path in sync with "Set yarn cache folder"
+          # Can't use environment variables for `save_cache` paths (tested in https://app.circleci.com/pipelines/github/mui-org/material-ui/37813/workflows/5b1e207f-ac8b-44e7-9ba4-d0f9a01f5c55/jobs/223370)
+            - ~/.cache/yarn
   test_unit:
     <<: *defaults
     steps:

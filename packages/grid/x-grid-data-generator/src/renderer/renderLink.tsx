@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CellParams } from '@material-ui/x-grid';
+import { GridCellParams } from '@material-ui/x-grid';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
@@ -30,6 +30,6 @@ export const DemoLink = React.memo(function DemoLink(props: DemoLinkProps) {
   );
 });
 
-export function renderLink(params: CellParams) {
+export function renderLink(params: GridCellParams) {
   return <DemoLink href={params.value!.toString()}>{params.value!.toString()}</DemoLink>;
 }

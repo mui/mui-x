@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Story, Meta } from '@storybook/react';
-import { DataGrid, DataGridProps, SortDirection } from '@material-ui/data-grid';
+import { DataGrid, DataGridProps, GridSortDirection } from '@material-ui/data-grid';
 import { useData } from '../../hooks/useData';
 
 export default {
@@ -52,7 +52,7 @@ Options.args = {
   showColumnRightBorder: false,
   checkboxSelection: true,
   disableSelectionOnClick: false,
-  sortingOrder: ['asc', 'desc', 'null' as SortDirection],
+  sortingOrder: ['asc', 'desc', 'null' as GridSortDirection],
   headerHeight: 56,
   rowHeight: 52,
 };

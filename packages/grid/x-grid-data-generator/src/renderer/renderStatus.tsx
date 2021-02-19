@@ -5,7 +5,7 @@ import InfoIcon from '@material-ui/icons/Info';
 import AutorenewIcon from '@material-ui/icons/Autorenew';
 import DoneIcon from '@material-ui/icons/Done';
 import Chip from '@material-ui/core/Chip';
-import { CellParams } from '@material-ui/x-grid';
+import { GridCellParams } from '@material-ui/x-grid';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -67,6 +67,6 @@ const Status = React.memo((props: StatusProps) => {
   );
 });
 
-export function renderStatus(params: CellParams) {
+export function renderStatus(params: GridCellParams) {
   return <Status status={params.value!.toString()} />;
 }

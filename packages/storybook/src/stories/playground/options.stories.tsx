@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Story, Meta } from '@storybook/react';
-import { XGrid, SortDirection, GridOptionsProp } from '@material-ui/x-grid';
+import { XGrid, GridSortDirection, GridOptionsProp } from '@material-ui/x-grid';
 import { useData } from '../../hooks/useData';
 
 export default {
@@ -46,7 +46,7 @@ Options.args = {
   checkboxSelection: true,
   disableSelectionOnClick: false,
   disableMultipleColumnsSorting: false,
-  sortingOrder: ['asc', 'desc', 'null' as SortDirection],
+  sortingOrder: ['asc', 'desc', 'null' as GridSortDirection],
   headerHeight: 56,
   rowHeight: 52,
 };

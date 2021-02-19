@@ -1,6 +1,6 @@
-import { getLocalization, Localization } from '../utils';
+import { getGridLocalization, Localization } from '../utils';
 
-export const bgBG: Localization = getLocalization({
+export const bgBG: Localization = getGridLocalization({
   // Root
   rootGridLabel: 'мрежа',
   noRowsLabel: 'Няма редове',
@@ -13,7 +13,7 @@ export const bgBG: Localization = getLocalization({
   toolbarDensityStandard: 'Стандартна',
   toolbarDensityComfortable: 'Комфортна',
 
-  // Columns selector toolbar button text
+  // GridColumns selector toolbar button text
   toolbarColumns: 'Колони',
   toolbarColumnsLabel: 'Покажи селектора на колони',
 
@@ -24,7 +24,7 @@ export const bgBG: Localization = getLocalization({
   toolbarFiltersTooltipShow: 'Покажи Филтрите',
   toolbarFiltersTooltipActive: (count) => `${count} активни филтри`,
 
-  // Columns panel text
+  // GridColumns panel text
   columnsPanelTextFieldLabel: 'Намери колона',
   columnsPanelTextFieldPlaceholder: 'Заглавие на колона',
   columnsPanelDragIconLabel: 'Пренареди на колона',

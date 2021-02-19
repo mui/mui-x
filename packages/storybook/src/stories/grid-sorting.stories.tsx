@@ -2,12 +2,12 @@ import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import { randomInt } from '@material-ui/x-grid-data-generator';
 import {
-  ColDef,
+  GridColDef,
   XGrid,
-  RowsProp,
-  SortModelParams,
-  SortModel,
-  useApiRef,
+  GridRowsProp,
+  GridSortModelParams,
+  GridSortModel,
+  useGridApiRef,
 } from '@material-ui/x-grid';
 import { action } from '@storybook/addon-actions';
 
@@ -22,7 +22,7 @@ export default {
   },
 };
 
-const getColumns: () => ColDef[] = () => [
+const getColumns: () => GridColDef[] = () => [
   { field: 'id', type: 'number' },
   { field: 'name', type: 'string' },
   { field: 'age', type: 'number', width: 100 },
@@ -285,7 +285,7 @@ export const SortingWithFormatter = () => {
 };
 
 export const SortModelOptionsMultiple = () => {
-  const sortModel: SortModel = React.useMemo(
+  const sortModel: GridSortModel = React.useMemo(
     () => [
       { field: 'age', sort: 'desc' },
       { field: 'name', sort: 'asc' },
@@ -300,7 +300,7 @@ export const SortModelOptionsMultiple = () => {
   );
 };
 export const ApiSingleSorted = () => {
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
   React.useEffect(() => {
     apiRef.current.setSortModel([{ field: 'name', sort: 'asc' }]);
   }, [apiRef]);
@@ -312,7 +312,7 @@ export const ApiSingleSorted = () => {
   );
 };
 export const ApiMultipleSorted = () => {
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
   React.useEffect(() => {
     apiRef.current.setSortModel([
       { field: 'age', sort: 'desc' },
@@ -328,7 +328,7 @@ export const ApiMultipleSorted = () => {
 };
 
 export const SortedEventsApi = () => {
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
   const [loggedEvents, setEvents] = React.useState<any[]>([]);
@@ -383,7 +383,7 @@ export const SortedEventsOptions = () => {
       [
         { field: 'age', sort: 'desc' },
         { field: 'name', sort: 'asc' },
-      ] as SortModel,
+      ] as GridSortModel,
     [],
   );
 
@@ -412,7 +412,7 @@ export const SortedEventsOptions = () => {
   );
 };
 
-function sortServerRows(rows: any[], params: SortModelParams): Promise<any[]> {
+function sortServerRows(rows: any[], params: GridSortModelParams): Promise<any[]> {
   return new Promise<any[]>((resolve) => {
     setTimeout(() => {
       if (params.sortModel.length === 0) {
@@ -435,12 +435,12 @@ function sortServerRows(rows: any[], params: SortModelParams): Promise<any[]> {
 }
 
 export const ServerSideSorting = () => {
-  const [rows, setRows] = React.useState<RowsProp>(getRows());
-  const [columns] = React.useState<ColDef[]>(getColumns());
+  const [rows, setRows] = React.useState<GridRowsProp>(getRows());
+  const [columns] = React.useState<GridColDef[]>(getColumns());
   const [loading, setLoading] = React.useState<boolean>(false);
 
   const onSortModelChange = React.useCallback(
-    async (params: SortModelParams) => {
+    async (params: GridSortModelParams) => {
       setLoading(true);
       action('onSortModelChange')(params);
 
@@ -452,7 +452,7 @@ export const ServerSideSorting = () => {
   );
 
   // We use `useMemo` here, to keep the same ref and not trigger another sort on the next rendering
-  const sortModel: SortModel = React.useMemo(() => [{ field: 'age', sort: 'desc' }], []);
+  const sortModel: GridSortModel = React.useMemo(() => [{ field: 'age', sort: 'desc' }], []);
 
   return (
     <div className="grid-container">
@@ -481,7 +481,7 @@ export const ResetSortingRows = () => {
       type: 'number',
     },
   ];
-  const [rows, setRows] = React.useState<RowsProp>([]);
+  const [rows, setRows] = React.useState<GridRowsProp>([]);
 
   const createRandomRows = () => {
     const randomRows: any[] = [];

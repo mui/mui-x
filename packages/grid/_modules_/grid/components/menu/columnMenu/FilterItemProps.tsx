@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { ColDef } from '../../../models/colDef/colDef';
+import { GridColDef } from '../../../models/colDef/gridColDef';
 
 export interface FilterItemProps {
-  column: ColDef;
+  column: GridColDef;
   onClick: (event: React.MouseEvent<any>) => void;
 }

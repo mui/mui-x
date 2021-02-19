@@ -38,7 +38,7 @@ module.exports = {
           LIB_VERSION: JSON.stringify(pkg.version),
           PULL_REQUEST: JSON.stringify(process.env.PULL_REQUEST === 'true'),
           REACT_MODE: JSON.stringify(reactMode),
-          EXPERIMENTAL_ENABLED: JSON.stringify(
+          GRID_EXPERIMENTAL_ENABLED: JSON.stringify(
             // Set by Netlify
             process.env.PULL_REQUEST === 'false' ? 'false' : 'true',
           ),

@@ -1,9 +1,9 @@
 import {
-  CELL_CSS_CLASS,
-  DATA_CONTAINER_CSS_CLASS,
-  HEADER_CELL_TITLE_CSS_CLASS,
+  GRID_CELL_CSS_CLASS,
+  GRID_DATA_CONTAINER_CSS_CLASS,
+  GRID_HEADER_CELL_TITLE_CSS_CLASS,
 } from '../constants/cssClassesConstants';
-import { CellIndexCoordinates } from '../models/cell';
+import { GridCellIndexCoordinates } from '../models/gridCell';
 
 export function isOverflown(element: Element): boolean {
   return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
@@ -13,19 +13,19 @@ export function findParentElementFromClassName(elem: Element, className: string)
   return elem.closest(`.${className}`);
 }
 
-export function isCellRoot(elem: Element | null): boolean {
-  return elem != null && elem.classList.contains(CELL_CSS_CLASS);
+export function isGridCellRoot(elem: Element | null): boolean {
+  return elem != null && elem.classList.contains(GRID_CELL_CSS_CLASS);
 }
 
-export function isCell(elem: Element | null): boolean {
+export function isGridCell(elem: Element | null): boolean {
   return (
     elem != null &&
-    (isCellRoot(elem) || findParentElementFromClassName(elem, CELL_CSS_CLASS) !== null)
+    (isGridCellRoot(elem) || findParentElementFromClassName(elem, GRID_CELL_CSS_CLASS) !== null)
   );
 }
 
-export function isHeaderTitleContainer(elem: Element): boolean {
-  return elem && findParentElementFromClassName(elem, HEADER_CELL_TITLE_CSS_CLASS) !== null;
+export function isGridHeaderTitleContainer(elem: Element): boolean {
+  return elem && findParentElementFromClassName(elem, GRID_HEADER_CELL_TITLE_CSS_CLASS) !== null;
 }
 
 export function getIdFromRowElem(rowEl: Element): string {
@@ -40,13 +40,13 @@ export function findHeaderElementFromField(elem: Element, field: string): Elemen
   return elem.querySelector(`[data-field="${field}"]`);
 }
 
-export function findCellElementsFromCol(col: HTMLElement): NodeListOf<Element> | null {
+export function findGridCellElementsFromCol(col: HTMLElement): NodeListOf<Element> | null {
   const field = col.getAttribute('data-field');
   const root = findParentElementFromClassName(col, 'MuiDataGrid-root');
   if (!root) {
     throw new Error('Material-UI: The root element is not found.');
   }
-  const cells = root.querySelectorAll(`:scope .${CELL_CSS_CLASS}[data-field="${field}"]`);
+  const cells = root.querySelectorAll(`:scope .${GRID_CELL_CSS_CLASS}[data-field="${field}"]`);
   return cells;
 }
 
@@ -58,19 +58,19 @@ export function findGridRootFromCurrent(elem: Element): HTMLDivElement | null {
   return root as HTMLDivElement;
 }
 
-export function findDataContainerFromCurrent(elem: Element): HTMLDivElement | null {
+export function findGridDataContainerFromCurrent(elem: Element): HTMLDivElement | null {
   const root = findGridRootFromCurrent(elem);
   if (!root) {
     return null;
   }
-  return root.querySelector(`:scope .${DATA_CONTAINER_CSS_CLASS}`) as HTMLDivElement;
+  return root.querySelector(`:scope .${GRID_DATA_CONTAINER_CSS_CLASS}`) as HTMLDivElement;
 }
 
-export function getCellElementFromIndexes(
+export function getGridCellElementFromIndexes(
   root: Element,
-  { colIndex, rowIndex }: CellIndexCoordinates,
+  { colIndex, rowIndex }: GridCellIndexCoordinates,
 ) {
   return root.querySelector(
-    `:scope .${CELL_CSS_CLASS}[aria-colIndex='${colIndex}'][data-rowIndex='${rowIndex}']`,
+    `:scope .${GRID_CELL_CSS_CLASS}[aria-colIndex='${colIndex}'][data-rowIndex='${rowIndex}']`,
   ) as HTMLDivElement;
 }

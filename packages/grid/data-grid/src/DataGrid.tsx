@@ -63,7 +63,7 @@ DataGrid2.propTypes = {
       return new Error(
         [
           `Material-UI: \`apiRef\` is not a valid prop.`,
-          'ApiRef is not available in the MIT version.',
+          'GridApiRef is not available in the MIT version.',
           '',
           'You need to upgrade to the XGrid component to unlock this feature.',
         ].join('\n'),

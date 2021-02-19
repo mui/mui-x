@@ -6,7 +6,7 @@ import {
   act,
 } from 'test/utils';
 import { getColumnHeadersTextContent, raf } from 'test/utils/helperFn';
-import { ApiRef, useApiRef, XGrid } from '@material-ui/x-grid';
+import { GridApiRef, useGridApiRef, XGrid } from '@material-ui/x-grid';
 
 describe('<XGrid /> - Reorder', () => {
   // TODO v5: replace with createClientRender
@@ -35,11 +35,11 @@ describe('<XGrid /> - Reorder', () => {
 
   describe('Columns', () => {
     it('resizing after columns reorder should respect the new columns order', async () => {
-      let apiRef: ApiRef;
+      let apiRef: GridApiRef;
 
       const TestCase = (props: { width: number }) => {
         const { width } = props;
-        apiRef = useApiRef();
+        apiRef = useGridApiRef();
         return (
           <div style={{ width, height: 300 }}>
             <XGrid apiRef={apiRef} columns={baselineProps.columns} rows={baselineProps.rows} />
@@ -60,12 +60,12 @@ describe('<XGrid /> - Reorder', () => {
   });
 
   it('should not reset the column order when a prop change', () => {
-    let apiRef: ApiRef;
+    let apiRef: GridApiRef;
     const rows = [{ id: 0, brand: 'Nike' }];
     const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
 
     const Test = () => {
-      apiRef = useApiRef();
+      apiRef = useGridApiRef();
 
       return (
         <div style={{ width: 300, height: 300 }}>

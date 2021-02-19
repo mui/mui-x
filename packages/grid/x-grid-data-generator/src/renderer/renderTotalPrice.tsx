@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { CellParams, muiStyleAlpha } from '../../../_modules_/grid';
+import { GridCellParams, muiStyleAlpha } from '../../../_modules_/grid';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -43,6 +43,6 @@ const TotalPrice = React.memo(function TotalPrice(props: TotalPriceProps) {
   );
 });
 
-export function renderTotalPrice(params: CellParams) {
+export function renderTotalPrice(params: GridCellParams) {
   return <TotalPrice value={params.value as any} />;
 }

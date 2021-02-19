@@ -1,3 +1,3 @@
-export * from './rowsSelector';
-export * from './rowsState';
-export * from './useRows';
+export * from './gridRowsSelector';
+export * from './gridRowsState';
+export * from './useGridRows';

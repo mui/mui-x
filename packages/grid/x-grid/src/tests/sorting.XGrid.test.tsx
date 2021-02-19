@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApiRef, SortModel, useApiRef } from '@material-ui/data-grid';
+import { GridApiRef, GridSortModel, useGridApiRef } from '@material-ui/data-grid';
 import { XGrid } from '@material-ui/x-grid';
 import { expect } from 'chai';
 import { useFakeTimers } from 'sinon';
@@ -27,9 +27,9 @@ describe('<XGrid /> - Sorting', () => {
     }
   });
 
-  let apiRef: ApiRef;
+  let apiRef: GridApiRef;
 
-  const TestCase = (props: { rows?: any[]; sortModel: SortModel }) => {
+  const TestCase = (props: { rows?: any[]; sortModel: GridSortModel }) => {
     const baselineProps = {
       rows: [
         {
@@ -52,7 +52,7 @@ describe('<XGrid /> - Sorting', () => {
     };
 
     const { sortModel, rows } = props;
-    apiRef = useApiRef();
+    apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
         <XGrid
@@ -66,7 +66,7 @@ describe('<XGrid /> - Sorting', () => {
   };
 
   const renderBrandSortedAsc = () => {
-    const sortModel: SortModel = [{ field: 'brand', sort: 'asc' }];
+    const sortModel: GridSortModel = [{ field: 'brand', sort: 'asc' }];
 
     render(<TestCase sortModel={sortModel} />);
   };
@@ -76,7 +76,7 @@ describe('<XGrid /> - Sorting', () => {
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
   });
 
-  it('should apply the sortModel prop correctly on ApiRef setRows', () => {
+  it('should apply the sortModel prop correctly on GridApiRef setRows', () => {
     renderBrandSortedAsc();
     const newRows = [
       {
@@ -97,7 +97,7 @@ describe('<XGrid /> - Sorting', () => {
     expect(getColumnValues()).to.deep.equal(['Asics', 'Hugo', 'RedBull']);
   });
 
-  it('should apply the sortModel prop correctly on ApiRef update row data', () => {
+  it('should apply the sortModel prop correctly on GridApiRef update row data', () => {
     renderBrandSortedAsc();
     apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
     apiRef.current.updateRows([{ id: 0, brand: 'Patagonia' }]);
@@ -112,7 +112,7 @@ describe('<XGrid /> - Sorting', () => {
   });
 
   it('should allow multiple sort columns and', () => {
-    const sortModel: SortModel = [
+    const sortModel: GridSortModel = [
       { field: 'year', sort: 'desc' },
       { field: 'brand', sort: 'asc' },
     ];
@@ -123,7 +123,7 @@ describe('<XGrid /> - Sorting', () => {
   it('should allow to set multiple Sort items via apiRef', () => {
     renderBrandSortedAsc();
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
-    const sortModel: SortModel = [
+    const sortModel: GridSortModel = [
       { field: 'year', sort: 'desc' },
       { field: 'brand', sort: 'asc' },
     ];

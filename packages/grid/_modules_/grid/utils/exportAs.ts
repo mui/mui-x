@@ -1,3 +1,5 @@
+import { GridExportFormat } from '../models/gridExport';
+
 /**
  * I have hesitate to use https://github.com/eligrey/FileSaver.js.
  * If we get bug reports that this project solves, we should consider using it.
@@ -10,7 +12,7 @@
  */
 export function exportAs(
   blob: Blob,
-  extension: string = 'txt',
+  extension: GridExportFormat = 'csv',
   filename: string = document.title,
 ): void {
   const fullName = `${filename}.${extension}`;

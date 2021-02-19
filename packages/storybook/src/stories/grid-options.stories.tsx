@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ColDef, XGrid } from '@material-ui/x-grid';
+import { GridColDef, XGrid } from '@material-ui/x-grid';
 import { useData } from '../hooks/useData';
 
 export default {
@@ -10,7 +10,7 @@ export default {
   },
 };
 
-const columns: ColDef[] = [{ field: 'id' }, { field: 'name' }, { field: 'age' }];
+const columns: GridColDef[] = [{ field: 'id' }, { field: 'name' }, { field: 'age' }];
 
 const rows = [
   { id: 1, name: 'alice', age: 40 },

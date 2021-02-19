@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { ApiRef } from '../../models/api/apiRef';
+import { GridApiRef } from '../../models/api/gridApiRef';
 import { isFunction } from '../../utils/utils';
 import { useLogger } from '../utils/useLogger';
 
 export const useNativeEventListener = (
-  apiRef: ApiRef,
+  apiRef: GridApiRef,
   ref: React.MutableRefObject<HTMLDivElement | null> | (() => Element | undefined | null),
   eventName: string,
   handler?: (event: Event) => any,

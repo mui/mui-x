@@ -27,7 +27,7 @@ describe('Components override', () => {
     await snapshotTest('/story/x-grid-demos-custom-components--header-and-footer');
     done();
   });
-  test('Styled Columns', async (done) => {
+  test('Styled GridColumns', async (done) => {
     await snapshotTest('/story/x-grid-demos-custom-components--styled-columns');
     done();
   });
