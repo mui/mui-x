@@ -1,4 +1,4 @@
 export * from './FilterModelState';
-export * from './filterSelector';
-export * from './useFilter';
-export * from './visibleRowsState';
+export * from './gridFilterSelector';
+export * from './useGridFilter';
+export * from './visibleGridRowsState';

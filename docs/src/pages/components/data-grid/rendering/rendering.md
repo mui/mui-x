@@ -9,13 +9,13 @@ components: DataGrid, XGrid
 
 ## Column definitions
 
-This section is an extension of the main [column definitions documentation](/components/data-grid/columns/#column-definitions) that focuses on the rendering and the customization of the rendering with `ColDef`.
+This section is an extension of the main [column definitions documentation](/components/data-grid/columns/#column-definitions) that focuses on the rendering and the customization of the rendering with `GridColDef`.
 
 ### Value getter
 
 Sometimes a column might not have a corresponding value and you just want to render a combination of different fields.
 
-To do that, you can set the `valueGetter` attribute of `ColDef` as in the example below:
+To do that, you can set the `valueGetter` attribute of `GridColDef` as in the example below:
 
 **Note**: You need to set a `sortComparator` for the column sorting to work when setting the `valueGetter` attribute.
 
@@ -26,7 +26,7 @@ function getFullName(params: ValueGetterParams) {
   }`;
 }
 
-const columns: ColDef[] = [
+const columns: GridColDef[] = [
   { field: 'firstName', headerName: 'First name', width: 130 },
   { field: 'lastName', headerName: 'Last name', width: 130 },
   {
@@ -50,7 +50,7 @@ The value formatters allow you to format values for display as a string.
 For instance, you might want to format a JavaScript date object into a string year.
 
 ```tsx
-const columns: ColDef[] = [
+const columns: GridColDef[] = [
   {
     field: 'date',
     headerName: 'Year',
@@ -78,11 +78,11 @@ The `renderCell` method of the column definitions is similar to `valueFormatter`
 However, it trades to be able to only render in a cell in exchange for allowing to return a React node (instead of a string).
 
 ```tsx
-const columns: ColDef[] = [
+const columns: GridColDef[] = [
   {
     field: 'date',
     headerName: 'Year',
-    renderCell: (params: CellParams) => (
+    renderCell: (params: GridCellParams) => (
       <strong>
         {(params.value as Date).getFullYear()}
         <Button
@@ -107,12 +107,12 @@ You can customize the look of each header with the `renderHeader` method.
 It takes precedence over the `headerName` property.
 
 ```tsx
-const columns: ColDef[] = [
+const columns: GridColDef[] = [
   {
     field: 'date',
     width: 150,
     type: 'date',
-    renderHeader: (params: ColParams) => (
+    renderHeader: (params: GridColParams) => (
       <strong>
         {'Birthday '}
         <span role="img" aria-label="enjoy">
@@ -128,13 +128,13 @@ const columns: ColDef[] = [
 
 ### Styling header
 
-The `ColDef` type has properties to apply class names and custom CSS on the header.
+The `GridColDef` type has properties to apply class names and custom CSS on the header.
 
 - `headerClassName`: to apply class names into the column header.
 - `headerAlign`: to align the content of the header. It must be 'left' | 'right' | 'center'.
 
 ```tsx
-const columns: Columns = [
+const columns: GridColumns = [
   {
     field: 'first',
     headerClassName: 'super-app-theme--header',
@@ -152,13 +152,13 @@ const columns: Columns = [
 
 ### Styling cells
 
-The `ColDef` type has properties to apply class names and custom CSS on the cells.
+The `GridColDef` type has properties to apply class names and custom CSS on the cells.
 
 - `cellClassName`: to apply class names on every cell. It can also be a function.
 - `align`: to align the content of the cells. It must be 'left' | 'right' | 'center'.
 
 ```tsx
-const columns: Columns = [
+const columns: GridColumns = [
   {
     field: 'name',
     cellClassName: 'super-app-theme--cell',
@@ -166,7 +166,7 @@ const columns: Columns = [
   {
     field: 'score',
     type: 'number',
-    cellClassName: (params: CellClassParams) =>
+    cellClassName: (params: GridCellClassParams) =>
       clsx('super-app', {
         negative: (params.value as number) < 0,
         positive: (params.value as number) > 0,
@@ -213,7 +213,7 @@ You can change the density of the rows and the column header.
 
 ### Density selector
 
-To enable the density selector you need to compose a toolbar containing the `DensitySelector` component, and apply it using the `Toolbar` key in the grid `components` prop.
+To enable the density selector you need to compose a toolbar containing the `GridDensitySelector` component, and apply it using the `Toolbar` key in the grid `components` prop.
 
 The user can change the density of the data grid by using the density selector from the toolbar.
 
@@ -274,8 +274,8 @@ Alternatively, you can compose your own toolbar.
 function CustomToolbar() {
   return (
     <GridToolbarContainer>
-      <ColumnsToolbarButton />
-      <FilterToolbarButton />
+      <GridColumnsToolbarButton />
+      <GridFilterToolbarButton />
     </GridToolbarContainer>
   );
 }

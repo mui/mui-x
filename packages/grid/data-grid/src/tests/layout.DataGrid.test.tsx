@@ -161,7 +161,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         );
       });
 
-      it('should warn when CellParams.valueGetter is called with a missing column', () => {
+      it('should warn when GridCellParams.valueGetter is called with a missing column', () => {
         const rows = [
           { id: 1, age: 1 },
           { id: 2, age: 2 },

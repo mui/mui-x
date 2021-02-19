@@ -7,7 +7,7 @@ import {
   screen,
 } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid, DataGridProps, RowsProp } from '@material-ui/data-grid';
+import { DataGrid, DataGridProps, GridRowsProp } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 
@@ -138,7 +138,7 @@ describe('<DataGrid /> - Pagination', () => {
     it('should support server side pagination', () => {
       const ServerPaginationGrid = () => {
         const [page, setPage] = React.useState(0);
-        const [rows, setRows] = React.useState<RowsProp>([]);
+        const [rows, setRows] = React.useState<GridRowsProp>([]);
 
         const handlePageChange = (params) => {
           setPage(params.page);

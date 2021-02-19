@@ -1,5 +1,6 @@
-export const MULTIPLE_SELECTION_KEYS = ['Meta', 'Control'];
-export const isMultipleKey = (key: string): boolean => MULTIPLE_SELECTION_KEYS.indexOf(key) > -1;
+export const GRID_MULTIPLE_SELECTION_KEYS = ['Meta', 'Control'];
+export const isMultipleKey = (key: string): boolean =>
+  GRID_MULTIPLE_SELECTION_KEYS.indexOf(key) > -1;
 export const isTabKey = (key: string): boolean => key === 'Tab';
 export const isSpaceKey = (key: string): boolean => key === ' ';
 export const isArrowKeys = (key: string): boolean => key.indexOf('Arrow') === 0;

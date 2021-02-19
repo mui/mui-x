@@ -1,12 +1,12 @@
-import { ColDef, RowId } from '@material-ui/x-grid';
+import { GridColDef, GridRowId } from '@material-ui/x-grid';
 
 export interface DataRowModel {
-  id: RowId;
+  id: GridRowId;
   [field: string]: any;
 }
 
 export interface GridData {
-  columns: ColDef[];
+  columns: GridColDef[];
   rows: DataRowModel[];
 }
 

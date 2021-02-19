@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { ownerDocument } from '@material-ui/core/utils';
-import { DEFAULT_LOCALE_TEXT } from '../../constants/localeTextConstants';
+import { GRID_DEFAULT_LOCALE_TEXT } from '../../constants/localeTextConstants';
+import { mergeGridOptions } from '../../utils/mergeUtils';
 import { GridComponentProps, GridOptionsProp } from '../../GridComponentProps';
-import { ApiRef } from '../../models/api/apiRef';
+import { GridApiRef } from '../../models/api/gridApiRef';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../models/gridOptions';
 import { getScrollbarSize, useEnhancedEffect } from '../../utils/material-ui-utils';
-import { mergeOptions } from '../../utils/mergeUtils';
 import { useGridReducer } from '../features/core/useGridReducer';
 import { useLogger } from './useLogger';
 
@@ -16,12 +16,12 @@ export function optionsReducer(
 ) {
   switch (action.type) {
     case 'options::UPDATE':
-      return mergeOptions(state, action.payload);
+      return mergeGridOptions(state, action.payload);
     default:
       throw new Error(`Material-UI: Action ${action.type} not found.`);
   }
 }
-export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridOptions {
+export function useOptionsProp(apiRef: GridApiRef, props: GridComponentProps): GridOptions {
   const logger = useLogger('useOptionsProp');
   const [browserScrollBar, setBrowserScrollBar] = React.useState(0);
 
@@ -43,7 +43,7 @@ export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridO
   const options: GridOptionsProp = React.useMemo(
     () => ({
       ...props,
-      localeText: { ...DEFAULT_LOCALE_TEXT, ...props.localeText },
+      localeText: { ...GRID_DEFAULT_LOCALE_TEXT, ...props.localeText },
       scrollbarSize: props.scrollbarSize == null ? browserScrollBar : props.scrollbarSize || 0,
     }),
     [browserScrollBar, props],

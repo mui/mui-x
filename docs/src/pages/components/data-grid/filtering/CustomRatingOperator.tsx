@@ -3,10 +3,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Rating } from '@material-ui/lab';
 import {
   FilterInputValueProps,
-  PreferencePanelsValue,
+  GridPreferencePanelsValue,
   DataGrid,
-  FilterItem,
-  ColDef,
+  GridFilterItem,
+  GridColDef,
 } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
@@ -45,7 +45,7 @@ const RatingOnlyOperators = [
   {
     label: 'From',
     value: 'from',
-    getApplyFilterFn: (filterItem: FilterItem, column: ColDef) => {
+    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
       if (
         !filterItem.columnField ||
         !filterItem.value ||
@@ -91,7 +91,7 @@ export default function CustomRatingOperator() {
         state={{
           preferencePanel: {
             open: true,
-            openedPanelValue: PreferencePanelsValue.filters,
+            openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
       />

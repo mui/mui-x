@@ -11,8 +11,8 @@ components: DataGrid, XGrid
 
 Grid rows can be defined with the `rows` prop.
 `rows` expects an array of objects.
-Rows should have this type: `RowData[]`.
-The columns' "field" property should match a key of the row object (`RowData`).
+Rows should have this type: `GridRowData[]`.
+The columns' "field" property should match a key of the row object (`GridRowData`).
 
 {{"demo": "pages/components/data-grid/rows/RowsGrid.js", "bg": "inline"}}
 

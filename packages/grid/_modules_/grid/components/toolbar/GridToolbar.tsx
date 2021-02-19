@@ -2,14 +2,14 @@ import { useContext } from 'react';
 import * as React from 'react';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
-import { ApiContext } from '../api-context';
+import { GridApiContext } from '../GridApiContext';
 import { GridToolbarContainer } from '../containers/GridToolbarContainer';
-import { ColumnsToolbarButton } from './ColumnsToolbarButton';
-import { DensitySelector } from './DensitySelector';
-import { FilterToolbarButton } from './FilterToolbarButton';
+import { GridColumnsToolbarButton } from './GridColumnsToolbarButton';
+import { GridDensitySelector } from './GridDensitySelector';
+import { GridFilterToolbarButton } from './GridFilterToolbarButton';
 
 export function GridToolbar() {
-  const apiRef = useContext(ApiContext);
+  const apiRef = useContext(GridApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
 
   if (
@@ -22,9 +22,9 @@ export function GridToolbar() {
 
   return (
     <GridToolbarContainer>
-      <ColumnsToolbarButton />
-      <FilterToolbarButton />
-      <DensitySelector />
+      <GridColumnsToolbarButton />
+      <GridFilterToolbarButton />
+      <GridDensitySelector />
     </GridToolbarContainer>
   );
 }

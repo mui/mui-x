@@ -2,17 +2,17 @@ import Button from '@material-ui/core/Button';
 import * as React from 'react';
 import { Story, Meta } from '@storybook/react';
 import {
-  ColDef,
+  GridColDef,
   XGrid,
   GridOverlay,
   GridFooterContainer,
   XGridProps,
-  HideColMenuItem,
+  HideGridColMenuItem,
   ColumnMenuProps,
-  BaseComponentProps,
+  GridBaseComponentProps,
   GridColumnMenu,
-  PanelProps,
-  PreferencesPanel,
+  GridPanelProps,
+  GridPreferencesPanel,
   GridFooter,
   GridToolbar,
 } from '@material-ui/x-grid';
@@ -37,7 +37,7 @@ export default {
   decorators: [(StoryFn) => <StoryFn />],
 } as Meta;
 
-const columns: ColDef[] = [{ field: 'id' }, { field: 'name' }, { field: 'age' }];
+const columns: GridColDef[] = [{ field: 'id' }, { field: 'name' }, { field: 'age' }];
 
 const rows = [
   { id: 1, name: 'alice', age: 40 },
@@ -122,7 +122,7 @@ Icons.args = {
   },
 };
 
-function PaginationComponent(props: BaseComponentProps & { color?: 'primary' }) {
+function PaginationComponent(props: GridBaseComponentProps & { color?: 'primary' }) {
   const { state, api } = props;
   return (
     <Pagination
@@ -328,7 +328,7 @@ CustomToolbar.args = {
 
 function ColumnMenuComponent(props: ColumnMenuProps & { color?: string }) {
   if (props.currentColumn.field === 'id') {
-    return <HideColMenuItem onClick={props.hideMenu} column={props.currentColumn!} />;
+    return <HideGridColMenuItem onClick={props.hideMenu} column={props.currentColumn!} />;
   }
   if (props.currentColumn.field === 'currencyPair') {
     return (
@@ -412,16 +412,16 @@ export function DynamicIconUpdate() {
   );
 }
 
-function CustomFilterPanel(props: { bg?: string } & BaseComponentProps) {
+function CustomFilterPanel(props: { bg?: string } & GridBaseComponentProps) {
   return (
     <div style={{ width: 500, height: 100, background: props.bg, color: 'white' }}>
       My Custom Filter Panel
     </div>
   );
 }
-function CustomColumnsPanel(props: { bg?: string } & BaseComponentProps) {
+function CustomColumnsPanel(props: { bg?: string } & GridBaseComponentProps) {
   return (
-    <div style={{ width: 500, height: 300, background: props.bg }}>My Custom Columns Panel</div>
+    <div style={{ width: 500, height: 300, background: props.bg }}>My Custom GridColumns Panel</div>
   );
 }
 export const CustomFilterColumnsPanels = Template.bind({});
@@ -436,7 +436,7 @@ CustomFilterColumnsPanels.args = {
     columnsPanel: { bg: 'red' },
   },
 };
-function CustomPanelComponent(props: BaseComponentProps & PanelProps) {
+function CustomPanelComponent(props: GridBaseComponentProps & GridPanelProps) {
   if (!props.open) {
     return null;
   }
@@ -455,7 +455,7 @@ function FooterWithPanel() {
   return (
     <React.Fragment>
       <GridFooter />
-      <PreferencesPanel />
+      <GridPreferencesPanel />
     </React.Fragment>
   );
 }

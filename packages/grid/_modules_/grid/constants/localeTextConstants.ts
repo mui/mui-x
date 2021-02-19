@@ -1,6 +1,6 @@
-import { LocaleText } from '../models/api/localeTextApi';
+import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 
-export const DEFAULT_LOCALE_TEXT: LocaleText = {
+export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Root
   rootGridLabel: 'grid',
   noRowsLabel: 'No rows',
@@ -13,8 +13,8 @@ export const DEFAULT_LOCALE_TEXT: LocaleText = {
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Comfortable',
 
-  // Columns selector toolbar button text
-  toolbarColumns: 'Columns',
+  // GridColumns selector toolbar button text
+  toolbarColumns: 'GridColumns',
   toolbarColumnsLabel: 'Show Column Selector',
 
   // Filters toolbar button text
@@ -24,7 +24,7 @@ export const DEFAULT_LOCALE_TEXT: LocaleText = {
   toolbarFiltersTooltipShow: 'Show Filters',
   toolbarFiltersTooltipActive: (count) => `${count} active filter(s)`,
 
-  // Columns panel text
+  // GridColumns panel text
   columnsPanelTextFieldLabel: 'Find column',
   columnsPanelTextFieldPlaceholder: 'Column title',
   columnsPanelDragIconLabel: 'Reorder Column',
@@ -37,7 +37,7 @@ export const DEFAULT_LOCALE_TEXT: LocaleText = {
   filterPanelOperators: 'Operators',
   filterPanelOperatorAnd: 'And',
   filterPanelOperatorOr: 'Or',
-  filterPanelColumns: 'Columns',
+  filterPanelColumns: 'GridColumns',
   filterPanelInputLabel: 'Value',
   filterPanelInputPlaceholder: 'Filter value',
 

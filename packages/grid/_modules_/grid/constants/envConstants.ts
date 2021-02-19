@@ -11,24 +11,24 @@ import { localStorageAvailable } from '../utils/utils';
 // - the local environment
 // - the pull request previews
 //
-// Reviewers can force the value with the local storage and the EXPERIMENTAL_ENABLED key:
+// Reviewers can force the value with the local storage and the GRID_EXPERIMENTAL_ENABLED key:
 // - 'true' => force it to be enabled
 // - 'false' => force it to be disabled
 //
-// Developers (users) are discouraged to enable the experimental feature by setting the EXPERIMENTAL_ENABLED env.
+// Developers (users) are discouraged to enable the experimental feature by setting the GRID_EXPERIMENTAL_ENABLED env.
 // Instead, prefer exposing experimental APIs, for instance, a prop or a new `unstable_` module.
 
 let experimentalEnabled = false;
 
 if (
   typeof process !== 'undefined' &&
-  process.env.EXPERIMENTAL_ENABLED !== undefined &&
+  process.env.GRID_EXPERIMENTAL_ENABLED !== undefined &&
   localStorageAvailable() &&
-  window.localStorage.getItem('EXPERIMENTAL_ENABLED')
+  window.localStorage.getItem('GRID_EXPERIMENTAL_ENABLED')
 ) {
-  experimentalEnabled = window.localStorage.getItem('EXPERIMENTAL_ENABLED') === 'true';
+  experimentalEnabled = window.localStorage.getItem('GRID_EXPERIMENTAL_ENABLED') === 'true';
 } else if (typeof process !== 'undefined') {
-  experimentalEnabled = process.env.EXPERIMENTAL_ENABLED === 'true';
+  experimentalEnabled = process.env.GRID_EXPERIMENTAL_ENABLED === 'true';
 }
 
-export const EXPERIMENTAL_ENABLED = experimentalEnabled as boolean;
+export const GRID_EXPERIMENTAL_ENABLED = experimentalEnabled as boolean;

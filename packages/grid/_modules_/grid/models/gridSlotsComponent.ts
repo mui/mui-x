@@ -2,31 +2,31 @@ import * as React from 'react';
 import { ErrorOverlay, ErrorOverlayProps } from '../components/ErrorOverlay';
 import { GridFooter } from '../components/GridFooter';
 import { GridHeader } from '../components/GridHeader';
-import { PreferencesPanel } from '../components/panel/PreferencesPanel';
+import { GridPreferencesPanel } from '../components/panel/GridPreferencesPanel';
 import {
-  ArrowDownwardIcon,
-  ArrowUpwardIcon,
-  ColumnIcon,
-  FilterAltIcon,
-  FilterListIcon,
-  SeparatorIcon,
-  TableRowsIcon,
-  TripleDotsVerticalIcon,
-  ViewHeadlineIcon,
-  ViewStreamIcon,
+  GridArrowDownwardIcon,
+  GridArrowUpwardIcon,
+  GridColumnIcon,
+  GridFilterAltIcon,
+  GridFilterListIcon,
+  GridSeparatorIcon,
+  GridTableRowsIcon,
+  GridTripleDotsVerticalIcon,
+  GridViewHeadlineIcon,
+  GridViewStreamIcon,
 } from '../components/icons/index';
-import { LoadingOverlay } from '../components/LoadingOverlay';
+import { GridLoadingOverlay } from '../components/GridLoadingOverlay';
 import { GridColumnMenu, GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenu';
-import { NoRowsOverlay } from '../components/NoRowsOverlay';
-import { Pagination } from '../components/Pagination';
-import { ColumnsPanel } from '../components/panel/ColumnsPanel';
-import { FilterPanel } from '../components/panel/filterPanel/FilterPanel';
-import { Panel, PanelProps } from '../components/panel/Panel';
-import { ApiRefComponentsProperty } from './api/componentsApi';
+import { GridNoRowsOverlay } from '../components/GridNoRowsOverlay';
+import { GridPagination } from '../components/GridPagination';
+import { GridColumnsPanel } from '../components/panel/GridColumnsPanel';
+import { GridFilterPanel } from '../components/panel/filterPanel/GridFilterPanel';
+import { GridPanel, GridPanelProps } from '../components/panel/GridPanel';
+import { GridApiRefComponentsProperty } from './api/gridComponentsApi';
 import { GridIconSlotsComponent } from './gridIconSlotsComponent';
-import { BaseComponentProps } from './params/baseComponentProps';
+import { GridBaseComponentProps } from './params/gridBaseComponentProps';
 
-export type ColumnMenuProps = BaseComponentProps & GridColumnMenuProps;
+export type ColumnMenuProps = GridBaseComponentProps & GridColumnMenuProps;
 
 /**
  * Grid components React prop interface containing all the overridable components.
@@ -40,74 +40,74 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
   /**
    * Error overlay component rendered above the grid when an error is caught.
    */
-  ErrorOverlay?: React.ElementType<BaseComponentProps & ErrorOverlayProps>;
+  ErrorOverlay?: React.ElementType<GridBaseComponentProps & ErrorOverlayProps>;
   /**
    * Footer component rendered at the bottom of the grid viewport.
    */
-  Footer?: React.ElementType<BaseComponentProps>;
+  Footer?: React.ElementType<GridBaseComponentProps>;
   /**
    * Header component rendered above the grid column header bar.
    * Prefer using the `Toolbar` slot. You should never need to use this slot. TODO remove.
    */
-  Header?: React.ElementType<BaseComponentProps>;
+  Header?: React.ElementType<GridBaseComponentProps>;
   /**
    * Toolbar component rendered inside the Header component.
    */
-  Toolbar?: React.ElementType<BaseComponentProps>;
+  Toolbar?: React.ElementType<GridBaseComponentProps>;
   /**
    * PreferencesPanel component rendered inside the Header component.
    */
-  PreferencesPanel?: React.ElementType<BaseComponentProps>;
+  PreferencesPanel?: React.ElementType<GridBaseComponentProps>;
   /**
    * Loading overlay component rendered when the grid is in a loading state.
    */
-  LoadingOverlay?: React.ElementType<BaseComponentProps>;
+  LoadingOverlay?: React.ElementType<GridBaseComponentProps>;
   /**
    * No rows overlay component rendered when the grid has no rows.
    */
-  NoRowsOverlay?: React.ElementType<BaseComponentProps>;
+  NoRowsOverlay?: React.ElementType<GridBaseComponentProps>;
   /**
    * Pagination component rendered in the grid footer by default.
    */
-  Pagination?: React.ElementType<BaseComponentProps>;
+  Pagination?: React.ElementType<GridBaseComponentProps>;
   /**
    * Filter panel component rendered when clicking the filter button.
    */
-  FilterPanel?: React.ElementType<BaseComponentProps>;
+  FilterPanel?: React.ElementType<GridBaseComponentProps>;
   /**
-   * Columns panel component rendered when clicking the columns button.
+   * GridColumns panel component rendered when clicking the columns button.
    */
-  ColumnsPanel?: React.ElementType<BaseComponentProps>;
+  ColumnsPanel?: React.ElementType<GridBaseComponentProps>;
   /**
    * Panel component wrapping the filters and columns panels.
    */
-  Panel?: React.ElementType<BaseComponentProps & PanelProps>;
+  Panel?: React.ElementType<GridBaseComponentProps & GridPanelProps>;
 }
 
-export const DEFAULT_SLOTS_ICONS: GridIconSlotsComponent = {
-  OpenFilterButtonIcon: FilterListIcon,
-  ColumnFilteredIcon: FilterAltIcon,
-  ColumnSelectorIcon: ColumnIcon,
-  ColumnMenuIcon: TripleDotsVerticalIcon,
-  ColumnSortedAscendingIcon: ArrowUpwardIcon,
-  ColumnSortedDescendingIcon: ArrowDownwardIcon,
-  ColumnResizeIcon: SeparatorIcon,
-  DensityCompactIcon: ViewHeadlineIcon,
-  DensityStandardIcon: TableRowsIcon,
-  DensityComfortableIcon: ViewStreamIcon,
+export const DEFAULT_GRID_SLOTS_ICONS: GridIconSlotsComponent = {
+  OpenFilterButtonIcon: GridFilterListIcon,
+  ColumnFilteredIcon: GridFilterAltIcon,
+  ColumnSelectorIcon: GridColumnIcon,
+  ColumnMenuIcon: GridTripleDotsVerticalIcon,
+  ColumnSortedAscendingIcon: GridArrowUpwardIcon,
+  ColumnSortedDescendingIcon: GridArrowDownwardIcon,
+  ColumnResizeIcon: GridSeparatorIcon,
+  DensityCompactIcon: GridViewHeadlineIcon,
+  DensityStandardIcon: GridTableRowsIcon,
+  DensityComfortableIcon: GridViewStreamIcon,
 };
 
-export const DEFAULT_SLOTS_COMPONENTS: ApiRefComponentsProperty = {
-  ...DEFAULT_SLOTS_ICONS,
+export const DEFAULT_GRID_SLOTS_COMPONENTS: GridApiRefComponentsProperty = {
+  ...DEFAULT_GRID_SLOTS_ICONS,
   ColumnMenu: GridColumnMenu,
-  ColumnsPanel,
+  ColumnsPanel: GridColumnsPanel,
   ErrorOverlay,
-  FilterPanel,
+  FilterPanel: GridFilterPanel,
   Footer: GridFooter,
   Header: GridHeader,
-  PreferencesPanel,
-  LoadingOverlay,
-  NoRowsOverlay,
-  Pagination,
-  Panel,
+  PreferencesPanel: GridPreferencesPanel,
+  LoadingOverlay: GridLoadingOverlay,
+  NoRowsOverlay: GridNoRowsOverlay,
+  Pagination: GridPagination,
+  Panel: GridPanel,
 };

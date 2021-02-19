@@ -1,14 +1,14 @@
-import { ColDef, RowId } from '@material-ui/x-grid';
+import { GridColDef, GridRowId } from '@material-ui/x-grid';
 import { currencyPairs } from './currency-pairs';
 
 export interface DataRowModel {
-  id: RowId;
+  id: GridRowId;
   currencyPair: string;
   [price: string]: number | string;
 }
 
 export interface GridData {
-  columns: ColDef[];
+  columns: GridColDef[];
   rows: DataRowModel[];
 }
 
@@ -27,7 +27,7 @@ export function getData(rowLength: number, colLength: number): GridData {
     data.push(model);
   }
 
-  const columns: ColDef[] = [
+  const columns: GridColDef[] = [
     { field: 'id', headerName: 'id' },
     { field: 'currencyPair', headerName: 'Currency Pair' },
   ];

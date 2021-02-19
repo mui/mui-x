@@ -1,6 +1,6 @@
-import { CellIndexCoordinates } from '../../../models/cell';
+import { GridCellIndexCoordinates } from '../../../models/gridCell';
 
 export interface KeyboardState {
-  cell: CellIndexCoordinates | null;
+  cell: GridCellIndexCoordinates | null;
   isMultipleKeyPressed: boolean;
 }

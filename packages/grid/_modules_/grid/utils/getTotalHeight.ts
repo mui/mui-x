@@ -1,9 +1,9 @@
-import { ContainerProps, GridOptions } from '../models';
+import { GridContainerProps, GridOptions } from '../models';
 
 // TODO Move that to renderContext and delete this
 export const getTotalHeight = (
   options: GridOptions,
-  containerSizes: ContainerProps | null,
+  containerSizes: GridContainerProps | null,
   height: number,
 ) => {
   if (!options.autoHeight) {

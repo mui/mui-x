@@ -1,21 +1,21 @@
-import { DEFAULT_LOCALE_TEXT } from '../constants/localeTextConstants';
+import { GRID_DEFAULT_LOCALE_TEXT } from '../constants/localeTextConstants';
 import { FilterModel } from '../hooks/features/filter/FilterModelState';
 import { Logger } from '../hooks/utils/useLogger';
-import { LocaleText } from './api/localeTextApi';
-import { ColumnTypesRecord } from './colDef/colTypeDef';
-import { getDefaultColumnTypes } from './colDef/defaultColumnTypes';
-import { Density, DensityTypes } from './density';
-import { FeatureMode, FeatureModeConstant } from './featureMode';
-import { CellParams } from './params/cellParams';
-import { ColParams } from './params/colParams';
-import { FilterModelParams } from './params/filterModelParams';
-import { PageChangeParams } from './params/pageChangeParams';
-import { RowParams } from './params/rowParams';
-import { RowSelectedParams } from './params/rowSelectedParams';
-import { SelectionModelChangeParams } from './params/selectionModelChangeParams';
-import { SortModelParams } from './params/sortModelParams';
-import { SelectionModel } from './selectionModel';
-import { SortDirection, SortModel } from './sortModel';
+import { GridLocaleText } from './api/gridLocaleTextApi';
+import { GridColumnTypesRecord } from './colDef/gridColTypeDef';
+import { getGridDefaultColumnTypes } from './colDef/gridDefaultColumnTypes';
+import { GridDensity, GridDensityTypes } from './gridDensity';
+import { GridFeatureMode, GridFeatureModeConstant } from './gridFeatureMode';
+import { GridCellParams } from './params/gridCellParams';
+import { GridColParams } from './params/gridColParams';
+import { GridFilterModelParams } from './params/gridFilterModelParams';
+import { GridPageChangeParams } from './params/gridPageChangeParams';
+import { GridRowParams } from './params/gridRowParams';
+import { GridRowSelectedParams } from './params/gridRowSelectedParams';
+import { GridSelectionModelChangeParams } from './params/gridSelectionModelChangeParams';
+import { GridSortModelParams } from './params/gridSortModelParams';
+import { GridSelectionModel } from './gridSelectionModel';
+import { GridSortDirection, GridSortModel } from './gridSortModel';
 
 // TODO add multiSortKey
 /**
@@ -110,7 +110,7 @@ export interface GridOptions {
    * The order of the sorting sequence.
    * @default ['asc', 'desc', null]
    */
-  sortingOrder: SortDirection[];
+  sortingOrder: GridSortDirection[];
   /**
    * If `true`, pagination is enabled.
    * @default false
@@ -136,7 +136,7 @@ export interface GridOptions {
    * Set it to 'client' if you would like to handle the pagination on the client-side.
    * Set it to 'server' if you would like to handle the pagination on the server-side.
    */
-  paginationMode?: FeatureMode;
+  paginationMode?: GridFeatureMode;
   /**
    * Set the total number of rows, if it is different than the length of the value `rows` prop.
    */
@@ -151,13 +151,13 @@ export interface GridOptions {
    * Set it to 'client' if you would like to handle sorting on the client-side.
    * Set it to 'server' if you would like to handle sorting on the server-side.
    */
-  sortingMode?: FeatureMode;
+  sortingMode?: GridFeatureMode;
   /**
    * Filtering can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle filtering on the client-side.
    * Set it to 'server' if you would like to handle filtering on the server-side.
    */
-  filterMode?: FeatureMode;
+  filterMode?: GridFeatureMode;
   /**
    * If `true`, the footer component is hidden.
    * @default false
@@ -201,7 +201,7 @@ export interface GridOptions {
   /**
    * Set the sort model of the grid.
    */
-  sortModel?: SortModel;
+  sortModel?: GridSortModel;
   /**
    * Set the filter model of the grid.
    */
@@ -209,62 +209,62 @@ export interface GridOptions {
   /**
    * Set the selection model of the grid.
    */
-  selectionModel?: SelectionModel;
+  selectionModel?: GridSelectionModel;
   /**
    * Callback fired when a click event comes from a cell element.
-   * @param param With all properties from [[CellParams]].
+   * @param param With all properties from [[GridCellParams]].
    */
-  onCellClick?: (param: CellParams) => void;
+  onCellClick?: (param: GridCellParams) => void;
   /**
    * Callback fired when a hover event comes from a cell element.
-   * @param param With all properties from [[CellParams]].
+   * @param param With all properties from [[GridCellParams]].
    */
-  onCellHover?: (param: CellParams) => void;
+  onCellHover?: (param: GridCellParams) => void;
   /**
    * Callback fired when a click event comes from a row container element.
-   * @param param With all properties from [[RowParams]].
+   * @param param With all properties from [[GridRowParams]].
    */
-  onRowClick?: (param: RowParams) => void;
+  onRowClick?: (param: GridRowParams) => void;
   /**
    * Callback fired when a hover event comes from a row container element.
-   * @param param With all properties from [[RowParams]].
+   * @param param With all properties from [[GridRowParams]].
    */
-  onRowHover?: (param: RowParams) => void;
+  onRowHover?: (param: GridRowParams) => void;
   /**
    * Callback fired when one row is selected.
-   * @param param With all properties from [[RowSelectedParams]].
+   * @param param With all properties from [[GridRowSelectedParams]].
    */
-  onRowSelected?: (param: RowSelectedParams) => void;
+  onRowSelected?: (param: GridRowSelectedParams) => void;
   /**
    * Callback fired when the selection state of one or multiple rows changes.
    * @param param With all properties from [[SelectionChangeParams]].
    */
-  onSelectionModelChange?: (param: SelectionModelChangeParams) => void;
+  onSelectionModelChange?: (param: GridSelectionModelChangeParams) => void;
   /**
    * Callback fired when a click event comes from a column header element.
-   * @param param With all properties from [[ColParams]].
+   * @param param With all properties from [[GridColParams]].
    */
-  onColumnHeaderClick?: (param: ColParams) => void;
+  onColumnHeaderClick?: (param: GridColParams) => void;
   /**
    * Callback fired when the sort model changes before a column is sorted.
-   * @param param With all properties from [[SortModelParams]].
+   * @param param With all properties from [[GridSortModelParams]].
    */
-  onSortModelChange?: (params: SortModelParams) => void;
+  onSortModelChange?: (params: GridSortModelParams) => void;
   /**
    * Callback fired when the Filter model changes before the filters are applied.
-   * @param param With all properties from [[FilterModelParams]].
+   * @param param With all properties from [[GridFilterModelParams]].
    */
-  onFilterModelChange?: (params: FilterModelParams) => void;
+  onFilterModelChange?: (params: GridFilterModelParams) => void;
   /**
    * Callback fired when the current page has changed.
-   * @param param With all properties from [[PageChangeParams]].
+   * @param param With all properties from [[GridPageChangeParams]].
    */
-  onPageChange?: (param: PageChangeParams) => void;
+  onPageChange?: (param: GridPageChangeParams) => void;
   /**
    * Callback fired when the page size has changed.
-   * @param param With all properties from [[PageChangeParams]].
+   * @param param With all properties from [[GridPageChangeParams]].
    */
-  onPageSizeChange?: (param: PageChangeParams) => void;
+  onPageSizeChange?: (param: GridPageChangeParams) => void;
   /**
    * Callback fired when an exception is thrown in the grid, or when the `showError` API method is called.
    */
@@ -276,16 +276,16 @@ export interface GridOptions {
   /**
    * Extend native column types with your new column types.
    */
-  columnTypes: ColumnTypesRecord;
+  columnTypes: GridColumnTypesRecord;
   /**
    * Set the density of the grid.
    */
-  density: Density;
+  density: GridDensity;
   /**
    * Set the locale text of the grid.
    * You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
    */
-  localeText: Partial<LocaleText>;
+  localeText: Partial<GridLocaleText>;
 }
 
 /**
@@ -297,11 +297,11 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   columnBuffer: 2,
   rowsPerPageOptions: [25, 50, 100],
   pageSize: 100,
-  paginationMode: FeatureModeConstant.client,
-  sortingMode: FeatureModeConstant.client,
-  filterMode: FeatureModeConstant.client,
+  paginationMode: GridFeatureModeConstant.client,
+  sortingMode: GridFeatureModeConstant.client,
+  filterMode: GridFeatureModeConstant.client,
   sortingOrder: ['asc', 'desc', null],
-  columnTypes: getDefaultColumnTypes(),
-  density: DensityTypes.Standard,
-  localeText: DEFAULT_LOCALE_TEXT,
+  columnTypes: getGridDefaultColumnTypes(),
+  density: GridDensityTypes.Standard,
+  localeText: GRID_DEFAULT_LOCALE_TEXT,
 };

@@ -1,3 +1,3 @@
 export * from './columnMenuState';
-export * from './useColumnMenu';
+export * from './useGridColumnMenu';
 export * from './columnMenuSelector';

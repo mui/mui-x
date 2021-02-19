@@ -1,9 +1,9 @@
-import { Columns, RowsProp, XGrid } from '@material-ui/x-grid';
+import { GridColumns, GridRowsProp, XGrid } from '@material-ui/x-grid';
 import * as React from 'react';
 import { randomCreatedDate, randomUpdatedDate } from '@material-ui/x-grid-data-generator';
 
 export default function ExceptionDemo() {
-  const columns: Columns = [
+  const columns: GridColumns = [
     { field: 'name', type: 'string' },
     {
       field: 'age',
@@ -15,7 +15,7 @@ export default function ExceptionDemo() {
     { field: 'dateCreated', type: 'date', width: 180 },
     { field: 'lastLogin', type: 'dateTime', width: 180 },
   ];
-  const rows: RowsProp = [
+  const rows: GridRowsProp = [
     {
       id: 1,
       name: 'Damien',
