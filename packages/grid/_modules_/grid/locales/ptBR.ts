@@ -15,13 +15,13 @@ export const ptBR: Localization = getLocalization({
 
   // Columns selector toolbar button text
   toolbarColumns: 'Colunas',
-  toolbarColumnsLabel: 'Exibir Seletor de Colunas',
+  toolbarColumnsLabel: 'Exibir seletor de colunas',
 
   // Filters toolbar button text
   toolbarFilters: 'Filtros',
-  toolbarFiltersLabel: 'Exibir Filtros',
-  toolbarFiltersTooltipHide: 'Ocultar Filtros',
-  toolbarFiltersTooltipShow: 'Exibir Filtros',
+  toolbarFiltersLabel: 'Exibir filtros',
+  toolbarFiltersTooltipHide: 'Ocultar filtros',
+  toolbarFiltersTooltipShow: 'Exibir filtros',
   toolbarFiltersTooltipActive: (count) =>
     `${count} ${count !== 1 ? 'filtros' : 'filtro'} ${count !== 1 ? 'ativos' : 'ativo'}`,
 
@@ -33,7 +33,7 @@ export const ptBR: Localization = getLocalization({
   columnsPanelHideAllButton: 'Ocultar todas',
 
   // Filter panel text
-  filterPanelAddFilter: 'Adicionar Filtro',
+  filterPanelAddFilter: 'Adicionar filtro',
   filterPanelDeleteIconLabel: 'Excluir',
   filterPanelOperators: 'Operadores',
   filterPanelOperatorAnd: 'E',
@@ -50,8 +50,9 @@ export const ptBR: Localization = getLocalization({
   filterOperatorIs: 'é',
   filterOperatorNot: 'não é',
   filterOperatorOnOrAfter: 'em ou após',
-  filterOperatorBefore: 'está antes de',
+  filterOperatorBefore: 'antes de',
   filterOperatorOnOrBefore: 'em ou antes de',
+  filterOperatorAfter: 'após',
 
   // Column menu text
   columnMenuLabel: 'Menu',
@@ -75,7 +76,7 @@ export const ptBR: Localization = getLocalization({
       : `${count.toLocaleString()} linha selecionada`,
 
   // Total rows footer text
-  footerTotalRows: 'Total de Linhas:',
+  footerTotalRows: 'Total de linhas:',
 
   // Pagination footer text
   footerPaginationRowsPerPage: 'Linhas por página:',
