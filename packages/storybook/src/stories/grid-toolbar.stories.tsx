@@ -45,3 +45,19 @@ export const DensitySelectorComfortable = () => {
     </div>
   );
 };
+export const CsvExport = () => {
+  const data = useData(100, 50);
+
+  return (
+    <div style={{ height: 600 }}>
+      <XGrid
+        columns={data.columns}
+        rows={data.rows}
+        checkboxSelection
+        components={{
+          Toolbar: GridToolbar,
+        }}
+      />
+    </div>
+  );
+};

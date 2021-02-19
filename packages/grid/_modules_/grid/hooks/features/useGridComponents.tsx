@@ -38,6 +38,9 @@ export const useGridComponents = (
       DensityStandardIcon:
         (componentSlotsProp && componentSlotsProp.DensityStandardIcon) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.DensityStandardIcon,
+      ExportIcon:
+        (componentSlotsProp && componentSlotsProp.ExportIcon) ||
+        DEFAULT_GRID_SLOTS_COMPONENTS.ExportIcon,
       OpenFilterButtonIcon:
         (componentSlotsProp && componentSlotsProp.OpenFilterButtonIcon) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.OpenFilterButtonIcon,

@@ -13,8 +13,8 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Comfortable',
 
-  // GridColumns selector toolbar button text
-  toolbarColumns: 'GridColumns',
+  // Columns selector toolbar button text
+  toolbarColumns: 'Columns',
   toolbarColumnsLabel: 'Show Column Selector',
 
   // Filters toolbar button text
@@ -24,7 +24,12 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   toolbarFiltersTooltipShow: 'Show Filters',
   toolbarFiltersTooltipActive: (count) => `${count} active filter(s)`,
 
-  // GridColumns panel text
+  // Export selector toolbar button text
+  toolbarExport: 'Export',
+  toolbarExportLabel: 'Export',
+  toolbarExportCSV: 'Download as CSV',
+
+  // Columns panel text
   columnsPanelTextFieldLabel: 'Find column',
   columnsPanelTextFieldPlaceholder: 'Column title',
   columnsPanelDragIconLabel: 'Reorder Column',
@@ -37,7 +42,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   filterPanelOperators: 'Operators',
   filterPanelOperatorAnd: 'And',
   filterPanelOperatorOr: 'Or',
-  filterPanelColumns: 'GridColumns',
+  filterPanelColumns: 'Columns',
   filterPanelInputLabel: 'Value',
   filterPanelInputPlaceholder: 'Filter value',
 

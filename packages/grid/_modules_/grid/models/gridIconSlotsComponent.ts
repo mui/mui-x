@@ -44,4 +44,8 @@ export interface GridIconSlotsComponent {
    * Icon displayed on the comfortable density option in the toolbar.
    */
   DensityComfortableIcon?: React.ElementType;
+  /**
+   * Icon displayed on the open export button present in the toolbar by default.
+   */
+  ExportIcon?: React.ElementType;
 }

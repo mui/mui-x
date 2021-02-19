@@ -99,6 +99,7 @@ Api of the `components` props of type `GridSlotsComponent`
 | <span class="prop-name">DensityCompactIcon</span> | <span class="prop-type">React.ElementType </span> | <span class="prop-type">ViewHeadlineIcon</span> | Icon displayed on the compact density option in the toolbar. |
 | <span class="prop-name">DensityStandardIcon</span> | <span class="prop-type">React.ElementType </span> | <span class="prop-type">TableRowsIcon</span> | Icon displayed on the standard density option in the toolbar. |
 | <span class="prop-name">DensityComfortableIcon</span> | <span class="prop-type">React.ElementType </span> | <span class="prop-type">ViewStreamIcon</span> | Icon displayed on the comfortable density option in the toolbar. |
+| <span class="prop-name">ExportIcon</span> | <span class="prop-type">React.ElementType </span> | <span class="prop-type">GridSaveAltIcon</span> | Icon displayed on the export button in the toolbar. |
 | <span class="prop-name">OpenFilterButtonIcon</span> | <span class="prop-type">React.ElementType </span> | <span class="prop-type">FilterListIcon</span> | Icon displayed on the open filter button present in the toolbar by default. |
 
 ## CSS

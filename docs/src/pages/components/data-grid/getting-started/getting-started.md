@@ -154,7 +154,7 @@ The following table summarizes the features available in the community `DataGrid
 | [Row edition](/components/data-grid/editing/#row-editing)                               |    🚧     |              🚧               |                  🚧                   |
 | [Cell editing](/components/data-grid/editing/#cell-editing)                             |    🚧     |              🚧               |                  🚧                   |
 | **Import & export**                                                                     |           |                               |                                       |
-| [CSV export](/components/data-grid/export/#csv-export)                                  |    🚧     |              🚧               |                  🚧                   |
+| [CSV export](/components/data-grid/export/#csv-export)                                  |    ✅     |              ✅               |                  ✅                   |
 | [Print](/components/data-grid/export/#print)                                            |    🚧     |              🚧               |                  🚧                   |
 | [Excel export](/components/data-grid/export/#excel-export)                              |    ❌     |              ❌               |                  🚧                   |
 | [Clipboard](/components/data-grid/export/#clipboard)                                    |    ❌     |              🚧               |                  🚧                   |

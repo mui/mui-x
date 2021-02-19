@@ -88,7 +88,8 @@ export function GridDensitySelector() {
         startIcon={getSelectedDensityIcon()}
         onClick={handleDensitySelectorOpen}
         aria-label={apiRef!.current.getLocaleText('toolbarDensityLabel')}
-        aria-haspopup="true"
+        aria-expanded={anchorEl ? 'true' : undefined}
+        aria-haspopup="listbox"
       >
         {apiRef!.current.getLocaleText('toolbarDensity')}
       </Button>
@@ -98,7 +99,7 @@ export function GridDensitySelector() {
         onClickAway={handleDensitySelectorClose}
         position="bottom-start"
       >
-        <MenuList id="menu-list-grow" onKeyDown={handleListKeyDown}>
+        <MenuList role="listbox" onKeyDown={handleListKeyDown} autoFocusItem={Boolean(anchorEl)}>
           {renderDensityOptions}
         </MenuList>
       </GridMenu>
