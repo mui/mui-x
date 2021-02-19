@@ -30,7 +30,7 @@ const MAX_CIRCLE_CI_CONCURRENCY = 83;
 module.exports = function setKarmaConfig(config) {
   const baseConfig = {
     basePath: '../',
-    browsers: ['ChromeHeadlessNoSandbox'],
+    browsers: ['chromeHeadless'],
     browserDisconnectTimeout: 120000, // default 2000
     browserDisconnectTolerance: 1, // default 0
     browserNoActivityTimeout: 6 * 60 * 1000, // default 10000
@@ -99,7 +99,7 @@ module.exports = function setKarmaConfig(config) {
       writeToDisk: CI,
     },
     customLaunchers: {
-      ChromeHeadlessNoSandbox: {
+      chromeHeadless: {
         base: 'ChromeHeadless',
         flags: ['--no-sandbox'],
       },
