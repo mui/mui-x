@@ -141,7 +141,7 @@ describe('<DataGrid /> - Toolbar', () => {
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
-      fireEvent.click(getByText('GridColumns'));
+      fireEvent.click(getByText('Columns'));
       fireEvent.click(document.querySelector('[role="tooltip"] [name="id"]'));
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand']);
@@ -161,7 +161,7 @@ describe('<DataGrid /> - Toolbar', () => {
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
-      fireEvent.click(getByText('GridColumns'));
+      fireEvent.click(getByText('Columns'));
       fireEvent.click(getByText('Hide All'));
 
       expect(getColumnHeadersTextContent()).to.deep.equal([]);
@@ -191,7 +191,7 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      fireEvent.click(getByText('GridColumns'));
+      fireEvent.click(getByText('Columns'));
       fireEvent.click(getByText('Show All'));
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
