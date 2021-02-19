@@ -15,19 +15,14 @@ LicenseInfo.setLicenseKey(
 );
 
 const blacklist = [
-  // 'docs-system-spacing', // Unit tests are enough
+  'stories-grid-data/Grid100000.png', // Too slow
   // 'docs-system-typography', // Unit tests are enough
-  // 'docs-versions', // No public components
   // /^docs-guides-.*/, // No public components
 ];
 
 const unusedBlacklistPatterns = new Set(blacklist);
 
 function excludeTest(suite, name) {
-  if (/^docs-premium-themes(.*)/.test(suite)) {
-    return true;
-  }
-
   return blacklist.some((pattern) => {
     if (typeof pattern === 'string') {
       if (pattern === suite) {
@@ -56,10 +51,11 @@ function excludeTest(suite, name) {
 // Get all the tests specifically written for preventing regressions.
 const requireStories = require.context('packages/storybook/src/stories', true, /\.(js|ts|tsx)$/);
 const stories = requireStories.keys().reduce((res, path) => {
-  const suite = path
+  let suite = path
     .replace('./', '')
     .replace('.stories', '')
     .replace(/\.\w+$/, '');
+  suite = `stories-${suite}`;
 
   const cases = requireStories(path);
 
@@ -67,7 +63,7 @@ const stories = requireStories.keys().reduce((res, path) => {
     if (name !== 'default' && !excludeTest(suite, name)) {
       res.push({
         path,
-        suite: `stories-${suite}`,
+        suite,
         name,
         case: cases[name],
       });
