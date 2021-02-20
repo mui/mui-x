@@ -10,7 +10,13 @@ This Material-UI X mono-repo gathers the Material-UI advanced components. It's a
 
 ## How do we decide if a feature is MIT or commercial?
 
-We have been building MIT React components since 2014. we have learned a lot about the strength and weaknesses of the MIT license model. We believe that any open source project will ultimately become the dominant and best solution in any market it enters. The **ultimately** aspect is very important. While for the simple components, we have reached this point a long time ago. We believe that advanced components won't reach this point before multiple decades. So what should we do? Wait? No! We are using a commercial license to sustain the development of the most advanced features, where the open-source model can't.
+We have been building MIT React components since 2014.
+We have learned a lot about the strength and weaknesses of the MIT license model.
+The health of this model is improving every day. As the community grows, it increases the probability that developers contribute improvements to the project.
+However, we believe that have reached the sustainability limits of what the model can support for advancing our mission forward. We have seen too many MIT components moving slowly or getting abandoned. The community isn't contributing improvements as fast as the problems deserved to be solved.
+
+What should we do? Wait? No! We are using a commercial license to forward the development of the most advanced features, where the MIT model can't.
+A solution to a problem should only be commercial if it has no MIT alternatives.
 
 We provide three options:
 
