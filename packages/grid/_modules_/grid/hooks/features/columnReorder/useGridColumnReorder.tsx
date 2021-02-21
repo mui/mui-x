@@ -49,7 +49,7 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
     x: 0,
     y: 0,
   });
-  const removeDnDStylesTimeout = React.useRef<number>();
+  const removeDnDStylesTimeout = React.useRef<any>();
 
   const handleDragEnd = React.useCallback((): void => {
     logger.debug('End dragging col');

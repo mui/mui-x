@@ -21,7 +21,7 @@ export const GridScrollArea = React.memo(function GridScrollArea(props: ScrollAr
   const { scrollDirection } = props;
   const rootRef = React.useRef<HTMLDivElement>(null);
   const api = React.useContext(GridApiContext);
-  const timeout = React.useRef<number>();
+  const timeout = React.useRef<any>();
   const [dragging, setDragging] = React.useState<boolean>(false);
   const scrollPosition = React.useRef<GridScrollParams>({
     left: 0,
