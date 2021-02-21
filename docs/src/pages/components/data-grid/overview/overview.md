@@ -48,19 +48,19 @@ See [Pricing](https://material-ui.com/store/items/material-ui-pro/) for details 
 
 _How do we decide if a feature is MIT or commercial?_
 
-We have been building MIT React components since 2014.
-We have learned a lot about the strength and weaknesses of the MIT license model.
+We have been building MIT React components since 2014,
+and have learned much about the strengths and weaknesses of the MIT license model.
 The health of this model is improving every day. As the community grows, it increases the probability that developers contribute improvements to the project.
-However, we believe that have reached the sustainability limits of what the model can support for advancing our mission forward. We have seen too many MIT components moving slowly or getting abandoned. The community isn't contributing improvements as fast as the problems deserved to be solved.
+However, we believe that we have reached the sustainability limits of what the model can support for advancing our mission forward. We have seen too many MIT licensed components moving slowly or getting abandoned. The community isn't contributing improvements as fast as the problems deserved to be solved.
 
-What should we do? Wait? No! We are using a commercial license to forward the development of the most advanced features, where the MIT model can't.
+We are using a commercial license to forward the development of the most advanced features, where the MIT model can't sustain it.
 A solution to a problem should only be commercial if it has no MIT alternatives.
 
 We provide three options:
 
-- Community. This plan contains the MIT components that are sustainable by the contributions of the open-source community. Free and forever.
-- Pro. This plan contains the features that are at the limit of what the open-source model can sustain. For instance, providing a very comprehensive set of components. From a price perspective, the plan is designed to be accessible by most professionals.
-- Premium. This plan contains the most advanced features.
+- **Community**. This plan contains the MIT components that are sustainable by the contributions of the open-source community. Free forever.
+- **Pro**. This plan contains the features that are at the limit of what the open-source model can sustain. For instance, providing a very comprehensive set of components. From a price perspective, the plan is designed to be accessible to most professionals.
+- **Premium**. This plan contains the most advanced features.
 
 ## Features
 
