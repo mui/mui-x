@@ -34,7 +34,7 @@ export function PaginationDefault() {
 }
 
 export function PageSize100() {
-  const data = useData(200, 20);
+  const data = useData(2000, 20);
 
   return (
     <div className="grid-container">
