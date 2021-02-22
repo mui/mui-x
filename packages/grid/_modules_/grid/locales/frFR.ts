@@ -40,7 +40,7 @@ export const frFR: Localization = getLocalization({
   filterPanelOperatorOr: 'Ou',
   filterPanelColumns: 'Colonnes',
   filterPanelInputLabel: 'Valeur',
-  filterPanelInputPlaceholder: 'Filrer la valeur',
+  filterPanelInputPlaceholder: 'Filtrer la valeur',
 
   // Filter operators text
   filterOperatorContains: 'contient',
@@ -57,9 +57,9 @@ export const frFR: Localization = getLocalization({
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Afficher les colonnes',
-  columnMenuFilter: 'Filtre',
+  columnMenuFilter: 'Filtrer',
   columnMenuHideColumn: 'Cacher',
-  columnMenuUnsort: 'Unsort',
+  columnMenuUnsort: 'Annuler le tri',
   columnMenuSortAsc: 'Tri ascendant',
   columnMenuSortDesc: 'Tri descendant',
 
@@ -76,7 +76,7 @@ export const frFR: Localization = getLocalization({
       : `${count.toLocaleString()} ligne sélectionnée`,
 
   // Total rows footer text
-  footerTotalRows: 'Lignes totale:',
+  footerTotalRows: 'Lignes totales :',
 
   // Pagination footer text
   footerPaginationRowsPerPage: 'Lignes par page :',
