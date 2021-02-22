@@ -1,6 +1,6 @@
-import { getLocalization, Localization } from '../utils';
+import { getGridLocalization, Localization } from '../utils';
 
-export const frFR: Localization = getLocalization({
+export const frFR: Localization = getGridLocalization({
   // Root
   rootGridLabel: 'grid',
   noRowsLabel: 'Pas de résultats',
