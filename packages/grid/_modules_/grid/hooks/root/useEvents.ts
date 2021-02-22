@@ -25,9 +25,9 @@ import {
   GRID_ELEMENT_FOCUS_OUT,
   GRID_COMPONENT_ERROR,
   GRID_STATE_CHANGE,
-  DOUBLE_CELL_CLICK,
-  DOUBLE_ROW_CLICK,
-  DOUBLE_CLICK,
+  GRID_DOUBLE_CELL_CLICK,
+  GRID_DOUBLE_ROW_CLICK,
+  GRID_DOUBLE_CLICK,
 } from '../../constants/eventsConstants';
 import { GRID_CELL_CSS_CLASS, GRID_ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
 import { findParentElementFromClassName, getIdFromRowElem, isGridCell } from '../../utils/domUtils';
@@ -125,10 +125,10 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
       }
 
       if (eventParams.cell) {
-        apiRef.current.publishEvent(DOUBLE_CELL_CLICK, eventParams.cell);
+        apiRef.current.publishEvent(GRID_DOUBLE_CELL_CLICK, eventParams.cell);
       }
       if (eventParams.row) {
-        apiRef.current.publishEvent(DOUBLE_ROW_CLICK, eventParams.row);
+        apiRef.current.publishEvent(GRID_DOUBLE_ROW_CLICK, eventParams.row);
       }
     },
     [apiRef, getEventParams],
@@ -212,7 +212,7 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
       const gridRootElem = gridRootRef.current;
 
       gridRootElem.addEventListener(GRID_CLICK, onClickHandler, { capture: true });
-      gridRootElem.addEventListener(DOUBLE_CLICK, onDoubleClickHandler, { capture: true });
+      gridRootElem.addEventListener(GRID_DOUBLE_CLICK, onDoubleClickHandler, { capture: true });
       gridRootElem.addEventListener(GRID_MOUSE_HOVER, onHoverHandler, { capture: true });
       gridRootElem.addEventListener(GRID_FOCUS_OUT, onFocusOutHandler);
 

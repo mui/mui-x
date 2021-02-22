@@ -23,6 +23,7 @@ import {
 } from '../pagination/gridPaginationReducer';
 import { GridPreferencePanelState } from '../preferencesPanel/gridPreferencePanelState';
 import { getInitialGridRowState, InternalGridRowsState } from '../rows/gridRowsState';
+import { GridEditRowsModel } from '../rows/useGridEditRows';
 import { GridSelectionState } from '../selection/gridSelectionState';
 import { getInitialGridSortingState, GridSortingState } from '../sorting/gridSortingState';
 import {
@@ -32,7 +33,7 @@ import {
 
 export interface GridState {
   rows: InternalGridRowsState;
-  editRows: EditRowsModel;
+  editRows: GridEditRowsModel;
   pagination: PaginationState;
   options: GridOptions;
   isScrolling: boolean;

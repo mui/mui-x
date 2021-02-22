@@ -24,7 +24,7 @@ export function buildGridCellParams({
   api: GridApi;
   element?: HTMLElement;
 }): GridCellParams {
-  const params: CellParams = {
+  const params: GridCellParams = {
     element,
     value,
     field: colDef?.field,

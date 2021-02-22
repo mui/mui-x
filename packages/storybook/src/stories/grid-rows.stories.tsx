@@ -2,12 +2,18 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import { makeStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import { GridRowData, useGridApiRef, XGrid } from '@material-ui/x-grid';
+import {
+  GridCellParams,
+  GridLoadIcon,
+  GridRowData,
+  useGridApiRef,
+  XGrid,
+} from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import {
-  EditCellProps,
-  EditRowsModel,
-} from '../../../grid/_modules_/grid/hooks/features/rows/useEditRows';
+  GridEditCellProps,
+  GridEditRowsModel,
+} from '../../../grid/_modules_/grid/hooks/features/rows/useGridEditRows';
 import { randomInt } from '../data/random-generator';
 
 export default {
@@ -306,12 +312,12 @@ const useStyles = makeStyles({
 });
 
 export function EditRowsPoc() {
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
   const classes = useStyles();
 
   const [selectedCell, setSelectedCell] = React.useState<[string, string] | null>(null);
   const [isEditable, setIsEditable] = React.useState<boolean>(false);
-  const [editRowsModel, setEditRowsModel] = React.useState<EditRowsModel>({});
+  const [editRowsModel, setEditRowsModel] = React.useState<GridEditRowsModel>({});
 
   const editRow = React.useCallback(() => {
     if (!selectedCell) {
@@ -319,7 +325,7 @@ export function EditRowsPoc() {
     }
 
     setEditRowsModel((state) => {
-      const editRowState: EditRowsModel = { ...state };
+      const editRowState: GridEditRowsModel = { ...state };
       editRowState[selectedCell[0]] = editRowState[selectedCell[0]]
         ? editRowState[selectedCell[0]]
         : {};
@@ -329,13 +335,13 @@ export function EditRowsPoc() {
     });
   }, [selectedCell]);
 
-  const onCellClick = React.useCallback((params: CellParams) => {
+  const onCellClick = React.useCallback((params: GridCellParams) => {
     setSelectedCell([params.row.id!.toString(), params.field]);
     setIsEditable(!!params.isEditable);
   }, []);
 
   const onCellDoubleClick = React.useCallback(
-    (params: CellParams) => {
+    (params: GridCellParams) => {
       if (params.isEditable) {
         apiRef.current.setCellMode(params.row.id!.toString(), params.field, 'edit');
       }
@@ -343,7 +349,7 @@ export function EditRowsPoc() {
     [apiRef],
   );
 
-  const isCellEditable = React.useCallback((params: CellParams) => params.row.id !== 0, []);
+  const isCellEditable = React.useCallback((params: GridCellParams) => params.row.id !== 0, []);
 
   const onEditCellValueChange = React.useCallback(({ update }) => {
     if (update.email) {
@@ -362,7 +368,7 @@ export function EditRowsPoc() {
       if (update.email) {
         const newState = {};
         const componentProps = {
-          InputProps: { endAdornment: <LoadIcon /> },
+          InputProps: { endAdornment: <GridLoadIcon /> },
         };
         newState[update.id] = {};
         newState[update.id][field] = { value: update.email, ...componentProps };

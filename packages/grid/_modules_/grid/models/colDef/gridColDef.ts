@@ -97,7 +97,7 @@ export interface GridColDef {
    * Allows to override the component rendered in edit cell mode for this column.
    * @param params
    */
-  renderEditCell?: (params: CellParams) => React.ReactElement;
+  renderEditCell?: (params: GridCellParams) => React.ReactElement;
   /**
    * Class name that will be added in the column header cell.
    */

@@ -1,8 +1,7 @@
-import { GridRowModel, GridRowId, RowModelUpdate } from '../gridRows';
-import { EditRowsModel } from '../../hooks/features/rows/useEditRows';
-import { CellMode } from '../cell';
-import { CellParams } from '../params/cellParams';
-import { RowModel, RowId, RowModelUpdate } from '../rows';
+import { GridCellMode } from '../gridCell';
+import { GridRowModel, GridRowId, GridRowModelUpdate } from '../gridRows';
+import { GridEditRowsModel } from '../../hooks/features/rows/useGridEditRows';
+import { GridCellParams } from '../params/gridCellParams';
 
 /**
  * The Row API interface that is available in the grid [[apiRef]].
@@ -30,7 +29,7 @@ export interface GridRowApi {
    * Update any properties of the current set of GridRowData[].
    * @param updates
    */
-  updateRows: (updates: RowModelUpdate[]) => void;
+  updateRows: (updates: GridRowModelUpdate[]) => void;
   /**
    * Get the GridRowId of a row at a specific position.
    * @param index
@@ -48,10 +47,10 @@ export interface GridRowApi {
   getRowFromId: (id: GridRowId) => GridRowModel;
 }
 
-export interface EditRowApi {
-  setEditRowsModel: (model: EditRowsModel) => void;
-  setCellMode: (rowId: RowId, field: string, mode: CellMode) => void;
-  isCellEditable: (params: CellParams) => boolean;
-  setEditCellValue: (update: RowModelUpdate) => void;
-  commitCellValueChanges: (update: RowModelUpdate) => void;
+export interface GridEditRowApi {
+  setEditRowsModel: (model: GridEditRowsModel) => void;
+  setCellMode: (rowId: GridRowId, field: string, mode: GridCellMode) => void;
+  isCellEditable: (params: GridCellParams) => boolean;
+  setEditCellValue: (update: GridRowModelUpdate) => void;
+  commitCellValueChanges: (update: GridRowModelUpdate) => void;
 }

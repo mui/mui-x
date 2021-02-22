@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { editRowsStateSelector } from '../hooks/features/rows/useEditRows';
+import { gridEditRowsStateSelector } from '../hooks/features/rows/useGridEditRows';
 import {
   GridCellClassParams,
   GridColumns,
@@ -52,7 +52,7 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
   } = props;
   const api = React.useContext(GridApiContext);
   const rowHeight = useGridSelector(api, gridDensityRowHeightSelector);
-  const editRowsState = useGridSelector(api, editRowsStateSelector);
+  const editRowsState = useGridSelector(api, gridEditRowsStateSelector);
 
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const isLastColumn = firstColIdx + colIdx === columns.length - 1;

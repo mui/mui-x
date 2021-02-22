@@ -1,7 +1,7 @@
 /**
  * The Cell mode values.
  */
-export type CellMode = 'edit' | 'view';
+export type GridCellMode = 'edit' | 'view';
 
 /**
  * The cell value type.

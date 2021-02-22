@@ -1,6 +1,6 @@
 import * as React from 'react';
 import TextField, { TextFieldProps } from '@material-ui/core/TextField';
-import { CellParams } from '../../models/params/cellParams';
+import { GridCellParams } from '../../models/params/gridCellParams';
 import { isDate } from '../../utils/utils';
 
 // export interface StringEditCellProps extends CellParams {
@@ -19,7 +19,7 @@ function mapColDefTypeToInputType(type: string) {
       return 'text';
   }
 }
-export function StringEditCell(props: CellParams & TextFieldProps) {
+export function StringEditCell(props: GridCellParams & TextFieldProps) {
   const {
     value,
     api,

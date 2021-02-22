@@ -9,7 +9,7 @@ import { GridRowApi } from '../../../models/api/gridRowApi';
 import {
   checkGridRowHasId,
   GridRowModel,
-  RowModelUpdate,
+  GridRowModelUpdate,
   GridRowId,
   GridRowsProp,
   GridRowIdGetter,
@@ -133,7 +133,7 @@ export const useGridRows = (
   );
 
   const updateRows = React.useCallback(
-    (updates: RowModelUpdate[]) => {
+    (updates: GridRowModelUpdate[]) => {
       // we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
       const uniqUpdates = updates.reduce((uniq, update) => {
         const udpateWithId = addGridRowId(update, getRowIdProp);

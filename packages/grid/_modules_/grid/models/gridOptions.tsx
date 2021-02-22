@@ -1,12 +1,13 @@
 import { GRID_DEFAULT_LOCALE_TEXT } from '../constants/localeTextConstants';
 import { FilterModel } from '../hooks/features/filter/FilterModelState';
-import { EditRowsModel } from '../hooks/features/rows/useEditRows';
+import { GridEditRowsModel } from '../hooks/features/rows/useGridEditRows';
 import { Logger } from '../hooks/utils/useLogger';
 import { GridLocaleText } from './api/gridLocaleTextApi';
 import { GridColumnTypesRecord } from './colDef/gridColTypeDef';
 import { getGridDefaultColumnTypes } from './colDef/gridDefaultColumnTypes';
 import { GridDensity, GridDensityTypes } from './gridDensity';
 import { GridFeatureMode, GridFeatureModeConstant } from './gridFeatureMode';
+import { GridRowModelUpdate } from './gridRows';
 import { GridCellParams } from './params/gridCellParams';
 import { GridColParams } from './params/gridColParams';
 import { GridFilterModelParams } from './params/gridFilterModelParams';
@@ -220,7 +221,7 @@ export interface GridOptions {
    * Callback fired when a double click event comes from a cell element.
    * @param param With all properties from [[CellParams]].
    */
-  onCellDoubleClick?: (param: CellParams) => void;
+  onCellDoubleClick?: (param: GridCellParams) => void;
   /**
    * Callback fired when a hover event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
@@ -235,7 +236,7 @@ export interface GridOptions {
    * Callback fired when a click event comes from a row container element.
    * @param param With all properties from [[RowParams]].
    */
-  onRowDoubleClick?: (param: RowParams) => void;
+  onRowDoubleClick?: (param: GridRowParams) => void;
   /**
    * Callback fired when a hover event comes from a row container element.
    * @param param With all properties from [[GridRowParams]].
@@ -285,15 +286,15 @@ export interface GridOptions {
    */
   onStateChange?: (params: any) => void;
 
-  editRowsModel?: EditRowsModel;
+  editRowsModel?: GridEditRowsModel;
   /**
    * Callback fired when the cell is rendered.
    */
-  isCellEditable?: (params: CellParams) => boolean;
+  isCellEditable?: (params: GridCellParams) => boolean;
   onCellModeChange?: ({ id: RowId, field: string, api: any, mode: CellMode }) => void;
-  onEditCellValueChange?: (params: { api: any; update: RowModelUpdate }) => void;
-  onEditCellValueChangeCommitted?: (params: { api: any; update: RowModelUpdate }) => void;
-  onEditRowModelChange?: (model: EditRowsModel) => void;
+  onEditCellValueChange?: (params: { api: any; update: GridRowModelUpdate }) => void;
+  onEditCellValueChangeCommitted?: (params: { api: any; update: GridRowModelUpdate }) => void;
+  onEditRowModelChange?: (model: GridEditRowsModel) => void;
 
   /**
    * Extend native column types with your new column types.
