@@ -13,6 +13,8 @@ const browserStack = {
   username: process.env.BROWSERSTACK_USERNAME,
   accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
   build,
+  // https://github.com/browserstack/api#timeout300
+  timeout: 2.5 * 60, // Maximum time before a worker is terminated. Default 5 minutes.
 };
 
 process.env.CHROME_BIN = playwright.chromium.executablePath();
@@ -31,7 +33,7 @@ module.exports = function setKarmaConfig(config) {
   const baseConfig = {
     basePath: '../',
     browsers: ['chromeHeadless'],
-    browserDisconnectTimeout: 120000, // default 2000
+    browserDisconnectTimeout: 3 * 60 * 1000, // default 2000
     browserDisconnectTolerance: 1, // default 0
     browserNoActivityTimeout: 6 * 60 * 1000, // default 10000
     colors: true,
@@ -154,7 +156,7 @@ module.exports = function setKarmaConfig(config) {
     const browserstackBrowsersUsed = newConfig.browsers.length - 1;
 
     // default 1000, Avoid Rate Limit Exceeded
-    newConfig.pollingTimeout =
+    newConfig.browserStack.pollingTimeout =
       ((MAX_CIRCLE_CI_CONCURRENCY * AVERAGE_KARMA_BUILD * browserstackBrowsersUsed) /
         MAX_REQUEST_PER_SECOND_BROWSERSTACK) *
       1000;
