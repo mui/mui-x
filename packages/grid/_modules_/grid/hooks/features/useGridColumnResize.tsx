@@ -70,7 +70,7 @@ export const useGridColumnResize = (
   const colElementRef = React.useRef<HTMLDivElement>();
   const colCellElementsRef = React.useRef<NodeListOf<Element>>();
   const initialOffset = React.useRef<number>();
-  const stopResizeEventTimeout = React.useRef<number>();
+  const stopResizeEventTimeout = React.useRef<any>();
   const touchId = React.useRef<number>();
   const columnsHeaderElement = columnsRef.current;
 
