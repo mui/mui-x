@@ -155,7 +155,7 @@ const columns: GridColumns = [
 The `GridColDef` type has properties to apply class names and custom CSS on the cells.
 
 - `cellClassName`: to apply class names on every cell. It can also be a function.
-- `align`: to align the content of the cells. It must be 'left' | 'right' | 'center'.
+- `align`: to align the content of the cells. It must be 'left' | 'right' | 'center'. (Note you must use `headerAlign` to align the content of the header.)
 
 ```tsx
 const columns: GridColumns = [
