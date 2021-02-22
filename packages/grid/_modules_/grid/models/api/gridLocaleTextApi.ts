@@ -54,6 +54,7 @@ export interface GridLocaleText {
   filterOperatorEndsWith: string;
   filterOperatorIs: string;
   filterOperatorNot: string;
+  filterOperatorAfter: string;
   filterOperatorOnOrAfter: string;
   filterOperatorBefore: string;
   filterOperatorOnOrBefore: string;

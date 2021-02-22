@@ -53,6 +53,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   filterOperatorEndsWith: 'ends with',
   filterOperatorIs: 'is',
   filterOperatorNot: 'is not',
+  filterOperatorAfter: 'is after',
   filterOperatorOnOrAfter: 'is on or after',
   filterOperatorBefore: 'is before',
   filterOperatorOnOrBefore: 'is on or before',

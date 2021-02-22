@@ -46,6 +46,7 @@ export const bgBG: Localization = getGridLocalization({
   filterOperatorEndsWith: 'завършва с',
   filterOperatorIs: 'е',
   filterOperatorNot: 'не е',
+  filterOperatorAfter: 'е след',
   filterOperatorOnOrAfter: 'е на или след',
   filterOperatorBefore: 'е преди',
   filterOperatorOnOrBefore: 'е на или преди',
