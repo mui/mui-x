@@ -1,14 +1,14 @@
 import MenuList from '@material-ui/core/MenuList';
 import * as React from 'react';
-import { ColDef } from '../../../models/colDef/colDef';
-import { ColumnsMenuItem } from './ColumnsMenuItem';
-import { FilterMenuItem } from './FilterMenuItem';
-import { HideColMenuItem } from './HideColMenuItem';
-import { SortMenuItems } from './SortMenuItems';
+import { GridColDef } from '../../../models/colDef/gridColDef';
+import { GridColumnsMenuItem } from './GridColumnsMenuItem';
+import { GridFilterMenuItem } from './GridFilterMenuItem';
+import { HideGridColMenuItem } from './HideGridColMenuItem';
+import { SortGridMenuItems } from './SortGridMenuItems';
 
 export interface GridColumnMenuProps {
   hideMenu: () => void;
-  currentColumn: ColDef;
+  currentColumn: GridColDef;
 }
 
 export function GridColumnMenu(props: GridColumnMenuProps) {
@@ -24,10 +24,10 @@ export function GridColumnMenu(props: GridColumnMenuProps) {
   );
   return (
     <MenuList id="menu-list-grow" onKeyDown={handleListKeyDown}>
-      <SortMenuItems onClick={hideMenu} column={currentColumn!} />
-      <FilterMenuItem onClick={hideMenu} column={currentColumn!} />
-      <HideColMenuItem onClick={hideMenu} column={currentColumn!} />
-      <ColumnsMenuItem onClick={hideMenu} column={currentColumn!} />
+      <SortGridMenuItems onClick={hideMenu} column={currentColumn!} />
+      <GridFilterMenuItem onClick={hideMenu} column={currentColumn!} />
+      <HideGridColMenuItem onClick={hideMenu} column={currentColumn!} />
+      <GridColumnsMenuItem onClick={hideMenu} column={currentColumn!} />
     </MenuList>
   );
 }

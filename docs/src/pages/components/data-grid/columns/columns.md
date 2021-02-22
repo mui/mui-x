@@ -11,14 +11,14 @@ components: DataGrid, XGrid
 
 Grid columns are defined with the `columns` prop.
 `columns` expects an array of objects.
-The columns should have this type: `ColDef[]`.
+The columns should have this type: `GridColDef[]`.
 
-`field` is the only required property since it's the column identifier. It's also used to match with `RowData` values.
+`field` is the only required property since it's the column identifier. It's also used to match with `GridRowData` values.
 
 ```ts
-interface ColDef {
+interface GridColDef {
   /**
-   * The column identifier. It's used to match with [[RowData]] values.
+   * The column identifier. It's used to match with [[GridRowData]] values.
    */
   field: string;
   …
@@ -45,13 +45,13 @@ For more advanced header configuration, go to the [rendering section](/component
 
 By default, the columns have a width of 100 pixels.
 This is an arbitrary, easy to remember value.
-To change the width of a column, use the `width` property available in `ColDef`.
+To change the width of a column, use the `width` property available in `GridColDef`.
 
 {{"demo": "pages/components/data-grid/columns/ColumnWidthGrid.js", "bg": "inline"}}
 
 ### Fluid width
 
-Each column has a fixed width of 100 pixels by default, but column fluidity (responsiveness) can be by achieved by setting the `flex` property in `ColDef`.
+Each column has a fixed width of 100 pixels by default, but column fluidity (responsiveness) can be by achieved by setting the `flex` property in `GridColDef`.
 
 The `flex` property accepts a value between 0 and ∞.
 
@@ -59,17 +59,17 @@ The `flex` property works by dividing the remaining space in the grid among all 
 For example, consider a grid with a total width of 500px that has three columns: the first with `width: 200`; the second with `flex: 1`; and third with `flex: 0.5`.
 The first column will be 200px wide, leaving 300px remaining. The column with `flex: 1` is twice the size of `flex: 0.5`, which means that final sizes will be: 200px, 200px, 100px.
 
-Note that `flex` doesn't work together with `width`. If you set both `flex` and `width` in `ColDef`, `flex` will override `width`.
+Note that `flex` doesn't work together with `width`. If you set both `flex` and `width` in `GridColDef`, `flex` will override `width`.
 
 In addition, `flex` does not work if the combined width of the columns that have `width` is more than the width of the grid itself. If that is the case a scroll bar will be visible, and the columns that have `flex` will default back to their base value of 100px.
 
 {{"demo": "pages/components/data-grid/columns/ColumnFluidWidthGrid.js", "bg": "inline"}}
 
-## Column resizing [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
+## Column resizing [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 By default, `XGrid` allows all columns to be resized by dragging the right portion of the column separator.
 
-To prevent the resizing of a column, set `resizable: false` in the `ColDef`.
+To prevent the resizing of a column, set `resizable: false` in the `GridColDef`.
 Alternatively, to disable all columns resize, set the prop `disableColumnResize={true}`.
 
 {{"demo": "pages/components/data-grid/columns/ColumnSizingGrid.js", "disableAd": true, "bg": "inline"}}
@@ -109,7 +109,7 @@ You can extend the native column types with your own by simply spreading the nec
 The demo below defines a new column type: `usdPrice` that extends the native `number` column type.
 
 ```jsx
-const usdPrice: ColTypeDef = {
+const usdPrice: GridColTypeDef = {
   type: 'number',
   width: 130,
   valueFormatter: ({ value }) => valueFormatter.format(Number(value)),
@@ -137,7 +137,7 @@ To disable the column selector, set the prop `disableColumnSelector={true}`.
 
 {{"demo": "pages/components/data-grid/columns/ColumnSelectorGrid.js", "bg": "inline"}}
 
-## Column reorder [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
+## Column reorder [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 By default, `XGrid` allows all column reordering by dragging the header cells and moving them left or right.
 
@@ -161,7 +161,7 @@ In addition, column reordering emits the following events that can be imported:
 
 Grouping columns allows you to have multiple levels of columns in your header and the ability, if needed, to 'open and close' column groups to show and hide additional columns.
 
-## 🚧 Column pinning [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
+## 🚧 Column pinning [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >

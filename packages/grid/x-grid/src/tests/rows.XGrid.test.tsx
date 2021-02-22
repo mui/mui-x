@@ -3,7 +3,7 @@ import { createClientRenderStrictMode } from 'test/utils';
 import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
 import { getColumnValues } from 'test/utils/helperFn';
-import { ApiRef, useApiRef, XGrid } from '@material-ui/x-grid';
+import { GridApiRef, useGridApiRef, XGrid } from '@material-ui/x-grid';
 
 describe('<XGrid /> - Rows ', () => {
   let clock;
@@ -50,9 +50,9 @@ describe('<XGrid /> - Rows ', () => {
     describe('updateRows', () => {
       it('should apply getRowId before updating rows', () => {
         const getRowId = (row) => `${row.clientId}`;
-        let apiRef: ApiRef;
+        let apiRef: GridApiRef;
         const Test = () => {
-          apiRef = useApiRef();
+          apiRef = useGridApiRef();
           return (
             <div style={{ width: 300, height: 300 }}>
               <XGrid {...baselineProps} getRowId={getRowId} apiRef={apiRef} />

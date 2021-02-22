@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Columns, DataGrid } from '@material-ui/data-grid';
+import { GridColumns, DataGrid } from '@material-ui/data-grid';
 import { makeStyles } from '@material-ui/core/styles';
 
-const columns: Columns = [
+const columns: GridColumns = [
   {
     field: 'first',
     headerClassName: 'super-app-theme--header',

@@ -2,16 +2,16 @@ import * as React from 'react';
 import {
   DataGrid,
   GridToolbarContainer,
-  ColumnsToolbarButton,
-  FilterToolbarButton,
+  GridColumnsToolbarButton,
+  GridFilterToolbarButton,
 } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
 function CustomToolbar() {
   return (
     <GridToolbarContainer>
-      <ColumnsToolbarButton />
-      <FilterToolbarButton />
+      <GridColumnsToolbarButton />
+      <GridFilterToolbarButton />
     </GridToolbarContainer>
   );
 }

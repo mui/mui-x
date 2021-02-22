@@ -12,7 +12,7 @@ import { DataGrid, GridToolbar } from '@material-ui/data-grid';
 import {
   COMFORTABLE_DENSITY_FACTOR,
   COMPACT_DENSITY_FACTOR,
-} from 'packages/grid/_modules_/grid/hooks/features/density/useDensity';
+} from 'packages/grid/_modules_/grid/hooks/features/density/useGridDensity';
 
 describe('<DataGrid /> - Toolbar', () => {
   // TODO v5: replace with createClientRender

@@ -27,6 +27,7 @@ function loadServerRows(commodityFilterValue) {
 
 export default function ServerFilterGrid() {
   const [columns] = React.useState([{ field: 'commodity', width: 150 }]);
+
   const [rows, setRows] = React.useState([]);
   const [filterValue, setFilterValue] = React.useState();
   const [loading, setLoading] = React.useState(false);

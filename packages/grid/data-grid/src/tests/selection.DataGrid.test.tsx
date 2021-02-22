@@ -46,6 +46,18 @@ describe('<DataGrid /> - Selection', () => {
       expect(row!.classList.contains('Mui-selected')).to.equal(false, 'class mui-selected 2');
       expect(checkbox).to.have.property('checked', false);
     });
+
+    it('with no rows, the checkbox should not be checked', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid rows={[]} checkboxSelection columns={[{ field: 'brand', width: 100 }]} />
+        </div>,
+      );
+      const selectAll = screen.getByRole('checkbox', {
+        name: /select all rows checkbox/i,
+      });
+      expect(selectAll).to.have.property('checked', false);
+    });
   });
 
   describe('props: selectionModel', () => {

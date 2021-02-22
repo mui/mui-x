@@ -1,8 +1,8 @@
-import { ApiRef } from '../../models/api/apiRef';
+import { GridApiRef } from '../../models/api/gridApiRef';
 import { useGridState } from '../features/core/useGridState';
 import { Logger } from './useLogger';
 
-export function useRenderInfoLog(apiRef: ApiRef, logger: Logger) {
+export function useRenderInfoLog(apiRef: GridApiRef, logger: Logger) {
   const [gridState] = useGridState(apiRef);
 
   if (gridState.rendering.renderContext != null) {

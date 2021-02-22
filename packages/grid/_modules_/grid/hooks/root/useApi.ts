@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { ApiRef } from '../../models/api/apiRef';
+import { GridApiRef } from '../../models/api/gridApiRef';
 import { useLogger } from '../utils/useLogger';
-import { COMPONENT_ERROR, UNMOUNT } from '../../constants/eventsConstants';
-import { useApiMethod } from './useApiMethod';
+import { GRID_COMPONENT_ERROR, GRID_UNMOUNT } from '../../constants/eventsConstants';
+import { useGridApiMethod } from './useGridApiMethod';
 
 export function useApi(
   gridRootRef: React.RefObject<HTMLDivElement>,
   columnHeadersContainerRef: React.RefObject<HTMLDivElement>,
-  apiRef: ApiRef,
+  apiRef: GridApiRef,
 ): boolean {
   const [initialised, setInit] = React.useState(false);
   const logger = useLogger('useApi');
@@ -34,7 +34,7 @@ export function useApi(
 
   const showError = React.useCallback(
     (args) => {
-      publishEvent(COMPONENT_ERROR, args);
+      publishEvent(GRID_COMPONENT_ERROR, args);
     },
     [publishEvent],
   );
@@ -50,13 +50,13 @@ export function useApi(
 
     return () => {
       logger.debug('Unmounting Grid component');
-      api.emit(UNMOUNT);
+      api.emit(GRID_UNMOUNT);
       logger.debug('Clearing all events listeners');
       api.removeAllListeners();
     };
   }, [gridRootRef, logger, apiRef, columnHeadersContainerRef]);
 
-  useApiMethod(apiRef, { subscribeEvent, publishEvent, showError }, 'CoreApi');
+  useGridApiMethod(apiRef, { subscribeEvent, publishEvent, showError }, 'GridCoreApi');
 
   return initialised;
 }

@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { DataGrid, ColDef, RowId } from '@material-ui/data-grid';
+import { DataGrid, GridColDef, GridRowId } from '@material-ui/data-grid';
 
 export interface DataRowModel {
-  id: RowId;
+  id: GridRowId;
   [price: string]: number | string;
 }
 
 export interface GridData {
-  columns: ColDef[];
+  columns: GridColDef[];
   rows: DataRowModel[];
 }
 
@@ -29,7 +29,7 @@ function useData(rowLength: number, columnLength: number) {
       rows.push(row);
     }
 
-    const columns: ColDef[] = [{ field: 'id', hide: true }];
+    const columns: GridColDef[] = [{ field: 'id', hide: true }];
 
     for (let j = 1; j <= columnLength; j += 1) {
       columns.push({ field: `price${j}M`, headerName: `${j}M` });

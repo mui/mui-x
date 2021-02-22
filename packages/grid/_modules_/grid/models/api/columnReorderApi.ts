@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ColDef } from '../colDef/colDef';
+import { GridColDef } from '../colDef/gridColDef';
 
 export interface CursorCoordinates {
   x: number;
@@ -16,7 +16,7 @@ export interface ColumnReorderApi {
    * @param target
    * @returns void
    */
-  onColItemDragStart: (column: ColDef, target: HTMLElement) => void;
+  onColItemDragStart: (column: GridColDef, target: HTMLElement) => void;
   /**
    * Column header drag over event handler.
    * @param event
@@ -30,7 +30,7 @@ export interface ColumnReorderApi {
    * @param coordinates
    * @returns void
    */
-  onColItemDragOver: (column: ColDef, coordinates: CursorCoordinates) => void;
+  onColItemDragOver: (column: GridColDef, coordinates: CursorCoordinates) => void;
   /**
    * Column item drag enter event handler.
    * @param event

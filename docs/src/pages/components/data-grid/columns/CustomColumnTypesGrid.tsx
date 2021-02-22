@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { DataGrid, ColTypeDef } from '@material-ui/data-grid';
+import { DataGrid, GridColTypeDef } from '@material-ui/data-grid';
 import {
   randomStatusOptions,
   randomPrice,
@@ -32,7 +32,7 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
   currency: 'USD',
 });
 
-const usdPrice: ColTypeDef = {
+const usdPrice: GridColTypeDef = {
   type: 'number',
   width: 130,
   valueFormatter: ({ value }) => currencyFormatter.format(Number(value)),

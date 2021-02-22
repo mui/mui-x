@@ -1,0 +1,33 @@
+import { GridColDef } from '../colDef/gridColDef';
+import { GridSortDirection, GridSortModel } from '../gridSortModel';
+import { GridSortModelParams } from '../params/gridSortModelParams';
+
+/**
+ * The sort API interface that is available in the grid [[apiRef]].
+ */
+export interface GridSortApi {
+  /**
+   * Get the sort model currently applied to the grid.
+   */
+  getSortModel: () => GridSortModel;
+  /**
+   * Apply the current sorting model to the rows.
+   */
+  applySorting: () => void;
+  /**
+   * Set the sort model and trigger the sorting of rows.
+   * @param model
+   */
+  setSortModel: (model: GridSortModel) => void;
+  /**
+   * Callback fired when the column sorting changed before the grid has sorted its rows.
+   * @param handler
+   */
+  onSortModelChange: (handler: (param: GridSortModelParams) => void) => () => void;
+  /**
+   * Set the sort direction of a column.
+   * @param column
+   * @param direction
+   */
+  sortColumn: (column: GridColDef, direction?: GridSortDirection) => void;
+}

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { densityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
+import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { useGridState } from '../../hooks/features/core/useGridState';
 import { getTotalHeight } from '../../utils/getTotalHeight';
 import { classnames } from '../../utils';
-import { ApiContext } from '../api-context';
+import { GridApiContext } from '../GridApiContext';
 
 export interface GridWindowProps extends React.HTMLAttributes<HTMLDivElement> {
   size: { width: number; height: number };
@@ -16,9 +16,9 @@ export const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(func
   ref,
 ) {
   const { className, size, ...other } = props;
-  const apiRef = React.useContext(ApiContext);
+  const apiRef = React.useContext(GridApiContext);
   const { autoHeight } = useGridSelector(apiRef, optionsSelector);
-  const headerHeight = useGridSelector(apiRef, densityHeaderHeightSelector);
+  const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
   const [gridState] = useGridState(apiRef!);
 
   React.useEffect(() => {

@@ -2,14 +2,14 @@ import * as React from 'react';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import {
   DataGrid,
-  getNumericColumnOperators,
-  PreferencePanelsValue,
+  getGridNumericColumnOperators,
+  GridPreferencePanelsValue,
 } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
 const priceColumnType = {
   extendType: 'number',
-  filterOperators: getNumericColumnOperators()
+  filterOperators: getGridNumericColumnOperators()
     .filter((operator) => operator.value === '>' || operator.value === '<')
     .map((operator) => {
       return {
@@ -58,7 +58,7 @@ export default function ColumnTypeFilteringGrid() {
         state={{
           preferencePanel: {
             open: true,
-            openedPanelValue: PreferencePanelsValue.filters,
+            openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
       />

@@ -1,5 +1,5 @@
-import { ColDef } from '@material-ui/x-grid';
+import { GridColDef } from '@material-ui/x-grid';
 
-export interface GeneratableColDef extends ColDef {
+export interface GeneratableColDef extends GridColDef {
   generateData: (data: any) => any;
 }

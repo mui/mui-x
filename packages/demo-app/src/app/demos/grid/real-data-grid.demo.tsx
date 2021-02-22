@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { XGrid, LicenseInfo, RowModel, Columns, GridOptions } from '@material-ui/x-grid';
+import { XGrid, LicenseInfo, GridRowModel, GridColumns, GridOptions } from '@material-ui/x-grid';
 import pkg from '@material-ui/x-grid/package.json';
 import { commodityColumns, employeeColumns } from '@material-ui/x-grid-data-generator';
 import { AppBreadcrumbs } from '../../app-breadcrumbs';
@@ -24,7 +24,7 @@ const loadFile = async (file: string) => {
   return data;
 };
 
-const mapDates = (data: RowModel[], columns: Columns): RowModel[] => {
+const mapDates = (data: GridRowModel[], columns: GridColumns): GridRowModel[] => {
   const dateCols = columns.filter((c) => c.type === 'date' || c.type === 'dateTime');
 
   if (dateCols.length === 0) {
@@ -67,7 +67,7 @@ export const RealDataGridDemo: React.FC<{ toggleTheme: () => void; themeId: stri
           data = data.map((row, idx) => ({ ...row, ...{ id: idx } }));
         }
         data.length = size;
-        data = mapDates(data, gridColumns as Columns);
+        data = mapDates(data, gridColumns as GridColumns);
 
         // eslint-disable-next-line no-console
         console.log(`Setting rows with length ${data.length}`);

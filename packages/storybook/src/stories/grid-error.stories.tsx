@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { XGrid, ColDef, useApiRef, GridOverlay } from '@material-ui/x-grid';
+import { XGrid, GridColDef, useGridApiRef, GridOverlay } from '@material-ui/x-grid';
 import '../style/grid-stories.css';
 
 export default {
@@ -13,7 +13,7 @@ export default {
   },
 };
 
-const getColumns: () => ColDef[] = () => [
+const getColumns: () => GridColDef[] = () => [
   { field: 'id' },
   { field: 'firstName' },
   { field: 'lastName' },
@@ -116,7 +116,7 @@ export const ThrowException = () => {
 };
 
 export const ShowErrorApi = () => {
-  const api = useApiRef();
+  const api = useGridApiRef();
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
 
@@ -154,7 +154,7 @@ function CustomErrorOverlay(props) {
 }
 
 export const CustomError = () => {
-  const api = useApiRef();
+  const api = useGridApiRef();
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
 
@@ -210,7 +210,7 @@ function fetchError(): Promise<any> {
 }
 
 export const AsyncErrorApi = () => {
-  const api = useApiRef();
+  const api = useGridApiRef();
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
 

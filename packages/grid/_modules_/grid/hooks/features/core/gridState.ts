@@ -1,60 +1,73 @@
-import { getInitialColumnsState, InternalColumns } from '../../../models/colDef/colDef';
-import { ContainerProps, ScrollBarState, ViewportSizeState } from '../../../models/containerProps';
+import { getInitialGridColumnsState, GridInternalColumns } from '../../../models/colDef/gridColDef';
+import {
+  GridContainerProps,
+  GridScrollBarState,
+  GridViewportSizeState,
+} from '../../../models/gridContainerProps';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
 import { ColumnMenuState } from '../columnMenu/columnMenuState';
 import {
   ColumnReorderState,
-  getInitialColumnReorderState,
+  getInitialGridColumnReorderState,
 } from '../columnReorder/columnReorderState';
-import { DensityState, getInitialDensityState } from '../density/densityState';
-import { FilterModelState, getInitialFilterState } from '../filter/FilterModelState';
-import { getInitialVisibleRowsState, VisibleRowsState } from '../filter/visibleRowsState';
+import { GridGridDensity, getInitialGridDensityState } from '../density/densityState';
+import { FilterModelState, getInitialGridFilterState } from '../filter/FilterModelState';
+import {
+  getInitialVisibleGridRowsState,
+  VisibleGridRowsState,
+} from '../filter/visibleGridRowsState';
 import { KeyboardState } from '../keyboard/keyboardState';
-import { INITIAL_PAGINATION_STATE, PaginationState } from '../pagination/paginationReducer';
-import { PreferencePanelState } from '../preferencesPanel/preferencePanelState';
-import { getInitialRowState, InternalRowsState } from '../rows/rowsState';
-import { SelectionState } from '../selection/selectionState';
-import { getInitialSortingState, SortingState } from '../sorting/sortingState';
-import { getInitialRenderingState, InternalRenderingState } from '../virtualization/renderingState';
+import {
+  GRID_INITIAL_PAGINATION_STATE,
+  PaginationState,
+} from '../pagination/gridPaginationReducer';
+import { GridPreferencePanelState } from '../preferencesPanel/gridPreferencePanelState';
+import { getInitialGridRowState, InternalGridRowsState } from '../rows/gridRowsState';
+import { GridSelectionState } from '../selection/gridSelectionState';
+import { getInitialGridSortingState, GridSortingState } from '../sorting/gridSortingState';
+import {
+  getInitialGridRenderingState,
+  InternalRenderingState,
+} from '../virtualization/renderingState';
 
 export interface GridState {
-  rows: InternalRowsState;
+  rows: InternalGridRowsState;
   pagination: PaginationState;
   options: GridOptions;
   isScrolling: boolean;
-  columns: InternalColumns;
+  columns: GridInternalColumns;
   columnReorder: ColumnReorderState;
   columnMenu: ColumnMenuState;
   rendering: InternalRenderingState;
-  containerSizes: ContainerProps | null;
-  viewportSizes: ViewportSizeState;
-  scrollBar: ScrollBarState;
-  sorting: SortingState;
+  containerSizes: GridContainerProps | null;
+  viewportSizes: GridViewportSizeState;
+  scrollBar: GridScrollBarState;
+  sorting: GridSortingState;
   keyboard: KeyboardState;
-  selection: SelectionState;
+  selection: GridSelectionState;
   filter: FilterModelState;
-  visibleRows: VisibleRowsState;
-  preferencePanel: PreferencePanelState;
-  density: DensityState;
+  visibleRows: VisibleGridRowsState;
+  preferencePanel: GridPreferencePanelState;
+  density: GridGridDensity;
 }
 
-export const getInitialState: () => GridState = () => ({
-  rows: getInitialRowState(),
-  pagination: INITIAL_PAGINATION_STATE,
+export const getInitialGridState: () => GridState = () => ({
+  rows: getInitialGridRowState(),
+  pagination: GRID_INITIAL_PAGINATION_STATE,
   options: DEFAULT_GRID_OPTIONS,
   isScrolling: false,
-  columns: getInitialColumnsState(),
-  columnReorder: getInitialColumnReorderState(),
-  rendering: getInitialRenderingState(),
+  columns: getInitialGridColumnsState(),
+  columnReorder: getInitialGridColumnReorderState(),
+  rendering: getInitialGridRenderingState(),
   containerSizes: null,
   scrollBar: { hasScrollX: false, hasScrollY: false, scrollBarSize: { x: 0, y: 0 } },
   viewportSizes: { width: 0, height: 1 },
-  sorting: getInitialSortingState(),
+  sorting: getInitialGridSortingState(),
   keyboard: { cell: null, isMultipleKeyPressed: false },
   selection: {},
-  filter: getInitialFilterState(),
+  filter: getInitialGridFilterState(),
   columnMenu: { open: false },
   preferencePanel: { open: false },
-  visibleRows: getInitialVisibleRowsState(),
-  density: getInitialDensityState(),
+  visibleRows: getInitialVisibleGridRowsState(),
+  density: getInitialGridDensityState(),
 });

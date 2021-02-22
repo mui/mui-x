@@ -1,6 +1,6 @@
-import { getLocalization, Localization } from '../utils';
+import { getGridLocalization, Localization } from '../utils';
 
-export const ptBR: Localization = getLocalization({
+export const ptBR: Localization = getGridLocalization({
   // Root
   rootGridLabel: 'Grade',
   noRowsLabel: 'Nenhuma linha',

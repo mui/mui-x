@@ -3,7 +3,7 @@ import { ColumnMenuState } from '../../../hooks/features/columnMenu/columnMenuSt
 import { GridState } from '../../../hooks/features/core/gridState';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { findHeaderElementFromField } from '../../../utils/domUtils';
-import { ApiContext } from '../../api-context';
+import { GridApiContext } from '../../GridApiContext';
 import { GridMenu } from '../GridMenu';
 
 const columnMenuStateSelector = (state: GridState) => state.columnMenu;
@@ -17,7 +17,7 @@ export function GridColumnHeaderMenu({
   ContentComponent,
   contentComponentProps,
 }: GridColumnHeaderMenuProps) {
-  const apiRef = React.useContext(ApiContext);
+  const apiRef = React.useContext(GridApiContext);
   const columnMenuState = useGridSelector(apiRef!, columnMenuStateSelector);
   const currentColumn = columnMenuState.field
     ? apiRef?.current.getColumnFromField(columnMenuState.field)

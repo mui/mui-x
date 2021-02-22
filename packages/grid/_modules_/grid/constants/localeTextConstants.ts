@@ -1,6 +1,6 @@
-import { LocaleText } from '../models/api/localeTextApi';
+import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 
-export const DEFAULT_LOCALE_TEXT: LocaleText = {
+export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Root
   rootGridLabel: 'grid',
   noRowsLabel: 'No rows',
@@ -23,6 +23,11 @@ export const DEFAULT_LOCALE_TEXT: LocaleText = {
   toolbarFiltersTooltipHide: 'Hide Filters',
   toolbarFiltersTooltipShow: 'Show Filters',
   toolbarFiltersTooltipActive: (count) => `${count} active filter(s)`,
+
+  // Export selector toolbar button text
+  toolbarExport: 'Export',
+  toolbarExportLabel: 'Export',
+  toolbarExportCSV: 'Download as CSV',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Find column',
@@ -48,6 +53,7 @@ export const DEFAULT_LOCALE_TEXT: LocaleText = {
   filterOperatorEndsWith: 'ends with',
   filterOperatorIs: 'is',
   filterOperatorNot: 'is not',
+  filterOperatorAfter: 'is after',
   filterOperatorOnOrAfter: 'is on or after',
   filterOperatorBefore: 'is before',
   filterOperatorOnOrBefore: 'is on or before',

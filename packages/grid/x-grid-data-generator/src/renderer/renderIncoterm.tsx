@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Tooltip from '@material-ui/core/Tooltip';
 import InfoIcon from '@material-ui/icons/Info';
-import { CellParams, CellValue } from '@material-ui/x-grid';
+import { GridCellParams, GridCellValue } from '@material-ui/x-grid';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
@@ -17,7 +17,7 @@ const useStyles = makeStyles({
 });
 
 interface IncotermProps {
-  value: CellValue;
+  value: GridCellValue;
 }
 
 const Incoterm = React.memo(function Incoterm(props: IncotermProps) {
@@ -42,6 +42,6 @@ const Incoterm = React.memo(function Incoterm(props: IncotermProps) {
   );
 });
 
-export function renderIncoterm(params: CellParams) {
+export function renderIncoterm(params: GridCellParams) {
   return <Incoterm value={params.value!} />;
 }

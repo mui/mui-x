@@ -1,13 +1,13 @@
-import { Density } from '../../../models/density';
+import { GridDensity } from '../../../models/gridDensity';
 import { DEFAULT_GRID_OPTIONS } from '../../../models/gridOptions';
 
-export interface DensityState {
-  value: Density;
+export interface GridGridDensity {
+  value: GridDensity;
   rowHeight: number;
   headerHeight: number;
 }
 
-export function getInitialDensityState(): DensityState {
+export function getInitialGridDensityState(): GridGridDensity {
   return {
     value: DEFAULT_GRID_OPTIONS.density,
     rowHeight: DEFAULT_GRID_OPTIONS.rowHeight,

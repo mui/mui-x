@@ -48,7 +48,7 @@ The same import works with `XGrid` as it's an extension of `DataGrid`.
 ### Supported locales
 
 | Locale              | BCP 47 language tag | Import name |
-| :-------------------| :------------------ | :---------- |
+| :------------------ | :------------------ | :---------- |
 | Bulgarian           | bg-BG               | `bgBG`      |
 | Portuguese (Brazil) | pt-BR               | `ptBR`      |
 

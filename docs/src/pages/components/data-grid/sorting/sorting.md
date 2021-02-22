@@ -12,7 +12,7 @@ components: DataGrid, XGrid
 Single column sorting can be triggered with by clicking a column header.
 Repeat this action to change the sorting direction.
 
-A sorted column can be can pre-configured using the `sortModel` prop of the `ColDef` interface:
+A sorted column can be can pre-configured using the `sortModel` prop of the `GridColDef` interface:
 
 {{"demo": "pages/components/data-grid/sorting/BasicSortingGrid.js", "bg": "inline"}}
 
@@ -26,7 +26,7 @@ The component handles sorting natively for the following types:
 - date
 - dateTime
 
-To extend or modify this behavior in a specific column, you can pass in a custom comparator, and override the `sortComparator` prop of the `ColDef` interface.
+To extend or modify this behavior in a specific column, you can pass in a custom comparator, and override the `sortComparator` prop of the `GridColDef` interface.
 
 In the example below, the `username` column combines `name` and `age`, but it is sorted by `age` using a custom comparator:
 
@@ -51,10 +51,10 @@ In the example below columns are only sortable in descending or ascending order.
 ## Disable sorting
 
 By default, all columns are sortable.
-This can be revoked using the sortable prop of the `ColDef` interface:
+This can be revoked using the sortable prop of the `GridColDef` interface:
 
 ```tsx
-const columns: ColDef = [{ field: 'name', sortable: false }];
+const columns: GridColDef = [{ field: 'name', sortable: false }];
 ```
 
 {{"demo": "pages/components/data-grid/sorting/DisableSortingGrid.js", "bg": "inline"}}
@@ -67,14 +67,14 @@ Then you need to handle the `onSortModelChange` callback, sort the rows on the s
 
 {{"demo": "pages/components/data-grid/sorting/ServerSortingGrid.js", "bg": "inline"}}
 
-## Multi-column sorting [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
+## Multi-column sorting [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 You can sort by multiple columns at the same time using `XGrid`.
 Hold the <kbd>CTRL</kbd> key down while clicking the column header.
 
 {{"demo": "pages/components/data-grid/sorting/MultiSortingGrid.js", "disableAd": true, "bg": "inline"}}
 
-## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
+## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 
