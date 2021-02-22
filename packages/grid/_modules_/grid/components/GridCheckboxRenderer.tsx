@@ -24,7 +24,7 @@ export const GridHeaderCheckbox: React.FC<GridColParams> = () => {
 
   React.useEffect(() => {
     const isNewIndeterminate = totalSelectedRows > 0 && totalSelectedRows !== totalRows;
-    const isNewChecked = totalSelectedRows === totalRows || isIndeterminate;
+    const isNewChecked = (totalRows > 0 && totalSelectedRows === totalRows) || isIndeterminate;
     setChecked(isNewChecked);
     setisIndeterminate(isNewIndeterminate);
   }, [isIndeterminate, totalRows, totalSelectedRows]);
