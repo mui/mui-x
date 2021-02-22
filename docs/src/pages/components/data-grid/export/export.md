@@ -23,7 +23,7 @@ To enable the CSV export you need to compose a toolbar containing the `GridToolb
 
 Optimization of the layout of the grid for print mode. It can also be used to export to PDF.
 
-## 🚧 Excel export [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-x/)
+## 🚧 Excel export [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
@@ -31,7 +31,7 @@ Optimization of the layout of the grid for print mode. It can also be used to ex
 
 You will be able to export the displayed data to Excel with an API call, or using the grid UI.
 
-## 🚧 Clipboard [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-x/)
+## 🚧 Clipboard [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >

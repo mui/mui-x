@@ -18,7 +18,7 @@ Data tables display information in a grid-like format of rows and columns. They 
 
 The features only available in the commercial version are suffixed with a <span class="pro"></span> icon.
 You can check the [feature comparison](/components/data-grid/getting-started/#feature-comparison) for more details.
-See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on purchasing licenses.
+See [Pricing](https://material-ui.com/store/items/material-ui-pro/) for details on purchasing licenses.
 
 ### MIT version
 
@@ -31,7 +31,7 @@ import { DataGrid } from '@material-ui/data-grid';
 
 {{"demo": "pages/components/data-grid/overview/DataGridDemo.js", "defaultCodeOpen": false, "bg": "inline"}}
 
-### Commercial version [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
+### Commercial version [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 The following grid displays 31 columns and 100,000 rows - over 3 million cells in total.
 
@@ -42,7 +42,25 @@ import { XGrid } from '@material-ui/x-grid';
 {{"demo": "pages/components/data-grid/overview/XGridDemo.js", "defaultCodeOpen": false, "disableAd": true, "bg": "inline"}}
 
 You can check the [feature comparison](/components/data-grid/getting-started/#feature-comparison) for more details.
-See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on purchasing licenses.
+See [Pricing](https://material-ui.com/store/items/material-ui-pro/) for details on purchasing licenses.
+
+### MIT vs. commercial
+
+_How do we decide if a feature is MIT or commercial?_
+
+We have been building MIT React components since 2014,
+and have learned much about the strengths and weaknesses of the MIT license model.
+The health of this model is improving every day. As the community grows, it increases the probability that developers contribute improvements to the project.
+However, we believe that we have reached the sustainability limits of what the model can support for advancing our mission forward. We have seen too many MIT licensed components moving slowly or getting abandoned. The community isn't contributing improvements as fast as the problems deserved to be solved.
+
+We are using a commercial license to forward the development of the most advanced features, where the MIT model can't sustain it.
+A solution to a problem should only be commercial if it has no MIT alternatives.
+
+We provide three options:
+
+- **Community**. This plan contains the MIT components that are sustainable by the contributions of the open-source community. Free forever.
+- **Pro**. This plan contains the features that are at the limit of what the open-source model can sustain. For instance, providing a very comprehensive set of components. From a price perspective, the plan is designed to be accessible to most professionals.
+- **Premium**. This plan contains the most advanced features.
 
 ## Features
 
@@ -63,12 +81,15 @@ See [Pricing](https://material-ui.com/store/items/material-ui-x/) for details on
 
 ### 🚧 Upcoming features
 
-While development of the data grid component is moving fast, there are still many additional features that we plan to implement:
+While development of the data grid component is moving fast, there are still many additional features that we plan to implement. Some of them:
 
-- [Cell editing](/components/data-grid/editing/)
+- [Row & Cell editing](/components/data-grid/editing/)
 - Headless (hooks only)
-- [Group & Pivot](/components/data-grid/group-pivot/) <span class="premium"></span>
-- [Export](/components/data-grid/export/)
+- [Column pinning](/components/data-grid/columns/#column-pinning) <span class="pro"></span>
+- [Tree data](/components/data-grid/group-pivot/#tree-data) <span class="pro"></span>
+- [Excel export](/components/data-grid/export/) <span class="premium"></span>
+- [Range selection](/components/data-grid/selection/#range-selection) <span class="premium"></span>
+- [Group, Pivot, Aggregation](/components/data-grid/group-pivot/) <span class="premium"></span>
 
 You can find more details on, the [feature comparison](/components/data-grid/getting-started/#feature-comparison), our living quarterly [roadmap](https://github.com/mui-org/material-ui-x/projects/1) as well as on the open [GitHub issues](https://github.com/mui-org/material-ui-x/issues?q=is%3Aopen+label%3A%22component%3A+DataGrid%22+label%3Aenhancement).
 
