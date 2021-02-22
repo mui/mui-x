@@ -182,8 +182,7 @@ export const useGridVirtualRows = (
 
   const scrollToIndexes = React.useCallback(
     (params: GridCellIndexCoordinates) => {
-
-      if(totalRowCount === 0 || visibleColumns.length === 0) {
+      if (totalRowCount === 0 || visibleColumns.length === 0) {
         return false;
       }
 
@@ -245,7 +244,16 @@ export const useGridVirtualRows = (
 
       return needScroll;
     },
-    [totalRowCount, visibleColumns, logger, apiRef, gridState, windowRef, rowHeight, columnsMeta.positions],
+    [
+      totalRowCount,
+      visibleColumns,
+      logger,
+      apiRef,
+      gridState,
+      windowRef,
+      rowHeight,
+      columnsMeta.positions,
+    ],
   );
 
   const resetScroll = React.useCallback(() => {

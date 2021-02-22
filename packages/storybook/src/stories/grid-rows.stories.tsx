@@ -178,17 +178,17 @@ const columns: any[] = [
 export function ScrollIssue() {
   const apiRef = useGridApiRef();
 
-  React.useEffect(()=> {
-    const timeout = setTimeout(()=> {
-      apiRef.current.scrollToIndexes({colIndex: 0, rowIndex: 6});
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      apiRef.current.scrollToIndexes({ colIndex: 0, rowIndex: 6 });
     }, 0);
 
-    return ()=> clearTimeout(timeout);
+    return () => clearTimeout(timeout);
   }, [apiRef]);
 
   return (
     <div style={{ height: 300, width: 600 }}>
-      <XGrid rows={rows} columns={columns} apiRef={apiRef}/>
+      <XGrid rows={rows} columns={columns} apiRef={apiRef} />
     </div>
   );
 }
