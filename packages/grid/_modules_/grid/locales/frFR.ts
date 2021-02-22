@@ -22,7 +22,8 @@ export const frFR: Localization = getLocalization({
   toolbarFiltersLabel: 'Afficher les filtres',
   toolbarFiltersTooltipHide: 'Cacher les filtres',
   toolbarFiltersTooltipShow: 'Afficher les filtres',
-  toolbarFiltersTooltipActive: (count) => `${count} filtre(s) actif(s)`,
+  toolbarFiltersTooltipActive: (count) =>
+    count > 1 ? `${count} filtre(s) actif(s)` : `${count} filtre actif`,
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Chercher colonne',
@@ -63,7 +64,8 @@ export const frFR: Localization = getLocalization({
   columnMenuSortDesc: 'Tri descendant',
 
   // Column header text
-  columnHeaderFiltersTooltipActive: (count) => `${count} filtre(s) actif(s)`,
+  columnHeaderFiltersTooltipActive: (count) =>
+    count > 1 ? `${count} filtre(s) actif(s)` : `${count} filtre actif`,
   columnHeaderFiltersLabel: 'Afficher les filtres',
   columnHeaderSortIconLabel: 'Trier',
 
