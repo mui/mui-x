@@ -135,11 +135,7 @@ function App() {
   React.useEffect(() => {
     webfontloader.load({
       google: {
-        families: ['Roboto:300,400,500,700', 'Material+Icons'],
-      },
-      custom: {
-        families: ['Font Awesome 5 Free:n9'],
-        urls: ['https://use.fontawesome.com/releases/v5.1.0/css/all.css'],
+        families: ['Roboto:300,400,500,700'],
       },
       timeout: 20000,
       active: () => {
