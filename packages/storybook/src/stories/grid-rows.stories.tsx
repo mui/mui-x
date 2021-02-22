@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Popper from '@material-ui/core/Popper';
 import Paper from '@material-ui/core/Paper';
@@ -201,48 +202,70 @@ const GridCellExpand = React.memo(function CellExpand(props: GridCellExpandProps
   const cellDiv = React.useRef(null);
   const cellValue = React.useRef(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
   const classes = useStyles();
   const [showFullCell, setShowFullCell] = React.useState(false);
   const [showPopper, setShowPopper] = React.useState(false);
 
-  const showCell = React.useCallback(() => {
+  const handleMouseEnter = () => {
+    const isCurrentlyOverflown = isOverflown(cellValue.current!);
+    setShowPopper(isCurrentlyOverflown);
+    setAnchorEl(cellDiv.current);
     setShowFullCell(true);
-  }, []);
-  const hideCell = React.useCallback(() => {
+  };
+
+  const handleMouseLeave = () => {
     setShowFullCell(false);
-  }, []);
+  };
 
   React.useEffect(() => {
-    if (cellDiv.current) {
-      setAnchorEl(cellDiv.current);
+    if (!showFullCell) {
+      return undefined;
     }
-  }, []);
-  React.useEffect(() => {
-    if (cellValue && cellValue.current) {
-      const isCurrentlyOverflown = isOverflown(cellValue.current!);
-      setShowPopper(isCurrentlyOverflown);
+
+    function handleKeyDown(nativeEvent: KeyboardEvent) {
+      // IE11, Edge (prior to using Bink?) use 'Esc'
+      if (nativeEvent.key === 'Escape' || nativeEvent.key === 'Esc') {
+        setShowFullCell(false);
+      }
     }
-  }, [width]);
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [setShowFullCell, showFullCell]);
 
   return (
-    <div ref={wrapper} className={classes.root} onMouseEnter={showCell} onMouseLeave={hideCell}>
+    <div
+      ref={wrapper}
+      className={classes.root}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <div
         ref={cellDiv}
-        style={{ height: 1, width, display: 'block', position: 'absolute', top: 0 }}
+        style={{
+          height: 1,
+          width,
+          display: 'block',
+          position: 'absolute',
+          top: 0,
+        }}
       />
       <div ref={cellValue} className="cellValue">
         {value}
       </div>
       {showPopper && (
         <Popper
-          id={'123'}
           open={showFullCell && anchorEl != null}
           anchorEl={anchorEl}
           style={{ width, marginLeft: -17 }}
         >
-          <Paper elevation={1} style={{ minHeight: wrapper.current!.offsetHeight - 2 }}>
-            <div style={{ padding: 5 }}>{value}</div>
+          <Paper elevation={1} style={{ minHeight: wrapper.current!.offsetHeight - 3 }}>
+            <Typography variant="body2" style={{ padding: 8 }}>
+              {value}
+            </Typography>
           </Paper>
         </Popper>
       )}
@@ -269,43 +292,41 @@ const rows: any = [
     id: 1,
     col1: 'Hello',
     col2: 'World',
-    col3:
-      'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
+    col3: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used.',
   },
   {
     id: 2,
     col1: 'XGrid',
     col2: 'is Awesome',
     col3:
-      'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
+      'In publishing and graphic design, Lorem ipsum is a placeholder text or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
   },
   {
     id: 3,
     col1: 'Material-UI',
     col2: 'is Amazing',
     col3:
-      'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
+      'Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
   },
   {
     id: 4,
     col1: 'Hello',
     col2: 'World',
     col3:
-      'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
+      'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form.',
   },
   {
     id: 5,
     col1: 'XGrid',
     col2: 'is Awesome',
     col3:
-      'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
+      'Typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
   },
   {
     id: 6,
     col1: 'Material-UI',
     col2: 'is Amazing',
-    col3:
-      'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
+    col3: 'Lorem ipsum may be used as a placeholder before final copy is available.',
   },
 ];
 

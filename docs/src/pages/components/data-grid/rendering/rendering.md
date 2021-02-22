@@ -101,6 +101,13 @@ const columns: GridColDef[] = [
 
 {{"demo": "pages/components/data-grid/rendering/RenderCellGrid.js", "defaultCodeOpen": false, "bg": "inline"}}
 
+#### Expand Cell Renderer
+
+By default, the grid will cut the content of a cell and render an ellipsis if the content of the cell does not fit in the cell.
+As workaround, you can create a cell renderer that will allow seeing the full content of the cell in the grid.
+
+{{"demo": "pages/components/data-grid/rendering/RenderExpandCellGrid.js", "defaultCodeOpen": false, "bg": "inline"}}
+
 ### Render header
 
 You can customize the look of each header with the `renderHeader` method.
