@@ -22,7 +22,8 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   toolbarFiltersLabel: 'Show filters',
   toolbarFiltersTooltipHide: 'Hide filters',
   toolbarFiltersTooltipShow: 'Show filters',
-  toolbarFiltersTooltipActive: (count) => `${count} active filter(s)`,
+  toolbarFiltersTooltipActive: (count) =>
+    count !== 1 ? `${count} active filters` : `${count} active filter`,
 
   // Export selector toolbar button text
   toolbarExport: 'Export',
@@ -68,7 +69,8 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   columnMenuSortDesc: 'Sort by DESC',
 
   // Column header text
-  columnHeaderFiltersTooltipActive: (count) => `${count} active filter(s)`,
+  columnHeaderFiltersTooltipActive: (count) =>
+    count !== 1 ? `${count} active filters` : `${count} active filter`,
   columnHeaderFiltersLabel: 'Show filters',
   columnHeaderSortIconLabel: 'Sort',
 
