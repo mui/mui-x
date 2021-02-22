@@ -71,7 +71,7 @@ export const frFR: Localization = getLocalization({
 
   // Rows selected footer text
   footerRowSelected: (count) =>
-    count !== 1
+    count > 1
       ? `${count.toLocaleString()} lignes sélectionnées`
       : `${count.toLocaleString()} ligne sélectionnée`,
 
