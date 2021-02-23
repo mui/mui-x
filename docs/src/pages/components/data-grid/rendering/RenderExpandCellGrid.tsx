@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -24,9 +24,6 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '100%',
       position: 'relative',
       display: 'flex',
-      '& .MuiRating-root': {
-        marginRight: theme.spacing(1),
-      },
       '& .cellValue': {
         whiteSpace: 'nowrap',
         overflow: 'hidden',
@@ -100,7 +97,7 @@ const GridCellExpand = React.memo(function GridCellExpand(
       </div>
       {showPopper && (
         <Popper
-          open={showFullCell && anchorEl != null}
+          open={showFullCell && anchorEl !== null}
           anchorEl={anchorEl}
           style={{ width, marginLeft: -17 }}
         >
@@ -189,7 +186,7 @@ const rows: any = [
 export default function RenderExpandCellGrid() {
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} hideFooter />
+      <DataGrid rows={rows} columns={columns} />
     </div>
   );
 }
