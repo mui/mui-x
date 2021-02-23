@@ -86,7 +86,7 @@ export function PaginationApiTests() {
   }, [apiRef, data]);
 
   const backToFirstPage = () => {
-    apiRef.current.setPage(1);
+    apiRef.current.setPage(0);
   };
   const [myPageSize, setPageSize] = React.useState(33);
   const changePageSizeWithOptionProp = () => {
@@ -181,12 +181,12 @@ export function AutoPagination() {
   );
 }
 
-function loadServerRows(params: GridPageChangeParams): Promise<GridData> {
+function loadServerRows(params: { page: number; pageSize: number }): Promise<GridData> {
   return new Promise<GridData>((resolve) => {
     const data = getData(params.pageSize * 5, 10);
 
     setTimeout(() => {
-      const minId = (params.page - 1) * params.pageSize;
+      const minId = params.page * params.pageSize;
       data.rows.forEach((row) => {
         row.id = (Number(row.id) + minId).toString();
       });
@@ -200,22 +200,29 @@ export function ServerPaginationWithApi() {
   const data = useData(1000, 10);
   const [rows, setRows] = React.useState<GridRowsProp>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
+  const defaultPageSize = 50;
+
+  const loadRows = React.useCallback((params: { page: number; pageSize: number }) => {
+    setLoading(true);
+    loadServerRows(params).then((newData) => {
+      setRows(newData.rows);
+      setLoading(false);
+    });
+  }, []);
 
   React.useEffect(() => {
     const unsubscribe = apiRef.current.onPageChange((params) => {
       action('onPageChange')(params);
-      setLoading(true);
-      loadServerRows(params).then((newData) => {
-        setRows(newData.rows);
-        setLoading(false);
-      });
+      loadRows(params);
     });
+    loadRows({ page: 0, pageSize: defaultPageSize });
+
     return () => {
       if (unsubscribe) {
         unsubscribe();
       }
     };
-  }, [apiRef, data]);
+  }, [apiRef, data, loadRows]);
 
   return (
     <div className="grid-container">
@@ -224,7 +231,7 @@ export function ServerPaginationWithApi() {
         columns={data.columns}
         apiRef={apiRef}
         pagination
-        pageSize={50}
+        pageSize={defaultPageSize}
         rowCount={1000}
         paginationMode={'server'}
         loading={loading}
@@ -238,15 +245,27 @@ export function ServerPaginationWithEventHandler() {
   const data = useData(100, 10);
   const [rows, setRows] = React.useState<GridRowsProp>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
+  const defaultPageSize = 50;
 
-  const onPageChange = React.useCallback((params) => {
-    action('onPageChange')(params);
+  const loadRows = React.useCallback((params: { page: number; pageSize: number }) => {
     setLoading(true);
     loadServerRows(params).then((newData) => {
       setRows(newData.rows);
       setLoading(false);
     });
   }, []);
+
+  const onPageChange = React.useCallback(
+    (params) => {
+      action('onPageChange')(params);
+      loadRows(params);
+    },
+    [loadRows],
+  );
+
+  React.useEffect(() => {
+    loadRows({ page: 0, pageSize: defaultPageSize });
+  }, [apiRef, data, loadRows]);
 
   return (
     <div className="grid-container">
@@ -255,7 +274,7 @@ export function ServerPaginationWithEventHandler() {
         columns={data.columns}
         apiRef={apiRef}
         pagination
-        pageSize={50}
+        pageSize={defaultPageSize}
         rowCount={552}
         paginationMode={'server'}
         onPageChange={onPageChange}
@@ -274,6 +293,7 @@ export function Page1Prop() {
         columns={data.columns}
         pagination
         pageSize={50}
+        page={0}
         onPageChange={(p) => action('pageChange')(p)}
       />
     </div>
@@ -289,7 +309,7 @@ export function Page2Prop() {
         columns={data.columns}
         pagination
         pageSize={50}
-        page={2}
+        page={1}
         onPageChange={(p) => action('pageChange')(p)}
       />
     </div>
@@ -300,7 +320,7 @@ export function Page2Api() {
   const apiRef = useGridApiRef();
 
   React.useEffect(() => {
-    apiRef.current.setPage(2);
+    apiRef.current.setPage(1);
   }, [apiRef]);
 
   return (
