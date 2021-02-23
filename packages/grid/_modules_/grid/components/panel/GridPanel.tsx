@@ -1,5 +1,5 @@
-import { makeStyles, Theme } from '@material-ui/core/styles';
 import * as React from 'react';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
@@ -49,6 +49,15 @@ export function GridPanel(props: GridPanelProps) {
     apiRef!.current.hidePreferences();
   }, [apiRef]);
 
+  const handleKeyDown = React.useCallback(
+    (event) => {
+      if (event.key === 'Escape') {
+        apiRef!.current.hidePreferences();
+      }
+    },
+    [apiRef],
+  );
+
   let anchorEl;
   if (apiRef!.current && apiRef!.current.columnHeadersElementRef?.current) {
     anchorEl = apiRef?.current.columnHeadersElementRef?.current;
@@ -66,7 +75,7 @@ export function GridPanel(props: GridPanelProps) {
       modifiers={getPopperModifiers()}
     >
       <ClickAwayListener onClickAway={handleClickAway}>
-        <Paper className={classes.root} elevation={8}>
+        <Paper className={classes.root} elevation={8} onKeyDown={handleKeyDown}>
           {children}
         </Paper>
       </ClickAwayListener>
