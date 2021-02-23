@@ -6,27 +6,17 @@ import {
   GRID_EDIT_ROW_MODEL_CHANGE,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridEditRowApi } from '../../../models/api/gridRowApi';
-import { GridCellMode, GridCellValue } from '../../../models/gridCell';
+import { GridEditRowApi } from '../../../models/api/gridEditRowApi';
+import { GridCellMode } from '../../../models/gridCell';
+import { GridEditRowsModel } from '../../../models/gridEditRowModel';
 import { GridRowModelUpdate } from '../../../models/gridRows';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 
 import { optionsSelector } from '../../utils/optionsSelector';
-import { GridState } from '../core/gridState';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
-
-export interface GridEditCellProps {
-  value: GridCellValue;
-  [prop: string]: any;
-}
-
-export type GridEditRow = { [field: string]: true | GridEditCellProps };
-export type GridEditRowsModel = { [rowId: string]: GridEditRow };
-
-export const gridEditRowsStateSelector = (state: GridState) => state.editRows;
 
 export function useGridEditRows(apiRef: GridApiRef) {
   const [, setGridState, forceUpdate] = useGridState(apiRef);
@@ -35,6 +25,10 @@ export function useGridEditRows(apiRef: GridApiRef) {
   const setCellEditMode = React.useCallback(
     (id, field) => {
       setGridState((state) => {
+        if (state.editRows[id] && state.editRows[id][field]) {
+          return state;
+        }
+
         const currentCellEditState: GridEditRowsModel = { ...state.editRows };
         currentCellEditState[id] = currentCellEditState[id] || {};
         currentCellEditState[id][field] = true;
@@ -60,7 +54,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
       setGridState((state) => {
         const newEditRowsState: GridEditRowsModel = { ...state.editRows };
 
-        if (!newEditRowsState[id]) {
+        if (!newEditRowsState[id] || !newEditRowsState[id][field]) {
           return state;
         }
 
@@ -100,6 +94,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
     (params: GridCellParams) => {
       return params.colDef.editable && (!options.isCellEditable || options.isCellEditable(params));
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [options.isCellEditable],
   );
 
@@ -112,8 +107,8 @@ export function useGridEditRows(apiRef: GridApiRef) {
         });
         return;
       }
-      //TODO don't update when it's in server mode
-      //How should we turn server mode? featureMode === 'server' ?
+      // TODO don't update when it's in server mode
+      // How should we turn server mode? featureMode === 'server' ?
 
       apiRef.current.updateRows([update]);
       const field = Object.keys(update).find((key) => key !== 'id')!;
@@ -140,7 +135,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
     [forceUpdate, setGridState],
   );
 
-  //TODO add those options.handlers on apiRef
+  // TODO add those options.handlers on apiRef
   useGridApiEventHandler(apiRef, GRID_CELL_VALUE_CHANGE, options.onEditCellValueChange);
   useGridApiEventHandler(
     apiRef,

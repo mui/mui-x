@@ -1,4 +1,4 @@
-import { renderEditStringCell } from '../../components/editCell/StringEditCell';
+import { renderEditInputCell } from '../../components/editCell/EditInputCell';
 import { gridStringNumberComparer } from '../../utils/sortingUtils';
 import { GridColTypeDef } from './gridColDef';
 import { getGridStringOperators } from './gridStringOperators';
@@ -13,5 +13,5 @@ export const GRID_STRING_COL_DEF: GridColTypeDef = {
   type: 'string',
   align: 'left',
   filterOperators: getGridStringOperators(),
-  renderEditCell: renderEditStringCell,
+  renderEditCell: renderEditInputCell,
 };

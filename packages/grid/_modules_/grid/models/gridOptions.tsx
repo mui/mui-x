@@ -1,11 +1,11 @@
 import { GRID_DEFAULT_LOCALE_TEXT } from '../constants/localeTextConstants';
 import { FilterModel } from '../hooks/features/filter/FilterModelState';
-import { GridEditRowsModel } from '../hooks/features/rows/useGridEditRows';
 import { Logger } from '../hooks/utils/useLogger';
 import { GridLocaleText } from './api/gridLocaleTextApi';
 import { GridColumnTypesRecord } from './colDef/gridColTypeDef';
 import { getGridDefaultColumnTypes } from './colDef/gridDefaultColumnTypes';
 import { GridDensity, GridDensityTypes } from './gridDensity';
+import { GridEditRowsModel } from './gridEditRowModel';
 import { GridFeatureMode, GridFeatureModeConstant } from './gridFeatureMode';
 import { GridRowModelUpdate } from './gridRows';
 import { GridCellParams } from './params/gridCellParams';

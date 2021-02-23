@@ -1,7 +1,4 @@
-import { GridCellMode } from '../gridCell';
 import { GridRowModel, GridRowId, GridRowModelUpdate } from '../gridRows';
-import { GridEditRowsModel } from '../../hooks/features/rows/useGridEditRows';
-import { GridCellParams } from '../params/gridCellParams';
 
 /**
  * The Row API interface that is available in the grid [[apiRef]].
@@ -45,12 +42,4 @@ export interface GridRowApi {
    * @param id
    */
   getRowFromId: (id: GridRowId) => GridRowModel;
-}
-
-export interface GridEditRowApi {
-  setEditRowsModel: (model: GridEditRowsModel) => void;
-  setCellMode: (rowId: GridRowId, field: string, mode: GridCellMode) => void;
-  isCellEditable: (params: GridCellParams) => boolean;
-  setEditCellValue: (update: GridRowModelUpdate) => void;
-  commitCellValueChanges: (update: GridRowModelUpdate) => void;
 }

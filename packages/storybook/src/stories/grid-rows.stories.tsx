@@ -1,4 +1,3 @@
-import InputAdornment from '@material-ui/core/InputAdornment';
 import { makeStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
@@ -10,10 +9,7 @@ import {
   XGrid,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
-import {
-  GridEditCellProps,
-  GridEditRowsModel,
-} from '../../../grid/_modules_/grid/hooks/features/rows/useGridEditRows';
+import { GridEditRowsModel } from '../../../grid/_modules_/grid/models/gridEditRowModel';
 import { randomInt } from '../data/random-generator';
 
 export default {
@@ -283,9 +279,9 @@ const baselineEditProps = {
       field: 'fullname',
       editable: true,
       valueGetter: ({ row }) => `${row.firstname} ${row.lastname}`,
-    }, //needs special field, value getter...
-    { field: 'username', editable: true }, //TODO implement server validation
-    { field: 'email', editable: true, width: 150 }, //needs validation
+    },
+    { field: 'username', editable: true },
+    { field: 'email', editable: true, width: 150 },
     { field: 'age', width: 50, type: 'number', editable: true },
     { field: 'DOB', width: 120, type: 'date', editable: true },
     { field: 'meetup', width: 180, type: 'dateTime', editable: true },
@@ -297,7 +293,6 @@ function validateEmail(email) {
   return re.test(String(email).toLowerCase());
 }
 
-//MuiDataGrid-cellEditing
 const useStyles = makeStyles({
   root: {
     '& .MuiDataGrid-cellEditable': {
@@ -311,7 +306,7 @@ const useStyles = makeStyles({
   },
 });
 
-export function EditRowsPoc() {
+export function EditRows() {
   const apiRef = useGridApiRef();
   const classes = useStyles();
 
@@ -351,19 +346,36 @@ export function EditRowsPoc() {
 
   const isCellEditable = React.useCallback((params: GridCellParams) => params.row.id !== 0, []);
 
-  const onEditCellValueChange = React.useCallback(({ update }) => {
-    if (update.email) {
-      const isValid = validateEmail(update.email);
-      // how do we feedback users?
-      // how do we prevent committing?
-      const newState = {};
-      newState[update.id] = { email: { value: update.email, error: !isValid } };
-      setEditRowsModel((state) => ({ ...state, ...newState }));
-    }
-  }, []);
+  const onEditCellValueChange = React.useCallback(
+    ({ update }) => {
+      if (update.email) {
+        const isValid = validateEmail(update.email);
+        const newState = {};
+        newState[update.id] = {
+          ...editRowsModel[update.id],
+          email: { value: update.email, error: !isValid },
+        };
+        setEditRowsModel((state) => ({ ...state, ...newState }));
+      }
+      if (update.DOB) {
+        const newState = {};
+        newState[update.id] = { ...editRowsModel[update.id], DOB: { value: new Date(update.DOB) } };
+        setEditRowsModel((state) => ({ ...state, ...newState }));
+      }
+      if (update.meetup) {
+        const newState = {};
+        newState[update.id] = {
+          ...editRowsModel[update.id],
+          meetup: { value: new Date(update.meetup) },
+        };
+        setEditRowsModel((state) => ({ ...state, ...newState }));
+      }
+    },
+    [editRowsModel],
+  );
 
   const onEditCellValueChangeCommitted = React.useCallback(
-    ({ update, api }) => {
+    ({ update }) => {
       const field = Object.keys(update).find((key) => key !== 'id')!;
       if (update.email) {
         const newState = {};

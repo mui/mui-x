@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { gridEditRowsStateSelector } from '../hooks/features/rows/useGridEditRows';
+import { gridEditRowsStateSelector } from '../hooks/features/rows/gridEditRowsSelector';
 import {
   GridCellClassParams,
   GridColumns,
@@ -98,7 +98,7 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
 
     let formattedValueProp = {};
     if (column.valueFormatter) {
-      //TODO add formatted value to cellParams?
+      // TODO add formatted value to cellParams?
       formattedValueProp = { formattedValue: column.valueFormatter(cellParams) };
     }
 

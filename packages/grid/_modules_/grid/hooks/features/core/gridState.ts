@@ -4,6 +4,7 @@ import {
   GridScrollBarState,
   GridViewportSizeState,
 } from '../../../models/gridContainerProps';
+import { GridEditRowsModel } from '../../../models/gridEditRowModel';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
 import { ColumnMenuState } from '../columnMenu/columnMenuState';
 import {
@@ -23,7 +24,6 @@ import {
 } from '../pagination/gridPaginationReducer';
 import { GridPreferencePanelState } from '../preferencesPanel/gridPreferencePanelState';
 import { getInitialGridRowState, InternalGridRowsState } from '../rows/gridRowsState';
-import { GridEditRowsModel } from '../rows/useGridEditRows';
 import { GridSelectionState } from '../selection/gridSelectionState';
 import { getInitialGridSortingState, GridSortingState } from '../sorting/gridSortingState';
 import {
