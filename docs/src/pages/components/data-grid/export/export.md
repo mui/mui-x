@@ -7,13 +7,13 @@ components: DataGrid, XGrid
 
 <p class="description">Easily export the rows in various file formats such as CSV, Excel, or PDF.</p>
 
-## 🚧 CSV export
+## CSV export
 
-> ⚠️ This feature isn't implemented yet. It's coming.
->
-> 👍 Upvote [issue #197](https://github.com/mui-org/material-ui-x/issues/197) if you want to see it land faster.
+You are able to export the displayed data to CSV with an API call, or using the grid UI.
 
-You will be able to export the displayed data to CSV with an API call, or using the grid UI.
+To enable the CSV export you need to compose a toolbar containing the `GridToolbarExport` component, and apply it using the `Toolbar` key in the grid `components` prop.
+
+{{"demo": "pages/components/data-grid/export/ExportSelectorGrid.js", "bg": "inline"}}
 
 ## 🚧 Print
 
@@ -23,7 +23,7 @@ You will be able to export the displayed data to CSV with an API call, or using 
 
 Optimization of the layout of the grid for print mode. It can also be used to export to PDF.
 
-## 🚧 Excel export [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-x/)
+## 🚧 Excel export [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
@@ -31,7 +31,7 @@ Optimization of the layout of the grid for print mode. It can also be used to ex
 
 You will be able to export the displayed data to Excel with an API call, or using the grid UI.
 
-## 🚧 Clipboard [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-x/)
+## 🚧 Clipboard [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >

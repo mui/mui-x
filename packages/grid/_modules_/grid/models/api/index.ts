@@ -12,3 +12,4 @@ export * from './gridSortApi';
 export * from './gridStateApi';
 export * from './gridVirtualizationApi';
 export * from './gridLocaleTextApi';
+export * from './gridCsvExportApi';

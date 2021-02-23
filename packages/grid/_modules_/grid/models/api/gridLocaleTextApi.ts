@@ -14,7 +14,7 @@ export interface GridLocaleText {
   toolbarDensityStandard: string;
   toolbarDensityComfortable: string;
 
-  // GridColumns selector toolbar button text
+  // Columns selector toolbar button text
   toolbarColumns: React.ReactNode;
   toolbarColumnsLabel: string;
 
@@ -25,7 +25,12 @@ export interface GridLocaleText {
   toolbarFiltersTooltipShow: React.ReactNode;
   toolbarFiltersTooltipActive: (count: number) => React.ReactNode;
 
-  // GridColumns panel text
+  // Export selector toolbar button text
+  toolbarExport: React.ReactNode;
+  toolbarExportLabel: string;
+  toolbarExportCSV: React.ReactNode;
+
+  // Columns panel text
   columnsPanelTextFieldLabel: string;
   columnsPanelTextFieldPlaceholder: string;
   columnsPanelDragIconLabel: string;
@@ -49,6 +54,7 @@ export interface GridLocaleText {
   filterOperatorEndsWith: string;
   filterOperatorIs: string;
   filterOperatorNot: string;
+  filterOperatorAfter: string;
   filterOperatorOnOrAfter: string;
   filterOperatorBefore: string;
   filterOperatorOnOrBefore: string;

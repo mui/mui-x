@@ -15,6 +15,7 @@ import { GridCoreApi } from './gridCoreApi';
 import { GridEventsApi } from './gridEventsApi';
 import { GridDensityApi } from './gridDensityApi';
 import { LocaleTextApi } from './gridLocaleTextApi';
+import { GridCsvExportApi } from './gridCsvExportApi';
 
 /**
  * The full grid API.
@@ -31,6 +32,7 @@ export type GridApi = GridCoreApi &
   GridSortApi &
   GridVirtualizationApi &
   GridPaginationApi &
+  GridCsvExportApi &
   FilterApi &
   ColumnMenuApi &
   ColumnResizeApi &

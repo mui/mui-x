@@ -14,6 +14,7 @@ import {
   GridTripleDotsVerticalIcon,
   GridViewHeadlineIcon,
   GridViewStreamIcon,
+  GridSaveAltIcon,
 } from '../components/icons/index';
 import { GridLoadingOverlay } from '../components/GridLoadingOverlay';
 import { GridColumnMenu, GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenu';
@@ -95,6 +96,7 @@ export const DEFAULT_GRID_SLOTS_ICONS: GridIconSlotsComponent = {
   DensityCompactIcon: GridViewHeadlineIcon,
   DensityStandardIcon: GridTableRowsIcon,
   DensityComfortableIcon: GridViewStreamIcon,
+  ExportIcon: GridSaveAltIcon,
 };
 
 export const DEFAULT_GRID_SLOTS_COMPONENTS: GridApiRefComponentsProperty = {

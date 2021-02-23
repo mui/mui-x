@@ -4,12 +4,30 @@
 
 <h1 align="center">Material-UI X</h1>
 
-The Material-UI X mono-repo gathers Material-UI advanced components.
+The [main repository](https://github.com/mui-org/material-ui) of Material-UI focuses on providing a ready-to-use design system, as well as empowering developers to build their own.
+
+This Material-UI X mono-repo gathers the advanced Material-UI components – it's an extension of the core. The fundamental features are MIT licensed, and the more advanced ones commercial.
+
+## How do we decide if a feature is MIT or commercial?
+
+We have been building MIT React components since 2014,
+and have learned much about the strengths and weaknesses of the MIT license model.
+The health of this model is improving every day. As the community grows, it increases the probability that developers contribute improvements to the project.
+However, we believe that we have reached the sustainability limits of what the model can support for advancing our mission forward. We have seen too many MIT licensed components moving slowly or getting abandoned. The community isn't contributing improvements as fast as the problems deserved to be solved.
+
+We are using a commercial license to forward the development of the most advanced features, where the MIT model can't sustain it.
+A solution to a problem should only be commercial if it has no MIT alternatives.
+
+We provide three options:
+
+- **Community**. This plan contains the MIT components that are sustainable by the contributions of the open-source community. Free forever.
+- **Pro**. This plan contains the features that are at the limit of what the open-source model can sustain. For instance, providing a very comprehensive set of components. From a price perspective, the plan is designed to be accessible to most professionals.
+- **Premium**. This plan contains the most advanced features.
 
 ## Components
 
-- [DataGrid](https://material-ui.com/components/data-grid/) MIT
-- [XGrid](https://material-ui.com/components/data-grid/#commercial-version) Commercial license
+- [DataGrid](https://material-ui.com/components/data-grid/), publised under `@material-ui/data-grid`, MIT licensed.
+- [XGrid](https://material-ui.com/components/data-grid/#commercial-version), publised under `@material-ui/x-grid`, commercially licensed.
 
 ## Questions
 

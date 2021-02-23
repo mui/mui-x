@@ -155,7 +155,7 @@ const columns: GridColumns = [
 The `GridColDef` type has properties to apply class names and custom CSS on the cells.
 
 - `cellClassName`: to apply class names on every cell. It can also be a function.
-- `align`: to align the content of the cells. It must be 'left' | 'right' | 'center'.
+- `align`: to align the content of the cells. It must be 'left' | 'right' | 'center'. (Note you must use `headerAlign` to align the content of the header.)
 
 ```tsx
 const columns: GridColumns = [
@@ -234,7 +234,7 @@ This is a built-in feature of the rendering engine and greatly improves renderin
 
 _unlimited\*: Browsers set a limit on the number of pixels a scroll container can host: 17.5 million pixels on Firefox, 33.5 million pixels on Chrome, Edge, and Safari. A [reproduction](https://codesandbox.io/s/beautiful-silence-1yifo?file=/src/App.js)._
 
-### Row virtualization [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
+### Row virtualization [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 Row virtualization is the insertion and removal of rows as the grid scrolls vertically.
 

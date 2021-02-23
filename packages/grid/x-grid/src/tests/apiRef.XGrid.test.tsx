@@ -40,7 +40,7 @@ describe('<XGrid /> - apiRef', () => {
           brand: 'Puma',
         },
       ],
-      columns: [{ field: 'brand' }],
+      columns: [{ field: 'brand', headerName: 'Brand' }],
     };
   });
 
@@ -150,5 +150,11 @@ describe('<XGrid /> - apiRef', () => {
     ]);
     clock.tick(100);
     expect(getColumnValues()).to.deep.equal(['Apple', 'Atari']);
+  });
+
+  it('getDataAsCsv should return the correct string representation of the grid data', () => {
+    render(<TestCase />);
+
+    expect(apiRef.current.getDataAsCsv()).to.equal('Brand\r\nNike\r\nAdidas\r\nPuma');
   });
 });

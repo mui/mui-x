@@ -7,6 +7,7 @@ import { GridToolbarContainer } from '../containers/GridToolbarContainer';
 import { GridColumnsToolbarButton } from './GridColumnsToolbarButton';
 import { GridDensitySelector } from './GridDensitySelector';
 import { GridFilterToolbarButton } from './GridFilterToolbarButton';
+import { GridToolbarExport } from './GridToolbarExport';
 
 export function GridToolbar() {
   const apiRef = useContext(GridApiContext);
@@ -25,6 +26,7 @@ export function GridToolbar() {
       <GridColumnsToolbarButton />
       <GridFilterToolbarButton />
       <GridDensitySelector />
+      <GridToolbarExport />
     </GridToolbarContainer>
   );
 }
