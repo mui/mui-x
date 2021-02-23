@@ -181,7 +181,7 @@ export function AutoPagination() {
   );
 }
 
-function loadServerRows(params: GridPageChangeParams): Promise<GridData> {
+function loadServerRows(params:  { page: number, pageSize: number }): Promise<GridData> {
   return new Promise<GridData>((resolve) => {
     const data = getData(params.pageSize * 5, 10);
 
@@ -202,7 +202,7 @@ export function ServerPaginationWithApi() {
   const [loading, setLoading] = React.useState<boolean>(false);
   const defaultPageSize = 50;
 
-  const loadRows = React.useCallback((params: GridPageChangeParams) => {
+  const loadRows = React.useCallback((params: { page: number, pageSize: number }) => {
     setLoading(true);
     loadServerRows(params).then((newData) => {
       setRows(newData.rows);
@@ -247,7 +247,7 @@ export function ServerPaginationWithEventHandler() {
   const [loading, setLoading] = React.useState<boolean>(false);
   const defaultPageSize = 50;
 
-  const loadRows = React.useCallback((params: GridPageChangeParams) => {
+  const loadRows = React.useCallback((params:  { page: number, pageSize: number }) => {
     setLoading(true);
     loadServerRows(params).then((newData) => {
       setRows(newData.rows);
