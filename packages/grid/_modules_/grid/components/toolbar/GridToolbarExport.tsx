@@ -5,9 +5,12 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { GridApiContext } from '../GridApiContext';
 import { GridMenu } from '../menu/GridMenu';
 import { GridExportOption } from '../../models';
+import { useId } from '../../utils/material-ui-utils';
 
 export function GridToolbarExport() {
   const apiRef = React.useContext(GridApiContext);
+  const exportButtonId = useId('export-button');
+  const exportMenuId = useId('export-menu');
   const [anchorEl, setAnchorEl] = React.useState(null);
   const ExportIcon = apiRef!.current.components!.ExportIcon!;
 
@@ -48,8 +51,10 @@ export function GridToolbarExport() {
         size="small"
         startIcon={<ExportIcon />}
         onClick={handleExportSelectorOpen}
-        aria-expanded={Boolean(anchorEl)}
-        aria-haspopup="true"
+        aria-expanded={anchorEl ? 'true' : undefined}
+        aria-haspopup="menu"
+        aria-labelledby={exportMenuId}
+        id={exportButtonId}
       >
         {apiRef!.current.getLocaleText('toolbarExport')}
       </Button>
@@ -59,7 +64,14 @@ export function GridToolbarExport() {
         onClickAway={handleExportSelectorClose}
         position="bottom-start"
       >
-        <MenuList onKeyDown={handleListKeyDown} autoFocusItem={Boolean(anchorEl)}>
+        <MenuList
+          id={exportMenuId}
+          className="MuiDataGrid-gridMenuList"
+          role="menu"
+          aria-labelledby={exportButtonId}
+          onKeyDown={handleListKeyDown}
+          autoFocus={Boolean(anchorEl)}
+        >
           {renderExportOptions}
         </MenuList>
       </GridMenu>

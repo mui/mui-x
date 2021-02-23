@@ -10,11 +10,14 @@ import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridDensityOption } from '../../models/api/gridDensityApi';
 import { GridMenu } from '../menu/GridMenu';
+import { useId } from '../../utils/material-ui-utils';
 
 export function GridDensitySelector() {
   const apiRef = React.useContext(GridApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
   const densityValue = useGridSelector(apiRef, gridDensityValueSelector);
+  const densityButtonId = useId('density-button');
+  const densityMenuId = useId('density-menu');
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const DensityCompactIcon = apiRef!.current.components!.DensityCompactIcon!;
@@ -89,7 +92,9 @@ export function GridDensitySelector() {
         onClick={handleDensitySelectorOpen}
         aria-label={apiRef!.current.getLocaleText('toolbarDensityLabel')}
         aria-expanded={anchorEl ? 'true' : undefined}
-        aria-haspopup="listbox"
+        aria-haspopup="menu"
+        aria-labelledby={densityMenuId}
+        id={densityButtonId}
       >
         {apiRef!.current.getLocaleText('toolbarDensity')}
       </Button>
@@ -99,7 +104,14 @@ export function GridDensitySelector() {
         onClickAway={handleDensitySelectorClose}
         position="bottom-start"
       >
-        <MenuList role="listbox" onKeyDown={handleListKeyDown} autoFocusItem={Boolean(anchorEl)}>
+        <MenuList
+          id={densityMenuId}
+          className="MuiDataGrid-gridMenuList"
+          role="menu"
+          aria-labelledby={densityButtonId}
+          onKeyDown={handleListKeyDown}
+          autoFocus={Boolean(anchorEl)}
+        >
           {renderDensityOptions}
         </MenuList>
       </GridMenu>
