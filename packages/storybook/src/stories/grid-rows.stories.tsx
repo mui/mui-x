@@ -340,6 +340,7 @@ export function ExpendRowCell() {
 
     return () => clearTimeout(timeout);
   }, [apiRef]);
+
   return (
     <div style={{ height: 300, width: 600 }}>
       <XGrid rows={rows} columns={columns} apiRef={apiRef} />
