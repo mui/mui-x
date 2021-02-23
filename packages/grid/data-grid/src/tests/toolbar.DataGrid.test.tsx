@@ -162,7 +162,7 @@ describe('<DataGrid /> - Toolbar', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
       fireEvent.click(getByText('Columns'));
-      fireEvent.click(getByText('Hide All'));
+      fireEvent.click(getByText('Hide all'));
 
       expect(getColumnHeadersTextContent()).to.deep.equal([]);
     });
@@ -192,7 +192,7 @@ describe('<DataGrid /> - Toolbar', () => {
       );
 
       fireEvent.click(getByText('Columns'));
-      fireEvent.click(getByText('Show All'));
+      fireEvent.click(getByText('Show all'));
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
     });
