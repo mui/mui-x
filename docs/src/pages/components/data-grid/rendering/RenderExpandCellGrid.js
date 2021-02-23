@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-prop-types */
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
@@ -119,12 +120,10 @@ RenderCellExpand.propTypes = {
   /**
    * The column of the row that the current cell belongs to.
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   colDef: PropTypes.any.isRequired,
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */
-  // eslint-disable-next-line react/no-unused-prop-types
   value: PropTypes.oneOfType([
     PropTypes.instanceOf(Date),
     PropTypes.number,
