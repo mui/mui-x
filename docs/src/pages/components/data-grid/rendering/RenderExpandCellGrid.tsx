@@ -15,7 +15,7 @@ interface GridCellExpandProps {
   width: number;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     root: {
       alignItems: 'center',

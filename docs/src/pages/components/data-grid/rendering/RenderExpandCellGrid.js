@@ -1,12 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Typography } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import { makeStyles } from '@material-ui/core/styles';
 import { DataGrid, isOverflown } from '@material-ui/data-grid';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     alignItems: 'center',
     lineHeight: '24px',
@@ -14,9 +14,6 @@ const useStyles = makeStyles((theme) => ({
     height: '100%',
     position: 'relative',
     display: 'flex',
-    '& .MuiRating-root': {
-      marginRight: theme.spacing(1),
-    },
     '& .cellValue': {
       whiteSpace: 'nowrap',
       overflow: 'hidden',
@@ -87,7 +84,7 @@ const GridCellExpand = React.memo(function GridCellExpand(props) {
       </div>
       {showPopper && (
         <Popper
-          open={showFullCell && anchorEl != null}
+          open={showFullCell && anchorEl !== null}
           anchorEl={anchorEl}
           style={{ width, marginLeft: -17 }}
         >
@@ -118,6 +115,23 @@ function RenderCellExpand(params) {
     />
   );
 }
+
+RenderCellExpand.propTypes = {
+  /**
+   * The column of the row that the current cell belongs to.
+   */
+  colDef: PropTypes.any.isRequired,
+  /**
+   * The cell value, but if the column has valueGetter, use getValue.
+   */
+  value: PropTypes.oneOfType([
+    PropTypes.instanceOf(Date),
+    PropTypes.number,
+    PropTypes.object,
+    PropTypes.string,
+    PropTypes.bool,
+  ]),
+};
 
 const columns = [
   { field: 'col1', headerName: 'Column 1', width: 80, renderCell: RenderCellExpand },
@@ -182,7 +196,7 @@ const rows = [
 export default function RenderExpandCellGrid() {
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} hideFooter />
+      <DataGrid rows={rows} columns={columns} />
     </div>
   );
 }
