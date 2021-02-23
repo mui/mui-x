@@ -116,23 +116,6 @@ function RenderCellExpand(params) {
   );
 }
 
-RenderCellExpand.propTypes = {
-  /**
-   * The column of the row that the current cell belongs to.
-   */
-  colDef: PropTypes.any.isRequired,
-  /**
-   * The cell value, but if the column has valueGetter, use getValue.
-   */
-  value: PropTypes.oneOfType([
-    PropTypes.instanceOf(Date),
-    PropTypes.number,
-    PropTypes.object,
-    PropTypes.string,
-    PropTypes.bool,
-  ]),
-};
-
 const columns = [
   { field: 'col1', headerName: 'Column 1', width: 80, renderCell: RenderCellExpand },
   {
