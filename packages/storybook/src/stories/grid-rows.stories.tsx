@@ -11,6 +11,7 @@ import {
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { GridEditRowsModel } from '../../../grid/_modules_/grid/models/gridEditRowModel';
 import { randomInt } from '../data/random-generator';
+import { GridCellValue } from '@material-ui/x-grid';
 
 export default {
   title: 'X-Grid Tests/Rows',
