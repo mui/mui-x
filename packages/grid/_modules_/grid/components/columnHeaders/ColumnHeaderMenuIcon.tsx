@@ -1,5 +1,5 @@
 import * as React from 'react';
-// @ts-ignore TODO: remove once the module is fixed
+// @ts-expect-error fixed in Material-UI v5, types definitions were added.
 import { unstable_useId as useId } from '@material-ui/core/utils';
 import IconButton from '@material-ui/core/IconButton';
 import { gridColumnMenuStateSelector } from '../../hooks/features/columnMenu/columnMenuSelector';
