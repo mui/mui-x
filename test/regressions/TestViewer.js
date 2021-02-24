@@ -104,6 +104,7 @@ function TestViewer(props) {
 TestViewer.propTypes = {
   children: PropTypes.node.isRequired,
   classes: PropTypes.object.isRequired,
+  dataGridContainer: PropTypes.bool.isRequired,
 };
 
 export default withStyles(styles)(TestViewer);
