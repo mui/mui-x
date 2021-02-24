@@ -165,10 +165,15 @@ function App() {
             return null;
           }
 
+          let dataGridContainer = false;
+          if (path.indexOf('/docs-components-data-grid') === 0 || path.indexOf('/stories-') === 0) {
+            dataGridContainer = true;
+          }
+
           return (
             <Route key={path} exact path={path}>
               {testPrepared && (
-                <TestViewer>
+                <TestViewer dataGridContainer={dataGridContainer}>
                   <TestCase />
                 </TestViewer>
               )}
