@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { useFakeTimers } from 'sinon';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -27,10 +28,27 @@ const styles = (theme) => ({
     display: 'inline-block',
     padding: theme.spacing(1),
   },
+  dataGridContainer: {
+    minHeight: 400,
+    maxWidth: 500,
+    display: 'flex',
+    flexDirection: 'column',
+    // Workaround the min-height limitation
+    '& .grid-container': {
+      position: 'relative',
+      '& > .MuiDataGrid-root': {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        left: 0,
+        bottom: 0,
+      },
+    },
+  },
 });
 
 function TestViewer(props) {
-  const { children, classes } = props;
+  const { children, classes, dataGridContainer } = props;
 
   // We're simulating `act(() => ReactDOM.render(children))`
   // In the end children passive effects should've been flushed.
@@ -71,7 +89,13 @@ function TestViewer(props) {
   }, []);
 
   return (
-    <div aria-busy={!ready} data-testid="testcase" className={classes.root}>
+    <div
+      aria-busy={!ready}
+      data-testid="testcase"
+      className={clsx(classes.root, {
+        [classes.dataGridContainer]: dataGridContainer,
+      })}
+    >
       {children}
     </div>
   );
@@ -80,6 +104,7 @@ function TestViewer(props) {
 TestViewer.propTypes = {
   children: PropTypes.node.isRequired,
   classes: PropTypes.object.isRequired,
+  dataGridContainer: PropTypes.bool.isRequired,
 };
 
 export default withStyles(styles)(TestViewer);
