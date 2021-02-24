@@ -23,7 +23,7 @@ const Template: Story<Omit<DataGridProps, 'columns' | 'rows'> & StoryExtraArgs> 
   sortingOrder,
   ...args
 }) => {
-  const { rows, columns } = useData(2000, 200);
+  const { rows, columns } = useData(200, 20);
   if (resizable) {
     columns.forEach((c) => {
       c.resizable = true;

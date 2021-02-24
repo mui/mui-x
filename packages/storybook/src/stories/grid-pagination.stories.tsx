@@ -24,7 +24,7 @@ export default {
 } as Meta;
 
 export function PaginationDefault() {
-  const data = useData(2000, 200);
+  const data = useData(200, 20);
 
   return (
     <div className="grid-container">
@@ -34,7 +34,7 @@ export function PaginationDefault() {
 }
 
 export function PageSize100() {
-  const data = useData(2000, 200);
+  const data = useData(2000, 20);
 
   return (
     <div className="grid-container">
@@ -44,7 +44,7 @@ export function PageSize100() {
 }
 
 export const PaginationArgs: Story = (args) => {
-  const data = useData(2000, 200);
+  const data = useData(200, 20);
 
   return <XGrid rows={data.rows} columns={data.columns} {...args} />;
 };
@@ -61,7 +61,7 @@ PaginationArgs.args = {
 };
 
 export function HiddenPagination() {
-  const data = useData(2000, 200);
+  const data = useData(200, 20);
 
   return (
     <div className="grid-container">

@@ -1,4 +1,3 @@
-// import './style/real-data-stories.css';
 import {
   generateTotalPrice,
   randomCommodity,
