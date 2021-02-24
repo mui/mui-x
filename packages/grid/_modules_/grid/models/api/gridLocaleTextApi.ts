@@ -81,6 +81,16 @@ export interface GridLocaleText {
 
   // Pagination footer text
   footerPaginationRowsPerPage: React.ReactNode;
+  footerPaginationGetItemAriaLabel: (type: string) => string;
+  footerPaginationLabelDisplayedRows: ({
+    from,
+    to,
+    count,
+  }: {
+    from: number;
+    to: number;
+    count: number;
+  }) => React.ReactNode;
 }
 
 export type LocaleTextValue = string | React.ReactNode | Function;

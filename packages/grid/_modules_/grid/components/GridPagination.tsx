@@ -85,6 +85,8 @@ export function GridPagination() {
       }
       rowsPerPage={paginationState.pageSize}
       labelRowsPerPage={apiRef!.current.getLocaleText('footerPaginationRowsPerPage')}
+      getItemAriaLabel={apiRef!.current.getLocaleText('footerPaginationGetItemAriaLabel')}
+      labelDisplayedRows={apiRef!.current.getLocaleText('footerPaginationLabelDisplayedRows')}
       {...getPaginationChangeHandlers()}
     />
   );

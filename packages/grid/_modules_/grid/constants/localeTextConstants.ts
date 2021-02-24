@@ -85,4 +85,19 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Pagination footer text
   footerPaginationRowsPerPage: 'Rows per page:',
+  footerPaginationGetItemAriaLabel: (type) => {
+    if (type === 'first') {
+      return 'Go to first page';
+    }
+    if (type === 'last') {
+      return 'Go to last page';
+    }
+    if (type === 'next') {
+      return 'Go to next page';
+    }
+
+    return 'Go to previous page';
+  },
+  footerPaginationLabelDisplayedRows: ({ from, to, count }) =>
+    `${from}-${to} of ${count !== -1 ? count : `more than ${to}`}`,
 };
