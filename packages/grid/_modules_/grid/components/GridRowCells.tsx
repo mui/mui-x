@@ -89,7 +89,7 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
 
     const editCellState = editRowsState[row.id] && editRowsState[row.id][column.field];
     let cellComponent: React.ReactElement | null = null;
-   
+
     if (column.valueGetter) {
       // Value getter override the original value
       value = column.valueGetter(cellParams);
@@ -108,8 +108,11 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
     }
 
     if (editCellState != null && column.renderEditCell) {
-      const params = editCellState === true || typeof editCellState !== 'object' ? cellParams : { ...cellParams, ...editCellState };
-      if(editCellState !== true && typeof editCellState !== 'object') {
+      const params =
+        editCellState === true || typeof editCellState !== 'object'
+          ? cellParams
+          : { ...cellParams, ...editCellState };
+      if (editCellState !== true && typeof editCellState !== 'object') {
         params.value = editCellState;
       }
       cellComponent = column.renderEditCell(params);

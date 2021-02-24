@@ -1,6 +1,6 @@
 import { GridCellMode, GridCellValue } from '../gridCell';
 import { GridEditRowsModel, GridEditRowUpdate } from '../gridEditRowModel';
-import { GridRowId, GridRowModelUpdate } from '../gridRows';
+import { GridRowId } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
 
 export interface GridEditRowApi {
@@ -32,16 +32,14 @@ export interface GridEditRowApi {
    */
   commitCellValueChanges: (update: GridEditRowUpdate) => void;
   /**
-   * get the cell value of a row and field 
+   * get the cell value of a row and field
    * @param id
    * @param field
    */
-  getCellValue: (id: GridRowId, field: string)=> GridCellValue;
+  getCellValue: (id: GridRowId, field: string) => GridCellValue;
 
   onEditRowModelChange: (handler: (param: { update: GridEditRowUpdate }) => void) => void;
   onCellModeChange: (handler: (param: { update: GridEditRowUpdate }) => void) => void;
-  onEditCellValueChangeCommitted: (
-    handler: (param: { update: GridEditRowUpdate }) => void,
-  ) => void;
+  onEditCellValueChangeCommitted: (handler: (param: { update: GridEditRowUpdate }) => void) => void;
   onEditCellValueChange: (handler: (param: { update: GridEditRowUpdate }) => void) => void;
 }
