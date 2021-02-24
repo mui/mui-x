@@ -314,7 +314,7 @@ export function EditRowsControl() {
   const apiRef = useGridApiRef();
   const classes = useStyles();
 
-  const [selectedCell, setSelectedCell] = React.useState<[string, string] | null>(null);
+  const [selectedCell, setSelectedCell] = React.useState<[string, string,  GridCellValue] | null>(null);
   const [isEditable, setIsEditable] = React.useState<boolean>(false);
   const [editRowsModel, setEditRowsModel] = React.useState<GridEditRowsModel>({});
 
@@ -327,15 +327,15 @@ export function EditRowsControl() {
       const editRowState: GridEditRowsModel = { ...state };
       editRowState[selectedCell[0]] = editRowState[selectedCell[0]]
         ? editRowState[selectedCell[0]]
-        : {};
-      editRowState[selectedCell[0]][selectedCell[1]] = true;
+        : {id: selectedCell[0]};
+      editRowState[selectedCell[0]][selectedCell[1]] = selectedCell[2];
 
       return { ...state, ...editRowState };
     });
   }, [selectedCell]);
 
   const onCellClick = React.useCallback((params: GridCellParams) => {
-    setSelectedCell([params.row.id!.toString(), params.field]);
+    setSelectedCell([params.row.id!.toString(), params.field, params.value]);
     setIsEditable(!!params.isEditable);
   }, []);
 
