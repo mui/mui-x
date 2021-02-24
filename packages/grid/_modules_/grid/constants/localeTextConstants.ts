@@ -15,14 +15,15 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Columns selector toolbar button text
   toolbarColumns: 'Columns',
-  toolbarColumnsLabel: 'Show Column Selector',
+  toolbarColumnsLabel: 'Select columns',
 
   // Filters toolbar button text
   toolbarFilters: 'Filters',
-  toolbarFiltersLabel: 'Show Filters',
-  toolbarFiltersTooltipHide: 'Hide Filters',
-  toolbarFiltersTooltipShow: 'Show Filters',
-  toolbarFiltersTooltipActive: (count) => `${count} active filter(s)`,
+  toolbarFiltersLabel: 'Show filters',
+  toolbarFiltersTooltipHide: 'Hide filters',
+  toolbarFiltersTooltipShow: 'Show filters',
+  toolbarFiltersTooltipActive: (count) =>
+    count !== 1 ? `${count} active filters` : `${count} active filter`,
 
   // Export selector toolbar button text
   toolbarExport: 'Export',
@@ -32,12 +33,12 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Columns panel text
   columnsPanelTextFieldLabel: 'Find column',
   columnsPanelTextFieldPlaceholder: 'Column title',
-  columnsPanelDragIconLabel: 'Reorder Column',
-  columnsPanelShowAllButton: 'Show All',
-  columnsPanelHideAllButton: 'Hide All',
+  columnsPanelDragIconLabel: 'Reorder column',
+  columnsPanelShowAllButton: 'Show all',
+  columnsPanelHideAllButton: 'Hide all',
 
   // Filter panel text
-  filterPanelAddFilter: 'Add Filter',
+  filterPanelAddFilter: 'Add filter',
   filterPanelDeleteIconLabel: 'Delete',
   filterPanelOperators: 'Operators',
   filterPanelOperatorAnd: 'And',
@@ -64,12 +65,13 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   columnMenuFilter: 'Filter',
   columnMenuHideColumn: 'Hide',
   columnMenuUnsort: 'Unsort',
-  columnMenuSortAsc: 'Sort by Asc',
-  columnMenuSortDesc: 'Sort by Desc',
+  columnMenuSortAsc: 'Sort by ASC',
+  columnMenuSortDesc: 'Sort by DESC',
 
   // Column header text
-  columnHeaderFiltersTooltipActive: (count) => `${count} active filter(s)`,
-  columnHeaderFiltersLabel: 'Show Filters',
+  columnHeaderFiltersTooltipActive: (count) =>
+    count !== 1 ? `${count} active filters` : `${count} active filter`,
+  columnHeaderFiltersLabel: 'Show filters',
   columnHeaderSortIconLabel: 'Sort',
 
   // Rows selected footer text
