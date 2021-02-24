@@ -115,7 +115,7 @@ const GridCellExpand = React.memo(function GridCellExpand(
   );
 });
 
-function RenderCellExpand(params: GridCellParams) {
+function renderCellExpand(params: GridCellParams) {
   return (
     <GridCellExpand
       value={params.value ? params.value.toString() : ''}
@@ -125,18 +125,18 @@ function RenderCellExpand(params: GridCellParams) {
 }
 
 const columns: GridColDef[] = [
-  { field: 'col1', headerName: 'Column 1', width: 80, renderCell: RenderCellExpand },
+  { field: 'col1', headerName: 'Column 1', width: 80, renderCell: renderCellExpand },
   {
     field: 'col2',
     headerName: 'Column 2',
     width: 100,
-    renderCell: RenderCellExpand,
+    renderCell: renderCellExpand,
   },
   {
     field: 'col3',
     headerName: 'Column 3',
     width: 150,
-    renderCell: RenderCellExpand,
+    renderCell: renderCellExpand,
   },
 ];
 const rows: any = [

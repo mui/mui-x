@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unused-prop-types */
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
@@ -108,7 +107,7 @@ GridCellExpand.propTypes = {
   width: PropTypes.number.isRequired,
 };
 
-function RenderCellExpand(params) {
+function renderCellExpand(params) {
   return (
     <GridCellExpand
       value={params.value ? params.value.toString() : ''}
@@ -116,7 +115,8 @@ function RenderCellExpand(params) {
     />
   );
 }
-RenderCellExpand.propTypes = {
+
+renderCellExpand.propTypes = {
   /**
    * The column of the row that the current cell belongs to.
    */
@@ -132,19 +132,20 @@ RenderCellExpand.propTypes = {
     PropTypes.bool,
   ]),
 };
+
 const columns = [
-  { field: 'col1', headerName: 'Column 1', width: 80, renderCell: RenderCellExpand },
+  { field: 'col1', headerName: 'Column 1', width: 80, renderCell: renderCellExpand },
   {
     field: 'col2',
     headerName: 'Column 2',
     width: 100,
-    renderCell: RenderCellExpand,
+    renderCell: renderCellExpand,
   },
   {
     field: 'col3',
     headerName: 'Column 3',
     width: 150,
-    renderCell: RenderCellExpand,
+    renderCell: renderCellExpand,
   },
 ];
 
