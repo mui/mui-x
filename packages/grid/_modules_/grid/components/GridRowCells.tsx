@@ -89,7 +89,7 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
 
     const editCellState = editRowsState[row.id] && editRowsState[row.id][column.field];
     let cellComponent: React.ReactElement | null = null;
-
+   
     if (column.valueGetter) {
       // Value getter override the original value
       value = column.valueGetter(cellParams);
@@ -102,12 +102,16 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
       formattedValueProp = { formattedValue: column.valueFormatter(cellParams) };
     }
 
-    if (!editCellState && column.renderCell) {
+    if (editCellState == null && column.renderCell) {
       cellComponent = column.renderCell(cellParams);
       cssClassProp = { cssClass: `${cssClassProp.cssClass} MuiDataGrid-cellWithRenderer` };
     }
-    if (editCellState && column.renderEditCell) {
-      const params = editCellState === true ? cellParams : { ...cellParams, ...editCellState };
+
+    if (editCellState != null && column.renderEditCell) {
+      const params = editCellState === true || typeof editCellState !== 'object' ? cellParams : { ...cellParams, ...editCellState };
+      if(editCellState !== true && typeof editCellState !== 'object') {
+        params.value = editCellState;
+      }
       cellComponent = column.renderEditCell(params);
       cssClassProp = { cssClass: `${cssClassProp.cssClass} MuiDataGrid-cellEditing` };
     }
