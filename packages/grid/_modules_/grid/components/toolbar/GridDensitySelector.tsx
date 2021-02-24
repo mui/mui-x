@@ -1,4 +1,6 @@
 import * as React from 'react';
+// @ts-ignore TODO: remove once the module is fixed
+import { unstable_useId as useId } from '@material-ui/core/utils';
 import MenuList from '@material-ui/core/MenuList';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -10,7 +12,6 @@ import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridDensityOption } from '../../models/api/gridDensityApi';
 import { GridMenu } from '../menu/GridMenu';
-import { useId } from '../../utils/material-ui-utils';
 
 export function GridDensitySelector() {
   const apiRef = React.useContext(GridApiContext);

@@ -1,11 +1,12 @@
 import * as React from 'react';
+// @ts-ignore TODO: remove once the module is fixed
+import { unstable_useId as useId } from '@material-ui/core/utils';
 import MenuList from '@material-ui/core/MenuList';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import { GridApiContext } from '../GridApiContext';
 import { GridMenu } from '../menu/GridMenu';
 import { GridExportOption } from '../../models';
-import { useId } from '../../utils/material-ui-utils';
 
 export function GridToolbarExport() {
   const apiRef = React.useContext(GridApiContext);

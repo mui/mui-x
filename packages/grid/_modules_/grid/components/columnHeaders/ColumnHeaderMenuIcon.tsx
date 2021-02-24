@@ -1,11 +1,12 @@
 import * as React from 'react';
+// @ts-ignore TODO: remove once the module is fixed
+import { unstable_useId as useId } from '@material-ui/core/utils';
 import IconButton from '@material-ui/core/IconButton';
 import { gridColumnMenuStateSelector } from '../../hooks/features/columnMenu/columnMenuSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { classnames } from '../../utils/classnames';
 import { GridApiContext } from '../GridApiContext';
 import { GridColDef } from '../../models/colDef/gridColDef';
-import { useId } from '../../utils/material-ui-utils';
 
 export interface ColumnHeaderFilterIconProps {
   column: GridColDef;
