@@ -75,7 +75,7 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
       onChange={onValueChange}
       type={inputType}
       style={{ width: '100%' }}
-      error
+      {...inputBaseProps}
     />
   );
 }

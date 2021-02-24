@@ -161,6 +161,12 @@ export interface GridOptions {
    */
   filterMode?: GridFeatureMode;
   /**
+   * Edit cell or rows can be processed on the server or client-side.
+   * Set it to 'client' if you would like to handle editing on the client-side.
+   * Set it to 'server' if you would like to handle editing on the server-side.
+   */
+  editMode?: GridFeatureMode;
+  /**
    * If `true`, the footer component is hidden.
    * @default false
    */

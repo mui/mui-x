@@ -9,4 +9,11 @@ export interface GridEditRowApi {
   isCellEditable: (params: GridCellParams) => boolean;
   setEditCellValue: (update: GridRowModelUpdate) => void;
   commitCellValueChanges: (update: GridRowModelUpdate) => void;
+
+  onEditRowModelChange: (handler: (param: { update: GridRowModelUpdate }) => void) => void;
+  onCellModeChange: (handler: (param: { update: GridRowModelUpdate }) => void) => void;
+  onEditCellValueChangeCommitted: (
+    handler: (param: { update: GridRowModelUpdate }) => void,
+  ) => void;
+  onEditCellValueChange: (handler: (param: { update: GridRowModelUpdate }) => void) => void;
 }

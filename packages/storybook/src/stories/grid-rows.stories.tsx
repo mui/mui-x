@@ -303,6 +303,10 @@ const useStyles = makeStyles({
       backgroundColor: 'rgb(255,215,115, 0.19)',
       color: '#1a3e72',
     },
+    '& .Mui-error': {
+      backgroundColor: 'rgb(126,10,15, 0.1)',
+      color: '#750f0f',
+    },
   },
 });
 
@@ -420,6 +424,7 @@ export function EditRows() {
           onEditCellValueChange={onEditCellValueChange}
           onEditCellValueChangeCommitted={onEditCellValueChangeCommitted}
           editRowsModel={editRowsModel}
+          editMode="server"
         />
       </div>
     </React.Fragment>
