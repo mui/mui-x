@@ -2,16 +2,16 @@ import { makeStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import {
+  GridCellValue,
   GridCellParams,
+  GridEditRowsModel,
   GridLoadIcon,
   GridRowData,
   useGridApiRef,
   XGrid,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
-import { GridEditRowsModel } from '../../../grid/_modules_/grid/models/gridEditRowModel';
 import { randomInt } from '../data/random-generator';
-import { GridCellValue } from '@material-ui/x-grid';
 
 export default {
   title: 'X-Grid Tests/Rows',
