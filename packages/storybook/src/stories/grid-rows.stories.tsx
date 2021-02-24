@@ -362,6 +362,7 @@ export function EditRowsControl() {
         setEditRowsModel((state) => ({ ...state, ...newState }));
         return;
       }
+      // todo handle native types like date internally?
       if (update.DOB) {
         const newState = {};
         newState[update.id] = { ...editRowsModel[update.id], DOB: { value: new Date(update.DOB) } };
