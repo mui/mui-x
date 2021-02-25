@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {
   GRID_CELL_MODE_CHANGE,
-  GRID_CELL_VALUE_CHANGE,
-  GRID_CELL_VALUE_CHANGE_COMMITTED,
+  GRID_CELL_CHANGE,
+  GRID_CELL_CHANGE_COMMITTED,
   GRID_EDIT_ROW_MODEL_CHANGE,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
@@ -10,8 +10,13 @@ import { GridEditRowApi } from '../../../models/api/gridEditRowApi';
 import { GridCellMode } from '../../../models/gridCell';
 import { GridEditRowsModel, GridEditRowUpdate } from '../../../models/gridEditRowModel';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
-import { GridRowId, GridRowModelUpdate } from '../../../models/gridRows';
+import { GridRowId } from '../../../models/gridRows';
 import { GridCellParams } from '../../../models/params/gridCellParams';
+import {
+  GridCellModeChangeParams,
+  GridEditCellParams,
+  GridEditRowModelParams,
+} from '../../../models/params/gridEditCellParams';
 import { buildGridCellParams } from '../../../utils/paramsUtils';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
@@ -91,12 +96,13 @@ export function useGridEditRows(apiRef: GridApiRef) {
 
         return { ...state, editRows: newEditRowsState };
       });
-      apiRef.current.publishEvent(GRID_CELL_MODE_CHANGE, {
+      const params: GridCellModeChangeParams = {
         id,
         field,
         mode: 'view',
         api: apiRef.current,
-      });
+      };
+      apiRef.current.publishEvent(GRID_CELL_MODE_CHANGE, params);
       forceUpdate();
     },
     [apiRef, forceUpdate, setGridState],
@@ -121,32 +127,33 @@ export function useGridEditRows(apiRef: GridApiRef) {
     [options.isCellEditable],
   );
 
-  const commitCellValueChanges = React.useCallback(
-    (update: GridRowModelUpdate) => {
+  const commitCellChange = React.useCallback(
+    (id: GridRowId, update: GridEditRowUpdate) => {
       if (options.editMode === GridFeatureModeConstant.server) {
-        apiRef.current.publishEvent(GRID_CELL_VALUE_CHANGE_COMMITTED, {
-          update,
-          api: apiRef.current,
-        });
+        const params: GridEditCellParams = { api: apiRef.current, id, update };
+        apiRef.current.publishEvent(GRID_CELL_CHANGE_COMMITTED, params);
         return;
       }
-      apiRef.current.updateRows([update]);
       const field = Object.keys(update).find((key) => key !== 'id')!;
-      apiRef.current.setCellMode(update.id, field, 'view');
+      const rowUpdate = { id };
+      rowUpdate[field] = update[field].value;
+      apiRef.current.updateRows([rowUpdate]);
+      apiRef.current.setCellMode(id, field, 'view');
     },
     [apiRef, options.editMode],
   );
 
-  const setEditCellValue = React.useCallback(
-    (update: GridEditRowUpdate) => {
+  const setEditCellProps = React.useCallback(
+    (id: GridRowId, update: GridEditRowUpdate) => {
       if (options.editMode === GridFeatureModeConstant.server) {
-        apiRef.current.publishEvent(GRID_CELL_VALUE_CHANGE, { update, api: apiRef.current });
+        const params: GridEditCellParams = { api: apiRef.current, id, update };
+        apiRef.current.publishEvent(GRID_CELL_CHANGE, params);
         return;
       }
       setGridState((state) => {
         const newState = { ...state.editRows };
-        newState[update.id] = {
-          ...state.editRows[update.id],
+        newState[id] = {
+          ...state.editRows[id],
           ...update,
         };
 
@@ -168,37 +175,34 @@ export function useGridEditRows(apiRef: GridApiRef) {
     [forceUpdate, setGridState],
   );
   // TODO cleanup params What should we put?
-  const onEditCellValueChange = React.useCallback(
-    (handler: (param: { update: GridEditRowUpdate }) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(GRID_CELL_VALUE_CHANGE, handler);
-    },
-    [apiRef],
-  );
-  const onEditCellValueChangeCommitted = React.useCallback(
-    (handler: (param: { update: GridEditRowUpdate }) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(GRID_CELL_VALUE_CHANGE_COMMITTED, handler);
-    },
-    [apiRef],
-  );
-  const onCellModeChange = React.useCallback(
-    (handler: (param: { update: GridEditRowUpdate }) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(GRID_CELL_MODE_CHANGE, handler);
-    },
-    [apiRef],
-  );
   const onEditRowModelChange = React.useCallback(
-    (handler: (param: { update: GridEditRowUpdate }) => void): (() => void) => {
+    (handler: (param: GridEditRowModelParams) => void): (() => void) => {
       return apiRef.current.subscribeEvent(GRID_EDIT_ROW_MODEL_CHANGE, handler);
     },
     [apiRef],
   );
-  // TODO add those options.handlers on apiRef
-  useGridApiEventHandler(apiRef, GRID_CELL_VALUE_CHANGE, options.onEditCellValueChange);
-  useGridApiEventHandler(
-    apiRef,
-    GRID_CELL_VALUE_CHANGE_COMMITTED,
-    options.onEditCellValueChangeCommitted,
+  const onCellModeChange = React.useCallback(
+    (handler: (param: GridCellModeChangeParams) => void): (() => void) => {
+      return apiRef.current.subscribeEvent(GRID_CELL_MODE_CHANGE, handler);
+    },
+    [apiRef],
   );
+  const onEditCellChange = React.useCallback(
+    (handler: (param: GridEditCellParams) => void): (() => void) => {
+      return apiRef.current.subscribeEvent(GRID_CELL_CHANGE, handler);
+    },
+    [apiRef],
+  );
+  const onEditCellChangeCommitted = React.useCallback(
+    (handler: (param: GridEditCellParams) => void): (() => void) => {
+      return apiRef.current.subscribeEvent(GRID_CELL_CHANGE_COMMITTED, handler);
+    },
+    [apiRef],
+  );
+
+  // TODO add those options.handlers on apiRef
+  useGridApiEventHandler(apiRef, GRID_CELL_CHANGE, options.onEditCellChange);
+  useGridApiEventHandler(apiRef, GRID_CELL_CHANGE_COMMITTED, options.onEditCellChangeCommitted);
   useGridApiEventHandler(apiRef, GRID_CELL_MODE_CHANGE, options.onCellModeChange);
   useGridApiEventHandler(apiRef, GRID_EDIT_ROW_MODEL_CHANGE, options.onEditRowModelChange);
 
@@ -209,11 +213,11 @@ export function useGridEditRows(apiRef: GridApiRef) {
       setCellMode,
       onEditRowModelChange,
       onCellModeChange,
-      onEditCellValueChangeCommitted,
-      onEditCellValueChange,
+      onEditCellChangeCommitted,
+      onEditCellChange,
       isCellEditable,
-      commitCellValueChanges,
-      setEditCellValue,
+      commitCellChange,
+      setEditCellProps,
       setEditRowsModel,
     },
     'EditRowApi',

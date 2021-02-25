@@ -7,7 +7,6 @@ import { getGridDefaultColumnTypes } from './colDef/gridDefaultColumnTypes';
 import { GridDensity, GridDensityTypes } from './gridDensity';
 import { GridEditRowsModel } from './gridEditRowModel';
 import { GridFeatureMode, GridFeatureModeConstant } from './gridFeatureMode';
-import { GridRowModelUpdate } from './gridRows';
 import { GridCellParams } from './params/gridCellParams';
 import { GridColParams } from './params/gridColParams';
 import { GridFilterModelParams } from './params/gridFilterModelParams';
@@ -18,6 +17,11 @@ import { GridSelectionModelChangeParams } from './params/gridSelectionModelChang
 import { GridSortModelParams } from './params/gridSortModelParams';
 import { GridSelectionModel } from './gridSelectionModel';
 import { GridSortDirection, GridSortModel } from './gridSortModel';
+import {
+  GridCellModeChangeParams,
+  GridEditCellParams,
+  GridEditRowModelParams,
+} from './params/gridEditCellParams';
 
 // TODO add multiSortKey
 /**
@@ -297,10 +301,10 @@ export interface GridOptions {
    * Callback fired when the cell is rendered.
    */
   isCellEditable?: (params: GridCellParams) => boolean;
-  onCellModeChange?: ({ id: RowId, field: string, api: any, mode: CellMode }) => void;
-  onEditCellValueChange?: (params: { api: any; update: GridRowModelUpdate }) => void;
-  onEditCellValueChangeCommitted?: (params: { api: any; update: GridRowModelUpdate }) => void;
-  onEditRowModelChange?: (model: GridEditRowsModel) => void;
+  onEditRowModelChange?: (params: GridEditRowModelParams) => void;
+  onCellModeChange?: (params: GridCellModeChangeParams) => void;
+  onEditCellChange?: (params: GridEditCellParams) => void;
+  onEditCellChangeCommitted?: (params: GridEditCellParams) => void;
 
   /**
    * Extend native column types with your new column types.

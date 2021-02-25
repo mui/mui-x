@@ -10,8 +10,8 @@ export const GRID_SCROLL = 'scroll';
 export const GRID_DRAGEND = 'dragend';
 
 // XGRID events
-export const GRID_CELL_VALUE_CHANGE = 'cellValueChange';
-export const GRID_CELL_VALUE_CHANGE_COMMITTED = 'cellValueChangeCommitted';
+export const GRID_CELL_CHANGE = 'cellChange';
+export const GRID_CELL_CHANGE_COMMITTED = 'cellChangeCommitted';
 export const GRID_CELL_MODE_CHANGE = 'cellModeChange';
 export const GRID_EDIT_ROW_MODEL_CHANGE = 'editRowModelChange';
 export const GRID_COMPONENT_ERROR = 'componentError';

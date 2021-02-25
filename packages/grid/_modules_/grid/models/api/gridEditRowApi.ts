@@ -2,6 +2,11 @@ import { GridCellMode, GridCellValue } from '../gridCell';
 import { GridEditRowsModel, GridEditRowUpdate } from '../gridEditRowModel';
 import { GridRowId } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
+import {
+  GridCellModeChangeParams,
+  GridEditCellParams,
+  GridEditRowModelParams,
+} from '../params/gridEditCellParams';
 
 export interface GridEditRowApi {
   /**
@@ -15,7 +20,7 @@ export interface GridEditRowApi {
    * @param string
    * @param 'edit' | 'view'
    */
-  setCellMode: (rowId: GridRowId, field: string, mode: GridCellMode) => void;
+  setCellMode: (id: GridRowId, field: string, mode: GridCellMode) => void;
   /**
    * Returns true if the cell is editable
    * @param params
@@ -25,12 +30,12 @@ export interface GridEditRowApi {
    * Set the edit cell input props
    * @param update
    */
-  setEditCellValue: (update: GridEditRowUpdate) => void;
+  setEditCellProps: (id: GridRowId, update: GridEditRowUpdate) => void;
   /**
    * commit the cell value changes to update the cell value.
    * @param update
    */
-  commitCellValueChanges: (update: GridEditRowUpdate) => void;
+  commitCellChange: (id: GridRowId, update: GridEditRowUpdate) => void;
   /**
    * get the cell value of a row and field
    * @param id
@@ -38,8 +43,8 @@ export interface GridEditRowApi {
    */
   getCellValue: (id: GridRowId, field: string) => GridCellValue;
 
-  onEditRowModelChange: (handler: (param: { update: GridEditRowUpdate }) => void) => void;
-  onCellModeChange: (handler: (param: { update: GridEditRowUpdate }) => void) => void;
-  onEditCellValueChangeCommitted: (handler: (param: { update: GridEditRowUpdate }) => void) => void;
-  onEditCellValueChange: (handler: (param: { update: GridEditRowUpdate }) => void) => void;
+  onEditRowModelChange: (handler: (param: GridEditRowModelParams) => void) => void;
+  onCellModeChange: (handler: (param: GridCellModeChangeParams) => void) => void;
+  onEditCellChangeCommitted: (handler: (param: GridEditCellParams) => void) => void;
+  onEditCellChange: (handler: (param: GridEditCellParams) => void) => void;
 }

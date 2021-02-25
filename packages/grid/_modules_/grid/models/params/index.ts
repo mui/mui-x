@@ -1,4 +1,5 @@
 export * from './gridCellParams';
+export * from './gridEditCellParams';
 export * from './gridColParams';
 export * from './gridBaseComponentProps';
 export * from './gridFilterModelParams';

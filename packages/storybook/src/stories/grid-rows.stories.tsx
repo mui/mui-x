@@ -14,6 +14,7 @@ import {
   GridRowData,
   useGridApiRef,
   XGrid,
+  GridEditCellParams,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { randomInt } from '../data/random-generator';
@@ -464,7 +465,9 @@ export function EditRowsControl() {
   const apiRef = useGridApiRef();
   const classes = useEditCellStyles();
 
-  const [selectedCell, setSelectedCell] = React.useState<[string, string,  GridCellValue] | null>(null);
+  const [selectedCell, setSelectedCell] = React.useState<[string, string, GridCellValue] | null>(
+    null,
+  );
   const [isEditable, setIsEditable] = React.useState<boolean>(false);
   const [editRowsModel, setEditRowsModel] = React.useState<GridEditRowsModel>({});
 
@@ -472,13 +475,12 @@ export function EditRowsControl() {
     if (!selectedCell) {
       return;
     }
+    const [id, field, value] = selectedCell;
 
     setEditRowsModel((state) => {
       const editRowState: GridEditRowsModel = { ...state };
-      editRowState[selectedCell[0]] = editRowState[selectedCell[0]]
-        ? editRowState[selectedCell[0]]
-        : {id: selectedCell[0]};
-      editRowState[selectedCell[0]][selectedCell[1]] = selectedCell[2];
+      editRowState[id] = editRowState[id] ? { ...editRowState[id] } : {};
+      editRowState[id][field] = { value };
 
       return { ...state, ...editRowState };
     });
@@ -500,37 +502,21 @@ export function EditRowsControl() {
 
   const isCellEditable = React.useCallback((params: GridCellParams) => params.row.id !== 0, []);
 
-  const onEditCellValueChange = React.useCallback(
-    ({ update }) => {
+  const onEditCellChange = React.useCallback(
+    ({ id, update }: GridEditCellParams) => {
       if (update.email) {
-        const isValid = validateEmail(update.email);
+        const isValid = validateEmail(update.email.value);
         const newState = {};
-        newState[update.id] = {
-          ...editRowsModel[update.id],
-          email: { value: update.email, error: !isValid },
-        };
-        setEditRowsModel((state) => ({ ...state, ...newState }));
-        return;
-      }
-      // todo handle native types like date internally?
-      if (update.DOB) {
-        const newState = {};
-        newState[update.id] = { ...editRowsModel[update.id], DOB: { value: new Date(update.DOB) } };
-        setEditRowsModel((state) => ({ ...state, ...newState }));
-        return;
-      }
-      if (update.meetup) {
-        const newState = {};
-        newState[update.id] = {
-          ...editRowsModel[update.id],
-          meetup: { value: new Date(update.meetup) },
+        newState[id] = {
+          ...editRowsModel[id],
+          email: { ...update.email, error: !isValid },
         };
         setEditRowsModel((state) => ({ ...state, ...newState }));
         return;
       }
       const newState = {};
-      newState[update.id] = {
-        ...editRowsModel[update.id],
+      newState[id] = {
+        ...editRowsModel[id],
         ...update,
       };
       setEditRowsModel((state) => ({ ...state, ...newState }));
@@ -538,28 +524,31 @@ export function EditRowsControl() {
     [editRowsModel],
   );
 
-  const onEditCellValueChangeCommitted = React.useCallback(
-    ({ update }) => {
-      const field = Object.keys(update).find((key) => key !== 'id')!;
+  const onEditCellChangeCommitted = React.useCallback(
+    ({ id, update }: GridEditCellParams) => {
+      const field = Object.keys(update)[0]!;
+      const rowUpdate = { id };
+      rowUpdate[field] = update[field].value;
+
       if (update.email) {
         const newState = {};
         const componentProps = {
-          InputProps: { endAdornment: <GridLoadIcon /> },
+          endAdornment: <GridLoadIcon />,
         };
-        newState[update.id] = {};
-        newState[update.id][field] = { value: update.email, ...componentProps };
+        newState[id] = {};
+        newState[id][field] = { ...update.email, ...componentProps };
         setEditRowsModel((state) => ({ ...state, ...newState }));
         setTimeout(() => {
-          apiRef.current.updateRows([update]);
-          apiRef.current.setCellMode(update.id, field, 'view');
+          apiRef.current.updateRows([rowUpdate]);
+          apiRef.current.setCellMode(id, field, 'view');
         }, 2000);
-      } else if (update.fullname) {
-        const [firstname, lastname] = update.fullname.split(' ');
-        apiRef.current.updateRows([{ id: update.id, firstname, lastname }]);
-        apiRef.current.setCellMode(update.id, field, 'view');
+      } else if (update.fullname && update.fullname.value) {
+        const [firstname, lastname] = update.fullname.value.toString().split(' ');
+        apiRef.current.updateRows([{ id, firstname, lastname }]);
+        apiRef.current.setCellMode(id, field, 'view');
       } else {
-        apiRef.current.updateRows([update]);
-        apiRef.current.setCellMode(update.id, field, 'view');
+        apiRef.current.updateRows([rowUpdate]);
+        apiRef.current.setCellMode(id, field, 'view');
       }
     },
     [apiRef],
@@ -581,8 +570,8 @@ export function EditRowsControl() {
           onCellClick={onCellClick}
           onCellDoubleClick={onCellDoubleClick}
           isCellEditable={isCellEditable}
-          onEditCellValueChange={onEditCellValueChange}
-          onEditCellValueChangeCommitted={onEditCellValueChangeCommitted}
+          onEditCellChange={onEditCellChange}
+          onEditCellChangeCommitted={onEditCellChangeCommitted}
           editRowsModel={editRowsModel}
           editMode="server"
         />

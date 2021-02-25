@@ -108,13 +108,7 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
     }
 
     if (editCellState != null && column.renderEditCell) {
-      const params =
-        editCellState === true || typeof editCellState !== 'object'
-          ? cellParams
-          : { ...cellParams, ...editCellState };
-      if (editCellState !== true && typeof editCellState !== 'object') {
-        params.value = editCellState;
-      }
+      const params = { ...cellParams, ...editCellState };
       cellComponent = column.renderEditCell(params);
       cssClassProp = { cssClass: `${cssClassProp.cssClass} MuiDataGrid-cellEditing` };
     }

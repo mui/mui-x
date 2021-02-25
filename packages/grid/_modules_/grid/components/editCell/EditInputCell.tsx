@@ -2,6 +2,8 @@ import * as React from 'react';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { formatDateToLocalInputDate, isDate, mapColDefTypeToInputType } from '../../utils/utils';
+import { GridEditRowUpdate } from '../../models/gridEditRowModel';
+import { GridEditRowApi } from '../../models/api/gridEditRowApi';
 
 export function EditInputCell(props: GridCellParams & InputBaseProps) {
   const {
@@ -17,6 +19,7 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
     ...inputBaseProps
   } = props;
 
+  const editRowApi = api as GridEditRowApi;
   const caretRafRef = React.useRef(0);
   React.useEffect(() => {
     return () => {
@@ -36,29 +39,32 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
 
   const onValueChange = React.useCallback(
     (event) => {
-      keepCaretPosition(event);
-
+      if (colDef.type === 'string') {
+        keepCaretPosition(event);
+      }
       const newValue = event.target.value;
-      const update = { id: row.id };
-      update[field] = newValue;
-      api.setEditCellValue(update);
+      const update: GridEditRowUpdate = {};
+      update[field] = {
+        value: colDef.type === 'date' || colDef.type === 'dateTime' ? new Date(newValue) : newValue,
+      };
+      editRowApi.setEditCellProps(row.id, update);
     },
-    [api, field, keepCaretPosition, row.id],
+    [editRowApi, colDef.type, field, keepCaretPosition, row.id],
   );
 
   const onKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
       if (!inputBaseProps.error && event.key === 'Enter') {
-        const update = { id: row.id };
-        update[field] = value;
-        api.commitCellValueChanges(update);
+        const update: GridEditRowUpdate = {};
+        update[field] = { value };
+        editRowApi.commitCellChange(row.id, update);
       }
 
       if (event.key === 'Escape') {
-        api.setCellMode(row.id, field, 'view');
+        editRowApi.setCellMode(row.id, field, 'view');
       }
     },
-    [inputBaseProps.error, row.id, field, value, api],
+    [inputBaseProps.error, row.id, field, value, editRowApi],
   );
 
   const inputType = mapColDefTypeToInputType(colDef.type);
