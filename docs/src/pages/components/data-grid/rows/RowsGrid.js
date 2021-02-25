@@ -5,10 +5,11 @@ export default function RowsGrid() {
   return (
     <div style={{ height: 250, width: '100%' }}>
       <DataGrid
-        columns={[{ field: 'name' }]}
+        rowIdAccessor='test'
+        columns={[{ field: 'name' }, {field: 'test'}]}
         rows={[
-          { id: 1, name: 'React' },
-          { id: 2, name: 'Material-UI' },
+          { id: 1, name: 'React', test: 7 },
+          { id: 2, name: 'Material-UI', test: 8 },
         ]}
       />
     </div>

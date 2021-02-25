@@ -126,6 +126,10 @@ export interface GridOptions {
    */
   rowCount?: number;
   /**
+   * Set the row uniKey of row data.
+   */
+  rowIdAccessor?: number | string;
+  /**
    * Set the current page.
    * @default 1
    */

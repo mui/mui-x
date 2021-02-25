@@ -69,6 +69,7 @@ export function useEvents(
           return null;
         }
         const id = getIdFromRowElem(rowEl);
+        console.log(id)
         const rowModel = apiRef.current.getRowFromId(id);
         const rowIndex = apiRef.current.getRowIndexFromId(id);
         const field = cellEl.getAttribute('data-field') as string;

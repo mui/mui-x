@@ -24,12 +24,14 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportP
     const renderCtx = React.useContext(RenderContext) as RenderContextProps;
 
     const getRowsElements = () => {
+      console.log(rows)
+      console.log(options)
       const renderedRows = rows.slice(renderCtx.firstRowIdx, renderCtx.lastRowIdx!);
       return renderedRows.map((r, idx) => (
         <Row
           className={(renderCtx.firstRowIdx! + idx) % 2 === 0 ? 'Mui-even' : 'Mui-odd'}
-          key={r.id}
-          id={r.id}
+          key={options.rowIdAccessor ? r.data[options.rowIdAccessor] : r.id}
+          id={options.rowIdAccessor ? r.data[options.rowIdAccessor] : r.id}
           selected={r.selected}
           rowIndex={renderCtx.firstRowIdx + idx}
         >

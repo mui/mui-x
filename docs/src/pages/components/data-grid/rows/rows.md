@@ -7,4 +7,6 @@ components: DataGrid, XGrid
 
 <p class="description">This section goes in details on the aspects of the rows you need to know.</p>
 
+{{"demo": "pages/components/data-grid/rows/RowsGrid.js"}}
+
 > ⚠️ The data grid components are supporting v5 and v4. However, no documentation is available for v5 yet. You can use the [documentation of v4](https://material-ui.com/components/data-grid/) instead.

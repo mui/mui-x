@@ -1,3 +1,4 @@
+import { GridOptions } from './gridOptions'
 export type RowsProp = RowData[];
 export type Rows = RowModel[];
 
@@ -42,9 +43,12 @@ export interface RowModel {
  * An helper function allowing to create [[RowModel]] from [[RowData]].
  *
  * @param rowData Row as [[RowData]].
+ * @param rowIdAccessor RowId as [[RowId]].
  * @returns A row as [[RowModel]].
  */
-export function createRowModel(rowData: RowData): RowModel {
+export function createRowModel(rowData: RowData, gridOptions: GridOptions ): RowModel {
+  console.log(rowData)
+  console.log(gridOptions.rowIdAccessor)
   if (rowData.id == null) {
     throw new Error(
       [
@@ -56,7 +60,7 @@ export function createRowModel(rowData: RowData): RowModel {
   }
 
   const row: RowModel = {
-    id: rowData.id,
+    id: gridOptions.rowIdAccessor ? gridOptions.rowIdAccessor : rowData.id,
     data: rowData,
     selected: false,
   };
