@@ -23,7 +23,7 @@ type MenuPosition =
 const useStyles = makeStyles(
   () => ({
     root: {
-      '& .MuiDataGrid-gridMenuList:focus': {
+      '& .MuiDataGrid-gridMenuList': {
         outline: 0,
       },
     },
