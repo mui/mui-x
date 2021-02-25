@@ -24,12 +24,14 @@ import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePan
 import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
 import { FilterModel, FilterModelState, getInitialGridFilterState } from './FilterModelState';
 import { getInitialVisibleGridRowsState } from './visibleGridRowsState';
+import { visibleSortedGridRowsSelector } from './gridFilterSelector';
 
 export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void => {
   const logger = useLogger('useGridFilter');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const filterableColumnsIds = useGridSelector(apiRef, filterableGridColumnsIdsSelector);
   const options = useGridSelector(apiRef, optionsSelector);
+  const visibleRowModels = useGridSelector(apiRef, visibleSortedGridRowsSelector);
 
   const getFilterModelParams = React.useCallback(
     (): GridFilterModelParams => ({
@@ -175,9 +177,8 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
         };
         return newState;
       });
-      apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
-
       applyFilters();
+      apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
     [
       logger,
@@ -206,9 +207,8 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
       if (hasNoItem) {
         upsertFilter({});
       }
-      apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
-
       applyFilters();
+      apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
     [apiRef, applyFilters, getFilterModelParams, logger, setGridState, upsertFilter],
   );
@@ -271,6 +271,8 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
     [apiRef],
   );
 
+  const getVisibleRowModels = React.useCallback(() => visibleRowModels, [visibleRowModels]);
+
   useGridApiMethod<FilterApi>(
     apiRef,
     {
@@ -283,6 +285,7 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
       setFilterModel,
       showFilterPanel,
       hideFilterPanel,
+      getVisibleRowModels,
     },
     'FilterApi',
   );
