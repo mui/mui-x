@@ -1,5 +1,5 @@
 import * as React from 'react';
-// @ts-ignore TODO: remove once the module is fixed
+// @ts-expect-error fixed in Material-UI v5, types definitions were added.
 import { unstable_useId as useId } from '@material-ui/core/utils';
 import MenuList from '@material-ui/core/MenuList';
 import Button from '@material-ui/core/Button';
@@ -17,8 +17,8 @@ export function GridDensitySelector() {
   const apiRef = React.useContext(GridApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
   const densityValue = useGridSelector(apiRef, gridDensityValueSelector);
-  const densityButtonId = useId('density-button');
-  const densityMenuId = useId('density-menu');
+  const densityButtonId = useId();
+  const densityMenuId = useId();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const DensityCompactIcon = apiRef!.current.components!.DensityCompactIcon!;
@@ -62,8 +62,10 @@ export function GridDensitySelector() {
   };
 
   const handleListKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Tab' || event.key === 'Escape') {
+    if (event.key === 'Tab') {
       event.preventDefault();
+    }
+    if (event.key === 'Tab' || event.key === 'Escape') {
       handleDensitySelectorClose();
     }
   };
@@ -111,7 +113,7 @@ export function GridDensitySelector() {
           role="menu"
           aria-labelledby={densityButtonId}
           onKeyDown={handleListKeyDown}
-          autoFocus={Boolean(anchorEl)}
+          autoFocusItem={Boolean(anchorEl)}
         >
           {renderDensityOptions}
         </MenuList>

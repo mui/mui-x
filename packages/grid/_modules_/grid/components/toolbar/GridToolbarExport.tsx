@@ -1,5 +1,5 @@
 import * as React from 'react';
-// @ts-ignore TODO: remove once the module is fixed
+// @ts-expect-error fixed in Material-UI v5, types definitions were added.
 import { unstable_useId as useId } from '@material-ui/core/utils';
 import MenuList from '@material-ui/core/MenuList';
 import Button from '@material-ui/core/Button';
@@ -10,8 +10,8 @@ import { GridExportOption } from '../../models';
 
 export function GridToolbarExport() {
   const apiRef = React.useContext(GridApiContext);
-  const exportButtonId = useId('export-button');
-  const exportMenuId = useId('export-menu');
+  const exportButtonId = useId();
+  const exportMenuId = useId();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const ExportIcon = apiRef!.current.components!.ExportIcon!;
 
@@ -33,8 +33,10 @@ export function GridToolbarExport() {
   };
 
   const handleListKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Tab' || event.key === 'Escape') {
+    if (event.key === 'Tab') {
       event.preventDefault();
+    }
+    if (event.key === 'Tab' || event.key === 'Escape') {
       handleExportSelectorClose();
     }
   };
@@ -71,7 +73,7 @@ export function GridToolbarExport() {
           role="menu"
           aria-labelledby={exportButtonId}
           onKeyDown={handleListKeyDown}
-          autoFocus={Boolean(anchorEl)}
+          autoFocusItem={Boolean(anchorEl)}
         >
           {renderExportOptions}
         </MenuList>

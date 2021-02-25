@@ -16,8 +16,8 @@ export function ColumnHeaderMenuIcon(props: ColumnHeaderFilterIconProps) {
   const { column } = props;
   const apiRef = React.useContext(GridApiContext);
   const columnMenuState = useGridSelector(apiRef, gridColumnMenuStateSelector);
-  const columnMenuButtonId = useId('column-menu-button');
-  const columnMenuId = useId('column-menu');
+  const columnMenuButtonId: string = useId();
+  const columnMenuId: string = useId();
   const ColumnMenuIcon = apiRef!.current.components.ColumnMenuIcon!;
 
   const handleMenuIconClick = React.useCallback(
@@ -26,12 +26,12 @@ export function ColumnHeaderMenuIcon(props: ColumnHeaderFilterIconProps) {
       event.stopPropagation();
       const lastMenuState = apiRef!.current.getState().columnMenu;
       if (!lastMenuState.open || lastMenuState.field !== column.field) {
-        apiRef!.current.showColumnMenu(column.field);
+        apiRef!.current.showColumnMenu(column.field, columnMenuId, columnMenuButtonId);
       } else {
         apiRef!.current.hideColumnMenu();
       }
     },
-    [apiRef, column.field],
+    [apiRef, column.field, columnMenuId, columnMenuButtonId],
   );
 
   const open = columnMenuState.open && columnMenuState.field === column.field;
