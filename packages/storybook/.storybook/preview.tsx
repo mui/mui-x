@@ -9,7 +9,7 @@ LicenseInfo.setLicenseKey(
 );
 
 configureActions({
-  depth: 3,
+  depth: 6,
   limit: 10,
 });
 

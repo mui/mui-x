@@ -18,6 +18,7 @@ import {
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { randomInt } from '../data/random-generator';
+import { action } from '@storybook/addon-actions';
 
 export default {
   title: 'X-Grid Tests/Rows',
@@ -593,9 +594,14 @@ export function EditRowsBasic() {
 
   return (
     <React.Fragment>
-      Green cells are editable! Double click
+      Double click to edit.
       <div className="grid-container">
-        <XGrid {...baselineEditProps} apiRef={apiRef} onCellDoubleClick={onCellDoubleClick} />
+        <XGrid
+          {...baselineEditProps}
+          apiRef={apiRef}
+          onCellDoubleClick={onCellDoubleClick}
+          onEditRowModelChange={action('onEditRowsModelChange')}
+        />
       </div>
     </React.Fragment>
   );

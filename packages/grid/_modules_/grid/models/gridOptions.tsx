@@ -295,12 +295,15 @@ export interface GridOptions {
    * Callback fired when the state of the grid is updated.
    */
   onStateChange?: (params: any) => void;
-
+  /**
+   * Set the edit rows model of the grid
+   */
   editRowsModel?: GridEditRowsModel;
   /**
-   * Callback fired when the cell is rendered.
+   * Callback fired when the cell is rendered. Returns true if the cell is editable
    */
   isCellEditable?: (params: GridCellParams) => boolean;
+
   onEditRowModelChange?: (params: GridEditRowModelParams) => void;
   onCellModeChange?: (params: GridCellModeChangeParams) => void;
   onEditCellChange?: (params: GridEditCellParams) => void;

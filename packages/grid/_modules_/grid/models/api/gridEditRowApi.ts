@@ -42,9 +42,24 @@ export interface GridEditRowApi {
    * @param field
    */
   getCellValue: (id: GridRowId, field: string) => GridCellValue;
-
+  /**
+   * Callback fired when the EditRowModel changed.
+   * @param handler
+   */
   onEditRowModelChange: (handler: (param: GridEditRowModelParams) => void) => void;
+  /**
+   * Callback fired when the cell mode changed.
+   * @param handler
+   */
   onCellModeChange: (handler: (param: GridCellModeChangeParams) => void) => void;
+  /**
+   * Callback fired when the cell changes are commited.
+   * @param handler
+   */
   onEditCellChangeCommitted: (handler: (param: GridEditCellParams) => void) => void;
+  /**
+   * Callback fired when the edit cell value changed.
+   * @param handler
+   */
   onEditCellChange: (handler: (param: GridEditCellParams) => void) => void;
 }

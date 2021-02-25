@@ -61,18 +61,23 @@ export function useGridEditRows(apiRef: GridApiRef) {
         currentCellEditState[id] = currentCellEditState[id] || {};
         currentCellEditState[id][field] = { value: getCellValue(id, field) };
 
-        const newEditRowsState = { ...state.editRows, ...currentCellEditState };
+        const newEditRowsState: GridEditRowsModel = { ...state.editRows, ...currentCellEditState };
 
-        apiRef.current.publishEvent(GRID_EDIT_ROW_MODEL_CHANGE, newEditRowsState);
         return { ...state, editRows: newEditRowsState };
       });
+      forceUpdate();
       apiRef.current.publishEvent(GRID_CELL_MODE_CHANGE, {
         id,
         field,
         mode: 'edit',
         api: apiRef.current,
       });
-      forceUpdate();
+
+      const editRowParams: GridEditRowModelParams = {
+        api: apiRef.current,
+        model: apiRef.current.getState().editRows,
+      };
+      apiRef.current.publishEvent(GRID_EDIT_ROW_MODEL_CHANGE, editRowParams);
     },
     [apiRef, forceUpdate, getCellValue, setGridState],
   );
@@ -92,10 +97,9 @@ export function useGridEditRows(apiRef: GridApiRef) {
             delete newEditRowsState[id];
           }
         }
-        apiRef.current.publishEvent(GRID_EDIT_ROW_MODEL_CHANGE, newEditRowsState);
-
         return { ...state, editRows: newEditRowsState };
       });
+      forceUpdate();
       const params: GridCellModeChangeParams = {
         id,
         field,
@@ -103,7 +107,11 @@ export function useGridEditRows(apiRef: GridApiRef) {
         api: apiRef.current,
       };
       apiRef.current.publishEvent(GRID_CELL_MODE_CHANGE, params);
-      forceUpdate();
+      const editRowParams: GridEditRowModelParams = {
+        api: apiRef.current,
+        model: apiRef.current.getState().editRows,
+      };
+      apiRef.current.publishEvent(GRID_EDIT_ROW_MODEL_CHANGE, editRowParams);
     },
     [apiRef, forceUpdate, setGridState],
   );
@@ -151,15 +159,19 @@ export function useGridEditRows(apiRef: GridApiRef) {
         return;
       }
       setGridState((state) => {
-        const newState = { ...state.editRows };
-        newState[id] = {
+        const editRowsModel: GridEditRowsModel = { ...state.editRows };
+        editRowsModel[id] = {
           ...state.editRows[id],
           ...update,
         };
-
-        return { ...state, editRows: newState };
+        return { ...state, editRows: editRowsModel };
       });
       forceUpdate();
+      const params: GridEditRowModelParams = {
+        api: apiRef.current,
+        model: apiRef.current.getState().editRows,
+      };
+      apiRef.current.publishEvent(GRID_EDIT_ROW_MODEL_CHANGE, params);
     },
     [apiRef, forceUpdate, options.editMode, setGridState],
   );
@@ -200,7 +212,6 @@ export function useGridEditRows(apiRef: GridApiRef) {
     [apiRef],
   );
 
-  // TODO add those options.handlers on apiRef
   useGridApiEventHandler(apiRef, GRID_CELL_CHANGE, options.onEditCellChange);
   useGridApiEventHandler(apiRef, GRID_CELL_CHANGE_COMMITTED, options.onEditCellChangeCommitted);
   useGridApiEventHandler(apiRef, GRID_CELL_MODE_CHANGE, options.onCellModeChange);
