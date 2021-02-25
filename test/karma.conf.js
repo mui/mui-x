@@ -1,4 +1,4 @@
-const path = require('path');
+const playwright = require('playwright');
 const webpack = require('webpack');
 
 const CI = Boolean(process.env.CI);
@@ -17,7 +17,7 @@ const browserStack = {
   timeout: 2.5 * 60, // Maximum time before a worker is terminated. Default 5 minutes.
 };
 
-process.env.CHROME_BIN = require('puppeteer').executablePath();
+process.env.CHROME_BIN = playwright.chromium.executablePath();
 
 // BrowserStack rate limit after 1600 calls every 5 minutes.
 // Per second, https://www.browserstack.com/docs/automate/api-reference/selenium/introduction#rest-api-projects
@@ -32,11 +32,17 @@ const MAX_CIRCLE_CI_CONCURRENCY = 83;
 module.exports = function setKarmaConfig(config) {
   const baseConfig = {
     basePath: '../',
-    browsers: ['ChromeHeadlessNoSandbox'],
+    browsers: ['chromeHeadless'],
     browserDisconnectTimeout: 3 * 60 * 1000, // default 2000
     browserDisconnectTolerance: 1, // default 0
     browserNoActivityTimeout: 6 * 60 * 1000, // default 10000
     colors: true,
+    client: {
+      mocha: {
+        // Some BrowserStack browsers can be slow.
+        timeout: (process.env.CIRCLECI === 'true' ? 4 : 2) * 1000,
+      },
+    },
     frameworks: ['mocha'],
     files: [
       {
@@ -46,13 +52,7 @@ module.exports = function setKarmaConfig(config) {
         included: true,
       },
     ],
-    plugins: [
-      'karma-mocha',
-      'karma-chrome-launcher',
-      'karma-sourcemap-loader',
-      'karma-webpack',
-      'karma-mocha-reporter',
-    ],
+    plugins: ['karma-mocha', 'karma-chrome-launcher', 'karma-sourcemap-loader', 'karma-webpack'],
     /**
      * possible values:
      * - config.LOG_DISABLE
@@ -94,21 +94,6 @@ module.exports = function setKarmaConfig(config) {
       },
       resolve: {
         extensions: ['.js', '.ts', '.tsx'],
-        modules: [path.join(__dirname, '../'), 'node_modules'],
-        alias: {
-          // yarn alias for `pretty-format@3`
-          // @testing-library/dom -> pretty-format@25
-          // which uses Object.entries which isn't implemented in all browsers
-          // we support
-          'pretty-format': require.resolve('pretty-format-v24'),
-          // https://github.com/sinonjs/sinon/issues/1951
-          // use the cdn main field. Neither module nor main are supported for browserbuilds
-          sinon: 'sinon/pkg/sinon.js',
-          // https://github.com/testing-library/react-testing-library/issues/486
-          // "default" bundles are not browser compatible
-          '@testing-library/react/pure':
-            '@testing-library/react/dist/@testing-library/react.pure.esm',
-        },
       },
     },
     webpackMiddleware: {
@@ -116,7 +101,7 @@ module.exports = function setKarmaConfig(config) {
       writeToDisk: CI,
     },
     customLaunchers: {
-      ChromeHeadlessNoSandbox: {
+      chromeHeadless: {
         base: 'ChromeHeadless',
         flags: ['--no-sandbox'],
       },
@@ -130,30 +115,25 @@ module.exports = function setKarmaConfig(config) {
     newConfig = {
       ...baseConfig,
       browserStack,
-      browsers: baseConfig.browsers.concat([
-        'BrowserStack_Chrome',
-        'BrowserStack_Firefox',
-        'BrowserStack_Safari',
-        'BrowserStack_Edge',
-      ]),
+      browsers: baseConfig.browsers.concat(['chrome', 'firefox', 'safari', 'edge']),
       plugins: baseConfig.plugins.concat(['karma-browserstack-launcher']),
       customLaunchers: {
         ...baseConfig.customLaunchers,
-        BrowserStack_Chrome: {
+        chrome: {
           base: 'BrowserStack',
           os: 'OS X',
           os_version: 'Catalina',
           browser: 'chrome',
           browser_version: '84.0',
         },
-        BrowserStack_Firefox: {
+        firefox: {
           base: 'BrowserStack',
           os: 'Windows',
           os_version: '10',
           browser: 'firefox',
           browser_version: '78.0',
         },
-        BrowserStack_Safari: {
+        safari: {
           base: 'BrowserStack',
           os: 'OS X',
           os_version: 'Catalina',
@@ -162,7 +142,7 @@ module.exports = function setKarmaConfig(config) {
           // However, 12.1 is very flaky on desktop (mobile is always flaky).
           browser_version: '13.0',
         },
-        BrowserStack_Edge: {
+        edge: {
           base: 'BrowserStack',
           os: 'Windows',
           os_version: '10',

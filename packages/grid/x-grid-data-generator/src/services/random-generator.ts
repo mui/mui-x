@@ -11,7 +11,14 @@ import {
   TAXCODE_OPTIONS,
 } from './static-data';
 
-const chance = globalChance();
+const chanceId = globalChance();
+let chance;
+
+if (process.env.DISABLE_CHANCE_RANDOM) {
+  chance = globalChance(() => 0.5);
+} else {
+  chance = chanceId;
+}
 
 function dateFuture(years?: number, refDate?: string) {
   let date = new Date();
@@ -67,17 +74,17 @@ function datePast(years?: number, refDate?: string) {
   return date;
 }
 
-export const random = (min: number, max: number): number => Math.random() * (max - min) + min;
+export const random = (min: number, max: number): number => chance.random() * (max - min) + min;
 export const randomInt = (min: number, max: number): number => Number(random(min, max).toFixed());
 export const randomPrice = (min = 0, max = 100000): number => random(min, max);
 export const randomRate = (): number => random(0, 1);
 export const randomDate = (start, end) =>
-  new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+  new Date(start.getTime() + chance.random() * (end.getTime() - start.getTime()));
 export const getDate = () => randomDate(new Date(2012, 0, 1), new Date());
 export const randomArrayItem = (arr: any[]) => arr[random(0, arr.length - 1).toFixed()];
 
 export const randomColor = () => randomArrayItem(COLORS);
-export const randomId = () => chance.guid();
+export const randomId = () => chanceId.guid();
 export const randomDesk = () => `D-${chance.integer({ min: 0, max: 10000 })}`;
 export const randomCommodity = () => randomArrayItem(COMMODITY_OPTIONS);
 export const randomTraderName = () => chance.name();

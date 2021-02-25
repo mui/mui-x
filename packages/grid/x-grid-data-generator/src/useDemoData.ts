@@ -49,14 +49,6 @@ function extrapolateSeed(rowLength, columns, data) {
   return { ...data, rows };
 }
 
-async function sleep(duration: number) {
-  return new Promise<void>((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, duration);
-  });
-}
-
 function deepFreeze(object) {
   // Retrieve the property names defined on object
   const propNames = Object.getOwnPropertyNames(object);
@@ -94,7 +86,6 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
     let active = true;
 
     (async () => {
-      await sleep(100);
       let columns = options.dataSet === 'Commodity' ? getCommodityColumns() : getEmployeeColumns();
 
       if (options.maxColumns) {
@@ -105,7 +96,6 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
 
       if (rowLength > 1000) {
         newData = await getRealData(1000, columns);
-        await sleep(100);
         newData = extrapolateSeed(rowLength, columns, newData);
       } else {
         newData = await getRealData(rowLength, columns);
