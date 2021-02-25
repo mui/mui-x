@@ -30,7 +30,6 @@ export function GridColumnMenu(props: GridColumnMenuProps) {
     <MenuList
       id={columnMenuId}
       className="MuiDataGrid-gridMenuList"
-      role="menu"
       aria-labelledby={columnMenuButtonId}
       onKeyDown={handleListKeyDown}
       autoFocus={open}
