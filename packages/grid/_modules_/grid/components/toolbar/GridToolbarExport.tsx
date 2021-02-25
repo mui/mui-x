@@ -70,7 +70,6 @@ export function GridToolbarExport() {
         <MenuList
           id={exportMenuId}
           className="MuiDataGrid-gridMenuList"
-          role="menu"
           aria-labelledby={exportButtonId}
           onKeyDown={handleListKeyDown}
           autoFocusItem={Boolean(anchorEl)}

@@ -110,7 +110,6 @@ export function GridDensitySelector() {
         <MenuList
           id={densityMenuId}
           className="MuiDataGrid-gridMenuList"
-          role="menu"
           aria-labelledby={densityButtonId}
           onKeyDown={handleListKeyDown}
           autoFocusItem={Boolean(anchorEl)}
