@@ -24,8 +24,6 @@ export const Viewport: ViewportType = React.forwardRef<HTMLDivElement, ViewportP
     const renderCtx = React.useContext(RenderContext) as RenderContextProps;
 
     const getRowsElements = () => {
-      console.log(rows)
-      console.log(options)
       const renderedRows = rows.slice(renderCtx.firstRowIdx, renderCtx.lastRowIdx!);
       return renderedRows.map((r, idx) => (
         <Row

@@ -31,8 +31,7 @@ export const useRows = (
 ): RowModel[] => {
   const logger = useLogger('useRows');
   // const rowModels = React.useMemo(() => rows.map(createRowModel), [rows]);
-  console.log(options)
-  const rowModels = React.useMemo(() => rows.map(rowData => createRowModel(rowData, options)), [rows]);
+  const rowModels = React.useMemo(() => rows.map(rowData => createRowModel(rowData, options)), [rows, options]);
   const [rowModelsState, setRowModelsState] = React.useState<RowModel[]>(rowModels);
   const [, forceUpdate] = React.useState();
   const [rafUpdate] = useRafUpdate(() => forceUpdate((p: any) => !p));
@@ -66,7 +65,6 @@ export const useRows = (
   );
 
   React.useEffect(() => {
-    console.log(rowModels)
     logger.info('Updating Rows.');
     isScrollingRef.current = false;
     updateAllRows(rowModels);
@@ -139,13 +137,13 @@ export const useRows = (
       const rowModelUpdates = Object.values<RowData>(uniqUpdates).map((partialRow) => {
         const oldRow = getRowFromId(partialRow.id!);
         if (!oldRow) {
-          return createRowModel(partialRow, options.rowIdAccessor);
+          return createRowModel(partialRow, options);
         }
         return { ...oldRow, data: { ...oldRow.data, ...partialRow } };
       });
       return updateRowModels(rowModelUpdates);
     },
-    [updateRowModels, logger, getRowFromId],
+    [logger, updateRowModels, getRowFromId, options],
   );
 
   const onSortModelUpdated = React.useCallback(({ sortModel }: any) => {

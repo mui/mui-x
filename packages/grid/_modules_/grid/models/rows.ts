@@ -47,12 +47,12 @@ export interface RowModel {
  * @returns A row as [[RowModel]].
  */
 export function createRowModel(rowData: RowData, gridOptions: GridOptions ): RowModel {
-  console.log(rowData)
-  console.log(gridOptions.rowIdAccessor)
-  if (rowData.id == null) {
+  // if (rowData.id == null) {
+  if (!rowData.id && !gridOptions.rowIdAccessor) {
     throw new Error(
       [
-        'Material-UI: The data grid component requires all rows to have a unique id property.',
+        'Material-UI: The data grid component requires all rows to have a unique id property,',
+        'or specify your id key on the prop of the GridComponent.',
         'A row was provided without in the rows prop:',
         JSON.stringify(rowData),
       ].join('\n'),
@@ -60,7 +60,7 @@ export function createRowModel(rowData: RowData, gridOptions: GridOptions ): Row
   }
 
   const row: RowModel = {
-    id: gridOptions.rowIdAccessor ? gridOptions.rowIdAccessor : rowData.id,
+    id: gridOptions.rowIdAccessor ? rowData[gridOptions.rowIdAccessor] : rowData.id,
     data: rowData,
     selected: false,
   };
