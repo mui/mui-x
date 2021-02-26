@@ -44,6 +44,7 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">onCellHover</span> | <span class="prop-type">(param: GridCellParams) => void</span> |   | Callback fired when a hover event comes from a cell element. |
 | <span class="prop-name">onColumnHeaderClick</span> | <span class="prop-type">(param: GridColParams) => void</span> |   | Callback fired when a click event comes from a column header element. |
 | <span class="prop-name">onError</span> | <span class="prop-type">(args: any) => void</span> |   | Callback fired when an exception is thrown in the grid, or when the `showError` API method is called. |
+| <span class="prop-name">onFilterModelChange</span> | <span class="prop-type">(params: GridFilterModelParams) => void</span> |   | Callback fired when the Filter model changes before the filters are applied. |
 | <span class="prop-name">onPageChange</span> | <span class="prop-type">(param: GridPageChangeParams) => void</span> |   | Callback fired when the current page has changed. |
 | <span class="prop-name">onPageSizeChange</span> | <span class="prop-type">(param: GridPageChangeParams) => void</span> |   | Callback fired when the page size has changed. |
 | <span class="prop-name">onRowClick</span> | <span class="prop-type">(param: GridRowParams) => void</span> |   | Callback fired when a click event comes from a row container element. |
