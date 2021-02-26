@@ -5,6 +5,7 @@ import { LicenseInfo } from '@material-ui/x-grid';
 import { withStyles } from '@material-ui/core/styles';
 import webfontloader from 'webfontloader';
 import TestViewer from 'test/regressions/TestViewer';
+import { useFakeTimers } from 'sinon';
 import addons, { mockChannel } from '@storybook/addons';
 
 // See https://storybook.js.org/docs/react/workflows/faq#why-is-there-no-addons-channel
@@ -28,6 +29,10 @@ const blacklist = [
 ];
 
 const unusedBlacklistPatterns = new Set(blacklist);
+
+// Use a "real timestamp" so that we see a useful date instead of "00:00"
+// eslint-disable-next-line react-hooks/rules-of-hooks -- not a React hook
+const clock = useFakeTimers(new Date('Mon Aug 18 14:11:54 2014 -0500'));
 
 function excludeTest(suite, name) {
   return blacklist.some((pattern) => {
@@ -99,6 +104,8 @@ const docs = requireDocs.keys().reduce((res, path) => {
 
   return res;
 }, []);
+
+clock.restore();
 
 const tests = stories.concat(docs);
 
