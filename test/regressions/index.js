@@ -136,7 +136,7 @@ const GlobalStyles = withStyles({
       overflowX: 'hidden',
     },
   },
-})(() => null)
+})(() => null);
 
 function App() {
   function computeIsDev() {
