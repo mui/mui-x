@@ -31,7 +31,6 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const filterableColumnsIds = useGridSelector(apiRef, filterableGridColumnsIdsSelector);
   const options = useGridSelector(apiRef, optionsSelector);
-  const visibleRowModels = useGridSelector(apiRef, visibleSortedGridRowsSelector);
 
   const getFilterModelParams = React.useCallback(
     (): GridFilterModelParams => ({
@@ -39,6 +38,7 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
       api: apiRef.current,
       columns: apiRef.current.getAllColumns(),
       rows: apiRef.current.getRowModels(),
+      visibleRows: apiRef.current.getVisibleRowModels(),
     }),
     [apiRef],
   );
@@ -113,8 +113,8 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
           visibleRows: {
             visibleRowsLookup,
             visibleRows: Object.entries(visibleRowsLookup)
-              .filter((entry) => entry[1])
-              .map((entry) => entry[0]),
+              .filter(([, isVisible]) => isVisible)
+              .map(([id]) => id),
           },
         };
       });
@@ -271,7 +271,10 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
     [apiRef],
   );
 
-  const getVisibleRowModels = React.useCallback(() => visibleRowModels, [visibleRowModels]);
+  const getVisibleRowModels = React.useCallback(
+    () => visibleSortedGridRowsSelector(apiRef.current.state),
+    [apiRef],
+  );
 
   useGridApiMethod<FilterApi>(
     apiRef,

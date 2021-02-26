@@ -10,6 +10,7 @@ import {
   GridRowModel,
   useGridApiRef,
   XGrid,
+  SUBMIT_FILTER_STROKE_TIME,
 } from '@material-ui/x-grid';
 import {
   // @ts-expect-error need to migrate helpers to TypeScript
@@ -227,6 +228,33 @@ describe('<XGrid /> - Filter', () => {
     expect(getColumnValues()).to.deep.equal(['Adidas']);
     setProps({ filterModel: { items: [] } });
     expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+  });
+
+  it('should show the latest visibleRows onFilterChange', () => {
+    let visibleRows: any[] = [];
+    const onFilterChange = (params) => {
+      visibleRows = params.visibleRows;
+    };
+
+    render(
+      <TestCase
+        filterModel={model}
+        onFilterModelChange={onFilterChange}
+        state={{
+          preferencePanel: {
+            open: true,
+            openedPanelValue: GridPreferencePanelsValue.filters,
+          },
+        }}
+      />,
+    );
+
+    expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
+    const input = screen.getByPlaceholderText('Filter value');
+    fireEvent.change(input, { target: { value: 'ad' } });
+    clock.tick(SUBMIT_FILTER_STROKE_TIME);
+    expect(visibleRows).to.deep.equal([{ id: 1, brand: 'Adidas' }]);
+    expect(apiRef.current.getVisibleRowModels()).to.deep.equal([{ id: 1, brand: 'Adidas' }]);
   });
 
   describe('Server', () => {
