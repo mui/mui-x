@@ -82,7 +82,4 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Total rows footer text
   footerTotalRows: 'Total Rows:',
-
-  // Pagination footer text
-  footerPaginationRowsPerPage: 'Rows per page:',
 };

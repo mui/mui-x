@@ -78,9 +78,6 @@ export interface GridLocaleText {
 
   // Total rows footer text
   footerTotalRows: React.ReactNode;
-
-  // Pagination footer text
-  footerPaginationRowsPerPage: React.ReactNode;
 }
 
 export type LocaleTextValue = string | React.ReactNode | Function;
