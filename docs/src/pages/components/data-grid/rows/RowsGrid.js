@@ -5,7 +5,7 @@ export default function RowsGrid() {
   return (
     <div style={{ height: 250, width: '100%' }}>
       <DataGrid
-        rowIdAccessor='customUniKey'
+        // rowIdAccessor='customUniKey'
         columns={[{ field: 'name' }, {field: 'customUniKey'}]}
         rows={[
           {  name: 'React', customUniKey: 'uniNo-1' },

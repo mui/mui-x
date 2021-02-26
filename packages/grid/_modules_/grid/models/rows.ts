@@ -52,7 +52,7 @@ export function createRowModel(rowData: RowData, gridOptions: GridOptions ): Row
     throw new Error(
       [
         'Material-UI: The data grid component requires all rows to have a unique id property,',
-        'or specify your id key on the prop of the GridComponent.',
+        'or use "rowIdAccessor" api of GridComponent to specify your row id key.',
         'A row was provided without in the rows prop:',
         JSON.stringify(rowData),
       ].join('\n'),
