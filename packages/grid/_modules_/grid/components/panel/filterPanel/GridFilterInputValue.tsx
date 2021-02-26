@@ -3,7 +3,7 @@ import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import { GridLoadIcon } from '../../icons/index';
 import { FilterInputValueProps } from './FilterInputValueProps';
 
-const SUBMIT_FILTER_STROKE_TIME = 500;
+export const SUBMIT_FILTER_STROKE_TIME = 500;
 
 export interface TypeFilterInputValueProps extends FilterInputValueProps {
   type?: 'text' | 'number' | 'date' | 'datetime-local';
