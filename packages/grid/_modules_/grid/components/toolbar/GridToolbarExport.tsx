@@ -1,4 +1,6 @@
 import * as React from 'react';
+// @ts-expect-error fixed in Material-UI v5, types definitions were added.
+import { unstable_useId as useId } from '@material-ui/core/utils';
 import MenuList from '@material-ui/core/MenuList';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -8,6 +10,8 @@ import { GridExportOption } from '../../models';
 
 export function GridToolbarExport() {
   const apiRef = React.useContext(GridApiContext);
+  const exportButtonId = useId();
+  const exportMenuId = useId();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const ExportIcon = apiRef!.current.components!.ExportIcon!;
 
@@ -29,8 +33,10 @@ export function GridToolbarExport() {
   };
 
   const handleListKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Tab' || event.key === 'Escape') {
+    if (event.key === 'Tab') {
       event.preventDefault();
+    }
+    if (event.key === 'Tab' || event.key === 'Escape') {
       handleExportSelectorClose();
     }
   };
@@ -48,8 +54,10 @@ export function GridToolbarExport() {
         size="small"
         startIcon={<ExportIcon />}
         onClick={handleExportSelectorOpen}
-        aria-expanded={Boolean(anchorEl)}
-        aria-haspopup="true"
+        aria-expanded={anchorEl ? 'true' : undefined}
+        aria-haspopup="menu"
+        aria-labelledby={exportMenuId}
+        id={exportButtonId}
       >
         {apiRef!.current.getLocaleText('toolbarExport')}
       </Button>
@@ -59,7 +67,13 @@ export function GridToolbarExport() {
         onClickAway={handleExportSelectorClose}
         position="bottom-start"
       >
-        <MenuList onKeyDown={handleListKeyDown} autoFocusItem={Boolean(anchorEl)}>
+        <MenuList
+          id={exportMenuId}
+          className="MuiDataGrid-gridMenuList"
+          aria-labelledby={exportButtonId}
+          onKeyDown={handleListKeyDown}
+          autoFocusItem={Boolean(anchorEl)}
+        >
           {renderExportOptions}
         </MenuList>
       </GridMenu>

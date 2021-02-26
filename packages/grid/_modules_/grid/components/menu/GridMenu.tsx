@@ -3,6 +3,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
 import Popper, { PopperProps } from '@material-ui/core/Popper';
+import { makeStyles } from '@material-ui/core/styles';
 
 type MenuPosition =
   | 'bottom-end'
@@ -18,6 +19,17 @@ type MenuPosition =
   | 'top-start'
   | 'top'
   | undefined;
+
+const useStyles = makeStyles(
+  () => ({
+    root: {
+      '& .MuiDataGrid-gridMenuList': {
+        outline: 0,
+      },
+    },
+  }),
+  { name: 'MuiDataGridMenu' },
+);
 
 export interface MenuProps extends Omit<PopperProps, 'onKeyDown'> {
   open: boolean;
@@ -41,6 +53,7 @@ export const GridMenu: React.FC<MenuProps> = ({
 }) => {
   const prevTarget = React.useRef(target);
   const prevOpen = React.useRef(open);
+  const classes = useStyles();
 
   React.useEffect(() => {
     if (prevOpen.current && prevTarget.current) {
@@ -52,13 +65,20 @@ export const GridMenu: React.FC<MenuProps> = ({
   }, [open, target]);
 
   return (
-    <Popper open={open} anchorEl={target as any} transition placement={position} {...other}>
+    <Popper
+      className={classes.root}
+      open={open}
+      anchorEl={target as any}
+      transition
+      placement={position}
+      {...other}
+    >
       {({ TransitionProps, placement }) => (
-        <Grow {...TransitionProps} style={{ transformOrigin: transformOrigin[placement] }}>
-          <Paper>
-            <ClickAwayListener onClickAway={onClickAway}>{children}</ClickAwayListener>
-          </Paper>
-        </Grow>
+        <ClickAwayListener onClickAway={onClickAway}>
+          <Grow {...TransitionProps} style={{ transformOrigin: transformOrigin[placement] }}>
+            <Paper>{children}</Paper>
+          </Grow>
+        </ClickAwayListener>
       )}
     </Popper>
   );

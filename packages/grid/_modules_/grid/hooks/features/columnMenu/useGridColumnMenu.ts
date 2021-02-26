@@ -9,11 +9,11 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
 
   const showColumnMenu = React.useCallback(
-    (field: string) => {
+    (field: string, id: string, labelledby: string) => {
       logger.debug('Opening Column Menu');
       setGridState((state) => ({
         ...state,
-        columnMenu: { open: true, field },
+        columnMenu: { open: true, field, id, labelledby },
       }));
       apiRef.current.hidePreferences();
       forceUpdate();
@@ -25,7 +25,7 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
     logger.debug('Hiding Column Menu');
     setGridState((state) => ({
       ...state,
-      columnMenu: { ...state.columnMenu, open: false },
+      columnMenu: { ...state.columnMenu, open: false, id: undefined, labelledby: undefined },
     }));
     forceUpdate();
   }, [forceUpdate, logger, setGridState]);
