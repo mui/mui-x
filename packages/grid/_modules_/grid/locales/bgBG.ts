@@ -1,6 +1,6 @@
 import { getGridLocalization, Localization } from '../utils';
 
-export const bgBG: Localization = getGridLocalization({
+export const bgBG: Localization = getGridLocalization('bgBG', {
   // Root
   rootGridLabel: 'мрежа',
   noRowsLabel: 'Няма редове',
@@ -75,7 +75,4 @@ export const bgBG: Localization = getGridLocalization({
 
   // Total rows footer text
   footerTotalRows: 'Общо Rедове:',
-
-  // Pagination footer text
-  footerPaginationRowsPerPage: 'Редове на страница:',
 });

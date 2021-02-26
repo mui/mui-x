@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { XGrid, GridToolbar } from '@material-ui/x-grid';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { XGrid, GridToolbar, bgBG } from '@material-ui/x-grid';
 import '../style/grid-stories.css';
 import { useData } from '../hooks/useData';
 

@@ -1,6 +1,6 @@
 import { getGridLocalization, Localization } from '../utils';
 
-export const ptBR: Localization = getGridLocalization({
+export const ptBR: Localization = getGridLocalization('ptBR', {
   // Root
   rootGridLabel: 'Grade',
   noRowsLabel: 'Nenhuma linha',
@@ -77,7 +77,4 @@ export const ptBR: Localization = getGridLocalization({
 
   // Total rows footer text
   footerTotalRows: 'Total de linhas:',
-
-  // Pagination footer text
-  footerPaginationRowsPerPage: 'Linhas por página:',
 });
