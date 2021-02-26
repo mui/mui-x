@@ -27,7 +27,7 @@ export interface CellIndexCoordinates {
   rowIndex: number;
 }
 export interface ObjectWithId {
-  id: RowId;
+  id?: RowId;
 }
 
 /**

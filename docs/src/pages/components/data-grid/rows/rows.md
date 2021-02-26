@@ -7,6 +7,11 @@ components: DataGrid, XGrid
 
 <p class="description">This section goes in details on the aspects of the rows you need to know.</p>
 
-{{"demo": "pages/components/data-grid/rows/RowsGrid.js"}}
+## Row ID accessor
+
+If your data does not exist id or use another key as the unique id, 
+you can use the rowIdAccessor API to specify the key you need.
+
+{{"demo": "pages/components/data-grid/rows/RowIdAccessor.js"}}
 
 > ⚠️ The data grid components are supporting v5 and v4. However, no documentation is available for v5 yet. You can use the [documentation of v4](https://material-ui.com/components/data-grid/) instead.
