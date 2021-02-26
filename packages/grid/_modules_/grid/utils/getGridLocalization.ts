@@ -1,4 +1,3 @@
-import * as locales from '@material-ui/core/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { GridOptions } from '../models/gridOptions';
 import { isMuiV5 } from './utils';
@@ -20,18 +19,18 @@ export interface LocalizationV5 {
 export type Localization = LocalizationV4 | LocalizationV5;
 
 export const getGridLocalization = (
-  locale: string,
-  translations: Partial<GridLocaleText>,
+  gridTranslations: Partial<GridLocaleText>,
+  coreTranslations,
 ): Localization => {
   if (isMuiV5()) {
     return {
       components: {
         MuiDataGrid: {
           defaultProps: {
-            localeText: translations,
+            localeText: gridTranslations,
           },
         },
-        ...locales[locale].components,
+        ...coreTranslations.components,
       },
     };
   }
@@ -39,9 +38,9 @@ export const getGridLocalization = (
   return {
     props: {
       MuiDataGrid: {
-        localeText: translations,
+        localeText: gridTranslations,
       },
-      ...locales[locale].props,
+      ...coreTranslations.props,
     },
   };
 };

@@ -1,6 +1,8 @@
+import { frFR as frFRCore } from '@material-ui/core/locale';
+import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils';
 
-export const frFR: Localization = getGridLocalization('frFR', {
+const frFRGrid: Partial<GridLocaleText> = {
   // Root
   rootGridLabel: 'grid',
   noRowsLabel: 'Pas de résultats',
@@ -77,4 +79,6 @@ export const frFR: Localization = getGridLocalization('frFR', {
 
   // Total rows footer text
   footerTotalRows: 'Lignes totales :',
-});
+};
+
+export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);

@@ -1,6 +1,8 @@
+import { ptBR as ptBRCore } from '@material-ui/core/locale';
+import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils';
 
-export const ptBR: Localization = getGridLocalization('ptBR', {
+const ptBRGrid: Partial<GridLocaleText> = {
   // Root
   rootGridLabel: 'Grade',
   noRowsLabel: 'Nenhuma linha',
@@ -77,4 +79,6 @@ export const ptBR: Localization = getGridLocalization('ptBR', {
 
   // Total rows footer text
   footerTotalRows: 'Total de linhas:',
-});
+};
+
+export const ptBR: Localization = getGridLocalization(ptBRGrid, ptBRCore);
