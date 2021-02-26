@@ -2,6 +2,7 @@ import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { LicenseInfo } from '@material-ui/x-grid';
+import { withStyles } from '@material-ui/core/styles';
 import webfontloader from 'webfontloader';
 import TestViewer from 'test/regressions/TestViewer';
 import addons, { mockChannel } from '@storybook/addons';
@@ -109,6 +110,27 @@ if (unusedBlacklistPatterns.size > 0) {
   );
 }
 
+const GlobalStyles = withStyles({
+  '@global': {
+    html: {
+      WebkitFontSmoothing: 'antialiased', // Antialiasing.
+      MozOsxFontSmoothing: 'grayscale', // Antialiasing.
+      // Do the opposite of the docs in order to help catching issues.
+      boxSizing: 'content-box',
+    },
+    '*, *::before, *::after': {
+      boxSizing: 'inherit',
+      // Disable transitions to avoid flaky screenshots
+      transition: 'none !important',
+      animation: 'none !important',
+    },
+    body: {
+      margin: 0,
+      overflowX: 'hidden',
+    },
+  },
+})(() => null)
+
 function App() {
   function computeIsDev() {
     if (window.location.hash === '#dev') {
@@ -156,6 +178,7 @@ function App() {
 
   return (
     <Router>
+      <GlobalStyles />
       <Switch>
         {tests.map((test) => {
           const path = computePath(test);
