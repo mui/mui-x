@@ -57,7 +57,13 @@ async function main() {
     });
 
     routes.forEach((route, index) => {
-      it(`creates screenshots of ${route.replace(baseUrl, '')}`, async () => {
+      const pathURL = route.replace(baseUrl, '');
+
+      it(`creates screenshots of ${pathURL}`, async function test() {
+        if (pathURL === '/docs-components-data-grid-overview/XGridDemo') {
+          this.timeout(5000);
+        }
+
         // Use client-side routing which is much faster than full page navigation via page.goto().
         // Could become an issue with test isolation.
         // If tests are flaky due to global pollution switch to page.goto(route);
