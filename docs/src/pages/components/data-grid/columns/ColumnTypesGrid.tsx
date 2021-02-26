@@ -29,7 +29,7 @@ const rows = [
   },
 ];
 
-export default function ColumnTypesDemo() {
+export default function ColumnTypesGrid() {
   return (
     <div style={{ height: 300, width: '100%' }}>
       <DataGrid
