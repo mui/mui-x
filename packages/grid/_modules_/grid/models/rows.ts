@@ -1,4 +1,5 @@
 import { GridOptions } from './gridOptions'
+
 export type RowsProp = RowData[];
 export type Rows = RowModel[];
 
