@@ -1,4 +1,4 @@
-import { GridOptions } from './gridOptions'
+import { GridOptions } from './gridOptions';
 
 export type RowsProp = RowData[];
 export type Rows = RowModel[];
@@ -47,7 +47,7 @@ export interface RowModel {
  * @param rowIdAccessor RowId as [[RowId]].
  * @returns A row as [[RowModel]].
  */
-export function createRowModel(rowData: RowData, gridOptions: GridOptions ): RowModel {
+export function createRowModel(rowData: RowData, gridOptions: GridOptions): RowModel {
   // if (rowData.id == null) {
   if (!rowData.id && !gridOptions.rowIdAccessor) {
     throw new Error(

@@ -9,7 +9,7 @@ components: DataGrid, XGrid
 
 ## Row ID accessor
 
-If your data does not exist id or use another key as the unique id, 
+If your data does not exist id or use another key as the unique id,
 you can use the rowIdAccessor API to specify the key you need.
 
 {{"demo": "pages/components/data-grid/rows/RowIdAccessor.js"}}
