@@ -16,7 +16,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 - 🌏 Improve the support for custom locales (#1096, #1079, #1109, #1077)
 - ♿️ Fix a couple of accessibility issues with the popups (#1105, #1102)
 
-### @material-ui/x-grid@v4.0.0-alpha.19 / @material-ui/data-grid@v4.0.0-alpha.19
+### @material-ui/x-grid@v4.0.0-alpha.21 / @material-ui/data-grid@v4.0.0-alpha.21
 
 #### Breaking changes
 
@@ -69,7 +69,7 @@ Big thanks to the 4 contributors who made this release possible. Here are some h
 - 🙌 Fix scrollbar size on windows (#1061) @dtassone
 - 🐛 Polish existing features, fix 9 issues.
 
-### @material-ui/x-grid@v4.0.0-alpha.19 / @material-ui/data-grid@v4.0.0-alpha.19
+### @material-ui/x-grid@v4.0.0-alpha.20 / @material-ui/data-grid@v4.0.0-alpha.20
 
 #### Breaking changes
 
