@@ -70,6 +70,7 @@ describe('<XGrid /> - Rows ', () => {
         expect(getColumnValues(2)).to.deep.equal(['11', '30', '31']);
       });
     });
+
     it('should allow to switch between cell mode', () => {
       let apiRef: GridApiRef;
       const editableProps = { ...baselineProps };
