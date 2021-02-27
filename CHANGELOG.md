@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.21](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.20...v4.0.0-alpha.21)
+
+_Feb 27, 2021_
+
+Big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add support for CSV export (#1030) @DanailH.
+  This is the first iteration of the feature. You can either render the `GridToolbarExport` component in the toolbar or use the apiRef `exportDataAsCsv`/`getDataAsCsv` methods.
+
+  See the documentation for [more details](https://material-ui.com/components/data-grid/export/#csv-export).
+- 🌏 Improve the support for custom locales (#1096, #1079, #1109, #1077)
+- ♿️ Fix a couple of accessibility issues with the popups (#1105, #1102)
+
+### @material-ui/x-grid@v4.0.0-alpha.19 / @material-ui/data-grid@v4.0.0-alpha.19
+
+#### Breaking changes
+
+- [DataGrid] Prefix all public API to fit into the global Material-UI namespace (#1069) @DanailH
+  This change gets the data grid one step closer to a stable release. It allows the data grid to fit into the global namespace of Material-UI. All the exported modules should have a unique name. It allows the search features, in Google, in the docs, and in the codebase to work effectively and efficiently.
+
+  For the mirgration, prefixing a broken import with "grid" is often enough. In the case it's not working, head to the pull request's description. It [details all the changes](https://github.com/mui-org/material-ui-x/pull/1069).
+
+#### Changes
+
+- [DataGrid] Add frFR locale (#1079) @oliviertassinari
+- [DataGrid] Add missing TablePagination localizations (#1109) @DanailH
+- [DataGrid] Add ptBR locale (#1077) @erikian
+- [DataGrid] Fix checked checkbox when empty rows (#1068) @bigandy
+- [DataGrid] Fix issue with visible rows state (#1113) @dtassone
+- [DataGrid] Fix last row (#1071) @dtassone
+- [DataGrid] Fix menu accessible (#1105) @DanailH
+- [DataGrid] Fix missing translation filterOperatorAfter key (#1096) @DanailH
+- [DataGrid] Fix preferences panel accessibility (#1102) @DanailH
+- [DataGrid] Implement CSV export (#1030) @DanailH
+
+### Docs
+
+- [docs] Add expand cell renderer demo (#1070) @dtassone
+- [docs] Clarify align is separate from headerAlign (#1074) @alexdanilowicz
+- [docs] Clarify product split (#1080) @oliviertassinari
+
+### Core
+
+- [core] Fix storybook pagination stories (#1099) @dtassone
+- [core] Pin playwright image to known working version (#1110) @oliviertassinari
+- [test] Add visual regression tests (#1081) @oliviertassinari
+- [test] Avoid Rate Limit Exceeded (#1059) @oliviertassinari
+- [test] Fix containers size for screenshots (#1111) @oliviertassinari
+- [test] Fix visual regression flakiness (#1115) @oliviertassinari
+- [test] Improve BrowserStack configuration (#1100) @oliviertassinari
+- [test] Speed-up rebuild in Karma (#1064) @oliviertassinari
+
 ## [4.0.0-alpha.20](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.19...v4.0.0-alpha.20)
 
 _Feb 17, 2021_
