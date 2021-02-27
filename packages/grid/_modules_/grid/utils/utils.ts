@@ -12,6 +12,7 @@ export interface DebouncedFunction extends Function {
 export function isDate(value: any): value is Date {
   return value instanceof Date;
 }
+
 export function formatDateToLocalInputDate({
   value,
   withTime,
@@ -26,6 +27,7 @@ export function formatDateToLocalInputDate({
   }
   return value;
 }
+
 export function isArray(value: any): value is Array<any> {
   return Array.isArray(value);
 }
