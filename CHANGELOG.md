@@ -21,7 +21,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 #### Breaking changes
 
 - [DataGrid] Prefix all public API to fit into the global Material-UI namespace (#1069) @DanailH
-  This change gets us one step closer to a stable release. It allows the data grid to fit into the global namespace of Material-UI. All the exported modules should have a unique name. It allows the search features, in Google, in the docs, and in the codebase to work effectively and efficiently.
+  This change gets the data grid one step closer to a stable release. It allows the data grid to fit into the global namespace of Material-UI. All the exported modules should have a unique name. It allows the search features, in Google, in the docs, and in the codebase to work effectively and efficiently.
 
   For the mirgration, prefixing a broken import with "grid" is often enough. In the case it's not working, head to the pull request's description. It [details all the changes](https://github.com/mui-org/material-ui-x/pull/1069).
 
