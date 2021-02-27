@@ -7,12 +7,14 @@ export interface GridEditCellParams {
   id: GridRowId;
   update: GridEditRowUpdate;
 }
+
 export interface GridCellModeChangeParams {
   id: GridRowId;
   field: string;
   api: any;
   mode: GridCellMode;
 }
+
 export interface GridEditRowModelParams {
   model: GridEditRowsModel;
   api: any;
