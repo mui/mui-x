@@ -10,9 +10,8 @@ _Feb 27, 2021_
 Big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Add support for CSV export (#1030) @DanailH.
-  This is a first iteration of the feature.
-  You can either render the `GridToolbarExport` component in the toolbar
-  or use the apiRef `exportDataAsCsv`/`getDataAsCsv` methods.
+  This is the first iteration of the feature. You can either render the `GridToolbarExport` component in the toolbar or use the apiRef `exportDataAsCsv`/`getDataAsCsv` methods.
+
   See the documentation for [more details](https://material-ui.com/components/data-grid/export/#csv-export).
 - 🌏 Improve the support for custom locales (#1096, #1079, #1109, #1077)
 - ♿️ Fix a couple of accessibility issues with the popups (#1105, #1102)
