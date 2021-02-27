@@ -26,16 +26,16 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     children,
     colIndex,
     cssClass,
-    hasFocus,
-    isEditable,
     field,
     formattedValue,
+    hasFocus,
+    height,
+    isEditable,
     rowIndex,
     showRightBorder,
     tabIndex,
     value,
     width,
-    height,
   } = props;
 
   const valueToRender = formattedValue || value;
