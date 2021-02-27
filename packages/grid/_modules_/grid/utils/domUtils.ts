@@ -39,6 +39,7 @@ export function isGridHeaderTitleContainer(elem: Element): boolean {
 export function getIdFromRowElem(rowEl: Element): string {
   return rowEl.getAttribute('data-id')!;
 }
+
 export function getFieldFromCellElem(cellEl: Element): string {
   return cellEl.getAttribute('data-field')!;
 }
