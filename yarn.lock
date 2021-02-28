@@ -13407,9 +13407,9 @@ jest-haste-map@^26.6.2:
     fsevents "^2.1.2"
 
 jest-image-snapshot@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/jest-image-snapshot/-/jest-image-snapshot-4.1.0.tgz#107fed0bbf68d465037071a337f4bc17cf54cc2c"
-  integrity sha512-jSceASW6BQWSuU2r0/47sBYdxgHUI//49gYUKwCxn5d7faP39kB1TRTuH30dEMmjvzob0t/NKer5H0mwoPuZwA==
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/jest-image-snapshot/-/jest-image-snapshot-4.4.0.tgz#7c5282cc62280086b6cbcda203d50b6ee0b0e71e"
+  integrity sha512-lGlHxoEHLYL0qyr6E7SA04/eMT/PFWxHRNmhEJZpw80iE1XH/wSHEKiK4oDGJI5FQ4hhWPXmcH5tDlTvsAHogQ==
   dependencies:
     chalk "^1.1.3"
     get-stdin "^5.0.1"
@@ -19563,15 +19563,10 @@ sshpk@^1.7.0:
     safer-buffer "^2.0.2"
     tweetnacl "~0.14.0"
 
-ssim.js@^3.1.0:
+ssim.js@^3.1.0, ssim.js@^3.1.1:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/ssim.js/-/ssim.js-3.3.0.tgz#49d9f6d741467054118f2a61c0e106e2defe03dc"
   integrity sha512-Gu85i4R+lN1U1NtOP59CHSpZXHhF8jGqRH8RzxRc5v/YlU+ralZIs4pJyaWgqf3Kzbzx73qcjwmmY2kbq/jBOw==
-
-ssim.js@^3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/ssim.js/-/ssim.js-3.1.1.tgz#6b0ad54a8eeae3490adde84076f62a2dc48febfe"
-  integrity sha512-/AcvEnpIxwh1+t4HNRE9lg+Ka8MIsUPXsXeQjzd5IQjs1DcphrlPHKciWdZRnHAQoQIbLFzXJ+5KruYeH7oXjw==
 
 ssri@^6.0.0, ssri@^6.0.1:
   version "6.0.1"
