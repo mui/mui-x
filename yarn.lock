@@ -5121,13 +5121,13 @@
     "@types/istanbul-lib-report" "*"
 
 "@types/jest-image-snapshot@^4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@types/jest-image-snapshot/-/jest-image-snapshot-4.1.0.tgz#787c9af8bc69f733895972e15f40c9ae8fde9e81"
-  integrity sha512-C6jmexjimSMO1or8LvprZgfoFCCMV9uAvxRH38pd6KleTuwDqG8EZpe9Ivng/ZSirq/RqzrcBHjChqXoO9rUCg==
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/@types/jest-image-snapshot/-/jest-image-snapshot-4.3.0.tgz#d07d4278520ab0d3be0ad2d7825b282180c03cb4"
+  integrity sha512-gb6zF1ICfvzBsQYMTq2qFhhiI46Cab/t5PtLK4Z3mpbyQoyKI2HgCFDi71iE7rjs6TrIPnsf2GXw+mnGvZSgrA==
   dependencies:
     "@types/jest" "*"
     "@types/pixelmatch" "*"
-    ssim.js "^3.1.0"
+    ssim.js "^3.1.1"
 
 "@types/jest@*", "@types/jest@26.x", "@types/jest@^26.0.0", "@types/jest@^26.0.14":
   version "26.0.19"
@@ -19562,11 +19562,6 @@ sshpk@^1.7.0:
     jsbn "~0.1.0"
     safer-buffer "^2.0.2"
     tweetnacl "~0.14.0"
-
-ssim.js@^3.1.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/ssim.js/-/ssim.js-3.3.0.tgz#49d9f6d741467054118f2a61c0e106e2defe03dc"
-  integrity sha512-Gu85i4R+lN1U1NtOP59CHSpZXHhF8jGqRH8RzxRc5v/YlU+ralZIs4pJyaWgqf3Kzbzx73qcjwmmY2kbq/jBOw==
 
 ssim.js@^3.1.1:
   version "3.1.1"
