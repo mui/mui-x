@@ -57,7 +57,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
         }
 
         const currentCellEditState: GridEditRowsModel = { ...state.editRows };
-        currentCellEditState[id] = {...currentCellEditState[id]} || {};
+        currentCellEditState[id] = { ...currentCellEditState[id] } || {};
         currentCellEditState[id][field] = { value: getCellValue(id, field) };
 
         const newEditRowsState: GridEditRowsModel = { ...state.editRows, ...currentCellEditState };

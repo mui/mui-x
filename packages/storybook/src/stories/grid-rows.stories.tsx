@@ -354,39 +354,9 @@ export function ExpendRowCell() {
 }
 
 // Requirements
-/*
-- Turn edit mode, using a button or events such as double click...
-- Expose double click cell
-- Be able to edit rows as well as individual cell
-- Validate the value of a cell
-- render different input component according to the type of value to edit
-- fix issue with number as IDs
-- Provide a basic Edit UX out of the box
-- Customise the edit for a particular cell
-- Some columns should not be editable
-- Some rows should not be editable
-
-colDef.renderEditCell
-
-        <XGrid
-          {...baselineProps}
-          apiRef={apiRef}
-          onCellClick={onCellClick}
-          isCellEditable={(params: CellParams)=> boolean}
-          onCellModeChange
-          onRowModeChange
-          onCellValueChange=??? => while typing, allows to validate? Or feedback user...
-          onCellValueChangeCommitted => pressing enter? What happens when you press ESC?
-        />
-
- */
 // TODO demo with Cell edit with value getter
 // Todo demo with cell not editable according to value
-// demo with cell edit validation
-// demo with cell edit validation serverside ie username
-// demo with cell edit client and serverside ie username
-
-// TODO create inputs for each col types
+// demo with cell edit validation, email, username(serverside)
 
 const baselineEditProps = {
   rows: [
