@@ -20,36 +20,19 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
   } = props;
 
   const editRowApi = api as GridEditRowApi;
-  const caretRafRef = React.useRef<number>(0);
-  React.useEffect(() => {
-    return () => {
-      cancelAnimationFrame(caretRafRef.current);
-    };
-  }, []);
-
-  const keepCaretPosition = React.useCallback((event) => {
-    // Fix caret from jumping to the end of the input
-    const caret = event.target.selectionStart;
-    const element = event.target;
-    caretRafRef.current = window.requestAnimationFrame(() => {
-      element.selectionStart = caret;
-      element.selectionEnd = caret;
-    });
-  }, []);
+  const [valueState, setValueState] = React.useState(value);
 
   const onValueChange = React.useCallback(
     (event) => {
-      if (colDef.type === 'string') {
-        keepCaretPosition(event);
-      }
       const newValue = event.target.value;
       const update: GridEditRowUpdate = {};
       update[field] = {
         value: colDef.type === 'date' || colDef.type === 'dateTime' ? new Date(newValue) : newValue,
       };
+      setValueState(newValue);
       editRowApi.setEditCellProps(row.id, update);
     },
-    [editRowApi, colDef.type, field, keepCaretPosition, row.id],
+    [editRowApi, colDef.type, field, row.id],
   );
 
   const onKeyDown = React.useCallback(
@@ -69,18 +52,24 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
 
   const inputType = mapColDefTypeToInputType(colDef.type);
   const formattedValue =
-    value && isDate(value)
-      ? formatDateToLocalInputDate({ value, withTime: colDef.type === 'dateTime' })
-      : value;
+    valueState && isDate(valueState)
+      ? formatDateToLocalInputDate({ value: valueState, withTime: colDef.type === 'dateTime' })
+      : valueState;
+
+  React.useEffect(() => {
+    // The value props takes priority over state in case it is overwritten externally. Then we override the state value.
+    setValueState((prev) => (value !== prev ? value : prev));
+  }, [value]);
 
   return (
     <InputBase
       autoFocus
+      fullWidth
+      className="MuiDataGrid-editCellInputBase"
       onKeyDown={onKeyDown}
       value={formattedValue}
       onChange={onValueChange}
       type={inputType}
-      style={{ width: '100%' }}
       {...inputBaseProps}
     />
   );

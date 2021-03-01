@@ -482,6 +482,7 @@ export function EditRowsControl() {
           ...editRowsModel[id],
           email: { ...update.email, error: !isValid },
         };
+        newState[id].email.value += 'EXTERRRR';
         setEditRowsModel((state) => ({ ...state, ...newState }));
         return;
       }
@@ -568,6 +569,36 @@ export function EditRowsBasic() {
       <div className="grid-container">
         <XGrid
           {...baselineEditProps}
+          apiRef={apiRef}
+          onCellDoubleClick={onCellDoubleClick}
+          onEditRowModelChange={action('onEditRowsModelChange')}
+        />
+      </div>
+    </React.Fragment>
+  );
+}
+const singleData = { rows: [...baselineEditProps.rows], columns: [...baselineEditProps.columns] };
+singleData.rows.length = 1;
+singleData.columns.length = 1;
+singleData.columns[0].width = 200;
+
+export function SingleCellBasic() {
+  const apiRef = useGridApiRef();
+  const onCellDoubleClick = React.useCallback(
+    (params: GridCellParams) => {
+      if (params.isEditable) {
+        apiRef.current.setCellMode(params.row.id!.toString(), params.field, 'edit');
+      }
+    },
+    [apiRef],
+  );
+
+  return (
+    <React.Fragment>
+      Double click to edit.
+      <div className="grid-container">
+        <XGrid
+          {...singleData}
           apiRef={apiRef}
           onCellDoubleClick={onCellDoubleClick}
           onEditRowModelChange={action('onEditRowsModelChange')}
