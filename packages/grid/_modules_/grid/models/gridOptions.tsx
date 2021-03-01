@@ -304,19 +304,23 @@ export interface GridOptions {
    */
   isCellEditable?: (params: GridCellParams) => boolean;
   /**
-   * Callback fired when […].
+   * Callback fired when the EditRowModel changed.
+   * @param handler
    */
   onEditRowModelChange?: (params: GridEditRowModelParams) => void;
   /**
-   * Callback fired when […].
+   * Callback fired when the cell mode changed.
+   * @param handler
    */
   onCellModeChange?: (params: GridCellModeChangeParams) => void;
   /**
-   * Callback fired when […].
+   * Callback fired when the edit cell value changed.
+   * @param handler
    */
   onEditCellChange?: (params: GridEditCellParams) => void;
   /**
-   * Callback fired when […].
+   * Callback fired when the cell changes are commited.
+   * @param handler
    */
   onEditCellChangeCommitted?: (params: GridEditCellParams) => void;
   /**

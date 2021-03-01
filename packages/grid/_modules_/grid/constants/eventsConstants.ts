@@ -9,7 +9,7 @@ export const GRID_KEYUP = 'keyup';
 export const GRID_SCROLL = 'scroll';
 export const GRID_DRAGEND = 'dragend';
 
-// XGRID events
+// GRID events
 export const GRID_CELL_CHANGE = 'cellChange';
 export const GRID_CELL_CHANGE_COMMITTED = 'cellChangeCommitted';
 export const GRID_CELL_MODE_CHANGE = 'cellModeChange';

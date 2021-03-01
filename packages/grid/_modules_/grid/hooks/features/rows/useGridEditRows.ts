@@ -20,7 +20,6 @@ import {
 import { buildGridCellParams } from '../../../utils/paramsUtils';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
-
 import { optionsSelector } from '../../utils/optionsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
@@ -58,7 +57,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
         }
 
         const currentCellEditState: GridEditRowsModel = { ...state.editRows };
-        currentCellEditState[id] = currentCellEditState[id] || {};
+        currentCellEditState[id] = {...currentCellEditState[id]} || {};
         currentCellEditState[id][field] = { value: getCellValue(id, field) };
 
         const newEditRowsState: GridEditRowsModel = { ...state.editRows, ...currentCellEditState };
