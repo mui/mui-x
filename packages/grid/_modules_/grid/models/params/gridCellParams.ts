@@ -44,7 +44,7 @@ export interface GridCellParams {
    */
   api: any;
   /**
-   * true: if the cell is editable
+   * If true, the cell is editable.
    */
   isEditable?: boolean;
 }

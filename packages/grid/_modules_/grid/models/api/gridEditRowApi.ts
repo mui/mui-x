@@ -10,34 +10,34 @@ import {
 
 export interface GridEditRowApi {
   /**
-   * Set the edit rows model of the grid
+   * Set the edit rows model of the grid.
    * @param GridEditRowsModel
    */
   setEditRowsModel: (model: GridEditRowsModel) => void;
   /**
-   * Set the cell mode of a cell
+   * Set the cellMode of a cell.
    * @param GridRowId
    * @param string
    * @param 'edit' | 'view'
    */
   setCellMode: (id: GridRowId, field: string, mode: GridCellMode) => void;
   /**
-   * Returns true if the cell is editable
+   * Returns true if the cell is editable.
    * @param params
    */
   isCellEditable: (params: GridCellParams) => boolean;
   /**
-   * Set the edit cell input props
+   * Set the edit cell input props.
    * @param update
    */
   setEditCellProps: (id: GridRowId, update: GridEditRowUpdate) => void;
   /**
-   * commit the cell value changes to update the cell value.
+   * Commit the cell value changes to update the cell value.
    * @param update
    */
   commitCellChange: (id: GridRowId, update: GridEditRowUpdate) => void;
   /**
-   * get the cell value of a row and field
+   * Get the cell value of a row and field.
    * @param id
    * @param field
    */

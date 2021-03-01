@@ -53,7 +53,7 @@ export interface GridColDef {
    */
   resizable?: boolean;
   /**
-   * If `true`, the column cell would be   editable.
+   * If `true`, the cells of the column are editable.
    * @default true
    */
   editable?: boolean;

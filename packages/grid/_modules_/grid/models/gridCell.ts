@@ -1,5 +1,5 @@
 /**
- * The Cell mode values.
+ * The mode of the cell.
  */
 export type GridCellMode = 'edit' | 'view';
 
