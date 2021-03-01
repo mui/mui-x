@@ -2,7 +2,6 @@ import { GridCellValue } from './gridCell';
 
 export interface GridEditCellProps {
   value: GridCellValue;
-
   [prop: string]: any;
 }
 

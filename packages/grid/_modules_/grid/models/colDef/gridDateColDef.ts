@@ -1,4 +1,3 @@
-import { renderEditInputCell } from '../../components/editCell/EditInputCell';
 import { isDate } from '../../utils/utils';
 import { gridDateComparer } from '../../utils/sortingUtils';
 import { GridCellValue } from '../gridCell';
@@ -26,7 +25,6 @@ export const GRID_DATE_COL_DEF: GridColTypeDef = {
   sortComparator: gridDateComparer,
   valueFormatter: gridDateFormatter,
   filterOperators: getGridDateOperators(),
-  renderEditCell: renderEditInputCell,
 };
 
 export const GRID_DATETIME_COL_DEF: GridColTypeDef = {
@@ -35,5 +33,4 @@ export const GRID_DATETIME_COL_DEF: GridColTypeDef = {
   sortComparator: gridDateComparer,
   valueFormatter: gridDateTimeFormatter,
   filterOperators: getGridDateOperators(true),
-  renderEditCell: renderEditInputCell,
 };

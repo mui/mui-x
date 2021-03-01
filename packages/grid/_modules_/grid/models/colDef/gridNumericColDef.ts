@@ -1,4 +1,3 @@
-import { renderEditInputCell } from '../../components/editCell/EditInputCell';
 import { gridNumberComparer } from '../../utils/sortingUtils';
 import { isNumber } from '../../utils/utils';
 import { getGridNumericColumnOperators } from './gridNumericOperators';
@@ -13,5 +12,4 @@ export const GRID_NUMERIC_COL_DEF: GridColTypeDef = {
   sortComparator: gridNumberComparer,
   valueFormatter: ({ value }) => (value && isNumber(value) && value.toLocaleString()) || value,
   filterOperators: getGridNumericColumnOperators(),
-  renderEditCell: renderEditInputCell,
 };

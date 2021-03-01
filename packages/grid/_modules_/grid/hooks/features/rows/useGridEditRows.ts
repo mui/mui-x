@@ -236,5 +236,5 @@ export function useGridEditRows(apiRef: GridApiRef) {
 
   React.useEffect(() => {
     apiRef.current.setEditRowsModel(options.editRowsModel || {});
-  }, [apiRef, forceUpdate, options.editRowsModel]);
+  }, [apiRef, options.editRowsModel]);
 }

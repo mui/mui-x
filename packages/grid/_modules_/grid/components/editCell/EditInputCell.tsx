@@ -20,7 +20,7 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
   } = props;
 
   const editRowApi = api as GridEditRowApi;
-  const caretRafRef = React.useRef(0);
+  const caretRafRef = React.useRef<number>(0);
   React.useEffect(() => {
     return () => {
       cancelAnimationFrame(caretRafRef.current);

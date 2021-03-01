@@ -94,8 +94,8 @@ describe('<XGrid /> - Rows ', () => {
       expect(cell.querySelector('input')!.value).to.equal('Jack');
       apiRef!.current.setCellMode('c2', 'first', 'view');
 
-      expect(cell.classList.contains('MuiDataGrid-cellEditable')).to.equal(true);
-      expect(cell.classList.contains('MuiDataGrid-cellEditing')).to.equal(false);
+      expect(cell).to.have.class('MuiDataGrid-cellEditable');
+      expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
       expect(cell.querySelector('input')).to.equal(null);
     });
   });
