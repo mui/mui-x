@@ -35,7 +35,6 @@ const useStyles = makeStyles({
   },
 });
 
-// eslint-disable-next-line react/prop-types
 const SettingsPanel = ({ onApply, type, size }) => {
   const [sizeState, setSize] = React.useState(size);
   const [typeState, setType] = React.useState(type);
