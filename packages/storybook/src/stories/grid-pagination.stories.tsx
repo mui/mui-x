@@ -436,12 +436,7 @@ export function CommodityAutoPageSize() {
   });
   return (
     <div className="grid-container">
-      <DataGrid
-        rows={data.rows}
-        columns={data.columns}
-        pagination
-        autoPageSize
-      />
+      <DataGrid rows={data.rows} columns={data.columns} pagination autoPageSize />
     </div>
   );
 }
