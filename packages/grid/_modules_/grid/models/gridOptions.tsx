@@ -319,7 +319,7 @@ export interface GridOptions {
    */
   onEditCellChange?: (params: GridEditCellParams) => void;
   /**
-   * Callback fired when the cell changes are commited.
+   * Callback fired when the cell changes are committed.
    * @param handler
    */
   onEditCellChangeCommitted?: (params: GridEditCellParams) => void;

@@ -53,7 +53,7 @@ export interface GridEditRowApi {
    */
   onCellModeChange: (handler: (param: GridCellModeChangeParams) => void) => void;
   /**
-   * Callback fired when the cell changes are commited.
+   * Callback fired when the cell changes are committed.
    * @param handler
    */
   onEditCellChangeCommitted: (handler: (param: GridEditCellParams) => void) => void;
