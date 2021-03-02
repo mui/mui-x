@@ -77,6 +77,8 @@ export function GridColumnHeaderMenu({
         currentColumn={currentColumn}
         hideMenu={hideMenu}
         open={columnMenuState.open}
+        id={columnMenuState.id}
+        labelledby={columnMenuState.labelledby}
         {...contentComponentProps}
       />
     </GridMenu>

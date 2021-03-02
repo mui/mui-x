@@ -1,6 +1,8 @@
+import { bgBG as bgBGCore } from '@material-ui/core/locale';
+import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils';
 
-export const bgBG: Localization = getGridLocalization({
+const bgBGGrid: Partial<GridLocaleText> = {
   // Root
   rootGridLabel: 'мрежа',
   noRowsLabel: 'Няма редове',
@@ -75,7 +77,6 @@ export const bgBG: Localization = getGridLocalization({
 
   // Total rows footer text
   footerTotalRows: 'Общо Rедове:',
+};
 
-  // Pagination footer text
-  footerPaginationRowsPerPage: 'Редове на страница:',
-});
+export const bgBG: Localization = getGridLocalization(bgBGGrid, bgBGCore);

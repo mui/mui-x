@@ -1,4 +1,6 @@
 import * as React from 'react';
+// @ts-expect-error fixed in Material-UI v5, types definitions were added.
+import { unstable_useId as useId } from '@material-ui/core/utils';
 import MenuList from '@material-ui/core/MenuList';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -15,6 +17,8 @@ export function GridDensitySelector() {
   const apiRef = React.useContext(GridApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
   const densityValue = useGridSelector(apiRef, gridDensityValueSelector);
+  const densityButtonId = useId();
+  const densityMenuId = useId();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const DensityCompactIcon = apiRef!.current.components!.DensityCompactIcon!;
@@ -58,8 +62,10 @@ export function GridDensitySelector() {
   };
 
   const handleListKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Tab' || event.key === 'Escape') {
+    if (event.key === 'Tab') {
       event.preventDefault();
+    }
+    if (event.key === 'Tab' || event.key === 'Escape') {
       handleDensitySelectorClose();
     }
   };
@@ -89,7 +95,9 @@ export function GridDensitySelector() {
         onClick={handleDensitySelectorOpen}
         aria-label={apiRef!.current.getLocaleText('toolbarDensityLabel')}
         aria-expanded={anchorEl ? 'true' : undefined}
-        aria-haspopup="listbox"
+        aria-haspopup="menu"
+        aria-labelledby={densityMenuId}
+        id={densityButtonId}
       >
         {apiRef!.current.getLocaleText('toolbarDensity')}
       </Button>
@@ -99,7 +107,13 @@ export function GridDensitySelector() {
         onClickAway={handleDensitySelectorClose}
         position="bottom-start"
       >
-        <MenuList role="listbox" onKeyDown={handleListKeyDown} autoFocusItem={Boolean(anchorEl)}>
+        <MenuList
+          id={densityMenuId}
+          className="MuiDataGrid-gridMenuList"
+          aria-labelledby={densityButtonId}
+          onKeyDown={handleListKeyDown}
+          autoFocusItem={Boolean(anchorEl)}
+        >
           {renderDensityOptions}
         </MenuList>
       </GridMenu>

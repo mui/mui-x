@@ -9,7 +9,7 @@ const rows = [
   },
 ];
 
-export default function ColumnWidthGrid() {
+export default function ColumnSizingGrid() {
   return (
     <div style={{ height: 250, width: '100%' }}>
       <XGrid

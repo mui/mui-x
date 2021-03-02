@@ -1,6 +1,6 @@
 # @material-ui/x-grid
 
-The Material-UI X edition of the data grid component.
+The Material-UI X Commercial edition of the data grid component.
 
 ## Installation
 
@@ -18,7 +18,7 @@ This component has 2 peer dependencies that you will need to install as well.
 
 ```json
 "peerDependencies": {
-  "@material-ui/core": "^4.9.12",
+  "@material-ui/core": "^4.9.12 || ^5.0.0-alpha.22",
   "react": "^16.8.0 || ^17.0.0"
 },
 ```

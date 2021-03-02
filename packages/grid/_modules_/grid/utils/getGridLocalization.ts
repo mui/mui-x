@@ -18,15 +18,19 @@ export interface LocalizationV5 {
 
 export type Localization = LocalizationV4 | LocalizationV5;
 
-export const getGridLocalization = (translations: Partial<GridLocaleText>): Localization => {
+export const getGridLocalization = (
+  gridTranslations: Partial<GridLocaleText>,
+  coreTranslations,
+): Localization => {
   if (isMuiV5()) {
     return {
       components: {
         MuiDataGrid: {
           defaultProps: {
-            localeText: translations,
+            localeText: gridTranslations,
           },
         },
+        ...coreTranslations.components,
       },
     };
   }
@@ -34,8 +38,9 @@ export const getGridLocalization = (translations: Partial<GridLocaleText>): Loca
   return {
     props: {
       MuiDataGrid: {
-        localeText: translations,
+        localeText: gridTranslations,
       },
+      ...coreTranslations.props,
     },
   };
 };

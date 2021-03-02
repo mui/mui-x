@@ -19,6 +19,10 @@ export interface GridFilterModelParams {
    */
   rows: GridRowModel[];
   /**
+   * The set of currently visible rows.
+   */
+  visibleRows: GridRowModel[];
+  /**
    * Api that let you manipulate the grid.
    */
   api: any;

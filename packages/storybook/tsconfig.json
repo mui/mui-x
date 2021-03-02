@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "dist/",
     "rootDirs": ["src"],
-    "types": ["node", "jest", "jest-image-snapshot"],
+    "types": ["node"],
     "sourceMap": true
   },
   "include": ["src/**/*"],
