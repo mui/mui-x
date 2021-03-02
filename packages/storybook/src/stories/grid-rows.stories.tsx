@@ -607,3 +607,25 @@ export function SingleCellBasic() {
     </React.Fragment>
   );
 }
+export function CommodityEdit() {
+  const apiRef = useGridApiRef();
+  const onCellDoubleClick = React.useCallback(
+    (params: GridCellParams) => {
+      apiRef.current.setCellMode(params.row.id!.toString(), params.field, 'edit');
+    },
+    [apiRef],
+  );
+
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100000,
+  });
+
+  return (
+    <React.Fragment>
+      <div style={{ width: '100%', height: 600 }}>
+        <XGrid {...data} apiRef={apiRef} onCellDoubleClick={onCellDoubleClick} />
+      </div>
+    </React.Fragment>
+  );
+}

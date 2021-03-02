@@ -158,13 +158,16 @@ export const useGridRows = (
           addedRows.push(partialRow);
           return;
         }
-        Object.assign(internalRowsState.current.idRowsLookup[id], {
+        const lookup = { ...internalRowsState.current.idRowsLookup };
+
+        lookup[id] = {
           ...oldRow,
           ...partialRow,
-        });
+        };
+        internalRowsState.current.idRowsLookup = lookup;
       });
 
-      setGridState((state) => ({ ...state, rows: internalRowsState.current }));
+      setGridState((state) => ({ ...state, rows: { ...internalRowsState.current } }));
 
       if (deletedRows.length > 0 || addedRows.length > 0) {
         deletedRows.forEach((row) => {
