@@ -140,9 +140,11 @@ export const useGridContainerProps = (
         (options.autoPageSize ? 1 : rowsCount / viewportPageSize) * viewportSizes.height +
         (scrollState.hasScrollY ? scrollState.scrollBarSize.x : 0);
 
-      // make sure the last row fit well due to rounding
-      totalHeight += totalHeight % rowHeight;
-
+      if(!options.autoPageSize) {
+        // make sure the last row fit well due to rounding,
+        // we round down in autoPageSize mode so it properly fits the viewport.
+        totalHeight += totalHeight % rowHeight;
+      }
       if (options.autoHeight) {
         totalHeight = rowsCount * rowHeight + scrollState.scrollBarSize.x;
       }
