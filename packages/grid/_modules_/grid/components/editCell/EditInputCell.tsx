@@ -57,8 +57,7 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
       : valueState;
 
   React.useEffect(() => {
-    // The value props takes priority over state in case it is overwritten externally. Then we override the state value.
-    setValueState((prev) => (value !== prev ? value : prev));
+    setValueState(value);
   }, [value]);
 
   return (
