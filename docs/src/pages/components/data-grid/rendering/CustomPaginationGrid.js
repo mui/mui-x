@@ -19,9 +19,9 @@ function CustomPagination(props) {
     <Pagination
       className={classes.root}
       color="primary"
-      page={state.pagination.page}
       count={state.pagination.pageCount}
-      onChange={(event, value) => api.current.setPage(value)}
+      page={state.pagination.page + 1}
+      onChange={(event, value) => api.current.setPage(value - 1)}
     />
   );
 }
