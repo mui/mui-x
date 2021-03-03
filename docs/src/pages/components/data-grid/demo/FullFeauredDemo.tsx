@@ -104,7 +104,6 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     '& .MuiFormGroup-options': {
       alignItems: 'center',
-      justifyContent: 'center',
       marginBottom: theme.spacing(2),
       '& fieldset': {
         padding: theme.spacing(0, 1),
@@ -117,7 +116,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function SettingsPanel(props) {
-  // eslint-disable-next-line react/prop-types
   const { onApply, type, size, theme } = props;
   const [sizeState, setSize] = React.useState(size);
   const [typeState, setType] = React.useState(type);
