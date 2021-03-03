@@ -12,9 +12,3 @@ components: DataGrid, XGrid
 This demo includes all of the currently available features in `XGrid`. Use the settings to alter the data and play with the grid.
 
 {{"demo": "pages/components/data-grid/demo/FullFeauredDemo.js", "bg": "inline"}}
-
-## Streaming
-
-This is a streaming demo that showcases how real-time data can be handled using the grid.
-
-{{"demo": "pages/components/data-grid/demo/StreamingDemo.js", "bg": "inline"}}

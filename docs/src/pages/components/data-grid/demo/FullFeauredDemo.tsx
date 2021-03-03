@@ -15,41 +15,43 @@ import FormLabel from '@material-ui/core/FormLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    height: 400,
+    height: 600,
     width: '100%',
     '& .MuiFormGroup-options': {
       alignItems: 'center',
       justifyContent: 'center',
-      marginBottom: 15,
+      marginBottom: theme.spacing(2),
       '& fieldset': {
-        padding: `0 10px`,
+        padding: theme.spacing(0, 1),
       },
       '& button': {
-        marginLeft: 20,
+        marginLeft: theme.spacing(3),
       },
     },
   },
-});
+}));
 
-const SettingsPanel = ({ onApply, type, size }) => {
+function SettingsPanel(props) {
+  // eslint-disable-next-line react/prop-types
+  const { onApply, type, size } = props;
   const [sizeState, setSize] = React.useState(size);
   const [typeState, setType] = React.useState(type);
   const [selectedPaginationValue, setSelectedPaginationValue] = React.useState(-1);
 
-  const onSizeChange = React.useCallback((e) => {
-    setSize(Number(e.target.value));
+  const onSizeChange = React.useCallback((event) => {
+    setSize(Number(event.target.value));
   }, []);
 
-  const onDatasetChange = React.useCallback((e) => {
-    setType(e.target.value);
+  const onDatasetChange = React.useCallback((event) => {
+    setType(event.target.value);
   }, []);
 
-  const onPaginationChange = React.useCallback((e) => {
-    setSelectedPaginationValue(e.target.value);
+  const onPaginationChange = React.useCallback((event) => {
+    setSelectedPaginationValue(event.target.value);
   }, []);
 
   const applyChanges = React.useCallback(() => {
@@ -89,7 +91,7 @@ const SettingsPanel = ({ onApply, type, size }) => {
       </Button>
     </FormGroup>
   );
-};
+}
 
 export default function FullFeaturedDemo() {
   const classes = useStyles();
@@ -103,7 +105,7 @@ export default function FullFeaturedDemo() {
   const [gridData, setGridData] = React.useState({});
   const [pagination, setPagination] = React.useState({});
 
-  const onApplyClick = async (settings) => {
+  const handleApplyClick = async (settings) => {
     if (size !== settings.size) {
       setSize(settings.size);
     }
@@ -118,30 +120,31 @@ export default function FullFeaturedDemo() {
     );
     setGridData(newData);
 
-    const newPagination = {
+    const newPaginationSettings = {
       pagination: settings.pagesize !== -1,
       autoPageSize: settings.pagesize === 0,
       pageSize: settings.pagesize > 0 ? settings.pagesize : undefined,
     };
 
-    setPagination((p: any) => {
+    setPagination((currentPaginationSettings: any) => {
       if (
-        p.pagination === newPagination.pagination &&
-        p.autoPageSize === newPagination.autoPageSize &&
-        p.pageSize === newPagination.pageSize
+        currentPaginationSettings.pagination === newPaginationSettings.pagination &&
+        currentPaginationSettings.autoPageSize ===
+          newPaginationSettings.autoPageSize &&
+        currentPaginationSettings.pageSize === newPaginationSettings.pageSize
       ) {
-        return p;
+        return currentPaginationSettings;
       }
-      return newPagination;
+      return newPaginationSettings;
     });
   };
 
   return (
     <div className={classes.root}>
-      <SettingsPanel onApply={onApplyClick} size={size} type={type} />
+      <SettingsPanel onApply={handleApplyClick} size={size} type={type} />
       <XGrid
         columns={(gridData as any).columns || data.columns}
-        rows={(gridData as any).rows || data.rows}
+        rows={(gridData.rows as any) || data.rows}
         components={{
           Toolbar: GridToolbar,
         }}
