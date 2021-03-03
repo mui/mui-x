@@ -230,6 +230,17 @@ export const useStyles = makeStyles(
           whiteSpace: 'nowrap',
           borderBottom: `1px solid ${borderColor}`,
         },
+        '& .MuiDataGrid-editCellInputBase': {
+          ...theme.typography.body2,
+          border: `1px solid ${borderColor}`,
+          borderRadius: theme.shape.borderRadius,
+          '& :focus': {
+            borderColor: theme.palette.text.primary,
+            outline: 0,
+            // boxShadow: getThemePaletteMode(theme.palette) === 'light' ? null : '0 0 0 100px #266798 inset',
+            boxShadow: 'inset 0 1px 1px rgb(0 0 0 / 8%), 0 0 8px rgb(102 175 233 / 60%)',
+          },
+        },
         // The very last cell
         '& .MuiDataGrid-colCellWrapper .MuiDataGrid-cell': {
           borderBottom: 'none',

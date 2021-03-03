@@ -5,6 +5,7 @@ import { GridLocaleText } from './api/gridLocaleTextApi';
 import { GridColumnTypesRecord } from './colDef/gridColTypeDef';
 import { getGridDefaultColumnTypes } from './colDef/gridDefaultColumnTypes';
 import { GridDensity, GridDensityTypes } from './gridDensity';
+import { GridEditRowsModel } from './gridEditRowModel';
 import { GridFeatureMode, GridFeatureModeConstant } from './gridFeatureMode';
 import { GridCellParams } from './params/gridCellParams';
 import { GridColParams } from './params/gridColParams';
@@ -16,6 +17,11 @@ import { GridSelectionModelChangeParams } from './params/gridSelectionModelChang
 import { GridSortModelParams } from './params/gridSortModelParams';
 import { GridSelectionModel } from './gridSelectionModel';
 import { GridSortDirection, GridSortModel } from './gridSortModel';
+import {
+  GridCellModeChangeParams,
+  GridEditCellParams,
+  GridEditRowModelParams,
+} from './params/gridEditCellParams';
 
 // TODO add multiSortKey
 /**
@@ -159,6 +165,12 @@ export interface GridOptions {
    */
   filterMode?: GridFeatureMode;
   /**
+   * Edit cell or rows can be processed on the server or client-side.
+   * Set it to 'client' if you would like to handle editing on the client-side.
+   * Set it to 'server' if you would like to handle editing on the server-side.
+   */
+  editMode?: GridFeatureMode;
+  /**
    * If `true`, the footer component is hidden.
    * @default false
    */
@@ -216,6 +228,11 @@ export interface GridOptions {
    */
   onCellClick?: (param: GridCellParams) => void;
   /**
+   * Callback fired when a double click event comes from a cell element.
+   * @param param With all properties from [[CellParams]].
+   */
+  onCellDoubleClick?: (param: GridCellParams) => void;
+  /**
    * Callback fired when a hover event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
    */
@@ -225,6 +242,11 @@ export interface GridOptions {
    * @param param With all properties from [[GridRowParams]].
    */
   onRowClick?: (param: GridRowParams) => void;
+  /**
+   * Callback fired when a click event comes from a row container element.
+   * @param param With all properties from [[RowParams]].
+   */
+  onRowDoubleClick?: (param: GridRowParams) => void;
   /**
    * Callback fired when a hover event comes from a row container element.
    * @param param With all properties from [[GridRowParams]].
@@ -273,6 +295,34 @@ export interface GridOptions {
    * Callback fired when the state of the grid is updated.
    */
   onStateChange?: (params: any) => void;
+  /**
+   * Set the edit rows model of the grid.
+   */
+  editRowsModel?: GridEditRowsModel;
+  /**
+   * Callback fired when a cell is rendered, returns true if the cell is editable.
+   */
+  isCellEditable?: (params: GridCellParams) => boolean;
+  /**
+   * Callback fired when the EditRowModel changed.
+   * @param handler
+   */
+  onEditRowModelChange?: (params: GridEditRowModelParams) => void;
+  /**
+   * Callback fired when the cell mode changed.
+   * @param handler
+   */
+  onCellModeChange?: (params: GridCellModeChangeParams) => void;
+  /**
+   * Callback fired when the edit cell value changed.
+   * @param handler
+   */
+  onEditCellChange?: (params: GridEditCellParams) => void;
+  /**
+   * Callback fired when the cell changes are committed.
+   * @param handler
+   */
+  onEditCellChangeCommitted?: (params: GridEditCellParams) => void;
   /**
    * Extend native column types with your new column types.
    */

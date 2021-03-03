@@ -11,6 +11,7 @@ export function buildGridCellParams({
   element,
   value,
   rowIndex,
+  colIndex,
   rowModel,
   colDef,
   api,
@@ -18,11 +19,12 @@ export function buildGridCellParams({
   rowModel: GridRowModel;
   colDef: GridColDef;
   rowIndex?: number;
+  colIndex?: number;
   value: GridCellValue;
   api: GridApi;
   element?: HTMLElement;
 }): GridCellParams {
-  return {
+  const params: GridCellParams = {
     element,
     value,
     field: colDef?.field,
@@ -60,8 +62,14 @@ export function buildGridCellParams({
     row: rowModel,
     colDef,
     rowIndex,
+    colIndex: colIndex || (colDef && api.getColumnIndex(colDef.field, true)),
     api,
   };
+  const isEditableAttr = element && element.getAttribute('data-editable');
+  params.isEditable =
+    isEditableAttr != null ? isEditableAttr === 'true' : colDef && api.isCellEditable(params);
+
+  return params;
 }
 
 export function buildGridRowParams({

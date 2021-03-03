@@ -5,14 +5,19 @@ import Popper from '@material-ui/core/Popper';
 import Paper from '@material-ui/core/Paper';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import {
+  GridCellValue,
   GridCellParams,
+  GridEditRowsModel,
+  GridLoadIcon,
   GridColDef,
   isOverflown,
   GridRowData,
   useGridApiRef,
   XGrid,
+  GridEditCellParams,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { action } from '@storybook/addon-actions';
 import { randomInt } from '../data/random-generator';
 
 export default {
@@ -345,5 +350,282 @@ export function ExpendRowCell() {
     <div style={{ height: 300, width: 600 }}>
       <XGrid rows={rows} columns={columns} apiRef={apiRef} />
     </div>
+  );
+}
+
+// Requirements
+// TODO demo with Cell edit with value getter
+// Todo demo with cell not editable according to value
+// demo with cell edit validation, email, username(serverside)
+
+const baselineEditProps = {
+  rows: [
+    {
+      id: 0,
+      firstname: 'Damien',
+      lastname: 'Tassone',
+      email: 'damien@material-ui.com',
+      username: 'Damo',
+      lastLogin: new Date(),
+      age: 25,
+      DOB: new Date(1996, 10, 2),
+      meetup: new Date(2020, 2, 25, 10, 50, 0),
+    },
+    {
+      id: 1,
+      firstname: 'Jon',
+      lastname: 'Wood',
+      email: 'jon@material-ui.com',
+      username: 'jon',
+      lastLogin: new Date(),
+      age: 25,
+      DOB: new Date(1992, 1, 20),
+      meetup: new Date(2020, 4, 15, 10, 50, 0),
+    },
+    {
+      id: 2,
+      firstname: 'James',
+      lastname: 'Smith',
+      email: 'james@material-ui.com',
+      username: 'smithhhh',
+      lastLogin: new Date(),
+      age: 25,
+      DOB: new Date(1986, 0, 12),
+      meetup: new Date(2020, 3, 5, 10, 50, 0),
+    },
+  ],
+  columns: [
+    { field: 'firstname', editable: true },
+    { field: 'lastname', editable: true },
+    {
+      field: 'fullname',
+      editable: true,
+      valueGetter: ({ row }) => `${row.firstname} ${row.lastname}`,
+    },
+    { field: 'username', editable: true },
+    { field: 'email', editable: true, width: 150 },
+    { field: 'age', width: 50, type: 'number', editable: true },
+    { field: 'DOB', width: 120, type: 'date', editable: true },
+    { field: 'meetup', width: 180, type: 'dateTime', editable: true },
+    { field: 'lastLogin', width: 180, type: 'dateTime', editable: false },
+  ],
+};
+function validateEmail(email) {
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+}
+
+const useEditCellStyles = makeStyles({
+  root: {
+    '& .MuiDataGrid-cellEditable': {
+      backgroundColor: 'rgba(184,250,158,0.19)',
+      color: '#1a3e72',
+    },
+    '& .MuiDataGrid-cellEditing': {
+      backgroundColor: 'rgb(255,215,115, 0.19)',
+      color: '#1a3e72',
+    },
+    '& .Mui-error': {
+      backgroundColor: 'rgb(126,10,15, 0.1)',
+      color: '#750f0f',
+    },
+  },
+});
+
+export function EditRowsControl() {
+  const apiRef = useGridApiRef();
+  const classes = useEditCellStyles();
+
+  const [selectedCell, setSelectedCell] = React.useState<[string, string, GridCellValue] | null>(
+    null,
+  );
+  const [isEditable, setIsEditable] = React.useState<boolean>(false);
+  const [editRowsModel, setEditRowsModel] = React.useState<GridEditRowsModel>({});
+
+  const editRow = React.useCallback(() => {
+    if (!selectedCell) {
+      return;
+    }
+    const [id, field, value] = selectedCell;
+
+    setEditRowsModel((state) => {
+      const editRowState: GridEditRowsModel = { ...state };
+      editRowState[id] = editRowState[id] ? { ...editRowState[id] } : {};
+      editRowState[id][field] = { value };
+
+      return { ...state, ...editRowState };
+    });
+  }, [selectedCell]);
+
+  const onCellClick = React.useCallback((params: GridCellParams) => {
+    setSelectedCell([params.row.id!.toString(), params.field, params.value]);
+    setIsEditable(!!params.isEditable);
+  }, []);
+
+  const onCellDoubleClick = React.useCallback(
+    (params: GridCellParams) => {
+      if (params.isEditable) {
+        apiRef.current.setCellMode(params.row.id!.toString(), params.field, 'edit');
+      }
+    },
+    [apiRef],
+  );
+
+  const isCellEditable = React.useCallback((params: GridCellParams) => params.row.id !== 0, []);
+
+  const onEditCellChange = React.useCallback(
+    ({ id, update }: GridEditCellParams) => {
+      if (update.email) {
+        const isValid = validateEmail(update.email.value);
+        const newState = {};
+        newState[id] = {
+          ...editRowsModel[id],
+          email: { ...update.email, error: !isValid },
+        };
+        newState[id].email.value += 'EXTERRRR';
+        setEditRowsModel((state) => ({ ...state, ...newState }));
+        return;
+      }
+      const newState = {};
+      newState[id] = {
+        ...editRowsModel[id],
+        ...update,
+      };
+      setEditRowsModel((state) => ({ ...state, ...newState }));
+    },
+    [editRowsModel],
+  );
+
+  const onEditCellChangeCommitted = React.useCallback(
+    ({ id, update }: GridEditCellParams) => {
+      const field = Object.keys(update)[0]!;
+      const rowUpdate = { id };
+      rowUpdate[field] = update[field].value;
+
+      if (update.email) {
+        const newState = {};
+        const componentProps = {
+          endAdornment: <GridLoadIcon />,
+        };
+        newState[id] = {};
+        newState[id][field] = { ...update.email, ...componentProps };
+        setEditRowsModel((state) => ({ ...state, ...newState }));
+        setTimeout(() => {
+          apiRef.current.updateRows([rowUpdate]);
+          apiRef.current.setCellMode(id, field, 'view');
+        }, 2000);
+      } else if (update.fullname && update.fullname.value) {
+        const [firstname, lastname] = update.fullname.value.toString().split(' ');
+        apiRef.current.updateRows([{ id, firstname, lastname }]);
+        apiRef.current.setCellMode(id, field, 'view');
+      } else {
+        apiRef.current.updateRows([rowUpdate]);
+        apiRef.current.setCellMode(id, field, 'view');
+      }
+    },
+    [apiRef],
+  );
+
+  return (
+    <React.Fragment>
+      Green cells are editable! Click + EDIT or Double click
+      <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+        <Button color="primary" onClick={editRow} disabled={!isEditable}>
+          Edit
+        </Button>
+      </div>
+      <div className="grid-container">
+        <XGrid
+          className={classes.root}
+          {...baselineEditProps}
+          apiRef={apiRef}
+          onCellClick={onCellClick}
+          onCellDoubleClick={onCellDoubleClick}
+          isCellEditable={isCellEditable}
+          onEditCellChange={onEditCellChange}
+          onEditCellChangeCommitted={onEditCellChangeCommitted}
+          editRowsModel={editRowsModel}
+          editMode="server"
+        />
+      </div>
+    </React.Fragment>
+  );
+}
+export function EditRowsBasic() {
+  const apiRef = useGridApiRef();
+
+  const onCellDoubleClick = React.useCallback(
+    (params: GridCellParams) => {
+      if (params.isEditable) {
+        apiRef.current.setCellMode(params.row.id!.toString(), params.field, 'edit');
+      }
+    },
+    [apiRef],
+  );
+
+  return (
+    <React.Fragment>
+      Double click to edit.
+      <div className="grid-container">
+        <XGrid
+          {...baselineEditProps}
+          apiRef={apiRef}
+          onCellDoubleClick={onCellDoubleClick}
+          onEditRowModelChange={action('onEditRowsModelChange')}
+        />
+      </div>
+    </React.Fragment>
+  );
+}
+const singleData = { rows: [...baselineEditProps.rows], columns: [...baselineEditProps.columns] };
+singleData.rows.length = 1;
+singleData.columns.length = 1;
+singleData.columns[0].width = 200;
+
+export function SingleCellBasic() {
+  const apiRef = useGridApiRef();
+  const onCellDoubleClick = React.useCallback(
+    (params: GridCellParams) => {
+      if (params.isEditable) {
+        apiRef.current.setCellMode(params.row.id!.toString(), params.field, 'edit');
+      }
+    },
+    [apiRef],
+  );
+
+  return (
+    <React.Fragment>
+      Double click to edit.
+      <div className="grid-container">
+        <XGrid
+          {...singleData}
+          apiRef={apiRef}
+          onCellDoubleClick={onCellDoubleClick}
+          onEditRowModelChange={action('onEditRowsModelChange')}
+        />
+      </div>
+    </React.Fragment>
+  );
+}
+export function CommodityEdit() {
+  const apiRef = useGridApiRef();
+  const onCellDoubleClick = React.useCallback(
+    (params: GridCellParams) => {
+      apiRef.current.setCellMode(params.row.id!.toString(), params.field, 'edit');
+    },
+    [apiRef],
+  );
+
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100000,
+  });
+
+  return (
+    <React.Fragment>
+      <div style={{ width: '100%', height: 600 }}>
+        <XGrid {...data} apiRef={apiRef} onCellDoubleClick={onCellDoubleClick} />
+      </div>
+    </React.Fragment>
   );
 }

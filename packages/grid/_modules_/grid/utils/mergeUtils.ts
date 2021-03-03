@@ -9,11 +9,10 @@ export function mergeGridColTypes(
   const hydratedOptionColTypes: GridColumnTypesRecord = {};
 
   Object.entries(mergedColTypes).forEach(([colType, colTypeDef]: [string, any]) => {
-    if (colTypeDef.extendType) {
-      colTypeDef = { ...mergedColTypes[colTypeDef.extendType], ...colTypeDef, type: colType };
-    } else {
-      colTypeDef = { ...mergedColTypes[DEFAULT_GRID_COL_TYPE_KEY], ...colTypeDef, type: colType };
-    }
+    colTypeDef = {
+      ...mergedColTypes[colTypeDef.extendType || DEFAULT_GRID_COL_TYPE_KEY],
+      ...colTypeDef,
+    };
     hydratedOptionColTypes[colType] = colTypeDef;
   });
 

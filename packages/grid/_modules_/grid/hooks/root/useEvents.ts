@@ -25,6 +25,9 @@ import {
   GRID_ELEMENT_FOCUS_OUT,
   GRID_COMPONENT_ERROR,
   GRID_STATE_CHANGE,
+  GRID_DOUBLE_CELL_CLICK,
+  GRID_DOUBLE_ROW_CLICK,
+  GRID_DOUBLE_CLICK,
 } from '../../constants/eventsConstants';
 import { GRID_CELL_CSS_CLASS, GRID_ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
 import { findParentElementFromClassName, getIdFromRowElem, isGridCell } from '../../utils/domUtils';
@@ -113,6 +116,24 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
     [apiRef, getEventParams],
   );
 
+  const onDoubleClickHandler = React.useCallback(
+    (event: MouseEvent) => {
+      const eventParams = getEventParams(event);
+
+      if (!eventParams) {
+        return;
+      }
+
+      if (eventParams.cell) {
+        apiRef.current.publishEvent(GRID_DOUBLE_CELL_CLICK, eventParams.cell);
+      }
+      if (eventParams.row) {
+        apiRef.current.publishEvent(GRID_DOUBLE_ROW_CLICK, eventParams.row);
+      }
+    },
+    [apiRef, getEventParams],
+  );
+
   const onHoverHandler = React.useCallback(
     (event: MouseEvent) => {
       const eventParams = getEventParams(event);
@@ -175,6 +196,9 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
   useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_CLICK, options.onColumnHeaderClick);
   useGridApiEventHandler(apiRef, GRID_CELL_CLICK, options.onCellClick);
   useGridApiEventHandler(apiRef, GRID_ROW_CLICK, options.onRowClick);
+  useGridApiEventHandler(apiRef, GRID_DOUBLE_CELL_CLICK, options.onCellDoubleClick);
+  useGridApiEventHandler(apiRef, GRID_DOUBLE_ROW_CLICK, options.onRowDoubleClick);
+
   useGridApiEventHandler(apiRef, GRID_CELL_HOVER, options.onCellHover);
   useGridApiEventHandler(apiRef, GRID_ROW_HOVER, options.onRowHover);
   useGridApiEventHandler(apiRef, GRID_COMPONENT_ERROR, options.onError);
@@ -188,6 +212,7 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
       const gridRootElem = gridRootRef.current;
 
       gridRootElem.addEventListener(GRID_CLICK, onClickHandler, { capture: true });
+      gridRootElem.addEventListener(GRID_DOUBLE_CLICK, onDoubleClickHandler, { capture: true });
       gridRootElem.addEventListener(GRID_MOUSE_HOVER, onHoverHandler, { capture: true });
       gridRootElem.addEventListener(GRID_FOCUS_OUT, onFocusOutHandler);
 
@@ -214,6 +239,7 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
     getHandler,
     logger,
     onClickHandler,
+    onDoubleClickHandler,
     onHoverHandler,
     onFocusOutHandler,
     apiRef,

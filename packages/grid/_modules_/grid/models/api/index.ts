@@ -4,6 +4,7 @@ export * from './gridColumnApi';
 export * from './gridComponentsApi';
 export * from './gridDensityApi';
 export * from './gridEventsApi';
+export * from './gridEditRowApi';
 export * from './gridApi';
 export * from './gridPaginationApi';
 export * from './gridRowApi';
