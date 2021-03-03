@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { XGrid, GridToolbar } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
@@ -194,13 +193,6 @@ function SettingsPanel(props) {
     </FormGroup>
   );
 }
-
-SettingsPanel.propTypes = {
-  onApply: PropTypes.func,
-  size: PropTypes.number,
-  theme: PropTypes.string,
-  type: PropTypes.string,
-};
 
 export default function FullFeaturedDemo() {
   const classes = useStyles();
