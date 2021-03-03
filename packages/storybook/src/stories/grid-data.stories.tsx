@@ -1,3 +1,4 @@
+import { Story } from '@storybook/react';
 import * as React from 'react';
 import { XGrid, GridOptionsProp } from '@material-ui/x-grid';
 import { useData } from '../hooks/useData';
@@ -56,3 +57,26 @@ export const Grid8628 = () => <GridDataSet nbRows={8628} nbCols={100} />;
 export const Grid5234 = () => <GridDataSet nbRows={5234} nbCols={100} />;
 export const Grid10000 = () => <GridDataSet nbRows={10000} nbCols={100} />;
 export const Grid100000 = () => <GridDataSet nbRows={100000} nbCols={100} />;
+
+const DemoDynamicContainerTemplate: Story<{
+  height: number;
+  width: number | string;
+  nbRows: number;
+  nbCols: number;
+}> = ({ nbRows, nbCols, height, width }) => {
+  const data = useData(nbRows, nbCols);
+  return (
+    <div className="demo-rendering grid-container" style={{ padding: 10 }}>
+      <div style={{ width, height }}>
+        <XGrid rows={data.rows} columns={data.columns} />
+      </div>
+    </div>
+  );
+};
+export const GridXRowsPlay = DemoDynamicContainerTemplate.bind({});
+GridXRowsPlay.args = {
+  height: 500,
+  width: '100%',
+  nbRows: 500,
+  nbCols: 20,
+};

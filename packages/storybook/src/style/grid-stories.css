@@ -27,12 +27,15 @@
 
  /* highlight first and last row in rendering zone -> useful for Debugging virtualization */
 
- /*.rendering-zone .material-row:first-child {*/
- /*    background: blueviolet !important;*/
- /*}*/
- /*.rendering-zone .material-row:last-child {*/
- /*    background: red !important;*/
- /*}*/
+ .demo-rendering .rendering-zone {
+     background: #e6db74  !important;
+ }
+ .demo-rendering .rendering-zone .MuiDataGrid-row:first-child {
+     background: #c696f1 !important;
+ }
+ .demo-rendering .rendering-zone .MuiDataGrid-row:last-child {
+     background: #f17f7f !important;
+ }
 
  .overlay.custom-overlay {
      background: #ffffff61;
