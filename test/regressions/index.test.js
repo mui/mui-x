@@ -61,7 +61,7 @@ async function main() {
 
       it(`creates screenshots of ${pathURL}`, async function test() {
         if (pathURL === '/docs-components-data-grid-overview/XGridDemo') {
-          this.timeout(5000);
+          this.timeout(6000);
         }
 
         // Use client-side routing which is much faster than full page navigation via page.goto().
