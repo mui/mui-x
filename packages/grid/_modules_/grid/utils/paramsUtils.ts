@@ -79,7 +79,6 @@ export function buildGridRowParams({
   api,
 }: {
   rowModel: GridRowModel;
-  colDef: GridColDef;
   rowIndex: number;
   api: GridApi;
   element?: HTMLElement;

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { GRID_CELL_CLICK } from '../constants/eventsConstants';
 import { gridEditRowsStateSelector } from '../hooks/features/rows/gridEditRowsSelector';
 import {
   GridCellClassParams,
@@ -101,6 +102,9 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
       // TODO add formatted value to cellParams?
       formattedValueProp = { formattedValue: column.valueFormatter(cellParams) };
     }
+    const onClick = ()=>{
+      api?.current.publishEvent(GRID_CELL_CLICK, cellParams);
+    } ;
 
     if (editCellState == null && column.renderCell) {
       cellComponent = column.renderCell(cellParams);
@@ -131,6 +135,7 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
         cellFocus !== null &&
         cellFocus.rowIndex === rowIndex &&
         cellFocus.colIndex === colIdx + firstColIdx,
+      onClick
     };
 
     return cellProps;

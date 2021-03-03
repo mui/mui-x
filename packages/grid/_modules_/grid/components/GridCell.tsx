@@ -18,6 +18,7 @@ export interface GridCellProps {
   tabIndex?: number;
   value?: GridCellValue;
   width: number;
+  onClick?: ((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void) ;
 }
 
 export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
@@ -36,6 +37,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     tabIndex,
     value,
     width,
+    onClick
   } = props;
 
   const valueToRender = formattedValue || value;
@@ -68,6 +70,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
         maxHeight: height,
       }}
       tabIndex={tabIndex}
+      onClick={onClick}
     >
       {children || valueToRender?.toString()}
     </div>

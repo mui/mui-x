@@ -1,7 +1,8 @@
 import * as React from 'react';
+import { GRID_ROW_CLICK } from '../constants/eventsConstants';
 import { GridRowId } from '../models';
 import { GRID_ROW_CSS_CLASS } from '../constants/cssClassesConstants';
-import { classnames } from '../utils';
+import { buildGridRowParams, classnames } from '../utils';
 import { gridDensityRowHeightSelector } from '../hooks/features/density';
 import { GridApiContext } from './GridApiContext';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
@@ -18,6 +19,13 @@ export const GridRow: React.FC<RowProps> = ({ selected, id, className, rowIndex,
   const apiRef = React.useContext(GridApiContext);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
 
+  const onClick = React.useCallback((event: React.MouseEvent)=>{
+    const rowModel = apiRef?.current.getRowFromId(id)!;
+    const element = event.target as HTMLElement
+    const commonParams =buildGridRowParams({rowModel, rowIndex, element: element!, api: apiRef!.current});
+    apiRef?.current.publishEvent(GRID_ROW_CLICK, commonParams);
+  }, [apiRef, id, rowIndex] );
+
   return (
     <div
       key={id}
@@ -31,6 +39,7 @@ export const GridRow: React.FC<RowProps> = ({ selected, id, className, rowIndex,
         maxHeight: rowHeight,
         minHeight: rowHeight,
       }}
+      onClick={onClick}
     >
       {children}
     </div>
