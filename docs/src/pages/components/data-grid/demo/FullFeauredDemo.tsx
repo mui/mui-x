@@ -144,7 +144,7 @@ export default function FullFeaturedDemo() {
       <SettingsPanel onApply={handleApplyClick} size={size} type={type} />
       <XGrid
         columns={(gridData as any).columns || data.columns}
-        rows={(gridData.rows as any) || data.rows}
+        rows={(gridData as any).rows || data.rows}
         components={{
           Toolbar: GridToolbar,
         }}

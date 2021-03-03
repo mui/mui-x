@@ -2,7 +2,6 @@
 /docs/.next
 /docs/export
 /lerna.json
-/packages/demo-app/public/static-data
 /packages/grid/_modules_/grid/lib
 CHANGELOG.md
 dist
