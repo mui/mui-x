@@ -118,7 +118,10 @@ export default function FullFeaturedDemo() {
       settings.size,
       settings.type === 'Commodity' ? getCommodityColumns() : getEmployeeColumns(),
     );
-    setGridData(newData);
+
+    if (newData.columns.length && newData.rows.length) {
+      setGridData(newData);
+    }
 
     const newPaginationSettings = {
       pagination: settings.pagesize !== -1,
