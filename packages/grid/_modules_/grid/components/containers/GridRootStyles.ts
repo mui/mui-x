@@ -238,7 +238,9 @@ export const useStyles = makeStyles(
           ...theme.typography.body2,
           padding: '1px 0',
           border: `1px solid ${
-            getThemePaletteMode(theme.palette) === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)'
+            getThemePaletteMode(theme.palette) === 'light'
+              ? 'rgba(0, 0, 0, 0.23)'
+              : 'rgba(255, 255, 255, 0.23)'
           }`,
           borderRadius: 3,
           '&:hover': {
