@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { XGrid, GridToolbar } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
@@ -10,96 +11,91 @@ import FormLabel from '@material-ui/core/FormLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
-const useStylesAntDesign = makeStyles((theme) => {
-  console.log(theme.palette);
-  return {
-    root: {
-      border: `1px solid ${theme.palette.type === 'light' ? '#f0f0f0' : '#303030'}`,
+const useStylesAntDesign = makeStyles((theme) => ({
+  root: {
+    border: `1px solid ${theme.palette.type === 'light' ? '#f0f0f0' : '#303030'}`,
+    color:
+      theme.palette.type === 'light' ? 'rgba(0,0,0,.85)' : 'rgba(255,255,255,0.85)',
+    fontFamily: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(','),
+    WebkitFontSmoothing: 'auto',
+    letterSpacing: 'normal',
+    '& .MuiDataGrid-columnsContainer': {
+      backgroundColor: theme.palette.type === 'light' ? '#fafafa' : '#1d1d1d',
+    },
+    '& .MuiDataGrid-iconSeparator': {
+      display: 'none',
+    },
+    '& .MuiDataGrid-colCell, .MuiDataGrid-cell': {
+      borderRight: `1px solid ${
+        theme.palette.type === 'light' ? '#f0f0f0' : '#303030'
+      }`,
+    },
+    '& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell': {
+      borderBottom: `1px solid ${
+        theme.palette.type === 'light' ? '#f0f0f0' : '#303030'
+      }`,
+    },
+    '& .MuiDataGrid-cell': {
       color:
         theme.palette.type === 'light'
           ? 'rgba(0,0,0,.85)'
-          : 'rgba(255,255,255,0.85)',
-      fontFamily: [
-        '-apple-system',
-        'BlinkMacSystemFont',
-        '"Segoe UI"',
-        'Roboto',
-        '"Helvetica Neue"',
-        'Arial',
-        'sans-serif',
-        '"Apple Color Emoji"',
-        '"Segoe UI Emoji"',
-        '"Segoe UI Symbol"',
-      ].join(','),
-      WebkitFontSmoothing: 'auto',
-      letterSpacing: 'normal',
-      '& .MuiDataGrid-columnsContainer': {
-        backgroundColor: theme.palette.type === 'light' ? '#fafafa' : '#1d1d1d',
-      },
-      '& .MuiDataGrid-iconSeparator': {
-        display: 'none',
-      },
-      '& .MuiDataGrid-colCell, .MuiDataGrid-cell': {
-        borderRight: `1px solid ${
-          theme.palette.type === 'light' ? '#f0f0f0' : '#303030'
-        }`,
-      },
-      '& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell': {
-        borderBottom: `1px solid ${
-          theme.palette.type === 'light' ? '#f0f0f0' : '#303030'
-        }`,
-      },
-      '& .MuiDataGrid-cell': {
-        color:
-          theme.palette.type === 'light'
-            ? 'rgba(0,0,0,.85)'
-            : 'rgba(255,255,255,0.65)',
-      },
-      '& .MuiPaginationItem-root': {
-        borderRadius: 0,
-      },
-      '& .MuiCheckbox-root svg': {
-        width: 16,
-        height: 16,
-        backgroundColor: 'transparent',
-        border: `1px solid ${
-          theme.palette.type === 'light' ? '#d9d9d9' : 'rgb(67, 67, 67)'
-        }`,
-        borderRadius: 2,
-      },
-      '& .MuiCheckbox-root svg path': {
-        display: 'none',
-      },
-      '& .MuiCheckbox-root.Mui-checked:not(.MuiCheckbox-indeterminate) svg': {
-        backgroundColor: '#1890ff',
-        borderColor: '#1890ff',
-      },
-      '& .MuiCheckbox-root.Mui-checked .MuiIconButton-label:after': {
-        position: 'absolute',
-        display: 'table',
-        border: '2px solid #fff',
-        borderTop: 0,
-        borderLeft: 0,
-        transform: 'rotate(45deg) translate(-50%,-50%)',
-        opacity: 1,
-        transition: 'all .2s cubic-bezier(.12,.4,.29,1.46) .1s',
-        content: '""',
-        top: '50%',
-        left: '39%',
-        width: 5.71428571,
-        height: 9.14285714,
-      },
-      '& .MuiCheckbox-root.MuiCheckbox-indeterminate .MuiIconButton-label:after': {
-        width: 8,
-        height: 8,
-        backgroundColor: '#1890ff',
-        transform: 'none',
-        top: '39%',
-        border: 0,
-      },
+          : 'rgba(255,255,255,0.65)',
     },
-  };
-});
+    '& .MuiPaginationItem-root': {
+      borderRadius: 0,
+    },
+    '& .MuiCheckbox-root svg': {
+      width: 16,
+      height: 16,
+      backgroundColor: 'transparent',
+      border: `1px solid ${
+        theme.palette.type === 'light' ? '#d9d9d9' : 'rgb(67, 67, 67)'
+      }`,
+      borderRadius: 2,
+    },
+    '& .MuiCheckbox-root svg path': {
+      display: 'none',
+    },
+    '& .MuiCheckbox-root.Mui-checked:not(.MuiCheckbox-indeterminate) svg': {
+      backgroundColor: '#1890ff',
+      borderColor: '#1890ff',
+    },
+    '& .MuiCheckbox-root.Mui-checked .MuiIconButton-label:after': {
+      position: 'absolute',
+      display: 'table',
+      border: '2px solid #fff',
+      borderTop: 0,
+      borderLeft: 0,
+      transform: 'rotate(45deg) translate(-50%,-50%)',
+      opacity: 1,
+      transition: 'all .2s cubic-bezier(.12,.4,.29,1.46) .1s',
+      content: '""',
+      top: '50%',
+      left: '39%',
+      width: 5.71428571,
+      height: 9.14285714,
+    },
+    '& .MuiCheckbox-root.MuiCheckbox-indeterminate .MuiIconButton-label:after': {
+      width: 8,
+      height: 8,
+      backgroundColor: '#1890ff',
+      transform: 'none',
+      top: '39%',
+      border: 0,
+    },
+  },
+}));
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -198,6 +194,13 @@ function SettingsPanel(props) {
   );
 }
 
+SettingsPanel.propTypes = {
+  onApply: PropTypes.func.isRequired,
+  size: PropTypes.number.isRequired,
+  theme: PropTypes.oneOf(['ant', 'default']).isRequired,
+  type: PropTypes.oneOf(['Commodity', 'Employee']).isRequired,
+};
+
 export default function FullFeaturedDemo() {
   const classes = useStyles();
   const AntDesignClasses = useStylesAntDesign();
@@ -209,7 +212,11 @@ export default function FullFeaturedDemo() {
     rowLength: size,
     maxColumns: 20,
   });
-  const [pagination, setPagination] = React.useState({});
+  const [pagination, setPagination] = React.useState({
+    pagination: false,
+    autoPageSize: false,
+    pageSize: undefined,
+  });
 
   const getActiveTheme = () => {
     return isAntDesign ? 'ant' : 'default';

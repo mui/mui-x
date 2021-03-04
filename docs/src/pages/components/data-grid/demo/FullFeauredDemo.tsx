@@ -10,9 +10,9 @@ import FormLabel from '@material-ui/core/FormLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
-const useStylesAntdDesign = makeStyles((theme) => ({
+const useStylesAntDesign = makeStyles((theme) => ({
   root: {
-    border: 0,
+    border: `1px solid ${theme.palette.type === 'light' ? '#f0f0f0' : '#303030'}`,
     color:
       theme.palette.type === 'light' ? 'rgba(0,0,0,.85)' : 'rgba(255,255,255,0.85)',
     fontFamily: [
@@ -104,23 +104,48 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     '& .MuiFormGroup-options': {
       alignItems: 'center',
-      marginBottom: theme.spacing(2),
       '& fieldset': {
-        padding: theme.spacing(0, 1),
+        padding: theme.spacing(2),
       },
       '& button': {
-        marginLeft: theme.spacing(3),
+        marginLeft: theme.spacing(1),
       },
     },
   },
 }));
 
-function SettingsPanel(props) {
+type GridDataType = 'Employee' | 'Commodity';
+type GridDataThemeOption = 'default' | 'ant';
+
+interface GridPaginationSettings {
+  pagination: boolean;
+  autoPageSize: boolean;
+  pageSize: number | undefined;
+}
+
+interface GridConfigOptions {
+  size: number;
+  type: GridDataType;
+  pagesize: number;
+  theme: GridDataThemeOption;
+}
+
+interface GridToolbarContainerProps {
+  onApply: (options: GridConfigOptions) => void;
+  size: number;
+  type: GridDataType;
+  theme: GridDataThemeOption;
+}
+
+function SettingsPanel(props: GridToolbarContainerProps) {
   const { onApply, type, size, theme } = props;
-  const [sizeState, setSize] = React.useState(size);
-  const [typeState, setType] = React.useState(type);
-  const [selectedPaginationValue, setSelectedPaginationValue] = React.useState(-1);
-  const [activeTheme, setActiveTheme] = React.useState(theme);
+  const [sizeState, setSize] = React.useState<number>(size);
+  const [typeState, setType] = React.useState<GridDataType>(type);
+  const [
+    selectedPaginationValue,
+    setSelectedPaginationValue,
+  ] = React.useState<number>(-1);
+  const [activeTheme, setActiveTheme] = React.useState<GridDataThemeOption>(theme);
 
   const handleSizeChange = React.useCallback((event) => {
     setSize(Number(event.target.value));
@@ -179,7 +204,7 @@ function SettingsPanel(props) {
         <FormLabel component="legend">Theme</FormLabel>
         <Select value={activeTheme} onChange={handleThemeChange}>
           <MenuItem value="default">Default Theme</MenuItem>
-          <MenuItem value="antd">Antd Design</MenuItem>
+          <MenuItem value="ant">Ant Design</MenuItem>
         </Select>
       </FormControl>
       <Button
@@ -196,19 +221,23 @@ function SettingsPanel(props) {
 
 export default function FullFeaturedDemo() {
   const classes = useStyles();
-  const AntdDesignClasses = useStylesAntdDesign();
-  const [isAntdDesign, setIsAntdDesign] = React.useState(false);
-  const [type, setType] = React.useState('Commodity');
+  const AntDesignClasses = useStylesAntDesign();
+  const [isAntDesign, setIsAntDesign] = React.useState<boolean>(false);
+  const [type, setType] = React.useState<GridDataType>('Commodity');
   const [size, setSize] = React.useState(100);
   const { data, setRowLength, loadNewData } = useDemoData({
-    dataSet: type as any,
+    dataSet: type,
     rowLength: size,
     maxColumns: 20,
   });
-  const [pagination, setPagination] = React.useState({});
+  const [pagination, setPagination] = React.useState<GridPaginationSettings>({
+    pagination: false,
+    autoPageSize: false,
+    pageSize: undefined,
+  });
 
   const getActiveTheme = () => {
-    return isAntdDesign ? 'antd' : 'default';
+    return isAntDesign ? 'ant' : 'default';
   };
 
   const handleApplyClick = (settings) => {
@@ -221,7 +250,7 @@ export default function FullFeaturedDemo() {
     }
 
     if (getActiveTheme() !== settings.theme) {
-      setIsAntdDesign(!isAntdDesign);
+      setIsAntDesign(!isAntDesign);
     }
 
     if (size !== settings.size || type !== settings.type) {
@@ -229,23 +258,28 @@ export default function FullFeaturedDemo() {
       loadNewData();
     }
 
-    const newPaginationSettings = {
+    const newPaginationSettings: GridPaginationSettings = {
       pagination: settings.pagesize !== -1,
       autoPageSize: settings.pagesize === 0,
       pageSize: settings.pagesize > 0 ? settings.pagesize : undefined,
     };
 
-    setPagination((currentPaginationSettings: any) => {
-      if (
-        currentPaginationSettings.pagination === newPaginationSettings.pagination &&
-        currentPaginationSettings.autoPageSize ===
-          newPaginationSettings.autoPageSize &&
-        currentPaginationSettings.pageSize === newPaginationSettings.pageSize
-      ) {
-        return currentPaginationSettings;
-      }
-      return newPaginationSettings;
-    });
+    setPagination(
+      (
+        currentPaginationSettings: GridPaginationSettings,
+      ): GridPaginationSettings => {
+        if (
+          currentPaginationSettings.pagination ===
+            newPaginationSettings.pagination &&
+          currentPaginationSettings.autoPageSize ===
+            newPaginationSettings.autoPageSize &&
+          currentPaginationSettings.pageSize === newPaginationSettings.pageSize
+        ) {
+          return currentPaginationSettings;
+        }
+        return newPaginationSettings;
+      },
+    );
   };
 
   return (
@@ -257,7 +291,7 @@ export default function FullFeaturedDemo() {
         theme={getActiveTheme()}
       />
       <XGrid
-        className={isAntdDesign ? AntdDesignClasses.root : undefined}
+        className={isAntDesign ? AntDesignClasses.root : undefined}
         {...data}
         components={{
           Toolbar: GridToolbar,
