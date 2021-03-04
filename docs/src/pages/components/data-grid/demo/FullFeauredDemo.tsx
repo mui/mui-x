@@ -230,6 +230,7 @@ export default function FullFeaturedDemo() {
     rowLength: size,
     maxColumns: 20,
   });
+
   const [pagination, setPagination] = React.useState<GridPaginationSettings>({
     pagination: false,
     autoPageSize: false,
