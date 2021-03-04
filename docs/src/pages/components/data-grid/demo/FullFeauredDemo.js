@@ -10,91 +10,96 @@ import FormLabel from '@material-ui/core/FormLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
-const useStylesAntdDesign = makeStyles((theme) => ({
-  root: {
-    border: 0,
-    color:
-      theme.palette.type === 'light' ? 'rgba(0,0,0,.85)' : 'rgba(255,255,255,0.85)',
-    fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
-    WebkitFontSmoothing: 'auto',
-    letterSpacing: 'normal',
-    '& .MuiDataGrid-columnsContainer': {
-      backgroundColor: theme.palette.type === 'light' ? '#fafafa' : '#1d1d1d',
-    },
-    '& .MuiDataGrid-iconSeparator': {
-      display: 'none',
-    },
-    '& .MuiDataGrid-colCell, .MuiDataGrid-cell': {
-      borderRight: `1px solid ${
-        theme.palette.type === 'light' ? '#f0f0f0' : '#303030'
-      }`,
-    },
-    '& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell': {
-      borderBottom: `1px solid ${
-        theme.palette.type === 'light' ? '#f0f0f0' : '#303030'
-      }`,
-    },
-    '& .MuiDataGrid-cell': {
+const useStylesAntDesign = makeStyles((theme) => {
+  console.log(theme.palette);
+  return {
+    root: {
+      border: `1px solid ${theme.palette.type === 'light' ? '#f0f0f0' : '#303030'}`,
       color:
         theme.palette.type === 'light'
           ? 'rgba(0,0,0,.85)'
-          : 'rgba(255,255,255,0.65)',
+          : 'rgba(255,255,255,0.85)',
+      fontFamily: [
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+      ].join(','),
+      WebkitFontSmoothing: 'auto',
+      letterSpacing: 'normal',
+      '& .MuiDataGrid-columnsContainer': {
+        backgroundColor: theme.palette.type === 'light' ? '#fafafa' : '#1d1d1d',
+      },
+      '& .MuiDataGrid-iconSeparator': {
+        display: 'none',
+      },
+      '& .MuiDataGrid-colCell, .MuiDataGrid-cell': {
+        borderRight: `1px solid ${
+          theme.palette.type === 'light' ? '#f0f0f0' : '#303030'
+        }`,
+      },
+      '& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell': {
+        borderBottom: `1px solid ${
+          theme.palette.type === 'light' ? '#f0f0f0' : '#303030'
+        }`,
+      },
+      '& .MuiDataGrid-cell': {
+        color:
+          theme.palette.type === 'light'
+            ? 'rgba(0,0,0,.85)'
+            : 'rgba(255,255,255,0.65)',
+      },
+      '& .MuiPaginationItem-root': {
+        borderRadius: 0,
+      },
+      '& .MuiCheckbox-root svg': {
+        width: 16,
+        height: 16,
+        backgroundColor: 'transparent',
+        border: `1px solid ${
+          theme.palette.type === 'light' ? '#d9d9d9' : 'rgb(67, 67, 67)'
+        }`,
+        borderRadius: 2,
+      },
+      '& .MuiCheckbox-root svg path': {
+        display: 'none',
+      },
+      '& .MuiCheckbox-root.Mui-checked:not(.MuiCheckbox-indeterminate) svg': {
+        backgroundColor: '#1890ff',
+        borderColor: '#1890ff',
+      },
+      '& .MuiCheckbox-root.Mui-checked .MuiIconButton-label:after': {
+        position: 'absolute',
+        display: 'table',
+        border: '2px solid #fff',
+        borderTop: 0,
+        borderLeft: 0,
+        transform: 'rotate(45deg) translate(-50%,-50%)',
+        opacity: 1,
+        transition: 'all .2s cubic-bezier(.12,.4,.29,1.46) .1s',
+        content: '""',
+        top: '50%',
+        left: '39%',
+        width: 5.71428571,
+        height: 9.14285714,
+      },
+      '& .MuiCheckbox-root.MuiCheckbox-indeterminate .MuiIconButton-label:after': {
+        width: 8,
+        height: 8,
+        backgroundColor: '#1890ff',
+        transform: 'none',
+        top: '39%',
+        border: 0,
+      },
     },
-    '& .MuiPaginationItem-root': {
-      borderRadius: 0,
-    },
-    '& .MuiCheckbox-root svg': {
-      width: 16,
-      height: 16,
-      backgroundColor: 'transparent',
-      border: `1px solid ${
-        theme.palette.type === 'light' ? '#d9d9d9' : 'rgb(67, 67, 67)'
-      }`,
-      borderRadius: 2,
-    },
-    '& .MuiCheckbox-root svg path': {
-      display: 'none',
-    },
-    '& .MuiCheckbox-root.Mui-checked:not(.MuiCheckbox-indeterminate) svg': {
-      backgroundColor: '#1890ff',
-      borderColor: '#1890ff',
-    },
-    '& .MuiCheckbox-root.Mui-checked .MuiIconButton-label:after': {
-      position: 'absolute',
-      display: 'table',
-      border: '2px solid #fff',
-      borderTop: 0,
-      borderLeft: 0,
-      transform: 'rotate(45deg) translate(-50%,-50%)',
-      opacity: 1,
-      transition: 'all .2s cubic-bezier(.12,.4,.29,1.46) .1s',
-      content: '""',
-      top: '50%',
-      left: '39%',
-      width: 5.71428571,
-      height: 9.14285714,
-    },
-    '& .MuiCheckbox-root.MuiCheckbox-indeterminate .MuiIconButton-label:after': {
-      width: 8,
-      height: 8,
-      backgroundColor: '#1890ff',
-      transform: 'none',
-      top: '39%',
-      border: 0,
-    },
-  },
-}));
+  };
+});
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -104,12 +109,11 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     '& .MuiFormGroup-options': {
       alignItems: 'center',
-      marginBottom: theme.spacing(2),
       '& fieldset': {
-        padding: theme.spacing(0, 1),
+        padding: theme.spacing(2),
       },
       '& button': {
-        marginLeft: theme.spacing(3),
+        marginLeft: theme.spacing(1),
       },
     },
   },
@@ -179,7 +183,7 @@ function SettingsPanel(props) {
         <FormLabel component="legend">Theme</FormLabel>
         <Select value={activeTheme} onChange={handleThemeChange}>
           <MenuItem value="default">Default Theme</MenuItem>
-          <MenuItem value="antd">Antd Design</MenuItem>
+          <MenuItem value="ant">Ant Design</MenuItem>
         </Select>
       </FormControl>
       <Button
@@ -196,8 +200,8 @@ function SettingsPanel(props) {
 
 export default function FullFeaturedDemo() {
   const classes = useStyles();
-  const AntdDesignClasses = useStylesAntdDesign();
-  const [isAntdDesign, setIsAntdDesign] = React.useState(false);
+  const AntDesignClasses = useStylesAntDesign();
+  const [isAntDesign, setIsAntDesign] = React.useState(false);
   const [type, setType] = React.useState('Commodity');
   const [size, setSize] = React.useState(100);
   const { data, setRowLength, loadNewData } = useDemoData({
@@ -208,7 +212,7 @@ export default function FullFeaturedDemo() {
   const [pagination, setPagination] = React.useState({});
 
   const getActiveTheme = () => {
-    return isAntdDesign ? 'antd' : 'default';
+    return isAntDesign ? 'ant' : 'default';
   };
 
   const handleApplyClick = (settings) => {
@@ -221,7 +225,7 @@ export default function FullFeaturedDemo() {
     }
 
     if (getActiveTheme() !== settings.theme) {
-      setIsAntdDesign(!isAntdDesign);
+      setIsAntDesign(!isAntDesign);
     }
 
     if (size !== settings.size || type !== settings.type) {
@@ -257,7 +261,7 @@ export default function FullFeaturedDemo() {
         theme={getActiveTheme()}
       />
       <XGrid
-        className={isAntdDesign ? AntdDesignClasses.root : undefined}
+        className={isAntDesign ? AntDesignClasses.root : undefined}
         {...data}
         components={{
           Toolbar: GridToolbar,
