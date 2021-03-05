@@ -17,14 +17,6 @@ export type DemoDataReturnType = {
   loadNewData: () => void;
 };
 
-async function sleep(duration: number) {
-  return new Promise<void>((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, duration);
-  });
-}
-
 type DataSet = 'Commodity' | 'Employee';
 
 export interface DemoDataOptions {
@@ -107,8 +99,6 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
 
     (async () => {
       setLoading(true);
-      // Reduce priority. It's not that important.
-      await sleep(0);
       let columns = options.dataSet === 'Commodity' ? getCommodityColumns() : getEmployeeColumns();
 
       if (options.maxColumns) {
