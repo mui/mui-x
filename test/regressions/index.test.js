@@ -104,7 +104,7 @@ async function main() {
         await testcase.screenshot({ path: screenshotPath, type: 'png' });
       });
 
-      it(`should have no errors rendering ${pathURL}`, function test () {
+      it(`should have no errors rendering ${pathURL}`, function test() {
         if (pathURL.indexOf('/stories-grid-error/') === 0) {
           this.skip();
         }
