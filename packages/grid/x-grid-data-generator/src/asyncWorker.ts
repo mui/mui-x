@@ -6,16 +6,13 @@ export default function asyncWorker({ work, tasks, done }) {
     }
 
     if (tasks.current > 0) {
-      // @ts-ignore
       requestIdleCallback(myNonEssentialWork);
     } else {
       done();
     }
   }
 
-  // @ts-ignore
   if (typeof requestIdleCallback !== 'function') {
-    // @ts-ignore
     requestIdleCallback(myNonEssentialWork);
   } else {
     while (tasks.current > 0) {
