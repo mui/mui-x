@@ -2,6 +2,7 @@ import { ColumnMenuApi } from './columnMenuApi';
 import { ColumnResizeApi } from './columnResizeApi';
 import { ComponentsApi } from './gridComponentsApi';
 import { FilterApi } from './filterApi';
+import { GridEditRowApi } from './gridEditRowApi';
 import { PreferencesPanelApi } from './preferencesPanelApi';
 import { GridRowApi } from './gridRowApi';
 import { GridColumnApi } from './gridColumnApi';
@@ -26,6 +27,7 @@ export type GridApi = GridCoreApi &
   GridDensityApi &
   GridEventsApi &
   GridRowApi &
+  GridEditRowApi &
   GridColumnApi &
   ColumnReorderApi &
   GridSelectionApi &

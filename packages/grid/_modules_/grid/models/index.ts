@@ -1,6 +1,7 @@
 export * from './colDef';
 export * from './gridContainerProps';
 export * from './elementSize';
+export * from './gridEditRowModel';
 export * from './gridFeatureMode';
 export * from './gridFilterItem';
 export * from './gridFilterOperator';

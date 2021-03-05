@@ -1,5 +1,6 @@
 import * as styles from '@material-ui/core/styles';
 import isDeepEqual from '../lib/lodash/isDeepEqual';
+import { GridCellValue } from '../models/gridCell';
 
 export { isDeepEqual };
 
@@ -10,6 +11,21 @@ export interface DebouncedFunction extends Function {
 
 export function isDate(value: any): value is Date {
   return value instanceof Date;
+}
+
+export function formatDateToLocalInputDate({
+  value,
+  withTime,
+}: {
+  value: GridCellValue;
+  withTime: boolean;
+}) {
+  if (isDate(value)) {
+    const offset = value.getTimezoneOffset();
+    const localDate = new Date(value.getTime() - offset * 60 * 1000);
+    return localDate.toISOString().substr(0, withTime ? 16 : 10);
+  }
+  return value;
 }
 
 export function isArray(value: any): value is Array<any> {
@@ -58,5 +74,18 @@ export function localStorageAvailable() {
     return true;
   } catch (err) {
     return false;
+  }
+}
+export function mapColDefTypeToInputType(type: string) {
+  switch (type) {
+    case 'string':
+      return 'text';
+    case 'number':
+    case 'date':
+      return type;
+    case 'dateTime':
+      return 'datetime-local';
+    default:
+      return 'text';
   }
 }

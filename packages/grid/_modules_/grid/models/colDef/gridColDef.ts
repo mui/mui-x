@@ -53,6 +53,11 @@ export interface GridColDef {
    */
   resizable?: boolean;
   /**
+   * If `true`, the cells of the column are editable.
+   * @default true
+   */
+  editable?: boolean;
+  /**
    * A comparator function used to sort rows.
    */
   sortComparator?: GridComparatorFn;
@@ -88,6 +93,11 @@ export interface GridColDef {
    * @param params
    */
   renderCell?: (params: GridCellParams) => React.ReactElement;
+  /**
+   * Allows to override the component rendered in edit cell mode for this column.
+   * @param params
+   */
+  renderEditCell?: (params: GridCellParams) => React.ReactElement;
   /**
    * Class name that will be added in the column header cell.
    */

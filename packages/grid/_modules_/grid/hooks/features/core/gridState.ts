@@ -4,6 +4,7 @@ import {
   GridScrollBarState,
   GridViewportSizeState,
 } from '../../../models/gridContainerProps';
+import { GridEditRowsModel } from '../../../models/gridEditRowModel';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../../models/gridOptions';
 import { ColumnMenuState } from '../columnMenu/columnMenuState';
 import {
@@ -32,6 +33,7 @@ import {
 
 export interface GridState {
   rows: InternalGridRowsState;
+  editRows: GridEditRowsModel;
   pagination: PaginationState;
   options: GridOptions;
   isScrolling: boolean;
@@ -53,6 +55,7 @@ export interface GridState {
 
 export const getInitialGridState: () => GridState = () => ({
   rows: getInitialGridRowState(),
+  editRows: {},
   pagination: GRID_INITIAL_PAGINATION_STATE,
   options: DEFAULT_GRID_OPTIONS,
   isScrolling: false,

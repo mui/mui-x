@@ -2,8 +2,8 @@ import * as React from 'react';
 import { createClientRenderStrictMode } from 'test/utils';
 import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
-import { getColumnValues } from 'test/utils/helperFn';
-import { GridApiRef, useGridApiRef, XGrid } from '@material-ui/x-grid';
+import { getCell, getColumnValues } from 'test/utils/helperFn';
+import { GridApiRef, GridColDef, GridRowData, useGridApiRef, XGrid } from '@material-ui/x-grid';
 
 describe('<XGrid /> - Rows ', () => {
   let clock;
@@ -18,7 +18,7 @@ describe('<XGrid /> - Rows ', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
-  const baselineProps = {
+  const baselineProps: { columns: GridColDef[]; rows: GridRowData[] } = {
     rows: [
       {
         clientId: 'c1',
@@ -69,6 +69,34 @@ describe('<XGrid /> - Rows ', () => {
 
         expect(getColumnValues(2)).to.deep.equal(['11', '30', '31']);
       });
+    });
+
+    it('should allow to switch between cell mode', () => {
+      let apiRef: GridApiRef;
+      const editableProps = { ...baselineProps };
+      editableProps.columns = editableProps.columns.map((col) => ({ ...col, editable: true }));
+      const getRowId = (row) => `${row.clientId}`;
+
+      const Test = () => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid {...editableProps} apiRef={apiRef} getRowId={getRowId} />
+          </div>
+        );
+      };
+      render(<Test />);
+      apiRef!.current.setCellMode('c2', 'first', 'edit');
+      const cell = getCell(1, 1);
+
+      expect(cell).to.have.class('MuiDataGrid-cellEditable');
+      expect(cell).to.have.class('MuiDataGrid-cellEditing');
+      expect(cell.querySelector('input')!.value).to.equal('Jack');
+      apiRef!.current.setCellMode('c2', 'first', 'view');
+
+      expect(cell).to.have.class('MuiDataGrid-cellEditable');
+      expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
+      expect(cell.querySelector('input')).to.equal(null);
     });
   });
 });

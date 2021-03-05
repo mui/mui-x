@@ -5,18 +5,19 @@ import { GRID_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import { classnames } from '../utils';
 
 export interface GridCellProps {
-  field?: string;
-  value?: GridCellValue;
-  formattedValue?: GridCellValue;
-  width: number;
-  height: number;
-  showRightBorder?: boolean;
-  hasFocus?: boolean;
   align: GridAlignment;
-  cssClass?: string;
-  tabIndex?: number;
   colIndex?: number;
+  cssClass?: string;
+  field?: string;
+  formattedValue?: GridCellValue;
+  hasFocus?: boolean;
+  height: number;
+  isEditable?: boolean;
   rowIndex?: number;
+  showRightBorder?: boolean;
+  tabIndex?: number;
+  value?: GridCellValue;
+  width: number;
 }
 
 export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
@@ -25,15 +26,16 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     children,
     colIndex,
     cssClass,
-    hasFocus,
     field,
     formattedValue,
+    hasFocus,
+    height,
+    isEditable,
     rowIndex,
     showRightBorder,
     tabIndex,
     value,
     width,
-    height,
   } = props;
 
   const valueToRender = formattedValue || value;
@@ -50,11 +52,13 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
       ref={cellRef}
       className={classnames(GRID_CELL_CSS_CLASS, cssClass, `MuiDataGrid-cell${capitalize(align)}`, {
         'MuiDataGrid-withBorder': showRightBorder,
+        'MuiDataGrid-cellEditable': isEditable,
       })}
       role="cell"
       data-value={value}
       data-field={field}
       data-rowindex={rowIndex}
+      data-editable={isEditable}
       aria-colindex={colIndex}
       style={{
         minWidth: width,

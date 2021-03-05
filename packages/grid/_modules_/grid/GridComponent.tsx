@@ -22,6 +22,7 @@ import { useGridState } from './hooks/features/core/useGridState';
 import { useGridPagination } from './hooks/features/pagination/useGridPagination';
 import { useGridPreferencesPanel } from './hooks/features/preferencesPanel/useGridPreferencesPanel';
 import { useGridRows } from './hooks/features/rows/useGridRows';
+import { useGridEditRows } from './hooks/features/rows/useGridEditRows';
 import { useGridSorting } from './hooks/features/sorting/useGridSorting';
 import { useGridApiRef } from './hooks/features/useGridApiRef';
 import { useGridColumnReorder } from './hooks/features/columnReorder';
@@ -75,6 +76,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
 
     useGridColumns(props.columns, apiRef);
     useGridRows(apiRef, props.rows, props.getRowId);
+    useGridEditRows(apiRef);
     useGridKeyboard(rootContainerRef, apiRef);
     useGridSelection(apiRef);
     useGridSorting(apiRef, props.rows);

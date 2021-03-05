@@ -5,7 +5,7 @@ import { GridCellParams } from '@material-ui/x-grid';
 // ISO 3166-1 alpha-2
 // ⚠️ No support for IE 11
 function countryToFlag(isoCode: string) {
-  return typeof String.fromCodePoint !== 'undefined'
+  return typeof String.fromCodePoint !== 'undefined' && isoCode
     ? isoCode
         .toUpperCase()
         .replace(/./g, (char) => String.fromCodePoint(char.charCodeAt(0) + 127397))
@@ -42,7 +42,7 @@ const Country = React.memo(function Country(props: CountryProps) {
 
   return (
     <div className={classes.root}>
-      <span className={classes.flag}>{countryToFlag(value.code)}</span>
+      <span className={classes.flag}>{value.code && countryToFlag(value.code)}</span>
       <span className={classes.label}>{value.label}</span>
     </div>
   );
