@@ -154,7 +154,13 @@ describe('<XGrid /> - apiRef', () => {
 
   it('getDataAsCsv should return the correct string representation of the grid data', () => {
     render(<TestCase />);
-
-    expect(apiRef.current.getDataAsCsv()).to.equal('"Brand"\r\n"Nike"\r\n"Adidas"\r\n"Puma"');
+    expect(apiRef.current.getDataAsCsv()).to.equal('Brand\r\nNike\r\nAdidas\r\nPuma');
+    apiRef.current.updateRows([
+      {
+        id: 1,
+        brand: 'Adidas,Reebok',
+      },
+    ]);
+    expect(apiRef.current.getDataAsCsv()).to.equal('Brand\r\nNike\r\n"Adidas,Reebok"\r\nPuma');
   });
 });
