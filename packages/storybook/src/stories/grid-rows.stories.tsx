@@ -630,7 +630,7 @@ export function CommodityEdit() {
   );
 }
 
-export function RegressionEditCell() {
+export function EditCellSnap() {
   const apiRef = useGridApiRef();
 
   React.useEffect(() => {
