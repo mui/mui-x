@@ -230,15 +230,32 @@ export const useStyles = makeStyles(
           whiteSpace: 'nowrap',
           borderBottom: `1px solid ${borderColor}`,
         },
+        '& .MuiDataGrid-cell.MuiDataGrid-cellEditing': {
+          padding: 1,
+          display: 'flex',
+        },
         '& .MuiDataGrid-editCellInputBase': {
           ...theme.typography.body2,
-          border: `1px solid ${borderColor}`,
-          borderRadius: theme.shape.borderRadius,
-          '& :focus': {
+          padding: '1px 0',
+          border: `1px solid ${
+            getThemePaletteMode(theme.palette) === 'light'
+              ? 'rgba(0, 0, 0, 0.23)'
+              : 'rgba(255, 255, 255, 0.23)'
+          }`,
+          borderRadius: 3,
+          '&:hover': {
             borderColor: theme.palette.text.primary,
-            outline: 0,
-            // boxShadow: getThemePaletteMode(theme.palette) === 'light' ? null : '0 0 0 100px #266798 inset',
-            boxShadow: 'inset 0 1px 1px rgb(0 0 0 / 8%), 0 0 8px rgb(102 175 233 / 60%)',
+          },
+          '&.Mui-focused': {
+            borderColor: theme.palette.primary.main,
+            borderWidth: 2,
+            '& input': {
+              padding: '0 13px',
+            },
+          },
+          '& input': {
+            padding: '0 14px',
+            height: '100%',
           },
         },
         // The very last cell

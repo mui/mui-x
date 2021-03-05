@@ -629,3 +629,18 @@ export function CommodityEdit() {
     </React.Fragment>
   );
 }
+
+export function EditCellSnap() {
+  const apiRef = useGridApiRef();
+
+  React.useEffect(() => {
+    apiRef.current.setCellMode(0, 'brand', 'edit');
+    apiRef.current.setCellMode(1, 'brand', 'edit');
+  });
+
+  return (
+    <div className="grid-container">
+      <XGrid {...baselineProps} apiRef={apiRef} />
+    </div>
+  );
+}
