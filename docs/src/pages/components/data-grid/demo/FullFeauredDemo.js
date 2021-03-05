@@ -104,14 +104,11 @@ const useStyles = makeStyles((theme) => ({
     height: 600,
     width: '100%',
     '& .MuiFormGroup-options': {
-      marginBottom: theme.spacing(2),
       alignItems: 'center',
+      paddingBottom: theme.spacing(1),
       '& fieldset': {
         minWidth: 100,
-        marginRight: theme.spacing(2),
-      },
-      '& button': {
-        marginLeft: theme.spacing(1),
+        margin: theme.spacing(2, 2, 2, 0),
       },
     },
   },
