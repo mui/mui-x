@@ -1,6 +1,6 @@
-import { GridColumns, GridRowId, GridRowModel } from '../../../../models';
+import { GridCellValue, GridColumns, GridRowId, GridRowModel } from '../../../../models';
 
-const formatCellValue = (value) => {
+const serialiseCellValue = (value) => {
   if (typeof value === 'string') {
     const formattedValue = value.replace(/"/g, '""');
     return formattedValue.includes(',') ? `"${formattedValue}"` : formattedValue;
@@ -8,10 +8,16 @@ const formatCellValue = (value) => {
   return value;
 };
 
-export function buildRow(row: GridRowModel, columns: GridColumns): Array<string> {
+export function serialiseRow(
+  row: GridRowModel,
+  columns: GridColumns,
+  getCellValue: (id: GridRowId, field: string) => GridCellValue,
+): Array<string> {
   const mappedRow: string[] = [];
   columns.forEach(
-    (column) => column.field !== '__check__' && mappedRow.push(formatCellValue(row[column.field])),
+    (column) =>
+      column.field !== '__check__' &&
+      mappedRow.push(serialiseCellValue(getCellValue(row.id, column.field))),
   );
   return mappedRow;
 }
@@ -20,6 +26,7 @@ export function buildCSV(
   columns: GridColumns,
   rows: GridRowModel[],
   selectedRows: Record<GridRowId, boolean>,
+  getCellValue: (id: GridRowId, field: string) => GridCellValue,
 ): string {
   const selectedRowsIds = Object.keys(selectedRows);
 
@@ -29,9 +36,11 @@ export function buildCSV(
 
   const CSVHead = `${columns
     .filter((column) => column.field !== '__check__')
-    .map((column) => formatCellValue(column.headerName))
+    .map((column) => serialiseCellValue(column.headerName || column.field))
     .toString()}\r\n`;
-  const CSVBody = rows.reduce((soFar, row) => `${soFar}${buildRow(row, columns)}\r\n`, '').trim();
+  const CSVBody = rows
+    .reduce((soFar, row) => `${soFar}${serialiseRow(row, columns, getCellValue)}\r\n`, '')
+    .trim();
   const csv = `${CSVHead}${CSVBody}`.trim();
 
   return csv;
