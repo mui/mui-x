@@ -429,7 +429,7 @@ export function ServerPaginationDocsDemo() {
     </div>
   );
 }
-export function CommodityAutoPageSize() {
+export function CommodityAutoPageSizeSnap() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 500,
