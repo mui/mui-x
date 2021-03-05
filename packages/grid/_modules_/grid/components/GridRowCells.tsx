@@ -73,18 +73,18 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
       api: api!.current!,
     });
 
-    const classNames = [] as string[];
+    let cssClassProp = { cssClass: '' };
     if (column.cellClassName) {
       if (!isFunction(column.cellClassName)) {
-        classNames.push(...column.cellClassName);
+        cssClassProp = { cssClass: classnames(column.cellClassName) };
       } else {
-        classNames.push(column.cellClassName(cellParams) as string);
+        cssClassProp = { cssClass: column.cellClassName(cellParams) as string };
       }
     }
 
     if (column.cellClassRules) {
       const cssClass = applyCssClassRules(column.cellClassRules, cellParams);
-      classNames.push(cssClass);
+      cssClassProp = { cssClass: `${cssClassProp.cssClass} ${cssClass}` };
     }
 
     const editCellState = editRowsState[row.id] && editRowsState[row.id][column.field];
@@ -104,13 +104,13 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
 
     if (editCellState == null && column.renderCell) {
       cellComponent = column.renderCell(cellParams);
-      classNames.push('MuiDataGrid-cellWithRenderer');
+      cssClassProp = { cssClass: `${cssClassProp.cssClass} MuiDataGrid-cellWithRenderer` };
     }
 
     if (editCellState != null && column.renderEditCell) {
       const params = { ...cellParams, ...editCellState };
       cellComponent = column.renderEditCell(params);
-      classNames.push('MuiDataGrid-cellEditing');
+      cssClassProp = { cssClass: `${cssClassProp.cssClass} MuiDataGrid-cellEditing` };
     }
 
     const cellProps: GridCellProps & { children: any } = {
@@ -121,7 +121,7 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
       showRightBorder,
       ...formattedValueProp,
       align: column.align || 'left',
-      cssClass: classnames(classNames),
+      ...cssClassProp,
       tabIndex: domIndex === 0 && colIdx === 0 ? 0 : -1,
       rowIndex,
       colIndex: colIdx + firstColIdx,
