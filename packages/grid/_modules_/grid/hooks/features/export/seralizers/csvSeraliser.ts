@@ -2,7 +2,8 @@ import { GridColumns, GridRowId, GridRowModel } from '../../../../models';
 
 const formatCellValue = (value) => {
   if (typeof value === 'string') {
-    return value.includes(',') ? `"${value}"` : value;
+    const formattedValue = value.replace(/"/g, '""');
+    return formattedValue.includes(',') ? `"${formattedValue}"` : formattedValue;
   }
   return value;
 };
