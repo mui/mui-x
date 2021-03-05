@@ -106,7 +106,7 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiFormGroup-options': {
       alignItems: 'center',
       paddingBottom: theme.spacing(1),
-      '& fieldset': {
+      '& > div': {
         minWidth: 100,
         margin: theme.spacing(2, 2, 2, 0),
       },
@@ -148,14 +148,14 @@ function SettingsPanel(props) {
 
   return (
     <FormGroup className="MuiFormGroup-options" row>
-      <FormControl component="fieldset">
+      <FormControl>
         <InputLabel>Dataset</InputLabel>
         <Select value={typeState} onChange={handleDatasetChange}>
           <MenuItem value="Employee">Employee</MenuItem>
           <MenuItem value="Commodity">Commodity</MenuItem>
         </Select>
       </FormControl>
-      <FormControl component="fieldset">
+      <FormControl>
         <InputLabel>Rows</InputLabel>
         <Select value={sizeState} onChange={handleSizeChange}>
           <MenuItem value={100}>100</MenuItem>
@@ -164,7 +164,7 @@ function SettingsPanel(props) {
           <MenuItem value={100000}>{Number(100000).toLocaleString()}</MenuItem>
         </Select>
       </FormControl>
-      <FormControl component="fieldset">
+      <FormControl>
         <InputLabel>Page Size</InputLabel>
         <Select value={selectedPaginationValue} onChange={handlePaginationChange}>
           <MenuItem value={-1}>off</MenuItem>
@@ -174,7 +174,7 @@ function SettingsPanel(props) {
           <MenuItem value={1000}>{Number(1000).toLocaleString()}</MenuItem>
         </Select>
       </FormControl>
-      <FormControl component="fieldset">
+      <FormControl>
         <InputLabel>Theme</InputLabel>
         <Select value={activeTheme} onChange={handleThemeChange}>
           <MenuItem value="default">Default Theme</MenuItem>
