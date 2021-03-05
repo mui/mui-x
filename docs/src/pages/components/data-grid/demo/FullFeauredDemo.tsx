@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import FormGroup from '@material-ui/core/FormGroup';
 import Button from '@material-ui/core/Button';
-import FormLabel from '@material-ui/core/FormLabel';
+import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
@@ -103,9 +103,11 @@ const useStyles = makeStyles((theme) => ({
     height: 600,
     width: '100%',
     '& .MuiFormGroup-options': {
+      marginBottom: theme.spacing(2),
       alignItems: 'center',
       '& fieldset': {
-        padding: theme.spacing(2),
+        minWidth: 100,
+        marginRight: theme.spacing(2),
       },
       '& button': {
         marginLeft: theme.spacing(1),
@@ -174,15 +176,15 @@ function SettingsPanel(props: GridToolbarContainerProps) {
 
   return (
     <FormGroup className="MuiFormGroup-options" row>
-      <FormControl size="small" component="fieldset">
-        <FormLabel component="legend">Dataset</FormLabel>
+      <FormControl component="fieldset">
+        <InputLabel>Dataset</InputLabel>
         <Select value={typeState} onChange={handleDatasetChange}>
           <MenuItem value="Employee">Employee</MenuItem>
           <MenuItem value="Commodity">Commodity</MenuItem>
         </Select>
       </FormControl>
-      <FormControl size="small" component="fieldset">
-        <FormLabel component="legend">Rows</FormLabel>
+      <FormControl component="fieldset">
+        <InputLabel>Rows</InputLabel>
         <Select value={sizeState} onChange={handleSizeChange}>
           <MenuItem value={100}>100</MenuItem>
           <MenuItem value={1000}>{Number(1000).toLocaleString()}</MenuItem>
@@ -190,8 +192,8 @@ function SettingsPanel(props: GridToolbarContainerProps) {
           <MenuItem value={100000}>{Number(100000).toLocaleString()}</MenuItem>
         </Select>
       </FormControl>
-      <FormControl size="small" component="fieldset">
-        <FormLabel component="legend">Page Size</FormLabel>
+      <FormControl component="fieldset">
+        <InputLabel>Page Size</InputLabel>
         <Select value={selectedPaginationValue} onChange={handlePaginationChange}>
           <MenuItem value={-1}>off</MenuItem>
           <MenuItem value={0}>auto</MenuItem>
@@ -200,8 +202,8 @@ function SettingsPanel(props: GridToolbarContainerProps) {
           <MenuItem value={1000}>{Number(1000).toLocaleString()}</MenuItem>
         </Select>
       </FormControl>
-      <FormControl size="small" component="fieldset">
-        <FormLabel component="legend">Theme</FormLabel>
+      <FormControl component="fieldset">
+        <InputLabel>Theme</InputLabel>
         <Select value={activeTheme} onChange={handleThemeChange}>
           <MenuItem value="default">Default Theme</MenuItem>
           <MenuItem value="ant">Ant Design</MenuItem>
