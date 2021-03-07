@@ -46,7 +46,7 @@ function excludeTest(suite, name) {
     }
 
     // assume regex
-    if (pattern.test(suite)) {
+    if (pattern.test(`${suite}/${name}.png`)) {
       unusedBlacklistPatterns.delete(pattern);
       return true;
     }
