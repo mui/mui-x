@@ -20,8 +20,8 @@ export function AllEvents() {
   const options: GridOptionsProp = {
     onRowClick: (params) => action('onRowClick')(params),
     onCellClick: (params) => action('onCellClick')(params),
-    onCellOver: (params) => action('onCellHover')(params),
-    onRowOver: (params) => action('onRowHover')(params),
+    onCellOver: (params) => action('onCellOver')(params),
+    onRowOver: (params) => action('onRowOver')(params),
     onColumnHeaderClick: (params) => action('onColumnHeaderClick')(params),
     onRowSelected: (params) => action('onRowSelected')(params),
     onSelectionModelChange: (params) => action('onSelectionChange', { depth: 1 })(params),
