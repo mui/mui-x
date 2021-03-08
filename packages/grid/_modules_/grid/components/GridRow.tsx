@@ -9,7 +9,7 @@ import {
 } from '../constants/eventsConstants';
 import { GridRowId } from '../models';
 import { GRID_ROW_CSS_CLASS } from '../constants/cssClassesConstants';
-import { buildGridRowParams, classnames } from '../utils';
+import { classnames } from '../utils';
 import { gridDensityRowHeightSelector } from '../hooks/features/density';
 import { GridApiContext } from './GridApiContext';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
@@ -33,6 +33,7 @@ export const GridRow: React.FC<RowProps> = ({ selected, id, className, rowIndex,
     },
     [apiRef, id],
   );
+
   const handleDoubleClick = React.useCallback(
     (event: React.MouseEvent) => {
       const params = apiRef?.current.getRowParams(id)!;
@@ -40,6 +41,7 @@ export const GridRow: React.FC<RowProps> = ({ selected, id, className, rowIndex,
     },
     [apiRef, id],
   );
+
   const handleMouseOver = React.useCallback(
     (event: React.MouseEvent) => {
       const params = apiRef?.current.getRowParams(id)!;

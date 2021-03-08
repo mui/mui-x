@@ -8,7 +8,7 @@ import {
   GRID_CELL_OUT,
   GRID_DOUBLE_CELL_CLICK,
 } from '../constants/eventsConstants';
-import { GridAlignment, GridCellParams, GridCellValue, GridRowId } from '../models';
+import { GridAlignment, GridCellValue, GridRowId } from '../models';
 import { GRID_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import { classnames } from '../utils';
 import { GridApiContext } from './GridApiContext';
@@ -73,7 +73,6 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
       if (params?.colDef.disableClickEventBubbling) {
         event.stopPropagation();
       }
-
       apiRef?.current.publishEvent(GRID_CELL_CLICK, params, event);
     },
     [apiRef, getParams],

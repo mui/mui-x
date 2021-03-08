@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { GRID_CELL_CLICK } from '../constants/eventsConstants';
 import { gridEditRowsStateSelector } from '../hooks/features/rows/gridEditRowsSelector';
 import {
   GridCellClassParams,
@@ -12,7 +11,6 @@ import {
 import { GridCell, GridCellProps } from './GridCell';
 import { GridApiContext } from './GridApiContext';
 import { classnames, isFunction } from '../utils';
-import { buildGridCellParams } from '../utils/paramsUtils';
 import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 

@@ -1,10 +1,14 @@
 import { GridCellValue } from '../gridCell';
-import { GridRowModel } from '../gridRows';
+import { GridRowId, GridRowModel } from '../gridRows';
 
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
  */
 export interface GridCellParams {
+  /**
+   * The grid row id
+   */
+  id: GridRowId;
   /**
    * The HTMLElement that triggered the event
    */
@@ -51,7 +55,7 @@ export interface GridCellParams {
 /**
  * Alias of GridCellParams.
  */
-export type ValueGetterParams = GridCellParams;
+export type ValueGetterParams =GridCellParams// Omit<GridCellParams, 'value' | 'getValue' | 'isEditable'>;
 
 /**
  * Alias of GridCellParams.

@@ -87,9 +87,11 @@ export function getGridCellElementFromIndexes(
     `:scope .${GRID_CELL_CSS_CLASS}[aria-colIndex='${colIndex}'][data-rowIndex='${rowIndex}']`,
   ) as HTMLDivElement;
 }
+
 export function getGridRowElement(root: Element, id: GridRowId) {
   return root.querySelector(`:scope .${GRID_ROW_CSS_CLASS}[data-id='${id}']`) as HTMLDivElement;
 }
+
 export function getGridCellElement(root: Element, { id, field }: { id: GridRowId; field: string }) {
   const row = getGridRowElement(root, id);
   if (!row) {
