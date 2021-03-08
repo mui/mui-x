@@ -5,7 +5,7 @@ import { useLogger } from '../utils/useLogger';
 export function useGridApiEventHandler(
   apiRef: GridApiRef,
   eventName: string,
-  handler?: (args: any) => void,
+  handler?: (...args: any) => void,
 ) {
   const logger = useLogger('useGridApiEventHandler');
 

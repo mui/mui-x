@@ -51,9 +51,9 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
     cellFocus,
     showCellRightBorder,
   } = props;
-  const api = React.useContext(GridApiContext);
-  const rowHeight = useGridSelector(api, gridDensityRowHeightSelector);
-  const editRowsState = useGridSelector(api, gridEditRowsStateSelector);
+  const apiRef = React.useContext(GridApiContext);
+  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
+  const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
 
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const isLastColumn = firstColIdx + colIdx === columns.length - 1;
@@ -64,15 +64,7 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
       ? showCellRightBorder
       : !removeLastBorderRight && !props.extendRowFullWidth;
 
-    let value = row[column.field!];
-    const cellParams: GridCellParams = buildGridCellParams({
-      rowModel: row,
-      colDef: column,
-      rowIndex,
-      colIndex: colIdx,
-      value,
-      api: api!.current!,
-    });
+    const cellParams: GridCellParams = apiRef!.current.getCellParams(row.id, column.field);
 
     let cssClassProp = { cssClass: '' };
     if (column.cellClassName) {
@@ -91,20 +83,11 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
     const editCellState = editRowsState[row.id] && editRowsState[row.id][column.field];
     let cellComponent: React.ReactElement | null = null;
 
-    if (column.valueGetter) {
-      // Value getter override the original value
-      value = column.valueGetter(cellParams);
-      cellParams.value = value;
-    }
-
     let formattedValueProp = {};
     if (column.valueFormatter) {
       // TODO add formatted value to cellParams?
       formattedValueProp = { formattedValue: column.valueFormatter(cellParams) };
     }
-    const onClick = ()=>{
-      api?.current.publishEvent(GRID_CELL_CLICK, cellParams);
-    } ;
 
     if (editCellState == null && column.renderCell) {
       cellComponent = column.renderCell(cellParams);
@@ -118,9 +101,10 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
     }
 
     const cellProps: GridCellProps & { children: any } = {
-      value,
+      value: cellParams.value,
       field: column.field,
       width,
+      rowId: row.id,
       height: rowHeight,
       showRightBorder,
       ...formattedValueProp,
@@ -135,7 +119,6 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
         cellFocus !== null &&
         cellFocus.rowIndex === rowIndex &&
         cellFocus.colIndex === colIdx + firstColIdx,
-      onClick
     };
 
     return cellProps;

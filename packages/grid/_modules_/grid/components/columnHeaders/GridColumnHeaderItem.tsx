@@ -73,15 +73,18 @@ export const GridColumnHeaderItem = ({
       }),
     [apiRef, column],
   );
-  const onHeaderTitleClick = React.useCallback(() => {
-    const colHeaderParams: GridColParams = {
-      field: column.field,
-      colDef: column,
-      colIndex,
-      api: apiRef!.current,
-    };
-    apiRef!.current.publishEvent(GRID_COLUMN_HEADER_CLICK, colHeaderParams);
-  }, [apiRef, colIndex, column]);
+  const onHeaderTitleClick = React.useCallback(
+    (event: React.MouseEvent) => {
+      const colHeaderParams: GridColParams = {
+        field: column.field,
+        colDef: column,
+        colIndex,
+        api: apiRef!.current,
+      };
+      apiRef!.current.publishEvent(GRID_COLUMN_HEADER_CLICK, colHeaderParams, event);
+    },
+    [apiRef, colIndex, column],
+  );
 
   const cssClasses = classnames(
     GRID_HEADER_CELL_CSS_CLASS,

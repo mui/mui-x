@@ -5,6 +5,7 @@ import {
   GRID_ROW_CSS_CLASS,
 } from '../constants/cssClassesConstants';
 import { GridCellIndexCoordinates } from '../models/gridCell';
+import { GridRowId } from '../models/gridRows';
 
 export function isOverflown(element: Element): boolean {
   return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
@@ -85,4 +86,14 @@ export function getGridCellElementFromIndexes(
   return root.querySelector(
     `:scope .${GRID_CELL_CSS_CLASS}[aria-colIndex='${colIndex}'][data-rowIndex='${rowIndex}']`,
   ) as HTMLDivElement;
+}
+export function getGridRowElement(root: Element, id: GridRowId) {
+  return root.querySelector(`:scope .${GRID_ROW_CSS_CLASS}[data-id='${id}']`) as HTMLDivElement;
+}
+export function getGridCellElement(root: Element, { id, field }: { id: GridRowId; field: string }) {
+  const row = getGridRowElement(root, id);
+  if (!row) {
+    return null;
+  }
+  return row.querySelector(`.${GRID_CELL_CSS_CLASS}[data-field='${field}']`) as HTMLDivElement;
 }

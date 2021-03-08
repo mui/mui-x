@@ -37,12 +37,6 @@ export interface GridEditRowApi {
    */
   commitCellChange: (id: GridRowId, update: GridEditRowUpdate) => void;
   /**
-   * Get the cell value of a row and field.
-   * @param id
-   * @param field
-   */
-  getCellValue: (id: GridRowId, field: string) => GridCellValue;
-  /**
    * Callback fired when the EditRowModel changed.
    * @param handler
    */

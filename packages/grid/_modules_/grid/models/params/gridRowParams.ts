@@ -8,7 +8,7 @@ export interface GridRowParams {
   /**
    * The HTMLElement that triggered the event
    */
-  element?: HTMLElement;
+  element?: HTMLElement | null;
   /**
    * A function that let you get data from other columns.
    * @param field

@@ -1,4 +1,5 @@
 export * from './gridApiRef';
+export * from './gridCellApi';
 export * from './gridCoreApi';
 export * from './gridColumnApi';
 export * from './gridComponentsApi';

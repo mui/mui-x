@@ -1,14 +1,24 @@
 import * as React from 'react';
 import { capitalize } from '@material-ui/core/utils';
-import { GridAlignment, GridCellValue } from '../models';
+import {
+  GRID_CELL_CLICK,
+  GRID_CELL_ENTER,
+  GRID_CELL_OVER,
+  GRID_CELL_LEAVE,
+  GRID_CELL_OUT,
+  GRID_DOUBLE_CELL_CLICK,
+} from '../constants/eventsConstants';
+import { GridAlignment, GridCellParams, GridCellValue, GridRowId } from '../models';
 import { GRID_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import { classnames } from '../utils';
+import { GridApiContext } from './GridApiContext';
 
 export interface GridCellProps {
   align: GridAlignment;
   colIndex?: number;
   cssClass?: string;
   field?: string;
+  rowId?: GridRowId;
   formattedValue?: GridCellValue;
   hasFocus?: boolean;
   height: number;
@@ -18,7 +28,6 @@ export interface GridCellProps {
   tabIndex?: number;
   value?: GridCellValue;
   width: number;
-  onClick?: ((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void) ;
 }
 
 export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
@@ -33,21 +42,77 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     height,
     isEditable,
     rowIndex,
+    rowId,
     showRightBorder,
     tabIndex,
     value,
     width,
-    onClick
   } = props;
 
   const valueToRender = formattedValue || value;
   const cellRef = React.useRef<HTMLDivElement>(null);
+  const apiRef = React.useContext(GridApiContext);
+
+  const getParams = React.useCallback(() => {
+    if (rowId == null || field == null || !apiRef?.current) {
+      return null;
+    }
+
+    return apiRef!.current.getCellParams(rowId, field);
+  }, [apiRef, field, rowId]);
 
   React.useEffect(() => {
     if (hasFocus && cellRef.current) {
       cellRef.current.focus();
     }
   }, [hasFocus]);
+
+  const handleClick = React.useCallback(
+    (event: React.MouseEvent) => {
+      const params = getParams();
+      if (params?.colDef.disableClickEventBubbling) {
+        event.stopPropagation();
+      }
+
+      apiRef?.current.publishEvent(GRID_CELL_CLICK, params, event);
+    },
+    [apiRef, getParams],
+  );
+
+  const handleDoubleClick = React.useCallback(
+    (event: React.MouseEvent) => {
+      apiRef?.current.publishEvent(GRID_DOUBLE_CELL_CLICK, getParams(), event);
+    },
+    [apiRef, getParams],
+  );
+
+  const handleHover = React.useCallback(
+    (event: React.MouseEvent) => {
+      apiRef?.current.publishEvent(GRID_CELL_OVER, getParams(), event);
+    },
+    [apiRef, getParams],
+  );
+
+  const handleOut = React.useCallback(
+    (event: React.MouseEvent) => {
+      apiRef?.current.publishEvent(GRID_CELL_OUT, getParams(), event);
+    },
+    [apiRef, getParams],
+  );
+
+  const handleEnter = React.useCallback(
+    (event: React.MouseEvent) => {
+      apiRef?.current.publishEvent(GRID_CELL_ENTER, getParams(), event);
+    },
+    [apiRef, getParams],
+  );
+
+  const handleLeave = React.useCallback(
+    (event: React.MouseEvent) => {
+      apiRef?.current.publishEvent(GRID_CELL_LEAVE, getParams(), event);
+    },
+    [apiRef, getParams],
+  );
 
   return (
     <div
@@ -70,7 +135,12 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
         maxHeight: height,
       }}
       tabIndex={tabIndex}
-      onClick={onClick}
+      onClick={handleClick}
+      onDoubleClick={handleDoubleClick}
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+      onMouseOver={handleHover}
+      onMouseOut={handleOut}
     >
       {children || valueToRender?.toString()}
     </div>

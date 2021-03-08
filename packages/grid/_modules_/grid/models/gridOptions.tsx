@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { GRID_DEFAULT_LOCALE_TEXT } from '../constants/localeTextConstants';
 import { FilterModel } from '../hooks/features/filter/FilterModelState';
 import { Logger } from '../hooks/utils/useLogger';
@@ -225,33 +226,40 @@ export interface GridOptions {
   /**
    * Callback fired when a click event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
+   * @param event [[React.MouseEvent]].
    */
-  onCellClick?: (param: GridCellParams) => void;
+  onCellClick?: (param: GridCellParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when a double click event comes from a cell element.
    * @param param With all properties from [[CellParams]].
    */
-  onCellDoubleClick?: (param: GridCellParams) => void;
+  onCellDoubleClick?: (param: GridCellParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when a hover event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
    */
-  onCellHover?: (param: GridCellParams) => void;
+  onCellOver?: (param: GridCellParams, event: React.MouseEvent) => void;
+  onCellOut?: (param: GridCellParams, event: React.MouseEvent) => void;
+  onCellEnter?: (param: GridCellParams, event: React.MouseEvent) => void;
+  onCellLeave?: (param: GridCellParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when a click event comes from a row container element.
    * @param param With all properties from [[GridRowParams]].
    */
-  onRowClick?: (param: GridRowParams) => void;
+  onRowClick?: (param: GridRowParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when a click event comes from a row container element.
    * @param param With all properties from [[RowParams]].
    */
-  onRowDoubleClick?: (param: GridRowParams) => void;
+  onRowDoubleClick?: (param: GridRowParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when a hover event comes from a row container element.
    * @param param With all properties from [[GridRowParams]].
    */
-  onRowHover?: (param: GridRowParams) => void;
+  onRowOver?: (param: GridRowParams, event: React.MouseEvent) => void;
+  onRowOut?: (param: GridRowParams, event: React.MouseEvent) => void;
+  onRowEnter?: (param: GridRowParams, event: React.MouseEvent) => void;
+  onRowLeave?: (param: GridRowParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when one row is selected.
    * @param param With all properties from [[GridRowSelectedParams]].
@@ -266,7 +274,7 @@ export interface GridOptions {
    * Callback fired when a click event comes from a column header element.
    * @param param With all properties from [[GridColParams]].
    */
-  onColumnHeaderClick?: (param: GridColParams) => void;
+  onColumnHeaderClick?: (param: GridColParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when the sort model changes before a column is sorted.
    * @param param With all properties from [[GridSortModelParams]].

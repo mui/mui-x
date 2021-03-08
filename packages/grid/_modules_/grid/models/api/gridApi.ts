@@ -1,5 +1,6 @@
 import { ColumnMenuApi } from './columnMenuApi';
 import { ColumnResizeApi } from './columnResizeApi';
+import { GridCellApi } from './gridCellApi';
 import { ComponentsApi } from './gridComponentsApi';
 import { FilterApi } from './filterApi';
 import { GridEditRowApi } from './gridEditRowApi';
@@ -28,6 +29,7 @@ export type GridApi = GridCoreApi &
   GridEventsApi &
   GridRowApi &
   GridEditRowApi &
+  GridCellApi &
   GridColumnApi &
   ColumnReorderApi &
   GridSelectionApi &
