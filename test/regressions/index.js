@@ -17,15 +17,9 @@ LicenseInfo.setLicenseKey(
 );
 
 const blacklist = [
-  'stories-grid-data/Grid10000.png', // Generating data is too slow
-  'stories-grid-data/Grid1000by1000.png', // Generating data is too slow
-  'stories-grid-data/Grid2000by2000.png', // Generating data is too slow
-  'stories-grid-data/Grid100000.png', // Generating data is too slow
-  'stories-grid-pagination/PageSize100.png', // Generating data is too slow
-  'stories-grid-pagination/PaginationApiTests.png', // Demo is broken, infinite rendering loops
-  'stories-grid-pagination/Page1Prop.png', // Demo is broken, infinite rendering loops
-  // 'docs-system-typography', // Unit tests are enough
-  // /^docs-guides-.*/, // No public components
+  // 'stories-grid-pagination/Page1Prop.png',
+  // 'docs-system-typography',
+  /^stories(.*)(?<!Snap)\.png$/, // Excludes stories that aren't suffixed with 'Snap'.
 ];
 
 const unusedBlacklistPatterns = new Set(blacklist);
@@ -52,7 +46,7 @@ function excludeTest(suite, name) {
     }
 
     // assume regex
-    if (pattern.test(suite)) {
+    if (pattern.test(`${suite}/${name}.png`)) {
       unusedBlacklistPatterns.delete(pattern);
       return true;
     }

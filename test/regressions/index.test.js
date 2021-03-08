@@ -1,4 +1,5 @@
 import * as fse from 'fs-extra';
+import { expect } from 'chai';
 import * as path from 'path';
 import * as playwright from 'playwright';
 
@@ -23,6 +24,15 @@ async function main() {
       route.abort();
     } else {
       route.continue();
+    }
+  });
+
+  let errorConsole;
+
+  page.on('console', (msg) => {
+    // Filter out native user-agent errors e.g. "Failed to load resource: net::ERR_FAILED"
+    if (msg.args().length > 0 && (msg.type() === 'error' || msg.type() === 'warning')) {
+      errorConsole = msg.text();
     }
   });
 
@@ -56,10 +66,21 @@ async function main() {
       await browser.close();
     });
 
+    it('should have no errors after the initial render', () => {
+      const msg = errorConsole;
+      errorConsole = undefined;
+      expect(msg).to.equal(undefined);
+    });
+
     routes.forEach((route, index) => {
       const pathURL = route.replace(baseUrl, '');
 
       it(`creates screenshots of ${pathURL}`, async function test() {
+        // With the playwright inspector we might want to call `page.pause` which would lead to a timeout.
+        if (process.env.PWDEBUG) {
+          this.timeout(0);
+        }
+
         if (pathURL === '/docs-components-data-grid-overview/XGridDemo') {
           this.timeout(6000);
         }
@@ -77,12 +98,16 @@ async function main() {
         const testcase = await page.waitForSelector(
           '[data-testid="testcase"]:not([aria-busy="true"])',
         );
-        const clip = await testcase.boundingBox();
 
         const screenshotPath = path.resolve(screenshotDir, `${route.replace(baseUrl, '.')}.png`);
         await fse.ensureDir(path.dirname(screenshotPath));
-        // Testcase.screenshot would resize the viewport to the element bbox.
-        await page.screenshot({ clip, path: screenshotPath, type: 'png' });
+        await testcase.screenshot({ path: screenshotPath, type: 'png' });
+      });
+
+      it(`should have no errors rendering ${pathURL}`, () => {
+        const msg = errorConsole;
+        errorConsole = undefined;
+        expect(msg).to.equal(undefined);
       });
     });
   });
