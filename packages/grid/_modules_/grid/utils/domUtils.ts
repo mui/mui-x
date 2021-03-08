@@ -2,6 +2,7 @@ import {
   GRID_CELL_CSS_CLASS,
   GRID_DATA_CONTAINER_CSS_CLASS,
   GRID_HEADER_CELL_TITLE_CSS_CLASS,
+  GRID_ROW_CSS_CLASS,
 } from '../constants/cssClassesConstants';
 import { GridCellIndexCoordinates } from '../models/gridCell';
 
@@ -11,6 +12,13 @@ export function isOverflown(element: Element): boolean {
 
 export function findParentElementFromClassName(elem: Element, className: string): Element | null {
   return elem.closest(`.${className}`);
+}
+
+export function getRowEl(cell?: Element | null): HTMLElement | null {
+  if (!cell) {
+    return null;
+  }
+  return findParentElementFromClassName(cell as HTMLDivElement, GRID_ROW_CSS_CLASS)! as HTMLElement;
 }
 
 export function isGridCellRoot(elem: Element | null): boolean {
@@ -30,6 +38,10 @@ export function isGridHeaderTitleContainer(elem: Element): boolean {
 
 export function getIdFromRowElem(rowEl: Element): string {
   return rowEl.getAttribute('data-id')!;
+}
+
+export function getFieldFromCellElem(cellEl: Element): string {
+  return cellEl.getAttribute('data-field')!;
 }
 
 export function getFieldFromHeaderElem(colCellEl: Element): string {

@@ -1,4 +1,9 @@
 /**
+ * The mode of the cell.
+ */
+export type GridCellMode = 'edit' | 'view';
+
+/**
  * The cell value type.
  */
 export type GridCellValue = string | number | boolean | Date | null | undefined | object;

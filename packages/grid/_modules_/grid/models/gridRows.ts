@@ -8,7 +8,7 @@ export type GridRowModel = ObjectWithId & GridRowData;
 
 export type GridUpdateAction = 'delete';
 
-export interface RowModelUpdate extends GridRowData {
+export interface GridRowModelUpdate extends GridRowData {
   _action?: GridUpdateAction;
 }
 

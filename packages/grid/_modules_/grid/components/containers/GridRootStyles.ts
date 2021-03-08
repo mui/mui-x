@@ -230,6 +230,34 @@ export const useStyles = makeStyles(
           whiteSpace: 'nowrap',
           borderBottom: `1px solid ${borderColor}`,
         },
+        '& .MuiDataGrid-cell.MuiDataGrid-cellEditing': {
+          padding: 1,
+          display: 'flex',
+        },
+        '& .MuiDataGrid-editCellInputBase': {
+          ...theme.typography.body2,
+          padding: '1px 0',
+          border: `1px solid ${
+            getThemePaletteMode(theme.palette) === 'light'
+              ? 'rgba(0, 0, 0, 0.23)'
+              : 'rgba(255, 255, 255, 0.23)'
+          }`,
+          borderRadius: 3,
+          '&:hover': {
+            borderColor: theme.palette.text.primary,
+          },
+          '&.Mui-focused': {
+            borderColor: theme.palette.primary.main,
+            borderWidth: 2,
+            '& input': {
+              padding: '0 13px',
+            },
+          },
+          '& input': {
+            padding: '0 14px',
+            height: '100%',
+          },
+        },
         // The very last cell
         '& .MuiDataGrid-colCellWrapper .MuiDataGrid-cell': {
           borderBottom: 'none',

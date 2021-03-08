@@ -1,4 +1,4 @@
-import { GridRowModel, GridRowId, RowModelUpdate } from '../gridRows';
+import { GridRowModel, GridRowId, GridRowModelUpdate } from '../gridRows';
 
 /**
  * The Row API interface that is available in the grid [[apiRef]].
@@ -26,7 +26,7 @@ export interface GridRowApi {
    * Update any properties of the current set of GridRowData[].
    * @param updates
    */
-  updateRows: (updates: RowModelUpdate[]) => void;
+  updateRows: (updates: GridRowModelUpdate[]) => void;
   /**
    * Get the GridRowId of a row at a specific position.
    * @param index

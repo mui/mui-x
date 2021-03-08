@@ -1,6 +1,7 @@
 // Web standard events
 export const GRID_RESIZE = 'resize';
 export const GRID_CLICK = 'click';
+export const GRID_DOUBLE_CLICK = 'dblclick';
 export const GRID_MOUSE_HOVER = 'mouseover';
 export const GRID_FOCUS_OUT = 'focusout';
 export const GRID_KEYDOWN = 'keydown';
@@ -8,13 +9,19 @@ export const GRID_KEYUP = 'keyup';
 export const GRID_SCROLL = 'scroll';
 export const GRID_DRAGEND = 'dragend';
 
-// XGRID events
+// GRID events
+export const GRID_CELL_CHANGE = 'cellChange';
+export const GRID_CELL_CHANGE_COMMITTED = 'cellChangeCommitted';
+export const GRID_CELL_MODE_CHANGE = 'cellModeChange';
+export const GRID_EDIT_ROW_MODEL_CHANGE = 'editRowModelChange';
 export const GRID_COMPONENT_ERROR = 'componentError';
 export const GRID_UNMOUNT = 'unmount';
 export const GRID_ELEMENT_FOCUS_OUT = 'gridFocusOut';
 export const GRID_CELL_CLICK = 'cellClick';
+export const GRID_DOUBLE_CELL_CLICK = 'doubleCellClick';
 export const GRID_CELL_HOVER = 'cellHover';
 export const GRID_ROW_CLICK = 'rowClick';
+export const GRID_DOUBLE_ROW_CLICK = 'doubleRowClick';
 export const GRID_ROW_HOVER = 'rowHover';
 export const GRID_ROW_SELECTED = 'rowSelected';
 export const GRID_SELECTION_CHANGED = 'selectionChange';

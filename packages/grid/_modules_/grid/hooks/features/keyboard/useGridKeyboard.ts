@@ -12,6 +12,7 @@ import { GridCellIndexCoordinates } from '../../../models/gridCell';
 import {
   findParentElementFromClassName,
   getIdFromRowElem,
+  getRowEl,
   isGridCellRoot,
 } from '../../../utils/domUtils';
 import {
@@ -211,10 +212,7 @@ export const useGridKeyboard = (
   );
 
   const handleCopy = React.useCallback(() => {
-    const rowEl = findParentElementFromClassName(
-      document.activeElement as HTMLDivElement,
-      GRID_ROW_CSS_CLASS,
-    )! as HTMLElement;
+    const rowEl = getRowEl(document.activeElement)!;
     const rowId = getIdFromRowElem(rowEl);
     const isRowSelected = selectionState[rowId];
 

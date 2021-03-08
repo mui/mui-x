@@ -35,9 +35,17 @@ export interface GridCellParams {
    */
   rowIndex?: number;
   /**
-   * GridApiRef that let you manipulate the grid.
+   * The column index that the current cell belongs to.
+   */
+  colIndex?: number;
+  /**
+   * GridApi that let you manipulate the grid.
    */
   api: any;
+  /**
+   * If true, the cell is editable.
+   */
+  isEditable?: boolean;
 }
 
 /**

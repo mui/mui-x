@@ -41,5 +41,11 @@
     "source-map-loader": "^1.0.2",
     "string-replace-loader": "^3.0.1",
     "ts-loader": "^8.0.2"
-  }
+  },
+  "browserslist": [
+    ">0.3%",
+    "not ie 11",
+    "not dead",
+    "not op_mini all"
+  ]
 }

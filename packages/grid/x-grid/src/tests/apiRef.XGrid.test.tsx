@@ -1,8 +1,14 @@
-import { GridApiRef, GridRowData, useGridApiRef, XGrid } from '@material-ui/x-grid';
+import {
+  GridApiRef,
+  GridComponentProps,
+  GridRowData,
+  useGridApiRef,
+  XGrid,
+} from '@material-ui/x-grid';
 import { expect } from 'chai';
 import * as React from 'react';
 import { useFakeTimers } from 'sinon';
-import { getColumnValues } from 'test/utils/helperFn';
+import { getCell, getColumnValues } from 'test/utils/helperFn';
 import { createClientRenderStrictMode } from 'test/utils';
 
 describe('<XGrid /> - apiRef', () => {
@@ -46,11 +52,16 @@ describe('<XGrid /> - apiRef', () => {
 
   let apiRef: GridApiRef;
 
-  const TestCase = () => {
+  const TestCase = (props: Partial<GridComponentProps>) => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
-        <XGrid apiRef={apiRef} columns={baselineProps.columns} rows={baselineProps.rows} />
+        <XGrid
+          apiRef={apiRef}
+          columns={baselineProps.columns}
+          rows={baselineProps.rows}
+          {...props}
+        />
       </div>
     );
   };
@@ -153,8 +164,120 @@ describe('<XGrid /> - apiRef', () => {
   });
 
   it('getDataAsCsv should return the correct string representation of the grid data', () => {
-    render(<TestCase />);
+    const TestCaseCSVExport = () => {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid
+            apiRef={apiRef}
+            columns={[{ field: 'brand', headerName: 'Brand' }]}
+            rows={[
+              {
+                id: 0,
+                brand: 'Nike',
+              },
+              {
+                id: 1,
+                brand: 'Adidas',
+              },
+              {
+                id: 2,
+                brand: 'Puma',
+              },
+            ]}
+          />
+        </div>
+      );
+    };
 
+    render(<TestCaseCSVExport />);
     expect(apiRef.current.getDataAsCsv()).to.equal('Brand\r\nNike\r\nAdidas\r\nPuma');
+    apiRef.current.updateRows([
+      {
+        id: 1,
+        brand: 'Adidas,Reebok',
+      },
+    ]);
+    expect(apiRef.current.getDataAsCsv()).to.equal('Brand\r\nNike\r\n"Adidas,Reebok"\r\nPuma');
+  });
+
+  it('getDataAsCsv should return the correct string representation of the grid data if cell contains comma', () => {
+    const TestCaseCSVExport = () => {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid
+            apiRef={apiRef}
+            columns={[{ field: 'brand', headerName: 'Brand' }]}
+            rows={[
+              {
+                id: 0,
+                brand: 'Nike',
+              },
+              {
+                id: 1,
+                brand: 'Adidas,Puma',
+              },
+            ]}
+          />
+        </div>
+      );
+    };
+
+    render(<TestCaseCSVExport />);
+    expect(apiRef.current.getDataAsCsv()).to.equal('Brand\r\nNike\r\n"Adidas,Puma"');
+  });
+
+  it('getDataAsCsv should return the correct string representation of the grid data if cell contains comma and double quotes', () => {
+    const TestCaseCSVExport = () => {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid
+            apiRef={apiRef}
+            columns={[{ field: 'brand', headerName: 'Brand' }]}
+            rows={[
+              {
+                id: 0,
+                brand: 'Nike,"Adidas",Puma',
+              },
+            ]}
+          />
+        </div>
+      );
+    };
+
+    render(<TestCaseCSVExport />);
+    expect(apiRef.current.getDataAsCsv()).to.equal('Brand\r\n"Nike,""Adidas"",Puma"');
+  });
+
+  it('should allow to switch between cell mode', () => {
+    baselineProps.columns = baselineProps.columns.map((col) => ({ ...col, editable: true }));
+
+    render(<TestCase />);
+    apiRef!.current.setCellMode(1, 'brand', 'edit');
+    const cell = getCell(1, 0);
+
+    expect(cell.classList.contains('MuiDataGrid-cellEditable')).to.equal(true);
+    expect(cell.classList.contains('MuiDataGrid-cellEditing')).to.equal(true);
+    expect(cell.querySelector('input')!.value).to.equal('Adidas');
+
+    apiRef!.current.setCellMode(1, 'brand', 'view');
+    expect(cell.classList.contains('MuiDataGrid-cellEditable')).to.equal(true);
+    expect(cell.classList.contains('MuiDataGrid-cellEditing')).to.equal(false);
+    expect(cell.querySelector('input')).to.equal(null);
+  });
+
+  it('isCellEditable should add the class MuiDataGrid-cellEditable to editable cells but not prevent a cell from switching mode', () => {
+    baselineProps.columns = baselineProps.columns.map((col) => ({ ...col, editable: true }));
+
+    render(<TestCase isCellEditable={(params) => params.value === 'Adidas'} />);
+    const cellNike = getCell(0, 0);
+    expect(cellNike!.classList.contains('MuiDataGrid-cellEditable')).to.equal(false);
+    const cellAdidas = getCell(1, 0);
+    expect(cellAdidas!.classList.contains('MuiDataGrid-cellEditable')).to.equal(true);
+
+    apiRef!.current.setCellMode(0, 'brand', 'edit');
+    expect(cellNike.classList.contains('MuiDataGrid-cellEditing')).to.equal(true);
   });
 });

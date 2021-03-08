@@ -5,7 +5,7 @@ components: DataGrid, XGrid
 
 # Data Grid - Localization
 
-<p class="description">The Date Grid will support users from different locale, with formating, RTL, and localized strings.</p>
+<p class="description">The Data Grid allows to support users from different locales, with formatting, RTL, and localized strings.</p>
 
 The default locale of Material-UI is English (United States). If you want to use other locales, follow the instructions below.
 

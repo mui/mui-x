@@ -7,4 +7,4 @@ components: DataGrid, XGrid
 
 <p class="description">Use the demo below to explore the available features</p>
 
-{{"demo": "pages/components/data-grid/demo/FullFeauredDemo.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"demo": "pages/components/data-grid/demo/FullFeaturedDemo.js", "defaultCodeOpen": false, "bg": "inline"}}
