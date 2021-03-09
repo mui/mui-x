@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridCellApi } from '../../../models/api/gridCellApi';
+import { GridParamsApi } from '../../../models/api/gridParamsApi';
 import { GridRowId } from '../../../models/gridRows';
 import { GridCellParams, ValueGetterParams } from '../../../models/params/gridCellParams';
 import { GridRowParams } from '../../../models/params/gridRowParams';
 import { getGridCellElement, getGridRowElement } from '../../../utils/domUtils';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 
-export function useGridCellApi(apiRef: GridApiRef) {
+export function useGridParamsApi(apiRef: GridApiRef) {
   const getRowParams = React.useCallback(
     (id: GridRowId) => {
       const params: GridRowParams = {
@@ -105,7 +105,7 @@ export function useGridCellApi(apiRef: GridApiRef) {
     [apiRef],
   );
 
-  useGridApiMethod<GridCellApi>(
+  useGridApiMethod<GridParamsApi>(
     apiRef,
     {
       getCellValue,
