@@ -19,7 +19,7 @@ const requireRaw = require.context(
 requireDemo.keys().map(requireDemo);
 
 export default function Page({ demos, docs }) {
-  return <MarkdownDocs demos={demos} docs={docs} requireDemo={requireDemo} disableToc />;
+  return <MarkdownDocs demos={demos} docs={docs} requireDemo={requireDemo} disableToc disableAd />;
 }
 
 Page.getInitialProps = () => {
