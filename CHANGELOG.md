@@ -19,7 +19,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 - [DataGrid] Add deDE locale (#1117) @LarsKumbier
 - [DataGrid] Fix scrollbar on autopageSize (#1146) @dtassone
-- [DataGrid] Handle special chars when doing CSV export (#1154) @DanailH
+- [DataGrid] Fix handling of special chars when doing CSV export (#1154) @DanailH
 - [DataGrid] Implement base foundation for editing a cell (#1025) @dtassone
 - [DataGrid] Improve edit cell UI (#1168) @oliviertassinari
 
