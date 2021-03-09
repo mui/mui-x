@@ -157,6 +157,7 @@ export const useGridVirtualRows = (
         requireRerender = true;
       } else {
         scrollTo(scrollParams);
+        // TODO: use this event
         apiRef.current.publishEvent(GRID_SCROLLING, scrollParams);
       }
       setRenderingState({ renderingZoneScroll: scrollParams });
