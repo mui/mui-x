@@ -20,7 +20,6 @@ function warnMissingColumn(field) {
   }
 }
 export function useGridParamsApi(apiRef: GridApiRef) {
-
   const getRowParams = React.useCallback(
     (id: GridRowId) => {
       const params: GridRowParams = {
@@ -89,7 +88,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
       const colDef = apiRef.current.getColumnFromField(field);
       const rowModel = apiRef.current.getRowFromId(id);
 
-      if(!colDef) {
+      if (!colDef) {
         warnMissingColumn(field);
       }
       if (!colDef || !colDef.valueGetter) {

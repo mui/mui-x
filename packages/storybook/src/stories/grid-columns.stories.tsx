@@ -291,18 +291,19 @@ export const FlexColumnWidth2000 = () => {
 };
 
 export const ValueGetter = () => {
-  const [data,] = React.useState({
-    rows:[ { id: 1, age: 1 },
-    { id: 2, age: 2 },
-  ],
-  columns: [
-    { field: 'id', hide: true },
-    {
-      field: 'fullName',
-      valueGetter: (params: ValueGetterParams) => params.getValue('age'),
-    },
-  ]});
-
+  const [data] = React.useState({
+    rows: [
+      { id: 1, age: 1 },
+      { id: 2, age: 2 },
+    ],
+    columns: [
+      { field: 'id', hide: true },
+      {
+        field: 'fullName',
+        valueGetter: (params: ValueGetterParams) => params.getValue('age'),
+      },
+    ],
+  });
 
   return (
     <div className="grid-container">
