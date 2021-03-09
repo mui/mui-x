@@ -22,6 +22,10 @@ export interface GridCellParams {
    */
   value: GridCellValue;
   /**
+   * The cell value formatted with the column valueFormatter.
+   */
+  formattedValue: GridCellValue;
+  /**
    * A function that let you get data from other columns.
    * @param field
    */
@@ -55,9 +59,9 @@ export interface GridCellParams {
 /**
  * Alias of GridCellParams.
  */
-export type ValueGetterParams =GridCellParams// Omit<GridCellParams, 'value' | 'getValue' | 'isEditable'>;
+export type ValueGetterParams = Omit<GridCellParams, 'formattedValue' | 'isEditable'>;
 
 /**
  * Alias of GridCellParams.
  */
-export type ValueFormatterParams = GridCellParams;
+export type ValueFormatterParams = Omit<GridCellParams, 'formattedValue' | 'isEditable'>;

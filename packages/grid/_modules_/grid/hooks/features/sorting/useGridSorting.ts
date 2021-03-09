@@ -104,7 +104,7 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
             row1[field],
             row2[field],
             apiRef.current.getCellParams(row1.id, field),
-            apiRef.current.getCellParams(row2.id, field)
+            apiRef.current.getCellParams(row2.id, field),
           );
         return res;
       }, 0);

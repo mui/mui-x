@@ -1,4 +1,4 @@
-import { GridCellMode, GridCellValue } from '../gridCell';
+import { GridCellMode } from '../gridCell';
 import { GridEditRowsModel, GridEditRowUpdate } from '../gridEditRowModel';
 import { GridRowId } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';

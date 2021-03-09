@@ -75,6 +75,7 @@ export const GridRow: React.FC<RowProps> = ({ selected, id, className, rowIndex,
   );
 
   return (
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/mouse-events-have-key-events,jsx-a11y/interactive-supports-focus
     <div
       key={id}
       data-id={id}

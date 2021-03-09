@@ -81,12 +81,6 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
     const editCellState = editRowsState[row.id] && editRowsState[row.id][column.field];
     let cellComponent: React.ReactElement | null = null;
 
-    let formattedValueProp = {};
-    if (column.valueFormatter) {
-      // TODO add formatted value to cellParams?
-      formattedValueProp = { formattedValue: column.valueFormatter(cellParams) };
-    }
-
     if (editCellState == null && column.renderCell) {
       cellComponent = column.renderCell(cellParams);
       cssClassProp = { cssClass: `${cssClassProp.cssClass} MuiDataGrid-cellWithRenderer` };
@@ -105,18 +99,18 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
       rowId: row.id,
       height: rowHeight,
       showRightBorder,
-      ...formattedValueProp,
+      formattedValue: cellParams.formattedValue,
       align: column.align || 'left',
       ...cssClassProp,
       tabIndex: domIndex === 0 && colIdx === 0 ? 0 : -1,
       rowIndex,
-      colIndex: colIdx + firstColIdx,
+      colIndex: cellParams.colIndex,
       children: cellComponent,
       isEditable: cellParams.isEditable,
       hasFocus:
         cellFocus !== null &&
         cellFocus.rowIndex === rowIndex &&
-        cellFocus.colIndex === colIdx + firstColIdx,
+        cellFocus.colIndex === cellParams.colIndex,
     };
 
     return cellProps;

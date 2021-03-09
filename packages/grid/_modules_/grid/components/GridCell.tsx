@@ -114,6 +114,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
   );
 
   return (
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/mouse-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions
     <div
       ref={cellRef}
       className={classnames(GRID_CELL_CSS_CLASS, cssClass, `MuiDataGrid-cell${capitalize(align)}`, {

@@ -24,35 +24,7 @@ export function useGridCellApi(apiRef: GridApiRef) {
     [apiRef],
   );
 
-  const getCellParams = React.useCallback(
-    (id: GridRowId, field: string) => {
-      const colDef = apiRef.current.getColumnFromField(field);
-      const element = apiRef.current.getCellElement(id, field);
-
-      const params: GridCellParams = {
-        element,
-        id,
-        value: apiRef.current.getCellValue(id, field),
-        field,
-        getValue: (columnField: string) => apiRef.current.getCellValue(id, columnField),
-        row: apiRef.current.getRowFromId(id),
-        colDef: apiRef.current.getColumnFromField(field),
-        rowIndex: apiRef.current.getRowIndexFromId(id),
-        colIndex: apiRef.current.getColumnIndex(field, true),
-        api: apiRef.current,
-      };
-      const isEditableAttr = element && element.getAttribute('data-editable');
-      params.isEditable =
-        isEditableAttr != null
-          ? isEditableAttr === 'true'
-          : colDef && apiRef.current.isCellEditable(params);
-
-      return params;
-    },
-    [apiRef],
-  );
-
-  const getValueGetterParams = React.useCallback(
+  const getBaseCellParams = React.useCallback(
     (id: GridRowId, field: string) => {
       const element = apiRef.current.getCellElement(id, field);
       const row = apiRef.current.getRowFromId(id);
@@ -75,6 +47,30 @@ export function useGridCellApi(apiRef: GridApiRef) {
     [apiRef],
   );
 
+  const getCellParams = React.useCallback(
+    (id: GridRowId, field: string) => {
+      const colDef = apiRef.current.getColumnFromField(field);
+      const element = apiRef.current.getCellElement(id, field);
+      const value = apiRef.current.getCellValue(id, field);
+      const baseParams = getBaseCellParams(id, field);
+      const params: GridCellParams = {
+        ...baseParams,
+        value,
+        getValue: (columnField: string) => apiRef.current.getCellValue(id, columnField),
+        formattedValue: colDef.valueFormatter ? colDef.valueFormatter(baseParams) : value,
+      };
+
+      const isEditableAttr = element && element.getAttribute('data-editable');
+      params.isEditable =
+        isEditableAttr != null
+          ? isEditableAttr === 'true'
+          : colDef && apiRef.current.isCellEditable(params);
+
+      return params;
+    },
+    [apiRef, getBaseCellParams],
+  );
+
   const getCellValue = React.useCallback(
     (id: GridRowId, field: string) => {
       const colDef = apiRef.current.getColumnFromField(field);
@@ -84,9 +80,9 @@ export function useGridCellApi(apiRef: GridApiRef) {
         return rowModel[field];
       }
 
-      return colDef.valueGetter(getValueGetterParams(id, field));
+      return colDef.valueGetter(getBaseCellParams(id, field));
     },
-    [apiRef, getValueGetterParams],
+    [apiRef, getBaseCellParams],
   );
 
   const getRowElement = React.useCallback(
@@ -98,6 +94,7 @@ export function useGridCellApi(apiRef: GridApiRef) {
     },
     [apiRef],
   );
+
   const getCellElement = React.useCallback(
     (id: GridRowId, field: string): HTMLDivElement | null => {
       if (!apiRef.current.rootElementRef!.current) {
