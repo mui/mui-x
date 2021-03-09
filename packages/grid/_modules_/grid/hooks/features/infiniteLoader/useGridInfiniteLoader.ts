@@ -1,18 +1,31 @@
 import * as React from 'react';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridSelector } from '../core/useGridSelector';
+import { gridContainerSizesSelector } from '../../../components/GridViewport';
+import { useNativeEventListener } from '../../root/useNativeEventListener';
+import { GRID_SCROLL } from '../../../constants/eventsConstants';
 
-export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
+export const useGridInfiniteLoader = (
+  windowRef: React.MutableRefObject<HTMLDivElement | null>,
+  apiRef: GridApiRef
+): void => {
   const options = useGridSelector(apiRef, optionsSelector);
+  const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
+  const isInScrollBottomArea = React.useRef<boolean>(false);
 
-  console.log(apiRef.current)
-  console.log(options)
+  const handleGridScroll = React.useCallback((event) => {
+    const scrollPositionBottom = event.target.scrollTop + containerSizes?.windowSizes.height + options.scrollBottomThreshold;
 
-  const test = {
+    if(containerSizes && scrollPositionBottom >= containerSizes.dataContainerSizes.height) {
+      if (!isInScrollBottomArea.current && options.onScrollBottom) {
+        isInScrollBottomArea.current = true;
+        options.onScrollBottom();
+      }
+    } else {
+      isInScrollBottomArea.current = false;
+    }
+  }, [options ,containerSizes, isInScrollBottomArea]);
 
-  };
-
-  // useGridApiMethod(apiRef, localeTextApi, 'LocaleTextApi');
+  useNativeEventListener(apiRef, windowRef, GRID_SCROLL, handleGridScroll, { passive: true });
 };

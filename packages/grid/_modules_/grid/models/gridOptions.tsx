@@ -336,6 +336,14 @@ export interface GridOptions {
    * You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
    */
   localeText: Partial<GridLocaleText>;
+  /**
+   *
+   */
+  onScrollBottom?: () => void;
+  /**
+   *
+   */
+  scrollBottomThreshold: number;
 }
 
 /**
@@ -346,7 +354,8 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   headerHeight: 56,
   columnBuffer: 2,
   rowsPerPageOptions: [25, 50, 100],
-  pageSize: 100,
+  pageSize: 80,
+  scrollBottomThreshold: 100,
   paginationMode: GridFeatureModeConstant.client,
   sortingMode: GridFeatureModeConstant.client,
   filterMode: GridFeatureModeConstant.client,

@@ -91,7 +91,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useGridColumnResize(columnsHeaderRef, apiRef);
     useGridPagination(apiRef);
     useGridCsvExport(apiRef);
-    useGridInfiniteLoader(apiRef);
+    useGridInfiniteLoader(windowRef, apiRef);
 
     const components = useGridComponents(props.components, props.componentsProps, apiRef);
     useStateProp(apiRef, props.state);
