@@ -1,7 +1,9 @@
+import { DataGrid } from '@material-ui/data-grid';
 import * as React from 'react';
-import { GridColDef, XGrid, GridColTypeDef } from '@material-ui/x-grid';
+import { GridColDef, XGrid, GridColTypeDef, ValueGetterParams } from '@material-ui/x-grid';
 import CreateIcon from '@material-ui/icons/Create';
 import Button from '@material-ui/core/Button';
+import { getColumnValues } from '../../../../test/utils/helperFn';
 import { useData } from '../hooks/useData';
 
 export default {
@@ -284,6 +286,27 @@ export const FlexColumnWidth2000 = () => {
   return (
     <div className="grid-container">
       <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />
+    </div>
+  );
+};
+
+export const ValueGetter = () => {
+  const [data,] = React.useState({
+    rows:[ { id: 1, age: 1 },
+    { id: 2, age: 2 },
+  ],
+  columns: [
+    { field: 'id', hide: true },
+    {
+      field: 'fullName',
+      valueGetter: (params: ValueGetterParams) => params.getValue('age'),
+    },
+  ]});
+
+
+  return (
+    <div className="grid-container">
+      <XGrid rows={data.rows} columns={data.columns} />
     </div>
   );
 };

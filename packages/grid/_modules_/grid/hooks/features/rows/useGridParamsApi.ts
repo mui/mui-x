@@ -7,7 +7,20 @@ import { GridRowParams } from '../../../models/params/gridRowParams';
 import { getGridCellElement, getGridRowElement } from '../../../utils/domUtils';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 
+let warnedOnce = false;
+function warnMissingColumn(field) {
+  if (!warnedOnce && process.env.NODE_ENV !== 'production') {
+    console.warn(
+      [
+        `Material-UI: You are calling getValue('${field}') but the column \`${field}\` is not defined.`,
+        `Instead, you can access the data from \`params.row.${field}\`.`,
+      ].join('\n'),
+    );
+    warnedOnce = true;
+  }
+}
 export function useGridParamsApi(apiRef: GridApiRef) {
+
   const getRowParams = React.useCallback(
     (id: GridRowId) => {
       const params: GridRowParams = {
@@ -35,7 +48,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
         field,
         row,
         value: row[field],
-        getValue: (columnField: string) => row[columnField],
+        getValue: (columnField: string) => apiRef.current.getCellValue(id, columnField),
         colDef: apiRef.current.getColumnFromField(field),
         rowIndex: apiRef.current.getRowIndexFromId(id),
         colIndex: apiRef.current.getColumnIndex(field, true),
@@ -76,6 +89,9 @@ export function useGridParamsApi(apiRef: GridApiRef) {
       const colDef = apiRef.current.getColumnFromField(field);
       const rowModel = apiRef.current.getRowFromId(id);
 
+      if(!colDef) {
+        warnMissingColumn(field);
+      }
       if (!colDef || !colDef.valueGetter) {
         return rowModel[field];
       }
