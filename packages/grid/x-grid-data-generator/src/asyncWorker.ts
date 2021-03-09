@@ -12,7 +12,8 @@ export default function asyncWorker({ work, tasks, done }) {
     }
   }
 
-  if (typeof requestIdleCallback === 'function') {
+  // Don't use requestIdleCallback if the time is mock, better to run synchronously in such case.
+  if (typeof requestIdleCallback === 'function' && !(requestIdleCallback as any).clock) {
     requestIdleCallback(myNonEssentialWork);
   } else {
     while (tasks.current > 0) {
