@@ -12,7 +12,7 @@ export default function asyncWorker({ work, tasks, done }) {
     }
   }
 
-  if (typeof requestIdleCallback !== 'function') {
+  if (typeof requestIdleCallback === 'function') {
     requestIdleCallback(myNonEssentialWork);
   } else {
     while (tasks.current > 0) {

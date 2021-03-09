@@ -224,7 +224,7 @@ export default function FullFeaturedDemo() {
   const [isAntDesign, setIsAntDesign] = React.useState<boolean>(false);
   const [type, setType] = React.useState<GridDataType>('Commodity');
   const [size, setSize] = React.useState(100);
-  const { data, setRowLength, loadNewData } = useDemoData({
+  const { loading, data, setRowLength, loadNewData } = useDemoData({
     dataSet: type,
     rowLength: size,
     maxColumns: 20,
@@ -296,6 +296,7 @@ export default function FullFeaturedDemo() {
         components={{
           Toolbar: GridToolbar,
         }}
+        loading={loading}
         checkboxSelection
         {...pagination}
       />
