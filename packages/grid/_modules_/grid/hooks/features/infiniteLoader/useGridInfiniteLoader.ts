@@ -8,24 +8,28 @@ import { GRID_SCROLL } from '../../../constants/eventsConstants';
 
 export const useGridInfiniteLoader = (
   windowRef: React.MutableRefObject<HTMLDivElement | null>,
-  apiRef: GridApiRef
+  apiRef: GridApiRef,
 ): void => {
   const options = useGridSelector(apiRef, optionsSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const isInScrollBottomArea = React.useRef<boolean>(false);
 
-  const handleGridScroll = React.useCallback((event) => {
-    const scrollPositionBottom = event.target.scrollTop + containerSizes?.windowSizes.height + options.scrollBottomThreshold;
+  const handleGridScroll = React.useCallback(
+    (event) => {
+      const scrollPositionBottom =
+        event.target.scrollTop + containerSizes?.windowSizes.height + options.scrollBottomThreshold;
 
-    if(containerSizes && scrollPositionBottom >= containerSizes.dataContainerSizes.height) {
-      if (!isInScrollBottomArea.current && options.onScrollBottom) {
-        isInScrollBottomArea.current = true;
-        options.onScrollBottom();
+      if (containerSizes && scrollPositionBottom >= containerSizes.dataContainerSizes.height) {
+        if (!isInScrollBottomArea.current && options.onScrollBottom) {
+          isInScrollBottomArea.current = true;
+          options.onScrollBottom();
+        }
+      } else {
+        isInScrollBottomArea.current = false;
       }
-    } else {
-      isInScrollBottomArea.current = false;
-    }
-  }, [options ,containerSizes, isInScrollBottomArea]);
+    },
+    [options, containerSizes, isInScrollBottomArea],
+  );
 
   useNativeEventListener(apiRef, windowRef, GRID_SCROLL, handleGridScroll, { passive: true });
 };
