@@ -121,34 +121,53 @@ export const useGridContainerProps = (
         return null;
       }
 
-      let viewportPageSize = viewportSizes.height / rowHeight;
-      viewportPageSize = options.pagination
-        ? Math.floor(viewportPageSize)
-        : Math.round(viewportPageSize);
+      if (options.autoPageSize || options.autoHeight) {
+        // we don't need vertical virtualization in these 2 cases.
+        const viewportPageSize = options.autoHeight
+          ? rowsCount
+          : Math.floor(viewportSizes.height / rowHeight);
+        const requiredHeight = viewportPageSize * rowHeight + scrollState.scrollBarSize.x;
 
-      // We multiply by 2 for virtualization
-      // TODO allow buffer with fixed nb rows
-      const rzPageSize = viewportPageSize * 2;
-      const viewportMaxPage = options.autoPageSize ? 1 : Math.ceil(rowsCount / viewportPageSize);
-
-      logger.debug(
-        `viewportPageSize:  ${viewportPageSize}, rzPageSize: ${rzPageSize}, viewportMaxPage: ${viewportMaxPage}`,
-      );
-      const renderingZoneHeight = rzPageSize * rowHeight + rowHeight + scrollState.scrollBarSize.x;
-      const dataContainerWidth = columnsTotalWidth - scrollState.scrollBarSize.y;
-      let totalHeight =
-        (options.autoPageSize ? 1 : rowsCount / viewportPageSize) * viewportSizes.height +
-        (scrollState.hasScrollY ? scrollState.scrollBarSize.x : 0);
-
-      // make sure the last row fit well due to rounding
-      totalHeight += totalHeight % rowHeight;
-
-      if (options.autoHeight) {
-        totalHeight = rowsCount * rowHeight + scrollState.scrollBarSize.x;
+        const indexes: GridContainerProps = {
+          virtualRowsCount: viewportPageSize,
+          renderingZonePageSize: viewportPageSize,
+          viewportPageSize,
+          totalSizes: {
+            width: columnsTotalWidth,
+            height: requiredHeight,
+          },
+          dataContainerSizes: {
+            width: columnsTotalWidth,
+            height: requiredHeight,
+          },
+          renderingZone: {
+            width: columnsTotalWidth,
+            height: requiredHeight,
+          },
+          windowSizes: windowSizesRef.current,
+          lastPage: 1,
+        };
+        logger.debug('Fixed container props', indexes);
+        return indexes;
       }
 
+      const viewportPageSize = Math.round(viewportSizes.height / rowHeight);
+
+      // Number of pages required to render the full set of rows in the viewport
+      const viewportMaxPage = Math.ceil(rowsCount / viewportPageSize);
+
+      // TODO allow buffer with fixed nb rows
+      // Number of rows rendered in the rendering zone.
+      // We multiply by 2 for virtualization to work with useGridVirtualRows scroll system
+      const rzPageSize = viewportPageSize * 2;
+      const renderingZoneHeight = rzPageSize * rowHeight;
+
+      let totalHeight = (rowsCount / viewportPageSize) * viewportSizes.height;
+      // make sure we display the full row
+      totalHeight += (totalHeight % rowHeight) + scrollState.scrollBarSize.x;
+
       const indexes: GridContainerProps = {
-        virtualRowsCount: options.autoPageSize ? viewportPageSize : rowsCount,
+        virtualRowsCount: rowsCount,
         renderingZonePageSize: rzPageSize,
         viewportPageSize,
         totalSizes: {
@@ -156,29 +175,21 @@ export const useGridContainerProps = (
           height: totalHeight || 1,
         },
         dataContainerSizes: {
-          width: dataContainerWidth,
+          width: columnsTotalWidth - scrollState.scrollBarSize.y,
           height: totalHeight || 1,
         },
         renderingZone: {
-          width: dataContainerWidth,
+          width: columnsTotalWidth - scrollState.scrollBarSize.y,
           height: renderingZoneHeight,
         },
         windowSizes: windowSizesRef.current,
         lastPage: viewportMaxPage,
       };
 
-      logger.debug('returning container props', indexes);
+      logger.debug('virtualized container props', indexes);
       return indexes;
     },
-    [
-      windowRef,
-      columnsTotalWidth,
-      rowHeight,
-      options.pagination,
-      options.autoPageSize,
-      options.autoHeight,
-      logger,
-    ],
+    [windowRef, columnsTotalWidth, rowHeight, options.autoPageSize, options.autoHeight, logger],
   );
 
   const updateStateIfChanged = React.useCallback(
