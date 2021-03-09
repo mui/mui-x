@@ -10,7 +10,7 @@ _Mar 9, 2021_
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Implement base foundation for editing a cell (#1025) @dtassone.
-  This is the foundation on which the feature will be built. Currently the newly added methods in the apiRef are not yet document and may be subject to change.
+  This is the foundation on which the feature will be built. Currently, the newly added methods aren't yet ready for being used. This feature will be available in the coming weeks.
 - 🇩🇪 Added deDE locale (#1117) @LarsKumbier
 - 📜 Fix scrollbar related issue (#1146) @dtassone
 - 🐛 Handle commas in cell values when doing CSV export (#1154) @DanailH
