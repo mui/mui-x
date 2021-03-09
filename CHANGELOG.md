@@ -17,8 +17,6 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 ### @material-ui/x-grid@v4.0.0-alpha.22 / @material-ui/data-grid@v4.0.0-alpha.22
 
-#### Changes
-
 - [DataGrid] Add deDE locale (#1117) @LarsKumbier
 - [DataGrid] Fix scrollbar on autopageSize (#1146) @dtassone
 - [DataGrid] Handle special chars when doing CSV export (#1154) @DanailH
