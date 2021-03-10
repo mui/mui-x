@@ -5,7 +5,7 @@ import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { renderStateSelector } from '../../hooks/features/virtualization/renderingStateSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridApiContext } from '../GridApiContext';
-import { GridLeftEmptyCell, GridRightEmptyCell } from '../GridCell';
+import { GridEmptyCell } from '../GridEmptyCell';
 import { GridScrollArea } from '../GridScrollArea';
 import { gridContainerSizesSelector } from '../GridViewport';
 import { GridColumnHeadersItemCollection } from './GridColumnHeadersItemCollection';
@@ -51,9 +51,9 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function G
         style={{ minWidth: containerSizes?.totalSizes?.width }}
         onDragOver={handleDragOver}
       >
-        <GridLeftEmptyCell width={renderCtx?.leftEmptyWidth} height={headerHeight} />
+        <GridEmptyCell width={renderCtx?.leftEmptyWidth} height={headerHeight} />
         <GridColumnHeadersItemCollection columns={renderedCols} />
-        <GridRightEmptyCell width={renderCtx?.rightEmptyWidth} height={headerHeight} />
+        <GridEmptyCell width={renderCtx?.rightEmptyWidth} height={headerHeight} />
       </div>
       <GridScrollArea scrollDirection="right" />
     </React.Fragment>

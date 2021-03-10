@@ -77,10 +77,6 @@ export function useGridParamsApi(apiRef: GridApiRef) {
 
   const getCellParams = React.useCallback(
     (id: GridRowId, field: string) => {
-      if (id == null || field == null || !apiRef?.current) {
-        return null;
-      }
-
       const colDef = apiRef.current.getColumnFromField(field);
       const element = apiRef.current.getCellElement(id, field);
       const value = apiRef.current.getCellValue(id, field);

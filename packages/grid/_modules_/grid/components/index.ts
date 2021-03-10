@@ -22,3 +22,4 @@ export * from './GridStickyContainer';
 export * from './GridViewport';
 export * from './Watermark';
 export * from './GridScrollArea';
+export * from './GridEmptyCell';

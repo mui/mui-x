@@ -1,15 +1,15 @@
-import * as React from 'react';
 import { capitalize } from '@material-ui/core/utils';
+import * as React from 'react';
+import { GRID_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import {
   GRID_CELL_CLICK,
+  GRID_CELL_DOUBLE_CLICK,
   GRID_CELL_ENTER,
-  GRID_CELL_OVER,
   GRID_CELL_LEAVE,
   GRID_CELL_OUT,
-  GRID_CELL_DOUBLE_CLICK,
+  GRID_CELL_OVER,
 } from '../constants/eventsConstants';
 import { GridAlignment, GridCellValue, GridRowId } from '../models';
-import { GRID_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
 import { classnames } from '../utils';
 import { GridApiContext } from './GridApiContext';
 
@@ -17,8 +17,8 @@ export interface GridCellProps {
   align: GridAlignment;
   colIndex?: number;
   cssClass?: string;
-  field?: string;
-  rowId?: GridRowId;
+  field: string;
+  rowId: GridRowId;
   formattedValue?: GridCellValue;
   hasFocus?: boolean;
   height: number;
@@ -71,7 +71,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
 
   const publishClick = React.useCallback(
     (eventName: string) => (event: React.MouseEvent) => {
-      const params = apiRef!.current.getCellParams(rowId!, field || '');
+      const params = apiRef!.current.getCellParams(rowId, field || '');
       if (params?.colDef.disableClickEventBubbling) {
         event.stopPropagation();
       }
@@ -130,18 +130,3 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
 });
 
 GridCell.displayName = 'GridCell';
-
-interface EmptyCellProps {
-  width?: number;
-  height?: number;
-}
-
-export const GridLeftEmptyCell: React.FC<EmptyCellProps> = React.memo(({ width, height }) =>
-  !width || !height ? null : <GridCell width={width} height={height} align="left" />,
-);
-GridLeftEmptyCell.displayName = 'GridLeftEmptyCell';
-
-export const GridRightEmptyCell: React.FC<EmptyCellProps> = React.memo(({ width, height }) =>
-  !width || !height ? null : <GridCell width={width} height={height} align="left" />,
-);
-GridRightEmptyCell.displayName = 'GridRightEmptyCell';

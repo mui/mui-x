@@ -22,7 +22,7 @@ export interface GridParamsApi {
    * @param id
    * @param field
    */
-  getCellParams: (id: GridRowId, field: string) => GridCellParams | null;
+  getCellParams: (id: GridRowId, field: string) => GridCellParams;
   /**
    * Get the row params that are passed in events
    * @param id
