@@ -85,7 +85,7 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}`;
+    const cacheKey = `${options.dataSet}-${options.rowLength}-${index}-${options.maxColumns}`;
 
     // Cache to allow fast switch between the JavaScript and TypeScript version
     // of the demos.
@@ -107,11 +107,11 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
 
       let newData;
 
-      if (rowLength > 1000) {
+      if (options.rowLength > 1000) {
         newData = await getRealData(1000, columns);
-        newData = await extrapolateSeed(rowLength, columns, newData);
+        newData = await extrapolateSeed(options.rowLength, columns, newData);
       } else {
-        newData = await getRealData(rowLength, columns);
+        newData = await getRealData(options.rowLength, columns);
       }
 
       if (!active) {
@@ -131,7 +131,7 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
     return () => {
       active = false;
     };
-  }, [rowLength, options.dataSet, index, options.maxColumns]);
+  }, [options.rowLength, options.dataSet, index, options.maxColumns]);
 
   return {
     data,
