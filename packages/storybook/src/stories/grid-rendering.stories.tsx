@@ -62,8 +62,7 @@ export const InfiniteLoading = () => {
   });
 
   const handleOnScrollBottom = () => {
-    const newRowLength = size + 20;
-    setSize(newRowLength);
+    setSize(size + 20);
     loadNewData();
   };
 
