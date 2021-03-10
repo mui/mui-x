@@ -206,5 +206,62 @@ describe('<XGrid /> - Events Params ', () => {
       fireEvent.click(cell22);
       expect(events).to.equal('cellClick, rowClick, ');
     });
+
+    it('should not bubble to the row if the column has disableEventBubbling', () => {
+      let events = '';
+      const addEventName = (name: string) => () => {
+        events += `${name}, `;
+      };
+      render(
+        <TestEvents
+          onCellClick={addEventName('cellClick')}
+          onRowClick={addEventName('rowClick')}
+          columns={baselineProps.columns.map((col) => ({
+            ...col,
+            disableClickEventBubbling: true,
+          }))}
+        />,
+      );
+
+      const cell22 = getCell(1, 1);
+      fireEvent.click(cell22);
+      expect(events).to.equal('cellClick, ');
+    });
+    it('should allow to stop propagation', () => {
+      let events = '';
+      const addEventName = (name: string) => () => {
+        events += `${name}, `;
+      };
+      const stopClick = (params, event) => {
+        event.stopPropagation();
+      };
+      render(<TestEvents onCellClick={stopClick} onRowSelected={addEventName('rowSelected')} />);
+
+      const cell22 = getCell(1, 1);
+      fireEvent.click(cell22);
+      expect(events).to.equal('');
+    });
+    it('should select a row by default', () => {
+      let events = '';
+      const addEventName = (name: string) => () => {
+        events += `${name}, `;
+      };
+      render(<TestEvents onRowSelected={addEventName('rowSelected')} />);
+
+      const cell22 = getCell(1, 1);
+      fireEvent.click(cell22);
+      expect(events).to.equal('rowSelected, ');
+    });
+    it('should not select a row if options.disableSelectionOnClick', () => {
+      let events = '';
+      const addEventName = (name: string) => () => {
+        events += `${name}, `;
+      };
+      render(<TestEvents onRowSelected={addEventName('rowSelected')} disableSelectionOnClick />);
+
+      const cell22 = getCell(1, 1);
+      fireEvent.click(cell22);
+      expect(events).to.equal('');
+    });
   });
 });
