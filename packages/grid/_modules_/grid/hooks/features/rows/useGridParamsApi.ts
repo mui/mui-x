@@ -85,9 +85,11 @@ export function useGridParamsApi(apiRef: GridApiRef) {
         ...baseParams,
         value,
         getValue: (columnField: string) => apiRef.current.getCellValue(id, columnField),
-        formattedValue: colDef.valueFormatter ? colDef.valueFormatter(baseParams) : value,
+        formattedValue: value,
       };
-
+      if (colDef.valueFormatter) {
+        params.formattedValue = colDef.valueFormatter(params);
+      }
       const isEditableAttr = element && element.getAttribute('data-editable');
       params.isEditable =
         isEditableAttr != null

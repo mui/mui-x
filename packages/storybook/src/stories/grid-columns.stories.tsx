@@ -288,17 +288,24 @@ export const FlexColumnWidth2000 = () => {
   );
 };
 
-export const ValueGetter = () => {
+export const ValueGetterAndFormatter = () => {
   const [data] = React.useState({
     rows: [
-      { id: 1, age: 1 },
-      { id: 2, age: 2 },
+      { id: 1, first: 'mark', age: 1 },
+      { id: 2, first: 'jack', age: 2 },
     ],
     columns: [
       { field: 'id', hide: true },
       {
-        field: 'fullName',
-        valueGetter: (params: ValueGetterParams) => params.getValue('age'),
+        field: 'firstAge',
+        valueGetter: (params: ValueGetterParams) =>
+          `${params.getValue('first')}_${params.getValue('age')}`,
+      },
+      {
+        field: 'firstAgeFormatted',
+        valueGetter: (params: ValueGetterParams) =>
+          `${params.getValue('first')}_${params.getValue('age')}`,
+        valueFormatter: (params) => `${params.value} yrs`,
       },
     ],
   });
