@@ -41,7 +41,7 @@ function RatingInputValue(props: FilterInputValueProps) {
   );
 }
 
-const RatingOnlyOperators = [
+const ratingOnlyOperators = [
   {
     label: 'From',
     value: 'from',
@@ -74,7 +74,7 @@ export default function CustomRatingOperator() {
     const ratingColumn = columns.find((col) => col.field === 'rating');
     const newRatingColumn = {
       ...ratingColumn!,
-      filterOperators: RatingOnlyOperators,
+      filterOperators: ratingOnlyOperators,
     };
     const ratingColIndex = columns.findIndex((col) => col.field === 'rating');
     columns[ratingColIndex] = newRatingColumn;

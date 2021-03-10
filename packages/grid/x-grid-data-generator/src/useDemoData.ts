@@ -3,6 +3,7 @@ import LRUCache from 'lru-cache';
 import { GridData, getRealData } from './services/real-data-service';
 import { getCommodityColumns } from './commodities.columns';
 import { getEmployeeColumns } from './employees.columns';
+import asyncWorker from './asyncWorker';
 
 const dataCache = new LRUCache({
   max: 10,
@@ -11,6 +12,7 @@ const dataCache = new LRUCache({
 
 export type DemoDataReturnType = {
   data: GridData;
+  loading: boolean;
   setRowLength: (count: number) => void;
   loadNewData: () => void;
 };
@@ -25,28 +27,37 @@ export interface DemoDataOptions {
 
 // Generate fake data from a seed.
 // It's about x20 faster than getRealData.
-function extrapolateSeed(rowLength, columns, data) {
-  const seed = data.rows;
-  const rows = data.rows.slice();
+async function extrapolateSeed(rowLength, columns, data): Promise<any> {
+  return new Promise<any>((resolve) => {
+    const seed = data.rows;
+    const rows = data.rows.slice();
+    const tasks = { current: rowLength - seed.length };
 
-  for (let i = 0; i < rowLength - seed.length; i += 1) {
-    const row = {};
+    function work() {
+      const row = {} as any;
 
-    for (let j = 0; j < columns.length; j += 1) {
-      const column = columns[j];
-      const index = Math.round(Math.random() * (seed.length - 1));
+      for (let j = 0; j < columns.length; j += 1) {
+        const column = columns[j];
+        const index = Math.round(Math.random() * (seed.length - 1));
 
-      if (column.field === 'id') {
-        row[column.field] = `id-${i + seed.length}`;
-      } else {
-        row[column.field] = seed[index][column.field];
+        if (column.field === 'id') {
+          row.id = `id-${tasks.current + seed.length}`;
+        } else {
+          row[column.field] = seed[index][column.field];
+        }
       }
+
+      rows.push(row);
+
+      tasks.current -= 1;
     }
 
-    rows.push(row);
-  }
-
-  return { ...data, rows };
+    asyncWorker({
+      work,
+      done: () => resolve({ ...data, rows }),
+      tasks,
+    });
+  });
 }
 
 function deepFreeze(object) {
@@ -71,6 +82,7 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
   const [data, setData] = React.useState<GridData>({ columns: [], rows: [] });
   const [rowLength, setRowLength] = React.useState(options.rowLength);
   const [index, setIndex] = React.useState(0);
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}`;
@@ -86,6 +98,7 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
     let active = true;
 
     (async () => {
+      setLoading(true);
       let columns = options.dataSet === 'Commodity' ? getCommodityColumns() : getEmployeeColumns();
 
       if (options.maxColumns) {
@@ -96,7 +109,7 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
 
       if (rowLength > 1000) {
         newData = await getRealData(1000, columns);
-        newData = extrapolateSeed(rowLength, columns, newData);
+        newData = await extrapolateSeed(rowLength, columns, newData);
       } else {
         newData = await getRealData(rowLength, columns);
       }
@@ -105,10 +118,14 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
         return;
       }
 
-      deepFreeze(newData);
+      // It's quite slow. No need for it in production.
+      if (process.env.NODE_ENV !== 'production') {
+        deepFreeze(newData);
+      }
 
       dataCache.set(cacheKey, newData);
       setData(newData);
+      setLoading(false);
     })();
 
     return () => {
@@ -118,6 +135,7 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
 
   return {
     data,
+    loading,
     setRowLength,
     loadNewData: () => {
       setIndex((oldIndex) => oldIndex + 1);
