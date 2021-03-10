@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.22](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.21...v4.0.0-alpha.22)
+
+_Mar 9, 2021_
+
+Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Implement base foundation for editing a cell (#1025) @dtassone.
+  This is the foundation on which the feature will be built. Currently, the newly added methods aren't yet ready for being used. This feature will be available in the coming weeks.
+- 🇩🇪 Added deDE locale (#1117) @LarsKumbier
+- 📜 Fix scrollbar related issue (#1146) @dtassone
+- 🐛 Handle commas in cell values when doing CSV export (#1154) @DanailH
+
+### @material-ui/x-grid@v4.0.0-alpha.22 / @material-ui/data-grid@v4.0.0-alpha.22
+
+- [DataGrid] Add deDE locale (#1117) @LarsKumbier
+- [DataGrid] Fix scrollbar on autopageSize (#1146) @dtassone
+- [DataGrid] Fix handling of special chars when doing CSV export (#1154) @DanailH
+- [DataGrid] Implement base foundation for editing a cell (#1025) @dtassone
+- [DataGrid] Improve edit cell UI (#1168) @oliviertassinari
+
+### Docs
+
+- [docs] Add demo page (#1147) @DanailH
+- [docs] Fix typo in localization.md (#1155) @michael-martin-al
+- [docs] Improve the desciption of the individual packages (#1139) @oliviertassinari
+- [docs] Fix rendering docs to solve custom pagination issue (#1159) @consDev
+
+### Core
+
+- [core] Add build in eslintignore (#1171) @dtassone
+- [core] Increase timeout for XGrid demo (#1150) @oliviertassinari
+- [core] Output warnings in the rendered components (#1153) @oliviertassinari
+- [core] Update to the HEAD of the monorepo (#1138) @oliviertassinari
+
 ## [4.0.0-alpha.21](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.20...v4.0.0-alpha.21)
 
 _Feb 27, 2021_

@@ -66,6 +66,7 @@
     "@types/node": "^14.11.10",
     "@types/react": "^17.0.1",
     "@types/react-dom": "^17.0.0",
+    "@types/requestidlecallback": "^0.3.1",
     "@types/sinon": "^9.0.8",
     "@types/styled-components": "^5.0.1",
     "@typescript-eslint/eslint-plugin": "^4.11.1",

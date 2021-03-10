@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "dist/",
     "rootDirs": ["src"],
-    "types": ["node"],
+    "types": ["node", "requestidlecallback"],
     "sourceMap": true
   },
   "include": ["src/**/*"],

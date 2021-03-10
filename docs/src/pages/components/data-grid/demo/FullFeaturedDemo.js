@@ -202,11 +202,11 @@ SettingsPanel.propTypes = {
 
 export default function FullFeaturedDemo() {
   const classes = useStyles();
-  const AntDesignClasses = useStylesAntDesign();
+  const antDesignClasses = useStylesAntDesign();
   const [isAntDesign, setIsAntDesign] = React.useState(false);
   const [type, setType] = React.useState('Commodity');
   const [size, setSize] = React.useState(100);
-  const { data, setRowLength, loadNewData } = useDemoData({
+  const { loading, data, setRowLength, loadNewData } = useDemoData({
     dataSet: type,
     rowLength: size,
     maxColumns: 20,
@@ -268,11 +268,12 @@ export default function FullFeaturedDemo() {
         theme={getActiveTheme()}
       />
       <XGrid
-        className={isAntDesign ? AntDesignClasses.root : undefined}
+        className={isAntDesign ? antDesignClasses.root : undefined}
         {...data}
         components={{
           Toolbar: GridToolbar,
         }}
+        loading={loading}
         checkboxSelection
         {...pagination}
       />

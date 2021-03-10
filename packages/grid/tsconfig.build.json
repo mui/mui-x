@@ -6,7 +6,7 @@
     "declarationDir": "./dist",
     "outDir": "./dist",
     "allowJs": true,
-    "types": ["jest", "node"],
+    "types": ["jest", "node", "requestidlecallback"],
     "rootDir": "./"
   },
   "include": ["./data-grid/src", "./x-grid/src", "./x-grid-data-generator/src", "./_modules_/**/*"],

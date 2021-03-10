@@ -132,7 +132,7 @@ describe('<DataGrid /> - Keyboard', () => {
       columns.map((column) => ({ ...column, width: 60 }));
 
     return (
-      <div style={{ width: 300, height: 300 }}>
+      <div style={{ width: 300, height: 330 }}>
         <DataGrid rows={data.rows} columns={transformColSizes(data.columns)} />
       </div>
     );
@@ -168,7 +168,7 @@ describe('<DataGrid /> - Keyboard', () => {
     getCell(0, 0).focus();
     expect(getActiveCell()).to.equal('0-0');
     fireEvent.keyDown(document.activeElement!, SPACE_KEY);
-    expect(getActiveCell()).to.equal('3-0');
+    expect(getActiveCell()).to.equal('4-0');
   });
 
   it('Home / End navigation', async () => {

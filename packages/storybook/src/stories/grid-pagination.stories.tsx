@@ -429,3 +429,14 @@ export function ServerPaginationDocsDemo() {
     </div>
   );
 }
+export function CommodityAutoPageSizeSnap() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 500,
+  });
+  return (
+    <div className="grid-container">
+      <DataGrid rows={data.rows} columns={data.columns} pagination autoPageSize />
+    </div>
+  );
+}
