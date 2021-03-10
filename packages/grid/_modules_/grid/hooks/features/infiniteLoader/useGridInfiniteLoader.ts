@@ -28,7 +28,7 @@ export const useGridInfiniteLoader = (
         isInScrollBottomArea.current = false;
       }
     },
-    [options, containerSizes, isInScrollBottomArea],
+    [options, containerSizes],
   );
 
   useNativeEventListener(apiRef, windowRef, GRID_SCROLL, handleGridScroll, { passive: true });
