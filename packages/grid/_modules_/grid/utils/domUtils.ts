@@ -26,23 +26,12 @@ export function isGridCellRoot(elem: Element | null): boolean {
   return elem != null && elem.classList.contains(GRID_CELL_CSS_CLASS);
 }
 
-export function isGridCell(elem: Element | null): boolean {
-  return (
-    elem != null &&
-    (isGridCellRoot(elem) || findParentElementFromClassName(elem, GRID_CELL_CSS_CLASS) !== null)
-  );
-}
-
 export function isGridHeaderTitleContainer(elem: Element): boolean {
   return elem && findParentElementFromClassName(elem, GRID_HEADER_CELL_TITLE_CSS_CLASS) !== null;
 }
 
 export function getIdFromRowElem(rowEl: Element): string {
   return rowEl.getAttribute('data-id')!;
-}
-
-export function getFieldFromCellElem(cellEl: Element): string {
-  return cellEl.getAttribute('data-field')!;
 }
 
 export function getFieldFromHeaderElem(colCellEl: Element): string {
@@ -85,6 +74,12 @@ export function getGridCellElementFromIndexes(
 ) {
   return root.querySelector(
     `:scope .${GRID_CELL_CSS_CLASS}[aria-colIndex='${colIndex}'][data-rowIndex='${rowIndex}']`,
+  ) as HTMLDivElement;
+}
+
+export function getGridColumnHeaderElement(root: Element, field: string) {
+  return root.querySelector(
+    `:scope [role='columnheader'][data-field='${field}']`,
   ) as HTMLDivElement;
 }
 

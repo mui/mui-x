@@ -6,7 +6,7 @@ import {
   GRID_CELL_OVER,
   GRID_CELL_LEAVE,
   GRID_CELL_OUT,
-  GRID_DOUBLE_CELL_CLICK,
+  GRID_CELL_DOUBLE_CLICK,
 } from '../constants/eventsConstants';
 import { GridAlignment, GridCellValue, GridRowId } from '../models';
 import { GRID_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
@@ -53,13 +53,15 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
   const cellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = React.useContext(GridApiContext);
 
-  const getParams = React.useCallback(() => {
-    if (rowId == null || field == null || !apiRef?.current) {
-      return null;
-    }
-
-    return apiRef!.current.getCellParams(rowId, field);
-  }, [apiRef, field, rowId]);
+  const cssClasses = classnames(
+    GRID_CELL_CSS_CLASS,
+    cssClass,
+    `MuiDataGrid-cell${capitalize(align)}`,
+    {
+      'MuiDataGrid-withBorder': showRightBorder,
+      'MuiDataGrid-cellEditable': isEditable,
+    },
+  );
 
   React.useEffect(() => {
     if (hasFocus && cellRef.current) {
@@ -67,80 +69,60 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     }
   }, [hasFocus]);
 
-  const handleClick = React.useCallback(
-    (event: React.MouseEvent) => {
-      const params = getParams();
+  const publishClick = React.useCallback(
+    (eventName: string) => (event: React.MouseEvent) => {
+      const params = apiRef!.current.getCellParams(rowId!, field || '');
       if (params?.colDef.disableClickEventBubbling) {
         event.stopPropagation();
       }
-      apiRef?.current.publishEvent(GRID_CELL_CLICK, params, event);
+      apiRef!.current.publishEvent(eventName, params, event);
     },
-    [apiRef, getParams],
+    [apiRef, field, rowId],
   );
 
-  const handleDoubleClick = React.useCallback(
-    (event: React.MouseEvent) => {
-      apiRef?.current.publishEvent(GRID_DOUBLE_CELL_CLICK, getParams(), event);
-    },
-    [apiRef, getParams],
+  const publish = React.useCallback(
+    (eventName: string) => (event: React.MouseEvent) =>
+      apiRef!.current.publishEvent(
+        eventName,
+        apiRef!.current.getCellParams(rowId!, field || ''),
+        event,
+      ),
+    [apiRef, field, rowId],
   );
 
-  const handleHover = React.useCallback(
-    (event: React.MouseEvent) => {
-      apiRef?.current.publishEvent(GRID_CELL_OVER, getParams(), event);
-    },
-    [apiRef, getParams],
+  const mouseEventsHandlers = React.useMemo(
+    () => ({
+      onClick: publishClick(GRID_CELL_CLICK),
+      onDoubleClick: publish(GRID_CELL_DOUBLE_CLICK),
+      onMouseOver: publish(GRID_CELL_OVER),
+      onMouseOut: publish(GRID_CELL_OUT),
+      onMouseEnter: publish(GRID_CELL_ENTER),
+      onMouseLeave: publish(GRID_CELL_LEAVE),
+    }),
+    [publish, publishClick],
   );
 
-  const handleOut = React.useCallback(
-    (event: React.MouseEvent) => {
-      apiRef?.current.publishEvent(GRID_CELL_OUT, getParams(), event);
-    },
-    [apiRef, getParams],
-  );
-
-  const handleEnter = React.useCallback(
-    (event: React.MouseEvent) => {
-      apiRef?.current.publishEvent(GRID_CELL_ENTER, getParams(), event);
-    },
-    [apiRef, getParams],
-  );
-
-  const handleLeave = React.useCallback(
-    (event: React.MouseEvent) => {
-      apiRef?.current.publishEvent(GRID_CELL_LEAVE, getParams(), event);
-    },
-    [apiRef, getParams],
-  );
+  const style = {
+    minWidth: width,
+    maxWidth: width,
+    lineHeight: `${height - 1}px`,
+    minHeight: height,
+    maxHeight: height,
+  };
 
   return (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/mouse-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions
     <div
       ref={cellRef}
-      className={classnames(GRID_CELL_CSS_CLASS, cssClass, `MuiDataGrid-cell${capitalize(align)}`, {
-        'MuiDataGrid-withBorder': showRightBorder,
-        'MuiDataGrid-cellEditable': isEditable,
-      })}
+      className={cssClasses}
       role="cell"
       data-value={value}
       data-field={field}
       data-rowindex={rowIndex}
       data-editable={isEditable}
       aria-colindex={colIndex}
-      style={{
-        minWidth: width,
-        maxWidth: width,
-        lineHeight: `${height - 1}px`,
-        minHeight: height,
-        maxHeight: height,
-      }}
+      style={style}
       tabIndex={tabIndex}
-      onClick={handleClick}
-      onDoubleClick={handleDoubleClick}
-      onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
-      onMouseOver={handleHover}
-      onMouseOut={handleOut}
+      {...mouseEventsHandlers}
     >
       {children || valueToRender?.toString()}
     </div>

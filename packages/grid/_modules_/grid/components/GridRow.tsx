@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  GRID_DOUBLE_ROW_CLICK,
+  GRID_ROW_DOUBLE_CLICK,
   GRID_ROW_CLICK,
   GRID_ROW_ENTER,
   GRID_ROW_LEAVE,
@@ -26,56 +26,30 @@ export const GridRow: React.FC<RowProps> = ({ selected, id, className, rowIndex,
   const apiRef = React.useContext(GridApiContext);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
 
-  const handleClick = React.useCallback(
-    (event: React.MouseEvent) => {
-      const params = apiRef?.current.getRowParams(id)!;
-      apiRef?.current.publishEvent(GRID_ROW_CLICK, params, event);
-    },
+  const publish = React.useCallback(
+    (eventName: string) => (event: React.MouseEvent) =>
+      apiRef!.current.publishEvent(eventName, apiRef?.current.getRowParams(id), event),
     [apiRef, id],
   );
 
-  const handleDoubleClick = React.useCallback(
-    (event: React.MouseEvent) => {
-      const params = apiRef?.current.getRowParams(id)!;
-      apiRef?.current.publishEvent(GRID_DOUBLE_ROW_CLICK, params, event);
-    },
-    [apiRef, id],
+  const mouseEventsHandlers = React.useMemo(
+    () => ({
+      onClick: publish(GRID_ROW_CLICK),
+      onDoubleClick: publish(GRID_ROW_DOUBLE_CLICK),
+      onMouseOver: publish(GRID_ROW_OVER),
+      onMouseOut: publish(GRID_ROW_OUT),
+      onMouseEnter: publish(GRID_ROW_ENTER),
+      onMouseLeave: publish(GRID_ROW_LEAVE),
+    }),
+    [publish],
   );
 
-  const handleMouseOver = React.useCallback(
-    (event: React.MouseEvent) => {
-      const params = apiRef?.current.getRowParams(id)!;
-      apiRef?.current.publishEvent(GRID_ROW_OVER, params, event);
-    },
-    [apiRef, id],
-  );
-
-  const handleMouseOut = React.useCallback(
-    (event: React.MouseEvent) => {
-      const params = apiRef?.current.getRowParams(id)!;
-      apiRef?.current.publishEvent(GRID_ROW_OUT, params, event);
-    },
-    [apiRef, id],
-  );
-
-  const handleMouseEnter = React.useCallback(
-    (event: React.MouseEvent) => {
-      const params = apiRef?.current.getRowParams(id)!;
-      apiRef?.current.publishEvent(GRID_ROW_ENTER, params, event);
-    },
-    [apiRef, id],
-  );
-
-  const handleMouseLeave = React.useCallback(
-    (event: React.MouseEvent) => {
-      const params = apiRef?.current.getRowParams(id)!;
-      apiRef?.current.publishEvent(GRID_ROW_LEAVE, params, event);
-    },
-    [apiRef, id],
-  );
+  const style = {
+    maxHeight: rowHeight,
+    minHeight: rowHeight,
+  };
 
   return (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/mouse-events-have-key-events,jsx-a11y/interactive-supports-focus
     <div
       key={id}
       data-id={id}
@@ -84,16 +58,8 @@ export const GridRow: React.FC<RowProps> = ({ selected, id, className, rowIndex,
       className={classnames(GRID_ROW_CSS_CLASS, className, { 'Mui-selected': selected })}
       aria-rowindex={ariaRowIndex}
       aria-selected={selected}
-      style={{
-        maxHeight: rowHeight,
-        minHeight: rowHeight,
-      }}
-      onClick={handleClick}
-      onDoubleClick={handleDoubleClick}
-      onMouseOver={handleMouseOver}
-      onMouseOut={handleMouseOut}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      style={style}
+      {...mouseEventsHandlers}
     >
       {children}
     </div>

@@ -3,8 +3,13 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridParamsApi } from '../../../models/api/gridParamsApi';
 import { GridRowId } from '../../../models/gridRows';
 import { GridCellParams, ValueGetterParams } from '../../../models/params/gridCellParams';
+import { GridColParams } from '../../../models/params/gridColParams';
 import { GridRowParams } from '../../../models/params/gridRowParams';
-import { getGridCellElement, getGridRowElement } from '../../../utils/domUtils';
+import {
+  getGridCellElement,
+  getGridColumnHeaderElement,
+  getGridRowElement,
+} from '../../../utils/domUtils';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 
 let warnedOnce = false;
@@ -20,6 +25,17 @@ function warnMissingColumn(field) {
   }
 }
 export function useGridParamsApi(apiRef: GridApiRef) {
+  const getColumnHeaderParams = React.useCallback(
+    (field: string): GridColParams => ({
+      field,
+      element: apiRef.current.getColumnHeaderElement(field),
+      colDef: apiRef.current.getColumnFromField(field),
+      colIndex: apiRef.current.getColumnIndex(field, true),
+      api: apiRef!.current,
+    }),
+    [apiRef],
+  );
+
   const getRowParams = React.useCallback(
     (id: GridRowId) => {
       const params: GridRowParams = {
@@ -61,6 +77,10 @@ export function useGridParamsApi(apiRef: GridApiRef) {
 
   const getCellParams = React.useCallback(
     (id: GridRowId, field: string) => {
+      if (id == null || field == null || !apiRef?.current) {
+        return null;
+      }
+
       const colDef = apiRef.current.getColumnFromField(field);
       const element = apiRef.current.getCellElement(id, field);
       const value = apiRef.current.getCellValue(id, field);
@@ -100,6 +120,15 @@ export function useGridParamsApi(apiRef: GridApiRef) {
     [apiRef, getBaseCellParams],
   );
 
+  const getColumnHeaderElement = React.useCallback(
+    (field: string): HTMLDivElement | null => {
+      if (!apiRef.current.rootElementRef!.current) {
+        return null;
+      }
+      return getGridColumnHeaderElement(apiRef.current.rootElementRef!.current!, field);
+    },
+    [apiRef],
+  );
   const getRowElement = React.useCallback(
     (id: GridRowId): HTMLDivElement | null => {
       if (!apiRef.current.rootElementRef!.current) {
@@ -128,6 +157,8 @@ export function useGridParamsApi(apiRef: GridApiRef) {
       getCellElement,
       getRowParams,
       getRowElement,
+      getColumnHeaderParams,
+      getColumnHeaderElement,
     },
     'CellApi',
   );

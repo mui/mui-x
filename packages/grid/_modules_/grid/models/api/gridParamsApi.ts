@@ -1,6 +1,7 @@
 import { GridCellValue } from '../gridCell';
 import { GridRowId } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
+import { GridColParams } from '../params/gridColParams';
 import { GridRowParams } from '../params/gridRowParams';
 
 export interface GridParamsApi {
@@ -21,7 +22,7 @@ export interface GridParamsApi {
    * @param id
    * @param field
    */
-  getCellParams: (id: GridRowId, field: string) => GridCellParams;
+  getCellParams: (id: GridRowId, field: string) => GridCellParams | null;
   /**
    * Get the row params that are passed in events
    * @param id
@@ -34,4 +35,14 @@ export interface GridParamsApi {
    * @param field
    */
   getRowElement: (id: GridRowId) => HTMLDivElement | null;
+  /**
+   * Get the column header DOM element
+   * @param field
+   */
+  getColumnHeaderElement: (field: string) => HTMLDivElement | null;
+  /**
+   * Get the header params that are passed in events
+   * @param field
+   */
+  getColumnHeaderParams: (field: string) => GridColParams;
 }

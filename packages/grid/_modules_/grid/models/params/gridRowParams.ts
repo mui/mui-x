@@ -10,7 +10,7 @@ export interface GridRowParams {
    */
   id: GridRowId;
   /**
-   * The HTMLElement that triggered the event
+   * The HTMLElement row element
    */
   element?: HTMLElement | null;
   /**

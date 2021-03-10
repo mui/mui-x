@@ -311,6 +311,31 @@ export interface GridOptions {
    */
   onColumnHeaderClick?: (param: GridColParams, event: React.MouseEvent) => void;
   /**
+   * Callback fired when a double click event comes from a column header element.
+   * @param param With all properties from [[GridColParams]].
+   */
+  onColumnHeaderDoubleClick?: (param: GridColParams, event: React.MouseEvent) => void;
+  /**
+   * Callback fired when a mouseover event comes from a column header element.
+   * @param param With all properties from [[GridColParams]].
+   */
+  onColumnHeaderOver?: (param: GridColParams, event: React.MouseEvent) => void;
+  /**
+   * Callback fired when a mouseout event comes from a column header element.
+   * @param param With all properties from [[GridColParams]].
+   */
+  onColumnHeaderOut?: (param: GridColParams, event: React.MouseEvent) => void;
+  /**
+   * Callback fired when a mouse enter event comes from a column header element.
+   * @param param With all properties from [[GridColParams]].
+   */
+  onColumnHeaderEnter?: (param: GridColParams, event: React.MouseEvent) => void;
+  /**
+   * Callback fired when a mouse leave event comes from a column header element.
+   * @param param With all properties from [[GridColParams]].
+   */
+  onColumnHeaderLeave?: (param: GridColParams, event: React.MouseEvent) => void;
+  /**
    * Callback fired when the sort model changes before a column is sorted.
    * @param param With all properties from [[GridSortModelParams]].
    */
