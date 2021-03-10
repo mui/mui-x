@@ -2,9 +2,9 @@ import * as React from 'react';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridSelector } from '../core/useGridSelector';
-import { gridContainerSizesSelector } from '../../../components/GridViewport';
 import { useNativeEventListener } from '../../root/useNativeEventListener';
 import { GRID_SCROLL } from '../../../constants/eventsConstants';
+import { gridContainerSizesSelector } from '../../utils/sizesSelector';
 
 export const useGridInfiniteLoader = (
   windowRef: React.MutableRefObject<HTMLDivElement | null>,
