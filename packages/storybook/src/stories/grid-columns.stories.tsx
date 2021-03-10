@@ -1,9 +1,7 @@
-import { DataGrid } from '@material-ui/data-grid';
 import * as React from 'react';
 import { GridColDef, XGrid, GridColTypeDef, ValueGetterParams } from '@material-ui/x-grid';
 import CreateIcon from '@material-ui/icons/Create';
 import Button from '@material-ui/core/Button';
-import { getColumnValues } from '../../../../test/utils/helperFn';
 import { useData } from '../hooks/useData';
 
 export default {

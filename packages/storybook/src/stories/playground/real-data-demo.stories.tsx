@@ -40,10 +40,10 @@ export default {
       },
     },
     rowLength: {
-      defaultValue: 1000,
+      defaultValue: 10000,
       control: {
         type: 'select',
-        options: [100, 500, 1000, 10000, 50000, 100000, 500000],
+        options: [100, 500, 1000, 2000, 5000, 8000, 10000, 50000, 100000, 500000],
       },
     },
     multipleGrid: {
