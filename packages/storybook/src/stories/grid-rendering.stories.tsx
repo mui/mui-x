@@ -55,14 +55,16 @@ export const RenderInputInCell = () => {
 export const InfiniteLoading = () => {
   const apiRef = useGridApiRef();
   const [size, setSize] = React.useState(50);
-  const { loading, data, loadNewData } = useDemoData({
+  const { loading, data, setRowLength, loadNewData } = useDemoData({
     dataSet: 'Commodity',
     rowLength: size,
     maxColumns: 20,
   });
 
   const handleOnRowsScrollEnd = (params) => {
-    setSize(params.virtualRowsCount + params.viewportPageSize);
+    const newRowLength = params.virtualRowsCount + params.viewportPageSize;
+    setSize(newRowLength);
+    setRowLength(newRowLength);
     loadNewData();
   };
 
