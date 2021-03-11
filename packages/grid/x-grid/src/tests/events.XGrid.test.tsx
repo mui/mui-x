@@ -81,74 +81,70 @@ describe('<XGrid /> - Events Params ', () => {
       fireEvent.click(ageColumnElement);
     });
 
-    it('should contains the column header element', () => {
-      expect(eventArgs!.params.element).to.equal(ageColumnElement);
-    });
-    it('should contains the column def', () => {
-      expect(eventArgs!.params.colDef).to.equal(apiRef!.current.getColumnFromField('age'));
-    });
-    it('should contains the column index', () => {
-      expect(eventArgs!.params.colIndex).to.equal(2);
-    });
-    it('should contains the column field', () => {
-      expect(eventArgs!.params.field).to.equal('age');
-    });
-    it('should contains the api', () => {
-      expect(eventArgs!.params.api).to.equal(apiRef.current);
+    it('should include the correct params', () => {
+      expect(eventArgs!.params).to.deep.include({
+        colDef: apiRef!.current.getColumnFromField('age'),
+        element: ageColumnElement,
+        colIndex: 2,
+        field: 'age',
+        api: apiRef.current,
+      });
     });
   });
 
   describe('RowsParams', () => {
     let eventArgs: { params: GridRowParams; event: React.MouseEvent } | null = null;
-    let row2;
+    let row1;
+
     beforeEach(() => {
       const handleClick = (params, event) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onRowClick={handleClick} />);
 
-      row2 = getRow(1);
-      fireEvent.click(row2);
+      row1 = getRow(1);
+      fireEvent.click(row1);
     });
 
-    it('should contains the row id', () => {
-      expect(eventArgs!.params.id).to.equal(2);
-    });
-    it('should contains the element', () => {
-      expect(eventArgs!.params.element).to.equal(row2);
-    });
-    it('should contains the row model', () => {
-      expect(eventArgs!.params.row).to.equal(baselineProps.rows[1]);
-    });
-    it('should contains the row index', () => {
-      expect(eventArgs!.params.rowIndex).to.equal(1);
-    });
-    it('should contains the columns', () => {
-      expect(eventArgs!.params.columns).to.equal(apiRef!.current.getAllColumns());
-    });
-    it('should contains the api', () => {
-      expect(eventArgs!.params.api).to.equal(apiRef.current);
+    it('should include the correct params', () => {
+      expect(eventArgs!.params).to.deep.include({
+        id: 2,
+        element: row1,
+        row: baselineProps.rows[1],
+        rowIndex: 1,
+        columns: apiRef!.current.getAllColumns(),
+        api: apiRef.current,
+      });
     });
   });
 
   describe('CellsParams', () => {
     let eventArgs: { params: GridCellParams; event: React.MouseEvent } | null = null;
-    let cell22;
+    let cell11;
+
     beforeEach(() => {
       const handleClick = (params, event) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onCellClick={handleClick} />);
 
-      cell22 = getCell(1, 1);
-      fireEvent.click(cell22);
+      cell11 = getCell(1, 1);
+      fireEvent.click(cell11);
     });
 
-    it('should contains the cell id', () => {
-      expect(eventArgs!.params.id).to.equal(2);
-    });
-    it('should contains the cell value', () => {
-      expect(eventArgs!.params.value).to.equal('Jack');
+    it('should include the correct params', () => {
+      expect(eventArgs!.params).to.deep.include({
+        id: 2,
+        value: 'Jack',
+        formattedValue: 'Jack',
+        isEditable: true,
+        element: cell11,
+        row: baselineProps.rows[1],
+        rowIndex: 1,
+        colDef: apiRef!.current.getColumnFromField('first'),
+        colIndex: 1,
+        api: apiRef.current,
+      });
     });
 
     it('should consider value getter', () => {
@@ -157,65 +153,38 @@ describe('<XGrid /> - Events Params ', () => {
 
       expect(eventArgs!.params.value).to.equal('Jack_11');
     });
+
     it('should consider value formatter', () => {
       const cellFirstAge = getCell(1, 3);
       fireEvent.click(cellFirstAge);
 
       expect(eventArgs!.params.formattedValue).to.equal('Jack_11 yrs');
     });
-    it('should contains the cell formattedValue', () => {
-      expect(eventArgs!.params.formattedValue).to.equal('Jack');
-    });
-    it('should contains the cell isEditable', () => {
-      expect(eventArgs!.params.isEditable).to.equal(true);
-    });
-    it('should contains the element', () => {
-      expect(eventArgs!.params.element).to.equal(cell22);
-    });
-    it('should contains the cell model', () => {
-      expect(eventArgs!.params.row).to.equal(baselineProps.rows[1]);
-    });
-    it('should contains the cell index', () => {
-      expect(eventArgs!.params.rowIndex).to.equal(1);
-    });
-    it('should contains the column', () => {
-      expect(eventArgs!.params.colDef).to.equal(apiRef!.current.getColumnFromField('first'));
-    });
-    it('should contains the column index', () => {
-      expect(eventArgs!.params.colIndex).to.equal(1);
-    });
-    it('should contains the api', () => {
-      expect(eventArgs!.params.api).to.equal(apiRef.current);
-    });
   });
 
   describe('onCellClick', () => {
-    it('should bubble to the row', () => {
-      let events = '';
-      const addEventName = (name: string) => () => {
-        events += `${name}, `;
-      };
-      render(
-        <TestEvents
-          onCellClick={addEventName('cellClick')}
-          onRowClick={addEventName('rowClick')}
-        />,
-      );
+    let eventStack: string[] = [];
+    const push = (name: string) => () => {
+      eventStack.push(name);
+    };
 
-      const cell22 = getCell(1, 1);
-      fireEvent.click(cell22);
-      expect(events).to.equal('cellClick, rowClick, ');
+    beforeEach(() => {
+      eventStack = [];
+    });
+
+    it('should bubble to the row', () => {
+      render(<TestEvents onCellClick={push('cellClick')} onRowClick={push('rowClick')} />);
+
+      const cell11 = getCell(1, 1);
+      fireEvent.click(cell11);
+      expect(eventStack).to.deep.equal(['cellClick', 'rowClick']);
     });
 
     it('should not bubble to the row if the column has disableEventBubbling', () => {
-      let events = '';
-      const addEventName = (name: string) => () => {
-        events += `${name}, `;
-      };
       render(
         <TestEvents
-          onCellClick={addEventName('cellClick')}
-          onRowClick={addEventName('rowClick')}
+          onCellClick={push('cellClick')}
+          onRowClick={push('rowClick')}
           columns={baselineProps.columns.map((col) => ({
             ...col,
             disableClickEventBubbling: true,
@@ -223,45 +192,35 @@ describe('<XGrid /> - Events Params ', () => {
         />,
       );
 
-      const cell22 = getCell(1, 1);
-      fireEvent.click(cell22);
-      expect(events).to.equal('cellClick, ');
+      const cell11 = getCell(1, 1);
+      fireEvent.click(cell11);
+      expect(eventStack).to.deep.equal(['cellClick']);
     });
+
     it('should allow to stop propagation', () => {
-      let events = '';
-      const addEventName = (name: string) => () => {
-        events += `${name}, `;
-      };
       const stopClick = (params, event) => {
         event.stopPropagation();
       };
-      render(<TestEvents onCellClick={stopClick} onRowSelected={addEventName('rowSelected')} />);
+      render(<TestEvents onCellClick={stopClick} onRowSelected={push('rowSelected')} />);
 
-      const cell22 = getCell(1, 1);
-      fireEvent.click(cell22);
-      expect(events).to.equal('');
+      const cell11 = getCell(1, 1);
+      fireEvent.click(cell11);
+      expect(eventStack).to.deep.equal([]);
     });
+
     it('should select a row by default', () => {
-      let events = '';
-      const addEventName = (name: string) => () => {
-        events += `${name}, `;
-      };
-      render(<TestEvents onRowSelected={addEventName('rowSelected')} />);
+      render(<TestEvents onRowSelected={push('rowSelected')} />);
 
-      const cell22 = getCell(1, 1);
-      fireEvent.click(cell22);
-      expect(events).to.equal('rowSelected, ');
+      const cell11 = getCell(1, 1);
+      fireEvent.click(cell11);
+      expect(eventStack).to.deep.equal(['rowSelected']);
     });
-    it('should not select a row if options.disableSelectionOnClick', () => {
-      let events = '';
-      const addEventName = (name: string) => () => {
-        events += `${name}, `;
-      };
-      render(<TestEvents onRowSelected={addEventName('rowSelected')} disableSelectionOnClick />);
 
-      const cell22 = getCell(1, 1);
-      fireEvent.click(cell22);
-      expect(events).to.equal('');
+    it('should not select a row if options.disableSelectionOnClick', () => {
+      render(<TestEvents onRowSelected={push('rowSelected')} disableSelectionOnClick />);
+      const cell11 = getCell(1, 1);
+      fireEvent.click(cell11);
+      expect(eventStack).to.deep.equal([]);
     });
   });
 });
