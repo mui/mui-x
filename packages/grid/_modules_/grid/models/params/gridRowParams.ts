@@ -6,11 +6,11 @@ import { GridRowId, GridRowModel } from '../gridRows';
  */
 export interface GridRowParams {
   /**
-   * The grid row id
+   * The grid row id.
    */
   id: GridRowId;
   /**
-   * The HTMLElement row element
+   * The HTMLElement row element.
    */
   element?: HTMLElement | null;
   /**

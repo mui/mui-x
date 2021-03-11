@@ -12,13 +12,13 @@ export interface GridParamsApi {
    */
   getCellValue: (id: GridRowId, field: string) => GridCellValue;
   /**
-   * Get the cell DOM element
+   * Get the cell DOM element.
    * @param id
    * @param field
    */
   getCellElement: (id: GridRowId, field: string) => HTMLDivElement | null;
   /**
-   * Get the cell params that are passed in events
+   * Get the cell params that are passed in events.
    * @param id
    * @param field
    */
@@ -30,18 +30,18 @@ export interface GridParamsApi {
    */
   getRowParams: (id: GridRowId) => GridRowParams;
   /**
-   * Get the row DOM element
+   * Get the row DOM element.
    * @param id
    * @param field
    */
   getRowElement: (id: GridRowId) => HTMLDivElement | null;
   /**
-   * Get the column header DOM element
+   * Get the column header DOM element.
    * @param field
    */
   getColumnHeaderElement: (field: string) => HTMLDivElement | null;
   /**
-   * Get the header params that are passed in events
+   * Get the header params that are passed in events.
    * @param field
    */
   getColumnHeaderParams: (field: string) => GridColParams;

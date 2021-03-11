@@ -3,7 +3,7 @@
  */
 export interface GridColParams {
   /**
-   * The HTMLElement column header element
+   * The HTMLElement column header element.
    */
   element?: HTMLElement | null;
   /**
