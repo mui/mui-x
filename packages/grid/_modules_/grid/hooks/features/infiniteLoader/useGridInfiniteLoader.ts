@@ -4,8 +4,10 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridSelector } from '../core/useGridSelector';
 import { useNativeEventListener } from '../../root/useNativeEventListener';
 import { GRID_SCROLL, GRID_SCROLL_ROW_END } from '../../../constants/eventsConstants';
-import { gridContainerSizesSelector } from '../../utils/gridContainerSizesSelector';
+import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndParams';
+import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 
 export const useGridInfiniteLoader = (
   windowRef: React.MutableRefObject<HTMLDivElement | null>,
@@ -13,6 +15,7 @@ export const useGridInfiniteLoader = (
 ): void => {
   const options = useGridSelector(apiRef, optionsSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
+  const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const isInScrollBottomArea = React.useRef<boolean>(false);
 
   const handleGridScroll = React.useCallback(
@@ -24,14 +27,20 @@ export const useGridInfiniteLoader = (
 
       if (containerSizes && scrollPositionBottom >= containerSizes.dataContainerSizes.height) {
         if (!isInScrollBottomArea.current) {
+          const rowScrollEndParam: GridRowScrollEndParams = {
+            api: apiRef,
+            visibleColumns,
+            viewportPageSize: containerSizes?.viewportPageSize,
+            virtualRowsCount: containerSizes?.virtualRowsCount,
+          };
+          apiRef.current.publishEvent(GRID_SCROLL_ROW_END, rowScrollEndParam);
           isInScrollBottomArea.current = true;
-          apiRef.current.publishEvent(GRID_SCROLL_ROW_END, event);
         }
       } else {
         isInScrollBottomArea.current = false;
       }
     },
-    [options, containerSizes, apiRef],
+    [options, containerSizes, apiRef, visibleColumns],
   );
 
   useNativeEventListener(apiRef, windowRef, GRID_SCROLL, handleGridScroll, { passive: true });

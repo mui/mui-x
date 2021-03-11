@@ -22,6 +22,7 @@ import {
   GridEditCellParams,
   GridEditRowModelParams,
 } from './params/gridEditCellParams';
+import { GridRowScrollEndParams } from './params/gridRowScrollEndParams';
 
 // TODO add multiSortKey
 /**
@@ -340,7 +341,7 @@ export interface GridOptions {
    * Callback fired when scrolling to the bottom of the grid viewport.
    * @param param
    */
-  onRowsScrollEnd?: (params: Event) => void;
+  onRowsScrollEnd?: (params: GridRowScrollEndParams) => void;
   /**
    * Set the area at the bottom of the grid viewport where onRowsScrollEnd is called.
    */

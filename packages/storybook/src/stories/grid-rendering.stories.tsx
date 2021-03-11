@@ -61,8 +61,8 @@ export const InfiniteLoading = () => {
     maxColumns: 20,
   });
 
-  const handleOnRowsScrollEnd = () => {
-    setSize(size + 20);
+  const handleOnRowsScrollEnd = (params) => {
+    setSize(params.virtualRowsCount + params.viewportPageSize);
     loadNewData();
   };
 
