@@ -32,7 +32,7 @@ import { useLogger } from '../../utils/useLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { gridSelectionStateSelector } from '../selection/gridSelectionSelector';
 import { KeyboardState } from './keyboardState';
-import { gridContainerSizesSelector } from '../../utils/sizesSelector';
+import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
 
 const getNextCellIndexes = (code: string, indexes: GridCellIndexCoordinates) => {
   if (!isArrowKeys(code)) {

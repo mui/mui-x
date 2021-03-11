@@ -6,7 +6,7 @@ import { GridPageChangeParams } from '../../../models/params/gridPageChangeParam
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
-import { gridContainerSizesSelector } from '../../utils/sizesSelector';
+import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
 import { useLogger } from '../../utils/useLogger';
 import { useGridReducer } from '../core/useGridReducer';
 import { useGridSelector } from '../core/useGridSelector';

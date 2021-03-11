@@ -18,7 +18,7 @@ import {
   gridContainerSizesSelector,
   gridViewportSizesSelector,
   gridScrollBarSizeSelector,
-} from '../hooks/utils/sizesSelector';
+} from '../hooks/root/gridContainerSizesSelector';
 
 type ViewportType = React.ForwardRefExoticComponent<React.RefAttributes<HTMLDivElement>>;
 

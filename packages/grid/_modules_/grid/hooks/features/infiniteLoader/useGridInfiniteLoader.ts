@@ -4,7 +4,7 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridSelector } from '../core/useGridSelector';
 import { useNativeEventListener } from '../../root/useNativeEventListener';
 import { GRID_SCROLL, GRID_SCROLL_ROW_END } from '../../../constants/eventsConstants';
-import { gridContainerSizesSelector } from '../../utils/sizesSelector';
+import { gridContainerSizesSelector } from '../../utils/gridContainerSizesSelector';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 
 export const useGridInfiniteLoader = (
