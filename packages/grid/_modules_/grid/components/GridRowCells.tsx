@@ -104,6 +104,7 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
       ...cssClassProp,
       tabIndex: domIndex === 0 && colIdx === 0 ? 0 : -1,
       rowIndex,
+      cellMode: cellParams.cellMode,
       colIndex: cellParams.colIndex,
       children: cellComponent,
       isEditable: cellParams.isEditable,

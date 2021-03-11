@@ -5,11 +5,12 @@ import {
   GRID_CELL_CLICK,
   GRID_CELL_DOUBLE_CLICK,
   GRID_CELL_ENTER,
+  GRID_CELL_KEYDOWN,
   GRID_CELL_LEAVE,
   GRID_CELL_OUT,
   GRID_CELL_OVER,
 } from '../constants/eventsConstants';
-import { GridAlignment, GridCellValue, GridRowId } from '../models';
+import { GridAlignment, GridCellMode, GridCellValue, GridRowId } from '../models';
 import { classnames } from '../utils';
 import { GridApiContext } from './GridApiContext';
 
@@ -28,6 +29,7 @@ export interface GridCellProps {
   tabIndex?: number;
   value?: GridCellValue;
   width: number;
+  cellMode?: GridCellMode;
 }
 
 export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
@@ -35,6 +37,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     align,
     children,
     colIndex,
+    cellMode,
     cssClass,
     field,
     formattedValue,
@@ -81,7 +84,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
   );
 
   const publish = React.useCallback(
-    (eventName: string) => (event: React.MouseEvent) =>
+    (eventName: string) => (event: React.SyntheticEvent) =>
       apiRef!.current.publishEvent(
         eventName,
         apiRef!.current.getCellParams(rowId!, field || ''),
@@ -90,7 +93,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     [apiRef, field, rowId],
   );
 
-  const mouseEventsHandlers = React.useMemo(
+  const eventsHandlers = React.useMemo(
     () => ({
       onClick: publishClick(GRID_CELL_CLICK),
       onDoubleClick: publish(GRID_CELL_DOUBLE_CLICK),
@@ -98,6 +101,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
       onMouseOut: publish(GRID_CELL_OUT),
       onMouseEnter: publish(GRID_CELL_ENTER),
       onMouseLeave: publish(GRID_CELL_LEAVE),
+      onKeyDown: publish(GRID_CELL_KEYDOWN),
     }),
     [publish, publishClick],
   );
@@ -115,14 +119,16 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
       ref={cellRef}
       className={cssClasses}
       role="cell"
+      data-rowId={rowId}
       data-value={value}
       data-field={field}
       data-rowindex={rowIndex}
       data-editable={isEditable}
+      data-mode={cellMode}
       aria-colindex={colIndex}
       style={style}
       tabIndex={tabIndex}
-      {...mouseEventsHandlers}
+      {...eventsHandlers}
     >
       {children || valueToRender?.toString()}
     </div>

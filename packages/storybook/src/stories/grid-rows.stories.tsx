@@ -446,30 +446,16 @@ export function EditRowsControl() {
     if (!selectedCell) {
       return;
     }
-    const [id, field, value] = selectedCell;
+    const [id, field, ] = selectedCell;
 
-    setEditRowsModel((state) => {
-      const editRowState: GridEditRowsModel = { ...state };
-      editRowState[id] = editRowState[id] ? { ...editRowState[id] } : {};
-      editRowState[id][field] = { value };
+    apiRef.current.setCellMode(id, field, 'edit');
 
-      return { ...state, ...editRowState };
-    });
-  }, [selectedCell]);
+  }, [apiRef, selectedCell]);
 
   const onCellClick = React.useCallback((params: GridCellParams) => {
     setSelectedCell([params.row.id!.toString(), params.field, params.value]);
     setIsEditable(!!params.isEditable);
   }, []);
-
-  const onCellDoubleClick = React.useCallback(
-    (params: GridCellParams) => {
-      if (params.isEditable) {
-        apiRef.current.setCellMode(params.row.id!.toString(), params.field, 'edit');
-      }
-    },
-    [apiRef],
-  );
 
   const isCellEditable = React.useCallback((params: GridCellParams) => params.row.id !== 0, []);
 
@@ -482,7 +468,6 @@ export function EditRowsControl() {
           ...editRowsModel[id],
           email: { ...update.email, error: !isValid },
         };
-        newState[id].email.value += 'EXTERRRR';
         setEditRowsModel((state) => ({ ...state, ...newState }));
         return;
       }
@@ -512,15 +497,15 @@ export function EditRowsControl() {
         setEditRowsModel((state) => ({ ...state, ...newState }));
         setTimeout(() => {
           apiRef.current.updateRows([rowUpdate]);
-          apiRef.current.setCellMode(id, field, 'view');
+          // apiRef.current.setCellMode(id, field, 'view');
         }, 2000);
       } else if (update.fullname && update.fullname.value) {
         const [firstname, lastname] = update.fullname.value.toString().split(' ');
         apiRef.current.updateRows([{ id, firstname, lastname }]);
-        apiRef.current.setCellMode(id, field, 'view');
+        // apiRef.current.setCellMode(id, field, 'view');
       } else {
         apiRef.current.updateRows([rowUpdate]);
-        apiRef.current.setCellMode(id, field, 'view');
+        // apiRef.current.setCellMode(id, field, 'view');
       }
     },
     [apiRef],
@@ -540,7 +525,6 @@ export function EditRowsControl() {
           {...baselineEditProps}
           apiRef={apiRef}
           onCellClick={onCellClick}
-          onCellDoubleClick={onCellDoubleClick}
           isCellEditable={isCellEditable}
           onEditCellChange={onEditCellChange}
           onEditCellChangeCommitted={onEditCellChangeCommitted}
@@ -554,23 +538,12 @@ export function EditRowsControl() {
 export function EditRowsBasic() {
   const apiRef = useGridApiRef();
 
-  const onCellDoubleClick = React.useCallback(
-    (params: GridCellParams) => {
-      if (params.isEditable) {
-        apiRef.current.setCellMode(params.row.id!.toString(), params.field, 'edit');
-      }
-    },
-    [apiRef],
-  );
-
   return (
     <React.Fragment>
-      Double click to edit.
       <div className="grid-container">
         <XGrid
           {...baselineEditProps}
           apiRef={apiRef}
-          onCellDoubleClick={onCellDoubleClick}
           onEditRowModelChange={action('onEditRowsModelChange')}
         />
       </div>
@@ -583,50 +556,22 @@ singleData.columns.length = 1;
 singleData.columns[0].width = 200;
 
 export function SingleCellBasic() {
-  const apiRef = useGridApiRef();
-  const onCellDoubleClick = React.useCallback(
-    (params: GridCellParams) => {
-      if (params.isEditable) {
-        apiRef.current.setCellMode(params.row.id!.toString(), params.field, 'edit');
-      }
-    },
-    [apiRef],
-  );
-
   return (
-    <React.Fragment>
-      Double click to edit.
       <div className="grid-container">
-        <XGrid
-          {...singleData}
-          apiRef={apiRef}
-          onCellDoubleClick={onCellDoubleClick}
-          onEditRowModelChange={action('onEditRowsModelChange')}
-        />
+        <XGrid {...singleData} onEditRowModelChange={action('onEditRowsModelChange')} />
       </div>
-    </React.Fragment>
   );
 }
 export function CommodityEdit() {
-  const apiRef = useGridApiRef();
-  const onCellDoubleClick = React.useCallback(
-    (params: GridCellParams) => {
-      apiRef.current.setCellMode(params.row.id!.toString(), params.field, 'edit');
-    },
-    [apiRef],
-  );
-
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100000,
   });
 
   return (
-    <React.Fragment>
       <div style={{ width: '100%', height: 600 }}>
-        <XGrid {...data} apiRef={apiRef} onCellDoubleClick={onCellDoubleClick} />
+        <XGrid {...data} />
       </div>
-    </React.Fragment>
   );
 }
 

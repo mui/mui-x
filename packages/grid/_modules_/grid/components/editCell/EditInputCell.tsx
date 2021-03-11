@@ -1,5 +1,7 @@
 import * as React from 'react';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
+import { GRID_CELL_KEYDOWN, GRID_KEYDOWN } from '../../constants/eventsConstants';
+import { GridApi } from '../../models/api/gridApi';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { formatDateToLocalInputDate, isDate, mapColDefTypeToInputType } from '../../utils/utils';
 import { GridEditRowUpdate } from '../../models/gridEditRowModel';
@@ -21,7 +23,7 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
     ...inputBaseProps
   } = props;
 
-  const editRowApi = api as GridEditRowApi;
+  const editRowApi = api as GridApi;
   const [valueState, setValueState] = React.useState(value);
 
   const onValueChange = React.useCallback(
@@ -39,14 +41,10 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
 
   const onKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
-      if (!inputBaseProps.error && event.key === 'Enter') {
+      if (!inputBaseProps.error && (event.key === 'Enter' || event.key === 'Tab')) {
         const update: GridEditRowUpdate = {};
         update[field] = { value };
         editRowApi.commitCellChange(row.id, update);
-      }
-
-      if (event.key === 'Escape') {
-        editRowApi.setCellMode(row.id, field, 'view');
       }
     },
     [inputBaseProps.error, row.id, field, value, editRowApi],

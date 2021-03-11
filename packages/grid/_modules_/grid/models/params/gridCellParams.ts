@@ -1,4 +1,4 @@
-import { GridCellValue } from '../gridCell';
+import { GridCellMode, GridCellValue } from '../gridCell';
 import { GridRowId, GridRowModel } from '../gridRows';
 
 /**
@@ -54,6 +54,10 @@ export interface GridCellParams {
    * If true, the cell is editable.
    */
   isEditable?: boolean;
+  /**
+   *
+   */
+  cellMode: GridCellMode;
 }
 
 /**

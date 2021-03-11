@@ -22,6 +22,13 @@ export interface GridEditRowApi {
    */
   setCellMode: (id: GridRowId, field: string, mode: GridCellMode) => void;
   /**
+   * Get the cellMode of a cell.
+   * @param GridRowId
+   * @param string
+   * @returns 'edit' | 'view'
+   */
+  getCellMode: (id: GridRowId, field: string) => GridCellMode;
+  /**
    * Returns true if the cell is editable.
    * @param params
    */

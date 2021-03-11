@@ -65,6 +65,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
         value: row[field],
         getValue: (columnField: string) => apiRef.current.getCellValue(id, columnField),
         colDef: apiRef.current.getColumnFromField(field),
+        cellMode: apiRef.current.getCellMode(id, field),
         rowIndex: apiRef.current.getRowIndexFromId(id),
         colIndex: apiRef.current.getColumnIndex(field, true),
         api: apiRef.current,
