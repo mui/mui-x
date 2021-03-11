@@ -35,6 +35,7 @@ export const GRID_COLUMN_MENU_BUTTON_CLICK = 'colMenuButtonClick';
 export const GRID_SCROLLING_START = 'scrolling:start';
 export const GRID_SCROLLING = 'scrolling';
 export const GRID_SCROLLING_STOP = 'scrolling:stop';
+export const GRID_SCROLL_ROW_END = 'scroll:rowEnd';
 
 export const GRID_COL_RESIZE_START = 'colResizing:start';
 export const GRID_COL_RESIZE_STOP = 'colResizing:stop';

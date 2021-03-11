@@ -61,7 +61,7 @@ export const InfiniteLoading = () => {
     maxColumns: 20,
   });
 
-  const handleOnScrollBottom = () => {
+  const handleOnRowsScrollEnd = () => {
     setSize(size + 20);
     loadNewData();
   };
@@ -72,7 +72,7 @@ export const InfiniteLoading = () => {
         {...data}
         apiRef={apiRef}
         loading={loading}
-        onScrollBottom={handleOnScrollBottom}
+        onRowsScrollEnd={handleOnRowsScrollEnd}
         components={{
           LoadingOverlay: CustomLoadingOverlay,
         }}

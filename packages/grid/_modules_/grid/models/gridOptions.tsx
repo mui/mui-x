@@ -337,13 +337,14 @@ export interface GridOptions {
    */
   localeText: Partial<GridLocaleText>;
   /**
-   *
+   * Callback fired when scrolling to the bottom of the grid viewport.
+   * @param param
    */
-  onScrollBottom?: () => void;
+  onRowsScrollEnd?: (params: Event) => void;
   /**
-   *
+   * Set the area at the bottom of the grid viewport where onRowsScrollEnd is called.
    */
-  scrollBottomThreshold: number;
+  scrollEndThresholdHeight: number;
 }
 
 /**
@@ -355,7 +356,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   columnBuffer: 2,
   rowsPerPageOptions: [25, 50, 100],
   pageSize: 100,
-  scrollBottomThreshold: 80,
+  scrollEndThresholdHeight: 80,
   paginationMode: GridFeatureModeConstant.client,
   sortingMode: GridFeatureModeConstant.client,
   filterMode: GridFeatureModeConstant.client,
