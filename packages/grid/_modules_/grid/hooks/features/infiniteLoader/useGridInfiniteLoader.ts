@@ -3,7 +3,7 @@ import { optionsSelector } from '../../utils/optionsSelector';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridSelector } from '../core/useGridSelector';
 import { useNativeEventListener } from '../../root/useNativeEventListener';
-import { GRID_SCROLL, GRID_SCROLL_ROW_END } from '../../../constants/eventsConstants';
+import { GRID_NATIVE_SCROLL, GRID_ROWS_SCROLL_END } from '../../../constants/eventsConstants';
 import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndParams';
@@ -33,7 +33,7 @@ export const useGridInfiniteLoader = (
             viewportPageSize: containerSizes?.viewportPageSize,
             virtualRowsCount: containerSizes?.virtualRowsCount,
           };
-          apiRef.current.publishEvent(GRID_SCROLL_ROW_END, rowScrollEndParam);
+          apiRef.current.publishEvent(GRID_ROWS_SCROLL_END, rowScrollEndParam);
           isInScrollBottomArea.current = true;
         }
       } else {
@@ -43,6 +43,8 @@ export const useGridInfiniteLoader = (
     [options, containerSizes, apiRef, visibleColumns],
   );
 
-  useNativeEventListener(apiRef, windowRef, GRID_SCROLL, handleGridScroll, { passive: true });
-  useGridApiEventHandler(apiRef, GRID_SCROLL_ROW_END, options.onRowsScrollEnd);
+  useNativeEventListener(apiRef, windowRef, GRID_NATIVE_SCROLL, handleGridScroll, {
+    passive: true,
+  });
+  useGridApiEventHandler(apiRef, GRID_ROWS_SCROLL_END, options.onRowsScrollEnd);
 };

@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { GRID_RESIZE, GRID_SCROLL, GRID_SCROLLING } from '../../../constants/eventsConstants';
+import {
+  GRID_RESIZE,
+  GRID_NATIVE_SCROLL,
+  GRID_ROWS_SCROLL,
+} from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridVirtualizationApi } from '../../../models/api/gridVirtualizationApi';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
@@ -157,7 +161,7 @@ export const useGridVirtualRows = (
         requireRerender = true;
       } else {
         scrollTo(scrollParams);
-        apiRef.current.publishEvent(GRID_SCROLLING, scrollParams);
+        apiRef.current.publishEvent(GRID_ROWS_SCROLL, scrollParams);
       }
       setRenderingState({ renderingZoneScroll: scrollParams });
 
@@ -386,11 +390,11 @@ export const useGridVirtualRows = (
     [logger],
   );
 
-  useNativeEventListener(apiRef, windowRef, GRID_SCROLL, handleScroll, { passive: true });
+  useNativeEventListener(apiRef, windowRef, GRID_NATIVE_SCROLL, handleScroll, { passive: true });
   useNativeEventListener(
     apiRef,
     () => renderingZoneRef.current?.parentElement,
-    GRID_SCROLL,
+    GRID_NATIVE_SCROLL,
     preventViewportScroll,
   );
   useGridApiEventHandler(apiRef, GRID_RESIZE, updateViewport);

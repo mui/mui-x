@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   GRID_COL_REORDER_START,
   GRID_COL_REORDER_STOP,
-  GRID_SCROLLING,
+  GRID_ROWS_SCROLL,
 } from '../constants/eventsConstants';
 import { useGridApiEventHandler } from '../hooks/root/useGridApiEventHandler';
 import { GridApiRef } from '../models/api/gridApiRef';
@@ -68,7 +68,7 @@ export const GridScrollArea = React.memo(function GridScrollArea(props: ScrollAr
     setDragging((prevdragging) => !prevdragging);
   }, []);
 
-  useGridApiEventHandler(api as GridApiRef, GRID_SCROLLING, handleScrolling);
+  useGridApiEventHandler(api as GridApiRef, GRID_ROWS_SCROLL, handleScrolling);
   useGridApiEventHandler(api as GridApiRef, GRID_COL_REORDER_START, toggleDragging);
   useGridApiEventHandler(api as GridApiRef, GRID_COL_REORDER_STOP, toggleDragging);
 

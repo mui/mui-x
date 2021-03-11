@@ -6,7 +6,7 @@ export const GRID_MOUSE_HOVER = 'mouseover';
 export const GRID_FOCUS_OUT = 'focusout';
 export const GRID_KEYDOWN = 'keydown';
 export const GRID_KEYUP = 'keyup';
-export const GRID_SCROLL = 'scroll';
+export const GRID_NATIVE_SCROLL = 'scroll';
 export const GRID_DRAGEND = 'dragend';
 
 // GRID events
@@ -33,9 +33,9 @@ export const GRID_COLUMN_FILTER_BUTTON_CLICK = 'colFilterButtonClick';
 export const GRID_COLUMN_MENU_BUTTON_CLICK = 'colMenuButtonClick';
 
 export const GRID_SCROLLING_START = 'scrolling:start';
-export const GRID_SCROLLING = 'scrolling';
+export const GRID_ROWS_SCROLL = 'scrolling:rows';
 export const GRID_SCROLLING_STOP = 'scrolling:stop';
-export const GRID_SCROLL_ROW_END = 'scroll:rowEnd';
+export const GRID_ROWS_SCROLL_END = 'scroll:rowEnd';
 
 export const GRID_COL_RESIZE_START = 'colResizing:start';
 export const GRID_COL_RESIZE_STOP = 'colResizing:stop';
