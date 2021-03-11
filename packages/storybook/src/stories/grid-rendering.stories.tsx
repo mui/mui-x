@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { XGrid, GridOverlay, useGridApiRef } from '@material-ui/x-grid';
+import { XGrid, GridOverlay } from '@material-ui/x-grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import '../style/grid-stories.css';
@@ -53,7 +53,6 @@ export const RenderInputInCell = () => {
   );
 };
 export const InfiniteLoading = () => {
-  const apiRef = useGridApiRef();
   const [size, setSize] = React.useState(50);
   const { loading, data, setRowLength, loadNewData } = useDemoData({
     dataSet: 'Commodity',
@@ -72,7 +71,6 @@ export const InfiniteLoading = () => {
     <div className="grid-container">
       <XGrid
         {...data}
-        apiRef={apiRef}
         loading={loading}
         onRowsScrollEnd={handleOnRowsScrollEnd}
         components={{

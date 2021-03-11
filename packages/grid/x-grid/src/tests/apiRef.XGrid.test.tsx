@@ -2,12 +2,13 @@ import {
   GridApiRef,
   GridComponentProps,
   GridRowData,
+  GRID_SCROLL_ROW_END,
   useGridApiRef,
   XGrid,
 } from '@material-ui/x-grid';
 import { expect } from 'chai';
 import * as React from 'react';
-import { useFakeTimers } from 'sinon';
+import { spy, useFakeTimers } from 'sinon';
 import { getCell, getColumnValues } from 'test/utils/helperFn';
 import { createClientRenderStrictMode } from 'test/utils';
 
@@ -279,5 +280,13 @@ describe('<XGrid /> - apiRef', () => {
 
     apiRef!.current.setCellMode(0, 'brand', 'edit');
     expect(cellNike.classList.contains('MuiDataGrid-cellEditing')).to.equal(true);
+  });
+
+  it('publishing GRID_SCROLL_ROW_END should call onRowsScrollEnd callback', () => {
+    const handleOnRowsScrollEnd = spy();
+
+    render(<TestCase onRowsScrollEnd={handleOnRowsScrollEnd} />);
+    apiRef.current.publishEvent(GRID_SCROLL_ROW_END);
+    expect(handleOnRowsScrollEnd.callCount).to.equal(1);
   });
 });
