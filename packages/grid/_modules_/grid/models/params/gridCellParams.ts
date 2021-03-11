@@ -59,9 +59,9 @@ export interface GridCellParams {
 /**
  * Alias of GridCellParams.
  */
-export type ValueGetterParams = Omit<GridCellParams, 'formattedValue' | 'isEditable'>;
+export type GridValueGetterParams = Omit<GridCellParams, 'formattedValue' | 'isEditable'>;
 
 /**
  * Alias of GridCellParams.
  */
-export type ValueFormatterParams = Omit<GridCellParams, 'formattedValue' | 'isEditable'>;
+export type GridValueFormatterParams = Omit<GridCellParams, 'formattedValue' | 'isEditable'>;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridColDef, XGrid, GridColTypeDef, ValueGetterParams } from '@material-ui/x-grid';
+import { GridColDef, XGrid, GridColTypeDef, GridValueGetterParams } from '@material-ui/x-grid';
 import CreateIcon from '@material-ui/icons/Create';
 import Button from '@material-ui/core/Button';
 import { useData } from '../hooks/useData';
@@ -298,12 +298,12 @@ export const ValueGetterAndFormatter = () => {
       { field: 'id', hide: true },
       {
         field: 'firstAge',
-        valueGetter: (params: ValueGetterParams) =>
+        valueGetter: (params: GridValueGetterParams) =>
           `${params.getValue('first')}_${params.getValue('age')}`,
       },
       {
         field: 'firstAgeFormatted',
-        valueGetter: (params: ValueGetterParams) =>
+        valueGetter: (params: GridValueGetterParams) =>
           `${params.getValue('first')}_${params.getValue('age')}`,
         valueFormatter: (params) => `${params.value} yrs`,
       },

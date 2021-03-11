@@ -69,19 +69,16 @@ describe('<XGrid /> - Events Params ', () => {
   };
 
   describe('columnHeaderParams', () => {
-    let eventArgs: { params: GridColParams; event: React.MouseEvent } | null = null;
-    let ageColumnElement;
-    beforeEach(() => {
+    it('should include the correct params', () => {
+      let eventArgs: { params: GridColParams; event: React.MouseEvent } | null = null;
       const handleClick = (params, event) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onColumnHeaderClick={handleClick} />);
 
-      ageColumnElement = getColumnHeaderCell(3);
+      const ageColumnElement = getColumnHeaderCell(3);
       fireEvent.click(ageColumnElement);
-    });
 
-    it('should include the correct params', () => {
       expect(eventArgs!.params).to.deep.include({
         colDef: apiRef!.current.getColumnFromField('age'),
         element: ageColumnElement,
@@ -93,20 +90,17 @@ describe('<XGrid /> - Events Params ', () => {
   });
 
   describe('RowsParams', () => {
-    let eventArgs: { params: GridRowParams; event: React.MouseEvent } | null = null;
-    let row1;
+    it('should include the correct params', () => {
+      let eventArgs: { params: GridRowParams; event: React.MouseEvent } | null = null;
 
-    beforeEach(() => {
       const handleClick = (params, event) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onRowClick={handleClick} />);
 
-      row1 = getRow(1);
+      const row1 = getRow(1);
       fireEvent.click(row1);
-    });
 
-    it('should include the correct params', () => {
       expect(eventArgs!.params).to.deep.include({
         id: 2,
         element: row1,
@@ -127,12 +121,12 @@ describe('<XGrid /> - Events Params ', () => {
         eventArgs = { params, event };
       };
       render(<TestEvents onCellClick={handleClick} />);
-
-      cell11 = getCell(1, 1);
-      fireEvent.click(cell11);
     });
 
     it('should include the correct params', () => {
+      cell11 = getCell(1, 1);
+      fireEvent.click(cell11);
+
       expect(eventArgs!.params).to.deep.include({
         id: 2,
         value: 'Jack',

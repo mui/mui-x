@@ -7,7 +7,7 @@ import {
 } from 'test/utils';
 import { useFakeTimers, stub } from 'sinon';
 import { expect } from 'chai';
-import { DataGrid, ValueGetterParams, GridToolbar } from '@material-ui/data-grid';
+import { DataGrid, GridValueGetterParams, GridToolbar } from '@material-ui/data-grid';
 import { getColumnValues, raf, sleep } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
@@ -170,7 +170,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           { field: 'id', hide: true },
           {
             field: 'fullName',
-            valueGetter: (params: ValueGetterParams) => params.getValue('age'),
+            valueGetter: (params: GridValueGetterParams) => params.getValue('age'),
           },
         ];
         expect(() => {

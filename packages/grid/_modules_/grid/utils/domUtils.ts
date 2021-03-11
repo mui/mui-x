@@ -78,9 +78,7 @@ export function getGridCellElementFromIndexes(
 }
 
 export function getGridColumnHeaderElement(root: Element, field: string) {
-  return root.querySelector(
-    `:scope [role='columnheader'][data-field='${field}']`,
-  ) as HTMLDivElement;
+  return root.querySelector(`[role='columnheader'][data-field='${field}']`) as HTMLDivElement;
 }
 
 export function getGridRowElement(root: Element, id: GridRowId) {
