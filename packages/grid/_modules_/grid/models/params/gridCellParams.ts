@@ -6,7 +6,7 @@ import { GridRowId, GridRowModel } from '../gridRows';
  */
 export interface GridCellParams {
   /**
-   * The grid row id
+   * The grid row id.
    */
   id: GridRowId;
   /**
