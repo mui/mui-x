@@ -1,4 +1,4 @@
-export const GRID_MULTIPLE_SELECTION_KEYS = ['Meta', 'Control'];
+export const GRID_MULTIPLE_SELECTION_KEYS = ['Meta', 'Control', 'Shift'];
 export const isMultipleKey = (key: string): boolean =>
   GRID_MULTIPLE_SELECTION_KEYS.indexOf(key) > -1;
 export const isTabKey = (key: string): boolean => key === 'Tab';
