@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GridColDef, XGrid, GridColTypeDef } from '@material-ui/x-grid';
+import { GridColDef, XGrid, GridColTypeDef, GridValueGetterParams } from '@material-ui/x-grid';
 import CreateIcon from '@material-ui/icons/Create';
 import Button from '@material-ui/core/Button';
 import { useData } from '../hooks/useData';
@@ -284,6 +284,35 @@ export const FlexColumnWidth2000 = () => {
   return (
     <div className="grid-container">
       <XGrid rows={data.rows} columns={transformColSizes(data.columns)} />
+    </div>
+  );
+};
+
+export const ValueGetterAndFormatter = () => {
+  const [data] = React.useState({
+    rows: [
+      { id: 1, first: 'mark', age: 1 },
+      { id: 2, first: 'jack', age: 2 },
+    ],
+    columns: [
+      { field: 'id', hide: true },
+      {
+        field: 'firstAge',
+        valueGetter: (params: GridValueGetterParams) =>
+          `${params.getValue('first')}_${params.getValue('age')}`,
+      },
+      {
+        field: 'firstAgeFormatted',
+        valueGetter: (params: GridValueGetterParams) =>
+          `${params.getValue('first')}_${params.getValue('age')}`,
+        valueFormatter: (params) => `${params.value} yrs`,
+      },
+    ],
+  });
+
+  return (
+    <div className="grid-container">
+      <XGrid rows={data.rows} columns={data.columns} />
     </div>
   );
 };

@@ -11,7 +11,6 @@ import {
 import { GridCell, GridCellProps } from './GridCell';
 import { GridApiContext } from './GridApiContext';
 import { classnames, isFunction } from '../utils';
-import { buildGridCellParams } from '../utils/paramsUtils';
 import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 
@@ -50,9 +49,9 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
     cellFocus,
     showCellRightBorder,
   } = props;
-  const api = React.useContext(GridApiContext);
-  const rowHeight = useGridSelector(api, gridDensityRowHeightSelector);
-  const editRowsState = useGridSelector(api, gridEditRowsStateSelector);
+  const apiRef = React.useContext(GridApiContext);
+  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
+  const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
 
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const isLastColumn = firstColIdx + colIdx === columns.length - 1;
@@ -63,15 +62,7 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
       ? showCellRightBorder
       : !removeLastBorderRight && !props.extendRowFullWidth;
 
-    let value = row[column.field!];
-    const cellParams: GridCellParams = buildGridCellParams({
-      rowModel: row,
-      colDef: column,
-      rowIndex,
-      colIndex: colIdx,
-      value,
-      api: api!.current!,
-    });
+    const cellParams: GridCellParams = apiRef!.current.getCellParams(row.id, column.field);
 
     let cssClassProp = { cssClass: '' };
     if (column.cellClassName) {
@@ -90,18 +81,6 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
     const editCellState = editRowsState[row.id] && editRowsState[row.id][column.field];
     let cellComponent: React.ReactElement | null = null;
 
-    if (column.valueGetter) {
-      // Value getter override the original value
-      value = column.valueGetter(cellParams);
-      cellParams.value = value;
-    }
-
-    let formattedValueProp = {};
-    if (column.valueFormatter) {
-      // TODO add formatted value to cellParams?
-      formattedValueProp = { formattedValue: column.valueFormatter(cellParams) };
-    }
-
     if (editCellState == null && column.renderCell) {
       cellComponent = column.renderCell(cellParams);
       cssClassProp = { cssClass: `${cssClassProp.cssClass} MuiDataGrid-cellWithRenderer` };
@@ -114,23 +93,24 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
     }
 
     const cellProps: GridCellProps & { children: any } = {
-      value,
+      value: cellParams.value,
       field: column.field,
       width,
+      rowId: row.id,
       height: rowHeight,
       showRightBorder,
-      ...formattedValueProp,
+      formattedValue: cellParams.formattedValue,
       align: column.align || 'left',
       ...cssClassProp,
       tabIndex: domIndex === 0 && colIdx === 0 ? 0 : -1,
       rowIndex,
-      colIndex: colIdx + firstColIdx,
+      colIndex: cellParams.colIndex,
       children: cellComponent,
       isEditable: cellParams.isEditable,
       hasFocus:
         cellFocus !== null &&
         cellFocus.rowIndex === rowIndex &&
-        cellFocus.colIndex === colIdx + firstColIdx,
+        cellFocus.colIndex === cellParams.colIndex,
     };
 
     return cellProps;

@@ -5,6 +5,7 @@ import {
   GRID_ROW_CSS_CLASS,
 } from '../constants/cssClassesConstants';
 import { GridCellIndexCoordinates } from '../models/gridCell';
+import { GridRowId } from '../models/gridRows';
 
 export function isOverflown(element: Element): boolean {
   return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
@@ -25,23 +26,12 @@ export function isGridCellRoot(elem: Element | null): boolean {
   return elem != null && elem.classList.contains(GRID_CELL_CSS_CLASS);
 }
 
-export function isGridCell(elem: Element | null): boolean {
-  return (
-    elem != null &&
-    (isGridCellRoot(elem) || findParentElementFromClassName(elem, GRID_CELL_CSS_CLASS) !== null)
-  );
-}
-
 export function isGridHeaderTitleContainer(elem: Element): boolean {
   return elem && findParentElementFromClassName(elem, GRID_HEADER_CELL_TITLE_CSS_CLASS) !== null;
 }
 
 export function getIdFromRowElem(rowEl: Element): string {
   return rowEl.getAttribute('data-id')!;
-}
-
-export function getFieldFromCellElem(cellEl: Element): string {
-  return cellEl.getAttribute('data-field')!;
 }
 
 export function getFieldFromHeaderElem(colCellEl: Element): string {
@@ -85,4 +75,20 @@ export function getGridCellElementFromIndexes(
   return root.querySelector(
     `:scope .${GRID_CELL_CSS_CLASS}[aria-colIndex='${colIndex}'][data-rowIndex='${rowIndex}']`,
   ) as HTMLDivElement;
+}
+
+export function getGridColumnHeaderElement(root: Element, field: string) {
+  return root.querySelector(`[role='columnheader'][data-field='${field}']`) as HTMLDivElement;
+}
+
+export function getGridRowElement(root: Element, id: GridRowId) {
+  return root.querySelector(`:scope .${GRID_ROW_CSS_CLASS}[data-id='${id}']`) as HTMLDivElement;
+}
+
+export function getGridCellElement(root: Element, { id, field }: { id: GridRowId; field: string }) {
+  const row = getGridRowElement(root, id);
+  if (!row) {
+    return null;
+  }
+  return row.querySelector(`.${GRID_CELL_CSS_CLASS}[data-field='${field}']`) as HTMLDivElement;
 }

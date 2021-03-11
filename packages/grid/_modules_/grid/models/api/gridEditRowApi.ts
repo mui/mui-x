@@ -1,4 +1,4 @@
-import { GridCellMode, GridCellValue } from '../gridCell';
+import { GridCellMode } from '../gridCell';
 import { GridEditRowsModel, GridEditRowUpdate } from '../gridEditRowModel';
 import { GridRowId } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
@@ -36,12 +36,6 @@ export interface GridEditRowApi {
    * @param update
    */
   commitCellChange: (id: GridRowId, update: GridEditRowUpdate) => void;
-  /**
-   * Get the cell value of a row and field.
-   * @param id
-   * @param field
-   */
-  getCellValue: (id: GridRowId, field: string) => GridCellValue;
   /**
    * Callback fired when the EditRowModel changed.
    * @param handler

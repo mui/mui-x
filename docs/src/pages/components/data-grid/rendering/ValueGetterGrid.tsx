@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { DataGrid, GridColDef, ValueGetterParams } from '@material-ui/data-grid';
+import { DataGrid, GridColDef, GridValueGetterParams } from '@material-ui/data-grid';
 
-function getFullName(params: ValueGetterParams) {
+function getFullName(params: GridValueGetterParams) {
   return `${params.getValue('firstName') || ''} ${
     params.getValue('lastName') || ''
   }`;

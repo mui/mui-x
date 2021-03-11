@@ -2,7 +2,11 @@ import * as React from 'react';
 import { GridCellValue } from '../gridCell';
 import { GridCellClassNamePropType, GridCellClassRules } from '../gridCellClass';
 import { GridFilterOperator } from '../gridFilterOperator';
-import { GridCellParams, ValueFormatterParams, ValueGetterParams } from '../params/gridCellParams';
+import {
+  GridCellParams,
+  GridValueFormatterParams,
+  GridValueGetterParams,
+} from '../params/gridCellParams';
 import { GridColParams } from '../params/gridColParams';
 import { GridComparatorFn } from '../gridSortModel';
 import { GridColType, GridNativeColTypes } from './gridColType';
@@ -74,12 +78,12 @@ export interface GridColDef {
    * Function that allows to get a specific data instead of field to render in the cell.
    * @param params
    */
-  valueGetter?: (params: ValueGetterParams) => GridCellValue;
+  valueGetter?: (params: GridValueGetterParams) => GridCellValue;
   /**
    * Function that allows to apply a formatter before rendering its value.
    * @param params
    */
-  valueFormatter?: (params: ValueFormatterParams) => GridCellValue;
+  valueFormatter?: (params: GridValueFormatterParams) => GridCellValue;
   /**
    * Class name that will be added in cells for that column.
    */

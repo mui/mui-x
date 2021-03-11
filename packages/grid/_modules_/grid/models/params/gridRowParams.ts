@@ -1,14 +1,18 @@
 import { GridCellValue } from '../gridCell';
-import { GridRowModel } from '../gridRows';
+import { GridRowId, GridRowModel } from '../gridRows';
 
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
  */
 export interface GridRowParams {
   /**
-   * The HTMLElement that triggered the event
+   * The grid row id.
    */
-  element?: HTMLElement;
+  id: GridRowId;
+  /**
+   * The HTMLElement row element.
+   */
+  element?: HTMLElement | null;
   /**
    * A function that let you get data from other columns.
    * @param field

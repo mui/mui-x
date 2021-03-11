@@ -7,7 +7,9 @@ import { GridEditRowApi } from '../../models/api/gridEditRowApi';
 
 export function EditInputCell(props: GridCellParams & InputBaseProps) {
   const {
+    id,
     value,
+    formattedValue,
     api,
     field,
     row,
@@ -51,7 +53,7 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
   );
 
   const inputType = mapColDefTypeToInputType(colDef.type);
-  const formattedValue =
+  const inputFormattedValue =
     valueState && isDate(valueState)
       ? formatDateToLocalInputDate({ value: valueState, withTime: colDef.type === 'dateTime' })
       : valueState;
@@ -66,7 +68,7 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
       fullWidth
       className="MuiDataGrid-editCellInputBase"
       onKeyDown={onKeyDown}
-      value={formattedValue}
+      value={inputFormattedValue}
       onChange={onValueChange}
       type={inputType}
       {...inputBaseProps}

@@ -23,7 +23,6 @@ import {
   GridSortModel,
   GridSortDirection,
 } from '../../../models/gridSortModel';
-import { buildGridCellParams } from '../../../utils/paramsUtils';
 import { isDesc, nextGridSortDirection } from '../../../utils/sortingUtils';
 import { isDeepEqual } from '../../../utils/utils';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
@@ -104,18 +103,8 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
           comparator(
             row1[field],
             row2[field],
-            buildGridCellParams({
-              api: apiRef.current,
-              colDef: apiRef.current.getColumnFromField(field),
-              rowModel: row1,
-              value: row1[field],
-            }),
-            buildGridCellParams({
-              api: apiRef.current,
-              colDef: apiRef.current.getColumnFromField(field),
-              rowModel: row2,
-              value: row2[field],
-            }),
+            apiRef.current.getCellParams(row1.id, field),
+            apiRef.current.getCellParams(row2.id, field),
           );
         return res;
       }, 0);

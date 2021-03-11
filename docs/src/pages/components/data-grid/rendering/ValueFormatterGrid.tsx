@@ -1,11 +1,15 @@
 import * as React from 'react';
-import { DataGrid, GridColDef, ValueFormatterParams } from '@material-ui/data-grid';
+import {
+  DataGrid,
+  GridColDef,
+  GridValueFormatterParams,
+} from '@material-ui/data-grid';
 
 const columns: GridColDef[] = [
   {
     field: 'date',
     headerName: 'Year',
-    valueFormatter: (params: ValueFormatterParams) =>
+    valueFormatter: (params: GridValueFormatterParams) =>
       (params.value as Date).getFullYear(),
   },
 ];

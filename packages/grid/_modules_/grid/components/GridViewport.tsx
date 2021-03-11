@@ -9,8 +9,8 @@ import { gridSelectionStateSelector } from '../hooks/features/selection/gridSele
 import { renderStateSelector } from '../hooks/features/virtualization/renderingStateSelector';
 import { optionsSelector } from '../hooks/utils/optionsSelector';
 import { GridApiContext } from './GridApiContext';
-import { GridLeftEmptyCell, GridRightEmptyCell } from './GridCell';
 import { GridDataContainer } from './containers/GridDataContainer';
+import { GridEmptyCell } from './GridEmptyCell';
 import { GridRenderingZone } from './GridRenderingZone';
 import { GridRow } from './GridRow';
 import { GridRowCells } from './GridRowCells';
@@ -56,7 +56,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
           selected={!!selectionState[r.id]}
           rowIndex={renderState.renderContext!.firstRowIdx! + idx}
         >
-          <GridLeftEmptyCell width={renderState.renderContext!.leftEmptyWidth} height={rowHeight} />
+          <GridEmptyCell width={renderState.renderContext!.leftEmptyWidth} height={rowHeight} />
           <GridRowCells
             columns={visibleColumns}
             row={r}
@@ -70,10 +70,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
             cellFocus={cellFocus}
             domIndex={idx}
           />
-          <GridRightEmptyCell
-            width={renderState.renderContext!.rightEmptyWidth}
-            height={rowHeight}
-          />
+          <GridEmptyCell width={renderState.renderContext!.rightEmptyWidth} height={rowHeight} />
         </GridRow>
       ));
     };

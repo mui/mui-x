@@ -1,8 +1,5 @@
 // Web standard events
 export const GRID_RESIZE = 'resize';
-export const GRID_CLICK = 'click';
-export const GRID_DOUBLE_CLICK = 'dblclick';
-export const GRID_MOUSE_HOVER = 'mouseover';
 export const GRID_FOCUS_OUT = 'focusout';
 export const GRID_KEYDOWN = 'keydown';
 export const GRID_KEYUP = 'keyup';
@@ -10,31 +7,42 @@ export const GRID_SCROLL = 'scroll';
 export const GRID_DRAGEND = 'dragend';
 
 // GRID events
-export const GRID_CELL_CHANGE = 'cellChange';
-export const GRID_CELL_CHANGE_COMMITTED = 'cellChangeCommitted';
-export const GRID_CELL_MODE_CHANGE = 'cellModeChange';
-export const GRID_EDIT_ROW_MODEL_CHANGE = 'editRowModelChange';
 export const GRID_COMPONENT_ERROR = 'componentError';
 export const GRID_UNMOUNT = 'unmount';
 export const GRID_ELEMENT_FOCUS_OUT = 'gridFocusOut';
+
+export const GRID_CELL_CHANGE = 'cellChange';
+export const GRID_CELL_CHANGE_COMMITTED = 'cellChangeCommitted';
+export const GRID_CELL_MODE_CHANGE = 'cellModeChange';
 export const GRID_CELL_CLICK = 'cellClick';
-export const GRID_DOUBLE_CELL_CLICK = 'doubleCellClick';
-export const GRID_CELL_HOVER = 'cellHover';
+export const GRID_CELL_DOUBLE_CLICK = 'cellDoubleClick';
+export const GRID_CELL_OVER = 'cellOver';
+export const GRID_CELL_OUT = 'cellOut';
+export const GRID_CELL_ENTER = 'cellEnter';
+export const GRID_CELL_LEAVE = 'cellLeave';
+
 export const GRID_ROW_CLICK = 'rowClick';
-export const GRID_DOUBLE_ROW_CLICK = 'doubleRowClick';
-export const GRID_ROW_HOVER = 'rowHover';
+export const GRID_ROW_DOUBLE_CLICK = 'rowDoubleClick';
+export const GRID_ROW_OVER = 'rowOver';
+export const GRID_ROW_OUT = 'rowOut';
+export const GRID_ROW_ENTER = 'rowEnter';
+export const GRID_ROW_LEAVE = 'rowLeave';
+
+export const GRID_COLUMN_HEADER_CLICK = 'columnHeaderClick';
+export const GRID_COLUMN_HEADER_DOUBLE_CLICK = 'columnHeaderDoubleClick';
+export const GRID_COLUMN_HEADER_OVER = 'columnHeaderOver';
+export const GRID_COLUMN_HEADER_OUT = 'columnHeaderOut';
+export const GRID_COLUMN_HEADER_ENTER = 'columnHeaderEnter';
+export const GRID_COLUMN_HEADER_LEAVE = 'columnHeaderLeave';
+
+export const GRID_EDIT_ROW_MODEL_CHANGE = 'editRowModelChange';
 export const GRID_ROW_SELECTED = 'rowSelected';
 export const GRID_SELECTION_CHANGED = 'selectionChange';
-export const GRID_COLUMN_HEADER_CLICK = 'columnClick';
-export const GRID_COLUMN_HEADER_HOVER = 'columnHeaderHover';
+
 export const GRID_PAGE_CHANGED = 'pageChange';
 export const GRID_PAGESIZE_CHANGED = 'pageSizeChange';
-export const GRID_COLUMN_FILTER_BUTTON_CLICK = 'colFilterButtonClick';
-export const GRID_COLUMN_MENU_BUTTON_CLICK = 'colMenuButtonClick';
 
-export const GRID_SCROLLING_START = 'scrolling:start';
 export const GRID_SCROLLING = 'scrolling';
-export const GRID_SCROLLING_STOP = 'scrolling:stop';
 
 export const GRID_COL_RESIZE_START = 'colResizing:start';
 export const GRID_COL_RESIZE_STOP = 'colResizing:stop';
