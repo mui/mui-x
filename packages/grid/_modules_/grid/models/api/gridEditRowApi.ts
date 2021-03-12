@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { GridCellMode } from '../gridCell';
 import { GridEditCellProps, GridEditRowsModel, GridEditRowUpdate } from '../gridEditRowModel';
 import { GridRowId } from '../gridRows';

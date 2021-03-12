@@ -16,7 +16,7 @@ import { GridCellParams } from '../../../models/params/gridCellParams';
 import {
   findParentElementFromClassName,
   getIdFromRowElem,
-  getRowEl,
+  getRowEl, isGridCellRoot,
 } from '../../../utils/domUtils';
 import {
   isCellEditCommitKeys,
@@ -165,6 +165,9 @@ export const useGridKeyboard = (
         if (!event.isPropagationStopped() && isCellExitEditModeKeys(event.key)) {
           apiRef.current.publishEvent(GRID_CELL_EXIT_EDIT, params, event);
         }
+        return;
+      }
+      if(!isGridCellRoot(document.activeElement)) {
         return;
       }
 

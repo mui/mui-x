@@ -119,7 +119,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
       ref={cellRef}
       className={cssClasses}
       role="cell"
-      data-rowId={rowId}
+      data-rowid={rowId}
       data-value={value}
       data-field={field}
       data-rowindex={rowIndex}

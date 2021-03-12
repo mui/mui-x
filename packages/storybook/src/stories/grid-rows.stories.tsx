@@ -482,7 +482,7 @@ export function EditRowsControl() {
   );
 
   const onEditCellChangeCommitted = React.useCallback(
-    (params: GridEditCellParams, event: React.SyntheticEvent) => {
+    (params: GridEditCellParams, event?: React.SyntheticEvent) => {
       const { id, update } = params;
       event.persist();
       // we stop propagation as we want to switch back to view mode after we updated the value on the server
