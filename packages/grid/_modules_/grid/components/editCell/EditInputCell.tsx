@@ -1,11 +1,9 @@
 import * as React from 'react';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
-import { GRID_CELL_KEYDOWN, GRID_KEYDOWN } from '../../constants/eventsConstants';
-import { GridApi } from '../../models/api/gridApi';
 import { GridCellParams } from '../../models/params/gridCellParams';
+import { isCellEditCommitKeys } from '../../utils/keyboardUtils';
 import { formatDateToLocalInputDate, isDate, mapColDefTypeToInputType } from '../../utils/utils';
 import { GridEditRowUpdate } from '../../models/gridEditRowModel';
-import { GridEditRowApi } from '../../models/api/gridEditRowApi';
 
 export function EditInputCell(props: GridCellParams & InputBaseProps) {
   const {
@@ -23,7 +21,6 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
     ...inputBaseProps
   } = props;
 
-  const editRowApi = api as GridApi;
   const [valueState, setValueState] = React.useState(value);
 
   const onValueChange = React.useCallback(
@@ -34,20 +31,19 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
         value: colDef.type === 'date' || colDef.type === 'dateTime' ? new Date(newValue) : newValue,
       };
       setValueState(newValue);
-      editRowApi.setEditCellProps(row.id, update);
+      api.setEditCellProps(row.id, update);
     },
-    [editRowApi, colDef.type, field, row.id],
+    [api, colDef.type, field, row.id],
   );
 
   const onKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
-      if (!inputBaseProps.error && (event.key === 'Enter' || event.key === 'Tab')) {
-        const update: GridEditRowUpdate = {};
-        update[field] = { value };
-        editRowApi.commitCellChange(row.id, update);
+      if (inputBaseProps.error && isCellEditCommitKeys(event.key)) {
+        event.preventDefault();
+        event.stopPropagation();
       }
     },
-    [inputBaseProps.error, row.id, field, value, editRowApi],
+    [inputBaseProps.error],
   );
 
   const inputType = mapColDefTypeToInputType(colDef.type);

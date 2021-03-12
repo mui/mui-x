@@ -15,6 +15,7 @@ import {
   useGridApiRef,
   XGrid,
   GridEditCellParams,
+  GRID_CELL_EXIT_EDIT,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
@@ -446,10 +447,9 @@ export function EditRowsControl() {
     if (!selectedCell) {
       return;
     }
-    const [id, field, ] = selectedCell;
+    const [id, field] = selectedCell;
 
     apiRef.current.setCellMode(id, field, 'edit');
-
   }, [apiRef, selectedCell]);
 
   const onCellClick = React.useCallback((params: GridCellParams) => {
@@ -482,31 +482,30 @@ export function EditRowsControl() {
   );
 
   const onEditCellChangeCommitted = React.useCallback(
-    ({ id, update }: GridEditCellParams) => {
-      const field = Object.keys(update)[0]!;
-      const rowUpdate = { id };
-      rowUpdate[field] = update[field].value;
+    (params: GridEditCellParams, event: React.SyntheticEvent) => {
+      const { id, update } = params;
+      event.persist();
+      // we stop propagation as we want to switch back to view mode after we updated the value on the server
+      event.stopPropagation();
 
-      if (update.email) {
-        const newState = {};
-        const componentProps = {
-          endAdornment: <GridLoadIcon />,
-        };
-        newState[id] = {};
-        newState[id][field] = { ...update.email, ...componentProps };
-        setEditRowsModel((state) => ({ ...state, ...newState }));
-        setTimeout(() => {
-          apiRef.current.updateRows([rowUpdate]);
-          // apiRef.current.setCellMode(id, field, 'view');
-        }, 2000);
-      } else if (update.fullname && update.fullname.value) {
+      const field = Object.keys(update)[0]!;
+      let cellUpdate: any = { id };
+      cellUpdate[field] = update[field].value;
+
+      const newState = {};
+      newState[id] = {};
+      newState[id][field] = { ...update[field], endAdornment: <GridLoadIcon /> };
+      setEditRowsModel((state) => ({ ...state, ...newState }));
+
+      if (update.fullname && update.fullname.value) {
         const [firstname, lastname] = update.fullname.value.toString().split(' ');
-        apiRef.current.updateRows([{ id, firstname, lastname }]);
-        // apiRef.current.setCellMode(id, field, 'view');
-      } else {
-        apiRef.current.updateRows([rowUpdate]);
-        // apiRef.current.setCellMode(id, field, 'view');
+        cellUpdate = { id, firstname, lastname };
       }
+
+      setTimeout(() => {
+        apiRef.current.updateRows([cellUpdate]);
+        apiRef.current.publishEvent(GRID_CELL_EXIT_EDIT, params, event);
+      }, randomInt(300, 2000));
     },
     [apiRef],
   );
@@ -557,9 +556,9 @@ singleData.columns[0].width = 200;
 
 export function SingleCellBasic() {
   return (
-      <div className="grid-container">
-        <XGrid {...singleData} onEditRowModelChange={action('onEditRowsModelChange')} />
-      </div>
+    <div className="grid-container">
+      <XGrid {...singleData} onEditRowModelChange={action('onEditRowsModelChange')} />
+    </div>
   );
 }
 export function CommodityEdit() {
@@ -569,9 +568,9 @@ export function CommodityEdit() {
   });
 
   return (
-      <div style={{ width: '100%', height: 600 }}>
-        <XGrid {...data} />
-      </div>
+    <div style={{ width: '100%', height: 600 }}>
+      <XGrid {...data} />
+    </div>
   );
 }
 

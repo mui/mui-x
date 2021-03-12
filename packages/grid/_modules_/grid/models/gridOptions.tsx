@@ -390,7 +390,7 @@ export interface GridOptions {
    * Callback fired when the cell changes are committed.
    * @param handler
    */
-  onEditCellChangeCommitted?: (params: GridEditCellParams) => void;
+  onEditCellChangeCommitted?: (params: GridEditCellParams, event: React.SyntheticEvent) => void;
   /**
    * Extend native column types with your new column types.
    */

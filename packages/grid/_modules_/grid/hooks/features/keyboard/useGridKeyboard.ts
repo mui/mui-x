@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { GRID_ROW_CSS_CLASS } from '../../../constants/cssClassesConstants';
 import {
-  GRID_CELL_ENTER_EDIT_KEY_DOWN,
-  GRID_CELL_EXIT_EDIT_KEY_DOWN,
+  GRID_CELL_CHANGE_COMMITTED,
+  GRID_CELL_ENTER_EDIT,
+  GRID_CELL_EXIT_EDIT,
   GRID_CELL_KEYDOWN,
   GRID_CELL_NAVIGATION_KEYDOWN,
   GRID_ELEMENT_FOCUS_OUT,
@@ -18,8 +19,9 @@ import {
   getRowEl,
 } from '../../../utils/domUtils';
 import {
-  isEnterEditCellKeys,
-  isExitEditCellKeys,
+  isCellEditCommitKeys,
+  isCellEnterEditModeKeys,
+  isCellExitEditModeKeys,
   isMultipleKey,
   isNavigationKey,
   isSpaceKey,
@@ -155,23 +157,19 @@ export const useGridKeyboard = (
     (params: GridCellParams, event: React.KeyboardEvent) => {
       const isEditMode = params.cellMode === 'edit';
 
-      if (isEditMode && isExitEditCellKeys(event.key)) {
-        apiRef.current.publishEvent(GRID_CELL_EXIT_EDIT_KEY_DOWN, params, event);
-
-        if (event.key === 'Enter') {
-          apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEYDOWN, params, event);
-        }
-        if (event.key === 'Tab') {
-          apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEYDOWN, params, event);
-        }
-      }
-
       if (isEditMode) {
+        if (isCellEditCommitKeys(event.key)) {
+          const cellCommitParams = apiRef.current.getEditCellParams(params.id, params.field);
+          apiRef.current.publishEvent(GRID_CELL_CHANGE_COMMITTED, cellCommitParams, event);
+        }
+        if (!event.isPropagationStopped() && isCellExitEditModeKeys(event.key)) {
+          apiRef.current.publishEvent(GRID_CELL_EXIT_EDIT, params, event);
+        }
         return;
       }
 
-      if (isEnterEditCellKeys(event.key)) {
-        apiRef.current.publishEvent(GRID_CELL_ENTER_EDIT_KEY_DOWN, params, event);
+      if (isCellEnterEditModeKeys(event.key)) {
+        apiRef.current.publishEvent(GRID_CELL_ENTER_EDIT, params, event);
       }
 
       if (isSpaceKey(event.key) && event.shiftKey) {

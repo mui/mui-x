@@ -22,8 +22,8 @@ export const GRID_CELL_ENTER = 'cellEnter';
 export const GRID_CELL_LEAVE = 'cellLeave';
 export const GRID_CELL_KEYDOWN = 'cellKeyDown';
 
-export const GRID_CELL_ENTER_EDIT_KEY_DOWN = 'cellEnterEditKeyDown';
-export const GRID_CELL_EXIT_EDIT_KEY_DOWN = 'cellExitEditKeyDown';
+export const GRID_CELL_ENTER_EDIT = 'cellEnterEdit';
+export const GRID_CELL_EXIT_EDIT = 'cellExitEdit';
 export const GRID_CELL_NAVIGATION_KEYDOWN = 'cellNavigationKeyDown';
 
 export const GRID_ROW_CLICK = 'rowClick';

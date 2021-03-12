@@ -5,8 +5,9 @@ import {
   GRID_CELL_CHANGE_COMMITTED,
   GRID_ROW_EDIT_MODEL_CHANGE,
   GRID_CELL_DOUBLE_CLICK,
-  GRID_CELL_ENTER_EDIT_KEY_DOWN,
-  GRID_CELL_EXIT_EDIT_KEY_DOWN,
+  GRID_CELL_ENTER_EDIT,
+  GRID_CELL_EXIT_EDIT,
+  GRID_CELL_NAVIGATION_KEYDOWN,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridEditRowApi } from '../../../models/api/gridEditRowApi';
@@ -31,19 +32,26 @@ export function useGridEditRows(apiRef: GridApiRef) {
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
 
-  const setCellEditMode = React.useCallback(
-    ({ id, field }: { id: GridRowId; field: string }) => {
+  const setCellMode = React.useCallback(
+    (id, field, mode: GridCellMode) => {
       let hasChanged = false;
       setGridState((state) => {
-        if (state.editRows[id] && state.editRows[id][field]) {
+        const stateExist = state.editRows[id] && state.editRows[id][field];
+        const newEditRowsState: GridEditRowsModel = { ...state.editRows };
+        if ((mode === 'edit' && stateExist) || (mode === 'view' && !stateExist)) {
           return state;
         }
 
-        const currentCellEditState: GridEditRowsModel = { ...state.editRows };
-        currentCellEditState[id] = { ...currentCellEditState[id] } || {};
-        currentCellEditState[id][field] = { value: apiRef.current.getCellValue(id, field) };
+        if (mode === 'edit') {
+          newEditRowsState[id] = { ...newEditRowsState[id] } || {};
+          newEditRowsState[id][field] = { value: apiRef.current.getCellValue(id, field) };
+        } else {
+          delete newEditRowsState[id][field];
+          if (!Object.keys(newEditRowsState[id]).length) {
+            delete newEditRowsState[id];
+          }
+        }
 
-        const newEditRowsState: GridEditRowsModel = { ...state.editRows, ...currentCellEditState };
         hasChanged = true;
         return { ...state, editRows: newEditRowsState };
       });
@@ -55,7 +63,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
       apiRef.current.publishEvent(GRID_CELL_MODE_CHANGE, {
         id,
         field,
-        mode: 'edit',
+        mode,
         api: apiRef.current,
       });
 
@@ -68,55 +76,6 @@ export function useGridEditRows(apiRef: GridApiRef) {
     [apiRef, forceUpdate, setGridState],
   );
 
-  const setCellViewMode = React.useCallback(
-    ({ id, field }) => {
-      let hasChanged = false;
-      setGridState((state) => {
-        const newEditRowsState: GridEditRowsModel = { ...state.editRows };
-
-        if (!newEditRowsState[id] || !newEditRowsState[id][field]) {
-          return state;
-        }
-
-        if (newEditRowsState[id][field]) {
-          delete newEditRowsState[id][field];
-          if (!Object.keys(newEditRowsState[id]).length) {
-            delete newEditRowsState[id];
-          }
-        }
-        hasChanged = true;
-        return { ...state, editRows: newEditRowsState };
-      });
-      if (!hasChanged) {
-        return;
-      }
-      forceUpdate();
-      const params: GridCellModeChangeParams = {
-        id,
-        field,
-        mode: 'view',
-        api: apiRef.current,
-      };
-      apiRef.current.publishEvent(GRID_CELL_MODE_CHANGE, params);
-      const editRowParams: GridEditRowModelParams = {
-        api: apiRef.current,
-        model: apiRef.current.getState().editRows,
-      };
-      apiRef.current.publishEvent(GRID_ROW_EDIT_MODEL_CHANGE, editRowParams);
-    },
-    [apiRef, forceUpdate, setGridState],
-  );
-
-  const setCellMode = React.useCallback(
-    (id, field, mode: GridCellMode) => {
-      if (mode === 'edit') {
-        setCellEditMode({ id, field });
-      } else {
-        setCellViewMode({ id, field });
-      }
-    },
-    [setCellEditMode, setCellViewMode],
-  );
   const getCellMode = React.useCallback(
     (id, field) => {
       const editState = apiRef.current.getState().editRows;
@@ -127,22 +86,17 @@ export function useGridEditRows(apiRef: GridApiRef) {
   );
 
   const isCellEditable = React.useCallback(
-    (params: GridCellParams) => {
-      return (
-        params.colDef.editable &&
-        params.colDef!.renderEditCell &&
-        (!options.isCellEditable || options.isCellEditable(params))
-      );
-    },
+    (params: GridCellParams) =>
+      params.colDef.editable &&
+      params.colDef!.renderEditCell &&
+      (!options.isCellEditable || options.isCellEditable(params)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [options.isCellEditable],
   );
 
   const commitCellChange = React.useCallback(
-    (id: GridRowId, update: GridEditRowUpdate) => {
+    ({ id, update }: GridEditCellParams) => {
       if (options.editMode === GridFeatureModeConstant.server) {
-        const params: GridEditCellParams = { api: apiRef.current, id, update };
-        apiRef.current.publishEvent(GRID_CELL_CHANGE_COMMITTED, params);
         return;
       }
       const field = Object.keys(update).find((key) => key !== 'id')!;
@@ -155,8 +109,10 @@ export function useGridEditRows(apiRef: GridApiRef) {
 
   const setEditCellProps = React.useCallback(
     (id: GridRowId, update: GridEditRowUpdate) => {
+      const field = Object.keys(update).find((key) => key !== 'id')!;
       if (options.editMode === GridFeatureModeConstant.server) {
-        const params: GridEditCellParams = { api: apiRef.current, id, update };
+        const params = apiRef.current.getEditCellParams(id, field);
+        params.update = update;
         apiRef.current.publishEvent(GRID_CELL_CHANGE, params);
         return;
       }
@@ -178,16 +134,41 @@ export function useGridEditRows(apiRef: GridApiRef) {
     [apiRef, forceUpdate, options.editMode, setGridState],
   );
 
+  const getEditCellProps = React.useCallback(
+    (id: GridRowId, field: string) => {
+      const model = apiRef.current.getEditRowsModel();
+      if (!model[id]) {
+        return null;
+      }
+      return model[id][field] || null;
+    },
+    [apiRef],
+  );
+
   const setEditRowsModel = React.useCallback(
     (editRows: GridEditRowsModel) => {
-      setGridState((state) => {
-        const newState = { ...state, editRows };
-        return newState;
-      });
+      setGridState((state) => ({ ...state, editRows }));
       forceUpdate();
     },
     [forceUpdate, setGridState],
   );
+
+  const getEditRowsModel = React.useCallback(
+    (): GridEditRowsModel => apiRef.current.getState().editRows,
+    [apiRef],
+  );
+
+  const getEditCellParams = React.useCallback(
+    (id: GridRowId, field: string) => {
+      const params = apiRef.current.getCellParams(id, field);
+      const fieldProps = apiRef.current.getEditCellProps(id, field);
+      const update = {};
+      update[params.field] = fieldProps;
+      return { ...params, update };
+    },
+    [apiRef],
+  );
+
   // TODO cleanup params What should we put?
   const onEditRowModelChange = React.useCallback(
     (handler: (param: GridEditRowModelParams) => void): (() => void) => {
@@ -214,28 +195,37 @@ export function useGridEditRows(apiRef: GridApiRef) {
     [apiRef],
   );
 
-  // TAKE an appraoch link to the action so we can map the keyboard to a generic event
-  //
   const handleEnterEdit = React.useCallback(
     (params: GridCellParams, event: React.MouseEvent | React.KeyboardEvent) => {
       if (!params.isEditable) {
         return;
       }
-      setCellEditMode(params);
+      setCellMode(params.id, params.field, 'edit');
       if (isKeyboardEvent(event) && isDeleteKeys(event.key)) {
         const update = {};
         update[params.field] = { value: '' };
         apiRef.current.setEditCellProps(params.id, update);
       }
     },
-    [apiRef, setCellEditMode],
+    [apiRef, setCellMode],
+  );
+
+  const handleExitEdit = React.useCallback(
+    (params: GridCellParams, event: React.SyntheticEvent) => {
+      setCellMode(params.id, params.field, 'view');
+      if (isKeyboardEvent(event) && (event.key === 'Enter' || event.key === 'Tab')) {
+        apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEYDOWN, params, event);
+      }
+    },
+    [apiRef, setCellMode],
   );
 
   useGridApiEventHandler(apiRef, GRID_CELL_DOUBLE_CLICK, handleEnterEdit);
-  useGridApiEventHandler(apiRef, GRID_CELL_ENTER_EDIT_KEY_DOWN, handleEnterEdit);
-  useGridApiEventHandler(apiRef, GRID_CELL_EXIT_EDIT_KEY_DOWN, setCellViewMode);
+  useGridApiEventHandler(apiRef, GRID_CELL_ENTER_EDIT, handleEnterEdit);
+  useGridApiEventHandler(apiRef, GRID_CELL_EXIT_EDIT, handleExitEdit);
 
   useGridApiEventHandler(apiRef, GRID_CELL_CHANGE, options.onEditCellChange);
+  useGridApiEventHandler(apiRef, GRID_CELL_CHANGE_COMMITTED, commitCellChange);
   useGridApiEventHandler(apiRef, GRID_CELL_CHANGE_COMMITTED, options.onEditCellChangeCommitted);
   useGridApiEventHandler(apiRef, GRID_CELL_MODE_CHANGE, options.onCellModeChange);
   useGridApiEventHandler(apiRef, GRID_ROW_EDIT_MODEL_CHANGE, options.onEditRowModelChange);
@@ -245,14 +235,17 @@ export function useGridEditRows(apiRef: GridApiRef) {
     {
       setCellMode,
       getCellMode,
+      isCellEditable,
+      commitCellChange,
+      setEditCellProps,
+      getEditCellProps,
+      getEditCellParams,
+      setEditRowsModel,
+      getEditRowsModel,
       onEditRowModelChange,
       onCellModeChange,
       onEditCellChangeCommitted,
       onEditCellChange,
-      isCellEditable,
-      commitCellChange,
-      setEditCellProps,
-      setEditRowsModel,
     },
     'EditRowApi',
   );

@@ -2,13 +2,17 @@ export const GRID_MULTIPLE_SELECTION_KEYS = ['Meta', 'Control', 'Shift'];
 export const isMultipleKey = (key: string): boolean =>
   GRID_MULTIPLE_SELECTION_KEYS.indexOf(key) > -1;
 
-export const GRID_ENTER_EDIT_CELL_KEYS = ['Enter', 'Delete', 'Backspace'];
-export const isEnterEditCellKeys = (key: string): boolean =>
-  GRID_ENTER_EDIT_CELL_KEYS.indexOf(key) > -1;
+export const GRID_CELL_ENTER_EDIT_MODE_KEYS = ['Enter', 'Delete', 'Backspace'];
+export const isCellEnterEditModeKeys = (key: string): boolean =>
+  GRID_CELL_ENTER_EDIT_MODE_KEYS.indexOf(key) > -1;
 
-export const GRID_EXIT_EDIT_CELL_KEYS = ['Enter', 'Escape', 'Tab'];
-export const isExitEditCellKeys = (key: string): boolean =>
-  GRID_EXIT_EDIT_CELL_KEYS.indexOf(key) > -1;
+export const GRID_CELL_EXIT_EDIT_MODE_KEYS = ['Enter', 'Escape', 'Tab'];
+export const isCellExitEditModeKeys = (key: string): boolean =>
+  GRID_CELL_EXIT_EDIT_MODE_KEYS.indexOf(key) > -1;
+
+export const GRID_CELL_EDIT_COMMIT_KEYS = ['Enter', 'Tab'];
+export const isCellEditCommitKeys = (key: string): boolean =>
+  GRID_CELL_EDIT_COMMIT_KEYS.indexOf(key) > -1;
 
 export const isTabKey = (key: string): boolean => key === 'Tab';
 

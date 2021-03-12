@@ -1,18 +1,10 @@
 import * as React from 'react';
 import { gridContainerSizesSelector } from '../../../components/GridViewport';
-import { GRID_CELL_CSS_CLASS } from '../../../constants/cssClassesConstants';
 import { GRID_CELL_NAVIGATION_KEYDOWN } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
 import { GridCellParams } from '../../../models/params/gridCellParams';
-import { findParentElementFromClassName } from '../../../utils/domUtils';
-import {
-  isArrowKeys,
-  isHomeOrEndKeys,
-  isMultipleKey,
-  isPageKeys,
-  isSpaceKey,
-} from '../../../utils/keyboardUtils';
+import { isArrowKeys, isHomeOrEndKeys, isPageKeys, isSpaceKey } from '../../../utils/keyboardUtils';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { visibleGridColumnsLengthSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
