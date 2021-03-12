@@ -2,7 +2,7 @@ import {
   GridApiRef,
   GridComponentProps,
   GridRowData,
-  GRID_ROWS_SCROLL_END,
+  GRID_ROWS_SCROLL,
   useGridApiRef,
   XGrid,
 } from '@material-ui/x-grid';
@@ -282,11 +282,11 @@ describe('<XGrid /> - apiRef', () => {
     expect(cellNike.classList.contains('MuiDataGrid-cellEditing')).to.equal(true);
   });
 
-  it('publishing GRID_ROWS_SCROLL_END should call onRowsScrollEnd callback', () => {
+  it('publishing GRID_ROWS_SCROLL should call onRowsScrollEnd callback', () => {
     const handleOnRowsScrollEnd = spy();
 
     render(<TestCase onRowsScrollEnd={handleOnRowsScrollEnd} />);
-    apiRef.current.publishEvent(GRID_ROWS_SCROLL_END);
+    apiRef.current.publishEvent(GRID_ROWS_SCROLL);
     expect(handleOnRowsScrollEnd.callCount).to.equal(1);
   });
 });

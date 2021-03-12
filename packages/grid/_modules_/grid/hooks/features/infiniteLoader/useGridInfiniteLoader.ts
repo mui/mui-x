@@ -2,8 +2,7 @@ import * as React from 'react';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridSelector } from '../core/useGridSelector';
-import { useNativeEventListener } from '../../root/useNativeEventListener';
-import { GRID_NATIVE_SCROLL, GRID_ROWS_SCROLL_END } from '../../../constants/eventsConstants';
+import { GRID_ROWS_SCROLL, GRID_ROWS_SCROLL_END } from '../../../constants/eventsConstants';
 import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndParams';
@@ -19,9 +18,10 @@ export const useGridInfiniteLoader = (
   const isInScrollBottomArea = React.useRef<boolean>(false);
 
   const handleGridScroll = React.useCallback(
-    (event) => {
+    (position) => {
       const scrollPositionBottom =
-        event.target.scrollTop + containerSizes?.windowSizes.height + options.scrollEndThreshold;
+        position &&
+        position.absoluteTop + containerSizes?.windowSizes.height + options.scrollEndThreshold;
 
       if (containerSizes && scrollPositionBottom >= containerSizes.dataContainerSizes.height) {
         if (!isInScrollBottomArea.current) {
@@ -41,8 +41,6 @@ export const useGridInfiniteLoader = (
     [options, containerSizes, apiRef, visibleColumns],
   );
 
-  useNativeEventListener(apiRef, windowRef, GRID_NATIVE_SCROLL, handleGridScroll, {
-    passive: true,
-  });
+  useGridApiEventHandler(apiRef, GRID_ROWS_SCROLL, handleGridScroll);
   useGridApiEventHandler(apiRef, GRID_ROWS_SCROLL_END, options.onRowsScrollEnd);
 };

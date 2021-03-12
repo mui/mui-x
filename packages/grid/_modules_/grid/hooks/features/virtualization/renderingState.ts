@@ -13,9 +13,9 @@ export interface InternalRenderingState {
 
 export const getInitialGridRenderingState = (): InternalRenderingState => {
   return {
-    realScroll: { left: 0, top: 0 },
+    realScroll: { left: 0, top: 0, absoluteTop: 0 },
     renderContext: null,
-    renderingZoneScroll: { left: 0, top: 0 },
+    renderingZoneScroll: { left: 0, top: 0, absoluteTop: 0 },
     virtualPage: 0,
     virtualRowsCount: 0,
     renderedSizes: null,
