@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridOverlay } from '@material-ui/data-grid';
+import { XGrid, GridOverlay } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
@@ -30,7 +30,7 @@ export default function InfiniteLoadingGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
+      <XGrid
         {...data}
         loading={loading}
         hideFooterPagination
