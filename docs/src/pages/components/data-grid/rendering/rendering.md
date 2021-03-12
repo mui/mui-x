@@ -214,14 +214,6 @@ This means that the number of rows will drive the height of the grid and consequ
 
 {{"demo": "pages/components/data-grid/rendering/AutoHeightGrid.js", "bg": "inline"}}
 
-### Infinite loading
-
-The grid provides a `onRowsScrollEnd` prop that can be used to load additional rows when the scroll reaches the bottom of the viewport area.
-
-In addition, the area in which the callback provided to the `onRowsScrollEnd` is called can be changed using `scrollEndThreshold`.
-
-{{"demo": "pages/components/data-grid/rendering/InfiniteLoadingGrid.js", "bg": "inline"}}
-
 ## Density
 
 You can change the density of the rows and the column header.
