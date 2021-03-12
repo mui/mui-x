@@ -53,16 +53,14 @@ export const RenderInputInCell = () => {
   );
 };
 export const InfiniteLoading = () => {
-  const [rowLengthSize, setRowLengthSize] = React.useState(20);
   const { loading, data, setRowLength, loadNewData } = useDemoData({
     dataSet: 'Commodity',
-    rowLength: rowLengthSize,
+    rowLength: 20,
     maxColumns: 20,
   });
 
   const handleOnRowsScrollEnd = (params) => {
-    const newRowLength = rowLengthSize + params.viewportPageSize;
-    setRowLengthSize(newRowLength);
+    const newRowLength = params.virtualRowsCount + params.viewportPageSize;
     setRowLength(newRowLength);
     loadNewData();
   };
