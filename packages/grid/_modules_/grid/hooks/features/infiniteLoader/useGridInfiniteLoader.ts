@@ -21,9 +21,7 @@ export const useGridInfiniteLoader = (
   const handleGridScroll = React.useCallback(
     (event) => {
       const scrollPositionBottom =
-        event.target.scrollTop +
-        containerSizes?.windowSizes.height +
-        options.scrollEndThreshold;
+        event.target.scrollTop + containerSizes?.windowSizes.height + options.scrollEndThreshold;
 
       if (containerSizes && scrollPositionBottom >= containerSizes.dataContainerSizes.height) {
         if (!isInScrollBottomArea.current) {
