@@ -8,10 +8,7 @@ import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndParams';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 
-export const useGridInfiniteLoader = (
-  windowRef: React.MutableRefObject<HTMLDivElement | null>,
-  apiRef: GridApiRef,
-): void => {
+export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
   const options = useGridSelector(apiRef, optionsSelector);
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);

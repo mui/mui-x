@@ -28,7 +28,7 @@ It replaces the previous values. This approach has some drawbacks:
 - You need to provide all the rows.
 - You might create a performance bottleneck when preparing the rows array to provide to the grid.
 
-### Infinite loading
+### Infinite loading [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 The grid provides a `onRowsScrollEnd` prop that can be used to load additional rows when the scroll reaches the bottom of the viewport area.
 
