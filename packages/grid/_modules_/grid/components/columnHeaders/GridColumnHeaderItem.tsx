@@ -1,8 +1,14 @@
 import * as React from 'react';
-import { GRID_COLUMN_HEADER_CLICK } from '../../constants/eventsConstants';
+import {
+  GRID_COLUMN_HEADER_CLICK,
+  GRID_COLUMN_HEADER_DOUBLE_CLICK,
+  GRID_COLUMN_HEADER_ENTER,
+  GRID_COLUMN_HEADER_LEAVE,
+  GRID_COLUMN_HEADER_OUT,
+  GRID_COLUMN_HEADER_OVER,
+} from '../../constants/eventsConstants';
 import { GridColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
 import { GridOptions } from '../../models/gridOptions';
-import { GridColParams } from '../../models/params/gridColParams';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { GridApiContext } from '../GridApiContext';
 import { GRID_HEADER_CELL_CSS_CLASS } from '../../constants/cssClassesConstants';
@@ -73,15 +79,28 @@ export const GridColumnHeaderItem = ({
       }),
     [apiRef, column],
   );
-  const onHeaderTitleClick = React.useCallback(() => {
-    const colHeaderParams: GridColParams = {
-      field: column.field,
-      colDef: column,
-      colIndex,
-      api: apiRef!.current,
-    };
-    apiRef!.current.publishEvent(GRID_COLUMN_HEADER_CLICK, colHeaderParams);
-  }, [apiRef, colIndex, column]);
+
+  const publish = React.useCallback(
+    (eventName: string) => (event: React.MouseEvent) =>
+      apiRef!.current.publishEvent(
+        eventName,
+        apiRef!.current.getColumnHeaderParams(column.field),
+        event,
+      ),
+    [apiRef, column.field],
+  );
+
+  const mouseEventsHandlers = React.useMemo(
+    () => ({
+      onClick: publish(GRID_COLUMN_HEADER_CLICK),
+      onDoubleClick: publish(GRID_COLUMN_HEADER_DOUBLE_CLICK),
+      onMouseOver: publish(GRID_COLUMN_HEADER_OVER),
+      onMouseOut: publish(GRID_COLUMN_HEADER_OUT),
+      onMouseEnter: publish(GRID_COLUMN_HEADER_ENTER),
+      onMouseLeave: publish(GRID_COLUMN_HEADER_LEAVE),
+    }),
+    [publish],
+  );
 
   const cssClasses = classnames(
     GRID_HEADER_CELL_CSS_CLASS,
@@ -125,7 +144,6 @@ export const GridColumnHeaderItem = ({
   const columnMenuIconButton = <ColumnHeaderMenuIcon column={column} />;
 
   return (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events
     <div
       className={cssClasses}
       key={column.field}
@@ -139,7 +157,7 @@ export const GridColumnHeaderItem = ({
       tabIndex={-1}
       aria-colindex={colIndex + 1}
       {...ariaSort}
-      onClick={onHeaderTitleClick}
+      {...mouseEventsHandlers}
     >
       <div className="MuiDataGrid-colCell-draggable" {...dragConfig}>
         {!disableColumnMenu && isColumnNumeric && !column.disableColumnMenu && columnMenuIconButton}

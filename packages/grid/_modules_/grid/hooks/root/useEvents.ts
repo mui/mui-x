@@ -1,14 +1,10 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
-import { GridCellParams } from '../../models/params/gridCellParams';
-import { GridColParams } from '../../models/params/gridColParams';
-import { GridRowParams } from '../../models/params/gridRowParams';
 import { useGridSelector } from '../features/core/useGridSelector';
 import { optionsSelector } from '../utils/optionsSelector';
 import { useLogger } from '../utils/useLogger';
 import {
   GRID_CELL_CLICK,
-  GRID_CLICK,
   GRID_COL_RESIZE_START,
   GRID_COL_RESIZE_STOP,
   GRID_COLUMN_HEADER_CLICK,
@@ -17,23 +13,28 @@ import {
   GRID_KEYUP,
   GRID_RESIZE,
   GRID_ROW_CLICK,
-  GRID_MOUSE_HOVER,
-  GRID_CELL_HOVER,
-  GRID_ROW_HOVER,
-  GRID_COLUMN_HEADER_HOVER,
+  GRID_CELL_OVER,
+  GRID_ROW_OVER,
   GRID_FOCUS_OUT,
   GRID_ELEMENT_FOCUS_OUT,
   GRID_COMPONENT_ERROR,
   GRID_STATE_CHANGE,
-  GRID_DOUBLE_CELL_CLICK,
-  GRID_DOUBLE_ROW_CLICK,
-  GRID_DOUBLE_CLICK,
+  GRID_CELL_DOUBLE_CLICK,
+  GRID_ROW_DOUBLE_CLICK,
+  GRID_CELL_ENTER,
+  GRID_CELL_LEAVE,
+  GRID_CELL_OUT,
+  GRID_ROW_ENTER,
+  GRID_ROW_LEAVE,
+  GRID_ROW_OUT,
+  GRID_COLUMN_HEADER_LEAVE,
+  GRID_COLUMN_HEADER_ENTER,
+  GRID_COLUMN_HEADER_DOUBLE_CLICK,
+  GRID_COLUMN_HEADER_OVER,
+  GRID_COLUMN_HEADER_OUT,
 } from '../../constants/eventsConstants';
-import { GRID_CELL_CSS_CLASS, GRID_ROW_CSS_CLASS } from '../../constants/cssClassesConstants';
-import { findParentElementFromClassName, getIdFromRowElem, isGridCell } from '../../utils/domUtils';
 import { useGridApiMethod } from './useGridApiMethod';
 import { useGridApiEventHandler } from './useGridApiEventHandler';
-import { buildGridCellParams, buildGridRowParams } from '../../utils/paramsUtils';
 import { GridEventsApi } from '../../models/api/gridEventsApi';
 
 export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: GridApiRef): void {
@@ -45,114 +46,6 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
   const getHandler = React.useCallback(
     (name: string) => (...args: any[]) => apiRef.current.publishEvent(name, ...args),
     [apiRef],
-  );
-
-  const getEventParams = React.useCallback(
-    (event: MouseEvent) => {
-      if (event.target == null) {
-        throw new Error(
-          `Event target null - Target has been removed or component might already be unmounted.`,
-        );
-      }
-
-      const elem = event.target as HTMLElement;
-      const eventParams: {
-        cell?: GridCellParams;
-        row?: GridRowParams;
-        header?: GridColParams;
-      } = {};
-
-      if (isGridCell(elem)) {
-        const cellEl = findParentElementFromClassName(elem, GRID_CELL_CSS_CLASS)! as HTMLElement;
-        const rowEl = findParentElementFromClassName(elem, GRID_ROW_CSS_CLASS)! as HTMLElement;
-        if (rowEl == null) {
-          return null;
-        }
-        const id = getIdFromRowElem(rowEl);
-        const rowModel = apiRef.current.getRowFromId(id);
-        const rowIndex = apiRef.current.getRowIndexFromId(id);
-        const field = cellEl.getAttribute('data-field') as string;
-        const value = cellEl.getAttribute('data-value');
-        const column = apiRef.current.getColumnFromField(field);
-        if (!column || !column.disableClickEventBubbling) {
-          const commonParams = {
-            data: rowModel,
-            rowIndex,
-            colDef: column,
-            rowModel,
-            api: apiRef.current,
-          };
-          eventParams.cell = buildGridCellParams({
-            ...commonParams,
-            element: cellEl,
-            value,
-          });
-          eventParams.row = buildGridRowParams({
-            ...commonParams,
-            element: rowEl,
-          });
-        }
-      }
-      return eventParams;
-    },
-    [apiRef],
-  );
-
-  const onClickHandler = React.useCallback(
-    (event: MouseEvent) => {
-      const eventParams = getEventParams(event);
-
-      if (!eventParams) {
-        return;
-      }
-
-      if (eventParams.cell) {
-        apiRef.current.publishEvent(GRID_CELL_CLICK, eventParams.cell);
-      }
-      if (eventParams.row) {
-        apiRef.current.publishEvent(GRID_ROW_CLICK, eventParams.row);
-      }
-    },
-    [apiRef, getEventParams],
-  );
-
-  const onDoubleClickHandler = React.useCallback(
-    (event: MouseEvent) => {
-      const eventParams = getEventParams(event);
-
-      if (!eventParams) {
-        return;
-      }
-
-      if (eventParams.cell) {
-        apiRef.current.publishEvent(GRID_DOUBLE_CELL_CLICK, eventParams.cell);
-      }
-      if (eventParams.row) {
-        apiRef.current.publishEvent(GRID_DOUBLE_ROW_CLICK, eventParams.row);
-      }
-    },
-    [apiRef, getEventParams],
-  );
-
-  const onHoverHandler = React.useCallback(
-    (event: MouseEvent) => {
-      const eventParams = getEventParams(event);
-
-      if (!eventParams) {
-        return;
-      }
-
-      if (eventParams.cell) {
-        apiRef.current.publishEvent(GRID_CELL_HOVER, eventParams.cell);
-      }
-      if (eventParams.row) {
-        apiRef.current.publishEvent(GRID_ROW_HOVER, eventParams.row);
-      }
-      if (eventParams.header) {
-        apiRef.current.publishEvent(GRID_COLUMN_HEADER_HOVER, eventParams.header);
-      }
-    },
-    [apiRef, getEventParams],
   );
 
   const onFocusOutHandler = React.useCallback(
@@ -194,13 +87,30 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
   useGridApiEventHandler(apiRef, GRID_COL_RESIZE_STOP, handleResizeStop);
 
   useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_CLICK, options.onColumnHeaderClick);
-  useGridApiEventHandler(apiRef, GRID_CELL_CLICK, options.onCellClick);
-  useGridApiEventHandler(apiRef, GRID_ROW_CLICK, options.onRowClick);
-  useGridApiEventHandler(apiRef, GRID_DOUBLE_CELL_CLICK, options.onCellDoubleClick);
-  useGridApiEventHandler(apiRef, GRID_DOUBLE_ROW_CLICK, options.onRowDoubleClick);
+  useGridApiEventHandler(
+    apiRef,
+    GRID_COLUMN_HEADER_DOUBLE_CLICK,
+    options.onColumnHeaderDoubleClick,
+  );
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_OVER, options.onColumnHeaderOver);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_OUT, options.onColumnHeaderOut);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_ENTER, options.onColumnHeaderEnter);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_LEAVE, options.onColumnHeaderLeave);
 
-  useGridApiEventHandler(apiRef, GRID_CELL_HOVER, options.onCellHover);
-  useGridApiEventHandler(apiRef, GRID_ROW_HOVER, options.onRowHover);
+  useGridApiEventHandler(apiRef, GRID_CELL_CLICK, options.onCellClick);
+  useGridApiEventHandler(apiRef, GRID_CELL_DOUBLE_CLICK, options.onCellDoubleClick);
+  useGridApiEventHandler(apiRef, GRID_CELL_OVER, options.onCellOver);
+  useGridApiEventHandler(apiRef, GRID_CELL_OUT, options.onCellOut);
+  useGridApiEventHandler(apiRef, GRID_CELL_ENTER, options.onCellEnter);
+  useGridApiEventHandler(apiRef, GRID_CELL_LEAVE, options.onCellLeave);
+
+  useGridApiEventHandler(apiRef, GRID_ROW_DOUBLE_CLICK, options.onRowDoubleClick);
+  useGridApiEventHandler(apiRef, GRID_ROW_CLICK, options.onRowClick);
+  useGridApiEventHandler(apiRef, GRID_ROW_OVER, options.onRowOver);
+  useGridApiEventHandler(apiRef, GRID_ROW_OUT, options.onRowOut);
+  useGridApiEventHandler(apiRef, GRID_ROW_ENTER, options.onRowEnter);
+  useGridApiEventHandler(apiRef, GRID_ROW_LEAVE, options.onRowLeave);
+
   useGridApiEventHandler(apiRef, GRID_COMPONENT_ERROR, options.onError);
   useGridApiEventHandler(apiRef, GRID_STATE_CHANGE, options.onStateChange);
 
@@ -211,11 +121,7 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
       const keyUpHandler = getHandler(GRID_KEYUP);
       const gridRootElem = gridRootRef.current;
 
-      gridRootElem.addEventListener(GRID_CLICK, onClickHandler, { capture: true });
-      gridRootElem.addEventListener(GRID_DOUBLE_CLICK, onDoubleClickHandler, { capture: true });
-      gridRootElem.addEventListener(GRID_MOUSE_HOVER, onHoverHandler, { capture: true });
       gridRootElem.addEventListener(GRID_FOCUS_OUT, onFocusOutHandler);
-
       gridRootElem.addEventListener(GRID_KEYDOWN, keyDownHandler);
       gridRootElem.addEventListener(GRID_KEYUP, keyUpHandler);
       apiRef.current.isInitialised = true;
@@ -224,8 +130,6 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
       return () => {
         logger.debug('Clearing all events listeners');
         api.publishEvent(GRID_UNMOUNT);
-        gridRootElem.removeEventListener(GRID_CLICK, onClickHandler, { capture: true });
-        gridRootElem.removeEventListener(GRID_MOUSE_HOVER, onHoverHandler, { capture: true });
         gridRootElem.removeEventListener(GRID_FOCUS_OUT, onFocusOutHandler);
         gridRootElem.removeEventListener(GRID_KEYDOWN, keyDownHandler);
         gridRootElem.removeEventListener(GRID_KEYUP, keyUpHandler);
@@ -233,15 +137,5 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
       };
     }
     return undefined;
-  }, [
-    gridRootRef,
-    apiRef.current?.isInitialised,
-    getHandler,
-    logger,
-    onClickHandler,
-    onDoubleClickHandler,
-    onHoverHandler,
-    onFocusOutHandler,
-    apiRef,
-  ]);
+  }, [gridRootRef, apiRef.current?.isInitialised, getHandler, logger, onFocusOutHandler, apiRef]);
 }

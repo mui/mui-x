@@ -11,7 +11,6 @@ import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { GridFilterModelParams } from '../../../models/params/gridFilterModelParams';
 import { GridRowsProp } from '../../../models/gridRows';
-import { buildGridCellParams } from '../../../utils/paramsUtils';
 import { isDeepEqual } from '../../../utils/utils';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
@@ -88,14 +87,8 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
         // This way we have latest rows on the first rendering
         const rows = sortedGridRowsSelector(state);
 
-        rows.forEach((row, rowIndex) => {
-          const params = buildGridCellParams({
-            rowModel: row,
-            colDef: column,
-            rowIndex,
-            value: row[column.field],
-            api: apiRef!.current!,
-          });
+        rows.forEach((row) => {
+          const params = apiRef.current.getCellParams(row.id, filterItem.columnField!);
 
           const isShown = applyFilterOnRow(params);
           if (visibleRowsLookup[row.id] == null) {

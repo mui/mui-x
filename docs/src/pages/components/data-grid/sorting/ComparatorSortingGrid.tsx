@@ -4,7 +4,7 @@ import {
   GridRowsProp,
   DataGrid,
   GridSortDirection,
-  ValueGetterParams,
+  GridValueGetterParams,
 } from '@material-ui/data-grid';
 import {
   randomCreatedDate,
@@ -16,7 +16,7 @@ const columns: GridColumns = [
   { field: 'age', type: 'number' },
   {
     field: 'username',
-    valueGetter: (params: ValueGetterParams) =>
+    valueGetter: (params: GridValueGetterParams) =>
       `${params.getValue('name') || 'unknown'} - ${params.getValue('age') || 'x'}`,
     sortComparator: (v1, v2, param1, param2) => param1.row.age - param2.row.age,
     width: 150,

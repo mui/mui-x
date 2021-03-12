@@ -17,7 +17,6 @@ import {
   GridEditCellParams,
   GridEditRowModelParams,
 } from '../../../models/params/gridEditCellParams';
-import { buildGridCellParams } from '../../../utils/paramsUtils';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
@@ -28,27 +27,6 @@ export function useGridEditRows(apiRef: GridApiRef) {
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
 
-  const getCellValue = React.useCallback(
-    (id: GridRowId, field: string) => {
-      const colDef = apiRef.current.getColumnFromField(field);
-      const rowModel = apiRef.current.getRowFromId(id);
-
-      if (!colDef || !colDef.valueGetter) {
-        return rowModel[field];
-      }
-
-      return colDef.valueGetter(
-        buildGridCellParams({
-          value: rowModel[field],
-          colDef,
-          rowModel,
-          api: apiRef.current,
-        }),
-      );
-    },
-    [apiRef],
-  );
-
   const setCellEditMode = React.useCallback(
     (id, field) => {
       setGridState((state) => {
@@ -58,7 +36,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
 
         const currentCellEditState: GridEditRowsModel = { ...state.editRows };
         currentCellEditState[id] = { ...currentCellEditState[id] } || {};
-        currentCellEditState[id][field] = { value: getCellValue(id, field) };
+        currentCellEditState[id][field] = { value: apiRef.current.getCellValue(id, field) };
 
         const newEditRowsState: GridEditRowsModel = { ...state.editRows, ...currentCellEditState };
 
@@ -78,7 +56,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
       };
       apiRef.current.publishEvent(GRID_EDIT_ROW_MODEL_CHANGE, editRowParams);
     },
-    [apiRef, forceUpdate, getCellValue, setGridState],
+    [apiRef, forceUpdate, setGridState],
   );
 
   const setCellViewMode = React.useCallback(
@@ -219,7 +197,6 @@ export function useGridEditRows(apiRef: GridApiRef) {
   useGridApiMethod<GridEditRowApi>(
     apiRef,
     {
-      getCellValue,
       setCellMode,
       onEditRowModelChange,
       onCellModeChange,

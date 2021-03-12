@@ -1,14 +1,18 @@
 import { GridCellValue } from '../gridCell';
-import { GridRowModel } from '../gridRows';
+import { GridRowId, GridRowModel } from '../gridRows';
 
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
  */
 export interface GridCellParams {
   /**
-   * The HTMLElement that triggered the event
+   * The grid row id.
    */
-  element?: HTMLElement;
+  id: GridRowId;
+  /**
+   * The HTMLElement cell element.
+   */
+  element?: HTMLElement | null;
   /**
    * The column field of the cell that triggered the event
    */
@@ -17,6 +21,10 @@ export interface GridCellParams {
    * The cell value, but if the column has valueGetter, use getValue.
    */
   value: GridCellValue;
+  /**
+   * The cell value formatted with the column valueFormatter.
+   */
+  formattedValue: GridCellValue;
   /**
    * A function that let you get data from other columns.
    * @param field
@@ -51,9 +59,9 @@ export interface GridCellParams {
 /**
  * Alias of GridCellParams.
  */
-export type ValueGetterParams = GridCellParams;
+export type GridValueGetterParams = Omit<GridCellParams, 'formattedValue' | 'isEditable'>;
 
 /**
  * Alias of GridCellParams.
  */
-export type ValueFormatterParams = GridCellParams;
+export type GridValueFormatterParams = Omit<GridCellParams, 'formattedValue' | 'isEditable'>;
