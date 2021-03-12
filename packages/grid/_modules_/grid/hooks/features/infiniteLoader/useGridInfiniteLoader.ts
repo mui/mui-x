@@ -23,7 +23,7 @@ export const useGridInfiniteLoader = (
       const scrollPositionBottom =
         event.target.scrollTop +
         containerSizes?.windowSizes.height +
-        options.scrollEndThresholdHeight;
+        options.scrollEndThreshold;
 
       if (containerSizes && scrollPositionBottom >= containerSizes.dataContainerSizes.height) {
         if (!isInScrollBottomArea.current) {

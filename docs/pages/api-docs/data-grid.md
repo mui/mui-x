@@ -80,7 +80,7 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">rowHeight</span> | <span class="prop-type">number</span> | 52 | Set the height in pixel of a row in the grid. |
 | <span class="prop-name">rowsPerPageOptions</span> | <span class="prop-type">number[]</span> | [25, 50, 100] | Select the pageSize dynamically using the component UI. |
 | <span class="prop-name">scrollbarSize</span> | <span class="prop-type">number</span> | 15 | Set the height/width of the grid inner scrollbar. |
-| <span class="prop-name">scrollEndThresholdHeight</span> | <span class="prop-type">number</span> | 80 | Set the area at the bottom of the grid viewport where onRowsScrollEnd is called. |
+| <span class="prop-name">scrollEndThreshold</span> | <span class="prop-type">number</span> | 80 | Set the area at the bottom of the grid viewport where onRowsScrollEnd is called. |
 | <span class="prop-name">selectionModel</span> | <span class="prop-type">GridSelectionModel</span> |   | Set the selection model of the grid. |
 | <span class="prop-name">showCellRightBorder</span> | <span class="prop-type">boolean</span> | false | If `true`, the right border of the cells are displayed. |
 | <span class="prop-name">showColumnRightBorder</span> | <span class="prop-type">boolean</span> | false | If `true`, the right border of the column headers are displayed. |

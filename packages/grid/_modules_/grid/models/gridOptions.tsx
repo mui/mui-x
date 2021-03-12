@@ -413,7 +413,7 @@ export interface GridOptions {
   /**
    * Set the area at the bottom of the grid viewport where onRowsScrollEnd is called.
    */
-  scrollEndThresholdHeight: number;
+  scrollEndThreshold: number;
 }
 
 /**
@@ -425,7 +425,7 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   columnBuffer: 2,
   rowsPerPageOptions: [25, 50, 100],
   pageSize: 100,
-  scrollEndThresholdHeight: 80,
+  scrollEndThreshold: 80,
   paginationMode: GridFeatureModeConstant.client,
   sortingMode: GridFeatureModeConstant.client,
   filterMode: GridFeatureModeConstant.client,
