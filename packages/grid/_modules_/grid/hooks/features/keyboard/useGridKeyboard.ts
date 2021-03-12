@@ -16,7 +16,8 @@ import { GridCellParams } from '../../../models/params/gridCellParams';
 import {
   findParentElementFromClassName,
   getIdFromRowElem,
-  getRowEl, isGridCellRoot,
+  getRowEl,
+  isGridCellRoot,
 } from '../../../utils/domUtils';
 import {
   isCellEditCommitKeys,
@@ -167,7 +168,7 @@ export const useGridKeyboard = (
         }
         return;
       }
-      if(!isGridCellRoot(document.activeElement)) {
+      if (!isGridCellRoot(document.activeElement)) {
         return;
       }
 
