@@ -7,6 +7,7 @@ import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelecto
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndParams';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
+import { GridScrollParams } from '../../../models/params/gridScrollParams';
 
 export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
   const options = useGridSelector(apiRef, optionsSelector);
@@ -15,24 +16,30 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
   const isInScrollBottomArea = React.useRef<boolean>(false);
 
   const handleGridScroll = React.useCallback(
-    (position) => {
-      const scrollPositionBottom =
-        position &&
-        position.absoluteTop + containerSizes?.windowSizes.height + options.scrollEndThreshold;
+    (position: GridScrollParams) => {
+      if (!containerSizes || !position) {
+        return;
+      }
 
-      if (containerSizes && scrollPositionBottom >= containerSizes.dataContainerSizes.height) {
-        if (!isInScrollBottomArea.current) {
-          const rowScrollEndParam: GridRowScrollEndParams = {
-            api: apiRef,
-            visibleColumns,
-            viewportPageSize: containerSizes?.viewportPageSize,
-            virtualRowsCount: containerSizes?.virtualRowsCount,
-          };
-          apiRef.current.publishEvent(GRID_ROWS_SCROLL_END, rowScrollEndParam);
-          isInScrollBottomArea.current = true;
-        }
-      } else {
+      const scrollPositionBottom =
+        position.absoluteTop + containerSizes.windowSizes.height + options.scrollEndThreshold;
+
+      if (scrollPositionBottom < containerSizes.dataContainerSizes.height) {
         isInScrollBottomArea.current = false;
+      }
+
+      if (
+        scrollPositionBottom >= containerSizes.dataContainerSizes.height &&
+        !isInScrollBottomArea.current
+      ) {
+        const rowScrollEndParam: GridRowScrollEndParams = {
+          api: apiRef,
+          visibleColumns,
+          viewportPageSize: containerSizes.viewportPageSize,
+          virtualRowsCount: containerSizes.virtualRowsCount,
+        };
+        apiRef.current.publishEvent(GRID_ROWS_SCROLL_END, rowScrollEndParam);
+        isInScrollBottomArea.current = true;
       }
     },
     [options, containerSizes, apiRef, visibleColumns],
