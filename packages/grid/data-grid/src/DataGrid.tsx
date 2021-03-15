@@ -26,6 +26,7 @@ export type DataGridProps = Omit<
   | 'options'
   | 'pagination'
   | 'onRowsScrollEnd'
+  | 'scrollEndThreshold'
 > & {
   disableColumnResize?: true;
   disableColumnReorder?: true;

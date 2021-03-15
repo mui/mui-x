@@ -42,9 +42,6 @@ export const GRID_SELECTION_CHANGED = 'selectionChange';
 export const GRID_PAGE_CHANGED = 'pageChange';
 export const GRID_PAGESIZE_CHANGED = 'pageSizeChange';
 
-export const GRID_SCROLLING = 'scrolling';
-export const GRID_SCROLLING_START = 'scrolling:start';
-export const GRID_SCROLLING_STOP = 'scrolling:stop';
 export const GRID_ROWS_SCROLL = 'scrolling:rows';
 export const GRID_ROWS_SCROLL_END = 'scroll:rowEnd';
 
