@@ -2,9 +2,18 @@ import * as React from 'react';
 import { gridContainerSizesSelector } from '../../../components/GridViewport';
 import { GRID_CELL_NAVIGATION_KEYDOWN } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
+import { GridNavigationApi } from '../../../models/api/gridNavigationApi';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
 import { GridCellParams } from '../../../models/params/gridCellParams';
-import { isArrowKeys, isHomeOrEndKeys, isPageKeys, isSpaceKey } from '../../../utils/keyboardUtils';
+import {
+  isArrowKeys,
+  isEnterKey,
+  isHomeOrEndKeys,
+  isPageKeys,
+  isSpaceKey,
+  isTabKey,
+} from '../../../utils/keyboardUtils';
+import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { visibleGridColumnsLengthSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
@@ -45,10 +54,10 @@ export const useGridKeyboardNavigation = (
   const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
 
   const mapKey = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
+    if (isEnterKey(event.key)) {
       return 'ArrowDown';
     }
-    if (event.key === 'Tab') {
+    if (isTabKey(event.key)) {
       return event.shiftKey ? 'ArrowLeft' : 'ArrowRight';
     }
     return event.key;
@@ -110,14 +119,7 @@ export const useGridKeyboardNavigation = (
       nextCellIndexes.colIndex = nextCellIndexes.colIndex <= 0 ? 0 : nextCellIndexes.colIndex;
       nextCellIndexes.colIndex =
         nextCellIndexes.colIndex >= colCount ? colCount - 1 : nextCellIndexes.colIndex;
-
-      apiRef.current.scrollToIndexes(nextCellIndexes);
-
-      setGridState((state) => {
-        logger.debug(`Setting keyboard state, cell focus to ${JSON.stringify(nextCellIndexes)}`);
-        return { ...state, keyboard: { ...state.keyboard, cell: nextCellIndexes } };
-      });
-      forceUpdate();
+      apiRef.current.setCellFocus(nextCellIndexes);
     },
     [
       options.pagination,
@@ -126,12 +128,31 @@ export const useGridKeyboardNavigation = (
       totalRowCount,
       colCount,
       apiRef,
-      setGridState,
-      forceUpdate,
       containerSizes,
-      logger,
     ],
   );
 
+  const setCellFocus = React.useCallback(
+    (nextCellIndexes: GridCellIndexCoordinates) => {
+      apiRef.current.scrollToIndexes(nextCellIndexes);
+
+      setGridState((state) => {
+        logger.debug(
+          `Focusing on cell with rowIndex=${nextCellIndexes.rowIndex} and colIndex=${nextCellIndexes.colIndex}`,
+        );
+        return { ...state, keyboard: { ...state.keyboard, cell: nextCellIndexes } };
+      });
+      forceUpdate();
+    },
+    [apiRef, forceUpdate, logger, setGridState],
+  );
+
+  useGridApiMethod<GridNavigationApi>(
+    apiRef,
+    {
+      setCellFocus,
+    },
+    'GridNavigationApi',
+  );
   useGridApiEventHandler(apiRef, GRID_CELL_NAVIGATION_KEYDOWN, navigateCells);
 };

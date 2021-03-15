@@ -41,11 +41,11 @@ export interface GridCellParams {
   /**
    * The row index of the row that the current cell belongs to.
    */
-  rowIndex?: number;
+  rowIndex: number;
   /**
    * The column index that the current cell belongs to.
    */
-  colIndex?: number;
+  colIndex: number;
   /**
    * GridApi that let you manipulate the grid.
    */

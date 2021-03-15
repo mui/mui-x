@@ -18,7 +18,7 @@ export const parameters = {
   // due to its circular structure
   actions: {
     argTypesRegex:
-      '^on((?!CellClick|CellDoubleClick|CellEnter|CellLeave|CellOut|CellOver|ColumnHeaderClick|ColumnHeaderDoubleClick|ColumnHeaderOver|ColumnHeaderOut|ColumnHeaderEnter|ColumnHeaderLeave|StateChange|RowClick|RowDoubleClick|RowEnter|RowLeave|RowOut|RowOver).)*$',
+      '^on((?!CellClick|CellDoubleClick|CellEditBlur|CellKeyDown|CellEnter|CellLeave|CellMouseDown|CellOut|CellOver|ColumnHeaderClick|ColumnHeaderDoubleClick|ColumnHeaderOver|ColumnHeaderOut|ColumnHeaderEnter|ColumnHeaderLeave|StateChange|RowClick|RowDoubleClick|RowEnter|RowLeave|RowOut|RowOver).)*$',
   },
   options: {
     /**

@@ -1,9 +1,10 @@
 import { GridCellMode } from '../gridCell';
 import { GridEditRowsModel, GridEditRowUpdate } from '../gridEditRowModel';
 import { GridRowId } from '../gridRows';
-import { GridCellParams } from './gridCellParams';
 
-export interface GridEditCellParams extends GridCellParams {
+export interface GridEditCellParams {
+  id: GridRowId;
+  field: string;
   update: GridEditRowUpdate;
 }
 
