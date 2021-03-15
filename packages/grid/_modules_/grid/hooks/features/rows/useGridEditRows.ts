@@ -224,7 +224,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
   );
 
   const preventDefaultDoubleClick = React.useCallback((params, event) => {
-    if (event.detail > 1) {
+    if (params.isEditable && event.detail > 1) {
       // If we click more than one time, then we prevent the default behavior of selecting the text cell.
       event.preventDefault();
     }
