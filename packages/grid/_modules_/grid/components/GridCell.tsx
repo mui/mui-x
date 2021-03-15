@@ -7,6 +7,7 @@ import {
   GRID_CELL_ENTER,
   GRID_CELL_KEYDOWN,
   GRID_CELL_LEAVE,
+  GRID_CELL_MOUSE_DOWN,
   GRID_CELL_OUT,
   GRID_CELL_OVER,
 } from '../constants/eventsConstants';
@@ -97,6 +98,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     () => ({
       onClick: publishClick(GRID_CELL_CLICK),
       onDoubleClick: publish(GRID_CELL_DOUBLE_CLICK),
+      onMouseDown: publish(GRID_CELL_MOUSE_DOWN),
       onMouseOver: publish(GRID_CELL_OVER),
       onMouseOut: publish(GRID_CELL_OUT),
       onMouseEnter: publish(GRID_CELL_ENTER),
@@ -119,7 +121,6 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
       ref={cellRef}
       className={cssClasses}
       role="cell"
-      data-rowid={rowId}
       data-value={value}
       data-field={field}
       data-rowindex={rowIndex}

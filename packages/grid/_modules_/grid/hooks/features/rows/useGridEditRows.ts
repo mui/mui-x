@@ -8,6 +8,7 @@ import {
   GRID_CELL_ENTER_EDIT,
   GRID_CELL_EXIT_EDIT,
   GRID_CELL_NAVIGATION_KEYDOWN,
+  GRID_CELL_MOUSE_DOWN,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridEditRowApi } from '../../../models/api/gridEditRowApi';
@@ -21,7 +22,7 @@ import {
   GridEditCellParams,
   GridEditRowModelParams,
 } from '../../../models/params/gridEditCellParams';
-import { isDeleteKeys, isKeyboardEvent } from '../../../utils/keyboardUtils';
+import { isCellEditCommitKeys, isDeleteKeys, isKeyboardEvent } from '../../../utils/keyboardUtils';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
@@ -205,6 +206,8 @@ export function useGridEditRows(apiRef: GridApiRef) {
         const update = {};
         update[params.field] = { value: '' };
         apiRef.current.setEditCellProps(params.id, update);
+      } else {
+        event.preventDefault();
       }
     },
     [apiRef, setCellMode],
@@ -213,13 +216,21 @@ export function useGridEditRows(apiRef: GridApiRef) {
   const handleExitEdit = React.useCallback(
     (params: GridCellParams, event: React.SyntheticEvent) => {
       setCellMode(params.id, params.field, 'view');
-      if (isKeyboardEvent(event) && (event.key === 'Enter' || event.key === 'Tab')) {
+      if (isKeyboardEvent(event) && isCellEditCommitKeys(event.key)) {
         apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEYDOWN, params, event);
       }
     },
     [apiRef, setCellMode],
   );
 
+  const preventDefaultDoubleClick = React.useCallback((params, event) => {
+    if (event.detail > 1) {
+      // If we click more than one time, then we prevent the default behavior of selecting the text cell.
+      event.preventDefault();
+    }
+  }, []);
+
+  useGridApiEventHandler(apiRef, GRID_CELL_MOUSE_DOWN, preventDefaultDoubleClick);
   useGridApiEventHandler(apiRef, GRID_CELL_DOUBLE_CLICK, handleEnterEdit);
   useGridApiEventHandler(apiRef, GRID_CELL_ENTER_EDIT, handleEnterEdit);
   useGridApiEventHandler(apiRef, GRID_CELL_EXIT_EDIT, handleExitEdit);

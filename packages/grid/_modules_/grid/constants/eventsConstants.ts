@@ -16,6 +16,7 @@ export const GRID_CELL_CHANGE_COMMITTED = 'cellChangeCommitted';
 export const GRID_CELL_MODE_CHANGE = 'cellModeChange';
 export const GRID_CELL_CLICK = 'cellClick';
 export const GRID_CELL_DOUBLE_CLICK = 'cellDoubleClick';
+export const GRID_CELL_MOUSE_DOWN = 'cellMouseDown';
 export const GRID_CELL_OVER = 'cellOver';
 export const GRID_CELL_OUT = 'cellOut';
 export const GRID_CELL_ENTER = 'cellEnter';

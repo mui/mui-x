@@ -55,7 +55,7 @@ export interface GridCellParams {
    */
   isEditable?: boolean;
   /**
-   *
+   * The mode of the cell.
    */
   cellMode: GridCellMode;
 }
