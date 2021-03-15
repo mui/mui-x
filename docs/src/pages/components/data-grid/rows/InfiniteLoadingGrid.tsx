@@ -14,16 +14,24 @@ function CustomLoadingOverlay() {
 }
 
 export default function InfiniteLoadingGrid() {
-  const { loading, data, setRowLength, loadNewData } = useDemoData({
+  const [loading, setLoading] = React.useState(false);
+  const { data, setRowLength } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 20,
     maxColumns: 6,
   });
 
+  const loadServerRows = (newRowLength) => {
+    setLoading(true);
+    setTimeout(() => {
+      setRowLength(newRowLength);
+      setLoading(false);
+    }, Math.random() * 500 + 100);
+  };
+
   const handleOnRowsScrollEnd = (params) => {
     const newRowLength = params.virtualRowsCount + params.viewportPageSize;
-    setRowLength(newRowLength);
-    loadNewData();
+    loadServerRows(newRowLength);
   };
 
   return (
