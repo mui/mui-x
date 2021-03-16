@@ -44,7 +44,7 @@ export interface GridEditRowApi {
    * @param rowId
    * @param update
    */
-  setEditCellProps: (rowId: GridRowId, update: GridEditRowProps) => void;
+  setEditCellProps: (params: GridEditCellPropsParams) => void;
   /**
    * Get the edit cell input props.
    * @param rowId

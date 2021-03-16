@@ -28,14 +28,13 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
   const onValueChange = React.useCallback(
     (event) => {
       const newValue = event.target.value;
-      const update: GridEditRowProps = {};
-      update[field] = {
+      const editProps = {
         value: colDef.type === 'date' || colDef.type === 'dateTime' ? new Date(newValue) : newValue,
       };
       setValueState(newValue);
-      api.setEditCellProps(row.id, update);
+      api.setEditCellProps({id, field, props: editProps});
     },
-    [api, colDef.type, field, row.id],
+    [api, colDef.type, field, id],
   );
 
   const onKeyDown = React.useCallback(
