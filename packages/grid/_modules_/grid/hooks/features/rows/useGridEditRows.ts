@@ -108,7 +108,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
     [options.isCellEditable],
   );
 
-  //TODO split with setCellValue ?
+  // TODO split with setCellValue ?
   const commitCellChange = React.useCallback(
     ({ id, update }: GridEditCellParams) => {
       if (options.editMode === GridFeatureModeConstant.server) {
@@ -301,7 +301,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
 
   useGridApiEventHandler(apiRef, GRID_CELL_CHANGE, options.onEditCellChange);
   useGridApiEventHandler(apiRef, GRID_CELL_CHANGE_COMMITTED, commitCellChange);
-  //OnCellValueChange?
+  // OnCellValueChange?
   useGridApiEventHandler(apiRef, GRID_CELL_CHANGE_COMMITTED, options.onEditCellChangeCommitted);
   useGridApiEventHandler(apiRef, GRID_CELL_MODE_CHANGE, options.onCellModeChange);
   useGridApiEventHandler(apiRef, GRID_ROW_EDIT_MODEL_CHANGE, options.onEditRowModelChange);

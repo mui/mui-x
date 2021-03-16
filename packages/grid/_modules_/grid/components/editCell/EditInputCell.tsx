@@ -5,7 +5,6 @@ import { GridCellParams } from '../../models/params/gridCellParams';
 import { isCellEditCommitKeys } from '../../utils/keyboardUtils';
 import { formatDateToLocalInputDate, isDate, mapColDefTypeToInputType } from '../../utils/utils';
 import { GridEditRowUpdate } from '../../models/gridEditRowModel';
-import { GridApiContext } from '../GridApiContext';
 
 export function EditInputCell(props: GridCellParams & InputBaseProps) {
   const {
@@ -24,7 +23,6 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
     ...inputBaseProps
   } = props;
 
-  const apiRef = React.useContext(GridApiContext);
   const [valueState, setValueState] = React.useState(value);
 
   const onValueChange = React.useCallback(
@@ -51,10 +49,10 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
   );
   const onBlur = React.useCallback(
     (event: React.SyntheticEvent) => {
-      const params = apiRef!.current.getCellParams(id, field);
-      apiRef!.current.publishEvent(GRID_CELL_EDIT_BLUR, params, event);
+      const params = api.getCellParams(id, field);
+      api.publishEvent(GRID_CELL_EDIT_BLUR, params, event);
     },
-    [apiRef, field, id],
+    [api, field, id],
   );
 
   const inputType = mapColDefTypeToInputType(colDef.type);
