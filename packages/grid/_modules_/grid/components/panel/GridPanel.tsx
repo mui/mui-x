@@ -14,6 +14,9 @@ export interface GridPanelProps {
 const useStyles = makeStyles(
   (theme: Theme) => ({
     root: {
+      zIndex: theme.zIndex.modal,
+    },
+    paper: {
       backgroundColor: theme.palette.background.paper,
       minWidth: 300,
       maxHeight: 450,
@@ -70,12 +73,13 @@ export function GridPanel(props: GridPanelProps) {
   return (
     <Popper
       placement="bottom-start"
+      className={classes.root}
       open={open}
       anchorEl={anchorEl}
       modifiers={getPopperModifiers()}
     >
       <ClickAwayListener onClickAway={handleClickAway}>
-        <Paper className={classes.root} elevation={8} onKeyDown={handleKeyDown}>
+        <Paper className={classes.paper} elevation={8} onKeyDown={handleKeyDown}>
           {children}
         </Paper>
       </ClickAwayListener>
