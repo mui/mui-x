@@ -1,9 +1,21 @@
 import * as React from 'react';
 import { XGrid, GridOverlay } from '@material-ui/x-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import {
+  useDemoData,
+  getRealData,
+  getCommodityColumns,
+} from '@material-ui/x-grid-data-generator';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 const MAX_ROW_LENGTH = 500;
+
+async function sleep(duration) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, duration);
+  });
+}
 
 function CustomLoadingOverlay() {
   return (
@@ -17,40 +29,44 @@ function CustomLoadingOverlay() {
 
 export default function InfiniteLoadingGrid() {
   const [loading, setLoading] = React.useState(false);
-  const timeout = React.useRef(null);
-  const { data, setRowLength } = useDemoData({
+  const [loadedRows, setLoadedRows] = React.useState([]);
+  const mounted = React.useRef(true);
+  const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 20,
     maxColumns: 6,
   });
 
-  const loadServerRows = (newRowLength) => {
-    clearTimeout(timeout.current);
+  const loadServerRows = async (newRowLength) => {
     setLoading(true);
+    console.log('newRowLength', newRowLength);
+    const newData = await getRealData(newRowLength, getCommodityColumns());
+    // Simulate network throttle
+    await sleep(Math.random() * 500 + 100);
 
-    timeout.current = setTimeout(() => {
-      setRowLength(newRowLength);
+    if (mounted.current) {
       setLoading(false);
-      // Simulate network throttle
-    }, Math.random() * 500 + 100);
+      setLoadedRows(loadedRows.concat(newData.rows));
+    }
   };
 
   const handleOnRowsScrollEnd = (params) => {
-    const newRowLength = params.virtualRowsCount + params.viewportPageSize;
-
-    if (newRowLength <= MAX_ROW_LENGTH) {
-      loadServerRows(newRowLength);
+    if (loadedRows.length <= MAX_ROW_LENGTH) {
+      loadServerRows(params.viewportPageSize);
     }
   };
 
   React.useEffect(() => {
-    return () => clearTimeout(timeout.current);
+    return () => {
+      mounted.current = false;
+    };
   }, []);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <XGrid
         {...data}
+        rows={data.rows.concat(loadedRows)}
         loading={loading}
         hideFooterPagination
         onRowsScrollEnd={handleOnRowsScrollEnd}
