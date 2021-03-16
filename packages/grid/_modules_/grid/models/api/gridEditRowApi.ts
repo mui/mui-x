@@ -1,10 +1,11 @@
 import { GridCellMode } from '../gridCell';
-import { GridEditCellProps, GridEditRowsModel, GridEditRowUpdate } from '../gridEditRowModel';
+import { GridEditCellProps, GridEditRowsModel, GridEditRowProps } from '../gridEditRowModel';
 import { GridRowId } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
 import {
   GridCellModeChangeParams,
-  GridEditCellParams,
+  GridEditCellValueParams,
+  GridEditCellPropsParams,
   GridEditRowModelParams,
 } from '../params/gridEditCellParams';
 
@@ -43,24 +44,26 @@ export interface GridEditRowApi {
    * @param rowId
    * @param update
    */
-  setEditCellProps: (rowId: GridRowId, update: GridEditRowUpdate) => void;
+  setEditCellProps: (rowId: GridRowId, update: GridEditRowProps) => void;
   /**
    * Get the edit cell input props.
    * @param rowId
    * @param field
    */
-  getEditCellProps: (rowId: GridRowId, field: string) => GridEditCellProps | null;
+  getEditCellProps: (rowId: GridRowId, field: string) => GridEditCellProps;
   /**
    * Get the edit cell params.
    * @param rowId
    * @param field
    */
-  getEditCellParams: (rowId: GridRowId, field: string) => GridEditCellParams;
+  getEditCellPropsParams: (rowId: GridRowId, field: string) => GridEditCellPropsParams;
+  getEditCellValueParams: (rowId: GridRowId, field: string) => GridEditCellValueParams;
   /**
    * Commit the cell value changes to update the cell value.
    * @param update
    */
-  commitCellChange: (params: GridEditCellParams) => void;
+  commitCellChange: (params: GridEditCellPropsParams) => void;
+  setCellValue: (params: GridEditCellValueParams) => void;
   /**
    * Callback fired when the EditRowModel changed.
    * @param handler
@@ -75,10 +78,10 @@ export interface GridEditRowApi {
    * Callback fired when the cell changes are committed.
    * @param handler
    */
-  onEditCellChangeCommitted: (handler: (param: GridEditCellParams) => void) => void;
+  onEditCellChangeCommitted: (handler: (param: GridEditCellValueParams) => void) => void;
   /**
    * Callback fired when the edit cell value changed.
    * @param handler
    */
-  onEditCellChange: (handler: (param: GridEditCellParams) => void) => void;
+  onEditCellChange: (handler: (param: GridEditCellValueParams) => void) => void;
 }

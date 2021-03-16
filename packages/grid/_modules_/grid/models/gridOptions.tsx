@@ -20,7 +20,8 @@ import { GridSelectionModel } from './gridSelectionModel';
 import { GridSortDirection, GridSortModel } from './gridSortModel';
 import {
   GridCellModeChangeParams,
-  GridEditCellParams,
+  GridEditCellPropsParams,
+  GridEditCellValueParams,
   GridEditRowModelParams,
 } from './params/gridEditCellParams';
 
@@ -381,16 +382,20 @@ export interface GridOptions {
    * @param handler
    */
   onCellModeChange?: (params: GridCellModeChangeParams) => void;
+  onCellValueChange?: (params: GridEditCellValueParams) => void;
   /**
    * Callback fired when the edit cell value changed.
    * @param handler
    */
-  onEditCellChange?: (params: GridEditCellParams) => void;
+  onEditCellChange?: (params: GridEditCellPropsParams) => void;
   /**
    * Callback fired when the cell changes are committed.
    * @param handler
    */
-  onEditCellChangeCommitted?: (params: GridEditCellParams, event?: React.SyntheticEvent) => void;
+  onEditCellChangeCommitted?: (
+    params: GridEditCellPropsParams,
+    event?: React.SyntheticEvent,
+  ) => void;
   /**
    * Extend native column types with your new column types.
    */

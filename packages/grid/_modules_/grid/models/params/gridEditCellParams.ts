@@ -1,11 +1,16 @@
-import { GridCellMode } from '../gridCell';
-import { GridEditRowsModel, GridEditRowUpdate } from '../gridEditRowModel';
+import { GridCellMode, GridCellValue } from '../gridCell';
+import { GridEditRowsModel, GridEditCellProps } from '../gridEditRowModel';
 import { GridRowId } from '../gridRows';
 
-export interface GridEditCellParams {
+export interface GridEditCellPropsParams {
   id: GridRowId;
   field: string;
-  update: GridEditRowUpdate;
+  props: GridEditCellProps;
+}
+export interface GridEditCellValueParams {
+  id: GridRowId;
+  field: string;
+  value: GridCellValue;
 }
 
 export interface GridCellModeChangeParams {

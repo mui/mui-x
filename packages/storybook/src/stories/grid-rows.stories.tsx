@@ -14,8 +14,8 @@ import {
   GridRowData,
   useGridApiRef,
   XGrid,
-  GridEditCellParams,
   GRID_CELL_EXIT_EDIT,
+  GridEditCellPropsParams,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
@@ -401,7 +401,7 @@ const baselineEditProps = {
     {
       field: 'fullname',
       editable: true,
-      valueGetter: ({ row }) => `${row.firstname} ${row.lastname}`,
+      valueGetter: ({ row }) => `${row.firstname || ''} ${row.lastname || ''}`,
     },
     { field: 'username', editable: true },
     { field: 'email', editable: true, width: 150 },
@@ -460,13 +460,13 @@ export function EditRowsControl() {
   const isCellEditable = React.useCallback((params: GridCellParams) => params.row.id !== 0, []);
 
   const onEditCellChange = React.useCallback(
-    ({ id, update }: GridEditCellParams) => {
-      if (update.email) {
-        const isValid = validateEmail(update.email.value);
+    ({ id, field, props }: GridEditCellPropsParams) => {
+      if (field === 'email') {
+        const isValid = validateEmail(props.value);
         const newState = {};
         newState[id] = {
           ...editRowsModel[id],
-          email: { ...update.email, error: !isValid },
+          email: { ...props, error: !isValid },
         };
         setEditRowsModel((state) => ({ ...state, ...newState }));
         return;
@@ -474,31 +474,30 @@ export function EditRowsControl() {
       const newState = {};
       newState[id] = {
         ...editRowsModel[id],
-        ...update,
       };
+      newState[id][field] = props;
       setEditRowsModel((state) => ({ ...state, ...newState }));
     },
     [editRowsModel],
   );
 
   const onEditCellChangeCommitted = React.useCallback(
-    (params: GridEditCellParams, event?: React.SyntheticEvent) => {
-      const { id, update } = params;
+    (params: GridEditCellPropsParams, event?: React.SyntheticEvent) => {
+      const { id, field, props } = params;
       event!.persist();
       // we stop propagation as we want to switch back to view mode after we updated the value on the server
       event!.stopPropagation();
 
-      const field = Object.keys(update)[0]!;
       let cellUpdate: any = { id };
-      cellUpdate[field] = update[field].value;
+      cellUpdate[field] = props.value;
 
       const newState = {};
       newState[id] = {};
-      newState[id][field] = { ...update[field], endAdornment: <GridLoadIcon /> };
+      newState[id][field] = { ...props, endAdornment: <GridLoadIcon /> };
       setEditRowsModel((state) => ({ ...state, ...newState }));
 
-      if (update.fullname && update.fullname.value) {
-        const [firstname, lastname] = update.fullname.value.toString().split(' ');
+      if (field === 'fullname') {
+        const [firstname, lastname] = props.value!.toString().split(' ');
         cellUpdate = { id, firstname, lastname };
       }
 

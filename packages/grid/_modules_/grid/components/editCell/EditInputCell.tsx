@@ -4,7 +4,7 @@ import { GRID_CELL_EDIT_BLUR } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { isCellEditCommitKeys } from '../../utils/keyboardUtils';
 import { formatDateToLocalInputDate, isDate, mapColDefTypeToInputType } from '../../utils/utils';
-import { GridEditRowUpdate } from '../../models/gridEditRowModel';
+import { GridEditRowProps } from '../../models/gridEditRowModel';
 
 export function EditInputCell(props: GridCellParams & InputBaseProps) {
   const {
@@ -28,7 +28,7 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
   const onValueChange = React.useCallback(
     (event) => {
       const newValue = event.target.value;
-      const update: GridEditRowUpdate = {};
+      const update: GridEditRowProps = {};
       update[field] = {
         value: colDef.type === 'date' || colDef.type === 'dateTime' ? new Date(newValue) : newValue,
       };

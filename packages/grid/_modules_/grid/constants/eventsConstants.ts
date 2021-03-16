@@ -11,8 +11,6 @@ export const GRID_COMPONENT_ERROR = 'componentError';
 export const GRID_UNMOUNT = 'unmount';
 export const GRID_ELEMENT_FOCUS_OUT = 'gridFocusOut';
 
-export const GRID_CELL_CHANGE = 'cellChange';
-export const GRID_CELL_CHANGE_COMMITTED = 'cellChangeCommitted';
 export const GRID_CELL_MODE_CHANGE = 'cellModeChange';
 export const GRID_CELL_CLICK = 'cellClick';
 export const GRID_CELL_DOUBLE_CLICK = 'cellDoubleClick';
@@ -23,6 +21,9 @@ export const GRID_CELL_ENTER = 'cellEnter';
 export const GRID_CELL_LEAVE = 'cellLeave';
 export const GRID_CELL_KEYDOWN = 'cellKeyDown';
 export const GRID_CELL_EDIT_BLUR = 'cellEditBlur';
+export const GRID_CELL_EDIT_PROPS_CHANGE = 'cellEditPropsChange';
+export const GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED = 'cellEditPropsChangeCommitted';
+export const GRID_CELL_VALUE_CHANGE = 'cellValueChange';
 
 export const GRID_CELL_ENTER_EDIT = 'cellEnterEdit';
 export const GRID_CELL_EXIT_EDIT = 'cellExitEdit';
