@@ -39,7 +39,6 @@ export default function InfiniteLoadingGrid() {
 
   const loadServerRows = async (newRowLength) => {
     setLoading(true);
-    console.log('newRowLength', newRowLength);
     const newData = await getRealData(newRowLength, getCommodityColumns());
     // Simulate network throttle
     await sleep(Math.random() * 500 + 100);
