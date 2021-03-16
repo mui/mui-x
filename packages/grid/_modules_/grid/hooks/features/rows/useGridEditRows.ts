@@ -16,7 +16,7 @@ import {
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridEditRowApi } from '../../../models/api/gridEditRowApi';
 import { GridCellMode } from '../../../models/gridCell';
-import { GridEditRowsModel, GridEditRowProps } from '../../../models/gridEditRowModel';
+import { GridEditRowsModel } from '../../../models/gridEditRowModel';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridRowId } from '../../../models/gridRows';
 import { GridCellParams } from '../../../models/params/gridCellParams';
@@ -119,11 +119,11 @@ export function useGridEditRows(apiRef: GridApiRef) {
         apiRef.current.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE, params);
         return;
       }
-      const {id, field, props} = params;
+      const { id, field, props } = params;
       logger.debug(`Setting cell props on id: ${id} field: ${field}`);
       setGridState((state) => {
         const editRowsModel: GridEditRowsModel = { ...state.editRows };
-        editRowsModel[id] = {...state.editRows[id]};
+        editRowsModel[id] = { ...state.editRows[id] };
         editRowsModel[id][field] = props;
         return { ...state, editRows: editRowsModel };
       });
@@ -181,7 +181,11 @@ export function useGridEditRows(apiRef: GridApiRef) {
 
   const setCellValue = React.useCallback(
     (params: GridEditCellValueParams) => {
-      logger.debug(`Setting cell id: ${params.id} field: ${params.field} to value: ${params.value?.toString()}`);
+      logger.debug(
+        `Setting cell id: ${params.id} field: ${
+          params.field
+        } to value: ${params.value?.toString()}`,
+      );
       const rowUpdate = { id: params.id };
       rowUpdate[params.field] = params.value;
       apiRef.current.updateRows([rowUpdate]);
