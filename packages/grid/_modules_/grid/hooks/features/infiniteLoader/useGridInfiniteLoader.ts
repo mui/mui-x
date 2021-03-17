@@ -7,7 +7,7 @@ import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelecto
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndParams';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
-import { GridScrollParams } from '../../../models/params/gridScrollParams';
+import { scrollStateSelector } from '../virtualization/renderingStateSelector';
 
 export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
   const options = useGridSelector(apiRef, optionsSelector);
@@ -15,19 +15,14 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const isInScrollBottomArea = React.useRef<boolean>(false);
 
-  const getRealScroll = React.useCallback(
-    (): GridScrollParams => apiRef.current.getState().rendering.realScroll,
-    [apiRef],
-  );
-
   const handleGridScroll = React.useCallback(() => {
     if (!containerSizes) {
       return;
     }
 
-    const realScroll = getRealScroll();
+    const scrollState = scrollStateSelector(apiRef.current.getState());
     const scrollPositionBottom =
-      realScroll.top + containerSizes.windowSizes.height + options.scrollEndThreshold;
+      scrollState.top + containerSizes.windowSizes.height + options.scrollEndThreshold;
 
     if (scrollPositionBottom < containerSizes.dataContainerSizes.height) {
       isInScrollBottomArea.current = false;
@@ -46,7 +41,7 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
       apiRef.current.publishEvent(GRID_ROWS_SCROLL_END, rowScrollEndParam);
       isInScrollBottomArea.current = true;
     }
-  }, [options, containerSizes, apiRef, visibleColumns, getRealScroll]);
+  }, [options, containerSizes, apiRef, visibleColumns]);
 
   useGridApiEventHandler(apiRef, GRID_ROWS_SCROLL, handleGridScroll);
   useGridApiEventHandler(apiRef, GRID_ROWS_SCROLL_END, options.onRowsScrollEnd);
