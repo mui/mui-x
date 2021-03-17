@@ -289,4 +289,48 @@ describe('<XGrid /> - apiRef', () => {
     apiRef.current.publishEvent(GRID_ROWS_SCROLL);
     expect(handleOnRowsScrollEnd.callCount).to.equal(1);
   });
+
+  it('call onRowsScrollEnd when viewport scroll reaches the bottom', () => {
+    const handleOnRowsScrollEnd = spy();
+    const data = {
+      rows: [
+        {
+          id: 0,
+          brand: 'Nike',
+        },
+        {
+          id: 1,
+          brand: 'Adidas',
+        },
+        {
+          id: 2,
+          brand: 'Puma',
+        },
+        {
+          id: 3,
+          brand: 'Under Armor',
+        },
+        {
+          id: 4,
+          brand: 'Jordan',
+        },
+        {
+          id: 5,
+          brand: 'Reebok',
+        },
+      ],
+      columns: [{ field: 'brand', width: 100 }],
+    };
+
+    const { container } = render(
+      <div style={{ width: 300, height: 300 }}>
+        <XGrid columns={data.columns} rows={data.rows} onRowsScrollEnd={handleOnRowsScrollEnd} />
+      </div>,
+    );
+    const gridWindow = container.querySelector('.MuiDataGrid-window');
+    // arbitrary number to make sure that the bottom of the grid window is reached.
+    gridWindow.scrollTop = 12345;
+    gridWindow.dispatchEvent(new Event('scroll'));
+    expect(handleOnRowsScrollEnd.callCount).to.equal(1);
+  });
 });
