@@ -149,7 +149,6 @@ export const useGridVirtualRows = (
       const scrollParams = {
         left: scrollBar.hasScrollX ? rzScrollLeft : 0,
         top: scrollBar.hasScrollY ? rzScrollTop : 0,
-        absoluteTop: scrollBar.hasScrollY ? scrollTop : 0,
       };
 
       const page = lastState.rendering.virtualPage;
@@ -163,8 +162,14 @@ export const useGridVirtualRows = (
       } else {
         scrollTo(scrollParams);
       }
+      setRenderingState({
+        renderingZoneScroll: scrollParams,
+        realScroll: {
+          left: windowRef.current.scrollLeft,
+          top: windowRef.current.scrollTop,
+        },
+      });
       apiRef.current.publishEvent(GRID_ROWS_SCROLL, scrollParams);
-      setRenderingState({ renderingZoneScroll: scrollParams });
 
       const pageChanged =
         lastState.rendering.renderContext &&
@@ -262,13 +267,13 @@ export const useGridVirtualRows = (
   );
 
   const resetScroll = React.useCallback(() => {
-    scrollTo({ left: 0, top: 0, absoluteTop: 0 });
+    scrollTo({ left: 0, top: 0 });
     setRenderingState({ virtualPage: 1 });
 
     if (windowRef && windowRef.current) {
       windowRef.current.scrollTo(0, 0);
     }
-    setRenderingState({ renderingZoneScroll: { left: 0, top: 0, absoluteTop: 0 } });
+    setRenderingState({ renderingZoneScroll: { left: 0, top: 0 } });
   }, [scrollTo, setRenderingState, windowRef]);
 
   const scrollingTimeout = React.useRef<any>(null);

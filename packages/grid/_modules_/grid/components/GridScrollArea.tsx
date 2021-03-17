@@ -26,7 +26,6 @@ export const GridScrollArea = React.memo(function GridScrollArea(props: ScrollAr
   const scrollPosition = React.useRef<GridScrollParams>({
     left: 0,
     top: 0,
-    absoluteTop: 0,
   });
 
   const handleScrolling = React.useCallback((newScrollPosition) => {
@@ -53,7 +52,6 @@ export const GridScrollArea = React.memo(function GridScrollArea(props: ScrollAr
         api!.current.scroll({
           left: scrollPosition.current.left + offset,
           top: scrollPosition.current.top,
-          absoluteTop: scrollPosition.current.absoluteTop,
         });
       });
     },
