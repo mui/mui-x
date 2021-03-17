@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { GridScrollParams } from 'packages/grid/data-grid/dist/data-grid';
+import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridState } from '../core/gridState';
 import { InternalRenderingState } from './renderingState';
 
