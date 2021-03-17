@@ -29,6 +29,7 @@ import { useGridScrollFn } from '../../utils/useGridScrollFn';
 import { InternalRenderingState } from './renderingState';
 import { useGridVirtualColumns } from './useGridVirtualColumns';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
+import { scrollStateSelector } from './renderingStateSelector';
 
 export const useGridVirtualRows = (
   colRef: React.MutableRefObject<HTMLDivElement | null>,
@@ -312,6 +313,11 @@ export const useGridVirtualRows = (
     [windowRef, colRef, logger],
   );
 
+  const getScrollPosition = React.useCallback(
+    () => scrollStateSelector(apiRef.current.getState()),
+    [apiRef],
+  );
+
   const getContainerPropsState = React.useCallback(() => gridState.containerSizes, [
     gridState.containerSizes,
   ]);
@@ -332,6 +338,7 @@ export const useGridVirtualRows = (
     scrollToIndexes,
     getContainerPropsState,
     getRenderContextState,
+    getScrollPosition,
     updateViewport,
   };
   useGridApiMethod(apiRef, virtualApi, 'GridVirtualizationApi');

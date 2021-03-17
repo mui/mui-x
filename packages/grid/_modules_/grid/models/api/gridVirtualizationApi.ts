@@ -32,6 +32,10 @@ export interface GridVirtualizationApi {
    */
   getRenderContextState: () => Partial<GridRenderContextProps> | undefined;
   /**
+   * Get the current scroll position.
+   */
+  getScrollPosition: () => GridScrollParams;
+  /**
    * Refresh the viewport cells according to the scroll positions
    * @param forceRender
    */

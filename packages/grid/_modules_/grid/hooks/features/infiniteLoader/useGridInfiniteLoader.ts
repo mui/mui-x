@@ -7,7 +7,6 @@ import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelecto
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndParams';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
-import { scrollStateSelector } from '../virtualization/renderingStateSelector';
 
 export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
   const options = useGridSelector(apiRef, optionsSelector);
@@ -20,9 +19,9 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
       return;
     }
 
-    const scrollState = scrollStateSelector(apiRef.current.getState());
+    const scrollPosition = apiRef.current.getScrollPosition();
     const scrollPositionBottom =
-      scrollState.top + containerSizes.windowSizes.height + options.scrollEndThreshold;
+      scrollPosition.top + containerSizes.windowSizes.height + options.scrollEndThreshold;
 
     if (scrollPositionBottom < containerSizes.dataContainerSizes.height) {
       isInScrollBottomArea.current = false;
