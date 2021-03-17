@@ -1,6 +1,6 @@
 import { capitalize } from '@material-ui/core/utils';
 import * as React from 'react';
-import { GRID_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
+import { GRID_CELL_CSS_CLASS } from '../../constants/cssClassesConstants';
 import {
   GRID_CELL_CLICK,
   GRID_CELL_DOUBLE_CLICK,
@@ -10,10 +10,10 @@ import {
   GRID_CELL_MOUSE_DOWN,
   GRID_CELL_OUT,
   GRID_CELL_OVER,
-} from '../constants/eventsConstants';
-import { GridAlignment, GridCellMode, GridCellValue, GridRowId } from '../models';
-import { classnames } from '../utils';
-import { GridApiContext } from './GridApiContext';
+} from '../../constants/eventsConstants';
+import { GridAlignment, GridCellMode, GridCellValue, GridRowId } from '../../models/index';
+import { classnames } from '../../utils/index';
+import { GridApiContext } from '../GridApiContext';
 
 export interface GridCellProps {
   align: GridAlignment;

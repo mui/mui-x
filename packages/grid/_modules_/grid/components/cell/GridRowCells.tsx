@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { gridEditRowsStateSelector } from '../hooks/features/rows/gridEditRowsSelector';
+import { gridEditRowsStateSelector } from '../../hooks/features/rows/gridEditRowsSelector';
 import {
   GridCellClassParams,
   GridColumns,
@@ -7,12 +7,12 @@ import {
   GridCellClassRules,
   GridCellParams,
   GridCellIndexCoordinates,
-} from '../models';
+} from '../../models/index';
 import { GridCell, GridCellProps } from './GridCell';
-import { GridApiContext } from './GridApiContext';
-import { classnames, isFunction } from '../utils';
-import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
-import { useGridSelector } from '../hooks/features/core/useGridSelector';
+import { GridApiContext } from '../GridApiContext';
+import { classnames, isFunction } from '../../utils/index';
+import { gridDensityRowHeightSelector } from '../../hooks/features/density/densitySelector';
+import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 
 function applyCssClassRules(cellClassRules: GridCellClassRules, params: GridCellClassParams) {
   return Object.entries(cellClassRules).reduce((appliedCss, entry) => {

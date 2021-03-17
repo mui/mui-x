@@ -10,10 +10,10 @@ import { renderStateSelector } from '../hooks/features/virtualization/renderingS
 import { optionsSelector } from '../hooks/utils/optionsSelector';
 import { GridApiContext } from './GridApiContext';
 import { GridDataContainer } from './containers/GridDataContainer';
-import { GridEmptyCell } from './GridEmptyCell';
+import { GridEmptyCell } from './cell/GridEmptyCell';
 import { GridRenderingZone } from './GridRenderingZone';
 import { GridRow } from './GridRow';
-import { GridRowCells } from './GridRowCells';
+import { GridRowCells } from './cell/GridRowCells';
 import { GridStickyContainer } from './GridStickyContainer';
 
 type ViewportType = React.ForwardRefExoticComponent<React.RefAttributes<HTMLDivElement>>;

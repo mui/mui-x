@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GRID_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
+import { GRID_CELL_CSS_CLASS } from '../../constants/cssClassesConstants';
 
 export interface GridEmptyCellProps {
   width?: number;
