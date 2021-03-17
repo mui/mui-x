@@ -27,7 +27,6 @@ export interface GridCellProps {
   isEditable?: boolean;
   rowIndex?: number;
   showRightBorder?: boolean;
-  tabIndex?: number;
   value?: GridCellValue;
   width: number;
   cellMode?: GridCellMode;
@@ -48,7 +47,6 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     rowIndex,
     rowId,
     showRightBorder,
-    tabIndex,
     value,
     width,
   } = props;
@@ -128,7 +126,8 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
       data-mode={cellMode}
       aria-colindex={colIndex}
       style={style}
-      tabIndex={tabIndex}
+      /* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */
+      tabIndex={hasFocus ? 0 : -1}
       {...eventsHandlers}
     >
       {children || valueToRender?.toString()}

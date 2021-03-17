@@ -65,6 +65,8 @@ export const useGridKeyboardNavigation = (
 
   const navigateCells = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
+      event.preventDefault();
+
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
 

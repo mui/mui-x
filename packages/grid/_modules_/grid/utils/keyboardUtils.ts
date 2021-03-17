@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 export const isEscapeKey = (key: string): boolean => key === 'Escape';
 export const isEnterKey = (key: string): boolean => key === 'Enter';
 export const isTabKey = (key: string): boolean => key === 'Tab';
@@ -30,7 +32,7 @@ export const isCellEditCommitKeys = (key: string): boolean =>
   GRID_CELL_EDIT_COMMIT_KEYS.indexOf(key) > -1;
 
 export const isNavigationKey = (key: string) =>
-  isHomeOrEndKeys(key) || isArrowKeys(key) || isPageKeys(key) || isSpaceKey(key);
+  isHomeOrEndKeys(key) || isArrowKeys(key) || isPageKeys(key) || isSpaceKey(key) || isTabKey(key);
 
 export const isKeyboardEvent = (event: any): event is React.KeyboardEvent => !!event.key;
 

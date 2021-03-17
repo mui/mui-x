@@ -68,7 +68,6 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
             extendRowFullWidth={!options.disableExtendRowFullWidth}
             rowIndex={renderState.renderContext!.firstRowIdx! + idx}
             cellFocus={cellFocus}
-            domIndex={idx}
           />
           <GridEmptyCell width={renderState.renderContext!.rightEmptyWidth} height={rowHeight} />
         </GridRow>

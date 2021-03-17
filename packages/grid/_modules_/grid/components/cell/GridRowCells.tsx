@@ -24,7 +24,6 @@ function applyCssClassRules(cellClassRules: GridCellClassRules, params: GridCell
 
 interface RowCellsProps {
   columns: GridColumns;
-  domIndex: number;
   extendRowFullWidth: boolean;
   firstColIdx: number;
   hasScroll: { y: boolean; x: boolean };
@@ -39,7 +38,6 @@ interface RowCellsProps {
 export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
   const {
     columns,
-    domIndex,
     firstColIdx,
     hasScroll,
     lastColIdx,
@@ -102,7 +100,6 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
       formattedValue: cellParams.formattedValue,
       align: column.align || 'left',
       ...cssClassProp,
-      tabIndex: domIndex === 0 && colIdx === 0 ? 0 : -1,
       rowIndex,
       cellMode: cellParams.cellMode,
       colIndex: cellParams.colIndex,

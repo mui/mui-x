@@ -47,6 +47,7 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
   const handleKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
       if (inputBaseProps.error && isCellEditCommitKeys(event.key)) {
+        // Account for when tab/enter is pressed
         event.preventDefault();
         event.stopPropagation();
       }
