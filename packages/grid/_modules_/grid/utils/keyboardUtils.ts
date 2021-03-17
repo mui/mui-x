@@ -33,3 +33,5 @@ export const isNavigationKey = (key: string) =>
   isHomeOrEndKeys(key) || isArrowKeys(key) || isPageKeys(key) || isSpaceKey(key);
 
 export const isKeyboardEvent = (event: any): event is React.KeyboardEvent => !!event.key;
+
+export const isHideMenuKey = (key) => isTabKey(key) || isEscapeKey(key);

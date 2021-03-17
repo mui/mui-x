@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import * as React from 'react';
 import { createClientRenderStrictMode } from 'test/utils';
 
-describe('<XGrid /> - apiRef', () => {
+describe('<XGrid /> - Export', () => {
   before(function beforeHook() {
     if (/jsdom/.test(window.navigator.userAgent)) {
       // Need layouting

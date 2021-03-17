@@ -1,4 +1,10 @@
-import { GridApiRef, GridComponentProps, useGridApiRef, XGrid } from '@material-ui/x-grid';
+import {
+  GRID_CELL_KEYDOWN,
+  GridApiRef,
+  GridComponentProps,
+  useGridApiRef,
+  XGrid,
+} from '@material-ui/x-grid';
 import { expect } from 'chai';
 import * as React from 'react';
 import { getActiveCell, getCell } from 'test/utils/helperFn';
@@ -6,11 +12,9 @@ import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
   fireEvent,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  act,
 } from 'test/utils';
 
-describe('<XGrid /> - apiRef', () => {
+describe('<XGrid /> - Edit Rows', () => {
   let baselineProps;
 
   before(function beforeHook() {
@@ -67,12 +71,12 @@ describe('<XGrid /> - apiRef', () => {
   it('isCellEditable should add the class MuiDataGrid-cellEditable to editable cells but not prevent a cell from switching mode', () => {
     render(<TestCase isCellEditable={(params) => params.value === 'Adidas'} />);
     const cellNike = getCell(0, 0);
-    expect(cellNike!.classList.contains('MuiDataGrid-cellEditable')).to.equal(false);
+    expect(cellNike).to.not.have.class('MuiDataGrid-cellEditable');
     const cellAdidas = getCell(1, 0);
-    expect(cellAdidas!.classList.contains('MuiDataGrid-cellEditable')).to.equal(true);
+    expect(cellAdidas).to.have.class('MuiDataGrid-cellEditable');
 
     apiRef!.current.setCellMode(0, 'brand', 'edit');
-    expect(cellNike.classList.contains('MuiDataGrid-cellEditing')).to.equal(true);
+    expect(cellNike).to.have.class('MuiDataGrid-cellEditing');
   });
 
   it('should allow to switch between cell mode', () => {
@@ -80,13 +84,13 @@ describe('<XGrid /> - apiRef', () => {
     apiRef!.current.setCellMode(1, 'brand', 'edit');
     const cell = getCell(1, 0);
 
-    expect(cell.classList.contains('MuiDataGrid-cellEditable')).to.equal(true);
-    expect(cell.classList.contains('MuiDataGrid-cellEditing')).to.equal(true);
+    expect(cell).to.have.class('MuiDataGrid-cellEditable');
+    expect(cell).to.have.class('MuiDataGrid-cellEditing');
     expect(cell.querySelector('input')!.value).to.equal('Adidas');
 
     apiRef!.current.setCellMode(1, 'brand', 'view');
-    expect(cell.classList.contains('MuiDataGrid-cellEditable')).to.equal(true);
-    expect(cell.classList.contains('MuiDataGrid-cellEditing')).to.equal(false);
+    expect(cell).to.have.class('MuiDataGrid-cellEditable');
+    expect(cell).to.not.have.class('MuiDataGrid-cellEditing');
     expect(cell.querySelector('input')).to.equal(null);
   });
 
@@ -96,8 +100,8 @@ describe('<XGrid /> - apiRef', () => {
     cell.focus();
     fireEvent.doubleClick(cell);
 
-    expect(cell.classList.contains('MuiDataGrid-cellEditable')).to.equal(true);
-    expect(cell.classList.contains('MuiDataGrid-cellEditing')).to.equal(true);
+    expect(cell).to.have.class('MuiDataGrid-cellEditable');
+    expect(cell).to.have.class('MuiDataGrid-cellEditing');
     expect(cell.querySelector('input')!.value).to.equal('Adidas');
   });
 
@@ -107,8 +111,8 @@ describe('<XGrid /> - apiRef', () => {
     cell.focus();
     fireEvent.keyDown(cell, { key: 'Enter' });
 
-    expect(cell.classList.contains('MuiDataGrid-cellEditable')).to.equal(true);
-    expect(cell.classList.contains('MuiDataGrid-cellEditing')).to.equal(true);
+    expect(cell).to.have.class('MuiDataGrid-cellEditable');
+    expect(cell).to.have.class('MuiDataGrid-cellEditing');
     expect(cell.querySelector('input')!.value).to.equal('Adidas');
   });
 
@@ -119,27 +123,26 @@ describe('<XGrid /> - apiRef', () => {
 
     expect(cell.textContent).to.equal('Adidas');
     fireEvent.keyDown(cell, { key: 'Delete' });
-    expect(cell.classList.contains('MuiDataGrid-cellEditable')).to.equal(true);
-    expect(cell.classList.contains('MuiDataGrid-cellEditing')).to.equal(false);
+    expect(cell).to.have.class('MuiDataGrid-cellEditable');
+    expect(cell).to.not.have.class('MuiDataGrid-cellEditing');
     expect(cell.textContent).to.equal('');
   });
 
-  // Due to an issue with the keyDown event in test library, this test is not working
+  // Due to an issue with the keyDown event in test library, this test uses the apiRef to publish an event
   // https://github.com/testing-library/dom-testing-library/issues/405
-  // eslint-disable-next-line mocha/no-skipped-tests
-  xit('should allow to edit a cell value by typing an alpha char', () => {
+  it('should allow to edit a cell value by typing an alpha char', () => {
     render(<TestCase />);
     const cell = getCell(1, 0);
     cell.focus();
     expect(cell.textContent).to.equal('Adidas');
-    act(() => {
-      fireEvent.keyDown(cell, { key: 'a', code: 1, target: cell });
-    });
-    expect(cell.classList.contains('MuiDataGrid-cellEditable')).to.equal(true);
-    expect(cell.classList.contains('MuiDataGrid-cellEditing')).to.equal(true);
-    expect(cell.textContent).to.equal('a');
+    const params = apiRef.current.getCellParams(1, 'brand');
+    apiRef.current.publishEvent(GRID_CELL_KEYDOWN, params, { key: 'a', code: 1, target: cell });
+    // fireEvent.keyDown(cell, { key: 'a', code: 1, target: cell });
 
-    expect(cell.querySelector('input')!.value).to.equal('a');
+    expect(cell).to.have.class('MuiDataGrid-cellEditable');
+    expect(cell).to.have.class('MuiDataGrid-cellEditing');
+    // we can't check input as we did not fire the real keyDown event
+    // expect(cell.querySelector('input')!.value).to.equal('a');
   });
 
   it('should allow to rollback from edit changes using Escape', () => {
@@ -154,8 +157,8 @@ describe('<XGrid /> - apiRef', () => {
     expect(cell.querySelector('input')!.value).to.equal('n');
 
     fireEvent.keyDown(input, { key: 'Escape' });
-    expect(cell.classList.contains('MuiDataGrid-cellEditable')).to.equal(true);
-    expect(cell.classList.contains('MuiDataGrid-cellEditing')).to.equal(false);
+    expect(cell).to.have.class('MuiDataGrid-cellEditable');
+    expect(cell).to.not.have.class('MuiDataGrid-cellEditing');
     expect(cell.textContent).to.equal('Adidas');
   });
 
@@ -170,8 +173,8 @@ describe('<XGrid /> - apiRef', () => {
     expect(cell.querySelector('input')!.value).to.equal('n');
 
     fireEvent.keyDown(input, { key: 'Enter' });
-    expect(cell.classList.contains('MuiDataGrid-cellEditable')).to.equal(true);
-    expect(cell.classList.contains('MuiDataGrid-cellEditing')).to.equal(false);
+    expect(cell).to.have.class('MuiDataGrid-cellEditable');
+    expect(cell).to.not.have.class('MuiDataGrid-cellEditing');
     expect(cell.textContent).to.equal('n');
     expect(getActiveCell()).to.equal('2-0');
   });
@@ -188,8 +191,8 @@ describe('<XGrid /> - apiRef', () => {
     expect(cell.querySelector('input')!.value).to.equal('n');
 
     fireEvent.keyDown(input, { key: 'Tab' });
-    expect(cell.classList.contains('MuiDataGrid-cellEditable')).to.equal(true);
-    expect(cell.classList.contains('MuiDataGrid-cellEditing')).to.equal(false);
+    expect(cell).to.have.class('MuiDataGrid-cellEditable');
+    expect(cell).to.not.have.class('MuiDataGrid-cellEditing');
     expect(cell.textContent).to.equal('n');
     expect(getActiveCell()).to.equal('1-1');
   });
@@ -206,8 +209,8 @@ describe('<XGrid /> - apiRef', () => {
     expect(cell.querySelector('input')!.value).to.equal('1970');
 
     fireEvent.keyDown(input, { key: 'Tab', shiftKey: true });
-    expect(cell.classList.contains('MuiDataGrid-cellEditable')).to.equal(true);
-    expect(cell.classList.contains('MuiDataGrid-cellEditing')).to.equal(false);
+    expect(cell).to.have.class('MuiDataGrid-cellEditable');
+    expect(cell).to.not.have.class('MuiDataGrid-cellEditing');
     expect(cell.textContent).to.equal('1970');
     expect(getActiveCell()).to.equal('1-0');
   });

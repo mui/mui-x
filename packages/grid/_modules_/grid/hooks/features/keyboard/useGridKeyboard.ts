@@ -23,7 +23,6 @@ import { useLogger } from '../../utils/useLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { gridSelectionStateSelector } from '../selection/gridSelectionSelector';
 import { KeyboardState } from './keyboardState';
-import { useGridKeyboardNavigation } from './useGridKeyboardNavigation';
 
 export const useGridKeyboard = (
   gridRootRef: React.RefObject<HTMLDivElement>,
@@ -32,17 +31,24 @@ export const useGridKeyboard = (
   const logger = useLogger('useGridKeyboard');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const selectionState = useGridSelector(apiRef, gridSelectionStateSelector);
-  useGridKeyboardNavigation(gridRootRef, apiRef);
 
-  const onMultipleKeyChange = React.useCallback(
+  const setMultipleKeyState = React.useCallback(
     (isPressed: boolean) => {
-      setGridState((state) => {
+      const hasChanged = setGridState((state) => {
+        if (state.keyboard.isMultipleKeyPressed === isPressed) {
+          return state;
+        }
+
         logger.debug(`Toggling keyboard multiple key pressed to ${isPressed}`);
         const keyboardState: KeyboardState = { ...state.keyboard, isMultipleKeyPressed: isPressed };
         return { ...state, keyboard: keyboardState };
       });
-      forceUpdate();
 
+      if (!hasChanged) {
+        return;
+      }
+
+      forceUpdate();
       apiRef.current.publishEvent(GRID_MULTIPLE_KEY_PRESS_CHANGED, isPressed);
     },
     [apiRef, forceUpdate, logger, setGridState],
@@ -114,34 +120,32 @@ export const useGridKeyboard = (
     document.execCommand('copy');
   }, [selectionState]);
 
-  const onKeyDownHandler = React.useCallback(
+  const handleKeyDown = React.useCallback(
     (event: KeyboardEvent) => {
       if (isMultipleKey(event.key)) {
         logger.debug('Multiple Select key pressed');
-        onMultipleKeyChange(true);
+        setMultipleKeyState(true);
       }
     },
-    [logger, onMultipleKeyChange],
+    [logger, setMultipleKeyState],
   );
 
-  const onKeyUpHandler = React.useCallback(
+  const handleKeyUp = React.useCallback(
     (event: KeyboardEvent) => {
       if (isMultipleKey(event.key)) {
         logger.debug('Multiple Select key released');
-        onMultipleKeyChange(false);
+        setMultipleKeyState(false);
       }
     },
-    [logger, onMultipleKeyChange],
+    [logger, setMultipleKeyState],
   );
 
-  const onFocusOutHandler = React.useCallback(
+  const handleFocusOut = React.useCallback(
     (args) => {
       logger.debug('Grid lost focus, releasing key press', args);
-      if (apiRef.current.getState().keyboard.isMultipleKeyPressed) {
-        onMultipleKeyChange(false);
-      }
+      setMultipleKeyState(false);
     },
-    [apiRef, logger, onMultipleKeyChange],
+    [logger, setMultipleKeyState],
   );
 
   const handleCellKeyDown = React.useCallback(
@@ -181,8 +185,8 @@ export const useGridKeyboard = (
     [apiRef, expandSelection, handleCopy, selectActiveRow],
   );
 
-  useGridApiEventHandler(apiRef, GRID_KEYDOWN, onKeyDownHandler);
+  useGridApiEventHandler(apiRef, GRID_KEYDOWN, handleKeyDown);
   useGridApiEventHandler(apiRef, GRID_CELL_KEYDOWN, handleCellKeyDown);
-  useGridApiEventHandler(apiRef, GRID_KEYUP, onKeyUpHandler);
-  useGridApiEventHandler(apiRef, GRID_ELEMENT_FOCUS_OUT, onFocusOutHandler);
+  useGridApiEventHandler(apiRef, GRID_KEYUP, handleKeyUp);
+  useGridApiEventHandler(apiRef, GRID_ELEMENT_FOCUS_OUT, handleFocusOut);
 };

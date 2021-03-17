@@ -5,7 +5,7 @@ import { GridCellParams } from '../../models/params/gridCellParams';
 import { isCellEditCommitKeys } from '../../utils/keyboardUtils';
 import { formatDateToLocalInputDate, isDate, mapColDefTypeToInputType } from '../../utils/utils';
 
-export function EditInputCell(props: GridCellParams & InputBaseProps) {
+export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
   const {
     id,
     value,
@@ -24,7 +24,15 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
 
   const [valueState, setValueState] = React.useState(value);
 
-  const onValueChange = React.useCallback(
+  const handleBlur = React.useCallback(
+    (event: React.SyntheticEvent) => {
+      const params = api.getCellParams(id, field);
+      api.publishEvent(GRID_CELL_EDIT_BLUR, params, event);
+    },
+    [api, field, id],
+  );
+
+  const handleChange = React.useCallback(
     (event) => {
       const newValue = event.target.value;
       const editProps = {
@@ -36,7 +44,7 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
     [api, colDef.type, field, id],
   );
 
-  const onKeyDown = React.useCallback(
+  const handleKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
       if (inputBaseProps.error && isCellEditCommitKeys(event.key)) {
         event.preventDefault();
@@ -44,13 +52,6 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
       }
     },
     [inputBaseProps.error],
-  );
-  const onBlur = React.useCallback(
-    (event: React.SyntheticEvent) => {
-      const params = api.getCellParams(id, field);
-      api.publishEvent(GRID_CELL_EDIT_BLUR, params, event);
-    },
-    [api, field, id],
   );
 
   const inputType = mapColDefTypeToInputType(colDef.type);
@@ -66,15 +67,15 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
   return (
     <InputBase
       autoFocus
-      fullWidth
       className="MuiDataGrid-editCellInputBase"
-      onKeyDown={onKeyDown}
-      value={inputFormattedValue}
-      onChange={onValueChange}
-      onBlur={onBlur}
+      fullWidth
       type={inputType}
+      value={inputFormattedValue}
+      onBlur={handleBlur}
+      onChange={handleChange}
+      onKeyDown={handleKeyDown}
       {...inputBaseProps}
     />
   );
 }
-export const renderEditInputCell = (params) => <EditInputCell {...params} />;
+export const renderEditInputCell = (params) => <GridEditInputCell {...params} />;

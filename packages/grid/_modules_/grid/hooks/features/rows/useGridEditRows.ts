@@ -21,7 +21,6 @@ import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridRowId } from '../../../models/gridRows';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import {
-  GridCellModeChangeParams,
   GridEditCellPropsParams,
   GridEditCellValueParams,
   GridEditRowModelParams,
@@ -207,34 +206,6 @@ export function useGridEditRows(apiRef: GridApiRef) {
     [apiRef, logger, options.editMode],
   );
 
-  const onEditRowModelChange = React.useCallback(
-    (handler: (param: GridEditRowModelParams) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(GRID_ROW_EDIT_MODEL_CHANGE, handler);
-    },
-    [apiRef],
-  );
-
-  const onCellModeChange = React.useCallback(
-    (handler: (param: GridCellModeChangeParams) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(GRID_CELL_MODE_CHANGE, handler);
-    },
-    [apiRef],
-  );
-
-  const onEditCellChange = React.useCallback(
-    (handler: (param: GridEditCellValueParams) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(GRID_CELL_EDIT_PROPS_CHANGE, handler);
-    },
-    [apiRef],
-  );
-
-  const onEditCellChangeCommitted = React.useCallback(
-    (handler: (param: GridEditCellValueParams) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED, handler);
-    },
-    [apiRef],
-  );
-
   const handleExitEdit = React.useCallback(
     (params: GridCellParams, event: React.SyntheticEvent) => {
       setCellMode(params.id, params.field, 'view');
@@ -269,13 +240,16 @@ export function useGridEditRows(apiRef: GridApiRef) {
     [apiRef, setCellMode],
   );
 
-  const preventTextSelection = React.useCallback((params, event) => {
-    const isMoreThanOneClick = event.detail > 1;
-    if (params.isEditable && isMoreThanOneClick) {
-      // If we click more than one time, then we prevent the default behavior of selecting the text cell.
-      event.preventDefault();
-    }
-  }, []);
+  const preventTextSelection = React.useCallback(
+    (params: GridCellParams, event: React.MouseEvent) => {
+      const isMoreThanOneClick = event.detail > 1;
+      if (params.isEditable && params.cellMode === 'view' && isMoreThanOneClick) {
+        // If we click more than one time, then we prevent the default behavior of selecting the text cell.
+        event.preventDefault();
+      }
+    },
+    [],
+  );
 
   const handleCellEditBlur = React.useCallback(
     (params: GridCellParams, event) => {
@@ -349,11 +323,6 @@ export function useGridEditRows(apiRef: GridApiRef) {
       getEditCellValueParams,
       setEditRowsModel,
       getEditRowsModel,
-
-      onEditRowModelChange,
-      onCellModeChange,
-      onEditCellChangeCommitted,
-      onEditCellChange,
     },
     'EditRowApi',
   );
