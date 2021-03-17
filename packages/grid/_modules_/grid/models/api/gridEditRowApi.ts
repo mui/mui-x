@@ -1,5 +1,5 @@
 import { GridCellMode } from '../gridCell';
-import { GridEditCellProps, GridEditRowsModel, GridEditRowProps } from '../gridEditRowModel';
+import { GridEditCellProps, GridEditRowsModel } from '../gridEditRowModel';
 import { GridRowId } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
 import {
