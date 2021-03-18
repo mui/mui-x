@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { GRID_RESIZE, GRID_SCROLL, GRID_SCROLLING } from '../../../constants/eventsConstants';
+import {
+  GRID_RESIZE,
+  GRID_NATIVE_SCROLL,
+  GRID_ROWS_SCROLL,
+} from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridVirtualizationApi } from '../../../models/api/gridVirtualizationApi';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
@@ -25,6 +29,7 @@ import { useGridScrollFn } from '../../utils/useGridScrollFn';
 import { InternalRenderingState } from './renderingState';
 import { useGridVirtualColumns } from './useGridVirtualColumns';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
+import { scrollStateSelector } from './renderingStateSelector';
 
 export const useGridVirtualRows = (
   colRef: React.MutableRefObject<HTMLDivElement | null>,
@@ -157,9 +162,15 @@ export const useGridVirtualRows = (
         requireRerender = true;
       } else {
         scrollTo(scrollParams);
-        apiRef.current.publishEvent(GRID_SCROLLING, scrollParams);
       }
-      setRenderingState({ renderingZoneScroll: scrollParams });
+      setRenderingState({
+        renderingZoneScroll: scrollParams,
+        realScroll: {
+          left: windowRef.current.scrollLeft,
+          top: windowRef.current.scrollTop,
+        },
+      });
+      apiRef.current.publishEvent(GRID_ROWS_SCROLL, scrollParams);
 
       const pageChanged =
         lastState.rendering.renderContext &&
@@ -302,6 +313,11 @@ export const useGridVirtualRows = (
     [windowRef, colRef, logger],
   );
 
+  const getScrollPosition = React.useCallback(
+    () => scrollStateSelector(apiRef.current.getState()),
+    [apiRef],
+  );
+
   const getContainerPropsState = React.useCallback(() => gridState.containerSizes, [
     gridState.containerSizes,
   ]);
@@ -322,6 +338,7 @@ export const useGridVirtualRows = (
     scrollToIndexes,
     getContainerPropsState,
     getRenderContextState,
+    getScrollPosition,
     updateViewport,
   };
   useGridApiMethod(apiRef, virtualApi, 'GridVirtualizationApi');
@@ -386,11 +403,11 @@ export const useGridVirtualRows = (
     [logger],
   );
 
-  useNativeEventListener(apiRef, windowRef, GRID_SCROLL, handleScroll, { passive: true });
+  useNativeEventListener(apiRef, windowRef, GRID_NATIVE_SCROLL, handleScroll, { passive: true });
   useNativeEventListener(
     apiRef,
     () => renderingZoneRef.current?.parentElement,
-    GRID_SCROLL,
+    GRID_NATIVE_SCROLL,
     preventViewportScroll,
   );
   useGridApiEventHandler(apiRef, GRID_RESIZE, updateViewport);
