@@ -7,7 +7,7 @@ export const GridStickyContainer: React.FC<ElementSize> = ({ height, width, chil
     style={{
       minWidth: width,
       maxWidth: width,
-      minHeight: height,
+      //minHeight: height,
       maxHeight: height,
     }}
   >

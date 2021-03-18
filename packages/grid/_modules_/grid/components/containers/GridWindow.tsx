@@ -28,11 +28,13 @@ export const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(func
     apiRef!.current.resize();
   }, [apiRef]);
 
+  const hasScrollY = gridState.scrollBar.hasScrollY;
+const height = autoHeight ? size.height : gridState.containerSizes?.windowSizes.height;
   return (
     <div
       style={{
         width: size.width,
-        height: getTotalHeight(gridState.options, gridState.containerSizes, size.height),
+        height: height!, //getTotalHeight(gridState.options, gridState.containerSizes, size.height),
       }}
     >
       <div

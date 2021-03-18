@@ -13,6 +13,8 @@ export interface GridScrollBarState {
    * The scrollbar size.
    */
   scrollBarSize: { x: number; y: number };
+
+  virtual?: any
 }
 
 /**

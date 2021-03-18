@@ -149,7 +149,7 @@ export const useGridVirtualRows = (
 
       const scrollParams = {
         left: scrollBar.hasScrollX ? rzScrollLeft : 0,
-        top: scrollBar.hasScrollY ? rzScrollTop : 0,
+        top:  rzScrollTop,
       };
 
       const page = lastState.rendering.virtualPage;
