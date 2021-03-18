@@ -1,11 +1,11 @@
 import * as React from 'react';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
+import { GRID_CELL_EDIT_BLUR } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
+import { isCellEditCommitKeys } from '../../utils/keyboardUtils';
 import { formatDateToLocalInputDate, isDate, mapColDefTypeToInputType } from '../../utils/utils';
-import { GridEditRowUpdate } from '../../models/gridEditRowModel';
-import { GridEditRowApi } from '../../models/api/gridEditRowApi';
 
-export function EditInputCell(props: GridCellParams & InputBaseProps) {
+export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
   const {
     id,
     value,
@@ -14,6 +14,7 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
     field,
     row,
     colDef,
+    cellMode,
     getValue,
     rowIndex,
     colIndex,
@@ -21,35 +22,37 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
     ...inputBaseProps
   } = props;
 
-  const editRowApi = api as GridEditRowApi;
   const [valueState, setValueState] = React.useState(value);
 
-  const onValueChange = React.useCallback(
+  const handleBlur = React.useCallback(
+    (event: React.SyntheticEvent) => {
+      const params = api.getCellParams(id, field);
+      api.publishEvent(GRID_CELL_EDIT_BLUR, params, event);
+    },
+    [api, field, id],
+  );
+
+  const handleChange = React.useCallback(
     (event) => {
       const newValue = event.target.value;
-      const update: GridEditRowUpdate = {};
-      update[field] = {
+      const editProps = {
         value: colDef.type === 'date' || colDef.type === 'dateTime' ? new Date(newValue) : newValue,
       };
       setValueState(newValue);
-      editRowApi.setEditCellProps(row.id, update);
+      api.setEditCellProps({ id, field, props: editProps });
     },
-    [editRowApi, colDef.type, field, row.id],
+    [api, colDef.type, field, id],
   );
 
-  const onKeyDown = React.useCallback(
+  const handleKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
-      if (!inputBaseProps.error && event.key === 'Enter') {
-        const update: GridEditRowUpdate = {};
-        update[field] = { value };
-        editRowApi.commitCellChange(row.id, update);
-      }
-
-      if (event.key === 'Escape') {
-        editRowApi.setCellMode(row.id, field, 'view');
+      if (inputBaseProps.error && isCellEditCommitKeys(event.key)) {
+        // Account for when tab/enter is pressed
+        event.preventDefault();
+        event.stopPropagation();
       }
     },
-    [inputBaseProps.error, row.id, field, value, editRowApi],
+    [inputBaseProps.error],
   );
 
   const inputType = mapColDefTypeToInputType(colDef.type);
@@ -65,14 +68,15 @@ export function EditInputCell(props: GridCellParams & InputBaseProps) {
   return (
     <InputBase
       autoFocus
-      fullWidth
       className="MuiDataGrid-editCellInputBase"
-      onKeyDown={onKeyDown}
-      value={inputFormattedValue}
-      onChange={onValueChange}
+      fullWidth
       type={inputType}
+      value={inputFormattedValue}
+      onBlur={handleBlur}
+      onChange={handleChange}
+      onKeyDown={handleKeyDown}
       {...inputBaseProps}
     />
   );
 }
-export const renderEditInputCell = (params) => <EditInputCell {...params} />;
+export const renderEditInputCell = (params) => <GridEditInputCell {...params} />;

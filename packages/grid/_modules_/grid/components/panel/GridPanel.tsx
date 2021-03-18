@@ -4,7 +4,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import { GridApiContext } from '../GridApiContext';
-import { isMuiV5 } from '../../utils';
+import { isEscapeKey, isMuiV5 } from '../../utils';
 
 export interface GridPanelProps {
   children?: React.ReactNode;
@@ -50,8 +50,8 @@ export function GridPanel(props: GridPanelProps) {
   }, [apiRef]);
 
   const handleKeyDown = React.useCallback(
-    (event) => {
-      if (event.key === 'Escape') {
+    (event: React.KeyboardEvent) => {
+      if (isEscapeKey(event.key)) {
         apiRef!.current.hidePreferences();
       }
     },

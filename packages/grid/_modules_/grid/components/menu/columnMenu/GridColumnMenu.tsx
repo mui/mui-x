@@ -1,6 +1,7 @@
 import * as React from 'react';
 import MenuList from '@material-ui/core/MenuList';
 import { GridColDef } from '../../../models/colDef/gridColDef';
+import { isHideMenuKey, isTabKey } from '../../../utils/keyboardUtils';
 import { GridColumnsMenuItem } from './GridColumnsMenuItem';
 import { GridFilterMenuItem } from './GridFilterMenuItem';
 import { HideGridColMenuItem } from './HideGridColMenuItem';
@@ -18,10 +19,10 @@ export function GridColumnMenu(props: GridColumnMenuProps) {
   const { hideMenu, currentColumn, open, id, labelledby } = props;
   const handleListKeyDown = React.useCallback(
     (event: React.KeyboardEvent) => {
-      if (event.key === 'Tab') {
+      if (isTabKey(event.key)) {
         event.preventDefault();
       }
-      if (event.key === 'Tab' || event.key === 'Escape') {
+      if (isHideMenuKey(event.key)) {
         hideMenu();
       }
     },

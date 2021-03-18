@@ -9,10 +9,10 @@ import { renderStateSelector } from '../hooks/features/virtualization/renderingS
 import { optionsSelector } from '../hooks/utils/optionsSelector';
 import { GridApiContext } from './GridApiContext';
 import { GridDataContainer } from './containers/GridDataContainer';
-import { GridEmptyCell } from './GridEmptyCell';
+import { GridEmptyCell } from './cell/GridEmptyCell';
 import { GridRenderingZone } from './GridRenderingZone';
 import { GridRow } from './GridRow';
-import { GridRowCells } from './GridRowCells';
+import { GridRowCells } from './cell/GridRowCells';
 import { GridStickyContainer } from './GridStickyContainer';
 import {
   gridContainerSizesSelector,
@@ -68,7 +68,6 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
             extendRowFullWidth={!options.disableExtendRowFullWidth}
             rowIndex={renderState.renderContext!.firstRowIdx! + idx}
             cellFocus={cellFocus}
-            domIndex={idx}
           />
           <GridEmptyCell width={renderState.renderContext!.rightEmptyWidth} height={rowHeight} />
         </GridRow>

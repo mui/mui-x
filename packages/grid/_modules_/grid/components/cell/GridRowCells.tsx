@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { gridEditRowsStateSelector } from '../hooks/features/rows/gridEditRowsSelector';
+import { gridEditRowsStateSelector } from '../../hooks/features/rows/gridEditRowsSelector';
 import {
   GridCellClassParams,
   GridColumns,
@@ -7,12 +7,12 @@ import {
   GridCellClassRules,
   GridCellParams,
   GridCellIndexCoordinates,
-} from '../models';
+} from '../../models/index';
 import { GridCell, GridCellProps } from './GridCell';
-import { GridApiContext } from './GridApiContext';
-import { classnames, isFunction } from '../utils';
-import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
-import { useGridSelector } from '../hooks/features/core/useGridSelector';
+import { GridApiContext } from '../GridApiContext';
+import { classnames, isFunction } from '../../utils/index';
+import { gridDensityRowHeightSelector } from '../../hooks/features/density/densitySelector';
+import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 
 function applyCssClassRules(cellClassRules: GridCellClassRules, params: GridCellClassParams) {
   return Object.entries(cellClassRules).reduce((appliedCss, entry) => {
@@ -24,7 +24,6 @@ function applyCssClassRules(cellClassRules: GridCellClassRules, params: GridCell
 
 interface RowCellsProps {
   columns: GridColumns;
-  domIndex: number;
   extendRowFullWidth: boolean;
   firstColIdx: number;
   hasScroll: { y: boolean; x: boolean };
@@ -39,7 +38,6 @@ interface RowCellsProps {
 export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
   const {
     columns,
-    domIndex,
     firstColIdx,
     hasScroll,
     lastColIdx,
@@ -102,8 +100,8 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
       formattedValue: cellParams.formattedValue,
       align: column.align || 'left',
       ...cssClassProp,
-      tabIndex: domIndex === 0 && colIdx === 0 ? 0 : -1,
       rowIndex,
+      cellMode: cellParams.cellMode,
       colIndex: cellParams.colIndex,
       children: cellComponent,
       isEditable: cellParams.isEditable,

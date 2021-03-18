@@ -1,4 +1,4 @@
-import { GridCellValue } from '../gridCell';
+import { GridCellMode, GridCellValue } from '../gridCell';
 import { GridRowId, GridRowModel } from '../gridRows';
 
 /**
@@ -41,11 +41,11 @@ export interface GridCellParams {
   /**
    * The row index of the row that the current cell belongs to.
    */
-  rowIndex?: number;
+  rowIndex: number;
   /**
    * The column index that the current cell belongs to.
    */
-  colIndex?: number;
+  colIndex: number;
   /**
    * GridApi that let you manipulate the grid.
    */
@@ -54,6 +54,10 @@ export interface GridCellParams {
    * If true, the cell is editable.
    */
   isEditable?: boolean;
+  /**
+   * The mode of the cell.
+   */
+  cellMode: GridCellMode;
 }
 
 /**

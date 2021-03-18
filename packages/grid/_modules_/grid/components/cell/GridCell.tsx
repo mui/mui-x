@@ -1,17 +1,19 @@
 import { capitalize } from '@material-ui/core/utils';
 import * as React from 'react';
-import { GRID_CELL_CSS_CLASS } from '../constants/cssClassesConstants';
+import { GRID_CELL_CSS_CLASS } from '../../constants/cssClassesConstants';
 import {
   GRID_CELL_CLICK,
   GRID_CELL_DOUBLE_CLICK,
   GRID_CELL_ENTER,
+  GRID_CELL_KEYDOWN,
   GRID_CELL_LEAVE,
+  GRID_CELL_MOUSE_DOWN,
   GRID_CELL_OUT,
   GRID_CELL_OVER,
-} from '../constants/eventsConstants';
-import { GridAlignment, GridCellValue, GridRowId } from '../models';
-import { classnames } from '../utils';
-import { GridApiContext } from './GridApiContext';
+} from '../../constants/eventsConstants';
+import { GridAlignment, GridCellMode, GridCellValue, GridRowId } from '../../models/index';
+import { classnames } from '../../utils/index';
+import { GridApiContext } from '../GridApiContext';
 
 export interface GridCellProps {
   align: GridAlignment;
@@ -25,9 +27,9 @@ export interface GridCellProps {
   isEditable?: boolean;
   rowIndex?: number;
   showRightBorder?: boolean;
-  tabIndex?: number;
   value?: GridCellValue;
   width: number;
+  cellMode?: GridCellMode;
 }
 
 export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
@@ -35,6 +37,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     align,
     children,
     colIndex,
+    cellMode,
     cssClass,
     field,
     formattedValue,
@@ -44,7 +47,6 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     rowIndex,
     rowId,
     showRightBorder,
-    tabIndex,
     value,
     width,
   } = props;
@@ -63,12 +65,6 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     },
   );
 
-  React.useEffect(() => {
-    if (hasFocus && cellRef.current) {
-      cellRef.current.focus();
-    }
-  }, [hasFocus]);
-
   const publishClick = React.useCallback(
     (eventName: string) => (event: React.MouseEvent) => {
       const params = apiRef!.current.getCellParams(rowId, field || '');
@@ -81,7 +77,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
   );
 
   const publish = React.useCallback(
-    (eventName: string) => (event: React.MouseEvent) =>
+    (eventName: string) => (event: React.SyntheticEvent) =>
       apiRef!.current.publishEvent(
         eventName,
         apiRef!.current.getCellParams(rowId!, field || ''),
@@ -90,14 +86,16 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     [apiRef, field, rowId],
   );
 
-  const mouseEventsHandlers = React.useMemo(
+  const eventsHandlers = React.useMemo(
     () => ({
       onClick: publishClick(GRID_CELL_CLICK),
       onDoubleClick: publish(GRID_CELL_DOUBLE_CLICK),
+      onMouseDown: publish(GRID_CELL_MOUSE_DOWN),
       onMouseOver: publish(GRID_CELL_OVER),
       onMouseOut: publish(GRID_CELL_OUT),
       onMouseEnter: publish(GRID_CELL_ENTER),
       onMouseLeave: publish(GRID_CELL_LEAVE),
+      onKeyDown: publish(GRID_CELL_KEYDOWN),
     }),
     [publish, publishClick],
   );
@@ -110,6 +108,12 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     maxHeight: height,
   };
 
+  React.useLayoutEffect(() => {
+    if (hasFocus && cellMode === 'view' && cellRef.current) {
+      cellRef.current!.focus();
+    }
+  });
+
   return (
     <div
       ref={cellRef}
@@ -119,10 +123,12 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
       data-field={field}
       data-rowindex={rowIndex}
       data-editable={isEditable}
+      data-mode={cellMode}
       aria-colindex={colIndex}
       style={style}
-      tabIndex={tabIndex}
-      {...mouseEventsHandlers}
+      /* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */
+      tabIndex={hasFocus ? 0 : -1}
+      {...eventsHandlers}
     >
       {children || valueToRender?.toString()}
     </div>

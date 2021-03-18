@@ -4,6 +4,7 @@ import { unstable_useId as useId } from '@material-ui/core/utils';
 import MenuList from '@material-ui/core/MenuList';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
+import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
 import { GridApiContext } from '../GridApiContext';
 import { GridMenu } from '../menu/GridMenu';
 import { GridExportOption } from '../../models';
@@ -33,10 +34,10 @@ export function GridToolbarExport() {
   };
 
   const handleListKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Tab') {
+    if (isTabKey(event.key)) {
       event.preventDefault();
     }
-    if (event.key === 'Tab' || event.key === 'Escape') {
+    if (isHideMenuKey(event.key)) {
       handleExportSelectorClose();
     }
   };

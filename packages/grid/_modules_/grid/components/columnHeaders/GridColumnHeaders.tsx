@@ -5,7 +5,7 @@ import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { renderStateSelector } from '../../hooks/features/virtualization/renderingStateSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridApiContext } from '../GridApiContext';
-import { GridEmptyCell } from '../GridEmptyCell';
+import { GridEmptyCell } from '../cell/GridEmptyCell';
 import { GridScrollArea } from '../GridScrollArea';
 import { GridColumnHeadersItemCollection } from './GridColumnHeadersItemCollection';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
