@@ -69,7 +69,7 @@ We provide three options:
 - Lightweight; less than [30 kB](https://bundlephobia.com/result?p=@material-ui/data-grid) gzipped with as few dependencies as possible.
 - [Filtering](/components/data-grid/filtering/) and [multi-filtering](/components/data-grid/filtering/#multi-column-filtering) <span class="pro"></span>
 - [Pagination](/components/data-grid/pagination/)
-- [Sorting](/components/data-grid/rows/#row-sorting) and [multi-sort](/components/data-grid/rows/#multi-column-sorting) <span class="pro"></span>
+- [Sorting](/components/data-grid/sorting) and [multi-sort](/components/data-grid/sorting/#multi-column-sorting) <span class="pro"></span>
 - [Selection](/components/data-grid/selection/)
 - [Column virtualization](/components/data-grid/rendering/#virtualization) and [rows virtualization](/components/data-grid/rendering/#virtualization) <span class="pro"></span>
 - [Resizable columns](/components/data-grid/columns/#column-resizing) <span class="pro"></span>
