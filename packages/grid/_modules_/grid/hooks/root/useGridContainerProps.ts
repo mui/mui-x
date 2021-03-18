@@ -59,25 +59,28 @@ export const useGridContainerProps = (
   const getScrollBar = React.useCallback(
     (rowsCount: number) => {
       logger.debug('Calculating scrollbar sizes.');
-      const hasScrollY =
-        options.autoPageSize || options.autoHeight
-          ? false
-          : windowSizesRef.current.height < rowsCount * rowHeight;
+
       const hasScrollX = columnsTotalWidth > windowSizesRef.current.width;
       const scrollBarSize = {
-        y: hasScrollY ? options.scrollbarSize! : 0,
+        y: 0,
         x: hasScrollX ? options.scrollbarSize! : 0,
       };
+
+      if(rowsCount === 0) {
+        return { hasScrollX, hasScrollY: false, scrollBarSize };
+      }
+
+      const requiredSize = rowsCount * rowHeight;
+      const hasScrollY =
+        !options.autoPageSize && !options.autoHeight
+          &&
+        windowSizesRef.current.height - scrollBarSize.x < requiredSize;
+
+      scrollBarSize.y = hasScrollY ? options.scrollbarSize! : 0;
+
       return { hasScrollX, hasScrollY, scrollBarSize };
     },
-    [
-      logger,
-      options.autoPageSize,
-      options.autoHeight,
-      options.scrollbarSize,
-      rowHeight,
-      columnsTotalWidth,
-    ],
+    [logger, columnsTotalWidth, options.scrollbarSize, options.autoPageSize, options.autoHeight, rowHeight],
   );
 
   const getViewport = React.useCallback(
@@ -121,7 +124,7 @@ export const useGridContainerProps = (
         return null;
       }
 
-      if (options.autoPageSize || options.autoHeight) {
+      if (options.autoPageSize || options.autoHeight ) {
         // we don't need vertical virtualization in these 2 cases.
         const viewportPageSize = options.autoHeight
           ? rowsCount
@@ -164,7 +167,10 @@ export const useGridContainerProps = (
 
       let totalHeight = (rowsCount / viewportPageSize) * viewportSizes.height;
       // make sure we display the full row
-      totalHeight += (totalHeight % rowHeight) + scrollState.scrollBarSize.x;
+      // totalHeight += (totalHeight % rowHeight) ; //+ scrollState.scrollBarSize.x;
+      const leftOver =rowHeight - (totalHeight % rowHeight);
+      // totalHeight += (leftOver < scrollState.scrollBarSize.x ? leftOver : scrollState.scrollBarSize.x);
+      totalHeight += scrollState.scrollBarSize.x;
 
       const indexes: GridContainerProps = {
         virtualRowsCount: rowsCount,
