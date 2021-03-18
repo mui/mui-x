@@ -65,12 +65,6 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     },
   );
 
-  React.useEffect(() => {
-    if (hasFocus && cellRef.current) {
-      cellRef.current.focus();
-    }
-  }, [hasFocus]);
-
   const publishClick = React.useCallback(
     (eventName: string) => (event: React.MouseEvent) => {
       const params = apiRef!.current.getCellParams(rowId, field || '');
@@ -113,6 +107,12 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     minHeight: height,
     maxHeight: height,
   };
+
+  React.useLayoutEffect(() => {
+    if (hasFocus && cellMode === 'view' && cellRef.current) {
+      cellRef.current!.focus();
+    }
+  });
 
   return (
     <div
