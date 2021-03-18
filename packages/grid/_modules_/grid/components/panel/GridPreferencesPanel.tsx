@@ -11,7 +11,6 @@ export const GridPreferencesPanel = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(function GridPreferencesPanel(props, ref) {
-  const { className, ...other } = props;
   const apiRef = React.useContext(GridApiContext);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
   const options = useGridSelector(apiRef, optionsSelector);
@@ -28,11 +27,10 @@ export const GridPreferencesPanel = React.forwardRef<
   return (
     <Panel
       ref={ref}
-      className={className}
       open={columns.length > 0 && preferencePanelState.open}
       {...baseProps}
       {...apiRef?.current.componentsProps?.panel}
-      {...other}
+      {...props}
     >
       {!options.disableColumnSelector && isColumnsTabOpen && (
         <ColumnSelectorComponent

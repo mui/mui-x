@@ -8,12 +8,12 @@ export interface ErrorOverlayProps extends GridOverlayProps {
 
 export const ErrorOverlay = React.forwardRef<HTMLDivElement, ErrorOverlayProps>(
   function ErrorOverlay(props: ErrorOverlayProps, ref) {
-    const { message, className, ...other } = props;
+    const { message, ...other } = props;
     const apiRef = React.useContext(GridApiContext);
     const defaultLabel = apiRef!.current.getLocaleText('errorOverlayDefaultLabel');
 
     return (
-      <GridOverlay ref={ref} className={className} {...other}>
+      <GridOverlay ref={ref} {...other}>
         {message || defaultLabel}
       </GridOverlay>
     );

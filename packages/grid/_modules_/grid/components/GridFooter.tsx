@@ -12,7 +12,6 @@ import { GridFooterContainer, GridFooterContainerProps } from './containers/Grid
 
 export const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(
   function GridFooter(props, ref) {
-    const { className, ...other } = props;
     const apiRef = React.useContext(GridApiContext);
     const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
     const options = useGridSelector(apiRef, optionsSelector);
@@ -43,7 +42,7 @@ export const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerPr
     );
 
     return (
-      <GridFooterContainer ref={ref} className={className} {...other}>
+      <GridFooterContainer ref={ref} {...props}>
         {SelectedRowCountElement}
         {RowCountElement}
         {PaginationElement}

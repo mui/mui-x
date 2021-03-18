@@ -4,7 +4,6 @@ import { useGridBaseComponentProps } from '../hooks/features/useGridBaseComponen
 
 export const GridHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   function GridHeader(props, ref) {
-    const { className, ...other } = props;
     const apiRef = React.useContext(GridApiContext);
     const baseProps = useGridBaseComponentProps(apiRef);
 
@@ -21,7 +20,7 @@ export const GridHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<
     );
 
     return (
-      <div ref={ref} className={className} {...other}>
+      <div ref={ref} {...props}>
         {PreferencesPanelElement}
         {ToolbarElement}
       </div>

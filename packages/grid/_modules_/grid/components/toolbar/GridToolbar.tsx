@@ -14,7 +14,6 @@ import { GridToolbarExport } from './GridToolbarExport';
 
 export const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarContainerProps>(
   function GridToolbar(props, ref) {
-    const { className, ...other } = props;
     const apiRef = useContext(GridApiContext);
     const options = useGridSelector(apiRef, optionsSelector);
 
@@ -27,7 +26,7 @@ export const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarContainer
     }
 
     return (
-      <GridToolbarContainer ref={ref} className={className} {...other}>
+      <GridToolbarContainer ref={ref} {...props}>
         <GridColumnsToolbarButton />
         <GridFilterToolbarButton />
         <GridDensitySelector />

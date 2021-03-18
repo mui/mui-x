@@ -27,7 +27,7 @@ export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(functi
   props,
   ref,
 ) {
-  const { children, open, className, ...other } = props;
+  const { children, open, ...other } = props;
   const classes = useStyles();
   const apiRef = React.useContext(GridApiContext);
 
@@ -73,7 +73,6 @@ export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(functi
   return (
     <Popper
       ref={ref}
-      className={className}
       placement="bottom-start"
       open={open}
       anchorEl={anchorEl}
