@@ -29,6 +29,10 @@ export const GRID_CELL_EDIT_ENTER = 'cellEditEnter';
 export const GRID_CELL_EDIT_EXIT = 'cellEditExit';
 export const GRID_CELL_NAVIGATION_KEYDOWN = 'cellNavigationKeyDown';
 export const GRID_CELL_FOCUS = 'cellCellFocus';
+export const GRID_CELL_DRAG_START = 'cellDragStart';
+export const GRID_CELL_DRAG_ENTER = 'cellDragEnter';
+export const GRID_CELL_DRAG_OVER = 'cellDragOver';
+export const GRID_CELL_DRAG_END = 'cellDragEnd';
 
 export const GRID_ROW_CLICK = 'rowClick';
 export const GRID_ROW_DOUBLE_CLICK = 'rowDoubleClick';
@@ -45,6 +49,10 @@ export const GRID_COLUMN_HEADER_OVER = 'columnHeaderOver';
 export const GRID_COLUMN_HEADER_OUT = 'columnHeaderOut';
 export const GRID_COLUMN_HEADER_ENTER = 'columnHeaderEnter';
 export const GRID_COLUMN_HEADER_LEAVE = 'columnHeaderLeave';
+export const GRID_COLUMN_HEADER_DRAG_START = 'columnHeaderDragStart';
+export const GRID_COLUMN_HEADER_DRAG_OVER = 'columnHeaderDragOver';
+export const GRID_COLUMN_HEADER_DRAG_ENTER = 'columnHeaderDragEnter';
+export const GRID_COLUMN_HEADER_DRAG_END = 'columnHeaderDragEnd';
 
 export const GRID_SELECTION_CHANGED = 'selectionChange';
 
@@ -58,12 +66,6 @@ export const GRID_COL_RESIZE_START = 'colResizing:start';
 export const GRID_COL_RESIZE_STOP = 'colResizing:stop';
 
 export const GRID_COLUMN_ORDER_CHANGE = 'columnOrderChange';
-
-export const GRID_COLUMN_REORDER_START = 'columnReordering:dragStart';
-export const GRID_COLUMN_REORDER_DRAG_OVER_HEADER = 'columnReordering:dragOverHeader';
-export const GRID_COLUMN_REORDER_DRAG_OVER = 'columnReordering:dragOver';
-export const GRID_COLUMN_REORDER_DRAG_ENTER = 'columnReordering:dragEnter';
-export const GRID_COLUMN_REORDER_DRAG_END = 'columnReordering:dragEnd';
 
 export const GRID_ROWS_UPDATED = 'rowsUpdated';
 export const GRID_ROWS_SET = 'rowsSet';

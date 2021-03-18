@@ -4,8 +4,17 @@ import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
   act,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  fireEvent,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  createEvent,
 } from 'test/utils';
-import { getColumnHeadersTextContent, raf } from 'test/utils/helperFn';
+import {
+  getColumnHeadersTextContent,
+  getColumnHeaderCell,
+  getCell,
+  raf,
+} from 'test/utils/helperFn';
 import { GridApiRef, useGridApiRef, XGrid } from '@material-ui/x-grid';
 
 describe('<XGrid /> - Reorder', () => {
@@ -80,5 +89,67 @@ describe('<XGrid /> - Reorder', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
     forceUpdate(); // test stability
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
+  });
+
+  it('should allow to reorder columns by dropping outside the header row', () => {
+    let apiRef: GridApiRef;
+    const rows = [{ id: 0, brand: 'Nike' }];
+    const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
+
+    const Test = () => {
+      apiRef = useGridApiRef();
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid apiRef={apiRef} rows={rows} columns={columns} onPageChange={() => {}} />
+        </div>
+      );
+    };
+
+    render(<Test />);
+    expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+    const dragCol = getColumnHeaderCell(1).firstChild;
+
+    fireEvent.dragStart(dragCol);
+    fireEvent.dragEnter(getCell(0, 2));
+    fireEvent.dragOver(getCell(0, 2), { clientX: 1, clientY: 1 });
+    expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
+
+    const dragEndEvent = createEvent.dragEnd(dragCol);
+    // Safari doesn't support DataTransfer constructor
+    Object.defineProperty(dragEndEvent, 'dataTransfer', { value: { dropEffect: 'copy' } });
+    fireEvent(dragCol, dragEndEvent);
+    expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
+  });
+
+  it('should cancel the reordering when dropping the column outside the grid', () => {
+    let apiRef: GridApiRef;
+    const rows = [{ id: 0, brand: 'Nike' }];
+    const columns = [{ field: 'brand' }, { field: 'desc' }, { field: 'type' }];
+
+    const Test = () => {
+      apiRef = useGridApiRef();
+
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid apiRef={apiRef} rows={rows} columns={columns} onPageChange={() => {}} />
+        </div>
+      );
+    };
+
+    render(<Test />);
+    expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
+    const dragCol = getColumnHeaderCell(1).firstChild;
+
+    fireEvent.dragStart(dragCol);
+    fireEvent.dragEnter(getCell(0, 2));
+    fireEvent.dragOver(getCell(0, 2), { clientX: 1, clientY: 1 });
+    expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
+
+    const dragEndEvent = createEvent.dragEnd(dragCol);
+    // Safari doesn't support DataTransfer constructor
+    Object.defineProperty(dragEndEvent, 'dataTransfer', { value: { dropEffect: 'none' } });
+    fireEvent(dragCol, dragEndEvent);
+    expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
   });
 });

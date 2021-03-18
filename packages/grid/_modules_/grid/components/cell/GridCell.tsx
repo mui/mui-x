@@ -12,6 +12,9 @@ import {
   GRID_CELL_MOUSE_DOWN,
   GRID_CELL_OUT,
   GRID_CELL_OVER,
+  GRID_CELL_DRAG_START,
+  GRID_CELL_DRAG_ENTER,
+  GRID_CELL_DRAG_OVER,
 } from '../../constants/eventsConstants';
 import { GridAlignment, GridCellMode, GridCellValue, GridRowId } from '../../models/index';
 import { classnames } from '../../utils/index';
@@ -115,6 +118,9 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
       onKeyDown: publish(GRID_CELL_KEYDOWN),
       onBlur: publishBlur(GRID_CELL_BLUR),
       onFocus: publish(GRID_CELL_FOCUS),
+      onDragStart: publish(GRID_CELL_DRAG_START),
+      onDragEnter: publish(GRID_CELL_DRAG_ENTER),
+      onDragOver: publish(GRID_CELL_DRAG_OVER),
     }),
     [publish, publishBlur, publishClick],
   );
