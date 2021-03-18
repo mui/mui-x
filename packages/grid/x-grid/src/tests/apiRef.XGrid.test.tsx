@@ -2,12 +2,13 @@ import {
   GridApiRef,
   GridComponentProps,
   GridRowData,
+  GRID_ROWS_SCROLL,
   useGridApiRef,
   XGrid,
 } from '@material-ui/x-grid';
 import { expect } from 'chai';
 import * as React from 'react';
-import { useFakeTimers } from 'sinon';
+import { spy, useFakeTimers } from 'sinon';
 import { getCell, getColumnValues } from 'test/utils/helperFn';
 import { createClientRenderStrictMode } from 'test/utils';
 
@@ -279,5 +280,57 @@ describe('<XGrid /> - apiRef', () => {
 
     apiRef!.current.setCellMode(0, 'brand', 'edit');
     expect(cellNike.classList.contains('MuiDataGrid-cellEditing')).to.equal(true);
+  });
+
+  it('publishing GRID_ROWS_SCROLL should call onRowsScrollEnd callback', () => {
+    const handleOnRowsScrollEnd = spy();
+
+    render(<TestCase onRowsScrollEnd={handleOnRowsScrollEnd} />);
+    apiRef.current.publishEvent(GRID_ROWS_SCROLL);
+    expect(handleOnRowsScrollEnd.callCount).to.equal(1);
+  });
+
+  it('call onRowsScrollEnd when viewport scroll reaches the bottom', () => {
+    const handleOnRowsScrollEnd = spy();
+    const data = {
+      rows: [
+        {
+          id: 0,
+          brand: 'Nike',
+        },
+        {
+          id: 1,
+          brand: 'Adidas',
+        },
+        {
+          id: 2,
+          brand: 'Puma',
+        },
+        {
+          id: 3,
+          brand: 'Under Armor',
+        },
+        {
+          id: 4,
+          brand: 'Jordan',
+        },
+        {
+          id: 5,
+          brand: 'Reebok',
+        },
+      ],
+      columns: [{ field: 'brand', width: 100 }],
+    };
+
+    const { container } = render(
+      <div style={{ width: 300, height: 300 }}>
+        <XGrid columns={data.columns} rows={data.rows} onRowsScrollEnd={handleOnRowsScrollEnd} />
+      </div>,
+    );
+    const gridWindow = container.querySelector('.MuiDataGrid-window');
+    // arbitrary number to make sure that the bottom of the grid window is reached.
+    gridWindow.scrollTop = 12345;
+    gridWindow.dispatchEvent(new Event('scroll'));
+    expect(handleOnRowsScrollEnd.callCount).to.equal(1);
   });
 });

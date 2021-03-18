@@ -7,9 +7,9 @@ import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridApiContext } from '../GridApiContext';
 import { GridEmptyCell } from '../GridEmptyCell';
 import { GridScrollArea } from '../GridScrollArea';
-import { gridContainerSizesSelector } from '../GridViewport';
 import { GridColumnHeadersItemCollection } from './GridColumnHeadersItemCollection';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
+import { gridContainerSizesSelector } from '../../hooks/root/gridContainerSizesSelector';
 
 export const gridScrollbarStateSelector = (state: GridState) => state.scrollBar;
 

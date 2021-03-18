@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { gridContainerSizesSelector } from '../../../components/GridViewport';
 import { GRID_CELL_CSS_CLASS, GRID_ROW_CSS_CLASS } from '../../../constants/cssClassesConstants';
 import {
   GRID_ELEMENT_FOCUS_OUT,
@@ -33,6 +32,7 @@ import { useLogger } from '../../utils/useLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { gridSelectionStateSelector } from '../selection/gridSelectionSelector';
 import { KeyboardState } from './keyboardState';
+import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
 
 const getNextCellIndexes = (code: string, indexes: GridCellIndexCoordinates) => {
   if (!isArrowKeys(code)) {

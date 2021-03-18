@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { visibleGridColumnsSelector } from '../hooks/features/columns/gridColumnsSelector';
-import { GridState } from '../hooks/features/core/gridState';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
 import { visibleSortedGridRowsSelector } from '../hooks/features/filter/gridFilterSelector';
@@ -15,12 +14,13 @@ import { GridRenderingZone } from './GridRenderingZone';
 import { GridRow } from './GridRow';
 import { GridRowCells } from './GridRowCells';
 import { GridStickyContainer } from './GridStickyContainer';
+import {
+  gridContainerSizesSelector,
+  gridViewportSizesSelector,
+  gridScrollBarSizeSelector,
+} from '../hooks/root/gridContainerSizesSelector';
 
 type ViewportType = React.ForwardRefExoticComponent<React.RefAttributes<HTMLDivElement>>;
-
-export const gridContainerSizesSelector = (state: GridState) => state.containerSizes;
-export const gridViewportSizesSelector = (state: GridState) => state.viewportSizes;
-export const gridScrollBarSizeSelector = (state: GridState) => state.scrollBar;
 
 export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
   (props, renderingZoneRef) => {

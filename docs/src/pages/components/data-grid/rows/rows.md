@@ -28,6 +28,14 @@ It replaces the previous values. This approach has some drawbacks:
 - You need to provide all the rows.
 - You might create a performance bottleneck when preparing the rows array to provide to the grid.
 
+### Infinite loading [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+
+The grid provides a `onRowsScrollEnd` prop that can be used to load additional rows when the scroll reaches the bottom of the viewport area.
+
+In addition, the area in which the callback provided to the `onRowsScrollEnd` is called can be changed using `scrollEndThreshold`.
+
+{{"demo": "pages/components/data-grid/rows/InfiniteLoadingGrid.js", "bg": "inline"}}
+
 ### apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 The second way to update rows is to use the apiRef.

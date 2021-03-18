@@ -11,6 +11,7 @@ const FORCED_PROPS: Partial<GridComponentProps> = {
   disableMultipleSelection: true,
   pagination: true,
   apiRef: undefined,
+  onRowsScrollEnd: undefined,
 };
 
 export type DataGridProps = Omit<
@@ -24,6 +25,8 @@ export type DataGridProps = Omit<
   | 'apiRef'
   | 'options'
   | 'pagination'
+  | 'onRowsScrollEnd'
+  | 'scrollEndThreshold'
 > & {
   disableColumnResize?: true;
   disableColumnReorder?: true;
@@ -32,6 +35,7 @@ export type DataGridProps = Omit<
   disableMultipleSelection?: true;
   pagination?: true;
   apiRef?: undefined;
+  onRowsScrollEnd?: undefined;
 };
 
 const MAX_PAGE_SIZE = 100;
@@ -175,6 +179,32 @@ DataGrid2.propTypes = {
     }
     return null;
   },
+  onRowsScrollEnd: chainPropTypes(PropTypes.any, (props: any) => {
+    if (props.onRowsScrollEnd != null) {
+      return new Error(
+        [
+          `Material-UI: \`onRowsScrollEnd\` is not a valid prop.`,
+          'onRowsScrollEnd is not available in the MIT version.',
+          '',
+          'You need to upgrade to the XGrid component to unlock this feature.',
+        ].join('\n'),
+      );
+    }
+    return null;
+  }),
+  scrollEndThreshold: chainPropTypes(PropTypes.number, (props: any) => {
+    if (props.scrollEndThreshold) {
+      return new Error(
+        [
+          `Material-UI: \`<DataGrid scrollEndThreshold={${props.scrollEndThreshold}} />\` is not a valid prop.`,
+          'scrollEndThreshold is not available in the MIT version.',
+          '',
+          'You need to upgrade to the XGrid component to unlock this feature.',
+        ].join('\n'),
+      );
+    }
+    return null;
+  }),
 } as any;
 
 export const DataGrid = React.memo(DataGrid2);

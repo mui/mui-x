@@ -23,6 +23,7 @@ import {
   GridEditCellParams,
   GridEditRowModelParams,
 } from './params/gridEditCellParams';
+import { GridRowScrollEndParams } from './params/gridRowScrollEndParams';
 
 // TODO add multiSortKey
 /**
@@ -35,44 +36,33 @@ export interface GridOptions {
    */
   autoHeight?: boolean;
   /**
-   * Set the height in pixel of a row in the grid.
-   * @default 52
+   * If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar.
+   * @default false
    */
-  rowHeight: number;
+  autoPageSize?: boolean;
   /**
-   * Set the height in pixel of the column headers in the grid.
-   * @default 56
+   * If `true`, the grid get a first column with a checkbox that allows to select rows.
+   * @default false
    */
-  headerHeight: number;
-  /**
-   * Override the height/width of the grid inner scrollbar.
-   */
-  scrollbarSize?: number;
+  checkboxSelection?: boolean;
   /**
    * Number of columns rendered outside the grid viewport.
    * @default 2
    */
   columnBuffer: number;
   /**
-   * If `true`, multiple selection using the CTRL or CMD key is disabled.
-   * @default false
+   * Extend native column types with your new column types.
    */
-  disableMultipleSelection?: boolean;
+  columnTypes: GridColumnTypesRecord;
   /**
-   * If `true`, filtering with multiple columns is disabled.
-   * @default false
+   * Set the density of the grid.
    */
-  disableMultipleColumnsFiltering?: boolean;
+  density: GridDensity;
   /**
-   * If `true`, sorting with multiple columns is disabled.
+   * If `true`, rows will not be extended to fill the full width of the grid container.
    * @default false
    */
-  disableMultipleColumnsSorting?: boolean;
-  /**
-   * If `true`, resizing columns is disabled.
-   * @default false
-   */
-  disableColumnResize?: boolean;
+  disableExtendRowFullWidth?: boolean;
   /**
    * If `true`, column filters are disabled.
    * @default false
@@ -84,87 +74,45 @@ export interface GridOptions {
    */
   disableColumnMenu?: boolean;
   /**
-   * If `true`, density selection is disabled.
-   * @default false
-   */
-  disableDensitySelector?: boolean;
-  /**
    * If `true`, reordering columns is disabled.
    * @default false
    */
   disableColumnReorder?: boolean;
+  /**
+   * If `true`, resizing columns is disabled.
+   * @default false
+   */
+  disableColumnResize?: boolean;
   /**
    * If `true`, hiding/showing columns is disabled.
    * @default false
    */
   disableColumnSelector?: boolean;
   /**
-   * If `true`, the right border of the cells are displayed.
+   * If `true`, density selection is disabled.
    * @default false
    */
-  showCellRightBorder?: boolean;
+  disableDensitySelector?: boolean;
   /**
-   * If `true`, the right border of the column headers are displayed.
+   * If `true`, filtering with multiple columns is disabled.
    * @default false
    */
-  showColumnRightBorder?: boolean;
+  disableMultipleColumnsFiltering?: boolean;
   /**
-   * If `true`, rows will not be extended to fill the full width of the grid container.
+   * If `true`, multiple selection using the CTRL or CMD key is disabled.
    * @default false
    */
-  disableExtendRowFullWidth?: boolean;
+  disableMultipleSelection?: boolean;
   /**
-   * The order of the sorting sequence.
-   * @default ['asc', 'desc', null]
-   */
-  sortingOrder: GridSortDirection[];
-  /**
-   * If `true`, pagination is enabled.
+   * If `true`, sorting with multiple columns is disabled.
    * @default false
    */
-  pagination?: boolean;
+  disableMultipleColumnsSorting?: boolean;
   /**
-   * Set the number of rows in one page.
-   * @default 100
-   */
-  pageSize?: number;
-  /**
-   * If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar.
+   * If `true`, the selection on click on a row or cell is disabled.
    * @default false
    */
-  autoPageSize?: boolean;
-  /**
-   * Select the pageSize dynamically using the component UI.
-   * @default [25, 50, 100]
-   */
-  rowsPerPageOptions?: number[];
-  /**
-   * Pagination can be processed on the server or client-side.
-   * Set it to 'client' if you would like to handle the pagination on the client-side.
-   * Set it to 'server' if you would like to handle the pagination on the server-side.
-   */
-  paginationMode?: GridFeatureMode;
-  /**
-   * Set the total number of rows, if it is different than the length of the value `rows` prop.
-   */
-  rowCount?: number;
-  /**
-   * Set the current page.
-   * @default 1
-   */
-  page?: number;
-  /**
-   * Sorting can be processed on the server or client-side.
-   * Set it to 'client' if you would like to handle sorting on the client-side.
-   * Set it to 'server' if you would like to handle sorting on the server-side.
-   */
-  sortingMode?: GridFeatureMode;
-  /**
-   * Filtering can be processed on the server or client-side.
-   * Set it to 'client' if you would like to handle filtering on the client-side.
-   * Set it to 'server' if you would like to handle filtering on the server-side.
-   */
-  filterMode?: GridFeatureMode;
+  disableSelectionOnClick?: boolean;
   /**
    * Edit cell or rows can be processed on the server or client-side.
    * Set it to 'client' if you would like to handle editing on the client-side.
@@ -172,10 +120,34 @@ export interface GridOptions {
    */
   editMode?: GridFeatureMode;
   /**
+   * Set the edit rows model of the grid.
+   */
+  editRowsModel?: GridEditRowsModel;
+  /**
+   * Filtering can be processed on the server or client-side.
+   * Set it to 'client' if you would like to handle filtering on the client-side.
+   * Set it to 'server' if you would like to handle filtering on the server-side.
+   */
+  filterMode?: GridFeatureMode;
+  /**
+   * Set the filter model of the grid.
+   */
+  filterModel?: FilterModel;
+  /**
+   * Set the height in pixel of the column headers in the grid.
+   * @default 56
+   */
+  headerHeight: number;
+  /**
    * If `true`, the footer component is hidden.
    * @default false
    */
   hideFooter?: boolean;
+  /**
+   * If `true`, the pagination component in the footer is hidden.
+   * @default false
+   */
+  hideFooterPagination?: boolean;
   /**
    * If `true`, the row count in the footer is hidden.
    * @default false
@@ -187,20 +159,14 @@ export interface GridOptions {
    */
   hideFooterSelectedRowCount?: boolean;
   /**
-   * If `true`, the pagination component in the footer is hidden.
-   * @default false
+   * Callback fired when a cell is rendered, returns true if the cell is editable.
    */
-  hideFooterPagination?: boolean;
+  isCellEditable?: (params: GridCellParams) => boolean;
   /**
-   * If `true`, the grid get a first column with a checkbox that allows to select rows.
-   * @default false
+   * Set the locale text of the grid.
+   * You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
    */
-  checkboxSelection?: boolean;
-  /**
-   * If `true`, the selection on click on a row or cell is disabled.
-   * @default false
-   */
-  disableSelectionOnClick?: boolean;
+  localeText: Partial<GridLocaleText>;
   /**
    * Pass a custom logger in the components that implements the [[Logger]] interface.
    * @default null
@@ -211,18 +177,26 @@ export interface GridOptions {
    * @default debug
    */
   logLevel?: string | false;
+
   /**
-   * Set the sort model of the grid.
+   * Callback fired when the edit cell value changed.
+   * @param handler
    */
-  sortModel?: GridSortModel;
+  onEditCellChange?: (params: GridEditCellParams) => void;
   /**
-   * Set the filter model of the grid.
+   * Callback fired when the cell changes are committed.
+   * @param handler
    */
-  filterModel?: FilterModel;
+  onEditCellChangeCommitted?: (params: GridEditCellParams) => void;
   /**
-   * Set the selection model of the grid.
+   * Callback fired when the EditRowModel changed.
+   * @param handler
    */
-  selectionModel?: GridSelectionModel;
+  onEditRowModelChange?: (params: GridEditRowModelParams) => void;
+  /**
+   * Callback fired when an exception is thrown in the grid, or when the `showError` API method is called.
+   */
+  onError?: (args: any) => void;
   /**
    * Callback fired when a click event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
@@ -260,11 +234,66 @@ export interface GridOptions {
    */
   onCellLeave?: (param: GridCellParams, event: React.MouseEvent) => void;
   /**
+   * Callback fired when the cell mode changed.
+   * @param handler
+   */
+  onCellModeChange?: (params: GridCellModeChangeParams) => void;
+  /**
+   * Callback fired when a click event comes from a column header element.
+   * @param param With all properties from [[GridColParams]].
+   */
+  onColumnHeaderClick?: (param: GridColParams, event: React.MouseEvent) => void;
+  /**
+   * Callback fired when a double click event comes from a column header element.
+   * @param param With all properties from [[GridColParams]].
+   */
+  onColumnHeaderDoubleClick?: (param: GridColParams, event: React.MouseEvent) => void;
+  /**
+   * Callback fired when a mouseover event comes from a column header element.
+   * @param param With all properties from [[GridColParams]].
+   */
+  onColumnHeaderOver?: (param: GridColParams, event: React.MouseEvent) => void;
+  /**
+   * Callback fired when a mouseout event comes from a column header element.
+   * @param param With all properties from [[GridColParams]].
+   */
+  onColumnHeaderOut?: (param: GridColParams, event: React.MouseEvent) => void;
+  /**
+   * Callback fired when a mouse enter event comes from a column header element.
+   * @param param With all properties from [[GridColParams]].
+   */
+  onColumnHeaderEnter?: (param: GridColParams, event: React.MouseEvent) => void;
+  /**
+   * Callback fired when a mouse leave event comes from a column header element.
+   * @param param With all properties from [[GridColParams]].
+   */
+  onColumnHeaderLeave?: (param: GridColParams, event: React.MouseEvent) => void;
+  /**
+   * Callback fired when the Filter model changes before the filters are applied.
+   * @param param With all properties from [[GridFilterModelParams]].
+   */
+  onFilterModelChange?: (params: GridFilterModelParams) => void;
+  /**
+   * Callback fired when the current page has changed.
+   * @param param With all properties from [[GridPageChangeParams]].
+   */
+  onPageChange?: (param: GridPageChangeParams) => void;
+  /**
+   * Callback fired when the page size has changed.
+   * @param param With all properties from [[GridPageChangeParams]].
+   */
+  onPageSizeChange?: (param: GridPageChangeParams) => void;
+  /**
    * Callback fired when a click event comes from a row container element.
    * @param param With all properties from [[GridRowParams]].
    * @param event [[React.MouseEvent]].
    */
   onRowClick?: (param: GridRowParams, event: React.MouseEvent) => void;
+  /**
+   * Callback fired when scrolling to the bottom of the grid viewport.
+   * @param param
+   */
+  onRowsScrollEnd?: (params: GridRowScrollEndParams) => void;
   /**
    * Callback fired when a double click event comes from a row container element.
    * @param param With all properties from [[RowParams]].
@@ -306,120 +335,103 @@ export interface GridOptions {
    */
   onSelectionModelChange?: (param: GridSelectionModelChangeParams) => void;
   /**
-   * Callback fired when a click event comes from a column header element.
-   * @param param With all properties from [[GridColParams]].
-   */
-  onColumnHeaderClick?: (param: GridColParams, event: React.MouseEvent) => void;
-  /**
-   * Callback fired when a double click event comes from a column header element.
-   * @param param With all properties from [[GridColParams]].
-   */
-  onColumnHeaderDoubleClick?: (param: GridColParams, event: React.MouseEvent) => void;
-  /**
-   * Callback fired when a mouseover event comes from a column header element.
-   * @param param With all properties from [[GridColParams]].
-   */
-  onColumnHeaderOver?: (param: GridColParams, event: React.MouseEvent) => void;
-  /**
-   * Callback fired when a mouseout event comes from a column header element.
-   * @param param With all properties from [[GridColParams]].
-   */
-  onColumnHeaderOut?: (param: GridColParams, event: React.MouseEvent) => void;
-  /**
-   * Callback fired when a mouse enter event comes from a column header element.
-   * @param param With all properties from [[GridColParams]].
-   */
-  onColumnHeaderEnter?: (param: GridColParams, event: React.MouseEvent) => void;
-  /**
-   * Callback fired when a mouse leave event comes from a column header element.
-   * @param param With all properties from [[GridColParams]].
-   */
-  onColumnHeaderLeave?: (param: GridColParams, event: React.MouseEvent) => void;
-  /**
    * Callback fired when the sort model changes before a column is sorted.
    * @param param With all properties from [[GridSortModelParams]].
    */
   onSortModelChange?: (params: GridSortModelParams) => void;
   /**
-   * Callback fired when the Filter model changes before the filters are applied.
-   * @param param With all properties from [[GridFilterModelParams]].
-   */
-  onFilterModelChange?: (params: GridFilterModelParams) => void;
-  /**
-   * Callback fired when the current page has changed.
-   * @param param With all properties from [[GridPageChangeParams]].
-   */
-  onPageChange?: (param: GridPageChangeParams) => void;
-  /**
-   * Callback fired when the page size has changed.
-   * @param param With all properties from [[GridPageChangeParams]].
-   */
-  onPageSizeChange?: (param: GridPageChangeParams) => void;
-  /**
-   * Callback fired when an exception is thrown in the grid, or when the `showError` API method is called.
-   */
-  onError?: (args: any) => void;
-  /**
    * Callback fired when the state of the grid is updated.
    */
   onStateChange?: (params: any) => void;
   /**
-   * Set the edit rows model of the grid.
+   * Set the current page.
+   * @default 1
    */
-  editRowsModel?: GridEditRowsModel;
+  page?: number;
   /**
-   * Callback fired when a cell is rendered, returns true if the cell is editable.
+   * Set the number of rows in one page.
+   * @default 100
    */
-  isCellEditable?: (params: GridCellParams) => boolean;
+  pageSize?: number;
   /**
-   * Callback fired when the EditRowModel changed.
-   * @param handler
+   * If `true`, pagination is enabled.
+   * @default false
    */
-  onEditRowModelChange?: (params: GridEditRowModelParams) => void;
+  pagination?: boolean;
   /**
-   * Callback fired when the cell mode changed.
-   * @param handler
+   * Pagination can be processed on the server or client-side.
+   * Set it to 'client' if you would like to handle the pagination on the client-side.
+   * Set it to 'server' if you would like to handle the pagination on the server-side.
    */
-  onCellModeChange?: (params: GridCellModeChangeParams) => void;
+  paginationMode?: GridFeatureMode;
   /**
-   * Callback fired when the edit cell value changed.
-   * @param handler
+   * Set the height in pixel of a row in the grid.
+   * @default 52
    */
-  onEditCellChange?: (params: GridEditCellParams) => void;
+  rowHeight: number;
   /**
-   * Callback fired when the cell changes are committed.
-   * @param handler
+   * Select the pageSize dynamically using the component UI.
+   * @default [25, 50, 100]
    */
-  onEditCellChangeCommitted?: (params: GridEditCellParams) => void;
+  rowsPerPageOptions?: number[];
   /**
-   * Extend native column types with your new column types.
+   * Set the total number of rows, if it is different than the length of the value `rows` prop.
    */
-  columnTypes: GridColumnTypesRecord;
+  rowCount?: number;
   /**
-   * Set the density of the grid.
+   * Override the height/width of the grid inner scrollbar.
    */
-  density: GridDensity;
+  scrollbarSize?: number;
   /**
-   * Set the locale text of the grid.
-   * You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
+   * Set the area at the bottom of the grid viewport where onRowsScrollEnd is called.
    */
-  localeText: Partial<GridLocaleText>;
+  scrollEndThreshold: number;
+  /**
+   * Set the selection model of the grid.
+   */
+  selectionModel?: GridSelectionModel;
+  /**
+   * If `true`, the right border of the cells are displayed.
+   * @default false
+   */
+  showCellRightBorder?: boolean;
+  /**
+   * If `true`, the right border of the column headers are displayed.
+   * @default false
+   */
+  showColumnRightBorder?: boolean;
+  /**
+   * The order of the sorting sequence.
+   * @default ['asc', 'desc', null]
+   */
+  sortingOrder: GridSortDirection[];
+  /**
+   * Sorting can be processed on the server or client-side.
+   * Set it to 'client' if you would like to handle sorting on the client-side.
+   * Set it to 'server' if you would like to handle sorting on the server-side.
+   */
+  sortingMode?: GridFeatureMode;
+  /**
+   * Set the sort model of the grid.
+   */
+  sortModel?: GridSortModel;
 }
 
 /**
  * The default [[GridOptions]] object that will be used to merge with the 'options' passed in the react component prop.
  */
 export const DEFAULT_GRID_OPTIONS: GridOptions = {
-  rowHeight: 52,
-  headerHeight: 56,
   columnBuffer: 2,
-  rowsPerPageOptions: [25, 50, 100],
-  pageSize: 100,
-  paginationMode: GridFeatureModeConstant.client,
-  sortingMode: GridFeatureModeConstant.client,
-  filterMode: GridFeatureModeConstant.client,
-  sortingOrder: ['asc', 'desc', null],
   columnTypes: getGridDefaultColumnTypes(),
   density: GridDensityTypes.Standard,
+  filterMode: GridFeatureModeConstant.client,
+  headerHeight: 56,
   localeText: GRID_DEFAULT_LOCALE_TEXT,
+  pageSize: 100,
+  paginationMode: GridFeatureModeConstant.client,
+  rowHeight: 52,
+  rowsPerPageOptions: [25, 50, 100],
+  scrollEndThreshold: 80,
+  sortingMode: GridFeatureModeConstant.client,
+  sortingOrder: ['asc', 'desc', null],
 };

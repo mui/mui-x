@@ -3,7 +3,7 @@ export const GRID_RESIZE = 'resize';
 export const GRID_FOCUS_OUT = 'focusout';
 export const GRID_KEYDOWN = 'keydown';
 export const GRID_KEYUP = 'keyup';
-export const GRID_SCROLL = 'scroll';
+export const GRID_NATIVE_SCROLL = 'scroll';
 export const GRID_DRAGEND = 'dragend';
 
 // GRID events
@@ -42,7 +42,8 @@ export const GRID_SELECTION_CHANGED = 'selectionChange';
 export const GRID_PAGE_CHANGED = 'pageChange';
 export const GRID_PAGESIZE_CHANGED = 'pageSizeChange';
 
-export const GRID_SCROLLING = 'scrolling';
+export const GRID_ROWS_SCROLL = 'scrolling:rows';
+export const GRID_ROWS_SCROLL_END = 'scroll:rowEnd';
 
 export const GRID_COL_RESIZE_START = 'colResizing:start';
 export const GRID_COL_RESIZE_STOP = 'colResizing:stop';
