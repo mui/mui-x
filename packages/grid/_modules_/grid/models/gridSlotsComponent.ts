@@ -26,6 +26,9 @@ import { GridPanel, GridPanelProps } from '../components/panel/GridPanel';
 import { GridApiRefComponentsProperty } from './api/gridComponentsApi';
 import { GridIconSlotsComponent } from './gridIconSlotsComponent';
 import { GridBaseComponentProps } from './params/gridBaseComponentProps';
+import { GridToolbarContainerProps } from '../components/containers/GridToolbarContainer';
+import { GridFooterContainerProps } from '../components/containers/GridFooterContainer';
+import { GridOverlayProps } from '../components/containers/GridOverlay';
 
 export type ColumnMenuProps = GridBaseComponentProps & GridColumnMenuProps;
 
@@ -45,16 +48,16 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
   /**
    * Footer component rendered at the bottom of the grid viewport.
    */
-  Footer?: React.ElementType<GridBaseComponentProps>;
+  Footer?: React.ElementType<GridBaseComponentProps & GridFooterContainerProps>;
   /**
    * Header component rendered above the grid column header bar.
    * Prefer using the `Toolbar` slot. You should never need to use this slot. TODO remove.
    */
-  Header?: React.ElementType<GridBaseComponentProps>;
+  Header?: React.ElementType<GridBaseComponentProps & React.HTMLAttributes<HTMLDivElement>>;
   /**
    * Toolbar component rendered inside the Header component.
    */
-  Toolbar?: React.ElementType<GridBaseComponentProps>;
+  Toolbar?: React.ElementType<GridBaseComponentProps & GridToolbarContainerProps>;
   /**
    * PreferencesPanel component rendered inside the Header component.
    */
@@ -62,19 +65,19 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
   /**
    * Loading overlay component rendered when the grid is in a loading state.
    */
-  LoadingOverlay?: React.ElementType<GridBaseComponentProps>;
+  LoadingOverlay?: React.ElementType<GridBaseComponentProps & GridOverlayProps>;
   /**
    * No rows overlay component rendered when the grid has no rows.
    */
-  NoRowsOverlay?: React.ElementType<GridBaseComponentProps>;
+  NoRowsOverlay?: React.ElementType<GridBaseComponentProps & GridOverlayProps>;
   /**
    * Pagination component rendered in the grid footer by default.
    */
-  Pagination?: React.ElementType<GridBaseComponentProps>;
+  Pagination?: React.ElementType<GridBaseComponentProps & React.HTMLAttributes<HTMLDivElement>>;
   /**
    * Filter panel component rendered when clicking the filter button.
    */
-  FilterPanel?: React.ElementType<GridBaseComponentProps>;
+  FilterPanel?: React.ElementType<GridBaseComponentProps & React.HTMLAttributes<HTMLDivElement>>;
   /**
    * GridColumns panel component rendered when clicking the columns button.
    */

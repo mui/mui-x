@@ -32,5 +32,5 @@ export interface GridBaseComponentProps {
   /**
    * The ref of the inner div Element of the grid.
    */
-  rootElement: GridRootContainerRef;
+  rootelement: GridRootContainerRef;
 }
