@@ -183,12 +183,15 @@ export interface GridOptions {
    * Callback fired when the edit cell value changed.
    * @param handler
    */
-  onEditCellChange?: (params: GridEditCellParams) => void;
+  onEditCellChange?: (params: GridEditCellPropsParams) => void;
   /**
    * Callback fired when the cell changes are committed.
    * @param handler
    */
-  onEditCellChangeCommitted?: (params: GridEditCellParams) => void;
+  onEditCellChangeCommitted?: (
+    params: GridEditCellPropsParams,
+    event?: React.SyntheticEvent,
+  ) => void;
   /**
    * Callback fired when the EditRowModel changed.
    * @param handler
@@ -239,6 +242,11 @@ export interface GridOptions {
    * @param handler
    */
   onCellModeChange?: (params: GridCellModeChangeParams) => void;
+  /**
+   * Callback fired when the cell value changed.
+   * @param handler
+   */
+  onCellValueChange?: (params: GridEditCellValueParams) => void;
   /**
    * Callback fired when a click event comes from a column header element.
    * @param param With all properties from [[GridColParams]].

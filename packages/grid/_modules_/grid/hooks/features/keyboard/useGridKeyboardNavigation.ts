@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { gridContainerSizesSelector } from '../../../components/GridViewport';
 import { GRID_CELL_NAVIGATION_KEYDOWN } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridNavigationApi } from '../../../models/api/gridNavigationApi';
@@ -13,6 +12,7 @@ import {
   isSpaceKey,
   isTabKey,
 } from '../../../utils/keyboardUtils';
+import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { visibleGridColumnsLengthSelector } from '../columns/gridColumnsSelector';
