@@ -21,7 +21,7 @@ export const useGridBaseComponentProps = (apiRef: GridApiRef | undefined) => {
         columns,
         options,
         api: apiRef,
-        rootelement: apiRef.current.rootElementRef!,
+        rootElement: apiRef.current.rootElementRef!,
       },
     [state, rows, columns, options, apiRef],
   );
