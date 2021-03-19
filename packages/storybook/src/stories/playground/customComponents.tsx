@@ -10,6 +10,7 @@ import {
   GridColumnMenu,
   HideGridColMenuItem,
   ColumnMenuProps,
+  GridBaseComponentProps,
 } from '@material-ui/data-grid';
 import RecipeReviewCard from './RecipeReviewCard';
 
@@ -41,7 +42,7 @@ export function NoRowsComponent() {
   );
 }
 
-export function PaginationComponent(props) {
+export function PaginationComponent(props: GridBaseComponentProps & { color?: 'primary' }) {
   const { state, api } = props;
   return (
     <Pagination
