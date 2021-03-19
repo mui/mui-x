@@ -75,8 +75,8 @@ const DemoDynamicContainerTemplate: Story<{
 };
 export const GridXRowsPlay = DemoDynamicContainerTemplate.bind({});
 GridXRowsPlay.args = {
-  height: 520,
+  height: 560,
   width: '100%',
-  nbRows: 8,
+  nbRows: 80,
   nbCols: 20,
 };

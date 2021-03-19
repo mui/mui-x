@@ -16,7 +16,7 @@ export function GridDataContainer(props: GridDataContainerProps) {
   }
 
   if(gridState.scrollBar.hasScrollY) {
-    style.minHeight = gridState.containerSizes?.dataContainerSizes?.height! + gridState.scrollBar.scrollBarSize.x;
+    style.minHeight = gridState.containerSizes?.dataContainerSizes?.height!;
   }
 
   return (
