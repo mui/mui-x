@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
-import { GridBaseComponentProps } from '../../models/params/gridBaseComponentProps';
+import {
+  GridBaseComponentProps,
+  GridBaseComponentPropsEnum,
+} from '../../models/params/gridBaseComponentProps';
 import { optionsSelector } from '../utils/optionsSelector';
 import { visibleGridColumnsSelector } from './columns/gridColumnsSelector';
 import { useGridSelector } from './core/useGridSelector';
@@ -16,12 +19,12 @@ export const useGridBaseComponentProps = (apiRef: GridApiRef | undefined) => {
   const baseComponentProps: GridBaseComponentProps | undefined = React.useMemo(
     () =>
       apiRef && {
-        state,
-        rows,
-        columns,
-        options,
-        api: apiRef,
-        rootElement: apiRef.current.rootElementRef!,
+        [GridBaseComponentPropsEnum.state]: state,
+        [GridBaseComponentPropsEnum.rows]: rows,
+        [GridBaseComponentPropsEnum.columns]: columns,
+        [GridBaseComponentPropsEnum.options]: options,
+        [GridBaseComponentPropsEnum.api]: apiRef,
+        [GridBaseComponentPropsEnum.rootElement]: apiRef.current.rootElementRef!,
       },
     [state, rows, columns, options, apiRef],
   );

@@ -1,16 +1,7 @@
-const gridBaseComponentProps = [
-  'api',
-  'columns',
-  'options',
-  'rootElement',
-  'rows',
-  'state',
-] as const;
+import { GridBaseComponentPropsEnum } from '../../models/params/gridBaseComponentProps';
 
-type GridBaseComponentPropsKeys = typeof gridBaseComponentProps[number];
-
-const isGridBaseComponentProp = (prop: any): prop is GridBaseComponentPropsKeys => {
-  return gridBaseComponentProps.includes(prop);
+const isGridBaseComponentProp = (prop: string) => {
+  return !!GridBaseComponentPropsEnum[prop];
 };
 
 export function useStrippedProps(props) {
