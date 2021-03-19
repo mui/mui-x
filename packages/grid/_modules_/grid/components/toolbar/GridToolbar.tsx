@@ -11,9 +11,11 @@ import { GridColumnsToolbarButton } from './GridColumnsToolbarButton';
 import { GridDensitySelector } from './GridDensitySelector';
 import { GridFilterToolbarButton } from './GridFilterToolbarButton';
 import { GridToolbarExport } from './GridToolbarExport';
+import { useStrippedProps } from '../../hooks/utils/useStrippedProps';
 
 export const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarContainerProps>(
   function GridToolbar(props, ref) {
+    const strippedProps = useStrippedProps(props);
     const apiRef = useContext(GridApiContext);
     const options = useGridSelector(apiRef, optionsSelector);
 
@@ -26,7 +28,7 @@ export const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarContainer
     }
 
     return (
-      <GridToolbarContainer ref={ref} {...props}>
+      <GridToolbarContainer ref={ref} {...strippedProps}>
         <GridColumnsToolbarButton />
         <GridFilterToolbarButton />
         <GridDensitySelector />

@@ -5,6 +5,7 @@ import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import { GridApiContext } from '../GridApiContext';
 import { isMuiV5 } from '../../utils';
+import { useStrippedProps } from '../../hooks/utils/useStrippedProps';
 
 export interface GridPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
@@ -28,6 +29,7 @@ export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(functi
   ref,
 ) {
   const { children, open, ...other } = props;
+  const strippedProps = useStrippedProps(other);
   const classes = useStyles();
   const apiRef = React.useContext(GridApiContext);
 
@@ -77,7 +79,7 @@ export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(functi
       open={open}
       anchorEl={anchorEl}
       modifiers={getPopperModifiers()}
-      {...other}
+      {...strippedProps}
     >
       <ClickAwayListener onClickAway={handleClickAway}>
         <Paper className={classes.root} elevation={8} onKeyDown={handleKeyDown}>

@@ -9,9 +9,11 @@ import { GridApiContext } from './GridApiContext';
 import { GridRowCount } from './GridRowCount';
 import { GridSelectedRowCount } from './GridSelectedRowCount';
 import { GridFooterContainer, GridFooterContainerProps } from './containers/GridFooterContainer';
+import { useStrippedProps } from '../hooks/utils/useStrippedProps';
 
 export const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(
   function GridFooter(props, ref) {
+    const strippedProps = useStrippedProps(props);
     const apiRef = React.useContext(GridApiContext);
     const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
     const options = useGridSelector(apiRef, optionsSelector);
@@ -42,7 +44,7 @@ export const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerPr
     );
 
     return (
-      <GridFooterContainer ref={ref} {...props}>
+      <GridFooterContainer ref={ref} {...strippedProps}>
         {SelectedRowCountElement}
         {RowCountElement}
         {PaginationElement}

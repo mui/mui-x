@@ -6,6 +6,7 @@ import { GridFilterMenuItem } from './GridFilterMenuItem';
 import { HideGridColMenuItem } from './HideGridColMenuItem';
 import { SortGridMenuItems } from './SortGridMenuItems';
 import { classnames } from '../../../utils/classnames';
+import { useStrippedProps } from '../../../hooks/utils/useStrippedProps';
 
 export interface GridColumnMenuProps extends React.HTMLAttributes<HTMLUListElement> {
   hideMenu: () => void;
@@ -18,6 +19,7 @@ export interface GridColumnMenuProps extends React.HTMLAttributes<HTMLUListEleme
 export const GridColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
   function GridColumnMenu(props: GridColumnMenuProps, ref) {
     const { hideMenu, currentColumn, open, id, labelledby, className, ...other } = props;
+    const strippedProps = useStrippedProps(other);
     const handleListKeyDown = React.useCallback(
       (event: React.KeyboardEvent) => {
         if (event.key === 'Tab') {
@@ -37,7 +39,7 @@ export const GridColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuP
         aria-labelledby={labelledby}
         onKeyDown={handleListKeyDown}
         autoFocus={open}
-        {...other}
+        {...strippedProps}
       >
         <SortGridMenuItems onClick={hideMenu} column={currentColumn!} />
         <GridFilterMenuItem onClick={hideMenu} column={currentColumn!} />

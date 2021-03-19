@@ -6,6 +6,7 @@ import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginat
 import { optionsSelector } from '../hooks/utils/optionsSelector';
 import { GridApiContext } from './GridApiContext';
 import { isMuiV5 } from '../utils';
+import { useStrippedProps } from '../hooks/utils/useStrippedProps';
 
 // Used to hide the Rows per page selector on small devices
 const useStyles = makeStyles((theme: Theme) => ({
@@ -36,6 +37,7 @@ export const GridPagination = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(function GridPagination(props, ref) {
+  const strippedProps = useStrippedProps(props);
   const classes = useStyles();
   const apiRef = React.useContext(GridApiContext);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
@@ -89,7 +91,7 @@ export const GridPagination = React.forwardRef<
       }
       rowsPerPage={paginationState.pageSize}
       {...getPaginationChangeHandlers()}
-      {...props}
+      {...strippedProps}
     />
   );
 });
