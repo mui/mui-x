@@ -15,6 +15,9 @@ export interface GridPanelProps extends React.HTMLAttributes<HTMLDivElement> {
 const useStyles = makeStyles(
   (theme: Theme) => ({
     root: {
+      zIndex: theme.zIndex.modal,
+    },
+    paper: {
       backgroundColor: theme.palette.background.paper,
       minWidth: 300,
       maxHeight: 450,
@@ -76,13 +79,14 @@ export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(functi
     <Popper
       ref={ref}
       placement="bottom-start"
+      className={classes.root}
       open={open}
       anchorEl={anchorEl}
       modifiers={getPopperModifiers()}
       {...strippedProps}
     >
       <ClickAwayListener onClickAway={handleClickAway}>
-        <Paper className={classes.root} elevation={8} onKeyDown={handleKeyDown}>
+        <Paper className={classes.paper} elevation={8} onKeyDown={handleKeyDown}>
           {children}
         </Paper>
       </ClickAwayListener>
