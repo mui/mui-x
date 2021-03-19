@@ -1,4 +1,4 @@
-import { renderEditInputCell } from '../../components/editCell/EditInputCell';
+import { renderEditInputCell } from '../../components/cell/GridEditInputCell';
 import { gridStringNumberComparer } from '../../utils/sortingUtils';
 import { GridColTypeDef } from './gridColDef';
 import { getGridStringOperators } from './gridStringOperators';

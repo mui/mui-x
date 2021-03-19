@@ -7,6 +7,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { gridDensityValueSelector } from '../../hooks/features/density/densitySelector';
 import { GridDensity, GridDensityTypes } from '../../models/gridDensity';
+import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
 import { GridApiContext } from '../GridApiContext';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
@@ -62,10 +63,10 @@ export function GridDensitySelector() {
   };
 
   const handleListKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Tab') {
+    if (isTabKey(event.key)) {
       event.preventDefault();
     }
-    if (event.key === 'Tab' || event.key === 'Escape') {
+    if (isHideMenuKey(event.key)) {
       handleDensitySelectorClose();
     }
   };

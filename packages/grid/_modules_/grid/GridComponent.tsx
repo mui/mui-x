@@ -19,6 +19,7 @@ import { GridComponentProps } from './GridComponentProps';
 import { useGridColumnMenu } from './hooks/features/columnMenu/useGridColumnMenu';
 import { useGridColumns } from './hooks/features/columns/useGridColumns';
 import { useGridState } from './hooks/features/core/useGridState';
+import { useGridKeyboardNavigation } from './hooks/features/keyboard/useGridKeyboardNavigation';
 import { useGridPagination } from './hooks/features/pagination/useGridPagination';
 import { useGridPreferencesPanel } from './hooks/features/preferencesPanel/useGridPreferencesPanel';
 import { useGridParamsApi } from './hooks/features/rows/useGridParamsApi';
@@ -48,6 +49,7 @@ import { GridApiContext } from './components/GridApiContext';
 import { useGridFilter } from './hooks/features/filter/useGridFilter';
 import { useLocaleText } from './hooks/features/localeText/useLocaleText';
 import { useGridCsvExport } from './hooks/features/export';
+import { useGridInfiniteLoader } from './hooks/features/infiniteLoader';
 
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {
@@ -80,6 +82,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useGridRows(apiRef, props.rows, props.getRowId);
     useGridEditRows(apiRef);
     useGridKeyboard(rootContainerRef, apiRef);
+    useGridKeyboardNavigation(rootContainerRef, apiRef);
     useGridSelection(apiRef);
     useGridSorting(apiRef, props.rows);
     useGridColumnMenu(apiRef);
@@ -92,6 +95,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useGridColumnResize(columnsHeaderRef, apiRef);
     useGridPagination(apiRef);
     useGridCsvExport(apiRef);
+    useGridInfiniteLoader(apiRef);
 
     const components = useGridComponents(props.components, props.componentsProps, apiRef);
     useStateProp(apiRef, props.state);

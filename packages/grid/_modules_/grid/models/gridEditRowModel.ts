@@ -5,6 +5,6 @@ export interface GridEditCellProps {
   [prop: string]: any;
 }
 
-export type GridEditRowUpdate = { [field: string]: GridEditCellProps };
+export type GridEditRowProps = { [field: string]: GridEditCellProps };
 
-export type GridEditRowsModel = { [rowId: string]: GridEditRowUpdate };
+export type GridEditRowsModel = { [rowId: string]: GridEditRowProps };

@@ -3,41 +3,21 @@ import { createClientRenderStrictMode } from 'test/utils';
 import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
 import { getCell, getColumnValues } from 'test/utils/helperFn';
-import { GridApiRef, GridColDef, GridRowData, useGridApiRef, XGrid } from '@material-ui/x-grid';
+import {
+  GridApiRef,
+  GridColDef,
+  GridComponentProps,
+  GridRowData,
+  useGridApiRef,
+  XGrid,
+} from '@material-ui/x-grid';
 
 describe('<XGrid /> - Rows ', () => {
   let clock;
+  let baselineProps: { columns: GridColDef[]; rows: GridRowData[] };
 
-  beforeEach(() => {
-    clock = useFakeTimers();
-  });
-
-  afterEach(() => {
-    clock.restore();
-  });
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
-
-  const baselineProps: { columns: GridColDef[]; rows: GridRowData[] } = {
-    rows: [
-      {
-        clientId: 'c1',
-        first: 'Mike',
-        age: 11,
-      },
-      {
-        clientId: 'c2',
-        first: 'Jack',
-        age: 11,
-      },
-      {
-        clientId: 'c3',
-        first: 'Mike',
-        age: 20,
-      },
-    ],
-    columns: [{ field: 'id' }, { field: 'first' }, { field: 'age' }],
-  };
 
   before(function beforeHook() {
     if (/jsdom/.test(window.navigator.userAgent)) {
@@ -47,6 +27,35 @@ describe('<XGrid /> - Rows ', () => {
   });
 
   describe('getRowId', () => {
+    beforeEach(() => {
+      clock = useFakeTimers();
+
+      baselineProps = {
+        rows: [
+          {
+            clientId: 'c1',
+            first: 'Mike',
+            age: 11,
+          },
+          {
+            clientId: 'c2',
+            first: 'Jack',
+            age: 11,
+          },
+          {
+            clientId: 'c3',
+            first: 'Mike',
+            age: 20,
+          },
+        ],
+        columns: [{ field: 'id' }, { field: 'first' }, { field: 'age' }],
+      };
+    });
+
+    afterEach(() => {
+      clock.restore();
+    });
+
     describe('updateRows', () => {
       it('should apply getRowId before updating rows', () => {
         const getRowId = (row) => `${row.clientId}`;
@@ -97,6 +106,147 @@ describe('<XGrid /> - Rows ', () => {
       expect(cell).to.have.class('MuiDataGrid-cellEditable');
       expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
       expect(cell.querySelector('input')).to.equal(null);
+    });
+  });
+
+  describe('updateRows', () => {
+    beforeEach(() => {
+      clock = useFakeTimers();
+
+      baselineProps = {
+        rows: [
+          {
+            id: 0,
+            brand: 'Nike',
+          },
+          {
+            id: 1,
+            brand: 'Adidas',
+          },
+          {
+            id: 2,
+            brand: 'Puma',
+          },
+        ],
+        columns: [{ field: 'brand', headerName: 'Brand' }],
+      };
+    });
+
+    afterEach(() => {
+      clock.restore();
+    });
+
+    let apiRef: GridApiRef;
+
+    const TestCase = (props: Partial<GridComponentProps>) => {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid
+            apiRef={apiRef}
+            columns={baselineProps.columns}
+            rows={baselineProps.rows}
+            {...props}
+          />
+        </div>
+      );
+    };
+
+    it('should allow to reset rows with setRows and render after 100ms', () => {
+      render(<TestCase />);
+      const newRows = [
+        {
+          id: 3,
+          brand: 'Asics',
+        },
+      ];
+      apiRef.current.setRows(newRows);
+
+      clock.tick(50);
+      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      clock.tick(50);
+      expect(getColumnValues()).to.deep.equal(['Asics']);
+    });
+
+    it('should allow to update row data', () => {
+      render(<TestCase />);
+      apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
+      apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]);
+      apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]);
+      clock.tick(100);
+      expect(getColumnValues()).to.deep.equal(['Pata', 'Fila', 'Pum']);
+    });
+
+    it('update row data can also add rows', () => {
+      render(<TestCase />);
+      apiRef.current.updateRows([{ id: 1, brand: 'Fila' }]);
+      apiRef.current.updateRows([{ id: 0, brand: 'Pata' }]);
+      apiRef.current.updateRows([{ id: 2, brand: 'Pum' }]);
+      apiRef.current.updateRows([{ id: 3, brand: 'Jordan' }]);
+      clock.tick(100);
+      expect(getColumnValues()).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
+    });
+
+    it('update row data can also add rows in bulk', () => {
+      render(<TestCase />);
+      apiRef.current.updateRows([
+        { id: 1, brand: 'Fila' },
+        { id: 0, brand: 'Pata' },
+        { id: 2, brand: 'Pum' },
+        { id: 3, brand: 'Jordan' },
+      ]);
+      clock.tick(100);
+      expect(getColumnValues()).to.deep.equal(['Pata', 'Fila', 'Pum', 'Jordan']);
+    });
+
+    it('update row data can also delete rows', () => {
+      render(<TestCase />);
+      apiRef.current.updateRows([{ id: 1, _action: 'delete' }]);
+      apiRef.current.updateRows([{ id: 0, brand: 'Apple' }]);
+      apiRef.current.updateRows([{ id: 2, _action: 'delete' }]);
+      apiRef.current.updateRows([{ id: 5, brand: 'Atari' }]);
+      clock.tick(100);
+      expect(getColumnValues()).to.deep.equal(['Apple', 'Atari']);
+    });
+
+    it('update row data can also delete rows in bulk', () => {
+      render(<TestCase />);
+      apiRef.current.updateRows([
+        { id: 1, _action: 'delete' },
+        { id: 0, brand: 'Apple' },
+        { id: 2, _action: 'delete' },
+        { id: 5, brand: 'Atari' },
+      ]);
+      clock.tick(100);
+      expect(getColumnValues()).to.deep.equal(['Apple', 'Atari']);
+    });
+
+    it('update row data should process getRowId', () => {
+      const TestCaseGetRowId = () => {
+        apiRef = useGridApiRef();
+        const getRowId = React.useCallback((row: GridRowData) => row.idField, []);
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid
+              apiRef={apiRef}
+              columns={baselineProps.columns}
+              rows={baselineProps.rows.map((row) => ({ idField: row.id, brand: row.brand }))}
+              getRowId={getRowId}
+            />
+          </div>
+        );
+      };
+
+      render(<TestCaseGetRowId />);
+      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+      apiRef.current.updateRows([
+        { idField: 1, _action: 'delete' },
+        { idField: 0, brand: 'Apple' },
+        { idField: 2, _action: 'delete' },
+        { idField: 5, brand: 'Atari' },
+      ]);
+      clock.tick(100);
+      expect(getColumnValues()).to.deep.equal(['Apple', 'Atari']);
     });
   });
 });

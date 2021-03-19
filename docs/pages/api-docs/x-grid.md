@@ -72,6 +72,7 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">onRowEnter</span> | <span class="prop-type">(param: GridRowParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse enter comes from a row container element. |
 | <span class="prop-name">onRowLeave</span> | <span class="prop-type">(param: GridRowParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse leave event comes from a row container element. |
 | <span class="prop-name">onRowSelected</span> | <span class="prop-type">(param: GridRowSelectedParams) => void</span> |   | Callback fired when one row is selected. |
+| <span class="prop-name">onRowsScrollEnd</span> | <span class="prop-type">(param: GridRowScrollEndParams) => void</span> |   | Callback fired when scrolling to the bottom of the grid viewport. |
 | <span class="prop-name">onSelectionModelChange</span> | <span class="prop-type">(param: GridSelectionModelChangeParams) => void</span> |   | Callback fired when the selection state of one or multiple rows changes. |
 | <span class="prop-name">onSortModelChange</span> | <span class="prop-type">(param: GridSortModelParams) => void</span> |   | Callback fired when the sort model changes before a column is sorted. |
 | <span class="prop-name">page</span> | <span class="prop-type">number</span> | 1   |  Set the current page. |
@@ -83,6 +84,7 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">rowHeight</span> | <span class="prop-type">number</span> | 52 | Set the height in pixel of a row in the grid. |
 | <span class="prop-name">rowsPerPageOptions</span> | <span class="prop-type">number[]</span> | [25, 50, 100] | Select the pageSize dynamically using the component UI. |
 | <span class="prop-name">scrollbarSize</span> | <span class="prop-type">number</span> | 15 | Set the height/width of the grid inner scrollbar. |
+| <span class="prop-name">scrollEndThreshold</span> | <span class="prop-type">number</span> | 80 | Set the area at the bottom of the grid viewport where onRowsScrollEnd is called. |
 | <span class="prop-name">selectionModel</span> | <span class="prop-type">GridSelectionModel</span> |   | Set the selection model of the grid. |
 | <span class="prop-name">showCellRightBorder</span> | <span class="prop-type">boolean</span> | false | If `true`, the right border of the cells are displayed. |
 | <span class="prop-name">showColumnRightBorder</span> | <span class="prop-type">boolean</span> | false | If `true`, the right border of the column headers are displayed. |

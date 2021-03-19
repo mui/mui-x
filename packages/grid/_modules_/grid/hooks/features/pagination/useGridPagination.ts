@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { gridContainerSizesSelector } from '../../../components/GridViewport';
 import { GRID_PAGE_CHANGED, GRID_PAGESIZE_CHANGED } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridPaginationApi } from '../../../models/api/gridPaginationApi';
@@ -7,6 +6,7 @@ import { GridPageChangeParams } from '../../../models/params/gridPageChangeParam
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
+import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
 import { useLogger } from '../../utils/useLogger';
 import { useGridReducer } from '../core/useGridReducer';
 import { useGridSelector } from '../core/useGridSelector';

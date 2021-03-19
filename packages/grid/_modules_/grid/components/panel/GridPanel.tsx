@@ -4,8 +4,8 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import { GridApiContext } from '../GridApiContext';
-import { isMuiV5 } from '../../utils';
 import { useStrippedProps } from '../../hooks/utils/useStrippedProps';
+import { isEscapeKey, isMuiV5 } from '../../utils';
 
 export interface GridPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
@@ -55,8 +55,8 @@ export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(functi
   }, [apiRef]);
 
   const handleKeyDown = React.useCallback(
-    (event) => {
-      if (event.key === 'Escape') {
+    (event: React.KeyboardEvent) => {
+      if (isEscapeKey(event.key)) {
         apiRef!.current.hidePreferences();
       }
     },
