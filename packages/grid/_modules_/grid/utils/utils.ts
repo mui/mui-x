@@ -4,11 +4,6 @@ import { GridCellValue } from '../models/gridCell';
 
 export { isDeepEqual };
 
-export interface DebouncedFunction extends Function {
-  cancel: () => void;
-  flush: () => void;
-}
-
 export function isDate(value: any): value is Date {
   return value instanceof Date;
 }
