@@ -158,7 +158,8 @@ export const useGridVirtualRows = (
       } else {
         scrollTo(scrollParams);
       }
-      setRenderingState({ renderingZoneScroll: scrollParams ,
+      setRenderingState({
+        renderingZoneScroll: scrollParams,
         realScroll: {
           left: windowRef.current.scrollLeft,
           top: windowRef.current.scrollTop,
