@@ -13,8 +13,6 @@ export interface GridScrollBarState {
    * The scrollbar size.
    */
   scrollBarSize: { x: number; y: number };
-
-  virtual?: any
 }
 
 /**
@@ -26,6 +24,10 @@ export type GridViewportSizeState = ElementSize;
  * The set of container properties calculated on resize of the grid.
  */
 export interface GridContainerProps {
+  /**
+   * if true, the grid is virtualizing the rendering of rows.
+   */
+  isVirtualized: boolean;
   /**
    * The maximum number of rows that will be rendered at any given time in the grid.
    */
@@ -54,6 +56,10 @@ export interface GridContainerProps {
    * The size of the container containing all the rendered rows.
    */
   renderingZone: ElementSize;
+  /**
+   * The size of the available scroll height in the rendering zone container.
+   */
+  renderingZoneScrollHeight: number;
   /**
    * The total element size required to render the full set of rows and columns, minus the scrollbars.
    */

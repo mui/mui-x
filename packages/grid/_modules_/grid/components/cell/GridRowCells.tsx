@@ -53,7 +53,7 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
 
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const isLastColumn = firstColIdx + colIdx === columns.length - 1;
-    const removeScrollWidth = false;// isLastColumn && hasScroll.y && hasScroll.x;
+    const removeScrollWidth = false; // isLastColumn && hasScroll.y && hasScroll.x;
     const width = removeScrollWidth ? column.width! - scrollSize : column.width!;
     const removeLastBorderRight = isLastColumn && hasScroll.x && !hasScroll.y;
     const showRightBorder = !isLastColumn

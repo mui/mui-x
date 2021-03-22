@@ -11,11 +11,11 @@ export function GridDataContainer(props: GridDataContainerProps) {
   const apiRef = React.useContext(GridApiContext);
   const [gridState] = useGridState(apiRef!);
 
-  const style :any =  {
+  const style: any = {
     minWidth: gridState.containerSizes?.dataContainerSizes?.width,
-  }
+  };
 
-  if(gridState.scrollBar.hasScrollY) {
+  if (gridState.scrollBar.hasScrollY) {
     style.minHeight = gridState.containerSizes?.dataContainerSizes?.height!;
   }
 

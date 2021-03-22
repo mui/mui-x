@@ -66,35 +66,31 @@ export const useGridContainerProps = (
         x: hasScrollX ? options.scrollbarSize! : 0,
       };
 
-      if(rowsCount === 0) {
+      if (rowsCount === 0) {
         return { hasScrollX, hasScrollY: false, scrollBarSize };
       }
 
       const requiredSize = rowsCount * rowHeight;
-      const diff =  requiredSize - windowSizesRef.current.height;
-      //diff < 0 //it fits -4 hidden
-      //diff > 0 //it fits 5 hidden
-
-      const virtual = diff > rowHeight * 2; //we activate virtualisation when we have more than 2 rows
 
       const hasScrollY =
-        !options.autoPageSize && !options.autoHeight
-          &&
+        !options.autoPageSize &&
+        !options.autoHeight &&
         requiredSize + scrollBarSize.x > windowSizesRef.current.height;
-      console.log(`
-      diff: ${diff},
-      requiredSize: ${requiredSize}, 
-      winHeight: ${windowSizesRef.current.height} 
-      hasScrollX: ${hasScrollX}
-      hasScrollY: ${hasScrollY}
-      virtual: ${virtual}
-      `);
 
       scrollBarSize.y = hasScrollY ? options.scrollbarSize! : 0;
 
-      return { hasScrollX, hasScrollY, scrollBarSize, virtual };
+      logger.debug(`Scrollbar size on axis x: ${scrollBarSize.x}, y: ${scrollBarSize.y}`);
+
+      return { hasScrollX, hasScrollY, scrollBarSize };
     },
-    [logger, columnsTotalWidth, options.scrollbarSize, options.autoPageSize, options.autoHeight, rowHeight],
+    [
+      logger,
+      columnsTotalWidth,
+      options.scrollbarSize,
+      options.autoPageSize,
+      options.autoHeight,
+      rowHeight,
+    ],
   );
 
   const getViewport = React.useCallback(
@@ -124,11 +120,7 @@ export const useGridContainerProps = (
   );
 
   const getContainerProps = React.useCallback(
-    (
-      rowsCount: number,
-      viewportSizes: GridViewportSizeState,
-      scrollState: GridScrollBarState,
-    ): GridContainerProps | null => {
+    (rowsCount: number, viewportSizes: GridViewportSizeState): GridContainerProps | null => {
       if (
         !windowRef ||
         !windowRef.current ||
@@ -138,14 +130,21 @@ export const useGridContainerProps = (
         return null;
       }
 
-      if (options.autoPageSize || options.autoHeight || !scrollState.virtual ) {
-        // we don't need vertical virtualization in these 2 cases.
-        const viewportPageSize = options.autoHeight || !scrollState.virtual
-          ? rowsCount
-          : Math.floor(viewportSizes.height / rowHeight);
+      const requiredSize = rowsCount * rowHeight;
+      const diff = requiredSize - windowSizesRef.current.height;
+      // we activate virtualisation when we have more than 2 rows outside the viewport
+      const isVirtualized = diff > rowHeight * 2;
+
+      if (options.autoPageSize || options.autoHeight || !isVirtualized) {
+        // we don't need vertical virtualization in these cases.
+        const viewportPageSize =
+          options.autoHeight || !isVirtualized
+            ? rowsCount
+            : Math.floor(viewportSizes.height / rowHeight);
         const requiredHeight = viewportPageSize * rowHeight;
 
         const indexes: GridContainerProps = {
+          isVirtualized,
           virtualRowsCount: viewportPageSize,
           renderingZonePageSize: viewportPageSize,
           viewportPageSize,
@@ -157,6 +156,7 @@ export const useGridContainerProps = (
             width: columnsTotalWidth,
             height: requiredHeight,
           },
+          renderingZoneScrollHeight: requiredHeight - viewportSizes.height,
           renderingZone: {
             width: columnsTotalWidth,
             height: requiredHeight,
@@ -170,26 +170,22 @@ export const useGridContainerProps = (
       const viewportPageSize = Math.floor(viewportSizes.height / rowHeight);
 
       // Number of pages required to render the full set of rows in the viewport
-      let viewportMaxPage = Math.ceil(rowsCount / viewportPageSize) - 1;
+      const viewportMaxPage = Math.ceil(rowsCount / viewportPageSize) - 1;
 
       // We multiply by 2 for virtualization to work with useGridVirtualRows scroll system
-      const rzPageSize = viewportPageSize * 2;
-      const renderingZoneHeight = rzPageSize * rowHeight;
-      const maxScrollHeight = renderingZoneHeight - viewportSizes.height;
+      const renderingZonePageSize = viewportPageSize * 2;
+      const renderingZoneHeight = renderingZonePageSize * rowHeight;
+      const renderingZoneMaxScrollHeight = renderingZoneHeight - viewportSizes.height;
 
+      let totalHeight = viewportMaxPage * renderingZoneMaxScrollHeight + viewportSizes.height;
       const rowsLeftOnLastPage = rowsCount % viewportPageSize;
-console.log(`
-rowsLeftOnLastPage ${rowsLeftOnLastPage},
-`)
-
-      let totalHeight = viewportMaxPage * maxScrollHeight + viewportSizes.height;
-      if(rowsLeftOnLastPage > 0) {
-        totalHeight = totalHeight - maxScrollHeight + (rowsLeftOnLastPage * rowHeight);
+      if (rowsLeftOnLastPage > 0) {
+        totalHeight = totalHeight - renderingZoneMaxScrollHeight + rowsLeftOnLastPage * rowHeight;
       }
 
       const indexes: GridContainerProps = {
+        isVirtualized,
         virtualRowsCount: rowsCount,
-        renderingZonePageSize: rzPageSize,
         viewportPageSize,
         totalSizes: {
           width: columnsTotalWidth,
@@ -197,12 +193,14 @@ rowsLeftOnLastPage ${rowsLeftOnLastPage},
         },
         dataContainerSizes: {
           width: columnsTotalWidth,
-          height: totalHeight  || 1,
+          height: totalHeight || 1,
         },
+        renderingZonePageSize,
         renderingZone: {
           width: columnsTotalWidth,
           height: renderingZoneHeight,
         },
+        renderingZoneScrollHeight: renderingZoneMaxScrollHeight,
         windowSizes: windowSizesRef.current,
         lastPage: viewportMaxPage,
       };
@@ -253,7 +251,7 @@ rowsLeftOnLastPage ${rowsLeftOnLastPage},
       (state) => ({ ...state, viewportSizes }),
     );
 
-    const containerState = getContainerProps(rowsCount, viewportSizes, scrollBar);
+    const containerState = getContainerProps(rowsCount, viewportSizes);
     updateStateIfChanged(
       (state) => !isDeepEqual(state.containerSizes, containerState),
       (state) => ({ ...state, containerSizes: containerState }),
