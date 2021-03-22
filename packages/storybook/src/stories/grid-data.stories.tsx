@@ -63,12 +63,12 @@ const DemoDynamicContainerTemplate: Story<{
   width: number | string;
   nbRows: number;
   nbCols: number;
-}> = ({ nbRows, nbCols, height, width }) => {
+}> = ({ nbRows, nbCols, height, width, ...args }) => {
   const data = useData(nbRows, nbCols);
   return (
     <div className="demo-rendering grid-container" style={{ padding: 10 }}>
       <div style={{ width, height }}>
-        <XGrid rows={data.rows} columns={data.columns} />
+        <XGrid rows={data.rows} columns={data.columns} {...args} />
       </div>
     </div>
   );

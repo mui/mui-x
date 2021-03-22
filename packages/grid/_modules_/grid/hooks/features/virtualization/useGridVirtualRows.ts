@@ -135,102 +135,65 @@ export const useGridVirtualRows = (
       const viewportSizes = lastState.viewportSizes;
       const scrollBar = lastState.scrollBar;
 
-      const { scrollLeft, scrollTop } = windowRef.current;
+      const {scrollLeft, scrollTop} = windowRef.current;
       logger.debug(`Handling scroll Left: ${scrollLeft} Top: ${scrollTop}`);
 
       let requireRerender = updateRenderedCols(containerProps, scrollLeft);
-      const page = lastState.rendering.virtualPage;
-let nextPage = page;
+
+
       const rzScrollLeft = scrollLeft;
       // let currentPage = scrollTop / viewportSizes.height;
       const maxScrollHeight = containerProps.renderingZone.height - viewportSizes.height;
-      let currentPage = Math.round(scrollTop / maxScrollHeight);
 
-      let rzScrollTop = scrollTop - (page * maxScrollHeight);
-console.log(`'rzScrollTop ${rzScrollTop}, 
-              currentPage: ${scrollTop / maxScrollHeight}
-              page: ${page}
-            `);
+      // let currentPage = Math.floor(scrollTop / maxScrollHeight);
+      const page = lastState.rendering.virtualPage;
+      let currentPage = scrollTop / maxScrollHeight;
+      const rzScrollTop = scrollTop % maxScrollHeight;
 
-const buffer = rowHeight;
-if(rzScrollTop + buffer > maxScrollHeight) {
-  nextPage = currentPage; // + 1;
-  // rzScrollTop = maxScrollHeight - rzScrollTop;
-} else if(rzScrollTop - buffer < 0) {
-  nextPage = currentPage;// - 1;
-  // rzScrollTop = maxScrollHeight - rzScrollTop;
-}
-      // rzScrollTop = scrollTop % maxScrollHeight;
-
-      // logger.debug(
-      //   ` viewportHeight:${viewportSizes.height}, rzScrollTop: ${rzScrollTop}, scrollTop: ${scrollTop}, current page = ${currentPage}`,
-      // );
-
-
+      // if (rzScrollTop > maxScrollHeight) {
+      //   currentPage = currentPage === page ? currentPage + 1 : currentPage; // + 1;
+      // }
 
       const scrollParams = {
         left: scrollBar.hasScrollX ? rzScrollLeft : 0,
-        top:  gridState.scrollBar.virtual ? rzScrollTop : scrollTop,
+        top: gridState.scrollBar.virtual ? rzScrollTop : scrollTop,
       };
+      let nextPage = Math.floor(currentPage);
+      if( nextPage > lastState.containerSizes!.lastPage) {
+        nextPage = lastState.containerSizes!.lastPage;
+        // const currentScroll = scrollTop - (maxScrollHeight * nextPage);
+        // if(currentScroll > maxScrollHeight) {
+        //   rzScrollTop
+        // }
+      }
 
-     //  const isStartOfRenderingZone = rzScrollTop <= 0;
-     //  const isEndOfRenderingZone = rzScrollTop + viewportSizes.height >= containerProps.renderingZone.height;
-     //  const isScrollingDown = scrollTop > lastState.rendering.realScroll.top;
+      //  const isStartOfRenderingZone = rzScrollTop <= 0;
+      //  const isEndOfRenderingZone = rzScrollTop + viewportSizes.height >= containerProps.renderingZone.height;
+      //  const isScrollingDown = scrollTop > lastState.rendering.realScroll.top;
       console.log(`
-     viewportSizes.height: ${viewportSizes.height},
-      window scrollTop: ${windowRef.current!.scrollTop},
+      window scrollTop: ${scrollTop},
       calculated rzScrollTop: ${rzScrollTop}
       nextPage: ${nextPage}
-      last virtualPage: ${page}
-      // isStartOfRenderingZone: ${0}
-      // isEndOfRenderingZone: ${0}
-      // isScrollingDown: ${0}
+      previous virtualPage: ${page}
+      last page: ${lastState.containerSizes!.lastPage}
+      viewport pageSize: ${lastState.containerSizes!.viewportPageSize}
+      windowSizes: ${lastState.containerSizes!.windowSizes.height}
+      viewport height: ${lastState.viewportSizes!.height}
+      rendering zone height: ${lastState.containerSizes?.renderingZone.height},
+      rendering zone pagesize: ${lastState.containerSizes?.renderingZonePageSize},
+      data container height: ${lastState.containerSizes?.dataContainerSizes.height},
       maxScrollHeight: ${maxScrollHeight}
-      scrollTopModulo: ${scrollTop % maxScrollHeight}
       `);
 
-      // currentPage = Math.floor(currentPage);
-      // const lastPage = containerProps.lastPage;
-      // let nextPage = page;
-      // if(lastState.scrollBar.virtual && isScrollingDown && isEndOfRenderingZone) {
-      //   nextPage = page + 1 > lastPage - 1 ? lastPage - 1 : page + 1;
-      //   // let newRzScrollTop = scrollTop - (nextPage * viewportSizes.height);
-      //   // newRzScrollTop = newRzScrollTop < 0 ? 0 : newRzScrollTop;
-      //   // scrollParams.top = nextPage === lastPage - 1 ? scrollParams.top :  newRzScrollTop;
-      //   console.log(`
-      //   scrolling DOWN
-      // scrollParams.top: ${scrollParams.top},
-      //  newRzScrollTop : ${0}
-      // nextPage : ${nextPage}
-      // `);
-      // } else if(lastState.scrollBar.virtual && !isScrollingDown && isStartOfRenderingZone) {
-      //   nextPage = page - 1 < 0 ? 0 : page - 1;
-      //   // let newRzScrollTop = scrollTop - (nextPage * viewportSizes.height);
-      //   // newRzScrollTop = newRzScrollTop < 0 ? maxScrollHeight : newRzScrollTop;
-      //   //
-      //   // scrollParams.top = nextPage === 0 ? 0 : newRzScrollTop;
-      //   console.log(`
-      //     scrolling UP
-      //     scrollParams.top: ${scrollParams.top},
-      //     newRzScrollTop : ${0}
-      //     nextPage : ${nextPage}
-      // `);
-      // }
-
-
-      // scrollParams.top = scrollTop % viewportSizes.height;
-      if(page !== nextPage) {
+      if (page !== nextPage) {
         setRenderingState({virtualPage: nextPage});
-        // rzScrollTop = scrollTop - (nextPage * viewportSizes.height);
-        // scrollParams.top = rzScrollTop;
         console.log(`Changing page from ${page} to ${nextPage}`);
         logger.debug(`Changing page from ${page} to ${nextPage}`);
         requireRerender = true;
       } else {
         scrollTo(scrollParams);
       }
-      setRenderingState({
-        renderingZoneScroll: scrollParams,
+      setRenderingState({renderingZoneScroll: scrollParams,
         realScroll: {
           left: windowRef.current.scrollLeft,
           top: windowRef.current.scrollTop,

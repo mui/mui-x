@@ -34,7 +34,7 @@
      background: #c696f1 !important;
  }
  .demo-rendering .rendering-zone .MuiDataGrid-row:last-child {
-     background: #f17f7f !important;
+     border: 1px solid #f17f7f !important;
  }
 
  .overlay.custom-overlay {
