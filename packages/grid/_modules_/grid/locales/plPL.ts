@@ -42,7 +42,7 @@ export const plPLGrid: Partial<GridLocaleText> = {
   filterPanelAddFilter: 'Dodaj filtr',
   filterPanelDeleteIconLabel: 'Usuń',
   filterPanelOperators: 'Operator',
-  filterPanelOperatorAnd: 'Dodaj',
+  filterPanelOperatorAnd: 'I',
   filterPanelOperatorOr: 'Lub',
   filterPanelColumns: 'Kolumny',
   filterPanelInputLabel: 'Wartość',
