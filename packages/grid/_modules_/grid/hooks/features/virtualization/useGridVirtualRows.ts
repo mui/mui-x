@@ -151,7 +151,7 @@ export const useGridVirtualRows = (
         top: containerProps.isVirtualized ? rzScrollTop : scrollTop,
       };
 
-      if (page !== nextPage) {
+      if (containerProps.isVirtualized && page !== nextPage) {
         setRenderingState({ virtualPage: nextPage });
         logger.debug(`Changing page from ${page} to ${nextPage}`);
         requireRerender = true;
