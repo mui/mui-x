@@ -15,7 +15,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
 - ⚡️ Edit cell accessibility (#1205) @dtassone
 - 🐞 Bugfixes
 
-### @material-ui/x-grid@v4.0.0-alpha.22 / @material-ui/data-grid@v4.0.0-alpha.22
+### @material-ui/x-grid@v4.0.0-alpha.23 / @material-ui/data-grid@v4.0.0-alpha.23
 
 - [DataGrid] Add plPL locale (#1274) @michallukowski
 - [DataGrid] Add onScrollBottom to support infinite loading (#1199) @DanailH
