@@ -6,43 +6,31 @@ import { GridRootContainerRef } from '../gridRootContainerRef';
 import { GridRowModel } from '../gridRows';
 
 /**
- * Enum listing the grid base component props.
- */
-export enum GridBaseComponentPropsEnum {
-  state = 'state',
-  rows = 'rows',
-  columns = 'columns',
-  options = 'options',
-  api = 'api',
-  rootElement = 'rootElement',
-}
-
-/**
  * Object passed as React prop in the component override.
  */
 export interface GridBaseComponentProps {
   /**
    * The GridState object containing the current grid state.
    */
-  [GridBaseComponentPropsEnum.state]: GridState;
+  state: GridState;
   /**
    * The full set of rows.
    */
-  [GridBaseComponentPropsEnum.rows]: GridRowModel[];
+  rows: GridRowModel[];
   /**
    * The full set of columns.
    */
-  [GridBaseComponentPropsEnum.columns]: GridColumns;
+  columns: GridColumns;
   /**
    * The full set of options.
    */
-  [GridBaseComponentPropsEnum.options]: GridOptions;
+  options: GridOptions;
   /**
    * GridApiRef that let you manipulate the grid.
    */
-  [GridBaseComponentPropsEnum.api]: GridApiRef;
+  api: GridApiRef;
   /**
    * The ref of the inner div Element of the grid.
    */
-  [GridBaseComponentPropsEnum.rootElement]: GridRootContainerRef;
+  rootElement: GridRootContainerRef;
 }

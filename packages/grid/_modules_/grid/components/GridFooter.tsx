@@ -3,23 +3,19 @@ import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../hooks/features/rows/gridRowsSelector';
 import { selectedGridRowsCountSelector } from '../hooks/features/selection/gridSelectionSelector';
-import { useGridBaseComponentProps } from '../hooks/features/useGridBaseComponentProps';
 import { optionsSelector } from '../hooks/utils/optionsSelector';
 import { GridApiContext } from './GridApiContext';
 import { GridRowCount } from './GridRowCount';
 import { GridSelectedRowCount } from './GridSelectedRowCount';
 import { GridFooterContainer, GridFooterContainerProps } from './containers/GridFooterContainer';
-import { useGridStripBaseComponentsProps } from '../hooks/utils/useGridStripBaseComponentsProps';
 
 export const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(
   function GridFooter(props, ref) {
-    const strippedProps = useGridStripBaseComponentsProps(props);
     const apiRef = React.useContext(GridApiContext);
     const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
     const options = useGridSelector(apiRef, optionsSelector);
     const selectedRowCount = useGridSelector(apiRef, selectedGridRowsCountSelector);
     const pagination = useGridSelector(apiRef, gridPaginationSelector);
-    const baseProps = useGridBaseComponentProps(apiRef);
 
     const SelectedRowCountElement =
       !options.hideFooterSelectedRowCount && selectedRowCount > 0 ? (
@@ -40,11 +36,11 @@ export const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerPr
       apiRef?.current.components.Pagination;
 
     const PaginationElement = PaginationComponent && (
-      <PaginationComponent {...baseProps} {...apiRef?.current.componentsProps?.pagination} />
+      <PaginationComponent {...apiRef?.current.componentsProps?.pagination} />
     );
 
     return (
-      <GridFooterContainer ref={ref} {...strippedProps}>
+      <GridFooterContainer ref={ref} {...props}>
         {SelectedRowCountElement}
         {RowCountElement}
         {PaginationElement}

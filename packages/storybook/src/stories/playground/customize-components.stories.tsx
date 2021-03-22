@@ -351,7 +351,7 @@ CustomFilterColumnsPanels.args = {
     columnsPanel: { bg: 'red' },
   },
 };
-function CustomPanelComponent(props: GridBaseComponentProps & GridPanelProps) {
+function CustomPanelComponent(props: GridPanelProps) {
   if (!props.open) {
     return null;
   }
