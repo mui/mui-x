@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { GridApiContext } from './GridApiContext';
 import { useGridBaseComponentProps } from '../hooks/features/useGridBaseComponentProps';
-import { useStrippedProps } from '../hooks/utils/useStrippedProps';
+import { useGridStripBaseComponentsProps } from '../hooks/utils/useGridStripBaseComponentsProps';
 
 export const GridHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   function GridHeader(props, ref) {
-    const strippedProps = useStrippedProps(props);
+    const strippedProps = useGridStripBaseComponentsProps(props);
     const apiRef = React.useContext(GridApiContext);
     const baseProps = useGridBaseComponentProps(apiRef);
 

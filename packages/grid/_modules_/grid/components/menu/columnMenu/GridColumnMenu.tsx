@@ -7,7 +7,7 @@ import { GridFilterMenuItem } from './GridFilterMenuItem';
 import { HideGridColMenuItem } from './HideGridColMenuItem';
 import { SortGridMenuItems } from './SortGridMenuItems';
 import { classnames } from '../../../utils/classnames';
-import { useStrippedProps } from '../../../hooks/utils/useStrippedProps';
+import { useGridStripBaseComponentsProps } from '../../../hooks/utils/useGridStripBaseComponentsProps';
 
 export interface GridColumnMenuProps extends React.HTMLAttributes<HTMLUListElement> {
   hideMenu: () => void;
@@ -20,13 +20,13 @@ export interface GridColumnMenuProps extends React.HTMLAttributes<HTMLUListEleme
 export const GridColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
   function GridColumnMenu(props: GridColumnMenuProps, ref) {
     const { hideMenu, currentColumn, open, id, labelledby, className, ...other } = props;
-    const strippedProps = useStrippedProps(other);
+    const strippedProps = useGridStripBaseComponentsProps(other);
     const handleListKeyDown = React.useCallback(
       (event: React.KeyboardEvent) => {
-        if (isTabKey(event.key)) {
+        if (event.key === 'Tab') {
           event.preventDefault();
         }
-        if (isHideMenuKey(event.key)) {
+        if (event.key === 'Tab' || event.key === 'Escape') {
           hideMenu();
         }
       },
@@ -34,8 +34,8 @@ export const GridColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuP
     );
     return (
       <MenuList
-        ref={ref}
         id={id}
+        ref={ref}
         className={classnames('MuiDataGrid-gridMenuList', className)}
         aria-labelledby={labelledby}
         onKeyDown={handleListKeyDown}

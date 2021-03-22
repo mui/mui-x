@@ -4,7 +4,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import { GridApiContext } from '../GridApiContext';
-import { useStrippedProps } from '../../hooks/utils/useStrippedProps';
+import { useGridStripBaseComponentsProps } from '../../hooks/utils/useGridStripBaseComponentsProps';
 import { isEscapeKey, isMuiV5 } from '../../utils';
 
 export interface GridPanelProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -32,7 +32,7 @@ export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(functi
   ref,
 ) {
   const { children, open, ...other } = props;
-  const strippedProps = useStrippedProps(other);
+  const strippedProps = useGridStripBaseComponentsProps(other);
   const classes = useStyles();
   const apiRef = React.useContext(GridApiContext);
 

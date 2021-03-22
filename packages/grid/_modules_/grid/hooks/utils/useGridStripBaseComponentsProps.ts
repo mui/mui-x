@@ -4,7 +4,7 @@ const isGridBaseComponentProp = (prop: string) => {
   return !!GridBaseComponentPropsEnum[prop];
 };
 
-export function useStrippedProps(props) {
+export function useGridStripBaseComponentsProps(props) {
   const strippedProps = {};
 
   Object.keys(props).forEach((prop) => {

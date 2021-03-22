@@ -6,13 +6,13 @@ import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel
 import { useGridBaseComponentProps } from '../../hooks/features/useGridBaseComponentProps';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridApiContext } from '../GridApiContext';
-import { useStrippedProps } from '../../hooks/utils/useStrippedProps';
+import { useGridStripBaseComponentsProps } from '../../hooks/utils/useGridStripBaseComponentsProps';
 
 export const GridPreferencesPanel = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(function GridPreferencesPanel(props, ref) {
-  const strippedProps = useStrippedProps(props);
+  const strippedProps = useGridStripBaseComponentsProps(props);
   const apiRef = React.useContext(GridApiContext);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
   const options = useGridSelector(apiRef, optionsSelector);
