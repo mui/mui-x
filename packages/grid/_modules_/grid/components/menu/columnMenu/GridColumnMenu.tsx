@@ -23,10 +23,10 @@ export const GridColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuP
     const strippedProps = useGridStripBaseComponentsProps(other);
     const handleListKeyDown = React.useCallback(
       (event: React.KeyboardEvent) => {
-        if (event.key === 'Tab') {
+        if (isTabKey(event.key)) {
           event.preventDefault();
         }
-        if (event.key === 'Tab' || event.key === 'Escape') {
+        if (isHideMenuKey(event.key)) {
           hideMenu();
         }
       },
