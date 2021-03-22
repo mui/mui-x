@@ -3,4 +3,5 @@ export * from './bgBG';
 export * from './deDE';
 export * from './enUS';
 export * from './frFR';
+export * from './plPL';
 export * from './ptBR';
