@@ -132,7 +132,7 @@ describe('<DataGrid /> - Keyboard', () => {
       columns.map((column) => ({ ...column, width: 60 }));
 
     return (
-      <div style={{ width: 300, height: 330 }}>
+      <div style={{ width: 300, height: 335 }}>
         <DataGrid rows={data.rows} columns={transformColSizes(data.columns)} />
       </div>
     );
