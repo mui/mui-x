@@ -14,16 +14,15 @@ export const useGridBaseComponentProps = () => {
   const columns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const [state] = useGridState(apiRef!);
 
-  const baseComponentProps: GridBaseComponentProps | undefined = React.useMemo(
-    () =>
-      apiRef && {
-        state,
-        rows,
-        columns,
-        options,
-        api: apiRef,
-        rootElement: apiRef.current.rootElementRef!,
-      },
+  const baseComponentProps: GridBaseComponentProps = React.useMemo(
+    () => ({
+      state,
+      rows,
+      columns,
+      options,
+      api: apiRef!,
+      rootElement: apiRef!.current.rootElementRef!,
+    }),
     [state, rows, columns, options, apiRef],
   );
 
