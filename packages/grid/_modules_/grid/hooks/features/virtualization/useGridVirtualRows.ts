@@ -143,7 +143,7 @@ export const useGridVirtualRows = (
       const maxScrollHeight = lastState.containerSizes!.renderingZoneScrollHeight;
 
       const page = lastState.rendering.virtualPage;
-      const nextPage = Math.floor(scrollTop / maxScrollHeight);
+      const nextPage = maxScrollHeight > 0 ? Math.floor(scrollTop / maxScrollHeight) : 0;
       const rzScrollTop = scrollTop % maxScrollHeight;
 
       const scrollParams = {

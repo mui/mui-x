@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GRID_CELL_NAVIGATION_KEYDOWN } from '../../../constants/eventsConstants';
+import { GRID_CELL_FOCUS, GRID_CELL_NAVIGATION_KEYDOWN } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridNavigationApi } from '../../../models/api/gridNavigationApi';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
@@ -75,9 +75,10 @@ export const useGridKeyboardNavigation = (
 
       const currentColIndex = Number(cellEl.getAttribute('aria-colindex'));
       const currentRowIndex = Number(cellEl.getAttribute('data-rowindex'));
-      const rowCount = options.pagination
-        ? paginationState.pageSize * (paginationState.page + 1)
-        : totalRowCount;
+      let rowCount = totalRowCount;
+      if (options.pagination && totalRowCount > paginationState.pageSize) {
+        rowCount = paginationState.pageSize * (paginationState.page + 1);
+      }
 
       let nextCellIndexes: GridCellIndexCoordinates;
       if (isArrowKeys(key)) {
@@ -149,6 +150,17 @@ export const useGridKeyboardNavigation = (
     [apiRef, forceUpdate, logger, setGridState],
   );
 
+  const handleCellFocus = React.useCallback(
+    (cellParams: GridCellParams, event?: React.SyntheticEvent) => {
+      if (event?.target !== event?.currentTarget) {
+        return;
+      }
+
+      apiRef.current.setCellFocus(cellParams);
+    },
+    [apiRef],
+  );
+
   useGridApiMethod<GridNavigationApi>(
     apiRef,
     {
@@ -157,4 +169,5 @@ export const useGridKeyboardNavigation = (
     'GridNavigationApi',
   );
   useGridApiEventHandler(apiRef, GRID_CELL_NAVIGATION_KEYDOWN, navigateCells);
+  useGridApiEventHandler(apiRef, GRID_CELL_FOCUS, handleCellFocus);
 };
