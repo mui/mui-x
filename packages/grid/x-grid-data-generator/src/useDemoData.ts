@@ -82,7 +82,7 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
   const [data, setData] = React.useState<GridData>({ columns: [], rows: [] });
   const [rowLength, setRowLength] = React.useState(options.rowLength);
   const [index, setIndex] = React.useState(0);
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
     const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}`;
