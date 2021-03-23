@@ -9,19 +9,22 @@ _Mar 22, 2021_
 
 Big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
 
+- 🎁 Add `onRowsScrollEnd` to support infinite loading (#1199) @DanailH
+  This is an XGrid feature. Provides the ability to tap into the `onRowsScrollEnd` which is called when the scroll reaches the bottom of the grid viewport allowing developers to load additional data. It can be used with a combination of `scrollBottomThreshold` to control the area in which the `onRowsScrollEnd` is called.
+
+  See the documentation for [more details](https://material-ui.com/components/data-grid/rows/#infinite-loading).
+- 🕹 Provide the ability to sort by multiple columns using Shift+click (#1203) @dtassone
 - 🇵🇱 Added plPL locale (#1117) @LarsKumbier
-- 🎁 Add onScrollBottom to support infinite loading (#1199) @DanailH
-- 🕹 Add shift as multiple key (#1203) @dtassone
 - ⚡️ Edit cell accessibility (#1205) @dtassone
 - 🐞 Bugfixes
 
 ### @material-ui/x-grid@v4.0.0-alpha.23 / @material-ui/data-grid@v4.0.0-alpha.23
 
 - [DataGrid] Add plPL locale (#1274) @michallukowski
-- [DataGrid] Add onScrollBottom to support infinite loading (#1199) @DanailH
+- [DataGrid] Add onRowsScrollEnd to support infinite loading (#1199) @DanailH
 - [DataGrid] Edit Cell Navigation (#1205) @dtassone
 - [DataGrid] Fix Popper z-index (#1240) @m4theushw
-- [DataGrid] Add shift as multiple key (#1203) @dtassone
+- [DataGrid] Provide the ability to sort by multiple columns using Shift+click (#1203) @dtassone
 
 ### Docs
 
