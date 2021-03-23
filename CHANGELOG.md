@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.23](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.22...v4.0.0-alpha.23)
+
+_Mar 22, 2021_
+
+Big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add `onRowsScrollEnd` to support infinite loading (#1199) @DanailH
+  This is an XGrid feature. Provides the ability to tap into the `onRowsScrollEnd` which is called when the scroll reaches the bottom of the grid viewport allowing developers to load additional data. It can be used with a combination of `scrollBottomThreshold` to control the area in which the `onRowsScrollEnd` is called.
+
+  See the documentation for [more details](https://material-ui.com/components/data-grid/rows/#infinite-loading).
+- 🕹 Provide the ability to sort by multiple columns using Shift+click (#1203) @dtassone
+- 🇵🇱 Added plPL locale (#1117) @LarsKumbier
+- ⚡️ Edit cell accessibility (#1205) @dtassone
+- 🐞 Bugfixes
+
+### @material-ui/x-grid@v4.0.0-alpha.23 / @material-ui/data-grid@v4.0.0-alpha.23
+
+- [DataGrid] Add plPL locale (#1274) @michallukowski
+- [DataGrid] Add onRowsScrollEnd to support infinite loading (#1199) @DanailH
+- [DataGrid] Edit Cell Navigation (#1205) @dtassone
+- [DataGrid] Fix Popper z-index (#1240) @m4theushw
+- [DataGrid] Provide the ability to sort by multiple columns using Shift+click (#1203) @dtassone
+
+### Docs
+
+- [docs] Lazy generate fake data (#1170) @oliviertassinari
+- [docs] Fix linking to sorting component in data-grid overview page (#1237) @SaskiaKeil
+- [docs] Fix typos (#1198) @cthogg
+
+### Core
+
+- [core] Improve the handling of events (rm capture, add event, add new props) (#1158) @dtassone
+- [core] Reinforce that columns are definitions (#1210) @oliviertassinari
+- [core] Batch small changes (#1209) @oliviertassinari
+- [core] No top-level imports (#1257) @oliviertassinari
+- [core] Remove dead code (#1259) @oliviertassinari
+
 ## [4.0.0-alpha.22](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.21...v4.0.0-alpha.22)
 
 _Mar 9, 2021_
