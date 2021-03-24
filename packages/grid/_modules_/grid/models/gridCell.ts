@@ -13,5 +13,5 @@ export type GridCellValue = string | number | boolean | Date | null | undefined 
  */
 export interface GridCellIndexCoordinates {
   colIndex: number;
-  rowIndex: number;
+  rowIndex: number | null;
 }

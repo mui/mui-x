@@ -226,8 +226,9 @@ export const useGridVirtualRows = (
 
       let scrollTop;
 
+      const currentRowIndex = params.rowIndex === null ? 0 : params.rowIndex;
       const currentRowPage =
-        (params.rowIndex - gridState.pagination.page * gridState.pagination.pageSize) /
+        (currentRowIndex - gridState.pagination.page * gridState.pagination.pageSize) /
         gridState.containerSizes!.viewportPageSize;
       const scrollPosition = currentRowPage * gridState!.viewportSizes.height;
       const viewportHeight = gridState.viewportSizes.height;

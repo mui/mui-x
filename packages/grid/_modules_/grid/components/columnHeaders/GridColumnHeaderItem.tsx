@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  GRID_CELL_KEYDOWN,
   GRID_COLUMN_HEADER_CLICK,
   GRID_COLUMN_HEADER_DOUBLE_CLICK,
   GRID_COLUMN_HEADER_ENTER,
@@ -30,6 +31,7 @@ interface GridColumnHeaderItemProps {
   sortIndex?: number;
   options: GridOptions;
   filterItemsCounter?: number;
+  hasFocus?: boolean;
 }
 
 export const GridColumnHeaderItem = ({
@@ -41,8 +43,10 @@ export const GridColumnHeaderItem = ({
   sortIndex,
   options,
   filterItemsCounter,
+  hasFocus,
 }: GridColumnHeaderItemProps) => {
   const apiRef = React.useContext(GridApiContext);
+  const headerCellRef = React.useRef<HTMLDivElement>(null);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
   const {
     disableColumnReorder,
@@ -90,16 +94,33 @@ export const GridColumnHeaderItem = ({
     [apiRef, column.field],
   );
 
+  const publishClick = React.useCallback(
+    (eventName: string) => (event: React.MouseEvent) => {
+      apiRef!.current.setCellFocus({
+        colIndex,
+        rowIndex: null,
+      });
+
+      apiRef!.current.publishEvent(
+        eventName,
+        apiRef!.current.getColumnHeaderParams(column.field),
+        event,
+      );
+    },
+    [apiRef, column.field, colIndex],
+  );
+
   const mouseEventsHandlers = React.useMemo(
     () => ({
-      onClick: publish(GRID_COLUMN_HEADER_CLICK),
+      onClick: publishClick(GRID_COLUMN_HEADER_CLICK),
       onDoubleClick: publish(GRID_COLUMN_HEADER_DOUBLE_CLICK),
       onMouseOver: publish(GRID_COLUMN_HEADER_OVER),
       onMouseOut: publish(GRID_COLUMN_HEADER_OUT),
       onMouseEnter: publish(GRID_COLUMN_HEADER_ENTER),
       onMouseLeave: publish(GRID_COLUMN_HEADER_LEAVE),
+      onKeyDown: publish(GRID_CELL_KEYDOWN),
     }),
-    [publish],
+    [publish, publishClick],
   );
 
   const cssClasses = classnames(
@@ -143,8 +164,15 @@ export const GridColumnHeaderItem = ({
   );
   const columnMenuIconButton = <ColumnHeaderMenuIcon column={column} />;
 
+  React.useLayoutEffect(() => {
+    if (hasFocus && headerCellRef.current) {
+      headerCellRef.current!.focus();
+    }
+  });
+
   return (
     <div
+      ref={headerCellRef}
       className={cssClasses}
       key={column.field}
       data-field={column.field}
@@ -154,7 +182,7 @@ export const GridColumnHeaderItem = ({
         maxWidth: width,
       }}
       role="columnheader"
-      tabIndex={-1}
+      tabIndex={hasFocus ? 0 : -1}
       aria-colindex={colIndex + 1}
       {...ariaSort}
       {...mouseEventsHandlers}

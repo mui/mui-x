@@ -17,7 +17,7 @@ import { GridApiContext } from '../GridApiContext';
 
 export interface GridCellProps {
   align: GridAlignment;
-  colIndex?: number;
+  colIndex: number;
   cssClass?: string;
   field: string;
   rowId: GridRowId;
@@ -25,7 +25,7 @@ export interface GridCellProps {
   hasFocus?: boolean;
   height: number;
   isEditable?: boolean;
-  rowIndex?: number;
+  rowIndex: number;
   showRightBorder?: boolean;
   value?: GridCellValue;
   width: number;
@@ -68,12 +68,16 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
   const publishClick = React.useCallback(
     (eventName: string) => (event: React.MouseEvent) => {
       const params = apiRef!.current.getCellParams(rowId, field || '');
+      apiRef!.current.setCellFocus({
+        colIndex,
+        rowIndex,
+      });
       if (params?.colDef.disableClickEventBubbling) {
         event.stopPropagation();
       }
       apiRef!.current.publishEvent(eventName, params, event);
     },
-    [apiRef, field, rowId],
+    [apiRef, field, rowId, colIndex, rowIndex],
   );
 
   const publish = React.useCallback(

@@ -30,7 +30,7 @@ export const DensitySelectorCompact = () => {
   );
 };
 export const DensitySelectorComfortable = () => {
-  const data = useData(100, 50);
+  const data = useData(5, 5);
 
   return (
     <div style={{ height: 600 }}>

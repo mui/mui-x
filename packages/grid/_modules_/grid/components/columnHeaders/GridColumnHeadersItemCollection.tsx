@@ -3,6 +3,7 @@ import { GRID_COL_RESIZE_START, GRID_COL_RESIZE_STOP } from '../../constants/eve
 import { gridColumnReorderDragColSelector } from '../../hooks/features/columnReorder/columnReorderSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { filterGridColumnLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
+import { gridKeyboardCellSelector } from '../../hooks/features/keyboard/keyboardSelector';
 import { gridSortColumnLookupSelector } from '../../hooks/features/sorting/gridSortingSelector';
 import { useGridApiEventHandler } from '../../hooks/root/useGridApiEventHandler';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
@@ -22,6 +23,7 @@ export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemColl
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const filterColumnLookup = useGridSelector(apiRef, filterGridColumnLookupSelector);
   const dragCol = useGridSelector(apiRef, gridColumnReorderDragColSelector);
+  const cellFocus = useGridSelector(apiRef, gridKeyboardCellSelector);
 
   const handleResizeStart = React.useCallback((params) => {
     setResizingColField(params.field);
@@ -33,7 +35,7 @@ export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemColl
   // TODO refactor by putting resizing in the state so we avoid adding listeners.
   useGridApiEventHandler(apiRef!, GRID_COL_RESIZE_START, handleResizeStart);
   useGridApiEventHandler(apiRef!, GRID_COL_RESIZE_STOP, handleResizeStop);
-
+  // console.log(cellFocus);
   const items = columns.map((col, idx) => (
     <GridColumnHeaderItem
       key={col.field}
@@ -44,6 +46,7 @@ export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemColl
       column={col}
       colIndex={idx}
       isResizing={resizingColField === col.field}
+      hasFocus={cellFocus !== null && cellFocus.rowIndex === null && cellFocus.colIndex === idx}
     />
   ));
 

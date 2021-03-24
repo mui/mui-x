@@ -92,12 +92,9 @@ export const useGridKeyboard = (
 
       const nextCellIndexes = apiRef.current.getState().keyboard.cell!;
       // We select the rows in between
-      const rowIds = Array(Math.abs(nextCellIndexes.rowIndex - selectionFromRowIndex) + 1)
-        .fill(
-          nextCellIndexes.rowIndex > selectionFromRowIndex
-            ? selectionFromRowIndex
-            : nextCellIndexes.rowIndex,
-        )
+      const nextRowIndex = nextCellIndexes.rowIndex === null ? 0 : params.rowIndex;
+      const rowIds = Array(Math.abs(nextRowIndex - selectionFromRowIndex) + 1)
+        .fill(nextRowIndex > selectionFromRowIndex ? selectionFromRowIndex : nextRowIndex)
         .map((cur, idx) => apiRef.current.getRowIdFromRowIndex(cur + idx));
 
       logger.debug('Selecting rows ');
@@ -159,7 +156,6 @@ export const useGridKeyboard = (
         selectActiveRow();
         return;
       }
-
       if ((isNavigationKey(event.key) && !event.shiftKey) || isTabKey(event.key)) {
         apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEYDOWN, params, event);
         return;

@@ -28,17 +28,31 @@ const getNextCellIndexes = (code: string, indexes: GridCellIndexCoordinates) => 
     throw new Error('Material-UI: The first argument (code) should be an arrow key code.');
   }
 
-  if (code === 'ArrowLeft') {
-    return { ...indexes, colIndex: indexes.colIndex - 1 };
+  switch (code) {
+    case 'ArrowLeft':
+      if (indexes.rowIndex === null) {
+        return { rowIndex: null, colIndex: indexes.colIndex - 1 };
+      }
+      return { ...indexes, colIndex: indexes.colIndex - 1 };
+    case 'ArrowRight':
+      if (indexes.rowIndex === null) {
+        return { rowIndex: null, colIndex: indexes.colIndex + 1 };
+      }
+      return { ...indexes, colIndex: indexes.colIndex + 1 };
+    case 'ArrowUp':
+      if (indexes.rowIndex === 0 || indexes.rowIndex === null) {
+        return { ...indexes, rowIndex: null };
+      }
+
+      return { ...indexes, rowIndex: indexes.rowIndex - 1 };
+    default:
+      // Last option code === 'ArrowDown'
+      if (indexes.rowIndex === null) {
+        return { ...indexes, rowIndex: 0 };
+      }
+
+      return { ...indexes, rowIndex: indexes.rowIndex + 1 };
   }
-  if (code === 'ArrowRight') {
-    return { ...indexes, colIndex: indexes.colIndex + 1 };
-  }
-  if (code === 'ArrowUp') {
-    return { ...indexes, rowIndex: indexes.rowIndex - 1 };
-  }
-  // Last option code === 'ArrowDown'
-  return { ...indexes, rowIndex: indexes.rowIndex + 1 };
 };
 
 export const useGridKeyboardNavigation = (
@@ -66,15 +80,15 @@ export const useGridKeyboardNavigation = (
   const navigateCells = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
       event.preventDefault();
-
+      const { colIndex } = params;
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
-
       const cellEl = params.element!;
       cellEl.tabIndex = -1;
-
-      const currentColIndex = Number(cellEl.getAttribute('aria-colindex'));
-      const currentRowIndex = Number(cellEl.getAttribute('data-rowindex'));
+      const rowIndex =
+        cellEl.getAttribute('data-rowindex') === null
+          ? null
+          : Number(cellEl.getAttribute('data-rowindex'));
       const rowCount = options.pagination
         ? paginationState.pageSize * (paginationState.page + 1)
         : totalRowCount;
@@ -82,42 +96,40 @@ export const useGridKeyboardNavigation = (
       let nextCellIndexes: GridCellIndexCoordinates;
       if (isArrowKeys(key)) {
         nextCellIndexes = getNextCellIndexes(key, {
-          colIndex: currentColIndex,
-          rowIndex: currentRowIndex,
+          colIndex,
+          rowIndex,
         });
       } else if (isHomeOrEndKeys(key)) {
         const colIdx = key === 'Home' ? 0 : colCount - 1;
 
         if (!isCtrlPressed) {
           // we go to the current row, first col, or last col!
-          nextCellIndexes = { colIndex: colIdx, rowIndex: currentRowIndex };
+          nextCellIndexes = { colIndex: colIdx, rowIndex };
         } else {
           // In that case we go to first row, first col, or last row last col!
-          let rowIndex = 0;
+          let newRowIndex = 0;
           if (colIdx === 0) {
-            rowIndex = options.pagination ? rowCount - paginationState.pageSize : 0;
+            newRowIndex = options.pagination ? rowCount - paginationState.pageSize : 0;
           } else {
-            rowIndex = rowCount - 1;
+            newRowIndex = rowCount - 1;
           }
-          nextCellIndexes = { colIndex: colIdx, rowIndex };
+          nextCellIndexes = { colIndex: colIdx, rowIndex: newRowIndex };
         }
-      } else if (isPageKeys(key) || isSpaceKey(key)) {
+      } else if ((isPageKeys(key) || isSpaceKey(key)) && rowIndex !== null) {
         const nextRowIndex =
-          currentRowIndex +
+          rowIndex +
           (key.indexOf('Down') > -1 || isSpaceKey(key)
             ? containerSizes!.viewportPageSize
             : -1 * containerSizes!.viewportPageSize);
-        nextCellIndexes = { colIndex: currentColIndex, rowIndex: nextRowIndex };
+        nextCellIndexes = { colIndex, rowIndex: nextRowIndex };
       } else {
         throw new Error('Material-UI. Key not mapped to navigation behavior.');
       }
 
-      nextCellIndexes.rowIndex = nextCellIndexes.rowIndex <= 0 ? 0 : nextCellIndexes.rowIndex;
       nextCellIndexes.rowIndex =
-        nextCellIndexes.rowIndex >= rowCount && rowCount > 0
+        nextCellIndexes.rowIndex !== null && nextCellIndexes.rowIndex >= rowCount && rowCount > 0
           ? rowCount - 1
           : nextCellIndexes.rowIndex;
-
       nextCellIndexes.colIndex = nextCellIndexes.colIndex <= 0 ? 0 : nextCellIndexes.colIndex;
       nextCellIndexes.colIndex =
         nextCellIndexes.colIndex >= colCount ? colCount - 1 : nextCellIndexes.colIndex;
@@ -136,7 +148,9 @@ export const useGridKeyboardNavigation = (
 
   const setCellFocus = React.useCallback(
     (nextCellIndexes: GridCellIndexCoordinates) => {
-      apiRef.current.scrollToIndexes(nextCellIndexes);
+      if (nextCellIndexes !== null) {
+        apiRef.current.scrollToIndexes(nextCellIndexes);
+      }
 
       setGridState((state) => {
         logger.debug(
