@@ -53,6 +53,7 @@ The same import works with `XGrid` as it's an extension of `DataGrid`.
 | English (United States) | en-US               | `enUS`      |
 | French                  | fr-FR               | `frFR`      |
 | German                  | de-DE               | `deDE`      |
+| Japanese                | ja-JP               | `jaJP`      |
 | Polish                  | pl-PL               | `plPL`      |
 | Portuguese (Brazil)     | pt-BR               | `ptBR`      |
 
