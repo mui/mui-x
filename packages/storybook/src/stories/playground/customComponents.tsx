@@ -43,20 +43,20 @@ export function NoRowsComponent() {
 }
 
 export function PaginationComponent(props: GridBaseComponentProps & { color?: 'primary' }) {
-  const { state, api } = props;
+  const { state, apiRef } = props;
   return (
     <Pagination
       className="my-custom-pagination"
       page={state.pagination.page}
       color={props.color}
       count={state.pagination.pageCount}
-      onChange={(event, value) => api.current.setPage(value)}
+      onChange={(event, value) => apiRef.current.setPage(value)}
     />
   );
 }
 
 export function CustomFooter(props) {
-  const { state, api } = props;
+  const { state, apiRef } = props;
   return (
     <GridFooterContainer className="my-custom-footer">
       <span style={{ display: 'flex', alignItems: 'center', background: props.color }}>
@@ -66,7 +66,7 @@ export function CustomFooter(props) {
         className="my-custom-pagination"
         page={state.pagination.page}
         count={state.pagination.pageCount}
-        onChange={(event, value) => api.current.setPage(value)}
+        onChange={(event, value) => apiRef.current.setPage(value)}
       />
     </GridFooterContainer>
   );
@@ -89,7 +89,7 @@ export function CustomHeader(props) {
 }
 
 export function ColumnMenuComponent(props: ColumnMenuProps) {
-  if (props.api.current.getColumnIndex(props.currentColumn.field) === 1) {
+  if (props.apiRef.current.getColumnIndex(props.currentColumn.field) === 1) {
     return <RecipeReviewCard />;
   }
   if (props.currentColumn.field === 'id') {
