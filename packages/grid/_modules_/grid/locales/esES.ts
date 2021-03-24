@@ -1,6 +1,6 @@
-import { esES as esESCore } from "@material-ui/core/locale";
+import { esES as esESCore } from '@material-ui/core/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from "../utils";
+import { getGridLocalization, Localization } from '../utils';
 
 const esESGrid: Partial<GridLocaleText> = {
   // Root
@@ -33,8 +33,8 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarExportCSV: 'Descargar como CSV',
 
   // Columns panel text
-  columnsPanelTextFieldLabel: 'Columna de búsqueda',
-  columnsPanelTextFieldPlaceholder: 'Título de columna',
+  columnsPanelTextFieldLabel: 'Columna de bï¿½squeda',
+  columnsPanelTextFieldPlaceholder: 'Tï¿½tulo de columna',
   columnsPanelDragIconLabel: 'Reorder columna',
   columnsPanelShowAllButton: 'Mostrar todo',
   columnsPanelHideAllButton: 'Ocultar todo',
@@ -62,7 +62,7 @@ const esESGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'es en o anterior',
 
   // Column menu text
-  columnMenuLabel: 'Menú',
+  columnMenuLabel: 'Menï¿½',
   columnMenuShowColumns: 'Mostrar columnas',
   columnMenuFilter: 'Filtro',
   columnMenuHideColumn: 'Ocultar',
