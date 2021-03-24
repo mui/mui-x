@@ -1,4 +1,3 @@
-import { elGR as elGRCore } from '@material-ui/core/locale';
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization, Localization } from '../utils';
 
@@ -86,4 +85,4 @@ const elGRGrid: Partial<GridLocaleText> = {
   footerTotalRows: 'Σύνολο Γραμμών:',
 };
 
-export const elGR: Localization = getGridLocalization(elGRGrid, elGRCore);
+export const elGR: Localization = getGridLocalization(elGRGrid);
