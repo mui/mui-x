@@ -17,13 +17,15 @@ const useStyles = makeStyles(
   { name: 'MuiDataGridPanelWrapper' },
 );
 
+const isEnabled = () => true;
+
 export function GridPanelWrapper(
   props: React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>,
 ) {
   const classes = useStyles();
   const { className, ...other } = props;
   return (
-    <TrapFocus open disableEnforceFocus isEnabled={() => true} getDoc={() => document}>
+    <TrapFocus open disableEnforceFocus isEnabled={isEnabled} getDoc={() => document}>
       <div tabIndex={-1} className={classnames(classes.root, className)} {...other} />
     </TrapFocus>
   );
