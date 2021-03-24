@@ -102,7 +102,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 function CustomPagination() {
-  const { state, api } = useGridBaseComponentProps();
+  const { state, apiRef } = useGridBaseComponentProps();
 
   return (
     <Pagination
@@ -113,7 +113,7 @@ function CustomPagination() {
       count={state.pagination.pageCount}
       // @ts-expect-error
       renderItem={(props2) => <PaginationItem {...props2} disableRipple />}
-      onChange={(event, value) => api.current.setPage(value)}
+      onChange={(event, value) => apiRef.current.setPage(value)}
     />
   );
 }

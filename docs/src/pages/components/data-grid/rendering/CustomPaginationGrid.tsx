@@ -11,7 +11,7 @@ const useStyles = makeStyles({
 });
 
 function CustomPagination() {
-  const { state, api } = useGridBaseComponentProps();
+  const { state, apiRef } = useGridBaseComponentProps();
   const classes = useStyles();
 
   return (
@@ -20,7 +20,7 @@ function CustomPagination() {
       color="primary"
       count={state.pagination.pageCount}
       page={state.pagination.page + 1}
-      onChange={(event, value) => api.current.setPage(value - 1)}
+      onChange={(event, value) => apiRef.current.setPage(value - 1)}
     />
   );
 }

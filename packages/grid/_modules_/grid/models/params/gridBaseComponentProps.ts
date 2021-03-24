@@ -28,7 +28,7 @@ export interface GridBaseComponentProps {
   /**
    * GridApiRef that let you manipulate the grid.
    */
-  api: GridApiRef;
+  apiRef: GridApiRef;
   /**
    * The ref of the inner div Element of the grid.
    */

@@ -20,7 +20,7 @@ export const useGridBaseComponentProps = () => {
       rows,
       columns,
       options,
-      api: apiRef!,
+      apiRef: apiRef!,
       rootElement: apiRef!.current.rootElementRef!,
     }),
     [state, rows, columns, options, apiRef],
