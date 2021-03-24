@@ -2,6 +2,7 @@
 export * from './bgBG';
 export * from './deDE';
 export * from './enUS';
+export * from './esES';
 export * from './frFR';
 export * from './jaJP';
 export * from './plPL';
