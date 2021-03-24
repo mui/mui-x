@@ -33,8 +33,8 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarExportCSV: 'Descargar como CSV',
 
   // Columns panel text
-  columnsPanelTextFieldLabel: 'Columna de b�squeda',
-  columnsPanelTextFieldPlaceholder: 'T�tulo de columna',
+  columnsPanelTextFieldLabel: 'Columna de búsqueda',
+  columnsPanelTextFieldPlaceholder: 'Título de columna',
   columnsPanelDragIconLabel: 'Reorder columna',
   columnsPanelShowAllButton: 'Mostrar todo',
   columnsPanelHideAllButton: 'Ocultar todo',
@@ -62,7 +62,7 @@ const esESGrid: Partial<GridLocaleText> = {
   filterOperatorOnOrBefore: 'es en o anterior',
 
   // Column menu text
-  columnMenuLabel: 'Men�',
+  columnMenuLabel: 'Menú',
   columnMenuShowColumns: 'Mostrar columnas',
   columnMenuFilter: 'Filtro',
   columnMenuHideColumn: 'Ocultar',
