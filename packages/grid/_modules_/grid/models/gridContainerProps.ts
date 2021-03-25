@@ -25,7 +25,7 @@ export type GridViewportSizeState = ElementSize;
  */
 export interface GridContainerProps {
   /**
-   * if true, the grid is virtualizing the rendering of rows.
+   * If `true`, the grid is virtualizing the rendering of rows.
    */
   isVirtualized: boolean;
   /**

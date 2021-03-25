@@ -12,7 +12,7 @@ import {
   XGrid,
   XGridProps,
 } from '@material-ui/x-grid';
-import { useData } from '../../../../storybook/src/hooks/useData';
+import { useData } from 'packages/storybook/src/hooks/useData';
 
 describe('<XGrid /> - Rows ', () => {
   let clock;
