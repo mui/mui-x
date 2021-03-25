@@ -198,7 +198,7 @@ describe('<DataGrid /> - Toolbar', () => {
     });
 
     it('should keep the focus on the switch after toggling a column', () => {
-      const { getByRole } = render(
+      render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
             {...baselineProps}
@@ -209,7 +209,7 @@ describe('<DataGrid /> - Toolbar', () => {
         </div>,
       );
 
-      const button = getByRole('button', { name: 'Select columns' });
+      const button = screen.getByRole('button', { name: 'Select columns' });
       button.focus();
       fireEvent.click(button);
 
