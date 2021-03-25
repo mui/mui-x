@@ -17,7 +17,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { GridColumns } from 'packages/grid/_modules_/grid/models/colDef/gridColDef';
 
-const SPACE_KEY = { key: ' ', code: 'Space', shiftKey: false };
+const SPACE_KEY = { key: ' ' };
 const SHIFT_SPACE_KEY = { ...SPACE_KEY, shiftKey: true };
 
 describe('<DataGrid /> - Keyboard', () => {

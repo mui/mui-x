@@ -314,17 +314,15 @@ describe('<XGrid /> - Rows ', () => {
     });
 
     it('should render last row when scrolling to the bottom', () => {
-      const { container } = render(<TestCaseVirtualization nbRows={996} hideFooter height={600} />);
-      const totalHeight = apiRef!.current!.getState().containerSizes?.totalSizes.height;
+      render(<TestCaseVirtualization nbRows={996} hideFooter height={600} />);
+      const totalHeight = apiRef!.current!.getState().containerSizes?.totalSizes.height!;
 
-      const gridWindow = container.querySelector('.MuiDataGrid-window');
-      const renderingZone = container.querySelector('.MuiDataGrid-renderingZone');
+      const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+      const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
       gridWindow.scrollTop = totalHeight;
       gridWindow.dispatchEvent(new Event('scroll'));
 
-      const lastCell = container.querySelector(
-        '.MuiDataGrid-row:last-child .MuiDataGrid-cell:first-child',
-      );
+      const lastCell = document.querySelector('[role="row"]:last-child [role="cell"]:first-child')!;
       expect(lastCell.textContent).to.equal('995');
       expect(renderingZone.children.length).to.equal(16);
       expect(renderingZone.style.transform).to.equal('translate3d(0px, -312px, 0px)');
