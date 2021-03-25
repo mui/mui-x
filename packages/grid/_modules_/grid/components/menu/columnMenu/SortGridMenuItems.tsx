@@ -4,9 +4,9 @@ import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { gridSortModelSelector } from '../../../hooks/features/sorting/gridSortingSelector';
 import { GridSortDirection } from '../../../models/gridSortModel';
 import { GridApiContext } from '../../GridApiContext';
-import { FilterItemProps } from './FilterItemProps';
+import { GridFilterItemProps } from './GridFilterItemProps';
 
-export const SortGridMenuItems: React.FC<FilterItemProps> = ({ column, onClick }) => {
+export const SortGridMenuItems: React.FC<GridFilterItemProps> = ({ column, onClick }) => {
   const apiRef = React.useContext(GridApiContext);
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
 

@@ -1,4 +1,4 @@
-import { FilterModel } from '../../hooks/features/filter/FilterModelState';
+import { FilterModel } from '../../hooks/features/filter/gridFilterModelState';
 import { GridColumns } from '../colDef/gridColDef';
 import { GridRowModel } from '../gridRows';
 

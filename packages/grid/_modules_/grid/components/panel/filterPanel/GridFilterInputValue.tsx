@@ -1,15 +1,15 @@
 import * as React from 'react';
 import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import { GridLoadIcon } from '../../icons/index';
-import { FilterInputValueProps } from './FilterInputValueProps';
+import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 
 export const SUBMIT_FILTER_STROKE_TIME = 500;
 
-export interface TypeFilterInputValueProps extends FilterInputValueProps {
+export interface GridTypeFilterInputValueProps extends GridFilterInputValueProps {
   type?: 'text' | 'number' | 'date' | 'datetime-local';
 }
 
-export function GridFilterInputValue(props: TypeFilterInputValueProps & TextFieldProps) {
+export function GridFilterInputValue(props: GridTypeFilterInputValueProps & TextFieldProps) {
   const { item, applyValue, type, apiRef, ...others } = props;
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');

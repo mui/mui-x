@@ -1,4 +1,4 @@
 export * from './GridFilterForm';
 export * from './GridFilterInputValue';
-export * from './FilterInputValueProps';
+export * from './GridFilterInputValueProps';
 export * from './GridFilterPanel';

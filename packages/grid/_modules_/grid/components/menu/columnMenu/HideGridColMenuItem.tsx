@@ -1,9 +1,9 @@
 import * as React from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
 import { GridApiContext } from '../../GridApiContext';
-import { FilterItemProps } from './FilterItemProps';
+import { GridFilterItemProps } from './GridFilterItemProps';
 
-export const HideGridColMenuItem: React.FC<FilterItemProps> = ({ column, onClick }) => {
+export const HideGridColMenuItem: React.FC<GridFilterItemProps> = ({ column, onClick }) => {
   const apiRef = React.useContext(GridApiContext);
   const timeoutRef = React.useRef<any>();
 

@@ -21,7 +21,11 @@ import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
 import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
-import { FilterModel, FilterModelState, getInitialGridFilterState } from './FilterModelState';
+import {
+  FilterModel,
+  GridFilterModelState,
+  getInitialGridFilterState,
+} from './gridFilterModelState';
 import { getInitialVisibleGridRowsState } from './visibleGridRowsState';
 import { visibleSortedGridRowsSelector } from './gridFilterSelector';
 
@@ -33,7 +37,7 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
 
   const getFilterModelParams = React.useCallback(
     (): GridFilterModelParams => ({
-      filterModel: apiRef.current.getState<FilterModelState>('filter'),
+      filterModel: apiRef.current.getState<GridFilterModelState>('filter'),
       api: apiRef.current,
       columns: apiRef.current.getAllColumns(),
       rows: apiRef.current.getRowModels(),
@@ -310,7 +314,7 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
 
   const onColUpdated = React.useCallback(() => {
     logger.debug('onColUpdated - GridColumns changed, applying filters');
-    const filterState = apiRef.current.getState<FilterModelState>('filter');
+    const filterState = apiRef.current.getState<GridFilterModelState>('filter');
     const columnsIds = filterableGridColumnsIdsSelector(apiRef.current.state);
     logger.debug('GridColumns changed, applying filters');
 

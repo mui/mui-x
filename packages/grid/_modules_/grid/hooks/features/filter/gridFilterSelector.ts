@@ -4,7 +4,7 @@ import { GridRowModel } from '../../../models/gridRows';
 import { GridState } from '../core/gridState';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
-import { FilterModelState } from './FilterModelState';
+import { GridFilterModelState } from './gridFilterModelState';
 import { VisibleGridRowsState } from './visibleGridRowsState';
 
 export const visibleGridRowsStateSelector = (state: GridState) => state.visibleRows;
@@ -34,12 +34,12 @@ export const visibleGridRowCountSelector = createSelector<
   return visibleRowsState.visibleRows.length;
 });
 
-export const filterGridStateSelector: (state: GridState) => FilterModelState = (state) =>
+export const filterGridStateSelector: (state: GridState) => GridFilterModelState = (state) =>
   state.filter;
 
 export const activeGridFilterItemsSelector = createSelector<
   GridState,
-  FilterModelState,
+  GridFilterModelState,
   GridFilterItem[]
 >(
   filterGridStateSelector,

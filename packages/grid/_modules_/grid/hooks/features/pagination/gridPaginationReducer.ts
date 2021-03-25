@@ -1,6 +1,6 @@
 import { GridFeatureMode } from '../../../models/gridFeatureMode';
 
-export interface PaginationState {
+export interface GridPaginationState {
   page: number;
   pageCount: number;
   pageSize: number;
@@ -24,7 +24,7 @@ type SetRowCountAction = {
   payload: { totalRowCount: number };
 };
 
-export type PaginationActions =
+export type GridPaginationActions =
   | SetPageAction
   | SetPageSizeAction
   | SetPaginationModeAction
@@ -57,22 +57,22 @@ export const getGridPageCount = (pageSize: number | undefined, rowsCount: number
 };
 // STATE UPDATE PURE FUNCTIONS
 export const setGridPageStateUpdate = (
-  state: PaginationState,
+  state: GridPaginationState,
   { page }: { page: number },
-): PaginationState => {
+): GridPaginationState => {
   return state.page !== page ? { ...state, page } : state;
 };
 
 export const setGridPageSizeStateUpdate = (
-  state: PaginationState,
+  state: GridPaginationState,
   payload: { pageSize: number },
-): PaginationState => {
+): GridPaginationState => {
   const { pageSize } = payload;
   if (state.pageSize === pageSize) {
     return state;
   }
 
-  const newState: PaginationState = {
+  const newState: GridPaginationState = {
     ...state,
     pageSize,
     pageCount: getGridPageCount(pageSize, state.rowCount),
@@ -80,7 +80,7 @@ export const setGridPageSizeStateUpdate = (
   return newState;
 };
 
-export const setGridRowCountStateUpdate = (state, payload): PaginationState => {
+export const setGridRowCountStateUpdate = (state, payload): GridPaginationState => {
   const { totalRowCount } = payload;
   if (state.rowCount !== totalRowCount) {
     const newPageCount = getGridPageCount(state.pageSize, totalRowCount);
@@ -94,7 +94,7 @@ export const setGridRowCountStateUpdate = (state, payload): PaginationState => {
   return state;
 };
 
-export const GRID_INITIAL_PAGINATION_STATE: PaginationState = {
+export const GRID_INITIAL_PAGINATION_STATE: GridPaginationState = {
   page: 0,
   pageCount: 0,
   pageSize: 0,
@@ -103,7 +103,10 @@ export const GRID_INITIAL_PAGINATION_STATE: PaginationState = {
 };
 
 // REDUCER
-export const gridPaginationReducer = (state: PaginationState, action: PaginationActions) => {
+export const gridPaginationReducer = (
+  state: GridPaginationState,
+  action: GridPaginationActions,
+) => {
   switch (action.type) {
     case SET_PAGE_ACTION:
       return setGridPageStateUpdate(state, action.payload);

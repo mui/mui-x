@@ -6,7 +6,7 @@ import Rating from '@material-ui/lab/Rating';
 import {
   GridColDef,
   GridColTypeDef,
-  FilterInputValueProps,
+  GridFilterInputValueProps,
   GridFilterItem,
   FilterModel,
   GridFilterModelParams,
@@ -391,7 +391,7 @@ const useStyles = makeStyles({
   },
 });
 
-function RatingInputValue(props: FilterInputValueProps) {
+function RatingInputValue(props: GridFilterInputValueProps) {
   const classes = useStyles();
   const { item, applyValue } = props;
 

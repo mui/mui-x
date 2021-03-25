@@ -12,7 +12,7 @@ import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem
 import { GridFilterOperator } from '../../../models/gridFilterOperator';
 import { GridApiContext } from '../../GridApiContext';
 import { GridCloseIcon } from '../../icons/index';
-import { TranslationKeys } from '../../../models/api/gridLocaleTextApi';
+import { GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
 
 export interface GridFilterFormProps {
   item: GridFilterItem;
@@ -204,7 +204,7 @@ export function GridFilterForm(props: GridFilterFormProps) {
             <option key={operator.value} value={operator.value}>
               {operator.label ||
                 apiRef!.current.getLocaleText(
-                  `filterOperator${capitalize(operator.value)}` as TranslationKeys,
+                  `filterOperator${capitalize(operator.value)}` as GridTranslationKeys,
                 )}
             </option>
           ))}

@@ -32,7 +32,7 @@ const useStyles = makeStyles(
   { name: 'MuiDataGridMenu' },
 );
 
-export interface MenuProps extends Omit<PopperProps, 'onKeyDown'> {
+export interface GridMenuProps extends Omit<PopperProps, 'onKeyDown'> {
   open: boolean;
   target: React.ReactNode;
   onClickAway: (event?: React.MouseEvent<Document, MouseEvent>) => void;
@@ -44,7 +44,7 @@ const transformOrigin = {
   'bottom-end': 'top right',
 };
 
-export const GridMenu: React.FC<MenuProps> = ({
+export const GridMenu: React.FC<GridMenuProps> = ({
   open,
   target,
   onClickAway,

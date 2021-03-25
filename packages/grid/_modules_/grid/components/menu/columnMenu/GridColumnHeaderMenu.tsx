@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ColumnMenuState } from '../../../hooks/features/columnMenu/columnMenuState';
+import { GridColumnMenuState } from '../../../hooks/features/columnMenu/columnMenuState';
 import { GridState } from '../../../hooks/features/core/gridState';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { findHeaderElementFromField } from '../../../utils/domUtils';
@@ -36,7 +36,7 @@ export function GridColumnHeaderMenu({
   }, [hideMenu]);
 
   const updateColumnMenu = React.useCallback(
-    ({ open, field }: ColumnMenuState) => {
+    ({ open, field }: GridColumnMenuState) => {
       if (field && open) {
         immediateTimeout.current = setTimeout(() => clearTimeout(hideTimeout.current), 0);
 

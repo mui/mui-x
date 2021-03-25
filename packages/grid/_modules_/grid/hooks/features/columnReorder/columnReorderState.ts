@@ -1,7 +1,7 @@
-export interface ColumnReorderState {
+export interface GridColumnReorderState {
   dragCol: string;
 }
 
-export function getInitialGridColumnReorderState(): ColumnReorderState {
+export function getInitialGridColumnReorderState(): GridColumnReorderState {
   return { dragCol: '' };
 }

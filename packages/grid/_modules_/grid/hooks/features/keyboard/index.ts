@@ -1,3 +1,3 @@
-export * from './keyboardSelector';
-export * from './keyboardState';
+export * from './gridKeyboardSelector';
+export * from './gridKeyboardState';
 export * from './useGridKeyboard';
