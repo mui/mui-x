@@ -14,7 +14,7 @@ import { GridCellValue } from '../../../models/gridCell';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridCellParams } from '../../../models/params/gridCellParams';
-import { GridColParams } from '../../../models/params/gridColParams';
+import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { GridSortModelParams } from '../../../models/params/gridSortModelParams';
 import { GridRowModel, GridRowsProp } from '../../../models/gridRows';
 import {
@@ -209,7 +209,7 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   );
 
   const headerClickHandler = React.useCallback(
-    ({ colDef }: GridColParams) => {
+    ({ colDef }: GridColumnHeaderParams) => {
       sortColumn(colDef);
     },
     [sortColumn],

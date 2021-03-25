@@ -119,7 +119,7 @@ const columns: GridColDef[] = [
     field: 'date',
     width: 150,
     type: 'date',
-    renderHeader: (params: GridColParams) => (
+    renderHeader: (params: GridColumnHeaderParams) => (
       <strong>
         {'Birthday '}
         <span role="img" aria-label="enjoy">

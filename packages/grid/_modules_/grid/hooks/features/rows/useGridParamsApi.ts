@@ -3,7 +3,7 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridParamsApi } from '../../../models/api/gridParamsApi';
 import { GridRowId } from '../../../models/gridRows';
 import { GridCellParams, GridValueGetterParams } from '../../../models/params/gridCellParams';
-import { GridColParams } from '../../../models/params/gridColParams';
+import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { GridRowParams } from '../../../models/params/gridRowParams';
 import {
   getGridCellElement,
@@ -26,7 +26,7 @@ function warnMissingColumn(field) {
 }
 export function useGridParamsApi(apiRef: GridApiRef) {
   const getColumnHeaderParams = React.useCallback(
-    (field: string): GridColParams => ({
+    (field: string): GridColumnHeaderParams => ({
       field,
       element: apiRef.current.getColumnHeaderElement(field),
       colDef: apiRef.current.getColumnFromField(field),

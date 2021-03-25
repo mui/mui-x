@@ -6,6 +6,10 @@ import {
   GRID_COLUMN_HEADER_LEAVE,
   GRID_COLUMN_HEADER_OUT,
   GRID_COLUMN_HEADER_OVER,
+  GRID_COLUMN_REORDER_DRAG_ENTER,
+  GRID_COLUMN_REORDER_DRAG_OVER,
+  GRID_COLUMN_REORDER_START,
+  GRID_COLUMN_REORDER_DRAG_END,
 } from '../../constants/eventsConstants';
 import { GridColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
 import { GridOptions } from '../../models/gridOptions';
@@ -64,22 +68,6 @@ export const GridColumnHeaderItem = ({
     });
   }
 
-  const onDragStart = React.useCallback(
-    (event) => apiRef!.current.onColItemDragStart(column, event.currentTarget),
-    [apiRef, column],
-  );
-  const onDragEnter = React.useCallback((event) => apiRef!.current.onColItemDragEnter(event), [
-    apiRef,
-  ]);
-  const onDragOver = React.useCallback(
-    (event) =>
-      apiRef!.current.onColItemDragOver(column, {
-        x: event.clientX,
-        y: event.clientY,
-      }),
-    [apiRef, column],
-  );
-
   const publish = React.useCallback(
     (eventName: string) => (event: React.MouseEvent) =>
       apiRef!.current.publishEvent(
@@ -102,6 +90,16 @@ export const GridColumnHeaderItem = ({
     [publish],
   );
 
+  const draggableEventHandlers = React.useMemo(
+    () => ({
+      onDragStart: publish(GRID_COLUMN_REORDER_START),
+      onDragEnter: publish(GRID_COLUMN_REORDER_DRAG_ENTER),
+      onDragOver: publish(GRID_COLUMN_REORDER_DRAG_OVER),
+      onDragEnd: publish(GRID_COLUMN_REORDER_DRAG_END),
+    }),
+    [publish],
+  );
+
   const cssClasses = classnames(
     GRID_HEADER_CELL_CSS_CLASS,
     column.headerClassName,
@@ -116,12 +114,6 @@ export const GridColumnHeaderItem = ({
     },
   );
 
-  const dragConfig = {
-    draggable: !disableColumnReorder,
-    onDragStart,
-    onDragEnter,
-    onDragOver,
-  };
   const width = column.width!;
 
   let ariaSort: any;
@@ -159,7 +151,11 @@ export const GridColumnHeaderItem = ({
       {...ariaSort}
       {...mouseEventsHandlers}
     >
-      <div className="MuiDataGrid-colCell-draggable" {...dragConfig}>
+      <div
+        className="MuiDataGrid-colCell-draggable"
+        draggable={!disableColumnReorder}
+        {...draggableEventHandlers}
+      >
         {!disableColumnMenu && isColumnNumeric && !column.disableColumnMenu && columnMenuIconButton}
         <div className="MuiDataGrid-colCellTitleContainer">
           {isColumnNumeric && columnTitleIconButtons}

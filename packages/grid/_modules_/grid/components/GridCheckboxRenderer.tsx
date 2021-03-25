@@ -4,11 +4,11 @@ import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { visibleSortedGridRowsSelector } from '../hooks/features/filter/gridFilterSelector';
 import { gridRowCountSelector } from '../hooks/features/rows/gridRowsSelector';
 import { selectedGridRowsCountSelector } from '../hooks/features/selection/gridSelectionSelector';
-import { GridColParams } from '../models/params/gridColParams';
+import { GridColumnHeaderParams } from '../models/params/gridColumnHeaderParams';
 import { GridCellParams } from '../models/params/gridCellParams';
 import { GridApiContext } from './GridApiContext';
 
-export const GridHeaderCheckbox: React.FC<GridColParams> = () => {
+export const GridHeaderCheckbox: React.FC<GridColumnHeaderParams> = () => {
   const apiRef = React.useContext(GridApiContext);
   const visibleRows = useGridSelector(apiRef, visibleSortedGridRowsSelector);
 

@@ -9,7 +9,9 @@ import { GridEmptyCell } from '../cell/GridEmptyCell';
 import { GridScrollArea } from '../GridScrollArea';
 import { GridColumnHeadersItemCollection } from './GridColumnHeadersItemCollection';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
+import { gridColumnReorderDragColSelector } from '../../hooks/features/columnReorder/columnReorderSelector';
 import { gridContainerSizesSelector } from '../../hooks/root/gridContainerSizesSelector';
+import { GRID_COLUMN_REORDER_DRAG_OVER_HEADER } from '../../constants/eventsConstants';
 
 export const gridScrollbarStateSelector = (state: GridState) => state.scrollBar;
 
@@ -24,6 +26,7 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function G
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
   const renderCtx = useGridSelector(apiRef, renderStateSelector).renderContext;
   const { hasScrollX } = useGridSelector(apiRef, gridScrollbarStateSelector);
+  const dragCol = useGridSelector(apiRef, gridColumnReorderDragColSelector);
   const wrapperCssClasses = `MuiDataGrid-colCellWrapper ${hasScrollX ? 'scroll' : ''}`;
 
   const renderedCols = React.useMemo(() => {
@@ -35,7 +38,12 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function G
 
   const handleDragOver =
     !disableColumnReorder && apiRef
-      ? (event) => apiRef.current.onColHeaderDragOver(event, ref as React.RefObject<HTMLElement>)
+      ? (event) =>
+          apiRef.current.publishEvent(
+            GRID_COLUMN_REORDER_DRAG_OVER_HEADER,
+            apiRef.current.getColumnHeaderParams(dragCol),
+            event,
+          )
       : undefined;
 
   return (

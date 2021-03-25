@@ -8,7 +8,6 @@ import { GridEditRowApi } from './gridEditRowApi';
 import { PreferencesPanelApi } from './preferencesPanelApi';
 import { GridRowApi } from './gridRowApi';
 import { GridColumnApi } from './gridColumnApi';
-import { ColumnReorderApi } from './columnReorderApi';
 import { GridSelectionApi } from './gridSelectionApi';
 import { GridSortApi } from './gridSortApi';
 import { GridPaginationApi } from './gridPaginationApi';
@@ -32,7 +31,6 @@ export type GridApi = GridCoreApi &
   GridEditRowApi &
   GridParamsApi &
   GridColumnApi &
-  ColumnReorderApi &
   GridSelectionApi &
   GridSortApi &
   GridVirtualizationApi &
