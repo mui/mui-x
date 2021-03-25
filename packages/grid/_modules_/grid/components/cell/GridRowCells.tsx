@@ -30,7 +30,6 @@ interface RowCellsProps {
   lastColIdx: number;
   row: GridRowModel;
   rowIndex: number;
-  scrollSize: number;
   showCellRightBorder: boolean;
   cellFocus: GridCellIndexCoordinates | null;
 }
@@ -43,7 +42,6 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
     lastColIdx,
     row,
     rowIndex,
-    scrollSize,
     cellFocus,
     showCellRightBorder,
   } = props;
@@ -53,8 +51,6 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
 
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const isLastColumn = firstColIdx + colIdx === columns.length - 1;
-    const removeScrollWidth = isLastColumn && hasScroll.y && hasScroll.x;
-    const width = removeScrollWidth ? column.width! - scrollSize : column.width!;
     const removeLastBorderRight = isLastColumn && hasScroll.x && !hasScroll.y;
     const showRightBorder = !isLastColumn
       ? showCellRightBorder
@@ -93,7 +89,7 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
     const cellProps: GridCellProps & { children: any } = {
       value: cellParams.value,
       field: column.field,
-      width,
+      width: column.width!,
       rowId: row.id,
       height: rowHeight,
       showRightBorder,

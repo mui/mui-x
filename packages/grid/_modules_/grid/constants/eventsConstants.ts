@@ -28,6 +28,7 @@ export const GRID_CELL_VALUE_CHANGE = 'cellValueChange';
 export const GRID_CELL_ENTER_EDIT = 'cellEnterEdit';
 export const GRID_CELL_EXIT_EDIT = 'cellExitEdit';
 export const GRID_CELL_NAVIGATION_KEYDOWN = 'cellNavigationKeyDown';
+export const GRID_CELL_FOCUS = 'cellCellFocus';
 
 export const GRID_ROW_CLICK = 'rowClick';
 export const GRID_ROW_DOUBLE_CLICK = 'rowDoubleClick';

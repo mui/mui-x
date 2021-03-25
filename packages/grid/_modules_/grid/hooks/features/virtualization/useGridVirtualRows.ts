@@ -132,7 +132,6 @@ export const useGridVirtualRows = (
       if (!windowRef || !windowRef.current || !containerProps) {
         return;
       }
-      const viewportSizes = lastState.viewportSizes;
       const scrollBar = lastState.scrollBar;
 
       const { scrollLeft, scrollTop } = windowRef.current;
@@ -141,24 +140,20 @@ export const useGridVirtualRows = (
       let requireRerender = updateRenderedCols(containerProps, scrollLeft);
 
       const rzScrollLeft = scrollLeft;
-      let currentPage = scrollTop / viewportSizes.height;
-      const rzScrollTop = scrollTop % viewportSizes.height;
-      logger.debug(
-        ` viewportHeight:${viewportSizes.height}, rzScrollTop: ${rzScrollTop}, scrollTop: ${scrollTop}, current page = ${currentPage}`,
-      );
+      const maxScrollHeight = lastState.containerSizes!.renderingZoneScrollHeight;
+
+      const page = lastState.rendering.virtualPage;
+      const nextPage = maxScrollHeight > 0 ? Math.floor(scrollTop / maxScrollHeight) : 0;
+      const rzScrollTop = scrollTop % maxScrollHeight;
 
       const scrollParams = {
         left: scrollBar.hasScrollX ? rzScrollLeft : 0,
-        top: scrollBar.hasScrollY ? rzScrollTop : 0,
+        top: containerProps.isVirtualized ? rzScrollTop : scrollTop,
       };
 
-      const page = lastState.rendering.virtualPage;
-      currentPage = Math.floor(currentPage);
-
-      if (page !== currentPage) {
-        setRenderingState({ virtualPage: currentPage });
-
-        logger.debug(`Changing page from ${page} to ${currentPage}`);
+      if (containerProps.isVirtualized && page !== nextPage) {
+        setRenderingState({ virtualPage: nextPage });
+        logger.debug(`Changing page from ${page} to ${nextPage}`);
         requireRerender = true;
       } else {
         scrollTo(scrollParams);
@@ -269,7 +264,7 @@ export const useGridVirtualRows = (
 
   const resetScroll = React.useCallback(() => {
     scrollTo({ left: 0, top: 0 });
-    setRenderingState({ virtualPage: 1 });
+    setRenderingState({ virtualPage: 0 });
 
     if (windowRef && windowRef.current) {
       windowRef.current.scrollTo(0, 0);

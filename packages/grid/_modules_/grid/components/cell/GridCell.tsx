@@ -5,6 +5,7 @@ import {
   GRID_CELL_CLICK,
   GRID_CELL_DOUBLE_CLICK,
   GRID_CELL_ENTER,
+  GRID_CELL_FOCUS,
   GRID_CELL_KEYDOWN,
   GRID_CELL_LEAVE,
   GRID_CELL_MOUSE_DOWN,
@@ -96,6 +97,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
       onMouseEnter: publish(GRID_CELL_ENTER),
       onMouseLeave: publish(GRID_CELL_LEAVE),
       onKeyDown: publish(GRID_CELL_KEYDOWN),
+      onFocus: publish(GRID_CELL_FOCUS),
     }),
     [publish, publishClick],
   );

@@ -63,7 +63,6 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
             firstColIdx={renderState.renderContext!.firstColIdx!}
             lastColIdx={renderState.renderContext!.lastColIdx!}
             hasScroll={{ y: scrollBarState!.hasScrollY, x: scrollBarState.hasScrollX }}
-            scrollSize={options.scrollbarSize!}
             showCellRightBorder={!!options.showCellRightBorder}
             extendRowFullWidth={!options.disableExtendRowFullWidth}
             rowIndex={renderState.renderContext!.firstRowIdx! + idx}

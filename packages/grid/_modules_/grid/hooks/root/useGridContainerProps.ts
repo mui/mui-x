@@ -59,24 +59,37 @@ export const useGridContainerProps = (
   const getScrollBar = React.useCallback(
     (rowsCount: number) => {
       logger.debug('Calculating scrollbar sizes.');
-      const hasScrollY =
-        options.autoPageSize || options.autoHeight
-          ? false
-          : windowSizesRef.current.height < rowsCount * rowHeight;
+
       const hasScrollX = columnsTotalWidth > windowSizesRef.current.width;
       const scrollBarSize = {
-        y: hasScrollY ? options.scrollbarSize! : 0,
+        y: 0,
         x: hasScrollX ? options.scrollbarSize! : 0,
       };
+
+      if (rowsCount === 0) {
+        return { hasScrollX, hasScrollY: false, scrollBarSize };
+      }
+
+      const requiredSize = rowsCount * rowHeight;
+
+      const hasScrollY =
+        !options.autoPageSize &&
+        !options.autoHeight &&
+        requiredSize + scrollBarSize.x > windowSizesRef.current.height;
+
+      scrollBarSize.y = hasScrollY ? options.scrollbarSize! : 0;
+
+      logger.debug(`Scrollbar size on axis x: ${scrollBarSize.x}, y: ${scrollBarSize.y}`);
+
       return { hasScrollX, hasScrollY, scrollBarSize };
     },
     [
       logger,
+      columnsTotalWidth,
+      options.scrollbarSize,
       options.autoPageSize,
       options.autoHeight,
-      options.scrollbarSize,
       rowHeight,
-      columnsTotalWidth,
     ],
   );
 
@@ -110,7 +123,7 @@ export const useGridContainerProps = (
     (
       rowsCount: number,
       viewportSizes: GridViewportSizeState,
-      scrollState: GridScrollBarState,
+      scrollBarState: GridScrollBarState,
     ): GridContainerProps | null => {
       if (
         !windowRef ||
@@ -121,14 +134,21 @@ export const useGridContainerProps = (
         return null;
       }
 
-      if (options.autoPageSize || options.autoHeight) {
-        // we don't need vertical virtualization in these 2 cases.
-        const viewportPageSize = options.autoHeight
-          ? rowsCount
-          : Math.floor(viewportSizes.height / rowHeight);
-        const requiredHeight = viewportPageSize * rowHeight + scrollState.scrollBarSize.x;
+      const requiredSize = rowsCount * rowHeight;
+      const diff = requiredSize - windowSizesRef.current.height;
+      // we activate virtualisation when we have more than 2 rows outside the viewport
+      const isVirtualized = diff > rowHeight * 2;
+
+      if (options.autoPageSize || options.autoHeight || !isVirtualized) {
+        // we don't need vertical virtualization in these cases.
+        const viewportPageSize =
+          options.autoHeight || !isVirtualized
+            ? rowsCount
+            : Math.floor(viewportSizes.height / rowHeight);
+        const requiredHeight = viewportPageSize * rowHeight + scrollBarState.scrollBarSize.x;
 
         const indexes: GridContainerProps = {
+          isVirtualized,
           virtualRowsCount: viewportPageSize,
           renderingZonePageSize: viewportPageSize,
           viewportPageSize,
@@ -140,6 +160,7 @@ export const useGridContainerProps = (
             width: columnsTotalWidth,
             height: requiredHeight,
           },
+          renderingZoneScrollHeight: requiredHeight - viewportSizes.height,
           renderingZone: {
             width: columnsTotalWidth,
             height: requiredHeight,
@@ -150,38 +171,40 @@ export const useGridContainerProps = (
         logger.debug('Fixed container props', indexes);
         return indexes;
       }
-
-      const viewportPageSize = Math.round(viewportSizes.height / rowHeight);
+      const viewportPageSize = Math.floor(viewportSizes.height / rowHeight);
 
       // Number of pages required to render the full set of rows in the viewport
-      const viewportMaxPage = Math.ceil(rowsCount / viewportPageSize);
+      const viewportMaxPage = Math.ceil(rowsCount / viewportPageSize) - 1;
 
-      // TODO allow buffer with fixed nb rows
-      // Number of rows rendered in the rendering zone.
       // We multiply by 2 for virtualization to work with useGridVirtualRows scroll system
-      const rzPageSize = viewportPageSize * 2;
-      const renderingZoneHeight = rzPageSize * rowHeight;
+      const renderingZonePageSize = viewportPageSize * 2;
+      const renderingZoneHeight = renderingZonePageSize * rowHeight;
+      const renderingZoneMaxScrollHeight = renderingZoneHeight - viewportSizes.height;
 
-      let totalHeight = (rowsCount / viewportPageSize) * viewportSizes.height;
-      // make sure we display the full row
-      totalHeight += (totalHeight % rowHeight) + scrollState.scrollBarSize.x;
+      let totalHeight = viewportMaxPage * renderingZoneMaxScrollHeight + viewportSizes.height;
+      const rowsLeftOnLastPage = rowsCount % viewportPageSize;
+      if (rowsLeftOnLastPage > 0) {
+        totalHeight = totalHeight - renderingZoneMaxScrollHeight + rowsLeftOnLastPage * rowHeight;
+      }
 
       const indexes: GridContainerProps = {
+        isVirtualized,
         virtualRowsCount: rowsCount,
-        renderingZonePageSize: rzPageSize,
         viewportPageSize,
         totalSizes: {
           width: columnsTotalWidth,
           height: totalHeight || 1,
         },
         dataContainerSizes: {
-          width: columnsTotalWidth - scrollState.scrollBarSize.y,
+          width: columnsTotalWidth,
           height: totalHeight || 1,
         },
+        renderingZonePageSize,
         renderingZone: {
-          width: columnsTotalWidth - scrollState.scrollBarSize.y,
+          width: columnsTotalWidth,
           height: renderingZoneHeight,
         },
+        renderingZoneScrollHeight: renderingZoneMaxScrollHeight,
         windowSizes: windowSizesRef.current,
         lastPage: viewportMaxPage,
       };

@@ -10,7 +10,9 @@ import {
   GridRowData,
   useGridApiRef,
   XGrid,
+  XGridProps,
 } from '@material-ui/x-grid';
+import { useData } from 'packages/storybook/src/hooks/useData';
 
 describe('<XGrid /> - Rows ', () => {
   let clock;
@@ -247,6 +249,98 @@ describe('<XGrid /> - Rows ', () => {
       ]);
       clock.tick(100);
       expect(getColumnValues()).to.deep.equal(['Apple', 'Atari']);
+    });
+  });
+
+  describe('virtualization', () => {
+    let apiRef: GridApiRef;
+    const TestCaseVirtualization = (
+      props: Partial<XGridProps> & { nbRows?: number; nbCols?: number; height?: number },
+    ) => {
+      apiRef = useGridApiRef();
+      const data = useData(props.nbRows || 100, props.nbCols || 10);
+
+      return (
+        <div style={{ width: 300, height: props.height || 300 }}>
+          <XGrid apiRef={apiRef} columns={data.columns} rows={data.rows} {...props} />
+        </div>
+      );
+    };
+
+    it('Rows should not be virtualized when the number of rows fit in the viewport', () => {
+      const headerHeight = 50;
+      const rowHeight = 50;
+      const maxRowsNotVirtualised = (300 - headerHeight) / rowHeight;
+      render(
+        <TestCaseVirtualization
+          nbRows={maxRowsNotVirtualised}
+          hideFooter
+          headerHeight={headerHeight}
+          rowHeight={rowHeight}
+        />,
+      );
+
+      const isVirtualized = apiRef!.current!.getState().containerSizes!.isVirtualized;
+      expect(isVirtualized).to.equal(false);
+    });
+
+    it('Rows should be virtualized when at least 2 rows are outside the viewport', () => {
+      const headerHeight = 50;
+      const rowHeight = 50;
+      const maxRowsNotVirtualised = (300 - headerHeight) / rowHeight;
+      render(
+        <TestCaseVirtualization
+          nbRows={maxRowsNotVirtualised + 1}
+          hideFooter
+          headerHeight={headerHeight}
+          rowHeight={rowHeight}
+        />,
+      );
+
+      let isVirtualized = apiRef!.current!.getState().containerSizes!.isVirtualized;
+      expect(isVirtualized).to.equal(false);
+
+      render(
+        <TestCaseVirtualization
+          nbRows={maxRowsNotVirtualised + 2}
+          hideFooter
+          headerHeight={headerHeight}
+          rowHeight={rowHeight}
+        />,
+      );
+
+      isVirtualized = apiRef!.current!.getState().containerSizes!.isVirtualized;
+      expect(isVirtualized).to.equal(true);
+    });
+
+    it('should render last row when scrolling to the bottom', () => {
+      render(<TestCaseVirtualization nbRows={996} hideFooter height={600} />);
+      const totalHeight = apiRef!.current!.getState().containerSizes?.totalSizes.height!;
+
+      const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+      const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
+      gridWindow.scrollTop = 10e6; // scroll to the bottom
+      gridWindow.dispatchEvent(new Event('scroll'));
+
+      const lastCell = document.querySelector('[role="row"]:last-child [role="cell"]:first-child')!;
+      expect(lastCell.textContent).to.equal('995');
+      expect(renderingZone.children.length).to.equal(16);
+      expect(renderingZone.style.transform).to.equal('translate3d(0px, -312px, 0px)');
+      expect(gridWindow.scrollHeight).to.equal(totalHeight);
+    });
+
+    it('Rows should not be virtualized when the grid is in pagination autoPageSize', () => {
+      render(<TestCaseVirtualization autoPageSize pagination />);
+
+      const isVirtualized = apiRef!.current!.getState().containerSizes!.isVirtualized;
+      expect(isVirtualized).to.equal(false);
+    });
+
+    it('Rows should not be virtualized when the grid is in autoHeight', () => {
+      render(<TestCaseVirtualization autoHeight />);
+
+      const isVirtualized = apiRef!.current!.getState().containerSizes!.isVirtualized;
+      expect(isVirtualized).to.equal(false);
     });
   });
 });
