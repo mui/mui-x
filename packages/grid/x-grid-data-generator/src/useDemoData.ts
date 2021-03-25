@@ -92,6 +92,7 @@ export const useDemoData = (options: DemoDataOptions): DemoDataReturnType => {
     if (dataCache.has(cacheKey)) {
       const newData = dataCache.get(cacheKey);
       setData(newData);
+      setLoading(false);
       return undefined;
     }
 
