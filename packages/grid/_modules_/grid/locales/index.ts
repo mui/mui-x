@@ -1,6 +1,7 @@
 // Keys are translated from enUS
 export * from './bgBG';
 export * from './deDE';
+export * from './nlNL';
 export * from './elGR';
 export * from './enUS';
 export * from './frFR';
