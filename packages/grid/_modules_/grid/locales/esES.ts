@@ -25,7 +25,7 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipHide: 'Ocultar filtros',
   toolbarFiltersTooltipShow: 'Mostrar filtros',
   toolbarFiltersTooltipActive: (count) =>
-    count !== 1 ? `${count} filtros activos` : `${count} filtro activo`,
+    count > 1 ? `${count} filtros activos` : `${count} filtro activo`,
 
   // Export selector toolbar button text
   toolbarExport: 'Exportar',
@@ -72,13 +72,13 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
-    count !== 1 ? `${count} filtros activos` : `${count} filtro activo`,
+    count > 1 ? `${count} filtros activos` : `${count} filtro activo`,
   columnHeaderFiltersLabel: 'Mostrar filtros',
   columnHeaderSortIconLabel: 'Ordenar',
 
   // Rows selected footer text
   footerRowSelected: (count) =>
-    count !== 1
+    count > 1
       ? `${count.toLocaleString()} filas seleccionadas`
       : `${count.toLocaleString()} fila seleccionada`,
 
