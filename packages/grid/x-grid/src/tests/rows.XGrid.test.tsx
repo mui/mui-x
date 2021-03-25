@@ -319,13 +319,14 @@ describe('<XGrid /> - Rows ', () => {
 
       const gridWindow = document.querySelector('.MuiDataGrid-window')!;
       const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
-      gridWindow.scrollTop = totalHeight;
+      gridWindow.scrollTop = 10e6; // scroll to the bottom
       gridWindow.dispatchEvent(new Event('scroll'));
 
       const lastCell = document.querySelector('[role="row"]:last-child [role="cell"]:first-child')!;
       expect(lastCell.textContent).to.equal('995');
       expect(renderingZone.children.length).to.equal(16);
       expect(renderingZone.style.transform).to.equal('translate3d(0px, -312px, 0px)');
+      expect(gridWindow.scrollHeight).to.equal(totalHeight);
     });
 
     it('Rows should not be virtualized when the grid is in pagination autoPageSize', () => {
