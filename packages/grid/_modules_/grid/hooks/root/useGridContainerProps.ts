@@ -120,7 +120,11 @@ export const useGridContainerProps = (
   );
 
   const getContainerProps = React.useCallback(
-    (rowsCount: number, viewportSizes: GridViewportSizeState): GridContainerProps | null => {
+    (
+      rowsCount: number,
+      viewportSizes: GridViewportSizeState,
+      scrollBarState: GridScrollBarState,
+    ): GridContainerProps | null => {
       if (
         !windowRef ||
         !windowRef.current ||
@@ -141,7 +145,7 @@ export const useGridContainerProps = (
           options.autoHeight || !isVirtualized
             ? rowsCount
             : Math.floor(viewportSizes.height / rowHeight);
-        const requiredHeight = viewportPageSize * rowHeight;
+        const requiredHeight = viewportPageSize * rowHeight + scrollBarState.scrollBarSize.x;
 
         const indexes: GridContainerProps = {
           isVirtualized,
@@ -251,7 +255,7 @@ export const useGridContainerProps = (
       (state) => ({ ...state, viewportSizes }),
     );
 
-    const containerState = getContainerProps(rowsCount, viewportSizes);
+    const containerState = getContainerProps(rowsCount, viewportSizes, scrollBar);
     updateStateIfChanged(
       (state) => !isDeepEqual(state.containerSizes, containerState),
       (state) => ({ ...state, containerSizes: containerState }),
