@@ -20,7 +20,7 @@ export type Localization = LocalizationV4 | LocalizationV5;
 
 export const getGridLocalization = (
   gridTranslations: Partial<GridLocaleText>,
-  coreTranslations,
+  coreTranslations?,
 ): Localization => {
   if (isMuiV5()) {
     return {
@@ -30,7 +30,7 @@ export const getGridLocalization = (
             localeText: gridTranslations,
           },
         },
-        ...coreTranslations.components,
+        ...coreTranslations?.components,
       },
     };
   }
@@ -40,7 +40,7 @@ export const getGridLocalization = (
       MuiDataGrid: {
         localeText: gridTranslations,
       },
-      ...coreTranslations.props,
+      ...coreTranslations?.props,
     },
   };
 };
