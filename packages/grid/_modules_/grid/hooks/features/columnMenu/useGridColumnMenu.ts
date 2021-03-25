@@ -9,7 +9,7 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
 
   const showColumnMenu = React.useCallback(
-    (field: string, id: string, labelledby: string) => {
+    (field: string, id?: string, labelledby?: string) => {
       logger.debug('Opening Column Menu');
       setGridState((state) => ({
         ...state,
@@ -30,6 +30,19 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
     forceUpdate();
   }, [forceUpdate, logger, setGridState]);
 
+  const toggleColumnMenu = React.useCallback(
+    (field: string, id?: string, labelledby?: string) => {
+      logger.debug('Toggle Column Menu');
+      const lastMenuState = gridState.columnMenu;
+      if (!lastMenuState.open || lastMenuState.field !== field) {
+        showColumnMenu(field, id, labelledby);
+      } else {
+        hideColumnMenu();
+      }
+    },
+    [logger, showColumnMenu, hideColumnMenu, gridState],
+  );
+
   React.useEffect(() => {
     if (gridState.isScrolling) {
       hideColumnMenu();
@@ -41,6 +54,7 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
     {
       showColumnMenu,
       hideColumnMenu,
+      toggleColumnMenu,
     },
     'ColumnMenuApi',
   );

@@ -35,7 +35,7 @@ export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemColl
   // TODO refactor by putting resizing in the state so we avoid adding listeners.
   useGridApiEventHandler(apiRef!, GRID_COL_RESIZE_START, handleResizeStart);
   useGridApiEventHandler(apiRef!, GRID_COL_RESIZE_STOP, handleResizeStop);
-  // console.log(cellFocus);
+
   const items = columns.map((col, idx) => (
     <GridColumnHeaderItem
       key={col.field}

@@ -28,6 +28,7 @@ export function GridColumnMenu(props: GridColumnMenuProps) {
     },
     [hideMenu],
   );
+
   return (
     <MenuList
       id={id}

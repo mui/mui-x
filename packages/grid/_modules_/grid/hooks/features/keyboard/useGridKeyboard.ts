@@ -3,6 +3,7 @@ import { GRID_ROW_CSS_CLASS } from '../../../constants/cssClassesConstants';
 import {
   GRID_CELL_KEYDOWN,
   GRID_CELL_NAVIGATION_KEYDOWN,
+  GRID_COLUMN_HEADER_CLICK,
   GRID_ELEMENT_FOCUS_OUT,
   GRID_KEYDOWN,
   GRID_KEYUP,
@@ -15,8 +16,15 @@ import {
   getIdFromRowElem,
   getRowEl,
   isGridCellRoot,
+  isGridHeaderCellRoot,
 } from '../../../utils/domUtils';
-import { isMultipleKey, isNavigationKey, isSpaceKey, isTabKey } from '../../../utils/keyboardUtils';
+import {
+  isEnterKey,
+  isMultipleKey,
+  isNavigationKey,
+  isSpaceKey,
+  isTabKey,
+} from '../../../utils/keyboardUtils';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { useLogger } from '../../utils/useLogger';
@@ -147,7 +155,10 @@ export const useGridKeyboard = (
 
   const handleCellKeyDown = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
-      if (!isGridCellRoot(document.activeElement)) {
+      if (
+        !isGridCellRoot(document.activeElement) &&
+        !isGridHeaderCellRoot(document.activeElement)
+      ) {
         return;
       }
 
@@ -156,8 +167,28 @@ export const useGridKeyboard = (
         selectActiveRow();
         return;
       }
+
       if ((isNavigationKey(event.key) && !event.shiftKey) || isTabKey(event.key)) {
         apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEYDOWN, params, event);
+        return;
+      }
+
+      // Column Header Cell specific interactions
+      if (
+        isGridHeaderCellRoot(document.activeElement) &&
+        isEnterKey(event.key) &&
+        (event.ctrlKey || event.metaKey)
+      ) {
+        apiRef!.current.toggleColumnMenu(params.field);
+        return;
+      }
+
+      if (isGridHeaderCellRoot(document.activeElement) && isEnterKey(event.key)) {
+        apiRef.current.publishEvent(
+          GRID_COLUMN_HEADER_CLICK,
+          apiRef!.current.getColumnHeaderParams(params.field),
+          event,
+        );
         return;
       }
 

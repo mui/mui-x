@@ -24,12 +24,7 @@ export function ColumnHeaderMenuIcon(props: ColumnHeaderFilterIconProps) {
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       event.stopPropagation();
-      const lastMenuState = apiRef!.current.getState().columnMenu;
-      if (!lastMenuState.open || lastMenuState.field !== column.field) {
-        apiRef!.current.showColumnMenu(column.field, columnMenuId, columnMenuButtonId);
-      } else {
-        apiRef!.current.hideColumnMenu();
-      }
+      apiRef!.current.toggleColumnMenu(column.field, columnMenuId, columnMenuButtonId);
     },
     [apiRef, column.field, columnMenuId, columnMenuButtonId],
   );

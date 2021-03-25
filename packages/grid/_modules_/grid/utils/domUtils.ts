@@ -24,11 +24,11 @@ export function getRowEl(cell?: Element | null): HTMLElement | null {
 }
 
 export function isGridCellRoot(elem: Element | null): boolean {
-  return (
-    elem != null &&
-    (elem.classList.contains(GRID_CELL_CSS_CLASS) ||
-      elem.classList.contains(GRID_HEADER_CELL_CSS_CLASS))
-  );
+  return elem != null && elem.classList.contains(GRID_CELL_CSS_CLASS);
+}
+
+export function isGridHeaderCellRoot(elem: Element | null): boolean {
+  return elem != null && elem.classList.contains(GRID_HEADER_CELL_CSS_CLASS);
 }
 
 export function isGridHeaderTitleContainer(elem: Element): boolean {
