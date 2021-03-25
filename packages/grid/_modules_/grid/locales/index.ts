@@ -4,4 +4,6 @@ export * from './deDE';
 export * from './elGR';
 export * from './enUS';
 export * from './frFR';
+export * from './jaJP';
+export * from './plPL';
 export * from './ptBR';
