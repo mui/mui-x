@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Unstable_TrapFocus as TrapFocus } from '@material-ui/core';
+import TrapFocus from '@material-ui/core/Unstable_TrapFocus';
 import { makeStyles } from '@material-ui/core/styles';
 import { classnames } from '../../utils/classnames';
 

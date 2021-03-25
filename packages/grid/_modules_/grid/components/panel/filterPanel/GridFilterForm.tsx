@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { capitalize } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
 import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
+import { capitalize } from '@material-ui/core/utils';
 import { makeStyles } from '@material-ui/core/styles';
 import { filterableGridColumnsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';

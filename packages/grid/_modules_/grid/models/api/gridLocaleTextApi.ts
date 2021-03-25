@@ -80,8 +80,6 @@ export interface GridLocaleText {
   footerTotalRows: React.ReactNode;
 }
 
-export type LocaleTextValue = string | React.ReactNode | Function;
-
 export type TranslationKeys = keyof GridLocaleText;
 
 /**
@@ -90,8 +88,8 @@ export type TranslationKeys = keyof GridLocaleText;
 export interface LocaleTextApi {
   /**
    * Get grid text.
-   * @param key
-   * @returns LocaleTextValue
+   * @param key T
+   * @returns GridLocaleText[T]
    */
   getLocaleText: <T extends TranslationKeys>(key: T) => GridLocaleText[T];
 }
