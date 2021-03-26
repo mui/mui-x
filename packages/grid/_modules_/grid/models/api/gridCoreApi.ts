@@ -23,7 +23,17 @@ export interface GridCoreApi extends EventEmitter {
    * @param handler
    * @returns Unsubscribe Function
    */
-  subscribeEvent: (event: string, handler: (param: any) => void) => () => void;
+  subscribeEvent: (
+    event: string,
+    handler: (params: any, event?: React.SyntheticEvent) => void,
+  ) => () => void;
+  /**
+   * Allows to register a handler for an event as the first listener.
+   * @param event
+   * @param handler
+   * @returns Unsubscribe Function
+   */
+  subscribeFirst: (event: string, handler: (param: any) => void) => () => void;
   /**
    * Allows to emit an event.
    * @param name

@@ -3,7 +3,7 @@ import { GRID_PAGE_CHANGED, GRID_PAGESIZE_CHANGED } from '../../../constants/eve
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridPaginationApi } from '../../../models/api/gridPaginationApi';
 import { GridPageChangeParams } from '../../../models/params/gridPageChangeParams';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
@@ -75,8 +75,8 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
     [apiRef],
   );
 
-  useGridApiEventHandler(apiRef, GRID_PAGE_CHANGED, options.onPageChange);
-  useGridApiEventHandler(apiRef, GRID_PAGESIZE_CHANGED, options.onPageSizeChange);
+  useGridApiOptionHandler(apiRef, GRID_PAGE_CHANGED, options.onPageChange);
+  useGridApiOptionHandler(apiRef, GRID_PAGESIZE_CHANGED, options.onPageSizeChange);
 
   React.useEffect(() => {
     dispatch(setGridPaginationModeActionCreator({ paginationMode: options.paginationMode! }));

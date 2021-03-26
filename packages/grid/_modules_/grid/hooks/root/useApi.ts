@@ -13,14 +13,16 @@ export function useApi(
   const logger = useLogger('useApi');
 
   const publishEvent = React.useCallback(
-    (name: string, ...args: any[]) => {
-      apiRef.current.emit(name, ...args);
+    (name: string, params: any, event?: React.SyntheticEvent) => {
+      if (!event || !event.isPropagationStopped()) {
+        apiRef.current.emit(name, params, event);
+      }
     },
     [apiRef],
   );
 
   const subscribeEvent = React.useCallback(
-    (event: string, handler: (param: any) => void): (() => void) => {
+    (event: string, handler: (...args) => void): (() => void) => {
       logger.debug(`Binding ${event} event`);
       apiRef.current.on(event, handler);
       const api = apiRef.current;
@@ -30,6 +32,18 @@ export function useApi(
       };
     },
     [apiRef, logger],
+  );
+
+  const subscribeFirst = React.useCallback(
+    (event: string, handler: (param: any) => void): (() => void) => {
+      const unsubscribe = subscribeEvent(event, handler);
+      logger.debug(`Moving last subscriber for ${event} to the first listener.`);
+      const firstListener = apiRef.current.events[event].pop();
+      apiRef.current.events[event].splice(0, 0, firstListener!);
+
+      return unsubscribe;
+    },
+    [apiRef, logger, subscribeEvent],
   );
 
   const showError = React.useCallback(
@@ -56,7 +70,11 @@ export function useApi(
     };
   }, [gridRootRef, logger, apiRef, columnHeadersContainerRef]);
 
-  useGridApiMethod(apiRef, { subscribeEvent, publishEvent, showError }, 'GridCoreApi');
+  useGridApiMethod(
+    apiRef,
+    { subscribeEvent, subscribeFirst, publishEvent, showError },
+    'GridCoreApi',
+  );
 
   return initialised;
 }

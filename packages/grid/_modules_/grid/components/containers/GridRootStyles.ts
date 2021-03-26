@@ -129,6 +129,7 @@ export const useStyles = makeStyles(
           overflow: 'hidden',
           whiteSpace: 'nowrap',
           fontWeight: theme.typography.fontWeightMedium,
+          textTransform: 'capitalize',
         },
         '& .MuiDataGrid-colCellMoving': {
           backgroundColor: theme.palette.action.hover,
