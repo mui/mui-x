@@ -106,7 +106,7 @@ describe('<XGrid /> - Edit Rows', () => {
   });
 
   it('should allow to stop double click using stopPropagation', () => {
-    render(<TestCase onCellDoubleClick={(params, event)=> event.stopPropagation()} />);
+    render(<TestCase onCellDoubleClick={(params, event) => event.stopPropagation()} />);
     const cell = getCell(1, 0);
     cell.focus();
     fireEvent.doubleClick(cell);
@@ -147,7 +147,12 @@ describe('<XGrid /> - Edit Rows', () => {
     cell.focus();
     expect(cell.textContent).to.equal('Adidas');
     const params = apiRef.current.getCellParams(1, 'brand');
-    apiRef.current.publishEvent(GRID_CELL_KEYDOWN, params, { key: 'a', code: 1, target: cell, isPropagationStopped: ()=> false });
+    apiRef.current.publishEvent(GRID_CELL_KEYDOWN, params, {
+      key: 'a',
+      code: 1,
+      target: cell,
+      isPropagationStopped: () => false,
+    });
     // fireEvent.keyDown(cell, { key: 'a', code: 1, target: cell });
 
     expect(cell).to.have.class('MuiDataGrid-cellEditable');

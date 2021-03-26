@@ -706,25 +706,22 @@ export function EditCellUsingExternalButtonGrid() {
 
   const [selectedCellParams, setSelectedCellParams] = React.useState<GridCellParams | null>(null);
 
-  const handleButtonClick = React.useCallback(
-    () => {
-      if (!selectedCellParams) {
-        return;
-      }
-      const { id, field, cellMode } = selectedCellParams;
-      if (cellMode === 'edit') {
-        const editedCellProps = apiRef.current.getEditCellPropsParams(id, field);
-        apiRef.current.commitCellChange(editedCellProps);
-        apiRef.current.setCellMode(id, field, 'view');
-        setButtonLabel('Edit');
-      } else {
-        apiRef.current.setCellMode(id, field, 'edit');
-        setButtonLabel('Save');
-      }
-      // Or you can use the editRowModel prop, but I find it easier
-    },
-    [apiRef, selectedCellParams],
-  );
+  const handleButtonClick = React.useCallback(() => {
+    if (!selectedCellParams) {
+      return;
+    }
+    const { id, field, cellMode } = selectedCellParams;
+    if (cellMode === 'edit') {
+      const editedCellProps = apiRef.current.getEditCellPropsParams(id, field);
+      apiRef.current.commitCellChange(editedCellProps);
+      apiRef.current.setCellMode(id, field, 'view');
+      setButtonLabel('Edit');
+    } else {
+      apiRef.current.setCellMode(id, field, 'edit');
+      setButtonLabel('Save');
+    }
+    // Or you can use the editRowModel prop, but I find it easier
+  }, [apiRef, selectedCellParams]);
 
   const handleCellClick = React.useCallback((params: GridCellParams) => {
     setSelectedCellParams(params);
