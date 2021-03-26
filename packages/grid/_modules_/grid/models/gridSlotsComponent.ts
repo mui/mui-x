@@ -25,12 +25,9 @@ import { GridFilterPanel } from '../components/panel/filterPanel/GridFilterPanel
 import { GridPanel, GridPanelProps } from '../components/panel/GridPanel';
 import { GridApiRefComponentsProperty } from './api/gridComponentsApi';
 import { GridIconSlotsComponent } from './gridIconSlotsComponent';
-import { GridBaseComponentProps } from './params/gridBaseComponentProps';
 import { GridToolbarContainerProps } from '../components/containers/GridToolbarContainer';
 import { GridFooterContainerProps } from '../components/containers/GridFooterContainer';
 import { GridOverlayProps } from '../components/containers/GridOverlay';
-
-export type ColumnMenuProps = GridBaseComponentProps & GridColumnMenuProps;
 
 /**
  * Grid components React prop interface containing all the overridable components.
@@ -40,7 +37,7 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
   /**
    * Column menu component rendered by clicking on the 3 dots "kebab" icon in column headers.
    */
-  ColumnMenu?: React.ElementType<ColumnMenuProps>;
+  ColumnMenu?: React.ElementType<GridColumnMenuProps>;
   /**
    * Error overlay component rendered above the grid when an error is caught.
    */

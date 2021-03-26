@@ -1,20 +1,20 @@
 import * as React from 'react';
 import { GridApiContext } from '../../components/GridApiContext';
-import { GridBaseComponentProps } from '../../models/params/gridBaseComponentProps';
+import { GridSlotComponentProps } from '../../models/params/gridSlotComponentProps';
 import { optionsSelector } from '../utils/optionsSelector';
 import { visibleGridColumnsSelector } from './columns/gridColumnsSelector';
 import { useGridSelector } from './core/useGridSelector';
 import { useGridState } from './core/useGridState';
 import { unorderedGridRowModelsSelector } from './rows/gridRowsSelector';
 
-export const useGridBaseComponentProps = () => {
+export const useGridSlotComponentProps = () => {
   const apiRef = React.useContext(GridApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
   const rows = useGridSelector(apiRef, unorderedGridRowModelsSelector);
   const columns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const [state] = useGridState(apiRef!);
 
-  const baseComponentProps: GridBaseComponentProps = React.useMemo(
+  const slotComponentProps: GridSlotComponentProps = React.useMemo(
     () => ({
       state,
       rows,
@@ -26,5 +26,5 @@ export const useGridBaseComponentProps = () => {
     [state, rows, columns, options, apiRef],
   );
 
-  return baseComponentProps;
+  return slotComponentProps;
 };

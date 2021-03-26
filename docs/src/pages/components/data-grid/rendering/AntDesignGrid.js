@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, useGridBaseComponentProps } from '@material-ui/data-grid';
+import { DataGrid, useGridSlotComponentProps } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { makeStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';
@@ -98,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CustomPagination() {
-  const { state, apiRef } = useGridBaseComponentProps();
+  const { state, apiRef } = useGridSlotComponentProps();
 
   return (
     <Pagination

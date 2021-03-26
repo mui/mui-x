@@ -9,8 +9,8 @@ import {
   GridOverlay,
   GridColumnMenu,
   HideGridColMenuItem,
-  ColumnMenuProps,
-  GridBaseComponentProps,
+  GridColumnMenuProps,
+  useGridSlotComponentProps,
 } from '@material-ui/data-grid';
 import RecipeReviewCard from './RecipeReviewCard';
 
@@ -42,8 +42,8 @@ export function NoRowsComponent() {
   );
 }
 
-export function PaginationComponent(props: GridBaseComponentProps & { color?: 'primary' }) {
-  const { state, apiRef } = props;
+export function PaginationComponent(props: { color?: 'primary' }) {
+  const { state, apiRef } = useGridSlotComponentProps();
   return (
     <Pagination
       className="my-custom-pagination"
@@ -56,7 +56,8 @@ export function PaginationComponent(props: GridBaseComponentProps & { color?: 'p
 }
 
 export function CustomFooter(props) {
-  const { state, apiRef } = props;
+  const { state, apiRef } = useGridSlotComponentProps();
+
   return (
     <GridFooterContainer className="my-custom-footer">
       <span style={{ display: 'flex', alignItems: 'center', background: props.color }}>
@@ -72,8 +73,8 @@ export function CustomFooter(props) {
   );
 }
 
-export function FooterComponent2(props) {
-  const { state } = props;
+export function FooterComponent2() {
+  const { state } = useGridSlotComponentProps();
 
   return (
     <div className="footer my-custom-footer"> I counted {state.pagination.rowCount} row(s) </div>
@@ -88,8 +89,10 @@ export function CustomHeader(props) {
   );
 }
 
-export function ColumnMenuComponent(props: ColumnMenuProps) {
-  if (props.apiRef.current.getColumnIndex(props.currentColumn.field) === 1) {
+export function ColumnMenuComponent(props: GridColumnMenuProps) {
+  const { apiRef } = useGridSlotComponentProps();
+
+  if (apiRef.current.getColumnIndex(props.currentColumn.field) === 1) {
     return <RecipeReviewCard />;
   }
   if (props.currentColumn.field === 'id') {
