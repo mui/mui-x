@@ -22,7 +22,7 @@ import { useGridState } from '../core/useGridState';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
 import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
 import {
-  FilterModel,
+  GridFilterModel,
   GridFilterModelState,
   getInitialGridFilterState,
 } from './gridFilterModelState';
@@ -250,7 +250,7 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
   }, [clearFilteredRows, logger, setGridState]);
 
   const setFilterModel = React.useCallback(
-    (model: FilterModel) => {
+    (model: GridFilterModel) => {
       clearFilterModel();
       logger.debug('Setting filter model');
       applyFilterLinkOperator(model.linkOperator);

@@ -5,7 +5,7 @@ export interface GridFilterModelState {
   linkOperator?: GridLinkOperator;
 }
 
-export type FilterModel = GridFilterModelState;
+export type GridFilterModel = GridFilterModelState;
 
 export const getInitialGridFilterState: () => GridFilterModelState = () => ({
   items: [],
