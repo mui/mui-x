@@ -82,10 +82,10 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
   const publishClick = React.useCallback(
     (eventName: string) => (event: React.MouseEvent) => {
       const params = apiRef!.current.getCellParams(rowId, field || '');
+      apiRef!.current.publishEvent(eventName, params, event);
       if (params?.colDef.disableClickEventBubbling) {
         event.stopPropagation();
       }
-      apiRef!.current.publishEvent(eventName, params, event);
     },
     [apiRef, field, rowId],
   );
