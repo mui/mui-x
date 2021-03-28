@@ -75,7 +75,6 @@
     "redux-logger": "^3.0.6",
     "rimraf": "^3.0.0",
     "webfontloader": "^1.6.28",
-    "webpack": "^4.41.0",
     "webpack-bundle-analyzer": "^4.1.0"
   },
   "devDependencies": {
