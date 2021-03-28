@@ -19,7 +19,7 @@ import {
 import { getCell, getColumnHeaderCell, getRow } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 
-describe('<XGrid /> - Events Params ', () => {
+describe('<XGrid /> - Events Params', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 

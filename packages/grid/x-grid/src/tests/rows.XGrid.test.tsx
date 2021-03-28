@@ -14,7 +14,7 @@ import {
 } from '@material-ui/x-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
-describe('<XGrid /> - Rows ', () => {
+describe('<XGrid /> - Rows', () => {
   let clock;
   let baselineProps: { columns: GridColDef[]; rows: GridRowData[] };
 
