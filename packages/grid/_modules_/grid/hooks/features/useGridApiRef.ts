@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { GridApi } from '../../models/api/gridApi';
-import { EventEmitter } from '../../utils/EventEmitter';
+import { GridEventEmitter } from '../../utils/eventEmitter/GridEventEmitter';
 
 /**
  * Hook that instantiate an GridApiRef to pass in component prop.
  */
 function createGridApi(): GridApi {
-  return new EventEmitter() as GridApi;
+  return new GridEventEmitter() as GridApi;
 }
 
 // Public developers facing overload

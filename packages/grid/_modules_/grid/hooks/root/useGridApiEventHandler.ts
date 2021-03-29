@@ -12,10 +12,7 @@ export function useGridApiEventHandler(
 
   React.useEffect(() => {
     if (handler && eventName) {
-      if (options?.isFirst) {
-        return apiRef.current.subscribeFirst(eventName, handler);
-      }
-      return apiRef.current.subscribeEvent(eventName, handler);
+      return apiRef.current.subscribeEvent(eventName, handler, options);
     }
 
     return undefined;

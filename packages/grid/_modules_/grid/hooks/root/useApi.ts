@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
+import { GridSubscribeEventOptions } from '../../utils/eventEmitter/GridEventEmitter';
 import { useLogger } from '../utils/useLogger';
 import { GRID_COMPONENT_ERROR, GRID_UNMOUNT } from '../../constants/eventsConstants';
 import { useGridApiMethod } from './useGridApiMethod';
@@ -22,9 +23,9 @@ export function useApi(
   );
 
   const subscribeEvent = React.useCallback(
-    (event: string, handler: (...args) => void): (() => void) => {
+    (event: string, handler: (...args) => void, options?: GridSubscribeEventOptions): (() => void) => {
       logger.debug(`Binding ${event} event`);
-      apiRef.current.on(event, handler);
+      apiRef.current.on(event, handler, options);
       const api = apiRef.current;
       return () => {
         logger.debug(`Clearing ${event} event`);
@@ -32,18 +33,6 @@ export function useApi(
       };
     },
     [apiRef, logger],
-  );
-
-  const subscribeFirst = React.useCallback(
-    (event: string, handler: (param: any) => void): (() => void) => {
-      const unsubscribe = subscribeEvent(event, handler);
-      logger.debug(`Moving last subscriber for ${event} to the first listener.`);
-      const firstListener = apiRef.current.events[event].pop();
-      apiRef.current.events[event].splice(0, 0, firstListener!);
-
-      return unsubscribe;
-    },
-    [apiRef, logger, subscribeEvent],
   );
 
   const showError = React.useCallback(
@@ -72,7 +61,7 @@ export function useApi(
 
   useGridApiMethod(
     apiRef,
-    { subscribeEvent, subscribeFirst, publishEvent, showError },
+    { subscribeEvent, publishEvent, showError },
     'GridCoreApi',
   );
 
