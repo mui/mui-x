@@ -1,7 +1,6 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, useGridSlotComponentProps } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import Pagination from '@material-ui/lab/Pagination';
 
@@ -11,8 +10,8 @@ const useStyles = makeStyles({
   },
 });
 
-function CustomPagination(props) {
-  const { state, api } = props;
+function CustomPagination() {
+  const { state, apiRef } = useGridSlotComponentProps();
   const classes = useStyles();
 
   return (
@@ -21,23 +20,10 @@ function CustomPagination(props) {
       color="primary"
       count={state.pagination.pageCount}
       page={state.pagination.page + 1}
-      onChange={(event, value) => api.current.setPage(value - 1)}
+      onChange={(event, value) => apiRef.current.setPage(value - 1)}
     />
   );
 }
-
-CustomPagination.propTypes = {
-  /**
-   * GridApiRef that let you manipulate the grid.
-   */
-  api: PropTypes.shape({
-    current: PropTypes.object.isRequired,
-  }).isRequired,
-  /**
-   * The GridState object containing the current grid state.
-   */
-  state: PropTypes.object.isRequired,
-};
 
 export default function CustomPaginationGrid() {
   const { data } = useDemoData({

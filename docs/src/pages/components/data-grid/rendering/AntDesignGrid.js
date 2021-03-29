@@ -1,6 +1,5 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, useGridSlotComponentProps } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { makeStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';
@@ -98,8 +97,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CustomPagination(props) {
-  const { state, api } = props;
+function CustomPagination() {
+  const { state, apiRef } = useGridSlotComponentProps();
 
   return (
     <Pagination
@@ -110,23 +109,10 @@ function CustomPagination(props) {
       count={state.pagination.pageCount}
       // @ts-expect-error
       renderItem={(props2) => <PaginationItem {...props2} disableRipple />}
-      onChange={(event, value) => api.current.setPage(value)}
+      onChange={(event, value) => apiRef.current.setPage(value)}
     />
   );
 }
-
-CustomPagination.propTypes = {
-  /**
-   * GridApiRef that let you manipulate the grid.
-   */
-  api: PropTypes.shape({
-    current: PropTypes.object.isRequired,
-  }).isRequired,
-  /**
-   * The GridState object containing the current grid state.
-   */
-  state: PropTypes.object.isRequired,
-};
 
 export default function AntDesignGrid() {
   const { data } = useDemoData({
