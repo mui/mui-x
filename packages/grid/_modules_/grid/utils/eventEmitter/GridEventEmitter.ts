@@ -3,16 +3,15 @@ import { EventEmitter } from './EventEmitter';
 
 //TODO replace any with Generics
 export type GridListener = (params: any, event?: React.SyntheticEvent) => void;
-export type GridSubscribeEventOptions = {isFirst?: boolean};
+export type GridSubscribeEventOptions = { isFirst?: boolean };
 
 export class GridEventEmitter extends EventEmitter {
-
   on(eventName: string, listener: GridListener, options?: GridSubscribeEventOptions): void {
     if (!Array.isArray(this.events[eventName])) {
       this.events[eventName] = [];
     }
 
-    if(options && options.isFirst) {
+    if (options && options.isFirst) {
       this.events[eventName].splice(0, 0, listener);
     } else {
       this.events[eventName].push(listener);

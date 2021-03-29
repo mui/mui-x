@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { GridEventEmitter, GridSubscribeEventOptions } from '../../utils/eventEmitter/GridEventEmitter';
+import {
+  GridEventEmitter,
+  GridSubscribeEventOptions,
+} from '../../utils/eventEmitter/GridEventEmitter';
 
 /**
  * The core API interface that is available in the grid [[apiRef]].
@@ -27,7 +30,7 @@ export interface GridCoreApi extends GridEventEmitter {
   subscribeEvent: (
     event: string,
     handler: (params: any, event?: React.SyntheticEvent) => void,
-    options?: GridSubscribeEventOptions
+    options?: GridSubscribeEventOptions,
   ) => () => void;
   /**
    * Allows to emit an event.

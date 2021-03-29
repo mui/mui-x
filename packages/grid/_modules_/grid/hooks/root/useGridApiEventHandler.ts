@@ -19,11 +19,12 @@ export function useGridApiEventHandler(
   }, [apiRef, logger, eventName, handler, options]);
 }
 
+const optionsSubscriberOptions = { isFirst: true };
 export function useGridApiOptionHandler(
   apiRef: GridApiRef,
   eventName: string,
   handler?: (...args: any) => void,
 ) {
   // Validate that only one per event name?
-  useGridApiEventHandler(apiRef, eventName, handler, { isFirst: true });
+  useGridApiEventHandler(apiRef, eventName, handler, optionsSubscriberOptions);
 }

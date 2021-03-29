@@ -23,7 +23,11 @@ export function useApi(
   );
 
   const subscribeEvent = React.useCallback(
-    (event: string, handler: (...args) => void, options?: GridSubscribeEventOptions): (() => void) => {
+    (
+      event: string,
+      handler: (...args) => void,
+      options?: GridSubscribeEventOptions,
+    ): (() => void) => {
       logger.debug(`Binding ${event} event`);
       apiRef.current.on(event, handler, options);
       const api = apiRef.current;
@@ -59,11 +63,7 @@ export function useApi(
     };
   }, [gridRootRef, logger, apiRef, columnHeadersContainerRef]);
 
-  useGridApiMethod(
-    apiRef,
-    { subscribeEvent, publishEvent, showError },
-    'GridCoreApi',
-  );
+  useGridApiMethod(apiRef, { subscribeEvent, publishEvent, showError }, 'GridCoreApi');
 
   return initialised;
 }
