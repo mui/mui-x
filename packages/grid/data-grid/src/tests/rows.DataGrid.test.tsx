@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
-describe('<DataGrid /> - Rows ', () => {
+describe('<DataGrid /> - Rows', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
