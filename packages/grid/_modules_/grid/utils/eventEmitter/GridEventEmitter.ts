@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { EventEmitter } from './EventEmitter';
 
-//TODO replace any with Generics
+// TODO replace any with Generics
 export type GridListener = (params: any, event?: React.SyntheticEvent) => void;
 export type GridSubscribeEventOptions = { isFirst?: boolean };
 
