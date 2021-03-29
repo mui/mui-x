@@ -202,7 +202,7 @@ export interface GridOptions {
    */
   onError?: (args: any) => void;
   /**
-   * Callback fired when a blur event comes from a cell element.
+   * Callback fired when the active element leaves a cell.
    * @param param With all properties from [[GridCellParams]].
    * @param event [[React.MouseEvent]].
    */

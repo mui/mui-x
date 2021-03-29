@@ -68,13 +68,16 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
   );
 
   const publishBlur = React.useCallback(
-    (eventName: string) => (event: React.SyntheticEvent) => {
-      const params = apiRef!.current.getCellParams(rowId, field || '');
+    (eventName: string) => (event: React.FocusEvent<HTMLDivElement>) => {
       // We don't trigger blur when the focus is on an element in the cell.
-      if (event.target === params.element) {
+      if (
+        event.relatedTarget &&
+        event.currentTarget.contains(event.relatedTarget as HTMLDivElement)
+      ) {
         return;
       }
 
+      const params = apiRef!.current.getCellParams(rowId, field || '');
       apiRef!.current.publishEvent(eventName, params, event);
     },
     [apiRef, field, rowId],

@@ -25,8 +25,8 @@ export const GRID_CELL_EDIT_PROPS_CHANGE = 'cellEditPropsChange';
 export const GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED = 'cellEditPropsChangeCommitted';
 export const GRID_CELL_VALUE_CHANGE = 'cellValueChange';
 
-export const GRID_CELL_ENTER_EDIT = 'cellEnterEdit';
-export const GRID_CELL_EXIT_EDIT = 'cellExitEdit';
+export const GRID_CELL_EDIT_ENTER = 'cellEditEnter';
+export const GRID_CELL_EDIT_EXIT = 'cellEditExit';
 export const GRID_CELL_NAVIGATION_KEYDOWN = 'cellNavigationKeyDown';
 export const GRID_CELL_FOCUS = 'cellCellFocus';
 

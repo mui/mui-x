@@ -15,7 +15,7 @@ import {
   GridRowData,
   useGridApiRef,
   XGrid,
-  GRID_CELL_EXIT_EDIT,
+  GRID_CELL_EDIT_EXIT,
   GridEditCellPropsParams,
   GridEditRowModelParams,
 } from '@material-ui/x-grid';
@@ -505,7 +505,7 @@ export function EditRowsControl() {
 
       setTimeout(() => {
         apiRef.current.updateRows([cellUpdate]);
-        apiRef.current.publishEvent(GRID_CELL_EXIT_EDIT, params, event);
+        apiRef.current.publishEvent(GRID_CELL_EDIT_EXIT, params, event);
       }, randomInt(300, 2000));
     },
     [apiRef],

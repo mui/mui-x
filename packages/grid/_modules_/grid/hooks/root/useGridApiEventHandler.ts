@@ -6,20 +6,20 @@ export function useGridApiEventHandler(
   apiRef: GridApiRef,
   eventName: string,
   handler?: (...args: any) => void,
-  isFirst?: boolean,
+  options?: { isFirst?: boolean },
 ) {
   const logger = useLogger('useGridApiEventHandler');
 
   React.useEffect(() => {
     if (handler && eventName) {
-      if (isFirst) {
+      if (options?.isFirst) {
         return apiRef.current.subscribeFirst(eventName, handler);
       }
       return apiRef.current.subscribeEvent(eventName, handler);
     }
 
     return undefined;
-  }, [apiRef, logger, eventName, handler, isFirst]);
+  }, [apiRef, logger, eventName, handler, options]);
 }
 
 export function useGridApiOptionHandler(
@@ -28,5 +28,5 @@ export function useGridApiOptionHandler(
   handler?: (...args: any) => void,
 ) {
   // Validate that only one per event name?
-  useGridApiEventHandler(apiRef, eventName, handler, true);
+  useGridApiEventHandler(apiRef, eventName, handler, { isFirst: true });
 }
