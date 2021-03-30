@@ -53,8 +53,12 @@ The same import works with `XGrid` as it's an extension of `DataGrid`.
 | English (United States) | en-US               | `enUS`      |
 | French                  | fr-FR               | `frFR`      |
 | German                  | de-DE               | `deDE`      |
+| Dutch                   | nl-NL               | `nlNL`      |
+| Greek                   | el-GR               | `elGR`      |
+| Japanese                | ja-JP               | `jaJP`      |
 | Polish                  | pl-PL               | `plPL`      |
 | Portuguese (Brazil)     | pt-BR               | `ptBR`      |
+| Spanish (Spain)         | es-ES               | `esES`      |
 
 You can [find the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/locales) in the GitHub repository.
 

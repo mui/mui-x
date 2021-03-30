@@ -8,7 +8,7 @@ import { GridRowModel } from '../gridRows';
 /**
  * Object passed as React prop in the component override.
  */
-export interface GridBaseComponentProps {
+export interface GridSlotComponentProps {
   /**
    * The GridState object containing the current grid state.
    */
@@ -28,7 +28,7 @@ export interface GridBaseComponentProps {
   /**
    * GridApiRef that let you manipulate the grid.
    */
-  api: GridApiRef;
+  apiRef: GridApiRef;
   /**
    * The ref of the inner div Element of the grid.
    */

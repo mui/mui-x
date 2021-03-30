@@ -32,7 +32,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export function GridPagination() {
+export const GridPagination = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(function GridPagination(props, ref) {
   const classes = useStyles();
   const apiRef = React.useContext(GridApiContext);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
@@ -70,6 +73,7 @@ export function GridPagination() {
   return (
     // @ts-ignore TODO remove once upgraded v4 support is dropped
     <TablePagination
+      ref={ref}
       classes={{
         ...(isMuiV5() ? { selectLabel: classes.selectLabel } : { caption: classes.caption }),
         input: classes.input,
@@ -85,6 +89,7 @@ export function GridPagination() {
       }
       rowsPerPage={paginationState.pageSize}
       {...getPaginationChangeHandlers()}
+      {...props}
     />
   );
-}
+});

@@ -196,5 +196,29 @@ describe('<DataGrid /> - Toolbar', () => {
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
     });
+
+    it('should keep the focus on the switch after toggling a column', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            {...baselineProps}
+            components={{
+              Toolbar: GridToolbar,
+            }}
+          />
+        </div>,
+      );
+
+      const button = screen.getByRole('button', { name: 'Select columns' });
+      button.focus();
+      fireEvent.click(button);
+
+      const column: HTMLElement | null = document.querySelector('[role="tooltip"] [name="id"]');
+      column!.focus();
+      fireEvent.click(column);
+
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(column).toHaveFocus();
+    });
   });
 });

@@ -6,7 +6,7 @@ import Popper from '@material-ui/core/Popper';
 import { GridApiContext } from '../GridApiContext';
 import { isEscapeKey, isMuiV5 } from '../../utils';
 
-export interface GridPanelProps {
+export interface GridPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
   open: boolean;
 }
@@ -26,9 +26,12 @@ const useStyles = makeStyles(
   { name: 'MuiDataGridPanel' },
 );
 
-export function GridPanel(props: GridPanelProps) {
+export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(function GridPanel(
+  props,
+  ref,
+) {
+  const { children, open, ...other } = props;
   const classes = useStyles();
-  const { children, open } = props;
   const apiRef = React.useContext(GridApiContext);
 
   const getPopperModifiers = (): any => {
@@ -72,11 +75,13 @@ export function GridPanel(props: GridPanelProps) {
 
   return (
     <Popper
+      ref={ref}
       placement="bottom-start"
       className={classes.root}
       open={open}
       anchorEl={anchorEl}
       modifiers={getPopperModifiers()}
+      {...other}
     >
       <ClickAwayListener onClickAway={handleClickAway}>
         <Paper className={classes.paper} elevation={8} onKeyDown={handleKeyDown}>
@@ -85,4 +90,4 @@ export function GridPanel(props: GridPanelProps) {
       </ClickAwayListener>
     </Popper>
   );
-}
+});

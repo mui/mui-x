@@ -5,7 +5,6 @@ import {
   GridColDef,
   XGrid,
   XGridProps,
-  GridBaseComponentProps,
   GridPanelProps,
   GridPreferencesPanel,
   GridFooter,
@@ -327,14 +326,14 @@ export function DynamicIconUpdate() {
   );
 }
 
-function CustomFilterPanel(props: { bg?: string } & GridBaseComponentProps) {
+function CustomFilterPanel(props: { bg?: string }) {
   return (
     <div style={{ width: 500, height: 100, background: props.bg, color: 'white' }}>
       My Custom Filter Panel
     </div>
   );
 }
-function CustomColumnsPanel(props: { bg?: string } & GridBaseComponentProps) {
+function CustomColumnsPanel(props: { bg?: string }) {
   return (
     <div style={{ width: 500, height: 300, background: props.bg }}>My Custom GridColumns Panel</div>
   );
@@ -351,7 +350,7 @@ CustomFilterColumnsPanels.args = {
     columnsPanel: { bg: 'red' },
   },
 };
-function CustomPanelComponent(props: GridBaseComponentProps & GridPanelProps) {
+function CustomPanelComponent(props: GridPanelProps) {
   if (!props.open) {
     return null;
   }

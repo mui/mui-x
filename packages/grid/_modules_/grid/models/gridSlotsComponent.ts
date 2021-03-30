@@ -25,9 +25,9 @@ import { GridFilterPanel } from '../components/panel/filterPanel/GridFilterPanel
 import { GridPanel, GridPanelProps } from '../components/panel/GridPanel';
 import { GridApiRefComponentsProperty } from './api/gridComponentsApi';
 import { GridIconSlotsComponent } from './gridIconSlotsComponent';
-import { GridBaseComponentProps } from './params/gridBaseComponentProps';
-
-export type ColumnMenuProps = GridBaseComponentProps & GridColumnMenuProps;
+import { GridToolbarContainerProps } from '../components/containers/GridToolbarContainer';
+import { GridFooterContainerProps } from '../components/containers/GridFooterContainer';
+import { GridOverlayProps } from '../components/containers/GridOverlay';
 
 /**
  * Grid components React prop interface containing all the overridable components.
@@ -37,52 +37,52 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
   /**
    * Column menu component rendered by clicking on the 3 dots "kebab" icon in column headers.
    */
-  ColumnMenu?: React.ElementType<ColumnMenuProps>;
+  ColumnMenu?: React.ElementType<GridColumnMenuProps>;
   /**
    * Error overlay component rendered above the grid when an error is caught.
    */
-  ErrorOverlay?: React.ElementType<GridBaseComponentProps & ErrorOverlayProps>;
+  ErrorOverlay?: React.ElementType<ErrorOverlayProps>;
   /**
    * Footer component rendered at the bottom of the grid viewport.
    */
-  Footer?: React.ElementType<GridBaseComponentProps>;
+  Footer?: React.ElementType<GridFooterContainerProps>;
   /**
    * Header component rendered above the grid column header bar.
    * Prefer using the `Toolbar` slot. You should never need to use this slot. TODO remove.
    */
-  Header?: React.ElementType<GridBaseComponentProps>;
+  Header?: React.ElementType;
   /**
    * Toolbar component rendered inside the Header component.
    */
-  Toolbar?: React.ElementType<GridBaseComponentProps>;
+  Toolbar?: React.ElementType<GridToolbarContainerProps>;
   /**
    * PreferencesPanel component rendered inside the Header component.
    */
-  PreferencesPanel?: React.ElementType<GridBaseComponentProps>;
+  PreferencesPanel?: React.ElementType;
   /**
    * Loading overlay component rendered when the grid is in a loading state.
    */
-  LoadingOverlay?: React.ElementType<GridBaseComponentProps>;
+  LoadingOverlay?: React.ElementType<GridOverlayProps>;
   /**
    * No rows overlay component rendered when the grid has no rows.
    */
-  NoRowsOverlay?: React.ElementType<GridBaseComponentProps>;
+  NoRowsOverlay?: React.ElementType<GridOverlayProps>;
   /**
    * Pagination component rendered in the grid footer by default.
    */
-  Pagination?: React.ElementType<GridBaseComponentProps>;
+  Pagination?: React.ElementType;
   /**
    * Filter panel component rendered when clicking the filter button.
    */
-  FilterPanel?: React.ElementType<GridBaseComponentProps>;
+  FilterPanel?: React.ElementType;
   /**
    * GridColumns panel component rendered when clicking the columns button.
    */
-  ColumnsPanel?: React.ElementType<GridBaseComponentProps>;
+  ColumnsPanel?: React.ElementType;
   /**
    * Panel component wrapping the filters and columns panels.
    */
-  Panel?: React.ElementType<GridBaseComponentProps & GridPanelProps>;
+  Panel?: React.ElementType<GridPanelProps>;
 }
 
 export const DEFAULT_GRID_SLOTS_ICONS: GridIconSlotsComponent = {

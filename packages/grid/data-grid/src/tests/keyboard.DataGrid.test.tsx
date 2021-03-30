@@ -17,7 +17,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { GridColumns } from 'packages/grid/_modules_/grid/models/colDef/gridColDef';
 
-const SPACE_KEY = { key: ' ', code: 'Space', shiftKey: false };
+const SPACE_KEY = { key: ' ' };
 const SHIFT_SPACE_KEY = { ...SPACE_KEY, shiftKey: true };
 
 describe('<DataGrid /> - Keyboard', () => {
@@ -126,13 +126,13 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(handleKeyDown.returnValues).to.deep.equal([true]);
   });
 
-  const KeyboardTest = () => {
-    const data = useData(100, 20);
+  const KeyboardTest = (props: { nbRows?: number }) => {
+    const data = useData(props.nbRows || 100, 20);
     const transformColSizes = (columns: GridColumns) =>
       columns.map((column) => ({ ...column, width: 60 }));
 
     return (
-      <div style={{ width: 300, height: 330 }}>
+      <div style={{ width: 300, height: 360 }}>
         <DataGrid rows={data.rows} columns={transformColSizes(data.columns)} />
       </div>
     );
@@ -169,6 +169,14 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(getActiveCell()).to.equal('0-0');
     fireEvent.keyDown(document.activeElement!, SPACE_KEY);
     expect(getActiveCell()).to.equal('4-0');
+  });
+
+  it('Space only should go to the bottom of the page even with small number of rows', () => {
+    render(<KeyboardTest nbRows={4} />);
+    getCell(0, 0).focus();
+    expect(getActiveCell()).to.equal('0-0');
+    fireEvent.keyDown(document.activeElement!, SPACE_KEY);
+    expect(getActiveCell()).to.equal('3-0');
   });
 
   it('Home / End navigation', async () => {

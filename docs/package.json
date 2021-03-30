@@ -1,6 +1,6 @@
 {
   "name": "docs",
-  "version": "4.0.0-alpha.22",
+  "version": "4.0.0-alpha.23",
   "private": true,
   "author": "Material-UI Team",
   "license": "MIT",
@@ -75,7 +75,6 @@
     "redux-logger": "^3.0.6",
     "rimraf": "^3.0.0",
     "webfontloader": "^1.6.28",
-    "webpack": "^4.41.0",
     "webpack-bundle-analyzer": "^4.1.0"
   },
   "devDependencies": {

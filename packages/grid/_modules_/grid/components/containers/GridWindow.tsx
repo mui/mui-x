@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
+import {
+  gridDensityHeaderHeightSelector,
+  gridDensityRowHeightSelector,
+} from '../../hooks/features/density/densitySelector';
+import { gridDataContainerHeightSelector } from '../../hooks/root/gridContainerSizesSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
-import { useGridState } from '../../hooks/features/core/useGridState';
-import { getTotalHeight } from '../../utils/getTotalHeight';
 import { classnames } from '../../utils';
 import { GridApiContext } from '../GridApiContext';
 
@@ -19,7 +21,8 @@ export const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(func
   const apiRef = React.useContext(GridApiContext);
   const { autoHeight } = useGridSelector(apiRef, optionsSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
-  const [gridState] = useGridState(apiRef!);
+  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
+  const dataContainerHeight = useGridSelector(apiRef, gridDataContainerHeightSelector);
 
   React.useEffect(() => {
     // refs are run before effect. Waiting for an effect guarentees that
@@ -28,11 +31,21 @@ export const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(func
     apiRef!.current.resize();
   }, [apiRef]);
 
+  const containerHeight = React.useMemo(() => {
+    if (!autoHeight) {
+      return size.height;
+    }
+    // If we have no rows, we give the size of 2 rows to display the no rows overlay
+    const dataHeight = dataContainerHeight < rowHeight ? rowHeight * 2 : dataContainerHeight;
+    return headerHeight + dataHeight;
+  }, [autoHeight, dataContainerHeight, headerHeight, rowHeight, size.height]);
+
   return (
     <div
+      className="MuiDataGrid-windowContainer"
       style={{
         width: size.width,
-        height: getTotalHeight(gridState.options, gridState.containerSizes, size.height),
+        height: containerHeight,
       }}
     >
       <div
