@@ -102,6 +102,7 @@ The following are the native column types:
 - `'number'`
 - `'date'`
 - `'dateTime'`
+- `'boolean'`
 
 To apply a column type, you need to define the type property in your column definition.
 

@@ -32,7 +32,6 @@ import {
 } from './services';
 import {
   renderCountry,
-  renderDone,
   renderEmail,
   renderIncoterm,
   renderPnl,
@@ -91,9 +90,9 @@ export const getCommodityColumns: () => any[] = () => [
   {
     field: 'isFilled',
     headerName: 'Is Filled',
-    renderCell: renderDone,
     align: 'center',
     generateData: generateIsFilled,
+    type: 'boolean',
     width: 80,
   },
   {

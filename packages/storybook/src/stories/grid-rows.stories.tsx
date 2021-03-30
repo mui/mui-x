@@ -374,6 +374,7 @@ const baselineEditProps = {
       age: 25,
       DOB: new Date(1996, 10, 2),
       meetup: new Date(2020, 2, 25, 10, 50, 0),
+      isAdmin: true,
     },
     {
       id: 1,
@@ -385,6 +386,7 @@ const baselineEditProps = {
       age: 25,
       DOB: new Date(1992, 1, 20),
       meetup: new Date(2020, 4, 15, 10, 50, 0),
+      isAdmin: true,
     },
     {
       id: 2,
@@ -396,6 +398,7 @@ const baselineEditProps = {
       age: 25,
       DOB: new Date(1986, 0, 12),
       meetup: new Date(2020, 3, 5, 10, 50, 0),
+      isAdmin: false,
     },
   ],
   columns: [
@@ -412,6 +415,7 @@ const baselineEditProps = {
     { field: 'DOB', width: 120, type: 'date', editable: true },
     { field: 'meetup', width: 180, type: 'dateTime', editable: true },
     { field: 'lastLogin', width: 180, type: 'dateTime', editable: false },
+    { field: 'isAdmin', width: 120, type: 'boolean', editable: true },
   ],
 };
 function validateEmail(email) {

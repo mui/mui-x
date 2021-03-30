@@ -233,10 +233,12 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-cell.MuiDataGrid-cellEditing': {
           padding: 1,
           display: 'flex',
+          alignItems: 'center',
         },
         '& .MuiDataGrid-editCellInputBase': {
           ...theme.typography.body2,
           padding: '1px 0',
+          height: '100%',
           border: `1px solid ${
             getThemePaletteMode(theme.palette) === 'light'
               ? 'rgba(0, 0, 0, 0.23)'
@@ -272,11 +274,20 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-cellLeft': {
           textAlign: 'left',
         },
+        '& .MuiDataGrid-cellLeft.MuiDataGrid-cellWithRenderer, & .MuiDataGrid-cellLeft.MuiDataGrid-cellEditing': {
+          justifyContent: 'flex-start',
+        },
         '& .MuiDataGrid-cellRight': {
           textAlign: 'right',
         },
+        '& .MuiDataGrid-cellRight.MuiDataGrid-cellWithRenderer, & .MuiDataGrid-cellRight.MuiDataGrid-cellEditing': {
+          justifyContent: 'flex-end',
+        },
         '& .MuiDataGrid-cellCenter': {
           textAlign: 'center',
+        },
+        '& .MuiDataGrid-cellCenter.MuiDataGrid-cellWithRenderer, & .MuiDataGrid-cellCenter.MuiDataGrid-cellEditing': {
+          justifyContent: 'center',
         },
         '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
           alignItems: 'center',
