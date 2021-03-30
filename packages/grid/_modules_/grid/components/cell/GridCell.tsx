@@ -128,7 +128,11 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
   };
 
   React.useLayoutEffect(() => {
-    if (hasFocus && cellRef.current && ( !document.activeElement || !cellRef.current!.contains(document.activeElement))) {
+    if (
+      hasFocus &&
+      cellRef.current &&
+      (!document.activeElement || !cellRef.current!.contains(document.activeElement))
+    ) {
       cellRef.current!.focus();
     }
   });

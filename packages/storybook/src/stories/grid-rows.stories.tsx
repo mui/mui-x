@@ -17,7 +17,8 @@ import {
   XGrid,
   GRID_CELL_EDIT_EXIT,
   GridEditCellPropsParams,
-  GridEditRowModelParams, GRID_CELL_EDIT_ENTER,
+  GridEditRowModelParams,
+  GRID_CELL_EDIT_ENTER,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
