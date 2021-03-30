@@ -122,6 +122,8 @@ export const useGridKeyboardNavigation = (
       nextCellIndexes.colIndex = nextCellIndexes.colIndex <= 0 ? 0 : nextCellIndexes.colIndex;
       nextCellIndexes.colIndex =
         nextCellIndexes.colIndex >= colCount ? colCount - 1 : nextCellIndexes.colIndex;
+
+      apiRef.current.scrollToIndexes(nextCellIndexes);
       apiRef.current.setCellFocus(nextCellIndexes);
     },
     [
@@ -137,8 +139,6 @@ export const useGridKeyboardNavigation = (
 
   const setCellFocus = React.useCallback(
     (nextCellIndexes: GridCellIndexCoordinates) => {
-      apiRef.current.scrollToIndexes(nextCellIndexes);
-
       setGridState((state) => {
         logger.debug(
           `Focusing on cell with rowIndex=${nextCellIndexes.rowIndex} and colIndex=${nextCellIndexes.colIndex}`,
@@ -147,7 +147,7 @@ export const useGridKeyboardNavigation = (
       });
       forceUpdate();
     },
-    [apiRef, forceUpdate, logger, setGridState],
+    [forceUpdate, logger, setGridState],
   );
 
   const handleCellFocus = React.useCallback(
