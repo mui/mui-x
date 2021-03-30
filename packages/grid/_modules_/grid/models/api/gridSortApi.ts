@@ -1,4 +1,5 @@
 import { GridColDef } from '../colDef/gridColDef';
+import { GridRowId, GridRowModel } from '../gridRows';
 import { GridSortDirection, GridSortModel } from '../gridSortModel';
 import { GridSortModelParams } from '../params/gridSortModelParams';
 
@@ -30,4 +31,7 @@ export interface GridSortApi {
    * @param direction
    */
   sortColumn: (column: GridColDef, direction?: GridSortDirection) => void;
+
+  getSortedRows: () => GridRowModel[];
+  getSortedRowIds: () => GridRowId[];
 }

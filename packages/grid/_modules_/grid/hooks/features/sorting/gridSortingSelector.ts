@@ -5,15 +5,22 @@ import { GridState } from '../core/gridState';
 import {
   GridRowsLookup,
   gridRowsLookupSelector,
+  unorderedGridRowIdsSelector,
   unorderedGridRowModelsSelector,
 } from '../rows/gridRowsSelector';
 import { GridSortingState } from './gridSortingState';
 
 const sortingGridStateSelector = (state: GridState) => state.sorting;
-export const sortedGridRowIdsSelector = createSelector<GridState, GridSortingState, GridRowId[]>(
+export const sortedGridRowIdsSelector = createSelector<
+  GridState,
+  GridSortingState,
+  GridRowId[],
+  GridRowId[]
+>(
   sortingGridStateSelector,
-  (sortingState: GridSortingState) => {
-    return sortingState.sortedRows;
+  unorderedGridRowIdsSelector,
+  (sortingState: GridSortingState, allRows: GridRowId[]) => {
+    return sortingState.sortedRows.length ? sortingState.sortedRows : allRows;
   },
 );
 export const sortedGridRowsSelector = createSelector<

@@ -15,6 +15,11 @@ export const gridRowsLookupSelector = createSelector<
   InternalGridRowsState,
   GridRowsLookup
 >(gridRowsStateSelector, (rows: InternalGridRowsState) => rows && rows.idRowsLookup);
+export const unorderedGridRowIdsSelector = createSelector<
+  GridState,
+  InternalGridRowsState,
+  GridRowId[]
+>(gridRowsStateSelector, (rows: InternalGridRowsState) => rows.allRows);
 export const unorderedGridRowModelsSelector = createSelector<
   GridState,
   InternalGridRowsState,
