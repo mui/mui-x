@@ -48,9 +48,11 @@ To make it more visible, we applied a green background on the editable cells.
 
 {{"demo": "pages/components/data-grid/editing/EditRowModelControlGrid.js", "bg": "inline"}}
 
-### Validating new values
+#### value Getter ?
 
-To validate cell values on change, you can use the options handler `onEditCellChange`.
+### Validation
+
+To validate cell values on input change, you can use the options handler `onEditCellChange`.
 {{"demo": "pages/components/data-grid/editing/ValidateRowModelControlGrid.js", "bg": "inline"}}
 
 #### using ApiRef
@@ -58,16 +60,23 @@ To validate cell values on change, you can use the options handler `onEditCellCh
 If you purchase XGrid, then it might be quicker to use `apiRef` to do that.
 {{"demo": "pages/components/data-grid/editing/ValidateCellApiRefGrid.js", "bg": "inline"}}
 
-#### Server side validation
+### Server side
 
-#### Save server side with error handling
+username onChange serverValidation 
+Demo Save server side with error handling => No update on error
 
-### Override native behaviour
+### Customization 
+Override native behaviour
 
 You can edit on click...
 Or with an external button
 
-### Intercept Events
+#### Component
+`Column.renderEditCell`
+
+### Events
+
+
 
 ## 🚧 Row editing
 
