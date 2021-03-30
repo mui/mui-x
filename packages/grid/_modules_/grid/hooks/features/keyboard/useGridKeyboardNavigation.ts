@@ -23,12 +23,12 @@ import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { useLogger } from '../../utils/useLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 
-const getNextCellIndexes = (code: string, indexes: GridCellIndexCoordinates) => {
-  if (!isArrowKeys(code)) {
-    throw new Error('Material-UI: The first argument (code) should be an arrow key code.');
+const getNextCellIndexes = (key: string, indexes: GridCellIndexCoordinates) => {
+  if (!isArrowKeys(key)) {
+    throw new Error('Material-UI: The first argument (key) should be an arrow key code.');
   }
 
-  switch (code) {
+  switch (key) {
     case 'ArrowLeft':
       if (indexes.rowIndex === null) {
         return { rowIndex: null, colIndex: indexes.colIndex - 1 };
@@ -46,7 +46,7 @@ const getNextCellIndexes = (code: string, indexes: GridCellIndexCoordinates) => 
 
       return { ...indexes, rowIndex: indexes.rowIndex - 1 };
     default:
-      // Last option code === 'ArrowDown'
+      // Last option key === 'ArrowDown'
       if (indexes.rowIndex === null) {
         return { ...indexes, rowIndex: 0 };
       }
