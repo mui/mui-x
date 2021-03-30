@@ -12,7 +12,7 @@ import { GridSelectionModelChangeParams } from '../../../models/params/gridSelec
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { GridSelectionModel } from '../../../models/gridSelectionModel';
 import { isDeepEqual } from '../../../utils/utils';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
@@ -171,8 +171,8 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
   );
 
   useGridApiEventHandler(apiRef, GRID_ROW_CLICK, rowClickHandler);
-  useGridApiEventHandler(apiRef, GRID_ROW_SELECTED, options.onRowSelected);
-  useGridApiEventHandler(apiRef, GRID_SELECTION_CHANGED, options.onSelectionModelChange);
+  useGridApiOptionHandler(apiRef, GRID_ROW_SELECTED, options.onRowSelected);
+  useGridApiOptionHandler(apiRef, GRID_SELECTION_CHANGED, options.onSelectionModelChange);
 
   // TODO handle Cell Click/range selection?
   const selectionApi: GridSelectionApi = {

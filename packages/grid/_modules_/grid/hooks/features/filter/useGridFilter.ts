@@ -12,7 +12,7 @@ import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem
 import { GridFilterModelParams } from '../../../models/params/gridFilterModelParams';
 import { GridRowsProp } from '../../../models/gridRows';
 import { isDeepEqual } from '../../../utils/utils';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
@@ -288,7 +288,7 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
 
   useGridApiEventHandler(apiRef, GRID_ROWS_SET, apiRef.current.applyFilters);
   useGridApiEventHandler(apiRef, GRID_ROWS_UPDATED, apiRef.current.applyFilters);
-  useGridApiEventHandler(apiRef, GRID_FILTER_MODEL_CHANGE, options.onFilterModelChange);
+  useGridApiOptionHandler(apiRef, GRID_FILTER_MODEL_CHANGE, options.onFilterModelChange);
 
   React.useEffect(() => {
     const filterModel = options.filterModel;

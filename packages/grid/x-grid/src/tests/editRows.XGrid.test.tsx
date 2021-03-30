@@ -105,6 +105,17 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(cell.querySelector('input')!.value).to.equal('Adidas');
   });
 
+  it('should allow to stop double click using stopPropagation', () => {
+    render(<TestCase onCellDoubleClick={(params, event) => event.stopPropagation()} />);
+    const cell = getCell(1, 0);
+    cell.focus();
+    fireEvent.doubleClick(cell);
+
+    expect(cell).to.have.class('MuiDataGrid-cellEditable');
+    expect(cell).to.not.have.class('MuiDataGrid-cellEditing');
+    expect(cell.querySelector('input')).to.equal(null);
+  });
+
   it('should allow to switch between cell mode using enter key', () => {
     render(<TestCase />);
     const cell = getCell(1, 0);
@@ -136,7 +147,12 @@ describe('<XGrid /> - Edit Rows', () => {
     cell.focus();
     expect(cell.textContent).to.equal('Adidas');
     const params = apiRef.current.getCellParams(1, 'brand');
-    apiRef.current.publishEvent(GRID_CELL_KEYDOWN, params, { key: 'a', code: 1, target: cell });
+    apiRef.current.publishEvent(GRID_CELL_KEYDOWN, params, {
+      key: 'a',
+      code: 1,
+      target: cell,
+      isPropagationStopped: () => false,
+    });
     // fireEvent.keyDown(cell, { key: 'a', code: 1, target: cell });
 
     expect(cell).to.have.class('MuiDataGrid-cellEditable');

@@ -32,9 +32,11 @@ import {
   GRID_COLUMN_HEADER_DOUBLE_CLICK,
   GRID_COLUMN_HEADER_OVER,
   GRID_COLUMN_HEADER_OUT,
+  GRID_CELL_KEYDOWN,
+  GRID_CELL_BLUR,
 } from '../../constants/eventsConstants';
 import { useGridApiMethod } from './useGridApiMethod';
-import { useGridApiEventHandler } from './useGridApiEventHandler';
+import { useGridApiEventHandler, useGridApiOptionHandler } from './useGridApiEventHandler';
 import { GridEventsApi } from '../../models/api/gridEventsApi';
 
 export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: GridApiRef): void {
@@ -86,33 +88,35 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
   useGridApiEventHandler(apiRef, GRID_COL_RESIZE_START, handleResizeStart);
   useGridApiEventHandler(apiRef, GRID_COL_RESIZE_STOP, handleResizeStop);
 
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_CLICK, options.onColumnHeaderClick);
-  useGridApiEventHandler(
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_CLICK, options.onColumnHeaderClick);
+  useGridApiOptionHandler(
     apiRef,
     GRID_COLUMN_HEADER_DOUBLE_CLICK,
     options.onColumnHeaderDoubleClick,
   );
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_OVER, options.onColumnHeaderOver);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_OUT, options.onColumnHeaderOut);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_ENTER, options.onColumnHeaderEnter);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_LEAVE, options.onColumnHeaderLeave);
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_OVER, options.onColumnHeaderOver);
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_OUT, options.onColumnHeaderOut);
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_ENTER, options.onColumnHeaderEnter);
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_LEAVE, options.onColumnHeaderLeave);
 
-  useGridApiEventHandler(apiRef, GRID_CELL_CLICK, options.onCellClick);
-  useGridApiEventHandler(apiRef, GRID_CELL_DOUBLE_CLICK, options.onCellDoubleClick);
-  useGridApiEventHandler(apiRef, GRID_CELL_OVER, options.onCellOver);
-  useGridApiEventHandler(apiRef, GRID_CELL_OUT, options.onCellOut);
-  useGridApiEventHandler(apiRef, GRID_CELL_ENTER, options.onCellEnter);
-  useGridApiEventHandler(apiRef, GRID_CELL_LEAVE, options.onCellLeave);
+  useGridApiOptionHandler(apiRef, GRID_CELL_CLICK, options.onCellClick);
+  useGridApiOptionHandler(apiRef, GRID_CELL_DOUBLE_CLICK, options.onCellDoubleClick);
+  useGridApiOptionHandler(apiRef, GRID_CELL_OVER, options.onCellOver);
+  useGridApiOptionHandler(apiRef, GRID_CELL_OUT, options.onCellOut);
+  useGridApiOptionHandler(apiRef, GRID_CELL_ENTER, options.onCellEnter);
+  useGridApiOptionHandler(apiRef, GRID_CELL_LEAVE, options.onCellLeave);
+  useGridApiOptionHandler(apiRef, GRID_CELL_KEYDOWN, options.onCellKeyDown);
+  useGridApiOptionHandler(apiRef, GRID_CELL_BLUR, options.onCellBlur);
 
-  useGridApiEventHandler(apiRef, GRID_ROW_DOUBLE_CLICK, options.onRowDoubleClick);
-  useGridApiEventHandler(apiRef, GRID_ROW_CLICK, options.onRowClick);
-  useGridApiEventHandler(apiRef, GRID_ROW_OVER, options.onRowOver);
-  useGridApiEventHandler(apiRef, GRID_ROW_OUT, options.onRowOut);
-  useGridApiEventHandler(apiRef, GRID_ROW_ENTER, options.onRowEnter);
-  useGridApiEventHandler(apiRef, GRID_ROW_LEAVE, options.onRowLeave);
+  useGridApiOptionHandler(apiRef, GRID_ROW_DOUBLE_CLICK, options.onRowDoubleClick);
+  useGridApiOptionHandler(apiRef, GRID_ROW_CLICK, options.onRowClick);
+  useGridApiOptionHandler(apiRef, GRID_ROW_OVER, options.onRowOver);
+  useGridApiOptionHandler(apiRef, GRID_ROW_OUT, options.onRowOut);
+  useGridApiOptionHandler(apiRef, GRID_ROW_ENTER, options.onRowEnter);
+  useGridApiOptionHandler(apiRef, GRID_ROW_LEAVE, options.onRowLeave);
 
-  useGridApiEventHandler(apiRef, GRID_COMPONENT_ERROR, options.onError);
-  useGridApiEventHandler(apiRef, GRID_STATE_CHANGE, options.onStateChange);
+  useGridApiOptionHandler(apiRef, GRID_COMPONENT_ERROR, options.onError);
+  useGridApiOptionHandler(apiRef, GRID_STATE_CHANGE, options.onStateChange);
 
   React.useEffect(() => {
     if (gridRootRef && gridRootRef.current && apiRef.current?.isInitialised) {

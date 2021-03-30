@@ -2,6 +2,7 @@ import { capitalize } from '@material-ui/core/utils';
 import * as React from 'react';
 import { GRID_CELL_CSS_CLASS } from '../../constants/cssClassesConstants';
 import {
+  GRID_CELL_BLUR,
   GRID_CELL_CLICK,
   GRID_CELL_DOUBLE_CLICK,
   GRID_CELL_ENTER,
@@ -66,13 +67,28 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     },
   );
 
+  const publishBlur = React.useCallback(
+    (eventName: string) => (event: React.FocusEvent<HTMLDivElement>) => {
+      // We don't trigger blur when the focus is on an element in the cell.
+      if (
+        event.relatedTarget &&
+        event.currentTarget.contains(event.relatedTarget as HTMLDivElement)
+      ) {
+        return;
+      }
+
+      const params = apiRef!.current.getCellParams(rowId, field || '');
+      apiRef!.current.publishEvent(eventName, params, event);
+    },
+    [apiRef, field, rowId],
+  );
   const publishClick = React.useCallback(
     (eventName: string) => (event: React.MouseEvent) => {
       const params = apiRef!.current.getCellParams(rowId, field || '');
+      apiRef!.current.publishEvent(eventName, params, event);
       if (params?.colDef.disableClickEventBubbling) {
         event.stopPropagation();
       }
-      apiRef!.current.publishEvent(eventName, params, event);
     },
     [apiRef, field, rowId],
   );
@@ -97,9 +113,10 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
       onMouseEnter: publish(GRID_CELL_ENTER),
       onMouseLeave: publish(GRID_CELL_LEAVE),
       onKeyDown: publish(GRID_CELL_KEYDOWN),
+      onBlur: publishBlur(GRID_CELL_BLUR),
       onFocus: publish(GRID_CELL_FOCUS),
     }),
-    [publish, publishClick],
+    [publish, publishBlur, publishClick],
   );
 
   const style = {

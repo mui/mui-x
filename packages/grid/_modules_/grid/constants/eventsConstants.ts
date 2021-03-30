@@ -20,13 +20,13 @@ export const GRID_CELL_OUT = 'cellOut';
 export const GRID_CELL_ENTER = 'cellEnter';
 export const GRID_CELL_LEAVE = 'cellLeave';
 export const GRID_CELL_KEYDOWN = 'cellKeyDown';
-export const GRID_CELL_EDIT_BLUR = 'cellEditBlur';
+export const GRID_CELL_BLUR = 'cellBlur';
 export const GRID_CELL_EDIT_PROPS_CHANGE = 'cellEditPropsChange';
 export const GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED = 'cellEditPropsChangeCommitted';
 export const GRID_CELL_VALUE_CHANGE = 'cellValueChange';
 
-export const GRID_CELL_ENTER_EDIT = 'cellEnterEdit';
-export const GRID_CELL_EXIT_EDIT = 'cellExitEdit';
+export const GRID_CELL_EDIT_ENTER = 'cellEditEnter';
+export const GRID_CELL_EDIT_EXIT = 'cellEditExit';
 export const GRID_CELL_NAVIGATION_KEYDOWN = 'cellNavigationKeyDown';
 export const GRID_CELL_FOCUS = 'cellCellFocus';
 

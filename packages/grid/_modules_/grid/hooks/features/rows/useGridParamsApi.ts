@@ -79,7 +79,6 @@ export function useGridParamsApi(apiRef: GridApiRef) {
   const getCellParams = React.useCallback(
     (id: GridRowId, field: string) => {
       const colDef = apiRef.current.getColumnFromField(field);
-      const element = apiRef.current.getCellElement(id, field);
       const value = apiRef.current.getCellValue(id, field);
       const baseParams = getBaseCellParams(id, field);
       const params: GridCellParams = {
@@ -91,11 +90,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
       if (colDef.valueFormatter) {
         params.formattedValue = colDef.valueFormatter(params);
       }
-      const isEditableAttr = element && element.getAttribute('data-editable');
-      params.isEditable =
-        isEditableAttr != null
-          ? isEditableAttr === 'true'
-          : colDef && apiRef.current.isCellEditable(params);
+      params.isEditable = colDef && apiRef.current.isCellEditable(params);
 
       return params;
     },

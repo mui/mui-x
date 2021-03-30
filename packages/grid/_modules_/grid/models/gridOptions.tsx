@@ -183,7 +183,7 @@ export interface GridOptions {
    * Callback fired when the edit cell value changed.
    * @param handler
    */
-  onEditCellChange?: (params: GridEditCellPropsParams) => void;
+  onEditCellChange?: (params: GridEditCellPropsParams, event?: React.SyntheticEvent) => void;
   /**
    * Callback fired when the cell changes are committed.
    * @param handler
@@ -202,6 +202,12 @@ export interface GridOptions {
    */
   onError?: (args: any) => void;
   /**
+   * Callback fired when the active element leaves a cell.
+   * @param param With all properties from [[GridCellParams]].
+   * @param event [[React.MouseEvent]].
+   */
+  onCellBlur?: (param: GridCellParams, event: React.SyntheticEvent) => void;
+  /**
    * Callback fired when a click event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
    * @param event [[React.MouseEvent]].
@@ -213,6 +219,12 @@ export interface GridOptions {
    * @param event [[React.MouseEvent]].
    */
   onCellDoubleClick?: (param: GridCellParams, event: React.MouseEvent) => void;
+  /**
+   * Callback fired when a keydown event comes from a cell element.
+   * @param param With all properties from [[GridCellParams]].
+   * @param event [[React.KeyboardEvent]].
+   */
+  onCellKeyDown?: (param: GridCellParams, event: React.KeyboardEvent) => void;
   /**
    * Callback fired when a mouseover event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
