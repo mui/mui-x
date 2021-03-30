@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { DataGrid, GridColumns, GridRowsProp } from '@material-ui/data-grid';
+import { DataGrid } from '@material-ui/data-grid';
 import { randomCreatedDate, randomTraderName, randomUpdatedDate } from '@material-ui/x-grid-data-generator';
 
 const columns = [
-  { field: 'name', width: 180,  editable: true },
-  { field: 'age', type: 'number', editable: true },
+  { field: 'name', headerName:'Name', width: 180,  editable: true },
+  { field: 'age', headerName:'Age', type: 'number', editable: true },
   { field: 'dateCreated', headerName:'Date Created', type: 'date', width: 180, editable: true },
   { field: 'lastLogin',  headerName:'Last Login', type: 'dateTime', width: 220, editable: true },
 ];
@@ -54,7 +54,6 @@ const rows = [
 ];
 
 export default function BasicEditingGrid() {
-
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid

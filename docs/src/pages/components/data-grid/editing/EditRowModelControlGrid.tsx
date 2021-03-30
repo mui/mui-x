@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridColumns, GridRowsProp } from '@material-ui/data-grid';
+import { DataGrid, GridColumns, GridEditRowModelParams, GridRowsProp } from '@material-ui/data-grid';
 import { randomCreatedDate, randomTraderName, randomUpdatedDate } from '@material-ui/x-grid-data-generator';
 
 const columns: GridColumns = [
@@ -54,11 +54,22 @@ const rows: GridRowsProp = [
   },
 ];
 
-export default function BasicEditingGrid() {
+export default function EditRowModelControlGrid() {
+  const [editRowsModel, setEditRowsModel] = React.useState({});
+
+  const handleEditRowModelChange = React.useCallback((params: GridEditRowModelParams) => {
+    setEditRowsModel(params.model);
+  }, []);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} />
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        editRowsModel={editRowsModel}
+        onEditRowModelChange={handleEditRowModelChange}
+      />
+      <code>{JSON.stringify(editRowsModel)}</code>
     </div>
   );
 }

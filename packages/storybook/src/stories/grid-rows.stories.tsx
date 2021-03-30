@@ -870,8 +870,8 @@ export function EditCellWithMessageGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid {...baselineEditProps} apiRef={apiRef} autoHeight />
       {message && <Alert severity="info">{message}</Alert>}
+      <XGrid {...baselineEditProps} apiRef={apiRef} autoHeight />
     </div>
   );
 }
