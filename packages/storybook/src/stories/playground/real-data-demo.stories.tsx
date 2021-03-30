@@ -43,7 +43,7 @@ export default {
       defaultValue: 2000,
       control: {
         type: 'select',
-        options: [100, 500, 1000, 2000, 5000, 8000, 10000, 50000, 100000, 500000],
+        options: [10, 50, 100, 500, 1000, 2000, 5000, 8000, 10000, 50000, 100000, 500000],
       },
     },
     multipleGrid: {
