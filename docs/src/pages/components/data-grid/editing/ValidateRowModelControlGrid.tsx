@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  DataGrid, GridColumns, GridEditCellPropsParams,
+  DataGrid,
+  GridColumns,
+  GridEditCellPropsParams,
   GridEditRowsModel,
   GridRowsProp,
 } from '@material-ui/data-grid';
@@ -13,10 +15,22 @@ import {
 } from '@material-ui/x-grid-data-generator';
 
 const columns: GridColumns = [
-  { field: 'name', headerName:'Name', width: 180,  editable: true },
-  { field: 'email', headerName:'Email', width: 200, editable: true },
-  { field: 'dateCreated', headerName:'Date Created', type: 'date', width: 180, editable: true },
-  { field: 'lastLogin',  headerName:'Last Login', type: 'dateTime', width: 220, editable: true },
+  { field: 'name', headerName: 'Name', width: 180, editable: true },
+  { field: 'email', headerName: 'Email', width: 200, editable: true },
+  {
+    field: 'dateCreated',
+    headerName: 'Date Created',
+    type: 'date',
+    width: 180,
+    editable: true,
+  },
+  {
+    field: 'lastLogin',
+    headerName: 'Last Login',
+    type: 'dateTime',
+    width: 220,
+    editable: true,
+  },
 ];
 
 const rows: GridRowsProp = [
@@ -29,35 +43,35 @@ const rows: GridRowsProp = [
   },
   {
     id: 2,
-    name:  randomTraderName(),
+    name: randomTraderName(),
     email: randomEmail(),
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
   },
   {
     id: 3,
-    name:  randomTraderName(),
+    name: randomTraderName(),
     email: randomEmail(),
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
   },
   {
     id: 4,
-    name:  randomTraderName(),
+    name: randomTraderName(),
     email: randomEmail(),
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
   },
   {
     id: 5,
-    name:  randomTraderName(),
+    name: randomTraderName(),
     email: randomEmail(),
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
   },
   {
     id: 6,
-    name:  randomTraderName(),
+    name: randomTraderName(),
     email: randomEmail(),
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),

@@ -16,9 +16,12 @@ To activate editing on cells, set the `editable` property of the column definiti
 ```tsx
 <DataGrid columns={[{ field: 'name', editable: true }]} />
 ```
+
 ### Start Editing
+
 By default, a cell can turn into edit mode by double-clicking on it, or using the keyboard shortcuts.
 If the cell has focus.
+
 - Start typing any alpha keys
 - Press <kbd class="key">Enter</kbd> to switch to edit mode
 - Press <kbd class="key">Delete</kbd> to delete the value
@@ -42,8 +45,8 @@ To make it more visible, we applied a green background on the editable cells.
 {{"demo": "pages/components/data-grid/editing/IsCellEditableGrid.js", "bg": "inline"}}
 
 ### Control editing
-{{"demo": "pages/components/data-grid/editing/EditRowModelControlGrid.js", "bg": "inline"}}
 
+{{"demo": "pages/components/data-grid/editing/EditRowModelControlGrid.js", "bg": "inline"}}
 
 ### Validating new values
 
@@ -60,12 +63,11 @@ If you purchase XGrid, then it might be quicker to use `apiRef` to do that.
 #### Save server side with error handling
 
 ### Override native behaviour
+
 You can edit on click...
 Or with an external button
 
 ### Intercept Events
-
-
 
 ## 🚧 Row editing
 

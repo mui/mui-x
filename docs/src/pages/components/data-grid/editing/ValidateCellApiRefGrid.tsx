@@ -2,8 +2,10 @@ import { XGrid } from '@material-ui/x-grid';
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-   GridColumns, GridEditCellPropsParams,
-  GridRowsProp, useGridApiRef,
+  GridColumns,
+  GridEditCellPropsParams,
+  GridRowsProp,
+  useGridApiRef,
 } from '@material-ui/data-grid';
 import {
   randomCreatedDate,
@@ -13,10 +15,22 @@ import {
 } from '@material-ui/x-grid-data-generator';
 
 const columns: GridColumns = [
-  { field: 'name', headerName:'Name', width: 180,  editable: true },
-  { field: 'email', headerName:'Email', width: 200, editable: true },
-  { field: 'dateCreated', headerName:'Date Created', type: 'date', width: 180, editable: true },
-  { field: 'lastLogin',  headerName:'Last Login', type: 'dateTime', width: 220, editable: true },
+  { field: 'name', headerName: 'Name', width: 180, editable: true },
+  { field: 'email', headerName: 'Email', width: 200, editable: true },
+  {
+    field: 'dateCreated',
+    headerName: 'Date Created',
+    type: 'date',
+    width: 180,
+    editable: true,
+  },
+  {
+    field: 'lastLogin',
+    headerName: 'Last Login',
+    type: 'dateTime',
+    width: 220,
+    editable: true,
+  },
 ];
 
 const rows: GridRowsProp = [
@@ -29,35 +43,35 @@ const rows: GridRowsProp = [
   },
   {
     id: 2,
-    name:  randomTraderName(),
+    name: randomTraderName(),
     email: randomEmail(),
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
   },
   {
     id: 3,
-    name:  randomTraderName(),
+    name: randomTraderName(),
     email: randomEmail(),
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
   },
   {
     id: 4,
-    name:  randomTraderName(),
+    name: randomTraderName(),
     email: randomEmail(),
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
   },
   {
     id: 5,
-    name:  randomTraderName(),
+    name: randomTraderName(),
     email: randomEmail(),
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
   },
   {
     id: 6,
-    name:  randomTraderName(),
+    name: randomTraderName(),
     email: randomEmail(),
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
@@ -87,10 +101,17 @@ export default function ValidateCellApiRefGrid() {
   const classes = useStyles();
 
   const onEditCellChange = React.useCallback(
-    ({ id, field, props }: GridEditCellPropsParams, event?: React.SyntheticEvent) => {
+    (
+      { id, field, props }: GridEditCellPropsParams,
+      event?: React.SyntheticEvent,
+    ) => {
       if (field === 'email') {
         const isValid = validateEmail(props.value);
-        apiRef.current.setEditCellProps({ id, field, props: { ...props, error: !isValid } });
+        apiRef.current.setEditCellProps({
+          id,
+          field,
+          props: { ...props, error: !isValid },
+        });
         // Prevent the native behavior.
         event?.stopPropagation();
       }
