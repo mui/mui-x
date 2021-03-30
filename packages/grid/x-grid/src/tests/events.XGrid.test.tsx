@@ -3,6 +3,7 @@ import {
   createClientRenderStrictMode,
   // @ts-ignore
   fireEvent,
+  // @ts-ignore
   screen,
 } from 'test/utils';
 import { expect } from 'chai';
