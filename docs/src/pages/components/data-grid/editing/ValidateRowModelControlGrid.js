@@ -1,10 +1,6 @@
 import * as React from 'react';
-import {makeStyles} from '@material-ui/core/styles';
-import {
-  DataGrid,GridColumns, GridEditCellPropsParams,
-  GridEditRowsModel,
-  GridRowsProp,
-} from '@material-ui/data-grid';
+import { makeStyles } from '@material-ui/core/styles';
+import { DataGrid } from '@material-ui/data-grid';
 import {
   randomCreatedDate,
   randomEmail,
@@ -13,10 +9,22 @@ import {
 } from '@material-ui/x-grid-data-generator';
 
 const columns = [
-  { field: 'name', headerName:'Name', width: 180,  editable: true },
-  { field: 'email', headerName:'Email', width: 200, editable: true },
-  { field: 'dateCreated', headerName:'Date Created', type: 'date', width: 180, editable: true },
-  { field: 'lastLogin',  headerName:'Last Login', type: 'dateTime', width: 220, editable: true },
+  { field: 'name', headerName: 'Name', width: 180, editable: true },
+  { field: 'email', headerName: 'Email', width: 200, editable: true },
+  {
+    field: 'dateCreated',
+    headerName: 'Date Created',
+    type: 'date',
+    width: 180,
+    editable: true,
+  },
+  {
+    field: 'lastLogin',
+    headerName: 'Last Login',
+    type: 'dateTime',
+    width: 220,
+    editable: true,
+  },
 ];
 
 const rows = [
@@ -29,35 +37,35 @@ const rows = [
   },
   {
     id: 2,
-    name:  randomTraderName(),
+    name: randomTraderName(),
     email: randomEmail(),
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
   },
   {
     id: 3,
-    name:  randomTraderName(),
+    name: randomTraderName(),
     email: randomEmail(),
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
   },
   {
     id: 4,
-    name:  randomTraderName(),
+    name: randomTraderName(),
     email: randomEmail(),
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
   },
   {
     id: 5,
-    name:  randomTraderName(),
+    name: randomTraderName(),
     email: randomEmail(),
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
   },
   {
     id: 6,
-    name:  randomTraderName(),
+    name: randomTraderName(),
     email: randomEmail(),
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
@@ -95,6 +103,7 @@ export default function ValidateRowModelControlGrid() {
           ...editRowsModel[id],
           email: { ...props, error: !isValid },
         };
+
         setEditRowsModel((state) => ({ ...state, ...newState }));
       }
     },
