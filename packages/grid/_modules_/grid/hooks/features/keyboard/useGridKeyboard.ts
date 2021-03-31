@@ -32,7 +32,7 @@ import { useGridState } from '../core/useGridState';
 import { useLogger } from '../../utils/useLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { gridSelectionStateSelector } from '../selection/gridSelectionSelector';
-import { KeyboardState } from './keyboardState';
+import { GridKeyboardState } from './gridKeyboardState';
 
 export const useGridKeyboard = (
   gridRootRef: React.RefObject<HTMLDivElement>,
@@ -50,7 +50,10 @@ export const useGridKeyboard = (
         }
 
         logger.debug(`Toggling keyboard multiple key pressed to ${isPressed}`);
-        const keyboardState: KeyboardState = { ...state.keyboard, isMultipleKeyPressed: isPressed };
+        const keyboardState: GridKeyboardState = {
+          ...state.keyboard,
+          isMultipleKeyPressed: isPressed,
+        };
         return { ...state, keyboard: keyboardState };
       });
 

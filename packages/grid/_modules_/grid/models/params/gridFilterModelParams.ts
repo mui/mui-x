@@ -1,4 +1,4 @@
-import { FilterModel } from '../../hooks/features/filter/FilterModelState';
+import { GridFilterModel } from '../../hooks/features/filter/gridFilterModelState';
 import { GridColumns } from '../colDef/gridColDef';
 import { GridRowModel } from '../gridRows';
 
@@ -9,7 +9,7 @@ export interface GridFilterModelParams {
   /**
    * The filter model.
    */
-  filterModel: FilterModel;
+  filterModel: GridFilterModel;
   /**
    * The full set of columns.
    */

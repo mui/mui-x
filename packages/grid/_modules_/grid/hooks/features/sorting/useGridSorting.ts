@@ -25,7 +25,7 @@ import {
 } from '../../../models/gridSortModel';
 import { isDesc, nextGridSortDirection } from '../../../utils/sortingUtils';
 import { isDeepEqual } from '../../../utils/utils';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
@@ -266,7 +266,7 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   useGridApiEventHandler(apiRef, GRID_COLUMNS_UPDATED, onColUpdated);
   useGridApiEventHandler(apiRef, GRID_MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
 
-  useGridApiEventHandler(apiRef, GRID_SORT_MODEL_CHANGE, options.onSortModelChange);
+  useGridApiOptionHandler(apiRef, GRID_SORT_MODEL_CHANGE, options.onSortModelChange);
 
   const sortApi: GridSortApi = {
     getSortModel,

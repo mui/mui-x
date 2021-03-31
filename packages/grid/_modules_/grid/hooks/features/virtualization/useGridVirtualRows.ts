@@ -18,7 +18,7 @@ import {
 } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
-import { PaginationState } from '../pagination/gridPaginationReducer';
+import { GridPaginationState } from '../pagination/gridPaginationReducer';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
@@ -42,7 +42,7 @@ export const useGridVirtualRows = (
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
-  const paginationState = useGridSelector<PaginationState>(apiRef, gridPaginationSelector);
+  const paginationState = useGridSelector<GridPaginationState>(apiRef, gridPaginationSelector);
   const totalRowCount = useGridSelector<number>(apiRef, gridRowCountSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);

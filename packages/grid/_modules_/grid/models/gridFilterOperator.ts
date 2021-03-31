@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FilterInputValueProps } from '../components/panel/filterPanel/FilterInputValueProps';
+import { GridFilterInputValueProps } from '../components/panel/filterPanel/GridFilterInputValueProps';
 import { GridFilterItem } from './gridFilterItem';
 import { GridCellParams } from './params/gridCellParams';
 
@@ -10,6 +10,6 @@ export interface GridFilterOperator {
     filterItem: GridFilterItem,
     column: any,
   ) => null | ((params: GridCellParams) => boolean);
-  InputComponent: React.ComponentType<FilterInputValueProps>;
+  InputComponent: React.ComponentType<GridFilterInputValueProps>;
   InputComponentProps?: Record<string, any>;
 }

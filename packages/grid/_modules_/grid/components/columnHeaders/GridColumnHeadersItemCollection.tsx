@@ -3,7 +3,7 @@ import { GRID_COL_RESIZE_START, GRID_COL_RESIZE_STOP } from '../../constants/eve
 import { gridColumnReorderDragColSelector } from '../../hooks/features/columnReorder/columnReorderSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { filterGridColumnLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
-import { gridKeyboardColumnHeaderSelector } from '../../hooks/features/keyboard/keyboardSelector';
+import { gridKeyboardColumnHeaderSelector } from '../../hooks/features/keyboard/gridKeyboardSelector';
 import { gridSortColumnLookupSelector } from '../../hooks/features/sorting/gridSortingSelector';
 import { useGridApiEventHandler } from '../../hooks/root/useGridApiEventHandler';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';

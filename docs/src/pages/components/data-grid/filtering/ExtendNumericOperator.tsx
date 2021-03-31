@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Rating } from '@material-ui/lab';
 import {
   DataGrid,
-  FilterInputValueProps,
+  GridFilterInputValueProps,
   getGridNumericColumnOperators,
   GridPreferencePanelsValue,
 } from '@material-ui/data-grid';
@@ -19,7 +19,7 @@ const useStyles = makeStyles({
   },
 });
 
-function RatingInputValue(props: FilterInputValueProps) {
+function RatingInputValue(props: GridFilterInputValueProps) {
   const classes = useStyles();
   const { item, applyValue } = props;
 

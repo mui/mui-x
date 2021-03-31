@@ -4,7 +4,7 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridSelector } from '../core/useGridSelector';
 import { GRID_ROWS_SCROLL, GRID_ROWS_SCROLL_END } from '../../../constants/eventsConstants';
 import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndParams';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
 
@@ -43,5 +43,5 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
   }, [options, containerSizes, apiRef, visibleColumns]);
 
   useGridApiEventHandler(apiRef, GRID_ROWS_SCROLL, handleGridScroll);
-  useGridApiEventHandler(apiRef, GRID_ROWS_SCROLL_END, options.onRowsScrollEnd);
+  useGridApiOptionHandler(apiRef, GRID_ROWS_SCROLL_END, options.onRowsScrollEnd);
 };

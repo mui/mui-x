@@ -3,7 +3,7 @@ import {
   GridColumnHeaderIndexCoordinates,
 } from '../../../models/gridCell';
 
-export interface KeyboardState {
+export interface GridKeyboardState {
   cell: GridCellIndexCoordinates | null;
   columnHeader: GridColumnHeaderIndexCoordinates | null;
   isMultipleKeyPressed: boolean;

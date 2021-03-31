@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { useFakeTimers } from 'sinon';
 import {
   GridApiRef,
-  FilterModel,
+  GridFilterModel,
   GridComponentProps,
   GridLinkOperator,
   GridPreferencePanelsValue,
@@ -178,7 +178,7 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should allow multiple filter and changing the linkOperator', () => {
-    const newModel: FilterModel = {
+    const newModel: GridFilterModel = {
       items: [
         {
           columnField: 'brand',
@@ -198,7 +198,7 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should only select visible rows', () => {
-    const newModel: FilterModel = {
+    const newModel: GridFilterModel = {
       items: [
         {
           columnField: 'brand',
@@ -215,7 +215,7 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should allow to clear filters by passing an empty filter model', () => {
-    const newModel: FilterModel = {
+    const newModel: GridFilterModel = {
       items: [
         {
           columnField: 'brand',

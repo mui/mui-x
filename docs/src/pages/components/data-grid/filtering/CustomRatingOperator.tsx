@@ -2,7 +2,7 @@ import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Rating } from '@material-ui/lab';
 import {
-  FilterInputValueProps,
+  GridFilterInputValueProps,
   GridPreferencePanelsValue,
   DataGrid,
   GridFilterItem,
@@ -20,7 +20,7 @@ const useStyles = makeStyles({
   },
 });
 
-function RatingInputValue(props: FilterInputValueProps) {
+function RatingInputValue(props: GridFilterInputValueProps) {
   const classes = useStyles();
   const { item, applyValue } = props;
 

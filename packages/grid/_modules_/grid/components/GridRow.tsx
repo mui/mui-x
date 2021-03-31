@@ -14,14 +14,20 @@ import { gridDensityRowHeightSelector } from '../hooks/features/density';
 import { GridApiContext } from './GridApiContext';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 
-export interface RowProps {
+export interface GridRowProps {
   id: GridRowId;
   selected: boolean;
   className: string;
   rowIndex: number;
 }
 
-export const GridRow: React.FC<RowProps> = ({ selected, id, className, rowIndex, children }) => {
+export const GridRow: React.FC<GridRowProps> = ({
+  selected,
+  id,
+  className,
+  rowIndex,
+  children,
+}) => {
   const ariaRowIndex = rowIndex + 2; // 1 for the header row and 1 as it's 1 based
   const apiRef = React.useContext(GridApiContext);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);

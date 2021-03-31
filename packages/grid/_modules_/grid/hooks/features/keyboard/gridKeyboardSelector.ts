@@ -4,22 +4,23 @@ import {
   GridColumnHeaderIndexCoordinates,
 } from '../../../models/gridCell';
 import { GridState } from '../core/gridState';
-import { KeyboardState } from './keyboardState';
+import { GridKeyboardState } from './gridKeyboardState';
 
 export const gridKeyboardStateSelector = (state: GridState) => state.keyboard;
 export const gridKeyboardCellSelector = createSelector<
   GridState,
-  KeyboardState,
+  GridKeyboardState,
   GridCellIndexCoordinates | null
->(gridKeyboardStateSelector, (keyboard: KeyboardState) => keyboard.cell);
+>(gridKeyboardStateSelector, (keyboard: GridKeyboardState) => keyboard.cell);
 
 export const gridKeyboardColumnHeaderSelector = createSelector<
   GridState,
-  KeyboardState,
+  GridKeyboardState,
   GridColumnHeaderIndexCoordinates | null
->(gridKeyboardStateSelector, (keyboard: KeyboardState) => keyboard.columnHeader);
+>(gridKeyboardStateSelector, (keyboard: GridKeyboardState) => keyboard.columnHeader);
 
-export const gridKeyboardMultipleKeySelector = createSelector<GridState, KeyboardState, boolean>(
-  gridKeyboardStateSelector,
-  (keyboard: KeyboardState) => keyboard.isMultipleKeyPressed,
-);
+export const gridKeyboardMultipleKeySelector = createSelector<
+  GridState,
+  GridKeyboardState,
+  boolean
+>(gridKeyboardStateSelector, (keyboard: GridKeyboardState) => keyboard.isMultipleKeyPressed);

@@ -4,9 +4,9 @@ import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { GridPreferencePanelsValue } from '../../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { optionsSelector } from '../../../hooks/utils/optionsSelector';
 import { GridApiContext } from '../../GridApiContext';
-import { FilterItemProps } from './FilterItemProps';
+import { GridFilterItemProps } from './GridFilterItemProps';
 
-export const GridColumnsMenuItem: React.FC<FilterItemProps> = ({ onClick }) => {
+export const GridColumnsMenuItem: React.FC<GridFilterItemProps> = ({ onClick }) => {
   const apiRef = React.useContext(GridApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
 

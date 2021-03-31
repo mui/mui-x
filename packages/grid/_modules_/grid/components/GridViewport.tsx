@@ -3,7 +3,7 @@ import { visibleGridColumnsSelector } from '../hooks/features/columns/gridColumn
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
 import { visibleSortedGridRowsSelector } from '../hooks/features/filter/gridFilterSelector';
-import { gridKeyboardCellSelector } from '../hooks/features/keyboard/keyboardSelector';
+import { gridKeyboardCellSelector } from '../hooks/features/keyboard/gridKeyboardSelector';
 import { gridSelectionStateSelector } from '../hooks/features/selection/gridSelectionSelector';
 import { renderStateSelector } from '../hooks/features/virtualization/renderingStateSelector';
 import { optionsSelector } from '../hooks/utils/optionsSelector';
