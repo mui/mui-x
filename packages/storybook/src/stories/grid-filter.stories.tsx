@@ -6,9 +6,9 @@ import Rating from '@material-ui/lab/Rating';
 import {
   GridColDef,
   GridColTypeDef,
-  FilterInputValueProps,
+  GridFilterInputValueProps,
   GridFilterItem,
-  FilterModel,
+  GridFilterModel,
   GridFilterModelParams,
   getGridNumericColumnOperators,
   GridLinkOperator,
@@ -221,7 +221,7 @@ export function CommodityNoToolbar() {
 export function ServerFilterViaProps() {
   const demoServer = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
   const [rows, setRows] = React.useState<GridRowModel[]>(demoServer.data.rows);
-  const [filterModel, setFilterModel] = React.useState<FilterModel>({
+  const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
     items: [{ id: 123, columnField: 'commodity', value: 'soy', operatorValue: 'contains' }],
   });
   const [loading, setLoading] = React.useState(false);
@@ -391,7 +391,7 @@ const useStyles = makeStyles({
   },
 });
 
-function RatingInputValue(props: FilterInputValueProps) {
+function RatingInputValue(props: GridFilterInputValueProps) {
   const classes = useStyles();
   const { item, applyValue } = props;
 
@@ -623,7 +623,7 @@ export function DemoCustomRatingFilterOperator() {
   );
 }
 
-const demoFilterModel: FilterModel = {
+const demoFilterModel: GridFilterModel = {
   items: [
     { id: 123, columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
     { id: 12, columnField: 'quantity', operatorValue: '>=', value: '20000' },

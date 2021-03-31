@@ -18,7 +18,7 @@ import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
-import { gridKeyboardMultipleKeySelector } from '../keyboard/keyboardSelector';
+import { gridKeyboardMultipleKeySelector } from '../keyboard/gridKeyboardSelector';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { GridSelectionState } from './gridSelectionState';
 

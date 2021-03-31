@@ -5,7 +5,7 @@ import { GridIconSlotsComponent } from '../../models/gridIconSlotsComponent';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { GridApiContext } from '../GridApiContext';
 
-export interface ColumnHeaderSortIconProps {
+export interface GridColumnHeaderSortIconProps {
   direction: GridSortDirection;
   index: number | undefined;
   hide?: boolean;
@@ -18,7 +18,7 @@ function getIcon(icons: GridIconSlotsComponent, direction: GridSortDirection) {
 }
 
 export const GridColumnHeaderSortIcon = React.memo(function GridColumnHeaderSortIcon(
-  props: ColumnHeaderSortIconProps,
+  props: GridColumnHeaderSortIconProps,
 ) {
   const { direction, index, hide } = props;
   const apiRef = React.useContext(GridApiContext);

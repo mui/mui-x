@@ -111,7 +111,7 @@ The default operator that will be applied between filters is an And.
 To change the default operator, you should set the 'linkOperator' property of the filterModel like below.
 
 ```ts
-const filterModel: FilterModel = {
+const filterModel: GridFilterModel = {
   items: [
     { columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
     { columnField: 'commodity', operatorValue: 'startsWith', value: 'Soy' },

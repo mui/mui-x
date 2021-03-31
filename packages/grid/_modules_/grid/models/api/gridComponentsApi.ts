@@ -54,7 +54,7 @@ export interface GridApiRefComponentsProperty extends GridIconSlotsComponent {
   Panel: React.ElementType;
 }
 
-export interface ComponentsApi {
+export interface GridComponentsApi {
   /**
    * The set of overridable components used in the grid.
    */

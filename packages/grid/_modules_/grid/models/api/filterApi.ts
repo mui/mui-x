@@ -1,4 +1,4 @@
-import { FilterModel } from '../../hooks/features/filter/FilterModelState';
+import { GridFilterModel } from '../../hooks/features/filter/gridFilterModelState';
 import { GridFilterItem, GridLinkOperator } from '../gridFilterItem';
 import { GridRowModel } from '../gridRows';
 import { GridFilterModelParams } from '../params/gridFilterModelParams';
@@ -12,6 +12,6 @@ export interface FilterApi {
   deleteFilter: (item: GridFilterItem) => void;
   applyFilterLinkOperator: (operator: GridLinkOperator) => void;
   onFilterModelChange: (handler: (params: GridFilterModelParams) => void) => void;
-  setFilterModel: (model: FilterModel) => void;
+  setFilterModel: (model: GridFilterModel) => void;
   getVisibleRowModels: () => GridRowModel[];
 }

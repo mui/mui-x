@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GRID_DEFAULT_LOCALE_TEXT } from '../constants/localeTextConstants';
-import { FilterModel } from '../hooks/features/filter/FilterModelState';
+import { GridFilterModel } from '../hooks/features/filter/gridFilterModelState';
 import { Logger } from '../hooks/utils/useLogger';
 import { GridLocaleText } from './api/gridLocaleTextApi';
 import { GridColumnTypesRecord } from './colDef/gridColTypeDef';
@@ -133,7 +133,7 @@ export interface GridOptions {
   /**
    * Set the filter model of the grid.
    */
-  filterModel?: FilterModel;
+  filterModel?: GridFilterModel;
   /**
    * Set the height in pixel of the column headers in the grid.
    * @default 56
