@@ -105,10 +105,11 @@ export const useGridKeyboard = (
 
       const nextCellIndexes = apiRef.current.getState().keyboard.cell!;
       // We select the rows in between
-      const nextRowIndex = nextCellIndexes.rowIndex === null ? 0 : params.rowIndex;
-      const rowIds = Array(Math.abs(nextRowIndex - selectionFromRowIndex) + 1)
-        .fill(nextRowIndex > selectionFromRowIndex ? selectionFromRowIndex : nextRowIndex)
-        .map((cur, idx) => apiRef.current.getRowIdFromRowIndex(cur + idx));
+      const rowIds = Array(Math.abs(nextCellIndexes.rowIndex - selectionFromRowIndex) + 1).fill(
+        nextCellIndexes.rowIndex > selectionFromRowIndex
+          ? selectionFromRowIndex
+          : nextCellIndexes.rowIndex,
+      );
 
       logger.debug('Selecting rows ');
 
