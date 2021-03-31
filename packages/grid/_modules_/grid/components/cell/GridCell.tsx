@@ -135,7 +135,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     ) {
       cellRef.current!.focus();
     }
-  });
+  }, [hasFocus]);
 
   return (
     <div
