@@ -16,7 +16,7 @@ import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { GridColParams } from '../../../models/params/gridColParams';
 import { GridSortModelParams } from '../../../models/params/gridSortModelParams';
-import { GridRowModel, GridRowsProp } from '../../../models/gridRows';
+import { GridRowId, GridRowModel, GridRowsProp } from '../../../models/gridRows';
 import {
   GridFieldComparatorList,
   GridSortItem,
@@ -33,6 +33,7 @@ import { allGridColumnsSelector, visibleGridColumnsSelector } from '../columns/g
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
+import { sortedGridRowIdsSelector, sortedGridRowsSelector } from './gridSortingSelector';
 
 export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   const logger = useLogger('useGridSorting');
@@ -225,6 +226,16 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
     gridState.sorting.sortModel,
   ]);
 
+  const getSortedRows = React.useCallback(
+    (): GridRowModel[] => sortedGridRowsSelector(apiRef.current.state),
+    [apiRef],
+  );
+
+  const getSortedRowIds = React.useCallback(
+    (): GridRowId[] => sortedGridRowIdsSelector(apiRef.current.state),
+    [apiRef],
+  );
+
   const onMultipleKeyPressed = React.useCallback(
     (isPressed: boolean) => {
       allowMultipleSorting.current = !options.disableMultipleColumnsSorting && isPressed;
@@ -270,6 +281,8 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
 
   const sortApi: GridSortApi = {
     getSortModel,
+    getSortedRows,
+    getSortedRowIds,
     setSortModel,
     sortColumn,
     onSortModelChange,

@@ -35,19 +35,11 @@ export const useGridContainerProps = (
 
   const getVirtualRowCount = React.useCallback(() => {
     logger.debug('Calculating virtual row count.');
-    const currentPage = paginationState.page;
-    let pageRowCount =
-      options.pagination && paginationState.pageSize ? paginationState.pageSize : null;
-
-    pageRowCount =
-      !pageRowCount || currentPage * pageRowCount <= visibleRowsCount
-        ? pageRowCount
-        : visibleRowsCount - (currentPage - 1) * pageRowCount;
-
-    const virtRowsCount =
-      pageRowCount == null || pageRowCount > visibleRowsCount ? visibleRowsCount : pageRowCount;
-
-    return virtRowsCount;
+    if (options.pagination) {
+      const rowsLeft = visibleRowsCount - paginationState.page * paginationState.pageSize;
+      return rowsLeft > paginationState.pageSize ? paginationState.pageSize : rowsLeft;
+    }
+    return visibleRowsCount;
   }, [
     logger,
     options.pagination,

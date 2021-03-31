@@ -87,11 +87,21 @@ export const useGridRows = (
   }, [getRowIdProp, rows, setGridState]);
 
   const getRowIndexFromId = React.useCallback(
-    (id: GridRowId): number => apiRef.current.state.rows.allRows.indexOf(id),
+    (id: GridRowId): number => {
+      if (apiRef.current.getSortedRowIds) {
+        return apiRef.current.getSortedRowIds().indexOf(id);
+      }
+      return apiRef.current.state.rows.allRows.indexOf(id);
+    },
     [apiRef],
   );
   const getRowIdFromRowIndex = React.useCallback(
-    (index: number): GridRowId => apiRef.current.state.rows.allRows[index],
+    (index: number): GridRowId => {
+      if (apiRef.current.getSortedRowIds) {
+        return apiRef.current.getSortedRowIds()[index];
+      }
+      return apiRef.current.state.rows.allRows[index];
+    },
     [apiRef],
   );
   const getRowFromId = React.useCallback(
