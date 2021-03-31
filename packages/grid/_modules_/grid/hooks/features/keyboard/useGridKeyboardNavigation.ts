@@ -1,8 +1,16 @@
 import * as React from 'react';
-import { GRID_CELL_FOCUS, GRID_CELL_NAVIGATION_KEYDOWN } from '../../../constants/eventsConstants';
+import {
+  GRID_CELL_FOCUS,
+  GRID_CELL_NAVIGATION_KEYDOWN,
+  GRID_COLUMN_HEADER_FOCUS,
+  GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN,
+} from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridNavigationApi } from '../../../models/api/gridNavigationApi';
-import { GridCellIndexCoordinates } from '../../../models/gridCell';
+import {
+  GridCellIndexCoordinates,
+  GridColumnHeaderIndexCoordinates,
+} from '../../../models/gridCell';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import {
   isArrowKeys,
@@ -30,28 +38,32 @@ const getNextCellIndexes = (key: string, indexes: GridCellIndexCoordinates) => {
 
   switch (key) {
     case 'ArrowLeft':
-      if (indexes.rowIndex === null) {
-        return { rowIndex: null, colIndex: indexes.colIndex - 1 };
-      }
       return { ...indexes, colIndex: indexes.colIndex - 1 };
     case 'ArrowRight':
-      if (indexes.rowIndex === null) {
-        return { rowIndex: null, colIndex: indexes.colIndex + 1 };
-      }
       return { ...indexes, colIndex: indexes.colIndex + 1 };
     case 'ArrowUp':
-      if (indexes.rowIndex === 0 || indexes.rowIndex === null) {
-        return { ...indexes, rowIndex: null };
-      }
-
       return { ...indexes, rowIndex: indexes.rowIndex - 1 };
     default:
       // Last option key === 'ArrowDown'
-      if (indexes.rowIndex === null) {
-        return { ...indexes, rowIndex: 0 };
-      }
-
       return { ...indexes, rowIndex: indexes.rowIndex + 1 };
+  }
+};
+
+const getNextColumnHeaderIndexes = (key: string, indexes: GridColumnHeaderIndexCoordinates) => {
+  if (!isArrowKeys(key)) {
+    throw new Error('Material-UI: The first argument (key) should be an arrow key code.');
+  }
+
+  switch (key) {
+    case 'ArrowLeft':
+      return { colIndex: indexes.colIndex - 1 };
+    case 'ArrowRight':
+      return { colIndex: indexes.colIndex + 1 };
+    case 'ArrowDown':
+      return null;
+    default:
+      // Last option key === 'ArrowUp'
+      return { ...indexes };
   }
 };
 
@@ -85,11 +97,9 @@ export const useGridKeyboardNavigation = (
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
       const cellEl = params.element!;
       cellEl.tabIndex = -1;
-      const rowIndex =
-        cellEl.getAttribute('data-rowindex') === null
-          ? null
-          : Number(cellEl.getAttribute('data-rowindex'));
+      const rowIndex = Number(cellEl.getAttribute('data-rowindex'));
       let rowCount = totalRowCount;
+
       if (options.pagination && totalRowCount > paginationState.pageSize) {
         rowCount = paginationState.pageSize * (paginationState.page + 1);
       }
@@ -118,13 +128,18 @@ export const useGridKeyboardNavigation = (
         }
       } else if (isPageKeys(key) || isSpaceKey(key)) {
         const nextRowIndex =
-          Number(rowIndex) +
+          rowIndex +
           (key.indexOf('Down') > -1 || isSpaceKey(key)
             ? containerSizes!.viewportPageSize
             : -1 * containerSizes!.viewportPageSize);
         nextCellIndexes = { colIndex, rowIndex: nextRowIndex };
       } else {
         throw new Error('Material-UI. Key not mapped to navigation behavior.');
+      }
+
+      if (nextCellIndexes.rowIndex < 0) {
+        apiRef.current.setColumnHeaderFocus({ colIndex: nextCellIndexes.colIndex });
+        return;
       }
 
       nextCellIndexes.rowIndex =
@@ -134,7 +149,6 @@ export const useGridKeyboardNavigation = (
       nextCellIndexes.colIndex = nextCellIndexes.colIndex <= 0 ? 0 : nextCellIndexes.colIndex;
       nextCellIndexes.colIndex =
         nextCellIndexes.colIndex >= colCount ? colCount - 1 : nextCellIndexes.colIndex;
-      console.log(nextCellIndexes)
       apiRef.current.setCellFocus(nextCellIndexes);
     },
     [
@@ -148,6 +162,44 @@ export const useGridKeyboardNavigation = (
     ],
   );
 
+  const navigateColumnHeders = React.useCallback(
+    (params: GridCellParams, event: React.KeyboardEvent) => {
+      event.preventDefault();
+      let nextColumnHeaderIndexes: GridColumnHeaderIndexCoordinates | null;
+      const { colIndex } = params;
+      const key = mapKey(event);
+      const ColumnHeaderEl = params.element!;
+      ColumnHeaderEl.tabIndex = -1;
+
+      if (isArrowKeys(key)) {
+        nextColumnHeaderIndexes = getNextColumnHeaderIndexes(key, {
+          colIndex,
+        });
+      } else if (isHomeOrEndKeys(key)) {
+        const colIdx = key === 'Home' ? 0 : colCount - 1;
+
+        nextColumnHeaderIndexes = { colIndex: colIdx };
+      } else {
+        throw new Error('Material-UI. Key not mapped to navigation behavior.');
+      }
+
+      if (!nextColumnHeaderIndexes) {
+        apiRef.current.setCellFocus({ colIndex: params.colIndex, rowIndex: 0 });
+        return;
+      }
+
+      nextColumnHeaderIndexes.colIndex =
+        nextColumnHeaderIndexes.colIndex <= 0 ? 0 : nextColumnHeaderIndexes.colIndex;
+      nextColumnHeaderIndexes.colIndex =
+        nextColumnHeaderIndexes.colIndex >= colCount
+          ? colCount - 1
+          : nextColumnHeaderIndexes.colIndex;
+
+      apiRef.current.setColumnHeaderFocus(nextColumnHeaderIndexes);
+    },
+    [apiRef, colCount],
+  );
+
   const setCellFocus = React.useCallback(
     (nextCellIndexes: GridCellIndexCoordinates) => {
       if (nextCellIndexes !== null) {
@@ -158,7 +210,28 @@ export const useGridKeyboardNavigation = (
         logger.debug(
           `Focusing on cell with rowIndex=${nextCellIndexes.rowIndex} and colIndex=${nextCellIndexes.colIndex}`,
         );
-        return { ...state, keyboard: { ...state.keyboard, cell: nextCellIndexes } };
+        return {
+          ...state,
+          keyboard: { ...state.keyboard, cell: nextCellIndexes, columnHeader: null },
+        };
+      });
+      forceUpdate();
+    },
+    [apiRef, forceUpdate, logger, setGridState],
+  );
+
+  const setColumnHeaderFocus = React.useCallback(
+    (nextColumnHeaderIndexes: GridColumnHeaderIndexCoordinates) => {
+      if (nextColumnHeaderIndexes !== null) {
+        apiRef.current.scrollToIndexes({ ...nextColumnHeaderIndexes, rowIndex: 0 });
+      }
+
+      setGridState((state) => {
+        logger.debug(`Focusing on column header with colIndex=${nextColumnHeaderIndexes.colIndex}`);
+        return {
+          ...state,
+          keyboard: { ...state.keyboard, columnHeader: nextColumnHeaderIndexes, cell: null },
+        };
       });
       forceUpdate();
     },
@@ -176,13 +249,27 @@ export const useGridKeyboardNavigation = (
     [apiRef],
   );
 
+  const handleColumnHeaderFocus = React.useCallback(
+    (params: GridCellParams, event?: React.SyntheticEvent) => {
+      if (event?.target !== event?.currentTarget) {
+        return;
+      }
+
+      apiRef.current.setColumnHeaderFocus(params);
+    },
+    [apiRef],
+  );
+
   useGridApiMethod<GridNavigationApi>(
     apiRef,
     {
       setCellFocus,
+      setColumnHeaderFocus,
     },
     'GridNavigationApi',
   );
   useGridApiEventHandler(apiRef, GRID_CELL_NAVIGATION_KEYDOWN, navigateCells);
   useGridApiEventHandler(apiRef, GRID_CELL_FOCUS, handleCellFocus);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN, navigateColumnHeders);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_FOCUS, handleColumnHeaderFocus);
 };

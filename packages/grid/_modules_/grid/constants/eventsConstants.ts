@@ -28,7 +28,7 @@ export const GRID_CELL_VALUE_CHANGE = 'cellValueChange';
 export const GRID_CELL_ENTER_EDIT = 'cellEnterEdit';
 export const GRID_CELL_EXIT_EDIT = 'cellExitEdit';
 export const GRID_CELL_NAVIGATION_KEYDOWN = 'cellNavigationKeyDown';
-export const GRID_CELL_FOCUS = 'cellCellFocus';
+export const GRID_CELL_FOCUS = 'cellFocus';
 
 export const GRID_ROW_CLICK = 'rowClick';
 export const GRID_ROW_DOUBLE_CLICK = 'rowDoubleClick';
@@ -39,6 +39,9 @@ export const GRID_ROW_LEAVE = 'rowLeave';
 export const GRID_ROW_EDIT_MODEL_CHANGE = 'editRowModelChange';
 export const GRID_ROW_SELECTED = 'rowSelected';
 
+export const GRID_COLUMN_HEADER_FOCUS = 'columnHeaderFocus';
+export const GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN = 'columnHeaderNavigationKeyDown';
+export const GRID_COLUMN_HEADER_KEYDOWN = 'columnHeaderKeyDown';
 export const GRID_COLUMN_HEADER_CLICK = 'columnHeaderClick';
 export const GRID_COLUMN_HEADER_DOUBLE_CLICK = 'columnHeaderDoubleClick';
 export const GRID_COLUMN_HEADER_OVER = 'columnHeaderOver';

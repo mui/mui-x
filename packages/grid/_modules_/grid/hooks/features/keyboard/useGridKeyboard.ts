@@ -4,10 +4,12 @@ import {
   GRID_CELL_KEYDOWN,
   GRID_CELL_NAVIGATION_KEYDOWN,
   GRID_COLUMN_HEADER_CLICK,
+  GRID_COLUMN_HEADER_KEYDOWN,
   GRID_ELEMENT_FOCUS_OUT,
   GRID_KEYDOWN,
   GRID_KEYUP,
   GRID_MULTIPLE_KEY_PRESS_CHANGED,
+  GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridCellParams } from '../../../models/params/gridCellParams';
@@ -155,10 +157,7 @@ export const useGridKeyboard = (
 
   const handleCellKeyDown = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
-      if (
-        !isGridCellRoot(document.activeElement) &&
-        !isGridHeaderCellRoot(document.activeElement)
-      ) {
+      if (!isGridCellRoot(document.activeElement)) {
         return;
       }
 
@@ -170,25 +169,6 @@ export const useGridKeyboard = (
 
       if ((isNavigationKey(event.key) && !event.shiftKey) || isTabKey(event.key)) {
         apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEYDOWN, params, event);
-        return;
-      }
-
-      // Column Header Cell specific interactions
-      if (
-        isGridHeaderCellRoot(document.activeElement) &&
-        isEnterKey(event.key) &&
-        (event.ctrlKey || event.metaKey)
-      ) {
-        apiRef!.current.toggleColumnMenu(params.field);
-        return;
-      }
-
-      if (isGridHeaderCellRoot(document.activeElement) && isEnterKey(event.key)) {
-        apiRef.current.publishEvent(
-          GRID_COLUMN_HEADER_CLICK,
-          apiRef!.current.getColumnHeaderParams(params.field),
-          event,
-        );
         return;
       }
 
@@ -211,8 +191,36 @@ export const useGridKeyboard = (
     [apiRef, expandSelection, handleCopy, selectActiveRow],
   );
 
+  const handleColumnHeaderKeyDown = React.useCallback(
+    (params: GridCellParams, event: React.KeyboardEvent) => {
+      if (!isGridHeaderCellRoot(document.activeElement)) {
+        return;
+      }
+
+      if ((isNavigationKey(event.key) && !event.shiftKey) || isTabKey(event.key)) {
+        apiRef.current.publishEvent(GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN, params, event);
+        return;
+      }
+
+      if (isEnterKey(event.key) && (event.ctrlKey || event.metaKey)) {
+        apiRef!.current.toggleColumnMenu(params.field);
+        return;
+      }
+
+      if (isEnterKey(event.key)) {
+        apiRef.current.publishEvent(
+          GRID_COLUMN_HEADER_CLICK,
+          apiRef!.current.getColumnHeaderParams(params.field),
+          event,
+        );
+      }
+    },
+    [apiRef],
+  );
+
   useGridApiEventHandler(apiRef, GRID_KEYDOWN, handleKeyDown);
   useGridApiEventHandler(apiRef, GRID_CELL_KEYDOWN, handleCellKeyDown);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_KEYDOWN, handleColumnHeaderKeyDown);
   useGridApiEventHandler(apiRef, GRID_KEYUP, handleKeyUp);
   useGridApiEventHandler(apiRef, GRID_ELEMENT_FOCUS_OUT, handleFocusOut);
 };

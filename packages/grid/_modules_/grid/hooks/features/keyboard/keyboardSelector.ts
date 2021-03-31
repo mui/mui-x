@@ -1,5 +1,8 @@
 import { createSelector } from 'reselect';
-import { GridCellIndexCoordinates } from '../../../models/gridCell';
+import {
+  GridCellIndexCoordinates,
+  GridColumnHeaderIndexCoordinates,
+} from '../../../models/gridCell';
 import { GridState } from '../core/gridState';
 import { KeyboardState } from './keyboardState';
 
@@ -9,6 +12,12 @@ export const gridKeyboardCellSelector = createSelector<
   KeyboardState,
   GridCellIndexCoordinates | null
 >(gridKeyboardStateSelector, (keyboard: KeyboardState) => keyboard.cell);
+
+export const gridKeyboardColumnHeaderSelector = createSelector<
+  GridState,
+  KeyboardState,
+  GridColumnHeaderIndexCoordinates | null
+>(gridKeyboardStateSelector, (keyboard: KeyboardState) => keyboard.columnHeader);
 
 export const gridKeyboardMultipleKeySelector = createSelector<GridState, KeyboardState, boolean>(
   gridKeyboardStateSelector,

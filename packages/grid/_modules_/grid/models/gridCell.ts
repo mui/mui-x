@@ -13,5 +13,12 @@ export type GridCellValue = string | number | boolean | Date | null | undefined 
  */
 export interface GridCellIndexCoordinates {
   colIndex: number;
-  rowIndex: number | null;
+  rowIndex: number;
+}
+
+/**
+ * The coordinates of column header represented by their row and column indexes.
+ */
+export interface GridColumnHeaderIndexCoordinates {
+  colIndex: number;
 }

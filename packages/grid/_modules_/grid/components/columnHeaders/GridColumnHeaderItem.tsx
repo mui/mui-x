@@ -1,12 +1,13 @@
 import * as React from 'react';
 import {
-  GRID_CELL_KEYDOWN,
+  GRID_COLUMN_HEADER_KEYDOWN,
   GRID_COLUMN_HEADER_CLICK,
   GRID_COLUMN_HEADER_DOUBLE_CLICK,
   GRID_COLUMN_HEADER_ENTER,
   GRID_COLUMN_HEADER_LEAVE,
   GRID_COLUMN_HEADER_OUT,
   GRID_COLUMN_HEADER_OVER,
+  GRID_COLUMN_HEADER_FOCUS,
 } from '../../constants/eventsConstants';
 import { GridColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
 import { GridOptions } from '../../models/gridOptions';
@@ -96,18 +97,13 @@ export const GridColumnHeaderItem = ({
 
   const publishClick = React.useCallback(
     (eventName: string) => (event: React.MouseEvent) => {
-      apiRef!.current.setCellFocus({
-        colIndex,
-        rowIndex: null,
-      });
-
       apiRef!.current.publishEvent(
         eventName,
         apiRef!.current.getColumnHeaderParams(column.field),
         event,
       );
     },
-    [apiRef, column.field, colIndex],
+    [apiRef, column.field],
   );
 
   const mouseEventsHandlers = React.useMemo(
@@ -118,7 +114,8 @@ export const GridColumnHeaderItem = ({
       onMouseOut: publish(GRID_COLUMN_HEADER_OUT),
       onMouseEnter: publish(GRID_COLUMN_HEADER_ENTER),
       onMouseLeave: publish(GRID_COLUMN_HEADER_LEAVE),
-      onKeyDown: publish(GRID_CELL_KEYDOWN),
+      onKeyDown: publish(GRID_COLUMN_HEADER_KEYDOWN),
+      onFocus: publish(GRID_COLUMN_HEADER_FOCUS),
     }),
     [publish, publishClick],
   );
