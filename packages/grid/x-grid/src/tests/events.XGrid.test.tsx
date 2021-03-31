@@ -144,6 +144,7 @@ describe('<XGrid /> - Events Params', () => {
         api: apiRef.current,
       });
     });
+
     it('should include the correct params when grid is sorted', () => {
       const header = screen
         .getByRole('columnheader', { name: 'first' })
@@ -166,6 +167,7 @@ describe('<XGrid /> - Events Params', () => {
         api: apiRef.current,
       });
     });
+
     it('should consider value getter', () => {
       const cellFirstAge = getCell(1, 3);
       fireEvent.click(cellFirstAge);
