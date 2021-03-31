@@ -12,12 +12,19 @@ import {
 } from 'test/utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { getActiveCell, getCell, getRow } from 'test/utils/helperFn';
+import {
+  getActiveCell,
+  getCell,
+  getColumnHeaderCell,
+  getColumnValues,
+  getRow,
+} from 'test/utils/helperFn';
 import { DataGrid } from '@material-ui/data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { GridColumns } from 'packages/grid/_modules_/grid/models/colDef/gridColDef';
 
 const SPACE_KEY = { key: ' ' };
+const ENTER_KEY = { key: 'Enter' };
 const SHIFT_SPACE_KEY = { ...SPACE_KEY, shiftKey: true };
 
 describe('<DataGrid /> - Keyboard', () => {
@@ -151,6 +158,12 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(getActiveCell()).to.equal('1-0');
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
     expect(getActiveCell()).to.equal('0-0');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
+    expect(getActiveCell()).to.equal('null-1');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+    expect(getActiveCell()).to.equal('null-2');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+    expect(getActiveCell()).to.equal('0-1');
   });
 
   it('Shift + Space should select a row', () => {
@@ -188,6 +201,41 @@ describe('<DataGrid /> - Keyboard', () => {
     fireEvent.keyDown(document.activeElement!, { key: 'End' });
     await waitFor(() => getCell(1, 19));
     expect(getActiveCell()).to.equal('1-19');
+  });
+
+  it('Sort column when pressing enter and column header is selected', async () => {
+    const columns = [
+      {
+        field: 'id',
+      },
+      {
+        field: 'name',
+      },
+    ];
+
+    const rows = [
+      {
+        id: 1,
+        name: 'John',
+      },
+      {
+        id: 2,
+        name: 'Doe',
+      },
+    ];
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid rows={rows} columns={columns} />
+      </div>,
+    );
+
+    getColumnHeaderCell(1).focus();
+    expect(getActiveCell()).to.equal('null-1');
+    expect(getColumnValues(1)).to.deep.equal(['John', 'Doe']);
+    fireEvent.keyDown(document.activeElement!, ENTER_KEY);
+    fireEvent.keyDown(document.activeElement!, ENTER_KEY);
+    expect(getColumnValues(1)).to.deep.equal(['Doe', 'John']);
   });
   /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
 });

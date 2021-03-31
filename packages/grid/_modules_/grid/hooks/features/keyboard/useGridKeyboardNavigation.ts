@@ -223,7 +223,7 @@ export const useGridKeyboardNavigation = (
   const setColumnHeaderFocus = React.useCallback(
     (nextColumnHeaderIndexes: GridColumnHeaderIndexCoordinates) => {
       if (nextColumnHeaderIndexes !== null) {
-        apiRef.current.scrollToIndexes({ ...nextColumnHeaderIndexes, rowIndex: 0 });
+        apiRef.current.scrollToIndexes(nextColumnHeaderIndexes);
       }
 
       setGridState((state) => {

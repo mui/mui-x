@@ -15,7 +15,11 @@ export const CLOCK_SYNC_FACTOR = 10;
 
 export function getActiveCell() {
   let activeElement: Element | null;
-  if (document.activeElement && document.activeElement.getAttribute('role') === 'cell') {
+  if (
+    document.activeElement &&
+    (document.activeElement.getAttribute('role') === 'cell' ||
+      document.activeElement.getAttribute('role') === 'columnheader')
+  ) {
     activeElement = document.activeElement;
   } else {
     activeElement = document.activeElement && document.activeElement.closest('[role="cell"]');
