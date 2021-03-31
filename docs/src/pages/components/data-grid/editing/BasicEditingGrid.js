@@ -24,6 +24,7 @@ const columns = [
     editable: true,
   },
 ];
+
 const rows = [
   {
     id: 1,
@@ -60,19 +61,8 @@ const rows = [
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
   },
-  {
-    id: 6,
-    name: randomTraderName(),
-    age: 10,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
 ];
 
 export default function BasicEditingGrid() {
-  return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} />
-    </div>
-  );
+  return <DataGrid rows={rows} columns={columns} autoHeight />;
 }

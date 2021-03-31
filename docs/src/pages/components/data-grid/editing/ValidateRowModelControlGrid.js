@@ -63,13 +63,6 @@ const rows = [
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
   },
-  {
-    id: 6,
-    name: randomTraderName(),
-    email: randomEmail(),
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
 ];
 
 const useStyles = makeStyles({
@@ -111,14 +104,13 @@ export default function ValidateRowModelControlGrid() {
   );
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        className={classes.root}
-        rows={rows}
-        columns={columns}
-        editRowsModel={editRowsModel}
-        onEditCellChange={onEditCellChange}
-      />
-    </div>
+    <DataGrid
+      rows={rows}
+      columns={columns}
+      autoHeight
+      className={classes.root}
+      editRowsModel={editRowsModel}
+      onEditCellChange={onEditCellChange}
+    />
   );
 }

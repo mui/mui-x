@@ -2,6 +2,7 @@ import { XGrid } from '@material-ui/x-grid';
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
+  DataGrid,
   GridColumns,
   GridEditCellPropsParams,
   GridRowsProp,
@@ -69,13 +70,6 @@ const rows: GridRowsProp = [
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
   },
-  {
-    id: 6,
-    name: randomTraderName(),
-    email: randomEmail(),
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
 ];
 
 const useStyles = makeStyles({
@@ -120,14 +114,10 @@ export default function ValidateCellApiRefGrid() {
   );
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      <XGrid
-        className={classes.root}
+    <XGrid rows={rows} columns={columns} autoHeight
+              className={classes.root}
         apiRef={apiRef}
-        rows={rows}
-        columns={columns}
         onEditCellChange={onEditCellChange}
       />
-    </div>
   );
 }

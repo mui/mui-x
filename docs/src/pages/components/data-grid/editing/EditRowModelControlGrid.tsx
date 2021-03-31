@@ -66,13 +66,6 @@ const rows: GridRowsProp = [
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
   },
-  {
-    id: 6,
-    name: randomTraderName(),
-    age: 10,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
 ];
 
 export default function EditRowModelControlGrid() {
@@ -85,13 +78,10 @@ export default function EditRowModelControlGrid() {
     [],
   );
 
-  return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        editRowsModel={editRowsModel}
-        onEditRowModelChange={handleEditRowModelChange}
+  return (<div style={{width: '100%'}}>
+      <DataGrid rows={rows} columns={columns} autoHeight
+                editRowsModel={editRowsModel}
+                onEditRowModelChange={handleEditRowModelChange}
       />
       <code>{JSON.stringify(editRowsModel)}</code>
     </div>
