@@ -100,12 +100,18 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
   );
 
   const publish = React.useCallback(
-    (eventName: string) => (event: React.SyntheticEvent) =>
+    (eventName: string) => (event: React.SyntheticEvent) => {
+      // Ignore portal
+      if (!event.currentTarget.contains(event.target as HTMLElement)) {
+        return;
+      }
+
       apiRef!.current.publishEvent(
         eventName,
         apiRef!.current.getCellParams(rowId!, field || ''),
         event,
-      ),
+      );
+    },
     [apiRef, field, rowId],
   );
 
