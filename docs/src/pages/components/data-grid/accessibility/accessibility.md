@@ -28,20 +28,20 @@ The grid responds to keyboard interactions from the user as well as emitting eve
 
 Use the arrow keys to move the focus.
 
-|                              Keys | Description                                   |
-| --------------------------------: | :-------------------------------------------- |
-|                    <kbd>Tab</kbd> | Navigate between selectable elements          |
-|             <kbd>Arrow Left</kbd> | Navigate between cell elements                |
-|           <kbd>Arrow Bottom</kbd> | Navigate between cell elements                |
-|            <kbd>Arrow Right</kbd> | Navigate between cell elements                |
-|               <kbd>Arrow Up</kbd> | Navigate between cell elements                |
-|                   <kbd>Home</kbd> | Navigate to the first cell of the current row |
-|                    <kbd>End</kbd> | Navigate to the last cell of the current row  |
-| <kbd>CTRL</kbd> + <kbd>Home</kbd> | Navigate to the first cell of the first row   |
-|  <kbd>CTRL</kbd> + <kbd>End</kbd> | Navigate to the last cell of the last row     |
-|                  <kbd>Space</kbd> | Navigate to the next scrollable page          |
-|                <kbd>Page Up</kbd> | Navigate to the next scrollable page          |
-|              <kbd>Page Down</kbd> | Navigate to the previous scrollable page      |
+|                              Keys | Description                                      |
+| --------------------------------: | :----------------------------------------------- |
+|                    <kbd>Tab</kbd> | Navigate between selectable elements             |
+|             <kbd>Arrow Left</kbd> | Navigate between cell and column header elements |
+|           <kbd>Arrow Bottom</kbd> | Navigate between cell and column header elements |
+|            <kbd>Arrow Right</kbd> | Navigate between cell and column header elements |
+|               <kbd>Arrow Up</kbd> | Navigate between cell and column header elements |
+|                   <kbd>Home</kbd> | Navigate to the first cell of the current row    |
+|                    <kbd>End</kbd> | Navigate to the last cell of the current row     |
+| <kbd>CTRL</kbd> + <kbd>Home</kbd> | Navigate to the first cell of the first row      |
+|  <kbd>CTRL</kbd> + <kbd>End</kbd> | Navigate to the last cell of the last row        |
+|                  <kbd>Space</kbd> | Navigate to the next scrollable page             |
+|                <kbd>Page Up</kbd> | Navigate to the next scrollable page             |
+|              <kbd>Page Down</kbd> | Navigate to the previous scrollable page         |
 
 ### Selection
 
@@ -52,6 +52,8 @@ Use the arrow keys to move the focus.
 |                                 <kbd>CTRL</kbd> + <kbd>A</kbd> | Select all rows                                   |
 |                                 <kbd>CTRL</kbd> + <kbd>C</kbd> | Copy the currently selected row                   |
 |                                <kbd>CTRL</kbd> + Click on cell | Enable multi-selection                            |
+|                                               <kbd>ENTER</kbd> | Sort column when column header is selected        |
+|                             <kbd>CTRL</kbd> + <kbd>ENTER</kbd> | Open column menu when column header is selected   |
 
 ### Sorting
 
