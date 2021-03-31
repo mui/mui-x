@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GRID_COLUMNS_UPDATED } from '../../../constants/eventsConstants';
+import { GRID_COLUMNS_UPDATED, GRID_COLUMN_ORDER_CHANGE } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
 import { gridCheckboxSelectionColDef } from '../../../models/colDef/gridCheckboxSelection';
@@ -13,6 +13,7 @@ import {
 import { GridColumnTypesRecord } from '../../../models/colDef/gridColTypeDef';
 import { getGridDefaultColumnTypes } from '../../../models/colDef/gridDefaultColumnTypes';
 import { getGridColDef } from '../../../models/colDef/getGridColDef';
+import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import { mergeGridColTypes } from '../../../utils/mergeUtils';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
@@ -165,16 +166,30 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
     [forceUpdate, getColumnFromField, updateColumns],
   );
 
-  const moveColumn = React.useCallback(
+  const setColumnIndex = React.useCallback(
     (field: string, targetIndexPosition: number) => {
-      logger.debug(`Moving column ${field} to index ${targetIndexPosition}`);
       const oldIndexPosition = gridState.columns.all.findIndex((col) => col === field);
+      if (oldIndexPosition === targetIndexPosition) {
+        return;
+      }
+
+      logger.debug(`Moving column ${field} to index ${targetIndexPosition}`);
+
+      const params: GridColumnOrderChangeParams = {
+        field,
+        element: apiRef.current.getColumnHeaderElement(field),
+        colDef: apiRef.current.getColumnFromField(field),
+        targetIndex: targetIndexPosition,
+        oldIndex: oldIndexPosition,
+        api: apiRef.current,
+      };
+      apiRef.current.publishEvent(GRID_COLUMN_ORDER_CHANGE, params);
 
       const updatedColumns = [...gridState.columns.all];
       updatedColumns.splice(targetIndexPosition, 0, updatedColumns.splice(oldIndexPosition, 1)[0]);
-      updateState({ ...gridState.columns, all: updatedColumns }, false);
+      updateState({ ...gridState.columns, all: updatedColumns });
     },
-    [gridState.columns, logger, updateState],
+    [apiRef, gridState.columns, logger, updateState],
   );
 
   const colApi: GridColumnApi = {
@@ -187,7 +202,7 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
     updateColumn,
     updateColumns,
     toggleColumn,
-    moveColumn,
+    setColumnIndex,
   };
 
   useGridApiMethod(apiRef, colApi, 'ColApi');

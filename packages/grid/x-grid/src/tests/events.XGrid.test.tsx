@@ -9,7 +9,7 @@ import {
 import { expect } from 'chai';
 import {
   XGrid,
-  GridColParams,
+  GridColumnHeaderParams,
   useGridApiRef,
   XGridProps,
   GridRowParams,
@@ -74,7 +74,7 @@ describe('<XGrid /> - Events Params', () => {
 
   describe('columnHeaderParams', () => {
     it('should include the correct params', () => {
-      let eventArgs: { params: GridColParams; event: React.MouseEvent } | null = null;
+      let eventArgs: { params: GridColumnHeaderParams; event: React.MouseEvent } | null = null;
       const handleClick = (params, event) => {
         eventArgs = { params, event };
       };

@@ -57,11 +57,13 @@ export const GRID_ROWS_SCROLL_END = 'scroll:rowEnd';
 export const GRID_COL_RESIZE_START = 'colResizing:start';
 export const GRID_COL_RESIZE_STOP = 'colResizing:stop';
 
-export const GRID_COL_REORDER_START = 'colReordering:dragStart';
-export const GRID_COL_REORDER_DRAG_OVER_HEADER = 'colReordering:dragOverHeader';
-export const GRID_COL_REORDER_DRAG_OVER = 'colReordering:dragOver';
-export const GRID_COL_REORDER_DRAG_ENTER = 'colReordering:dragEnter';
-export const GRID_COL_REORDER_STOP = 'colReordering:dragStop';
+export const GRID_COLUMN_ORDER_CHANGE = 'columnOrderChange';
+
+export const GRID_COLUMN_REORDER_START = 'columnReordering:dragStart';
+export const GRID_COLUMN_REORDER_DRAG_OVER_HEADER = 'columnReordering:dragOverHeader';
+export const GRID_COLUMN_REORDER_DRAG_OVER = 'columnReordering:dragOver';
+export const GRID_COLUMN_REORDER_DRAG_ENTER = 'columnReordering:dragEnter';
+export const GRID_COLUMN_REORDER_DRAG_END = 'columnReordering:dragEnd';
 
 export const GRID_ROWS_UPDATED = 'rowsUpdated';
 export const GRID_ROWS_SET = 'rowsSet';

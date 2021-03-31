@@ -1,13 +1,13 @@
 /**
- * Object passed as parameter in the column [[GridColDef]] header renderer.
+ * Object passed as parameter of the column order change event.
  */
-export interface GridColParams {
+export interface GridColumnOrderChangeParams {
   /**
    * The HTMLElement column header element.
    */
   element?: HTMLElement | null;
   /**
-   * The column field of the column that triggered the event
+   * The column field of the column that triggered the event.
    */
   field: string;
   /**
@@ -15,9 +15,13 @@ export interface GridColParams {
    */
   colDef: any;
   /**
-   * The column index of the current header component.
+   * The target column index.
    */
-  colIndex: number;
+  targetIndex: number;
+  /**
+   * The old column index.
+   */
+  oldIndex: number;
   /**
    * API ref that let you manipulate the grid.
    */
