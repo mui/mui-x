@@ -202,9 +202,7 @@ export const useGridKeyboardNavigation = (
 
   const setCellFocus = React.useCallback(
     (nextCellIndexes: GridCellIndexCoordinates) => {
-      if (nextCellIndexes !== null) {
-        apiRef.current.scrollToIndexes(nextCellIndexes);
-      }
+      apiRef.current.scrollToIndexes(nextCellIndexes);
 
       setGridState((state) => {
         logger.debug(
