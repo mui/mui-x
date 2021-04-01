@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { GRID_CELL_FOCUS, GRID_CELL_NAVIGATION_KEYDOWN } from '../../../constants/eventsConstants';
+import {
+  GRID_CELL_FOCUS,
+  GRID_CELL_NAVIGATION_KEYDOWN,
+  GRID_CONTAINER_KEYDOWN,
+} from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridNavigationApi } from '../../../models/api/gridNavigationApi';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
@@ -161,6 +165,19 @@ export const useGridKeyboardNavigation = (
     [apiRef],
   );
 
+  const handleGridContainerKeydown = React.useCallback(
+    (event: React.SyntheticEvent) => {
+      event.preventDefault();
+
+      if (event?.target !== event?.currentTarget) {
+        return;
+      }
+
+      apiRef.current.setCellFocus({ colIndex: 0, rowIndex: 0 });
+    },
+    [apiRef],
+  );
+
   useGridApiMethod<GridNavigationApi>(
     apiRef,
     {
@@ -170,4 +187,5 @@ export const useGridKeyboardNavigation = (
   );
   useGridApiEventHandler(apiRef, GRID_CELL_NAVIGATION_KEYDOWN, navigateCells);
   useGridApiEventHandler(apiRef, GRID_CELL_FOCUS, handleCellFocus);
+  useGridApiEventHandler(apiRef, GRID_CONTAINER_KEYDOWN, handleGridContainerKeydown);
 };

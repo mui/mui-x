@@ -11,6 +11,8 @@ export const GRID_COMPONENT_ERROR = 'componentError';
 export const GRID_UNMOUNT = 'unmount';
 export const GRID_ELEMENT_FOCUS_OUT = 'gridFocusOut';
 
+export const GRID_CONTAINER_KEYDOWN = 'gridContainerKeydown';
+
 export const GRID_CELL_MODE_CHANGE = 'cellModeChange';
 export const GRID_CELL_CLICK = 'cellClick';
 export const GRID_CELL_DOUBLE_CLICK = 'cellDoubleClick';
