@@ -203,7 +203,7 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(getActiveCell()).to.equal('1-19');
   });
 
-  it('Sort column when pressing enter and column header is selected', async () => {
+  it('should sort column when pressing enter and column header is selected', () => {
     const columns = [
       {
         field: 'id',
