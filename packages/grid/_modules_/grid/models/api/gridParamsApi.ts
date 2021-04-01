@@ -1,7 +1,7 @@
 import { GridCellValue } from '../gridCell';
 import { GridRowId } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
-import { GridColParams } from '../params/gridColParams';
+import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
 import { GridRowParams } from '../params/gridRowParams';
 
 export interface GridParamsApi {
@@ -44,5 +44,5 @@ export interface GridParamsApi {
    * Get the header params that are passed in events.
    * @param field
    */
-  getColumnHeaderParams: (field: string) => GridColParams;
+  getColumnHeaderParams: (field: string) => GridColumnHeaderParams;
 }

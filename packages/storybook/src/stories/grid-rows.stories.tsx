@@ -18,6 +18,7 @@ import {
   GRID_CELL_EDIT_EXIT,
   GridEditCellPropsParams,
   GridEditRowModelParams,
+  GRID_CELL_EDIT_ENTER,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
@@ -806,7 +807,7 @@ export function EditCellWithCellClickGrid() {
     (params: GridCellParams, event) => {
       // Or you can use the editRowModel prop, but I find it easier
       // apiRef.current.setCellMode(params.id, params.field, 'edit');
-      apiRef.current.publishEvent('cellEnterEdit', params, event);
+      apiRef.current.publishEvent(GRID_CELL_EDIT_ENTER, params, event);
 
       // if I want to prevent selection I can do
       event.stopPropagation();
@@ -829,7 +830,7 @@ export function EditCellWithMessageGrid() {
 
   React.useEffect(() => {
     return apiRef.current.subscribeEvent(
-      'cellEnterEdit',
+      GRID_CELL_EDIT_ENTER,
       (param: GridCellParams, event?: React.SyntheticEvent) => {
         setMessage(`Editing cell with value: ${param.value} at row: ${param.rowIndex}, column: ${
           param.field

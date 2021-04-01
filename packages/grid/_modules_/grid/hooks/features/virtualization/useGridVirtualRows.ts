@@ -223,23 +223,24 @@ export const useGridVirtualRows = (
       let isRowIndexBelow = false;
 
       if (params.rowIndex || params.rowIndex === 0) {
-        const currentRowPage =
-          (params.rowIndex - gridState.pagination.page * gridState.pagination.pageSize) /
-          gridState.containerSizes!.viewportPageSize;
+        const elementIndex = !options.pagination
+          ? params.rowIndex
+          : params.rowIndex - paginationState.page * paginationState.pageSize;
+
+        const currentRowPage = elementIndex / gridState.containerSizes!.viewportPageSize;
         const scrollPosition = currentRowPage * gridState!.viewportSizes.height;
         const viewportHeight = gridState.viewportSizes.height;
 
         isRowIndexAbove = windowRef.current!.scrollTop > scrollPosition;
-        isRowIndexBelow =
-          windowRef.current!.scrollTop + viewportHeight < scrollPosition + rowHeight;
+        isRowIndexBelow = windowRef.current!.scrollTop + viewportHeight < scrollPosition;
 
         if (isRowIndexAbove) {
           scrollCoordinates.top = scrollPosition; // We put it at the top of the page
-          logger.debug(`Row is above, setting scrollTop to ${scrollCoordinates.top}`);
+          logger.debug(`Row is above, setting top to ${scrollCoordinates.top}`);
         } else if (isRowIndexBelow) {
           // We make sure the row is not half visible
           scrollCoordinates.top = scrollPosition - viewportHeight + rowHeight;
-          logger.debug(`Row is below, setting scrollTop to ${scrollCoordinates.top}`);
+          logger.debug(`Row is below, setting top to ${scrollCoordinates.top}`);
         }
       }
 
@@ -255,10 +256,13 @@ export const useGridVirtualRows = (
       visibleColumns,
       logger,
       apiRef,
+      options.pagination,
+      paginationState.page,
+      paginationState.pageSize,
       gridState,
       windowRef,
-      rowHeight,
       columnsMeta.positions,
+      rowHeight,
     ],
   );
 

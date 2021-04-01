@@ -3,11 +3,13 @@ import {
   createClientRenderStrictMode,
   // @ts-ignore
   fireEvent,
+  // @ts-ignore
+  screen,
 } from 'test/utils';
 import { expect } from 'chai';
 import {
   XGrid,
-  GridColParams,
+  GridColumnHeaderParams,
   useGridApiRef,
   XGridProps,
   GridRowParams,
@@ -72,7 +74,7 @@ describe('<XGrid /> - Events Params', () => {
 
   describe('columnHeaderParams', () => {
     it('should include the correct params', () => {
-      let eventArgs: { params: GridColParams; event: React.MouseEvent } | null = null;
+      let eventArgs: { params: GridColumnHeaderParams; event: React.MouseEvent } | null = null;
       const handleClick = (params, event) => {
         eventArgs = { params, event };
       };
@@ -137,6 +139,29 @@ describe('<XGrid /> - Events Params', () => {
         element: cell11,
         row: baselineProps.rows[1],
         rowIndex: 1,
+        colDef: apiRef!.current.getColumnFromField('first'),
+        colIndex: 1,
+        api: apiRef.current,
+      });
+    });
+
+    it('should include the correct params when grid is sorted', () => {
+      const header = screen
+        .getByRole('columnheader', { name: 'first' })
+        .querySelector('.MuiDataGrid-colCellTitleContainer');
+      fireEvent.click(header);
+
+      const cell01 = getCell(0, 1);
+      fireEvent.click(cell01);
+
+      expect(eventArgs!.params).to.deep.include({
+        id: 2,
+        value: 'Jack',
+        formattedValue: 'Jack',
+        isEditable: true,
+        element: cell01,
+        row: baselineProps.rows[1],
+        rowIndex: 0,
         colDef: apiRef!.current.getColumnFromField('first'),
         colIndex: 1,
         api: apiRef.current,

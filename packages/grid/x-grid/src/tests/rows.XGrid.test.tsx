@@ -342,5 +342,40 @@ describe('<XGrid /> - Rows', () => {
       const isVirtualized = apiRef!.current!.getState().containerSizes!.isVirtualized;
       expect(isVirtualized).to.equal(false);
     });
+
+    describe('Pagination', () => {
+      it('should render only the pageSize', () => {
+        render(<TestCaseVirtualization pagination pageSize={32} />);
+        const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+        gridWindow.scrollTop = 10e6; // scroll to the bottom
+        gridWindow.dispatchEvent(new Event('scroll'));
+
+        const lastCell = document.querySelector(
+          '[role="row"]:last-child [role="cell"]:first-child',
+        )!;
+        expect(lastCell.textContent).to.equal('31');
+        const totalHeight = apiRef!.current!.getState().containerSizes?.totalSizes.height!;
+        expect(gridWindow.scrollHeight).to.equal(totalHeight);
+      });
+
+      it('should not virtualized the last page if smaller than viewport', () => {
+        render(<TestCaseVirtualization pagination pageSize={32} page={3} height={500} />);
+        const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+        gridWindow.scrollTop = 10e6; // scroll to the bottom
+        gridWindow.dispatchEvent(new Event('scroll'));
+
+        const lastCell = document.querySelector(
+          '[role="row"]:last-child [role="cell"]:first-child',
+        )!;
+        expect(lastCell.textContent).to.equal('99');
+        expect(gridWindow.scrollTop).to.equal(0);
+        expect(gridWindow.scrollHeight).to.equal(gridWindow.clientHeight);
+
+        const isVirtualized = apiRef!.current!.getState().containerSizes!.isVirtualized;
+        expect(isVirtualized).to.equal(false);
+        const virtualRowsCount = apiRef!.current!.getState().containerSizes!.virtualRowsCount;
+        expect(virtualRowsCount).to.equal(4);
+      });
+    });
   });
 });

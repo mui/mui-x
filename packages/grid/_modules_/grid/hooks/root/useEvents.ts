@@ -32,6 +32,7 @@ import {
   GRID_COLUMN_HEADER_DOUBLE_CLICK,
   GRID_COLUMN_HEADER_OVER,
   GRID_COLUMN_HEADER_OUT,
+  GRID_COLUMN_ORDER_CHANGE,
   GRID_CELL_KEYDOWN,
   GRID_CELL_BLUR,
 } from '../../constants/eventsConstants';
@@ -98,6 +99,7 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
   useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_OUT, options.onColumnHeaderOut);
   useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_ENTER, options.onColumnHeaderEnter);
   useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_LEAVE, options.onColumnHeaderLeave);
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_ORDER_CHANGE, options.onColumnOrderChange);
 
   useGridApiOptionHandler(apiRef, GRID_CELL_CLICK, options.onCellClick);
   useGridApiOptionHandler(apiRef, GRID_CELL_DOUBLE_CLICK, options.onCellDoubleClick);

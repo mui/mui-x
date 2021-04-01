@@ -7,7 +7,7 @@ import {
   GridValueFormatterParams,
   GridValueGetterParams,
 } from '../params/gridCellParams';
-import { GridColParams } from '../params/gridColParams';
+import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
 import { GridComparatorFn } from '../gridSortModel';
 import { GridColType, GridNativeColTypes } from './gridColType';
 
@@ -110,7 +110,7 @@ export interface GridColDef {
    * Allows to render a component in the column header cell.
    * @param params
    */
-  renderHeader?: (params: GridColParams) => React.ReactElement;
+  renderHeader?: (params: GridColumnHeaderParams) => React.ReactElement;
   /**
    * Header cell element alignment.
    */

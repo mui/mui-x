@@ -14,9 +14,9 @@ import { GridCellValue } from '../../../models/gridCell';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridCellParams } from '../../../models/params/gridCellParams';
-import { GridColParams } from '../../../models/params/gridColParams';
+import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { GridSortModelParams } from '../../../models/params/gridSortModelParams';
-import { GridRowModel, GridRowsProp } from '../../../models/gridRows';
+import { GridRowId, GridRowModel, GridRowsProp } from '../../../models/gridRows';
 import {
   GridFieldComparatorList,
   GridSortItem,
@@ -33,6 +33,7 @@ import { allGridColumnsSelector, visibleGridColumnsSelector } from '../columns/g
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
+import { sortedGridRowIdsSelector, sortedGridRowsSelector } from './gridSortingSelector';
 
 export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   const logger = useLogger('useGridSorting');
@@ -209,7 +210,7 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   );
 
   const headerClickHandler = React.useCallback(
-    ({ colDef }: GridColParams) => {
+    ({ colDef }: GridColumnHeaderParams) => {
       sortColumn(colDef);
     },
     [sortColumn],
@@ -224,6 +225,16 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   const getSortModel = React.useCallback(() => gridState.sorting.sortModel, [
     gridState.sorting.sortModel,
   ]);
+
+  const getSortedRows = React.useCallback(
+    (): GridRowModel[] => sortedGridRowsSelector(apiRef.current.state),
+    [apiRef],
+  );
+
+  const getSortedRowIds = React.useCallback(
+    (): GridRowId[] => sortedGridRowIdsSelector(apiRef.current.state),
+    [apiRef],
+  );
 
   const onMultipleKeyPressed = React.useCallback(
     (isPressed: boolean) => {
@@ -270,6 +281,8 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
 
   const sortApi: GridSortApi = {
     getSortModel,
+    getSortedRows,
+    getSortedRowIds,
     setSortModel,
     sortColumn,
     onSortModelChange,

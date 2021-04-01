@@ -16,8 +16,7 @@ import {
   getFieldFromHeaderElem,
   findHeaderElementFromField,
 } from '../../utils/domUtils';
-import { GridApiRef } from '../../models';
-import { CursorCoordinates } from '../../models/api/columnReorderApi';
+import { GridApiRef, CursorCoordinates } from '../../models';
 
 const MIN_COL_WIDTH = 50;
 let cachedSupportsTouchActionNone = false;

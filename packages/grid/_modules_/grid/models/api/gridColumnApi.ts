@@ -57,5 +57,5 @@ export interface GridColumnApi {
    * @param field
    * @param targetIndexPosition .
    */
-  moveColumn: (field: string, targetIndexPosition: number) => void;
+  setColumnIndex: (field: string, targetIndexPosition: number) => void;
 }

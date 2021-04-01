@@ -51,7 +51,7 @@ describe('<XGrid /> - Reorder', () => {
 
       expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
       act(() => {
-        apiRef!.current.moveColumn('id', 1);
+        apiRef!.current.setColumnIndex('id', 1);
       });
       setProps({ width: 200 });
       await raf();
@@ -76,7 +76,7 @@ describe('<XGrid /> - Reorder', () => {
 
     const { forceUpdate } = render(<Test />);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-    apiRef!.current.moveColumn('brand', 2);
+    apiRef!.current.setColumnIndex('brand', 2);
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
     forceUpdate(); // test stability
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
