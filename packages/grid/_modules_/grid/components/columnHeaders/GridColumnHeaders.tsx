@@ -46,7 +46,6 @@ export const GridColumnsHeader = React.forwardRef<HTMLDivElement, {}>(function G
           )
       : undefined;
 
-  console.log(renderedCols);
   return (
     <React.Fragment>
       <GridScrollArea scrollDirection="left" />

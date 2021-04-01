@@ -143,8 +143,7 @@ export const GridColumnHeaderItem = ({
   const columnMenuIconButton = <ColumnHeaderMenuIcon column={column} />;
 
   React.useLayoutEffect(() => {
-    const lastMenuState = apiRef!.current.getState().columnMenu;
-    if (hasFocus && headerCellRef.current && !lastMenuState.open) {
+    if (hasFocus && apiRef!.current.getState().columnMenu) {
       headerCellRef.current!.focus();
     }
   });
