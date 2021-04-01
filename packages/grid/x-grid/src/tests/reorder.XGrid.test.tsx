@@ -110,13 +110,18 @@ describe('<XGrid /> - Reorder', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
     const dragCol = getColumnHeaderCell(1).firstChild;
 
+    const targetCell = getCell(0, 2);
     fireEvent.dragStart(dragCol);
-    fireEvent.dragEnter(getCell(0, 2));
-    fireEvent.dragOver(getCell(0, 2), { clientX: 1, clientY: 1 });
+    fireEvent.dragEnter(targetCell);
+    const dragOverEvent = createEvent.dragOver(targetCell);
+    // Safari 13 doesn't have DragEvent.
+    // RTL fallbacks to Event which doesn't allow to set these fields during initialization.
+    Object.defineProperty(dragOverEvent, 'clientX', { value: 1 });
+    Object.defineProperty(dragOverEvent, 'clientY', { value: 1 });
+    fireEvent(targetCell, dragOverEvent);
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
 
     const dragEndEvent = createEvent.dragEnd(dragCol);
-    // Safari doesn't support DataTransfer constructor
     Object.defineProperty(dragEndEvent, 'dataTransfer', { value: { dropEffect: 'copy' } });
     fireEvent(dragCol, dragEndEvent);
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
@@ -142,12 +147,17 @@ describe('<XGrid /> - Reorder', () => {
     const dragCol = getColumnHeaderCell(1).firstChild;
 
     fireEvent.dragStart(dragCol);
-    fireEvent.dragEnter(getCell(0, 2));
-    fireEvent.dragOver(getCell(0, 2), { clientX: 1, clientY: 1 });
+    const targetCell = getCell(0, 2);
+    fireEvent.dragEnter(targetCell);
+    const dragOverEvent = createEvent.dragOver(targetCell);
+    // Safari 13 doesn't have DragEvent.
+    // RTL fallbacks to Event which doesn't allow to set these fields during initialization.
+    Object.defineProperty(dragOverEvent, 'clientX', { value: 1 });
+    Object.defineProperty(dragOverEvent, 'clientY', { value: 1 });
+    fireEvent(targetCell, dragOverEvent);
     expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
 
     const dragEndEvent = createEvent.dragEnd(dragCol);
-    // Safari doesn't support DataTransfer constructor
     Object.defineProperty(dragEndEvent, 'dataTransfer', { value: { dropEffect: 'none' } });
     fireEvent(dragCol, dragEndEvent);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
