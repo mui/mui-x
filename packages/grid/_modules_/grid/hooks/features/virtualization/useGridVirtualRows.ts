@@ -409,5 +409,11 @@ export const useGridVirtualRows = (
     GRID_NATIVE_SCROLL,
     preventViewportScroll,
   );
+  useNativeEventListener(
+    apiRef,
+    () => colRef.current?.parentElement,
+    GRID_NATIVE_SCROLL,
+    preventViewportScroll,
+  );
   useGridApiEventHandler(apiRef, GRID_RESIZE, updateViewport);
 };
