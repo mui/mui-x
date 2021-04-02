@@ -7,12 +7,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Apr 2, 2021_
 
-Big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+Big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
-- 🇬🇷 Added elGR locale (#1275) @clytras
-- 🇪🇸 Added esES locale (#1286) @WiXSL
-- 🇯🇵 Added jaJP locale (#1283) @seed-of-apricot
-- 🇳🇱 Added nlNL locale (#1273) @wimdetroyer
+- 🇬🇷 Add elGR locale (#1275) @clytras
+- 🇪🇸 Add esES locale (#1286) @WiXSL
+- 🇯🇵 Add jaJP locale (#1283) @seed-of-apricot
+- 🇳🇱 Add nlNL locale (#1273) @wimdetroyer
 - 🐞 Bugfixes
 
 ### @material-ui/x-grid@v4.0.0-alpha.24 / @material-ui/data-grid@v4.0.0-alpha.24
@@ -24,7 +24,7 @@ Big thanks to the 9 contributors who made this release possible. Here are some h
 - [DataGrid] Rename `GridBaseComponentProps` type to `GridSlotComponentProps` (#1252) @DanailH
 - [DataGrid] Rename `useGridBaseComponentProps` hook to `useGridSlotComponentProps` (#1252) @DanailH
 - [DataGrid] Rename modules (#1292) @DanailH
-- [DataGrid] Renamed all events related to column reordering, e.g. `GRID_COL_REORDER_START` -> `GRID_COLUMN_REORDER_START` (#1299) @m4theushw
+- [DataGrid] Rename all events related to column reordering, e.g. `GRID_COL_REORDER_START` -> `GRID_COLUMN_REORDER_START` (#1299) @m4theushw
 - [DataGrid] Methods `onColItemDragStart`, `onColHeaderDragOver`, `onColItemDragOver`, `onColItemDragEnter` removed from the grid API. Prefer listening to [column reordering events](https://material-ui.com/components/data-grid/columns/#column-reorder) (#1299) @m4theushw
 - [DataGrid] Calling `apiRef.current.getColumnHeaderParams` returns a `GridColumnHeaderParams` instead of `GridColParams` (#1299) @m4theushw
 - [DataGrid] Events that follow the pattern `GRID_COLUMN_HEADER_xxx` will be called with a `GridColumnHeaderParams` instead of `GridColParams` (#1299) @m4theushw
@@ -37,7 +37,6 @@ Big thanks to the 9 contributors who made this release possible. Here are some h
 - [DataGrid] Fix page shift after toggling column (#1284) @m4theushw
 - [DataGrid] Fix rendering issues (#1319, #1253) @dtassone
 - [DataGrid] Refactor edit events to allow stop propagation (#1304) @dtassone
-- [Security] Bump y18n from 4.0.0 to 4.0.1 (#1318) @dependabot-preview
 
 ### Core
 
