@@ -56,7 +56,9 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
   const valueToRender = formattedValue || value;
   const cellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = React.useContext(GridApiContext);
-  const isCellFocusable = rowIndex === 0 && colIndex === 0;
+  const currentFocusedCell = apiRef!.current.getState().keyboard.cell;
+  const isCellFocusable =
+    (currentFocusedCell && hasFocus) || (rowIndex === 0 && colIndex === 0 && !currentFocusedCell);
 
   const cssClasses = classnames(
     GRID_CELL_CSS_CLASS,
