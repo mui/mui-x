@@ -24,7 +24,6 @@ import { useData } from 'packages/storybook/src/hooks/useData';
 import { GridColumns } from 'packages/grid/_modules_/grid/models/colDef/gridColDef';
 
 const SPACE_KEY = { key: ' ' };
-const ENTER_KEY = { key: 'Enter' };
 const SHIFT_SPACE_KEY = { ...SPACE_KEY, shiftKey: true };
 
 describe('<DataGrid /> - Keyboard', () => {
@@ -233,8 +232,8 @@ describe('<DataGrid /> - Keyboard', () => {
     getColumnHeaderCell(1).focus();
     expect(getActiveCell()).to.equal('null-1');
     expect(getColumnValues(1)).to.deep.equal(['John', 'Doe']);
-    fireEvent.keyDown(document.activeElement!, ENTER_KEY);
-    fireEvent.keyDown(document.activeElement!, ENTER_KEY);
+    fireEvent.keyDown(document.activeElement!, { key: 'Enter' });
+    fireEvent.keyDown(document.activeElement!, { key: 'Enter' });
     expect(getColumnValues(1)).to.deep.equal(['Doe', 'John']);
   });
   /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
