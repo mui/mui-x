@@ -212,7 +212,8 @@ export const useGridKeyboard = (
         return;
       }
 
-      if (isEnterKey(event.key)) {
+      if (isEnterKey(event.key) || isSpaceKey(event.key)) {
+        event.preventDefault();
         apiRef.current.publishEvent(
           GRID_COLUMN_HEADER_CLICK,
           apiRef!.current.getColumnHeaderParams(params.field),
