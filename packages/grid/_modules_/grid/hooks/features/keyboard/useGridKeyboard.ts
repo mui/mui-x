@@ -202,6 +202,10 @@ export const useGridKeyboard = (
         return;
       }
 
+      if (isSpaceKey(event.key)) {
+        event.preventDefault();
+      }
+
       if ((isColumnNavigationKey(event.key) && !event.shiftKey) || isTabKey(event.key)) {
         apiRef.current.publishEvent(GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN, params, event);
         return;
@@ -213,7 +217,6 @@ export const useGridKeyboard = (
       }
 
       if (isEnterKey(event.key) || isSpaceKey(event.key)) {
-        event.preventDefault();
         apiRef.current.publishEvent(
           GRID_COLUMN_HEADER_CLICK,
           apiRef!.current.getColumnHeaderParams(params.field),
