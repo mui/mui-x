@@ -27,7 +27,7 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
       role="grid"
       aria-colcount={visibleColumnsLength}
       aria-rowcount={gridState.rows.totalRowCount}
-      tabIndex={0}
+      tabIndex={-1}
       aria-label={apiRef!.current.getLocaleText('rootGridLabel')}
       aria-multiselectable={!gridState.options.disableMultipleSelection}
       {...other}
