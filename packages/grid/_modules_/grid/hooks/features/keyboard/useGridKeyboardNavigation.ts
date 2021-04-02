@@ -181,6 +181,15 @@ export const useGridKeyboardNavigation = (
         const colIdx = key === 'Home' ? 0 : colCount - 1;
 
         nextColumnHeaderIndexes = { colIndex: colIdx };
+      } else if (isPageKeys(key)) {
+        // Handle only Page Down key, Page Up should keep the current possition
+        if (key.indexOf('Down') > -1) {
+          apiRef.current.setCellFocus({
+            colIndex: params.colIndex,
+            rowIndex: containerSizes!.viewportPageSize - 1,
+          });
+        }
+        return;
       } else {
         throw new Error('Material-UI. Key not mapped to navigation behavior.');
       }
@@ -190,17 +199,17 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      nextColumnHeaderIndexes.colIndex =
-        nextColumnHeaderIndexes.colIndex <= 0 ? 0 : nextColumnHeaderIndexes.colIndex;
-      nextColumnHeaderIndexes.colIndex =
-        nextColumnHeaderIndexes.colIndex >= colCount
+      nextColumnHeaderIndexes!.colIndex =
+        nextColumnHeaderIndexes!.colIndex <= 0 ? 0 : nextColumnHeaderIndexes!.colIndex;
+      nextColumnHeaderIndexes!.colIndex =
+        nextColumnHeaderIndexes!.colIndex >= colCount
           ? colCount - 1
-          : nextColumnHeaderIndexes.colIndex;
+          : nextColumnHeaderIndexes!.colIndex;
 
       apiRef.current.scrollToIndexes(nextColumnHeaderIndexes);
       apiRef.current.setColumnHeaderFocus(nextColumnHeaderIndexes);
     },
-    [apiRef, colCount],
+    [apiRef, colCount, containerSizes],
   );
 
   const setCellFocus = React.useCallback(

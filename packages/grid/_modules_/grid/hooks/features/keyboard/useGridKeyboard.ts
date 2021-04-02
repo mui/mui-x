@@ -21,7 +21,6 @@ import {
   isGridHeaderCellRoot,
 } from '../../../utils/domUtils';
 import {
-  isColumnNavigationKey,
   isEnterKey,
   isMultipleKey,
   isNavigationKey,
@@ -206,7 +205,10 @@ export const useGridKeyboard = (
         event.preventDefault();
       }
 
-      if ((isColumnNavigationKey(event.key) && !event.shiftKey) || isTabKey(event.key)) {
+      if (
+        (isNavigationKey(event.key) && !isSpaceKey(event.key) && !event.shiftKey) ||
+        isTabKey(event.key)
+      ) {
         apiRef.current.publishEvent(GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN, params, event);
         return;
       }
