@@ -13,6 +13,7 @@ export const createClientRenderStrictMode = () => {
   // It significantly slowdown the tests in watch mode (linear growth with rerun).
   // It's similar to why https://github.com/mui-org/material-ui/pull/24837.
   // TODO v5: remove
+  // @ts-expect-error need to remove jest
   after(() => {
     Array.from(document.querySelectorAll('style')).forEach((style) => {
       document.head.removeChild(style);
