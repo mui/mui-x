@@ -9,6 +9,7 @@ describe('<DataGrid /> - State', () => {
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
+    autoHeight: true,
     rows: [
       {
         id: 0,
@@ -25,13 +26,6 @@ describe('<DataGrid /> - State', () => {
     ],
     columns: [{ field: 'brand' }],
   };
-
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
 
   it('should allow to control the state using useState', async () => {
     function GridStateTest({ direction, sortedRows }) {

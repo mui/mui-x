@@ -9,6 +9,7 @@ describe('<DataGrid /> - Filter', () => {
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
+    autoHeight: true,
     rows: [
       {
         id: 0,
@@ -29,13 +30,6 @@ describe('<DataGrid /> - Filter', () => {
     columns: [{ field: 'brand' }, { field: 'isPublished', type: 'boolean' }],
   };
 
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
-
   const TestCase = (props: {
     rows?: any[];
     columns?: any[];
@@ -47,6 +41,7 @@ describe('<DataGrid /> - Filter', () => {
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid
+          autoHeight
           columns={columns || baselineProps.columns}
           rows={rows || baselineProps.rows}
           filterModel={{

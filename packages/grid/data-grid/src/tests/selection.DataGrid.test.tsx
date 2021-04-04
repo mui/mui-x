@@ -10,18 +10,12 @@ describe('<DataGrid /> - Selection', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
-
   describe('prop: checkboxSelection', () => {
     it('should check and uncheck when double clicking the row', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
+            autoHeight
             rows={[
               {
                 id: 0,
@@ -51,7 +45,12 @@ describe('<DataGrid /> - Selection', () => {
     it('with no rows, the checkbox should not be checked', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid rows={[]} checkboxSelection columns={[{ field: 'brand', width: 100 }]} />
+          <DataGrid
+            autoHeight
+            rows={[]}
+            checkboxSelection
+            columns={[{ field: 'brand', width: 100 }]}
+          />
         </div>,
       );
       const selectAll = screen.getByRole('checkbox', {
@@ -66,6 +65,7 @@ describe('<DataGrid /> - Selection', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
+            autoHeight
             rows={[
               {
                 id: 0,
@@ -102,7 +102,7 @@ describe('<DataGrid /> - Selection', () => {
       function Demo(props) {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid {...data} selectionModel={props.selectionModel} />
+            <DataGrid autoHeight {...data} selectionModel={props.selectionModel} />
           </div>
         );
       }

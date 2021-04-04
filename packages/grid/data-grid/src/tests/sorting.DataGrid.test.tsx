@@ -8,13 +8,14 @@ import {
 } from 'test/utils';
 import { expect } from 'chai';
 import { DataGrid, DataGridProps } from '@material-ui/data-grid';
-import { getColumnValues } from 'test/utils/helperFn';
+import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Sorting', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
+    autoHeight: true,
     rows: [
       {
         id: 0,
@@ -35,20 +36,13 @@ describe('<DataGrid /> - Sorting', () => {
     columns: [{ field: 'brand' }, { field: 'isPublished', type: 'boolean' }],
   };
 
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
-
   it('should keep the initial order', () => {
     const cols = [{ field: 'id' }];
     const rows = [{ id: 10 }, { id: 0 }, { id: 5 }];
 
     render(
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid columns={cols} rows={rows} />
+        <DataGrid autoHeight columns={cols} rows={rows} />
       </div>,
     );
     expect(getColumnValues()).to.deep.equal(['10', '0', '5']);
@@ -61,7 +55,7 @@ describe('<DataGrid /> - Sorting', () => {
     function Demo(props) {
       return (
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid columns={cols} sortingMode="server" {...props} />
+          <DataGrid autoHeight columns={cols} sortingMode="server" {...props} />
         </div>
       );
     }
@@ -78,9 +72,7 @@ describe('<DataGrid /> - Sorting', () => {
         <DataGrid {...baselineProps} />
       </div>,
     );
-    const header = screen
-      .getByRole('columnheader', { name: 'brand' })
-      .querySelector('.MuiDataGrid-colCellTitleContainer');
+    const header = getColumnHeaderCell(1);
     expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     fireEvent.click(header);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
@@ -199,7 +191,7 @@ describe('<DataGrid /> - Sorting', () => {
       const { rows, columns } = props;
       return (
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid rows={rows} columns={columns} />
+          <DataGrid autoHeight rows={rows} columns={columns} />
         </div>
       );
     };

@@ -15,6 +15,7 @@ describe('<DataGrid /> - Rows', () => {
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
+    autoHeight: true,
     rows: [
       {
         clientId: 'c1',
@@ -34,13 +35,6 @@ describe('<DataGrid /> - Rows', () => {
     ],
     columns: [{ field: 'clientId' }, { field: 'first' }, { field: 'age' }],
   };
-
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
 
   describe('getRowId', () => {
     it('should allow to select a field as id', () => {
