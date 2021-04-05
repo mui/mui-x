@@ -453,7 +453,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       }).toErrorDev([
         'The data grid component requires all rows to have a unique id property',
         'The above error occurred in the <ForwardRef(GridComponent)> component',
-        'The above error occurred in the <ForwardRef(GridComponent)> component',
       ]);
       expect((errorRef.current as any).errors).to.have.length(1);
       expect((errorRef.current as any).errors[0].toString()).to.include(
