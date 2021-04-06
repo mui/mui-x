@@ -21,7 +21,7 @@ import {
   GridFieldComparatorList,
   GridSortItem,
   GridSortModel,
-  GridSortDirection,
+  GridSortDirection, GridSortCellParams,
 } from '../../../models/gridSortModel';
 import { isDesc, nextGridSortDirection } from '../../../utils/sortingUtils';
 import { isDeepEqual } from '../../../utils/utils';
@@ -95,6 +95,22 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
     [gridState.sorting.sortModel, options.sortingOrder],
   );
 
+  const getSortCellParams = React.useCallback(
+    (id: GridRowId, field: string) => {
+      const params: GridSortCellParams = {
+        id,
+        field,
+        row: apiRef.current.getRowFromId(id),
+        value: apiRef.current.getCellValue(id, field),
+        getValue: (columnField: string) => apiRef.current.getCellValue(id, columnField),
+        api: apiRef.current,
+      };
+
+      return params;
+    },
+    [apiRef],
+    );
+
   const comparatorListAggregate = React.useCallback(
     (row1: GridRowModel, row2: GridRowModel) => {
       const result = comparatorList.current.reduce((res, colComparator) => {
@@ -104,14 +120,14 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
           comparator(
             row1[field],
             row2[field],
-            apiRef.current.getCellParams(row1.id, field),
-            apiRef.current.getCellParams(row2.id, field),
+            getSortCellParams(row1.id, field),
+            getSortCellParams(row2.id, field),
           );
         return res;
       }, 0);
       return result;
     },
-    [apiRef],
+    [getSortCellParams],
   );
 
   const buildComparatorList = React.useCallback(
