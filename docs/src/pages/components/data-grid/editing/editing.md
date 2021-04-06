@@ -48,7 +48,13 @@ To make it more visible, we applied a green background on the editable cells.
 
 {{"demo": "pages/components/data-grid/editing/EditRowModelControlGrid.js", "bg": "inline"}}
 
-#### value Getter ?
+#### value Getter
+
+If the column definition process their data using a `valueGetter`,
+then you will need to set the underlying data. You can do this by implementing `onEditCellChangeCommitted` event handler.
+This handler is called when the edit value is submitted, and the grid is about to update its cell value.
+
+{{"demo": "pages/components/data-grid/editing/ValueGetterGrid.js", "bg": "inline"}}
 
 ### Validation
 
