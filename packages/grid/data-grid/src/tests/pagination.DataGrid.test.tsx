@@ -208,7 +208,7 @@ describe('<DataGrid /> - Pagination', () => {
             </div>
           );
         };
-        render(<TestCaseAutoPageSize nbRows={27} height={800} />);
+        render(<TestCaseAutoPageSize nbRows={27} height={780} />);
         let rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
         expect(rows.length).to.equal(12);
 
