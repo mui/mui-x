@@ -46,17 +46,20 @@ const baselineProps = {
     {
       id: 0,
       brand: 'Nike',
+      isPublished: false,
     },
     {
       id: 1,
       brand: 'Adidas',
+      isPublished: true,
     },
     {
       id: 2,
       brand: 'Puma',
+      isPublished: true,
     },
   ],
-  columns: [{ field: 'brand' }],
+  columns: [{ field: 'brand' }, { field: 'isPublished', type: 'boolean' }],
 };
 
 function getStoryRowId(row) {
@@ -585,6 +588,20 @@ export function EditCellSnap() {
 
   React.useEffect(() => {
     apiRef.current.setCellMode(1, 'brand', 'edit');
+  });
+
+  return (
+    <div className="grid-container">
+      <XGrid {...baselineProps} apiRef={apiRef} />
+    </div>
+  );
+}
+
+export function EditBooleanCellSnap() {
+  const apiRef = useGridApiRef();
+
+  React.useEffect(() => {
+    apiRef.current.setCellMode(1, 'isPublished', 'edit');
   });
 
   return (
