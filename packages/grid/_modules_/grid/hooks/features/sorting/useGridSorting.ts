@@ -13,7 +13,6 @@ import { GridSortApi } from '../../../models/api/gridSortApi';
 import { GridCellValue } from '../../../models/gridCell';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
-import { GridCellParams } from '../../../models/params/gridCellParams';
 import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { GridSortModelParams } from '../../../models/params/gridSortModelParams';
 import { GridRowId, GridRowModel, GridRowsProp } from '../../../models/gridRows';
@@ -142,8 +141,8 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
           ? (
               v1: GridCellValue,
               v2: GridCellValue,
-              cellParams1: GridCellParams,
-              cellParams2: GridCellParams,
+              cellParams1: GridSortCellParams,
+              cellParams2: GridSortCellParams,
             ) => -1 * column.sortComparator!(v1, v2, cellParams1, cellParams2)
           : column.sortComparator!;
         return { field: column.field, comparator };
