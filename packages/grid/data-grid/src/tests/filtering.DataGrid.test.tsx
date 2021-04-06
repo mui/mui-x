@@ -13,17 +13,20 @@ describe('<DataGrid /> - Filter', () => {
       {
         id: 0,
         brand: 'Nike',
+        isPublished: false,
       },
       {
         id: 1,
         brand: 'Adidas',
+        isPublished: true,
       },
       {
         id: 2,
         brand: 'Puma',
+        isPublished: true,
       },
     ],
-    columns: [{ field: 'brand' }],
+    columns: [{ field: 'brand' }, { field: 'isPublished', type: 'boolean' }],
   };
 
   before(function beforeHook() {
@@ -38,8 +41,9 @@ describe('<DataGrid /> - Filter', () => {
     columns?: any[];
     operator?: string;
     value?: string;
+    field?: string;
   }) => {
-    const { operator, value, rows, columns } = props;
+    const { operator, value, rows, columns, field = 'brand' } = props;
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid
@@ -48,7 +52,7 @@ describe('<DataGrid /> - Filter', () => {
           filterModel={{
             items: [
               {
-                columnField: 'brand',
+                columnField: field,
                 value,
                 operatorValue: operator,
               },
@@ -89,29 +93,55 @@ describe('<DataGrid /> - Filter', () => {
     expect(getColumnValues()).to.deep.equal(['Asics']);
   });
 
-  it('should allow operator startsWith', () => {
-    const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
-    setProps({
-      operator: 'startsWith',
+  describe('string operators', () => {
+    it('should allow operator startsWith', () => {
+      const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
+      setProps({
+        operator: 'startsWith',
+      });
+      expect(getColumnValues()).to.deep.equal(['Adidas']);
     });
-    expect(getColumnValues()).to.deep.equal(['Adidas']);
+
+    it('should allow operator endsWith', () => {
+      const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
+      setProps({
+        operator: 'endsWith',
+      });
+      expect(getColumnValues()).to.deep.equal(['Puma']);
+    });
+
+    it('should allow operator equal', () => {
+      const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
+      setProps({
+        operator: 'equals',
+        value: 'nike',
+      });
+      expect(getColumnValues()).to.deep.equal(['Nike']);
+    });
   });
 
-  it('should allow operator endsWith', () => {
-    const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
-    setProps({
-      operator: 'endsWith',
+  describe('boolean operators', () => {
+    it('should allow operator is', () => {
+      const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
+      setProps({
+        field: 'isPublished',
+        operator: 'is',
+        value: 'false',
+      });
+      expect(getColumnValues()).to.deep.equal(['Nike']);
+      setProps({
+        field: 'isPublished',
+        operator: 'is',
+        value: 'true',
+      });
+      expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
+      setProps({
+        field: 'isPublished',
+        operator: 'is',
+        value: '',
+      });
+      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     });
-    expect(getColumnValues()).to.deep.equal(['Puma']);
-  });
-
-  it('should allow operator equal', () => {
-    const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
-    setProps({
-      operator: 'equals',
-      value: 'nike',
-    });
-    expect(getColumnValues()).to.deep.equal(['Nike']);
   });
 
   it('should support new dataset', () => {
