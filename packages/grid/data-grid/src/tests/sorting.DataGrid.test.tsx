@@ -19,17 +19,20 @@ describe('<DataGrid /> - Sorting', () => {
       {
         id: 0,
         brand: 'Nike',
+        isPublished: false,
       },
       {
         id: 1,
         brand: 'Adidas',
+        isPublished: true,
       },
       {
         id: 2,
         brand: 'Puma',
+        isPublished: true,
       },
     ],
-    columns: [{ field: 'brand' }],
+    columns: [{ field: 'brand' }, { field: 'isPublished', type: 'boolean' }],
   };
 
   before(function beforeHook() {
@@ -69,7 +72,7 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnValues()).to.deep.equal(['5', '0', '10']);
   });
 
-  it('should sort when clicking the header cell', () => {
+  it('should sort string column when clicking the header cell', () => {
     render(
       <div style={{ width: 300, height: 300 }}>
         <DataGrid {...baselineProps} />
@@ -83,6 +86,22 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     fireEvent.click(header);
     expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+  });
+
+  it('should sort boolean column when clicking the header cell', () => {
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid {...baselineProps} />
+      </div>,
+    );
+    const header = screen
+      .getByRole('columnheader', { name: 'isPublished' })
+      .querySelector('.MuiDataGrid-colCellTitleContainer');
+    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    fireEvent.click(header);
+    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    fireEvent.click(header);
+    expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma', 'Nike']);
   });
 
   it('should keep rows sorted when rows prop change', () => {
