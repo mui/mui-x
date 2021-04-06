@@ -15,11 +15,7 @@ export const CLOCK_SYNC_FACTOR = 10;
 
 export function getActiveCell() {
   let activeElement: Element | null;
-  if (
-    document.activeElement &&
-    (document.activeElement.getAttribute('role') === 'cell' ||
-      document.activeElement.getAttribute('role') === 'columnheader')
-  ) {
+  if (document.activeElement && document.activeElement.getAttribute('role') === 'cell') {
     activeElement = document.activeElement;
   } else {
     activeElement = document.activeElement && document.activeElement.closest('[role="cell"]');
@@ -32,6 +28,22 @@ export function getActiveCell() {
   return `${activeElement.getAttribute('data-rowindex')}-${activeElement.getAttribute(
     'aria-colindex',
   )}`;
+}
+
+export function getActiveColumnHeader() {
+  let activeElement: Element | null;
+  if (document.activeElement && document.activeElement.getAttribute('role') === 'columnheader') {
+    activeElement = document.activeElement;
+  } else {
+    activeElement =
+      document.activeElement && document.activeElement.closest('[role="columnheader"]');
+  }
+
+  if (!activeElement) {
+    return null;
+  }
+
+  return `${activeElement.getAttribute('aria-colindex')}`;
 }
 
 export async function sleep(duration: number) {

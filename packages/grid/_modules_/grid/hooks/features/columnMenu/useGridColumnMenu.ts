@@ -33,8 +33,7 @@ export const useGridColumnMenu = (apiRef: GridApiRef): void => {
   const toggleColumnMenu = React.useCallback(
     (field: string, id?: string, labelledby?: string) => {
       logger.debug('Toggle Column Menu');
-      const lastMenuState = gridState.columnMenu;
-      if (!lastMenuState.open || lastMenuState.field !== field) {
+      if (!gridState.columnMenu.open || gridState.columnMenu.field !== field) {
         showColumnMenu(field, id, labelledby);
       } else {
         hideColumnMenu();

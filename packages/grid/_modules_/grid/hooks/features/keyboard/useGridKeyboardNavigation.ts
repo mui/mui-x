@@ -164,7 +164,7 @@ export const useGridKeyboardNavigation = (
     ],
   );
 
-  const navigateColumnHeders = React.useCallback(
+  const navigateColumnHeaders = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
       event.preventDefault();
       let nextColumnHeaderIndexes: GridColumnHeaderIndexCoordinates | null;
@@ -199,8 +199,7 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      nextColumnHeaderIndexes!.colIndex =
-        nextColumnHeaderIndexes!.colIndex <= 0 ? 0 : nextColumnHeaderIndexes!.colIndex;
+      nextColumnHeaderIndexes!.colIndex = Math.max(0, nextColumnHeaderIndexes!.colIndex);
       nextColumnHeaderIndexes!.colIndex =
         nextColumnHeaderIndexes!.colIndex >= colCount
           ? colCount - 1
@@ -274,6 +273,6 @@ export const useGridKeyboardNavigation = (
   );
   useGridApiEventHandler(apiRef, GRID_CELL_NAVIGATION_KEYDOWN, navigateCells);
   useGridApiEventHandler(apiRef, GRID_CELL_FOCUS, handleCellFocus);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN, navigateColumnHeders);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN, navigateColumnHeaders);
   useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_FOCUS, handleColumnHeaderFocus);
 };
