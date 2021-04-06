@@ -21,7 +21,8 @@ import {
   GridFieldComparatorList,
   GridSortItem,
   GridSortModel,
-  GridSortDirection, GridSortCellParams,
+  GridSortDirection,
+  GridSortCellParams,
 } from '../../../models/gridSortModel';
 import { isDesc, nextGridSortDirection } from '../../../utils/sortingUtils';
 import { isDeepEqual } from '../../../utils/utils';
@@ -109,7 +110,7 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
       return params;
     },
     [apiRef],
-    );
+  );
 
   const comparatorListAggregate = React.useCallback(
     (row1: GridRowModel, row2: GridRowModel) => {
