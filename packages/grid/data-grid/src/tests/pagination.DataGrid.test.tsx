@@ -10,6 +10,7 @@ import { expect } from 'chai';
 import { DataGrid, DataGridProps, GridRowsProp } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
+import { useData } from 'packages/storybook/src/hooks/useData';
 
 describe('<DataGrid /> - Pagination', () => {
   // TODO v5: replace with createClientRender
@@ -186,6 +187,44 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues()).to.deep.equal(['Nike 0']);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(getColumnValues()).to.deep.equal(['Nike 1']);
+    });
+
+    describe('AutoPageSize', () => {
+      it('should always render the same amount of rows and fit the viewport', () => {
+        const TestCaseAutoPageSize = (
+          props: Partial<DataGridProps> & { nbRows?: number; nbCols?: number; height?: number },
+        ) => {
+          const data = useData(props.nbRows || 100, props.nbCols || 10);
+
+          return (
+            <div style={{ width: 300, height: props.height || 300 }}>
+              <DataGrid
+                columns={data.columns}
+                rows={data.rows}
+                autoPageSize
+                pagination
+                {...props}
+              />
+            </div>
+          );
+        };
+        render(<TestCaseAutoPageSize nbRows={27} height={800} />);
+        let rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
+        expect(rows.length).to.equal(12);
+
+        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+        rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
+        expect(rows.length).to.equal(12);
+
+        fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
+        rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
+        expect(rows.length).to.equal(12);
+
+        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+        rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
+        expect(rows.length).to.equal(3);
+      });
     });
   });
 });

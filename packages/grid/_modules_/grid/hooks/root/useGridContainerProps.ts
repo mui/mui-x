@@ -35,13 +35,14 @@ export const useGridContainerProps = (
 
   const getVirtualRowCount = React.useCallback(() => {
     logger.debug('Calculating virtual row count.');
-    if (options.pagination) {
+    if (options.pagination && !options.autoPageSize) {
       const rowsLeft = visibleRowsCount - paginationState.page * paginationState.pageSize;
       return rowsLeft > paginationState.pageSize ? paginationState.pageSize : rowsLeft;
     }
     return visibleRowsCount;
   }, [
     logger,
+    options.autoPageSize,
     options.pagination,
     paginationState.page,
     paginationState.pageSize,
@@ -140,7 +141,7 @@ export const useGridContainerProps = (
         const requiredHeight = viewportPageSize * rowHeight + scrollBarState.scrollBarSize.x;
 
         const indexes: GridContainerProps = {
-          isVirtualized,
+          isVirtualized: false,
           virtualRowsCount: viewportPageSize,
           renderingZonePageSize: viewportPageSize,
           viewportPageSize,
