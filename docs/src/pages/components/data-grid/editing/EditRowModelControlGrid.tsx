@@ -78,10 +78,14 @@ export default function EditRowModelControlGrid() {
     [],
   );
 
-  return (<div style={{width: '100%'}}>
-      <DataGrid rows={rows} columns={columns} autoHeight
-                editRowsModel={editRowsModel}
-                onEditRowModelChange={handleEditRowModelChange}
+  return (
+    <div style={{ width: '100%' }}>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        editRowsModel={editRowsModel}
+        onEditRowModelChange={handleEditRowModelChange}
+        autoHeight
       />
       <code>{JSON.stringify(editRowsModel)}</code>
     </div>

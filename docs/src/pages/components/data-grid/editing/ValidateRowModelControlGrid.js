@@ -105,12 +105,12 @@ export default function ValidateRowModelControlGrid() {
 
   return (
     <DataGrid
+      className={classes.root}
       rows={rows}
       columns={columns}
-      autoHeight
-      className={classes.root}
       editRowsModel={editRowsModel}
       onEditCellChange={onEditCellChange}
+      autoHeight
     />
   );
 }

@@ -80,11 +80,11 @@ export default function IsCellEditableGrid() {
   const classes = useStyles();
   return (
     <DataGrid
+      className={classes.root}
       rows={rows}
       columns={columns}
-      autoHeight
-      className={classes.root}
       isCellEditable={(params) => params.row.age % 2 === 0}
+      autoHeight
     />
   );
 }

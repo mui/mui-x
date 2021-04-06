@@ -60,11 +60,9 @@ const rows: GridRowsProp = [
     age: 23,
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
-  }
+  },
 ];
 
 export default function BasicEditingGrid() {
-  return (
-      <DataGrid rows={rows} columns={columns} autoHeight />
-  );
+  return <DataGrid rows={rows} columns={columns} autoHeight />;
 }

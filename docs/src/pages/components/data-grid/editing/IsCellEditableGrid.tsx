@@ -1,6 +1,11 @@
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import * as React from 'react';
-import { DataGrid, getThemePaletteMode, GridColumns, GridRowsProp } from '@material-ui/data-grid';
+import {
+  DataGrid,
+  getThemePaletteMode,
+  GridColumns,
+  GridRowsProp,
+} from '@material-ui/data-grid';
 import {
   randomCreatedDate,
   randomTraderName,
@@ -64,25 +69,27 @@ const rows: GridRowsProp = [
   },
 ];
 
-export const useStyles = makeStyles(
-  (theme: Theme) => {
-    const backgroundColor =
-      getThemePaletteMode(theme.palette) === 'dark' ? '#376331' : 'rgb(217 243 190)';
-    return {
-      root: {
-        '& .MuiDataGrid-cellEditable': {
-          backgroundColor,
-        },
+export const useStyles = makeStyles((theme: Theme) => {
+  const backgroundColor =
+    getThemePaletteMode(theme.palette) === 'dark' ? '#376331' : 'rgb(217 243 190)';
+  return {
+    root: {
+      '& .MuiDataGrid-cellEditable': {
+        backgroundColor,
       },
-    };
-  });
+    },
+  };
+});
 
 export default function IsCellEditableGrid() {
   const classes = useStyles();
   return (
-    <DataGrid rows={rows} columns={columns} autoHeight
-              className={classes.root}
-        isCellEditable={(params) => params.row.age % 2 === 0}
-      />
+    <DataGrid
+      className={classes.root}
+      rows={rows}
+      columns={columns}
+      isCellEditable={(params) => params.row.age % 2 === 0}
+      autoHeight
+    />
   );
 }

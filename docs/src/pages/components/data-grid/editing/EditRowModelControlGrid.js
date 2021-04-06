@@ -75,9 +75,9 @@ export default function EditRowModelControlGrid() {
       <DataGrid
         rows={rows}
         columns={columns}
-        autoHeight
         editRowsModel={editRowsModel}
         onEditRowModelChange={handleEditRowModelChange}
+        autoHeight
       />
       <code>{JSON.stringify(editRowsModel)}</code>
     </div>

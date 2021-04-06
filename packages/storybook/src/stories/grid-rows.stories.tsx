@@ -672,7 +672,7 @@ export function ValidateEditValueWithEditCellModelPropGrid() {
     </div>
   );
 }
-// Server  mock
+
 let promiseTimeout: any;
 function validateUsername(username: string): Promise<boolean> {
   const existingUsers = ['damien', 'olivier', 'danail'];

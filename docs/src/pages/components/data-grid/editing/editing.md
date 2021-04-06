@@ -62,21 +62,23 @@ If you purchase XGrid, then it might be quicker to use `apiRef` to do that.
 
 ### Server side
 
-username onChange serverValidation 
+username onChange serverValidation
 Demo Save server side with error handling => No update on error
 
-### Customization 
+{{"demo": "pages/components/data-grid/editing/ValidateServerNameGrid.js", "bg": "inline"}}
+
+### Customization
+
 Override native behaviour
 
 You can edit on click...
 Or with an external button
 
 #### Component
+
 `Column.renderEditCell`
 
 ### Events
-
-
 
 ## 🚧 Row editing
 
