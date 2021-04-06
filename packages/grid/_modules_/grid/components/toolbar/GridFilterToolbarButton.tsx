@@ -1,6 +1,7 @@
 import Badge from '@material-ui/core/Badge';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
+import { capitalize } from '@material-ui/core/utils';
 import * as React from 'react';
 import { gridColumnLookupSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
@@ -11,6 +12,7 @@ import {
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
+import { GridTranslationKeys } from '../../models/api/gridLocaleTextApi';
 import { GridApiContext } from '../GridApiContext';
 
 export const GridFilterToolbarButton: React.FC<{}> = () => {
@@ -35,7 +37,10 @@ export const GridFilterToolbarButton: React.FC<{}> = () => {
           {activeFilters.map((item) => ({
             ...(lookup[item.columnField!] && (
               <li key={item.id}>
-                {lookup[item.columnField!].headerName || item.columnField} {item.operatorValue}{' '}
+                {lookup[item.columnField!].headerName || item.columnField}{' '}
+                {apiRef!.current.getLocaleText(
+                  `filterOperator${capitalize(item.operatorValue!)}` as GridTranslationKeys,
+                )}{' '}
                 {item.value}
               </li>
             )),
