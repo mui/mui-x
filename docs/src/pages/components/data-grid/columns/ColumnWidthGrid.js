@@ -4,7 +4,7 @@ import { DataGrid } from '@material-ui/data-grid';
 const rows = [
   {
     id: 1,
-    username: 'defunkt',
+    username: '@MaterialUI',
     age: 38,
   },
 ];
@@ -14,7 +14,6 @@ export default function ColumnWidthGrid() {
     <div style={{ height: 250, width: '100%' }}>
       <DataGrid
         columns={[
-          { field: 'id' },
           { field: 'username', width: 200 },
           { field: 'age' },
         ]}

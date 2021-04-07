@@ -4,17 +4,15 @@ import { DataGrid } from '@material-ui/data-grid';
 const rows = [
   {
     id: 1,
-    username: 'defunkt',
-    age: 38,
+    username: '@MaterialUI',
+    age: 20,
   },
 ];
 
 export default function HeaderColumnsGrid() {
   return (
-    <div style={{ height: 250, width: '100%' }}>
       <DataGrid
         columns={[
-          { field: 'id', hide: true },
           {
             field: 'username',
             headerName: 'Username',
@@ -24,7 +22,8 @@ export default function HeaderColumnsGrid() {
           { field: 'age', headerName: 'Age' },
         ]}
         rows={rows}
+        autoHeight
+        hideFooter
       />
-    </div>
   );
 }

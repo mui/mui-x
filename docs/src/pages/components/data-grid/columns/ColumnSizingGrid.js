@@ -4,14 +4,13 @@ import { XGrid } from '@material-ui/x-grid';
 const rows = [
   {
     id: 1,
-    username: 'defunkt',
-    age: 38,
+    username: '@MaterialUI',
+    age: 20,
   },
 ];
 
 export default function ColumnSizingGrid() {
   return (
-    <div style={{ height: 250, width: '100%' }}>
       <XGrid
         columns={[
           { field: 'id' },
@@ -19,7 +18,8 @@ export default function ColumnSizingGrid() {
           { field: 'age', resizable: false },
         ]}
         rows={rows}
+        autoHeight
+        hideFooter
       />
-    </div>
   );
 }

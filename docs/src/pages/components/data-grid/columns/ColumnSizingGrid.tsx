@@ -11,7 +11,6 @@ const rows = [
 
 export default function ColumnSizingGrid() {
   return (
-    <div style={{ height: 250, width: '100%' }}>
       <XGrid
         columns={[
           { field: 'id' },
@@ -19,7 +18,8 @@ export default function ColumnSizingGrid() {
           { field: 'age', resizable: false },
         ]}
         rows={rows}
+        autoHeight
+        hideFooter
       />
-    </div>
   );
 }

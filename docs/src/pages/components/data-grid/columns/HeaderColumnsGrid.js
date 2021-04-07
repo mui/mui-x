@@ -11,7 +11,6 @@ const rows = [
 
 export default function HeaderColumnsGrid() {
   return (
-    <div style={{ height: 250, width: '100%' }}>
       <DataGrid
         columns={[
           { field: 'id', hide: true },
@@ -25,6 +24,5 @@ export default function HeaderColumnsGrid() {
         ]}
         rows={rows}
       />
-    </div>
   );
 }
