@@ -2,7 +2,6 @@ import Alert from '@material-ui/lab/Alert';
 import { GRID_CELL_EDIT_EXIT, XGrid } from '@material-ui/x-grid';
 import * as React from 'react';
 import {
-  DataGrid,
   GRID_CELL_EDIT_ENTER,
   GridCellParams,
   GridColumns,

@@ -97,8 +97,12 @@ You can customize that behaviour and override it completely as shown in the demo
 ### Events
 
 The editing feature leverages the event capability of the grid and the apiRef.
+The following events can be used to customize the edition:
 
-Events list here...
+- `cellEditEnter`: emitted when the cell turns to edit mode.
+- `cellEditExit`: emitted when the cell turns back to view mode.
+- `cellEditPropsChange`: emitted when the edit input change.
+- `cellEditPropsChangeCommitted`: emitted when the edit input change is submitted.
 
 You can catch the events while ignoring the trigger of the event.
 
