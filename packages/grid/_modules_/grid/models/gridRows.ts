@@ -27,16 +27,18 @@ export interface GridObjectWithId {
 }
 
 /**
- * An helper function allowing to check if [[GridRowData]] is valid.
+ * An helper function to check if the id provided is valid.
  *
+ * @param id Id as [[GridRowId]].
  * @param row Row as [[GridRowData]].
  * @returns a boolean
  */
-export function checkGridRowHasId(
+export function checkGridRowIdIsValid(
+  id: GridRowId,
   row: GridRowModel | Partial<GridRowModel>,
   detailErrorMessage?: string,
 ): boolean {
-  if (row.id == null) {
+  if (id == null) {
     throw new Error(
       [
         'Material-UI: The data grid component requires all rows to have a unique id property.',

@@ -7,7 +7,7 @@ import {
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridRowApi } from '../../../models/api/gridRowApi';
 import {
-  checkGridRowHasId,
+  checkGridRowIdIsValid,
   GridRowModel,
   GridRowModelUpdate,
   GridRowId,
@@ -20,8 +20,13 @@ import { useLogger } from '../../utils/useLogger';
 import { useGridState } from '../core/useGridState';
 import { getInitialGridRowState, InternalGridRowsState } from './gridRowsState';
 
+// TODO remove after all row.id are removed
 export function addGridRowId(rowData: GridRowData, getRowId?: GridRowIdGetter): GridRowModel {
   return getRowId == null ? (rowData as GridRowModel) : { id: getRowId(rowData), ...rowData };
+}
+
+function getGridRowId(rowData: GridRowData, getRowId?: GridRowIdGetter): GridRowId {
+  return getRowId ? getRowId(rowData) : rowData.id;
 }
 
 export function convertGridRowsPropToState(
@@ -36,9 +41,10 @@ export function convertGridRowsPropToState(
 
   rows.forEach((rowData) => {
     const row = addGridRowId(rowData, rowIdGetter);
-    checkGridRowHasId(row);
-    state.allRows.push(row.id);
-    state.idRowsLookup[row.id] = row;
+    const id = getGridRowId(rowData, rowIdGetter);
+    checkGridRowIdIsValid(id, row);
+    state.allRows.push(id);
+    state.idRowsLookup[id] = row;
   });
 
   return state;
@@ -120,9 +126,10 @@ export const useGridRows = (
       const allRows: GridRowId[] = [];
       const idRowsLookup = allNewRows.reduce((lookup, row) => {
         row = addGridRowId(row, getRowIdProp);
-        checkGridRowHasId(row);
-        lookup[row.id] = row;
-        allRows.push(row.id);
+        const id = getGridRowId(row, getRowIdProp);
+        checkGridRowIdIsValid(id, row);
+        lookup[id] = row;
+        allRows.push(id);
         return lookup;
       }, {});
 
@@ -146,20 +153,24 @@ export const useGridRows = (
     (updates: GridRowModelUpdate[]) => {
       // we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
       const uniqUpdates = updates.reduce((uniq, update) => {
-        const udpateWithId = addGridRowId(update, getRowIdProp);
-        const id = udpateWithId.id;
-        checkGridRowHasId(udpateWithId, 'A row was provided without id when calling updateRows():');
-        uniq[id] = uniq[id] != null ? { ...uniq[id!], ...udpateWithId } : udpateWithId;
+        const updateWithId = addGridRowId(update, getRowIdProp);
+        const id = getGridRowId(update, getRowIdProp);
+        checkGridRowIdIsValid(
+          id,
+          updateWithId,
+          'A row was provided without id when calling updateRows():',
+        );
+        uniq[id] = uniq[id] != null ? { ...uniq[id!], ...updateWithId } : updateWithId;
         return uniq;
       }, {} as { [id: string]: GridRowModel });
 
       const addedRows: GridRowModel[] = [];
-      const deletedRows: GridRowModel[] = [];
+      const deletedRowIds: GridRowId[] = [];
 
       Object.entries<GridRowModel>(uniqUpdates).forEach(([id, partialRow]) => {
         // eslint-disable-next-line no-underscore-dangle
         if (partialRow._action === 'delete') {
-          deletedRows.push(partialRow);
+          deletedRowIds.push(id);
           return;
         }
 
@@ -179,9 +190,9 @@ export const useGridRows = (
 
       setGridState((state) => ({ ...state, rows: { ...internalRowsState.current } }));
 
-      if (deletedRows.length > 0 || addedRows.length > 0) {
-        deletedRows.forEach((row) => {
-          delete internalRowsState.current.idRowsLookup[row.id];
+      if (deletedRowIds.length > 0 || addedRows.length > 0) {
+        deletedRowIds.forEach((id) => {
+          delete internalRowsState.current.idRowsLookup[id];
         });
         const newRows = [
           ...Object.values<GridRowModel>(internalRowsState.current.idRowsLookup),
