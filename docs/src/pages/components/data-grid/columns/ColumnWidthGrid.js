@@ -11,14 +11,11 @@ const rows = [
 
 export default function ColumnWidthGrid() {
   return (
-    <div style={{ height: 250, width: '100%' }}>
-      <DataGrid
-        columns={[
-          { field: 'username', width: 200 },
-          { field: 'age' },
-        ]}
-        rows={rows}
-      />
-    </div>
+    <DataGrid
+      columns={[{ field: 'username', width: 200 }, { field: 'age' }]}
+      rows={rows}
+      autoHeight
+      hideFooter
+    />
   );
 }
