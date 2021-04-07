@@ -76,9 +76,7 @@ If you purchased XGrid, it will be quicker to use `apiRef` to do that.
 Server side validation works just like client side [validation](#validation).
 - use the `GridEditRowsModel` mentioned in [Control Editing](#control-editing).
 - or set the event handler `onEditCellChange` for `keydown` validation
-
-To validate, and update the server when the change is committed.
-- set the event handler `onEditCellChangeCommitted`.
+- set the event handler `onEditCellChangeCommitted` to validate and update the server when the change is committed.
 
 **Note:** To prevent the default client side behavior, use `event.stopPropagation()`.
 
@@ -114,7 +112,7 @@ The following events can be used to customize the edition:
 
 Catching events can be used to add a callback after an event while ignoring its triggers.
 
-*The demo shows how to catch the start & end edit events which can be triggered using a mouse or a keyboard interaction.*
+*The demo shows how to catch the start & end edit events to log which cell is editing in an info message.*
 
 {{"demo": "pages/components/data-grid/editing/CatchEditingEventsGrid.js", "bg": "inline"}}
 
