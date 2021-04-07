@@ -37,11 +37,11 @@ export const GridFilterToolbarButton: React.FC<{}> = () => {
           {activeFilters.map((item) => ({
             ...(lookup[item.columnField!] && (
               <li key={item.id}>
-                {lookup[item.columnField!].headerName || item.columnField}{' '}
-                {apiRef!.current.getLocaleText(
+                {`${lookup[item.columnField!].headerName || item.columnField}
+                ${apiRef!.current.getLocaleText(
                   `filterOperator${capitalize(item.operatorValue!)}` as GridTranslationKeys,
-                )}{' '}
-                {item.value}
+                )}
+                ${item.value}`}
               </li>
             )),
           }))}
