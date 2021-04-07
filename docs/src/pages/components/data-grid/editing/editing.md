@@ -5,13 +5,12 @@ components: DataGrid, XGrid
 
 # Data Grid - Editing
 
-<p class="description">The data grid provides allows performing: create, read, update, and delete operations (CRUD).</p>
+<p class="description">The data grid has built-in edit capabilities that you can customize to your needs.</p>
 
 ## Cell editing
 
-Cell editing allows to edit the value of one cell at a time.
-
-To activate editing on cells, set the `editable` property of the column definition `GridColDef` object to true.
+Cell editing allows to edit the value of one cell at a time. 
+- set `editable` attribute of the column definition `GridColDef` object to `true` to allow editing cells of this column.
 
 ```tsx
 <DataGrid columns={[{ field: 'name', editable: true }]} />
@@ -19,78 +18,89 @@ To activate editing on cells, set the `editable` property of the column definiti
 
 ### Start Editing
 
-By default, a cell can turn into edit mode by double-clicking on it, or using the keyboard shortcuts.
-If the cell has focus.
+If a column is editable and if a cell has focus.
 
-- Start typing any alpha keys
 - Press <kbd class="key">Enter</kbd> to switch to edit mode
-- Press <kbd class="key">Delete</kbd> to delete the value
+- Press <kbd class="key">Delete</kbd> to delete the value 
+- Type any alpha key to start editing
+- Double click to switch to edit mode
 
 {{"demo": "pages/components/data-grid/editing/BasicEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Stop Editing
 
-- Click outside the cell
 - <kbd class="key">Escape</kbd> to rollback changes.
 - <kbd class="key">Tab</kbd> to save and goes to next cell.
 - <kbd class="key">Enter</kbd> to save and goes to next cell below.
+- Click outside the cell
 
 ### Control cell editability
 
-In addition to the `editable` flag on columns, you can control which cell is editable using `isCellEditable` prop.
+In addition to the `editable` flag on columns, control which cell is editable using `isCellEditable` prop.
 
-In the demo below, the column `name` is not editable, and only the rows with an even `age` value are editable.
-To make it more visible, we applied a green background on the editable cells.
+*In this demo, `Name` is not editable, and only the rows with an even `Age` value are editable.
+We applied a green background for a better visibility.*
 
 {{"demo": "pages/components/data-grid/editing/IsCellEditableGrid.js", "bg": "inline"}}
 
 ### Control editing
 
-The `editRowsModel` lets you control the editing.
+The `editRowsModel` lets you control the editing. 
+- implement the `onEditRowModelChange` to control the state of the `GridEditRowsModel` model.
 
 {{"demo": "pages/components/data-grid/editing/EditRowModelControlGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 #### value Getter
 
-If the column definition process their data using a `valueGetter`,
-then you will need to set the underlying data. You can do this by implementing `onEditCellChangeCommitted` event handler.
-This handler is called when the edit value is submitted, and the grid is about to update its cell value.
+If the column definition process their data using a `valueGetter`.
+- set the underlying data by implementing `onEditCellChangeCommitted` event handler invoked when the change is submitted, and the grid is about to update.
 
 {{"demo": "pages/components/data-grid/editing/ValueGetterGrid.js", "bg": "inline"}}
 
 ### Validation
 
-To validate cell values on input change, you can use the options handler `onEditCellChange`.
+To validate cell values on input change.
+- set the event handler `onEditCellChange` invoked when a change is triggered by the edit input component.
+- or use the `GridEditRowsModel` mentioned in [Control Editing](#control-editing).
+
+To validate, and update the server when the change is committed.
+- set the event handler `onEditCellChangeCommitted`.
+
 {{"demo": "pages/components/data-grid/editing/ValidateRowModelControlGrid.js", "bg": "inline"}}
 
 #### using ApiRef
 
-If you purchase XGrid, then it might be quicker to use `apiRef` to do that.
+If you purchased XGrid, it will be quicker to use `apiRef` to do that.
 {{"demo": "pages/components/data-grid/editing/ValidateCellApiRefGrid.js", "bg": "inline"}}
 
 ### Server side
 
-You can implement server side validation by implementing an handler on `onEditCellChange` for `keydown` validation.
+Server side validation works just like client side [validation](#validation).
+- use the `GridEditRowsModel` mentioned in [Control Editing](#control-editing).
+- or set the event handler `onEditCellChange` for `keydown` validation
 
-Or You can validate or apply changes on the server when a value is committed. To achieve this, you would need to implement `onEditCellChangeCommitted`.
+To validate, and update the server when the change is committed.
+- set the event handler `onEditCellChangeCommitted`.
 
-**Note:** To prevent the default client side behavior, you can use `event.stopPropagation()`.
+**Note:** To prevent the default client side behavior, use `event.stopPropagation()`.
 
-The example below shows how you can validate a username asynchronously and prevent the user from committing the value while validating.
+*This demo shows how you can validate a username asynchronously and prevent the user from committing the value while validating.*
 {{"demo": "pages/components/data-grid/editing/ValidateServerNameGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Customization
 
 #### Component
 
-You can customize the edit component of a column using the `renderEditCell` function available as a prop of the column definition `GridColDef`.
-The demo below lets you edit the ratings by double clicking the cell.
+To customize the edit component of a column 
+- set the `renderEditCell` function available in the column definition `GridColDef`.
+
+*The demo lets you edit the ratings by double clicking the cell.*
 {{"demo": "pages/components/data-grid/editing/RenderRatingEditCellGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-#### Start Edit using external button
+#### Edit using external button
 
-By default, the grid cell turns in edit mode using the keyboard by double clicking on it.
-You can customize that behaviour and override it completely as shown in the demo below.
+By default, cells turn to edit mode using the keyboard or by double clicking on it.
+- Customize that behaviour and override it completely as shown in this demo.
 
 {{"demo": "pages/components/data-grid/editing/StartEditButtonGrid.js", "bg": "inline"}}
 
@@ -104,9 +114,9 @@ The following events can be used to customize the edition:
 - `cellEditPropsChange`: emitted when the edit input change.
 - `cellEditPropsChangeCommitted`: emitted when the edit input change is submitted.
 
-You can catch the events while ignoring the trigger of the event.
+Catching events can be used to add a callback after an event while ignoring its triggers.
 
-The demo below shows how you can catch the start/end edit events which can be triggered using a mouse or a keyboard interaction.
+*The demo shows how to catch the start & end edit events which can be triggered using a mouse or a keyboard interaction.*
 
 {{"demo": "pages/components/data-grid/editing/CatchEditingEventsGrid.js", "bg": "inline"}}
 
