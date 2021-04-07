@@ -57,7 +57,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
   const cellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = React.useContext(GridApiContext);
   const currentFocusedCell = apiRef!.current.getState().keyboard.cell;
-  const isCellFocusable =
+  const isCellFocused =
     (currentFocusedCell && hasFocus) || (rowIndex === 0 && colIndex === 0 && !currentFocusedCell);
 
   const cssClasses = classnames(
@@ -153,7 +153,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
       aria-colindex={colIndex}
       style={style}
       /* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */
-      tabIndex={isCellFocusable ? 0 : -1}
+      tabIndex={isCellFocused ? 0 : -1}
       {...eventsHandlers}
     >
       {children || valueToRender?.toString()}
