@@ -143,7 +143,7 @@ export const useGridKeyboardNavigation = (
       }
 
       nextCellIndexes.rowIndex =
-        nextCellIndexes.rowIndex !== null && nextCellIndexes.rowIndex >= rowCount && rowCount > 0
+        nextCellIndexes.rowIndex >= rowCount && rowCount > 0
           ? rowCount - 1
           : nextCellIndexes.rowIndex;
       nextCellIndexes.colIndex = nextCellIndexes.colIndex <= 0 ? 0 : nextCellIndexes.colIndex;
