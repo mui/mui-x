@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.24](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.23...v4.0.0-alpha.24)
+
+_Apr 2, 2021_
+
+Big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 🇬🇷 Add elGR locale (#1275) @clytras
+- 🇪🇸 Add esES locale (#1286) @WiXSL
+- 🇯🇵 Add jaJP locale (#1283) @seed-of-apricot
+- 🇳🇱 Add nlNL locale (#1273) @wimdetroyer
+- 🐞 Bugfixes
+
+### @material-ui/x-grid@v4.0.0-alpha.24 / @material-ui/data-grid@v4.0.0-alpha.24
+
+#### Breaking Changes
+
+- [DataGrid] All slot components no longer get access to `GridBaseComponentProps` through the props. To use the `GridBaseComponentProps` call the `useGridSlotComponentProps` hook. (#1252) @DanailH
+- [DataGrid] Type `GridSlotsComponent` changed (#1252) @DanailH
+- [DataGrid] Rename `GridBaseComponentProps` type to `GridSlotComponentProps` (#1252) @DanailH
+- [DataGrid] Rename `useGridBaseComponentProps` hook to `useGridSlotComponentProps` (#1252) @DanailH
+- [DataGrid] Rename modules (#1292) @DanailH
+- [DataGrid] Rename all events related to column reordering, e.g. `GRID_COL_REORDER_START` -> `GRID_COLUMN_REORDER_START` (#1299) @m4theushw
+- [DataGrid] Methods `onColItemDragStart`, `onColHeaderDragOver`, `onColItemDragOver`, `onColItemDragEnter` removed from the grid API. Prefer listening to [column reordering events](https://material-ui.com/components/data-grid/columns/#column-reorder) (#1299) @m4theushw
+- [DataGrid] Calling `apiRef.current.getColumnHeaderParams` returns a `GridColumnHeaderParams` instead of `GridColParams` (#1299) @m4theushw
+- [DataGrid] Events that follow the pattern `GRID_COLUMN_HEADER_xxx` will be called with a `GridColumnHeaderParams` instead of `GridColParams` (#1299) @m4theushw
+- [DataGrid] The `renderHeader` will be called with a `GridColumnHeaderParams` instead of `GridColParams` (#1299) @m4theushw
+- [DataGrid] The `apiRef.current.moveColumn` was renamed to `apiRef.current.setColumnIndex` (#1299) @m4theushw
+
+#### Changes
+
+- [DataGrid] Fix loader flag from useDemoData hook (#1279) @DanailH
+- [DataGrid] Fix page shift after toggling column (#1284) @m4theushw
+- [DataGrid] Fix rendering issues (#1319, #1253) @dtassone
+- [DataGrid] Refactor edit events to allow stop propagation (#1304) @dtassone
+
+### Core
+
+- [core] Batch small changes (#1310) @oliviertassinari
+
 ## [4.0.0-alpha.23](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.22...v4.0.0-alpha.23)
 
 _Mar 22, 2021_
