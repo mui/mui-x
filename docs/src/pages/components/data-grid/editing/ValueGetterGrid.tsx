@@ -1,10 +1,8 @@
 import * as React from 'react';
 import {
   DataGrid,
-  GridCellParams,
   GridColDef,
   GridEditCellPropsParams,
-  GridEditRowsModel,
   GridValueGetterParams,
 } from '@material-ui/data-grid';
 

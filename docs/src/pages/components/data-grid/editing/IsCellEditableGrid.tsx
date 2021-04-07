@@ -69,7 +69,7 @@ const rows: GridRowsProp = [
   },
 ];
 
-export const useStyles = makeStyles((theme: Theme) => {
+const useStyles = makeStyles((theme: Theme) => {
   const backgroundColor =
     getThemePaletteMode(theme.palette) === 'dark' ? '#376331' : 'rgb(217 243 190)';
   return {
