@@ -55,12 +55,12 @@ export default function ValueGetterGrid() {
     [rows],
   );
   return (
-    <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         rows={rows}
         columns={columns}
         onEditCellChangeCommitted={handleEditCellChangeCommitted}
+        autoHeight
+        hideFooter
       />
-    </div>
   );
 }

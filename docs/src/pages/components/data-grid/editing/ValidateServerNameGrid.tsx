@@ -64,7 +64,6 @@ function validateName(username: string): Promise<boolean> {
     }, Math.random() * 500 + 100);
   });
 }
-// TODO Commit value serverside
 export default function ValidateServerNameGrid() {
   const apiRef = useGridApiRef();
   const classes = useStyles();
@@ -99,7 +98,6 @@ export default function ValidateServerNameGrid() {
   );
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
       <XGrid
         className={classes.root}
         apiRef={apiRef}
@@ -110,6 +108,5 @@ export default function ValidateServerNameGrid() {
         autoHeight
         hideFooter
       />
-    </div>
   );
 }

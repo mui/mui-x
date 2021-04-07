@@ -46,7 +46,9 @@ To make it more visible, we applied a green background on the editable cells.
 
 ### Control editing
 
-{{"demo": "pages/components/data-grid/editing/EditRowModelControlGrid.js", "bg": "inline"}}
+The `editRowsModel` lets you control the editing. 
+
+{{"demo": "pages/components/data-grid/editing/EditRowModelControlGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 #### value Getter
 
@@ -68,23 +70,42 @@ If you purchase XGrid, then it might be quicker to use `apiRef` to do that.
 
 ### Server side
 
-username onChange serverValidation
-Demo Save server side with error handling => No update on error
+You can implement server side validation by implementing an handler on `onEditCellChange` for `keydown` validation. 
 
-{{"demo": "pages/components/data-grid/editing/ValidateServerNameGrid.js", "bg": "inline"}}
+Or You can validate or apply changes on the server when a value is committed. To achieve this, you would need to implement `onEditCellChangeCommitted`. 
+
+**Note:** To prevent the default client side behavior, you can use `event.stopPropagation()`.
+
+The example below shows how you can validate a username asynchronously and prevent the user from committing the value while validating.
+{{"demo": "pages/components/data-grid/editing/ValidateServerNameGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Customization
 
-Override native behaviour
-
-You can edit on click...
-Or with an external button
-
 #### Component
 
-`Column.renderEditCell`
+You can customize the edit component of a column using the `renderEditCell` function available as a prop of the column definition `GridColDef`.
+The demo below lets you edit the ratings by double clicking the cell.
+{{"demo": "pages/components/data-grid/editing/RenderRatingEditCellGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
+#### Start Edit using external button
+
+By default, the grid cell turns in edit mode using the keyboard by double clicking on it.
+You can customize that behaviour and override it completely as shown in the demo below.
+
+{{"demo": "pages/components/data-grid/editing/StartEditButtonGrid.js", "bg": "inline"}}
 
 ### Events
+
+The editing feature leverages the event capability of the grid and the apiRef.
+
+Events list here...
+
+You can catch the events while ignoring the trigger of the event.
+
+The demo below shows how you can catch the start/end edit events which can be triggered using a mouse or a keyboard interaction.
+
+{{"demo": "pages/components/data-grid/editing/CatchEditingEventsGrid.js", "bg": "inline"}}
+
 
 ## 🚧 Row editing
 

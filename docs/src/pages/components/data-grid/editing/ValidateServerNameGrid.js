@@ -60,7 +60,6 @@ function validateName(username) {
     }, Math.random() * 500 + 100);
   });
 }
-// TODO Commit value serverside
 export default function ValidateServerNameGrid() {
   const apiRef = useGridApiRef();
   const classes = useStyles();
@@ -96,17 +95,15 @@ export default function ValidateServerNameGrid() {
   );
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      <XGrid
-        className={classes.root}
-        apiRef={apiRef}
-        rows={rows}
-        columns={columns}
-        onEditCellChange={handleEditCellChange}
-        isCellEditable={(params) => params.row.id === 5}
-        autoHeight
-        hideFooter
-      />
-    </div>
+    <XGrid
+      className={classes.root}
+      apiRef={apiRef}
+      rows={rows}
+      columns={columns}
+      onEditCellChange={handleEditCellChange}
+      isCellEditable={(params) => params.row.id === 5}
+      autoHeight
+      hideFooter
+    />
   );
 }
