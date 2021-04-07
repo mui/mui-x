@@ -4,13 +4,13 @@ import {
   GridHeaderCheckbox,
 } from '../../components/GridCheckboxRenderer';
 import { GridColDef } from './gridColDef';
+import { GRID_BOOLEAN_COL_DEF } from './gridBooleanColDef';
 
 export const gridCheckboxSelectionColDef: GridColDef = {
+  ...GRID_BOOLEAN_COL_DEF,
   field: '__check__',
   type: 'checkboxSelection',
   width: 48,
-  align: 'center',
-  headerAlign: 'center',
   resizable: true,
   sortable: false,
   filterable: false,
