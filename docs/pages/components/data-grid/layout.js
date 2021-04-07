@@ -2,14 +2,14 @@ import React from 'react';
 import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
 import { prepareMarkdown } from 'docs/src/modules/utils/parseMarkdown';
 
-const pageFilename = 'components/data-grid/rendering';
+const pageFilename = 'components/data-grid/layout';
 const requireDemo = require.context(
-  'docsx/src/pages/components/data-grid/rendering',
+  'docsx/src/pages/components/data-grid/layout',
   false,
   /\.(js|tsx)$/,
 );
 const requireRaw = require.context(
-  '!raw-loader!../../../src/pages/components/data-grid/rendering',
+  '!raw-loader!../../../src/pages/components/data-grid/layout',
   false,
   /\.(js|md|tsx)$/,
 );

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid } from '@material-ui/data-grid';
+import { XGrid } from '@material-ui/x-grid';
 
 function useData(rowLength, columnLength) {
   const [data, setData] = React.useState({ columns: [], rows: [] });
@@ -35,11 +35,11 @@ function useData(rowLength, columnLength) {
 }
 
 export default function ColumnVirtualizationGrid() {
-  const data = useData(50, 1000);
+  const data = useData(500, 1000);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid {...data} columnBuffer={2} />
+      <XGrid {...data} columnBuffer={2} hideFooter />
     </div>
   );
 }
