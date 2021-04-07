@@ -92,12 +92,11 @@ export const useGridKeyboardNavigation = (
   const navigateCells = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
       event.preventDefault();
-      const { colIndex } = params;
+      const { colIndex, rowIndex } = params;
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
       const cellEl = params.element!;
       cellEl.tabIndex = -1;
-      const rowIndex = Number(cellEl.getAttribute('data-rowindex'));
       let rowCount = totalRowCount;
 
       if (options.pagination && totalRowCount > paginationState.pageSize) {
