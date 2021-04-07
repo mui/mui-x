@@ -6,10 +6,10 @@ import {
   GRID_COLUMN_HEADER_LEAVE,
   GRID_COLUMN_HEADER_OUT,
   GRID_COLUMN_HEADER_OVER,
-  GRID_COLUMN_REORDER_DRAG_ENTER,
-  GRID_COLUMN_REORDER_DRAG_OVER,
-  GRID_COLUMN_REORDER_START,
-  GRID_COLUMN_REORDER_DRAG_END,
+  GRID_COLUMN_HEADER_DRAG_ENTER,
+  GRID_COLUMN_HEADER_DRAG_OVER,
+  GRID_COLUMN_HEADER_DRAG_START,
+  GRID_COLUMN_HEADER_DRAG_END,
 } from '../../constants/eventsConstants';
 import { GridColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
 import { GridOptions } from '../../models/gridOptions';
@@ -69,7 +69,7 @@ export const GridColumnHeaderItem = ({
   }
 
   const publish = React.useCallback(
-    (eventName: string) => (event: React.MouseEvent) =>
+    (eventName: string) => (event: React.MouseEvent | React.DragEvent) =>
       apiRef!.current.publishEvent(
         eventName,
         apiRef!.current.getColumnHeaderParams(column.field),
@@ -92,10 +92,10 @@ export const GridColumnHeaderItem = ({
 
   const draggableEventHandlers = React.useMemo(
     () => ({
-      onDragStart: publish(GRID_COLUMN_REORDER_START),
-      onDragEnter: publish(GRID_COLUMN_REORDER_DRAG_ENTER),
-      onDragOver: publish(GRID_COLUMN_REORDER_DRAG_OVER),
-      onDragEnd: publish(GRID_COLUMN_REORDER_DRAG_END),
+      onDragStart: publish(GRID_COLUMN_HEADER_DRAG_START),
+      onDragEnter: publish(GRID_COLUMN_HEADER_DRAG_ENTER),
+      onDragOver: publish(GRID_COLUMN_HEADER_DRAG_OVER),
+      onDragEnd: publish(GRID_COLUMN_HEADER_DRAG_END),
     }),
     [publish],
   );
