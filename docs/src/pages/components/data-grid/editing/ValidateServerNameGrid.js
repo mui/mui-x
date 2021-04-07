@@ -29,7 +29,7 @@ const rows = [
   },
 ];
 
-export const useStyles = makeStyles((theme) => {
+const useStyles = makeStyles((theme) => {
   const backgroundColor =
     getThemePaletteMode(theme.palette) === 'dark' ? '#376331' : 'rgb(217 243 190)';
   return {
