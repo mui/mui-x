@@ -1,7 +1,6 @@
 import Button from '@material-ui/core/Button';
-import { XGrid } from '@material-ui/x-grid';
 import * as React from 'react';
-import { useGridApiRef } from '@material-ui/data-grid';
+import { useGridApiRef, XGrid } from '@material-ui/x-grid';
 import {
   randomCreatedDate,
   randomTraderName,

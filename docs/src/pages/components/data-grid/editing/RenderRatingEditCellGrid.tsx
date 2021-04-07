@@ -1,28 +1,8 @@
-import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Rating } from '@material-ui/lab';
-import {
-  GridFilterInputValueProps,
-  GridPreferencePanelsValue,
-  DataGrid,
-  GridFilterItem,
-  GridColDef,
-  GridCellParams,
-  GRID_CELL_EDIT_PROPS_CHANGE,
-  mapColDefTypeToInputType,
-  isDate,
-  formatDateToLocalInputDate,
-  GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED,
-} from '@material-ui/data-grid';
-import {
-  generateName,
-  randomRating,
-  randomUrl,
-  renderLink,
-  renderRating,
-  useDemoData,
-} from '@material-ui/x-grid-data-generator';
+import { DataGrid, GridCellParams } from '@material-ui/data-grid';
+import { renderRating } from '@material-ui/x-grid-data-generator';
 
 const useStyles = makeStyles({
   root: {
@@ -33,7 +13,7 @@ const useStyles = makeStyles({
     paddingLeft: 20,
   },
 });
-export function GridRatingEditInputCell(props: GridCellParams & InputBaseProps) {
+export function GridRatingEditInputCell(props: GridCellParams) {
   const { id, value, api, field } = props;
   const classes = useStyles();
 

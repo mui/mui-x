@@ -1,13 +1,14 @@
 import Alert from '@material-ui/lab/Alert';
-import { GRID_CELL_EDIT_EXIT, XGrid } from '@material-ui/x-grid';
 import * as React from 'react';
 import {
   GRID_CELL_EDIT_ENTER,
+  GRID_CELL_EDIT_EXIT,
   GridCellParams,
   GridColumns,
   GridRowsProp,
   useGridApiRef,
-} from '@material-ui/data-grid';
+  XGrid,
+} from '@material-ui/x-grid';
 import {
   randomCreatedDate,
   randomTraderName,
@@ -78,9 +79,9 @@ export default function CatchEditingEventsGrid() {
     return apiRef.current.subscribeEvent(
       GRID_CELL_EDIT_ENTER,
       (param: GridCellParams, event?: React.SyntheticEvent) => {
-        setMessage(`Editing cell with value: ${param.value} at row: ${param.rowIndex}, column: ${
-          param.field
-        },
+        setMessage(`Editing cell with value: ${param.value} at row: ${
+          param.rowIndex
+        }, column: ${param.field},
                         triggered by ${event!.type}
       `);
       },
@@ -100,4 +101,3 @@ export default function CatchEditingEventsGrid() {
     </div>
   );
 }
-

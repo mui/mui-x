@@ -1,7 +1,6 @@
-import { XGrid } from '@material-ui/x-grid';
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { useGridApiRef } from '@material-ui/data-grid';
+import { useGridApiRef, XGrid } from '@material-ui/x-grid';
 import {
   randomCreatedDate,
   randomEmail,

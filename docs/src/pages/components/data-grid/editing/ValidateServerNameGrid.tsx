@@ -1,12 +1,13 @@
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { getThemePaletteMode, XGrid } from '@material-ui/x-grid';
 import * as React from 'react';
 import {
   GridColumns,
   GridEditCellPropsParams,
   GridRowsProp,
   useGridApiRef,
-} from '@material-ui/data-grid';
+  getThemePaletteMode,
+  XGrid,
+} from '@material-ui/x-grid';
 
 const columns: GridColumns = [
   { field: 'name', headerName: 'MUI Contributor', width: 180, editable: true },
@@ -98,15 +99,15 @@ export default function ValidateServerNameGrid() {
   );
 
   return (
-      <XGrid
-        className={classes.root}
-        apiRef={apiRef}
-        rows={rows}
-        columns={columns}
-        onEditCellChange={handleEditCellChange}
-        isCellEditable={(params) => params.row.id === 5}
-        autoHeight
-        hideFooter
-      />
+    <XGrid
+      className={classes.root}
+      apiRef={apiRef}
+      rows={rows}
+      columns={columns}
+      onEditCellChange={handleEditCellChange}
+      isCellEditable={(params) => params.row.id === 5}
+      autoHeight
+      hideFooter
+    />
   );
 }

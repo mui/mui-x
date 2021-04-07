@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
-import { getThemePaletteMode, XGrid } from '@material-ui/x-grid';
 import * as React from 'react';
-import { useGridApiRef } from '@material-ui/data-grid';
+import { useGridApiRef, getThemePaletteMode, XGrid } from '@material-ui/x-grid';
 
 const columns = [
   { field: 'name', headerName: 'MUI Contributor', width: 180, editable: true },

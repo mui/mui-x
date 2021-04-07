@@ -1,7 +1,11 @@
 import Alert from '@material-ui/lab/Alert';
-import { XGrid } from '@material-ui/x-grid';
 import * as React from 'react';
-import { GRID_CELL_EDIT_ENTER, useGridApiRef } from '@material-ui/data-grid';
+import {
+  GRID_CELL_EDIT_ENTER,
+  GRID_CELL_EDIT_EXIT,
+  useGridApiRef,
+  XGrid,
+} from '@material-ui/x-grid';
 import {
   randomCreatedDate,
   randomTraderName,
@@ -78,7 +82,7 @@ export default function CatchEditingEventsGrid() {
   }, [apiRef]);
 
   React.useEffect(() => {
-    return apiRef.current.subscribeEvent('cellExitEdit', () => {
+    return apiRef.current.subscribeEvent(GRID_CELL_EDIT_EXIT, () => {
       setMessage('');
     });
   }, [apiRef]);
@@ -86,7 +90,7 @@ export default function CatchEditingEventsGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       {message && <Alert severity="info">{message}</Alert>}
-      <XGrid rows={rows} columns={columns} apiRef={apiRef} autoHeight />
+      <XGrid rows={rows} columns={columns} apiRef={apiRef} autoHeight hideFooter />
     </div>
   );
 }

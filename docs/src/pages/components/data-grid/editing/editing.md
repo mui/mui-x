@@ -46,7 +46,7 @@ To make it more visible, we applied a green background on the editable cells.
 
 ### Control editing
 
-The `editRowsModel` lets you control the editing. 
+The `editRowsModel` lets you control the editing.
 
 {{"demo": "pages/components/data-grid/editing/EditRowModelControlGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -70,9 +70,9 @@ If you purchase XGrid, then it might be quicker to use `apiRef` to do that.
 
 ### Server side
 
-You can implement server side validation by implementing an handler on `onEditCellChange` for `keydown` validation. 
+You can implement server side validation by implementing an handler on `onEditCellChange` for `keydown` validation.
 
-Or You can validate or apply changes on the server when a value is committed. To achieve this, you would need to implement `onEditCellChangeCommitted`. 
+Or You can validate or apply changes on the server when a value is committed. To achieve this, you would need to implement `onEditCellChangeCommitted`.
 
 **Note:** To prevent the default client side behavior, you can use `event.stopPropagation()`.
 
@@ -109,7 +109,6 @@ You can catch the events while ignoring the trigger of the event.
 The demo below shows how you can catch the start/end edit events which can be triggered using a mouse or a keyboard interaction.
 
 {{"demo": "pages/components/data-grid/editing/CatchEditingEventsGrid.js", "bg": "inline"}}
-
 
 ## 🚧 Row editing
 

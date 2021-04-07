@@ -55,12 +55,12 @@ export default function ValueGetterGrid() {
     [rows],
   );
   return (
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        onEditCellChangeCommitted={handleEditCellChangeCommitted}
-        autoHeight
-        hideFooter
-      />
+    <DataGrid
+      rows={rows}
+      columns={columns}
+      onEditCellChangeCommitted={handleEditCellChangeCommitted}
+      autoHeight
+      hideFooter
+    />
   );
 }

@@ -50,7 +50,7 @@ GridRatingEditInputCell.propTypes = {
   /**
    * The grid row id.
    */
-  id: PropTypes.string.isRequired,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * The cell value, but if the column has valueGetter, use getValue.
    */

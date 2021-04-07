@@ -1,13 +1,12 @@
-import { XGrid } from '@material-ui/x-grid';
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  DataGrid,
   GridColumns,
   GridEditCellPropsParams,
   GridRowsProp,
   useGridApiRef,
-} from '@material-ui/data-grid';
+  XGrid,
+} from '@material-ui/x-grid';
 import {
   randomCreatedDate,
   randomEmail,
