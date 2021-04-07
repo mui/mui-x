@@ -61,10 +61,8 @@ If the column definition process their data using a `valueGetter`.
 
 To validate cell values on input change.
 - set the event handler `onEditCellChange` invoked when a change is triggered by the edit input component.
+- set the event handler `onEditCellChangeCommitted` to validate when the change is committed.
 - or use the `GridEditRowsModel` mentioned in [Control Editing](#control-editing).
-
-To validate when the change is committed.
-- set the event handler `onEditCellChangeCommitted`.
 
 {{"demo": "pages/components/data-grid/editing/ValidateRowModelControlGrid.js", "bg": "inline"}}
 
