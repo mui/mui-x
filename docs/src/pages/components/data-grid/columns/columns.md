@@ -34,23 +34,23 @@ By default, columns are ordered according to the order they are included in the 
 > Otherwise, you take the risk of losing the column width state (if resized).
 > You can create the array outside of the render function or memoize it.
 
-### Title & Description
+### Column Headers
 
 You can configure the headers with:
 
 - `headerName`: The title of the column rendered in the column header cell.
 - `description`: The description of the column rendered as tooltip if the column header name is not fully displayed.
 
-{{"demo": "pages/components/data-grid/columns/HeaderColumnsGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/columns/HeaderColumnsGrid.js", "bg": "inline"}}
 
 ### Width
 
 The default columns width is 100 pixels.
 - set the `width` property available in `GridColDef` to override that value.
 
-{{"demo": "pages/components/data-grid/columns/ColumnWidthGrid.js", "bg": "inline",  "defaultCodeOpen": false}}
+{{"demo": "pages/components/data-grid/columns/ColumnWidthGrid.js", "bg": "inline" }}
 
-#### Fluid width
+### Fluid width
 
 Column fluidity or responsiveness can be by achieved by setting the `flex` property in `GridColDef`.
 
@@ -72,8 +72,9 @@ Set the column definiton attribute
 - `hide`: Hide the column.
 
 ```tsx
-const hiddenColumn = {field: 'id', hide: true};
+<DataGrid columns={[{ field: 'id', hide: true }]} />
 ```
+
 ### Resizing [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 By default, `XGrid` allows all columns to be resized by dragging the right portion of the column separator.
@@ -113,7 +114,7 @@ const columns: GridColDef[] = [
 ];
 ```
 
-{{"demo": "pages/components/data-grid/columns/ValueGetterGrid.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"demo": "pages/components/data-grid/columns/ValueGetterGrid.js", "bg": "inline"}}
 
 The value generated is used for filtering, sorting, rendering, etc unless overridden by a more specific configuration.
 
@@ -133,7 +134,7 @@ const columns: GridColDef[] = [
 ];
 ```
 
-{{"demo": "pages/components/data-grid/columns/ValueFormatterGrid.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"demo": "pages/components/data-grid/columns/ValueFormatterGrid.js", "bg": "inline"}}
 
 The value generated is used for filtering, sorting, rendering in the cell and outside, etc unless overridden by a more specific configuration.
 
@@ -172,7 +173,7 @@ const columns: GridColDef[] = [
 ];
 ```
 
-{{"demo": "pages/components/data-grid/columns/RenderCellGrid.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"demo": "pages/components/data-grid/columns/RenderCellGrid.js", "bg": "inline"}}
 
 #### Render Edit Cell
 
@@ -186,7 +187,7 @@ As `renderCell` for the view mode, the grid render an input field in edit mode.
 By default, the grid cuts the content of a cell and renders an ellipsis if the content of the cell does not fit in the cell.
 As a workaround, you can create a cell renderer that will allow seeing the full content of the cell in the grid.
 
-{{"demo": "pages/components/data-grid/columns/RenderExpandCellGrid.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"demo": "pages/components/data-grid/columns/RenderExpandCellGrid.js", "bg": "inline"}}
 
 ### Render header
 
@@ -211,7 +212,7 @@ const columns: GridColDef[] = [
 ];
 ```
 
-{{"demo": "pages/components/data-grid/columns/RenderHeaderGrid.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"demo": "pages/components/data-grid/columns/RenderHeaderGrid.js", "bg": "inline"}}
 
 ### Styling header
 
@@ -235,7 +236,7 @@ const columns: GridColumns = [
 ];
 ```
 
-{{"demo": "pages/components/data-grid/columns/StylingHeaderGrid.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"demo": "pages/components/data-grid/columns/StylingHeaderGrid.js", "bg": "inline"}}
 
 ### Styling cells
 
@@ -262,7 +263,7 @@ const columns: GridColumns = [
 ];
 ```
 
-{{"demo": "pages/components/data-grid/columns/StylingCellsGrid.js", "defaultCodeOpen": false, "bg": "inline"}}
+{{"demo": "pages/components/data-grid/columns/StylingCellsGrid.js", "bg": "inline"}}
 
 ## Column types
 

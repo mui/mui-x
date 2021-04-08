@@ -11,24 +11,25 @@ const rows = [
 
 export default function ColumnFluidWidthGrid() {
   return (
-    <DataGrid
-      columns={[
-        {
-          field: 'id',
-          flex: 1,
-        },
-        {
-          field: 'username',
-          width: 200,
-        },
-        {
-          field: 'age',
-          flex: 0.3,
-        },
-      ]}
-      rows={rows}
-      autoHeight
-      hideFooter
-    />
+    <div style={{ height: 250, width: '100%' }}>
+      <DataGrid
+        columns={[
+          {
+            field: 'id',
+            flex: 1,
+          },
+          {
+            field: 'username',
+            width: 200,
+          },
+          {
+            field: 'age',
+            flex: 0.3,
+          },
+        ]}
+        rows={rows}
+        hideFooter
+      />
+    </div>
   );
 }

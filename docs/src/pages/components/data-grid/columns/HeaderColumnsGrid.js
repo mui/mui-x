@@ -11,19 +11,20 @@ const rows = [
 
 export default function HeaderColumnsGrid() {
   return (
-    <DataGrid
-      columns={[
-        {
-          field: 'username',
-          headerName: 'Username',
-          description:
-            'The identification used by the person with access to the online service.',
-        },
-        { field: 'age', headerName: 'Age' },
-      ]}
-      rows={rows}
-      autoHeight
-      hideFooter
-    />
+    <div style={{ height: 250, width: '100%' }}>
+      <DataGrid
+        columns={[
+          {
+            field: 'username',
+            headerName: 'Username',
+            description:
+              'The identification used by the person with access to the online service.',
+          },
+          { field: 'age', headerName: 'Age' },
+        ]}
+        rows={rows}
+        hideFooter
+      />
+    </div>
   );
 }
