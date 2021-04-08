@@ -21,13 +21,15 @@ import { useGridState } from '../core/useGridState';
 import { gridKeyboardMultipleKeySelector } from '../keyboard/gridKeyboardSelector';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { GridSelectionState } from './gridSelectionState';
+import { selectedGridRowsSelector } from './gridSelectionSelector';
 
 export const useGridSelection = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridSelection');
-  const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
+  const [, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
   const rowsLookup = useGridSelector(apiRef, gridRowsLookupSelector);
   const isMultipleKeyPressed = useGridSelector(apiRef, gridKeyboardMultipleKeySelector);
+  const selectedRows = useGridSelector(apiRef, selectedGridRowsSelector);
 
   const allowMultipleSelectionKeyPressed = React.useRef<boolean>(false);
 
@@ -36,14 +38,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
       !options.disableMultipleSelection && isMultipleKeyPressed;
   }, [isMultipleKeyPressed, options.disableMultipleSelection]);
 
-  const getSelectedRows = React.useCallback((): Map<GridRowId, GridRowModel> => {
-    // TODO replace with selector
-    const map = new Map();
-    Object.keys(gridState.selection).forEach((id) => {
-      map.set(id, apiRef.current.getRowFromId(id));
-    });
-    return map;
-  }, [apiRef, gridState.selection]);
+  const getSelectedRows = React.useCallback(() => selectedRows, [selectedRows]);
 
   const selectRowModel = React.useCallback(
     (id: GridRowId, row: GridRowModel, allowMultipleOverride?: boolean, isSelected?: boolean) => {
