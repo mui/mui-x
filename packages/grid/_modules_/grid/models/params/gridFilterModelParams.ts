@@ -1,6 +1,6 @@
 import { GridFilterModel } from '../../hooks/features/filter/gridFilterModelState';
 import { GridColumns } from '../colDef/gridColDef';
-import { GridRowModel } from '../gridRows';
+import { GridRowModel, GridRowId } from '../gridRows';
 
 /**
  * Object passed as parameter of the filter changed event.
@@ -17,11 +17,11 @@ export interface GridFilterModelParams {
   /**
    * The full set of rows.
    */
-  rows: GridRowModel[];
+  rows: Map<GridRowId, GridRowModel>;
   /**
    * The set of currently visible rows.
    */
-  visibleRows: GridRowModel[];
+  visibleRows: Map<GridRowId, GridRowModel>;
   /**
    * Api that let you manipulate the grid.
    */

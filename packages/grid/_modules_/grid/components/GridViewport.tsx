@@ -42,25 +42,25 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
         return null;
       }
 
-      const renderedRows = rows.slice(
+      const renderedRows = [...rows.entries()].slice(
         renderState.renderContext.firstRowIdx,
         renderState.renderContext.lastRowIdx!,
       );
-      return renderedRows.map((r, idx) => (
+      return renderedRows.map(([id, row], idx) => (
         <GridRow
           className={
             (renderState.renderContext!.firstRowIdx! + idx) % 2 === 0 ? 'Mui-even' : 'Mui-odd'
           }
-          key={r.id}
-          id={r.id}
-          selected={!!selectionState[r.id]}
+          key={id}
+          id={id}
+          selected={!!selectionState[id]}
           rowIndex={renderState.renderContext!.firstRowIdx! + idx}
         >
           <GridEmptyCell width={renderState.renderContext!.leftEmptyWidth} height={rowHeight} />
           <GridRowCells
             columns={visibleColumns}
-            row={r}
-            id={r.id}
+            row={row}
+            id={id}
             firstColIdx={renderState.renderContext!.firstColIdx!}
             lastColIdx={renderState.renderContext!.lastColIdx!}
             hasScroll={{ y: scrollBarState!.hasScrollY, x: scrollBarState.hasScrollX }}

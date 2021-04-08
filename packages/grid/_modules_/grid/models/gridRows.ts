@@ -4,7 +4,7 @@ export type GridRowData = { [key: string]: any };
 /**
  * The key value object representing the data of a row.
  */
-export type GridRowModel = GridObjectWithId & GridRowData;
+export type GridRowModel = GridRowData;
 
 export type GridUpdateAction = 'delete';
 

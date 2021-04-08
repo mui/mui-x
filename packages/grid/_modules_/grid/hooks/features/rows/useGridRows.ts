@@ -20,11 +20,6 @@ import { useLogger } from '../../utils/useLogger';
 import { useGridState } from '../core/useGridState';
 import { getInitialGridRowState, InternalGridRowsState } from './gridRowsState';
 
-// TODO remove after all row.id are removed
-export function addGridRowId(rowData: GridRowData, getRowId?: GridRowIdGetter): GridRowModel {
-  return getRowId == null ? (rowData as GridRowModel) : { id: getRowId(rowData), ...rowData };
-}
-
 function getGridRowId(rowData: GridRowData, getRowId?: GridRowIdGetter): GridRowId {
   return getRowId ? getRowId(rowData) : rowData.id;
 }
@@ -40,11 +35,10 @@ export function convertGridRowsPropToState(
   };
 
   rows.forEach((rowData) => {
-    const row = addGridRowId(rowData, rowIdGetter);
     const id = getGridRowId(rowData, rowIdGetter);
-    checkGridRowIdIsValid(id, row);
+    checkGridRowIdIsValid(id, rowData);
     state.allRows.push(id);
-    state.idRowsLookup[id] = row;
+    state.idRowsLookup[id] = rowData;
   });
 
   return state;
@@ -125,7 +119,6 @@ export const useGridRows = (
 
       const allRows: GridRowId[] = [];
       const idRowsLookup = allNewRows.reduce((lookup, row) => {
-        row = addGridRowId(row, getRowIdProp);
         const id = getGridRowId(row, getRowIdProp);
         checkGridRowIdIsValid(id, row);
         lookup[id] = row;
@@ -153,14 +146,13 @@ export const useGridRows = (
     (updates: GridRowModelUpdate[]) => {
       // we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
       const uniqUpdates = updates.reduce((uniq, update) => {
-        const updateWithId = addGridRowId(update, getRowIdProp);
         const id = getGridRowId(update, getRowIdProp);
         checkGridRowIdIsValid(
           id,
-          updateWithId,
+          update,
           'A row was provided without id when calling updateRows():',
         );
-        uniq[id] = uniq[id] != null ? { ...uniq[id!], ...updateWithId } : updateWithId;
+        uniq[id] = uniq[id] != null ? { ...uniq[id!], ...update } : update;
         return uniq;
       }, {} as { [id: string]: GridRowModel });
 
@@ -205,10 +197,13 @@ export const useGridRows = (
     [apiRef, forceUpdate, getRowFromId, getRowIdProp, setGridState, setRows],
   );
 
-  const getRowModels = React.useCallback(
-    () => apiRef.current.state.rows.allRows.map((id) => apiRef.current.state.rows.idRowsLookup[id]),
-    [apiRef],
-  );
+  const getRowModels = React.useCallback(() => {
+    const map = new Map<GridRowId, GridRowModel>();
+    apiRef.current.state.rows.allRows.forEach((id) => {
+      map.set(id, apiRef.current.state.rows.idRowsLookup[id]);
+    });
+    return map;
+  }, [apiRef]);
   const getRowsCount = React.useCallback(() => apiRef.current.state.rows.totalRowCount, [apiRef]);
   const getAllRowIds = React.useCallback(() => apiRef.current.state.rows.allRows, [apiRef]);
 

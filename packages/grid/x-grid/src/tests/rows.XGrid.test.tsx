@@ -50,7 +50,7 @@ describe('<XGrid /> - Rows', () => {
             age: 20,
           },
         ],
-        columns: [{ field: 'id' }, { field: 'first' }, { field: 'age' }],
+        columns: [{ field: 'clientId' }, { field: 'first' }, { field: 'age' }],
       };
     });
 
@@ -108,6 +108,21 @@ describe('<XGrid /> - Rows', () => {
       expect(cell).to.have.class('MuiDataGrid-cellEditable');
       expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
       expect(cell.querySelector('input')).to.equal(null);
+    });
+
+    it('should not clone the row', () => {
+      const getRowId = (row) => `${row.clientId}`;
+      let apiRef: GridApiRef;
+      const Test = () => {
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid {...baselineProps} getRowId={getRowId} apiRef={apiRef} />
+          </div>
+        );
+      };
+      render(<Test />);
+      expect(apiRef!.current.getRowFromId('c1')).to.equal(baselineProps.rows[0]);
     });
   });
 

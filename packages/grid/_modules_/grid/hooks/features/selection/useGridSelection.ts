@@ -36,23 +36,27 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
       !options.disableMultipleSelection && isMultipleKeyPressed;
   }, [isMultipleKeyPressed, options.disableMultipleSelection]);
 
-  const getSelectedRows = React.useCallback((): GridRowModel[] => {
+  const getSelectedRows = React.useCallback((): Map<GridRowId, GridRowModel> => {
     // TODO replace with selector
-    return Object.keys(gridState.selection).map((id) => apiRef.current.getRowFromId(id));
+    const map = new Map();
+    Object.keys(gridState.selection).forEach((id) => {
+      map.set(id, apiRef.current.getRowFromId(id));
+    });
+    return map;
   }, [apiRef, gridState.selection]);
 
   const selectRowModel = React.useCallback(
-    (row: GridRowModel, allowMultipleOverride?: boolean, isSelected?: boolean) => {
+    (id: GridRowId, row: GridRowModel, allowMultipleOverride?: boolean, isSelected?: boolean) => {
       if (!apiRef.current.isInitialised) {
         setGridState((state) => {
           const selectionState: GridSelectionState = {};
-          selectionState[row.id] = true;
+          selectionState[id] = true;
           return { ...state, selection: selectionState };
         });
         return;
       }
 
-      logger.debug(`Selecting row ${row.id}`);
+      logger.debug(`Selecting row ${id}`);
 
       const allowMultiSelect =
         allowMultipleOverride ||
@@ -64,19 +68,19 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
           // eslint-disable-next-line prefer-object-spread
           const selectionState: GridSelectionState = Object.assign({}, state.selection);
           const isRowSelected: boolean =
-            !allowMultiSelect || isSelected == null ? !selectionState[row.id] : isSelected;
+            !allowMultiSelect || isSelected == null ? !selectionState[id] : isSelected;
 
           if (isRowSelected) {
-            selectionState[row.id] = true;
+            selectionState[id] = true;
           } else {
-            delete selectionState[row.id];
+            delete selectionState[id];
           }
           return { ...state, selection: selectionState };
         });
       } else {
         setGridState((state) => {
           const selectionState: GridSelectionState = {};
-          selectionState[row.id] = true;
+          selectionState[id] = true;
           return { ...state, selection: selectionState };
         });
       }
@@ -87,7 +91,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
       const rowSelectedParam: GridRowSelectedParams = {
         api: apiRef,
         data: row,
-        isSelected: !!selectionState[row.id],
+        isSelected: !!selectionState[id],
       };
       const selectionChangeParam: GridSelectionModelChangeParams = {
         selectionModel: Object.keys(selectionState),
@@ -100,7 +104,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
 
   const selectRow = React.useCallback(
     (id: GridRowId, isSelected = true, allowMultiple = false) => {
-      selectRowModel(apiRef.current.getRowFromId(id), allowMultiple, isSelected);
+      selectRowModel(id, apiRef.current.getRowFromId(id), allowMultiple, isSelected);
     },
     [apiRef, selectRowModel],
   );
@@ -151,7 +155,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
   const rowClickHandler = React.useCallback(
     (params: GridRowParams) => {
       if (!options.disableSelectionOnClick) {
-        selectRowModel(params.row);
+        selectRowModel(params.id, params.row);
       }
     },
     [options.disableSelectionOnClick, selectRowModel],

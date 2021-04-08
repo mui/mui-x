@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import { GridFilterItem } from '../../../models/gridFilterItem';
-import { GridRowModel } from '../../../models/gridRows';
+import { GridRowId, GridRowData } from '../../../models/gridRows';
 import { GridState } from '../core/gridState';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
@@ -12,15 +12,17 @@ export const visibleGridRowsStateSelector = (state: GridState) => state.visibleR
 export const visibleSortedGridRowsSelector = createSelector<
   GridState,
   VisibleGridRowsState,
-  GridRowModel[],
-  GridRowModel[]
->(
-  visibleGridRowsStateSelector,
-  sortedGridRowsSelector,
-  (visibleRowsState, sortedRows: GridRowModel[]) => {
-    return [...sortedRows].filter((row) => visibleRowsState.visibleRowsLookup[row.id] !== false);
-  },
-);
+  Map<GridRowId, GridRowData>,
+  Map<GridRowId, GridRowData>
+>(visibleGridRowsStateSelector, sortedGridRowsSelector, (visibleRowsState, sortedRows) => {
+  const map = new Map();
+  sortedRows.forEach((row, id) => {
+    if (visibleRowsState.visibleRowsLookup[id] !== false) {
+      map.set(id, row);
+    }
+  });
+  return map;
+});
 
 export const visibleGridRowCountSelector = createSelector<
   GridState,

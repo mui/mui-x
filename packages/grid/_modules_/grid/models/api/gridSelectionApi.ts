@@ -24,7 +24,7 @@ export interface GridSelectionApi {
   /**
    * Get an array of selected rows.
    */
-  getSelectedRows: () => GridRowModel[];
+  getSelectedRows: () => Map<GridRowId, GridRowModel>;
   /**
    * Callback fired after a row is selected.
    * @param handler

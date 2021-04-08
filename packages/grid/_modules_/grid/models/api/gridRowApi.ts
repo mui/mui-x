@@ -8,7 +8,7 @@ export interface GridRowApi {
    * Get the full set of rows as [[Rows]].
    * @returns [[Rows]]
    */
-  getRowModels: () => GridRowModel[];
+  getRowModels: () => Map<GridRowId, GridRowModel>;
   /**
    * Get the total number of rows in the grid.
    */

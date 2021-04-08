@@ -31,10 +31,7 @@ export const GridHeaderCheckbox: React.FC<GridColumnHeaderParams> = () => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     setChecked(checked);
-    apiRef!.current.selectRows(
-      visibleRows.map((row) => row.id),
-      checked,
-    );
+    apiRef!.current.selectRows([...visibleRows.keys()], checked);
   };
 
   return (
