@@ -1,4 +1,4 @@
-import { GridRowId, GridRowData } from 'packages/grid/data-grid/dist/data-grid';
+import { GridRowId, GridRowData } from '../gridRows';
 import { GridFilterModel } from '../../hooks/features/filter/gridFilterModelState';
 import { GridFilterItem, GridLinkOperator } from '../gridFilterItem';
 import { GridFilterModelParams } from '../params/gridFilterModelParams';

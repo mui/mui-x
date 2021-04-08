@@ -9,6 +9,7 @@ import {
   GridPreferencePanelsValue,
   GridRowModel,
   GridFilterModelParams,
+  GridRowId,
   useGridApiRef,
   XGrid,
   SUBMIT_FILTER_STROKE_TIME,
@@ -21,7 +22,6 @@ import {
   fireEvent,
 } from 'test/utils';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
-import { GridRowId } from 'packages/grid/data-grid/dist/data-grid';
 
 describe('<XGrid /> - Filter', () => {
   let clock;
