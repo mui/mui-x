@@ -34,7 +34,7 @@ By default, columns are ordered according to the order they are included in the 
 > Otherwise, you take the risk of losing the column width state (if resized).
 > You can create the array outside of the render function or memoize it.
 
-### Column Headers
+### Column headers
 
 You can configure the headers with:
 
@@ -46,6 +46,7 @@ You can configure the headers with:
 ### Width
 
 The default columns width is 100 pixels.
+
 - set the `width` property available in `GridColDef` to override that value.
 
 {{"demo": "pages/components/data-grid/columns/ColumnWidthGrid.js", "bg": "inline" }}
@@ -60,7 +61,8 @@ Column fluidity or responsiveness can be by achieved by setting the `flex` prope
 For example, consider a grid with a total width of 500px that has three columns: the first with `width: 200`; the second with `flex: 1`; and third with `flex: 0.5`.
 The first column will be 200px wide, leaving 300px remaining. The column with `flex: 1` is twice the size of `flex: 0.5`, which means that final sizes will be: 200px, 200px, 100px.
 
-**Note** 
+**Note**
+
 - `flex` doesn't work together with `width`. If you set both `flex` and `width` in `GridColDef`, `flex` will override `width`.
 - `flex` does not work if the combined width of the columns that have `width` is more than the width of the grid itself. If that is the case a scroll bar will be visible, and the columns that have `flex` will default back to their base value of 100px.
 
@@ -69,6 +71,7 @@ The first column will be 200px wide, leaving 300px remaining. The column with `f
 ### Hiding
 
 Set the column definiton attribute
+
 - `hide`: Hide the column.
 
 ```tsx
@@ -83,7 +86,6 @@ To prevent the resizing of a column, set `resizable: false` in the `GridColDef`.
 Alternatively, to disable all columns resize, set the prop `disableColumnResize={true}`.
 
 {{"demo": "pages/components/data-grid/columns/ColumnSizingGrid.js", "disableAd": true, "bg": "inline"}}
-
 
 ### Value getter
 
@@ -121,6 +123,7 @@ The value generated is used for filtering, sorting, rendering, etc unless overri
 ### Value formatter
 
 The value formatters allow you to format values for display as a string.
+
 - use it to format a JavaScript `Date` object.
 
 ```tsx
@@ -178,9 +181,10 @@ const columns: GridColDef[] = [
 #### Render Edit Cell
 
 As `renderCell` for the view mode, the grid render an input field in edit mode.
+
 - set the `renderEditCell` to customize that component.
 
-*Check the [editing page](/components/data-grid/editing) for more details about editing*
+_Check the [editing page](/components/data-grid/editing) for more details about editing_
 
 #### Expand cell renderer
 

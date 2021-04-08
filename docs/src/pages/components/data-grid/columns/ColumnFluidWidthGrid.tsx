@@ -12,7 +12,7 @@ const rows = [
 export default function ColumnFluidWidthGrid() {
   return (
     <div style={{ height: 250, width: '100%' }}>
-        <DataGrid
+      <DataGrid
         columns={[
           {
             field: 'id',
@@ -30,6 +30,6 @@ export default function ColumnFluidWidthGrid() {
         rows={rows}
         hideFooter
       />
-      </div>
+    </div>
   );
 }

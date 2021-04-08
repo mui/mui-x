@@ -12,7 +12,7 @@ const rows = [
 export default function HeaderColumnsGrid() {
   return (
     <div style={{ height: 250, width: '100%' }}>
-    <DataGrid
+      <DataGrid
         columns={[
           {
             field: 'username',
@@ -25,6 +25,6 @@ export default function HeaderColumnsGrid() {
         rows={rows}
         hideFooter
       />
-      </div>
+    </div>
   );
 }

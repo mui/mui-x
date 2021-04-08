@@ -7,7 +7,6 @@ components: DataGrid, XGrid
 
 <p class="description">The grid is highly customizable. Take advantage of a React-first implementation.</p>
 
-
 ## Layout
 
 By default, the grid has no intrinsic dimensions. It occupies the space its parent leaves.

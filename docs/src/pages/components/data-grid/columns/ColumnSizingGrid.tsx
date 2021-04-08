@@ -21,6 +21,6 @@ export default function ColumnSizingGrid() {
         rows={rows}
         hideFooter
       />
-      </div>
+    </div>
   );
 }
