@@ -214,7 +214,6 @@ This means that the number of rows will drive the height of the grid and consequ
 
 {{"demo": "pages/components/data-grid/rendering/AutoHeightGrid.js", "bg": "inline"}}
 
-
 ## Virtualization
 
 DOM virtualization is the feature that allows the grid to handle an unlimited\* number of rows and columns.
