@@ -3,7 +3,6 @@ import {
   gridCheckboxSelectionColDef,
   GridColumns,
   GridRowId,
-  GridRowModel,
 } from '../../../../models';
 
 const serialiseCellValue = (value) => {
@@ -30,22 +29,22 @@ export function serialiseRow(
 
 export function buildCSV(
   columns: GridColumns,
-  rows: Map<GridRowId, GridRowModel>,
+  rowIds: GridRowId[],
   selectedRows: Record<GridRowId, boolean>,
   getCellValue: (id: GridRowId, field: string) => GridCellValue,
 ): string {
-  let rowIds = [...rows.keys()];
+  let rowIdsToSerialize = [...rowIds];
   const selectedRowIds = Object.keys(selectedRows);
 
   if (selectedRowIds.length) {
-    rowIds = rowIds.filter((id) => selectedRowIds.includes(`${id}`));
+    rowIdsToSerialize = rowIds.filter((id) => selectedRowIds.includes(`${id}`));
   }
 
   const CSVHead = `${columns
     .filter((column) => column.field !== gridCheckboxSelectionColDef.field)
     .map((column) => serialiseCellValue(column.headerName || column.field))
     .toString()}\r\n`;
-  const CSVBody = rowIds
+  const CSVBody = rowIdsToSerialize
     .reduce<string>((soFar, id) => `${soFar}${serialiseRow(id, columns, getCellValue)}\r\n`, '')
     .trim();
   const csv = `${CSVHead}${CSVBody}`.trim();

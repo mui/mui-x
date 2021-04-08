@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import { GridFilterItem } from '../../../models/gridFilterItem';
-import { GridRowId, GridRowData } from '../../../models/gridRows';
+import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { GridState } from '../core/gridState';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
@@ -12,8 +12,8 @@ export const visibleGridRowsStateSelector = (state: GridState) => state.visibleR
 export const visibleSortedGridRowsSelector = createSelector<
   GridState,
   VisibleGridRowsState,
-  Map<GridRowId, GridRowData>,
-  Map<GridRowId, GridRowData>
+  Map<GridRowId, GridRowModel>,
+  Map<GridRowId, GridRowModel>
 >(visibleGridRowsStateSelector, sortedGridRowsSelector, (visibleRowsState, sortedRows) => {
   const map = new Map();
   sortedRows.forEach((row, id) => {
@@ -22,6 +22,30 @@ export const visibleSortedGridRowsSelector = createSelector<
     }
   });
   return map;
+});
+
+export const visibleSortedGridRowsAsArraySelector = createSelector<
+  GridState,
+  Map<GridRowId, GridRowModel>,
+  [GridRowId, GridRowModel][]
+>(visibleSortedGridRowsSelector, (visibleSortedRows) => {
+  const result: [GridRowId, GridRowModel][] = [];
+  visibleSortedRows.forEach((row, id) => {
+    result.push([id, row]);
+  });
+  return result;
+});
+
+export const visibleSortedGridRowIdsSelector = createSelector<
+  GridState,
+  Map<GridRowId, GridRowModel>,
+  GridRowId[]
+>(visibleSortedGridRowsSelector, (visibleSortedRows) => {
+  const result: GridRowId[] = [];
+  visibleSortedRows.forEach((row, id) => {
+    result.push(id);
+  });
+  return result;
 });
 
 export const visibleGridRowCountSelector = createSelector<

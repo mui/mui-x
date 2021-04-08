@@ -155,14 +155,14 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   );
 
   const applySorting = React.useCallback(() => {
-    const rowModels = apiRef.current.getRowModels();
+    const rowIds = apiRef.current.getAllRowIds();
 
     if (options.sortingMode === GridFeatureModeConstant.server) {
       logger.debug('Skipping sorting rows as sortingMode = server');
       setGridState((oldState) => {
         return {
           ...oldState,
-          sorting: { ...oldState.sorting, sortedRows: Object.keys(rowModels) },
+          sorting: { ...oldState.sorting, sortedRows: rowIds },
         };
       });
       return;
@@ -170,7 +170,7 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
 
     const sortModel = apiRef.current.getState().sorting.sortModel;
     logger.debug('Sorting rows with ', sortModel);
-    const sorted = [...rowModels.keys()];
+    const sorted = [...rowIds];
     if (sortModel.length > 0) {
       comparatorList.current = buildComparatorList(sortModel);
       sorted.sort(comparatorListAggregate);

@@ -22,10 +22,6 @@ export type GridRowId = string | number;
  */
 export type GridRowIdGetter = (row: GridRowData) => GridRowId;
 
-export interface GridObjectWithId {
-  id: GridRowId;
-}
-
 /**
  * An helper function to check if the id provided is valid.
  *
