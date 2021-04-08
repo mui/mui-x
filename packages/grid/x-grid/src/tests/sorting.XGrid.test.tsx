@@ -1,10 +1,19 @@
 import * as React from 'react';
 import { GridApiRef, GridSortModel, useGridApiRef } from '@material-ui/data-grid';
-import { XGrid } from '@material-ui/x-grid';
+import { XGrid, XGridProps } from '@material-ui/x-grid';
 import { expect } from 'chai';
 import { useFakeTimers } from 'sinon';
 import { getColumnValues } from 'test/utils/helperFn';
-import { createClientRenderStrictMode } from 'test/utils';
+import {
+  createClientRenderStrictMode,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  fireEvent,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  screen,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  waitFor,
+} from 'test/utils';
+import { useData } from '../../../../storybook/src/hooks/useData';
 
 describe('<XGrid /> - Sorting', () => {
   let clock;
@@ -130,5 +139,36 @@ describe('<XGrid /> - Sorting', () => {
 
     apiRef.current.setSortModel(sortModel);
     expect(getColumnValues()).to.deep.equal(['Puma', 'Adidas', 'Nike']);
+  });
+
+  describe('performance', () => {
+    beforeEach(() => {
+      clock.restore();
+    });
+    const TestCasePerf = (
+      props: Partial<XGridProps> & { nbRows?: number; nbCols?: number; height?: number },
+    ) => {
+      const data = useData(props.nbRows || 100, props.nbCols || 10);
+
+      return (
+        <div style={{ width: 600, height: props.height || 800 }}>
+          <XGrid columns={data.columns} rows={data.rows} {...props} />
+        </div>
+      );
+    };
+
+    it('should sort 10,000 rows in less than 200 ms', async () => {
+      render(<TestCasePerf nbRows={10000} nbCols={100} />);
+      const header = screen
+        .getByRole('columnheader', { name: 'Currency Pair' })
+        .querySelector('.MuiDataGrid-colCellTitleContainer');
+
+      const t0 = performance.now();
+      fireEvent.click(header);
+      await waitFor(() => expect(document.querySelector('.MuiDataGrid-sortIcon')).to.not.be.null);
+      const t1 = performance.now();
+      const time = Math.round(t1 - t0);
+      expect(time).to.be.lessThan(200);
+    });
   });
 });
