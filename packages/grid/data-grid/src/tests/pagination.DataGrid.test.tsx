@@ -7,7 +7,12 @@ import {
   screen,
 } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid, DataGridProps, GridRowsProp } from '@material-ui/data-grid';
+import {
+  DataGrid,
+  DataGridProps,
+  DEFAULT_GRID_OPTIONS,
+  GridRowsProp,
+} from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
@@ -208,22 +213,29 @@ describe('<DataGrid /> - Pagination', () => {
             </div>
           );
         };
-        render(<TestCaseAutoPageSize nbRows={27} height={780} />);
+        const height = 780;
+        const footerHeight = 52;
+        const nbRows = 27;
+        const expectedViewportRowsLength = Math.floor(
+          (height - DEFAULT_GRID_OPTIONS.headerHeight - footerHeight) /
+            DEFAULT_GRID_OPTIONS.rowHeight,
+        );
+        render(<TestCaseAutoPageSize nbRows={nbRows} height={height} />);
         let rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
-        expect(rows.length).to.equal(12);
+        expect(rows.length).to.equal(expectedViewportRowsLength);
 
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
         rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
-        expect(rows.length).to.equal(12);
+        expect(rows.length).to.equal(expectedViewportRowsLength);
 
         fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
         rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
-        expect(rows.length).to.equal(12);
+        expect(rows.length).to.equal(expectedViewportRowsLength);
 
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
         rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
-        expect(rows.length).to.equal(3);
+        expect(rows.length).to.equal(nbRows % expectedViewportRowsLength);
       });
     });
   });
