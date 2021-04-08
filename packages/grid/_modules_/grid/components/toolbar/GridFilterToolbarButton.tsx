@@ -1,3 +1,4 @@
+import { makeStyles } from '@material-ui/core';
 import Badge from '@material-ui/core/Badge';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -15,7 +16,17 @@ import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridTranslationKeys } from '../../models/api/gridLocaleTextApi';
 import { GridApiContext } from '../GridApiContext';
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    '& ul': {
+      margin: theme.spacing(1),
+      padding: theme.spacing(0, 1),
+    },
+  },
+}));
+
 export const GridFilterToolbarButton: React.FC<{}> = () => {
+  const classes = useStyles();
   const apiRef = React.useContext(GridApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
   const counter = useGridSelector(apiRef, filterGridItemsCounterSelector);
@@ -31,7 +42,7 @@ export const GridFilterToolbarButton: React.FC<{}> = () => {
       return apiRef!.current.getLocaleText('toolbarFiltersTooltipShow') as React.ReactElement;
     }
     return (
-      <div>
+      <div className={classes.root}>
         {apiRef!.current.getLocaleText('toolbarFiltersTooltipActive')(counter)}
         <ul>
           {activeFilters.map((item) => ({
@@ -48,7 +59,7 @@ export const GridFilterToolbarButton: React.FC<{}> = () => {
         </ul>
       </div>
     );
-  }, [apiRef, preferencePanel.open, counter, activeFilters, lookup]);
+  }, [apiRef, preferencePanel.open, counter, activeFilters, lookup, classes]);
 
   const toggleFilter = React.useCallback(() => {
     const { open, openedPanelValue } = preferencePanel;
@@ -66,7 +77,7 @@ export const GridFilterToolbarButton: React.FC<{}> = () => {
 
   const OpenFilterButtonIcon = apiRef!.current.components!.OpenFilterButtonIcon!;
   return (
-    <Tooltip title={tooltipContentNode} enterDelay={1000}>
+    <Tooltip open title={tooltipContentNode} enterDelay={1000}>
       <Button
         onClick={toggleFilter}
         size="small"
