@@ -87,10 +87,11 @@ export default function ValidateCellApiRefGrid() {
   const apiRef = useGridApiRef();
   const classes = useStyles();
 
-  const onEditCellChange = React.useCallback(
+  const handleEditCellChange = React.useCallback(
     ({ id, field, props }, event) => {
       if (field === 'email') {
-        const isValid = validateEmail(props.value);
+        const data = props; // Fix eslint value is missing in prop-types for JS files
+        const isValid = validateEmail(data.value);
         apiRef.current.setEditCellProps({
           id,
           field,
@@ -110,7 +111,7 @@ export default function ValidateCellApiRefGrid() {
       className={classes.root}
       rows={rows}
       columns={columns}
-      onEditCellChange={onEditCellChange}
+      onEditCellChange={handleEditCellChange}
       autoHeight
     />
   );

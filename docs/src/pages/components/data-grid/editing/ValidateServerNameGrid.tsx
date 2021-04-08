@@ -84,7 +84,8 @@ export default function ValidateServerNameGrid() {
         });
         // basic debouncing here
         keyStrokeTimeoutRef.current = setTimeout(async () => {
-          const isValid = await validateName(props.value!.toString());
+          const data = props; // Fix eslint value is missing in prop-types for JS files
+          const isValid = await validateName(data.value!.toString());
           apiRef.current.setEditCellProps({
             id,
             field,
