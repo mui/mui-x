@@ -29,11 +29,7 @@ export const visibleSortedGridRowsAsArraySelector = createSelector<
   Map<GridRowId, GridRowModel>,
   [GridRowId, GridRowModel][]
 >(visibleSortedGridRowsSelector, (visibleSortedRows) => {
-  const result: [GridRowId, GridRowModel][] = [];
-  visibleSortedRows.forEach((row, id) => {
-    result.push([id, row]);
-  });
-  return result;
+  return [...visibleSortedRows.entries()]
 });
 
 export const visibleSortedGridRowIdsSelector = createSelector<
@@ -41,11 +37,7 @@ export const visibleSortedGridRowIdsSelector = createSelector<
   Map<GridRowId, GridRowModel>,
   GridRowId[]
 >(visibleSortedGridRowsSelector, (visibleSortedRows) => {
-  const result: GridRowId[] = [];
-  visibleSortedRows.forEach((row, id) => {
-    result.push(id);
-  });
-  return result;
+  return [...visibleSortedRows.keys()];
 });
 
 export const visibleGridRowCountSelector = createSelector<
