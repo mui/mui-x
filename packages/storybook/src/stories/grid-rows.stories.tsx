@@ -412,13 +412,13 @@ const baselineEditProps = {
       editable: true,
       valueGetter: ({ row }) => `${row.firstname || ''} ${row.lastname || ''}`,
     },
+    { field: 'isAdmin', width: 120, type: 'boolean', editable: true },
     { field: 'username', editable: true },
     { field: 'email', editable: true, width: 150 },
     { field: 'age', width: 50, type: 'number', editable: true },
     { field: 'DOB', width: 120, type: 'date', editable: true },
     { field: 'meetup', width: 180, type: 'dateTime', editable: true },
     { field: 'lastLogin', width: 180, type: 'dateTime', editable: false },
-    { field: 'isAdmin', width: 120, type: 'boolean', editable: true },
   ],
 };
 function validateEmail(email) {

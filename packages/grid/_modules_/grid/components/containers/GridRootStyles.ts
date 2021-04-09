@@ -196,6 +196,7 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-row': {
           display: 'flex',
           width: 'fit-content',
+          borderBottom: `1px solid ${borderColor}`,
           '&:hover': {
             backgroundColor: theme.palette.action.hover,
             // Reset on touch devices, it doesn't add specificity
@@ -228,37 +229,32 @@ export const useStyles = makeStyles(
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
-          borderBottom: `1px solid ${borderColor}`,
+          border: `1px solid transparent`,
+          '&.Mui-focused': {
+            outline: 0,
+            borderColor: theme.palette.primary.main,
+          },
         },
         '& .MuiDataGrid-cell.MuiDataGrid-cellEditing': {
           padding: 1,
           display: 'flex',
-          alignItems: 'center',
+          boxShadow: theme.shadows[2],
+          backgroundColor: theme.palette.background.paper,
         },
         '& .MuiDataGrid-editCellInputBase': {
           ...theme.typography.body2,
-          padding: '1px 0',
           height: '100%',
-          border: `1px solid ${
-            getThemePaletteMode(theme.palette) === 'light'
-              ? 'rgba(0, 0, 0, 0.23)'
-              : 'rgba(255, 255, 255, 0.23)'
-          }`,
-          borderRadius: 3,
-          '&:hover': {
-            borderColor: theme.palette.text.primary,
-          },
-          '&.Mui-focused': {
-            borderColor: theme.palette.primary.main,
-            borderWidth: 2,
-            '& input': {
-              padding: '0 13px',
-            },
-          },
           '& input': {
             padding: '0 14px',
             height: '100%',
           },
+        },
+        '& .MuiDataGrid-editCellBoolean': {
+          display: 'flex',
+          height: '100%',
+          width: '100%',
+          alignItems: 'center',
+          justifyContent: 'center',
         },
         // The very last cell
         '& .MuiDataGrid-colCellWrapper .MuiDataGrid-cell': {

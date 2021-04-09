@@ -5,7 +5,7 @@ import { GridCellParams } from '../../models/params/gridCellParams';
 
 export function GridEditBooleanCell(props: GridCellParams & CheckboxProps) {
   const {
-    id,
+    id: idProp,
     value,
     element,
     formattedValue,
@@ -28,24 +28,28 @@ export function GridEditBooleanCell(props: GridCellParams & CheckboxProps) {
       const newValue = event.target.checked;
       const editProps = { value: newValue };
       setValueState(newValue);
-      api.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE, { id, field, props: editProps }, event);
+      api.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE, { id: idProp, field, props: editProps }, event);
     },
-    [api, field, id],
+    [api, field, idProp],
   );
 
   React.useEffect(() => {
     setValueState(value);
   }, [value]);
 
+  const id = `MuiDataGrid-cell-${idProp}-${field}`;
+
   return (
-    <Checkbox
-      autoFocus
-      className="MuiDataGrid-editCellBoolean"
-      checked={Boolean(valueState)}
-      onChange={handleChange}
-      size="small"
-      {...checkboxProps}
-    />
+    <label htmlFor={id} className="MuiDataGrid-editCellBoolean">
+      <Checkbox
+        autoFocus
+        id={id}
+        checked={Boolean(valueState)}
+        onChange={handleChange}
+        size="small"
+        {...checkboxProps}
+      />
+    </label>
   );
 }
 export const renderEditBooleanCell = (params) => <GridEditBooleanCell {...params} />;

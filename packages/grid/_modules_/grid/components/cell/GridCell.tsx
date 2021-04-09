@@ -70,6 +70,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     {
       'MuiDataGrid-withBorder': showRightBorder,
       'MuiDataGrid-cellEditable': isEditable,
+      'Mui-focused': hasFocus,
     },
   );
 
