@@ -84,6 +84,6 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   footerTotalRows: 'Total Rows:',
 
   // Checkbox selection text
-  checkboxSelectionHeaderName: 'Column Selection',
+  checkboxSelectionHeaderName: 'Checkbox Selection',
   checkboxSelectionDescription: 'Select Multiple Rows',
 };
