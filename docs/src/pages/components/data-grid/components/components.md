@@ -5,12 +5,17 @@ components: DataGrid, XGrid
 
 # Data Grid - Components
 
-<p class="description">The grid is highly customizable. Override components using the <code>components</code> prop.</p>
+<p class="description">The grid is highly customizable. Override components using the `components` prop.</p>
+
 
 As part of the customization API, the grid allows you to replace and override nested components with the `components` prop.
-The prop accepts an object of type [GridSlotsComponent](/api/data-grid/#slots) .
+The prop accepts an object of type `GridSlotsComponent` and you can get the full list of overridable component [here](/api/data-grid/#slots) .
 
-## Toolbar
+### Custom Icons
+
+### ColumnMenu
+
+### Toolbar
 
 To enable the toolbar you need to add the `Toolbar: GridToolbar` to the grid `components` prop.
 This demo showcases how this can be achieved.
@@ -32,20 +37,20 @@ function CustomToolbar() {
 
 {{"demo": "pages/components/data-grid/components/CustomToolbarGrid.js", "bg": "inline"}}
 
-## Loading overlay
+### Loading overlay
 
 By default, the loading overlay displays a circular progress.
 This demo replaces it with a linear progress.
 
 {{"demo": "pages/components/data-grid/components/CustomLoadingOverlayGrid.js", "bg": "inline"}}
 
-## No rows overlay
+### No rows overlay
 
 In the following demo, an illustration is added on top of the default "No Rows" message.
 
 {{"demo": "pages/components/data-grid/components/CustomEmptyOverlayGrid.js", "bg": "inline"}}
 
-## Footer
+### Footer
 
 The grid exposes props to hide specific elements of the UI:
 
