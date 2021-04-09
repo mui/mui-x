@@ -70,7 +70,6 @@ function hydrateColumns(
   if (withCheckboxSelection) {
     const checkboxSelection = { ...gridCheckboxSelectionColDef };
     checkboxSelection.headerName = getLocaleText('checkboxSelectionHeaderName');
-    checkboxSelection.description = getLocaleText('checkboxSelectionDescription');
     return [checkboxSelection, ...extendedColumns];
   }
 

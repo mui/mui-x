@@ -81,7 +81,6 @@ export interface GridLocaleText {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: string;
-  checkboxSelectionDescription: string;
 }
 
 export type GridTranslationKeys = keyof GridLocaleText;
