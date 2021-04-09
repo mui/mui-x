@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GRID_COL_RESIZE_START, GRID_COL_RESIZE_STOP } from '../../constants/eventsConstants';
+import { GRID_COLUMN_RESIZE_START, GRID_COLUMN_RESIZE_STOP } from '../../constants/eventsConstants';
 import { gridColumnReorderDragColSelector } from '../../hooks/features/columnReorder/columnReorderSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { filterGridColumnLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
@@ -31,8 +31,8 @@ export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemColl
   }, []);
 
   // TODO refactor by putting resizing in the state so we avoid adding listeners.
-  useGridApiEventHandler(apiRef!, GRID_COL_RESIZE_START, handleResizeStart);
-  useGridApiEventHandler(apiRef!, GRID_COL_RESIZE_STOP, handleResizeStop);
+  useGridApiEventHandler(apiRef!, GRID_COLUMN_RESIZE_START, handleResizeStart);
+  useGridApiEventHandler(apiRef!, GRID_COLUMN_RESIZE_STOP, handleResizeStop);
 
   const items = columns.map((col, idx) => (
     <GridColumnHeaderItem

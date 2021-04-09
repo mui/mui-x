@@ -62,8 +62,10 @@ export const GRID_PAGESIZE_CHANGED = 'pageSizeChange';
 export const GRID_ROWS_SCROLL = 'scrolling:rows';
 export const GRID_ROWS_SCROLL_END = 'scroll:rowEnd';
 
-export const GRID_COL_RESIZE_START = 'colResizing:start';
-export const GRID_COL_RESIZE_STOP = 'colResizing:stop';
+export const GRID_COLUMN_RESIZE = 'columnResize';
+export const GRID_COLUMN_RESIZE_MOUSE_DOWN = 'columnResize:MouseDown';
+export const GRID_COLUMN_RESIZE_START = 'columnResize:start';
+export const GRID_COLUMN_RESIZE_STOP = 'columnResize:stop';
 
 export const GRID_COLUMN_ORDER_CHANGE = 'columnOrderChange';
 
