@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import Badge from '@material-ui/core/Badge';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -16,14 +16,15 @@ import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridTranslationKeys } from '../../models/api/gridLocaleTextApi';
 import { GridApiContext } from '../GridApiContext';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    '& ul': {
+const useStyles = makeStyles(
+  (theme) => ({
+    list: {
       margin: theme.spacing(1),
       padding: theme.spacing(0, 1),
     },
-  },
-}));
+  }),
+  { name: 'MuiDataGridFilterButtonTooltipList' },
+);
 
 export const GridFilterToolbarButton: React.FC<{}> = () => {
   const classes = useStyles();
@@ -42,9 +43,9 @@ export const GridFilterToolbarButton: React.FC<{}> = () => {
       return apiRef!.current.getLocaleText('toolbarFiltersTooltipShow') as React.ReactElement;
     }
     return (
-      <div className={classes.root}>
+      <div>
         {apiRef!.current.getLocaleText('toolbarFiltersTooltipActive')(counter)}
-        <ul>
+        <ul className={classes.list}>
           {activeFilters.map((item) => ({
             ...(lookup[item.columnField!] && (
               <li key={item.id}>
@@ -77,7 +78,7 @@ export const GridFilterToolbarButton: React.FC<{}> = () => {
 
   const OpenFilterButtonIcon = apiRef!.current.components!.OpenFilterButtonIcon!;
   return (
-    <Tooltip open title={tooltipContentNode} enterDelay={1000}>
+    <Tooltip title={tooltipContentNode} enterDelay={1000}>
       <Button
         onClick={toggleFilter}
         size="small"
