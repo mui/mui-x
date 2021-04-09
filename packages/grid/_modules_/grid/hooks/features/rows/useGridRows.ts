@@ -20,8 +20,14 @@ import { useLogger } from '../../utils/useLogger';
 import { useGridState } from '../core/useGridState';
 import { getInitialGridRowState, InternalGridRowsState } from './gridRowsState';
 
-function getGridRowId(rowData: GridRowData, getRowId?: GridRowIdGetter): GridRowId {
-  return getRowId ? getRowId(rowData) : rowData.id;
+function getGridRowId(
+  rowData: GridRowData,
+  getRowId?: GridRowIdGetter,
+  detailErrorMessage?: string,
+): GridRowId {
+  const id = getRowId ? getRowId(rowData) : rowData.id;
+  checkGridRowIdIsValid(id, rowData, detailErrorMessage);
+  return id;
 }
 
 export function convertGridRowsPropToState(
@@ -36,7 +42,6 @@ export function convertGridRowsPropToState(
 
   rows.forEach((rowData) => {
     const id = getGridRowId(rowData, rowIdGetter);
-    checkGridRowIdIsValid(id, rowData);
     state.allRows.push(id);
     state.idRowsLookup[id] = rowData;
   });
@@ -120,7 +125,6 @@ export const useGridRows = (
       const allRows: GridRowId[] = [];
       const idRowsLookup = allNewRows.reduce((lookup, row) => {
         const id = getGridRowId(row, getRowIdProp);
-        checkGridRowIdIsValid(id, row);
         lookup[id] = row;
         allRows.push(id);
         return lookup;
@@ -146,10 +150,9 @@ export const useGridRows = (
     (updates: GridRowModelUpdate[]) => {
       // we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
       const uniqUpdates = updates.reduce((uniq, update) => {
-        const id = getGridRowId(update, getRowIdProp);
-        checkGridRowIdIsValid(
-          id,
+        const id = getGridRowId(
           update,
+          getRowIdProp,
           'A row was provided without id when calling updateRows():',
         );
         uniq[id] = uniq[id] != null ? { ...uniq[id!], ...update } : update;
