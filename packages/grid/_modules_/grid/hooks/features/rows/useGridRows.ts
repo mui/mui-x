@@ -200,13 +200,16 @@ export const useGridRows = (
     [apiRef, forceUpdate, getRowFromId, getRowIdProp, setGridState, setRows],
   );
 
-  const getRowModels = React.useCallback(() => {
-    const map = new Map<GridRowId, GridRowModel>();
-    apiRef.current.state.rows.allRows.forEach((id) => {
-      map.set(id, apiRef.current.state.rows.idRowsLookup[id]);
-    });
-    return map;
-  }, [apiRef]);
+  const getRowModels = React.useCallback(
+    () =>
+      new Map(
+        apiRef.current.state.rows.allRows.map((id) => [
+          id,
+          apiRef.current.state.rows.idRowsLookup[id],
+        ]),
+      ),
+    [apiRef],
+  );
   const getRowsCount = React.useCallback(() => apiRef.current.state.rows.totalRowCount, [apiRef]);
   const getAllRowIds = React.useCallback(() => apiRef.current.state.rows.allRows, [apiRef]);
 

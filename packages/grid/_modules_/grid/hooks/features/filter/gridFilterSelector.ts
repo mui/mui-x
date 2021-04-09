@@ -29,7 +29,7 @@ export const visibleSortedGridRowsAsArraySelector = createSelector<
   Map<GridRowId, GridRowModel>,
   [GridRowId, GridRowModel][]
 >(visibleSortedGridRowsSelector, (visibleSortedRows) => {
-  return [...visibleSortedRows.entries()]
+  return [...visibleSortedRows.entries()];
 });
 
 export const visibleSortedGridRowIdsSelector = createSelector<

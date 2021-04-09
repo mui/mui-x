@@ -29,7 +29,6 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
   const options = useGridSelector(apiRef, optionsSelector);
   const rowsLookup = useGridSelector(apiRef, gridRowsLookupSelector);
   const isMultipleKeyPressed = useGridSelector(apiRef, gridKeyboardMultipleKeySelector);
-  const selectedRows = useGridSelector(apiRef, selectedGridRowsSelector);
 
   const allowMultipleSelectionKeyPressed = React.useRef<boolean>(false);
 
@@ -38,7 +37,10 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
       !options.disableMultipleSelection && isMultipleKeyPressed;
   }, [isMultipleKeyPressed, options.disableMultipleSelection]);
 
-  const getSelectedRows = React.useCallback(() => selectedRows, [selectedRows]);
+  const getSelectedRows = React.useCallback(
+    () => selectedGridRowsSelector(apiRef.current.getState()),
+    [apiRef],
+  );
 
   const selectRowModel = React.useCallback(
     (id: GridRowId, row: GridRowModel, allowMultipleOverride?: boolean, isSelected?: boolean) => {
