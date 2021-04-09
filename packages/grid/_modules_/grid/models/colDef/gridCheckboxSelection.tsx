@@ -7,8 +7,6 @@ import { GridColDef } from './gridColDef';
 
 export const gridCheckboxSelectionColDef: GridColDef = {
   field: '__check__',
-  headerName: 'Checkbox Selection',
-  description: 'Select Multiple Rows',
   type: 'checkboxSelection',
   width: 48,
   align: 'center',
