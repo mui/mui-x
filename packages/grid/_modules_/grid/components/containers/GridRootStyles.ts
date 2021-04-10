@@ -229,9 +229,11 @@ export const useStyles = makeStyles(
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
-          border: `1px solid transparent`,
-          '&.Mui-focused': {
-            outline: 0,
+          borderRadius: 3,
+          border: '2px solid transparent',
+          boxSizing: 'border-box',
+          '&:focus-within': {
+            outline: 'none',
             borderColor: theme.palette.primary.main,
           },
         },
