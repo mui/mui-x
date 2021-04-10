@@ -44,7 +44,7 @@ describe('<DataGrid /> - Toolbar', () => {
     ],
   };
 
-  describe('Density selector', () => {
+  describe('density selector', () => {
     it('should increase grid density when selecting compact density', () => {
       const rowHeight = 30;
       const { getByText } = render(
@@ -120,7 +120,7 @@ describe('<DataGrid /> - Toolbar', () => {
     });
   });
 
-  describe('Column selector', () => {
+  describe('column selector', () => {
     it('should hide "id" column when hiding it from the column selector', () => {
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>

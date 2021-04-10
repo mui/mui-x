@@ -31,13 +31,6 @@ describe('<DataGrid /> - Keyboard', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
-
   it('should be able to type in an child input', () => {
     const handleInputKeyDown = spy((event) => event.defaultPrevented);
 
@@ -134,13 +127,13 @@ describe('<DataGrid /> - Keyboard', () => {
   });
 
   const KeyboardTest = (props: { nbRows?: number }) => {
-    const data = useData(props.nbRows || 100, 20);
+    const data = useData(props.nbRows || 20, 20);
     const transformColSizes = (columns: GridColumns) =>
       columns.map((column) => ({ ...column, width: 60 }));
 
     return (
       <div style={{ width: 300, height: 360 }}>
-        <DataGrid rows={data.rows} columns={transformColSizes(data.columns)} />
+        <DataGrid autoHeight rows={data.rows} columns={transformColSizes(data.columns)} />
       </div>
     );
   };
@@ -181,7 +174,7 @@ describe('<DataGrid /> - Keyboard', () => {
     getCell(0, 0).focus();
     expect(getActiveCell()).to.equal('0-0');
     fireEvent.keyDown(document.activeElement!, SPACE_KEY);
-    expect(getActiveCell()).to.equal('4-0');
+    expect(getActiveCell()).to.equal('19-0');
   });
 
   it('Space only should go to the bottom of the page even with small number of rows', () => {
@@ -192,7 +185,12 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(getActiveCell()).to.equal('3-0');
   });
 
-  it('Home / End navigation', async () => {
+  it('Home / End navigation', async function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // Need layouting for column virtualization
+      this.skip();
+    }
+
     render(<KeyboardTest />);
     getCell(1, 1).focus();
     expect(getActiveCell()).to.equal('1-1');

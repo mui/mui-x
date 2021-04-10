@@ -40,6 +40,13 @@ describe('<DataGrid /> - Pagination', () => {
   };
 
   describe('pagination', () => {
+    before(function beforeHook() {
+      if (/jsdom/.test(window.navigator.userAgent)) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
     it('should apply the page prop correctly', () => {
       const rows = [
         {

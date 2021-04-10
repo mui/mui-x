@@ -27,7 +27,7 @@ describe('<DataGrid /> - State', () => {
     columns: [{ field: 'brand' }],
   };
 
-  it('should allow to control the state using useState', async () => {
+  it('should allow to control the state using useState', () => {
     function GridStateTest({ direction, sortedRows }) {
       const gridState = {
         sorting: { sortModel: [{ field: 'brand', sort: direction }], sortedRows },
