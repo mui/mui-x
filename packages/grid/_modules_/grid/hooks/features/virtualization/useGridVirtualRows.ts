@@ -276,7 +276,8 @@ export const useGridVirtualRows = (
     setRenderingState({ virtualPage: 0 });
 
     if (windowRef && windowRef.current) {
-      windowRef.current.scrollTo(0, 0);
+      windowRef.current.scrollTop = 0;
+      windowRef.current.scrollLeft = 0;
     }
     setRenderingState({ renderingZoneScroll: { left: 0, top: 0 } });
   }, [scrollTo, setRenderingState, windowRef]);
