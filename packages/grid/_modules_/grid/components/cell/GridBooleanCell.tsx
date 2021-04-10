@@ -1,8 +1,10 @@
 import * as React from 'react';
-import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
+import { SvgIconProps } from '@material-ui/core/SvgIcon';
+import CloseIcon from '@material-ui/icons/Close';
+import CheckIcon from '@material-ui/icons/Check';
 import { GridCellParams } from '../../models/params/gridCellParams';
 
-export function GridBooleanCell(props: GridCellParams & CheckboxProps) {
+export function GridBooleanCell(props: GridCellParams & SvgIconProps) {
   const {
     id,
     value,
@@ -17,16 +19,18 @@ export function GridBooleanCell(props: GridCellParams & CheckboxProps) {
     rowIndex,
     colIndex,
     isEditable,
-    ...checkboxProps
+    ...other
   } = props;
 
+  const Icon = value ? CheckIcon : CloseIcon;
+
   return (
-    <Checkbox
-      checked={Boolean(value)}
-      size="small"
+    <Icon
+      fontSize="small"
+      className="MuiDataGrid-booleanCell"
       aria-label={api.getLocaleText(value ? 'booleanCellTrueLabel' : 'booleanCellFalseLabel')}
-      disabled
-      {...checkboxProps}
+      data-value={Boolean(value)}
+      {...other}
     />
   );
 }

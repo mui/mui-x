@@ -255,6 +255,12 @@ export const useStyles = makeStyles(
           alignItems: 'center',
           justifyContent: 'center',
         },
+        '& .MuiDataGrid-booleanCell[data-value="true"]': {
+          color: theme.palette.success.main,
+        },
+        '& .MuiDataGrid-booleanCell[data-value="false"]': {
+          color: theme.palette.error.main,
+        },
         // The very last cell
         '& .MuiDataGrid-colCellWrapper .MuiDataGrid-cell': {
           borderBottom: 'none',
