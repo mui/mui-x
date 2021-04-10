@@ -11,9 +11,9 @@ export function useResizeContainer(apiRef): (size: ElementSize) => void {
   const onResize = React.useCallback(
     (size: ElementSize) => {
       // jsdom has no layout capabilities
-      const jsdom = /jsdom/.test(window.navigator.userAgent);
+      const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
-      if (size.height === 0 && !autoHeight && !jsdom) {
+      if (size.height === 0 && !autoHeight && !isJSDOM) {
         gridLogger.warn(
           [
             'The parent of the grid has an empty height.',
@@ -25,7 +25,7 @@ export function useResizeContainer(apiRef): (size: ElementSize) => void {
           ].join('\n'),
         );
       }
-      if (size.width === 0 && !jsdom) {
+      if (size.width === 0 && !isJSDOM) {
         gridLogger.warn(
           [
             'The parent of the grid has an empty width.',
