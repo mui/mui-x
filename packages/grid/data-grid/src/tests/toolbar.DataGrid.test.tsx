@@ -19,6 +19,7 @@ describe('<DataGrid /> - Toolbar', () => {
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
+    autoHeight: true,
     rows: [
       {
         id: 0,
@@ -42,13 +43,6 @@ describe('<DataGrid /> - Toolbar', () => {
       },
     ],
   };
-
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
 
   describe('Density selector', () => {
     it('should increase grid density when selecting compact density', () => {
