@@ -196,7 +196,6 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-row': {
           display: 'flex',
           width: 'fit-content',
-          borderBottom: `1px solid ${borderColor}`,
           '&:hover': {
             backgroundColor: theme.palette.action.hover,
             // Reset on touch devices, it doesn't add specificity
@@ -229,19 +228,21 @@ export const useStyles = makeStyles(
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
+          borderBottom: `1px solid ${borderColor}`,
           '&:focus-within': {
             outline: `solid ${theme.palette.primary.main} 1px`,
             outlineOffset: '-1px',
           },
         },
         '& .MuiDataGrid-cell.MuiDataGrid-cellEditing': {
-          padding: 0,
+          padding: 1,
           display: 'flex',
           boxShadow: theme.shadows[2],
           backgroundColor: theme.palette.background.paper,
         },
         '& .MuiDataGrid-editCellInputBase': {
           ...theme.typography.body2,
+          padding: '1px 0',
           '& input': {
             padding: '0 16px',
             height: '100%',
