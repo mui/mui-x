@@ -19,6 +19,7 @@
     "prettier:all": "node ./scripts/prettier.js write",
     "size:snapshot": "node --max-old-space-size=2048 ./scripts/sizeSnapshot/create",
     "size:why": "yarn size:snapshot --analyze --accurateBundles",
+    "t": "node test/cli.js",
     "test": "lerna run test --parallel",
     "test:coverage": "cross-env NODE_ENV=test BABEL_ENV=coverage nyc mocha 'packages/**/*.test.tsx' --exclude '**/node_modules/**' && nyc report -r lcovonly",
     "test:coverage:html": "cross-env NODE_ENV=test BABEL_ENV=coverage nyc mocha 'packages/**/*.test.tsx' --exclude '**/node_modules/**' && nyc report --reporter=html",
