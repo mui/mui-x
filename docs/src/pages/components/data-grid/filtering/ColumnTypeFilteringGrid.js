@@ -57,7 +57,7 @@ export default function ColumnTypeFilteringGrid() {
         }}
         state={{
           preferencePanel: {
-            open: true,
+            open: false,
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}

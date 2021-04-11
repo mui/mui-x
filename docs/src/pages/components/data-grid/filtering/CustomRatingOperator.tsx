@@ -90,7 +90,7 @@ export default function CustomRatingOperator() {
         }}
         state={{
           preferencePanel: {
-            open: true,
+            open: false,
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}

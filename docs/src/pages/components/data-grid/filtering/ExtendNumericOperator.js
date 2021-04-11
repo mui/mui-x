@@ -82,7 +82,7 @@ export default function ExtendNumericOperator() {
         filterModel={filterModel}
         state={{
           preferencePanel: {
-            open: true,
+            open: false,
             openedPanelValue: GridPreferencePanelsValue.filters,
           },
         }}
