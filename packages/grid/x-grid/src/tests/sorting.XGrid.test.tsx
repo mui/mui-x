@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridApiRef, GridSortModel, useGridApiRef } from '@material-ui/data-grid';
-import { XGrid, XGridProps } from '@material-ui/x-grid';
+import { XGrid } from '@material-ui/x-grid';
 import { expect } from 'chai';
 import { useFakeTimers } from 'sinon';
 import { getColumnValues } from 'test/utils/helperFn';
@@ -146,7 +146,7 @@ describe('<XGrid /> - Sorting', () => {
       clock.restore();
     });
 
-    it.only('should sort 1,000 rows in less than 200 ms', async function test () {
+    it('should sort 5,000 rows in less than 200 ms', async function test() {
       // It's simpler to only run the performance test in a single controlled environment.
       if (!/HeadlessChrome/.test(window.navigator.userAgent)) {
         this.skip();
@@ -154,7 +154,7 @@ describe('<XGrid /> - Sorting', () => {
       }
 
       const TestCasePerf = () => {
-        const data = useData(1000, 10);
+        const data = useData(5000, 10);
 
         return (
           <div style={{ width: 300, height: 300 }}>
