@@ -145,19 +145,20 @@ describe('<XGrid /> - Sorting', () => {
     beforeEach(() => {
       clock.restore();
     });
-    const TestCasePerf = (
-      props: Partial<XGridProps> & { nbRows?: number; nbCols?: number; height?: number },
-    ) => {
-      const data = useData(props.nbRows || 100, props.nbCols || 10);
-
-      return (
-        <div style={{ width: 600, height: props.height || 800 }}>
-          <XGrid columns={data.columns} rows={data.rows} {...props} />
-        </div>
-      );
-    };
 
     it('should sort 10,000 rows in less than 200 ms', async () => {
+      const TestCasePerf = (
+        props: Partial<XGridProps> & { nbRows?: number; nbCols?: number; height?: number },
+      ) => {
+        const data = useData(props.nbRows || 100, props.nbCols || 10);
+
+        return (
+          <div style={{ width: 600, height: props.height || 800 }}>
+            <XGrid columns={data.columns} rows={data.rows} {...props} />
+          </div>
+        );
+      };
+
       render(<TestCasePerf nbRows={10000} nbCols={100} />);
       const header = screen
         .getByRole('columnheader', { name: 'Currency Pair' })
