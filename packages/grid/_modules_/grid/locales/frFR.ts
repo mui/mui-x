@@ -79,6 +79,9 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Total rows footer text
   footerTotalRows: 'Lignes totales :',
+
+  // Checkbox selection text
+  checkboxSelectionHeaderName: 'Sélection',
 };
 
 export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);
