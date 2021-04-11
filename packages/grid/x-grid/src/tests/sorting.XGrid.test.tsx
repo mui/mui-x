@@ -146,7 +146,13 @@ describe('<XGrid /> - Sorting', () => {
       clock.restore();
     });
 
-    it('should sort 1,000 rows in less than 200 ms', async () => {
+    it.only('should sort 1,000 rows in less than 200 ms', async function test () {
+      // It's simpler to only run the performance test in a single controlled environment.
+      if (!/HeadlessChrome/.test(window.navigator.userAgent)) {
+        this.skip();
+        return;
+      }
+
       const TestCasePerf = () => {
         const data = useData(1000, 10);
 
