@@ -146,20 +146,18 @@ describe('<XGrid /> - Sorting', () => {
       clock.restore();
     });
 
-    it('should sort 10,000 rows in less than 200 ms', async () => {
-      const TestCasePerf = (
-        props: Partial<XGridProps> & { nbRows?: number; nbCols?: number; height?: number },
-      ) => {
-        const data = useData(props.nbRows || 100, props.nbCols || 10);
+    it('should sort 1,000 rows in less than 200 ms', async () => {
+      const TestCasePerf = () => {
+        const data = useData(1000, 10);
 
         return (
-          <div style={{ width: 600, height: props.height || 800 }}>
-            <XGrid columns={data.columns} rows={data.rows} {...props} />
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid columns={data.columns} rows={data.rows} />
           </div>
         );
       };
 
-      render(<TestCasePerf nbRows={10000} nbCols={100} />);
+      render(<TestCasePerf />);
       const header = screen
         .getByRole('columnheader', { name: 'Currency Pair' })
         .querySelector('.MuiDataGrid-colCellTitleContainer');
