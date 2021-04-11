@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { SvgIconProps } from '@material-ui/core/SvgIcon';
-import CloseIcon from '@material-ui/icons/Close';
-import CheckIcon from '@material-ui/icons/Check';
 import { GridCellParams } from '../../models/params/gridCellParams';
 
 export function GridBooleanCell(props: GridCellParams & SvgIconProps) {
@@ -22,13 +20,13 @@ export function GridBooleanCell(props: GridCellParams & SvgIconProps) {
     ...other
   } = props;
 
-  const Icon = value ? CheckIcon : CloseIcon;
+  const Icon = value ? api.components.BooleanCellTrueIcon : api.components.BooleanCellFalseIcon;
 
   return (
     <Icon
       fontSize="small"
       className="MuiDataGrid-booleanCell"
-      aria-label={api.getLocaleText(value ? 'booleanCellTrueLabel' : 'booleanCellFalseLabel')}
+      titleAccess={api.getLocaleText(value ? 'booleanCellTrueLabel' : 'booleanCellFalseLabel')}
       data-value={Boolean(value)}
       {...other}
     />

@@ -1,9 +1,13 @@
 import * as React from 'react';
-import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
+import Checkbox from '@material-ui/core/Checkbox';
 import { GRID_CELL_EDIT_PROPS_CHANGE } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
+import { classnames } from '../../utils/classnames';
 
-export function GridEditBooleanCell(props: GridCellParams & CheckboxProps) {
+export function GridEditBooleanCell(
+  props: GridCellParams &
+    React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>,
+) {
   const {
     id: idProp,
     value,
@@ -18,7 +22,8 @@ export function GridEditBooleanCell(props: GridCellParams & CheckboxProps) {
     rowIndex,
     colIndex,
     isEditable,
-    ...checkboxProps
+    className,
+    ...other
   } = props;
 
   const [valueState, setValueState] = React.useState(value);
@@ -40,14 +45,13 @@ export function GridEditBooleanCell(props: GridCellParams & CheckboxProps) {
   const id = `MuiDataGrid-cell-${idProp}-${field}`;
 
   return (
-    <label htmlFor={id} className="MuiDataGrid-editCellBoolean">
+    <label htmlFor={id} className={classnames('MuiDataGrid-editCellBoolean', className)} {...other}>
       <Checkbox
         autoFocus
         id={id}
         checked={Boolean(valueState)}
         onChange={handleChange}
         size="small"
-        {...checkboxProps}
       />
     </label>
   );

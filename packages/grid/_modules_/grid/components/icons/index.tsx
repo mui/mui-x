@@ -83,3 +83,8 @@ export const GridSaveAltIcon = createSvgIcon(
   <path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z" />,
   'SaveAlt',
 );
+
+export const GridCheckIcon = createSvgIcon(
+  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />,
+  'Check',
+);

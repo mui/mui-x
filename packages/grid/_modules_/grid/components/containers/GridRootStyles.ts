@@ -256,10 +256,10 @@ export const useStyles = makeStyles(
           justifyContent: 'center',
         },
         '& .MuiDataGrid-booleanCell[data-value="true"]': {
-          color: theme.palette.success.main,
+          color: theme.palette.text.secondary,
         },
         '& .MuiDataGrid-booleanCell[data-value="false"]': {
-          color: theme.palette.error.main,
+          color: theme.palette.text.disabled,
         },
         // The very last cell
         '& .MuiDataGrid-colCellWrapper .MuiDataGrid-cell': {
