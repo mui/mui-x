@@ -13,7 +13,6 @@ import { GridSortApi } from '../../../models/api/gridSortApi';
 import { GridCellValue } from '../../../models/gridCell';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
-import { GridCellParams } from '../../../models/params/gridCellParams';
 import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { GridSortModelParams } from '../../../models/params/gridSortModelParams';
 import { GridRowId, GridRowModel, GridRowsProp } from '../../../models/gridRows';
@@ -22,6 +21,7 @@ import {
   GridSortItem,
   GridSortModel,
   GridSortDirection,
+  GridSortCellParams,
 } from '../../../models/gridSortModel';
 import { isDesc, nextGridSortDirection } from '../../../utils/sortingUtils';
 import { isDeepEqual } from '../../../utils/utils';
@@ -95,6 +95,22 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
     [gridState.sorting.sortModel, options.sortingOrder],
   );
 
+  const getSortCellParams = React.useCallback(
+    (id: GridRowId, field: string) => {
+      const params: GridSortCellParams = {
+        id,
+        field,
+        row: apiRef.current.getRowFromId(id),
+        value: apiRef.current.getCellValue(id, field),
+        getValue: (columnField: string) => apiRef.current.getCellValue(id, columnField),
+        api: apiRef.current,
+      };
+
+      return params;
+    },
+    [apiRef],
+  );
+
   const comparatorListAggregate = React.useCallback(
     (row1: GridRowModel, row2: GridRowModel) => {
       const result = comparatorList.current.reduce((res, colComparator) => {
@@ -104,14 +120,14 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
           comparator(
             row1[field],
             row2[field],
-            apiRef.current.getCellParams(row1.id, field),
-            apiRef.current.getCellParams(row2.id, field),
+            getSortCellParams(row1.id, field),
+            getSortCellParams(row2.id, field),
           );
         return res;
       }, 0);
       return result;
     },
-    [apiRef],
+    [getSortCellParams],
   );
 
   const buildComparatorList = React.useCallback(
@@ -125,8 +141,8 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
           ? (
               v1: GridCellValue,
               v2: GridCellValue,
-              cellParams1: GridCellParams,
-              cellParams2: GridCellParams,
+              cellParams1: GridSortCellParams,
+              cellParams2: GridSortCellParams,
             ) => -1 * column.sortComparator!(v1, v2, cellParams1, cellParams2)
           : column.sortComparator!;
         return { field: column.field, comparator };
