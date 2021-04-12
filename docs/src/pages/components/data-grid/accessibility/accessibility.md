@@ -50,7 +50,6 @@ Use the arrow keys to move the focus.
 
 |                              Keys | Description                                   |
 | --------------------------------: | :-------------------------------------------- |
-|                    <kbd>Tab</kbd> | Navigate between selectable elements          |
 |             <kbd>Arrow Left</kbd> | Navigate between cell elements                |
 |           <kbd>Arrow Bottom</kbd> | Navigate between cell elements                |
 |            <kbd>Arrow Right</kbd> | Navigate between cell elements                |
