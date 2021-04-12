@@ -78,6 +78,9 @@ export interface GridLocaleText {
 
   // Total rows footer text
   footerTotalRows: React.ReactNode;
+
+  // Checkbox selection text
+  checkboxSelectionHeaderName: string;
 }
 
 export type GridTranslationKeys = keyof GridLocaleText;

@@ -19,6 +19,7 @@ import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { Logger, useLogger } from '../../utils/useLogger';
 import { useGridSelector } from '../core/useGridSelector';
+import { GridLocaleText, GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
 import { useGridState } from '../core/useGridState';
 import {
   allGridColumnsSelector,
@@ -60,13 +61,16 @@ function hydrateColumns(
   columnTypes: GridColumnTypesRecord,
   withCheckboxSelection: boolean,
   logger: Logger,
+  getLocaleText: <T extends GridTranslationKeys>(key: T) => GridLocaleText[T],
 ): GridColumns {
   logger.debug('Hydrating GridColumns with default definitions');
   const mergedColTypes = mergeGridColTypes(getGridDefaultColumnTypes(), columnTypes);
   const extendedColumns = columns.map((c) => ({ ...getGridColDef(mergedColTypes, c.type), ...c }));
 
   if (withCheckboxSelection) {
-    return [gridCheckboxSelectionColDef, ...extendedColumns];
+    const checkboxSelection = { ...gridCheckboxSelectionColDef };
+    checkboxSelection.headerName = getLocaleText('checkboxSelectionHeaderName');
+    return [checkboxSelection, ...extendedColumns];
   }
 
   return extendedColumns;
@@ -216,6 +220,7 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
         options.columnTypes,
         !!options.checkboxSelection,
         logger,
+        apiRef.current.getLocaleText,
       );
 
       const updatedCols = updateColumnsWidth(
