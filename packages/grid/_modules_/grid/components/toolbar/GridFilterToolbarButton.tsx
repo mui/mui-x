@@ -23,7 +23,7 @@ const useStyles = makeStyles(
       padding: theme.spacing(0, 1),
     },
   }),
-  { name: 'MuiDataGridFilterButtonTooltipList' },
+  { name: 'MuiDataGridFilterToolbarButton' },
 );
 
 export const GridFilterToolbarButton: React.FC<{}> = () => {
