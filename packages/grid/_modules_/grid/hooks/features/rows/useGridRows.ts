@@ -123,11 +123,11 @@ export const useGridRows = (
       }
 
       const allRows: GridRowId[] = [];
-      const idRowsLookup = allNewRows.reduce((lookup, row) => {
+      const idRowsLookup = allNewRows.reduce((acc, row) => {
         const id = getGridRowId(row, getRowIdProp);
-        lookup[id] = row;
+        acc[id] = row;
         allRows.push(id);
-        return lookup;
+        return acc;
       }, {});
 
       const totalRowCount =
@@ -149,14 +149,14 @@ export const useGridRows = (
   const updateRows = React.useCallback(
     (updates: GridRowModelUpdate[]) => {
       // we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
-      const uniqUpdates = updates.reduce((uniq, update) => {
+      const uniqUpdates = updates.reduce((acc, update) => {
         const id = getGridRowId(
           update,
           getRowIdProp,
           'A row was provided without id when calling updateRows():',
         );
-        uniq[id] = uniq[id] != null ? { ...uniq[id!], ...update } : update;
-        return uniq;
+        acc[id] = acc[id] != null ? { ...acc[id!], ...update } : update;
+        return acc;
       }, {} as { [id: string]: GridRowModel });
 
       const addedRows: GridRowModel[] = [];

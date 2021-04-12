@@ -46,7 +46,7 @@ export function buildCSV(
     .map((column) => serialiseCellValue(column.headerName || column.field))
     .toString()}\r\n`;
   const CSVBody = rowIds
-    .reduce<string>((soFar, id) => `${soFar}${serialiseRow(id, columns, getCellValue)}\r\n`, '')
+    .reduce<string>((acc, id) => `${acc}${serialiseRow(id, columns, getCellValue)}\r\n`, '')
     .trim();
   const csv = `${CSVHead}${CSVBody}`.trim();
 
