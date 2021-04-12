@@ -13,7 +13,7 @@ import {
   // @ts-expect-error need to migrate helpers to TypeScript
   waitFor,
 } from 'test/utils';
-import { useData } from '../../../../storybook/src/hooks/useData';
+import { useData } from 'packages/storybook/src/hooks/useData';
 
 describe('<XGrid /> - Sorting', () => {
   let clock;
