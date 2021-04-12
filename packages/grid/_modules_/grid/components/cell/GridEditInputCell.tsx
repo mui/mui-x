@@ -18,7 +18,7 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
     rowIndex,
     colIndex,
     isEditable,
-    ...inputBaseProps
+    ...other
   } = props;
 
   const [valueState, setValueState] = React.useState(value);
@@ -53,7 +53,7 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
       type={inputType}
       value={inputFormattedValue}
       onChange={handleChange}
-      {...inputBaseProps}
+      {...other}
     />
   );
 }
