@@ -51,11 +51,11 @@ export const GridHeaderCheckbox: React.FC<GridColumnHeaderParams> = () => {
 GridHeaderCheckbox.displayName = 'GridHeaderCheckbox';
 
 export const GridCellCheckboxRenderer: React.FC<GridCellParams> = React.memo((props) => {
-  const { row, getValue, field } = props;
+  const { getValue, field, id } = props;
   const apiRef = React.useContext(GridApiContext);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-    apiRef!.current.selectRow(row.id, checked, true);
+    apiRef!.current.selectRow(id, checked, true);
   };
 
   return (
