@@ -25,7 +25,6 @@ import {
   isMultipleKey,
   isNavigationKey,
   isSpaceKey,
-  isTabKey,
 } from '../../../utils/keyboardUtils';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
@@ -171,7 +170,7 @@ export const useGridKeyboard = (
         return;
       }
 
-      if ((isNavigationKey(event.key) && !event.shiftKey) || isTabKey(event.key)) {
+      if (isNavigationKey(event.key) && !event.shiftKey) {
         apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEYDOWN, params, event);
         return;
       }
@@ -205,10 +204,7 @@ export const useGridKeyboard = (
         event.preventDefault();
       }
 
-      if (
-        (isNavigationKey(event.key) && !isSpaceKey(event.key) && !event.shiftKey) ||
-        isTabKey(event.key)
-      ) {
+      if (isNavigationKey(event.key) && !isSpaceKey(event.key) && !event.shiftKey) {
         apiRef.current.publishEvent(GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN, params, event);
         return;
       }

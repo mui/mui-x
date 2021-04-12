@@ -5,7 +5,6 @@ import {
   DataGrid,
   GridFilterInputValueProps,
   getGridNumericColumnOperators,
-  GridPreferencePanelsValue,
 } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
@@ -65,17 +64,7 @@ export default function ExtendNumericOperator() {
   }
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        rows={data.rows}
-        columns={columns}
-        filterModel={filterModel}
-        state={{
-          preferencePanel: {
-            open: true,
-            openedPanelValue: GridPreferencePanelsValue.filters,
-          },
-        }}
-      />
+      <DataGrid rows={data.rows} columns={columns} filterModel={filterModel} />
     </div>
   );
 }

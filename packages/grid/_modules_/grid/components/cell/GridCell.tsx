@@ -12,6 +12,9 @@ import {
   GRID_CELL_MOUSE_DOWN,
   GRID_CELL_OUT,
   GRID_CELL_OVER,
+  GRID_CELL_DRAG_START,
+  GRID_CELL_DRAG_ENTER,
+  GRID_CELL_DRAG_OVER,
 } from '../../constants/eventsConstants';
 import { GridAlignment, GridCellMode, GridCellValue, GridRowId } from '../../models/index';
 import { classnames } from '../../utils/index';
@@ -56,6 +59,9 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
   const valueToRender = formattedValue || value;
   const cellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = React.useContext(GridApiContext);
+  const currentFocusedCell = apiRef!.current.getState().keyboard.cell;
+  const isCellFocused =
+    (currentFocusedCell && hasFocus) || (rowIndex === 0 && colIndex === 0 && !currentFocusedCell);
 
   const cssClasses = classnames(
     GRID_CELL_CSS_CLASS,
@@ -115,6 +121,9 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
       onKeyDown: publish(GRID_CELL_KEYDOWN),
       onBlur: publishBlur(GRID_CELL_BLUR),
       onFocus: publish(GRID_CELL_FOCUS),
+      onDragStart: publish(GRID_CELL_DRAG_START),
+      onDragEnter: publish(GRID_CELL_DRAG_ENTER),
+      onDragOver: publish(GRID_CELL_DRAG_OVER),
     }),
     [publish, publishBlur, publishClick],
   );
@@ -150,7 +159,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
       aria-colindex={colIndex}
       style={style}
       /* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */
-      tabIndex={hasFocus ? 0 : -1}
+      tabIndex={isCellFocused ? 0 : -1}
       {...eventsHandlers}
     >
       {children || valueToRender?.toString()}

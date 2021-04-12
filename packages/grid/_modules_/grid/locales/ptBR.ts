@@ -79,6 +79,9 @@ const ptBRGrid: Partial<GridLocaleText> = {
 
   // Total rows footer text
   footerTotalRows: 'Total de linhas:',
+
+  // Checkbox selection text
+  checkboxSelectionHeaderName: 'Seleção',
 };
 
 export const ptBR: Localization = getGridLocalization(ptBRGrid, ptBRCore);

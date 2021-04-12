@@ -150,11 +150,10 @@ To disable column reordering, set the prop `disableColumnReorder={true}`.
 
 In addition, column reordering emits the following events that can be imported:
 
-- `columnReordering:dragStart`: emitted when dragging of a header cell starts.
-- `columnReordering:dragEnter`: emitted when the cursor enters another header cell while dragging.
-- `columnReordering:dragOver`: emitted when dragging a header cell over another header cell.
-- `columnReordering:dragOverHeader`: emitted when dragging a header cell over the `ColumnsHeader` component.
-- `columnReordering:dragEnd`: emitted when dragging of a header cell stops.
+- `columnHeaderDragStart`: emitted when dragging of a header cell starts.
+- `columnHeaderDragEnter`: emitted when the cursor enters another header cell while dragging.
+- `columnHeaderDragOver`: emitted when dragging a header cell over another header cell.
+- `columnHeaderDragEnd`: emitted when dragging of a header cell stops.
 
 {{"demo": "pages/components/data-grid/columns/ColumnOrderingGrid.js", "disableAd": true, "bg": "inline"}}
 

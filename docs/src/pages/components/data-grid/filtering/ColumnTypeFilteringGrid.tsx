@@ -4,7 +4,6 @@ import {
   DataGrid,
   GridColTypeDef,
   getGridNumericColumnOperators,
-  GridPreferencePanelsValue,
 } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
@@ -54,12 +53,6 @@ export default function ColumnTypeFilteringGrid() {
           items: [
             { columnField: 'totalPrice', value: '3000000', operatorValue: '>' },
           ],
-        }}
-        state={{
-          preferencePanel: {
-            open: true,
-            openedPanelValue: GridPreferencePanelsValue.filters,
-          },
         }}
       />
     </div>
