@@ -26,7 +26,10 @@ const useStyles = makeStyles(
   { name: 'MuiDataGridFilterToolbarButton' },
 );
 
-export const GridFilterToolbarButton: React.FC<{}> = () => {
+export const GridFilterToolbarButton = React.forwardRef<
+  HTMLButtonElement,
+  React.HTMLAttributes<HTMLButtonElement>
+>(function GridFilterToolbarButton(props, ref) {
   const classes = useStyles();
   const apiRef = React.useContext(GridApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
@@ -50,10 +53,10 @@ export const GridFilterToolbarButton: React.FC<{}> = () => {
             ...(lookup[item.columnField!] && (
               <li key={item.id}>
                 {`${lookup[item.columnField!].headerName || item.columnField}
-                ${apiRef!.current.getLocaleText(
-                  `filterOperator${capitalize(item.operatorValue!)}` as GridTranslationKeys,
-                )}
-                ${item.value}`}
+                  ${apiRef!.current.getLocaleText(
+                    `filterOperator${capitalize(item.operatorValue!)}` as GridTranslationKeys,
+                  )}
+                  ${item.value}`}
               </li>
             )),
           }))}
@@ -80,6 +83,8 @@ export const GridFilterToolbarButton: React.FC<{}> = () => {
   return (
     <Tooltip title={tooltipContentNode} enterDelay={1000}>
       <Button
+        ref={ref}
+        {...props}
         onClick={toggleFilter}
         size="small"
         color="primary"
@@ -94,4 +99,4 @@ export const GridFilterToolbarButton: React.FC<{}> = () => {
       </Button>
     </Tooltip>
   );
-};
+});
