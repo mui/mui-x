@@ -82,6 +82,10 @@ const ptBRGrid: Partial<GridLocaleText> = {
 
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Seleção',
+
+  // Boolean cell text
+  booleanCellTrueLabel: 'sim',
+  booleanCellFalseLabel: 'não',
 };
 
 export const ptBR: Localization = getGridLocalization(ptBRGrid, ptBRCore);
