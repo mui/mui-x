@@ -213,14 +213,16 @@ describe('<DataGrid /> - Pagination', () => {
             </div>
           );
         };
-        const height = 780;
-        const footerHeight = 52;
         const nbRows = 27;
+        const height = 780;
+        render(<TestCaseAutoPageSize nbRows={nbRows} height={height} />);
+
+        const footerHeight = document.querySelector('.MuiDataGrid-footer')!.clientHeight;
         const expectedViewportRowsLength = Math.floor(
           (height - DEFAULT_GRID_OPTIONS.headerHeight - footerHeight) /
             DEFAULT_GRID_OPTIONS.rowHeight,
         );
-        render(<TestCaseAutoPageSize nbRows={nbRows} height={height} />);
+
         let rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
         expect(rows.length).to.equal(expectedViewportRowsLength);
 
@@ -236,6 +238,13 @@ describe('<DataGrid /> - Pagination', () => {
         fireEvent.click(screen.getByRole('button', { name: /next page/i }));
         rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
         expect(rows.length).to.equal(nbRows % expectedViewportRowsLength);
+
+        // make sure there is no more pages.
+        const nextPageBtn = document.querySelector('.MuiTablePagination-actions button:last-child');
+        expect(nextPageBtn!.getAttribute('disabled')).to.not.equal(
+          null,
+          'next page should be disabled.',
+        );
       });
     });
   });
