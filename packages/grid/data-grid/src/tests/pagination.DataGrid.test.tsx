@@ -196,19 +196,12 @@ describe('<DataGrid /> - Pagination', () => {
 
     describe('prop: autoPageSize', () => {
       it('should always render the same amount of rows and fit the viewport', () => {
-        const TestCaseAutoPageSize = (
-          props: { nbRows: number; height?: number },
-        ) => {
-          const data = useData(props.nbRows,  10);
+        const TestCaseAutoPageSize = (props: { nbRows: number; height?: number }) => {
+          const data = useData(props.nbRows, 10);
 
           return (
             <div style={{ width: 300, height: props.height }}>
-              <DataGrid
-                columns={data.columns}
-                rows={data.rows}
-                autoPageSize
-                pagination
-              />
+              <DataGrid columns={data.columns} rows={data.rows} autoPageSize pagination />
             </div>
           );
         };
