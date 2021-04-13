@@ -12,7 +12,7 @@ export const isHomeOrEndKeys = (key: string): boolean => key === 'Home' || key =
 
 export const isPageKeys = (key: string): boolean => key.indexOf('Page') === 0;
 export const isDeleteKeys = (key: string) => key === 'Delete' || key === 'Backspace';
-const printableChars = `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!"£$%^&amp;*()_+-=[];'#,./|<>?:@~{}`;
+const printableChars = `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!"£$%^&*()_+-=[];'#,./|<>?:@~{}`;
 
 export const isPrintableKey = (key: string) => printableChars.indexOf(key) > -1;
 
