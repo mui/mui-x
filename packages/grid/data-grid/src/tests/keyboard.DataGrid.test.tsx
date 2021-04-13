@@ -222,7 +222,7 @@ describe('<DataGrid /> - Keyboard', () => {
 
     render(
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid rows={baselineProps.rows} columns={baselineProps.columns} />
+        <DataGrid autoHeight rows={baselineProps.rows} columns={baselineProps.columns} />
       </div>,
     );
 
