@@ -127,7 +127,7 @@ describe('<DataGrid /> - Keyboard', () => {
   });
 
   const KeyboardTest = (props: { nbRows?: number }) => {
-    const data = useData(props.nbRows || 20, 20);
+    const data = useData(props.nbRows || 100, 20);
     const transformColSizes = (columns: GridColumns) =>
       columns.map((column) => ({ ...column, width: 60 }));
 
@@ -140,7 +140,7 @@ describe('<DataGrid /> - Keyboard', () => {
 
   /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
   it('cell navigation with arrows', () => {
-    render(<KeyboardTest />);
+    render(<KeyboardTest nbRows={10} />);
     getCell(0, 0).focus();
     expect(getActiveCell()).to.equal('0-0');
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
