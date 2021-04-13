@@ -33,6 +33,7 @@ export function ColumnHeaderMenuIcon(props: ColumnHeaderFilterIconProps) {
   return (
     <div className={classnames('MuiDataGrid-menuIcon', { 'MuiDataGrid-menuOpen': open })}>
       <IconButton
+        tabIndex={-1}
         className="MuiDataGrid-menuIconButton"
         aria-label={apiRef!.current.getLocaleText('columnMenuLabel')}
         title={apiRef!.current.getLocaleText('columnMenuLabel')}

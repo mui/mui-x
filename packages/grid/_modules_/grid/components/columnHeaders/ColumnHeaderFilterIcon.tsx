@@ -45,6 +45,7 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
       color="default"
       aria-label={apiRef!.current.getLocaleText('columnHeaderFiltersLabel')}
       size="small"
+      tabIndex={-1}
     >
       <FilteredColumnIconElement fontSize="small" />
     </IconButton>
