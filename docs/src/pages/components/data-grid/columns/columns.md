@@ -64,7 +64,7 @@ The first column will be 200px wide, leaving 300px remaining. The column with `f
 **Note**
 
 - `flex` doesn't work together with `width`. If you set both `flex` and `width` in `GridColDef`, `flex` will override `width`.
-- `flex` does not work if the combined width of the columns that have `width` is more than the width of the grid itself. If that is the case a scroll bar will be visible, and the columns that have `flex` will default back to their base value of 100px.
+- `flex` doesn't work if the combined width of the columns that have `width` is more than the width of the grid itself. If that is the case a scroll bar will be visible, and the columns that have `flex` will default back to their base value of 100px.
 
 {{"demo": "pages/components/data-grid/columns/ColumnFluidWidthGrid.js", "bg": "inline"}}
 
@@ -89,7 +89,7 @@ Alternatively, to disable all columns resize, set the prop `disableColumnResize=
 
 Sometimes a column might not have a corresponding value, or you might want to render a combination of different fields.
 
-To achieve that, set the `valueGetter` attribute of `GridColDef` as in the example below
+To achieve that, set the `valueGetter` attribute of `GridColDef` as in the example below.
 
 **Note**: You need to set a `sortComparator` for the column sorting to work when setting the `valueGetter` attribute.
 
@@ -175,12 +175,11 @@ const columns: GridColDef[] = [
 
 {{"demo": "pages/components/data-grid/columns/RenderCellGrid.js", "bg": "inline"}}
 
-#### Render Edit Cell
+#### Render edit cell
 
-As `renderCell` for the view mode, the grid render an input field in edit mode.
-To customize the edit component, set the `renderEditCell` function.
-
-_Check the [editing page](/components/data-grid/editing) for more details about editing_
+The `renderCell` render function allows customizing the rendered in "view mode" only.
+For the "edit mode", set the `renderEditCell` function to customize the edit component.
+Check the [editing page](/components/data-grid/editing) for more details about editing.
 
 #### Expand cell renderer
 
