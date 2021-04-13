@@ -75,7 +75,7 @@ This is especially interesting when using the `valueGetter` on the column defini
 Follow the following steps to validate the value in the cells.
 
 - Set the event handler `onEditCellChange`. It's invoked when a change is triggered by the edit input component.
-- Set the event handler `onEditCellChangeCommitted` to validate when the change is committed.
+- Set the event handler `onEditCellChangeCommitted` to validate or persist the new value. This handler is invoked when an end-user requests a change to be committed and before the cell reverts to view mode.
 
 Alternatively, you can use the `GridEditRowsModel` state mentioned in the [Control editing](#control-editing) section.
 
@@ -89,9 +89,9 @@ Alternatively, you can use the `GridEditRowsModel` state mentioned in the [Contr
 
 Server-side validation works like client-side [validation](#validation).
 
-- use the `GridEditRowsModel` mentioned in the [Control editing](#control-editing) section.
-- or set the event handler `onEditCellChange` for `keydown` validation
-- set the event handler `onEditCellChangeCommitted` to validate and update the server when the change is committed.
+- Use the `GridEditRowsModel` mentioned in the [Control editing](#control-editing) section.
+- Or set the event handler `onEditCellChange` for `keydown` validation
+- Set the event handler `onEditCellChangeCommitted` to validate and update the server when the change is committed.
 
 **Note:** To prevent the default client-side behavior, use `event.stopPropagation()`.
 

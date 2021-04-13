@@ -7,10 +7,7 @@ import {
   useGridApiRef,
   XGrid,
 } from '@material-ui/x-grid';
-import {
-  randomEmail,
-  randomTraderName,
-} from '@material-ui/x-grid-data-generator';
+import { randomEmail, randomTraderName } from '@material-ui/x-grid-data-generator';
 
 const columns: GridColumns = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },

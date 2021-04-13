@@ -99,11 +99,11 @@ export default function ValidateServerNameGrid() {
     [apiRef],
   );
 
-  React.useEffect(()=> {
-    return ()=> {
+  React.useEffect(() => {
+    return () => {
       clearTimeout(promiseTimeout);
       clearTimeout(keyStrokeTimeoutRef.current);
-    }
+    };
   }, []);
 
   return (
