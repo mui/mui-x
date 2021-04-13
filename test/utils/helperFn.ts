@@ -30,6 +30,22 @@ export function getActiveCell() {
   )}`;
 }
 
+export function getActiveColumnHeader() {
+  let activeElement: Element | null;
+  if (document.activeElement && document.activeElement.getAttribute('role') === 'columnheader') {
+    activeElement = document.activeElement;
+  } else {
+    activeElement =
+      document.activeElement && document.activeElement.closest('[role="columnheader"]');
+  }
+
+  if (!activeElement) {
+    return null;
+  }
+
+  return `${activeElement.getAttribute('aria-colindex')}`;
+}
+
 export async function sleep(duration: number) {
   return new Promise<void>((resolve) => {
     setTimeout(() => {

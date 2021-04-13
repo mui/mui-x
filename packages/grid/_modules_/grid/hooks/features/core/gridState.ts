@@ -66,7 +66,7 @@ export const getInitialGridState: () => GridState = () => ({
   scrollBar: { hasScrollX: false, hasScrollY: false, scrollBarSize: { x: 0, y: 0 } },
   viewportSizes: { width: 0, height: 1 },
   sorting: getInitialGridSortingState(),
-  keyboard: { cell: null, isMultipleKeyPressed: false },
+  keyboard: { cell: null, columnHeader: null, isMultipleKeyPressed: false },
   selection: {},
   filter: getInitialGridFilterState(),
   columnMenu: { open: false },

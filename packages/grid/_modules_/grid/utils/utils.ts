@@ -84,3 +84,6 @@ export function mapColDefTypeToInputType(type: string) {
       return 'text';
   }
 }
+
+// Util to make specific interface properties optional
+export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;

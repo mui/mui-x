@@ -8,9 +8,16 @@ export interface ColumnMenuApi {
    * @param id
    * @param labelledby
    */
-  showColumnMenu: (field: string, id: string, labelledby: string) => void;
+  showColumnMenu: (field: string, id?: string, labelledby?: string) => void;
   /**
    * Hide the column menu.
    */
   hideColumnMenu: () => void;
+  /**
+   * Toggle the column menu under the field column.
+   * @param field
+   * @param id
+   * @param labelledby
+   */
+  toggleColumnMenu: (field: string, id?: string, labelledby?: string) => void;
 }

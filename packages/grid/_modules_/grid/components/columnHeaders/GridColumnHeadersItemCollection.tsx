@@ -3,7 +3,9 @@ import { GRID_COL_RESIZE_START, GRID_COL_RESIZE_STOP } from '../../constants/eve
 import { gridColumnReorderDragColSelector } from '../../hooks/features/columnReorder/columnReorderSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { filterGridColumnLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
+import { gridKeyboardColumnHeaderSelector } from '../../hooks/features/keyboard/gridKeyboardSelector';
 import { gridSortColumnLookupSelector } from '../../hooks/features/sorting/gridSortingSelector';
+import { renderStateSelector } from '../../hooks/features/virtualization/renderingStateSelector';
 import { useGridApiEventHandler } from '../../hooks/root/useGridApiEventHandler';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridColumns } from '../../models/colDef/gridColDef';
@@ -22,6 +24,8 @@ export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemColl
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const filterColumnLookup = useGridSelector(apiRef, filterGridColumnLookupSelector);
   const dragCol = useGridSelector(apiRef, gridColumnReorderDragColSelector);
+  const columnHeaderFocus = useGridSelector(apiRef, gridKeyboardColumnHeaderSelector);
+  const renderCtx = useGridSelector(apiRef, renderStateSelector).renderContext;
 
   const handleResizeStart = React.useCallback((params) => {
     setResizingColField(params.field);
@@ -34,6 +38,14 @@ export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemColl
   useGridApiEventHandler(apiRef!, GRID_COL_RESIZE_START, handleResizeStart);
   useGridApiEventHandler(apiRef!, GRID_COL_RESIZE_STOP, handleResizeStop);
 
+  const getColIndex = (index) => {
+    if (renderCtx == null) {
+      return index;
+    }
+
+    return index + renderCtx.firstColIdx;
+  };
+
   const items = columns.map((col, idx) => (
     <GridColumnHeaderItem
       key={col.field}
@@ -42,8 +54,9 @@ export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemColl
       options={options}
       isDragging={col.field === dragCol}
       column={col}
-      colIndex={idx}
+      colIndex={getColIndex(idx)}
       isResizing={resizingColField === col.field}
+      hasFocus={columnHeaderFocus !== null && columnHeaderFocus.colIndex === getColIndex(idx)}
     />
   ));
 

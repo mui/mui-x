@@ -22,7 +22,7 @@ import { GridApiContext } from '../GridApiContext';
 
 export interface GridCellProps {
   align: GridAlignment;
-  colIndex?: number;
+  colIndex: number;
   cssClass?: string;
   field: string;
   rowId: GridRowId;
@@ -30,7 +30,7 @@ export interface GridCellProps {
   hasFocus?: boolean;
   height: number;
   isEditable?: boolean;
-  rowIndex?: number;
+  rowIndex: number;
   showRightBorder?: boolean;
   value?: GridCellValue;
   width: number;

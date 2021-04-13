@@ -33,6 +33,7 @@ export const GridColumnHeaderSortIcon = React.memo(function GridColumnHeaderSort
         {index != null && (
           <Badge badgeContent={index} color="default">
             <IconButton
+              tabIndex={-1}
               aria-label={apiRef!.current.getLocaleText('columnHeaderSortIconLabel')}
               title={apiRef!.current.getLocaleText('columnHeaderSortIconLabel')}
               size="small"
@@ -43,6 +44,7 @@ export const GridColumnHeaderSortIcon = React.memo(function GridColumnHeaderSort
         )}
         {index == null && (
           <IconButton
+            tabIndex={-1}
             aria-label={apiRef!.current.getLocaleText('columnHeaderSortIconLabel')}
             title={apiRef!.current.getLocaleText('columnHeaderSortIconLabel')}
             size="small"

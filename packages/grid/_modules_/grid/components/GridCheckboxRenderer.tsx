@@ -60,6 +60,7 @@ export const GridCellCheckboxRenderer: React.FC<GridCellParams> = React.memo((pr
 
   return (
     <Checkbox
+      tabIndex={-1}
       checked={!!getValue(field)}
       onChange={handleChange}
       className="MuiDataGrid-checkboxInput"
