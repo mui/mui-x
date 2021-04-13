@@ -303,10 +303,15 @@ export interface GridOptions {
    */
   onColumnOrderChange?: (param: GridColumnOrderChangeParams) => void;
   /**
-   * Callback fired when a column is resized.
+   * Callback fired when a column is resizing.
    * @param param With all properties from [[GridColumnResizeParams]].
    */
   onColumnResize?: (param: GridColumnResizeParams) => void;
+  /**
+   * Callback fired when a column is resized.
+   * @param param With all properties from [[GridColumnResizeParams]].
+   */
+  onColumnResizeCommitted?: (param: GridColumnResizeParams) => void;
   /**
    * Callback fired when the Filter model changes before the filters are applied.
    * @param param With all properties from [[GridFilterModelParams]].
