@@ -1,30 +1,11 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useGridApiRef, XGrid } from '@material-ui/x-grid';
-import {
-  randomCreatedDate,
-  randomEmail,
-  randomTraderName,
-  randomUpdatedDate,
-} from '@material-ui/x-grid-data-generator';
+import { randomEmail, randomTraderName } from '@material-ui/x-grid-data-generator';
 
 const columns = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
   { field: 'email', headerName: 'Email', width: 200, editable: true },
-  {
-    field: 'dateCreated',
-    headerName: 'Date Created',
-    type: 'date',
-    width: 180,
-    editable: true,
-  },
-  {
-    field: 'lastLogin',
-    headerName: 'Last Login',
-    type: 'dateTime',
-    width: 220,
-    editable: true,
-  },
 ];
 
 const rows = [
@@ -32,36 +13,26 @@ const rows = [
     id: 1,
     name: randomTraderName(),
     email: randomEmail(),
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
   },
   {
     id: 2,
     name: randomTraderName(),
     email: randomEmail(),
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
   },
   {
     id: 3,
     name: randomTraderName(),
     email: randomEmail(),
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
   },
   {
     id: 4,
     name: randomTraderName(),
     email: randomEmail(),
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
   },
   {
     id: 5,
     name: randomTraderName(),
     email: randomEmail(),
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
   },
 ];
 

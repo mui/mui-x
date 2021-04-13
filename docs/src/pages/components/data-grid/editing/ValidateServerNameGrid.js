@@ -56,7 +56,7 @@ function validateName(username) {
   return new Promise((resolve) => {
     promiseTimeout = setTimeout(() => {
       resolve(existingUsers.indexOf(username.toLowerCase()) === -1);
-    }, Math.random() * 500 + 100);
+    }, Math.random() * 500 + 100); // simulate network latency
   });
 }
 export default function ValidateServerNameGrid() {
