@@ -4,8 +4,8 @@ import { DataGrid } from '@material-ui/data-grid';
 const rows = [
   {
     id: 1,
-    username: 'defunkt',
-    age: 38,
+    username: '@MaterialUI',
+    age: 20,
   },
 ];
 

@@ -34,19 +34,16 @@ By default, columns are ordered according to the order they are included in the 
 > Otherwise, you take the risk of losing the column width state (if resized).
 > You can create the array outside of the render function or memoize it.
 
-## Column headers
+### Headers
 
 You can configure the headers with:
 
 - `headerName`: The title of the column rendered in the column header cell.
 - `description`: The description of the column rendered as tooltip if the column header name is not fully displayed.
-- `hide`: Hide the column.
 
 {{"demo": "pages/components/data-grid/columns/HeaderColumnsGrid.js", "bg": "inline"}}
 
-For more advanced header configuration, go to the [rendering section](/components/data-grid/rendering/#header-cell).
-
-## Column width
+### Width
 
 By default, the columns have a width of 100 pixels.
 This is an arbitrary, easy to remember value.
@@ -56,21 +53,30 @@ To change the width of a column, use the `width` property available in `GridColD
 
 ### Fluid width
 
-Each column has a fixed width of 100 pixels by default, but column fluidity (responsiveness) can be by achieved by setting the `flex` property in `GridColDef`.
+Column fluidity or responsiveness can be by achieved by setting the `flex` property in `GridColDef`.
 
 The `flex` property accepts a value between 0 and ∞.
+It works by dividing the remaining space in the grid among all flex columns in proportion to their `flex` value.
 
-The `flex` property works by dividing the remaining space in the grid among all flex columns in proportion to their `flex` value.
 For example, consider a grid with a total width of 500px that has three columns: the first with `width: 200`; the second with `flex: 1`; and third with `flex: 0.5`.
 The first column will be 200px wide, leaving 300px remaining. The column with `flex: 1` is twice the size of `flex: 0.5`, which means that final sizes will be: 200px, 200px, 100px.
 
-Note that `flex` doesn't work together with `width`. If you set both `flex` and `width` in `GridColDef`, `flex` will override `width`.
+**Note**
 
-In addition, `flex` does not work if the combined width of the columns that have `width` is more than the width of the grid itself. If that is the case a scroll bar will be visible, and the columns that have `flex` will default back to their base value of 100px.
+- `flex` doesn't work together with `width`. If you set both `flex` and `width` in `GridColDef`, `flex` will override `width`.
+- `flex` doesn't work if the combined width of the columns that have `width` is more than the width of the grid itself. If that is the case a scroll bar will be visible, and the columns that have `flex` will default back to their base value of 100px.
 
 {{"demo": "pages/components/data-grid/columns/ColumnFluidWidthGrid.js", "bg": "inline"}}
 
-## Column resizing [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+### Hiding
+
+Set the column definition attribute `hide` to `true` to hide the column.
+
+```tsx
+<DataGrid columns={[{ field: 'id', hide: true }]} />
+```
+
+### Resizing [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 By default, `XGrid` allows all columns to be resized by dragging the right portion of the column separator.
 
@@ -79,17 +85,184 @@ Alternatively, to disable all columns resize, set the prop `disableColumnResize=
 
 {{"demo": "pages/components/data-grid/columns/ColumnSizingGrid.js", "disableAd": true, "bg": "inline"}}
 
-<!--
-- https://ag-grid.com/javascript-grid-resizing/
-- https://demos.telerik.com/kendo-ui/grid/column-resizing
-- https://www.telerik.com/kendo-react-ui/components/grid/columns/resizing/
-- https://elastic.github.io/eui/#/tabular-content/data-grid
-- https://devexpress.github.io/devextreme-reactive/react/grid/docs/guides/column-resizing/
-- http://schrodinger.github.io/fixed-data-table-2/example-resize.html
-- https://ej2.syncfusion.com/react/demos/#/material/grid/column-resizing
-- https://js.devexpress.com/Demos/WidgetsGallery/Demo/DataGrid/ColumnResizing/React/Light/
-- https://www.jqwidgets.com/react/react-grid/#https://www.jqwidgets.com/react/react-grid/react-grid-columnsresize.htm
--->
+### Value getter
+
+Sometimes a column might not have a corresponding value, or you might want to render a combination of different fields.
+
+To achieve that, set the `valueGetter` attribute of `GridColDef` as in the example below.
+
+**Note**: You need to set a `sortComparator` for the column sorting to work when setting the `valueGetter` attribute.
+
+```tsx
+function getFullName(params: ValueGetterParams) {
+  return `${params.getValue('firstName') || ''} ${
+    params.getValue('lastName') || ''
+  }`;
+}
+
+const columns: GridColDef[] = [
+  { field: 'firstName', headerName: 'First name', width: 130 },
+  { field: 'lastName', headerName: 'Last name', width: 130 },
+  {
+    field: 'fullName',
+    headerName: 'Full name',
+    width: 160,
+    valueGetter: getFullName,
+    sortComparator: (v1, v2, cellParams1, cellParams2) =>
+      getFullName(cellParams1).localeCompare(getFullName(cellParams2)),
+  },
+];
+```
+
+{{"demo": "pages/components/data-grid/columns/ValueGetterGrid.js", "bg": "inline"}}
+
+The value generated is used for filtering, sorting, rendering, etc unless overridden by a more specific configuration.
+
+### Value formatter
+
+The value formatters allow you to format values for display as a string.
+For instance, you can use it to format a JavaScript `Date` object.
+
+```tsx
+const columns: GridColDef[] = [
+  {
+    field: 'date',
+    headerName: 'Year',
+    valueFormatter: (params: ValueFormatterParams) =>
+      (params.value as Date).getFullYear(),
+  },
+];
+```
+
+{{"demo": "pages/components/data-grid/columns/ValueFormatterGrid.js", "bg": "inline"}}
+
+The value generated is used for filtering, sorting, rendering in the cell and outside, etc unless overridden by a more specific configuration.
+
+### Render cell
+
+By default, the grid render the value as a string in the cell.
+It resolves the rendered output in the following order:
+
+1. `renderCell() => ReactElement`
+2. `valueFormatter() => string`
+3. `valueGetter() => string`
+4. `row[field]`
+
+The `renderCell` method of the column definitions is similar to `valueFormatter`.
+However, it trades to be able to only render in a cell in exchange for allowing to return a React node (instead of a string).
+
+```tsx
+const columns: GridColDef[] = [
+  {
+    field: 'date',
+    headerName: 'Year',
+    renderCell: (params: GridCellParams) => (
+      <strong>
+        {(params.value as Date).getFullYear()}
+        <Button
+          variant="contained"
+          color="primary"
+          size="small"
+          style={{ marginLeft: 16 }}
+        >
+          Open
+        </Button>
+      </strong>
+    ),
+  },
+];
+```
+
+{{"demo": "pages/components/data-grid/columns/RenderCellGrid.js", "bg": "inline"}}
+
+#### Render edit cell
+
+The `renderCell` render function allows customizing the rendered in "view mode" only.
+For the "edit mode", set the `renderEditCell` function to customize the edit component.
+Check the [editing page](/components/data-grid/editing) for more details about editing.
+
+#### Expand cell renderer
+
+By default, the grid cuts the content of a cell and renders an ellipsis if the content of the cell does not fit in the cell.
+As a workaround, you can create a cell renderer that will allow seeing the full content of the cell in the grid.
+
+{{"demo": "pages/components/data-grid/columns/RenderExpandCellGrid.js", "bg": "inline"}}
+
+### Render header
+
+You can customize the look of each header with the `renderHeader` method.
+It takes precedence over the `headerName` property.
+
+```tsx
+const columns: GridColDef[] = [
+  {
+    field: 'date',
+    width: 150,
+    type: 'date',
+    renderHeader: (params: GridColumnHeaderParams) => (
+      <strong>
+        {'Birthday '}
+        <span role="img" aria-label="enjoy">
+          🎂
+        </span>
+      </strong>
+    ),
+  },
+];
+```
+
+{{"demo": "pages/components/data-grid/columns/RenderHeaderGrid.js", "bg": "inline"}}
+
+### Styling header
+
+The `GridColDef` type has properties to apply class names and custom CSS on the header.
+
+- `headerClassName`: to apply class names into the column header.
+- `headerAlign`: to align the content of the header. It must be 'left' | 'right' | 'center'.
+
+```tsx
+const columns: GridColumns = [
+  {
+    field: 'first',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
+  },
+  {
+    field: 'last',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
+  },
+];
+```
+
+{{"demo": "pages/components/data-grid/columns/StylingHeaderGrid.js", "bg": "inline"}}
+
+### Styling cells
+
+The `GridColDef` type has properties to apply class names and custom CSS on the cells.
+
+- `cellClassName`: to apply class names on every cell. It can also be a function.
+- `align`: to align the content of the cells. It must be 'left' | 'right' | 'center'. (Note you must use `headerAlign` to align the content of the header.)
+
+```tsx
+const columns: GridColumns = [
+  {
+    field: 'name',
+    cellClassName: 'super-app-theme--cell',
+  },
+  {
+    field: 'score',
+    type: 'number',
+    cellClassName: (params: GridCellClassParams) =>
+      clsx('super-app', {
+        negative: (params.value as number) < 0,
+        positive: (params.value as number) > 0,
+      }),
+  },
+];
+```
+
+{{"demo": "pages/components/data-grid/columns/StylingCellsGrid.js", "bg": "inline"}}
 
 ## Column types
 
