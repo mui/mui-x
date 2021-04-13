@@ -4,7 +4,16 @@ import { XGrid } from '@material-ui/x-grid';
 import { expect } from 'chai';
 import { useFakeTimers } from 'sinon';
 import { getColumnValues } from 'test/utils/helperFn';
-import { createClientRenderStrictMode } from 'test/utils';
+import {
+  createClientRenderStrictMode,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  fireEvent,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  screen,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  waitFor,
+} from 'test/utils';
+import { useData } from 'packages/storybook/src/hooks/useData';
 
 describe('<XGrid /> - Sorting', () => {
   let clock;
@@ -130,5 +139,41 @@ describe('<XGrid /> - Sorting', () => {
 
     apiRef.current.setSortModel(sortModel);
     expect(getColumnValues()).to.deep.equal(['Puma', 'Adidas', 'Nike']);
+  });
+
+  describe('performance', () => {
+    beforeEach(() => {
+      clock.restore();
+    });
+
+    it('should sort 5,000 rows in less than 200 ms', async function test() {
+      // It's simpler to only run the performance test in a single controlled environment.
+      if (!/HeadlessChrome/.test(window.navigator.userAgent)) {
+        this.skip();
+        return;
+      }
+
+      const TestCasePerf = () => {
+        const data = useData(5000, 10);
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid columns={data.columns} rows={data.rows} />
+          </div>
+        );
+      };
+
+      render(<TestCasePerf />);
+      const header = screen
+        .getByRole('columnheader', { name: 'Currency Pair' })
+        .querySelector('.MuiDataGrid-colCellTitleContainer');
+
+      const t0 = performance.now();
+      fireEvent.click(header);
+      await waitFor(() => expect(document.querySelector('.MuiDataGrid-sortIcon')).to.not.be.null);
+      const t1 = performance.now();
+      const time = Math.round(t1 - t0);
+      expect(time).to.be.lessThan(200);
+    });
   });
 });

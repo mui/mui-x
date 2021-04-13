@@ -5,6 +5,14 @@ import * as React from 'react';
  */
 export interface GridIconSlotsComponent {
   /**
+   * Icon displayed on the boolean cell to represent the true value.
+   */
+  BooleanCellTrueIcon?: React.ElementType;
+  /**
+   * Icon displayed on the boolean cell to represent the false value.
+   */
+  BooleanCellFalseIcon?: React.ElementType;
+  /**
    * Icon displayed on the side of the column header title to display the filter input component.
    */
   ColumnMenuIcon?: React.ElementType;

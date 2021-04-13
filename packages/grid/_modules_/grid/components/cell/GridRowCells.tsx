@@ -7,6 +7,7 @@ import {
   GridCellClassRules,
   GridCellParams,
   GridCellIndexCoordinates,
+  GridRowId,
 } from '../../models/index';
 import { GridCell, GridCellProps } from './GridCell';
 import { GridApiContext } from '../GridApiContext';
@@ -26,6 +27,7 @@ interface RowCellsProps {
   columns: GridColumns;
   extendRowFullWidth: boolean;
   firstColIdx: number;
+  id: GridRowId;
   hasScroll: { y: boolean; x: boolean };
   lastColIdx: number;
   row: GridRowModel;
@@ -39,8 +41,8 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
     columns,
     firstColIdx,
     hasScroll,
+    id,
     lastColIdx,
-    row,
     rowIndex,
     cellFocus,
     showCellRightBorder,
@@ -56,7 +58,7 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
       ? showCellRightBorder
       : !removeLastBorderRight && !props.extendRowFullWidth;
 
-    const cellParams: GridCellParams = apiRef!.current.getCellParams(row.id, column.field);
+    const cellParams: GridCellParams = apiRef!.current.getCellParams(id, column.field);
 
     let cssClassProp = { cssClass: '' };
     if (column.cellClassName) {
@@ -72,7 +74,7 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
       cssClassProp = { cssClass: `${cssClassProp.cssClass} ${cssClass}` };
     }
 
-    const editCellState = editRowsState[row.id] && editRowsState[row.id][column.field];
+    const editCellState = editRowsState[id] && editRowsState[id][column.field];
     let cellComponent: React.ReactElement | null = null;
 
     if (editCellState == null && column.renderCell) {
@@ -90,7 +92,7 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
       value: cellParams.value,
       field: column.field,
       width: column.width!,
-      rowId: row.id,
+      rowId: id,
       height: rowHeight,
       showRightBorder,
       formattedValue: cellParams.formattedValue,

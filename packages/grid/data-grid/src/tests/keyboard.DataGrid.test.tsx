@@ -12,7 +12,14 @@ import {
 } from 'test/utils';
 import { spy } from 'sinon';
 import { expect } from 'chai';
-import { getActiveCell, getCell, getRow } from 'test/utils/helperFn';
+import {
+  getActiveCell,
+  getActiveColumnHeader,
+  getCell,
+  getColumnHeaderCell,
+  getColumnValues,
+  getRow,
+} from 'test/utils/helperFn';
 import { DataGrid } from '@material-ui/data-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 import { GridColumns } from 'packages/grid/_modules_/grid/models/colDef/gridColDef';
@@ -151,6 +158,12 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(getActiveCell()).to.equal('1-0');
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
     expect(getActiveCell()).to.equal('0-0');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
+    expect(getActiveColumnHeader()).to.equal('1');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
+    expect(getActiveColumnHeader()).to.equal('2');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+    expect(getActiveCell()).to.equal('0-1');
   });
 
   it('Shift + Space should select a row', () => {
@@ -189,5 +202,75 @@ describe('<DataGrid /> - Keyboard', () => {
     await waitFor(() => getCell(1, 19));
     expect(getActiveCell()).to.equal('1-19');
   });
+
+  it('Page Down / Page Up navigation', () => {
+    const baselineProps = {
+      rows: [
+        {
+          id: 0,
+          brand: 'Nike',
+        },
+        {
+          id: 1,
+          brand: 'Adidas',
+        },
+        {
+          id: 2,
+          brand: 'Puma',
+        },
+      ],
+      columns: [{ field: 'brand' }],
+    };
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid rows={baselineProps.rows} columns={baselineProps.columns} />
+      </div>,
+    );
+
+    getCell(0, 0).focus();
+    expect(getActiveCell()).to.equal('0-0');
+    fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
+    expect(getActiveCell()).to.equal('2-0');
+    fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
+    expect(getActiveColumnHeader()).to.equal('1');
+    fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
+    expect(getActiveCell()).to.equal('2-0');
+  });
   /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
+
+  it('should sort column when pressing enter and column header is selected', () => {
+    const columns = [
+      {
+        field: 'id',
+      },
+      {
+        field: 'name',
+      },
+    ];
+
+    const rows = [
+      {
+        id: 1,
+        name: 'John',
+      },
+      {
+        id: 2,
+        name: 'Doe',
+      },
+    ];
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid rows={rows} columns={columns} />
+      </div>,
+    );
+
+    getColumnHeaderCell(1).focus();
+    expect(getActiveColumnHeader()).to.equal('1');
+    expect(getColumnValues(1)).to.deep.equal(['John', 'Doe']);
+    fireEvent.keyDown(getColumnHeaderCell(1), { key: 'Enter' });
+    fireEvent.keyDown(getColumnHeaderCell(1), { key: 'Enter' });
+    expect(getColumnValues(1)).to.deep.equal(['Doe', 'John']);
+  });
 });

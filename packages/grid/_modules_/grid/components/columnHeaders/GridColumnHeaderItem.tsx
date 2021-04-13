@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  GRID_COLUMN_HEADER_KEYDOWN,
   GRID_COLUMN_HEADER_CLICK,
   GRID_COLUMN_HEADER_DOUBLE_CLICK,
   GRID_COLUMN_HEADER_ENTER,
@@ -11,6 +12,7 @@ import {
   GRID_COLUMN_HEADER_DRAG_START,
   GRID_COLUMN_HEADER_DRAG_END,
   GRID_COLUMN_SEPARATOR_MOUSE_DOWN,
+  GRID_COLUMN_HEADER_FOCUS,
 } from '../../constants/eventsConstants';
 import { GridColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
 import { GridOptions } from '../../models/gridOptions';
@@ -35,6 +37,7 @@ interface GridColumnHeaderItemProps {
   sortIndex?: number;
   options: GridOptions;
   filterItemsCounter?: number;
+  hasFocus?: boolean;
 }
 
 export const GridColumnHeaderItem = ({
@@ -46,8 +49,10 @@ export const GridColumnHeaderItem = ({
   sortIndex,
   options,
   filterItemsCounter,
+  hasFocus,
 }: GridColumnHeaderItemProps) => {
   const apiRef = React.useContext(GridApiContext);
+  const headerCellRef = React.useRef<HTMLDivElement>(null);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
   const {
     disableColumnReorder,
@@ -87,6 +92,8 @@ export const GridColumnHeaderItem = ({
       onMouseOut: publish(GRID_COLUMN_HEADER_OUT),
       onMouseEnter: publish(GRID_COLUMN_HEADER_ENTER),
       onMouseLeave: publish(GRID_COLUMN_HEADER_LEAVE),
+      onKeyDown: publish(GRID_COLUMN_HEADER_KEYDOWN),
+      onFocus: publish(GRID_COLUMN_HEADER_FOCUS),
     }),
     [publish],
   );
@@ -143,8 +150,16 @@ export const GridColumnHeaderItem = ({
   );
   const columnMenuIconButton = <ColumnHeaderMenuIcon column={column} />;
 
+  React.useLayoutEffect(() => {
+    const columnMenuState = apiRef!.current.getState().columnMenu;
+    if (hasFocus && !columnMenuState.open) {
+      headerCellRef.current!.focus();
+    }
+  });
+
   return (
     <div
+      ref={headerCellRef}
       className={cssClasses}
       key={column.field}
       data-field={column.field}
@@ -154,7 +169,7 @@ export const GridColumnHeaderItem = ({
         maxWidth: width,
       }}
       role="columnheader"
-      tabIndex={-1}
+      tabIndex={hasFocus ? 0 : -1}
       aria-colindex={colIndex + 1}
       {...ariaSort}
       {...mouseEventsHandlers}

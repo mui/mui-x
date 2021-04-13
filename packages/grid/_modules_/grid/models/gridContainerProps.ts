@@ -29,7 +29,7 @@ export interface GridContainerProps {
    */
   isVirtualized: boolean;
   /**
-   * The maximum number of rows that will be rendered at any given time in the grid.
+   * The number of rows that fit in the rendering zone.
    */
   renderingZonePageSize: number;
   /**
@@ -37,7 +37,7 @@ export interface GridContainerProps {
    */
   viewportPageSize: number;
   /**
-   * The number of rows allocated for the rendered zone.
+   * The total number of rows that are scrollable in the viewport. If pagination then it would be page size. If not, it would be the full set of rows.
    */
   virtualRowsCount: number;
   /**

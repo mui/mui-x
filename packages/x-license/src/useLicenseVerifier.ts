@@ -12,7 +12,7 @@ export function useLicenseVerifier() {
   const [licenseStatus, setLicenseStatus] = React.useState(LicenseStatus.Invalid);
 
   React.useEffect(() => {
-    const newLicenseStatus = verifyLicense(LicenseInfo.releaseInfo, LicenseInfo.key);
+    const newLicenseStatus = verifyLicense(LicenseInfo.getReleaseInfo(), LicenseInfo.getKey());
     setLicenseStatus(newLicenseStatus);
     if (newLicenseStatus === LicenseStatus.Invalid) {
       showInvalidLicenseError();

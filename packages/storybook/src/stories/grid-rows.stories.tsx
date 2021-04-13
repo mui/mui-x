@@ -46,17 +46,20 @@ const baselineProps = {
     {
       id: 0,
       brand: 'Nike',
+      isPublished: false,
     },
     {
       id: 1,
       brand: 'Adidas',
+      isPublished: true,
     },
     {
       id: 2,
       brand: 'Puma',
+      isPublished: true,
     },
   ],
-  columns: [{ field: 'brand' }],
+  columns: [{ field: 'brand' }, { field: 'isPublished', type: 'boolean' }],
 };
 
 function getStoryRowId(row) {
@@ -374,6 +377,7 @@ const baselineEditProps = {
       age: 25,
       DOB: new Date(1996, 10, 2),
       meetup: new Date(2020, 2, 25, 10, 50, 0),
+      isAdmin: true,
     },
     {
       id: 1,
@@ -385,6 +389,7 @@ const baselineEditProps = {
       age: 25,
       DOB: new Date(1992, 1, 20),
       meetup: new Date(2020, 4, 15, 10, 50, 0),
+      isAdmin: true,
     },
     {
       id: 2,
@@ -396,6 +401,7 @@ const baselineEditProps = {
       age: 25,
       DOB: new Date(1986, 0, 12),
       meetup: new Date(2020, 3, 5, 10, 50, 0),
+      isAdmin: false,
     },
   ],
   columns: [
@@ -406,6 +412,7 @@ const baselineEditProps = {
       editable: true,
       valueGetter: ({ row }) => `${row.firstname || ''} ${row.lastname || ''}`,
     },
+    { field: 'isAdmin', width: 120, type: 'boolean', editable: true },
     { field: 'username', editable: true },
     { field: 'email', editable: true, width: 150 },
     { field: 'age', width: 50, type: 'number', editable: true },
@@ -581,6 +588,20 @@ export function EditCellSnap() {
 
   React.useEffect(() => {
     apiRef.current.setCellMode(1, 'brand', 'edit');
+  });
+
+  return (
+    <div className="grid-container">
+      <XGrid {...baselineProps} apiRef={apiRef} />
+    </div>
+  );
+}
+
+export function EditBooleanCellSnap() {
+  const apiRef = useGridApiRef();
+
+  React.useEffect(() => {
+    apiRef.current.setCellMode(1, 'isPublished', 'edit');
   });
 
   return (

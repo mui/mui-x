@@ -25,6 +25,7 @@
     "licensegen": "./bin/license-gen-script.js"
   },
   "dependencies": {
+    "@material-ui/utils": "^5.0.0-alpha.14",
     "esm": "^3.2.25",
     "yargs": "^16.2.0"
   },

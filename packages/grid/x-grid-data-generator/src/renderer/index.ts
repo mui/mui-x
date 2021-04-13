@@ -1,6 +1,5 @@
 export * from './renderAvatar';
 export * from './renderCountry';
-export * from './renderDone';
 export * from './renderEmail';
 export * from './renderIncoterm';
 export * from './renderLink';

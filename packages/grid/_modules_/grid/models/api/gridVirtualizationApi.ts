@@ -2,6 +2,7 @@ import { GridCellIndexCoordinates } from '../gridCell';
 import { GridContainerProps } from '../gridContainerProps';
 import { GridScrollParams } from '../params/gridScrollParams';
 import { GridRenderContextProps } from '../gridRenderContextProps';
+import { Optional } from '../../utils/utils';
 
 /**
  * The virtualization API interface that is available in the grid [[apiRef]].
@@ -17,7 +18,7 @@ export interface GridVirtualizationApi {
    * @param params
    * @returns boolean Return if the index was outside of the viewport and the grid has to scroll to reach the target.
    */
-  scrollToIndexes: (params: GridCellIndexCoordinates) => boolean;
+  scrollToIndexes: (params: Optional<GridCellIndexCoordinates, 'rowIndex'>) => boolean;
   /**
    * Check if a column at index is currently visible in the viewport.
    * @param colIndex

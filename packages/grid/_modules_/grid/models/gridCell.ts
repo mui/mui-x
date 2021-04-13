@@ -15,3 +15,10 @@ export interface GridCellIndexCoordinates {
   colIndex: number;
   rowIndex: number;
 }
+
+/**
+ * The coordinates of column header represented by their row and column indexes.
+ */
+export interface GridColumnHeaderIndexCoordinates {
+  colIndex: number;
+}

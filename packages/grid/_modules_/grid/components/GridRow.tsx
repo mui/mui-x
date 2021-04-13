@@ -33,8 +33,14 @@ export const GridRow: React.FC<GridRowProps> = ({
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
 
   const publish = React.useCallback(
-    (eventName: string) => (event: React.MouseEvent) =>
-      apiRef!.current.publishEvent(eventName, apiRef?.current.getRowParams(id), event),
+    (eventName: string) => (event: React.MouseEvent) => {
+      // Ignore portal
+      if (!event.currentTarget.contains(event.target as HTMLElement)) {
+        return;
+      }
+
+      apiRef!.current.publishEvent(eventName, apiRef?.current.getRowParams(id), event);
+    },
     [apiRef, id],
   );
 

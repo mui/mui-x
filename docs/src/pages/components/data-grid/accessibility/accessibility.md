@@ -20,6 +20,26 @@ As meeting WCAG 2.0 level AA guidelines also meets the ADA and Section 508 stand
 
 The [WAI-ARIA authoring practices](https://www.w3.org/TR/wai-aria-practices/#grid) provides valuable insight on how to make the grid highly accessible.
 
+## Density
+
+You can change the density of the rows and the column header.
+
+### Density selector
+
+To enable the density selector you need to compose a toolbar containing the `GridDensitySelector` component, and apply it using the `Toolbar` property in the grid `components` prop.
+
+The user can change the density of the data grid by using the density selector from the toolbar.
+
+{{"demo": "pages/components/data-grid/accessibility/DensitySelectorGrid.js", "bg": "inline"}}
+
+To hide the density selector add the `disableDensitySelector` prop to the data grid.
+
+### Density prop
+
+The vertical density of the data grid can be set using the `density` prop. The `density` prop applies the values determined by the `rowHeight` and `headerHeight` props, if supplied. The user can override this setting with the toolbar density selector, if provided.
+
+{{"demo": "pages/components/data-grid/accessibility/DensitySelectorSmallGrid.js", "bg": "inline"}}
+
 ## Keyboard navigation
 
 The grid responds to keyboard interactions from the user as well as emitting events when key presses happen on the grid cells.
@@ -30,7 +50,6 @@ Use the arrow keys to move the focus.
 
 |                              Keys | Description                                   |
 | --------------------------------: | :-------------------------------------------- |
-|                    <kbd>Tab</kbd> | Navigate between selectable elements          |
 |             <kbd>Arrow Left</kbd> | Navigate between cell elements                |
 |           <kbd>Arrow Bottom</kbd> | Navigate between cell elements                |
 |            <kbd>Arrow Right</kbd> | Navigate between cell elements                |
@@ -52,6 +71,8 @@ Use the arrow keys to move the focus.
 |                                 <kbd>CTRL</kbd> + <kbd>A</kbd> | Select all rows                                   |
 |                                 <kbd>CTRL</kbd> + <kbd>C</kbd> | Copy the currently selected row                   |
 |                                <kbd>CTRL</kbd> + Click on cell | Enable multi-selection                            |
+|                                               <kbd>Enter</kbd> | Sort column when column header is focused         |
+|                             <kbd>CTRL</kbd> + <kbd>Enter</kbd> | Open column menu when column header is focused    |
 
 ### Sorting
 

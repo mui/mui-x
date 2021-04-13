@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Rating } from '@material-ui/lab';
-import { GridPreferencePanelsValue, DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
 const useStyles = makeStyles({
@@ -93,12 +93,6 @@ export default function CustomRatingOperator() {
         columns={columns}
         filterModel={{
           items: [{ columnField: 'rating', value: '3.5', operatorValue: 'from' }],
-        }}
-        state={{
-          preferencePanel: {
-            open: true,
-            openedPanelValue: GridPreferencePanelsValue.filters,
-          },
         }}
       />
     </div>

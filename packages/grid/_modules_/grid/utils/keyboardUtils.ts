@@ -32,7 +32,7 @@ export const isCellEditCommitKeys = (key: string): boolean =>
   GRID_CELL_EDIT_COMMIT_KEYS.indexOf(key) > -1;
 
 export const isNavigationKey = (key: string) =>
-  isHomeOrEndKeys(key) || isArrowKeys(key) || isPageKeys(key) || isSpaceKey(key) || isTabKey(key);
+  isHomeOrEndKeys(key) || isArrowKeys(key) || isPageKeys(key) || isSpaceKey(key);
 
 export const isKeyboardEvent = (event: any): event is React.KeyboardEvent => !!event.key;
 

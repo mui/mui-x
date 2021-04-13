@@ -22,7 +22,7 @@ import { GridApiContext } from '../GridApiContext';
 
 export interface GridCellProps {
   align: GridAlignment;
-  colIndex?: number;
+  colIndex: number;
   cssClass?: string;
   field: string;
   rowId: GridRowId;
@@ -30,7 +30,7 @@ export interface GridCellProps {
   hasFocus?: boolean;
   height: number;
   isEditable?: boolean;
-  rowIndex?: number;
+  rowIndex: number;
   showRightBorder?: boolean;
   value?: GridCellValue;
   width: number;
@@ -59,6 +59,9 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
   const valueToRender = formattedValue || value;
   const cellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = React.useContext(GridApiContext);
+  const currentFocusedCell = apiRef!.current.getState().keyboard.cell;
+  const isCellFocused =
+    (currentFocusedCell && hasFocus) || (rowIndex === 0 && colIndex === 0 && !currentFocusedCell);
 
   const cssClasses = classnames(
     GRID_CELL_CSS_CLASS,
@@ -97,12 +100,18 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
   );
 
   const publish = React.useCallback(
-    (eventName: string) => (event: React.SyntheticEvent) =>
+    (eventName: string) => (event: React.SyntheticEvent) => {
+      // Ignore portal
+      if (!event.currentTarget.contains(event.target as HTMLElement)) {
+        return;
+      }
+
       apiRef!.current.publishEvent(
         eventName,
         apiRef!.current.getCellParams(rowId!, field || ''),
         event,
-      ),
+      );
+    },
     [apiRef, field, rowId],
   );
 
@@ -156,7 +165,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
       aria-colindex={colIndex}
       style={style}
       /* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */
-      tabIndex={hasFocus ? 0 : -1}
+      tabIndex={isCellFocused ? 0 : -1}
       {...eventsHandlers}
     >
       {children || valueToRender?.toString()}

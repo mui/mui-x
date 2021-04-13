@@ -6,7 +6,6 @@ import {
   GridRowsLookup,
   gridRowsLookupSelector,
   unorderedGridRowIdsSelector,
-  unorderedGridRowModelsSelector,
 } from '../rows/gridRowsSelector';
 import { GridSortingState } from './gridSortingState';
 
@@ -27,14 +26,16 @@ export const sortedGridRowsSelector = createSelector<
   GridState,
   GridRowId[],
   GridRowsLookup,
-  GridRowModel[],
-  GridRowModel[]
+  Map<GridRowId, GridRowModel>
 >(
   sortedGridRowIdsSelector,
   gridRowsLookupSelector,
-  unorderedGridRowModelsSelector,
-  (sortedIds: GridRowId[], idRowsLookup, unordered) => {
-    return sortedIds.length > 0 ? sortedIds.map((id) => idRowsLookup[id]) : unordered;
+  (sortedIds: GridRowId[], idRowsLookup: GridRowsLookup) => {
+    const map = new Map<GridRowId, GridRowModel>();
+    sortedIds.forEach((id) => {
+      map.set(id, idRowsLookup[id]);
+    });
+    return map;
   },
 );
 export const gridSortModelSelector = createSelector<GridState, GridSortingState, GridSortModel>(

@@ -1,9 +1,18 @@
 import { GridCellValue } from './gridCell';
-import { GridCellParams } from './params/gridCellParams';
+import { GridRowData, GridRowId } from './gridRows';
 
 export type GridSortDirection = 'asc' | 'desc' | null | undefined;
 
 export type GridFieldComparatorList = { field: string; comparator: GridComparatorFn }[];
+
+export interface GridSortCellParams {
+  id: GridRowId;
+  field: string;
+  row: GridRowData;
+  value: GridCellValue;
+  getValue: (columnField: string) => GridCellValue;
+  api: any;
+}
 
 /**
  * The type of the sort comparison function.
@@ -11,8 +20,8 @@ export type GridFieldComparatorList = { field: string; comparator: GridComparato
 export type GridComparatorFn = (
   v1: GridCellValue,
   v2: GridCellValue,
-  cellParams1: GridCellParams,
-  cellParams2: GridCellParams,
+  cellParams1: GridSortCellParams,
+  cellParams2: GridSortCellParams,
 ) => number;
 
 /**

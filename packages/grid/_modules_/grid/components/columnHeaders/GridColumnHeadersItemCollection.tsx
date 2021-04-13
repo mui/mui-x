@@ -3,7 +3,9 @@ import { gridColumnReorderDragColSelector } from '../../hooks/features/columnReo
 import { gridResizingColumnFieldSelector } from '../../hooks/features/columnResize/columnResizeSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { filterGridColumnLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
+import { gridKeyboardColumnHeaderSelector } from '../../hooks/features/keyboard/gridKeyboardSelector';
 import { gridSortColumnLookupSelector } from '../../hooks/features/sorting/gridSortingSelector';
+import { renderStateSelector } from '../../hooks/features/virtualization/renderingStateSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridColumns } from '../../models/colDef/gridColDef';
 import { GridApiContext } from '../GridApiContext';
@@ -21,6 +23,16 @@ export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemColl
   const filterColumnLookup = useGridSelector(apiRef, filterGridColumnLookupSelector);
   const dragCol = useGridSelector(apiRef, gridColumnReorderDragColSelector);
   const resizingColumnField = useGridSelector(apiRef, gridResizingColumnFieldSelector);
+  const columnHeaderFocus = useGridSelector(apiRef, gridKeyboardColumnHeaderSelector);
+  const renderCtx = useGridSelector(apiRef, renderStateSelector).renderContext;
+
+  const getColIndex = (index) => {
+    if (renderCtx == null) {
+      return index;
+    }
+
+    return index + renderCtx.firstColIdx;
+  };
 
   const items = columns.map((col, idx) => (
     <GridColumnHeaderItem
@@ -30,8 +42,9 @@ export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemColl
       options={options}
       isDragging={col.field === dragCol}
       column={col}
-      colIndex={idx}
+      colIndex={getColIndex(idx)}
       isResizing={resizingColumnField === col.field}
+      hasFocus={columnHeaderFocus !== null && columnHeaderFocus.colIndex === getColIndex(idx)}
     />
   ));
 

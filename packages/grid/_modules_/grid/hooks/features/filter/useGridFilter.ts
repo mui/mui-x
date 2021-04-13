@@ -10,7 +10,7 @@ import { FilterApi } from '../../../models/api/filterApi';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { GridFilterModelParams } from '../../../models/params/gridFilterModelParams';
-import { GridRowsProp } from '../../../models/gridRows';
+import { GridRowsProp, GridRowId, GridRowModel } from '../../../models/gridRows';
 import { isDeepEqual } from '../../../utils/utils';
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
@@ -91,17 +91,17 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
         // This way we have latest rows on the first rendering
         const rows = sortedGridRowsSelector(state);
 
-        rows.forEach((row) => {
-          const params = apiRef.current.getCellParams(row.id, filterItem.columnField!);
+        rows.forEach((row: GridRowModel, id: GridRowId) => {
+          const params = apiRef.current.getCellParams(id, filterItem.columnField!);
 
           const isShown = applyFilterOnRow(params);
-          if (visibleRowsLookup[row.id] == null) {
-            visibleRowsLookup[row.id] = isShown;
+          if (visibleRowsLookup[id] == null) {
+            visibleRowsLookup[id] = isShown;
           } else {
-            visibleRowsLookup[row.id] =
+            visibleRowsLookup[id] =
               linkOperator === GridLinkOperator.And
-                ? visibleRowsLookup[row.id] && isShown
-                : visibleRowsLookup[row.id] || isShown;
+                ? visibleRowsLookup[id] && isShown
+                : visibleRowsLookup[id] || isShown;
           }
         });
 

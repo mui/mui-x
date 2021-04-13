@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
-import { visibleSortedGridRowsSelector } from '../hooks/features/filter/gridFilterSelector';
+import { visibleSortedGridRowIdsSelector } from '../hooks/features/filter/gridFilterSelector';
 import { gridRowCountSelector } from '../hooks/features/rows/gridRowsSelector';
 import { selectedGridRowsCountSelector } from '../hooks/features/selection/gridSelectionSelector';
 import { GridColumnHeaderParams } from '../models/params/gridColumnHeaderParams';
@@ -10,7 +10,7 @@ import { GridApiContext } from './GridApiContext';
 
 export const GridHeaderCheckbox: React.FC<GridColumnHeaderParams> = () => {
   const apiRef = React.useContext(GridApiContext);
-  const visibleRows = useGridSelector(apiRef, visibleSortedGridRowsSelector);
+  const visibleRowIds = useGridSelector(apiRef, visibleSortedGridRowIdsSelector);
 
   const totalSelectedRows = useGridSelector(apiRef, selectedGridRowsCountSelector);
   const totalRows = useGridSelector(apiRef, gridRowCountSelector);
@@ -31,10 +31,7 @@ export const GridHeaderCheckbox: React.FC<GridColumnHeaderParams> = () => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     setChecked(checked);
-    apiRef!.current.selectRows(
-      visibleRows.map((row) => row.id),
-      checked,
-    );
+    apiRef!.current.selectRows(visibleRowIds, checked);
   };
 
   return (
@@ -51,15 +48,16 @@ export const GridHeaderCheckbox: React.FC<GridColumnHeaderParams> = () => {
 GridHeaderCheckbox.displayName = 'GridHeaderCheckbox';
 
 export const GridCellCheckboxRenderer: React.FC<GridCellParams> = React.memo((props) => {
-  const { row, getValue, field } = props;
+  const { getValue, field, id } = props;
   const apiRef = React.useContext(GridApiContext);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-    apiRef!.current.selectRow(row.id, checked, true);
+    apiRef!.current.selectRow(id, checked, true);
   };
 
   return (
     <Checkbox
+      tabIndex={-1}
       checked={!!getValue(field)}
       onChange={handleChange}
       className="MuiDataGrid-checkboxInput"

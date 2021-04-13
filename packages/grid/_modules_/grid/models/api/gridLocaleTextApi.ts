@@ -59,6 +59,11 @@ export interface GridLocaleText {
   filterOperatorBefore: string;
   filterOperatorOnOrBefore: string;
 
+  // Filter values text
+  filterValueAny: string;
+  filterValueTrue: string;
+  filterValueFalse: string;
+
   // Column menu text
   columnMenuLabel: string;
   columnMenuShowColumns: React.ReactNode;
@@ -78,6 +83,13 @@ export interface GridLocaleText {
 
   // Total rows footer text
   footerTotalRows: React.ReactNode;
+
+  // Checkbox selection text
+  checkboxSelectionHeaderName: string;
+
+  // Boolean cell text
+  booleanCellTrueLabel: string;
+  booleanCellFalseLabel: string;
 }
 
 export type GridTranslationKeys = keyof GridLocaleText;
