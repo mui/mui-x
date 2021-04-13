@@ -87,11 +87,9 @@ export const useGridKeyboard = (
       let selectionFromRowIndex = currentRowIndex;
 
       // TODO Refactor here to not use api call
-      const selectedRows = apiRef.current.getSelectedRows();
-      if (selectedRows.length > 0) {
-        const selectedRowsIndex = selectedRows.map((row) =>
-          apiRef.current.getRowIndexFromId(row.id),
-        );
+      const selectedRowsIds = [...apiRef.current.getSelectedRows().keys()];
+      if (selectedRowsIds.length > 0) {
+        const selectedRowsIndex = selectedRowsIds.map((id) => apiRef.current.getRowIndexFromId(id));
 
         const diffWithCurrentIndex: number[] = selectedRowsIndex.map((idx) =>
           Math.abs(currentRowIndex - idx),

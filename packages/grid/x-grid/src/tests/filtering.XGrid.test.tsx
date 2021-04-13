@@ -8,6 +8,8 @@ import {
   GridLinkOperator,
   GridPreferencePanelsValue,
   GridRowModel,
+  GridFilterModelParams,
+  GridRowId,
   useGridApiRef,
   XGrid,
   SUBMIT_FILTER_STROKE_TIME,
@@ -231,8 +233,8 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should show the latest visibleRows onFilterChange', () => {
-    let visibleRows: any[] = [];
-    const onFilterChange = (params) => {
+    let visibleRows: Map<GridRowId, GridRowModel> = new Map();
+    const onFilterChange = (params: GridFilterModelParams) => {
       visibleRows = params.visibleRows;
     };
 
@@ -253,8 +255,10 @@ describe('<XGrid /> - Filter', () => {
     const input = screen.getByPlaceholderText('Filter value');
     fireEvent.change(input, { target: { value: 'ad' } });
     clock.tick(SUBMIT_FILTER_STROKE_TIME);
-    expect(visibleRows).to.deep.equal([{ id: 1, brand: 'Adidas' }]);
-    expect(apiRef.current.getVisibleRowModels()).to.deep.equal([{ id: 1, brand: 'Adidas' }]);
+    expect(visibleRows.size).to.equal(1);
+    expect(visibleRows.get(1)).to.deep.equal({ id: 1, brand: 'Adidas' });
+    expect(apiRef.current.getVisibleRowModels().size).to.equal(1);
+    expect(apiRef.current.getVisibleRowModels().get(1)).to.deep.equal({ id: 1, brand: 'Adidas' });
   });
 
   describe('Server', () => {

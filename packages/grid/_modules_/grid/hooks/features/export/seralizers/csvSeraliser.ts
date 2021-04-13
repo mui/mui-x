@@ -15,7 +15,7 @@ const serialiseCellValue = (value) => {
 };
 
 export function serialiseRow(
-  row: GridRowModel,
+  id: GridRowId,
   columns: GridColumns,
   getCellValue: (id: GridRowId, field: string) => GridCellValue,
 ): Array<string> {
@@ -23,29 +23,30 @@ export function serialiseRow(
   columns.forEach(
     (column) =>
       column.field !== gridCheckboxSelectionColDef.field &&
-      mappedRow.push(serialiseCellValue(getCellValue(row.id, column.field))),
+      mappedRow.push(serialiseCellValue(getCellValue(id, column.field))),
   );
   return mappedRow;
 }
 
 export function buildCSV(
   columns: GridColumns,
-  rows: GridRowModel[],
+  rows: Map<GridRowId, GridRowModel>,
   selectedRows: Record<GridRowId, boolean>,
   getCellValue: (id: GridRowId, field: string) => GridCellValue,
 ): string {
-  const selectedRowsIds = Object.keys(selectedRows);
+  let rowIds = [...rows.keys()];
+  const selectedRowIds = Object.keys(selectedRows);
 
-  if (selectedRowsIds.length) {
-    rows = rows.filter((row) => selectedRowsIds.includes(`${row.id}`));
+  if (selectedRowIds.length) {
+    rowIds = rowIds.filter((id) => selectedRowIds.includes(`${id}`));
   }
 
   const CSVHead = `${columns
     .filter((column) => column.field !== gridCheckboxSelectionColDef.field)
     .map((column) => serialiseCellValue(column.headerName || column.field))
     .toString()}\r\n`;
-  const CSVBody = rows
-    .reduce((soFar, row) => `${soFar}${serialiseRow(row, columns, getCellValue)}\r\n`, '')
+  const CSVBody = rowIds
+    .reduce<string>((acc, id) => `${acc}${serialiseRow(id, columns, getCellValue)}\r\n`, '')
     .trim();
   const csv = `${CSVHead}${CSVBody}`.trim();
 

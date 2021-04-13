@@ -20,13 +20,14 @@ import { useLogger } from '../../utils/useLogger';
 import { useGridState } from '../core/useGridState';
 import { getInitialGridRowState, InternalGridRowsState } from './gridRowsState';
 
-// TODO remove after all row.id are removed
-export function addGridRowId(rowData: GridRowData, getRowId?: GridRowIdGetter): GridRowModel {
-  return getRowId == null ? (rowData as GridRowModel) : { id: getRowId(rowData), ...rowData };
-}
-
-function getGridRowId(rowData: GridRowData, getRowId?: GridRowIdGetter): GridRowId {
-  return getRowId ? getRowId(rowData) : rowData.id;
+function getGridRowId(
+  rowData: GridRowData,
+  getRowId?: GridRowIdGetter,
+  detailErrorMessage?: string,
+): GridRowId {
+  const id = getRowId ? getRowId(rowData) : rowData.id;
+  checkGridRowIdIsValid(id, rowData, detailErrorMessage);
+  return id;
 }
 
 export function convertGridRowsPropToState(
@@ -40,11 +41,9 @@ export function convertGridRowsPropToState(
   };
 
   rows.forEach((rowData) => {
-    const row = addGridRowId(rowData, rowIdGetter);
     const id = getGridRowId(rowData, rowIdGetter);
-    checkGridRowIdIsValid(id, row);
     state.allRows.push(id);
-    state.idRowsLookup[id] = row;
+    state.idRowsLookup[id] = rowData;
   });
 
   return state;
@@ -124,13 +123,11 @@ export const useGridRows = (
       }
 
       const allRows: GridRowId[] = [];
-      const idRowsLookup = allNewRows.reduce((lookup, row) => {
-        row = addGridRowId(row, getRowIdProp);
+      const idRowsLookup = allNewRows.reduce((acc, row) => {
         const id = getGridRowId(row, getRowIdProp);
-        checkGridRowIdIsValid(id, row);
-        lookup[id] = row;
+        acc[id] = row;
         allRows.push(id);
-        return lookup;
+        return acc;
       }, {});
 
       const totalRowCount =
@@ -152,16 +149,14 @@ export const useGridRows = (
   const updateRows = React.useCallback(
     (updates: GridRowModelUpdate[]) => {
       // we removes duplicate updates. A server can batch updates, and send several updates for the same row in one fn call.
-      const uniqUpdates = updates.reduce((uniq, update) => {
-        const updateWithId = addGridRowId(update, getRowIdProp);
-        const id = getGridRowId(update, getRowIdProp);
-        checkGridRowIdIsValid(
-          id,
-          updateWithId,
+      const uniqUpdates = updates.reduce((acc, update) => {
+        const id = getGridRowId(
+          update,
+          getRowIdProp,
           'A row was provided without id when calling updateRows():',
         );
-        uniq[id] = uniq[id] != null ? { ...uniq[id!], ...updateWithId } : updateWithId;
-        return uniq;
+        acc[id] = acc[id] != null ? { ...acc[id!], ...update } : update;
+        return acc;
       }, {} as { [id: string]: GridRowModel });
 
       const addedRows: GridRowModel[] = [];
@@ -206,7 +201,13 @@ export const useGridRows = (
   );
 
   const getRowModels = React.useCallback(
-    () => apiRef.current.state.rows.allRows.map((id) => apiRef.current.state.rows.idRowsLookup[id]),
+    () =>
+      new Map(
+        apiRef.current.state.rows.allRows.map((id) => [
+          id,
+          apiRef.current.state.rows.idRowsLookup[id],
+        ]),
+      ),
     [apiRef],
   );
   const getRowsCount = React.useCallback(() => apiRef.current.state.rows.totalRowCount, [apiRef]);

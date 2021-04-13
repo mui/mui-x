@@ -112,16 +112,18 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   );
 
   const comparatorListAggregate = React.useCallback(
-    (row1: GridRowModel, row2: GridRowModel) => {
+    (id1: GridRowId, id2: GridRowId) => {
       const result = comparatorList.current.reduce((res, colComparator) => {
         const { field, comparator } = colComparator;
+        const sortCellParams1 = getSortCellParams(id1, field);
+        const sortCellParams2 = getSortCellParams(id2, field);
         res =
           res ||
           comparator(
-            row1[field],
-            row2[field],
-            getSortCellParams(row1.id, field),
-            getSortCellParams(row2.id, field),
+            sortCellParams1.value,
+            sortCellParams2.value,
+            sortCellParams1,
+            sortCellParams2,
           );
         return res;
       }, 0);
@@ -153,14 +155,14 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   );
 
   const applySorting = React.useCallback(() => {
-    const rowModels = apiRef.current.getRowModels();
+    const rowIds = apiRef.current.getAllRowIds();
 
     if (options.sortingMode === GridFeatureModeConstant.server) {
       logger.debug('Skipping sorting rows as sortingMode = server');
       setGridState((oldState) => {
         return {
           ...oldState,
-          sorting: { ...oldState.sorting, sortedRows: rowModels.map((row) => row.id) },
+          sorting: { ...oldState.sorting, sortedRows: rowIds },
         };
       });
       return;
@@ -168,7 +170,7 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
 
     const sortModel = apiRef.current.getState().sorting.sortModel;
     logger.debug('Sorting rows with ', sortModel);
-    const sorted = [...rowModels];
+    const sorted = [...rowIds];
     if (sortModel.length > 0) {
       comparatorList.current = buildComparatorList(sortModel);
       sorted.sort(comparatorListAggregate);
@@ -177,7 +179,7 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
     setGridState((oldState) => {
       return {
         ...oldState,
-        sorting: { ...oldState.sorting, sortedRows: sorted.map((row) => row.id) },
+        sorting: { ...oldState.sorting, sortedRows: sorted },
       };
     });
     forceUpdate();
@@ -243,7 +245,7 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   ]);
 
   const getSortedRows = React.useCallback(
-    (): GridRowModel[] => sortedGridRowsSelector(apiRef.current.state),
+    (): GridRowModel[] => Object.values(sortedGridRowsSelector(apiRef.current.state)),
     [apiRef],
   );
 

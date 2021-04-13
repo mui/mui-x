@@ -2,7 +2,7 @@ import * as React from 'react';
 import { visibleGridColumnsSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
-import { visibleSortedGridRowsSelector } from '../hooks/features/filter/gridFilterSelector';
+import { visibleSortedGridRowsAsArraySelector } from '../hooks/features/filter/gridFilterSelector';
 import { gridKeyboardCellSelector } from '../hooks/features/keyboard/gridKeyboardSelector';
 import { gridSelectionStateSelector } from '../hooks/features/selection/gridSelectionSelector';
 import { renderStateSelector } from '../hooks/features/virtualization/renderingStateSelector';
@@ -34,7 +34,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const renderState = useGridSelector(apiRef, renderStateSelector);
     const cellFocus = useGridSelector(apiRef, gridKeyboardCellSelector);
     const selectionState = useGridSelector(apiRef, gridSelectionStateSelector);
-    const rows = useGridSelector(apiRef, visibleSortedGridRowsSelector);
+    const rows = useGridSelector(apiRef, visibleSortedGridRowsAsArraySelector);
     const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
 
     const getRowsElements = () => {
@@ -46,21 +46,21 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
         renderState.renderContext.firstRowIdx,
         renderState.renderContext.lastRowIdx!,
       );
-      return renderedRows.map((r, idx) => (
+      return renderedRows.map(([id, row], idx) => (
         <GridRow
           className={
             (renderState.renderContext!.firstRowIdx! + idx) % 2 === 0 ? 'Mui-even' : 'Mui-odd'
           }
-          key={r.id}
-          id={r.id}
-          selected={!!selectionState[r.id]}
+          key={id}
+          id={id}
+          selected={!!selectionState[id]}
           rowIndex={renderState.renderContext!.firstRowIdx! + idx}
         >
           <GridEmptyCell width={renderState.renderContext!.leftEmptyWidth} height={rowHeight} />
           <GridRowCells
             columns={visibleColumns}
-            row={r}
-            id={r.id}
+            row={row}
+            id={id}
             firstColIdx={renderState.renderContext!.firstColIdx!}
             lastColIdx={renderState.renderContext!.lastColIdx!}
             hasScroll={{ y: scrollBarState!.hasScrollY, x: scrollBarState.hasScrollX }}

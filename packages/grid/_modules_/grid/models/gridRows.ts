@@ -4,7 +4,7 @@ export type GridRowData = { [key: string]: any };
 /**
  * The key value object representing the data of a row.
  */
-export type GridRowModel = GridObjectWithId & GridRowData;
+export type GridRowModel = GridRowData;
 
 export type GridUpdateAction = 'delete';
 
@@ -21,10 +21,6 @@ export type GridRowId = string | number;
  * The function to retrieve the id of a [[GridRowData]].
  */
 export type GridRowIdGetter = (row: GridRowData) => GridRowId;
-
-export interface GridObjectWithId {
-  id: GridRowId;
-}
 
 /**
  * An helper function to check if the id provided is valid.

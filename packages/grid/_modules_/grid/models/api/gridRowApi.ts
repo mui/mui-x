@@ -5,10 +5,10 @@ import { GridRowModel, GridRowId, GridRowModelUpdate } from '../gridRows';
  */
 export interface GridRowApi {
   /**
-   * Get the full set of rows as [[Rows]].
-   * @returns [[Rows]]
+   * Get the full set of rows as [[Map<GridRowId, GridRowModel>]].
+   * @returns [[Map<GridRowId, GridRowModel>]]
    */
-  getRowModels: () => GridRowModel[];
+  getRowModels: () => Map<GridRowId, GridRowModel>;
   /**
    * Get the total number of rows in the grid.
    */

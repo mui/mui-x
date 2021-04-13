@@ -26,7 +26,7 @@ describe('<DataGrid /> - Rows', () => {
         age: 20,
       },
     ],
-    columns: [{ field: 'id' }, { field: 'first' }, { field: 'age' }],
+    columns: [{ field: 'clientId' }, { field: 'first' }, { field: 'age' }],
   };
 
   before(function beforeHook() {
@@ -45,16 +45,6 @@ describe('<DataGrid /> - Rows', () => {
         </div>,
       );
       expect(getColumnValues()).to.deep.equal(['c1', 'c2', 'c3']);
-    });
-
-    it('should allow to compute row ids', () => {
-      const getRowId = (row) => `${row.first}-${row.age}`;
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} getRowId={getRowId} />
-        </div>,
-      );
-      expect(getColumnValues()).to.deep.equal(['Mike-11', 'Jack-11', 'Mike-20']);
     });
   });
 });
