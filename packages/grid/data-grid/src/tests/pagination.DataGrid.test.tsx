@@ -7,9 +7,15 @@ import {
   screen,
 } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid, DataGridProps, GridRowsProp } from '@material-ui/data-grid';
+import {
+  DataGrid,
+  DataGridProps,
+  DEFAULT_GRID_OPTIONS,
+  GridRowsProp,
+} from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
+import { useData } from 'packages/storybook/src/hooks/useData';
 
 describe('<DataGrid /> - Pagination', () => {
   // TODO v5: replace with createClientRender
@@ -186,6 +192,52 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues()).to.deep.equal(['Nike 0']);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(getColumnValues()).to.deep.equal(['Nike 1']);
+    });
+
+    describe('prop: autoPageSize', () => {
+      it('should always render the same amount of rows and fit the viewport', () => {
+        const TestCaseAutoPageSize = (props: { nbRows: number; height?: number }) => {
+          const data = useData(props.nbRows, 10);
+
+          return (
+            <div style={{ width: 300, height: props.height }}>
+              <DataGrid columns={data.columns} rows={data.rows} autoPageSize pagination />
+            </div>
+          );
+        };
+        const nbRows = 27;
+        const height = 780;
+        render(<TestCaseAutoPageSize nbRows={nbRows} height={height} />);
+
+        const footerHeight = document.querySelector('.MuiDataGrid-footer')!.clientHeight;
+        const expectedViewportRowsLength = Math.floor(
+          (height - DEFAULT_GRID_OPTIONS.headerHeight - footerHeight) /
+            DEFAULT_GRID_OPTIONS.rowHeight,
+        );
+
+        let rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
+        expect(rows.length).to.equal(expectedViewportRowsLength);
+
+        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+        rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
+        expect(rows.length).to.equal(expectedViewportRowsLength);
+
+        fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
+        rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
+        expect(rows.length).to.equal(expectedViewportRowsLength);
+
+        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+        fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+        rows = document.querySelectorAll('.MuiDataGrid-viewport [role="row"]');
+        expect(rows.length).to.equal(nbRows % expectedViewportRowsLength);
+
+        // make sure there is no more pages.
+        const nextPageBtn = document.querySelector('.MuiTablePagination-actions button:last-child');
+        expect(nextPageBtn!.getAttribute('disabled')).to.not.equal(
+          null,
+          'next page should be disabled.',
+        );
+      });
     });
   });
 });
