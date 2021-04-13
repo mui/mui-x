@@ -73,7 +73,6 @@ export const useGridColumnResize = (
 ) => {
   const logger = useLogger('useGridColumnResize');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
-  const isResizingRef = React.useRef(false);
   const colDefRef = React.useRef<GridColDef>();
   const colElementRef = React.useRef<HTMLDivElement>();
   const colCellElementsRef = React.useRef<NodeListOf<Element>>();
@@ -288,7 +287,6 @@ export const useGridColumnResize = (
 
   const handleResizeStart = React.useCallback(
     ({ field }) => {
-      isResizingRef.current = true;
       setGridState((oldState) => ({
         ...oldState,
         columnResize: { ...oldState.columnResize, resizingColumnField: field },
@@ -299,7 +297,6 @@ export const useGridColumnResize = (
   );
 
   const handleResizeStop = React.useCallback(() => {
-    isResizingRef.current = false;
     setGridState((oldState) => ({
       ...oldState,
       columnResize: { ...oldState.columnResize, resizingColumnField: '' },
