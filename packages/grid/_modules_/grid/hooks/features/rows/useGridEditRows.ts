@@ -25,7 +25,7 @@ import {
   GridEditRowModelParams,
 } from '../../../models/params/gridEditCellParams';
 import {
-  isAlphaKeys,
+  isPrintableKey,
   isCellEditCommitKeys,
   isCellEnterEditModeKeys,
   isCellExitEditModeKeys,
@@ -230,7 +230,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
       if (!params.isEditable || event.isPropagationStopped()) {
         return;
       }
-      if (isKeyboardEvent(event) && isAlphaKeys(event.key)) {
+      if (isKeyboardEvent(event) && isPrintableKey(event.key)) {
         const propsParams = apiRef.current.getEditCellPropsParams(params.id, params.field);
         propsParams.props.value = '';
         apiRef.current.setEditCellProps(propsParams);
