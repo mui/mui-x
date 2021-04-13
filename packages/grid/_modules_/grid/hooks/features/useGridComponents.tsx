@@ -11,6 +11,12 @@ export const useGridComponents = (
 ) => {
   const components: GridApiRefComponentsProperty = React.useMemo(() => {
     const mappedComponents = {
+      BooleanCellTrueIcon:
+        (componentSlotsProp && componentSlotsProp.BooleanCellTrueIcon) ||
+        DEFAULT_GRID_SLOTS_COMPONENTS.BooleanCellTrueIcon,
+      BooleanCellFalseIcon:
+        (componentSlotsProp && componentSlotsProp.BooleanCellFalseIcon) ||
+        DEFAULT_GRID_SLOTS_COMPONENTS.BooleanCellFalseIcon,
       ColumnFilteredIcon:
         (componentSlotsProp && componentSlotsProp.ColumnFilteredIcon) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.ColumnFilteredIcon,

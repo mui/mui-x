@@ -15,6 +15,8 @@ import {
   GridViewHeadlineIcon,
   GridViewStreamIcon,
   GridSaveAltIcon,
+  GridCloseIcon,
+  GridCheckIcon,
 } from '../components/icons/index';
 import { GridLoadingOverlay } from '../components/GridLoadingOverlay';
 import { GridColumnMenu, GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenu';
@@ -86,6 +88,8 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
 }
 
 export const DEFAULT_GRID_SLOTS_ICONS: GridIconSlotsComponent = {
+  BooleanCellTrueIcon: GridCheckIcon,
+  BooleanCellFalseIcon: GridCloseIcon,
   OpenFilterButtonIcon: GridFilterListIcon,
   ColumnFilteredIcon: GridFilterAltIcon,
   ColumnSelectorIcon: GridColumnIcon,
