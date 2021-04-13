@@ -34,7 +34,7 @@ By default, columns are ordered according to the order they are included in the 
 > Otherwise, you take the risk of losing the column width state (if resized).
 > You can create the array outside of the render function or memoize it.
 
-### Column headers
+### Headers
 
 You can configure the headers with:
 
@@ -45,9 +45,9 @@ You can configure the headers with:
 
 ### Width
 
-The default columns width is 100 pixels.
-
-- set the `width` property available in `GridColDef` to override that value.
+By default, the columns have a width of 100 pixels.
+This is an arbitrary, easy to remember value.
+To change the width of a column, use the `width` property available in `GridColDef`.
 
 {{"demo": "pages/components/data-grid/columns/ColumnWidthGrid.js", "bg": "inline" }}
 
@@ -55,8 +55,8 @@ The default columns width is 100 pixels.
 
 Column fluidity or responsiveness can be by achieved by setting the `flex` property in `GridColDef`.
 
-- The `flex` property accepts a value between 0 and ∞.
-- it works by dividing the remaining space in the grid among all flex columns in proportion to their `flex` value.
+The `flex` property accepts a value between 0 and ∞.
+It works by dividing the remaining space in the grid among all flex columns in proportion to their `flex` value.
 
 For example, consider a grid with a total width of 500px that has three columns: the first with `width: 200`; the second with `flex: 1`; and third with `flex: 0.5`.
 The first column will be 200px wide, leaving 300px remaining. The column with `flex: 1` is twice the size of `flex: 0.5`, which means that final sizes will be: 200px, 200px, 100px.
