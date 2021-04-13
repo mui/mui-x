@@ -194,21 +194,20 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues()).to.deep.equal(['Nike 1']);
     });
 
-    describe('AutoPageSize', () => {
+    describe('prop: autoPageSize', () => {
       it('should always render the same amount of rows and fit the viewport', () => {
         const TestCaseAutoPageSize = (
-          props: Partial<DataGridProps> & { nbRows?: number; nbCols?: number; height?: number },
+          props: { nbRows: number; height?: number },
         ) => {
-          const data = useData(props.nbRows || 100, props.nbCols || 10);
+          const data = useData(props.nbRows,  10);
 
           return (
-            <div style={{ width: 300, height: props.height || 300 }}>
+            <div style={{ width: 300, height: props.height }}>
               <DataGrid
                 columns={data.columns}
                 rows={data.rows}
                 autoPageSize
                 pagination
-                {...props}
               />
             </div>
           );
