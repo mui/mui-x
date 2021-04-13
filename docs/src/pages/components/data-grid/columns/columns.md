@@ -70,9 +70,7 @@ The first column will be 200px wide, leaving 300px remaining. The column with `f
 
 ### Hiding
 
-Set the column definiton attribute
-
-- `hide`: Hide the column.
+Set the column definition attribute `hide` to `true` to hide the column.
 
 ```tsx
 <DataGrid columns={[{ field: 'id', hide: true }]} />
@@ -89,9 +87,9 @@ Alternatively, to disable all columns resize, set the prop `disableColumnResize=
 
 ### Value getter
 
-Sometimes a column might not have a corresponding value and you just want to render a combination of different fields.
+Sometimes a column might not have a corresponding value, or you might want to render a combination of different fields.
 
-- set the `valueGetter` attribute of `GridColDef` as in the example below
+To achieve that, set the `valueGetter` attribute of `GridColDef` as in the example below
 
 **Note**: You need to set a `sortComparator` for the column sorting to work when setting the `valueGetter` attribute.
 
@@ -123,8 +121,7 @@ The value generated is used for filtering, sorting, rendering, etc unless overri
 ### Value formatter
 
 The value formatters allow you to format values for display as a string.
-
-- use it to format a JavaScript `Date` object.
+For instance, you can use it to format a JavaScript `Date` object.
 
 ```tsx
 const columns: GridColDef[] = [
@@ -181,8 +178,7 @@ const columns: GridColDef[] = [
 #### Render Edit Cell
 
 As `renderCell` for the view mode, the grid render an input field in edit mode.
-
-- set the `renderEditCell` to customize that component.
+To customize the edit component, set the `renderEditCell` function.
 
 _Check the [editing page](/components/data-grid/editing) for more details about editing_
 
