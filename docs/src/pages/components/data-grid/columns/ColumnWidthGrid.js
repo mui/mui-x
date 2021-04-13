@@ -15,7 +15,6 @@ export default function ColumnWidthGrid() {
       <DataGrid
         columns={[{ field: 'username', width: 200 }, { field: 'age' }]}
         rows={rows}
-        hideFooter
       />
     </div>
   );

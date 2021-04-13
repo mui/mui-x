@@ -19,7 +19,6 @@ export default function ColumnSizingGrid() {
           { field: 'age', resizable: false },
         ]}
         rows={rows}
-        hideFooter
       />
     </div>
   );

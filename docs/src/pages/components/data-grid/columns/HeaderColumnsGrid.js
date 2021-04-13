@@ -23,7 +23,6 @@ export default function HeaderColumnsGrid() {
           { field: 'age', headerName: 'Age' },
         ]}
         rows={rows}
-        hideFooter
       />
     </div>
   );

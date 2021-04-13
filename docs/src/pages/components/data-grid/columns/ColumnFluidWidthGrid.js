@@ -28,7 +28,6 @@ export default function ColumnFluidWidthGrid() {
           },
         ]}
         rows={rows}
-        hideFooter
       />
     </div>
   );
