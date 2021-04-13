@@ -134,6 +134,7 @@ export const useGridColumnResize = (
       element: colElementRef.current,
       colDef: colDefRef.current,
       api: apiRef,
+      width: newWidth,
     });
   });
 
@@ -226,6 +227,7 @@ export const useGridColumnResize = (
       element: colElementRef.current,
       colDef: colDefRef.current,
       api: apiRef,
+      width: newWidth,
     });
   });
 

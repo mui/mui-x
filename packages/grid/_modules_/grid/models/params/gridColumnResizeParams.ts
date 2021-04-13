@@ -14,4 +14,8 @@ export interface GridColumnResizeParams {
    * API ref that let you manipulate the grid.
    */
   api: any;
+  /**
+   * The width of the column.
+   */
+  width: number;
 }
