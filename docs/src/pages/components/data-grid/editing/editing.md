@@ -24,20 +24,24 @@ If a cell is editable and has focus, any of the following interactions will star
 - A <kbd class="key">Backspace</kbd> or <kbd class="key">Delete</kbd> keydown. It will also delete the value and stops the edit mode instantly.
 - A keydown of any printable key, for instance `a`, `E`, `0`, or `$`
 - A double click on the cell
- - A call to `apiRef.current.setCellMode()`.
- ```
-  /**
-   * Set the cellMode of a cell.
-   * @param GridRowId
-   * @param string
-   * @param 'edit' | 'view'
-   */
-  setCellMode: (id: GridRowId, field: string, mode: GridCellMode) => void;
- ```
+- A call to `apiRef.current.setCellMode()`.
+
+```
+ /**
+  * Set the cellMode of a cell.
+  * @param GridRowId
+  * @param string
+  * @param 'edit' | 'view'
+  */
+ setCellMode: (id: GridRowId, field: string, mode: GridCellMode) => void;
+```
+
 {{"demo": "pages/components/data-grid/editing/BasicEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Stop editing
+
 If a cell is in edit mode and has focus, any of the following interactions will stop the edit mode:
+
 - A <kbd class="key">Escape</kbd> keydown. It will also roll back changes done in the value of the cell.
 - A <kbd class="key">Tab</kbd> keydown. It will also save and goes to next cell on the same row.
 - A <kbd class="key">Enter</kbd> keydown. It will also save and goes to next cell on the same column.
@@ -59,10 +63,10 @@ You can handle the `onEditRowModelChange` callback to control the `GridEditRowsM
 
 {{"demo": "pages/components/data-grid/editing/EditRowModelControlGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-#### value Getter
+### Column with valueGetter
 
 You can control the committed value when the edit move stops with the `onEditCellChangeCommitted` prop.
-This is especially interesting when using the `valueGetter` on the column definition. 
+This is especially interesting when using the `valueGetter` on the column definition.
 
 {{"demo": "pages/components/data-grid/editing/ValueGetterGrid.js", "bg": "inline"}}
 
@@ -71,7 +75,7 @@ This is especially interesting when using the `valueGetter` on the column defini
 Follow the following steps to validate the value in the cells.
 
 - Set the event handler `onEditCellChange`. It's invoked when a change is triggered by the edit input component.
-- set the event handler `onEditCellChangeCommitted` to validate when the change is committed.
+- Set the event handler `onEditCellChangeCommitted` to validate when the change is committed.
 
 Alternatively, you can use the `GridEditRowsModel` state mentioned in the [Control editing](#control-editing) section.
 

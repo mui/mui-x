@@ -90,7 +90,7 @@ export default function CatchEditingEventsGrid() {
   return (
     <div style={{ height: 400, width: '100%' }}>
       {message && <Alert severity="info">{message}</Alert>}
-      <XGrid rows={rows} columns={columns} apiRef={apiRef} autoHeight hideFooter />
+      <XGrid rows={rows} columns={columns} apiRef={apiRef} />
     </div>
   );
 }

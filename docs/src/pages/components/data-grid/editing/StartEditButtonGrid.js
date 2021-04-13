@@ -120,35 +120,35 @@ export default function StartEditButtonGrid() {
   }, []);
 
   return (
-    <XGrid
-      rows={rows}
-      columns={columns}
-      autoHeight
-      hideFooter
-      apiRef={apiRef}
-      onCellClick={handleCellClick}
-      onCellDoubleClick={handleDoubleCellClick}
-      onCellBlur={handleCellBlur}
-      onCellKeyDown={handleCellKeyDown}
-      components={{
-        Toolbar: () => (
-          <div
-            style={{
-              justifyContent: 'center',
-              display: 'flex',
-              borderBottom: '1px solid rgba(224, 224, 224, 1)',
-            }}
-          >
-            <Button
-              onMouseDown={handleButtonClick}
-              disabled={!selectedCellParams}
-              color="primary"
+    <div style={{ height: 400, width: '100%' }}>
+      <XGrid
+        rows={rows}
+        columns={columns}
+        apiRef={apiRef}
+        onCellClick={handleCellClick}
+        onCellDoubleClick={handleDoubleCellClick}
+        onCellBlur={handleCellBlur}
+        onCellKeyDown={handleCellKeyDown}
+        components={{
+          Toolbar: () => (
+            <div
+              style={{
+                justifyContent: 'center',
+                display: 'flex',
+                borderBottom: '1px solid rgba(224, 224, 224, 1)',
+              }}
             >
-              {buttonLabel}
-            </Button>
-          </div>
-        ),
-      }}
-    />
+              <Button
+                onMouseDown={handleButtonClick}
+                disabled={!selectedCellParams}
+                color="primary"
+              >
+                {buttonLabel}
+              </Button>
+            </div>
+          ),
+        }}
+      />
+    </div>
   );
 }

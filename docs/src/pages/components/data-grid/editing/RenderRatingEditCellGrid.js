@@ -93,5 +93,9 @@ const rows = [
 ];
 
 export default function CustomRatingOperator() {
-  return <DataGrid rows={rows} columns={columns} autoHeight hideFooter />;
+  return (
+    <div style={{ height: 250, width: '100%' }}>
+      <DataGrid rows={rows} columns={columns} />
+    </div>
+  );
 }

@@ -64,5 +64,9 @@ const rows = [
 ];
 
 export default function BasicEditingGrid() {
-  return <DataGrid rows={rows} columns={columns} autoHeight />;
+  return (
+    <div style={{ height: 250, width: '100%' }}>
+      <DataGrid rows={rows} columns={columns} />
+    </div>
+  );
 }

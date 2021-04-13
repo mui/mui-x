@@ -110,13 +110,14 @@ export default function ValidateRowModelControlGrid() {
   );
 
   return (
-    <DataGrid
-      className={classes.root}
-      rows={rows}
-      columns={columns}
-      editRowsModel={editRowsModel}
-      onEditCellChange={handleEditCellChange}
-      autoHeight
-    />
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid
+        className={classes.root}
+        rows={rows}
+        columns={columns}
+        editRowsModel={editRowsModel}
+        onEditCellChange={handleEditCellChange}
+      />
+    </div>
   );
 }

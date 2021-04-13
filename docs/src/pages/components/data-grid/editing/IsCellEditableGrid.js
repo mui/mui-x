@@ -79,12 +79,13 @@ const useStyles = makeStyles((theme) => {
 export default function IsCellEditableGrid() {
   const classes = useStyles();
   return (
-    <DataGrid
-      className={classes.root}
-      rows={rows}
-      columns={columns}
-      isCellEditable={(params) => params.row.age % 2 === 0}
-      autoHeight
-    />
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid
+        className={classes.root}
+        rows={rows}
+        columns={columns}
+        isCellEditable={(params) => params.row.age % 2 === 0}
+      />
+    </div>
   );
 }

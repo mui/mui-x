@@ -100,15 +100,15 @@ export default function ValidateServerNameGrid() {
   );
 
   return (
-    <XGrid
-      className={classes.root}
-      apiRef={apiRef}
-      rows={rows}
-      columns={columns}
-      onEditCellChange={handleEditCellChange}
-      isCellEditable={(params) => params.row.id === 5}
-      autoHeight
-      hideFooter
-    />
+    <div style={{ height: 400, width: '100%' }}>
+      <XGrid
+        className={classes.root}
+        apiRef={apiRef}
+        rows={rows}
+        columns={columns}
+        onEditCellChange={handleEditCellChange}
+        isCellEditable={(params) => params.row.id === 5}
+      />
+    </div>
   );
 }

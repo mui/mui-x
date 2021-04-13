@@ -114,13 +114,14 @@ export default function ValidateCellApiRefGrid() {
   );
 
   return (
-    <XGrid
-      apiRef={apiRef}
-      className={classes.root}
-      rows={rows}
-      columns={columns}
-      onEditCellChange={handleEditCellChange}
-      autoHeight
-    />
+    <div style={{ height: 400, width: '100%' }}>
+      <XGrid
+        apiRef={apiRef}
+        className={classes.root}
+        rows={rows}
+        columns={columns}
+        onEditCellChange={handleEditCellChange}
+      />
+    </div>
   );
 }
