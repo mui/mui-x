@@ -62,7 +62,7 @@ function validateName(username: string): Promise<boolean> {
   return new Promise<any>((resolve) => {
     promiseTimeout = setTimeout(() => {
       resolve(existingUsers.indexOf(username.toLowerCase()) === -1);
-    }, Math.random() * 500 + 100);
+    }, Math.random() * 500 + 100); // simulate network latency
   });
 }
 export default function ValidateServerNameGrid() {
@@ -98,6 +98,13 @@ export default function ValidateServerNameGrid() {
     },
     [apiRef],
   );
+
+  React.useEffect(()=> {
+    return ()=> {
+      clearTimeout(promiseTimeout);
+      clearTimeout(keyStrokeTimeoutRef.current);
+    }
+  }, []);
 
   return (
     <div style={{ height: 400, width: '100%' }}>

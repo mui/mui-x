@@ -72,7 +72,7 @@ export default function EditRowModelControlGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      editRowsModel state: <code>{JSON.stringify(editRowsModel)}</code>
+      <code>editRowsModel: {JSON.stringify(editRowsModel)}</code>
       <DataGrid
         rows={rows}
         columns={columns}

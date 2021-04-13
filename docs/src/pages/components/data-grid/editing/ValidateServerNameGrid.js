@@ -94,6 +94,13 @@ export default function ValidateServerNameGrid() {
     [apiRef],
   );
 
+  React.useEffect(() => {
+    return () => {
+      clearTimeout(promiseTimeout);
+      clearTimeout(keyStrokeTimeoutRef.current);
+    };
+  }, []);
+
   return (
     <div style={{ height: 400, width: '100%' }}>
       <XGrid
