@@ -10,7 +10,7 @@ import {
   GRID_COLUMN_HEADER_DRAG_OVER,
   GRID_COLUMN_HEADER_DRAG_START,
   GRID_COLUMN_HEADER_DRAG_END,
-  GRID_COLUMN_RESIZE_MOUSE_DOWN,
+  GRID_COLUMN_SEPARATOR_MOUSE_DOWN,
 } from '../../constants/eventsConstants';
 import { GridColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
 import { GridOptions } from '../../models/gridOptions';
@@ -103,7 +103,7 @@ export const GridColumnHeaderItem = ({
 
   const resizeEventHandlers = React.useMemo(
     () => ({
-      onMouseDown: publish(GRID_COLUMN_RESIZE_MOUSE_DOWN),
+      onMouseDown: publish(GRID_COLUMN_SEPARATOR_MOUSE_DOWN),
     }),
     [publish],
   );

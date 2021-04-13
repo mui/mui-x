@@ -5,8 +5,6 @@ import { optionsSelector } from '../utils/optionsSelector';
 import { useLogger } from '../utils/useLogger';
 import {
   GRID_CELL_CLICK,
-  GRID_COLUMN_RESIZE_START,
-  GRID_COLUMN_RESIZE_STOP,
   GRID_COLUMN_HEADER_CLICK,
   GRID_UNMOUNT,
   GRID_KEYDOWN,
@@ -35,15 +33,12 @@ import {
   GRID_COLUMN_ORDER_CHANGE,
   GRID_CELL_KEYDOWN,
   GRID_CELL_BLUR,
-  GRID_COLUMN_RESIZE,
 } from '../../constants/eventsConstants';
 import { useGridApiMethod } from './useGridApiMethod';
-import { useGridApiEventHandler, useGridApiOptionHandler } from './useGridApiEventHandler';
+import { useGridApiOptionHandler } from './useGridApiEventHandler';
 import { GridEventsApi } from '../../models/api/gridEventsApi';
 
 export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: GridApiRef): void {
-  //  We use the isResizingRef to prevent the click on column header when the user is resizing the column
-  const isResizingRef = React.useRef(false);
   const logger = useLogger('useEvents');
   const options = useGridSelector(apiRef, optionsSelector);
 
@@ -75,20 +70,9 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
     [apiRef],
   );
 
-  const handleResizeStart = React.useCallback(() => {
-    isResizingRef.current = true;
-  }, []);
-
-  const handleResizeStop = React.useCallback(() => {
-    isResizingRef.current = false;
-  }, []);
-
   const resize = React.useCallback(() => apiRef.current.publishEvent(GRID_RESIZE), [apiRef]);
   const eventsApi: GridEventsApi = { resize, onUnmount, onResize };
   useGridApiMethod(apiRef, eventsApi, 'GridEventsApi');
-
-  useGridApiEventHandler(apiRef, GRID_COLUMN_RESIZE_START, handleResizeStart);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_RESIZE_STOP, handleResizeStop);
 
   useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_CLICK, options.onColumnHeaderClick);
   useGridApiOptionHandler(
@@ -101,8 +85,6 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
   useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_ENTER, options.onColumnHeaderEnter);
   useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_LEAVE, options.onColumnHeaderLeave);
   useGridApiOptionHandler(apiRef, GRID_COLUMN_ORDER_CHANGE, options.onColumnOrderChange);
-
-  useGridApiOptionHandler(apiRef, GRID_COLUMN_RESIZE, options.onColumnResize);
 
   useGridApiOptionHandler(apiRef, GRID_CELL_CLICK, options.onCellClick);
   useGridApiOptionHandler(apiRef, GRID_CELL_DOUBLE_CLICK, options.onCellDoubleClick);

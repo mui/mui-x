@@ -1,26 +1,29 @@
 import * as React from 'react';
 import { ownerDocument } from '@material-ui/core/utils';
-import { GridColDef } from '../../models/colDef';
-import { useLogger } from '../utils';
-import { useEventCallback } from '../../utils/material-ui-utils';
+import { GridColDef } from '../../../models/colDef';
+import { useLogger } from '../../utils';
+import { useEventCallback } from '../../../utils/material-ui-utils';
 import {
-  GRID_COLUMN_RESIZE_MOUSE_DOWN,
+  GRID_COLUMN_SEPARATOR_MOUSE_DOWN,
   GRID_COLUMN_RESIZE_START,
   GRID_COLUMN_RESIZE_STOP,
   GRID_COLUMN_RESIZE,
-} from '../../constants/eventsConstants';
+} from '../../../constants/eventsConstants';
 import {
   GRID_HEADER_CELL_CSS_CLASS,
   GRID_HEADER_CELL_SEPARATOR_RESIZABLE_CSS_CLASS,
-} from '../../constants/cssClassesConstants';
+} from '../../../constants/cssClassesConstants';
 import {
   findGridCellElementsFromCol,
   findParentElementFromClassName,
   getFieldFromHeaderElem,
   findHeaderElementFromField,
-} from '../../utils/domUtils';
-import { GridApiRef, CursorCoordinates, GridColumnHeaderParams } from '../../models';
-import { useGridApiEventHandler } from '../root/useGridApiEventHandler';
+} from '../../../utils/domUtils';
+import { GridApiRef, CursorCoordinates, GridColumnHeaderParams } from '../../../models';
+import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
+import { optionsSelector } from '../../utils/optionsSelector';
+import { useGridSelector } from '../core/useGridSelector';
+import { useGridState } from '../core/useGridState';
 
 const MIN_COL_WIDTH = 50;
 let cachedSupportsTouchActionNone = false;
@@ -69,12 +72,15 @@ export const useGridColumnResize = (
   apiRef: GridApiRef,
 ) => {
   const logger = useLogger('useGridColumnResize');
+  const [, setGridState, forceUpdate] = useGridState(apiRef);
+  const isResizingRef = React.useRef(false);
   const colDefRef = React.useRef<GridColDef>();
   const colElementRef = React.useRef<HTMLDivElement>();
   const colCellElementsRef = React.useRef<NodeListOf<Element>>();
   const initialOffset = React.useRef<number>();
   const stopResizeEventTimeout = React.useRef<any>();
   const touchId = React.useRef<number>();
+  const options = useGridSelector(apiRef, optionsSelector);
   const columnsHeaderElement = columnsRef.current;
 
   const updateWidth = (newWidth: number) => {
@@ -130,6 +136,7 @@ export const useGridColumnResize = (
       api: apiRef,
     });
   });
+
   const handleColumnResizeMouseDown = useEventCallback(
     ({ colDef }: GridColumnHeaderParams, event: React.MouseEvent<HTMLDivElement>) => {
       // Only handle left clicks
@@ -138,7 +145,7 @@ export const useGridColumnResize = (
       }
 
       // Skip if the column isn't resizable
-      if (!event.currentTarget.classList.contains('MuiDataGrid-columnSeparatorResizable')) {
+      if (!event.currentTarget.classList.contains(GRID_HEADER_CELL_SEPARATOR_RESIZABLE_CSS_CLASS)) {
         return;
       }
 
@@ -277,6 +284,27 @@ export const useGridColumnResize = (
     doc.removeEventListener('touchend', handleTouchEnd);
   }, [apiRef, handleResizeMouseMove, handleResizeMouseUp, handleTouchMove, handleTouchEnd]);
 
+  const handleResizeStart = React.useCallback(
+    ({ field }) => {
+      isResizingRef.current = true;
+      setGridState((oldState) => ({
+        ...oldState,
+        columnResize: { ...oldState.columnResize, resizingColumnField: field },
+      }));
+      forceUpdate();
+    },
+    [setGridState, forceUpdate],
+  );
+
+  const handleResizeStop = React.useCallback(() => {
+    isResizingRef.current = false;
+    setGridState((oldState) => ({
+      ...oldState,
+      columnResize: { ...oldState.columnResize, resizingColumnField: '' },
+    }));
+    forceUpdate();
+  }, [setGridState, forceUpdate]);
+
   React.useEffect(() => {
     columnsHeaderElement?.addEventListener('touchstart', handleTouchStart, {
       passive: doesSupportTouchActionNone(),
@@ -290,11 +318,9 @@ export const useGridColumnResize = (
     };
   }, [columnsHeaderElement, handleTouchStart, stopListening]);
 
-  // useGridApiMethod<ColumnResizeApi>(
-  //   apiRef,
-  //   { startResizeOnMouseDown: handleColumnResizeMouseDown },
-  //   'columnResizeApi',
-  // );
+  useGridApiEventHandler(apiRef, GRID_COLUMN_SEPARATOR_MOUSE_DOWN, handleColumnResizeMouseDown);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_RESIZE_START, handleResizeStart);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_RESIZE_STOP, handleResizeStop);
 
-  useGridApiEventHandler(apiRef, GRID_COLUMN_RESIZE_MOUSE_DOWN, handleColumnResizeMouseDown);
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_RESIZE, options.onColumnResize);
 };

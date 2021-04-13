@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { GRID_COLUMN_RESIZE_START, GRID_COLUMN_RESIZE_STOP } from '../../constants/eventsConstants';
 import { gridColumnReorderDragColSelector } from '../../hooks/features/columnReorder/columnReorderSelector';
+import { gridResizingColumnFieldSelector } from '../../hooks/features/columnResize/columnResizeSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { filterGridColumnLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridSortColumnLookupSelector } from '../../hooks/features/sorting/gridSortingSelector';
-import { useGridApiEventHandler } from '../../hooks/root/useGridApiEventHandler';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridColumns } from '../../models/colDef/gridColDef';
 import { GridApiContext } from '../GridApiContext';
@@ -16,23 +15,12 @@ export interface GridColumnHeadersItemCollectionProps {
 
 export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemCollectionProps) {
   const { columns } = props;
-  const [resizingColField, setResizingColField] = React.useState('');
   const apiRef = React.useContext(GridApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const filterColumnLookup = useGridSelector(apiRef, filterGridColumnLookupSelector);
   const dragCol = useGridSelector(apiRef, gridColumnReorderDragColSelector);
-
-  const handleResizeStart = React.useCallback((params) => {
-    setResizingColField(params.field);
-  }, []);
-  const handleResizeStop = React.useCallback(() => {
-    setResizingColField('');
-  }, []);
-
-  // TODO refactor by putting resizing in the state so we avoid adding listeners.
-  useGridApiEventHandler(apiRef!, GRID_COLUMN_RESIZE_START, handleResizeStart);
-  useGridApiEventHandler(apiRef!, GRID_COLUMN_RESIZE_STOP, handleResizeStop);
+  const resizingColumnField = useGridSelector(apiRef, gridResizingColumnFieldSelector);
 
   const items = columns.map((col, idx) => (
     <GridColumnHeaderItem
@@ -43,7 +31,7 @@ export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemColl
       isDragging={col.field === dragCol}
       column={col}
       colIndex={idx}
-      isResizing={resizingColField === col.field}
+      isResizing={resizingColumnField === col.field}
     />
   ));
 
