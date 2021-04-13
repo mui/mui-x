@@ -49,7 +49,7 @@ By default, the columns have a width of 100 pixels.
 This is an arbitrary, easy to remember value.
 To change the width of a column, use the `width` property available in `GridColDef`.
 
-{{"demo": "pages/components/data-grid/columns/ColumnWidthGrid.js", "bg": "inline" }}
+{{"demo": "pages/components/data-grid/columns/ColumnWidthGrid.js", "bg": "inline"}}
 
 ### Fluid width
 
