@@ -66,7 +66,8 @@ describe('<DataGrid /> - Rows', () => {
 
   it('should ignore events coming from a portal in the cell', () => {
     const handleRowClick = spy();
-    const Cell = () => (
+    const InputCell = () => <input type="text" name="input" />;
+    const PortalCell = () => (
       <Portal>
         <input type="text" name="portal-input" />
       </Portal>
@@ -80,7 +81,11 @@ describe('<DataGrid /> - Rows', () => {
           columns={[
             {
               field: 'id',
-              renderCell: () => <Cell />,
+              renderCell: () => <PortalCell />,
+            },
+            {
+              field: 'input',
+              renderCell: () => <InputCell />,
             },
           ]}
         />
@@ -88,5 +93,7 @@ describe('<DataGrid /> - Rows', () => {
     );
     fireEvent.click(document.querySelector('input[name="portal-input"]'));
     expect(handleRowClick.callCount).to.equal(0);
+    fireEvent.click(document.querySelector('input[name="input"]'));
+    expect(handleRowClick.callCount).to.equal(1);
   });
 });
