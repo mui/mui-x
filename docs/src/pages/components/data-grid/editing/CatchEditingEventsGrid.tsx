@@ -40,9 +40,15 @@ export default function CatchEditingEventsGrid() {
   }, [apiRef]);
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      {message && <Alert severity="info">{message}</Alert>}
-      <XGrid rows={rows} columns={columns} apiRef={apiRef} />
+    <div style={{ width: '100%' }}>
+      <div style={{ height: 180, width: '100%' }}>
+        <XGrid rows={rows} columns={columns} apiRef={apiRef} />
+      </div>
+      {message && (
+        <Alert severity="info" style={{ marginTop: 8 }}>
+          {message}
+        </Alert>
+      )}
     </div>
   );
 }
@@ -71,34 +77,6 @@ const rows: GridRowsProp = [
     id: 1,
     name: randomTraderName(),
     age: 25,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
-  {
-    id: 2,
-    name: randomTraderName(),
-    age: 36,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
-  {
-    id: 3,
-    name: randomTraderName(),
-    age: 19,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
-  {
-    id: 4,
-    name: randomTraderName(),
-    age: 28,
-    dateCreated: randomCreatedDate(),
-    lastLogin: randomUpdatedDate(),
-  },
-  {
-    id: 5,
-    name: randomTraderName(),
-    age: 23,
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
   },
