@@ -10,7 +10,7 @@ components: DataGrid, XGrid
 ## Cell editing
 
 Cell editing allows editing the value of one cell at a time.
-Set `editable` property of the column definition `GridColDef` object to `true` to allow editing cells of this column.
+Set the `editable` property of the column definition `GridColDef` object to `true` to allow editing cells of this column.
 
 ```tsx
 <DataGrid columns={[{ field: 'name', editable: true }]} />
@@ -26,7 +26,7 @@ If a cell is editable and has focus, any of the following interactions will star
 - A double click on the cell
 - A call to `apiRef.current.setCellMode()`.
 
-```
+```tsx
  /**
   * Set the cellMode of a cell.
   * @param GridRowId
@@ -49,7 +49,7 @@ If a cell is in edit mode and has focus, any of the following interactions will 
 
 ### Control cell editability
 
-In addition to the `editable` flag on columns, control which cell is editable using `isCellEditable` prop.
+In addition to the `editable` flag on columns, control which cell is editable using the `isCellEditable` prop.
 
 In this demo, the column `Name` is not editable. Only the rows with an even `Age` value are editable.
 The editable cells have a green background for better visibility.
@@ -72,7 +72,7 @@ This is especially interesting when using the `valueGetter` on the column defini
 
 ### Client-side validation
 
-Follow the following steps to validate the value in the cells.
+Follow the following steps to validate the value in the cells:
 
 - Set the event handler `onEditCellChange`. It's invoked when a change is triggered by the edit input component.
 - Set the event handler `onEditCellChangeCommitted` to validate or persist the new value. This handler is invoked when an end-user requests a change to be committed and before the cell reverts to view mode.
@@ -82,6 +82,8 @@ Alternatively, you can use the `GridEditRowsModel` state mentioned in the [Contr
 {{"demo": "pages/components/data-grid/editing/ValidateRowModelControlGrid.js", "bg": "inline"}}
 
 #### Using apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
+
+You can reproduce the same behavior using the apiRef.
 
 {{"demo": "pages/components/data-grid/editing/ValidateCellApiRefGrid.js", "bg": "inline"}}
 
@@ -96,6 +98,7 @@ Server-side validation works like client-side [validation](#validation).
 **Note:** To prevent the default client-side behavior, use `event.stopPropagation()`.
 
 This demo shows how you can validate a username asynchronously and prevent the user from committing the value while validating.
+It's using `XGrid` but the same approach can be used with `DataGrid`.
 
 {{"demo": "pages/components/data-grid/editing/ValidateServerNameGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -107,13 +110,13 @@ The demo lets you edit the ratings by double-clicking the cell.
 
 {{"demo": "pages/components/data-grid/editing/RenderRatingEditCellGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Edit using external button
+### Edit using external button [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 You can override the default [start editing](#start-editing) triggers using the `event.stopPropagation()` API on the synthetic React events.
 
 {{"demo": "pages/components/data-grid/editing/StartEditButtonGrid.js", "bg": "inline"}}
 
-### Events
+### Events [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 The editing feature leverages the event capability of the grid and the apiRef.
 The following events can be imported and used to customize the edition:
@@ -125,7 +128,7 @@ The following events can be imported and used to customize the edition:
 
 Catching events can be used to add a callback after an event while ignoring its triggers.
 
-_The demo shows how to catch the start & end edit events to log which cell is editing in an info message._
+The demo shows how to catch the start & end edit events to log which cell is editing in an info message:
 
 {{"demo": "pages/components/data-grid/editing/CatchEditingEventsGrid.js", "bg": "inline"}}
 
