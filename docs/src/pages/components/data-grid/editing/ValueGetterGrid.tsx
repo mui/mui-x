@@ -3,10 +3,10 @@ import {
   DataGrid,
   GridColDef,
   GridEditCellPropsParams,
-  GridValueGetterParams,
+  GridSortCellParams,
 } from '@material-ui/data-grid';
 
-function getFullName(params: GridValueGetterParams) {
+function getFullName(params: GridSortCellParams) {
   return `${params.getValue('firstName') || ''} ${
     params.getValue('lastName') || ''
   }`;
