@@ -42,8 +42,8 @@ If a cell is editable and has focus, any of the following interactions will star
 If a cell is in edit mode and has focus, any of the following interactions will stop the edit mode:
 
 - A <kbd class="key">Escape</kbd> keydown. It will also roll back changes done in the value of the cell.
-- A <kbd class="key">Tab</kbd> keydown. It will also save and goes to next cell on the same row.
-- A <kbd class="key">Enter</kbd> keydown. It will also save and goes to next cell on the same column.
+- A <kbd class="key">Tab</kbd> keydown. It will also save and goes to the next cell on the same row.
+- A <kbd class="key">Enter</kbd> keydown. It will also save and goes to the next cell on the same column.
 - A mousedown outside the cell
 - A call to `apiRef.current.setCellMode(id, field, 'view')`.
 
