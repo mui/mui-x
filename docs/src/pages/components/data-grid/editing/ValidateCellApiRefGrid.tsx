@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
+  getThemePaletteMode,
   GridColumns,
   GridEditCellPropsParams,
   GridRowsProp,
@@ -9,50 +11,22 @@ import {
 } from '@material-ui/x-grid';
 import { randomEmail, randomTraderName } from '@material-ui/x-grid-data-generator';
 
-const columns: GridColumns = [
-  { field: 'name', headerName: 'Name', width: 180, editable: true },
-  { field: 'email', headerName: 'Email', width: 200, editable: true },
-];
+const useStyles = makeStyles((theme: Theme) => {
+  const isDark =
+    getThemePaletteMode(theme.palette) === 'dark';
 
-const rows: GridRowsProp = [
-  {
-    id: 1,
-    name: randomTraderName(),
-    email: randomEmail(),
-  },
-  {
-    id: 2,
-    name: randomTraderName(),
-    email: randomEmail(),
-  },
-  {
-    id: 3,
-    name: randomTraderName(),
-    email: randomEmail(),
-  },
-  {
-    id: 4,
-    name: randomTraderName(),
-    email: randomEmail(),
-  },
-  {
-    id: 5,
-    name: randomTraderName(),
-    email: randomEmail(),
-  },
-];
-
-const useStyles = makeStyles({
-  root: {
-    '& .MuiDataGrid-cellEditing': {
-      backgroundColor: 'rgb(255,215,115, 0.19)',
-      color: '#1a3e72',
+  return {
+    root: {
+      '& .MuiDataGrid-cellEditing': {
+        backgroundColor: 'rgb(255,215,115, 0.19)',
+        color: '#1a3e72',
+      },
+      '& .Mui-error': {
+        backgroundColor: `rgb(126,10,15, ${isDark ? 0 : 0.1})`,
+        color: isDark ? '#ff4343' : '#750f0f',
+      },
     },
-    '& .Mui-error': {
-      backgroundColor: 'rgb(126,10,15, 0.1)',
-      color: '#750f0f',
-    },
-  },
+  };
 });
 
 function validateEmail(email) {
@@ -96,3 +70,36 @@ export default function ValidateCellApiRefGrid() {
     </div>
   );
 }
+
+const columns: GridColumns = [
+  { field: 'name', headerName: 'Name', width: 180, editable: true },
+  { field: 'email', headerName: 'Email', width: 200, editable: true },
+];
+
+const rows: GridRowsProp = [
+  {
+    id: 1,
+    name: randomTraderName(),
+    email: randomEmail(),
+  },
+  {
+    id: 2,
+    name: randomTraderName(),
+    email: randomEmail(),
+  },
+  {
+    id: 3,
+    name: randomTraderName(),
+    email: randomEmail(),
+  },
+  {
+    id: 4,
+    name: randomTraderName(),
+    email: randomEmail(),
+  },
+  {
+    id: 5,
+    name: randomTraderName(),
+    email: randomEmail(),
+  },
+];

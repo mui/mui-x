@@ -1,11 +1,38 @@
-import { makeStyles } from '@material-ui/core/styles';
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import { DataGrid, getThemePaletteMode } from '@material-ui/data-grid';
 import {
   randomCreatedDate,
   randomTraderName,
   randomUpdatedDate,
 } from '@material-ui/x-grid-data-generator';
+
+const useStyles = makeStyles((theme) => {
+  const backgroundColor =
+    getThemePaletteMode(theme.palette) === 'dark' ? '#376331' : 'rgb(217 243 190)';
+  return {
+    root: {
+      '& .MuiDataGrid-cellEditable': {
+        backgroundColor,
+      },
+    },
+  };
+});
+
+export default function IsCellEditableGrid() {
+  const classes = useStyles();
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid
+        className={classes.root}
+        rows={rows}
+        columns={columns}
+        isCellEditable={(params) => params.row.age % 2 === 0}
+      />
+    </div>
+  );
+}
 
 const columns = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
@@ -63,29 +90,3 @@ const rows = [
     lastLogin: randomUpdatedDate(),
   },
 ];
-
-const useStyles = makeStyles((theme) => {
-  const backgroundColor =
-    getThemePaletteMode(theme.palette) === 'dark' ? '#376331' : 'rgb(217 243 190)';
-  return {
-    root: {
-      '& .MuiDataGrid-cellEditable': {
-        backgroundColor,
-      },
-    },
-  };
-});
-
-export default function IsCellEditableGrid() {
-  const classes = useStyles();
-  return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        className={classes.root}
-        rows={rows}
-        columns={columns}
-        isCellEditable={(params) => params.row.age % 2 === 0}
-      />
-    </div>
-  );
-}

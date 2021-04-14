@@ -1,5 +1,6 @@
-import { makeStyles, Theme } from '@material-ui/core/styles';
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
   GridColumns,
   GridEditCellPropsParams,
@@ -9,47 +10,18 @@ import {
   XGrid,
 } from '@material-ui/x-grid';
 
-const columns: GridColumns = [
-  { field: 'name', headerName: 'MUI Contributor', width: 180, editable: true },
-];
-
-const rows: GridRowsProp = [
-  {
-    id: 1,
-    name: 'Damien',
-  },
-  {
-    id: 2,
-    name: 'Olivier',
-  },
-  {
-    id: 3,
-    name: 'Danail',
-  },
-  {
-    id: 4,
-    name: 'Matheus',
-  },
-  {
-    id: 5,
-    name: 'You?',
-  },
-];
 const useStyles = makeStyles((theme: Theme) => {
-  const backgroundColor =
-    getThemePaletteMode(theme.palette) === 'dark' ? '#376331' : 'rgb(217 243 190)';
+  const isDark =
+    getThemePaletteMode(theme.palette) === 'dark';
+
   return {
     root: {
       '& .MuiDataGrid-cellEditable': {
-        backgroundColor,
-      },
-      '& .MuiDataGrid-cellEditing': {
-        backgroundColor: 'rgb(255,215,115, 0.19)',
-        color: '#1a3e72',
+        backgroundColor: isDark ? '#376331' : 'rgb(217 243 190)',
       },
       '& .Mui-error': {
-        backgroundColor: 'rgb(126,10,15, 0.1)',
-        color: '#750f0f',
+         backgroundColor: `rgb(126,10,15, ${isDark ? 0 : 0.1})`,
+        color: isDark ? '#ff4343' : '#750f0f',
       },
     },
   };
@@ -65,6 +37,7 @@ function validateName(username: string): Promise<boolean> {
     }, Math.random() * 500 + 100); // simulate network latency
   });
 }
+
 export default function ValidateServerNameGrid() {
   const apiRef = useGridApiRef();
   const classes = useStyles();
@@ -119,3 +92,30 @@ export default function ValidateServerNameGrid() {
     </div>
   );
 }
+
+const columns: GridColumns = [
+  { field: 'name', headerName: 'MUI Contributor', width: 180, editable: true },
+];
+
+const rows: GridRowsProp = [
+  {
+    id: 1,
+    name: 'Damien',
+  },
+  {
+    id: 2,
+    name: 'Olivier',
+  },
+  {
+    id: 3,
+    name: 'Danail',
+  },
+  {
+    id: 4,
+    name: 'Matheus',
+  },
+  {
+    id: 5,
+    name: 'You?',
+  },
+];

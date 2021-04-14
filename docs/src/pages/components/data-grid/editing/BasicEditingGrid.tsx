@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
 import { DataGrid, GridColumns, GridRowsProp } from '@material-ui/data-grid';
 import {
@@ -5,6 +6,14 @@ import {
   randomTraderName,
   randomUpdatedDate,
 } from '@material-ui/x-grid-data-generator';
+
+export default function BasicEditingGrid() {
+  return (
+    <div style={{ height: 250, width: '100%' }}>
+      <DataGrid rows={rows} columns={columns} />
+    </div>
+  );
+}
 
 const columns: GridColumns = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
@@ -62,11 +71,3 @@ const rows: GridRowsProp = [
     lastLogin: randomUpdatedDate(),
   },
 ];
-
-export default function BasicEditingGrid() {
-  return (
-    <div style={{ height: 250, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} />
-    </div>
-  );
-}

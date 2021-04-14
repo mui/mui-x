@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
 import {
   DataGrid,
@@ -11,28 +12,6 @@ function getFullName(params: GridSortCellParams) {
     params.getValue('lastName') || ''
   }`;
 }
-
-const columns: GridColDef[] = [
-  { field: 'firstName', headerName: 'First name', width: 130, editable: true },
-  { field: 'lastName', headerName: 'Last name', width: 130, editable: true },
-  {
-    field: 'fullName',
-    headerName: 'Full name',
-    width: 160,
-    editable: true,
-    valueGetter: getFullName,
-    sortComparator: (v1, v2, cellParams1, cellParams2) =>
-      getFullName(cellParams1).localeCompare(getFullName(cellParams2)),
-  },
-];
-
-const defaultRows = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon' },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei' },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime' },
-  { id: 4, lastName: 'Stark', firstName: 'Arya' },
-  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys' },
-];
 
 export default function ValueGetterGrid() {
   const [rows, setRows] = React.useState<any[]>(defaultRows);
@@ -63,3 +42,25 @@ export default function ValueGetterGrid() {
     </div>
   );
 }
+
+const columns: GridColDef[] = [
+  { field: 'firstName', headerName: 'First name', width: 130, editable: true },
+  { field: 'lastName', headerName: 'Last name', width: 130, editable: true },
+  {
+    field: 'fullName',
+    headerName: 'Full name',
+    width: 160,
+    editable: true,
+    valueGetter: getFullName,
+    sortComparator: (v1, v2, cellParams1, cellParams2) =>
+      getFullName(cellParams1).localeCompare(getFullName(cellParams2)),
+  },
+];
+
+const defaultRows = [
+  { id: 1, lastName: 'Snow', firstName: 'Jon' },
+  { id: 2, lastName: 'Lannister', firstName: 'Cersei' },
+  { id: 3, lastName: 'Lannister', firstName: 'Jaime' },
+  { id: 4, lastName: 'Stark', firstName: 'Arya' },
+  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys' },
+];

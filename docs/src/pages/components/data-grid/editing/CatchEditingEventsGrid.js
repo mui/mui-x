@@ -1,5 +1,6 @@
-import Alert from '@material-ui/lab/Alert';
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
+import Alert from '@material-ui/lab/Alert';
 import {
   GRID_CELL_EDIT_ENTER,
   GRID_CELL_EDIT_EXIT,
@@ -11,6 +12,32 @@ import {
   randomTraderName,
   randomUpdatedDate,
 } from '@material-ui/x-grid-data-generator';
+
+export default function CatchEditingEventsGrid() {
+  const apiRef = useGridApiRef();
+  const [message, setMessage] = React.useState('');
+
+  React.useEffect(() => {
+    return apiRef.current.subscribeEvent(GRID_CELL_EDIT_ENTER, (param, event) => {
+      setMessage(`Editing cell with value: ${param.value} at row: ${param.rowIndex}, column: ${param.field},
+                        triggered by ${event.type}
+      `);
+    });
+  }, [apiRef]);
+
+  React.useEffect(() => {
+    return apiRef.current.subscribeEvent(GRID_CELL_EDIT_EXIT, () => {
+      setMessage('');
+    });
+  }, [apiRef]);
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      {message && <Alert severity="info">{message}</Alert>}
+      <XGrid rows={rows} columns={columns} apiRef={apiRef} />
+    </div>
+  );
+}
 
 const columns = [
   { field: 'name', headerName: 'Name', width: 180, editable: true },
@@ -68,29 +95,3 @@ const rows = [
     lastLogin: randomUpdatedDate(),
   },
 ];
-
-export default function CatchEditingEventsGrid() {
-  const apiRef = useGridApiRef();
-  const [message, setMessage] = React.useState('');
-
-  React.useEffect(() => {
-    return apiRef.current.subscribeEvent(GRID_CELL_EDIT_ENTER, (param, event) => {
-      setMessage(`Editing cell with value: ${param.value} at row: ${param.rowIndex}, column: ${param.field},
-                        triggered by ${event.type}
-      `);
-    });
-  }, [apiRef]);
-
-  React.useEffect(() => {
-    return apiRef.current.subscribeEvent(GRID_CELL_EDIT_EXIT, () => {
-      setMessage('');
-    });
-  }, [apiRef]);
-
-  return (
-    <div style={{ height: 400, width: '100%' }}>
-      {message && <Alert severity="info">{message}</Alert>}
-      <XGrid rows={rows} columns={columns} apiRef={apiRef} />
-    </div>
-  );
-}

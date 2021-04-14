@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { Rating } from '@material-ui/lab';
+import Rating from '@material-ui/lab/Rating';
 import { DataGrid } from '@material-ui/data-grid';
 import { renderRating } from '@material-ui/x-grid-data-generator';
 
@@ -68,6 +69,15 @@ export { GridRatingEditInputCell };
 function renderRatingEditInputCell(params) {
   return <GridRatingEditInputCell {...params} />;
 }
+
+export default function RenderRatingEditCellGrid() {
+  return (
+    <div style={{ height: 250, width: '100%' }}>
+      <DataGrid rows={rows} columns={columns} />
+    </div>
+  );
+}
+
 const columns = [
   {
     field: 'places',
@@ -91,11 +101,3 @@ const rows = [
   { id: 3, places: 'London', rating: 3 },
   { id: 4, places: 'New York', rating: 2 },
 ];
-
-export default function CustomRatingOperator() {
-  return (
-    <div style={{ height: 250, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} />
-    </div>
-  );
-}
