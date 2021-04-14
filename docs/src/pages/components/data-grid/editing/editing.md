@@ -25,16 +25,15 @@ If a cell is editable and has focus, any of the following interactions will star
 - A keydown of any printable key, for instance `a`, `E`, `0`, or `$`
 - A double click on the cell
 - A call to `apiRef.current.setCellMode(id, field, 'edit')`.
-
-```tsx
- /**
-  * Set the cellMode of a cell.
-  * @param GridRowId
-  * @param string
-  * @param 'edit' | 'view'
-  */
- setCellMode: (id: GridRowId, field: string, mode: GridCellMode) => void;
-```
+  ```tsx
+  /**
+    * Set the cellMode of a cell.
+    * @param GridRowId
+    * @param string
+    * @param 'edit' | 'view'
+    */
+  setCellMode: (id: GridRowId, field: string, mode: GridCellMode) => void;
+  ```
 
 {{"demo": "pages/components/data-grid/editing/BasicEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
