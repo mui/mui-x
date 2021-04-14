@@ -17,7 +17,7 @@ const useStyles = makeStyles({
   },
 });
 
-function GridRatingEditInputCell(props) {
+function RatingEditInputCell(props) {
   const { id, value, api, field } = props;
   const classes = useStyles();
 
@@ -40,7 +40,7 @@ function GridRatingEditInputCell(props) {
   );
 }
 
-GridRatingEditInputCell.propTypes = {
+RatingEditInputCell.propTypes = {
   /**
    * GridApi that let you manipulate the grid.
    */
@@ -65,10 +65,8 @@ GridRatingEditInputCell.propTypes = {
   ]),
 };
 
-export { GridRatingEditInputCell };
-
 function renderRatingEditInputCell(params) {
-  return <GridRatingEditInputCell {...params} />;
+  return <RatingEditInputCell {...params} />;
 }
 
 export default function RenderRatingEditCellGrid() {
