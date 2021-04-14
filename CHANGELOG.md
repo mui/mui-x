@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.25](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.24...v4.0.0-alpha.25)
+
+_Apr 14, 2021_
+
+Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add boolean column type @m4theushw
+- ⚡️ Update to React 17 (#1331) @m4theushw
+- 🕹 Make column header cells focusable @DanailH
+- 🐛 Ignore event from portal in cells (#1324) @oliviertassinari
+- 🐞 Bugfixes
+
+### @material-ui/x-grid@v4.0.0-alpha.24 / @material-ui/data-grid@v4.0.0-alpha.24
+
+#### Breaking Changes
+
+- [DataGrid] Add support for custom row ids without cloning (#1377) @m4theushw
+
+#### Changes
+
+- [DataGrid] Add boolean column type (#1321) @m4theushw
+- [DataGrid] Add missing filter tooltip translations (#1367) @DanailH
+- [DataGrid] Fix autoPageSize (#1366) @dtassone
+- [DataGrid] Fix performance issue when sorting columns (#1368) @dtassone
+- [DataGrid] Fix printable keys to match ag (#1409) @dtassone
+- [DataGrid] Ignore event from portal in cells (#1324) @oliviertassinari
+- [DataGrid] Make "Checkbox selection" translatable (#1379) @m4theushw
+- [DataGrid] Make column header cells focusable (#1289) @DanailH
+- [DataGrid] Remove use of row.id when id prop is available (#1371) @m4theushw
+- [DataGrid] Update min version of React to 17 (#1410) @m4theushw
+- [DataGrid] Make GridMainContainer tabbable (#1327) @DanailH
+- [XGrid] Support column reordering inside the whole grid (#1250) @m4theushw
+
+### Docs
+
+- [docs] Fix anchor links on the /data-grid/filtering/ page (#1398) @oliviertassinari
+- [docs] Move Column definition to Columns page (#1373) @dtassone
+- [docs] Move density to accessibility page (#1374) @dtassone
+- [Docs] Fix GitHub references in API docs (#1411) @SaskiaKeil
+
+### Core
+
+- [core] Update to React 17 (#1331) @m4theushw
+- [core] Variable convention (#1397) @oliviertassinari
+- [license] Use a global storage rather than a module singleton (#1384) @oliviertassinari
+
 ## [4.0.0-alpha.24](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.23...v4.0.0-alpha.24)
 
 _Apr 2, 2021_
