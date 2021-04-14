@@ -49,7 +49,7 @@ export interface GridFilterModelParams {
 }
 ```  
 
-- [DataGrid] Update min version of React to 17 (#1410) @m4theushw
+- [DataGrid] Upgrade mininum supported version of React to 17.0.0 (#1410) @m4theushw
 
 #### Changes
 
