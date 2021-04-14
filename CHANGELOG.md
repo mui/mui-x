@@ -11,15 +11,45 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
 - 🎁 Add boolean column type @m4theushw
 - ⚡️ Update to React 17 (#1331) @m4theushw
-- 🕹 Make column header cells focusable @DanailH
+- ♿ Make column header cells focusable (#1289), and fix roving tabindex (#1327) @DanailH
 - 🐛 Ignore event from portal in cells (#1324) @oliviertassinari
 - 🐞 Bugfixes
 
-### @material-ui/x-grid@v4.0.0-alpha.24 / @material-ui/data-grid@v4.0.0-alpha.24
+### @material-ui/x-grid@v4.0.0-alpha.25 / @material-ui/data-grid@v4.0.0-alpha.25
 
-#### Breaking Changes
+#### Breaking changes
 
 - [DataGrid] Add support for custom row ids without cloning (#1377) @m4theushw
+  This change has involved the following refactorings.
+  
+  - Changes on `apiRef.current`.
+  
+```diff  
+-  getRowModels: () => GridRowModel[];
++  getRowModels: () => Map<GridRowId, GridRowModel>;
+-  getVisibleRowModels: () => GridRowModel[];
++  getVisibleRowModels: () => Map<GridRowId, GridRowModel>;
+-  getSelectedRows: () => GridRowModel[];
++  getSelectedRows: () => Map<GridRowId, GridRowModel>;
+```
+  - Changes on `GridFilterModelParams`.
+  
+```diff
+export interface GridFilterModelParams {
+  /**
+   * The full set of rows.
+   */
+-  rows: GridRowModel[];
++  rows: Map<GridRowId, GridRowModel>;
+  /**
+   * The set of currently visible rows.
+   */
+-  visibleRows: GridRowModel[];
++  visibleRows: Map<GridRowId, GridRowModel>;
+}
+```  
+
+- [DataGrid] Update min version of React to 17 (#1410) @m4theushw
 
 #### Changes
 
@@ -32,7 +62,6 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [DataGrid] Make "Checkbox selection" translatable (#1379) @m4theushw
 - [DataGrid] Make column header cells focusable (#1289) @DanailH
 - [DataGrid] Remove use of row.id when id prop is available (#1371) @m4theushw
-- [DataGrid] Update min version of React to 17 (#1410) @m4theushw
 - [DataGrid] Make GridMainContainer tabbable (#1327) @DanailH
 - [XGrid] Support column reordering inside the whole grid (#1250) @m4theushw
 
