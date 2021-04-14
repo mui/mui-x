@@ -12,9 +12,9 @@ export const isHomeOrEndKeys = (key: string): boolean => key === 'Home' || key =
 
 export const isPageKeys = (key: string): boolean => key.indexOf('Page') === 0;
 export const isDeleteKeys = (key: string) => key === 'Delete' || key === 'Backspace';
-const printableChars = `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!"£$%^&*()_+-=[];'#,./|<>?:@~{}`;
 
-export const isPrintableKey = (key: string) => printableChars.indexOf(key) > -1;
+const printableCharRegex = /^(\p{L}|\p{M}\p{L}|\p{M}|\p{N}|\p{Z}|\p{S}|\p{P})$/iu;
+export const isPrintableKey = (key: string) => printableCharRegex.test(key);
 
 export const GRID_MULTIPLE_SELECTION_KEYS = ['Meta', 'Control', 'Shift'];
 export const GRID_CELL_EXIT_EDIT_MODE_KEYS = ['Enter', 'Escape', 'Tab'];
