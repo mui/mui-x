@@ -15,14 +15,16 @@ export default function EditRowModelControlGrid() {
   }, []);
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <div style={{ height: 425, width: '100%' }}>
       <code>editRowsModel: {JSON.stringify(editRowsModel)}</code>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        editRowsModel={editRowsModel}
-        onEditRowModelChange={handleEditRowModelChange}
-      />
+      <div style={{ height: 400, width: '100%' }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          editRowsModel={editRowsModel}
+          onEditRowModelChange={handleEditRowModelChange}
+        />
+      </div>
     </div>
   );
 }

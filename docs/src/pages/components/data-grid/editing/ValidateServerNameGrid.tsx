@@ -11,8 +11,7 @@ import {
 } from '@material-ui/x-grid';
 
 const useStyles = makeStyles((theme: Theme) => {
-  const isDark =
-    getThemePaletteMode(theme.palette) === 'dark';
+  const isDark = getThemePaletteMode(theme.palette) === 'dark';
 
   return {
     root: {
@@ -20,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => {
         backgroundColor: isDark ? '#376331' : 'rgb(217 243 190)',
       },
       '& .Mui-error': {
-         backgroundColor: `rgb(126,10,15, ${isDark ? 0 : 0.1})`,
+        backgroundColor: `rgb(126,10,15, ${isDark ? 0 : 0.1})`,
         color: isDark ? '#ff4343' : '#750f0f',
       },
     },

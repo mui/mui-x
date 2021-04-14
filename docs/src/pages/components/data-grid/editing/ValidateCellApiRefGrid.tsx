@@ -12,8 +12,7 @@ import {
 import { randomEmail, randomTraderName } from '@material-ui/x-grid-data-generator';
 
 const useStyles = makeStyles((theme: Theme) => {
-  const isDark =
-    getThemePaletteMode(theme.palette) === 'dark';
+  const isDark = getThemePaletteMode(theme.palette) === 'dark';
 
   return {
     root: {

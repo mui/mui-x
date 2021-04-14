@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import {
-  DataGrid, getThemePaletteMode,
+  DataGrid,
+  getThemePaletteMode,
   GridColumns,
   GridEditCellPropsParams,
   GridEditRowsModel,
@@ -16,8 +17,7 @@ import {
 } from '@material-ui/x-grid-data-generator';
 
 const useStyles = makeStyles((theme: Theme) => {
-  const isDark =
-    getThemePaletteMode(theme.palette) === 'dark';
+  const isDark = getThemePaletteMode(theme.palette) === 'dark';
 
   return {
     root: {

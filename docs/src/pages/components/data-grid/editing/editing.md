@@ -48,7 +48,6 @@ If a cell is in edit mode and has focus, any of the following interactions will 
 - A mousedown outside the cell
 - A call to `apiRef.current.setCellMode(id, field, 'view')`.
 
-
 ### Control cell editability
 
 In addition to the `editable` flag on columns, control which cell is editable using the `isCellEditable` prop.
