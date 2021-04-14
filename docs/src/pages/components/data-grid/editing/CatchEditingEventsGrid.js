@@ -18,10 +18,10 @@ export default function CatchEditingEventsGrid() {
   const [message, setMessage] = React.useState('');
 
   React.useEffect(() => {
-    return apiRef.current.subscribeEvent(GRID_CELL_EDIT_ENTER, (param, event) => {
-      setMessage(`Editing cell with value: ${param.value} at row: ${param.rowIndex}, column: ${param.field},
-                        triggered by ${event.type}
-      `);
+    return apiRef.current.subscribeEvent(GRID_CELL_EDIT_ENTER, (params, event) => {
+      setMessage(
+        `Editing cell with value: ${params.value} at row: ${params.rowIndex}, column: ${params.field}, triggered by ${event.type}.`,
+      );
     });
   }, [apiRef]);
 
