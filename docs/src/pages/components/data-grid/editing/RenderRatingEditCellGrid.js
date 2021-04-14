@@ -4,15 +4,16 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Rating from '@material-ui/lab/Rating';
 import { DataGrid } from '@material-ui/data-grid';
-import { renderRating } from '@material-ui/x-grid-data-generator';
+
+function renderRating(params) {
+  return <Rating readOnly value={params.value} />;
+}
 
 const useStyles = makeStyles({
   root: {
-    display: 'inline-flex',
-    flexDirection: 'row',
+    display: 'flex',
     alignItems: 'center',
-    height: 48,
-    paddingLeft: 20,
+    paddingRight: 16,
   },
 });
 
