@@ -24,9 +24,9 @@ If a cell is editable and has focus, any of the following interactions will star
 - A <kbd class="key">Backspace</kbd> or <kbd class="key">Delete</kbd> keydown. It will also delete the value and stops the edit mode instantly.
 - A keydown of any printable key, for instance `a`, `E`, `0`, or `$`
 - A double click on the cell
-- A call to `apiRef.current.setCellMode()`.
+- A call to `apiRef.current.setCellMode(id, field, 'edit')`.
 
-```
+```tsx
  /**
   * Set the cellMode of a cell.
   * @param GridRowId
@@ -46,12 +46,14 @@ If a cell is in edit mode and has focus, any of the following interactions will 
 - A <kbd class="key">Tab</kbd> keydown. It will also save and goes to next cell on the same row.
 - A <kbd class="key">Enter</kbd> keydown. It will also save and goes to next cell on the same column.
 - A mousedown outside the cell
+- A call to `apiRef.current.setCellMode(id, field, 'view')`.
+
 
 ### Control cell editability
 
 In addition to the `editable` flag on columns, control which cell is editable using `isCellEditable` prop.
 
-In this demo, the column `Name` is not editable. Only the rows with an even `Age` value are editable.
+In this demo, only the rows with an even `Age` value are editable.
 The editable cells have a green background for better visibility.
 
 {{"demo": "pages/components/data-grid/editing/IsCellEditableGrid.js", "bg": "inline"}}
