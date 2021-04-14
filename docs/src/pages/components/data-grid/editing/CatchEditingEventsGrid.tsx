@@ -23,10 +23,10 @@ export default function CatchEditingEventsGrid() {
   React.useEffect(() => {
     return apiRef.current.subscribeEvent(
       GRID_CELL_EDIT_ENTER,
-      (param: GridCellParams, event?: React.SyntheticEvent) => {
-        setMessage(`Editing cell with value: ${param.value} at row: ${
-          param.rowIndex
-        }, column: ${param.field},
+      (params: GridCellParams, event?: React.SyntheticEvent) => {
+        setMessage(`Editing cell with value: ${params.value} at row: ${
+          params.rowIndex
+        }, column: ${params.field},
                         triggered by ${event!.type}
       `);
       },

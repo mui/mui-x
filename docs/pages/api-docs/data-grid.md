@@ -42,12 +42,12 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">logger</span> | <span class="prop-type">Logger</span> | null | Pass a custom logger in the components that implements the 'Logger' interface. |
 | <span class="prop-name">logLevel</span> | <span class="prop-type">string | false</span> | false | Allows to pass the logging level or false to turn off logging. |
 | <span class="prop-name">nonce</span> | <span class="prop-type">string</span> |   | Nonce of the inline styles for [Content Security Policy](https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute). |
-| <span class="prop-name">onCellClick</span> | <span class="prop-type">(param: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a click event comes from a cell element. |
-| <span class="prop-name">onCellDoubleClick</span> | <span class="prop-type">(param: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a double click event comes from a cell element. |
-| <span class="prop-name">onCellOver</span> | <span class="prop-type">(param: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse over event comes from a cell element. |
-| <span class="prop-name">onCellOut</span> | <span class="prop-type">(param: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse out comes from a cell element. |
-| <span class="prop-name">onCellEnter</span> | <span class="prop-type">(param: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse enter event comes from a cell element. |
-| <span class="prop-name">onCellLeave</span> | <span class="prop-type">(param: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse leave event comes from a cell element. |
+| <span class="prop-name">onCellClick</span> | <span class="prop-type">(params: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a click event comes from a cell element. |
+| <span class="prop-name">onCellDoubleClick</span> | <span class="prop-type">(params: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a double click event comes from a cell element. |
+| <span class="prop-name">onCellOver</span> | <span class="prop-type">(params: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse over event comes from a cell element. |
+| <span class="prop-name">onCellOut</span> | <span class="prop-type">(params: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse out comes from a cell element. |
+| <span class="prop-name">onCellEnter</span> | <span class="prop-type">(params: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse enter event comes from a cell element. |
+| <span class="prop-name">onCellLeave</span> | <span class="prop-type">(params: GridCellParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse leave event comes from a cell element. |
 | <span class="prop-name">onCellModeChange</span> | <span class="prop-type">(params: GridCellModeChangeParams) => void |   | Callback fired when the cell mode changed. |
 | <span class="prop-name">onColumnHeaderClick</span> | <span class="prop-type">(param: GridColumnHeaderParams, event: React.MouseEvent) => void</span> |   | Callback fired when a click event comes from a column header element. |
 | <span class="prop-name">onColumnHeaderDoubleClick</span> | <span class="prop-type">(param: GridColumnHeaderParams, event: React.MouseEvent) => void</span> |   | Callback fired when a double click event comes from a column header element. |

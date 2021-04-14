@@ -207,49 +207,49 @@ export interface GridOptions {
    * @param param With all properties from [[GridCellParams]].
    * @param event [[React.MouseEvent]].
    */
-  onCellBlur?: (param: GridCellParams, event: React.SyntheticEvent) => void;
+  onCellBlur?: (params: GridCellParams, event: React.SyntheticEvent) => void;
   /**
    * Callback fired when a click event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
    * @param event [[React.MouseEvent]].
    */
-  onCellClick?: (param: GridCellParams, event: React.MouseEvent) => void;
+  onCellClick?: (params: GridCellParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when a double click event comes from a cell element.
    * @param param With all properties from [[CellParams]].
    * @param event [[React.MouseEvent]].
    */
-  onCellDoubleClick?: (param: GridCellParams, event: React.MouseEvent) => void;
+  onCellDoubleClick?: (params: GridCellParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when a keydown event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
    * @param event [[React.KeyboardEvent]].
    */
-  onCellKeyDown?: (param: GridCellParams, event: React.KeyboardEvent) => void;
+  onCellKeyDown?: (params: GridCellParams, event: React.KeyboardEvent) => void;
   /**
    * Callback fired when a mouseover event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
    * @param event [[React.MouseEvent]].
    */
-  onCellOver?: (param: GridCellParams, event: React.MouseEvent) => void;
+  onCellOver?: (params: GridCellParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when a mouseout event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
    * @param event [[React.MouseEvent]].
    */
-  onCellOut?: (param: GridCellParams, event: React.MouseEvent) => void;
+  onCellOut?: (params: GridCellParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when a mouse enter event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
    * @param event [[React.MouseEvent]].
    */
-  onCellEnter?: (param: GridCellParams, event: React.MouseEvent) => void;
+  onCellEnter?: (params: GridCellParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when a mouse leave event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
    * @param event [[React.MouseEvent]].
    */
-  onCellLeave?: (param: GridCellParams, event: React.MouseEvent) => void;
+  onCellLeave?: (params: GridCellParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when the cell mode changed.
    * @param handler
