@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ErrorOverlay, ErrorOverlayProps } from '../components/ErrorOverlay';
+import { ErrorOverlay } from '../components/ErrorOverlay';
 import { GridFooter } from '../components/GridFooter';
 import { GridHeader } from '../components/GridHeader';
 import { GridPreferencesPanel } from '../components/panel/GridPreferencesPanel';
@@ -19,7 +19,7 @@ import {
   GridCheckIcon,
 } from '../components/icons/index';
 import { GridLoadingOverlay } from '../components/GridLoadingOverlay';
-import { GridColumnMenu, GridColumnMenuProps } from '../components/menu/columnMenu/GridColumnMenu';
+import { GridColumnMenu } from '../components/menu/columnMenu/GridColumnMenu';
 import { GridNoRowsOverlay } from '../components/GridNoRowsOverlay';
 import { GridPagination } from '../components/GridPagination';
 import { GridColumnsPanel } from '../components/panel/GridColumnsPanel';
