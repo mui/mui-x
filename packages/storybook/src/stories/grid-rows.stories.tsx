@@ -672,7 +672,7 @@ export function ValidateEditValueWithEditCellModelPropGrid() {
     </div>
   );
 }
-// Server  mock
+
 let promiseTimeout: any;
 function validateUsername(username: string): Promise<boolean> {
   const existingUsers = ['damien', 'olivier', 'danail'];
@@ -852,9 +852,9 @@ export function EditCellWithMessageGrid() {
   React.useEffect(() => {
     return apiRef.current.subscribeEvent(
       GRID_CELL_EDIT_ENTER,
-      (param: GridCellParams, event?: React.SyntheticEvent) => {
-        setMessage(`Editing cell with value: ${param.value} at row: ${param.rowIndex}, column: ${
-          param.field
+      (params: GridCellParams, event?: React.SyntheticEvent) => {
+        setMessage(`Editing cell with value: ${params.value} at row: ${params.rowIndex}, column: ${
+          params.field
         },
                         triggered by ${event!.type}
       `);
@@ -870,8 +870,8 @@ export function EditCellWithMessageGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid {...baselineEditProps} apiRef={apiRef} autoHeight />
       {message && <Alert severity="info">{message}</Alert>}
+      <XGrid {...baselineEditProps} apiRef={apiRef} autoHeight />
     </div>
   );
 }
