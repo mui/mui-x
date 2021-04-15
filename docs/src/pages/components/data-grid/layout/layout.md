@@ -5,7 +5,7 @@ components: DataGrid, XGrid
 
 # Data Grid - Layout
 
-<p class="description">The data-grid offers multiple layout mode</p>
+<p class="description">The data grid offers multiple layout mode.</p>
 
 By default, the grid has no intrinsic dimensions. It occupies the space its parent leaves.
 
