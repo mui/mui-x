@@ -3,7 +3,7 @@ import { GridApiRef, GridSortModel, useGridApiRef } from '@material-ui/data-grid
 import { XGrid } from '@material-ui/x-grid';
 import { expect } from 'chai';
 import { useFakeTimers } from 'sinon';
-import { getColumnValues } from 'test/utils/helperFn';
+import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
 import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
@@ -139,6 +139,15 @@ describe('<XGrid /> - Sorting', () => {
 
     apiRef.current.setSortModel(sortModel);
     expect(getColumnValues()).to.deep.equal(['Puma', 'Adidas', 'Nike']);
+  });
+
+  ['shiftKey', 'metaKey', 'ctrlKey'].forEach((key) => {
+    it(`should do a multi-sorting when clicking the header cell while the ${key} is pressed`, () => {
+      render(<TestCase sortModel={[{ field: 'year', sort: 'desc' }]} />);
+      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+      fireEvent.click(getColumnHeaderCell(1), { [key]: true });
+      expect(getColumnValues()).to.deep.equal(['Puma', 'Adidas', 'Nike']);
+    });
   });
 
   describe('performance', () => {

@@ -228,7 +228,8 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   );
 
   const headerClickHandler = React.useCallback(
-    ({ colDef }: GridColumnHeaderParams) => {
+    ({ colDef }: GridColumnHeaderParams, event: React.MouseEvent) => {
+      allowMultipleSorting.current = event.shiftKey || event.metaKey || event.ctrlKey;
       sortColumn(colDef);
     },
     [sortColumn],
