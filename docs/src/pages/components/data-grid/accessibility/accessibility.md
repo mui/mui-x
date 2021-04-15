@@ -76,9 +76,10 @@ Use the arrow keys to move the focus.
 
 ### Sorting
 
-|                              Keys | Description          |
-| --------------------------------: | :------------------- |
-| <kbd>CTRL</kbd> + Click on header | Enable multi-sorting |
+|                               Keys | Description          |
+| ---------------------------------: | :------------------- |
+|  <kbd>CTRL</kbd> + Click on header | Enable multi-sorting |
+| <kbd>Shift</kbd> + Click on header | Enable multi-sorting |
 
 ### Key assignment conventions
 
