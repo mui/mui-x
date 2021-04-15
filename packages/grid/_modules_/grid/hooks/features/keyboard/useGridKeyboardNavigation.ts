@@ -1,7 +1,9 @@
 import * as React from 'react';
 import {
+  GRID_CELL_BLUR,
   GRID_CELL_FOCUS,
   GRID_CELL_NAVIGATION_KEYDOWN,
+  GRID_COLUMN_HEADER_BLUR,
   GRID_COLUMN_HEADER_FOCUS,
   GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN,
 } from '../../../constants/eventsConstants';
@@ -262,6 +264,14 @@ export const useGridKeyboardNavigation = (
     [apiRef],
   );
 
+  const handleBlur = React.useCallback(() => {
+    logger.debug(`Clearing focus`);
+    setGridState((previousState) => ({
+      ...previousState,
+      keyboard: { ...previousState.keyboard, cell: null, columnHeader: null },
+    }));
+  }, [logger, setGridState]);
+
   useGridApiMethod<GridNavigationApi>(
     apiRef,
     {
@@ -271,6 +281,8 @@ export const useGridKeyboardNavigation = (
     'GridNavigationApi',
   );
   useGridApiEventHandler(apiRef, GRID_CELL_NAVIGATION_KEYDOWN, navigateCells);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_BLUR, handleBlur);
+  useGridApiEventHandler(apiRef, GRID_CELL_BLUR, handleBlur);
   useGridApiEventHandler(apiRef, GRID_CELL_FOCUS, handleCellFocus);
   useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN, navigateColumnHeaders);
   useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_FOCUS, handleColumnHeaderFocus);

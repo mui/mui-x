@@ -12,7 +12,9 @@ import {
   GRID_COLUMN_HEADER_DRAG_START,
   GRID_COLUMN_HEADER_DRAG_END,
   GRID_COLUMN_HEADER_FOCUS,
+  GRID_COLUMN_HEADER_BLUR,
 } from '../../constants/eventsConstants';
+import { gridKeyboardStateSelector } from '../../hooks/features/keyboard/gridKeyboardSelector';
 import { GridColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
 import { GridOptions } from '../../models/gridOptions';
 import { GridSortDirection } from '../../models/gridSortModel';
@@ -53,6 +55,7 @@ export const GridColumnHeaderItem = ({
   const apiRef = React.useContext(GridApiContext);
   const headerCellRef = React.useRef<HTMLDivElement>(null);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
+  const keyboardState = useGridSelector(apiRef, gridKeyboardStateSelector);
   const {
     disableColumnReorder,
     showColumnRightBorder,
@@ -93,6 +96,7 @@ export const GridColumnHeaderItem = ({
       onMouseLeave: publish(GRID_COLUMN_HEADER_LEAVE),
       onKeyDown: publish(GRID_COLUMN_HEADER_KEYDOWN),
       onFocus: publish(GRID_COLUMN_HEADER_FOCUS),
+      onBlur: publish(GRID_COLUMN_HEADER_BLUR),
     }),
     [publish],
   );
@@ -149,6 +153,10 @@ export const GridColumnHeaderItem = ({
     }
   });
 
+  const isFirstTabbable =
+    keyboardState.cell === null && keyboardState.columnHeader === null && colIndex === 0;
+  const tabIndex = hasFocus || isFirstTabbable ? 0 : -1;
+
   return (
     <div
       ref={headerCellRef}
@@ -161,7 +169,7 @@ export const GridColumnHeaderItem = ({
         maxWidth: width,
       }}
       role="columnheader"
-      tabIndex={hasFocus ? 0 : -1}
+      tabIndex={tabIndex}
       aria-colindex={colIndex + 1}
       {...ariaSort}
       {...mouseEventsHandlers}
