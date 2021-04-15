@@ -34,7 +34,7 @@ For the `XGrid`, you need to disable multiple row selection with `disableMultipl
 
 ### Multiple row selection [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
-To activate multiple selection, put focus the `XGrid` component and hold the <kbd>CTRL</kbd> key while selecting rows.
+To activate multiple selection, put focus the `XGrid` component and hold the <kbd class="key">CTRL</kbd> key while selecting rows.
 
 {{"demo": "pages/components/data-grid/selection/MultipleRowSelectionGrid.js", "disableAd": true, "bg": "inline"}}
 
