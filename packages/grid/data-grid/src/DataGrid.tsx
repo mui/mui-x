@@ -205,6 +205,7 @@ DataGrid2.propTypes = {
     }
     return null;
   }),
+  rows: PropTypes.array.isRequired,
 } as any;
 
 export const DataGrid = React.memo(DataGrid2);
