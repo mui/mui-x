@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { XGrid, GridColDef, GridRowId } from '@material-ui/x-grid';
+import { DataGrid, GridColDef, GridRowId } from '@material-ui/data-grid';
 
 export interface DataRowModel {
   id: GridRowId;
@@ -45,11 +45,11 @@ function useData(rowLength: number, columnLength: number) {
 }
 
 export default function ColumnVirtualizationGrid() {
-  const data = useData(500, 1000);
+  const data = useData(100, 1000);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <XGrid {...data} columnBuffer={2} hideFooter />
+      <DataGrid {...data} columnBuffer={2} />
     </div>
   );
 }
