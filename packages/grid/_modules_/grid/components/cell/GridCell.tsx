@@ -56,7 +56,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     width,
   } = props;
 
-  const valueToRender = formattedValue || value;
+  const valueToRender = formattedValue == null ? value : formattedValue;
   const cellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = React.useContext(GridApiContext);
   const currentFocusedCell = apiRef!.current.getState().keyboard.cell;
