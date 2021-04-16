@@ -3,7 +3,6 @@ import { GRID_ROW_CSS_CLASS } from '../../../constants/cssClassesConstants';
 import {
   GRID_CELL_KEYDOWN,
   GRID_CELL_NAVIGATION_KEYDOWN,
-  GRID_COLUMN_HEADER_CLICK,
   GRID_COLUMN_HEADER_KEYDOWN,
   GRID_ELEMENT_FOCUS_OUT,
   GRID_KEYDOWN,
@@ -207,15 +206,6 @@ export const useGridKeyboard = (
 
       if (isEnterKey(event.key) && (event.ctrlKey || event.metaKey)) {
         apiRef!.current.toggleColumnMenu(params.field);
-        return;
-      }
-
-      if (isEnterKey(event.key) || isSpaceKey(event.key)) {
-        apiRef.current.publishEvent(
-          GRID_COLUMN_HEADER_CLICK,
-          apiRef!.current.getColumnHeaderParams(params.field),
-          event,
-        );
       }
     },
     [apiRef],

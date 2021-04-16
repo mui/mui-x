@@ -148,12 +148,30 @@ describe('<XGrid /> - Sorting', () => {
 
   describe('multi-sorting', () => {
     ['shiftKey', 'metaKey', 'ctrlKey'].forEach((key) => {
-      it(`should do a multi-sorting if ${key} is pressed`, () => {
+      it(`should do a multi-sorting when clicking the header cell while ${key} is pressed`, () => {
         render(<TestCase sortModel={[{ field: 'year', sort: 'desc' }]} />);
         expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
         fireEvent.click(getColumnHeaderCell(1), { [key]: true });
         expect(getColumnValues()).to.deep.equal(['Puma', 'Adidas', 'Nike']);
       });
+    });
+
+    ['metaKey', 'ctrlKey'].forEach((key) => {
+      it(`should do nothing when pressing Enter while ${key} is pressed`, () => {
+        render(<TestCase sortModel={[{ field: 'year', sort: 'desc' }]} />);
+        expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+        getColumnHeaderCell(1).focus();
+        fireEvent.keyDown(getColumnHeaderCell(1), { key: 'Enter', [key]: true });
+        expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+      });
+    });
+
+    it('should do a multi-sorting pressing Enter while shiftKey is pressed', () => {
+      render(<TestCase sortModel={[{ field: 'year', sort: 'desc' }]} />);
+      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+      getColumnHeaderCell(1).focus();
+      fireEvent.keyDown(getColumnHeaderCell(1), { key: 'Enter', shiftKey: true });
+      expect(getColumnValues()).to.deep.equal(['Puma', 'Adidas', 'Nike']);
     });
 
     it(`should not do a multi-sorting if no multiple key is pressed`, () => {

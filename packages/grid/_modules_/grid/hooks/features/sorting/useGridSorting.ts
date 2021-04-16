@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   GRID_COLUMN_HEADER_CLICK,
+  GRID_COLUMN_HEADER_KEYDOWN,
   GRID_COLUMNS_UPDATED,
   GRID_ROWS_CLEARED,
   GRID_ROWS_SET,
@@ -23,6 +24,7 @@ import {
   GridSortCellParams,
 } from '../../../models/gridSortModel';
 import { isDesc, nextGridSortDirection } from '../../../utils/sortingUtils';
+import { isEnterKey, isMultipleKeyPressed } from '../../../utils/keyboardUtils';
 import { isDeepEqual } from '../../../utils/utils';
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
@@ -225,10 +227,19 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
     [upsertSortModel, setSortModel, createSortItem, options.disableMultipleColumnsSorting],
   );
 
-  const headerClickHandler = React.useCallback(
+  const handleColumnHeaderClick = React.useCallback(
     ({ colDef }: GridColumnHeaderParams, event: React.MouseEvent) => {
-      const isMultipleKeyPressed = event.shiftKey || event.metaKey || event.ctrlKey;
-      sortColumn(colDef, undefined, isMultipleKeyPressed);
+      sortColumn(colDef, undefined, isMultipleKeyPressed(event));
+    },
+    [sortColumn],
+  );
+
+  const handleColumnHeaderKeyDown = React.useCallback(
+    ({ colDef }: GridColumnHeaderParams, event: React.KeyboardEvent) => {
+      // CTRL + Enter opens the column menu
+      if (isEnterKey(event.key) && !event.ctrlKey && !event.metaKey) {
+        sortColumn(colDef, undefined, event.shiftKey);
+      }
     },
     [sortColumn],
   );
@@ -280,7 +291,8 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
     });
   }, [setGridState]);
 
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_CLICK, headerClickHandler);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_CLICK, handleColumnHeaderClick);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_KEYDOWN, handleColumnHeaderKeyDown);
   useGridApiEventHandler(apiRef, GRID_ROWS_SET, apiRef.current.applySorting);
   useGridApiEventHandler(apiRef, GRID_ROWS_CLEARED, onRowsCleared);
   useGridApiEventHandler(apiRef, GRID_ROWS_UPDATED, apiRef.current.applySorting);
