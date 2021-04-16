@@ -216,7 +216,7 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
         return;
       }
       const sortItem = createSortItem(column, direction);
-      let sortModel: GridSortItem[] | undefined;
+      let sortModel: GridSortItem[];
       if (!allowMultipleSorting || options.disableMultipleColumnsSorting) {
         sortModel = !sortItem ? [] : [sortItem];
       } else {
