@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   GRID_COLUMN_HEADER_CLICK,
   GRID_COLUMNS_UPDATED,
-  GRID_MULTIPLE_KEY_PRESS_CHANGED,
   GRID_ROWS_CLEARED,
   GRID_ROWS_SET,
   GRID_ROWS_UPDATED,
@@ -37,7 +36,6 @@ import { sortedGridRowIdsSelector, sortedGridRowsSelector } from './gridSortingS
 
 export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   const logger = useLogger('useGridSorting');
-  const allowMultipleSorting = React.useRef<boolean>(false);
   const comparatorList = React.useRef<GridFieldComparatorList>([]);
 
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
@@ -211,26 +209,26 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   );
 
   const sortColumn = React.useCallback(
-    (column: GridColDef, direction?: GridSortDirection) => {
+    (column: GridColDef, direction?: GridSortDirection, allowMultipleSorting?: boolean) => {
       if (!column.sortable) {
         return;
       }
       const sortItem = createSortItem(column, direction);
-      let sortModel: GridSortItem | GridSortItem[];
-      if (!allowMultipleSorting.current) {
+      let sortModel: GridSortItem[] | undefined;
+      if (!allowMultipleSorting || options.disableMultipleColumnsSorting) {
         sortModel = !sortItem ? [] : [sortItem];
       } else {
         sortModel = upsertSortModel(column.field, sortItem);
       }
       setSortModel(sortModel);
     },
-    [upsertSortModel, setSortModel, createSortItem],
+    [upsertSortModel, setSortModel, createSortItem, options.disableMultipleColumnsSorting],
   );
 
   const headerClickHandler = React.useCallback(
     ({ colDef }: GridColumnHeaderParams, event: React.MouseEvent) => {
-      allowMultipleSorting.current = event.shiftKey || event.metaKey || event.ctrlKey;
-      sortColumn(colDef);
+      const isMultipleKeyPressed = event.shiftKey || event.metaKey || event.ctrlKey;
+      sortColumn(colDef, undefined, isMultipleKeyPressed);
     },
     [sortColumn],
   );
@@ -253,13 +251,6 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   const getSortedRowIds = React.useCallback(
     (): GridRowId[] => sortedGridRowIdsSelector(apiRef.current.state),
     [apiRef],
-  );
-
-  const onMultipleKeyPressed = React.useCallback(
-    (isPressed: boolean) => {
-      allowMultipleSorting.current = !options.disableMultipleColumnsSorting && isPressed;
-    },
-    [options.disableMultipleColumnsSorting],
   );
 
   const onSortModelChange = React.useCallback(
@@ -294,7 +285,6 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   useGridApiEventHandler(apiRef, GRID_ROWS_CLEARED, onRowsCleared);
   useGridApiEventHandler(apiRef, GRID_ROWS_UPDATED, apiRef.current.applySorting);
   useGridApiEventHandler(apiRef, GRID_COLUMNS_UPDATED, onColUpdated);
-  useGridApiEventHandler(apiRef, GRID_MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
 
   useGridApiOptionHandler(apiRef, GRID_SORT_MODEL_CHANGE, options.onSortModelChange);
 
