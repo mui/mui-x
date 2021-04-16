@@ -66,16 +66,6 @@ export const useGridKeyboard = (
     [apiRef, forceUpdate, logger, setGridState],
   );
 
-  const selectActiveRow = React.useCallback(() => {
-    const rowEl = findParentElementFromClassName(
-      document.activeElement as HTMLDivElement,
-      GRID_ROW_CSS_CLASS,
-    )! as HTMLElement;
-
-    const rowId = getIdFromRowElem(rowEl);
-    apiRef.current.selectRow(rowId);
-  }, [apiRef]);
-
   const expandSelection = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
       const rowEl = findParentElementFromClassName(
@@ -164,7 +154,7 @@ export const useGridKeyboard = (
 
       if (isSpaceKey(event.key) && event.shiftKey) {
         event.preventDefault();
-        selectActiveRow();
+        apiRef.current.selectRow(params.id);
         return;
       }
 
@@ -189,7 +179,7 @@ export const useGridKeyboard = (
         apiRef.current.selectRows(apiRef.current.getAllRowIds(), true);
       }
     },
-    [apiRef, expandSelection, handleCopy, selectActiveRow],
+    [apiRef, expandSelection, handleCopy],
   );
 
   const handleColumnHeaderKeyDown = React.useCallback(

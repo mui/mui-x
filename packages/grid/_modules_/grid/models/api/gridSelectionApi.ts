@@ -9,10 +9,10 @@ export interface GridSelectionApi {
   /**
    * Toggle the row selected state.
    * @param id
-   * @param allowMultiple Default: false = deselect other rows if isSelected is true
    * @param isSelected Default true
+   * @param allowMultiple Default: false = deselect other rows if isSelected is true
    */
-  selectRow: (id: GridRowId, allowMultiple?: boolean, isSelected?: boolean) => void;
+  selectRow: (id: GridRowId, isSelected?: boolean, allowMultiple?: boolean) => void;
   /**
    * Batch toggle rows selected state.
    * @param ids
