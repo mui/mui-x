@@ -76,10 +76,10 @@ Use the arrow keys to move the focus.
 
 ### Sorting
 
-|                                           Keys | Description          |
-| ---------------------------------------------: | :------------------- |
-|  <kbd class="key">CTRL</kbd> + Click on header | Enable multi-sorting |
-| <kbd class="key">Shift</kbd> + Click on header | Enable multi-sorting |
+|                                                        Keys | Description                                        |
+| ----------------------------------------------------------: | :------------------------------------------------- |
+|               <kbd class="key">CTRL</kbd> + Click on header | Enable multi-sorting                               |
+|              <kbd class="key">Shift</kbd> + Click on header | Enable multi-sorting                               |
 | <kbd class="key">Shift</kbd> + <kbd class="key">Enter</kbd> | Enable multi-sorting when column header is focused |
 
 ### Key assignment conventions
