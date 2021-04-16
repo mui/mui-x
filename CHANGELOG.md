@@ -444,7 +444,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [DataGrid] Add support for Material-UI v5-alpha (#855) @DanailH
 - [DataGrid] Fix footer count not shown on small screen (#899) @mnajdova
 - [DataGrid] Fix column selector crash when hiding columns (#875) @DanailH
-- [DataGrid] Fix <kbd class="key">Shift</kbd> + <kbd class="key">Space</kbd> keyboard regression to select row (#897) @dtassone
+- [DataGrid] Fix <kbd>Shift</kbd> + <kbd>Space</kbd> keyboard regression to select row (#897) @dtassone
 
 ### docs
 
