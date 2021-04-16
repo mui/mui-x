@@ -5,7 +5,7 @@ components: DataGrid, XGrid
 
 # Data Grid - Components
 
-<p class="description">The grid is highly customizable. Override components using the `components` prop.</p>
+<p class="description">The grid is highly customizable. Override components using the <code>components</code> prop.</p>
 
 
 As part of the customization API, the grid allows you to replace and override nested components with the `components` prop.
