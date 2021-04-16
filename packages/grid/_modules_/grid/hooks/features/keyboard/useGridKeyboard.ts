@@ -8,7 +8,6 @@ import {
   GRID_ELEMENT_FOCUS_OUT,
   GRID_KEYDOWN,
   GRID_KEYUP,
-  GRID_MULTIPLE_KEY_PRESS_CHANGED,
   GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
@@ -61,9 +60,8 @@ export const useGridKeyboard = (
       }
 
       forceUpdate();
-      apiRef.current.publishEvent(GRID_MULTIPLE_KEY_PRESS_CHANGED, isPressed);
     },
-    [apiRef, forceUpdate, logger, setGridState],
+    [forceUpdate, logger, setGridState],
   );
 
   const selectActiveRow = React.useCallback(() => {
