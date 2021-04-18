@@ -24,7 +24,6 @@
     "typescript": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "@material-ui/core": "^4.9.12 || ^5.0.0-alpha.22",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.54",
     "@types/chance": "^1.1.0",
@@ -36,6 +35,9 @@
   "devDependencies": {
     "esm": "^3.2.25",
     "yargs": "^16.2.0"
+  },
+  "peerDependencies": {
+    "@material-ui/core": "^4.9.12 || ^5.0.0-alpha.22"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
