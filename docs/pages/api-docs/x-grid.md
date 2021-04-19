@@ -13,12 +13,13 @@ import { XGrid } from '@material-ui/x-grid';
 
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
+| <span class="prop-name required">columns<abbr title="required">*</abbr></span> | <span class="prop-type">GridColumns</span> |   | Set of columns of type 'GridColumns'. |
+| <span class="prop-name required">rows<abbr title="required">*</abbr></span> | <span class="prop-type">GridRowsProp</span> |  | Set of rows of type 'GridRowsProp'. |
 | <span class="prop-name">apiRef</span> | <span class="prop-type">GridApiRef</span> |   | The ref object that allows grid manipulation. Can be instantiated with 'useGridApiRef()'. |
 | <span class="prop-name">autoHeight</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid height is dynamic and follow the number of rows in the grid. |
 | <span class="prop-name">autoPageSize</span> | <span class="prop-type">boolean</span> | false | If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar. |
 | <span class="prop-name">checkboxSelection</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid get a first column with a checkbox that allows to select rows. |
 | <span class="prop-name">className</span> | <span class="prop-type">string</span> |   | Css classname to add on the outer container. |
-| <span class="prop-name required">columns<abbr title="required">*</abbr></span> | <span class="prop-type">GridColumns</span> |   | Set of columns of type 'GridColumns'. |
 | <span class="prop-name">columnBuffer</span> | <span class="prop-type">number</span> | 2 | Number of columns rendered outside the grid viewport. |
 | <span class="prop-name">columnTypes</span> | <span class="prop-type">GridColumnTypesRecord</span> |   | Extend native column types with your new column types. |
 | <span class="prop-name">components</span> | <span class="prop-type">GridSlotsComponent</span> |   | Overrideable components slots. |
@@ -80,7 +81,6 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">pageSize</span> | <span class="prop-type">number</span> | 100 | Set the number of rows in one page. |
 | <span class="prop-name">pagination</span> | <span class="prop-type">boolean</span> | false | If `true`, pagination is enabled. |
 | <span class="prop-name">paginationMode</span> | <span class="prop-type">GridFeatureMode</span> | 'client' | Pagination can be processed on the server or client-side. Set it to 'client' if you would like to handle the pagination on the client-side. Set it to 'server' if you would like to handle the pagination on the server-side. |
-| <span class="prop-name required">rows<abbr title="required">*</abbr></span> | <span class="prop-type">GridRowsProp</span> |  | Set of rows of type 'GridRowsProp'. |
 | <span class="prop-name">rowCount</span> | <span class="prop-type">number</span> |   |  Set the total number of rows, if it is different than the length of the value `rows` prop. |
 | <span class="prop-name">rowHeight</span> | <span class="prop-type">number</span> | 52 | Set the height in pixel of a row in the grid. |
 | <span class="prop-name">rowsPerPageOptions</span> | <span class="prop-type">number[]</span> | [25, 50, 100] | Select the pageSize dynamically using the component UI. |
