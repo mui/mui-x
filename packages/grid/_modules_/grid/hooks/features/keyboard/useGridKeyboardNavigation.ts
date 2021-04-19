@@ -1,14 +1,9 @@
 import * as React from 'react';
 import {
-  GRID_CELL_BLUR,
-  GRID_CELL_FOCUS,
   GRID_CELL_NAVIGATION_KEYDOWN,
-  GRID_COLUMN_HEADER_BLUR,
-  GRID_COLUMN_HEADER_FOCUS,
   GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { GridFocusApi } from '../../../models/api/gridFocusApi';
 import {
   GridCellIndexCoordinates,
   GridColumnHeaderIndexCoordinates,
@@ -23,11 +18,9 @@ import {
   isTabKey,
 } from '../../../utils/keyboardUtils';
 import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { visibleGridColumnsLengthSelector } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
-import { useGridState } from '../core/useGridState';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { useLogger } from '../../utils/useLogger';

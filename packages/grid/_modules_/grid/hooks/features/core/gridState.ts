@@ -18,10 +18,7 @@ import {
   VisibleGridRowsState,
 } from '../filter/visibleGridRowsState';
 import { GridFocusState, GridTabIndexState } from '../focus/gridFocusState';
-import {
-  GridKeyboardState,
-
-} from '../keyboard/gridKeyboardState';
+import { GridKeyboardState } from '../keyboard/gridKeyboardState';
 import {
   GRID_INITIAL_PAGINATION_STATE,
   GridPaginationState,

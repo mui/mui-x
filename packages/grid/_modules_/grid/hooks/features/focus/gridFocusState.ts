@@ -1,4 +1,7 @@
-import { GridCellIndexCoordinates, GridColumnHeaderIndexCoordinates } from '../../../models/gridCell';
+import {
+  GridCellIndexCoordinates,
+  GridColumnHeaderIndexCoordinates,
+} from '../../../models/gridCell';
 
 export interface GridFocusState {
   cell: GridCellIndexCoordinates | null;

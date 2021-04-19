@@ -9,4 +9,3 @@ export const gridKeyboardMultipleKeySelector = createSelector<
   GridKeyboardState,
   boolean
 >(gridKeyboardStateSelector, (keyboard: GridKeyboardState) => keyboard.isMultipleKeyPressed);
-

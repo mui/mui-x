@@ -25,7 +25,6 @@ import {
   isMultipleKey,
   isNavigationKey,
   isSpaceKey,
-  isTabKey,
 } from '../../../utils/keyboardUtils';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';

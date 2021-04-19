@@ -164,7 +164,6 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
       data-mode={cellMode}
       aria-colindex={colIndex}
       style={style}
-      /* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */
       tabIndex={tabIndex}
       {...eventsHandlers}
     >
