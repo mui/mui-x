@@ -3,12 +3,10 @@ import { GRID_ROW_CSS_CLASS } from '../../../constants/cssClassesConstants';
 import {
   GRID_CELL_KEYDOWN,
   GRID_CELL_NAVIGATION_KEYDOWN,
-  GRID_COLUMN_HEADER_CLICK,
   GRID_COLUMN_HEADER_KEYDOWN,
   GRID_ELEMENT_FOCUS_OUT,
   GRID_KEYDOWN,
   GRID_KEYUP,
-  GRID_MULTIPLE_KEY_PRESS_CHANGED,
   GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
@@ -61,9 +59,8 @@ export const useGridKeyboard = (
       }
 
       forceUpdate();
-      apiRef.current.publishEvent(GRID_MULTIPLE_KEY_PRESS_CHANGED, isPressed);
     },
-    [apiRef, forceUpdate, logger, setGridState],
+    [forceUpdate, logger, setGridState],
   );
 
   const expandSelection = React.useCallback(
@@ -199,15 +196,6 @@ export const useGridKeyboard = (
 
       if (isEnterKey(event.key) && (event.ctrlKey || event.metaKey)) {
         apiRef!.current.toggleColumnMenu(params.field);
-        return;
-      }
-
-      if (isEnterKey(event.key) || isSpaceKey(event.key)) {
-        apiRef.current.publishEvent(
-          GRID_COLUMN_HEADER_CLICK,
-          apiRef!.current.getColumnHeaderParams(params.field),
-          event,
-        );
       }
     },
     [apiRef],
