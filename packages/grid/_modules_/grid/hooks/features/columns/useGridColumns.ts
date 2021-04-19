@@ -196,6 +196,16 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
     [apiRef, gridState.columns, logger, updateState],
   );
 
+  const setColumnWidth = React.useCallback(
+    (field: string, width: number) => {
+      logger.debug(`Updating column ${field} width to ${width}`);
+
+      const column = apiRef.current.getColumnFromField(field);
+      updateColumn({ ...column, width });
+    },
+    [apiRef, logger, updateColumn],
+  );
+
   const colApi: GridColumnApi = {
     getColumnFromField,
     getAllColumns,
@@ -207,6 +217,7 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
     updateColumns,
     toggleColumn,
     setColumnIndex,
+    setColumnWidth,
   };
 
   useGridApiMethod(apiRef, colApi, 'ColApi');
