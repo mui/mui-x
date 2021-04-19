@@ -68,7 +68,7 @@ export const FeedGrid = (props: FeedGridProps) => {
         </button>
       </div>
       <div style={{ width: 800, height: 600 }}>
-        <XGrid rows={rows} columns={columns} apiRef={apiRef} {...p} getRowId={getRowId} />
+        <XGrid rows={rows} columns={columns} apiRef={apiRef} {...props} getRowId={getRowId} />
       </div>
     </React.Fragment>
   );
