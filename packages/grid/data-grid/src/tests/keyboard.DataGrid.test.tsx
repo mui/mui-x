@@ -26,6 +26,7 @@ import { GridColumns } from 'packages/grid/_modules_/grid/models/colDef/gridColD
 
 const SPACE_KEY = { key: ' ' };
 const SHIFT_SPACE_KEY = { ...SPACE_KEY, shiftKey: true };
+const NO_LAYOUT = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Keyboard', () => {
   // TODO v5: replace with createClientRender
@@ -133,7 +134,11 @@ describe('<DataGrid /> - Keyboard', () => {
 
     return (
       <div style={{ width: 300, height: 360 }}>
-        <DataGrid autoHeight rows={data.rows} columns={transformColSizes(data.columns)} />
+        <DataGrid
+          autoHeight={NO_LAYOUT}
+          rows={data.rows}
+          columns={transformColSizes(data.columns)}
+        />
       </div>
     );
   };
@@ -222,7 +227,11 @@ describe('<DataGrid /> - Keyboard', () => {
 
     render(
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid autoHeight rows={baselineProps.rows} columns={baselineProps.columns} />
+        <DataGrid
+          autoHeight={NO_LAYOUT}
+          rows={baselineProps.rows}
+          columns={baselineProps.columns}
+        />
       </div>,
     );
 

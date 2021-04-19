@@ -9,7 +9,7 @@ describe('<DataGrid /> - State', () => {
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
-    autoHeight: true,
+    autoHeight: /jsdom/.test(window.navigator.userAgent),
     rows: [
       {
         id: 0,

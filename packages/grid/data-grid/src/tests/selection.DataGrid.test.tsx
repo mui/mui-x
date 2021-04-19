@@ -6,6 +6,8 @@ import { spy } from 'sinon';
 import { DataGrid } from '@material-ui/data-grid';
 import { getCell, getRow } from 'test/utils/helperFn';
 
+const NO_LAYOUT = /jsdom/.test(window.navigator.userAgent);
+
 describe('<DataGrid /> - Selection', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
@@ -15,7 +17,7 @@ describe('<DataGrid /> - Selection', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
-            autoHeight
+            autoHeight={NO_LAYOUT}
             rows={[
               {
                 id: 0,
@@ -46,7 +48,7 @@ describe('<DataGrid /> - Selection', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
-            autoHeight
+            autoHeight={NO_LAYOUT}
             rows={[]}
             checkboxSelection
             columns={[{ field: 'brand', width: 100 }]}
@@ -65,7 +67,7 @@ describe('<DataGrid /> - Selection', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGrid
-            autoHeight
+            autoHeight={NO_LAYOUT}
             rows={[
               {
                 id: 0,
@@ -102,7 +104,7 @@ describe('<DataGrid /> - Selection', () => {
       function Demo(props) {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid autoHeight {...data} selectionModel={props.selectionModel} />
+            <DataGrid autoHeight={NO_LAYOUT} {...data} selectionModel={props.selectionModel} />
           </div>
         );
       }

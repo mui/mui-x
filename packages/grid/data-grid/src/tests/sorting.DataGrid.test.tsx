@@ -10,12 +10,14 @@ import { expect } from 'chai';
 import { DataGrid, DataGridProps } from '@material-ui/data-grid';
 import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
 
+const NO_LAYOUT = /jsdom/.test(window.navigator.userAgent);
+
 describe('<DataGrid /> - Sorting', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
-    autoHeight: true,
+    autoHeight: NO_LAYOUT,
     rows: [
       {
         id: 0,
@@ -42,7 +44,7 @@ describe('<DataGrid /> - Sorting', () => {
 
     render(
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid autoHeight columns={cols} rows={rows} />
+        <DataGrid autoHeight={NO_LAYOUT} columns={cols} rows={rows} />
       </div>,
     );
     expect(getColumnValues()).to.deep.equal(['10', '0', '5']);
@@ -55,7 +57,7 @@ describe('<DataGrid /> - Sorting', () => {
     function Demo(props) {
       return (
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid autoHeight columns={cols} sortingMode="server" {...props} />
+          <DataGrid autoHeight={NO_LAYOUT} columns={cols} sortingMode="server" {...props} />
         </div>
       );
     }
@@ -191,7 +193,7 @@ describe('<DataGrid /> - Sorting', () => {
       const { rows, columns } = props;
       return (
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid autoHeight rows={rows} columns={columns} />
+          <DataGrid autoHeight={NO_LAYOUT} rows={rows} columns={columns} />
         </div>
       );
     };
