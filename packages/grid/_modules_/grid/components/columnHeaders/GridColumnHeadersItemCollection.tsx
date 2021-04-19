@@ -3,7 +3,7 @@ import { GRID_COL_RESIZE_START, GRID_COL_RESIZE_STOP } from '../../constants/eve
 import { gridColumnReorderDragColSelector } from '../../hooks/features/columnReorder/columnReorderSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { filterGridColumnLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
-import { gridKeyboardColumnHeaderSelector } from '../../hooks/features/keyboard/gridKeyboardSelector';
+import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { gridSortColumnLookupSelector } from '../../hooks/features/sorting/gridSortingSelector';
 import { renderStateSelector } from '../../hooks/features/virtualization/renderingStateSelector';
 import { useGridApiEventHandler } from '../../hooks/root/useGridApiEventHandler';
@@ -24,8 +24,9 @@ export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemColl
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const filterColumnLookup = useGridSelector(apiRef, filterGridColumnLookupSelector);
   const dragCol = useGridSelector(apiRef, gridColumnReorderDragColSelector);
-  const columnHeaderFocus = useGridSelector(apiRef, gridKeyboardColumnHeaderSelector);
+  const columnHeaderFocus = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
   const renderCtx = useGridSelector(apiRef, renderStateSelector).renderContext;
+  const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
 
   const handleResizeStart = React.useCallback((params) => {
     setResizingColField(params.field);
@@ -57,6 +58,12 @@ export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemColl
       colIndex={getColIndex(idx)}
       isResizing={resizingColField === col.field}
       hasFocus={columnHeaderFocus !== null && columnHeaderFocus.colIndex === getColIndex(idx)}
+      tabIndex={
+        (tabIndexState !== null && tabIndexState.colIndex === getColIndex(idx)) ||
+        (getColIndex(idx) === 0 && tabIndexState === null)
+          ? 0
+          : -1
+      }
     />
   ));
 

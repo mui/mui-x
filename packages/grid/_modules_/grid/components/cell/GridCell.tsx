@@ -35,6 +35,7 @@ export interface GridCellProps {
   value?: GridCellValue;
   width: number;
   cellMode?: GridCellMode;
+  tabIndex: 0 | -1;
 }
 
 export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
@@ -52,6 +53,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     rowIndex,
     rowId,
     showRightBorder,
+    tabIndex,
     value,
     width,
   } = props;
@@ -163,7 +165,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
       aria-colindex={colIndex}
       style={style}
       /* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */
-      tabIndex={hasFocus ? 0 : -1}
+      tabIndex={tabIndex}
       {...eventsHandlers}
     >
       {children || valueToRender?.toString()}

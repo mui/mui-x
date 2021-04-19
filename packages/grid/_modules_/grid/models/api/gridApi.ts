@@ -1,6 +1,6 @@
 import { ColumnMenuApi } from './columnMenuApi';
 import { ColumnResizeApi } from './columnResizeApi';
-import { GridNavigationApi } from './gridNavigationApi';
+import { GridFocusApi } from './gridFocusApi';
 import { GridParamsApi } from './gridParamsApi';
 import { GridComponentsApi } from './gridComponentsApi';
 import { FilterApi } from './filterApi';
@@ -36,7 +36,7 @@ export type GridApi = GridCoreApi &
   GridVirtualizationApi &
   GridPaginationApi &
   GridCsvExportApi &
-  GridNavigationApi &
+  GridFocusApi &
   FilterApi &
   ColumnMenuApi &
   ColumnResizeApi &

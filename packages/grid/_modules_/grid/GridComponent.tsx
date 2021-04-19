@@ -19,6 +19,7 @@ import { GridComponentProps } from './GridComponentProps';
 import { useGridColumnMenu } from './hooks/features/columnMenu/useGridColumnMenu';
 import { useGridColumns } from './hooks/features/columns/useGridColumns';
 import { useGridState } from './hooks/features/core/useGridState';
+import { useGridFocus } from './hooks/features/focus/useGridFocus';
 import { useGridKeyboardNavigation } from './hooks/features/keyboard/useGridKeyboardNavigation';
 import { useGridPagination } from './hooks/features/pagination/useGridPagination';
 import { useGridPreferencesPanel } from './hooks/features/preferencesPanel/useGridPreferencesPanel';
@@ -80,6 +81,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useGridParamsApi(apiRef);
     useGridRows(apiRef, props.rows, props.getRowId);
     useGridEditRows(apiRef);
+    useGridFocus(apiRef);
     useGridKeyboard(rootContainerRef, apiRef);
     useGridKeyboardNavigation(rootContainerRef, apiRef);
     useGridSelection(apiRef);

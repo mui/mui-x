@@ -14,7 +14,6 @@ import {
   GRID_COLUMN_HEADER_FOCUS,
   GRID_COLUMN_HEADER_BLUR,
 } from '../../constants/eventsConstants';
-import { gridKeyboardStateSelector } from '../../hooks/features/keyboard/gridKeyboardSelector';
 import { GridColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
 import { GridOptions } from '../../models/gridOptions';
 import { GridSortDirection } from '../../models/gridSortModel';
@@ -39,6 +38,7 @@ interface GridColumnHeaderItemProps {
   options: GridOptions;
   filterItemsCounter?: number;
   hasFocus?: boolean;
+  tabIndex: 0 | -1;
 }
 
 export const GridColumnHeaderItem = ({
@@ -51,11 +51,11 @@ export const GridColumnHeaderItem = ({
   options,
   filterItemsCounter,
   hasFocus,
+  tabIndex,
 }: GridColumnHeaderItemProps) => {
   const apiRef = React.useContext(GridApiContext);
   const headerCellRef = React.useRef<HTMLDivElement>(null);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
-  const keyboardState = useGridSelector(apiRef, gridKeyboardStateSelector);
   const {
     disableColumnReorder,
     showColumnRightBorder,
@@ -152,10 +152,6 @@ export const GridColumnHeaderItem = ({
       headerCellRef.current!.focus();
     }
   });
-
-  const isFirstTabbable =
-    keyboardState.cell === null && keyboardState.columnHeader === null && colIndex === 0;
-  const tabIndex = hasFocus || isFirstTabbable ? 0 : -1;
 
   return (
     <div
