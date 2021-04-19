@@ -174,12 +174,17 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(isSelected).to.equal(true);
   });
 
-  it('Space only should go to the bottom of the page', () => {
+  it('Space only should go to the bottom of the page', function test() {
+    if (/jsdom/.test(window.navigator.userAgent)) {
+      // Need layouting for row virtualization
+      this.skip();
+    }
+
     render(<KeyboardTest />);
     getCell(0, 0).focus();
     expect(getActiveCell()).to.equal('0-0');
-    fireEvent.keyDown(document.activeElement!, SPACE_KEY);
-    expect(getActiveCell()).to.equal('19-0');
+    fireEvent.keyDown(document.activeElement!, { key: ' ' });
+    expect(getActiveCell()).to.equal('4-0');
   });
 
   it('Space only should go to the bottom of the page even with small number of rows', () => {
