@@ -63,7 +63,7 @@ describe('e2e', () => {
 
   describe('<DataGrid />', () => {
     it('should select cell 0-0 when pressing tab key', async () => {
-      await renderFixture('KeyboardNavigation/GridFocus');
+      await renderFixture('DataGrid/KeyboardNavigationFocus');
 
       expect(
         await page.evaluate(() => document.activeElement?.getAttribute('data-testid')),

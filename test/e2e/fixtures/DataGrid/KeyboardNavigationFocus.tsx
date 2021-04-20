@@ -19,7 +19,7 @@ const baselineProps = {
   columns: [{ field: 'brand', width: 100 }],
 };
 
-export default function BaseGridFocus() {
+export default function KeyboardNavigationFocus() {
   return (
     <React.Fragment>
       <button type="button" autoFocus data-testid="initial-focus">
