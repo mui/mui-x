@@ -38,8 +38,11 @@ describe('e2e', () => {
   let browser: playwright.Browser;
   let page: playwright.Page;
 
+  async function renderFixture(fixturePath: string) {
+    await page.goto(`${baseUrl}/e2e/${fixturePath}#no-dev`);
+  }
+
   before(async function beforeHook() {
-    console.log(123123);
     this.timeout(20000);
 
     browser = await playwright.chromium.launch({
@@ -58,9 +61,16 @@ describe('e2e', () => {
     await browser.close();
   });
 
-  describe('<Test />', () => {
-    it('test', () => {
-      expect(true).to.equal(true);
+  describe('<DataGrid />', () => {
+    it('should select cell 0-0 when pressing tab key', async () => {
+      await renderFixture('KeyboardNavigation/GridFocus');
+
+      expect(
+        await page.evaluate(() => document.activeElement?.getAttribute('data-testid')),
+      ).to.equal('initial-focus');
+
+      await page.keyboard.press('Tab');
+      expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('Nike');
     });
   });
 });
