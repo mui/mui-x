@@ -9,4 +9,5 @@ export * from './frFR';
 export * from './jaJP';
 export * from './plPL';
 export * from './ptBR';
+export * from './ruRU';
 export * from './ukUA';
