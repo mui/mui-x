@@ -102,27 +102,34 @@ export const useStyles = makeStyles(
           display: 'flex',
           alignItems: 'center',
         },
-        '& .MuiDataGrid-colCellTitleContainer': {
-          textOverflow: 'ellipsis',
-          overflow: 'hidden',
-          whiteSpace: 'nowrap',
-          display: 'inline-flex',
-          flex: 1,
+        '& .MuiDataGrid-colCell:not(.MuiDataGrid-colCellSorted) .MuiDataGrid-sortIcon': {
+          opacity: 0,
+          transition: theme.transitions.create(['opacity'], {
+            duration: theme.transitions.duration.shorter,
+          }),
         },
-        '& .MuiDataGrid-colCellNumeric .MuiDataGrid-iconButtonContainer': {
-          paddingRight: 5,
+        '& .MuiDataGrid-colCell:not(.MuiDataGrid-colCellSorted):hover .MuiDataGrid-sortIcon': {
+          opacity: 0.5,
+        },
+        '& .MuiDataGrid-colCellTitleContainer': {
+          display: 'flex',
+          alignItems: 'center',
+          minWidth: 0,
+          flex: 1,
+          whiteSpace: 'nowrap',
         },
         '& .MuiDataGrid-colCellSortable': {
           cursor: 'pointer',
         },
-        '& .MuiDataGrid-sortIcon': {
-          fontSize: 18,
-        },
         '& .MuiDataGrid-colCellCenter .MuiDataGrid-colCellTitleContainer': {
           justifyContent: 'center',
         },
-        '& .MuiDataGrid-colCellRight .MuiDataGrid-colCellTitleContainer': {
-          justifyContent: 'flex-end',
+        '& .MuiDataGrid-colCellRight .MuiDataGrid-colCell-draggable, & .MuiDataGrid-colCellRight .MuiDataGrid-colCellTitleContainer': {
+          flexDirection: 'row-reverse',
+        },
+        '& .MuiDataGrid-colCellCenter .MuiDataGrid-menuIcon, & .MuiDataGrid-colCellRight .MuiDataGrid-menuIcon': {
+          marginRight: 'auto',
+          marginLeft: -6,
         },
         '& .MuiDataGrid-colCellTitle': {
           textOverflow: 'ellipsis',
@@ -317,7 +324,6 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-colCell-draggable': {
           display: 'flex',
           width: '100%',
-          justifyContent: 'inherit',
         },
         '& .MuiDataGrid-colCell-dragging': {
           background: theme.palette.background.paper,

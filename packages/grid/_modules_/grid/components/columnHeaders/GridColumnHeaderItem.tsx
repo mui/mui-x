@@ -138,17 +138,18 @@ export const GridColumnHeaderItem = React.memo(
       };
     }
 
+    const columnMenuIconButton = !disableColumnMenu && !column.disableColumnMenu && (
+      <ColumnHeaderMenuIcon column={column} />
+    );
+
     const columnTitleIconButtons = (
       <React.Fragment>
-        <GridColumnHeaderSortIcon
-          direction={sortDirection}
-          index={sortIndex}
-          hide={column.hideSortIcons}
-        />
         <ColumnHeaderFilterIcon counter={filterItemsCounter} />
+        {column.sortable && !column.hideSortIcons && (
+          <GridColumnHeaderSortIcon direction={sortDirection} index={sortIndex} />
+        )}
       </React.Fragment>
     );
-    const columnMenuIconButton = <ColumnHeaderMenuIcon column={column} />;
 
     React.useLayoutEffect(() => {
       const columnMenuState = apiRef!.current.getState().columnMenu;
@@ -186,12 +187,7 @@ export const GridColumnHeaderItem = React.memo(
           draggable={!disableColumnReorder}
           {...draggableEventHandlers}
         >
-          {!disableColumnMenu &&
-            isColumnNumeric &&
-            !column.disableColumnMenu &&
-            columnMenuIconButton}
           <div className="MuiDataGrid-colCellTitleContainer">
-            {isColumnNumeric && columnTitleIconButtons}
             {headerComponent || (
               <GridColumnHeaderTitle
                 label={column.headerName || column.field}
@@ -199,12 +195,9 @@ export const GridColumnHeaderItem = React.memo(
                 columnWidth={width}
               />
             )}
-            {!isColumnNumeric && columnTitleIconButtons}
+            {columnTitleIconButtons}
           </div>
-          {!isColumnNumeric &&
-            !disableColumnMenu &&
-            !column.disableColumnMenu &&
-            columnMenuIconButton}
+          {columnMenuIconButton}
         </div>
         <GridColumnHeaderSeparator
           resizable={!disableColumnResize && !!column.resizable}
