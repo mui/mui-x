@@ -20,4 +20,3 @@ export const GridStickyContainer = (props: GridStickyContainerProps) => {
     </div>
   );
 };
-GridStickyContainer.displayName = 'GridStickyContainer';
