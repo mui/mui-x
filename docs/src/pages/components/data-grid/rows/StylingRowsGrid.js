@@ -5,28 +5,28 @@ import { makeStyles, lighten } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    '& .super-app-theme--open': {
+    '& .super-app-theme--Open': {
       backgroundColor: lighten(theme.palette.info.light, 0.6),
       '&:hover': {
-        backgroundColor: lighten(theme.palette.info.light, 0.4),
+        backgroundColor: lighten(theme.palette.info.light, 0.5),
       },
     },
-    '& .super-app-theme--filled': {
+    '& .super-app-theme--Filled': {
       backgroundColor: lighten(theme.palette.success.light, 0.6),
       '&:hover': {
-        backgroundColor: lighten(theme.palette.success.light, 0.4),
+        backgroundColor: lighten(theme.palette.success.light, 0.5),
       },
     },
-    '& .super-app-theme--partiallyfilled': {
+    '& .super-app-theme--PartiallyFilled': {
       backgroundColor: lighten(theme.palette.warning.light, 0.6),
       '&:hover': {
-        backgroundColor: lighten(theme.palette.warning.light, 0.4),
+        backgroundColor: lighten(theme.palette.warning.light, 0.5),
       },
     },
-    '& .super-app-theme--rejected': {
+    '& .super-app-theme--Rejected': {
       backgroundColor: lighten(theme.palette.error.light, 0.6),
       '&:hover': {
-        backgroundColor: lighten(theme.palette.error.light, 0.4),
+        backgroundColor: lighten(theme.palette.error.light, 0.5),
       },
     },
   },
@@ -44,9 +44,7 @@ export default function StylingRowsGrid() {
     <div style={{ height: 300, width: '100%' }} className={classes.root}>
       <DataGrid
         {...data}
-        rowClassName={(params) =>
-          `super-app-theme--${params.getValue('status').toLowerCase()}`
-        }
+        rowClassName={(params) => `super-app-theme--${params.getValue('status')}`}
       />
     </div>
   );
