@@ -18,11 +18,11 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">autoHeight</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid height is dynamic and follow the number of rows in the grid. |
 | <span class="prop-name">autoPageSize</span> | <span class="prop-type">boolean</span> | false | If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar. |
 | <span class="prop-name">checkboxSelection</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid get a first column with a checkbox that allows to select rows. |
-| <span class="prop-name">className</span> | <span class="prop-type">string</span> |   | Css classname to add on the outer container. |
+| <span class="prop-name">className</span> | <span class="prop-type">string</span> |   | CSS classname to add on the outer container. |
 | <span class="prop-name">columnBuffer</span> | <span class="prop-type">number</span> | 2 | Number of columns rendered outside the grid viewport. |
 | <span class="prop-name">columnTypes</span> | <span class="prop-type">GridColumnTypesRecord</span> |   | Extend native column types with your new column types. |
 | <span class="prop-name">components</span> | <span class="prop-type">GridSlotsComponent</span> |   | Overrideable components. |
-| <span class="prop-name">componentsProps</span> | <span class="prop-type">GridSlotsComponentProps</span> |   | Overrideable components props dynamic passed to the component at rendering. |
+| <span class="prop-name">componentsProps</span> | <span class="prop-type">GridSlotsComponentsProps</span> |   | Overrideable components props dynamically passed to the component at rendering. |
 | <span class="prop-name">density</span> | <span class="prop-type">Density</span> | standard | Sets the density of the grid. |
 | <span class="prop-name">disableColumnMenu</span> | <span class="prop-type">boolean</span> | false | If `true`, the column menu is disabled. |
 | <span class="prop-name">disableColumnSelector</span> | <span class="prop-type">boolean</span> | false | If `true`, the column selector is disabled. |
