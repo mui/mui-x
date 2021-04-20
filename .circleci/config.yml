@@ -215,6 +215,9 @@ workflows:
       - test_types:
           requires:
             - checkout
+      - test_e2e:
+          requires:
+            - checkout
       - test_regressions:
           requires:
             - checkout
