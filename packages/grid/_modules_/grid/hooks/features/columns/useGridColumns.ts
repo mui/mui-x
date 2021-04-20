@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { GRID_COLUMNS_UPDATED, GRID_COLUMN_ORDER_CHANGE } from '../../../constants/eventsConstants';
+import {
+  GRID_COLUMNS_UPDATED,
+  GRID_COLUMN_ORDER_CHANGE,
+  GRID_COLUMN_RESIZE_COMMITED,
+} from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
 import { gridCheckboxSelectionColDef } from '../../../models/colDef/gridCheckboxSelection';
@@ -201,9 +205,16 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
       logger.debug(`Updating column ${field} width to ${width}`);
 
       const column = apiRef.current.getColumnFromField(field);
-      updateColumn({ ...column, width });
+      apiRef.current.updateColumn({ ...column, width });
+
+      apiRef.current.publishEvent(GRID_COLUMN_RESIZE_COMMITED, {
+        element: apiRef.current.getColumnHeaderElement(field),
+        colDef: column,
+        api: apiRef,
+        width,
+      });
     },
-    [apiRef, logger, updateColumn],
+    [apiRef, logger],
   );
 
   const colApi: GridColumnApi = {
