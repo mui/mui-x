@@ -63,6 +63,12 @@ To change the row height for the whole grid, set the `rowHeight` prop:
 
 {{"demo": "pages/components/data-grid/rows/DenseHeightGrid.js", "bg": "inline"}}
 
+## Styling rows
+
+The `rowClassName` prop can be used to apply a CSS class on each row. It's called with a `GridRowsParams` object.
+
+{{"demo": "pages/components/data-grid/rows/StylingRowsGrid.js", "bg": "inline"}}
+
 ## 🚧 Row spanning
 
 > ⚠️ This feature isn't implemented yet. It's coming.

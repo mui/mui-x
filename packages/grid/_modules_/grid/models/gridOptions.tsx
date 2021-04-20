@@ -398,6 +398,10 @@ export interface GridOptions {
    */
   paginationMode?: GridFeatureMode;
   /**
+   * Function that allows to apply a class name on each row.
+   */
+  rowClassName?: (params: GridRowParams) => string;
+  /**
    * Set the height in pixel of a row in the grid.
    * @default 52
    */
