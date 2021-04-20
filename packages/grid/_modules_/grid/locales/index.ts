@@ -10,3 +10,4 @@ export * from './jaJP';
 export * from './plPL';
 export * from './ptBR';
 export * from './ukUA';
+export * from './itIT';
