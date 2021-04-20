@@ -4,7 +4,6 @@ import { getGridLocalization, Localization } from '../utils';
 
 const itITGrid: Partial<GridLocaleText> = {
   // Root
-  rootGridLabel: 'grid',
   noRowsLabel: 'Nessun record',
   errorOverlayDefaultLabel: 'Si è verificato un errore.',
 
