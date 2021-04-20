@@ -10,6 +10,7 @@ export interface GridSlotsComponentsProps {
   preferencesPanel?: any;
   loadingOverlay?: any;
   noRowsOverlay?: any;
+  allFilteredOverlay?: any;
   pagination?: any;
   filterPanel?: any;
   panel?: any;

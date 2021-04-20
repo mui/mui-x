@@ -4,6 +4,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Root
   rootGridLabel: 'grid',
   noRowsLabel: 'No rows',
+  allRowsFilteredLabel: 'All rows are filtered',
   errorOverlayDefaultLabel: 'An error occurred.',
 
   // Density selector toolbar button text
