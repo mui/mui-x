@@ -62,13 +62,6 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
     [apiRef, dispatch],
   );
 
-  const onPageSizeChange = React.useCallback(
-    (handler: (param: GridPageChangeParams) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(GRID_PAGESIZE_CHANGED, handler);
-    },
-    [apiRef],
-  );
-
   useGridApiOptionHandler(apiRef, GRID_PAGE_CHANGED, options.onPageChange);
   useGridApiOptionHandler(apiRef, GRID_PAGESIZE_CHANGED, options.onPageSizeChange);
 
@@ -100,7 +93,6 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
   const paginationApi: GridPaginationApi = {
     setPageSize,
     setPage,
-    onPageSizeChange,
   };
 
   useGridApiMethod(apiRef, paginationApi, 'paginationApi');
