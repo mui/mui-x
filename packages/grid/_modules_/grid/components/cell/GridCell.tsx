@@ -35,7 +35,7 @@ export interface GridCellProps {
   value?: GridCellValue;
   width: number;
   cellMode?: GridCellMode;
-  children: React.ReactNode;
+  children: React.ReactElement | null;
 }
 
 export const GridCell = React.memo((props: GridCellProps) => {
