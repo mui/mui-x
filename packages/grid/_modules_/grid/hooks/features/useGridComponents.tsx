@@ -67,12 +67,12 @@ export const useGridComponents = (
       LoadingOverlay:
         (componentSlotsProp && componentSlotsProp.LoadingOverlay) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.LoadingOverlay,
+      NoFilteredRowsOverlay:
+        (componentSlotsProp && componentSlotsProp.NoFilteredRowsOverlay) ||
+        DEFAULT_GRID_SLOTS_COMPONENTS.NoFilteredRowsOverlay,
       NoRowsOverlay:
         (componentSlotsProp && componentSlotsProp.NoRowsOverlay) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.NoRowsOverlay,
-      AllFilteredOverlay:
-        (componentSlotsProp && componentSlotsProp.AllFilteredOverlay) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.AllFilteredOverlay,
       Pagination:
         (componentSlotsProp && componentSlotsProp.Pagination) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.Pagination,

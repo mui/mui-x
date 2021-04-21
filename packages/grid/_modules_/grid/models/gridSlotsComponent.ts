@@ -21,7 +21,7 @@ import {
 import { GridLoadingOverlay } from '../components/GridLoadingOverlay';
 import { GridColumnMenu } from '../components/menu/columnMenu/GridColumnMenu';
 import { GridNoRowsOverlay } from '../components/GridNoRowsOverlay';
-import { GridAllFilteredOverlay } from '../components/GridAllFilteredOverlay';
+import { GridNoFilteredRowsOverlay } from '../components/GridNoFilteredRowsOverlay';
 import { GridPagination } from '../components/GridPagination';
 import { GridColumnsPanel } from '../components/panel/GridColumnsPanel';
 import { GridFilterPanel } from '../components/panel/filterPanel/GridFilterPanel';
@@ -64,13 +64,13 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
    */
   LoadingOverlay?: React.ElementType;
   /**
+   * No filtered rows overlay component rendered when the grid has no results after filtering.
+   */
+  NoFilteredRowsOverlay?: React.ElementType;
+  /**
    * No rows overlay component rendered when the grid has no rows.
    */
   NoRowsOverlay?: React.ElementType;
-  /**
-   * All filtered overlay component rendered when the grid has no results after filtering.
-   */
-  AllFilteredOverlay?: React.ElementType;
   /**
    * Pagination component rendered in the grid footer by default.
    */
@@ -115,8 +115,8 @@ export const DEFAULT_GRID_SLOTS_COMPONENTS: GridApiRefComponentsProperty = {
   Header: GridHeader,
   PreferencesPanel: GridPreferencesPanel,
   LoadingOverlay: GridLoadingOverlay,
+  NoFilteredRowsOverlay: GridNoFilteredRowsOverlay,
   NoRowsOverlay: GridNoRowsOverlay,
-  AllFilteredOverlay: GridAllFilteredOverlay,
   Pagination: GridPagination,
   Panel: GridPanel,
 };
