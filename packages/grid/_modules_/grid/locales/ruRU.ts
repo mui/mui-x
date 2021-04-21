@@ -72,7 +72,7 @@ export const ruRUGrid: Partial<GridLocaleText> = {
 
   // Filter values ​​text
   filterValueAny: 'любой',
-  filterValueTrue: 'правда',
+  filterValueTrue: 'истина',
   filterValueFalse: 'ложь',
 
   // Column menu text
@@ -121,7 +121,7 @@ export const ruRUGrid: Partial<GridLocaleText> = {
   checkboxSelectionHeaderName: 'Выбор флажка',
 
   // Boolean cell text
-  booleanCellTrueLabel: 'правда',
+  booleanCellTrueLabel: 'истина',
   booleanCellFalseLabel: 'ложь',
 };
 
