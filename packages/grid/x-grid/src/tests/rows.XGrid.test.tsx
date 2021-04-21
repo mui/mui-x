@@ -366,7 +366,7 @@ describe('<XGrid /> - Rows', () => {
       gridWindow.dispatchEvent(new Event('scroll'));
 
       let lastCell = document.querySelector('[role="row"]:last-child [role="cell"]:first-child')!;
-      expect(lastCell.textContent).to.equal('995');
+      expect(lastCell).to.have.text('995');
 
       let virtualPage = apiRef!.current!.getState().rendering!.virtualPage;
       expect(virtualPage).to.equal(98);
@@ -374,7 +374,7 @@ describe('<XGrid /> - Rows', () => {
       setProps({ nbRows: 9 });
 
       lastCell = document.querySelector('[role="row"]:last-child [role="cell"]:first-child')!;
-      expect(lastCell.textContent).to.equal('8');
+      expect(lastCell).to.have.text('8');
 
       const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
       expect(renderingZone.children.length).to.equal(9);
