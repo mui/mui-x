@@ -157,13 +157,6 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
     [options.disableSelectionOnClick, selectRowModel],
   );
 
-  const onSelectionModelChange = React.useCallback(
-    (handler: (param: GridSelectionModelChangeParams) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(GRID_SELECTION_CHANGED, handler);
-    },
-    [apiRef],
-  );
-
   useGridApiEventHandler(apiRef, GRID_ROW_CLICK, rowClickHandler);
   useGridApiOptionHandler(apiRef, GRID_ROW_SELECTED, options.onRowSelected);
   useGridApiOptionHandler(apiRef, GRID_SELECTION_CHANGED, options.onSelectionModelChange);
@@ -174,7 +167,6 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
     getSelectedRows,
     selectRows,
     setSelectionModel,
-    onSelectionModelChange,
   };
   useGridApiMethod(apiRef, selectionApi, 'GridSelectionApi');
 
