@@ -4,7 +4,6 @@ import { getGridLocalization, Localization } from '../utils';
 
 export const ruRUGrid: Partial<GridLocaleText> = {
   // Root
-  rootGridLabel: 'сетка',
   noRowsLabel: 'Нет строк',
   errorOverlayDefaultLabel: 'Обнаружена ошибка.',
 
