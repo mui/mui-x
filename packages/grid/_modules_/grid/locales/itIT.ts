@@ -49,7 +49,7 @@ const itITGrid: Partial<GridLocaleText> = {
   filterOperatorStartsWith: 'comincia per',
   filterOperatorEndsWith: 'termina per',
   filterOperatorIs: 'uguale a',
-  filterOperatorNot: "diversa da",
+  filterOperatorNot: 'diversa da',
   filterOperatorOnOrAfter: 'a partire dal',
   filterOperatorAfter: 'dopo il',
   filterOperatorOnOrBefore: 'fino al',
