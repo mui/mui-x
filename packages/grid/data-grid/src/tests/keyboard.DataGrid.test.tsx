@@ -175,7 +175,7 @@ describe('<DataGrid /> - Keyboard', () => {
   });
 
   it('Space only should go to the bottom of the page', function test() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
+    if (NO_LAYOUT) {
       // Need layouting for row virtualization
       this.skip();
     }
@@ -196,7 +196,7 @@ describe('<DataGrid /> - Keyboard', () => {
   });
 
   it('Home / End navigation', async function test() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
+    if (NO_LAYOUT) {
       // Need layouting for column virtualization
       this.skip();
     }
