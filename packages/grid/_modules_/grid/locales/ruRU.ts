@@ -70,7 +70,7 @@ export const ruRUGrid: Partial<GridLocaleText> = {
   filterOperatorBefore: 'меньше чем',
   filterOperatorOnOrBefore: 'меньше или равно',
 
-  // Filter values ​​text
+  // Filter values text
   filterValueAny: 'любой',
   filterValueTrue: 'истина',
   filterValueFalse: 'ложь',
