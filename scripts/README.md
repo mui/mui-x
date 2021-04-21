@@ -23,3 +23,15 @@ The following steps must be proposed as a pull request.
 3. `yarn release:build`
 4. `yarn release:publish` You need your 2FA device.
 5. Tag the release with the version `git tag v4.0.0-alpha.30 && git push --tag`
+
+### Documentation
+
+Push the master branch on the release branch to deploy the documentation with the latest changes. It lives at https://material-ui-x.netlify.app/. Force push if necessary.
+
+```sh
+yarn docs:deploy
+```
+
+### Announce
+
+1. **GitHub**. Make a new release on GitHub (for people subscribing to updates). https://github.com/mui-org/material-ui-x/releases

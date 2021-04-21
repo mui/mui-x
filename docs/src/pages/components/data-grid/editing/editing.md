@@ -16,6 +16,8 @@ Set the `editable` property of the column definition `GridColDef` object to `tru
 <DataGrid columns={[{ field: 'name', editable: true }]} />
 ```
 
+{{"demo": "pages/components/data-grid/editing/BasicEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Start editing
 
 If a cell is editable and has focus, any of the following interactions will start the edit mode:
@@ -34,8 +36,6 @@ If a cell is editable and has focus, any of the following interactions will star
     */
   setCellMode: (id: GridRowId, field: string, mode: GridCellMode) => void;
   ```
-
-{{"demo": "pages/components/data-grid/editing/BasicEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Stop editing
 

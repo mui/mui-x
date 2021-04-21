@@ -1,5 +1,5 @@
 {
-  "version": "0.1.63",
+  "version": "4.0.0-alpha.26",
   "private": true,
   "scripts": {
     "start": "yarn docs:dev",
@@ -41,7 +41,7 @@
     "eslint:ci": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx",
     "jsonlint": "node scripts/jsonlint.js",
     "typescript": "lerna run --no-bail --parallel typescript",
-    "build:codesandbox": "yarn build",
+    "build:codesandbox": "yarn release:build",
     "release:version": "lerna version --exact --no-changelog --no-push --no-git-tag-version",
     "release:build": "cd packages/x-license && yarn build && cd ../grid/x-grid && yarn build && cd ../data-grid && yarn build && cd ../x-grid-data-generator && yarn build",
     "release:publish": "lerna publish from-package --dist-tag latest",
