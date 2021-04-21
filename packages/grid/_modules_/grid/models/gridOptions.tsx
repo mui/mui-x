@@ -383,6 +383,10 @@ export interface GridOptions {
    */
   onStateChange?: (params: any) => void;
   /**
+   * Callback fired when the grid is unmounted.
+   */
+  onUnmount?: (params: any) => void;
+  /**
    * Set the current page.
    * @default 1
    */
