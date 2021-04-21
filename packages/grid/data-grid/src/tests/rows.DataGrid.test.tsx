@@ -87,12 +87,12 @@ describe('<DataGrid /> - Rows', () => {
     expect(handleRowClick.callCount).to.equal(1);
   });
 
-  it('should apply the CSS class returned by rowClassName', () => {
+  it('should apply the CSS class returned by getRowClassName', () => {
     const getRowId = (row) => `${row.clientId}`;
-    const rowClassName = (params) => (params.getValue('age') < 20 ? 'under-age' : '');
+    const getRowClassName = (params) => (params.getValue('age') < 20 ? 'under-age' : '');
     render(
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid rowClassName={rowClassName} getRowId={getRowId} {...baselineProps} />
+        <DataGrid getRowClassName={getRowClassName} getRowId={getRowId} {...baselineProps} />
       </div>,
     );
     expect(getRow(0).className).to.contain('under-age');

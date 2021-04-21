@@ -64,7 +64,8 @@ export const GridRow: React.FC<GridRowProps> = ({
   };
 
   const rowClassName =
-    isFunction(options.rowClassName) && options.rowClassName(apiRef!.current.getRowParams(id));
+    isFunction(options.getRowClassName) &&
+    options.getRowClassName(apiRef!.current.getRowParams(id));
   const cssClasses = classnames(GRID_ROW_CSS_CLASS, className, rowClassName, {
     'Mui-selected': selected,
   });
