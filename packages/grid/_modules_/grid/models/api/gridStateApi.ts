@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { GridState } from '../../hooks/features/core/gridState';
-import { GridStateChangeParams } from '../params/gridStateChangeParams';
 
 export interface GridStateApi {
   /**
@@ -19,8 +18,4 @@ export interface GridStateApi {
    * Allows forcing the grid to rerender after a state update.
    */
   forceUpdate: React.Dispatch<any>;
-  /**
-   * Allows assigning a handler that is triggered when the state change.
-   */
-  onStateChange: (handler: (param: GridStateChangeParams) => void) => void;
 }
