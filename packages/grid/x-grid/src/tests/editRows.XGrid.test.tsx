@@ -1,6 +1,8 @@
+import Button from '@material-ui/core/Button';
 import {
   GRID_CELL_KEYDOWN,
   GridApiRef,
+  GridCellParams,
   GridComponentProps,
   useGridApiRef,
   XGrid,
@@ -12,6 +14,8 @@ import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
   fireEvent,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  screen,
 } from 'test/utils';
 
 describe('<XGrid /> - Edit Rows', () => {
@@ -229,5 +233,106 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(cell).to.not.have.class('MuiDataGrid-cellEditing');
     expect(cell.textContent).to.equal('1970');
     expect(getActiveCell()).to.equal('1-0');
+  });
+
+  it('should focus on cells input on click when multiple cells are in edit mode', () => {
+    function TestComponent() {
+      apiRef = useGridApiRef();
+      const [buttonLabel, setButtonLabel] = React.useState('Edit');
+
+      const [selectedCellParams, setSelectedCellParams] = React.useState<GridCellParams | null>(
+        null,
+      );
+
+      const handleButtonClick = React.useCallback(() => {
+        console.log('handleButtonClick');
+        if (!selectedCellParams) {
+          return;
+        }
+        const { id, field, cellMode } = selectedCellParams;
+        if (cellMode === 'edit') {
+          const editedCellProps = apiRef.current.getEditCellPropsParams(id, field);
+          apiRef.current.commitCellChange(editedCellProps);
+          apiRef.current.setCellMode(id, field, 'view');
+          setButtonLabel('Edit');
+        } else {
+          console.log('Changing cell mode to ', id, field);
+          apiRef.current.setCellMode(id, field, 'edit');
+          setButtonLabel('Save');
+        }
+        // Or you can use the editRowModel prop, but I find it easier
+      }, [selectedCellParams]);
+
+      const handleCellClick = React.useCallback((params: GridCellParams) => {
+        console.log('handleCellClick');
+        setSelectedCellParams(params);
+
+        const { cellMode } = params;
+        if (cellMode === 'edit') {
+          setButtonLabel('Save');
+        } else {
+          console.log('setButtonLabel Edit', params.value);
+          setButtonLabel('Edit');
+        }
+      }, []);
+
+      const handleDoubleCellClick = React.useCallback(
+        (params: GridCellParams, event: React.SyntheticEvent) => {
+          event.stopPropagation();
+        },
+        [],
+      );
+
+      // Prevent from rolling back on escape
+      const handleCellKeyDown = React.useCallback((params, event: React.KeyboardEvent) => {
+        if (
+          params.cellMode === 'edit' &&
+          (event.key === 'Escape' || event.key === 'Delete' || event.key === 'Enter')
+        ) {
+          event.stopPropagation();
+        }
+      }, []);
+
+      // Prevent from committing on blur
+      const handleCellBlur = React.useCallback((params, event?: React.SyntheticEvent) => {
+        if (params.cellMode === 'edit') {
+          event?.stopPropagation();
+        }
+      }, []);
+
+      return (
+        <div style={{ height: 450, width: '100%' }}>
+          <Button className="edit-button" onClick={handleButtonClick} color="primary">
+            {buttonLabel}
+          </Button>
+          <div style={{ height: 400, width: '100%' }}>
+            <XGrid
+              {...baselineProps}
+              apiRef={apiRef}
+              onCellClick={handleCellClick}
+              onCellDoubleClick={handleDoubleCellClick}
+              onCellBlur={handleCellBlur}
+              onCellKeyDown={handleCellKeyDown}
+            />
+          </div>
+        </div>
+      );
+    }
+
+    render(<TestComponent />);
+    fireEvent.click(getCell(0, 0));
+
+    fireEvent.click(screen.getByRole('button', { name: /Edit/i }));
+    fireEvent.click(getCell(1, 0));
+    fireEvent.click(screen.getByRole('button', { name: /Edit/i }));
+    const inputs = document.querySelectorAll('input');
+    expect(inputs.length).to.equal(2);
+    const nikeInput = getCell(0, 0).querySelector('input');
+    fireEvent.click(nikeInput);
+
+    expect(getActiveCell()).to.equal('0-0');
+
+    expect(document.activeElement).to.have.text('Nike');
+    expect(document.activeElement).to.have.class('MuiInputBase-input');
   });
 });
