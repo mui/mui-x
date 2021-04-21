@@ -15,11 +15,6 @@ export interface GridPaginationApi {
    */
   setPageSize: (pageSize: number) => void;
   /**
-   * Callback fired after a new page has been displayed.
-   * @param handler
-   */
-  onPageChange: (handler: (param: GridPageChangeParams) => void) => () => void;
-  /**
    * Callback fired after the page size was changed.
    * @param handler
    */
