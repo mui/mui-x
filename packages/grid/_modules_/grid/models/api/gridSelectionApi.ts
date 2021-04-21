@@ -1,5 +1,4 @@
 import { GridRowId, GridRowModel } from '../gridRows';
-import { GridRowSelectedParams } from '../params/gridRowSelectedParams';
 import { GridSelectionModelChangeParams } from '../params/gridSelectionModelChangeParams';
 
 /**
@@ -25,11 +24,6 @@ export interface GridSelectionApi {
    * Get an array of selected rows.
    */
   getSelectedRows: () => Map<GridRowId, GridRowModel>;
-  /**
-   * Callback fired after a row is selected.
-   * @param handler
-   */
-  onRowSelected: (handler: (param: GridRowSelectedParams) => void) => () => void;
   /**
    * Callback fired after one or multiple rows had a selection state change.
    * @param handler
