@@ -33,6 +33,13 @@ export interface GridComponentProps extends GridOptionsProp {
    */
   componentsProps?: GridSlotsComponentsProps;
   /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: {
+    /** Styles applied to the root element. */
+    root?: string;
+  };
+  /**
    * @ignore
    */
   className?: string;
