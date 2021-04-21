@@ -80,5 +80,3 @@ export const GRID_SORT_MODEL_CHANGE = 'sortModelChange';
 export const GRID_FILTER_MODEL_CHANGE = 'filterModelChange';
 
 export const GRID_STATE_CHANGE = 'stateChange';
-
-export const GRID_MULTIPLE_KEY_PRESS_CHANGED = 'multipleKeyPressChange';

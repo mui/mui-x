@@ -45,7 +45,7 @@ function useData(rowLength: number, columnLength: number) {
 }
 
 export default function ColumnVirtualizationGrid() {
-  const data = useData(50, 1000);
+  const data = useData(100, 1000);
 
   return (
     <div style={{ height: 400, width: '100%' }}>

@@ -29,8 +29,13 @@ export interface GridSortApi {
    * Set the sort direction of a column.
    * @param column
    * @param direction
+   * @param allowMultipleSorting
    */
-  sortColumn: (column: GridColDef, direction?: GridSortDirection) => void;
+  sortColumn: (
+    column: GridColDef,
+    direction?: GridSortDirection,
+    allowMultipleSorting?: boolean,
+  ) => void;
   /**
    * Get the full set of sorted rows as [[GridRowModel]].
    * @returns [[GridRowModel]]

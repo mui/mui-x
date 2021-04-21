@@ -1,5 +1,5 @@
-import Alert from '@material-ui/lab/Alert';
 import * as React from 'react';
+import Alert from '@material-ui/lab/Alert';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Popper from '@material-ui/core/Popper';
@@ -872,6 +872,45 @@ export function EditCellWithMessageGrid() {
     <div style={{ height: 400, width: '100%' }}>
       {message && <Alert severity="info">{message}</Alert>}
       <XGrid {...baselineEditProps} apiRef={apiRef} autoHeight />
+    </div>
+  );
+}
+
+export function SwitchVirtualization() {
+  const { data, setRowLength } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 200,
+    maxColumns: 20,
+  });
+
+  const handleButtonClick = (nbRows: number) => {
+    setRowLength(nbRows);
+  };
+
+  React.useLayoutEffect(() => {
+    const window = document.querySelector('.MuiDataGrid-window');
+    if (window) {
+      window!.scrollTo(0, 5000);
+    }
+  });
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 1,
+        height: '100%',
+        width: '100%',
+      }}
+    >
+      <div>
+        <Button onClick={() => handleButtonClick(9)}>9 items</Button>
+        <Button onClick={() => handleButtonClick(100)}>100 items</Button>
+      </div>
+      <div style={{ width: '100%', height: 500 }}>
+        <XGrid rows={data.rows} columns={data.columns} />
+      </div>
     </div>
   );
 }

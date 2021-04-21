@@ -3,12 +3,10 @@ import { GRID_ROW_CSS_CLASS } from '../../../constants/cssClassesConstants';
 import {
   GRID_CELL_KEYDOWN,
   GRID_CELL_NAVIGATION_KEYDOWN,
-  GRID_COLUMN_HEADER_CLICK,
   GRID_COLUMN_HEADER_KEYDOWN,
   GRID_ELEMENT_FOCUS_OUT,
   GRID_KEYDOWN,
   GRID_KEYUP,
-  GRID_MULTIPLE_KEY_PRESS_CHANGED,
   GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
@@ -61,20 +59,9 @@ export const useGridKeyboard = (
       }
 
       forceUpdate();
-      apiRef.current.publishEvent(GRID_MULTIPLE_KEY_PRESS_CHANGED, isPressed);
     },
-    [apiRef, forceUpdate, logger, setGridState],
+    [forceUpdate, logger, setGridState],
   );
-
-  const selectActiveRow = React.useCallback(() => {
-    const rowEl = findParentElementFromClassName(
-      document.activeElement as HTMLDivElement,
-      GRID_ROW_CSS_CLASS,
-    )! as HTMLElement;
-
-    const rowId = getIdFromRowElem(rowEl);
-    apiRef.current.selectRow(rowId);
-  }, [apiRef]);
 
   const expandSelection = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
@@ -172,7 +159,7 @@ export const useGridKeyboard = (
 
       if (isSpaceKey(event.key) && event.shiftKey) {
         event.preventDefault();
-        selectActiveRow();
+        apiRef.current.selectRow(params.id);
         return;
       }
 
@@ -197,7 +184,7 @@ export const useGridKeyboard = (
         apiRef.current.selectRows(apiRef.current.getAllRowIds(), true);
       }
     },
-    [apiRef, expandSelection, handleCopy, selectActiveRow],
+    [apiRef, expandSelection, handleCopy],
   );
 
   const handleColumnHeaderKeyDown = React.useCallback(
@@ -217,15 +204,6 @@ export const useGridKeyboard = (
 
       if (isEnterKey(event.key) && (event.ctrlKey || event.metaKey)) {
         apiRef!.current.toggleColumnMenu(params.field);
-        return;
-      }
-
-      if (isEnterKey(event.key) || isSpaceKey(event.key)) {
-        apiRef.current.publishEvent(
-          GRID_COLUMN_HEADER_CLICK,
-          apiRef!.current.getColumnHeaderParams(params.field),
-          event,
-        );
       }
     },
     [apiRef],

@@ -213,7 +213,7 @@ describe('<XGrid /> - Filter', () => {
     render(<TestCase checkboxSelection filterModel={newModel} />);
     const checkAllCell = getColumnHeaderCell(1).querySelector('input');
     fireEvent.click(checkAllCell);
-    expect(apiRef.current.getState().selection).to.deep.equal({ 1: true });
+    expect(apiRef.current.getState().selection).to.deep.equal({ 1: 1 });
   });
 
   it('should allow to clear filters by passing an empty filter model', () => {

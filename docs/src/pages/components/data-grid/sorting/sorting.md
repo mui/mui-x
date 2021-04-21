@@ -70,7 +70,7 @@ Then you need to handle the `onSortModelChange` callback, sort the rows on the s
 ## Multi-column sorting [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 You can sort by multiple columns at the same time using `XGrid`.
-Hold the <kbd>CTRL</kbd> key down while clicking the column header.
+Hold down the <kbd class="key">CTRL</kbd> or <kbd class="key">Shift</kbd> (use <kbd class="key">⌘ Command</kbd> on macOS) key while clicking the column header.
 
 {{"demo": "pages/components/data-grid/sorting/MultiSortingGrid.js", "disableAd": true, "bg": "inline"}}
 

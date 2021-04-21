@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {
   GRID_COLUMN_HEADER_CLICK,
+  GRID_COLUMN_HEADER_KEYDOWN,
   GRID_COLUMNS_UPDATED,
-  GRID_MULTIPLE_KEY_PRESS_CHANGED,
   GRID_ROWS_CLEARED,
   GRID_ROWS_SET,
   GRID_ROWS_UPDATED,
@@ -24,6 +24,7 @@ import {
   GridSortCellParams,
 } from '../../../models/gridSortModel';
 import { isDesc, nextGridSortDirection } from '../../../utils/sortingUtils';
+import { isEnterKey, isMultipleKeyPressed } from '../../../utils/keyboardUtils';
 import { isDeepEqual } from '../../../utils/utils';
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
@@ -37,7 +38,6 @@ import { sortedGridRowIdsSelector, sortedGridRowsSelector } from './gridSortingS
 
 export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   const logger = useLogger('useGridSorting');
-  const allowMultipleSorting = React.useRef<boolean>(false);
   const comparatorList = React.useRef<GridFieldComparatorList>([]);
 
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
@@ -211,25 +211,35 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   );
 
   const sortColumn = React.useCallback(
-    (column: GridColDef, direction?: GridSortDirection) => {
+    (column: GridColDef, direction?: GridSortDirection, allowMultipleSorting?: boolean) => {
       if (!column.sortable) {
         return;
       }
       const sortItem = createSortItem(column, direction);
-      let sortModel: GridSortItem | GridSortItem[];
-      if (!allowMultipleSorting.current) {
+      let sortModel: GridSortItem[];
+      if (!allowMultipleSorting || options.disableMultipleColumnsSorting) {
         sortModel = !sortItem ? [] : [sortItem];
       } else {
         sortModel = upsertSortModel(column.field, sortItem);
       }
       setSortModel(sortModel);
     },
-    [upsertSortModel, setSortModel, createSortItem],
+    [upsertSortModel, setSortModel, createSortItem, options.disableMultipleColumnsSorting],
   );
 
-  const headerClickHandler = React.useCallback(
-    ({ colDef }: GridColumnHeaderParams) => {
-      sortColumn(colDef);
+  const handleColumnHeaderClick = React.useCallback(
+    ({ colDef }: GridColumnHeaderParams, event: React.MouseEvent) => {
+      sortColumn(colDef, undefined, isMultipleKeyPressed(event));
+    },
+    [sortColumn],
+  );
+
+  const handleColumnHeaderKeyDown = React.useCallback(
+    ({ colDef }: GridColumnHeaderParams, event: React.KeyboardEvent) => {
+      // CTRL + Enter opens the column menu
+      if (isEnterKey(event.key) && !event.ctrlKey && !event.metaKey) {
+        sortColumn(colDef, undefined, event.shiftKey);
+      }
     },
     [sortColumn],
   );
@@ -252,13 +262,6 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   const getSortedRowIds = React.useCallback(
     (): GridRowId[] => sortedGridRowIdsSelector(apiRef.current.state),
     [apiRef],
-  );
-
-  const onMultipleKeyPressed = React.useCallback(
-    (isPressed: boolean) => {
-      allowMultipleSorting.current = !options.disableMultipleColumnsSorting && isPressed;
-    },
-    [options.disableMultipleColumnsSorting],
   );
 
   const onSortModelChange = React.useCallback(
@@ -288,12 +291,12 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
     });
   }, [setGridState]);
 
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_CLICK, headerClickHandler);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_CLICK, handleColumnHeaderClick);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_KEYDOWN, handleColumnHeaderKeyDown);
   useGridApiEventHandler(apiRef, GRID_ROWS_SET, apiRef.current.applySorting);
   useGridApiEventHandler(apiRef, GRID_ROWS_CLEARED, onRowsCleared);
   useGridApiEventHandler(apiRef, GRID_ROWS_UPDATED, apiRef.current.applySorting);
   useGridApiEventHandler(apiRef, GRID_COLUMNS_UPDATED, onColUpdated);
-  useGridApiEventHandler(apiRef, GRID_MULTIPLE_KEY_PRESS_CHANGED, onMultipleKeyPressed);
 
   useGridApiOptionHandler(apiRef, GRID_SORT_MODEL_CHANGE, options.onSortModelChange);
 

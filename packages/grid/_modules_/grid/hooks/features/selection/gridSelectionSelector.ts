@@ -23,5 +23,5 @@ export const selectedGridRowsSelector = createSelector<
   gridSelectionStateSelector,
   gridRowsLookupSelector,
   (selectedRows, rowsLookup) =>
-    new Map(Object.keys(selectedRows).map((id) => [id, rowsLookup[id]])),
+    new Map(Object.values(selectedRows).map((id) => [id, rowsLookup[id]])),
 );

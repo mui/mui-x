@@ -156,6 +156,11 @@ export const useGridVirtualRows = (
         logger.debug(`Changing page from ${page} to ${nextPage}`);
         requireRerender = true;
       } else {
+        if (!containerProps.isVirtualized && page > 0) {
+          logger.debug(`Virtualization disabled, setting virtualPage to 0`);
+          setRenderingState({ virtualPage: 0 });
+        }
+
         scrollTo(scrollParams);
       }
       setRenderingState({

@@ -48,39 +48,41 @@ The grid responds to keyboard interactions from the user as well as emitting eve
 
 Use the arrow keys to move the focus.
 
-|                              Keys | Description                                   |
-| --------------------------------: | :-------------------------------------------- |
-|             <kbd>Arrow Left</kbd> | Navigate between cell elements                |
-|           <kbd>Arrow Bottom</kbd> | Navigate between cell elements                |
-|            <kbd>Arrow Right</kbd> | Navigate between cell elements                |
-|               <kbd>Arrow Up</kbd> | Navigate between cell elements                |
-|                   <kbd>Home</kbd> | Navigate to the first cell of the current row |
-|                    <kbd>End</kbd> | Navigate to the last cell of the current row  |
-| <kbd>CTRL</kbd> + <kbd>Home</kbd> | Navigate to the first cell of the first row   |
-|  <kbd>CTRL</kbd> + <kbd>End</kbd> | Navigate to the last cell of the last row     |
-|                  <kbd>Space</kbd> | Navigate to the next scrollable page          |
-|                <kbd>Page Up</kbd> | Navigate to the next scrollable page          |
-|              <kbd>Page Down</kbd> | Navigate to the previous scrollable page      |
+|                                                      Keys | Description                                   |
+| --------------------------------------------------------: | :-------------------------------------------- |
+|                         <kbd class="key">Arrow Left</kbd> | Navigate between cell elements                |
+|                       <kbd class="key">Arrow Bottom</kbd> | Navigate between cell elements                |
+|                        <kbd class="key">Arrow Right</kbd> | Navigate between cell elements                |
+|                           <kbd class="key">Arrow Up</kbd> | Navigate between cell elements                |
+|                               <kbd class="key">Home</kbd> | Navigate to the first cell of the current row |
+|                                <kbd class="key">End</kbd> | Navigate to the last cell of the current row  |
+| <kbd class="key">CTRL</kbd> + <kbd class="key">Home</kbd> | Navigate to the first cell of the first row   |
+|  <kbd class="key">CTRL</kbd> + <kbd class="key">End</kbd> | Navigate to the last cell of the last row     |
+|                              <kbd class="key">Space</kbd> | Navigate to the next scrollable page          |
+|                            <kbd class="key">Page Up</kbd> | Navigate to the next scrollable page          |
+|                          <kbd class="key">Page Down</kbd> | Navigate to the previous scrollable page      |
 
 ### Selection
 
-|                                                           Keys | Description                                       |
-| -------------------------------------------------------------: | :------------------------------------------------ |
-|                            <kbd>Shift</kbd> + <kbd>Space</kbd> | Select the current row                            |
-| <kbd>Shift</kbd> + <kbd>Space</kbd> + <kbd>Arrow Up/Down</kbd> | Select the current row and the row above or below |
-|                                 <kbd>CTRL</kbd> + <kbd>A</kbd> | Select all rows                                   |
-|                                 <kbd>CTRL</kbd> + <kbd>C</kbd> | Copy the currently selected row                   |
-|                                <kbd>CTRL</kbd> + Click on cell | Enable multi-selection                            |
-|                                               <kbd>Enter</kbd> | Sort column when column header is focused         |
-|                             <kbd>CTRL</kbd> + <kbd>Enter</kbd> | Open column menu when column header is focused    |
+|                                                                                               Keys | Description                                       |
+| -------------------------------------------------------------------------------------------------: | :------------------------------------------------ |
+|                                        <kbd class="key">Shift</kbd> + <kbd class="key">Space</kbd> | Select the current row                            |
+| <kbd class="key">Shift</kbd> + <kbd class="key">Space</kbd> + <kbd class="key">Arrow Up/Down</kbd> | Select the current row and the row above or below |
+|                                             <kbd class="key">CTRL</kbd> + <kbd class="key">A</kbd> | Select all rows                                   |
+|                                             <kbd class="key">CTRL</kbd> + <kbd class="key">C</kbd> | Copy the currently selected row                   |
+|                                                        <kbd class="key">CTRL</kbd> + Click on cell | Enable multi-selection                            |
+|                                                                       <kbd class="key">Enter</kbd> | Sort column when column header is focused         |
+|                                         <kbd class="key">CTRL</kbd> + <kbd class="key">Enter</kbd> | Open column menu when column header is focused    |
 
 ### Sorting
 
-|                              Keys | Description          |
-| --------------------------------: | :------------------- |
-| <kbd>CTRL</kbd> + Click on header | Enable multi-sorting |
+|                                                        Keys | Description                                        |
+| ----------------------------------------------------------: | :------------------------------------------------- |
+|               <kbd class="key">CTRL</kbd> + Click on header | Enable multi-sorting                               |
+|              <kbd class="key">Shift</kbd> + Click on header | Enable multi-sorting                               |
+| <kbd class="key">Shift</kbd> + <kbd class="key">Enter</kbd> | Enable multi-sorting when column header is focused |
 
 ### Key assignment conventions
 
 The above key assignments are for Windows and Linux.
-On macOS, replace <kbd>CTRL</kbd> with <kbd>⌘ Command</kbd>.
+On macOS, replace <kbd class="key">CTRL</kbd> with <kbd class="key">⌘ Command</kbd>.

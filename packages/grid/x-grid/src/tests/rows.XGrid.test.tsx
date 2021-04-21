@@ -358,6 +358,34 @@ describe('<XGrid /> - Rows', () => {
       expect(isVirtualized).to.equal(false);
     });
 
+    it('should set the virtual page to 0 when resetting rows to a non virtualized length', () => {
+      const { setProps } = render(<TestCaseVirtualization nbRows={996} hideFooter height={600} />);
+
+      const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+      gridWindow.scrollTop = 10e6; // scroll to the bottom
+      gridWindow.dispatchEvent(new Event('scroll'));
+
+      let lastCell = document.querySelector('[role="row"]:last-child [role="cell"]:first-child')!;
+      expect(lastCell).to.have.text('995');
+
+      let virtualPage = apiRef!.current!.getState().rendering!.virtualPage;
+      expect(virtualPage).to.equal(98);
+
+      setProps({ nbRows: 9 });
+
+      lastCell = document.querySelector('[role="row"]:last-child [role="cell"]:first-child')!;
+      expect(lastCell).to.have.text('8');
+
+      const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
+      expect(renderingZone.children.length).to.equal(9);
+
+      virtualPage = apiRef!.current!.getState().rendering!.virtualPage;
+      expect(virtualPage).to.equal(0);
+
+      const isVirtualized = apiRef!.current!.getState().containerSizes!.isVirtualized;
+      expect(isVirtualized).to.equal(false);
+    });
+
     describe('Pagination', () => {
       it('should render only the pageSize', () => {
         render(<TestCaseVirtualization pagination pageSize={32} />);

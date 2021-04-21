@@ -2,6 +2,7 @@ import * as React from 'react';
 // @ts-expect-error need to migrate helpers to TypeScript
 import { fireEvent, screen, createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
+import { spy } from 'sinon';
 import { DataGrid } from '@material-ui/data-grid';
 import { getCell, getRow } from 'test/utils/helperFn';
 
@@ -120,6 +121,41 @@ describe('<DataGrid /> - Selection', () => {
       // https://github.com/mui-org/material-ui-x/issues/190
       expect(row0).to.not.have.class('Mui-selected');
       expect(row1).to.have.class('Mui-selected');
+    });
+
+    it('should not call onSelectionModelChange if the new value is the same', () => {
+      const onSelectionModelChange = spy();
+      const data = {
+        rows: [
+          {
+            id: 0,
+            brand: 'Nike',
+          },
+          {
+            id: 1,
+            brand: 'Hugo Boss',
+          },
+        ],
+        columns: [{ field: 'brand', width: 100 }],
+        checkboxSelection: true,
+        onSelectionModelChange,
+      };
+      function Demo(props) {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...data} selectionModel={props.selectionModel} />
+          </div>
+        );
+      }
+      const { setProps } = render(<Demo selectionModel={[0]} />);
+      expect(onSelectionModelChange.callCount).to.equal(1);
+      expect(onSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equals([0]);
+      setProps({ selectionModel: [0, 1] });
+      expect(onSelectionModelChange.callCount).to.equal(2);
+      expect(onSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equals([0, 1]);
+      setProps({ selectionModel: [0, 1] });
+      expect(onSelectionModelChange.callCount).to.equal(2);
+      expect(onSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equals([0, 1]);
     });
   });
 });

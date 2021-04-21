@@ -40,7 +40,10 @@ export type DataGridProps = Omit<
 
 const MAX_PAGE_SIZE = 100;
 
-const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(inProps, ref) {
+const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(
+  inProps,
+  ref,
+) {
   const props = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
   const { className, pageSize: pageSizeProp, ...other } = props;
 
@@ -61,7 +64,10 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
   );
 });
 
-DataGrid2.propTypes = {
+export const DataGrid = React.memo(DataGridRaw);
+
+// @ts-ignore
+DataGrid.propTypes = {
   apiRef: chainPropTypes(PropTypes.any, (props: any) => {
     if (props.apiRef != null) {
       return new Error(
@@ -75,7 +81,7 @@ DataGrid2.propTypes = {
     }
     return null;
   }),
-  columns: chainPropTypes(PropTypes.any, (props: any) => {
+  columns: chainPropTypes(PropTypes.array.isRequired, (props: any) => {
     if (props.columns && props.columns.some((column) => column.resizable)) {
       return new Error(
         [
@@ -192,6 +198,7 @@ DataGrid2.propTypes = {
     }
     return null;
   }),
+  rows: PropTypes.array.isRequired,
   scrollEndThreshold: chainPropTypes(PropTypes.number, (props: any) => {
     if (props.scrollEndThreshold) {
       return new Error(
@@ -206,8 +213,3 @@ DataGrid2.propTypes = {
     return null;
   }),
 } as any;
-
-export const DataGrid = React.memo(DataGrid2);
-
-// @ts-ignore
-DataGrid.Naked = DataGrid2;

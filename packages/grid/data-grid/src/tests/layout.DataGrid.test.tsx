@@ -417,9 +417,11 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       expect(() => {
         PropTypes.checkPropTypes(
           // @ts-ignore
-          DataGrid.Naked.propTypes,
+          DataGrid.propTypes,
           {
             pagination: false,
+            columns: [],
+            rows: [],
           },
           'prop',
           'MockedDataGrid',

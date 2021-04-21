@@ -31,7 +31,7 @@ export function serialiseRow(
 export function buildCSV(
   columns: GridColumns,
   rows: Map<GridRowId, GridRowModel>,
-  selectedRows: Record<GridRowId, boolean>,
+  selectedRows: Record<string, GridRowId>,
   getCellValue: (id: GridRowId, field: string) => GridCellValue,
 ): string {
   let rowIds = [...rows.keys()];

@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { GRID_DATA_CONTAINER_CSS_CLASS } from '../../constants/cssClassesConstants';
-import { useGridState } from '../../hooks/features/core/useGridState';
+import { useGridSelector } from '../../hooks/features/core/useGridSelector';
+import {
+  gridDataContainerSizesSelector,
+  gridScrollBarSizeSelector,
+} from '../../hooks/root/gridContainerSizesSelector';
 import { classnames } from '../../utils';
 import { GridApiContext } from '../GridApiContext';
 
@@ -9,14 +13,15 @@ type GridDataContainerProps = React.HTMLAttributes<HTMLDivElement>;
 export function GridDataContainer(props: GridDataContainerProps) {
   const { className, ...other } = props;
   const apiRef = React.useContext(GridApiContext);
-  const [gridState] = useGridState(apiRef!);
+  const dataContainerSizes = useGridSelector(apiRef!, gridDataContainerSizesSelector);
+  const scrollBar = useGridSelector(apiRef!, gridScrollBarSizeSelector);
 
   const style: any = {
-    minWidth: gridState.containerSizes?.dataContainerSizes?.width,
+    minWidth: dataContainerSizes?.width,
   };
 
-  if (gridState.scrollBar.hasScrollY) {
-    style.minHeight = gridState.containerSizes?.dataContainerSizes?.height!;
+  if (scrollBar.hasScrollY) {
+    style.minHeight = dataContainerSizes?.height!;
   }
 
   return (

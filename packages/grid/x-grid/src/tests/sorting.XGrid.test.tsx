@@ -3,7 +3,7 @@ import { GridApiRef, GridSortModel, useGridApiRef } from '@material-ui/data-grid
 import { XGrid } from '@material-ui/x-grid';
 import { expect } from 'chai';
 import { useFakeTimers } from 'sinon';
-import { getColumnValues } from 'test/utils/helperFn';
+import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
 import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
@@ -38,7 +38,11 @@ describe('<XGrid /> - Sorting', () => {
 
   let apiRef: GridApiRef;
 
-  const TestCase = (props: { rows?: any[]; sortModel: GridSortModel }) => {
+  const TestCase = (props: {
+    rows?: any[];
+    sortModel: GridSortModel;
+    disableMultipleColumnsSorting?: boolean;
+  }) => {
     const baselineProps = {
       rows: [
         {
@@ -60,7 +64,7 @@ describe('<XGrid /> - Sorting', () => {
       columns: [{ field: 'brand' }, { field: 'year', type: 'number' }],
     };
 
-    const { sortModel, rows } = props;
+    const { sortModel, rows, disableMultipleColumnsSorting } = props;
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
@@ -69,6 +73,7 @@ describe('<XGrid /> - Sorting', () => {
           {...baselineProps}
           rows={rows || baselineProps.rows}
           sortModel={sortModel}
+          disableMultipleColumnsSorting={disableMultipleColumnsSorting}
         />
       </div>
     );
@@ -139,6 +144,51 @@ describe('<XGrid /> - Sorting', () => {
 
     apiRef.current.setSortModel(sortModel);
     expect(getColumnValues()).to.deep.equal(['Puma', 'Adidas', 'Nike']);
+  });
+
+  describe('multi-sorting', () => {
+    ['shiftKey', 'metaKey', 'ctrlKey'].forEach((key) => {
+      it(`should do a multi-sorting when clicking the header cell while ${key} is pressed`, () => {
+        render(<TestCase sortModel={[{ field: 'year', sort: 'desc' }]} />);
+        expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+        fireEvent.click(getColumnHeaderCell(1), { [key]: true });
+        expect(getColumnValues()).to.deep.equal(['Puma', 'Adidas', 'Nike']);
+      });
+    });
+
+    ['metaKey', 'ctrlKey'].forEach((key) => {
+      it(`should do nothing when pressing Enter while ${key} is pressed`, () => {
+        render(<TestCase sortModel={[{ field: 'year', sort: 'desc' }]} />);
+        expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+        getColumnHeaderCell(1).focus();
+        fireEvent.keyDown(getColumnHeaderCell(1), { key: 'Enter', [key]: true });
+        expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+      });
+    });
+
+    it('should do a multi-sorting pressing Enter while shiftKey is pressed', () => {
+      render(<TestCase sortModel={[{ field: 'year', sort: 'desc' }]} />);
+      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+      getColumnHeaderCell(1).focus();
+      fireEvent.keyDown(getColumnHeaderCell(1), { key: 'Enter', shiftKey: true });
+      expect(getColumnValues()).to.deep.equal(['Puma', 'Adidas', 'Nike']);
+    });
+
+    it(`should not do a multi-sorting if no multiple key is pressed`, () => {
+      render(<TestCase sortModel={[{ field: 'year', sort: 'desc' }]} />);
+      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+      fireEvent.click(getColumnHeaderCell(1));
+      expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    });
+
+    it('should not do a multi-sorting if disableMultipleColumnsSorting is true', () => {
+      render(
+        <TestCase sortModel={[{ field: 'year', sort: 'desc' }]} disableMultipleColumnsSorting />,
+      );
+      expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+      fireEvent.click(getColumnHeaderCell(1), { shiftKey: true });
+      expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    });
   });
 
   describe('performance', () => {

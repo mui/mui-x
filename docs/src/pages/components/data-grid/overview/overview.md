@@ -71,11 +71,11 @@ We provide three options:
 - [Pagination](/components/data-grid/pagination/)
 - [Sorting](/components/data-grid/sorting) and [multi-sort](/components/data-grid/sorting/#multi-column-sorting) <span class="pro"></span>
 - [Selection](/components/data-grid/selection/)
-- [Column virtualization](/components/data-grid/rendering/#virtualization) and [rows virtualization](/components/data-grid/rendering/#virtualization) <span class="pro"></span>
+- [Column virtualization](/components/data-grid/virtualization/#column-virtualization) and [rows virtualization](/components/data-grid/virtualization/#row-virtualization) <span class="pro"></span>
 - [Resizable columns](/components/data-grid/columns/#column-resizing) <span class="pro"></span>
-- [100% customizable](/components/data-grid/rendering/#customization-example)
+- [100% customizable](/components/data-grid/style/)
 - Server-side data
-- [Column hiding](/components/data-grid/columns/#column-headers)
+- [Column hiding](/components/data-grid/columns/#hiding)
 - [Accessible](/components/data-grid/accessibility/)
 - [Localization](/components/data-grid/localization/)
 
