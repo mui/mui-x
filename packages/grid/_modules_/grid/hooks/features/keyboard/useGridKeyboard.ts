@@ -15,7 +15,6 @@ import {
   findParentElementFromClassName,
   getIdFromRowElem,
   getRowEl,
-  isGridCellRoot,
   isGridHeaderCellRoot,
 } from '../../../utils/domUtils';
 import {
@@ -145,9 +144,6 @@ export const useGridKeyboard = (
 
   const handleCellKeyDown = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
-      if (!isGridCellRoot(document.activeElement)) {
-        return;
-      }
       if (event.isPropagationStopped()) {
         return;
       }
@@ -189,11 +185,10 @@ export const useGridKeyboard = (
 
   const handleColumnHeaderKeyDown = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
-      if (!isGridHeaderCellRoot(document.activeElement)) {
+      if (event.isPropagationStopped()) {
         return;
       }
-
-      if (isSpaceKey(event.key)) {
+      if (isSpaceKey(event.key) && isGridHeaderCellRoot(document.activeElement)) {
         event.preventDefault();
       }
 

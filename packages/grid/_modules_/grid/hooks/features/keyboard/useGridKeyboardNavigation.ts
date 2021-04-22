@@ -89,8 +89,6 @@ export const useGridKeyboardNavigation = (
       const { colIndex, rowIndex } = params;
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
-      const cellEl = params.element!;
-      cellEl.tabIndex = -1;
       let rowCount = totalRowCount;
 
       if (options.pagination && totalRowCount > paginationState.pageSize) {
@@ -166,8 +164,6 @@ export const useGridKeyboardNavigation = (
       let nextColumnHeaderIndexes: GridColumnHeaderIndexCoordinates | null;
       const { colIndex } = params;
       const key = mapKey(event);
-      const ColumnHeaderEl = params.element!;
-      ColumnHeaderEl.tabIndex = -1;
 
       if (isArrowKeys(key)) {
         nextColumnHeaderIndexes = getNextColumnHeaderIndexes(key, {

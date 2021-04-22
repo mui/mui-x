@@ -18,19 +18,18 @@ import { useLogger } from '../../utils/useLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 
 export const useGridFocus = (apiRef: GridApiRef): void => {
-  const logger = useLogger('useGridKeyboardNavigation');
+  const logger = useLogger('useGridFocus');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
   const setCellFocus = React.useCallback(
     (nextCellIndexes: GridCellIndexCoordinates) => {
       setGridState((state) => {
-        logger.debug(
-          `Focusing on cell with rowIndex=${nextCellIndexes.rowIndex} and colIndex=${nextCellIndexes.colIndex}`,
-        );
+        const { rowIndex, colIndex } = nextCellIndexes;
+        logger.debug(`Focusing on cell with rowIndex=${rowIndex} and colIndex=${colIndex}`);
         return {
           ...state,
-          tabIndex: { cell: nextCellIndexes, columnHeader: null },
-          focus: { cell: nextCellIndexes, columnHeader: null },
+          tabIndex: { cell: { rowIndex, colIndex }, columnHeader: null },
+          focus: { cell: { rowIndex, colIndex }, columnHeader: null },
         };
       });
       forceUpdate();
@@ -41,11 +40,13 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
   const setColumnHeaderFocus = React.useCallback(
     (nextColumnHeaderIndexes: GridColumnHeaderIndexCoordinates) => {
       setGridState((state) => {
-        logger.debug(`Focusing on column header with colIndex=${nextColumnHeaderIndexes.colIndex}`);
+        const { colIndex } = nextColumnHeaderIndexes;
+        logger.debug(`Focusing on column header with colIndex=${colIndex}`);
+
         return {
           ...state,
-          tabIndex: { columnHeader: nextColumnHeaderIndexes, cell: null },
-          focus: { columnHeader: nextColumnHeaderIndexes, cell: null },
+          tabIndex: { columnHeader: { colIndex }, cell: null },
+          focus: { columnHeader: { colIndex }, cell: null },
         };
       });
       forceUpdate();
@@ -79,7 +80,6 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
     logger.debug(`Clearing focus`);
     setGridState((previousState) => ({
       ...previousState,
-      tabIndex: { ...previousState.focus },
       focus: { cell: null, columnHeader: null },
     }));
   }, [logger, setGridState]);
