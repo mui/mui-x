@@ -1,6 +1,7 @@
 export * from './cell';
 export * from './containers';
 export * from './columnHeaders';
+export * from './columnSelection';
 export * from './icons';
 export * from './menu';
 export * from './panel';
@@ -8,7 +9,6 @@ export * from './toolbar';
 
 export * from './GridApiContext';
 export * from './GridAutoSizer';
-export * from './GridCheckboxRenderer';
 export * from './GridFooter';
 export * from './GridHeader';
 export * from './GridLoadingOverlay';
