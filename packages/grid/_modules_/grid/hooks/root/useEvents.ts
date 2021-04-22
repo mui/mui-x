@@ -111,7 +111,6 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
   useGridApiOptionHandler(apiRef, GRID_ROW_LEAVE, options.onRowLeave);
 
   useGridApiOptionHandler(apiRef, GRID_RESIZE, options.onResize);
-  useGridApiOptionHandler(apiRef, GRID_UNMOUNT, options.onUnmount);
 
   useGridApiOptionHandler(apiRef, GRID_COMPONENT_ERROR, options.onError);
   useGridApiOptionHandler(apiRef, GRID_STATE_CHANGE, options.onStateChange);
