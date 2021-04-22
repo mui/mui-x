@@ -26,7 +26,10 @@ export default {
   },
 };
 export const RenderInputInCell = () => {
-  const handleInputKeyDown = (event) => action('InputChange')(event.target.value);
+  const handleInputKeyDown = (event) => {
+    event.stopPropagation();
+    action('InputChange')(event.target.value);
+  };
 
   const columns = [
     {

@@ -80,7 +80,13 @@ describe('<DataGrid /> - Keyboard', () => {
       },
       {
         field: 'name',
-        renderCell: () => <input type="text" data-testid="custom-input" />,
+        renderCell: () => (
+          <input
+            type="text"
+            onKeyDown={(event) => event.stopPropagation()}
+            data-testid="custom-input"
+          />
+        ),
       },
     ];
 
