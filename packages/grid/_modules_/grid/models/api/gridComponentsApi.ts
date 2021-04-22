@@ -37,9 +37,9 @@ export interface GridApiRefComponentsProperty extends GridIconSlotsComponent {
    */
   NoRowsOverlay: React.ElementType;
   /**
-   * No filtered rows overlay component rendered when the grid has no results after filtering.
+   * No results overlay component rendered when the grid has no results after filtering.
    */
-  NoFilteredRowsOverlay: React.ElementType;
+  NoResultsOverlay: React.ElementType;
   /**
    * Pagination component rendered in the grid footer by default.
    */

@@ -104,7 +104,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useRenderInfoLog(apiRef, logger);
 
     const showNoRowsOverlay = !props.loading && totalRowCount === 0;
-    const showNoFilteredRowsOverlay = !props.loading && totalRowCount > 0 && visibleRowCount === 0;
+    const showNoResultsOverlay = !props.loading && totalRowCount > 0 && visibleRowCount === 0;
     return (
       <GridApiContext.Provider value={apiRef}>
         <NoSsr>
@@ -140,10 +140,8 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                 {showNoRowsOverlay && (
                   <components.NoRowsOverlay {...props.componentsProps?.noRowsOverlay} />
                 )}
-                {showNoFilteredRowsOverlay && (
-                  <components.NoFilteredRowsOverlay
-                    {...props.componentsProps?.noFilteredRowsOverlay}
-                  />
+                {showNoResultsOverlay && (
+                  <components.NoResultsOverlay {...props.componentsProps?.noResultsOverlay} />
                 )}
                 {props.loading && (
                   <components.LoadingOverlay {...props.componentsProps?.loadingOverlay} />
