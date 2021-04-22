@@ -1,5 +1,9 @@
 import * as React from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
+import {
+  GRID_CELL_NAVIGATION_KEYDOWN,
+  GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN,
+} from '../constants/eventsConstants';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { visibleSortedGridRowIdsSelector } from '../hooks/features/filter/gridFilterSelector';
 import {
@@ -10,7 +14,7 @@ import { gridRowCountSelector } from '../hooks/features/rows/gridRowsSelector';
 import { selectedGridRowsCountSelector } from '../hooks/features/selection/gridSelectionSelector';
 import { GridColumnHeaderParams } from '../models/params/gridColumnHeaderParams';
 import { GridCellParams } from '../models/params/gridCellParams';
-import { isSpaceKey } from '../utils/keyboardUtils';
+import { isNavigationKey, isSpaceKey } from '../utils/keyboardUtils';
 import { GridApiContext } from './GridApiContext';
 
 export const GridHeaderCheckbox = (props: GridColumnHeaderParams) => {
@@ -21,7 +25,7 @@ export const GridHeaderCheckbox = (props: GridColumnHeaderParams) => {
   const totalSelectedRows = useGridSelector(apiRef, selectedGridRowsCountSelector);
   const totalRows = useGridSelector(apiRef, gridRowCountSelector);
 
-  const [isIndeterminate, setisIndeterminate] = React.useState(
+  const [isIndeterminate, setIsIndeterminate] = React.useState(
     totalSelectedRows > 0 && totalSelectedRows !== totalRows,
   );
   const [isChecked, setChecked] = React.useState(
@@ -32,7 +36,7 @@ export const GridHeaderCheckbox = (props: GridColumnHeaderParams) => {
     const isNewIndeterminate = totalSelectedRows > 0 && totalSelectedRows !== totalRows;
     const isNewChecked = (totalRows > 0 && totalSelectedRows === totalRows) || isIndeterminate;
     setChecked(isNewChecked);
-    setisIndeterminate(isNewIndeterminate);
+    setIsIndeterminate(isNewIndeterminate);
   }, [isIndeterminate, totalRows, totalSelectedRows]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
@@ -47,6 +51,18 @@ export const GridHeaderCheckbox = (props: GridColumnHeaderParams) => {
     }
   }, [props.element, tabIndex]);
 
+  const handleKeyDown = React.useCallback(
+    (event) => {
+      if (isSpaceKey(event.key)) {
+        event.stopPropagation();
+      }
+      if (isNavigationKey(event.key) && !event.shiftKey) {
+        apiRef!.current.publishEvent(GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN, props, event);
+      }
+    },
+    [apiRef, props],
+  );
+
   return (
     <Checkbox
       indeterminate={isIndeterminate}
@@ -56,6 +72,7 @@ export const GridHeaderCheckbox = (props: GridColumnHeaderParams) => {
       color="primary"
       inputProps={{ 'aria-label': 'Select All Rows checkbox' }}
       tabIndex={tabIndex}
+      onKeyDown={handleKeyDown}
     />
   );
 };
@@ -81,11 +98,17 @@ export const GridCellCheckboxRenderer = React.memo((props: GridCellParams) => {
     }
   }, [props.element, tabIndex]);
 
-  const handleKeyDown = React.useCallback((event) => {
-    if (isSpaceKey(event.key)) {
-      event.stopPropagation();
-    }
-  }, []);
+  const handleKeyDown = React.useCallback(
+    (event) => {
+      if (isSpaceKey(event.key)) {
+        event.stopPropagation();
+      }
+      if (isNavigationKey(event.key) && !event.shiftKey) {
+        apiRef!.current.publishEvent(GRID_CELL_NAVIGATION_KEYDOWN, props, event);
+      }
+    },
+    [apiRef, props],
+  );
 
   return (
     <Checkbox
