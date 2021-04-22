@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.26](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.25...v4.0.0-alpha.26)
+
+_Apr 23, 2021_
+
+Big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 💄 Release the cell editing feature (#1287) @dtassone
+
+  This is the first release of the Cell editing feature. You can find the documentation [following this link](https://material-ui.com/components/data-grid/editing/#cell-editing). We have spent the last three months working on it.
+
+  ![cell edit](https://user-images.githubusercontent.com/3165635/115632215-87994700-a307-11eb-91d9-9f5537df0911.gif)
+
+- 🐞 A focus on bug fixes and documentation improvements
+
+### @material-ui/x-grid@v4.0.0-alpha.26 / @material-ui/data-grid@v4.0.0-alpha.26
+
+- [DataGrid] Add support for Editable cells (#1287) @dtassone
+- [DataGrid] Add Ukrainian (ukUA) locale (#1418) @Neonin
+- [DataGrid] Fix 'Hide' menu item with `disableColumnSelector` (#1429) @ZeeshanTamboli
+- [DataGrid] Fix reset of virtualPage (#1451) @dtassone
+- [DataGrid] Fix support for falsy value from valueFormatter (#1425) @zj9495
+- [DataGrid] Fix support for numeric ids in selection (#1404) @m4theushw
+- [XGrid] Fix multi-sorting when focus is not in the grid root (#1422) @m4theushw
+
+### Docs
+
+- [docs] Add Shift key as option to enable multi-sorting (#1423) @m4theushw
+- [docs] Fix x-grid-data-generator dependencies (#1433) @ZeeshanTamboli
+- [docs] Improve PropType to cover required props (#1419) @ZeeshanTamboli
+- [docs] Remove duplicate rendering page (#1375) @dtassone
+
+### Core
+
+- [core] Setup e2e tests (#1443) @DanailH
+
+  This infrastructure relies on Playwright to control Chrome with the end-to-end API. It differentiates from our current end-to-end tests by running outside of the browser (Karma runs inside). It's slower and doesn't have a great DX, but it allows to test things like the <kbd>Tab</kbd> behavior.
+
 ## [4.0.0-alpha.25](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.24...v4.0.0-alpha.25)
 
 _Apr 14, 2021_
@@ -21,10 +58,10 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
 - [DataGrid] Add support for custom row ids without cloning (#1377) @m4theushw
   This change has involved the following refactorings.
-  
+
   - Changes on `apiRef.current`.
-  
-```diff  
+
+```diff
 -  getRowModels: () => GridRowModel[];
 +  getRowModels: () => Map<GridRowId, GridRowModel>;
 -  getVisibleRowModels: () => GridRowModel[];
@@ -33,7 +70,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 +  getSelectedRows: () => Map<GridRowId, GridRowModel>;
 ```
   - Changes on `GridFilterModelParams`.
-  
+
 ```diff
 export interface GridFilterModelParams {
   /**
@@ -47,7 +84,7 @@ export interface GridFilterModelParams {
 -  visibleRows: GridRowModel[];
 +  visibleRows: Map<GridRowId, GridRowModel>;
 }
-```  
+```
 
 - [DataGrid] Upgrade mininum supported version of React to 17.0.0 (#1410) @m4theushw
 
