@@ -72,8 +72,7 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
   const resize = React.useCallback(
     () =>
       apiRef.current.publishEvent(GRID_RESIZE, {
-        viewportSizes: apiRef.current.getState().viewportSizes,
-        scrollBar: apiRef.current.getState().scrollBar,
+        containerSize: apiRef.current.getState().containerSizes?.windowSizes,
       }),
     [apiRef],
   );

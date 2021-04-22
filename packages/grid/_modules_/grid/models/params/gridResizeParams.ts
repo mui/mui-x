@@ -1,15 +1,11 @@
-import { GridScrollBarState, GridViewportSizeState } from '../gridContainerProps';
+import { ElementSize } from '../elementSize';
 
 /**
  * Object passed as parameter onto the resize event handler.
  */
 export interface GridResizeParams {
   /**
-   * The viewport sizes state.
+   * The container size.
    */
-  viewportSizes: GridViewportSizeState;
-  /**
-   * The scrollbar state.
-   */
-  scrollBar: GridScrollBarState;
+  containerSize: ElementSize;
 }
