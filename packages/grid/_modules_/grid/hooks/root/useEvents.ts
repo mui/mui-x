@@ -5,8 +5,6 @@ import { optionsSelector } from '../utils/optionsSelector';
 import { useLogger } from '../utils/useLogger';
 import {
   GRID_CELL_CLICK,
-  GRID_COL_RESIZE_START,
-  GRID_COL_RESIZE_STOP,
   GRID_COLUMN_HEADER_CLICK,
   GRID_UNMOUNT,
   GRID_KEYDOWN,
@@ -37,12 +35,10 @@ import {
   GRID_CELL_BLUR,
 } from '../../constants/eventsConstants';
 import { useGridApiMethod } from './useGridApiMethod';
-import { useGridApiEventHandler, useGridApiOptionHandler } from './useGridApiEventHandler';
+import { useGridApiOptionHandler } from './useGridApiEventHandler';
 import { GridEventsApi } from '../../models/api/gridEventsApi';
 
 export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: GridApiRef): void {
-  //  We use the isResizingRef to prevent the click on column header when the user is resizing the column
-  const isResizingRef = React.useRef(false);
   const logger = useLogger('useEvents');
   const options = useGridSelector(apiRef, optionsSelector);
 
@@ -74,20 +70,9 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
     [apiRef],
   );
 
-  const handleResizeStart = React.useCallback(() => {
-    isResizingRef.current = true;
-  }, []);
-
-  const handleResizeStop = React.useCallback(() => {
-    isResizingRef.current = false;
-  }, []);
-
   const resize = React.useCallback(() => apiRef.current.publishEvent(GRID_RESIZE), [apiRef]);
   const eventsApi: GridEventsApi = { resize, onUnmount, onResize };
   useGridApiMethod(apiRef, eventsApi, 'GridEventsApi');
-
-  useGridApiEventHandler(apiRef, GRID_COL_RESIZE_START, handleResizeStart);
-  useGridApiEventHandler(apiRef, GRID_COL_RESIZE_STOP, handleResizeStop);
 
   useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_CLICK, options.onColumnHeaderClick);
   useGridApiOptionHandler(

@@ -55,7 +55,13 @@ export interface GridColumnApi {
   /**
    * Allows to move a column to another position in the column array.
    * @param field
-   * @param targetIndexPosition .
+   * @param targetIndexPosition
    */
   setColumnIndex: (field: string, targetIndexPosition: number) => void;
+  /**
+   * Allows to set target column width.
+   * @param field
+   * @param width
+   */
+  setColumnWidth: (field: string, width: number) => void;
 }

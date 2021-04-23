@@ -11,6 +11,7 @@ import {
   GRID_COLUMN_HEADER_DRAG_OVER,
   GRID_COLUMN_HEADER_DRAG_START,
   GRID_COLUMN_HEADER_DRAG_END,
+  GRID_COLUMN_SEPARATOR_MOUSE_DOWN,
   GRID_COLUMN_HEADER_FOCUS,
 } from '../../constants/eventsConstants';
 import { GridColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
@@ -107,6 +108,13 @@ export const GridColumnHeaderItem = ({
     [publish],
   );
 
+  const resizeEventHandlers = React.useMemo(
+    () => ({
+      onMouseDown: publish(GRID_COLUMN_SEPARATOR_MOUSE_DOWN),
+    }),
+    [publish],
+  );
+
   const cssClasses = classnames(
     GRID_HEADER_CELL_CSS_CLASS,
     column.headerClassName,
@@ -192,7 +200,7 @@ export const GridColumnHeaderItem = ({
         resizable={!disableColumnResize && !!column.resizable}
         resizing={isResizing}
         height={headerHeight}
-        onMouseDown={apiRef?.current.startResizeOnMouseDown}
+        {...resizeEventHandlers}
       />
     </div>
   );

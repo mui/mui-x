@@ -11,6 +11,10 @@ import {
   GridColumnReorderState,
   getInitialGridColumnReorderState,
 } from '../columnReorder/columnReorderState';
+import {
+  getInitialGridColumnResizeState,
+  GridColumnResizeState,
+} from '../columnResize/columnResizeState';
 import { GridGridDensity, getInitialGridDensityState } from '../density/densityState';
 import { GridFilterModelState, getInitialGridFilterState } from '../filter/gridFilterModelState';
 import {
@@ -39,6 +43,7 @@ export interface GridState {
   isScrolling: boolean;
   columns: GridInternalColumns;
   columnReorder: GridColumnReorderState;
+  columnResize: GridColumnResizeState;
   columnMenu: GridColumnMenuState;
   rendering: InternalRenderingState;
   containerSizes: GridContainerProps | null;
@@ -61,6 +66,7 @@ export const getInitialGridState: () => GridState = () => ({
   isScrolling: false,
   columns: getInitialGridColumnsState(),
   columnReorder: getInitialGridColumnReorderState(),
+  columnResize: getInitialGridColumnResizeState(),
   rendering: getInitialGridRenderingState(),
   containerSizes: null,
   scrollBar: { hasScrollX: false, hasScrollY: false, scrollBarSize: { x: 0, y: 0 } },
