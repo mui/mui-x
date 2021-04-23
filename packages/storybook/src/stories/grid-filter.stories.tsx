@@ -644,7 +644,7 @@ export function DemoMultiFilteringGrid() {
   );
 }
 
-export function AllFilteredSnap() {
+export function NoResultsSnap() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 100,
