@@ -5,7 +5,7 @@ export interface GridLocaleText {
   // Root
   rootGridLabel: string;
   noRowsLabel: string;
-  allRowsFilteredLabel: string;
+  noResultsOverlayLabel: string;
   errorOverlayDefaultLabel: string;
 
   // Density selector toolbar button text
