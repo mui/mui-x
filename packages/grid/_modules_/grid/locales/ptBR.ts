@@ -6,7 +6,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // Root
   rootGridLabel: 'Grade',
   noRowsLabel: 'Nenhuma linha',
-  noResultsOverlayLabel: 'Todos os registros estão filtrados',
+  noResultsOverlayLabel: 'Nenhum registro encontrado.',
   errorOverlayDefaultLabel: 'Ocorreu um erro.',
 
   // Density selector toolbar button text
