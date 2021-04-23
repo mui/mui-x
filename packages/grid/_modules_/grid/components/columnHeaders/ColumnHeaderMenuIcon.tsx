@@ -1,6 +1,4 @@
 import * as React from 'react';
-// @ts-expect-error fixed in Material-UI v5, types definitions were added.
-import { unstable_useId as useId } from '@material-ui/core/utils';
 import IconButton from '@material-ui/core/IconButton';
 import { gridColumnMenuStateSelector } from '../../hooks/features/columnMenu/columnMenuSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
@@ -16,17 +14,17 @@ export function ColumnHeaderMenuIcon(props: ColumnHeaderFilterIconProps) {
   const { column } = props;
   const apiRef = React.useContext(GridApiContext);
   const columnMenuState = useGridSelector(apiRef, gridColumnMenuStateSelector);
-  const columnMenuButtonId: string = useId();
-  const columnMenuId: string = useId();
+  const columnMenuButtonId = `${column.field}-column-menu-button`;
+  const columnMenuId = `${column.field}-column-menu`;
   const ColumnMenuIcon = apiRef!.current.components.ColumnMenuIcon!;
 
   const handleMenuIconClick = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       event.stopPropagation();
-      apiRef!.current.toggleColumnMenu(column.field, columnMenuId, columnMenuButtonId);
+      apiRef!.current.toggleColumnMenu(column.field);
     },
-    [apiRef, column.field, columnMenuId, columnMenuButtonId],
+    [apiRef, column.field],
   );
 
   const open = columnMenuState.open && columnMenuState.field === column.field;

@@ -22,6 +22,8 @@ export function GridColumnHeaderMenu({
   const currentColumn = columnMenuState.field
     ? apiRef?.current.getColumnFromField(columnMenuState.field)
     : null;
+  const columnMenuButtonId = `${columnMenuState.field}-column-menu-button`;
+  const columnMenuId = `${columnMenuState.field}-column-menu`;
   const [target, setTarget] = React.useState<Element | null>(null);
 
   // TODO: Fix issue with portal in V5
@@ -77,8 +79,8 @@ export function GridColumnHeaderMenu({
         currentColumn={currentColumn}
         hideMenu={hideMenu}
         open={columnMenuState.open}
-        id={columnMenuState.id}
-        labelledby={columnMenuState.labelledby}
+        id={columnMenuId}
+        labelledby={columnMenuButtonId}
         {...contentComponentProps}
       />
     </GridMenu>
