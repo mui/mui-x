@@ -34,7 +34,7 @@
     "test:regressions:build": "webpack --config test/regressions/webpack.config.js",
     "test:regressions:dev": "concurrently \"yarn test:regressions:build --watch\" \"yarn test:regressions:server\"",
     "test:regressions:run": "mocha --config test/regressions/.mocharc.js --delay 'test/regressions/**/*.test.js'",
-    "test:regressions:server": "serve test/regressions",
+    "test:regressions:server": "serve test/regressions -p 5001",
     "test:argos": "node ./scripts/pushArgos.js",
     "lint": "yarn eslint && yarn jsonlint",
     "eslint": "eslint . --report-unused-disable-directives --ext .js,.ts,.tsx",
