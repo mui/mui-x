@@ -72,5 +72,27 @@ describe('e2e', () => {
       await page.keyboard.press('Tab');
       expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('Nike');
     });
+
+    it('should implement the roving tabindex pattern', async () => {
+      await renderFixture('DataGrid/KeyboardNavigationFocus');
+
+      expect(
+        await page.evaluate(() => document.activeElement?.getAttribute('data-testid')),
+      ).to.equal('initial-focus');
+      await page.keyboard.press('Tab');
+      expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('Nike');
+      expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal('cell');
+      await page.keyboard.press('ArrowDown');
+      expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('Adidas');
+      expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal('cell');
+      await page.keyboard.press('Tab');
+      expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('100');
+      expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal('button');
+      await page.keyboard.press('Shift+Tab');
+      expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('Adidas');
+      expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal('cell');
+      await page.keyboard.press('Shift+Tab');
+      expect(await page.evaluate(() => document.activeElement?.getAttribute('data-testid'))).to.equal('initial-focus');
+    });
   });
 });
