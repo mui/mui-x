@@ -58,6 +58,7 @@ The same import works with `XGrid` as it's an extension of `DataGrid`.
 | Japanese                | ja-JP               | `jaJP`      |
 | Polish                  | pl-PL               | `plPL`      |
 | Portuguese (Brazil)     | pt-BR               | `ptBR`      |
+| Russian                 | ru-RU               | `ruRU`      |
 | Spanish (Spain)         | es-ES               | `esES`      |
 | Ukraine                 | uk-UA               | `ukUA`      |
 
