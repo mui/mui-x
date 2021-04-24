@@ -14,20 +14,16 @@ import {
   fireEvent,
 } from 'test/utils';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<XGrid /> - Edit Rows', () => {
   let baselineProps;
-
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
 
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
   beforeEach(() => {
     baselineProps = {
+      autoHeight: isJSDOM,
       rows: [
         {
           id: 0,
@@ -58,12 +54,7 @@ describe('<XGrid /> - Edit Rows', () => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
-        <XGrid
-          apiRef={apiRef}
-          columns={baselineProps.columns}
-          rows={baselineProps.rows}
-          {...props}
-        />
+        <XGrid {...baselineProps} apiRef={apiRef} {...props} />
       </div>
     );
   };
