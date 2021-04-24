@@ -54,7 +54,11 @@ describe('<XGrid /> - Edit Rows', () => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
-        <XGrid {...baselineProps} apiRef={apiRef} {...props} />
+        <XGrid
+          {...baselineProps}
+          apiRef={apiRef}
+          {...props}
+        />
       </div>
     );
   };

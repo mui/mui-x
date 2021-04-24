@@ -3,16 +3,15 @@ import { expect } from 'chai';
 import * as React from 'react';
 import { createClientRenderStrictMode } from 'test/utils';
 
-describe('<XGrid /> - Export', () => {
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
+describe('<XGrid /> - Export', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
+
+  const baselineProps = {
+    autoHeight: isJSDOM,
+  };
 
   let apiRef: GridApiRef;
 
@@ -22,6 +21,7 @@ describe('<XGrid /> - Export', () => {
       return (
         <div style={{ width: 300, height: 300 }}>
           <XGrid
+            {...baselineProps}
             apiRef={apiRef}
             columns={[{ field: 'brand', headerName: 'Brand' }]}
             rows={[
@@ -60,6 +60,7 @@ describe('<XGrid /> - Export', () => {
       return (
         <div style={{ width: 300, height: 300 }}>
           <XGrid
+            {...baselineProps}
             apiRef={apiRef}
             columns={[{ field: 'brand', headerName: 'Brand' }]}
             rows={[
@@ -87,6 +88,7 @@ describe('<XGrid /> - Export', () => {
       return (
         <div style={{ width: 300, height: 300 }}>
           <XGrid
+            {...baselineProps}
             apiRef={apiRef}
             columns={[{ field: 'brand', headerName: 'Brand' }]}
             rows={[
