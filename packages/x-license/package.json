@@ -18,6 +18,7 @@
     "dist/*"
   ],
   "license": "See LICENSE file",
+  "sideEffects": false,
   "publishConfig": {
     "access": "public"
   },
