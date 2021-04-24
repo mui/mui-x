@@ -14,14 +14,14 @@ import {
   COMPACT_DENSITY_FACTOR,
 } from 'packages/grid/_modules_/grid/hooks/features/density/useGridDensity';
 
-const NO_LAYOUT = /jsdom/.test(window.navigator.userAgent);
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Toolbar', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
-    autoHeight: NO_LAYOUT,
+    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,

@@ -10,14 +10,14 @@ import Portal from '@material-ui/core/Portal';
 import { DataGrid } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
-const NO_LAYOUT = /jsdom/.test(window.navigator.userAgent);
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Rows', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
-    autoHeight: NO_LAYOUT,
+    autoHeight: isJSDOM,
     rows: [
       {
         clientId: 'c1',

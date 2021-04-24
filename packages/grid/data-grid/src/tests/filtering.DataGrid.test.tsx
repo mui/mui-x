@@ -4,14 +4,14 @@ import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
-const NO_LAYOUT = /jsdom/.test(window.navigator.userAgent);
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Filter', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
-    autoHeight: NO_LAYOUT,
+    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,
@@ -43,7 +43,7 @@ describe('<DataGrid /> - Filter', () => {
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid
-          autoHeight={NO_LAYOUT}
+          autoHeight={isJSDOM}
           columns={columns || baselineProps.columns}
           rows={rows || baselineProps.rows}
           filterModel={{

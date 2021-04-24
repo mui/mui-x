@@ -26,7 +26,7 @@ import { GridColumns } from 'packages/grid/_modules_/grid/models/colDef/gridColD
 
 const SPACE_KEY = { key: ' ' };
 const SHIFT_SPACE_KEY = { ...SPACE_KEY, shiftKey: true };
-const NO_LAYOUT = /jsdom/.test(window.navigator.userAgent);
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Keyboard', () => {
   // TODO v5: replace with createClientRender
@@ -134,11 +134,7 @@ describe('<DataGrid /> - Keyboard', () => {
 
     return (
       <div style={{ width: 300, height: 360 }}>
-        <DataGrid
-          autoHeight={NO_LAYOUT}
-          rows={data.rows}
-          columns={transformColSizes(data.columns)}
-        />
+        <DataGrid autoHeight={isJSDOM} rows={data.rows} columns={transformColSizes(data.columns)} />
       </div>
     );
   };
@@ -175,7 +171,7 @@ describe('<DataGrid /> - Keyboard', () => {
   });
 
   it('Space only should go to the bottom of the page', function test() {
-    if (NO_LAYOUT) {
+    if (isJSDOM) {
       // Need layouting for row virtualization
       this.skip();
     }
@@ -196,7 +192,7 @@ describe('<DataGrid /> - Keyboard', () => {
   });
 
   it('Home / End navigation', async function test() {
-    if (NO_LAYOUT) {
+    if (isJSDOM) {
       // Need layouting for column virtualization
       this.skip();
     }
@@ -232,11 +228,7 @@ describe('<DataGrid /> - Keyboard', () => {
 
     render(
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid
-          autoHeight={NO_LAYOUT}
-          rows={baselineProps.rows}
-          columns={baselineProps.columns}
-        />
+        <DataGrid autoHeight={isJSDOM} rows={baselineProps.rows} columns={baselineProps.columns} />
       </div>,
     );
 
