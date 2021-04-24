@@ -15,6 +15,8 @@ import {
 } from 'test/utils';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<XGrid /> - Sorting', () => {
   let clock;
 
@@ -29,13 +31,6 @@ describe('<XGrid /> - Sorting', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
-
   let apiRef: GridApiRef;
 
   const TestCase = (props: {
@@ -44,6 +39,7 @@ describe('<XGrid /> - Sorting', () => {
     disableMultipleColumnsSorting?: boolean;
   }) => {
     const baselineProps = {
+      autoHeight: isJSDOM,
       rows: [
         {
           id: 0,

@@ -5,7 +5,6 @@ import { expect } from 'chai';
 import { getCell, getColumnValues } from 'test/utils/helperFn';
 import {
   GridApiRef,
-  GridColDef,
   GridComponentProps,
   GridRowData,
   useGridApiRef,
@@ -14,25 +13,21 @@ import {
 } from '@material-ui/x-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<XGrid /> - Rows', () => {
   let clock;
-  let baselineProps: { columns: GridColDef[]; rows: GridRowData[] };
+  let baselineProps;
 
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
-
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
 
   describe('getRowId', () => {
     beforeEach(() => {
       clock = useFakeTimers();
 
       baselineProps = {
+        autoHeight: isJSDOM,
         rows: [
           {
             clientId: 'c1',
@@ -131,6 +126,7 @@ describe('<XGrid /> - Rows', () => {
       clock = useFakeTimers();
 
       baselineProps = {
+        autoHeight: isJSDOM,
         rows: [
           {
             id: 0,
@@ -159,12 +155,7 @@ describe('<XGrid /> - Rows', () => {
       apiRef = useGridApiRef();
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid
-            apiRef={apiRef}
-            columns={baselineProps.columns}
-            rows={baselineProps.rows}
-            {...props}
-          />
+          <XGrid {...baselineProps} apiRef={apiRef} {...props} />
         </div>
       );
     };
@@ -245,8 +236,8 @@ describe('<XGrid /> - Rows', () => {
         return (
           <div style={{ width: 300, height: 300 }}>
             <XGrid
+              {...baselineProps}
               apiRef={apiRef}
-              columns={baselineProps.columns}
               rows={baselineProps.rows.map((row) => ({ idField: row.id, brand: row.brand }))}
               getRowId={getRowId}
             />
@@ -268,6 +259,13 @@ describe('<XGrid /> - Rows', () => {
   });
 
   describe('virtualization', () => {
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
     let apiRef: GridApiRef;
     const TestCaseVirtualization = (
       props: Partial<XGridProps> & { nbRows?: number; nbCols?: number; height?: number },
