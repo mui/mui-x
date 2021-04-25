@@ -7,12 +7,8 @@
   "module": "dist/esm/index.js",
   "types": "dist/x-license.d.ts",
   "scripts": {
-    "precommit": "npm run lint",
-    "build": "rollup -c",
-    "start": "rollup -cw",
-    "lint": "../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../.eslintrc.js",
-    "test": "../../node_modules/.bin/jest --config jest.config.js",
-    "typescript": "tsc -p tsconfig.json"
+    "typescript": "tsc -p tsconfig.json",
+    "build": "rollup -c"
   },
   "files": [
     "dist/*"
