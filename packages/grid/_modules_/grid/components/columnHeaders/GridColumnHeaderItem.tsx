@@ -108,12 +108,12 @@ export const GridColumnHeaderItem = React.memo(
       [publish],
     );
 
-  const resizeEventHandlers = React.useMemo(
-    () => ({
-      onMouseDown: publish(GRID_COLUMN_SEPARATOR_MOUSE_DOWN),
-    }),
-    [publish],
-  );
+    const resizeEventHandlers = React.useMemo(
+      () => ({
+        onMouseDown: publish(GRID_COLUMN_SEPARATOR_MOUSE_DOWN),
+      }),
+      [publish],
+    );
 
     const cssClasses = classnames(
       GRID_HEADER_CELL_CSS_CLASS,
