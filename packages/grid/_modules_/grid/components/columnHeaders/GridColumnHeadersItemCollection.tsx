@@ -4,6 +4,7 @@ import { gridResizingColumnFieldSelector } from '../../hooks/features/columnResi
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { filterGridColumnLookupSelector } from '../../hooks/features/filter/gridFilterSelector';
 import {
+  gridFocusColumnHeaderSelector,
   gridTabIndexCellSelector,
   gridTabIndexColumnHeaderSelector,
 } from '../../hooks/features/focus/gridFocusStateSelector';
@@ -26,7 +27,7 @@ export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemColl
   const filterColumnLookup = useGridSelector(apiRef, filterGridColumnLookupSelector);
   const dragCol = useGridSelector(apiRef, gridColumnReorderDragColSelector);
   const resizingColumnField = useGridSelector(apiRef, gridResizingColumnFieldSelector);
-  const columnHeaderFocus = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
+  const columnHeaderFocus = useGridSelector(apiRef, gridFocusColumnHeaderSelector);
   const renderCtx = useGridSelector(apiRef, renderStateSelector).renderContext;
   const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
   const cellTabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
