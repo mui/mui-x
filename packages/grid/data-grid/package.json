@@ -43,6 +43,6 @@
     "<rootDir>/src/setupTests.js"
   ],
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=12.0.0"
   }
 }
