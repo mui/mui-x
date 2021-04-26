@@ -6,7 +6,7 @@ import { gridPreferencePanelStateSelector } from '../../hooks/features/preferenc
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { GridApiContext } from '../GridApiContext';
 
-export const GridColumnsToolbarButton: React.FC<{}> = () => {
+export const GridColumnsToolbarButton = () => {
   const apiRef = React.useContext(GridApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
   const ColumnSelectorIcon = apiRef!.current.components.ColumnSelectorIcon!;

@@ -1,7 +1,12 @@
 import * as React from 'react';
 import { GridApiContext } from './GridApiContext';
 
-export const GridRowCount: React.FC<{ rowCount: number }> = ({ rowCount }) => {
+export interface GridRowCountProps {
+  rowCount: number;
+}
+
+export const GridRowCount = (props: GridRowCountProps) => {
+  const { rowCount } = props;
   const apiRef = React.useContext(GridApiContext);
 
   if (rowCount === 0) {

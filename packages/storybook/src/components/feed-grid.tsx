@@ -10,7 +10,8 @@ export interface FeedGridProps {
   max?: number;
   options?: GridOptionsProp;
 }
-export const FeedGrid: React.FC<FeedGridProps> = (p) => {
+export const FeedGrid = (props: FeedGridProps) => {
+  const { min, max } = props;
   const [columns] = React.useState<GridColDef[]>(pricingColumns);
   const [rows] = React.useState<PricingModel[]>([]);
 
@@ -31,7 +32,7 @@ export const FeedGrid: React.FC<FeedGridProps> = (p) => {
         }),
       );
 
-      const data$ = subscribeFeed(p.min, p.max);
+      const data$ = subscribeFeed(min, max);
       subscriptionRef.add(
         data$.pipe(takeUntil(cancel$)).subscribe((data) => handleNewPrices(data)),
       );
@@ -67,7 +68,7 @@ export const FeedGrid: React.FC<FeedGridProps> = (p) => {
         </button>
       </div>
       <div style={{ width: 800, height: 600 }}>
-        <XGrid rows={rows} columns={columns} apiRef={apiRef} {...p} getRowId={getRowId} />
+        <XGrid rows={rows} columns={columns} apiRef={apiRef} {...props} getRowId={getRowId} />
       </div>
     </React.Fragment>
   );
