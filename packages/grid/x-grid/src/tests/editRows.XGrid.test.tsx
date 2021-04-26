@@ -71,7 +71,7 @@ describe('<XGrid /> - Edit Rows', () => {
   it('isCellEditable should add the class MuiDataGrid-cellEditable to editable cells but not prevent a cell from switching mode', () => {
     render(<TestCase isCellEditable={(params) => params.value === 'Adidas'} />);
     const cellNike = getCell(0, 0);
-    expect(cellNike).to.not.have.class('MuiDataGrid-cellEditable');
+    expect(cellNike).not.to.have.class('MuiDataGrid-cellEditable');
     const cellAdidas = getCell(1, 0);
     expect(cellAdidas).to.have.class('MuiDataGrid-cellEditable');
 
@@ -90,7 +90,7 @@ describe('<XGrid /> - Edit Rows', () => {
 
     apiRef!.current.setCellMode(1, 'brand', 'view');
     expect(cell).to.have.class('MuiDataGrid-cellEditable');
-    expect(cell).to.not.have.class('MuiDataGrid-cellEditing');
+    expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
     expect(cell.querySelector('input')).to.equal(null);
   });
 
@@ -112,7 +112,7 @@ describe('<XGrid /> - Edit Rows', () => {
     fireEvent.doubleClick(cell);
 
     expect(cell).to.have.class('MuiDataGrid-cellEditable');
-    expect(cell).to.not.have.class('MuiDataGrid-cellEditing');
+    expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
     expect(cell.querySelector('input')).to.equal(null);
   });
 
@@ -132,11 +132,22 @@ describe('<XGrid /> - Edit Rows', () => {
     const cell = getCell(1, 0);
     cell.focus();
 
-    expect(cell.textContent).to.equal('Adidas');
+    expect(cell).to.have.text('Adidas');
     fireEvent.keyDown(cell, { key: 'Delete' });
     expect(cell).to.have.class('MuiDataGrid-cellEditable');
-    expect(cell).to.not.have.class('MuiDataGrid-cellEditing');
-    expect(cell.textContent).to.equal('');
+    expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
+    expect(cell).to.have.text('');
+  });
+
+  it('should not allow to delete a cell directly if it is not editable', () => {
+    render(<TestCase isCellEditable={() => false} />);
+    const cell = getCell(1, 0);
+    cell.focus();
+
+    expect(cell).to.have.text('Adidas');
+    fireEvent.keyDown(cell, { key: 'Delete' });
+    expect(cell).not.to.have.class('MuiDataGrid-cellEditable');
+    expect(cell).to.have.text('Adidas');
   });
 
   // Due to an issue with the keyDown event in test library, this test uses the apiRef to publish an event
@@ -145,7 +156,7 @@ describe('<XGrid /> - Edit Rows', () => {
     render(<TestCase />);
     const cell = getCell(1, 0);
     cell.focus();
-    expect(cell.textContent).to.equal('Adidas');
+    expect(cell).to.have.text('Adidas');
     const params = apiRef.current.getCellParams(1, 'brand');
     apiRef.current.publishEvent(GRID_CELL_KEYDOWN, params, {
       key: 'a',
@@ -174,8 +185,8 @@ describe('<XGrid /> - Edit Rows', () => {
 
     fireEvent.keyDown(input, { key: 'Escape' });
     expect(cell).to.have.class('MuiDataGrid-cellEditable');
-    expect(cell).to.not.have.class('MuiDataGrid-cellEditing');
-    expect(cell.textContent).to.equal('Adidas');
+    expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
+    expect(cell).to.have.text('Adidas');
   });
 
   it('should allow to save an edit changes using Enter', () => {
@@ -190,8 +201,8 @@ describe('<XGrid /> - Edit Rows', () => {
 
     fireEvent.keyDown(input, { key: 'Enter' });
     expect(cell).to.have.class('MuiDataGrid-cellEditable');
-    expect(cell).to.not.have.class('MuiDataGrid-cellEditing');
-    expect(cell.textContent).to.equal('n');
+    expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
+    expect(cell).to.have.text('n');
     expect(getActiveCell()).to.equal('2-0');
   });
 
@@ -208,8 +219,8 @@ describe('<XGrid /> - Edit Rows', () => {
 
     fireEvent.keyDown(input, { key: 'Tab' });
     expect(cell).to.have.class('MuiDataGrid-cellEditable');
-    expect(cell).to.not.have.class('MuiDataGrid-cellEditing');
-    expect(cell.textContent).to.equal('n');
+    expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
+    expect(cell).to.have.text('n');
     expect(getActiveCell()).to.equal('1-1');
   });
 
@@ -226,8 +237,8 @@ describe('<XGrid /> - Edit Rows', () => {
 
     fireEvent.keyDown(input, { key: 'Tab', shiftKey: true });
     expect(cell).to.have.class('MuiDataGrid-cellEditable');
-    expect(cell).to.not.have.class('MuiDataGrid-cellEditing');
-    expect(cell.textContent).to.equal('1970');
+    expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
+    expect(cell).to.have.text('1970');
     expect(getActiveCell()).to.equal('1-0');
   });
 });

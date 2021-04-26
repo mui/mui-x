@@ -268,7 +268,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
 
   const handleCellKeyDown = React.useCallback(
     (params: GridCellParams, event) => {
-      if (event.isPropagationStopped()) {
+      if (!params.isEditable || event.isPropagationStopped()) {
         return;
       }
 
