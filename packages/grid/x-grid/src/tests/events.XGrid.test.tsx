@@ -120,14 +120,11 @@ describe('<XGrid /> - Events Params', () => {
     let eventArgs: { params: GridCellParams; event: React.MouseEvent } | null = null;
     let cell11;
 
-    beforeEach(() => {
+    it('should include the correct params', () => {
       const handleClick = (params, event) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onCellClick={handleClick} />);
-    });
-
-    it('should include the correct params', () => {
       cell11 = getCell(1, 1);
       fireEvent.click(cell11);
 
@@ -146,6 +143,10 @@ describe('<XGrid /> - Events Params', () => {
     });
 
     it('should include the correct params when grid is sorted', () => {
+      const handleClick = (params, event) => {
+        eventArgs = { params, event };
+      };
+      render(<TestEvents onCellClick={handleClick} />);
       const header = screen
         .getByRole('columnheader', { name: 'first' })
         .querySelector('.MuiDataGrid-colCellTitleContainer');
@@ -169,6 +170,10 @@ describe('<XGrid /> - Events Params', () => {
     });
 
     it('should consider value getter', () => {
+      const handleClick = (params, event) => {
+        eventArgs = { params, event };
+      };
+      render(<TestEvents onCellClick={handleClick} />);
       const cellFirstAge = getCell(1, 3);
       fireEvent.click(cellFirstAge);
 
@@ -176,6 +181,10 @@ describe('<XGrid /> - Events Params', () => {
     });
 
     it('should consider value formatter', () => {
+      const handleClick = (params, event) => {
+        eventArgs = { params, event };
+      };
+      render(<TestEvents onCellClick={handleClick} />);
       const cellFirstAge = getCell(1, 3);
       fireEvent.click(cellFirstAge);
 
