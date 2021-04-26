@@ -28,7 +28,7 @@ import { useGridEditRows } from './hooks/features/rows/useGridEditRows';
 import { useGridSorting } from './hooks/features/sorting/useGridSorting';
 import { useGridApiRef } from './hooks/features/useGridApiRef';
 import { useGridColumnReorder } from './hooks/features/columnReorder';
-import { useGridColumnResize } from './hooks/features/useGridColumnResize';
+import { useGridColumnResize } from './hooks/features/columnResize';
 import { useGridComponents } from './hooks/features/useGridComponents';
 import { useGridSelection } from './hooks/features/selection/useGridSelection';
 import { useApi } from './hooks/root/useApi';

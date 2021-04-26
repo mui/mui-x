@@ -66,7 +66,6 @@ We provide three options:
 
 - Built with and exclusively for React ⚛️
 - High performance 🚀
-- Lightweight; less than [30 kB](https://bundlephobia.com/result?p=@material-ui/data-grid) gzipped with as few dependencies as possible.
 - [Filtering](/components/data-grid/filtering/) and [multi-filtering](/components/data-grid/filtering/#multi-column-filtering) <span class="pro"></span>
 - [Pagination](/components/data-grid/pagination/)
 - [Sorting](/components/data-grid/sorting) and [multi-sort](/components/data-grid/sorting/#multi-column-sorting) <span class="pro"></span>

@@ -26,6 +26,7 @@ import {
 } from './params/gridEditCellParams';
 import { GridRowScrollEndParams } from './params/gridRowScrollEndParams';
 import { GridColumnOrderChangeParams } from './params/gridColumnOrderChangeParams';
+import { GridColumnResizeParams } from './params/gridColumnResizeParams';
 
 // TODO add multiSortKey
 /**
@@ -301,6 +302,16 @@ export interface GridOptions {
    * @param param With all properties from [[GridColumnHeaderParams]].
    */
   onColumnOrderChange?: (param: GridColumnOrderChangeParams) => void;
+  /**
+   * Callback fired when a column is resizing.
+   * @param param With all properties from [[GridColumnResizeParams]].
+   */
+  onColumnResize?: (param: GridColumnResizeParams) => void;
+  /**
+   * Callback fired when a column is resized.
+   * @param param With all properties from [[GridColumnResizeParams]].
+   */
+  onColumnResizeCommitted?: (param: GridColumnResizeParams) => void;
   /**
    * Callback fired when the Filter model changes before the filters are applied.
    * @param param With all properties from [[GridFilterModelParams]].
