@@ -9,21 +9,9 @@ export function generateReleaseInfo() {
   return base64Encode(today.getTime().toString());
 }
 
-const MUI_DOMAINS = [
-  'https://muix-preview.netlify.app/',
-  'https://muix-storybook.netlify.app/',
-  'material-ui.com/',
-];
-const isOnMUIDomain = () =>
-  MUI_DOMAINS.some((domain) => window != null && window.location.href.indexOf(domain) > -1);
-
 const expiryReg = /^.*EXPIRY=([0-9]+),.*$/;
 
 export function verifyLicense(releaseInfo: string, encodedLicense: string) {
-  if (isOnMUIDomain()) {
-    return LicenseStatus.Valid;
-  }
-
   if (!releaseInfo) {
     throw new Error(
       'Material-UI: The release information is missing. Not able to validate license.',

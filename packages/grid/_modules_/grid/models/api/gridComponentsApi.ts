@@ -60,7 +60,7 @@ export interface GridComponentsApi {
    */
   components: GridApiRefComponentsProperty;
   /**
-   * Overrideable components props dynamic passed to the component at rendering.
+   * Overrideable components props dynamically passed to the component at rendering.
    */
   componentsProps?: GridSlotsComponentsProps;
 }

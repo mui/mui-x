@@ -77,11 +77,27 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         expect(ref.current).to.equal(container.firstChild.firstChild);
       });
 
-      function randomStringValue() {
-        return `r${Math.random().toString(36).slice(2)}`;
-      }
+      describe('Apply the `classes` prop', () => {
+        it("should apply the `root` rule name's value as a class to the root grid component", () => {
+          const classes = {
+            root: 'my_class_name',
+          };
+
+          const { container } = render(
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid {...baselineProps} classes={{ root: classes.root }} />
+            </div>,
+          );
+
+          expect(container.firstChild.firstChild).to.have.class(classes.root);
+        });
+      });
 
       it('applies the className to the root component', () => {
+        function randomStringValue() {
+          return `r${Math.random().toString(36).slice(2)}`;
+        }
+
         const className = randomStringValue();
 
         const { container } = render(

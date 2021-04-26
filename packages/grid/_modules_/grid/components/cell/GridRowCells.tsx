@@ -37,7 +37,7 @@ interface RowCellsProps {
   cellTabIndex: GridCellIndexCoordinates | null;
 }
 
-export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
+export const GridRowCells = React.memo((props: RowCellsProps) => {
   const {
     columns,
     firstColIdx,
@@ -90,7 +90,7 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
       cssClassProp = { cssClass: `${cssClassProp.cssClass} MuiDataGrid-cellEditing` };
     }
 
-    const cellProps: GridCellProps & { children: any } = {
+    const cellProps: GridCellProps = {
       value: cellParams.value,
       field: column.field,
       width: column.width!,

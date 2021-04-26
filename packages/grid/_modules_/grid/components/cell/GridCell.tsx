@@ -35,10 +35,11 @@ export interface GridCellProps {
   value?: GridCellValue;
   width: number;
   cellMode?: GridCellMode;
+  children: React.ReactElement | null;
   tabIndex: 0 | -1;
 }
 
-export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
+export const GridCell = React.memo((props: GridCellProps) => {
   const {
     align,
     children,
