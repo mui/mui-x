@@ -50,11 +50,12 @@ The same import works with `XGrid` as it's an extension of `DataGrid`.
 | Locale                  | BCP 47 language tag | Import name |
 | :---------------------- | :------------------ | :---------- |
 | Bulgarian               | bg-BG               | `bgBG`      |
+| Dutch                   | nl-NL               | `nlNL`      |
 | English (United States) | en-US               | `enUS`      |
 | French                  | fr-FR               | `frFR`      |
 | German                  | de-DE               | `deDE`      |
-| Dutch                   | nl-NL               | `nlNL`      |
 | Greek                   | el-GR               | `elGR`      |
+| Italian                 | it-IT               | `itIT`      |
 | Japanese                | ja-JP               | `jaJP`      |
 | Polish                  | pl-PL               | `plPL`      |
 | Portuguese (Brazil)     | pt-BR               | `ptBR`      |
