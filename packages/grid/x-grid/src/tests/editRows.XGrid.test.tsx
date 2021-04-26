@@ -139,6 +139,17 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(cell.textContent).to.equal('');
   });
 
+  it('should not allow to delete a cell directly if it is not editable', () => {
+    render(<TestCase isCellEditable={()=> false} />);
+    const cell = getCell(1, 0);
+    cell.focus();
+
+    expect(cell.textContent).to.equal('Adidas');
+    fireEvent.keyDown(cell, { key: 'Delete' });
+    expect(cell).to.not.have.class('MuiDataGrid-cellEditable');
+    expect(cell.textContent).to.equal('Adidas');
+  });
+
   // Due to an issue with the keyDown event in test library, this test uses the apiRef to publish an event
   // https://github.com/testing-library/dom-testing-library/issues/405
   it('should allow to edit a cell value by typing an alpha char', () => {
