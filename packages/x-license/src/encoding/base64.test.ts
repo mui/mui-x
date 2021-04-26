@@ -1,4 +1,5 @@
-import { base64Decode, base64Encode } from '../encoding/base64';
+import { expect } from 'chai';
+import { base64Decode, base64Encode } from './base64';
 
 describe('License: base64', () => {
   const clearStr1 = "HELLO my name is Bryan amd I'm awesome!";
@@ -9,13 +10,14 @@ describe('License: base64', () => {
   const encodedStr3 = '4pyTIMOgIGxhIG1vZGU=';
 
   it('should encode string properly', () => {
-    expect(base64Encode(clearStr1)).toBe(encodedStr1);
-    expect(base64Encode(clearStr2)).toBe(encodedStr2);
-    expect(base64Encode(clearStr3)).toBe(encodedStr3);
+    expect(base64Encode(clearStr1)).to.equal(encodedStr1);
+    expect(base64Encode(clearStr2)).to.equal(encodedStr2);
+    expect(base64Encode(clearStr3)).to.equal(encodedStr3);
   });
+
   it('should decode string properly', () => {
-    expect(base64Decode(encodedStr1)).toBe(clearStr1);
-    expect(base64Decode(encodedStr2)).toBe(clearStr2);
-    expect(base64Decode(encodedStr3)).toBe(clearStr3);
+    expect(base64Decode(encodedStr1)).to.equal(clearStr1);
+    expect(base64Decode(encodedStr2)).to.equal(clearStr2);
+    expect(base64Decode(encodedStr3)).to.equal(clearStr3);
   });
 });

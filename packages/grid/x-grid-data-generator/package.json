@@ -17,11 +17,8 @@
     "datagen": "./bin/data-gen-script.js"
   },
   "scripts": {
-    "precommit": "npm run lint",
-    "build": "cd ../ && rollup --config rollup.x-grid-data-generator.config.js",
-    "start": "cd ../ && rollup --cw rollup.x-grid-data-generator.config.js",
-    "lint": "../../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../.eslintrc.js",
-    "typescript": "tsc -p tsconfig.json"
+    "typescript": "tsc -p tsconfig.json",
+    "build": "cd ../ && rollup --config rollup.x-grid-data-generator.config.js"
   },
   "dependencies": {
     "@material-ui/icons": "^4.9.1",

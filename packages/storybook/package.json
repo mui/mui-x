@@ -8,7 +8,6 @@
     "start": "start-storybook -p 6006 --ci",
     "build": "build-storybook -o dist/ --quiet",
     "export": "mv dist ../../docs/export/storybook",
-    "lint": "../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ./.eslintrc.js",
     "typescript": "tsc -p tsconfig.json"
   },
   "dependencies": {
