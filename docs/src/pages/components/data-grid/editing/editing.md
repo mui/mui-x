@@ -16,6 +16,8 @@ Set the `editable` property of the column definition `GridColDef` object to `tru
 <DataGrid columns={[{ field: 'name', editable: true }]} />
 ```
 
+{{"demo": "pages/components/data-grid/editing/BasicEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Start editing
 
 If a cell is editable and has focus, any of the following interactions will start the edit mode:
@@ -34,8 +36,6 @@ If a cell is editable and has focus, any of the following interactions will star
     */
   setCellMode: (id: GridRowId, field: string, mode: GridCellMode) => void;
   ```
-
-{{"demo": "pages/components/data-grid/editing/BasicEditingGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Stop editing
 
@@ -85,7 +85,7 @@ Alternatively, you can use the `GridEditRowsModel` state mentioned in the [Contr
 
 You can reproduce the same behavior using the apiRef.
 
-{{"demo": "pages/components/data-grid/editing/ValidateCellApiRefGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/editing/ValidateCellApiRefGrid.js", "bg": "inline", "disableAd": true}}
 
 ### Server-side validation
 
@@ -114,7 +114,7 @@ The demo lets you edit the ratings by double-clicking the cell.
 
 You can override the default [start editing](#start-editing) triggers using the `event.stopPropagation()` API on the synthetic React events.
 
-{{"demo": "pages/components/data-grid/editing/StartEditButtonGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/editing/StartEditButtonGrid.js", "bg": "inline", "disableAd": true}}
 
 ### Events [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
@@ -130,7 +130,7 @@ Catching events can be used to add a callback after an event while ignoring its 
 
 The demo shows how to catch the start & end edit events to log which cell is editing in an info message:
 
-{{"demo": "pages/components/data-grid/editing/CatchEditingEventsGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/editing/CatchEditingEventsGrid.js", "bg": "inline", "disableAd": true}}
 
 ## 🚧 Row editing
 
