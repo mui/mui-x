@@ -19,15 +19,11 @@ export interface GridRowProps {
   selected: boolean;
   className: string;
   rowIndex: number;
+  children: React.ReactNode;
 }
 
-export const GridRow: React.FC<GridRowProps> = ({
-  selected,
-  id,
-  className,
-  rowIndex,
-  children,
-}) => {
+export const GridRow = (props: GridRowProps) => {
+  const { selected, id, className, rowIndex, children } = props;
   const ariaRowIndex = rowIndex + 2; // 1 for the header row and 1 as it's 1 based
   const apiRef = React.useContext(GridApiContext);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);

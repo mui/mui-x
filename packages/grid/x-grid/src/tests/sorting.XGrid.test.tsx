@@ -223,7 +223,7 @@ describe('<XGrid /> - Sorting', () => {
       await waitFor(() => expect(document.querySelector('.MuiDataGrid-sortIcon')).to.not.be.null);
       const t1 = performance.now();
       const time = Math.round(t1 - t0);
-      expect(time).to.be.lessThan(200);
+      expect(time).to.be.lessThan(300);
     });
   });
 });

@@ -135,7 +135,7 @@ export function GridFilterForm(props: GridFilterFormProps) {
 
   return (
     <div className={classes.root}>
-      <FormControl className={classes.closeIcon}>
+      <FormControl variant="standard" className={classes.closeIcon}>
         <IconButton
           aria-label={apiRef!.current.getLocaleText('filterPanelDeleteIconLabel')}
           title={apiRef!.current.getLocaleText('filterPanelDeleteIconLabel')}
@@ -171,7 +171,7 @@ export function GridFilterForm(props: GridFilterFormProps) {
           </option>
         </Select>
       </FormControl>
-      <FormControl className={classes.columnSelect}>
+      <FormControl variant="standard" className={classes.columnSelect}>
         <InputLabel id="columns-filter-select-label">
           {apiRef!.current.getLocaleText('filterPanelColumns')}
         </InputLabel>
@@ -189,7 +189,7 @@ export function GridFilterForm(props: GridFilterFormProps) {
           ))}
         </Select>
       </FormControl>
-      <FormControl className={classes.operatorSelect}>
+      <FormControl variant="standard" className={classes.operatorSelect}>
         <InputLabel id="columns-operators-select-label">
           {apiRef!.current.getLocaleText('filterPanelOperators')}
         </InputLabel>
@@ -210,7 +210,7 @@ export function GridFilterForm(props: GridFilterFormProps) {
           ))}
         </Select>
       </FormControl>
-      <FormControl className={classes.filterValueInput}>
+      <FormControl variant="standard" className={classes.filterValueInput}>
         {currentColumn &&
           currentOperator &&
           React.createElement(currentOperator.InputComponent, {

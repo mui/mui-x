@@ -6,7 +6,8 @@ import { optionsSelector } from '../../../hooks/utils/optionsSelector';
 import { GridApiContext } from '../../GridApiContext';
 import { GridFilterItemProps } from './GridFilterItemProps';
 
-export const GridColumnsMenuItem: React.FC<GridFilterItemProps> = ({ onClick }) => {
+export const GridColumnsMenuItem = (props: GridFilterItemProps) => {
+  const { onClick } = props;
   const apiRef = React.useContext(GridApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
 
