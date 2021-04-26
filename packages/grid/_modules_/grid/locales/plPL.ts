@@ -24,7 +24,7 @@ export const plPLGrid: Partial<GridLocaleText> = {
   toolbarFiltersLabel: 'Pokaż filtry',
   toolbarFiltersTooltipHide: 'Ukryj filtry',
   toolbarFiltersTooltipShow: 'Pokaż filtry',
-  toolbarFiltersTooltipActive: (count) => `Ilość aktywnych filtrów: ${count}`,
+  toolbarFiltersTooltipActive: (count) => `Liczba aktywnych filtrów: ${count}`,
 
   // Export selector toolbar button text
   toolbarExport: 'Eksportuj',
@@ -70,12 +70,12 @@ export const plPLGrid: Partial<GridLocaleText> = {
   columnMenuSortDesc: 'Sortuj malejąco',
 
   // Column header text
-  columnHeaderFiltersTooltipActive: (count) => `Ilość aktywnych filtrów: ${count}`,
+  columnHeaderFiltersTooltipActive: (count) => `Liczba aktywnych filtrów: ${count}`,
   columnHeaderFiltersLabel: 'Pokaż filtry',
   columnHeaderSortIconLabel: 'Sortuj',
 
   // Rows selected footer text
-  footerRowSelected: (count) => `Ilość wybranych wierszy: ${count.toLocaleString()}`,
+  footerRowSelected: (count) => `Liczba wybranych wierszy: ${count.toLocaleString()}`,
 
   // Total rows footer text
   footerTotalRows: 'Łączna liczba wierszy:',
