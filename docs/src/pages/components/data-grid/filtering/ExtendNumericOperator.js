@@ -41,7 +41,6 @@ RatingInputValue.propTypes = {
   item: PropTypes.shape({
     columnField: PropTypes.string,
     id: PropTypes.number,
-    operatorLabel: PropTypes.string,
     operatorValue: PropTypes.string,
     value: PropTypes.string,
   }).isRequired,
