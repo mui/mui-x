@@ -244,6 +244,7 @@ describe('<XGrid /> - Edit Rows', () => {
     getCell(1, 0).focus();
     apiRef!.current.setCellMode(1, 'brand', 'edit');
     const input = getCell(0, 0).querySelector('input');
+    input!.focus();
     fireEvent.click(input);
     expect(document.activeElement).to.have.property('value', 'Nike');
   });
