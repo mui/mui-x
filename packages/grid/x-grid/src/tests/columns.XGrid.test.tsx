@@ -9,20 +9,16 @@ import {
 import { expect } from 'chai';
 import { GridApiRef, GridComponentProps, useGridApiRef, XGrid } from '@material-ui/x-grid';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<XGrid /> - Columns', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
-
   let apiRef: GridApiRef;
 
   const baselineProps = {
+    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,
@@ -63,8 +59,8 @@ describe('<XGrid /> - Columns', () => {
       apiRef!.current.showColumnMenu('brand');
       await waitFor(() => {
         const menu = screen.queryByRole('menu');
-        expect(menu).to.have.attribute('id', 'brand-column-menu');
-        expect(menu).to.have.attribute('aria-labelledby', 'brand-column-menu-button');
+        expect(menu.id).to.match(/^mui-[0-9]+/);
+        expect(menu.getAttribute('aria-labelledby')).to.match(/^mui-[0-9]+/);
       });
     });
   });
