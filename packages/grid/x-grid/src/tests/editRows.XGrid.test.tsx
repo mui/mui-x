@@ -232,4 +232,19 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(cell).to.have.text('1970');
     expect(getActiveCell()).to.equal('1-0');
   });
+
+  it('should the focus to the new field', () => {
+    const handleCellBlur = (params, event) => {
+      if (params.cellMode === 'edit') {
+        event?.stopPropagation();
+      }
+    };
+    render(<TestCase onCellBlur={handleCellBlur} />);
+    apiRef!.current.setCellMode(0, 'brand', 'edit');
+    getCell(1, 0).focus();
+    apiRef!.current.setCellMode(1, 'brand', 'edit');
+    const input = getCell(0, 0).querySelector('input');
+    fireEvent.click(input);
+    expect(document.activeElement).to.have.property('value', 'Nike');
+  });
 });
