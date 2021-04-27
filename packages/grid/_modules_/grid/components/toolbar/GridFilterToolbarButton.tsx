@@ -51,9 +51,12 @@ export const GridFilterToolbarButton = React.forwardRef<HTMLButtonElement, Butto
               ...(lookup[item.columnField!] && (
                 <li key={item.id}>
                   {`${lookup[item.columnField!].headerName || item.columnField}
-                  ${apiRef!.current.getLocaleText(
-                    `filterOperator${capitalize(item.operatorValue!)}` as GridTranslationKeys,
-                  )}
+                  ${
+                    item.operatorLabel ||
+                    apiRef!.current.getLocaleText(
+                      `filterOperator${capitalize(item.operatorValue!)}` as GridTranslationKeys,
+                    )
+                  }
                   ${item.value}`}
                 </li>
               )),
