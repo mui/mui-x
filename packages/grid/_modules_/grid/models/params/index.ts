@@ -13,3 +13,4 @@ export * from './gridSelectionModelChangeParams';
 export * from './gridSortModelParams';
 export * from './gridStateChangeParams';
 export * from './gridRowScrollEndParams';
+export * from './gridResizeParams';
