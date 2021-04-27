@@ -417,6 +417,26 @@ describe('<XGrid /> - Rows', () => {
         const virtualRowsCount = apiRef!.current!.getState().containerSizes!.virtualRowsCount;
         expect(virtualRowsCount).to.equal(4);
       });
+
+      it('should paginate small dataset in auto page-size #1492', () => {
+        render(<TestCaseVirtualization pagination autoPageSize height={496} nbRows={9} />);
+        const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+
+        const lastCell = document.querySelector(
+          '[role="row"]:last-child [role="cell"]:first-child',
+        )!;
+        expect(lastCell.textContent).to.equal('6');
+        const rows = document.querySelectorAll('.MuiDataGrid-row[role="row"]')!;
+        expect(rows.length).to.equal(7);
+
+        expect(gridWindow.scrollTop).to.equal(0);
+        expect(gridWindow.scrollHeight).to.equal(gridWindow.clientHeight);
+
+        const isVirtualized = apiRef!.current!.getState().containerSizes!.isVirtualized;
+        expect(isVirtualized).to.equal(false);
+        const virtualRowsCount = apiRef!.current!.getState().containerSizes!.virtualRowsCount;
+        expect(virtualRowsCount).to.equal(7);
+      });
     });
   });
 });
