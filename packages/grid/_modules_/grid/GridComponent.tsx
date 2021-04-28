@@ -18,7 +18,6 @@ import { Watermark } from './components/Watermark';
 import { GridComponentProps } from './GridComponentProps';
 import { useGridColumnMenu } from './hooks/features/columnMenu/useGridColumnMenu';
 import { useGridColumns } from './hooks/features/columns/useGridColumns';
-import { useGridState } from './hooks/features/core/useGridState';
 import { useGridFocus } from './hooks/features/focus/useGridFocus';
 import { useGridSelector } from './hooks/features/core/useGridSelector';
 import { useGridKeyboardNavigation } from './hooks/features/keyboard/useGridKeyboardNavigation';
