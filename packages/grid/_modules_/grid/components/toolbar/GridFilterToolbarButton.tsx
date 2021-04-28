@@ -14,6 +14,7 @@ import { gridPreferencePanelStateSelector } from '../../hooks/features/preferenc
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridTranslationKeys } from '../../models/api/gridLocaleTextApi';
+import { GridFilterItem } from '../../models/gridFilterItem';
 import { GridApiContext } from '../GridApiContext';
 
 const useStyles = makeStyles(
@@ -43,6 +44,17 @@ export const GridFilterToolbarButton = React.forwardRef<HTMLButtonElement, Butto
       if (counter === 0) {
         return apiRef!.current.getLocaleText('toolbarFiltersTooltipShow') as React.ReactElement;
       }
+
+      const getOperatorLabel = (item: GridFilterItem): string =>
+        lookup[item.columnField!].filterOperators!.find(
+          (operator) => operator.value === item.operatorValue,
+        )!.label ||
+        apiRef!
+          .current!.getLocaleText(
+            `filterOperator${capitalize(item.operatorValue!)}` as GridTranslationKeys,
+          )!
+          .toString();
+
       return (
         <div>
           {apiRef!.current.getLocaleText('toolbarFiltersTooltipActive')(counter)}
@@ -51,9 +63,7 @@ export const GridFilterToolbarButton = React.forwardRef<HTMLButtonElement, Butto
               ...(lookup[item.columnField!] && (
                 <li key={item.id}>
                   {`${lookup[item.columnField!].headerName || item.columnField}
-                  ${apiRef!.current.getLocaleText(
-                    `filterOperator${capitalize(item.operatorValue!)}` as GridTranslationKeys,
-                  )}
+                  ${getOperatorLabel(item)}
                   ${item.value}`}
                 </li>
               )),
