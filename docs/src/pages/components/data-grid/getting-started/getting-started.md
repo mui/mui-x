@@ -152,7 +152,7 @@ The following table summarizes the features available in the community `DataGrid
 | [Pagination > 100 rows per page](/components/data-grid/pagination/)                     |    ❌     |              ✅               |                  ✅                   |
 | **Editing**                                                                             |           |                               |                                       |
 | [Row edition](/components/data-grid/editing/#row-editing)                               |    🚧     |              🚧               |                  🚧                   |
-| [Cell editing](/components/data-grid/editing/#cell-editing)                             |    🚧     |              🚧               |                  🚧                   |
+| [Cell editing](/components/data-grid/editing/#cell-editing)                             |    ✅     |              ✅               |                  ✅                   |
 | **Import & export**                                                                     |           |                               |                                       |
 | [CSV export](/components/data-grid/export/#csv-export)                                  |    ✅     |              ✅               |                  ✅                   |
 | [Print](/components/data-grid/export/#print)                                            |    🚧     |              🚧               |                  🚧                   |
