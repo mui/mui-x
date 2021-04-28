@@ -138,7 +138,7 @@ export interface GridOptions {
    */
   filterModel?: GridFilterModel;
   /**
-   * Function that allows to apply a class name on each row.
+   * Function that applies CSS classes dynamically on rows.
    */
   getRowClassName?: (params: GridRowParams) => string;
   /**
