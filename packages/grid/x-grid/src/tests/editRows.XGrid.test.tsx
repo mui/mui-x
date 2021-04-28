@@ -230,6 +230,7 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(cell.textContent).to.equal('1970');
     expect(getActiveCell()).to.equal('1-0');
   });
+
   it('should the focus to the new field', () => {
     const handleCellBlur = (params, event) => {
       if (params.cellMode === 'edit') {
