@@ -55,12 +55,13 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
   );
 
   const handleCellFocus = React.useCallback(
-    (cellParams: GridCellParams, event?: React.SyntheticEvent) => {
+    (params: GridCellParams, event?: React.SyntheticEvent) => {
       if (event?.target !== event?.currentTarget) {
         return;
       }
-
-      apiRef.current.setCellFocus(cellParams);
+      const colIndex = apiRef.current.getColumnIndex(params.field);
+      const rowIndex = apiRef.current.getRowIndex(params.id);
+      apiRef.current.setCellFocus({colIndex, rowIndex});
     },
     [apiRef],
   );
@@ -70,8 +71,8 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
       if (event?.target !== event?.currentTarget) {
         return;
       }
-
-      apiRef.current.setColumnHeaderFocus(params);
+      const colIndex = apiRef.current.getColumnIndex(params.field);
+      apiRef.current.setColumnHeaderFocus({colIndex});
     },
     [apiRef],
   );

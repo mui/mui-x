@@ -220,7 +220,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
       }
       if (isEscapeKey(event.key) || isDeleteKeys(event.key)) {
         const colIndex = apiRef.current.getColumnIndex(params.field);
-        const rowIndex = apiRef.current.getRowIndexFromId(params.id);
+        const rowIndex = apiRef.current.getRowIndex(params.id);
         apiRef.current.setCellFocus({ colIndex, rowIndex });
       }
     },

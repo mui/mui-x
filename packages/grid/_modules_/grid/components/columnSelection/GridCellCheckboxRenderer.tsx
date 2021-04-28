@@ -11,22 +11,26 @@ export const GridCellCheckboxRenderer = React.memo((props: GridCellParams) => {
   const { getValue, field, id } = props;
   const apiRef = React.useContext(GridApiContext);
   const tabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
+  const rowIndex = apiRef!.current.getRowIndex(id);
+  const colIndex = apiRef!.current.getColumnIndex(field);
+  const element = props.getElement(id, field);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     apiRef!.current.selectRow(id, checked, true);
   };
+
   const tabIndex =
     tabIndexState !== null &&
-    tabIndexState.rowIndex === props.rowIndex &&
-    tabIndexState.colIndex === props.colIndex
+    tabIndexState.rowIndex === rowIndex &&
+    tabIndexState.colIndex === colIndex
       ? 0
       : -1;
 
   React.useLayoutEffect(() => {
-    if (tabIndex === 0 && props.element) {
-      props.element!.tabIndex = -1;
+    if (tabIndex === 0 && element) {
+      element!.tabIndex = -1;
     }
-  }, [props.element, tabIndex]);
+  }, [element, tabIndex]);
 
   const handleKeyDown = React.useCallback(
     (event) => {

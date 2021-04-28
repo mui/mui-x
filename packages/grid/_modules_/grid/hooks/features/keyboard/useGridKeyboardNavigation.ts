@@ -9,6 +9,7 @@ import {
   GridColumnHeaderIndexCoordinates,
 } from '../../../models/gridCell';
 import { GridCellParams } from '../../../models/params/gridCellParams';
+import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import {
   isArrowKeys,
   isEnterKey,
@@ -87,7 +88,7 @@ export const useGridKeyboardNavigation = (
     (params: GridCellParams, event: React.KeyboardEvent) => {
       event.preventDefault();
       const colIndex = apiRef.current.getColumnIndex(params.field);
-      const rowIndex = apiRef.current.getRowIndexFromId(params.id);
+      const rowIndex = apiRef.current.getRowIndex(params.id);
 
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;

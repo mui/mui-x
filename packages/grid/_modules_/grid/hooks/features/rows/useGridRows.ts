@@ -214,7 +214,7 @@ export const useGridRows = (
   const getAllRowIds = React.useCallback(() => apiRef.current.state.rows.allRows, [apiRef]);
 
   const rowApi: GridRowApi = {
-    getRowIndexFromId,
+    getRowIndex: getRowIndexFromId,
     getRowIdFromRowIndex,
     getRowFromId,
     getRowModels,
