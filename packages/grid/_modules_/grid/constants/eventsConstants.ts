@@ -43,6 +43,7 @@ export const GRID_ROW_LEAVE = 'rowLeave';
 export const GRID_ROW_EDIT_MODEL_CHANGE = 'editRowModelChange';
 export const GRID_ROW_SELECTED = 'rowSelected';
 
+export const GRID_COLUMN_HEADER_BLUR = 'columnHeaderBlur';
 export const GRID_COLUMN_HEADER_FOCUS = 'columnHeaderFocus';
 export const GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN = 'columnHeaderNavigationKeydown';
 export const GRID_COLUMN_HEADER_KEYDOWN = 'columnHeaderKeydown';
