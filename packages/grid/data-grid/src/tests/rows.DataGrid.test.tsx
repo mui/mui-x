@@ -10,11 +10,14 @@ import Portal from '@material-ui/core/Portal';
 import { DataGrid } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<DataGrid /> - Rows', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
+    autoHeight: isJSDOM,
     rows: [
       {
         clientId: 'c1',
@@ -34,13 +37,6 @@ describe('<DataGrid /> - Rows', () => {
     ],
     columns: [{ field: 'clientId' }, { field: 'first' }, { field: 'age' }],
   };
-
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
 
   describe('getRowId', () => {
     it('should allow to select a field as id', () => {

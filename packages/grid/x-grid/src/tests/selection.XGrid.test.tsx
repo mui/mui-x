@@ -4,20 +4,16 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import { GridApiRef, GridComponentProps, useGridApiRef, XGrid } from '@material-ui/x-grid';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<XGrid /> - Selection', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
-
   let apiRef: GridApiRef;
 
   const baselineProps = {
+    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,

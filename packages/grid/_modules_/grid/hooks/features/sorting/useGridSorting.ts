@@ -264,13 +264,6 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
     [apiRef],
   );
 
-  const onSortModelChange = React.useCallback(
-    (handler: (param: GridSortModelParams) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(GRID_SORT_MODEL_CHANGE, handler);
-    },
-    [apiRef],
-  );
-
   const onColUpdated = React.useCallback(() => {
     // When the columns change we check that the sorted columns are still part of the dataset
     setGridState((state) => {
@@ -306,7 +299,6 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
     getSortedRowIds,
     setSortModel,
     sortColumn,
-    onSortModelChange,
     applySorting,
   };
   useGridApiMethod(apiRef, sortApi, 'GridSortApi');

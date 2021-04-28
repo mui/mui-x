@@ -67,6 +67,9 @@ export const useGridComponents = (
       LoadingOverlay:
         (componentSlotsProp && componentSlotsProp.LoadingOverlay) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.LoadingOverlay,
+      NoResultsOverlay:
+        (componentSlotsProp && componentSlotsProp.NoResultsOverlay) ||
+        DEFAULT_GRID_SLOTS_COMPONENTS.NoResultsOverlay,
       NoRowsOverlay:
         (componentSlotsProp && componentSlotsProp.NoRowsOverlay) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.NoRowsOverlay,

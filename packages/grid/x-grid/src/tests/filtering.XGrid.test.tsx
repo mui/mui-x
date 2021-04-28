@@ -23,6 +23,8 @@ import {
 } from 'test/utils';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<XGrid /> - Filter', () => {
   let clock;
 
@@ -37,17 +39,11 @@ describe('<XGrid /> - Filter', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
-
   let apiRef: GridApiRef;
 
   const TestCase = (props: Partial<GridComponentProps>) => {
     const baselineProps = {
+      autoHeight: isJSDOM,
       rows: [
         {
           id: 0,

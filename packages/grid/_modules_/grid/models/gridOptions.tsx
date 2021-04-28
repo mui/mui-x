@@ -26,6 +26,7 @@ import {
 } from './params/gridEditCellParams';
 import { GridRowScrollEndParams } from './params/gridRowScrollEndParams';
 import { GridColumnOrderChangeParams } from './params/gridColumnOrderChangeParams';
+import { GridResizeParams } from './params/gridResizeParams';
 import { GridColumnResizeParams } from './params/gridColumnResizeParams';
 
 // TODO add multiSortKey
@@ -373,6 +374,11 @@ export interface GridOptions {
    * @param param With all properties from [[GridRowSelectedParams]].
    */
   onRowSelected?: (param: GridRowSelectedParams) => void;
+  /**
+   * Callback fired when the grid is resized.
+   * @param param With all properties from [[GridResizeParams]].
+   */
+  onResize?: (param: GridResizeParams) => void;
   /**
    * Callback fired when the selection state of one or multiple rows changes.
    * @param param With all properties from [[SelectionChangeParams]].

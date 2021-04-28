@@ -70,6 +70,7 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">onFilterModelChange</span> | <span class="prop-type">(params: GridFilterModelParams) => void</span> |   | Callback fired when the Filter model changes before the filters are applied. |
 | <span class="prop-name">onPageChange</span> | <span class="prop-type">(param: GridPageChangeParams) => void</span> |   | Callback fired when the current page has changed. |
 | <span class="prop-name">onPageSizeChange</span> | <span class="prop-type">(param: GridPageChangeParams) => void</span> |   | Callback fired when the page size has changed. |
+| <span class="prop-name">onResize</span> | <span class="prop-type">(param: GridResizeParams) => void</span> |   | Callback fired when the grid is being resized. |
 | <span class="prop-name">onRowClick</span> | <span class="prop-type">(param: GridRowParams, event: React.MouseEvent) => void</span> |   | Callback fired when a click event comes from a row container element. |
 | <span class="prop-name">onRowDoubleClick</span> | <span class="prop-type">(param: GridRowParams, event: React.MouseEvent) => void</span> |   | Callback fired when a double click event comes from a row container element. |
 | <span class="prop-name">onRowOver</span> | <span class="prop-type">(param: GridRowParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse over comes from a row container element. |
@@ -112,6 +113,7 @@ Api of the `components` props of type `GridSlotsComponent`
 | <span class="prop-name">Toolbar</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">GridToolbar</span> | Toolbar component rendered above the grid column header bar.|
 | <span class="prop-name">PreferencesPanel</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">PreferencesPanel</span> | PreferencesPanel component that renders the ColumnSelector or FilterPanel within a Panel component.|
 | <span class="prop-name">LoadingOverlay</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">LoadingOverlay</span> | Loading overlay component rendered when the grid is in a loading state.|
+| <span class="prop-name">NoResultsOverlay</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">NoResultsOverlay </span> | No results overlay component rendered when the grid has no results after filtering.|
 | <span class="prop-name">NoRowsOverlay</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">NoRowsOverlay</span> | No rows overlay component rendered when the grid has no rows.|
 | <span class="prop-name">Pagination</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">Pagination</span> | Pagination component rendered in the grid footer by default.|
 | <span class="prop-name">Panel</span> | <span class="prop-type">React.ElementType&lt;GridPanelProps></span> | <span class="prop-type">Panel</span> | Panel component wrapping the filters and columns panels. |

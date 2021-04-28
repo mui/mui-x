@@ -82,10 +82,6 @@ export function PaginationApiTests() {
   const data = useData(2000, 200);
   const [autosize, setAutoSize] = React.useState(false);
 
-  React.useEffect(() => {
-    return apiRef.current.onPageChange(action('apiRef: onPageChange'));
-  }, [apiRef, data]);
-
   const backToFirstPage = () => {
     apiRef.current.setPage(0);
   };
@@ -211,18 +207,16 @@ export function ServerPaginationWithApi() {
     });
   }, []);
 
-  React.useEffect(() => {
-    const unsubscribe = apiRef.current.onPageChange((params) => {
+  const handleOnPageChange = React.useCallback(
+    (params) => {
       action('onPageChange')(params);
       loadRows(params);
-    });
-    loadRows({ page: 0, pageSize: defaultPageSize });
+    },
+    [loadRows],
+  );
 
-    return () => {
-      if (unsubscribe) {
-        unsubscribe();
-      }
-    };
+  React.useEffect(() => {
+    loadRows({ page: 0, pageSize: defaultPageSize });
   }, [apiRef, data, loadRows]);
 
   return (
@@ -232,6 +226,7 @@ export function ServerPaginationWithApi() {
         columns={data.columns}
         apiRef={apiRef}
         pagination
+        onPageChange={handleOnPageChange}
         pageSize={defaultPageSize}
         rowCount={1000}
         paginationMode={'server'}

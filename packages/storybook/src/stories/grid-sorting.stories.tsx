@@ -338,9 +338,12 @@ export const SortedEventsApi = () => {
     setEvents((prev: any[]) => [...prev, name]);
   }, []);
 
-  React.useEffect(() => {
-    apiRef.current.onSortModelChange((params) => handleEvent('onSortModelChange', params));
+  const handleOnSortModelChange = React.useCallback(
+    (params) => handleEvent('onSortModelChange', params),
+    [handleEvent],
+  );
 
+  React.useEffect(() => {
     apiRef.current.setSortModel([
       { field: 'age', sort: 'desc' },
       { field: 'name', sort: 'asc' },
@@ -359,7 +362,12 @@ export const SortedEventsApi = () => {
         </ol>
       </div>
       <div className="grid-container">
-        <XGrid rows={rows} columns={cols} apiRef={apiRef} />
+        <XGrid
+          rows={rows}
+          columns={cols}
+          onSortModelChange={handleOnSortModelChange}
+          apiRef={apiRef}
+        />
       </div>
     </React.Fragment>
   );
