@@ -98,7 +98,6 @@ export function GridFilterForm(props: GridFilterFormProps) {
         value: undefined,
         columnField,
         operatorValue: newOperator.value,
-        operatorLabel: newOperator.label,
       });
     },
     [apiRef, applyFilterChanges, item],

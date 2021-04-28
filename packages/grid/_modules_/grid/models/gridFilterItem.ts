@@ -3,7 +3,6 @@ export interface GridFilterItem {
   columnField?: string;
   value?: string;
   operatorValue?: string;
-  operatorLabel?: string;
 }
 
 export enum GridLinkOperator {
