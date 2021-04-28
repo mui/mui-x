@@ -6,6 +6,7 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Root
   rootGridLabel: 'мрежа',
   noRowsLabel: 'Няма редове',
+  // noResultsOverlayLabel: 'No results found.',
   errorOverlayDefaultLabel: 'Възникна грешка.',
 
   // Density selector toolbar button text

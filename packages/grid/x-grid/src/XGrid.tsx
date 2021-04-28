@@ -20,13 +20,13 @@ export type XGridProps = Omit<GridComponentProps, 'licenseStatus'>;
 
 const XGridRaw = React.forwardRef<HTMLDivElement, XGridProps>(function XGrid(inProps, ref) {
   const props = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
-  const { className, ...other } = props;
+  const { className, classes, ...other } = props;
   const licenseStatus = useLicenseVerifier();
 
   return (
     <GridComponent
       ref={ref}
-      className={classnames('MuiDataGrid-root', className)}
+      className={classnames('MuiDataGrid-root', classes?.root, className)}
       {...other}
       licenseStatus={licenseStatus.toString()}
     />

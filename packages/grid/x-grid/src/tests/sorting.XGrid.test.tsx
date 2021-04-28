@@ -15,6 +15,8 @@ import {
 } from 'test/utils';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<XGrid /> - Sorting', () => {
   let clock;
 
@@ -29,13 +31,6 @@ describe('<XGrid /> - Sorting', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
-
   let apiRef: GridApiRef;
 
   const TestCase = (props: {
@@ -44,6 +39,7 @@ describe('<XGrid /> - Sorting', () => {
     disableMultipleColumnsSorting?: boolean;
   }) => {
     const baselineProps = {
+      autoHeight: isJSDOM,
       rows: [
         {
           id: 0,
@@ -223,7 +219,7 @@ describe('<XGrid /> - Sorting', () => {
       await waitFor(() => expect(document.querySelector('.MuiDataGrid-sortIcon')).to.not.be.null);
       const t1 = performance.now();
       const time = Math.round(t1 - t0);
-      expect(time).to.be.lessThan(200);
+      expect(time).to.be.lessThan(300);
     });
   });
 });

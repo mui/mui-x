@@ -3,10 +3,6 @@ const path = require('path');
 
 module.exports = {
   ...baseline,
-  env: {
-    ...baseline.env,
-    jest: true,
-  },
   settings: {
     'import/resolver': {
       webpack: {

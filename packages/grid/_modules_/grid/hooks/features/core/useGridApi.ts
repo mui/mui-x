@@ -23,13 +23,6 @@ export const useGridApi = (apiRef: GridApiRef): GridApi => {
     [apiRef],
   );
 
-  const onStateChange = React.useCallback(
-    (handler: (param: GridStateChangeParams) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(GRID_STATE_CHANGE, handler);
-    },
-    [apiRef],
-  );
-
   const setState = React.useCallback(
     (stateOrFunc: GridState | ((oldState: GridState) => GridState)) => {
       let state: GridState;
@@ -46,7 +39,7 @@ export const useGridApi = (apiRef: GridApiRef): GridApi => {
     [apiRef],
   );
 
-  useGridApiMethod(apiRef, { getState, onStateChange, setState }, 'GridStateApi');
+  useGridApiMethod(apiRef, { getState, setState }, 'GridStateApi');
 
   return apiRef.current;
 };

@@ -34,7 +34,7 @@ The grid provides a `onRowsScrollEnd` prop that can be used to load additional r
 
 In addition, the area in which the callback provided to the `onRowsScrollEnd` is called can be changed using `scrollEndThreshold`.
 
-{{"demo": "pages/components/data-grid/rows/InfiniteLoadingGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/rows/InfiniteLoadingGrid.js", "bg": "inline", "disableAd": true}}
 
 ### apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 

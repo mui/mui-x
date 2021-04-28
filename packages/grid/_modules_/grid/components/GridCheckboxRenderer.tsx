@@ -4,11 +4,10 @@ import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { visibleSortedGridRowIdsSelector } from '../hooks/features/filter/gridFilterSelector';
 import { gridRowCountSelector } from '../hooks/features/rows/gridRowsSelector';
 import { selectedGridRowsCountSelector } from '../hooks/features/selection/gridSelectionSelector';
-import { GridColumnHeaderParams } from '../models/params/gridColumnHeaderParams';
 import { GridCellParams } from '../models/params/gridCellParams';
 import { GridApiContext } from './GridApiContext';
 
-export const GridHeaderCheckbox: React.FC<GridColumnHeaderParams> = () => {
+export const GridHeaderCheckbox = () => {
   const apiRef = React.useContext(GridApiContext);
   const visibleRowIds = useGridSelector(apiRef, visibleSortedGridRowIdsSelector);
 
@@ -47,7 +46,7 @@ export const GridHeaderCheckbox: React.FC<GridColumnHeaderParams> = () => {
 };
 GridHeaderCheckbox.displayName = 'GridHeaderCheckbox';
 
-export const GridCellCheckboxRenderer: React.FC<GridCellParams> = React.memo((props) => {
+export const GridCellCheckboxRenderer = React.memo((props: GridCellParams) => {
   const { getValue, field, id } = props;
   const apiRef = React.useContext(GridApiContext);
 

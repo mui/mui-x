@@ -5,7 +5,6 @@ import { expect } from 'chai';
 import { getCell, getColumnValues } from 'test/utils/helperFn';
 import {
   GridApiRef,
-  GridColDef,
   GridComponentProps,
   GridRowData,
   useGridApiRef,
@@ -14,25 +13,21 @@ import {
 } from '@material-ui/x-grid';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<XGrid /> - Rows', () => {
   let clock;
-  let baselineProps: { columns: GridColDef[]; rows: GridRowData[] };
+  let baselineProps;
 
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
-
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
 
   describe('getRowId', () => {
     beforeEach(() => {
       clock = useFakeTimers();
 
       baselineProps = {
+        autoHeight: isJSDOM,
         rows: [
           {
             clientId: 'c1',
@@ -131,6 +126,7 @@ describe('<XGrid /> - Rows', () => {
       clock = useFakeTimers();
 
       baselineProps = {
+        autoHeight: isJSDOM,
         rows: [
           {
             id: 0,
@@ -159,12 +155,7 @@ describe('<XGrid /> - Rows', () => {
       apiRef = useGridApiRef();
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid
-            apiRef={apiRef}
-            columns={baselineProps.columns}
-            rows={baselineProps.rows}
-            {...props}
-          />
+          <XGrid {...baselineProps} apiRef={apiRef} {...props} />
         </div>
       );
     };
@@ -245,8 +236,8 @@ describe('<XGrid /> - Rows', () => {
         return (
           <div style={{ width: 300, height: 300 }}>
             <XGrid
+              {...baselineProps}
               apiRef={apiRef}
-              columns={baselineProps.columns}
               rows={baselineProps.rows.map((row) => ({ idField: row.id, brand: row.brand }))}
               getRowId={getRowId}
             />
@@ -268,6 +259,13 @@ describe('<XGrid /> - Rows', () => {
   });
 
   describe('virtualization', () => {
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
     let apiRef: GridApiRef;
     const TestCaseVirtualization = (
       props: Partial<XGridProps> & { nbRows?: number; nbCols?: number; height?: number },
@@ -353,6 +351,34 @@ describe('<XGrid /> - Rows', () => {
 
     it('Rows should not be virtualized when the grid is in autoHeight', () => {
       render(<TestCaseVirtualization autoHeight />);
+
+      const isVirtualized = apiRef!.current!.getState().containerSizes!.isVirtualized;
+      expect(isVirtualized).to.equal(false);
+    });
+
+    it('should set the virtual page to 0 when resetting rows to a non virtualized length', () => {
+      const { setProps } = render(<TestCaseVirtualization nbRows={996} hideFooter height={600} />);
+
+      const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+      gridWindow.scrollTop = 10e6; // scroll to the bottom
+      gridWindow.dispatchEvent(new Event('scroll'));
+
+      let lastCell = document.querySelector('[role="row"]:last-child [role="cell"]:first-child')!;
+      expect(lastCell).to.have.text('995');
+
+      let virtualPage = apiRef!.current!.getState().rendering!.virtualPage;
+      expect(virtualPage).to.equal(98);
+
+      setProps({ nbRows: 9 });
+
+      lastCell = document.querySelector('[role="row"]:last-child [role="cell"]:first-child')!;
+      expect(lastCell).to.have.text('8');
+
+      const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
+      expect(renderingZone.children.length).to.equal(9);
+
+      virtualPage = apiRef!.current!.getState().rendering!.virtualPage;
+      expect(virtualPage).to.equal(0);
 
       const isVirtualized = apiRef!.current!.getState().containerSizes!.isVirtualized;
       expect(isVirtualized).to.equal(false);

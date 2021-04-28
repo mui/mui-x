@@ -41,8 +41,12 @@ export const Small = () => {
   return <XGrid rows={data.rows} columns={data.columns} {...options} />;
 };
 
-const IsDone: React.FC<{ value: boolean }> = ({ value }) =>
-  value ? <DoneIcon fontSize="small" /> : <ClearIcon fontSize="small" />;
+interface IsDoneProps {
+  value: boolean;
+}
+
+const IsDone = (props: IsDoneProps) =>
+  props.value ? <DoneIcon fontSize="small" /> : <ClearIcon fontSize="small" />;
 
 const getColumns: () => GridColDef[] = () => [
   { field: 'id' },

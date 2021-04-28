@@ -77,11 +77,27 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         expect(ref.current).to.equal(container.firstChild.firstChild);
       });
 
-      function randomStringValue() {
-        return `r${Math.random().toString(36).slice(2)}`;
-      }
+      describe('Apply the `classes` prop', () => {
+        it("should apply the `root` rule name's value as a class to the root grid component", () => {
+          const classes = {
+            root: 'my_class_name',
+          };
+
+          const { container } = render(
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid {...baselineProps} classes={{ root: classes.root }} />
+            </div>,
+          );
+
+          expect(container.firstChild.firstChild).to.have.class(classes.root);
+        });
+      });
 
       it('applies the className to the root component', () => {
+        function randomStringValue() {
+          return `r${Math.random().toString(36).slice(2)}`;
+        }
+
         const className = randomStringValue();
 
         const { container } = render(
@@ -464,13 +480,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
   });
 
   describe('localeText', () => {
-    before(function beforeHook() {
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
     it('should replace the density selector button label text to "Size"', () => {
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
@@ -489,13 +498,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
   });
 
   describe('Error', () => {
-    before(function beforeHook() {
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
     it('should display error message when error prop set', () => {
       const message = 'Error can also be set in props!';
       render(

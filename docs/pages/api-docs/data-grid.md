@@ -18,11 +18,12 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">autoHeight</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid height is dynamic and follow the number of rows in the grid. |
 | <span class="prop-name">autoPageSize</span> | <span class="prop-type">boolean</span> | false | If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar. |
 | <span class="prop-name">checkboxSelection</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid get a first column with a checkbox that allows to select rows. |
-| <span class="prop-name">className</span> | <span class="prop-type">string</span> |   | Css classname to add on the outer container. |
+| <span class="prop-name">classes</span> | <span class="prop-type">object</span> |   | Override or extend the styles applied to the component. See [CSS API](/api/data-grid/#css) below for more details. |
+| <span class="prop-name">className</span> | <span class="prop-type">string</span> |   | CSS classname to add on the outer container. |
 | <span class="prop-name">columnBuffer</span> | <span class="prop-type">number</span> | 2 | Number of columns rendered outside the grid viewport. |
 | <span class="prop-name">columnTypes</span> | <span class="prop-type">GridColumnTypesRecord</span> |   | Extend native column types with your new column types. |
 | <span class="prop-name">components</span> | <span class="prop-type">GridSlotsComponent</span> |   | Overrideable components. |
-| <span class="prop-name">componentsProps</span> | <span class="prop-type">GridSlotsComponentProps</span> |   | Overrideable components props dynamic passed to the component at rendering. |
+| <span class="prop-name">componentsProps</span> | <span class="prop-type">GridSlotsComponentsProps</span> |   | Overrideable components props dynamically passed to the component at rendering. |
 | <span class="prop-name">density</span> | <span class="prop-type">Density</span> | standard | Sets the density of the grid. |
 | <span class="prop-name">disableColumnMenu</span> | <span class="prop-type">boolean</span> | false | If `true`, the column menu is disabled. |
 | <span class="prop-name">disableColumnSelector</span> | <span class="prop-type">boolean</span> | false | If `true`, the column selector is disabled. |
@@ -58,6 +59,8 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">onColumnHeaderEnter</span> | <span class="prop-type">(param: GridColumnHeaderParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse enter event comes from a column header element. |
 | <span class="prop-name">onColumnHeaderLeave</span> | <span class="prop-type">(param: GridColumnHeaderParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse leave event comes from a column header element. |
 | <span class="prop-name">onColumnOrderChange</span> | <span class="prop-type">(param: GridColumnOrderChangeParams, event: React.MouseEvent) => void</span> |   | Callback fired when a column is reordered. |
+| <span class="prop-name">onColumnResize</span> | <span class="prop-type">(param: GridColumnResizeParams) => void</span> |   | Callback fired when a column is resizing. |
+| <span class="prop-name">onColumnResizeCommited</span> | <span class="prop-type">(param: GridColumnResizeParams) => void</span> |   | Callback fired when a column is resized. |
 | <span class="prop-name">onError</span> | <span class="prop-type">(args: any) => void</span> |   | Callback fired when an exception is thrown in the grid, or when the `showError` API method is called. |
 | <span class="prop-name">onEditCellChange</span> | <span class="prop-type">(params: GridEditCellParams) => void</span> |   |  Callback fired when the edit cell value changed. |
 | <span class="prop-name">onEditCellChangeCommitted</span> | <span class="prop-type">(params: GridEditCellParams) => void</span> |   | Callback fired when the cell changes are committed. |
@@ -65,6 +68,7 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">onFilterModelChange</span> | <span class="prop-type">(params: GridFilterModelParams) => void</span> |   | Callback fired when the Filter model changes before the filters are applied. |
 | <span class="prop-name">onPageChange</span> | <span class="prop-type">(param: GridPageChangeParams) => void</span> |   | Callback fired when the current page has changed. |
 | <span class="prop-name">onPageSizeChange</span> | <span class="prop-type">(param: GridPageChangeParams) => void</span> |   | Callback fired when the page size has changed. |
+| <span class="prop-name">onResize</span> | <span class="prop-type">(param: GridResizeParams) => void</span> |   | Callback fired when the grid is being resized. |
 | <span class="prop-name">onRowClick</span> | <span class="prop-type">(param: GridRowParams, event: React.MouseEvent) => void</span> |   | Callback fired when a click event comes from a row container element. |
 | <span class="prop-name">onRowDoubleClick</span> | <span class="prop-type">(param: GridRowParams, event: React.MouseEvent) => void</span> |   | Callback fired when a double click event comes from a row container element. |
 | <span class="prop-name">onRowOver</span> | <span class="prop-type">(param: GridRowParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse over comes from a row container element. |
@@ -104,6 +108,7 @@ Api of the `components` props of type `GridSlotsComponent`
 | <span class="prop-name">Toolbar</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">GridToolbar</span> | Toolbar component rendered above the grid column header bar.|
 | <span class="prop-name">PreferencesPanel</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">PreferencesPanel</span> | PreferencesPanel component that renders the ColumnSelector or FilterPanel within a Panel component.|
 | <span class="prop-name">LoadingOverlay</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">LoadingOverlay</span> | Loading overlay component rendered when the grid is in a loading state.|
+| <span class="prop-name">NoResultsOverlay</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">NoResultsOverlay </span> | No results overlay component rendered when the grid has no results after filtering.|
 | <span class="prop-name">NoRowsOverlay</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">NoRowsOverlay</span> | No rows overlay component rendered when the grid has no rows.|
 | <span class="prop-name">Pagination</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">Pagination</span> | Pagination component rendered in the grid footer by default.|
 | <span class="prop-name">Panel</span> | <span class="prop-type">React.ElementType&lt;GridPanelProps></span> | <span class="prop-type">Panel</span> | Panel component wrapping the filters and columns panels. |

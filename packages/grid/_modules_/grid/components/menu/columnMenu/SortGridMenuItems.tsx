@@ -6,7 +6,8 @@ import { GridSortDirection } from '../../../models/gridSortModel';
 import { GridApiContext } from '../../GridApiContext';
 import { GridFilterItemProps } from './GridFilterItemProps';
 
-export const SortGridMenuItems: React.FC<GridFilterItemProps> = ({ column, onClick }) => {
+export const SortGridMenuItems = (props: GridFilterItemProps) => {
+  const { column, onClick } = props;
   const apiRef = React.useContext(GridApiContext);
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
 

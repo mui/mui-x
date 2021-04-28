@@ -156,6 +156,11 @@ export const useGridVirtualRows = (
         logger.debug(`Changing page from ${page} to ${nextPage}`);
         requireRerender = true;
       } else {
+        if (!containerProps.isVirtualized && page > 0) {
+          logger.debug(`Virtualization disabled, setting virtualPage to 0`);
+          setRenderingState({ virtualPage: 0 });
+        }
+
         scrollTo(scrollParams);
       }
       setRenderingState({
@@ -271,7 +276,8 @@ export const useGridVirtualRows = (
     setRenderingState({ virtualPage: 0 });
 
     if (windowRef && windowRef.current) {
-      windowRef.current.scrollTo(0, 0);
+      windowRef.current.scrollTop = 0;
+      windowRef.current.scrollLeft = 0;
     }
     setRenderingState({ renderingZoneScroll: { left: 0, top: 0 } });
   }, [scrollTo, setRenderingState, windowRef]);

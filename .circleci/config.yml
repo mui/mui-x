@@ -169,6 +169,19 @@ jobs:
       - run:
           name: Tests TypeScript definitions
           command: yarn typescript
+  test_e2e:
+    <<: *defaults
+    docker:
+      - image: mcr.microsoft.com/playwright@sha256:1700531ce01a3d974cc440bb8efcf43d31d58ee5f1d354fc21563ea5fe4291e6
+        environment:
+          NODE_ENV: development # Needed if playwright is in `devDependencies`
+    steps:
+      - checkout
+      - install_js:
+          browsers: true
+      - run:
+          name: Run e2e tests
+          command: yarn test:e2e
   test_regressions:
     <<: *defaults
     docker:
@@ -200,6 +213,9 @@ workflows:
           requires:
             - checkout
       - test_types:
+          requires:
+            - checkout
+      - test_e2e:
           requires:
             - checkout
       - test_regressions:

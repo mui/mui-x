@@ -26,17 +26,11 @@ import { GridColumns } from 'packages/grid/_modules_/grid/models/colDef/gridColD
 
 const SPACE_KEY = { key: ' ' };
 const SHIFT_SPACE_KEY = { ...SPACE_KEY, shiftKey: true };
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Keyboard', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
-
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
 
   it('should be able to type in an child input', () => {
     const handleInputKeyDown = spy((event) => event.defaultPrevented);
@@ -140,14 +134,14 @@ describe('<DataGrid /> - Keyboard', () => {
 
     return (
       <div style={{ width: 300, height: 360 }}>
-        <DataGrid rows={data.rows} columns={transformColSizes(data.columns)} />
+        <DataGrid autoHeight={isJSDOM} rows={data.rows} columns={transformColSizes(data.columns)} />
       </div>
     );
   };
 
   /* eslint-disable material-ui/disallow-active-element-as-key-event-target */
   it('cell navigation with arrows', () => {
-    render(<KeyboardTest />);
+    render(<KeyboardTest nbRows={10} />);
     getCell(0, 0).focus();
     expect(getActiveCell()).to.equal('0-0');
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
@@ -176,11 +170,16 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(isSelected).to.equal(true);
   });
 
-  it('Space only should go to the bottom of the page', () => {
+  it('Space only should go to the bottom of the page', function test() {
+    if (isJSDOM) {
+      // Need layouting for row virtualization
+      this.skip();
+    }
+
     render(<KeyboardTest />);
     getCell(0, 0).focus();
     expect(getActiveCell()).to.equal('0-0');
-    fireEvent.keyDown(document.activeElement!, SPACE_KEY);
+    fireEvent.keyDown(document.activeElement!, { key: ' ' });
     expect(getActiveCell()).to.equal('4-0');
   });
 
@@ -192,7 +191,12 @@ describe('<DataGrid /> - Keyboard', () => {
     expect(getActiveCell()).to.equal('3-0');
   });
 
-  it('Home / End navigation', async () => {
+  it('Home / End navigation', async function test() {
+    if (isJSDOM) {
+      // Need layouting for column virtualization
+      this.skip();
+    }
+
     render(<KeyboardTest />);
     getCell(1, 1).focus();
     expect(getActiveCell()).to.equal('1-1');
@@ -224,7 +228,7 @@ describe('<DataGrid /> - Keyboard', () => {
 
     render(
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid rows={baselineProps.rows} columns={baselineProps.columns} />
+        <DataGrid autoHeight={isJSDOM} rows={baselineProps.rows} columns={baselineProps.columns} />
       </div>,
     );
 

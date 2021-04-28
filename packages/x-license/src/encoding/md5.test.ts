@@ -1,4 +1,5 @@
-import { md5 } from '../encoding/md5';
+import { expect } from 'chai';
+import { md5 } from './md5';
 
 describe('License: md5', () => {
   const clearStr1 =
@@ -10,8 +11,8 @@ describe('License: md5', () => {
   const encodedStr3 = '8a59b141a26e95b5020e04ed5d4877dd';
 
   it('should hash string properly', () => {
-    expect(md5(clearStr1)).toBe(encodedStr1);
-    expect(md5(clearStr2)).toBe(encodedStr2);
-    expect(md5(clearStr3)).toBe(encodedStr3);
+    expect(md5(clearStr1)).to.equal(encodedStr1);
+    expect(md5(clearStr2)).to.equal(encodedStr2);
+    expect(md5(clearStr3)).to.equal(encodedStr3);
   });
 });
