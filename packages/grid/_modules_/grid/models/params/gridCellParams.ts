@@ -12,7 +12,7 @@ export interface GridCellParams {
   /**
    * The HTMLElement cell element.
    */
-  element?: HTMLElement | null;
+  getElement: (id: GridRowId, field: string) => HTMLElement | null;
   /**
    * The column field of the cell that triggered the event
    */
@@ -38,14 +38,6 @@ export interface GridCellParams {
    * The column of the row that the current cell belongs to.
    */
   colDef: any;
-  /**
-   * The row index of the row that the current cell belongs to.
-   */
-  rowIndex: number;
-  /**
-   * The column index that the current cell belongs to.
-   */
-  colIndex: number;
   /**
    * GridApi that let you manipulate the grid.
    */

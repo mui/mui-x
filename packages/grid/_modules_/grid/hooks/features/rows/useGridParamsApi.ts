@@ -27,9 +27,8 @@ export function useGridParamsApi(apiRef: GridApiRef) {
   const getColumnHeaderParams = React.useCallback(
     (field: string): GridColumnHeaderParams => ({
       field,
-      element: apiRef.current.getColumnHeaderElement(field),
+      getElement: apiRef.current.getColumnHeaderElement,
       colDef: apiRef.current.getColumnFromField(field),
-      colIndex: apiRef.current.getColumnIndex(field, true),
       api: apiRef!.current,
     }),
     [apiRef],
@@ -39,11 +38,10 @@ export function useGridParamsApi(apiRef: GridApiRef) {
     (id: GridRowId) => {
       const params: GridRowParams = {
         id,
-        element: apiRef.current.getRowElement(id),
+        getElement: apiRef.current.getRowElement,
         columns: apiRef.current.getAllColumns(),
         getValue: (columnField: string) => apiRef.current.getCellValue(id, columnField),
         row: apiRef.current.getRowFromId(id),
-        rowIndex: apiRef.current.getRowIndexFromId(id),
         api: apiRef.current,
       };
       return params;
@@ -53,11 +51,10 @@ export function useGridParamsApi(apiRef: GridApiRef) {
 
   const getBaseCellParams = React.useCallback(
     (id: GridRowId, field: string) => {
-      const element = apiRef.current.getCellElement(id, field);
       const row = apiRef.current.getRowFromId(id);
 
       const params: GridValueGetterParams = {
-        element,
+        getElement: apiRef.current.getCellElement,
         id,
         field,
         row,
@@ -65,8 +62,6 @@ export function useGridParamsApi(apiRef: GridApiRef) {
         getValue: (columnField: string) => apiRef.current.getCellValue(id, columnField),
         colDef: apiRef.current.getColumnFromField(field),
         cellMode: apiRef.current.getCellMode(id, field),
-        rowIndex: apiRef.current.getRowIndexFromId(id),
-        colIndex: apiRef.current.getColumnIndex(field, true),
         api: apiRef.current,
       };
 

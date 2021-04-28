@@ -86,7 +86,9 @@ export const useGridKeyboardNavigation = (
   const navigateCells = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
       event.preventDefault();
-      const { colIndex, rowIndex } = params;
+      const colIndex = apiRef.current.getColumnIndex(params.field);
+      const rowIndex = apiRef.current.getRowIndexFromId(params.id);
+
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
       let rowCount = totalRowCount;
@@ -159,10 +161,10 @@ export const useGridKeyboardNavigation = (
   );
 
   const navigateColumnHeaders = React.useCallback(
-    (params: GridCellParams, event: React.KeyboardEvent) => {
+    (params: GridColumnHeaderParams, event: React.KeyboardEvent) => {
       event.preventDefault();
       let nextColumnHeaderIndexes: GridColumnHeaderIndexCoordinates | null;
-      const { colIndex } = params;
+      const colIndex = apiRef.current.getColumnIndex(params.field);
       const key = mapKey(event);
 
       if (isArrowKeys(key)) {
@@ -177,7 +179,7 @@ export const useGridKeyboardNavigation = (
         // Handle only Page Down key, Page Up should keep the current possition
         if (key.indexOf('Down') > -1) {
           apiRef.current.setCellFocus({
-            colIndex: params.colIndex,
+            colIndex,
             rowIndex: containerSizes!.viewportPageSize - 1,
           });
         }
@@ -187,7 +189,7 @@ export const useGridKeyboardNavigation = (
       }
 
       if (!nextColumnHeaderIndexes) {
-        apiRef.current.setCellFocus({ colIndex: params.colIndex, rowIndex: 0 });
+        apiRef.current.setCellFocus({ colIndex, rowIndex: 0 });
         return;
       }
 

@@ -12,7 +12,7 @@ export interface GridRowParams {
   /**
    * The HTMLElement row element.
    */
-  element?: HTMLElement | null;
+  getElement: (id: GridRowId) => HTMLElement | null;
   /**
    * A function that let you get data from other columns.
    * @param field
@@ -26,10 +26,6 @@ export interface GridRowParams {
    * All grid columns.
    */
   columns: any;
-  /**
-   * The row index of the row that the current cell belongs to.
-   */
-  rowIndex: number;
   /**
    * GridApiRef that let you manipulate the grid.
    */

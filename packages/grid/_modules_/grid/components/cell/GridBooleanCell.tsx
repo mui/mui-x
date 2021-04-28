@@ -6,7 +6,7 @@ export function GridBooleanCell(props: GridCellParams & SvgIconProps) {
   const {
     id,
     value,
-    element,
+    getElement,
     formattedValue,
     api,
     field,
@@ -14,8 +14,6 @@ export function GridBooleanCell(props: GridCellParams & SvgIconProps) {
     colDef,
     cellMode,
     getValue,
-    rowIndex,
-    colIndex,
     isEditable,
     ...other
   } = props;
