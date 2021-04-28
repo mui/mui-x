@@ -6,6 +6,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Root
   rootGridLabel: 'grid',
   noRowsLabel: 'Pas de résultats',
+  noResultsOverlayLabel: 'Aucun résultat.',
   errorOverlayDefaultLabel: 'Une erreur est apparue.',
 
   // Density selector toolbar button text
