@@ -95,8 +95,8 @@ describe('<DataGrid /> - Rows', () => {
         <DataGrid getRowClassName={getRowClassName} getRowId={getRowId} {...baselineProps} />
       </div>,
     );
-    expect(getRow(0).className).to.contain('under-age');
-    expect(getRow(1).className).to.contain('under-age');
-    expect(getRow(2).className).not.to.contain('under-age');
+    expect(getRow(0)).to.have.class('under-age');
+    expect(getRow(1)).to.have.class('under-age');
+    expect(getRow(2)).not.to.have.class('under-age');
   });
 });
