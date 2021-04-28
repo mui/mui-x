@@ -36,7 +36,7 @@ function EditToolbar({ buttonLabel, selectedCellParams, apiRef, setButtonLabel }
       }}
     >
       <Button
-        onMouseDown={handleButtonClick}
+        onClick={handleButtonClick}
         disabled={!selectedCellParams}
         color="primary"
       >
