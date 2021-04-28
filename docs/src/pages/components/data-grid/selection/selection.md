@@ -46,7 +46,7 @@ To activate checkbox selection set `checkboxSelection={true}`.
 
 ## Disable selection on click
 
-You might have interactive content in the cells and need to disable the selection of the row on click. Use the `disableClickEventBubbling` option in this case.
+You might have interactive content in the cells and need to disable the selection of the row on click. Use the `disableSelectionOnClick` option in this case.
 
 {{"demo": "pages/components/data-grid/selection/DisableClickSelectionGrid.js", "bg": "inline"}}
 
