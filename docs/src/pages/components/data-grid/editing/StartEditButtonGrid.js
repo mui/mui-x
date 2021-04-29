@@ -58,6 +58,7 @@ EditToolbar.propTypes = {
   buttonLabel: PropTypes.any.isRequired,
   selectedCellParams: PropTypes.any.isRequired,
   setButtonLabel: PropTypes.any.isRequired,
+  setSelectedCellParams: PropTypes.any.isRequired,
 };
 
 export default function StartEditButtonGrid() {
