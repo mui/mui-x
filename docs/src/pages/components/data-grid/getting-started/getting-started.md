@@ -161,7 +161,7 @@ The following table summarizes the features available in the community `DataGrid
 | **Rendering**                                                                             |           |                               |                                       |
 | [Column virtualization](/components/data-grid/virtualization/#column-virtualization)      |    ✅     |              ✅               |                  ✅                   |
 | [Row virtualization > 100 rows](/components/data-grid/virtualization/#row-virtualization) |    ❌     |              ✅               |                  ✅                   |
-| [Customizable components](/components/data-grid/components/)                                           |    ✅     |              ✅               |                  ✅                   |
+| [Customizable components](/components/data-grid/components/)                              |    ✅     |              ✅               |                  ✅                   |
 | **Group & Pivot**                                                                         |           |                               |                                       |
 | [Tree data](/components/data-grid/group-pivot/#tree-data)                                 |    ❌     |              🚧               |                  🚧                   |
 | [Master detail](/components/data-grid/group-pivot/#master-detail)                         |    ❌     |              🚧               |                  🚧                   |
