@@ -2,23 +2,22 @@ import * as React from 'react';
 import { SvgIconProps } from '@material-ui/core/SvgIcon';
 import { GridCellParams } from '../../models/params/gridCellParams';
 
-export function GridBooleanCell(props: GridCellParams & SvgIconProps) {
+export const GridBooleanCell = React.memo(( props: GridCellParams & SvgIconProps) => {
   const {
     id,
     value,
-    getElement,
     formattedValue,
     api,
     field,
     row,
     colDef,
     cellMode,
-    getValue,
     isEditable,
     ...other
   } = props;
 
-  const Icon = value ? api.components.BooleanCellTrueIcon : api.components.BooleanCellFalseIcon;
+  const Icon = React.useMemo(()=> value ? api.components.BooleanCellTrueIcon : api.components.BooleanCellFalseIcon,
+    [api.components.BooleanCellFalseIcon, api.components.BooleanCellTrueIcon, value]);
 
   return (
     <Icon
@@ -29,6 +28,6 @@ export function GridBooleanCell(props: GridCellParams & SvgIconProps) {
       {...other}
     />
   );
-}
+});
 
 export const renderBooleanCell = (params) => <GridBooleanCell {...params} />;

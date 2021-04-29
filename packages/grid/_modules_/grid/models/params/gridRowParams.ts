@@ -12,12 +12,12 @@ export interface GridRowParams {
   /**
    * The HTMLElement row element.
    */
-  getElement: (id: GridRowId) => HTMLElement | null;
+  // getElement: () => HTMLElement | null;
   /**
    * A function that let you get data from other columns.
    * @param field
    */
-  getValue: (field: string) => GridCellValue;
+  // getValue: (field: string) => GridCellValue;
   /**
    * The row model of the row that the current cell belongs to.
    */

@@ -14,7 +14,7 @@ export const GridHeaderCheckbox = (props: GridColumnHeaderParams) => {
   const apiRef = React.useContext(GridApiContext);
   const visibleRowIds = useGridSelector(apiRef, visibleSortedGridRowIdsSelector);
   const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
-  const element = props.getElement(props.field);
+  const element = apiRef!.current.getColumnHeaderElement(props.field);
   const colIndex = apiRef!.current.getColumnIndex(props.field)
 
   const totalSelectedRows = useGridSelector(apiRef, selectedGridRowsCountSelector);

@@ -27,7 +27,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
   const getColumnHeaderParams = React.useCallback(
     (field: string): GridColumnHeaderParams => ({
       field,
-      getElement: apiRef.current.getColumnHeaderElement,
+      // getElement: ()=> apiRef.current.getColumnHeaderElement(field),
       colDef: apiRef.current.getColumnFromField(field),
       api: apiRef!.current,
     }),
@@ -38,9 +38,9 @@ export function useGridParamsApi(apiRef: GridApiRef) {
     (id: GridRowId) => {
       const params: GridRowParams = {
         id,
-        getElement: apiRef.current.getRowElement,
+        // getElement: ()=> apiRef.current.getRowElement(id),
         columns: apiRef.current.getAllColumns(),
-        getValue: (columnField: string) => apiRef.current.getCellValue(id, columnField),
+        // getValue: (columnField: string) => apiRef.current.getCellValue(id, columnField),
         row: apiRef.current.getRowFromId(id),
         api: apiRef.current,
       };
@@ -54,12 +54,12 @@ export function useGridParamsApi(apiRef: GridApiRef) {
       const row = apiRef.current.getRowFromId(id);
 
       const params: GridValueGetterParams = {
-        getElement: apiRef.current.getCellElement,
+        // getElement: ()=> apiRef.current.getCellElement(id, field),
         id,
         field,
         row,
         value: row[field],
-        getValue: (columnField: string) => apiRef.current.getCellValue(id, columnField),
+        // getValue: (columnField: string) => apiRef.current.getCellValue(id, columnField),
         colDef: apiRef.current.getColumnFromField(field),
         cellMode: apiRef.current.getCellMode(id, field),
         api: apiRef.current,
@@ -78,7 +78,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
       const params: GridCellParams = {
         ...baseParams,
         value,
-        getValue: (columnField: string) => apiRef.current.getCellValue(id, columnField),
+        // getValue: (columnField: string) => apiRef.current.getCellValue(id, columnField),
         formattedValue: value,
       };
       if (colDef.valueFormatter) {

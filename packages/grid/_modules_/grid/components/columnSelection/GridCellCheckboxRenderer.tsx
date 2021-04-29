@@ -8,12 +8,12 @@ import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { GridApiContext } from '../GridApiContext';
 
 export const GridCellCheckboxRenderer = React.memo((props: GridCellParams) => {
-  const { getValue, field, id } = props;
+  const { field, id } = props;
   const apiRef = React.useContext(GridApiContext);
   const tabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
   const rowIndex = apiRef!.current.getRowIndex(id);
   const colIndex = apiRef!.current.getColumnIndex(field);
-  const element = props.getElement(id, field);
+  const element = props.api.getCellElement(id, field);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     apiRef!.current.selectRow(id, checked, true);
@@ -47,7 +47,7 @@ export const GridCellCheckboxRenderer = React.memo((props: GridCellParams) => {
   return (
     <Checkbox
       tabIndex={tabIndex}
-      checked={!!getValue(field)}
+      checked={!!props.api.getCellValue(id, field)}
       onChange={handleChange}
       className="MuiDataGrid-checkboxInput"
       color="primary"

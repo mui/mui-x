@@ -16,7 +16,7 @@ import {
   GridViewStreamIcon,
   GridSaveAltIcon,
   GridCloseIcon,
-  GridCheckIcon,
+  GridCheckIcon, IconTest,
 } from '../components/icons/index';
 import { GridLoadingOverlay } from '../components/GridLoadingOverlay';
 import { GridColumnMenu } from '../components/menu/columnMenu/GridColumnMenu';
@@ -90,19 +90,19 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
 }
 
 export const DEFAULT_GRID_SLOTS_ICONS: GridIconSlotsComponent = {
-  BooleanCellTrueIcon: GridCheckIcon,
-  BooleanCellFalseIcon: GridCloseIcon,
-  OpenFilterButtonIcon: GridFilterListIcon,
-  ColumnFilteredIcon: GridFilterAltIcon,
-  ColumnSelectorIcon: GridColumnIcon,
-  ColumnMenuIcon: GridTripleDotsVerticalIcon,
-  ColumnSortedAscendingIcon: GridArrowUpwardIcon,
-  ColumnSortedDescendingIcon: GridArrowDownwardIcon,
-  ColumnResizeIcon: GridSeparatorIcon,
-  DensityCompactIcon: GridViewHeadlineIcon,
-  DensityStandardIcon: GridTableRowsIcon,
-  DensityComfortableIcon: GridViewStreamIcon,
-  ExportIcon: GridSaveAltIcon,
+  BooleanCellTrueIcon: IconTest,
+  BooleanCellFalseIcon: IconTest,
+  OpenFilterButtonIcon: IconTest,
+  ColumnFilteredIcon: IconTest,
+  ColumnSelectorIcon: IconTest,
+  ColumnMenuIcon: IconTest,
+  ColumnSortedAscendingIcon: IconTest,
+  ColumnSortedDescendingIcon: IconTest,
+  ColumnResizeIcon: IconTest,
+  DensityCompactIcon: IconTest,
+  DensityStandardIcon: IconTest,
+  DensityComfortableIcon: IconTest,
+  ExportIcon: IconTest,
 };
 
 export const DEFAULT_GRID_SLOTS_COMPONENTS: GridApiRefComponentsProperty = {

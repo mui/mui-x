@@ -5,7 +5,7 @@ export interface GridColumnHeaderParams {
   /**
    * The HTMLElement column header element.
    */
-  getElement: (field: string) => HTMLElement | null;
+  // getElement: () => HTMLElement | null;
   /**
    * The column field of the column that triggered the event
    */

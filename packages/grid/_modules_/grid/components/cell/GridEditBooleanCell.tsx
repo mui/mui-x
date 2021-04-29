@@ -11,14 +11,12 @@ export function GridEditBooleanCell(
   const {
     id: idProp,
     value,
-    getElement,
     formattedValue,
     api,
     field,
     row,
     colDef,
     cellMode,
-    getValue,
     isEditable,
     className,
     ...other

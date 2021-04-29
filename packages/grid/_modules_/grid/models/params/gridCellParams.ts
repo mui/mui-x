@@ -12,7 +12,7 @@ export interface GridCellParams {
   /**
    * The HTMLElement cell element.
    */
-  getElement: (id: GridRowId, field: string) => HTMLElement | null;
+  // getElement: () => HTMLElement | null;
   /**
    * The column field of the cell that triggered the event
    */
@@ -29,7 +29,7 @@ export interface GridCellParams {
    * A function that let you get data from other columns.
    * @param field
    */
-  getValue: (field: string) => GridCellValue;
+  // getValue: (field: string) => GridCellValue;
   /**
    * The row model of the row that the current cell belongs to.
    */
