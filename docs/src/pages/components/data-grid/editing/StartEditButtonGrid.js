@@ -32,7 +32,7 @@ function EditToolbar({
       setButtonLabel('Save');
     }
     // Or you can use the editRowModel prop, but I find it easier with apiRef
-  }, [apiRef, selectedCellParams, setButtonLabel]);
+  }, [apiRef, selectedCellParams, setButtonLabel, setSelectedCellParams]);
 
   return (
     <div
