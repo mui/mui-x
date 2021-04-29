@@ -138,6 +138,10 @@ export interface GridOptions {
    */
   filterModel?: GridFilterModel;
   /**
+   * Function that applies CSS classes dynamically on rows.
+   */
+  getRowClassName?: (params: GridRowParams) => string;
+  /**
    * Set the height in pixel of the column headers in the grid.
    * @default 56
    */

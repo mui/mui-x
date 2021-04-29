@@ -63,6 +63,46 @@ To change the row height for the whole grid, set the `rowHeight` prop:
 
 {{"demo": "pages/components/data-grid/rows/DenseHeightGrid.js", "bg": "inline"}}
 
+## Styling rows
+
+The `getRowClassName` prop can be used to apply a custom CSS class on each row. It's called with a `GridRowsParams` object and must return a string.
+
+```tsx
+interface GridRowParams {
+  /**
+   * The grid row id.
+   */
+  id: GridRowId;
+  /**
+   * The HTMLElement row element.
+   */
+  element?: HTMLElement | null;
+  /**
+   * A function that let you get data from other columns.
+   * @param field
+   */
+  getValue: (field: string) => GridCellValue;
+  /**
+   * The row model of the row that the current cell belongs to.
+   */
+  row: GridRowModel;
+  /**
+   * All grid columns.
+   */
+  columns: any;
+  /**
+   * The row index of the row that the current cell belongs to.
+   */
+  rowIndex: number;
+  /**
+   * GridApiRef that let you manipulate the grid.
+   */
+  api: any;
+}
+```
+
+{{"demo": "pages/components/data-grid/rows/StylingRowsGrid.js", "bg": "inline"}}
+
 ## 🚧 Row spanning
 
 > ⚠️ This feature isn't implemented yet. It's coming.
