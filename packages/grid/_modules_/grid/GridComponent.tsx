@@ -18,6 +18,7 @@ import { Watermark } from './components/Watermark';
 import { GridComponentProps } from './GridComponentProps';
 import { useGridColumnMenu } from './hooks/features/columnMenu/useGridColumnMenu';
 import { useGridColumns } from './hooks/features/columns/useGridColumns';
+import { useGridFocus } from './hooks/features/focus/useGridFocus';
 import { useGridSelector } from './hooks/features/core/useGridSelector';
 import { useGridKeyboardNavigation } from './hooks/features/keyboard/useGridKeyboardNavigation';
 import { useGridPagination } from './hooks/features/pagination/useGridPagination';
@@ -83,6 +84,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useGridParamsApi(apiRef);
     useGridRows(apiRef, props.rows, props.getRowId);
     useGridEditRows(apiRef);
+    useGridFocus(apiRef);
     useGridKeyboard(rootContainerRef, apiRef);
     useGridKeyboardNavigation(rootContainerRef, apiRef);
     useGridSelection(apiRef);

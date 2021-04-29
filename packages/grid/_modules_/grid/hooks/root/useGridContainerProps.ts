@@ -133,11 +133,12 @@ export const useGridContainerProps = (
       const isVirtualized = diff > rowHeight * 2;
 
       if (options.autoPageSize || options.autoHeight || !isVirtualized) {
-        // we don't need vertical virtualization in these cases.
+        const viewportFitHeightSize = Math.floor(viewportSizes.height / rowHeight);
         const viewportPageSize =
-          options.autoHeight || !isVirtualized
+          scrollBarState.hasScrollY || rowsCount < viewportFitHeightSize
             ? rowsCount
-            : Math.floor(viewportSizes.height / rowHeight);
+            : viewportFitHeightSize;
+
         const requiredHeight = viewportPageSize * rowHeight + scrollBarState.scrollBarSize.x;
 
         const indexes: GridContainerProps = {
