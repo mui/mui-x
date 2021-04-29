@@ -14,16 +14,15 @@ import { useGridApiMethod } from '../../root/useGridApiMethod';
 
 let warnedOnce = false;
 function warnMissingColumn(field) {
-  if (!warnedOnce && process.env.NODE_ENV !== 'production') {
-    console.warn(
-      [
-        `Material-UI: You are calling getValue('${field}') but the column \`${field}\` is not defined.`,
-        `Instead, you can access the data from \`params.row.${field}\`.`,
-      ].join('\n'),
-    );
-    warnedOnce = true;
-  }
+  console.warn(
+    [
+      `Material-UI: You are calling getValue('${field}') but the column \`${field}\` is not defined.`,
+      `Instead, you can access the data from \`params.row.${field}\`.`,
+    ].join('\n'),
+  );
+  warnedOnce = true;
 }
+
 export function useGridParamsApi(apiRef: GridApiRef) {
   const getColumnHeaderParams = React.useCallback(
     (field: string): GridColumnHeaderParams => ({
@@ -100,12 +99,15 @@ export function useGridParamsApi(apiRef: GridApiRef) {
   const getCellValue = React.useCallback(
     (id: GridRowId, field: string) => {
       const colDef = apiRef.current.getColumnFromField(field);
-      const rowModel = apiRef.current.getRowFromId(id);
 
-      if (!colDef) {
-        warnMissingColumn(field);
+      if (!warnedOnce && process.env.NODE_ENV !== 'production') {
+        if (!colDef) {
+          warnMissingColumn(field);
+        }
       }
+
       if (!colDef || !colDef.valueGetter) {
+        const rowModel = apiRef.current.getRowFromId(id);
         return rowModel[field];
       }
 
