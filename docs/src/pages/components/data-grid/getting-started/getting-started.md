@@ -149,7 +149,7 @@ The following table summarizes the features available in the community `DataGrid
 | [Quick filter](/components/data-grid/filtering/#quick-filter)                           |    🚧     |              🚧               |                  🚧                   |
 | **Pagination**                                                                          |           |                               |                                       |
 | [Pagination](/components/data-grid/pagination/)                                         |    ✅     |              ✅               |                  ✅                   |
-| [Pagination > 100 rows per page](/components/data-grid/pagination/)                     |    ❌     |              ✅               |                  ✅                   |
+| [Pagination > 100 rows per page](/components/data-grid/pagination/#paginate-gt-100-rows)                     |    ❌     |              ✅               |                  ✅                   |
 | **Editing**                                                                             |           |                               |                                       |
 | [Row edition](/components/data-grid/editing/#row-editing)                               |    🚧     |              🚧               |                  🚧                   |
 | [Cell editing](/components/data-grid/editing/#cell-editing)                             |    ✅     |              ✅               |                  ✅                   |
@@ -159,9 +159,9 @@ The following table summarizes the features available in the community `DataGrid
 | [Excel export](/components/data-grid/export/#excel-export)                              |    ❌     |              ❌               |                  🚧                   |
 | [Clipboard](/components/data-grid/export/#clipboard)                                    |    ❌     |              🚧               |                  🚧                   |
 | **Rendering**                                                                           |           |                               |                                       |
-| [Column virtualization](/components/data-grid/rendering/#column-virtualization)         |    ✅     |              ✅               |                  ✅                   |
-| [Row virtualization > 100 rows](/components/data-grid/rendering/#column-virtualization) |    ❌     |              ✅               |                  ✅                   |
-| [Components](/components/data-grid/rendering/#components)                               |    ✅     |              ✅               |                  ✅                   |
+| [Column virtualization](/components/data-grid/virtualization/#column-virtualization)         |    ✅     |              ✅               |                  ✅                   |
+| [Row virtualization > 100 rows](/components/data-grid/virtualization/#row-virtualization) |    ❌     |              ✅               |                  ✅                   |
+| [Components](/components/data-grid/components/)                               |    ✅     |              ✅               |                  ✅                   |
 | **Group & Pivot**                                                                       |           |                               |                                       |
 | [Tree data](/components/data-grid/group-pivot/#tree-data)                               |    ❌     |              🚧               |                  🚧                   |
 | [Master detail](/components/data-grid/group-pivot/#master-detail)                       |    ❌     |              🚧               |                  🚧                   |
