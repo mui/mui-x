@@ -15,13 +15,7 @@ import {
 } from '@material-ui/x-grid-data-generator';
 
 function EditToolbar(props) {
-  const {
-    buttonLabel,
-    selectedCellParams,
-    apiRef,
-    setButtonLabel,
-    setSelectedCellParams,
-  } = props;
+  const { selectedCellParams, apiRef, setSelectedCellParams } = props;
 
   const handleClick = () => {
     if (!selectedCellParams) {
@@ -33,11 +27,9 @@ function EditToolbar(props) {
       apiRef.current.commitCellChange(editedCellProps);
       apiRef.current.setCellMode(id, field, 'view');
       setSelectedCellParams({ ...selectedCellParams, cellMode: 'view' });
-      setButtonLabel('Edit');
     } else {
       apiRef.current.setCellMode(id, field, 'edit');
       setSelectedCellParams({ ...selectedCellParams, cellMode: 'edit' });
-      setButtonLabel('Save');
     }
   };
 
@@ -60,7 +52,7 @@ function EditToolbar(props) {
         disabled={!selectedCellParams}
         color="primary"
       >
-        {buttonLabel}
+        {selectedCellParams?.cellMode === 'edit' ? 'Save' : 'Edit'}
       </Button>
     </div>
   );
@@ -68,7 +60,6 @@ function EditToolbar(props) {
 
 export default function StartEditButtonGrid() {
   const apiRef = useGridApiRef();
-  const [buttonLabel, setButtonLabel] = React.useState('Edit');
   const [
     selectedCellParams,
     setSelectedCellParams,
@@ -76,13 +67,6 @@ export default function StartEditButtonGrid() {
 
   const handleCellClick = React.useCallback((params: GridCellParams) => {
     setSelectedCellParams(params);
-
-    const { cellMode } = params;
-    if (cellMode === 'edit') {
-      setButtonLabel('Save');
-    } else {
-      setButtonLabel('Edit');
-    }
   }, []);
 
   const handleDoubleCellClick = React.useCallback(
@@ -131,9 +115,7 @@ export default function StartEditButtonGrid() {
         componentsProps={{
           toolbar: {
             selectedCellParams,
-            buttonLabel,
             apiRef,
-            setButtonLabel,
             setSelectedCellParams,
           },
         }}
