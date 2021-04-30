@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import { useGridApiRef, XGrid } from '@material-ui/x-grid';
 import {
@@ -55,6 +56,14 @@ function EditToolbar(props) {
     </div>
   );
 }
+
+EditToolbar.propTypes = {
+  apiRef: PropTypes.shape({
+    current: PropTypes.object.isRequired,
+  }).isRequired,
+  selectedCellParams: PropTypes.any.isRequired,
+  setSelectedCellParams: PropTypes.func.isRequired,
+};
 
 export default function StartEditButtonGrid() {
   const apiRef = useGridApiRef();

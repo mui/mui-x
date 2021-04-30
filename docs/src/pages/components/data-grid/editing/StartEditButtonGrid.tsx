@@ -7,6 +7,7 @@ import {
   GridRowsProp,
   useGridApiRef,
   XGrid,
+  GridApiRef,
 } from '@material-ui/x-grid';
 import {
   randomCreatedDate,
@@ -23,7 +24,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function EditToolbar(props) {
+interface EditToolbarProps {
+  apiRef: GridApiRef;
+  setSelectedCellParams: (value: any) => void;
+  selectedCellParams: any;
+}
+
+function EditToolbar(props: EditToolbarProps) {
   const { selectedCellParams, apiRef, setSelectedCellParams } = props;
   const classes = useStyles();
 
