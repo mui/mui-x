@@ -28,7 +28,8 @@ interface RowCellsProps {
   extendRowFullWidth: boolean;
   firstColIdx: number;
   id: GridRowId;
-  hasScroll: { y: boolean; x: boolean };
+  hasScrollX:  boolean;
+  hasScrollY:  boolean;
   lastColIdx: number;
   row: GridRowModel;
   rowIndex: number;
@@ -41,7 +42,8 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
   const {
     columns,
     firstColIdx,
-    hasScroll,
+    hasScrollX,
+    hasScrollY,
     id,
     lastColIdx,
     rowIndex,
@@ -56,7 +58,7 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const colIndex = firstColIdx + colIdx;
     const isLastColumn = colIndex === columns.length - 1;
-    const removeLastBorderRight = isLastColumn && hasScroll.x && !hasScroll.y;
+    const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
     const showRightBorder = !isLastColumn
       ? showCellRightBorder
       : !removeLastBorderRight && !props.extendRowFullWidth;
@@ -103,7 +105,7 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
       ...cssClassProp,
       rowIndex,
       cellMode: cellParams.cellMode,
-      colIndex: colIndex,
+      colIndex,
       children: cellComponent,
       isEditable: cellParams.isEditable,
       hasFocus:

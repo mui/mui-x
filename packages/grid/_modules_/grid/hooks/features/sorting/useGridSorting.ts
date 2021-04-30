@@ -169,10 +169,10 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
     }
 
     const sortModel = apiRef.current.getState().sorting.sortModel;
-    logger.debug('Sorting rows with ', sortModel);
     const sorted = [...rowIds];
     if (sortModel.length > 0) {
       comparatorList.current = buildComparatorList(sortModel);
+      logger.debug('Sorting rows with ', sortModel);
       sorted.sort(comparatorListAggregate);
     }
 
