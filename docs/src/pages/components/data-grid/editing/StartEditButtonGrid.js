@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import { useGridApiRef, XGrid } from '@material-ui/x-grid';
 import {
@@ -8,15 +7,21 @@ import {
   randomTraderName,
   randomUpdatedDate,
 } from '@material-ui/x-grid-data-generator';
+import { makeStyles } from '@material-ui/core/styles';
 
-function EditToolbar({
-  buttonLabel,
-  selectedCellParams,
-  apiRef,
-  setButtonLabel,
-  setSelectedCellParams,
-}) {
-  const handleButtonClick = React.useCallback(() => {
+const useStyles = makeStyles((theme) => ({
+  root: {
+    justifyContent: 'center',
+    display: 'flex',
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+}));
+
+function EditToolbar(props) {
+  const { selectedCellParams, apiRef, setSelectedCellParams } = props;
+  const classes = useStyles();
+
+  const handleClick = () => {
     if (!selectedCellParams) {
       return;
     }
@@ -25,56 +30,38 @@ function EditToolbar({
       const editedCellProps = apiRef.current.getEditCellPropsParams(id, field);
       apiRef.current.commitCellChange(editedCellProps);
       apiRef.current.setCellMode(id, field, 'view');
-      setButtonLabel('Edit');
+      setSelectedCellParams({ ...selectedCellParams, cellMode: 'view' });
     } else {
       apiRef.current.setCellMode(id, field, 'edit');
       setSelectedCellParams({ ...selectedCellParams, cellMode: 'edit' });
-      setButtonLabel('Save');
     }
-    // Or you can use the editRowModel prop, but I find it easier with apiRef
-  }, [apiRef, selectedCellParams, setButtonLabel, setSelectedCellParams]);
+  };
+
+  const handleMouseDown = (event) => {
+    // Keep the focus in the cell
+    event.preventDefault();
+  };
 
   return (
-    <div
-      style={{
-        justifyContent: 'center',
-        display: 'flex',
-        borderBottom: '1px solid rgba(224, 224, 224, 1)',
-      }}
-    >
+    <div className={classes.root}>
       <Button
-        onClick={handleButtonClick}
+        onClick={handleClick}
+        onMouseDown={handleMouseDown}
         disabled={!selectedCellParams}
         color="primary"
       >
-        {buttonLabel}
+        {selectedCellParams?.cellMode === 'edit' ? 'Save' : 'Edit'}
       </Button>
     </div>
   );
 }
 
-EditToolbar.propTypes = {
-  apiRef: PropTypes.any.isRequired,
-  buttonLabel: PropTypes.any.isRequired,
-  selectedCellParams: PropTypes.any.isRequired,
-  setButtonLabel: PropTypes.any.isRequired,
-  setSelectedCellParams: PropTypes.any.isRequired,
-};
-
 export default function StartEditButtonGrid() {
   const apiRef = useGridApiRef();
-  const [buttonLabel, setButtonLabel] = React.useState('Edit');
   const [selectedCellParams, setSelectedCellParams] = React.useState(null);
 
   const handleCellClick = React.useCallback((params) => {
     setSelectedCellParams(params);
-
-    const { cellMode } = params;
-    if (cellMode === 'edit') {
-      setButtonLabel('Save');
-    } else {
-      setButtonLabel('Edit');
-    }
   }, []);
 
   const handleDoubleCellClick = React.useCallback((params, event) => {
@@ -114,9 +101,7 @@ export default function StartEditButtonGrid() {
         componentsProps={{
           toolbar: {
             selectedCellParams,
-            buttonLabel,
             apiRef,
-            setButtonLabel,
             setSelectedCellParams,
           },
         }}
