@@ -3,6 +3,85 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.27](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.26...v4.0.0-alpha.27)
+
+_Apr 30, 2021_
+
+Big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add getRowClassName prop (#1448) @m4theushw
+- ⚡️ Drop support for Node v10 (#1499) @ZeeshanTamboli
+- ♿ Make checkbox focusable (#1421) @dtassone
+- 🇮🇹 Add itIT locale (#1446) @profcav
+- 🇷🇺 Add ruRU locale (#1449) @Lukin
+- 🐞 Bugfixes
+
+### @material-ui/x-grid@v4.0.0-alpha.27 / @material-ui/data-grid@v4.0.0-alpha.27
+
+#### Breaking changes
+
+- [core] Drop support for Node v10 (#1499) @ZeeshanTamboli
+- [XGrid] Remove `onAction` APIs (#1453) @DanailH
+
+  These event handlers on the apiRef were duplicating with the react props
+  and the event subscribe API. Changes on `apiRef.current`:
+
+  ```diff
+  -onFilterModelChange
+  -onPageChange
+  -onPageSizeChange
+  -onResize
+  -onUnmount
+  -onRowSelected
+  -onSelectionModelChange
+  -onSortModelChange
+  -onStateChange
+  ```
+
+  Note: These methods are available as React props.
+
+- [XGrid] Refactor useGridColumnResize (#1380) @DanailH
+
+  Changes on `apiRef.current`:
+
+  ```diff
+  -startResizeOnMouseDown
+  +setColumnWidth
+  ```
+
+#### Changes
+
+- [DataGrid] Add Italian (itIT) locale (#1446) @profcav
+- [DataGrid] Add Russian (ruRU) locale (#1449) @Lukin
+- [DataGrid] Add getRowClassName prop (#1448) @m4theushw
+- [DataGrid] Add support for `classes` prop (#1450) @ZeeshanTamboli
+- [DataGrid] Allow to customize the overlay when there're no filtered rows (#1445) @m4theushw
+- [DataGrid] Correct quantities plPL (#1487) @Chriserus
+- [DataGrid] Fix autoPageSize with small dataset (#1505) @dtassone
+- [DataGrid] Fix delete key for uneditable cells (#1497) @dtassone
+- [DataGrid] Fix invalid translation key (#1504) @DanailH
+- [DataGrid] Forward props for all Toolbar and Footer components (#1456) @DanailH
+- [DataGrid] Improve support of core v5 (#1458) @oliviertassinari
+- [DataGrid] Fix multiple focus behaviors (#1421) @dtassone
+
+### Docs
+
+- [docs] Add missing filterModel prop in /api/ (#1518) @imsuvesh
+- [docs] Better document how to disable row selection (#1510) @ZeeshanTamboli
+- [docs] Fix data grid feature comparison (#1516) @imsuvesh
+- [docs] Fix typos (#1447) @ZeeshanTamboli
+- [docs] No ads for commercial license (#1489) @oliviertassinari
+
+### Core
+
+- [core] Label our packages as side effect free (#1466) @oliviertassinari
+- [core] Reduce work in data grid (#1520) @oliviertassinari
+- [core] Remove React.FC (#1436) @ZeeshanTamboli
+- [license] No need to test the location (#1488) @oliviertassinari
+- [test] Improve test coverage of roving tabindex (#1459) @oliviertassinari
+- [test] Remove jest (#1467) @dependabot-preview
+- [test] Run more tests in jsdom (#1361) @oliviertassinari
+
 ## [4.0.0-alpha.26](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.25...v4.0.0-alpha.26)
 
 _Apr 22, 2021_
