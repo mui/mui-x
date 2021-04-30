@@ -13,9 +13,19 @@ import {
   randomTraderName,
   randomUpdatedDate,
 } from '@material-ui/x-grid-data-generator';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    justifyContent: 'center',
+    display: 'flex',
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+}));
 
 function EditToolbar(props) {
   const { selectedCellParams, apiRef, setSelectedCellParams } = props;
+  const classes = useStyles();
 
   const handleClick = () => {
     if (!selectedCellParams) {
@@ -39,13 +49,7 @@ function EditToolbar(props) {
   };
 
   return (
-    <div
-      style={{
-        justifyContent: 'center',
-        display: 'flex',
-        borderBottom: '1px solid rgba(224, 224, 224, 1)',
-      }}
-    >
+    <div className={classes.root}>
       <Button
         onClick={handleClick}
         onMouseDown={handleMouseDown}
