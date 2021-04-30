@@ -14,14 +14,16 @@ import {
   randomUpdatedDate,
 } from '@material-ui/x-grid-data-generator';
 
-function EditToolbar({
-  buttonLabel,
-  selectedCellParams,
-  apiRef,
-  setButtonLabel,
-  setSelectedCellParams,
-}) {
-  const handleButtonClick = React.useCallback(() => {
+function EditToolbar(props) {
+  const {
+    buttonLabel,
+    selectedCellParams,
+    apiRef,
+    setButtonLabel,
+    setSelectedCellParams,
+  } = props;
+
+  const handleClick = () => {
     if (!selectedCellParams) {
       return;
     }
@@ -36,8 +38,7 @@ function EditToolbar({
       setSelectedCellParams({ ...selectedCellParams, cellMode: 'edit' });
       setButtonLabel('Save');
     }
-    // Or you can use the editRowModel prop, but I find it easier with apiRef
-  }, [apiRef, selectedCellParams, setButtonLabel, setSelectedCellParams]);
+  };
 
   return (
     <div
@@ -47,11 +48,7 @@ function EditToolbar({
         borderBottom: '1px solid rgba(224, 224, 224, 1)',
       }}
     >
-      <Button
-        onClick={handleButtonClick}
-        disabled={!selectedCellParams}
-        color="primary"
-      >
+      <Button onClick={handleClick} disabled={!selectedCellParams} color="primary">
         {buttonLabel}
       </Button>
     </div>
