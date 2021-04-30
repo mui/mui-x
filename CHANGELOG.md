@@ -22,30 +22,31 @@ Big thanks to the 9 contributors who made this release possible. Here are some h
 
 - [XGrid] Remove `onAction` APIs (#1453) @DanailH
 
-This change has involved the following refactorings.
+  These event handlers on the apiRef were duplicating with the react props
+  and the event subscribe API. Changes on `apiRef.current`:
 
-Changes on `apiRef.current`.
+  ```diff
+  -onFilterModelChange
+  -onPageChange
+  -onPageSizeChange
+  -onResize
+  -onUnmount
+  -onRowSelected
+  -onSelectionModelChange
+  -onSortModelChange
+  -onStateChange
+  ```
 
-```diff
--  onFilterModelChange
--  onPageChange
--  onPageSizeChange
--  onResize
--  onUnmount
--  onRowSelected
--  onSelectionModelChange
--  onSortModelChange
--  onStateChange
-```
-Note: These methods are available as React props.
+  Note: These methods are available as React props.
 
 - [XGrid] Refactor useGridColumnResize (#1380) @DanailH
 
- Changes on `apiRef.current`.
-```diff
--  startResizeOnMouseDown
-+  setColumnWidth
-```
+  Changes on `apiRef.current`:
+
+  ```diff
+  -startResizeOnMouseDown
+  +setColumnWidth
+  ```
 
 #### Changes
 
