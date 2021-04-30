@@ -40,6 +40,11 @@ function EditToolbar(props) {
     }
   };
 
+  const handleMouseDown = (event) => {
+    // Keep the focus in the cell
+    event.preventDefault();
+  };
+
   return (
     <div
       style={{
@@ -48,7 +53,12 @@ function EditToolbar(props) {
         borderBottom: '1px solid rgba(224, 224, 224, 1)',
       }}
     >
-      <Button onClick={handleClick} disabled={!selectedCellParams} color="primary">
+      <Button
+        onClick={handleClick}
+        onMouseDown={handleMouseDown}
+        disabled={!selectedCellParams}
+        color="primary"
+      >
         {buttonLabel}
       </Button>
     </div>
