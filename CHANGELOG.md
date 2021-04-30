@@ -10,7 +10,7 @@ _Apr 29, 2021_
 Big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Add getRowClassName prop (#1448) @m4theushw
-- ⚡️ Update to Node 12 (#1499) @ZeeshanTamboli
+- ⚡️ Drop support for Node v10(#1499) @ZeeshanTamboli
 - ♿ Make checkbox focusable (#1421) @dtassone
 - 🇮🇹 Add itIT locale (#1446) @profcav
 - 🇷🇺 Add ruRU locale (#1449) @Lukin
@@ -20,7 +20,7 @@ Big thanks to the 9 contributors who made this release possible. Here are some h
 
 #### Breaking changes
 
-- [DataGrid] Remove `onAction` APIs (#1453) @DanailH
+- [XGrid] Remove `onAction` APIs (#1453) @DanailH
 
 This change has involved the following refactorings.
 
@@ -39,9 +39,9 @@ This change has involved the following refactorings.
 ```
 Note: These methods are available as React props.
 
-- [DataGrid] Refactor useGridColumnResize (#1380) @DanailH
+- [XGrid] Refactor useGridColumnResize (#1380) @DanailH
 
-  - Changes on `apiRef.current`.
+ Changes on `apiRef.current`.
 ```diff
 -  startResizeOnMouseDown
 +  setColumnWidth
@@ -60,7 +60,7 @@ Note: These methods are available as React props.
 - [DataGrid] Fix invalid translation key (#1504) @DanailH
 - [DataGrid] Forward props for all Toolbar and Footer components (#1456) @DanailH
 - [DataGrid] Improve support of core v5 (#1458) @oliviertassinari
-- [DataGrid] refactoring on focus cell and cols (#1421) @dtassone
+- [DataGrid] Fix multiple focus behaviors (#1421) @dtassone
 
 ### Docs
 
