@@ -83,7 +83,7 @@ const trTRGrid: Partial<GridLocaleText> = {
       : `${count.toLocaleString()} satır seçildi`,
 
   // Total rows footer text
-  footerTotalRows: 'Toplam Satır:'
+  footerTotalRows: 'Toplam Satır:',
 };
 
 export const trTR: Localization = getGridLocalization(trTRGrid, trTRCore);
