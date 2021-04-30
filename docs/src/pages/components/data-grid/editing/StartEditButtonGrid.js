@@ -79,7 +79,7 @@ export default function StartEditButtonGrid() {
 
   // Prevent from rolling back on escape
   const handleCellKeyDown = React.useCallback((params, event) => {
-    if (['Escape', 'Delete', 'Enter'].includes(event.key)) {
+    if (['Escape', 'Delete', 'Backspace', 'Enter'].includes(event.key)) {
       event.stopPropagation();
     }
   }, []);
