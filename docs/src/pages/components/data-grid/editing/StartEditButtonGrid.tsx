@@ -32,6 +32,7 @@ function EditToolbar(props) {
       const editedCellProps = apiRef.current.getEditCellPropsParams(id, field);
       apiRef.current.commitCellChange(editedCellProps);
       apiRef.current.setCellMode(id, field, 'view');
+      setSelectedCellParams({ ...selectedCellParams, cellMode: 'view' });
       setButtonLabel('Edit');
     } else {
       apiRef.current.setCellMode(id, field, 'edit');
