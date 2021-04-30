@@ -8,16 +8,18 @@ import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { GridApiContext } from '../GridApiContext';
 
 export const GridCellCheckboxRenderer = React.memo((props: GridCellParams) => {
-  const { field, id } = props;
+  const {field, id} = props;
   const apiRef = React.useContext(GridApiContext);
   const tabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
   const rowIndex = apiRef!.current.getRowIndex(id);
   const colIndex = apiRef!.current.getColumnIndex(field);
   const element = props.api.getCellElement(id, field);
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-    apiRef!.current.selectRow(id, checked, true);
-  };
+  const [, forceUpdate] = React.useState(false)
+  // const [tabIndex, setTabIndex] = React.useState(tabIndexState !== null &&
+  // tabIndexState.rowIndex === rowIndex &&
+  // tabIndexState.colIndex === colIndex
+  //   ? 0
+  //   : -1);
 
   const tabIndex =
     tabIndexState !== null &&
@@ -25,6 +27,10 @@ export const GridCellCheckboxRenderer = React.memo((props: GridCellParams) => {
     tabIndexState.colIndex === colIndex
       ? 0
       : -1;
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    apiRef!.current.selectRow(id, checked, true);
+  };
 
   React.useLayoutEffect(() => {
     if (tabIndex === 0 && element) {
@@ -44,14 +50,26 @@ export const GridCellCheckboxRenderer = React.memo((props: GridCellParams) => {
     [apiRef, props],
   );
 
+  const handleCellNavigation = React.useCallback(
+    (params: GridCellParams) => {
+      forceUpdate(p=> !p)
+    },
+    [],
+  );
+
+  React.useEffect(()=> {
+    return apiRef!.current.subscribeEvent('cellFocusChange', handleCellNavigation);
+  }, [apiRef, handleCellNavigation])
+  console.log('Rendering  ', tabIndex)
+
   return (
     <Checkbox
       tabIndex={tabIndex}
-      checked={!!props.api.getCellValue(id, field)}
+      checked={!!apiRef!.current.getCellValue(id, field)}
       onChange={handleChange}
       className="MuiDataGrid-checkboxInput"
       color="primary"
-      inputProps={{ 'aria-label': 'Select Row checkbox' }}
+      inputProps={{'aria-label': 'Select Row checkbox'}}
       onKeyDown={handleKeyDown}
     />
   );

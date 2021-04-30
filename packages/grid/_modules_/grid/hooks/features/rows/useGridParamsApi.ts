@@ -11,6 +11,8 @@ import {
   getGridRowElement,
 } from '../../../utils/domUtils';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
+import { useGridSelector } from '../core/useGridSelector';
+import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 
 let warnedOnce = false;
 function warnMissingColumn(field) {
@@ -24,6 +26,9 @@ function warnMissingColumn(field) {
 }
 
 export function useGridParamsApi(apiRef: GridApiRef) {
+  const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
+  const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
+
   const getColumnHeaderParams = React.useCallback(
     (field: string): GridColumnHeaderParams => ({
       field,

@@ -8,7 +8,7 @@ import { GridApiContext } from '../GridApiContext';
 
 export type GridRootProps = React.HTMLAttributes<HTMLDivElement>;
 
-export const GridRoot = React.memo(React.forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(
+export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(
   props,
   ref,
 ) {
@@ -32,4 +32,4 @@ export const GridRoot = React.memo(React.forwardRef<HTMLDivElement, GridRootProp
       {...other}
     />
   );
-}));
+});
