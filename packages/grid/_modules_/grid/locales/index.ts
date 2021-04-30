@@ -11,4 +11,5 @@ export * from './nlNL';
 export * from './plPL';
 export * from './ptBR';
 export * from './ruRU';
+export * from './trTR';
 export * from './ukUA';
