@@ -10,7 +10,7 @@ _Apr 29, 2021_
 Big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Add getRowClassName prop (#1448) @m4theushw
-- ⚡️ Upgrade Node to version 12 (#1499) @ZeeshanTamboli
+- ⚡️ Drop support for Node v10 (#1499) @ZeeshanTamboli
 - ♿ Make checkbox focusable (#1421) @dtassone
 - 🇮🇹 Add itIT locale (#1446) @profcav
 - 🇷🇺 Add ruRU locale (#1449) @Lukin
@@ -20,6 +20,7 @@ Big thanks to the 9 contributors who made this release possible. Here are some h
 
 #### Breaking changes
 
+- [core] Drop support for Node v10 (#1499) @ZeeshanTamboli
 - [XGrid] Remove `onAction` APIs (#1453) @DanailH
 
   These event handlers on the apiRef were duplicating with the react props
@@ -73,19 +74,10 @@ Big thanks to the 9 contributors who made this release possible. Here are some h
 
 ### Core
 
-#### Breaking changes
-
-- [core] upgrade node version from 10 to 12 (#1499) @ZeeshanTamboli
-
-#### Changes
-
 - [core] Label our packages as side effect free (#1466) @oliviertassinari
 - [core] Reduce work in data grid (#1520) @oliviertassinari
 - [core] Remove React.FC (#1436) @ZeeshanTamboli
 - [license] No need to test the location (#1488) @oliviertassinari
-  
-#### Tests
-
 - [test] Improve test coverage of roving tabindex (#1459) @oliviertassinari
 - [test] Remove jest (#1467) @dependabot-preview
 - [test] Run more tests in jsdom (#1361) @oliviertassinari
