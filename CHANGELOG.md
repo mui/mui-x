@@ -10,7 +10,7 @@ _Apr 29, 2021_
 Big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
 
 - 🎁 Add getRowClassName prop (#1448) @m4theushw
-- ⚡️ Drop support for Node v10(#1499) @ZeeshanTamboli
+- ⚡️ Upgrade Node to version 12 (#1499) @ZeeshanTamboli
 - ♿ Make checkbox focusable (#1421) @dtassone
 - 🇮🇹 Add itIT locale (#1446) @profcav
 - 🇷🇺 Add ruRU locale (#1449) @Lukin
@@ -24,7 +24,7 @@ Big thanks to the 9 contributors who made this release possible. Here are some h
 
 This change has involved the following refactorings.
 
-  - Changes on `apiRef.current`.
+Changes on `apiRef.current`.
 
 ```diff
 -  onFilterModelChange
@@ -83,7 +83,7 @@ Note: These methods are available as React props.
 - [core] Remove React.FC (#1436) @ZeeshanTamboli
 - [license] No need to test the location (#1488) @oliviertassinari
   
-### Tests
+#### Tests
 
 - [test] Improve test coverage of roving tabindex (#1459) @oliviertassinari
 - [test] Remove jest (#1467) @dependabot-preview
