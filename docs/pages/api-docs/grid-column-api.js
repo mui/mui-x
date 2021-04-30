@@ -2,8 +2,8 @@ import React from 'react';
 import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
 import { prepareMarkdown } from 'docs/src/modules/utils/parseMarkdown';
 
-const pageFilename = 'api/data-grid';
-const requireRaw = require.context('!raw-loader!./', false, /\/data-grid\.md$/);
+const pageFilename = 'api/grid-column-api';
+const requireRaw = require.context('!raw-loader!./', false, /\/grid-column-api\.md$/);
 
 export default function Page({ docs }) {
   return <MarkdownDocs docs={docs} />;

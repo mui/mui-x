@@ -4,6 +4,8 @@
   "scripts": {
     "start": "yarn docs:dev",
     "docs:dev": "yarn workspace docs dev",
+    "docs:api": "rimraf ./docs/pages/api-docs && yarn docs:api:build",
+    "docs:api:build": "cross-env BABEL_ENV=development babel-node --extensions \".tsx,.ts\" ./docs/scripts/buildApi.ts ./docs/pages/api-docs",
     "docs:build": "yarn workspace docs build",
     "docs:export": "yarn workspace docs export",
     "docs:typescript:formatted": "yarn workspace docs typescript:transpile",
@@ -144,5 +146,10 @@
     "nohoist": [
       "**/@material-ui/monorepo"
     ]
+  },
+  "dependencies": {
+    "@types/yargs": "^16.0.1",
+    "typedoc": "^0.20.36",
+    "yargs": "^16.2.0"
   }
 }
