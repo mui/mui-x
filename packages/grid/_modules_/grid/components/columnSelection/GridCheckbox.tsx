@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { GridCellCheckboxRenderer } from '../../components/columnSelection/GridCellCheckboxRenderer';
-import { GridHeaderCheckbox } from '../../components/columnSelection/GridHeaderCheckbox';
-import { GridCheckboxHeaderOrCellProps } from './GridCheckboxHeaderOrCellProps';
+import { GridCellCheckboxRenderer } from './GridCellCheckboxRenderer';
+import { GridHeaderCheckbox } from './GridHeaderCheckbox';
+import { GridCheckboxHeaderOrCellProps } from './GridCheckboxHeaderOrCell';
 
 export const GridCheckbox = (props: GridCheckboxHeaderOrCellProps) => {
   const { headerParams, cellParams } = props;
