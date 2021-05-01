@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { GridCellCheckboxRenderer } from '../../components/columnSelection/GridCellCheckboxRenderer';
-import { GridHeaderCheckbox } from '../../components/columnSelection/GridHeaderCheckbox';
 import { GridColDef } from './gridColDef';
 import { GRID_BOOLEAN_COL_DEF } from './gridBooleanColDef';
+import { GridCheckboxHeaderOrCell } from '../../components/columnSelection/GridCheckboxHeaderOrCellProps';
 
 export const gridCheckboxSelectionColDef: GridColDef = {
   ...GRID_BOOLEAN_COL_DEF,
@@ -15,8 +14,8 @@ export const gridCheckboxSelectionColDef: GridColDef = {
   disableClickEventBubbling: true,
   disableColumnMenu: true,
   valueGetter: (params) => params.api.getState().selection[params.id] !== undefined,
-  renderHeader: (params) => <GridHeaderCheckbox {...params} />,
-  renderCell: (params) => <GridCellCheckboxRenderer {...params} />,
+  renderHeader: (params) => <GridCheckboxHeaderOrCell headerParams={params} />,
+  renderCell: (params) => <GridCheckboxHeaderOrCell cellParams={params} />,
   cellClassName: 'MuiDataGrid-cellCheckbox',
   headerClassName: 'MuiDataGrid-colCellCheckbox',
 };
