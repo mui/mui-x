@@ -36,7 +36,7 @@ import { GridCheckbox } from '../components/columnSelection/GridCheckbox';
  */
 export interface GridSlotsComponent extends GridIconSlotsComponent {
   /**
-   * The custom Checkbox component used in the grid.
+   * The custom Checkbox component used in the grid for both header and cells.
    */
   Checkbox?: React.ElementType;
   /**
