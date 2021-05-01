@@ -11,16 +11,14 @@ export interface GridCheckboxHeaderOrCellProps {
 export const GridCheckboxHeaderOrCell = (props: GridCheckboxHeaderOrCellProps) => {
   const { headerParams, cellParams } = props;
   const apiRef = React.useContext(GridApiContext);
-  const CheckboxComponent = apiRef?.current.components.Checkbox;
+  const CheckboxComponent = apiRef?.current.components.Checkbox!;
   return (
-    <React.Fragment>
-      {CheckboxComponent && (
-        <CheckboxComponent
-          headerParams={headerParams}
-          cellParams={cellParams}
-          {...apiRef?.current.componentsProps?.checkbox}
-        />
-      )}
-    </React.Fragment>
+    CheckboxComponent && (
+      <CheckboxComponent
+        headerParams={headerParams}
+        cellParams={cellParams}
+        {...apiRef?.current.componentsProps?.checkbox}
+      />
+    )
   );
 };
