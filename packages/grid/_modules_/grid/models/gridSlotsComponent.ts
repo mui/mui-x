@@ -28,6 +28,7 @@ import { GridFilterPanel } from '../components/panel/filterPanel/GridFilterPanel
 import { GridPanel } from '../components/panel/GridPanel';
 import { GridApiRefComponentsProperty } from './api/gridComponentsApi';
 import { GridIconSlotsComponent } from './gridIconSlotsComponent';
+import { GridCheckbox } from '../components/columnSelection/GridCheckbox';
 
 /**
  * Grid components React prop interface containing all the overridable components.
@@ -111,6 +112,7 @@ export const DEFAULT_GRID_SLOTS_ICONS: GridIconSlotsComponent = {
 
 export const DEFAULT_GRID_SLOTS_COMPONENTS: GridApiRefComponentsProperty = {
   ...DEFAULT_GRID_SLOTS_ICONS,
+  Checkbox: GridCheckbox,
   ColumnMenu: GridColumnMenu,
   ColumnsPanel: GridColumnsPanel,
   ErrorOverlay,
