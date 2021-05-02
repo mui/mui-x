@@ -68,7 +68,7 @@
     "@types/chai-dom": "^0.0.10",
     "@types/enzyme": "^3.10.5",
     "@types/mocha": "^8.0.3",
-    "@types/node": "^14.11.10",
+    "@types/node": "^15.0.1",
     "@types/react": "^17.0.1",
     "@types/react-dom": "^17.0.0",
     "@types/requestidlecallback": "^0.3.1",
