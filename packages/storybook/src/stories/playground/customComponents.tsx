@@ -120,7 +120,7 @@ export function CustomCheckboxComponent(props: CheckboxProps) {
       },
     },
     checked: {},
-  })((props: CheckboxProps) => <Checkbox color="default" {...props} />);
+  })((checkboxProps: CheckboxProps) => <Checkbox color="default" {...checkboxProps} />);
 
   return <GreenCheckbox {...props} />;
 }
