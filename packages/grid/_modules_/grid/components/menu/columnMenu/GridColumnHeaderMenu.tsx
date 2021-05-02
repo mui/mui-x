@@ -9,7 +9,7 @@ import { GridMenu } from '../GridMenu';
 const columnMenuStateSelector = (state: GridState) => state.columnMenu;
 
 export interface GridColumnHeaderMenuProps {
-  ContentComponent: React.ElementType;
+  ContentComponent: React.JSXElementConstructor<any>;
   contentComponentProps?: any;
 }
 
