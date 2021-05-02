@@ -40,8 +40,10 @@ export const GridCellCheckboxRenderer = React.memo((props: GridCellParams) => {
     [apiRef, props],
   );
 
+  const CheckboxComponent = apiRef?.current.components.Checkbox!;
+
   return (
-    <Checkbox
+    <CheckboxComponent
       tabIndex={tabIndex}
       checked={!!getValue(field)}
       onChange={handleChange}
@@ -49,6 +51,7 @@ export const GridCellCheckboxRenderer = React.memo((props: GridCellParams) => {
       color="primary"
       inputProps={{ 'aria-label': 'Select Row checkbox' }}
       onKeyDown={handleKeyDown}
+      {...apiRef?.current.componentsProps?.checkbox}
     />
   );
 });

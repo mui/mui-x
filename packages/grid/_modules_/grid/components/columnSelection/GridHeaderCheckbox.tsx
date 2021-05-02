@@ -1,4 +1,3 @@
-import Checkbox from '@material-ui/core/Checkbox';
 import * as React from 'react';
 import { GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN } from '../../constants/eventsConstants';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
@@ -56,8 +55,10 @@ export const GridHeaderCheckbox = (props: GridColumnHeaderParams) => {
     [apiRef, props],
   );
 
+  const CheckboxComponent = apiRef?.current.components.Checkbox!;
+
   return (
-    <Checkbox
+    <CheckboxComponent
       indeterminate={isIndeterminate}
       checked={isChecked}
       onChange={handleChange}
@@ -66,6 +67,7 @@ export const GridHeaderCheckbox = (props: GridColumnHeaderParams) => {
       inputProps={{ 'aria-label': 'Select All Rows checkbox' }}
       tabIndex={tabIndex}
       onKeyDown={handleKeyDown}
+      {...apiRef?.current.componentsProps?.checkbox}
     />
   );
 };
