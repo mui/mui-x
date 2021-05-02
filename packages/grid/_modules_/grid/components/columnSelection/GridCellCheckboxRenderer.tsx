@@ -1,4 +1,3 @@
-import Checkbox from '@material-ui/core/Checkbox';
 import * as React from 'react';
 import { GRID_CELL_NAVIGATION_KEYDOWN } from '../../constants/eventsConstants';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';

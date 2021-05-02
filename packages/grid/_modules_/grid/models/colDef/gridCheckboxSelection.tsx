@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { GridCellCheckboxRenderer } from '../../components/columnSelection/GridCellCheckboxRenderer';
+import { GridHeaderCheckbox } from '../../components/columnSelection/GridHeaderCheckbox';
 import { GridColDef } from './gridColDef';
 import { GRID_BOOLEAN_COL_DEF } from './gridBooleanColDef';
-import { GridHeaderCheckbox } from '../../components/columnSelection/GridHeaderCheckbox';
-import { GridCellCheckboxRenderer } from '../../components/columnSelection/GridCellCheckboxRenderer';
 
 export const gridCheckboxSelectionColDef: GridColDef = {
   ...GRID_BOOLEAN_COL_DEF,
