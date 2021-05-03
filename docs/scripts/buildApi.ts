@@ -4,7 +4,15 @@ import * as TypeDoc from 'typedoc';
 import { writeFileSync, mkdirSync } from 'fs';
 import path from 'path';
 import kebabCase from 'lodash/kebabCase';
+import * as prettier from 'prettier';
 
+type Api = {
+  name: string;
+  description?: string;
+  properties: TypeDoc.DeclarationReflection[];
+};
+
+// Based on https://github.com/TypeStrong/typedoc-default-themes/blob/master/src/default/partials/type.hbs
 function generateType(type) {
   if (type.type === 'union') {
     let text = type.needsParens ? '(' : '';
@@ -18,9 +26,8 @@ function generateType(type) {
     return `${generateType(type.elementType)}[]`;
   }
   if (type.type === 'reflection') {
-    if (type.children) {
-      // TODO
-    } else if (type.declaration.signatures) {
+    // TODO
+    if (type.declaration.signatures) {
       if (type.declaration.signatures.length > 1) {
         // TODO
       } else {
@@ -58,25 +65,33 @@ function generateType(type) {
 }
 
 function escapeCell(value) {
-  // As the pipe is use for the table structure
+  // As the pipe is used for the table structure
   return value.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\|/g, '\\|');
 }
 
-function generateProperties(reflection: TypeDoc.Reflection) {
+function generateProperties(api: Api, apisToGenerate) {
   let text = `## Properties
+  
+  
+  | Name | Type | Default | Description |
+  |:-----|:-----|:--------|:------------|\n`;
 
+  const bracketsRegex = /\[\[([^\]]+)\]\]/g;
 
-| Name | Type | Default | Description |
-|:-----|:-----|:--------|:------------|\n`;
-
-  reflection.traverse((propertyReflection) => {
-    if (!(propertyReflection instanceof TypeDoc.DeclarationReflection)) {
-      return;
-    }
-
+  api.properties.forEach((propertyReflection) => {
     let name = propertyReflection.name;
     const comment = propertyReflection.comment;
-    const description = comment?.shortText || '';
+    const description = escapeCell(comment?.shortText || '');
+    const descriptionWithLinks = description.replace(
+      bracketsRegex,
+      (match: string, content: string) => {
+        if (!apisToGenerate.includes(content)) {
+          return content;
+        }
+        const link = kebabCase(content);
+        return `[${content}](/api/${link})`;
+      },
+    );
 
     if (!propertyReflection.flags.isOptional) {
       name = `<span class="prop-name required">${name}<abbr title="required">*</abbr></span>`;
@@ -94,33 +109,68 @@ function generateProperties(reflection: TypeDoc.Reflection) {
       generateType(propertyReflection.type),
     )}</span>`;
 
-    text += `| ${name} | ${type} | ${defaultValue} | ${description} |\n`;
+    text += `| ${name} | ${type} | ${defaultValue} | ${descriptionWithLinks} |\n`;
   });
 
   return text;
 }
 
-function generateMarkdown(reflection) {
+function generateMarkdown(api, apisToGenerate) {
   return [
-    `# ${reflection.name} API`,
+    `# ${api.name} Interface`,
     '',
-    `<p class="description">${reflection.comment?.shortText || ''}</p>`,
+    `<p class="description">${api.description || ''}</p>`,
     '',
     '## Import',
     '',
     '```js',
-    `import { ${reflection.name} } from '@material-ui/x-grid';`,
+    `import { ${api.name} } from '@material-ui/x-grid';`,
     '// or',
-    `import { ${reflection.name} } from '@material-ui/data-grid';`,
+    `import { ${api.name} } from '@material-ui/data-grid';`,
     '```',
     '',
-    generateProperties(reflection),
+    generateProperties(api, apisToGenerate),
   ].join('\n');
+}
+
+function writePrettifiedFile(filename: string, data: string, prettierConfigPath: string) {
+  const prettierConfig = prettier.resolveConfig.sync(filename, {
+    config: prettierConfigPath,
+  });
+  if (prettierConfig === null) {
+    throw new Error(
+      `Could not resolve config for '${filename}' using prettier config path '${prettierConfigPath}'.`,
+    );
+  }
+
+  writeFileSync(filename, prettier.format(data, { ...prettierConfig, filepath: filename }), {
+    encoding: 'utf8',
+  });
+}
+
+function findProperties(
+  reflection: TypeDoc.DeclarationReflection,
+  project: TypeDoc.ProjectReflection,
+) {
+  // Type aliases are the intersection of other types
+  // We need to collect the properties from each type first
+  if (reflection.kind === TypeDoc.ReflectionKind.TypeAlias) {
+    return (reflection.type as any).types.reduce((acc, type) => {
+      const referenceType = project!.findReflectionByName(
+        type.name,
+      ) as TypeDoc.DeclarationReflection;
+      return referenceType ? [...acc, ...findProperties(referenceType, project)] : acc;
+    }, []);
+  }
+  return reflection.children!.filter((child) => child.kind === TypeDoc.ReflectionKind.Property);
 }
 
 function run(argv: { outputDirectory?: string }) {
   const outputDirectory = path.resolve(argv.outputDirectory!);
   mkdirSync(outputDirectory, { mode: 0o777, recursive: true });
+
+  const workspaceRoot = path.resolve(__dirname, '../../');
+  const prettierConfigPath = path.join(workspaceRoot, 'prettier.config.js');
 
   const app = new TypeDoc.Application();
   app.options.addReader(new TypeDoc.TSConfigReader());
@@ -130,28 +180,34 @@ function run(argv: { outputDirectory?: string }) {
     exclude: ['**/*.test.ts'],
     tsconfig: 'packages/grid/data-grid/tsconfig.json',
   });
-
   const project = app.convert();
 
-  // Generate only a few pages for testing
-  const reflections = ['GridColDef', 'GridParamsApi', 'GridColumnApi'].map((name) =>
-    project!.findReflectionByName(name),
-  );
+  const apisToGenerate = ['GridApi', 'GriColDef'];
+  const reflections = apisToGenerate.map((name) => project!.findReflectionByName(name));
 
   reflections.forEach((reflection) => {
-    const markdown = generateMarkdown(reflection);
+    if (!reflection) {
+      return;
+    }
 
-    writeFileSync(path.resolve(outputDirectory, `${kebabCase(reflection!.name)}.md`), markdown);
-    writeFileSync(
-      path.resolve(outputDirectory, `${kebabCase(reflection!.name)}.js`),
+    const api: Api = {
+      name: reflection.name,
+      description: reflection.comment?.shortText,
+      properties: findProperties(reflection as TypeDoc.DeclarationReflection, project!),
+    };
+    const slug = kebabCase(reflection!.name);
+    const markdown = generateMarkdown(api, apisToGenerate);
+
+    writePrettifiedFile(path.resolve(outputDirectory, `${slug}.md`), markdown, prettierConfigPath);
+
+    writePrettifiedFile(
+      path.resolve(outputDirectory, `${slug}.js`),
       `import React from 'react';
 import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
 import { prepareMarkdown } from 'docs/src/modules/utils/parseMarkdown';
 
-const pageFilename = 'api/${kebabCase(reflection!.name)}';
-const requireRaw = require.context('!raw-loader!./', false, /\\/${kebabCase(
-        reflection!.name,
-      )}\\.md$/);
+const pageFilename = 'api/${slug}';
+const requireRaw = require.context('!raw-loader!./', false, /\\/${slug}\\.md$/);
 
 export default function Page({ docs }) {
   return <MarkdownDocs docs={docs} />;
@@ -160,10 +216,10 @@ export default function Page({ docs }) {
 Page.getInitialProps = () => {
   const { demos, docs } = prepareMarkdown({ pageFilename, requireRaw });
   return { demos, docs };
-};\n`,
+};
+`,
+      prettierConfigPath,
     );
-
-    console.log('Built markdown docs for', reflection!.name);
   });
 }
 
