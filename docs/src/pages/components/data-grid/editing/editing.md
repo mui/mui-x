@@ -56,7 +56,7 @@ The editable cells have a green background for better visibility.
 
 {{"demo": "pages/components/data-grid/editing/IsCellEditableGrid.js", "bg": "inline"}}
 
-### Control editing
+### Controlled editing
 
 The `editRowsModel` prop lets you control the editing state.
 You can handle the `onEditRowModelChange` callback to control the `GridEditRowsModel` state.
