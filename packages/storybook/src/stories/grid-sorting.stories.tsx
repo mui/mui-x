@@ -251,7 +251,8 @@ export const CustomComparator = () => {
     field: 'username',
     valueGetter: (params) =>
       `${params.api.getCellValue(params.id, 'name') || 'unknown'}_${params.api.getCellValue(params.id, 'age') || 'x'}`,
-    sortComparator: (v1, v2, cellParams1, cellParams2) => cellParams1.row.age - cellParams2.row.age,
+    sortComparator: (v1, v2, cellParams1, cellParams2) =>
+      cellParams1.api.getCellValue(cellParams1.id, 'age') - cellParams2.api.getCellValue(cellParams2.id, 'age') ,
     width: 150,
   };
 

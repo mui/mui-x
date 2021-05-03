@@ -100,9 +100,7 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
       const params: GridSortCellParams = {
         id,
         field,
-        row: apiRef.current.getRowFromId(id),
         value: apiRef.current.getCellValue(id, field),
-        getValue: (columnField: string) => apiRef.current.getCellValue(id, columnField),
         api: apiRef.current,
       };
 

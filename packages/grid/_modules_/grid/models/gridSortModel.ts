@@ -8,9 +8,7 @@ export type GridFieldComparatorList = { field: string; comparator: GridComparato
 export interface GridSortCellParams {
   id: GridRowId;
   field: string;
-  row: GridRowData;
   value: GridCellValue;
-  getValue: (columnField: string) => GridCellValue;
   api: any;
 }
 

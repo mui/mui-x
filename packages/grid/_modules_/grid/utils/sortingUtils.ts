@@ -24,14 +24,9 @@ export const gridNillComparer = (v1: GridCellValue, v2: GridCellValue): number |
 };
 
 export const gridStringNumberComparer: GridComparatorFn = (
-  v1: GridCellValue,
-  v2: GridCellValue,
-  cellParams1,
-  cellParams2,
+  value1: GridCellValue,
+  value2: GridCellValue,
 ) => {
-  const value1 = cellParams1.getValue(cellParams1.field);
-  const value2 = cellParams2.getValue(cellParams2.field);
-
   const nillResult = gridNillComparer(value1, value2);
   if (nillResult !== null) {
     return nillResult;
@@ -44,14 +39,9 @@ export const gridStringNumberComparer: GridComparatorFn = (
 };
 
 export const gridNumberComparer: GridComparatorFn = (
-  v1: GridCellValue,
-  v2: GridCellValue,
-  cellParams1,
-  cellParams2,
+  value1: GridCellValue,
+  value2: GridCellValue,
 ) => {
-  const value1 = cellParams1.getValue(cellParams1.field);
-  const value2 = cellParams2.getValue(cellParams2.field);
-
   const nillResult = gridNillComparer(value1, value2);
   if (nillResult !== null) {
     return nillResult;
@@ -61,14 +51,9 @@ export const gridNumberComparer: GridComparatorFn = (
 };
 
 export const gridDateComparer = (
-  v1: GridCellValue,
-  v2: GridCellValue,
-  cellParams1,
-  cellParams2,
+  value1: GridCellValue,
+  value2: GridCellValue,
 ): number => {
-  const value1 = cellParams1.getValue(cellParams1.field);
-  const value2 = cellParams2.getValue(cellParams2.field);
-
   const nillResult = gridNillComparer(value1, value2);
   if (nillResult !== null) {
     return nillResult;
