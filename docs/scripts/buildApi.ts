@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import * as yargs from 'yargs';
 import * as TypeDoc from 'typedoc';
 import { writeFileSync, mkdirSync } from 'fs';
@@ -118,7 +117,7 @@ function generateProperties(api: Api, apisToGenerate) {
       generateType(propertyReflection.type),
     )}</span>`;
 
-    text += `| ${name} | ${type} | ${defaultValue} | ${description} |\n`;
+    text += `| ${name} | ${type} | ${defaultValue} | ${escapeCell(description)} |\n`;
   });
 
   return text;
@@ -236,6 +235,9 @@ Page.getInitialProps = () => {
 `,
       prettierConfigPath,
     );
+
+    // eslint-disable-next-line no-console
+    console.log('Built API docs for', api.name);
   });
 }
 
