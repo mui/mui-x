@@ -66,7 +66,11 @@ function generateType(type) {
 
 function escapeCell(value) {
   // As the pipe is used for the table structure
-  return value.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\|/g, '\\|');
+  return value
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\|/g, '\\|')
+    .replace(/\r?\n/g, '<br />');
 }
 
 function generateProperties(api: Api, apisToGenerate) {
@@ -102,7 +106,7 @@ function generateProperties(api: Api, apisToGenerate) {
     let defaultValue = '';
     const defaultTag = comment && comment.getTag('default');
     if (defaultTag) {
-      defaultValue = `<span class="prop-default">${defaultTag.text.replace(/\n\r?/g, '')}</span>`;
+      defaultValue = `<span class="prop-default">${escapeCell(defaultTag.text)}</span>`;
     }
 
     const type = `<span class="prop-type">${escapeCell(
@@ -182,7 +186,15 @@ function run(argv: { outputDirectory?: string }) {
   });
   const project = app.convert();
 
-  const apisToGenerate = ['GridApi', 'GridColDef'];
+  const apisToGenerate = [
+    'GridApi',
+    'GridColDef',
+    'GridSlotsComponentsProps',
+    'GridApiRefComponentsProperty',
+    'GridCellParams',
+    'GridRowParams'
+  ];
+
   apisToGenerate.forEach((apiName) => {
     const reflection = project!.findReflectionByName(apiName);
     if (!reflection) {

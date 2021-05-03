@@ -11,7 +11,6 @@ import 'docs/src/modules/components/bootstrap';
 // --- Post bootstrap -----
 import React from 'react';
 import find from 'lodash/find';
-import uniqBy from 'lodash/uniqBy';
 import { Provider as ReduxProvider, useDispatch, useSelector } from 'react-redux';
 import { loadCSS } from 'fg-loadcss/src/loadCSS';
 import NextHead from 'next/head';
@@ -22,7 +21,7 @@ import rtl from 'jss-rtl';
 import { useRouter } from 'next/router';
 import { StylesProvider, jssPreset } from '@material-ui/styles';
 import { ponyfillGlobal } from '@material-ui/utils';
-import otherPages from 'docsx/src/pages';
+import pages from 'docsx/src/pages';
 import initRedux from 'docs/src/modules/redux/initRedux';
 import PageContext from 'docs/src/modules/components/PageContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
@@ -31,19 +30,6 @@ import loadScript from 'docs/src/modules/utils/loadScript';
 import { ThemeProvider } from 'docs/src/modules/components/ThemeContext';
 import { pathnameToLanguage, getCookie } from 'docs/src/modules/utils/helpers';
 import { ACTION_TYPES, CODE_VARIANTS } from 'docs/src/modules/constants';
-import apiPages from /* preval */ 'docsx/src/modules/utils/findPages';
-
-const pages = otherPages.map((page) => {
-  if (page.pathname !== '/api-docs') {
-    return page;
-  }
-  return {
-    ...page,
-    children: uniqBy([...page.children, ...apiPages], 'pathname').sort((a, b) =>
-      a.pathname.replace('/api-docs/', '').localeCompare(b.pathname.replace('/api-docs/', '')),
-    ),
-  };
-});
 
 function getMuiPackageVersion(packageName, commitRef) {
   if (commitRef === undefined) {

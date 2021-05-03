@@ -67,4 +67,12 @@ datagrid.children =
         { pathname: '/components/data-grid/group-pivot', title: '🚧 Group & Pivot' },
       ];
 
+// Inject new API pages
+pages[2].children.push({ pathname: '/api-docs/grid-api' });
+pages[2].children.push({ pathname: '/api-docs/grid-col-def' });
+pages[2].children.push({ pathname: '/api-docs/grid-api-ref-components-property' });
+pages[2].children.push({ pathname: '/api-docs/grid-cell-params' });
+pages[2].children.push({ pathname: '/api-docs/grid-row-params' });
+pages[2].children.push({ pathname: '/api-docs/grid-slots-components-props' });
+
 export default pages;
