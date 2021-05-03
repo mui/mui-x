@@ -76,7 +76,7 @@ function escapeCell(value) {
     .replace(/\r?\n/g, '<br />');
 }
 
-function linkify(text, apisToGenerate) {
+function linkify(text, apisToGenerate, format: 'markdown' | 'html') {
   if (!text) {
     return '';
   }
@@ -85,8 +85,8 @@ function linkify(text, apisToGenerate) {
     if (!apisToGenerate.includes(content)) {
       return content;
     }
-    const link = kebabCase(content);
-    return `[${content}](/api/${link})`;
+    const url = `/api/${kebabCase(content)}`;
+    return format === 'markdown' ? `[${content}](${url})` : `<a href="${url}">${content}</a>`;
   });
 }
 
@@ -100,7 +100,7 @@ function generateProperties(api: Api, apisToGenerate) {
   api.properties.forEach((propertyReflection) => {
     let name = propertyReflection.name;
     const comment = propertyReflection.comment;
-    const description = linkify(comment?.shortText, apisToGenerate);
+    const description = linkify(comment?.shortText, apisToGenerate, 'markdown');
 
     if (!propertyReflection.flags.isOptional) {
       name = `<span class="prop-name required">${name}<abbr title="required">*</abbr></span>`;
@@ -128,7 +128,7 @@ function generateMarkdown(api: Api, apisToGenerate) {
   return [
     `# ${api.name} Interface`,
     '',
-    `<p class="description">${linkify(api.description, apisToGenerate)}</p>`,
+    `<p class="description">${linkify(api.description, apisToGenerate, 'html')}</p>`,
     '',
     '## Import',
     '',
