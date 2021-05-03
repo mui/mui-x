@@ -22,6 +22,9 @@ function generateType(type) {
   if (type.type === 'intrinsic') {
     return type.name;
   }
+  if (type.type === 'literal') {
+    return `${type.value}`;
+  }
   if (type.type === 'array') {
     return `${generateType(type.elementType)}[]`;
   }
@@ -73,6 +76,20 @@ function escapeCell(value) {
     .replace(/\r?\n/g, '<br />');
 }
 
+function linkify(text, apisToGenerate) {
+  if (!text) {
+    return '';
+  }
+  const bracketsRegex = /\[\[([^\]]+)\]\]/g;
+  return text.replace(bracketsRegex, (match: string, content: string) => {
+    if (!apisToGenerate.includes(content)) {
+      return content;
+    }
+    const link = kebabCase(content);
+    return `[${content}](/api/${link})`;
+  });
+}
+
 function generateProperties(api: Api, apisToGenerate) {
   let text = `## Properties
   
@@ -80,22 +97,10 @@ function generateProperties(api: Api, apisToGenerate) {
   | Name | Type | Default | Description |
   |:-----|:-----|:--------|:------------|\n`;
 
-  const bracketsRegex = /\[\[([^\]]+)\]\]/g;
-
   api.properties.forEach((propertyReflection) => {
     let name = propertyReflection.name;
     const comment = propertyReflection.comment;
-    const description = escapeCell(comment?.shortText || '');
-    const descriptionWithLinks = description.replace(
-      bracketsRegex,
-      (match: string, content: string) => {
-        if (!apisToGenerate.includes(content)) {
-          return content;
-        }
-        const link = kebabCase(content);
-        return `[${content}](/api/${link})`;
-      },
-    );
+    const description = linkify(comment?.shortText, apisToGenerate);
 
     if (!propertyReflection.flags.isOptional) {
       name = `<span class="prop-name required">${name}<abbr title="required">*</abbr></span>`;
@@ -113,17 +118,17 @@ function generateProperties(api: Api, apisToGenerate) {
       generateType(propertyReflection.type),
     )}</span>`;
 
-    text += `| ${name} | ${type} | ${defaultValue} | ${descriptionWithLinks} |\n`;
+    text += `| ${name} | ${type} | ${defaultValue} | ${description} |\n`;
   });
 
   return text;
 }
 
-function generateMarkdown(api, apisToGenerate) {
+function generateMarkdown(api: Api, apisToGenerate) {
   return [
     `# ${api.name} Interface`,
     '',
-    `<p class="description">${api.description || ''}</p>`,
+    `<p class="description">${linkify(api.description, apisToGenerate)}</p>`,
     '',
     '## Import',
     '',
@@ -157,7 +162,7 @@ function findProperties(
   project: TypeDoc.ProjectReflection,
 ) {
   // Type aliases are the intersection of other types
-  // We need to collect the properties from each type first
+  // We need to collect the properties from each type
   if (reflection.kind === TypeDoc.ReflectionKind.TypeAlias) {
     return (reflection.type as any).types.reduce((acc, type) => {
       const referenceType = project!.findReflectionByName(
@@ -192,7 +197,7 @@ function run(argv: { outputDirectory?: string }) {
     'GridSlotsComponentsProps',
     'GridApiRefComponentsProperty',
     'GridCellParams',
-    'GridRowParams'
+    'GridRowParams',
   ];
 
   apisToGenerate.forEach((apiName) => {
