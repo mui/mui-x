@@ -1,1 +1,0 @@
-import './node_modules/@material-ui/monorepo/docs/src/modules/utils/generatePropTypeDescription';
