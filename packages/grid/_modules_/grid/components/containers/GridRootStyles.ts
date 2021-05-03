@@ -118,6 +118,9 @@ export const useStyles = makeStyles(
           flex: 1,
           whiteSpace: 'nowrap',
         },
+        '& .MuiDataGrid-sortIcon, & .MuiDataGrid-filterIcon': {
+          fontSize: 'inherit',
+        },
         '& .MuiDataGrid-colCellSortable': {
           cursor: 'pointer',
         },
