@@ -182,7 +182,7 @@ function run(argv: { outputDirectory?: string }) {
   });
   const project = app.convert();
 
-  const apisToGenerate = ['GridApi', 'GriColDef'];
+  const apisToGenerate = ['GridApi', 'GridColDef'];
   const reflections = apisToGenerate.map((name) => project!.findReflectionByName(name));
 
   reflections.forEach((reflection) => {
