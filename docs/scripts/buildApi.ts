@@ -183,11 +183,10 @@ function run(argv: { outputDirectory?: string }) {
   const project = app.convert();
 
   const apisToGenerate = ['GridApi', 'GridColDef'];
-  const reflections = apisToGenerate.map((name) => project!.findReflectionByName(name));
-
-  reflections.forEach((reflection) => {
+  apisToGenerate.forEach((apiName) => {
+    const reflection = project!.findReflectionByName(apiName);
     if (!reflection) {
-      return;
+      throw new Error(`Could not find reflection for ${apiName}.`);
     }
 
     const api: Api = {
