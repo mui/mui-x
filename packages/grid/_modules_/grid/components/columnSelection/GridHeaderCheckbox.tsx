@@ -15,7 +15,6 @@ export const GridHeaderCheckbox = (props: GridColumnHeaderParams) => {
   const visibleRowIds = useGridSelector(apiRef, visibleSortedGridRowIdsSelector);
   const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
   const element = apiRef!.current.getColumnHeaderElement(props.field);
-  const colIndex = apiRef!.current.getColumnIndex(props.field)
 
   const totalSelectedRows = useGridSelector(apiRef, selectedGridRowsCountSelector);
   const totalRows = useGridSelector(apiRef, gridRowCountSelector);
@@ -39,7 +38,7 @@ export const GridHeaderCheckbox = (props: GridColumnHeaderParams) => {
     apiRef!.current.selectRows(visibleRowIds, checked);
   };
 
-  const tabIndex = tabIndexState !== null && tabIndexState.colIndex === colIndex ? 0 : -1;
+  const tabIndex =  tabIndexState !== null && tabIndexState.field === props.field ? 0 : -1;
   React.useLayoutEffect(() => {
     if (tabIndex === 0 && element) {
       element!.tabIndex = -1;
@@ -57,7 +56,7 @@ export const GridHeaderCheckbox = (props: GridColumnHeaderParams) => {
     },
     [apiRef, props],
   );
-
+console.log('header cb rendered')
   return (
     <Checkbox
       indeterminate={isIndeterminate}

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { GridCellIdentifier } from '../../hooks/features/focus/gridFocusState';
 import { gridEditRowsStateSelector } from '../../hooks/features/rows/gridEditRowsSelector';
 import {
   GridCellClassParams,
@@ -34,8 +35,9 @@ interface RowCellsProps {
   row: GridRowModel;
   rowIndex: number;
   showCellRightBorder: boolean;
-  cellFocus: GridCellIndexCoordinates | null;
-  cellTabIndex: GridCellIndexCoordinates | null;
+  cellFocus: GridCellIdentifier | null;
+  cellTabIndex: GridCellIdentifier | null;
+  selected: boolean;
 }
 
 export const GridRowCells = React.memo((props: RowCellsProps) => {
@@ -50,6 +52,7 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
     cellFocus,
     cellTabIndex,
     showCellRightBorder,
+    selected,
   } = props;
   const apiRef = React.useContext(GridApiContext);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
@@ -109,17 +112,18 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
       children: cellComponent,
       isEditable: cellParams.isEditable,
       hasFocus:
-        cellFocus !== null && cellFocus.rowIndex === rowIndex && cellFocus.colIndex === colIndex,
+        cellFocus !== null && cellFocus.id === id && cellFocus.field === column.field,
       tabIndex:
         cellTabIndex !== null &&
-        cellTabIndex.rowIndex === rowIndex &&
-        cellTabIndex.colIndex === colIndex
+        cellTabIndex.id === id &&
+        cellTabIndex.field === column.field
           ? 0
           : -1,
     };
 
     return cellProps;
   });
+  console.log('rowcells on ', props);
 
   return (
     <React.Fragment>

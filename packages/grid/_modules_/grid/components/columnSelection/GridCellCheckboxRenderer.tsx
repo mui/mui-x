@@ -1,32 +1,17 @@
 import Checkbox from '@material-ui/core/Checkbox';
 import * as React from 'react';
-import { GRID_CELL_NAVIGATION_KEYDOWN } from '../../constants/eventsConstants';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { gridTabIndexCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
+import {
+  GRID_CELL_NAVIGATION_KEYDOWN,
+} from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { GridApiContext } from '../GridApiContext';
 
-export const GridCellCheckboxRenderer = React.memo((props: GridCellParams) => {
-  const {field, id} = props;
+export const GridCellCheckboxRenderer = (props: GridCellParams) => {
+  const {field, id, value, tabIndex, hasFocus} = props;
   const apiRef = React.useContext(GridApiContext);
-  const tabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
-  const rowIndex = apiRef!.current.getRowIndex(id);
-  const colIndex = apiRef!.current.getColumnIndex(field);
+  const checkboxElement = React.useRef<HTMLButtonElement | null>(null);
   const element = props.api.getCellElement(id, field);
-  const [, forceUpdate] = React.useState(false)
-  // const [tabIndex, setTabIndex] = React.useState(tabIndexState !== null &&
-  // tabIndexState.rowIndex === rowIndex &&
-  // tabIndexState.colIndex === colIndex
-  //   ? 0
-  //   : -1);
-
-  const tabIndex =
-    tabIndexState !== null &&
-    tabIndexState.rowIndex === rowIndex &&
-    tabIndexState.colIndex === colIndex
-      ? 0
-      : -1;
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     apiRef!.current.selectRow(id, checked, true);
@@ -35,8 +20,12 @@ export const GridCellCheckboxRenderer = React.memo((props: GridCellParams) => {
   React.useLayoutEffect(() => {
     if (tabIndex === 0 && element) {
       element!.tabIndex = -1;
+      if(hasFocus) {
+        console.log('focusing on ', checkboxElement);
+        checkboxElement.current!.focus();
+      }
     }
-  }, [element, tabIndex]);
+  }, [element, hasFocus, tabIndex]);
 
   const handleKeyDown = React.useCallback(
     (event) => {
@@ -50,27 +39,19 @@ export const GridCellCheckboxRenderer = React.memo((props: GridCellParams) => {
     [apiRef, props],
   );
 
-  const handleCellNavigation = React.useCallback(
-    (params: GridCellParams) => {
-      forceUpdate(p=> !p)
-    },
-    [],
-  );
-
-  React.useEffect(()=> {
-    return apiRef!.current.subscribeEvent('cellFocusChange', handleCellNavigation);
-  }, [apiRef, handleCellNavigation])
-  console.log('Rendering  ', tabIndex)
+  console.log('Rendering on ', props);
 
   return (
     <Checkbox
+      ref={checkboxElement}
       tabIndex={tabIndex}
-      checked={!!apiRef!.current.getCellValue(id, field)}
+      checked={!!value}
       onChange={handleChange}
       className="MuiDataGrid-checkboxInput"
       color="primary"
       inputProps={{'aria-label': 'Select Row checkbox'}}
       onKeyDown={handleKeyDown}
+      // autoFocus={hasFocus}
     />
   );
-});
+};

@@ -74,11 +74,13 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
             rowIndex={renderState.renderContext!.firstRowIdx! + idx}
             cellFocus={cellFocus}
             cellTabIndex={cellTabIndex}
+            selected={selectionState[id] !== undefined}
           />
           <GridEmptyCell width={renderState.renderContext!.rightEmptyWidth} height={rowHeight} />
         </GridRow>
       ));
     };
+    console.log('viepo on ', props);
 
     return (
       <GridDataContainer>

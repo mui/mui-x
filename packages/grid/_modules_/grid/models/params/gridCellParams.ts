@@ -50,6 +50,8 @@ export interface GridCellParams {
    * The mode of the cell.
    */
   cellMode: GridCellMode;
+  hasFocus: boolean;
+  tabIndex: 0 | -1;
 }
 
 /**

@@ -132,7 +132,8 @@ export const useGridKeyboardNavigation = (
       }
 
       if (nextCellIndexes.rowIndex < 0) {
-        apiRef.current.setColumnHeaderFocus({ colIndex: nextCellIndexes.colIndex });
+        const field = apiRef.current.getVisibleColumns()[nextCellIndexes.colIndex].field;
+        apiRef.current.setColumnHeaderFocus({ field });
         return;
       }
 
@@ -147,7 +148,9 @@ export const useGridKeyboardNavigation = (
         `Navigating to next cell row ${nextCellIndexes.rowIndex}, col ${nextCellIndexes.colIndex}`,
       );
       apiRef.current.scrollToIndexes(nextCellIndexes);
-      apiRef.current.setCellFocus(nextCellIndexes);
+      const field = apiRef.current.getVisibleColumns()[nextCellIndexes.colIndex].field;
+      const id = apiRef.current.getRowIdFromRowIndex(nextCellIndexes.rowIndex)
+      apiRef.current.setCellFocus({field, id});
     },
     [
       totalRowCount,
@@ -179,9 +182,12 @@ export const useGridKeyboardNavigation = (
       } else if (isPageKeys(key)) {
         // Handle only Page Down key, Page Up should keep the current possition
         if (key.indexOf('Down') > -1) {
+          const field = apiRef.current.getVisibleColumns()[colIndex].field;
+          const id = apiRef.current.getRowIdFromRowIndex(containerSizes!.viewportPageSize - 1)
+
           apiRef.current.setCellFocus({
-            colIndex,
-            rowIndex: containerSizes!.viewportPageSize - 1,
+            field,
+            id,
           });
         }
         return;
@@ -190,7 +196,9 @@ export const useGridKeyboardNavigation = (
       }
 
       if (!nextColumnHeaderIndexes) {
-        apiRef.current.setCellFocus({ colIndex, rowIndex: 0 });
+        const field = apiRef.current.getVisibleColumns()[colIndex].field;
+        const id = apiRef.current.getRowIdFromRowIndex(0)
+        apiRef.current.setCellFocus({ id,field });
         return;
       }
 
@@ -202,7 +210,8 @@ export const useGridKeyboardNavigation = (
 
       logger.debug(`Navigating to next column row ${nextColumnHeaderIndexes.colIndex}`);
       apiRef.current.scrollToIndexes(nextColumnHeaderIndexes);
-      apiRef.current.setColumnHeaderFocus(nextColumnHeaderIndexes);
+      const field = apiRef.current.getVisibleColumns()[nextColumnHeaderIndexes.colIndex].field;
+      apiRef.current.setColumnHeaderFocus({field});
     },
     [apiRef, colCount, containerSizes, logger],
   );

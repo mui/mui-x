@@ -16,20 +16,20 @@ import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridState } from '../core/useGridState';
 import { useLogger } from '../../utils/useLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import { GridCellIdentifier, GridColIdentifier } from './gridFocusState';
 
 export const useGridFocus = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridFocus');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
   const setCellFocus = React.useCallback(
-    (nextCellIndexes: GridCellIndexCoordinates) => {
+    ({id, field}: GridCellIdentifier) => {
       setGridState((state) => {
-        const { rowIndex, colIndex } = nextCellIndexes;
-        logger.debug(`Focusing on cell with rowIndex=${rowIndex} and colIndex=${colIndex}`);
+        logger.debug(`Focusing on cell with id=${id} and field=${field}`);
         return {
           ...state,
-          tabIndex: { cell: { rowIndex, colIndex }, columnHeader: null },
-          focus: { cell: { rowIndex, colIndex }, columnHeader: null },
+          tabIndex: { cell: {id, field}, columnHeader: null },
+          focus: { cell: {id, field}, columnHeader: null },
         };
       });
       apiRef.current.publishEvent('cellFocusChange');
@@ -39,20 +39,21 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
   );
 
   const setColumnHeaderFocus = React.useCallback(
-    (nextColumnHeaderIndexes: GridColumnHeaderIndexCoordinates) => {
+    ({field}: GridColIdentifier) => {
       setGridState((state) => {
-        const { colIndex } = nextColumnHeaderIndexes;
-        logger.debug(`Focusing on column header with colIndex=${colIndex}`);
+        logger.debug(`Focusing on column header with colIndex=${field}`);
 
         return {
           ...state,
-          tabIndex: { columnHeader: { colIndex }, cell: null },
-          focus: { columnHeader: { colIndex }, cell: null },
+          tabIndex: { columnHeader: { field }, cell: null },
+          focus: { columnHeader: { field }, cell: null },
         };
       });
+      apiRef.current.publishEvent('cellFocusChange');
+
       forceUpdate();
     },
-    [forceUpdate, logger, setGridState],
+    [apiRef, forceUpdate, logger, setGridState],
   );
 
   const handleCellFocus = React.useCallback(
@@ -60,9 +61,7 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
       if (event?.target !== event?.currentTarget) {
         return;
       }
-      const colIndex = apiRef.current.getColumnIndex(params.field);
-      const rowIndex = apiRef.current.getRowIndex(params.id);
-      apiRef.current.setCellFocus({colIndex, rowIndex});
+      apiRef.current.setCellFocus(params);
     },
     [apiRef],
   );
@@ -72,8 +71,7 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
       if (event?.target !== event?.currentTarget) {
         return;
       }
-      const colIndex = apiRef.current.getColumnIndex(params.field);
-      apiRef.current.setColumnHeaderFocus({colIndex});
+      apiRef.current.setColumnHeaderFocus(params);
     },
     [apiRef],
   );

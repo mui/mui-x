@@ -219,9 +219,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
         return;
       }
       if (isEscapeKey(event.key) || isDeleteKeys(event.key)) {
-        const colIndex = apiRef.current.getColumnIndex(params.field);
-        const rowIndex = apiRef.current.getRowIndex(params.id);
-        apiRef.current.setCellFocus({ colIndex, rowIndex });
+        apiRef.current.setCellFocus(params);
       }
     },
     [apiRef, setCellMode],
