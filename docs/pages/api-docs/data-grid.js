@@ -6,10 +6,10 @@ const pageFilename = 'api/data-grid';
 const requireRaw = require.context('!raw-loader!./', false, /\/data-grid\.md$/);
 
 export default function Page({ docs }) {
-return <MarkdownDocs docs={docs} />;
+  return <MarkdownDocs docs={docs} />;
 }
 
 Page.getInitialProps = () => {
-const { demos, docs } = prepareMarkdown({ pageFilename, requireRaw });
-return { demos, docs };
+  const { demos, docs } = prepareMarkdown({ pageFilename, requireRaw });
+  return { demos, docs };
 };
