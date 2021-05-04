@@ -3,10 +3,6 @@
  */
 export interface GridColumnHeaderParams {
   /**
-   * The HTMLElement column header element.
-   */
-  // getElement: () => HTMLElement | null;
-  /**
    * The column field of the column that triggered the event
    */
   field: string;

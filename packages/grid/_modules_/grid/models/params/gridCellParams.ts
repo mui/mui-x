@@ -10,10 +10,6 @@ export interface GridCellParams {
    */
   id: GridRowId;
   /**
-   * The HTMLElement cell element.
-   */
-  // getElement: () => HTMLElement | null;
-  /**
    * The column field of the cell that triggered the event
    */
   field: string;
@@ -25,11 +21,6 @@ export interface GridCellParams {
    * The cell value formatted with the column valueFormatter.
    */
   formattedValue: GridCellValue;
-  /**
-   * A function that let you get data from other columns.
-   * @param field
-   */
-  // getValue: (field: string) => GridCellValue;
   /**
    * The row model of the row that the current cell belongs to.
    */
@@ -50,7 +41,13 @@ export interface GridCellParams {
    * The mode of the cell.
    */
   cellMode: GridCellMode;
+  /**
+   * If true, the cell is the active element.
+   */
   hasFocus: boolean;
+  /**
+   * the tabIndex value.
+   */
   tabIndex: 0 | -1;
 }
 

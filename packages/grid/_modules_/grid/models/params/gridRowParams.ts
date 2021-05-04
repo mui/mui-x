@@ -9,15 +9,6 @@ export interface GridRowParams {
    */
   id: GridRowId;
   /**
-   * The HTMLElement row element.
-   */
-  // getElement: () => HTMLElement | null;
-  /**
-   * A function that let you get data from other columns.
-   * @param field
-   */
-  // getValue: (field: string) => GridCellValue;
-  /**
    * The row model of the row that the current cell belongs to.
    */
   row: GridRowModel;
