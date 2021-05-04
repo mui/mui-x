@@ -65,7 +65,7 @@ To change the row height for the whole grid, set the `rowHeight` prop:
 
 ## Styling rows
 
-The `getRowClassName` prop can be used to apply a custom CSS class on each row. It's called with a `GridRowsParams` object and must return a string.
+The `getRowClassName` prop can be used to apply a custom CSS class on each row. It's called with a `GridRowParams` object and must return a string.
 
 ```tsx
 interface GridRowParams {
