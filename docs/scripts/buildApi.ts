@@ -28,30 +28,23 @@ function generateType(type) {
     return `${generateType(type.elementType)}[]`;
   }
   if (type.type === 'reflection') {
-    // TODO
-    if (type.declaration.signatures) {
-      if (type.declaration.signatures.length > 1) {
-        // TODO
-      } else {
-        const signature = type.declaration.signatures[0];
-        let text = type.needsParens ? '(' : '';
-        text += '(';
-        text += signature.parameters
-          .map((param) => {
-            let paramText = param.flags.isRest ? `...${param.name}` : param.name;
-            if (param.flags.isOptional) paramText += '?';
-            if (param.defaultValue) paramText += '?';
-            return `${paramText}: ${generateType(param.type)}`;
-          })
-          .join(', ');
-        text += ')';
-        if (signature.type) {
-          text += ` => ${generateType(signature.type)}`;
-        }
-        return type.needsParens ? `${text})` : text;
+    if (type.declaration.signatures && type.declaration.signatures.length === 1) {
+      const signature = type.declaration.signatures[0];
+      let text = type.needsParens ? '(' : '';
+      text += '(';
+      text += signature.parameters
+        .map((param) => {
+          let paramText = param.flags.isRest ? `...${param.name}` : param.name;
+          if (param.flags.isOptional) paramText += '?';
+          if (param.defaultValue) paramText += '?';
+          return `${paramText}: ${generateType(param.type)}`;
+        })
+        .join(', ');
+      text += ')';
+      if (signature.type) {
+        text += ` => ${generateType(signature.type)}`;
       }
-    } else {
-      return '{}';
+      return type.needsParens ? `${text})` : text;
     }
   }
   if (type.type === 'reference') {
@@ -62,6 +55,9 @@ function generateType(type) {
       text += `>`;
     }
     return text;
+  }
+  if (type.type === 'indexedAccess') {
+    return `${generateType(type.objectType)}[${generateType(type.indexType)}]`;
   }
   return '';
 }
