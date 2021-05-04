@@ -59,7 +59,7 @@ describe('<XGrid /> - Edit Rows', () => {
     );
   };
 
-  it.only('isCellEditable should add the class MuiDataGrid-cellEditable to editable cells but not prevent a cell from switching mode', () => {
+  it('isCellEditable should add the class MuiDataGrid-cellEditable to editable cells but not prevent a cell from switching mode', () => {
     render(<TestCase isCellEditable={(params) => params.value === 'Adidas'} />);
     const cellNike = getCell(0, 0);
     expect(cellNike).not.to.have.class('MuiDataGrid-cellEditable');
