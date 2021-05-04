@@ -4,10 +4,19 @@ export type Listener = (...args: any[]) => void;
 // See https://github.com/browserify/events/blob/master/events.js for
 // the Node.js (https://nodejs.org/api/events.html) polyfill used by webpack.
 export class EventEmitter {
+  /**
+   * @ignore - do not document.
+   */
   maxListeners = 10;
 
+  /**
+   * @ignore - do not document.
+   */
   warnOnce = false;
 
+  /**
+   * @ignore - do not document.
+   */
   events: { [key: string]: Listener[] } = {};
 
   on(eventName: string, listener: Listener): void {

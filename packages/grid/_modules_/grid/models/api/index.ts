@@ -15,3 +15,7 @@ export * from './gridStateApi';
 export * from './gridVirtualizationApi';
 export * from './gridLocaleTextApi';
 export * from './gridCsvExportApi';
+export * from './gridFocusApi';
+export * from './filterApi';
+export * from './columnMenuApi';
+export * from './preferencesPanelApi';

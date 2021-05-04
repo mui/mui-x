@@ -164,13 +164,23 @@ function findProperties(
   // We need to collect the properties from each type
   if (reflection.kind === TypeDoc.ReflectionKind.TypeAlias) {
     return (reflection.type as any).types.reduce((acc, type) => {
-      const referenceType = project!.findReflectionByName(
+      const typeReflection = project!.findReflectionByName(
         type.name,
       ) as TypeDoc.DeclarationReflection;
-      return referenceType ? [...acc, ...findProperties(referenceType, project)] : acc;
+
+      if (!typeReflection) {
+        throw new Error(`Could not find reflection for "${type.name}". Is it exported?`);
+      }
+
+      return [...acc, ...findProperties(typeReflection, project)];
     }, []);
   }
-  return reflection.children!.filter((child) => child.kind === TypeDoc.ReflectionKind.Property);
+  return reflection.children!.filter((child) => {
+    return (
+      child.kind === TypeDoc.ReflectionKind.Property &&
+      !child.comment?.text.match(/@ignore - do not document\./)
+    );
+  });
 }
 
 function run(argv: { outputDirectory?: string }) {
@@ -202,7 +212,7 @@ function run(argv: { outputDirectory?: string }) {
   apisToGenerate.forEach((apiName) => {
     const reflection = project!.findReflectionByName(apiName);
     if (!reflection) {
-      throw new Error(`Could not find reflection for ${apiName}.`);
+      throw new Error(`Could not find reflection for "${apiName}".`);
     }
 
     const api: Api = {
