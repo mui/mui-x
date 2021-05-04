@@ -11,7 +11,7 @@ import { GridColDef } from '../../models/colDef/gridColDef';
 export interface ColumnHeaderFilterIconProps {
   column: GridColDef;
 }
-export const ColumnHeaderMenuIcon = React.memo(( props: ColumnHeaderFilterIconProps) => {
+export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderFilterIconProps) => {
   const { column } = props;
   const apiRef = React.useContext(GridApiContext);
   const columnMenuState = useGridSelector(apiRef, gridColumnMenuStateSelector);

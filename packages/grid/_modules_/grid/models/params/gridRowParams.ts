@@ -1,4 +1,3 @@
-import { GridCellValue } from '../gridCell';
 import { GridRowId, GridRowModel } from '../gridRows';
 
 /**

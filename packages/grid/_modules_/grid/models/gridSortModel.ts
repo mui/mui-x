@@ -1,5 +1,5 @@
 import { GridCellValue } from './gridCell';
-import { GridRowData, GridRowId } from './gridRows';
+import { GridRowId } from './gridRows';
 
 export type GridSortDirection = 'asc' | 'desc' | null | undefined;
 

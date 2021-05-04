@@ -7,7 +7,6 @@ import {
   GridRowModel,
   GridCellClassRules,
   GridCellParams,
-  GridCellIndexCoordinates,
   GridRowId,
 } from '../../models/index';
 import { GridCell, GridCellProps } from './GridCell';
@@ -29,15 +28,15 @@ interface RowCellsProps {
   extendRowFullWidth: boolean;
   firstColIdx: number;
   id: GridRowId;
-  hasScrollX:  boolean;
-  hasScrollY:  boolean;
+  hasScrollX: boolean;
+  hasScrollY: boolean;
   lastColIdx: number;
   row: GridRowModel;
   rowIndex: number;
   showCellRightBorder: boolean;
   cellFocus: GridCellIdentifier | null;
   cellTabIndex: GridCellIdentifier | null;
-  selected: boolean;
+  isSelected: boolean;
 }
 
 export const GridRowCells = React.memo((props: RowCellsProps) => {
@@ -52,7 +51,7 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
     cellFocus,
     cellTabIndex,
     showCellRightBorder,
-    selected,
+    isSelected,
   } = props;
   const apiRef = React.useContext(GridApiContext);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
@@ -111,12 +110,10 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
       colIndex,
       children: cellComponent,
       isEditable: cellParams.isEditable,
-      hasFocus:
-        cellFocus !== null && cellFocus.id === id && cellFocus.field === column.field,
+      isSelected,
+      hasFocus: cellFocus !== null && cellFocus.id === id && cellFocus.field === column.field,
       tabIndex:
-        cellTabIndex !== null &&
-        cellTabIndex.id === id &&
-        cellTabIndex.field === column.field
+        cellTabIndex !== null && cellTabIndex.id === id && cellTabIndex.field === column.field
           ? 0
           : -1,
     };

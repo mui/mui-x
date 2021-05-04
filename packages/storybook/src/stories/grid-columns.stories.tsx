@@ -299,12 +299,18 @@ export const ValueGetterAndFormatter = () => {
       {
         field: 'firstAge',
         valueGetter: (params: GridValueGetterParams) =>
-          `${params.api.getCellValue(params.id, 'first')}_${params.api.getCellValue(params.id, 'age')}`,
+          `${params.api.getCellValue(params.id, 'first')}_${params.api.getCellValue(
+            params.id,
+            'age',
+          )}`,
       },
       {
         field: 'firstAgeFormatted',
         valueGetter: (params: GridValueGetterParams) =>
-          `${params.api.getCellValue(params.id, 'first')}_${params.api.getCellValue(params.id, 'age')}`,
+          `${params.api.getCellValue(params.id, 'first')}_${params.api.getCellValue(
+            params.id,
+            'age',
+          )}`,
         valueFormatter: (params) => `${params.value} yrs`,
       },
     ],

@@ -1,14 +1,12 @@
 import Checkbox from '@material-ui/core/Checkbox';
 import * as React from 'react';
-import {
-  GRID_CELL_NAVIGATION_KEYDOWN,
-} from '../../constants/eventsConstants';
+import { GRID_CELL_NAVIGATION_KEYDOWN } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { GridApiContext } from '../GridApiContext';
 
 export const GridCellCheckboxRenderer = (props: GridCellParams) => {
-  const {field, id, value, tabIndex, hasFocus} = props;
+  const { field, id, value, tabIndex, hasFocus } = props;
   const apiRef = React.useContext(GridApiContext);
   const checkboxElement = React.useRef<HTMLButtonElement | null>(null);
   const element = props.api.getCellElement(id, field);
@@ -24,7 +22,7 @@ export const GridCellCheckboxRenderer = (props: GridCellParams) => {
   }, [element, tabIndex]);
 
   React.useLayoutEffect(() => {
-    if(hasFocus) {
+    if (hasFocus) {
       const input = checkboxElement.current!.querySelector('input')!;
       input!.focus();
     }
@@ -50,7 +48,7 @@ export const GridCellCheckboxRenderer = (props: GridCellParams) => {
       onChange={handleChange}
       className="MuiDataGrid-checkboxInput"
       color="primary"
-      inputProps={{'aria-label': 'Select Row checkbox'}}
+      inputProps={{ 'aria-label': 'Select Row checkbox' }}
       onKeyDown={handleKeyDown}
     />
   );

@@ -7,29 +7,25 @@ import {
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridFocusApi } from '../../../models/api/gridFocusApi';
-import {
-  GridCellIndexCoordinates,
-  GridColumnHeaderIndexCoordinates,
-} from '../../../models/gridCell';
+import { GridRowId } from '../../../models/gridRows';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridState } from '../core/useGridState';
 import { useLogger } from '../../utils/useLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
-import { GridCellIdentifier, GridColIdentifier } from './gridFocusState';
 
 export const useGridFocus = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridFocus');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
 
   const setCellFocus = React.useCallback(
-    ({id, field}: GridCellIdentifier) => {
+    (id: GridRowId, field: string) => {
       setGridState((state) => {
         logger.debug(`Focusing on cell with id=${id} and field=${field}`);
         return {
           ...state,
-          tabIndex: { cell: {id, field}, columnHeader: null },
-          focus: { cell: {id, field}, columnHeader: null },
+          tabIndex: { cell: { id, field }, columnHeader: null },
+          focus: { cell: { id, field }, columnHeader: null },
         };
       });
       apiRef.current.publishEvent('cellFocusChange');
@@ -39,7 +35,7 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
   );
 
   const setColumnHeaderFocus = React.useCallback(
-    ({field}: GridColIdentifier) => {
+    (field: string) => {
       setGridState((state) => {
         logger.debug(`Focusing on column header with colIndex=${field}`);
 
@@ -57,21 +53,21 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
   );
 
   const handleCellFocus = React.useCallback(
-    (params: GridCellParams, event?: React.SyntheticEvent) => {
+    ({ id, field }: GridCellParams, event?: React.SyntheticEvent) => {
       if (event?.target !== event?.currentTarget) {
         return;
       }
-      apiRef.current.setCellFocus(params);
+      apiRef.current.setCellFocus(id, field);
     },
     [apiRef],
   );
 
   const handleColumnHeaderFocus = React.useCallback(
-    (params: GridCellParams, event?: React.SyntheticEvent) => {
+    ({ field }: GridCellParams, event?: React.SyntheticEvent) => {
       if (event?.target !== event?.currentTarget) {
         return;
       }
-      apiRef.current.setColumnHeaderFocus(params);
+      apiRef.current.setColumnHeaderFocus(field);
     },
     [apiRef],
   );

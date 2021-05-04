@@ -88,12 +88,10 @@ export const useGridKeyboard = (
       apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEYDOWN, params, event);
 
       const focusCell = apiRef.current.getState().focus.cell!;
-      const rowIndex = apiRef.current.getRowIndex(focusCell.id)
+      const rowIndex = apiRef.current.getRowIndex(focusCell.id);
       // We select the rows in between
       const rowIds = Array(Math.abs(rowIndex - selectionFromRowIndex) + 1).fill(
-        rowIndex > selectionFromRowIndex
-          ? selectionFromRowIndex
-          : rowIndex,
+        rowIndex > selectionFromRowIndex ? selectionFromRowIndex : rowIndex,
       );
 
       logger.debug('Selecting rows ');

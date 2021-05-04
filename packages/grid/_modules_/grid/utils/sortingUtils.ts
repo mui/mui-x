@@ -50,10 +50,7 @@ export const gridNumberComparer: GridComparatorFn = (
   return Number(value1) - Number(value2);
 };
 
-export const gridDateComparer = (
-  value1: GridCellValue,
-  value2: GridCellValue,
-): number => {
+export const gridDateComparer = (value1: GridCellValue, value2: GridCellValue): number => {
   const nillResult = gridNillComparer(value1, value2);
   if (nillResult !== null) {
     return nillResult;

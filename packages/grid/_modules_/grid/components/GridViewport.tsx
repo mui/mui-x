@@ -67,14 +67,14 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
             id={id}
             firstColIdx={renderState.renderContext!.firstColIdx!}
             lastColIdx={renderState.renderContext!.lastColIdx!}
-            hasScrollX={scrollBarState.hasScrollX }
-            hasScrollY={scrollBarState.hasScrollY }
+            hasScrollX={scrollBarState.hasScrollX}
+            hasScrollY={scrollBarState.hasScrollY}
             showCellRightBorder={!!options.showCellRightBorder}
             extendRowFullWidth={!options.disableExtendRowFullWidth}
             rowIndex={renderState.renderContext!.firstRowIdx! + idx}
             cellFocus={cellFocus}
             cellTabIndex={cellTabIndex}
-            selected={selectionState[id] !== undefined}
+            isSelected={selectionState[id] !== undefined}
           />
           <GridEmptyCell width={renderState.renderContext!.rightEmptyWidth} height={rowHeight} />
         </GridRow>
