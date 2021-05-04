@@ -7,7 +7,7 @@ import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { GridApiContext } from '../GridApiContext';
 
 const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellParams>(
-  function GridCellCheckbox(props, ref) {
+  function GridCellCheckboxRenderer(props, ref) {
     const { getValue, field, id, rowIndex, colIndex, element } = props;
     const apiRef = React.useContext(GridApiContext);
     const tabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
