@@ -18,7 +18,9 @@ const columns = [
     sortable: false,
     width: 160,
     valueGetter: (params) =>
-      `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
+      `${params.api.getCellValue(params.id, 'firstName') || ''} ${
+        params.api.getCellValue(params.id, 'lastName') || ''
+      }`,
   },
 ];
 

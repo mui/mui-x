@@ -8,8 +8,8 @@ import {
 } from '@material-ui/data-grid';
 
 function getFullName(params: GridSortCellParams) {
-  return `${params.getValue('firstName') || ''} ${
-    params.getValue('lastName') || ''
+  return `${params.api.getCellValue(params.id, 'firstName') || ''} ${
+    params.api.getCellValue(params.id, 'lastName') || ''
   }`;
 }
 

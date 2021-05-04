@@ -2,8 +2,8 @@ import * as React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 
 function getFullName(params) {
-  return `${params.getValue('firstName') || ''} ${
-    params.getValue('lastName') || ''
+  return `${params.api.getCellValue(params.id, 'firstName') || ''} ${
+    params.api.getCellValue(params.id, 'lastName') || ''
   }`;
 }
 
