@@ -123,7 +123,6 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
 
     return cellProps;
   });
-  console.log('rowcells on ', props);
 
   return (
     <React.Fragment>

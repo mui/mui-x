@@ -80,7 +80,6 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
         </GridRow>
       ));
     };
-    console.log('viepo on ', props);
 
     return (
       <GridDataContainer>

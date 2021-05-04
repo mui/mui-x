@@ -1,6 +1,6 @@
 import Checkbox from '@material-ui/core/Checkbox';
 import * as React from 'react';
-import { GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN } from '../../constants/eventsConstants';
+import { GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN, GRID_SELECTION_CHANGED } from '../../constants/eventsConstants';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { visibleSortedGridRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
@@ -11,6 +11,7 @@ import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { GridApiContext } from '../GridApiContext';
 
 export const GridHeaderCheckbox = (props: GridColumnHeaderParams) => {
+  const [, forceUpdate] = React.useState(false);
   const apiRef = React.useContext(GridApiContext);
   const visibleRowIds = useGridSelector(apiRef, visibleSortedGridRowIdsSelector);
   const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
@@ -56,7 +57,15 @@ export const GridHeaderCheckbox = (props: GridColumnHeaderParams) => {
     },
     [apiRef, props],
   );
-console.log('header cb rendered')
+
+  const handleSelectionChange = React.useCallback(()=> {
+    forceUpdate(p=> !p);
+  }, []);
+
+  React.useEffect(()=> {
+    return apiRef?.current.subscribeEvent(GRID_SELECTION_CHANGED, handleSelectionChange);
+  }, [apiRef, handleSelectionChange]);
+
   return (
     <Checkbox
       indeterminate={isIndeterminate}

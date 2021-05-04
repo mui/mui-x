@@ -20,12 +20,15 @@ export const GridCellCheckboxRenderer = (props: GridCellParams) => {
   React.useLayoutEffect(() => {
     if (tabIndex === 0 && element) {
       element!.tabIndex = -1;
-      if(hasFocus) {
-        console.log('focusing on ', checkboxElement);
-        checkboxElement.current!.focus();
-      }
     }
-  }, [element, hasFocus, tabIndex]);
+  }, [element, tabIndex]);
+
+  React.useLayoutEffect(() => {
+    if(hasFocus) {
+      const input = checkboxElement.current!.querySelector('input')!;
+      input!.focus();
+    }
+  }, [hasFocus]);
 
   const handleKeyDown = React.useCallback(
     (event) => {
@@ -39,8 +42,6 @@ export const GridCellCheckboxRenderer = (props: GridCellParams) => {
     [apiRef, props],
   );
 
-  console.log('Rendering on ', props);
-
   return (
     <Checkbox
       ref={checkboxElement}
@@ -51,7 +52,6 @@ export const GridCellCheckboxRenderer = (props: GridCellParams) => {
       color="primary"
       inputProps={{'aria-label': 'Select Row checkbox'}}
       onKeyDown={handleKeyDown}
-      // autoFocus={hasFocus}
     />
   );
 };
