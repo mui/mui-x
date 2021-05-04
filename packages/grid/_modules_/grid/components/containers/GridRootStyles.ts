@@ -85,7 +85,7 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-colCell, & .MuiDataGrid-cell': {
           WebkitTapHighlightColor: 'transparent',
           lineHeight: null,
-          padding: theme.spacing(0, 2),
+          padding: '0 10px',
         },
         '& .MuiDataGrid-colCell:focus, & .MuiDataGrid-cell:focus': {
           outline: 'dotted',
@@ -117,6 +117,8 @@ export const useStyles = makeStyles(
           minWidth: 0,
           flex: 1,
           whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          padding: '0 6px',
         },
         '& .MuiDataGrid-sortIcon, & .MuiDataGrid-filterIcon': {
           fontSize: 'inherit',
