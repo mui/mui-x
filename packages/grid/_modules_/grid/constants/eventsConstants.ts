@@ -29,7 +29,6 @@ export const GRID_CELL_EDIT_ENTER = 'cellEditEnter';
 export const GRID_CELL_EDIT_EXIT = 'cellEditExit';
 export const GRID_CELL_NAVIGATION_KEYDOWN = 'cellNavigationKeyDown';
 export const GRID_CELL_FOCUS = 'cellFocus';
-// export const GRID_CELL_FOCUS = 'cellFocusChange';
 export const GRID_CELL_DRAG_START = 'cellDragStart';
 export const GRID_CELL_DRAG_ENTER = 'cellDragEnter';
 export const GRID_CELL_DRAG_OVER = 'cellDragOver';
