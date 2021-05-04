@@ -85,7 +85,8 @@ describe('<DataGrid /> - Rows', () => {
 
   it('should apply the CSS class returned by getRowClassName', () => {
     const getRowId = (row) => `${row.clientId}`;
-    const getRowClassName = (params) => (params.getValue('age') < 20 ? 'under-age' : '');
+    const getRowClassName = (params) =>
+      params.api.getCellValue(params.id, 'age') < 20 ? 'under-age' : '';
     render(
       <div style={{ width: 300, height: 300 }}>
         <DataGrid getRowClassName={getRowClassName} getRowId={getRowId} {...baselineProps} />
