@@ -6,9 +6,9 @@ import events from './events.json';
 
 const useStyles = makeStyles({
   root: {
-    width: '100%'
-  }
-})
+    width: '100%',
+  },
+});
 
 export default function CatalogOfEvents() {
   const classes = useStyles();
