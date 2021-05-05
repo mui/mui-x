@@ -72,9 +72,6 @@ function escapeCell(value) {
 }
 
 function linkify(text, apisToGenerate, format: 'markdown' | 'html') {
-  if (!text) {
-    return '';
-  }
   const bracketsRegex = /\[\[([^\]]+)\]\]/g;
   return text.replace(bracketsRegex, (match: string, content: string) => {
     if (!apisToGenerate.includes(content)) {
@@ -95,7 +92,7 @@ function generateProperties(api: Api, apisToGenerate) {
   api.properties.forEach((propertyReflection) => {
     let name = propertyReflection.name;
     const comment = propertyReflection.comment;
-    const description = linkify(comment?.shortText, apisToGenerate, 'markdown');
+    const description = linkify(comment?.shortText || '', apisToGenerate, 'markdown');
 
     if (!propertyReflection.flags.isOptional) {
       name = `<span class="prop-name required">${name}<abbr title="required">*</abbr></span>`;
@@ -123,7 +120,7 @@ function generateMarkdown(api: Api, apisToGenerate) {
   return [
     `# ${api.name} Interface`,
     '',
-    `<p class="description">${linkify(api.description, apisToGenerate, 'html')}</p>`,
+    `<p class="description">${linkify(api.description || '', apisToGenerate, 'html')}</p>`,
     '',
     '## Import',
     '',
@@ -171,12 +168,7 @@ function findProperties(
       return [...acc, ...findProperties(typeReflection, project)];
     }, []);
   }
-  return reflection.children!.filter((child) => {
-    return (
-      child.kind === TypeDoc.ReflectionKind.Property &&
-      !child.comment?.text.match(/@ignore - do not document\./)
-    );
-  });
+  return reflection.children!.filter((child) => child.kindOf(TypeDoc.ReflectionKind.Property));
 }
 
 function run(argv: { outputDirectory?: string }) {
@@ -238,13 +230,34 @@ Page.getInitialProps = () => {
   const { demos, docs } = prepareMarkdown({ pageFilename, requireRaw });
   return { demos, docs };
 };
-`,
+  `,
       prettierConfigPath,
     );
 
     // eslint-disable-next-line no-console
     console.log('Built API docs for', api.name);
   });
+
+  const eventsFilePath = 'packages/grid/_modules_/grid/constants/eventsConstants.ts';
+  const eventsFile = project!.files.find((source) => source.fileName === eventsFilePath);
+  const events: { name: string; description: string }[] = [];
+  eventsFile?.reflections.forEach((reflection) => {
+    if (!reflection.kindOf(TypeDoc.ReflectionKind.Variable) || !reflection.flags.isConst) {
+      return;
+    }
+    events.push({
+      name: (reflection as any).type.value,
+      description: linkify(reflection.comment?.shortText || '', apisToGenerate, 'html'),
+    });
+  });
+  writePrettifiedFile(
+    path.resolve(outputDirectory, 'events.json'),
+    JSON.stringify(events),
+    prettierConfigPath,
+  );
+
+  // eslint-disable-next-line no-console
+  console.log('Built events file');
 }
 
 yargs
