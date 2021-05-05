@@ -45,6 +45,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
         columns: apiRef.current.getAllColumns(),
         row: apiRef.current.getRowFromId(id),
         api: apiRef.current,
+        getValue: apiRef.current.getCellValue,
       };
       return params;
     },

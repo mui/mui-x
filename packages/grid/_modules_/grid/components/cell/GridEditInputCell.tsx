@@ -15,6 +15,7 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
     colDef,
     cellMode,
     isEditable,
+    hasFocus,
     getValue,
     ...other
   } = props;

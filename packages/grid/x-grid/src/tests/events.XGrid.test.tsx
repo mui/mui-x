@@ -85,8 +85,6 @@ describe('<XGrid /> - Events Params', () => {
 
       expect(eventArgs!.params).to.deep.include({
         colDef: apiRef!.current.getColumnFromField('age'),
-        element: ageColumnElement,
-        colIndex: 2,
         field: 'age',
         api: apiRef.current,
       });
@@ -107,11 +105,10 @@ describe('<XGrid /> - Events Params', () => {
 
       expect(eventArgs!.params).to.deep.include({
         id: 2,
-        element: row1,
         row: baselineProps.rows[1],
-        rowIndex: 1,
         columns: apiRef!.current.getAllColumns(),
         api: apiRef.current,
+        getValue: apiRef.current.getCellValue,
       });
     });
   });
@@ -133,12 +130,12 @@ describe('<XGrid /> - Events Params', () => {
         value: 'Jack',
         formattedValue: 'Jack',
         isEditable: true,
-        element: cell11,
         row: baselineProps.rows[1],
-        rowIndex: 1,
         colDef: apiRef!.current.getColumnFromField('first'),
-        colIndex: 1,
         api: apiRef.current,
+        hasFocus: false,
+        tabIndex: -1,
+        getValue: apiRef.current.getCellValue,
       });
     });
 
@@ -160,12 +157,12 @@ describe('<XGrid /> - Events Params', () => {
         value: 'Jack',
         formattedValue: 'Jack',
         isEditable: true,
-        element: cell01,
         row: baselineProps.rows[1],
-        rowIndex: 0,
         colDef: apiRef!.current.getColumnFromField('first'),
-        colIndex: 1,
         api: apiRef.current,
+        hasFocus: false,
+        tabIndex: -1,
+        getValue: apiRef.current.getCellValue,
       });
     });
 
