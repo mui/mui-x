@@ -149,25 +149,7 @@ function writePrettifiedFile(filename: string, data: string, prettierConfigPath:
   });
 }
 
-function findProperties(
-  reflection: TypeDoc.DeclarationReflection,
-  project: TypeDoc.ProjectReflection,
-) {
-  // Type aliases are the intersection of other types
-  // We need to collect the properties from each type
-  if (reflection.kind === TypeDoc.ReflectionKind.TypeAlias) {
-    return (reflection.type as any).types.reduce((acc, type) => {
-      const typeReflection = project!.findReflectionByName(
-        type.name,
-      ) as TypeDoc.DeclarationReflection;
-
-      if (!typeReflection) {
-        throw new Error(`Could not find reflection for "${type.name}". Is it exported?`);
-      }
-
-      return [...acc, ...findProperties(typeReflection, project)];
-    }, []);
-  }
+function findProperties(reflection: TypeDoc.DeclarationReflection) {
   return reflection.children!.filter((child) => child.kindOf(TypeDoc.ReflectionKind.Property));
 }
 
@@ -188,6 +170,8 @@ function run(argv: { outputDirectory?: string }) {
   });
   const project = app.convert();
 
+  // app.generateJson(project!, 'docs.json');
+
   const apisToGenerate = [
     'GridApi',
     'GridColDef',
@@ -206,7 +190,7 @@ function run(argv: { outputDirectory?: string }) {
     const api: Api = {
       name: reflection.name,
       description: reflection.comment?.shortText,
-      properties: findProperties(reflection as TypeDoc.DeclarationReflection, project!),
+      properties: findProperties(reflection as TypeDoc.DeclarationReflection),
     };
     const slug = kebabCase(reflection!.name);
     const markdown = generateMarkdown(api, apisToGenerate);
@@ -238,20 +222,19 @@ Page.getInitialProps = () => {
     console.log('Built API docs for', api.name);
   });
 
-  const eventsFilePath = 'packages/grid/_modules_/grid/constants/eventsConstants.ts';
-  const eventsFile = project!.files.find((source) => source.fileName === eventsFilePath);
   const events: { name: string; description: string }[] = [];
-  eventsFile?.reflections.forEach((reflection) => {
-    if (!reflection.kindOf(TypeDoc.ReflectionKind.Variable) || !reflection.flags.isConst) {
-      return;
+  const allEvents = project?.getReflectionsByKind(TypeDoc.ReflectionKind.Event);
+  allEvents!.forEach((event) => {
+    if (event.flags.isConst) {
+      events.push({
+        name: (event as any).type.value,
+        description: linkify(event.comment?.shortText || '', apisToGenerate, 'html'),
+      });
     }
-    events.push({
-      name: (reflection as any).type.value,
-      description: linkify(reflection.comment?.shortText || '', apisToGenerate, 'html'),
-    });
   });
+
   writePrettifiedFile(
-    path.resolve(outputDirectory, 'events.json'),
+    path.resolve(outputDirectory, '../../src/pages/components/data-grid/events/events.json'),
     JSON.stringify(events),
     prettierConfigPath,
   );
