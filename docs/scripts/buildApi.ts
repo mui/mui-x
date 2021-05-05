@@ -170,16 +170,7 @@ function run(argv: { outputDirectory?: string }) {
   });
   const project = app.convert();
 
-  // app.generateJson(project!, 'docs.json');
-
-  const apisToGenerate = [
-    'GridApi',
-    'GridColDef',
-    'GridSlotsComponentsProps',
-    'GridApiRefComponentsProperty',
-    'GridCellParams',
-    'GridRowParams',
-  ];
+  const apisToGenerate = ['GridApi', 'GridColDef', 'GridCellParams', 'GridRowParams'];
 
   apisToGenerate.forEach((apiName) => {
     const reflection = project!.findReflectionByName(apiName);

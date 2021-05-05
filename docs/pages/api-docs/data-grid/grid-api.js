@@ -2,8 +2,8 @@ import React from 'react';
 import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
 import { prepareMarkdown } from 'docs/src/modules/utils/parseMarkdown';
 
-const pageFilename = 'api/grid-slots-components-props';
-const requireRaw = require.context('!raw-loader!./', false, /\/grid-slots-components-props\.md$/);
+const pageFilename = 'api/grid-api';
+const requireRaw = require.context('!raw-loader!./', false, /\/grid-api\.md$/);
 
 export default function Page({ docs }) {
   return <MarkdownDocs docs={docs} />;
