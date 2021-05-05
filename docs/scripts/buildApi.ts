@@ -225,7 +225,7 @@ Page.getInitialProps = () => {
   });
 
   writePrettifiedFile(
-    path.resolve(outputDirectory, '../../src/pages/components/data-grid/events/events.json'),
+    path.resolve(workspaceRoot, 'docs/src/pages/components/data-grid/events/events.json'),
     JSON.stringify(events),
     prettierConfigPath,
   );
