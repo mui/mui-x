@@ -62,7 +62,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
         value: row[field],
         colDef: apiRef.current.getColumnFromField(field),
         cellMode: apiRef.current.getCellMode(id, field),
-        // getValue: apiRef.current.getCellValue,
+        getValue: apiRef.current.getCellValue,
         api: apiRef.current,
         hasFocus: cellFocus !== null && cellFocus.field === field && cellFocus.id === id,
         tabIndex: cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === id ? 0 : -1,

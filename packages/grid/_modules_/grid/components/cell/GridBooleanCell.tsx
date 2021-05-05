@@ -15,6 +15,7 @@ export const GridBooleanCell = React.memo((props: GridCellParams & SvgIconProps)
     isEditable,
     hasFocus,
     tabIndex,
+    getValue,
     ...other
   } = props;
 

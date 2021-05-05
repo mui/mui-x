@@ -61,8 +61,8 @@ const getColumns: () => GridColDef[] = () => [
     description: 'this column has a value getter and is not sortable',
     sortable: false,
     valueGetter: (params) =>
-      `${params.api.getCellValue(params.id, 'firstName') || ''} ${
-        params.api.getCellValue(params.id, 'lastName') || ''
+      `${params.getValue(params.id, 'firstName') || ''} ${
+        params.getValue(params.id, 'lastName') || ''
       }`.trim(),
   },
   {

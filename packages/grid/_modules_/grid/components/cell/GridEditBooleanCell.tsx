@@ -19,6 +19,7 @@ export function GridEditBooleanCell(
     cellMode,
     isEditable,
     className,
+    getValue,
     ...other
   } = props;
 
