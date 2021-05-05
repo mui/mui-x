@@ -21,22 +21,23 @@ import { GridCsvExportApi } from './gridCsvExportApi';
 /**
  * The full grid API.
  */
-export type GridApi = GridCoreApi &
-  GridComponentsApi &
-  GridStateApi &
-  GridDensityApi &
-  GridEventsApi &
-  GridRowApi &
-  GridEditRowApi &
-  GridParamsApi &
-  GridColumnApi &
-  GridSelectionApi &
-  GridSortApi &
-  GridVirtualizationApi &
-  GridPaginationApi &
-  GridCsvExportApi &
-  GridFocusApi &
-  FilterApi &
-  ColumnMenuApi &
-  PreferencesPanelApi &
-  LocaleTextApi;
+export interface GridApi
+  extends GridCoreApi,
+    GridComponentsApi,
+    GridStateApi,
+    GridDensityApi,
+    GridEventsApi,
+    GridRowApi,
+    GridEditRowApi,
+    GridParamsApi,
+    GridColumnApi,
+    GridSelectionApi,
+    GridSortApi,
+    GridVirtualizationApi,
+    GridPaginationApi,
+    GridCsvExportApi,
+    GridFocusApi,
+    FilterApi,
+    ColumnMenuApi,
+    PreferencesPanelApi,
+    LocaleTextApi {}
