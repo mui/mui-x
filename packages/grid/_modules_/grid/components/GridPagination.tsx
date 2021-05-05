@@ -39,10 +39,6 @@ export const GridPagination = React.forwardRef<
   const classes = useStyles();
   const apiRef = React.useContext(GridApiContext);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
-  const lastPage = React.useMemo(
-    () => Math.floor(paginationState.rowCount / (paginationState.pageSize || 1)),
-    [paginationState.rowCount, paginationState.pageSize],
-  );
   const options = useGridSelector(apiRef, optionsSelector);
 
   const onPageSizeChange = React.useCallback(
@@ -84,7 +80,7 @@ export const GridPagination = React.forwardRef<
       }}
       component="div"
       count={paginationState.rowCount}
-      page={paginationState.page <= lastPage ? paginationState.page : lastPage}
+      page={paginationState.page}
       rowsPerPageOptions={
         options.rowsPerPageOptions &&
         options.rowsPerPageOptions.indexOf(paginationState.pageSize) > -1
