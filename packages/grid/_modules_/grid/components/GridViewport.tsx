@@ -7,6 +7,7 @@ import {
   gridFocusCellSelector,
   gridTabIndexCellSelector,
 } from '../hooks/features/focus/gridFocusStateSelector';
+import { gridEditRowsStateSelector } from '../hooks/features/rows/gridEditRowsSelector';
 import { gridSelectionStateSelector } from '../hooks/features/selection/gridSelectionSelector';
 import { renderStateSelector } from '../hooks/features/virtualization/renderingStateSelector';
 import { optionsSelector } from '../hooks/utils/optionsSelector';
@@ -40,6 +41,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const selectionState = useGridSelector(apiRef, gridSelectionStateSelector);
     const rows = useGridSelector(apiRef, visibleSortedGridRowsAsArraySelector);
     const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
+    const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
 
     const getRowsElements = () => {
       if (renderState.renderContext == null) {
@@ -75,6 +77,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
             cellFocus={cellFocus}
             cellTabIndex={cellTabIndex}
             isSelected={selectionState[id] !== undefined}
+            editRowState={editRowsState[id]}
           />
           <GridEmptyCell width={renderState.renderContext!.rightEmptyWidth} height={rowHeight} />
         </GridRow>

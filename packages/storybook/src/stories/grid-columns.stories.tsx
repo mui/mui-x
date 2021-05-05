@@ -299,18 +299,12 @@ export const ValueGetterAndFormatter = () => {
       {
         field: 'firstAge',
         valueGetter: (params: GridValueGetterParams) =>
-          `${params.getValue(params.id, 'first')}_${params.getValue(
-            params.id,
-            'age',
-          )}`,
+          `${params.getValue(params.id, 'first')}_${params.getValue(params.id, 'age')}`,
       },
       {
         field: 'firstAgeFormatted',
         valueGetter: (params: GridValueGetterParams) =>
-          `${params.getValue(params.id, 'first')}_${params.getValue(
-            params.id,
-            'age',
-          )}`,
+          `${params.getValue(params.id, 'first')}_${params.getValue(params.id, 'age')}`,
         valueFormatter: (params) => `${params.value} yrs`,
       },
     ],

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { GridCellIdentifier } from '../../hooks/features/focus/gridFocusState';
-import { gridEditRowsStateSelector } from '../../hooks/features/rows/gridEditRowsSelector';
 import {
   GridCellClassParams,
   GridColumns,
@@ -8,6 +7,7 @@ import {
   GridCellClassRules,
   GridCellParams,
   GridRowId,
+  GridEditRowProps,
 } from '../../models/index';
 import { GridCell, GridCellProps } from './GridCell';
 import { GridApiContext } from '../GridApiContext';
@@ -37,6 +37,7 @@ interface RowCellsProps {
   cellFocus: GridCellIdentifier | null;
   cellTabIndex: GridCellIdentifier | null;
   isSelected: boolean;
+  editRowState?: GridEditRowProps;
 }
 
 export const GridRowCells = React.memo((props: RowCellsProps) => {
@@ -52,10 +53,10 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
     cellTabIndex,
     showCellRightBorder,
     isSelected,
+    editRowState,
   } = props;
   const apiRef = React.useContext(GridApiContext);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
-  const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
 
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const colIndex = firstColIdx + colIdx;
@@ -81,7 +82,7 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
       cssClassProp = { cssClass: `${cssClassProp.cssClass} ${cssClass}` };
     }
 
-    const editCellState = editRowsState[id] && editRowsState[id][column.field];
+    const editCellState = editRowState && editRowState[column.field];
     let cellComponent: React.ReactElement | null = null;
 
     if (editCellState == null && column.renderCell) {
