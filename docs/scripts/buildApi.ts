@@ -64,7 +64,6 @@ function generateType(type) {
 }
 
 function escapeCell(value) {
-  // As the pipe is used for the table structure
   return value
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
@@ -73,8 +72,8 @@ function escapeCell(value) {
 }
 
 function linkify(text, apisToGenerate, format: 'markdown' | 'html') {
-  const bracketsRegex = /\[\[([^\]]+)\]\]/g;
-  return text.replace(bracketsRegex, (match: string, content: string) => {
+  const bracketsRegexp = /\[\[([^\]]+)\]\]/g;
+  return text.replace(bracketsRegexp, (match: string, content: string) => {
     if (!apisToGenerate.includes(content)) {
       return content;
     }
@@ -162,20 +161,17 @@ function extractEvents(project: TypeDoc.ProjectReflection, apisToGenerate) {
     if (!event.flags.isConst) {
       return;
     }
-
-    let description = linkify(event.comment?.shortText || '', apisToGenerate, 'html');
-    description = renderMarkdownInline(description);
-
+    const description = linkify(event.comment?.shortText || '', apisToGenerate, 'html');
     events.push({
       name: (event as any).type.value,
-      description,
+      description: renderMarkdownInline(description),
     });
   });
 
   return events;
 }
 
-async function run(argv: { outputDirectory?: string }) {
+function run(argv: { outputDirectory?: string }) {
   const outputDirectory = path.resolve(argv.outputDirectory!);
   mkdirSync(outputDirectory, { mode: 0o777, recursive: true });
 

@@ -148,6 +148,7 @@
     ]
   },
   "dependencies": {
+    "@types/prettier": "^2.2.3",
     "@types/yargs": "^16.0.1",
     "remark": "^13.0.0",
     "typedoc": "^0.20.36",
