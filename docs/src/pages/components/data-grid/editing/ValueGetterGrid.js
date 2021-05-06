@@ -48,8 +48,7 @@ const columns = [
     width: 160,
     editable: true,
     valueGetter: getFullName,
-    sortComparator: (v1, v2, cellParams1, cellParams2) =>
-      getFullName(cellParams1).localeCompare(getFullName(cellParams2)),
+    sortComparator: (v1, v2) => v1.toString().localeCompare(v2.toString()),
   },
 ];
 

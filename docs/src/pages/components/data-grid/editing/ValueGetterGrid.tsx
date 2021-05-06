@@ -4,10 +4,10 @@ import {
   DataGrid,
   GridColDef,
   GridEditCellPropsParams,
-  GridSortCellParams,
+  GridValueGetterParams,
 } from '@material-ui/data-grid';
 
-function getFullName(params: GridSortCellParams) {
+function getFullName(params: GridValueGetterParams) {
   return `${params.getValue(params.id, 'firstName') || ''} ${
     params.getValue(params.id, 'lastName') || ''
   }`;
@@ -52,8 +52,7 @@ const columns: GridColDef[] = [
     width: 160,
     editable: true,
     valueGetter: getFullName,
-    sortComparator: (v1, v2, cellParams1, cellParams2) =>
-      getFullName(cellParams1).localeCompare(getFullName(cellParams2)),
+    sortComparator: (v1, v2) => v1!.toString().localeCompare(v2!.toString()),
   },
 ];
 
