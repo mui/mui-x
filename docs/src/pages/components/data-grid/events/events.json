@@ -199,7 +199,7 @@
     "description": "Fired during the scroll of the grid viewport. Called with a GridScrollParams object."
   },
   {
-    "name": "scroll:rowEnd",
+    "name": "rowsScrollEnd",
     "description": "Fired when scrolling to the bottom of the grid viewport. Called with a GridRowScrollEndParams object."
   },
   {
