@@ -346,7 +346,7 @@ export const GRID_ROWS_SCROLL = 'rowsScroll';
  * Fired when scrolling to the bottom of the grid viewport. Called with a [[GridRowScrollEndParams]] object.
  * @event
  */
-export const GRID_ROWS_SCROLL_END = 'scroll:rowEnd';
+export const GRID_ROWS_SCROLL_END = 'rowsScrollEnd';
 
 /**
  * Fired when a `mousedown` DOM event happens in the column header separator.
