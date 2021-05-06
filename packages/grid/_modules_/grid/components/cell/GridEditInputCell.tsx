@@ -2,12 +2,7 @@ import * as React from 'react';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
 import { GRID_CELL_EDIT_PROPS_CHANGE } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
-import {
-  formatDateToLocalInputDate,
-  isDate,
-  isDateValid,
-  mapColDefTypeToInputType,
-} from '../../utils/utils';
+import { formatDateToLocalInputDate, mapColDefTypeToInputType } from '../../utils/utils';
 
 export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
   const {
@@ -32,32 +27,31 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
   const handleChange = React.useCallback(
     (event) => {
       const newValue = event.target.value;
-      let isValid = false;
-      setValueState((prevState) => {
-        isValid = !isDate(prevState) || !!newValue; //if the input date is invalid, it triggers on change ''
-        return isValid ? newValue : prevState;
-      });
+      const editProps = {
+        value: newValue,
+      };
 
-      if (!isValid) {
-        return;
+      if (colDef.type === 'date' || colDef.type === 'dateTime') {
+        if (newValue === '') {
+          editProps.value = null;
+        } else {
+          editProps.value = new Date(newValue); // TODO fix parsing, this is plain wrong.
+        }
       }
 
-      const editProps = {
-        value: colDef.type === 'date' || colDef.type === 'dateTime' ? new Date(newValue) : newValue,
-      };
+      setValueState(newValue);
       api.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE, { id, field, props: editProps }, event);
     },
     [api, colDef.type, field, id],
   );
-
-  const inputFormattedValue =
-    valueState && isDate(valueState)
-      ? formatDateToLocalInputDate({ value: valueState, withTime: colDef.type === 'dateTime' })
-      : valueState;
-
+  
   React.useEffect(() => {
-    setValueState(value);
-  }, [value]);
+    if (value instanceof Date) {
+      setValueState(formatDateToLocalInputDate({ value, withTime: colDef.type === 'dateTime' }));
+    } else {
+      setValueState(value || '');
+    }
+  }, [value, colDef.type]);
 
   return (
     <InputBase
@@ -65,7 +59,7 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
       className="MuiDataGrid-editCellInputBase"
       fullWidth
       type={inputType}
-      value={inputFormattedValue}
+      value={valueState}
       onChange={handleChange}
       {...other}
     />
