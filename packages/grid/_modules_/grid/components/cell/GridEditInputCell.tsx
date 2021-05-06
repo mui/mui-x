@@ -2,7 +2,12 @@ import * as React from 'react';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
 import { GRID_CELL_EDIT_PROPS_CHANGE } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
-import { formatDateToLocalInputDate, isDate, isDateValid, mapColDefTypeToInputType } from '../../utils/utils';
+import {
+  formatDateToLocalInputDate,
+  isDate,
+  isDateValid,
+  mapColDefTypeToInputType,
+} from '../../utils/utils';
 
 export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
   const {
@@ -28,12 +33,12 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
     (event) => {
       const newValue = event.target.value;
       let isValid = false;
-      setValueState(prevState => {
+      setValueState((prevState) => {
         isValid = !isDate(prevState) || !!newValue; //if the input date is invalid, it triggers on change ''
         return isValid ? newValue : prevState;
       });
 
-      if(!isValid) {
+      if (!isValid) {
         return;
       }
 
@@ -51,7 +56,7 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
       : valueState;
 
   React.useEffect(() => {
-      setValueState(value);
+    setValueState(value);
   }, [value]);
 
   return (
@@ -62,7 +67,6 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
       type={inputType}
       value={inputFormattedValue}
       onChange={handleChange}
-
       {...other}
     />
   );
