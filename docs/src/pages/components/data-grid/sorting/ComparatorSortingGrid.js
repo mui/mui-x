@@ -11,8 +11,8 @@ const columns = [
   {
     field: 'username',
     valueGetter: (params) =>
-      `${params.api.getCellValue(params.id, 'name') || 'unknown'} - ${
-        params.api.getCellValue(params.id, 'age') || 'x'
+      `${params.getValue(params.id, 'name') || 'unknown'} - ${
+        params.getValue(params.id, 'age') || 'x'
       }`,
     sortComparator: (v1, v2, param1, param2) =>
       param1.api.getCellValue(param1.id, 'age') -
