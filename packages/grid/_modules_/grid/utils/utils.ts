@@ -10,6 +10,7 @@ export function isDate(value: any): value is Date {
 export function isDateValid(value: Date): boolean {
   return !Number.isNaN(value.getTime());
 }
+
 export function formatDateToLocalInputDate({
   value,
   withTime,
