@@ -44,7 +44,7 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
     },
     [api, colDef.type, field, id],
   );
-  
+
   React.useEffect(() => {
     if (value instanceof Date) {
       setValueState(formatDateToLocalInputDate({ value, withTime: colDef.type === 'dateTime' }));
