@@ -4,6 +4,7 @@ import { writeFileSync, mkdirSync } from 'fs';
 import path from 'path';
 import kebabCase from 'lodash/kebabCase';
 import * as prettier from 'prettier';
+import { renderInline as renderMarkdownInline } from '../../node_modules/@material-ui/monorepo/docs/src/modules/utils/parseMarkdown';
 
 type Api = {
   name: string;
@@ -77,7 +78,7 @@ function linkify(text, apisToGenerate, format: 'markdown' | 'html') {
     if (!apisToGenerate.includes(content)) {
       return content;
     }
-    const url = `/api/${kebabCase(content)}`;
+    const url = `/api/data-grid/${kebabCase(content)}`;
     return format === 'markdown' ? `[${content}](${url})` : `<a href="${url}">${content}</a>`;
   });
 }
@@ -153,7 +154,28 @@ function findProperties(reflection: TypeDoc.DeclarationReflection) {
   return reflection.children!.filter((child) => child.kindOf(TypeDoc.ReflectionKind.Property));
 }
 
-function run(argv: { outputDirectory?: string }) {
+function extractEvents(project: TypeDoc.ProjectReflection, apisToGenerate) {
+  const events: { name: string; description: string }[] = [];
+  const allEvents = project?.getReflectionsByKind(TypeDoc.ReflectionKind.Event);
+
+  allEvents!.forEach((event) => {
+    if (!event.flags.isConst) {
+      return;
+    }
+
+    let description = linkify(event.comment?.shortText || '', apisToGenerate, 'html');
+    description = renderMarkdownInline(description);
+
+    events.push({
+      name: (event as any).type.value,
+      description,
+    });
+  });
+
+  return events;
+}
+
+async function run(argv: { outputDirectory?: string }) {
   const outputDirectory = path.resolve(argv.outputDirectory!);
   mkdirSync(outputDirectory, { mode: 0o777, recursive: true });
 
@@ -213,16 +235,7 @@ Page.getInitialProps = () => {
     console.log('Built API docs for', api.name);
   });
 
-  const events: { name: string; description: string }[] = [];
-  const allEvents = project?.getReflectionsByKind(TypeDoc.ReflectionKind.Event);
-  allEvents!.forEach((event) => {
-    if (event.flags.isConst) {
-      events.push({
-        name: (event as any).type.value,
-        description: linkify(event.comment?.shortText || '', apisToGenerate, 'html'),
-      });
-    }
-  });
+  const events = extractEvents(project, apisToGenerate);
 
   writePrettifiedFile(
     path.resolve(workspaceRoot, 'docs/src/pages/components/data-grid/events/events.json'),
