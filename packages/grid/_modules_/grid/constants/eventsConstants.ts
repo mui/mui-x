@@ -68,7 +68,7 @@ export const GRID_ROWS_SCROLL_END = 'scroll:rowEnd';
 
 export const GRID_COLUMN_SEPARATOR_MOUSE_DOWN = 'columnSeparatorMouseDown';
 export const GRID_COLUMN_RESIZE = 'columnResize';
-export const GRID_COLUMN_RESIZE_COMMITED = 'columnResizeCommited';
+export const GRID_COLUMN_RESIZE_COMMITTED = 'columnResizeCommitted';
 export const GRID_COLUMN_RESIZE_START = 'columnResizeStart';
 export const GRID_COLUMN_RESIZE_STOP = 'columnResizeStop';
 
