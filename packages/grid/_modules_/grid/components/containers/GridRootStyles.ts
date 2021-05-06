@@ -229,6 +229,10 @@ export const useStyles = makeStyles(
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
           borderBottom: `1px solid ${borderColor}`,
+          '&:focus-within:not(.MuiDataGrid-cellCheckbox)': {
+            outline: `solid ${theme.palette.primary.main} 1px`,
+            outlineOffset: '-1px',
+          },
         },
         '& .MuiDataGrid-cell.MuiDataGrid-cellEditing': {
           padding: 1,
