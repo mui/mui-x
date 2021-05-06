@@ -87,7 +87,7 @@ export const useStyles = makeStyles(
           lineHeight: null,
           padding: theme.spacing(0, 2),
         },
-        '& .MuiDataGrid-colCell[tabindex="0"]:focus, & .MuiDataGrid-cell[tabindex="0"]:focus': {
+        '& .MuiDataGrid-colCell:focus, & .MuiDataGrid-cell:focus': {
           outline: `solid ${theme.palette.primary.main} 1px`,
           outlineWidth: 1,
           outlineOffset: -2,
@@ -229,7 +229,7 @@ export const useStyles = makeStyles(
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
           borderBottom: `1px solid ${borderColor}`,
-          '&[tabindex="0"]:focus-within': {
+          '&:focus': {
             outline: `solid ${theme.palette.primary.main} 1px`,
             outlineOffset: '-1px',
           },
@@ -239,6 +239,10 @@ export const useStyles = makeStyles(
           display: 'flex',
           boxShadow: theme.shadows[2],
           backgroundColor: theme.palette.background.paper,
+          '&:focus-within': {
+            outline: `solid ${theme.palette.primary.main} 1px`,
+            outlineOffset: '-1px',
+          },
         },
         '& .MuiDataGrid-editCellInputBase': {
           ...theme.typography.body2,
