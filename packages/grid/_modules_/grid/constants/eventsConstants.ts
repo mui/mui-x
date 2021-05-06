@@ -368,13 +368,13 @@ export const GRID_COLUMN_RESIZE = 'columnResize';
 export const GRID_COLUMN_RESIZE_COMMITED = 'columnResizeCommited';
 
 /**
- * Fired when the user starts resizing a column. Called with a object `{ field: string }`.
+ * Fired when the user starts resizing a column. Called with an object `{ field: string }`.
  * @event
  */
 export const GRID_COLUMN_RESIZE_START = 'columnResizeStart';
 
 /**
- * Fired when the user starts resizing a column. Called with a object `{ field: string }`.
+ * Fired when the user starts resizing a column. Called with an object `{ field: string }`.
  * @event
  */
 export const GRID_COLUMN_RESIZE_STOP = 'columnResizeStop';
