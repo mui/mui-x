@@ -16,7 +16,7 @@ export const HideGridColMenuItem = (props: GridFilterItemProps) => {
       onClick(event);
       // time for the transition
       timeoutRef.current = setTimeout(() => {
-        apiRef!.current.toggleColumn(column?.field, true);
+        apiRef!.current.setColumnVisibility(column?.field, true);
       }, 10);
     },
     [apiRef, column?.field, onClick],
