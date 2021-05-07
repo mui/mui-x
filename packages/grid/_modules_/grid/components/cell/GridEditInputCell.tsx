@@ -23,6 +23,7 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
 
   const [valueState, setValueState] = React.useState(value);
   const inputType = mapColDefTypeToInputType(colDef.type);
+  const isDateColumn = colDef.type === 'date' || colDef.type === 'dateTime';
 
   const handleChange = React.useCallback(
     (event) => {
@@ -31,18 +32,14 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
         value: newValue,
       };
 
-      if (colDef.type === 'date' || colDef.type === 'dateTime') {
-        if (newValue === '') {
-          editProps.value = null;
-        } else {
-          editProps.value = new Date(newValue); // TODO fix parsing, this is plain wrong.
-        }
+      if (isDateColumn) {
+        editProps.value = newValue === '' ? null : new Date(newValue); // TODO fix parsing, this is plain wrong.
       }
 
       setValueState(newValue);
       api.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE, { id, field, props: editProps }, event);
     },
-    [api, colDef.type, field, id],
+    [api, field, id, isDateColumn],
   );
 
   React.useEffect(() => {
