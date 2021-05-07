@@ -168,9 +168,9 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
   ]);
 
   const setColumnVisibility = React.useCallback(
-    (field: string, hide: boolean) => {
+    (field: string, isVisible: boolean) => {
       const col = getColumnFromField(field);
-      const updatedCol = { ...col, hide };
+      const updatedCol = { ...col, hide: !isVisible };
 
       updateColumns([updatedCol]);
       forceUpdate();
@@ -178,7 +178,7 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
       apiRef.current.publishEvent(GRID_COLUMN_VISIBILITY_CHANGE, {
         colDef: updatedCol,
         api: apiRef,
-        hide,
+        isVisible,
       });
     },
     [apiRef, forceUpdate, getColumnFromField, updateColumns],

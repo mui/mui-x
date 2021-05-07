@@ -13,5 +13,5 @@ export interface GridColumnVisibilityChangeParams {
   /**
    * The visibility state of the column.
    */
-  hide: boolean;
+  isVisible: boolean;
 }

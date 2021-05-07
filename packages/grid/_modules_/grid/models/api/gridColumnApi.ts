@@ -49,9 +49,9 @@ export interface GridColumnApi {
   /**
    * Allows to toggle a column.
    * @param field
-   * @param hide
+   * @param isVisible
    */
-  setColumnVisibility: (field: string, hide: boolean) => void;
+  setColumnVisibility: (field: string, isVisible: boolean) => void;
   /**
    * Allows to move a column to another position in the column array.
    * @param field
