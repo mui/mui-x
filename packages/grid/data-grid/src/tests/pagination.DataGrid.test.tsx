@@ -195,31 +195,31 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should show filtered data if the user applies filter on an intermediate page and the resulted filter data is less than the rows per page', () => {
-      const TestCasePaginationFilteredData = (props) => {
+      const TestCasePaginationFilteredData = () => {
         const data = useData(200, 2);
 
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid columns={data.columns} rows={data.rows} pagination {...props} />
+            <DataGrid
+              columns={data.columns}
+              rows={data.rows}
+              pagination
+              page={1}
+              pageSize={25}
+              filterModel={{
+                items: [
+                  {
+                    columnField: 'currencyPair',
+                    value: 'BTCUSD',
+                    operatorValue: 'equals',
+                  },
+                ],
+              }}
+            />
           </div>
         );
       };
-
-      render(
-        <TestCasePaginationFilteredData
-          page={1}
-          pageSize={25}
-          filterModel={{
-            items: [
-              {
-                columnField: 'currencyPair',
-                value: 'BTCUSD',
-                operatorValue: 'equals',
-              },
-            ],
-          }}
-        />,
-      );
+      render(<TestCasePaginationFilteredData />);
       expect(getColumnValues(1)).to.deep.equal(['BTCUSD', 'BTCUSD', 'BTCUSD', 'BTCUSD']);
     });
 
