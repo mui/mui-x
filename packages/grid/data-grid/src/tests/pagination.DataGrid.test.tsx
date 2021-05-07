@@ -267,6 +267,28 @@ describe('<DataGrid /> - Pagination', () => {
           'next page should be disabled.',
         );
       });
+
+      it('should be compatible with controlled page', () => {
+        const rows = [
+          { id: 1, x: 1 },
+          { id: 2, x: 2 },
+          { id: 3, x: 3 },
+          { id: 4, x: 4 },
+          { id: 5, x: 5 },
+          { id: 6, x: 6 },
+          { id: 7, x: 7 },
+          { id: 8, x: 8 },
+        ];
+        const columns = [
+          { field: 'x', type: 'number' },
+        ];
+        render(
+          <div style={{ height: 300, width: 400 }}>
+            <DataGrid pagination autoPageSize rows={rows} columns={columns} page={2} />
+          </div>,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['7', '8']);
+      });
     });
   });
 });
