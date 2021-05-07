@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useForkRef } from '@material-ui/core/utils';
 import { GRID_CELL_NAVIGATION_KEYDOWN } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
@@ -6,14 +7,16 @@ import { GridApiContext } from '../GridApiContext';
 
 export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellParams>(
   function GridCellCheckboxRenderer(props, ref) {
-  const { field, id, value, tabIndex, hasFocus } = props;
-  const apiRef = React.useContext(GridApiContext);
-  const checkboxElement = React.useRef<HTMLButtonElement | null>(null);
-  const element = props.api.getCellElement(id, field);
+    const { field, id, value, tabIndex, hasFocus } = props;
+    const apiRef = React.useContext(GridApiContext);
+    const checkboxElement = React.useRef<HTMLInputElement | null>(null);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-    apiRef!.current.selectRow(id, checked, true);
-  };
+    const handleRef = useForkRef(checkboxElement, ref);
+    const element = props.api.getCellElement(id, field);
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+      apiRef!.current.selectRow(id, checked, true);
+    };
 
     React.useLayoutEffect(() => {
       if (tabIndex === 0 && element) {
@@ -21,12 +24,12 @@ export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, Gri
       }
     }, [element, tabIndex]);
 
-  React.useLayoutEffect(() => {
-    if (hasFocus) {
-      const input = checkboxElement.current!.querySelector('input')!;
-      input!.focus();
-    }
-  }, [hasFocus]);
+    React.useLayoutEffect(() => {
+      if (hasFocus && checkboxElement.current) {
+        const input = checkboxElement.current.querySelector('input')!;
+        input!.focus();
+      }
+    }, [hasFocus]);
 
     const handleKeyDown = React.useCallback(
       (event) => {
@@ -44,7 +47,7 @@ export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, Gri
 
     return (
       <CheckboxComponent
-        ref={ref}
+        ref={handleRef}
         tabIndex={tabIndex}
         checked={!!value}
         onChange={handleChange}

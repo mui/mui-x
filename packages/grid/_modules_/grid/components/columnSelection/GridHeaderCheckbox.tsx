@@ -15,10 +15,10 @@ import { GridApiContext } from '../GridApiContext';
 export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderParams>(
   function GridHeaderCheckbox(props, ref) {
     const [, forceUpdate] = React.useState(false);
-  const apiRef = React.useContext(GridApiContext);
+    const apiRef = React.useContext(GridApiContext);
     const visibleRowIds = useGridSelector(apiRef, visibleSortedGridRowIdsSelector);
     const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
-  const element = apiRef!.current.getColumnHeaderElement(props.field);
+    const element = apiRef!.current.getColumnHeaderElement(props.field);
 
     const totalSelectedRows = useGridSelector(apiRef, selectedGridRowsCountSelector);
     const totalRows = useGridSelector(apiRef, gridRowCountSelector);
@@ -42,12 +42,12 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
       apiRef!.current.selectRows(visibleRowIds, checked);
     };
 
-  const tabIndex = tabIndexState !== null && tabIndexState.field === props.field ? 0 : -1;
-  React.useLayoutEffect(() => {
-    if (tabIndex === 0 && element) {
-      element!.tabIndex = -1;
-    }
-  }, [element, tabIndex]);
+    const tabIndex = tabIndexState !== null && tabIndexState.field === props.field ? 0 : -1;
+    React.useLayoutEffect(() => {
+      if (tabIndex === 0 && element) {
+        element!.tabIndex = -1;
+      }
+    }, [element, tabIndex]);
 
     const handleKeyDown = React.useCallback(
       (event) => {
@@ -61,13 +61,13 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
       [apiRef, props],
     );
 
-  const handleSelectionChange = React.useCallback(() => {
-    forceUpdate((p) => !p);
-  }, []);
+    const handleSelectionChange = React.useCallback(() => {
+      forceUpdate((p) => !p);
+    }, []);
 
-  React.useEffect(() => {
-    return apiRef?.current.subscribeEvent(GRID_SELECTION_CHANGED, handleSelectionChange);
-  }, [apiRef, handleSelectionChange]);
+    React.useEffect(() => {
+      return apiRef?.current.subscribeEvent(GRID_SELECTION_CHANGED, handleSelectionChange);
+    }, [apiRef, handleSelectionChange]);
 
     const CheckboxComponent = apiRef?.current.components.Checkbox!;
 
