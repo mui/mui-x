@@ -207,7 +207,7 @@ describe('<DataGrid /> - Pagination', () => {
 
       render(
         <TestCasePaginationFilteredData
-          page={3}
+          page={1}
           pageSize={25}
           filterModel={{
             items: [
