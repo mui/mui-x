@@ -7,6 +7,9 @@ export { isDeepEqual };
 export function isDate(value: any): value is Date {
   return value instanceof Date;
 }
+export function isDateValid(value: Date): boolean {
+  return !Number.isNaN(value.getTime());
+}
 
 export function formatDateToLocalInputDate({
   value,
@@ -15,7 +18,7 @@ export function formatDateToLocalInputDate({
   value: GridCellValue;
   withTime: boolean;
 }) {
-  if (isDate(value)) {
+  if (isDate(value) && isDateValid(value)) {
     const offset = value.getTimezoneOffset();
     const localDate = new Date(value.getTime() - offset * 60 * 1000);
     return localDate.toISOString().substr(0, withTime ? 16 : 10);

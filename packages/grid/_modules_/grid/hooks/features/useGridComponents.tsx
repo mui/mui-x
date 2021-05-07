@@ -50,6 +50,9 @@ export const useGridComponents = (
       OpenFilterButtonIcon:
         (componentSlotsProp && componentSlotsProp.OpenFilterButtonIcon) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.OpenFilterButtonIcon,
+      Checkbox:
+        (componentSlotsProp && componentSlotsProp.Checkbox) ||
+        DEFAULT_GRID_SLOTS_COMPONENTS.Checkbox,
       ColumnMenu:
         (componentSlotsProp && componentSlotsProp.ColumnMenu) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.ColumnMenu,
