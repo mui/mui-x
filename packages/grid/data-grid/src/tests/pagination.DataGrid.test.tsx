@@ -196,7 +196,7 @@ describe('<DataGrid /> - Pagination', () => {
 
     it('should show filtered data if the user applies filter on an intermediate page and the resulted filter data is less than the rows per page', () => {
       const TestCasePaginationFilteredData = (props) => {
-        const data = useData(200, 10);
+        const data = useData(200, 2);
 
         return (
           <div style={{ width: 300, height: 300 }}>
