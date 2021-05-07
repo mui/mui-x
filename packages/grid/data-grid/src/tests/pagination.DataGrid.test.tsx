@@ -220,7 +220,7 @@ describe('<DataGrid /> - Pagination', () => {
           }}
         />,
       );
-      expect(getColumnValues(1)).to.include('BTCUSD');
+      expect(getColumnValues(1)).to.deep.equal(['BTCUSD', 'BTCUSD', 'BTCUSD', 'BTCUSD']);
     });
 
     describe('prop: autoPageSize', () => {
