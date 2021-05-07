@@ -104,6 +104,7 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
           pageSize: options.pageSize,
         }),
       }));
+      forceUpdate();
     } else if (options.autoPageSize && containerSizes && containerSizes?.viewportPageSize > 0) {
       setGridState((oldState) => ({
         ...oldState,
@@ -112,8 +113,9 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
           pageSize: containerSizes?.viewportPageSize,
         }),
       }));
+      forceUpdate();
     }
-  }, [setGridState, options.autoPageSize, containerSizes, options.pageSize]);
+  }, [setGridState, forceUpdate, options.autoPageSize, containerSizes, options.pageSize]);
 
   const paginationApi: GridPaginationApi = {
     setPageSize,
