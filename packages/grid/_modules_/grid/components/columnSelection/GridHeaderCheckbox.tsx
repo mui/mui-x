@@ -1,4 +1,3 @@
-import Checkbox from '@material-ui/core/Checkbox';
 import * as React from 'react';
 import {
   GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN,
@@ -13,34 +12,35 @@ import { GridColumnHeaderParams } from '../../models/params/gridColumnHeaderPara
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { GridApiContext } from '../GridApiContext';
 
-export const GridHeaderCheckbox = (props: GridColumnHeaderParams) => {
-  const [, forceUpdate] = React.useState(false);
+export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderParams>(
+  function GridHeaderCheckbox(props, ref) {
+    const [, forceUpdate] = React.useState(false);
   const apiRef = React.useContext(GridApiContext);
-  const visibleRowIds = useGridSelector(apiRef, visibleSortedGridRowIdsSelector);
-  const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
+    const visibleRowIds = useGridSelector(apiRef, visibleSortedGridRowIdsSelector);
+    const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
   const element = apiRef!.current.getColumnHeaderElement(props.field);
 
-  const totalSelectedRows = useGridSelector(apiRef, selectedGridRowsCountSelector);
-  const totalRows = useGridSelector(apiRef, gridRowCountSelector);
+    const totalSelectedRows = useGridSelector(apiRef, selectedGridRowsCountSelector);
+    const totalRows = useGridSelector(apiRef, gridRowCountSelector);
 
-  const [isIndeterminate, setIsIndeterminate] = React.useState(
-    totalSelectedRows > 0 && totalSelectedRows !== totalRows,
-  );
-  const [isChecked, setChecked] = React.useState(
-    totalSelectedRows === totalRows || isIndeterminate,
-  );
+    const [isIndeterminate, setIsIndeterminate] = React.useState(
+      totalSelectedRows > 0 && totalSelectedRows !== totalRows,
+    );
+    const [isChecked, setChecked] = React.useState(
+      totalSelectedRows === totalRows || isIndeterminate,
+    );
 
-  React.useEffect(() => {
-    const isNewIndeterminate = totalSelectedRows > 0 && totalSelectedRows !== totalRows;
-    const isNewChecked = (totalRows > 0 && totalSelectedRows === totalRows) || isIndeterminate;
-    setChecked(isNewChecked);
-    setIsIndeterminate(isNewIndeterminate);
-  }, [isIndeterminate, totalRows, totalSelectedRows]);
+    React.useEffect(() => {
+      const isNewIndeterminate = totalSelectedRows > 0 && totalSelectedRows !== totalRows;
+      const isNewChecked = (totalRows > 0 && totalSelectedRows === totalRows) || isIndeterminate;
+      setChecked(isNewChecked);
+      setIsIndeterminate(isNewIndeterminate);
+    }, [isIndeterminate, totalRows, totalSelectedRows]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-    setChecked(checked);
-    apiRef!.current.selectRows(visibleRowIds, checked);
-  };
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+      setChecked(checked);
+      apiRef!.current.selectRows(visibleRowIds, checked);
+    };
 
   const tabIndex = tabIndexState !== null && tabIndexState.field === props.field ? 0 : -1;
   React.useLayoutEffect(() => {
@@ -49,17 +49,17 @@ export const GridHeaderCheckbox = (props: GridColumnHeaderParams) => {
     }
   }, [element, tabIndex]);
 
-  const handleKeyDown = React.useCallback(
-    (event) => {
-      if (isSpaceKey(event.key)) {
-        event.stopPropagation();
-      }
-      if (isNavigationKey(event.key) && !event.shiftKey) {
-        apiRef!.current.publishEvent(GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN, props, event);
-      }
-    },
-    [apiRef, props],
-  );
+    const handleKeyDown = React.useCallback(
+      (event) => {
+        if (isSpaceKey(event.key)) {
+          event.stopPropagation();
+        }
+        if (isNavigationKey(event.key) && !event.shiftKey) {
+          apiRef!.current.publishEvent(GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN, props, event);
+        }
+      },
+      [apiRef, props],
+    );
 
   const handleSelectionChange = React.useCallback(() => {
     forceUpdate((p) => !p);
@@ -69,16 +69,21 @@ export const GridHeaderCheckbox = (props: GridColumnHeaderParams) => {
     return apiRef?.current.subscribeEvent(GRID_SELECTION_CHANGED, handleSelectionChange);
   }, [apiRef, handleSelectionChange]);
 
-  return (
-    <Checkbox
-      indeterminate={isIndeterminate}
-      checked={isChecked}
-      onChange={handleChange}
-      className="MuiDataGrid-checkboxInput"
-      color="primary"
-      inputProps={{ 'aria-label': 'Select All Rows checkbox' }}
-      tabIndex={tabIndex}
-      onKeyDown={handleKeyDown}
-    />
-  );
-};
+    const CheckboxComponent = apiRef?.current.components.Checkbox!;
+
+    return (
+      <CheckboxComponent
+        ref={ref}
+        indeterminate={isIndeterminate}
+        checked={isChecked}
+        onChange={handleChange}
+        className="MuiDataGrid-checkboxInput"
+        color="primary"
+        inputProps={{ 'aria-label': 'Select All Rows checkbox' }}
+        tabIndex={tabIndex}
+        onKeyDown={handleKeyDown}
+        {...apiRef?.current.componentsProps?.checkbox}
+      />
+    );
+  },
+);

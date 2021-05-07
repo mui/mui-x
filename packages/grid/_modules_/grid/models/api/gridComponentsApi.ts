@@ -4,6 +4,10 @@ import { GridSlotsComponentsProps } from '../gridSlotsComponentsProps';
 
 export interface GridApiRefComponentsProperty extends GridIconSlotsComponent {
   /**
+   * The custom Checkbox component used in the grid.
+   */
+  Checkbox: React.ElementType;
+  /**
    * Column menu component rendered by clicking on the 3 dots "kebab" icon in column headers.
    */
   ColumnMenu: React.ElementType;

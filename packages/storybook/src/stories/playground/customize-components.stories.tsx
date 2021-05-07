@@ -24,6 +24,7 @@ import {
   ColumnMenuComponent,
   SortedDescendingIcon,
   SortedAscendingIcon,
+  CustomCheckboxComponent,
 } from './customComponents';
 
 export default {
@@ -382,4 +383,12 @@ CustomPanelInFooter.args = {
     Footer: FooterWithPanel,
     Toolbar: GridToolbar,
   },
+};
+
+export const CustomCheckbox = Template.bind({});
+CustomCheckbox.args = {
+  components: {
+    Checkbox: CustomCheckboxComponent,
+  },
+  checkboxSelection: true,
 };

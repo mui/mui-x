@@ -61,7 +61,7 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">onColumnHeaderLeave</span> | <span class="prop-type">(param: GridColumnHeaderParams, event: React.MouseEvent) => void</span> |   | Callback fired when a mouse leave event comes from a column header element. |
 | <span class="prop-name">onColumnOrderChange</span> | <span class="prop-type">(param: GridColumnOrderChangeParams, event: React.MouseEvent) => void</span> |   | Callback fired when a column is reordered. |
 | <span class="prop-name">onColumnResize</span> | <span class="prop-type">(param: GridColumnResizeParams) => void</span> |   | Callback fired when a column is resizing. |
-| <span class="prop-name">onColumnResizeCommited</span> | <span class="prop-type">(param: GridColumnResizeParams) => void</span> |   | Callback fired when a column is resized. |
+| <span class="prop-name">onColumnResizeCommitted</span> | <span class="prop-type">(param: GridColumnResizeParams) => void</span> |   | Callback fired when a column is resized. |
 | <span class="prop-name">onError</span> | <span class="prop-type">(args: any) => void</span> |   | Callback fired when an exception is thrown in the grid, or when the `showError` API method is called. |
 | <span class="prop-name">onEditCellChange</span> | <span class="prop-type">(params: GridEditCellParams) => void</span> |   |  Callback fired when the edit cell value changed. |
 | <span class="prop-name">onEditCellChangeCommitted</span> | <span class="prop-type">(params: GridEditCellParams) => void</span> |   | Callback fired when the cell changes are committed. |
@@ -101,6 +101,7 @@ Api of the `components` props of type `GridSlotsComponent`
 
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
+| <span class="prop-name">Checkbox</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">Checkbox</span> | Checkbox component used in the grid for both header and cells. Default it uses the Material UI core Checkbox component.|
 | <span class="prop-name">ColumnMenu</span> | <span class="prop-type">React.ElementType&lt;GridColumnMenuProps></span> | <span class="prop-type">GridColumnMenu</span> | Column menu component rendered by clicking on the 3 dots "kebab" icon in column headers.|
 | <span class="prop-name">ColumnsPanel</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">ColumnsPanel</span> | GridColumns panel component rendered when clicking the columns button.|
 | <span class="prop-name">ErrorOverlay</span> | <span class="prop-type">React.ElementType&lt;ErrorOverlayProps></span> | <span class="prop-type">ErrorOverlay</span> | Error overlay component rendered above the grid when an error is caught.|

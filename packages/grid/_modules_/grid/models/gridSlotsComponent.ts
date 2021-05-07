@@ -1,4 +1,5 @@
 import * as React from 'react';
+import MUICheckbox from '@material-ui/core/Checkbox';
 import { ErrorOverlay } from '../components/ErrorOverlay';
 import { GridFooter } from '../components/GridFooter';
 import { GridHeader } from '../components/GridHeader';
@@ -34,6 +35,10 @@ import { GridIconSlotsComponent } from './gridIconSlotsComponent';
  *
  */
 export interface GridSlotsComponent extends GridIconSlotsComponent {
+  /**
+   * The custom Checkbox component used in the grid for both header and cells.
+   */
+  Checkbox?: React.ElementType;
   /**
    * Column menu component rendered by clicking on the 3 dots "kebab" icon in column headers.
    */
@@ -107,6 +112,7 @@ export const DEFAULT_GRID_SLOTS_ICONS: GridIconSlotsComponent = {
 
 export const DEFAULT_GRID_SLOTS_COMPONENTS: GridApiRefComponentsProperty = {
   ...DEFAULT_GRID_SLOTS_ICONS,
+  Checkbox: MUICheckbox,
   ColumnMenu: GridColumnMenu,
   ColumnsPanel: GridColumnsPanel,
   ErrorOverlay,
