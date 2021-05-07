@@ -111,21 +111,22 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
 
   const comparatorListAggregate = React.useCallback(
     (id1: GridRowId, id2: GridRowId) => {
-      const result = comparatorList.current.reduce((res, colComparator) => {
+      return comparatorList.current.reduce((res, colComparator) => {
+        if (res !== 0) {
+          return res;
+        }
+
         const { field, comparator } = colComparator;
         const sortCellParams1 = getSortCellParams(id1, field);
         const sortCellParams2 = getSortCellParams(id2, field);
-        res =
-          res ||
-          comparator(
-            sortCellParams1.value,
-            sortCellParams2.value,
-            sortCellParams1,
-            sortCellParams2,
-          );
+        res = comparator(
+          sortCellParams1.value,
+          sortCellParams2.value,
+          sortCellParams1,
+          sortCellParams2,
+        );
         return res;
       }, 0);
-      return result;
     },
     [getSortCellParams],
   );
