@@ -88,7 +88,7 @@ export const setGridRowCountStateUpdate = (state, payload): GridPaginationState 
       ...state,
       pageCount: newPageCount,
       rowCount: totalRowCount,
-      page: state.page > newPageCount ? newPageCount - 1 : state.page,
+      page: Math.min(state.page, newPageCount - 1),
     };
   }
   return state;
