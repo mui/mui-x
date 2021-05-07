@@ -53,13 +53,13 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
 
   const setPageSize = React.useCallback(
     (pageSize: number) => {
-      dispatch(setGridPageSizeActionCreator(pageSize));
+      dispatch(setGridPageSizeActionCreator(pageSize, options.page));
       apiRef.current.publishEvent(
         GRID_PAGESIZE_CHANGED,
         apiRef.current.getState<GridPaginationState>(PAGINATION_STATE_ID) as GridPageChangeParams,
       );
     },
-    [apiRef, dispatch],
+    [apiRef, dispatch, options.page],
   );
 
   useGridApiOptionHandler(apiRef, GRID_PAGE_CHANGED, options.onPageChange);
@@ -76,15 +76,15 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
 
   React.useEffect(() => {
     if (!options.autoPageSize && options.pageSize) {
-      dispatch(setGridPageSizeActionCreator(options.pageSize));
+      dispatch(setGridPageSizeActionCreator(options.pageSize, options.page));
     }
-  }, [options.autoPageSize, options.pageSize, logger, dispatch]);
+  }, [options.autoPageSize, options.page, options.pageSize, logger, dispatch]);
 
   React.useEffect(() => {
     if (options.autoPageSize && containerSizes && containerSizes?.viewportPageSize > 0) {
-      dispatch(setGridPageSizeActionCreator(containerSizes?.viewportPageSize));
+      dispatch(setGridPageSizeActionCreator(containerSizes?.viewportPageSize, options.page));
     }
-  }, [containerSizes, dispatch, options.autoPageSize]);
+  }, [containerSizes, dispatch, options.page, options.autoPageSize]);
 
   React.useEffect(() => {
     dispatch(setGridRowCountActionCreator({ totalRowCount: visibleRowCount }));

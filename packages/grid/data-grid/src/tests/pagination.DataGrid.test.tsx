@@ -279,9 +279,7 @@ describe('<DataGrid /> - Pagination', () => {
           { id: 7, x: 7 },
           { id: 8, x: 8 },
         ];
-        const columns = [
-          { field: 'x', type: 'number' },
-        ];
+        const columns = [{ field: 'x', type: 'number' }];
         render(
           <div style={{ height: 300, width: 400 }}>
             <DataGrid pagination autoPageSize rows={rows} columns={columns} page={2} />

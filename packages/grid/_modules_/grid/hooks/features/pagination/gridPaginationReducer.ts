@@ -14,7 +14,10 @@ const SET_PAGINATION_MODE_ACTION = 'SET_PAGINATION_MODE_ACTION';
 const SET_ROWCOUNT_ACTION = 'SET_ROWCOUNT_ACTION';
 
 type SetPageAction = { type: typeof SET_PAGE_ACTION; payload: { page: number } };
-type SetPageSizeAction = { type: typeof SET_PAGESIZE_ACTION; payload: { pageSize: number } };
+type SetPageSizeAction = {
+  type: typeof SET_PAGESIZE_ACTION;
+  payload: { pageSize: number; optionPage?: number };
+};
 type SetPaginationModeAction = {
   type: typeof SET_PAGINATION_MODE_ACTION;
   payload: { paginationMode: GridFeatureMode };
@@ -35,8 +38,11 @@ export function setGridPageActionCreator(page: number): SetPageAction {
   return { type: SET_PAGE_ACTION, payload: { page } };
 }
 
-export function setGridPageSizeActionCreator(pageSize: number): SetPageSizeAction {
-  return { type: SET_PAGESIZE_ACTION, payload: { pageSize } };
+export function setGridPageSizeActionCreator(
+  pageSize: number,
+  optionPage?: number,
+): SetPageSizeAction {
+  return { type: SET_PAGESIZE_ACTION, payload: { pageSize, optionPage } };
 }
 
 export function setGridPaginationModeActionCreator(payload: {
@@ -65,17 +71,21 @@ export const setGridPageStateUpdate = (
 
 export const setGridPageSizeStateUpdate = (
   state: GridPaginationState,
-  payload: { pageSize: number },
+  payload: { pageSize: number; optionPage?: number },
 ): GridPaginationState => {
-  const { pageSize } = payload;
+  const { pageSize, optionPage } = payload;
   if (state.pageSize === pageSize) {
     return state;
   }
 
+  const newPageCount = getGridPageCount(pageSize, state.rowCount);
+  const newPage = optionPage != null ? optionPage : state.page;
+
   const newState: GridPaginationState = {
     ...state,
     pageSize,
-    pageCount: getGridPageCount(pageSize, state.rowCount),
+    pageCount: newPageCount,
+    page: Math.min(newPage, newPageCount - 1),
   };
   return newState;
 };
