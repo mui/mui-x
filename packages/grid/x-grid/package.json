@@ -32,6 +32,7 @@
   "dependencies": {
     "@material-ui/utils": "^5.0.0-alpha.14",
     "@material-ui/x-license": "^4.0.0-alpha.25",
+    "clsx": "^1.1.1",
     "prop-types": "^15.7.2",
     "reselect": "^4.0.0"
   },

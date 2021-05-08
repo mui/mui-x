@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import MenuList from '@material-ui/core/MenuList';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { isHideMenuKey, isTabKey } from '../../../utils/keyboardUtils';
@@ -6,7 +7,6 @@ import { GridColumnsMenuItem } from './GridColumnsMenuItem';
 import { GridFilterMenuItem } from './GridFilterMenuItem';
 import { HideGridColMenuItem } from './HideGridColMenuItem';
 import { SortGridMenuItems } from './SortGridMenuItems';
-import { classnames } from '../../../utils/classnames';
 
 export interface GridColumnMenuProps extends React.HTMLAttributes<HTMLUListElement> {
   hideMenu: () => void;
@@ -34,7 +34,7 @@ export const GridColumnMenu = React.forwardRef<HTMLUListElement, GridColumnMenuP
       <MenuList
         id={id}
         ref={ref}
-        className={classnames('MuiDataGrid-gridMenuList', className)}
+        className={clsx('MuiDataGrid-gridMenuList', className)}
         aria-labelledby={labelledby}
         onKeyDown={handleListKeyDown}
         autoFocus={open}
