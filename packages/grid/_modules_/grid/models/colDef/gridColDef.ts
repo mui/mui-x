@@ -43,7 +43,7 @@ export interface GridColDef {
   flex?: number;
   /**
    * If `true`, hide the column.
-   * @default false;
+   * @default false
    */
   hide?: boolean;
   /**
