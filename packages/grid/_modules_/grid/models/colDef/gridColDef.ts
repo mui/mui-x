@@ -67,7 +67,7 @@ export interface GridColDef {
   sortComparator?: GridComparatorFn;
   /**
    * Type allows to merge this object with a default definition [[GridColDef]].
-   * @default string
+   * @default 'string'
    */
   type?: GridColType;
   /**
