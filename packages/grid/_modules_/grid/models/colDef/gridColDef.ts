@@ -38,7 +38,7 @@ export interface GridColDef {
    */
   width?: number;
   /**
-   * If set, it indicates that a column has fluid width. Range [0, ∞].
+   * If set, it indicates that a column has fluid width. Range [0, ∞).
    */
   flex?: number;
   /**
