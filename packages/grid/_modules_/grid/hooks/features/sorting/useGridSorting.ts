@@ -38,7 +38,6 @@ import { sortedGridRowIdsSelector, sortedGridRowsSelector } from './gridSortingS
 
 export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   const logger = useLogger('useGridSorting');
-  const comparatorList = React.useRef<GridFieldComparatorList>([]);
 
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
@@ -110,15 +109,18 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   );
 
   const comparatorListAggregate = React.useCallback(
-    (id1: GridRowId, id2: GridRowId) => {
-      return comparatorList.current.reduce((res, colComparator) => {
+    (comparatorList: GridFieldComparatorList) => (
+      row1: GridSortCellParams[],
+      row2: GridSortCellParams[],
+    ) => {
+      return comparatorList.reduce((res, colComparator, index) => {
         if (res !== 0) {
           return res;
         }
 
-        const { field, comparator } = colComparator;
-        const sortCellParams1 = getSortCellParams(id1, field);
-        const sortCellParams2 = getSortCellParams(id2, field);
+        const { comparator } = colComparator;
+        const sortCellParams1 = row1[index];
+        const sortCellParams2 = row2[index];
         res = comparator(
           sortCellParams1.value,
           sortCellParams2.value,
@@ -128,7 +130,7 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
         return res;
       }, 0);
     },
-    [getSortCellParams],
+    [],
   );
 
   const buildComparatorList = React.useCallback(
@@ -168,11 +170,18 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
     }
 
     const sortModel = apiRef.current.getState().sorting.sortModel;
-    const sorted = [...rowIds];
+    let sorted = rowIds;
     if (sortModel.length > 0) {
-      comparatorList.current = buildComparatorList(sortModel);
+      const comparatorList = buildComparatorList(sortModel);
       logger.debug('Sorting rows with ', sortModel);
-      sorted.sort(comparatorListAggregate);
+      sorted = rowIds
+        .map((id) => {
+          return comparatorList.map((colComparator) => {
+            return getSortCellParams(id, colComparator.field);
+          });
+        })
+        .sort(comparatorListAggregate(comparatorList))
+        .map((field) => field[0].id);
     }
 
     setGridState((oldState) => {
@@ -185,6 +194,7 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   }, [
     apiRef,
     logger,
+    getSortCellParams,
     setGridState,
     forceUpdate,
     buildComparatorList,
