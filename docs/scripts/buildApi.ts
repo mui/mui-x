@@ -116,6 +116,21 @@ function generateProperties(api: Api, apisToGenerate) {
   return text;
 }
 
+function generateImportStatement(api: Api) {
+  // TODO: Check if interface was exported
+  if (api.name === 'GridApi') {
+    return `\`\`\`js
+import { ${api.name} } from '@material-ui/x-grid';
+\`\`\``;
+  }
+
+  return `\`\`\`js
+import { ${api.name} } from '@material-ui/x-grid';
+// or
+import { ${api.name} } from '@material-ui/data-grid';
+\`\`\``;
+}
+
 function generateMarkdown(api: Api, apisToGenerate) {
   return [
     `# ${api.name} Interface`,
@@ -124,11 +139,7 @@ function generateMarkdown(api: Api, apisToGenerate) {
     '',
     '## Import',
     '',
-    '```js',
-    `import { ${api.name} } from '@material-ui/x-grid';`,
-    '// or',
-    `import { ${api.name} } from '@material-ui/data-grid';`,
-    '```',
+    generateImportStatement(api),
     '',
     generateProperties(api, apisToGenerate),
   ].join('\n');
