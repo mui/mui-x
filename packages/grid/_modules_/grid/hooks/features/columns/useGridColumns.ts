@@ -3,6 +3,7 @@ import {
   GRID_COLUMNS_UPDATED,
   GRID_COLUMN_ORDER_CHANGE,
   GRID_COLUMN_RESIZE_COMMITTED,
+  GRID_COLUMN_VISIBILITY_CHANGE,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
@@ -30,6 +31,7 @@ import {
   gridColumnsMetaSelector,
   visibleGridColumnsSelector,
 } from './gridColumnsSelector';
+import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 
 function updateColumnsWidth(columns: GridColumns, viewportWidth: number) {
   const numberOfFluidColumns = columns.filter((column) => !!column.flex && !column.hide).length;
@@ -164,14 +166,23 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
   const updateColumn = React.useCallback((col: GridColDef) => updateColumns([col]), [
     updateColumns,
   ]);
-  const toggleColumn = React.useCallback(
-    (field: string, hide?: boolean) => {
+
+  const setColumnVisibility = React.useCallback(
+    (field: string, isVisible: boolean) => {
       const col = getColumnFromField(field);
-      const updatedCol = { ...col, hide: hide == null ? !col.hide : hide };
+      const updatedCol = { ...col, hide: !isVisible };
+
       updateColumns([updatedCol]);
       forceUpdate();
+
+      apiRef.current.publishEvent(GRID_COLUMN_VISIBILITY_CHANGE, {
+        field,
+        colDef: updatedCol,
+        api: apiRef,
+        isVisible,
+      });
     },
-    [forceUpdate, getColumnFromField, updateColumns],
+    [apiRef, forceUpdate, getColumnFromField, updateColumns],
   );
 
   const setColumnIndex = React.useCallback(
@@ -226,7 +237,7 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
     getColumnsMeta,
     updateColumn,
     updateColumns,
-    toggleColumn,
+    setColumnVisibility,
     setColumnIndex,
     setColumnWidth,
   };
@@ -269,4 +280,7 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
     const updatedCols = updateColumnsWidth(currentColumns, gridState.viewportSizes.width);
     apiRef.current.updateColumns(updatedCols);
   }, [apiRef, gridState.viewportSizes.width, logger]);
+
+  // Grid Option Handlers
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_VISIBILITY_CHANGE, options.onColumnVisibilityChange);
 }
