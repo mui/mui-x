@@ -3,7 +3,7 @@ title: Data Grid - Events
 components: DataGrid, XGrid
 ---
 
-# Data Grid - Events
+# Data Grid - Events [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 <p class="description">The data grid emits events that can be subscribed to attach custom behavior.</p>
 
