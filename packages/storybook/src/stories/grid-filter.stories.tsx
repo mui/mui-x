@@ -643,3 +643,24 @@ export function DemoMultiFilteringGrid() {
     </div>
   );
 }
+
+export function NoResultsSnap() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+  });
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <XGrid
+        {...data}
+        filterModel={{
+          items: [
+            { id: 123, columnField: 'commodity', value: 'foobar', operatorValue: 'startsWith' },
+          ],
+          linkOperator: GridLinkOperator.And,
+        }}
+      />
+    </div>
+  );
+}

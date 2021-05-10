@@ -5,7 +5,7 @@ import { GridMenu } from '../GridMenu';
 export interface GridColumnHeaderMenuProps {
   columnMenuId: string;
   columnMenuButtonId: string;
-  ContentComponent: React.ElementType;
+  ContentComponent: React.JSXElementConstructor<any>;
   contentComponentProps?: any;
   field: string;
   open: boolean;

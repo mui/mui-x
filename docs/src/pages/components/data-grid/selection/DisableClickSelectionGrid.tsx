@@ -11,14 +11,7 @@ export default function DisableClickSelectionGrid() {
 
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        checkboxSelection
-        {...data}
-        columns={data.columns.map((column) => ({
-          ...column,
-          disableClickEventBubbling: true,
-        }))}
-      />
+      <DataGrid checkboxSelection disableSelectionOnClick {...data} />
     </div>
   );
 }

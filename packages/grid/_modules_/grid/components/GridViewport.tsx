@@ -3,7 +3,10 @@ import { visibleGridColumnsSelector } from '../hooks/features/columns/gridColumn
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
 import { visibleSortedGridRowsAsArraySelector } from '../hooks/features/filter/gridFilterSelector';
-import { gridKeyboardCellSelector } from '../hooks/features/keyboard/gridKeyboardSelector';
+import {
+  gridFocusCellSelector,
+  gridTabIndexCellSelector,
+} from '../hooks/features/focus/gridFocusStateSelector';
 import { gridSelectionStateSelector } from '../hooks/features/selection/gridSelectionSelector';
 import { renderStateSelector } from '../hooks/features/virtualization/renderingStateSelector';
 import { optionsSelector } from '../hooks/utils/optionsSelector';
@@ -32,7 +35,8 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const scrollBarState = useGridSelector(apiRef, gridScrollBarSizeSelector);
     const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
     const renderState = useGridSelector(apiRef, renderStateSelector);
-    const cellFocus = useGridSelector(apiRef, gridKeyboardCellSelector);
+    const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
+    const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
     const selectionState = useGridSelector(apiRef, gridSelectionStateSelector);
     const rows = useGridSelector(apiRef, visibleSortedGridRowsAsArraySelector);
     const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
@@ -68,6 +72,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
             extendRowFullWidth={!options.disableExtendRowFullWidth}
             rowIndex={renderState.renderContext!.firstRowIdx! + idx}
             cellFocus={cellFocus}
+            cellTabIndex={cellTabIndex}
           />
           <GridEmptyCell width={renderState.renderContext!.rightEmptyWidth} height={rowHeight} />
         </GridRow>

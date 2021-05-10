@@ -62,7 +62,7 @@ describe('e2e', () => {
   });
 
   describe('<DataGrid />', () => {
-    it('should select cell 0-0 when pressing tab key', async () => {
+    it('should select the first column header when pressing tab key', async () => {
       await renderFixture('DataGrid/KeyboardNavigationFocus');
 
       expect(
@@ -70,7 +70,7 @@ describe('e2e', () => {
       ).to.equal('initial-focus');
 
       await page.keyboard.press('Tab');
-      expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('Nike');
+      expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('brand');
     });
 
     it('should implement the roving tabindex pattern', async () => {
@@ -80,6 +80,7 @@ describe('e2e', () => {
         await page.evaluate(() => document.activeElement?.getAttribute('data-testid')),
       ).to.equal('initial-focus');
       await page.keyboard.press('Tab');
+      await page.keyboard.press('ArrowDown');
       expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('Nike');
       expect(await page.evaluate(() => document.activeElement?.getAttribute('role'))).to.equal(
         'cell',

@@ -50,6 +50,9 @@ export const useGridComponents = (
       OpenFilterButtonIcon:
         (componentSlotsProp && componentSlotsProp.OpenFilterButtonIcon) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.OpenFilterButtonIcon,
+      Checkbox:
+        (componentSlotsProp && componentSlotsProp.Checkbox) ||
+        DEFAULT_GRID_SLOTS_COMPONENTS.Checkbox,
       ColumnMenu:
         (componentSlotsProp && componentSlotsProp.ColumnMenu) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.ColumnMenu,
@@ -67,6 +70,9 @@ export const useGridComponents = (
       LoadingOverlay:
         (componentSlotsProp && componentSlotsProp.LoadingOverlay) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.LoadingOverlay,
+      NoResultsOverlay:
+        (componentSlotsProp && componentSlotsProp.NoResultsOverlay) ||
+        DEFAULT_GRID_SLOTS_COMPONENTS.NoResultsOverlay,
       NoRowsOverlay:
         (componentSlotsProp && componentSlotsProp.NoRowsOverlay) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.NoRowsOverlay,

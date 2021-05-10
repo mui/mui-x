@@ -24,7 +24,7 @@ export const DemoLink = React.memo(function DemoLink(props: DemoLinkProps) {
   };
 
   return (
-    <a className={classes.root} onClick={handleClick} href={props.href}>
+    <a tabIndex={-1} className={classes.root} onClick={handleClick} href={props.href}>
       {props.children}
     </a>
   );

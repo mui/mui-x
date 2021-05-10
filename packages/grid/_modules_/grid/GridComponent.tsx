@@ -17,13 +17,15 @@ import { Watermark } from './components/Watermark';
 import { GridComponentProps } from './GridComponentProps';
 import { useGridColumnMenu } from './hooks/features/columnMenu/useGridColumnMenu';
 import { useGridColumns } from './hooks/features/columns/useGridColumns';
-import { useGridState } from './hooks/features/core/useGridState';
+import { useGridFocus } from './hooks/features/focus/useGridFocus';
+import { useGridSelector } from './hooks/features/core/useGridSelector';
 import { useGridKeyboardNavigation } from './hooks/features/keyboard/useGridKeyboardNavigation';
 import { useGridPagination } from './hooks/features/pagination/useGridPagination';
 import { useGridPreferencesPanel } from './hooks/features/preferencesPanel/useGridPreferencesPanel';
 import { useGridParamsApi } from './hooks/features/rows/useGridParamsApi';
 import { useGridRows } from './hooks/features/rows/useGridRows';
 import { useGridEditRows } from './hooks/features/rows/useGridEditRows';
+import { gridRowCountSelector } from './hooks/features/rows/gridRowsSelector';
 import { useGridSorting } from './hooks/features/sorting/useGridSorting';
 import { useGridApiRef } from './hooks/features/useGridApiRef';
 import { useGridColumnReorder } from './hooks/features/columnReorder';
@@ -48,6 +50,7 @@ import { useGridFilter } from './hooks/features/filter/useGridFilter';
 import { useLocaleText } from './hooks/features/localeText/useLocaleText';
 import { useGridCsvExport } from './hooks/features/export';
 import { useGridInfiniteLoader } from './hooks/features/infiniteLoader';
+import { visibleGridRowCountSelector } from './hooks/features/filter/gridFilterSelector';
 
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {
@@ -62,7 +65,8 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const renderingZoneRef = React.useRef<HTMLDivElement>(null);
 
     const apiRef = useGridApiRef(props.apiRef);
-    const [gridState] = useGridState(apiRef);
+    const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
+    const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
 
     const internalOptions = useOptionsProp(apiRef, props);
 
@@ -79,6 +83,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useGridParamsApi(apiRef);
     useGridRows(apiRef, props.rows, props.getRowId);
     useGridEditRows(apiRef);
+    useGridFocus(apiRef);
     useGridKeyboard(rootContainerRef, apiRef);
     useGridKeyboardNavigation(rootContainerRef, apiRef);
     useGridSelection(apiRef);
@@ -99,7 +104,8 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useStateProp(apiRef, props.state);
     useRenderInfoLog(apiRef, logger);
 
-    const showNoRowsOverlay = !props.loading && gridState.rows.totalRowCount === 0;
+    const showNoRowsOverlay = !props.loading && totalRowCount === 0;
+    const showNoResultsOverlay = !props.loading && totalRowCount > 0 && visibleRowCount === 0;
     return (
       <GridApiContext.Provider value={apiRef}>
         <NoSsr>
@@ -129,6 +135,9 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                 {showNoRowsOverlay && (
                   <components.NoRowsOverlay {...props.componentsProps?.noRowsOverlay} />
                 )}
+                {showNoResultsOverlay && (
+                  <components.NoResultsOverlay {...props.componentsProps?.noResultsOverlay} />
+                )}
                 {props.loading && (
                   <components.LoadingOverlay {...props.componentsProps?.loadingOverlay} />
                 )}
@@ -144,7 +153,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                   )}
                 </GridAutoSizer>
               </GridMainContainer>
-              {!gridState.options.hideFooter && (
+              {!internalOptions.hideFooter && (
                 <div ref={footerRef}>
                   <components.Footer {...props.componentsProps?.footer} />
                 </div>

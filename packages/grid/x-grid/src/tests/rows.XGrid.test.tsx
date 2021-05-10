@@ -336,7 +336,7 @@ describe('<XGrid /> - Rows', () => {
       gridWindow.dispatchEvent(new Event('scroll'));
 
       const lastCell = document.querySelector('[role="row"]:last-child [role="cell"]:first-child')!;
-      expect(lastCell.textContent).to.equal('995');
+      expect(lastCell).to.have.text('995');
       expect(renderingZone.children.length).to.equal(16);
       expect(renderingZone.style.transform).to.equal('translate3d(0px, -312px, 0px)');
       expect(gridWindow.scrollHeight).to.equal(totalHeight);
@@ -394,7 +394,7 @@ describe('<XGrid /> - Rows', () => {
         const lastCell = document.querySelector(
           '[role="row"]:last-child [role="cell"]:first-child',
         )!;
-        expect(lastCell.textContent).to.equal('31');
+        expect(lastCell).to.have.text('31');
         const totalHeight = apiRef!.current!.getState().containerSizes?.totalSizes.height!;
         expect(gridWindow.scrollHeight).to.equal(totalHeight);
       });
@@ -408,7 +408,7 @@ describe('<XGrid /> - Rows', () => {
         const lastCell = document.querySelector(
           '[role="row"]:last-child [role="cell"]:first-child',
         )!;
-        expect(lastCell.textContent).to.equal('99');
+        expect(lastCell).to.have.text('99');
         expect(gridWindow.scrollTop).to.equal(0);
         expect(gridWindow.scrollHeight).to.equal(gridWindow.clientHeight);
 
@@ -416,6 +416,26 @@ describe('<XGrid /> - Rows', () => {
         expect(isVirtualized).to.equal(false);
         const virtualRowsCount = apiRef!.current!.getState().containerSizes!.virtualRowsCount;
         expect(virtualRowsCount).to.equal(4);
+      });
+
+      it('should paginate small dataset in auto page-size #1492', () => {
+        render(<TestCaseVirtualization pagination autoPageSize height={496} nbRows={9} />);
+        const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+
+        const lastCell = document.querySelector(
+          '[role="row"]:last-child [role="cell"]:first-child',
+        )!;
+        expect(lastCell).to.have.text('6');
+        const rows = document.querySelectorAll('.MuiDataGrid-row[role="row"]')!;
+        expect(rows.length).to.equal(7);
+
+        expect(gridWindow.scrollTop).to.equal(0);
+        expect(gridWindow.scrollHeight).to.equal(gridWindow.clientHeight);
+
+        const isVirtualized = apiRef!.current!.getState().containerSizes!.isVirtualized;
+        expect(isVirtualized).to.equal(false);
+        const virtualRowsCount = apiRef!.current!.getState().containerSizes!.virtualRowsCount;
+        expect(virtualRowsCount).to.equal(7);
       });
     });
   });
