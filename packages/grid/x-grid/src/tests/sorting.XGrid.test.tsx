@@ -216,19 +216,13 @@ describe('<XGrid /> - Sorting', () => {
 
       const t0 = performance.now();
       fireEvent.click(header);
-      await waitFor(() => expect(document.querySelector('.MuiDataGrid-sortIcon')).to.not.be.null);
+      await waitFor(() => expect(document.querySelector('.MuiDataGrid-sortIcon')).to.not.equal(null));
       const t1 = performance.now();
       const time = Math.round(t1 - t0);
       expect(time).to.be.lessThan(300);
     });
 
     it('should render maximum twice', async function test() {
-      // It's simpler to only run the performance test in a single controlled environment.
-      if (!/HeadlessChrome/.test(window.navigator.userAgent)) {
-        this.skip();
-        return;
-      }
-
       let renderHeaderCount = 0;
       const TestCasePerf = () => {
         const [cols, setCols] = React.useState<GridColDef[]>([]);
@@ -256,7 +250,7 @@ describe('<XGrid /> - Sorting', () => {
       const header = document.querySelector('.currency-pair-component');
       renderHeaderCount = 0;
       fireEvent.click(header);
-      await waitFor(() => expect(document.querySelector('.MuiDataGrid-sortIcon')).to.not.be.null);
+      await waitFor(() => expect(document.querySelector('.MuiDataGrid-sortIcon')).to.not.equal(null));
       expect(renderHeaderCount).to.equal(2);
     });
   });

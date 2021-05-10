@@ -24,7 +24,7 @@ import {
   waitFor,
 } from 'test/utils';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
-import { useData } from '../../../../storybook/src/hooks/useData';
+import { useData } from 'packages/storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -295,7 +295,7 @@ describe('<XGrid /> - Filter', () => {
       const t0 = performance.now();
       apiRef.current.setFilterModel(newModel);
 
-      await waitFor(() => expect(document.querySelector('.MuiDataGrid-filterIcon')).to.not.be.null);
+      await waitFor(() => expect(document.querySelector('.MuiDataGrid-filterIcon')).to.not.equal(null));
       const t1 = performance.now();
       const time = Math.round(t1 - t0);
       expect(time).to.be.lessThan(100);
