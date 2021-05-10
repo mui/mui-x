@@ -52,7 +52,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 ### Core
 
 - [core] Add security policy (#1588) @oliviertassinari
-- [core] Improve GridApi type structure (#1566) @oliviertassinari
+- [core] Improve `GridApi` type structure (#1566) @oliviertassinari
 - [core] Simplify component type (#1552) @oliviertassinari
 - [core] Update monorepo (#1530) @oliviertassinari
 - [core] Increase timeout on jsdom (#1532) @oliviertassinari
