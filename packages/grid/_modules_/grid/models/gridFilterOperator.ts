@@ -10,6 +10,6 @@ export interface GridFilterOperator {
     filterItem: GridFilterItem,
     column: any,
   ) => null | ((params: GridCellParams) => boolean);
-  InputComponent: React.ComponentType<GridFilterInputValueProps>;
+  InputComponent: React.JSXElementConstructor<GridFilterInputValueProps>;
   InputComponentProps?: Record<string, any>;
 }

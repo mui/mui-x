@@ -11,10 +11,10 @@ The component leverages the power of React and TypeScript, to provide the best U
 
 ## Overview
 
-Data tables display information in a grid-like format of rows and columns. They organize information in a way that’s easy to scan so that users can look for patterns and insights. The data grid comes in 2 versions:
+Data tables display information in a grid-like format of rows and columns. They organize information in a way that’s easy to scan so that users can look for patterns and insights. The data grid comes in 2 versions, both in Material-UI X:
 
-- `DataGrid` **MIT licensed** as part of the community edition. It's an extension of `@material-ui/core`.
-- `XGrid` **Commercially licensed** as part of the X product line offering.
+- `DataGrid` **MIT licensed** as part of the Community plan.
+- `XGrid` **Commercially licensed** as part of Pro and Premium plans.
 
 The features only available in the commercial version are suffixed with a <span class="pro"></span> icon.
 You can check the [feature comparison](/components/data-grid/getting-started/#feature-comparison) for more details.

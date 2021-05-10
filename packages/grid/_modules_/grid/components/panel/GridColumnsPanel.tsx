@@ -46,7 +46,8 @@ export function GridColumnsPanel() {
   const toggleColumn = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       const { name } = event.target as HTMLInputElement;
-      apiRef!.current.toggleColumn(name);
+      const column = apiRef!.current.getColumnFromField(name);
+      apiRef!.current.setColumnVisibility(name, !!column.hide);
     },
     [apiRef],
   );
