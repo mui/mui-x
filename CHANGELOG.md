@@ -53,7 +53,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [core] Improve GridApi type structure (#1566) @oliviertassinari
 - [core] Simplify component type (#1552) @oliviertassinari
 - [core] Update monorepo (#1530) @oliviertassinari
-- [core] Increase timeout on jsdom (#1532) @oliviertassinari"
+- [core] Increase timeout on jsdom (#1532) @oliviertassinari
 
 ## [4.0.0-alpha.27](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.26...v4.0.0-alpha.27)
 
