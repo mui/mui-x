@@ -83,11 +83,19 @@ function linkify(text, apisToGenerate, format: 'markdown' | 'html') {
 }
 
 function generateProperties(api: Api, apisToGenerate) {
-  let text = `## Properties
-  
-  
-  | Name | Type | Default | Description |
-  |:-----|:-----|:--------|:------------|\n`;
+  const hasDefaultValue = api.properties.reduce((acc, propertyReflection) => {
+    return acc || !!propertyReflection.comment?.hasTag('default');
+  }, false);
+
+  const headers = hasDefaultValue
+    ? `
+| Name | Type | Default | Description |
+|:-----|:-----|:--------|:------------|`
+    : `
+| Name | Type | Description |
+|:-----|:-----|:------------|`;
+
+  let text = `## Properties\n\n${headers}\n`;
 
   api.properties.forEach((propertyReflection) => {
     let name = propertyReflection.name;
@@ -95,7 +103,7 @@ function generateProperties(api: Api, apisToGenerate) {
     const description = linkify(comment?.shortText || '', apisToGenerate, 'markdown');
 
     if (propertyReflection.flags.isOptional) {
-      name = `<span class="prop-name optional">${name}<abbr title="optional">?</abbr></span>`;
+      name = `<span class="prop-name optional">${name}<sup><abbr title="optional">?</abbr></sup></span>`;
     } else {
       name = `<span class="prop-name">${name}</span>`;
     }
@@ -110,7 +118,11 @@ function generateProperties(api: Api, apisToGenerate) {
       generateType(propertyReflection.type),
     )}</span>`;
 
-    text += `| ${name} | ${type} | ${defaultValue} | ${escapeCell(description)} |\n`;
+    if (hasDefaultValue) {
+      text += `| ${name} | ${type} | ${defaultValue} | ${escapeCell(description)} |\n`;
+    } else {
+      text += `| ${name} | ${type} | ${escapeCell(description)} |\n`;
+    }
   });
 
   return text;
@@ -242,7 +254,7 @@ Page.getInitialProps = () => {
     console.log('Built API docs for', api.name);
   });
 
-  const events = extractEvents(project, apisToGenerate);
+  const events = extractEvents(project!, apisToGenerate);
 
   writePrettifiedFile(
     path.resolve(workspaceRoot, 'docs/src/pages/components/data-grid/events/events.json'),
