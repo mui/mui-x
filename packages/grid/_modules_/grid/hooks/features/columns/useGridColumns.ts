@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   GRID_COLUMNS_UPDATED,
   GRID_COLUMN_ORDER_CHANGE,
-  GRID_COLUMN_RESIZE_COMMITED,
+  GRID_COLUMN_RESIZE_COMMITTED,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
@@ -207,7 +207,7 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
       const column = apiRef.current.getColumnFromField(field);
       apiRef.current.updateColumn({ ...column, width });
 
-      apiRef.current.publishEvent(GRID_COLUMN_RESIZE_COMMITED, {
+      apiRef.current.publishEvent(GRID_COLUMN_RESIZE_COMMITTED, {
         element: apiRef.current.getColumnHeaderElement(field),
         colDef: column,
         api: apiRef,
