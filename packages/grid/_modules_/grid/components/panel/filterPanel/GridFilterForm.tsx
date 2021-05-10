@@ -211,14 +211,14 @@ export function GridFilterForm(props: GridFilterFormProps) {
         </Select>
       </FormControl>
       <FormControl variant="standard" className={classes.filterValueInput}>
-        {currentColumn &&
-          currentOperator &&
-          React.createElement(currentOperator.InputComponent, {
-            apiRef,
-            item,
-            applyValue: applyFilterChanges,
-            ...currentOperator.InputComponentProps,
-          })}
+        {currentColumn && currentOperator && (
+          <currentOperator.InputComponent
+            apiRef={apiRef}
+            item={item}
+            applyValue={applyFilterChanges}
+            {...currentOperator.InputComponentProps}
+          />
+        )}
       </FormControl>
     </div>
   );

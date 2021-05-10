@@ -109,35 +109,35 @@ Api of the `components` props of type `GridSlotsComponent`
 
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
-| <span class="prop-name">Checkbox</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">Checkbox</span> | Checkbox component used in the grid for both header and cells. Default it uses the Material UI core Checkbox component.|
-| <span class="prop-name">ColumnMenu</span> | <span class="prop-type">React.ElementType&lt;GridColumnMenuProps></span> | <span class="prop-type">GridColumnMenu</span> | Column menu component rendered by clicking on the 3 dots "kebab" icon in column headers.|
-| <span class="prop-name">ColumnsPanel</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">ColumnsPanel</span> | GridColumns panel component rendered when clicking the columns button.|
-| <span class="prop-name">ErrorOverlay</span> | <span class="prop-type">React.ElementType&lt;ErrorOverlayProps></span> | <span class="prop-type">ErrorOverlay</span> | Error overlay component rendered above the grid when an error is caught.|
-| <span class="prop-name">FilterPanel</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">FilterPanel</span> | Filter panel component rendered when clicking the filter button.|
-| <span class="prop-name">Footer</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">GridFooter</span> | Footer component rendered at the bottom of the grid viewport.|
-| <span class="prop-name">Toolbar</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">GridToolbar</span> | Toolbar component rendered above the grid column header bar.|
-| <span class="prop-name">PreferencesPanel</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">PreferencesPanel</span> | PreferencesPanel component that renders the ColumnSelector or FilterPanel within a Panel component.|
-| <span class="prop-name">LoadingOverlay</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">LoadingOverlay</span> | Loading overlay component rendered when the grid is in a loading state.|
-| <span class="prop-name">NoResultsOverlay</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">NoResultsOverlay </span> | No results overlay component rendered when the grid has no results after filtering.|
-| <span class="prop-name">NoRowsOverlay</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">NoRowsOverlay</span> | No rows overlay component rendered when the grid has no rows.|
-| <span class="prop-name">Pagination</span> | <span class="prop-type">React.ElementType</span> | <span class="prop-type">Pagination</span> | Pagination component rendered in the grid footer by default.|
-| <span class="prop-name">Panel</span> | <span class="prop-type">React.ElementType&lt;GridPanelProps></span> | <span class="prop-type">Panel</span> | Panel component wrapping the filters and columns panels. |
+| <span class="prop-name">Checkbox</span> | <span class="prop-type">elementType</span> | <span class="prop-type">Checkbox</span> | Checkbox component used in the grid for both header and cells. Default it uses the Material UI core Checkbox component.|
+| <span class="prop-name">ColumnMenu</span> | <span class="prop-type">elementType&lt;GridColumnMenuProps></span> | <span class="prop-type">GridColumnMenu</span> | Column menu component rendered by clicking on the 3 dots "kebab" icon in column headers.|
+| <span class="prop-name">ColumnsPanel</span> | <span class="prop-type">elementType</span> | <span class="prop-type">ColumnsPanel</span> | GridColumns panel component rendered when clicking the columns button.|
+| <span class="prop-name">ErrorOverlay</span> | <span class="prop-type">elementType&lt;ErrorOverlayProps></span> | <span class="prop-type">ErrorOverlay</span> | Error overlay component rendered above the grid when an error is caught.|
+| <span class="prop-name">FilterPanel</span> | <span class="prop-type">elementType</span> | <span class="prop-type">FilterPanel</span> | Filter panel component rendered when clicking the filter button.|
+| <span class="prop-name">Footer</span> | <span class="prop-type">elementType</span> | <span class="prop-type">GridFooter</span> | Footer component rendered at the bottom of the grid viewport.|
+| <span class="prop-name">Toolbar</span> | <span class="prop-type">elementType</span> | <span class="prop-type">GridToolbar</span> | Toolbar component rendered above the grid column header bar.|
+| <span class="prop-name">PreferencesPanel</span> | <span class="prop-type">elementType</span> | <span class="prop-type">PreferencesPanel</span> | PreferencesPanel component that renders the ColumnSelector or FilterPanel within a Panel component.|
+| <span class="prop-name">LoadingOverlay</span> | <span class="prop-type">elementType</span> | <span class="prop-type">LoadingOverlay</span> | Loading overlay component rendered when the grid is in a loading state.|
+| <span class="prop-name">NoResultsOverlay</span> | <span class="prop-type">elementType</span> | <span class="prop-type">NoResultsOverlay </span> | No results overlay component rendered when the grid has no results after filtering.|
+| <span class="prop-name">NoRowsOverlay</span> | <span class="prop-type">elementType</span> | <span class="prop-type">NoRowsOverlay</span> | No rows overlay component rendered when the grid has no rows.|
+| <span class="prop-name">Pagination</span> | <span class="prop-type">elementType</span> | <span class="prop-type">Pagination</span> | Pagination component rendered in the grid footer by default.|
+| <span class="prop-name">Panel</span> | <span class="prop-type">elementType&lt;GridPanelProps></span> | <span class="prop-type">Panel</span> | Panel component wrapping the filters and columns panels. |
 
 ### Icons Slots
 
 | Name | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
-| <span class="prop-name">ColumnMenuIcon</span> | <span class="prop-type">React.ElementType </span> | <span class="prop-type">TripleDotsVerticalIcon</span> | Icon displayed on the side of the column header title to display the filter input component. |
-| <span class="prop-name">ColumnFilteredIcon</span> | <span class="prop-type">React.ElementType </span> | <span class="prop-type">FilterAltIcon</span> | Icon displayed on the column header menu to show that a filer has been applied to the column. |
-| <span class="prop-name">ColumnSelectorIcon</span> | <span class="prop-type">React.ElementType </span> | <span class="prop-type">ColumnIcon</span> | Icon displayed on the column menu selector tab. |
-| <span class="prop-name">ColumnSortedAscendingIcon</span> | <span class="prop-type">React.ElementType </span> | <span class="prop-type">ArrowUpwardIcon</span> | Icon displayed on the side of the column header title when sorted in Ascending order. |
-| <span class="prop-name">ColumnSortedDescendingIcon</span> | <span class="prop-type">React.ElementType </span> | <span class="prop-type">ArrowDownwardIcon</span> | Icon displayed on the side of the column header title when sorted in Descending order.|
-| <span class="prop-name">ColumnResizeIcon</span> | <span class="prop-type">React.ElementType </span> | <span class="prop-type">SeparatorIcon</span> |  Icon displayed in between two column headers that allows to resize the column header. |
-| <span class="prop-name">DensityCompactIcon</span> | <span class="prop-type">React.ElementType </span> | <span class="prop-type">ViewHeadlineIcon</span> | Icon displayed on the compact density option in the toolbar. |
-| <span class="prop-name">DensityStandardIcon</span> | <span class="prop-type">React.ElementType </span> | <span class="prop-type">TableRowsIcon</span> | Icon displayed on the standard density option in the toolbar. |
-| <span class="prop-name">DensityComfortableIcon</span> | <span class="prop-type">React.ElementType </span> | <span class="prop-type">ViewStreamIcon</span> | Icon displayed on the comfortable density option in the toolbar. |
-| <span class="prop-name">ExportIcon</span> | <span class="prop-type">React.ElementType </span> | <span class="prop-type">GridSaveAltIcon</span> | Icon displayed on the export button in the toolbar. |
-| <span class="prop-name">OpenFilterButtonIcon</span> | <span class="prop-type">React.ElementType </span> | <span class="prop-type">FilterListIcon</span> | Icon displayed on the open filter button present in the toolbar by default. |
+| <span class="prop-name">ColumnMenuIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">TripleDotsVerticalIcon</span> | Icon displayed on the side of the column header title to display the filter input component. |
+| <span class="prop-name">ColumnFilteredIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">FilterAltIcon</span> | Icon displayed on the column header menu to show that a filer has been applied to the column. |
+| <span class="prop-name">ColumnSelectorIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">ColumnIcon</span> | Icon displayed on the column menu selector tab. |
+| <span class="prop-name">ColumnSortedAscendingIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">ArrowUpwardIcon</span> | Icon displayed on the side of the column header title when sorted in Ascending order. |
+| <span class="prop-name">ColumnSortedDescendingIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">ArrowDownwardIcon</span> | Icon displayed on the side of the column header title when sorted in Descending order.|
+| <span class="prop-name">ColumnResizeIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">SeparatorIcon</span> |  Icon displayed in between two column headers that allows to resize the column header. |
+| <span class="prop-name">DensityCompactIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">ViewHeadlineIcon</span> | Icon displayed on the compact density option in the toolbar. |
+| <span class="prop-name">DensityStandardIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">TableRowsIcon</span> | Icon displayed on the standard density option in the toolbar. |
+| <span class="prop-name">DensityComfortableIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">ViewStreamIcon</span> | Icon displayed on the comfortable density option in the toolbar. |
+| <span class="prop-name">ExportIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">GridSaveAltIcon</span> | Icon displayed on the export button in the toolbar. |
+| <span class="prop-name">OpenFilterButtonIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">FilterListIcon</span> | Icon displayed on the open filter button present in the toolbar by default. |
 
 ## CSS
 
