@@ -21,7 +21,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [XGrid] Rename apiRef `toggleColumn` method for consistency (#1578) @DanailH
 
   ```diff
-  -toggleColumn: (field: string, forceHide?: boolean) => void;
+  -apiRef.current.toggleColumn: (field: string, forceHide?: boolean) => void;
   +apiRef.current.setColumnVisibility: (field: string, isVisible: boolean) => void;
   ```
 
