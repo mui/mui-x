@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.28](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.27...v4.0.0-alpha.28)
+
+_May 10, 2021_
+
+Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🇹🇷 Add trTR locale (#1446) @simsek97
+- 🎁 Add support for checkbox component slot (#1528) @ZeeshanTamboli
+- ⚡️ Add `onColumnVisibilityChange` prop (#1578) @DanailH
+- 🐞 Bugfixes
+
+### @material-ui/x-grid@v4.0.0-alpha.28 / @material-ui/data-grid@v4.0.0-alpha.28
+
+#### Breaking changes
+
+- [XGrid] Rename apiRef `toggleColumn` method for consistency (#1578) @DanailH
+
+  ```diff
+  -apiRef.current.toggleColumn: (field: string, forceHide?: boolean) => void;
+  +apiRef.current.setColumnVisibility: (field: string, isVisible: boolean) => void;
+  ```
+
+- [XGrid] Fix event typo (#1574) @DanailH
+
+  ```diff
+  -import { GRID_COLUMN_RESIZE_COMMITED } from '@material-ui/x-grid';
+  +import { GRID_COLUMN_RESIZE_COMMITTED } from '@material-ui/x-grid';
+  ```
+
+#### Changes
+
+- [DataGrid] Add Turkish (trTR) locale (#1526) @simsek97
+- [DataGrid] Add `onColumnVisibilityChange` prop (#1578) @DanailH
+- [DataGrid] Fix date input crash (#1570) @dtassone
+- [DataGrid] Fix resulted filter data shows blank screen during pagination (#1571) @ZeeshanTamboli
+- [DataGrid] Support Checkbox component slot (#1528) @ZeeshanTamboli
+- [DataGrid] Fix column cell and row cell focus style (#1575) @DanailH
+
+### Docs
+
+- [docs] Fix Feature comparison 404 links (#1525) @ZeeshanTamboli
+- [docs] Fix focus isn't set on the text box in `Edit using external button` demo (#1515) @ZeeshanTamboli
+- [docs] Fix typo of `onColumnResizeCommitted` prop (#1563) @ZeeshanTamboli
+- [docs] Header convention for controllable prop (#1531) @oliviertassinari
+- [docs] Fix errors in the docs (#1585) @oliviertassinari
+
+### Core
+
+- [core] Add security policy (#1588) @oliviertassinari
+- [core] Improve `GridApi` type structure (#1566) @oliviertassinari
+- [core] Simplify component type (#1552) @oliviertassinari
+- [core] Update monorepo (#1530) @oliviertassinari
+- [core] Increase timeout on jsdom (#1532) @oliviertassinari
+
 ## [4.0.0-alpha.27](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.26...v4.0.0-alpha.27)
 
 _Apr 30, 2021_
