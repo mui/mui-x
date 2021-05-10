@@ -1,4 +1,4 @@
-# API Reference
+# Data Grid - API Reference
 
 <p class="description">This page contains an index to the most important APIs of the data grid</p>
 
