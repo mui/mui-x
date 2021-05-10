@@ -40,6 +40,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [DataGrid] Fix event typo (#1574) @DanailH
 - [DataGrid] Fix resulted filter data shows blank screen during pagination (#1571) @ZeeshanTamboli
 - [DataGrid] Support Checkbox component slot (#1528) @ZeeshanTamboli
+- [DataGrid] Fix column cell and row cell focus style (#1575) @DanailH
 
 ### Docs
 
@@ -47,6 +48,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [docs] Fix focus isn't set on the text box in `Edit using external button` demo (#1515) @ZeeshanTamboli
 - [docs] Fix typo of `onColumnResizeCommitted` prop (#1563) @ZeeshanTamboli
 - [docs] Header convention for controllable prop (#1531) @oliviertassinari
+- [docs] Fix errors in the docs (#1585) @oliviertassinari
 
 ### Core
 
