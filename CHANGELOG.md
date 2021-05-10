@@ -18,7 +18,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
 #### Breaking changes
 
-- [XGrid] apiRef `toggleColumn` method change
+- [XGrid] Rename apiRef `toggleColumn` method for consistency (#1578) @DanailH
 
   ```diff
   -toggleColumn: (field: string, forceHide?: boolean) => void;
