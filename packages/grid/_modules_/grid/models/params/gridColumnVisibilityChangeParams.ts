@@ -3,6 +3,10 @@
  */
 export interface GridColumnVisibilityChangeParams {
   /**
+   * The field of the column which visibility changed.
+   */
+  field: string;
+  /**
    * The column of the current header component.
    */
   colDef: any;

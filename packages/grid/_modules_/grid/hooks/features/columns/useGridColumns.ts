@@ -176,6 +176,7 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
       forceUpdate();
 
       apiRef.current.publishEvent(GRID_COLUMN_VISIBILITY_CHANGE, {
+        field,
         colDef: updatedCol,
         api: apiRef,
         isVisible,
