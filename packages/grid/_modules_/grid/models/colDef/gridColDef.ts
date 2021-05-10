@@ -38,12 +38,12 @@ export interface GridColDef {
    */
   width?: number;
   /**
-   * If set, it indicates that a column has fluid width. Range [0, ∞].
+   * If set, it indicates that a column has fluid width. Range [0, ∞).
    */
   flex?: number;
   /**
    * If `true`, hide the column.
-   * @default false;
+   * @default false
    */
   hide?: boolean;
   /**
@@ -67,7 +67,7 @@ export interface GridColDef {
   sortComparator?: GridComparatorFn;
   /**
    * Type allows to merge this object with a default definition [[GridColDef]].
-   * @default string
+   * @default 'string'
    */
   type?: GridColType;
   /**
