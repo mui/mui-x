@@ -194,6 +194,35 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues()).to.deep.equal(['Nike 1']);
     });
 
+    it('should show filtered data if the user applies filter on an intermediate page and the resulted filter data is less than the rows per page', () => {
+      const TestCasePaginationFilteredData = (props) => {
+        const data = useData(200, 10);
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid columns={data.columns} rows={data.rows} pagination {...props} />
+          </div>
+        );
+      };
+
+      render(
+        <TestCasePaginationFilteredData
+          page={3}
+          pageSize={25}
+          filterModel={{
+            items: [
+              {
+                columnField: 'currencyPair',
+                value: 'BTCUSD',
+                operatorValue: 'equals',
+              },
+            ],
+          }}
+        />,
+      );
+      expect(getColumnValues(1)).to.include('BTCUSD');
+    });
+
     describe('prop: autoPageSize', () => {
       it('should always render the same amount of rows and fit the viewport', () => {
         const TestCaseAutoPageSize = (props: { nbRows: number; height?: number }) => {

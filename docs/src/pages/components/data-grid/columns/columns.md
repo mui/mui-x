@@ -85,6 +85,8 @@ Alternatively, to disable all columns resize, set the prop `disableColumnResize=
 
 {{"demo": "pages/components/data-grid/columns/ColumnSizingGrid.js", "disableAd": true, "bg": "inline"}}
 
+To capture changes of a column width during resizing use `onColumnResize` or `onColumnResizeCommitted`.
+
 ### Value getter
 
 Sometimes a column might not have a corresponding value, or you might want to render a combination of different fields.

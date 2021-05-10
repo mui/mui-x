@@ -387,7 +387,7 @@ export const GRID_COLUMN_RESIZE = 'columnResize';
  * Fired when a column is resized. Called with a [[GridColumnResizeParams]] object.
  * @event
  */
-export const GRID_COLUMN_RESIZE_COMMITED = 'columnResizeCommited';
+export const GRID_COLUMN_RESIZE_COMMITTED = 'columnResizeCommitted';
 
 /**
  * Fired when the user starts resizing a column. Called with an object `{ field: string }`.
@@ -453,3 +453,9 @@ export const GRID_FILTER_MODEL_CHANGE = 'filterModelChange';
  * @event
  */
 export const GRID_STATE_CHANGE = 'stateChange';
+
+/**
+ * Fired when a column visibility changes. Called with a [[GridColumnVisibilityChangeParams]] object.
+ * @event
+ */
+export const GRID_COLUMN_VISIBILITY_CHANGE = 'columnVisibilityChange';
