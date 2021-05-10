@@ -18,14 +18,14 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
 #### Breaking changes
 
-- [XGrid] apiRef `toggleColumn` method change
+- [XGrid] Rename apiRef `toggleColumn` method for consistency (#1578) @DanailH
 
   ```diff
-  -toggleColumn: (field: string, forceHide?: boolean) => void;
-  +setColumnVisibility: (field: string, isVisible: boolean) => void;
+  -apiRef.current.toggleColumn: (field: string, forceHide?: boolean) => void;
+  +apiRef.current.setColumnVisibility: (field: string, isVisible: boolean) => void;
   ```
 
-- [XGrid] Fix event typo
+- [XGrid] Fix event typo (#1574) @DanailH
 
   ```diff
   -import { GRID_COLUMN_RESIZE_COMMITED } from '@material-ui/x-grid';
@@ -37,7 +37,6 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [DataGrid] Add Turkish (trTR) locale (#1526) @simsek97
 - [DataGrid] Add `onColumnVisibilityChange` prop (#1578) @DanailH
 - [DataGrid] Fix date input crash (#1570) @dtassone
-- [DataGrid] Fix event typo (#1574) @DanailH
 - [DataGrid] Fix resulted filter data shows blank screen during pagination (#1571) @ZeeshanTamboli
 - [DataGrid] Support Checkbox component slot (#1528) @ZeeshanTamboli
 - [DataGrid] Fix column cell and row cell focus style (#1575) @DanailH
@@ -56,7 +55,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [core] Improve GridApi type structure (#1566) @oliviertassinari
 - [core] Simplify component type (#1552) @oliviertassinari
 - [core] Update monorepo (#1530) @oliviertassinari
-- [core] Increase timeout on jsdom (#1532) @oliviertassinari"
+- [core] Increase timeout on jsdom (#1532) @oliviertassinari
 
 ## [4.0.0-alpha.27](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.26...v4.0.0-alpha.27)
 
