@@ -47,7 +47,7 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
       size="small"
       tabIndex={-1}
     >
-      <FilteredColumnIconElement fontSize="small" />
+      <FilteredColumnIconElement className="MuiDataGrid-filterIcon" fontSize="small" />
     </IconButton>
   );
 
