@@ -94,8 +94,8 @@ function generateProperties(api: Api, apisToGenerate) {
     const comment = propertyReflection.comment;
     const description = linkify(comment?.shortText || '', apisToGenerate, 'markdown');
 
-    if (!propertyReflection.flags.isOptional) {
-      name = `<span class="prop-name required">${name}<abbr title="required">*</abbr></span>`;
+    if (propertyReflection.flags.isOptional) {
+      name = `<span class="prop-name optional">${name}<abbr title="optional">?</abbr></span>`;
     } else {
       name = `<span class="prop-name">${name}</span>`;
     }
