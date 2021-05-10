@@ -37,7 +37,6 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 - [DataGrid] Add Turkish (trTR) locale (#1526) @simsek97
 - [DataGrid] Add `onColumnVisibilityChange` prop (#1578) @DanailH
 - [DataGrid] Fix date input crash (#1570) @dtassone
-- [DataGrid] Fix event typo (#1574) @DanailH
 - [DataGrid] Fix resulted filter data shows blank screen during pagination (#1571) @ZeeshanTamboli
 - [DataGrid] Support Checkbox component slot (#1528) @ZeeshanTamboli
 
