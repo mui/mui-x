@@ -71,11 +71,13 @@
     "@types/enzyme": "^3.10.5",
     "@types/mocha": "^8.0.3",
     "@types/node": "^15.0.1",
+    "@types/prettier": "^2.2.3",
     "@types/react": "^17.0.1",
     "@types/react-dom": "^17.0.0",
     "@types/requestidlecallback": "^0.3.1",
     "@types/sinon": "^10.0.0",
     "@types/styled-components": "^5.0.1",
+    "@types/yargs": "^16.0.1",
     "@typescript-eslint/eslint-plugin": "^4.11.1",
     "@typescript-eslint/parser": "^4.11.1",
     "argos-cli": "^0.3.0",
@@ -128,9 +130,11 @@
     "stylelint": "^13.7.2",
     "stylelint-config-standard": "^22.0.0",
     "stylelint-processor-styled-components": "^1.10.0",
+    "typedoc": "^0.20.36",
     "typescript": "^4.1.2",
     "webpack": "^4.41.0",
     "webpack-cli": "^4.6.0",
+    "yargs": "^17.0.1",
     "yarn-deduplicate": "^3.0.0"
   },
   "setupFiles": [
@@ -146,12 +150,5 @@
     "nohoist": [
       "**/@material-ui/monorepo"
     ]
-  },
-  "dependencies": {
-    "@types/prettier": "^2.2.3",
-    "@types/yargs": "^16.0.1",
-    "remark": "^13.0.0",
-    "typedoc": "^0.20.36",
-    "yargs": "^16.2.0"
   }
 }
