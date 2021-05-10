@@ -22,7 +22,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 
   ```diff
   -toggleColumn: (field: string, forceHide?: boolean) => void;
-  +setColumnVisibility: (field: string, isVisible: boolean) => void;
+  +apiRef.current.setColumnVisibility: (field: string, isVisible: boolean) => void;
   ```
 
 - [XGrid] Fix event typo (#1574) @DanailH
