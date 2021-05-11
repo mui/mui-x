@@ -20,7 +20,7 @@ import { GridApiContext } from '../GridApiContext';
 
 const defaultTheme = createMuiTheme();
 const useStyles = makeStyles(
-  (theme) => ({
+  (theme: Theme) => ({
     list: {
       margin: theme.spacing(1, 1, 0.5),
       padding: theme.spacing(0, 1),
