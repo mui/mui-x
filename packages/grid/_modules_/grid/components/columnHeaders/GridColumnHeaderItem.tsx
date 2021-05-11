@@ -64,6 +64,7 @@ export const GridColumnHeaderItem = React.memo(
       showColumnRightBorder,
       disableColumnResize,
       disableColumnMenu,
+      disableColumnFilter,
     } = options;
     const isColumnSorted = sortDirection != null;
     // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
@@ -146,7 +147,10 @@ export const GridColumnHeaderItem = React.memo(
           index={sortIndex}
           hide={column.hideSortIcons}
         />
-        <ColumnHeaderFilterIcon counter={filterItemsCounter} options={options} />
+        <ColumnHeaderFilterIcon
+          counter={filterItemsCounter}
+          disableColumnFilter={disableColumnFilter}
+        />
       </React.Fragment>
     );
     const columnMenuIconButton = <ColumnHeaderMenuIcon column={column} open={columnMenuOpen} />;

@@ -5,15 +5,14 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { GridApiContext } from '../GridApiContext';
-import { GridOptions } from '../../models/gridOptions';
 
 export interface ColumnHeaderFilterIconProps {
   counter?: number;
-  options: GridOptions;
+  disableColumnFilter?: boolean;
 }
 
 export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
-  const { counter, options } = props;
+  const { counter, disableColumnFilter } = props;
   const apiRef = React.useContext(GridApiContext);
 
   const FilteredColumnIconElement = apiRef!.current.components.ColumnFilteredIcon!;
@@ -36,7 +35,7 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
     [apiRef],
   );
 
-  if (!counter || options.disableColumnFilter) {
+  if (!counter || disableColumnFilter) {
     return null;
   }
 
