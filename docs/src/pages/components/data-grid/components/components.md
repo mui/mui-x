@@ -7,13 +7,52 @@ components: DataGrid, XGrid
 
 <p class="description">The grid is highly customizable. Override components using the <code>components</code> prop.</p>
 
-
 As part of the customization API, the grid allows you to replace and override nested components with the `components` prop.
-The prop accepts an object of type `GridSlotsComponent` and you can get the full list of overridable component [here](/api/data-grid/#slots) .
+The prop accepts an object of type [`GridSlotsComponent`](/api/data-grid/#slots).
+If you wish to pass some props in a custom component, you can do it using the `componentsProps` prop. This prop is of type `GridSlotsComponentsProps`.
 
-## Custom Icons
+As an example, you could override the column menu with some props as below.
+
+```jsx
+<DataGrid
+  rows={rows}
+  columns={columns}
+  components={{
+    ColumnMenu: MyCustomColumnMenu,
+  }}
+  componentsProps={{
+    columnMenu: { background: 'red', counter: rows.length },
+  }}
+/>
+```
+
+**Note** The casing is different between the `components` and `componentsProps` prop.
 
 ## ColumnMenu
+
+As mentioned above, the column menu is a customizable component that can be recomposed easily and customised on each column.
+
+{{"demo": "pages/components/data-grid/components/CustomColumnMenu.js", "bg": "inline"}}
+
+Below is our default `GridColumnMenu`.
+
+```tsx
+export const GridColumnMenu = React.forwardRef<
+  HTMLUListElement,
+  GridColumnMenuProps
+>(function GridColumnMenu(props: GridColumnMenuProps, ref) {
+  const { hideMenu, currentColumn } = props;
+
+  return (
+    <GridColumnMenuContainer ref={ref} {...props}>
+      <SortGridMenuItems onClick={hideMenu} column={currentColumn!} />
+      <GridFilterMenuItem onClick={hideMenu} column={currentColumn!} />
+      <HideGridColMenuItem onClick={hideMenu} column={currentColumn!} />
+      <GridColumnsMenuItem onClick={hideMenu} column={currentColumn!} />
+    </GridColumnMenuContainer>
+  );
+});
+```
 
 ## Toolbar
 
@@ -63,3 +102,20 @@ By default, pagination uses the [TablePagination](/components/pagination/#table-
 This demo replaces it with the [Pagination](/components/pagination/) component.
 
 {{"demo": "pages/components/data-grid/components/CustomPaginationGrid.js", "bg": "inline"}}
+
+## Icons
+
+As any component slot, every icon can be customised. However, it is not yet possible to use the `componentsProps` with icons.
+
+{{"demo": "pages/components/data-grid/components/CustomSortIcons.js", "bg": "inline"}}
+
+```jsx
+<DataGrid
+  rows={rows}
+  columns={columns}
+  components={{
+    ColumnSortedDescendingIcon: SortedDescendingIcon,
+    ColumnSortedAscendingIcon: SortedAscendingIcon,
+  }}
+/>
+```
