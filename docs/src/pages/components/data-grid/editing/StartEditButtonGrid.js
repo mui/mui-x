@@ -8,15 +8,20 @@ import {
   randomTraderName,
   randomUpdatedDate,
 } from '@material-ui/x-grid-data-generator';
-import { makeStyles } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    justifyContent: 'center',
-    display: 'flex',
-    borderBottom: `1px solid ${theme.palette.divider}`,
-  },
-}));
+const defaultTheme = createMuiTheme();
+const useStyles = makeStyles(
+  (theme) => ({
+    root: {
+      justifyContent: 'center',
+      display: 'flex',
+      borderBottom: `1px solid ${theme.palette.divider}`,
+    },
+  }),
+  { defaultTheme },
+);
 
 function EditToolbar(props) {
   const { selectedCellParams, apiRef, setSelectedCellParams } = props;

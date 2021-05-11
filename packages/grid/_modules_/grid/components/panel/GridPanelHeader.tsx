@@ -1,14 +1,16 @@
 import * as React from 'react';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import { classnames } from '../../utils/classnames';
 
+const defaultTheme = createMuiTheme();
 const useStyles = makeStyles(
   (theme: Theme) => ({
     root: {
       padding: theme.spacing(1),
     },
   }),
-  { name: 'MuiDataGridPanelHeader' },
+  { name: 'MuiDataGridPanelHeader', defaultTheme },
 );
 
 export function GridPanelHeader(

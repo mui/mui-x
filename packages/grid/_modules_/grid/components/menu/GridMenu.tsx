@@ -3,7 +3,8 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
 import Popper, { PopperProps } from '@material-ui/core/Popper';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 
 type MenuPosition =
   | 'bottom-end'
@@ -20,6 +21,7 @@ type MenuPosition =
   | 'top'
   | undefined;
 
+const defaultTheme = createMuiTheme();
 const useStyles = makeStyles(
   (theme: Theme) => ({
     root: {
@@ -29,7 +31,7 @@ const useStyles = makeStyles(
       },
     },
   }),
-  { name: 'MuiDataGridMenu' },
+  { name: 'MuiDataGridMenu', defaultTheme },
 );
 
 export interface GridMenuProps extends Omit<PopperProps, 'onKeyDown'> {

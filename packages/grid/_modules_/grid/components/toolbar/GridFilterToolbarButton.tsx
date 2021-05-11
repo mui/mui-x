@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import Badge from '@material-ui/core/Badge';
 import Button, { ButtonProps } from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -17,6 +18,7 @@ import { GridTranslationKeys } from '../../models/api/gridLocaleTextApi';
 import { GridFilterItem } from '../../models/gridFilterItem';
 import { GridApiContext } from '../GridApiContext';
 
+const defaultTheme = createMuiTheme();
 const useStyles = makeStyles(
   (theme) => ({
     list: {
@@ -24,7 +26,7 @@ const useStyles = makeStyles(
       padding: theme.spacing(0, 1),
     },
   }),
-  { name: 'MuiDataGridFilterToolbarButton' },
+  { name: 'MuiDataGridFilterToolbarButton', defaultTheme },
 );
 
 export const GridFilterToolbarButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
