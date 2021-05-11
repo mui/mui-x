@@ -87,10 +87,13 @@ export const useStyles = makeStyles(
           lineHeight: null,
           padding: theme.spacing(0, 2),
         },
-        '& .MuiDataGrid-colCell:focus, & .MuiDataGrid-cell:focus': {
-          outline: 'dotted',
+        '& .MuiDataGrid-colCell:focus-within, & .MuiDataGrid-cell:focus-within': {
+          outline: `solid ${muiStyleAlpha(theme.palette.primary.main, 0.5)} 1px`,
           outlineWidth: 1,
           outlineOffset: -2,
+        },
+        '& .MuiDataGrid-colCell:focus, & .MuiDataGrid-cell:focus': {
+          outline: `solid ${theme.palette.primary.main} 1px`,
         },
         '& .MuiDataGrid-colCellCheckbox, & .MuiDataGrid-cellCheckbox': {
           padding: 0,
@@ -229,16 +232,16 @@ export const useStyles = makeStyles(
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
           borderBottom: `1px solid ${borderColor}`,
-          '&:focus-within': {
-            outline: `solid ${theme.palette.primary.main} 1px`,
-            outlineOffset: '-1px',
-          },
         },
         '& .MuiDataGrid-cell.MuiDataGrid-cellEditing': {
           padding: 1,
           display: 'flex',
           boxShadow: theme.shadows[2],
           backgroundColor: theme.palette.background.paper,
+          '&:focus-within': {
+            outline: `solid ${theme.palette.primary.main} 1px`,
+            outlineOffset: '-1px',
+          },
         },
         '& .MuiDataGrid-editCellInputBase': {
           ...theme.typography.body2,

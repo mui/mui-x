@@ -29,7 +29,7 @@ export function GridEditBooleanCell(
   const [valueState, setValueState] = React.useState(value);
 
   const handleChange = React.useCallback(
-    (event) => {
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = event.target.checked;
       const editProps = { value: newValue };
       setValueState(newValue);

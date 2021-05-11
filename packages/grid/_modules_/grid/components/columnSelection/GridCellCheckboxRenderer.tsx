@@ -12,8 +12,8 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
     const apiRef = React.useContext(GridApiContext);
     const tabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
-      apiRef!.current.selectRow(id, checked, true);
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      apiRef!.current.selectRow(id, event.target.checked, true);
     };
     const tabIndex =
       tabIndexState !== null &&

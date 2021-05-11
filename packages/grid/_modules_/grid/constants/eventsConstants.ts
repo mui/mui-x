@@ -68,7 +68,7 @@ export const GRID_ROWS_SCROLL_END = 'scroll:rowEnd';
 
 export const GRID_COLUMN_SEPARATOR_MOUSE_DOWN = 'columnSeparatorMouseDown';
 export const GRID_COLUMN_RESIZE = 'columnResize';
-export const GRID_COLUMN_RESIZE_COMMITED = 'columnResizeCommited';
+export const GRID_COLUMN_RESIZE_COMMITTED = 'columnResizeCommitted';
 export const GRID_COLUMN_RESIZE_START = 'columnResizeStart';
 export const GRID_COLUMN_RESIZE_STOP = 'columnResizeStop';
 
@@ -83,3 +83,9 @@ export const GRID_SORT_MODEL_CHANGE = 'sortModelChange';
 export const GRID_FILTER_MODEL_CHANGE = 'filterModelChange';
 
 export const GRID_STATE_CHANGE = 'stateChange';
+
+/**
+ * Fired when a column visibility changes. Called with a [[GridColumnVisibilityChangeParams]] object.
+ * @event
+ */
+export const GRID_COLUMN_VISIBILITY_CHANGE = 'columnVisibilityChange';

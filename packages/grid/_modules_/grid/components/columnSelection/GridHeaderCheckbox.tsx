@@ -33,7 +33,8 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
       setIsIndeterminate(isNewIndeterminate);
     }, [isIndeterminate, totalRows, totalSelectedRows]);
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const checked = event.target.checked;
       setChecked(checked);
       apiRef!.current.selectRows(visibleRowIds, checked);
     };
