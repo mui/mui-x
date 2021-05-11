@@ -46,7 +46,7 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
       setValueState(newValue);
       api.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE, { id, field, props: editProps }, event);
     },
-    [api, field, id, isDateColumn],
+    [api, field, id, isDateColumn, isDateTimeColumn],
   );
 
   React.useEffect(() => {
