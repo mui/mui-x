@@ -11,6 +11,11 @@ export function isDateValid(value: Date): boolean {
   return !Number.isNaN(value.getTime());
 }
 
+export function formatDateString(value: string): string {
+  const nonStandardDate = value.split('-').join('/');
+  return nonStandardDate;
+}
+
 export function formatDateToLocalInputDate({
   value,
   withTime,
