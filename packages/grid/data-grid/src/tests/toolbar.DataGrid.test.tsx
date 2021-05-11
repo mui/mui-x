@@ -14,11 +14,14 @@ import {
   COMPACT_DENSITY_FACTOR,
 } from 'packages/grid/_modules_/grid/hooks/features/density/useGridDensity';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<DataGrid /> - Toolbar', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
+    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,
@@ -43,14 +46,7 @@ describe('<DataGrid /> - Toolbar', () => {
     ],
   };
 
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
-
-  describe('Density selector', () => {
+  describe('density selector', () => {
     it('should increase grid density when selecting compact density', () => {
       const rowHeight = 30;
       const { getByText } = render(
@@ -126,7 +122,7 @@ describe('<DataGrid /> - Toolbar', () => {
     });
   });
 
-  describe('Column selector', () => {
+  describe('column selector', () => {
     it('should hide "id" column when hiding it from the column selector', () => {
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>

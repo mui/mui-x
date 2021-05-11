@@ -1,23 +1,20 @@
 {
   "name": "@material-ui/x-license",
-  "version": "4.0.0-alpha.25",
+  "version": "4.0.0-alpha.28",
   "description": "Material-UI X License verification",
   "author": "Material-UI Team",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/x-license.d.ts",
   "scripts": {
-    "precommit": "npm run lint",
-    "build": "rollup -c",
-    "start": "rollup -cw",
-    "lint": "../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../.eslintrc.js",
-    "test": "../../node_modules/.bin/jest --config jest.config.js",
-    "typescript": "tsc -p tsconfig.json"
+    "typescript": "tsc -p tsconfig.json",
+    "build": "rollup -c"
   },
   "files": [
     "dist/*"
   ],
   "license": "See LICENSE file",
+  "sideEffects": false,
   "publishConfig": {
     "access": "public"
   },
@@ -27,7 +24,7 @@
   "dependencies": {
     "@material-ui/utils": "^5.0.0-alpha.14",
     "esm": "^3.2.25",
-    "yargs": "^16.2.0"
+    "yargs": "^17.0.1"
   },
   "peerDependencies": {
     "react": "^17.0.0"
@@ -36,6 +33,6 @@
     "<rootDir>/src/setupTests.js"
   ],
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=12.0.0"
   }
 }

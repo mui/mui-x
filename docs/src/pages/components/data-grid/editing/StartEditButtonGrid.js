@@ -8,9 +8,21 @@ import {
   randomTraderName,
   randomUpdatedDate,
 } from '@material-ui/x-grid-data-generator';
+import { makeStyles } from '@material-ui/core/styles';
 
-function EditToolbar({ buttonLabel, selectedCellParams, apiRef, setButtonLabel }) {
-  const handleButtonClick = React.useCallback(() => {
+const useStyles = makeStyles((theme) => ({
+  root: {
+    justifyContent: 'center',
+    display: 'flex',
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+}));
+
+function EditToolbar(props) {
+  const { selectedCellParams, apiRef, setSelectedCellParams } = props;
+  const classes = useStyles();
+
+  const handleClick = () => {
     if (!selectedCellParams) {
       return;
     }
@@ -19,54 +31,46 @@ function EditToolbar({ buttonLabel, selectedCellParams, apiRef, setButtonLabel }
       const editedCellProps = apiRef.current.getEditCellPropsParams(id, field);
       apiRef.current.commitCellChange(editedCellProps);
       apiRef.current.setCellMode(id, field, 'view');
-      setButtonLabel('Edit');
+      setSelectedCellParams({ ...selectedCellParams, cellMode: 'view' });
     } else {
       apiRef.current.setCellMode(id, field, 'edit');
-      setButtonLabel('Save');
+      setSelectedCellParams({ ...selectedCellParams, cellMode: 'edit' });
     }
-    // Or you can use the editRowModel prop, but I find it easier with apiRef
-  }, [apiRef, selectedCellParams, setButtonLabel]);
+  };
+
+  const handleMouseDown = (event) => {
+    // Keep the focus in the cell
+    event.preventDefault();
+  };
 
   return (
-    <div
-      style={{
-        justifyContent: 'center',
-        display: 'flex',
-        borderBottom: '1px solid rgba(224, 224, 224, 1)',
-      }}
-    >
+    <div className={classes.root}>
       <Button
-        onMouseDown={handleButtonClick}
+        onClick={handleClick}
+        onMouseDown={handleMouseDown}
         disabled={!selectedCellParams}
         color="primary"
       >
-        {buttonLabel}
+        {selectedCellParams?.cellMode === 'edit' ? 'Save' : 'Edit'}
       </Button>
     </div>
   );
 }
 
 EditToolbar.propTypes = {
-  apiRef: PropTypes.any.isRequired,
-  buttonLabel: PropTypes.any.isRequired,
+  apiRef: PropTypes.shape({
+    current: PropTypes.object.isRequired,
+  }).isRequired,
   selectedCellParams: PropTypes.any.isRequired,
-  setButtonLabel: PropTypes.any.isRequired,
+  setSelectedCellParams: PropTypes.func.isRequired,
 };
 
 export default function StartEditButtonGrid() {
   const apiRef = useGridApiRef();
-  const [buttonLabel, setButtonLabel] = React.useState('Edit');
   const [selectedCellParams, setSelectedCellParams] = React.useState(null);
 
   const handleCellClick = React.useCallback((params) => {
     setSelectedCellParams(params);
-
-    const { cellMode } = params;
-    if (cellMode === 'edit') {
-      setButtonLabel('Save');
-    } else {
-      setButtonLabel('Edit');
-    }
   }, []);
 
   const handleDoubleCellClick = React.useCallback((params, event) => {
@@ -75,10 +79,7 @@ export default function StartEditButtonGrid() {
 
   // Prevent from rolling back on escape
   const handleCellKeyDown = React.useCallback((params, event) => {
-    if (
-      params.cellMode === 'edit' &&
-      (event.key === 'Escape' || event.key === 'Delete' || event.key === 'Enter')
-    ) {
+    if (['Escape', 'Delete', 'Backspace', 'Enter'].includes(event.key)) {
       event.stopPropagation();
     }
   }, []);
@@ -106,9 +107,8 @@ export default function StartEditButtonGrid() {
         componentsProps={{
           toolbar: {
             selectedCellParams,
-            buttonLabel,
             apiRef,
-            setButtonLabel,
+            setSelectedCellParams,
           },
         }}
       />

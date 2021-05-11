@@ -1,4 +1,7 @@
 import * as React from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import { green } from '@material-ui/core/colors';
+import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CodeIcon from '@material-ui/icons/Code';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
@@ -106,4 +109,18 @@ export function ColumnMenuComponent(props: GridColumnMenuProps) {
       currentColumn={props.currentColumn}
     />
   );
+}
+
+export function CustomCheckboxComponent(props: CheckboxProps) {
+  const GreenCheckbox = withStyles({
+    root: {
+      color: green[400],
+      '&$checked': {
+        color: green[600],
+      },
+    },
+    checked: {},
+  })((checkboxProps: CheckboxProps) => <Checkbox color="default" {...checkboxProps} />);
+
+  return <GreenCheckbox {...props} />;
 }

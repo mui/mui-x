@@ -26,6 +26,9 @@ import {
 } from './params/gridEditCellParams';
 import { GridRowScrollEndParams } from './params/gridRowScrollEndParams';
 import { GridColumnOrderChangeParams } from './params/gridColumnOrderChangeParams';
+import { GridResizeParams } from './params/gridResizeParams';
+import { GridColumnResizeParams } from './params/gridColumnResizeParams';
+import { GridColumnVisibilityChangeParams } from './params/gridColumnVisibilityChangeParams';
 
 // TODO add multiSortKey
 /**
@@ -135,6 +138,10 @@ export interface GridOptions {
    * Set the filter model of the grid.
    */
   filterModel?: GridFilterModel;
+  /**
+   * Function that applies CSS classes dynamically on rows.
+   */
+  getRowClassName?: (params: GridRowParams) => string;
   /**
    * Set the height in pixel of the column headers in the grid.
    * @default 56
@@ -302,6 +309,21 @@ export interface GridOptions {
    */
   onColumnOrderChange?: (param: GridColumnOrderChangeParams) => void;
   /**
+   * Callback fired when a column is resizing.
+   * @param param With all properties from [[GridColumnResizeParams]].
+   */
+  onColumnResize?: (param: GridColumnResizeParams) => void;
+  /**
+   * Callback fired when a column is resized.
+   * @param param With all properties from [[GridColumnResizeParams]].
+   */
+  onColumnResizeCommitted?: (param: GridColumnResizeParams) => void;
+  /**
+   * Callback fired when a column visibility changes.
+   * @param param With all properties from [[GridColumnVisibilityChangeParams]].
+   */
+  onColumnVisibilityChange?: (param: GridColumnVisibilityChangeParams) => void;
+  /**
    * Callback fired when the Filter model changes before the filters are applied.
    * @param param With all properties from [[GridFilterModelParams]].
    */
@@ -362,6 +384,11 @@ export interface GridOptions {
    * @param param With all properties from [[GridRowSelectedParams]].
    */
   onRowSelected?: (param: GridRowSelectedParams) => void;
+  /**
+   * Callback fired when the grid is resized.
+   * @param param With all properties from [[GridResizeParams]].
+   */
+  onResize?: (param: GridResizeParams) => void;
   /**
    * Callback fired when the selection state of one or multiple rows changes.
    * @param param With all properties from [[SelectionChangeParams]].

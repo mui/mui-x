@@ -43,6 +43,7 @@ export const GRID_ROW_LEAVE = 'rowLeave';
 export const GRID_ROW_EDIT_MODEL_CHANGE = 'editRowModelChange';
 export const GRID_ROW_SELECTED = 'rowSelected';
 
+export const GRID_COLUMN_HEADER_BLUR = 'columnHeaderBlur';
 export const GRID_COLUMN_HEADER_FOCUS = 'columnHeaderFocus';
 export const GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN = 'columnHeaderNavigationKeydown';
 export const GRID_COLUMN_HEADER_KEYDOWN = 'columnHeaderKeydown';
@@ -65,8 +66,11 @@ export const GRID_PAGESIZE_CHANGED = 'pageSizeChange';
 export const GRID_ROWS_SCROLL = 'scrolling:rows';
 export const GRID_ROWS_SCROLL_END = 'scroll:rowEnd';
 
-export const GRID_COL_RESIZE_START = 'colResizing:start';
-export const GRID_COL_RESIZE_STOP = 'colResizing:stop';
+export const GRID_COLUMN_SEPARATOR_MOUSE_DOWN = 'columnSeparatorMouseDown';
+export const GRID_COLUMN_RESIZE = 'columnResize';
+export const GRID_COLUMN_RESIZE_COMMITTED = 'columnResizeCommitted';
+export const GRID_COLUMN_RESIZE_START = 'columnResizeStart';
+export const GRID_COLUMN_RESIZE_STOP = 'columnResizeStop';
 
 export const GRID_COLUMN_ORDER_CHANGE = 'columnOrderChange';
 
@@ -79,3 +83,9 @@ export const GRID_SORT_MODEL_CHANGE = 'sortModelChange';
 export const GRID_FILTER_MODEL_CHANGE = 'filterModelChange';
 
 export const GRID_STATE_CHANGE = 'stateChange';
+
+/**
+ * Fired when a column visibility changes. Called with a [[GridColumnVisibilityChangeParams]] object.
+ * @event
+ */
+export const GRID_COLUMN_VISIBILITY_CHANGE = 'columnVisibilityChange';

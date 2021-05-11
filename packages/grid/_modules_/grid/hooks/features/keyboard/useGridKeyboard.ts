@@ -87,7 +87,7 @@ export const useGridKeyboard = (
 
       apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEYDOWN, params, event);
 
-      const nextCellIndexes = apiRef.current.getState().keyboard.cell!;
+      const nextCellIndexes = apiRef.current.getState().focus.cell!;
       // We select the rows in between
       const rowIds = Array(Math.abs(nextCellIndexes.rowIndex - selectionFromRowIndex) + 1).fill(
         nextCellIndexes.rowIndex > selectionFromRowIndex
@@ -148,6 +148,13 @@ export const useGridKeyboard = (
       if (!isGridCellRoot(document.activeElement)) {
         return;
       }
+      if (event.isPropagationStopped()) {
+        return;
+      }
+      const isEditMode = params.cellMode === 'edit';
+      if (isEditMode) {
+        return;
+      }
 
       if (isSpaceKey(event.key) && event.shiftKey) {
         event.preventDefault();
@@ -184,8 +191,10 @@ export const useGridKeyboard = (
       if (!isGridHeaderCellRoot(document.activeElement)) {
         return;
       }
-
-      if (isSpaceKey(event.key)) {
+      if (event.isPropagationStopped()) {
+        return;
+      }
+      if (isSpaceKey(event.key) && isGridHeaderCellRoot(document.activeElement)) {
         event.preventDefault();
       }
 

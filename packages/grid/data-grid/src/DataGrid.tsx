@@ -45,7 +45,7 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
   ref,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
-  const { className, pageSize: pageSizeProp, ...other } = props;
+  const { className, pageSize: pageSizeProp, classes, ...other } = props;
 
   let pageSize = pageSizeProp;
   if (pageSize && pageSize > MAX_PAGE_SIZE) {
@@ -55,7 +55,7 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
   return (
     <GridComponent
       ref={ref}
-      className={classnames('MuiDataGrid-root', className)}
+      className={classnames('MuiDataGrid-root', classes?.root, className)}
       pageSize={pageSize}
       {...other}
       {...FORCED_PROPS}

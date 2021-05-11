@@ -29,9 +29,16 @@ export interface GridComponentProps extends GridOptionsProp {
    */
   components?: GridSlotsComponent;
   /**
-   * Overrideable components props dynamic passed to the component at rendering.
+   * Overrideable components props dynamically passed to the component at rendering.
    */
   componentsProps?: GridSlotsComponentsProps;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: {
+    /** Styles applied to the root element. */
+    root?: string;
+  };
   /**
    * @ignore
    */

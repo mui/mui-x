@@ -1,14 +1,17 @@
 import * as React from 'react';
 import { createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, GridToolbar } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
+
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Filter', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
+    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,
@@ -29,13 +32,6 @@ describe('<DataGrid /> - Filter', () => {
     columns: [{ field: 'brand' }, { field: 'isPublished', type: 'boolean' }],
   };
 
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
-
   const TestCase = (props: {
     rows?: any[];
     columns?: any[];
@@ -47,6 +43,7 @@ describe('<DataGrid /> - Filter', () => {
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid
+          autoHeight={isJSDOM}
           columns={columns || baselineProps.columns}
           rows={rows || baselineProps.rows}
           filterModel={{
@@ -165,5 +162,37 @@ describe('<DataGrid /> - Filter', () => {
       columns: [{ field: 'country' }],
     });
     expect(getColumnValues()).to.deep.equal(['France', 'UK', 'US']);
+  });
+
+  it('should translate operators dynamically in toolbar without crashing ', () => {
+    const Test = () => {
+      return (
+        <div style={{ height: 400, width: '100%' }}>
+          <DataGrid
+            rows={[
+              {
+                id: 1,
+                quantity: 1,
+              },
+            ]}
+            columns={[{ field: 'quantity', type: 'number', width: 150 }]}
+            filterModel={{
+              items: [
+                {
+                  columnField: 'quantity',
+                  id: 1619547587572,
+                  operatorValue: '=',
+                  value: '1',
+                },
+              ],
+            }}
+            components={{
+              Toolbar: GridToolbar,
+            }}
+          />
+        </div>
+      );
+    };
+    render(<Test />);
   });
 });

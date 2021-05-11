@@ -49,13 +49,19 @@ export interface GridColumnApi {
   /**
    * Allows to toggle a column.
    * @param field
-   * @param forceHide Optional value, if not provided the column will toggle.
+   * @param isVisible
    */
-  toggleColumn: (field: string, forceHide?: boolean) => void;
+  setColumnVisibility: (field: string, isVisible: boolean) => void;
   /**
    * Allows to move a column to another position in the column array.
    * @param field
-   * @param targetIndexPosition .
+   * @param targetIndexPosition
    */
   setColumnIndex: (field: string, targetIndexPosition: number) => void;
+  /**
+   * Allows to set target column width.
+   * @param field
+   * @param width
+   */
+  setColumnWidth: (field: string, width: number) => void;
 }

@@ -35,9 +35,11 @@ export interface GridCellProps {
   value?: GridCellValue;
   width: number;
   cellMode?: GridCellMode;
+  children: React.ReactElement | null;
+  tabIndex: 0 | -1;
 }
 
-export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
+export const GridCell = React.memo((props: GridCellProps) => {
   const {
     align,
     children,
@@ -52,6 +54,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     rowIndex,
     rowId,
     showRightBorder,
+    tabIndex,
     value,
     width,
   } = props;
@@ -59,9 +62,6 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
   const valueToRender = formattedValue == null ? value : formattedValue;
   const cellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = React.useContext(GridApiContext);
-  const currentFocusedCell = apiRef!.current.getState().keyboard.cell;
-  const isCellFocused =
-    (currentFocusedCell && hasFocus) || (rowIndex === 0 && colIndex === 0 && !currentFocusedCell);
 
   const cssClasses = classnames(
     GRID_CELL_CSS_CLASS,
@@ -88,6 +88,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
     },
     [apiRef, field, rowId],
   );
+
   const publishClick = React.useCallback(
     (eventName: string) => (event: React.MouseEvent) => {
       const params = apiRef!.current.getCellParams(rowId, field || '');
@@ -148,7 +149,12 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
       cellRef.current &&
       (!document.activeElement || !cellRef.current!.contains(document.activeElement))
     ) {
-      cellRef.current!.focus();
+      const focusableElement = cellRef.current.querySelector('[tabindex="0"]') as HTMLElement;
+      if (focusableElement) {
+        focusableElement!.focus();
+      } else {
+        cellRef.current!.focus();
+      }
     }
   });
 
@@ -164,8 +170,7 @@ export const GridCell: React.FC<GridCellProps> = React.memo((props) => {
       data-mode={cellMode}
       aria-colindex={colIndex}
       style={style}
-      /* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */
-      tabIndex={isCellFocused ? 0 : -1}
+      tabIndex={tabIndex}
       {...eventsHandlers}
     >
       {children || valueToRender?.toString()}

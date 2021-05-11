@@ -5,7 +5,8 @@ import { GridFilterItemProps } from './GridFilterItemProps';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../../hooks/utils/optionsSelector';
 
-export const HideGridColMenuItem: React.FC<GridFilterItemProps> = ({ column, onClick }) => {
+export const HideGridColMenuItem = (props: GridFilterItemProps) => {
+  const { column, onClick } = props;
   const apiRef = React.useContext(GridApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
   const timeoutRef = React.useRef<any>();
@@ -15,8 +16,8 @@ export const HideGridColMenuItem: React.FC<GridFilterItemProps> = ({ column, onC
       onClick(event);
       // time for the transition
       timeoutRef.current = setTimeout(() => {
-        apiRef!.current.toggleColumn(column?.field, true);
-      }, 10);
+        apiRef!.current.setColumnVisibility(column?.field, false);
+      }, 100);
     },
     [apiRef, column?.field, onClick],
   );

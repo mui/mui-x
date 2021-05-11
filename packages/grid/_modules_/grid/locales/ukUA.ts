@@ -6,6 +6,7 @@ export const ukUAGrid: Partial<GridLocaleText> = {
   // Root
   rootGridLabel: 'сітка',
   noRowsLabel: 'Немає рядків',
+  // noResultsOverlayLabel: 'No results found.',
   errorOverlayDefaultLabel: 'Виявлено помилку.',
 
   // Density selector toolbar button text

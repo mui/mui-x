@@ -7,53 +7,53 @@ export interface GridIconSlotsComponent {
   /**
    * Icon displayed on the boolean cell to represent the true value.
    */
-  BooleanCellTrueIcon?: React.ElementType;
+  BooleanCellTrueIcon?: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the boolean cell to represent the false value.
    */
-  BooleanCellFalseIcon?: React.ElementType;
+  BooleanCellFalseIcon?: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the side of the column header title to display the filter input component.
    */
-  ColumnMenuIcon?: React.ElementType;
+  ColumnMenuIcon?: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the open filter button present in the toolbar by default
    */
-  OpenFilterButtonIcon?: React.ElementType;
+  OpenFilterButtonIcon?: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the column header menu to show that a filer has been applied to the column.
    */
-  ColumnFilteredIcon?: React.ElementType;
+  ColumnFilteredIcon?: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the column menu selector tab.
    */
-  ColumnSelectorIcon?: React.ElementType;
+  ColumnSelectorIcon?: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the side of the column header title when sorted in Ascending order.
    */
-  ColumnSortedAscendingIcon?: React.ElementType;
+  ColumnSortedAscendingIcon?: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the side of the column header title when sorted in Descending order.
    */
-  ColumnSortedDescendingIcon?: React.ElementType;
+  ColumnSortedDescendingIcon?: React.JSXElementConstructor<any>;
   /**
    * Icon displayed in between two column headers that allows to resize the column header.
    */
-  ColumnResizeIcon?: React.ElementType;
+  ColumnResizeIcon?: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the compact density option in the toolbar.
    */
-  DensityCompactIcon?: React.ElementType;
+  DensityCompactIcon?: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the standard density option in the toolbar.
    */
-  DensityStandardIcon?: React.ElementType;
+  DensityStandardIcon?: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the comfortable density option in the toolbar.
    */
-  DensityComfortableIcon?: React.ElementType;
+  DensityComfortableIcon?: React.JSXElementConstructor<any>;
   /**
    * Icon displayed on the open export button present in the toolbar by default.
    */
-  ExportIcon?: React.ElementType;
+  ExportIcon?: React.JSXElementConstructor<any>;
 }

@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { GRID_COLUMNS_UPDATED, GRID_COLUMN_ORDER_CHANGE } from '../../../constants/eventsConstants';
+import {
+  GRID_COLUMNS_UPDATED,
+  GRID_COLUMN_ORDER_CHANGE,
+  GRID_COLUMN_RESIZE_COMMITTED,
+  GRID_COLUMN_VISIBILITY_CHANGE,
+} from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
 import { gridCheckboxSelectionColDef } from '../../../models/colDef/gridCheckboxSelection';
@@ -26,6 +31,7 @@ import {
   gridColumnsMetaSelector,
   visibleGridColumnsSelector,
 } from './gridColumnsSelector';
+import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 
 function updateColumnsWidth(columns: GridColumns, viewportWidth: number) {
   const numberOfFluidColumns = columns.filter((column) => !!column.flex && !column.hide).length;
@@ -160,14 +166,23 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
   const updateColumn = React.useCallback((col: GridColDef) => updateColumns([col]), [
     updateColumns,
   ]);
-  const toggleColumn = React.useCallback(
-    (field: string, hide?: boolean) => {
+
+  const setColumnVisibility = React.useCallback(
+    (field: string, isVisible: boolean) => {
       const col = getColumnFromField(field);
-      const updatedCol = { ...col, hide: hide == null ? !col.hide : hide };
+      const updatedCol = { ...col, hide: !isVisible };
+
       updateColumns([updatedCol]);
       forceUpdate();
+
+      apiRef.current.publishEvent(GRID_COLUMN_VISIBILITY_CHANGE, {
+        field,
+        colDef: updatedCol,
+        api: apiRef,
+        isVisible,
+      });
     },
-    [forceUpdate, getColumnFromField, updateColumns],
+    [apiRef, forceUpdate, getColumnFromField, updateColumns],
   );
 
   const setColumnIndex = React.useCallback(
@@ -196,6 +211,23 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
     [apiRef, gridState.columns, logger, updateState],
   );
 
+  const setColumnWidth = React.useCallback(
+    (field: string, width: number) => {
+      logger.debug(`Updating column ${field} width to ${width}`);
+
+      const column = apiRef.current.getColumnFromField(field);
+      apiRef.current.updateColumn({ ...column, width });
+
+      apiRef.current.publishEvent(GRID_COLUMN_RESIZE_COMMITTED, {
+        element: apiRef.current.getColumnHeaderElement(field),
+        colDef: column,
+        api: apiRef,
+        width,
+      });
+    },
+    [apiRef, logger],
+  );
+
   const colApi: GridColumnApi = {
     getColumnFromField,
     getAllColumns,
@@ -205,8 +237,9 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
     getColumnsMeta,
     updateColumn,
     updateColumns,
-    toggleColumn,
+    setColumnVisibility,
     setColumnIndex,
+    setColumnWidth,
   };
 
   useGridApiMethod(apiRef, colApi, 'ColApi');
@@ -247,4 +280,7 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
     const updatedCols = updateColumnsWidth(currentColumns, gridState.viewportSizes.width);
     apiRef.current.updateColumns(updatedCols);
   }, [apiRef, gridState.viewportSizes.width, logger]);
+
+  // Grid Option Handlers
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_VISIBILITY_CHANGE, options.onColumnVisibilityChange);
 }

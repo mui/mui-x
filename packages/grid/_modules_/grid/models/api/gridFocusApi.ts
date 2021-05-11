@@ -1,6 +1,6 @@
 import { GridCellIndexCoordinates, GridColumnHeaderIndexCoordinates } from '../gridCell';
 
-export interface GridNavigationApi {
+export interface GridFocusApi {
   /**
    * Set the active element to the cell with the indexes.
    * @param indexes

@@ -34,9 +34,10 @@ interface RowCellsProps {
   rowIndex: number;
   showCellRightBorder: boolean;
   cellFocus: GridCellIndexCoordinates | null;
+  cellTabIndex: GridCellIndexCoordinates | null;
 }
 
-export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
+export const GridRowCells = React.memo((props: RowCellsProps) => {
   const {
     columns,
     firstColIdx,
@@ -45,6 +46,7 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
     lastColIdx,
     rowIndex,
     cellFocus,
+    cellTabIndex,
     showCellRightBorder,
   } = props;
   const apiRef = React.useContext(GridApiContext);
@@ -88,7 +90,7 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
       cssClassProp = { cssClass: `${cssClassProp.cssClass} MuiDataGrid-cellEditing` };
     }
 
-    const cellProps: GridCellProps & { children: any } = {
+    const cellProps: GridCellProps = {
       value: cellParams.value,
       field: column.field,
       width: column.width!,
@@ -107,6 +109,12 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
         cellFocus !== null &&
         cellFocus.rowIndex === rowIndex &&
         cellFocus.colIndex === cellParams.colIndex,
+      tabIndex:
+        cellTabIndex !== null &&
+        cellTabIndex.rowIndex === rowIndex &&
+        cellTabIndex.colIndex === cellParams.colIndex
+          ? 0
+          : -1,
     };
 
     return cellProps;

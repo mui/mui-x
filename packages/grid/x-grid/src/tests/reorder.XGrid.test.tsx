@@ -17,11 +17,14 @@ import {
 } from 'test/utils/helperFn';
 import { GridApiRef, useGridApiRef, XGrid } from '@material-ui/x-grid';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<XGrid /> - Reorder', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
+    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,
@@ -34,13 +37,6 @@ describe('<XGrid /> - Reorder', () => {
     ],
     columns: [{ field: 'id' }, { field: 'brand' }],
   };
-
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
 
   describe('Columns', () => {
     it('resizing after columns reorder should respect the new columns order', async () => {

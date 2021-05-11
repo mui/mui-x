@@ -8,13 +8,16 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 import Portal from '@material-ui/core/Portal';
 import { DataGrid } from '@material-ui/data-grid';
-import { getColumnValues } from 'test/utils/helperFn';
+import { getColumnValues, getRow } from 'test/utils/helperFn';
+
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Rows', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
+    autoHeight: isJSDOM,
     rows: [
       {
         clientId: 'c1',
@@ -34,13 +37,6 @@ describe('<DataGrid /> - Rows', () => {
     ],
     columns: [{ field: 'clientId' }, { field: 'first' }, { field: 'age' }],
   };
-
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
 
   describe('getRowId', () => {
     it('should allow to select a field as id', () => {
@@ -85,5 +81,18 @@ describe('<DataGrid /> - Rows', () => {
     expect(handleRowClick.callCount).to.equal(0);
     fireEvent.click(document.querySelector('input[name="input"]'));
     expect(handleRowClick.callCount).to.equal(1);
+  });
+
+  it('should apply the CSS class returned by getRowClassName', () => {
+    const getRowId = (row) => `${row.clientId}`;
+    const getRowClassName = (params) => (params.getValue('age') < 20 ? 'under-age' : '');
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid getRowClassName={getRowClassName} getRowId={getRowId} {...baselineProps} />
+      </div>,
+    );
+    expect(getRow(0)).to.have.class('under-age');
+    expect(getRow(1)).to.have.class('under-age');
+    expect(getRow(2)).not.to.have.class('under-age');
   });
 });

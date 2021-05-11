@@ -26,13 +26,6 @@ describe('<DataGrid /> - Components', () => {
   };
 
   describe('footer', () => {
-    before(function beforeHook() {
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
     it('should hide footer if prop hideFooter is set', () => {
       render(
         <div style={{ width: 300, height: 500 }}>

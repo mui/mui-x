@@ -3,6 +3,7 @@ export * from './columnReorder';
 export * from './columns';
 export * from './core';
 export * from './filter';
+export * from './focus';
 export * from './keyboard';
 export * from './pagination';
 export * from './preferencesPanel';
@@ -12,6 +13,6 @@ export * from './sorting';
 export * from './virtualization';
 
 export * from './useGridApiRef';
-export * from './useGridColumnResize';
+export * from './columnResize';
 export * from './useGridComponents';
 export * from './useGridSlotComponentProps';

@@ -5,8 +5,6 @@ import { optionsSelector } from '../utils/optionsSelector';
 import { useLogger } from '../utils/useLogger';
 import {
   GRID_CELL_CLICK,
-  GRID_COL_RESIZE_START,
-  GRID_COL_RESIZE_STOP,
   GRID_COLUMN_HEADER_CLICK,
   GRID_UNMOUNT,
   GRID_KEYDOWN,
@@ -37,12 +35,10 @@ import {
   GRID_CELL_BLUR,
 } from '../../constants/eventsConstants';
 import { useGridApiMethod } from './useGridApiMethod';
-import { useGridApiEventHandler, useGridApiOptionHandler } from './useGridApiEventHandler';
+import { useGridApiOptionHandler } from './useGridApiEventHandler';
 import { GridEventsApi } from '../../models/api/gridEventsApi';
 
 export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: GridApiRef): void {
-  //  We use the isResizingRef to prevent the click on column header when the user is resizing the column
-  const isResizingRef = React.useRef(false);
   const logger = useLogger('useEvents');
   const options = useGridSelector(apiRef, optionsSelector);
 
@@ -61,33 +57,15 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
     [apiRef],
   );
 
-  const onUnmount = React.useCallback(
-    (handler: (param: any) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(GRID_UNMOUNT, handler);
-    },
+  const resize = React.useCallback(
+    () =>
+      apiRef.current.publishEvent(GRID_RESIZE, {
+        containerSize: apiRef.current.getState().containerSizes?.windowSizes,
+      }),
     [apiRef],
   );
-  const onResize = React.useCallback(
-    (handler: (param: any) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(GRID_RESIZE, handler);
-    },
-    [apiRef],
-  );
-
-  const handleResizeStart = React.useCallback(() => {
-    isResizingRef.current = true;
-  }, []);
-
-  const handleResizeStop = React.useCallback(() => {
-    isResizingRef.current = false;
-  }, []);
-
-  const resize = React.useCallback(() => apiRef.current.publishEvent(GRID_RESIZE), [apiRef]);
-  const eventsApi: GridEventsApi = { resize, onUnmount, onResize };
+  const eventsApi: GridEventsApi = { resize };
   useGridApiMethod(apiRef, eventsApi, 'GridEventsApi');
-
-  useGridApiEventHandler(apiRef, GRID_COL_RESIZE_START, handleResizeStart);
-  useGridApiEventHandler(apiRef, GRID_COL_RESIZE_STOP, handleResizeStop);
 
   useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_CLICK, options.onColumnHeaderClick);
   useGridApiOptionHandler(
@@ -116,6 +94,8 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
   useGridApiOptionHandler(apiRef, GRID_ROW_OUT, options.onRowOut);
   useGridApiOptionHandler(apiRef, GRID_ROW_ENTER, options.onRowEnter);
   useGridApiOptionHandler(apiRef, GRID_ROW_LEAVE, options.onRowLeave);
+
+  useGridApiOptionHandler(apiRef, GRID_RESIZE, options.onResize);
 
   useGridApiOptionHandler(apiRef, GRID_COMPONENT_ERROR, options.onError);
   useGridApiOptionHandler(apiRef, GRID_STATE_CHANGE, options.onStateChange);
