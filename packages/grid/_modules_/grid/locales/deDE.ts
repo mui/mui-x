@@ -58,7 +58,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   filterOperatorAfter: 'ist nach',
 
   // Column menu text
-  columnMenuLabel: 'Menu',
+  columnMenuLabel: 'Menü',
   columnMenuShowColumns: 'Zeige alle Spalten',
   columnMenuFilter: 'Filter',
   columnMenuHideColumn: 'Verbergen',
