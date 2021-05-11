@@ -1,4 +1,4 @@
-import { darken, lighten, Theme } from '@material-ui/core/styles';
+import { darken, lighten, Theme, createMuiTheme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 import { getThemePaletteMode, muiStyleAlpha } from '../../utils/utils';
 
