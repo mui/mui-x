@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Theme, createStyles, createMuiTheme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
+import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';

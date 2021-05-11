@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { createMuiTheme, Theme, createStyles } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
+import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/styles';
 import { GridCellParams } from '@material-ui/x-grid';
 import Rating from '@material-ui/lab/Rating';
 

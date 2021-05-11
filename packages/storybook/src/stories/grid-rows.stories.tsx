@@ -4,8 +4,8 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Popper from '@material-ui/core/Popper';
 import Paper from '@material-ui/core/Paper';
-import { createMuiTheme, createStyles, Theme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
+import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/styles';
 import {
   GridCellValue,
   GridCellParams,

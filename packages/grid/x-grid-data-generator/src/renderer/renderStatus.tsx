@@ -6,8 +6,8 @@ import AutorenewIcon from '@material-ui/icons/Autorenew';
 import DoneIcon from '@material-ui/icons/Done';
 import Chip from '@material-ui/core/Chip';
 import { GridCellParams } from '@material-ui/x-grid';
-import { createMuiTheme, Theme, createStyles } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
+import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/styles';
 
 const defaultTheme = createMuiTheme();
 const useStyles = makeStyles(

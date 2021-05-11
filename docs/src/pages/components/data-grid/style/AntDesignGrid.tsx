@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { DataGrid, useGridSlotComponentProps } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
-import { createStyles, Theme, createMuiTheme } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/styles';
+import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/styles';
 import Pagination from '@material-ui/lab/Pagination';
 import PaginationItem from '@material-ui/lab/PaginationItem';
 
