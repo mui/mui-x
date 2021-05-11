@@ -31,7 +31,7 @@ export interface GridFilterApi {
    */
   applyFilters: () => void;
   /**
-   * Deletes a [[GridFilterItem]]
+   * Deletes a [[GridFilterItem]].
    * @param item
    */
   deleteFilter: (item: GridFilterItem) => void;
