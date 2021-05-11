@@ -295,7 +295,9 @@ describe('<XGrid /> - Filter', () => {
       const t0 = performance.now();
       apiRef.current.setFilterModel(newModel);
 
-      await waitFor(() => expect(document.querySelector('.MuiDataGrid-filterIcon')).to.not.equal(null));
+      await waitFor(() =>
+        expect(document.querySelector('.MuiDataGrid-filterIcon')).to.not.equal(null),
+      );
       const t1 = performance.now();
       const time = Math.round(t1 - t0);
       expect(time).to.be.lessThan(100);

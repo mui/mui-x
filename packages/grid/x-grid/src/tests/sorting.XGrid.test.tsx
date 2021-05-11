@@ -216,24 +216,34 @@ describe('<XGrid /> - Sorting', () => {
 
       const t0 = performance.now();
       fireEvent.click(header);
-      await waitFor(() => expect(document.querySelector('.MuiDataGrid-sortIcon')).to.not.equal(null));
+      await waitFor(() =>
+        expect(document.querySelector('.MuiDataGrid-sortIcon')).to.not.equal(null),
+      );
       const t1 = performance.now();
       const time = Math.round(t1 - t0);
       expect(time).to.be.lessThan(300);
     });
 
     it('should render maximum twice', async function test() {
+      let renderCellCount = 0;
       let renderHeaderCount = 0;
       const TestCasePerf = () => {
         const [cols, setCols] = React.useState<GridColDef[]>([]);
-        const data = useData(5000, 10);
+        const data = useData(10, 10);
 
         React.useEffect(() => {
           if (data.columns.length) {
             const newColumns = [...data.columns];
             newColumns[1].renderHeader = (params) => {
               renderHeaderCount += 1;
-              return <span className={'currency-pair-component'}>{params.field}</span>;
+
+              return <span>{params.field}</span>;
+            };
+            newColumns[1].renderCell = (params) => {
+              if (params.id === 0) {
+                renderCellCount += 1;
+              }
+              return <span>{params.value}</span>;
             };
             setCols(newColumns);
           }
@@ -247,11 +257,15 @@ describe('<XGrid /> - Sorting', () => {
       };
 
       render(<TestCasePerf />);
-      const header = document.querySelector('.currency-pair-component');
+      const header = getColumnHeaderCell(2);
       renderHeaderCount = 0;
+      renderCellCount = 0;
       fireEvent.click(header);
-      await waitFor(() => expect(document.querySelector('.MuiDataGrid-sortIcon')).to.not.equal(null));
+      await waitFor(() =>
+        expect(document.querySelector('.MuiDataGrid-sortIcon')).to.not.equal(null),
+      );
       expect(renderHeaderCount).to.equal(2);
+      expect(renderCellCount).to.equal(0);
     });
   });
 });
