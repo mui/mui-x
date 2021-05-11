@@ -3,7 +3,7 @@
   "compilerOptions": {
     /* files are emitted by babel */
     "noEmit": true,
-    "types": ["react", "node"],
+    "types": ["react", "node", "requestidlecallback"],
     "jsx": "preserve",
     "skipLibCheck": true
   },

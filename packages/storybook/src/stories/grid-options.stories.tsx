@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ColDef, XGrid } from '@material-ui/x-grid';
+import { GridColDef, XGrid } from '@material-ui/x-grid';
 import { useData } from '../hooks/useData';
 
 export default {
@@ -10,11 +10,7 @@ export default {
   },
 };
 
-const columns: ColDef[] = [
-  { field: 'id' },
-  { field: 'name', sortDirection: 'asc' },
-  { field: 'age', sortDirection: 'desc' },
-];
+const columns: GridColDef[] = [{ field: 'id' }, { field: 'name' }, { field: 'age' }];
 
 const rows = [
   { id: 1, name: 'alice', age: 40 },
@@ -92,7 +88,7 @@ export const ColumnRightBorder = () => {
 export const AutoHeightSmall = () => {
   const data = useData(8, 12);
   return (
-    <div className="grid-container">
+    <div>
       <XGrid rows={data.rows} columns={data.columns} autoHeight />
     </div>
   );
@@ -101,7 +97,7 @@ export const AutoHeightSmall = () => {
 export const AutoHeightLarge = () => {
   const data = useData(75, 20);
   return (
-    <div className="grid-container">
+    <div>
       <XGrid rows={data.rows} columns={data.columns} autoHeight />
     </div>
   );

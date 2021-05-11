@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { chainPropTypes } from '@material-ui/utils';
-import { GridComponent, GridComponentProps, classnames } from '../../_modules_/grid';
+import { GridComponent, GridComponentProps, classnames, useThemeProps } from '../../_modules_/grid';
 
 const FORCED_PROPS: Partial<GridComponentProps> = {
   disableColumnResize: true,
@@ -11,6 +11,7 @@ const FORCED_PROPS: Partial<GridComponentProps> = {
   disableMultipleSelection: true,
   pagination: true,
   apiRef: undefined,
+  onRowsScrollEnd: undefined,
 };
 
 export type DataGridProps = Omit<
@@ -24,6 +25,8 @@ export type DataGridProps = Omit<
   | 'apiRef'
   | 'options'
   | 'pagination'
+  | 'onRowsScrollEnd'
+  | 'scrollEndThreshold'
 > & {
   disableColumnResize?: true;
   disableColumnReorder?: true;
@@ -32,12 +35,17 @@ export type DataGridProps = Omit<
   disableMultipleSelection?: true;
   pagination?: true;
   apiRef?: undefined;
+  onRowsScrollEnd?: undefined;
 };
 
 const MAX_PAGE_SIZE = 100;
 
-const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(props, ref) {
-  const { className, pageSize: pageSizeProp, ...other } = props;
+const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function DataGrid(
+  inProps,
+  ref,
+) {
+  const props = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
+  const { className, pageSize: pageSizeProp, classes, ...other } = props;
 
   let pageSize = pageSizeProp;
   if (pageSize && pageSize > MAX_PAGE_SIZE) {
@@ -47,7 +55,7 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
   return (
     <GridComponent
       ref={ref}
-      className={classnames('MuiDataGrid-root', className)}
+      className={classnames('MuiDataGrid-root', classes?.root, className)}
       pageSize={pageSize}
       {...other}
       {...FORCED_PROPS}
@@ -56,13 +64,16 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
   );
 });
 
-(DataGrid2 as any).propTypes = {
+export const DataGrid = React.memo(DataGridRaw);
+
+// @ts-ignore
+DataGrid.propTypes = {
   apiRef: chainPropTypes(PropTypes.any, (props: any) => {
     if (props.apiRef != null) {
-      throw new Error(
+      return new Error(
         [
           `Material-UI: \`apiRef\` is not a valid prop.`,
-          'ApiRef is not available in the MIT version.',
+          'GridApiRef is not available in the MIT version.',
           '',
           'You need to upgrade to the XGrid component to unlock this feature.',
         ].join('\n'),
@@ -70,9 +81,9 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
     }
     return null;
   }),
-  columns: chainPropTypes(PropTypes.any, (props: any) => {
+  columns: chainPropTypes(PropTypes.array.isRequired, (props: any) => {
     if (props.columns && props.columns.some((column) => column.resizable)) {
-      throw new Error(
+      return new Error(
         [
           `Material-UI: \`column.resizable = true\` is not a valid prop.`,
           'Column resizing is not available in the MIT version.',
@@ -85,7 +96,7 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
   }),
   disableColumnReorder: chainPropTypes(PropTypes.bool, (props: any) => {
     if (props.disableColumnReorder === false) {
-      throw new Error(
+      return new Error(
         [
           `Material-UI: \`<DataGrid disableColumnReorder={false} />\` is not a valid prop.`,
           'Column reordering is not available in the MIT version.',
@@ -98,7 +109,7 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
   }),
   disableColumnResize: chainPropTypes(PropTypes.bool, (props: any) => {
     if (props.disableColumnResize === false) {
-      throw new Error(
+      return new Error(
         [
           `Material-UI: \`<DataGrid disableColumnResize={false} />\` is not a valid prop.`,
           'Column resizing is not available in the MIT version.',
@@ -111,7 +122,7 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
   }),
   disableMultipleColumnsFiltering: chainPropTypes(PropTypes.bool, (props: any) => {
     if (props.disableMultipleColumnsFiltering === false) {
-      throw new Error(
+      return new Error(
         [
           `Material-UI: \`<DataGrid disableMultipleColumnsFiltering={false} />\` is not a valid prop.`,
           'Only single column sorting is available in the MIT version.',
@@ -124,7 +135,7 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
   }),
   disableMultipleColumnsSorting: chainPropTypes(PropTypes.bool, (props: any) => {
     if (props.disableMultipleColumnsSorting === false) {
-      throw new Error(
+      return new Error(
         [
           `Material-UI: \`<DataGrid disableMultipleColumnsSorting={false} />\` is not a valid prop.`,
           'Only single column sorting is available in the MIT version.',
@@ -137,7 +148,7 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
   }),
   disableMultipleSelection: chainPropTypes(PropTypes.bool, (props: any) => {
     if (props.disableMultipleSelection === false) {
-      throw new Error(
+      return new Error(
         [
           `Material-UI: \`<DataGrid disableMultipleSelection={false} />\` is not a valid prop.`,
           'Only single column selection is available in the MIT version.',
@@ -150,7 +161,7 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
   }),
   pageSize: chainPropTypes(PropTypes.number, (props: any) => {
     if (props.pageSize && props.pageSize > MAX_PAGE_SIZE) {
-      throw new Error(
+      return new Error(
         [
           `Material-UI: \`<DataGrid pageSize={${props.pageSize}} />\` is not a valid prop.`,
           `Only page size below ${MAX_PAGE_SIZE} is available in the MIT version.`,
@@ -174,9 +185,31 @@ const DataGrid2 = React.forwardRef<HTMLDivElement, DataGridProps>(function DataG
     }
     return null;
   },
-};
-
-export const DataGrid = React.memo(DataGrid2);
-
-// @ts-ignore
-DataGrid.Naked = DataGrid2;
+  onRowsScrollEnd: chainPropTypes(PropTypes.any, (props: any) => {
+    if (props.onRowsScrollEnd != null) {
+      return new Error(
+        [
+          `Material-UI: \`onRowsScrollEnd\` is not a valid prop.`,
+          'onRowsScrollEnd is not available in the MIT version.',
+          '',
+          'You need to upgrade to the XGrid component to unlock this feature.',
+        ].join('\n'),
+      );
+    }
+    return null;
+  }),
+  rows: PropTypes.array.isRequired,
+  scrollEndThreshold: chainPropTypes(PropTypes.number, (props: any) => {
+    if (props.scrollEndThreshold) {
+      return new Error(
+        [
+          `Material-UI: \`<DataGrid scrollEndThreshold={${props.scrollEndThreshold}} />\` is not a valid prop.`,
+          'scrollEndThreshold is not available in the MIT version.',
+          '',
+          'You need to upgrade to the XGrid component to unlock this feature.',
+        ].join('\n'),
+      );
+    }
+    return null;
+  }),
+} as any;

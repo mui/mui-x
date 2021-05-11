@@ -1,54 +1,55 @@
 import * as React from 'react';
 import { createClientRenderStrictMode } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, GridToolbar } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
+
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Filter', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
+    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,
         brand: 'Nike',
+        isPublished: false,
       },
       {
         id: 1,
         brand: 'Adidas',
+        isPublished: true,
       },
       {
         id: 2,
         brand: 'Puma',
+        isPublished: true,
       },
     ],
-    columns: [{ field: 'brand' }],
+    columns: [{ field: 'brand' }, { field: 'isPublished', type: 'boolean' }],
   };
-
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
 
   const TestCase = (props: {
     rows?: any[];
     columns?: any[];
     operator?: string;
     value?: string;
+    field?: string;
   }) => {
-    const { operator, value, rows, columns } = props;
+    const { operator, value, rows, columns, field = 'brand' } = props;
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid
+          autoHeight={isJSDOM}
           columns={columns || baselineProps.columns}
           rows={rows || baselineProps.rows}
           filterModel={{
             items: [
               {
-                columnField: 'brand',
+                columnField: field,
                 value,
                 operatorValue: operator,
               },
@@ -89,29 +90,55 @@ describe('<DataGrid /> - Filter', () => {
     expect(getColumnValues()).to.deep.equal(['Asics']);
   });
 
-  it('should allow operator startsWith', () => {
-    const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
-    setProps({
-      operator: 'startsWith',
+  describe('string operators', () => {
+    it('should allow operator startsWith', () => {
+      const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
+      setProps({
+        operator: 'startsWith',
+      });
+      expect(getColumnValues()).to.deep.equal(['Adidas']);
     });
-    expect(getColumnValues()).to.deep.equal(['Adidas']);
+
+    it('should allow operator endsWith', () => {
+      const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
+      setProps({
+        operator: 'endsWith',
+      });
+      expect(getColumnValues()).to.deep.equal(['Puma']);
+    });
+
+    it('should allow operator equal', () => {
+      const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
+      setProps({
+        operator: 'equals',
+        value: 'nike',
+      });
+      expect(getColumnValues()).to.deep.equal(['Nike']);
+    });
   });
 
-  it('should allow operator endsWith', () => {
-    const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
-    setProps({
-      operator: 'endsWith',
+  describe('boolean operators', () => {
+    it('should allow operator is', () => {
+      const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
+      setProps({
+        field: 'isPublished',
+        operator: 'is',
+        value: 'false',
+      });
+      expect(getColumnValues()).to.deep.equal(['Nike']);
+      setProps({
+        field: 'isPublished',
+        operator: 'is',
+        value: 'true',
+      });
+      expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
+      setProps({
+        field: 'isPublished',
+        operator: 'is',
+        value: '',
+      });
+      expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     });
-    expect(getColumnValues()).to.deep.equal(['Puma']);
-  });
-
-  it('should allow operator equal', () => {
-    const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
-    setProps({
-      operator: 'equals',
-      value: 'nike',
-    });
-    expect(getColumnValues()).to.deep.equal(['Nike']);
   });
 
   it('should support new dataset', () => {
@@ -135,5 +162,37 @@ describe('<DataGrid /> - Filter', () => {
       columns: [{ field: 'country' }],
     });
     expect(getColumnValues()).to.deep.equal(['France', 'UK', 'US']);
+  });
+
+  it('should translate operators dynamically in toolbar without crashing ', () => {
+    const Test = () => {
+      return (
+        <div style={{ height: 400, width: '100%' }}>
+          <DataGrid
+            rows={[
+              {
+                id: 1,
+                quantity: 1,
+              },
+            ]}
+            columns={[{ field: 'quantity', type: 'number', width: 150 }]}
+            filterModel={{
+              items: [
+                {
+                  columnField: 'quantity',
+                  id: 1619547587572,
+                  operatorValue: '=',
+                  value: '1',
+                },
+              ],
+            }}
+            components={{
+              Toolbar: GridToolbar,
+            }}
+          />
+        </div>
+      );
+    };
+    render(<Test />);
   });
 });

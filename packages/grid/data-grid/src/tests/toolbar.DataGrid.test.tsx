@@ -6,19 +6,22 @@ import {
   // @ts-expect-error need to migrate helpers to TypeScript
   screen,
 } from 'test/utils';
-import { getColumnHeaders } from 'test/utils/helperFn';
+import { getColumnHeadersTextContent } from 'test/utils/helperFn';
 import { expect } from 'chai';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, GridToolbar } from '@material-ui/data-grid';
 import {
   COMFORTABLE_DENSITY_FACTOR,
   COMPACT_DENSITY_FACTOR,
-} from 'packages/grid/_modules_/grid/hooks/features/density/useDensity';
+} from 'packages/grid/_modules_/grid/hooks/features/density/useGridDensity';
+
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Toolbar', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
+    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,
@@ -43,19 +46,18 @@ describe('<DataGrid /> - Toolbar', () => {
     ],
   };
 
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
-
-  describe('Density selector', () => {
+  describe('density selector', () => {
     it('should increase grid density when selecting compact density', () => {
       const rowHeight = 30;
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} showToolbar rowHeight={rowHeight} />
+          <DataGrid
+            {...baselineProps}
+            components={{
+              Toolbar: GridToolbar,
+            }}
+            rowHeight={rowHeight}
+          />
         </div>,
       );
 
@@ -72,7 +74,13 @@ describe('<DataGrid /> - Toolbar', () => {
       const rowHeight = 30;
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} showToolbar rowHeight={rowHeight} />
+          <DataGrid
+            {...baselineProps}
+            components={{
+              Toolbar: GridToolbar,
+            }}
+            rowHeight={rowHeight}
+          />
         </div>,
       );
 
@@ -114,35 +122,45 @@ describe('<DataGrid /> - Toolbar', () => {
     });
   });
 
-  describe('Column selector', () => {
+  describe('column selector', () => {
     it('should hide "id" column when hiding it from the column selector', () => {
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} showToolbar />
+          <DataGrid
+            {...baselineProps}
+            components={{
+              Toolbar: GridToolbar,
+            }}
+          />
         </div>,
       );
 
-      expect(getColumnHeaders()).to.deep.equal(['id', 'brand']);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
       fireEvent.click(getByText('Columns'));
       fireEvent.click(document.querySelector('[role="tooltip"] [name="id"]'));
 
-      expect(getColumnHeaders()).to.deep.equal(['brand']);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['brand']);
     });
 
     it('should hide all columns when clicking "HIDE ALL" from the column selector', () => {
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} showToolbar />
+          <DataGrid
+            {...baselineProps}
+            components={{
+              Toolbar: GridToolbar,
+            }}
+          />
         </div>,
       );
 
-      expect(getColumnHeaders()).to.deep.equal(['id', 'brand']);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
 
       fireEvent.click(getByText('Columns'));
-      fireEvent.click(getByText('Hide All'));
+      fireEvent.click(getByText('Hide all'));
 
-      expect(getColumnHeaders()).to.deep.equal([]);
+      expect(getColumnHeadersTextContent()).to.deep.equal([]);
     });
 
     it('should show all columns when clicking "SHOW ALL" from the column selector', () => {
@@ -159,14 +177,44 @@ describe('<DataGrid /> - Toolbar', () => {
 
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} columns={customColumns} showToolbar />
+          <DataGrid
+            {...baselineProps}
+            columns={customColumns}
+            components={{
+              Toolbar: GridToolbar,
+            }}
+          />
         </div>,
       );
 
       fireEvent.click(getByText('Columns'));
-      fireEvent.click(getByText('Show All'));
+      fireEvent.click(getByText('Show all'));
 
-      expect(getColumnHeaders()).to.deep.equal(['id', 'brand']);
+      expect(getColumnHeadersTextContent()).to.deep.equal(['id', 'brand']);
+    });
+
+    it('should keep the focus on the switch after toggling a column', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            {...baselineProps}
+            components={{
+              Toolbar: GridToolbar,
+            }}
+          />
+        </div>,
+      );
+
+      const button = screen.getByRole('button', { name: 'Select columns' });
+      button.focus();
+      fireEvent.click(button);
+
+      const column: HTMLElement | null = document.querySelector('[role="tooltip"] [name="id"]');
+      column!.focus();
+      fireEvent.click(column);
+
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(column).toHaveFocus();
     });
   });
 });

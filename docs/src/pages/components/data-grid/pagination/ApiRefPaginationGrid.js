@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { XGrid, useApiRef } from '@material-ui/x-grid';
+import { XGrid, useGridApiRef } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
 export default function ApiRefPaginationGrid() {
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
   const { data } = useDemoData({
     dataSet: 'Commodity',
     rowLength: 10,
@@ -11,7 +11,7 @@ export default function ApiRefPaginationGrid() {
   });
 
   React.useEffect(() => {
-    apiRef.current.setPage(2);
+    apiRef.current.setPage(1);
   }, [apiRef]);
 
   return (

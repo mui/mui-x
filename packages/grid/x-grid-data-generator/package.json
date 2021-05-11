@@ -1,0 +1,46 @@
+{
+  "name": "@material-ui/x-grid-data-generator",
+  "version": "4.0.0-alpha.28",
+  "description": "Generate fake data for demo purposes only.",
+  "author": "Material-UI Team",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/x-grid-data-generator.d.ts",
+  "files": [
+    "dist/*"
+  ],
+  "license": "MIT",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": {
+    "datagen": "./bin/data-gen-script.js"
+  },
+  "scripts": {
+    "typescript": "tsc -p tsconfig.json",
+    "build": "cd ../ && rollup --config rollup.x-grid-data-generator.config.js"
+  },
+  "dependencies": {
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.54",
+    "@types/chance": "^1.1.0",
+    "chance": "^1.1.6",
+    "clsx": "^1.0.4",
+    "lru-cache": "^6.0.0"
+  },
+  "devDependencies": {
+    "esm": "^3.2.25",
+    "yargs": "^17.0.1"
+  },
+  "peerDependencies": {
+    "@material-ui/core": "^4.9.12 || ^5.0.0-alpha.22",
+    "react": "^17.0.0"
+  },
+  "setupFiles": [
+    "<rootDir>/src/setupTests.js"
+  ],
+  "engines": {
+    "node": ">=12.0.0"
+  }
+}

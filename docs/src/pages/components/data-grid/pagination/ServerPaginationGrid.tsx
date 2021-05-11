@@ -1,11 +1,15 @@
 import * as React from 'react';
-import { RowsProp, DataGrid, PageChangeParams } from '@material-ui/data-grid';
+import {
+  GridRowsProp,
+  DataGrid,
+  GridPageChangeParams,
+} from '@material-ui/data-grid';
 import { useDemoData, GridData } from '@material-ui/x-grid-data-generator';
 
 function loadServerRows(page: number, data: GridData): Promise<any> {
   return new Promise<any>((resolve) => {
     setTimeout(() => {
-      resolve(data.rows.slice((page - 1) * 5, page * 5));
+      resolve(data.rows.slice(page * 5, (page + 1) * 5));
     }, Math.random() * 500 + 100); // simulate network latency
   });
 }
@@ -16,11 +20,11 @@ export default function ServerPaginationGrid() {
     rowLength: 100,
     maxColumns: 6,
   });
-  const [page, setPage] = React.useState(1);
-  const [rows, setRows] = React.useState<RowsProp>([]);
+  const [page, setPage] = React.useState(0);
+  const [rows, setRows] = React.useState<GridRowsProp>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
 
-  const handlePageChange = (params: PageChangeParams) => {
+  const handlePageChange = (params: GridPageChangeParams) => {
     setPage(params.page);
   };
 

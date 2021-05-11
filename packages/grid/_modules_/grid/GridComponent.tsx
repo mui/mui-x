@@ -4,50 +4,58 @@
  */
 import * as React from 'react';
 import { useForkRef } from '@material-ui/core/utils';
-import { AutoSizer } from './components/AutoSizer';
-import { ColumnsHeader } from './components/columnHeaders/ColumnHeaders';
+import NoSsr from '@material-ui/core/NoSsr';
+import { GridAutoSizer } from './components/GridAutoSizer';
+import { GridColumnsHeader } from './components/columnHeaders/GridColumnHeaders';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { GridColumnHeaderMenu } from './components/menu/columnMenu/GridColumnHeaderMenu';
-import { PreferencesPanel } from './components/panel/PreferencesPanel';
 import { GridColumnsContainer } from './components/containers/GridColumnsContainer';
 import { GridMainContainer } from './components/containers/GridMainContainer';
 import { GridRoot } from './components/containers/GridRoot';
 import { GridWindow } from './components/containers/GridWindow';
-import { Viewport } from './components/Viewport';
+import { GridViewport } from './components/GridViewport';
 import { Watermark } from './components/Watermark';
 import { GridComponentProps } from './GridComponentProps';
-import { useColumnMenu } from './hooks/features/columnMenu/useColumnMenu';
-import { useColumns } from './hooks/features/columns/useColumns';
-import { useGridState } from './hooks/features/core/useGridState';
-import { usePagination } from './hooks/features/pagination/usePagination';
-import { usePreferencesPanel } from './hooks/features/preferencesPanel/usePreferencesPanel';
-import { useRows } from './hooks/features/rows/useRows';
-import { useSorting } from './hooks/features/sorting/useSorting';
-import { useApiRef } from './hooks/features/useApiRef';
-import { useColumnReorder } from './hooks/features/columnReorder';
-import { useColumnResize } from './hooks/features/useColumnResize';
-import { useComponents } from './hooks/features/useComponents';
-import { useSelection } from './hooks/features/selection/useSelection';
+import { useGridColumnMenu } from './hooks/features/columnMenu/useGridColumnMenu';
+import { useGridColumns } from './hooks/features/columns/useGridColumns';
+import { useGridFocus } from './hooks/features/focus/useGridFocus';
+import { useGridSelector } from './hooks/features/core/useGridSelector';
+import { useGridKeyboardNavigation } from './hooks/features/keyboard/useGridKeyboardNavigation';
+import { useGridPagination } from './hooks/features/pagination/useGridPagination';
+import { useGridPreferencesPanel } from './hooks/features/preferencesPanel/useGridPreferencesPanel';
+import { useGridParamsApi } from './hooks/features/rows/useGridParamsApi';
+import { useGridRows } from './hooks/features/rows/useGridRows';
+import { useGridEditRows } from './hooks/features/rows/useGridEditRows';
+import { gridRowCountSelector } from './hooks/features/rows/gridRowsSelector';
+import { useGridSorting } from './hooks/features/sorting/useGridSorting';
+import { useGridApiRef } from './hooks/features/useGridApiRef';
+import { useGridColumnReorder } from './hooks/features/columnReorder';
+import { useGridColumnResize } from './hooks/features/columnResize';
+import { useGridComponents } from './hooks/features/useGridComponents';
+import { useGridSelection } from './hooks/features/selection/useGridSelection';
 import { useApi } from './hooks/root/useApi';
-import { useContainerProps } from './hooks/root/useContainerProps';
+import { useGridContainerProps } from './hooks/root/useGridContainerProps';
 import { useEvents } from './hooks/root/useEvents';
-import { useKeyboard } from './hooks/features/keyboard/useKeyboard';
+import { useGridKeyboard } from './hooks/features/keyboard/useGridKeyboard';
 import { useErrorHandler } from './hooks/utils/useErrorHandler';
 import { useLogger, useLoggerFactory } from './hooks/utils/useLogger';
 import { useOptionsProp } from './hooks/utils/useOptionsProp';
 import { useRenderInfoLog } from './hooks/utils/useRenderInfoLog';
 import { useResizeContainer } from './hooks/utils/useResizeContainer';
-import { useVirtualRows } from './hooks/features/virtualization/useVirtualRows';
-import { useDensity } from './hooks/features/density';
+import { useGridVirtualRows } from './hooks/features/virtualization/useGridVirtualRows';
+import { useGridDensity } from './hooks/features/density';
 import { useStateProp } from './hooks/utils/useStateProp';
-import { RootContainerRef } from './models/rootContainerRef';
-import { ApiContext } from './components/api-context';
-import { useFilter } from './hooks/features/filter/useFilter';
+import { GridRootContainerRef } from './models/gridRootContainerRef';
+import { GridApiContext } from './components/GridApiContext';
+import { useGridFilter } from './hooks/features/filter/useGridFilter';
 import { useLocaleText } from './hooks/features/localeText/useLocaleText';
+import { useGridCsvExport } from './hooks/features/export';
+import { useGridInfiniteLoader } from './hooks/features/infiniteLoader';
+import { visibleGridRowCountSelector } from './hooks/features/filter/gridFilterSelector';
 
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {
-    const rootContainerRef: RootContainerRef = React.useRef<HTMLDivElement>(null);
+    const rootContainerRef: GridRootContainerRef = React.useRef<HTMLDivElement>(null);
     const handleRef = useForkRef(rootContainerRef, ref);
 
     const footerRef = React.useRef<HTMLDivElement>(null);
@@ -57,8 +65,9 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const windowRef = React.useRef<HTMLDivElement>(null);
     const renderingZoneRef = React.useRef<HTMLDivElement>(null);
 
-    const apiRef = useApiRef(props.apiRef);
-    const [gridState] = useGridState(apiRef);
+    const apiRef = useGridApiRef(props.apiRef);
+    const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
+    const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
 
     const internalOptions = useOptionsProp(apiRef, props);
 
@@ -68,92 +77,98 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useApi(rootContainerRef, columnsContainerRef, apiRef);
     const errorState = useErrorHandler(apiRef, props);
     useEvents(rootContainerRef, apiRef);
+    useLocaleText(apiRef);
     const onResize = useResizeContainer(apiRef);
 
-    useColumns(props.columns, apiRef);
-    useRows(props.rows, apiRef);
-    useKeyboard(rootContainerRef, apiRef);
-    useSelection(apiRef);
-    useSorting(apiRef, props.rows);
-    useColumnMenu(apiRef);
-    usePreferencesPanel(apiRef);
-    useFilter(apiRef, props.rows);
-    useContainerProps(windowRef, apiRef);
-    useDensity(apiRef);
-    useVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
-    useLocaleText(apiRef);
-    useColumnReorder(apiRef);
-    useColumnResize(columnsHeaderRef, apiRef);
-    usePagination(apiRef);
+    useGridColumns(props.columns, apiRef);
+    useGridParamsApi(apiRef);
+    useGridRows(apiRef, props.rows, props.getRowId);
+    useGridEditRows(apiRef);
+    useGridFocus(apiRef);
+    useGridKeyboard(rootContainerRef, apiRef);
+    useGridKeyboardNavigation(rootContainerRef, apiRef);
+    useGridSelection(apiRef);
+    useGridSorting(apiRef, props.rows);
+    useGridColumnMenu(apiRef);
+    useGridPreferencesPanel(apiRef);
+    useGridFilter(apiRef, props.rows);
+    useGridContainerProps(windowRef, apiRef);
+    useGridDensity(apiRef);
+    useGridVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
+    useGridColumnReorder(apiRef);
+    useGridColumnResize(columnsHeaderRef, apiRef);
+    useGridPagination(apiRef);
+    useGridCsvExport(apiRef);
+    useGridInfiniteLoader(apiRef);
 
-    const components = useComponents(props.components, apiRef, rootContainerRef);
+    const components = useGridComponents(props.components, props.componentsProps, apiRef);
     useStateProp(apiRef, props.state);
     useRenderInfoLog(apiRef, logger);
 
-    const showNoRowsOverlay = !props.loading && gridState.rows.totalRowCount === 0;
+    const showNoRowsOverlay = !props.loading && totalRowCount === 0;
+    const showNoResultsOverlay = !props.loading && totalRowCount > 0 && visibleRowCount === 0;
     return (
-      <ApiContext.Provider value={apiRef}>
-        <AutoSizer onResize={onResize} nonce={props.nonce}>
-          {(size: any) => (
-            <GridRoot
-              ref={handleRef}
-              className={props.className}
-              size={size}
-              header={headerRef}
-              footer={footerRef}
-            >
-              <ErrorBoundary
-                hasError={errorState != null}
-                componentProps={errorState}
-                api={apiRef!}
-                logger={logger}
-                render={(errorProps) => (
-                  <GridMainContainer>
-                    <components.ErrorOverlay
-                      {...errorProps}
-                      {...props.componentsProps?.errorOverlay}
-                    />
-                  </GridMainContainer>
-                )}
-              >
-                <div ref={headerRef}>
-                  <components.Header {...props.componentsProps?.header} />
-                </div>
+      <GridApiContext.Provider value={apiRef}>
+        <NoSsr>
+          <GridRoot ref={handleRef} className={props.className}>
+            <ErrorBoundary
+              hasError={errorState != null}
+              componentProps={errorState}
+              api={apiRef!}
+              logger={logger}
+              render={(errorProps) => (
                 <GridMainContainer>
-                  <GridColumnHeaderMenu
-                    ContentComponent={components.ColumnMenu}
-                    contentComponentProps={props.componentsProps?.columnMenu}
+                  <components.ErrorOverlay
+                    {...errorProps}
+                    {...props.componentsProps?.errorOverlay}
                   />
-                  <PreferencesPanel />
-                  <Watermark licenseStatus={props.licenseStatus} />
-                  <GridColumnsContainer ref={columnsContainerRef}>
-                    <ColumnsHeader ref={columnsHeaderRef} />
-                  </GridColumnsContainer>
-                  {showNoRowsOverlay && (
-                    <components.NoRowsOverlay {...props.componentsProps?.noRowsOverlay} />
-                  )}
-                  {props.loading && (
-                    <components.LoadingOverlay {...props.componentsProps?.loadingOverlay} />
-                  )}
-                  <GridWindow ref={windowRef}>
-                    <Viewport ref={renderingZoneRef} />
-                  </GridWindow>
                 </GridMainContainer>
-                {!gridState.options.hideFooter && (
-                  <div ref={footerRef}>
-                    <components.Footer
-                      PaginationComponent={
-                        <components.Pagination {...props.componentsProps?.pagination} />
-                      }
-                      {...props.componentsProps?.footer}
-                    />
-                  </div>
+              )}
+            >
+              <div ref={headerRef}>
+                <components.Header {...props.componentsProps?.header} />
+              </div>
+              <GridMainContainer>
+                <GridColumnHeaderMenu
+                  ContentComponent={components.ColumnMenu}
+                  contentComponentProps={{
+                    ...props.componentsProps?.columnMenu,
+                  }}
+                />
+                <Watermark licenseStatus={props.licenseStatus} />
+                <GridColumnsContainer ref={columnsContainerRef}>
+                  <GridColumnsHeader ref={columnsHeaderRef} />
+                </GridColumnsContainer>
+                {showNoRowsOverlay && (
+                  <components.NoRowsOverlay {...props.componentsProps?.noRowsOverlay} />
                 )}
-              </ErrorBoundary>
-            </GridRoot>
-          )}
-        </AutoSizer>
-      </ApiContext.Provider>
+                {showNoResultsOverlay && (
+                  <components.NoResultsOverlay {...props.componentsProps?.noResultsOverlay} />
+                )}
+                {props.loading && (
+                  <components.LoadingOverlay {...props.componentsProps?.loadingOverlay} />
+                )}
+                <GridAutoSizer
+                  onResize={onResize}
+                  nonce={props.nonce}
+                  disableHeight={props.autoHeight}
+                >
+                  {(size: any) => (
+                    <GridWindow ref={windowRef} size={size}>
+                      <GridViewport ref={renderingZoneRef} />
+                    </GridWindow>
+                  )}
+                </GridAutoSizer>
+              </GridMainContainer>
+              {!internalOptions.hideFooter && (
+                <div ref={footerRef}>
+                  <components.Footer {...props.componentsProps?.footer} />
+                </div>
+              )}
+            </ErrorBoundary>
+          </GridRoot>
+        </NoSsr>
+      </GridApiContext.Provider>
     );
   },
 );

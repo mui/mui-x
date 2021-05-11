@@ -4,12 +4,12 @@ import { XGrid } from '@material-ui/x-grid';
 const rows = [
   {
     id: 1,
-    username: 'defunkt',
-    age: 38,
+    username: '@MaterialUI',
+    age: 20,
   },
 ];
 
-export default function ColumnWidthGrid() {
+export default function ColumnSizingGrid() {
   return (
     <div style={{ height: 250, width: '100%' }}>
       <XGrid

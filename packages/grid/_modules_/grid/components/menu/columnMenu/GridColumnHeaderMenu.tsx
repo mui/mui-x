@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { ColumnMenuState } from '../../../hooks/features/columnMenu/columnMenuState';
+import { GridColumnMenuState } from '../../../hooks/features/columnMenu/columnMenuState';
 import { GridState } from '../../../hooks/features/core/gridState';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { findHeaderElementFromField } from '../../../utils/domUtils';
-import { ApiContext } from '../../api-context';
+import { GridApiContext } from '../../GridApiContext';
 import { GridMenu } from '../GridMenu';
 
 const columnMenuStateSelector = (state: GridState) => state.columnMenu;
 
 export interface GridColumnHeaderMenuProps {
-  ContentComponent: React.ElementType;
+  ContentComponent: React.JSXElementConstructor<any>;
   contentComponentProps?: any;
 }
 
@@ -17,7 +17,7 @@ export function GridColumnHeaderMenu({
   ContentComponent,
   contentComponentProps,
 }: GridColumnHeaderMenuProps) {
-  const apiRef = React.useContext(ApiContext);
+  const apiRef = React.useContext(GridApiContext);
   const columnMenuState = useGridSelector(apiRef!, columnMenuStateSelector);
   const currentColumn = columnMenuState.field
     ? apiRef?.current.getColumnFromField(columnMenuState.field)
@@ -36,7 +36,7 @@ export function GridColumnHeaderMenu({
   }, [hideMenu]);
 
   const updateColumnMenu = React.useCallback(
-    ({ open, field }: ColumnMenuState) => {
+    ({ open, field }: GridColumnMenuState) => {
       if (field && open) {
         immediateTimeout.current = setTimeout(() => clearTimeout(hideTimeout.current), 0);
 
@@ -77,6 +77,8 @@ export function GridColumnHeaderMenu({
         currentColumn={currentColumn}
         hideMenu={hideMenu}
         open={columnMenuState.open}
+        id={columnMenuState.id}
+        labelledby={columnMenuState.labelledby}
         {...contentComponentProps}
       />
     </GridMenu>

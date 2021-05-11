@@ -1,6 +1,6 @@
-import { darken, lighten, createMuiTheme, Theme } from '@material-ui/core/styles';
+import { darken, lighten, Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
-import { getThemePaletteMode, muiStyleAlpha } from '../../utils';
+import { getThemePaletteMode, muiStyleAlpha } from '../../utils/utils';
 
 const defaultTheme = createMuiTheme();
 export const useStyles = makeStyles(
@@ -20,10 +20,14 @@ export const useStyles = makeStyles(
         color: theme.palette.text.primary,
         ...theme.typography.body2,
         outline: 'none',
+        height: '100%',
         display: 'flex',
         flexDirection: 'column',
         '& *, & *::before, & *::after': {
           boxSizing: 'inherit',
+        },
+        '&.MuiDataGrid-autoHeight': {
+          height: 'auto',
         },
         '& .MuiDataGrid-main': {
           position: 'relative',
@@ -85,10 +89,13 @@ export const useStyles = makeStyles(
           lineHeight: null,
           padding: theme.spacing(0, 2),
         },
-        '& .MuiDataGrid-colCell:focus, & .MuiDataGrid-cell:focus': {
-          outline: 'dotted',
+        '& .MuiDataGrid-colCell:focus-within, & .MuiDataGrid-cell:focus-within': {
+          outline: `solid ${muiStyleAlpha(theme.palette.primary.main, 0.5)} 1px`,
           outlineWidth: 1,
           outlineOffset: -2,
+        },
+        '& .MuiDataGrid-colCell:focus, & .MuiDataGrid-cell:focus': {
+          outline: `solid ${theme.palette.primary.main} 1px`,
         },
         '& .MuiDataGrid-colCellCheckbox, & .MuiDataGrid-cellCheckbox': {
           padding: 0,
@@ -228,6 +235,37 @@ export const useStyles = makeStyles(
           whiteSpace: 'nowrap',
           borderBottom: `1px solid ${borderColor}`,
         },
+        '& .MuiDataGrid-cell.MuiDataGrid-cellEditing': {
+          padding: 1,
+          display: 'flex',
+          boxShadow: theme.shadows[2],
+          backgroundColor: theme.palette.background.paper,
+          '&:focus-within': {
+            outline: `solid ${theme.palette.primary.main} 1px`,
+            outlineOffset: '-1px',
+          },
+        },
+        '& .MuiDataGrid-editCellInputBase': {
+          ...theme.typography.body2,
+          padding: '1px 0',
+          '& input': {
+            padding: '0 16px',
+            height: '100%',
+          },
+        },
+        '& .MuiDataGrid-editCellBoolean': {
+          display: 'flex',
+          height: '100%',
+          width: '100%',
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+        '& .MuiDataGrid-booleanCell[data-value="true"]': {
+          color: theme.palette.text.secondary,
+        },
+        '& .MuiDataGrid-booleanCell[data-value="false"]': {
+          color: theme.palette.text.disabled,
+        },
         // The very last cell
         '& .MuiDataGrid-colCellWrapper .MuiDataGrid-cell': {
           borderBottom: 'none',
@@ -242,11 +280,20 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-cellLeft': {
           textAlign: 'left',
         },
+        '& .MuiDataGrid-cellLeft.MuiDataGrid-cellWithRenderer, & .MuiDataGrid-cellLeft.MuiDataGrid-cellEditing': {
+          justifyContent: 'flex-start',
+        },
         '& .MuiDataGrid-cellRight': {
           textAlign: 'right',
         },
+        '& .MuiDataGrid-cellRight.MuiDataGrid-cellWithRenderer, & .MuiDataGrid-cellRight.MuiDataGrid-cellEditing': {
+          justifyContent: 'flex-end',
+        },
         '& .MuiDataGrid-cellCenter': {
           textAlign: 'center',
+        },
+        '& .MuiDataGrid-cellCenter.MuiDataGrid-cellWithRenderer, & .MuiDataGrid-cellCenter.MuiDataGrid-cellEditing': {
+          justifyContent: 'center',
         },
         '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
           alignItems: 'center',
@@ -261,9 +308,11 @@ export const useStyles = makeStyles(
           '& .MuiDataGrid-selectedRowCount': {
             visibility: 'hidden',
             width: 0,
+            height: 0,
             [theme.breakpoints.up('sm')]: {
               visibility: 'visible',
               width: 'auto',
+              height: 'auto',
             },
           },
         },

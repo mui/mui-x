@@ -3,6 +3,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Grow from '@material-ui/core/Grow';
 import Paper from '@material-ui/core/Paper';
 import Popper, { PopperProps } from '@material-ui/core/Popper';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 
 type MenuPosition =
   | 'bottom-end'
@@ -19,10 +20,22 @@ type MenuPosition =
   | 'top'
   | undefined;
 
-export interface MenuProps extends Omit<PopperProps, 'onKeyDown'> {
+const useStyles = makeStyles(
+  (theme: Theme) => ({
+    root: {
+      zIndex: theme.zIndex.modal,
+      '& .MuiDataGrid-gridMenuList': {
+        outline: 0,
+      },
+    },
+  }),
+  { name: 'MuiDataGridMenu' },
+);
+
+export interface GridMenuProps extends Omit<PopperProps, 'onKeyDown'> {
   open: boolean;
   target: React.ReactNode;
-  onClickAway: (event: React.MouseEvent<Document, MouseEvent>) => void;
+  onClickAway: (event?: React.MouseEvent<Document, MouseEvent>) => void;
   position?: MenuPosition;
 }
 
@@ -31,24 +44,36 @@ const transformOrigin = {
   'bottom-end': 'top right',
 };
 
-export const GridMenu: React.FC<MenuProps> = ({
-  open,
-  target,
-  onClickAway,
-  children,
-  position,
-  ...other
-}) => {
+export const GridMenu = (props: GridMenuProps) => {
+  const { open, target, onClickAway, children, position, ...other } = props;
+  const prevTarget = React.useRef(target);
+  const prevOpen = React.useRef(open);
+  const classes = useStyles();
+
+  React.useEffect(() => {
+    if (prevOpen.current && prevTarget.current) {
+      (prevTarget.current as HTMLElement).focus();
+    }
+
+    prevOpen.current = open;
+    prevTarget.current = target;
+  }, [open, target]);
+
   return (
-    <Popper open={open} anchorEl={target as any} transition placement={position} {...other}>
+    <Popper
+      className={classes.root}
+      open={open}
+      anchorEl={target as any}
+      transition
+      placement={position}
+      {...other}
+    >
       {({ TransitionProps, placement }) => (
-        <Grow {...TransitionProps} style={{ transformOrigin: transformOrigin[placement] }}>
-          <Paper>
-            <ClickAwayListener onClickAway={onClickAway}>
-              <div>{children}</div>
-            </ClickAwayListener>
-          </Paper>
-        </Grow>
+        <ClickAwayListener onClickAway={onClickAway}>
+          <Grow {...TransitionProps} style={{ transformOrigin: transformOrigin[placement] }}>
+            <Paper>{children}</Paper>
+          </Grow>
+        </ClickAwayListener>
       )}
     </Popper>
   );

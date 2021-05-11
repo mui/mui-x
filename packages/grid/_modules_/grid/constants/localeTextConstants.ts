@@ -1,9 +1,10 @@
-import { LocaleText } from '../models/api/localeTextApi';
+import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 
-export const DEFAULT_LOCALE_TEXT: LocaleText = {
+export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Root
   rootGridLabel: 'grid',
   noRowsLabel: 'No rows',
+  noResultsOverlayLabel: 'No results found.',
   errorOverlayDefaultLabel: 'An error occurred.',
 
   // Density selector toolbar button text
@@ -15,29 +16,54 @@ export const DEFAULT_LOCALE_TEXT: LocaleText = {
 
   // Columns selector toolbar button text
   toolbarColumns: 'Columns',
-  toolbarColumnsLabel: 'Show Column Selector',
+  toolbarColumnsLabel: 'Select columns',
 
   // Filters toolbar button text
   toolbarFilters: 'Filters',
-  toolbarFiltersLabel: 'Show Filters',
-  toolbarFiltersTooltipHide: 'Hide Filters',
-  toolbarFiltersTooltipShow: 'Show Filters',
-  toolbarFiltersTooltipActive: (count) => `${count} active filter(s)`,
+  toolbarFiltersLabel: 'Show filters',
+  toolbarFiltersTooltipHide: 'Hide filters',
+  toolbarFiltersTooltipShow: 'Show filters',
+  toolbarFiltersTooltipActive: (count) =>
+    count !== 1 ? `${count} active filters` : `${count} active filter`,
+
+  // Export selector toolbar button text
+  toolbarExport: 'Export',
+  toolbarExportLabel: 'Export',
+  toolbarExportCSV: 'Download as CSV',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Find column',
   columnsPanelTextFieldPlaceholder: 'Column title',
-  columnsPanelDragIconLabel: 'Reorder Column',
-  columnsPanelShowAllButton: 'Show All',
-  columnsPanelHideAllButton: 'Hide All',
+  columnsPanelDragIconLabel: 'Reorder column',
+  columnsPanelShowAllButton: 'Show all',
+  columnsPanelHideAllButton: 'Hide all',
 
   // Filter panel text
-  filterPanelAddFilter: 'Add Filter',
+  filterPanelAddFilter: 'Add filter',
   filterPanelDeleteIconLabel: 'Delete',
   filterPanelOperators: 'Operators',
   filterPanelOperatorAnd: 'And',
   filterPanelOperatorOr: 'Or',
   filterPanelColumns: 'Columns',
+  filterPanelInputLabel: 'Value',
+  filterPanelInputPlaceholder: 'Filter value',
+
+  // Filter operators text
+  filterOperatorContains: 'contains',
+  filterOperatorEquals: 'equals',
+  filterOperatorStartsWith: 'starts with',
+  filterOperatorEndsWith: 'ends with',
+  filterOperatorIs: 'is',
+  filterOperatorNot: 'is not',
+  filterOperatorAfter: 'is after',
+  filterOperatorOnOrAfter: 'is on or after',
+  filterOperatorBefore: 'is before',
+  filterOperatorOnOrBefore: 'is on or before',
+
+  // Filter values text
+  filterValueAny: 'any',
+  filterValueTrue: 'true',
+  filterValueFalse: 'false',
 
   // Column menu text
   columnMenuLabel: 'Menu',
@@ -45,12 +71,13 @@ export const DEFAULT_LOCALE_TEXT: LocaleText = {
   columnMenuFilter: 'Filter',
   columnMenuHideColumn: 'Hide',
   columnMenuUnsort: 'Unsort',
-  columnMenuSortAsc: 'Sort by Asc',
-  columnMenuSortDesc: 'Sort by Desc',
+  columnMenuSortAsc: 'Sort by ASC',
+  columnMenuSortDesc: 'Sort by DESC',
 
   // Column header text
-  columnHeaderFiltersTooltipActive: (count) => `${count} active filter(s)`,
-  columnHeaderFiltersLabel: 'Show Filters',
+  columnHeaderFiltersTooltipActive: (count) =>
+    count !== 1 ? `${count} active filters` : `${count} active filter`,
+  columnHeaderFiltersLabel: 'Show filters',
   columnHeaderSortIconLabel: 'Sort',
 
   // Rows selected footer text
@@ -62,6 +89,10 @@ export const DEFAULT_LOCALE_TEXT: LocaleText = {
   // Total rows footer text
   footerTotalRows: 'Total Rows:',
 
-  // Pagination footer text
-  footerPaginationRowsPerPage: 'Rows per page:',
+  // Checkbox selection text
+  checkboxSelectionHeaderName: 'Checkbox selection',
+
+  // Boolean cell text
+  booleanCellTrueLabel: 'true',
+  booleanCellFalseLabel: 'false',
 };

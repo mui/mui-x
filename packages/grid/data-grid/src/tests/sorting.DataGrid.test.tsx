@@ -7,37 +7,36 @@ import {
   screen,
 } from 'test/utils';
 import { expect } from 'chai';
-import { DataGrid } from '@material-ui/data-grid';
-import { getColumnValues } from 'test/utils/helperFn';
+import { DataGrid, DataGridProps } from '@material-ui/data-grid';
+import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
+
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<DataGrid /> - Sorting', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
+    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,
         brand: 'Nike',
+        isPublished: false,
       },
       {
         id: 1,
         brand: 'Adidas',
+        isPublished: true,
       },
       {
         id: 2,
         brand: 'Puma',
+        isPublished: true,
       },
     ],
-    columns: [{ field: 'brand' }],
+    columns: [{ field: 'brand' }, { field: 'isPublished', type: 'boolean' }],
   };
-
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
 
   it('should keep the initial order', () => {
     const cols = [{ field: 'id' }];
@@ -45,7 +44,7 @@ describe('<DataGrid /> - Sorting', () => {
 
     render(
       <div style={{ width: 300, height: 300 }}>
-        <DataGrid columns={cols} rows={rows} />
+        <DataGrid autoHeight={isJSDOM} columns={cols} rows={rows} />
       </div>,
     );
     expect(getColumnValues()).to.deep.equal(['10', '0', '5']);
@@ -58,7 +57,7 @@ describe('<DataGrid /> - Sorting', () => {
     function Demo(props) {
       return (
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid columns={cols} sortingMode="server" {...props} />
+          <DataGrid autoHeight={isJSDOM} columns={cols} sortingMode="server" {...props} />
         </div>
       );
     }
@@ -69,20 +68,34 @@ describe('<DataGrid /> - Sorting', () => {
     expect(getColumnValues()).to.deep.equal(['5', '0', '10']);
   });
 
-  it('should sort when clicking the header cell', () => {
+  it('should sort string column when clicking the header cell', () => {
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid {...baselineProps} />
+      </div>,
+    );
+    const header = getColumnHeaderCell(1);
+    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+    fireEvent.click(header);
+    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    fireEvent.click(header);
+    expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+  });
+
+  it('should sort boolean column when clicking the header cell', () => {
     render(
       <div style={{ width: 300, height: 300 }}>
         <DataGrid {...baselineProps} />
       </div>,
     );
     const header = screen
-      .getByRole('columnheader', { name: 'brand' })
+      .getByRole('columnheader', { name: 'isPublished' })
       .querySelector('.MuiDataGrid-colCellTitleContainer');
     expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     fireEvent.click(header);
-    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     fireEvent.click(header);
-    expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+    expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma', 'Nike']);
   });
 
   it('should keep rows sorted when rows prop change', () => {
@@ -180,7 +193,7 @@ describe('<DataGrid /> - Sorting', () => {
       const { rows, columns } = props;
       return (
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid rows={rows} columns={columns} />
+          <DataGrid autoHeight={isJSDOM} rows={rows} columns={columns} />
         </div>
       );
     };
@@ -212,5 +225,21 @@ describe('<DataGrid /> - Sorting', () => {
     };
     setProps(newData);
     expect(getColumnValues()).to.deep.equal(['France', 'UK', 'US']);
+  });
+
+  it('should clear the sorting col when passing an empty sortModel', () => {
+    const TestCase = (props: Partial<DataGridProps>) => {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} {...props} />
+        </div>
+      );
+    };
+
+    const { setProps } = render(<TestCase sortModel={[{ field: 'brand', sort: 'asc' }]} />);
+
+    expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
+    setProps({ sortModel: [] });
+    expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 });

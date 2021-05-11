@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { fromEvent, Subscription } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
-import { XGrid, ColDef, GridOptionsProp, useApiRef } from '@material-ui/x-grid';
+import { XGrid, GridColDef, GridOptionsProp, useGridApiRef } from '@material-ui/x-grid';
 import {
   PricingModel,
   subscribeCurrencyPair,
@@ -14,12 +14,13 @@ export interface PricingGridProps {
   max?: number;
   options?: GridOptionsProp;
 }
-export const PricingGrid: React.FC<PricingGridProps> = (props) => {
-  const [columns] = React.useState<ColDef[]>(pricingColumns);
+export const PricingGrid = (props: PricingGridProps) => {
+  const { min, max } = props;
+  const [columns] = React.useState<GridColDef[]>(pricingColumns);
   const [rows] = React.useState<PricingModel[]>([]);
 
   const [started, setStarted] = React.useState<boolean>(false);
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
   const stopButton = React.useRef<HTMLButtonElement>(null);
 
   const { current: subscription } = React.useRef(new Subscription());
@@ -36,7 +37,7 @@ export const PricingGrid: React.FC<PricingGridProps> = (props) => {
       );
 
       for (let i = 0, len = currencyPairs.length; i < len; i += 1) {
-        const data$ = subscribeCurrencyPair(currencyPairs[i], i, props.min, props.max);
+        const data$ = subscribeCurrencyPair(currencyPairs[i], i, min, max);
         subscription.add(data$.pipe(takeUntil(cancel$)).subscribe((data) => handleNewPrice(data)));
       }
       setStarted(true);
@@ -54,6 +55,7 @@ export const PricingGrid: React.FC<PricingGridProps> = (props) => {
       subscribeToStream();
     }
   };
+  const getRowId = React.useCallback((row) => row.idfield, []);
   return (
     <React.Fragment>
       <div>
@@ -67,7 +69,7 @@ export const PricingGrid: React.FC<PricingGridProps> = (props) => {
         </button>
       </div>
       <div style={{ width: 800, height: 600 }}>
-        <XGrid rows={rows} columns={columns} apiRef={apiRef} {...props} />
+        <XGrid rows={rows} columns={columns} apiRef={apiRef} {...props} getRowId={getRowId} />
       </div>
     </React.Fragment>
   );

@@ -1,32 +1,25 @@
 import * as React from 'react';
-import { STATE_CHANGE } from '../../../constants/eventsConstants';
-import { ApiRef } from '../../../models/api/apiRef';
+import { GRID_STATE_CHANGE } from '../../../constants/eventsConstants';
+import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridApi } from '../../../models/api/gridApi';
-import { StateChangeParams } from '../../../models/params/stateChangeParams';
+import { GridStateChangeParams } from '../../../models/params/gridStateChangeParams';
 import { isFunction } from '../../../utils/utils';
-import { useApiMethod } from '../../root/useApiMethod';
+import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useLogger } from '../../utils/useLogger';
-import { getInitialState, GridState } from './gridState';
+import { getInitialGridState, GridState } from './gridState';
 
-export const useGridApi = (apiRef: ApiRef): GridApi => {
+export const useGridApi = (apiRef: GridApiRef): GridApi => {
   const logger = useLogger('useGridApi');
   const [, forceUpdate] = React.useState<GridState>();
   if (!apiRef.current.isInitialised && !apiRef.current.state) {
     logger.info('Initialising state.');
-    apiRef.current.state = getInitialState();
+    apiRef.current.state = getInitialGridState();
     apiRef.current.forceUpdate = forceUpdate;
   }
 
   const getState = React.useCallback(
     <State>(stateId?: string) =>
       (stateId ? apiRef.current.state[stateId] : apiRef.current.state) as State,
-    [apiRef],
-  );
-
-  const onStateChange = React.useCallback(
-    (handler: (param: StateChangeParams) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(STATE_CHANGE, handler);
-    },
     [apiRef],
   );
 
@@ -40,13 +33,13 @@ export const useGridApi = (apiRef: ApiRef): GridApi => {
       }
       apiRef.current.state = state;
       forceUpdate(() => state);
-      const params: StateChangeParams = { api: apiRef.current, state };
-      apiRef.current.publishEvent(STATE_CHANGE, params);
+      const params: GridStateChangeParams = { api: apiRef.current, state };
+      apiRef.current.publishEvent(GRID_STATE_CHANGE, params);
     },
     [apiRef],
   );
 
-  useApiMethod(apiRef, { getState, onStateChange, setState }, 'StateApi');
+  useGridApiMethod(apiRef, { getState, setState }, 'GridStateApi');
 
   return apiRef.current;
 };

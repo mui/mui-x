@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, RowId } from '@material-ui/data-grid';
+import { DataGrid, GridRowId } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
 export default function ControlledSelectionGrid() {
@@ -9,16 +9,16 @@ export default function ControlledSelectionGrid() {
     maxColumns: 6,
   });
 
-  // TODO: https://github.com/mui-org/material-ui-x/issues/246
-  const [, setSelection] = React.useState<RowId[]>([]);
+  const [selectionModel, setSelectionModel] = React.useState<GridRowId[]>([]);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         checkboxSelection
-        onSelectionChange={(newSelection) => {
-          setSelection(newSelection.rowIds);
+        onSelectionModelChange={(newSelection) => {
+          setSelectionModel(newSelection.selectionModel);
         }}
+        selectionModel={selectionModel}
         {...data}
       />
     </div>

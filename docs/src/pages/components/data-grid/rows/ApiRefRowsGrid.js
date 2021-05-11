@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { XGrid, useApiRef } from '@material-ui/x-grid';
+import { XGrid, useGridApiRef } from '@material-ui/x-grid';
 import { interval } from 'rxjs';
 import { randomInt, randomUserName } from '@material-ui/x-grid-data-generator';
 
@@ -17,7 +17,7 @@ const rows = [
 ];
 
 export default function ApiRefRowsGrid() {
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
 
   React.useEffect(() => {
     const subscription = interval(200).subscribe(() => {

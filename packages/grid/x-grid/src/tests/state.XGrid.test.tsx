@@ -3,13 +3,16 @@ import * as React from 'react';
 import { fireEvent, screen, createClientRenderStrictMode } from 'test/utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import { expect } from 'chai';
-import { XGrid, useApiRef } from '@material-ui/x-grid';
+import { XGrid, useGridApiRef } from '@material-ui/x-grid';
+
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<XGrid /> - State', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
+    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,
@@ -27,19 +30,12 @@ describe('<XGrid /> - State', () => {
     columns: [{ field: 'brand', width: 100 }],
   };
 
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
-
   it('should trigger on state change and pass the correct params', () => {
     let onStateParams;
     let apiRef;
 
     function Test() {
-      apiRef = useApiRef();
+      apiRef = useGridApiRef();
       const onStateChange = (params) => {
         onStateParams = params;
       };
@@ -61,7 +57,7 @@ describe('<XGrid /> - State', () => {
 
   it('should allow to control the state using apiRef', () => {
     function GridStateTest() {
-      const apiRef = useApiRef();
+      const apiRef = useGridApiRef();
       React.useEffect(() => {
         apiRef.current.setState((prev) => ({
           ...prev,

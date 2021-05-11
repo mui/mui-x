@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { action } from '@storybook/addon-actions';
-import { GridOptionsProp, XGrid, useApiRef } from '@material-ui/x-grid';
+import { GridOptionsProp, XGrid, useGridApiRef } from '@material-ui/x-grid';
 import { interval } from 'rxjs';
 import { randomInt, randomUserName } from '@material-ui/x-grid-data-generator';
 import { FeedGrid } from '../components/feed-grid';
@@ -19,7 +19,7 @@ export default {
 
 export const SlowUpdateGrid = () => {
   const options: GridOptionsProp = {
-    onSelectionChange: (params) => action('onSelectionChange', { depth: 1 })(params),
+    onSelectionModelChange: (params) => action('onSelectionChange', { depth: 1 })(params),
     onRowSelected: (params) => action('onRowSelected')(params),
   };
   const rate = { min: 1000, max: 5000 };
@@ -34,7 +34,7 @@ export const SlowUpdateGrid = () => {
 };
 export const FastUpdateGrid = () => {
   const options: GridOptionsProp = {
-    onSelectionChange: (params) => action('onSelectionChange', { depth: 1 })(params),
+    onSelectionModelChange: (params) => action('onSelectionChange', { depth: 1 })(params),
     onRowSelected: (params) => action('onRowSelected')(params),
   };
   const rate = { min: 100, max: 500 };
@@ -49,7 +49,7 @@ export const FastUpdateGrid = () => {
 };
 export const SingleSubscriptionFast = () => {
   const options: GridOptionsProp = {
-    onSelectionChange: (params) => action('onSelectionChange', { depth: 1 })(params),
+    onSelectionModelChange: (params) => action('onSelectionChange', { depth: 1 })(params),
     onRowSelected: (params) => action('onRowSelected')(params),
   };
   const rate = { min: 100, max: 500 };
@@ -64,7 +64,7 @@ export const SingleSubscriptionFast = () => {
 };
 
 export function SimpleRxUpdate() {
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
   const columns = [{ field: 'id' }, { field: 'username', width: 150 }, { field: 'age', width: 80 }];
 
   React.useEffect(() => {

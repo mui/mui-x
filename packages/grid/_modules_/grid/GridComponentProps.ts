@@ -1,10 +1,11 @@
 import { GridState } from './hooks/features/core/gridState';
-import { ApiRef } from './models/api/apiRef';
-import { Columns } from './models/colDef/colDef';
-import { GridSlotsComponent, GridSlotsComponentProps } from './models/gridSlotsComponent';
+import { GridApiRef } from './models/api/gridApiRef';
+import { GridColumns } from './models/colDef/gridColDef';
+import { GridSlotsComponent } from './models/gridSlotsComponent';
 import { GridOptions } from './models/gridOptions';
-import { StateChangeParams } from './models/params/stateChangeParams';
-import { RowsProp } from './models/rows';
+import { GridSlotsComponentsProps } from './models/gridSlotsComponentsProps';
+import { GridStateChangeParams } from './models/params/gridStateChangeParams';
+import { GridRowIdGetter, GridRowsProp } from './models/gridRows';
 
 /**
  * Partial set of [[GridOptions]].
@@ -16,18 +17,28 @@ export type GridOptionsProp = Partial<GridOptions>;
  */
 export interface GridComponentProps extends GridOptionsProp {
   /**
-   * The ref object that allows grid manipulation. Can be instantiated with [[useApiRef()]].
+   * The ref object that allows grid manipulation. Can be instantiated with [[useGridApiRef()]].
    */
-  apiRef?: ApiRef;
+  apiRef?: GridApiRef;
   /**
-   * Set of columns of type [[Columns]].
+   * Set of columns of type [[GridColumns]].
    */
-  columns: Columns;
+  columns: GridColumns;
   /**
    * Overrideable components.
    */
   components?: GridSlotsComponent;
-  componentsProps?: GridSlotsComponentProps;
+  /**
+   * Overrideable components props dynamically passed to the component at rendering.
+   */
+  componentsProps?: GridSlotsComponentsProps;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: {
+    /** Styles applied to the root element. */
+    root?: string;
+  };
   /**
    * @ignore
    */
@@ -51,13 +62,17 @@ export interface GridComponentProps extends GridOptionsProp {
   /**
    * Set a callback fired when the state of the grid is updated.
    */
-  onStateChange?: (params: StateChangeParams) => void; // We are overriding the handler in GridOptions to fix the params type and avoid the cycle dependency
+  onStateChange?: (params: GridStateChangeParams) => void; // We are overriding the handler in GridOptions to fix the params type and avoid the cycle dependency
   /**
-   * Set of rows of type [[RowsProp]].
+   * Set of rows of type [[GridRowsProp]].
    */
-  rows: RowsProp;
+  rows: GridRowsProp;
   /**
    * Set the whole state of the grid.
    */
   state?: Partial<GridState>;
+  /**
+   * Return the id of a given [[GridRowData]].
+   */
+  getRowId?: GridRowIdGetter;
 }

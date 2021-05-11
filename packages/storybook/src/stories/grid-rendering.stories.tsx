@@ -1,7 +1,19 @@
 import * as React from 'react';
-import { XGrid } from '@material-ui/x-grid';
+import { XGrid, GridOverlay } from '@material-ui/x-grid';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import { useDemoData } from '@material-ui/x-grid-data-generator';
 import '../style/grid-stories.css';
 import { action } from '@storybook/addon-actions';
+
+function CustomLoadingOverlay() {
+  return (
+    <GridOverlay>
+      <div style={{ position: 'absolute', top: 0, width: '100%' }}>
+        <LinearProgress />
+      </div>
+    </GridOverlay>
+  );
+}
 
 export default {
   title: 'X-Grid Tests/Rendering',
@@ -37,6 +49,31 @@ export const RenderInputInCell = () => {
   return (
     <div className="grid-container">
       <XGrid rows={rows} columns={columns} />
+    </div>
+  );
+};
+export const InfiniteLoading = () => {
+  const { loading, data, setRowLength } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 50,
+    maxColumns: 20,
+  });
+
+  const handleOnRowsScrollEnd = (params) => {
+    const newRowLength = params.virtualRowsCount + params.viewportPageSize;
+    setRowLength(newRowLength);
+  };
+
+  return (
+    <div className="grid-container">
+      <XGrid
+        {...data}
+        loading={loading}
+        onRowsScrollEnd={handleOnRowsScrollEnd}
+        components={{
+          LoadingOverlay: CustomLoadingOverlay,
+        }}
+      />
     </div>
   );
 };

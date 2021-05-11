@@ -1,10 +1,13 @@
 import * as React from 'react';
-import { DEFAULT_LOCALE_TEXT } from '../../constants/localeTextConstants';
+import { ownerDocument } from '@material-ui/core/utils';
+import { GRID_DEFAULT_LOCALE_TEXT } from '../../constants/localeTextConstants';
+import { mergeGridOptions } from '../../utils/mergeUtils';
 import { GridComponentProps, GridOptionsProp } from '../../GridComponentProps';
-import { ApiRef } from '../../models/api/apiRef';
+import { GridApiRef } from '../../models/api/gridApiRef';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../models/gridOptions';
-import { mergeOptions } from '../../utils/mergeOptions';
+import { getScrollbarSize, useEnhancedEffect } from '../../utils/material-ui-utils';
 import { useGridReducer } from '../features/core/useGridReducer';
+import { useLogger } from './useLogger';
 
 // REDUCER
 export function optionsReducer(
@@ -13,127 +16,37 @@ export function optionsReducer(
 ) {
   switch (action.type) {
     case 'options::UPDATE':
-      return mergeOptions(state, action.payload);
+      return mergeGridOptions(state, action.payload);
     default:
       throw new Error(`Material-UI: Action ${action.type} not found.`);
   }
 }
+export function useOptionsProp(apiRef: GridApiRef, props: GridComponentProps): GridOptions {
+  const logger = useLogger('useOptionsProp');
+  const [browserScrollBar, setBrowserScrollBar] = React.useState(0);
 
-export function useOptionsProp(apiRef: ApiRef, props: GridComponentProps): GridOptions {
-  // TODO Refactor to smaller objects
+  const getBrowserScrollBar = React.useCallback(() => {
+    if (apiRef.current?.rootElementRef?.current) {
+      const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
+      const scrollbarSize = getScrollbarSize(doc);
+      logger.debug(`Detected Scroll Bar size ${scrollbarSize}.`);
+      return scrollbarSize;
+    }
+    return 0;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiRef, logger, apiRef.current?.rootElementRef?.current]);
+
+  useEnhancedEffect(() => {
+    setBrowserScrollBar(getBrowserScrollBar());
+  }, [getBrowserScrollBar]);
+
   const options: GridOptionsProp = React.useMemo(
     () => ({
-      pageSize: props.pageSize,
-      logger: props.logger,
-      sortingMode: props.sortingMode,
-      filterMode: props.filterMode,
-      autoHeight: props.autoHeight,
-      autoPageSize: props.autoPageSize,
-      checkboxSelection: props.checkboxSelection,
-      columnBuffer: props.columnBuffer,
-      columnTypes: props.columnTypes,
-      disableSelectionOnClick: props.disableSelectionOnClick,
-      disableMultipleColumnsSorting: props.disableMultipleColumnsSorting,
-      disableMultipleSelection: props.disableMultipleSelection,
-      disableMultipleColumnsFiltering: props.disableMultipleColumnsFiltering,
-      disableColumnResize: props.disableColumnResize,
-      disableDensitySelector: props.disableDensitySelector,
-      disableColumnReorder: props.disableColumnReorder,
-      disableColumnFilter: props.disableColumnFilter,
-      disableColumnMenu: props.disableColumnMenu,
-      disableColumnSelector: props.disableColumnSelector,
-      disableExtendRowFullWidth: props.disableExtendRowFullWidth,
-      headerHeight: props.headerHeight,
-      hideFooter: props.hideFooter,
-      hideFooterPagination: props.hideFooterPagination,
-      hideFooterRowCount: props.hideFooterRowCount,
-      hideFooterSelectedRowCount: props.hideFooterSelectedRowCount,
-      showToolbar: props.showToolbar,
-      logLevel: props.logLevel,
-      onCellClick: props.onCellClick,
-      onCellHover: props.onCellHover,
-      onColumnHeaderClick: props.onColumnHeaderClick,
-      onError: props.onError,
-      onPageChange: props.onPageChange,
-      onPageSizeChange: props.onPageSizeChange,
-      onRowClick: props.onRowClick,
-      onRowHover: props.onRowHover,
-      onRowSelected: props.onRowSelected,
-      onSelectionChange: props.onSelectionChange,
-      onSortModelChange: props.onSortModelChange,
-      onFilterModelChange: props.onFilterModelChange,
-      onStateChange: props.onStateChange,
-      page: props.page,
-      pagination: props.pagination,
-      paginationMode: props.paginationMode,
-      rowCount: props.rowCount,
-      rowHeight: props.rowHeight,
-      rowsPerPageOptions: props.rowsPerPageOptions,
-      scrollbarSize: props.scrollbarSize,
-      showCellRightBorder: props.showCellRightBorder,
-      showColumnRightBorder: props.showColumnRightBorder,
-      sortingOrder: props.sortingOrder,
-      sortModel: props.sortModel,
-      density: props.density,
-      filterModel: props.filterModel,
-      localeText: { ...DEFAULT_LOCALE_TEXT, ...props.localeText },
+      ...props,
+      localeText: { ...GRID_DEFAULT_LOCALE_TEXT, ...props.localeText },
+      scrollbarSize: props.scrollbarSize == null ? browserScrollBar : props.scrollbarSize || 0,
     }),
-    [
-      props.pageSize,
-      props.logger,
-      props.sortingMode,
-      props.filterMode,
-      props.autoHeight,
-      props.autoPageSize,
-      props.checkboxSelection,
-      props.columnBuffer,
-      props.columnTypes,
-      props.disableSelectionOnClick,
-      props.disableMultipleColumnsSorting,
-      props.disableMultipleSelection,
-      props.disableMultipleColumnsFiltering,
-      props.disableColumnResize,
-      props.disableDensitySelector,
-      props.disableColumnReorder,
-      props.disableColumnFilter,
-      props.disableColumnMenu,
-      props.disableColumnSelector,
-      props.disableExtendRowFullWidth,
-      props.headerHeight,
-      props.hideFooter,
-      props.hideFooterPagination,
-      props.hideFooterRowCount,
-      props.hideFooterSelectedRowCount,
-      props.showToolbar,
-      props.logLevel,
-      props.onCellClick,
-      props.onCellHover,
-      props.onColumnHeaderClick,
-      props.onError,
-      props.onPageChange,
-      props.onPageSizeChange,
-      props.onRowClick,
-      props.onRowHover,
-      props.onRowSelected,
-      props.onSelectionChange,
-      props.onSortModelChange,
-      props.onFilterModelChange,
-      props.onStateChange,
-      props.page,
-      props.pagination,
-      props.paginationMode,
-      props.rowCount,
-      props.rowHeight,
-      props.rowsPerPageOptions,
-      props.scrollbarSize,
-      props.showCellRightBorder,
-      props.showColumnRightBorder,
-      props.sortingOrder,
-      props.sortModel,
-      props.density,
-      props.filterModel,
-      props.localeText,
-    ],
+    [browserScrollBar, props],
   );
 
   const { gridState, dispatch } = useGridReducer(apiRef, 'options', optionsReducer, {

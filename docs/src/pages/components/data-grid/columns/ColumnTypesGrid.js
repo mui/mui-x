@@ -12,6 +12,7 @@ const rows = [
     age: 25,
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
+    isAdmin: true,
   },
   {
     id: 2,
@@ -19,6 +20,7 @@ const rows = [
     age: 36,
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
+    isAdmin: true,
   },
   {
     id: 3,
@@ -26,10 +28,11 @@ const rows = [
     age: 19,
     dateCreated: randomCreatedDate(),
     lastLogin: randomUpdatedDate(),
+    isAdmin: false,
   },
 ];
 
-export default function ColumnTypesDemo() {
+export default function ColumnTypesGrid() {
   return (
     <div style={{ height: 300, width: '100%' }}>
       <DataGrid
@@ -38,6 +41,7 @@ export default function ColumnTypesDemo() {
           { field: 'age', type: 'number' },
           { field: 'dateCreated', type: 'date', width: 130 },
           { field: 'lastLogin', type: 'dateTime', width: 180 },
+          { field: 'isAdmin', type: 'boolean', width: 120 },
         ]}
         rows={rows}
       />

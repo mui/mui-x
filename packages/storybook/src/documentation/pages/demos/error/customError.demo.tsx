@@ -1,4 +1,4 @@
-import { Columns, GridOverlay, RowsProp, XGrid } from '@material-ui/x-grid';
+import { GridColumns, GridOverlay, GridRowsProp, XGrid } from '@material-ui/x-grid';
 import * as React from 'react';
 import { randomCreatedDate, randomUpdatedDate } from '@material-ui/x-grid-data-generator';
 
@@ -14,7 +14,7 @@ function CustomErrorOverlay(props) {
 }
 
 export default function CustomErrorDemo() {
-  const columns: Columns = [
+  const columns: GridColumns = [
     { field: 'name', type: 'string' },
     {
       field: 'age',
@@ -26,7 +26,7 @@ export default function CustomErrorDemo() {
     { field: 'dateCreated', type: 'date', width: 180 },
     { field: 'lastLogin', type: 'dateTime', width: 180 },
   ];
-  const rows: RowsProp = [
+  const rows: GridRowsProp = [
     {
       id: 1,
       name: 'Damien',

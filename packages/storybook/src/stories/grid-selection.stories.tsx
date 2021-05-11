@@ -1,6 +1,13 @@
+import { useDemoData } from '@material-ui/x-grid-data-generator';
 import * as React from 'react';
 import { action } from '@storybook/addon-actions';
-import { XGrid, GridOptionsProp, useApiRef } from '@material-ui/x-grid';
+import {
+  XGrid,
+  GridOptionsProp,
+  useGridApiRef,
+  GridSelectionModelChangeParams,
+  GridRowId,
+} from '@material-ui/x-grid';
 import { getData, GridData } from '../data/data-service';
 import { useData } from '../hooks/useData';
 
@@ -16,7 +23,7 @@ export default {
 };
 
 export const ApiPreSelectedRows = () => {
-  const apiRef = useApiRef();
+  const apiRef = useGridApiRef();
   const [data, setData] = React.useState<GridData>({ rows: [], columns: [] });
 
   React.useEffect(() => {
@@ -37,7 +44,7 @@ export const EventsMapped = () => {
   const data = useData(200, 200);
 
   const options: GridOptionsProp = {
-    onSelectionChange: (params) => action('onSelectionChange', { depth: 1 })(params),
+    onSelectionModelChange: (params) => action('onSelectionChange', { depth: 1 })(params),
     onRowSelected: (params) => action('onRowSelected')(params),
   };
 
@@ -62,4 +69,33 @@ export const MultipleSelectWithCheckboxNoClick = () => {
   return (
     <XGrid rows={data.rows} columns={data.columns} checkboxSelection disableSelectionOnClick />
   );
+};
+
+export function HandleSelection() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+  });
+
+  const [selectionModel, setSelectionModel] = React.useState<GridRowId[]>([]);
+  const handleSelection = React.useCallback(
+    (params: GridSelectionModelChangeParams) => {
+      setSelectionModel(params.selectionModel);
+    },
+    [setSelectionModel],
+  );
+
+  return (
+    <XGrid
+      {...data}
+      checkboxSelection
+      selectionModel={selectionModel}
+      onSelectionModelChange={handleSelection}
+    />
+  );
+}
+export const GridSelectionModel = () => {
+  const data = useData(200, 200);
+
+  return <XGrid rows={data.rows} columns={data.columns} selectionModel={[1, 2, 3]} />;
 };

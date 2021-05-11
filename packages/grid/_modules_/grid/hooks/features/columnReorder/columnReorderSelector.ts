@@ -1,10 +1,11 @@
 import { createSelector } from 'reselect';
 import { GridState } from '../core/gridState';
-import { ColumnReorderState } from './columnReorderState';
+import { GridColumnReorderState } from './columnReorderState';
 
-export const columnReorderSelector = (state: GridState) => state.columnReorder;
+export const gridColumnReorderSelector = (state: GridState) => state.columnReorder;
 
-export const columnReorderDragColSelector = createSelector<GridState, ColumnReorderState, string>(
-  columnReorderSelector,
-  (columnReorder) => columnReorder.dragCol,
-);
+export const gridColumnReorderDragColSelector = createSelector<
+  GridState,
+  GridColumnReorderState,
+  string
+>(gridColumnReorderSelector, (columnReorder) => columnReorder.dragCol);

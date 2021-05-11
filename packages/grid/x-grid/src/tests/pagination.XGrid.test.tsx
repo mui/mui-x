@@ -5,13 +5,16 @@ import {
 } from 'test/utils';
 import * as React from 'react';
 import { expect } from 'chai';
-import { XGrid, useApiRef } from '@material-ui/x-grid';
+import { XGrid, useGridApiRef } from '@material-ui/x-grid';
+
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<XGrid /> - Pagination', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
+    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,
@@ -29,17 +32,10 @@ describe('<XGrid /> - Pagination', () => {
     columns: [{ field: 'brand', width: 100 }],
   };
 
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
-
   it('should apply setPage correctly', () => {
     let apiRef;
     const GridTest = () => {
-      apiRef = useApiRef();
+      apiRef = useGridApiRef();
 
       return (
         <div style={{ width: 300, height: 300 }}>
@@ -48,13 +44,12 @@ describe('<XGrid /> - Pagination', () => {
       );
     };
 
-    // TODO fix StrictMode support
-    render(<GridTest />, { strict: false });
+    render(<GridTest />);
 
     let cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
     expect(cell).to.have.text('Nike');
     act(() => {
-      apiRef.current.setPage(2);
+      apiRef.current.setPage(1);
     });
 
     cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;

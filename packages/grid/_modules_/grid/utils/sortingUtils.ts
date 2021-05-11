@@ -1,7 +1,10 @@
-import { CellValue } from '../models/cell';
-import { SortDirection, ComparatorFn } from '../models/sortModel';
+import { GridCellValue } from '../models/gridCell';
+import { GridSortDirection, GridComparatorFn } from '../models/gridSortModel';
 
-export const nextSortDirection = (sortingOrder: SortDirection[], current?: SortDirection) => {
+export const nextGridSortDirection = (
+  sortingOrder: GridSortDirection[],
+  current?: GridSortDirection,
+) => {
   const currentIdx = sortingOrder.indexOf(current);
   if (!current || currentIdx === -1 || currentIdx + 1 === sortingOrder.length) {
     return sortingOrder[0];
@@ -10,9 +13,9 @@ export const nextSortDirection = (sortingOrder: SortDirection[], current?: SortD
   return sortingOrder[currentIdx + 1];
 };
 
-export const isDesc = (direction: SortDirection) => direction === 'desc';
+export const isDesc = (direction: GridSortDirection) => direction === 'desc';
 
-export const nillComparer = (v1: CellValue, v2: CellValue): number | null => {
+export const gridNillComparer = (v1: GridCellValue, v2: GridCellValue): number | null => {
   if (v1 == null && v2 != null) return -1;
   if (v2 == null && v1 != null) return 1;
   if (v1 == null && v2 == null) return 0;
@@ -20,16 +23,16 @@ export const nillComparer = (v1: CellValue, v2: CellValue): number | null => {
   return null;
 };
 
-export const stringNumberComparer: ComparatorFn = (
-  v1: CellValue,
-  v2: CellValue,
+export const gridStringNumberComparer: GridComparatorFn = (
+  v1: GridCellValue,
+  v2: GridCellValue,
   cellParams1,
   cellParams2,
 ) => {
   const value1 = cellParams1.getValue(cellParams1.field);
   const value2 = cellParams2.getValue(cellParams2.field);
 
-  const nillResult = nillComparer(value1, value2);
+  const nillResult = gridNillComparer(value1, value2);
   if (nillResult !== null) {
     return nillResult;
   }
@@ -40,16 +43,16 @@ export const stringNumberComparer: ComparatorFn = (
   return (value1 as any) - (value2 as any);
 };
 
-export const numberComparer: ComparatorFn = (
-  v1: CellValue,
-  v2: CellValue,
+export const gridNumberComparer: GridComparatorFn = (
+  v1: GridCellValue,
+  v2: GridCellValue,
   cellParams1,
   cellParams2,
 ) => {
   const value1 = cellParams1.getValue(cellParams1.field);
   const value2 = cellParams2.getValue(cellParams2.field);
 
-  const nillResult = nillComparer(value1, value2);
+  const nillResult = gridNillComparer(value1, value2);
   if (nillResult !== null) {
     return nillResult;
   }
@@ -57,11 +60,16 @@ export const numberComparer: ComparatorFn = (
   return Number(value1) - Number(value2);
 };
 
-export const dateComparer = (v1: CellValue, v2: CellValue, cellParams1, cellParams2): number => {
+export const gridDateComparer = (
+  v1: GridCellValue,
+  v2: GridCellValue,
+  cellParams1,
+  cellParams2,
+): number => {
   const value1 = cellParams1.getValue(cellParams1.field);
   const value2 = cellParams2.getValue(cellParams2.field);
 
-  const nillResult = nillComparer(value1, value2);
+  const nillResult = gridNillComparer(value1, value2);
   if (nillResult !== null) {
     return nillResult;
   }

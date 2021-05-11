@@ -1,48 +1,50 @@
 import * as React from 'react';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
-import { paginationSelector } from '../hooks/features/pagination/paginationSelector';
-import { rowCountSelector } from '../hooks/features/rows/rowsSelector';
-import { selectedRowsCountSelector } from '../hooks/features/selection/selectionSelector';
+import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
+import { gridRowCountSelector } from '../hooks/features/rows/gridRowsSelector';
+import { selectedGridRowsCountSelector } from '../hooks/features/selection/gridSelectionSelector';
 import { optionsSelector } from '../hooks/utils/optionsSelector';
-import { ApiContext } from './api-context';
-import { RowCount } from './RowCount';
-import { SelectedRowCount } from './SelectedRowCount';
-import { GridFooterContainer } from './containers/GridFooterContainer';
+import { GridApiContext } from './GridApiContext';
+import { GridRowCount } from './GridRowCount';
+import { GridSelectedRowCount } from './GridSelectedRowCount';
+import { GridFooterContainer, GridFooterContainerProps } from './containers/GridFooterContainer';
 
-export interface GridFooterProps {
-  PaginationComponent?: React.ReactNode;
-}
+export const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerProps>(
+  function GridFooter(props, ref) {
+    const apiRef = React.useContext(GridApiContext);
+    const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
+    const options = useGridSelector(apiRef, optionsSelector);
+    const selectedRowCount = useGridSelector(apiRef, selectedGridRowsCountSelector);
+    const pagination = useGridSelector(apiRef, gridPaginationSelector);
 
-export function GridFooter(props: GridFooterProps) {
-  const apiRef = React.useContext(ApiContext);
-  const totalRowCount = useGridSelector(apiRef, rowCountSelector);
-  const options = useGridSelector(apiRef, optionsSelector);
-  const selectedRowCount = useGridSelector(apiRef, selectedRowsCountSelector);
-  const pagination = useGridSelector(apiRef, paginationSelector);
+    const SelectedRowCountElement =
+      !options.hideFooterSelectedRowCount && selectedRowCount > 0 ? (
+        <GridSelectedRowCount selectedRowCount={selectedRowCount} />
+      ) : (
+        <div />
+      );
 
-  const SelectedRowCountElement =
-    !options.hideFooterSelectedRowCount && selectedRowCount > 0 ? (
-      <SelectedRowCount selectedRowCount={selectedRowCount} />
-    ) : (
-      <div />
+    const RowCountElement =
+      !options.hideFooterRowCount && !options.pagination ? (
+        <GridRowCount rowCount={totalRowCount} />
+      ) : null;
+
+    const PaginationComponent =
+      !!options.pagination &&
+      pagination.pageSize != null &&
+      !options.hideFooterPagination &&
+      apiRef?.current.components.Pagination;
+
+    const PaginationElement = PaginationComponent && (
+      <PaginationComponent {...apiRef?.current.componentsProps?.pagination} />
     );
 
-  const RowCountElement =
-    !options.hideFooterRowCount && !options.pagination ? (
-      <RowCount rowCount={totalRowCount} />
-    ) : null;
-
-  const PaginationElement =
-    !!options.pagination &&
-    pagination.pageSize != null &&
-    !options.hideFooterPagination &&
-    props.PaginationComponent;
-
-  return (
-    <GridFooterContainer>
-      {SelectedRowCountElement}
-      {RowCountElement}
-      {PaginationElement}
-    </GridFooterContainer>
-  );
-}
+    return (
+      <GridFooterContainer ref={ref} {...props}>
+        {SelectedRowCountElement}
+        {RowCountElement}
+        {PaginationElement}
+      </GridFooterContainer>
+    );
+  },
+);

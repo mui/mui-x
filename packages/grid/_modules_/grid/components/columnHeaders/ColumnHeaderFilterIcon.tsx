@@ -3,10 +3,10 @@ import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import Tooltip from '@material-ui/core/Tooltip';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { preferencePanelStateSelector } from '../../hooks/features/preferencesPanel/preferencePanelSelector';
-import { PreferencePanelsValue } from '../../hooks/features/preferencesPanel/preferencesPanelValue';
+import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
+import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
-import { ApiContext } from '../api-context';
+import { GridApiContext } from '../GridApiContext';
 
 export interface ColumnHeaderFilterIconProps {
   counter?: number;
@@ -14,9 +14,9 @@ export interface ColumnHeaderFilterIconProps {
 
 export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
   const { counter } = props;
-  const apiRef = React.useContext(ApiContext);
+  const apiRef = React.useContext(GridApiContext);
   const options = useGridSelector(apiRef, optionsSelector);
-  const preferencePanel = useGridSelector(apiRef, preferencePanelStateSelector);
+  const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
 
   const FilteredColumnIconElement = apiRef!.current.components.ColumnFilteredIcon!;
 
@@ -26,7 +26,7 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
       event.stopPropagation();
 
       const { open, openedPanelValue } = preferencePanel;
-      if (open && openedPanelValue === PreferencePanelsValue.filters) {
+      if (open && openedPanelValue === GridPreferencePanelsValue.filters) {
         apiRef!.current.hideFilterPanel();
       } else {
         apiRef!.current.showFilterPanel();
@@ -35,7 +35,7 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
     [apiRef, preferencePanel],
   );
 
-  if (!counter || options.disableColumnFilter || options.showToolbar) {
+  if (!counter || options.disableColumnFilter) {
     return null;
   }
 
@@ -45,6 +45,7 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
       color="default"
       aria-label={apiRef!.current.getLocaleText('columnHeaderFiltersLabel')}
       size="small"
+      tabIndex={-1}
     >
       <FilteredColumnIconElement fontSize="small" />
     </IconButton>

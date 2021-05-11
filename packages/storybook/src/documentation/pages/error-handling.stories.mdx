@@ -51,12 +51,12 @@ React.useEffect(()=> {
 
 <ServerErrorStateDemo />
 
-### Using the ApiRef
+### Using the GridApiRef
 
-Server errors can be displayed using the `showError` method of the `ApiRef` as below.
+Server errors can be displayed using the `showError` method of the `GridApiRef` as below.
 
 ```tsx
-const apiRef = useApiRef();
+const apiRef = useGridApiRef();
 
 React.useEffect(()=> {
   service.loadBadRows().catch((error)=> {

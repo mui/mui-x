@@ -1,0 +1,131 @@
+import * as React from 'react';
+import { gridEditRowsStateSelector } from '../../hooks/features/rows/gridEditRowsSelector';
+import {
+  GridCellClassParams,
+  GridColumns,
+  GridRowModel,
+  GridCellClassRules,
+  GridCellParams,
+  GridCellIndexCoordinates,
+  GridRowId,
+} from '../../models/index';
+import { GridCell, GridCellProps } from './GridCell';
+import { GridApiContext } from '../GridApiContext';
+import { classnames, isFunction } from '../../utils/index';
+import { gridDensityRowHeightSelector } from '../../hooks/features/density/densitySelector';
+import { useGridSelector } from '../../hooks/features/core/useGridSelector';
+
+function applyCssClassRules(cellClassRules: GridCellClassRules, params: GridCellClassParams) {
+  return Object.entries(cellClassRules).reduce((appliedCss, entry) => {
+    const shouldApplyCss: boolean = isFunction(entry[1]) ? entry[1](params) : entry[1];
+    appliedCss += shouldApplyCss ? `${entry[0]} ` : '';
+    return appliedCss;
+  }, '');
+}
+
+interface RowCellsProps {
+  columns: GridColumns;
+  extendRowFullWidth: boolean;
+  firstColIdx: number;
+  id: GridRowId;
+  hasScroll: { y: boolean; x: boolean };
+  lastColIdx: number;
+  row: GridRowModel;
+  rowIndex: number;
+  showCellRightBorder: boolean;
+  cellFocus: GridCellIndexCoordinates | null;
+  cellTabIndex: GridCellIndexCoordinates | null;
+}
+
+export const GridRowCells = React.memo((props: RowCellsProps) => {
+  const {
+    columns,
+    firstColIdx,
+    hasScroll,
+    id,
+    lastColIdx,
+    rowIndex,
+    cellFocus,
+    cellTabIndex,
+    showCellRightBorder,
+  } = props;
+  const apiRef = React.useContext(GridApiContext);
+  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
+  const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
+
+  const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
+    const isLastColumn = firstColIdx + colIdx === columns.length - 1;
+    const removeLastBorderRight = isLastColumn && hasScroll.x && !hasScroll.y;
+    const showRightBorder = !isLastColumn
+      ? showCellRightBorder
+      : !removeLastBorderRight && !props.extendRowFullWidth;
+
+    const cellParams: GridCellParams = apiRef!.current.getCellParams(id, column.field);
+
+    let cssClassProp = { cssClass: '' };
+    if (column.cellClassName) {
+      if (!isFunction(column.cellClassName)) {
+        cssClassProp = { cssClass: classnames(column.cellClassName) };
+      } else {
+        cssClassProp = { cssClass: column.cellClassName(cellParams) as string };
+      }
+    }
+
+    if (column.cellClassRules) {
+      const cssClass = applyCssClassRules(column.cellClassRules, cellParams);
+      cssClassProp = { cssClass: `${cssClassProp.cssClass} ${cssClass}` };
+    }
+
+    const editCellState = editRowsState[id] && editRowsState[id][column.field];
+    let cellComponent: React.ReactElement | null = null;
+
+    if (editCellState == null && column.renderCell) {
+      cellComponent = column.renderCell(cellParams);
+      cssClassProp = { cssClass: `${cssClassProp.cssClass} MuiDataGrid-cellWithRenderer` };
+    }
+
+    if (editCellState != null && column.renderEditCell) {
+      const params = { ...cellParams, ...editCellState };
+      cellComponent = column.renderEditCell(params);
+      cssClassProp = { cssClass: `${cssClassProp.cssClass} MuiDataGrid-cellEditing` };
+    }
+
+    const cellProps: GridCellProps = {
+      value: cellParams.value,
+      field: column.field,
+      width: column.width!,
+      rowId: id,
+      height: rowHeight,
+      showRightBorder,
+      formattedValue: cellParams.formattedValue,
+      align: column.align || 'left',
+      ...cssClassProp,
+      rowIndex,
+      cellMode: cellParams.cellMode,
+      colIndex: cellParams.colIndex,
+      children: cellComponent,
+      isEditable: cellParams.isEditable,
+      hasFocus:
+        cellFocus !== null &&
+        cellFocus.rowIndex === rowIndex &&
+        cellFocus.colIndex === cellParams.colIndex,
+      tabIndex:
+        cellTabIndex !== null &&
+        cellTabIndex.rowIndex === rowIndex &&
+        cellTabIndex.colIndex === cellParams.colIndex
+          ? 0
+          : -1,
+    };
+
+    return cellProps;
+  });
+
+  return (
+    <React.Fragment>
+      {cellsProps.map((cellProps) => (
+        <GridCell key={cellProps.field} {...cellProps} />
+      ))}
+    </React.Fragment>
+  );
+});
+GridRowCells.displayName = 'GridRowCells';

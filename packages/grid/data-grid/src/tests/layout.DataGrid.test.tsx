@@ -5,10 +5,10 @@ import {
   // @ts-expect-error need to migrate helpers to TypeScript
   ErrorBoundary,
 } from 'test/utils';
-import { useFakeTimers } from 'sinon';
+import { useFakeTimers, stub } from 'sinon';
 import { expect } from 'chai';
-import { DataGrid, ValueGetterParams } from '@material-ui/data-grid';
-import { getColumnValues, raf } from 'test/utils/helperFn';
+import { DataGrid, GridValueGetterParams, GridToolbar } from '@material-ui/data-grid';
+import { getColumnValues, raf, sleep } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
   // TODO v5: replace with createClientRender
@@ -74,14 +74,30 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </div>,
         );
         expect(ref.current).to.be.instanceof(window.HTMLDivElement);
-        expect(ref.current).to.equal(container.firstChild.firstChild.firstChild);
+        expect(ref.current).to.equal(container.firstChild.firstChild);
       });
 
-      function randomStringValue() {
-        return `r${Math.random().toString(36).slice(2)}`;
-      }
+      describe('Apply the `classes` prop', () => {
+        it("should apply the `root` rule name's value as a class to the root grid component", () => {
+          const classes = {
+            root: 'my_class_name',
+          };
+
+          const { container } = render(
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid {...baselineProps} classes={{ root: classes.root }} />
+            </div>,
+          );
+
+          expect(container.firstChild.firstChild).to.have.class(classes.root);
+        });
+      });
 
       it('applies the className to the root component', () => {
+        function randomStringValue() {
+          return `r${Math.random().toString(36).slice(2)}`;
+        }
+
         const className = randomStringValue();
 
         const { container } = render(
@@ -90,9 +106,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </div>,
         );
 
-        expect(document.querySelector(`.${className}`)).to.equal(
-          container.firstChild.firstChild.firstChild,
-        );
+        expect(document.querySelector(`.${className}`)).to.equal(container.firstChild.firstChild);
       });
 
       it('should support columns.valueGetter', () => {
@@ -163,7 +177,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         );
       });
 
-      it('should warn when CellParams.valueGetter is called with a missing column', () => {
+      it('should warn when GridCellParams.valueGetter is called with a missing column', () => {
         const rows = [
           { id: 1, age: 1 },
           { id: 2, age: 2 },
@@ -172,7 +186,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           { field: 'id', hide: true },
           {
             field: 'fullName',
-            valueGetter: (params: ValueGetterParams) => params.getValue('age'),
+            valueGetter: (params: GridValueGetterParams) => params.getValue('age'),
           },
         ];
         expect(() => {
@@ -184,6 +198,30 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           // @ts-expect-error need to migrate helpers to TypeScript
         }).toWarnDev(["You are calling getValue('age') but the column `age` is not defined"]);
         expect(getColumnValues()).to.deep.equal(['1', '2']);
+      });
+    });
+
+    describe('swallow warnings', () => {
+      beforeEach(() => {
+        stub(console, 'warn');
+      });
+
+      afterEach(() => {
+        // @ts-expect-error beforeEach side effect
+        console.warn.restore();
+      });
+
+      it('should have a stable height if the parent container has no intrinsic height', async () => {
+        const { getByRole } = render(
+          <div>
+            <p>The table keeps growing... and growing...</p>
+            <DataGrid {...baselineProps} />
+          </div>,
+        );
+        const firstHeight = getByRole('grid').clientHeight;
+        await sleep(10);
+        const secondHeight = getByRole('grid').clientHeight;
+        expect(firstHeight).to.equal(secondHeight);
       });
     });
 
@@ -373,6 +411,17 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         ).to.equal(200 - 2);
       });
     });
+
+    it('should have the correct intrinsic height when autoHeight={true}', () => {
+      render(
+        <div style={{ width: 300 }}>
+          <DataGrid {...baselineProps} headerHeight={40} rowHeight={30} autoHeight />
+        </div>,
+      );
+      expect(document.querySelector('.MuiDataGrid-main')!.clientHeight).to.equal(
+        40 + 30 * baselineProps.rows.length,
+      );
+    });
   });
 
   describe('warnings', () => {
@@ -384,9 +433,11 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       expect(() => {
         PropTypes.checkPropTypes(
           // @ts-ignore
-          DataGrid.Naked.propTypes,
+          DataGrid.propTypes,
           {
             pagination: false,
+            columns: [],
+            rows: [],
           },
           'prop',
           'MockedDataGrid',
@@ -413,14 +464,12 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       expect(() => {
         render(
           <ErrorBoundary ref={errorRef}>
-            {/* @ts-expect-error missing id */}
             <DataGrid {...baselineProps} rows={rows} />
           </ErrorBoundary>,
         );
         // @ts-expect-error need to migrate helpers to TypeScript
       }).toErrorDev([
         'The data grid component requires all rows to have a unique id property',
-        'The above error occurred in the <ForwardRef(GridComponent)> component',
         'The above error occurred in the <ForwardRef(GridComponent)> component',
       ]);
       expect((errorRef.current as any).errors).to.have.length(1);
@@ -431,17 +480,16 @@ describe('<DataGrid /> - Layout & Warnings', () => {
   });
 
   describe('localeText', () => {
-    before(function beforeHook() {
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
     it('should replace the density selector button label text to "Size"', () => {
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} showToolbar localeText={{ toolbarDensity: 'Size' }} />
+          <DataGrid
+            {...baselineProps}
+            components={{
+              Toolbar: GridToolbar,
+            }}
+            localeText={{ toolbarDensity: 'Size' }}
+          />
         </div>,
       );
 
@@ -450,13 +498,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
   });
 
   describe('Error', () => {
-    before(function beforeHook() {
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
     it('should display error message when error prop set', () => {
       const message = 'Error can also be set in props!';
       render(

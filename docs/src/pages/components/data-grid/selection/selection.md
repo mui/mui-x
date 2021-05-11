@@ -32,9 +32,9 @@ For the `XGrid`, you need to disable multiple row selection with `disableMultipl
 
 {{"demo": "pages/components/data-grid/selection/SingleRowSelectionGrid.js", "bg": "inline"}}
 
-### Multiple row selection [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
+### Multiple row selection [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
-To activate multiple selection, put focus the `XGrid` component and hold the <kbd>CTRL</kbd> key while selecting rows.
+To activate multiple selection, put focus the `XGrid` component and hold the <kbd class="key">CTRL</kbd> key while selecting rows.
 
 {{"demo": "pages/components/data-grid/selection/MultipleRowSelectionGrid.js", "disableAd": true, "bg": "inline"}}
 
@@ -46,7 +46,7 @@ To activate checkbox selection set `checkboxSelection={true}`.
 
 ## Disable selection on click
 
-You might have interactive content in the cells and need to disable the selection of the row on click. Use the `disableClickEventBubbling` option in this case.
+You might have interactive content in the cells and need to disable the selection of the row on click. Use the `disableSelectionOnClick` option in this case.
 
 {{"demo": "pages/components/data-grid/selection/DisableClickSelectionGrid.js", "bg": "inline"}}
 
@@ -54,7 +54,7 @@ You might have interactive content in the cells and need to disable the selectio
 
 {{"demo": "pages/components/data-grid/selection/ControlledSelectionGrid.js", "bg": "inline"}}
 
-## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-x/)
+## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 The grid exposes a set of methods that enables all of these features using the imperative apiRef.
 
@@ -62,7 +62,7 @@ The grid exposes a set of methods that enables all of these features using the i
 
 - `onSelectionChange`: Callback fired when the selection state of one or multiple rows changes.
 
-## 🚧 Range selection [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-x/)
+## 🚧 Range selection [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 > ⚠️ This feature isn't implemented yet. It's coming.
 >
