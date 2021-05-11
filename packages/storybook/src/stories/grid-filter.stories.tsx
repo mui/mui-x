@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import { DataGrid } from '@material-ui/data-grid';
 import Rating from '@material-ui/lab/Rating';
 import Button from '@material-ui/core/Button';

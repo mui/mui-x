@@ -5,52 +5,57 @@ import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Divider from '@material-ui/core/Divider';
 import Link from '@material-ui/core/Link';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { createMuiTheme, createStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 
-const useStyles = makeStyles((theme: Theme) => {
-  return createStyles({
-    root: {
-      marginTop: 20,
-    },
-    section: {
-      color: theme.palette.secondary.contrastText,
-    },
-    footer: {
-      padding: 0,
-      [theme.breakpoints.up('sm')]: {
-        padding: '15px 0',
+const defaultTheme = createMuiTheme();
+const useStyles = makeStyles(
+  (theme: Theme) => {
+    return createStyles({
+      root: {
+        marginTop: 20,
       },
-    },
-    logo: {
-      display: 'flex',
-      alignItems: 'center',
-      marginBottom: theme.spacing(4),
-      '& img': {
-        width: 28,
-        height: 22,
-        marginRight: theme.spacing(1.5),
+      section: {
+        color: theme.palette.secondary.contrastText,
       },
-    },
-    list: {
-      marginBottom: theme.spacing(4),
-      '& h3': {
-        fontWeight: theme.typography.fontWeightMedium,
-      },
-      '& ul': {
-        margin: 0,
+      footer: {
         padding: 0,
-        listStyle: 'none',
+        [theme.breakpoints.up('sm')]: {
+          padding: '15px 0',
+        },
       },
-      '& li': {
-        padding: '6px 0',
-        color: theme.palette.text.secondary,
+      logo: {
+        display: 'flex',
+        alignItems: 'center',
+        marginBottom: theme.spacing(4),
+        '& img': {
+          width: 28,
+          height: 22,
+          marginRight: theme.spacing(1.5),
+        },
       },
-    },
-    version: {
-      marginTop: theme.spacing(3),
-    },
-  });
-});
+      list: {
+        marginBottom: theme.spacing(4),
+        '& h3': {
+          fontWeight: theme.typography.fontWeightMedium,
+        },
+        '& ul': {
+          margin: 0,
+          padding: 0,
+          listStyle: 'none',
+        },
+        '& li': {
+          padding: '6px 0',
+          color: theme.palette.text.secondary,
+        },
+      },
+      version: {
+        marginTop: theme.spacing(3),
+      },
+    });
+  },
+  { defaultTheme },
+);
 
 function AppFooter() {
   const classes = useStyles();

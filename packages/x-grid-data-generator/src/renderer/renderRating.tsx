@@ -1,20 +1,24 @@
 import * as React from 'react';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { Theme, createStyles, createMuiTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import { CellParams } from '@material-ui/x-grid';
 import Rating from '@material-ui/lab/Rating';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      alignItems: 'center',
-      lineHeight: '24px',
-      color: theme.palette.text.secondary,
-      '& .MuiRating-root': {
-        marginRight: theme.spacing(1),
+const defaultTheme = createMuiTheme();
+const useStyles = makeStyles(
+  (theme: Theme) =>
+    createStyles({
+      root: {
+        display: 'flex',
+        alignItems: 'center',
+        lineHeight: '24px',
+        color: theme.palette.text.secondary,
+        '& .MuiRating-root': {
+          marginRight: theme.spacing(1),
+        },
       },
-    },
-  }),
+    }),
+  { defaultTheme },
 );
 
 interface RatingValueProps {

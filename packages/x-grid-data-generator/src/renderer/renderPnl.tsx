@@ -1,27 +1,31 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, Theme, createMuiTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import { CellParams, getThemePaletteMode } from '@material-ui/x-grid';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      fontVariantNumeric: 'tabular-nums',
-    },
-    positive: {
-      color:
-        getThemePaletteMode(theme.palette) === 'light'
-          ? theme.palette.success.dark
-          : theme.palette.success.light,
-    },
-    negative: {
-      color:
-        getThemePaletteMode(theme.palette) === 'light'
-          ? theme.palette.error.dark
-          : theme.palette.error.light,
-    },
-  }),
+const defaultTheme = createMuiTheme();
+const useStyles = makeStyles(
+  (theme: Theme) =>
+    createStyles({
+      root: {
+        width: '100%',
+        fontVariantNumeric: 'tabular-nums',
+      },
+      positive: {
+        color:
+          getThemePaletteMode(theme.palette) === 'light'
+            ? theme.palette.success.dark
+            : theme.palette.success.light,
+      },
+      negative: {
+        color:
+          getThemePaletteMode(theme.palette) === 'light'
+            ? theme.palette.error.dark
+            : theme.palette.error.light,
+      },
+    }),
+  { defaultTheme },
 );
 
 function pnlFormatter(value: number) {

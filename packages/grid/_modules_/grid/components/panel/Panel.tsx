@@ -2,10 +2,12 @@ import * as React from 'react';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import { ApiContext } from '../api-context';
 import { isMuiV5 } from '../../utils';
 
+const defaultTheme = createMuiTheme();
 const useStyles = makeStyles(
   (theme: Theme) => ({
     root: {
@@ -31,7 +33,7 @@ const useStyles = makeStyles(
       },
     },
   }),
-  { name: 'MuiDataGridPanel' },
+  { name: 'MuiDataGridPanel', defaultTheme },
 );
 
 export interface PanelProps {

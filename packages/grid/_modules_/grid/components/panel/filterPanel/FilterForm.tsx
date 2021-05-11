@@ -3,7 +3,7 @@ import FormControl from '@material-ui/core/FormControl';
 import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import { filterableColumnsSelector } from '../../../hooks/features/columns/columnsSelector';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
 import { ColDef } from '../../../models/colDef/colDef';
@@ -24,7 +24,7 @@ export interface FilterFormProps {
 }
 
 const useStyles = makeStyles(
-  () => ({
+  {
     root: {
       display: 'flex',
       justifyContent: 'space-around',
@@ -48,7 +48,7 @@ const useStyles = makeStyles(
       marginRight: 6,
       marginBottom: 2,
     },
-  }),
+  },
   { name: 'MuiDataGridFilterForm' },
 );
 

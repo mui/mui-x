@@ -1,6 +1,8 @@
-import { darken, lighten, makeStyles, Theme } from '@material-ui/core/styles';
+import { darken, lighten, createMuiTheme, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import { getThemePaletteMode, muiStyleAlpha } from '../../utils';
 
+const defaultTheme = createMuiTheme();
 export const useStyles = makeStyles(
   (theme: Theme) => {
     const borderColor =
@@ -317,5 +319,5 @@ export const useStyles = makeStyles(
     }
     return gridStyle;
   },
-  { name: 'MuiDataGrid' },
+  { name: 'MuiDataGrid', defaultTheme },
 );

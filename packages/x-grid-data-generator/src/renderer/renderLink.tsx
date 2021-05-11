@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CellParams } from '@material-ui/x-grid';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 
 const useStyles = makeStyles({
   root: {
