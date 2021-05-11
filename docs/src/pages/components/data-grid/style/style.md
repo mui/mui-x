@@ -7,11 +7,7 @@ components: DataGrid, XGrid
 
 <p class="description">The grid css can be easily overwritten.</p>
 
-## Columns
-
-Styles can be applied to both the column header and the cells.
-
-### Styling header
+## Styling column headers
 
 The `GridColDef` type has properties to apply class names and custom CSS on the header.
 
@@ -34,33 +30,6 @@ const columns: GridColumns = [
 ```
 
 {{"demo": "pages/components/data-grid/style/StylingHeaderGrid.js", "bg": "inline"}}
-
-### Styling cells
-
-The `GridColDef` type has properties to apply class names and custom CSS on the cells.
-
-- `cellClassName`: to apply class names on every cell. It can also be a function.
-- `align`: to align the content of the cells. It must be 'left' | 'right' | 'center'. (Note you must use `headerAlign` to align the content of the header.)
-
-```tsx
-const columns: GridColumns = [
-  {
-    field: 'name',
-    cellClassName: 'super-app-theme--cell',
-  },
-  {
-    field: 'score',
-    type: 'number',
-    cellClassName: (params: GridCellClassParams) =>
-      clsx('super-app', {
-        negative: (params.value as number) < 0,
-        positive: (params.value as number) > 0,
-      }),
-  },
-];
-```
-
-{{"demo": "pages/components/data-grid/style/StylingCellsGrid.js", "bg": "inline"}}
 
 ## Styling rows
 
@@ -101,6 +70,33 @@ interface GridRowParams {
 ```
 
 {{"demo": "pages/components/data-grid/style/StylingRowsGrid.js", "bg": "inline"}}
+
+## Styling cells
+
+The `GridColDef` type has properties to apply class names and custom CSS on the cells.
+
+- `cellClassName`: to apply class names on every cell. It can also be a function.
+- `align`: to align the content of the cells. It must be 'left' | 'right' | 'center'. (Note you must use `headerAlign` to align the content of the header.)
+
+```tsx
+const columns: GridColumns = [
+  {
+    field: 'name',
+    cellClassName: 'super-app-theme--cell',
+  },
+  {
+    field: 'score',
+    type: 'number',
+    cellClassName: (params: GridCellClassParams) =>
+      clsx('super-app', {
+        negative: (params.value as number) < 0,
+        positive: (params.value as number) > 0,
+      }),
+  },
+];
+```
+
+{{"demo": "pages/components/data-grid/style/StylingCellsGrid.js", "bg": "inline"}}
 
 ## Demo
 

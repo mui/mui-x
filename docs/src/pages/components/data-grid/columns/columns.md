@@ -217,7 +217,7 @@ const columns: GridColDef[] = [
 
 ### Styling header
 
-You can check the [styling header](/components/data-grid/style/#styling-header) section for more information.
+You can check the [styling header](/components/data-grid/style/#styling-column-headers) section for more information.
 
 ### Styling cells
 
