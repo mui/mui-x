@@ -8,11 +8,10 @@ import { GridApiContext } from '../GridApiContext';
 
 export interface ColumnHeaderFilterIconProps {
   counter?: number;
-  disableColumnFilter?: boolean;
 }
 
 export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
-  const { counter, disableColumnFilter } = props;
+  const { counter } = props;
   const apiRef = React.useContext(GridApiContext);
 
   const FilteredColumnIconElement = apiRef!.current.components.ColumnFilteredIcon!;
@@ -35,7 +34,7 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
     [apiRef],
   );
 
-  if (!counter || disableColumnFilter) {
+  if (!counter) {
     return null;
   }
 

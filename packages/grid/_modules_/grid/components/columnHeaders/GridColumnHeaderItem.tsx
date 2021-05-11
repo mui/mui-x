@@ -147,10 +147,7 @@ export const GridColumnHeaderItem = React.memo(
           index={sortIndex}
           hide={column.hideSortIcons}
         />
-        <ColumnHeaderFilterIcon
-          counter={filterItemsCounter}
-          disableColumnFilter={disableColumnFilter}
-        />
+        {!disableColumnFilter && <ColumnHeaderFilterIcon counter={filterItemsCounter} />}
       </React.Fragment>
     );
     const columnMenuIconButton = <ColumnHeaderMenuIcon column={column} open={columnMenuOpen} />;
