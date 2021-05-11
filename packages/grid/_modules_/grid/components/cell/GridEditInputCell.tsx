@@ -2,7 +2,11 @@ import * as React from 'react';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
 import { GRID_CELL_EDIT_PROPS_CHANGE } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
-import { formatDateString, formatDateToLocalInputDate, mapColDefTypeToInputType } from '../../utils/utils';
+import {
+  formatDateString,
+  formatDateToLocalInputDate,
+  mapColDefTypeToInputType,
+} from '../../utils/utils';
 
 export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
   const {
