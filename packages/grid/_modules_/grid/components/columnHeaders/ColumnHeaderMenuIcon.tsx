@@ -11,7 +11,7 @@ export interface ColumnHeaderFilterIconProps {
   open: boolean;
 }
 
-export function ColumnHeaderMenuIcon(props: ColumnHeaderFilterIconProps) {
+export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderFilterIconProps) => {
   const { column, open } = props;
   const apiRef = React.useContext(GridApiContext);
   const columnMenuButtonId: string = useId();
@@ -45,4 +45,4 @@ export function ColumnHeaderMenuIcon(props: ColumnHeaderFilterIconProps) {
       </IconButton>
     </div>
   );
-}
+});

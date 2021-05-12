@@ -853,7 +853,7 @@ export function EditCellWithMessageGrid() {
     return apiRef.current.subscribeEvent(
       GRID_CELL_EDIT_ENTER,
       (params: GridCellParams, event?: React.SyntheticEvent) => {
-        setMessage(`Editing cell with value: ${params.value} at row: ${params.rowIndex}, column: ${
+        setMessage(`Editing cell with value: ${params.value} at row: ${params.id}, column: ${
           params.field
         },
                         triggered by ${event!.type}
