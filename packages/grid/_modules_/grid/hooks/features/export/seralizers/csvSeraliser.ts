@@ -48,7 +48,7 @@ export function buildCSV(
   const CSVBody = rowIds
     .reduce<string>((acc, id) => `${acc}${serialiseRow(id, columns, getCellValue)}\r\n`, '')
     .trim();
-  const csv = `${CSVHead}${CSVBody}`.trim();
+  const csv = `sep=,\n${CSVHead}${CSVBody}`.trim();
 
   return csv;
 }
