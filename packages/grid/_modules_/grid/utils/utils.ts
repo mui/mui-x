@@ -11,7 +11,7 @@ export function isDateValid(value: Date): boolean {
   return !Number.isNaN(value.getTime());
 }
 
-export function formatDateString(value: string): Date {
+export function parseDate(value: string): Date {
   const [year, month, day] = value.split('-');
   return new Date(Number(year), Number(month) - 1, Number(day));
 }

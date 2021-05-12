@@ -2,11 +2,7 @@ import * as React from 'react';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
 import { GRID_CELL_EDIT_PROPS_CHANGE } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
-import {
-  formatDateString,
-  formatDateToLocalInputDate,
-  mapColDefTypeToInputType,
-} from '../../utils/utils';
+import { parseDate, formatDateToLocalInputDate, mapColDefTypeToInputType } from '../../utils/utils';
 
 export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
   const {
@@ -38,7 +34,7 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
       };
 
       if (isDateColumn) {
-        editProps.value = newValue === '' ? null : formatDateString(newValue);
+        editProps.value = newValue === '' ? null : parseDate(newValue);
       } else if (isDateTimeColumn) {
         editProps.value = newValue === '' ? null : new Date(newValue);
       }
