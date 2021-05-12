@@ -98,8 +98,8 @@ const columns: GridColumns = [
 
 {{"demo": "pages/components/data-grid/style/StylingCellsGrid.js", "bg": "inline"}}
 
-## Demo
+## Customized demo
 
-The following grid leverages the CSS customization API to match the Ant Design specification.
+The following demo leverages the CSS customization API to match the Ant Design specification.
 
 {{"demo": "pages/components/data-grid/style/AntDesignGrid.js", "defaultCodeOpen": false}}
