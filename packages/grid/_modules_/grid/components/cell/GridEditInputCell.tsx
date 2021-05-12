@@ -38,7 +38,7 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
       };
 
       if (isDateColumn) {
-        editProps.value = newValue === '' ? null : new Date(formatDateString(newValue));
+        editProps.value = newValue === '' ? null : formatDateString(newValue);
       } else if (isDateTimeColumn) {
         editProps.value = newValue === '' ? null : new Date(newValue);
       }

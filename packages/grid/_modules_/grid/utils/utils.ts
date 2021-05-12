@@ -11,9 +11,9 @@ export function isDateValid(value: Date): boolean {
   return !Number.isNaN(value.getTime());
 }
 
-export function formatDateString(value: string): string {
-  const nonStandardDate = value.split('-').join('/');
-  return nonStandardDate;
+export function formatDateString(value: string): Date {
+  const [year, month, day] = value.split('-');
+  return new Date(Number(year), Number(month) - 1, Number(day));
 }
 
 export function formatDateToLocalInputDate({
