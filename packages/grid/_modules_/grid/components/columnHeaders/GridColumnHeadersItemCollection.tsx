@@ -45,11 +45,11 @@ export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemColl
     const isFirstColumn = colIndex === 0;
     const hasTabbableElement = !(tabIndexState === null && cellTabIndexState === null);
     const tabIndex =
-      (tabIndexState !== null && tabIndexState.colIndex === colIndex) ||
+      (tabIndexState !== null && tabIndexState.field === col.field) ||
       (isFirstColumn && !hasTabbableElement)
         ? 0
         : -1;
-    const hasFocus = columnHeaderFocus !== null && columnHeaderFocus.colIndex === colIndex;
+    const hasFocus = columnHeaderFocus !== null && columnHeaderFocus.field === col.field;
     return (
       <GridColumnHeaderItem
         key={col.field}

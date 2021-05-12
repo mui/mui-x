@@ -76,7 +76,7 @@ export const useGridKeyboard = (
       // TODO Refactor here to not use api call
       const selectedRowsIds = [...apiRef.current.getSelectedRows().keys()];
       if (selectedRowsIds.length > 0) {
-        const selectedRowsIndex = selectedRowsIds.map((id) => apiRef.current.getRowIndexFromId(id));
+        const selectedRowsIndex = selectedRowsIds.map((id) => apiRef.current.getRowIndex(id));
 
         const diffWithCurrentIndex: number[] = selectedRowsIndex.map((idx) =>
           Math.abs(currentRowIndex - idx),
@@ -87,12 +87,11 @@ export const useGridKeyboard = (
 
       apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEYDOWN, params, event);
 
-      const nextCellIndexes = apiRef.current.getState().focus.cell!;
+      const focusCell = apiRef.current.getState().focus.cell!;
+      const rowIndex = apiRef.current.getRowIndex(focusCell.id);
       // We select the rows in between
-      const rowIds = Array(Math.abs(nextCellIndexes.rowIndex - selectionFromRowIndex) + 1).fill(
-        nextCellIndexes.rowIndex > selectionFromRowIndex
-          ? selectionFromRowIndex
-          : nextCellIndexes.rowIndex,
+      const rowIds = Array(Math.abs(rowIndex - selectionFromRowIndex) + 1).fill(
+        rowIndex > selectionFromRowIndex ? selectionFromRowIndex : rowIndex,
       );
 
       logger.debug('Selecting rows ');

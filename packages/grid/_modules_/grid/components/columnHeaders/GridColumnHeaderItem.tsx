@@ -69,8 +69,8 @@ export const GridColumnHeaderItem = React.memo(
     const isColumnNumeric = column.type === GRID_NUMBER_COLUMN_TYPE;
 
     let headerComponent: React.ReactElement | null = null;
-    if (column.renderHeader) {
-      headerComponent = column.renderHeader(apiRef!.current.getColumnHeaderParams(column.field)!);
+    if (column.renderHeader && apiRef!.current) {
+      headerComponent = column.renderHeader(apiRef!.current.getColumnHeaderParams(column.field));
     }
 
     const publish = React.useCallback(

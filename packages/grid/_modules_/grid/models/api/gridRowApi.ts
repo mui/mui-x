@@ -36,7 +36,7 @@ export interface GridRowApi {
    * Get the row index of a row with a given id.
    * @param id
    */
-  getRowIndexFromId: (id: GridRowId) => number;
+  getRowIndex: (id: GridRowId) => number;
   /**
    * Get the [[GridRowModel]] of a given rowId.
    * @param id

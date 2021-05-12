@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { gridEditRowsStateSelector } from '../../hooks/features/rows/gridEditRowsSelector';
+import { GridCellIdentifier } from '../../hooks/features/focus/gridFocusState';
 import {
   GridCellClassParams,
   GridColumns,
   GridRowModel,
   GridCellClassRules,
   GridCellParams,
-  GridCellIndexCoordinates,
   GridRowId,
+  GridEditRowProps,
 } from '../../models/index';
 import { GridCell, GridCellProps } from './GridCell';
 import { GridApiContext } from '../GridApiContext';
@@ -28,34 +28,40 @@ interface RowCellsProps {
   extendRowFullWidth: boolean;
   firstColIdx: number;
   id: GridRowId;
-  hasScroll: { y: boolean; x: boolean };
+  hasScrollX: boolean;
+  hasScrollY: boolean;
   lastColIdx: number;
   row: GridRowModel;
   rowIndex: number;
   showCellRightBorder: boolean;
-  cellFocus: GridCellIndexCoordinates | null;
-  cellTabIndex: GridCellIndexCoordinates | null;
+  cellFocus: GridCellIdentifier | null;
+  cellTabIndex: GridCellIdentifier | null;
+  isSelected: boolean;
+  editRowState?: GridEditRowProps;
 }
 
 export const GridRowCells = React.memo((props: RowCellsProps) => {
   const {
     columns,
     firstColIdx,
-    hasScroll,
+    hasScrollX,
+    hasScrollY,
     id,
     lastColIdx,
     rowIndex,
     cellFocus,
     cellTabIndex,
     showCellRightBorder,
+    isSelected,
+    editRowState,
   } = props;
   const apiRef = React.useContext(GridApiContext);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
-  const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
 
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
-    const isLastColumn = firstColIdx + colIdx === columns.length - 1;
-    const removeLastBorderRight = isLastColumn && hasScroll.x && !hasScroll.y;
+    const colIndex = firstColIdx + colIdx;
+    const isLastColumn = colIndex === columns.length - 1;
+    const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
     const showRightBorder = !isLastColumn
       ? showCellRightBorder
       : !removeLastBorderRight && !props.extendRowFullWidth;
@@ -76,7 +82,7 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
       cssClassProp = { cssClass: `${cssClassProp.cssClass} ${cssClass}` };
     }
 
-    const editCellState = editRowsState[id] && editRowsState[id][column.field];
+    const editCellState = editRowState && editRowState[column.field];
     let cellComponent: React.ReactElement | null = null;
 
     if (editCellState == null && column.renderCell) {
@@ -102,17 +108,13 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
       ...cssClassProp,
       rowIndex,
       cellMode: cellParams.cellMode,
-      colIndex: cellParams.colIndex,
+      colIndex,
       children: cellComponent,
       isEditable: cellParams.isEditable,
-      hasFocus:
-        cellFocus !== null &&
-        cellFocus.rowIndex === rowIndex &&
-        cellFocus.colIndex === cellParams.colIndex,
+      isSelected,
+      hasFocus: cellFocus !== null && cellFocus.id === id && cellFocus.field === column.field,
       tabIndex:
-        cellTabIndex !== null &&
-        cellTabIndex.rowIndex === rowIndex &&
-        cellTabIndex.colIndex === cellParams.colIndex
+        cellTabIndex !== null && cellTabIndex.id === id && cellTabIndex.field === column.field
           ? 0
           : -1,
     };

@@ -1,14 +1,15 @@
-import { GridCellIndexCoordinates, GridColumnHeaderIndexCoordinates } from '../gridCell';
+import { GridRowId } from '../gridRows';
 
 export interface GridFocusApi {
   /**
    * Set the active element to the cell with the indexes.
-   * @param indexes
+   * @param id
+   * @param field
    */
-  setCellFocus: (indexes: GridCellIndexCoordinates) => void;
+  setCellFocus: (id: GridRowId, field: string) => void;
   /**
    * Set the active element to the column header with the indexes.
-   * @param indexes
+   * @param field
    */
-  setColumnHeaderFocus: (indexes: GridColumnHeaderIndexCoordinates) => void;
+  setColumnHeaderFocus: (field: string) => void;
 }
