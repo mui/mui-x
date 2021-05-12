@@ -30,7 +30,7 @@ As an example, you could override the column menu with some props as below.
 
 ## ColumnMenu
 
-As mentioned above, the column menu is a customizable component that can be recomposed easily and customised on each column.
+As mentioned above, the column menu is a customizable component that can be recomposed easily and customised on each column as in the demo below.
 
 {{"demo": "pages/components/data-grid/components/CustomColumnMenu.js", "bg": "inline"}}
 

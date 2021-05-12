@@ -2,7 +2,7 @@ import MenuList from '@material-ui/core/MenuList';
 import * as React from 'react';
 import { classnames } from '../../../utils/classnames';
 import { isHideMenuKey, isTabKey } from '../../../utils/keyboardUtils';
-import { GridColumnMenuProps } from './GridColumnMenu';
+import { GridColumnMenuProps } from './GridColumnMenuProps';
 
 export const GridColumnMenuContainer = React.forwardRef<HTMLUListElement, GridColumnMenuProps>(
   function GridColumnMenuContainer(props: GridColumnMenuProps, ref) {

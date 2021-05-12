@@ -1,3 +1,4 @@
+import { makeStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import {
@@ -10,14 +11,27 @@ import {
 } from '@material-ui/x-grid';
 import StarOutlineIcon from '@material-ui/icons/StarOutline';
 
-export function CustomColumnMenu(props: GridColumnMenuProps & { bgColor: string }) {
-  const { hideMenu, currentColumn, bgColor, ...other } = props;
+const useStyles = makeStyles((theme) => ({
+  primary: {
+    background: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+  },
+  secondary: {
+    background: theme.palette.secondary.main,
+    color: theme.palette.secondary.contrastText,
+  },
+}));
+
+export function CustomColumnMenu(props: GridColumnMenuProps & { color: string }) {
+  const classes = useStyles();
+  const { hideMenu, currentColumn, color, ...other } = props;
+
   if (currentColumn.field === 'name') {
     return (
       <GridColumnMenuContainer
         hideMenu={hideMenu}
         currentColumn={currentColumn}
-        style={{ background: bgColor, color: '#fff' }}
+        className={classes[color]}
         {...other}
       >
         <SortGridMenuItems onClick={hideMenu} column={currentColumn!} />
@@ -30,7 +44,7 @@ export function CustomColumnMenu(props: GridColumnMenuProps & { bgColor: string 
       <GridColumnMenuContainer
         hideMenu={hideMenu}
         currentColumn={currentColumn}
-        style={{ background: bgColor, color: '#fff' }}
+        className={classes[color]}
         {...other}
       >
         <div
@@ -52,44 +66,50 @@ export function CustomColumnMenu(props: GridColumnMenuProps & { bgColor: string 
     <GridColumnMenu
       hideMenu={hideMenu}
       currentColumn={currentColumn}
-      style={{ background: bgColor, color: '#fff' }}
+      className={classes[color]}
       {...other}
     />
   );
 }
 
 export default function CustomSortIcons() {
-  const [menuBg, setMenuBg] = React.useState('#dc004d');
+  const [color, setColor] = React.useState<'primary' | 'secondary'>('primary');
   return (
     <div style={{ height: 300, width: '100%' }}>
-      <Button onClick={() => setMenuBg('#1876d2')}>Blue</Button>
-      <Button onClick={() => setMenuBg('#dc004d')}>Red</Button>
+      <Button
+        color={color}
+        onClick={() =>
+          setColor((current) => (current === 'primary' ? 'secondary' : 'primary'))
+        }
+      >
+        Toggle Colors
+      </Button>
       <div style={{ height: 250, width: '100%' }}>
         <XGrid
           columns={[
+            { field: 'default', width: 150 },
             { field: 'name', width: 150 },
             { field: 'stars', width: 150 },
-            { field: 'users', width: 150 },
           ]}
           rows={[
             {
               id: 1,
               name: 'Material-UI',
               stars: 28000,
-              users: '100M',
+              default: 'Open source',
             },
             {
               id: 2,
               name: 'XGrid',
               stars: 15000,
-              users: '10M',
+              default: 'Enterprise',
             },
           ]}
           components={{
             ColumnMenu: CustomColumnMenu,
           }}
           componentsProps={{
-            columnMenu: { bgColor: menuBg },
+            columnMenu: { color },
           }}
         />
       </div>
