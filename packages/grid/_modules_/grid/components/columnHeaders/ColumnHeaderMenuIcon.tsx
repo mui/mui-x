@@ -6,12 +6,12 @@ import { classnames } from '../../utils/classnames';
 import { GridApiContext } from '../GridApiContext';
 import { GridColDef } from '../../models/colDef/gridColDef';
 
-export interface ColumnHeaderFilterIconProps {
+export interface ColumnHeaderMenuIconProps {
   column: GridColDef;
   open: boolean;
 }
 
-export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderFilterIconProps) => {
+export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps) => {
   const { column, open } = props;
   const apiRef = React.useContext(GridApiContext);
   const columnMenuButtonId: string = useId();
