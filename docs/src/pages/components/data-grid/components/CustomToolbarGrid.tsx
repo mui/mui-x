@@ -18,8 +18,8 @@ function CustomToolbar() {
 
 export default function CustomToolbarGrid() {
   const { data } = useDemoData({
-    dataSet: 'Commodity',
-    rowLength: 100,
+    dataSet: 'Employee',
+    rowLength: 10,
     maxColumns: 6,
   });
 

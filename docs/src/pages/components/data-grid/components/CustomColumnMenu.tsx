@@ -22,7 +22,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function CustomColumnMenu(props: GridColumnMenuProps & { color: string }) {
+export function CustomColumnMenuComponent(
+  props: GridColumnMenuProps & { color: string },
+) {
   const classes = useStyles();
   const { hideMenu, currentColumn, color, ...other } = props;
 
@@ -72,7 +74,7 @@ export function CustomColumnMenu(props: GridColumnMenuProps & { color: string })
   );
 }
 
-export default function CustomSortIcons() {
+export default function CustomColumnMenu() {
   const [color, setColor] = React.useState<'primary' | 'secondary'>('primary');
   return (
     <div style={{ height: 300, width: '100%' }}>
@@ -82,7 +84,7 @@ export default function CustomSortIcons() {
           setColor((current) => (current === 'primary' ? 'secondary' : 'primary'))
         }
       >
-        Toggle Colors
+        Toggle Color
       </Button>
       <div style={{ height: 250, width: '100%' }}>
         <XGrid
@@ -106,7 +108,7 @@ export default function CustomSortIcons() {
             },
           ]}
           components={{
-            ColumnMenu: CustomColumnMenu,
+            ColumnMenu: CustomColumnMenuComponent,
           }}
           componentsProps={{
             columnMenu: { color },
