@@ -159,7 +159,9 @@ StyledColumns.args = {
       headerClassName: 'highlight',
       sortable: false,
       valueGetter: (params) =>
-        `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
+        `${params.getValue(params.id, 'firstName') || ''} ${
+          params.getValue(params.id, 'lastName') || ''
+        }`,
       cellClassRules: {
         common: (params) => params.row.lastName === 'Smith',
         unknown: (params) => !params.row.lastName,
