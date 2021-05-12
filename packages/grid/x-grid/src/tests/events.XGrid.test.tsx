@@ -3,11 +3,13 @@ import {
   createClientRenderStrictMode,
   // @ts-ignore
   fireEvent,
+  // @ts-ignore
+  screen,
 } from 'test/utils';
 import { expect } from 'chai';
 import {
   XGrid,
-  GridColParams,
+  GridColumnHeaderParams,
   useGridApiRef,
   XGridProps,
   GridRowParams,
@@ -19,7 +21,7 @@ import {
 import { getCell, getColumnHeaderCell, getRow } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 
-describe('<XGrid /> - Events Params ', () => {
+describe('<XGrid /> - Events Params', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
@@ -72,7 +74,7 @@ describe('<XGrid /> - Events Params ', () => {
 
   describe('columnHeaderParams', () => {
     it('should include the correct params', () => {
-      let eventArgs: { params: GridColParams; event: React.MouseEvent } | null = null;
+      let eventArgs: { params: GridColumnHeaderParams; event: React.MouseEvent } | null = null;
       const handleClick = (params, event) => {
         eventArgs = { params, event };
       };
@@ -83,8 +85,6 @@ describe('<XGrid /> - Events Params ', () => {
 
       expect(eventArgs!.params).to.deep.include({
         colDef: apiRef!.current.getColumnFromField('age'),
-        element: ageColumnElement,
-        colIndex: 2,
         field: 'age',
         api: apiRef.current,
       });
@@ -105,11 +105,10 @@ describe('<XGrid /> - Events Params ', () => {
 
       expect(eventArgs!.params).to.deep.include({
         id: 2,
-        element: row1,
         row: baselineProps.rows[1],
-        rowIndex: 1,
         columns: apiRef!.current.getAllColumns(),
         api: apiRef.current,
+        getValue: apiRef.current.getCellValue,
       });
     });
   });
@@ -118,14 +117,11 @@ describe('<XGrid /> - Events Params ', () => {
     let eventArgs: { params: GridCellParams; event: React.MouseEvent } | null = null;
     let cell11;
 
-    beforeEach(() => {
+    it('should include the correct params', () => {
       const handleClick = (params, event) => {
         eventArgs = { params, event };
       };
       render(<TestEvents onCellClick={handleClick} />);
-    });
-
-    it('should include the correct params', () => {
       cell11 = getCell(1, 1);
       fireEvent.click(cell11);
 
@@ -134,16 +130,47 @@ describe('<XGrid /> - Events Params ', () => {
         value: 'Jack',
         formattedValue: 'Jack',
         isEditable: true,
-        element: cell11,
         row: baselineProps.rows[1],
-        rowIndex: 1,
         colDef: apiRef!.current.getColumnFromField('first'),
-        colIndex: 1,
         api: apiRef.current,
+        hasFocus: false,
+        tabIndex: -1,
+        getValue: apiRef.current.getCellValue,
+      });
+    });
+
+    it('should include the correct params when grid is sorted', () => {
+      const handleClick = (params, event) => {
+        eventArgs = { params, event };
+      };
+      render(<TestEvents onCellClick={handleClick} />);
+      const header = screen
+        .getByRole('columnheader', { name: 'first' })
+        .querySelector('.MuiDataGrid-colCellTitleContainer');
+      fireEvent.click(header);
+
+      const cell01 = getCell(0, 1);
+      fireEvent.click(cell01);
+
+      expect(eventArgs!.params).to.deep.include({
+        id: 2,
+        value: 'Jack',
+        formattedValue: 'Jack',
+        isEditable: true,
+        row: baselineProps.rows[1],
+        colDef: apiRef!.current.getColumnFromField('first'),
+        api: apiRef.current,
+        hasFocus: false,
+        tabIndex: -1,
+        getValue: apiRef.current.getCellValue,
       });
     });
 
     it('should consider value getter', () => {
+      const handleClick = (params, event) => {
+        eventArgs = { params, event };
+      };
+      render(<TestEvents onCellClick={handleClick} />);
       const cellFirstAge = getCell(1, 3);
       fireEvent.click(cellFirstAge);
 
@@ -151,6 +178,10 @@ describe('<XGrid /> - Events Params ', () => {
     });
 
     it('should consider value formatter', () => {
+      const handleClick = (params, event) => {
+        eventArgs = { params, event };
+      };
+      render(<TestEvents onCellClick={handleClick} />);
       const cellFirstAge = getCell(1, 3);
       fireEvent.click(cellFirstAge);
 

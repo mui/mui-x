@@ -6,6 +6,7 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // Root
   rootGridLabel: 'Grade',
   noRowsLabel: 'Nenhuma linha',
+  noResultsOverlayLabel: 'Nenhum resultado encontrado.',
   errorOverlayDefaultLabel: 'Ocorreu um erro.',
 
   // Density selector toolbar button text
@@ -79,6 +80,13 @@ const ptBRGrid: Partial<GridLocaleText> = {
 
   // Total rows footer text
   footerTotalRows: 'Total de linhas:',
+
+  // Checkbox selection text
+  checkboxSelectionHeaderName: 'Seleção',
+
+  // Boolean cell text
+  booleanCellTrueLabel: 'sim',
+  booleanCellFalseLabel: 'não',
 };
 
 export const ptBR: Localization = getGridLocalization(ptBRGrid, ptBRCore);

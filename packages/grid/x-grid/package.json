@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/x-grid",
-  "version": "4.0.0-alpha.23",
+  "version": "4.0.0-alpha.28",
   "description": "The Material-UI X edition of the data grid component.",
   "author": "Material-UI Team",
   "main": "dist/index-cjs.js",
@@ -10,6 +10,7 @@
     "dist/*"
   ],
   "license": "See LICENSE file",
+  "sideEffects": false,
   "publishConfig": {
     "access": "public"
   },
@@ -25,25 +26,23 @@
     "data-grid"
   ],
   "scripts": {
-    "precommit": "npm run lint",
-    "lint": "../../../node_modules/.bin/tsc --noEmit && eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../.eslintrc.js",
     "typescript": "tsc -p tsconfig.json",
     "build": "cd ../ && rollup --config rollup.x-grid.config.js"
   },
   "dependencies": {
     "@material-ui/utils": "^5.0.0-alpha.14",
-    "@material-ui/x-license": "^4.0.0-alpha.21",
+    "@material-ui/x-license": "4.0.0-alpha.28",
     "prop-types": "^15.7.2",
     "reselect": "^4.0.0"
   },
   "peerDependencies": {
     "@material-ui/core": "^4.9.12 || ^5.0.0-alpha.22",
-    "react": "^16.8.0 || ^17.0.0"
+    "react": "^17.0.0"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
   ],
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=12.0.0"
   }
 }

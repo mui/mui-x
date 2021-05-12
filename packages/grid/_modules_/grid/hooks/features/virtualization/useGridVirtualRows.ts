@@ -9,7 +9,7 @@ import { GridVirtualizationApi } from '../../../models/api/gridVirtualizationApi
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
 import { GridScrollParams } from '../../../models/params/gridScrollParams';
 import { GridRenderContextProps, GridRenderRowProps } from '../../../models/gridRenderContextProps';
-import { isDeepEqual } from '../../../utils/utils';
+import { isDeepEqual, Optional } from '../../../utils/utils';
 import { useEnhancedEffect } from '../../../utils/material-ui-utils';
 import { optionsSelector } from '../../utils/optionsSelector';
 import {
@@ -18,7 +18,7 @@ import {
 } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
-import { PaginationState } from '../pagination/gridPaginationReducer';
+import { GridPaginationState } from '../pagination/gridPaginationReducer';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
@@ -42,7 +42,7 @@ export const useGridVirtualRows = (
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
-  const paginationState = useGridSelector<PaginationState>(apiRef, gridPaginationSelector);
+  const paginationState = useGridSelector<GridPaginationState>(apiRef, gridPaginationSelector);
   const totalRowCount = useGridSelector<number>(apiRef, gridRowCountSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
@@ -132,7 +132,6 @@ export const useGridVirtualRows = (
       if (!windowRef || !windowRef.current || !containerProps) {
         return;
       }
-      const viewportSizes = lastState.viewportSizes;
       const scrollBar = lastState.scrollBar;
 
       const { scrollLeft, scrollTop } = windowRef.current;
@@ -141,26 +140,27 @@ export const useGridVirtualRows = (
       let requireRerender = updateRenderedCols(containerProps, scrollLeft);
 
       const rzScrollLeft = scrollLeft;
-      let currentPage = scrollTop / viewportSizes.height;
-      const rzScrollTop = scrollTop % viewportSizes.height;
-      logger.debug(
-        ` viewportHeight:${viewportSizes.height}, rzScrollTop: ${rzScrollTop}, scrollTop: ${scrollTop}, current page = ${currentPage}`,
-      );
+      const maxScrollHeight = lastState.containerSizes!.renderingZoneScrollHeight;
+
+      const page = lastState.rendering.virtualPage;
+      const nextPage = maxScrollHeight > 0 ? Math.floor(scrollTop / maxScrollHeight) : 0;
+      const rzScrollTop = scrollTop % maxScrollHeight;
 
       const scrollParams = {
         left: scrollBar.hasScrollX ? rzScrollLeft : 0,
-        top: scrollBar.hasScrollY ? rzScrollTop : 0,
+        top: containerProps.isVirtualized ? rzScrollTop : scrollTop,
       };
 
-      const page = lastState.rendering.virtualPage;
-      currentPage = Math.floor(currentPage);
-
-      if (page !== currentPage) {
-        setRenderingState({ virtualPage: currentPage });
-
-        logger.debug(`Changing page from ${page} to ${currentPage}`);
+      if (containerProps.isVirtualized && page !== nextPage) {
+        setRenderingState({ virtualPage: nextPage });
+        logger.debug(`Changing page from ${page} to ${nextPage}`);
         requireRerender = true;
       } else {
+        if (!containerProps.isVirtualized && page > 0) {
+          logger.debug(`Virtualization disabled, setting virtualPage to 0`);
+          setRenderingState({ virtualPage: 0 });
+        }
+
         scrollTo(scrollParams);
       }
       setRenderingState({
@@ -192,14 +192,14 @@ export const useGridVirtualRows = (
   );
 
   const scrollToIndexes = React.useCallback(
-    (params: GridCellIndexCoordinates) => {
+    (params: Optional<GridCellIndexCoordinates, 'rowIndex'>) => {
       if (totalRowCount === 0 || visibleColumns.length === 0) {
         return false;
       }
 
       logger.debug(`Scrolling to cell at row ${params.rowIndex}, col: ${params.colIndex} `);
 
-      let scrollLeft;
+      const scrollCoordinates: any = {};
       const isColVisible = apiRef.current.isColumnVisibleInWindow(params.colIndex);
       logger.debug(`Column ${params.colIndex} is ${isColVisible ? 'already' : 'not'} visible.`);
       if (!isColVisible) {
@@ -207,50 +207,51 @@ export const useGridVirtualRows = (
 
         if (isLastCol) {
           const lastColWidth = visibleColumns[params.colIndex].width!;
-          scrollLeft =
+          scrollCoordinates.left =
             columnsMeta.positions[params.colIndex] +
             lastColWidth -
             gridState.containerSizes!.windowSizes.width;
         } else {
-          scrollLeft =
+          scrollCoordinates.left =
             columnsMeta.positions[params.colIndex + 1] -
             gridState.containerSizes!.windowSizes.width +
             gridState.scrollBar!.scrollBarSize.y;
-          logger.debug(`Scrolling to the right, scrollLeft: ${scrollLeft}`);
+          logger.debug(`Scrolling to the right, scrollLeft: ${scrollCoordinates.left}`);
         }
-        if (gridState.rendering.renderingZoneScroll.left > scrollLeft) {
-          scrollLeft = columnsMeta.positions[params.colIndex];
-          logger.debug(`Scrolling to the left, scrollLeft: ${scrollLeft}`);
+        if (gridState.rendering.renderingZoneScroll.left > scrollCoordinates.left) {
+          scrollCoordinates.left = columnsMeta.positions[params.colIndex];
+          logger.debug(`Scrolling to the left, scrollLeft: ${scrollCoordinates.left}`);
         }
       }
 
-      let scrollTop;
+      let isRowIndexAbove = false;
+      let isRowIndexBelow = false;
 
-      const currentRowPage =
-        (params.rowIndex - gridState.pagination.page * gridState.pagination.pageSize) /
-        gridState.containerSizes!.viewportPageSize;
-      const scrollPosition = currentRowPage * gridState!.viewportSizes.height;
-      const viewportHeight = gridState.viewportSizes.height;
+      if (params.rowIndex || params.rowIndex === 0) {
+        const elementIndex = !options.pagination
+          ? params.rowIndex
+          : params.rowIndex - paginationState.page * paginationState.pageSize;
 
-      const isRowIndexAbove = windowRef.current!.scrollTop > scrollPosition;
-      const isRowIndexBelow =
-        windowRef.current!.scrollTop + viewportHeight < scrollPosition + rowHeight;
+        const currentRowPage = elementIndex / gridState.containerSizes!.viewportPageSize;
+        const scrollPosition = currentRowPage * gridState!.viewportSizes.height;
+        const viewportHeight = gridState.viewportSizes.height;
 
-      if (isRowIndexAbove) {
-        scrollTop = scrollPosition; // We put it at the top of the page
-        logger.debug(`Row is above, setting scrollTop to ${scrollTop}`);
-      } else if (isRowIndexBelow) {
-        // We make sure the row is not half visible
-        scrollTop = scrollPosition - viewportHeight + rowHeight;
-        logger.debug(`Row is below, setting scrollTop to ${scrollTop}`);
+        isRowIndexAbove = windowRef.current!.scrollTop > scrollPosition;
+        isRowIndexBelow = windowRef.current!.scrollTop + viewportHeight < scrollPosition;
+
+        if (isRowIndexAbove) {
+          scrollCoordinates.top = scrollPosition; // We put it at the top of the page
+          logger.debug(`Row is above, setting top to ${scrollCoordinates.top}`);
+        } else if (isRowIndexBelow) {
+          // We make sure the row is not half visible
+          scrollCoordinates.top = scrollPosition - viewportHeight + rowHeight;
+          logger.debug(`Row is below, setting top to ${scrollCoordinates.top}`);
+        }
       }
 
       const needScroll = !isColVisible || isRowIndexAbove || isRowIndexBelow;
       if (needScroll) {
-        apiRef.current.scroll({
-          left: scrollLeft,
-          top: scrollTop,
-        });
+        apiRef.current.scroll(scrollCoordinates);
       }
 
       return needScroll;
@@ -260,19 +261,23 @@ export const useGridVirtualRows = (
       visibleColumns,
       logger,
       apiRef,
+      options.pagination,
+      paginationState.page,
+      paginationState.pageSize,
       gridState,
       windowRef,
-      rowHeight,
       columnsMeta.positions,
+      rowHeight,
     ],
   );
 
   const resetScroll = React.useCallback(() => {
     scrollTo({ left: 0, top: 0 });
-    setRenderingState({ virtualPage: 1 });
+    setRenderingState({ virtualPage: 0 });
 
     if (windowRef && windowRef.current) {
-      windowRef.current.scrollTo(0, 0);
+      windowRef.current.scrollTop = 0;
+      windowRef.current.scrollLeft = 0;
     }
     setRenderingState({ renderingZoneScroll: { left: 0, top: 0 } });
   }, [scrollTo, setRenderingState, windowRef]);
@@ -407,6 +412,12 @@ export const useGridVirtualRows = (
   useNativeEventListener(
     apiRef,
     () => renderingZoneRef.current?.parentElement,
+    GRID_NATIVE_SCROLL,
+    preventViewportScroll,
+  );
+  useNativeEventListener(
+    apiRef,
+    () => colRef.current?.parentElement,
     GRID_NATIVE_SCROLL,
     preventViewportScroll,
   );

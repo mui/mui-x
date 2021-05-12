@@ -1,9 +1,8 @@
 import * as React from 'react';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
-import { GRID_CELL_EDIT_BLUR } from '../../constants/eventsConstants';
+import { GRID_CELL_EDIT_PROPS_CHANGE } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
-import { isCellEditCommitKeys } from '../../utils/keyboardUtils';
-import { formatDateToLocalInputDate, isDate, mapColDefTypeToInputType } from '../../utils/utils';
+import { formatDateToLocalInputDate, mapColDefTypeToInputType } from '../../utils/utils';
 
 export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
   const {
@@ -15,55 +14,40 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
     row,
     colDef,
     cellMode,
-    getValue,
-    rowIndex,
-    colIndex,
     isEditable,
-    ...inputBaseProps
+    hasFocus,
+    getValue,
+    ...other
   } = props;
 
   const [valueState, setValueState] = React.useState(value);
-
-  const handleBlur = React.useCallback(
-    (event: React.SyntheticEvent) => {
-      const params = api.getCellParams(id, field);
-      api.publishEvent(GRID_CELL_EDIT_BLUR, params, event);
-    },
-    [api, field, id],
-  );
+  const inputType = mapColDefTypeToInputType(colDef.type);
+  const isDateColumn = colDef.type === 'date' || colDef.type === 'dateTime';
 
   const handleChange = React.useCallback(
     (event) => {
       const newValue = event.target.value;
       const editProps = {
-        value: colDef.type === 'date' || colDef.type === 'dateTime' ? new Date(newValue) : newValue,
+        value: newValue,
       };
-      setValueState(newValue);
-      api.setEditCellProps({ id, field, props: editProps });
-    },
-    [api, colDef.type, field, id],
-  );
 
-  const handleKeyDown = React.useCallback(
-    (event: React.KeyboardEvent) => {
-      if (inputBaseProps.error && isCellEditCommitKeys(event.key)) {
-        // Account for when tab/enter is pressed
-        event.preventDefault();
-        event.stopPropagation();
+      if (isDateColumn) {
+        editProps.value = newValue === '' ? null : new Date(newValue); // TODO fix parsing, this is plain wrong.
       }
-    },
-    [inputBaseProps.error],
-  );
 
-  const inputType = mapColDefTypeToInputType(colDef.type);
-  const inputFormattedValue =
-    valueState && isDate(valueState)
-      ? formatDateToLocalInputDate({ value: valueState, withTime: colDef.type === 'dateTime' })
-      : valueState;
+      setValueState(newValue);
+      api.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE, { id, field, props: editProps }, event);
+    },
+    [api, field, id, isDateColumn],
+  );
 
   React.useEffect(() => {
-    setValueState(value);
-  }, [value]);
+    if (value instanceof Date) {
+      setValueState(formatDateToLocalInputDate({ value, withTime: colDef.type === 'dateTime' }));
+    } else {
+      setValueState(value || '');
+    }
+  }, [value, colDef.type]);
 
   return (
     <InputBase
@@ -71,11 +55,9 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
       className="MuiDataGrid-editCellInputBase"
       fullWidth
       type={inputType}
-      value={inputFormattedValue}
-      onBlur={handleBlur}
+      value={valueState}
       onChange={handleChange}
-      onKeyDown={handleKeyDown}
-      {...inputBaseProps}
+      {...other}
     />
   );
 }

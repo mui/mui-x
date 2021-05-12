@@ -1,21 +1,20 @@
 import * as React from 'react';
-import { GridColDef } from '../../../models/colDef';
 import { useLogger } from '../../utils/useLogger';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import {
-  GRID_DRAGEND,
-  GRID_COL_REORDER_START,
-  GRID_COL_REORDER_DRAG_OVER,
-  GRID_COL_REORDER_DRAG_OVER_HEADER,
-  GRID_COL_REORDER_DRAG_ENTER,
-  GRID_COL_REORDER_STOP,
+  GRID_COLUMN_HEADER_DRAG_START,
+  GRID_COLUMN_HEADER_DRAG_OVER,
+  GRID_COLUMN_HEADER_DRAG_ENTER,
+  GRID_COLUMN_HEADER_DRAG_END,
+  GRID_CELL_DRAG_ENTER,
+  GRID_CELL_DRAG_OVER,
+  GRID_CELL_DRAG_END,
 } from '../../../constants/eventsConstants';
-import {
-  GRID_HEADER_CELL_DROP_ZONE_CSS_CLASS,
-  GRID_HEADER_CELL_DRAGGING_CSS_CLASS,
-} from '../../../constants/cssClassesConstants';
-import { useGridApiMethod } from '../../root/useGridApiMethod';
-import { ColumnReorderApi, CursorCoordinates } from '../../../models/api/columnReorderApi';
+import { GRID_HEADER_CELL_DRAGGING_CSS_CLASS } from '../../../constants/cssClassesConstants';
+import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
+import { GridCellParams } from '../../../models/params/gridCellParams';
+import { CursorCoordinates } from '../../../models/cursorCoordinates';
+import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { gridColumnReorderDragColSelector } from './columnReorderSelector';
@@ -44,51 +43,12 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const dragCol = useGridSelector(apiRef, gridColumnReorderDragColSelector);
   const dragColNode = React.useRef<HTMLElement | null>(null);
-  const columnsHeaderRef = React.useRef<HTMLElement | null>(null);
   const cursorPosition = React.useRef<CursorCoordinates>({
     x: 0,
     y: 0,
   });
+  const originColumnIndex = React.useRef<number | null>(null);
   const removeDnDStylesTimeout = React.useRef<any>();
-
-  const handleDragEnd = React.useCallback((): void => {
-    logger.debug('End dragging col');
-    apiRef.current.publishEvent(GRID_COL_REORDER_STOP);
-
-    clearTimeout(removeDnDStylesTimeout.current);
-
-    columnsHeaderRef.current!.classList.remove(GRID_HEADER_CELL_DROP_ZONE_CSS_CLASS);
-    dragColNode.current!.removeEventListener(GRID_DRAGEND, handleDragEnd);
-    dragColNode.current = null;
-
-    setGridState((oldState) => ({
-      ...oldState,
-      columnReorder: { ...oldState.columnReorder, dragCol: '' },
-    }));
-    forceUpdate();
-  }, [apiRef, setGridState, forceUpdate, logger]);
-
-  const onColItemDragStart = React.useCallback(
-    (col: GridColDef, currentTarget: HTMLElement): void => {
-      logger.debug(`Start dragging col ${col.field}`);
-      apiRef.current.publishEvent(GRID_COL_REORDER_START);
-
-      dragColNode.current = currentTarget;
-      dragColNode.current.addEventListener(GRID_DRAGEND, handleDragEnd, { once: true });
-      dragColNode.current.classList.add(GRID_HEADER_CELL_DRAGGING_CSS_CLASS);
-
-      setGridState((oldState) => ({
-        ...oldState,
-        columnReorder: { ...oldState.columnReorder, dragCol: col.field },
-      }));
-      forceUpdate();
-
-      removeDnDStylesTimeout.current = setTimeout(() => {
-        dragColNode.current!.classList.remove(GRID_HEADER_CELL_DRAGGING_CSS_CLASS);
-      });
-    },
-    [apiRef, setGridState, forceUpdate, handleDragEnd, logger],
-  );
 
   React.useEffect(() => {
     return () => {
@@ -96,31 +56,47 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
     };
   }, []);
 
-  const onColHeaderDragOver = React.useCallback(
-    (event: Event, ref: React.RefObject<HTMLElement>) => {
-      event.preventDefault();
-      apiRef.current.publishEvent(GRID_COL_REORDER_DRAG_OVER_HEADER);
-      columnsHeaderRef.current = ref.current;
-      columnsHeaderRef.current!.classList.add(GRID_HEADER_CELL_DROP_ZONE_CSS_CLASS);
+  const handleColumnHeaderDragStart = React.useCallback(
+    (params: GridColumnHeaderParams, event: React.MouseEvent<HTMLElement>) => {
+      logger.debug(`Start dragging col ${params.field}`);
+
+      dragColNode.current = event.currentTarget;
+      dragColNode.current.classList.add(GRID_HEADER_CELL_DRAGGING_CSS_CLASS);
+
+      setGridState((oldState) => ({
+        ...oldState,
+        columnReorder: { ...oldState.columnReorder, dragCol: params.field },
+      }));
+      forceUpdate();
+
+      removeDnDStylesTimeout.current = setTimeout(() => {
+        dragColNode.current!.classList.remove(GRID_HEADER_CELL_DRAGGING_CSS_CLASS);
+      });
+
+      originColumnIndex.current = apiRef.current.getColumnIndex(params.field, false);
     },
-    [apiRef],
+    [forceUpdate, logger, setGridState, apiRef],
   );
 
-  const onColItemDragEnter = React.useCallback(
-    (event: Event) => {
+  const handleDragEnter = React.useCallback(
+    (params: GridColumnHeaderParams | GridCellParams, event: React.DragEvent<HTMLElement>) => {
       event.preventDefault();
-      apiRef.current.publishEvent(GRID_COL_REORDER_DRAG_ENTER);
     },
-    [apiRef],
+    [],
   );
 
-  const onColItemDragOver = React.useCallback(
-    (col: GridColDef, coordinates: CursorCoordinates): void => {
-      logger.debug(`Dragging over col ${col.field}`);
-      apiRef.current.publishEvent(GRID_COL_REORDER_DRAG_OVER);
+  const handleDragOver = React.useCallback(
+    (params: GridColumnHeaderParams | GridCellParams, event: React.DragEvent) => {
+      logger.debug(`Dragging over col ${params.field}`);
+      event.preventDefault();
 
-      if (col.field !== dragCol && hasCursorPositionChanged(cursorPosition.current, coordinates)) {
-        const targetColIndex = apiRef.current.getColumnIndex(col.field, false);
+      const coordinates = { x: event.clientX, y: event.clientY };
+
+      if (
+        params.field !== dragCol &&
+        hasCursorPositionChanged(cursorPosition.current, coordinates)
+      ) {
+        const targetColIndex = apiRef.current.getColumnIndex(params.field, false);
         const dragColIndex = apiRef.current.getColumnIndex(dragCol, false);
 
         if (
@@ -131,7 +107,7 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
             CURSOR_MOVE_DIRECTION_LEFT &&
             targetColIndex < dragColIndex)
         ) {
-          apiRef.current.moveColumn(dragCol, targetColIndex);
+          apiRef.current.setColumnIndex(dragCol, targetColIndex);
         }
 
         cursorPosition.current = coordinates;
@@ -140,12 +116,34 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
     [apiRef, dragCol, logger],
   );
 
-  const colReorderApi: ColumnReorderApi = {
-    onColItemDragStart,
-    onColHeaderDragOver,
-    onColItemDragOver,
-    onColItemDragEnter,
-  };
+  const handleDragEnd = React.useCallback(
+    (params: GridColumnHeaderParams | GridCellParams, event: React.DragEvent): void => {
+      logger.debug('End dragging col');
+      event.preventDefault();
 
-  useGridApiMethod(apiRef, colReorderApi, 'ColReorderApi');
+      clearTimeout(removeDnDStylesTimeout.current);
+      dragColNode.current = null;
+
+      // Check if the column was dropped outside the grid.
+      if (event.dataTransfer.dropEffect === 'none') {
+        apiRef.current.setColumnIndex(params.field, originColumnIndex.current!);
+        originColumnIndex.current = null;
+      }
+
+      setGridState((oldState) => ({
+        ...oldState,
+        columnReorder: { ...oldState.columnReorder, dragCol: '' },
+      }));
+      forceUpdate();
+    },
+    [logger, setGridState, forceUpdate, apiRef],
+  );
+
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_START, handleColumnHeaderDragStart);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_ENTER, handleDragEnter);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_OVER, handleDragOver);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_DRAG_END, handleDragEnd);
+  useGridApiEventHandler(apiRef, GRID_CELL_DRAG_ENTER, handleDragEnter);
+  useGridApiEventHandler(apiRef, GRID_CELL_DRAG_OVER, handleDragOver);
+  useGridApiEventHandler(apiRef, GRID_CELL_DRAG_END, handleDragEnd);
 };

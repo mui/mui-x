@@ -1,3 +1,3 @@
-import { PaginationState } from './gridPaginationReducer';
+import { GridPaginationState } from './gridPaginationReducer';
 
-export const gridPaginationSelector = (state: any): PaginationState => state.pagination;
+export const gridPaginationSelector = (state: any): GridPaginationState => state.pagination;

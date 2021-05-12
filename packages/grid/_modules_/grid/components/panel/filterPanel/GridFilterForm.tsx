@@ -12,7 +12,7 @@ import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem
 import { GridFilterOperator } from '../../../models/gridFilterOperator';
 import { GridApiContext } from '../../GridApiContext';
 import { GridCloseIcon } from '../../icons/index';
-import { TranslationKeys } from '../../../models/api/gridLocaleTextApi';
+import { GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
 
 export interface GridFilterFormProps {
   item: GridFilterItem;
@@ -135,7 +135,7 @@ export function GridFilterForm(props: GridFilterFormProps) {
 
   return (
     <div className={classes.root}>
-      <FormControl className={classes.closeIcon}>
+      <FormControl variant="standard" className={classes.closeIcon}>
         <IconButton
           aria-label={apiRef!.current.getLocaleText('filterPanelDeleteIconLabel')}
           title={apiRef!.current.getLocaleText('filterPanelDeleteIconLabel')}
@@ -171,7 +171,7 @@ export function GridFilterForm(props: GridFilterFormProps) {
           </option>
         </Select>
       </FormControl>
-      <FormControl className={classes.columnSelect}>
+      <FormControl variant="standard" className={classes.columnSelect}>
         <InputLabel id="columns-filter-select-label">
           {apiRef!.current.getLocaleText('filterPanelColumns')}
         </InputLabel>
@@ -189,7 +189,7 @@ export function GridFilterForm(props: GridFilterFormProps) {
           ))}
         </Select>
       </FormControl>
-      <FormControl className={classes.operatorSelect}>
+      <FormControl variant="standard" className={classes.operatorSelect}>
         <InputLabel id="columns-operators-select-label">
           {apiRef!.current.getLocaleText('filterPanelOperators')}
         </InputLabel>
@@ -204,21 +204,21 @@ export function GridFilterForm(props: GridFilterFormProps) {
             <option key={operator.value} value={operator.value}>
               {operator.label ||
                 apiRef!.current.getLocaleText(
-                  `filterOperator${capitalize(operator.value)}` as TranslationKeys,
+                  `filterOperator${capitalize(operator.value)}` as GridTranslationKeys,
                 )}
             </option>
           ))}
         </Select>
       </FormControl>
-      <FormControl className={classes.filterValueInput}>
-        {currentColumn &&
-          currentOperator &&
-          React.createElement(currentOperator.InputComponent, {
-            apiRef,
-            item,
-            applyValue: applyFilterChanges,
-            ...currentOperator.InputComponentProps,
-          })}
+      <FormControl variant="standard" className={classes.filterValueInput}>
+        {currentColumn && currentOperator && (
+          <currentOperator.InputComponent
+            apiRef={apiRef}
+            item={item}
+            applyValue={applyFilterChanges}
+            {...currentOperator.InputComponentProps}
+          />
+        )}
       </FormControl>
     </div>
   );

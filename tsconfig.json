@@ -16,7 +16,7 @@
     "jsx": "react",
     // TODO, turn to true
     "noImplicitAny": false,
-    "types": ["jest", "node", "requestidlecallback"],
+    "types": ["node", "requestidlecallback"],
     "baseUrl": "./",
     "paths": {
       "@material-ui/data-grid": ["./packages/grid/data-grid/src"],

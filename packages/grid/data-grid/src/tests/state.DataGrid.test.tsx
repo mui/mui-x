@@ -4,11 +4,14 @@ import { expect } from 'chai';
 import { DataGrid } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<DataGrid /> - State', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
+    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,
@@ -26,14 +29,7 @@ describe('<DataGrid /> - State', () => {
     columns: [{ field: 'brand' }],
   };
 
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
-
-  it('should allow to control the state using useState', async () => {
+  it('should allow to control the state using useState', () => {
     function GridStateTest({ direction, sortedRows }) {
       const gridState = {
         sorting: { sortModel: [{ field: 'brand', sort: direction }], sortedRows },

@@ -14,20 +14,16 @@ import {
   fireEvent,
 } from 'test/utils';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<XGrid /> - Edit Rows', () => {
   let baselineProps;
-
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
 
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
   beforeEach(() => {
     baselineProps = {
+      autoHeight: isJSDOM,
       rows: [
         {
           id: 0,
@@ -58,12 +54,7 @@ describe('<XGrid /> - Edit Rows', () => {
     apiRef = useGridApiRef();
     return (
       <div style={{ width: 300, height: 300 }}>
-        <XGrid
-          apiRef={apiRef}
-          columns={baselineProps.columns}
-          rows={baselineProps.rows}
-          {...props}
-        />
+        <XGrid {...baselineProps} apiRef={apiRef} {...props} />
       </div>
     );
   };
@@ -71,7 +62,7 @@ describe('<XGrid /> - Edit Rows', () => {
   it('isCellEditable should add the class MuiDataGrid-cellEditable to editable cells but not prevent a cell from switching mode', () => {
     render(<TestCase isCellEditable={(params) => params.value === 'Adidas'} />);
     const cellNike = getCell(0, 0);
-    expect(cellNike).to.not.have.class('MuiDataGrid-cellEditable');
+    expect(cellNike).not.to.have.class('MuiDataGrid-cellEditable');
     const cellAdidas = getCell(1, 0);
     expect(cellAdidas).to.have.class('MuiDataGrid-cellEditable');
 
@@ -90,7 +81,7 @@ describe('<XGrid /> - Edit Rows', () => {
 
     apiRef!.current.setCellMode(1, 'brand', 'view');
     expect(cell).to.have.class('MuiDataGrid-cellEditable');
-    expect(cell).to.not.have.class('MuiDataGrid-cellEditing');
+    expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
     expect(cell.querySelector('input')).to.equal(null);
   });
 
@@ -103,6 +94,17 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(cell).to.have.class('MuiDataGrid-cellEditable');
     expect(cell).to.have.class('MuiDataGrid-cellEditing');
     expect(cell.querySelector('input')!.value).to.equal('Adidas');
+  });
+
+  it('should allow to stop double click using stopPropagation', () => {
+    render(<TestCase onCellDoubleClick={(params, event) => event.stopPropagation()} />);
+    const cell = getCell(1, 0);
+    cell.focus();
+    fireEvent.doubleClick(cell);
+
+    expect(cell).to.have.class('MuiDataGrid-cellEditable');
+    expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
+    expect(cell.querySelector('input')).to.equal(null);
   });
 
   it('should allow to switch between cell mode using enter key', () => {
@@ -121,11 +123,22 @@ describe('<XGrid /> - Edit Rows', () => {
     const cell = getCell(1, 0);
     cell.focus();
 
-    expect(cell.textContent).to.equal('Adidas');
+    expect(cell).to.have.text('Adidas');
     fireEvent.keyDown(cell, { key: 'Delete' });
     expect(cell).to.have.class('MuiDataGrid-cellEditable');
-    expect(cell).to.not.have.class('MuiDataGrid-cellEditing');
-    expect(cell.textContent).to.equal('');
+    expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
+    expect(cell).to.have.text('');
+  });
+
+  it('should not allow to delete a cell directly if it is not editable', () => {
+    render(<TestCase isCellEditable={() => false} />);
+    const cell = getCell(1, 0);
+    cell.focus();
+
+    expect(cell).to.have.text('Adidas');
+    fireEvent.keyDown(cell, { key: 'Delete' });
+    expect(cell).not.to.have.class('MuiDataGrid-cellEditable');
+    expect(cell).to.have.text('Adidas');
   });
 
   // Due to an issue with the keyDown event in test library, this test uses the apiRef to publish an event
@@ -134,9 +147,14 @@ describe('<XGrid /> - Edit Rows', () => {
     render(<TestCase />);
     const cell = getCell(1, 0);
     cell.focus();
-    expect(cell.textContent).to.equal('Adidas');
+    expect(cell).to.have.text('Adidas');
     const params = apiRef.current.getCellParams(1, 'brand');
-    apiRef.current.publishEvent(GRID_CELL_KEYDOWN, params, { key: 'a', code: 1, target: cell });
+    apiRef.current.publishEvent(GRID_CELL_KEYDOWN, params, {
+      key: 'a',
+      code: 1,
+      target: cell,
+      isPropagationStopped: () => false,
+    });
     // fireEvent.keyDown(cell, { key: 'a', code: 1, target: cell });
 
     expect(cell).to.have.class('MuiDataGrid-cellEditable');
@@ -158,8 +176,8 @@ describe('<XGrid /> - Edit Rows', () => {
 
     fireEvent.keyDown(input, { key: 'Escape' });
     expect(cell).to.have.class('MuiDataGrid-cellEditable');
-    expect(cell).to.not.have.class('MuiDataGrid-cellEditing');
-    expect(cell.textContent).to.equal('Adidas');
+    expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
+    expect(cell).to.have.text('Adidas');
   });
 
   it('should allow to save an edit changes using Enter', () => {
@@ -174,8 +192,8 @@ describe('<XGrid /> - Edit Rows', () => {
 
     fireEvent.keyDown(input, { key: 'Enter' });
     expect(cell).to.have.class('MuiDataGrid-cellEditable');
-    expect(cell).to.not.have.class('MuiDataGrid-cellEditing');
-    expect(cell.textContent).to.equal('n');
+    expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
+    expect(cell).to.have.text('n');
     expect(getActiveCell()).to.equal('2-0');
   });
 
@@ -192,8 +210,8 @@ describe('<XGrid /> - Edit Rows', () => {
 
     fireEvent.keyDown(input, { key: 'Tab' });
     expect(cell).to.have.class('MuiDataGrid-cellEditable');
-    expect(cell).to.not.have.class('MuiDataGrid-cellEditing');
-    expect(cell.textContent).to.equal('n');
+    expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
+    expect(cell).to.have.text('n');
     expect(getActiveCell()).to.equal('1-1');
   });
 
@@ -210,8 +228,30 @@ describe('<XGrid /> - Edit Rows', () => {
 
     fireEvent.keyDown(input, { key: 'Tab', shiftKey: true });
     expect(cell).to.have.class('MuiDataGrid-cellEditable');
-    expect(cell).to.not.have.class('MuiDataGrid-cellEditing');
-    expect(cell.textContent).to.equal('1970');
+    expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
+    expect(cell).to.have.text('1970');
     expect(getActiveCell()).to.equal('1-0');
+  });
+
+  it('should the focus to the new field', () => {
+    const handleCellBlur = (params, event) => {
+      if (params.cellMode === 'edit') {
+        event?.stopPropagation();
+      }
+    };
+    render(<TestCase onCellBlur={handleCellBlur} />);
+    // Turn first cell into edit mode
+    apiRef!.current.setCellMode(0, 'brand', 'edit');
+
+    // Turn second cell into edit mode
+    getCell(1, 0).focus();
+    apiRef!.current.setCellMode(1, 'brand', 'edit');
+    expect(document.querySelectorAll('input').length).to.equal(2);
+
+    // Try to focus the first cell's input
+    const input0 = getCell(0, 0).querySelector('input');
+    input0!.focus();
+    fireEvent.click(input0);
+    expect(document.activeElement).to.have.property('value', 'Nike');
   });
 });

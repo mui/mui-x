@@ -87,10 +87,13 @@ export const useStyles = makeStyles(
           lineHeight: null,
           padding: theme.spacing(0, 2),
         },
-        '& .MuiDataGrid-colCell:focus, & .MuiDataGrid-cell:focus': {
-          outline: 'dotted',
+        '& .MuiDataGrid-colCell:focus-within, & .MuiDataGrid-cell:focus-within': {
+          outline: `solid ${muiStyleAlpha(theme.palette.primary.main, 0.5)} 1px`,
           outlineWidth: 1,
           outlineOffset: -2,
+        },
+        '& .MuiDataGrid-colCell:focus, & .MuiDataGrid-cell:focus': {
+          outline: `solid ${theme.palette.primary.main} 1px`,
         },
         '& .MuiDataGrid-colCellCheckbox, & .MuiDataGrid-cellCheckbox': {
           padding: 0,
@@ -233,30 +236,33 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-cell.MuiDataGrid-cellEditing': {
           padding: 1,
           display: 'flex',
+          boxShadow: theme.shadows[2],
+          backgroundColor: theme.palette.background.paper,
+          '&:focus-within': {
+            outline: `solid ${theme.palette.primary.main} 1px`,
+            outlineOffset: '-1px',
+          },
         },
         '& .MuiDataGrid-editCellInputBase': {
           ...theme.typography.body2,
           padding: '1px 0',
-          border: `1px solid ${
-            getThemePaletteMode(theme.palette) === 'light'
-              ? 'rgba(0, 0, 0, 0.23)'
-              : 'rgba(255, 255, 255, 0.23)'
-          }`,
-          borderRadius: 3,
-          '&:hover': {
-            borderColor: theme.palette.text.primary,
-          },
-          '&.Mui-focused': {
-            borderColor: theme.palette.primary.main,
-            borderWidth: 2,
-            '& input': {
-              padding: '0 13px',
-            },
-          },
           '& input': {
-            padding: '0 14px',
+            padding: '0 16px',
             height: '100%',
           },
+        },
+        '& .MuiDataGrid-editCellBoolean': {
+          display: 'flex',
+          height: '100%',
+          width: '100%',
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+        '& .MuiDataGrid-booleanCell[data-value="true"]': {
+          color: theme.palette.text.secondary,
+        },
+        '& .MuiDataGrid-booleanCell[data-value="false"]': {
+          color: theme.palette.text.disabled,
         },
         // The very last cell
         '& .MuiDataGrid-colCellWrapper .MuiDataGrid-cell': {
@@ -272,11 +278,20 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-cellLeft': {
           textAlign: 'left',
         },
+        '& .MuiDataGrid-cellLeft.MuiDataGrid-cellWithRenderer, & .MuiDataGrid-cellLeft.MuiDataGrid-cellEditing': {
+          justifyContent: 'flex-start',
+        },
         '& .MuiDataGrid-cellRight': {
           textAlign: 'right',
         },
+        '& .MuiDataGrid-cellRight.MuiDataGrid-cellWithRenderer, & .MuiDataGrid-cellRight.MuiDataGrid-cellEditing': {
+          justifyContent: 'flex-end',
+        },
         '& .MuiDataGrid-cellCenter': {
           textAlign: 'center',
+        },
+        '& .MuiDataGrid-cellCenter.MuiDataGrid-cellWithRenderer, & .MuiDataGrid-cellCenter.MuiDataGrid-cellEditing': {
+          justifyContent: 'center',
         },
         '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
           alignItems: 'center',

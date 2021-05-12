@@ -34,7 +34,7 @@ For the `XGrid`, you need to disable multiple row selection with `disableMultipl
 
 ### Multiple row selection [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
-To activate multiple selection, put focus the `XGrid` component and hold the <kbd>CTRL</kbd> key while selecting rows.
+To activate multiple selection, put focus the `XGrid` component and hold the <kbd class="key">CTRL</kbd> key while selecting rows.
 
 {{"demo": "pages/components/data-grid/selection/MultipleRowSelectionGrid.js", "disableAd": true, "bg": "inline"}}
 
@@ -46,7 +46,7 @@ To activate checkbox selection set `checkboxSelection={true}`.
 
 ## Disable selection on click
 
-You might have interactive content in the cells and need to disable the selection of the row on click. Use the `disableClickEventBubbling` option in this case.
+You might have interactive content in the cells and need to disable the selection of the row on click. Use the `disableSelectionOnClick` option in this case.
 
 {{"demo": "pages/components/data-grid/selection/DisableClickSelectionGrid.js", "bg": "inline"}}
 

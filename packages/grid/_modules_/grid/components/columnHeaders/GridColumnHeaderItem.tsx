@@ -1,11 +1,19 @@
 import * as React from 'react';
 import {
+  GRID_COLUMN_HEADER_KEYDOWN,
   GRID_COLUMN_HEADER_CLICK,
   GRID_COLUMN_HEADER_DOUBLE_CLICK,
   GRID_COLUMN_HEADER_ENTER,
   GRID_COLUMN_HEADER_LEAVE,
   GRID_COLUMN_HEADER_OUT,
   GRID_COLUMN_HEADER_OVER,
+  GRID_COLUMN_HEADER_DRAG_ENTER,
+  GRID_COLUMN_HEADER_DRAG_OVER,
+  GRID_COLUMN_HEADER_DRAG_START,
+  GRID_COLUMN_HEADER_DRAG_END,
+  GRID_COLUMN_SEPARATOR_MOUSE_DOWN,
+  GRID_COLUMN_HEADER_FOCUS,
+  GRID_COLUMN_HEADER_BLUR,
 } from '../../constants/eventsConstants';
 import { GridColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
 import { GridOptions } from '../../models/gridOptions';
@@ -30,159 +38,181 @@ interface GridColumnHeaderItemProps {
   sortIndex?: number;
   options: GridOptions;
   filterItemsCounter?: number;
+  hasFocus?: boolean;
+  tabIndex: 0 | -1;
 }
 
-export const GridColumnHeaderItem = ({
-  column,
-  colIndex,
-  isDragging,
-  isResizing,
-  sortDirection,
-  sortIndex,
-  options,
-  filterItemsCounter,
-}: GridColumnHeaderItemProps) => {
-  const apiRef = React.useContext(GridApiContext);
-  const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
-  const {
-    disableColumnReorder,
-    showColumnRightBorder,
-    disableColumnResize,
-    disableColumnMenu,
-  } = options;
-  const isColumnSorted = sortDirection != null;
-  // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
-  const isColumnNumeric = column.type === GRID_NUMBER_COLUMN_TYPE;
+export const GridColumnHeaderItem = React.memo(
+  ({
+    column,
+    colIndex,
+    isDragging,
+    isResizing,
+    sortDirection,
+    sortIndex,
+    options,
+    filterItemsCounter,
+    hasFocus,
+    tabIndex,
+  }: GridColumnHeaderItemProps) => {
+    const apiRef = React.useContext(GridApiContext);
+    const headerCellRef = React.useRef<HTMLDivElement>(null);
+    const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
+    const {
+      disableColumnReorder,
+      showColumnRightBorder,
+      disableColumnResize,
+      disableColumnMenu,
+    } = options;
+    const isColumnSorted = sortDirection != null;
+    // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
+    const isColumnNumeric = column.type === GRID_NUMBER_COLUMN_TYPE;
 
-  let headerComponent: React.ReactElement | null = null;
-  if (column.renderHeader) {
-    headerComponent = column.renderHeader({
-      api: apiRef!.current!,
-      colDef: column,
-      colIndex,
-      field: column.field,
-    });
-  }
+    let headerComponent: React.ReactElement | null = null;
+    if (column.renderHeader && apiRef!.current) {
+      headerComponent = column.renderHeader(apiRef!.current.getColumnHeaderParams(column.field));
+    }
 
-  const onDragStart = React.useCallback(
-    (event) => apiRef!.current.onColItemDragStart(column, event.currentTarget),
-    [apiRef, column],
-  );
-  const onDragEnter = React.useCallback((event) => apiRef!.current.onColItemDragEnter(event), [
-    apiRef,
-  ]);
-  const onDragOver = React.useCallback(
-    (event) =>
-      apiRef!.current.onColItemDragOver(column, {
-        x: event.clientX,
-        y: event.clientY,
+    const publish = React.useCallback(
+      (eventName: string) => (event: React.MouseEvent | React.DragEvent) =>
+        apiRef!.current.publishEvent(
+          eventName,
+          apiRef!.current.getColumnHeaderParams(column.field),
+          event,
+        ),
+      [apiRef, column.field],
+    );
+
+    const mouseEventsHandlers = React.useMemo(
+      () => ({
+        onClick: publish(GRID_COLUMN_HEADER_CLICK),
+        onDoubleClick: publish(GRID_COLUMN_HEADER_DOUBLE_CLICK),
+        onMouseOver: publish(GRID_COLUMN_HEADER_OVER),
+        onMouseOut: publish(GRID_COLUMN_HEADER_OUT),
+        onMouseEnter: publish(GRID_COLUMN_HEADER_ENTER),
+        onMouseLeave: publish(GRID_COLUMN_HEADER_LEAVE),
+        onKeyDown: publish(GRID_COLUMN_HEADER_KEYDOWN),
+        onFocus: publish(GRID_COLUMN_HEADER_FOCUS),
+        onBlur: publish(GRID_COLUMN_HEADER_BLUR),
       }),
-    [apiRef, column],
-  );
+      [publish],
+    );
 
-  const publish = React.useCallback(
-    (eventName: string) => (event: React.MouseEvent) =>
-      apiRef!.current.publishEvent(
-        eventName,
-        apiRef!.current.getColumnHeaderParams(column.field),
-        event,
-      ),
-    [apiRef, column.field],
-  );
+    const draggableEventHandlers = React.useMemo(
+      () => ({
+        onDragStart: publish(GRID_COLUMN_HEADER_DRAG_START),
+        onDragEnter: publish(GRID_COLUMN_HEADER_DRAG_ENTER),
+        onDragOver: publish(GRID_COLUMN_HEADER_DRAG_OVER),
+        onDragEnd: publish(GRID_COLUMN_HEADER_DRAG_END),
+      }),
+      [publish],
+    );
 
-  const mouseEventsHandlers = React.useMemo(
-    () => ({
-      onClick: publish(GRID_COLUMN_HEADER_CLICK),
-      onDoubleClick: publish(GRID_COLUMN_HEADER_DOUBLE_CLICK),
-      onMouseOver: publish(GRID_COLUMN_HEADER_OVER),
-      onMouseOut: publish(GRID_COLUMN_HEADER_OUT),
-      onMouseEnter: publish(GRID_COLUMN_HEADER_ENTER),
-      onMouseLeave: publish(GRID_COLUMN_HEADER_LEAVE),
-    }),
-    [publish],
-  );
+    const resizeEventHandlers = React.useMemo(
+      () => ({
+        onMouseDown: publish(GRID_COLUMN_SEPARATOR_MOUSE_DOWN),
+      }),
+      [publish],
+    );
 
-  const cssClasses = classnames(
-    GRID_HEADER_CELL_CSS_CLASS,
-    column.headerClassName,
-    column.headerAlign === 'center' && 'MuiDataGrid-colCellCenter',
-    column.headerAlign === 'right' && 'MuiDataGrid-colCellRight',
-    {
-      'MuiDataGrid-colCellSortable': column.sortable,
-      'MuiDataGrid-colCellMoving': isDragging,
-      'MuiDataGrid-colCellSorted': isColumnSorted,
-      'MuiDataGrid-colCellNumeric': isColumnNumeric,
-      'MuiDataGrid-withBorder': showColumnRightBorder,
-    },
-  );
+    const cssClasses = classnames(
+      GRID_HEADER_CELL_CSS_CLASS,
+      column.headerClassName,
+      column.headerAlign === 'center' && 'MuiDataGrid-colCellCenter',
+      column.headerAlign === 'right' && 'MuiDataGrid-colCellRight',
+      {
+        'MuiDataGrid-colCellSortable': column.sortable,
+        'MuiDataGrid-colCellMoving': isDragging,
+        'MuiDataGrid-colCellSorted': isColumnSorted,
+        'MuiDataGrid-colCellNumeric': isColumnNumeric,
+        'MuiDataGrid-withBorder': showColumnRightBorder,
+      },
+    );
 
-  const dragConfig = {
-    draggable: !disableColumnReorder,
-    onDragStart,
-    onDragEnter,
-    onDragOver,
-  };
-  const width = column.width!;
+    const width = column.width!;
 
-  let ariaSort: any;
-  if (sortDirection != null) {
-    ariaSort = {
-      'aria-sort': sortDirection === 'asc' ? 'ascending' : 'descending',
-    };
-  }
+    let ariaSort: any;
+    if (sortDirection != null) {
+      ariaSort = {
+        'aria-sort': sortDirection === 'asc' ? 'ascending' : 'descending',
+      };
+    }
 
-  const columnTitleIconButtons = (
-    <React.Fragment>
-      <GridColumnHeaderSortIcon
-        direction={sortDirection}
-        index={sortIndex}
-        hide={column.hideSortIcons}
-      />
-      <ColumnHeaderFilterIcon counter={filterItemsCounter} />
-    </React.Fragment>
-  );
-  const columnMenuIconButton = <ColumnHeaderMenuIcon column={column} />;
+    const columnTitleIconButtons = (
+      <React.Fragment>
+        <GridColumnHeaderSortIcon
+          direction={sortDirection}
+          index={sortIndex}
+          hide={column.hideSortIcons}
+        />
+        <ColumnHeaderFilterIcon counter={filterItemsCounter} />
+      </React.Fragment>
+    );
+    const columnMenuIconButton = <ColumnHeaderMenuIcon column={column} />;
 
-  return (
-    <div
-      className={cssClasses}
-      key={column.field}
-      data-field={column.field}
-      style={{
-        width,
-        minWidth: width,
-        maxWidth: width,
-      }}
-      role="columnheader"
-      tabIndex={-1}
-      aria-colindex={colIndex + 1}
-      {...ariaSort}
-      {...mouseEventsHandlers}
-    >
-      <div className="MuiDataGrid-colCell-draggable" {...dragConfig}>
-        {!disableColumnMenu && isColumnNumeric && !column.disableColumnMenu && columnMenuIconButton}
-        <div className="MuiDataGrid-colCellTitleContainer">
-          {isColumnNumeric && columnTitleIconButtons}
-          {headerComponent || (
-            <GridColumnHeaderTitle
-              label={column.headerName || column.field}
-              description={column.description}
-              columnWidth={width}
-            />
-          )}
-          {!isColumnNumeric && columnTitleIconButtons}
+    React.useLayoutEffect(() => {
+      const columnMenuState = apiRef!.current.getState().columnMenu;
+      if (hasFocus && !columnMenuState.open) {
+        const focusableElement = headerCellRef.current!.querySelector(
+          '[tabindex="0"]',
+        ) as HTMLElement;
+        if (focusableElement) {
+          focusableElement!.focus();
+        } else {
+          headerCellRef.current!.focus();
+        }
+      }
+    });
+
+    return (
+      <div
+        ref={headerCellRef}
+        className={cssClasses}
+        key={column.field}
+        data-field={column.field}
+        style={{
+          width,
+          minWidth: width,
+          maxWidth: width,
+        }}
+        role="columnheader"
+        tabIndex={tabIndex}
+        aria-colindex={colIndex + 1}
+        {...ariaSort}
+        {...mouseEventsHandlers}
+      >
+        <div
+          className="MuiDataGrid-colCell-draggable"
+          draggable={!disableColumnReorder}
+          {...draggableEventHandlers}
+        >
+          {!disableColumnMenu &&
+            isColumnNumeric &&
+            !column.disableColumnMenu &&
+            columnMenuIconButton}
+          <div className="MuiDataGrid-colCellTitleContainer">
+            {isColumnNumeric && columnTitleIconButtons}
+            {headerComponent || (
+              <GridColumnHeaderTitle
+                label={column.headerName || column.field}
+                description={column.description}
+                columnWidth={width}
+              />
+            )}
+            {!isColumnNumeric && columnTitleIconButtons}
+          </div>
+          {!isColumnNumeric &&
+            !disableColumnMenu &&
+            !column.disableColumnMenu &&
+            columnMenuIconButton}
         </div>
-        {!isColumnNumeric &&
-          !disableColumnMenu &&
-          !column.disableColumnMenu &&
-          columnMenuIconButton}
+        <GridColumnHeaderSeparator
+          resizable={!disableColumnResize && !!column.resizable}
+          resizing={isResizing}
+          height={headerHeight}
+          {...resizeEventHandlers}
+        />
       </div>
-      <GridColumnHeaderSeparator
-        resizable={!disableColumnResize && !!column.resizable}
-        resizing={isResizing}
-        height={headerHeight}
-        onMouseDown={apiRef?.current.startResizeOnMouseDown}
-      />
-    </div>
-  );
-};
+    );
+  },
+);

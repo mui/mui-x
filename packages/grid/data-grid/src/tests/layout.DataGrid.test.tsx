@@ -77,11 +77,27 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         expect(ref.current).to.equal(container.firstChild.firstChild);
       });
 
-      function randomStringValue() {
-        return `r${Math.random().toString(36).slice(2)}`;
-      }
+      describe('Apply the `classes` prop', () => {
+        it("should apply the `root` rule name's value as a class to the root grid component", () => {
+          const classes = {
+            root: 'my_class_name',
+          };
+
+          const { container } = render(
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid {...baselineProps} classes={{ root: classes.root }} />
+            </div>,
+          );
+
+          expect(container.firstChild.firstChild).to.have.class(classes.root);
+        });
+      });
 
       it('applies the className to the root component', () => {
+        function randomStringValue() {
+          return `r${Math.random().toString(36).slice(2)}`;
+        }
+
         const className = randomStringValue();
 
         const { container } = render(
@@ -101,7 +117,9 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           {
             field: 'fullName',
             valueGetter: (params) =>
-              `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
+              `${params.getValue(params.id, 'firstName') || ''} ${
+                params.getValue(params.id, 'lastName') || ''
+              }`,
           },
         ];
 
@@ -170,7 +188,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           { field: 'id', hide: true },
           {
             field: 'fullName',
-            valueGetter: (params: GridValueGetterParams) => params.getValue('age'),
+            valueGetter: (params: GridValueGetterParams) => params.getValue(params.id, 'age'),
           },
         ];
         expect(() => {
@@ -417,9 +435,11 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       expect(() => {
         PropTypes.checkPropTypes(
           // @ts-ignore
-          DataGrid.Naked.propTypes,
+          DataGrid.propTypes,
           {
             pagination: false,
+            columns: [],
+            rows: [],
           },
           'prop',
           'MockedDataGrid',
@@ -453,7 +473,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       }).toErrorDev([
         'The data grid component requires all rows to have a unique id property',
         'The above error occurred in the <ForwardRef(GridComponent)> component',
-        'The above error occurred in the <ForwardRef(GridComponent)> component',
       ]);
       expect((errorRef.current as any).errors).to.have.length(1);
       expect((errorRef.current as any).errors[0].toString()).to.include(
@@ -463,13 +482,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
   });
 
   describe('localeText', () => {
-    before(function beforeHook() {
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
     it('should replace the density selector button label text to "Size"', () => {
       const { getByText } = render(
         <div style={{ width: 300, height: 300 }}>
@@ -488,13 +500,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
   });
 
   describe('Error', () => {
-    before(function beforeHook() {
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
     it('should display error message when error prop set', () => {
       const message = 'Error can also be set in props!';
       render(

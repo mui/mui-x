@@ -2,8 +2,7 @@ import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Rating } from '@material-ui/lab';
 import {
-  FilterInputValueProps,
-  GridPreferencePanelsValue,
+  GridFilterInputValueProps,
   DataGrid,
   GridFilterItem,
   GridColDef,
@@ -20,7 +19,7 @@ const useStyles = makeStyles({
   },
 });
 
-function RatingInputValue(props: FilterInputValueProps) {
+function RatingInputValue(props: GridFilterInputValueProps) {
   const classes = useStyles();
   const { item, applyValue } = props;
 
@@ -87,12 +86,6 @@ export default function CustomRatingOperator() {
         columns={columns}
         filterModel={{
           items: [{ columnField: 'rating', value: '3.5', operatorValue: 'from' }],
-        }}
-        state={{
-          preferencePanel: {
-            open: true,
-            openedPanelValue: GridPreferencePanelsValue.filters,
-          },
         }}
       />
     </div>

@@ -50,12 +50,19 @@ The same import works with `XGrid` as it's an extension of `DataGrid`.
 | Locale                  | BCP 47 language tag | Import name |
 | :---------------------- | :------------------ | :---------- |
 | Bulgarian               | bg-BG               | `bgBG`      |
+| Dutch                   | nl-NL               | `nlNL`      |
 | English (United States) | en-US               | `enUS`      |
 | French                  | fr-FR               | `frFR`      |
 | German                  | de-DE               | `deDE`      |
+| Greek                   | el-GR               | `elGR`      |
+| Italian                 | it-IT               | `itIT`      |
 | Japanese                | ja-JP               | `jaJP`      |
 | Polish                  | pl-PL               | `plPL`      |
 | Portuguese (Brazil)     | pt-BR               | `ptBR`      |
+| Russian                 | ru-RU               | `ruRU`      |
+| Spanish (Spain)         | es-ES               | `esES`      |
+| Turkish                 | tr-TR               | `trTR`      |
+| Ukraine                 | uk-UA               | `ukUA`      |
 
 You can [find the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/locales) in the GitHub repository.
 

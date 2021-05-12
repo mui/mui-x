@@ -11,8 +11,7 @@ import { GridColDef } from '../../models/colDef/gridColDef';
 export interface ColumnHeaderFilterIconProps {
   column: GridColDef;
 }
-
-export function ColumnHeaderMenuIcon(props: ColumnHeaderFilterIconProps) {
+export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderFilterIconProps) => {
   const { column } = props;
   const apiRef = React.useContext(GridApiContext);
   const columnMenuState = useGridSelector(apiRef, gridColumnMenuStateSelector);
@@ -24,12 +23,7 @@ export function ColumnHeaderMenuIcon(props: ColumnHeaderFilterIconProps) {
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       event.stopPropagation();
-      const lastMenuState = apiRef!.current.getState().columnMenu;
-      if (!lastMenuState.open || lastMenuState.field !== column.field) {
-        apiRef!.current.showColumnMenu(column.field, columnMenuId, columnMenuButtonId);
-      } else {
-        apiRef!.current.hideColumnMenu();
-      }
+      apiRef!.current.toggleColumnMenu(column.field, columnMenuId, columnMenuButtonId);
     },
     [apiRef, column.field, columnMenuId, columnMenuButtonId],
   );
@@ -38,6 +32,7 @@ export function ColumnHeaderMenuIcon(props: ColumnHeaderFilterIconProps) {
   return (
     <div className={classnames('MuiDataGrid-menuIcon', { 'MuiDataGrid-menuOpen': open })}>
       <IconButton
+        tabIndex={-1}
         className="MuiDataGrid-menuIconButton"
         aria-label={apiRef!.current.getLocaleText('columnMenuLabel')}
         title={apiRef!.current.getLocaleText('columnMenuLabel')}
@@ -52,4 +47,4 @@ export function ColumnHeaderMenuIcon(props: ColumnHeaderFilterIconProps) {
       </IconButton>
     </div>
   );
-}
+});

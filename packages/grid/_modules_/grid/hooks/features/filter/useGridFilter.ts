@@ -10,9 +10,9 @@ import { FilterApi } from '../../../models/api/filterApi';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { GridFilterModelParams } from '../../../models/params/gridFilterModelParams';
-import { GridRowsProp } from '../../../models/gridRows';
+import { GridRowsProp, GridRowId, GridRowModel } from '../../../models/gridRows';
 import { isDeepEqual } from '../../../utils/utils';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
@@ -21,7 +21,11 @@ import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { GridPreferencePanelsValue } from '../preferencesPanel/gridPreferencePanelsValue';
 import { sortedGridRowsSelector } from '../sorting/gridSortingSelector';
-import { FilterModel, FilterModelState, getInitialGridFilterState } from './FilterModelState';
+import {
+  GridFilterModel,
+  GridFilterModelState,
+  getInitialGridFilterState,
+} from './gridFilterModelState';
 import { getInitialVisibleGridRowsState } from './visibleGridRowsState';
 import { visibleSortedGridRowsSelector } from './gridFilterSelector';
 
@@ -33,7 +37,7 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
 
   const getFilterModelParams = React.useCallback(
     (): GridFilterModelParams => ({
-      filterModel: apiRef.current.getState<FilterModelState>('filter'),
+      filterModel: apiRef.current.getState<GridFilterModelState>('filter'),
       api: apiRef.current,
       columns: apiRef.current.getAllColumns(),
       rows: apiRef.current.getRowModels(),
@@ -87,17 +91,17 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
         // This way we have latest rows on the first rendering
         const rows = sortedGridRowsSelector(state);
 
-        rows.forEach((row) => {
-          const params = apiRef.current.getCellParams(row.id, filterItem.columnField!);
+        rows.forEach((row: GridRowModel, id: GridRowId) => {
+          const params = apiRef.current.getCellParams(id, filterItem.columnField!);
 
           const isShown = applyFilterOnRow(params);
-          if (visibleRowsLookup[row.id] == null) {
-            visibleRowsLookup[row.id] = isShown;
+          if (visibleRowsLookup[id] == null) {
+            visibleRowsLookup[id] = isShown;
           } else {
-            visibleRowsLookup[row.id] =
+            visibleRowsLookup[id] =
               linkOperator === GridLinkOperator.And
-                ? visibleRowsLookup[row.id] && isShown
-                : visibleRowsLookup[row.id] || isShown;
+                ? visibleRowsLookup[id] && isShown
+                : visibleRowsLookup[id] || isShown;
           }
         });
 
@@ -246,7 +250,7 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
   }, [clearFilteredRows, logger, setGridState]);
 
   const setFilterModel = React.useCallback(
-    (model: FilterModel) => {
+    (model: GridFilterModel) => {
       clearFilterModel();
       logger.debug('Setting filter model');
       applyFilterLinkOperator(model.linkOperator);
@@ -255,13 +259,6 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
       apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
     [apiRef, applyFilterLinkOperator, clearFilterModel, getFilterModelParams, logger, upsertFilter],
-  );
-
-  const onFilterModelChange = React.useCallback(
-    (handler: (param: GridFilterModelParams) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(GRID_FILTER_MODEL_CHANGE, handler);
-    },
-    [apiRef],
   );
 
   const getVisibleRowModels = React.useCallback(
@@ -277,7 +274,6 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
       applyFilter,
       deleteFilter,
       upsertFilter,
-      onFilterModelChange,
       setFilterModel,
       showFilterPanel,
       hideFilterPanel,
@@ -288,7 +284,7 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
 
   useGridApiEventHandler(apiRef, GRID_ROWS_SET, apiRef.current.applyFilters);
   useGridApiEventHandler(apiRef, GRID_ROWS_UPDATED, apiRef.current.applyFilters);
-  useGridApiEventHandler(apiRef, GRID_FILTER_MODEL_CHANGE, options.onFilterModelChange);
+  useGridApiOptionHandler(apiRef, GRID_FILTER_MODEL_CHANGE, options.onFilterModelChange);
 
   React.useEffect(() => {
     const filterModel = options.filterModel;
@@ -310,7 +306,7 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
 
   const onColUpdated = React.useCallback(() => {
     logger.debug('onColUpdated - GridColumns changed, applying filters');
-    const filterState = apiRef.current.getState<FilterModelState>('filter');
+    const filterState = apiRef.current.getState<GridFilterModelState>('filter');
     const columnsIds = filterableGridColumnsIdsSelector(apiRef.current.state);
     logger.debug('GridColumns changed, applying filters');
 

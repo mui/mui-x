@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { GridApiRef } from '../../models/api/gridApiRef';
+import { GridSubscribeEventOptions } from '../../utils/eventEmitter/GridEventEmitter';
 import { useLogger } from '../utils/useLogger';
 import { GRID_COMPONENT_ERROR, GRID_UNMOUNT } from '../../constants/eventsConstants';
 import { useGridApiMethod } from './useGridApiMethod';
@@ -13,16 +14,22 @@ export function useApi(
   const logger = useLogger('useApi');
 
   const publishEvent = React.useCallback(
-    (name: string, ...args: any[]) => {
-      apiRef.current.emit(name, ...args);
+    (name: string, params: any, event?: React.SyntheticEvent) => {
+      if (!event || !event.isPropagationStopped()) {
+        apiRef.current.emit(name, params, event);
+      }
     },
     [apiRef],
   );
 
   const subscribeEvent = React.useCallback(
-    (event: string, handler: (param: any) => void): (() => void) => {
+    (
+      event: string,
+      handler: (...args) => void,
+      options?: GridSubscribeEventOptions,
+    ): (() => void) => {
       logger.debug(`Binding ${event} event`);
-      apiRef.current.on(event, handler);
+      apiRef.current.on(event, handler, options);
       const api = apiRef.current;
       return () => {
         logger.debug(`Clearing ${event} event`);

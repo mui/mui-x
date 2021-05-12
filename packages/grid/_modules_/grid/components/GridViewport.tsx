@@ -2,8 +2,12 @@ import * as React from 'react';
 import { visibleGridColumnsSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridDensityRowHeightSelector } from '../hooks/features/density/densitySelector';
-import { visibleSortedGridRowsSelector } from '../hooks/features/filter/gridFilterSelector';
-import { gridKeyboardCellSelector } from '../hooks/features/keyboard/keyboardSelector';
+import { visibleSortedGridRowsAsArraySelector } from '../hooks/features/filter/gridFilterSelector';
+import {
+  gridFocusCellSelector,
+  gridTabIndexCellSelector,
+} from '../hooks/features/focus/gridFocusStateSelector';
+import { gridEditRowsStateSelector } from '../hooks/features/rows/gridEditRowsSelector';
 import { gridSelectionStateSelector } from '../hooks/features/selection/gridSelectionSelector';
 import { renderStateSelector } from '../hooks/features/virtualization/renderingStateSelector';
 import { optionsSelector } from '../hooks/utils/optionsSelector';
@@ -32,10 +36,12 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     const scrollBarState = useGridSelector(apiRef, gridScrollBarSizeSelector);
     const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
     const renderState = useGridSelector(apiRef, renderStateSelector);
-    const cellFocus = useGridSelector(apiRef, gridKeyboardCellSelector);
+    const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
+    const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
     const selectionState = useGridSelector(apiRef, gridSelectionStateSelector);
-    const rows = useGridSelector(apiRef, visibleSortedGridRowsSelector);
+    const rows = useGridSelector(apiRef, visibleSortedGridRowsAsArraySelector);
     const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
+    const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
 
     const getRowsElements = () => {
       if (renderState.renderContext == null) {
@@ -46,28 +52,32 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
         renderState.renderContext.firstRowIdx,
         renderState.renderContext.lastRowIdx!,
       );
-      return renderedRows.map((r, idx) => (
+      return renderedRows.map(([id, row], idx) => (
         <GridRow
           className={
             (renderState.renderContext!.firstRowIdx! + idx) % 2 === 0 ? 'Mui-even' : 'Mui-odd'
           }
-          key={r.id}
-          id={r.id}
-          selected={!!selectionState[r.id]}
+          key={id}
+          id={id}
+          selected={selectionState[id] !== undefined}
           rowIndex={renderState.renderContext!.firstRowIdx! + idx}
         >
           <GridEmptyCell width={renderState.renderContext!.leftEmptyWidth} height={rowHeight} />
           <GridRowCells
             columns={visibleColumns}
-            row={r}
+            row={row}
+            id={id}
             firstColIdx={renderState.renderContext!.firstColIdx!}
             lastColIdx={renderState.renderContext!.lastColIdx!}
-            hasScroll={{ y: scrollBarState!.hasScrollY, x: scrollBarState.hasScrollX }}
-            scrollSize={options.scrollbarSize!}
+            hasScrollX={scrollBarState.hasScrollX}
+            hasScrollY={scrollBarState.hasScrollY}
             showCellRightBorder={!!options.showCellRightBorder}
             extendRowFullWidth={!options.disableExtendRowFullWidth}
             rowIndex={renderState.renderContext!.firstRowIdx! + idx}
             cellFocus={cellFocus}
+            cellTabIndex={cellTabIndex}
+            isSelected={selectionState[id] !== undefined}
+            editRowState={editRowsState[id]}
           />
           <GridEmptyCell width={renderState.renderContext!.rightEmptyWidth} height={rowHeight} />
         </GridRow>

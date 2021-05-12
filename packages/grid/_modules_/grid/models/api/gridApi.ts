@@ -1,14 +1,12 @@
 import { ColumnMenuApi } from './columnMenuApi';
-import { ColumnResizeApi } from './columnResizeApi';
-import { GridNavigationApi } from './gridNavigationApi';
+import { GridFocusApi } from './gridFocusApi';
 import { GridParamsApi } from './gridParamsApi';
-import { ComponentsApi } from './gridComponentsApi';
+import { GridComponentsApi } from './gridComponentsApi';
 import { FilterApi } from './filterApi';
 import { GridEditRowApi } from './gridEditRowApi';
 import { PreferencesPanelApi } from './preferencesPanelApi';
 import { GridRowApi } from './gridRowApi';
 import { GridColumnApi } from './gridColumnApi';
-import { ColumnReorderApi } from './columnReorderApi';
 import { GridSelectionApi } from './gridSelectionApi';
 import { GridSortApi } from './gridSortApi';
 import { GridPaginationApi } from './gridPaginationApi';
@@ -23,24 +21,23 @@ import { GridCsvExportApi } from './gridCsvExportApi';
 /**
  * The full grid API.
  */
-export type GridApi = GridCoreApi &
-  ComponentsApi &
-  GridStateApi &
-  GridDensityApi &
-  GridEventsApi &
-  GridRowApi &
-  GridEditRowApi &
-  GridParamsApi &
-  GridColumnApi &
-  ColumnReorderApi &
-  GridSelectionApi &
-  GridSortApi &
-  GridVirtualizationApi &
-  GridPaginationApi &
-  GridCsvExportApi &
-  GridNavigationApi &
-  FilterApi &
-  ColumnMenuApi &
-  ColumnResizeApi &
-  PreferencesPanelApi &
-  LocaleTextApi;
+export interface GridApi
+  extends GridCoreApi,
+    GridComponentsApi,
+    GridStateApi,
+    GridDensityApi,
+    GridEventsApi,
+    GridRowApi,
+    GridEditRowApi,
+    GridParamsApi,
+    GridColumnApi,
+    GridSelectionApi,
+    GridSortApi,
+    GridVirtualizationApi,
+    GridPaginationApi,
+    GridCsvExportApi,
+    GridFocusApi,
+    FilterApi,
+    ColumnMenuApi,
+    PreferencesPanelApi,
+    LocaleTextApi {}

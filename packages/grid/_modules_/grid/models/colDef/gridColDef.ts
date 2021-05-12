@@ -7,7 +7,7 @@ import {
   GridValueFormatterParams,
   GridValueGetterParams,
 } from '../params/gridCellParams';
-import { GridColParams } from '../params/gridColParams';
+import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
 import { GridComparatorFn } from '../gridSortModel';
 import { GridColType, GridNativeColTypes } from './gridColType';
 
@@ -38,12 +38,12 @@ export interface GridColDef {
    */
   width?: number;
   /**
-   * If set, it indicates that a column has fluid width. Range [0, ∞].
+   * If set, it indicates that a column has fluid width. Range [0, ∞).
    */
   flex?: number;
   /**
    * If `true`, hide the column.
-   * @default false;
+   * @default false
    */
   hide?: boolean;
   /**
@@ -67,7 +67,7 @@ export interface GridColDef {
   sortComparator?: GridComparatorFn;
   /**
    * Type allows to merge this object with a default definition [[GridColDef]].
-   * @default string
+   * @default 'string'
    */
   type?: GridColType;
   /**
@@ -110,7 +110,7 @@ export interface GridColDef {
    * Allows to render a component in the column header cell.
    * @param params
    */
-  renderHeader?: (params: GridColParams) => React.ReactElement;
+  renderHeader?: (params: GridColumnHeaderParams) => React.ReactElement;
   /**
    * Header cell element alignment.
    */

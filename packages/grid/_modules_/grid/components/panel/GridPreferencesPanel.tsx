@@ -3,16 +3,17 @@ import { allGridColumnsSelector } from '../../hooks/features/columns/gridColumns
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
-import { useGridBaseComponentProps } from '../../hooks/features/useGridBaseComponentProps';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridApiContext } from '../GridApiContext';
 
-export function GridPreferencesPanel() {
+export const GridPreferencesPanel = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(function GridPreferencesPanel(props, ref) {
   const apiRef = React.useContext(GridApiContext);
   const columns = useGridSelector(apiRef, allGridColumnsSelector);
   const options = useGridSelector(apiRef, optionsSelector);
   const preferencePanelState = useGridSelector(apiRef, gridPreferencePanelStateSelector);
-  const baseProps = useGridBaseComponentProps(apiRef);
 
   const isColumnsTabOpen =
     preferencePanelState.openedPanelValue === GridPreferencePanelsValue.columns;
@@ -23,19 +24,17 @@ export function GridPreferencesPanel() {
   const Panel = apiRef!.current.components.Panel!;
   return (
     <Panel
+      ref={ref}
       open={columns.length > 0 && preferencePanelState.open}
-      {...baseProps}
       {...apiRef?.current.componentsProps?.panel}
+      {...props}
     >
       {!options.disableColumnSelector && isColumnsTabOpen && (
-        <ColumnSelectorComponent
-          {...baseProps}
-          {...apiRef?.current.componentsProps?.columnsPanel}
-        />
+        <ColumnSelectorComponent {...apiRef?.current.componentsProps?.columnsPanel} />
       )}
       {!options.disableColumnFilter && isFiltersTabOpen && (
-        <FilterPanelComponent {...baseProps} {...apiRef?.current.componentsProps?.filterPanel} />
+        <FilterPanelComponent {...apiRef?.current.componentsProps?.filterPanel} />
       )}
     </Panel>
   );
-}
+});

@@ -1,5 +1,3 @@
-import { GridPageChangeParams } from '../params/gridPageChangeParams';
-
 /**
  * The pagination API interface that is available in the grid [[apiRef]].
  */
@@ -14,14 +12,4 @@ export interface GridPaginationApi {
    * @param pageSize
    */
   setPageSize: (pageSize: number) => void;
-  /**
-   * Callback fired after a new page has been displayed.
-   * @param handler
-   */
-  onPageChange: (handler: (param: GridPageChangeParams) => void) => () => void;
-  /**
-   * Callback fired after the page size was changed.
-   * @param handler
-   */
-  onPageSizeChange: (handler: (param: GridPageChangeParams) => void) => () => void;
 }

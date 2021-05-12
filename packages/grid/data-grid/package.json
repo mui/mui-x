@@ -1,6 +1,6 @@
 {
   "name": "@material-ui/data-grid",
-  "version": "4.0.0-alpha.23",
+  "version": "4.0.0-alpha.28",
   "description": "The Material-UI community edition of the data grid component.",
   "author": "Material-UI Team",
   "main": "dist/index-cjs.js",
@@ -10,6 +10,7 @@
     "dist/*"
   ],
   "license": "MIT",
+  "sideEffects": false,
   "publishConfig": {
     "access": "public"
   },
@@ -25,8 +26,6 @@
     "data-grid"
   ],
   "scripts": {
-    "precommit": "npm run lint",
-    "lint": "eslint 'src/**/*.{ts,tsx}' --quiet --fix -c ../../../.eslintrc.js",
     "typescript": "tsc -p tsconfig.json",
     "build": "cd ../ && rollup --config rollup.data-grid.config.js"
   },
@@ -37,12 +36,12 @@
   },
   "peerDependencies": {
     "@material-ui/core": "^4.9.12 || ^5.0.0-alpha.22",
-    "react": "^16.8.0 || ^17.0.0"
+    "react": "^17.0.0"
   },
   "setupFiles": [
     "<rootDir>/src/setupTests.js"
   ],
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=12.0.0"
   }
 }

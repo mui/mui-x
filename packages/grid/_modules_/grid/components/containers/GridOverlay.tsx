@@ -4,17 +4,22 @@ import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/de
 import { classnames } from '../../utils';
 import { GridApiContext } from '../GridApiContext';
 
-type GridOverlayProps = React.HTMLAttributes<HTMLDivElement>;
+export type GridOverlayProps = React.HTMLAttributes<HTMLDivElement>;
 
-export function GridOverlay(props: GridOverlayProps) {
+export const GridOverlay = React.forwardRef<HTMLDivElement, GridOverlayProps>(function GridOverlay(
+  props: GridOverlayProps,
+  ref,
+) {
   const { className, style, ...other } = props;
   const apiRef = React.useContext(GridApiContext);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
+
   return (
     <div
+      ref={ref}
       className={classnames('MuiDataGrid-overlay', className)}
       style={{ top: headerHeight, ...style }}
       {...other}
     />
   );
-}
+});

@@ -7,11 +7,14 @@ import * as React from 'react';
 import { expect } from 'chai';
 import { XGrid, useGridApiRef } from '@material-ui/x-grid';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<XGrid /> - Pagination', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
   const baselineProps = {
+    autoHeight: isJSDOM,
     rows: [
       {
         id: 0,
@@ -28,13 +31,6 @@ describe('<XGrid /> - Pagination', () => {
     ],
     columns: [{ field: 'brand', width: 100 }],
   };
-
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
 
   it('should apply setPage correctly', () => {
     let apiRef;

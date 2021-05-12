@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { GRID_COLUMNS_UPDATED } from '../../../constants/eventsConstants';
+import {
+  GRID_COLUMNS_UPDATED,
+  GRID_COLUMN_ORDER_CHANGE,
+  GRID_COLUMN_RESIZE_COMMITTED,
+  GRID_COLUMN_VISIBILITY_CHANGE,
+} from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridColumnApi } from '../../../models/api/gridColumnApi';
 import { gridCheckboxSelectionColDef } from '../../../models/colDef/gridCheckboxSelection';
@@ -13,17 +18,20 @@ import {
 import { GridColumnTypesRecord } from '../../../models/colDef/gridColTypeDef';
 import { getGridDefaultColumnTypes } from '../../../models/colDef/gridDefaultColumnTypes';
 import { getGridColDef } from '../../../models/colDef/getGridColDef';
+import { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import { mergeGridColTypes } from '../../../utils/mergeUtils';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { Logger, useLogger } from '../../utils/useLogger';
 import { useGridSelector } from '../core/useGridSelector';
+import { GridLocaleText, GridTranslationKeys } from '../../../models/api/gridLocaleTextApi';
 import { useGridState } from '../core/useGridState';
 import {
   allGridColumnsSelector,
   gridColumnsMetaSelector,
   visibleGridColumnsSelector,
 } from './gridColumnsSelector';
+import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 
 function updateColumnsWidth(columns: GridColumns, viewportWidth: number) {
   const numberOfFluidColumns = columns.filter((column) => !!column.flex && !column.hide).length;
@@ -59,13 +67,16 @@ function hydrateColumns(
   columnTypes: GridColumnTypesRecord,
   withCheckboxSelection: boolean,
   logger: Logger,
+  getLocaleText: <T extends GridTranslationKeys>(key: T) => GridLocaleText[T],
 ): GridColumns {
   logger.debug('Hydrating GridColumns with default definitions');
   const mergedColTypes = mergeGridColTypes(getGridDefaultColumnTypes(), columnTypes);
   const extendedColumns = columns.map((c) => ({ ...getGridColDef(mergedColTypes, c.type), ...c }));
 
   if (withCheckboxSelection) {
-    return [gridCheckboxSelectionColDef, ...extendedColumns];
+    const checkboxSelection = { ...gridCheckboxSelectionColDef };
+    checkboxSelection.headerName = getLocaleText('checkboxSelectionHeaderName');
+    return [checkboxSelection, ...extendedColumns];
   }
 
   return extendedColumns;
@@ -155,26 +166,66 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
   const updateColumn = React.useCallback((col: GridColDef) => updateColumns([col]), [
     updateColumns,
   ]);
-  const toggleColumn = React.useCallback(
-    (field: string, hide?: boolean) => {
+
+  const setColumnVisibility = React.useCallback(
+    (field: string, isVisible: boolean) => {
       const col = getColumnFromField(field);
-      const updatedCol = { ...col, hide: hide == null ? !col.hide : hide };
+      const updatedCol = { ...col, hide: !isVisible };
+
       updateColumns([updatedCol]);
       forceUpdate();
+
+      apiRef.current.publishEvent(GRID_COLUMN_VISIBILITY_CHANGE, {
+        field,
+        colDef: updatedCol,
+        api: apiRef,
+        isVisible,
+      });
     },
-    [forceUpdate, getColumnFromField, updateColumns],
+    [apiRef, forceUpdate, getColumnFromField, updateColumns],
   );
 
-  const moveColumn = React.useCallback(
+  const setColumnIndex = React.useCallback(
     (field: string, targetIndexPosition: number) => {
-      logger.debug(`Moving column ${field} to index ${targetIndexPosition}`);
       const oldIndexPosition = gridState.columns.all.findIndex((col) => col === field);
+      if (oldIndexPosition === targetIndexPosition) {
+        return;
+      }
+
+      logger.debug(`Moving column ${field} to index ${targetIndexPosition}`);
+
+      const params: GridColumnOrderChangeParams = {
+        field,
+        element: apiRef.current.getColumnHeaderElement(field),
+        colDef: apiRef.current.getColumnFromField(field),
+        targetIndex: targetIndexPosition,
+        oldIndex: oldIndexPosition,
+        api: apiRef.current,
+      };
+      apiRef.current.publishEvent(GRID_COLUMN_ORDER_CHANGE, params);
 
       const updatedColumns = [...gridState.columns.all];
       updatedColumns.splice(targetIndexPosition, 0, updatedColumns.splice(oldIndexPosition, 1)[0]);
-      updateState({ ...gridState.columns, all: updatedColumns }, false);
+      updateState({ ...gridState.columns, all: updatedColumns });
     },
-    [gridState.columns, logger, updateState],
+    [apiRef, gridState.columns, logger, updateState],
+  );
+
+  const setColumnWidth = React.useCallback(
+    (field: string, width: number) => {
+      logger.debug(`Updating column ${field} width to ${width}`);
+
+      const column = apiRef.current.getColumnFromField(field);
+      apiRef.current.updateColumn({ ...column, width });
+
+      apiRef.current.publishEvent(GRID_COLUMN_RESIZE_COMMITTED, {
+        element: apiRef.current.getColumnHeaderElement(field),
+        colDef: column,
+        api: apiRef,
+        width,
+      });
+    },
+    [apiRef, logger],
   );
 
   const colApi: GridColumnApi = {
@@ -186,8 +237,9 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
     getColumnsMeta,
     updateColumn,
     updateColumns,
-    toggleColumn,
-    moveColumn,
+    setColumnVisibility,
+    setColumnIndex,
+    setColumnWidth,
   };
 
   useGridApiMethod(apiRef, colApi, 'ColApi');
@@ -201,6 +253,7 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
         options.columnTypes,
         !!options.checkboxSelection,
         logger,
+        apiRef.current.getLocaleText,
       );
 
       const updatedCols = updateColumnsWidth(
@@ -227,4 +280,7 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
     const updatedCols = updateColumnsWidth(currentColumns, gridState.viewportSizes.width);
     apiRef.current.updateColumns(updatedCols);
   }, [apiRef, gridState.viewportSizes.width, logger]);
+
+  // Grid Option Handlers
+  useGridApiOptionHandler(apiRef, GRID_COLUMN_VISIBILITY_CHANGE, options.onColumnVisibilityChange);
 }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GRID_DEFAULT_LOCALE_TEXT } from '../constants/localeTextConstants';
-import { FilterModel } from '../hooks/features/filter/FilterModelState';
+import { GridFilterModel } from '../hooks/features/filter/gridFilterModelState';
 import { Logger } from '../hooks/utils/useLogger';
 import { GridLocaleText } from './api/gridLocaleTextApi';
 import { GridColumnTypesRecord } from './colDef/gridColTypeDef';
@@ -9,7 +9,7 @@ import { GridDensity, GridDensityTypes } from './gridDensity';
 import { GridEditRowsModel } from './gridEditRowModel';
 import { GridFeatureMode, GridFeatureModeConstant } from './gridFeatureMode';
 import { GridCellParams } from './params/gridCellParams';
-import { GridColParams } from './params/gridColParams';
+import { GridColumnHeaderParams } from './params/gridColumnHeaderParams';
 import { GridFilterModelParams } from './params/gridFilterModelParams';
 import { GridPageChangeParams } from './params/gridPageChangeParams';
 import { GridRowParams } from './params/gridRowParams';
@@ -25,6 +25,10 @@ import {
   GridEditRowModelParams,
 } from './params/gridEditCellParams';
 import { GridRowScrollEndParams } from './params/gridRowScrollEndParams';
+import { GridColumnOrderChangeParams } from './params/gridColumnOrderChangeParams';
+import { GridResizeParams } from './params/gridResizeParams';
+import { GridColumnResizeParams } from './params/gridColumnResizeParams';
+import { GridColumnVisibilityChangeParams } from './params/gridColumnVisibilityChangeParams';
 
 // TODO add multiSortKey
 /**
@@ -133,7 +137,11 @@ export interface GridOptions {
   /**
    * Set the filter model of the grid.
    */
-  filterModel?: FilterModel;
+  filterModel?: GridFilterModel;
+  /**
+   * Function that applies CSS classes dynamically on rows.
+   */
+  getRowClassName?: (params: GridRowParams) => string;
   /**
    * Set the height in pixel of the column headers in the grid.
    * @default 56
@@ -183,7 +191,7 @@ export interface GridOptions {
    * Callback fired when the edit cell value changed.
    * @param handler
    */
-  onEditCellChange?: (params: GridEditCellPropsParams) => void;
+  onEditCellChange?: (params: GridEditCellPropsParams, event?: React.SyntheticEvent) => void;
   /**
    * Callback fired when the cell changes are committed.
    * @param handler
@@ -202,41 +210,53 @@ export interface GridOptions {
    */
   onError?: (args: any) => void;
   /**
+   * Callback fired when the active element leaves a cell.
+   * @param param With all properties from [[GridCellParams]].
+   * @param event [[React.MouseEvent]].
+   */
+  onCellBlur?: (params: GridCellParams, event: React.SyntheticEvent) => void;
+  /**
    * Callback fired when a click event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
    * @param event [[React.MouseEvent]].
    */
-  onCellClick?: (param: GridCellParams, event: React.MouseEvent) => void;
+  onCellClick?: (params: GridCellParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when a double click event comes from a cell element.
    * @param param With all properties from [[CellParams]].
    * @param event [[React.MouseEvent]].
    */
-  onCellDoubleClick?: (param: GridCellParams, event: React.MouseEvent) => void;
+  onCellDoubleClick?: (params: GridCellParams, event: React.MouseEvent) => void;
+  /**
+   * Callback fired when a keydown event comes from a cell element.
+   * @param param With all properties from [[GridCellParams]].
+   * @param event [[React.KeyboardEvent]].
+   */
+  onCellKeyDown?: (params: GridCellParams, event: React.KeyboardEvent) => void;
   /**
    * Callback fired when a mouseover event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
    * @param event [[React.MouseEvent]].
    */
-  onCellOver?: (param: GridCellParams, event: React.MouseEvent) => void;
+  onCellOver?: (params: GridCellParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when a mouseout event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
    * @param event [[React.MouseEvent]].
    */
-  onCellOut?: (param: GridCellParams, event: React.MouseEvent) => void;
+  onCellOut?: (params: GridCellParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when a mouse enter event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
    * @param event [[React.MouseEvent]].
    */
-  onCellEnter?: (param: GridCellParams, event: React.MouseEvent) => void;
+  onCellEnter?: (params: GridCellParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when a mouse leave event comes from a cell element.
    * @param param With all properties from [[GridCellParams]].
    * @param event [[React.MouseEvent]].
    */
-  onCellLeave?: (param: GridCellParams, event: React.MouseEvent) => void;
+  onCellLeave?: (params: GridCellParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when the cell mode changed.
    * @param handler
@@ -249,34 +269,60 @@ export interface GridOptions {
   onCellValueChange?: (params: GridEditCellValueParams) => void;
   /**
    * Callback fired when a click event comes from a column header element.
-   * @param param With all properties from [[GridColParams]].
+   * @param param With all properties from [[GridColumnHeaderParams]].
+   * @param event [[React.MouseEvent]].
    */
-  onColumnHeaderClick?: (param: GridColParams, event: React.MouseEvent) => void;
+  onColumnHeaderClick?: (param: GridColumnHeaderParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when a double click event comes from a column header element.
-   * @param param With all properties from [[GridColParams]].
+   * @param param With all properties from [[GridColumnHeaderParams]].
+   * @param event [[React.MouseEvent]].
    */
-  onColumnHeaderDoubleClick?: (param: GridColParams, event: React.MouseEvent) => void;
+  onColumnHeaderDoubleClick?: (param: GridColumnHeaderParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when a mouseover event comes from a column header element.
-   * @param param With all properties from [[GridColParams]].
+   * @param param With all properties from [[GridColumnHeaderParams]].
+   * @param event [[React.MouseEvent]].
    */
-  onColumnHeaderOver?: (param: GridColParams, event: React.MouseEvent) => void;
+  onColumnHeaderOver?: (param: GridColumnHeaderParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when a mouseout event comes from a column header element.
-   * @param param With all properties from [[GridColParams]].
+   * @param param With all properties from [[GridColumnHeaderParams]].
+   * @param event [[React.MouseEvent]].
    */
-  onColumnHeaderOut?: (param: GridColParams, event: React.MouseEvent) => void;
+  onColumnHeaderOut?: (param: GridColumnHeaderParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when a mouse enter event comes from a column header element.
-   * @param param With all properties from [[GridColParams]].
+   * @param param With all properties from [[GridColumnHeaderParams]].
+   * @param event [[React.MouseEvent]].
    */
-  onColumnHeaderEnter?: (param: GridColParams, event: React.MouseEvent) => void;
+  onColumnHeaderEnter?: (param: GridColumnHeaderParams, event: React.MouseEvent) => void;
   /**
    * Callback fired when a mouse leave event comes from a column header element.
-   * @param param With all properties from [[GridColParams]].
+   * @param param With all properties from [[GridColumnHeaderParams]].
+   * @param event [[React.MouseEvent]].
    */
-  onColumnHeaderLeave?: (param: GridColParams, event: React.MouseEvent) => void;
+  onColumnHeaderLeave?: (param: GridColumnHeaderParams, event: React.MouseEvent) => void;
+  /**
+   * Callback fired when a column is reordered.
+   * @param param With all properties from [[GridColumnHeaderParams]].
+   */
+  onColumnOrderChange?: (param: GridColumnOrderChangeParams) => void;
+  /**
+   * Callback fired when a column is resizing.
+   * @param param With all properties from [[GridColumnResizeParams]].
+   */
+  onColumnResize?: (param: GridColumnResizeParams) => void;
+  /**
+   * Callback fired when a column is resized.
+   * @param param With all properties from [[GridColumnResizeParams]].
+   */
+  onColumnResizeCommitted?: (param: GridColumnResizeParams) => void;
+  /**
+   * Callback fired when a column visibility changes.
+   * @param param With all properties from [[GridColumnVisibilityChangeParams]].
+   */
+  onColumnVisibilityChange?: (param: GridColumnVisibilityChangeParams) => void;
   /**
    * Callback fired when the Filter model changes before the filters are applied.
    * @param param With all properties from [[GridFilterModelParams]].
@@ -338,6 +384,11 @@ export interface GridOptions {
    * @param param With all properties from [[GridRowSelectedParams]].
    */
   onRowSelected?: (param: GridRowSelectedParams) => void;
+  /**
+   * Callback fired when the grid is resized.
+   * @param param With all properties from [[GridResizeParams]].
+   */
+  onResize?: (param: GridResizeParams) => void;
   /**
    * Callback fired when the selection state of one or multiple rows changes.
    * @param param With all properties from [[SelectionChangeParams]].

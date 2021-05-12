@@ -3,6 +3,290 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.28](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.27...v4.0.0-alpha.28)
+
+_May 10, 2021_
+
+Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🇹🇷 Add trTR locale (#1446) @simsek97
+- 🎁 Add support for checkbox component slot (#1528) @ZeeshanTamboli
+- ⚡️ Add `onColumnVisibilityChange` prop (#1578) @DanailH
+- 🐞 Bugfixes
+
+### @material-ui/x-grid@v4.0.0-alpha.28 / @material-ui/data-grid@v4.0.0-alpha.28
+
+#### Breaking changes
+
+- [XGrid] Rename apiRef `toggleColumn` method for consistency (#1578) @DanailH
+
+  ```diff
+  -apiRef.current.toggleColumn: (field: string, forceHide?: boolean) => void;
+  +apiRef.current.setColumnVisibility: (field: string, isVisible: boolean) => void;
+  ```
+
+- [XGrid] Fix event typo (#1574) @DanailH
+
+  ```diff
+  -import { GRID_COLUMN_RESIZE_COMMITED } from '@material-ui/x-grid';
+  +import { GRID_COLUMN_RESIZE_COMMITTED } from '@material-ui/x-grid';
+  ```
+
+#### Changes
+
+- [DataGrid] Add Turkish (trTR) locale (#1526) @simsek97
+- [DataGrid] Add `onColumnVisibilityChange` prop (#1578) @DanailH
+- [DataGrid] Fix date input crash (#1570) @dtassone
+- [DataGrid] Fix resulted filter data shows blank screen during pagination (#1571) @ZeeshanTamboli
+- [DataGrid] Support Checkbox component slot (#1528) @ZeeshanTamboli
+- [DataGrid] Fix column cell and row cell focus style (#1575) @DanailH
+
+### Docs
+
+- [docs] Fix Feature comparison 404 links (#1525) @ZeeshanTamboli
+- [docs] Fix focus isn't set on the text box in `Edit using external button` demo (#1515) @ZeeshanTamboli
+- [docs] Fix typo of `onColumnResizeCommitted` prop (#1563) @ZeeshanTamboli
+- [docs] Header convention for controllable prop (#1531) @oliviertassinari
+- [docs] Fix errors in the docs (#1585) @oliviertassinari
+
+### Core
+
+- [core] Add security policy (#1588) @oliviertassinari
+- [core] Improve `GridApi` type structure (#1566) @oliviertassinari
+- [core] Simplify component type (#1552) @oliviertassinari
+- [core] Update monorepo (#1530) @oliviertassinari
+- [core] Increase timeout on jsdom (#1532) @oliviertassinari
+
+## [4.0.0-alpha.27](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.26...v4.0.0-alpha.27)
+
+_Apr 30, 2021_
+
+Big thanks to the 9 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add getRowClassName prop (#1448) @m4theushw
+- ⚡️ Drop support for Node v10 (#1499) @ZeeshanTamboli
+- ♿ Make checkbox focusable (#1421) @dtassone
+- 🇮🇹 Add itIT locale (#1446) @profcav
+- 🇷🇺 Add ruRU locale (#1449) @Lukin
+- 🐞 Bugfixes
+
+### @material-ui/x-grid@v4.0.0-alpha.27 / @material-ui/data-grid@v4.0.0-alpha.27
+
+#### Breaking changes
+
+- [core] Drop support for Node v10 (#1499) @ZeeshanTamboli
+- [XGrid] Remove `onAction` APIs (#1453) @DanailH
+
+  These event handlers on the apiRef were duplicating with the react props
+  and the event subscribe API. Changes on `apiRef.current`:
+
+  ```diff
+  -onFilterModelChange
+  -onPageChange
+  -onPageSizeChange
+  -onResize
+  -onUnmount
+  -onRowSelected
+  -onSelectionModelChange
+  -onSortModelChange
+  -onStateChange
+  ```
+
+  Note: These methods are available as React props.
+
+- [XGrid] Refactor useGridColumnResize (#1380) @DanailH
+
+  Changes on `apiRef.current`:
+
+  ```diff
+  -startResizeOnMouseDown
+  +setColumnWidth
+  ```
+
+#### Changes
+
+- [DataGrid] Add Italian (itIT) locale (#1446) @profcav
+- [DataGrid] Add Russian (ruRU) locale (#1449) @Lukin
+- [DataGrid] Add getRowClassName prop (#1448) @m4theushw
+- [DataGrid] Add support for `classes` prop (#1450) @ZeeshanTamboli
+- [DataGrid] Allow to customize the overlay when there're no filtered rows (#1445) @m4theushw
+- [DataGrid] Correct quantities plPL (#1487) @Chriserus
+- [DataGrid] Fix autoPageSize with small dataset (#1505) @dtassone
+- [DataGrid] Fix delete key for uneditable cells (#1497) @dtassone
+- [DataGrid] Fix invalid translation key (#1504) @DanailH
+- [DataGrid] Forward props for all Toolbar and Footer components (#1456) @DanailH
+- [DataGrid] Improve support of core v5 (#1458) @oliviertassinari
+- [DataGrid] Fix multiple focus behaviors (#1421) @dtassone
+
+### Docs
+
+- [docs] Add missing filterModel prop in /api/ (#1518) @imsuvesh
+- [docs] Better document how to disable row selection (#1510) @ZeeshanTamboli
+- [docs] Fix data grid feature comparison (#1516) @imsuvesh
+- [docs] Fix typos (#1447) @ZeeshanTamboli
+- [docs] No ads for commercial license (#1489) @oliviertassinari
+
+### Core
+
+- [core] Label our packages as side effect free (#1466) @oliviertassinari
+- [core] Reduce work in data grid (#1520) @oliviertassinari
+- [core] Remove React.FC (#1436) @ZeeshanTamboli
+- [license] No need to test the location (#1488) @oliviertassinari
+- [test] Improve test coverage of roving tabindex (#1459) @oliviertassinari
+- [test] Remove jest (#1467) @dependabot-preview
+- [test] Run more tests in jsdom (#1361) @oliviertassinari
+
+## [4.0.0-alpha.26](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.25...v4.0.0-alpha.26)
+
+_Apr 22, 2021_
+
+Big thanks to the 7 contributors who made this release possible. Here are some highlights ✨:
+
+- 💄 Release the cell editing feature (#1287) @dtassone
+
+  This is the first release of the Cell editing feature. You can find the documentation [following this link](https://material-ui.com/components/data-grid/editing/#cell-editing). We have spent the last three months working on it.
+
+  ![cell edit](https://user-images.githubusercontent.com/3165635/115632215-87994700-a307-11eb-91d9-9f5537df0911.gif)
+
+- 🐞 A focus on bug fixes and documentation improvements
+
+### @material-ui/x-grid@v4.0.0-alpha.26 / @material-ui/data-grid@v4.0.0-alpha.26
+
+- [DataGrid] Add support for Editable cells (#1287) @dtassone
+- [DataGrid] Add Ukrainian (ukUA) locale (#1418) @Neonin
+- [DataGrid] Fix 'Hide' menu item with `disableColumnSelector` (#1429) @ZeeshanTamboli
+- [DataGrid] Fix reset of virtualPage (#1451) @dtassone
+- [DataGrid] Fix support for falsy value from valueFormatter (#1425) @zj9495
+- [DataGrid] Fix support for numeric ids in selection (#1404) @m4theushw
+- [XGrid] Fix multi-sorting when focus is not in the grid root (#1422) @m4theushw
+
+### Docs
+
+- [docs] Add Shift key as option to enable multi-sorting (#1423) @m4theushw
+- [docs] Fix x-grid-data-generator dependencies (#1433) @ZeeshanTamboli
+- [docs] Improve PropType to cover required props (#1419) @ZeeshanTamboli
+- [docs] Remove duplicate rendering page (#1375) @dtassone
+
+### Core
+
+- [core] Setup e2e tests (#1443) @DanailH
+
+  This infrastructure relies on Playwright to control Chrome with the end-to-end API. It differentiates from our current end-to-end tests by running outside of the browser (Karma runs inside). It's slower and doesn't have a great DX, but it allows to test things like the <kbd>Tab</kbd> behavior.
+
+## [4.0.0-alpha.25](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.24...v4.0.0-alpha.25)
+
+_Apr 14, 2021_
+
+Big thanks to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🎁 Add boolean column type @m4theushw
+- ⚡️ Update to React 17 (#1331) @m4theushw
+- ♿ Make column header cells focusable (#1289), and fix roving tabindex (#1327) @DanailH
+- 🐛 Ignore event from portal in cells (#1324) @oliviertassinari
+- 🐞 Bugfixes
+
+### @material-ui/x-grid@v4.0.0-alpha.25 / @material-ui/data-grid@v4.0.0-alpha.25
+
+#### Breaking changes
+
+- [DataGrid] Add support for custom row ids without cloning (#1377) @m4theushw
+  This change has involved the following refactorings.
+
+  - Changes on `apiRef.current`.
+
+```diff
+-  getRowModels: () => GridRowModel[];
++  getRowModels: () => Map<GridRowId, GridRowModel>;
+-  getVisibleRowModels: () => GridRowModel[];
++  getVisibleRowModels: () => Map<GridRowId, GridRowModel>;
+-  getSelectedRows: () => GridRowModel[];
++  getSelectedRows: () => Map<GridRowId, GridRowModel>;
+```
+  - Changes on `GridFilterModelParams`.
+
+```diff
+export interface GridFilterModelParams {
+  /**
+   * The full set of rows.
+   */
+-  rows: GridRowModel[];
++  rows: Map<GridRowId, GridRowModel>;
+  /**
+   * The set of currently visible rows.
+   */
+-  visibleRows: GridRowModel[];
++  visibleRows: Map<GridRowId, GridRowModel>;
+}
+```
+
+- [DataGrid] Upgrade mininum supported version of React to 17.0.0 (#1410) @m4theushw
+
+#### Changes
+
+- [DataGrid] Add boolean column type (#1321) @m4theushw
+- [DataGrid] Add missing filter tooltip translations (#1367) @DanailH
+- [DataGrid] Fix autoPageSize (#1366) @dtassone
+- [DataGrid] Fix performance issue when sorting columns (#1368) @dtassone
+- [DataGrid] Fix printable keys to match ag (#1409) @dtassone
+- [DataGrid] Ignore event from portal in cells (#1324) @oliviertassinari
+- [DataGrid] Make "Checkbox selection" translatable (#1379) @m4theushw
+- [DataGrid] Make column header cells focusable (#1289) @DanailH
+- [DataGrid] Remove use of row.id when id prop is available (#1371) @m4theushw
+- [DataGrid] Make GridMainContainer tabbable (#1327) @DanailH
+- [XGrid] Support column reordering inside the whole grid (#1250) @m4theushw
+
+### Docs
+
+- [docs] Fix anchor links on the /data-grid/filtering/ page (#1398) @oliviertassinari
+- [docs] Move Column definition to Columns page (#1373) @dtassone
+- [docs] Move density to accessibility page (#1374) @dtassone
+- [Docs] Fix GitHub references in API docs (#1411) @SaskiaKeil
+
+### Core
+
+- [core] Update to React 17 (#1331) @m4theushw
+- [core] Variable convention (#1397) @oliviertassinari
+- [license] Use a global storage rather than a module singleton (#1384) @oliviertassinari
+
+## [4.0.0-alpha.24](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.23...v4.0.0-alpha.24)
+
+_Apr 2, 2021_
+
+Big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 🇬🇷 Add elGR locale (#1275) @clytras
+- 🇪🇸 Add esES locale (#1286) @WiXSL
+- 🇯🇵 Add jaJP locale (#1283) @seed-of-apricot
+- 🇳🇱 Add nlNL locale (#1273) @wimdetroyer
+- 🐞 Bugfixes
+
+### @material-ui/x-grid@v4.0.0-alpha.24 / @material-ui/data-grid@v4.0.0-alpha.24
+
+#### Breaking Changes
+
+- [DataGrid] All slot components no longer get access to `GridBaseComponentProps` through the props. To use the `GridBaseComponentProps` call the `useGridSlotComponentProps` hook. (#1252) @DanailH
+- [DataGrid] Type `GridSlotsComponent` changed (#1252) @DanailH
+- [DataGrid] Rename `GridBaseComponentProps` type to `GridSlotComponentProps` (#1252) @DanailH
+- [DataGrid] Rename `useGridBaseComponentProps` hook to `useGridSlotComponentProps` (#1252) @DanailH
+- [DataGrid] Rename modules (#1292) @DanailH
+- [DataGrid] Rename all events related to column reordering, e.g. `GRID_COL_REORDER_START` -> `GRID_COLUMN_REORDER_START` (#1299) @m4theushw
+- [DataGrid] Methods `onColItemDragStart`, `onColHeaderDragOver`, `onColItemDragOver`, `onColItemDragEnter` removed from the grid API. Prefer listening to [column reordering events](https://material-ui.com/components/data-grid/columns/#column-reorder) (#1299) @m4theushw
+- [DataGrid] Calling `apiRef.current.getColumnHeaderParams` returns a `GridColumnHeaderParams` instead of `GridColParams` (#1299) @m4theushw
+- [DataGrid] Events that follow the pattern `GRID_COLUMN_HEADER_xxx` will be called with a `GridColumnHeaderParams` instead of `GridColParams` (#1299) @m4theushw
+- [DataGrid] The `renderHeader` will be called with a `GridColumnHeaderParams` instead of `GridColParams` (#1299) @m4theushw
+- [DataGrid] The `apiRef.current.moveColumn` was renamed to `apiRef.current.setColumnIndex` (#1299) @m4theushw
+
+#### Changes
+
+- [DataGrid] Fix loader flag from useDemoData hook (#1279) @DanailH
+- [DataGrid] Fix page shift after toggling column (#1284) @m4theushw
+- [DataGrid] Fix rendering issues (#1319, #1253) @dtassone
+- [DataGrid] Refactor edit events to allow stop propagation (#1304) @dtassone
+
+### Core
+
+- [core] Batch small changes (#1310) @oliviertassinari
+
 ## [4.0.0-alpha.23](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.22...v4.0.0-alpha.23)
 
 _Mar 22, 2021_

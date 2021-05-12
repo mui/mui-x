@@ -3,11 +3,13 @@ import { expect } from 'chai';
 import { useFakeTimers } from 'sinon';
 import {
   GridApiRef,
-  FilterModel,
+  GridFilterModel,
   GridComponentProps,
   GridLinkOperator,
   GridPreferencePanelsValue,
   GridRowModel,
+  GridFilterModelParams,
+  GridRowId,
   useGridApiRef,
   XGrid,
   SUBMIT_FILTER_STROKE_TIME,
@@ -18,8 +20,13 @@ import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
   fireEvent,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  waitFor,
 } from 'test/utils';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
+import { useData } from 'packages/storybook/src/hooks/useData';
+
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<XGrid /> - Filter', () => {
   let clock;
@@ -35,17 +42,11 @@ describe('<XGrid /> - Filter', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
-  before(function beforeHook() {
-    if (/jsdom/.test(window.navigator.userAgent)) {
-      // Need layouting
-      this.skip();
-    }
-  });
-
   let apiRef: GridApiRef;
 
   const TestCase = (props: Partial<GridComponentProps>) => {
     const baselineProps = {
+      autoHeight: isJSDOM,
       rows: [
         {
           id: 0,
@@ -178,7 +179,7 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should allow multiple filter and changing the linkOperator', () => {
-    const newModel: FilterModel = {
+    const newModel: GridFilterModel = {
       items: [
         {
           columnField: 'brand',
@@ -198,7 +199,7 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should only select visible rows', () => {
-    const newModel: FilterModel = {
+    const newModel: GridFilterModel = {
       items: [
         {
           columnField: 'brand',
@@ -211,11 +212,11 @@ describe('<XGrid /> - Filter', () => {
     render(<TestCase checkboxSelection filterModel={newModel} />);
     const checkAllCell = getColumnHeaderCell(1).querySelector('input');
     fireEvent.click(checkAllCell);
-    expect(apiRef.current.getState().selection).to.deep.equal({ 1: true });
+    expect(apiRef.current.getState().selection).to.deep.equal({ 1: 1 });
   });
 
   it('should allow to clear filters by passing an empty filter model', () => {
-    const newModel: FilterModel = {
+    const newModel: GridFilterModel = {
       items: [
         {
           columnField: 'brand',
@@ -231,8 +232,8 @@ describe('<XGrid /> - Filter', () => {
   });
 
   it('should show the latest visibleRows onFilterChange', () => {
-    let visibleRows: any[] = [];
-    const onFilterChange = (params) => {
+    let visibleRows: Map<GridRowId, GridRowModel> = new Map();
+    const onFilterChange = (params: GridFilterModelParams) => {
       visibleRows = params.visibleRows;
     };
 
@@ -253,8 +254,54 @@ describe('<XGrid /> - Filter', () => {
     const input = screen.getByPlaceholderText('Filter value');
     fireEvent.change(input, { target: { value: 'ad' } });
     clock.tick(SUBMIT_FILTER_STROKE_TIME);
-    expect(visibleRows).to.deep.equal([{ id: 1, brand: 'Adidas' }]);
-    expect(apiRef.current.getVisibleRowModels()).to.deep.equal([{ id: 1, brand: 'Adidas' }]);
+    expect(visibleRows.size).to.equal(1);
+    expect(visibleRows.get(1)).to.deep.equal({ id: 1, brand: 'Adidas' });
+    expect(apiRef.current.getVisibleRowModels().size).to.equal(1);
+    expect(apiRef.current.getVisibleRowModels().get(1)).to.deep.equal({ id: 1, brand: 'Adidas' });
+  });
+
+  describe('performance', () => {
+    beforeEach(() => {
+      clock.restore();
+    });
+
+    it('should filter 5,000 rows in less than 100 ms', async function test() {
+      // It's simpler to only run the performance test in a single controlled environment.
+      if (!/HeadlessChrome/.test(window.navigator.userAgent)) {
+        this.skip();
+        return;
+      }
+
+      const TestCasePerf = () => {
+        const data = useData(5000, 10);
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid apiRef={apiRef} columns={data.columns} rows={data.rows} />
+          </div>
+        );
+      };
+
+      render(<TestCasePerf />);
+      const newModel = {
+        items: [
+          {
+            columnField: 'currencyPair',
+            value: 'usd',
+            operatorValue: 'startsWith',
+          },
+        ],
+      };
+      const t0 = performance.now();
+      apiRef.current.setFilterModel(newModel);
+
+      await waitFor(() =>
+        expect(document.querySelector('.MuiDataGrid-filterIcon')).to.not.equal(null),
+      );
+      const t1 = performance.now();
+      const time = Math.round(t1 - t0);
+      expect(time).to.be.lessThan(100);
+    });
   });
 
   describe('Server', () => {

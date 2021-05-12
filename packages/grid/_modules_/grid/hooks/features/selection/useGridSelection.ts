@@ -12,19 +12,20 @@ import { GridSelectionModelChangeParams } from '../../../models/params/gridSelec
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { GridSelectionModel } from '../../../models/gridSelectionModel';
 import { isDeepEqual } from '../../../utils/utils';
-import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
+import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
-import { gridKeyboardMultipleKeySelector } from '../keyboard/keyboardSelector';
+import { gridKeyboardMultipleKeySelector } from '../keyboard/gridKeyboardSelector';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { GridSelectionState } from './gridSelectionState';
+import { selectedGridRowsSelector } from './gridSelectionSelector';
 
 export const useGridSelection = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridSelection');
-  const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
+  const [, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
   const rowsLookup = useGridSelector(apiRef, gridRowsLookupSelector);
   const isMultipleKeyPressed = useGridSelector(apiRef, gridKeyboardMultipleKeySelector);
@@ -36,23 +37,23 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
       !options.disableMultipleSelection && isMultipleKeyPressed;
   }, [isMultipleKeyPressed, options.disableMultipleSelection]);
 
-  const getSelectedRows = React.useCallback((): GridRowModel[] => {
-    // TODO replace with selector
-    return Object.keys(gridState.selection).map((id) => apiRef.current.getRowFromId(id));
-  }, [apiRef, gridState.selection]);
+  const getSelectedRows = React.useCallback(
+    () => selectedGridRowsSelector(apiRef.current.getState()),
+    [apiRef],
+  );
 
   const selectRowModel = React.useCallback(
-    (row: GridRowModel, allowMultipleOverride?: boolean, isSelected?: boolean) => {
+    (id: GridRowId, row: GridRowModel, allowMultipleOverride?: boolean, isSelected?: boolean) => {
       if (!apiRef.current.isInitialised) {
         setGridState((state) => {
           const selectionState: GridSelectionState = {};
-          selectionState[row.id] = true;
+          selectionState[id] = id;
           return { ...state, selection: selectionState };
         });
         return;
       }
 
-      logger.debug(`Selecting row ${row.id}`);
+      logger.debug(`Selecting row ${id}`);
 
       const allowMultiSelect =
         allowMultipleOverride ||
@@ -63,20 +64,20 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
         setGridState((state) => {
           // eslint-disable-next-line prefer-object-spread
           const selectionState: GridSelectionState = Object.assign({}, state.selection);
-          const isRowSelected: boolean =
-            !allowMultiSelect || isSelected == null ? !selectionState[row.id] : isSelected;
+          const isRowSelected =
+            !allowMultiSelect || isSelected == null ? selectionState[id] === undefined : isSelected;
 
           if (isRowSelected) {
-            selectionState[row.id] = true;
+            selectionState[id] = id;
           } else {
-            delete selectionState[row.id];
+            delete selectionState[id];
           }
           return { ...state, selection: selectionState };
         });
       } else {
         setGridState((state) => {
           const selectionState: GridSelectionState = {};
-          selectionState[row.id] = true;
+          selectionState[id] = id;
           return { ...state, selection: selectionState };
         });
       }
@@ -87,10 +88,10 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
       const rowSelectedParam: GridRowSelectedParams = {
         api: apiRef,
         data: row,
-        isSelected: !!selectionState[row.id],
+        isSelected: selectionState[id] !== undefined,
       };
       const selectionChangeParam: GridSelectionModelChangeParams = {
-        selectionModel: Object.keys(selectionState),
+        selectionModel: Object.values(selectionState),
       };
       apiRef.current.publishEvent(GRID_ROW_SELECTED, rowSelectedParam);
       apiRef.current.publishEvent(GRID_SELECTION_CHANGED, selectionChangeParam);
@@ -100,7 +101,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
 
   const selectRow = React.useCallback(
     (id: GridRowId, isSelected = true, allowMultiple = false) => {
-      selectRowModel(apiRef.current.getRowFromId(id), allowMultiple, isSelected);
+      selectRowModel(id, apiRef.current.getRowFromId(id), allowMultiple, isSelected);
     },
     [apiRef, selectRowModel],
   );
@@ -113,21 +114,20 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
 
       setGridState((state) => {
         const selectionState: GridSelectionState = deSelectOthers ? {} : { ...state.selection };
-        ids.reduce((newState, rowId) => {
+        ids.forEach((id) => {
           if (isSelected) {
-            newState[rowId] = true;
-          } else if (newState[rowId]) {
-            delete newState[rowId];
+            selectionState[id] = id;
+          } else if (selectionState[id] !== undefined) {
+            delete selectionState[id];
           }
-          return newState;
-        }, selectionState);
+        });
         return { ...state, selection: selectionState };
       });
 
       forceUpdate();
 
       const params: GridSelectionModelChangeParams = {
-        selectionModel: Object.keys(apiRef!.current!.getState<GridSelectionState>('selection')),
+        selectionModel: Object.values(apiRef!.current!.getState<GridSelectionState>('selection')),
       };
       // We don't emit GRID_ROW_SELECTED on each row as it would be too consuming for large set of data.
       apiRef.current.publishEvent(GRID_SELECTION_CHANGED, params);
@@ -151,28 +151,15 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
   const rowClickHandler = React.useCallback(
     (params: GridRowParams) => {
       if (!options.disableSelectionOnClick) {
-        selectRowModel(params.row);
+        selectRowModel(params.id, params.row);
       }
     },
     [options.disableSelectionOnClick, selectRowModel],
   );
 
-  const onRowSelected = React.useCallback(
-    (handler: (param: GridRowSelectedParams) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(GRID_ROW_SELECTED, handler);
-    },
-    [apiRef],
-  );
-  const onSelectionModelChange = React.useCallback(
-    (handler: (param: GridSelectionModelChangeParams) => void): (() => void) => {
-      return apiRef.current.subscribeEvent(GRID_SELECTION_CHANGED, handler);
-    },
-    [apiRef],
-  );
-
   useGridApiEventHandler(apiRef, GRID_ROW_CLICK, rowClickHandler);
-  useGridApiEventHandler(apiRef, GRID_ROW_SELECTED, options.onRowSelected);
-  useGridApiEventHandler(apiRef, GRID_SELECTION_CHANGED, options.onSelectionModelChange);
+  useGridApiOptionHandler(apiRef, GRID_ROW_SELECTED, options.onRowSelected);
+  useGridApiOptionHandler(apiRef, GRID_SELECTION_CHANGED, options.onSelectionModelChange);
 
   // TODO handle Cell Click/range selection?
   const selectionApi: GridSelectionApi = {
@@ -180,8 +167,6 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
     getSelectedRows,
     selectRows,
     setSelectionModel,
-    onRowSelected,
-    onSelectionModelChange,
   };
   useGridApiMethod(apiRef, selectionApi, 'GridSelectionApi');
 
@@ -204,7 +189,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
   }, [rowsLookup, apiRef, setGridState, forceUpdate]);
 
   React.useEffect(() => {
-    const currentModel = Object.keys(apiRef.current.getState().selection);
+    const currentModel = Object.values(apiRef.current.getState().selection);
     if (!isDeepEqual(currentModel, options.selectionModel)) {
       apiRef.current.setSelectionModel(options.selectionModel || []);
     }

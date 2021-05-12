@@ -1,10 +1,13 @@
 import * as React from 'react';
-import { EventEmitter } from '../../utils/EventEmitter';
+import {
+  GridEventEmitter,
+  GridSubscribeEventOptions,
+} from '../../utils/eventEmitter/GridEventEmitter';
 
 /**
  * The core API interface that is available in the grid [[apiRef]].
  */
-export interface GridCoreApi extends EventEmitter {
+export interface GridCoreApi extends GridEventEmitter {
   /**
    * Property that comes true when the grid has its EventEmitter initialised.
    */
@@ -21,9 +24,14 @@ export interface GridCoreApi extends EventEmitter {
    * Allows to register a handler for an event.
    * @param event
    * @param handler
+   * @param options
    * @returns Unsubscribe Function
    */
-  subscribeEvent: (event: string, handler: (param: any) => void) => () => void;
+  subscribeEvent: (
+    event: string,
+    handler: (params: any, event?: React.SyntheticEvent) => void,
+    options?: GridSubscribeEventOptions,
+  ) => () => void;
   /**
    * Allows to emit an event.
    * @param name

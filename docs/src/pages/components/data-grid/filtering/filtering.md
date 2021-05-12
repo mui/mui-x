@@ -106,12 +106,12 @@ WIP
 `XGrid` supports filtering by multiple columns.
 The default operator that will be applied between filters is an And.
 
-{{"demo": "pages/components/data-grid/filtering/MultiFilteringGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/filtering/MultiFilteringGrid.js", "bg": "inline", "disableAd": true}}
 
 To change the default operator, you should set the 'linkOperator' property of the filterModel like below.
 
 ```ts
-const filterModel: FilterModel = {
+const filterModel: GridFilterModel = {
   items: [
     { columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
     { columnField: 'commodity', operatorValue: 'startsWith', value: 'Soy' },

@@ -6,6 +6,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Root
   rootGridLabel: 'grid',
   noRowsLabel: 'Pas de résultats',
+  noResultsOverlayLabel: 'Aucun résultat.',
   errorOverlayDefaultLabel: 'Une erreur est apparue.',
 
   // Density selector toolbar button text
@@ -79,6 +80,9 @@ const frFRGrid: Partial<GridLocaleText> = {
 
   // Total rows footer text
   footerTotalRows: 'Lignes totales :',
+
+  // Checkbox selection text
+  checkboxSelectionHeaderName: 'Sélection',
 };
 
 export const frFR: Localization = getGridLocalization(frFRGrid, frFRCore);

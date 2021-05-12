@@ -1,6 +1,7 @@
 import {
   GRID_CELL_CSS_CLASS,
   GRID_DATA_CONTAINER_CSS_CLASS,
+  GRID_HEADER_CELL_CSS_CLASS,
   GRID_HEADER_CELL_TITLE_CSS_CLASS,
   GRID_ROW_CSS_CLASS,
 } from '../constants/cssClassesConstants';
@@ -24,6 +25,10 @@ export function getRowEl(cell?: Element | null): HTMLElement | null {
 
 export function isGridCellRoot(elem: Element | null): boolean {
   return elem != null && elem.classList.contains(GRID_CELL_CSS_CLASS);
+}
+
+export function isGridHeaderCellRoot(elem: Element | null): boolean {
+  return elem != null && elem.classList.contains(GRID_HEADER_CELL_CSS_CLASS);
 }
 
 export function isGridHeaderTitleContainer(elem: Element): boolean {

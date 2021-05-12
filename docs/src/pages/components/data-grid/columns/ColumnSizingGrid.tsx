@@ -4,8 +4,8 @@ import { XGrid } from '@material-ui/x-grid';
 const rows = [
   {
     id: 1,
-    username: 'defunkt',
-    age: 38,
+    username: '@MaterialUI',
+    age: 20,
   },
 ];
 

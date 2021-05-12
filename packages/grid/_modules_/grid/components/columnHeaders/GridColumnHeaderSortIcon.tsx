@@ -5,7 +5,7 @@ import { GridIconSlotsComponent } from '../../models/gridIconSlotsComponent';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { GridApiContext } from '../GridApiContext';
 
-export interface ColumnHeaderSortIconProps {
+export interface GridColumnHeaderSortIconProps {
   direction: GridSortDirection;
   index: number | undefined;
   hide?: boolean;
@@ -18,7 +18,7 @@ function getIcon(icons: GridIconSlotsComponent, direction: GridSortDirection) {
 }
 
 export const GridColumnHeaderSortIcon = React.memo(function GridColumnHeaderSortIcon(
-  props: ColumnHeaderSortIconProps,
+  props: GridColumnHeaderSortIconProps,
 ) {
   const { direction, index, hide } = props;
   const apiRef = React.useContext(GridApiContext);
@@ -33,6 +33,7 @@ export const GridColumnHeaderSortIcon = React.memo(function GridColumnHeaderSort
         {index != null && (
           <Badge badgeContent={index} color="default">
             <IconButton
+              tabIndex={-1}
               aria-label={apiRef!.current.getLocaleText('columnHeaderSortIconLabel')}
               title={apiRef!.current.getLocaleText('columnHeaderSortIconLabel')}
               size="small"
@@ -43,6 +44,7 @@ export const GridColumnHeaderSortIcon = React.memo(function GridColumnHeaderSort
         )}
         {index == null && (
           <IconButton
+            tabIndex={-1}
             aria-label={apiRef!.current.getLocaleText('columnHeaderSortIconLabel')}
             title={apiRef!.current.getLocaleText('columnHeaderSortIconLabel')}
             size="small"

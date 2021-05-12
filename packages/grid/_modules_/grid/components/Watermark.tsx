@@ -8,10 +8,6 @@ enum LicenseStatus {
   Valid = 'Valid',
 }
 
-export interface WatermarkProps {
-  licenseStatus: string;
-}
-
 function getLicenseErrorMessage(licenseStatus: string) {
   switch (licenseStatus) {
     case LicenseStatus.Expired.toString():
@@ -25,7 +21,12 @@ function getLicenseErrorMessage(licenseStatus: string) {
   }
 }
 
-export const Watermark: React.FC<WatermarkProps> = ({ licenseStatus }) => {
+export interface WatermarkProps {
+  licenseStatus: string;
+}
+
+export const Watermark = (props: WatermarkProps) => {
+  const { licenseStatus } = props;
   if (licenseStatus === LicenseStatus.Valid.toString()) {
     return null;
   }

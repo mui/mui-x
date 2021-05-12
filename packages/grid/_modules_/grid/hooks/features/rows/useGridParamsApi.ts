@@ -3,7 +3,7 @@ import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridParamsApi } from '../../../models/api/gridParamsApi';
 import { GridRowId } from '../../../models/gridRows';
 import { GridCellParams, GridValueGetterParams } from '../../../models/params/gridCellParams';
-import { GridColParams } from '../../../models/params/gridColParams';
+import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { GridRowParams } from '../../../models/params/gridRowParams';
 import {
   getGridCellElement,
@@ -11,26 +11,28 @@ import {
   getGridRowElement,
 } from '../../../utils/domUtils';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
+import { useGridSelector } from '../core/useGridSelector';
+import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 
 let warnedOnce = false;
 function warnMissingColumn(field) {
-  if (!warnedOnce && process.env.NODE_ENV !== 'production') {
-    console.warn(
-      [
-        `Material-UI: You are calling getValue('${field}') but the column \`${field}\` is not defined.`,
-        `Instead, you can access the data from \`params.row.${field}\`.`,
-      ].join('\n'),
-    );
-    warnedOnce = true;
-  }
+  console.warn(
+    [
+      `Material-UI: You are calling getValue('${field}') but the column \`${field}\` is not defined.`,
+      `Instead, you can access the data from \`params.row.${field}\`.`,
+    ].join('\n'),
+  );
+  warnedOnce = true;
 }
+
 export function useGridParamsApi(apiRef: GridApiRef) {
+  const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
+  const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
+
   const getColumnHeaderParams = React.useCallback(
-    (field: string): GridColParams => ({
+    (field: string): GridColumnHeaderParams => ({
       field,
-      element: apiRef.current.getColumnHeaderElement(field),
       colDef: apiRef.current.getColumnFromField(field),
-      colIndex: apiRef.current.getColumnIndex(field, true),
       api: apiRef!.current,
     }),
     [apiRef],
@@ -40,12 +42,10 @@ export function useGridParamsApi(apiRef: GridApiRef) {
     (id: GridRowId) => {
       const params: GridRowParams = {
         id,
-        element: apiRef.current.getRowElement(id),
         columns: apiRef.current.getAllColumns(),
-        getValue: (columnField: string) => apiRef.current.getCellValue(id, columnField),
         row: apiRef.current.getRowFromId(id),
-        rowIndex: apiRef.current.getRowIndexFromId(id),
         api: apiRef.current,
+        getValue: apiRef.current.getCellValue,
       };
       return params;
     },
@@ -54,48 +54,40 @@ export function useGridParamsApi(apiRef: GridApiRef) {
 
   const getBaseCellParams = React.useCallback(
     (id: GridRowId, field: string) => {
-      const element = apiRef.current.getCellElement(id, field);
       const row = apiRef.current.getRowFromId(id);
 
       const params: GridValueGetterParams = {
-        element,
         id,
         field,
         row,
         value: row[field],
-        getValue: (columnField: string) => apiRef.current.getCellValue(id, columnField),
         colDef: apiRef.current.getColumnFromField(field),
         cellMode: apiRef.current.getCellMode(id, field),
-        rowIndex: apiRef.current.getRowIndexFromId(id),
-        colIndex: apiRef.current.getColumnIndex(field, true),
+        getValue: apiRef.current.getCellValue,
         api: apiRef.current,
+        hasFocus: cellFocus !== null && cellFocus.field === field && cellFocus.id === id,
+        tabIndex: cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === id ? 0 : -1,
       };
 
       return params;
     },
-    [apiRef],
+    [apiRef, cellFocus, cellTabIndex],
   );
 
   const getCellParams = React.useCallback(
     (id: GridRowId, field: string) => {
       const colDef = apiRef.current.getColumnFromField(field);
-      const element = apiRef.current.getCellElement(id, field);
       const value = apiRef.current.getCellValue(id, field);
       const baseParams = getBaseCellParams(id, field);
       const params: GridCellParams = {
         ...baseParams,
         value,
-        getValue: (columnField: string) => apiRef.current.getCellValue(id, columnField),
         formattedValue: value,
       };
       if (colDef.valueFormatter) {
         params.formattedValue = colDef.valueFormatter(params);
       }
-      const isEditableAttr = element && element.getAttribute('data-editable');
-      params.isEditable =
-        isEditableAttr != null
-          ? isEditableAttr === 'true'
-          : colDef && apiRef.current.isCellEditable(params);
+      params.isEditable = colDef && apiRef.current.isCellEditable(params);
 
       return params;
     },
@@ -105,12 +97,15 @@ export function useGridParamsApi(apiRef: GridApiRef) {
   const getCellValue = React.useCallback(
     (id: GridRowId, field: string) => {
       const colDef = apiRef.current.getColumnFromField(field);
-      const rowModel = apiRef.current.getRowFromId(id);
 
-      if (!colDef) {
-        warnMissingColumn(field);
+      if (!warnedOnce && process.env.NODE_ENV !== 'production') {
+        if (!colDef) {
+          warnMissingColumn(field);
+        }
       }
+
       if (!colDef || !colDef.valueGetter) {
+        const rowModel = apiRef.current.getRowFromId(id);
         return rowModel[field];
       }
 
@@ -159,6 +154,6 @@ export function useGridParamsApi(apiRef: GridApiRef) {
       getColumnHeaderParams,
       getColumnHeaderElement,
     },
-    'CellApi',
+    'GridParamsApi',
   );
 }

@@ -1,3 +1,3 @@
 import { GridRowId } from '../../../models/gridRows';
 
-export type GridSelectionState = Record<GridRowId, boolean>;
+export type GridSelectionState = Record<string, GridRowId>;

@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { gridEditRowsStateSelector } from '../../hooks/features/rows/gridEditRowsSelector';
+import { GridCellIdentifier } from '../../hooks/features/focus/gridFocusState';
 import {
   GridCellClassParams,
   GridColumns,
   GridRowModel,
   GridCellClassRules,
   GridCellParams,
-  GridCellIndexCoordinates,
+  GridRowId,
+  GridEditRowProps,
 } from '../../models/index';
 import { GridCell, GridCellProps } from './GridCell';
 import { GridApiContext } from '../GridApiContext';
@@ -26,41 +27,46 @@ interface RowCellsProps {
   columns: GridColumns;
   extendRowFullWidth: boolean;
   firstColIdx: number;
-  hasScroll: { y: boolean; x: boolean };
+  id: GridRowId;
+  hasScrollX: boolean;
+  hasScrollY: boolean;
   lastColIdx: number;
   row: GridRowModel;
   rowIndex: number;
-  scrollSize: number;
   showCellRightBorder: boolean;
-  cellFocus: GridCellIndexCoordinates | null;
+  cellFocus: GridCellIdentifier | null;
+  cellTabIndex: GridCellIdentifier | null;
+  isSelected: boolean;
+  editRowState?: GridEditRowProps;
 }
 
-export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
+export const GridRowCells = React.memo((props: RowCellsProps) => {
   const {
     columns,
     firstColIdx,
-    hasScroll,
+    hasScrollX,
+    hasScrollY,
+    id,
     lastColIdx,
-    row,
     rowIndex,
-    scrollSize,
     cellFocus,
+    cellTabIndex,
     showCellRightBorder,
+    isSelected,
+    editRowState,
   } = props;
   const apiRef = React.useContext(GridApiContext);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
-  const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
 
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
-    const isLastColumn = firstColIdx + colIdx === columns.length - 1;
-    const removeScrollWidth = isLastColumn && hasScroll.y && hasScroll.x;
-    const width = removeScrollWidth ? column.width! - scrollSize : column.width!;
-    const removeLastBorderRight = isLastColumn && hasScroll.x && !hasScroll.y;
+    const colIndex = firstColIdx + colIdx;
+    const isLastColumn = colIndex === columns.length - 1;
+    const removeLastBorderRight = isLastColumn && hasScrollX && !hasScrollY;
     const showRightBorder = !isLastColumn
       ? showCellRightBorder
       : !removeLastBorderRight && !props.extendRowFullWidth;
 
-    const cellParams: GridCellParams = apiRef!.current.getCellParams(row.id, column.field);
+    const cellParams: GridCellParams = apiRef!.current.getCellParams(id, column.field);
 
     let cssClassProp = { cssClass: '' };
     if (column.cellClassName) {
@@ -76,7 +82,7 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
       cssClassProp = { cssClass: `${cssClassProp.cssClass} ${cssClass}` };
     }
 
-    const editCellState = editRowsState[row.id] && editRowsState[row.id][column.field];
+    const editCellState = editRowState && editRowState[column.field];
     let cellComponent: React.ReactElement | null = null;
 
     if (editCellState == null && column.renderCell) {
@@ -90,11 +96,11 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
       cssClassProp = { cssClass: `${cssClassProp.cssClass} MuiDataGrid-cellEditing` };
     }
 
-    const cellProps: GridCellProps & { children: any } = {
+    const cellProps: GridCellProps = {
       value: cellParams.value,
       field: column.field,
-      width,
-      rowId: row.id,
+      width: column.width!,
+      rowId: id,
       height: rowHeight,
       showRightBorder,
       formattedValue: cellParams.formattedValue,
@@ -102,13 +108,15 @@ export const GridRowCells: React.FC<RowCellsProps> = React.memo((props) => {
       ...cssClassProp,
       rowIndex,
       cellMode: cellParams.cellMode,
-      colIndex: cellParams.colIndex,
+      colIndex,
       children: cellComponent,
       isEditable: cellParams.isEditable,
-      hasFocus:
-        cellFocus !== null &&
-        cellFocus.rowIndex === rowIndex &&
-        cellFocus.colIndex === cellParams.colIndex,
+      isSelected,
+      hasFocus: cellFocus !== null && cellFocus.id === id && cellFocus.field === column.field,
+      tabIndex:
+        cellTabIndex !== null && cellTabIndex.id === id && cellTabIndex.field === column.field
+          ? 0
+          : -1,
     };
 
     return cellProps;

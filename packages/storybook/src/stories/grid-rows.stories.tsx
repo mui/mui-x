@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Alert from '@material-ui/lab/Alert';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Popper from '@material-ui/core/Popper';
@@ -14,8 +15,10 @@ import {
   GridRowData,
   useGridApiRef,
   XGrid,
-  GRID_CELL_EXIT_EDIT,
+  GRID_CELL_EDIT_EXIT,
   GridEditCellPropsParams,
+  GridEditRowModelParams,
+  GRID_CELL_EDIT_ENTER,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
@@ -43,17 +46,20 @@ const baselineProps = {
     {
       id: 0,
       brand: 'Nike',
+      isPublished: false,
     },
     {
       id: 1,
       brand: 'Adidas',
+      isPublished: true,
     },
     {
       id: 2,
       brand: 'Puma',
+      isPublished: true,
     },
   ],
-  columns: [{ field: 'brand' }],
+  columns: [{ field: 'brand' }, { field: 'isPublished', type: 'boolean' }],
 };
 
 function getStoryRowId(row) {
@@ -371,6 +377,7 @@ const baselineEditProps = {
       age: 25,
       DOB: new Date(1996, 10, 2),
       meetup: new Date(2020, 2, 25, 10, 50, 0),
+      isAdmin: true,
     },
     {
       id: 1,
@@ -382,6 +389,7 @@ const baselineEditProps = {
       age: 25,
       DOB: new Date(1992, 1, 20),
       meetup: new Date(2020, 4, 15, 10, 50, 0),
+      isAdmin: true,
     },
     {
       id: 2,
@@ -393,6 +401,7 @@ const baselineEditProps = {
       age: 25,
       DOB: new Date(1986, 0, 12),
       meetup: new Date(2020, 3, 5, 10, 50, 0),
+      isAdmin: false,
     },
   ],
   columns: [
@@ -403,6 +412,7 @@ const baselineEditProps = {
       editable: true,
       valueGetter: ({ row }) => `${row.firstname || ''} ${row.lastname || ''}`,
     },
+    { field: 'isAdmin', width: 120, type: 'boolean', editable: true },
     { field: 'username', editable: true },
     { field: 'email', editable: true, width: 150 },
     { field: 'age', width: 50, type: 'number', editable: true },
@@ -503,7 +513,7 @@ export function EditRowsControl() {
 
       setTimeout(() => {
         apiRef.current.updateRows([cellUpdate]);
-        apiRef.current.publishEvent(GRID_CELL_EXIT_EDIT, params, event);
+        apiRef.current.publishEvent(GRID_CELL_EDIT_EXIT, params, event);
       }, randomInt(300, 2000));
     },
     [apiRef],
@@ -583,6 +593,324 @@ export function EditCellSnap() {
   return (
     <div className="grid-container">
       <XGrid {...baselineProps} apiRef={apiRef} />
+    </div>
+  );
+}
+
+export function EditBooleanCellSnap() {
+  const apiRef = useGridApiRef();
+
+  React.useEffect(() => {
+    apiRef.current.setCellMode(1, 'isPublished', 'edit');
+  });
+
+  return (
+    <div className="grid-container">
+      <XGrid {...baselineProps} apiRef={apiRef} />
+    </div>
+  );
+}
+
+// Candidate demoes for docs
+export function ValidateEditValueWithApiRefGrid() {
+  const apiRef = useGridApiRef();
+  const classes = useEditCellStyles();
+
+  const onEditCellChange = React.useCallback(
+    ({ id, field, props }: GridEditCellPropsParams, event?: React.SyntheticEvent) => {
+      if (field === 'email') {
+        const isValid = validateEmail(props.value);
+        apiRef.current.setEditCellProps({ id, field, props: { ...props, error: !isValid } });
+        // Prevent the native behavior.
+        event?.stopPropagation();
+      }
+    },
+    [apiRef],
+  );
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <XGrid
+        className={classes.root}
+        {...baselineEditProps}
+        apiRef={apiRef}
+        onEditCellChange={onEditCellChange}
+      />
+    </div>
+  );
+}
+
+export function ValidateEditValueWithEditCellModelPropGrid() {
+  const apiRef = useGridApiRef();
+  const classes = useEditCellStyles();
+  const [editRowsModel, setEditRowsModel] = React.useState<GridEditRowsModel>({});
+
+  const onEditCellChange = React.useCallback(
+    ({ id, field, props }: GridEditCellPropsParams) => {
+      if (field === 'email') {
+        const isValid = validateEmail(props.value);
+        const newState = {};
+        newState[id] = {
+          ...editRowsModel[id],
+          email: { ...props, error: !isValid },
+        };
+        setEditRowsModel((state) => ({ ...state, ...newState }));
+      }
+    },
+    [editRowsModel],
+  );
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <XGrid
+        className={classes.root}
+        {...baselineEditProps}
+        apiRef={apiRef}
+        editRowsModel={editRowsModel}
+        onEditCellChange={onEditCellChange}
+      />
+    </div>
+  );
+}
+
+let promiseTimeout: any;
+function validateUsername(username: string): Promise<boolean> {
+  const existingUsers = ['damien', 'olivier', 'danail'];
+
+  return new Promise<any>((resolve) => {
+    promiseTimeout = setTimeout(() => {
+      resolve(existingUsers.indexOf(username.toLowerCase()) === -1);
+    }, randomInt(200, 1000));
+  });
+}
+// TODO Commit value serverside
+export function ValidateEditValueServerSide() {
+  const apiRef = useGridApiRef();
+  const classes = useEditCellStyles();
+  const keyStrokeTimeoutRef = React.useRef<any>();
+
+  const handleEditCellChange = React.useCallback(
+    async ({ id, field, props }: GridEditCellPropsParams, event) => {
+      if (field === 'username') {
+        // TODO refactor this block
+        clearTimeout(promiseTimeout);
+        clearTimeout(keyStrokeTimeoutRef.current);
+
+        apiRef.current.setEditCellProps({ id, field, props: { ...props, error: true } });
+        keyStrokeTimeoutRef.current = setTimeout(async () => {
+          const isValid = await validateUsername(props.value!.toString());
+          apiRef.current.setEditCellProps({ id, field, props: { ...props, error: !isValid } });
+        }, 200);
+
+        event.stopPropagation();
+      }
+    },
+    [apiRef],
+  );
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <XGrid
+        className={classes.root}
+        {...baselineEditProps}
+        apiRef={apiRef}
+        onEditCellChange={handleEditCellChange}
+      />
+    </div>
+  );
+}
+
+// Case Edit/Save using an external button
+export function EditCellUsingExternalButtonGrid() {
+  const apiRef = useGridApiRef();
+  const classes = useEditCellStyles();
+  const [buttonLabel, setButtonLabel] = React.useState('Edit');
+
+  const [selectedCellParams, setSelectedCellParams] = React.useState<GridCellParams | null>(null);
+
+  const handleButtonClick = React.useCallback(() => {
+    if (!selectedCellParams) {
+      return;
+    }
+    const { id, field, cellMode } = selectedCellParams;
+    if (cellMode === 'edit') {
+      const editedCellProps = apiRef.current.getEditCellPropsParams(id, field);
+      apiRef.current.commitCellChange(editedCellProps);
+      apiRef.current.setCellMode(id, field, 'view');
+      setButtonLabel('Edit');
+    } else {
+      apiRef.current.setCellMode(id, field, 'edit');
+      setButtonLabel('Save');
+    }
+    // Or you can use the editRowModel prop, but I find it easier
+  }, [apiRef, selectedCellParams]);
+
+  const handleCellClick = React.useCallback((params: GridCellParams) => {
+    setSelectedCellParams(params);
+
+    const { cellMode } = params;
+    if (cellMode === 'edit') {
+      setButtonLabel('Save');
+    } else {
+      setButtonLabel('Edit');
+    }
+  }, []);
+
+  const handleDoubleCellClick = React.useCallback(
+    (params: GridCellParams, event: React.SyntheticEvent) => {
+      event.stopPropagation();
+    },
+    [],
+  );
+
+  // Prevent from rolling back on escape
+  const handleCellKeyDown = React.useCallback((params, event: React.KeyboardEvent) => {
+    if (
+      params.cellMode === 'edit' &&
+      (event.key === 'Escape' || event.key === 'Delete' || event.key === 'Enter')
+    ) {
+      event.stopPropagation();
+    }
+  }, []);
+
+  // Prevent from committing on blur
+  const handleCellBlur = React.useCallback((params, event?: React.SyntheticEvent) => {
+    if (params.cellMode === 'edit') {
+      event?.stopPropagation();
+    }
+  }, []);
+
+  return (
+    <React.Fragment>
+      <Button onMouseDown={handleButtonClick} disabled={!selectedCellParams} color="primary">
+        {buttonLabel}
+      </Button>
+      <div style={{ height: 400, width: '100%' }}>
+        <XGrid
+          className={classes.root}
+          {...baselineEditProps}
+          apiRef={apiRef}
+          onCellClick={handleCellClick}
+          onCellDoubleClick={handleDoubleCellClick}
+          onCellBlur={handleCellBlur}
+          onCellKeyDown={handleCellKeyDown}
+        />
+      </div>
+    </React.Fragment>
+  );
+}
+// The control mode
+export function EditCellWithModelGrid() {
+  const [editRowsModel, setEditRowsModel] = React.useState({});
+
+  const handleEditRowModelChange = React.useCallback((params: GridEditRowModelParams) => {
+    setEditRowsModel(params.model);
+  }, []);
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <XGrid
+        {...baselineEditProps}
+        editRowsModel={editRowsModel}
+        onEditRowModelChange={handleEditRowModelChange}
+        autoHeight
+      />
+      <code>{JSON.stringify(editRowsModel)}</code>
+    </div>
+  );
+}
+
+// Override the native behavior
+export function EditCellWithCellClickGrid() {
+  const apiRef = useGridApiRef();
+
+  const handleCellClick = React.useCallback(
+    (params: GridCellParams, event) => {
+      // Or you can use the editRowModel prop, but I find it easier
+      // apiRef.current.setCellMode(params.id, params.field, 'edit');
+      apiRef.current.publishEvent(GRID_CELL_EDIT_ENTER, params, event);
+
+      // if I want to prevent selection I can do
+      event.stopPropagation();
+    },
+    [apiRef],
+  );
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <XGrid {...baselineEditProps} apiRef={apiRef} onCellClick={handleCellClick} autoHeight />
+    </div>
+  );
+}
+
+// Talk about all the keys to start editing
+// Explain the event system, list the event
+export function EditCellWithMessageGrid() {
+  const apiRef = useGridApiRef();
+  const [message, setMessage] = React.useState('');
+
+  React.useEffect(() => {
+    return apiRef.current.subscribeEvent(
+      GRID_CELL_EDIT_ENTER,
+      (params: GridCellParams, event?: React.SyntheticEvent) => {
+        setMessage(`Editing cell with value: ${params.value} at row: ${params.id}, column: ${
+          params.field
+        },
+                        triggered by ${event!.type}
+      `);
+      },
+    );
+  }, [apiRef]);
+
+  React.useEffect(() => {
+    return apiRef.current.subscribeEvent('cellExitEdit', () => {
+      setMessage('');
+    });
+  }, [apiRef]);
+
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      {message && <Alert severity="info">{message}</Alert>}
+      <XGrid {...baselineEditProps} apiRef={apiRef} autoHeight />
+    </div>
+  );
+}
+
+export function SwitchVirtualization() {
+  const { data, setRowLength } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 200,
+    maxColumns: 20,
+  });
+
+  const handleButtonClick = (nbRows: number) => {
+    setRowLength(nbRows);
+  };
+
+  React.useLayoutEffect(() => {
+    const window = document.querySelector('.MuiDataGrid-window');
+    if (window) {
+      window!.scrollTo(0, 5000);
+    }
+  });
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        flex: 1,
+        height: '100%',
+        width: '100%',
+      }}
+    >
+      <div>
+        <Button onClick={() => handleButtonClick(9)}>9 items</Button>
+        <Button onClick={() => handleButtonClick(100)}>100 items</Button>
+      </div>
+      <div style={{ width: '100%', height: 500 }}>
+        <XGrid rows={data.rows} columns={data.columns} />
+      </div>
     </div>
   );
 }

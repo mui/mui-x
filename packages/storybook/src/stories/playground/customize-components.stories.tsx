@@ -5,7 +5,6 @@ import {
   GridColDef,
   XGrid,
   XGridProps,
-  GridBaseComponentProps,
   GridPanelProps,
   GridPreferencesPanel,
   GridFooter,
@@ -25,6 +24,7 @@ import {
   ColumnMenuComponent,
   SortedDescendingIcon,
   SortedAscendingIcon,
+  CustomCheckboxComponent,
 } from './customComponents';
 
 export default {
@@ -159,7 +159,9 @@ StyledColumns.args = {
       headerClassName: 'highlight',
       sortable: false,
       valueGetter: (params) =>
-        `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
+        `${params.getValue(params.id, 'firstName') || ''} ${
+          params.getValue(params.id, 'lastName') || ''
+        }`,
       cellClassRules: {
         common: (params) => params.row.lastName === 'Smith',
         unknown: (params) => !params.row.lastName,
@@ -327,14 +329,14 @@ export function DynamicIconUpdate() {
   );
 }
 
-function CustomFilterPanel(props: { bg?: string } & GridBaseComponentProps) {
+function CustomFilterPanel(props: { bg?: string }) {
   return (
     <div style={{ width: 500, height: 100, background: props.bg, color: 'white' }}>
       My Custom Filter Panel
     </div>
   );
 }
-function CustomColumnsPanel(props: { bg?: string } & GridBaseComponentProps) {
+function CustomColumnsPanel(props: { bg?: string }) {
   return (
     <div style={{ width: 500, height: 300, background: props.bg }}>My Custom GridColumns Panel</div>
   );
@@ -351,7 +353,7 @@ CustomFilterColumnsPanels.args = {
     columnsPanel: { bg: 'red' },
   },
 };
-function CustomPanelComponent(props: GridBaseComponentProps & GridPanelProps) {
+function CustomPanelComponent(props: GridPanelProps) {
   if (!props.open) {
     return null;
   }
@@ -381,4 +383,12 @@ CustomPanelInFooter.args = {
     Footer: FooterWithPanel,
     Toolbar: GridToolbar,
   },
+};
+
+export const CustomCheckbox = Template.bind({});
+CustomCheckbox.args = {
+  components: {
+    Checkbox: CustomCheckboxComponent,
+  },
+  checkboxSelection: true,
 };

@@ -3,10 +3,11 @@ import { GRID_ROW_CSS_CLASS } from '../../../constants/cssClassesConstants';
 import {
   GRID_CELL_KEYDOWN,
   GRID_CELL_NAVIGATION_KEYDOWN,
+  GRID_COLUMN_HEADER_KEYDOWN,
   GRID_ELEMENT_FOCUS_OUT,
   GRID_KEYDOWN,
   GRID_KEYUP,
-  GRID_MULTIPLE_KEY_PRESS_CHANGED,
+  GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridCellParams } from '../../../models/params/gridCellParams';
@@ -15,14 +16,20 @@ import {
   getIdFromRowElem,
   getRowEl,
   isGridCellRoot,
+  isGridHeaderCellRoot,
 } from '../../../utils/domUtils';
-import { isMultipleKey, isNavigationKey, isSpaceKey, isTabKey } from '../../../utils/keyboardUtils';
+import {
+  isEnterKey,
+  isMultipleKey,
+  isNavigationKey,
+  isSpaceKey,
+} from '../../../utils/keyboardUtils';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { useLogger } from '../../utils/useLogger';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { gridSelectionStateSelector } from '../selection/gridSelectionSelector';
-import { KeyboardState } from './keyboardState';
+import { GridKeyboardState } from './gridKeyboardState';
 
 export const useGridKeyboard = (
   gridRootRef: React.RefObject<HTMLDivElement>,
@@ -40,7 +47,10 @@ export const useGridKeyboard = (
         }
 
         logger.debug(`Toggling keyboard multiple key pressed to ${isPressed}`);
-        const keyboardState: KeyboardState = { ...state.keyboard, isMultipleKeyPressed: isPressed };
+        const keyboardState: GridKeyboardState = {
+          ...state.keyboard,
+          isMultipleKeyPressed: isPressed,
+        };
         return { ...state, keyboard: keyboardState };
       });
 
@@ -49,20 +59,9 @@ export const useGridKeyboard = (
       }
 
       forceUpdate();
-      apiRef.current.publishEvent(GRID_MULTIPLE_KEY_PRESS_CHANGED, isPressed);
     },
-    [apiRef, forceUpdate, logger, setGridState],
+    [forceUpdate, logger, setGridState],
   );
-
-  const selectActiveRow = React.useCallback(() => {
-    const rowEl = findParentElementFromClassName(
-      document.activeElement as HTMLDivElement,
-      GRID_ROW_CSS_CLASS,
-    )! as HTMLElement;
-
-    const rowId = getIdFromRowElem(rowEl);
-    apiRef.current.selectRow(rowId);
-  }, [apiRef]);
 
   const expandSelection = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
@@ -75,11 +74,9 @@ export const useGridKeyboard = (
       let selectionFromRowIndex = currentRowIndex;
 
       // TODO Refactor here to not use api call
-      const selectedRows = apiRef.current.getSelectedRows();
-      if (selectedRows.length > 0) {
-        const selectedRowsIndex = selectedRows.map((row) =>
-          apiRef.current.getRowIndexFromId(row.id),
-        );
+      const selectedRowsIds = [...apiRef.current.getSelectedRows().keys()];
+      if (selectedRowsIds.length > 0) {
+        const selectedRowsIndex = selectedRowsIds.map((id) => apiRef.current.getRowIndex(id));
 
         const diffWithCurrentIndex: number[] = selectedRowsIndex.map((idx) =>
           Math.abs(currentRowIndex - idx),
@@ -90,15 +87,12 @@ export const useGridKeyboard = (
 
       apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEYDOWN, params, event);
 
-      const nextCellIndexes = apiRef.current.getState().keyboard.cell!;
+      const focusCell = apiRef.current.getState().focus.cell!;
+      const rowIndex = apiRef.current.getRowIndex(focusCell.id);
       // We select the rows in between
-      const rowIds = Array(Math.abs(nextCellIndexes.rowIndex - selectionFromRowIndex) + 1)
-        .fill(
-          nextCellIndexes.rowIndex > selectionFromRowIndex
-            ? selectionFromRowIndex
-            : nextCellIndexes.rowIndex,
-        )
-        .map((cur, idx) => apiRef.current.getRowIdFromRowIndex(cur + idx));
+      const rowIds = Array(Math.abs(rowIndex - selectionFromRowIndex) + 1).fill(
+        rowIndex > selectionFromRowIndex ? selectionFromRowIndex : rowIndex,
+      );
 
       logger.debug('Selecting rows ');
 
@@ -153,14 +147,21 @@ export const useGridKeyboard = (
       if (!isGridCellRoot(document.activeElement)) {
         return;
       }
-
-      if (isSpaceKey(event.key) && event.shiftKey) {
-        event.preventDefault();
-        selectActiveRow();
+      if (event.isPropagationStopped()) {
+        return;
+      }
+      const isEditMode = params.cellMode === 'edit';
+      if (isEditMode) {
         return;
       }
 
-      if ((isNavigationKey(event.key) && !event.shiftKey) || isTabKey(event.key)) {
+      if (isSpaceKey(event.key) && event.shiftKey) {
+        event.preventDefault();
+        apiRef.current.selectRow(params.id);
+        return;
+      }
+
+      if (isNavigationKey(event.key) && !event.shiftKey) {
         apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEYDOWN, params, event);
         return;
       }
@@ -181,11 +182,36 @@ export const useGridKeyboard = (
         apiRef.current.selectRows(apiRef.current.getAllRowIds(), true);
       }
     },
-    [apiRef, expandSelection, handleCopy, selectActiveRow],
+    [apiRef, expandSelection, handleCopy],
+  );
+
+  const handleColumnHeaderKeyDown = React.useCallback(
+    (params: GridCellParams, event: React.KeyboardEvent) => {
+      if (!isGridHeaderCellRoot(document.activeElement)) {
+        return;
+      }
+      if (event.isPropagationStopped()) {
+        return;
+      }
+      if (isSpaceKey(event.key) && isGridHeaderCellRoot(document.activeElement)) {
+        event.preventDefault();
+      }
+
+      if (isNavigationKey(event.key) && !isSpaceKey(event.key) && !event.shiftKey) {
+        apiRef.current.publishEvent(GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN, params, event);
+        return;
+      }
+
+      if (isEnterKey(event.key) && (event.ctrlKey || event.metaKey)) {
+        apiRef!.current.toggleColumnMenu(params.field);
+      }
+    },
+    [apiRef],
   );
 
   useGridApiEventHandler(apiRef, GRID_KEYDOWN, handleKeyDown);
   useGridApiEventHandler(apiRef, GRID_CELL_KEYDOWN, handleCellKeyDown);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_KEYDOWN, handleColumnHeaderKeyDown);
   useGridApiEventHandler(apiRef, GRID_KEYUP, handleKeyUp);
   useGridApiEventHandler(apiRef, GRID_ELEMENT_FOCUS_OUT, handleFocusOut);
 };

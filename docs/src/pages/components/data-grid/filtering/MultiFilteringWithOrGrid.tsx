@@ -1,8 +1,8 @@
-import { FilterModel, GridLinkOperator, XGrid } from '@material-ui/x-grid';
+import { GridFilterModel, GridLinkOperator, XGrid } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import * as React from 'react';
 
-const filterModel: FilterModel = {
+const filterModel: GridFilterModel = {
   items: [
     { columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
     { columnField: 'commodity', operatorValue: 'startsWith', value: 'soy' },

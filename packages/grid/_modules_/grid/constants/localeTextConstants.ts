@@ -4,6 +4,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Root
   rootGridLabel: 'grid',
   noRowsLabel: 'No rows',
+  noResultsOverlayLabel: 'No results found.',
   errorOverlayDefaultLabel: 'An error occurred.',
 
   // Density selector toolbar button text
@@ -59,6 +60,11 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   filterOperatorBefore: 'is before',
   filterOperatorOnOrBefore: 'is on or before',
 
+  // Filter values text
+  filterValueAny: 'any',
+  filterValueTrue: 'true',
+  filterValueFalse: 'false',
+
   // Column menu text
   columnMenuLabel: 'Menu',
   columnMenuShowColumns: 'Show columns',
@@ -82,4 +88,11 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Total rows footer text
   footerTotalRows: 'Total Rows:',
+
+  // Checkbox selection text
+  checkboxSelectionHeaderName: 'Checkbox selection',
+
+  // Boolean cell text
+  booleanCellTrueLabel: 'true',
+  booleanCellFalseLabel: 'false',
 };

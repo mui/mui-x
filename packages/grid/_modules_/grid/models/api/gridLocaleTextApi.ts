@@ -5,6 +5,7 @@ export interface GridLocaleText {
   // Root
   rootGridLabel: string;
   noRowsLabel: string;
+  noResultsOverlayLabel: string;
   errorOverlayDefaultLabel: string;
 
   // Density selector toolbar button text
@@ -59,6 +60,11 @@ export interface GridLocaleText {
   filterOperatorBefore: string;
   filterOperatorOnOrBefore: string;
 
+  // Filter values text
+  filterValueAny: string;
+  filterValueTrue: string;
+  filterValueFalse: string;
+
   // Column menu text
   columnMenuLabel: string;
   columnMenuShowColumns: React.ReactNode;
@@ -78,9 +84,16 @@ export interface GridLocaleText {
 
   // Total rows footer text
   footerTotalRows: React.ReactNode;
+
+  // Checkbox selection text
+  checkboxSelectionHeaderName: string;
+
+  // Boolean cell text
+  booleanCellTrueLabel: string;
+  booleanCellFalseLabel: string;
 }
 
-export type TranslationKeys = keyof GridLocaleText;
+export type GridTranslationKeys = keyof GridLocaleText;
 
 /**
  * The grid localeText API [[apiRef]].
@@ -91,5 +104,5 @@ export interface LocaleTextApi {
    * @param key T
    * @returns GridLocaleText[T]
    */
-  getLocaleText: <T extends TranslationKeys>(key: T) => GridLocaleText[T];
+  getLocaleText: <T extends GridTranslationKeys>(key: T) => GridLocaleText[T];
 }
