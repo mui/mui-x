@@ -26,12 +26,12 @@ import { GridColumnHeaderTitle } from './GridColumnHeaderTitle';
 import { GridColumnHeaderSeparator } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { ColumnHeaderFilterIcon } from './ColumnHeaderFilterIcon';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
   column: GridColDef;
+  columnMenuOpen: boolean;
+  headerHeight: number;
   isDragging: boolean;
   isResizing: boolean;
   sortDirection: GridSortDirection;
@@ -45,7 +45,9 @@ interface GridColumnHeaderItemProps {
 export const GridColumnHeaderItem = React.memo(
   ({
     column,
+    columnMenuOpen,
     colIndex,
+    headerHeight,
     isDragging,
     isResizing,
     sortDirection,
@@ -57,12 +59,12 @@ export const GridColumnHeaderItem = React.memo(
   }: GridColumnHeaderItemProps) => {
     const apiRef = React.useContext(GridApiContext);
     const headerCellRef = React.useRef<HTMLDivElement>(null);
-    const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
     const {
       disableColumnReorder,
       showColumnRightBorder,
       disableColumnResize,
       disableColumnMenu,
+      disableColumnFilter,
     } = options;
     const isColumnSorted = sortDirection != null;
     // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
@@ -145,10 +147,10 @@ export const GridColumnHeaderItem = React.memo(
           index={sortIndex}
           hide={column.hideSortIcons}
         />
-        <ColumnHeaderFilterIcon counter={filterItemsCounter} />
+        {!disableColumnFilter && <ColumnHeaderFilterIcon counter={filterItemsCounter} />}
       </React.Fragment>
     );
-    const columnMenuIconButton = <ColumnHeaderMenuIcon column={column} />;
+    const columnMenuIconButton = <ColumnHeaderMenuIcon column={column} open={columnMenuOpen} />;
 
     React.useLayoutEffect(() => {
       const columnMenuState = apiRef!.current.getState().columnMenu;

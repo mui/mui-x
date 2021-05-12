@@ -2,19 +2,18 @@ import * as React from 'react';
 // @ts-expect-error fixed in Material-UI v5, types definitions were added.
 import { unstable_useId as useId } from '@material-ui/core/utils';
 import IconButton from '@material-ui/core/IconButton';
-import { gridColumnMenuStateSelector } from '../../hooks/features/columnMenu/columnMenuSelector';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { classnames } from '../../utils/classnames';
 import { GridApiContext } from '../GridApiContext';
 import { GridColDef } from '../../models/colDef/gridColDef';
 
-export interface ColumnHeaderFilterIconProps {
+export interface ColumnHeaderMenuIconProps {
   column: GridColDef;
+  open: boolean;
 }
-export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderFilterIconProps) => {
-  const { column } = props;
+
+export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps) => {
+  const { column, open } = props;
   const apiRef = React.useContext(GridApiContext);
-  const columnMenuState = useGridSelector(apiRef, gridColumnMenuStateSelector);
   const columnMenuButtonId: string = useId();
   const columnMenuId: string = useId();
   const ColumnMenuIcon = apiRef!.current.components.ColumnMenuIcon!;
@@ -28,7 +27,6 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderFilterIconPro
     [apiRef, column.field, columnMenuId, columnMenuButtonId],
   );
 
-  const open = columnMenuState.open && columnMenuState.field === column.field;
   return (
     <div className={classnames('MuiDataGrid-menuIcon', { 'MuiDataGrid-menuOpen': open })}>
       <IconButton
