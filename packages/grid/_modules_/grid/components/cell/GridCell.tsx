@@ -30,6 +30,7 @@ export interface GridCellProps {
   hasFocus?: boolean;
   height: number;
   isEditable?: boolean;
+  isSelected?: boolean;
   rowIndex: number;
   showRightBorder?: boolean;
   value?: GridCellValue;
@@ -51,6 +52,7 @@ export const GridCell = React.memo((props: GridCellProps) => {
     hasFocus,
     height,
     isEditable,
+    isSelected,
     rowIndex,
     rowId,
     showRightBorder,
@@ -149,7 +151,7 @@ export const GridCell = React.memo((props: GridCellProps) => {
       cellRef.current &&
       (!document.activeElement || !cellRef.current!.contains(document.activeElement))
     ) {
-      const focusableElement = cellRef.current.querySelector('[tabindex="0"]') as HTMLElement;
+      const focusableElement = cellRef.current!.querySelector('[tabindex="0"]') as HTMLElement;
       if (focusableElement) {
         focusableElement!.focus();
       } else {
@@ -166,6 +168,7 @@ export const GridCell = React.memo((props: GridCellProps) => {
       data-value={value}
       data-field={field}
       data-rowindex={rowIndex}
+      data-rowselected={isSelected}
       data-editable={isEditable}
       data-mode={cellMode}
       aria-colindex={colIndex}

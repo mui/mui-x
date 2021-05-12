@@ -1,140 +1,59 @@
+# https://docs.github.com/en/code-security/supply-chain-security/configuration-options-for-dependency-updates
 version: 2
 updates:
-- package-ecosystem: npm
-  directory: "/"
-  schedule:
-    interval: weekly
-    day: sunday
-    time: "02:00"
-  open-pull-requests-limit: 30
-  labels:
-  - dependencies
-  ignore:
-  - dependency-name: "@babel/*"
-    versions:
-    - ">= 0"
-  - dependency-name: babel-plugin-preval
-    versions:
-    - ">= 3.0"
-  - dependency-name: core-js
-    versions:
-    - ">= 0"
-  - dependency-name: jss-*
-    versions:
-    - ">= 0"
-  - dependency-name: raw-loader
-    versions:
-    - ">= 0"
-  - dependency-name: react-dom
-    versions:
-    - ">= 0"
-  - dependency-name: react-is
-    versions:
-    - ">= 0"
-  - dependency-name: react-test-renderer
-    versions:
-    - ">= 0"
-  - dependency-name: size-limit
-    versions:
-    - ">= 0"
-  - dependency-name: "@storybook/*"
-    versions:
-    - ">= 0"
-  - dependency-name: tslint
-    versions:
-    - 5.x
-  - dependency-name: karma-webpack
-    versions:
-    - 5.0.0
-    - 5.0.0
-    - 5.0.0
-  - dependency-name: webpack
-    versions:
-    - 5.21.1
-    - 5.21.2
-    - 5.23.0
-  - dependency-name: puppeteer
-    versions:
-    - 7.0.1
-    - 7.1.0
-  - dependency-name: html-webpack-plugin
-    versions:
-    - 5.0.0
-    - 5.1.0
-  - dependency-name: "@types/puppeteer"
-    versions:
-    - 5.4.3
-  - dependency-name: "@typescript-eslint/parser"
-    versions:
-    - 4.14.2
-  - dependency-name: karma
-    versions:
-    - 6.0.3
-    - 6.1.0
-  - dependency-name: webpack-cli
-    versions:
-    - 4.5.0
-    - 4.6.0
-  - dependency-name: "@material-ui/core"
-    versions:
-    - 4.11.3
-  - dependency-name: ts-jest
-    versions:
-    - 26.5.0
-    - 26.5.1
-    - 26.5.2
-    - 26.5.3
-  - dependency-name: "@material-ui/utils"
-    versions:
-    - 5.0.0-alpha.25
-    - 5.0.0-alpha.27
-    - 5.0.0-alpha.29
-    - 5.0.0-alpha.30
-  - dependency-name: "@material-ui/unstyled"
-    versions:
-    - 5.0.0-alpha.31
-  - dependency-name: ts-loader
-    versions:
-    - 9.1.1
-  - dependency-name: marked
-    versions:
-    - 2.0.2
-  - dependency-name: "@types/eslint"
-    versions:
-    - 7.2.9
-  - dependency-name: concurrently
-    versions:
-    - 6.0.1
-  - dependency-name: react
-    versions:
-    - 16.14.0
-  - dependency-name: "@types/jest"
-    versions:
-    - 26.0.21
-  - dependency-name: chai-dom
-    versions:
-    - 1.9.0
-  - dependency-name: rollup-plugin-dts
-    versions:
-    - 3.0.1
-  - dependency-name: copy-webpack-plugin
-    versions:
-    - 6.4.1
-  - dependency-name: prismjs
-    versions:
-    - 1.23.0
-  - dependency-name: eslint-config-prettier
-    versions:
-    - 8.1.0
-  - dependency-name: "@types/jest-image-snapshot"
-    versions:
-    - 4.3.0
-  - dependency-name: jest-image-snapshot
-    versions:
-    - 4.4.0
-  - dependency-name: "@types/node"
-    versions:
-    - 14.14.27
-  - dependency-name: source-map-loader
-    versions:
-    - 2.0.1
+  - package-ecosystem: npm
+    directory: '/'
+    schedule:
+      interval: weekly
+      day: sunday
+      time: '02:00'
+    open-pull-requests-limit: 30
+    labels:
+      - dependencies
+    ignore:
+      # These should be grouped. Maintainer advise: Watch https://github.com/babel/babel
+      # for new releases and file a PR if you got time.
+      - dependency-name: '@babel/*'
+        versions:
+          - '>= 0'
+      # https://github.com/mui-org/material-ui/pull/17604#issuecomment-536262291
+      - dependency-name: core-js
+        versions:
+          - '>= 0'
+      # These should be grouped. Maintainer advise: Watch https://github.com/dmtrKovalenko/date-io
+      # for new releases and file a PR if you got time.
+      - dependency-name: '@date-io/*'
+        versions:
+          - '>= 0'
+      # These should be grouped once a PR for `jss` is opened
+      - dependency-name: jss-*
+        versions:
+          - '>= 0'
+      # 2.0 started using ES modules instead of CommonJS modules
+      - dependency-name: raw-loader
+        versions:
+          - '>= 0'
+      # not ignoring `react`. We'll hijack those PRs and also upgrade the other
+      # packages in the facebook/react repository
+      # should be grouped with `react`
+      - dependency-name: react-dom
+        versions:
+          - '>= 0'
+      # should be grouped with `react`
+      - dependency-name: react-is
+        versions:
+          - '>= 0'
+      # should be grouped with `react`
+      - dependency-name: react-test-renderer
+        versions:
+          - '>= 0'
+      # https://github.com/mui-org/material-ui/pull/17168#issuecomment-524861427
+      - dependency-name: tslint
+        versions:
+          - 5.x
+      # Should be grouped with @typescript-eslint/eslint-plugin
+      # They sometimes are mergable independently but create a different dependency when merged leading to a changed yarn.lock
+      # TODO: Revisit once https://github.com/dependabot/dependabot-core/issues/1190 is resolved.
+      - dependency-name: '@typescript-eslint/parser'
+        versions:
+          - '>= 0'
