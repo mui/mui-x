@@ -3,10 +3,6 @@
  */
 export interface GridColumnHeaderParams {
   /**
-   * The HTMLElement column header element.
-   */
-  element?: HTMLElement | null;
-  /**
    * The column field of the column that triggered the event
    */
   field: string;
@@ -14,10 +10,6 @@ export interface GridColumnHeaderParams {
    * The column of the current header component.
    */
   colDef: any;
-  /**
-   * The column index of the current header component.
-   */
-  colIndex: number;
   /**
    * API ref that let you manipulate the grid.
    */

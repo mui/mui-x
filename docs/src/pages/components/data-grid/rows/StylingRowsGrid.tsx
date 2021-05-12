@@ -56,7 +56,9 @@ export default function StylingRowsGrid() {
     <div style={{ height: 400, width: '100%' }} className={classes.root}>
       <DataGrid
         {...data}
-        getRowClassName={(params) => `super-app-theme--${params.getValue('status')}`}
+        getRowClassName={(params) =>
+          `super-app-theme--${params.getValue(params.id, 'status')}`
+        }
       />
     </div>
   );
