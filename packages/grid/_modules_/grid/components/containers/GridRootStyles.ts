@@ -2,7 +2,7 @@ import { darken, lighten, Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 import { getThemePaletteMode, muiStyleAlpha, createTheme } from '../../utils/utils';
 
-const defaultTheme = crateTheme();
+const defaultTheme = createTheme();
 export const useStyles = makeStyles(
   (theme: Theme) => {
     const borderColor =

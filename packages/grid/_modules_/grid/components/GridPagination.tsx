@@ -9,7 +9,7 @@ import { GridApiContext } from './GridApiContext';
 import { isMuiV5, createTheme } from '../utils';
 
 
-const defaultTheme = crateTheme();
+const defaultTheme = createTheme();
 // Used to hide the Rows per page selector on small devices
 const useStyles = makeStyles(
   (theme: Theme) => ({

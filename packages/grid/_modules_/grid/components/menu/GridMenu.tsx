@@ -22,7 +22,7 @@ type MenuPosition =
   | 'top'
   | undefined;
 
-  const defaultTheme = crateTheme();
+  const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme: Theme) => ({
     root: {
