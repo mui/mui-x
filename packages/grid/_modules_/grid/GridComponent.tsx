@@ -55,6 +55,20 @@ import { visibleGridRowCountSelector } from './hooks/features/filter/gridFilterS
 
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {
+    const {
+      apiRef: apiRefProp,
+      columns,
+      rows,
+      getRowId,
+      components: componentsProp,
+      componentsProps,
+      state,
+      loading,
+      className,
+      licenseStatus,
+      nonce,
+      autoHeight,
+    } = props;
     const rootContainerRef: GridRootContainerRef = React.useRef<HTMLDivElement>(null);
     const handleRef = useForkRef(rootContainerRef, ref);
 
@@ -65,7 +79,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const windowRef = React.useRef<HTMLDivElement>(null);
     const renderingZoneRef = React.useRef<HTMLDivElement>(null);
 
-    const apiRef = useGridApiRef(props.apiRef);
+    const apiRef = useGridApiRef(apiRefProp);
     const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
     const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
 
@@ -80,18 +94,18 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useLocaleText(apiRef);
     const onResize = useResizeContainer(apiRef);
 
-    useGridColumns(props.columns, apiRef);
+    useGridColumns(columns, apiRef);
     useGridParamsApi(apiRef);
-    useGridRows(apiRef, props.rows, props.getRowId);
+    useGridRows(apiRef, rows, getRowId);
     useGridEditRows(apiRef);
     useGridFocus(apiRef);
     useGridKeyboard(rootContainerRef, apiRef);
     useGridKeyboardNavigation(rootContainerRef, apiRef);
     useGridSelection(apiRef);
-    useGridSorting(apiRef, props.rows);
+    useGridSorting(apiRef, rows);
     useGridColumnMenu(apiRef);
     useGridPreferencesPanel(apiRef);
-    useGridFilter(apiRef, props.rows);
+    useGridFilter(apiRef, rows);
     useGridContainerProps(windowRef, apiRef);
     useGridDensity(apiRef);
     useGridVirtualRows(columnsHeaderRef, windowRef, renderingZoneRef, apiRef);
@@ -101,16 +115,16 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useGridCsvExport(apiRef);
     useGridInfiniteLoader(apiRef);
 
-    const components = useGridComponents(props.components, props.componentsProps, apiRef);
-    useStateProp(apiRef, props.state);
+    const components = useGridComponents(componentsProp, componentsProps, apiRef);
+    useStateProp(apiRef, state);
     useRenderInfoLog(apiRef, logger);
 
-    const showNoRowsOverlay = !props.loading && totalRowCount === 0;
-    const showNoResultsOverlay = !props.loading && totalRowCount > 0 && visibleRowCount === 0;
+    const showNoRowsOverlay = !loading && totalRowCount === 0;
+    const showNoResultsOverlay = !loading && totalRowCount > 0 && visibleRowCount === 0;
     return (
       <GridApiContext.Provider value={apiRef}>
         <NoSsr>
-          <GridRoot ref={handleRef} className={props.className}>
+          <GridRoot ref={handleRef} className={className}>
             <ErrorBoundary
               hasError={errorState != null}
               componentProps={errorState}
@@ -118,41 +132,32 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
               logger={logger}
               render={(errorProps) => (
                 <GridMainContainer>
-                  <components.ErrorOverlay
-                    {...errorProps}
-                    {...props.componentsProps?.errorOverlay}
-                  />
+                  <components.ErrorOverlay {...errorProps} {...componentsProps?.errorOverlay} />
                 </GridMainContainer>
               )}
             >
               <div ref={headerRef}>
-                <components.Header {...props.componentsProps?.header} />
+                <components.Header {...componentsProps?.header} />
               </div>
               <GridMainContainer>
                 <GridColumnHeaderMenu
                   ContentComponent={components.ColumnMenu}
                   contentComponentProps={{
-                    ...props.componentsProps?.columnMenu,
+                    ...componentsProps?.columnMenu,
                   }}
                 />
-                <Watermark licenseStatus={props.licenseStatus} />
+                <Watermark licenseStatus={licenseStatus} />
                 <GridColumnsContainer ref={columnsContainerRef}>
                   <GridColumnsHeader ref={columnsHeaderRef} />
                 </GridColumnsContainer>
                 {showNoRowsOverlay && (
-                  <components.NoRowsOverlay {...props.componentsProps?.noRowsOverlay} />
+                  <components.NoRowsOverlay {...componentsProps?.noRowsOverlay} />
                 )}
                 {showNoResultsOverlay && (
-                  <components.NoResultsOverlay {...props.componentsProps?.noResultsOverlay} />
+                  <components.NoResultsOverlay {...componentsProps?.noResultsOverlay} />
                 )}
-                {props.loading && (
-                  <components.LoadingOverlay {...props.componentsProps?.loadingOverlay} />
-                )}
-                <GridAutoSizer
-                  onResize={onResize}
-                  nonce={props.nonce}
-                  disableHeight={props.autoHeight}
-                >
+                {loading && <components.LoadingOverlay {...componentsProps?.loadingOverlay} />}
+                <GridAutoSizer onResize={onResize} nonce={nonce} disableHeight={autoHeight}>
                   {(size: any) => (
                     <GridWindow ref={windowRef} size={size}>
                       <GridViewport ref={renderingZoneRef} />
@@ -162,7 +167,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
               </GridMainContainer>
               {!internalOptions.hideFooter && (
                 <div ref={footerRef}>
-                  <components.Footer {...props.componentsProps?.footer} />
+                  <components.Footer {...componentsProps?.footer} />
                 </div>
               )}
             </ErrorBoundary>
