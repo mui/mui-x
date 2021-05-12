@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { Theme } from '@material-ui/core/styles';
 import { createStyles, makeStyles } from '@material-ui/styles';
 import { GridCellParams } from '@material-ui/x-grid';
 import Rating from '@material-ui/lab/Rating';
+import { createTheme } from '../../../_modules_/grid/utils/utils';
 
-const defaultTheme = createMuiTheme();
+const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme: Theme) =>
     createStyles({

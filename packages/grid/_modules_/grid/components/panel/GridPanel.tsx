@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import { GridApiContext } from '../GridApiContext';
-import { isEscapeKey, isMuiV5 } from '../../utils';
+import { isEscapeKey, isMuiV5, createTheme } from '../../utils';
 
 export interface GridPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
   open: boolean;
 }
 
-const defaultTheme = createMuiTheme();
+const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme: Theme) => ({
     root: {

@@ -1,10 +1,11 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { Theme } from '@material-ui/core/styles';
 import { createStyles, makeStyles } from '@material-ui/styles';
 import { GridCellParams, getThemePaletteMode } from '../../../_modules_/grid';
+import { createTheme } from '../../../_modules_/grid/utils/utils';
 
-const defaultTheme = createMuiTheme();
+const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme: Theme) =>
     createStyles({

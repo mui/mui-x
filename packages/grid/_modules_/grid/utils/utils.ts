@@ -50,6 +50,7 @@ export function getThemePaletteMode(palette: any): string {
   return palette.type || palette.mode;
 }
 
+
 export function isMuiV5(): boolean {
   return 'alpha' in styles;
 }
@@ -59,6 +60,13 @@ export function muiStyleAlpha(color: string, value: number): string {
     return (styles as any)?.alpha(color, value);
   }
   return (styles as any)?.fade(color, value);
+}
+
+export function createTheme(): styles.Theme {
+  if (isMuiV5()) {
+    return (styles as any)?.createTheme();
+  }
+  return (styles as any)?.createMuiTheme();
 }
 
 export function localStorageAvailable() {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 import Badge from '@material-ui/core/Badge';
 import Button, { ButtonProps } from '@material-ui/core/Button';
@@ -16,9 +16,10 @@ import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridTranslationKeys } from '../../models/api/gridLocaleTextApi';
 import { GridFilterItem } from '../../models/gridFilterItem';
+import { createTheme } from '../../utils/utils'
 import { GridApiContext } from '../GridApiContext';
 
-const defaultTheme = createMuiTheme();
+const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme: Theme) => ({
     list: {

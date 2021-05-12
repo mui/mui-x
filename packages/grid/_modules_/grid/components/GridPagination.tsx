@@ -1,14 +1,15 @@
 import * as React from 'react';
 import TablePagination from '@material-ui/core/TablePagination';
-import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
 import { optionsSelector } from '../hooks/utils/optionsSelector';
 import { GridApiContext } from './GridApiContext';
-import { isMuiV5 } from '../utils';
+import { isMuiV5, createTheme } from '../utils';
 
-const defaultTheme = createMuiTheme();
+
+const defaultTheme = crateTheme();
 // Used to hide the Rows per page selector on small devices
 const useStyles = makeStyles(
   (theme: Theme) => ({
