@@ -1,7 +1,7 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
-import { classnames } from '../../utils/index';
 import { GridApiContext } from '../GridApiContext';
 
 export interface GridColumnHeaderSeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -26,7 +26,7 @@ export const GridColumnHeaderSeparator = React.memo(function GridColumnHeaderSep
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
     <div
-      className={classnames('MuiDataGrid-columnSeparator', {
+      className={clsx('MuiDataGrid-columnSeparator', {
         'MuiDataGrid-columnSeparatorResizable': resizable,
         'Mui-resizing': resizing,
       })}
