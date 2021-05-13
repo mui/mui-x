@@ -7,6 +7,7 @@ import {
   GridColumnMenuProps,
   GridFilterMenuItem,
   SortGridMenuItems,
+  useGridApiRef,
   XGrid,
 } from '@material-ui/x-grid';
 import StarOutlineIcon from '@material-ui/icons/StarOutline';
@@ -76,18 +77,32 @@ export function CustomColumnMenuComponent(
 
 export default function CustomColumnMenu() {
   const [color, setColor] = React.useState<'primary' | 'secondary'>('primary');
+  const apiRef = useGridApiRef();
+
+  React.useEffect(() => {
+    apiRef.current.showColumnMenu('default');
+  }, [apiRef, color]);
+
   return (
-    <div style={{ height: 300, width: '100%' }}>
+    <div
+      style={{
+        height: 300,
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       <Button
         color={color}
         onClick={() =>
           setColor((current) => (current === 'primary' ? 'secondary' : 'primary'))
         }
       >
-        Toggle Color
+        Toggle menu background
       </Button>
-      <div style={{ height: 250, width: '100%', marginTop: 16  }}>
+      <div style={{ height: 250, width: '100%', marginTop: 16 }}>
         <XGrid
+          apiRef={apiRef}
           columns={[
             { field: 'default', width: 150 },
             { field: 'name', width: 150 },

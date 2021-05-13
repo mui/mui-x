@@ -60,6 +60,16 @@ export default function CustomFooter() {
         flexDirection: 'column',
       }}
     >
+      <Button
+        color="primary"
+        onClick={() =>
+          setStatus((current) =>
+            current === 'connected' ? 'disconnected' : 'connected',
+          )
+        }
+      >
+        {status === 'connected' ? 'Disconnect' : 'Connect'}
+      </Button>
       <div style={{ height: 350, width: '100%' }}>
         <DataGrid
           {...data}
@@ -71,17 +81,6 @@ export default function CustomFooter() {
           }}
         />
       </div>
-      <Button
-        color="primary"
-        onClick={() =>
-          setStatus((current) =>
-            current === 'connected' ? 'disconnected' : 'connected',
-          )
-        }
-        style={{ alignSelf: 'flex-end' }}
-      >
-        {status === 'connected' ? 'Disconnect' : 'Connect'}
-      </Button>
     </div>
   );
 }
