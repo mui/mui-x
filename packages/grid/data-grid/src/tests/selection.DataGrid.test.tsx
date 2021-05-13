@@ -32,7 +32,7 @@ describe('<DataGrid /> - Selection', () => {
       );
       const row = getRow(0);
       const checkbox = row!.querySelector('input');
-      expect(row).to.not.have.class('Mui-selected');
+      expect(row).not.to.have.class('Mui-selected');
       expect(checkbox).to.have.property('checked', false);
 
       fireEvent.click(screen.getByRole('cell', { name: 'Nike' }));
@@ -138,7 +138,7 @@ describe('<DataGrid /> - Selection', () => {
       const { setProps } = render(<Demo />);
 
       const row1 = getRow(1);
-      expect(row1).to.not.have.class('Mui-selected');
+      expect(row1).not.to.have.class('Mui-selected');
 
       fireEvent.click(getCell(0, 0));
       const row0 = getRow(0);
@@ -147,7 +147,7 @@ describe('<DataGrid /> - Selection', () => {
       setProps({ selectionModel: [1] });
       // TODO fix this assertion. The model is forced from the outside, hence shouldn't change.
       // https://github.com/mui-org/material-ui-x/issues/190
-      expect(row0).to.not.have.class('Mui-selected');
+      expect(row0).not.to.have.class('Mui-selected');
       expect(row1).to.have.class('Mui-selected');
     });
 
@@ -213,12 +213,12 @@ describe('<DataGrid /> - Selection', () => {
       }
 
       const { setProps } = render(<Demo {...data} />);
-      expect(getRow(0)).to.not.have.class('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
       expect(getRow(1)).to.have.class('Mui-selected');
 
       setProps({ selectionModel: [0] });
-      expect(getRow(0)).to.not.have.class('Mui-selected');
-      expect(getRow(1)).to.not.have.class('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
+      expect(getRow(1)).not.to.have.class('Mui-selected');
     });
   });
 
@@ -251,11 +251,11 @@ describe('<DataGrid /> - Selection', () => {
 
       const { setProps } = render(<Demo {...data} />);
       expect(getRow(0)).to.have.class('Mui-selected');
-      expect(getRow(1)).to.not.have.class('Mui-selected');
+      expect(getRow(1)).not.to.have.class('Mui-selected');
 
       setProps({ isRowSelectable: (params) => params.id > 0 });
-      expect(getRow(0)).to.not.have.class('Mui-selected');
-      expect(getRow(1)).to.not.have.class('Mui-selected');
+      expect(getRow(0)).not.to.have.class('Mui-selected');
+      expect(getRow(1)).not.to.have.class('Mui-selected');
     });
   });
 });
