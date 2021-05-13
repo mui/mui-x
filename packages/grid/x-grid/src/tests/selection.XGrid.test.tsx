@@ -69,6 +69,20 @@ describe('<XGrid /> - Selection', () => {
       apiRef!.current.selectRow(3, false, true);
       expect(onSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equal([2]);
     });
+
+    it('should not call onSelectionModelChange if the row is unselectable', () => {
+      const onSelectionModelChange = spy();
+      render(
+        <Test
+          isRowSelectable={(params) => params.id > 0}
+          onSelectionModelChange={onSelectionModelChange}
+        />,
+      );
+      apiRef!.current.selectRow(0);
+      expect(onSelectionModelChange.callCount).to.equal(0);
+      apiRef!.current.selectRow(1);
+      expect(onSelectionModelChange.callCount).to.equal(1);
+    });
   });
 
   describe('selectRows', () => {
@@ -85,6 +99,18 @@ describe('<XGrid /> - Selection', () => {
       apiRef!.current.selectRows([4, 5], true, true);
       expect(onSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equal([4, 5]);
     });
+
+    it('should filter out unselectable rows before calling onSelectionModelChange', () => {
+      const onSelectionModelChange = spy();
+      render(
+        <Test
+          isRowSelectable={(params) => params.id > 0}
+          onSelectionModelChange={onSelectionModelChange}
+        />,
+      );
+      apiRef!.current.selectRows([0, 1, 2]);
+      expect(onSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equal([1, 2]);
+    });
   });
 
   it('should clean the selected ids when the rows prop changes', () => {
@@ -99,5 +125,21 @@ describe('<XGrid /> - Selection', () => {
       ],
     });
     expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
+  });
+
+  it('should filter out unselectable rows when the selectionModel prop changes', () => {
+    const { setProps } = render(
+      <Test selectionModel={[1]} isRowSelectable={(params) => params.id > 0} />,
+    );
+    expect(apiRef.current.getSelectedRows()).to.have.keys([1]);
+    setProps({ selectionModel: [0, 1, 2] });
+    expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2]);
+  });
+
+  it('should update the selected rows when the isRowSelectable prop changes', () => {
+    const { setProps } = render(<Test selectionModel={[0, 1, 2]} isRowSelectable={() => true} />);
+    expect(apiRef.current.getSelectedRows()).to.have.keys([0, 1, 2]);
+    setProps({ isRowSelectable: (params) => params.id > 0 });
+    expect(apiRef.current.getSelectedRows()).to.have.keys([1, 2]);
   });
 });

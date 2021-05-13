@@ -60,6 +60,32 @@ describe('<DataGrid /> - Selection', () => {
       });
       expect(selectAll).to.have.property('checked', false);
     });
+
+    it('should disable the checkbox if isRowSelectable returns false', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            rows={[
+              {
+                id: 0,
+                brand: 'Nike',
+              },
+              {
+                id: 1,
+                brand: 'Adidas',
+              },
+            ]}
+            columns={[{ field: 'brand', width: 100 }]}
+            isRowSelectable={(params) => params.id === 0}
+            checkboxSelection
+            hideFooter
+          />
+        </div>,
+      );
+      expect(getRow(0).querySelector('input')).to.have.property('disabled', false);
+      expect(getRow(1).querySelector('input')).to.have.property('disabled', true);
+    });
   });
 
   describe('props: selectionModel', () => {

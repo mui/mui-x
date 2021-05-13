@@ -208,4 +208,26 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
       apiRef.current.setSelectionModel(options.selectionModel || []);
     }
   }, [apiRef, options.selectionModel]);
+
+  React.useEffect(() => {
+    setGridState((state) => {
+      const newSelectionState = { ...state.selection };
+      let hasChanged = false;
+      Object.keys(newSelectionState).forEach((id: GridRowId) => {
+        const isSelectable = options.isRowSelectable
+          ? options.isRowSelectable(apiRef.current.getRowParams(id))
+          : true;
+        if (!isSelectable) {
+          delete newSelectionState[id];
+          hasChanged = true;
+        }
+      });
+      if (hasChanged) {
+        return { ...state, selection: newSelectionState };
+      }
+      return state;
+    });
+    forceUpdate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiRef, setGridState, options.isRowSelectable, forceUpdate]);
 };
