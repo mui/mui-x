@@ -48,9 +48,8 @@ export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, Gri
 
     const CheckboxComponent = apiRef?.current.components.Checkbox!;
 
-    const isSelectable = options.isRowSelectable
-      ? options.isRowSelectable(apiRef!.current.getRowParams(id))
-      : true;
+    const isSelectable =
+      !options.isRowSelectable || options.isRowSelectable(apiRef!.current.getRowParams(id));
 
     return (
       <CheckboxComponent

@@ -214,9 +214,8 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
       const newSelectionState = { ...state.selection };
       let hasChanged = false;
       Object.keys(newSelectionState).forEach((id: GridRowId) => {
-        const isSelectable = options.isRowSelectable
-          ? options.isRowSelectable(apiRef.current.getRowParams(id))
-          : true;
+        const isSelectable =
+          !options.isRowSelectable || options.isRowSelectable(apiRef.current.getRowParams(id));
         if (!isSelectable) {
           delete newSelectionState[id];
           hasChanged = true;
