@@ -92,14 +92,16 @@ export default function CustomColumnMenu() {
         flexDirection: 'column',
       }}
     >
-      <Button
-        color={color}
-        onClick={() =>
-          setColor((current) => (current === 'primary' ? 'secondary' : 'primary'))
-        }
-      >
-        Toggle menu background
-      </Button>
+      <div style={{ alignSelf: 'center' }}>
+        <Button
+          color={color}
+          onClick={() =>
+            setColor((current) => (current === 'primary' ? 'secondary' : 'primary'))
+          }
+        >
+          Toggle menu background
+        </Button>
+      </div>
       <div style={{ height: 250, width: '100%', marginTop: 16 }}>
         <XGrid
           apiRef={apiRef}
@@ -133,4 +135,3 @@ export default function CustomColumnMenu() {
     </div>
   );
 }
-
