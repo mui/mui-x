@@ -85,7 +85,7 @@ async function transpileFile(tsxPath, program, ignoreCache = false) {
 
     const propTypesAST = typescriptToProptypes.parseFromProgram(tsxPath, program, {
       shouldResolveObject: ({ name }) => {
-        if (name === 'classes' || name === 'state') {
+        if (name === 'classes' || name === 'state' || name === 'currentColumn') {
           return false;
         }
 
