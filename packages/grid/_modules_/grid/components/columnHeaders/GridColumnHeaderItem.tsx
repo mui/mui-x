@@ -236,9 +236,7 @@ export const GridColumnHeaderItem = React.memo(
           open={columnMenuOpen}
           target={iconButtonRef.current}
           ContentComponent={apiRef!.current.components.ColumnMenu}
-          contentComponentProps={{
-            ...apiRef!.current.componentsProps?.columnMenu,
-          }}
+          contentComponentProps={apiRef!.current.componentsProps?.columnMenu}
         />
       </div>
     );
