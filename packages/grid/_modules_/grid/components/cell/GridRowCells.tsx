@@ -38,6 +38,7 @@ interface RowCellsProps {
   cellTabIndex: GridCellIdentifier | null;
   isSelected: boolean;
   editRowState?: GridEditRowProps;
+  classes?: string;
 }
 
 export const GridRowCells = React.memo((props: RowCellsProps) => {
@@ -54,6 +55,7 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
     showCellRightBorder,
     isSelected,
     editRowState,
+    ...other
   } = props;
   const apiRef = React.useContext(GridApiContext);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
@@ -117,6 +119,7 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
         cellTabIndex !== null && cellTabIndex.id === id && cellTabIndex.field === column.field
           ? 0
           : -1,
+      ...other,
     };
 
     return cellProps;

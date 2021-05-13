@@ -29,6 +29,7 @@ import { GridColumnOrderChangeParams } from './params/gridColumnOrderChangeParam
 import { GridResizeParams } from './params/gridResizeParams';
 import { GridColumnResizeParams } from './params/gridColumnResizeParams';
 import { GridColumnVisibilityChangeParams } from './params/gridColumnVisibilityChangeParams';
+import { GridClasses } from './gridClasses';
 
 // TODO add multiSortKey
 /**
@@ -59,6 +60,10 @@ export interface GridOptions {
    * Extend native column types with your new column types.
    */
   columnTypes: GridColumnTypesRecord;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: GridClasses;
   /**
    * Set the density of the grid.
    */

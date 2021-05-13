@@ -52,6 +52,7 @@ import { useLocaleText } from './hooks/features/localeText/useLocaleText';
 import { useGridCsvExport } from './hooks/features/export';
 import { useGridInfiniteLoader } from './hooks/features/infiniteLoader';
 import { visibleGridRowCountSelector } from './hooks/features/filter/gridFilterSelector';
+import { classnames } from './utils/classnames';
 
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {
@@ -110,7 +111,14 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     return (
       <GridApiContext.Provider value={apiRef}>
         <NoSsr>
-          <GridRoot ref={handleRef} className={props.className}>
+          <GridRoot
+            ref={handleRef}
+            className={classnames(
+              'MuiDataGrid-root',
+              internalOptions.classes?.root,
+              props.className,
+            )}
+          >
             <ErrorBoundary
               hasError={errorState != null}
               componentProps={errorState}

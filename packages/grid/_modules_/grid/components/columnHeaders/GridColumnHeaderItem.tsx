@@ -63,6 +63,7 @@ export const GridColumnHeaderItem = React.memo(
       showColumnRightBorder,
       disableColumnResize,
       disableColumnMenu,
+      classes,
     } = options;
     const isColumnSorted = sortDirection != null;
     // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
@@ -127,6 +128,7 @@ export const GridColumnHeaderItem = React.memo(
         'MuiDataGrid-colCellNumeric': isColumnNumeric,
         'MuiDataGrid-withBorder': showColumnRightBorder,
       },
+      classes?.columnHeader,
     );
 
     const width = column.width!;
