@@ -29,7 +29,7 @@ As an example, you could override the column menu and pass additional props as b
 />
 ```
 
-**Note** The casing is different between the `components` and `componentsProps` prop.
+**Note** The casing is different between the `components` (ColumnMenu) and `componentsProps` (columnMenu) props.
 
 ### Getting props
 
