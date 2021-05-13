@@ -4,6 +4,8 @@ import {
   GridToolbarContainer,
   GridColumnsToolbarButton,
   GridFilterToolbarButton,
+  GridToolbarExport,
+  GridDensitySelector,
 } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
@@ -12,13 +14,15 @@ function CustomToolbar() {
     <GridToolbarContainer>
       <GridColumnsToolbarButton />
       <GridFilterToolbarButton />
+      <GridDensitySelector />
+      <GridToolbarExport />
     </GridToolbarContainer>
   );
 }
 
 export default function CustomToolbarGrid() {
   const { data } = useDemoData({
-    dataSet: 'Employee',
+    dataSet: 'Commodity',
     rowLength: 10,
     maxColumns: 6,
   });

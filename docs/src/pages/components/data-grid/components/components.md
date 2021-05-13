@@ -98,6 +98,8 @@ function CustomToolbar() {
     <GridToolbarContainer>
       <GridColumnsToolbarButton />
       <GridFilterToolbarButton />
+      <GridDensitySelector />
+      <GridToolbarExport />
     </GridToolbarContainer>
   );
 }
