@@ -73,7 +73,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         const [rows, setRows] = React.useState(baselineProps.rows);
 
         const addRow = () => {
-          // Error: mutating a row directly
+          // Error: mutating rows directly
           rows.push({
             id: 3,
             brand: 'Louis Vuitton',
