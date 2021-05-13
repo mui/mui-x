@@ -38,7 +38,7 @@ interface RowCellsProps {
   cellTabIndex: GridCellIdentifier | null;
   isSelected: boolean;
   editRowState?: GridEditRowProps;
-  classes?: string;
+  className?: string;
 }
 
 export const GridRowCells = React.memo((props: RowCellsProps) => {

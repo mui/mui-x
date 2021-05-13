@@ -38,7 +38,7 @@ export interface GridCellProps {
   cellMode?: GridCellMode;
   children: React.ReactElement | null;
   tabIndex: 0 | -1;
-  classes?: string;
+  className?: string;
 }
 
 export const GridCell = React.memo((props: GridCellProps) => {
@@ -60,7 +60,7 @@ export const GridCell = React.memo((props: GridCellProps) => {
     tabIndex,
     value,
     width,
-    classes,
+    className,
   } = props;
 
   const valueToRender = formattedValue == null ? value : formattedValue;
@@ -70,7 +70,7 @@ export const GridCell = React.memo((props: GridCellProps) => {
   const cssClasses = classnames(
     GRID_CELL_CSS_CLASS,
     cssClass,
-    classes,
+    className,
     `MuiDataGrid-cell${capitalize(align)}`,
     {
       'MuiDataGrid-withBorder': showRightBorder,
