@@ -1,8 +1,8 @@
-import Button from '@material-ui/core/Button';
+import * as React from 'react';
 import PropTypes from 'prop-types';
+import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
-import * as React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 

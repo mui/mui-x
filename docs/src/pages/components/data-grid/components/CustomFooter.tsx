@@ -1,7 +1,7 @@
+import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
-import * as React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
@@ -22,6 +22,7 @@ const useStyles = makeStyles(() => ({
     color: '#d9182e',
   },
 }));
+
 export function CustomFooterStatusComponent(props: {
   status: 'connected' | 'disconnected';
 }) {

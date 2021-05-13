@@ -1,6 +1,6 @@
+import * as React from 'react';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import * as React from 'react';
 import { XGrid } from '@material-ui/x-grid';
 
 export function SortedDescendingIcon() {

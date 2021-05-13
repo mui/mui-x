@@ -7,14 +7,14 @@ components: DataGrid, XGrid
 
 <p class="description">The grid is highly customizable. Override components using the <code>components</code> prop.</p>
 
-## Installing Component
+## Overriding components
 
 As part of the customization API, the grid allows you to replace and override nested components with the `components` prop.
 The prop accepts an object of type [`GridSlotsComponent`](/api/data-grid/#slots).
 
-If you wish to pass some props in a custom component, you can do it using the `componentsProps` prop. This prop is of type `GridSlotsComponentsProps`.
+If you wish to pass additional props in a component slot, you can do it using the `componentsProps` prop. This prop is of type `GridSlotsComponentsProps`.
 
-As an example, you could override the column menu with some props as below.
+As an example, you could override the column menu and pass additional props as below.
 
 ```jsx
 <DataGrid
@@ -33,37 +33,37 @@ As an example, you could override the column menu with some props as below.
 
 ### Getting props
 
-While building new component slots, you might need some grid data.
-Therefore, we exposed a `useGridSlotComponentProps` hook which allows to retrieve the following props.
+While overriding component slots, you might need to access the grid data.
+Therefore, the grid expose a `useGridSlotComponentProps` hook which allows to retrieve the following props.
 
 - `state`: the current grid state.
 - `rows`: the current rows in the grid.
 - `columns`: the current columns in the grid.
 - `options`: the current set of options in the grid.
 - `apiRef`: the `GridApi` ref that allows to manipulate the grid.
-- `rootElement`: the root DOM element
+- `rootElement`: the root DOM element.
 
-It can be used as below.
+It can be used as below:
 
 ```tsx
 function CustomRowCounter() {
   const { rows } = useGridSlotComponentProps();
 
-  return <div> Row count: {rows.length} </div>;
+  return <div>Row count: {rows.length} </div>;
 }
 ```
 
 ## Components
 
-The full list of overridable components can be found in the [`GridSlotsComponent`](/api/data-grid/#slots) api page.
+The full list of overridable components can be found in the [`GridSlotsComponent`](/api/data-grid/#slots) API page.
 
 ### ColumnMenu
 
-As mentioned above, the column menu is a customizable component that can be recomposed easily and customised on each column as in the demo below.
+As mentioned above, the column menu is a component slot that can be recomposed easily and customized on each column as in the demo below.
 
 {{"demo": "pages/components/data-grid/components/CustomColumnMenu.js", "bg": "inline"}}
 
-Below is our default `GridColumnMenu`.
+Below is the default `GridColumnMenu`.
 
 ```tsx
 export const GridColumnMenu = React.forwardRef<
@@ -105,31 +105,6 @@ function CustomToolbar() {
 
 {{"demo": "pages/components/data-grid/components/CustomToolbarGrid.js", "bg": "inline"}}
 
-### Header
-
-The default header component is the **parent** component of the **toolbar** and of the **filter and columns panel**.
-
-For this reason, we recommend that you use the toolbar slot directly if you only wish to change this one.
-
-That said, there might be cases, where you would like to modify this one directly, maybe if you want to render the pagination below the toolbar.
-
-> ⚠️ If you change this component, you will need to render `<GridHeader />` in the new customised component to maintain the columns, and filter panels.
-
-Below is an example of custom header component.
-
-```tsx
-export function CustomHeaderComponent(props) {
-  return (
-    <React.Fragment>
-      <GridHeader {...props} />
-      <PaginationComponent {...props} />
-    </React.Fragment>
-  );
-}
-```
-
-{{"demo": "pages/components/data-grid/components/CustomHeader.js", "bg": "inline"}}
-
 ### Footer
 
 The grid exposes props to hide specific elements of the UI:
@@ -161,7 +136,7 @@ In the following demo, an illustration is added on top of the default "No Rows" 
 
 {{"demo": "pages/components/data-grid/components/CustomEmptyOverlayGrid.js", "bg": "inline"}}
 
-**Note** As the no rows overlay, the grid allows to override a no result overlay, as listed [`here`](/api/data-grid/#slots).
+**Note** As the no rows overlay, the grid allows to override the no results overlay with the `NoResultsOverlay` slot.
 
 ### Icons
 

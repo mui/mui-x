@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
 import * as React from 'react';
+import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import {
   GridColumnMenu,
@@ -225,7 +225,7 @@ export default function CustomColumnMenu() {
       >
         Toggle Color
       </Button>
-      <div style={{ height: 250, width: '100%' }}>
+      <div style={{ height: 250, width: '100%', marginTop: 16 }}>
         <XGrid
           columns={[
             { field: 'default', width: 150 },
