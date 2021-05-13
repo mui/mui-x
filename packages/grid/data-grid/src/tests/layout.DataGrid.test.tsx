@@ -64,6 +64,15 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       expect(rect.width).to.equal(400 - 2);
     });
 
+    it('should freeze the rows', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} />
+        </div>,
+      );
+      expect(baselineProps.rows).to.be.frozen;
+    });
+
     // Adapation of describeConformance()
     describe('Material-UI component API', () => {
       it(`attaches the ref`, () => {
