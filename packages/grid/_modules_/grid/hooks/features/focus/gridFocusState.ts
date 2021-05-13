@@ -1,14 +1,14 @@
-import {
-  GridCellIndexCoordinates,
-  GridColumnHeaderIndexCoordinates,
-} from '../../../models/gridCell';
+import { GridRowId } from '../../../models/gridRows';
+
+export type GridCellIdentifier = { id: GridRowId; field: string };
+export type GridColumnIdentifier = { field: string };
 
 export interface GridFocusState {
-  cell: GridCellIndexCoordinates | null;
-  columnHeader: GridColumnHeaderIndexCoordinates | null;
+  cell: GridCellIdentifier | null;
+  columnHeader: GridColumnIdentifier | null;
 }
 
 export interface GridTabIndexState {
-  cell: GridCellIndexCoordinates | null;
-  columnHeader: GridColumnHeaderIndexCoordinates | null;
+  cell: GridCellIdentifier | null;
+  columnHeader: GridColumnIdentifier | null;
 }

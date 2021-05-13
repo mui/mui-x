@@ -3,8 +3,8 @@ import * as React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 
 function getFullName(params) {
-  return `${params.getValue('firstName') || ''} ${
-    params.getValue('lastName') || ''
+  return `${params.getValue(params.id, 'firstName') || ''} ${
+    params.getValue(params.id, 'lastName') || ''
   }`;
 }
 
@@ -48,8 +48,7 @@ const columns = [
     width: 160,
     editable: true,
     valueGetter: getFullName,
-    sortComparator: (v1, v2, cellParams1, cellParams2) =>
-      getFullName(cellParams1).localeCompare(getFullName(cellParams2)),
+    sortComparator: (v1, v2) => v1.toString().localeCompare(v2.toString()),
   },
 ];
 

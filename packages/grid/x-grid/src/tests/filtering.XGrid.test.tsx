@@ -20,8 +20,11 @@ import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
   fireEvent,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  waitFor,
 } from 'test/utils';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
+import { useData } from 'packages/storybook/src/hooks/useData';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -255,6 +258,50 @@ describe('<XGrid /> - Filter', () => {
     expect(visibleRows.get(1)).to.deep.equal({ id: 1, brand: 'Adidas' });
     expect(apiRef.current.getVisibleRowModels().size).to.equal(1);
     expect(apiRef.current.getVisibleRowModels().get(1)).to.deep.equal({ id: 1, brand: 'Adidas' });
+  });
+
+  describe('performance', () => {
+    beforeEach(() => {
+      clock.restore();
+    });
+
+    it('should filter 5,000 rows in less than 100 ms', async function test() {
+      // It's simpler to only run the performance test in a single controlled environment.
+      if (!/HeadlessChrome/.test(window.navigator.userAgent)) {
+        this.skip();
+        return;
+      }
+
+      const TestCasePerf = () => {
+        const data = useData(5000, 10);
+        apiRef = useGridApiRef();
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <XGrid apiRef={apiRef} columns={data.columns} rows={data.rows} />
+          </div>
+        );
+      };
+
+      render(<TestCasePerf />);
+      const newModel = {
+        items: [
+          {
+            columnField: 'currencyPair',
+            value: 'usd',
+            operatorValue: 'startsWith',
+          },
+        ],
+      };
+      const t0 = performance.now();
+      apiRef.current.setFilterModel(newModel);
+
+      await waitFor(() =>
+        expect(document.querySelector('.MuiDataGrid-filterIcon')).to.not.equal(null),
+      );
+      const t1 = performance.now();
+      const time = Math.round(t1 - t0);
+      expect(time).to.be.lessThan(100);
+    });
   });
 
   describe('Server', () => {

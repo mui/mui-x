@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { DataGrid, getThemePaletteMode } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
-import { createMuiTheme, darken, lighten } from '@material-ui/core/styles';
+import { createMuiTheme, darken, lighten, Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
 
 const defaultTheme = createMuiTheme();
 const useStyles = makeStyles(
-  (theme) => {
+  (theme: Theme) => {
     const getBackgroundColor = (color) =>
       getThemePaletteMode(theme.palette) === 'dark'
         ? darken(color, 0.6)
@@ -61,7 +61,9 @@ export default function StylingRowsGrid() {
     <div style={{ height: 400, width: '100%' }} className={classes.root}>
       <DataGrid
         {...data}
-        getRowClassName={(params) => `super-app-theme--${params.getValue('status')}`}
+        getRowClassName={(params) =>
+          `super-app-theme--${params.getValue(params.id, 'status')}`
+        }
       />
     </div>
   );

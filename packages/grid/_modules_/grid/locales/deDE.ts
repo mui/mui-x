@@ -23,7 +23,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Filters toolbar button text
   toolbarFilters: 'Filter',
   toolbarFiltersLabel: 'Zeige Filter',
-  toolbarFiltersTooltipHide: 'Verstecke Filter',
+  toolbarFiltersTooltipHide: 'Verberge Filter',
   toolbarFiltersTooltipShow: 'Zeige Filter',
   toolbarFiltersTooltipActive: (count) =>
     count !== 1 ? `${count} aktive Filter` : `${count} aktiver Filter`,
@@ -33,7 +33,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   columnsPanelTextFieldPlaceholder: 'Spaltenüberschrift',
   columnsPanelDragIconLabel: 'Spalte umsortieren',
   columnsPanelShowAllButton: 'Zeige alle',
-  columnsPanelHideAllButton: 'Verstecke alle',
+  columnsPanelHideAllButton: 'Verberge alle',
 
   // Filter panel text
   filterPanelAddFilter: 'Filter hinzufügen',
@@ -58,10 +58,10 @@ const deDEGrid: Partial<GridLocaleText> = {
   filterOperatorAfter: 'ist nach',
 
   // Column menu text
-  columnMenuLabel: 'Menu',
+  columnMenuLabel: 'Menü',
   columnMenuShowColumns: 'Zeige alle Spalten',
   columnMenuFilter: 'Filter',
-  columnMenuHideColumn: 'Verstecken',
+  columnMenuHideColumn: 'Verbergen',
   columnMenuUnsort: 'Sortierung deaktivieren',
   columnMenuSortAsc: 'Sortiere aufsteigend',
   columnMenuSortDesc: 'Sortiere absteigend',
