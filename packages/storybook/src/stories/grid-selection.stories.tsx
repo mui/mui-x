@@ -103,13 +103,11 @@ export const GridSelectionModel = () => {
 export const UnselectableRows = () => {
   const data = useData(200, 200);
 
-  const isRowSelectable = React.useCallback((params) => params.id % 2 === 0, []);
-
   return (
     <XGrid
       rows={data.rows}
       columns={data.columns}
-      isRowSelectable={isRowSelectable}
+      isRowSelectable={(params) => Number(params.id) % 2 === 0}
       checkboxSelection
     />
   );
