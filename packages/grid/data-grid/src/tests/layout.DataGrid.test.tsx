@@ -117,7 +117,9 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           {
             field: 'fullName',
             valueGetter: (params) =>
-              `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`,
+              `${params.getValue(params.id, 'firstName') || ''} ${
+                params.getValue(params.id, 'lastName') || ''
+              }`,
           },
         ];
 
@@ -186,7 +188,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           { field: 'id', hide: true },
           {
             field: 'fullName',
-            valueGetter: (params: GridValueGetterParams) => params.getValue('age'),
+            valueGetter: (params: GridValueGetterParams) => params.getValue(params.id, 'age'),
           },
         ];
         expect(() => {

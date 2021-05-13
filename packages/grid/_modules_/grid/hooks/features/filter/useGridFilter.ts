@@ -6,7 +6,7 @@ import {
   GRID_ROWS_UPDATED,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { FilterApi } from '../../../models/api/filterApi';
+import { GridFilterApi } from '../../../models/api/gridFilterApi';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { GridFilterModelParams } from '../../../models/params/gridFilterModelParams';
@@ -266,7 +266,7 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
     [apiRef],
   );
 
-  useGridApiMethod<FilterApi>(
+  useGridApiMethod<GridFilterApi>(
     apiRef,
     {
       applyFilterLinkOperator,

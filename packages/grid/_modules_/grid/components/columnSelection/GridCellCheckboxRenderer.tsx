@@ -1,32 +1,35 @@
 import * as React from 'react';
+import { useForkRef } from '@material-ui/core/utils';
 import { GRID_CELL_NAVIGATION_KEYDOWN } from '../../constants/eventsConstants';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { gridTabIndexCellSelector } from '../../hooks/features/focus/gridFocusStateSelector';
 import { GridCellParams } from '../../models/params/gridCellParams';
 import { isNavigationKey, isSpaceKey } from '../../utils/keyboardUtils';
 import { GridApiContext } from '../GridApiContext';
 
-const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellParams>(
+export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellParams>(
   function GridCellCheckboxRenderer(props, ref) {
-    const { getValue, field, id, rowIndex, colIndex, element } = props;
+    const { field, id, value, tabIndex, hasFocus } = props;
     const apiRef = React.useContext(GridApiContext);
-    const tabIndexState = useGridSelector(apiRef, gridTabIndexCellSelector);
+    const checkboxElement = React.useRef<HTMLInputElement | null>(null);
+
+    const handleRef = useForkRef(checkboxElement, ref);
+    const element = props.api.getCellElement(id, field);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       apiRef!.current.selectRow(id, event.target.checked, true);
     };
-    const tabIndex =
-      tabIndexState !== null &&
-      tabIndexState.rowIndex === rowIndex &&
-      tabIndexState.colIndex === colIndex
-        ? 0
-        : -1;
 
     React.useLayoutEffect(() => {
       if (tabIndex === 0 && element) {
         element!.tabIndex = -1;
       }
     }, [element, tabIndex]);
+
+    React.useLayoutEffect(() => {
+      if (hasFocus && checkboxElement.current) {
+        const input = checkboxElement.current.querySelector('input')!;
+        input!.focus();
+      }
+    }, [hasFocus]);
 
     const handleKeyDown = React.useCallback(
       (event) => {
@@ -44,9 +47,9 @@ const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, GridCellPa
 
     return (
       <CheckboxComponent
-        ref={ref}
+        ref={handleRef}
         tabIndex={tabIndex}
-        checked={!!getValue(field)}
+        checked={!!value}
         onChange={handleChange}
         className="MuiDataGrid-checkboxInput"
         color="primary"
