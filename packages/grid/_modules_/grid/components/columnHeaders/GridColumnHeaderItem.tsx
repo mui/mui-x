@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 // @ts-expect-error fixed in Material-UI v5, types definitions were added.
 import { unstable_useId as useId } from '@material-ui/core/utils';
 import {
@@ -22,7 +23,6 @@ import { GridOptions } from '../../models/gridOptions';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { GridApiContext } from '../GridApiContext';
 import { GRID_HEADER_CELL_CSS_CLASS } from '../../constants/cssClassesConstants';
-import { classnames } from '../../utils/index';
 import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
 import { GridColumnHeaderTitle } from './GridColumnHeaderTitle';
 import { GridColumnHeaderSeparator } from './GridColumnHeaderSeparator';
@@ -123,7 +123,7 @@ export const GridColumnHeaderItem = React.memo(
       [publish],
     );
 
-    const cssClasses = classnames(
+    const cssClasses = clsx(
       GRID_HEADER_CELL_CSS_CLASS,
       column.headerClassName,
       column.headerAlign === 'center' && 'MuiDataGrid-colCellCenter',

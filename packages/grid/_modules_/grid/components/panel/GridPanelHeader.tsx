@@ -1,6 +1,6 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { classnames } from '../../utils/classnames';
 
 const useStyles = makeStyles(
   (theme: Theme) => ({
@@ -16,5 +16,5 @@ export function GridPanelHeader(
 ) {
   const classes = useStyles();
   const { className, ...other } = props;
-  return <div className={classnames(classes.root, className)} {...other} />;
+  return <div className={clsx(classes.root, className)} {...other} />;
 }

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { GridCellIdentifier } from '../../hooks/features/focus/gridFocusState';
 import {
   GridCellClassParams,
@@ -11,7 +12,7 @@ import {
 } from '../../models/index';
 import { GridCell, GridCellProps } from './GridCell';
 import { GridApiContext } from '../GridApiContext';
-import { classnames, isFunction } from '../../utils/index';
+import { isFunction } from '../../utils/index';
 import { gridDensityRowHeightSelector } from '../../hooks/features/density/densitySelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 
@@ -71,7 +72,7 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
     let cssClassProp = { cssClass: '' };
     if (column.cellClassName) {
       if (!isFunction(column.cellClassName)) {
-        cssClassProp = { cssClass: classnames(column.cellClassName) };
+        cssClassProp = { cssClass: clsx(column.cellClassName) };
       } else {
         cssClassProp = { cssClass: column.cellClassName(cellParams) as string };
       }
