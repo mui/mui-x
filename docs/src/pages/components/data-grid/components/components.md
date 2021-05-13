@@ -40,7 +40,7 @@ Therefore, the grid expose a `useGridSlotComponentProps` hook which allows to re
 - `rows`: the current rows in the grid.
 - `columns`: the current columns in the grid.
 - `options`: the current set of options in the grid.
-- `apiRef`: the `GridApi` ref that allows to manipulate the grid.
+- `apiRef`<span class="pro"></span>: the `GridApi` ref that allows to manipulate the grid.
 - `rootElement`: the root DOM element.
 
 It can be used as below:
