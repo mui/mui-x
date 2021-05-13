@@ -16,7 +16,7 @@ import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridTranslationKeys } from '../../models/api/gridLocaleTextApi';
 import { GridFilterItem } from '../../models/gridFilterItem';
-import { createTheme } from '../../utils/utils'
+import { createTheme } from '../../utils/utils';
 import { GridApiContext } from '../GridApiContext';
 
 const defaultTheme = createTheme();

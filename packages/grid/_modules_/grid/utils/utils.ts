@@ -50,7 +50,6 @@ export function getThemePaletteMode(palette: any): string {
   return palette.type || palette.mode;
 }
 
-
 export function isMuiV5(): boolean {
   return 'alpha' in styles;
 }

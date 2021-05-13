@@ -5,7 +5,7 @@ import Paper from '@material-ui/core/Paper';
 import Popper, { PopperProps } from '@material-ui/core/Popper';
 import { Theme } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/styles';
-import { createTheme } from '../../utils/utils'
+import { createTheme } from '../../utils/utils';
 
 type MenuPosition =
   | 'bottom-end'
@@ -22,7 +22,7 @@ type MenuPosition =
   | 'top'
   | undefined;
 
-  const defaultTheme = createTheme();
+const defaultTheme = createTheme();
 const useStyles = makeStyles(
   (theme: Theme) => ({
     root: {
