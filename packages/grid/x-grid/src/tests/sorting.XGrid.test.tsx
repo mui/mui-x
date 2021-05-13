@@ -244,12 +244,7 @@ describe('<XGrid /> - Sorting', () => {
     function Test(props) {
       return (
         <div style={{ width: 300, height: 300 }}>
-          <XGrid
-            {...baselineProps}
-            columns={columns}
-            checkboxSelection
-            {...props}
-          />
+          <XGrid {...baselineProps} columns={columns} checkboxSelection {...props} />
         </div>
       );
     }
