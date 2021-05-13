@@ -9,7 +9,7 @@ components: DataGrid, XGrid
 
 ## Overriding components
 
-As part of the customization API, the grid allows you to replace and override nested components with the `components` prop.
+As part of the customization API, the grid allows you to override internal components with the `components` prop.
 The prop accepts an object of type [`GridSlotsComponent`](/api/data-grid/#slots).
 
 If you wish to pass additional props in a component slot, you can do it using the `componentsProps` prop. This prop is of type `GridSlotsComponentsProps`.
