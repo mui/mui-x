@@ -185,5 +185,77 @@ describe('<DataGrid /> - Selection', () => {
       expect(onSelectionModelChange.callCount).to.equal(2);
       expect(onSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equals([0, 1]);
     });
+
+    it('should filter out unselectable rows when the selectionModel prop changes', () => {
+      const data = {
+        autoHeight: isJSDOM,
+        rows: [
+          {
+            id: 0,
+            brand: 'Nike',
+          },
+          {
+            id: 1,
+            brand: 'Adidas',
+          },
+        ],
+        columns: [{ field: 'brand', width: 100 }],
+        selectionModel: [1],
+        isRowSelectable: (params) => params.id > 0,
+      };
+
+      function Demo(props) {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...props} />
+          </div>
+        );
+      }
+
+      const { setProps } = render(<Demo {...data} />);
+      expect(getRow(0)).to.not.have.class('Mui-selected');
+      expect(getRow(1)).to.have.class('Mui-selected');
+
+      setProps({ selectionModel: [0] });
+      expect(getRow(0)).to.not.have.class('Mui-selected');
+      expect(getRow(1)).to.not.have.class('Mui-selected');
+    });
+  });
+
+  describe('props: isRowSelectable', () => {
+    it('should update the selected rows when the isRowSelectable prop changes', () => {
+      const data = {
+        autoHeight: isJSDOM,
+        rows: [
+          {
+            id: 0,
+            brand: 'Nike',
+          },
+          {
+            id: 1,
+            brand: 'Adidas',
+          },
+        ],
+        columns: [{ field: 'brand', width: 100 }],
+        selectionModel: [0],
+        isRowSelectable: () => true,
+      };
+
+      function Demo(props) {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...props} />
+          </div>
+        );
+      }
+
+      const { setProps } = render(<Demo {...data} />);
+      expect(getRow(0)).to.have.class('Mui-selected');
+      expect(getRow(1)).to.not.have.class('Mui-selected');
+
+      setProps({ isRowSelectable: (params) => params.id > 0 });
+      expect(getRow(0)).to.not.have.class('Mui-selected');
+      expect(getRow(1)).to.not.have.class('Mui-selected');
+    });
   });
 });
