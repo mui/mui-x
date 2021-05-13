@@ -7,7 +7,6 @@ import {
   GridRowsProp,
   GridSortModelParams,
   GridSortModel,
-  GridRowData,
   useGridApiRef,
 } from '@material-ui/x-grid';
 import { action } from '@storybook/addon-actions';
