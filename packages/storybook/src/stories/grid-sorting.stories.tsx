@@ -7,6 +7,7 @@ import {
   GridRowsProp,
   GridSortModelParams,
   GridSortModel,
+  GridRowData,
   useGridApiRef,
 } from '@material-ui/x-grid';
 import { action } from '@storybook/addon-actions';
@@ -426,7 +427,7 @@ export const SortedEventsOptions = () => {
   );
 };
 
-function sortServerRows(rows: any[], params: GridSortModelParams): Promise<any[]> {
+function sortServerRows(rows: Readonly<any[]>, params: GridSortModelParams): Promise<any[]> {
   return new Promise<any[]>((resolve) => {
     setTimeout(() => {
       if (params.sortModel.length === 0) {
@@ -435,8 +436,9 @@ function sortServerRows(rows: any[], params: GridSortModelParams): Promise<any[]
       }
       const sortedCol = params.sortModel[0];
       const comparator = params.columns[0].sortComparator!;
+      const clonedRows = [...rows];
       let sortedRows = [
-        ...rows.sort((a, b) => comparator(a[sortedCol.field], b[sortedCol.field], a, b)),
+        ...clonedRows.sort((a, b) => comparator(a[sortedCol.field], b[sortedCol.field], a, b)),
       ];
 
       if (params.sortModel[0].sort === 'desc') {
