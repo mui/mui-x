@@ -29,13 +29,21 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
   const options = useGridSelector(apiRef, optionsSelector);
   const rowsLookup = useGridSelector(apiRef, gridRowsLookupSelector);
   const isMultipleKeyPressed = useGridSelector(apiRef, gridKeyboardMultipleKeySelector);
-
   const allowMultipleSelectionKeyPressed = React.useRef<boolean>(false);
 
+  const {
+    checkboxSelection,
+    disableMultipleSelection,
+    disableSelectionOnClick,
+    selectionModel,
+    isRowSelectable,
+    onRowSelected,
+    onSelectionModelChange,
+  } = options;
+
   React.useEffect(() => {
-    allowMultipleSelectionKeyPressed.current =
-      !options.disableMultipleSelection && isMultipleKeyPressed;
-  }, [isMultipleKeyPressed, options.disableMultipleSelection]);
+    allowMultipleSelectionKeyPressed.current = !disableMultipleSelection && isMultipleKeyPressed;
+  }, [isMultipleKeyPressed, disableMultipleSelection]);
 
   const getSelectedRows = React.useCallback(
     () => selectedGridRowsSelector(apiRef.current.getState()),
@@ -44,7 +52,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
 
   const selectRowModel = React.useCallback(
     (id: GridRowId, row: GridRowModel, allowMultipleOverride?: boolean, isSelected?: boolean) => {
-      if (options.isRowSelectable && !options.isRowSelectable(apiRef.current.getRowParams(id))) {
+      if (isRowSelectable && !isRowSelectable(apiRef.current.getRowParams(id))) {
         return;
       }
 
@@ -60,9 +68,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
       logger.debug(`Selecting row ${id}`);
 
       const allowMultiSelect =
-        allowMultipleOverride ||
-        allowMultipleSelectionKeyPressed.current ||
-        options.checkboxSelection;
+        allowMultipleOverride || allowMultipleSelectionKeyPressed.current || checkboxSelection;
 
       if (allowMultiSelect) {
         setGridState((state) => {
@@ -100,8 +106,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
       apiRef.current.publishEvent(GRID_ROW_SELECTED, rowSelectedParam);
       apiRef.current.publishEvent(GRID_SELECTION_CHANGED, selectionChangeParam);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [apiRef, logger, options.checkboxSelection, options.isRowSelectable, forceUpdate, setGridState],
+    [isRowSelectable, apiRef, logger, checkboxSelection, forceUpdate, setGridState],
   );
 
   const selectRow = React.useCallback(
@@ -113,15 +118,11 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
 
   const selectRows = React.useCallback(
     (ids: GridRowId[], isSelected = true, deSelectOthers = false) => {
-      const selectableIds = options.isRowSelectable
-        ? ids.filter((id) => options.isRowSelectable!(apiRef.current.getRowParams(id)))
+      const selectableIds = isRowSelectable
+        ? ids.filter((id) => isRowSelectable!(apiRef.current.getRowParams(id)))
         : ids;
 
-      if (
-        options.disableMultipleSelection &&
-        selectableIds.length > 1 &&
-        !options.checkboxSelection
-      ) {
+      if (disableMultipleSelection && selectableIds.length > 1 && !checkboxSelection) {
         return;
       }
 
@@ -146,9 +147,9 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
       apiRef.current.publishEvent(GRID_SELECTION_CHANGED, params);
     },
     [
-      options.disableMultipleSelection,
-      options.checkboxSelection,
-      options.isRowSelectable,
+      isRowSelectable,
+      disableMultipleSelection,
+      checkboxSelection,
       setGridState,
       forceUpdate,
       apiRef,
@@ -164,16 +165,16 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
 
   const handleRowClick = React.useCallback(
     (params: GridRowParams) => {
-      if (!options.disableSelectionOnClick) {
+      if (!disableSelectionOnClick) {
         selectRowModel(params.id, params.row);
       }
     },
-    [options.disableSelectionOnClick, selectRowModel],
+    [disableSelectionOnClick, selectRowModel],
   );
 
   useGridApiEventHandler(apiRef, GRID_ROW_CLICK, handleRowClick);
-  useGridApiOptionHandler(apiRef, GRID_ROW_SELECTED, options.onRowSelected);
-  useGridApiOptionHandler(apiRef, GRID_SELECTION_CHANGED, options.onSelectionModelChange);
+  useGridApiOptionHandler(apiRef, GRID_ROW_SELECTED, onRowSelected);
+  useGridApiOptionHandler(apiRef, GRID_SELECTION_CHANGED, onSelectionModelChange);
 
   // TODO handle Cell Click/range selection?
   const selectionApi: GridSelectionApi = {
@@ -204,18 +205,17 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
 
   React.useEffect(() => {
     const currentModel = Object.values(apiRef.current.getState().selection);
-    if (!isDeepEqual(currentModel, options.selectionModel)) {
-      apiRef.current.setSelectionModel(options.selectionModel || []);
+    if (!isDeepEqual(currentModel, selectionModel)) {
+      apiRef.current.setSelectionModel(selectionModel || []);
     }
-  }, [apiRef, options.selectionModel]);
+  }, [apiRef, selectionModel]);
 
   React.useEffect(() => {
     setGridState((state) => {
       const newSelectionState = { ...state.selection };
       let hasChanged = false;
       Object.keys(newSelectionState).forEach((id: GridRowId) => {
-        const isSelectable =
-          !options.isRowSelectable || options.isRowSelectable(apiRef.current.getRowParams(id));
+        const isSelectable = !isRowSelectable || isRowSelectable(apiRef.current.getRowParams(id));
         if (!isSelectable) {
           delete newSelectionState[id];
           hasChanged = true;
@@ -227,6 +227,5 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
       return state;
     });
     forceUpdate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiRef, setGridState, options.isRowSelectable, forceUpdate]);
+  }, [apiRef, setGridState, options.isRowSelectable, forceUpdate, isRowSelectable]);
 };
