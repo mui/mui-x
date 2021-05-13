@@ -4,6 +4,10 @@ import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
   ErrorBoundary,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  screen,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  fireEvent,
 } from 'test/utils';
 import { useFakeTimers, stub } from 'sinon';
 import { expect } from 'chai';
@@ -64,13 +68,33 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       expect(rect.width).to.equal(400 - 2);
     });
 
-    it('should freeze the rows', () => {
-      render(
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} />
-        </div>,
-      );
-      expect(baselineProps.rows).to.be.frozen;
+    it('should throw an error if rows props is being mutated. Error should be thrown due to Object.freeze(rows) on rows prop', () => {
+      const TestDataGrid = () => {
+        const [rows, setRows] = React.useState(baselineProps.rows);
+
+        const addRow = () => {
+          // Error: mutating a row directly
+          rows.push({
+            id: 3,
+            brand: 'Louis Vuitton',
+          });
+          setRows(rows);
+        };
+
+        return (
+          <React.Fragment>
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid {...baselineProps} />
+            </div>
+            <button onClick={addRow}>Add a new row</button>
+          </React.Fragment>
+        );
+      };
+      render(<TestDataGrid />);
+      const addRowButton = screen.getByText('Add a new row');
+      expect(() => {
+        fireEvent.click(addRowButton);
+      }).to.throw();
     });
 
     // Adapation of describeConformance()
