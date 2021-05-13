@@ -26,14 +26,6 @@ export function formatDateToLocalInputDate({
   return value;
 }
 
-export function isArray(value: any): value is Array<any> {
-  return Array.isArray(value);
-}
-
-export function isString(value: any): value is string {
-  return typeof value === 'string';
-}
-
 export function isNumber(value: any): value is number {
   return typeof value === 'number';
 }
