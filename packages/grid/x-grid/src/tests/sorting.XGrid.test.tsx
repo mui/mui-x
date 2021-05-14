@@ -222,7 +222,13 @@ describe('<XGrid /> - Sorting', () => {
     });
   });
 
-  it('should prune rendering on cells', () => {
+  it('should prune rendering on cells', function test() {
+    // The number of renders depends on the user-agent
+    if (!/HeadlessChrome/.test(window.navigator.userAgent) || !isJSDOM) {
+      this.skip();
+      return;
+    }
+
     let renderCellCount = 0;
 
     function CounterRender(props) {
