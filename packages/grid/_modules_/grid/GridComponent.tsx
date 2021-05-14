@@ -143,7 +143,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                 <components.Header {...componentsProps?.header} />
               </div>
               <GridMainContainer>
-                <Watermark licenseStatus={props.licenseStatus} />
+                <Watermark licenseStatus={licenseStatus} />
                 <GridColumnsContainer ref={columnsContainerRef}>
                   <GridColumnsHeader ref={columnsHeaderRef} />
                 </GridColumnsContainer>
