@@ -66,7 +66,7 @@ export default function CustomFooter() {
           {status === 'connected' ? 'Disconnect' : 'Connect'}
         </Button>
       </div>
-      <div style={{ height: 350, width: '100%' }}>
+      <div style={{ height: 350, width: '100%', marginTop: 16 }}>
         <DataGrid
           {...data}
           components={{
