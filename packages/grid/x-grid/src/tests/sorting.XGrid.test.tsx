@@ -148,7 +148,7 @@ describe('<XGrid /> - Sorting', () => {
         render(<TestCase sortModel={[{ field: 'year', sort: 'desc' }]} />);
         expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
         fireEvent.click(getColumnHeaderCell(0), { [key]: true });
-        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
+        expect(getColumnValues()).to.deep.equal(['Puma', 'Adidas', 'Nike']);
       });
     });
 
@@ -166,7 +166,7 @@ describe('<XGrid /> - Sorting', () => {
       render(<TestCase sortModel={[{ field: 'year', sort: 'desc' }]} />);
       expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
       getColumnHeaderCell(1).focus();
-      fireEvent.keyDown(getColumnHeaderCell(1), { key: 'Enter', shiftKey: true });
+      fireEvent.keyDown(getColumnHeaderCell(0), { key: 'Enter', shiftKey: true });
       expect(getColumnValues()).to.deep.equal(['Puma', 'Adidas', 'Nike']);
     });
 
@@ -182,7 +182,7 @@ describe('<XGrid /> - Sorting', () => {
         <TestCase sortModel={[{ field: 'year', sort: 'desc' }]} disableMultipleColumnsSorting />,
       );
       expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
-      fireEvent.click(getColumnHeaderCell(1), { shiftKey: true });
+      fireEvent.click(getColumnHeaderCell(0), { shiftKey: true });
       expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     });
   });
@@ -257,7 +257,7 @@ describe('<XGrid /> - Sorting', () => {
       };
 
       render(<TestCasePerf />);
-      const header = getColumnHeaderCell(2);
+      const header = getColumnHeaderCell(1);
       renderHeaderCount = 0;
       renderCellCount = 0;
       fireEvent.click(header);
