@@ -60,14 +60,12 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
       enterDelay={1000}
     >
       <div className="MuiDataGrid-iconButtonContainer">
-        <div>
-          {counter > 1 && (
-            <Badge badgeContent={counter} color="default">
-              {iconButton}
-            </Badge>
-          )}
-          {counter === 1 && iconButton}
-        </div>
+        {counter > 1 && (
+          <Badge badgeContent={counter} color="default">
+            {iconButton}
+          </Badge>
+        )}
+        {counter === 1 && iconButton}
       </div>
     </Tooltip>
   );
