@@ -1,31 +1,19 @@
 import * as React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
-import { randomUserName, randomInt } from '@material-ui/x-grid-data-generator';
-
-const columns = [
-  { field: 'id' },
-  { field: 'username', width: 150 },
-  { field: 'age', width: 80, type: 'number' },
-];
-
-const rows = [
-  { id: 1, username: randomUserName(), age: randomInt(10, 80) },
-  { id: 2, username: randomUserName(), age: randomInt(10, 80) },
-  { id: 3, username: randomUserName(), age: randomInt(10, 80) },
-  { id: 4, username: randomUserName(), age: randomInt(10, 80) },
-  { id: 5, username: randomUserName(), age: randomInt(10, 80) },
-  { id: 6, username: randomUserName(), age: randomInt(10, 80) },
-  { id: 7, username: randomUserName(), age: randomInt(10, 80) },
-  { id: 8, username: randomUserName(), age: randomInt(10, 80) },
-];
+import { useDemoData } from '@material-ui/x-grid-data-generator';
 
 export default function DisableRowSelection() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+    maxColumns: 6,
+  });
+
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        columns={columns}
-        rows={rows}
-        isRowSelectable={(params) => Number(params.id) % 2 === 0}
+        {...data}
+        isRowSelectable={(params) => params.row.quantity > 50000}
         checkboxSelection
       />
     </div>
