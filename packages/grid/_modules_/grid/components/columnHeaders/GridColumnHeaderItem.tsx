@@ -22,7 +22,6 @@ import { GridColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
 import { GridOptions } from '../../models/gridOptions';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { GridApiContext } from '../GridApiContext';
-import { GRID_HEADER_CELL_CSS_CLASS } from '../../constants/cssClassesConstants';
 import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
 import { GridColumnHeaderTitle } from './GridColumnHeaderTitle';
 import { GridColumnHeaderSeparator } from './GridColumnHeaderSeparator';
@@ -125,7 +124,6 @@ export const GridColumnHeaderItem = React.memo(
     );
 
     const cssClasses = clsx(
-      GRID_HEADER_CELL_CSS_CLASS,
       column.headerClassName,
       column.headerAlign === 'center' && 'MuiDataGrid-colCellCenter',
       column.headerAlign === 'right' && 'MuiDataGrid-colCellRight',
@@ -136,7 +134,7 @@ export const GridColumnHeaderItem = React.memo(
         'MuiDataGrid-colCellNumeric': isColumnNumeric,
         'MuiDataGrid-withBorder': showColumnRightBorder,
       },
-      classes?.columnHeader,
+      classes?.colCell,
     );
 
     const width = column.width!;

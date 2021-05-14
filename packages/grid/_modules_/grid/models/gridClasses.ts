@@ -4,9 +4,9 @@ export interface GridClasses {
    */
   root?: string;
   /**
-   * Styles applied to the columnHeader element.
+   * Styles applied to the colCell element.
    */
-  columnHeader?: string;
+  colCell?: string;
   /**
    * Styles applied to the row element.
    */

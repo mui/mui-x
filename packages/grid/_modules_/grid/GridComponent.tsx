@@ -112,7 +112,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
         <NoSsr>
           <GridRoot
             ref={handleRef}
-            className={clsx('MuiDataGrid-root', internalOptions.classes?.root, props.className)}
+            className={clsx(internalOptions.classes?.root, props.className)}
           >
             <ErrorBoundary
               hasError={errorState != null}

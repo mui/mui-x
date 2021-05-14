@@ -9,7 +9,6 @@ import {
   GRID_ROW_OVER,
 } from '../constants/eventsConstants';
 import { GridRowId } from '../models';
-import { GRID_ROW_CSS_CLASS } from '../constants/cssClassesConstants';
 import { isFunction } from '../utils';
 import { gridDensityRowHeightSelector } from '../hooks/features/density';
 import { GridApiContext } from './GridApiContext';
@@ -63,7 +62,7 @@ export const GridRow = (props: GridRowProps) => {
   const rowClassName =
     isFunction(options.getRowClassName) &&
     options.getRowClassName(apiRef!.current.getRowParams(id));
-  const cssClasses = clsx(GRID_ROW_CSS_CLASS, className, rowClassName, options.classes?.row, {
+  const cssClasses = clsx(className, rowClassName, options.classes?.row, {
     'Mui-selected': selected,
   });
 
