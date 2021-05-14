@@ -55,9 +55,9 @@ export async function sleep(duration: number) {
 }
 
 export function getColumnValues(colIndex: number = 0) {
-  return Array.from(document.querySelectorAll(`[role="cell"][aria-colindex="${colIndex}"]`)).map(
-    (node) => node!.textContent,
-  );
+  return Array.from(
+    document.querySelectorAll(`[role="cell"][aria-colindex="${colIndex + 1}"]`),
+  ).map((node) => node!.textContent);
 }
 
 export function getColumnHeaderCell(colIndex: number): HTMLElement {
