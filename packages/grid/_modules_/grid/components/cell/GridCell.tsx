@@ -166,7 +166,7 @@ export const GridCell = React.memo((props: GridCellProps) => {
       data-rowselected={isSelected}
       data-editable={isEditable}
       data-mode={cellMode}
-      aria-colindex={colIndex}
+      aria-colindex={colIndex + 1}
       style={style}
       tabIndex={tabIndex}
       {...eventsHandlers}
