@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import {
   gridDensityHeaderHeightSelector,
@@ -6,7 +7,6 @@ import {
 } from '../../hooks/features/density/densitySelector';
 import { gridDataContainerHeightSelector } from '../../hooks/root/gridContainerSizesSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
-import { classnames } from '../../utils';
 import { GridApiContext } from '../GridApiContext';
 
 export interface GridWindowProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -50,7 +50,7 @@ export const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(func
     >
       <div
         ref={ref}
-        className={classnames('MuiDataGrid-window', className)}
+        className={clsx('MuiDataGrid-window', className)}
         {...other}
         style={{ top: headerHeight, overflowY: autoHeight ? 'hidden' : 'auto' }}
       />

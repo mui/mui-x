@@ -1,84 +1,55 @@
 import * as React from 'react';
-import { GridColumnMenuState } from '../../../hooks/features/columnMenu/columnMenuState';
-import { GridState } from '../../../hooks/features/core/gridState';
-import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
-import { findHeaderElementFromField } from '../../../utils/domUtils';
 import { GridApiContext } from '../../GridApiContext';
 import { GridMenu } from '../GridMenu';
 
-const columnMenuStateSelector = (state: GridState) => state.columnMenu;
-
 export interface GridColumnHeaderMenuProps {
+  columnMenuId: string;
+  columnMenuButtonId: string;
   ContentComponent: React.JSXElementConstructor<any>;
   contentComponentProps?: any;
+  field: string;
+  open: boolean;
+  target: Element | null;
 }
 
 export function GridColumnHeaderMenu({
+  columnMenuId,
+  columnMenuButtonId,
   ContentComponent,
   contentComponentProps,
+  field,
+  open,
+  target,
 }: GridColumnHeaderMenuProps) {
   const apiRef = React.useContext(GridApiContext);
-  const columnMenuState = useGridSelector(apiRef!, columnMenuStateSelector);
-  const currentColumn = columnMenuState.field
-    ? apiRef?.current.getColumnFromField(columnMenuState.field)
-    : null;
-  const [target, setTarget] = React.useState<Element | null>(null);
+  const currentColumn = apiRef?.current.getColumnFromField(field);
 
-  // TODO: Fix issue with portal in V5
-  const hideTimeout = React.useRef<any>();
-  const immediateTimeout = React.useRef<any>();
-  const hideMenu = React.useCallback(() => {
-    apiRef?.current.hideColumnMenu();
-  }, [apiRef]);
-
-  const hideMenuDelayed = React.useCallback(() => {
-    hideTimeout.current = setTimeout(hideMenu, 50);
-  }, [hideMenu]);
-
-  const updateColumnMenu = React.useCallback(
-    ({ open, field }: GridColumnMenuState) => {
-      if (field && open) {
-        immediateTimeout.current = setTimeout(() => clearTimeout(hideTimeout.current), 0);
-
-        const headerCellEl = findHeaderElementFromField(
-          apiRef!.current!.rootElementRef!.current!,
-          field!,
-        );
-        const menuIconElement = headerCellEl!.querySelector('.MuiDataGrid-menuIconButton');
-        setTarget(menuIconElement);
-      }
+  const hideMenu = React.useCallback(
+    (event) => {
+      // Prevent triggering the sorting
+      event.stopPropagation();
+      apiRef?.current.hideColumnMenu();
     },
     [apiRef],
   );
 
-  React.useEffect(() => {
-    updateColumnMenu(columnMenuState);
-  }, [columnMenuState, updateColumnMenu]);
-
-  React.useEffect(() => {
-    return () => {
-      clearTimeout(hideTimeout.current);
-      clearTimeout(immediateTimeout.current);
-    };
-  }, []);
-
-  if (!target || !currentColumn) {
+  if (!target) {
     return null;
   }
 
   return (
     <GridMenu
       placement={`bottom-${currentColumn!.align === 'right' ? 'start' : 'end'}` as any}
-      open={columnMenuState.open}
+      open={open}
       target={target}
-      onClickAway={hideMenuDelayed}
+      onClickAway={hideMenu}
     >
       <ContentComponent
         currentColumn={currentColumn}
         hideMenu={hideMenu}
-        open={columnMenuState.open}
-        id={columnMenuState.id}
-        labelledby={columnMenuState.labelledby}
+        open={open}
+        id={columnMenuId}
+        labelledby={columnMenuButtonId}
         {...contentComponentProps}
       />
     </GridMenu>

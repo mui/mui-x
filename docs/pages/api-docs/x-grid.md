@@ -130,6 +130,7 @@ Api of the `components` props of type `GridSlotsComponent`
 | <span class="prop-name">ColumnMenuIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">TripleDotsVerticalIcon</span> | Icon displayed on the side of the column header title to display the filter input component. |
 | <span class="prop-name">ColumnFilteredIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">FilterAltIcon</span> | Icon displayed on the column header menu to show that a filer has been applied to the column. |
 | <span class="prop-name">ColumnSelectorIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">ColumnIcon</span> | Icon displayed on the column menu selector tab. |
+| <span class="prop-name">ColumnUnsortedIcon</span> | <span class="prop-type">React.ElementType<br>&#124;&nbsp;null </span> | <span class="prop-type">GridColumnUnsortedIcon</span> | Icon displayed on the side of the column header title when unsorted. |
 | <span class="prop-name">ColumnSortedAscendingIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">ArrowUpwardIcon</span> | Icon displayed on the side of the column header title when sorted in Ascending order. |
 | <span class="prop-name">ColumnSortedDescendingIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">ArrowDownwardIcon</span> | Icon displayed on the side of the column header title when sorted in Descending order.|
 | <span class="prop-name">ColumnResizeIcon</span> | <span class="prop-type">elementType </span> | <span class="prop-type">SeparatorIcon</span> |  Icon displayed in between two column headers that allows to resize the column header. |
@@ -158,6 +159,7 @@ Api of the `components` props of type `GridSlotsComponent`
 |  | <span class="prop-name">.MuiDataGrid-colCellRight</span> | Styles applied to the aligned right header cell element.|
 |  | <span class="prop-name">.MuiDataGrid-colCellTitle</span> | Styles applied to the header cell title element.|
 |  | <span class="prop-name">.MuiDataGrid-columnSeparator</span> | Styles applied to the header cell separator element.|
+|  | <span class="prop-name">.MuiDataGrid-withColumnMenu</span> | Styles applied to the header cell that has a column menu.|
 |  | <span class="prop-name">.MuiDataGrid-iconSeparator</span> | Styles applied to the header cell separator icon element.|
 |  | <span class="prop-name">.MuiDataGrid-dataContainer</span> | Styles applied to the data container element.|
 |  | <span class="prop-name">.MuiDataGrid-window</span> | Styles applied to the window element.|

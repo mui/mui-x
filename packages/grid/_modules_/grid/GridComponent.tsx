@@ -5,10 +5,10 @@
 import * as React from 'react';
 import { useForkRef } from '@material-ui/core/utils';
 import NoSsr from '@material-ui/core/NoSsr';
+import clsx from 'clsx';
 import { GridAutoSizer } from './components/GridAutoSizer';
 import { GridColumnsHeader } from './components/columnHeaders/GridColumnHeaders';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { GridColumnHeaderMenu } from './components/menu/columnMenu/GridColumnHeaderMenu';
 import { GridColumnsContainer } from './components/containers/GridColumnsContainer';
 import { GridMainContainer } from './components/containers/GridMainContainer';
 import { GridRoot } from './components/containers/GridRoot';
@@ -52,7 +52,6 @@ import { useLocaleText } from './hooks/features/localeText/useLocaleText';
 import { useGridCsvExport } from './hooks/features/export';
 import { useGridInfiniteLoader } from './hooks/features/infiniteLoader';
 import { visibleGridRowCountSelector } from './hooks/features/filter/gridFilterSelector';
-import { classnames } from './utils/classnames';
 
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {
@@ -113,11 +112,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
         <NoSsr>
           <GridRoot
             ref={handleRef}
-            className={classnames(
-              'MuiDataGrid-root',
-              internalOptions.classes?.root,
-              props.className,
-            )}
+            className={clsx('MuiDataGrid-root', internalOptions.classes?.root, props.className)}
           >
             <ErrorBoundary
               hasError={errorState != null}
@@ -137,12 +132,6 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                 <components.Header {...props.componentsProps?.header} />
               </div>
               <GridMainContainer>
-                <GridColumnHeaderMenu
-                  ContentComponent={components.ColumnMenu}
-                  contentComponentProps={{
-                    ...props.componentsProps?.columnMenu,
-                  }}
-                />
                 <Watermark licenseStatus={props.licenseStatus} />
                 <GridColumnsContainer ref={columnsContainerRef}>
                   <GridColumnsHeader ref={columnsHeaderRef} />

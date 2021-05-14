@@ -1,5 +1,6 @@
 import { capitalize } from '@material-ui/core/utils';
 import * as React from 'react';
+import clsx from 'clsx';
 import { GRID_CELL_CSS_CLASS } from '../../constants/cssClassesConstants';
 import {
   GRID_CELL_BLUR,
@@ -17,11 +18,11 @@ import {
   GRID_CELL_DRAG_OVER,
 } from '../../constants/eventsConstants';
 import { GridAlignment, GridCellMode, GridCellValue, GridRowId } from '../../models/index';
-import { classnames } from '../../utils/index';
 import { GridApiContext } from '../GridApiContext';
 
 export interface GridCellProps {
   align: GridAlignment;
+  className?: string;
   colIndex: number;
   cssClass?: string;
   field: string;
@@ -38,12 +39,12 @@ export interface GridCellProps {
   cellMode?: GridCellMode;
   children: React.ReactElement | null;
   tabIndex: 0 | -1;
-  className?: string;
 }
 
 export const GridCell = React.memo((props: GridCellProps) => {
   const {
     align,
+    className,
     children,
     colIndex,
     cellMode,
@@ -60,14 +61,13 @@ export const GridCell = React.memo((props: GridCellProps) => {
     tabIndex,
     value,
     width,
-    className,
   } = props;
 
   const valueToRender = formattedValue == null ? value : formattedValue;
   const cellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = React.useContext(GridApiContext);
 
-  const cssClasses = classnames(
+  const cssClasses = clsx(
     GRID_CELL_CSS_CLASS,
     cssClass,
     className,

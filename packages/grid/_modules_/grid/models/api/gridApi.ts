@@ -2,7 +2,7 @@ import { ColumnMenuApi } from './columnMenuApi';
 import { GridFocusApi } from './gridFocusApi';
 import { GridParamsApi } from './gridParamsApi';
 import { GridComponentsApi } from './gridComponentsApi';
-import { FilterApi } from './filterApi';
+import { GridFilterApi } from './gridFilterApi';
 import { GridEditRowApi } from './gridEditRowApi';
 import { PreferencesPanelApi } from './preferencesPanelApi';
 import { GridRowApi } from './gridRowApi';
@@ -37,7 +37,7 @@ export interface GridApi
     GridPaginationApi,
     GridCsvExportApi,
     GridFocusApi,
-    FilterApi,
+    GridFilterApi,
     ColumnMenuApi,
     PreferencesPanelApi,
     LocaleTextApi {}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { classnames } from '../../utils';
+import clsx from 'clsx';
 
 export type GridToolbarContainerProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -12,7 +12,7 @@ export const GridToolbarContainer = React.forwardRef<HTMLDivElement, GridToolbar
     }
 
     return (
-      <div ref={ref} className={classnames('MuiDataGrid-toolbar', className)} {...other}>
+      <div ref={ref} className={clsx('MuiDataGrid-toolbar', className)} {...other}>
         {children}
       </div>
     );
