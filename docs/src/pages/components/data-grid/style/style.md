@@ -98,6 +98,14 @@ const columns: GridColumns = [
 
 {{"demo": "pages/components/data-grid/style/StylingCellsGrid.js", "bg": "inline"}}
 
+## Using the `classes` object prop
+
+When the `className` property isn't enough, and you need to access deeper elements, you can take advantage of the `classes` object property to customize the CSS injected by Material-UI.
+
+{{"demo": "pages/components/data-grid/style/StylingWithClassesProp.js", "bg": "inline"}}
+
+You can check the [overriding styles with classes](/customization/components/#overriding-styles-with-classes) section for more information.
+
 ## Custom theme
 
 The following demo leverages the CSS customization API to match the Ant Design specification.
