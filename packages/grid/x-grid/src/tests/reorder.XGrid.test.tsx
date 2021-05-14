@@ -106,7 +106,7 @@ describe('<XGrid /> - Reorder', () => {
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
     const dragCol = getColumnHeaderCell(0).firstChild;
 
-    const targetCell = getCell(0, 2);
+    const targetCell = getCell(0, 1);
     fireEvent.dragStart(dragCol);
     fireEvent.dragEnter(targetCell);
     const dragOverEvent = createEvent.dragOver(targetCell);

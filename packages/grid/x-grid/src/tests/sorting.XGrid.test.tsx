@@ -165,7 +165,7 @@ describe('<XGrid /> - Sorting', () => {
     it('should do a multi-sorting pressing Enter while shiftKey is pressed', () => {
       render(<TestCase sortModel={[{ field: 'year', sort: 'desc' }]} />);
       expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
-      getColumnHeaderCell(1).focus();
+      getColumnHeaderCell(0).focus();
       fireEvent.keyDown(getColumnHeaderCell(0), { key: 'Enter', shiftKey: true });
       expect(getColumnValues()).to.deep.equal(['Puma', 'Adidas', 'Nike']);
     });
