@@ -34,7 +34,7 @@ As an example, you could override the column menu and pass additional props as b
 ### Getting props
 
 While overriding component slots, you might need to access the grid data.
-Therefore, the grid expose a `useGridSlotComponentProps` hook which allows to retrieve the following props.
+Therefore, the grid exposes a `useGridSlotComponentProps` hook which allows to retrieve the following props.
 
 - `state`: the current grid state.
 - `rows`: the current rows in the grid.
