@@ -664,3 +664,77 @@ export function NoResultsSnap() {
     </div>
   );
 }
+const data = [
+  {
+    id: "1",
+    name: "Paris",
+    country: {
+      id: "1",
+      name: "France",
+      alpha2: "FR"
+    }
+  },
+  {
+    id: "2",
+    name: "Rouen",
+    country: {
+      id: "1",
+      name: "France",
+      alpha2: "FR"
+    }
+  },
+  {
+    id: "3",
+    name: "London",
+    country: {
+      id: "2",
+      name: "United Kingdom",
+      alpha2: "GB"
+    }
+  }
+];
+
+// Columns 1 : the filter doesn't work on Country
+
+const columns1 = [
+  {
+    field: "name",
+    headerName: "City",
+    flex: 0.5
+  },
+  {
+    field: "country", // field exists in data
+    headerName: "Country",
+    valueGetter: (cellParams) => cellParams.value.name,
+    flex: 0.5
+  }
+];
+
+// Columns 2 : the filter works on Country
+
+const columns2 = [
+  {
+    field: "name",
+    headerName: "City",
+    flex: 0.5
+  },
+  {
+    field: "country2", // field doesn't exist in data
+    headerName: "Country",
+    valueGetter: (cellParams) => cellParams.row.country.name,
+    flex: 0.5
+  }
+];
+
+export function FilterValueGetter() {
+  return (
+    <>
+      <div style={{ height: 400, width: "100%" }}>
+        <DataGrid rows={data} columns={columns1} />
+      </div>
+      <div style={{ height: 400, width: "100%", marginTop: "20px" }}>
+        <DataGrid rows={data} columns={columns2} />
+      </div>
+    </>
+  );
+}
