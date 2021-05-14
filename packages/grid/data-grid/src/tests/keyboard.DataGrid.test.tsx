@@ -153,9 +153,9 @@ describe('<DataGrid /> - Keyboard', () => {
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
     expect(getActiveCell()).to.equal('0-1');
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
-    expect(getActiveColumnHeader()).to.equal('2');
+    expect(getActiveColumnHeader()).to.equal('1');
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
-    expect(getActiveColumnHeader()).to.equal('3');
+    expect(getActiveColumnHeader()).to.equal('2');
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
     expect(getActiveCell()).to.equal('0-2');
   });
@@ -237,7 +237,7 @@ describe('<DataGrid /> - Keyboard', () => {
     fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
     expect(getActiveCell()).to.equal('2-1');
     fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
-    expect(getActiveColumnHeader()).to.equal('2');
+    expect(getActiveColumnHeader()).to.equal('1');
     fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
     expect(getActiveCell()).to.equal('2-1');
   });

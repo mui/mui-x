@@ -46,13 +46,13 @@ describe('<XGrid /> - Pagination', () => {
 
     render(<GridTest />);
 
-    let cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
+    let cell = document.querySelector('[role="cell"][aria-colindex="1"]')!;
     expect(cell).to.have.text('Nike');
     act(() => {
       apiRef.current.setPage(1);
     });
 
-    cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
+    cell = document.querySelector('[role="cell"][aria-colindex="1"]')!;
     expect(cell).to.have.text('Adidas');
   });
 });

@@ -147,8 +147,8 @@ describe('<XGrid /> - Sorting', () => {
       it(`should do a multi-sorting when clicking the header cell while ${key} is pressed`, () => {
         render(<TestCase sortModel={[{ field: 'year', sort: 'desc' }]} />);
         expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
-        fireEvent.click(getColumnHeaderCell(1), { [key]: true });
-        expect(getColumnValues()).to.deep.equal(['Puma', 'Adidas', 'Nike']);
+        fireEvent.click(getColumnHeaderCell(0), { [key]: true });
+        expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
       });
     });
 
@@ -173,7 +173,7 @@ describe('<XGrid /> - Sorting', () => {
     it(`should not do a multi-sorting if no multiple key is pressed`, () => {
       render(<TestCase sortModel={[{ field: 'year', sort: 'desc' }]} />);
       expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
-      fireEvent.click(getColumnHeaderCell(1));
+      fireEvent.click(getColumnHeaderCell(0));
       expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     });
 
