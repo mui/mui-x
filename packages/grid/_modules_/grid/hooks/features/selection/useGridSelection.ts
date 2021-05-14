@@ -227,5 +227,5 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
       return state;
     });
     forceUpdate();
-  }, [apiRef, setGridState, options.isRowSelectable, forceUpdate, isRowSelectable]);
+  }, [apiRef, setGridState, forceUpdate, isRowSelectable]);
 };
