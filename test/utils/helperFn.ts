@@ -61,7 +61,9 @@ export function getColumnValues(colIndex: number = 0) {
 }
 
 export function getColumnHeaderCell(colIndex: number): HTMLElement {
-  const columnHeader = document.querySelector(`[role="columnheader"][aria-colindex="${colIndex}"]`);
+  const columnHeader = document.querySelector(
+    `[role="columnheader"][aria-colindex="${colIndex + 1}"]`,
+  );
   if (columnHeader == null) {
     throw new Error(`columnheader ${colIndex} not found`);
   }
@@ -76,7 +78,7 @@ export function getColumnHeadersTextContent() {
 
 export function getCell(rowIndex: number, colIndex: number): HTMLElement {
   const cell = document.querySelector(
-    `[role="cell"][data-rowindex="${rowIndex}"][aria-colindex="${colIndex}"]`,
+    `[role="cell"][data-rowindex="${rowIndex}"][aria-colindex="${colIndex + 1}"]`,
   );
   if (cell == null) {
     throw new Error(`Cell ${rowIndex} ${colIndex} not found`);

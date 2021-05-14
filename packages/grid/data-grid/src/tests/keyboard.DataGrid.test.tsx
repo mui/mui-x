@@ -92,7 +92,7 @@ describe('<DataGrid /> - Keyboard', () => {
     );
     const input = screen.getByTestId('custom-input');
     input.focus();
-    expect(getActiveCell()).to.equal('0-1');
+    expect(getActiveCell()).to.equal('0-2');
     fireEvent.keyDown(input, { key: 'ArrowLeft' });
     expect(getActiveCell()).to.equal('0-1');
   });

@@ -78,7 +78,7 @@ export function getGridCellElementFromIndexes(
   { colIndex, rowIndex }: GridCellIndexCoordinates,
 ) {
   return root.querySelector(
-    `:scope .${GRID_CELL_CSS_CLASS}[aria-colIndex='${colIndex}'][data-rowIndex='${rowIndex}']`,
+    `:scope .${GRID_CELL_CSS_CLASS}[aria-colIndex='${colIndex + 1}'][data-rowIndex='${rowIndex}']`,
   ) as HTMLDivElement;
 }
 
