@@ -193,7 +193,6 @@ describe('<DataGrid /> - Filter', () => {
     before(function beforeHook() {
       // We need to skip edge as it does not handle the date the same way as other browsers.
       if (isEdge) {
-        // Need layouting
         this.skip();
       }
     });
