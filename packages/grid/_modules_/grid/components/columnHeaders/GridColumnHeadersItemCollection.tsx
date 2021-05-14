@@ -65,7 +65,7 @@ export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemColl
         headerHeight={headerHeight}
         isDragging={col.field === dragCol}
         column={col}
-        colIndex={getColIndex(idx)}
+        colIndex={colIndex}
         isResizing={resizingColumnField === col.field}
         hasFocus={hasFocus}
         tabIndex={tabIndex}
