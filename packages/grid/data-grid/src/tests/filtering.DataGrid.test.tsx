@@ -187,7 +187,17 @@ describe('<DataGrid /> - Filter', () => {
     });
   });
 
-  describe('Date operators', () => {
+  describe('Date operators', function test() {
+    const isEdge = /edge/.test(window.navigator.userAgent);
+
+    before(function beforeHook() {
+      // We need to skip edge as it does not handle the date the same way as other browsers.
+      if (isEdge) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
     [
       { operator: 'is', value: new Date(2000, 11, 1), expected: ['12/1/2000'] },
       { operator: 'not', value: new Date(2000, 11, 1), expected: ['1/1/2001', '1/1/2002'] },
