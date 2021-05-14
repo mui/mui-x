@@ -115,7 +115,7 @@ describe('<XGrid /> - Reorder', () => {
     Object.defineProperty(dragOverEvent, 'clientX', { value: 1 });
     Object.defineProperty(dragOverEvent, 'clientY', { value: 1 });
     fireEvent(targetCell, dragOverEvent);
-    expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'type', 'desc']);
+    expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
 
     const dragEndEvent = createEvent.dragEnd(dragCol);
     Object.defineProperty(dragEndEvent, 'dataTransfer', { value: { dropEffect: 'copy' } });
