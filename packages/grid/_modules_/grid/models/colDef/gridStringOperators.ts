@@ -11,8 +11,8 @@ export const getGridStringOperators: () => GridFilterOperator[] = () => [
       }
 
       const filterRegex = new RegExp(filterItem.value, 'i');
-      return ({value}): boolean => {
-        return filterRegex.test(value && value.toString() || '');
+      return ({ value }): boolean => {
+        return filterRegex.test((value && value.toString()) || '');
       };
     },
     InputComponent: GridFilterInputValue,
@@ -23,9 +23,9 @@ export const getGridStringOperators: () => GridFilterOperator[] = () => [
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
-      return ({value}): boolean => {
+      return ({ value }): boolean => {
         return (
-          filterItem.value?.localeCompare(value && value.toString() || '', undefined, {
+          filterItem.value?.localeCompare((value && value.toString()) || '', undefined, {
             sensitivity: 'base',
           }) === 0
         );
@@ -41,8 +41,8 @@ export const getGridStringOperators: () => GridFilterOperator[] = () => [
       }
 
       const filterRegex = new RegExp(`^${filterItem.value}.*$`, 'i');
-      return ({value}): boolean => {
-        return filterRegex.test(value && value.toString() || '');
+      return ({ value }): boolean => {
+        return filterRegex.test((value && value.toString()) || '');
       };
     },
     InputComponent: GridFilterInputValue,
@@ -55,8 +55,8 @@ export const getGridStringOperators: () => GridFilterOperator[] = () => [
       }
 
       const filterRegex = new RegExp(`.*${filterItem.value}$`, 'i');
-      return ({value}): boolean => {
-        return filterRegex.test(value && value.toString() || '');
+      return ({ value }): boolean => {
+        return filterRegex.test((value && value.toString()) || '');
       };
     },
     InputComponent: GridFilterInputValue,

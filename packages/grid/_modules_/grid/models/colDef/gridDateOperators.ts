@@ -11,7 +11,7 @@ export const getGridDateOperators: (showTime?: boolean) => GridFilterOperator[] 
       }
 
       const time = new Date(filterItem.value).getTime();
-      return ({value}): boolean => {
+      return ({ value }): boolean => {
         if (!value) {
           return false;
         }
@@ -32,7 +32,7 @@ export const getGridDateOperators: (showTime?: boolean) => GridFilterOperator[] 
       }
 
       const time = new Date(filterItem.value).getTime();
-      return ({value}): boolean => {
+      return ({ value }): boolean => {
         if (!value) {
           return false;
         }
@@ -53,7 +53,7 @@ export const getGridDateOperators: (showTime?: boolean) => GridFilterOperator[] 
       }
 
       const time = new Date(filterItem.value).getTime();
-      return ({value}): boolean => {
+      return ({ value }): boolean => {
         if (!value) {
           return false;
         }
@@ -74,7 +74,7 @@ export const getGridDateOperators: (showTime?: boolean) => GridFilterOperator[] 
       }
 
       const time = new Date(filterItem.value).getTime();
-      return ({value}): boolean => {
+      return ({ value }): boolean => {
         if (!value) {
           return false;
         }
@@ -95,7 +95,7 @@ export const getGridDateOperators: (showTime?: boolean) => GridFilterOperator[] 
       }
 
       const time = new Date(filterItem.value).getTime();
-      return ({value}): boolean => {
+      return ({ value }): boolean => {
         if (!value) {
           return false;
         }
@@ -116,7 +116,7 @@ export const getGridDateOperators: (showTime?: boolean) => GridFilterOperator[] 
       }
 
       const time = new Date(filterItem.value).getTime();
-      return ({value}): boolean => {
+      return ({ value }): boolean => {
         if (!value) {
           return false;
         }

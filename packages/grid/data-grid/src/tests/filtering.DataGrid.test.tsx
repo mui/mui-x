@@ -115,6 +115,31 @@ describe('<DataGrid /> - Filter', () => {
       });
       expect(getColumnValues()).to.deep.equal(['Nike']);
     });
+
+    it('should allow object as value and work with valueGetter', () => {
+      render(
+        <TestCase
+          value={'a'}
+          operator={'contains'}
+          rows={[
+            {
+              id: 3,
+              brand: { name: 'Asics' },
+            },
+            {
+              id: 4,
+              brand: { name: 'RedBull' },
+            },
+            {
+              id: 5,
+              brand: { name: 'Hugo' },
+            },
+          ]}
+          columns={[{ field: 'brand', valueGetter: (params) => params.value.name }]}
+        />,
+      );
+      expect(getColumnValues()).to.deep.equal(['Asics']);
+    });
   });
 
   describe('boolean operators', () => {

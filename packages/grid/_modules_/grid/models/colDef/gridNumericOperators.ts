@@ -11,7 +11,7 @@ export const getGridNumericColumnOperators: () => GridFilterOperator[] = () => [
         return null;
       }
 
-      return ({value}): boolean => {
+      return ({ value }): boolean => {
         return Number(value) === Number(filterItem.value);
       };
     },
@@ -26,7 +26,7 @@ export const getGridNumericColumnOperators: () => GridFilterOperator[] = () => [
         return null;
       }
 
-      return ({value}): boolean => {
+      return ({ value }): boolean => {
         return Number(value) !== Number(filterItem.value);
       };
     },
@@ -41,7 +41,7 @@ export const getGridNumericColumnOperators: () => GridFilterOperator[] = () => [
         return null;
       }
 
-      return ({value}): boolean => {
+      return ({ value }): boolean => {
         return Number(value) > Number(filterItem.value);
       };
     },
@@ -56,7 +56,7 @@ export const getGridNumericColumnOperators: () => GridFilterOperator[] = () => [
         return null;
       }
 
-      return ({value}): boolean => {
+      return ({ value }): boolean => {
         return Number(value) >= Number(filterItem.value);
       };
     },
@@ -71,7 +71,7 @@ export const getGridNumericColumnOperators: () => GridFilterOperator[] = () => [
         return null;
       }
 
-      return ({value}): boolean => {
+      return ({ value }): boolean => {
         return Number(value) < Number(filterItem.value);
       };
     },
@@ -86,7 +86,7 @@ export const getGridNumericColumnOperators: () => GridFilterOperator[] = () => [
         return null;
       }
 
-      return ({value}): boolean => {
+      return ({ value }): boolean => {
         return Number(value) <= Number(filterItem.value);
       };
     },
