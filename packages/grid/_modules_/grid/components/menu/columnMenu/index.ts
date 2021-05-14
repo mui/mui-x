@@ -5,3 +5,5 @@ export * from './GridColumnHeaderMenu';
 export * from './GridColumnMenu';
 export * from './HideGridColMenuItem';
 export * from './SortGridMenuItems';
+export * from './GridColumnMenuContainer';
+export * from './GridColumnMenuProps';
