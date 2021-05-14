@@ -16,6 +16,13 @@ export function parseDate(value: string): Date {
   return new Date(Number(year), Number(month) - 1, Number(day));
 }
 
+export function parseDateTime(value: string): Date {
+  const [date, time] = value.split('T');
+  const [year, month, day] = date.split('-');
+  const [hours, minutes] = time.split(':');
+  return new Date(Number(year), Number(month) - 1, Number(day), Number(hours), Number(minutes));
+}
+
 export function formatDateToLocalInputDate({
   value,
   withTime,
