@@ -28,7 +28,7 @@ export const GridRow = (props: GridRowProps) => {
   const ariaRowIndex = rowIndex + 2; // 1 for the header row and 1 as it's 1 based
   const apiRef = React.useContext(GridApiContext);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
-  const options = useGridSelector(apiRef, optionsSelector);
+  const { classes, getRowClassName } = useGridSelector(apiRef, optionsSelector);
 
   const publish = React.useCallback(
     (eventName: string) => (event: React.MouseEvent) => {
@@ -60,9 +60,8 @@ export const GridRow = (props: GridRowProps) => {
   };
 
   const rowClassName =
-    isFunction(options.getRowClassName) &&
-    options.getRowClassName(apiRef!.current.getRowParams(id));
-  const cssClasses = clsx(className, rowClassName, options.classes?.row, {
+    isFunction(getRowClassName) && getRowClassName(apiRef!.current.getRowParams(id));
+  const cssClasses = clsx(className, rowClassName, classes?.row, {
     'Mui-selected': selected,
   });
 
