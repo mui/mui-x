@@ -194,7 +194,7 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(cell).to.have.class('MuiDataGrid-cellEditable');
     expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
     expect(cell).to.have.text('n');
-    expect(getActiveCell()).to.equal('2-0');
+    expect(getActiveCell()).to.equal('2-1');
   });
 
   it('should allow to save an edit changes using Tab', () => {
@@ -212,7 +212,7 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(cell).to.have.class('MuiDataGrid-cellEditable');
     expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
     expect(cell).to.have.text('n');
-    expect(getActiveCell()).to.equal('1-1');
+    expect(getActiveCell()).to.equal('1-2');
   });
 
   it('should allow to save an edit changes using shift+Tab', () => {
@@ -230,7 +230,7 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(cell).to.have.class('MuiDataGrid-cellEditable');
     expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
     expect(cell).to.have.text('1970');
-    expect(getActiveCell()).to.equal('1-0');
+    expect(getActiveCell()).to.equal('1-1');
   });
 
   it('should the focus to the new field', () => {
