@@ -188,7 +188,7 @@ describe('<DataGrid /> - Filter', () => {
   });
 
   describe('Date operators', function test() {
-    const isEdge = /edge/.test(window.navigator.userAgent);
+    const isEdge = /Edge/.test(window.navigator.userAgent);
 
     before(function beforeHook() {
       // We need to skip edge as it does not handle the date the same way as other browsers.
