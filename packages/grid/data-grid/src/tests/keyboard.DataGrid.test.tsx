@@ -272,9 +272,9 @@ describe('<DataGrid /> - Keyboard', () => {
 
     getColumnHeaderCell(0).focus();
     expect(getActiveColumnHeader()).to.equal('1');
-    expect(getColumnValues(0)).to.deep.equal(['John', 'Doe']);
+    expect(getColumnValues(1)).to.deep.equal(['John', 'Doe']);
     fireEvent.keyDown(getColumnHeaderCell(0), { key: 'Enter' });
     fireEvent.keyDown(getColumnHeaderCell(0), { key: 'Enter' });
-    expect(getColumnValues(0)).to.deep.equal(['Doe', 'John']);
+    expect(getColumnValues(1)).to.deep.equal(['Doe', 'John']);
   });
 });
