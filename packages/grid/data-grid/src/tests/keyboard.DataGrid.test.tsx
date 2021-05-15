@@ -178,9 +178,9 @@ describe('<DataGrid /> - Keyboard', () => {
 
     render(<KeyboardTest />);
     getCell(0, 0).focus();
-    expect(getActiveCell()).to.equal('0-0');
+    expect(getActiveCell()).to.equal('0-1');
     fireEvent.keyDown(document.activeElement!, { key: ' ' });
-    expect(getActiveCell()).to.equal('4-0');
+    expect(getActiveCell()).to.equal('4-1');
   });
 
   it('Space only should go to the bottom of the page even with small number of rows', () => {
@@ -199,12 +199,12 @@ describe('<DataGrid /> - Keyboard', () => {
 
     render(<KeyboardTest />);
     getCell(1, 1).focus();
-    expect(getActiveCell()).to.equal('1-1');
+    expect(getActiveCell()).to.equal('1-2');
     fireEvent.keyDown(document.activeElement!, { key: 'Home' });
-    expect(getActiveCell()).to.equal('1-0');
+    expect(getActiveCell()).to.equal('1-1');
     fireEvent.keyDown(document.activeElement!, { key: 'End' });
     await waitFor(() => getCell(1, 19));
-    expect(getActiveCell()).to.equal('1-19');
+    expect(getActiveCell()).to.equal('1-20');
   });
 
   it('Page Down / Page Up navigation', () => {
