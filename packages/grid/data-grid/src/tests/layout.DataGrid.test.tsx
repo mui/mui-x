@@ -42,7 +42,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         </div>,
       );
       rows.push({ id: 3, brand: 'Louis Vuitton' });
-    }).to.throw('Cannot add property 3, object is not extensible');
+    }).to.throw();
   });
 
   describe('Layout', () => {
