@@ -56,17 +56,17 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
   function GridComponent(props, ref) {
     const {
       apiRef: apiRefProp,
+      autoHeight,
+      className,
       columns,
-      rows,
-      getRowId,
       components: componentsProp,
       componentsProps,
-      state,
-      loading,
-      className,
+      getRowId,
       licenseStatus,
+      loading,
       nonce,
-      autoHeight,
+      rows,
+      state,
     } = props;
 
     if (process.env.NODE_ENV !== 'production') {
