@@ -36,6 +36,19 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     columns: [{ field: 'brand' }],
   };
 
+  it('should throw an error if rows props is being mutated', () => {
+    expect(() => {
+      // We don't want to freeze baselineProps.rows
+      const rows = [...baselineProps.rows];
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} rows={rows} />
+        </div>,
+      );
+      rows.push({ id: 3, brand: 'Louis Vuitton' });
+    }).to.throw('Cannot add property 3, object is not extensible');
+  });
+
   describe('Layout', () => {
     before(function beforeHook() {
       if (/jsdom/.test(window.navigator.userAgent)) {
@@ -66,19 +79,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       await raf(); // wait for the AutoSize's dimension detection logic
       rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
       expect(rect.width).to.equal(400 - 2);
-    });
-
-    it('should throw an error if rows props is being mutated', () => {
-      expect(() => {
-        // We don't want to freeze baselineProps.rows
-        const rows = [...baselineProps.rows];
-        render(
-          <div style={{ width: 300, height: 300 }}>
-            <DataGrid {...baselineProps} rows={rows} />
-          </div>,
-        );
-        rows.push({ id: 3, brand: 'Louis Vuitton' });
-      }).to.throw('Cannot add property 3, object is not extensible');
     });
 
     // Adapation of describeConformance()
