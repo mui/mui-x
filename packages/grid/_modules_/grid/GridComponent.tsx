@@ -69,8 +69,10 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
       autoHeight,
     } = props;
 
-    // freeze rows for immutability
-    Object.freeze(rows);
+    if (process.env.NODE_ENV !== 'production') {
+      // Freeze rows for immutability
+      Object.freeze(rows);
+    }
 
     const rootContainerRef: GridRootContainerRef = React.useRef<HTMLDivElement>(null);
     const handleRef = useForkRef(rootContainerRef, ref);
