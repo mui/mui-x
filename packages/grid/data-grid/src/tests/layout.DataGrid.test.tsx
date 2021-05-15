@@ -68,33 +68,17 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       expect(rect.width).to.equal(400 - 2);
     });
 
-    it('should throw an error if rows props is being mutated. Error should be thrown due to Object.freeze(rows) on rows prop', () => {
-      const TestDataGrid = () => {
-        const [rows, setRows] = React.useState(baselineProps.rows);
-
-        const addRow = () => {
-          // Error: mutating rows directly
-          rows.push({
-            id: 3,
-            brand: 'Louis Vuitton',
-          });
-          setRows(rows);
-        };
-
-        return (
-          <React.Fragment>
-            <div style={{ width: 300, height: 300 }}>
-              <DataGrid {...baselineProps} />
-            </div>
-            <button onClick={addRow}>Add a new row</button>
-          </React.Fragment>
-        );
-      };
-      render(<TestDataGrid />);
-      const addRowButton = screen.getByText('Add a new row');
+    it('should throw an error if rows props is being mutated', () => {
       expect(() => {
-        fireEvent.click(addRowButton);
-      }).to.throw();
+        // We don't want to freeze baselineProps.rows
+        const rows = [...baselineProps.rows];
+        render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...baselineProps} rows={rows} />
+          </div>,
+        );
+        rows.push({ id: 3, brand: 'Louis Vuitton' });
+      }).to.throw('Cannot add property 3, object is not extensible');
     });
 
     // Adapation of describeConformance()
