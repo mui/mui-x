@@ -67,8 +67,7 @@ describe('<DataGrid /> - Pagination', () => {
           <DataGrid {...baselineProps} rows={rows} page={1} pageSize={1} />
         </div>,
       );
-      const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
-      expect(cell).to.have.text('Addidas');
+      expect(getColumnValues()).to.deep.equal(['Addidas']);
     });
 
     it('should trigger onPageChange when clicking on next page', () => {
