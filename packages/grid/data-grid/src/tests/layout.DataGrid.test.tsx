@@ -4,10 +4,6 @@ import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
   ErrorBoundary,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  screen,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  fireEvent,
 } from 'test/utils';
 import { useFakeTimers, stub } from 'sinon';
 import { expect } from 'chai';
