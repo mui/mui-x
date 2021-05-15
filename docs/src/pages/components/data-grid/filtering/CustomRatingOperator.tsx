@@ -5,7 +5,6 @@ import {
   GridFilterInputValueProps,
   DataGrid,
   GridFilterItem,
-  GridColDef,
 } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
@@ -44,7 +43,7 @@ const ratingOnlyOperators = [
   {
     label: 'From',
     value: 'from',
-    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
+    getApplyFilterFn: (filterItem: GridFilterItem) => {
       if (
         !filterItem.columnField ||
         !filterItem.value ||
@@ -54,10 +53,7 @@ const ratingOnlyOperators = [
       }
 
       return (params): boolean => {
-        const rowValue = column.valueGetter
-          ? column.valueGetter(params)
-          : params.value;
-        return Number(rowValue) >= Number(filterItem.value);
+        return Number(params.value) >= Number(filterItem.value);
       };
     },
     InputComponent: RatingInputValue,

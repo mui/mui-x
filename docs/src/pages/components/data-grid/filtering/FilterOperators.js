@@ -8,12 +8,19 @@ const columns = [
     field: 'rating',
     headerName: 'Rating',
     type: 'number',
+    width: 140,
   },
   {
     field: 'dateCreated',
     headerName: 'Created on',
     width: 180,
     type: 'date',
+  },
+  {
+    field: 'isAdmin',
+    headerName: 'Is admin?',
+    width: 180,
+    type: 'boolean',
   },
 ];
 
