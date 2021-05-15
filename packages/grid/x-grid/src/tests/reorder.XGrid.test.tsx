@@ -140,7 +140,7 @@ describe('<XGrid /> - Reorder', () => {
 
     render(<Test />);
     expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'desc', 'type']);
-    const dragCol = getColumnHeaderCell(1).firstChild;
+    const dragCol = getColumnHeaderCell(0).firstChild;
 
     fireEvent.dragStart(dragCol);
     const targetCell = getCell(0, 2);
@@ -151,7 +151,7 @@ describe('<XGrid /> - Reorder', () => {
     Object.defineProperty(dragOverEvent, 'clientX', { value: 1 });
     Object.defineProperty(dragOverEvent, 'clientY', { value: 1 });
     fireEvent(targetCell, dragOverEvent);
-    expect(getColumnHeadersTextContent()).to.deep.equal(['brand', 'type', 'desc']);
+    expect(getColumnHeadersTextContent()).to.deep.equal(['desc', 'type', 'brand']);
 
     const dragEndEvent = createEvent.dragEnd(dragCol);
     Object.defineProperty(dragEndEvent, 'dataTransfer', { value: { dropEffect: 'none' } });
