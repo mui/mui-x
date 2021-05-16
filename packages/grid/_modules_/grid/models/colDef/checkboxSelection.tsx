@@ -9,7 +9,7 @@ export const checkboxSelectionColDef: ColDef = {
   width: 48,
   align: 'center',
   headerAlign: 'center',
-  resizable: true,
+  resizable: false,
   sortable: false,
   disableClickEventBubbling: true,
   valueGetter: (params) => params.rowModel.selected,
