@@ -48,27 +48,13 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should apply the page prop correctly', () => {
-      const rows = [
-        {
-          id: 0,
-          brand: 'Nike',
-        },
-        {
-          id: 1,
-          brand: 'Addidas',
-        },
-        {
-          id: 2,
-          brand: 'Puma',
-        },
-      ];
       render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} rows={rows} page={1} pageSize={1} />
+          <DataGrid {...baselineProps} page={1} pageSize={1} />
         </div>,
       );
       const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
-      expect(cell).to.have.text('Addidas');
+      expect(cell).to.have.text('Adidas');
     });
 
     it('should trigger onPageChange when clicking on next page', () => {
