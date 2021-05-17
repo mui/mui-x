@@ -148,15 +148,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
 
     describe('warnings', () => {
-      // let clock;
-      //
-      // beforeEach(() => {
-      //   clock = useFakeTimers();
-      // });
-      //
-      // afterEach(() => {
-      //   clock.restore();
-      // });
 
       it('should warn if the container has no intrinsic height', () => {
         expect(() => {
