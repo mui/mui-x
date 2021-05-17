@@ -18,5 +18,5 @@ export const gridCheckboxSelectionColDef: GridColDef = {
   renderHeader: (params) => <GridHeaderCheckbox {...params} />,
   renderCell: (params) => <GridCellCheckboxRenderer {...params} />,
   cellClassName: 'MuiDataGrid-cellCheckbox',
-  headerClassName: 'MuiDataGrid-colCellCheckbox',
+  headerClassName: 'MuiDataGrid-columnHeaderCheckbox',
 };

@@ -98,9 +98,9 @@ const columns: GridColumns = [
 
 {{"demo": "pages/components/data-grid/style/StylingCellsGrid.js", "bg": "inline"}}
 
-## Using the `classes` object prop
+## Using the `classes` prop
 
-When the `className` property isn't enough, and you need to access deeper elements, you can take advantage of the `classes` object property to customize the CSS injected by Material-UI.
+When the `className` prop isn't enough, and you need to access deeper elements, you can take advantage of the `classes` prop to customize the CSS injected by Material-UI.
 
 {{"demo": "pages/components/data-grid/style/StylingWithClassesProp.js", "bg": "inline"}}
 

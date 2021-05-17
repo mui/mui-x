@@ -212,7 +212,7 @@ describe('<XGrid /> - Sorting', () => {
       render(<TestCasePerf />);
       const header = screen
         .getByRole('columnheader', { name: 'Currency Pair' })
-        .querySelector('.MuiDataGrid-colCellTitleContainer');
+        .querySelector('.MuiDataGrid-columnHeaderTitleContainer');
 
       const t0 = performance.now();
       fireEvent.click(header);

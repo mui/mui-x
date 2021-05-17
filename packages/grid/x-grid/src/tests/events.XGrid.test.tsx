@@ -146,7 +146,7 @@ describe('<XGrid /> - Events Params', () => {
       render(<TestEvents onCellClick={handleClick} />);
       const header = screen
         .getByRole('columnheader', { name: 'first' })
-        .querySelector('.MuiDataGrid-colCellTitleContainer');
+        .querySelector('.MuiDataGrid-columnHeaderTitleContainer');
       fireEvent.click(header);
 
       const cell01 = getCell(0, 1);

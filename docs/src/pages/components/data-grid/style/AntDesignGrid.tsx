@@ -77,7 +77,7 @@ const useStyles = makeStyles((theme: Theme) =>
       '& .MuiDataGrid-iconSeparator': {
         display: 'none',
       },
-      '& .MuiDataGrid-colCell, .MuiDataGrid-cell': {
+      '& .MuiDataGrid-columnHeader, .MuiDataGrid-cell': {
         borderRight: `1px solid ${
           theme.palette.type === 'light' ? '#f0f0f0' : '#303030'
         }`,

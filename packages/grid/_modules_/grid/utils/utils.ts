@@ -68,6 +68,7 @@ export function localStorageAvailable() {
     return false;
   }
 }
+
 export function mapColDefTypeToInputType(type: string) {
   switch (type) {
     case 'string':
@@ -85,6 +86,6 @@ export function mapColDefTypeToInputType(type: string) {
 // Util to make specific interface properties optional
 export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
-export function getButtonBaseUtilityClass(slot) {
+export function getDataGridUtilityClass(slot) {
   return generateUtilityClass(GRID_CSS_CLASS_PREFIX, slot);
 }

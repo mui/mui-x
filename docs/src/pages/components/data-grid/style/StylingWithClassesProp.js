@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     background: lighten(theme.palette.info.main, 0.6),
   },
-  colCell: {
+  columnHeader: {
     background: lighten(theme.palette.error.main, 0.6),
   },
   row: {
