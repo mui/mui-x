@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { debounce } from '@material-ui/core/utils';
 import { ElementSize } from '../../models';
 import { useLogger } from './useLogger';
 import { useGridSelector } from '../features/core/useGridSelector';
@@ -7,6 +8,15 @@ import { optionsSelector } from './optionsSelector';
 export function useResizeContainer(apiRef): (size: ElementSize) => void {
   const gridLogger = useLogger('useResizeContainer');
   const { autoHeight } = useGridSelector(apiRef, optionsSelector);
+
+  const debounceResize = React.useMemo(
+    () =>
+      debounce((size: ElementSize) => {
+        gridLogger.info('resized...', size);
+        apiRef.current.resize();
+      }, 60),
+    [apiRef, gridLogger],
+  );
 
   const onResize = React.useCallback(
     (size: ElementSize) => {
@@ -38,10 +48,9 @@ export function useResizeContainer(apiRef): (size: ElementSize) => void {
         );
       }
 
-      gridLogger.info('resized...', size);
-      apiRef!.current.resize();
+      debounceResize(size);
     },
-    [gridLogger, apiRef, autoHeight],
+    [autoHeight, gridLogger, debounceResize],
   );
 
   return onResize;
