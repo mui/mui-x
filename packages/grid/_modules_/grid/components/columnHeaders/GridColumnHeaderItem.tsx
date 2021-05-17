@@ -1,4 +1,7 @@
 import * as React from 'react';
+import clsx from 'clsx';
+// @ts-expect-error fixed in Material-UI v5, types definitions were added.
+import { unstable_useId as useId } from '@material-ui/core/utils';
 import {
   GRID_COLUMN_HEADER_KEYDOWN,
   GRID_COLUMN_HEADER_CLICK,
@@ -20,12 +23,12 @@ import { GridOptions } from '../../models/gridOptions';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { GridApiContext } from '../GridApiContext';
 import { GRID_HEADER_CELL_CSS_CLASS } from '../../constants/cssClassesConstants';
-import { classnames } from '../../utils/index';
 import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
 import { GridColumnHeaderTitle } from './GridColumnHeaderTitle';
 import { GridColumnHeaderSeparator } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { ColumnHeaderFilterIcon } from './ColumnHeaderFilterIcon';
+import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -59,6 +62,9 @@ export const GridColumnHeaderItem = React.memo(
   }: GridColumnHeaderItemProps) => {
     const apiRef = React.useContext(GridApiContext);
     const headerCellRef = React.useRef<HTMLDivElement>(null);
+    const columnMenuId: string = useId();
+    const columnMenuButtonId: string = useId();
+    const iconButtonRef = React.useRef<HTMLButtonElement>(null);
     const {
       disableColumnReorder,
       showColumnRightBorder,
@@ -117,7 +123,7 @@ export const GridColumnHeaderItem = React.memo(
       [publish],
     );
 
-    const cssClasses = classnames(
+    const cssClasses = clsx(
       GRID_HEADER_CELL_CSS_CLASS,
       column.headerClassName,
       column.headerAlign === 'center' && 'MuiDataGrid-colCellCenter',
@@ -140,17 +146,24 @@ export const GridColumnHeaderItem = React.memo(
       };
     }
 
+    const columnMenuIconButton = !disableColumnMenu && !column.disableColumnMenu && (
+      <ColumnHeaderMenuIcon
+        column={column}
+        columnMenuId={columnMenuId}
+        columnMenuButtonId={columnMenuButtonId}
+        open={columnMenuOpen}
+        iconButtonRef={iconButtonRef}
+      />
+    );
+
     const columnTitleIconButtons = (
       <React.Fragment>
-        <GridColumnHeaderSortIcon
-          direction={sortDirection}
-          index={sortIndex}
-          hide={column.hideSortIcons}
-        />
         {!disableColumnFilter && <ColumnHeaderFilterIcon counter={filterItemsCounter} />}
+        {column.sortable && !column.hideSortIcons && (
+          <GridColumnHeaderSortIcon direction={sortDirection} index={sortIndex} />
+        )}
       </React.Fragment>
     );
-    const columnMenuIconButton = <ColumnHeaderMenuIcon column={column} open={columnMenuOpen} />;
 
     React.useLayoutEffect(() => {
       const columnMenuState = apiRef!.current.getState().columnMenu;
@@ -188,12 +201,7 @@ export const GridColumnHeaderItem = React.memo(
           draggable={!disableColumnReorder}
           {...draggableEventHandlers}
         >
-          {!disableColumnMenu &&
-            isColumnNumeric &&
-            !column.disableColumnMenu &&
-            columnMenuIconButton}
           <div className="MuiDataGrid-colCellTitleContainer">
-            {isColumnNumeric && columnTitleIconButtons}
             {headerComponent || (
               <GridColumnHeaderTitle
                 label={column.headerName || column.field}
@@ -201,18 +209,24 @@ export const GridColumnHeaderItem = React.memo(
                 columnWidth={width}
               />
             )}
-            {!isColumnNumeric && columnTitleIconButtons}
+            {columnTitleIconButtons}
           </div>
-          {!isColumnNumeric &&
-            !disableColumnMenu &&
-            !column.disableColumnMenu &&
-            columnMenuIconButton}
+          {columnMenuIconButton}
         </div>
         <GridColumnHeaderSeparator
           resizable={!disableColumnResize && !!column.resizable}
           resizing={isResizing}
           height={headerHeight}
           {...resizeEventHandlers}
+        />
+        <GridColumnHeaderMenu
+          columnMenuId={columnMenuId}
+          columnMenuButtonId={columnMenuButtonId}
+          field={column.field}
+          open={columnMenuOpen}
+          target={iconButtonRef.current}
+          ContentComponent={apiRef!.current.components.ColumnMenu}
+          contentComponentProps={apiRef!.current.componentsProps?.columnMenu}
         />
       </div>
     );

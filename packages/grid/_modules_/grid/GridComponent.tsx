@@ -8,7 +8,6 @@ import NoSsr from '@material-ui/core/NoSsr';
 import { GridAutoSizer } from './components/GridAutoSizer';
 import { GridColumnsHeader } from './components/columnHeaders/GridColumnHeaders';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { GridColumnHeaderMenu } from './components/menu/columnMenu/GridColumnHeaderMenu';
 import { GridColumnsContainer } from './components/containers/GridColumnsContainer';
 import { GridMainContainer } from './components/containers/GridMainContainer';
 import { GridRoot } from './components/containers/GridRoot';
@@ -129,12 +128,6 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
                 <components.Header {...props.componentsProps?.header} />
               </div>
               <GridMainContainer>
-                <GridColumnHeaderMenu
-                  ContentComponent={components.ColumnMenu}
-                  contentComponentProps={{
-                    ...props.componentsProps?.columnMenu,
-                  }}
-                />
                 <Watermark licenseStatus={props.licenseStatus} />
                 <GridColumnsContainer ref={columnsContainerRef}>
                   <GridColumnsHeader ref={columnsHeaderRef} />

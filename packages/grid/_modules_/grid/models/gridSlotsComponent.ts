@@ -27,6 +27,7 @@ import { GridPagination } from '../components/GridPagination';
 import { GridColumnsPanel } from '../components/panel/GridColumnsPanel';
 import { GridFilterPanel } from '../components/panel/filterPanel/GridFilterPanel';
 import { GridPanel } from '../components/panel/GridPanel';
+import { GridColumnUnsortedIcon } from '../components/columnHeaders/GridColumnUnsortedIcon';
 import { GridApiRefComponentsProperty } from './api/gridComponentsApi';
 import { GridIconSlotsComponent } from './gridIconSlotsComponent';
 
@@ -101,6 +102,7 @@ export const DEFAULT_GRID_SLOTS_ICONS: GridIconSlotsComponent = {
   ColumnFilteredIcon: GridFilterAltIcon,
   ColumnSelectorIcon: GridColumnIcon,
   ColumnMenuIcon: GridTripleDotsVerticalIcon,
+  ColumnUnsortedIcon: GridColumnUnsortedIcon,
   ColumnSortedAscendingIcon: GridArrowUpwardIcon,
   ColumnSortedDescendingIcon: GridArrowDownwardIcon,
   ColumnResizeIcon: GridSeparatorIcon,
