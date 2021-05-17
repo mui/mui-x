@@ -1,26 +1,24 @@
 import { GridFilterInputValue } from '../../components/panel/filterPanel/GridFilterInputValue';
 import { GridFilterItem } from '../gridFilterItem';
 import { GridFilterOperator } from '../gridFilterOperator';
-import { GridColDef } from './gridColDef';
 
 export const getGridDateOperators: (showTime?: boolean) => GridFilterOperator[] = (showTime) => [
   {
     value: 'is',
-    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
+    getApplyFilterFn: (filterItem: GridFilterItem) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
 
       const time = new Date(filterItem.value).getTime();
-      return (params): boolean => {
-        const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
-        if (!rowValue) {
+      return ({ value }): boolean => {
+        if (!value) {
           return false;
         }
-        if (rowValue instanceof Date) {
-          return (rowValue as Date).getTime() === time;
+        if (value instanceof Date) {
+          return (value as Date).getTime() === time;
         }
-        return new Date(rowValue.toString()).getTime() === time;
+        return new Date(value.toString()).getTime() === time;
       };
     },
     InputComponent: GridFilterInputValue,
@@ -28,21 +26,20 @@ export const getGridDateOperators: (showTime?: boolean) => GridFilterOperator[] 
   },
   {
     value: 'not',
-    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
+    getApplyFilterFn: (filterItem: GridFilterItem) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
 
       const time = new Date(filterItem.value).getTime();
-      return (params): boolean => {
-        const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
-        if (!rowValue) {
+      return ({ value }): boolean => {
+        if (!value) {
           return false;
         }
-        if (rowValue instanceof Date) {
-          return (rowValue as Date).getTime() !== time;
+        if (value instanceof Date) {
+          return (value as Date).getTime() !== time;
         }
-        return new Date(rowValue.toString()).getTime() !== time;
+        return new Date(value.toString()).getTime() !== time;
       };
     },
     InputComponent: GridFilterInputValue,
@@ -50,21 +47,20 @@ export const getGridDateOperators: (showTime?: boolean) => GridFilterOperator[] 
   },
   {
     value: 'after',
-    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
+    getApplyFilterFn: (filterItem: GridFilterItem) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
 
       const time = new Date(filterItem.value).getTime();
-      return (params): boolean => {
-        const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
-        if (!rowValue) {
+      return ({ value }): boolean => {
+        if (!value) {
           return false;
         }
-        if (rowValue instanceof Date) {
-          return (rowValue as Date).getTime() > time;
+        if (value instanceof Date) {
+          return (value as Date).getTime() > time;
         }
-        return new Date(rowValue.toString()).getTime() > time;
+        return new Date(value.toString()).getTime() > time;
       };
     },
     InputComponent: GridFilterInputValue,
@@ -72,21 +68,20 @@ export const getGridDateOperators: (showTime?: boolean) => GridFilterOperator[] 
   },
   {
     value: 'onOrAfter',
-    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
+    getApplyFilterFn: (filterItem: GridFilterItem) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
 
       const time = new Date(filterItem.value).getTime();
-      return (params): boolean => {
-        const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
-        if (!rowValue) {
+      return ({ value }): boolean => {
+        if (!value) {
           return false;
         }
-        if (rowValue instanceof Date) {
-          return (rowValue as Date).getTime() >= time;
+        if (value instanceof Date) {
+          return (value as Date).getTime() >= time;
         }
-        return new Date(rowValue.toString()).getTime() >= time;
+        return new Date(value.toString()).getTime() >= time;
       };
     },
     InputComponent: GridFilterInputValue,
@@ -94,21 +89,20 @@ export const getGridDateOperators: (showTime?: boolean) => GridFilterOperator[] 
   },
   {
     value: 'before',
-    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
+    getApplyFilterFn: (filterItem: GridFilterItem) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
 
       const time = new Date(filterItem.value).getTime();
-      return (params): boolean => {
-        const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
-        if (!rowValue) {
+      return ({ value }): boolean => {
+        if (!value) {
           return false;
         }
-        if (rowValue instanceof Date) {
-          return (rowValue as Date).getTime() < time;
+        if (value instanceof Date) {
+          return (value as Date).getTime() < time;
         }
-        return new Date(rowValue.toString()).getTime() < time;
+        return new Date(value.toString()).getTime() < time;
       };
     },
     InputComponent: GridFilterInputValue,
@@ -116,21 +110,20 @@ export const getGridDateOperators: (showTime?: boolean) => GridFilterOperator[] 
   },
   {
     value: 'onOrBefore',
-    getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
+    getApplyFilterFn: (filterItem: GridFilterItem) => {
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
 
       const time = new Date(filterItem.value).getTime();
-      return (params): boolean => {
-        const rowValue = column.valueGetter ? column.valueGetter(params) : params.value;
-        if (!rowValue) {
+      return ({ value }): boolean => {
+        if (!value) {
           return false;
         }
-        if (rowValue instanceof Date) {
-          return (rowValue as Date).getTime() <= time;
+        if (value instanceof Date) {
+          return (value as Date).getTime() <= time;
         }
-        return new Date(rowValue.toString()).getTime() <= time;
+        return new Date(value.toString()).getTime() <= time;
       };
     },
     InputComponent: GridFilterInputValue,
