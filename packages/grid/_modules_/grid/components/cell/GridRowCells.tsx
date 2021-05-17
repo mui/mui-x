@@ -25,6 +25,7 @@ function applyCssClassRules(cellClassRules: GridCellClassRules, params: GridCell
 }
 
 interface RowCellsProps {
+  cellClassName?: string;
   columns: GridColumns;
   extendRowFullWidth: boolean;
   firstColIdx: number;
@@ -55,6 +56,8 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
     showCellRightBorder,
     isSelected,
     editRowState,
+    cellClassName,
+    ...other
   } = props;
   const apiRef = React.useContext(GridApiContext);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
@@ -118,6 +121,8 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
         cellTabIndex !== null && cellTabIndex.id === id && cellTabIndex.field === column.field
           ? 0
           : -1,
+      className: cellClassName,
+      ...other,
     };
 
     return cellProps;

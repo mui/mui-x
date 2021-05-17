@@ -22,7 +22,6 @@ import { GridColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
 import { GridOptions } from '../../models/gridOptions';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { GridApiContext } from '../GridApiContext';
-import { GRID_HEADER_CELL_CSS_CLASS } from '../../constants/cssClassesConstants';
 import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
 import { GridColumnHeaderTitle } from './GridColumnHeaderTitle';
 import { GridColumnHeaderSeparator } from './GridColumnHeaderSeparator';
@@ -66,6 +65,7 @@ export const GridColumnHeaderItem = React.memo(
     const columnMenuButtonId: string = useId();
     const iconButtonRef = React.useRef<HTMLButtonElement>(null);
     const {
+      classes,
       disableColumnReorder,
       showColumnRightBorder,
       disableColumnResize,
@@ -124,17 +124,17 @@ export const GridColumnHeaderItem = React.memo(
     );
 
     const cssClasses = clsx(
-      GRID_HEADER_CELL_CSS_CLASS,
       column.headerClassName,
-      column.headerAlign === 'center' && 'MuiDataGrid-colCellCenter',
-      column.headerAlign === 'right' && 'MuiDataGrid-colCellRight',
+      column.headerAlign === 'center' && 'MuiDataGrid-columnHeaderCenter',
+      column.headerAlign === 'right' && 'MuiDataGrid-columnHeaderRight',
       {
-        'MuiDataGrid-colCellSortable': column.sortable,
-        'MuiDataGrid-colCellMoving': isDragging,
-        'MuiDataGrid-colCellSorted': isColumnSorted,
-        'MuiDataGrid-colCellNumeric': isColumnNumeric,
+        'MuiDataGrid-columnHeaderSortable': column.sortable,
+        'MuiDataGrid-columnHeaderMoving': isDragging,
+        'MuiDataGrid-columnHeaderSorted': isColumnSorted,
+        'MuiDataGrid-columnHeaderNumeric': isColumnNumeric,
         'MuiDataGrid-withBorder': showColumnRightBorder,
       },
+      classes?.columnHeader,
     );
 
     const width = column.width!;
@@ -197,11 +197,11 @@ export const GridColumnHeaderItem = React.memo(
         {...mouseEventsHandlers}
       >
         <div
-          className="MuiDataGrid-colCell-draggable"
+          className="MuiDataGrid-columnHeader-draggable"
           draggable={!disableColumnReorder}
           {...draggableEventHandlers}
         >
-          <div className="MuiDataGrid-colCellTitleContainer">
+          <div className="MuiDataGrid-columnHeaderTitleContainer">
             {headerComponent || (
               <GridColumnHeaderTitle
                 label={column.headerName || column.field}

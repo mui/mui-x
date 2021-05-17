@@ -1,6 +1,8 @@
 import * as styles from '@material-ui/core/styles';
+import { GRID_CSS_CLASS_PREFIX } from '../constants/cssClassesConstants';
 import isDeepEqual from '../lib/lodash/isDeepEqual';
 import { GridCellValue } from '../models/gridCell';
+import { generateUtilityClass } from './material-ui-utils';
 
 export { isDeepEqual };
 
@@ -78,6 +80,7 @@ export function localStorageAvailable() {
     return false;
   }
 }
+
 export function mapColDefTypeToInputType(type: string) {
   switch (type) {
     case 'string':
@@ -94,3 +97,7 @@ export function mapColDefTypeToInputType(type: string) {
 
 // Util to make specific interface properties optional
 export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
+
+export function getDataGridUtilityClass(slot) {
+  return generateUtilityClass(GRID_CSS_CLASS_PREFIX, slot);
+}
