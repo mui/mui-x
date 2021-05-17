@@ -24,9 +24,13 @@ The filter applied to a column can be pre-configured using the `filterModel` pro
 
 {{"demo": "pages/components/data-grid/filtering/BasicFilteringGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Native filters
+## Predefined filters
 
-A filter is composed of three parts: the column to filter, the value to look for and an operator (e.g. _contains_, _is before_, _is after_, etc.). The operator determines if a candidate value should be considered as a result. The candidate value used by the operator is the one corresponding to the `field` attribute or the `valueGetter` of the `GridColDef`. As part of the native column types, a set of operators is available. You can find the supported column types in the [columns section](/components/data-grid/columns/#column-types).
+A filter is composed of three parts: the column to filter, the value to look for, and an operator (e.g. _contains_, _is before_, _is after_, etc.).
+The operator determines if a candidate value should be considered as a result.
+The candidate value used by the operator is the one corresponding to the `field` attribute or the `valueGetter` of the `GridColDef`.
+As part of the predefined column types, a set of operators is available.
+You can find the supported column types in the [columns section](/components/data-grid/columns/#column-types).
 
 **Note**: The [`valueFormatter`](/components/data-grid/columns/#value-formatter) is only used for rendering purposes.
 
@@ -36,7 +40,7 @@ The following demo allows to explore the different operators available:
 
 ## Disable filtering
 
-#### Globally
+**Globally**
 
 Filters are enabled by default, but you can easily disable this feature by setting the `disableColumnFilter` prop.
 
@@ -44,7 +48,7 @@ Filters are enabled by default, but you can easily disable this feature by setti
 <DataGrid disableColumnFilter />
 ```
 
-#### Per column
+**Per column**
 
 You can disable the filter on a column by setting the `filterable` property of the `GridColDef` to `false`;
 
@@ -64,15 +68,15 @@ This section provides examples on how to make the most common modifications.
 The value used by the operator to look for has to be entered by the user.
 On most column types, a text field is used. However, a custom component can be rendered instead.
 
-In this demo the Rating column reuses the numeric filter and the same rating component is used to the enter the value of the filter.
+In this demo, the Rating column reuses the numeric filter and the same rating component is used to the enter the value of the filter.
 
 {{"demo": "pages/components/data-grid/filtering/ExtendNumericOperator.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Reuse filter operators on a custom column type
+### Reuse filter operators
 
 When defining a [custom column type](/components/data-grid/columns/#custom-column-types), the added operators are the same from the type that was extended.
 
-In this demo a `price` column type (used by Total is USD) is defined extending the `number` column type.
+In this demo, a `price` column type (used by Total is USD) is defined extending the `number` column type.
 Instead of adding all numeric operators, only the operators `<` and `>` are kept.
 Furthermore, the "$" prefix is added to the input component with the `InputComponentProps` prop.
 
@@ -108,7 +112,7 @@ The returned function determines if the cell value satifies the condition of the
 
 **Note**: If the column has a [`valueGetter`](/components/data-grid/columns/#value-getter), then `params.value` will be the resolved value.
 
-In this demo you can see how to create a complete new operator for the Rating column.
+In this demo, you can see how to create a completely new operator for the Rating column.
 
 {{"demo": "pages/components/data-grid/filtering/CustomRatingOperator.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -126,7 +130,7 @@ Filtering can be run server-side by setting the `filterMode` prop to `server`, a
 />
 ```
 
-Below is a very simple demo on how you could achieve server side filtering.
+Below is a very simple demo on how you could achieve server-side filtering.
 
 {{"demo": "pages/components/data-grid/filtering/ServerFilterGrid.js", "bg": "inline"}}
 
