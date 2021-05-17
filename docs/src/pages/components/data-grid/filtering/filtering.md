@@ -72,7 +72,7 @@ In this demo, the Rating column reuses the numeric filter and the same rating co
 
 {{"demo": "pages/components/data-grid/filtering/ExtendNumericOperator.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Reuse filter operators
+### Extend filter operators
 
 When defining a [custom column type](/components/data-grid/columns/#custom-column-types), the added operators are the same from the type that was extended.
 
