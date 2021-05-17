@@ -190,13 +190,6 @@ describe('<DataGrid /> - Filter', () => {
   describe('Date operators', function test() {
     const isEdge = /Edge/.test(window.navigator.userAgent);
 
-    before(function beforeHook() {
-      // We need to skip edge as it does not handle the date the same way as other browsers.
-      if (isEdge) {
-        this.skip();
-      }
-    });
-
     [
       { operator: 'is', value: new Date(2000, 11, 1), expected: ['12/1/2000'] },
       { operator: 'not', value: new Date(2000, 11, 1), expected: ['1/1/2001', '1/1/2002'] },
@@ -205,7 +198,13 @@ describe('<DataGrid /> - Filter', () => {
       { operator: 'before', value: new Date(2001, 0, 1), expected: ['12/1/2000'] },
       { operator: 'onOrBefore', value: new Date(2001, 0, 1), expected: ['12/1/2000', '1/1/2001'] },
     ].forEach(({ operator, value, expected }) => {
-      it(`should allow object as value and work with valueGetter, operator: ${operator}`, () => {
+      it(`should allow object as value and work with valueGetter, operator: ${operator}`, function dateOpsTest() {
+        if (isEdge) {
+          // We need to skip edge as it does not handle the date the same way as other browsers.
+          this.skip();
+          return;
+        }
+
         render(
           <TestCase
             value={value.toLocaleDateString()}
