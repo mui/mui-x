@@ -3,7 +3,7 @@ import { GridApiRef, GridSortModel, useGridApiRef } from '@material-ui/data-grid
 import { XGrid } from '@material-ui/x-grid';
 import { expect } from 'chai';
 import { useFakeTimers } from 'sinon';
-import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
+import { getColumnValues, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
@@ -19,6 +19,27 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<XGrid /> - Sorting', () => {
   let clock;
+  const baselineProps = {
+    autoHeight: isJSDOM,
+    rows: [
+      {
+        id: 0,
+        brand: 'Nike',
+        year: '1940',
+      },
+      {
+        id: 1,
+        brand: 'Adidas',
+        year: '1940',
+      },
+      {
+        id: 2,
+        brand: 'Puma',
+        year: '1950',
+      },
+    ],
+    columns: [{ field: 'brand' }, { field: 'year', type: 'number' }],
+  };
 
   beforeEach(() => {
     clock = useFakeTimers();
@@ -38,28 +59,6 @@ describe('<XGrid /> - Sorting', () => {
     sortModel: GridSortModel;
     disableMultipleColumnsSorting?: boolean;
   }) => {
-    const baselineProps = {
-      autoHeight: isJSDOM,
-      rows: [
-        {
-          id: 0,
-          brand: 'Nike',
-          year: '1940',
-        },
-        {
-          id: 1,
-          brand: 'Adidas',
-          year: '1940',
-        },
-        {
-          id: 2,
-          brand: 'Puma',
-          year: '1950',
-        },
-      ],
-      columns: [{ field: 'brand' }, { field: 'year', type: 'number' }],
-    };
-
     const { sortModel, rows, disableMultipleColumnsSorting } = props;
     apiRef = useGridApiRef();
     return (
@@ -221,5 +220,48 @@ describe('<XGrid /> - Sorting', () => {
       const time = Math.round(t1 - t0);
       expect(time).to.be.lessThan(300);
     });
+  });
+
+  it('should prune rendering on cells', function test() {
+    // The number of renders depends on the user-agent
+    if (!/HeadlessChrome/.test(window.navigator.userAgent) || !isJSDOM) {
+      this.skip();
+      return;
+    }
+
+    let renderCellCount = 0;
+
+    function CounterRender(props) {
+      React.useEffect(() => {
+        if (props.value === 'Nike') {
+          renderCellCount += 1;
+        }
+      });
+      return props.value;
+    }
+
+    const columns = [
+      {
+        field: 'brand',
+        renderCell: (params) => <CounterRender value={params.value} />,
+      },
+    ];
+
+    function Test(props) {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid {...baselineProps} columns={columns} checkboxSelection {...props} />
+        </div>
+      );
+    }
+
+    const { setProps } = render(<Test />);
+    expect(renderCellCount).to.equal(1);
+    const cell = getCell(1, 0);
+    cell.focus();
+    fireEvent.click(cell);
+    expect(renderCellCount).to.equal(2);
+    setProps({ extra: true });
+    expect(renderCellCount).to.equal(2);
   });
 });

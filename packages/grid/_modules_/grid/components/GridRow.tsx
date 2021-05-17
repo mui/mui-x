@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import {
   GRID_ROW_DOUBLE_CLICK,
   GRID_ROW_CLICK,
@@ -9,7 +10,7 @@ import {
 } from '../constants/eventsConstants';
 import { GridRowId } from '../models';
 import { GRID_ROW_CSS_CLASS } from '../constants/cssClassesConstants';
-import { classnames, isFunction } from '../utils';
+import { isFunction } from '../utils';
 import { gridDensityRowHeightSelector } from '../hooks/features/density';
 import { GridApiContext } from './GridApiContext';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
@@ -62,7 +63,7 @@ export const GridRow = (props: GridRowProps) => {
   const rowClassName =
     isFunction(options.getRowClassName) &&
     options.getRowClassName(apiRef!.current.getRowParams(id));
-  const cssClasses = classnames(GRID_ROW_CSS_CLASS, className, rowClassName, {
+  const cssClasses = clsx(GRID_ROW_CSS_CLASS, className, rowClassName, {
     'Mui-selected': selected,
   });
 
