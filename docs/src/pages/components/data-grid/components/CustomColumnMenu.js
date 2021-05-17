@@ -85,29 +85,23 @@ export default function CustomColumnMenu() {
   const [color, setColor] = React.useState('primary');
   const apiRef = useGridApiRef();
 
-  React.useEffect(() => {
-    apiRef.current.showColumnMenu('default');
-  }, [apiRef, color]);
-
   return (
     <div
       style={{
-        height: 300,
         width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
       }}
     >
-      <div style={{ alignSelf: 'center' }}>
-        <Button
-          color={color}
-          onClick={() =>
-            setColor((current) => (current === 'primary' ? 'secondary' : 'primary'))
-          }
-        >
-          Toggle menu background
-        </Button>
-      </div>
+      <Button
+        color={color}
+        variant="outlined"
+        onClick={(event) => {
+          event.stopPropagation();
+          setColor((current) => (current === 'primary' ? 'secondary' : 'primary'));
+          apiRef.current.showColumnMenu('default');
+        }}
+      >
+        Toggle menu background
+      </Button>
       <div style={{ height: 250, width: '100%', marginTop: 16 }}>
         <XGrid
           apiRef={apiRef}

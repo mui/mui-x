@@ -167,7 +167,7 @@ Api of the `components` props of type `GridSlotsComponent`
 |  | <span class="prop-name">.MuiDataGrid-viewport</span> | Styles applied to the viewport element.|
 |  | <span class="prop-name">.MuiDataGrid-row</span> | Styles applied to the row element.|
 |  | <span class="prop-name">.Mui-selected</span> | Styles applied to the selected row element.|
-|  | <span class="prop-name">.MuiDataGrid-cellWithRenderer</span> | Styles applied to the customised cell element.|
+|  | <span class="prop-name">.MuiDataGrid-cellWithRenderer</span> | Styles applied to the customized cell element.|
 |  | <span class="prop-name">.MuiDataGrid-withBorder</span> | Styles applied to the cell element that has right border displayed.|
 |  | <span class="prop-name">.MuiDataGrid-cellLeft</span> | Styles applied to the aligned left cell element.|
 |  | <span class="prop-name">.MuiDataGrid-cellRight</span> | Styles applied to the aligned right cell element.|
