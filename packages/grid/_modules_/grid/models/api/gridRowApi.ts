@@ -38,8 +38,8 @@ export interface GridRowApi {
    */
   getRowIndex: (id: GridRowId) => number;
   /**
-   * Get the [[GridRowModel]] of a given rowId.
+   * Get the [[GridRowModel]] of a given id.
    * @param id
    */
-  getRowFromId: (id: GridRowId) => GridRowModel;
+  getRow: (id: GridRowId) => GridRowModel;
 }

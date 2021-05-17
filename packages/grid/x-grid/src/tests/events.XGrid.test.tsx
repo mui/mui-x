@@ -84,7 +84,7 @@ describe('<XGrid /> - Events Params', () => {
       fireEvent.click(ageColumnElement);
 
       expect(eventArgs!.params).to.deep.include({
-        colDef: apiRef!.current.getColumnFromField('age'),
+        colDef: apiRef!.current.getColumn('age'),
         field: 'age',
         api: apiRef.current,
       });
@@ -131,7 +131,7 @@ describe('<XGrid /> - Events Params', () => {
         formattedValue: 'Jack',
         isEditable: true,
         row: baselineProps.rows[1],
-        colDef: apiRef!.current.getColumnFromField('first'),
+        colDef: apiRef!.current.getColumn('first'),
         api: apiRef.current,
         hasFocus: false,
         tabIndex: -1,
@@ -158,7 +158,7 @@ describe('<XGrid /> - Events Params', () => {
         formattedValue: 'Jack',
         isEditable: true,
         row: baselineProps.rows[1],
-        colDef: apiRef!.current.getColumnFromField('first'),
+        colDef: apiRef!.current.getColumn('first'),
         api: apiRef.current,
         hasFocus: false,
         tabIndex: -1,

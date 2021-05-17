@@ -260,7 +260,7 @@ export const useGridColumnResize = (
       GRID_HEADER_CELL_CSS_CLASS,
     ) as HTMLDivElement;
     const field = getFieldFromHeaderElem(colElementRef.current!);
-    const colDef = apiRef.current.getColumnFromField(field);
+    const colDef = apiRef.current.getColumn(field);
 
     logger.debug(`Start Resize on col ${colDef.field}`);
     apiRef.current.publishEvent(GRID_COLUMN_RESIZE_START, { field });
