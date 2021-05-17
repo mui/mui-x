@@ -148,7 +148,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
 
     describe('warnings', () => {
-
       it('should warn if the container has no intrinsic height', () => {
         expect(() => {
           render(
