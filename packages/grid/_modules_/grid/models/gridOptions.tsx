@@ -172,6 +172,10 @@ export interface GridOptions {
    */
   isCellEditable?: (params: GridCellParams) => boolean;
   /**
+   * Determines if a row can be selected.
+   */
+  isRowSelectable?: (params: GridRowParams) => boolean;
+  /**
    * Set the locale text of the grid.
    * You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
    */
