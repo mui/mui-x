@@ -48,7 +48,7 @@ export function useResizeContainer(apiRef): (size: ElementSize) => void {
         );
       }
 
-      if(isJSDOM && autoHeight) {
+      if (isJSDOM && autoHeight) {
         // We don't need to debounce the resize in the JSDOM test.
         apiRef.current.resize();
         return;
@@ -58,6 +58,13 @@ export function useResizeContainer(apiRef): (size: ElementSize) => void {
     },
     [autoHeight, debounceResize, gridLogger, apiRef],
   );
+
+  React.useEffect(() => {
+    return () => {
+      gridLogger.info('canceling resize...');
+      debounceResize.clear();
+    };
+  }, [gridLogger, debounceResize]);
 
   return onResize;
 }
