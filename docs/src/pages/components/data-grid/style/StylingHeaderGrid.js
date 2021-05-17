@@ -7,11 +7,13 @@ const columns = [
     field: 'first',
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
+    width: 140,
   },
   {
     field: 'last',
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
+    width: 140,
   },
 ];
 

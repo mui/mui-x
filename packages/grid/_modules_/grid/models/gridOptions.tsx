@@ -144,6 +144,10 @@ export interface GridOptions {
    */
   filterModel?: GridFilterModel;
   /**
+   * Function that applies CSS classes dynamically on cells.
+   */
+  getCellClassName?: (params: GridCellParams) => string;
+  /**
    * Function that applies CSS classes dynamically on rows.
    */
   getRowClassName?: (params: GridRowParams) => string;

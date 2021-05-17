@@ -5,7 +5,7 @@ components: DataGrid, XGrid
 
 # Data Grid - Styling
 
-<p class="description">The grid css can be easily overwritten.</p>
+<p class="description">The grid CSS can be easily overwritten.</p>
 
 ## Styling column headers
 
@@ -73,10 +73,12 @@ interface GridRowParams {
 
 ## Styling cells
 
-The `GridColDef` type has properties to apply class names and custom CSS on the cells.
+There are multiple ways to apply a custom CSS class on a cell.
 
-- `cellClassName`: to apply class names on every cell. It can also be a function.
-- `align`: to align the content of the cells. It must be 'left' | 'right' | 'center'. (Note you must use `headerAlign` to align the content of the header.)
+1. Using the`cellClassName` property of `GridColDef`:
+
+This property allows to set a CSS class that is applied on every cell of the column it was defined.
+It can also be a function, which is called with a `GridCellParams` object.
 
 ```tsx
 const columns: GridColumns = [
@@ -87,7 +89,7 @@ const columns: GridColumns = [
   {
     field: 'score',
     type: 'number',
-    cellClassName: (params: GridCellClassParams) =>
+    cellClassName: (params: GridCellParams) =>
       clsx('super-app', {
         negative: (params.value as number) < 0,
         positive: (params.value as number) > 0,
@@ -96,7 +98,22 @@ const columns: GridColumns = [
 ];
 ```
 
-{{"demo": "pages/components/data-grid/style/StylingCellsGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/style/StylingCellsGrid.js", "bg": "inline", "defaultCodeOpen": false}}
+
+2. Using the `getCellClassName` prop:
+
+This prop is called for every cell in every column.
+Different from the first option, this prop is defined at the grid level, not column level.
+It is also called with a `GridCellParams` object.
+
+{{"demo": "pages/components/data-grid/style/StylingAllCells.js", "bg": "inline"}}
+
+## Cell alignment
+
+Use the `align` property in `GridColDef` to change the alignment of content of the cells.
+Choose between one of the following values: 'left' | 'right' | 'center'.
+
+**Note**: You must use `headerAlign` to align the content of the header.
 
 ## Custom theme
 
