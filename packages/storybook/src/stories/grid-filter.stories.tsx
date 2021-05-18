@@ -1,6 +1,6 @@
 import Button from '@material-ui/core/Button';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import { DataGrid } from '@material-ui/data-grid';
 import Rating from '@material-ui/lab/Rating';
 import {
@@ -661,6 +661,56 @@ export function NoResultsSnap() {
           linkOperator: GridLinkOperator.And,
         }}
       />
+    </div>
+  );
+}
+
+export function ObjectValueGetter() {
+  const [columns] = React.useState([
+    {
+      field: 'name',
+      headerName: 'City',
+      flex: 0.5,
+    },
+    {
+      field: 'country', // field exists in data
+      headerName: 'Country',
+      valueGetter: (cellParams) => cellParams.value.name,
+      flex: 0.5,
+    },
+  ]);
+  const [rows] = React.useState([
+    {
+      id: '1',
+      name: 'Paris',
+      country: {
+        id: '1',
+        name: 'France',
+        alpha2: 'FR',
+      },
+    },
+    {
+      id: '2',
+      name: 'Rouen',
+      country: {
+        id: '1',
+        name: 'France',
+        alpha2: 'FR',
+      },
+    },
+    {
+      id: '3',
+      name: 'London',
+      country: {
+        id: '2',
+        name: 'United Kingdom',
+        alpha2: 'GB',
+      },
+    },
+  ]);
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <DataGrid rows={rows} columns={columns} />
     </div>
   );
 }

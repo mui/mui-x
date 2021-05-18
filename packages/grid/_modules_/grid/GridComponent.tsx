@@ -5,6 +5,7 @@
 import * as React from 'react';
 import { useForkRef } from '@material-ui/core/utils';
 import NoSsr from '@material-ui/core/NoSsr';
+import clsx from 'clsx';
 import { GridAutoSizer } from './components/GridAutoSizer';
 import { GridColumnsHeader } from './components/columnHeaders/GridColumnHeaders';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -51,6 +52,7 @@ import { useLocaleText } from './hooks/features/localeText/useLocaleText';
 import { useGridCsvExport } from './hooks/features/export';
 import { useGridInfiniteLoader } from './hooks/features/infiniteLoader';
 import { visibleGridRowCountSelector } from './hooks/features/filter/gridFilterSelector';
+import { useGridFreezeRows } from './hooks/features/rows/useGridFreezeRows';
 
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {
@@ -78,6 +80,9 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useEvents(rootContainerRef, apiRef);
     useLocaleText(apiRef);
     const onResize = useResizeContainer(apiRef);
+
+    // Freeze rows for immutability
+    useGridFreezeRows(props.rows);
 
     useGridColumns(props.columns, apiRef);
     useGridParamsApi(apiRef);
@@ -109,7 +114,10 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     return (
       <GridApiContext.Provider value={apiRef}>
         <NoSsr>
-          <GridRoot ref={handleRef} className={props.className}>
+          <GridRoot
+            ref={handleRef}
+            className={clsx(internalOptions.classes?.root, props.className)}
+          >
             <ErrorBoundary
               hasError={errorState != null}
               componentProps={errorState}

@@ -1,7 +1,6 @@
 import { capitalize } from '@material-ui/core/utils';
 import * as React from 'react';
 import clsx from 'clsx';
-import { GRID_CELL_CSS_CLASS } from '../../constants/cssClassesConstants';
 import {
   GRID_CELL_BLUR,
   GRID_CELL_CLICK,
@@ -22,6 +21,7 @@ import { GridApiContext } from '../GridApiContext';
 
 export interface GridCellProps {
   align: GridAlignment;
+  className?: string;
   colIndex: number;
   cssClass?: string;
   field: string;
@@ -43,6 +43,7 @@ export interface GridCellProps {
 export const GridCell = React.memo((props: GridCellProps) => {
   const {
     align,
+    className,
     children,
     colIndex,
     cellMode,
@@ -65,7 +66,7 @@ export const GridCell = React.memo((props: GridCellProps) => {
   const cellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = React.useContext(GridApiContext);
 
-  const cssClasses = clsx(GRID_CELL_CSS_CLASS, cssClass, `MuiDataGrid-cell${capitalize(align)}`, {
+  const cssClasses = clsx(cssClass, className, `MuiDataGrid-cell${capitalize(align)}`, {
     'MuiDataGrid-withBorder': showRightBorder,
     'MuiDataGrid-cellEditable': isEditable,
   });

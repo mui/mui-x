@@ -2,7 +2,7 @@ import * as React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/styles';
 import {
   DataGrid,
   GridColDef,

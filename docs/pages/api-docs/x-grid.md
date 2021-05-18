@@ -19,7 +19,7 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">autoHeight</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid height is dynamic and follow the number of rows in the grid. |
 | <span class="prop-name">autoPageSize</span> | <span class="prop-type">boolean</span> | false | If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar. |
 | <span class="prop-name">checkboxSelection</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid get a first column with a checkbox that allows to select rows. |
-| <span class="prop-name">classes</span> | <span class="prop-type">object</span> |   | Override or extend the styles applied to the component. See [CSS API](/api/x-grid/#css) below for more details. |
+| <span class="prop-name">classes</span> | <span class="prop-type">GridClasses</span> |   | Override or extend the styles applied to the component. See [CSS API](/api/x-grid/#css) below for more details. |
 | <span class="prop-name">className</span> | <span class="prop-type">string</span> |   | CSS classname to add on the outer container. |
 | <span class="prop-name">columnBuffer</span> | <span class="prop-type">number</span> | 2 | Number of columns rendered outside the grid viewport. |
 | <span class="prop-name">columnTypes</span> | <span class="prop-type">GridColumnTypesRecord</span> |   | Extend native column types with your new column types. |
@@ -44,7 +44,8 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">hideFooterRowCount</span> | <span class="prop-type">boolean</span> | false | If `true`, the row count in the footer is hidden. |
 | <span class="prop-name">hideFooterSelectedRowCount</span> | <span class="prop-type">boolean</span> | false | If `true`, the selected row count in the footer is hidden. |
 | <span class="prop-name">icons</span> | <span class="prop-type">IconsOptions</span> |   | Set of icons used in the grid. |
-| <span class="prop-name">isCellEditable</span> | <span class="prop-type">(params: GridCellParams) => boolean; </span> |   | Callback fired when a cell is rendered, returns true if the cell is editable. |
+| <span class="prop-name">isCellEditable</span> | <span class="prop-type">(params: GridCellParams) => boolean</span> |   | Callback fired when a cell is rendered, returns true if the cell is editable. |
+| <span class="prop-name">isRowSelectable</span> | <span class="prop-type">(params: GridRowParams) => boolean</span> |   | Determines if a row can be selected. |
 | <span class="prop-name">loading</span> | <span class="prop-type">boolean</span> |  false | If `true`, a  loading overlay is displayed.. |
 | <span class="prop-name">localeText</span> | <span class="prop-type">GridLocaleText</span> |   | Set of text labels used in the grid. You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository. |
 | <span class="prop-name">logger</span> | <span class="prop-type">Logger</span> | null | Pass a custom logger in the components that implements the 'Logger' interface. |
@@ -148,16 +149,16 @@ Api of the `components` props of type `GridSlotsComponent`
 |  | <span class="prop-name">.MuiDataGrid-mainGridContainer</span> | Styles applied to the main container element.|
 |  | <span class="prop-name">.MuiDataGrid-overlay</span> | Styles applied to the outer overlay element.|
 |  | <span class="prop-name">.MuiDataGrid-columnsContainer</span> | Styles applied to the outer columns container element.|
-|  | <span class="prop-name">.MuiDataGrid-colCellWrapper</span> | Styles applied to the outer columns header cells container element.|
-|  | <span class="prop-name">.MuiDataGrid-colCell</span> | Styles applied to the header cell element.|
+|  | <span class="prop-name">.MuiDataGrid-columnHeaderWrapper</span> | Styles applied to the outer columns header cells container element.|
+|  | <span class="prop-name">.MuiDataGrid-columnHeader</span> | Styles applied to the header cell element.|
 |  | <span class="prop-name">.MuiDataGrid-cell</span> | Styles applied to the cell element.|
-|  | <span class="prop-name">.MuiDataGrid-colCellCheckbox</span> | Styles applied to the header checkbox cell element.|
+|  | <span class="prop-name">.MuiDataGrid-columnHeaderCheckbox</span> | Styles applied to the header checkbox cell element.|
 |  | <span class="prop-name">.MuiDataGrid-cellCheckbox</span> | Styles applied to the cell checkbox element.|
-|  | <span class="prop-name">.MuiDataGrid-colCellSortable</span> | Styles applied to the sortable header cell element.|
+|  | <span class="prop-name">.MuiDataGrid-columnHeaderSortable</span> | Styles applied to the sortable header cell element.|
 |  | <span class="prop-name">.MuiDataGrid-sortIcon</span> | Styles applied to the sort icon element.|
-|  | <span class="prop-name">.MuiDataGrid-colCellCenter</span> | Styles applied to the centered header cell element.|
-|  | <span class="prop-name">.MuiDataGrid-colCellRight</span> | Styles applied to the aligned right header cell element.|
-|  | <span class="prop-name">.MuiDataGrid-colCellTitle</span> | Styles applied to the header cell title element.|
+|  | <span class="prop-name">.MuiDataGrid-columnHeaderCenter</span> | Styles applied to the centered header cell element.|
+|  | <span class="prop-name">.MuiDataGrid-columnHeaderRight</span> | Styles applied to the aligned right header cell element.|
+|  | <span class="prop-name">.MuiDataGrid-columnHeaderTitle</span> | Styles applied to the header cell title element.|
 |  | <span class="prop-name">.MuiDataGrid-columnSeparator</span> | Styles applied to the header cell separator element.|
 |  | <span class="prop-name">.MuiDataGrid-withColumnMenu</span> | Styles applied to the header cell that has a column menu.|
 |  | <span class="prop-name">.MuiDataGrid-iconSeparator</span> | Styles applied to the header cell separator icon element.|
@@ -166,7 +167,7 @@ Api of the `components` props of type `GridSlotsComponent`
 |  | <span class="prop-name">.MuiDataGrid-viewport</span> | Styles applied to the viewport element.|
 |  | <span class="prop-name">.MuiDataGrid-row</span> | Styles applied to the row element.|
 |  | <span class="prop-name">.Mui-selected</span> | Styles applied to the selected row element.|
-|  | <span class="prop-name">.MuiDataGrid-cellWithRenderer</span> | Styles applied to the customised cell element.|
+|  | <span class="prop-name">.MuiDataGrid-cellWithRenderer</span> | Styles applied to the customized cell element.|
 |  | <span class="prop-name">.MuiDataGrid-withBorder</span> | Styles applied to the cell element that has right border displayed.|
 |  | <span class="prop-name">.MuiDataGrid-cellLeft</span> | Styles applied to the aligned left cell element.|
 |  | <span class="prop-name">.MuiDataGrid-cellRight</span> | Styles applied to the aligned right cell element.|

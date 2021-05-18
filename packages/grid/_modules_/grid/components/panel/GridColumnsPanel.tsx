@@ -4,7 +4,7 @@ import Switch from '@material-ui/core/Switch';
 import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import { allGridColumnsSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
@@ -46,7 +46,7 @@ export function GridColumnsPanel() {
   const toggleColumn = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       const { name } = event.target as HTMLInputElement;
-      const column = apiRef!.current.getColumnFromField(name);
+      const column = apiRef!.current.getColumn(name);
       apiRef!.current.setColumnVisibility(name, !!column.hide);
     },
     [apiRef],

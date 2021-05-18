@@ -1,27 +1,24 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { DataGrid } from '@material-ui/data-grid';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   root: {
     padding: 10,
     display: 'flex',
-    alignItems: 'flex-end',
-    flexDirection: 'column',
-    '& .status-container': {
-      display: 'flex',
-    },
   },
   connected: {
+    marginRight: 2,
     color: '#4caf50',
   },
   disconnected: {
+    marginRight: 2,
     color: '#d9182e',
   },
-}));
+});
 
 export function CustomFooterStatusComponent(props: {
   status: 'connected' | 'disconnected';
@@ -30,10 +27,8 @@ export function CustomFooterStatusComponent(props: {
 
   return (
     <div className={classes.root}>
-      <div className="status-container">
-        Status {props.status}
-        <FiberManualRecordIcon fontSize="small" className={classes[props.status]} />
-      </div>
+      <FiberManualRecordIcon fontSize="small" className={classes[props.status]} />
+      Status {props.status}
     </div>
   );
 }
@@ -48,25 +43,10 @@ export default function CustomFooter() {
   return (
     <div
       style={{
-        height: 400,
         width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
       }}
     >
-      <div style={{ alignSelf: 'center' }}>
-        <Button
-          color="primary"
-          onClick={() =>
-            setStatus((current) =>
-              current === 'connected' ? 'disconnected' : 'connected',
-            )
-          }
-        >
-          {status === 'connected' ? 'Disconnect' : 'Connect'}
-        </Button>
-      </div>
-      <div style={{ height: 350, width: '100%', marginTop: 16 }}>
+      <div style={{ height: 350, width: '100%', marginBottom: 16 }}>
         <DataGrid
           {...data}
           components={{
@@ -77,6 +57,17 @@ export default function CustomFooter() {
           }}
         />
       </div>
+      <Button
+        color="primary"
+        variant="contained"
+        onClick={() =>
+          setStatus((current) =>
+            current === 'connected' ? 'disconnected' : 'connected',
+          )
+        }
+      >
+        {status === 'connected' ? 'Disconnect' : 'Connect'}
+      </Button>
     </div>
   );
 }

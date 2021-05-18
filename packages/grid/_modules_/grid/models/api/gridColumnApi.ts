@@ -9,7 +9,7 @@ export interface GridColumnApi {
    * @param field
    * @returns [[GridColDef]]
    */
-  getColumnFromField: (field: string) => GridColDef;
+  getColumn: (field: string) => GridColDef;
   /**
    * Get all the [[GridColumns]].
    * @returns An array of [[GridColDef]].

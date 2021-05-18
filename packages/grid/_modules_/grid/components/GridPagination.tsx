@@ -1,36 +1,41 @@
 import * as React from 'react';
 import TablePagination from '@material-ui/core/TablePagination';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
 import { optionsSelector } from '../hooks/utils/optionsSelector';
 import { GridApiContext } from './GridApiContext';
-import { isMuiV5 } from '../utils';
+import { isMuiV5, createTheme } from '../utils';
 
+const defaultTheme = createTheme();
 // Used to hide the Rows per page selector on small devices
-const useStyles = makeStyles((theme: Theme) => ({
-  selectLabel: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'block',
-    },
-  },
-  caption: {
-    // input label
-    '&[id]': {
+const useStyles = makeStyles(
+  (theme: Theme) => ({
+    selectLabel: {
       display: 'none',
       [theme.breakpoints.up('md')]: {
         display: 'block',
       },
     },
-  },
-  input: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'inline-flex',
+    caption: {
+      // input label
+      '&[id]': {
+        display: 'none',
+        [theme.breakpoints.up('md')]: {
+          display: 'block',
+        },
+      },
     },
-  },
-}));
+    input: {
+      display: 'none',
+      [theme.breakpoints.up('md')]: {
+        display: 'inline-flex',
+      },
+    },
+  }),
+  { defaultTheme },
+);
 
 export const GridPagination = React.forwardRef<
   HTMLDivElement,

@@ -1,8 +1,8 @@
 import {
   GRID_CELL_CSS_CLASS,
   GRID_DATA_CONTAINER_CSS_CLASS,
-  GRID_HEADER_CELL_CSS_CLASS,
-  GRID_HEADER_CELL_TITLE_CSS_CLASS,
+  GRID_COLUMN_HEADER_CSS_CLASS,
+  GRID_COLUMN_HEADER_TITLE_CSS_CLASS,
   GRID_ROW_CSS_CLASS,
 } from '../constants/cssClassesConstants';
 import { GridCellIndexCoordinates } from '../models/gridCell';
@@ -28,11 +28,11 @@ export function isGridCellRoot(elem: Element | null): boolean {
 }
 
 export function isGridHeaderCellRoot(elem: Element | null): boolean {
-  return elem != null && elem.classList.contains(GRID_HEADER_CELL_CSS_CLASS);
+  return elem != null && elem.classList.contains(GRID_COLUMN_HEADER_CSS_CLASS);
 }
 
 export function isGridHeaderTitleContainer(elem: Element): boolean {
-  return elem && findParentElementFromClassName(elem, GRID_HEADER_CELL_TITLE_CSS_CLASS) !== null;
+  return elem && findParentElementFromClassName(elem, GRID_COLUMN_HEADER_TITLE_CSS_CLASS) !== null;
 }
 
 export function getIdFromRowElem(rowEl: Element): string {

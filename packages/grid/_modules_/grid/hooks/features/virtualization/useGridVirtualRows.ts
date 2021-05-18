@@ -18,7 +18,7 @@ import {
 } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
-import { GridPaginationState } from '../pagination/gridPaginationReducer';
+import { GridPaginationState } from '../pagination/gridPaginationState';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
