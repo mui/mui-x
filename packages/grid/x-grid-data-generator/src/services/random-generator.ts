@@ -82,6 +82,7 @@ export const randomDate = (start, end) =>
   new Date(start.getTime() + chance.random() * (end.getTime() - start.getTime()));
 export const getDate = () => randomDate(new Date(2012, 0, 1), new Date());
 export const randomArrayItem = (arr: any[]) => arr[random(0, arr.length - 1).toFixed()];
+export const randomBoolean = (): boolean => randomArrayItem([true, false]);
 
 export const randomColor = () => randomArrayItem(COLORS);
 export const randomId = () => chanceId.guid();

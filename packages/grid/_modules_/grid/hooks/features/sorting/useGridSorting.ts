@@ -136,7 +136,7 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   const buildComparatorList = React.useCallback(
     (sortModel: GridSortModel): GridFieldComparatorList => {
       const comparators = sortModel.map((item) => {
-        const column = apiRef.current.getColumnFromField(item.field);
+        const column = apiRef.current.getColumn(item.field);
         if (!column) {
           throw new Error(`Error sorting: column with field '${item.field}' not found. `);
         }

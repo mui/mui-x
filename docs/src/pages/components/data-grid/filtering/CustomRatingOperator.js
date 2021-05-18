@@ -50,7 +50,7 @@ const ratingOnlyOperators = [
   {
     label: 'From',
     value: 'from',
-    getApplyFilterFn: (filterItem, column) => {
+    getApplyFilterFn: (filterItem) => {
       if (
         !filterItem.columnField ||
         !filterItem.value ||
@@ -60,10 +60,7 @@ const ratingOnlyOperators = [
       }
 
       return (params) => {
-        const rowValue = column.valueGetter
-          ? column.valueGetter(params)
-          : params.value;
-        return Number(rowValue) >= Number(filterItem.value);
+        return Number(params.value) >= Number(filterItem.value);
       };
     },
     InputComponent: RatingInputValue,

@@ -117,7 +117,7 @@ describe('<XGrid /> - Rows', () => {
         );
       };
       render(<Test />);
-      expect(apiRef!.current.getRowFromId('c1')).to.equal(baselineProps.rows[0]);
+      expect(apiRef!.current.getRow('c1')).to.equal(baselineProps.rows[0]);
     });
   });
 

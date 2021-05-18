@@ -129,7 +129,7 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
     [logger, setGridState, forceUpdate, apiRef],
   );
 
-  const getColumnFromField: (field: string) => GridColDef = React.useCallback(
+  const getColumn: (field: string) => GridColDef = React.useCallback(
     (field) => apiRef.current.state.columns.lookup[field],
     [apiRef],
   );
@@ -169,7 +169,7 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
 
   const setColumnVisibility = React.useCallback(
     (field: string, isVisible: boolean) => {
-      const col = getColumnFromField(field);
+      const col = getColumn(field);
       const updatedCol = { ...col, hide: !isVisible };
 
       updateColumns([updatedCol]);
@@ -182,7 +182,7 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
         isVisible,
       });
     },
-    [apiRef, forceUpdate, getColumnFromField, updateColumns],
+    [apiRef, forceUpdate, getColumn, updateColumns],
   );
 
   const setColumnIndex = React.useCallback(
@@ -197,7 +197,7 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
       const params: GridColumnOrderChangeParams = {
         field,
         element: apiRef.current.getColumnHeaderElement(field),
-        colDef: apiRef.current.getColumnFromField(field),
+        colDef: apiRef.current.getColumn(field),
         targetIndex: targetIndexPosition,
         oldIndex: oldIndexPosition,
         api: apiRef.current,
@@ -215,7 +215,7 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
     (field: string, width: number) => {
       logger.debug(`Updating column ${field} width to ${width}`);
 
-      const column = apiRef.current.getColumnFromField(field);
+      const column = apiRef.current.getColumn(field);
       apiRef.current.updateColumn({ ...column, width });
 
       apiRef.current.publishEvent(GRID_COLUMN_RESIZE_COMMITTED, {
@@ -229,7 +229,7 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
   );
 
   const colApi: GridColumnApi = {
-    getColumnFromField,
+    getColumn,
     getAllColumns,
     getColumnIndex,
     getColumnPosition,

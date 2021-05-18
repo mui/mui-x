@@ -63,7 +63,7 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
         `Filtering column: ${filterItem.columnField} ${filterItem.operatorValue} ${filterItem.value} `,
       );
 
-      const column = apiRef.current.getColumnFromField(filterItem.columnField);
+      const column = apiRef.current.getColumn(filterItem.columnField);
       if (!column) {
         return;
       }
@@ -162,7 +162,7 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
         }
         if (newItem.columnField != null && newItem.operatorValue == null) {
           // we select a default operator
-          const column = apiRef!.current!.getColumnFromField(newItem.columnField);
+          const column = apiRef!.current!.getColumn(newItem.columnField);
           newItem.operatorValue = column && column!.filterOperators![0].value!;
         }
         if (options.disableMultipleColumnsFiltering && items.length > 1) {

@@ -34,13 +34,13 @@ As an example, you could override the column menu and pass additional props as b
 ### Getting props
 
 While overriding component slots, you might need to access the grid data.
-Therefore, the grid exposes a `useGridSlotComponentProps` hook which allows to retrieve the following props.
+Therefore, the grid exposes a `useGridSlotComponentProps` hook which allows retrieving the following props.
 
 - `state`: the current grid state.
 - `rows`: the current rows in the grid.
 - `columns`: the current columns in the grid.
 - `options`: the current set of options in the grid.
-- `apiRef`<span class="pro"></span>: the `GridApi` ref that allows to manipulate the grid.
+- `apiRef`<span class="pro"></span>: the `GridApi` ref that allows manipulating the grid.
 - `rootElement`: the root DOM element.
 
 It can be used as below:
@@ -55,9 +55,9 @@ function CustomRowCounter() {
 
 ## Components
 
-The full list of overridable components can be found in the [`GridSlotsComponent`](/api/data-grid/#slots) API page.
+The full list of overridable components can be found on the [`GridSlotsComponent`](/api/data-grid/#slots) API page.
 
-### ColumnMenu
+### Column menu
 
 As mentioned above, the column menu is a component slot that can be recomposed easily and customized on each column as in the demo below.
 
@@ -142,17 +142,6 @@ In the following demo, an illustration is added on top of the default "No Rows" 
 
 ### Icons
 
-As any component slot, every icon can be customised. However, it is not yet possible to use the `componentsProps` with icons.
+As any component slot, every icon can be customized. However, it is not yet possible to use the `componentsProps` with icons.
 
 {{"demo": "pages/components/data-grid/components/CustomSortIcons.js", "bg": "inline"}}
-
-```jsx
-<DataGrid
-  rows={rows}
-  columns={columns}
-  components={{
-    ColumnSortedDescendingIcon: SortedDescendingIcon,
-    ColumnSortedAscendingIcon: SortedAscendingIcon,
-  }}
-/>
-```
