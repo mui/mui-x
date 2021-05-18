@@ -150,8 +150,8 @@ Api of the `components` props of type `GridSlotsComponent`
 |  | <span class="prop-name">.MuiDataGrid-overlay</span> | Styles applied to the outer overlay element.|
 |  | <span class="prop-name">.MuiDataGrid-columnsContainer</span> | Styles applied to the outer columns container element.|
 |  | <span class="prop-name">.MuiDataGrid-columnHeaderWrapper</span> | Styles applied to the outer columns header cells container element.|
-|  | <span class="prop-name">.MuiDataGrid-columnHeader</span> | Styles applied to the header cell element.|
-|  | <span class="prop-name">.MuiDataGrid-cell</span> | Styles applied to the cell element.|
+| <span class="prop-name">columnHeader</span> | <span class="prop-name">.MuiDataGrid-columnHeader</span> | Styles applied to the header cell element.|
+| <span class="prop-name">cell</span> | <span class="prop-name">.MuiDataGrid-cell</span> | Styles applied to the cell element.|
 |  | <span class="prop-name">.MuiDataGrid-columnHeaderCheckbox</span> | Styles applied to the header checkbox cell element.|
 |  | <span class="prop-name">.MuiDataGrid-cellCheckbox</span> | Styles applied to the cell checkbox element.|
 |  | <span class="prop-name">.MuiDataGrid-columnHeaderSortable</span> | Styles applied to the sortable header cell element.|
@@ -165,7 +165,7 @@ Api of the `components` props of type `GridSlotsComponent`
 |  | <span class="prop-name">.MuiDataGrid-dataContainer</span> | Styles applied to the data container element.|
 |  | <span class="prop-name">.MuiDataGrid-window</span> | Styles applied to the window element.|
 |  | <span class="prop-name">.MuiDataGrid-viewport</span> | Styles applied to the viewport element.|
-|  | <span class="prop-name">.MuiDataGrid-row</span> | Styles applied to the row element.|
+| <span class="prop-name">row</span> | <span class="prop-name">.MuiDataGrid-row</span> | Styles applied to the row element.|
 |  | <span class="prop-name">.Mui-selected</span> | Styles applied to the selected row element.|
 |  | <span class="prop-name">.MuiDataGrid-cellWithRenderer</span> | Styles applied to the customized cell element.|
 |  | <span class="prop-name">.MuiDataGrid-withBorder</span> | Styles applied to the cell element that has right border displayed.|
