@@ -2,7 +2,6 @@ import * as React from 'react';
 import { GRID_PAGE_CHANGED, GRID_PAGESIZE_CHANGED } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridPaginationApi } from '../../../models/api/gridPaginationApi';
-import { GridOptions } from '../../../models/gridOptions';
 import { GridPageChangeParams } from '../../../models/params/gridPageChangeParams';
 import { useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
@@ -14,17 +13,14 @@ import { useGridSelector } from '../core/useGridSelector';
 import { visibleGridRowCountSelector } from '../filter/gridFilterSelector';
 import { GridPaginationState } from './gridPaginationState';
 
-function applyConstraints(
-  state: GridPaginationState,
-  options: { page: GridOptions['page'] },
-): GridPaginationState {
+function applyConstraints(state: GridPaginationState, pageProp?: number): GridPaginationState {
   const pageCount =
     state.pageSize && state.rowCount > 0 ? Math.ceil(state.rowCount / state.pageSize!) : 1;
 
   return {
     ...state,
     pageCount,
-    page: Math.min(pageCount - 1, options.page !== undefined ? options.page : state.page),
+    page: Math.min(pageCount - 1, pageProp !== undefined ? pageProp : state.page),
   };
 }
 
@@ -47,9 +43,7 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
             ...state.pagination,
             page,
           },
-          {
-            page: options.page,
-          },
+          options.page,
         ),
       }));
       forceUpdate();
@@ -73,9 +67,7 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
             ...state.pagination,
             pageSize,
           },
-          {
-            page: options.page,
-          },
+          options.page,
         ),
       }));
       forceUpdate();
@@ -103,9 +95,7 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
               : state.pagination.paginationMode,
           rowCount: visibleRowCount,
         },
-        {
-          page: options.page,
-        },
+        options.page,
       ),
     }));
     forceUpdate();
@@ -121,9 +111,7 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
             (options.autoPageSize ? containerSizes?.viewportPageSize : options.pageSize) ||
             state.pagination.pageSize,
         },
-        {
-          page: options.page,
-        },
+        options.page,
       ),
     }));
     forceUpdate();
