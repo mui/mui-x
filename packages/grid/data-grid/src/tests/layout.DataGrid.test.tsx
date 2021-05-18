@@ -8,7 +8,7 @@ import {
 import { useFakeTimers, stub } from 'sinon';
 import { expect } from 'chai';
 import { DataGrid, GridValueGetterParams, GridToolbar } from '@material-ui/data-grid';
-import { getColumnValues, raf, sleep } from 'test/utils/helperFn';
+import { getColumnValues, raf } from 'test/utils/helperFn';
 
 describe('<DataGrid /> - Layout & Warnings', () => {
   // TODO v5: replace with createClientRender
@@ -46,6 +46,16 @@ describe('<DataGrid /> - Layout & Warnings', () => {
   });
 
   describe('Layout', () => {
+    let clock;
+
+    beforeEach(() => {
+      clock = useFakeTimers();
+    });
+
+    afterEach(() => {
+      clock.restore();
+    });
+
     before(function beforeHook() {
       if (/jsdom/.test(window.navigator.userAgent)) {
         // Need layouting
@@ -54,6 +64,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
 
     it('should resize the width of the columns', async () => {
+      clock.restore();
       interface TestCaseProps {
         width?: number;
       }
@@ -72,7 +83,8 @@ describe('<DataGrid /> - Layout & Warnings', () => {
       expect(rect.width).to.equal(300 - 2);
 
       setProps({ width: 400 });
-      await raf(); // wait for the AutoSize's dimension detection logic
+      await raf();
+
       rect = container.querySelector('[role="row"][data-rowindex="0"]').getBoundingClientRect();
       expect(rect.width).to.equal(400 - 2);
     });
@@ -150,16 +162,6 @@ describe('<DataGrid /> - Layout & Warnings', () => {
     });
 
     describe('warnings', () => {
-      let clock;
-
-      beforeEach(() => {
-        clock = useFakeTimers();
-      });
-
-      afterEach(() => {
-        clock.restore();
-      });
-
       it('should warn if the container has no intrinsic height', () => {
         expect(() => {
           render(
@@ -226,7 +228,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         console.warn.restore();
       });
 
-      it('should have a stable height if the parent container has no intrinsic height', async () => {
+      it('should have a stable height if the parent container has no intrinsic height', () => {
         const { getByRole } = render(
           <div>
             <p>The table keeps growing... and growing...</p>
@@ -234,7 +236,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           </div>,
         );
         const firstHeight = getByRole('grid').clientHeight;
-        await sleep(10);
+        clock.tick(10);
         const secondHeight = getByRole('grid').clientHeight;
         expect(firstHeight).to.equal(secondHeight);
       });
