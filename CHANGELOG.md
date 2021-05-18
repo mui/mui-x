@@ -41,12 +41,12 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 - [DataGrid] Rename CSS classes (#1660) @DanailH
 
   1. `MuiDataGrid-colCellWrapper` to `MuiDataGrid-columnHeaderWrapper`
-  1. `MuiDataGrid-colCell` to `MuiDataGrid-columnHeader`
-  1. `MuiDataGrid-colCellCheckbox` to `MuiDataGrid-columnHeaderCheckbox`
-  1. `MuiDataGrid-colCellSortable` to `MuiDataGrid-columnHeaderSortable`
-  1. `MuiDataGrid-colCellCenter` to `MuiDataGrid-columnHeaderCenter`
-  1. `MuiDataGrid-colCellLeft` to `MuiDataGrid-columnHeaderLeft`
-  1. `MuiDataGrid-colCellRight` to `MuiDataGrid-columnHeaderRight`
+  2. `MuiDataGrid-colCell` to `MuiDataGrid-columnHeader`
+  3. `MuiDataGrid-colCellCheckbox` to `MuiDataGrid-columnHeaderCheckbox`
+  4. `MuiDataGrid-colCellSortable` to `MuiDataGrid-columnHeaderSortable`
+  5. `MuiDataGrid-colCellCenter` to `MuiDataGrid-columnHeaderCenter`
+  6. `MuiDataGrid-colCellLeft` to `MuiDataGrid-columnHeaderLeft`
+  7. `MuiDataGrid-colCellRight` to `MuiDataGrid-columnHeaderRight`
 
 - [XGrid] Calling `setCellFocus` now requires the id and field to be passed (#1513) @dtassone
 
