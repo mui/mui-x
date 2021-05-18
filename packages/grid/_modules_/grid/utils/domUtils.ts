@@ -5,7 +5,6 @@ import {
   GRID_COLUMN_HEADER_TITLE_CSS_CLASS,
   GRID_ROW_CSS_CLASS,
 } from '../constants/cssClassesConstants';
-import { GridCellIndexCoordinates } from '../models/gridCell';
 import { GridRowId } from '../models/gridRows';
 
 export function isOverflown(element: Element): boolean {
@@ -71,15 +70,6 @@ export function findGridDataContainerFromCurrent(elem: Element): HTMLDivElement 
     return null;
   }
   return root.querySelector(`:scope .${GRID_DATA_CONTAINER_CSS_CLASS}`) as HTMLDivElement;
-}
-
-export function getGridCellElementFromIndexes(
-  root: Element,
-  { colIndex, rowIndex }: GridCellIndexCoordinates,
-) {
-  return root.querySelector(
-    `:scope .${GRID_CELL_CSS_CLASS}[aria-colIndex='${colIndex + 1}'][data-rowIndex='${rowIndex}']`,
-  ) as HTMLDivElement;
 }
 
 export function getGridColumnHeaderElement(root: Element, field: string) {
