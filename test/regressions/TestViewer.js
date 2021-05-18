@@ -7,14 +7,13 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = (theme) => ({
   root: {
     backgroundColor: theme.palette.background.default,
-    display: 'inline-block',
     padding: theme.spacing(1),
+    display: 'flex',
+    justifyContent: 'center',
   },
   dataGridContainer: {
     minHeight: 400,
     maxWidth: 500,
-    display: 'flex',
-    flexDirection: 'column',
     // Workaround the min-height limitation
     '& .grid-container': {
       position: 'relative',
