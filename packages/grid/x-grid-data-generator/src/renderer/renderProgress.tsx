@@ -1,38 +1,43 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { GridCellParams } from '@material-ui/x-grid';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/styles';
+import { createTheme } from '../../../_modules_/grid/utils/utils';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      border: `1px solid ${theme.palette.divider}`,
-      position: 'relative',
-      overflow: 'hidden',
-      width: '100%',
-      height: 26,
-      borderRadius: 2,
-    },
-    value: {
-      position: 'absolute',
-      lineHeight: '24px',
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'center',
-    },
-    bar: {
-      height: '100%',
-      '&.low': {
-        backgroundColor: '#f44336',
+const defaultTheme = createTheme();
+const useStyles = makeStyles(
+  (theme: Theme) =>
+    createStyles({
+      root: {
+        border: `1px solid ${theme.palette.divider}`,
+        position: 'relative',
+        overflow: 'hidden',
+        width: '100%',
+        height: 26,
+        borderRadius: 2,
       },
-      '&.medium': {
-        backgroundColor: '#efbb5aa3',
+      value: {
+        position: 'absolute',
+        lineHeight: '24px',
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
       },
-      '&.high': {
-        backgroundColor: '#088208a3',
+      bar: {
+        height: '100%',
+        '&.low': {
+          backgroundColor: '#f44336',
+        },
+        '&.medium': {
+          backgroundColor: '#efbb5aa3',
+        },
+        '&.high': {
+          backgroundColor: '#088208a3',
+        },
       },
-    },
-  }),
+    }),
+  { defaultTheme },
 );
 
 interface ProgressBarProps {

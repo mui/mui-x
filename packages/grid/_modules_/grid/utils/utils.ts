@@ -67,6 +67,13 @@ export function muiStyleAlpha(color: string, value: number): string {
   return (styles as any)?.fade(color, value);
 }
 
+export function createTheme(): styles.Theme {
+  if (isMuiV5()) {
+    return (styles as any)?.createTheme();
+  }
+  return (styles as any)?.createMuiTheme();
+}
+
 export function localStorageAvailable() {
   try {
     // Incognito mode might reject access to the localStorage for security reasons.
