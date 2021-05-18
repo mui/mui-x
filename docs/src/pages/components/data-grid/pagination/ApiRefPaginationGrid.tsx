@@ -10,13 +10,20 @@ export default function ApiRefPaginationGrid() {
     maxColumns: 6,
   });
 
-  React.useEffect(() => {
+  const handleClick = () => {
     apiRef.current.setPage(1);
-  }, [apiRef]);
+  };
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      <XGrid pagination pageSize={5} apiRef={apiRef} {...data} />
+    <div>
+      <button type="button" onClick={handleClick}>
+        Set page 2
+      </button>
+      <br />
+      <br />
+      <div style={{ height: 400, width: '100%' }}>
+        <XGrid pagination pageSize={5} apiRef={apiRef} {...data} />
+      </div>
     </div>
   );
 }

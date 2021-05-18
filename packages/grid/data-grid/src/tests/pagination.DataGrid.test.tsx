@@ -48,27 +48,13 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should apply the page prop correctly', () => {
-      const rows = [
-        {
-          id: 0,
-          brand: 'Nike',
-        },
-        {
-          id: 1,
-          brand: 'Addidas',
-        },
-        {
-          id: 2,
-          brand: 'Puma',
-        },
-      ];
       render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} rows={rows} page={1} pageSize={1} />
+          <DataGrid {...baselineProps} page={1} pageSize={1} />
         </div>,
       );
       const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
-      expect(cell).to.have.text('Addidas');
+      expect(cell).to.have.text('Adidas');
     });
 
     it('should trigger onPageChange when clicking on next page', () => {
@@ -195,32 +181,32 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should show filtered data if the user applies filter on an intermediate page and the resulted filter data is less than the rows per page', () => {
-      const TestCasePaginationFilteredData = (props) => {
-        const data = useData(200, 10);
+      const TestCasePaginationFilteredData = () => {
+        const data = useData(200, 2);
 
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid columns={data.columns} rows={data.rows} pagination {...props} />
+            <DataGrid
+              columns={data.columns}
+              rows={data.rows}
+              pagination
+              page={1}
+              pageSize={25}
+              filterModel={{
+                items: [
+                  {
+                    columnField: 'currencyPair',
+                    value: 'BTCUSD',
+                    operatorValue: 'equals',
+                  },
+                ],
+              }}
+            />
           </div>
         );
       };
-
-      render(
-        <TestCasePaginationFilteredData
-          page={3}
-          pageSize={25}
-          filterModel={{
-            items: [
-              {
-                columnField: 'currencyPair',
-                value: 'BTCUSD',
-                operatorValue: 'equals',
-              },
-            ],
-          }}
-        />,
-      );
-      expect(getColumnValues(1)).to.include('BTCUSD');
+      render(<TestCasePaginationFilteredData />);
+      expect(getColumnValues(1)).to.deep.equal(['BTCUSD', 'BTCUSD', 'BTCUSD', 'BTCUSD']);
     });
 
     describe('prop: autoPageSize', () => {
@@ -266,6 +252,26 @@ describe('<DataGrid /> - Pagination', () => {
           null,
           'next page should be disabled.',
         );
+      });
+
+      it('should be compatible with controlled page', () => {
+        const rows = [
+          { id: 1, x: 1 },
+          { id: 2, x: 2 },
+          { id: 3, x: 3 },
+          { id: 4, x: 4 },
+          { id: 5, x: 5 },
+          { id: 6, x: 6 },
+          { id: 7, x: 7 },
+          { id: 8, x: 8 },
+        ];
+        const columns = [{ field: 'x', type: 'number' }];
+        render(
+          <div style={{ height: 300, width: 400 }}>
+            <DataGrid pagination autoPageSize rows={rows} columns={columns} page={2} />
+          </div>,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['7', '8']);
       });
     });
   });
