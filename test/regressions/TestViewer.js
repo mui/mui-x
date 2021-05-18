@@ -2,7 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useFakeTimers } from 'sinon';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/styles';
+import { createTheme } from '@material-ui/data-grid';
 
 const styles = (theme) => ({
   root: {
@@ -118,4 +119,5 @@ TestViewer.propTypes = {
   dataGridContainer: PropTypes.bool.isRequired,
 };
 
-export default withStyles(styles)(TestViewer);
+const defaultTheme = createTheme();
+export default withStyles(styles, { defaultTheme })(TestViewer);

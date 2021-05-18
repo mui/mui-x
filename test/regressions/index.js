@@ -2,7 +2,7 @@ import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { LicenseInfo } from '@material-ui/x-grid';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/styles';
 import webfontloader from 'webfontloader';
 import TestViewer from 'test/regressions/TestViewer';
 import { useFakeTimers } from 'sinon';
