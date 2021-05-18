@@ -93,13 +93,20 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
             options.paginationMode != null
               ? options.paginationMode
               : state.pagination.paginationMode,
-          rowCount: visibleRowCount,
+          rowCount: options.rowCount !== undefined ? options.rowCount : visibleRowCount,
         },
         options.page,
       ),
     }));
     forceUpdate();
-  }, [setGridState, forceUpdate, options.page, options.paginationMode, visibleRowCount]);
+  }, [
+    setGridState,
+    forceUpdate,
+    options.page,
+    options.paginationMode,
+    visibleRowCount,
+    options.rowCount,
+  ]);
 
   React.useEffect(() => {
     setGridState((state) => ({
