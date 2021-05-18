@@ -55,9 +55,9 @@ export async function sleep(duration: number) {
 }
 
 export function getColumnValues(colIndex: number = 0) {
-  return Array.from(
-    document.querySelectorAll(`[role="cell"][aria-colindex="${colIndex + 1}"]`),
-  ).map((node) => node!.textContent);
+  return Array.from(document.querySelectorAll(`[role="cell"][data-colindex="${colIndex}"]`)).map(
+    (node) => node!.textContent,
+  );
 }
 
 export function getColumnHeaderCell(colIndex: number): HTMLElement {
@@ -78,7 +78,7 @@ export function getColumnHeadersTextContent() {
 
 export function getCell(rowIndex: number, colIndex: number): HTMLElement {
   const cell = document.querySelector(
-    `[role="cell"][data-rowindex="${rowIndex}"][aria-colindex="${colIndex + 1}"]`,
+    `[role="cell"][data-rowindex="${rowIndex}"][data-colindex="${colIndex}"]`,
   );
   if (cell == null) {
     throw new Error(`Cell ${rowIndex} ${colIndex} not found`);
