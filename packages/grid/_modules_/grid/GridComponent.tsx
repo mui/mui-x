@@ -52,6 +52,7 @@ import { useLocaleText } from './hooks/features/localeText/useLocaleText';
 import { useGridCsvExport } from './hooks/features/export';
 import { useGridInfiniteLoader } from './hooks/features/infiniteLoader';
 import { visibleGridRowCountSelector } from './hooks/features/filter/gridFilterSelector';
+import { useGridFreezeRows } from './hooks/features/rows/useGridFreezeRows';
 
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {
@@ -79,6 +80,9 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useEvents(rootContainerRef, apiRef);
     useLocaleText(apiRef);
     const onResize = useResizeContainer(apiRef);
+
+    // Freeze rows for immutability
+    useGridFreezeRows(props.rows);
 
     useGridColumns(props.columns, apiRef);
     useGridParamsApi(apiRef);
