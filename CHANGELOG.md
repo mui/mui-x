@@ -11,7 +11,10 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 
 - 🚀 Performance increased when filtering, sorting, and rendering (#1513) @dtassone
 - 💅 Add `columnHeader`, `row` and `cell` to the `classes` prop (#1660) @DanailH
-- ✅ Add `isRowSelectable` prop (#1659) @m4theushw
+- ✅ Add the `isRowSelectable` prop to disable selection on certain rows (#1659) @m4theushw
+
+  See the documentation for [more details](https://material-ui.com/components/data-grid/selection/#disable-selection-on-certain-rows).
+
 - ⚡️ Add new icon slot to be displayed when the column is unsorted (#1415) @m4theushw
 - ⚙ Improve consistency of the API to prepare for the first beta release
 - 🐞 Bugfixes
