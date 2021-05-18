@@ -10,10 +10,10 @@ const columns: GridColumns = [
 ];
 
 const rows = [
-  { id: 1, city: 'São Paulo', oct: 20.2, nov: 21.1, dec: 19.2 },
+  { id: 1, city: 'Amsterdam', oct: 7.1, nov: 4, dec: 10.2 },
   { id: 2, city: 'Barcelona', oct: 14.9, nov: 12.3, dec: 18.2 },
-  { id: 4, city: 'Paris', oct: 8.1, nov: 5.4, dec: 12.3 },
-  { id: 5, city: 'Amsterdam', oct: 7.1, nov: 4, dec: 10.2 },
+  { id: 3, city: 'Paris', oct: 8.1, nov: 5.4, dec: 12.3 },
+  { id: 4, city: 'São Paulo', oct: 20.2, nov: 21.1, dec: 19.2 },
 ];
 
 const useStyles = makeStyles({
