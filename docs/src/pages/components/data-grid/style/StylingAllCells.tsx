@@ -19,11 +19,11 @@ const rows = [
 const useStyles = makeStyles({
   root: {
     '& .cold': {
-      backgroundColor: '#b9b9ff',
+      backgroundColor: '#b9d5ff91',
       color: '#1a3e72',
     },
     '& .hot': {
-      backgroundColor: '#ff5d1f',
+      backgroundColor: '#ff943975',
       color: '#1a3e72',
     },
   },
