@@ -436,9 +436,9 @@ function sortServerRows(rows: Readonly<any[]>, params: GridSortModelParams): Pro
       const sortedCol = params.sortModel[0];
       const comparator = params.columns[0].sortComparator!;
       const clonedRows = [...rows];
-      let sortedRows = [
-        ...clonedRows.sort((a, b) => comparator(a[sortedCol.field], b[sortedCol.field], a, b)),
-      ];
+      let sortedRows = clonedRows.sort((a, b) =>
+        comparator(a[sortedCol.field], b[sortedCol.field], a, b),
+      );
 
       if (params.sortModel[0].sort === 'desc') {
         sortedRows = sortedRows.reverse();
