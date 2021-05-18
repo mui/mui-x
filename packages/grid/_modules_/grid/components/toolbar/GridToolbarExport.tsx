@@ -7,28 +7,44 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
 import { GridApiContext } from '../GridApiContext';
 import { GridMenu } from '../menu/GridMenu';
-import { GridExportOption } from '../../models';
+import { GridExportOption, GridExportFormat, GridExportConfiguration } from '../../models';
 
-export const GridToolbarExport = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  function GridToolbarExport(props, ref) {
+type GridToolbarExportProps = ButtonProps & { exportConfiguration?: GridExportConfiguration };
+
+export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps>(
+  function GridToolbarExport({ exportConfiguration, ...buttonProps }, ref) {
     const apiRef = React.useContext(GridApiContext);
     const exportButtonId = useId();
     const exportMenuId = useId();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const ExportIcon = apiRef!.current.components!.ExportIcon!;
 
-    const ExportOptions: Array<GridExportOption> = [
-      {
+    const ExportOptions: Array<GridExportOption> = [];
+
+    if (exportConfiguration) {
+      if (!exportConfiguration.csv?.disabled) {
+        ExportOptions.push({
+          label: apiRef!.current.getLocaleText('toolbarExportCSV'),
+          format: {
+            name: 'csv',
+            options: exportConfiguration.csv,
+          },
+        });
+      }
+    } else {
+      ExportOptions.push({
         label: apiRef!.current.getLocaleText('toolbarExportCSV'),
-        format: 'csv',
-      },
-    ];
+        format: {
+          name: 'csv',
+        },
+      });
+    }
 
     const handleExportSelectorOpen = (event) => setAnchorEl(event.currentTarget);
     const handleExportSelectorClose = () => setAnchorEl(null);
-    const handleExport = (format) => {
-      if (format === 'csv') {
-        apiRef!.current.exportDataAsCsv();
+    const handleExport = (format: GridExportFormat, fileName?: string) => {
+      if (format.name === 'csv') {
+        apiRef!.current.exportDataAsCsv(format.options, fileName);
       }
 
       setAnchorEl(null);
@@ -44,7 +60,10 @@ export const GridToolbarExport = React.forwardRef<HTMLButtonElement, ButtonProps
     };
 
     const renderExportOptions: Array<React.ReactElement> = ExportOptions.map((option, index) => (
-      <MenuItem key={index} onClick={() => handleExport(option.format)}>
+      <MenuItem
+        key={index}
+        onClick={() => handleExport(option.format, exportConfiguration?.fileName)}
+      >
         {option.label}
       </MenuItem>
     ));
@@ -61,7 +80,7 @@ export const GridToolbarExport = React.forwardRef<HTMLButtonElement, ButtonProps
           aria-haspopup="menu"
           aria-labelledby={exportMenuId}
           id={exportButtonId}
-          {...props}
+          {...buttonProps}
         >
           {apiRef!.current.getLocaleText('toolbarExport')}
         </Button>

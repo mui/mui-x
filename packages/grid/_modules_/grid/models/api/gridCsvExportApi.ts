@@ -1,3 +1,5 @@
+import { GridExportCsvOptions } from '../gridExport';
+
 /**
  * The csv export API interface that is available in the grid [[apiRef]].
  */
@@ -10,5 +12,5 @@ export interface GridCsvExportApi {
   /**
    * Exports the grid data as CSV and sends it to the user.
    */
-  exportDataAsCsv: () => void;
+  exportDataAsCsv: (options?: GridExportCsvOptions, fileName?: string) => void;
 }
