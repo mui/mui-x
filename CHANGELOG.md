@@ -19,7 +19,7 @@ Big thanks to the 11 contributors who made this release possible. Here are some 
 
 #### Breaking changes
 
-- [DataGrid] Remove the rpoperties `element`, `rowIndex` and `colIndex` from all `params` arguments. (#1513) @dtassone
+- [DataGrid] Remove the properties `element`, `rowIndex` and `colIndex` from all `params` arguments. (#1513) @dtassone
 
   You can use the following `apiRef` methods to replace some of them:
 
