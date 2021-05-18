@@ -53,7 +53,7 @@ describe('<DataGrid /> - Pagination', () => {
           <DataGrid {...baselineProps} page={1} pageSize={1} />
         </div>,
       );
-      expect(getColumnValues()).to.deep.equal(['Addidas']);
+      expect(getColumnValues()).to.deep.equal(['Adidas']);
     });
 
     it('should trigger onPageChange when clicking on next page', () => {

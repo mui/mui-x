@@ -164,6 +164,7 @@ export const GridCell = React.memo((props: GridCellProps) => {
       data-value={value}
       data-field={field}
       data-rowindex={rowIndex}
+      data-colindex={colIndex}
       data-rowselected={isSelected}
       data-editable={isEditable}
       data-mode={cellMode}

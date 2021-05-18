@@ -92,9 +92,9 @@ describe('<DataGrid /> - Keyboard', () => {
     );
     const input = screen.getByTestId('custom-input');
     input.focus();
-    expect(getActiveCell()).to.equal('0-2');
+    expect(getActiveCell()).to.equal('0-1');
     fireEvent.keyDown(input, { key: 'ArrowLeft' });
-    expect(getActiveCell()).to.equal('0-2');
+    expect(getActiveCell()).to.equal('0-1');
   });
 
   it('should call preventDefault when using keyboard navigation', () => {
@@ -143,27 +143,27 @@ describe('<DataGrid /> - Keyboard', () => {
   it('cell navigation with arrows', () => {
     render(<KeyboardTest nbRows={10} />);
     getCell(0, 0).focus();
-    expect(getActiveCell()).to.equal('0-1');
+    expect(getActiveCell()).to.equal('0-0');
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
-    expect(getActiveCell()).to.equal('0-2');
-    fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
-    expect(getActiveCell()).to.equal('1-2');
-    fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
-    expect(getActiveCell()).to.equal('1-1');
-    fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
     expect(getActiveCell()).to.equal('0-1');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
+    expect(getActiveCell()).to.equal('1-1');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowLeft' });
+    expect(getActiveCell()).to.equal('1-0');
+    fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
+    expect(getActiveCell()).to.equal('0-0');
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowUp' });
     expect(getActiveColumnHeader()).to.equal('1');
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowRight' });
     expect(getActiveColumnHeader()).to.equal('2');
     fireEvent.keyDown(document.activeElement!, { key: 'ArrowDown' });
-    expect(getActiveCell()).to.equal('0-2');
+    expect(getActiveCell()).to.equal('0-1');
   });
 
   it('Shift + Space should select a row', () => {
     render(<KeyboardTest />);
     getCell(0, 0).focus();
-    expect(getActiveCell()).to.equal('0-1');
+    expect(getActiveCell()).to.equal('0-0');
     fireEvent.keyDown(document.activeElement!, SHIFT_SPACE_KEY);
     const row = getRow(0);
     const isSelected = row.classList.contains('Mui-selected');
@@ -178,17 +178,17 @@ describe('<DataGrid /> - Keyboard', () => {
 
     render(<KeyboardTest />);
     getCell(0, 0).focus();
-    expect(getActiveCell()).to.equal('0-1');
+    expect(getActiveCell()).to.equal('0-0');
     fireEvent.keyDown(document.activeElement!, { key: ' ' });
-    expect(getActiveCell()).to.equal('4-1');
+    expect(getActiveCell()).to.equal('4-0');
   });
 
   it('Space only should go to the bottom of the page even with small number of rows', () => {
     render(<KeyboardTest nbRows={4} />);
     getCell(0, 0).focus();
-    expect(getActiveCell()).to.equal('0-1');
+    expect(getActiveCell()).to.equal('0-0');
     fireEvent.keyDown(document.activeElement!, SPACE_KEY);
-    expect(getActiveCell()).to.equal('3-1');
+    expect(getActiveCell()).to.equal('3-0');
   });
 
   it('Home / End navigation', async function test() {
@@ -199,12 +199,12 @@ describe('<DataGrid /> - Keyboard', () => {
 
     render(<KeyboardTest />);
     getCell(1, 1).focus();
-    expect(getActiveCell()).to.equal('1-2');
-    fireEvent.keyDown(document.activeElement!, { key: 'Home' });
     expect(getActiveCell()).to.equal('1-1');
+    fireEvent.keyDown(document.activeElement!, { key: 'Home' });
+    expect(getActiveCell()).to.equal('1-0');
     fireEvent.keyDown(document.activeElement!, { key: 'End' });
     await waitFor(() => getCell(1, 19));
-    expect(getActiveCell()).to.equal('1-20');
+    expect(getActiveCell()).to.equal('1-19');
   });
 
   it('Page Down / Page Up navigation', () => {
@@ -233,13 +233,13 @@ describe('<DataGrid /> - Keyboard', () => {
     );
 
     getCell(0, 0).focus();
-    expect(getActiveCell()).to.equal('0-1');
+    expect(getActiveCell()).to.equal('0-0');
     fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
-    expect(getActiveCell()).to.equal('2-1');
+    expect(getActiveCell()).to.equal('2-0');
     fireEvent.keyDown(document.activeElement!, { key: 'PageUp' });
     expect(getActiveColumnHeader()).to.equal('1');
     fireEvent.keyDown(document.activeElement!, { key: 'PageDown' });
-    expect(getActiveCell()).to.equal('2-1');
+    expect(getActiveCell()).to.equal('2-0');
   });
   /* eslint-enable material-ui/disallow-active-element-as-key-event-target */
 

@@ -13,7 +13,7 @@ export async function raf() {
 
 export const CLOCK_SYNC_FACTOR = 10;
 
-export function getActiveCell() {
+export function getActiveCell(): string | null {
   let activeElement: Element | null;
   if (document.activeElement && document.activeElement.getAttribute('role') === 'cell') {
     activeElement = document.activeElement;
@@ -26,7 +26,7 @@ export function getActiveCell() {
   }
 
   return `${activeElement.getAttribute('data-rowindex')}-${activeElement.getAttribute(
-    'aria-colindex',
+    'data-colindex',
   )}`;
 }
 
