@@ -56,6 +56,7 @@ describe('<DataGrid /> - Pagination', () => {
       const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
       expect(cell).to.have.text('Adidas');
     });
+
     it('should react to an update of rowCount', () => {
       const Test = (props) => {
         return (
