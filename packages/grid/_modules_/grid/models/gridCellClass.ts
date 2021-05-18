@@ -3,7 +3,7 @@ import { GridCellParams } from './params/gridCellParams';
 /**
  * Alias of GridCellParams.
  *
- * TODO to be removed
+ * @deprecated use GridCellParams instead
  */
 export type GridCellClassParams = GridCellParams;
 /**
