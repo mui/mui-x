@@ -21,11 +21,7 @@ export default function ApiRefPaginationGrid() {
         width: '100%',
       }}
     >
-      <Button
-        color="primary"
-        variant="outlined"
-        onClick={handleClick}
-      >
+      <Button color="primary" variant="outlined" onClick={handleClick}>
         Set page 2
       </Button>
       <div style={{ height: 400, width: '100%', marginTop: 16 }}>
