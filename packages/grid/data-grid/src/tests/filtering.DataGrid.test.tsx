@@ -149,7 +149,7 @@ describe('<DataGrid /> - Filter', () => {
     });
   });
 
-  describe('Numeric operators', () => {
+  describe('numeric operators', () => {
     [
       { operator: '=', value: 1984, expected: [1984] },
       { operator: '!=', value: 1984, expected: [1954, 1974] },
@@ -187,23 +187,24 @@ describe('<DataGrid /> - Filter', () => {
     });
   });
 
-  describe('Date operators', function test() {
-    const isEdge = /Edg/.test(window.navigator.userAgent);
-    before(function before() {
-      if (isEdge) {
-        // We need to skip edge as it does not handle the date the same way as other browsers.
-        this.skip();
-      }
-    });
+  describe('date operators', () => {
     [
-      { operator: 'is', value: new Date(2000, 11, 1), expected: ['12/1/2000'] },
-      { operator: 'not', value: new Date(2000, 11, 1), expected: ['1/1/2001', '1/1/2002'] },
-      { operator: 'after', value: new Date(2001, 0, 1), expected: ['1/1/2002'] },
-      { operator: 'onOrAfter', value: new Date(2001, 0, 1), expected: ['1/1/2001', '1/1/2002'] },
-      { operator: 'before', value: new Date(2001, 0, 1), expected: ['12/1/2000'] },
-      { operator: 'onOrBefore', value: new Date(2001, 0, 1), expected: ['12/1/2000', '1/1/2001'] },
+      { operator: 'is', value: new Date(2000, 11, 1), expected: ['2000-12-01'] },
+      { operator: 'not', value: new Date(2000, 11, 1), expected: ['2001-01-01', '2002-01-01'] },
+      { operator: 'after', value: new Date(2001, 0, 1), expected: ['2002-01-01'] },
+      {
+        operator: 'onOrAfter',
+        value: new Date(2001, 0, 1),
+        expected: ['2001-01-01', '2002-01-01'],
+      },
+      { operator: 'before', value: new Date(2001, 0, 1), expected: ['2000-12-01'] },
+      {
+        operator: 'onOrBefore',
+        value: new Date(2001, 0, 1),
+        expected: ['2000-12-01', '2001-01-01'],
+      },
     ].forEach(({ operator, value, expected }) => {
-      it(`should allow object as value and work with valueGetter, operator: ${operator}`, function dateOpsTest() {
+      it(`should allow object as value and work with valueGetter, operator: ${operator}`, () => {
         render(
           <TestCase
             value={value.toLocaleDateString()}
@@ -222,7 +223,14 @@ describe('<DataGrid /> - Filter', () => {
                 brand: { date: new Date(2002, 0, 1) },
               },
             ]}
-            columns={[{ field: 'brand', valueGetter: (params) => params.value.date, type: 'date' }]}
+            columns={[
+              {
+                field: 'brand',
+                type: 'date',
+                valueGetter: (params) => params.value.date,
+                valueFormatter: (params) => params.value.toISOString().slice(0, 10),
+              },
+            ]}
           />,
         );
         expect(getColumnValues()).to.deep.equal(expected.map((res) => res));
