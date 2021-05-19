@@ -36,7 +36,7 @@ describe('<DataGrid /> - Filter', () => {
     rows?: any[];
     columns?: any[];
     operator?: string;
-    value?: string;
+    value?: any;
     field?: string;
   }) => {
     const { operator, value, rows, columns, field = 'brand' } = props;
@@ -188,13 +188,14 @@ describe('<DataGrid /> - Filter', () => {
   });
 
   describe('date operators', () => {
+    const formatter = new Intl.DateTimeFormat('en');
     [
-      { operator: 'is', value: '2000-12-01', expected: ['2000-12-01'] },
-      { operator: 'not', value: '2000-12-01', expected: ['2001-01-01', '2002-01-01'] },
-      { operator: 'after', value: '2001-01-01', expected: ['2002-01-01'] },
-      { operator: 'onOrAfter', value: '2001-01-01', expected: ['2001-01-01', '2002-01-01'] },
-      { operator: 'before', value: '2001-01-01', expected: ['2000-12-01'] },
-      { operator: 'onOrBefore', value: '2001-01-01', expected: ['2000-12-01', '2001-01-01'] },
+      { operator: 'is', value: new Date(2000, 11, 1), expected: ['12/1/2000'] },
+      { operator: 'not', value: new Date(2000, 11, 1), expected: ['1/1/2001', '1/1/2002'] },
+      { operator: 'after', value: new Date(2001, 0, 1), expected: ['1/1/2002'] },
+      { operator: 'onOrAfter', value: new Date(2001, 0, 1), expected: ['1/1/2001', '1/1/2002'] },
+      { operator: 'before', value: new Date(2001, 0, 1), expected: ['12/1/2000'] },
+      { operator: 'onOrBefore', value: new Date(2001, 0, 1), expected: ['12/1/2000', '1/1/2001'] },
     ].forEach(({ operator, value, expected }) => {
       it(`should allow object as value and work with valueGetter, operator: ${operator}`, () => {
         render(
@@ -204,15 +205,15 @@ describe('<DataGrid /> - Filter', () => {
             rows={[
               {
                 id: 3,
-                brand: { date: new Date('2000-12-01') },
+                brand: { date: new Date(2000, 11, 1) },
               },
               {
                 id: 4,
-                brand: { date: new Date('2001-01-01') },
+                brand: { date: new Date(2001, 0, 1) },
               },
               {
                 id: 5,
-                brand: { date: new Date('2002-01-01') },
+                brand: { date: new Date(2002, 0, 1) },
               },
             ]}
             columns={[
@@ -220,7 +221,7 @@ describe('<DataGrid /> - Filter', () => {
                 field: 'brand',
                 type: 'date',
                 valueGetter: (params) => params.value.date,
-                valueFormatter: (params) => params.value.toISOString().slice(0, 10),
+                valueFormatter: (params) => formatter.format(params.value),
               },
             ]}
           />,
