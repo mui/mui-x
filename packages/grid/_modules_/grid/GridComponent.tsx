@@ -38,6 +38,7 @@ import { useGridContainerProps } from './hooks/root/useGridContainerProps';
 import { useEvents } from './hooks/root/useEvents';
 import { useGridKeyboard } from './hooks/features/keyboard/useGridKeyboard';
 import { useErrorHandler } from './hooks/utils/useErrorHandler';
+import { useGridScrollbarSizeDetector } from './hooks/utils/useGridScrollbarSizeDetector';
 import { useLogger, useLoggerFactory } from './hooks/utils/useLogger';
 import { useOptionsProp } from './hooks/utils/useOptionsProp';
 import { useRenderInfoLog } from './hooks/utils/useRenderInfoLog';
@@ -79,11 +80,11 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     const errorState = useErrorHandler(apiRef, props);
     useEvents(rootContainerRef, apiRef);
     useLocaleText(apiRef);
+
+    useGridScrollbarSizeDetector(apiRef, props.scrollbarSize);
     const onResize = useResizeContainer(apiRef);
 
-    // Freeze rows for immutability
     useGridFreezeRows(props.rows);
-
     useGridColumns(props.columns, apiRef);
     useGridParamsApi(apiRef);
     useGridRows(apiRef, props.rows, props.getRowId);
