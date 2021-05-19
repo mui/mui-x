@@ -3,6 +3,123 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.29](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.28...v4.0.0-alpha.29)
+
+_May 18, 2021_
+
+Big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 🚀 Performance increased when filtering, sorting, and rendering (#1513) @dtassone
+- 💅 Add `columnHeader`, `row` and `cell` to the `classes` prop (#1660) @DanailH
+- ✅ Add the `isRowSelectable` prop to disable selection on certain rows (#1659) @m4theushw
+
+  See the documentation for [more details](https://material-ui.com/components/data-grid/selection/#disable-selection-on-certain-rows).
+
+- ⚡️ Add new icon slot to be displayed when the column is unsorted (#1415) @m4theushw
+- ⚙ Improve consistency of the API to prepare for the first beta release
+- 🐞 Bugfixes
+
+### @material-ui/x-grid@v4.0.0-alpha.29 / @material-ui/data-grid@v4.0.0-alpha.29
+
+#### Breaking changes
+
+- [DataGrid] Remove the properties `element`, `rowIndex`, and `colIndex` from all `params` arguments (#1513) @dtassone
+
+  You can use the following `apiRef` methods to replace some of them:
+
+  ```diff
+  -params.rowIndex
+  -params.colIndex
+  +apiRef.current.getRowIndex(params.id)
+  +apiRef.current.getColumnIndex(params.field)
+  ```
+
+- [DataGrid] Calling `params.getValue` now requires the id to be passed (#1513) @dtassone
+
+  ```diff
+  -params.getValue(field)
+  +params.getValue(params.id, field)
+  ```
+
+- [DataGrid] Rename CSS classes (#1660) @DanailH
+
+  1. `MuiDataGrid-colCellWrapper` to `MuiDataGrid-columnHeaderWrapper`
+  2. `MuiDataGrid-colCell` to `MuiDataGrid-columnHeader`
+  3. `MuiDataGrid-colCellCheckbox` to `MuiDataGrid-columnHeaderCheckbox`
+  4. `MuiDataGrid-colCellSortable` to `MuiDataGrid-columnHeaderSortable`
+  5. `MuiDataGrid-colCellCenter` to `MuiDataGrid-columnHeaderCenter`
+  6. `MuiDataGrid-colCellLeft` to `MuiDataGrid-columnHeaderLeft`
+  7. `MuiDataGrid-colCellRight` to `MuiDataGrid-columnHeaderRight`
+
+- [XGrid] Calling `setCellFocus` now requires the id and field to be passed (#1513) @dtassone
+
+  ```diff
+  -apiRef.current.setCellFocus: (indexes: GridCellIndexCoordinates) => void;
+  +apiRef.current.setCellFocus: (id: GridRowId, field: string) => void;
+  ```
+
+- [XGrid] Rename `apiRef` methods (#1513) @dtassone
+
+  Changes on `apiRef.current`:
+
+  ```diff
+  -apiRef.current.getRowIndexFromId: (id: GridRowId) => number;
+  +apiRef.current.getRowIndex: (id: GridRowId) => number;
+  ```
+
+- [XGrid] Rename `apiRef` methods (#1667) @m4theushw
+
+  Changes on `apiRef.current`:
+
+  ```diff
+  -apiRef.current.getColumnFromField: (field: string) => GridColDef;
+  -apiRef.current.getRowFromId: (id: GridRowId) => GridRowModel;
+  +apiRef.current.getColumn: (field: string) => GridColDef;
+  +apiRef.current.getRow: (id: GridRowId) => GridRowModel;
+  ```
+
+#### Changes
+
+- [DataGrid] Add Slovak (skSK) locale (#1634) @martinvysnovsky
+- [DataGrid] Add `columnHeader`, `row` and `cell` in addition to `root` in classes prop (#1660) @DanailH
+- [DataGrid] Add `isRowSelectable` prop (#1659) @m4theushw
+- [DataGrid] Add sort icon for when column is unsorted (#1415) @m4theushw
+- [DataGrid] Fix `id` and `aria-labelledby` attributes on the column menu (#1460) @m4theushw
+- [DataGrid] Fix broken checkbox in Material-UI v5 (#1587) @ZeeshanTamboli
+- [DataGrid] Fix CSS classes prefix (#1693) @m4theushw
+- [DataGrid] Fix German (deDe) locale (#1624) @klinge27
+- [DataGrid] Fix filter with object as value and value getter (#1665) @dtassone
+- [DataGrid] Fix incorrect date selection (#1652) @aTmb405
+- [DataGrid] Fix overflow of maximum page (#1583) @oliviertassinari
+- [DataGrid] Fix typo in Italian (itIT) locale (#1635) @profcav
+- [DataGrid] Improve performance of width resizing (#1686) @dtassone
+- [DataGrid] Make rows immutable for better developer experience (#1661) @ZeeshanTamboli
+- [DataGrid] Pass state values as props (#1628) @m4theushw
+- [DataGrid] Improve performance with filtering, sorting, and rendering (#1513) @dtassone
+- [XGrid] Fix checkbox column resizing (#1682) @elyesbenabdelkader
+
+### Docs
+
+- [docs] Add description for all events (#1572) @m4theushw
+- [docs] Add missing CSS rules (#1694) @ZeeshanTamboli
+- [docs] Add missing descriptions in `GridFilterApi` (#1620) @m4theushw
+- [docs] Clean demos components (#1681) @oliviertassinari
+- [docs] Fix docs demo (#1691) @dtassone
+- [docs] Improve Filtering page (#1671) @m4theushw
+- [docs] Improve the data grid components page (#1382) @dtassone
+- [docs] Refine the descriptions to be clearer (#1589) @oliviertassinari
+- [docs] Reshuffle columns and rows styling sections (#1622) @DanailH
+
+### Core
+
+- [core] Fix dependabot config (#1619) @oliviertassinari
+- [core] Remove `makeStyles` dependency on `@material-ui/core/styles` (#1627) @mnajdova
+- [core] Remove `withStyles` dependency on `@material-ui/core/styles` (#1690) @mnajdova
+- [core] Replace `classnames` utility with `clsx` dependency (#1586) @ZeeshanTamboli
+- [core] Reuse `colIndex` already computed (#1666) @oliviertassinari
+- [test] Add constraints on cell render (#1662) @oliviertassinari
+- [test] Catch broken demos (#1692) @oliviertassinari
+
 ## [4.0.0-alpha.28](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.27...v4.0.0-alpha.28)
 
 _May 10, 2021_
@@ -202,7 +319,8 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
 -  getSelectedRows: () => GridRowModel[];
 +  getSelectedRows: () => Map<GridRowId, GridRowModel>;
 ```
-  - Changes on `GridFilterModelParams`.
+
+- Changes on `GridFilterModelParams`.
 
 ```diff
 export interface GridFilterModelParams {
@@ -297,6 +415,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
   This is an XGrid feature. Provides the ability to tap into the `onRowsScrollEnd` which is called when the scroll reaches the bottom of the grid viewport allowing developers to load additional data. It can be used with a combination of `scrollBottomThreshold` to control the area in which the `onRowsScrollEnd` is called.
 
   See the documentation for [more details](https://material-ui.com/components/data-grid/rows/#infinite-loading).
+
 - 🕹 Provide the ability to sort by multiple columns using Shift+click (#1203) @dtassone
 - 🇵🇱 Added plPL locale (#1117) @LarsKumbier
 - ⚡️ Edit cell accessibility (#1205) @dtassone
@@ -368,6 +487,7 @@ Big thanks to the 7 contributors who made this release possible. Here are some h
   This is the first iteration of the feature. You can either render the `GridToolbarExport` component in the toolbar or use the apiRef `exportDataAsCsv`/`getDataAsCsv` methods.
 
   See the documentation for [more details](https://material-ui.com/components/data-grid/export/#csv-export).
+
 - 🌏 Improve the support for custom locales (#1096, #1079, #1109, #1077)
 - ♿️ Fix a couple of accessibility issues with the popups (#1105, #1102)
 
@@ -556,6 +676,7 @@ Big thanks to the 5 contributors who made this release possible. Here are some h
   The second one allows providing extra props to each slot. It avoids the need for using the React context to access information from outside the data grid.
 
   See the [RFC](https://github.com/mui-org/material-ui/issues/21453) for more details.
+
 - 🐛 Polish existing features, fix 3 issues.
 
 ### @material-ui/x-grid@v4.0.0-alpha.18 / @material-ui/data-grid@v4.0.0-alpha.18
@@ -761,7 +882,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [DataGrid] Add Density selector (#606) @DanailH
 - [DataGrid] Fix swallowing of keyboard events (#673) @DanailH
 - [DataGrid] Fix collision with react-virtualized on detectElementResize (#678) @tifosiblack
-- [DataGrid] Fix component name, rm context,  refact gridComponent (#707) @dtassone
+- [DataGrid] Fix component name, rm context, refact gridComponent (#707) @dtassone
 - [DataGrid] Fix infinite loop with multiple grid, and fix performance (#679) @dtassone
 - [DataGrid] Fix keyboard navigation in column picker (#674) @oliviertassinari
 - [DataGrid] Fix server-side sorting (#704) @akandels
@@ -805,6 +926,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
   -apiRef.current.updateRowData()
   +apiRef.current.updateRows()
   ```
+
   ```diff
   -apiRef.current.setRowModels()
   +apiRef.current.setRows()
