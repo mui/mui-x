@@ -53,8 +53,7 @@ describe('<DataGrid /> - Pagination', () => {
           <DataGrid {...baselineProps} page={1} pageSize={1} />
         </div>,
       );
-      const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
-      expect(cell).to.have.text('Adidas');
+      expect(getColumnValues()).to.deep.equal(['Adidas']);
     });
 
     it('should react to an update of rowCount', () => {

@@ -13,7 +13,7 @@ export async function raf() {
 
 export const CLOCK_SYNC_FACTOR = 10;
 
-export function getActiveCell() {
+export function getActiveCell(): string | null {
   let activeElement: Element | null;
   if (document.activeElement && document.activeElement.getAttribute('role') === 'cell') {
     activeElement = document.activeElement;
@@ -26,7 +26,7 @@ export function getActiveCell() {
   }
 
   return `${activeElement.getAttribute('data-rowindex')}-${activeElement.getAttribute(
-    'aria-colindex',
+    'data-colindex',
   )}`;
 }
 
@@ -55,13 +55,15 @@ export async function sleep(duration: number) {
 }
 
 export function getColumnValues(colIndex: number = 0) {
-  return Array.from(document.querySelectorAll(`[role="cell"][aria-colindex="${colIndex}"]`)).map(
+  return Array.from(document.querySelectorAll(`[role="cell"][data-colindex="${colIndex}"]`)).map(
     (node) => node!.textContent,
   );
 }
 
 export function getColumnHeaderCell(colIndex: number): HTMLElement {
-  const columnHeader = document.querySelector(`[role="columnheader"][aria-colindex="${colIndex}"]`);
+  const columnHeader = document.querySelector(
+    `[role="columnheader"][aria-colindex="${colIndex + 1}"]`,
+  );
   if (columnHeader == null) {
     throw new Error(`columnheader ${colIndex} not found`);
   }
@@ -76,7 +78,7 @@ export function getColumnHeadersTextContent() {
 
 export function getCell(rowIndex: number, colIndex: number): HTMLElement {
   const cell = document.querySelector(
-    `[role="cell"][data-rowindex="${rowIndex}"][aria-colindex="${colIndex}"]`,
+    `[role="cell"][data-rowindex="${rowIndex}"][data-colindex="${colIndex}"]`,
   );
   if (cell == null) {
     throw new Error(`Cell ${rowIndex} ${colIndex} not found`);

@@ -3,6 +3,7 @@ import {
   // @ts-expect-error need to migrate helpers to TypeScript
   act,
 } from 'test/utils';
+import { getColumnValues } from 'test/utils/helperFn';
 import * as React from 'react';
 import { expect } from 'chai';
 import { XGrid, useGridApiRef } from '@material-ui/x-grid';
@@ -46,13 +47,11 @@ describe('<XGrid /> - Pagination', () => {
 
     render(<GridTest />);
 
-    let cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
-    expect(cell).to.have.text('Nike');
+    expect(getColumnValues()).to.deep.equal(['Nike']);
     act(() => {
       apiRef.current.setPage(1);
     });
 
-    cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
-    expect(cell).to.have.text('Adidas');
+    expect(getColumnValues()).to.deep.equal(['Adidas']);
   });
 });
