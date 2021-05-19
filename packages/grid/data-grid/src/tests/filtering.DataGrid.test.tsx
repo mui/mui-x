@@ -189,38 +189,30 @@ describe('<DataGrid /> - Filter', () => {
 
   describe('date operators', () => {
     [
-      { operator: 'is', value: new Date(2000, 11, 1), expected: ['2000-12-01'] },
-      { operator: 'not', value: new Date(2000, 11, 1), expected: ['2001-01-01', '2002-01-01'] },
-      { operator: 'after', value: new Date(2001, 0, 1), expected: ['2002-01-01'] },
-      {
-        operator: 'onOrAfter',
-        value: new Date(2001, 0, 1),
-        expected: ['2001-01-01', '2002-01-01'],
-      },
-      { operator: 'before', value: new Date(2001, 0, 1), expected: ['2000-12-01'] },
-      {
-        operator: 'onOrBefore',
-        value: new Date(2001, 0, 1),
-        expected: ['2000-12-01', '2001-01-01'],
-      },
+      { operator: 'is', value: '2000-12-01', expected: ['2000-12-01'] },
+      { operator: 'not', value: '2000-12-01', expected: ['2001-01-01', '2002-01-01'] },
+      { operator: 'after', value: '2001-01-01', expected: ['2002-01-01'] },
+      { operator: 'onOrAfter', value: '2001-01-01', expected: ['2001-01-01', '2002-01-01'] },
+      { operator: 'before', value: '2001-01-01', expected: ['2000-12-01'] },
+      { operator: 'onOrBefore', value: '2001-01-01', expected: ['2000-12-01', '2001-01-01'] },
     ].forEach(({ operator, value, expected }) => {
       it(`should allow object as value and work with valueGetter, operator: ${operator}`, () => {
         render(
           <TestCase
-            value={value.toLocaleDateString()}
+            value={value}
             operator={operator}
             rows={[
               {
                 id: 3,
-                brand: { date: new Date(2000, 11, 1) },
+                brand: { date: new Date('2000-12-01') },
               },
               {
                 id: 4,
-                brand: { date: new Date(2001, 0, 1) },
+                brand: { date: new Date('2001-01-01') },
               },
               {
                 id: 5,
-                brand: { date: new Date(2002, 0, 1) },
+                brand: { date: new Date('2002-01-01') },
               },
             ]}
             columns={[
