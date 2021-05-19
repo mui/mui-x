@@ -57,6 +57,25 @@ describe('<DataGrid /> - Pagination', () => {
       expect(cell).to.have.text('Adidas');
     });
 
+    it('should react to an update of rowCount', () => {
+      const Test = (props) => {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...baselineProps} rowCount={5} {...props} />
+          </div>
+        );
+      };
+
+      const { setProps } = render(<Test />);
+      expect(document.querySelector('.MuiTablePagination-root')).to.have.text(
+        'Rows per page:1001-5 of 5',
+      );
+      setProps({ rowCount: 21 });
+      expect(document.querySelector('.MuiTablePagination-root')).to.have.text(
+        'Rows per page:1001-21 of 21',
+      );
+    });
+
     it('should trigger onPageChange when clicking on next page', () => {
       const onPageChange = spy();
 
