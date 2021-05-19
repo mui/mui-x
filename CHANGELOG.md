@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [4.0.0-alpha.29](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.28...v4.0.0-alpha.29)
 
-_May 18, 2021_
+_May 19, 2021_
 
 Big thanks to the 11 contributors who made this release possible. Here are some highlights ✨:
 
