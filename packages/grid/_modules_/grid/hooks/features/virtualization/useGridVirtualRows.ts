@@ -3,6 +3,7 @@ import {
   GRID_RESIZE,
   GRID_NATIVE_SCROLL,
   GRID_ROWS_SCROLL,
+  GRID_VIRTUAL_PAGE_CHANGE,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridVirtualizationApi } from '../../../models/api/gridVirtualizationApi';
@@ -154,6 +155,12 @@ export const useGridVirtualRows = (
       if (containerProps.isVirtualized && page !== nextPage) {
         setRenderingState({ virtualPage: nextPage });
         logger.debug(`Changing page from ${page} to ${nextPage}`);
+
+        apiRef.current.publishEvent(GRID_VIRTUAL_PAGE_CHANGE, {
+          currentPage: page,
+          nextPage,
+          api: apiRef
+        });
         requireRerender = true;
       } else {
         if (!containerProps.isVirtualized && page > 0) {

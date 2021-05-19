@@ -42,4 +42,11 @@ export interface GridRowApi {
    * @param id
    */
   getRowFromId: (id: GridRowId) => GridRowModel;
+  /**
+   * Loads a new subset of Rows.
+   * @param startIndex
+   * @param pageSize
+   * @param rows
+   */
+  loadRows: (startIndex: number, pageSize: number, rows: GridRowModel[]) => void;
 }

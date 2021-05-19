@@ -4,6 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Popper from '@material-ui/core/Popper';
 import Paper from '@material-ui/core/Paper';
+
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import {
   GridCellValue,
@@ -911,6 +912,60 @@ export function SwitchVirtualization() {
       <div style={{ width: '100%', height: 500 }}>
         <XGrid rows={data.rows} columns={data.columns} />
       </div>
+    </div>
+  );
+}
+
+export function InfiniteLoader() {
+  const data = {
+    rows: [
+      {
+        id: 0,
+        brand: 'Nike',
+      },
+      {
+        id: 1,
+        brand: 'Adidas',
+      },
+      {
+        id: 2,
+        brand: 'Puma',
+      },
+      {
+        id: 3,
+        brand: 'SB',
+      },
+      {
+        id: 4,
+        brand: 'New Balance',
+      },
+      {
+        id: 5,
+        brand: 'Reebok',
+      },
+    ],
+    columns: [{ field: 'brand', flex: 1 }],
+  };
+
+  return (
+    <div style={{ height: 300, width: '100%' }}>
+      <XGrid
+        {...data}
+        hideFooterPagination
+        rowCount={20}
+        loadRows={(params) => {
+          const newRowsBatch: any = [];
+          while(newRowsBatch.length < params.viewportPageSize) {
+            const id = Math.floor(Math.random() * 1000);
+            newRowsBatch.push({
+              id,
+              brand: `Jordan ${id}`,
+            });
+          };
+
+          return newRowsBatch;
+        }}
+      />
     </div>
   );
 }

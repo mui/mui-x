@@ -36,13 +36,13 @@ export function convertGridRowsPropToState(
   rowIdGetter?: GridRowIdGetter,
 ): InternalGridRowsState {
   const state: InternalGridRowsState = {
-    ...getInitialGridRowState(),
+    ...getInitialGridRowState(totalRowCount),
     totalRowCount: totalRowCount && totalRowCount > rows.length ? totalRowCount : rows.length,
   };
 
-  rows.forEach((rowData) => {
+  rows.forEach((rowData, index) => {
     const id = getGridRowId(rowData, rowIdGetter);
-    state.allRows.push(id);
+    state.allRows[index] = id;
     state.idRowsLookup[id] = rowData;
   });
 
@@ -113,6 +113,38 @@ export const useGridRows = (
     (id: GridRowId): GridRowModel => apiRef.current.state.rows.idRowsLookup[id],
     [apiRef],
   );
+
+  const loadRows = React.useCallback(
+    (startIndex: number, pageSize: number, newRows: GridRowModel[]) => {
+      logger.debug(`Loading rows from index:${startIndex} to index:${startIndex + pageSize}`);
+
+      const newRowsToState = convertGridRowsPropToState(
+        newRows,
+        newRows.length,
+        getRowIdProp,
+      );
+
+      setGridState((state) => {
+        const allRowsUpdated = state.rows.allRows.map((row, index) => {
+          if (index >= startIndex && index < startIndex + pageSize) {
+            return newRowsToState.allRows[index - startIndex];
+          }
+          return row;
+        });
+
+        internalRowsState.current = {
+          allRows: allRowsUpdated,
+          idRowsLookup: { ...state.rows.idRowsLookup, ...newRowsToState.idRowsLookup },
+          totalRowCount: state.rows.totalRowCount,
+        };
+
+        return { ...state, rows: internalRowsState.current};
+      });
+
+      forceUpdate();
+      apiRef.current.updateViewport();
+      apiRef.current.applySorting();
+  }, [logger, apiRef, getRowIdProp, setGridState, forceUpdate]);
 
   const setRows = React.useCallback(
     (allNewRows: GridRowModel[]) => {
@@ -222,6 +254,7 @@ export const useGridRows = (
     getAllRowIds,
     setRows,
     updateRows,
+    loadRows,
   };
   useGridApiMethod(apiRef, rowApi, 'GridRowApi');
 };

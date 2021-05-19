@@ -30,6 +30,7 @@ export const GridRow = (props: GridRowProps) => {
   const apiRef = React.useContext(GridApiContext);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const options = useGridSelector(apiRef, optionsSelector);
+  const rowId = id || `key-${Math.floor(Math.random() * 1000)}`;
 
   const publish = React.useCallback(
     (eventName: string) => (event: React.MouseEvent) => {
@@ -69,8 +70,8 @@ export const GridRow = (props: GridRowProps) => {
 
   return (
     <div
-      key={id}
-      data-id={id}
+      key={rowId}
+      data-id={rowId}
       data-rowindex={rowIndex}
       role="row"
       className={cssClasses}

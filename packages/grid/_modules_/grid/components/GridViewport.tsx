@@ -52,6 +52,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
         renderState.renderContext.firstRowIdx,
         renderState.renderContext.lastRowIdx!,
       );
+
       return renderedRows.map(([id, row], idx) => (
         <GridRow
           className={
@@ -63,22 +64,26 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
           rowIndex={renderState.renderContext!.firstRowIdx! + idx}
         >
           <GridEmptyCell width={renderState.renderContext!.leftEmptyWidth} height={rowHeight} />
-          <GridRowCells
-            columns={visibleColumns}
-            row={row}
-            id={id}
-            firstColIdx={renderState.renderContext!.firstColIdx!}
-            lastColIdx={renderState.renderContext!.lastColIdx!}
-            hasScrollX={scrollBarState.hasScrollX}
-            hasScrollY={scrollBarState.hasScrollY}
-            showCellRightBorder={!!options.showCellRightBorder}
-            extendRowFullWidth={!options.disableExtendRowFullWidth}
-            rowIndex={renderState.renderContext!.firstRowIdx! + idx}
-            cellFocus={cellFocus}
-            cellTabIndex={cellTabIndex}
-            isSelected={selectionState[id] !== undefined}
-            editRowState={editRowsState[id]}
-          />
+          {id === null ? (
+            <div>EMPTY</div>
+          ) : (
+            <GridRowCells
+              columns={visibleColumns}
+              row={row}
+              id={id}
+              firstColIdx={renderState.renderContext!.firstColIdx!}
+              lastColIdx={renderState.renderContext!.lastColIdx!}
+              hasScrollX={scrollBarState.hasScrollX}
+              hasScrollY={scrollBarState.hasScrollY}
+              showCellRightBorder={!!options.showCellRightBorder}
+              extendRowFullWidth={!options.disableExtendRowFullWidth}
+              rowIndex={renderState.renderContext!.firstRowIdx! + idx}
+              cellFocus={cellFocus}
+              cellTabIndex={cellTabIndex}
+              isSelected={selectionState[id] !== undefined}
+              editRowState={editRowsState[id]}
+            />
+          )}
           <GridEmptyCell width={renderState.renderContext!.rightEmptyWidth} height={rowHeight} />
         </GridRow>
       ));
