@@ -115,6 +115,8 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues()).to.deep.equal(['Adidas']);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(getColumnValues()).to.deep.equal(['Puma']);
+      fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
+      expect(getColumnValues()).to.deep.equal(['Adidas']);
     });
 
     it('should trigger onPageChange when clicking on next page in Server mode', () => {
