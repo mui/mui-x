@@ -1,9 +1,8 @@
 export interface GridExportCsvOptions {
   utf8WithBom?: boolean;
-  disabled?: boolean;
 }
 export interface GridExportFormatCsv {
-  name: 'csv';
+  format: 'csv';
   options?: GridExportCsvOptions;
 }
 
@@ -20,7 +19,6 @@ export interface GridExportConfiguration {
 /**
  * Export option interface
  */
-export interface GridExportOption {
+export type GridExportOption = GridExportFormat & {
   label: React.ReactNode;
-  format: GridExportFormat;
-}
+};

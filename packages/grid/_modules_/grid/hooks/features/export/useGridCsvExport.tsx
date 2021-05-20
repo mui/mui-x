@@ -23,7 +23,7 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
   }, [logger, visibleColumns, visibleSortedRows, selection, apiRef]);
 
   const exportDataAsCsv = React.useCallback(
-    (options?: GridExportCsvOptions, fileName: string = 'data'): void => {
+    (options?: GridExportCsvOptions, fileName?: string): void => {
       logger.debug(`Export data as CSV`);
       const csv = getDataAsCsv();
 
@@ -31,7 +31,7 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
         type: 'text/csv',
       });
 
-      exportAs(blob, 'csv', fileName.length ? fileName : 'data');
+      exportAs(blob, 'csv', fileName?.length ? fileName : undefined);
     },
     [logger, getDataAsCsv],
   );
