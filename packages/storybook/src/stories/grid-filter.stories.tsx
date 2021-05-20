@@ -714,32 +714,3 @@ export function ObjectValueGetter() {
     </div>
   );
 }
-
-export function MultiFilteringWithOrGrid() {
-  const [lastFilterChange, setLastFilterChange] = React.useState(new Date());
-  const [filterModelState, setFilterModelState] = React.useState(
-    {
-      items: [
-        { columnField: "commodity", operatorValue: "contains", value: "rice" },
-        { columnField: "commodity", operatorValue: "startsWith", value: "soy" }
-      ],
-      linkOperator: GridLinkOperator.Or
-    }
-  )
-  const { data } = useDemoData({
-    dataSet: "Commodity",
-    rowLength: 100,
-    maxColumns: 6
-  });
-
-  return (
-    <div style={{ height: 400, width: "100%" }}>
-      <XGrid
-        {...data}
-        onFilterModelChange={(p) => setLastFilterChange(new Date())}
-        filterModel={filterModelState}
-      />
-      <p>Last filter change: {lastFilterChange.toISOString()}</p>
-    </div>
-  );
-}

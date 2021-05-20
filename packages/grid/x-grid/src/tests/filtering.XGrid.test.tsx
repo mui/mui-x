@@ -198,7 +198,7 @@ describe('<XGrid /> - Filter', () => {
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
   });
 
-  it.only('should trigger onFilterModelChange when the link operator changes', () => {
+  it('should trigger onFilterModelChange when the link operator changes', () => {
     const onFilterModelChange = spy();
     const newModel: GridFilterModel = {
       items: [
@@ -214,11 +214,15 @@ describe('<XGrid /> - Filter', () => {
         },
       ],
     };
-    render(<TestCase filterModel={newModel} onFilterModelChange={onFilterModelChange}
-    state={{
-      preferencePanel: { openedPanelValue: GridPreferencePanelsValue.filters, open: true },
-    }}
-    />);
+    render(
+      <TestCase
+        filterModel={newModel}
+        onFilterModelChange={onFilterModelChange}
+        state={{
+          preferencePanel: { openedPanelValue: GridPreferencePanelsValue.filters, open: true },
+        }}
+      />,
+    );
     expect(onFilterModelChange.callCount).to.equal(4);
 
     const select = document.getElementById('columns-filter-operator-select');
