@@ -5,6 +5,7 @@
  * @event
  */
 export const GRID_RESIZE = 'resize';
+export const GRID_DEBOUNCED_RESIZE = 'debouncedResize';
 
 /**
  * Fired when a `focusout` event happens in the grid.

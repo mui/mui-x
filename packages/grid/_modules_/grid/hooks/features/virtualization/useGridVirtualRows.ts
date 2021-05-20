@@ -32,12 +32,13 @@ import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { scrollStateSelector } from './renderingStateSelector';
 
 export const useGridVirtualRows = (
-  colRef: React.MutableRefObject<HTMLDivElement | null>,
-  windowRef: React.MutableRefObject<HTMLDivElement | null>,
-  renderingZoneRef: React.MutableRefObject<HTMLDivElement | null>,
+
   apiRef: GridApiRef,
 ): void => {
   const logger = useLogger('useGridVirtualRows');
+  const colRef = apiRef.current.columnHeadersContainerElementRef!;
+  const windowRef = apiRef.current.windowRef!;
+  const renderingZoneRef = apiRef.current.renderingZoneRef!;
 
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
@@ -411,13 +412,13 @@ export const useGridVirtualRows = (
   useNativeEventListener(apiRef, windowRef, GRID_NATIVE_SCROLL, handleScroll, { passive: true });
   useNativeEventListener(
     apiRef,
-    () => renderingZoneRef.current?.parentElement,
+    () => apiRef.current?.renderingZoneRef?.current?.parentElement,
     GRID_NATIVE_SCROLL,
     preventViewportScroll,
   );
   useNativeEventListener(
     apiRef,
-    () => colRef.current?.parentElement,
+    () => apiRef.current?.columnHeadersContainerElementRef?.current?.parentElement,
     GRID_NATIVE_SCROLL,
     preventViewportScroll,
   );

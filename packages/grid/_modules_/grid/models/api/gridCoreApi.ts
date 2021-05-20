@@ -19,7 +19,12 @@ export interface GridCoreApi extends GridEventEmitter {
   /**
    * The react ref of the grid column container div element.
    */
+  columnHeadersContainerElementRef?: React.RefObject<HTMLDivElement>;
   columnHeadersElementRef?: React.RefObject<HTMLDivElement>;
+  windowRef?: React.RefObject<HTMLDivElement>;
+  renderingZoneRef?: React.RefObject<HTMLDivElement>;
+  headerRef?: React.RefObject<HTMLDivElement>;
+  footerRef?: React.RefObject<HTMLDivElement>;
   /**
    * Allows to register a handler for an event.
    * @param event

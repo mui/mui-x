@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GRID_RESIZE } from '../../constants/eventsConstants';
+import { GRID_DEBOUNCED_RESIZE, GRID_RESIZE } from '../../constants/eventsConstants';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import {
   GridContainerProps,
@@ -20,7 +20,6 @@ import { useLogger } from '../utils/useLogger';
 import { useGridApiEventHandler } from './useGridApiEventHandler';
 
 export const useGridContainerProps = (
-  windowRef: React.RefObject<HTMLDivElement>,
   apiRef: GridApiRef,
 ) => {
   const logger = useLogger('useGridContainerProps');
@@ -31,6 +30,7 @@ export const useGridContainerProps = (
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const visibleRowsCount = useGridSelector(apiRef, visibleGridRowCountSelector);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);
+  const windowRef = apiRef.current.windowRef;
 
   const getVirtualRowCount = React.useCallback(() => {
     logger.debug('Calculating virtual row count.');
@@ -87,7 +87,7 @@ export const useGridContainerProps = (
 
   const getViewport = React.useCallback(
     (rowsCount: number, scrollBarState: GridScrollBarState) => {
-      if (!windowRef.current) {
+      if (!windowRef?.current) {
         return null;
       }
 
@@ -266,5 +266,5 @@ export const useGridContainerProps = (
     refreshContainerSizes();
   }, [gridState.columns, gridState.options.hideFooter, refreshContainerSizes, visibleRowsCount]);
 
-  useGridApiEventHandler(apiRef, GRID_RESIZE, refreshContainerSizes);
+  useGridApiEventHandler(apiRef, GRID_DEBOUNCED_RESIZE, refreshContainerSizes);
 };

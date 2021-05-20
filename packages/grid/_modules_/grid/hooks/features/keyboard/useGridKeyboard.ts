@@ -32,7 +32,6 @@ import { gridSelectionStateSelector } from '../selection/gridSelectionSelector';
 import { GridKeyboardState } from './gridKeyboardState';
 
 export const useGridKeyboard = (
-  gridRootRef: React.RefObject<HTMLDivElement>,
   apiRef: GridApiRef,
 ): void => {
   const logger = useLogger('useGridKeyboard');

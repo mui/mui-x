@@ -1,27 +1,38 @@
 import * as React from 'react';
 import { debounce } from '@material-ui/core/utils';
-import { ElementSize } from '../../models';
+import { GRID_DEBOUNCED_RESIZE, GRID_RESIZE, GRID_ROW_ENTER } from '../../constants/eventsConstants';
+import { ElementSize, GridEventsApi } from '../../models';
+import { useGridApiEventHandler, useGridApiOptionHandler } from '../root/useGridApiEventHandler';
+import { useGridApiMethod } from '../root/useGridApiMethod';
 import { useLogger } from './useLogger';
 import { useGridSelector } from '../features/core/useGridSelector';
 import { optionsSelector } from './optionsSelector';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
-export function useResizeContainer(apiRef): (size: ElementSize) => void {
+export function useResizeContainer(apiRef) {
   const gridLogger = useLogger('useResizeContainer');
   const { autoHeight } = useGridSelector(apiRef, optionsSelector);
+  const options = useGridSelector(apiRef, optionsSelector);
 
   const resizeFn = React.useCallback(
-    (size: ElementSize) => {
-      gridLogger.info('resized...', size);
-      apiRef.current.resize();
+    () => {
+      gridLogger.debug(`resizing...`);
+
+      apiRef.current.publishEvent(GRID_DEBOUNCED_RESIZE, {
+        containerSize: apiRef.current.getState().containerSizes?.windowSizes,
+      });
     },
     [apiRef, gridLogger],
   );
 
+  const eventsApi: GridEventsApi = { resize: resizeFn };
+  useGridApiMethod(apiRef, eventsApi, 'GridEventsApi');
+
+
   const debounceResize = React.useMemo(() => debounce(resizeFn, 60), [resizeFn]);
 
-  const onResize = React.useCallback(
+  const handleResize = React.useCallback(
     (size: ElementSize) => {
       // jsdom has no layout capabilities
       const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -53,11 +64,11 @@ export function useResizeContainer(apiRef): (size: ElementSize) => void {
 
       if (isTestEnvironment) {
         // We don't need to debounce the resize for tests.
-        resizeFn(size);
+        resizeFn();
         return;
       }
 
-      debounceResize(size);
+      debounceResize();
     },
     [autoHeight, debounceResize, gridLogger, resizeFn],
   );
@@ -69,5 +80,6 @@ export function useResizeContainer(apiRef): (size: ElementSize) => void {
     };
   }, [gridLogger, debounceResize]);
 
-  return onResize;
+  useGridApiEventHandler(apiRef, GRID_RESIZE, handleResize);
+  useGridApiOptionHandler(apiRef, GRID_DEBOUNCED_RESIZE, options.onResize);
 }

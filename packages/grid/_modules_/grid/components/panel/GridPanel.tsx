@@ -67,8 +67,8 @@ export const GridPanel = React.forwardRef<HTMLDivElement, GridPanelProps>(functi
   );
 
   let anchorEl;
-  if (apiRef!.current && apiRef!.current.columnHeadersElementRef?.current) {
-    anchorEl = apiRef?.current.columnHeadersElementRef?.current;
+  if (apiRef!.current && apiRef!.current.columnHeadersContainerElementRef?.current) {
+    anchorEl = apiRef?.current.columnHeadersContainerElementRef?.current;
   }
 
   if (!anchorEl) {

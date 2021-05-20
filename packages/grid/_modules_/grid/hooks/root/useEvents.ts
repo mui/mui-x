@@ -38,7 +38,7 @@ import { useGridApiMethod } from './useGridApiMethod';
 import { useGridApiOptionHandler } from './useGridApiEventHandler';
 import { GridEventsApi } from '../../models/api/gridEventsApi';
 
-export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: GridApiRef): void {
+export function useEvents(apiRef: GridApiRef): void {
   const logger = useLogger('useEvents');
   const options = useGridSelector(apiRef, optionsSelector);
 
@@ -57,15 +57,6 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
     [apiRef],
   );
 
-  const resize = React.useCallback(
-    () =>
-      apiRef.current.publishEvent(GRID_RESIZE, {
-        containerSize: apiRef.current.getState().containerSizes?.windowSizes,
-      }),
-    [apiRef],
-  );
-  const eventsApi: GridEventsApi = { resize };
-  useGridApiMethod(apiRef, eventsApi, 'GridEventsApi');
 
   useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_CLICK, options.onColumnHeaderClick);
   useGridApiOptionHandler(
@@ -95,17 +86,16 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
   useGridApiOptionHandler(apiRef, GRID_ROW_ENTER, options.onRowEnter);
   useGridApiOptionHandler(apiRef, GRID_ROW_LEAVE, options.onRowLeave);
 
-  useGridApiOptionHandler(apiRef, GRID_RESIZE, options.onResize);
 
   useGridApiOptionHandler(apiRef, GRID_COMPONENT_ERROR, options.onError);
   useGridApiOptionHandler(apiRef, GRID_STATE_CHANGE, options.onStateChange);
 
   React.useEffect(() => {
-    if (gridRootRef && gridRootRef.current && apiRef.current?.isInitialised) {
+    if(apiRef.current.rootElementRef?.current) {
       logger.debug('Binding events listeners');
       const keyDownHandler = getHandler(GRID_KEYDOWN);
       const keyUpHandler = getHandler(GRID_KEYUP);
-      const gridRootElem = gridRootRef.current;
+      const gridRootElem = apiRef.current.rootElementRef.current!;
 
       gridRootElem.addEventListener(GRID_FOCUS_OUT, onFocusOutHandler);
       gridRootElem.addEventListener(GRID_KEYDOWN, keyDownHandler);
@@ -123,5 +113,5 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
       };
     }
     return undefined;
-  }, [gridRootRef, apiRef.current?.isInitialised, getHandler, logger, onFocusOutHandler, apiRef]);
+  }, [apiRef.current.rootElementRef?.current, apiRef.current?.isInitialised, getHandler, logger, onFocusOutHandler, apiRef]);
 }

@@ -6,8 +6,6 @@ import { GRID_COMPONENT_ERROR, GRID_UNMOUNT } from '../../constants/eventsConsta
 import { useGridApiMethod } from './useGridApiMethod';
 
 export function useApi(
-  gridRootRef: React.RefObject<HTMLDivElement>,
-  columnHeadersContainerRef: React.RefObject<HTMLDivElement>,
   apiRef: GridApiRef,
 ): boolean {
   const [initialised, setInit] = React.useState(false);
@@ -49,8 +47,6 @@ export function useApi(
   React.useEffect(() => {
     logger.debug('Initializing grid api.');
     apiRef.current.isInitialised = true;
-    apiRef.current.rootElementRef = gridRootRef;
-    apiRef.current.columnHeadersElementRef = columnHeadersContainerRef;
 
     setInit(true);
     const api = apiRef.current;
@@ -61,7 +57,7 @@ export function useApi(
       logger.debug('Clearing all events listeners');
       api.removeAllListeners();
     };
-  }, [gridRootRef, logger, apiRef, columnHeadersContainerRef]);
+  }, [logger, apiRef]);
 
   useGridApiMethod(apiRef, { subscribeEvent, publishEvent, showError }, 'GridCoreApi');
 

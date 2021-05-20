@@ -64,7 +64,6 @@ const getNextColumnHeaderIndexes = (key: string, indexes: GridColumnHeaderIndexC
 };
 
 export const useGridKeyboardNavigation = (
-  gridRootRef: React.RefObject<HTMLDivElement>,
   apiRef: GridApiRef,
 ): void => {
   const logger = useLogger('useGridKeyboardNavigation');
