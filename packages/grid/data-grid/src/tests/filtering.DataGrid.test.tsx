@@ -188,7 +188,6 @@ describe('<DataGrid /> - Filter', () => {
   });
 
   describe('date operators', () => {
-    const formatter = new Intl.DateTimeFormat('en');
     [
       { operator: 'is', value: new Date(2000, 11, 1), expected: ['12/1/2000'] },
       { operator: 'not', value: new Date(2000, 11, 1), expected: ['1/1/2001', '1/1/2002'] },
@@ -221,7 +220,7 @@ describe('<DataGrid /> - Filter', () => {
                 field: 'brand',
                 type: 'date',
                 valueGetter: (params) => params.value.date,
-                valueFormatter: (params) => formatter.format(params.value),
+                valueFormatter: (params) => params.value.toLocaleDateString('en-US'),
               },
             ]}
           />,
