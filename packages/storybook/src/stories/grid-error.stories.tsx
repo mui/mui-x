@@ -101,13 +101,11 @@ const getRows = () => [
 export const ThrowException = () => {
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
-  cols[1].cellClassRules = {
-    common: ({ value }) => {
-      if (value === 'alice') {
-        throw new Error('Alice created an error!');
-      }
-      return true;
-    },
+  cols[1].cellClassName = (params) => {
+    if (params.value === 'alice') {
+      throw new Error('Alice created an error!');
+    }
+    return '';
   };
 
   return (
@@ -182,13 +180,11 @@ export const CustomError = () => {
 export const CustomErrorWithException = () => {
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
-  cols[1].cellClassRules = {
-    common: ({ value }) => {
-      if (value === 'alice') {
-        throw new Error('Alice created an error!');
-      }
-      return true;
-    },
+  cols[1].cellClassName = (params) => {
+    if (params.value === 'alice') {
+      throw new Error('Alice created an error!');
+    }
+    return '';
   };
 
   return (
@@ -234,13 +230,11 @@ export const OnErrorHandler = () => {
   const cols = React.useMemo(() => getColumns(), []);
   const [errorMessage, setErrorMessage] = React.useState('');
 
-  cols[1].cellClassRules = {
-    common: ({ value }) => {
-      if (value === 'alice') {
-        throw new Error('Alice created an error!');
-      }
-      return true;
-    },
+  cols[1].cellClassName = (params) => {
+    if (params.value === 'alice') {
+      throw new Error('Alice created an error!');
+    }
+    return '';
   };
 
   const onError = React.useCallback(({ error }) => {

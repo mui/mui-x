@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { GridCellValue } from '../gridCell';
-import { GridCellClassNamePropType, GridCellClassRules } from '../gridCellClass';
+import { GridCellClassNamePropType } from '../gridCellClass';
 import { GridFilterOperator } from '../gridFilterOperator';
 import {
   GridCellParams,
@@ -88,10 +88,6 @@ export interface GridColDef {
    * Class name that will be added in cells for that column.
    */
   cellClassName?: GridCellClassNamePropType;
-  /**
-   * Set of CSS class rules that will be dynamically applied on cells.
-   */
-  cellClassRules?: GridCellClassRules;
   /**
    * Allows to override the component rendered as cell for this column.
    * @param params

@@ -2,10 +2,8 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { GridCellIdentifier } from '../../hooks/features/focus/gridFocusState';
 import {
-  GridCellClassParams,
   GridColumns,
   GridRowModel,
-  GridCellClassRules,
   GridCellParams,
   GridRowId,
   GridEditRowProps,
@@ -15,14 +13,6 @@ import { GridApiContext } from '../GridApiContext';
 import { isFunction } from '../../utils/index';
 import { gridDensityRowHeightSelector } from '../../hooks/features/density/densitySelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-
-function applyCssClassRules(cellClassRules: GridCellClassRules, params: GridCellClassParams) {
-  return Object.entries(cellClassRules).reduce((appliedCss, entry) => {
-    const shouldApplyCss: boolean = isFunction(entry[1]) ? entry[1](params) : entry[1];
-    appliedCss += shouldApplyCss ? `${entry[0]} ` : '';
-    return appliedCss;
-  }, '');
-}
 
 interface RowCellsProps {
   cellClassName?: string;
@@ -84,12 +74,6 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
             : column.cellClassName,
         ),
       );
-    }
-
-    // TODO to be removed by https://github.com/mui-org/material-ui-x/issues/275
-    if (column.cellClassRules) {
-      const cssClass = applyCssClassRules(column.cellClassRules, cellParams);
-      classNames.push(cssClass);
     }
 
     const editCellState = editRowState && editRowState[column.field];
