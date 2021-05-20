@@ -92,6 +92,10 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
         const rows = sortedGridRowsSelector(state);
 
         rows.forEach((row: GridRowModel, id: GridRowId) => {
+          if (id.toString().indexOf('null-') === 0) {
+            return;
+          }
+
           const params = apiRef.current.getCellParams(id, filterItem.columnField!);
 
           const isShown = applyFilterOnRow(params);

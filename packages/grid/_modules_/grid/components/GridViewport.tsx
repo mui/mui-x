@@ -64,7 +64,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
           rowIndex={renderState.renderContext!.firstRowIdx! + idx}
         >
           <GridEmptyCell width={renderState.renderContext!.leftEmptyWidth} height={rowHeight} />
-          {id === null ? (
+          {id.toString().indexOf('null-') === 0 ? (
             <div>EMPTY</div>
           ) : (
             <GridRowCells

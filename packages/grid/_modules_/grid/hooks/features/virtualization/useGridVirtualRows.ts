@@ -159,7 +159,7 @@ export const useGridVirtualRows = (
         apiRef.current.publishEvent(GRID_VIRTUAL_PAGE_CHANGE, {
           currentPage: page,
           nextPage,
-          api: apiRef
+          api: apiRef,
         });
         requireRerender = true;
       } else {

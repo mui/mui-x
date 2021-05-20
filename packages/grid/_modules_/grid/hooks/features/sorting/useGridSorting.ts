@@ -174,7 +174,9 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
     if (sortModel.length > 0) {
       const comparatorList = buildComparatorList(sortModel);
       logger.debug('Sorting rows with ', sortModel);
+      const rowIdsLength = rowIds.length;
       sorted = rowIds
+        .filter((id) => id !== null)
         .map((id) => {
           return comparatorList.map((colComparator) => {
             return getSortCellParams(id, colComparator.field);
@@ -182,6 +184,11 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
         })
         .sort(comparatorListAggregate(comparatorList))
         .map((field) => field[0].id);
+
+      if (rowIdsLength !== sorted.length) {
+        const NullArray = new Array(rowIdsLength - sorted.length).fill(null);
+        sorted = sorted.concat(NullArray);
+      }
     }
 
     setGridState((oldState) => {

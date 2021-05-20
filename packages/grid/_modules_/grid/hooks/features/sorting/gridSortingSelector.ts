@@ -33,7 +33,8 @@ export const sortedGridRowsSelector = createSelector<
   (sortedIds: GridRowId[], idRowsLookup: GridRowsLookup) => {
     const map = new Map<GridRowId, GridRowModel>();
     sortedIds.forEach((id) => {
-      map.set(id, idRowsLookup[id]);
+      const normalizeId = id !== null ? id : `null-${Math.floor(Math.random() * 1000)}`;
+      map.set(normalizeId, idRowsLookup[id]);
     });
     return map;
   },

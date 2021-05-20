@@ -34,7 +34,7 @@ export function buildCSV(
   selectedRows: Record<string, GridRowId>,
   getCellValue: (id: GridRowId, field: string) => GridCellValue,
 ): string {
-  let rowIds = [...rows.keys()];
+  let rowIds = [...rows.keys()].filter((id) => id.toString().indexOf('null-') !== 0);
   const selectedRowIds = Object.keys(selectedRows);
 
   if (selectedRowIds.length) {

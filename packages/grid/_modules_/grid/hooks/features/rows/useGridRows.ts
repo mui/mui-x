@@ -118,11 +118,7 @@ export const useGridRows = (
     (startIndex: number, pageSize: number, newRows: GridRowModel[]) => {
       logger.debug(`Loading rows from index:${startIndex} to index:${startIndex + pageSize}`);
 
-      const newRowsToState = convertGridRowsPropToState(
-        newRows,
-        newRows.length,
-        getRowIdProp,
-      );
+      const newRowsToState = convertGridRowsPropToState(newRows, newRows.length, getRowIdProp);
 
       setGridState((state) => {
         const allRowsUpdated = state.rows.allRows.map((row, index) => {
@@ -138,13 +134,15 @@ export const useGridRows = (
           totalRowCount: state.rows.totalRowCount,
         };
 
-        return { ...state, rows: internalRowsState.current};
+        return { ...state, rows: internalRowsState.current };
       });
 
       forceUpdate();
       apiRef.current.updateViewport();
       apiRef.current.applySorting();
-  }, [logger, apiRef, getRowIdProp, setGridState, forceUpdate]);
+    },
+    [logger, apiRef, getRowIdProp, setGridState, forceUpdate],
+  );
 
   const setRows = React.useCallback(
     (allNewRows: GridRowModel[]) => {

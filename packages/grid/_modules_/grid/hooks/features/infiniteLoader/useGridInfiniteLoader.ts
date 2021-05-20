@@ -2,12 +2,16 @@ import * as React from 'react';
 import { optionsSelector } from '../../utils/optionsSelector';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridSelector } from '../core/useGridSelector';
-import { GRID_ROWS_SCROLL, GRID_ROWS_SCROLL_END, GRID_VIRTUAL_PAGE_CHANGE } from '../../../constants/eventsConstants';
+import {
+  GRID_ROWS_SCROLL,
+  GRID_ROWS_SCROLL_END,
+  GRID_VIRTUAL_PAGE_CHANGE,
+} from '../../../constants/eventsConstants';
 import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { GridRowScrollEndParams } from '../../../models/params/gridRowScrollEndParams';
 import { visibleGridColumnsSelector } from '../columns/gridColumnsSelector';
-import { GridVirtualPageChangeParams } from '../../../models/params/gridvirtualPageChangeParas';
+import { GridVirtualPageChangeParams } from '../../../models/params/gridVirtualPageChangeParams';
 import { useLogger } from '../../utils/useLogger';
 
 export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
@@ -62,15 +66,18 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
     (params: GridVirtualPageChangeParams) => {
       logger.debug('Virtual page changed');
 
-      if(!containerSizes || !options.loadRows) {
+      if (!containerSizes || !options.loadRows) {
         return;
       }
 
       const state = apiRef.current.getState();
-      const loadedRowsCount = Object.keys(state.rows.idRowsLookup).length;
       const newRowsBatchStartIndex = (params.nextPage + 1) * containerSizes.viewportPageSize;
+      const toBeLoadedRange: any = [...state.rows.allRows].splice(
+        newRowsBatchStartIndex,
+        containerSizes.viewportPageSize,
+      );
 
-      if (loadedRowsCount > newRowsBatchStartIndex) {
+      if (!toBeLoadedRange.includes(null)) {
         return;
       }
 
@@ -80,9 +87,15 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
       });
 
       if (newRowsBatch.length) {
-        apiRef.current.loadRows(newRowsBatchStartIndex, containerSizes.viewportPageSize ,newRowsBatch);
+        apiRef.current.loadRows(
+          newRowsBatchStartIndex,
+          containerSizes.viewportPageSize,
+          newRowsBatch,
+        );
       }
-  }, [logger, options, containerSizes, apiRef]);
+    },
+    [logger, options, containerSizes, apiRef],
+  );
 
   useGridApiEventHandler(apiRef, GRID_ROWS_SCROLL, handleGridScroll);
   useGridApiEventHandler(apiRef, GRID_VIRTUAL_PAGE_CHANGE, handleGridVirtualPageChange);

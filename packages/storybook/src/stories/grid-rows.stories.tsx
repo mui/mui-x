@@ -20,6 +20,7 @@ import {
   GridEditCellPropsParams,
   GridEditRowModelParams,
   GRID_CELL_EDIT_ENTER,
+  GridToolbar,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
@@ -953,15 +954,18 @@ export function InfiniteLoader() {
         {...data}
         hideFooterPagination
         rowCount={20}
+        components={{
+          Toolbar: GridToolbar,
+        }}
         loadRows={(params) => {
           const newRowsBatch: any = [];
-          while(newRowsBatch.length < params.viewportPageSize) {
+          while (newRowsBatch.length < params.viewportPageSize) {
             const id = Math.floor(Math.random() * 1000);
             newRowsBatch.push({
               id,
               brand: `Jordan ${id}`,
             });
-          };
+          }
 
           return newRowsBatch;
         }}

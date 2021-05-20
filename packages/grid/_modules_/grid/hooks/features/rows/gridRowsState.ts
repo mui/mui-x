@@ -6,7 +6,9 @@ export interface InternalGridRowsState {
   totalRowCount: number;
 }
 
-export const getInitialGridRowState: (rowCount?: number) => InternalGridRowsState = (rowsCount = 0) => ({
+export const getInitialGridRowState: (rowCount?: number) => InternalGridRowsState = (
+  rowsCount = 0,
+) => ({
   idRowsLookup: {},
   allRows: new Array(rowsCount).fill(null),
   totalRowCount: 0,
