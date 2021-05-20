@@ -30,15 +30,6 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
 
     const scrollPosition = apiRef.current.getScrollPosition();
 
-    // console.log(containerSizes)
-    // console.log(scrollPosition.top)
-
-    // const maxScrollHeight = containerSizes!.renderingZoneScrollHeight;
-
-    // const page = lastState.rendering.virtualPage;
-    // const nextPage = maxScrollHeight > 0 ? Math.floor(scrollPosition.top / maxScrollHeight) : 0;
-    // console.log(`${page} - ${nextPage}`)
-
     const scrollPositionBottom =
       scrollPosition.top + containerSizes.windowSizes.height + options.scrollEndThreshold;
 
