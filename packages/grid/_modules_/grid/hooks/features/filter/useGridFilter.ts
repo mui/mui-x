@@ -1,6 +1,4 @@
 import * as React from 'react';
-// @ts-expect-error fixed in Material-UI v5, types definitions were added.
-import { unstable_useId as useId } from '@material-ui/core/utils';
 import {
   GRID_COLUMNS_UPDATED,
   GRID_FILTER_MODEL_CHANGE,
@@ -156,7 +154,7 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
         }
 
         if (newItem.id == null) {
-          newItem.id = Math.random().toString();
+          newItem.id = Math.random();
         }
 
         if (newItem.columnField == null) {
