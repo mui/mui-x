@@ -12,6 +12,7 @@ import {
   DataGridProps,
   DEFAULT_GRID_OPTIONS,
   GridRowsProp,
+  GridPageChangeParams,
 } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
@@ -88,6 +89,32 @@ describe('<DataGrid /> - Pagination', () => {
 
       fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
       expect(onPageChange.callCount).to.equal(2);
+    });
+
+    it('should paginate on trigger of onPageChange when clicking on next/previous page even when page prop is supplied', () => {
+      const TestDataGrid = () => {
+        const [page, setPage] = React.useState(1);
+
+        const handleOnPageChange = (params: GridPageChangeParams) => {
+          setPage(params.page);
+        };
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid
+              {...baselineProps}
+              page={page}
+              onPageChange={handleOnPageChange}
+              pageSize={1}
+            />
+          </div>
+        );
+      };
+
+      render(<TestDataGrid />);
+      expect(getColumnValues()).to.deep.equal(['Adidas']);
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(getColumnValues()).to.deep.equal(['Puma']);
     });
 
     it('should trigger onPageChange when clicking on next page in Server mode', () => {
