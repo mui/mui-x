@@ -7,9 +7,9 @@ import {
   GridToolbarContainer,
   GridToolbarContainerProps,
 } from '../containers/GridToolbarContainer';
-import { GridColumnsToolbarButton } from './GridColumnsToolbarButton';
-import { GridDensitySelector } from './GridDensitySelector';
-import { GridFilterToolbarButton } from './GridFilterToolbarButton';
+import { GridToolbarColumnsButton } from './GridToolbarColumnsButton';
+import { GridToolbarDensitySelector } from './GridToolbarDensitySelector';
+import { GridToolbarFilterButton } from './GridToolbarFilterButton';
 import { GridToolbarExport } from './GridToolbarExport';
 
 export const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarContainerProps>(
@@ -27,9 +27,9 @@ export const GridToolbar = React.forwardRef<HTMLDivElement, GridToolbarContainer
 
     return (
       <GridToolbarContainer ref={ref} {...props}>
-        <GridColumnsToolbarButton />
-        <GridFilterToolbarButton />
-        <GridDensitySelector />
+        <GridToolbarColumnsButton />
+        <GridToolbarFilterButton />
+        <GridToolbarDensitySelector />
         <GridToolbarExport />
       </GridToolbarContainer>
     );

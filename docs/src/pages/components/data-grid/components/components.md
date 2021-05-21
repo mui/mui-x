@@ -96,9 +96,9 @@ Alternatively, you can compose your own toolbar.
 function CustomToolbar() {
   return (
     <GridToolbarContainer>
-      <GridColumnsToolbarButton />
-      <GridFilterToolbarButton />
-      <GridDensitySelector />
+      <GridToolbarColumnsButton />
+      <GridToolbarFilterButton />
+      <GridToolbarDensitySelector />
       <GridToolbarExport />
     </GridToolbarContainer>
   );
