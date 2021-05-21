@@ -12,7 +12,6 @@ import {
   DataGridProps,
   DEFAULT_GRID_OPTIONS,
   GridRowsProp,
-  GridPageChangeParams,
 } from '@material-ui/data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
