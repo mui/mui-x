@@ -7,7 +7,6 @@ const columns: GridColumns = [
   {
     field: 'name',
     cellClassName: 'super-app-theme--cell',
-    width: 140,
   },
   {
     field: 'score',
