@@ -36,7 +36,7 @@ describe('<DataGrid /> - Filter', () => {
     rows?: any[];
     columns?: any[];
     operator?: string;
-    value?: any;
+    value?: string;
     field?: string;
   }) => {
     const { operator, value, rows, columns, field = 'brand' } = props;
@@ -189,12 +189,12 @@ describe('<DataGrid /> - Filter', () => {
 
   describe('date operators', () => {
     [
-      { operator: 'is', value: new Date(2000, 11, 1), expected: ['12/1/2000'] },
-      { operator: 'not', value: new Date(2000, 11, 1), expected: ['1/1/2001', '1/1/2002'] },
-      { operator: 'after', value: new Date(2001, 0, 1), expected: ['1/1/2002'] },
-      { operator: 'onOrAfter', value: new Date(2001, 0, 1), expected: ['1/1/2001', '1/1/2002'] },
-      { operator: 'before', value: new Date(2001, 0, 1), expected: ['12/1/2000'] },
-      { operator: 'onOrBefore', value: new Date(2001, 0, 1), expected: ['12/1/2000', '1/1/2001'] },
+      { operator: 'is', value: '2000-12-01', expected: ['12/1/2000'] },
+      { operator: 'not', value: '2000-12-01', expected: ['1/1/2001', '1/1/2002'] },
+      { operator: 'after', value: '2001-01-01', expected: ['1/1/2002'] },
+      { operator: 'onOrAfter', value: '2001-01-01', expected: ['1/1/2001', '1/1/2002'] },
+      { operator: 'before', value: '2001-01-01', expected: ['12/1/2000'] },
+      { operator: 'onOrBefore', value: '2001-01-01', expected: ['12/1/2000', '1/1/2001'] },
     ].forEach(({ operator, value, expected }) => {
       it(`should allow object as value and work with valueGetter, operator: ${operator}`, () => {
         render(
@@ -226,6 +226,163 @@ describe('<DataGrid /> - Filter', () => {
           />,
         );
         expect(getColumnValues()).to.deep.equal(expected.map((res) => res));
+      });
+    });
+
+    [
+      {
+        operator: 'is',
+        value: '2000-12-01',
+        expected: ['12/1/2000, 12:00:00 AM', '12/1/2000, 8:30:00 AM'],
+      },
+      {
+        operator: 'not',
+        value: '2000-12-01',
+        expected: [
+          '1/1/2001, 12:00:00 AM',
+          '1/1/2001, 8:30:00 AM',
+          '1/1/2002, 12:00:00 AM',
+          '1/1/2002, 8:30:00 AM',
+        ],
+      },
+      {
+        operator: 'after',
+        value: '2001-01-01',
+        expected: ['1/1/2002, 12:00:00 AM', '1/1/2002, 8:30:00 AM'],
+      },
+      {
+        operator: 'onOrAfter',
+        value: '2001-01-01',
+        expected: [
+          '1/1/2001, 12:00:00 AM',
+          '1/1/2001, 8:30:00 AM',
+          '1/1/2002, 12:00:00 AM',
+          '1/1/2002, 8:30:00 AM',
+        ],
+      },
+      {
+        operator: 'before',
+        value: '2001-01-01',
+        expected: ['12/1/2000, 12:00:00 AM', '12/1/2000, 8:30:00 AM'],
+      },
+      {
+        operator: 'onOrBefore',
+        value: '2001-01-01',
+        expected: [
+          '12/1/2000, 12:00:00 AM',
+          '12/1/2000, 8:30:00 AM',
+          '1/1/2001, 12:00:00 AM',
+          '1/1/2001, 8:30:00 AM',
+        ],
+      },
+    ].forEach(({ operator, value, expected }) => {
+      it(`should work with dates at different hours, operator ${operator}`, () => {
+        render(
+          <TestCase
+            value={value}
+            operator={operator}
+            rows={[
+              {
+                id: 3,
+                brand: new Date(2000, 11, 1), // 12/1/2000, 12:00:00 AM
+              },
+              {
+                id: 4,
+                brand: new Date(2000, 11, 1, 8, 30), // 12/1/2000, 8:30:00 AM
+              },
+              {
+                id: 5,
+                brand: new Date(2001, 0, 1), // -> 1/1/2001, 12:00:00 AM
+              },
+              {
+                id: 6,
+                brand: new Date(2001, 0, 1, 8, 30), // 1/1/2001, 08:30:00 AM
+              },
+              {
+                id: 7,
+                brand: new Date(2002, 0, 1), // -> 1/1/2002, 12:00:00 AM
+              },
+              {
+                id: 8,
+                brand: new Date(2002, 0, 1, 8, 30), // 1/1/2002, 08:30:00 AM
+              },
+            ]}
+            columns={[
+              {
+                field: 'brand',
+                type: 'date',
+                valueFormatter: (params) => params.value.toLocaleString('en-US'),
+              },
+            ]}
+          />,
+        );
+        expect(getColumnValues()).to.deep.equal(expected);
+      });
+    });
+  });
+
+  describe('dateTime operators', () => {
+    [
+      {
+        operator: 'is',
+        value: '2000-12-01T08:30',
+        expected: ['12/1/2000, 8:30:15 AM'],
+      },
+      {
+        operator: 'not',
+        value: '2000-12-01T08:30',
+        expected: ['1/1/2001, 8:30:15 AM', '1/1/2002, 8:30:15 AM'],
+      },
+      {
+        operator: 'after',
+        value: '2001-01-01T08:30',
+        expected: ['1/1/2002, 8:30:15 AM'],
+      },
+      {
+        operator: 'onOrAfter',
+        value: '2001-01-01T08:30',
+        expected: ['1/1/2001, 8:30:15 AM', '1/1/2002, 8:30:15 AM'],
+      },
+      {
+        operator: 'before',
+        value: '2001-01-01T08:30',
+        expected: ['12/1/2000, 8:30:15 AM'],
+      },
+      {
+        operator: 'onOrBefore',
+        value: '2001-01-01T08:30',
+        expected: ['12/1/2000, 8:30:15 AM', '1/1/2001, 8:30:15 AM'],
+      },
+    ].forEach(({ operator, value, expected }) => {
+      it(`should work correctly with operator=${operator}`, () => {
+        render(
+          <TestCase
+            value={value}
+            operator={operator}
+            rows={[
+              {
+                id: 3,
+                brand: new Date(2000, 11, 1, 8, 30, 15, 20), // 12/1/2000, 8:30:15 AM
+              },
+              {
+                id: 4,
+                brand: new Date(2001, 0, 1, 8, 30, 15, 20), // 1/1/2001, 08:30:15 AM
+              },
+              {
+                id: 5,
+                brand: new Date(2002, 0, 1, 8, 30, 15, 20), // 1/1/2002, 08:30:15 AM
+              },
+            ]}
+            columns={[
+              {
+                field: 'brand',
+                type: 'dateTime',
+                valueFormatter: (params) => params.value.toLocaleString('en-US'),
+              },
+            ]}
+          />,
+        );
+        expect(getColumnValues()).to.deep.equal(expected);
       });
     });
   });
