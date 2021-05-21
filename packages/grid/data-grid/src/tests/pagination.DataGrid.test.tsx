@@ -91,32 +91,19 @@ describe('<DataGrid /> - Pagination', () => {
       expect(onPageChange.callCount).to.equal(2);
     });
 
-    it('should paginate on trigger of onPageChange when clicking on next/previous page even when page prop is supplied', () => {
-      const TestDataGrid = () => {
-        const [page, setPage] = React.useState(1);
+    it('should trigger onPageChange with correct page param when page prop is supplied i.e in controlled mode', () => {
+      const onPageChange = spy();
 
-        const handleOnPageChange = (params: GridPageChangeParams) => {
-          setPage(params.page);
-        };
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} page={1} onPageChange={onPageChange} pageSize={1} />
+        </div>,
+      );
 
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <DataGrid
-              {...baselineProps}
-              page={page}
-              onPageChange={handleOnPageChange}
-              pageSize={1}
-            />
-          </div>
-        );
-      };
-
-      render(<TestDataGrid />);
-      expect(getColumnValues()).to.deep.equal(['Adidas']);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      expect(getColumnValues()).to.deep.equal(['Puma']);
+      expect(onPageChange.lastCall.args[0].page).to.equal(2);
       fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
-      expect(getColumnValues()).to.deep.equal(['Adidas']);
+      expect(onPageChange.lastCall.args[0].page).to.equal(1);
     });
 
     it('should trigger onPageChange when clicking on next page in Server mode', () => {
