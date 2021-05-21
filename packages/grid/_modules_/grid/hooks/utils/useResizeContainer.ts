@@ -1,12 +1,25 @@
 import * as React from 'react';
+import { debounce } from '@material-ui/core/utils';
 import { ElementSize } from '../../models';
 import { useLogger } from './useLogger';
 import { useGridSelector } from '../features/core/useGridSelector';
 import { optionsSelector } from './optionsSelector';
 
+const isTestEnvironment = process.env.NODE_ENV === 'test';
+
 export function useResizeContainer(apiRef): (size: ElementSize) => void {
   const gridLogger = useLogger('useResizeContainer');
   const { autoHeight } = useGridSelector(apiRef, optionsSelector);
+
+  const resizeFn = React.useCallback(
+    (size: ElementSize) => {
+      gridLogger.info('resized...', size);
+      apiRef.current.resize();
+    },
+    [apiRef, gridLogger],
+  );
+
+  const debounceResize = React.useMemo(() => debounce(resizeFn, 60), [resizeFn]);
 
   const onResize = React.useCallback(
     (size: ElementSize) => {
@@ -38,11 +51,23 @@ export function useResizeContainer(apiRef): (size: ElementSize) => void {
         );
       }
 
-      gridLogger.info('resized...', size);
-      apiRef!.current.resize();
+      if (isTestEnvironment) {
+        // We don't need to debounce the resize for tests.
+        resizeFn(size);
+        return;
+      }
+
+      debounceResize(size);
     },
-    [gridLogger, apiRef, autoHeight],
+    [autoHeight, debounceResize, gridLogger, resizeFn],
   );
+
+  React.useEffect(() => {
+    return () => {
+      gridLogger.info('canceling resize...');
+      debounceResize.clear();
+    };
+  }, [gridLogger, debounceResize]);
 
   return onResize;
 }

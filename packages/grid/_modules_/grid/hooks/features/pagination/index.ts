@@ -1,3 +1,3 @@
-export * from './gridPaginationReducer';
+export * from './gridPaginationState';
 export * from './gridPaginationSelector';
 export * from './useGridPagination';

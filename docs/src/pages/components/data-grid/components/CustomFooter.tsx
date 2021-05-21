@@ -1,11 +1,11 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { DataGrid } from '@material-ui/data-grid';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   root: {
     padding: 10,
     display: 'flex',
@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
     marginRight: 2,
     color: '#d9182e',
   },
-}));
+});
 
 export function CustomFooterStatusComponent(props: {
   status: 'connected' | 'disconnected';

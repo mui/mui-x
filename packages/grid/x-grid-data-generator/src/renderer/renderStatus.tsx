@@ -6,33 +6,38 @@ import AutorenewIcon from '@material-ui/icons/Autorenew';
 import DoneIcon from '@material-ui/icons/Done';
 import Chip from '@material-ui/core/Chip';
 import { GridCellParams } from '@material-ui/x-grid';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/styles';
+import { createTheme } from '../../../_modules_/grid/utils/utils';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      justifyContent: 'left',
-      '& .icon': {
-        color: 'inherit',
+const defaultTheme = createTheme();
+const useStyles = makeStyles(
+  (theme: Theme) =>
+    createStyles({
+      root: {
+        justifyContent: 'left',
+        '& .icon': {
+          color: 'inherit',
+        },
       },
-    },
-    Open: {
-      color: theme.palette.info.dark,
-      border: `1px solid ${theme.palette.info.main}`,
-    },
-    Filled: {
-      color: theme.palette.success.dark,
-      border: `1px solid ${theme.palette.success.main}`,
-    },
-    PartiallyFilled: {
-      color: theme.palette.warning.dark,
-      border: `1px solid ${theme.palette.warning.main}`,
-    },
-    Rejected: {
-      color: theme.palette.error.dark,
-      border: `1px solid ${theme.palette.error.main}`,
-    },
-  }),
+      Open: {
+        color: theme.palette.info.dark,
+        border: `1px solid ${theme.palette.info.main}`,
+      },
+      Filled: {
+        color: theme.palette.success.dark,
+        border: `1px solid ${theme.palette.success.main}`,
+      },
+      PartiallyFilled: {
+        color: theme.palette.warning.dark,
+        border: `1px solid ${theme.palette.warning.main}`,
+      },
+      Rejected: {
+        color: theme.palette.error.dark,
+        border: `1px solid ${theme.palette.error.main}`,
+      },
+    }),
+  { defaultTheme },
 );
 
 interface StatusProps {

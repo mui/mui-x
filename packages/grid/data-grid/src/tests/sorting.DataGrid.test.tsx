@@ -74,7 +74,7 @@ describe('<DataGrid /> - Sorting', () => {
         <DataGrid {...baselineProps} />
       </div>,
     );
-    const header = getColumnHeaderCell(1);
+    const header = getColumnHeaderCell(0);
     expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     fireEvent.click(header);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);

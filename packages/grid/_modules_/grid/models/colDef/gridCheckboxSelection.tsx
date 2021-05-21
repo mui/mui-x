@@ -9,7 +9,7 @@ export const gridCheckboxSelectionColDef: GridColDef = {
   field: '__check__',
   type: 'checkboxSelection',
   width: 48,
-  resizable: true,
+  resizable: false,
   sortable: false,
   filterable: false,
   disableClickEventBubbling: true,
