@@ -9,6 +9,7 @@ function buildApplyFilterFn(
   valueToFilter: string,
   compareFn: (value1: number, value2: number) => boolean,
   showTime?: boolean,
+  keepHours?: boolean,
 ) {
   const [year, month, day, hour, minute] = valueToFilter
     .match(showTime ? dateTimeRegex : dateRegex)!
@@ -21,9 +22,15 @@ function buildApplyFilterFn(
     if (!value) {
       return false;
     }
+
+    const valueAsDate = value instanceof Date ? value : new Date(value.toString());
+    if (keepHours) {
+      return compareFn(valueAsDate.getTime(), time);
+    }
+
     // Make a copy of the date to not reset the hours in the original object
-    const valueAsDate = new Date(value instanceof Date ? value : value.toString());
-    const timeToCompare = valueAsDate.setHours(
+    const dateCopy = value instanceof Date ? new Date(valueAsDate) : valueAsDate;
+    const timeToCompare = dateCopy.setHours(
       showTime ? valueAsDate.getHours() : 0,
       showTime ? valueAsDate.getMinutes() : 0,
       0,
@@ -84,7 +91,12 @@ export const getGridDateOperators: (showTime?: boolean) => GridFilterOperator[] 
       if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
         return null;
       }
-      return buildApplyFilterFn(filterItem.value, (value1, value2) => value1 < value2, showTime);
+      return buildApplyFilterFn(
+        filterItem.value,
+        (value1, value2) => value1 < value2,
+        showTime,
+        !showTime,
+      );
     },
     InputComponent: GridFilterInputValue,
     InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
