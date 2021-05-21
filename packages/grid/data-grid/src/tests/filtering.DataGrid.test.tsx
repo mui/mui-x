@@ -225,7 +225,7 @@ describe('<DataGrid /> - Filter', () => {
             ]}
           />,
         );
-        expect(getColumnValues()).to.deep.equal(expected.map((res) => res));
+        expect(getColumnValues()).to.deep.equal(expect);
       });
     });
 
