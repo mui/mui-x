@@ -27,11 +27,11 @@ const useStyles = makeStyles(
       padding: theme.spacing(0, 1),
     },
   }),
-  { name: 'MuiDataGridFilterToolbarButton', defaultTheme },
+  { name: 'MuiDataGridToolbarFilterButton', defaultTheme },
 );
 
-export const GridFilterToolbarButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  function GridFilterToolbarButton(props, ref) {
+export const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  function GridToolbarFilterButton(props, ref) {
     const classes = useStyles();
     const apiRef = React.useContext(GridApiContext);
     const options = useGridSelector(apiRef, optionsSelector);
