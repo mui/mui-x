@@ -182,7 +182,6 @@ describe('<DataGrid /> - Pagination', () => {
             <DataGrid
               {...baselineProps}
               rows={rows}
-              pagination
               pageSize={1}
               rowCount={3}
               paginationMode="server"
@@ -207,7 +206,6 @@ describe('<DataGrid /> - Pagination', () => {
             <DataGrid
               columns={data.columns}
               rows={data.rows}
-              pagination
               page={1}
               pageSize={25}
               filterModel={{
@@ -286,7 +284,7 @@ describe('<DataGrid /> - Pagination', () => {
         const columns = [{ field: 'x', type: 'number' }];
         render(
           <div style={{ height: 300, width: 400 }}>
-            <DataGrid pagination autoPageSize rows={rows} columns={columns} page={2} />
+            <DataGrid autoPageSize rows={rows} columns={columns} page={2} />
           </div>,
         );
         expect(getColumnValues(0)).to.deep.equal(['7', '8']);
