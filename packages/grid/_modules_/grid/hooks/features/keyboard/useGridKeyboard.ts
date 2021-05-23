@@ -144,7 +144,7 @@ export const useGridKeyboard = (
 
   const handleCellKeyDown = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
-      if (!isGridCellRoot(document.activeElement)) {
+      if (!isGridCellRoot(event.target as HTMLElement)) {
         return;
       }
       if (event.isPropagationStopped()) {
