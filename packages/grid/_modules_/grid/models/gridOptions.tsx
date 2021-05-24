@@ -29,6 +29,7 @@ import { GridColumnOrderChangeParams } from './params/gridColumnOrderChangeParam
 import { GridResizeParams } from './params/gridResizeParams';
 import { GridColumnResizeParams } from './params/gridColumnResizeParams';
 import { GridColumnVisibilityChangeParams } from './params/gridColumnVisibilityChangeParams';
+import { GridClasses } from './gridClasses';
 
 // TODO add multiSortKey
 /**
@@ -59,6 +60,10 @@ export interface GridOptions {
    * Extend native column types with your new column types.
    */
   columnTypes: GridColumnTypesRecord;
+  /**
+   * Override or extend the styles applied to the component.
+   */
+  classes?: GridClasses;
   /**
    * Set the density of the grid.
    */
@@ -139,6 +144,10 @@ export interface GridOptions {
    */
   filterModel?: GridFilterModel;
   /**
+   * Function that applies CSS classes dynamically on cells.
+   */
+  getCellClassName?: (params: GridCellParams) => string;
+  /**
    * Function that applies CSS classes dynamically on rows.
    */
   getRowClassName?: (params: GridRowParams) => string;
@@ -171,6 +180,10 @@ export interface GridOptions {
    * Callback fired when a cell is rendered, returns true if the cell is editable.
    */
   isCellEditable?: (params: GridCellParams) => boolean;
+  /**
+   * Determines if a row can be selected.
+   */
+  isRowSelectable?: (params: GridRowParams) => boolean;
   /**
    * Set the locale text of the grid.
    * You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.

@@ -32,6 +32,7 @@ export default function ColumnTypeFilteringGrid() {
 
         if (mappedColumn.field === 'totalPrice') {
           mappedColumn.type = 'price';
+          mappedColumn.width = 180;
         }
         return mappedColumn;
       });

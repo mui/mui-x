@@ -5,9 +5,16 @@ import { mergeGridOptions } from '../../utils/mergeUtils';
 import { GridComponentProps, GridOptionsProp } from '../../GridComponentProps';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { DEFAULT_GRID_OPTIONS, GridOptions } from '../../models/gridOptions';
-import { getScrollbarSize, useEnhancedEffect } from '../../utils/material-ui-utils';
+import { composeClasses, getScrollbarSize, useEnhancedEffect } from '../../utils/material-ui-utils';
 import { useGridReducer } from '../features/core/useGridReducer';
 import { useLogger } from './useLogger';
+import { getDataGridUtilityClass } from '../../utils/utils';
+import {
+  GRID_CELL_CSS_CLASS_SUFFIX,
+  GRID_COLUMN_HEADER_CSS_CLASS_SUFFIX,
+  GRID_ROOT_CSS_CLASS_SUFFIX,
+  GRID_ROW_CSS_CLASS_SUFFIX,
+} from '../../constants/cssClassesConstants';
 
 // REDUCER
 export function optionsReducer(
@@ -43,6 +50,16 @@ export function useOptionsProp(apiRef: GridApiRef, props: GridComponentProps): G
   const options: GridOptionsProp = React.useMemo(
     () => ({
       ...props,
+      classes: composeClasses(
+        {
+          root: [GRID_ROOT_CSS_CLASS_SUFFIX],
+          columnHeader: [GRID_COLUMN_HEADER_CSS_CLASS_SUFFIX],
+          row: [GRID_ROW_CSS_CLASS_SUFFIX],
+          cell: [GRID_CELL_CSS_CLASS_SUFFIX],
+        },
+        getDataGridUtilityClass,
+        props.classes as Record<string, string>,
+      ),
       localeText: { ...GRID_DEFAULT_LOCALE_TEXT, ...props.localeText },
       scrollbarSize: props.scrollbarSize == null ? browserScrollBar : props.scrollbarSize || 0,
     }),

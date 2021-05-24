@@ -234,7 +234,9 @@ export const UnsortableLastCol = () => {
     field: 'username',
     sortable: false,
     valueGetter: (params) =>
-      `${params.getValue('name') || 'unknown'}_${params.getValue('age') || 'x'}`,
+      `${params.getValue(params.id, 'name') || 'unknown'}_${
+        params.getValue(params.id, 'age') || 'x'
+      }`,
     width: 150,
   };
 
@@ -250,8 +252,12 @@ export const CustomComparator = () => {
   columns[columns.length] = {
     field: 'username',
     valueGetter: (params) =>
-      `${params.getValue('name') || 'unknown'}_${params.getValue('age') || 'x'}`,
-    sortComparator: (v1, v2, cellParams1, cellParams2) => cellParams1.row.age - cellParams2.row.age,
+      `${params.getValue(params.id, 'name') || 'unknown'}_${
+        params.getValue(params.id, 'age') || 'x'
+      }`,
+    sortComparator: (v1, v2, cellParams1, cellParams2) =>
+      cellParams1.api.getCellValue(cellParams1.id, 'age') -
+      cellParams2.api.getCellValue(cellParams2.id, 'age'),
     width: 150,
   };
 
@@ -420,7 +426,7 @@ export const SortedEventsOptions = () => {
   );
 };
 
-function sortServerRows(rows: any[], params: GridSortModelParams): Promise<any[]> {
+function sortServerRows(rows: Readonly<any[]>, params: GridSortModelParams): Promise<any[]> {
   return new Promise<any[]>((resolve) => {
     setTimeout(() => {
       if (params.sortModel.length === 0) {
@@ -429,9 +435,10 @@ function sortServerRows(rows: any[], params: GridSortModelParams): Promise<any[]
       }
       const sortedCol = params.sortModel[0];
       const comparator = params.columns[0].sortComparator!;
-      let sortedRows = [
-        ...rows.sort((a, b) => comparator(a[sortedCol.field], b[sortedCol.field], a, b)),
-      ];
+      const clonedRows = [...rows];
+      let sortedRows = clonedRows.sort((a, b) =>
+        comparator(a[sortedCol.field], b[sortedCol.field], a, b),
+      );
 
       if (params.sortModel[0].sort === 'desc') {
         sortedRows = sortedRows.reverse();

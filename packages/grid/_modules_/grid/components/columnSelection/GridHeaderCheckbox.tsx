@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN } from '../../constants/eventsConstants';
+import {
+  GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN,
+  GRID_SELECTION_CHANGED,
+} from '../../constants/eventsConstants';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { visibleSortedGridRowIdsSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { gridTabIndexColumnHeaderSelector } from '../../hooks/features/focus/gridFocusStateSelector';
@@ -11,10 +14,11 @@ import { GridApiContext } from '../GridApiContext';
 
 export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnHeaderParams>(
   function GridHeaderCheckbox(props, ref) {
-    const { colIndex, element } = props;
+    const [, forceUpdate] = React.useState(false);
     const apiRef = React.useContext(GridApiContext);
     const visibleRowIds = useGridSelector(apiRef, visibleSortedGridRowIdsSelector);
     const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
+    const element = apiRef!.current.getColumnHeaderElement(props.field);
 
     const totalSelectedRows = useGridSelector(apiRef, selectedGridRowsCountSelector);
     const totalRows = useGridSelector(apiRef, gridRowCountSelector);
@@ -33,12 +37,13 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
       setIsIndeterminate(isNewIndeterminate);
     }, [isIndeterminate, totalRows, totalSelectedRows]);
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const checked = event.target.checked;
       setChecked(checked);
       apiRef!.current.selectRows(visibleRowIds, checked);
     };
 
-    const tabIndex = tabIndexState !== null && tabIndexState.colIndex === colIndex ? 0 : -1;
+    const tabIndex = tabIndexState !== null && tabIndexState.field === props.field ? 0 : -1;
     React.useLayoutEffect(() => {
       if (tabIndex === 0 && element) {
         element!.tabIndex = -1;
@@ -56,6 +61,14 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
       },
       [apiRef, props],
     );
+
+    const handleSelectionChange = React.useCallback(() => {
+      forceUpdate((p) => !p);
+    }, []);
+
+    React.useEffect(() => {
+      return apiRef?.current.subscribeEvent(GRID_SELECTION_CHANGED, handleSelectionChange);
+    }, [apiRef, handleSelectionChange]);
 
     const CheckboxComponent = apiRef?.current.components.Checkbox!;
 

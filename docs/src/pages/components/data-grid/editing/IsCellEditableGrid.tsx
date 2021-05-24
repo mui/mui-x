@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import {
   DataGrid,
   getThemePaletteMode,
@@ -13,17 +14,21 @@ import {
   randomUpdatedDate,
 } from '@material-ui/x-grid-data-generator';
 
-const useStyles = makeStyles((theme: Theme) => {
-  const backgroundColor =
-    getThemePaletteMode(theme.palette) === 'dark' ? '#376331' : 'rgb(217 243 190)';
-  return {
-    root: {
-      '& .MuiDataGrid-cellEditable': {
-        backgroundColor,
+const defaultTheme = createMuiTheme();
+const useStyles = makeStyles(
+  (theme: Theme) => {
+    const backgroundColor =
+      getThemePaletteMode(theme.palette) === 'dark' ? '#376331' : 'rgb(217 243 190)';
+    return {
+      root: {
+        '& .MuiDataGrid-cellEditable': {
+          backgroundColor,
+        },
       },
-    },
-  };
-});
+    };
+  },
+  { defaultTheme },
+);
 
 export default function IsCellEditableGrid() {
   const classes = useStyles();

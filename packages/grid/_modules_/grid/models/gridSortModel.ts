@@ -1,5 +1,5 @@
 import { GridCellValue } from './gridCell';
-import { GridRowData, GridRowId } from './gridRows';
+import { GridRowId } from './gridRows';
 
 export type GridSortDirection = 'asc' | 'desc' | null | undefined;
 
@@ -8,9 +8,7 @@ export type GridFieldComparatorList = { field: string; comparator: GridComparato
 export interface GridSortCellParams {
   id: GridRowId;
   field: string;
-  row: GridRowData;
   value: GridCellValue;
-  getValue: (columnField: string) => GridCellValue;
   api: any;
 }
 

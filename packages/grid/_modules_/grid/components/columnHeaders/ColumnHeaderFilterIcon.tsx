@@ -2,10 +2,8 @@ import * as React from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import Badge from '@material-ui/core/Badge';
 import Tooltip from '@material-ui/core/Tooltip';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
-import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridApiContext } from '../GridApiContext';
 
 export interface ColumnHeaderFilterIconProps {
@@ -15,8 +13,6 @@ export interface ColumnHeaderFilterIconProps {
 export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
   const { counter } = props;
   const apiRef = React.useContext(GridApiContext);
-  const options = useGridSelector(apiRef, optionsSelector);
-  const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
 
   const FilteredColumnIconElement = apiRef!.current.components.ColumnFilteredIcon!;
 
@@ -25,17 +21,20 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
       event.preventDefault();
       event.stopPropagation();
 
-      const { open, openedPanelValue } = preferencePanel;
+      const { open, openedPanelValue } = gridPreferencePanelStateSelector(
+        apiRef!.current.getState(),
+      );
+
       if (open && openedPanelValue === GridPreferencePanelsValue.filters) {
         apiRef!.current.hideFilterPanel();
       } else {
         apiRef!.current.showFilterPanel();
       }
     },
-    [apiRef, preferencePanel],
+    [apiRef],
   );
 
-  if (!counter || options.disableColumnFilter) {
+  if (!counter) {
     return null;
   }
 
@@ -47,7 +46,7 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
       size="small"
       tabIndex={-1}
     >
-      <FilteredColumnIconElement fontSize="small" />
+      <FilteredColumnIconElement className="MuiDataGrid-filterIcon" fontSize="small" />
     </IconButton>
   );
 
@@ -61,14 +60,12 @@ export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
       enterDelay={1000}
     >
       <div className="MuiDataGrid-iconButtonContainer">
-        <div>
-          {counter > 1 && (
-            <Badge badgeContent={counter} color="default">
-              {iconButton}
-            </Badge>
-          )}
-          {counter === 1 && iconButton}
-        </div>
+        {counter > 1 && (
+          <Badge badgeContent={counter} color="default">
+            {iconButton}
+          </Badge>
+        )}
+        {counter === 1 && iconButton}
       </div>
     </Tooltip>
   );

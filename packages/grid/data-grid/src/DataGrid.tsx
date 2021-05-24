@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { chainPropTypes } from '@material-ui/utils';
-import { GridComponent, GridComponentProps, classnames, useThemeProps } from '../../_modules_/grid';
+import { GridComponent, GridComponentProps, useThemeProps } from '../../_modules_/grid';
 
 const FORCED_PROPS: Partial<GridComponentProps> = {
   disableColumnResize: true,
@@ -45,7 +45,7 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
   ref,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
-  const { className, pageSize: pageSizeProp, classes, ...other } = props;
+  const { pageSize: pageSizeProp, ...other } = props;
 
   let pageSize = pageSizeProp;
   if (pageSize && pageSize > MAX_PAGE_SIZE) {
@@ -55,7 +55,6 @@ const DataGridRaw = React.forwardRef<HTMLDivElement, DataGridProps>(function Dat
   return (
     <GridComponent
       ref={ref}
-      className={classnames('MuiDataGrid-root', classes?.root, className)}
       pageSize={pageSize}
       {...other}
       {...FORCED_PROPS}

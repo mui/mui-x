@@ -11,6 +11,8 @@ import {
   getGridRowElement,
 } from '../../../utils/domUtils';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
+import { useGridSelector } from '../core/useGridSelector';
+import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFocusStateSelector';
 
 let warnedOnce = false;
 function warnMissingColumn(field) {
@@ -24,12 +26,13 @@ function warnMissingColumn(field) {
 }
 
 export function useGridParamsApi(apiRef: GridApiRef) {
+  const cellFocus = useGridSelector(apiRef, gridFocusCellSelector);
+  const cellTabIndex = useGridSelector(apiRef, gridTabIndexCellSelector);
+
   const getColumnHeaderParams = React.useCallback(
     (field: string): GridColumnHeaderParams => ({
       field,
-      element: apiRef.current.getColumnHeaderElement(field),
-      colDef: apiRef.current.getColumnFromField(field),
-      colIndex: apiRef.current.getColumnIndex(field, true),
+      colDef: apiRef.current.getColumn(field),
       api: apiRef!.current,
     }),
     [apiRef],
@@ -39,12 +42,10 @@ export function useGridParamsApi(apiRef: GridApiRef) {
     (id: GridRowId) => {
       const params: GridRowParams = {
         id,
-        element: apiRef.current.getRowElement(id),
         columns: apiRef.current.getAllColumns(),
-        getValue: (columnField: string) => apiRef.current.getCellValue(id, columnField),
-        row: apiRef.current.getRowFromId(id),
-        rowIndex: apiRef.current.getRowIndexFromId(id),
+        row: apiRef.current.getRow(id),
         api: apiRef.current,
+        getValue: apiRef.current.getCellValue,
       };
       return params;
     },
@@ -53,37 +54,34 @@ export function useGridParamsApi(apiRef: GridApiRef) {
 
   const getBaseCellParams = React.useCallback(
     (id: GridRowId, field: string) => {
-      const element = apiRef.current.getCellElement(id, field);
-      const row = apiRef.current.getRowFromId(id);
+      const row = apiRef.current.getRow(id);
 
       const params: GridValueGetterParams = {
-        element,
         id,
         field,
         row,
         value: row[field],
-        getValue: (columnField: string) => apiRef.current.getCellValue(id, columnField),
-        colDef: apiRef.current.getColumnFromField(field),
+        colDef: apiRef.current.getColumn(field),
         cellMode: apiRef.current.getCellMode(id, field),
-        rowIndex: apiRef.current.getRowIndexFromId(id),
-        colIndex: apiRef.current.getColumnIndex(field, true),
+        getValue: apiRef.current.getCellValue,
         api: apiRef.current,
+        hasFocus: cellFocus !== null && cellFocus.field === field && cellFocus.id === id,
+        tabIndex: cellTabIndex && cellTabIndex.field === field && cellTabIndex.id === id ? 0 : -1,
       };
 
       return params;
     },
-    [apiRef],
+    [apiRef, cellFocus, cellTabIndex],
   );
 
   const getCellParams = React.useCallback(
     (id: GridRowId, field: string) => {
-      const colDef = apiRef.current.getColumnFromField(field);
+      const colDef = apiRef.current.getColumn(field);
       const value = apiRef.current.getCellValue(id, field);
       const baseParams = getBaseCellParams(id, field);
       const params: GridCellParams = {
         ...baseParams,
         value,
-        getValue: (columnField: string) => apiRef.current.getCellValue(id, columnField),
         formattedValue: value,
       };
       if (colDef.valueFormatter) {
@@ -98,7 +96,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
 
   const getCellValue = React.useCallback(
     (id: GridRowId, field: string) => {
-      const colDef = apiRef.current.getColumnFromField(field);
+      const colDef = apiRef.current.getColumn(field);
 
       if (!warnedOnce && process.env.NODE_ENV !== 'production') {
         if (!colDef) {
@@ -107,7 +105,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
       }
 
       if (!colDef || !colDef.valueGetter) {
-        const rowModel = apiRef.current.getRowFromId(id);
+        const rowModel = apiRef.current.getRow(id);
         return rowModel[field];
       }
 
@@ -156,6 +154,6 @@ export function useGridParamsApi(apiRef: GridApiRef) {
       getColumnHeaderParams,
       getColumnHeaderElement,
     },
-    'CellApi',
+    'GridParamsApi',
   );
 }

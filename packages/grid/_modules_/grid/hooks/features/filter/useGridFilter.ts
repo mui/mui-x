@@ -6,7 +6,7 @@ import {
   GRID_ROWS_UPDATED,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
-import { FilterApi } from '../../../models/api/filterApi';
+import { GridFilterApi } from '../../../models/api/gridFilterApi';
 import { GridFeatureModeConstant } from '../../../models/gridFeatureMode';
 import { GridFilterItem, GridLinkOperator } from '../../../models/gridFilterItem';
 import { GridFilterModelParams } from '../../../models/params/gridFilterModelParams';
@@ -63,7 +63,7 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
         `Filtering column: ${filterItem.columnField} ${filterItem.operatorValue} ${filterItem.value} `,
       );
 
-      const column = apiRef.current.getColumnFromField(filterItem.columnField);
+      const column = apiRef.current.getColumn(filterItem.columnField);
       if (!column) {
         return;
       }
@@ -162,7 +162,7 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
         }
         if (newItem.columnField != null && newItem.operatorValue == null) {
           // we select a default operator
-          const column = apiRef!.current!.getColumnFromField(newItem.columnField);
+          const column = apiRef!.current!.getColumn(newItem.columnField);
           newItem.operatorValue = column && column!.filterOperators![0].value!;
         }
         if (options.disableMultipleColumnsFiltering && items.length > 1) {
@@ -266,7 +266,7 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
     [apiRef],
   );
 
-  useGridApiMethod<FilterApi>(
+  useGridApiMethod<GridFilterApi>(
     apiRef,
     {
       applyFilterLinkOperator,

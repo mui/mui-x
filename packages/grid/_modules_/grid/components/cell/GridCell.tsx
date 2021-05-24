@@ -1,6 +1,6 @@
-import { capitalize } from '@material-ui/core/utils';
 import * as React from 'react';
-import { GRID_CELL_CSS_CLASS } from '../../constants/cssClassesConstants';
+import { ownerDocument, capitalize } from '@material-ui/core/utils';
+import clsx from 'clsx';
 import {
   GRID_CELL_BLUR,
   GRID_CELL_CLICK,
@@ -17,19 +17,19 @@ import {
   GRID_CELL_DRAG_OVER,
 } from '../../constants/eventsConstants';
 import { GridAlignment, GridCellMode, GridCellValue, GridRowId } from '../../models/index';
-import { classnames } from '../../utils/index';
 import { GridApiContext } from '../GridApiContext';
 
 export interface GridCellProps {
   align: GridAlignment;
+  className?: string;
   colIndex: number;
-  cssClass?: string;
   field: string;
   rowId: GridRowId;
   formattedValue?: GridCellValue;
   hasFocus?: boolean;
   height: number;
   isEditable?: boolean;
+  isSelected?: boolean;
   rowIndex: number;
   showRightBorder?: boolean;
   value?: GridCellValue;
@@ -42,15 +42,16 @@ export interface GridCellProps {
 export const GridCell = React.memo((props: GridCellProps) => {
   const {
     align,
+    className,
     children,
     colIndex,
     cellMode,
-    cssClass,
     field,
     formattedValue,
     hasFocus,
     height,
     isEditable,
+    isSelected,
     rowIndex,
     rowId,
     showRightBorder,
@@ -63,15 +64,10 @@ export const GridCell = React.memo((props: GridCellProps) => {
   const cellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = React.useContext(GridApiContext);
 
-  const cssClasses = classnames(
-    GRID_CELL_CSS_CLASS,
-    cssClass,
-    `MuiDataGrid-cell${capitalize(align)}`,
-    {
-      'MuiDataGrid-withBorder': showRightBorder,
-      'MuiDataGrid-cellEditable': isEditable,
-    },
-  );
+  const cssClasses = clsx(className, `MuiDataGrid-cell${capitalize(align)}`, {
+    'MuiDataGrid-withBorder': showRightBorder,
+    'MuiDataGrid-cellEditable': isEditable,
+  });
 
   const publishBlur = React.useCallback(
     (eventName: string) => (event: React.FocusEvent<HTMLDivElement>) => {
@@ -144,12 +140,14 @@ export const GridCell = React.memo((props: GridCellProps) => {
   };
 
   React.useLayoutEffect(() => {
+    const doc = ownerDocument(apiRef!.current.rootElementRef!.current as HTMLElement);
+
     if (
       hasFocus &&
       cellRef.current &&
-      (!document.activeElement || !cellRef.current!.contains(document.activeElement))
+      (!doc.activeElement || !cellRef.current!.contains(doc.activeElement))
     ) {
-      const focusableElement = cellRef.current.querySelector('[tabindex="0"]') as HTMLElement;
+      const focusableElement = cellRef.current!.querySelector('[tabindex="0"]') as HTMLElement;
       if (focusableElement) {
         focusableElement!.focus();
       } else {
@@ -166,9 +164,11 @@ export const GridCell = React.memo((props: GridCellProps) => {
       data-value={value}
       data-field={field}
       data-rowindex={rowIndex}
+      data-colindex={colIndex}
+      data-rowselected={isSelected}
       data-editable={isEditable}
       data-mode={cellMode}
-      aria-colindex={colIndex}
+      aria-colindex={colIndex + 1}
       style={style}
       tabIndex={tabIndex}
       {...eventsHandlers}

@@ -14,7 +14,6 @@ import { useGridSelector } from '../features/core/useGridSelector';
 import { useGridState } from '../features/core/useGridState';
 import { gridDensityRowHeightSelector } from '../features/density/densitySelector';
 import { visibleGridRowCountSelector } from '../features/filter/gridFilterSelector';
-import { GridPaginationState } from '../features/pagination/gridPaginationReducer';
 import { gridPaginationSelector } from '../features/pagination/gridPaginationSelector';
 import { optionsSelector } from '../utils/optionsSelector';
 import { useLogger } from '../utils/useLogger';
@@ -31,7 +30,7 @@ export const useGridContainerProps = (
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const visibleRowsCount = useGridSelector(apiRef, visibleGridRowCountSelector);
-  const paginationState = useGridSelector<GridPaginationState>(apiRef, gridPaginationSelector);
+  const paginationState = useGridSelector(apiRef, gridPaginationSelector);
 
   const getVirtualRowCount = React.useCallback(() => {
     logger.debug('Calculating virtual row count.');

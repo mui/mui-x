@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import { Rating } from '@material-ui/lab';
 import { DataGrid } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
@@ -50,7 +50,7 @@ const ratingOnlyOperators = [
   {
     label: 'From',
     value: 'from',
-    getApplyFilterFn: (filterItem, column) => {
+    getApplyFilterFn: (filterItem) => {
       if (
         !filterItem.columnField ||
         !filterItem.value ||
@@ -60,10 +60,7 @@ const ratingOnlyOperators = [
       }
 
       return (params) => {
-        const rowValue = column.valueGetter
-          ? column.valueGetter(params)
-          : params.value;
-        return Number(rowValue) >= Number(filterItem.value);
+        return Number(params.value) >= Number(filterItem.value);
       };
     },
     InputComponent: RatingInputValue,

@@ -13,6 +13,7 @@ import {
   randomUpdatedDate,
   randomUrl,
   randomUserName,
+  randomBoolean,
 } from './services';
 import { renderAvatar, renderCountry, renderEmail, renderLink, renderRating } from './renderer';
 
@@ -107,6 +108,13 @@ export const getEmployeeColumns: () => any[] = () => [
     headerName: 'Created on',
     generateData: randomCreatedDate,
     type: 'date',
+    width: 150,
+  },
+  {
+    field: 'isAdmin',
+    headerName: 'Is admin?',
+    generateData: randomBoolean,
+    type: 'boolean',
     width: 150,
   },
 ];

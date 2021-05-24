@@ -1,9 +1,9 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { useStyles } from './GridRootStyles';
 import { visibleGridColumnsLengthSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { useGridState } from '../../hooks/features/core/useGridState';
-import { classnames } from '../../utils';
 import { GridApiContext } from '../GridApiContext';
 
 export type GridRootProps = React.HTMLAttributes<HTMLDivElement>;
@@ -21,7 +21,7 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
   return (
     <div
       ref={ref}
-      className={classnames(classes.root, className, {
+      className={clsx(classes.root, className, {
         'MuiDataGrid-autoHeight': gridState.options.autoHeight,
       })}
       role="grid"

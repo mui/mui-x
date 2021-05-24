@@ -66,7 +66,7 @@ export const useGridKeyboard = (
   const expandSelection = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
       const rowEl = findParentElementFromClassName(
-        document.activeElement as HTMLDivElement,
+        (event.target as HTMLElement) as HTMLDivElement,
         GRID_ROW_CSS_CLASS,
       )! as HTMLElement;
 
@@ -76,7 +76,7 @@ export const useGridKeyboard = (
       // TODO Refactor here to not use api call
       const selectedRowsIds = [...apiRef.current.getSelectedRows().keys()];
       if (selectedRowsIds.length > 0) {
-        const selectedRowsIndex = selectedRowsIds.map((id) => apiRef.current.getRowIndexFromId(id));
+        const selectedRowsIndex = selectedRowsIds.map((id) => apiRef.current.getRowIndex(id));
 
         const diffWithCurrentIndex: number[] = selectedRowsIndex.map((idx) =>
           Math.abs(currentRowIndex - idx),
@@ -87,12 +87,11 @@ export const useGridKeyboard = (
 
       apiRef.current.publishEvent(GRID_CELL_NAVIGATION_KEYDOWN, params, event);
 
-      const nextCellIndexes = apiRef.current.getState().focus.cell!;
+      const focusCell = apiRef.current.getState().focus.cell!;
+      const rowIndex = apiRef.current.getRowIndex(focusCell.id);
       // We select the rows in between
-      const rowIds = Array(Math.abs(nextCellIndexes.rowIndex - selectionFromRowIndex) + 1).fill(
-        nextCellIndexes.rowIndex > selectionFromRowIndex
-          ? selectionFromRowIndex
-          : nextCellIndexes.rowIndex,
+      const rowIds = Array(Math.abs(rowIndex - selectionFromRowIndex) + 1).fill(
+        rowIndex > selectionFromRowIndex ? selectionFromRowIndex : rowIndex,
       );
 
       logger.debug('Selecting rows ');
@@ -102,18 +101,21 @@ export const useGridKeyboard = (
     [logger, apiRef],
   );
 
-  const handleCopy = React.useCallback(() => {
-    const rowEl = getRowEl(document.activeElement)!;
-    const rowId = getIdFromRowElem(rowEl);
-    const isRowSelected = selectionState[rowId];
+  const handleCopy = React.useCallback(
+    (target: HTMLElement) => {
+      const rowEl = getRowEl(target)!;
+      const rowId = getIdFromRowElem(rowEl);
+      const isRowSelected = selectionState[rowId];
 
-    if (isRowSelected) {
-      window?.getSelection()?.selectAllChildren(rowEl);
-    } else {
-      window?.getSelection()?.selectAllChildren(document.activeElement!);
-    }
-    document.execCommand('copy');
-  }, [selectionState]);
+      if (isRowSelected) {
+        window?.getSelection()?.selectAllChildren(rowEl);
+      } else {
+        window?.getSelection()?.selectAllChildren(target);
+      }
+      document.execCommand('copy');
+    },
+    [selectionState],
+  );
 
   const handleKeyDown = React.useCallback(
     (event: KeyboardEvent) => {
@@ -145,7 +147,7 @@ export const useGridKeyboard = (
 
   const handleCellKeyDown = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
-      if (!isGridCellRoot(document.activeElement)) {
+      if (!isGridCellRoot(event.target as HTMLElement)) {
         return;
       }
       if (event.isPropagationStopped()) {
@@ -174,7 +176,7 @@ export const useGridKeyboard = (
       }
 
       if (event.key.toLowerCase() === 'c' && (event.ctrlKey || event.metaKey)) {
-        handleCopy();
+        handleCopy(event.target as HTMLElement);
         return;
       }
 
@@ -188,13 +190,13 @@ export const useGridKeyboard = (
 
   const handleColumnHeaderKeyDown = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
-      if (!isGridHeaderCellRoot(document.activeElement)) {
+      if (!isGridHeaderCellRoot(event.target as HTMLElement)) {
         return;
       }
       if (event.isPropagationStopped()) {
         return;
       }
-      if (isSpaceKey(event.key) && isGridHeaderCellRoot(document.activeElement)) {
+      if (isSpaceKey(event.key) && isGridHeaderCellRoot(event.target as HTMLElement)) {
         event.preventDefault();
       }
 

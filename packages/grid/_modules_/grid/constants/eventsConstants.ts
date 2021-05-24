@@ -8,18 +8,21 @@ export const GRID_RESIZE = 'resize';
 
 /**
  * Fired when a `focusout` event happens in the grid.
+ * @ignore - do not document.
  * @event
  */
 export const GRID_FOCUS_OUT = 'focusout';
 
 /**
  * Fired when a `keydown` event happens in the grid.
+ * @ignore - do not document.
  * @event
  */
 export const GRID_KEYDOWN = 'keydown';
 
 /**
  * Fired when a `keyup` event happens in the grid.
+ * @ignore - do not document.
  * @event
  */
 export const GRID_KEYUP = 'keyup';
@@ -45,6 +48,7 @@ export const GRID_UNMOUNT = 'unmount';
 
 /**
  * @ignore - do not document.
+ * TODO remove
  */
 export const GRID_ELEMENT_FOCUS_OUT = 'gridFocusOut';
 
@@ -117,6 +121,7 @@ export const GRID_CELL_FOCUS = 'cellFocus';
 /**
  * Fired when the user starts dragging a cell. It's mapped to the `dragstart` DOM event.
  * Called with a [[GridCellParams]] object.
+ * @ignore - do not document.
  * @event
  */
 export const GRID_CELL_DRAG_START = 'cellDragStart';
@@ -124,6 +129,7 @@ export const GRID_CELL_DRAG_START = 'cellDragStart';
 /**
  * Fired when the dragged cell enters a valid drop target. It's mapped to the `dragend` DOM event.
  * Called with a [[GridCellParams]] object.
+ * @ignore - do not document.
  * @event
  */
 export const GRID_CELL_DRAG_ENTER = 'cellDragEnter';
@@ -132,12 +138,14 @@ export const GRID_CELL_DRAG_ENTER = 'cellDragEnter';
  * Fired while an element or text selection is dragged over the cell.
  * It's mapped to the `dragover` DOM event.
  * Called with a [[GridCellParams]] object.
+ * @ignore - do not document.
  * @event
  */
 export const GRID_CELL_DRAG_OVER = 'cellDragOver';
 
 /**
  * Fired when the dragging of a cell ends. Called with a [[GridCellParams]] object.
+ * @ignore - do not document.
  * @event
  */
 export const GRID_CELL_DRAG_END = 'cellDragEnd';
@@ -175,6 +183,7 @@ export const GRID_CELL_EDIT_EXIT = 'cellEditExit';
 /**
  * Fired when a [navigation key](/components/data-grid/accessibility#keyboard-navigation) is pressed in a cell.
  * Called with a [[GridCellParams]] object.
+ * @ignore - do not document.
  * @event
  */
 export const GRID_CELL_NAVIGATION_KEYDOWN = 'cellNavigationKeyDown';
@@ -216,7 +225,8 @@ export const GRID_ROW_ENTER = 'rowEnter';
 export const GRID_ROW_LEAVE = 'rowLeave';
 
 /**
- * @ignore - do not document.
+ * Fired when the row editing model changes. Called with a [[GridEditRowModelParams]] object.
+ * @event
  */
 export const GRID_ROW_EDIT_MODEL_CHANGE = 'editRowModelChange';
 
@@ -228,12 +238,14 @@ export const GRID_ROW_SELECTED = 'rowSelected';
 
 /**
  * Fired when a column header loses focus. Called with a [[GridColumnHeaderParams]] object.
+ * @ignore - do not document.
  * @event
  */
 export const GRID_COLUMN_HEADER_BLUR = 'columnHeaderBlur';
 
 /**
  * Fired when a column header gains focus. Called with a [[GridColumnHeaderParams]] object.
+ * @ignore - do not document.
  * @event
  */
 export const GRID_COLUMN_HEADER_FOCUS = 'columnHeaderFocus';
@@ -241,6 +253,7 @@ export const GRID_COLUMN_HEADER_FOCUS = 'columnHeaderFocus';
 /**
  * Fired when a [navigation key](/components/data-grid/accessibility#keyboard-navigation) is pressed in a column header.
  * Called with a [[GridColumnHeaderParams]] object.
+ * @ignore - do not document.
  * @event
  */
 export const GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN = 'columnHeaderNavigationKeydown';
@@ -266,24 +279,28 @@ export const GRID_COLUMN_HEADER_DOUBLE_CLICK = 'columnHeaderDoubleClick';
 
 /**
  * Fired when a `mouseover` event happens in a column header. Called with a [[GridColumnHeaderParams]] object.
+ * @ignore - do not document.
  * @event
  */
 export const GRID_COLUMN_HEADER_OVER = 'columnHeaderOver';
 
 /**
  * Fired when a `mouseout` event happens in a column header. Called with a [[GridColumnHeaderParams]] object.
+ * @ignore - do not document.
  * @event
  */
 export const GRID_COLUMN_HEADER_OUT = 'columnHeaderOut';
 
 /**
  * Fired when a `mouseenter` event happens in a column header. Called with a [[GridColumnHeaderParams]] object.
+ * @ignore - do not document.
  * @event
  */
 export const GRID_COLUMN_HEADER_ENTER = 'columnHeaderEnter';
 
 /**
  * Fired when a `mouseleave` event happens in a column header. Called with a [[GridColumnHeaderParams]] object.
+ * @ignore - do not document.*
  * @event
  */
 export const GRID_COLUMN_HEADER_LEAVE = 'columnHeaderLeave';
@@ -291,6 +308,7 @@ export const GRID_COLUMN_HEADER_LEAVE = 'columnHeaderLeave';
 /**
  * Fired when the user starts dragging a column header. It's mapped to the `dragstart` DOM event.
  * Called with a [[GridColumnHeaderParams]] object.
+ * @ignore - do not document.
  * @event
  */
 export const GRID_COLUMN_HEADER_DRAG_START = 'columnHeaderDragStart';
@@ -299,6 +317,7 @@ export const GRID_COLUMN_HEADER_DRAG_START = 'columnHeaderDragStart';
  * Fired while an element or text selection is dragged over the column header.
  * It's mapped to the `dragover` DOM event.
  * Called with a [[GridColumnHeaderParams]] object.
+ * @ignore - do not document.
  * @event
  */
 export const GRID_COLUMN_HEADER_DRAG_OVER = 'columnHeaderDragOver';
@@ -307,12 +326,14 @@ export const GRID_COLUMN_HEADER_DRAG_OVER = 'columnHeaderDragOver';
  * Fired when the dragged column header enters a valid drop target.
  * It's mapped to the `dragend` DOM event.
  * Called with a [[GridColumnHeaderParams]] object.
+ * @ignore - do not document.
  * @event
  */
 export const GRID_COLUMN_HEADER_DRAG_ENTER = 'columnHeaderDragEnter';
 
 /**
  * Fired when the dragging of a column header ends. Called with a [[GridColumnHeaderParams]] object.
+ * @ignore - do not document.
  * @event
  */
 export const GRID_COLUMN_HEADER_DRAG_END = 'columnHeaderDragEnd';
@@ -351,6 +372,7 @@ export const GRID_ROWS_SCROLL_END = 'rowsScrollEnd';
 /**
  * Fired when a `mousedown` DOM event happens in the column header separator.
  * Called with a [[GridColumnHeaderParams]] object.
+ * @ignore - do not document.
  * @event
  */
 export const GRID_COLUMN_SEPARATOR_MOUSE_DOWN = 'columnSeparatorMouseDown';
@@ -374,7 +396,7 @@ export const GRID_COLUMN_RESIZE_COMMITTED = 'columnResizeCommitted';
 export const GRID_COLUMN_RESIZE_START = 'columnResizeStart';
 
 /**
- * Fired when the user starts resizing a column. Called with an object `{ field: string }`.
+ * Fired when the user stops resizing a column. Called with an object `{ field: string }`.
  * @event
  */
 export const GRID_COLUMN_RESIZE_STOP = 'columnResizeStop';
@@ -387,12 +409,14 @@ export const GRID_COLUMN_ORDER_CHANGE = 'columnOrderChange';
 
 /**
  * Fired when the rows are updated.
+ * @ignore - do not document.
  * @event
  */
 export const GRID_ROWS_UPDATED = 'rowsUpdated';
 
 /**
  * Fired when the rows are updated.
+ * @ignore - do not document.
  * @event
  */
 export const GRID_ROWS_SET = 'rowsSet';
@@ -411,14 +435,14 @@ export const GRID_ROWS_CLEARED = 'rowsCleared';
 export const GRID_COLUMNS_UPDATED = 'columnsUpdated';
 
 /**
- * Fired after the sort model is changed but before applying the new model.
+ * Fired when the sort model changes.
  * Called with a [[GridSortModelParams]] object.
  * @event
  */
 export const GRID_SORT_MODEL_CHANGE = 'sortModelChange';
 
 /**
- * Fired after the filter model is changed and the new model is applied.
+ * Fired when the filter model changes.
  * Called with a [[GridFilterModelParams]] object.
  * @event
  */

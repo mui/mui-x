@@ -46,9 +46,19 @@ To activate checkbox selection set `checkboxSelection={true}`.
 
 ## Disable selection on click
 
-You might have interactive content in the cells and need to disable the selection of the row on click. Use the `disableSelectionOnClick` option in this case.
+You might have interactive content in the cells and need to disable the selection of the row on click. Use the `disableSelectionOnClick` prop in this case.
 
 {{"demo": "pages/components/data-grid/selection/DisableClickSelectionGrid.js", "bg": "inline"}}
+
+## Disable selection on certain rows
+
+Use the `isRowSelectable` prop to indicate if a row can be selected.
+It's called with a `GridRowParams` object and should return a boolean value.
+If not specified, all rows are selectable.
+
+In the demo below only rows with quantity above 50000 can be selected:
+
+{{"demo": "pages/components/data-grid/selection/DisableRowSelection.js", "bg": "inline"}}
 
 ## Controlled selection
 

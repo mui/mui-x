@@ -11,8 +11,8 @@ import {
   GRID_COLUMN_RESIZE_COMMITTED,
 } from '../../../constants/eventsConstants';
 import {
-  GRID_HEADER_CELL_CSS_CLASS,
-  GRID_HEADER_CELL_SEPARATOR_RESIZABLE_CSS_CLASS,
+  GRID_COLUMN_HEADER_CSS_CLASS,
+  GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS,
 } from '../../../constants/cssClassesConstants';
 import {
   findGridCellElementsFromCol,
@@ -152,7 +152,9 @@ export const useGridColumnResize = (
       }
 
       // Skip if the column isn't resizable
-      if (!event.currentTarget.classList.contains(GRID_HEADER_CELL_SEPARATOR_RESIZABLE_CSS_CLASS)) {
+      if (
+        !event.currentTarget.classList.contains(GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS)
+      ) {
         return;
       }
 
@@ -161,7 +163,7 @@ export const useGridColumnResize = (
 
       colElementRef.current = findParentElementFromClassName(
         event.currentTarget,
-        GRID_HEADER_CELL_CSS_CLASS,
+        GRID_COLUMN_HEADER_CSS_CLASS,
       ) as HTMLDivElement;
 
       logger.debug(`Start Resize on col ${colDef.field}`);
@@ -240,7 +242,7 @@ export const useGridColumnResize = (
   const handleTouchStart = useEventCallback((event) => {
     const cellSeparator = findParentElementFromClassName(
       event.target,
-      GRID_HEADER_CELL_SEPARATOR_RESIZABLE_CSS_CLASS,
+      GRID_COLUMN_HEADER_SEPARATOR_RESIZABLE_CSS_CLASS,
     );
     // Let the event bubble if the target is not a col separator
     if (!cellSeparator) return;
@@ -257,10 +259,10 @@ export const useGridColumnResize = (
 
     colElementRef.current = findParentElementFromClassName(
       event.target,
-      GRID_HEADER_CELL_CSS_CLASS,
+      GRID_COLUMN_HEADER_CSS_CLASS,
     ) as HTMLDivElement;
     const field = getFieldFromHeaderElem(colElementRef.current!);
-    const colDef = apiRef.current.getColumnFromField(field);
+    const colDef = apiRef.current.getColumn(field);
 
     logger.debug(`Start Resize on col ${colDef.field}`);
     apiRef.current.publishEvent(GRID_COLUMN_RESIZE_START, { field });

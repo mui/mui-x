@@ -9,7 +9,7 @@ export const gridCheckboxSelectionColDef: GridColDef = {
   field: '__check__',
   type: 'checkboxSelection',
   width: 48,
-  resizable: true,
+  resizable: false,
   sortable: false,
   filterable: false,
   disableClickEventBubbling: true,
@@ -18,5 +18,5 @@ export const gridCheckboxSelectionColDef: GridColDef = {
   renderHeader: (params) => <GridHeaderCheckbox {...params} />,
   renderCell: (params) => <GridCellCheckboxRenderer {...params} />,
   cellClassName: 'MuiDataGrid-cellCheckbox',
-  headerClassName: 'MuiDataGrid-colCellCheckbox',
+  headerClassName: 'MuiDataGrid-columnHeaderCheckbox',
 };

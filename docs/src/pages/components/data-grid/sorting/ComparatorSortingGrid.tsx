@@ -17,8 +17,12 @@ const columns: GridColumns = [
   {
     field: 'username',
     valueGetter: (params: GridValueGetterParams) =>
-      `${params.getValue('name') || 'unknown'} - ${params.getValue('age') || 'x'}`,
-    sortComparator: (v1, v2, param1, param2) => param1.row.age - param2.row.age,
+      `${params.getValue(params.id, 'name') || 'unknown'} - ${
+        params.getValue(params.id, 'age') || 'x'
+      }`,
+    sortComparator: (v1, v2, param1, param2) =>
+      param1.api.getCellValue(param1.id, 'age') -
+      param2.api.getCellValue(param2.id, 'age'),
     width: 150,
   },
   { field: 'dateCreated', type: 'date', width: 180 },

@@ -1,7 +1,7 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
-import { classnames } from '../../utils';
 import { GridApiContext } from '../GridApiContext';
 
 type GridColumnsContainerProps = React.HTMLAttributes<HTMLDivElement>;
@@ -16,7 +16,7 @@ export const GridColumnsContainer = React.forwardRef<HTMLDivElement, GridColumns
     return (
       <div
         ref={ref}
-        className={classnames('MuiDataGrid-columnsContainer', className)}
+        className={clsx('MuiDataGrid-columnsContainer', className)}
         {...other}
         style={{ minHeight: height, maxHeight: height, lineHeight: `${height}px`, ...style }}
       />

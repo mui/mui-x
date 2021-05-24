@@ -9,6 +9,7 @@ import {
   GridColumnHeaderIndexCoordinates,
 } from '../../../models/gridCell';
 import { GridCellParams } from '../../../models/params/gridCellParams';
+import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import {
   isArrowKeys,
   isEnterKey,
@@ -86,7 +87,9 @@ export const useGridKeyboardNavigation = (
   const navigateCells = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
       event.preventDefault();
-      const { colIndex, rowIndex } = params;
+      const colIndex = apiRef.current.getColumnIndex(params.field);
+      const rowIndex = apiRef.current.getRowIndex(params.id);
+
       const key = mapKey(event);
       const isCtrlPressed = event.ctrlKey || event.metaKey || event.shiftKey;
       let rowCount = totalRowCount;
@@ -129,7 +132,8 @@ export const useGridKeyboardNavigation = (
       }
 
       if (nextCellIndexes.rowIndex < 0) {
-        apiRef.current.setColumnHeaderFocus({ colIndex: nextCellIndexes.colIndex });
+        const field = apiRef.current.getVisibleColumns()[nextCellIndexes.colIndex].field;
+        apiRef.current.setColumnHeaderFocus(field);
         return;
       }
 
@@ -144,7 +148,9 @@ export const useGridKeyboardNavigation = (
         `Navigating to next cell row ${nextCellIndexes.rowIndex}, col ${nextCellIndexes.colIndex}`,
       );
       apiRef.current.scrollToIndexes(nextCellIndexes);
-      apiRef.current.setCellFocus(nextCellIndexes);
+      const field = apiRef.current.getVisibleColumns()[nextCellIndexes.colIndex].field;
+      const id = apiRef.current.getRowIdFromRowIndex(nextCellIndexes.rowIndex);
+      apiRef.current.setCellFocus(id, field);
     },
     [
       totalRowCount,
@@ -159,10 +165,10 @@ export const useGridKeyboardNavigation = (
   );
 
   const navigateColumnHeaders = React.useCallback(
-    (params: GridCellParams, event: React.KeyboardEvent) => {
+    (params: GridColumnHeaderParams, event: React.KeyboardEvent) => {
       event.preventDefault();
       let nextColumnHeaderIndexes: GridColumnHeaderIndexCoordinates | null;
-      const { colIndex } = params;
+      const colIndex = apiRef.current.getColumnIndex(params.field);
       const key = mapKey(event);
 
       if (isArrowKeys(key)) {
@@ -176,10 +182,10 @@ export const useGridKeyboardNavigation = (
       } else if (isPageKeys(key)) {
         // Handle only Page Down key, Page Up should keep the current possition
         if (key.indexOf('Down') > -1) {
-          apiRef.current.setCellFocus({
-            colIndex: params.colIndex,
-            rowIndex: containerSizes!.viewportPageSize - 1,
-          });
+          const field = apiRef.current.getVisibleColumns()[colIndex].field;
+          const id = apiRef.current.getRowIdFromRowIndex(containerSizes!.viewportPageSize - 1);
+
+          apiRef.current.setCellFocus(id, field);
         }
         return;
       } else {
@@ -187,7 +193,9 @@ export const useGridKeyboardNavigation = (
       }
 
       if (!nextColumnHeaderIndexes) {
-        apiRef.current.setCellFocus({ colIndex: params.colIndex, rowIndex: 0 });
+        const field = apiRef.current.getVisibleColumns()[colIndex].field;
+        const id = apiRef.current.getRowIdFromRowIndex(0);
+        apiRef.current.setCellFocus(id, field);
         return;
       }
 
@@ -199,7 +207,8 @@ export const useGridKeyboardNavigation = (
 
       logger.debug(`Navigating to next column row ${nextColumnHeaderIndexes.colIndex}`);
       apiRef.current.scrollToIndexes(nextColumnHeaderIndexes);
-      apiRef.current.setColumnHeaderFocus(nextColumnHeaderIndexes);
+      const field = apiRef.current.getVisibleColumns()[nextColumnHeaderIndexes.colIndex].field;
+      apiRef.current.setColumnHeaderFocus(field);
     },
     [apiRef, colCount, containerSizes, logger],
   );

@@ -219,7 +219,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
         return;
       }
       if (isEscapeKey(event.key) || isDeleteKeys(event.key)) {
-        apiRef.current.setCellFocus(params);
+        apiRef.current.setCellFocus(params.id, params.field);
       }
     },
     [apiRef, setCellMode],
