@@ -66,7 +66,7 @@ export const useGridKeyboard = (
   const expandSelection = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
       const rowEl = findParentElementFromClassName(
-        document.activeElement as HTMLDivElement,
+        (event.target as HTMLElement) as HTMLDivElement,
         GRID_ROW_CSS_CLASS,
       )! as HTMLElement;
 
@@ -101,18 +101,21 @@ export const useGridKeyboard = (
     [logger, apiRef],
   );
 
-  const handleCopy = React.useCallback(() => {
-    const rowEl = getRowEl(document.activeElement)!;
-    const rowId = getIdFromRowElem(rowEl);
-    const isRowSelected = selectionState[rowId];
+  const handleCopy = React.useCallback(
+    (target: HTMLElement) => {
+      const rowEl = getRowEl(target)!;
+      const rowId = getIdFromRowElem(rowEl);
+      const isRowSelected = selectionState[rowId];
 
-    if (isRowSelected) {
-      window?.getSelection()?.selectAllChildren(rowEl);
-    } else {
-      window?.getSelection()?.selectAllChildren(document.activeElement!);
-    }
-    document.execCommand('copy');
-  }, [selectionState]);
+      if (isRowSelected) {
+        window?.getSelection()?.selectAllChildren(rowEl);
+      } else {
+        window?.getSelection()?.selectAllChildren(target);
+      }
+      document.execCommand('copy');
+    },
+    [selectionState],
+  );
 
   const handleKeyDown = React.useCallback(
     (event: KeyboardEvent) => {
@@ -173,7 +176,7 @@ export const useGridKeyboard = (
       }
 
       if (event.key.toLowerCase() === 'c' && (event.ctrlKey || event.metaKey)) {
-        handleCopy();
+        handleCopy(event.target as HTMLElement);
         return;
       }
 
@@ -187,13 +190,13 @@ export const useGridKeyboard = (
 
   const handleColumnHeaderKeyDown = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
-      if (!isGridHeaderCellRoot(document.activeElement)) {
+      if (!isGridHeaderCellRoot(event.target as HTMLElement)) {
         return;
       }
       if (event.isPropagationStopped()) {
         return;
       }
-      if (isSpaceKey(event.key) && isGridHeaderCellRoot(document.activeElement)) {
+      if (isSpaceKey(event.key) && isGridHeaderCellRoot(event.target as HTMLElement)) {
         event.preventDefault();
       }
 
