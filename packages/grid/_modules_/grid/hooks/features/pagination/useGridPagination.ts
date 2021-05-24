@@ -126,7 +126,7 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
     setGridState,
     forceUpdate,
     options.autoPageSize,
-    containerSizes,
+    containerSizes?.viewportPageSize,
     options.pageSize,
     options.page,
   ]);
