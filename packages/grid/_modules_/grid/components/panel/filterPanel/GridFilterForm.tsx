@@ -3,7 +3,8 @@ import FormControl from '@material-ui/core/FormControl';
 import IconButton from '@material-ui/core/IconButton';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
-import { capitalize } from '@material-ui/core/utils';
+// @ts-expect-error fixed in Material-UI v5, types definitions were added.
+import { capitalize, unstable_useId as useId } from '@material-ui/core/utils';
 import { makeStyles } from '@material-ui/styles';
 import { filterableGridColumnsSelector } from '../../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../../hooks/features/core/useGridSelector';
@@ -68,6 +69,12 @@ export function GridFilterForm(props: GridFilterFormProps) {
   const classes = useStyles();
   const apiRef = React.useContext(GridApiContext);
   const filterableColumns = useGridSelector(apiRef, filterableGridColumnsSelector);
+  const linkOperatorSelectId = useId();
+  const linkOperatorSelectLabelId = useId();
+  const columnSelectId = useId();
+  const columnSelectLabelId = useId();
+  const operatorSelectId = useId();
+  const operatorSelectLabelId = useId();
   const [currentColumn, setCurrentColumn] = React.useState<GridColDef | null>(() => {
     if (!item.columnField) {
       return null;
@@ -152,12 +159,12 @@ export function GridFilterForm(props: GridFilterFormProps) {
           visibility: showMultiFilterOperators ? 'visible' : 'hidden',
         }}
       >
-        <InputLabel id="columns-filter-operator-select-label">
+        <InputLabel htmlFor={linkOperatorSelectId} id={linkOperatorSelectLabelId}>
           {apiRef!.current.getLocaleText('filterPanelOperators')}
         </InputLabel>
         <Select
-          labelId="columns-filter-operator-select-label"
-          id="columns-filter-operator-select"
+          labelId={linkOperatorSelectLabelId}
+          id={linkOperatorSelectId}
           value={multiFilterOperator}
           onChange={changeLinkOperator}
           disabled={!!disableMultiFilterOperator}
@@ -172,12 +179,12 @@ export function GridFilterForm(props: GridFilterFormProps) {
         </Select>
       </FormControl>
       <FormControl variant="standard" className={classes.columnSelect}>
-        <InputLabel id="columns-filter-select-label">
+        <InputLabel htmlFor={columnSelectId} id={columnSelectLabelId}>
           {apiRef!.current.getLocaleText('filterPanelColumns')}
         </InputLabel>
         <Select
-          labelId="columns-filter-select-label"
-          id="columns-filter-select"
+          labelId={columnSelectLabelId}
+          id={columnSelectId}
           value={item.columnField || ''}
           onChange={changeColumn}
           native
@@ -190,12 +197,12 @@ export function GridFilterForm(props: GridFilterFormProps) {
         </Select>
       </FormControl>
       <FormControl variant="standard" className={classes.operatorSelect}>
-        <InputLabel id="columns-operators-select-label">
+        <InputLabel htmlFor={operatorSelectId} id={operatorSelectLabelId}>
           {apiRef!.current.getLocaleText('filterPanelOperators')}
         </InputLabel>
         <Select
-          labelId="columns-operators-select-label"
-          id="columns-operators-select"
+          labelId={operatorSelectLabelId}
+          id={operatorSelectId}
           value={item.operatorValue}
           onChange={changeOperator}
           native

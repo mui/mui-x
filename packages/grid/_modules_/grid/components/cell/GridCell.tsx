@@ -1,5 +1,5 @@
-import { capitalize } from '@material-ui/core/utils';
 import * as React from 'react';
+import { ownerDocument, capitalize } from '@material-ui/core/utils';
 import clsx from 'clsx';
 import {
   GRID_CELL_BLUR,
@@ -141,10 +141,12 @@ export const GridCell = React.memo((props: GridCellProps) => {
   };
 
   React.useLayoutEffect(() => {
+    const doc = ownerDocument(apiRef!.current.rootElementRef!.current as HTMLElement);
+
     if (
       hasFocus &&
       cellRef.current &&
-      (!document.activeElement || !cellRef.current!.contains(document.activeElement))
+      (!doc.activeElement || !cellRef.current!.contains(doc.activeElement))
     ) {
       const focusableElement = cellRef.current!.querySelector('[tabindex="0"]') as HTMLElement;
       if (focusableElement) {

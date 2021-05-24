@@ -300,7 +300,7 @@ describe('<XGrid /> - Filter', () => {
       );
       const t1 = performance.now();
       const time = Math.round(t1 - t0);
-      expect(time).to.be.lessThan(100);
+      expect(time).to.be.lessThan(150);
     });
   });
 

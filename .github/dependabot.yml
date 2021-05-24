@@ -57,3 +57,7 @@ updates:
       - dependency-name: '@typescript-eslint/parser'
         versions:
           - '>= 0'
+      # Should be grouped
+      - dependency-name: "@storybook/*"
+        versions:
+          - ">= 0"
