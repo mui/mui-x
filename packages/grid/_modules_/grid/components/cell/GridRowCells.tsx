@@ -13,6 +13,7 @@ import { GridApiContext } from '../GridApiContext';
 import { isFunction } from '../../utils/index';
 import { gridDensityRowHeightSelector } from '../../hooks/features/density/densitySelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
+import { GRID_CSS_CLASS_PREFIX } from '../../constants/cssClassesConstants';
 
 interface RowCellsProps {
   cellClassName?: string;
@@ -81,13 +82,13 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
 
     if (editCellState == null && column.renderCell) {
       cellComponent = column.renderCell(cellParams);
-      classNames.push('MuiDataGrid-cellWithRenderer');
+      classNames.push(`${GRID_CSS_CLASS_PREFIX}-cellWithRenderer`);
     }
 
     if (editCellState != null && column.renderEditCell) {
       const params = { ...cellParams, ...editCellState };
       cellComponent = column.renderEditCell(params);
-      classNames.push('MuiDataGrid-cellEditing');
+      classNames.push(`${GRID_CSS_CLASS_PREFIX}-cellEditing`);
     }
 
     if (getCellClassName) {

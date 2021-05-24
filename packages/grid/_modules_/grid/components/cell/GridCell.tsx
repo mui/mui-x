@@ -16,6 +16,7 @@ import {
   GRID_CELL_DRAG_ENTER,
   GRID_CELL_DRAG_OVER,
 } from '../../constants/eventsConstants';
+import { GRID_CSS_CLASS_PREFIX } from '../../constants/cssClassesConstants';
 import { GridAlignment, GridCellMode, GridCellValue, GridRowId } from '../../models/index';
 import { GridApiContext } from '../GridApiContext';
 
@@ -64,9 +65,9 @@ export const GridCell = React.memo((props: GridCellProps) => {
   const cellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = React.useContext(GridApiContext);
 
-  const cssClasses = clsx(className, `MuiDataGrid-cell${capitalize(align)}`, {
-    'MuiDataGrid-withBorder': showRightBorder,
-    'MuiDataGrid-cellEditable': isEditable,
+  const cssClasses = clsx(className, `${GRID_CSS_CLASS_PREFIX}-cell${capitalize(align)}`, {
+    [`${GRID_CSS_CLASS_PREFIX}-withBorder`]: showRightBorder,
+    [`${GRID_CSS_CLASS_PREFIX}-cellEditable`]: isEditable,
   });
 
   const publishBlur = React.useCallback(
