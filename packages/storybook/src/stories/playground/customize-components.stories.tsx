@@ -167,9 +167,11 @@ StyledColumns.args = {
         `${params.getValue(params.id, 'firstName') || ''} ${
           params.getValue(params.id, 'lastName') || ''
         }`,
-      cellClassRules: {
-        common: (params) => params.row.lastName === 'Smith',
-        unknown: (params) => !params.row.lastName,
+      cellClassName: (params) => {
+        if (params.row.lastName === 'Smith') {
+          return 'common';
+        }
+        return !params.row.lastName ? 'unknown' : '';
       },
     },
     {
