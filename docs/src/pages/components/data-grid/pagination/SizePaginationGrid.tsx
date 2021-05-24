@@ -11,7 +11,7 @@ export default function SizePaginationGrid() {
     maxColumns: 6,
   });
 
-  const handleOnPageSizeChange = (params: GridPageChangeParams) => {
+  const handlePageSizeChange = (params: GridPageChangeParams) => {
     setPageSize(params.pageSize);
   };
 
@@ -19,7 +19,7 @@ export default function SizePaginationGrid() {
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
         pageSize={pageSize}
-        onPageSizeChange={handleOnPageSizeChange}
+        onPageSizeChange={handlePageSizeChange}
         rowsPerPageOptions={[5, 10, 20]}
         {...data}
       />
