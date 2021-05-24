@@ -31,9 +31,7 @@ import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import { gridSelectionStateSelector } from '../selection/gridSelectionSelector';
 import { GridKeyboardState } from './gridKeyboardState';
 
-export const useGridKeyboard = (
-  apiRef: GridApiRef,
-): void => {
+export const useGridKeyboard = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridKeyboard');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const selectionState = useGridSelector(apiRef, gridSelectionStateSelector);

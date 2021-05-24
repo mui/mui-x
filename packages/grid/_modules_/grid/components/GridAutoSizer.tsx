@@ -99,8 +99,7 @@ export const GridAutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(fu
           height: newHeight,
           width: newWidth,
         });
-        apiRef.current.publishEvent(GRID_RESIZE,  { height: newHeight, width: newWidth });
-
+        apiRef.current.publishEvent(GRID_RESIZE, { height: newHeight, width: newWidth });
       }
     }
   });

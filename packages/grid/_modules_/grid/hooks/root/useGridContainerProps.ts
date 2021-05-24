@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GRID_DEBOUNCED_RESIZE, GRID_RESIZE } from '../../constants/eventsConstants';
+import { GRID_DEBOUNCED_RESIZE } from '../../constants/eventsConstants';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import {
   GridContainerProps,
@@ -19,9 +19,7 @@ import { optionsSelector } from '../utils/optionsSelector';
 import { useLogger } from '../utils/useLogger';
 import { useGridApiEventHandler } from './useGridApiEventHandler';
 
-export const useGridContainerProps = (
-  apiRef: GridApiRef,
-) => {
+export const useGridContainerProps = (apiRef: GridApiRef) => {
   const logger = useLogger('useGridContainerProps');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const windowSizesRef = React.useRef<ElementSize>({ width: 0, height: 0 });

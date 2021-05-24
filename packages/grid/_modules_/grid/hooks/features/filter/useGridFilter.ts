@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { GridPropsContext } from '../../../components/GridApiContext';
 import {
   GRID_COLUMNS_UPDATED,
   GRID_FILTER_MODEL_CHANGE,
@@ -31,7 +30,10 @@ import {
 import { getInitialVisibleGridRowsState } from './visibleGridRowsState';
 import { visibleSortedGridRowsSelector } from './gridFilterSelector';
 
-export const useGridFilter = (apiRef: GridApiRef, props:Pick<GridComponentProps, 'rows' | 'filterModel' | 'onFilterModelChange'>): void => {
+export const useGridFilter = (
+  apiRef: GridApiRef,
+  props: Pick<GridComponentProps, 'rows' | 'filterModel' | 'onFilterModelChange'>,
+): void => {
   const logger = useLogger('useGridFilter');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const filterableColumnsIds = useGridSelector(apiRef, filterableGridColumnsIdsSelector);
@@ -177,7 +179,7 @@ export const useGridFilter = (apiRef: GridApiRef, props:Pick<GridComponentProps,
         return newState;
       });
       applyFilters();
-      console.log('publish GRID_FILTER_MODEL_CHANGE 1')
+      console.log('publish GRID_FILTER_MODEL_CHANGE 1');
       apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
     [
@@ -208,7 +210,7 @@ export const useGridFilter = (apiRef: GridApiRef, props:Pick<GridComponentProps,
         upsertFilter({});
       }
       applyFilters();
-      console.log('publish GRID_FILTER_MODEL_CHANGE 2')
+      console.log('publish GRID_FILTER_MODEL_CHANGE 2');
 
       apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
@@ -244,7 +246,7 @@ export const useGridFilter = (apiRef: GridApiRef, props:Pick<GridComponentProps,
         filter: { ...state.filter, linkOperator },
       }));
       applyFilters();
-      console.log('publish GRID_FILTER_MODEL_CHANGE 3')
+      console.log('publish GRID_FILTER_MODEL_CHANGE 3');
       apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
     [apiRef, applyFilters, getFilterModelParams, logger, setGridState],
@@ -262,7 +264,7 @@ export const useGridFilter = (apiRef: GridApiRef, props:Pick<GridComponentProps,
       logger.debug('Setting filter model');
       applyFilterLinkOperator(model.linkOperator);
       model.items.forEach((item) => upsertFilter(item));
-      console.log('publish GRID_FILTER_MODEL_CHANGE 4')
+      console.log('publish GRID_FILTER_MODEL_CHANGE 4');
       apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
     [apiRef, applyFilterLinkOperator, clearFilterModel, getFilterModelParams, logger, upsertFilter],
@@ -294,7 +296,7 @@ export const useGridFilter = (apiRef: GridApiRef, props:Pick<GridComponentProps,
   useGridApiOptionHandler(apiRef, GRID_FILTER_MODEL_CHANGE, props.onFilterModelChange);
 
   React.useEffect(() => {
-    if(!props || !props.filterModel) {
+    if (!props || !props.filterModel) {
       return;
     }
     const filterModel = props.filterModel;
@@ -329,6 +331,4 @@ export const useGridFilter = (apiRef: GridApiRef, props:Pick<GridComponentProps,
   }, [apiRef, logger]);
 
   useGridApiEventHandler(apiRef, GRID_COLUMNS_UPDATED, onColUpdated);
-
-
 };

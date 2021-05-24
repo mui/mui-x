@@ -68,9 +68,7 @@ function trackFinger(event, currentTouchId): CursorCoordinates | boolean {
 }
 
 // TODO improve experience for last column
-export const useGridColumnResize = (
-  apiRef: GridApiRef,
-) => {
+export const useGridColumnResize = (apiRef: GridApiRef) => {
   const logger = useLogger('useGridColumnResize');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const colDefRef = React.useRef<GridColDef>();
@@ -312,10 +310,9 @@ export const useGridColumnResize = (
   }, [setGridState, forceUpdate]);
 
   React.useEffect(() => {
-    const columnHeadersElement =apiRef.current!.columnHeadersElementRef?.current;
-    if(!columnHeadersElement) {
-      return () => {
-      };
+    const columnHeadersElement = apiRef.current!.columnHeadersElementRef?.current;
+    if (!columnHeadersElement) {
+      return () => {};
     }
 
     columnHeadersElement.addEventListener('touchstart', handleTouchStart, {

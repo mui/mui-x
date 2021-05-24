@@ -53,9 +53,11 @@ type LoggerFactoryFn = (name: string) => Logger;
 // TODO Refactor to allow different logger for each grid in a page...
 let factory: LoggerFactoryFn | null;
 
-export function useLoggerFactory(apiRef: any,
-                                 {logger, logLevel} : {logger?: Logger | LoggerFactoryFn,
-  logLevel?: string | false} = { logLevel: process.env.NODE_ENV === 'production' ? 'error' : 'warn'}
+export function useLoggerFactory(
+  apiRef: any,
+  { logger, logLevel }: { logger?: Logger | LoggerFactoryFn; logLevel?: string | false } = {
+    logLevel: process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+  },
 ) {
   if (forceDebug) {
     factory = defaultFactory('debug');
@@ -72,9 +74,7 @@ export function useLoggerFactory(apiRef: any,
     return;
   }
 
-  factory = logLevel
-    ? (name: string) => getAppender(name, logLevel.toString(), logger)
-    : null;
+  factory = logLevel ? (name: string) => getAppender(name, logLevel.toString(), logger) : null;
 }
 
 export function useLogger(name: string): Logger {

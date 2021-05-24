@@ -5,9 +5,7 @@ import { useLogger } from '../utils/useLogger';
 import { GRID_COMPONENT_ERROR, GRID_UNMOUNT } from '../../constants/eventsConstants';
 import { useGridApiMethod } from './useGridApiMethod';
 
-export function useApi(
-  apiRef: GridApiRef,
-): boolean {
+export function useApi(apiRef: GridApiRef): boolean {
   const [initialised, setInit] = React.useState(false);
   const logger = useLogger('useApi');
 

@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { debounce } from '@material-ui/core/utils';
-import { GRID_DEBOUNCED_RESIZE, GRID_RESIZE, GRID_ROW_ENTER } from '../../constants/eventsConstants';
+import {
+  GRID_DEBOUNCED_RESIZE,
+  GRID_RESIZE,
+} from '../../constants/eventsConstants';
 import { ElementSize, GridEventsApi } from '../../models';
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../root/useGridApiMethod';
@@ -15,20 +18,16 @@ export function useResizeContainer(apiRef) {
   const { autoHeight } = useGridSelector(apiRef, optionsSelector);
   const options = useGridSelector(apiRef, optionsSelector);
 
-  const resizeFn = React.useCallback(
-    () => {
-      gridLogger.debug(`resizing...`);
+  const resizeFn = React.useCallback(() => {
+    gridLogger.debug(`resizing...`);
 
-      apiRef.current.publishEvent(GRID_DEBOUNCED_RESIZE, {
-        containerSize: apiRef.current.getState().containerSizes?.windowSizes,
-      });
-    },
-    [apiRef, gridLogger],
-  );
+    apiRef.current.publishEvent(GRID_DEBOUNCED_RESIZE, {
+      containerSize: apiRef.current.getState().containerSizes?.windowSizes,
+    });
+  }, [apiRef, gridLogger]);
 
   const eventsApi: GridEventsApi = { resize: resizeFn };
   useGridApiMethod(apiRef, eventsApi, 'GridEventsApi');
-
 
   const debounceResize = React.useMemo(() => debounce(resizeFn, 60), [resizeFn]);
 

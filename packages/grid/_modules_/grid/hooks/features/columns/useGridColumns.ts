@@ -108,7 +108,7 @@ const upsertColumnsState = (
   return newState;
 };
 
-export function useGridColumns(apiRef: GridApiRef, {columns}: {columns: GridColumns}): void {
+export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridColumns }): void {
   const logger = useLogger('useGridColumns');
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);

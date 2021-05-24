@@ -51,8 +51,7 @@ export function convertGridRowsPropToState(
 
 export const useGridRows = (
   apiRef: GridApiRef,
-  {rows, getRowIdProp }:{rows: GridRowsProp,
-  getRowIdProp?: GridRowIdGetter}
+  { rows, getRowIdProp }: { rows: GridRowsProp; getRowIdProp?: GridRowIdGetter },
 ): void => {
   const logger = useLogger('useGridRows');
   const [gridState, setGridState, updateComponent] = useGridState(apiRef);

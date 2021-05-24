@@ -9,7 +9,6 @@ import {
   GRID_UNMOUNT,
   GRID_KEYDOWN,
   GRID_KEYUP,
-  GRID_RESIZE,
   GRID_ROW_CLICK,
   GRID_CELL_OVER,
   GRID_ROW_OVER,
@@ -57,7 +56,6 @@ export function useEvents(apiRef: GridApiRef): void {
     [apiRef],
   );
 
-
   useGridApiOptionHandler(apiRef, GRID_COLUMN_HEADER_CLICK, options.onColumnHeaderClick);
   useGridApiOptionHandler(
     apiRef,
@@ -86,12 +84,11 @@ export function useEvents(apiRef: GridApiRef): void {
   useGridApiOptionHandler(apiRef, GRID_ROW_ENTER, options.onRowEnter);
   useGridApiOptionHandler(apiRef, GRID_ROW_LEAVE, options.onRowLeave);
 
-
   useGridApiOptionHandler(apiRef, GRID_COMPONENT_ERROR, options.onError);
   useGridApiOptionHandler(apiRef, GRID_STATE_CHANGE, options.onStateChange);
 
   React.useEffect(() => {
-    if(apiRef.current.rootElementRef?.current) {
+    if (apiRef.current.rootElementRef?.current) {
       logger.debug('Binding events listeners');
       const keyDownHandler = getHandler(GRID_KEYDOWN);
       const keyUpHandler = getHandler(GRID_KEYUP);
@@ -113,5 +110,12 @@ export function useEvents(apiRef: GridApiRef): void {
       };
     }
     return undefined;
-  }, [apiRef.current.rootElementRef?.current, apiRef.current?.isInitialised, getHandler, logger, onFocusOutHandler, apiRef]);
+  }, [
+    apiRef.current.rootElementRef?.current,
+    apiRef.current?.isInitialised,
+    getHandler,
+    logger,
+    onFocusOutHandler,
+    apiRef,
+  ]);
 }

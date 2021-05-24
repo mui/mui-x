@@ -4,7 +4,7 @@ import { GridState } from '../features/core/gridState';
 import { useGridState } from '../features/core/useGridState';
 import { useLogger } from './useLogger';
 
-export function useStateProp(apiRef: GridApiRef, {state}:{state?: Partial<GridState>}) {
+export function useStateProp(apiRef: GridApiRef, { state }: { state?: Partial<GridState> }) {
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const logger = useLogger('useStateProp');
 

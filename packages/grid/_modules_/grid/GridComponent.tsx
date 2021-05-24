@@ -4,7 +4,7 @@
  */
 import * as React from 'react';
 import { GridComponentProps } from './GridComponentProps';
-import { GridBody } from './GridImplementation';
+import { GridBody } from './GridBody';
 import { useGridColumnMenu } from './hooks/features/columnMenu/useGridColumnMenu';
 import { useGridColumns } from './hooks/features/columns/useGridColumns';
 import { useGridFocus } from './hooks/features/focus/useGridFocus';
@@ -31,14 +31,15 @@ import { useResizeContainer } from './hooks/utils/useResizeContainer';
 import { useGridVirtualRows } from './hooks/features/virtualization/useGridVirtualRows';
 import { useGridDensity } from './hooks/features/density';
 import { useStateProp } from './hooks/utils/useStateProp';
-import { GridApiContext, GridPropsContext } from './components/GridApiContext';
+import { GridApiContext } from './components/GridApiContext';
 import { useGridFilter } from './hooks/features/filter/useGridFilter';
 import { useLocaleText } from './hooks/features/localeText/useLocaleText';
 import { useGridCsvExport } from './hooks/features/export';
 import { useGridInfiniteLoader } from './hooks/features/infiniteLoader';
 import { useGridFreezeRows } from './hooks/features/rows/useGridFreezeRows';
+import { GridApiRef } from './models/api/gridApiRef';
 
-const useXGrid = (apiRef, props) => {
+const useGridComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
   useLoggerFactory(apiRef, props);
   useOptionsProp(apiRef, props);
   useApi(apiRef);
@@ -69,65 +70,21 @@ const useXGrid = (apiRef, props) => {
   useGridComponents(apiRef, props);
   useStateProp(apiRef, props);
   useRenderInfoLog(apiRef);
-}
-
-export const GridContextProvider = (props)=> {
-  // const apiRef = useGridApiRef(props.apiRef);
-  return (
-  <GridPropsContext.Provider value={props}>
-    <GridApiContext.Provider value={props.apiRef }>
-      {props.children}
-    </GridApiContext.Provider>
-  </GridPropsContext.Provider>
-  )
 };
-// XGRID DEFINITION Option 1
-// export const XGridWrapperComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
-//   function XGridWrapperComponent(props, ref) {
-//     const apiRef = useGridApiRef(props.apiRef);
-//     useXGrid(apiRef, props);
-//     return (
-//       <GridContextProvider {...props} apiRef={apiRef} >
-//         <GridBody {...props} ref={ref}/>
-//       </GridContextProvider>
-//     );
-//   },
-// );
-// XGRID DEFINITION Option 2
-export const XGridBody = React.forwardRef<HTMLDivElement, GridComponentProps>(
-  function XGridBody(props, ref) {
-    const apiRef  = React.useContext(GridApiContext);
-    useXGrid(apiRef, props);
-    return (
-      <GridBody {...props} ref={ref}/>
-    );
-  },
-);
-// Not working but my favourite option
-export const XGridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
-  function XGridComponent(props, ref) {
-    return (
-      <GridContextProvider {...props} >
-        <XGridBody {...props} ref={ref}/>
-      </GridContextProvider>
-    );
-  },
-);
-// How to recompose the api type?
-// How to register new api method?
 
-// export const GridComponent = XGridComponent;
+// TODO recompose the api type
+//      register new api method
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {
-    const apiRef = useGridApiRef(props.apiRef);
+    const {apiRef: apiRefProp, ...others} = props
+    const apiRef = useGridApiRef(apiRefProp);
 
-    useXGrid(apiRef, props);
+    useGridComponent(apiRef, props);
 
     return (
-      <GridContextProvider {...props} apiRef={apiRef}  >
-          <GridBody {...props} ref={ref}/>
-        {/*<XGridBody {...props} ref={ref}/>*/}
-      </GridContextProvider>
+      <GridApiContext.Provider value={apiRef}>
+        <GridBody {...others} apiRef={apiRef} ref={ref} />
+      </GridApiContext.Provider>
     );
   },
 );

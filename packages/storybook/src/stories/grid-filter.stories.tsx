@@ -717,36 +717,30 @@ export function ObjectValueGetter() {
 export function MultiFilteringWithOrGrid() {
   const called = React.useRef(0);
   const [lastFilterChange, setLastFilterChange] = React.useState(new Date());
-  const [filterModelState, setFilterModelState] = React.useState(
-    {
-      items: [
-        { columnField: "commodity", operatorValue: "contains", value: "rice" },
-        { columnField: "commodity", operatorValue: "startsWith", value: "soy" }
-      ],
-      linkOperator: GridLinkOperator.Or
-    }
-  )
+  const [filterModelState, setFilterModelState] = React.useState({
+    items: [
+      { columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
+      { columnField: 'commodity', operatorValue: 'startsWith', value: 'soy' },
+    ],
+    linkOperator: GridLinkOperator.Or,
+  });
   const { data } = useDemoData({
-    dataSet: "Commodity",
+    dataSet: 'Commodity',
     rowLength: 100,
-    maxColumns: 6
+    maxColumns: 6,
   });
 
-  const handleFilterChange= React.useCallback(
-    (p) =>{
-      called.current +=1;
-      console.log(p, called.current);
-      setLastFilterChange(new Date())
-    }, []
-  )
+  const handleFilterChange = React.useCallback((p) => {
+    called.current += 1;
+    console.log(p, called.current);
+    setLastFilterChange(new Date());
+  }, []);
   return (
-    <div style={{ height: 400, width: "100%" }}>
-      <XGrid
-        {...data}
-        onFilterModelChange={handleFilterChange}
-        filterModel={filterModelState}
-      />
-      <p>Last filter change: {lastFilterChange.toISOString()} called = {called.current}</p>
+    <div style={{ height: 400, width: '100%' }}>
+      <XGrid {...data} onFilterModelChange={handleFilterChange} filterModel={filterModelState} />
+      <p>
+        Last filter change: {lastFilterChange.toISOString()} called = {called.current}
+      </p>
     </div>
   );
 }

@@ -6,8 +6,10 @@ import { GridSlotsComponentsProps } from '../../models/gridSlotsComponentsProps'
 
 export const useGridComponents = (
   apiRef: GridApiRef,
-  {components, componentsProps}:{components?: GridSlotsComponent,
-  componentsProps?: GridSlotsComponentsProps}
+  {
+    components,
+    componentsProps,
+  }: { components?: GridSlotsComponent; componentsProps?: GridSlotsComponentsProps },
 ) => {
   const mappedComponents: GridApiRefComponentsProperty = React.useMemo(() => {
     return {
@@ -21,8 +23,7 @@ export const useGridComponents = (
         (components && components.ColumnFilteredIcon) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.ColumnFilteredIcon,
       ColumnMenuIcon:
-        (components && components.ColumnMenuIcon) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.ColumnMenuIcon,
+        (components && components.ColumnMenuIcon) || DEFAULT_GRID_SLOTS_COMPONENTS.ColumnMenuIcon,
       ColumnResizeIcon:
         (components && components.ColumnResizeIcon) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.ColumnResizeIcon,
@@ -48,49 +49,33 @@ export const useGridComponents = (
       DensityStandardIcon:
         (components && components.DensityStandardIcon) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.DensityStandardIcon,
-      ExportIcon:
-        (components && components.ExportIcon) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.ExportIcon,
+      ExportIcon: (components && components.ExportIcon) || DEFAULT_GRID_SLOTS_COMPONENTS.ExportIcon,
       OpenFilterButtonIcon:
         (components && components.OpenFilterButtonIcon) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.OpenFilterButtonIcon,
-      Checkbox:
-        (components && components.Checkbox) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.Checkbox,
-      ColumnMenu:
-        (components && components.ColumnMenu) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.ColumnMenu,
+      Checkbox: (components && components.Checkbox) || DEFAULT_GRID_SLOTS_COMPONENTS.Checkbox,
+      ColumnMenu: (components && components.ColumnMenu) || DEFAULT_GRID_SLOTS_COMPONENTS.ColumnMenu,
       ErrorOverlay:
-        (components && components.ErrorOverlay) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.ErrorOverlay,
-      Footer:
-        (components && components.Footer) || DEFAULT_GRID_SLOTS_COMPONENTS.Footer,
-      Header:
-        (components && components.Header) || DEFAULT_GRID_SLOTS_COMPONENTS.Header,
+        (components && components.ErrorOverlay) || DEFAULT_GRID_SLOTS_COMPONENTS.ErrorOverlay,
+      Footer: (components && components.Footer) || DEFAULT_GRID_SLOTS_COMPONENTS.Footer,
+      Header: (components && components.Header) || DEFAULT_GRID_SLOTS_COMPONENTS.Header,
       Toolbar: components && components.Toolbar,
       PreferencesPanel:
         (components && components.PreferencesPanel) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.PreferencesPanel,
       LoadingOverlay:
-        (components && components.LoadingOverlay) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.LoadingOverlay,
+        (components && components.LoadingOverlay) || DEFAULT_GRID_SLOTS_COMPONENTS.LoadingOverlay,
       NoResultsOverlay:
         (components && components.NoResultsOverlay) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.NoResultsOverlay,
       NoRowsOverlay:
-        (components && components.NoRowsOverlay) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.NoRowsOverlay,
-      Pagination:
-        (components && components.Pagination) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.Pagination,
+        (components && components.NoRowsOverlay) || DEFAULT_GRID_SLOTS_COMPONENTS.NoRowsOverlay,
+      Pagination: (components && components.Pagination) || DEFAULT_GRID_SLOTS_COMPONENTS.Pagination,
       FilterPanel:
-        (components && components.FilterPanel) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.FilterPanel,
+        (components && components.FilterPanel) || DEFAULT_GRID_SLOTS_COMPONENTS.FilterPanel,
       ColumnsPanel:
-        (components && components.ColumnsPanel) ||
-        DEFAULT_GRID_SLOTS_COMPONENTS.ColumnsPanel,
-      Panel:
-        (components && components.Panel) || DEFAULT_GRID_SLOTS_COMPONENTS.Panel,
+        (components && components.ColumnsPanel) || DEFAULT_GRID_SLOTS_COMPONENTS.ColumnsPanel,
+      Panel: (components && components.Panel) || DEFAULT_GRID_SLOTS_COMPONENTS.Panel,
     };
   }, [components]);
 

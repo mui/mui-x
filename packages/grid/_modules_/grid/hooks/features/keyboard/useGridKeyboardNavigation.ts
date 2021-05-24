@@ -63,9 +63,7 @@ const getNextColumnHeaderIndexes = (key: string, indexes: GridColumnHeaderIndexC
   }
 };
 
-export const useGridKeyboardNavigation = (
-  apiRef: GridApiRef,
-): void => {
+export const useGridKeyboardNavigation = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridKeyboardNavigation');
   const options = useGridSelector(apiRef, optionsSelector);
   const paginationState = useGridSelector(apiRef, gridPaginationSelector);

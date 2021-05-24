@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  GRID_RESIZE,
+  GRID_DEBOUNCED_RESIZE,
   GRID_NATIVE_SCROLL,
   GRID_ROWS_SCROLL,
 } from '../../../constants/eventsConstants';
@@ -31,10 +31,7 @@ import { useGridVirtualColumns } from './useGridVirtualColumns';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { scrollStateSelector } from './renderingStateSelector';
 
-export const useGridVirtualRows = (
-
-  apiRef: GridApiRef,
-): void => {
+export const useGridVirtualRows = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridVirtualRows');
   const colRef = apiRef.current.columnHeadersContainerElementRef!;
   const windowRef = apiRef.current.windowRef!;
@@ -422,5 +419,5 @@ export const useGridVirtualRows = (
     GRID_NATIVE_SCROLL,
     preventViewportScroll,
   );
-  useGridApiEventHandler(apiRef, GRID_RESIZE, updateViewport);
+  useGridApiEventHandler(apiRef, GRID_DEBOUNCED_RESIZE, updateViewport);
 };
