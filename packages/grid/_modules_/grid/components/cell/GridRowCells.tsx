@@ -32,6 +32,7 @@ interface RowCellsProps {
   id: GridRowId;
   hasScrollX: boolean;
   hasScrollY: boolean;
+  getCellClassName?: (params: GridCellParams) => string;
   lastColIdx: number;
   row: GridRowModel;
   rowIndex: number;
@@ -49,6 +50,7 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
     hasScrollX,
     hasScrollY,
     id,
+    getCellClassName,
     lastColIdx,
     rowIndex,
     cellFocus,
@@ -72,18 +74,22 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
 
     const cellParams: GridCellParams = apiRef!.current.getCellParams(id, column.field);
 
-    let cssClassProp = { cssClass: '' };
+    const classNames = [cellClassName];
+
     if (column.cellClassName) {
-      if (!isFunction(column.cellClassName)) {
-        cssClassProp = { cssClass: clsx(column.cellClassName) };
-      } else {
-        cssClassProp = { cssClass: column.cellClassName(cellParams) as string };
-      }
+      classNames.push(
+        clsx(
+          isFunction(column.cellClassName)
+            ? column.cellClassName(cellParams)
+            : column.cellClassName,
+        ),
+      );
     }
 
+    // TODO to be removed by https://github.com/mui-org/material-ui-x/issues/275
     if (column.cellClassRules) {
       const cssClass = applyCssClassRules(column.cellClassRules, cellParams);
-      cssClassProp = { cssClass: `${cssClassProp.cssClass} ${cssClass}` };
+      classNames.push(cssClass);
     }
 
     const editCellState = editRowState && editRowState[column.field];
@@ -91,13 +97,17 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
 
     if (editCellState == null && column.renderCell) {
       cellComponent = column.renderCell(cellParams);
-      cssClassProp = { cssClass: `${cssClassProp.cssClass} MuiDataGrid-cellWithRenderer` };
+      classNames.push('MuiDataGrid-cellWithRenderer');
     }
 
     if (editCellState != null && column.renderEditCell) {
       const params = { ...cellParams, ...editCellState };
       cellComponent = column.renderEditCell(params);
-      cssClassProp = { cssClass: `${cssClassProp.cssClass} MuiDataGrid-cellEditing` };
+      classNames.push('MuiDataGrid-cellEditing');
+    }
+
+    if (getCellClassName) {
+      classNames.push(getCellClassName(cellParams));
     }
 
     const cellProps: GridCellProps = {
@@ -109,7 +119,6 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
       showRightBorder,
       formattedValue: cellParams.formattedValue,
       align: column.align || 'left',
-      ...cssClassProp,
       rowIndex,
       cellMode: cellParams.cellMode,
       colIndex,
@@ -121,7 +130,7 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
         cellTabIndex !== null && cellTabIndex.id === id && cellTabIndex.field === column.field
           ? 0
           : -1,
-      className: cellClassName,
+      className: clsx(classNames),
       ...other,
     };
 

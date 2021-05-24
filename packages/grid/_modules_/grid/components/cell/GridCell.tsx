@@ -23,7 +23,6 @@ export interface GridCellProps {
   align: GridAlignment;
   className?: string;
   colIndex: number;
-  cssClass?: string;
   field: string;
   rowId: GridRowId;
   formattedValue?: GridCellValue;
@@ -47,7 +46,6 @@ export const GridCell = React.memo((props: GridCellProps) => {
     children,
     colIndex,
     cellMode,
-    cssClass,
     field,
     formattedValue,
     hasFocus,
@@ -66,7 +64,7 @@ export const GridCell = React.memo((props: GridCellProps) => {
   const cellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = React.useContext(GridApiContext);
 
-  const cssClasses = clsx(cssClass, className, `MuiDataGrid-cell${capitalize(align)}`, {
+  const cssClasses = clsx(className, `MuiDataGrid-cell${capitalize(align)}`, {
     'MuiDataGrid-withBorder': showRightBorder,
     'MuiDataGrid-cellEditable': isEditable,
   });
