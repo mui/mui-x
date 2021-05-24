@@ -11,8 +11,6 @@ components: DataGrid, XGrid
 
 You can subscribe to one of the [events emitted](/components/data-grid/events/#catalog-of-events) by calling `apiRef.current.subscribeEvent()` with the name of the event and a handler. The handler will be called with two arguments: a object with information related to the event and, optionally, a `React.SyntheticEvent` object if the event was emitted by a DOM element.
 
-The demo shows how to subcribe to the `columnResize` event. Try it by resizing the columns.
-
 ```tsx
 /**
  * Allows to register a handler for an event.
@@ -27,6 +25,8 @@ subscribeEvent: (
   options?: GridSubscribeEventOptions,
 ) => () => void;
 ```
+
+The following demo shows how to subcribe to the `columnResize` event. Try it by resizing the columns.
 
 {{"demo": "pages/components/data-grid/events/SubscribeToEvents.js", "bg": "inline", "defaultCodeOpen": false}}
 
