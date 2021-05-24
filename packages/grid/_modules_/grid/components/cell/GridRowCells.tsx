@@ -4,7 +4,6 @@ import { GridCellIdentifier } from '../../hooks/features/focus/gridFocusState';
 import {
   GridCellClassParams,
   GridColumns,
-  GridRowModel,
   GridCellClassRules,
   GridCellParams,
   GridRowId,
@@ -32,7 +31,6 @@ interface RowCellsProps {
   hasScrollX: boolean;
   hasScrollY: boolean;
   lastColIdx: number;
-  row: GridRowModel;
   rowIndex: number;
   showCellRightBorder: boolean;
   cellFocus: GridCellIdentifier | null;

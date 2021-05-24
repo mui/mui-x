@@ -1,5 +1,6 @@
 // CSS_CLASSES_CONSTANTS
 export const GRID_CELL_CSS_CLASS = 'MuiDataGrid-cell';
+export const GRID_SKELETON_CELL_CSS_CLASS = 'MuiDataGrid-skeletonCell';
 export const GRID_ROW_CSS_CLASS = 'MuiDataGrid-row';
 export const GRID_HEADER_CELL_CSS_CLASS = 'MuiDataGrid-colCell';
 export const GRID_HEADER_CELL_SEPARATOR_RESIZABLE_CSS_CLASS =

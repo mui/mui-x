@@ -17,6 +17,7 @@ import { GridEmptyCell } from './cell/GridEmptyCell';
 import { GridRenderingZone } from './GridRenderingZone';
 import { GridRow } from './GridRow';
 import { GridRowCells } from './cell/GridRowCells';
+import { GridSkeletonRowCells } from './cell/GridSkeletonRowCells';
 import { GridStickyContainer } from './GridStickyContainer';
 import {
   gridContainerSizesSelector,
@@ -53,7 +54,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
         renderState.renderContext.lastRowIdx!,
       );
 
-      return renderedRows.map(([id, row], idx) => (
+      return renderedRows.map(([id], idx) => (
         <GridRow
           className={
             (renderState.renderContext!.firstRowIdx! + idx) % 2 === 0 ? 'Mui-even' : 'Mui-odd'
@@ -65,11 +66,19 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
         >
           <GridEmptyCell width={renderState.renderContext!.leftEmptyWidth} height={rowHeight} />
           {id.toString().indexOf('null-') === 0 ? (
-            <div>EMPTY</div>
+            <GridSkeletonRowCells
+              columns={visibleColumns}
+              firstColIdx={renderState.renderContext!.firstColIdx!}
+              lastColIdx={renderState.renderContext!.lastColIdx!}
+              hasScrollX={scrollBarState.hasScrollX}
+              hasScrollY={scrollBarState.hasScrollY}
+              showCellRightBorder={!!options.showCellRightBorder}
+              extendRowFullWidth={!options.disableExtendRowFullWidth}
+              rowIndex={renderState.renderContext!.firstRowIdx! + idx}
+            />
           ) : (
             <GridRowCells
               columns={visibleColumns}
-              row={row}
               id={id}
               firstColIdx={renderState.renderContext!.firstColIdx!}
               lastColIdx={renderState.renderContext!.lastColIdx!}
