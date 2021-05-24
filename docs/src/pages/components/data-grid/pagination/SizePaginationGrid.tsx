@@ -21,6 +21,7 @@ export default function SizePaginationGrid() {
         pageSize={pageSize}
         onPageSizeChange={handlePageSizeChange}
         rowsPerPageOptions={[5, 10, 20]}
+        pagination
         {...data}
       />
     </div>

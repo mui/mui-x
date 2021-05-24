@@ -19,6 +19,7 @@ export default function ControlledPaginationGrid() {
           setPage(params.page);
         }}
         pageSize={5}
+        pagination
         {...data}
       />
     </div>
