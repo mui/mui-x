@@ -111,12 +111,17 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
 
     const showNoRowsOverlay = !props.loading && totalRowCount === 0;
     const showNoResultsOverlay = !props.loading && totalRowCount > 0 && visibleRowCount === 0;
+
+    const ariaProps = {
+      'aria-label': props['aria-label'],
+    };
     return (
       <GridApiContext.Provider value={apiRef}>
         <NoSsr>
           <GridRoot
             ref={handleRef}
             className={clsx(internalOptions.classes?.root, props.className)}
+            {...ariaProps}
           >
             <ErrorBoundary
               hasError={errorState != null}

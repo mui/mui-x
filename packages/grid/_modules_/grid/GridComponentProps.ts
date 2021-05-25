@@ -68,4 +68,8 @@ export interface GridComponentProps extends GridOptionsProp {
    * Return the id of a given [[GridRowData]].
    */
   getRowId?: GridRowIdGetter;
+  /**
+   * The label of the grid.
+   */
+  'aria-label'?: string;
 }
