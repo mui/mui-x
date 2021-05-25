@@ -9,36 +9,41 @@ import { Optional } from '../../utils/utils';
  */
 export interface GridVirtualizationApi {
   /**
-   * Trigger the grid viewport to scroll to the position in pixel.
-   * @param params
+   * Triggers the viewport to scroll to the given positions (in pixels).
+   * @param {GridScrollParams} params An object contaning the `left` or `top` position to scroll.
    */
   scroll: (params: Partial<GridScrollParams>) => void;
   /**
-   * Trigger the grid viewport to scroll to a row of x y indexes.
-   * @param params
-   * @returns boolean Return if the index was outside of the viewport and the grid has to scroll to reach the target.
+   * Triggers the viewport to scroll to the cell at indexes given by `params`.
+   * Returns `true` if the grid had to scroll to reach the target.
+   * @param {GridCellIndexCoordinates} params The indexes where the cell is.
+   * @returns {boolean} Returns `true` if the index was outside of the viewport and the grid had to scroll to reach the target.
    */
   scrollToIndexes: (params: Optional<GridCellIndexCoordinates, 'rowIndex'>) => boolean;
   /**
-   * Check if a column at index is currently visible in the viewport.
-   * @param colIndex
+   * Checks if a column at the index given by `colIndex` is currently visible in the viewport.
+   * @param {number} colIndex To column index to check.
+   * @returns {boolean} Returns `true` when the column is visible and `false` when it is not.
    */
   isColumnVisibleInWindow: (colIndex: number) => boolean;
   /**
    * Get the current containerProps.
+   * @ignore - do not document.
    */
   getContainerPropsState: () => GridContainerProps | null;
   /**
    * Get the current renderContext.
+   * @ignore - do not document.
    */
   getRenderContextState: () => Partial<GridRenderContextProps> | undefined;
   /**
-   * Get the current scroll position.
+   * Returns the current scroll position.
+   * @returns {GridScrollParams} The scroll positions.
    */
   getScrollPosition: () => GridScrollParams;
   /**
-   * Refresh the viewport cells according to the scroll positions
-   * @param forceRender
+   * Refreshes the viewport cells according to the scroll positions
+   * @param {boolean} forceRender If `true` forces a rerender. By default, it is `false`.
    */
   updateViewport: (forceRender?: boolean) => void;
 }

@@ -2,14 +2,14 @@ import { GridRowId } from '../gridRows';
 
 export interface GridFocusApi {
   /**
-   * Set the active element to the cell with the indexes.
-   * @param id
-   * @param field
+   * Sets the focus to the cell at the given `id` and `field`.
+   * @param {GridRowId} id The row id.
+   * @param {string} field The field name.
    */
   setCellFocus: (id: GridRowId, field: string) => void;
   /**
-   * Set the active element to the column header with the indexes.
-   * @param field
+   * Sets the focus to the column header at the given `field`.
+   * @param {string} field The field name.
    */
   setColumnHeaderFocus: (field: string) => void;
 }

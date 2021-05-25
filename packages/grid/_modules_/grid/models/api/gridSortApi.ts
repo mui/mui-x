@@ -7,23 +7,24 @@ import { GridSortDirection, GridSortModel } from '../gridSortModel';
  */
 export interface GridSortApi {
   /**
-   * Get the sort model currently applied to the grid.
+   * Returns the sort model currently applied to the grid.
+   * @returns {GridSortModel} The `GridSortModel`.
    */
   getSortModel: () => GridSortModel;
   /**
-   * Apply the current sorting model to the rows.
+   * Applies the current sort model to the rows.
    */
   applySorting: () => void;
   /**
-   * Set the sort model and trigger the sorting of rows.
-   * @param model
+   * Updates the sort model and triggers the sorting of rows.
+   * @param {GridSortModel} model The `GridSortModel` to be applied.
    */
   setSortModel: (model: GridSortModel) => void;
   /**
-   * Set the sort direction of a column.
-   * @param column
-   * @param direction
-   * @param allowMultipleSorting
+   * Sorts a column.
+   * @param {GridColDef} column The [[GridColDef]] of the column to be sorted.
+   * @param {GridSortDirection} direction The direction to be sorted. By default, the next in the `sortingOrder` prop.
+   * @param {boolean} allowMultipleSorting Wether to keep the existing [[GridSortItem]]. Default is `false`.
    */
   sortColumn: (
     column: GridColDef,
@@ -31,13 +32,13 @@ export interface GridSortApi {
     allowMultipleSorting?: boolean,
   ) => void;
   /**
-   * Get the full set of sorted rows as [[GridRowModel]].
-   * @returns [[GridRowModel]]
+   * Returns all rows sorted according to the active sort model.
+   * @returns {GridRowModel[]} The sorted [[GridRowModel]] objects.
    */
   getSortedRows: () => GridRowModel[];
   /**
-   * Get the full set of sorted row ids as [[GridRowId]].
-   * @returns [[GridRowId]]
+   * Returns all row ids sorted according to the active sort model.
+   * @returns {GridRowId[]} The sorted [[GridRowId]] values.
    */
   getSortedRowIds: () => GridRowId[];
 }
