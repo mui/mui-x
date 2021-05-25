@@ -46,14 +46,14 @@ export interface GridEditRowApi {
   /**
    * Gets the input props for the edit cell of a given `rowId` and `field`.
    * @param {GridRowId} rowId The id of the row.
-   * @param {string} field The field name.
+   * @param {string} field The column field.
    * @returns {GridEditCellProps} The props for the edit cell.
    */
   getEditCellProps: (rowId: GridRowId, field: string) => GridEditCellProps;
   /**
    * Gets the params to be passed when calling `setEditCellProps`.
    * @param {GridRowId} rowId The id of the row.
-   * @param {string} field The field name.
+   * @param {string} field The column field.
    * @returns {GridEditCellPropsParams} The params.
    */
   getEditCellPropsParams: (rowId: GridRowId, field: string) => GridEditCellPropsParams;

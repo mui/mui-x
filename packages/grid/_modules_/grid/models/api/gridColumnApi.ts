@@ -6,7 +6,7 @@ import { GridColDef, GridColumns, GridColumnsMeta } from '../colDef/gridColDef';
 export interface GridColumnApi {
   /**
    * Returns the [[GridColDef]] for the given `field`.
-   * @param field The field name.
+   * @param {string} field The column field.
    * @returns {{GridColDef}} The [[GridColDef]].
    */
   getColumn: (field: string) => GridColDef;
@@ -28,14 +28,14 @@ export interface GridColumnApi {
   /**
    * Returns the index position of a column. By default, only the visible columns are considered.
    * Pass `false` to `useVisibleColumns` to consider all columns.
-   * @param {string} field The field name.
+   * @param {string} field The column field.
    * @param {boolean} useVisibleColumns Determines if all columns or the visible ones should be considered.
    * @returns {number} The index position.
    */
   getColumnIndex: (field: string, useVisibleColumns?: boolean) => number;
   /**
    * Returns the left-position of a column relative to the inner border of the grid.
-   * @param field The field name.
+   * @param {string} field The column field.
    * @returns {number} The position in pixels.
    */
   getColumnPosition: (field: string) => number;
@@ -63,7 +63,7 @@ export interface GridColumnApi {
   setColumnIndex: (field: string, targetIndexPosition: number) => void;
   /**
    * Updates the width of a column.
-   * @param {string} field The field name.
+   * @param {string} field The column field.
    * @param {number} width The new width.
    */
   setColumnWidth: (field: string, width: number) => void;
