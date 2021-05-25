@@ -56,15 +56,6 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
         return;
       }
 
-      if (!apiRef.current.isInitialised) {
-        setGridState((state) => {
-          const selectionState: GridSelectionState = {};
-          selectionState[id] = id;
-          return { ...state, selection: selectionState };
-        });
-        return;
-      }
-
       logger.debug(`Selecting row ${id}`);
 
       const allowMultiSelect =

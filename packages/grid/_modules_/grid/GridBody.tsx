@@ -19,7 +19,7 @@ import { gridRowCountSelector } from './hooks/features/rows/gridRowsSelector';
 import { optionsSelector } from './hooks/utils/optionsSelector';
 import { GridRootContainerRef } from './models/gridRootContainerRef';
 
-//TODO split this
+// TODO split this
 export const GridBody = React.forwardRef<HTMLDivElement, GridComponentProps>(function GridBody(
   props,
   ref,
@@ -49,13 +49,10 @@ export const GridBody = React.forwardRef<HTMLDivElement, GridComponentProps>(fun
   apiRef.current.headerRef = headerRef;
   apiRef.current.footerRef = footerRef;
 
-  if (!apiRef.current) {
-    return null;
-  }
   return (
     <NoSsr>
       <GridRoot ref={handleRef} className={clsx(options.classes?.root, props.className)}>
-        <ErrorHandler>
+        <ErrorHandler {...props}>
           <div ref={headerRef}>
             <apiRef.current.components.Header {...props.componentsProps?.header} />
           </div>

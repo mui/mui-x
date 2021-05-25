@@ -24,6 +24,7 @@ import { useApi } from './hooks/root/useApi';
 import { useGridContainerProps } from './hooks/root/useGridContainerProps';
 import { useEvents } from './hooks/root/useEvents';
 import { useGridKeyboard } from './hooks/features/keyboard/useGridKeyboard';
+import { useErrorHandler } from './hooks/utils/useErrorHandler';
 import { useLoggerFactory } from './hooks/utils/useLogger';
 import { useOptionsProp } from './hooks/utils/useOptionsProp';
 import { useRenderInfoLog } from './hooks/utils/useRenderInfoLog';
@@ -41,8 +42,9 @@ import { GridApiRef } from './models/api/gridApiRef';
 
 const useGridComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
   useLoggerFactory(apiRef, props);
-  useOptionsProp(apiRef, props);
   useApi(apiRef);
+  useErrorHandler(apiRef, props);
+  useOptionsProp(apiRef, props);
   useEvents(apiRef);
   useLocaleText(apiRef);
   useResizeContainer(apiRef);
@@ -76,14 +78,13 @@ const useGridComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
 //      register new api method
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {
-    const {apiRef: apiRefProp, ...others} = props
-    const apiRef = useGridApiRef(apiRefProp);
+    const apiRef = useGridApiRef(props.apiRef);
 
     useGridComponent(apiRef, props);
 
     return (
       <GridApiContext.Provider value={apiRef}>
-        <GridBody {...others} apiRef={apiRef} ref={ref} />
+        <GridBody {...props} ref={ref} />
       </GridApiContext.Provider>
     );
   },

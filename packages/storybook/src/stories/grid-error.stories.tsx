@@ -207,7 +207,7 @@ function fetchError(): Promise<any> {
   return new Promise<any>((resolve, reject) => {
     setTimeout(() => {
       reject(new Error('Bad fetch'));
-    }, 500);
+    }, 0);
   });
 }
 

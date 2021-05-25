@@ -325,7 +325,7 @@ export const useGridColumnResize = (apiRef: GridApiRef) => {
       clearTimeout(stopResizeEventTimeout.current);
       stopListening();
     };
-  }, [apiRef, apiRef.current?.columnHeadersElementRef?.current, handleTouchStart, stopListening]);
+  }, [apiRef, handleTouchStart, stopListening]);
 
   useGridApiEventHandler(apiRef, GRID_COLUMN_SEPARATOR_MOUSE_DOWN, handleColumnResizeMouseDown);
   useGridApiEventHandler(apiRef, GRID_COLUMN_RESIZE_START, handleResizeStart);

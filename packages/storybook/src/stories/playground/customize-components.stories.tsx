@@ -408,15 +408,7 @@ const CustomPanel2 = (props) => {
 export const OutsideColumnsPanel = () => {
   const data = useData(500, 50);
   const apiRef = useGridApiRef();
-  const [isMounted, setMounted] = React.useState(false);
   const [open, setOpen] = React.useState(false);
-
-  React.useEffect(() => {
-    if (apiRef.current && apiRef.current!.isInitialised && !isMounted) {
-      setMounted(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMounted, apiRef.current?.isInitialised]);
 
   const handleStateChange = React.useCallback((params: GridStateChangeParams) => {
     const preferencePanelState = gridPreferencePanelStateSelector(params.state);
@@ -428,7 +420,7 @@ export const OutsideColumnsPanel = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'row', flex: 1 }}>
       <GridApiContext.Provider value={apiRef}>
-        {isMounted && <SidePanel open={open} />}
+        <SidePanel open={open} />
         <div className="grid-container">
           <XGrid
             {...data}

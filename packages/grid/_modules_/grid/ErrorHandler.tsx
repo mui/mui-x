@@ -2,18 +2,18 @@ import * as React from 'react';
 import { GridMainContainer } from './components/containers/GridMainContainer';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { GridApiContext } from './components/GridApiContext';
-import { useErrorHandler } from './hooks/utils/useErrorHandler';
+import { useGridState } from './hooks/features/core/useGridState';
 import { useLogger } from './hooks/utils/useLogger';
 
 export function ErrorHandler(props) {
   const logger = useLogger('GridErrorHandler');
   const apiRef = React.useContext(GridApiContext)!;
-  const errorState = useErrorHandler(apiRef, props);
+  const [gridState] = useGridState(apiRef);
 
   return (
     <ErrorBoundary
-      hasError={errorState != null}
-      componentProps={errorState}
+      hasError={gridState.error != null}
+      componentProps={gridState.error}
       api={apiRef!}
       logger={logger}
       render={(errorProps) => (

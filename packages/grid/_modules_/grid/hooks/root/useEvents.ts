@@ -6,7 +6,6 @@ import { useLogger } from '../utils/useLogger';
 import {
   GRID_CELL_CLICK,
   GRID_COLUMN_HEADER_CLICK,
-  GRID_UNMOUNT,
   GRID_KEYDOWN,
   GRID_KEYUP,
   GRID_ROW_CLICK,
@@ -33,9 +32,7 @@ import {
   GRID_CELL_KEYDOWN,
   GRID_CELL_BLUR,
 } from '../../constants/eventsConstants';
-import { useGridApiMethod } from './useGridApiMethod';
 import { useGridApiOptionHandler } from './useGridApiEventHandler';
-import { GridEventsApi } from '../../models/api/gridEventsApi';
 
 export function useEvents(apiRef: GridApiRef): void {
   const logger = useLogger('useEvents');
@@ -97,25 +94,16 @@ export function useEvents(apiRef: GridApiRef): void {
       gridRootElem.addEventListener(GRID_FOCUS_OUT, onFocusOutHandler);
       gridRootElem.addEventListener(GRID_KEYDOWN, keyDownHandler);
       gridRootElem.addEventListener(GRID_KEYUP, keyUpHandler);
-      apiRef.current.isInitialised = true;
-      const api = apiRef.current;
 
       return () => {
-        logger.debug('Clearing all events listeners');
-        api.publishEvent(GRID_UNMOUNT);
+        logger.debug(
+          `Cleaning events listeners for ${[GRID_FOCUS_OUT, GRID_KEYDOWN, GRID_KEYUP].join(', ')}`,
+        );
         gridRootElem.removeEventListener(GRID_FOCUS_OUT, onFocusOutHandler);
         gridRootElem.removeEventListener(GRID_KEYDOWN, keyDownHandler);
         gridRootElem.removeEventListener(GRID_KEYUP, keyUpHandler);
-        api.removeAllListeners();
       };
     }
     return undefined;
-  }, [
-    apiRef.current.rootElementRef?.current,
-    apiRef.current?.isInitialised,
-    getHandler,
-    logger,
-    onFocusOutHandler,
-    apiRef,
-  ]);
+  }, [getHandler, logger, onFocusOutHandler, apiRef]);
 }

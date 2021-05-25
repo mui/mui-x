@@ -179,7 +179,6 @@ export const useGridFilter = (
         return newState;
       });
       applyFilters();
-      console.log('publish GRID_FILTER_MODEL_CHANGE 1');
       apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
     [
@@ -210,8 +209,6 @@ export const useGridFilter = (
         upsertFilter({});
       }
       applyFilters();
-      console.log('publish GRID_FILTER_MODEL_CHANGE 2');
-
       apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
     [apiRef, applyFilters, getFilterModelParams, logger, setGridState, upsertFilter],
@@ -246,7 +243,6 @@ export const useGridFilter = (
         filter: { ...state.filter, linkOperator },
       }));
       applyFilters();
-      console.log('publish GRID_FILTER_MODEL_CHANGE 3');
       apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
     [apiRef, applyFilters, getFilterModelParams, logger, setGridState],
@@ -264,7 +260,6 @@ export const useGridFilter = (
       logger.debug('Setting filter model');
       applyFilterLinkOperator(model.linkOperator);
       model.items.forEach((item) => upsertFilter(item));
-      console.log('publish GRID_FILTER_MODEL_CHANGE 4');
       apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
     [apiRef, applyFilterLinkOperator, clearFilterModel, getFilterModelParams, logger, upsertFilter],
