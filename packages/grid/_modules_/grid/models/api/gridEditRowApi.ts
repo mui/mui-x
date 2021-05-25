@@ -58,21 +58,14 @@ export interface GridEditRowApi {
    */
   getEditCellPropsParams: (rowId: GridRowId, field: string) => GridEditCellPropsParams;
   /**
-   * Get the edit cell value params.
-   * @param rowId
-   * @param field
-   * @ignore - do not document
-   */
-  getEditCellValueParams: (rowId: GridRowId, field: string) => GridEditCellValueParams;
-  /**
-   * Commit the cell value changes to update the cell value.
-   * @param update
-   * @ignore - do not document
+   * Commits a cell change. Used to update the value when editing a cell.
+   * @param {GridEditCellPropsParams} params The new params.
    */
   commitCellChange: (params: GridEditCellPropsParams) => void;
   /**
    * Sets the cell value.
    * @param {GridEditCellValueParams} params An object with the row id, the field and the new value.
+   * @ignore - do not document.
    */
   setCellValue: (params: GridEditCellValueParams) => void;
 }

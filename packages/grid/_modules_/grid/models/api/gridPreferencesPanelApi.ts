@@ -10,7 +10,7 @@ export interface GridPreferencesPanelApi {
    */
   showPreferences: (newValue: GridPreferencePanelsValue) => void;
   /**
-   * Hide the preferences panel.
+   * Hides the preferences panel.
    */
   hidePreferences: () => void;
 }

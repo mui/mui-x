@@ -169,14 +169,6 @@ export function useGridEditRows(apiRef: GridApiRef) {
     [apiRef],
   );
 
-  const getEditCellValueParams = React.useCallback(
-    (id: GridRowId, field: string): GridEditCellValueParams => {
-      const fieldProps = apiRef.current.getEditCellProps(id, field);
-      return { id, field, value: fieldProps?.value };
-    },
-    [apiRef],
-  );
-
   const setCellValue = React.useCallback(
     (params: GridEditCellValueParams) => {
       logger.debug(
@@ -338,7 +330,6 @@ export function useGridEditRows(apiRef: GridApiRef) {
       setEditCellProps,
       getEditCellProps,
       getEditCellPropsParams,
-      getEditCellValueParams,
       setEditRowsModel,
       getEditRowsModel,
     },
