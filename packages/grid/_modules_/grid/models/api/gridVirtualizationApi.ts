@@ -43,7 +43,7 @@ export interface GridVirtualizationApi {
   getScrollPosition: () => GridScrollParams;
   /**
    * Refreshes the viewport cells according to the scroll positions
-   * @param {boolean} forceRender If `true` forces a rerender. By default, it is `false`.
+   * @param {boolean} forceRender If `true`, forces a rerender. By default, it is `false`.
    */
   updateViewport: (forceRender?: boolean) => void;
 }
