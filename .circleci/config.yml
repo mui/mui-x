@@ -138,6 +138,12 @@ jobs:
       - run:
           name: Lint JSON
           command: yarn jsonlint
+      - run:
+          name: Generate the documentation
+          command: yarn docs:api
+      - run:
+          name: '`yarn docs:api` changes committed?'
+          command: git diff --exit-code
   test_browser:
     <<: *defaults
     docker:
