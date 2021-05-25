@@ -33,8 +33,8 @@ export const sortedGridRowsSelector = createSelector<
   (sortedIds: GridRowId[], idRowsLookup: GridRowsLookup) => {
     const map = new Map<GridRowId, GridRowModel>();
     sortedIds.forEach((id) => {
-      // TODO: think of a better null class name
-      const normalizeId = id !== null ? id : `null-${Math.floor(Math.random() * 1000)}`;
+      // This was taken from the useId in the core
+      const normalizeId = id !== null ? id : `null-${Math.round(Math.random() * 1e5)}`;
       map.set(normalizeId, idRowsLookup[id]);
     });
     return map;

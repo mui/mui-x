@@ -954,6 +954,7 @@ export function InfiniteLoader() {
         {...data}
         hideFooterPagination
         rowCount={20}
+        sortingMode="server"
         components={{
           Toolbar: GridToolbar,
         }}

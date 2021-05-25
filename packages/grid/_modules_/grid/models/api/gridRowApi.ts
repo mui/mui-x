@@ -48,5 +48,10 @@ export interface GridRowApi {
    * @param pageSize
    * @param rows
    */
-  loadRows: (startIndex: number, pageSize: number, rows: GridRowModel[]) => void;
+  loadRows: (
+    startIndex: number,
+    pageSize: number,
+    rows: GridRowModel[],
+    resetRows?: boolean,
+  ) => void;
 }

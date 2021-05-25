@@ -115,25 +115,31 @@ export const useGridRows = (
   );
 
   const loadRows = React.useCallback(
-    (startIndex: number, pageSize: number, newRows: GridRowModel[]) => {
+    (startIndex: number, pageSize: number, newRows: GridRowModel[], resetRows = false) => {
       logger.debug(`Loading rows from index:${startIndex} to index:${startIndex + pageSize}`);
 
       const newRowsToState = convertGridRowsPropToState(newRows, newRows.length, getRowIdProp);
 
       setGridState((state) => {
-        const allRowsUpdated = state.rows.allRows.map((row, index) => {
+        const allRows = resetRows
+          ? new Array(state.rows.totalRowCount).fill(null)
+          : state.rows.allRows;
+        const allRowsUpdated = allRows.map((row, index) => {
           if (index >= startIndex && index < startIndex + pageSize) {
             return newRowsToState.allRows[index - startIndex];
           }
           return row;
         });
 
+        const idRowsLookupUpdated = resetRows
+          ? newRowsToState.idRowsLookup
+          : { ...state.rows.idRowsLookup, ...newRowsToState.idRowsLookup };
+
         internalRowsState.current = {
           allRows: allRowsUpdated,
-          idRowsLookup: { ...state.rows.idRowsLookup, ...newRowsToState.idRowsLookup },
+          idRowsLookup: idRowsLookupUpdated,
           totalRowCount: state.rows.totalRowCount,
         };
-
         return { ...state, rows: internalRowsState.current };
       });
 
