@@ -221,7 +221,7 @@ function run(argv: { outputDirectory?: string }) {
   ];
 
   apisToGenerate.forEach((apiName) => {
-    const reflection = project!.findReflectionByName(apiName);
+    const reflection = project!.findReflectionByName(apiName) as TypeDoc.DeclarationReflection;
     if (!reflection) {
       throw new Error(`Could not find reflection for "${apiName}".`);
     }
@@ -229,37 +229,43 @@ function run(argv: { outputDirectory?: string }) {
     const api: Api = {
       name: reflection.name,
       description: reflection.comment?.shortText,
-      properties: findProperties(reflection as TypeDoc.DeclarationReflection),
+      properties: findProperties(reflection),
     };
     const slug = kebabCase(reflection!.name);
     const markdown = generateMarkdown(api, apisToGenerate);
 
-    writePrettifiedFile(path.resolve(outputDirectory, `${slug}.md`), markdown, prettierConfigPath);
+    if (reflection.extendedBy && reflection.extendedBy[0].name === 'GridApi') {
+      const json = {
+        name: reflection.name,
+        description: linkify(reflection.comment?.shortText, apisToGenerate, 'html'),
+        properties: api.properties.map((propertyReflection) => {
+          const comment = propertyReflection.comment;
+          const description = linkify(comment?.shortText || '', apisToGenerate, 'html');
+          const response: any = {
+            name: propertyReflection.name,
+            description: renderMarkdownInline(description),
+            type: generateType(propertyReflection.type),
+          };
+          return response;
+        }),
+      };
+      writePrettifiedFile(
+        path.resolve(outputDirectory, `${slug}.json`),
+        JSON.stringify(json),
+        prettierConfigPath,
+      );
+      // eslint-disable-next-line no-console
+      console.log('Built JSON file for', api.name);
+    } else {
+      writePrettifiedFile(
+        path.resolve(outputDirectory, `${slug}.md`),
+        markdown,
+        prettierConfigPath,
+      );
 
-    const jsonApi = {
-      name: reflection.name,
-      description: linkify(reflection.comment?.shortText, apisToGenerate, 'html'),
-      properties: api.properties.map((propertyReflection) => {
-        const comment = propertyReflection.comment;
-        const description = linkify(comment?.shortText || '', apisToGenerate, 'html');
-        const response: any = {
-          name: propertyReflection.name,
-          description: renderMarkdownInline(description),
-          type: generateType(propertyReflection.type),
-        };
-        return response;
-      }),
-    };
-
-    writePrettifiedFile(
-      path.resolve(outputDirectory, `${slug}.json`),
-      JSON.stringify(jsonApi),
-      prettierConfigPath,
-    );
-
-    writePrettifiedFile(
-      path.resolve(outputDirectory, `${slug}.js`),
-      `import React from 'react';
+      writePrettifiedFile(
+        path.resolve(outputDirectory, `${slug}.js`),
+        `import React from 'react';
 import MarkdownDocs from 'docs/src/modules/components/MarkdownDocs';
 import { prepareMarkdown } from 'docs/src/modules/utils/parseMarkdown';
 
@@ -274,12 +280,13 @@ Page.getInitialProps = () => {
   const { demos, docs } = prepareMarkdown({ pageFilename, requireRaw });
   return { demos, docs };
 };
-  `,
-      prettierConfigPath,
-    );
+    `,
+        prettierConfigPath,
+      );
 
-    // eslint-disable-next-line no-console
-    console.log('Built API docs for', api.name);
+      // eslint-disable-next-line no-console
+      console.log('Built API docs for', api.name);
+    }
   });
 
   const events = extractEvents(project!, apisToGenerate);
