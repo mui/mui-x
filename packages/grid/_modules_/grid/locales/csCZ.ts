@@ -21,20 +21,17 @@ const csCZKGrid: Partial<GridLocaleText> = {
 	toolbarColumnsLabel: 'Vybrat sloupec',
 
 	// Filters toolbar button text
-	toolbarFilters: 'Filtre',
-	toolbarFiltersLabel: 'Zobrazit filtre',
-	toolbarFiltersTooltipHide: 'Skrýt filtre ',
-	toolbarFiltersTooltipShow: 'Zobrazit filtre',
+	toolbarFilters: 'Filtry',
+	toolbarFiltersLabel: 'Zobrazit filtry',
+	toolbarFiltersTooltipHide: 'Skrýt filtry',
+	toolbarFiltersTooltipShow: 'Zobrazit filtry',
 	toolbarFiltersTooltipActive: count => {
 		let pluralForm = 'aktivních filtrů';
-		const lastDigit = count % 10;
-
-		if (lastDigit > 1 && lastDigit < 5) {
-			pluralForm = 'aktivní filtre';
-		} else if (lastDigit === 1) {
+		if (count > 1 && count < 5) {
+			pluralForm = 'aktivní filtry';
+		} else if (count === 1) {
 			pluralForm = 'aktivní filtr';
 		}
-
 		return `${count} ${pluralForm}`;
 	},
 
@@ -51,14 +48,14 @@ const csCZKGrid: Partial<GridLocaleText> = {
 	columnsPanelHideAllButton: 'Skrýt vše',
 
 	// Filter panel text
-	filterPanelAddFilter: 'Přidat filter',
+	filterPanelAddFilter: 'Přidat filtr',
 	filterPanelDeleteIconLabel: 'Odstranit',
-	filterPanelOperators: 'Operatory',
+	filterPanelOperators: 'Operátory',
 	filterPanelOperatorAnd: 'A',
-	filterPanelOperatorOr: 'Anebo',
+	filterPanelOperatorOr: 'Nebo',
 	filterPanelColumns: 'Sloupce',
 	filterPanelInputLabel: 'Hodnota',
-	filterPanelInputPlaceholder: 'Hodnota filtra',
+	filterPanelInputPlaceholder: 'Hodnota filtru',
 
 	// Filter operators text
 	filterOperatorContains: 'obsahuje',
@@ -68,9 +65,9 @@ const csCZKGrid: Partial<GridLocaleText> = {
 	filterOperatorIs: 'je',
 	filterOperatorNot: 'není',
 	filterOperatorAfter: 'je po',
-	filterOperatorOnOrAfter: 'je na alebo po',
+	filterOperatorOnOrAfter: 'je na nebo po',
 	filterOperatorBefore: 'je před',
-	filterOperatorOnOrBefore: 'je na alebo dříve',
+	filterOperatorOnOrBefore: 'je na nebo dříve',
 
 	// Filter values text
 	filterValueAny: 'jakýkoliv',
@@ -79,40 +76,34 @@ const csCZKGrid: Partial<GridLocaleText> = {
 
 	// Column menu text
 	columnMenuLabel: 'Menu',
-	columnMenuShowColumns: 'Zobrazit stloupce',
+	columnMenuShowColumns: 'Zobrazit sloupce',
 	columnMenuFilter: 'Filtr',
 	columnMenuHideColumn: 'Skrýt',
-	columnMenuUnsort: 'Zrušit filtre',
-	columnMenuSortAsc: 'Seřadit vzostupně',
-	columnMenuSortDesc: 'Seřadit zostupně',
+	columnMenuUnsort: 'Zrušit filtry',
+	columnMenuSortAsc: 'Seřadit vzestupně',
+	columnMenuSortDesc: 'Seřadit sestupně',
 
 	// Column header text
 	columnHeaderFiltersTooltipActive: count => {
 		let pluralForm = 'aktivních filtrů';
-		const lastDigit = count % 10;
-
-		if (lastDigit > 1 && lastDigit < 5) {
-			pluralForm = 'aktivní filtre';
-		} else if (lastDigit === 1) {
+		if (count > 1 && count < 5) {
+			pluralForm = 'aktivní filtry';
+		} else if (count === 1) {
 			pluralForm = 'aktivní filtr';
 		}
-
 		return `${count} ${pluralForm}`;
 	},
-	columnHeaderFiltersLabel: 'Zobrazit filtre',
+	columnHeaderFiltersLabel: 'Zobrazit filtry',
 	columnHeaderSortIconLabel: 'Filtrovat',
 
 	// Rows selected footer text
 	footerRowSelected: count => {
-		let pluralForm = 'vybrané záznamy';
-		const lastDigit = count % 10;
-
-		if (lastDigit > 1 && lastDigit < 5) {
-			pluralForm = 'vybraných záznamů';
-		} else if (lastDigit === 1) {
+		let pluralForm = 'vybraných záznamů';
+		if (count > 1 && count < 5) {
+			pluralForm = 'vybrané záznamy';
+		} else if (count === 1) {
 			pluralForm = 'vybraný záznam';
 		}
-
 		return `${count} ${pluralForm}`;
 	},
 
