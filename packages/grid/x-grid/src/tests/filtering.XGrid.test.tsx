@@ -223,11 +223,11 @@ describe('<XGrid /> - Filter', () => {
         }}
       />,
     );
-    expect(onFilterModelChange.callCount).to.equal(4);
+    expect(onFilterModelChange.callCount).to.equal(8);
 
     const select = document.getElementById('columns-filter-operator-select');
     fireEvent.change(select, { target: { value: 'or' } });
-    expect(onFilterModelChange.callCount).to.equal(5);
+    expect(onFilterModelChange.callCount).to.equal(9);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
   });
 

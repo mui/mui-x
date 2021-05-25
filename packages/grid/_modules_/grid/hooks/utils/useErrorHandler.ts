@@ -7,7 +7,7 @@ import { useGridApiEventHandler } from '../root/useGridApiEventHandler';
 export function useErrorHandler(apiRef: GridApiRef, props) {
   const [, setGridState] = useGridState(apiRef);
 
-  const errorHandler = React.useCallback(
+  const handleError = React.useCallback(
     (args: any) => {
       // We are handling error here, to set up the handler as early as possible and be able to catch error thrown at init time.
       setGridState((state) => ({ ...state, error: args }));
@@ -16,8 +16,8 @@ export function useErrorHandler(apiRef: GridApiRef, props) {
   );
 
   React.useEffect(() => {
-    apiRef!.current.showError(props.error);
-  }, [apiRef, props.error]);
+    handleError(props.error);
+  }, [handleError, props.error]);
 
-  useGridApiEventHandler(apiRef, GRID_COMPONENT_ERROR, errorHandler);
+  useGridApiEventHandler(apiRef, GRID_COMPONENT_ERROR, handleError);
 }

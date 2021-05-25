@@ -32,7 +32,6 @@ export function useResizeContainer(apiRef) {
     (size: ElementSize) => {
       // jsdom has no layout capabilities
       const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-
       if (size.height === 0 && !autoHeight && !isJSDOM) {
         gridLogger.warn(
           [
