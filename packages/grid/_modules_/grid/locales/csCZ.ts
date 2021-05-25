@@ -25,7 +25,7 @@ const csCZKGrid: Partial<GridLocaleText> = {
 	toolbarFiltersLabel: 'Zobrazit filtry',
 	toolbarFiltersTooltipHide: 'Skrýt filtry',
 	toolbarFiltersTooltipShow: 'Zobrazit filtry',
-	toolbarFiltersTooltipActive: count => {
+	toolbarFiltersTooltipActive: (count) => {
 		let pluralForm = 'aktivních filtrů';
 		if (count > 1 && count < 5) {
 			pluralForm = 'aktivní filtry';
@@ -84,7 +84,7 @@ const csCZKGrid: Partial<GridLocaleText> = {
 	columnMenuSortDesc: 'Seřadit sestupně',
 
 	// Column header text
-	columnHeaderFiltersTooltipActive: count => {
+	columnHeaderFiltersTooltipActive: (count) => {
 		let pluralForm = 'aktivních filtrů';
 		if (count > 1 && count < 5) {
 			pluralForm = 'aktivní filtry';
@@ -97,7 +97,7 @@ const csCZKGrid: Partial<GridLocaleText> = {
 	columnHeaderSortIconLabel: 'Filtrovat',
 
 	// Rows selected footer text
-	footerRowSelected: count => {
+	footerRowSelected: (count) => {
 		let pluralForm = 'vybraných záznamů';
 		if (count > 1 && count < 5) {
 			pluralForm = 'vybrané záznamy';
