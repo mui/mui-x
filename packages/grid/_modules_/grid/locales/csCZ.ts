@@ -4,7 +4,6 @@ import { getGridLocalization, Localization } from '../utils';
 
 const csCZKGrid: Partial<GridLocaleText> = {
   // Root
-  rootGridLabel: 'mřížka',
   noRowsLabel: 'Žádné záznamy',
   noResultsOverlayLabel: 'Nenašli se žadné výsledky.',
   errorOverlayDefaultLabel: 'Stala sa nepředvídaná chyba.',
