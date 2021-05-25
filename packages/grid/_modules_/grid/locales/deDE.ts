@@ -4,7 +4,6 @@ import { getGridLocalization, Localization } from '../utils';
 
 const deDEGrid: Partial<GridLocaleText> = {
   // Root
-  rootGridLabel: 'grid',
   noRowsLabel: 'Keine Einträge',
   noResultsOverlayLabel: 'Keine Ergebnisse gefunden.',
   errorOverlayDefaultLabel: 'Ein unerwarteter Fehler ist aufgetreten.',

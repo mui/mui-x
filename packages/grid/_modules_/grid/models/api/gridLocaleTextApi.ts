@@ -3,7 +3,6 @@
  */
 export interface GridLocaleText {
   // Root
-  rootGridLabel: string;
   noRowsLabel: string;
   noResultsOverlayLabel: string;
   errorOverlayDefaultLabel: string;

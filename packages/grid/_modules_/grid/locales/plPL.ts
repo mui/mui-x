@@ -4,7 +4,6 @@ import { getGridLocalization, Localization } from '../utils';
 
 export const plPLGrid: Partial<GridLocaleText> = {
   // Root
-  rootGridLabel: 'grid',
   noRowsLabel: 'Brak danych',
   // noResultsOverlayLabel: 'No results found.',
   errorOverlayDefaultLabel: 'Wystąpił błąd.',

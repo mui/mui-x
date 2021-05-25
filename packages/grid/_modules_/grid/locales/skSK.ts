@@ -4,7 +4,6 @@ import { getGridLocalization, Localization } from '../utils';
 
 export const skSKGrid: Partial<GridLocaleText> = {
   // Root
-  rootGridLabel: 'mriežka',
   noRowsLabel: 'Žiadne záznamy',
   noResultsOverlayLabel: 'Nenašli sa žadne výsledky.',
   errorOverlayDefaultLabel: 'Stala sa nepredvídaná chyba.',
