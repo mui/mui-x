@@ -1,0 +1,26 @@
+{
+  "name": "GridSelectionApi",
+  "description": "The selection API interface that is available in the grid apiRef.",
+  "properties": [
+    {
+      "name": "getSelectedRows",
+      "description": "Get an array of selected rows.",
+      "type": "() => Map<GridRowId, GridRowData>"
+    },
+    {
+      "name": "selectRow",
+      "description": "Toggle the row selected state.",
+      "type": "(id: GridRowId, isSelected?: boolean, allowMultiple?: boolean) => void"
+    },
+    {
+      "name": "selectRows",
+      "description": "Batch toggle rows selected state.",
+      "type": "(ids: GridRowId[], isSelected?: boolean, deselectOtherRows?: boolean) => void"
+    },
+    {
+      "name": "setSelectionModel",
+      "description": "Reset the selected rows to the array of ids passed in parameter",
+      "type": "(rowIds: GridRowId[]) => void"
+    }
+  ]
+}

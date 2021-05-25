@@ -70,7 +70,7 @@ The grid exposes a set of methods that enables all of these features using the i
 
 > ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
 
-- `onSelectionChange`: Callback fired when the selection state of one or multiple rows changes.
+{{"demo": "pages/components/data-grid/selection/SelectionApi.js", "bg": "inline", "hideToolbar": true}}
 
 ## 🚧 Range selection [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-pro/)
 

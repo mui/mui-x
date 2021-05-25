@@ -211,7 +211,14 @@ function run(argv: { outputDirectory?: string }) {
   });
   const project = app.convert();
 
-  const apisToGenerate = ['GridApi', 'GridColDef', 'GridCellParams', 'GridRowParams'];
+  const apisToGenerate = [
+    'GridApi',
+    'GridColDef',
+    'GridCellParams',
+    'GridRowParams',
+    'GridSelectionApi',
+    'GridFilterApi',
+  ];
 
   apisToGenerate.forEach((apiName) => {
     const reflection = project!.findReflectionByName(apiName);
@@ -228,6 +235,27 @@ function run(argv: { outputDirectory?: string }) {
     const markdown = generateMarkdown(api, apisToGenerate);
 
     writePrettifiedFile(path.resolve(outputDirectory, `${slug}.md`), markdown, prettierConfigPath);
+
+    const jsonApi = {
+      name: reflection.name,
+      description: linkify(reflection.comment?.shortText, apisToGenerate, 'html'),
+      properties: api.properties.map((propertyReflection) => {
+        const comment = propertyReflection.comment;
+        const description = linkify(comment?.shortText || '', apisToGenerate, 'html');
+        const response: any = {
+          name: propertyReflection.name,
+          description: renderMarkdownInline(description),
+          type: generateType(propertyReflection.type),
+        };
+        return response;
+      }),
+    };
+
+    writePrettifiedFile(
+      path.resolve(outputDirectory, `${slug}.json`),
+      JSON.stringify(jsonApi),
+      prettierConfigPath,
+    );
 
     writePrettifiedFile(
       path.resolve(outputDirectory, `${slug}.js`),

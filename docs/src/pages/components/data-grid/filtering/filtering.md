@@ -161,7 +161,7 @@ const filterModel: GridFilterModel = {
 
 ## apiRef <span class="pro"></span>
 
-<!-- https://master--material-ui-x.netlify.app/components/data-grid/rows/#apiref -->
+{{"demo": "pages/components/data-grid/filtering/FilterApi.js", "bg": "inline", "hideToolbar": true}}
 
 ## 🚧 Quick filter
 

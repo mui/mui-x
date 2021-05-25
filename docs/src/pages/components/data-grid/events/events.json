@@ -3,15 +3,6 @@
     "name": "resize",
     "description": "Fired when the grid is resized. Called with a GridResizeParams object."
   },
-  {
-    "name": "focusout",
-    "description": "Fired when a <code>focusout</code> event happens in the grid."
-  },
-  {
-    "name": "keydown",
-    "description": "Fired when a <code>keydown</code> event happens in the grid."
-  },
-  { "name": "keyup", "description": "Fired when a <code>keyup</code> event happens in the grid." },
   { "name": "componentError", "description": "Fired when an exception is thrown in the grid." },
   { "name": "unmount", "description": "Fired when the grid is unmounted." },
   {
@@ -59,22 +50,6 @@
     "description": "Fired when a cell gains focus. Called with a <a href=\"/api/data-grid/grid-cell-params\">GridCellParams</a> object."
   },
   {
-    "name": "cellDragStart",
-    "description": "Fired when the user starts dragging a cell. It&#39;s mapped to the <code>dragstart</code> DOM event.\nCalled with a <a href=\"/api/data-grid/grid-cell-params\">GridCellParams</a> object."
-  },
-  {
-    "name": "cellDragEnter",
-    "description": "Fired when the dragged cell enters a valid drop target. It&#39;s mapped to the <code>dragend</code> DOM event.\nCalled with a <a href=\"/api/data-grid/grid-cell-params\">GridCellParams</a> object."
-  },
-  {
-    "name": "cellDragOver",
-    "description": "Fired while an element or text selection is dragged over the cell.\nIt&#39;s mapped to the <code>dragover</code> DOM event.\nCalled with a <a href=\"/api/data-grid/grid-cell-params\">GridCellParams</a> object."
-  },
-  {
-    "name": "cellDragEnd",
-    "description": "Fired when the dragging of a cell ends. Called with a <a href=\"/api/data-grid/grid-cell-params\">GridCellParams</a> object."
-  },
-  {
     "name": "cellEditPropsChange",
     "description": "Fired when the props of the edit input changes. Called with a GridEditCellPropsParams object."
   },
@@ -93,10 +68,6 @@
   {
     "name": "cellEditExit",
     "description": "Fired when the cell turns back to view mode. Called with a <a href=\"/api/data-grid/grid-cell-params\">GridCellParams</a> object."
-  },
-  {
-    "name": "cellNavigationKeyDown",
-    "description": "Fired when a <a href=\"/components/data-grid/accessibility#keyboard-navigation\">navigation key</a> is pressed in a cell.\nCalled with a <a href=\"/api/data-grid/grid-cell-params\">GridCellParams</a> object."
   },
   {
     "name": "rowClick",
@@ -123,20 +94,12 @@
     "description": "Fired when a <code>mouseleave</code> event happens in a row.  Called with a <a href=\"/api/data-grid/grid-row-params\">GridRowParams</a> object."
   },
   {
+    "name": "editRowModelChange",
+    "description": "Fired when the row editing model changes. Called with a GridEditRowModelParams object."
+  },
+  {
     "name": "rowSelected",
     "description": "Fired when a row is selected or unselected. Called with a GridRowSelectedParams object."
-  },
-  {
-    "name": "columnHeaderBlur",
-    "description": "Fired when a column header loses focus. Called with a GridColumnHeaderParams object."
-  },
-  {
-    "name": "columnHeaderFocus",
-    "description": "Fired when a column header gains focus. Called with a GridColumnHeaderParams object."
-  },
-  {
-    "name": "columnHeaderNavigationKeydown",
-    "description": "Fired when a <a href=\"/components/data-grid/accessibility#keyboard-navigation\">navigation key</a> is pressed in a column header.\nCalled with a GridColumnHeaderParams object."
   },
   {
     "name": "columnHeaderKeydown",
@@ -149,38 +112,6 @@
   {
     "name": "columnHeaderDoubleClick",
     "description": "Fired when a column header is double-clicked. Called with a GridColumnHeaderParams object."
-  },
-  {
-    "name": "columnHeaderOver",
-    "description": "Fired when a <code>mouseover</code> event happens in a column header. Called with a GridColumnHeaderParams object."
-  },
-  {
-    "name": "columnHeaderOut",
-    "description": "Fired when a <code>mouseout</code> event happens in a column header. Called with a GridColumnHeaderParams object."
-  },
-  {
-    "name": "columnHeaderEnter",
-    "description": "Fired when a <code>mouseenter</code> event happens in a column header. Called with a GridColumnHeaderParams object."
-  },
-  {
-    "name": "columnHeaderLeave",
-    "description": "Fired when a <code>mouseleave</code> event happens in a column header. Called with a GridColumnHeaderParams object."
-  },
-  {
-    "name": "columnHeaderDragStart",
-    "description": "Fired when the user starts dragging a column header. It&#39;s mapped to the <code>dragstart</code> DOM event.\nCalled with a GridColumnHeaderParams object."
-  },
-  {
-    "name": "columnHeaderDragOver",
-    "description": "Fired while an element or text selection is dragged over the column header.\nIt&#39;s mapped to the <code>dragover</code> DOM event.\nCalled with a GridColumnHeaderParams object."
-  },
-  {
-    "name": "columnHeaderDragEnter",
-    "description": "Fired when the dragged column header enters a valid drop target.\nIt&#39;s mapped to the <code>dragend</code> DOM event.\nCalled with a GridColumnHeaderParams object."
-  },
-  {
-    "name": "columnHeaderDragEnd",
-    "description": "Fired when the dragging of a column header ends. Called with a GridColumnHeaderParams object."
   },
   {
     "name": "selectionChange",
@@ -203,10 +134,6 @@
     "description": "Fired when scrolling to the bottom of the grid viewport. Called with a GridRowScrollEndParams object."
   },
   {
-    "name": "columnSeparatorMouseDown",
-    "description": "Fired when a <code>mousedown</code> DOM event happens in the column header separator.\nCalled with a GridColumnHeaderParams object."
-  },
-  {
     "name": "columnResize",
     "description": "Fired during the resizing of a column. Called with a GridColumnResizeParams object."
   },
@@ -220,11 +147,9 @@
   },
   {
     "name": "columnResizeStop",
-    "description": "Fired when the user starts resizing a column. Called with an object <code>{ field: string }</code>."
+    "description": "Fired when the user stops resizing a column. Called with an object <code>{ field: string }</code>."
   },
   { "name": "columnOrderChange", "description": "Fired when the user ends resizing a column." },
-  { "name": "rowsUpdated", "description": "Fired when the rows are updated." },
-  { "name": "rowsSet", "description": "Fired when the rows are updated." },
   { "name": "rowsCleared", "description": "Fired when the grid is emptied." },
   {
     "name": "columnsUpdated",
@@ -232,11 +157,11 @@
   },
   {
     "name": "sortModelChange",
-    "description": "Fired after the sort model is changed but before applying the new model.\nCalled with a GridSortModelParams object."
+    "description": "Fired when the sort model changes.\nCalled with a GridSortModelParams object."
   },
   {
     "name": "filterModelChange",
-    "description": "Fired after the filter model is changed and the new model is applied.\nCalled with a GridFilterModelParams object."
+    "description": "Fired when the filter model changes.\nCalled with a GridFilterModelParams object."
   },
   {
     "name": "stateChange",

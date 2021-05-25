@@ -1,0 +1,46 @@
+{
+  "name": "GridCellParams",
+  "description": "Object passed as parameter in the column <a href=\"/api/data-grid/grid-col-def\">GridColDef</a> cell renderer.",
+  "properties": [
+    { "name": "api", "description": "GridApi that let you manipulate the grid.", "type": "any" },
+    { "name": "cellMode", "description": "The mode of the cell.", "type": "GridCellMode" },
+    {
+      "name": "colDef",
+      "description": "The column of the row that the current cell belongs to.",
+      "type": "any"
+    },
+    {
+      "name": "field",
+      "description": "The column field of the cell that triggered the event",
+      "type": "string"
+    },
+    {
+      "name": "formattedValue",
+      "description": "The cell value formatted with the column valueFormatter.",
+      "type": "GridCellValue"
+    },
+    {
+      "name": "getValue",
+      "description": "Get the cell value of a row and field.",
+      "type": "(id: GridRowId, field: string) => GridCellValue"
+    },
+    {
+      "name": "hasFocus",
+      "description": "If true, the cell is the active element.",
+      "type": "boolean"
+    },
+    { "name": "id", "description": "The grid row id.", "type": "GridRowId" },
+    { "name": "isEditable", "description": "If true, the cell is editable.", "type": "boolean" },
+    {
+      "name": "row",
+      "description": "The row model of the row that the current cell belongs to.",
+      "type": "GridRowData"
+    },
+    { "name": "tabIndex", "description": "the tabIndex value.", "type": "0 | -1" },
+    {
+      "name": "value",
+      "description": "The cell value, but if the column has valueGetter, use getValue.",
+      "type": "GridCellValue"
+    }
+  ]
+}

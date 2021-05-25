@@ -1,0 +1,19 @@
+{
+  "name": "GridRowParams",
+  "description": "Object passed as parameter in the column <a href=\"/api/data-grid/grid-col-def\">GridColDef</a> cell renderer.",
+  "properties": [
+    { "name": "api", "description": "GridApiRef that let you manipulate the grid.", "type": "any" },
+    { "name": "columns", "description": "All grid columns.", "type": "any" },
+    {
+      "name": "getValue",
+      "description": "Get the cell value of a row and field.",
+      "type": "(id: GridRowId, field: string) => GridCellValue"
+    },
+    { "name": "id", "description": "The grid row id.", "type": "GridRowId" },
+    {
+      "name": "row",
+      "description": "The row model of the row that the current cell belongs to.",
+      "type": "GridRowData"
+    }
+  ]
+}
