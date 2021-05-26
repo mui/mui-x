@@ -21,7 +21,9 @@ export function getRealData(rowLength: number, columns: any[]): Promise<GridData
 
       for (let j = 0; j < columns.length; j += 1) {
         const column = columns[j];
-        row[column.field] = column.generateData(row);
+        if (column.generateData) {
+          row[column.field] = column.generateData(row);
+        }
       }
 
       data.push(row);
