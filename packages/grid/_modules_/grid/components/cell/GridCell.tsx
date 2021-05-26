@@ -10,6 +10,7 @@ import {
   GRID_CELL_KEYDOWN,
   GRID_CELL_LEAVE,
   GRID_CELL_MOUSE_DOWN,
+  GRID_CELL_MOUSE_UP,
   GRID_CELL_OUT,
   GRID_CELL_OVER,
   GRID_CELL_DRAG_START,
@@ -86,10 +87,23 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
     [apiRef, field, rowId],
   );
 
+  const publishMouseUp = React.useCallback(
+    (eventName: string) => (event: React.MouseEvent) => {
+      const params = apiRef!.current.getCellParams(rowId, field || '');
+      apiRef!.current.publishEvent(eventName, params, event);
+    },
+    [apiRef, field, rowId],
+  );
+
   const publish = React.useCallback(
     (eventName: string) => (event: React.SyntheticEvent) => {
       // Ignore portal
-      if (!event.currentTarget.contains(event.target as HTMLElement)) {
+      // The target is not an element when triggered by a Select inside the cell
+      // See https://github.com/mui-org/material-ui/issues/10534
+      if (
+        (event.target as any).nodeType === 1 &&
+        !event.currentTarget.contains(event.target as Element)
+      ) {
         return;
       }
 
@@ -107,6 +121,7 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
       onClick: publish(GRID_CELL_CLICK),
       onDoubleClick: publish(GRID_CELL_DOUBLE_CLICK),
       onMouseDown: publish(GRID_CELL_MOUSE_DOWN),
+      onMouseUp: publishMouseUp(GRID_CELL_MOUSE_UP),
       onMouseOver: publish(GRID_CELL_OVER),
       onMouseOut: publish(GRID_CELL_OUT),
       onMouseEnter: publish(GRID_CELL_ENTER),
@@ -118,7 +133,7 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
       onDragEnter: publish(GRID_CELL_DRAG_ENTER),
       onDragOver: publish(GRID_CELL_DRAG_OVER),
     }),
-    [publish, publishBlur],
+    [publish, publishBlur, publishMouseUp],
   );
 
   const style = {

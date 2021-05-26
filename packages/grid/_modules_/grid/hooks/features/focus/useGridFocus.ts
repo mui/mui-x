@@ -1,7 +1,10 @@
 import * as React from 'react';
+import { ownerDocument } from '@material-ui/core/utils';
 import {
-  GRID_CELL_BLUR,
-  GRID_CELL_FOCUS,
+  GRID_CELL_CLICK,
+  GRID_CELL_DOUBLE_CLICK,
+  GRID_CELL_MOUSE_UP,
+  GRID_CELL_FOCUS_OUT,
   GRID_COLUMN_HEADER_BLUR,
   GRID_COLUMN_HEADER_FOCUS,
 } from '../../../constants/eventsConstants';
@@ -17,6 +20,7 @@ import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 export const useGridFocus = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridFocus');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
+  const insideFocusedCell = React.useRef(false);
 
   const setCellFocus = React.useCallback(
     (id: GridRowId, field: string) => {
@@ -28,6 +32,7 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
           focus: { cell: { id, field }, columnHeader: null },
         };
       });
+      // TODO replace with constant
       apiRef.current.publishEvent('cellFocusChange');
       forceUpdate();
     },
@@ -52,11 +57,8 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
     [apiRef, forceUpdate, logger, setGridState],
   );
 
-  const handleCellFocus = React.useCallback(
-    ({ id, field }: GridCellParams, event?: React.SyntheticEvent) => {
-      if (event?.target !== event?.currentTarget) {
-        return;
-      }
+  const updateFocus = React.useCallback(
+    ({ id, field }: GridCellParams) => {
       apiRef.current.setCellFocus(id, field);
     },
     [apiRef],
@@ -80,6 +82,48 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
     }));
   }, [logger, setGridState]);
 
+  const handleCellMouseUp = React.useCallback(
+    (params: GridCellParams) => {
+      const { cell } = apiRef.current.getState().focus;
+      if (!cell) {
+        return;
+      }
+
+      if (params.id === cell.id && params.field === cell.field) {
+        insideFocusedCell.current = true;
+      }
+    },
+    [apiRef],
+  );
+
+  const handleDocumentClick = React.useCallback(
+    (event) => {
+      const isInsideFocusedCell = insideFocusedCell.current;
+      insideFocusedCell.current = false;
+
+      const { cell } = apiRef.current.getState().focus;
+      if (!cell || isInsideFocusedCell) {
+        return;
+      }
+
+      const cellElement = apiRef.current.getCellElement(cell.id, cell.field);
+      if (cellElement?.contains(event.target)) {
+        return;
+      }
+
+      setGridState((previousState) => ({
+        ...previousState,
+        focus: { cell: null, columnHeader: null },
+      }));
+
+      apiRef.current.publishEvent(
+        GRID_CELL_FOCUS_OUT,
+        apiRef.current.getCellParams(cell.id, cell.field),
+      );
+    },
+    [apiRef, setGridState],
+  );
+
   useGridApiMethod<GridFocusApi>(
     apiRef,
     {
@@ -88,8 +132,19 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
     },
     'GridFocusApi',
   );
+
+  React.useEffect(() => {
+    const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
+    doc.addEventListener('click', handleDocumentClick, true);
+
+    return () => {
+      doc.removeEventListener('click', handleDocumentClick, true);
+    };
+  }, [apiRef, handleDocumentClick]);
+
   useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_BLUR, handleBlur);
-  useGridApiEventHandler(apiRef, GRID_CELL_BLUR, handleBlur);
-  useGridApiEventHandler(apiRef, GRID_CELL_FOCUS, handleCellFocus);
+  useGridApiEventHandler(apiRef, GRID_CELL_CLICK, updateFocus);
+  useGridApiEventHandler(apiRef, GRID_CELL_DOUBLE_CLICK, updateFocus);
+  useGridApiEventHandler(apiRef, GRID_CELL_MOUSE_UP, handleCellMouseUp);
   useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_FOCUS, handleColumnHeaderFocus);
 };
