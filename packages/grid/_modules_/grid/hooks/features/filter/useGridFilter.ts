@@ -154,7 +154,7 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
         }
 
         if (newItem.id == null) {
-          newItem.id = Math.random();
+          newItem.id = Math.round(Math.random() * 1e5);
         }
 
         if (newItem.columnField == null) {
