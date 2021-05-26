@@ -346,16 +346,16 @@ export const GRID_COLUMN_HEADER_DRAG_END = 'columnHeaderDragEnd';
 export const GRID_SELECTION_CHANGED = 'selectionChange';
 
 /**
- * Fired when the current page has changed. Called with a [[GridPageChangeParams]] object.
+ * Fired when the current page change. Called with a [[GridPageChangeParams]] object.
  * @event
  */
-export const GRID_PAGE_CHANGED = 'pageChange';
+export const GRID_PAGE_CHANGE = 'pageChange';
 
 /**
- * Fired when the page size has changed. Called with a [[GridPageChangeParams]] object.
+ * Fired when the page size change. Called with a [[GridPageChangeParams]] object.
  * @event
  */
-export const GRID_PAGESIZE_CHANGED = 'pageSizeChange';
+export const GRID_PAGESIZE_CHANGE = 'pageSizeChange';
 
 /**
  * Fired during the scroll of the grid viewport. Called with a [[GridScrollParams]] object.

@@ -90,6 +90,21 @@ describe('<DataGrid /> - Pagination', () => {
       expect(onPageChange.callCount).to.equal(2);
     });
 
+    it('should trigger onPageChange with correct page param when page prop is supplied i.e in controlled mode', () => {
+      const onPageChange = spy();
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} page={1} onPageChange={onPageChange} pageSize={1} />
+        </div>,
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(onPageChange.lastCall.args[0].page).to.equal(2);
+      fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
+      expect(onPageChange.lastCall.args[0].page).to.equal(0);
+    });
+
     it('should trigger onPageChange when clicking on next page in Server mode', () => {
       const onPageChange = spy();
 

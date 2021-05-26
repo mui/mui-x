@@ -5,27 +5,29 @@ import { GridRowId, GridRowModel } from '../gridRows';
  */
 export interface GridSelectionApi {
   /**
-   * Toggle the row selected state.
-   * @param id
-   * @param isSelected Default true
-   * @param allowMultiple Default: false = deselect other rows if isSelected is true
+   * Change the selection state of a row.
+   * @param {GridRowId} id The id of the row
+   * @param {boolean} isSelected Pass `false` to unselect a row. Default is `true`.
+   * @param {boolean} allowMultiple Whether to keep the already selected rows or not. Default is `false`.
    */
   selectRow: (id: GridRowId, isSelected?: boolean, allowMultiple?: boolean) => void;
   /**
-   * Batch toggle rows selected state.
-   * @param ids
-   * @param isSelected default true
-   * @param deselectOtherRows default: false
+   * Change the selection state of multiple rows.
+   * @param {GridRowId[]} ids The row ids.
+   * @param {boolean} isSelected The new selection state. Default is `true`.
+   * @param {boolean} deselectOtherRows Whether to keep the already selected rows or not. Default is `false`.
    */
   selectRows: (ids: GridRowId[], isSelected?: boolean, deselectOtherRows?: boolean) => void;
   // TODO unify parameter between SelectRow and SelectRows
   /**
-   * Get an array of selected rows.
+   * Returns an array of the selected rows.
+   * @returns {Map<GridRowId, GridRowModel>} A `Map` with the selected rows.
    */
   getSelectedRows: () => Map<GridRowId, GridRowModel>;
   /**
-   * Reset the selected rows to the array of ids passed in parameter
-   * @param GridRowId[]
+   * Updates the selected rows to be those passed to the `rowIds` argument.
+   * Any row already selected will be unselected.
+   * @param {GridRowId[]} rowIds The row ids to select.
    */
   setSelectionModel: (rowIds: GridRowId[]) => void;
 }

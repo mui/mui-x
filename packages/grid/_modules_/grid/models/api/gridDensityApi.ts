@@ -8,13 +8,14 @@ export interface GridDensityOption {
 }
 
 /**
- * The density API interface that is available in the grid [[apiRef]].
+ * The density API interface that is available in the grid `apiRef`.
  */
 export interface GridDensityApi {
   /**
-   * Set density of the grid.
-   * @param density
-   * @returns void
+   * Sets the density of the grid.
+   * @param {string} density Can be: `"compact"`, `"standard"`, `"comfortable"`.
+   * @param {number} headerHeight The new header height.
+   * @param {number} rowHeight The new row height.
    */
-  setDensity: (size: GridDensity, headerHeight?, rowHeight?) => void;
+  setDensity: (size: GridDensity, headerHeight?: number, rowHeight?: number) => void;
 }

@@ -27,14 +27,11 @@ export const skSKGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: 'Zobraziť filtre',
   toolbarFiltersTooltipActive: (count) => {
     let pluralForm = 'aktívnych filtrov';
-    const lastDigit = count % 10;
-
-    if (lastDigit > 1 && lastDigit < 5) {
+    if (count > 1 && count < 5) {
       pluralForm = 'aktívne filtre';
-    } else if (lastDigit === 1) {
+    } else if (count === 1) {
       pluralForm = 'aktívny filter';
     }
-
     return `${count} ${pluralForm}`;
   },
 
@@ -89,14 +86,11 @@ export const skSKGrid: Partial<GridLocaleText> = {
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => {
     let pluralForm = 'aktívnych filtrov';
-    const lastDigit = count % 10;
-
-    if (lastDigit > 1 && lastDigit < 5) {
+    if (count > 1 && count < 5) {
       pluralForm = 'aktívne filtre';
-    } else if (lastDigit === 1) {
+    } else if (count === 1) {
       pluralForm = 'aktívny filter';
     }
-
     return `${count} ${pluralForm}`;
   },
   columnHeaderFiltersLabel: 'Zobraziť filtre',
@@ -104,15 +98,12 @@ export const skSKGrid: Partial<GridLocaleText> = {
 
   // Rows selected footer text
   footerRowSelected: (count) => {
-    let pluralForm = 'vybrané záznamy';
-    const lastDigit = count % 10;
-
-    if (lastDigit > 1 && lastDigit < 5) {
-      pluralForm = 'vybraných záznamov';
-    } else if (lastDigit === 1) {
+    let pluralForm = 'vybraných záznamov';
+    if (count > 1 && count < 5) {
+      pluralForm = 'vybrané záznamy';
+    } else if (count === 1) {
       pluralForm = 'vybraný záznam';
     }
-
     return `${count} ${pluralForm}`;
   },
 

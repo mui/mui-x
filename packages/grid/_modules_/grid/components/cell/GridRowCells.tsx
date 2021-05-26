@@ -2,10 +2,8 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { GridCellIdentifier } from '../../hooks/features/focus/gridFocusState';
 import {
-  GridCellClassParams,
   GridColumns,
   GridRowModel,
-  GridCellClassRules,
   GridCellParams,
   GridRowId,
   GridEditRowProps,
@@ -15,14 +13,7 @@ import { GridApiContext } from '../GridApiContext';
 import { isFunction } from '../../utils/index';
 import { gridDensityRowHeightSelector } from '../../hooks/features/density/densitySelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-
-function applyCssClassRules(cellClassRules: GridCellClassRules, params: GridCellClassParams) {
-  return Object.entries(cellClassRules).reduce((appliedCss, entry) => {
-    const shouldApplyCss: boolean = isFunction(entry[1]) ? entry[1](params) : entry[1];
-    appliedCss += shouldApplyCss ? `${entry[0]} ` : '';
-    return appliedCss;
-  }, '');
-}
+import { GRID_CSS_CLASS_PREFIX } from '../../constants/cssClassesConstants';
 
 interface RowCellsProps {
   cellClassName?: string;
@@ -86,24 +77,18 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
       );
     }
 
-    // TODO to be removed by https://github.com/mui-org/material-ui-x/issues/275
-    if (column.cellClassRules) {
-      const cssClass = applyCssClassRules(column.cellClassRules, cellParams);
-      classNames.push(cssClass);
-    }
-
     const editCellState = editRowState && editRowState[column.field];
     let cellComponent: React.ReactElement | null = null;
 
     if (editCellState == null && column.renderCell) {
       cellComponent = column.renderCell(cellParams);
-      classNames.push('MuiDataGrid-cellWithRenderer');
+      classNames.push(`${GRID_CSS_CLASS_PREFIX}-cellWithRenderer`);
     }
 
     if (editCellState != null && column.renderEditCell) {
       const params = { ...cellParams, ...editCellState };
       cellComponent = column.renderEditCell(params);
-      classNames.push('MuiDataGrid-cellEditing');
+      classNames.push(`${GRID_CSS_CLASS_PREFIX}-cellEditing`);
     }
 
     if (getCellClassName) {
