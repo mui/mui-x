@@ -96,13 +96,13 @@ export interface GridLocaleText {
 export type GridTranslationKeys = keyof GridLocaleText;
 
 /**
- * The grid localeText API [[apiRef]].
+ * The grid locale text API [[apiRef]].
  */
-export interface LocaleTextApi {
+export interface GridLocaleTextApi {
   /**
-   * Get grid text.
-   * @param key T
-   * @returns GridLocaleText[T]
+   * Returns the translation for the `key`.
+   * @param {T} key One of the keys in [[GridLocaleText]].
+   * @returns {GridLocaleText[T]} The translated value.
    */
   getLocaleText: <T extends GridTranslationKeys>(key: T) => GridLocaleText[T];
 }

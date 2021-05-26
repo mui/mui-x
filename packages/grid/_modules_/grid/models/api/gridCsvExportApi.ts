@@ -3,13 +3,12 @@
  */
 export interface GridCsvExportApi {
   /**
-   * Get the grid data as CSV.
-   * @returns string
+   * Returns the grid data formatted as CSV.
+   * @returns {string} The data as CSV.
    */
   getDataAsCsv: () => string;
   /**
-   * Export the grid data as CSV.
-   * @returns void
+   * Exports the grid data as CSV and sends it to the user.
    */
   exportDataAsCsv: () => void;
 }

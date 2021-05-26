@@ -4,68 +4,68 @@ import { GridRowId } from '../gridRows';
 import { GridCellParams } from '../params/gridCellParams';
 import { GridEditCellValueParams, GridEditCellPropsParams } from '../params/gridEditCellParams';
 
+/**
+ * The editing API interface that is available in the grid `apiRef`.
+ */
 export interface GridEditRowApi {
   /**
-   * Set the edit rows model of the grid.
-   * @param GridEditRowsModel
+   * Set sthe edit rows model of the grid.
+   * @param {GridEditRowsModel} model The new edit rows model.
    */
   setEditRowsModel: (model: GridEditRowsModel) => void;
   /**
-   * Get the edit rows model of the grid.
-   * @returns GridEditRowsModel
+   * Gets the edit rows model of the grid.
+   * @returns {GridEditRowsModel} The edit rows model.
    */
   getEditRowsModel: () => GridEditRowsModel;
   /**
-   * Set the cellMode of a cell.
-   * @param GridRowId
-   * @param string
-   * @param 'edit' | 'view'
+   * Sets the mode of a cell.
+   * @param {GridRowId} id The id of the row.
+   * @param {string} field The field to change the mode.
+   * @param {GridCellMode} mode Can be: `"edit"`, `"view"`.
    */
   setCellMode: (id: GridRowId, field: string, mode: GridCellMode) => void;
   /**
-   * Get the cellMode of a cell.
-   * @param GridRowId
-   * @param string
-   * @returns 'edit' | 'view'
+   * Gets the mode of a cell.
+   * @param {GridRowId} id The id of the row.
+   * @param {string} field The field to get the mode.
+   * @returns Returns `"edit"` or `"view"`.
    */
   getCellMode: (id: GridRowId, field: string) => GridCellMode;
   /**
-   * Returns true if the cell is editable.
-   * @param params
+   * Controls if a cell is editable.
+   * @param {GridCellParams} params The cell params.
+   * @returns {boolean} A boolean value determining if the cell is editable.
    */
   isCellEditable: (params: GridCellParams) => boolean;
   /**
-   * Set the edit cell input props.
-   * @param rowId
-   * @param update
+   * Sets the input props of the edit cell.
+   * @param {GridEditCellPropsParams} params The params to set.
    */
   setEditCellProps: (params: GridEditCellPropsParams) => void;
   /**
-   * Get the edit cell input props.
-   * @param rowId
-   * @param field
+   * Gets the input props for the edit cell of a given `rowId` and `field`.
+   * @param {GridRowId} rowId The id of the row.
+   * @param {string} field The column field.
+   * @returns {GridEditCellProps} The props for the edit cell.
    */
   getEditCellProps: (rowId: GridRowId, field: string) => GridEditCellProps;
   /**
-   * Get the edit cell input props params passed in handler.
-   * @param rowId
-   * @param field
+   * Gets the params to be passed when calling `setEditCellProps`.
+   * @param {GridRowId} rowId The id of the row.
+   * @param {string} field The column field.
+   * @returns {GridEditCellPropsParams} The params.
    */
   getEditCellPropsParams: (rowId: GridRowId, field: string) => GridEditCellPropsParams;
   /**
-   * Get the edit cell value params.
-   * @param rowId
-   * @param field
-   */
-  getEditCellValueParams: (rowId: GridRowId, field: string) => GridEditCellValueParams;
-  /**
-   * Commit the cell value changes to update the cell value.
-   * @param update
+   * Commits a cell change. Used to update the value when editing a cell.
+   * @param {GridEditCellPropsParams} params The new params.
    */
   commitCellChange: (params: GridEditCellPropsParams) => void;
   /**
-   * Set the cell value.
-   * @param params
+   * Sets the cell value.
+   * @param {GridEditCellValueParams} params An object with the row id, the field and the new value.
+   * @ignore - do not document.
    */
   setCellValue: (params: GridEditCellValueParams) => void;
 }
