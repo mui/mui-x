@@ -14,7 +14,7 @@ import { NoSsr } from '@material-ui/core';
 export type GridRootProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(
-  {children},
+  { children },
   ref,
 ) {
   const classes = useStyles();

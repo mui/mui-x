@@ -22,18 +22,19 @@ export function GridOverlays() {
   const showNoRowsOverlay = !props.loading && totalRowCount === 0;
   const showNoResultsOverlay = !props.loading && totalRowCount > 0 && visibleRowCount === 0;
 
-  return <React.Fragment>
-
-    {showNoRowsOverlay && (
-      <apiRef.current.components.NoRowsOverlay {...props.componentsProps?.noRowsOverlay} />
-    )}
-    {showNoResultsOverlay && (
-      <apiRef.current.components.NoResultsOverlay {...props.componentsProps?.noResultsOverlay} />
-    )}
-    {props.loading && (
-      <apiRef.current.components.LoadingOverlay {...props.componentsProps?.loadingOverlay} />
-    )}
-  </React.Fragment>;
+  return (
+    <React.Fragment>
+      {showNoRowsOverlay && (
+        <apiRef.current.components.NoRowsOverlay {...props.componentsProps?.noRowsOverlay} />
+      )}
+      {showNoResultsOverlay && (
+        <apiRef.current.components.NoResultsOverlay {...props.componentsProps?.noResultsOverlay} />
+      )}
+      {props.loading && (
+        <apiRef.current.components.LoadingOverlay {...props.componentsProps?.loadingOverlay} />
+      )}
+    </React.Fragment>
+  );
 }
 
 export function GridBody() {
