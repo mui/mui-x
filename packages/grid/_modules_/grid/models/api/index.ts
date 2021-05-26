@@ -17,5 +17,5 @@ export * from './gridLocaleTextApi';
 export * from './gridCsvExportApi';
 export * from './gridFocusApi';
 export * from './gridFilterApi';
-export * from './columnMenuApi';
-export * from './preferencesPanelApi';
+export * from './gridColumnMenuApi';
+export * from './gridPreferencesPanelApi';
