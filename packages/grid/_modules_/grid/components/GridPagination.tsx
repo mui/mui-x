@@ -50,7 +50,7 @@ export const GridPagination = React.forwardRef<
   );
   const options = useGridSelector(apiRef, optionsSelector);
 
-  const onPageSizeChange = React.useCallback(
+  const handlePageSizeChange = React.useCallback(
     (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
       const newPageSize = Number(event.target.value);
       apiRef!.current!.setPageSize(newPageSize);
@@ -58,7 +58,7 @@ export const GridPagination = React.forwardRef<
     [apiRef],
   );
 
-  const onPageChange = React.useCallback(
+  const handlePageChange = React.useCallback(
     (event: any, page: number) => {
       apiRef!.current!.setPage(page);
     },
@@ -68,14 +68,14 @@ export const GridPagination = React.forwardRef<
   const getPaginationChangeHandlers = () => {
     if (isMuiV5()) {
       return {
-        onPageChange,
-        onRowsPerPageChange: onPageSizeChange,
+        onPageChange: handlePageChange,
+        onRowsPerPageChange: handlePageSizeChange,
       };
     }
 
     return {
-      onChangePage: onPageChange,
-      onChangeRowsPerPage: onPageSizeChange,
+      onChangePage: handlePageChange,
+      onChangeRowsPerPage: handlePageSizeChange,
     };
   };
 

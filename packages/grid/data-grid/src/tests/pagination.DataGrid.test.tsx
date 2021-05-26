@@ -102,7 +102,7 @@ describe('<DataGrid /> - Pagination', () => {
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(onPageChange.lastCall.args[0].page).to.equal(2);
       fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
-      expect(onPageChange.lastCall.args[0].page).to.equal(1);
+      expect(onPageChange.lastCall.args[0].page).to.equal(0);
     });
 
     it('should trigger onPageChange when clicking on next page in Server mode', () => {

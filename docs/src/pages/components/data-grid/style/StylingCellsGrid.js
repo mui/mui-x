@@ -11,6 +11,7 @@ const columns = [
   {
     field: 'score',
     type: 'number',
+    width: 140,
     cellClassName: (params) =>
       clsx('super-app', {
         negative: params.value < 0,
