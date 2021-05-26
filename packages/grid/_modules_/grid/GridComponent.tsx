@@ -2,7 +2,10 @@
  * Data Grid component implementing [[GridComponentProps]].
  * @returns JSX.Element
  */
+import { useForkRef } from '@material-ui/core/utils';
 import * as React from 'react';
+import { GridRoot } from './components/containers/GridRoot';
+import { ErrorHandler } from './ErrorHandler';
 import { GridComponentProps } from './GridComponentProps';
 import { GridBody } from './GridBody';
 import { useGridColumnMenu } from './hooks/features/columnMenu/useGridColumnMenu';
@@ -39,6 +42,7 @@ import { useGridCsvExport } from './hooks/features/export';
 import { useGridInfiniteLoader } from './hooks/features/infiniteLoader';
 import { useGridFreezeRows } from './hooks/features/rows/useGridFreezeRows';
 import { GridApiRef } from './models/api/gridApiRef';
+import { GridRootContainerRef } from './models/gridRootContainerRef';
 
 const useGridComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
   useLoggerFactory(apiRef, props);
@@ -73,9 +77,40 @@ const useGridComponent = (apiRef: GridApiRef, props: GridComponentProps) => {
   useStateProp(apiRef, props);
   useRenderInfoLog(apiRef);
 };
+export const GridPropsContext = React.createContext<GridComponentProps | undefined>(undefined);
 
+export const GridHeaderPlaceholder = React.forwardRef<HTMLDivElement, {}>((compProps,ref) => {
+  const apiRef = React.useContext(GridApiContext)!;
+  const props = React.useContext(GridPropsContext)!;
+  const headerRef = React.useRef<HTMLDivElement>(null);
+  const handleRef = useForkRef(headerRef, ref);
+  apiRef.current.headerRef = headerRef;
+
+  return <apiRef.current.components.Header ref={handleRef} {...props.componentsProps?.header} />;
+});
+export const GridFooterPlaceholder = React.forwardRef<HTMLDivElement, {}>((compProps,ref) => {
+  const apiRef = React.useContext(GridApiContext)!;
+  const props = React.useContext(GridPropsContext)!;
+  const footerRef = React.useRef<HTMLDivElement>(null);
+  const handleRef = useForkRef(footerRef, ref);
+  apiRef.current.footerRef = footerRef;
+
+
+  return <apiRef.current.components.Footer ref={handleRef} {...props.componentsProps?.footer} />;
+});
 // TODO recompose the api type
 //      register new api method
+
+export const GridContextProvider = ({apiRef, props, children})=> {
+  return (
+    <GridPropsContext.Provider value={props}>
+      <GridApiContext.Provider value={apiRef }>
+        {children}
+      </GridApiContext.Provider>
+    </GridPropsContext.Provider>
+  )
+};
+
 export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps>(
   function GridComponent(props, ref) {
     const apiRef = useGridApiRef(props.apiRef);
@@ -83,9 +118,16 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useGridComponent(apiRef, props);
 
     return (
-      <GridApiContext.Provider value={apiRef}>
-        <GridBody {...props} ref={ref} />
-      </GridApiContext.Provider>
+      <GridContextProvider apiRef={apiRef} props={props} >
+        <GridRoot ref={ref}>
+          <ErrorHandler>
+            <GridHeaderPlaceholder />
+            <GridBody />
+            <GridFooterPlaceholder />
+          </ErrorHandler>
+        </GridRoot>
+      </GridContextProvider>
+
     );
   },
 );

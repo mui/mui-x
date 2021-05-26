@@ -51,7 +51,7 @@ export interface GridSlotsComponent extends GridIconSlotsComponent {
   /**
    * Footer component rendered at the bottom of the grid viewport.
    */
-  Footer?: React.JSXElementConstructor<any>;
+  Footer?: React.ForwardRefExoticComponent<any>;
   /**
    * Header component rendered above the grid column header bar.
    * Prefer using the `Toolbar` slot. You should never need to use this slot. TODO remove.
