@@ -114,6 +114,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
 
     const ariaProps = {
       'aria-label': props['aria-label'],
+      'aria-labelledby': props['aria-labelledby'],
     };
     return (
       <GridApiContext.Provider value={apiRef}>

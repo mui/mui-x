@@ -16,6 +16,7 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name required">columns<abbr title="required">*</abbr></span> | <span class="prop-type">GridColumns</span> |   | Set of columns of type 'GridColumns'. |
 | <span class="prop-name required">rows<abbr title="required">*</abbr></span> | <span class="prop-type">GridRowsProp</span> |  | Set of rows of type 'GridRowsProp'. |
 | <span class="prop-name">aria-label</span> | <span class="prop-type">string</span> |  | The label of the grid. |
+| <span class="prop-name">aria-labelledby</span> | <span class="prop-type">string</span> |  | The id of the element containing a label for the grid. |
 | <span class="prop-name">autoHeight</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid height is dynamic and follow the number of rows in the grid. |
 | <span class="prop-name">autoPageSize</span> | <span class="prop-type">boolean</span> | false | If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar. |
 | <span class="prop-name">checkboxSelection</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid get a first column with a checkbox that allows to select rows. |

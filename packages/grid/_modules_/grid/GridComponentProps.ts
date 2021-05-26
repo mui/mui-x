@@ -72,4 +72,8 @@ export interface GridComponentProps extends GridOptionsProp {
    * The label of the grid.
    */
   'aria-label'?: string;
+  /**
+   * The id of the element containing a label for the grid.
+   */
+  'aria-labelledby'?: string;
 }
