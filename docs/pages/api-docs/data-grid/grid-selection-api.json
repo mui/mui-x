@@ -4,22 +4,22 @@
   "properties": [
     {
       "name": "getSelectedRows",
-      "description": "Get an array of selected rows.",
+      "description": "Returns an array of the selected rows.",
       "type": "() => Map<GridRowId, GridRowData>"
     },
     {
       "name": "selectRow",
-      "description": "Toggle the row selected state.",
+      "description": "Change the selection state of a row.",
       "type": "(id: GridRowId, isSelected?: boolean, allowMultiple?: boolean) => void"
     },
     {
       "name": "selectRows",
-      "description": "Batch toggle rows selected state.",
+      "description": "Change the selection state of multiple rows.",
       "type": "(ids: GridRowId[], isSelected?: boolean, deselectOtherRows?: boolean) => void"
     },
     {
       "name": "setSelectionModel",
-      "description": "Reset the selected rows to the array of ids passed in parameter",
+      "description": "Updates the selected rows to be those passed to the <code>rowIds</code> argument.\nAny row already selected will be unselected.",
       "type": "(rowIds: GridRowId[]) => void"
     }
   ]

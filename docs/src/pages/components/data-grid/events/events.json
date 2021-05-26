@@ -119,11 +119,11 @@
   },
   {
     "name": "pageChange",
-    "description": "Fired when the current page has changed. Called with a GridPageChangeParams object."
+    "description": "Fired when the current page change. Called with a GridPageChangeParams object."
   },
   {
     "name": "pageSizeChange",
-    "description": "Fired when the page size has changed. Called with a GridPageChangeParams object."
+    "description": "Fired when the page size change. Called with a GridPageChangeParams object."
   },
   {
     "name": "rowsScroll",
