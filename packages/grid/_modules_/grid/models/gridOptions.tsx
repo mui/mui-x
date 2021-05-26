@@ -29,6 +29,7 @@ import { GridColumnOrderChangeParams } from './params/gridColumnOrderChangeParam
 import { GridResizeParams } from './params/gridResizeParams';
 import { GridColumnResizeParams } from './params/gridColumnResizeParams';
 import { GridColumnVisibilityChangeParams } from './params/gridColumnVisibilityChangeParams';
+import { GridLoadRowsParams, GridLoadRowsReturnValue } from './params/gridLoadRowsParams';
 
 // TODO add multiSortKey
 /**
@@ -174,7 +175,7 @@ export interface GridOptions {
   /**
    *
    */
-  loadRows?: (params) => any;
+  loadRows?: (params: GridLoadRowsParams) => GridLoadRowsReturnValue;
   /**
    * Set the locale text of the grid.
    * You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.

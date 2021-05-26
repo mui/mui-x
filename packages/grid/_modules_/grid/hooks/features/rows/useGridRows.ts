@@ -115,15 +115,15 @@ export const useGridRows = (
   );
 
   const loadRows = React.useCallback(
-    (startIndex: number, pageSize: number, newRows: GridRowModel[], resetRows = false) => {
+    (startIndex: number, pageSize: number, newRows: GridRowModel[], rowCount?: number) => {
       logger.debug(`Loading rows from index:${startIndex} to index:${startIndex + pageSize}`);
 
       const newRowsToState = convertGridRowsPropToState(newRows, newRows.length, getRowIdProp);
 
       setGridState((state) => {
-        const allRows = resetRows
-          ? new Array(state.rows.totalRowCount).fill(null)
-          : state.rows.allRows;
+        // rowCount can be 0
+        const allRows =
+          rowCount !== undefined ? new Array(rowCount).fill(null) : state.rows.allRows;
         const allRowsUpdated = allRows.map((row, index) => {
           if (index >= startIndex && index < startIndex + pageSize) {
             return newRowsToState.allRows[index - startIndex];
@@ -131,20 +131,20 @@ export const useGridRows = (
           return row;
         });
 
-        const idRowsLookupUpdated = resetRows
-          ? newRowsToState.idRowsLookup
-          : { ...state.rows.idRowsLookup, ...newRowsToState.idRowsLookup };
+        const idRowsLookupUpdated =
+          rowCount !== undefined
+            ? newRowsToState.idRowsLookup
+            : { ...state.rows.idRowsLookup, ...newRowsToState.idRowsLookup };
 
         internalRowsState.current = {
           allRows: allRowsUpdated,
           idRowsLookup: idRowsLookupUpdated,
-          totalRowCount: state.rows.totalRowCount,
+          totalRowCount: rowCount !== undefined ? rowCount : state.rows.totalRowCount,
         };
         return { ...state, rows: internalRowsState.current };
       });
 
       forceUpdate();
-      apiRef.current.updateViewport();
       apiRef.current.applySorting();
     },
     [logger, apiRef, getRowIdProp, setGridState, forceUpdate],

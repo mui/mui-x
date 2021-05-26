@@ -944,17 +944,34 @@ export function InfiniteLoader() {
         id: 5,
         brand: 'Reebok',
       },
+      {
+        id: 6,
+        brand: 'Test 6',
+      },
+      {
+        id: 7,
+        brand: 'Test 7',
+      },
+      {
+        id: 8,
+        brand: 'Test 8',
+      },
+      {
+        id: 9,
+        brand: 'Test 8',
+      },
     ],
     columns: [{ field: 'brand', flex: 1 }],
   };
 
   return (
-    <div style={{ height: 300, width: '100%' }}>
+    <div style={{ height: 400, width: '100%' }}>
       <XGrid
         {...data}
         hideFooterPagination
         rowCount={20}
         sortingMode="server"
+        filterMode="server"
         components={{
           Toolbar: GridToolbar,
         }}
@@ -968,7 +985,12 @@ export function InfiniteLoader() {
             });
           }
 
-          return newRowsBatch;
+          let rowCount = 20;
+          if (params.filterModel.items.length) {
+            rowCount = 10;
+          }
+
+          return { rows: newRowsBatch, rowCount };
         }}
       />
     </div>

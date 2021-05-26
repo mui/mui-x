@@ -21,6 +21,7 @@ import { renderStateSelector } from '../virtualization/renderingStateSelector';
 import { unorderedGridRowIdsSelector } from '../rows/gridRowsSelector';
 import { gridSortModelSelector } from '../sorting/gridSortingSelector';
 import { filterGridStateSelector } from '../filter/gridFilterSelector';
+import { GridLoadRowsReturnValue } from '../../../models/params/gridLoadRowsParams';
 
 export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridInfiniteLoader');
@@ -91,19 +92,16 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
         return;
       }
 
-      const newRowsBatch = options.loadRows({
+      const { rows }: GridLoadRowsReturnValue = options.loadRows({
         startIndex: newRowsBatchStartIndex,
         viewportPageSize: containerSizes.viewportPageSize,
-        sortingModel: sortModel,
-        filter: filterState,
+        sortModel,
+        filterModel: filterState,
+        api: apiRef,
       });
 
-      if (newRowsBatch.length) {
-        apiRef.current.loadRows(
-          newRowsBatchStartIndex,
-          containerSizes.viewportPageSize,
-          newRowsBatch,
-        );
+      if (rows.length) {
+        apiRef.current.loadRows(newRowsBatchStartIndex, containerSizes.viewportPageSize, rows);
       }
     },
     [logger, options, renderState, allRows, sortModel, containerSizes, filterState, apiRef],
@@ -118,26 +116,26 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
       }
 
       const newRowsBatchStartIndex = renderState.virtualPage * containerSizes.viewportPageSize;
-      const newRowsBatch = options.loadRows({
+      const { rows, rowCount }: GridLoadRowsReturnValue = options.loadRows({
         startIndex: newRowsBatchStartIndex,
         viewportPageSize: containerSizes.viewportPageSize,
-        sortingModel: params.sortModel,
-        filter: filterState,
+        sortModel: params.sortModel,
+        filterModel: filterState,
+        api: apiRef,
       });
 
-      if (newRowsBatch.length) {
+      if (rows.length) {
         apiRef.current.loadRows(
           newRowsBatchStartIndex,
           containerSizes.viewportPageSize,
-          newRowsBatch,
-          true,
+          rows,
+          rowCount,
         );
       }
     },
     [logger, options, renderState, containerSizes, filterState, apiRef],
   );
 
-  // TODO: Iron out the infite loader filter combination
   const handleGridFilterModelChange = React.useCallback(
     (params: GridFilterModelParams) => {
       logger.debug('Filter model changed');
@@ -145,18 +143,25 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
         return;
       }
 
-      const newRowsBatch = options.loadRows({
-        startIndex: 0,
+      const newRowsBatchStartIndex = renderState.virtualPage * containerSizes.viewportPageSize;
+      const { rows, rowCount }: GridLoadRowsReturnValue = options.loadRows({
+        startIndex: newRowsBatchStartIndex,
         viewportPageSize: containerSizes.viewportPageSize,
-        sortingModel: sortModel,
-        filter: params.filterModel,
+        sortModel,
+        filterModel: params.filterModel,
+        api: apiRef,
       });
 
-      if (newRowsBatch.length) {
-        apiRef.current.loadRows(0, containerSizes.viewportPageSize, newRowsBatch);
+      if (rows.length) {
+        apiRef.current.loadRows(
+          newRowsBatchStartIndex,
+          containerSizes.viewportPageSize,
+          rows,
+          rowCount,
+        );
       }
     },
-    [logger, options, containerSizes, sortModel, apiRef],
+    [logger, options, containerSizes, sortModel, renderState, apiRef],
   );
 
   useGridApiEventHandler(apiRef, GRID_ROWS_SCROLL, handleGridScroll);
