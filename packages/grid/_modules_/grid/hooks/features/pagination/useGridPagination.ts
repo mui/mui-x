@@ -38,10 +38,13 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
 
       setGridState((state) => ({
         ...state,
-        pagination: applyConstraints({
-          ...state.pagination,
-          page,
-        }),
+        pagination: applyConstraints(
+          {
+            ...state.pagination,
+            page,
+          },
+          options.page,
+        ),
       }));
       forceUpdate();
 
@@ -54,7 +57,7 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
         page,
       });
     },
-    [apiRef, setGridState, forceUpdate, logger],
+    [apiRef, setGridState, forceUpdate, logger, options.page],
   );
 
   const setPageSize = React.useCallback(
@@ -63,10 +66,13 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
 
       setGridState((state) => ({
         ...state,
-        pagination: applyConstraints({
-          ...state.pagination,
-          pageSize,
-        }),
+        pagination: applyConstraints(
+          {
+            ...state.pagination,
+            pageSize,
+          },
+          options.page,
+        ),
       }));
       forceUpdate();
 
@@ -79,7 +85,7 @@ export const useGridPagination = (apiRef: GridApiRef): void => {
         pageSize,
       });
     },
-    [apiRef, setGridState, forceUpdate, logger],
+    [apiRef, setGridState, forceUpdate, logger, options.page],
   );
 
   useGridApiOptionHandler(apiRef, GRID_PAGE_CHANGE, options.onPageChange);
