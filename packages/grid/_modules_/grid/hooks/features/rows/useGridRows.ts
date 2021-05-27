@@ -109,7 +109,7 @@ export const useGridRows = (
     },
     [apiRef],
   );
-  const getRowFromId = React.useCallback(
+  const getRow = React.useCallback(
     (id: GridRowId): GridRowModel => apiRef.current.state.rows.idRowsLookup[id],
     [apiRef],
   );
@@ -205,7 +205,7 @@ export const useGridRows = (
           return;
         }
 
-        const oldRow = getRowFromId(id);
+        const oldRow = getRow(id);
         if (!oldRow) {
           addedRows.push(partialRow);
           return;
@@ -233,7 +233,7 @@ export const useGridRows = (
       }
       forceUpdate(() => apiRef.current.publishEvent(GRID_ROWS_UPDATED));
     },
-    [apiRef, forceUpdate, getRowFromId, getRowIdProp, setGridState, setRows],
+    [apiRef, forceUpdate, getRow, getRowIdProp, setGridState, setRows],
   );
 
   const getRowModels = React.useCallback(
@@ -252,7 +252,7 @@ export const useGridRows = (
   const rowApi: GridRowApi = {
     getRowIndex: getRowIndexFromId,
     getRowIdFromRowIndex,
-    getRowFromId,
+    getRow,
     getRowModels,
     getRowsCount,
     getAllRowIds,

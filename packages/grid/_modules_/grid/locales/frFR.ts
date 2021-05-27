@@ -4,7 +4,6 @@ import { getGridLocalization, Localization } from '../utils';
 
 const frFRGrid: Partial<GridLocaleText> = {
   // Root
-  rootGridLabel: 'grid',
   noRowsLabel: 'Pas de résultats',
   noResultsOverlayLabel: 'Aucun résultat.',
   errorOverlayDefaultLabel: 'Une erreur est apparue.',

@@ -1,23 +1,28 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import { useGridApiRef, getThemePaletteMode, XGrid } from '@material-ui/x-grid';
 
-const useStyles = makeStyles((theme) => {
-  const isDark = getThemePaletteMode(theme.palette) === 'dark';
+const defaultTheme = createMuiTheme();
+const useStyles = makeStyles(
+  (theme) => {
+    const isDark = getThemePaletteMode(theme.palette) === 'dark';
 
-  return {
-    root: {
-      '& .MuiDataGrid-cellEditable': {
-        backgroundColor: isDark ? '#376331' : 'rgb(217 243 190)',
+    return {
+      root: {
+        '& .MuiDataGrid-cellEditable': {
+          backgroundColor: isDark ? '#376331' : 'rgb(217 243 190)',
+        },
+        '& .Mui-error': {
+          backgroundColor: `rgb(126,10,15, ${isDark ? 0 : 0.1})`,
+          color: isDark ? '#ff4343' : '#750f0f',
+        },
       },
-      '& .Mui-error': {
-        backgroundColor: `rgb(126,10,15, ${isDark ? 0 : 0.1})`,
-        color: isDark ? '#ff4343' : '#750f0f',
-      },
-    },
-  };
-});
+    };
+  },
+  { defaultTheme },
+);
 
 let promiseTimeout;
 function validateName(username) {

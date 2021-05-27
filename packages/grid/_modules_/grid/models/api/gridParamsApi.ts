@@ -6,43 +6,49 @@ import { GridRowParams } from '../params/gridRowParams';
 
 export interface GridParamsApi {
   /**
-   * Get the cell value of a row and field.
-   * @param id
-   * @param field
+   * Gets the value of a cell at the given `id` and `field`.
+   * @param {GridRowId} id The id of the row.
+   * @param {string} field The column field.
+   * @returns {GridCellValue} The cell value.
    */
   getCellValue: (id: GridRowId, field: string) => GridCellValue;
   /**
-   * Get the cell DOM element.
-   * @param id
-   * @param field
+   * Gets the underlying DOM element for a cell at the given `id` and `field`.
+   * @param {GridRowId} id The id of the row.
+   * @param {string} field The column field.
+   * @returns {HTMLDivElement | null} The DOM element or `null`.
    */
   getCellElement: (id: GridRowId, field: string) => HTMLDivElement | null;
   /**
-   * Get the cell params that are passed in events.
-   * @param id
-   * @param field
+   * Gets the [[GridCellParams]] object that is passed as argument in events.
+   * @param {GridRowId} id The id of the row.
+   * @param {string} field The column field.
+   * @returns {GridCellParams} The cell params.
    */
   getCellParams: (id: GridRowId, field: string) => GridCellParams;
   /**
-   * Get the row params that are passed in events.
-   * @param id
-   * @param field
+   * Gets the [[GridRowParams]] object that is passed as argument in events.
+   * @param {GridRowId} id The id of the row.
+   * @param {string} field The column field.
+   * @returns {GridRowParams} The row params.
    */
   getRowParams: (id: GridRowId) => GridRowParams;
   /**
-   * Get the row DOM element.
-   * @param id
-   * @param field
+   * Gets the underlying DOM element for a row at the given `id`.
+   * @param {GridRowId} id The id of the row.
+   * @returns {HTMLDivElement | null} The DOM element or `null`.
    */
   getRowElement: (id: GridRowId) => HTMLDivElement | null;
   /**
-   * Get the column header DOM element.
-   * @param field
+   * Gets the underlying DOM element for the column header with the given `field`.
+   * @param {string} field The column field.
+   * @returns {HTMLDivElement | null} The DOM element or `null`.
    */
   getColumnHeaderElement: (field: string) => HTMLDivElement | null;
   /**
-   * Get the header params that are passed in events.
-   * @param field
+   * Gets the [[GridColumnHeaderParams]] object that is passed as argument in events.
+   * @param {string} field The column field.
+   * @returns {GridColumnHeaderParams} The cell params.
    */
   getColumnHeaderParams: (field: string) => GridColumnHeaderParams;
 }

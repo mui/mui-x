@@ -2,7 +2,12 @@ import * as React from 'react';
 import InputBase, { InputBaseProps } from '@material-ui/core/InputBase';
 import { GRID_CELL_EDIT_PROPS_CHANGE } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
-import { formatDateToLocalInputDate, mapColDefTypeToInputType } from '../../utils/utils';
+import {
+  parseDate,
+  parseDateTime,
+  formatDateToLocalInputDate,
+  mapColDefTypeToInputType,
+} from '../../utils/utils';
 
 export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
   const {
@@ -22,7 +27,8 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
 
   const [valueState, setValueState] = React.useState(value);
   const inputType = mapColDefTypeToInputType(colDef.type);
-  const isDateColumn = colDef.type === 'date' || colDef.type === 'dateTime';
+  const isDateColumn = colDef.type === 'date';
+  const isDateTimeColumn = colDef.type === 'dateTime';
 
   const handleChange = React.useCallback(
     (event) => {
@@ -32,13 +38,15 @@ export function GridEditInputCell(props: GridCellParams & InputBaseProps) {
       };
 
       if (isDateColumn) {
-        editProps.value = newValue === '' ? null : new Date(newValue); // TODO fix parsing, this is plain wrong.
+        editProps.value = newValue === '' ? null : parseDate(newValue);
+      } else if (isDateTimeColumn) {
+        editProps.value = newValue === '' ? null : parseDateTime(newValue);
       }
 
       setValueState(newValue);
       api.publishEvent(GRID_CELL_EDIT_PROPS_CHANGE, { id, field, props: editProps }, event);
     },
-    [api, field, id, isDateColumn],
+    [api, field, id, isDateColumn, isDateTimeColumn],
   );
 
   React.useEffect(() => {

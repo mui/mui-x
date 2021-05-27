@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { GridColumns, DataGrid, GridCellClassParams } from '@material-ui/data-grid';
-import { makeStyles } from '@material-ui/core/styles';
+import { GridColumns, DataGrid, GridCellParams } from '@material-ui/data-grid';
+import { makeStyles } from '@material-ui/styles';
 
 const columns: GridColumns = [
   {
@@ -11,7 +11,8 @@ const columns: GridColumns = [
   {
     field: 'score',
     type: 'number',
-    cellClassName: (params: GridCellClassParams) =>
+    width: 140,
+    cellClassName: (params: GridCellParams) =>
       clsx('super-app', {
         negative: (params.value as number) < 0,
         positive: (params.value as number) > 0,

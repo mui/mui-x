@@ -2,19 +2,19 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useFakeTimers } from 'sinon';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/styles';
+import { createTheme } from '@material-ui/data-grid';
 
 const styles = (theme) => ({
   root: {
     backgroundColor: theme.palette.background.default,
-    display: 'inline-block',
     padding: theme.spacing(1),
+    display: 'flex',
+    justifyContent: 'center',
   },
   dataGridContainer: {
     minHeight: 400,
     maxWidth: 500,
-    display: 'flex',
-    flexDirection: 'column',
     // Workaround the min-height limitation
     '& .grid-container': {
       position: 'relative',
@@ -119,4 +119,5 @@ TestViewer.propTypes = {
   dataGridContainer: PropTypes.bool.isRequired,
 };
 
-export default withStyles(styles)(TestViewer);
+const defaultTheme = createTheme();
+export default withStyles(styles, { defaultTheme })(TestViewer);

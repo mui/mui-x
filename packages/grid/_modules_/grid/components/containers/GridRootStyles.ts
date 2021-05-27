@@ -1,6 +1,8 @@
-import { darken, lighten, makeStyles, Theme } from '@material-ui/core/styles';
-import { getThemePaletteMode, muiStyleAlpha } from '../../utils/utils';
+import { darken, lighten, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
+import { getThemePaletteMode, muiStyleAlpha, createTheme } from '../../utils/utils';
 
+const defaultTheme = createTheme();
 export const useStyles = makeStyles(
   (theme: Theme) => {
     const borderColor =
@@ -76,45 +78,45 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-scrollArea-right': {
           right: 0,
         },
-        '& .MuiDataGrid-colCellWrapper': {
+        '& .MuiDataGrid-columnHeaderWrapper': {
           display: 'flex',
           width: '100%',
           alignItems: 'center',
           overflow: 'hidden',
         },
-        '& .MuiDataGrid-colCell, & .MuiDataGrid-cell, & .MuiDataGrid-skeletonCell': {
+        '& .MuiDataGrid-columnHeader, & .MuiDataGrid-cell & .MuiDataGrid-skeletonCell': {
           WebkitTapHighlightColor: 'transparent',
           lineHeight: null,
           padding: '0 10px',
         },
-        '& .MuiDataGrid-colCell:focus-within, & .MuiDataGrid-cell:focus-within': {
+        '& .MuiDataGrid-columnHeader:focus-within, & .MuiDataGrid-cell:focus-within': {
           outline: `solid ${muiStyleAlpha(theme.palette.primary.main, 0.5)} 1px`,
           outlineWidth: 1,
           outlineOffset: -2,
         },
-        '& .MuiDataGrid-colCell:focus, & .MuiDataGrid-cell:focus': {
+        '& .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-cell:focus': {
           outline: `solid ${theme.palette.primary.main} 1px`,
         },
-        '& .MuiDataGrid-colCellCheckbox, & .MuiDataGrid-cellCheckbox': {
+        '& .MuiDataGrid-columnHeaderCheckbox, & .MuiDataGrid-cellCheckbox': {
           padding: 0,
           justifyContent: 'center',
           alignItems: 'center',
         },
-        '& .MuiDataGrid-colCell': {
+        '& .MuiDataGrid-columnHeader': {
           position: 'relative',
           display: 'flex',
           alignItems: 'center',
         },
-        '& .MuiDataGrid-colCell:not(.MuiDataGrid-colCellSorted) .MuiDataGrid-sortIcon': {
+        '& .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeaderSorted) .MuiDataGrid-sortIcon': {
           opacity: 0,
           transition: theme.transitions.create(['opacity'], {
             duration: theme.transitions.duration.shorter,
           }),
         },
-        '& .MuiDataGrid-colCell:not(.MuiDataGrid-colCellSorted):hover .MuiDataGrid-sortIcon': {
+        '& .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeaderSorted):hover .MuiDataGrid-sortIcon': {
           opacity: 0.5,
         },
-        '& .MuiDataGrid-colCellTitleContainer': {
+        '& .MuiDataGrid-columnHeaderTitleContainer': {
           display: 'flex',
           alignItems: 'center',
           minWidth: 0,
@@ -126,26 +128,26 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-sortIcon, & .MuiDataGrid-filterIcon': {
           fontSize: 'inherit',
         },
-        '& .MuiDataGrid-colCellSortable': {
+        '& .MuiDataGrid-columnHeaderSortable': {
           cursor: 'pointer',
         },
-        '& .MuiDataGrid-colCellCenter .MuiDataGrid-colCellTitleContainer': {
+        '& .MuiDataGrid-columnHeaderCenter .MuiDataGrid-columnHeaderTitleContainer': {
           justifyContent: 'center',
         },
-        '& .MuiDataGrid-colCellRight .MuiDataGrid-colCell-draggable, & .MuiDataGrid-colCellRight .MuiDataGrid-colCellTitleContainer': {
+        '& .MuiDataGrid-columnHeaderRight .MuiDataGrid-columnHeader-draggable, & .MuiDataGrid-columnHeaderRight .MuiDataGrid-columnHeaderTitleContainer': {
           flexDirection: 'row-reverse',
         },
-        '& .MuiDataGrid-colCellCenter .MuiDataGrid-menuIcon, & .MuiDataGrid-colCellRight .MuiDataGrid-menuIcon': {
+        '& .MuiDataGrid-columnHeaderCenter .MuiDataGrid-menuIcon, & .MuiDataGrid-columnHeaderRight .MuiDataGrid-menuIcon': {
           marginRight: 'auto',
           marginLeft: -6,
         },
-        '& .MuiDataGrid-colCellTitle': {
+        '& .MuiDataGrid-columnHeaderTitle': {
           textOverflow: 'ellipsis',
           overflow: 'hidden',
           whiteSpace: 'nowrap',
           fontWeight: theme.typography.fontWeightMedium,
         },
-        '& .MuiDataGrid-colCellMoving': {
+        '& .MuiDataGrid-columnHeaderMoving': {
           backgroundColor: theme.palette.action.hover,
         },
         '& .MuiDataGrid-columnSeparator': {
@@ -181,10 +183,10 @@ export const useStyles = makeStyles(
           display: 'flex',
           alignItems: 'center',
         },
-        '& .MuiDataGrid-colCell:hover .MuiDataGrid-menuIcon, .MuiDataGrid-menuOpen': {
+        '& .MuiDataGrid-columnHeader:hover .MuiDataGrid-menuIcon, .MuiDataGrid-menuOpen': {
           visibility: 'visible',
         },
-        '& .MuiDataGrid-colCellWrapper.scroll .MuiDataGrid-colCell:last-child': {
+        '& .MuiDataGrid-columnHeaderWrapper.scroll .MuiDataGrid-columnHeader:last-child': {
           borderRight: 'none',
         },
         '& .MuiDataGrid-dataContainer': {
@@ -296,7 +298,7 @@ export const useStyles = makeStyles(
           color: theme.palette.text.disabled,
         },
         // The very last cell
-        '& .MuiDataGrid-colCellWrapper .MuiDataGrid-cell': {
+        '& .MuiDataGrid-columnHeaderWrapper .MuiDataGrid-cell': {
           borderBottom: 'none',
         },
         '& .MuiDataGrid-cellWithRenderer': {
@@ -345,14 +347,14 @@ export const useStyles = makeStyles(
             },
           },
         },
-        '& .MuiDataGrid-colCell-dropZone .MuiDataGrid-colCell-draggable': {
+        '& .MuiDataGrid-columnHeader-dropZone .MuiDataGrid-columnHeader-draggable': {
           cursor: 'move',
         },
-        '& .MuiDataGrid-colCell-draggable': {
+        '& .MuiDataGrid-columnHeader-draggable': {
           display: 'flex',
           width: '100%',
         },
-        '& .MuiDataGrid-colCell-dragging': {
+        '& .MuiDataGrid-columnHeader-dragging': {
           background: theme.palette.background.paper,
           padding: '0 12px',
           borderRadius: theme.shape.borderRadius,
@@ -439,5 +441,5 @@ export const useStyles = makeStyles(
       },
     };
   },
-  { name: 'MuiDataGrid' },
+  { name: 'MuiDataGrid', defaultTheme },
 );

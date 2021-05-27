@@ -1,22 +1,27 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/styles';
 import { GridCellParams, muiStyleAlpha } from '../../../_modules_/grid';
+import { createTheme } from '../../../_modules_/grid/utils/utils';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      paddingRight: 8,
-      fontVariantNumeric: 'tabular-nums',
-    },
-    good: {
-      backgroundColor: muiStyleAlpha(theme.palette.success.main, 0.3),
-    },
-    bad: {
-      backgroundColor: muiStyleAlpha(theme.palette.error.main, 0.3),
-    },
-  }),
+const defaultTheme = createTheme();
+const useStyles = makeStyles(
+  (theme: Theme) =>
+    createStyles({
+      root: {
+        width: '100%',
+        paddingRight: 8,
+        fontVariantNumeric: 'tabular-nums',
+      },
+      good: {
+        backgroundColor: muiStyleAlpha(theme.palette.success.main, 0.3),
+      },
+      bad: {
+        backgroundColor: muiStyleAlpha(theme.palette.error.main, 0.3),
+      },
+    }),
+  { defaultTheme },
 );
 
 interface TotalPriceProps {

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import {
   DataGrid,
   getThemePaletteMode,
@@ -16,22 +17,26 @@ import {
   randomUpdatedDate,
 } from '@material-ui/x-grid-data-generator';
 
-const useStyles = makeStyles((theme: Theme) => {
-  const isDark = getThemePaletteMode(theme.palette) === 'dark';
+const defaultTheme = createMuiTheme();
+const useStyles = makeStyles(
+  (theme: Theme) => {
+    const isDark = getThemePaletteMode(theme.palette) === 'dark';
 
-  return {
-    root: {
-      '& .MuiDataGrid-cellEditing': {
-        backgroundColor: 'rgb(255,215,115, 0.19)',
-        color: '#1a3e72',
+    return {
+      root: {
+        '& .MuiDataGrid-cellEditing': {
+          backgroundColor: 'rgb(255,215,115, 0.19)',
+          color: '#1a3e72',
+        },
+        '& .Mui-error': {
+          backgroundColor: `rgb(126,10,15, ${isDark ? 0 : 0.1})`,
+          color: isDark ? '#ff4343' : '#750f0f',
+        },
       },
-      '& .Mui-error': {
-        backgroundColor: `rgb(126,10,15, ${isDark ? 0 : 0.1})`,
-        color: isDark ? '#ff4343' : '#750f0f',
-      },
-    },
-  };
-});
+    };
+  },
+  { defaultTheme },
+);
 
 function validateEmail(email) {
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

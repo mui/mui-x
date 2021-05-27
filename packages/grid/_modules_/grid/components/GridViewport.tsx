@@ -91,6 +91,8 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
               cellTabIndex={cellTabIndex}
               isSelected={selectionState[id] !== undefined}
               editRowState={editRowsState[id]}
+              cellClassName={options.classes?.cell}
+              getCellClassName={options.getCellClassName}
             />
           )}
           <GridEmptyCell width={renderState.renderContext!.rightEmptyWidth} height={rowHeight} />

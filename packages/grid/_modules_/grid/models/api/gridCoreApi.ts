@@ -5,11 +5,11 @@ import {
 } from '../../utils/eventEmitter/GridEventEmitter';
 
 /**
- * The core API interface that is available in the grid [[apiRef]].
+ * The core API interface that is available in the grid `apiRef`.
  */
 export interface GridCoreApi extends GridEventEmitter {
   /**
-   * Property that comes true when the grid has its EventEmitter initialised.
+   * Property that comes `true` when the grid has its `EventEmitter` initialised.
    */
   isInitialised: boolean;
   /**
@@ -21,11 +21,11 @@ export interface GridCoreApi extends GridEventEmitter {
    */
   columnHeadersElementRef?: React.RefObject<HTMLDivElement>;
   /**
-   * Allows to register a handler for an event.
-   * @param event
-   * @param handler
-   * @param options
-   * @returns Unsubscribe Function
+   * Registers a handler for an event.
+   * @param {string} event The name of the event.
+   * @param {function} handler The handler to be called.
+   * @param {object} options Additional options for this listener.
+   * @returns {function} A function to unsubscribe from this event.
    */
   subscribeEvent: (
     event: string,
@@ -33,13 +33,14 @@ export interface GridCoreApi extends GridEventEmitter {
     options?: GridSubscribeEventOptions,
   ) => () => void;
   /**
-   * Allows to emit an event.
-   * @param name
-   * @param args
+   * Emits an event.
+   * @param {string} name The name of the event.
+   * @param {...*} args Arguments to be passed to the handlers.
    */
   publishEvent: (name: string, ...args: any[]) => void;
   /**
-   * Display the error overlay component.
+   * Displays the error overlay component.
+   * @param {any} props Props to be passed to the `ErrorOverlay` component.
    */
   showError: (props: any) => void;
 }

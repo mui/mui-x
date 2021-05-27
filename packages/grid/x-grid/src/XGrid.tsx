@@ -1,5 +1,4 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { LicenseInfo, useLicenseVerifier } from '@material-ui/x-license';
 import { ponyfillGlobal } from '@material-ui/utils';
@@ -21,17 +20,9 @@ export type XGridProps = Omit<GridComponentProps, 'licenseStatus'>;
 
 const XGridRaw = React.forwardRef<HTMLDivElement, XGridProps>(function XGrid(inProps, ref) {
   const props = useThemeProps({ props: inProps, name: 'MuiDataGrid' });
-  const { className, classes, ...other } = props;
   const licenseStatus = useLicenseVerifier();
 
-  return (
-    <GridComponent
-      ref={ref}
-      className={clsx('MuiDataGrid-root', classes?.root, className)}
-      {...other}
-      licenseStatus={licenseStatus.toString()}
-    />
-  );
+  return <GridComponent ref={ref} {...props} licenseStatus={licenseStatus.toString()} />;
 });
 
 export const XGrid = React.memo(XGridRaw);

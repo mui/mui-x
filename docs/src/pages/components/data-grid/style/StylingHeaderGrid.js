@@ -1,17 +1,19 @@
 import * as React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 
 const columns = [
   {
     field: 'first',
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
+    width: 140,
   },
   {
     field: 'last',
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
+    width: 140,
   },
 ];
 

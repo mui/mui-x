@@ -210,7 +210,7 @@ describe('<XGrid /> - Filter', () => {
       linkOperator: GridLinkOperator.Or,
     };
     render(<TestCase checkboxSelection filterModel={newModel} />);
-    const checkAllCell = getColumnHeaderCell(1).querySelector('input');
+    const checkAllCell = getColumnHeaderCell(0).querySelector('input');
     fireEvent.click(checkAllCell);
     expect(apiRef.current.getState().selection).to.deep.equal({ 1: 1 });
   });
@@ -300,7 +300,7 @@ describe('<XGrid /> - Filter', () => {
       );
       const t1 = performance.now();
       const time = Math.round(t1 - t0);
-      expect(time).to.be.lessThan(100);
+      expect(time).to.be.lessThan(150);
     });
   });
 

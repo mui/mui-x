@@ -1,6 +1,8 @@
 import * as styles from '@material-ui/core/styles';
+import { GRID_CSS_CLASS_PREFIX } from '../constants/cssClassesConstants';
 import isDeepEqual from '../lib/lodash/isDeepEqual';
 import { GridCellValue } from '../models/gridCell';
+import { generateUtilityClass } from './material-ui-utils';
 
 export { isDeepEqual };
 
@@ -9,6 +11,18 @@ export function isDate(value: any): value is Date {
 }
 export function isDateValid(value: Date): boolean {
   return !Number.isNaN(value.getTime());
+}
+
+export function parseDate(value: string): Date {
+  const [year, month, day] = value.split('-');
+  return new Date(Number(year), Number(month) - 1, Number(day));
+}
+
+export function parseDateTime(value: string): Date {
+  const [date, time] = value.split('T');
+  const [year, month, day] = date.split('-');
+  const [hours, minutes] = time.split(':');
+  return new Date(Number(year), Number(month) - 1, Number(day), Number(hours), Number(minutes));
 }
 
 export function formatDateToLocalInputDate({
@@ -53,6 +67,13 @@ export function muiStyleAlpha(color: string, value: number): string {
   return (styles as any)?.fade(color, value);
 }
 
+export function createTheme(): styles.Theme {
+  if (isMuiV5()) {
+    return (styles as any)?.createTheme();
+  }
+  return (styles as any)?.createMuiTheme();
+}
+
 export function localStorageAvailable() {
   try {
     // Incognito mode might reject access to the localStorage for security reasons.
@@ -66,6 +87,7 @@ export function localStorageAvailable() {
     return false;
   }
 }
+
 export function mapColDefTypeToInputType(type: string) {
   switch (type) {
     case 'string':
@@ -82,3 +104,7 @@ export function mapColDefTypeToInputType(type: string) {
 
 // Util to make specific interface properties optional
 export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
+
+export function getDataGridUtilityClass(slot) {
+  return generateUtilityClass(GRID_CSS_CLASS_PREFIX, slot);
+}

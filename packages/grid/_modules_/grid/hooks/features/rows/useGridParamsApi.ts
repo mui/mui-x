@@ -32,7 +32,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
   const getColumnHeaderParams = React.useCallback(
     (field: string): GridColumnHeaderParams => ({
       field,
-      colDef: apiRef.current.getColumnFromField(field),
+      colDef: apiRef.current.getColumn(field),
       api: apiRef!.current,
     }),
     [apiRef],
@@ -43,7 +43,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
       const params: GridRowParams = {
         id,
         columns: apiRef.current.getAllColumns(),
-        row: apiRef.current.getRowFromId(id),
+        row: apiRef.current.getRow(id),
         api: apiRef.current,
         getValue: apiRef.current.getCellValue,
       };
@@ -54,14 +54,14 @@ export function useGridParamsApi(apiRef: GridApiRef) {
 
   const getBaseCellParams = React.useCallback(
     (id: GridRowId, field: string) => {
-      const row = apiRef.current.getRowFromId(id);
+      const row = apiRef.current.getRow(id);
 
       const params: GridValueGetterParams = {
         id,
         field,
         row,
         value: row[field],
-        colDef: apiRef.current.getColumnFromField(field),
+        colDef: apiRef.current.getColumn(field),
         cellMode: apiRef.current.getCellMode(id, field),
         getValue: apiRef.current.getCellValue,
         api: apiRef.current,
@@ -76,7 +76,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
 
   const getCellParams = React.useCallback(
     (id: GridRowId, field: string) => {
-      const colDef = apiRef.current.getColumnFromField(field);
+      const colDef = apiRef.current.getColumn(field);
       const value = apiRef.current.getCellValue(id, field);
       const baseParams = getBaseCellParams(id, field);
       const params: GridCellParams = {
@@ -96,7 +96,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
 
   const getCellValue = React.useCallback(
     (id: GridRowId, field: string) => {
-      const colDef = apiRef.current.getColumnFromField(field);
+      const colDef = apiRef.current.getColumn(field);
 
       if (!warnedOnce && process.env.NODE_ENV !== 'production') {
         if (!colDef) {
@@ -105,7 +105,7 @@ export function useGridParamsApi(apiRef: GridApiRef) {
       }
 
       if (!colDef || !colDef.valueGetter) {
-        const rowModel = apiRef.current.getRowFromId(id);
+        const rowModel = apiRef.current.getRow(id);
         return rowModel[field];
       }
 

@@ -5,34 +5,42 @@ components: DataGrid, XGrid
 
 # Data Grid - Filtering
 
-<p class="description">Filtering helps view particular or related records in the data grid.</p>
+<p class="description">Filtering helps to view a subset of the records based on a criteria.</p>
 
-## Column filters
+## Basic filter
 
-### Basic filter
+Column filters can be set using the column menu and clicking the Filter menu item.
+Alternatively, if the grid has the toolbar displayed, you just need to click on the Filters button.
 
-Column filters can be set using the column menu and clicking the filter menu item.
-Alternatively, if the grid has the toolbar displayed, just need to click on the filter button.
+The filter applied to a column can be pre-configured using the `filterModel` prop:
 
-A filtered column can be can pre-configured using the `filterModel` prop:
+```jsx
+<DataGrid
+  filterModel={{
+    items: [{ columnField: 'commodity', operatorValue: 'contains', value: 'rice' }],
+  }}
+/>
+```
 
-{{"demo": "pages/components/data-grid/filtering/BasicFilteringGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/filtering/BasicFilteringGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Toolbar
+## Predefined filters
 
-In addition to the column menu that allows users to apply a filter, you can also show a toolbar:
+A filter is composed of three parts: the column to filter, the value to look for, and an operator (e.g. _contains_, _is before_, _is after_, etc.).
+The operator determines if a candidate value should be considered as a result.
+The candidate value used by the operator is the one corresponding to the `field` attribute or the `valueGetter` of the `GridColDef`.
+As part of the predefined column types, a set of operators is available.
+You can find the supported column types in the [columns section](/components/data-grid/columns/#column-types).
 
-{{"demo": "pages/components/data-grid/filtering/BasicToolbarFilteringGrid.js", "bg": "inline"}}
+**Note**: The [`valueFormatter`](/components/data-grid/columns/#value-formatter) is only used for rendering purposes.
 
-### Column types
-
-The type of the column is used for adapting the filtering. You can find the different supported types in the [columns section](/components/data-grid/columns/#column-types).
+The following demo allows to explore the different operators available:
 
 {{"demo": "pages/components/data-grid/filtering/FilterOperators.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Disable filter
+## Disable filtering
 
-#### Globally
+**Globally**
 
 Filters are enabled by default, but you can easily disable this feature by setting the `disableColumnFilter` prop.
 
@@ -40,7 +48,7 @@ Filters are enabled by default, but you can easily disable this feature by setti
 <DataGrid disableColumnFilter />
 ```
 
-#### Per column
+**Per column**
 
 You can disable the filter on a column by setting the `filterable` property of the `GridColDef` to `false`;
 
@@ -50,36 +58,65 @@ const columns = [{ field: 'image', filterable: false }];
 
 {{"demo": "pages/components/data-grid/filtering/DisableFilteringGrid.js", "bg": "inline"}}
 
-### Custom filter operator
+## Customize the filters
 
-The data grid supports different operators for the native column types.
-However, you can extend the operator and add your own, customize the input component or set your own operator for a new column type.
+The grid provides different ways to customize the filter panel.
+This section provides examples on how to make the most common modifications.
 
-1. **Custom input**.
+### Change the input component
 
-In this demo you will see how to reuse the numeric filter and customize the input filter value component.
+The value used by the operator to look for has to be entered by the user.
+On most column types, a text field is used. However, a custom component can be rendered instead.
 
-The rating column reuses the numeric operator, but the input value is a new rating component.
+In this demo, the Rating column reuses the numeric filter and the same rating component is used to the enter the value of the filter.
 
-{{"demo": "pages/components/data-grid/filtering/ExtendNumericOperator.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/filtering/ExtendNumericOperator.js", "bg": "inline", "defaultCodeOpen": false}}
 
-2. **Custom column type**.
+### Extend filter operators
 
-In this demo you will see how to extend an existing column type, adding your own filter operators with filter input value props.
+When defining a [custom column type](/components/data-grid/columns/#custom-column-types), the added operators are the same from the type that was extended.
 
-As you can see in the filter panel, the `totalPrice` column only contains 2 operators `<`, & `>`, and the input field is prefixed with `$`.
+In this demo, a `price` column type (used by Total is USD) is defined extending the `number` column type.
+Instead of adding all numeric operators, only the operators `<` and `>` are kept.
+Furthermore, the "$" prefix is added to the input component with the `InputComponentProps` prop.
 
-{{"demo": "pages/components/data-grid/filtering/ColumnTypeFilteringGrid.js", "bg": "inline"}}
+{{"demo": "pages/components/data-grid/filtering/ColumnTypeFilteringGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
-3. **Custom operator**.
+### Create a custom operator
 
-In this demo you will see how to create a complete new operator for a specific column.
+If reusing the native filter operators is not enough, creating a custom operator is an option.
+A custom operator is defined creating a `GridFilterOperator` object.
+This object has to be added to the `filterOperators` attribute of the `GridColDef`.
 
-The rating column contains a new `From` operator, as you can see in the filter panel.
+The most important part of an operator is the `getApplyFilterFn` function.
+It's called with the `GridFilterItem` object and the `GridColDef` object.
+This function must return another function that is called on every value of the column.
+The returned function determines if the cell value satifies the condition of the operator.
 
-{{"demo": "pages/components/data-grid/filtering/CustomRatingOperator.js", "bg": "inline"}}
+```ts
+{
+  label: 'From',
+  value: 'from',
+  getApplyFilterFn: (filterItem: GridFilterItem, column: GridColDef) => {
+    if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
+      return null;
+    }
+    return (params: GridCellParams): boolean => {
+      return Number(params.value) >= Number(filterItem.value);
+    };
+  },
+  InputComponent: RatingInputValue,
+  InputComponentProps: { type: 'number' },
+}
+```
 
-### Server-side filter
+**Note**: If the column has a [`valueGetter`](/components/data-grid/columns/#value-getter), then `params.value` will be the resolved value.
+
+In this demo, you can see how to create a completely new operator for the Rating column.
+
+{{"demo": "pages/components/data-grid/filtering/CustomRatingOperator.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Server-side filter
 
 Filtering can be run server-side by setting the `filterMode` prop to `server`, and implementing the `onFilterModelChange` handler.
 
@@ -93,15 +130,15 @@ Filtering can be run server-side by setting the `filterMode` prop to `server`, a
 />
 ```
 
-Below is very simple demo on how you could achieve server side filtering.
+Below is a very simple demo on how you could achieve server-side filtering.
 
 {{"demo": "pages/components/data-grid/filtering/ServerFilterGrid.js", "bg": "inline"}}
 
-### Controlled filtering
+<!-- ## Controlled filtering -->
 
-WIP
+<!-- WIP -->
 
-### Multi-column filtering <span class="pro"></span>
+## Multi-column filtering <span class="pro"></span>
 
 `XGrid` supports filtering by multiple columns.
 The default operator that will be applied between filters is an And.
@@ -122,7 +159,7 @@ const filterModel: GridFilterModel = {
 
 {{"demo": "pages/components/data-grid/filtering/MultiFilteringWithOrGrid.js", "bg": "inline", "disableAd": true}}
 
-### apiRef <span class="pro"></span>
+## apiRef <span class="pro"></span>
 
 <!-- https://master--material-ui-x.netlify.app/components/data-grid/rows/#apiref -->
 

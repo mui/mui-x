@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import {
   GridColumnMenu,
@@ -12,16 +13,20 @@ import {
 } from '@material-ui/x-grid';
 import StarOutlineIcon from '@material-ui/icons/StarOutline';
 
-const useStyles = makeStyles((theme) => ({
-  primary: {
-    background: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
-  },
-  secondary: {
-    background: theme.palette.secondary.main,
-    color: theme.palette.secondary.contrastText,
-  },
-}));
+const defaultTheme = createMuiTheme();
+const useStyles = makeStyles(
+  (theme) => ({
+    primary: {
+      background: theme.palette.primary.main,
+      color: theme.palette.primary.contrastText,
+    },
+    secondary: {
+      background: theme.palette.secondary.main,
+      color: theme.palette.secondary.contrastText,
+    },
+  }),
+  { defaultTheme },
+);
 
 function CustomColumnMenuComponent(props) {
   const classes = useStyles();
@@ -85,29 +90,23 @@ export default function CustomColumnMenu() {
   const [color, setColor] = React.useState('primary');
   const apiRef = useGridApiRef();
 
-  React.useEffect(() => {
-    apiRef.current.showColumnMenu('default');
-  }, [apiRef, color]);
-
   return (
     <div
       style={{
-        height: 300,
         width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
       }}
     >
-      <div style={{ alignSelf: 'center' }}>
-        <Button
-          color={color}
-          onClick={() =>
-            setColor((current) => (current === 'primary' ? 'secondary' : 'primary'))
-          }
-        >
-          Toggle menu background
-        </Button>
-      </div>
+      <Button
+        color={color}
+        variant="outlined"
+        onClick={(event) => {
+          event.stopPropagation();
+          setColor((current) => (current === 'primary' ? 'secondary' : 'primary'));
+          apiRef.current.showColumnMenu('default');
+        }}
+      >
+        Toggle menu background
+      </Button>
       <div style={{ height: 250, width: '100%', marginTop: 16 }}>
         <XGrid
           apiRef={apiRef}

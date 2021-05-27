@@ -36,7 +36,7 @@ describe('<DataGrid /> - Filter', () => {
     rows?: any[];
     columns?: any[];
     operator?: string;
-    value?: string;
+    value?: any;
     field?: string;
   }) => {
     const { operator, value, rows, columns, field = 'brand' } = props;
@@ -114,6 +114,119 @@ describe('<DataGrid /> - Filter', () => {
         value: 'nike',
       });
       expect(getColumnValues()).to.deep.equal(['Nike']);
+    });
+
+    [
+      { operator: 'contains', value: 'a', expected: ['Asics'] },
+      { operator: 'startsWith', value: 'r', expected: ['RedBull'] },
+      { operator: 'equals', value: 'hugo', expected: ['Hugo'] },
+      { operator: 'endsWith', value: 'ics', expected: ['Asics'] },
+    ].forEach(({ operator, value, expected }) => {
+      it(`should allow object as value and work with valueGetter, operator: ${operator}`, () => {
+        render(
+          <TestCase
+            value={value}
+            operator={operator}
+            rows={[
+              {
+                id: 3,
+                brand: { name: 'Asics' },
+              },
+              {
+                id: 4,
+                brand: { name: 'RedBull' },
+              },
+              {
+                id: 5,
+                brand: { name: 'Hugo' },
+              },
+            ]}
+            columns={[{ field: 'brand', valueGetter: (params) => params.value.name }]}
+          />,
+        );
+        expect(getColumnValues()).to.deep.equal(expected);
+      });
+    });
+  });
+
+  describe('numeric operators', () => {
+    [
+      { operator: '=', value: 1984, expected: [1984] },
+      { operator: '!=', value: 1984, expected: [1954, 1974] },
+      { operator: '>', value: 1974, expected: [1984] },
+      { operator: '>=', value: 1974, expected: [1984, 1974] },
+      { operator: '<', value: 1974, expected: [1954] },
+      { operator: '<=', value: 1974, expected: [1954, 1974] },
+    ].forEach(({ operator, value, expected }) => {
+      it(`should allow object as value and work with valueGetter, operator: ${operator}`, () => {
+        render(
+          <TestCase
+            value={value.toString()}
+            operator={operator}
+            rows={[
+              {
+                id: 3,
+                brand: { year: 1984 },
+              },
+              {
+                id: 4,
+                brand: { year: 1954 },
+              },
+              {
+                id: 5,
+                brand: { year: 1974 },
+              },
+            ]}
+            columns={[
+              { field: 'brand', valueGetter: (params) => params.value.year, type: 'number' },
+            ]}
+          />,
+        );
+        expect(getColumnValues()).to.deep.equal(expected.map((res) => res.toLocaleString()));
+      });
+    });
+  });
+
+  describe('date operators', () => {
+    [
+      { operator: 'is', value: new Date(2000, 11, 1), expected: ['12/1/2000'] },
+      { operator: 'not', value: new Date(2000, 11, 1), expected: ['1/1/2001', '1/1/2002'] },
+      { operator: 'after', value: new Date(2001, 0, 1), expected: ['1/1/2002'] },
+      { operator: 'onOrAfter', value: new Date(2001, 0, 1), expected: ['1/1/2001', '1/1/2002'] },
+      { operator: 'before', value: new Date(2001, 0, 1), expected: ['12/1/2000'] },
+      { operator: 'onOrBefore', value: new Date(2001, 0, 1), expected: ['12/1/2000', '1/1/2001'] },
+    ].forEach(({ operator, value, expected }) => {
+      it(`should allow object as value and work with valueGetter, operator: ${operator}`, () => {
+        render(
+          <TestCase
+            value={value}
+            operator={operator}
+            rows={[
+              {
+                id: 3,
+                brand: { date: new Date(2000, 11, 1) },
+              },
+              {
+                id: 4,
+                brand: { date: new Date(2001, 0, 1) },
+              },
+              {
+                id: 5,
+                brand: { date: new Date(2002, 0, 1) },
+              },
+            ]}
+            columns={[
+              {
+                field: 'brand',
+                type: 'date',
+                valueGetter: (params) => params.value.date,
+                valueFormatter: (params) => params.value.toLocaleDateString('en-US'),
+              },
+            ]}
+          />,
+        );
+        expect(getColumnValues()).to.deep.equal(expected.map((res) => res));
+      });
     });
   });
 

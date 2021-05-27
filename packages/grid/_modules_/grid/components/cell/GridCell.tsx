@@ -1,7 +1,6 @@
-import { capitalize } from '@material-ui/core/utils';
 import * as React from 'react';
+import { ownerDocument, capitalize } from '@material-ui/core/utils';
 import clsx from 'clsx';
-import { GRID_CELL_CSS_CLASS } from '../../constants/cssClassesConstants';
 import {
   GRID_CELL_BLUR,
   GRID_CELL_CLICK,
@@ -17,13 +16,14 @@ import {
   GRID_CELL_DRAG_ENTER,
   GRID_CELL_DRAG_OVER,
 } from '../../constants/eventsConstants';
+import { GRID_CSS_CLASS_PREFIX } from '../../constants/cssClassesConstants';
 import { GridAlignment, GridCellMode, GridCellValue, GridRowId } from '../../models/index';
 import { GridApiContext } from '../GridApiContext';
 
 export interface GridCellProps {
   align: GridAlignment;
+  className?: string;
   colIndex: number;
-  cssClass?: string;
   field: string;
   rowId: GridRowId;
   formattedValue?: GridCellValue;
@@ -43,10 +43,10 @@ export interface GridCellProps {
 export const GridCell = React.memo((props: GridCellProps) => {
   const {
     align,
+    className,
     children,
     colIndex,
     cellMode,
-    cssClass,
     field,
     formattedValue,
     hasFocus,
@@ -65,9 +65,9 @@ export const GridCell = React.memo((props: GridCellProps) => {
   const cellRef = React.useRef<HTMLDivElement>(null);
   const apiRef = React.useContext(GridApiContext);
 
-  const cssClasses = clsx(GRID_CELL_CSS_CLASS, cssClass, `MuiDataGrid-cell${capitalize(align)}`, {
-    'MuiDataGrid-withBorder': showRightBorder,
-    'MuiDataGrid-cellEditable': isEditable,
+  const cssClasses = clsx(className, `${GRID_CSS_CLASS_PREFIX}-cell${capitalize(align)}`, {
+    [`${GRID_CSS_CLASS_PREFIX}-withBorder`]: showRightBorder,
+    [`${GRID_CSS_CLASS_PREFIX}-cellEditable`]: isEditable,
   });
 
   const publishBlur = React.useCallback(
@@ -141,10 +141,12 @@ export const GridCell = React.memo((props: GridCellProps) => {
   };
 
   React.useLayoutEffect(() => {
+    const doc = ownerDocument(apiRef!.current.rootElementRef!.current as HTMLElement);
+
     if (
       hasFocus &&
       cellRef.current &&
-      (!document.activeElement || !cellRef.current!.contains(document.activeElement))
+      (!doc.activeElement || !cellRef.current!.contains(doc.activeElement))
     ) {
       const focusableElement = cellRef.current!.querySelector('[tabindex="0"]') as HTMLElement;
       if (focusableElement) {
@@ -163,10 +165,11 @@ export const GridCell = React.memo((props: GridCellProps) => {
       data-value={value}
       data-field={field}
       data-rowindex={rowIndex}
+      data-colindex={colIndex}
       data-rowselected={isSelected}
       data-editable={isEditable}
       data-mode={cellMode}
-      aria-colindex={colIndex}
+      aria-colindex={colIndex + 1}
       style={style}
       tabIndex={tabIndex}
       {...eventsHandlers}

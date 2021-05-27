@@ -1,4 +1,4 @@
-export type GridRowsProp = GridRowData[];
+export type GridRowsProp = Readonly<GridRowData[]>;
 export type GridRowData = { [key: string]: any };
 
 /**

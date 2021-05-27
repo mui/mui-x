@@ -22,7 +22,7 @@ export function GridColumnHeaderMenu({
   target,
 }: GridColumnHeaderMenuProps) {
   const apiRef = React.useContext(GridApiContext);
-  const currentColumn = apiRef?.current.getColumnFromField(field);
+  const currentColumn = apiRef?.current.getColumn(field);
 
   const hideMenu = React.useCallback(
     (event) => {

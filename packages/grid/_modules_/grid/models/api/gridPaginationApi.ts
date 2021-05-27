@@ -3,13 +3,13 @@
  */
 export interface GridPaginationApi {
   /**
-   * Set the displayed page.
-   * @param page
+   * Sets the displayed page to the value given by `page`.
+   * @param {number} page The new page number
    */
   setPage: (page: number) => void;
   /**
-   * Set the number of rows in one page.
-   * @param pageSize
+   * Sets the number of displayed rows to the value given by `pageSize`.
+   * @param {number} pageSize The new number of displayed rows.
    */
   setPageSize: (pageSize: number) => void;
 }
