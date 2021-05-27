@@ -21,7 +21,7 @@ import { renderStateSelector } from '../virtualization/renderingStateSelector';
 import { unorderedGridRowIdsSelector } from '../rows/gridRowsSelector';
 import { gridSortModelSelector } from '../sorting/gridSortingSelector';
 import { filterGridStateSelector } from '../filter/gridFilterSelector';
-import { GridLoadRowsReturnValue } from '../../../models/params/gridLoadRowsParams';
+import { GridGetRowsReturnValue } from '../../../models/params/gridGetRowsParams';
 
 export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridInfiniteLoader');
@@ -69,7 +69,7 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
   const handleGridVirtualPageChange = React.useCallback(
     (params: GridVirtualPageChangeParams) => {
       logger.debug('Virtual page changed');
-      if (!containerSizes || !options.loadRows) {
+      if (!containerSizes || !options.getRows) {
         return;
       }
 
@@ -92,7 +92,7 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
         return;
       }
 
-      const { rows }: GridLoadRowsReturnValue = options.loadRows({
+      const { rows }: GridGetRowsReturnValue = options.getRows({
         startIndex: newRowsBatchStartIndex,
         viewportPageSize: containerSizes.viewportPageSize,
         sortModel,
@@ -111,12 +111,12 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
     (params: GridSortModelParams) => {
       logger.debug('Sort model changed');
 
-      if (!containerSizes || !options.loadRows) {
+      if (!containerSizes || !options.getRows) {
         return;
       }
 
       const newRowsBatchStartIndex = renderState.virtualPage * containerSizes.viewportPageSize;
-      const { rows, rowCount }: GridLoadRowsReturnValue = options.loadRows({
+      const { rows, rowCount }: GridGetRowsReturnValue = options.getRows({
         startIndex: newRowsBatchStartIndex,
         viewportPageSize: containerSizes.viewportPageSize,
         sortModel: params.sortModel,
@@ -139,12 +139,12 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
   const handleGridFilterModelChange = React.useCallback(
     (params: GridFilterModelParams) => {
       logger.debug('Filter model changed');
-      if (!containerSizes || !options.loadRows) {
+      if (!containerSizes || !options.getRows) {
         return;
       }
 
       const newRowsBatchStartIndex = renderState.virtualPage * containerSizes.viewportPageSize;
-      const { rows, rowCount }: GridLoadRowsReturnValue = options.loadRows({
+      const { rows, rowCount }: GridGetRowsReturnValue = options.getRows({
         startIndex: newRowsBatchStartIndex,
         viewportPageSize: containerSizes.viewportPageSize,
         sortModel,

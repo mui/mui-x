@@ -975,7 +975,7 @@ export function InfiniteLoader() {
         components={{
           Toolbar: GridToolbar,
         }}
-        loadRows={(params) => {
+        getRows={(params) => {
           const newRowsBatch: any = [];
           while (newRowsBatch.length < params.viewportPageSize) {
             const id = Math.floor(Math.random() * 1000);

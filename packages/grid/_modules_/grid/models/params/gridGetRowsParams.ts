@@ -3,9 +3,9 @@ import { GridRowData } from '../gridRows';
 import { GridSortModel } from '../gridSortModel';
 
 /**
- * Object passed as parameter to the [[loadRows]] option.
+ * Object passed as parameter to the [[getRows]] option.
  */
-export interface GridLoadRowsParams {
+export interface GridGetRowsParams {
   /**
    * The start index from which rows needs to be loaded.
    */
@@ -29,9 +29,9 @@ export interface GridLoadRowsParams {
 }
 
 /**
- * Object expected to be returned from the [[loadRows]] option.
+ * Object expected to be returned from the [[getRows]] option.
  */
-export interface GridLoadRowsReturnValue {
+export interface GridGetRowsReturnValue {
   /**
    * The start index from which rows needs to be loaded.
    */

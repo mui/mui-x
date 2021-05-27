@@ -1,5 +1,6 @@
 export * from './gridCellParams';
 export * from './gridEditCellParams';
+export * from './gridGetRowsParams';
 export * from './gridColumnHeaderParams';
 export * from './gridColumnOrderChangeParams';
 export * from './gridColumnResizeParams';
@@ -12,6 +13,5 @@ export * from './gridScrollParams';
 export * from './gridSelectionModelChangeParams';
 export * from './gridSortModelParams';
 export * from './gridStateChangeParams';
-export * from './gridLoadRowsParams';
 export * from './gridRowScrollEndParams';
 export * from './gridResizeParams';
