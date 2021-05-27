@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { expect } from 'chai';
-import { useFakeTimers } from 'sinon';
+import { spy, useFakeTimers } from 'sinon';
 import {
   GridApiRef,
   GridFilterModel,
@@ -195,6 +195,41 @@ describe('<XGrid /> - Filter', () => {
       linkOperator: GridLinkOperator.Or,
     };
     render(<TestCase filterModel={newModel} />);
+    expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
+  });
+
+  it('should trigger onFilterModelChange when the link operator changes', () => {
+    const onFilterModelChange = spy();
+    const newModel: GridFilterModel = {
+      items: [
+        {
+          columnField: 'brand',
+          value: 'a',
+          operatorValue: 'startsWith',
+        },
+        {
+          columnField: 'brand',
+          value: 'a',
+          operatorValue: 'endsWith',
+        },
+      ],
+    };
+    render(
+      <TestCase
+        filterModel={newModel}
+        onFilterModelChange={onFilterModelChange}
+        state={{
+          preferencePanel: { openedPanelValue: GridPreferencePanelsValue.filters, open: true },
+        }}
+      />,
+    );
+    // TODO should equal 0, the state doesn't change
+    expect(onFilterModelChange.callCount).to.equal(4);
+    expect(getColumnValues()).to.deep.equal([]);
+
+    const select = screen.queryAllByRole('combobox', { name: /Operators/i })[1];
+    fireEvent.change(select, { target: { value: 'or' } });
+    expect(onFilterModelChange.callCount).to.equal(5);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
   });
 
