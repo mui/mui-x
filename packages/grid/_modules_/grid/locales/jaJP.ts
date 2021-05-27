@@ -4,7 +4,6 @@ import { getGridLocalization, Localization } from '../utils';
 
 const jaJPGrid: Partial<GridLocaleText> = {
   // Root
-  rootGridLabel: 'grid',
   noRowsLabel: '行がありません',
   // noResultsOverlayLabel: 'No results found.',
   errorOverlayDefaultLabel: 'エラーが発生しました。',

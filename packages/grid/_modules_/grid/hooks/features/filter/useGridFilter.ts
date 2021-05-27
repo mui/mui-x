@@ -154,7 +154,7 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
         }
 
         if (newItem.id == null) {
-          newItem.id = new Date().getTime();
+          newItem.id = Math.round(Math.random() * 1e5);
         }
 
         if (newItem.columnField == null) {
@@ -239,8 +239,9 @@ export const useGridFilter = (apiRef: GridApiRef, rowsProp: GridRowsProp): void 
         filter: { ...state.filter, linkOperator },
       }));
       applyFilters();
+      apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
-    [applyFilters, logger, setGridState],
+    [apiRef, applyFilters, getFilterModelParams, logger, setGridState],
   );
 
   const clearFilterModel = React.useCallback(() => {

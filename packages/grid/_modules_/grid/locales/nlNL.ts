@@ -4,7 +4,6 @@ import { getGridLocalization, Localization } from '../utils';
 
 const nlNLGrid: Partial<GridLocaleText> = {
   // Root
-  rootGridLabel: 'grid',
   noRowsLabel: 'Geen resultaten.',
   // noResultsOverlayLabel: 'No results found.',
   errorOverlayDefaultLabel: 'Er deed zich een fout voor.',
