@@ -14,8 +14,8 @@ import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridDensityOption } from '../../models/api/gridDensityApi';
 import { GridMenu } from '../menu/GridMenu';
 
-export const GridDensitySelector = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  function GridDensitySelector(props, ref) {
+export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  function GridToolbarDensitySelector(props, ref) {
     const apiRef = React.useContext(GridApiContext);
     const options = useGridSelector(apiRef, optionsSelector);
     const densityValue = useGridSelector(apiRef, gridDensityValueSelector);

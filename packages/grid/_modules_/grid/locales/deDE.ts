@@ -4,10 +4,9 @@ import { getGridLocalization, Localization } from '../utils';
 
 const deDEGrid: Partial<GridLocaleText> = {
   // Root
-  rootGridLabel: 'grid',
   noRowsLabel: 'Keine Einträge',
-  // noResultsOverlayLabel: 'No results found.',
-  errorOverlayDefaultLabel: 'Ein unvorhergesehener Fehler ist passiert.',
+  noResultsOverlayLabel: 'Keine Ergebnisse gefunden.',
+  errorOverlayDefaultLabel: 'Ein unerwarteter Fehler ist aufgetreten.',
 
   // Density selector toolbar button text
   toolbarDensity: 'Zeilenhöhe',

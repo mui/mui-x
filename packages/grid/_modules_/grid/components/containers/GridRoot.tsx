@@ -39,6 +39,8 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
         aria-colcount={visibleColumnsLength}
         aria-rowcount={gridState.rows.totalRowCount}
         aria-multiselectable={!gridState.options.disableMultipleSelection}
+        aria-label={props['aria-label']}
+        aria-labelledby={props['aria-labelledby']}
       >
         {children}
       </div>

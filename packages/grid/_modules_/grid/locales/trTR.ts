@@ -4,7 +4,6 @@ import { getGridLocalization, Localization } from '../utils';
 
 const trTRGrid: Partial<GridLocaleText> = {
   // Root
-  rootGridLabel: 'grid',
   noRowsLabel: 'Satır yok',
   errorOverlayDefaultLabel: 'Bir hata oluştu.',
 

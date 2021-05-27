@@ -80,7 +80,7 @@ describe('<XGrid /> - Events Params', () => {
       };
       render(<TestEvents onColumnHeaderClick={handleClick} />);
 
-      const ageColumnElement = getColumnHeaderCell(3);
+      const ageColumnElement = getColumnHeaderCell(2);
       fireEvent.click(ageColumnElement);
 
       expect(eventArgs!.params).to.deep.include({

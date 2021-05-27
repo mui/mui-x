@@ -7,15 +7,18 @@ export interface GridStateApi {
    */
   state: GridState;
   /**
-   * Allows to get the whole state of the grid if stateId is null or to get a part of the state if stateId has a value.
+   * Returns the whole state of the grid. If `stateId` is present, only the referred part is returned.
+   * @param {string} stateId The part of the state to be returned.
+   * @returns {any} The whole state or part of it.
    */
   getState: <T = GridState>(stateId?: string) => T;
   /**
-   * Allows to set/reset the whole state of the grid.
+   * Sets the whole state of the grid.
+   * @param {function} state The new state or a function to return the new state.
    */
   setState: (state: GridState | ((previousState: GridState) => GridState)) => void;
   /**
-   * Allows forcing the grid to rerender after a state update.
+   * Forces the grid to rerender. It's often used after a state update.
    */
   forceUpdate: React.Dispatch<any>;
 }

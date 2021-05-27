@@ -15,6 +15,8 @@ import { DataGrid } from '@material-ui/data-grid';
 |:-----|:-----|:--------|:------------|
 | <span class="prop-name required">columns<abbr title="required">*</abbr></span> | <span class="prop-type">GridColumns</span> |   | Set of columns of type 'GridColumns'. |
 | <span class="prop-name required">rows<abbr title="required">*</abbr></span> | <span class="prop-type">GridRowsProp</span> |  | Set of rows of type 'GridRowsProp'. |
+| <span class="prop-name">aria-label</span> | <span class="prop-type">string</span> |  | The label of the grid. |
+| <span class="prop-name">aria-labelledby</span> | <span class="prop-type">string</span> |  | The id of the element containing a label for the grid. |
 | <span class="prop-name">autoHeight</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid height is dynamic and follow the number of rows in the grid. |
 | <span class="prop-name">autoPageSize</span> | <span class="prop-type">boolean</span> | false | If `true`, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar. |
 | <span class="prop-name">checkboxSelection</span> | <span class="prop-type">boolean</span> | false | If `true`, the grid get a first column with a checkbox that allows to select rows. |
@@ -32,6 +34,7 @@ import { DataGrid } from '@material-ui/data-grid';
 | <span class="prop-name">error</span> | <span class="prop-type">any</span> |   | An error that will turn the grid into its error state and display the error component. |
 | <span class="prop-name">editRowsModel</span> | <span class="prop-type">GridEditRowsModel</span> | undefined  | Set the edit rows model of the grid. |
 | <span class="prop-name">filterModel</span> | <span class="prop-type">GridFilterModel</span> |   | Set the filter model of the grid. |
+| <span class="prop-name">getCellClassName</span> | <span class="prop-type">(params: GridCellParams) => string</span> |   | Function that applies CSS classes dynamically on cells. |
 | <span class="prop-name">getRowClassName</span> | <span class="prop-type">(params: GridRowParams) => string</span> |   | Function that applies CSS classes dynamically on rows. |
 | <span class="prop-name">getRowId</span> | <span class="prop-type">GridRowIdGetter</span> | (row)=> row.id   | A function that allows the grid to retrieve the row id. |
 | <span class="prop-name">headerHeight</span> | <span class="prop-type">number</span> | 56 | Set the height in pixel of the column headers in the grid. |
