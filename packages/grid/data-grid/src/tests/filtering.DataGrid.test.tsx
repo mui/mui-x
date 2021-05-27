@@ -35,11 +35,11 @@ describe('<DataGrid /> - Filter', () => {
   const TestCase = (props: {
     rows?: any[];
     columns?: any[];
-    operator?: string;
-    value?: any;
+    operatorValue?: string;
+    value?: string;
     field?: string;
   }) => {
-    const { operator, value, rows, columns, field = 'brand' } = props;
+    const { operatorValue, value, rows, columns, field = 'brand' } = props;
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid
@@ -51,7 +51,7 @@ describe('<DataGrid /> - Filter', () => {
               {
                 columnField: field,
                 value,
-                operatorValue: operator,
+                operatorValue,
               },
             ],
           }}
@@ -62,7 +62,7 @@ describe('<DataGrid /> - Filter', () => {
   };
 
   it('should apply the filterModel prop correctly', () => {
-    render(<TestCase value={'a'} operator={'contains'} />);
+    render(<TestCase value={'a'} operatorValue={'contains'} />);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
   });
 
@@ -70,7 +70,7 @@ describe('<DataGrid /> - Filter', () => {
     render(
       <TestCase
         value={'a'}
-        operator={'contains'}
+        operatorValue={'contains'}
         rows={[
           {
             id: 3,
@@ -90,43 +90,82 @@ describe('<DataGrid /> - Filter', () => {
     expect(getColumnValues()).to.deep.equal(['Asics']);
   });
 
+  [
+    { operatorValue: 'is', value: '' },
+    { operatorValue: 'is', value: undefined },
+    { operatorValue: '', value: '2000-12-01' },
+    { operatorValue: '', value: '' },
+  ].forEach(({ operatorValue, value }) => {
+    it(`should not filter when operatorValue='${operatorValue}' and value='${value}'`, () => {
+      render(
+        <TestCase
+          value={value}
+          operatorValue={operatorValue}
+          rows={[
+            {
+              id: 3,
+              brand: { date: new Date(2000, 11, 1) },
+            },
+            {
+              id: 4,
+              brand: { date: new Date(2001, 0, 1) },
+            },
+            {
+              id: 5,
+              brand: { date: new Date(2002, 0, 1) },
+            },
+          ]}
+          columns={[
+            {
+              field: 'brand',
+              type: 'date',
+              valueGetter: (params) => params.value.date,
+              valueFormatter: (params) => params.value.toLocaleDateString('en-US'),
+            },
+          ]}
+        />,
+      );
+      expect(getColumnValues()).to.deep.equal(['12/1/2000', '1/1/2001', '1/1/2002']);
+    });
+  });
+
   describe('string operators', () => {
     it('should allow operator startsWith', () => {
-      const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
+      const { setProps } = render(<TestCase value={'a'} operatorValue={'contains'} />);
       setProps({
-        operator: 'startsWith',
+        operatorValue: 'startsWith',
       });
       expect(getColumnValues()).to.deep.equal(['Adidas']);
     });
 
     it('should allow operator endsWith', () => {
-      const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
+      const { setProps } = render(<TestCase value={'a'} operatorValue={'contains'} />);
       setProps({
-        operator: 'endsWith',
+        operatorValue: 'endsWith',
       });
       expect(getColumnValues()).to.deep.equal(['Puma']);
     });
 
     it('should allow operator equal', () => {
-      const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
+      const { setProps } = render(<TestCase value={'a'} operatorValue={'contains'} />);
       setProps({
-        operator: 'equals',
+        operatorValue: 'equals',
         value: 'nike',
       });
       expect(getColumnValues()).to.deep.equal(['Nike']);
     });
 
     [
-      { operator: 'contains', value: 'a', expected: ['Asics'] },
-      { operator: 'startsWith', value: 'r', expected: ['RedBull'] },
-      { operator: 'equals', value: 'hugo', expected: ['Hugo'] },
-      { operator: 'endsWith', value: 'ics', expected: ['Asics'] },
-    ].forEach(({ operator, value, expected }) => {
-      it(`should allow object as value and work with valueGetter, operator: ${operator}`, () => {
+      { operatorValue: 'contains', value: 'a', expected: ['Asics'] },
+      { operatorValue: 'startsWith', value: 'r', expected: ['RedBull'] },
+      { operatorValue: 'equals', value: 'hugo', expected: ['Hugo'] },
+      { operatorValue: 'endsWith', value: 'ics', expected: ['Asics'] },
+    ].forEach(({ operatorValue, value, expected }) => {
+      it(`should allow object as value and work with valueGetter, operatorValue: ${operatorValue}`, () => {
         render(
           <TestCase
             value={value}
-            operator={operator}
+            operatorValue={operatorValue}
             rows={[
               {
                 id: 3,
@@ -151,18 +190,18 @@ describe('<DataGrid /> - Filter', () => {
 
   describe('numeric operators', () => {
     [
-      { operator: '=', value: 1984, expected: [1984] },
-      { operator: '!=', value: 1984, expected: [1954, 1974] },
-      { operator: '>', value: 1974, expected: [1984] },
-      { operator: '>=', value: 1974, expected: [1984, 1974] },
-      { operator: '<', value: 1974, expected: [1954] },
-      { operator: '<=', value: 1974, expected: [1954, 1974] },
-    ].forEach(({ operator, value, expected }) => {
-      it(`should allow object as value and work with valueGetter, operator: ${operator}`, () => {
+      { operatorValue: '=', value: 1984, expected: [1984] },
+      { operatorValue: '!=', value: 1984, expected: [1954, 1974] },
+      { operatorValue: '>', value: 1974, expected: [1984] },
+      { operatorValue: '>=', value: 1974, expected: [1984, 1974] },
+      { operatorValue: '<', value: 1974, expected: [1954] },
+      { operatorValue: '<=', value: 1974, expected: [1954, 1974] },
+    ].forEach(({ operatorValue, value, expected }) => {
+      it(`should allow object as value and work with valueGetter, operatorValue: ${operatorValue}`, () => {
         render(
           <TestCase
             value={value.toString()}
-            operator={operator}
+            operatorValue={operatorValue}
             rows={[
               {
                 id: 3,
@@ -189,57 +228,18 @@ describe('<DataGrid /> - Filter', () => {
 
   describe('date operators', () => {
     [
-      { operator: 'is', value: '' },
-      { operator: 'is', value: undefined },
-      { operator: '', value: '2000-12-01' },
-      { operator: '', value: '' },
-    ].forEach(({ operator, value }) => {
-      it(`should not filter when operator='${operator}' and value='${value}'`, () => {
+      { operatorValue: 'is', value: '2000-12-01', expected: ['12/1/2000'] },
+      { operatorValue: 'not', value: '2000-12-01', expected: ['1/1/2001', '1/1/2002'] },
+      { operatorValue: 'after', value: '2001-01-01', expected: ['1/1/2002'] },
+      { operatorValue: 'onOrAfter', value: '2001-01-01', expected: ['1/1/2001', '1/1/2002'] },
+      { operatorValue: 'before', value: '2001-01-01', expected: ['12/1/2000'] },
+      { operatorValue: 'onOrBefore', value: '2001-01-01', expected: ['12/1/2000', '1/1/2001'] },
+    ].forEach(({ operatorValue, value, expected }) => {
+      it(`should allow object as value and work with valueGetter, operatorValue: ${operatorValue}`, () => {
         render(
           <TestCase
             value={value}
-            operator={operator}
-            rows={[
-              {
-                id: 3,
-                brand: { date: new Date(2000, 11, 1) },
-              },
-              {
-                id: 4,
-                brand: { date: new Date(2001, 0, 1) },
-              },
-              {
-                id: 5,
-                brand: { date: new Date(2002, 0, 1) },
-              },
-            ]}
-            columns={[
-              {
-                field: 'brand',
-                type: 'date',
-                valueGetter: (params) => params.value.date,
-                valueFormatter: (params) => params.value.toLocaleDateString('en-US'),
-              },
-            ]}
-          />,
-        );
-        expect(getColumnValues()).to.deep.equal(['12/1/2000', '1/1/2001', '1/1/2002']);
-      });
-    });
-
-    [
-      { operator: 'is', value: '2000-12-01', expected: ['12/1/2000'] },
-      { operator: 'not', value: '2000-12-01', expected: ['1/1/2001', '1/1/2002'] },
-      { operator: 'after', value: '2001-01-01', expected: ['1/1/2002'] },
-      { operator: 'onOrAfter', value: '2001-01-01', expected: ['1/1/2001', '1/1/2002'] },
-      { operator: 'before', value: '2001-01-01', expected: ['12/1/2000'] },
-      { operator: 'onOrBefore', value: '2001-01-01', expected: ['12/1/2000', '1/1/2001'] },
-    ].forEach(({ operator, value, expected }) => {
-      it(`should allow object as value and work with valueGetter, operator: ${operator}`, () => {
-        render(
-          <TestCase
-            value={value}
-            operator={operator}
+            operatorValue={operatorValue}
             rows={[
               {
                 id: 3,
@@ -270,12 +270,12 @@ describe('<DataGrid /> - Filter', () => {
 
     [
       {
-        operator: 'is',
+        operatorValue: 'is',
         value: '2000-12-01',
         expected: ['12/1/2000, 12:00:00 AM', '12/1/2000, 8:30:00 AM'],
       },
       {
-        operator: 'not',
+        operatorValue: 'not',
         value: '2000-12-01',
         expected: [
           '1/1/2001, 12:00:00 AM',
@@ -285,12 +285,12 @@ describe('<DataGrid /> - Filter', () => {
         ],
       },
       {
-        operator: 'after',
+        operatorValue: 'after',
         value: '2001-01-01',
         expected: ['1/1/2002, 12:00:00 AM', '1/1/2002, 8:30:00 AM'],
       },
       {
-        operator: 'onOrAfter',
+        operatorValue: 'onOrAfter',
         value: '2001-01-01',
         expected: [
           '1/1/2001, 12:00:00 AM',
@@ -300,12 +300,12 @@ describe('<DataGrid /> - Filter', () => {
         ],
       },
       {
-        operator: 'before',
+        operatorValue: 'before',
         value: '2001-01-01',
         expected: ['12/1/2000, 12:00:00 AM', '12/1/2000, 8:30:00 AM'],
       },
       {
-        operator: 'onOrBefore',
+        operatorValue: 'onOrBefore',
         value: '2001-01-01',
         expected: [
           '12/1/2000, 12:00:00 AM',
@@ -314,12 +314,12 @@ describe('<DataGrid /> - Filter', () => {
           '1/1/2001, 8:30:00 AM',
         ],
       },
-    ].forEach(({ operator, value, expected }) => {
-      it(`should work with dates at different hours, operator ${operator}`, () => {
+    ].forEach(({ operatorValue, value, expected }) => {
+      it(`should work with dates at different hours, operator ${operatorValue}`, () => {
         render(
           <TestCase
             value={value}
-            operator={operator}
+            operatorValue={operatorValue}
             rows={[
               {
                 id: 3,
@@ -363,41 +363,41 @@ describe('<DataGrid /> - Filter', () => {
   describe('dateTime operators', () => {
     [
       {
-        operator: 'is',
+        operatorValue: 'is',
         value: '2000-12-01T08:30',
         expected: ['12/1/2000, 8:30:15 AM'],
       },
       {
-        operator: 'not',
+        operatorValue: 'not',
         value: '2000-12-01T08:30',
         expected: ['1/1/2001, 8:30:15 AM', '1/1/2002, 8:30:15 AM'],
       },
       {
-        operator: 'after',
+        operatorValue: 'after',
         value: '2001-01-01T08:30',
         expected: ['1/1/2002, 8:30:15 AM'],
       },
       {
-        operator: 'onOrAfter',
+        operatorValue: 'onOrAfter',
         value: '2001-01-01T08:30',
         expected: ['1/1/2001, 8:30:15 AM', '1/1/2002, 8:30:15 AM'],
       },
       {
-        operator: 'before',
+        operatorValue: 'before',
         value: '2001-01-01T08:30',
         expected: ['12/1/2000, 8:30:15 AM'],
       },
       {
-        operator: 'onOrBefore',
+        operatorValue: 'onOrBefore',
         value: '2001-01-01T08:30',
         expected: ['12/1/2000, 8:30:15 AM', '1/1/2001, 8:30:15 AM'],
       },
-    ].forEach(({ operator, value, expected }) => {
-      it(`should work correctly with operator=${operator}`, () => {
+    ].forEach(({ operatorValue, value, expected }) => {
+      it(`should work correctly with operatorValue=${operatorValue}`, () => {
         render(
           <TestCase
             value={value}
-            operator={operator}
+            operatorValue={operatorValue}
             rows={[
               {
                 id: 3,
@@ -428,22 +428,22 @@ describe('<DataGrid /> - Filter', () => {
 
   describe('boolean operators', () => {
     it('should allow operator is', () => {
-      const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
+      const { setProps } = render(<TestCase value={'a'} operatorValue={'contains'} />);
       setProps({
         field: 'isPublished',
-        operator: 'is',
+        operatorValue: 'is',
         value: 'false',
       });
       expect(getColumnValues()).to.deep.equal(['Nike']);
       setProps({
         field: 'isPublished',
-        operator: 'is',
+        operatorValue: 'is',
         value: 'true',
       });
       expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
       setProps({
         field: 'isPublished',
-        operator: 'is',
+        operatorValue: 'is',
         value: '',
       });
       expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
@@ -451,7 +451,7 @@ describe('<DataGrid /> - Filter', () => {
   });
 
   it('should support new dataset', () => {
-    const { setProps } = render(<TestCase value={'a'} operator={'contains'} />);
+    const { setProps } = render(<TestCase value={'a'} operatorValue={'contains'} />);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
     setProps({
       rows: [
