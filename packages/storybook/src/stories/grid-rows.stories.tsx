@@ -1,3 +1,4 @@
+import { DataGrid } from '@material-ui/data-grid';
 import * as React from 'react';
 import Alert from '@material-ui/lab/Alert';
 import Typography from '@material-ui/core/Typography';
@@ -918,3 +919,9 @@ export function SwitchVirtualization() {
     </div>
   );
 }
+
+export const ZeroHeightGrid = () => (
+  <div style={{ width: 300, height: 0 }}>
+    <DataGrid {...baselineProps} />
+  </div>
+);

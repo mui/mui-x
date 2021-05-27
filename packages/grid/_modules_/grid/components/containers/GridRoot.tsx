@@ -1,7 +1,8 @@
-import { useForkRef } from '@material-ui/core/utils';
 import * as React from 'react';
 import clsx from 'clsx';
-import { GridPropsContext } from '../../GridComponent';
+import { useForkRef } from '@material-ui/core/utils';
+import { NoSsr } from '@material-ui/core';
+import { GridPropsContext } from '../../context/GridPropsContext';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridRootContainerRef } from '../../models/gridRootContainerRef';
 import { useStyles } from './GridRootStyles';
@@ -9,7 +10,6 @@ import { visibleGridColumnsLengthSelector } from '../../hooks/features/columns/g
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { useGridState } from '../../hooks/features/core/useGridState';
 import { GridApiContext } from '../GridApiContext';
-import { NoSsr } from '@material-ui/core';
 
 export type GridRootProps = React.HTMLAttributes<HTMLDivElement>;
 

@@ -14,7 +14,17 @@ export function useResizeContainer(apiRef) {
   const gridLogger = useLogger('useResizeContainer');
   const { autoHeight } = useGridSelector(apiRef, optionsSelector);
   const options = useGridSelector(apiRef, optionsSelector);
-
+  const warningShown = React.useRef(false);
+  console.warn(
+    [
+      'The parent of the grid has an empty height.',
+      'You need to make sure the container has an intrinsic height.',
+      'The grid displays with a height of 0px.',
+      '',
+      'You can find a solution in the docs:',
+      'https://material-ui.com/components/data-grid/rendering/#layout',
+    ].join('\n'),
+  );
   const resizeFn = React.useCallback(() => {
     gridLogger.debug(`resizing...`);
 
@@ -32,7 +42,7 @@ export function useResizeContainer(apiRef) {
     (size: ElementSize) => {
       // jsdom has no layout capabilities
       const isJSDOM = /jsdom/.test(window.navigator.userAgent);
-      if (size.height === 0 && !autoHeight && !isJSDOM) {
+      if (size.height === 0 && !warningShown.current && !autoHeight && !isJSDOM) {
         gridLogger.warn(
           [
             'The parent of the grid has an empty height.',
@@ -43,8 +53,9 @@ export function useResizeContainer(apiRef) {
             'https://material-ui.com/components/data-grid/rendering/#layout',
           ].join('\n'),
         );
+        warningShown.current = true;
       }
-      if (size.width === 0 && !isJSDOM) {
+      if (size.width === 0 && !warningShown.current && !isJSDOM) {
         gridLogger.warn(
           [
             'The parent of the grid has an empty width.',
@@ -55,6 +66,7 @@ export function useResizeContainer(apiRef) {
             'https://material-ui.com/components/data-grid/rendering/#layout',
           ].join('\n'),
         );
+        warningShown.current = true;
       }
 
       if (isTestEnvironment) {

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridMainContainer } from './components/containers/GridMainContainer';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { GridApiContext } from './components/GridApiContext';
-import { GridPropsContext } from './GridComponent';
+import { GridPropsContext } from './context/GridPropsContext';
 import { useGridState } from './hooks/features/core/useGridState';
 import { useLogger } from './hooks/utils/useLogger';
 

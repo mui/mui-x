@@ -7,7 +7,7 @@ import { GridApiContext } from './components/GridApiContext';
 import { GridAutoSizer } from './components/GridAutoSizer';
 import { GridViewport } from './components/GridViewport';
 import { Watermark } from './components/Watermark';
-import { GridPropsContext } from './GridComponent';
+import { GridPropsContext } from './context/GridPropsContext';
 import { useGridSelector } from './hooks/features/core/useGridSelector';
 import { visibleGridRowCountSelector } from './hooks/features/filter/gridFilterSelector';
 import { gridRowCountSelector } from './hooks/features/rows/gridRowsSelector';
