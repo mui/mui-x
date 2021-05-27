@@ -9,12 +9,10 @@ import { useGridSelector } from '../features/core/useGridSelector';
 import { optionsSelector } from './optionsSelector';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
-// jsdom has no layout capabilities
-const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 export function useResizeContainer(apiRef) {
   const gridLogger = useLogger('useResizeContainer');
-  const {autoHeight} = useGridSelector(apiRef, optionsSelector);
+  const { autoHeight } = useGridSelector(apiRef, optionsSelector);
   const options = useGridSelector(apiRef, optionsSelector);
   const warningShown = React.useRef(false);
 
@@ -26,13 +24,16 @@ export function useResizeContainer(apiRef) {
     });
   }, [apiRef, gridLogger]);
 
-  const eventsApi: GridEventsApi = {resize: resizeFn};
+  const eventsApi: GridEventsApi = { resize: resizeFn };
   useGridApiMethod(apiRef, eventsApi, 'GridEventsApi');
 
   const debounceResize = React.useMemo(() => debounce(resizeFn, 60), [resizeFn]);
 
   const handleResize = React.useCallback(
     (size: ElementSize) => {
+      // jsdom has no layout capabilities
+      const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
       if (size.height === 0 && !warningShown.current && !autoHeight && !isJSDOM) {
         gridLogger.warn(
           [
