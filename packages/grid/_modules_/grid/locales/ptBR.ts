@@ -4,7 +4,6 @@ import { getGridLocalization, Localization } from '../utils';
 
 const ptBRGrid: Partial<GridLocaleText> = {
   // Root
-  rootGridLabel: 'Grade',
   noRowsLabel: 'Nenhuma linha',
   noResultsOverlayLabel: 'Nenhum resultado encontrado.',
   errorOverlayDefaultLabel: 'Ocorreu um erro.',
