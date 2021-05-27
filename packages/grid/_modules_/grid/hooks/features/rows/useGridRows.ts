@@ -34,10 +34,14 @@ export function convertGridRowsPropToState(
   rows: GridRowsProp,
   totalRowCount?: number,
   rowIdGetter?: GridRowIdGetter,
+  pagination?: boolean,
 ): InternalGridRowsState {
   const numberOfRows = totalRowCount && totalRowCount > rows.length ? totalRowCount : rows.length;
+  const initialRowState = pagination
+    ? getInitialGridRowState()
+    : getInitialGridRowState(numberOfRows);
   const state: InternalGridRowsState = {
-    ...getInitialGridRowState(numberOfRows),
+    ...initialRowState,
     totalRowCount: numberOfRows,
   };
 
@@ -87,6 +91,7 @@ export const useGridRows = (
         rows,
         state.options.rowCount,
         getRowIdProp,
+        state.options.pagination,
       );
       return { ...state, rows: internalRowsState.current };
     });
