@@ -189,6 +189,45 @@ describe('<DataGrid /> - Filter', () => {
 
   describe('date operators', () => {
     [
+      { operator: 'is', value: '' },
+      { operator: 'is', value: undefined },
+      { operator: '', value: '2000-12-01' },
+      { operator: '', value: '' },
+    ].forEach(({ operator, value }) => {
+      it(`should not filter when operator='${operator}' and value='${value}'`, () => {
+        render(
+          <TestCase
+            value={value}
+            operator={operator}
+            rows={[
+              {
+                id: 3,
+                brand: { date: new Date(2000, 11, 1) },
+              },
+              {
+                id: 4,
+                brand: { date: new Date(2001, 0, 1) },
+              },
+              {
+                id: 5,
+                brand: { date: new Date(2002, 0, 1) },
+              },
+            ]}
+            columns={[
+              {
+                field: 'brand',
+                type: 'date',
+                valueGetter: (params) => params.value.date,
+                valueFormatter: (params) => params.value.toLocaleDateString('en-US'),
+              },
+            ]}
+          />,
+        );
+        expect(getColumnValues()).to.deep.equal(['12/1/2000', '1/1/2001', '1/1/2002']);
+      });
+    });
+
+    [
       { operator: 'is', value: '2000-12-01', expected: ['12/1/2000'] },
       { operator: 'not', value: '2000-12-01', expected: ['1/1/2001', '1/1/2002'] },
       { operator: 'after', value: '2001-01-01', expected: ['1/1/2002'] },
