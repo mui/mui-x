@@ -68,18 +68,4 @@ datagrid.children =
         { pathname: '/components/data-grid/group-pivot', title: '🚧 Group & Pivot' },
       ];
 
-pages[2].children.push({
-  pathname: '/api-docs/data-grid',
-  title: 'Data Grid',
-  children: [
-    { pathname: '/api-docs/data-grid', title: 'API Reference' },
-    { pathname: '/api-docs/data-grid/data-grid' },
-    { pathname: '/api-docs/data-grid/x-grid' },
-    { pathname: '/api-docs/data-grid/grid-api', title: 'GridApi' },
-    { pathname: '/api-docs/data-grid/grid-col-def', title: 'GridColDef' },
-    { pathname: '/api-docs/data-grid/grid-cell-params', title: 'GridCellParams' },
-    { pathname: '/api-docs/data-grid/grid-row-params', title: 'GridRowParams' },
-  ],
-});
-
 export default pages;

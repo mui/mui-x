@@ -3217,9 +3217,9 @@
     prop-types "^15.7.2"
     react-is "^16.8.0 || ^17.0.0"
 
-"@material-ui/monorepo@https://github.com/m4theushw/material-ui.git#generate-docs":
+"@material-ui/monorepo@https://github.com/m4theushw/material-ui.git#prepare-for-data-grid-docs":
   version "4.11.1"
-  resolved "https://github.com/m4theushw/material-ui.git#0b591a59a68116c450f21ae0a408682cd85342a6"
+  resolved "https://github.com/m4theushw/material-ui.git#8e42f12b6db401406f06deff61a6444c17522b33"
 
 "@material-ui/monorepo@https://github.com/mui-org/material-ui.git#next":
   version "5.0.0-alpha.32"
