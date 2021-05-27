@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { GridCellIdentifier } from '../../hooks/features/focus/gridFocusState';
 import {
   GridColumns,
+  GridRowModel,
   GridCellParams,
   GridRowId,
   GridEditRowProps,
@@ -24,6 +25,7 @@ interface RowCellsProps {
   hasScrollY: boolean;
   getCellClassName?: (params: GridCellParams) => string;
   lastColIdx: number;
+  row: GridRowModel;
   rowIndex: number;
   showCellRightBorder: boolean;
   cellFocus: GridCellIdentifier | null;

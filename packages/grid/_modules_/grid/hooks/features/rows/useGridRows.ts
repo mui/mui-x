@@ -35,9 +35,10 @@ export function convertGridRowsPropToState(
   totalRowCount?: number,
   rowIdGetter?: GridRowIdGetter,
 ): InternalGridRowsState {
+  const numberOfRows = totalRowCount && totalRowCount > rows.length ? totalRowCount : rows.length;
   const state: InternalGridRowsState = {
-    ...getInitialGridRowState(totalRowCount),
-    totalRowCount: totalRowCount && totalRowCount > rows.length ? totalRowCount : rows.length,
+    ...getInitialGridRowState(numberOfRows),
+    totalRowCount: numberOfRows,
   };
 
   rows.forEach((rowData, index) => {

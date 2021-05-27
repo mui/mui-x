@@ -54,7 +54,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
         renderState.renderContext.lastRowIdx!,
       );
 
-      return renderedRows.map(([id], idx) => (
+      return renderedRows.map(([id, row], idx) => (
         <GridRow
           className={
             (renderState.renderContext!.firstRowIdx! + idx) % 2 === 0 ? 'Mui-even' : 'Mui-odd'
@@ -79,6 +79,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
           ) : (
             <GridRowCells
               columns={visibleColumns}
+              row={row}
               id={id}
               firstColIdx={renderState.renderContext!.firstColIdx!}
               lastColIdx={renderState.renderContext!.lastColIdx!}
