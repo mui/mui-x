@@ -84,7 +84,7 @@ export const useStyles = makeStyles(
           alignItems: 'center',
           overflow: 'hidden',
         },
-        '& .MuiDataGrid-columnHeader, & .MuiDataGrid-cell & .MuiDataGrid-skeletonCell': {
+        '& .MuiDataGrid-columnHeader, & .MuiDataGrid-cell, & .MuiDataGrid-skeletonCell': {
           WebkitTapHighlightColor: 'transparent',
           lineHeight: null,
           padding: '0 10px',
