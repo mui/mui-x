@@ -28,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
     '& code': {
       color: theme.palette.secondary.main,
     },
+    [theme.breakpoints.down('sm')]: {
+      display: 'none',
+    },
   },
   content: {
     display: 'block',
