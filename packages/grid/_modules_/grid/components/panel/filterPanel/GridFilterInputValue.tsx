@@ -1,5 +1,7 @@
 import * as React from 'react';
 import TextField, { TextFieldProps } from '@material-ui/core/TextField';
+// @ts-expect-error fixed in Material-UI v5, types definitions were added.
+import { unstable_useId as useId } from '@material-ui/core/utils';
 import { GridLoadIcon } from '../../icons/index';
 import { GridFilterInputValueProps } from './GridFilterInputValueProps';
 
@@ -14,6 +16,7 @@ export function GridFilterInputValue(props: GridTypeFilterInputValueProps & Text
   const filterTimeout = React.useRef<any>();
   const [filterValueState, setFilterValueState] = React.useState(item.value || '');
   const [applying, setIsApplying] = React.useState(false);
+  const id = useId();
 
   const onFilterChange = React.useCallback(
     (event) => {
@@ -43,6 +46,7 @@ export function GridFilterInputValue(props: GridTypeFilterInputValueProps & Text
 
   return (
     <TextField
+      id={id}
       label={apiRef.current.getLocaleText('filterPanelInputLabel')}
       placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
       value={filterValueState}

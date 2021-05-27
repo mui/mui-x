@@ -36,7 +36,7 @@ describe('<DataGrid /> - Filter', () => {
     rows?: any[];
     columns?: any[];
     operator?: string;
-    value?: string;
+    value?: any;
     field?: string;
   }) => {
     const { operator, value, rows, columns, field = 'brand' } = props;
@@ -331,7 +331,7 @@ describe('<DataGrid /> - Filter', () => {
               },
               {
                 id: 5,
-                brand: new Date(2001, 0, 1), // -> 1/1/2001, 12:00:00 AM
+                brand: new Date(2001, 0, 1), // 1/1/2001, 12:00:00 AM
               },
               {
                 id: 6,
@@ -339,7 +339,7 @@ describe('<DataGrid /> - Filter', () => {
               },
               {
                 id: 7,
-                brand: new Date(2002, 0, 1), // -> 1/1/2002, 12:00:00 AM
+                brand: new Date(2002, 0, 1), // 1/1/2002, 12:00:00 AM
               },
               {
                 id: 8,
