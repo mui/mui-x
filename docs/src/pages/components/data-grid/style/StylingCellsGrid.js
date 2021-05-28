@@ -12,15 +12,11 @@ const columns = [
     field: 'score',
     type: 'number',
     width: 140,
-    cellClassName: (params) => {
-      const cellClass = clsx('super-app', {
+    cellClassName: (params) =>
+      clsx('super-app', {
         negative: params.value < 0,
         positive: params.value > 0,
-      });
-
-      console.log(cellClass);
-      return cellClass;
-    },
+      }),
   },
 ];
 
