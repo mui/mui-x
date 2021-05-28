@@ -11,6 +11,14 @@ _May 28, 2021_
 
 Big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
+- ✅ Add `getCellClassName` prop (#1687) @m4theushw
+- 🇨🇿 Czech (csCZ) locale + Sloval plural rules fix (#1765) @Haaxor1689
+- ⚡️ Remove `cellClassRules` from `GridColDef` (#1716) @m4theushw
+- 🐞 Fix date operators with date-time values (#1722) @m4theushw
+- 🐞 Fix pagination regressions issues (#1729) @ZeeshanTamboli
+- 🐞 Fix onFilterModelChange not firing (#1706) @dtassone
+- 🐞 More bugfixes
+
 #### Breaking changes
 
 - [DataGrid] Rename the grid toolbar components for consistency
