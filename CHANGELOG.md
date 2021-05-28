@@ -7,18 +7,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _May 28, 2021_
 
-### @material-ui/x-grid@v4.0.0-alpha.30 / @material-ui/data-grid@v4.0.0-alpha.30
-
 Big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
-- ✅ Add `getCellClassName` prop (#1687) @m4theushw
-- 🇨🇿 Czech (csCZ) locale + Sloval plural rules fix (#1765) @Haaxor1689
+- 💅 Add `getCellClassName` prop (#1687) @m4theushw
+- 🇨🇿 Add csCZ locale (#1765) @Haaxor1689
 - ⚡️ Remove `cellClassRules` from `GridColDef` (#1716) @m4theushw
-- 🐞 Fix date operators with date-time values (#1722) @m4theushw
-- 🐞 Fix pagination regressions issues (#1729) @ZeeshanTamboli
-- 🐞 Fix onFilterModelChange not firing (#1706) @dtassone
-- 🐞 More bugfixes
-
+- 🐛 Fix a regression in the controlled pagination (#1729) @ZeeshanTamboli
+- 🐞 Bugfixes
+### @material-ui/x-grid@v4.0.0-alpha.30 / @material-ui/data-grid@v4.0.0-alpha.30
 #### Breaking changes
 
 - [DataGrid] Rename the grid toolbar components for consistency
@@ -26,10 +22,16 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 ```diff
 -<MuiDataGridFilterToolbarButton />
 +<MuiDataGridToolbarFilterButton />
+```
+```diff
 -<GridColumnsToolbarButton />
 +<GridToolbarColumnsButton />
+```
+```diff
 -<GridFilterToolbarButton />
 +<GridToolbarFilterButton />
+```
+```diff
 -<GridDensitySelector />
 +<GridToolbarDensitySelector />
 ```
@@ -76,13 +78,13 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 - [DataGrid] Add `getCellClassName` prop (#1687) @m4theushw
 - [DataGrid] Add customisable `aria-label`, `aria-labelledby` field (#1764) @ZeeshanTamboli
-- [DataGrid] Czech (csCZ) locale + Sloval plural rules fix (#1765) @Haaxor1689
+- [DataGrid] Add Czech (csCZ) locale and fix plural rules in Slovak (skSK) (#1765) locale @Haaxor1689
 - [DataGrid] Fix `onPageChange` doesn't update the `page` when a pagination button is clicked (#1719) @ZeeshanTamboli
 - [DataGrid] Fix cell accessibility aria-colindex (#1669) @ZeeshanTamboli
 - [DataGrid] Fix changing rows per page size (#1729) @ZeeshanTamboli
 - [DataGrid] Fix date operators not working with date-time values (#1722) @m4theushw
 - [DataGrid] Fix rowCount prop updates (#1697) @dtassone
-- [DataGrid] Improve deDe translation of \"errorOverlayDefaultLabel\" (#1718) @sebastianfrey
+- [DataGrid] Improve German (deDe) translation of "errorOverlayDefaultLabel" (#1718) @sebastianfrey
 - [DataGrid] Remove `cellClassRules` from `GridColDef` (#1716) @m4theushw
 - [DataGrid] Rename toolbar components for consistency (#1724) @DanailH
 - [DataGrid] Replace ids with scalable values (#1727) @m4theushw
@@ -100,7 +102,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 - [core] Batch updates of storybook (#1751) @oliviertassinari
 - [core] Help support different documents (#1754) @oliviertassinari
-- [core] upgrade material ui core v5 to latest version (#1763) @ZeeshanTamboli
+- [core] Upgrade Material-UI core v5 to latest version (#1763) @ZeeshanTamboli
 - [test] Reduce flakiness (#1753) @oliviertassinari
 - [test] Remove skip on Edge (#1708) @m4theushw
 
