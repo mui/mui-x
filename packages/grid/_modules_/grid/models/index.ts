@@ -14,6 +14,7 @@ export * from './gridSortModel';
 export * from './params';
 export * from './gridCellClass';
 export * from './gridCell';
+export * from './gridColumnHeaderClass';
 export * from './api';
 export * from './gridIconSlotsComponent';
 export * from './gridSlotsComponent';

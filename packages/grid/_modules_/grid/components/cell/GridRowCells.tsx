@@ -66,7 +66,7 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
     const cellParams: GridCellParams = apiRef!.current.getCellParams(id, column.field);
 
     const classNames = [cellClassName];
-
+    // TODO: steal
     if (column.cellClassName) {
       classNames.push(
         clsx(
