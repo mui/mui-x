@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Sorting
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Sorting
@@ -83,3 +82,8 @@ The grid exposes a set of methods that enables all of these features using the i
 - `getSortModel`: Get the sort model currently applied to the grid.
 - `setSortModel`: Set the sort model and trigger the sorting of rows.
 - `onSortModelChange`: Callback fired when the column sorting changed before the grid has sorted its rows.
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid)
+- [XGrid](/api/data-grid/x-grid)

@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Editing
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Editing
@@ -140,3 +139,8 @@ The demo shows how to catch the start & end edit events to log which cell is edi
 
 Row editing allows to edit all the cells of a row at once.
 The edition can be performed directly in the cells or in a popup or a modal.
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid)
+- [XGrid](/api/data-grid/x-grid)

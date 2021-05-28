@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Layout
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Layout
@@ -34,3 +33,8 @@ This means that the number of rows will drive the height of the grid and consequ
 > ⚠️ This is not recommended for large datasets as row virtualization will not be able to improve performance by limiting the number of elements rendered in the DOM.
 
 {{"demo": "pages/components/data-grid/layout/AutoHeightGrid.js", "bg": "inline"}}
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid)
+- [XGrid](/api/data-grid/x-grid)

@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Export
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Export
@@ -38,3 +37,8 @@ You will be able to export the displayed data to Excel with an API call, or usin
 > 👍 Upvote [issue #199](https://github.com/mui-org/material-ui-x/issues/199) if you want to see it land faster.
 
 You will be able to copy and paste items to and from the grid using the system clipboard.
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid)
+- [XGrid](/api/data-grid/x-grid)

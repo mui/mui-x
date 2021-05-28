@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Events
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Events [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
@@ -33,3 +32,8 @@ The following demo shows how to subcribe to the `columnResize` event. Try it by 
 ## Catalog of events
 
 {{"demo": "pages/components/data-grid/events/CatalogOfEvents.js", "bg": "inline", "hideToolbar": true}}
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid)
+- [XGrid](/api/data-grid/x-grid)

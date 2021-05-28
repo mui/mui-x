@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Styling
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Styling
@@ -120,3 +119,8 @@ Choose between one of the following values: 'left' | 'right' | 'center'.
 The following demo leverages the CSS customization API to match the Ant Design specification.
 
 {{"demo": "pages/components/data-grid/style/AntDesignGrid.js", "defaultCodeOpen": false}}
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid)
+- [XGrid](/api/data-grid/x-grid)

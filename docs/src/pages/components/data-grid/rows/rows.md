@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Rows
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Rows
@@ -85,3 +84,8 @@ This is very close to the "row spanning" in an HTML `<table>`.
 > 👍 Upvote [issue #206](https://github.com/mui-org/material-ui-x/issues/206) if you want to see it land faster.
 
 Row reorder is used to rearrange rows by dragging the row with the mouse.
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid)
+- [XGrid](/api/data-grid/x-grid)

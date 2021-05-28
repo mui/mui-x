@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Paging
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Pagination
@@ -74,3 +73,8 @@ The grid exposes a set of methods that enables all of these features using the i
 Below is an example of how you can reset the page using the imperative `setPage` method.
 
 {{"demo": "pages/components/data-grid/pagination/ApiRefPaginationGrid.js", "bg": "inline", "disableAd": true}}
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid)
+- [XGrid](/api/data-grid/x-grid)

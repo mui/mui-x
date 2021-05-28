@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Filtering
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Filtering
@@ -171,3 +170,8 @@ const filterModel: GridFilterModel = {
 
 In addition to the column specific filtering, a global quick filtering will also be available.
 The provided search text will match against all the cells.
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid)
+- [XGrid](/api/data-grid/x-grid)

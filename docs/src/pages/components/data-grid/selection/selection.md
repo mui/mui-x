@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Selection
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Selection
@@ -79,3 +78,8 @@ The grid exposes a set of methods that enables all of these features using the i
 > 👍 Upvote [issue #208](https://github.com/mui-org/material-ui-x/issues/208) if you want to see it land faster.
 
 With this feature, you will be able to select ranges of cells across the Grid.
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid)
+- [XGrid](/api/data-grid/x-grid)

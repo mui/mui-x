@@ -1,6 +1,5 @@
 ---
 title: React Data Grid component
-components: DataGrid, XGrid
 ---
 
 # Data Grid
@@ -101,3 +100,8 @@ Here are some resources you might be interested in to learn more about the grid:
 - The [Material Design specification](https://material.io/design/components/data-tables.html) specification
 - The accessibility [WAI-ARIA authoring practices](https://www.w3.org/TR/wai-aria-practices/#grid)
 - The [Sketch](https://material-ui.com/store/items/sketch-react/) and [Figma](https://material-ui.com/store/items/figma-react/) design assets
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid)
+- [XGrid](/api/data-grid/x-grid)
