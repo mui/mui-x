@@ -11,7 +11,7 @@ components: DataGrid, XGrid
 
 The `GridColDef` type has properties to apply class names and custom CSS on the header.
 
-- `headerClassName`: to apply class names into the column header.
+- `headerClassName`: to apply class names into the column header. It can also be a function, which is called with a `GridColumnHeaderParams` object.
 - `headerAlign`: to align the content of the header. It must be 'left' | 'right' | 'center'.
 
 ```tsx
