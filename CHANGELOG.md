@@ -14,10 +14,12 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - ⚡️ Remove `cellClassRules` from `GridColDef` (#1716) @m4theushw
 - 🐛 Fix a regression in the controlled pagination (#1729) @ZeeshanTamboli
 - 🐞 Bugfixes
+
 ### @material-ui/x-grid@v4.0.0-alpha.30 / @material-ui/data-grid@v4.0.0-alpha.30
+
 #### Breaking changes
 
-- [DataGrid] Rename the grid toolbar components for consistency
+- [DataGrid] Rename toolbar components for consistency (#1724) @DanailH
 
 ```diff
 -<MuiDataGridFilterToolbarButton />
@@ -36,7 +38,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 +<GridToolbarDensitySelector />
 ```
 
-- [DataGrid] The `GridCellClassParams` type is not exported anymore. Replace it with `GridCellParams`.
+- [DataGrid] The `GridCellClassParams` type is not exported anymore. Replace it with `GridCellParams`. (#1716) @m4theushw
   
 ```diff
 -import { GridCellClassParams} from '@material-ui/data-grid';
@@ -45,7 +47,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 +cellClassName: (params: GridCellParams) =>
 ```
 
-- [DataGrid] The `cellClassRules` in `GridColDef` was removed because it's redundant.
+- [DataGrid] Remove `cellClassRules` from `GridColDef` (#1716) @m4theushw
 
   The same functionality can be obtained using `cellClassName` and the `clsx` utility:
   
@@ -60,14 +62,15 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 +  positive: params.value > 0,
 +}),
  ```
-- Fix naming of `pageChange`and `pageSizeChange` events variables:
+
+- [DataGrid] Fix `onPageChange` doesn't update the `page` when a pagination button is clicked (#1719) @ZeeshanTamboli
 
 ```diff
 -import { GRID_PAGESIZE_CHANGED, GRID_PAGE_CHANGED } from '@material-ui/data-grid';
 +import { GRID_PAGESIZE_CHANGE, GRID_PAGE_CHANGE } from '@material-ui/data-grid';
 ``` 
 
-- [XGrid] The `getEditCellValueParams` method was removed from the `apiRef`. Use `getEditCellPropsParams` instead.
+- [XGrid] The `getEditCellValueParams` method was removed from the `apiRef`. Use `getEditCellPropsParams` instead.  (#1767) @m4theushw
 
 ```diff
 -const { value } = apiRef.current.getEditCellValueParams(id, field);
@@ -79,14 +82,11 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [DataGrid] Add `getCellClassName` prop (#1687) @m4theushw
 - [DataGrid] Add customisable `aria-label`, `aria-labelledby` field (#1764) @ZeeshanTamboli
 - [DataGrid] Add Czech (csCZ) locale and fix plural rules in Slovak (skSK) (#1765) locale @Haaxor1689
-- [DataGrid] Fix `onPageChange` doesn't update the `page` when a pagination button is clicked (#1719) @ZeeshanTamboli
 - [DataGrid] Fix cell accessibility aria-colindex (#1669) @ZeeshanTamboli
 - [DataGrid] Fix changing rows per page size (#1729) @ZeeshanTamboli
 - [DataGrid] Fix date operators not working with date-time values (#1722) @m4theushw
 - [DataGrid] Fix rowCount prop updates (#1697) @dtassone
 - [DataGrid] Improve German (deDe) translation of "errorOverlayDefaultLabel" (#1718) @sebastianfrey
-- [DataGrid] Remove `cellClassRules` from `GridColDef` (#1716) @m4theushw
-- [DataGrid] Rename toolbar components for consistency (#1724) @DanailH
 - [DataGrid] Replace ids with scalable values (#1727) @m4theushw
 - [DataGrid] Undefined issue fix (#1731) @visshaljagtap
 - [XGrid] Fix onFilterModelChange not firing (#1706) @dtassone
