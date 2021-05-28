@@ -91,8 +91,6 @@ describe('<DataGrid /> - Filter', () => {
   });
 
   [
-    { operatorValue: 'is', value: '' },
-    { operatorValue: 'is', value: undefined },
     { operatorValue: '', value: '2000-12-01' },
     { operatorValue: '', value: '' },
   ].forEach(({ operatorValue, value }) => {
@@ -227,6 +225,78 @@ describe('<DataGrid /> - Filter', () => {
   });
 
   describe('date operators', () => {
+    [
+      { operatorValue: 'is', value: '' },
+      { operatorValue: 'is', value: undefined },
+    ].forEach(({ operatorValue, value }) => {
+      it(`should not filter when operatorValue='${operatorValue}' and value='${value}'`, () => {
+        render(
+          <TestCase
+            value={value}
+            operatorValue={operatorValue}
+            rows={[
+              {
+                id: 3,
+                brand: { date: new Date(2000, 11, 1) },
+              },
+              {
+                id: 4,
+                brand: { date: new Date(2001, 0, 1) },
+              },
+              {
+                id: 5,
+                brand: { date: new Date(2002, 0, 1) },
+              },
+            ]}
+            columns={[
+              {
+                field: 'brand',
+                type: 'date',
+                valueGetter: (params) => params.value.date,
+                valueFormatter: (params) => params.value.toLocaleDateString('en-US'),
+              },
+            ]}
+          />,
+        );
+        expect(getColumnValues()).to.deep.equal(['12/1/2000', '1/1/2001', '1/1/2002']);
+      });
+    });
+
+    it('should filter out rows with invalid values', () => {
+      render(
+        <TestCase
+          value={'2001-01-01'}
+          operatorValue={'before'}
+          rows={[
+            {
+              id: 3,
+              brand: { date: new Date(2000, 11, 1) },
+            },
+            {
+              id: 4,
+              brand: { date: '' },
+            },
+            {
+              id: 5,
+              brand: { date: null },
+            },
+          ]}
+          columns={[
+            {
+              field: 'brand',
+              type: 'date',
+              valueGetter: (params) => params.value.date,
+              valueFormatter: (params) =>
+                params.value instanceof Date
+                  ? params.value.toLocaleDateString('en-US')
+                  : params.value,
+            },
+          ]}
+        />,
+      );
+      expect(getColumnValues()).to.deep.equal(['12/1/2000']);
+    });
+
     [
       { operatorValue: 'is', value: '2000-12-01', expected: ['12/1/2000'] },
       { operatorValue: 'not', value: '2000-12-01', expected: ['1/1/2001', '1/1/2002'] },
