@@ -95,7 +95,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [DataGrid] Fix date operators not working with date-time values (#1722) @m4theushw
 - [DataGrid] Fix rowCount prop updates (#1697) @dtassone
 - [DataGrid] Improve German (deDe) translation of "errorOverlayDefaultLabel" (#1718) @sebastianfrey
-- [DataGrid] Replace ids with scalable values (#1727) @m4theushw
+- [DataGrid] Fix accessibility of the filter panel textboxes (#1727) @m4theushw
 - [DataGrid] Undefined issue fix (#1731) @visshaljagtap
 - [XGrid] Fix onFilterModelChange not firing (#1706) @dtassone
 
