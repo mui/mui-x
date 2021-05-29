@@ -55,16 +55,20 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
   The `cellClassRules` in `GridColDef` was removed because it's redundant. The same functionality can be obtained using `cellClassName` and the [`clsx`](https://www.npmjs.com/package/clsx) utility:
 
   ```diff
-  -cellClassRules: {
-  -  negative: params => params.value < 0,
-  -  positive: params => params.value > 0,
-  -},
   +import clsx from 'clsx';
-  +
-  +cellClassName: params => clsx({
-  +  negative: params.value < 0,
-  +  positive: params.value > 0,
-  +}),
+
+   {
+     field: 'age',
+     width: 150,
+  -  cellClassRules: {
+  -    negative: params => params.value < 0,
+  -    positive: params => params.value > 0,
+  -  },
+  +  cellClassName: params => clsx({
+  +    negative: params.value < 0,
+  +    positive: params.value > 0,
+  +  }),
+   }
   ```
 
 - [DataGrid] Fix `onPageChange` doesn't update the `page` when a pagination button is clicked (#1719) @ZeeshanTamboli
