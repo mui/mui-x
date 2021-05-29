@@ -52,7 +52,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
   +cellClassName: (params: GridCellParams) =>
   ```
 
-  The `cellClassRules` in `GridColDef` was removed because it's redundant. The same functionality can be obtained using `cellClassName` and the `clsx` utility:
+  The `cellClassRules` in `GridColDef` was removed because it's redundant. The same functionality can be obtained using `cellClassName` and the [`clsx`](https://www.npmjs.com/package/clsx) utility:
 
   ```diff
   -cellClassRules: {
