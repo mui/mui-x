@@ -69,12 +69,16 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 - [DataGrid] Fix `onPageChange` doesn't update the `page` when a pagination button is clicked (#1719) @ZeeshanTamboli
 
+  Fix naming of `pageChange` and `pageSizeChange` events variables:
+
   ```diff
   -import { GRID_PAGESIZE_CHANGED, GRID_PAGE_CHANGED } from '@material-ui/data-grid';
   +import { GRID_PAGESIZE_CHANGE, GRID_PAGE_CHANGE } from '@material-ui/data-grid';
   ```
 
-- [XGrid] The `getEditCellValueParams` method was removed from the `apiRef`. Use `getEditCellPropsParams` instead.  (#1767) @m4theushw
+- [XGrid] The `getEditCellValueParams` method was removed from the `apiRef` (#1767) @m4theushw
+
+  The method was almost a straightforward alias of `getEditCellPropsParams`.
 
   ```diff
   -const { value } = apiRef.current.getEditCellValueParams(id, field);
