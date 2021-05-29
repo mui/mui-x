@@ -10,9 +10,9 @@ _May 31, 2021_
 Big thanks to the 8 contributors who made this release possible. Here are some highlights ✨:
 
 - 💅 Add `getCellClassName` prop (#1687) @m4theushw
-- 🇨🇿 Add csCZ locale (#1765) @Haaxor1689
-- ⚡️ Remove `cellClassRules` from `GridColDef` (#1716) @m4theushw
 - 🐛 Fix a regression in the controlled pagination (#1729) @ZeeshanTamboli
+- ⚡️ Remove `cellClassRules` from `GridColDef` (#1716) @m4theushw
+- 🇨🇿 Add csCZ locale (#1765) @Haaxor1689
 - 🐞 Bugfixes
 
 ### @material-ui/x-grid@v4.0.0-alpha.30 / @material-ui/data-grid@v4.0.0-alpha.30
