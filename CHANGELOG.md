@@ -40,18 +40,19 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
   +<GridToolbarDensitySelector />
   ```
 
-- [DataGrid] The `GridCellClassParams` type is not exported anymore. Replace it with `GridCellParams`. (#1716) @m4theushw
+- [DataGrid] Remove cellClassRules from GridColDef (#1716) @m4theushw
+
+  The `GridCellClassParams` type is not exported anymore. Replace it with `GridCellParams`.
 
   ```diff
   -import { GridCellClassParams} from '@material-ui/data-grid';
-  -cellClassName: (params: GridCellClassParams) =>
   +import { GridCellParams } from '@material-ui/data-grid';
+
+  -cellClassName: (params: GridCellClassParams) =>
   +cellClassName: (params: GridCellParams) =>
   ```
 
-- [DataGrid] Remove `cellClassRules` from `GridColDef` (#1716) @m4theushw
-
-  The same functionality can be obtained using `cellClassName` and the `clsx` utility:
+  The `cellClassRules` in `GridColDef` was removed because it's redundant. The same functionality can be obtained using `cellClassName` and the `clsx` utility:
 
   ```diff
   -cellClassRules: {
@@ -59,6 +60,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
   -  positive: params => params.value > 0,
   -},
   +import clsx from 'clsx';
+  +
   +cellClassName: params => clsx({
   +  negative: params.value < 0,
   +  positive: params.value > 0,
