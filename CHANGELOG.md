@@ -21,61 +21,61 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 - [DataGrid] Rename toolbar components for consistency (#1724) @DanailH
 
-```diff
--<MuiDataGridFilterToolbarButton />
-+<MuiDataGridToolbarFilterButton />
-```
-```diff
--<GridColumnsToolbarButton />
-+<GridToolbarColumnsButton />
-```
-```diff
--<GridFilterToolbarButton />
-+<GridToolbarFilterButton />
-```
-```diff
--<GridDensitySelector />
-+<GridToolbarDensitySelector />
-```
+  ```diff
+  -<MuiDataGridFilterToolbarButton />
+  +<MuiDataGridToolbarFilterButton />
+  ```
+  ```diff
+  -<GridColumnsToolbarButton />
+  +<GridToolbarColumnsButton />
+  ```
+  ```diff
+  -<GridFilterToolbarButton />
+  +<GridToolbarFilterButton />
+  ```
+  ```diff
+  -<GridDensitySelector />
+  +<GridToolbarDensitySelector />
+  ```
 
 - [DataGrid] The `GridCellClassParams` type is not exported anymore. Replace it with `GridCellParams`. (#1716) @m4theushw
-  
-```diff
--import { GridCellClassParams} from '@material-ui/data-grid';
--cellClassName: (params: GridCellClassParams) =>
-+import { GridCellParams } from '@material-ui/data-grid';
-+cellClassName: (params: GridCellParams) =>
-```
+
+  ```diff
+  -import { GridCellClassParams} from '@material-ui/data-grid';
+  -cellClassName: (params: GridCellClassParams) =>
+  +import { GridCellParams } from '@material-ui/data-grid';
+  +cellClassName: (params: GridCellParams) =>
+  ```
 
 - [DataGrid] Remove `cellClassRules` from `GridColDef` (#1716) @m4theushw
 
   The same functionality can be obtained using `cellClassName` and the `clsx` utility:
-  
-```diff
--cellClassRules: {
--  negative: params => params.value < 0,
--  positive: params => params.value > 0,
--},
-+import clsx from 'clsx';
-+cellClassName: params => clsx({
-+  negative: params.value < 0,
-+  positive: params.value > 0,
-+}),
- ```
+
+  ```diff
+  -cellClassRules: {
+  -  negative: params => params.value < 0,
+  -  positive: params => params.value > 0,
+  -},
+  +import clsx from 'clsx';
+  +cellClassName: params => clsx({
+  +  negative: params.value < 0,
+  +  positive: params.value > 0,
+  +}),
+  ```
 
 - [DataGrid] Fix `onPageChange` doesn't update the `page` when a pagination button is clicked (#1719) @ZeeshanTamboli
 
-```diff
--import { GRID_PAGESIZE_CHANGED, GRID_PAGE_CHANGED } from '@material-ui/data-grid';
-+import { GRID_PAGESIZE_CHANGE, GRID_PAGE_CHANGE } from '@material-ui/data-grid';
-``` 
+  ```diff
+  -import { GRID_PAGESIZE_CHANGED, GRID_PAGE_CHANGED } from '@material-ui/data-grid';
+  +import { GRID_PAGESIZE_CHANGE, GRID_PAGE_CHANGE } from '@material-ui/data-grid';
+  ```
 
 - [XGrid] The `getEditCellValueParams` method was removed from the `apiRef`. Use `getEditCellPropsParams` instead.  (#1767) @m4theushw
 
-```diff
--const { value } = apiRef.current.getEditCellValueParams(id, field);
-+const { props: { value } } = apiRef.current.getEditCellPropsParams(id, field);
-```
+  ```diff
+  -const { value } = apiRef.current.getEditCellValueParams(id, field);
+  +const { props: { value } } = apiRef.current.getEditCellPropsParams(id, field);
+  ```
 
 #### Changes
 
