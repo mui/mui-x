@@ -81,7 +81,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 - [DataGrid] Add `getCellClassName` prop (#1687) @m4theushw
 - [DataGrid] Add customisable `aria-label`, `aria-labelledby` field (#1764) @ZeeshanTamboli
-- [DataGrid] Add Czech (csCZ) locale and fix plural rules in Slovak (skSK) (#1765) locale @Haaxor1689
+- [DataGrid] Add Czech (csCZ) locale and fix plural rules in Slovak (skSK) locale (#1765) @Haaxor1689
 - [DataGrid] Fix cell accessibility aria-colindex (#1669) @ZeeshanTamboli
 - [DataGrid] Fix changing rows per page size (#1729) @ZeeshanTamboli
 - [DataGrid] Fix date operators not working with date-time values (#1722) @m4theushw
