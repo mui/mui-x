@@ -78,7 +78,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 - [XGrid] The `getEditCellValueParams` method was removed from the `apiRef` (#1767) @m4theushw
 
-  The method was almost a straightforward alias of `getEditCellPropsParams`.
+  The `getEditCellValueParams` method was almost a straightforward alias of `getEditCellPropsParams`.
 
   ```diff
   -const { value } = apiRef.current.getEditCellValueParams(id, field);
