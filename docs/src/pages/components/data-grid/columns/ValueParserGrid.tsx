@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridValueFormatterParams } from '@material-ui/data-grid';
+import { DataGrid, GridCellValue } from '@material-ui/data-grid';
 
 const rows = [
   {
@@ -16,7 +16,7 @@ const rows = [
   },
 ];
 
-export default function ValueFormatterGrid() {
+export default function ValueParserGrid() {
   return (
     <div style={{ height: 300, width: '100%' }}>
       <DataGrid
@@ -27,8 +27,8 @@ export default function ValueFormatterGrid() {
             field: 'date',
             headerName: 'Year',
             width: 150,
-            valueFormatter: (params: GridValueFormatterParams) =>
-              (params.value as Date).getFullYear(),
+            valueFormatter: (params) => (params.value as Date).getFullYear(),
+            valueParser: (value: GridCellValue) => new Date(Number(value), 0, 1),
           },
         ]}
       />

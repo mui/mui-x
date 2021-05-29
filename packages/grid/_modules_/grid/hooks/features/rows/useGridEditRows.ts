@@ -171,13 +171,15 @@ export function useGridEditRows(apiRef: GridApiRef) {
 
   const setCellValue = React.useCallback(
     (params: GridEditCellValueParams) => {
+      const column = apiRef.current.getColumn(params.field);
+      const parsedValue = column.valueParser
+        ? column.valueParser(params.value, apiRef.current.getCellParams(params.id, params.field))
+        : params.value;
       logger.debug(
-        `Setting cell id: ${params.id} field: ${
-          params.field
-        } to value: ${params.value?.toString()}`,
+        `Setting cell id: ${params.id} field: ${params.field} to value: ${parsedValue?.toString()}`,
       );
       const rowUpdate = { id: params.id };
-      rowUpdate[params.field] = params.value;
+      rowUpdate[params.field] = parsedValue;
       apiRef.current.updateRows([rowUpdate]);
       apiRef.current.publishEvent(GRID_CELL_VALUE_CHANGE, params);
     },

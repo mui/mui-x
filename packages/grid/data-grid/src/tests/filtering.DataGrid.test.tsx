@@ -36,7 +36,7 @@ describe('<DataGrid /> - Filter', () => {
     rows?: any[];
     columns?: any[];
     operatorValue?: string;
-    value?: string;
+    value?: any;
     field?: string;
   }) => {
     const { operatorValue, value, rows, columns, field = 'brand' } = props;
@@ -573,5 +573,33 @@ describe('<DataGrid /> - Filter', () => {
       );
     };
     render(<Test />);
+  });
+
+  it('should apply the valueParser onto the filter value', () => {
+    render(
+      <TestCase
+        rows={[
+          {
+            id: 1,
+            amount: 0.5,
+          },
+          {
+            id: 2,
+            amount: 1,
+          },
+        ]}
+        columns={[
+          {
+            field: 'amount',
+            type: 'number',
+            valueParser: (value) => (value as number) / 100,
+          },
+        ]}
+        operatorValue={'='}
+        value={50}
+        field={'amount'}
+      />,
+    );
+    expect(getColumnValues()).to.deep.equal(['0.5']);
   });
 });

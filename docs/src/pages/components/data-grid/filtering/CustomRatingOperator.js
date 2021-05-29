@@ -42,7 +42,7 @@ RatingInputValue.propTypes = {
     columnField: PropTypes.string,
     id: PropTypes.number,
     operatorValue: PropTypes.string,
-    value: PropTypes.string,
+    value: PropTypes.any,
   }).isRequired,
 };
 
