@@ -96,11 +96,11 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [DataGrid] Fix rowCount prop updates (#1697) @dtassone
 - [DataGrid] Improve German (deDe) translation of "errorOverlayDefaultLabel" (#1718) @sebastianfrey
 - [DataGrid] Fix accessibility of the filter panel textboxes (#1727) @m4theushw
-- [DataGrid] Undefined issue fix (#1731) @visshaljagtap
 - [XGrid] Fix onFilterModelChange not firing (#1706) @dtassone
 
 ### Docs
 
+- [docs] Fix outdated description of GridRowParams.getValue (#1731) @visshaljagtap
 - [docs] Fix 404 link (#1752) @oliviertassinari
 - [docs] Improve Custom edit component demo (#1750) @oliviertassinari
 - [docs] Remove redundant customizable pagination section (#1774) @ZeeshanTamboli
