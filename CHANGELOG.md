@@ -69,7 +69,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 - [DataGrid] Fix `onPageChange` doesn't update the `page` when a pagination button is clicked (#1719) @ZeeshanTamboli
 
-  Fix naming of `pageChange` and `pageSizeChange` events variables:
+  Fix naming of `pageChange` and `pageSizeChange` events variables. The correct event variable name should be prefixed with `GRID_` and converted to UPPER_CASE.
 
   ```diff
   -import { GRID_PAGESIZE_CHANGED, GRID_PAGE_CHANGED } from '@material-ui/data-grid';
