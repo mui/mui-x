@@ -104,7 +104,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [docs] Fix 404 link (#1752) @oliviertassinari
 - [docs] Improve Custom edit component demo (#1750) @oliviertassinari
 - [docs] Remove redundant customizable pagination section (#1774) @ZeeshanTamboli
-- [docs] Update `GridApi` descriptions (#1767) @m4theushw
+- [docs] Improve `GridApi` descriptions (#1767) @m4theushw
 
 ### Core
 
