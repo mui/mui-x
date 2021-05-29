@@ -78,7 +78,7 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
     }
 
     const editCellState = editRowState && editRowState[column.field];
-    let cellComponent: React.ReactElement | null = null;
+    let cellComponent: React.ReactNode = null;
 
     if (editCellState == null && column.renderCell) {
       cellComponent = column.renderCell(cellParams);

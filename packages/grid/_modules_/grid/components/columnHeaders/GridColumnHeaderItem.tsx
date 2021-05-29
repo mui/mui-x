@@ -76,7 +76,7 @@ export const GridColumnHeaderItem = React.memo(
     // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
     const isColumnNumeric = column.type === GRID_NUMBER_COLUMN_TYPE;
 
-    let headerComponent: React.ReactElement | null = null;
+    let headerComponent: React.ReactNode = null;
     if (column.renderHeader && apiRef!.current) {
       headerComponent = column.renderHeader(apiRef!.current.getColumnHeaderParams(column.field));
     }

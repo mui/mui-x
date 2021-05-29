@@ -100,12 +100,12 @@ export interface GridColDef {
    * Allows to override the component rendered as cell for this column.
    * @param params
    */
-  renderCell?: (params: GridCellParams) => React.ReactElement;
+  renderCell?: (params: GridCellParams) => React.ReactNode;
   /**
    * Allows to override the component rendered in edit cell mode for this column.
    * @param params
    */
-  renderEditCell?: (params: GridCellParams) => React.ReactElement;
+  renderEditCell?: (params: GridCellParams) => React.ReactNode;
   /**
    * Class name that will be added in the column header cell.
    */
@@ -114,7 +114,7 @@ export interface GridColDef {
    * Allows to render a component in the column header cell.
    * @param params
    */
-  renderHeader?: (params: GridColumnHeaderParams) => React.ReactElement;
+  renderHeader?: (params: GridColumnHeaderParams) => React.ReactNode;
   /**
    * Header cell element alignment.
    */

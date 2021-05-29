@@ -36,7 +36,7 @@ export interface GridCellProps {
   value?: GridCellValue;
   width: number;
   cellMode?: GridCellMode;
-  children: React.ReactElement | null;
+  children: React.ReactNode;
   tabIndex: 0 | -1;
 }
 
