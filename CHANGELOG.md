@@ -21,9 +21,11 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 
 - [DataGrid] Rename toolbar components for consistency (#1724) @DanailH
 
+  Prefix all the toolbar-related components with `GridToolbar`.
+
   ```diff
-  -<MuiDataGridFilterToolbarButton />
-  +<MuiDataGridToolbarFilterButton />
+  -.MuiDataGridFilterToolbarButton-list
+  +.MuiDataGridToolbarFilterButton-list
   ```
   ```diff
   -<GridColumnsToolbarButton />
