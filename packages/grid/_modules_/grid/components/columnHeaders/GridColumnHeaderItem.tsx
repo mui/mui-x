@@ -127,13 +127,11 @@ export const GridColumnHeaderItem = React.memo(
     const classNames = [classes?.columnHeader];
 
     if (column.headerClassName) {
-      classNames.push(
-        clsx(
-          isFunction(column.headerClassName)
-            ? column.headerClassName({ field: column.field, colDef: column, api: apiRef })
-            : column.headerClassName,
-        ),
-      );
+      const headerClassName = isFunction(column.headerClassName)
+        ? column.headerClassName({ field: column.field, colDef: column, api: apiRef })
+        : column.headerClassName;
+
+      classNames.push(headerClassName);
     }
 
     const cssClasses = clsx(
