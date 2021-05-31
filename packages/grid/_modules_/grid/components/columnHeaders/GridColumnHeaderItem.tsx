@@ -28,6 +28,7 @@ import { GridColumnHeaderSeparator } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { ColumnHeaderFilterIcon } from './ColumnHeaderFilterIcon';
 import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
+import { isFunction } from '../../utils/utils';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
@@ -123,8 +124,17 @@ export const GridColumnHeaderItem = React.memo(
       [publish],
     );
 
+    const classNames = [classes?.columnHeader];
+
+    if (column.headerClassName) {
+      const headerClassName = isFunction(column.headerClassName)
+        ? column.headerClassName({ field: column.field, colDef: column, api: apiRef })
+        : column.headerClassName;
+
+      classNames.push(headerClassName);
+    }
+
     const cssClasses = clsx(
-      column.headerClassName,
       column.headerAlign === 'center' && 'MuiDataGrid-columnHeaderCenter',
       column.headerAlign === 'right' && 'MuiDataGrid-columnHeaderRight',
       {
@@ -134,7 +144,7 @@ export const GridColumnHeaderItem = React.memo(
         'MuiDataGrid-columnHeaderNumeric': isColumnNumeric,
         'MuiDataGrid-withBorder': showColumnRightBorder,
       },
-      classes?.columnHeader,
+      ...classNames,
     );
 
     const width = column.width!;

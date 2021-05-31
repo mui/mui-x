@@ -2,24 +2,53 @@ import { GridFilterInputValue } from '../../components/panel/filterPanel/GridFil
 import { GridFilterItem } from '../gridFilterItem';
 import { GridFilterOperator } from '../gridFilterOperator';
 
+const dateRegex = /(\d+)-(\d+)-(\d+)/;
+const dateTimeRegex = /(\d+)-(\d+)-(\d+)T(\d+):(\d+)/;
+
+function buildApplyFilterFn(
+  filterItem: GridFilterItem,
+  compareFn: (value1: number, value2: number) => boolean,
+  showTime?: boolean,
+  keepHours?: boolean,
+) {
+  if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
+    return null;
+  }
+
+  const [year, month, day, hour, minute] = filterItem.value
+    .match(showTime ? dateTimeRegex : dateRegex)!
+    .slice(1)
+    .map(Number);
+
+  const time = new Date(year, month - 1, day, hour || 0, minute || 0).getTime();
+
+  return ({ value }): boolean => {
+    if (!value) {
+      return false;
+    }
+
+    const valueAsDate = value instanceof Date ? value : new Date(value.toString());
+    if (keepHours) {
+      return compareFn(valueAsDate.getTime(), time);
+    }
+
+    // Make a copy of the date to not reset the hours in the original object
+    const dateCopy = value instanceof Date ? new Date(valueAsDate) : valueAsDate;
+    const timeToCompare = dateCopy.setHours(
+      showTime ? valueAsDate.getHours() : 0,
+      showTime ? valueAsDate.getMinutes() : 0,
+      0,
+      0,
+    );
+    return compareFn(timeToCompare, time);
+  };
+}
+
 export const getGridDateOperators: (showTime?: boolean) => GridFilterOperator[] = (showTime) => [
   {
     value: 'is',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
-        return null;
-      }
-
-      const time = new Date(filterItem.value).getTime();
-      return ({ value }): boolean => {
-        if (!value) {
-          return false;
-        }
-        if (value instanceof Date) {
-          return (value as Date).getTime() === time;
-        }
-        return new Date(value.toString()).getTime() === time;
-      };
+      return buildApplyFilterFn(filterItem, (value1, value2) => value1 === value2, showTime);
     },
     InputComponent: GridFilterInputValue,
     InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
@@ -27,20 +56,7 @@ export const getGridDateOperators: (showTime?: boolean) => GridFilterOperator[] 
   {
     value: 'not',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
-        return null;
-      }
-
-      const time = new Date(filterItem.value).getTime();
-      return ({ value }): boolean => {
-        if (!value) {
-          return false;
-        }
-        if (value instanceof Date) {
-          return (value as Date).getTime() !== time;
-        }
-        return new Date(value.toString()).getTime() !== time;
-      };
+      return buildApplyFilterFn(filterItem, (value1, value2) => value1 !== value2, showTime);
     },
     InputComponent: GridFilterInputValue,
     InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
@@ -48,20 +64,7 @@ export const getGridDateOperators: (showTime?: boolean) => GridFilterOperator[] 
   {
     value: 'after',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
-        return null;
-      }
-
-      const time = new Date(filterItem.value).getTime();
-      return ({ value }): boolean => {
-        if (!value) {
-          return false;
-        }
-        if (value instanceof Date) {
-          return (value as Date).getTime() > time;
-        }
-        return new Date(value.toString()).getTime() > time;
-      };
+      return buildApplyFilterFn(filterItem, (value1, value2) => value1 > value2, showTime);
     },
     InputComponent: GridFilterInputValue,
     InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
@@ -69,20 +72,7 @@ export const getGridDateOperators: (showTime?: boolean) => GridFilterOperator[] 
   {
     value: 'onOrAfter',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
-        return null;
-      }
-
-      const time = new Date(filterItem.value).getTime();
-      return ({ value }): boolean => {
-        if (!value) {
-          return false;
-        }
-        if (value instanceof Date) {
-          return (value as Date).getTime() >= time;
-        }
-        return new Date(value.toString()).getTime() >= time;
-      };
+      return buildApplyFilterFn(filterItem, (value1, value2) => value1 >= value2, showTime);
     },
     InputComponent: GridFilterInputValue,
     InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
@@ -90,20 +80,12 @@ export const getGridDateOperators: (showTime?: boolean) => GridFilterOperator[] 
   {
     value: 'before',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
-        return null;
-      }
-
-      const time = new Date(filterItem.value).getTime();
-      return ({ value }): boolean => {
-        if (!value) {
-          return false;
-        }
-        if (value instanceof Date) {
-          return (value as Date).getTime() < time;
-        }
-        return new Date(value.toString()).getTime() < time;
-      };
+      return buildApplyFilterFn(
+        filterItem,
+        (value1, value2) => value1 < value2,
+        showTime,
+        !showTime,
+      );
     },
     InputComponent: GridFilterInputValue,
     InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
@@ -111,20 +93,7 @@ export const getGridDateOperators: (showTime?: boolean) => GridFilterOperator[] 
   {
     value: 'onOrBefore',
     getApplyFilterFn: (filterItem: GridFilterItem) => {
-      if (!filterItem.columnField || !filterItem.value || !filterItem.operatorValue) {
-        return null;
-      }
-
-      const time = new Date(filterItem.value).getTime();
-      return ({ value }): boolean => {
-        if (!value) {
-          return false;
-        }
-        if (value instanceof Date) {
-          return (value as Date).getTime() <= time;
-        }
-        return new Date(value.toString()).getTime() <= time;
-      };
+      return buildApplyFilterFn(filterItem, (value1, value2) => value1 <= value2, showTime);
     },
     InputComponent: GridFilterInputValue,
     InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },

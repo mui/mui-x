@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { GridCellValue } from '../gridCell';
 import { GridCellClassNamePropType } from '../gridCellClass';
+import { GridColumnHeaderClassNamePropType } from '../gridColumnHeaderClass';
 import { GridFilterOperator } from '../gridFilterOperator';
 import {
   GridCellParams,
@@ -101,7 +102,7 @@ export interface GridColDef {
   /**
    * Class name that will be added in the column header cell.
    */
-  headerClassName?: string | string[];
+  headerClassName?: GridColumnHeaderClassNamePropType;
   /**
    * Allows to render a component in the column header cell.
    * @param params

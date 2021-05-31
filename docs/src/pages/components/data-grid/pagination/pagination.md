@@ -34,10 +34,6 @@ By default, this feature is off.
 
 {{"demo": "pages/components/data-grid/pagination/AutoPaginationGrid.js", "bg": "inline"}}
 
-## Custom pagination component
-
-Head to the [rendering section](/components/data-grid/rendering/#footer) of the documentation for customizing the pagination component.
-
 ## Server-side pagination
 
 By default, pagination works on the client-side.

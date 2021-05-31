@@ -38,19 +38,6 @@ describe('<DataGrid /> - Cells', () => {
       expect(getCell(0, 0)).to.have.class('foobar');
     });
 
-    it('should append the CSS classes defined in cellClassName', () => {
-      render(
-        <div style={{ width: 300, height: 500 }}>
-          <DataGrid
-            {...baselineProps}
-            columns={[{ field: 'brand', cellClassName: ['foo', 'bar'] }]}
-          />
-        </div>,
-      );
-      expect(getCell(0, 0)).to.have.class('foo');
-      expect(getCell(0, 0)).to.have.class('bar');
-    });
-
     it('should append the CSS class returned by cellClassName', () => {
       render(
         <div style={{ width: 300, height: 500 }}>
@@ -61,19 +48,6 @@ describe('<DataGrid /> - Cells', () => {
         </div>,
       );
       expect(getCell(0, 0)).to.have.class('foobar');
-    });
-
-    it('should append the CSS classes returned by cellClassName', () => {
-      render(
-        <div style={{ width: 300, height: 500 }}>
-          <DataGrid
-            {...baselineProps}
-            columns={[{ field: 'brand', cellClassName: () => ['foo', 'bar'] }]}
-          />
-        </div>,
-      );
-      expect(getCell(0, 0)).to.have.class('foo');
-      expect(getCell(0, 0)).to.have.class('bar');
     });
   });
 
