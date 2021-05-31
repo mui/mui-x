@@ -259,7 +259,8 @@ describe('<XGrid /> - Edit Rows', () => {
   it('should apply the valueParser before saving the value', () => {
     const valueParser = stub().withArgs('62').returns(1962);
     render(
-      <TestCase
+      <XGrid
+        {...baselineProps}
         columns={[
           { field: 'brand', editable: true },
           { field: 'year', editable: true, valueParser },
@@ -280,8 +281,15 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(cell).to.have.text('1962');
     expect(valueParser.callCount).to.equal(1);
     expect(valueParser.args[0][0]).to.equal('62');
-    expect(valueParser.args[0][1].id).to.equal(1);
-    expect(valueParser.args[0][1].field).to.equal('year');
-    expect(valueParser.args[0][1].value).to.equal(1961);
+    expect(valueParser.args[0][1]).to.deep.include({
+      id: 1,
+      field: 'year',
+      value: 1961,
+      row: {
+        id: 1,
+        brand: 'Adidas',
+        year: 1961,
+      },
+    });
   });
 });
