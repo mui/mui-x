@@ -126,11 +126,7 @@ export const useGridRows = (
 
   const insertRows = React.useCallback(
     ({ startIndex, newRows, rowCount }: GridInsertRowParams) => {
-      logger.debug(
-        `Loading rows from index:${startIndex} to index:${
-          startIndex + containerSizes!.viewportPageSize
-        }`,
-      );
+      logger.debug(`Insert rows from index:${startIndex}`);
 
       const newRowsToState = convertGridRowsPropToState(newRows, newRows.length, getRowIdProp);
 

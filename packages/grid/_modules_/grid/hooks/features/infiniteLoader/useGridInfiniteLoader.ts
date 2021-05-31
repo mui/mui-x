@@ -70,7 +70,7 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
   const handleGridVirtualPageChange = React.useCallback(
     (params: GridVirtualPageChangeParams) => {
       logger.debug('Virtual page changed');
-      if (!containerSizes || !options.onFetchRows) {
+      if (!containerSizes) {
         return;
       }
 
@@ -102,14 +102,14 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
       };
       apiRef.current.publishEvent(GRID_FETCH_ROWS, fetchRowsParams);
     },
-    [logger, options, renderState, allRows, sortModel, containerSizes, filterState, apiRef],
+    [logger, renderState, allRows, sortModel, containerSizes, filterState, apiRef],
   );
 
   const handleGridSortModelChange = React.useCallback(
     (params: GridSortModelParams) => {
       logger.debug('Sort model changed');
 
-      if (!containerSizes || !options.onFetchRows) {
+      if (!containerSizes) {
         return;
       }
 
@@ -123,13 +123,13 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
       };
       apiRef.current.publishEvent(GRID_FETCH_ROWS, fetchRowsParams);
     },
-    [logger, options, renderState, containerSizes, filterState, apiRef],
+    [logger, renderState, containerSizes, filterState, apiRef],
   );
 
   const handleGridFilterModelChange = React.useCallback(
     (params: GridFilterModelParams) => {
       logger.debug('Filter model changed');
-      if (!containerSizes || !options.onFetchRows) {
+      if (!containerSizes) {
         return;
       }
 
@@ -143,7 +143,7 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
       };
       apiRef.current.publishEvent(GRID_FETCH_ROWS, fetchRowsParams);
     },
-    [logger, options, containerSizes, sortModel, renderState, apiRef],
+    [logger, containerSizes, sortModel, renderState, apiRef],
   );
 
   useGridApiEventHandler(apiRef, GRID_ROWS_SCROLL, handleGridScroll);
