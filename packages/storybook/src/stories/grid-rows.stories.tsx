@@ -991,12 +991,21 @@ export function InfiniteLoader() {
           if (params.filterModel.items.length) {
             params.api.current.insertRows({
               startIndex: params.startIndex,
+              pageSize: params.viewportPageSize,
               newRows: newRowsBatch,
               rowCount: 10,
+            });
+          } else if (params.sortModel.length) {
+            params.api.current.insertRows({
+              startIndex: params.startIndex,
+              pageSize: params.viewportPageSize,
+              newRows: newRowsBatch,
+              rowCount: 20,
             });
           } else {
             params.api.current.insertRows({
               startIndex: params.startIndex,
+              pageSize: params.viewportPageSize,
               newRows: newRowsBatch,
             });
           }

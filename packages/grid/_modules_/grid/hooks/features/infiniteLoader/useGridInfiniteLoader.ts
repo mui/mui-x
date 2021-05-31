@@ -23,6 +23,7 @@ import { unorderedGridRowIdsSelector } from '../rows/gridRowsSelector';
 import { gridSortModelSelector } from '../sorting/gridSortingSelector';
 import { filterGridStateSelector } from '../filter/gridFilterSelector';
 import { GridFetchRowsParams } from '../../../models/params/gridFetchRowsParams';
+import { GridRowId } from '../../../models/gridRows';
 
 export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridInfiniteLoader');
@@ -37,13 +38,11 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
 
   const handleGridScroll = React.useCallback(() => {
     logger.debug('Checking if scroll position reached bottom');
-
     if (!containerSizes) {
       return;
     }
 
     const scrollPosition = apiRef.current.getScrollPosition();
-
     const scrollPositionBottom =
       scrollPosition.top + containerSizes.windowSizes.height + options.scrollEndThreshold;
 
@@ -74,19 +73,18 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
         return;
       }
 
-      let nextPage = params.nextPage;
+      const newRowsBatchStartIndex = params.nextPage * containerSizes.viewportPageSize;
+      const remainingIndexes =
+        allRows.length - (newRowsBatchStartIndex + containerSizes.viewportPageSize);
+      let newRowsBatchLength = containerSizes.viewportPageSize;
 
-      if (
-        params.nextPage > params.currentPage &&
-        params.nextPage !== renderState.renderedSizes!.lastPage
-      ) {
-        nextPage = params.nextPage + 1;
+      if (remainingIndexes < containerSizes.renderingZonePageSize) {
+        newRowsBatchLength = containerSizes.renderingZonePageSize;
       }
 
-      const newRowsBatchStartIndex = nextPage * containerSizes.viewportPageSize;
-      const toBeLoadedRange: any = [...allRows].splice(
+      const toBeLoadedRange: Array<GridRowId | null> = [...allRows].splice(
         newRowsBatchStartIndex,
-        containerSizes.viewportPageSize,
+        newRowsBatchLength,
       );
 
       if (!toBeLoadedRange.includes(null)) {
@@ -95,20 +93,19 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
 
       const fetchRowsParams: GridFetchRowsParams = {
         startIndex: newRowsBatchStartIndex,
-        viewportPageSize: containerSizes.viewportPageSize,
+        viewportPageSize: newRowsBatchLength,
         sortModel,
         filterModel: filterState,
         api: apiRef,
       };
       apiRef.current.publishEvent(GRID_FETCH_ROWS, fetchRowsParams);
     },
-    [logger, renderState, allRows, sortModel, containerSizes, filterState, apiRef],
+    [logger, allRows, sortModel, containerSizes, filterState, apiRef],
   );
 
   const handleGridSortModelChange = React.useCallback(
     (params: GridSortModelParams) => {
       logger.debug('Sort model changed');
-
       if (!containerSizes) {
         return;
       }

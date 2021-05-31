@@ -56,6 +56,10 @@ export interface GridInsertRowParams {
    */
   startIndex: number;
   /**
+   * The page size.
+   */
+  pageSize: number;
+  /**
    * Rows to be inserted.
    */
   newRows: GridRowModel[];

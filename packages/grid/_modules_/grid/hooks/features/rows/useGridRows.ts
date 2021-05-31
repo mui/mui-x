@@ -16,10 +16,8 @@ import {
   GridRowData,
   GridInsertRowParams,
 } from '../../../models/gridRows';
-import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useLogger } from '../../utils/useLogger';
-import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { getInitialGridRowState, InternalGridRowsState } from './gridRowsState';
 
@@ -64,7 +62,6 @@ export const useGridRows = (
 ): void => {
   const logger = useLogger('useGridRows');
   const [gridState, setGridState, updateComponent] = useGridState(apiRef);
-  const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const updateTimeout = React.useRef<any>();
 
   const forceUpdate = React.useCallback(
@@ -125,7 +122,7 @@ export const useGridRows = (
   );
 
   const insertRows = React.useCallback(
-    ({ startIndex, newRows, rowCount }: GridInsertRowParams) => {
+    ({ startIndex, pageSize, newRows, rowCount }: GridInsertRowParams) => {
       logger.debug(`Insert rows from index:${startIndex}`);
 
       const newRowsToState = convertGridRowsPropToState(newRows, newRows.length, getRowIdProp);
@@ -135,7 +132,7 @@ export const useGridRows = (
         const allRows =
           rowCount !== undefined ? new Array(rowCount).fill(null) : state.rows.allRows;
         const allRowsUpdated = allRows.map((row, index) => {
-          if (index >= startIndex && index < startIndex + containerSizes!.viewportPageSize) {
+          if (index >= startIndex && index < startIndex + pageSize) {
             return newRowsToState.allRows[index - startIndex];
           }
           return row;
@@ -155,9 +152,10 @@ export const useGridRows = (
       });
 
       forceUpdate();
+      apiRef.current.updateViewport();
       apiRef.current.applySorting();
     },
-    [logger, apiRef, containerSizes, getRowIdProp, setGridState, forceUpdate],
+    [logger, apiRef, getRowIdProp, setGridState, forceUpdate],
   );
 
   const setRows = React.useCallback(
