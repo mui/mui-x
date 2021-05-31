@@ -62,15 +62,15 @@ describe('<DataGrid /> - Filter', () => {
   };
 
   it('should apply the filterModel prop correctly', () => {
-    render(<TestCase value={'a'} operatorValue={'contains'} />);
+    render(<TestCase value="a" operatorValue="contains" />);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
   });
 
   it('should apply the filterModel prop correctly when row prop changes', () => {
     render(
       <TestCase
-        value={'a'}
-        operatorValue={'contains'}
+        value="a"
+        operatorValue="contains"
         rows={[
           {
             id: 3,
@@ -129,7 +129,7 @@ describe('<DataGrid /> - Filter', () => {
 
   describe('string operators', () => {
     it('should allow operator startsWith', () => {
-      const { setProps } = render(<TestCase value={'a'} operatorValue={'contains'} />);
+      const { setProps } = render(<TestCase value="a" operatorValue="contains" />);
       setProps({
         operatorValue: 'startsWith',
       });
@@ -137,7 +137,7 @@ describe('<DataGrid /> - Filter', () => {
     });
 
     it('should allow operator endsWith', () => {
-      const { setProps } = render(<TestCase value={'a'} operatorValue={'contains'} />);
+      const { setProps } = render(<TestCase value="a" operatorValue="contains" />);
       setProps({
         operatorValue: 'endsWith',
       });
@@ -145,7 +145,7 @@ describe('<DataGrid /> - Filter', () => {
     });
 
     it('should allow operator equal', () => {
-      const { setProps } = render(<TestCase value={'a'} operatorValue={'contains'} />);
+      const { setProps } = render(<TestCase value="a" operatorValue="contains" />);
       setProps({
         operatorValue: 'equals',
         value: 'nike',
@@ -265,8 +265,8 @@ describe('<DataGrid /> - Filter', () => {
     it('should filter out rows with invalid values', () => {
       render(
         <TestCase
-          value={'2001-01-01'}
-          operatorValue={'before'}
+          value="2001-01-01"
+          operatorValue="before"
           rows={[
             {
               id: 3,
@@ -498,7 +498,7 @@ describe('<DataGrid /> - Filter', () => {
 
   describe('boolean operators', () => {
     it('should allow operator is', () => {
-      const { setProps } = render(<TestCase value={'a'} operatorValue={'contains'} />);
+      const { setProps } = render(<TestCase value="a" operatorValue="contains" />);
       setProps({
         field: 'isPublished',
         operatorValue: 'is',
@@ -521,7 +521,7 @@ describe('<DataGrid /> - Filter', () => {
   });
 
   it('should support new dataset', () => {
-    const { setProps } = render(<TestCase value={'a'} operatorValue={'contains'} />);
+    const { setProps } = render(<TestCase value="a" operatorValue="contains" />);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
     setProps({
       rows: [
@@ -595,9 +595,9 @@ describe('<DataGrid /> - Filter', () => {
             valueParser: (value) => (value as number) / 100,
           },
         ]}
-        operatorValue={'='}
+        operatorValue="="
         value={50}
-        field={'amount'}
+        field="amount"
       />,
     );
     expect(getColumnValues()).to.deep.equal(['0.5']);
