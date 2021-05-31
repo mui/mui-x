@@ -1,6 +1,6 @@
 export * from './gridCellParams';
 export * from './gridEditCellParams';
-export * from './gridGetRowsParams';
+export * from './gridFetchRowsParams';
 export * from './gridColumnHeaderParams';
 export * from './gridColumnOrderChangeParams';
 export * from './gridColumnResizeParams';

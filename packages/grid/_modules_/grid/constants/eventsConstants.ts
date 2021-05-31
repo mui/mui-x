@@ -465,3 +465,9 @@ export const GRID_COLUMN_VISIBILITY_CHANGE = 'columnVisibilityChange';
  * @event
  */
 export const GRID_VIRTUAL_PAGE_CHANGE = 'virtualPageChange';
+
+/**
+ * Fired when the virtual page changes. Called with a [[GridFetchRowsParams]] object.
+ * @event
+ */
+export const GRID_FETCH_ROWS = 'fetchRows';

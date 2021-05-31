@@ -14,9 +14,12 @@ import {
   GridRowsProp,
   GridRowIdGetter,
   GridRowData,
+  GridInsertRowParams,
 } from '../../../models/gridRows';
+import { gridContainerSizesSelector } from '../../root/gridContainerSizesSelector';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useLogger } from '../../utils/useLogger';
+import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
 import { getInitialGridRowState, InternalGridRowsState } from './gridRowsState';
 
@@ -61,6 +64,7 @@ export const useGridRows = (
 ): void => {
   const logger = useLogger('useGridRows');
   const [gridState, setGridState, updateComponent] = useGridState(apiRef);
+  const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);
   const updateTimeout = React.useRef<any>();
 
   const forceUpdate = React.useCallback(
@@ -120,9 +124,13 @@ export const useGridRows = (
     [apiRef],
   );
 
-  const loadRows = React.useCallback(
-    (startIndex: number, pageSize: number, newRows: GridRowModel[], rowCount?: number) => {
-      logger.debug(`Loading rows from index:${startIndex} to index:${startIndex + pageSize}`);
+  const insertRows = React.useCallback(
+    ({ startIndex, newRows, rowCount }: GridInsertRowParams) => {
+      logger.debug(
+        `Loading rows from index:${startIndex} to index:${
+          startIndex + containerSizes!.viewportPageSize
+        }`,
+      );
 
       const newRowsToState = convertGridRowsPropToState(newRows, newRows.length, getRowIdProp);
 
@@ -131,7 +139,7 @@ export const useGridRows = (
         const allRows =
           rowCount !== undefined ? new Array(rowCount).fill(null) : state.rows.allRows;
         const allRowsUpdated = allRows.map((row, index) => {
-          if (index >= startIndex && index < startIndex + pageSize) {
+          if (index >= startIndex && index < startIndex + containerSizes!.viewportPageSize) {
             return newRowsToState.allRows[index - startIndex];
           }
           return row;
@@ -153,7 +161,7 @@ export const useGridRows = (
       forceUpdate();
       apiRef.current.applySorting();
     },
-    [logger, apiRef, getRowIdProp, setGridState, forceUpdate],
+    [logger, apiRef, containerSizes, getRowIdProp, setGridState, forceUpdate],
   );
 
   const setRows = React.useCallback(
@@ -264,7 +272,7 @@ export const useGridRows = (
     getAllRowIds,
     setRows,
     updateRows,
-    loadRows,
+    insertRows,
   };
   useGridApiMethod(apiRef, rowApi, 'GridRowApi');
 };

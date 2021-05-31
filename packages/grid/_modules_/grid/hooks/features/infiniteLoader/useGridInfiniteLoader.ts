@@ -3,6 +3,7 @@ import { optionsSelector } from '../../utils/optionsSelector';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { useGridSelector } from '../core/useGridSelector';
 import {
+  GRID_FETCH_ROWS,
   GRID_FILTER_MODEL_CHANGE,
   GRID_ROWS_SCROLL,
   GRID_ROWS_SCROLL_END,
@@ -21,7 +22,7 @@ import { renderStateSelector } from '../virtualization/renderingStateSelector';
 import { unorderedGridRowIdsSelector } from '../rows/gridRowsSelector';
 import { gridSortModelSelector } from '../sorting/gridSortingSelector';
 import { filterGridStateSelector } from '../filter/gridFilterSelector';
-import { GridGetRowsReturnValue } from '../../../models/params/gridGetRowsParams';
+import { GridFetchRowsParams } from '../../../models/params/gridFetchRowsParams';
 
 export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridInfiniteLoader');
@@ -55,13 +56,13 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
       !isInScrollBottomArea.current &&
       !options.rowCount
     ) {
-      const rowScrollEndParam: GridRowScrollEndParams = {
+      const rowScrollEndParams: GridRowScrollEndParams = {
         api: apiRef,
         visibleColumns,
         viewportPageSize: containerSizes.viewportPageSize,
         virtualRowsCount: containerSizes.virtualRowsCount,
       };
-      apiRef.current.publishEvent(GRID_ROWS_SCROLL_END, rowScrollEndParam);
+      apiRef.current.publishEvent(GRID_ROWS_SCROLL_END, rowScrollEndParams);
       isInScrollBottomArea.current = true;
     }
   }, [logger, options, containerSizes, apiRef, visibleColumns]);
@@ -69,7 +70,7 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
   const handleGridVirtualPageChange = React.useCallback(
     (params: GridVirtualPageChangeParams) => {
       logger.debug('Virtual page changed');
-      if (!containerSizes || !options.getRows) {
+      if (!containerSizes || !options.onFetchRows) {
         return;
       }
 
@@ -92,17 +93,14 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
         return;
       }
 
-      const { rows }: GridGetRowsReturnValue = options.getRows({
+      const fetchRowsParams: GridFetchRowsParams = {
         startIndex: newRowsBatchStartIndex,
         viewportPageSize: containerSizes.viewportPageSize,
         sortModel,
         filterModel: filterState,
         api: apiRef,
-      });
-
-      if (rows.length) {
-        apiRef.current.loadRows(newRowsBatchStartIndex, containerSizes.viewportPageSize, rows);
-      }
+      };
+      apiRef.current.publishEvent(GRID_FETCH_ROWS, fetchRowsParams);
     },
     [logger, options, renderState, allRows, sortModel, containerSizes, filterState, apiRef],
   );
@@ -111,27 +109,19 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
     (params: GridSortModelParams) => {
       logger.debug('Sort model changed');
 
-      if (!containerSizes || !options.getRows) {
+      if (!containerSizes || !options.onFetchRows) {
         return;
       }
 
       const newRowsBatchStartIndex = renderState.virtualPage * containerSizes.viewportPageSize;
-      const { rows, rowCount }: GridGetRowsReturnValue = options.getRows({
+      const fetchRowsParams: GridFetchRowsParams = {
         startIndex: newRowsBatchStartIndex,
         viewportPageSize: containerSizes.viewportPageSize,
         sortModel: params.sortModel,
         filterModel: filterState,
         api: apiRef,
-      });
-
-      if (rows.length) {
-        apiRef.current.loadRows(
-          newRowsBatchStartIndex,
-          containerSizes.viewportPageSize,
-          rows,
-          rowCount,
-        );
-      }
+      };
+      apiRef.current.publishEvent(GRID_FETCH_ROWS, fetchRowsParams);
     },
     [logger, options, renderState, containerSizes, filterState, apiRef],
   );
@@ -139,27 +129,19 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
   const handleGridFilterModelChange = React.useCallback(
     (params: GridFilterModelParams) => {
       logger.debug('Filter model changed');
-      if (!containerSizes || !options.getRows) {
+      if (!containerSizes || !options.onFetchRows) {
         return;
       }
 
       const newRowsBatchStartIndex = renderState.virtualPage * containerSizes.viewportPageSize;
-      const { rows, rowCount }: GridGetRowsReturnValue = options.getRows({
+      const fetchRowsParams: GridFetchRowsParams = {
         startIndex: newRowsBatchStartIndex,
         viewportPageSize: containerSizes.viewportPageSize,
         sortModel,
         filterModel: params.filterModel,
         api: apiRef,
-      });
-
-      if (rows.length) {
-        apiRef.current.loadRows(
-          newRowsBatchStartIndex,
-          containerSizes.viewportPageSize,
-          rows,
-          rowCount,
-        );
-      }
+      };
+      apiRef.current.publishEvent(GRID_FETCH_ROWS, fetchRowsParams);
     },
     [logger, options, containerSizes, sortModel, renderState, apiRef],
   );
@@ -169,4 +151,5 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
   useGridApiEventHandler(apiRef, GRID_SORT_MODEL_CHANGE, handleGridSortModelChange);
   useGridApiEventHandler(apiRef, GRID_FILTER_MODEL_CHANGE, handleGridFilterModelChange);
   useGridApiOptionHandler(apiRef, GRID_ROWS_SCROLL_END, options.onRowsScrollEnd);
+  useGridApiOptionHandler(apiRef, GRID_FETCH_ROWS, options.onFetchRows);
 };

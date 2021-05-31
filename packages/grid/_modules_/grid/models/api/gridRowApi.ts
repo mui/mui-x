@@ -1,4 +1,4 @@
-import { GridRowModel, GridRowId, GridRowModelUpdate } from '../gridRows';
+import { GridRowModel, GridRowId, GridRowModelUpdate, GridInsertRowParams } from '../gridRows';
 
 /**
  * The Row API interface that is available in the grid `apiRef`.
@@ -48,10 +48,8 @@ export interface GridRowApi {
    */
   getRow: (id: GridRowId) => GridRowModel;
   /**
-   * Loads a new subset of Rows.
-   * @param startIndex
-   * @param pageSize
-   * @param rows
+   * Inserts a new subset of Rows.
+   * @param {GridInsertRowParams} params The new rows.
    */
-  loadRows: (startIndex: number, pageSize: number, rows: GridRowModel[], rowCount?: number) => void;
+  insertRows: (params: GridInsertRowParams) => void;
 }

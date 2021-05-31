@@ -46,3 +46,21 @@ export function checkGridRowIdIsValid(
 
   return true;
 }
+
+/**
+ * The type of api.current.insertRows params.
+ */
+export interface GridInsertRowParams {
+  /**
+   * The start index from which rows needs to be loaded.
+   */
+  startIndex: number;
+  /**
+   * Rows to be inserted.
+   */
+  newRows: GridRowModel[];
+  /**
+   * The updated row count.
+   */
+  rowCount?: number;
+}

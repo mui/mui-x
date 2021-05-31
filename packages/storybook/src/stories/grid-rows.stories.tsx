@@ -978,7 +978,7 @@ export function InfiniteLoader() {
         components={{
           Toolbar: GridToolbar,
         }}
-        getRows={(params) => {
+        onFetchRows={(params) => {
           const newRowsBatch: any = [];
           while (newRowsBatch.length < params.viewportPageSize) {
             const id = Math.floor(Math.random() * 1000);
@@ -988,12 +988,18 @@ export function InfiniteLoader() {
             });
           }
 
-          let rowCount = 20;
           if (params.filterModel.items.length) {
-            rowCount = 10;
+            params.api.current.insertRows({
+              startIndex: params.startIndex,
+              newRows: newRowsBatch,
+              rowCount: 10,
+            });
+          } else {
+            params.api.current.insertRows({
+              startIndex: params.startIndex,
+              newRows: newRowsBatch,
+            });
           }
-
-          return { rows: newRowsBatch, rowCount };
         }}
       />
     </div>

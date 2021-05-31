@@ -29,7 +29,7 @@ import { GridColumnOrderChangeParams } from './params/gridColumnOrderChangeParam
 import { GridResizeParams } from './params/gridResizeParams';
 import { GridColumnResizeParams } from './params/gridColumnResizeParams';
 import { GridColumnVisibilityChangeParams } from './params/gridColumnVisibilityChangeParams';
-import { GridGetRowsParams, GridGetRowsReturnValue } from './params/gridGetRowsParams';
+import { GridFetchRowsParams } from './params/gridFetchRowsParams';
 import { GridClasses } from './gridClasses';
 
 // TODO add multiSortKey
@@ -185,10 +185,6 @@ export interface GridOptions {
    * Determines if a row can be selected.
    */
   isRowSelectable?: (params: GridRowParams) => boolean;
-  /**
-   * Callback fired when rowCount is set and virtual pages change.
-   */
-  getRows?: (params: GridGetRowsParams) => GridGetRowsReturnValue;
   /**
    * Set the locale text of the grid.
    * You can find all the translation keys supported in [the source](https://github.com/mui-org/material-ui-x/blob/HEAD/packages/grid/_modules_/grid/constants/localeTextConstants.ts) in the GitHub repository.
@@ -346,6 +342,10 @@ export interface GridOptions {
    * @param param With all properties from [[GridFilterModelParams]].
    */
   onFilterModelChange?: (params: GridFilterModelParams) => void;
+  /**
+   * Callback fired when rowCount is set and virtual pages change.
+   */
+  onFetchRows?: (params: GridFetchRowsParams) => void;
   /**
    * Callback fired when the current page has changed.
    * @param param With all properties from [[GridPageChangeParams]].
