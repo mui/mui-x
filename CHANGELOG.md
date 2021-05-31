@@ -40,7 +40,7 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
   +<GridToolbarDensitySelector />
   ```
 
-- [DataGrid] Remove cellClassRules from GridColDef (#1716) @m4theushw
+- [DataGrid] Remove `cellClassRules` from `GridColDef` (#1716) @m4theushw
 
   The `GridCellClassParams` type is not exported anymore. Replace it with `GridCellParams`.
 
@@ -97,14 +97,14 @@ Big thanks to the 8 contributors who made this release possible. Here are some h
 - [DataGrid] Fix cell accessibility aria-colindex (#1669) @ZeeshanTamboli
 - [DataGrid] Fix changing rows per page size (#1729) @ZeeshanTamboli
 - [DataGrid] Fix date operators not working with date-time values (#1722) @m4theushw
-- [DataGrid] Fix rowCount prop updates (#1697) @dtassone
+- [DataGrid] Fix `rowCount` prop updates (#1697) @dtassone
 - [DataGrid] Improve German (deDe) translation of "errorOverlayDefaultLabel" (#1718) @sebastianfrey
 - [DataGrid] Fix accessibility of the filter panel textboxes (#1727) @m4theushw
-- [XGrid] Fix onFilterModelChange not firing (#1706) @dtassone
+- [XGrid] Fix `onFilterModelChange` not firing (#1706) @dtassone
 
 ### Docs
 
-- [docs] Fix outdated description of GridRowParams.getValue (#1731) @visshaljagtap
+- [docs] Fix outdated description of `GridRowParams.getValue` (#1731) @visshaljagtap
 - [docs] Fix 404 link (#1752) @oliviertassinari
 - [docs] Improve Custom edit component demo (#1750) @oliviertassinari
 - [docs] Remove redundant customizable pagination section (#1774) @ZeeshanTamboli
