@@ -259,13 +259,15 @@ describe('<XGrid /> - Edit Rows', () => {
   it('should apply the valueParser before saving the value', () => {
     const valueParser = stub().withArgs('62').returns(1962);
     render(
-      <XGrid
-        {...baselineProps}
-        columns={[
-          { field: 'brand', editable: true },
-          { field: 'year', editable: true, valueParser },
-        ]}
-      />,
+      <div style={{ width: 300, height: 300 }}>
+        <XGrid
+          {...baselineProps}
+          columns={[
+            { field: 'brand', editable: true },
+            { field: 'year', editable: true, valueParser },
+          ]}
+        />
+      </div>,
     );
     const cell = getCell(1, 1);
     cell.focus();
