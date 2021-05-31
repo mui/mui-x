@@ -1,5 +1,6 @@
 import Button from '@material-ui/core/Button';
 import * as React from 'react';
+import clsx from 'clsx';
 import { Story, Meta } from '@storybook/react';
 import {
   GridColDef,
@@ -154,8 +155,8 @@ StyledColumns.args = {
     { field: 'lastName' },
     {
       field: 'age',
-      cellClassName: ['age', 'shine'],
-      headerClassName: ['age', 'shine'],
+      cellClassName: () => clsx('age', 'shine'),
+      headerClassName: () => clsx('age', 'shine'),
       type: 'number',
     },
     {
