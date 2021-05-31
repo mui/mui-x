@@ -7,31 +7,44 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
 import { GridApiContext } from '../GridApiContext';
 import { GridMenu } from '../menu/GridMenu';
-import { GridExportOption, GridExportFormat, GridExportConfiguration } from '../../models';
+import { GridExportCsvOptions } from '../../models/gridExport';
 
-type GridToolbarExportProps = ButtonProps & { exportConfiguration?: GridExportConfiguration };
+interface GridExportFormatCsv {
+  format: 'csv';
+  formatOptions?: GridExportCsvOptions;
+}
+
+type GridExportFormatOption = GridExportFormatCsv;
+
+type GridExportOption = GridExportFormatOption & {
+  label: React.ReactNode;
+};
+
+export interface GridToolbarExportProps extends ButtonProps {
+  csvOptions?: GridExportCsvOptions;
+}
 
 export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbarExportProps>(
-  function GridToolbarExport({ exportConfiguration, ...other }, ref) {
+  function GridToolbarExport(props, ref) {
+    const { csvOptions, ...other } = props;
     const apiRef = React.useContext(GridApiContext);
-    const exportButtonId = useId();
-    const exportMenuId = useId();
+    const buttonId = useId();
+    const menuId = useId();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const ExportIcon = apiRef!.current.components!.ExportIcon!;
 
-    const ExportOptions: Array<GridExportOption> = [];
-
-    ExportOptions.push({
+    const exportOptions: Array<GridExportOption> = [];
+    exportOptions.push({
       label: apiRef!.current.getLocaleText('toolbarExportCSV'),
       format: 'csv',
-      options: exportConfiguration?.csv,
+      formatOptions: csvOptions,
     });
 
-    const handleExportSelectorOpen = (event) => setAnchorEl(event.currentTarget);
-    const handleExportSelectorClose = () => setAnchorEl(null);
-    const handleExport = (option: GridExportFormat, fileName?: string) => {
+    const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
+    const handleMenuClose = () => setAnchorEl(null);
+    const handleExport = (option: GridExportFormatOption) => () => {
       if (option.format === 'csv') {
-        apiRef!.current.exportDataAsCsv(option.options, fileName);
+        apiRef!.current.exportDataAsCsv(option.formatOptions);
       }
 
       setAnchorEl(null);
@@ -42,15 +55,9 @@ export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbar
         event.preventDefault();
       }
       if (isHideMenuKey(event.key)) {
-        handleExportSelectorClose();
+        handleMenuClose();
       }
     };
-
-    const renderExportOptions: Array<React.ReactElement> = ExportOptions.map((option, index) => (
-      <MenuItem key={index} onClick={() => handleExport(option, exportConfiguration?.fileName)}>
-        {option.label}
-      </MenuItem>
-    ));
 
     return (
       <React.Fragment>
@@ -59,11 +66,11 @@ export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbar
           color="primary"
           size="small"
           startIcon={<ExportIcon />}
-          onClick={handleExportSelectorOpen}
+          onClick={handleMenuOpen}
           aria-expanded={anchorEl ? 'true' : undefined}
           aria-haspopup="menu"
-          aria-labelledby={exportMenuId}
-          id={exportButtonId}
+          aria-labelledby={menuId}
+          id={buttonId}
           {...other}
         >
           {apiRef!.current.getLocaleText('toolbarExport')}
@@ -71,17 +78,21 @@ export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbar
         <GridMenu
           open={Boolean(anchorEl)}
           target={anchorEl}
-          onClickAway={handleExportSelectorClose}
+          onClickAway={handleMenuClose}
           position="bottom-start"
         >
           <MenuList
-            id={exportMenuId}
+            id={menuId}
             className="MuiDataGrid-gridMenuList"
-            aria-labelledby={exportButtonId}
+            aria-labelledby={buttonId}
             onKeyDown={handleListKeyDown}
             autoFocusItem={Boolean(anchorEl)}
           >
-            {renderExportOptions}
+            {exportOptions.map((option, index) => (
+              <MenuItem key={index} onClick={handleExport(option)}>
+                {option.label}
+              </MenuItem>
+            ))}
           </MenuList>
         </GridMenu>
       </React.Fragment>
