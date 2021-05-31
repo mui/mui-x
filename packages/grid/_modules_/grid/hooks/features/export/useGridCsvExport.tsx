@@ -37,7 +37,7 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
         type: 'text/csv',
       });
 
-      exportAs(blob, 'csv', options?.fileName?.length ? options.fileName : undefined);
+      exportAs(blob, 'csv', options?.fileName);
     },
     [logger, getDataAsCsv],
   );

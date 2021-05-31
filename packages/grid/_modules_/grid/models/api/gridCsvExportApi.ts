@@ -7,14 +7,13 @@ export interface GridCsvExportApi {
   /**
    * Returns the grid data as a CSV string.
    * This method is used internally by `exportDataAsCsv`.
-   * @params GridExportCsvOptions The options to apply on the export.
+   * @param {GridExportCsvOptions} options The options to apply on the export.
    * @returns string
    */
   getDataAsCsv: (options?: GridExportCsvOptions) => string;
   /**
    * Downloads and exports a CSV of the grid's data.
-   * @params GridExportCsvOptions The options to apply on the export.
-   * @returns void
+   * @param {GridExportCsvOptions} options The options to apply on the export.
    */
   exportDataAsCsv: (options?: GridExportCsvOptions) => void;
 }

@@ -42,7 +42,7 @@ export const GridToolbarExport = React.forwardRef<HTMLButtonElement, GridToolbar
 
     const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
     const handleMenuClose = () => setAnchorEl(null);
-    const handleExport = (option: GridExportFormatOption) => () => {
+    const handleExport = (option: GridExportOption) => () => {
       if (option.format === 'csv') {
         apiRef!.current.exportDataAsCsv(option.formatOptions);
       }
