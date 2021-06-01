@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridApiContext } from './components/GridApiContext';
 import { GridPropsContext } from './context/GridPropsContext';
 
-export const GridFooterPlaceholder = () => {
+export function GridFooterPlaceholder() {
   const apiRef = React.useContext(GridApiContext)!;
   const props = React.useContext(GridPropsContext)!;
   const footerRef = React.useRef<HTMLDivElement>(null);

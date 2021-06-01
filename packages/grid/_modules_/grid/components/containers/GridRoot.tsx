@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useForkRef } from '@material-ui/core/utils';
-import { NoSsr } from '@material-ui/core';
+import NoSsr from '@material-ui/core/NoSsr';
 import { GridPropsContext } from '../../context/GridPropsContext';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridRootContainerRef } from '../../models/gridRootContainerRef';
