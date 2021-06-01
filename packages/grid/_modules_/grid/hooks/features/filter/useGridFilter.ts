@@ -291,7 +291,7 @@ export const useGridFilter = (
   useGridApiOptionHandler(apiRef, GRID_FILTER_MODEL_CHANGE, props.onFilterModelChange);
 
   React.useEffect(() => {
-    if (!props || !props.filterModel) {
+    if (!props.filterModel) {
       return;
     }
     const filterModel = props.filterModel;
@@ -301,7 +301,7 @@ export const useGridFilter = (
       // we use apiRef to avoid watching setFilterModel as it will trigger an update on every state change
       apiRef.current.setFilterModel(filterModel);
     }
-  }, [apiRef, logger, props.filterModel, props]);
+  }, [apiRef, logger, props.filterModel]);
 
   React.useEffect(() => {
     if (apiRef.current) {
