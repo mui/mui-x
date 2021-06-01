@@ -77,7 +77,7 @@ function linkify(text, apisToGenerate, format: 'markdown' | 'html') {
     if (!apisToGenerate.includes(content)) {
       return content;
     }
-    const url = `/api/data-grid/${kebabCase(content)}`;
+    const url = `/api/data-grid/${kebabCase(content)}/`;
     return format === 'markdown' ? `[${content}](${url})` : `<a href="${url}">${content}</a>`;
   });
 }

@@ -1,6 +1,6 @@
 # GridCellParams Interface
 
-<p class="description">Object passed as parameter in the column <a href="/api/data-grid/grid-col-def">GridColDef</a> cell renderer.</p>
+<p class="description">Object passed as parameter in the column <a href="/api/data-grid/grid-col-def/">GridColDef</a> cell renderer.</p>
 
 ## Import
 
