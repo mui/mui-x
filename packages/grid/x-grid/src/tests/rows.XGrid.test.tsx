@@ -1,11 +1,18 @@
 import * as React from 'react';
-import { createClientRenderStrictMode } from 'test/utils';
-import { useFakeTimers } from 'sinon';
+import {
+  createClientRenderStrictMode,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  fireEvent,
+  // @ts-expect-error need to migrate helpers to TypeScript
+  screen,
+} from 'test/utils';
+import { useFakeTimers, spy } from 'sinon';
 import { expect } from 'chai';
-import { getCell, getColumnValues } from 'test/utils/helperFn';
+import { getCell, getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 import {
   GridApiRef,
   GridComponentProps,
+  GridPreferencePanelsValue,
   GridRowData,
   useGridApiRef,
   XGrid,
@@ -437,6 +444,81 @@ describe('<XGrid /> - Rows', () => {
         const virtualRowsCount = apiRef!.current!.getState().containerSizes!.virtualRowsCount;
         expect(virtualRowsCount).to.equal(7);
       });
+    });
+  });
+
+  describe('infinite loader', () => {
+    before(function beforeHook() {
+      if (isJSDOM) {
+        // Need layouting
+        this.skip();
+      }
+    });
+
+    let apiRef: GridApiRef;
+    const TestCaseInfiniteLoading = (
+      props: Partial<XGridProps> & { nbRows?: number; nbCols?: number; height?: number },
+    ) => {
+      apiRef = useGridApiRef();
+      const data = useData(props.nbRows || 100, props.nbCols || 10);
+
+      return (
+        <div style={{ width: 300, height: props.height || 300 }}>
+          <XGrid
+            apiRef={apiRef}
+            hideFooterPagination
+            columns={data.columns}
+            rows={data.rows}
+            {...props}
+          />
+        </div>
+      );
+    };
+
+    it('should call onRowsScrollEnd when scroll reaches the bottom of the grid', () => {
+      const handleRowsScrollEnd = spy();
+      render(<TestCaseInfiniteLoading nbRows={20} onRowsScrollEnd={handleRowsScrollEnd} />);
+
+      const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+      gridWindow.scrollTop = 10e6; // scroll to the bottom
+      gridWindow.dispatchEvent(new Event('scroll'));
+
+      expect(handleRowsScrollEnd.callCount).to.equal(1);
+    });
+
+    it('should call onFetchRows when scroll reaches the bottom of the grid', () => {
+      const handleFetchRows = spy();
+      render(
+        <TestCaseInfiniteLoading
+          sortingMode="server"
+          filterMode="server"
+          nbRows={20}
+          rowCount={50}
+          onFetchRows={handleFetchRows}
+        />,
+      );
+
+      const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+      gridWindow.scrollTop = 10e6; // scroll to the bottom
+      gridWindow.dispatchEvent(new Event('scroll'));
+
+      expect(handleFetchRows.callCount).to.equal(1);
+    });
+
+    it('should call onFetchRows when sorting is applied', () => {
+      const handleFetchRows = spy();
+      render(
+        <TestCaseInfiniteLoading
+          sortingMode="server"
+          filterMode="server"
+          nbRows={20}
+          rowCount={50}
+          onFetchRows={handleFetchRows}
+        />,
+      );
+
+      fireEvent.click(getColumnHeaderCell(0));
+      expect(handleFetchRows.callCount).to.equal(1);
     });
   });
 });
