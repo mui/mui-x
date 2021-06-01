@@ -9,7 +9,7 @@ import {
  */
 export interface GridCoreApi extends GridEventEmitter {
   /**
-   * Property that comes true when the grid has its EventEmitter initialised.
+   * Property that comes `true` when the grid has its `EventEmitter` initialised.
    * @ignore - do not document.
    */
   isInitialised: boolean;
