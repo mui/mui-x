@@ -390,29 +390,25 @@ describe('<XGrid /> - Rows', () => {
       expect(isVirtualized).to.equal(false);
     });
 
-    it.only('should allow defer rendering without race conditions', async ()=> {
+    it('should allow defer rendering without race conditions', async ()=> {
       function DeferRendering() {
         const [deferRows, setRows] = React.useState<any>([]);
-        const [deferColumns] = React.useState([{ field: "id", headerName: "Id", width: 100 }]);
+        const [deferColumns] = React.useState([{ field: "id" }]);
 
         React.useEffect(() => {
           setTimeout(() => setRows(()=> []), 0);
           setTimeout(() => setRows(()=> []), 0);
-          setTimeout(() => {
-            console.log('Settime')
-            setRows(()=> [{ id: "1" }, { id: '2' }])
-          }, 1);
+          setTimeout(() => setRows(()=> [{ id: "1" }, { id: '2' }]), 1);
         }, []);
 
-        console.log(deferRows);
         return (
           <div style={{ width: 300, height: 300 }}>
-            <XGrid columns={deferColumns} rows={deferRows} />
+            <XGrid autoHeight columns={deferColumns} rows={deferRows} />
           </div>
         );
       }
       render(<DeferRendering />)
-      await clock.tick(100);
+      await clock.tickAsync(100);
       expect(getColumnValues()).to.deep.equal(['1', '2']);
     });
 
