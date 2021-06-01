@@ -72,32 +72,26 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
       const allowMultiSelect =
         allowMultipleOverride || allowMultipleSelectionKeyPressed.current || checkboxSelection;
 
-      if (allowMultiSelect) {
-        setGridState((state) => {
-          // eslint-disable-next-line prefer-object-spread
-          const selectionState: GridSelectionState = Object.assign({}, state.selection);
+      setGridState((state) => {
+        let selection: GridSelectionState = { ...state.selection };
+        if (allowMultiSelect) {
           const isRowSelected =
-            !allowMultiSelect || isSelected == null ? selectionState[id] === undefined : isSelected;
-
+            !allowMultiSelect || isSelected == null ? selection[id] === undefined : isSelected;
           if (isRowSelected) {
-            selectionState[id] = id;
+            selection[id] = id;
           } else {
-            delete selectionState[id];
+            delete selection[id];
           }
-          return { ...state, selection: selectionState };
-        });
-      } else {
-        setGridState((state) => {
-          let selectionState: GridSelectionState = { ...state.selection };
-          if (isMultipleKeyRef.current && selectionState[id] !== undefined) {
-            selectionState = {};
+        } else {
+          if (isMultipleKeyRef.current && selection[id] !== undefined) {
+            selection = {};
           } else {
-            selectionState = {};
-            selectionState[id] = id;
+            selection = {};
+            selection[id] = id;
           }
-          return { ...state, selection: selectionState };
-        });
-      }
+        }
+        return { ...state, selection };
+      });
       forceUpdate();
 
       const selectionState = apiRef!.current!.getState<GridSelectionState>('selection');
