@@ -80,4 +80,10 @@ export function useResizeContainer(apiRef, { autoHeight }: { autoHeight?: boolea
 
   useGridApiEventHandler(apiRef, GRID_RESIZE, handleResize);
   useGridApiOptionHandler(apiRef, GRID_DEBOUNCED_RESIZE, options.onResize);
+
+  React.useEffect(() => {
+      gridLogger.info('canceling resize...');
+      debounceResize.clear();
+  }, [rowsProp, debounceResize, gridLogger]);
+
 }

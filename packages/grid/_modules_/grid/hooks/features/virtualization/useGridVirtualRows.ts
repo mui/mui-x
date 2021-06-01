@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  GRID_DEBOUNCED_RESIZE,
   GRID_NATIVE_SCROLL,
   GRID_ROWS_SCROLL,
 } from '../../../constants/eventsConstants';
@@ -420,5 +419,4 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
     GRID_NATIVE_SCROLL,
     preventViewportScroll,
   );
-  useGridApiEventHandler(apiRef, GRID_DEBOUNCED_RESIZE, updateViewport);
 };
