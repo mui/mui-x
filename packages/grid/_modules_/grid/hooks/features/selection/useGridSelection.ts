@@ -30,6 +30,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
   const rowsLookup = useGridSelector(apiRef, gridRowsLookupSelector);
   const isMultipleKeyPressed = useGridSelector(apiRef, gridKeyboardMultipleKeySelector);
   const allowMultipleSelectionKeyPressed = React.useRef<boolean>(false);
+  const isMultipleKeyRef = React.useRef<boolean>(false);
 
   const {
     checkboxSelection,
@@ -43,6 +44,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
 
   React.useEffect(() => {
     allowMultipleSelectionKeyPressed.current = !disableMultipleSelection && isMultipleKeyPressed;
+    isMultipleKeyRef.current = isMultipleKeyPressed;
   }, [isMultipleKeyPressed, disableMultipleSelection]);
 
   const getSelectedRows = React.useCallback(
@@ -86,8 +88,13 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
         });
       } else {
         setGridState((state) => {
-          const selectionState: GridSelectionState = {};
-          selectionState[id] = id;
+          let selectionState: GridSelectionState = { ...state.selection };
+          if (isMultipleKeyRef.current && selectionState[id] !== undefined) {
+            selectionState = {};
+          } else {
+            selectionState = {};
+            selectionState[id] = id;
+          }
           return { ...state, selection: selectionState };
         });
       }
