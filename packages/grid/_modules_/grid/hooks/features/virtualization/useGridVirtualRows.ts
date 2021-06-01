@@ -1,8 +1,5 @@
 import * as React from 'react';
-import {
-  GRID_NATIVE_SCROLL,
-  GRID_ROWS_SCROLL,
-} from '../../../constants/eventsConstants';
+import { GRID_NATIVE_SCROLL, GRID_ROWS_SCROLL } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridVirtualizationApi } from '../../../models/api/gridVirtualizationApi';
 import { GridCellIndexCoordinates } from '../../../models/gridCell';
