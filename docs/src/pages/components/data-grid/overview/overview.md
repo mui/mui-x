@@ -103,5 +103,5 @@ Here are some resources you might be interested in to learn more about the grid:
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid)
-- [XGrid](/api/data-grid/x-grid)
+- [DataGrid](/api/data-grid/data-grid/)
+- [XGrid](/api/data-grid/x-grid/)

@@ -35,5 +35,5 @@ The following demo shows how to subcribe to the `columnResize` event. Try it by 
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid)
-- [XGrid](/api/data-grid/x-grid)
+- [DataGrid](/api/data-grid/data-grid/)
+- [XGrid](/api/data-grid/x-grid/)

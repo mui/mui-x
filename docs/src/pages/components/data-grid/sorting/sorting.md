@@ -85,5 +85,5 @@ The grid exposes a set of methods that enables all of these features using the i
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid)
-- [XGrid](/api/data-grid/x-grid)
+- [DataGrid](/api/data-grid/data-grid/)
+- [XGrid](/api/data-grid/x-grid/)

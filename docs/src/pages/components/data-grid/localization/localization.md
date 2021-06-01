@@ -74,5 +74,5 @@ See the [Docs](https://material-ui.com/components/data-grid/localization/) for m
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid)
-- [XGrid](/api/data-grid/x-grid)
+- [DataGrid](/api/data-grid/data-grid/)
+- [XGrid](/api/data-grid/x-grid/)

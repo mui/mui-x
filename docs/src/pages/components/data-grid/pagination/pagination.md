@@ -72,5 +72,5 @@ Below is an example of how you can reset the page using the imperative `setPage`
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid)
-- [XGrid](/api/data-grid/x-grid)
+- [DataGrid](/api/data-grid/data-grid/)
+- [XGrid](/api/data-grid/x-grid/)

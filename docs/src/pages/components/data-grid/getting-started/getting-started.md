@@ -218,5 +218,5 @@ Here is [the public roadmap](https://github.com/mui-org/material-ui-x/projects/1
 
 ## API
 
-- [DataGrid](/api/data-grid/data-grid)
-- [XGrid](/api/data-grid/x-grid)
+- [DataGrid](/api/data-grid/data-grid/)
+- [XGrid](/api/data-grid/x-grid/)
