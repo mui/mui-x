@@ -3,8 +3,6 @@ import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
   fireEvent,
-  // @ts-expect-error need to migrate helpers to TypeScript
-  screen,
 } from 'test/utils';
 import { useFakeTimers, spy } from 'sinon';
 import { expect } from 'chai';
@@ -12,7 +10,6 @@ import { getCell, getColumnHeaderCell, getColumnValues } from 'test/utils/helper
 import {
   GridApiRef,
   GridComponentProps,
-  GridPreferencePanelsValue,
   GridRowData,
   useGridApiRef,
   XGrid,
