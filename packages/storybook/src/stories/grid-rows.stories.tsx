@@ -20,7 +20,6 @@ import {
   GridEditCellPropsParams,
   GridEditRowModelParams,
   GRID_CELL_EDIT_ENTER,
-  GridToolbar,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
@@ -916,101 +915,6 @@ export function SwitchVirtualization() {
       <div style={{ width: '100%', height: 500 }}>
         <XGrid rows={data.rows} columns={data.columns} />
       </div>
-    </div>
-  );
-}
-
-export function InfiniteLoader() {
-  const data = {
-    rows: [
-      {
-        id: 0,
-        brand: 'Nike',
-      },
-      {
-        id: 1,
-        brand: 'Adidas',
-      },
-      {
-        id: 2,
-        brand: 'Puma',
-      },
-      {
-        id: 3,
-        brand: 'SB',
-      },
-      {
-        id: 4,
-        brand: 'New Balance',
-      },
-      {
-        id: 5,
-        brand: 'Reebok',
-      },
-      {
-        id: 6,
-        brand: 'Test 6',
-      },
-      {
-        id: 7,
-        brand: 'Test 7',
-      },
-      {
-        id: 8,
-        brand: 'Test 8',
-      },
-      {
-        id: 9,
-        brand: 'Test 8',
-      },
-    ],
-    columns: [{ field: 'brand', flex: 1 }],
-  };
-
-  return (
-    <div style={{ height: 400, width: '100%' }}>
-      <XGrid
-        {...data}
-        hideFooterPagination
-        rowCount={20}
-        sortingMode="server"
-        filterMode="server"
-        components={{
-          Toolbar: GridToolbar,
-        }}
-        onFetchRows={(params) => {
-          const newRowsBatch: any = [];
-          while (newRowsBatch.length < params.viewportPageSize) {
-            const id = Math.floor(Math.random() * 1000);
-            newRowsBatch.push({
-              id,
-              brand: `Jordan ${id}`,
-            });
-          }
-
-          if (params.filterModel.items.length) {
-            params.api.current.insertRows({
-              startIndex: params.startIndex,
-              pageSize: params.viewportPageSize,
-              newRows: newRowsBatch,
-              rowCount: 10,
-            });
-          } else if (params.sortModel.length) {
-            params.api.current.insertRows({
-              startIndex: params.startIndex,
-              pageSize: params.viewportPageSize,
-              newRows: newRowsBatch,
-              rowCount: 20,
-            });
-          } else {
-            params.api.current.insertRows({
-              startIndex: params.startIndex,
-              pageSize: params.viewportPageSize,
-              newRows: newRowsBatch,
-            });
-          }
-        }}
-      />
     </div>
   );
 }
