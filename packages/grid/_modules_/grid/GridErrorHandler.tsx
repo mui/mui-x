@@ -7,7 +7,7 @@ import { useGridState } from './hooks/features/core/useGridState';
 import { useLogger } from './hooks/utils/useLogger';
 
 export function GridErrorHandler(props) {
-  const { children } = props
+  const { children } = props;
   const logger = useLogger('GridErrorHandler');
   const apiRef = React.useContext(GridApiContext)!;
   const propsContext = React.useContext(GridPropsContext)!;

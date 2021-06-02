@@ -23,7 +23,10 @@ export function getScrollbarSize(doc: Document, element: HTMLElement): number {
   return scrollbarSize;
 }
 
-export function useGridScrollbarSizeDetector(apiRef: GridApiRef, {scrollbarSize}: Pick<GridComponentProps, 'scrollbarSize'>) {
+export function useGridScrollbarSizeDetector(
+  apiRef: GridApiRef,
+  { scrollbarSize }: Pick<GridComponentProps, 'scrollbarSize'>,
+) {
   const logger = useLogger('useGridScrollbarSizeDetector');
   const [detectedScrollBarSize, setDetectedScrollBarSize] = React.useState<number>(0);
   const [, setGridState] = useGridState(apiRef);

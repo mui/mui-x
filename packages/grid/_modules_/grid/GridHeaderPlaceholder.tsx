@@ -13,4 +13,4 @@ export function GridHeaderPlaceholder() {
       <apiRef.current.components.Header {...props.componentsProps?.header} />
     </div>
   );
-};
+}
