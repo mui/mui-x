@@ -71,7 +71,7 @@ Use the arrow keys to move the focus.
 |                                             <kbd class="key">CTRL</kbd> + <kbd class="key">A</kbd> | Select all rows                                   |
 |                                             <kbd class="key">CTRL</kbd> + <kbd class="key">C</kbd> | Copy the currently selected row                   |
 |                                                        <kbd class="key">CTRL</kbd> + Click on cell | Enable multi-selection                            |
-|                                              <kbd class="key">CTRL</kbd> + Click on a selected row | Deselects a row                                   |
+|                                              <kbd class="key">CTRL</kbd> + Click on a selected row | Deselects the row                                   |
 |                                                                       <kbd class="key">Enter</kbd> | Sort column when column header is focused         |
 |                                         <kbd class="key">CTRL</kbd> + <kbd class="key">Enter</kbd> | Open column menu when column header is focused    |
 
