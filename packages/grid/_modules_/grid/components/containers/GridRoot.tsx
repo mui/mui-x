@@ -21,6 +21,7 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
   const apiRef = React.useContext(GridApiContext)!;
   const propsContext = React.useContext(GridPropsContext)!;
   const { className } = propsContext;
+  const { children, className: classNameProp, ...other } = props;
   const visibleColumnsLength = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
   const [gridState] = useGridState(apiRef!);
   const options = useGridSelector(apiRef, optionsSelector);
@@ -32,7 +33,7 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
     <NoSsr>
       <div
         ref={handleRef}
-        className={clsx(classes.root, options.classes?.root, className, {
+        className={clsx(classes.root, options.classes?.root, className, classNameProp, {
           'MuiDataGrid-autoHeight': gridState.options.autoHeight,
         })}
         role="grid"
@@ -41,8 +42,9 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
         aria-multiselectable={!gridState.options.disableMultipleSelection}
         aria-label={propsContext['aria-label']}
         aria-labelledby={propsContext['aria-labelledby']}
+        {...other}
       >
-        {props.children}
+        {children}
       </div>
     </NoSsr>
   );
