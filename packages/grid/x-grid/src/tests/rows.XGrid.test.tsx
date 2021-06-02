@@ -408,7 +408,7 @@ describe('<XGrid /> - Rows', () => {
         );
       }
       render(<DeferRendering />);
-      await clock.tickAsync(100);
+      await clock.tickAsync(150);
       expect(getColumnValues()).to.deep.equal(['1', '2']);
     });
 
