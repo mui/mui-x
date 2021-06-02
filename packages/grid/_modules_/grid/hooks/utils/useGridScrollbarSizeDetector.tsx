@@ -1,6 +1,7 @@
 // TODO replace with { unstable_getScrollbarSize } from '@material-ui/utils'
 import { ownerDocument } from '@material-ui/core/utils';
 import * as React from 'react';
+import { GridComponentProps } from '../../GridComponentProps';
 import { GridApiRef } from '../../models/api/gridApiRef';
 import { useEnhancedEffect } from '../../utils/material-ui-utils';
 import { allGridColumnsSelector } from '../features/columns/gridColumnsSelector';
@@ -22,30 +23,30 @@ export function getScrollbarSize(doc: Document, element: HTMLElement): number {
   return scrollbarSize;
 }
 
-export function useGridScrollbarSizeDetector(apiRef: GridApiRef, scrollBarSizeProp?: number) {
+export function useGridScrollbarSizeDetector(apiRef: GridApiRef, {scrollbarSize}: Pick<GridComponentProps, 'scrollbarSize'>) {
   const logger = useLogger('useGridScrollbarSizeDetector');
   const [detectedScrollBarSize, setDetectedScrollBarSize] = React.useState<number>(0);
   const [, setGridState] = useGridState(apiRef);
   const hasColumns = useGridSelector(apiRef, allGridColumnsSelector).length > 0;
 
   const detectScrollbarSize = React.useCallback(() => {
-    let scrollbarSize = 0;
+    let sbSize = 0;
     if (apiRef.current?.rootElementRef?.current) {
       const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
-      scrollbarSize = getScrollbarSize(doc, apiRef.current.rootElementRef!.current as HTMLElement);
-      logger.debug(`Detected scroll bar size ${scrollbarSize}.`);
+      sbSize = getScrollbarSize(doc, apiRef.current.rootElementRef!.current as HTMLElement);
+      logger.debug(`Detected scroll bar size ${sbSize}.`);
     }
-    setDetectedScrollBarSize(scrollbarSize);
+    setDetectedScrollBarSize(sbSize);
   }, [apiRef, logger]);
 
   useEnhancedEffect(() => {
-    if (hasColumns && scrollBarSizeProp == null) {
+    if (hasColumns && scrollbarSize == null) {
       detectScrollbarSize();
     }
-  }, [detectScrollbarSize, hasColumns, scrollBarSizeProp]);
+  }, [detectScrollbarSize, hasColumns, scrollbarSize]);
 
   React.useEffect(() => {
-    if (scrollBarSizeProp == null) {
+    if (scrollbarSize == null) {
       setGridState((state) => ({
         ...state,
         options: {
@@ -54,5 +55,5 @@ export function useGridScrollbarSizeDetector(apiRef: GridApiRef, scrollBarSizePr
         },
       }));
     }
-  }, [scrollBarSizeProp, detectedScrollBarSize, setGridState]);
+  }, [scrollbarSize, detectedScrollBarSize, setGridState]);
 }

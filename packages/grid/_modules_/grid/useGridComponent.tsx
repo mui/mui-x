@@ -25,6 +25,7 @@ import { useApi } from './hooks/root/useApi';
 import { useEvents } from './hooks/root/useEvents';
 import { useGridContainerProps } from './hooks/root/useGridContainerProps';
 import { useErrorHandler } from './hooks/utils/useErrorHandler';
+import { useGridScrollbarSizeDetector } from './hooks/utils/useGridScrollbarSizeDetector';
 import { useLoggerFactory } from './hooks/utils/useLogger';
 import { useOptionsProp } from './hooks/utils/useOptionsProp';
 import { useRenderInfoLog } from './hooks/utils/useRenderInfoLog';
@@ -36,6 +37,7 @@ export const useGridComponent = (apiRef: GridApiRef, props: GridComponentProps) 
   useLoggerFactory(apiRef, props);
   useApi(apiRef);
   useErrorHandler(apiRef, props);
+  useGridScrollbarSizeDetector(apiRef, props)
   useOptionsProp(apiRef, props);
   useEvents(apiRef);
   useLocaleText(apiRef);
