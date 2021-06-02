@@ -10,7 +10,7 @@ export function GridErrorHandler(props) {
   const { children } = props
   const logger = useLogger('GridErrorHandler');
   const apiRef = React.useContext(GridApiContext)!;
-  const props = React.useContext(GridPropsContext)!;
+  const propsContext = React.useContext(GridPropsContext)!;
   const [gridState] = useGridState(apiRef);
 
   return (
@@ -23,7 +23,7 @@ export function GridErrorHandler(props) {
         <GridMainContainer>
           <apiRef.current.components.ErrorOverlay
             {...errorProps}
-            {...props.componentsProps?.errorOverlay}
+            {...propsContext.componentsProps?.errorOverlay}
           />
         </GridMainContainer>
       )}

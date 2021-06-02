@@ -5,7 +5,7 @@
 import * as React from 'react';
 import { GridRoot } from './components/containers/GridRoot';
 import { GridContextProvider } from './context/GridContextProvider';
-import { ErrorHandler } from './ErrorHandler';
+import { GridErrorHandler } from './GridErrorHandler';
 import { GridBody } from './GridBody';
 import { GridComponentProps } from './GridComponentProps';
 import { GridFooterPlaceholder } from './GridFooterPlaceholder';
@@ -24,11 +24,11 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     return (
       <GridContextProvider apiRef={apiRef} props={props}>
         <GridRoot ref={ref}>
-          <ErrorHandler>
+          <GridErrorHandler>
             <GridHeaderPlaceholder />
             <GridBody />
             <GridFooterPlaceholder />
-          </ErrorHandler>
+          </GridErrorHandler>
         </GridRoot>
       </GridContextProvider>
     );

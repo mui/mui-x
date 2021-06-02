@@ -14,13 +14,13 @@ import { GridApiContext } from '../GridApiContext';
 export type GridRootProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(
-  { children },
+  props,
   ref,
 ) {
   const classes = useStyles();
   const apiRef = React.useContext(GridApiContext)!;
-  const props = React.useContext(GridPropsContext)!;
-  const { className } = props;
+  const propsContext = React.useContext(GridPropsContext)!;
+  const { className } = propsContext;
   const visibleColumnsLength = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
   const [gridState] = useGridState(apiRef!);
   const options = useGridSelector(apiRef, optionsSelector);
@@ -39,10 +39,10 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
         aria-colcount={visibleColumnsLength}
         aria-rowcount={gridState.rows.totalRowCount}
         aria-multiselectable={!gridState.options.disableMultipleSelection}
-        aria-label={props['aria-label']}
-        aria-labelledby={props['aria-labelledby']}
+        aria-label={propsContext['aria-label']}
+        aria-labelledby={propsContext['aria-labelledby']}
       >
-        {children}
+        {props.children}
       </div>
     </NoSsr>
   );
