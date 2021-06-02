@@ -11,6 +11,7 @@ import {
   GridApiRef,
   GridComponentProps,
   GridRowData,
+  GRID_SKELETON_CELL_CSS_CLASS,
   useGridApiRef,
   XGrid,
   XGridProps,
@@ -444,7 +445,7 @@ describe('<XGrid /> - Rows', () => {
     });
   });
 
-  describe('infinite loader', () => {
+  describe('Infinite loader', () => {
     before(function beforeHook() {
       if (isJSDOM) {
         // Need layouting
@@ -516,6 +517,54 @@ describe('<XGrid /> - Rows', () => {
 
       fireEvent.click(getColumnHeaderCell(0));
       expect(handleFetchRows.callCount).to.equal(1);
+    });
+
+    it('should render skeleton cell if rowCount is bigger than the number of rows', () => {
+      render(
+        <TestCaseInfiniteLoading
+          sortingMode="server"
+          filterMode="server"
+          nbRows={20}
+          rowCount={50}
+        />,
+      );
+
+      const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+      gridWindow.scrollTop = 10e6; // scroll to the bottom
+      gridWindow.dispatchEvent(new Event('scroll'));
+
+      const lastCell = document.querySelector('[role="row"]:last-child [role="cell"]:first-child')!;
+
+      expect(lastCell.classList.contains(GRID_SKELETON_CELL_CSS_CLASS)).to.equal(true);
+    });
+
+    it('should update allRows accordingly when apiRef.current.insertRows is called', () => {
+      render(
+        <TestCaseInfiniteLoading
+          sortingMode="server"
+          filterMode="server"
+          nbRows={5}
+          nbCols={2}
+          rowCount={10}
+        />,
+      );
+
+      const pageSize = 3;
+      const startIndex = 7;
+      const endIndex = startIndex + pageSize;
+      const newRows: GridRowData[] = [
+        { id: 'new-1', currencyPair: '' },
+        { id: 'new-2', currencyPair: '' },
+        { id: 'new-3', currencyPair: '' },
+      ];
+
+      const initialAllRows = apiRef!.current!.getState().rows!.allRows;
+      expect(initialAllRows.slice(startIndex, endIndex)).to.deep.equal([null, null, null]);
+
+      apiRef!.current!.insertRows({ startIndex, pageSize, newRows });
+
+      const updatedAllRows = apiRef!.current!.getState().rows!.allRows;
+      expect(updatedAllRows.slice(startIndex, endIndex)).to.deep.equal(['new-1', 'new-2', 'new-3']);
     });
   });
 });
