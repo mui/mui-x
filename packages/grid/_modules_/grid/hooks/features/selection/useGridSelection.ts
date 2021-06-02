@@ -73,22 +73,22 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
         allowMultipleOverride || allowMultipleSelectionKeyPressed.current || checkboxSelection;
 
       setGridState((state) => {
-        let selection: GridSelectionState = { ...state.selection };
+        let selectionState: GridSelectionState = { ...state.selection };
         if (allowMultiSelect) {
           const isRowSelected =
-            !allowMultiSelect || isSelected == null ? selection[id] === undefined : isSelected;
+            !allowMultiSelect || isSelected == null ? selectionState[id] === undefined : isSelected;
           if (isRowSelected) {
-            selection[id] = id;
+            selectionState[id] = id;
           } else {
-            delete selection[id];
+            delete selectionState[id];
           }
-        } else if (isMultipleKeyPressedRef.current && selection[id] !== undefined) {
-          selection = {};
+        } else if (isMultipleKeyPressedRef.current && selectionState[id] !== undefined) {
+          selectionState = {};
         } else {
-          selection = {};
-          selection[id] = id;
+          selectionState = {};
+          selectionState[id] = id;
         }
-        return { ...state, selection };
+        return { ...state, selection: selectionState };
       });
       forceUpdate();
 
