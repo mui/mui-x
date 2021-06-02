@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { GRID_DEFAULT_LOCALE_TEXT } from '../constants/localeTextConstants';
 import { GridFilterModel } from '../hooks/features/filter/gridFilterModelState';
-import { Logger } from '../hooks/utils/useLogger';
 import { GridLocaleText } from './api/gridLocaleTextApi';
 import { GridColumnTypesRecord } from './colDef/gridColTypeDef';
 import { getGridDefaultColumnTypes } from './colDef/gridDefaultColumnTypes';
 import { GridDensity, GridDensityTypes } from './gridDensity';
 import { GridEditRowsModel } from './gridEditRowModel';
 import { GridFeatureMode, GridFeatureModeConstant } from './gridFeatureMode';
+import { Logger } from './logger';
 import { GridCellParams } from './params/gridCellParams';
 import { GridColumnHeaderParams } from './params/gridColumnHeaderParams';
 import { GridFilterModelParams } from './params/gridFilterModelParams';
@@ -193,7 +193,7 @@ export interface GridOptions {
    * Pass a custom logger in the components that implements the [[Logger]] interface.
    * @default null
    */
-  logger?: Logger;
+  logger: Logger;
   /**
    * Allows to pass the logging level or false to turn off logging.
    * @default debug
@@ -507,4 +507,6 @@ export const DEFAULT_GRID_OPTIONS: GridOptions = {
   scrollEndThreshold: 80,
   sortingMode: GridFeatureModeConstant.client,
   sortingOrder: ['asc', 'desc', null],
+  logger: console,
+  logLevel: process.env.NODE_ENV === 'production' ? 'error' : 'warn',
 };

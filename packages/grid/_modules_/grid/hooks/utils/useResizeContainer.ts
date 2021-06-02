@@ -10,9 +10,8 @@ import { optionsSelector } from './optionsSelector';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
-export function useResizeContainer(apiRef) {
+export function useResizeContainer(apiRef, { autoHeight }: { autoHeight?: boolean }) {
   const gridLogger = useLogger('useResizeContainer');
-  const { autoHeight } = useGridSelector(apiRef, optionsSelector);
   const options = useGridSelector(apiRef, optionsSelector);
   const warningShown = React.useRef(false);
 

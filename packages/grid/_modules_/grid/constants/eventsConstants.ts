@@ -5,6 +5,10 @@
  * @event
  */
 export const GRID_RESIZE = 'resize';
+/**
+ * Fired when the grid is resized with a debounced time of 60ms. Called with a [[GridResizeParams]] object.
+ * @event
+ */
 export const GRID_DEBOUNCED_RESIZE = 'debouncedResize';
 
 /**

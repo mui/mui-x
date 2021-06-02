@@ -166,7 +166,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
         expect(() => {
           render(
             <div style={{ width: 300, height: 0 }}>
-              <DataGrid {...baselineProps} logger={console} logLevel="warn" />
+              <DataGrid {...baselineProps} />
             </div>,
           );
           // Use timeout to allow simpler tests in JSDOM.
@@ -182,7 +182,7 @@ describe('<DataGrid /> - Layout & Warnings', () => {
           render(
             <div style={{ width: 0 }}>
               <div style={{ width: '100%', height: 300 }}>
-                <DataGrid {...baselineProps} logger={console} logLevel="warn" />
+                <DataGrid {...baselineProps} />
               </div>
             </div>,
           );

@@ -11,6 +11,7 @@ import { GridComponentProps } from './GridComponentProps';
 import { GridFooterPlaceholder } from './GridFooterPlaceholder';
 import { GridHeaderPlaceholder } from './GridHeaderPlaceholder';
 import { useGridApiRef } from './hooks/features/useGridApiRef';
+import { DEFAULT_GRID_OPTIONS } from './models/gridOptions';
 import { useGridComponent } from './useGridComponent';
 
 // TODO recompose the api type
@@ -34,3 +35,4 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     );
   },
 );
+GridComponent.defaultProps = DEFAULT_GRID_OPTIONS;

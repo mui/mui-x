@@ -1,14 +1,8 @@
 import * as React from 'react';
-import { isFunction, localStorageAvailable } from '../../utils/utils';
+import { Logger } from '../../models/logger';
+import { localStorageAvailable } from '../../utils/utils';
 
 const forceDebug = localStorageAvailable() && window.localStorage.getItem('DEBUG') != null;
-
-export interface Logger {
-  debug: (...args: any[]) => void;
-  info: (...args: any[]) => void;
-  warn: (...args: any[]) => void;
-  error: (...args: any[]) => void;
-}
 
 const noop = () => {};
 
@@ -55,9 +49,7 @@ let factory: LoggerFactoryFn | null;
 
 export function useLoggerFactory(
   apiRef: any,
-  { logger, logLevel }: { logger?: Logger | LoggerFactoryFn; logLevel?: string | false } = {
-    logLevel: process.env.NODE_ENV === 'production' ? 'error' : 'warn',
-  },
+  { logger, logLevel }: { logger?: Logger; logLevel?: string | false },
 ) {
   if (forceDebug) {
     factory = defaultFactory('debug');
@@ -66,11 +58,6 @@ export function useLoggerFactory(
 
   if (!logger) {
     factory = logLevel ? defaultFactory(logLevel.toString()) : null;
-    return;
-  }
-
-  if (isFunction(logger)) {
-    factory = logger;
     return;
   }
 

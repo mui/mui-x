@@ -41,7 +41,7 @@ export const useGridComponent = (apiRef: GridApiRef, props: GridComponentProps) 
   useOptionsProp(apiRef, props);
   useEvents(apiRef);
   useLocaleText(apiRef);
-  useResizeContainer(apiRef);
+  useResizeContainer(apiRef, props);
   useGridFreezeRows(apiRef, props);
   useGridColumns(apiRef, props);
   useGridParamsApi(apiRef);
