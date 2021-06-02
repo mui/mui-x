@@ -50,7 +50,7 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
     (rowsCount: number) => {
       logger.debug('Calculating scrollbar sizes.');
 
-      const hasScrollX = columnsTotalWidth > windowSizesRef.current.width;
+      let hasScrollX = columnsTotalWidth > windowSizesRef.current.width;
       const scrollBarSize = {
         y: 0,
         x: hasScrollX ? options.scrollbarSize! : 0,
@@ -68,6 +68,10 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
         requiredSize + scrollBarSize.x > windowSizesRef.current.height;
 
       scrollBarSize.y = hasScrollY ? options.scrollbarSize! : 0;
+
+      // We recalculate the scroll x to consider the size of the y scrollbar.
+      hasScrollX = columnsTotalWidth + scrollBarSize.y > windowSizesRef.current.width;
+      scrollBarSize.x = hasScrollX ? options.scrollbarSize! : 0;
 
       logger.debug(`Scrollbar size on axis x: ${scrollBarSize.x}, y: ${scrollBarSize.y}`);
 

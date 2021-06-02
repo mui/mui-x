@@ -1,11 +1,11 @@
 import { GridCellParams } from './params/gridCellParams';
 
 /**
- * A function used to process cellClassParams.
+ * A function used to process cellClassName params.
  */
-export type GridCellClassFn = (params: GridCellParams) => string | string[];
+export type GridCellClassFn = (params: GridCellParams) => string;
 
 /**
  * The union type representing the [[GridColDef]] cell class type.
  */
-export type GridCellClassNamePropType = string | string[] | GridCellClassFn;
+export type GridCellClassNamePropType = string | GridCellClassFn;

@@ -96,9 +96,9 @@ To achieve that, set the `valueGetter` attribute of `GridColDef` as in the examp
 **Note**: You need to set a `sortComparator` for the column sorting to work when setting the `valueGetter` attribute.
 
 ```tsx
-function getFullName(params: ValueGetterParams) {
-  return `${params.getValue('firstName') || ''} ${
-    params.getValue('lastName') || ''
+function getFullName(params) {
+  return `${params.getValue(params.id, 'firstName') || ''} ${
+    params.getValue(params.id, 'lastName') || ''
   }`;
 }
 
