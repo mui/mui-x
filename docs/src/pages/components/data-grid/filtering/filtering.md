@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Filtering
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Filtering
@@ -161,7 +160,7 @@ const filterModel: GridFilterModel = {
 
 ## apiRef <span class="pro"></span>
 
-<!-- https://master--material-ui-x.netlify.app/components/data-grid/rows/#apiref -->
+{{"demo": "pages/components/data-grid/filtering/FilterApi.js", "bg": "inline", "hideToolbar": true}}
 
 ## 🚧 Quick filter
 
@@ -171,3 +170,8 @@ const filterModel: GridFilterModel = {
 
 In addition to the column specific filtering, a global quick filtering will also be available.
 The provided search text will match against all the cells.
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid/)
+- [XGrid](/api/data-grid/x-grid/)
