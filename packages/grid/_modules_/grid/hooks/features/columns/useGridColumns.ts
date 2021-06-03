@@ -53,17 +53,16 @@ function updateColumnsWidth(columns: GridColumns, viewportWidth: number) {
   let newColumns = columns;
   if (numberOfFluidColumns) {
     const flexMultiplier = viewportWidth / flexDivider;
-    newColumns = columns.map((column) =>
-      viewportWidth > 0
-        ? {
-            ...column,
-            width: column.flex! ? Math.floor(flexMultiplier * column.flex!) : column.width,
-          }
-        : {
-            ...column,
-            width: column.flex! ? GRID_STRING_COL_DEF.width : column.width,
-          },
-    );
+    newColumns = columns.map((column) => {
+      if (!column.flex) {
+        return column;
+      }
+      return {
+        ...column,
+        width:
+          viewportWidth > 0 ? Math.floor(flexMultiplier * column.flex!) : GRID_STRING_COL_DEF.width,
+      };
+    });
   }
   return newColumns;
 }
