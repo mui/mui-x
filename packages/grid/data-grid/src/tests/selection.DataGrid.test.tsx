@@ -12,6 +12,49 @@ describe('<DataGrid /> - Selection', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
+  it('should be selected and unselected when clicking on a row', () => {
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          rows={[
+            {
+              id: 0,
+              brand: 'Nike',
+            },
+            {
+              id: 1,
+              brand: 'Adidas',
+            },
+          ]}
+          columns={[{ field: 'brand', width: 100 }]}
+        />
+      </div>,
+    );
+    const firstRow = getRow(0);
+    const secondRow = getRow(1);
+
+    // selecting row on click without key press
+    fireEvent.click(screen.getByRole('cell', { name: 'Nike' }));
+    expect(firstRow).to.have.class('Mui-selected');
+    fireEvent.click(screen.getByRole('cell', { name: 'Adidas' }));
+    expect(firstRow).not.to.have.class('Mui-selected');
+    expect(secondRow).to.have.class('Mui-selected');
+
+    // selecting another row with key press
+    fireEvent.click(screen.getByRole('cell', { name: 'Nike' }), { metaKey: true });
+    expect(secondRow).not.to.have.class('Mui-selected');
+    expect(firstRow).to.have.class('Mui-selected');
+
+    // deselecting a selected row without key press
+    fireEvent.click(screen.getByRole('cell', { name: 'Nike' }));
+    expect(firstRow).to.have.class('Mui-selected');
+
+    // deselecting a selected row with key press
+    fireEvent.click(screen.getByRole('cell', { name: 'Nike' }), { metaKey: true });
+    expect(firstRow).not.to.have.class('Mui-selected');
+    expect(secondRow).not.to.have.class('Mui-selected');
+  });
+
   describe('prop: checkboxSelection', () => {
     it('should check and uncheck when double clicking the row', () => {
       render(
