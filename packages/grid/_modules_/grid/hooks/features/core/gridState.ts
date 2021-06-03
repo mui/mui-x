@@ -22,7 +22,6 @@ import {
   VisibleGridRowsState,
 } from '../filter/visibleGridRowsState';
 import { GridFocusState, GridTabIndexState } from '../focus/gridFocusState';
-import { GridKeyboardState } from '../keyboard/gridKeyboardState';
 import { GridPaginationState } from '../pagination/gridPaginationState';
 import { GridPreferencePanelState } from '../preferencesPanel/gridPreferencePanelState';
 import { getInitialGridRowState, InternalGridRowsState } from '../rows/gridRowsState';
@@ -48,7 +47,6 @@ export interface GridState {
   viewportSizes: GridViewportSizeState;
   scrollBar: GridScrollBarState;
   sorting: GridSortingState;
-  keyboard: GridKeyboardState;
   focus: GridFocusState;
   tabIndex: GridTabIndexState;
   selection: GridSelectionState;
@@ -78,7 +76,6 @@ export const getInitialGridState: () => GridState = () => ({
   scrollBar: { hasScrollX: false, hasScrollY: false, scrollBarSize: { x: 0, y: 0 } },
   viewportSizes: { width: 0, height: 1 },
   sorting: getInitialGridSortingState(),
-  keyboard: { isMultipleKeyPressed: false },
   focus: { cell: null, columnHeader: null },
   tabIndex: { cell: null, columnHeader: null },
   selection: {},

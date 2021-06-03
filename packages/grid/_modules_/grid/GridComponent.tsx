@@ -89,7 +89,7 @@ export const GridComponent = React.forwardRef<HTMLDivElement, GridComponentProps
     useGridRows(apiRef, props.rows, props.getRowId);
     useGridEditRows(apiRef);
     useGridFocus(apiRef);
-    useGridKeyboard(rootContainerRef, apiRef);
+    useGridKeyboard(apiRef);
     useGridKeyboardNavigation(rootContainerRef, apiRef);
     useGridSelection(apiRef);
     useGridSorting(apiRef, props.rows);
