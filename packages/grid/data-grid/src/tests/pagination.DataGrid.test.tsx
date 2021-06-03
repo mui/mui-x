@@ -315,14 +315,7 @@ describe('<DataGrid /> - Pagination', () => {
         const columns = [{ field: 'x', type: 'number' }];
         render(
           <div style={{ height: 300, width: 400 }}>
-            <DataGrid
-              autoHeight={isJSDOM}
-              pagination
-              autoPageSize
-              rows={rows}
-              columns={columns}
-              page={2}
-            />
+            <DataGrid pagination autoPageSize rows={rows} columns={columns} page={2} />
           </div>,
         );
         expect(getColumnValues(0)).to.deep.equal(['7', '8']);
