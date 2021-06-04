@@ -240,9 +240,10 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
       return;
     }
 
+    const containerState = getContainerProps(rowsCount, viewportSizes, scrollBar);
     updateStateIfChanged(
-      (state) => state.scrollBar !== scrollBar,
-      (state) => ({ ...state, scrollBar }),
+      (state) => !isDeepEqual(state.containerSizes, containerState),
+      (state) => ({ ...state, containerSizes: containerState }),
     );
 
     updateStateIfChanged(
@@ -250,10 +251,9 @@ export const useGridContainerProps = (apiRef: GridApiRef) => {
       (state) => ({ ...state, viewportSizes }),
     );
 
-    const containerState = getContainerProps(rowsCount, viewportSizes, scrollBar);
     updateStateIfChanged(
-      (state) => !isDeepEqual(state.containerSizes, containerState),
-      (state) => ({ ...state, containerSizes: containerState }),
+      (state) => state.scrollBar !== scrollBar,
+      (state) => ({ ...state, scrollBar }),
     );
   }, [
     getContainerProps,
