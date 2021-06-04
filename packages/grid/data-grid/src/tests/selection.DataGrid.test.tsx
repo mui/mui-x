@@ -12,7 +12,7 @@ describe('<DataGrid /> - Selection', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
-  it('should be selected and unselected when clicking on a row', () => {
+  it('should be selected and deselected when clicking on a row', () => {
     render(
       <div style={{ width: 300, height: 300 }}>
         <DataGrid
