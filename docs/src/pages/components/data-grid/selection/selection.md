@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Selection
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Selection
@@ -70,7 +69,7 @@ The grid exposes a set of methods that enables all of these features using the i
 
 > ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
 
-- `onSelectionChange`: Callback fired when the selection state of one or multiple rows changes.
+{{"demo": "pages/components/data-grid/selection/SelectionApi.js", "bg": "inline", "hideToolbar": true}}
 
 ## 🚧 Range selection [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
@@ -79,3 +78,8 @@ The grid exposes a set of methods that enables all of these features using the i
 > 👍 Upvote [issue #208](https://github.com/mui-org/material-ui-x/issues/208) if you want to see it land faster.
 
 With this feature, you will be able to select ranges of cells across the Grid.
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid/)
+- [XGrid](/api/data-grid/x-grid/)

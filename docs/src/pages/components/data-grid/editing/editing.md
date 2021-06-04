@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Editing
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Editing
@@ -121,10 +120,10 @@ You can override the default [start editing](#start-editing) triggers using the 
 The editing feature leverages the event capability of the grid and the apiRef.
 The following events can be imported and used to customize the edition:
 
-- `GRID_CELL_EDIT_ENTER`: emitted when the cell turns to edit mode.
-- `GRID_CELL_EDIT_EXIT`: emitted when the cell turns back to view mode.
-- `GRID_CELL_EDIT_PROPS_CHANGE`: emitted when the edit input change.
-- `GRID_CELL_EDIT_PROPS_CHANGE_COMMITTED`: emitted when the edit input change is submitted.
+- `cellEditEnter`: emitted when the cell turns to edit mode.
+- `cellEditExit`: emitted when the cell turns back to view mode.
+- `cellEditPropsChange`: emitted when the edit input change.
+- `cellEditPropsChangeCommitted`: emitted when the edit input change is submitted.
 
 Catching events can be used to add a callback after an event while ignoring its triggers.
 
@@ -140,3 +139,8 @@ The demo shows how to catch the start & end edit events to log which cell is edi
 
 Row editing allows to edit all the cells of a row at once.
 The edition can be performed directly in the cells or in a popup or a modal.
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid/)
+- [XGrid](/api/data-grid/x-grid/)

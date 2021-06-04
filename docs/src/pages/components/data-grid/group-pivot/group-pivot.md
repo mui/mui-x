@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Group & Pivot
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Group & Pivot
@@ -46,3 +45,8 @@ When grouping, you will be able to apply an aggregation function to populate the
 > 👍 Upvote [issue #214](https://github.com/mui-org/material-ui-x/issues/214) if you want to see it land faster.
 
 Pivoting will allow you to take a columns values and turn them into columns.
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid/)
+- [XGrid](/api/data-grid/x-grid/)

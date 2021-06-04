@@ -10,6 +10,7 @@ import {
 export interface GridCoreApi extends GridEventEmitter {
   /**
    * The react ref of the grid root container div element.
+   * @ignore - do not document.
    */
   rootElementRef?: React.RefObject<HTMLDivElement>;
   /**
@@ -18,6 +19,7 @@ export interface GridCoreApi extends GridEventEmitter {
   columnHeadersContainerElementRef?: React.RefObject<HTMLDivElement>;
   /**
    * The react ref of the grid column headers container element.
+   * @ignore - do not document.
    */
   columnHeadersElementRef?: React.RefObject<HTMLDivElement>;
   /**
