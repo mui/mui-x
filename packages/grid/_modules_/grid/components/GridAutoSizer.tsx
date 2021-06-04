@@ -58,6 +58,7 @@ export const GridAutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(fu
     disableHeight = false,
     disableWidth = false,
     nonce,
+    onResize,
     style,
     ...other
   } = props;
@@ -97,8 +98,8 @@ export const GridAutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(fu
           width: newWidth,
         });
 
-        if (props.onResize) {
-          props.onResize({ height: newHeight, width: newWidth });
+        if (onResize) {
+          onResize({ height: newHeight, width: newWidth });
         }
       }
     }

@@ -38,7 +38,11 @@ export function GridBody() {
       <GridColumnsContainer ref={columnsContainerRef}>
         <GridColumnsHeader ref={columnsHeaderRef} />
       </GridColumnsContainer>
-      <GridAutoSizer nonce={rootProps.nonce} disableHeight={rootProps.autoHeight} onResize={handleResize}>
+      <GridAutoSizer
+        nonce={rootProps.nonce}
+        disableHeight={rootProps.autoHeight}
+        onResize={handleResize}
+      >
         {(size: any) => (
           <GridWindow ref={windowRef} size={size}>
             <GridViewport ref={renderingZoneRef} />
