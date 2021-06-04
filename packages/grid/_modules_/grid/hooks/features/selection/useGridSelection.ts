@@ -79,8 +79,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
           checkboxSelection;
 
         if (allowMultiSelect) {
-          const isRowSelected =
-            !allowMultiSelect || isSelected == null ? selectionState[id] === undefined : isSelected;
+          const isRowSelected = isSelected == null ? selectionState[id] === undefined : isSelected;
           if (isRowSelected) {
             selectionState[id] = id;
           } else {
