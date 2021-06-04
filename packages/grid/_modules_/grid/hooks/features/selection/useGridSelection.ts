@@ -85,11 +85,13 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
           } else {
             delete selectionState[id];
           }
-        } else if (disableMultipleSelection && isMultipleKey && selectionState[id] !== undefined) {
-          selectionState = {};
         } else {
+          const isRowSelected =
+            isSelected == null ? !isMultipleKey || selectionState[id] === undefined : isSelected;
           selectionState = {};
-          selectionState[id] = id;
+          if (isRowSelected) {
+            selectionState[id] = id;
+          }
         }
         return { ...state, selection: selectionState };
       });
