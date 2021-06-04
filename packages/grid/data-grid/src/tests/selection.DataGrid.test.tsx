@@ -45,7 +45,7 @@ describe('<DataGrid /> - Selection', () => {
     expect(secondRow).not.to.have.class('Mui-selected');
     expect(firstRow).to.have.class('Mui-selected');
 
-    // deselecting a selected row without key press
+    // Clicking on a selected row without key press should not deselect
     fireEvent.click(getCell(0, 0));
     expect(firstRow).to.have.class('Mui-selected');
 
