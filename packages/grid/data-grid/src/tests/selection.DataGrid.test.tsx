@@ -12,8 +12,8 @@ describe('<DataGrid /> - Selection', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
 
-  it('should be selected and deselected when clicking on a row', () => {
-    render(
+  describe('no checkboxSelection prop - selection/deselection', () => {
+    const TestDataGridSelection = () => (
       <div style={{ width: 300, height: 300 }}>
         <DataGrid
           rows={[
@@ -28,31 +28,48 @@ describe('<DataGrid /> - Selection', () => {
           ]}
           columns={[{ field: 'brand', width: 100 }]}
         />
-      </div>,
+      </div>
     );
-    const firstRow = getRow(0);
-    const secondRow = getRow(1);
 
-    // selecting row on click without key press
-    fireEvent.click(getCell(0, 0));
-    expect(firstRow).to.have.class('Mui-selected');
-    fireEvent.click(getCell(1, 0));
-    expect(firstRow).not.to.have.class('Mui-selected');
-    expect(secondRow).to.have.class('Mui-selected');
+    it('should select one row at a time on click WITHOUT keypress', () => {
+      render(<TestDataGridSelection />);
+      const firstRow = getRow(0);
+      const secondRow = getRow(1);
+      fireEvent.click(getCell(0, 0));
+      expect(firstRow).to.have.class('Mui-selected');
+      fireEvent.click(getCell(1, 0));
+      expect(firstRow).not.to.have.class('Mui-selected');
+      expect(secondRow).to.have.class('Mui-selected');
+    });
 
-    // selecting another row with key press
-    fireEvent.click(getCell(0, 0), { metaKey: true });
-    expect(secondRow).not.to.have.class('Mui-selected');
-    expect(firstRow).to.have.class('Mui-selected');
+    it('should select one row at a time on click WITH keypress', () => {
+      render(<TestDataGridSelection />);
+      const firstRow = getRow(0);
+      const secondRow = getRow(1);
+      fireEvent.click(getCell(0, 0), { metaKey: true });
+      expect(firstRow).to.have.class('Mui-selected');
+      fireEvent.click(getCell(1, 0), { metaKey: true });
+      expect(firstRow).not.to.have.class('Mui-selected');
+      expect(secondRow).to.have.class('Mui-selected');
+    });
 
-    // Clicking on a selected row without key press should not deselect
-    fireEvent.click(getCell(0, 0));
-    expect(firstRow).to.have.class('Mui-selected');
+    it('should not deselect the selected row on click WITHOUT keypress', () => {
+      render(<TestDataGridSelection />);
+      const firstRow = getRow(0);
+      fireEvent.click(getCell(0, 0));
+      expect(firstRow).to.have.class('Mui-selected');
+      fireEvent.click(getCell(0, 0));
+      expect(firstRow).to.have.class('Mui-selected');
+    });
 
-    // deselecting a selected row with key press
-    fireEvent.click(getCell(0, 0), { metaKey: true });
-    expect(firstRow).not.to.have.class('Mui-selected');
-    expect(secondRow).not.to.have.class('Mui-selected');
+    it('should deselect the selected row on click WITH keypress', () => {
+      render(<TestDataGridSelection />);
+      const firstRow = getRow(0);
+      fireEvent.click(getCell(0, 0));
+      expect(firstRow).to.have.class('Mui-selected');
+      fireEvent.click(getCell(0, 0), { metaKey: true });
+      expect(firstRow).not.to.have.class('Mui-selected');
+    });
   });
 
   describe('prop: checkboxSelection', () => {
