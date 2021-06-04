@@ -34,23 +34,23 @@ describe('<DataGrid /> - Selection', () => {
     const secondRow = getRow(1);
 
     // selecting row on click without key press
-    fireEvent.click(screen.getByRole('cell', { name: 'Nike' }));
+    fireEvent.click(getCell(0, 0));
     expect(firstRow).to.have.class('Mui-selected');
-    fireEvent.click(screen.getByRole('cell', { name: 'Adidas' }));
+    fireEvent.click(getCell(1, 0));
     expect(firstRow).not.to.have.class('Mui-selected');
     expect(secondRow).to.have.class('Mui-selected');
 
     // selecting another row with key press
-    fireEvent.click(screen.getByRole('cell', { name: 'Nike' }), { metaKey: true });
+    fireEvent.click(getCell(0, 0), { metaKey: true });
     expect(secondRow).not.to.have.class('Mui-selected');
     expect(firstRow).to.have.class('Mui-selected');
 
     // deselecting a selected row without key press
-    fireEvent.click(screen.getByRole('cell', { name: 'Nike' }));
+    fireEvent.click(getCell(0, 0));
     expect(firstRow).to.have.class('Mui-selected');
 
     // deselecting a selected row with key press
-    fireEvent.click(screen.getByRole('cell', { name: 'Nike' }), { metaKey: true });
+    fireEvent.click(getCell(0, 0), { metaKey: true });
     expect(firstRow).not.to.have.class('Mui-selected');
     expect(secondRow).not.to.have.class('Mui-selected');
   });
