@@ -42,15 +42,26 @@ describe('<DataGrid /> - Selection', () => {
       expect(secondRow).to.have.class('Mui-selected');
     });
 
-    it('should select one row at a time on click WITH keypress', () => {
-      render(<TestDataGridSelection />);
-      const firstRow = getRow(0);
-      const secondRow = getRow(1);
-      fireEvent.click(getCell(0, 0), { metaKey: true });
-      expect(firstRow).to.have.class('Mui-selected');
-      fireEvent.click(getCell(1, 0), { metaKey: true });
-      expect(firstRow).not.to.have.class('Mui-selected');
-      expect(secondRow).to.have.class('Mui-selected');
+    ['metaKey', 'ctrlKey', 'shiftKey'].forEach((key) => {
+      it(`should select one row at a time on click WITH ${key} pressed`, () => {
+        render(<TestDataGridSelection />);
+        const firstRow = getRow(0);
+        const secondRow = getRow(1);
+        fireEvent.click(getCell(0, 0), { [key]: true });
+        expect(firstRow).to.have.class('Mui-selected');
+        fireEvent.click(getCell(1, 0), { [key]: true });
+        expect(firstRow).not.to.have.class('Mui-selected');
+        expect(secondRow).to.have.class('Mui-selected');
+      });
+
+      it(`should deselect the selected row on click WITH ${key} pressed`, () => {
+        render(<TestDataGridSelection />);
+        const firstRow = getRow(0);
+        fireEvent.click(getCell(0, 0));
+        expect(firstRow).to.have.class('Mui-selected');
+        fireEvent.click(getCell(0, 0), { [key]: true });
+        expect(firstRow).not.to.have.class('Mui-selected');
+      });
     });
 
     it('should not deselect the selected row on click WITHOUT keypress', () => {
@@ -60,15 +71,6 @@ describe('<DataGrid /> - Selection', () => {
       expect(firstRow).to.have.class('Mui-selected');
       fireEvent.click(getCell(0, 0));
       expect(firstRow).to.have.class('Mui-selected');
-    });
-
-    it('should deselect the selected row on click WITH keypress', () => {
-      render(<TestDataGridSelection />);
-      const firstRow = getRow(0);
-      fireEvent.click(getCell(0, 0));
-      expect(firstRow).to.have.class('Mui-selected');
-      fireEvent.click(getCell(0, 0), { metaKey: true });
-      expect(firstRow).not.to.have.class('Mui-selected');
     });
   });
 
