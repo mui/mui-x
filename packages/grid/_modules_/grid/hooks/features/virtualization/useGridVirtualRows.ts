@@ -33,7 +33,7 @@ import { scrollStateSelector } from './renderingStateSelector';
 
 export const useGridVirtualRows = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridVirtualRows');
-  const colRef = apiRef.current.columnHeadersContainerElementRef!;
+  const colRef = apiRef.current.columnHeadersElementRef!;
   const windowRef = apiRef.current.windowRef!;
   const renderingZoneRef = apiRef.current.renderingZoneRef!;
 
