@@ -17,6 +17,8 @@ import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<DataGrid /> - Pagination', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
@@ -40,13 +42,6 @@ describe('<DataGrid /> - Pagination', () => {
   };
 
   describe('pagination', () => {
-    before(function beforeHook() {
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
     it('should apply the page prop correctly', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
@@ -213,6 +208,17 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues()).to.deep.equal(['Nike 1']);
     });
 
+    it('should not change the page when clicking on the next page and a page prop is provided', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} page={0} pageSize={1} />
+        </div>,
+      );
+      expect(getColumnValues()).to.deep.equal(['Nike']);
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(getColumnValues()).to.deep.equal(['Nike']);
+    });
+
     it('should show filtered data if the user applies filter on an intermediate page and the resulted filter data is less than the rows per page', () => {
       const TestCasePaginationFilteredData = () => {
         const data = useData(200, 2);
@@ -220,6 +226,7 @@ describe('<DataGrid /> - Pagination', () => {
         return (
           <div style={{ width: 300, height: 300 }}>
             <DataGrid
+              autoHeight={isJSDOM}
               columns={data.columns}
               rows={data.rows}
               pagination
@@ -243,6 +250,13 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     describe('prop: autoPageSize', () => {
+      before(function beforeHook() {
+        if (isJSDOM) {
+          // Need layouting
+          this.skip();
+        }
+      });
+
       it('should always render the same amount of rows and fit the viewport', () => {
         const TestCaseAutoPageSize = (props: { nbRows: number; height?: number }) => {
           const data = useData(props.nbRows, 10);
