@@ -3,6 +3,10 @@
     "name": "resize",
     "description": "Fired when the grid is resized. Called with a GridResizeParams object."
   },
+  {
+    "name": "debouncedResize",
+    "description": "Fired when the grid is resized with a debounced time of 60ms. Called with a GridResizeParams object."
+  },
   { "name": "componentError", "description": "Fired when an exception is thrown in the grid." },
   { "name": "unmount", "description": "Fired when the grid is unmounted." },
   {

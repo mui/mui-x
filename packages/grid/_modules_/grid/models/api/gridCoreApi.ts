@@ -15,6 +15,7 @@ export interface GridCoreApi extends GridEventEmitter {
   rootElementRef?: React.RefObject<HTMLDivElement>;
   /**
    * The react ref of the grid column container virtualized div element.
+   * @ignore - do not document.
    */
   columnHeadersContainerElementRef?: React.RefObject<HTMLDivElement>;
   /**
@@ -24,18 +25,22 @@ export interface GridCoreApi extends GridEventEmitter {
   columnHeadersElementRef?: React.RefObject<HTMLDivElement>;
   /**
    * The react ref of the grid window container element.
+   * @ignore - do not document.
    */
   windowRef?: React.RefObject<HTMLDivElement>;
   /**
    * The react ref of the grid data rendering zone.
+   * @ignore - do not document.
    */
   renderingZoneRef?: React.RefObject<HTMLDivElement>;
   /**
    * The react ref of the grid header element.
+   * @ignore - do not document.
    */
   headerRef?: React.RefObject<HTMLDivElement>;
   /**
    * The react ref of the grid footer element.
+   * @ignore - do not document.
    */
   footerRef?: React.RefObject<HTMLDivElement>;
   /**
