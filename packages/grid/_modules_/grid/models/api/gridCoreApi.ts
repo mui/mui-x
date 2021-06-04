@@ -27,7 +27,7 @@ export interface GridCoreApi extends GridEventEmitter {
    */
   windowRef?: React.RefObject<HTMLDivElement>;
   /**
-   * The react ref of the grid data rendering zone .
+   * The react ref of the grid data rendering zone.
    */
   renderingZoneRef?: React.RefObject<HTMLDivElement>;
   /**
