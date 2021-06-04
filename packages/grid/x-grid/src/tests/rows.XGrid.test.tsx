@@ -24,6 +24,8 @@ describe('<XGrid /> - Rows', () => {
 
   describe('getRowId', () => {
     beforeEach(() => {
+      clock = useFakeTimers();
+
       baselineProps = {
         autoHeight: isJSDOM,
         rows: [
@@ -45,7 +47,6 @@ describe('<XGrid /> - Rows', () => {
         ],
         columns: [{ field: 'clientId' }, { field: 'first' }, { field: 'age' }],
       };
-      clock = useFakeTimers();
     });
 
     afterEach(() => {
@@ -122,6 +123,8 @@ describe('<XGrid /> - Rows', () => {
 
   describe('updateRows', () => {
     beforeEach(() => {
+      clock = useFakeTimers();
+
       baselineProps = {
         autoHeight: isJSDOM,
         rows: [
@@ -140,8 +143,6 @@ describe('<XGrid /> - Rows', () => {
         ],
         columns: [{ field: 'brand', headerName: 'Brand' }],
       };
-
-      clock = useFakeTimers();
     });
 
     afterEach(() => {
@@ -264,13 +265,6 @@ describe('<XGrid /> - Rows', () => {
         this.skip();
       }
     });
-    beforeEach(() => {
-      clock = useFakeTimers();
-    });
-
-    afterEach(() => {
-      clock.restore();
-    });
 
     let apiRef: GridApiRef;
     const TestCaseVirtualization = (
@@ -390,26 +384,37 @@ describe('<XGrid /> - Rows', () => {
       expect(isVirtualized).to.equal(false);
     });
 
-    it('should allow defer rendering without race conditions', async () => {
-      function DeferRendering() {
-        const [deferRows, setRows] = React.useState<any>([]);
-        const [deferColumns] = React.useState([{ field: 'id' }]);
+    describe('Defer rendering', ()=> {
+      beforeEach(() => {
+        clock = useFakeTimers();
+      });
 
-        React.useEffect(() => {
-          setTimeout(() => setRows(() => []), 0);
-          setTimeout(() => setRows(() => []), 0);
-          setTimeout(() => setRows(() => [{ id: '1' }, { id: '2' }]), 1);
-        }, []);
+      afterEach(() => {
+        clock.restore();
+      });
 
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <XGrid autoHeight columns={deferColumns} rows={deferRows} />
-          </div>
-        );
-      }
-      render(<DeferRendering />);
-      await clock.tickAsync(150);
-      expect(getColumnValues()).to.deep.equal(['1', '2']);
+      it('should allow defer rendering without race conditions', async () => {
+        function DeferRendering() {
+          const [deferRows, setRows] = React.useState<any>([]);
+          const [deferColumns] = React.useState([{field: 'id'}]);
+
+          React.useEffect(() => {
+            setTimeout(() => setRows(() => []), 0);
+            setTimeout(() => setRows(() => []), 0);
+            setTimeout(() => setRows(() => [{id: '1'}, {id: '2'}]), 1);
+          }, []);
+
+          return (
+            <div style={{width: 300, height: 300}}>
+              <XGrid autoHeight columns={deferColumns} rows={deferRows}/>
+            </div>
+          );
+        }
+
+        render(<DeferRendering/>);
+        await clock.tickAsync(150);
+        expect(getColumnValues()).to.deep.equal(['1', '2']);
+      });
     });
 
     describe('Pagination', () => {
