@@ -7,12 +7,14 @@ import { GridApiContext } from './components/GridApiContext';
 import { GridAutoSizer } from './components/GridAutoSizer';
 import { GridViewport } from './components/GridViewport';
 import { Watermark } from './components/Watermark';
-import { GridPropsContext } from './context/GridPropsContext';
+import { GRID_RESIZE } from './constants/eventsConstants';
+import { GridRootPropsContext } from './context/GridRootPropsContext';
 import { GridOverlays } from './GridOverlays';
+import { ElementSize } from './models/elementSize';
 
 export function GridBody() {
   const apiRef = React.useContext(GridApiContext)!;
-  const props = React.useContext(GridPropsContext)!;
+  const rootProps = React.useContext(GridRootPropsContext)!;
 
   const columnsHeaderRef = React.useRef<HTMLDivElement>(null);
   const columnsContainerRef = React.useRef<HTMLDivElement>(null);
@@ -24,14 +26,19 @@ export function GridBody() {
   apiRef.current.windowRef = windowRef;
   apiRef.current.renderingZoneRef = renderingZoneRef;
 
+  const handleResize = React.useCallback(
+    (size: ElementSize) => apiRef.current.publishEvent(GRID_RESIZE, size),
+    [apiRef],
+  );
+
   return (
     <GridMainContainer>
       <GridOverlays />
-      <Watermark licenseStatus={props.licenseStatus} />
+      <Watermark licenseStatus={rootProps.licenseStatus} />
       <GridColumnsContainer ref={columnsContainerRef}>
         <GridColumnsHeader ref={columnsHeaderRef} />
       </GridColumnsContainer>
-      <GridAutoSizer nonce={props.nonce} disableHeight={props.autoHeight}>
+      <GridAutoSizer nonce={rootProps.nonce} disableHeight={rootProps.autoHeight} onResize={handleResize}>
         {(size: any) => (
           <GridWindow ref={windowRef} size={size}>
             <GridViewport ref={renderingZoneRef} />

@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { GridApiContext } from './components/GridApiContext';
-import { GridPropsContext } from './context/GridPropsContext';
+import { GridRootPropsContext } from './context/GridRootPropsContext';
 import { useGridSelector } from './hooks/features/core/useGridSelector';
 import { visibleGridRowCountSelector } from './hooks/features/filter/gridFilterSelector';
 import { gridRowCountSelector } from './hooks/features/rows/gridRowsSelector';
 
 export function GridOverlays() {
   const apiRef = React.useContext(GridApiContext)!;
-  const props = React.useContext(GridPropsContext)!;
+  const props = React.useContext(GridRootPropsContext)!;
 
   const totalRowCount = useGridSelector(apiRef, gridRowCountSelector);
   const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);

@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { useForkRef, ownerWindow } from '@material-ui/core/utils';
-import { GRID_RESIZE } from '../constants/eventsConstants';
 import { useEventCallback, useEnhancedEffect } from '../utils/material-ui-utils';
 import createDetectElementResize from '../lib/createDetectElementResize';
-import { GridApiContext } from './GridApiContext';
 // TODO replace with https://caniuse.com/resizeobserver.
 
 export interface AutoSizerSize {
@@ -71,7 +69,6 @@ export const GridAutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(fu
 
   const rootRef = React.useRef<HTMLDivElement | null>(null);
   const parentElement = React.useRef<HTMLElement | null>(null);
-  const apiRef = React.useContext(GridApiContext)!;
 
   const handleResize = useEventCallback(() => {
     // Guard against AutoSizer component being removed from the DOM immediately after being added.
@@ -99,7 +96,10 @@ export const GridAutoSizer = React.forwardRef<HTMLDivElement, AutoSizerProps>(fu
           height: newHeight,
           width: newWidth,
         });
-        apiRef.current.publishEvent(GRID_RESIZE, { height: newHeight, width: newWidth });
+
+        if (props.onResize) {
+          props.onResize({ height: newHeight, width: newWidth });
+        }
       }
     }
   });

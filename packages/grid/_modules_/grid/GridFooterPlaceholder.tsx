@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { GridApiContext } from './components/GridApiContext';
-import { GridPropsContext } from './context/GridPropsContext';
+import { GridRootPropsContext } from './context/GridRootPropsContext';
 
 export function GridFooterPlaceholder() {
   const apiRef = React.useContext(GridApiContext)!;
-  const props = React.useContext(GridPropsContext)!;
+  const props = React.useContext(GridRootPropsContext)!;
   const footerRef = React.useRef<HTMLDivElement>(null);
   apiRef.current.footerRef = footerRef;
   if (props.hideFooter) {

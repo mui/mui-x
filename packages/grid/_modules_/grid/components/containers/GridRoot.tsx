@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useForkRef } from '@material-ui/core/utils';
 import NoSsr from '@material-ui/core/NoSsr';
-import { GridPropsContext } from '../../context/GridPropsContext';
+import { GridRootPropsContext } from '../../context/GridRootPropsContext';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridRootContainerRef } from '../../models/gridRootContainerRef';
 import { useStyles } from './GridRootStyles';
@@ -19,8 +19,8 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
 ) {
   const classes = useStyles();
   const apiRef = React.useContext(GridApiContext)!;
-  const propsContext = React.useContext(GridPropsContext)!;
-  const { className } = propsContext;
+  const rootProps = React.useContext(GridRootPropsContext)!;
+  const { className } = rootProps;
   const { children, className: classNameProp, ...other } = props;
   const visibleColumnsLength = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
   const [gridState] = useGridState(apiRef!);
@@ -40,8 +40,8 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
         aria-colcount={visibleColumnsLength}
         aria-rowcount={gridState.rows.totalRowCount}
         aria-multiselectable={!gridState.options.disableMultipleSelection}
-        aria-label={propsContext['aria-label']}
-        aria-labelledby={propsContext['aria-labelledby']}
+        aria-label={rootProps['aria-label']}
+        aria-labelledby={rootProps['aria-labelledby']}
         {...other}
       >
         {children}

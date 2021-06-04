@@ -33,13 +33,16 @@ export function useGridScrollbarSizeDetector(
   const hasColumns = useGridSelector(apiRef, allGridColumnsSelector).length > 0;
 
   const detectScrollbarSize = React.useCallback(() => {
-    let sbSize = 0;
+    let measuredScrollbarSize = 0;
     if (apiRef.current?.rootElementRef?.current) {
       const doc = ownerDocument(apiRef.current.rootElementRef!.current as HTMLElement);
-      sbSize = getScrollbarSize(doc, apiRef.current.rootElementRef!.current as HTMLElement);
-      logger.debug(`Detected scroll bar size ${sbSize}.`);
+      measuredScrollbarSize = getScrollbarSize(
+        doc,
+        apiRef.current.rootElementRef!.current as HTMLElement,
+      );
+      logger.debug(`Detected scroll bar size ${measuredScrollbarSize}.`);
     }
-    setDetectedScrollBarSize(sbSize);
+    setDetectedScrollBarSize(measuredScrollbarSize);
   }, [apiRef, logger]);
 
   useEnhancedEffect(() => {

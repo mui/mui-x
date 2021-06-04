@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { GridApiContext } from '../components/GridApiContext';
-import { GridPropsContext } from './GridPropsContext';
+import { GridRootPropsContext } from './GridRootPropsContext';
 
 export const GridContextProvider = ({ apiRef, props, children }) => {
   return (
-    <GridPropsContext.Provider value={props}>
+    <GridRootPropsContext.Provider value={props}>
       <GridApiContext.Provider value={apiRef}>{children}</GridApiContext.Provider>
-    </GridPropsContext.Provider>
+    </GridRootPropsContext.Provider>
   );
 };
