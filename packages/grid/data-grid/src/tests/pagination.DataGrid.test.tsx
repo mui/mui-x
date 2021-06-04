@@ -251,7 +251,7 @@ describe('<DataGrid /> - Pagination', () => {
 
     describe('prop: autoPageSize', () => {
       before(function beforeHook() {
-        if (/jsdom/.test(window.navigator.userAgent)) {
+        if (isJSDOM) {
           // Need layouting
           this.skip();
         }
