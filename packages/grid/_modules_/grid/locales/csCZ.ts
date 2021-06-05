@@ -109,6 +109,10 @@ const csCZKGrid: Partial<GridLocaleText> = {
   // Total rows footer text
   footerTotalRows: 'Celkem řádků:',
 
+  // Total visible rows footer text
+  // footerTotalVisibleRows: (visibleCount, totalCount) =>
+  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Výběr řádku',
 

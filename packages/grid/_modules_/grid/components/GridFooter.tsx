@@ -3,6 +3,7 @@ import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { gridPaginationSelector } from '../hooks/features/pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../hooks/features/rows/gridRowsSelector';
 import { selectedGridRowsCountSelector } from '../hooks/features/selection/gridSelectionSelector';
+import { visibleGridRowCountSelector } from '../hooks/features/filter/gridFilterSelector';
 import { optionsSelector } from '../hooks/utils/optionsSelector';
 import { GridApiContext } from './GridApiContext';
 import { GridRowCount } from './GridRowCount';
@@ -16,6 +17,7 @@ export const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerPr
     const options = useGridSelector(apiRef, optionsSelector);
     const selectedRowCount = useGridSelector(apiRef, selectedGridRowsCountSelector);
     const pagination = useGridSelector(apiRef, gridPaginationSelector);
+    const visibleRowCount = useGridSelector(apiRef, visibleGridRowCountSelector);
 
     const SelectedRowCountElement =
       !options.hideFooterSelectedRowCount && selectedRowCount > 0 ? (
@@ -26,7 +28,7 @@ export const GridFooter = React.forwardRef<HTMLDivElement, GridFooterContainerPr
 
     const RowCountElement =
       !options.hideFooterRowCount && !options.pagination ? (
-        <GridRowCount rowCount={totalRowCount} />
+        <GridRowCount rowCount={totalRowCount} visibleRowCount={visibleRowCount} />
       ) : null;
 
     const PaginationComponent =
