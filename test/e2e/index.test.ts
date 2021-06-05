@@ -105,5 +105,14 @@ describe('e2e', () => {
         await page.evaluate(() => document.activeElement?.getAttribute('data-testid')),
       ).to.equal('initial-focus');
     });
+
+    it('should display the rows', async () => {
+      await renderFixture('DataGrid/ConcurrentReactUpdate');
+      expect(
+        await page.evaluate(() =>
+          Array.from(document.querySelectorAll('[role="cell"]')).map((node) => node.textContent),
+        ),
+      ).to.deep.equal(['1', '2']);
+    });
   });
 });
