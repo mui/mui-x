@@ -160,7 +160,7 @@ const filterModel: GridFilterModel = {
 
 ## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
-{{"demo": "pages/components/data-grid/filtering/FilterApi.js", "bg": "inline", "hideToolbar": true}}
+{{"demo": "pages/components/data-grid/filtering/FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## 🚧 Quick filter
 
