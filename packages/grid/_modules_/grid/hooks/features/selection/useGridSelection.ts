@@ -12,7 +12,6 @@ import { GridSelectionModelChangeParams } from '../../../models/params/gridSelec
 import { GridRowId, GridRowModel } from '../../../models/gridRows';
 import { GridSelectionModel } from '../../../models/gridSelectionModel';
 import { isDeepEqual } from '../../../utils/utils';
-import { isMultipleKeyPressed } from '../../../utils/keyboardUtils';
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { optionsSelector } from '../../utils/optionsSelector';
@@ -186,7 +185,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
         selectRowModel({
           id: params.id,
           row: params.row,
-          isMultipleKey: isMultipleKeyPressed(event),
+          isMultipleKey: event.metaKey || event.ctrlKey,
         });
       }
     },
