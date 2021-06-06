@@ -123,7 +123,9 @@ If you have an enterprise grid running with an expired or missing license key, t
 
 ### Feature comparison
 
-The following table summarizes the features available in the community `DataGrid` and enterprise `XGrid` components. All the features of the community version are available in the enterprise one. The enterprise components comes in two plans: Pro and Premium.
+The following table summarizes the features available in the community `DataGrid` and enterprise `XGrid` components.
+All the features of the community version are available in the enterprise one.
+The enterprise components come in two plans: Pro and Premium.
 
 | Features                                                                                  | Community | Pro <span class="pro"></span> | Premium <span class="premium"></span> |
 | :---------------------------------------------------------------------------------------- | :-------: | :---------------------------: | :-----------------------------------: |

@@ -137,7 +137,7 @@ Below is a very simple demo on how you could achieve server-side filtering.
 
 <!-- WIP -->
 
-## Multi-column filtering <span class="pro"></span>
+## Multi-column filtering [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
 `XGrid` supports filtering by multiple columns.
 The default operator that will be applied between filters is an And.
@@ -158,9 +158,9 @@ const filterModel: GridFilterModel = {
 
 {{"demo": "pages/components/data-grid/filtering/MultiFilteringWithOrGrid.js", "bg": "inline", "disableAd": true}}
 
-## apiRef <span class="pro"></span>
+## apiRef [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
-{{"demo": "pages/components/data-grid/filtering/FilterApiNoSnap.js", "bg": "inline", "hideToolbar": true}}
+{{"demo": "pages/components/data-grid/filtering/FilterApi.js", "bg": "inline", "hideToolbar": true}}
 
 ## 🚧 Quick filter
 
