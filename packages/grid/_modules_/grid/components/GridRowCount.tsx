@@ -25,7 +25,7 @@ export const GridRowCount = React.forwardRef<HTMLDivElement, GridRowCountProps>(
 
     return (
       <div ref={ref} className={clsx('MuiDataGrid-rowCount', className)} {...other}>
-        {`${apiRef!.current.getLocaleText('footerTotalRows')} ${text}`}
+        {apiRef!.current.getLocaleText('footerTotalRows')} {text}
       </div>
     );
   },
