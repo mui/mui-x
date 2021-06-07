@@ -68,6 +68,11 @@ describe('<DataGrid /> - Toolbar', () => {
       expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
       });
+
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
+        maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
+      });
     });
 
     it('should decrease grid density when selecting comfortable density', () => {
@@ -91,6 +96,11 @@ describe('<DataGrid /> - Toolbar', () => {
       expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
       });
+
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
+        maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
+      });
     });
 
     it('should increase grid density even if toolbar is not enabled', () => {
@@ -105,6 +115,11 @@ describe('<DataGrid /> - Toolbar', () => {
       expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
       });
+
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
+        maxHeight: `${Math.floor(rowHeight * COMPACT_DENSITY_FACTOR)}px`,
+      });
     });
 
     it('should decrease grid density even if toolbar is not enabled', () => {
@@ -117,6 +132,11 @@ describe('<DataGrid /> - Toolbar', () => {
 
       // @ts-expect-error need to migrate helpers to TypeScript
       expect(screen.getAllByRole('row')[1]).toHaveInlineStyle({
+        maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
+      });
+
+      // @ts-expect-error need to migrate helpers to TypeScript
+      expect(screen.getAllByRole('cell')[1]).toHaveInlineStyle({
         maxHeight: `${Math.floor(rowHeight * COMFORTABLE_DENSITY_FACTOR)}px`,
       });
     });

@@ -18,7 +18,6 @@ import { optionsSelector } from '../../utils/optionsSelector';
 import { useLogger } from '../../utils/useLogger';
 import { useGridSelector } from '../core/useGridSelector';
 import { useGridState } from '../core/useGridState';
-import { gridKeyboardMultipleKeySelector } from '../keyboard/gridKeyboardSelector';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { GridSelectionState } from './gridSelectionState';
 import { selectedGridRowsSelector } from './gridSelectionSelector';
@@ -28,8 +27,6 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
   const rowsLookup = useGridSelector(apiRef, gridRowsLookupSelector);
-  const isMultipleKeyPressed = useGridSelector(apiRef, gridKeyboardMultipleKeySelector);
-  const allowMultipleSelectionKeyPressed = React.useRef<boolean>(false);
 
   const {
     checkboxSelection,
@@ -41,47 +38,53 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
     onSelectionModelChange,
   } = options;
 
-  React.useEffect(() => {
-    allowMultipleSelectionKeyPressed.current = !disableMultipleSelection && isMultipleKeyPressed;
-  }, [isMultipleKeyPressed, disableMultipleSelection]);
-
   const getSelectedRows = React.useCallback(
     () => selectedGridRowsSelector(apiRef.current.getState()),
     [apiRef],
   );
 
+  interface RowModelParams {
+    id: GridRowId;
+    row: GridRowModel;
+    allowMultipleOverride?: boolean;
+    isSelected?: boolean;
+    isMultipleKey?: boolean;
+  }
+
   const selectRowModel = React.useCallback(
-    (id: GridRowId, row: GridRowModel, allowMultipleOverride?: boolean, isSelected?: boolean) => {
+    (rowModelParams: RowModelParams) => {
+      const { id, row, allowMultipleOverride, isSelected, isMultipleKey } = rowModelParams;
+
       if (isRowSelectable && !isRowSelectable(apiRef.current.getRowParams(id))) {
         return;
       }
 
       logger.debug(`Selecting row ${id}`);
 
-      const allowMultiSelect =
-        allowMultipleOverride || allowMultipleSelectionKeyPressed.current || checkboxSelection;
+      setGridState((state) => {
+        let selectionState: GridSelectionState = { ...state.selection };
+        const allowMultiSelect =
+          allowMultipleOverride ||
+          (!disableMultipleSelection && isMultipleKey) ||
+          checkboxSelection;
 
-      if (allowMultiSelect) {
-        setGridState((state) => {
-          // eslint-disable-next-line prefer-object-spread
-          const selectionState: GridSelectionState = Object.assign({}, state.selection);
-          const isRowSelected =
-            !allowMultiSelect || isSelected == null ? selectionState[id] === undefined : isSelected;
-
+        if (allowMultiSelect) {
+          const isRowSelected = isSelected == null ? selectionState[id] === undefined : isSelected;
           if (isRowSelected) {
             selectionState[id] = id;
           } else {
             delete selectionState[id];
           }
-          return { ...state, selection: selectionState };
-        });
-      } else {
-        setGridState((state) => {
-          const selectionState: GridSelectionState = {};
-          selectionState[id] = id;
-          return { ...state, selection: selectionState };
-        });
-      }
+        } else {
+          const isRowSelected =
+            isSelected == null ? !isMultipleKey || selectionState[id] === undefined : isSelected;
+          selectionState = {};
+          if (isRowSelected) {
+            selectionState[id] = id;
+          }
+        }
+        return { ...state, selection: selectionState };
+      });
       forceUpdate();
 
       const selectionState = apiRef!.current!.getState<GridSelectionState>('selection');
@@ -97,12 +100,25 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
       apiRef.current.publishEvent(GRID_ROW_SELECTED, rowSelectedParam);
       apiRef.current.publishEvent(GRID_SELECTION_CHANGED, selectionChangeParam);
     },
-    [isRowSelectable, apiRef, logger, checkboxSelection, forceUpdate, setGridState],
+    [
+      isRowSelectable,
+      disableMultipleSelection,
+      apiRef,
+      logger,
+      checkboxSelection,
+      forceUpdate,
+      setGridState,
+    ],
   );
 
   const selectRow = React.useCallback(
     (id: GridRowId, isSelected = true, allowMultiple = false) => {
-      selectRowModel(id, apiRef.current.getRow(id), allowMultiple, isSelected);
+      selectRowModel({
+        id,
+        row: apiRef.current.getRow(id),
+        allowMultipleOverride: allowMultiple,
+        isSelected,
+      });
     },
     [apiRef, selectRowModel],
   );
@@ -155,9 +171,13 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
   );
 
   const handleRowClick = React.useCallback(
-    (params: GridRowParams) => {
+    (params: GridRowParams, event: React.MouseEvent) => {
       if (!disableSelectionOnClick) {
-        selectRowModel(params.id, params.row);
+        selectRowModel({
+          id: params.id,
+          row: params.row,
+          isMultipleKey: event.metaKey || event.ctrlKey,
+        });
       }
     },
     [disableSelectionOnClick, selectRowModel],

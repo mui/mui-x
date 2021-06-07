@@ -24,7 +24,7 @@ import {
   GridSortCellParams,
 } from '../../../models/gridSortModel';
 import { isDesc, nextGridSortDirection } from '../../../utils/sortingUtils';
-import { isEnterKey, isMultipleKeyPressed } from '../../../utils/keyboardUtils';
+import { isEnterKey } from '../../../utils/keyboardUtils';
 import { isDeepEqual } from '../../../utils/utils';
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
@@ -238,7 +238,8 @@ export const useGridSorting = (apiRef: GridApiRef, { rows }: { rows: GridRowsPro
 
   const handleColumnHeaderClick = React.useCallback(
     ({ colDef }: GridColumnHeaderParams, event: React.MouseEvent) => {
-      sortColumn(colDef, undefined, isMultipleKeyPressed(event));
+      const allowMultipleSorting = event.shiftKey || event.metaKey || event.ctrlKey;
+      sortColumn(colDef, undefined, allowMultipleSorting);
     },
     [sortColumn],
   );
