@@ -42,7 +42,7 @@ describe('<DataGrid /> - Selection', () => {
       expect(secondRow).to.have.class('Mui-selected');
     });
 
-    ['metaKey', 'ctrlKey', 'shiftKey'].forEach((key) => {
+    ['metaKey', 'ctrlKey'].forEach((key) => {
       it(`should select one row at a time on click WITH ${key} pressed`, () => {
         render(<TestDataGridSelection />);
         const firstRow = getRow(0);
