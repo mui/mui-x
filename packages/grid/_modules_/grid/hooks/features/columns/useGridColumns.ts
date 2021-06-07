@@ -163,9 +163,10 @@ export function useGridColumns(columns: GridColumns, apiRef: GridApiRef): void {
     [logger, gridState.columns, updateState],
   );
 
-  const updateColumn = React.useCallback((col: GridColDef) => updateColumns([col]), [
-    updateColumns,
-  ]);
+  const updateColumn = React.useCallback(
+    (col: GridColDef) => updateColumns([col]),
+    [updateColumns],
+  );
 
   const setColumnVisibility = React.useCallback(
     (field: string, isVisible: boolean) => {

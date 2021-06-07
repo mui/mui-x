@@ -44,9 +44,9 @@ function getAppender(name: string, logLevel: string, appender: Logger = console)
   return logger as Logger;
 }
 
-const defaultFactory: (logLevel: string) => LoggerFactoryFn = (logLevel: string) => (
-  name: string,
-) => getAppender(name, logLevel);
+const defaultFactory: (logLevel: string) => LoggerFactoryFn =
+  (logLevel: string) => (name: string) =>
+    getAppender(name, logLevel);
 
 type LoggerFactoryFn = (name: string) => Logger;
 
