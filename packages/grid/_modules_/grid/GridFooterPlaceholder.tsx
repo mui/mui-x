@@ -7,6 +7,7 @@ export function GridFooterPlaceholder() {
   const props = React.useContext(GridRootPropsContext)!;
   const footerRef = React.useRef<HTMLDivElement>(null);
   apiRef.current.footerRef = footerRef;
+
   if (props.hideFooter) {
     return null;
   }
