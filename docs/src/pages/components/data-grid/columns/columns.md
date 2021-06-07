@@ -125,7 +125,7 @@ The value generated is used for filtering, sorting, rendering, etc unless overri
 The value formatter allows you to convert the value before displaying it.
 Common use cases include converting a JavaScript `Date` object to a date string or a `Number` into a formatted number (e.g. "1,000.50").
 
-In the following demo, a formatter is used to display only the year of a JavaScript `Date` object.
+In the following demo, a formatter is used to display the tax rate's decimal value (e.g. 0.2) as a percentage (e.g. 20%).
 
 {{"demo": "pages/components/data-grid/columns/ValueFormatterGrid.js", "bg": "inline"}}
 
@@ -139,7 +139,7 @@ The value parser allows you to convert the user-entered value to another one use
 Common use cases include parsing date strings to JavaScript `Date` objects or formatted numbers (e.g. "1,000.50") into `Number`.
 It can be understood as the inverse of [`valueFormatter`](/components/data-grid/columns/#value-formatter).
 
-In the following demo, the user can filter for a year while a `Date` is used internally.
+In the following demo, the tax rate is displayed as a percentage (e.g. 20%) but a decimal number is used as value (e.g. 0.2).
 
 {{"demo": "pages/components/data-grid/columns/ValueParserGrid.js", "bg": "inline"}}
 

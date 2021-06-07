@@ -1,18 +1,22 @@
 import * as React from 'react';
-import { DataGrid, GridCellValue } from '@material-ui/data-grid';
+import {
+  DataGrid,
+  GridValueFormatterParams,
+  GridCellValue,
+} from '@material-ui/data-grid';
 
 const rows = [
   {
     id: 1,
-    date: new Date(1979, 0, 1),
+    taxRate: 0.1,
   },
   {
     id: 2,
-    date: new Date(1984, 0, 1),
+    taxRate: 0.2,
   },
   {
     id: 3,
-    date: new Date(1992, 0, 1),
+    taxRate: 0.3,
   },
 ];
 
@@ -24,11 +28,16 @@ export default function ValueParserGrid() {
         columns={[
           {
             type: 'number',
-            field: 'date',
-            headerName: 'Year',
+            field: 'taxRate',
+            headerName: 'Tax Rate',
             width: 150,
-            valueFormatter: (params) => (params.value as Date).getFullYear(),
-            valueParser: (value: GridCellValue) => new Date(Number(value), 0, 1),
+            valueFormatter: (params: GridValueFormatterParams) => {
+              const valueFormatted = Number(
+                (params.value as number) * 100,
+              ).toLocaleString();
+              return `${valueFormatted} %`;
+            },
+            valueParser: (value: GridCellValue) => Number(value) / 100,
           },
         ]}
       />
