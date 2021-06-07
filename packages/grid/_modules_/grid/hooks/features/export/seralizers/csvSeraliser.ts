@@ -6,11 +6,14 @@ import {
   GridRowModel,
 } from '../../../../models';
 
-const serialiseCellValue = (value) => {
+import { CsvDelimiterCharacter } from '../../../../models/gridExport';
+
+const serialiseCellValue = (value: any, delimiterCharacter: CsvDelimiterCharacter) => {
   if (typeof value === 'string') {
     const formattedValue = value.replace(/"/g, '""');
-    return formattedValue.includes(',') ? `"${formattedValue}"` : formattedValue;
+    return formattedValue.includes(delimiterCharacter) ? `"${formattedValue}"` : formattedValue;
   }
+
   return value;
 };
 
@@ -18,12 +21,13 @@ export function serialiseRow(
   id: GridRowId,
   columns: GridColumns,
   getCellValue: (id: GridRowId, field: string) => GridCellValue,
+  delimiterCharacter: CsvDelimiterCharacter,
 ): Array<string> {
   const mappedRow: string[] = [];
   columns.forEach(
     (column) =>
       column.field !== gridCheckboxSelectionColDef.field &&
-      mappedRow.push(serialiseCellValue(getCellValue(id, column.field))),
+      mappedRow.push(serialiseCellValue(getCellValue(id, column.field), delimiterCharacter)),
   );
   return mappedRow;
 }
@@ -33,6 +37,7 @@ export function buildCSV(
   rows: Map<GridRowId, GridRowModel>,
   selectedRows: Record<string, GridRowId>,
   getCellValue: (id: GridRowId, field: string) => GridCellValue,
+  delimiterCharacter: CsvDelimiterCharacter = ',',
 ): string {
   let rowIds = [...rows.keys()];
   const selectedRowIds = Object.keys(selectedRows);
@@ -43,10 +48,16 @@ export function buildCSV(
 
   const CSVHead = `${columns
     .filter((column) => column.field !== gridCheckboxSelectionColDef.field)
-    .map((column) => serialiseCellValue(column.headerName || column.field))
-    .toString()}\r\n`;
+    .map((column) => serialiseCellValue(column.headerName || column.field, delimiterCharacter))
+    .join(delimiterCharacter)}\r\n`;
   const CSVBody = rowIds
-    .reduce<string>((acc, id) => `${acc}${serialiseRow(id, columns, getCellValue)}\r\n`, '')
+    .reduce<string>(
+      (acc, id) =>
+        `${acc}${serialiseRow(id, columns, getCellValue, delimiterCharacter).join(
+          delimiterCharacter,
+        )}\r\n`,
+      '',
+    )
     .trim();
   const csv = `${CSVHead}${CSVBody}`.trim();
 

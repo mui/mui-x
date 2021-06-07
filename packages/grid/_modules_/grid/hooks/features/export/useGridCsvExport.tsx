@@ -18,12 +18,16 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
   const selection = useGridSelector(apiRef, gridSelectionStateSelector);
 
   const getDataAsCsv = React.useCallback(
-    // TODO remove once we use the options
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (options?: GridExportCsvOptions): string => {
       logger.debug(`Get data as CSV`);
 
-      return buildCSV(visibleColumns, visibleSortedRows, selection, apiRef.current.getCellValue);
+      return buildCSV(
+        visibleColumns,
+        visibleSortedRows,
+        selection,
+        apiRef.current.getCellValue,
+        options?.delimiter,
+      );
     },
     [logger, visibleColumns, visibleSortedRows, selection, apiRef],
   );
