@@ -11,8 +11,6 @@ import {
 import { GridCell, GridCellProps } from './GridCell';
 import { GridApiContext } from '../GridApiContext';
 import { isFunction } from '../../utils/index';
-import { gridDensityRowHeightSelector } from '../../hooks/features/density/densitySelector';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { GRID_CSS_CLASS_PREFIX } from '../../constants/cssClassesConstants';
 
 interface RowCellsProps {
@@ -23,6 +21,7 @@ interface RowCellsProps {
   id: GridRowId;
   hasScrollX: boolean;
   hasScrollY: boolean;
+  height: number;
   getCellClassName?: (params: GridCellParams) => string;
   lastColIdx: number;
   row: GridRowModel;
@@ -40,6 +39,7 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
     firstColIdx,
     hasScrollX,
     hasScrollY,
+    height,
     id,
     getCellClassName,
     lastColIdx,
@@ -53,8 +53,6 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
     ...other
   } = props;
   const apiRef = React.useContext(GridApiContext);
-  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
-
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const colIndex = firstColIdx + colIdx;
     const isLastColumn = colIndex === columns.length - 1;
@@ -100,7 +98,7 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
       field: column.field,
       width: column.width!,
       rowId: id,
-      height: rowHeight,
+      height,
       showRightBorder,
       formattedValue: cellParams.formattedValue,
       align: column.align || 'left',
