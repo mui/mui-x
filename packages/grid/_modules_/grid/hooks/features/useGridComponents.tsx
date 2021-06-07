@@ -29,6 +29,10 @@ export const useGridComponents = (
       ColumnSelectorIcon:
         (componentSlotsProp && componentSlotsProp.ColumnSelectorIcon) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.ColumnSelectorIcon,
+      ColumnUnsortedIcon:
+        componentSlotsProp?.ColumnUnsortedIcon === undefined
+          ? DEFAULT_GRID_SLOTS_COMPONENTS.ColumnUnsortedIcon
+          : componentSlotsProp?.ColumnUnsortedIcon,
       ColumnSortedAscendingIcon:
         (componentSlotsProp && componentSlotsProp.ColumnSortedAscendingIcon) ||
         DEFAULT_GRID_SLOTS_COMPONENTS.ColumnSortedAscendingIcon,

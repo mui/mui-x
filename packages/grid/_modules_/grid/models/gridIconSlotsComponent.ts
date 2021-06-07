@@ -29,6 +29,10 @@ export interface GridIconSlotsComponent {
    */
   ColumnSelectorIcon?: React.JSXElementConstructor<any>;
   /**
+   * Icon displayed on the side of the column header title when unsorted.
+   */
+  ColumnUnsortedIcon?: React.ElementType | null;
+  /**
    * Icon displayed on the side of the column header title when sorted in Ascending order.
    */
   ColumnSortedAscendingIcon?: React.JSXElementConstructor<any>;

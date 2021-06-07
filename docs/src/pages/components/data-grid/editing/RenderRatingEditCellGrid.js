@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import Rating from '@material-ui/lab/Rating';
 import { DataGrid } from '@material-ui/data-grid';
 
@@ -21,17 +21,14 @@ function RatingEditInputCell(props) {
   const { id, value, api, field } = props;
   const classes = useStyles();
 
-  const handleChange = React.useCallback(
-    (event) => {
-      const editProps = {
-        value: Number(event.target.value),
-      };
+  const handleChange = (event) => {
+    const editProps = {
+      value: Number(event.target.value),
+    };
 
-      api.commitCellChange({ id, field, props: editProps });
-      api.setCellMode(id, field, 'view');
-    },
-    [api, field, id],
-  );
+    api.commitCellChange({ id, field, props: editProps });
+    api.setCellMode(id, field, 'view');
+  };
 
   return (
     <div className={classes.root}>

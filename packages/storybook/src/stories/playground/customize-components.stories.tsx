@@ -1,5 +1,6 @@
 import Button from '@material-ui/core/Button';
 import * as React from 'react';
+import clsx from 'clsx';
 import { Story, Meta } from '@storybook/react';
 import {
   GridColDef,
@@ -9,6 +10,11 @@ import {
   GridPreferencesPanel,
   GridFooter,
   GridToolbar,
+  GridApiContext,
+  useGridApiRef,
+  gridPreferencePanelStateSelector,
+  GridPreferencePanelsValue,
+  GridStateChangeParams,
 } from '@material-ui/x-grid';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
@@ -149,8 +155,8 @@ StyledColumns.args = {
     { field: 'lastName' },
     {
       field: 'age',
-      cellClassName: ['age', 'shine'],
-      headerClassName: ['age', 'shine'],
+      cellClassName: () => clsx('age', 'shine'),
+      headerClassName: () => clsx('age', 'shine'),
       type: 'number',
     },
     {
@@ -162,9 +168,11 @@ StyledColumns.args = {
         `${params.getValue(params.id, 'firstName') || ''} ${
           params.getValue(params.id, 'lastName') || ''
         }`,
-      cellClassRules: {
-        common: (params) => params.row.lastName === 'Smith',
-        unknown: (params) => !params.row.lastName,
+      cellClassName: (params) => {
+        if (params.row.lastName === 'Smith') {
+          return 'common';
+        }
+        return !params.row.lastName ? 'unknown' : '';
       },
     },
     {
@@ -391,4 +399,51 @@ CustomCheckbox.args = {
     Checkbox: CustomCheckboxComponent,
   },
   checkboxSelection: true,
+};
+
+const SidePanel = ({ open }) => {
+  return open && <GridPreferencesPanel />;
+};
+const CustomPanel2 = (props) => {
+  return <div className="customPanel">{props.children}</div>;
+};
+
+export const OutsideColumnsPanel = () => {
+  const data = useData(500, 50);
+  const apiRef = useGridApiRef();
+  const [isMounted, setMounted] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    if (apiRef.current && apiRef.current!.isInitialised && !isMounted) {
+      setMounted(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMounted, apiRef.current?.isInitialised]);
+
+  const handleStateChange = React.useCallback((params: GridStateChangeParams) => {
+    const preferencePanelState = gridPreferencePanelStateSelector(params.state);
+    const isColumnsTabOpen =
+      preferencePanelState.openedPanelValue === GridPreferencePanelsValue.columns;
+    setOpen(isColumnsTabOpen);
+  }, []);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'row', flex: 1 }}>
+      <GridApiContext.Provider value={apiRef}>
+        {isMounted && <SidePanel open={open} />}
+        <div className="grid-container">
+          <XGrid
+            {...data}
+            apiRef={apiRef}
+            onStateChange={handleStateChange}
+            components={{
+              Panel: CustomPanel2,
+              Header: GridToolbar,
+            }}
+          />
+        </div>
+      </GridApiContext.Provider>
+    </div>
+  );
 };

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import Rating from '@material-ui/lab/Rating';
 import { DataGrid, GridCellParams } from '@material-ui/data-grid';
 
@@ -20,16 +20,13 @@ function RatingEditInputCell(props: GridCellParams) {
   const { id, value, api, field } = props;
   const classes = useStyles();
 
-  const handleChange = React.useCallback(
-    (event) => {
-      const editProps = {
-        value: Number(event.target.value),
-      };
-      api.commitCellChange({ id, field, props: editProps });
-      api.setCellMode(id, field, 'view');
-    },
-    [api, field, id],
-  );
+  const handleChange = (event) => {
+    const editProps = {
+      value: Number(event.target.value),
+    };
+    api.commitCellChange({ id, field, props: editProps });
+    api.setCellMode(id, field, 'view');
+  };
 
   return (
     <div className={classes.root}>

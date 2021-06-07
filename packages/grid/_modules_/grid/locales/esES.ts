@@ -4,7 +4,6 @@ import { getGridLocalization, Localization } from '../utils';
 
 const esESGrid: Partial<GridLocaleText> = {
   // Root
-  rootGridLabel: 'grilla',
   noRowsLabel: 'Sin filas',
   // noResultsOverlayLabel: 'No results found.',
   errorOverlayDefaultLabel: 'Ha ocurrido un error.',

@@ -3,7 +3,6 @@ import { getGridLocalization, Localization } from '../utils';
 
 const elGRGrid: Partial<GridLocaleText> = {
   // Root
-  rootGridLabel: 'πλέγμα',
   noRowsLabel: 'Δεν υπάρχουν καταχωρήσεις',
   // noResultsOverlayLabel: 'No results found.',
   errorOverlayDefaultLabel: 'Παρουσιάστηκε απρόβλεπτο σφάλμα.',

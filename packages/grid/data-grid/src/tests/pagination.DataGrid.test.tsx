@@ -17,6 +17,8 @@ import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { useData } from 'packages/storybook/src/hooks/useData';
 
+const isJSDOM = /jsdom/.test(window.navigator.userAgent);
+
 describe('<DataGrid /> - Pagination', () => {
   // TODO v5: replace with createClientRender
   const render = createClientRenderStrictMode();
@@ -40,35 +42,32 @@ describe('<DataGrid /> - Pagination', () => {
   };
 
   describe('pagination', () => {
-    before(function beforeHook() {
-      if (/jsdom/.test(window.navigator.userAgent)) {
-        // Need layouting
-        this.skip();
-      }
-    });
-
     it('should apply the page prop correctly', () => {
-      const rows = [
-        {
-          id: 0,
-          brand: 'Nike',
-        },
-        {
-          id: 1,
-          brand: 'Addidas',
-        },
-        {
-          id: 2,
-          brand: 'Puma',
-        },
-      ];
       render(
         <div style={{ width: 300, height: 300 }}>
-          <DataGrid {...baselineProps} rows={rows} page={1} pageSize={1} />
+          <DataGrid {...baselineProps} page={1} pageSize={1} />
         </div>,
       );
-      const cell = document.querySelector('[role="cell"][aria-colindex="0"]')!;
-      expect(cell).to.have.text('Addidas');
+      expect(getColumnValues()).to.deep.equal(['Adidas']);
+    });
+
+    it('should react to an update of rowCount', () => {
+      const Test = (props) => {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...baselineProps} rowCount={5} {...props} />
+          </div>
+        );
+      };
+
+      const { setProps } = render(<Test />);
+      expect(document.querySelector('.MuiTablePagination-root')).to.have.text(
+        'Rows per page:1001-5 of 5',
+      );
+      setProps({ rowCount: 21 });
+      expect(document.querySelector('.MuiTablePagination-root')).to.have.text(
+        'Rows per page:1001-21 of 21',
+      );
     });
 
     it('should trigger onPageChange when clicking on next page', () => {
@@ -84,6 +83,21 @@ describe('<DataGrid /> - Pagination', () => {
 
       fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
       expect(onPageChange.callCount).to.equal(2);
+    });
+
+    it('should trigger onPageChange with correct page param when page prop is supplied i.e in controlled mode', () => {
+      const onPageChange = spy();
+
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} page={1} onPageChange={onPageChange} pageSize={1} />
+        </div>,
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(onPageChange.lastCall.args[0].page).to.equal(2);
+      fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
+      expect(onPageChange.lastCall.args[0].page).to.equal(0);
     });
 
     it('should trigger onPageChange when clicking on next page in Server mode', () => {
@@ -194,36 +208,55 @@ describe('<DataGrid /> - Pagination', () => {
       expect(getColumnValues()).to.deep.equal(['Nike 1']);
     });
 
+    it('should not change the page when clicking on the next page and a page prop is provided', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...baselineProps} page={0} pageSize={1} />
+        </div>,
+      );
+      expect(getColumnValues()).to.deep.equal(['Nike']);
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      expect(getColumnValues()).to.deep.equal(['Nike']);
+    });
+
     it('should show filtered data if the user applies filter on an intermediate page and the resulted filter data is less than the rows per page', () => {
-      const TestCasePaginationFilteredData = (props) => {
-        const data = useData(200, 10);
+      const TestCasePaginationFilteredData = () => {
+        const data = useData(200, 2);
 
         return (
           <div style={{ width: 300, height: 300 }}>
-            <DataGrid columns={data.columns} rows={data.rows} pagination {...props} />
+            <DataGrid
+              autoHeight={isJSDOM}
+              columns={data.columns}
+              rows={data.rows}
+              pagination
+              page={1}
+              pageSize={25}
+              filterModel={{
+                items: [
+                  {
+                    columnField: 'currencyPair',
+                    value: 'BTCUSD',
+                    operatorValue: 'equals',
+                  },
+                ],
+              }}
+            />
           </div>
         );
       };
-
-      render(
-        <TestCasePaginationFilteredData
-          page={3}
-          pageSize={25}
-          filterModel={{
-            items: [
-              {
-                columnField: 'currencyPair',
-                value: 'BTCUSD',
-                operatorValue: 'equals',
-              },
-            ],
-          }}
-        />,
-      );
-      expect(getColumnValues(1)).to.include('BTCUSD');
+      render(<TestCasePaginationFilteredData />);
+      expect(getColumnValues(1)).to.deep.equal(['BTCUSD', 'BTCUSD', 'BTCUSD', 'BTCUSD']);
     });
 
     describe('prop: autoPageSize', () => {
+      before(function beforeHook() {
+        if (isJSDOM) {
+          // Need layouting
+          this.skip();
+        }
+      });
+
       it('should always render the same amount of rows and fit the viewport', () => {
         const TestCaseAutoPageSize = (props: { nbRows: number; height?: number }) => {
           const data = useData(props.nbRows, 10);
@@ -266,6 +299,26 @@ describe('<DataGrid /> - Pagination', () => {
           null,
           'next page should be disabled.',
         );
+      });
+
+      it('should be compatible with controlled page', () => {
+        const rows = [
+          { id: 1, x: 1 },
+          { id: 2, x: 2 },
+          { id: 3, x: 3 },
+          { id: 4, x: 4 },
+          { id: 5, x: 5 },
+          { id: 6, x: 6 },
+          { id: 7, x: 7 },
+          { id: 8, x: 8 },
+        ];
+        const columns = [{ field: 'x', type: 'number' }];
+        render(
+          <div style={{ height: 300, width: 400 }}>
+            <DataGrid pagination autoPageSize rows={rows} columns={columns} page={2} />
+          </div>,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['7', '8']);
       });
     });
   });

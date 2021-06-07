@@ -10,7 +10,7 @@ import {
   GRID_CELL_DRAG_OVER,
   GRID_CELL_DRAG_END,
 } from '../../../constants/eventsConstants';
-import { GRID_HEADER_CELL_DRAGGING_CSS_CLASS } from '../../../constants/cssClassesConstants';
+import { GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS } from '../../../constants/cssClassesConstants';
 import { GridColumnHeaderParams } from '../../../models/params/gridColumnHeaderParams';
 import { GridCellParams } from '../../../models/params/gridCellParams';
 import { CursorCoordinates } from '../../../models/cursorCoordinates';
@@ -61,7 +61,7 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
       logger.debug(`Start dragging col ${params.field}`);
 
       dragColNode.current = event.currentTarget;
-      dragColNode.current.classList.add(GRID_HEADER_CELL_DRAGGING_CSS_CLASS);
+      dragColNode.current.classList.add(GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS);
 
       setGridState((oldState) => ({
         ...oldState,
@@ -70,7 +70,7 @@ export const useGridColumnReorder = (apiRef: GridApiRef): void => {
       forceUpdate();
 
       removeDnDStylesTimeout.current = setTimeout(() => {
-        dragColNode.current!.classList.remove(GRID_HEADER_CELL_DRAGGING_CSS_CLASS);
+        dragColNode.current!.classList.remove(GRID_COLUMN_HEADER_DRAGGING_CSS_CLASS);
       });
 
       originColumnIndex.current = apiRef.current.getColumnIndex(params.field, false);

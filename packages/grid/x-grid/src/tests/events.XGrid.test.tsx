@@ -80,11 +80,11 @@ describe('<XGrid /> - Events Params', () => {
       };
       render(<TestEvents onColumnHeaderClick={handleClick} />);
 
-      const ageColumnElement = getColumnHeaderCell(3);
+      const ageColumnElement = getColumnHeaderCell(2);
       fireEvent.click(ageColumnElement);
 
       expect(eventArgs!.params).to.deep.include({
-        colDef: apiRef!.current.getColumnFromField('age'),
+        colDef: apiRef!.current.getColumn('age'),
         field: 'age',
         api: apiRef.current,
       });
@@ -131,7 +131,7 @@ describe('<XGrid /> - Events Params', () => {
         formattedValue: 'Jack',
         isEditable: true,
         row: baselineProps.rows[1],
-        colDef: apiRef!.current.getColumnFromField('first'),
+        colDef: apiRef!.current.getColumn('first'),
         api: apiRef.current,
         hasFocus: false,
         tabIndex: -1,
@@ -146,7 +146,7 @@ describe('<XGrid /> - Events Params', () => {
       render(<TestEvents onCellClick={handleClick} />);
       const header = screen
         .getByRole('columnheader', { name: 'first' })
-        .querySelector('.MuiDataGrid-colCellTitleContainer');
+        .querySelector('.MuiDataGrid-columnHeaderTitleContainer');
       fireEvent.click(header);
 
       const cell01 = getCell(0, 1);
@@ -158,7 +158,7 @@ describe('<XGrid /> - Events Params', () => {
         formattedValue: 'Jack',
         isEditable: true,
         row: baselineProps.rows[1],
-        colDef: apiRef!.current.getColumnFromField('first'),
+        colDef: apiRef!.current.getColumn('first'),
         api: apiRef.current,
         hasFocus: false,
         tabIndex: -1,

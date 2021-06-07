@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { GridCellValue } from '../gridCell';
-import { GridCellClassNamePropType, GridCellClassRules } from '../gridCellClass';
+import { GridCellClassNamePropType } from '../gridCellClass';
+import { GridColumnHeaderClassNamePropType } from '../gridColumnHeaderClass';
 import { GridFilterOperator } from '../gridFilterOperator';
 import {
   GridCellParams,
@@ -89,10 +90,6 @@ export interface GridColDef {
    */
   cellClassName?: GridCellClassNamePropType;
   /**
-   * Set of CSS class rules that will be dynamically applied on cells.
-   */
-  cellClassRules?: GridCellClassRules;
-  /**
    * Allows to override the component rendered as cell for this column.
    * @param params
    */
@@ -105,7 +102,7 @@ export interface GridColDef {
   /**
    * Class name that will be added in the column header cell.
    */
-  headerClassName?: string | string[];
+  headerClassName?: GridColumnHeaderClassNamePropType;
   /**
    * Allows to render a component in the column header cell.
    * @param params
@@ -117,14 +114,17 @@ export interface GridColDef {
   headerAlign?: GridAlignment;
   /**
    * Toggle the visibility of the sort icons.
+   * @default false
    */
   hideSortIcons?: boolean;
   /**
    * Allows to disable the click event in cells.
+   * @default false
    */
   disableClickEventBubbling?: boolean;
   /**
    * If `true`, the column menu is disabled for this column.
+   * @default false
    */
   disableColumnMenu?: boolean;
   /**

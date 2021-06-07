@@ -1,27 +1,32 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/styles';
 import { GridCellParams, getThemePaletteMode } from '../../../_modules_/grid';
+import { createTheme } from '../../../_modules_/grid/utils/utils';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      fontVariantNumeric: 'tabular-nums',
-    },
-    positive: {
-      color:
-        getThemePaletteMode(theme.palette) === 'light'
-          ? theme.palette.success.dark
-          : theme.palette.success.light,
-    },
-    negative: {
-      color:
-        getThemePaletteMode(theme.palette) === 'light'
-          ? theme.palette.error.dark
-          : theme.palette.error.light,
-    },
-  }),
+const defaultTheme = createTheme();
+const useStyles = makeStyles(
+  (theme: Theme) =>
+    createStyles({
+      root: {
+        width: '100%',
+        fontVariantNumeric: 'tabular-nums',
+      },
+      positive: {
+        color:
+          getThemePaletteMode(theme.palette) === 'light'
+            ? theme.palette.success.dark
+            : theme.palette.success.light,
+      },
+      negative: {
+        color:
+          getThemePaletteMode(theme.palette) === 'light'
+            ? theme.palette.error.dark
+            : theme.palette.error.light,
+      },
+    }),
+  { defaultTheme },
 );
 
 function pnlFormatter(value: number) {

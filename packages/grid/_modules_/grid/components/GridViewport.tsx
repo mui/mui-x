@@ -67,6 +67,7 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
             columns={visibleColumns}
             row={row}
             id={id}
+            height={rowHeight}
             firstColIdx={renderState.renderContext!.firstColIdx!}
             lastColIdx={renderState.renderContext!.lastColIdx!}
             hasScrollX={scrollBarState.hasScrollX}
@@ -78,6 +79,8 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
             cellTabIndex={cellTabIndex}
             isSelected={selectionState[id] !== undefined}
             editRowState={editRowsState[id]}
+            cellClassName={options.classes?.cell}
+            getCellClassName={options.getCellClassName}
           />
           <GridEmptyCell width={renderState.renderContext!.rightEmptyWidth} height={rowHeight} />
         </GridRow>

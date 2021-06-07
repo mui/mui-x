@@ -2,7 +2,6 @@ import { GridLocaleText } from '../models/api/gridLocaleTextApi';
 
 export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Root
-  rootGridLabel: 'grid',
   noRowsLabel: 'No rows',
   noResultsOverlayLabel: 'No results found.',
   errorOverlayDefaultLabel: 'An error occurred.',

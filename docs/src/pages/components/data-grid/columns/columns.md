@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Columns
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Columns
@@ -96,9 +95,9 @@ To achieve that, set the `valueGetter` attribute of `GridColDef` as in the examp
 **Note**: You need to set a `sortComparator` for the column sorting to work when setting the `valueGetter` attribute.
 
 ```tsx
-function getFullName(params: ValueGetterParams) {
-  return `${params.getValue('firstName') || ''} ${
-    params.getValue('lastName') || ''
+function getFullName(params) {
+  return `${params.getValue(params.id, 'firstName') || ''} ${
+    params.getValue(params.id, 'lastName') || ''
   }`;
 }
 
@@ -217,54 +216,11 @@ const columns: GridColDef[] = [
 
 ### Styling header
 
-The `GridColDef` type has properties to apply class names and custom CSS on the header.
-
-- `headerClassName`: to apply class names into the column header.
-- `headerAlign`: to align the content of the header. It must be 'left' | 'right' | 'center'.
-
-```tsx
-const columns: GridColumns = [
-  {
-    field: 'first',
-    headerClassName: 'super-app-theme--header',
-    headerAlign: 'center',
-  },
-  {
-    field: 'last',
-    headerClassName: 'super-app-theme--header',
-    headerAlign: 'center',
-  },
-];
-```
-
-{{"demo": "pages/components/data-grid/columns/StylingHeaderGrid.js", "bg": "inline"}}
+You can check the [styling header](/components/data-grid/style/#styling-column-headers) section for more information.
 
 ### Styling cells
 
-The `GridColDef` type has properties to apply class names and custom CSS on the cells.
-
-- `cellClassName`: to apply class names on every cell. It can also be a function.
-- `align`: to align the content of the cells. It must be 'left' | 'right' | 'center'. (Note you must use `headerAlign` to align the content of the header.)
-
-```tsx
-const columns: GridColumns = [
-  {
-    field: 'name',
-    cellClassName: 'super-app-theme--cell',
-  },
-  {
-    field: 'score',
-    type: 'number',
-    cellClassName: (params: GridCellClassParams) =>
-      clsx('super-app', {
-        negative: (params.value as number) < 0,
-        positive: (params.value as number) > 0,
-      }),
-  },
-];
-```
-
-{{"demo": "pages/components/data-grid/columns/StylingCellsGrid.js", "bg": "inline"}}
+You can check the [styling cells](/components/data-grid/style/#styling-cells) section for more information.
 
 ## Column types
 
@@ -359,3 +315,8 @@ Each cell takes up the width of one column.
 Column spanning allows to change this default behavior.
 It allows cells to span multiple columns.
 This is very close to the "column spanning" in an HTML `<table>`.
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid/)
+- [XGrid](/api/data-grid/x-grid/)

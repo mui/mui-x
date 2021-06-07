@@ -27,20 +27,49 @@ export function useThemeProps({ props: inputProps, name }) {
   };
 }
 
-// TODO replace with { unstable_getScrollbarSize } from '@material-ui/utils'
-// A change of the browser zoom change the scrollbar size.
-// Credit https://github.com/twbs/bootstrap/blob/3ffe3a5d82f6f561b82ff78d82b32a7d14aed558/js/src/modal.js#L512-L519
-export function getScrollbarSize(doc: Document): number {
-  const scrollDiv = doc.createElement('div');
-  scrollDiv.style.width = '99px';
-  scrollDiv.style.height = '99px';
-  scrollDiv.style.position = 'absolute';
-  scrollDiv.style.top = '-9999px';
-  scrollDiv.style.overflow = 'scroll';
+// TODO replace with { unstable_composeClasses } from '@material-ui/unstyled'
+export function composeClasses<ClassKey extends string>(
+  slots: Record<ClassKey, ReadonlyArray<string | false | undefined | null>>,
+  getUtilityClass: (slot: string) => string,
+  classes: Record<string, string> | undefined,
+): Record<ClassKey, string> {
+  const output: Record<ClassKey, string> = {} as any;
 
-  doc.body.appendChild(scrollDiv);
-  const scrollbarSize = scrollDiv.offsetWidth - scrollDiv.clientWidth;
-  doc.body.removeChild(scrollDiv);
+  Object.keys(slots).forEach(
+    // `Objet.keys(slots)` can't be wider than `T` because we infer `T` from `slots`.
+    // @ts-expect-error https://github.com/microsoft/TypeScript/pull/12253#issuecomment-263132208
+    (slot: ClassKey) => {
+      output[slot] = slots[slot]
+        .reduce((acc, key) => {
+          if (key) {
+            if (classes && classes[key]) {
+              acc.push(classes[key]);
+            }
+            acc.push(getUtilityClass(key));
+          }
+          return acc;
+        }, [] as string[])
+        .join(' ');
+    },
+  );
 
-  return scrollbarSize;
+  return output;
+}
+
+// TODO replace with { generateUtilityClass } from '@material-ui/unstyled';
+const globalPseudoClassesMapping: Record<string, string> = {
+  active: 'Mui-active',
+  checked: 'Mui-checked',
+  disabled: 'Mui-disabled',
+  error: 'Mui-error',
+  focused: 'Mui-focused',
+  focusVisible: 'Mui-focusVisible',
+  required: 'Mui-required',
+  expanded: 'Mui-expanded',
+  selected: 'Mui-selected',
+};
+
+export function generateUtilityClass(componentName: string, slot: string): string {
+  const globalPseudoClass = globalPseudoClassesMapping[slot];
+  return globalPseudoClass || `${componentName}-${slot}`;
 }

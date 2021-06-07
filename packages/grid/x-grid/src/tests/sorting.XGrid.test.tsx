@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { GridApiRef, GridColDef, GridSortModel, useGridApiRef } from '@material-ui/data-grid';
+import { GridApiRef, GridSortModel, useGridApiRef } from '@material-ui/data-grid';
 import { XGrid } from '@material-ui/x-grid';
 import { expect } from 'chai';
 import { useFakeTimers } from 'sinon';
-import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
+import { getColumnValues, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
@@ -19,6 +19,27 @@ const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
 describe('<XGrid /> - Sorting', () => {
   let clock;
+  const baselineProps = {
+    autoHeight: isJSDOM,
+    rows: [
+      {
+        id: 0,
+        brand: 'Nike',
+        year: '1940',
+      },
+      {
+        id: 1,
+        brand: 'Adidas',
+        year: '1940',
+      },
+      {
+        id: 2,
+        brand: 'Puma',
+        year: '1950',
+      },
+    ],
+    columns: [{ field: 'brand' }, { field: 'year', type: 'number' }],
+  };
 
   beforeEach(() => {
     clock = useFakeTimers();
@@ -38,28 +59,6 @@ describe('<XGrid /> - Sorting', () => {
     sortModel: GridSortModel;
     disableMultipleColumnsSorting?: boolean;
   }) => {
-    const baselineProps = {
-      autoHeight: isJSDOM,
-      rows: [
-        {
-          id: 0,
-          brand: 'Nike',
-          year: '1940',
-        },
-        {
-          id: 1,
-          brand: 'Adidas',
-          year: '1940',
-        },
-        {
-          id: 2,
-          brand: 'Puma',
-          year: '1950',
-        },
-      ],
-      columns: [{ field: 'brand' }, { field: 'year', type: 'number' }],
-    };
-
     const { sortModel, rows, disableMultipleColumnsSorting } = props;
     apiRef = useGridApiRef();
     return (
@@ -147,7 +146,7 @@ describe('<XGrid /> - Sorting', () => {
       it(`should do a multi-sorting when clicking the header cell while ${key} is pressed`, () => {
         render(<TestCase sortModel={[{ field: 'year', sort: 'desc' }]} />);
         expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
-        fireEvent.click(getColumnHeaderCell(1), { [key]: true });
+        fireEvent.click(getColumnHeaderCell(0), { [key]: true });
         expect(getColumnValues()).to.deep.equal(['Puma', 'Adidas', 'Nike']);
       });
     });
@@ -165,15 +164,15 @@ describe('<XGrid /> - Sorting', () => {
     it('should do a multi-sorting pressing Enter while shiftKey is pressed', () => {
       render(<TestCase sortModel={[{ field: 'year', sort: 'desc' }]} />);
       expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
-      getColumnHeaderCell(1).focus();
-      fireEvent.keyDown(getColumnHeaderCell(1), { key: 'Enter', shiftKey: true });
+      getColumnHeaderCell(0).focus();
+      fireEvent.keyDown(getColumnHeaderCell(0), { key: 'Enter', shiftKey: true });
       expect(getColumnValues()).to.deep.equal(['Puma', 'Adidas', 'Nike']);
     });
 
     it(`should not do a multi-sorting if no multiple key is pressed`, () => {
       render(<TestCase sortModel={[{ field: 'year', sort: 'desc' }]} />);
       expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
-      fireEvent.click(getColumnHeaderCell(1));
+      fireEvent.click(getColumnHeaderCell(0));
       expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     });
 
@@ -182,7 +181,7 @@ describe('<XGrid /> - Sorting', () => {
         <TestCase sortModel={[{ field: 'year', sort: 'desc' }]} disableMultipleColumnsSorting />,
       );
       expect(getColumnValues()).to.deep.equal(['Puma', 'Nike', 'Adidas']);
-      fireEvent.click(getColumnHeaderCell(1), { shiftKey: true });
+      fireEvent.click(getColumnHeaderCell(0), { shiftKey: true });
       expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     });
   });
@@ -212,60 +211,57 @@ describe('<XGrid /> - Sorting', () => {
       render(<TestCasePerf />);
       const header = screen
         .getByRole('columnheader', { name: 'Currency Pair' })
-        .querySelector('.MuiDataGrid-colCellTitleContainer');
+        .querySelector('.MuiDataGrid-columnHeaderTitleContainer');
 
       const t0 = performance.now();
       fireEvent.click(header);
-      await waitFor(() =>
-        expect(document.querySelector('.MuiDataGrid-sortIcon')).to.not.equal(null),
-      );
+      await waitFor(() => expect(document.querySelector('.MuiDataGrid-sortIcon')).to.not.be.null);
       const t1 = performance.now();
       const time = Math.round(t1 - t0);
       expect(time).to.be.lessThan(300);
     });
+  });
 
-    it('should render maximum twice', async function test() {
-      let renderCellCount = 0;
-      let renderHeaderCount = 0;
-      const TestCasePerf = () => {
-        const [cols, setCols] = React.useState<GridColDef[]>([]);
-        const data = useData(10, 10);
+  it('should prune rendering on cells', function test() {
+    // The number of renders depends on the user-agent
+    if (!/HeadlessChrome/.test(window.navigator.userAgent) || !isJSDOM) {
+      this.skip();
+      return;
+    }
 
-        React.useEffect(() => {
-          if (data.columns.length) {
-            const newColumns = [...data.columns];
-            newColumns[1].renderHeader = (params) => {
-              renderHeaderCount += 1;
+    let renderCellCount = 0;
 
-              return <span>{params.field}</span>;
-            };
-            newColumns[1].renderCell = (params) => {
-              if (params.id === 0) {
-                renderCellCount += 1;
-              }
-              return <span>{params.value}</span>;
-            };
-            setCols(newColumns);
-          }
-        }, [data.columns]);
+    function CounterRender(props) {
+      React.useEffect(() => {
+        if (props.value === 'Nike') {
+          renderCellCount += 1;
+        }
+      });
+      return props.value;
+    }
 
-        return (
-          <div style={{ width: 300, height: 300 }}>
-            <XGrid columns={cols} rows={data.rows} />
-          </div>
-        );
-      };
+    const columns = [
+      {
+        field: 'brand',
+        renderCell: (params) => <CounterRender value={params.value} />,
+      },
+    ];
 
-      render(<TestCasePerf />);
-      const header = getColumnHeaderCell(2);
-      renderHeaderCount = 0;
-      renderCellCount = 0;
-      fireEvent.click(header);
-      await waitFor(() =>
-        expect(document.querySelector('.MuiDataGrid-sortIcon')).to.not.equal(null),
+    function Test(props) {
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid {...baselineProps} columns={columns} checkboxSelection {...props} />
+        </div>
       );
-      expect(renderHeaderCount).to.equal(2);
-      expect(renderCellCount).to.equal(0);
-    });
+    }
+
+    const { setProps } = render(<Test />);
+    expect(renderCellCount).to.equal(1);
+    const cell = getCell(1, 0);
+    cell.focus();
+    fireEvent.click(cell);
+    expect(renderCellCount).to.equal(2);
+    setProps({ extra: true });
+    expect(renderCellCount).to.equal(2);
   });
 });

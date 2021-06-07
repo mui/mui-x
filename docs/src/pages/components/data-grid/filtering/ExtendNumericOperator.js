@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import { Rating } from '@material-ui/lab';
 import { DataGrid, getGridNumericColumnOperators } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';

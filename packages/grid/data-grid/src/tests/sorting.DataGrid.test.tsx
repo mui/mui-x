@@ -74,7 +74,7 @@ describe('<DataGrid /> - Sorting', () => {
         <DataGrid {...baselineProps} />
       </div>,
     );
-    const header = getColumnHeaderCell(1);
+    const header = getColumnHeaderCell(0);
     expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     fireEvent.click(header);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);
@@ -90,7 +90,7 @@ describe('<DataGrid /> - Sorting', () => {
     );
     const header = screen
       .getByRole('columnheader', { name: 'isPublished' })
-      .querySelector('.MuiDataGrid-colCellTitleContainer');
+      .querySelector('.MuiDataGrid-columnHeaderTitleContainer');
     expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     fireEvent.click(header);
     expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
@@ -202,7 +202,7 @@ describe('<DataGrid /> - Sorting', () => {
 
     const header = screen
       .getByRole('columnheader', { name: 'brand' })
-      .querySelector('.MuiDataGrid-colCellTitleContainer');
+      .querySelector('.MuiDataGrid-columnHeaderTitleContainer');
     expect(getColumnValues()).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     fireEvent.click(header);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Nike', 'Puma']);

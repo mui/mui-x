@@ -1,35 +1,28 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { GridCellIdentifier } from '../../hooks/features/focus/gridFocusState';
 import {
-  GridCellClassParams,
   GridColumns,
   GridRowModel,
-  GridCellClassRules,
   GridCellParams,
   GridRowId,
   GridEditRowProps,
 } from '../../models/index';
 import { GridCell, GridCellProps } from './GridCell';
 import { GridApiContext } from '../GridApiContext';
-import { classnames, isFunction } from '../../utils/index';
-import { gridDensityRowHeightSelector } from '../../hooks/features/density/densitySelector';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-
-function applyCssClassRules(cellClassRules: GridCellClassRules, params: GridCellClassParams) {
-  return Object.entries(cellClassRules).reduce((appliedCss, entry) => {
-    const shouldApplyCss: boolean = isFunction(entry[1]) ? entry[1](params) : entry[1];
-    appliedCss += shouldApplyCss ? `${entry[0]} ` : '';
-    return appliedCss;
-  }, '');
-}
+import { isFunction } from '../../utils/index';
+import { GRID_CSS_CLASS_PREFIX } from '../../constants/cssClassesConstants';
 
 interface RowCellsProps {
+  cellClassName?: string;
   columns: GridColumns;
   extendRowFullWidth: boolean;
   firstColIdx: number;
   id: GridRowId;
   hasScrollX: boolean;
   hasScrollY: boolean;
+  height: number;
+  getCellClassName?: (params: GridCellParams) => string;
   lastColIdx: number;
   row: GridRowModel;
   rowIndex: number;
@@ -46,7 +39,9 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
     firstColIdx,
     hasScrollX,
     hasScrollY,
+    height,
     id,
+    getCellClassName,
     lastColIdx,
     rowIndex,
     cellFocus,
@@ -54,10 +49,10 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
     showCellRightBorder,
     isSelected,
     editRowState,
+    cellClassName,
+    ...other
   } = props;
   const apiRef = React.useContext(GridApiContext);
-  const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
-
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const colIndex = firstColIdx + colIdx;
     const isLastColumn = colIndex === columns.length - 1;
@@ -68,18 +63,16 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
 
     const cellParams: GridCellParams = apiRef!.current.getCellParams(id, column.field);
 
-    let cssClassProp = { cssClass: '' };
-    if (column.cellClassName) {
-      if (!isFunction(column.cellClassName)) {
-        cssClassProp = { cssClass: classnames(column.cellClassName) };
-      } else {
-        cssClassProp = { cssClass: column.cellClassName(cellParams) as string };
-      }
-    }
+    const classNames = [cellClassName];
 
-    if (column.cellClassRules) {
-      const cssClass = applyCssClassRules(column.cellClassRules, cellParams);
-      cssClassProp = { cssClass: `${cssClassProp.cssClass} ${cssClass}` };
+    if (column.cellClassName) {
+      classNames.push(
+        clsx(
+          isFunction(column.cellClassName)
+            ? column.cellClassName(cellParams)
+            : column.cellClassName,
+        ),
+      );
     }
 
     const editCellState = editRowState && editRowState[column.field];
@@ -87,13 +80,17 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
 
     if (editCellState == null && column.renderCell) {
       cellComponent = column.renderCell(cellParams);
-      cssClassProp = { cssClass: `${cssClassProp.cssClass} MuiDataGrid-cellWithRenderer` };
+      classNames.push(`${GRID_CSS_CLASS_PREFIX}-cellWithRenderer`);
     }
 
     if (editCellState != null && column.renderEditCell) {
       const params = { ...cellParams, ...editCellState };
       cellComponent = column.renderEditCell(params);
-      cssClassProp = { cssClass: `${cssClassProp.cssClass} MuiDataGrid-cellEditing` };
+      classNames.push(`${GRID_CSS_CLASS_PREFIX}-cellEditing`);
+    }
+
+    if (getCellClassName) {
+      classNames.push(getCellClassName(cellParams));
     }
 
     const cellProps: GridCellProps = {
@@ -101,11 +98,10 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
       field: column.field,
       width: column.width!,
       rowId: id,
-      height: rowHeight,
+      height,
       showRightBorder,
       formattedValue: cellParams.formattedValue,
       align: column.align || 'left',
-      ...cssClassProp,
       rowIndex,
       cellMode: cellParams.cellMode,
       colIndex,
@@ -117,6 +113,8 @@ export const GridRowCells = React.memo((props: RowCellsProps) => {
         cellTabIndex !== null && cellTabIndex.id === id && cellTabIndex.field === column.field
           ? 0
           : -1,
+      className: clsx(classNames),
+      ...other,
     };
 
     return cellProps;

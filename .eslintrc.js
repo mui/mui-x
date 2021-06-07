@@ -1,4 +1,4 @@
-const baseline = require('@material-ui/monorepo/.eslintrc.js');
+const baseline = require('@material-ui/monorepo/.eslintrc');
 const path = require('path');
 
 module.exports = {

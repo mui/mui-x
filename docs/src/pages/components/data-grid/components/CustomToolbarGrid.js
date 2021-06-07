@@ -2,16 +2,20 @@ import * as React from 'react';
 import {
   DataGrid,
   GridToolbarContainer,
-  GridColumnsToolbarButton,
-  GridFilterToolbarButton,
+  GridToolbarColumnsButton,
+  GridToolbarFilterButton,
+  GridToolbarExport,
+  GridToolbarDensitySelector,
 } from '@material-ui/data-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 
 function CustomToolbar() {
   return (
     <GridToolbarContainer>
-      <GridColumnsToolbarButton />
-      <GridFilterToolbarButton />
+      <GridToolbarColumnsButton />
+      <GridToolbarFilterButton />
+      <GridToolbarDensitySelector />
+      <GridToolbarExport />
     </GridToolbarContainer>
   );
 }
@@ -19,7 +23,7 @@ function CustomToolbar() {
 export default function CustomToolbarGrid() {
   const { data } = useDemoData({
     dataSet: 'Commodity',
-    rowLength: 100,
+    rowLength: 10,
     maxColumns: 6,
   });
 

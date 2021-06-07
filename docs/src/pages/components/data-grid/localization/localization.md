@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Localization
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Localization
@@ -50,6 +49,7 @@ The same import works with `XGrid` as it's an extension of `DataGrid`.
 | Locale                  | BCP 47 language tag | Import name |
 | :---------------------- | :------------------ | :---------- |
 | Bulgarian               | bg-BG               | `bgBG`      |
+| Czech                   | cs-CZ               | `csCZ`      |
 | Dutch                   | nl-NL               | `nlNL`      |
 | English (United States) | en-US               | `enUS`      |
 | French                  | fr-FR               | `frFR`      |
@@ -60,6 +60,7 @@ The same import works with `XGrid` as it's an extension of `DataGrid`.
 | Polish                  | pl-PL               | `plPL`      |
 | Portuguese (Brazil)     | pt-BR               | `ptBR`      |
 | Russian                 | ru-RU               | `ruRU`      |
+| Slovak                  | sk-SK               | `skSK`      |
 | Spanish (Spain)         | es-ES               | `esES`      |
 | Turkish                 | tr-TR               | `trTR`      |
 | Ukraine                 | uk-UA               | `ukUA`      |
@@ -70,3 +71,8 @@ To create your own translation or to customize the English text, copy this file 
 
 Please do consider contributing new translations back to Material-UI by opening a pull request. However, Material-UI aims to support the 100 most popular locales. We might not accept contributions for locales that are not frequently used, for instance, `gl-ES` that has "only" 2.5 million native speakers.
 See the [Docs](https://material-ui.com/components/data-grid/localization/) for more details.
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid/)
+- [XGrid](/api/data-grid/x-grid/)

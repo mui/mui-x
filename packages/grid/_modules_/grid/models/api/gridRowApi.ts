@@ -1,45 +1,50 @@
 import { GridRowModel, GridRowId, GridRowModelUpdate } from '../gridRows';
 
 /**
- * The Row API interface that is available in the grid [[apiRef]].
+ * The Row API interface that is available in the grid `apiRef`.
  */
 export interface GridRowApi {
   /**
-   * Get the full set of rows as [[Map<GridRowId, GridRowModel>]].
-   * @returns [[Map<GridRowId, GridRowModel>]]
+   * Gets the full set of rows as [[Map<GridRowId, GridRowModel>]].
+   * @returns {Map<GridRowId, GridRowModel>}
    */
   getRowModels: () => Map<GridRowId, GridRowModel>;
   /**
-   * Get the total number of rows in the grid.
+   * Gets the total number of rows in the grid.
+   * @returns {number}
    */
   getRowsCount: () => number;
   /**
-   * Return the list of row Ids.
+   * Gets the list of row ids.
+   * @returns {GridRowId[]} A list of ids.
    */
   getAllRowIds: () => GridRowId[];
   /**
-   * Set a new set of Rows.
-   * @param rows
+   * Sets a new set of rows.
+   * @param {GridRowModel[]} rows The new rows.
    */
   setRows: (rows: GridRowModel[]) => void;
   /**
-   * Update any properties of the current set of GridRowData[].
-   * @param updates
+   * Allows to updates, insert and delete rows in a single call.
+   * @param {GridRowModelUpdate[]} updates An array of rows with an `action` specifying what to do.
    */
   updateRows: (updates: GridRowModelUpdate[]) => void;
   /**
-   * Get the GridRowId of a row at a specific position.
-   * @param index
+   * Gets the `GridRowId` of a row at a specific index.
+   * @param {number} index The index of the row
+   * @returns {GridRowId} The `GridRowId` of the row.
    */
   getRowIdFromRowIndex: (index: number) => GridRowId;
   /**
-   * Get the row index of a row with a given id.
-   * @param id
+   * Gets the row index of a row with a given id.
+   * @param {GridRowId} id The `GridRowId` of the row.
+   * @returns {number} The index of the row.
    */
   getRowIndex: (id: GridRowId) => number;
   /**
-   * Get the [[GridRowModel]] of a given rowId.
-   * @param id
+   * Gets the row data with a given id.
+   * @param {GridRowId} id The id of the row.
+   * @returns {GridRowModel} The row data.
    */
-  getRowFromId: (id: GridRowId) => GridRowModel;
+  getRow: (id: GridRowId) => GridRowModel;
 }

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import { XGrid, GridOptionsProp, GridColDef } from '@material-ui/x-grid';
 import DoneIcon from '@material-ui/icons/Done';
 import ClearIcon from '@material-ui/icons/Clear';
@@ -136,7 +137,8 @@ const getRows = () => [
 export const ColumnCellClass = () => {
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
-  cols[3].cellClassName = ['age', 'shine'];
+  cols[3].cellClassName = () => clsx('age', 'shine');
+  cols[1].cellClassName = (params) => (!params.value ? 'unknown' : '');
 
   return (
     <div className="grid-container">
@@ -147,23 +149,7 @@ export const ColumnCellClass = () => {
 export const ColumnHeaderClass = () => {
   const rows = React.useMemo(() => getRows(), []);
   const cols = React.useMemo(() => getColumns(), []);
-  cols[3].headerClassName = ['age', 'shine'];
-
-  return (
-    <div className="grid-container">
-      <XGrid rows={rows} columns={cols} />
-    </div>
-  );
-};
-
-export const ColumnCellClassRules = () => {
-  const rows = React.useMemo(() => getRows(), []);
-  const cols = React.useMemo(() => getColumns(), []);
-  cols[4].cellClassRules = {
-    common: (params) => params.row.lastName === 'Smith',
-    unknown: (params) => !params.row.lastName,
-    border: true,
-  };
+  cols[3].headerClassName = () => clsx('age', 'shine');
 
   return (
     <div className="grid-container">

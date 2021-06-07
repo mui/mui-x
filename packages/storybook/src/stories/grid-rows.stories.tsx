@@ -4,7 +4,8 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Popper from '@material-ui/core/Popper';
 import Paper from '@material-ui/core/Paper';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles } from '@material-ui/styles';
 import {
   GridCellValue,
   GridCellParams,
@@ -188,25 +189,28 @@ interface GridCellExpandProps {
   width: number;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      alignItems: 'center',
-      lineHeight: '24px',
-      width: '100%',
-      height: '100%',
-      position: 'relative',
-      display: 'flex',
-      '& .MuiRating-root': {
-        marginRight: theme.spacing(1),
+const defaultTheme = createMuiTheme();
+const useStyles = makeStyles(
+  (theme: Theme) =>
+    createStyles({
+      root: {
+        alignItems: 'center',
+        lineHeight: '24px',
+        width: '100%',
+        height: '100%',
+        position: 'relative',
+        display: 'flex',
+        '& .MuiRating-root': {
+          marginRight: theme.spacing(1),
+        },
+        '& .cellValue': {
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        },
       },
-      '& .cellValue': {
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-      },
-    },
-  }),
+    }),
+  { defaultTheme },
 );
 const GridCellExpand = React.memo(function CellExpand(props: GridCellExpandProps) {
   const { width, value } = props;
@@ -911,6 +915,19 @@ export function SwitchVirtualization() {
       <div style={{ width: '100%', height: 500 }}>
         <XGrid rows={data.rows} columns={data.columns} />
       </div>
+    </div>
+  );
+}
+
+export function SnapGridWidthEdgeScroll() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+    maxColumns: 6,
+  });
+  return (
+    <div style={{ height: 400, width: 710 }}>
+      <XGrid {...data} />
     </div>
   );
 }

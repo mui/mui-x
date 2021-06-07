@@ -1,4 +1,7 @@
 import * as React from 'react';
+import clsx from 'clsx';
+// @ts-expect-error fixed in Material-UI v5, types definitions were added.
+import { unstable_useId as useId } from '@material-ui/core/utils';
 import {
   GRID_COLUMN_HEADER_KEYDOWN,
   GRID_COLUMN_HEADER_CLICK,
@@ -19,19 +22,19 @@ import { GridColDef, GRID_NUMBER_COLUMN_TYPE } from '../../models/colDef/index';
 import { GridOptions } from '../../models/gridOptions';
 import { GridSortDirection } from '../../models/gridSortModel';
 import { GridApiContext } from '../GridApiContext';
-import { GRID_HEADER_CELL_CSS_CLASS } from '../../constants/cssClassesConstants';
-import { classnames } from '../../utils/index';
 import { GridColumnHeaderSortIcon } from './GridColumnHeaderSortIcon';
 import { GridColumnHeaderTitle } from './GridColumnHeaderTitle';
 import { GridColumnHeaderSeparator } from './GridColumnHeaderSeparator';
 import { ColumnHeaderMenuIcon } from './ColumnHeaderMenuIcon';
 import { ColumnHeaderFilterIcon } from './ColumnHeaderFilterIcon';
-import { useGridSelector } from '../../hooks/features/core/useGridSelector';
-import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/densitySelector';
+import { GridColumnHeaderMenu } from '../menu/columnMenu/GridColumnHeaderMenu';
+import { isFunction } from '../../utils/utils';
 
 interface GridColumnHeaderItemProps {
   colIndex: number;
   column: GridColDef;
+  columnMenuOpen: boolean;
+  headerHeight: number;
   isDragging: boolean;
   isResizing: boolean;
   sortDirection: GridSortDirection;
@@ -45,7 +48,9 @@ interface GridColumnHeaderItemProps {
 export const GridColumnHeaderItem = React.memo(
   ({
     column,
+    columnMenuOpen,
     colIndex,
+    headerHeight,
     isDragging,
     isResizing,
     sortDirection,
@@ -57,12 +62,16 @@ export const GridColumnHeaderItem = React.memo(
   }: GridColumnHeaderItemProps) => {
     const apiRef = React.useContext(GridApiContext);
     const headerCellRef = React.useRef<HTMLDivElement>(null);
-    const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
+    const columnMenuId: string = useId();
+    const columnMenuButtonId: string = useId();
+    const iconButtonRef = React.useRef<HTMLButtonElement>(null);
     const {
+      classes,
       disableColumnReorder,
       showColumnRightBorder,
       disableColumnResize,
       disableColumnMenu,
+      disableColumnFilter,
     } = options;
     const isColumnSorted = sortDirection != null;
     // todo refactor to a prop on col isNumeric or ?? ie: coltype===price wont work
@@ -115,18 +124,27 @@ export const GridColumnHeaderItem = React.memo(
       [publish],
     );
 
-    const cssClasses = classnames(
-      GRID_HEADER_CELL_CSS_CLASS,
-      column.headerClassName,
-      column.headerAlign === 'center' && 'MuiDataGrid-colCellCenter',
-      column.headerAlign === 'right' && 'MuiDataGrid-colCellRight',
+    const classNames = [classes?.columnHeader];
+
+    if (column.headerClassName) {
+      const headerClassName = isFunction(column.headerClassName)
+        ? column.headerClassName({ field: column.field, colDef: column, api: apiRef })
+        : column.headerClassName;
+
+      classNames.push(headerClassName);
+    }
+
+    const cssClasses = clsx(
+      column.headerAlign === 'center' && 'MuiDataGrid-columnHeaderCenter',
+      column.headerAlign === 'right' && 'MuiDataGrid-columnHeaderRight',
       {
-        'MuiDataGrid-colCellSortable': column.sortable,
-        'MuiDataGrid-colCellMoving': isDragging,
-        'MuiDataGrid-colCellSorted': isColumnSorted,
-        'MuiDataGrid-colCellNumeric': isColumnNumeric,
+        'MuiDataGrid-columnHeaderSortable': column.sortable,
+        'MuiDataGrid-columnHeaderMoving': isDragging,
+        'MuiDataGrid-columnHeaderSorted': isColumnSorted,
+        'MuiDataGrid-columnHeaderNumeric': isColumnNumeric,
         'MuiDataGrid-withBorder': showColumnRightBorder,
       },
+      ...classNames,
     );
 
     const width = column.width!;
@@ -138,17 +156,24 @@ export const GridColumnHeaderItem = React.memo(
       };
     }
 
+    const columnMenuIconButton = !disableColumnMenu && !column.disableColumnMenu && (
+      <ColumnHeaderMenuIcon
+        column={column}
+        columnMenuId={columnMenuId}
+        columnMenuButtonId={columnMenuButtonId}
+        open={columnMenuOpen}
+        iconButtonRef={iconButtonRef}
+      />
+    );
+
     const columnTitleIconButtons = (
       <React.Fragment>
-        <GridColumnHeaderSortIcon
-          direction={sortDirection}
-          index={sortIndex}
-          hide={column.hideSortIcons}
-        />
-        <ColumnHeaderFilterIcon counter={filterItemsCounter} />
+        {!disableColumnFilter && <ColumnHeaderFilterIcon counter={filterItemsCounter} />}
+        {column.sortable && !column.hideSortIcons && (
+          <GridColumnHeaderSortIcon direction={sortDirection} index={sortIndex} />
+        )}
       </React.Fragment>
     );
-    const columnMenuIconButton = <ColumnHeaderMenuIcon column={column} />;
 
     React.useLayoutEffect(() => {
       const columnMenuState = apiRef!.current.getState().columnMenu;
@@ -182,16 +207,11 @@ export const GridColumnHeaderItem = React.memo(
         {...mouseEventsHandlers}
       >
         <div
-          className="MuiDataGrid-colCell-draggable"
+          className="MuiDataGrid-columnHeader-draggable"
           draggable={!disableColumnReorder}
           {...draggableEventHandlers}
         >
-          {!disableColumnMenu &&
-            isColumnNumeric &&
-            !column.disableColumnMenu &&
-            columnMenuIconButton}
-          <div className="MuiDataGrid-colCellTitleContainer">
-            {isColumnNumeric && columnTitleIconButtons}
+          <div className="MuiDataGrid-columnHeaderTitleContainer">
             {headerComponent || (
               <GridColumnHeaderTitle
                 label={column.headerName || column.field}
@@ -199,18 +219,24 @@ export const GridColumnHeaderItem = React.memo(
                 columnWidth={width}
               />
             )}
-            {!isColumnNumeric && columnTitleIconButtons}
+            {columnTitleIconButtons}
           </div>
-          {!isColumnNumeric &&
-            !disableColumnMenu &&
-            !column.disableColumnMenu &&
-            columnMenuIconButton}
+          {columnMenuIconButton}
         </div>
         <GridColumnHeaderSeparator
           resizable={!disableColumnResize && !!column.resizable}
           resizing={isResizing}
           height={headerHeight}
           {...resizeEventHandlers}
+        />
+        <GridColumnHeaderMenu
+          columnMenuId={columnMenuId}
+          columnMenuButtonId={columnMenuButtonId}
+          field={column.field}
+          open={columnMenuOpen}
+          target={iconButtonRef.current}
+          ContentComponent={apiRef!.current.components.ColumnMenu}
+          contentComponentProps={apiRef!.current.componentsProps?.columnMenu}
         />
       </div>
     );

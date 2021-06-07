@@ -1,8 +1,10 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import Checkbox from '@material-ui/core/Checkbox';
+// @ts-expect-error fixed in Material-UI v5, types definitions were added.
+import { unstable_useId as useId } from '@material-ui/core/utils';
 import { GRID_CELL_EDIT_PROPS_CHANGE } from '../../constants/eventsConstants';
 import { GridCellParams } from '../../models/params/gridCellParams';
-import { classnames } from '../../utils/classnames';
 
 export function GridEditBooleanCell(
   props: GridCellParams &
@@ -23,6 +25,7 @@ export function GridEditBooleanCell(
     ...other
   } = props;
 
+  const id = useId();
   const [valueState, setValueState] = React.useState(value);
 
   const handleChange = React.useCallback(
@@ -39,10 +42,8 @@ export function GridEditBooleanCell(
     setValueState(value);
   }, [value]);
 
-  const id = `MuiDataGrid-cell-${idProp}-${field}`;
-
   return (
-    <label htmlFor={id} className={classnames('MuiDataGrid-editCellBoolean', className)} {...other}>
+    <label htmlFor={id} className={clsx('MuiDataGrid-editCellBoolean', className)} {...other}>
       <Checkbox
         autoFocus
         id={id}

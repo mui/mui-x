@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Paging
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Pagination
@@ -35,10 +34,6 @@ By default, this feature is off.
 
 {{"demo": "pages/components/data-grid/pagination/AutoPaginationGrid.js", "bg": "inline"}}
 
-## Custom pagination component
-
-Head to the [rendering section](/components/data-grid/rendering/#footer) of the documentation for customizing the pagination component.
-
 ## Server-side pagination
 
 By default, pagination works on the client-side.
@@ -48,9 +43,9 @@ Finally, you need to handle the `onPageChange` callback to load the rows for the
 
 {{"demo": "pages/components/data-grid/pagination/ServerPaginationGrid.js", "bg": "inline"}}
 
-## Rendering
+## Customization
 
-You can customize the rendered of the pagination following [this section](/components/data-grid/rendering/#footer) of the documentation.
+You can customize the rendering of the pagination in the footer following [the component section](/components/data-grid/components/#pagination) of the documentation.
 
 ## Paginate > 100 rows [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
@@ -74,3 +69,8 @@ The grid exposes a set of methods that enables all of these features using the i
 Below is an example of how you can reset the page using the imperative `setPage` method.
 
 {{"demo": "pages/components/data-grid/pagination/ApiRefPaginationGrid.js", "bg": "inline", "disableAd": true}}
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid/)
+- [XGrid](/api/data-grid/x-grid/)

@@ -1,10 +1,10 @@
-import { ColumnMenuApi } from './columnMenuApi';
+import { GridColumnMenuApi } from './gridColumnMenuApi';
 import { GridFocusApi } from './gridFocusApi';
 import { GridParamsApi } from './gridParamsApi';
 import { GridComponentsApi } from './gridComponentsApi';
-import { FilterApi } from './filterApi';
+import { GridFilterApi } from './gridFilterApi';
 import { GridEditRowApi } from './gridEditRowApi';
-import { PreferencesPanelApi } from './preferencesPanelApi';
+import { GridPreferencesPanelApi } from './gridPreferencesPanelApi';
 import { GridRowApi } from './gridRowApi';
 import { GridColumnApi } from './gridColumnApi';
 import { GridSelectionApi } from './gridSelectionApi';
@@ -15,7 +15,7 @@ import { GridVirtualizationApi } from './gridVirtualizationApi';
 import { GridCoreApi } from './gridCoreApi';
 import { GridEventsApi } from './gridEventsApi';
 import { GridDensityApi } from './gridDensityApi';
-import { LocaleTextApi } from './gridLocaleTextApi';
+import { GridLocaleTextApi } from './gridLocaleTextApi';
 import { GridCsvExportApi } from './gridCsvExportApi';
 
 /**
@@ -37,7 +37,7 @@ export interface GridApi
     GridPaginationApi,
     GridCsvExportApi,
     GridFocusApi,
-    FilterApi,
-    ColumnMenuApi,
-    PreferencesPanelApi,
-    LocaleTextApi {}
+    GridFilterApi,
+    GridColumnMenuApi,
+    GridPreferencesPanelApi,
+    GridLocaleTextApi {}

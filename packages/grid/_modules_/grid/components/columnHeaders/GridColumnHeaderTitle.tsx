@@ -1,6 +1,7 @@
 import * as React from 'react';
+import clsx from 'clsx';
 import Tooltip from '@material-ui/core/Tooltip';
-import { isOverflown, classnames } from '../../utils/index';
+import { isOverflown } from '../../utils/index';
 
 const ColumnHeaderInnerTitle = React.forwardRef<
   HTMLDivElement,
@@ -8,7 +9,7 @@ const ColumnHeaderInnerTitle = React.forwardRef<
 >(function ColumnHeaderInnerTitle(props, ref) {
   const { className, ...other } = props;
 
-  return <div ref={ref} className={classnames('MuiDataGrid-colCellTitle', className)} {...other} />;
+  return <div ref={ref} className={clsx('MuiDataGrid-columnHeaderTitle', className)} {...other} />;
 });
 
 export interface GridColumnHeaderTitleProps {
