@@ -5,7 +5,8 @@ import { useGridSelector } from '../core/useGridSelector';
 import { visibleGridColumnsSelector } from '../columns';
 import { visibleSortedGridRowsSelector } from '../filter';
 import { gridSelectionStateSelector } from '../selection';
-import { GridCsvExportApi } from '../../../models';
+import { GridCsvExportApi } from '../../../models/api/gridCsvExportApi';
+import { GridExportCsvOptions } from '../../../models/gridExport';
 import { useLogger } from '../../utils/useLogger';
 import { exportAs } from '../../../utils';
 import { buildCSV } from './seralizers/csvSeraliser';
@@ -16,19 +17,30 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
   const visibleSortedRows = useGridSelector(apiRef, visibleSortedGridRowsSelector);
   const selection = useGridSelector(apiRef, gridSelectionStateSelector);
 
-  const getDataAsCsv = React.useCallback((): string => {
-    logger.debug(`Get data as CSV`);
+  const getDataAsCsv = React.useCallback(
+    // TODO remove once we use the options
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    (options?: GridExportCsvOptions): string => {
+      logger.debug(`Get data as CSV`);
 
-    return buildCSV(visibleColumns, visibleSortedRows, selection, apiRef.current.getCellValue);
-  }, [logger, visibleColumns, visibleSortedRows, selection, apiRef]);
+      return buildCSV(visibleColumns, visibleSortedRows, selection, apiRef.current.getCellValue);
+    },
+    [logger, visibleColumns, visibleSortedRows, selection, apiRef],
+  );
 
-  const exportDataAsCsv = React.useCallback((): void => {
-    logger.debug(`Export data as CSV`);
-    const csv = getDataAsCsv();
-    const blob = new Blob([csv], { type: 'text/csv' });
+  const exportDataAsCsv = React.useCallback(
+    (options?: GridExportCsvOptions): void => {
+      logger.debug(`Export data as CSV`);
+      const csv = getDataAsCsv(options);
 
-    exportAs(blob, 'csv', 'data');
-  }, [logger, getDataAsCsv]);
+      const blob = new Blob([options?.utf8WithBom ? new Uint8Array([0xef, 0xbb, 0xbf]) : '', csv], {
+        type: 'text/csv',
+      });
+
+      exportAs(blob, 'csv', options?.fileName);
+    },
+    [logger, getDataAsCsv],
+  );
 
   const csvExportApi: GridCsvExportApi = {
     getDataAsCsv,
