@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Localization
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Localization
@@ -72,3 +71,8 @@ To create your own translation or to customize the English text, copy this file 
 
 Please do consider contributing new translations back to Material-UI by opening a pull request. However, Material-UI aims to support the 100 most popular locales. We might not accept contributions for locales that are not frequently used, for instance, `gl-ES` that has "only" 2.5 million native speakers.
 See the [Docs](https://material-ui.com/components/data-grid/localization/) for more details.
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid/)
+- [XGrid](/api/data-grid/x-grid/)

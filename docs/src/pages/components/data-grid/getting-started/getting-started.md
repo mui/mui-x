@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Getting started
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Getting started
@@ -216,3 +215,8 @@ We provide a [private support channel](https://material-ui.zendesk.com/) for ent
 Here is [the public roadmap](https://github.com/mui-org/material-ui-x/projects/1). It's organized by quarter.
 
 > ⚠️ **Disclaimer**: We operate in a dynamic environment, and things are subject to change. The information provided is intended to outline the general framework direction, for informational purposes only. We may decide to add or remove new items at any time, depending on our capability to deliver while meeting our quality standards. The development, releases, and timing of any features or functionality remains at the sole discretion of Material-UI. The roadmap does not represent a commitment, obligation, or promise to deliver at any time.
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid/)
+- [XGrid](/api/data-grid/x-grid/)

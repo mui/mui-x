@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Accessibility
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Accessibility
@@ -87,3 +86,8 @@ Use the arrow keys to move the focus.
 
 The above key assignments are for Windows and Linux.
 On macOS, replace <kbd class="key">CTRL</kbd> with <kbd class="key">⌘ Command</kbd>.
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid/)
+- [XGrid](/api/data-grid/x-grid/)

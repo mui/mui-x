@@ -28,7 +28,7 @@ module.exports = {
     rules: [
       {
         test: /\.(js|ts|tsx)$/,
-        exclude: /node_modules/,
+        exclude: /node_modules\/(?!@material-ui)/,
         loader: 'babel-loader',
         query: {
           cacheDirectory: true,
