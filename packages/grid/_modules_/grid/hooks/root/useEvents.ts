@@ -43,7 +43,9 @@ export function useEvents(gridRootRef: React.RefObject<HTMLDivElement>, apiRef: 
   const options = useGridSelector(apiRef, optionsSelector);
 
   const getHandler = React.useCallback(
-    (name: string) => (...args: any[]) => apiRef.current.publishEvent(name, ...args),
+    (name: string) =>
+      (...args: any[]) =>
+        apiRef.current.publishEvent(name, ...args),
     [apiRef],
   );
 
