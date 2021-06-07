@@ -31,7 +31,7 @@ The following demo shows how to subcribe to the `columnResize` event. Try it by 
 
 ## Catalog of events
 
-{{"demo": "pages/components/data-grid/events/CatalogOfEvents.js", "bg": "inline", "hideToolbar": true}}
+{{"demo": "pages/components/data-grid/events/CatalogOfEventsNoSnap.js", "bg": "inline", "hideToolbar": true}}
 
 ## API
 

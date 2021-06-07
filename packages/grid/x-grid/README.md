@@ -1,6 +1,7 @@
 # @material-ui/x-grid
 
-The Material-UI X Commercial edition of the data grid component.
+This package is the commercial edition of the data grid component.
+It's part of Material-UI X, an open core extension of Material-UI, with advanced components.
 
 ## Installation
 
@@ -14,7 +15,7 @@ npm install @material-ui/x-grid
 yarn add @material-ui/x-grid
 ```
 
-This component has 2 peer dependencies that you will need to install as well.
+This component has two peer dependencies that you will need to install as well.
 
 ```json
 "peerDependencies": {
