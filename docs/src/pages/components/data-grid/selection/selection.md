@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Selection
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Selection
@@ -28,13 +27,14 @@ Row selection can be performed with a simple mouse click, or using the [keyboard
 ### Single row selection
 
 Single row selection is enable by default with the `DataGrid` component.
+To unselect a row, hold the <kbd class="key">CTRL</kbd> key and click on it.
 For the `XGrid`, you need to disable multiple row selection with `disableMultipleSelection={true}`.
 
 {{"demo": "pages/components/data-grid/selection/SingleRowSelectionGrid.js", "bg": "inline"}}
 
 ### Multiple row selection [<span class="pro"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
-To activate multiple selection, put focus the `XGrid` component and hold the <kbd class="key">CTRL</kbd> key while selecting rows.
+To select multiple rows on the `XGrid` component, hold the <kbd class="key">CTRL</kbd> key while selecting rows.
 
 {{"demo": "pages/components/data-grid/selection/MultipleRowSelectionGrid.js", "disableAd": true, "bg": "inline"}}
 
@@ -70,7 +70,7 @@ The grid exposes a set of methods that enables all of these features using the i
 
 > ⚠️ Only use this API when you have no alternative. Always start from the declarative API that the grid exposes.
 
-- `onSelectionChange`: Callback fired when the selection state of one or multiple rows changes.
+{{"demo": "pages/components/data-grid/selection/SelectionApi.js", "bg": "inline", "hideToolbar": true}}
 
 ## 🚧 Range selection [<span class="premium"></span>](https://material-ui.com/store/items/material-ui-pro/)
 
@@ -79,3 +79,8 @@ The grid exposes a set of methods that enables all of these features using the i
 > 👍 Upvote [issue #208](https://github.com/mui-org/material-ui-x/issues/208) if you want to see it land faster.
 
 With this feature, you will be able to select ranges of cells across the Grid.
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid/)
+- [XGrid](/api/data-grid/x-grid/)

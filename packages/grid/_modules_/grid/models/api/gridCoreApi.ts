@@ -10,14 +10,17 @@ import {
 export interface GridCoreApi extends GridEventEmitter {
   /**
    * Property that comes `true` when the grid has its `EventEmitter` initialised.
+   * @ignore - do not document.
    */
   isInitialised: boolean;
   /**
    * The react ref of the grid root container div element.
+   * @ignore - do not document.
    */
   rootElementRef?: React.RefObject<HTMLDivElement>;
   /**
    * The react ref of the grid column container div element.
+   * @ignore - do not document.
    */
   columnHeadersElementRef?: React.RefObject<HTMLDivElement>;
   /**

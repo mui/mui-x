@@ -918,3 +918,16 @@ export function SwitchVirtualization() {
     </div>
   );
 }
+
+export function SnapGridWidthEdgeScroll() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+    maxColumns: 6,
+  });
+  return (
+    <div style={{ height: 400, width: 710 }}>
+      <XGrid {...data} />
+    </div>
+  );
+}

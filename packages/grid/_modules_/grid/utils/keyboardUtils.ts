@@ -38,6 +38,3 @@ export const isNavigationKey = (key: string) =>
 export const isKeyboardEvent = (event: any): event is React.KeyboardEvent => !!event.key;
 
 export const isHideMenuKey = (key) => isTabKey(key) || isEscapeKey(key);
-
-export const isMultipleKeyPressed = (event: any) =>
-  event.shiftKey || event.metaKey || event.ctrlKey;

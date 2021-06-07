@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Columns
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Columns
@@ -319,3 +318,8 @@ Each cell takes up the width of one column.
 Column spanning allows to change this default behavior.
 It allows cells to span multiple columns.
 This is very close to the "column spanning" in an HTML `<table>`.
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid/)
+- [XGrid](/api/data-grid/x-grid/)

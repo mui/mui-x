@@ -1,12 +1,12 @@
 /**
- * Available export formats. To be extended in future.
+ * The options to apply on the CSV export.
  */
-export type GridExportFormat = 'csv';
+export interface GridExportCsvOptions {
+  fileName?: string;
+  utf8WithBom?: boolean;
+}
 
 /**
- * Export option interface
+ * Available export formats.
  */
-export interface GridExportOption {
-  label: React.ReactNode;
-  format: GridExportFormat;
-}
+export type GridExportFormat = 'csv';

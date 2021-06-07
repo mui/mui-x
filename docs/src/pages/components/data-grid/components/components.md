@@ -1,6 +1,5 @@
 ---
 title: Data Grid - Components
-components: DataGrid, XGrid
 ---
 
 # Data Grid - Components
@@ -145,3 +144,8 @@ In the following demo, an illustration is added on top of the default "No Rows" 
 As any component slot, every icon can be customized. However, it is not yet possible to use the `componentsProps` with icons.
 
 {{"demo": "pages/components/data-grid/components/CustomSortIcons.js", "bg": "inline"}}
+
+## API
+
+- [DataGrid](/api/data-grid/data-grid/)
+- [XGrid](/api/data-grid/x-grid/)
