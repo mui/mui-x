@@ -15,11 +15,12 @@ import {
   GridPreferencePanelsValue,
   GridRowModel,
   useGridApiRef,
-  XGrid,
+  XGrid, getInitialGridFilterState,
 } from '@material-ui/x-grid';
 import { useDemoData } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
 import * as React from 'react';
+import { GridSelectionModel } from '../../../grid/_modules_/grid/models/gridSelectionModel';
 import { randomInt } from '../data/random-generator';
 import { useData } from '../hooks/useData';
 
@@ -741,5 +742,45 @@ export function MultiFilteringWithOrGrid() {
         Last filter change: {lastFilterChange.toISOString()} called = {called.current}
       </p>
     </div>
+  );
+}
+
+export function SimpleControlFilter() {
+  const [simpleColumns] = React.useState([
+    {
+      field: 'name',
+    },
+  ]);
+  const [simpleRows] = React.useState([
+    {
+      id: '1',
+      name: 'Paris',
+    },
+    {
+      id: '2',
+      name: 'Nice',
+    },
+    {
+      id: '3',
+      name: 'London',
+    },
+  ]);
+
+  const [simpleFilterModel, setFilterModel] = React.useState<GridFilterModel>(getInitialGridFilterState());
+  const handleFilterChange = React.useCallback(params => {
+    // setFilterModel(params.model);
+  }, []);
+  const [simpleSelectionModel, setSelectionModel] = React.useState<GridSelectionModel>([]);
+  const handleSelectionChange = React.useCallback(params => {
+    // setFilterModel(params.model);
+  }, []);
+
+  return (
+    <XGrid rows={simpleRows} columns={simpleColumns}
+           filterModel={simpleFilterModel}
+           onFilterModelChange={handleFilterChange}
+           selectionModel={simpleSelectionModel}
+           onSelectionModelChange={handleSelectionChange}
+    />
   );
 }

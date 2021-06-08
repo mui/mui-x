@@ -1,3 +1,4 @@
+import { ControlStateItem } from '../../hooks/features/core/useControlState';
 import { GridColumnMenuApi } from './gridColumnMenuApi';
 import { GridFocusApi } from './gridFocusApi';
 import { GridParamsApi } from './gridParamsApi';
@@ -17,6 +18,10 @@ import { GridEventsApi } from './gridEventsApi';
 import { GridDensityApi } from './gridDensityApi';
 import { GridLocaleTextApi } from './gridLocaleTextApi';
 import { GridCsvExportApi } from './gridCsvExportApi';
+
+export interface GridControlStateApi {
+  registerControlState: (controlState: ControlStateItem)=> void;
+}
 
 /**
  * The full grid API.
@@ -40,4 +45,5 @@ export interface GridApi
     GridFilterApi,
     GridColumnMenuApi,
     GridPreferencesPanelApi,
-    GridLocaleTextApi {}
+    GridLocaleTextApi,
+    GridControlStateApi {}

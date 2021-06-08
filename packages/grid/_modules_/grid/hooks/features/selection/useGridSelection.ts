@@ -4,6 +4,7 @@ import {
   GRID_ROW_SELECTED,
   GRID_SELECTION_CHANGED,
 } from '../../../constants/eventsConstants';
+import { GridComponentProps } from '../../../GridComponentProps';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridSelectionApi } from '../../../models/api/gridSelectionApi';
 import { GridRowParams } from '../../../models/params/gridRowParams';
@@ -22,7 +23,7 @@ import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { GridSelectionState } from './gridSelectionState';
 import { selectedGridRowsSelector } from './gridSelectionSelector';
 
-export const useGridSelection = (apiRef: GridApiRef): void => {
+export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps): void => {
   const logger = useLogger('useGridSelection');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
@@ -239,4 +240,12 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
     });
     forceUpdate();
   }, [apiRef, setGridState, forceUpdate, isRowSelectable]);
+
+  React.useEffect(()=> {
+    apiRef.current.registerControlState({
+      stateId: 'selectionModel',
+      propModel: props.selectionModel,
+      propOnChange: props.onSelectionModelChange,
+      stateSelector: state => state.selection});
+  } ,[apiRef, props.onSelectionModelChange, props.selectionModel])
 };

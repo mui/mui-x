@@ -331,5 +331,13 @@ export const useGridFilter = (
     apiRef.current.applyFilters();
   }, [apiRef, logger]);
 
+  React.useEffect(()=> {
+    apiRef.current.registerControlState({
+      stateId: 'filter',
+      propModel: props.filterModel,
+      propOnChange: props.onFilterModelChange,
+      stateSelector: state => state.filter});
+  } ,[apiRef, props.filterModel, props.onFilterModelChange])
+
   useGridApiEventHandler(apiRef, GRID_COLUMNS_UPDATED, onColUpdated);
 };

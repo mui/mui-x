@@ -31,6 +31,7 @@ import {
   getInitialGridRenderingState,
   InternalRenderingState,
 } from '../virtualization/renderingState';
+import { ControlStateItem } from './useControlState';
 
 export interface GridState {
   rows: InternalGridRowsState;
