@@ -56,7 +56,12 @@ module.exports = {
       },
     ],
   ],
-  ignore: [/@babel[\\|/]runtime/], // Fix a Windows issue.
+  ignore: [
+    // Fix a Windows issue.
+    /@babel[\\|/]runtime/,
+    // Fix const foo = /{{(.+?)}}/gs; crashing.
+    /prettier/,
+  ],
   env: {
     production: {
       plugins: [

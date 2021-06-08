@@ -7,13 +7,8 @@ export function useRenderInfoLog(apiRef: GridApiRef) {
   const logger = useLogger('useRenderInfoLog');
 
   if (gridState.rendering.renderContext != null) {
-    const {
-      page,
-      firstColIdx,
-      lastColIdx,
-      firstRowIdx,
-      lastRowIdx,
-    } = gridState.rendering.renderContext!;
+    const { page, firstColIdx, lastColIdx, firstRowIdx, lastRowIdx } =
+      gridState.rendering.renderContext!;
     logger.info(
       `Rendering, page: ${page}, col: ${firstColIdx}-${lastColIdx}, row: ${firstRowIdx}-${lastRowIdx}`,
     );
