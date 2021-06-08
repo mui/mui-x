@@ -916,6 +916,12 @@ export function SwitchVirtualization() {
   );
 }
 
+export const ZeroHeightGrid = () => (
+  <div style={{ width: 300, height: 0 }}>
+    <XGrid {...baselineProps} />
+  </div>
+);
+
 export function SnapGridWidthEdgeScroll() {
   const { data } = useDemoData({
     dataSet: 'Commodity',

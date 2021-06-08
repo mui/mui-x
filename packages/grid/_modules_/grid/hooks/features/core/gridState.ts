@@ -54,6 +54,7 @@ export interface GridState {
   visibleRows: VisibleGridRowsState;
   preferencePanel: GridPreferencePanelState;
   density: GridGridDensity;
+  error?: any;
 }
 
 export const getInitialGridState: () => GridState = () => ({

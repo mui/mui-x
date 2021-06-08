@@ -36,7 +36,7 @@ import { useGridState } from '../core/useGridState';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { sortedGridRowIdsSelector, sortedGridRowsSelector } from './gridSortingSelector';
 
-export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
+export const useGridSorting = (apiRef: GridApiRef, { rows }: { rows: GridRowsProp }) => {
   const logger = useLogger('useGridSorting');
 
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
@@ -315,7 +315,7 @@ export const useGridSorting = (apiRef: GridApiRef, rowsProp: GridRowsProp) => {
   React.useEffect(() => {
     // When the rows prop change, we re apply the sorting.
     apiRef.current.applySorting();
-  }, [apiRef, rowsProp]);
+  }, [apiRef, rows]);
 
   React.useEffect(() => {
     if (rowCount > 0) {

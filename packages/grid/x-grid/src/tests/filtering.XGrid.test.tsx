@@ -226,10 +226,11 @@ describe('<XGrid /> - Filter', () => {
     // TODO should equal 0, the state doesn't change
     expect(onFilterModelChange.callCount).to.equal(4);
     expect(getColumnValues()).to.deep.equal([]);
+    onFilterModelChange.callCount = 0;
 
     const select = screen.queryAllByRole('combobox', { name: /Operators/i })[1];
     fireEvent.change(select, { target: { value: 'or' } });
-    expect(onFilterModelChange.callCount).to.equal(5);
+    expect(onFilterModelChange.callCount).to.equal(1);
     expect(getColumnValues()).to.deep.equal(['Adidas', 'Puma']);
   });
 
