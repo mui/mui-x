@@ -31,6 +31,7 @@ import { XGrid } from '@material-ui/x-grid';
 | <span class="prop-name">disableColumnMenu</span> | <span class="prop-type">boolean</span> | false | If `true`, the column menu is disabled. |
 | <span class="prop-name">disableColumnSelector</span> | <span class="prop-type">boolean</span> | false | If `true`, the column selector is disabled. |
 | <span class="prop-name">disableColumnResize</span> | <span class="prop-type">boolean</span> | false | If `true`, resizing columns is disabled. |
+| <span class="prop-name">disableDensitySelector</span> | <span class="prop-type">boolean</span> | false | If `true`, the density selection is disabled. |
 | <span class="prop-name">disableExtendRowFullWidth</span> | <span class="prop-type">boolean</span> | false | If `true`, rows will not be extended to fill the full width of the grid container. |
 | <span class="prop-name">disableMultipleColumnsSorting</span> | <span class="prop-type">boolean</span> | false | If `true`, sorting with multiple columns is disabled. |
 | <span class="prop-name">disableMultipleSelection</span> | <span class="prop-type">boolean</span> | false | If `true`, multiple selection using the CTRL or CMD key is disabled. |
