@@ -80,6 +80,10 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Total rows footer text
   footerTotalRows: 'Lignes totales :',
 
+  // Total visible rows footer text
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} sur ${totalCount.toLocaleString()}`,
+
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Sélection',
 };

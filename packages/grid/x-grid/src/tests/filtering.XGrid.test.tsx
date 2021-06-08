@@ -418,4 +418,11 @@ describe('<XGrid /> - Filter', () => {
       expect(filterForms).to.have.length(2);
     });
   });
+
+  it('should display the number of results in the footer', () => {
+    const { setProps } = render(<TestCase />);
+    expect(screen.getByText('Total Rows: 3')).not.to.equal(null);
+    setProps({ filterModel: model });
+    expect(screen.getByText('Total Rows: 2 of 3')).not.to.equal(null);
+  });
 });
