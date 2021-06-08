@@ -63,30 +63,36 @@ export const useGridFilter = (
       if (!filterItem.columnField || !filterItem.operatorValue || !filterItem.value) {
         return;
       }
-      logger.debug(
-        `Filtering column: ${filterItem.columnField} ${filterItem.operatorValue} ${filterItem.value} `,
-      );
 
       const column = apiRef.current.getColumn(filterItem.columnField);
       if (!column) {
         return;
       }
-      const filterOperators = column.filterOperators;
 
+      const parsedValue = column.valueParser
+        ? column.valueParser(filterItem.value)
+        : filterItem.value;
+      const newFilterItem = { ...filterItem, value: parsedValue };
+
+      logger.debug(
+        `Filtering column: ${newFilterItem.columnField} ${newFilterItem.operatorValue} ${newFilterItem.value} `,
+      );
+
+      const filterOperators = column.filterOperators;
       if (!filterOperators?.length) {
         throw new Error(`Material-UI: No filter operators found for column '${column.field}'.`);
       }
-      const filterOperator = filterOperators.find(
-        (operator) => operator.value === filterItem.operatorValue,
-      )!;
 
+      const filterOperator = filterOperators.find(
+        (operator) => operator.value === newFilterItem.operatorValue,
+      )!;
       if (!filterOperator) {
         throw new Error(
-          `Material-UI: No filter operator found for column '${column.field}' and operator value '${filterItem.operatorValue}'.`,
+          `Material-UI: No filter operator found for column '${column.field}' and operator value '${newFilterItem.operatorValue}'.`,
         );
       }
 
-      const applyFilterOnRow = filterOperator.getApplyFilterFn(filterItem, column)!;
+      const applyFilterOnRow = filterOperator.getApplyFilterFn(newFilterItem, column)!;
 
       setGridState((state) => {
         const visibleRowsLookup = { ...state.visibleRows.visibleRowsLookup };
@@ -96,7 +102,7 @@ export const useGridFilter = (
         const rows = sortedGridRowsSelector(state);
 
         rows.forEach((row: GridRowModel, id: GridRowId) => {
-          const params = apiRef.current.getCellParams(id, filterItem.columnField!);
+          const params = apiRef.current.getCellParams(id, newFilterItem.columnField!);
 
           const isShown = applyFilterOnRow(params);
           if (visibleRowsLookup[id] == null) {

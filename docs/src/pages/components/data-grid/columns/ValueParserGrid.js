@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataGrid, GridValueFormatterParams } from '@material-ui/data-grid';
+import { DataGrid } from '@material-ui/data-grid';
 
 const rows = [
   {
@@ -16,7 +16,7 @@ const rows = [
   },
 ];
 
-export default function ValueFormatterGrid() {
+export default function ValueParserGrid() {
   return (
     <div style={{ height: 300, width: '100%' }}>
       <DataGrid
@@ -27,12 +27,11 @@ export default function ValueFormatterGrid() {
             field: 'taxRate',
             headerName: 'Tax Rate',
             width: 150,
-            valueFormatter: (params: GridValueFormatterParams) => {
-              const valueFormatted = Number(
-                (params.value as number) * 100,
-              ).toLocaleString();
+            valueFormatter: (params) => {
+              const valueFormatted = Number(params.value * 100).toLocaleString();
               return `${valueFormatted} %`;
             },
+            valueParser: (value) => Number(value) / 100,
           },
         ]}
       />

@@ -8,6 +8,7 @@ import {
 import { expect } from 'chai';
 import * as React from 'react';
 import { getActiveCell, getCell } from 'test/utils/helperFn';
+import { stub } from 'sinon';
 import {
   createClientRenderStrictMode,
   // @ts-expect-error need to migrate helpers to TypeScript
@@ -253,5 +254,44 @@ describe('<XGrid /> - Edit Rows', () => {
     input0!.focus();
     fireEvent.click(input0);
     expect(document.activeElement).to.have.property('value', 'Nike');
+  });
+
+  it('should apply the valueParser before saving the value', () => {
+    const valueParser = stub().withArgs('62').returns(1962);
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <XGrid
+          {...baselineProps}
+          columns={[
+            { field: 'brand', editable: true },
+            { field: 'year', editable: true, valueParser },
+          ]}
+        />
+      </div>,
+    );
+    const cell = getCell(1, 1);
+    cell.focus();
+    fireEvent.doubleClick(cell);
+    const input = cell.querySelector('input')!;
+    expect(input.value).to.equal('1961');
+
+    fireEvent.change(input, { target: { value: '62' } });
+    expect(cell.querySelector('input')!.value).to.equal('62');
+
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
+    expect(cell).to.have.text('1962');
+    expect(valueParser.callCount).to.equal(1);
+    expect(valueParser.args[0][0]).to.equal('62');
+    expect(valueParser.args[0][1]).to.deep.include({
+      id: 1,
+      field: 'year',
+      value: 1961,
+      row: {
+        id: 1,
+        brand: 'Adidas',
+        year: 1961,
+      },
+    });
   });
 });
