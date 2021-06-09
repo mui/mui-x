@@ -99,7 +99,7 @@ export interface GridOptions {
    */
   disableColumnSelector?: boolean;
   /**
-   * If `true`, density selection is disabled.
+   * If `true`, density selector is disabled.
    * @default false
    */
   disableDensitySelector?: boolean;
