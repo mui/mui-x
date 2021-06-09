@@ -26,6 +26,11 @@ const ptBRGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipShow: 'Exibir filtros',
   toolbarFiltersTooltipActive: (count) =>
     `${count} ${count !== 1 ? 'filtros' : 'filtro'} ${count !== 1 ? 'ativos' : 'ativo'}`,
+  
+  // Export selector toolbar button text
+  toolbarExport: 'Exportar',
+  toolbarExportLabel: 'Exportar',
+  toolbarExportCSV: 'Download como CSV',
 
   // Columns panel text
   columnsPanelTextFieldLabel: 'Localizar coluna',
