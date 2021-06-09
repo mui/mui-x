@@ -240,26 +240,7 @@ export const useStyles = makeStyles(
             },
           },
         },
-        '& .MuiDataGrid-skeletonCell': {
-          display: 'block',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-          borderBottom: `1px solid ${borderColor}`,
-          paddingTop: theme.spacing(1),
-          paddingBottom: theme.spacing(1),
-          '&::before': {
-            content: '""',
-            display: 'block',
-            width: '100%',
-            height: '100%',
-            '-webkit-animation': `3000ms ${theme.transitions.easing.easeInOut} $skeleton infinite`,
-            animation: `3000ms ${theme.transitions.easing.easeInOut} $skeleton infinite`,
-            background: theme.palette.grey[300],
-            willChange: 'transform-origin, transform, opacity',
-          },
-        },
-        '& .MuiDataGrid-cell': {
+        '& .MuiDataGrid-cell, & .MuiDataGrid-skeletonCell': {
           display: 'block',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
@@ -396,50 +377,7 @@ export const useStyles = makeStyles(
         },
       };
     }
-    return {
-      ...gridStyle,
-      '@keyframes skeleton': {
-        '0%': {
-          opacity: 0.3,
-          transform: 'scaleX(0)',
-          transformOrigin: 'left',
-        },
-        '20%': {
-          opacity: 1,
-          transform: 'scaleX(1)',
-          transformOrigin: 'left',
-        },
-        '28%': {
-          transform: 'scaleX(1)',
-          transformOrigin: 'right',
-        },
-        '51%': {
-          transform: 'scaleX(0)',
-          transformOrigin: 'right',
-        },
-        '58%': {
-          transform: 'scaleX(0)',
-          transformOrigin: 'right',
-        },
-        '82%': {
-          transform: 'scaleX(1)',
-          transformOrigin: 'right',
-        },
-        '83%': {
-          transform: 'scaleX(1)',
-          transformOrigin: 'left',
-        },
-        '96%': {
-          transform: 'scaleX(0)',
-          transformOrigin: 'left',
-        },
-        '100%': {
-          opacity: 0.3,
-          transform: 'scaleX(0)',
-          transformOrigin: 'left',
-        },
-      },
-    };
+    return gridStyle;
   },
   { name: 'MuiDataGrid', defaultTheme },
 );

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
+import Skeleton from '@material-ui/lab/Skeleton';
 import { GRID_SKELETON_CELL_CSS_CLASS } from '../../constants/cssClassesConstants';
 
 export interface GridSkeletonCellProps {
@@ -35,7 +36,9 @@ export const GridSkeletonCell = React.memo((props: GridSkeletonCellProps) => {
       aria-colindex={colIndex}
       style={style}
       tabIndex={-1}
-    />
+    >
+      <Skeleton animation="wave" />
+    </div>
   );
 });
 

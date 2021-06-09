@@ -73,7 +73,12 @@ export const useGridInfiniteLoader = (apiRef: GridApiRef): void => {
         return;
       }
 
-      const newRowsBatchStartIndex = params.nextPage * containerSizes.viewportPageSize;
+      let nextPage: number = params.nextPage;
+      if (params.currentPage < params.nextPage && params.nextPage !== containerSizes.lastPage) {
+        nextPage += 1;
+      }
+
+      const newRowsBatchStartIndex = nextPage * containerSizes.viewportPageSize;
       const remainingIndexes =
         allRows.length - (newRowsBatchStartIndex + containerSizes.viewportPageSize);
       let newRowsBatchLength = containerSizes.viewportPageSize;
