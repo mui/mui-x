@@ -316,10 +316,9 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
     [apiRef],
   );
 
-  const getContainerPropsState = React.useCallback(
-    () => gridState.containerSizes,
-    [gridState.containerSizes],
-  );
+  const getContainerPropsState = React.useCallback(() => gridState.containerSizes, [
+    gridState.containerSizes,
+  ]);
 
   const getRenderContextState = React.useCallback(() => {
     return gridState.rendering.renderContext || undefined;

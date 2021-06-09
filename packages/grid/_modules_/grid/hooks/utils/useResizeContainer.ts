@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { debounce } from '@material-ui/core/utils';
 import { GRID_DEBOUNCED_RESIZE, GRID_RESIZE } from '../../constants/eventsConstants';
-import { ElementSize, GridEventsApi } from '../../models';
+import { ElementSize, GridEventsApi, GridRowsProp } from '../../models';
 import { useGridApiEventHandler, useGridApiOptionHandler } from '../root/useGridApiEventHandler';
 import { useGridApiMethod } from '../root/useGridApiMethod';
 import { useLogger } from './useLogger';
@@ -10,7 +10,10 @@ import { optionsSelector } from './optionsSelector';
 
 const isTestEnvironment = process.env.NODE_ENV === 'test';
 
-export function useResizeContainer(apiRef, { autoHeight }: { autoHeight?: boolean }) {
+export function useResizeContainer(
+  apiRef,
+  { autoHeight, rows }: { autoHeight?: boolean; rows: GridRowsProp },
+) {
   const gridLogger = useLogger('useResizeContainer');
   const options = useGridSelector(apiRef, optionsSelector);
   const warningShown = React.useRef(false);
@@ -78,12 +81,11 @@ export function useResizeContainer(apiRef, { autoHeight }: { autoHeight?: boolea
     };
   }, [gridLogger, debounceResize]);
 
-  useGridApiEventHandler(apiRef, GRID_RESIZE, handleResize);
-  useGridApiOptionHandler(apiRef, GRID_DEBOUNCED_RESIZE, options.onResize);
-
   React.useEffect(() => {
     gridLogger.info('canceling resize...');
     debounceResize.clear();
-  }, [rowsProp, debounceResize, gridLogger]);
+  }, [rows, debounceResize, gridLogger]);
 
+  useGridApiEventHandler(apiRef, GRID_RESIZE, handleResize);
+  useGridApiOptionHandler(apiRef, GRID_DEBOUNCED_RESIZE, options.onResize);
 }
