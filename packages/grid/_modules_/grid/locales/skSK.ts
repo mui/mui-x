@@ -109,6 +109,10 @@ export const skSKGrid: Partial<GridLocaleText> = {
   // Total rows footer text
   footerTotalRows: 'Riadkov spolu:',
 
+  // Total visible rows footer text
+  // footerTotalVisibleRows: (visibleCount, totalCount) =>
+  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Výber riadku',
 

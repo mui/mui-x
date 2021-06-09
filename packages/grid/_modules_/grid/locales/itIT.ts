@@ -80,6 +80,10 @@ const itITGrid: Partial<GridLocaleText> = {
   // Total rows footer text
   footerTotalRows: 'Record totali :',
 
+  // Total visible rows footer text
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} di ${totalCount.toLocaleString()}`,
+
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Seleziona',
 };

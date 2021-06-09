@@ -10,7 +10,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function CatalogOfEvents() {
+export default function CatalogOfEventsNoSnap() {
   const classes = useStyles();
 
   return (

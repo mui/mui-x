@@ -79,6 +79,10 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Total rows footer text
   footerTotalRows: '総行数:',
+
+  // Total visible rows footer text
+  // footerTotalVisibleRows: (visibleCount, totalCount) =>
+  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
 };
 
 export const jaJP: Localization = getGridLocalization(jaJPGrid, jaJPCore);

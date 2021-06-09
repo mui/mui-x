@@ -1,14 +1,8 @@
 import * as React from 'react';
-import { isFunction, localStorageAvailable } from '../../utils/utils';
+import { Logger } from '../../models/logger';
+import { localStorageAvailable } from '../../utils/utils';
 
 const forceDebug = localStorageAvailable() && window.localStorage.getItem('DEBUG') != null;
-
-export interface Logger {
-  debug: (...args: any[]) => void;
-  info: (...args: any[]) => void;
-  warn: (...args: any[]) => void;
-  error: (...args: any[]) => void;
-}
 
 const noop = () => {};
 
@@ -44,9 +38,9 @@ function getAppender(name: string, logLevel: string, appender: Logger = console)
   return logger as Logger;
 }
 
-const defaultFactory: (logLevel: string) => LoggerFactoryFn = (logLevel: string) => (
-  name: string,
-) => getAppender(name, logLevel);
+const defaultFactory: (logLevel: string) => LoggerFactoryFn =
+  (logLevel: string) => (name: string) =>
+    getAppender(name, logLevel);
 
 type LoggerFactoryFn = (name: string) => Logger;
 
@@ -54,27 +48,20 @@ type LoggerFactoryFn = (name: string) => Logger;
 let factory: LoggerFactoryFn | null;
 
 export function useLoggerFactory(
-  customLogger?: Logger | LoggerFactoryFn,
-  logLevel: string | boolean = process.env.NODE_ENV === 'production' ? 'error' : 'warn',
+  apiRef: any,
+  { logger, logLevel }: { logger?: Logger; logLevel?: string | false },
 ) {
   if (forceDebug) {
     factory = defaultFactory('debug');
     return;
   }
 
-  if (!customLogger) {
+  if (!logger) {
     factory = logLevel ? defaultFactory(logLevel.toString()) : null;
     return;
   }
 
-  if (isFunction(customLogger)) {
-    factory = customLogger;
-    return;
-  }
-
-  factory = logLevel
-    ? (name: string) => getAppender(name, logLevel.toString(), customLogger)
-    : null;
+  factory = logLevel ? (name: string) => getAppender(name, logLevel.toString(), logger) : null;
 }
 
 export function useLogger(name: string): Logger {

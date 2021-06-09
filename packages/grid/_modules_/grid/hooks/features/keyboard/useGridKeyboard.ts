@@ -28,7 +28,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
   const expandSelection = React.useCallback(
     (params: GridCellParams, event: React.KeyboardEvent) => {
       const rowEl = findParentElementFromClassName(
-        (event.target as HTMLElement) as HTMLDivElement,
+        event.target as HTMLElement as HTMLDivElement,
         GRID_ROW_CSS_CLASS,
       )! as HTMLElement;
 

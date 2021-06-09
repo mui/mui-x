@@ -79,6 +79,10 @@ const nlNLGrid: Partial<GridLocaleText> = {
 
   // Total rows footer text
   footerTotalRows: 'Totaal:',
+
+  // Total visible rows footer text
+  // footerTotalVisibleRows: (visibleCount, totalCount) =>
+  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
 };
 
 export const nlNL: Localization = getGridLocalization(nlNLGrid, nlNLCore);

@@ -121,23 +121,26 @@ The value generated is used for filtering, sorting, rendering, etc unless overri
 
 ### Value formatter
 
-The value formatters allow you to format values for display as a string.
-For instance, you can use it to format a JavaScript `Date` object.
+The value formatter allows you to convert the value before displaying it.
+Common use cases include converting a JavaScript `Date` object to a date string or a `Number` into a formatted number (e.g. "1,000.50").
 
-```tsx
-const columns: GridColDef[] = [
-  {
-    field: 'date',
-    headerName: 'Year',
-    valueFormatter: (params: ValueFormatterParams) =>
-      (params.value as Date).getFullYear(),
-  },
-];
-```
+In the following demo, a formatter is used to display the tax rate's decimal value (e.g. 0.2) as a percentage (e.g. 20%).
 
 {{"demo": "pages/components/data-grid/columns/ValueFormatterGrid.js", "bg": "inline"}}
 
-The value generated is used for filtering, sorting, rendering in the cell and outside, etc unless overridden by a more specific configuration.
+The value generated is only used for rendering purposes.
+Filtering and sorting will not relay on the formatted value.
+Use the [`valueParser`](/components/data-grid/columns/#value-parser) to support filtering.
+
+### Value parser
+
+The value parser allows you to convert the user-entered value to another one used for filtering or editing.
+Common use cases include parsing date strings to JavaScript `Date` objects or formatted numbers (e.g. "1,000.50") into `Number`.
+It can be understood as the inverse of [`valueFormatter`](/components/data-grid/columns/#value-formatter).
+
+In the following demo, the tax rate is displayed as a percentage (e.g. 20%) but a decimal number is used as value (e.g. 0.2).
+
+{{"demo": "pages/components/data-grid/columns/ValueParserGrid.js", "bg": "inline"}}
 
 ### Render cell
 

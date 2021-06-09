@@ -90,6 +90,10 @@ export const ukUAGrid: Partial<GridLocaleText> = {
   // Total rows footer text
   footerTotalRows: 'Всього рядків:',
 
+  // Total visible rows footer text
+  // footerTotalVisibleRows: (visibleCount, totalCount) =>
+  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Вибір прапорця',
 

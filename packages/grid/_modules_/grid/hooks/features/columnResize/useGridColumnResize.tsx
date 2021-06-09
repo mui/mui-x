@@ -68,10 +68,7 @@ function trackFinger(event, currentTouchId): CursorCoordinates | boolean {
 }
 
 // TODO improve experience for last column
-export const useGridColumnResize = (
-  columnsRef: React.RefObject<HTMLDivElement>,
-  apiRef: GridApiRef,
-) => {
+export const useGridColumnResize = (apiRef: GridApiRef) => {
   const logger = useLogger('useGridColumnResize');
   const [, setGridState, forceUpdate] = useGridState(apiRef);
   const colDefRef = React.useRef<GridColDef>();
@@ -81,7 +78,6 @@ export const useGridColumnResize = (
   const stopResizeEventTimeout = React.useRef<any>();
   const touchId = React.useRef<number>();
   const options = useGridSelector(apiRef, optionsSelector);
-  const columnsHeaderElement = columnsRef.current;
 
   const updateWidth = (newWidth: number) => {
     logger.debug(`Updating width to ${newWidth} for col ${colDefRef.current!.field}`);
@@ -170,7 +166,7 @@ export const useGridColumnResize = (
       apiRef.current.publishEvent(GRID_COLUMN_RESIZE_START, { field: colDef.field });
 
       colDefRef.current = colDef;
-      colElementRef.current = columnsHeaderElement!.querySelector(
+      colElementRef.current = apiRef.current!.columnHeadersElementRef?.current!.querySelector(
         `[data-field="${colDef.field}"]`,
       ) as HTMLDivElement;
 
@@ -269,7 +265,7 @@ export const useGridColumnResize = (
 
     colDefRef.current = colDef;
     colElementRef.current = findHeaderElementFromField(
-      columnsHeaderElement!,
+      apiRef.current!.columnHeadersElementRef?.current!,
       colDef.field,
     ) as HTMLDivElement;
     colCellElementsRef.current = findGridCellElementsFromCol(
@@ -314,17 +310,22 @@ export const useGridColumnResize = (
   }, [setGridState, forceUpdate]);
 
   React.useEffect(() => {
-    columnsHeaderElement?.addEventListener('touchstart', handleTouchStart, {
+    const columnHeadersElement = apiRef.current!.columnHeadersElementRef?.current;
+    if (!columnHeadersElement) {
+      return () => {};
+    }
+
+    columnHeadersElement.addEventListener('touchstart', handleTouchStart, {
       passive: doesSupportTouchActionNone(),
     });
 
     return () => {
-      columnsHeaderElement?.removeEventListener('touchstart', handleTouchStart);
+      columnHeadersElement.removeEventListener('touchstart', handleTouchStart);
 
       clearTimeout(stopResizeEventTimeout.current);
       stopListening();
     };
-  }, [columnsHeaderElement, handleTouchStart, stopListening]);
+  }, [apiRef, handleTouchStart, stopListening]);
 
   useGridApiEventHandler(apiRef, GRID_COLUMN_SEPARATOR_MOUSE_DOWN, handleColumnResizeMouseDown);
   useGridApiEventHandler(apiRef, GRID_COLUMN_RESIZE_START, handleResizeStart);

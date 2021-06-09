@@ -83,6 +83,10 @@ const elGRGrid: Partial<GridLocaleText> = {
 
   // Total rows footer text
   footerTotalRows: 'Σύνολο Γραμμών:',
+
+  // Total visible rows footer text
+  // footerTotalVisibleRows: (visibleCount, totalCount) =>
+  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
 };
 
 export const elGR: Localization = getGridLocalization(elGRGrid);
