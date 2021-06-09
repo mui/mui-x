@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.0-alpha.31](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.30...v4.0.0-alpha.31)
+
+_June 9, 2021_
+
+Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
+
+- 💅 Allow to customize GridToolbarExport's CSV export (#1695) @michallukowski
+- 🐛 Allow to deselect rows with CTRL + click (#1813) @ZeeshanTamboli
+- ⚡️ Refactor scroll size detector (#1703) @dtassone
+- 🕹 Automatically generate API docs (#1529) @m4theushw
+- 🐞 Bugfixes
+
+### @material-ui/x-grid@v4.0.0-alpha.31 / @material-ui/data-grid@v4.0.0-alpha.31
+
+#### Breaking changes
+
+- [DataGrid] Improve `headerClassName` type (#1778) @DanailH
+
+```diff
+-cellClassName?: string | string[] | (params: GridCellParams) => string;
++cellClassName?: string | (params: GridCellParams) => string;
+```
+
+```diff
+-headerClassName?: string | string[];
++headerClassName?: string | (params: GridColumnHeaderParams) => string;
+```
+
+#### Changes
+
+- [DataGrid] Add `valueParser` to parse values entered by the user (#1785) @m4theushw
+- [DataGrid] Allow to customize GridToolbarExport's CSV export (#1695) @michallukowski
+- [DataGrid] Allow to deselect rows with CTRL + click (#1813) @ZeeshanTamboli
+- [DataGrid] Exploring Plugin api (#1720) @dtassone
+- [DataGrid] Fix cell height after changing grids density (#1819) @DanailH
+- [DataGrid] Fix fluid columns width when available `viewportWidth` < 0 (#1816) @DanailH
+- [DataGrid] Fix force reflow on scroll start and end (#1829) @dtassone
+- [DataGrid] Refactor scroll size detector (#1703) @dtassone
+- [XGrid] Display the number of filtered rows in the footer (#1830) @m4theushw
+
+### Docs
+
+- [docs] Add docs for `disableDensitySelector` option (#1856) @DanailH
+- [docs] Automatically generate API docs (#1529) @m4theushw
+
+### Core
+
+- [core] Batch small changes (#1848) @oliviertassinari
+- [core] Add `yarn docs:api` @oliviertassinari
+- [test] Improve pagination tests (#1827) @m4theushw
+
 ## [4.0.0-alpha.30](https://github.com/mui-org/material-ui-x/compare/v4.0.0-alpha.29...v4.0.0-alpha.30)
 
 _May 31, 2021_
