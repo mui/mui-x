@@ -4,7 +4,7 @@ import {
   GRID_CELL_KEYDOWN,
   GRID_CELL_NAVIGATION_KEYDOWN,
   GRID_COLUMN_HEADER_KEYDOWN,
-  GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN,
+  GRID_COLUMN_HEADER_NAVIGATION_KEY_DOWN,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridCellParams } from '../../../models/params/gridCellParams';
@@ -135,7 +135,7 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
       }
 
       if (isNavigationKey(event.key) && !isSpaceKey(event.key) && !event.shiftKey) {
-        apiRef.current.publishEvent(GRID_COLUMN_HEADER_NAVIGATION_KEYDOWN, params, event);
+        apiRef.current.publishEvent(GRID_COLUMN_HEADER_NAVIGATION_KEY_DOWN, params, event);
         return;
       }
 

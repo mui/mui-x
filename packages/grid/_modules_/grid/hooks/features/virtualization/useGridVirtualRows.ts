@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   GRID_DEBOUNCED_RESIZE,
-  GRID_NATIVE_SCROLL,
+  GRID_SCROLL,
   GRID_ROWS_SCROLL,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
@@ -407,17 +407,17 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
     [logger],
   );
 
-  useNativeEventListener(apiRef, windowRef, GRID_NATIVE_SCROLL, handleScroll, { passive: true });
+  useNativeEventListener(apiRef, windowRef, GRID_SCROLL, handleScroll, { passive: true });
   useNativeEventListener(
     apiRef,
     () => apiRef.current?.renderingZoneRef?.current?.parentElement,
-    GRID_NATIVE_SCROLL,
+    GRID_SCROLL,
     preventViewportScroll,
   );
   useNativeEventListener(
     apiRef,
     () => apiRef.current?.columnHeadersContainerElementRef?.current?.parentElement,
-    GRID_NATIVE_SCROLL,
+    GRID_SCROLL,
     preventViewportScroll,
   );
   useGridApiEventHandler(apiRef, GRID_DEBOUNCED_RESIZE, updateViewport);

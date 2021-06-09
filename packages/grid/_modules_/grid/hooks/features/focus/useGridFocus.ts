@@ -28,10 +28,9 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
           focus: { cell: { id, field }, columnHeader: null },
         };
       });
-      apiRef.current.publishEvent('cellFocusChange');
       forceUpdate();
     },
-    [apiRef, forceUpdate, logger, setGridState],
+    [forceUpdate, logger, setGridState],
   );
 
   const setColumnHeaderFocus = React.useCallback(
@@ -45,11 +44,9 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
           focus: { columnHeader: { field }, cell: null },
         };
       });
-      apiRef.current.publishEvent('cellFocusChange');
-
       forceUpdate();
     },
-    [apiRef, forceUpdate, logger, setGridState],
+    [forceUpdate, logger, setGridState],
   );
 
   const handleCellFocus = React.useCallback(

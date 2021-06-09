@@ -154,9 +154,9 @@
     "description": "Fired when the user stops resizing a column. Called with an object <code>{ field: string }</code>."
   },
   { "name": "columnOrderChange", "description": "Fired when the user ends resizing a column." },
-  { "name": "rowsCleared", "description": "Fired when the grid is emptied." },
+  { "name": "rowsClear", "description": "Fired when the grid is emptied." },
   {
-    "name": "columnsUpdated",
+    "name": "columnsChange",
     "description": "Fired when the columns state is changed.\nCalled with an array of strings correspoding to the field names."
   },
   {

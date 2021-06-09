@@ -8,7 +8,7 @@ import {
 } from '../../../models/index';
 import { isDeepEqual } from '../../../utils/utils';
 import { useLogger } from '../../utils/useLogger';
-import { GRID_COLUMNS_UPDATED, GRID_DEBOUNCED_RESIZE } from '../../../constants/eventsConstants';
+import { GRID_COLUMNS_CHANGE, GRID_DEBOUNCED_RESIZE } from '../../../constants/eventsConstants';
 import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import {
@@ -164,7 +164,7 @@ export const useGridVirtualColumns = (
     renderedColRef.current = null;
   }, [logger, renderedColRef]);
 
-  useGridApiEventHandler(apiRef, GRID_COLUMNS_UPDATED, resetRenderedColState);
+  useGridApiEventHandler(apiRef, GRID_COLUMNS_CHANGE, resetRenderedColState);
   useGridApiEventHandler(apiRef, GRID_DEBOUNCED_RESIZE, resetRenderedColState);
 
   return [renderedColRef, updateRenderedCols];

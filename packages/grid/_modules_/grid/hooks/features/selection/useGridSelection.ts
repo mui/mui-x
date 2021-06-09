@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   GRID_ROW_CLICK,
   GRID_ROW_SELECTED,
-  GRID_SELECTION_CHANGED,
+  GRID_SELECTION_CHANGE,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
 import { GridSelectionApi } from '../../../models/api/gridSelectionApi';
@@ -98,7 +98,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
         selectionModel: Object.values(selectionState),
       };
       apiRef.current.publishEvent(GRID_ROW_SELECTED, rowSelectedParam);
-      apiRef.current.publishEvent(GRID_SELECTION_CHANGED, selectionChangeParam);
+      apiRef.current.publishEvent(GRID_SELECTION_CHANGE, selectionChangeParam);
     },
     [
       isRowSelectable,
@@ -151,7 +151,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
         selectionModel: Object.values(apiRef!.current!.getState<GridSelectionState>('selection')),
       };
       // We don't emit GRID_ROW_SELECTED on each row as it would be too consuming for large set of data.
-      apiRef.current.publishEvent(GRID_SELECTION_CHANGED, params);
+      apiRef.current.publishEvent(GRID_SELECTION_CHANGE, params);
     },
     [
       isRowSelectable,
@@ -185,7 +185,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
 
   useGridApiEventHandler(apiRef, GRID_ROW_CLICK, handleRowClick);
   useGridApiOptionHandler(apiRef, GRID_ROW_SELECTED, onRowSelected);
-  useGridApiOptionHandler(apiRef, GRID_SELECTION_CHANGED, onSelectionModelChange);
+  useGridApiOptionHandler(apiRef, GRID_SELECTION_CHANGE, onSelectionModelChange);
 
   // TODO handle Cell Click/range selection?
   const selectionApi: GridSelectionApi = {

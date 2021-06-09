@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {
-  GRID_COLUMNS_UPDATED,
+  GRID_COLUMNS_CHANGE,
   GRID_COLUMN_ORDER_CHANGE,
-  GRID_COLUMN_RESIZE_COMMITTED,
+  GRID_COLUMN_WIDTH_CHANGE,
   GRID_COLUMN_VISIBILITY_CHANGE,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
@@ -129,7 +129,7 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
       forceUpdate();
 
       if (apiRef.current && emit) {
-        apiRef.current.publishEvent(GRID_COLUMNS_UPDATED, newState.all);
+        apiRef.current.publishEvent(GRID_COLUMNS_CHANGE, newState.all);
       }
     },
     [logger, setGridState, forceUpdate, apiRef],
@@ -225,7 +225,7 @@ export function useGridColumns(apiRef: GridApiRef, { columns }: { columns: GridC
       const column = apiRef.current.getColumn(field);
       apiRef.current.updateColumn({ ...column, width });
 
-      apiRef.current.publishEvent(GRID_COLUMN_RESIZE_COMMITTED, {
+      apiRef.current.publishEvent(GRID_COLUMN_WIDTH_CHANGE, {
         element: apiRef.current.getColumnHeaderElement(field),
         colDef: column,
         api: apiRef,
