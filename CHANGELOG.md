@@ -21,15 +21,16 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 
 - [DataGrid] Improve `headerClassName` type (#1778) @DanailH
 
-```diff
--cellClassName?: string | string[] | (params: GridCellParams) => string;
-+cellClassName?: string | (params: GridCellParams) => string;
-```
+  `cellClassName` and `headerClassName` no longer accept array of strings.
 
-```diff
--headerClassName?: string | string[];
-+headerClassName?: string | (params: GridColumnHeaderParams) => string;
-```
+  ```diff
+  -cellClassName?: string | string[] | (params: GridCellParams) => string;
+  +cellClassName?: string | (params: GridCellParams) => string;
+  ```
+  ```diff
+  -headerClassName?: string | string[];
+  +headerClassName?: string | (params: GridColumnHeaderParams) => string;
+  ```
 
 #### Changes
 
