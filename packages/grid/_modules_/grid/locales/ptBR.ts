@@ -29,7 +29,6 @@ const ptBRGrid: Partial<GridLocaleText> = {
 
   // Export selector toolbar button text
   toolbarExport: 'Exportar',
-  toolbarExportLabel: 'Exportar',
   toolbarExportCSV: 'Baixar como CSV',
 
   // Columns panel text
