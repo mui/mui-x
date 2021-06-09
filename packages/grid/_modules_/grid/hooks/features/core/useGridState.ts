@@ -9,10 +9,12 @@ export const useGridState = (
   apiRef: GridApiRef,
 ): [GridState, (stateUpdaterFn: (oldState: GridState) => GridState) => boolean, () => void] => {
   useGridApi(apiRef);
+
   const forceUpdate = React.useCallback(
     () => apiRef.current.forceUpdate(() => apiRef.current.state),
     [apiRef],
   );
+
   const setGridState = React.useCallback(
     (stateUpdaterFn: (oldState: GridState) => GridState) => {
       const newState = stateUpdaterFn(apiRef.current.state);
@@ -29,11 +31,11 @@ export const useGridState = (
           const controlState = controlStateMap[stateId];
           const oldModel = controlState.stateSelector(apiRef.current.state);
           const newModel = controlState.stateSelector(newState);
-          const hasControlledStateChange = oldModel !== newModel;
-          if (hasControlledStateChange) {
+          const hasSubStateChanged = oldModel !== newModel;
+          if (hasSubStateChanged) {
             if ( controlState.propOnChange && controlState.propModel) {
               // when the prop model is set we won't change the state
-              console.log(`State can't changed!`);
+              // it is down to the onChange to update the model. We just pass it the new model as arg
               controlState.propOnChange(newModel);
               shouldUpdate = false;
             }
@@ -43,6 +45,7 @@ export const useGridState = (
             }
             if( controlState.propOnChange && !controlState.propModel) {
               // if the prop model is not set, we call on change before setting the model.
+              // So if one mutate the model in onchange then we update it in the state
               controlState.propOnChange(newModel);
             }
           }
@@ -54,14 +57,14 @@ export const useGridState = (
       if(!shouldUpdate) {
         return false;
       }
+      // We always assign it as we mutate rows for perf reason.
+      apiRef.current.state = newState;
 
       if (hasChanged && apiRef.current.publishEvent) {
         const params: GridStateChangeParams = { api: apiRef.current, state: newState };
         apiRef.current.publishEvent(GRID_STATE_CHANGE, params);
       }
-      // We always assign it as we mutate rows for perf reason.
-      apiRef.current.state = newState;
-      
+
       return hasChanged;
     },
     [apiRef],

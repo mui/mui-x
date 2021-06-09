@@ -10,7 +10,6 @@ export interface ControlStateItem {
   stateSelector: (state: GridState) => any;
   propOnChange?: (...args) => void
 }
-// useControlledState(apiRef, props);
 
 // block the state from changing if there is a model an onChange
 // bind options.model to state.model with onChange
@@ -18,35 +17,14 @@ export interface ControlStateItem {
 //
 export function useControlState(apiRef: GridApiRef, props) {
   const controlStateMapRef = React.useRef<Record<string, ControlStateItem>>({});
-
-  // // this hook prepare a map that can be stored in the state
-  // if (props.filterModel && props.onFilterModelChange) {
-  //   controlStateMapRef.current.push({
-  //     propModel: props?.filterModel,
-  //     propOnChange: props?.onFilterModelChange,
-  //     // each model should have a specific state selector
-  //     // by convention
-  //     // nameModel, onNameModelChange, state.name
-  //     stateSelector: (state: GridState) => state.filter,
-  //   });
-  // }
-
-  // React.useEffect(()=> {
-  //   if (props.filterModel && props.onFilterModelChange) {
-  //     controlStateMapRef.current.push({
-  //       propModel: props?.filterModel,
-  //       propOnChange: props?.onFilterModelChange,
-  //       // each model should have a specific state selector
-  //       // by convention
-  //       // nameModel, onNameModelChange, state.name
-  //       stateSelector: (state: GridState) => state.filter,
-  //     });
-  //   }
-  // }, [props.filterModel, props.onFilterModelChange])
-
   apiRef.current.controlStateRef = controlStateMapRef
 
-  const registerControlState = React.useCallback(({stateId, propModel, propOnChange, stateSelector}: ControlStateItem )=> {
+  const registerControlState = React.useCallback(({
+                                                    stateId,
+                                                    propModel,
+                                                    propOnChange,
+                                                    stateSelector
+                                                  }: ControlStateItem) => {
     controlStateMapRef.current[stateId] = {
       stateId,
       propModel,
@@ -56,20 +34,5 @@ export function useControlState(apiRef: GridApiRef, props) {
   }, []);
 
   const controlStateApi: GridControlStateApi = {registerControlState};
-  useGridApiMethod(apiRef, controlStateApi, 'controlStateApi')
-
-  //return for now
-  // but it should be in state so it is callable as part of the hooks plugins.
-
-// // this wont work due to the fact that an event can't return a value
-//   const handleStateChange = React.useCallback(({newState, oldState})=> {
-//     const oldModel = controlStateMapTest.stateSelector(oldState);
-//     const newModel = controlStateMapTest.stateSelector(newState);
-//     if(newModel !== oldModel) {
-//
-//     }
-//   }, []);
-//
-//   useGridApiEventHandler(apiRef, 'StateChanged', handleStateChange);
-
+  useGridApiMethod(apiRef, controlStateApi, 'controlStateApi');
 }

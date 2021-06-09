@@ -1,7 +1,7 @@
 import Button from '@material-ui/core/Button';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { makeStyles } from '@material-ui/styles';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid, GRID_FILTER_MODEL_CHANGE } from '@material-ui/data-grid';
 import Rating from '@material-ui/lab/Rating';
 import {
   GridColDef,
@@ -745,7 +745,7 @@ export function MultiFilteringWithOrGrid() {
   );
 }
 
-export function SimpleControlFilter() {
+export function SimpleModelWithOnChangeControlFilter() {
   const [simpleColumns] = React.useState([
     {
       field: 'name',
@@ -775,12 +775,82 @@ export function SimpleControlFilter() {
     // setFilterModel(params.model);
   }, []);
 
+  const apiRef = useGridApiRef();
+
+  React.useEffect(()=> {
+    return apiRef.current.subscribeEvent(GRID_FILTER_MODEL_CHANGE, (params)=> {
+      console.log(`${GRID_FILTER_MODEL_CHANGE} triggered with `, params);
+    });
+  }, [apiRef]);
+
   return (
-    <XGrid rows={simpleRows} columns={simpleColumns}
+    <XGrid rows={simpleRows} columns={simpleColumns} apiRef={apiRef}
            filterModel={simpleFilterModel}
            onFilterModelChange={handleFilterChange}
            selectionModel={simpleSelectionModel}
            onSelectionModelChange={handleSelectionChange}
+    />
+  );
+}
+export function SimpleModelControlFilter() {
+  const [simpleColumns] = React.useState([
+    {
+      field: 'name',
+    },
+  ]);
+  const [simpleRows] = React.useState([
+    {
+      id: '1',
+      name: 'Paris',
+    },
+    {
+      id: '2',
+      name: 'Nice',
+    },
+    {
+      id: '3',
+      name: 'London',
+    },
+  ]);
+
+  const [simpleFilterModel, setFilterModel] = React.useState<GridFilterModel>(getInitialGridFilterState());
+
+  return (
+    <XGrid rows={simpleRows} columns={simpleColumns}
+           filterModel={simpleFilterModel}
+    />
+  );
+}
+export function SimpleOnChangeControlFilter() {
+  const [simpleColumns] = React.useState([
+    {
+      field: 'name',
+    },
+  ]);
+  const [simpleRows] = React.useState([
+    {
+      id: '1',
+      name: 'Paris',
+    },
+    {
+      id: '2',
+      name: 'Nice',
+    },
+    {
+      id: '3',
+      name: 'London',
+    },
+  ]);
+
+  const [simpleFilterModel, setFilterModel] = React.useState<GridFilterModel>(getInitialGridFilterState());
+  const handleFilterChange = React.useCallback(params => {
+    setFilterModel(params.model);
+  }, []);
+
+
+  return (
+    <XGrid rows={simpleRows} columns={simpleColumns}
+           handleFilterChange={simpleFilterModel}
     />
   );
 }
