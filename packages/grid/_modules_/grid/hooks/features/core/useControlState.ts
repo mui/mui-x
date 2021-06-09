@@ -9,6 +9,7 @@ export interface ControlStateItem {
   propModel?: any;
   stateSelector: (state: GridState) => any;
   propOnChange?: (...args) => void
+  onChangeCallback?: (...args) => void
 }
 
 // block the state from changing if there is a model an onChange
@@ -25,6 +26,9 @@ export function useControlState(apiRef: GridApiRef, props) {
                                                     propOnChange,
                                                     stateSelector
                                                   }: ControlStateItem) => {
+    if(controlStateMapRef.current[stateId]) {
+      throw new Error(`${stateId} is already registered in the controlStateMap.`)
+    }
     controlStateMapRef.current[stateId] = {
       stateId,
       propModel,

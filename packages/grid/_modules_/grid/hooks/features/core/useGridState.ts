@@ -20,19 +20,27 @@ export const useGridState = (
       const newState = stateUpdaterFn(apiRef.current.state);
       const hasChanged = apiRef.current.state !== newState;
       let shouldUpdate = true;
+      const updatedStateIds: string[] = [];
+      const controlStateMap = apiRef.current.controlStateRef.current!;
 
       if(hasChanged && apiRef.current.controlStateRef) {
-        const controlStateMap = apiRef.current.controlStateRef.current!;
-
-        // We probably don't need to run all controlState here as
-        // we only change stateModel one by one. But how can we identify which model as changed.
-        // Should we check each state model with previous. Or should we do the following?
         Object.keys(controlStateMap).forEach(stateId => {
           const controlState = controlStateMap[stateId];
           const oldModel = controlState.stateSelector(apiRef.current.state);
           const newModel = controlState.stateSelector(newState);
           const hasSubStateChanged = oldModel !== newModel;
+
+          if(updatedStateIds.length >=1 && hasSubStateChanged) {
+            // What if the state was updated and multiple models changed?
+            // Normally it should not happen as each hook modify its own state and it should not leak
+            // Events are here to forwarded to other hooks to apply changes.
+            // You are trying to update several states in a not isolated way.
+            throw new Error(`You're not allowed to update several substate in one transaction. You already updated ${updatedStateIds[0]}, therefore, you're not allowed to update ${controlState.stateId} in the same transaction.`);
+          }
+
           if (hasSubStateChanged) {
+            updatedStateIds.push(controlState.stateId);
+
             if ( controlState.propOnChange && controlState.propModel) {
               // when the prop model is set we won't change the state
               // it is down to the onChange to update the model. We just pass it the new model as arg
@@ -41,7 +49,11 @@ export const useGridState = (
             }
             if(!controlState.propOnChange && controlState.propModel) {
               // we dont' change the state and just return false;
-              shouldUpdate = false;
+              // how to apply propModel
+              console.log(newModel)
+              console.log(controlState.propModel)
+              // TODO fix  issue with selection state as the model is different of the state.
+              shouldUpdate = newModel === controlState.propModel;
             }
             if( controlState.propOnChange && !controlState.propModel) {
               // if the prop model is not set, we call on change before setting the model.
@@ -49,9 +61,7 @@ export const useGridState = (
               controlState.propOnChange(newModel);
             }
           }
-          // What if the state was updated and multiple models changed?
-          // Normally it should not happen as each hook modify its own state and it should not leak
-          // Events are here to forwarded to other hooks to apply changes.
+
         });
       }
       if(!shouldUpdate) {
@@ -63,6 +73,14 @@ export const useGridState = (
       if (hasChanged && apiRef.current.publishEvent) {
         const params: GridStateChangeParams = { api: apiRef.current, state: newState };
         apiRef.current.publishEvent(GRID_STATE_CHANGE, params);
+
+        updatedStateIds.forEach(stateId => {
+          if(controlStateMap[stateId].onChangeCallback){
+            //TODO here you need to add the latest model that you can get from the array
+            // this is meant to publish the onchange event
+            controlStateMap[stateId].onChangeCallback!()
+          }
+        });
       }
 
       return hasChanged;
