@@ -20,8 +20,9 @@ import {
   GridEditCellPropsParams,
   GridEditRowModelParams,
   GRID_CELL_EDIT_ENTER,
+  GridFetchRowsParams,
 } from '@material-ui/x-grid';
-import { useDemoData } from '@material-ui/x-grid-data-generator';
+import { getCommodityColumns, getRealData, useDemoData } from '@material-ui/x-grid-data-generator';
 import { action } from '@storybook/addon-actions';
 import { randomInt } from '../data/random-generator';
 
@@ -915,6 +916,53 @@ export function SwitchVirtualization() {
       <div style={{ width: '100%', height: 500 }}>
         <XGrid rows={data.rows} columns={data.columns} />
       </div>
+    </div>
+  );
+}
+
+async function sleep(duration) {
+  return new Promise<void>((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, duration);
+  });
+}
+
+const loadServerRows = async (newRowLength: number): Promise<GridRowData[]> => {
+  const newData = await getRealData(newRowLength, getCommodityColumns());
+  // Simulate network throttle
+  await sleep(Math.random() * 100 + 100);
+
+  return newData.rows;
+};
+
+export function ServerSideInfiniteLoading() {
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 20,
+    maxColumns: 20,
+  });
+
+  const handleFetchRows = async (params: GridFetchRowsParams) => {
+    const newRowsBatch: GridRowData[] = await loadServerRows(params.viewportPageSize);
+
+    params.api.current.insertRows({
+      startIndex: params.startIndex,
+      pageSize: params.viewportPageSize,
+      newRows: newRowsBatch,
+    });
+  };
+
+  return (
+    <div style={{ height: 600, width: '100%' }}>
+      <XGrid
+        {...data}
+        hideFooterPagination
+        rowCount={200}
+        sortingMode="server"
+        filterMode="server"
+        onFetchRows={handleFetchRows}
+      />
     </div>
   );
 }
