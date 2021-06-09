@@ -365,7 +365,7 @@ export const GRID_COLUMN_RESIZE = 'columnResize';
  * Fired when a column is resized. Called with a [[GridColumnResizeParams]] object.
  * @event
  */
-export const GRID_COLUMN_WIDTH_CHANGE = 'columnResizeCommitted';
+export const GRID_COLUMN_WIDTH_CHANGE = 'columnWidthChange';
 
 /**
  * Fired when the user starts resizing a column. Called with an object `{ field: string }`.
