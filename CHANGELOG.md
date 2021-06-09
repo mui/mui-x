@@ -12,7 +12,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - 💅 Allow to customize GridToolbarExport's CSV export (#1695) @michallukowski
 - 🐛 Allow to deselect rows with CTRL + click (#1813) @ZeeshanTamboli
 - ⚡️ Refactor scroll size detector (#1703) @dtassone
-- 🕹 Automatically generate API docs (#1529) @m4theushw
+- 📖 Add [documentation](https://material-ui.com/api/data-grid/) for interfaces and events (#1529) @m4theushw
 - 🐞 Bugfixes
 
 ### @material-ui/x-grid@v4.0.0-alpha.31 / @material-ui/data-grid@v4.0.0-alpha.31
