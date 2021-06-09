@@ -10,7 +10,7 @@ _June 9, 2021_
 Big thanks to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 💅 Allow to customize GridToolbarExport's CSV export (#1695) @michallukowski
-- 🐛 Allow to deselect rows with CTRL + click (#1813) @ZeeshanTamboli
+- 🐛 Allow to deselect rows with <kbd>CTRL</kbd> + click (#1813) @ZeeshanTamboli
 - ⚡️ Refactor scroll size detector (#1703) @dtassone
 - 📖 Add [documentation](https://material-ui.com/api/data-grid/) for interfaces and events (#1529) @m4theushw
 - 🐞 Bugfixes
