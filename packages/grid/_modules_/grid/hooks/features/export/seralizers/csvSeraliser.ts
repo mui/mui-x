@@ -5,7 +5,6 @@ import {
   GridRowId,
   GridRowModel,
 } from '../../../../models';
-
 import { CsvDelimiterCharacter } from '../../../../models/gridExport';
 
 const serialiseCellValue = (
