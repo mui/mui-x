@@ -41,6 +41,14 @@ export const useGridFocus = (apiRef: GridApiRef): void => {
 
   const setColumnHeaderFocus = React.useCallback(
     (field: string) => {
+      const { cell } = apiRef.current.getState().focus;
+      if (cell) {
+        apiRef.current.publishEvent(
+          GRID_CELL_FOCUS_OUT,
+          apiRef.current.getCellParams(cell.id, cell.field),
+        );
+      }
+
       setGridState((state) => {
         logger.debug(`Focusing on column header with colIndex=${field}`);
 

@@ -275,6 +275,23 @@ describe('<XGrid /> - Edit Rows', () => {
     expect(cell).to.have.text('1970');
   });
 
+  it('should save changes when a column header is focused', () => {
+    render(<TestCase />);
+    const cell = getCell(1, 1);
+    cell.focus();
+    expect(getActiveCell()).to.equal('1-1');
+    fireEvent.doubleClick(cell);
+    const input = cell.querySelector('input')!;
+    expect(input.value).to.equal('1961');
+
+    fireEvent.change(input, { target: { value: '1970' } });
+    expect(cell.querySelector('input')!.value).to.equal('1970');
+
+    fireEvent.focus(getColumnHeaderCell(1));
+    expect(cell).not.to.have.class('MuiDataGrid-cellEditing');
+    expect(cell).to.have.text('1970');
+  });
+
   it('should the focus to the new field', () => {
     const handleCellBlur = (params, event) => {
       if (params.cellMode === 'edit') {
