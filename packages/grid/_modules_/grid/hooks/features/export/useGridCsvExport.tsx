@@ -27,6 +27,7 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
         selection,
         apiRef.current.getCellValue,
         options?.delimiter,
+        options?.commaAsDecimalSeparator,
       );
     },
     [logger, visibleColumns, visibleSortedRows, selection, apiRef],
