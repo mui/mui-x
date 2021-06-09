@@ -220,10 +220,10 @@ export function useGridEditRows(apiRef: GridApiRef) {
   );
 
   const handleExitEdit = React.useCallback(
-    (params, event) => {
+    (params: GridCellParams, event?: React.SyntheticEvent) => {
       setCellMode(params.id, params.field, 'view');
 
-      // When dispatched by the document, the event is not available
+      // When dispatched by the document, the event is not passed
       if (!event || !isKeyboardEvent(event)) {
         return;
       }
