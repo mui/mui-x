@@ -84,6 +84,9 @@ export interface GridLocaleText {
   // Total rows footer text
   footerTotalRows: React.ReactNode;
 
+  // Total visible rows footer text
+  footerTotalVisibleRows: (visibleCount: number, totalCount: number) => React.ReactNode;
+
   // Checkbox selection text
   checkboxSelectionHeaderName: string;
 

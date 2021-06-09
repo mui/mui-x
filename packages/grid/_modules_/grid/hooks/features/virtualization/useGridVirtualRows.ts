@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  GRID_RESIZE,
+  GRID_DEBOUNCED_RESIZE,
   GRID_NATIVE_SCROLL,
   GRID_ROWS_SCROLL,
 } from '../../../constants/eventsConstants';
@@ -31,13 +31,11 @@ import { useGridVirtualColumns } from './useGridVirtualColumns';
 import { gridDensityRowHeightSelector } from '../density/densitySelector';
 import { scrollStateSelector } from './renderingStateSelector';
 
-export const useGridVirtualRows = (
-  colRef: React.MutableRefObject<HTMLDivElement | null>,
-  windowRef: React.MutableRefObject<HTMLDivElement | null>,
-  renderingZoneRef: React.MutableRefObject<HTMLDivElement | null>,
-  apiRef: GridApiRef,
-): void => {
+export const useGridVirtualRows = (apiRef: GridApiRef): void => {
   const logger = useLogger('useGridVirtualRows');
+  const colRef = apiRef.current.columnHeadersElementRef!;
+  const windowRef = apiRef.current.windowRef!;
+  const renderingZoneRef = apiRef.current.renderingZoneRef!;
 
   const [gridState, setGridState, forceUpdate] = useGridState(apiRef);
   const options = useGridSelector(apiRef, optionsSelector);
@@ -323,9 +321,10 @@ export const useGridVirtualRows = (
     [apiRef],
   );
 
-  const getContainerPropsState = React.useCallback(() => gridState.containerSizes, [
-    gridState.containerSizes,
-  ]);
+  const getContainerPropsState = React.useCallback(
+    () => gridState.containerSizes,
+    [gridState.containerSizes],
+  );
 
   const getRenderContextState = React.useCallback(() => {
     return gridState.rendering.renderContext || undefined;
@@ -411,15 +410,15 @@ export const useGridVirtualRows = (
   useNativeEventListener(apiRef, windowRef, GRID_NATIVE_SCROLL, handleScroll, { passive: true });
   useNativeEventListener(
     apiRef,
-    () => renderingZoneRef.current?.parentElement,
+    () => apiRef.current?.renderingZoneRef?.current?.parentElement,
     GRID_NATIVE_SCROLL,
     preventViewportScroll,
   );
   useNativeEventListener(
     apiRef,
-    () => colRef.current?.parentElement,
+    () => apiRef.current?.columnHeadersContainerElementRef?.current?.parentElement,
     GRID_NATIVE_SCROLL,
     preventViewportScroll,
   );
-  useGridApiEventHandler(apiRef, GRID_RESIZE, updateViewport);
+  useGridApiEventHandler(apiRef, GRID_DEBOUNCED_RESIZE, updateViewport);
 };

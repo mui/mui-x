@@ -77,6 +77,10 @@ const bgBGGrid: Partial<GridLocaleText> = {
 
   // Total rows footer text
   footerTotalRows: 'Общо Rедове:',
+
+  // Total visible rows footer text
+  // footerTotalVisibleRows: (visibleCount, totalCount) =>
+  //   `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
 };
 
 export const bgBG: Localization = getGridLocalization(bgBGGrid, bgBGCore);

@@ -88,6 +88,10 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Total rows footer text
   footerTotalRows: 'Total Rows:',
 
+  // Total visible rows footer text
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} of ${totalCount.toLocaleString()}`,
+
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Checkbox selection',
 

@@ -714,3 +714,32 @@ export function ObjectValueGetter() {
     </div>
   );
 }
+export function MultiFilteringWithOrGrid() {
+  const called = React.useRef(0);
+  const [lastFilterChange, setLastFilterChange] = React.useState(new Date());
+  const [filterModelState] = React.useState({
+    items: [
+      { columnField: 'commodity', operatorValue: 'contains', value: 'rice' },
+      { columnField: 'commodity', operatorValue: 'startsWith', value: 'soy' },
+    ],
+    linkOperator: GridLinkOperator.Or,
+  });
+  const { data } = useDemoData({
+    dataSet: 'Commodity',
+    rowLength: 100,
+    maxColumns: 6,
+  });
+
+  const handleFilterChange = React.useCallback(() => {
+    called.current += 1;
+    setLastFilterChange(new Date());
+  }, []);
+  return (
+    <div style={{ height: 400, width: '100%' }}>
+      <XGrid {...data} onFilterModelChange={handleFilterChange} filterModel={filterModelState} />
+      <p>
+        Last filter change: {lastFilterChange.toISOString()} called = {called.current}
+      </p>
+    </div>
+  );
+}

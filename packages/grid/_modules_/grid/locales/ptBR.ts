@@ -80,6 +80,10 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // Total rows footer text
   footerTotalRows: 'Total de linhas:',
 
+  // Total visible rows footer text
+  footerTotalVisibleRows: (visibleCount, totalCount) =>
+    `${visibleCount.toLocaleString()} de ${totalCount.toLocaleString()}`,
+
   // Checkbox selection text
   checkboxSelectionHeaderName: 'Seleção',
 
