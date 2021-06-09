@@ -37,7 +37,7 @@ Big thanks to the 6 contributors who made this release possible. Here are some h
 - [DataGrid] Add `valueParser` to parse values entered by the user (#1785) @m4theushw
 - [DataGrid] Allow to customize GridToolbarExport's CSV export (#1695) @michallukowski
 - [DataGrid] Allow to deselect rows with <kbd>CTRL</kbd> + click (#1813) @ZeeshanTamboli
-- [DataGrid] Exploring Plugin api (#1720) @dtassone
+- [DataGrid] Improve general architecture to better isolate hooks (#1720) @dtassone
 - [DataGrid] Fix cell height after changing grid density (#1819) @DanailH
 - [DataGrid] Fix fluid columns width when available `viewportWidth` < 0 (#1816) @DanailH
 - [DataGrid] Fix force reflow on scroll start and end (#1829) @dtassone
