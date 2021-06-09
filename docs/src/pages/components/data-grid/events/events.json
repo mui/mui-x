@@ -142,7 +142,7 @@
     "description": "Fired during the resizing of a column. Called with a GridColumnResizeParams object."
   },
   {
-    "name": "columnResizeCommitted",
+    "name": "columnWidthChange",
     "description": "Fired when a column is resized. Called with a GridColumnResizeParams object."
   },
   {
