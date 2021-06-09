@@ -9,12 +9,6 @@ export type CsvDelimiterCharacter = ',' | ';';
  */
 export interface GridExportCsvOptions {
   /**
-   * If `true`, the comma character used to separate the integer part from the fractional part of a number.
-   * This flag also changes the delimiter from `,` to `;`.
-   * @default false
-   */
-  commaAsDecimalSeparator?: boolean;
-  /**
    * The character used to separate fields.
    * @default ','
    */

@@ -8,18 +8,10 @@ import {
 
 import { CsvDelimiterCharacter } from '../../../../models/gridExport';
 
-const serialiseCellValue = (
-  value: any,
-  delimiterCharacter: CsvDelimiterCharacter,
-  commaAsDecimalSeparator: boolean,
-) => {
+const serialiseCellValue = (value: any, delimiterCharacter: CsvDelimiterCharacter) => {
   if (typeof value === 'string') {
     const formattedValue = value.replace(/"/g, '""');
     return formattedValue.includes(delimiterCharacter) ? `"${formattedValue}"` : formattedValue;
-  }
-
-  if (typeof value === 'number' && commaAsDecimalSeparator) {
-    return value.toString().replace('.', ',');
   }
 
   return value;
@@ -30,19 +22,12 @@ export function serialiseRow(
   columns: GridColumns,
   getCellValue: (id: GridRowId, field: string) => GridCellValue,
   delimiterCharacter: CsvDelimiterCharacter,
-  commaAsDecimalSeparator: boolean,
 ): Array<string> {
   const mappedRow: string[] = [];
   columns.forEach(
     (column) =>
       column.field !== gridCheckboxSelectionColDef.field &&
-      mappedRow.push(
-        serialiseCellValue(
-          getCellValue(id, column.field),
-          delimiterCharacter,
-          commaAsDecimalSeparator,
-        ),
-      ),
+      mappedRow.push(serialiseCellValue(getCellValue(id, column.field), delimiterCharacter)),
   );
   return mappedRow;
 }
@@ -53,7 +38,6 @@ export function buildCSV(
   selectedRows: Record<string, GridRowId>,
   getCellValue: (id: GridRowId, field: string) => GridCellValue,
   delimiterCharacter: CsvDelimiterCharacter = ',',
-  commaAsDecimalSeparator: boolean = false,
 ): string {
   let rowIds = [...rows.keys()];
   const selectedRowIds = Object.keys(selectedRows);
@@ -62,30 +46,16 @@ export function buildCSV(
     rowIds = rowIds.filter((id) => selectedRowIds.includes(`${id}`));
   }
 
-  if (commaAsDecimalSeparator && delimiterCharacter === ',') {
-    delimiterCharacter = ';';
-  }
-
   const CSVHead = `${columns
     .filter((column) => column.field !== gridCheckboxSelectionColDef.field)
-    .map((column) =>
-      serialiseCellValue(
-        column.headerName || column.field,
-        delimiterCharacter,
-        commaAsDecimalSeparator,
-      ),
-    )
+    .map((column) => serialiseCellValue(column.headerName || column.field, delimiterCharacter))
     .join(delimiterCharacter)}\r\n`;
   const CSVBody = rowIds
     .reduce<string>(
       (acc, id) =>
-        `${acc}${serialiseRow(
-          id,
-          columns,
-          getCellValue,
+        `${acc}${serialiseRow(id, columns, getCellValue, delimiterCharacter).join(
           delimiterCharacter,
-          commaAsDecimalSeparator,
-        ).join(delimiterCharacter)}\r\n`,
+        )}\r\n`,
       '',
     )
     .trim();
