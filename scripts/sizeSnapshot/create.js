@@ -91,8 +91,7 @@ async function getNextPagesSize() {
   const consoleOutput = await fse.readFile(path.join(__dirname, 'build/docs.next'), {
     encoding: 'utf8',
   });
-  const pageRegex =
-    /(?<treeViewPresentation>┌|├|└)\s+((?<fileType>λ|○|●)\s+)?(?<pageUrl>[^\s]+)\s+(?<sizeFormatted>[0-9.]+)\s+(?<sizeUnit>\w+)/gm;
+  const pageRegex = /(?<treeViewPresentation>┌|├|└)\s+((?<fileType>λ|○|●)\s+)?(?<pageUrl>[^\s]+)\s+(?<sizeFormatted>[0-9.]+)\s+(?<sizeUnit>\w+)/gm;
 
   const sharedChunks = [];
 

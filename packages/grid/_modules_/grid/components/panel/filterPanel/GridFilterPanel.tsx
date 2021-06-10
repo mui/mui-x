@@ -16,10 +16,9 @@ export function GridFilterPanel() {
   const [gridState] = useGridState(apiRef!);
   const { disableMultipleColumnsFiltering } = useGridSelector(apiRef, optionsSelector);
 
-  const hasMultipleFilters = React.useMemo(
-    () => gridState.filter.items.length > 1,
-    [gridState.filter.items.length],
-  );
+  const hasMultipleFilters = React.useMemo(() => gridState.filter.items.length > 1, [
+    gridState.filter.items.length,
+  ]);
 
   const applyFilter = React.useCallback(
     (item: GridFilterItem) => {

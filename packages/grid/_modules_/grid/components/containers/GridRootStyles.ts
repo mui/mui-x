@@ -113,10 +113,9 @@ export const useStyles = makeStyles(
             duration: theme.transitions.duration.shorter,
           }),
         },
-        '& .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeaderSorted):hover .MuiDataGrid-sortIcon':
-          {
-            opacity: 0.5,
-          },
+        '& .MuiDataGrid-columnHeader:not(.MuiDataGrid-columnHeaderSorted):hover .MuiDataGrid-sortIcon': {
+          opacity: 0.5,
+        },
         '& .MuiDataGrid-columnHeaderTitleContainer': {
           display: 'flex',
           alignItems: 'center',
@@ -135,15 +134,13 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-columnHeaderCenter .MuiDataGrid-columnHeaderTitleContainer': {
           justifyContent: 'center',
         },
-        '& .MuiDataGrid-columnHeaderRight .MuiDataGrid-columnHeader-draggable, & .MuiDataGrid-columnHeaderRight .MuiDataGrid-columnHeaderTitleContainer':
-          {
-            flexDirection: 'row-reverse',
-          },
-        '& .MuiDataGrid-columnHeaderCenter .MuiDataGrid-menuIcon, & .MuiDataGrid-columnHeaderRight .MuiDataGrid-menuIcon':
-          {
-            marginRight: 'auto',
-            marginLeft: -6,
-          },
+        '& .MuiDataGrid-columnHeaderRight .MuiDataGrid-columnHeader-draggable, & .MuiDataGrid-columnHeaderRight .MuiDataGrid-columnHeaderTitleContainer': {
+          flexDirection: 'row-reverse',
+        },
+        '& .MuiDataGrid-columnHeaderCenter .MuiDataGrid-menuIcon, & .MuiDataGrid-columnHeaderRight .MuiDataGrid-menuIcon': {
+          marginRight: 'auto',
+          marginLeft: -6,
+        },
         '& .MuiDataGrid-columnHeaderTitle': {
           textOverflow: 'ellipsis',
           overflow: 'hidden',
@@ -295,24 +292,21 @@ export const useStyles = makeStyles(
         '& .MuiDataGrid-cellLeft': {
           textAlign: 'left',
         },
-        '& .MuiDataGrid-cellLeft.MuiDataGrid-cellWithRenderer, & .MuiDataGrid-cellLeft.MuiDataGrid-cellEditing':
-          {
-            justifyContent: 'flex-start',
-          },
+        '& .MuiDataGrid-cellLeft.MuiDataGrid-cellWithRenderer, & .MuiDataGrid-cellLeft.MuiDataGrid-cellEditing': {
+          justifyContent: 'flex-start',
+        },
         '& .MuiDataGrid-cellRight': {
           textAlign: 'right',
         },
-        '& .MuiDataGrid-cellRight.MuiDataGrid-cellWithRenderer, & .MuiDataGrid-cellRight.MuiDataGrid-cellEditing':
-          {
-            justifyContent: 'flex-end',
-          },
+        '& .MuiDataGrid-cellRight.MuiDataGrid-cellWithRenderer, & .MuiDataGrid-cellRight.MuiDataGrid-cellEditing': {
+          justifyContent: 'flex-end',
+        },
         '& .MuiDataGrid-cellCenter': {
           textAlign: 'center',
         },
-        '& .MuiDataGrid-cellCenter.MuiDataGrid-cellWithRenderer, & .MuiDataGrid-cellCenter.MuiDataGrid-cellEditing':
-          {
-            justifyContent: 'center',
-          },
+        '& .MuiDataGrid-cellCenter.MuiDataGrid-cellWithRenderer, & .MuiDataGrid-cellCenter.MuiDataGrid-cellEditing': {
+          justifyContent: 'center',
+        },
         '& .MuiDataGrid-rowCount, & .MuiDataGrid-selectedRowCount': {
           alignItems: 'center',
           display: 'flex',

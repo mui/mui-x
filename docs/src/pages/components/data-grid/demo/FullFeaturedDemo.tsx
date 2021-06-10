@@ -186,8 +186,10 @@ function SettingsPanel(props: GridToolbarContainerProps) {
   const { onApply, type, size, theme } = props;
   const [sizeState, setSize] = React.useState<number>(size);
   const [typeState, setType] = React.useState<GridDataType>(type);
-  const [selectedPaginationValue, setSelectedPaginationValue] =
-    React.useState<number>(-1);
+  const [
+    selectedPaginationValue,
+    setSelectedPaginationValue,
+  ] = React.useState<number>(-1);
   const [activeTheme, setActiveTheme] = React.useState<GridDataThemeOption>(theme);
 
   const handleSizeChange = React.useCallback((event) => {
