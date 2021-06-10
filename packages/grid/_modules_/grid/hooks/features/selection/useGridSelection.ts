@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  GRID_PAGE_CHANGE,
   GRID_ROW_CLICK,
   GRID_ROW_SELECTED,
   GRID_SELECTION_CHANGED,
@@ -183,9 +184,16 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
     [disableSelectionOnClick, selectRowModel],
   );
 
+  const handlePageChange = React.useCallback(() => {
+    if (selectionModel) {
+      apiRef.current.setSelectionModel(selectionModel);
+    }
+  }, [apiRef, selectionModel]);
+
   useGridApiEventHandler(apiRef, GRID_ROW_CLICK, handleRowClick);
   useGridApiOptionHandler(apiRef, GRID_ROW_SELECTED, onRowSelected);
   useGridApiOptionHandler(apiRef, GRID_SELECTION_CHANGED, onSelectionModelChange);
+  useGridApiOptionHandler(apiRef, GRID_PAGE_CHANGE, handlePageChange);
 
   // TODO handle Cell Click/range selection?
   const selectionApi: GridSelectionApi = {
@@ -201,7 +209,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
       const newSelectionState = { ...state.selection };
       let hasChanged = false;
       Object.keys(newSelectionState).forEach((id: GridRowId) => {
-        if (!rowsLookup[id]) {
+        if (!rowsLookup[id] && !selectionModel) {
           delete newSelectionState[id];
           hasChanged = true;
         }
@@ -212,7 +220,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
       return state;
     });
     forceUpdate();
-  }, [rowsLookup, apiRef, setGridState, forceUpdate]);
+  }, [rowsLookup, selectionModel, apiRef, setGridState, forceUpdate]);
 
   React.useEffect(() => {
     const currentModel = Object.values(apiRef.current.getState().selection);
