@@ -27,6 +27,11 @@ const frFRGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     count > 1 ? `${count} filtres actifs` : `${count} filtre actif`,
 
+  // Export selector toolbar button text
+  // toolbarExport: 'Export',
+  // toolbarExportLabel: 'Export',
+  // toolbarExportCSV: 'Download as CSV',
+
   // Columns panel text
   columnsPanelTextFieldLabel: 'Chercher colonne',
   columnsPanelTextFieldPlaceholder: 'Titre de la colonne',

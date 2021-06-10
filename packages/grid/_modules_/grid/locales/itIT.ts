@@ -27,6 +27,11 @@ const itITGrid: Partial<GridLocaleText> = {
   toolbarFiltersTooltipActive: (count) =>
     count > 1 ? `${count} filtri attivi` : `${count} filtro attivo`,
 
+  // Export selector toolbar button text
+  // toolbarExport: 'Export',
+  // toolbarExportLabel: 'Export',
+  // toolbarExportCSV: 'Download as CSV',
+
   // Columns panel text
   columnsPanelTextFieldLabel: 'Cerca colonna',
   columnsPanelTextFieldPlaceholder: 'Titolo della colonna',
