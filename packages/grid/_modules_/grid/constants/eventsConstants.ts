@@ -82,7 +82,7 @@ export const GRID_CELL_LEAVE = 'cellLeave';
  * Fired when a `keydown` event happens in a cell. Called with a [[GridCellParams]] object.
  * @event
  */
-export const GRID_CELL_KEYDOWN = 'cellKeydown';
+export const GRID_CELL_KEY_DOWN = 'cellKeyDown';
 
 /**
  * Fired when a cell loses focus. Called with a [[GridCellParams]] object.

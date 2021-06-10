@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { GRID_ROW_CSS_CLASS } from '../../../constants/cssClassesConstants';
 import {
-  GRID_CELL_KEYDOWN,
+  GRID_CELL_KEY_DOWN,
   GRID_CELL_NAVIGATION_KEYDOWN,
   GRID_COLUMN_HEADER_KEYDOWN,
   GRID_COLUMN_HEADER_NAVIGATION_KEY_DOWN,
@@ -146,6 +146,6 @@ export const useGridKeyboard = (apiRef: GridApiRef): void => {
     [apiRef],
   );
 
-  useGridApiEventHandler(apiRef, GRID_CELL_KEYDOWN, handleCellKeyDown);
+  useGridApiEventHandler(apiRef, GRID_CELL_KEY_DOWN, handleCellKeyDown);
   useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_KEYDOWN, handleColumnHeaderKeyDown);
 };

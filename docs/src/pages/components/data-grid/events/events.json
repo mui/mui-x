@@ -42,7 +42,7 @@
     "description": "Fired when a <code>mouseleave</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
   {
-    "name": "cellKeydown",
+    "name": "cellKeyDown",
     "description": "Fired when a <code>keydown</code> event happens in a cell. Called with a <a href=\"/api/data-grid/grid-cell-params/\">GridCellParams</a> object."
   },
   {

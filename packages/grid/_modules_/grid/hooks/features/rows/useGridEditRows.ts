@@ -10,7 +10,7 @@ import {
   GRID_CELL_NAVIGATION_KEYDOWN,
   GRID_CELL_MOUSE_DOWN,
   GRID_CELL_BLUR,
-  GRID_CELL_KEYDOWN,
+  GRID_CELL_KEY_DOWN,
   GRID_CELL_VALUE_CHANGE,
 } from '../../../constants/eventsConstants';
 import { GridApiRef } from '../../../models/api/gridApiRef';
@@ -301,7 +301,7 @@ export function useGridEditRows(apiRef: GridApiRef) {
     [apiRef],
   );
 
-  useGridApiEventHandler(apiRef, GRID_CELL_KEYDOWN, handleCellKeyDown);
+  useGridApiEventHandler(apiRef, GRID_CELL_KEY_DOWN, handleCellKeyDown);
   useGridApiEventHandler(apiRef, GRID_CELL_BLUR, handleCellBlur);
   useGridApiEventHandler(apiRef, GRID_CELL_MOUSE_DOWN, preventTextSelection);
   useGridApiEventHandler(apiRef, GRID_CELL_DOUBLE_CLICK, handleDoubleClick);
