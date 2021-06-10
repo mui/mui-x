@@ -23,14 +23,14 @@ export const useGridState = (
       const updatedStateIds: string[] = [];
       const controlStateMap = apiRef.current.controlStateRef.current!;
 
-      if(hasChanged && apiRef.current.controlStateRef) {
+      if (hasChanged && apiRef.current.controlStateRef) {
         Object.keys(controlStateMap).forEach(stateId => {
           const controlState = controlStateMap[stateId];
-          const oldModel = controlState.stateSelector(apiRef.current.state);
-          const newModel = controlState.stateSelector(newState);
-          const hasSubStateChanged = oldModel !== newModel;
+          const oldState = controlState.stateSelector(apiRef.current.state);
+          const newSubState = controlState.stateSelector(newState);
+          const hasSubStateChanged = oldState !== newState;
 
-          if(updatedStateIds.length >=1 && hasSubStateChanged) {
+          if (updatedStateIds.length >= 1 && hasSubStateChanged) {
             // What if the state was updated and multiple models changed?
             // Normally it should not happen as each hook modify its own state and it should not leak
             // Events are here to forwarded to other hooks to apply changes.
@@ -41,41 +41,41 @@ export const useGridState = (
           if (hasSubStateChanged) {
             updatedStateIds.push(controlState.stateId);
 
-            if ( controlState.propOnChange && controlState.propModel) {
+            if (controlState.propOnChange && controlState.propModel) {
               // when the prop model is set we won't change the state
               // it is down to the onChange to update the model. We just pass it the new model as arg
-              controlState.propOnChange(newModel);
+              controlState.propOnChange(newSubState); //TODO convert state to model
               shouldUpdate = false;
             }
-            if(!controlState.propOnChange && controlState.propModel) {
+            if (!controlState.propOnChange && controlState.propModel) {
               // we dont' change the state and just return false;
               // how to apply propModel
-              console.log(newModel)
+              console.log(newState)
               console.log(controlState.propModel)
               // TODO fix  issue with selection state as the model is different of the state.
-              shouldUpdate = newModel === controlState.propModel;
+              shouldUpdate = newState === controlState.propModel;
             }
-            if( controlState.propOnChange && !controlState.propModel) {
+            if (controlState.propOnChange && !controlState.propModel) {
               // if the prop model is not set, we call on change before setting the model.
               // So if one mutate the model in onchange then we update it in the state
-              controlState.propOnChange(newModel);
+              controlState.propOnChange(newState);
             }
           }
 
         });
       }
-      if(!shouldUpdate) {
+      if (!shouldUpdate) {
         return false;
       }
       // We always assign it as we mutate rows for perf reason.
       apiRef.current.state = newState;
 
       if (hasChanged && apiRef.current.publishEvent) {
-        const params: GridStateChangeParams = { api: apiRef.current, state: newState };
+        const params: GridStateChangeParams = {api: apiRef.current, state: newState};
         apiRef.current.publishEvent(GRID_STATE_CHANGE, params);
 
         updatedStateIds.forEach(stateId => {
-          if(controlStateMap[stateId].onChangeCallback){
+          if (controlStateMap[stateId].onChangeCallback) {
             //TODO here you need to add the latest model that you can get from the array
             // this is meant to publish the onchange event
             controlStateMap[stateId].onChangeCallback!()
