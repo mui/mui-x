@@ -3,7 +3,7 @@ import clsx from 'clsx';
 // @ts-expect-error fixed in Material-UI v5, types definitions were added.
 import { unstable_useId as useId } from '@material-ui/core/utils';
 import {
-  GRID_COLUMN_HEADER_KEYDOWN,
+  GRID_COLUMN_HEADER_KEY_DOWN,
   GRID_COLUMN_HEADER_CLICK,
   GRID_COLUMN_HEADER_DOUBLE_CLICK,
   GRID_COLUMN_HEADER_ENTER,
@@ -100,7 +100,7 @@ export const GridColumnHeaderItem = React.memo(
         onMouseOut: publish(GRID_COLUMN_HEADER_OUT),
         onMouseEnter: publish(GRID_COLUMN_HEADER_ENTER),
         onMouseLeave: publish(GRID_COLUMN_HEADER_LEAVE),
-        onKeyDown: publish(GRID_COLUMN_HEADER_KEYDOWN),
+        onKeyDown: publish(GRID_COLUMN_HEADER_KEY_DOWN),
         onFocus: publish(GRID_COLUMN_HEADER_FOCUS),
         onBlur: publish(GRID_COLUMN_HEADER_BLUR),
       }),

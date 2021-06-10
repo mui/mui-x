@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
   GRID_COLUMN_HEADER_CLICK,
-  GRID_COLUMN_HEADER_KEYDOWN,
+  GRID_COLUMN_HEADER_KEY_DOWN,
   GRID_COLUMNS_CHANGE,
   GRID_ROWS_CLEAR,
   GRID_ROWS_SET,
@@ -294,7 +294,7 @@ export const useGridSorting = (apiRef: GridApiRef, { rows }: { rows: GridRowsPro
   }, [setGridState]);
 
   useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_CLICK, handleColumnHeaderClick);
-  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_KEYDOWN, handleColumnHeaderKeyDown);
+  useGridApiEventHandler(apiRef, GRID_COLUMN_HEADER_KEY_DOWN, handleColumnHeaderKeyDown);
   useGridApiEventHandler(apiRef, GRID_ROWS_SET, apiRef.current.applySorting);
   useGridApiEventHandler(apiRef, GRID_ROWS_CLEAR, onRowsCleared);
   useGridApiEventHandler(apiRef, GRID_ROWS_UPDATE, apiRef.current.applySorting);

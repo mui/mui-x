@@ -164,7 +164,7 @@ export const GRID_CELL_EDIT_EXIT = 'cellEditExit';
  * @ignore - do not document.
  * @event
  */
-export const GRID_CELL_NAVIGATION_KEYDOWN = 'cellNavigationKeyDown';
+export const GRID_CELL_NAVIGATION_KEY_DOWN = 'cellNavigationKeyDown';
 
 /**
  * Fired when a row is clicked. Called with a [[GridRowParams]] object.
@@ -241,7 +241,7 @@ export const GRID_COLUMN_HEADER_NAVIGATION_KEY_DOWN = 'columnHeaderNavigationKey
  * Called with a [[GridColumnHeaderParams]] object.
  * @event
  */
-export const GRID_COLUMN_HEADER_KEYDOWN = 'columnHeaderKeydown';
+export const GRID_COLUMN_HEADER_KEY_DOWN = 'columnHeaderKeyDown';
 
 /**
  * Fired when a column header is clicked. Called with a [[GridColumnHeaderParams]] object.
