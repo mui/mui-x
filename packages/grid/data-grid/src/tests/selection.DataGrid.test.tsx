@@ -282,6 +282,43 @@ describe('<DataGrid /> - Selection', () => {
       expect(getRow(0)).not.to.have.class('Mui-selected');
       expect(getRow(1)).not.to.have.class('Mui-selected');
     });
+
+    it('should apply selectionModel on page change', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            rows={[
+              {
+                id: 0,
+                brand: 'Nike',
+              },
+              {
+                id: 1,
+                brand: 'Adidas',
+              },
+              {
+                id: 2,
+                brand: 'Puma',
+              },
+            ]}
+            columns={[{ field: 'brand' }]}
+            selectionModel={[0]}
+            pageSize={2}
+          />
+        </div>,
+      );
+
+      fireEvent.click(screen.getByRole('cell', { name: 'Adidas' }));
+
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
+
+      const firstRow = getRow(0);
+      expect(firstRow).to.have.class('Mui-selected');
+
+      const secondRow = getRow(1);
+      expect(secondRow).to.not.have.class('Mui-selected');
+    });
   });
 
   describe('props: isRowSelectable', () => {

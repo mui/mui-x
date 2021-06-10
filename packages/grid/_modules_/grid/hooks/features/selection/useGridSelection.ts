@@ -209,7 +209,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
       const newSelectionState = { ...state.selection };
       let hasChanged = false;
       Object.keys(newSelectionState).forEach((id: GridRowId) => {
-        if (!rowsLookup[id] && !selectionModel) {
+        if (!rowsLookup[id] || !selectionModel) {
           delete newSelectionState[id];
           hasChanged = true;
         }

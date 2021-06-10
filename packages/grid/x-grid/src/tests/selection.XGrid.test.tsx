@@ -113,7 +113,7 @@ describe('<XGrid /> - Selection', () => {
     });
   });
 
-  it('should clean the selected ids when the rows prop changes', () => {
+  it('should clean the selected ids when the rows prop changes and no selectionModel is provided', () => {
     const { setProps } = render(<Test selectionModel={[0, 1, 2]} checkboxSelection />);
     expect(apiRef.current.getSelectedRows()).to.have.keys([0, 1, 2]);
     setProps({
@@ -123,6 +123,7 @@ describe('<XGrid /> - Selection', () => {
           brand: 'Nike',
         },
       ],
+      selectionModel: undefined,
     });
     expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
   });
