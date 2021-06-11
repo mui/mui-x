@@ -29,8 +29,6 @@ export const useGridState = (
           const controlState = controlStateMap[stateId];
           const oldState = controlState.stateSelector(apiRef.current.state);
           const newSubState = controlState.stateSelector(newState);
-          // console.log('oldState', oldState);
-          // console.log('newSubState', newSubState);
           const hasSubStateChanged = !isDeepEqual(oldState, newSubState);
 
           if (updatedStateIds.length >= 1 && hasSubStateChanged) {
@@ -45,44 +43,28 @@ export const useGridState = (
 
           if (hasSubStateChanged) {
             updatedStateIds.push(controlState.stateId);
-            const newModel = controlState.mapStateToModel
-              ? controlState.mapStateToModel(newSubState)
-              : newSubState;
-            const oldModel = controlState.mapStateToModel
-              ? controlState.mapStateToModel(oldState)
-              : oldState;
 
             if (controlState.propOnChange) {
               // when the prop model is set we won't change the state
               // it is down to the onChange to update the model. We just pass it the new model as arg
-              if (
-                controlState.propModel !== undefined &&
-                !isDeepEqual(controlState.propModel, newModel)
-              ) {
-                console.log('Control model changed: ', newModel);
+              const newModel = controlState.mapStateToModel
+                ? controlState.mapStateToModel(newSubState)
+                : newSubState;
+
+              if (!isDeepEqual(controlState.propModel, newModel)) {
                 controlState.propOnChange(newModel);
-                shouldUpdate = false;
-              } else {
-                console.log('onChange, but no model', controlState.propModel);
-                controlState.propOnChange(newModel);
+                shouldUpdate = controlState.propModel === undefined;
               }
-              // else {
-              //   shouldUpdate= !isDeepEqual(oldModel, newModel);
-              // }
               // if the prop model is not set, we call on change before setting the model.
               // So if one mutate the model in onchange then we update it in the state
             } else if (!controlState.propOnChange && controlState.propModel !== undefined) {
               // we dont' change the state and just return false;
               // how to apply propModel
-              console.log('No onChange, but a model', controlState.propModel);
+              const oldModel = controlState.mapStateToModel
+                ? controlState.mapStateToModel(oldState)
+                : oldState;
               shouldUpdate = !isDeepEqual(oldModel, controlState.propModel);
             }
-            // if (controlState.propOnChange && !controlState.propModel) {
-            //   // if the prop model is not set, we call on change before setting the model.
-            //   // So if one mutate the model in onchange then we update it in the state
-            //   console.log(newModel)
-            //   controlState.propOnChange(newModel);
-            // }
           }
         });
       }

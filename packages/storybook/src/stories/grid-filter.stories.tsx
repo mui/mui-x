@@ -776,7 +776,7 @@ export function SimpleModelWithOnChangeControlFilter() {
     getInitialGridFilterState(),
   );
   const handleFilterChange = React.useCallback((params) => {
-    // setFilterModel(params.model);
+    setFilterModel(params.filterModel);
   }, []);
   const [simpleSelectionModel, setSelectionModel] = React.useState<GridSelectionModel>([]);
   const handleSelectionChange = React.useCallback((params) => {
@@ -825,7 +825,10 @@ export function SimpleModelControlFilter() {
   ]);
 
   const [simpleFilterModel, setFilterModel] = React.useState<GridFilterModel>(
-    getInitialGridFilterState(),
+    {
+      items: [{id:1, value:'lon', operatorValue:'contains', columnField: 'name'}],
+      linkOperator: GridLinkOperator.And,
+    }
   );
 
   return <XGrid rows={simpleRows} columns={simpleColumns} filterModel={simpleFilterModel} />;
@@ -853,7 +856,7 @@ export function SimpleOnChangeControlFilter() {
 
   // const [simpleFilterModel, setFilterModel] = React.useState<GridFilterModel>(getInitialGridFilterState());
   const handleFilterChange = React.useCallback((params) => {
-    setFilterModel(params.model);
+    console.log('Filter model changed to', params);
   }, []);
 
   return (
@@ -884,10 +887,6 @@ export function ControlSelection() {
 
   const [selectionModel, setSelectionModel] = React.useState<any>([0]);
   const handleSelectionChange = React.useCallback((newModel) => {
-    if (newModel.length) {
-      setSelectionModel([...newModel, 2]);
-      return;
-    }
     setSelectionModel(newModel);
   }, []);
 
@@ -900,5 +899,54 @@ export function ControlSelection() {
         onSelectionModelChange={handleSelectionChange}
       />
     </div>
+  );
+}
+export function NoControlSelection() {
+  const [storyState] = React.useState({
+    rows: [
+      {
+        id: 0,
+        brand: 'Nike',
+        isPublished: false,
+      },
+      {
+        id: 1,
+        brand: 'Adidas',
+        isPublished: true,
+      },
+      {
+        id: 2,
+        brand: 'Puma',
+        isPublished: true,
+      },
+    ],
+    columns: [{ field: 'brand' }, { field: 'isPublished', type: 'boolean' }],
+  });
+
+  return (
+    <div style={{ width: 300, height: 300 }}>
+      <XGrid
+        columns={storyState.columns}
+        rows={storyState.rows}
+      />
+    </div>
+  );
+}
+export function LargeControlSelection() {
+  const { data } = useDemoData({ rowLength: 50000, dataSet:'Commodity',maxColumns:100});
+
+  const [selectionModel, setSelectionModel] = React.useState<any>([ ]);
+  const handleSelectionChange = React.useCallback((newModel) => {
+    setSelectionModel(newModel);
+  }, []);
+
+  return (
+      <XGrid
+        columns={data.columns}
+        rows={data.rows}
+        selectionModel={selectionModel}
+        onSelectionModelChange={handleSelectionChange}
+        checkboxSelection
+      />
   );
 }

@@ -54,7 +54,6 @@ describe('<DataGrid /> - Control', () => {
 
       expect(getRow(0)).to.not.have.class('Mui-selected');
       expect(getRow(1)).to.have.class('Mui-selected');
-      console.log('click 0');
       fireEvent.click(getCell(0, 0));
       expect(getRow(0)).to.not.have.class('Mui-selected');
     });
@@ -82,7 +81,6 @@ describe('<DataGrid /> - Control', () => {
         const [selectionModel, setSelectionModel] = React.useState<any>([0]);
         const handleSelectionChange = React.useCallback((newModel) => {
           if (newModel.length) {
-            console.log('Adding row 2 to selection', newModel);
             setSelectionModel([...newModel, 2]);
             return;
           }
@@ -107,7 +105,6 @@ describe('<DataGrid /> - Control', () => {
 
       expect(getRow(0)).to.have.class('Mui-selected');
       fireEvent.click(getCell(1, 0));
-      console.log('Click row 1');
       expect(getRow(0)).to.not.have.class('Mui-selected');
       expect(getRow(1)).to.have.class('Mui-selected');
       expect(getRow(2)).to.have.class('Mui-selected');

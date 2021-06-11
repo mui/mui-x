@@ -136,7 +136,6 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
       setGridState((state) => {
         const selectionState: GridSelectionState = deSelectOthers ? {} : { ...state.selection };
-        console.log('selectableIds', selectableIds);
         selectableIds.forEach((id) => {
           if (isSelected) {
             selectionState[id] = id;
