@@ -1,6 +1,5 @@
 import * as React from 'react';
-// @ts-expect-error need to migrate helpers to TypeScript
-import { createClientRenderStrictMode, screen } from 'test/utils';
+import { createClientRenderStrictMode } from 'test/utils';
 import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
 import { getCell, getColumnValues } from 'test/utils/helperFn';
