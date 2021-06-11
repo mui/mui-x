@@ -47,7 +47,15 @@ describe('<DataGrid /> - Control', () => {
       </div>
     );
   };
+
   describe.only('control Selection', () => {
+
+    it('should update the selection state when neither the model nor the onChange are set', () => {
+      render(<TestCase />);
+      fireEvent.click(getCell(0, 0));
+      expect(getRow(0)).to.have.class('Mui-selected');
+    });
+
     it('should not update the selection model when the selectionModelProp is set', () => {
       const selectionModel: GridSelectionModel = [1];
       render(<TestCase selectionModel={selectionModel} />);
@@ -56,12 +64,6 @@ describe('<DataGrid /> - Control', () => {
       expect(getRow(1)).to.have.class('Mui-selected');
       fireEvent.click(getCell(0, 0));
       expect(getRow(0)).to.not.have.class('Mui-selected');
-    });
-
-    it('should update the selection state when neither the model nor the onChange are set', () => {
-      render(<TestCase />);
-      fireEvent.click(getCell(0, 0));
-      expect(getRow(0)).to.have.class('Mui-selected');
     });
 
     it('should update the selection state when the model is not set, but the onChange is set', () => {

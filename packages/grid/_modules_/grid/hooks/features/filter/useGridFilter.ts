@@ -186,15 +186,7 @@ export const useGridFilter = (
       });
       applyFilters();
     },
-    [
-      logger,
-      setGridState,
-      apiRef,
-      getFilterModelParams,
-      applyFilters,
-      options.disableMultipleColumnsFiltering,
-      filterableColumnsIds,
-    ],
+    [logger, setGridState, apiRef, applyFilters, options.disableMultipleColumnsFiltering, filterableColumnsIds],
   );
 
   const deleteFilter = React.useCallback(
@@ -216,7 +208,7 @@ export const useGridFilter = (
       applyFilters();
       // apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
-    [apiRef, applyFilters, getFilterModelParams, logger, setGridState, upsertFilter],
+    [applyFilters, logger, setGridState, upsertFilter],
   );
 
   const showFilterPanel = React.useCallback(
@@ -250,7 +242,7 @@ export const useGridFilter = (
       applyFilters();
       // apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
-    [apiRef, applyFilters, getFilterModelParams, logger, setGridState],
+    [applyFilters, logger, setGridState],
   );
 
   const clearFilterModel = React.useCallback(() => {
@@ -267,7 +259,7 @@ export const useGridFilter = (
       model.items.forEach((item) => upsertFilter(item));
       // apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams());
     },
-    [apiRef, applyFilterLinkOperator, clearFilterModel, getFilterModelParams, logger, upsertFilter],
+    [applyFilterLinkOperator, clearFilterModel, logger, upsertFilter],
   );
 
   const getVisibleRowModels = React.useCallback(
@@ -339,7 +331,7 @@ export const useGridFilter = (
       // TODO here we don't need the callback arg.
       // Should we also call applyFilters?
       onChangeCallback: () =>
-        apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams()),
+        apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams().filterModel),
     });
   }, [apiRef, getFilterModelParams, props.filterModel, props.onFilterModelChange]);
 

@@ -24,9 +24,6 @@ export function useControlState(apiRef: GridApiRef, props) {
   const registerControlState = React.useCallback((controlStateItem: ControlStateItem<any, any>) => {
     const { stateId, stateSelector, ...others } = controlStateItem;
 
-    // if (controlStateMapRef.current[stateId]) {
-    //   throw new Error(`${stateId} is already registered in the controlStateMap.`)
-    // }
     controlStateMapRef.current[stateId] = {
       ...others,
       stateId,

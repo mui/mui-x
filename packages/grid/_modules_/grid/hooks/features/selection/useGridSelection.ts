@@ -248,12 +248,12 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
         const model = Object.values(selectionState);
         return model;
       },
-      onChangeCallback: (model) => {
-        // const params: GridSelectionModelChangeParams = {
-        //   selectionModel: Object.values(apiRef!.current!.getState<GridSelectionState>('selection')),
-        // };
+      onChangeCallback: () => {
+        const params: GridSelectionModelChangeParams = {
+          selectionModel: Object.values(apiRef!.current!.getState<GridSelectionState>('selection')),
+        };
         // We don't emit GRID_ROW_SELECTED on each row as it would be too consuming for large set of data.
-        // apiRef.current.publishEvent(GRID_SELECTION_CHANGED, model);
+        apiRef.current.publishEvent(GRID_SELECTION_CHANGED, params.selectionModel);
       },
     });
   }, [apiRef, props.onSelectionModelChange, props.selectionModel]);
