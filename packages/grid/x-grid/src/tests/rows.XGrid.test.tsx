@@ -441,17 +441,21 @@ describe('<XGrid /> - Rows', () => {
 
     describe('scrollToIndexes', () => {
       it('should scroll correctly to the beginning of a page when it is at the middle of this page', () => {
-        render(<TestCaseVirtualization hideFooter headerHeight={50} rowHeight={50} pageSize={4} />);
+        render(<TestCaseVirtualization hideFooter headerHeight={50} nbCols={2} rowHeight={50} />);
         const gridWindow = document.querySelector('.MuiDataGrid-window')!;
         const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
-        // Ensure that there's one offset row
+        // Ensure that there's no offset row
         expect(renderingZone.style.transform).to.equal('translate3d(0px, 0px, 0px)');
         // Scroll to the rowIndex=5, which is the 2nd row in page 1
         gridWindow.scrollTop = 202;
         gridWindow.dispatchEvent(new Event('scroll'));
+        // Round the value to prevent inconsistencies accross different browsers
+        const offset = Math.round(
+          Number(renderingZone.style.transform.match(/\dpx, ([-\d.]+)px, \dpx/)![1]),
+        );
         // Ensure that there's one offset row
-        expect(renderingZone.style.transform).to.equal('translate3d(0px, -35px, 0px)');
-        // Scroll to rowIndex=3, which is the 1st row in page 1
+        expect(offset).to.equal(-50);
+        // Scroll to rowIndex=4, which is the 1st row in page 1
         apiRef.current.scrollToIndexes({ rowIndex: 4, colIndex: 0 });
         gridWindow.dispatchEvent(new Event('scroll'));
         // Ensure that there's no offset row
