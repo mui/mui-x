@@ -330,18 +330,18 @@ export const useGridFilter = (
     apiRef.current.applyFilters();
   }, [apiRef, logger]);
 
-  React.useEffect(()=> {
+  React.useEffect(() => {
     apiRef.current.registerControlState({
       stateId: 'filter',
       propModel: props.filterModel,
       propOnChange: props.onFilterModelChange,
-      stateSelector: state => state.filter,
+      stateSelector: (state) => state.filter,
       // TODO here we don't need the callback arg.
       // Should we also call applyFilters?
-      onChangeCallback: ()=> apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams())
-
+      onChangeCallback: () =>
+        apiRef.current.publishEvent(GRID_FILTER_MODEL_CHANGE, getFilterModelParams()),
     });
-  } ,[apiRef, getFilterModelParams, props.filterModel, props.onFilterModelChange])
+  }, [apiRef, getFilterModelParams, props.filterModel, props.onFilterModelChange]);
 
   useGridApiEventHandler(apiRef, GRID_COLUMNS_UPDATED, onColUpdated);
 };

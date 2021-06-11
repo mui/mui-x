@@ -99,7 +99,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
         selectionModel: Object.values(selectionState),
       };
       apiRef.current.publishEvent(GRID_ROW_SELECTED, rowSelectedParam);
-      apiRef.current.publishEvent(GRID_SELECTION_CHANGED, selectionChangeParam);
+      // apiRef.current.publishEvent(GRID_SELECTION_CHANGED, selectionChangeParam);
     },
     [
       isRowSelectable,
@@ -136,6 +136,7 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
 
       setGridState((state) => {
         const selectionState: GridSelectionState = deSelectOthers ? {} : { ...state.selection };
+        console.log('selectableIds', selectableIds);
         selectableIds.forEach((id) => {
           if (isSelected) {
             selectionState[id] = id;
@@ -147,12 +148,6 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
       });
 
       forceUpdate();
-
-      const params: GridSelectionModelChangeParams = {
-        selectionModel: Object.values(apiRef!.current!.getState<GridSelectionState>('selection')),
-      };
-      // We don't emit GRID_ROW_SELECTED on each row as it would be too consuming for large set of data.
-      apiRef.current.publishEvent(GRID_SELECTION_CHANGED, params);
     },
     [
       isRowSelectable,
@@ -241,11 +236,26 @@ export const useGridSelection = (apiRef: GridApiRef, props: GridComponentProps):
     forceUpdate();
   }, [apiRef, setGridState, forceUpdate, isRowSelectable]);
 
-  React.useEffect(()=> {
-    apiRef.current.registerControlState({
+  React.useEffect(() => {
+    apiRef.current.registerControlState<GridSelectionModel, GridSelectionState>({
       stateId: 'selectionModel',
       propModel: props.selectionModel,
       propOnChange: props.onSelectionModelChange,
-      stateSelector: state => state.selection});
-  } ,[apiRef, props.onSelectionModelChange, props.selectionModel])
+      stateSelector: (state) => state.selection,
+      mapStateToModel: (selectionState) => {
+        if (!selectionState) {
+          return [];
+        }
+        const model = Object.values(selectionState);
+        return model;
+      },
+      onChangeCallback: (model) => {
+        // const params: GridSelectionModelChangeParams = {
+        //   selectionModel: Object.values(apiRef!.current!.getState<GridSelectionState>('selection')),
+        // };
+        // We don't emit GRID_ROW_SELECTED on each row as it would be too consuming for large set of data.
+        // apiRef.current.publishEvent(GRID_SELECTION_CHANGED, model);
+      },
+    });
+  }, [apiRef, props.onSelectionModelChange, props.selectionModel]);
 };

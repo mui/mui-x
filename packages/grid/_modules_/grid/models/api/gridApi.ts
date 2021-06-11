@@ -20,7 +20,7 @@ import { GridLocaleTextApi } from './gridLocaleTextApi';
 import { GridCsvExportApi } from './gridCsvExportApi';
 
 export interface GridControlStateApi {
-  registerControlState: (controlState: ControlStateItem)=> void;
+  registerControlState: <TModel, TState>(controlState: ControlStateItem<TModel, TState>) => void;
 }
 
 /**
