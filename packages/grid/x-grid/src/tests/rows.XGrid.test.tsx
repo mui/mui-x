@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { createClientRenderStrictMode } from 'test/utils';
+// @ts-expect-error need to migrate helpers to TypeScript
+import { createClientRenderStrictMode, screen } from 'test/utils';
 import { useFakeTimers } from 'sinon';
 import { expect } from 'chai';
 import { getCell, getColumnValues } from 'test/utils/helperFn';
@@ -436,6 +437,26 @@ describe('<XGrid /> - Rows', () => {
         expect(isVirtualized).to.equal(false);
         const virtualRowsCount = apiRef!.current!.getState().containerSizes!.virtualRowsCount;
         expect(virtualRowsCount).to.equal(7);
+      });
+    });
+
+    describe('scrollToIndexes', () => {
+      it('should scroll correctly to the beginning of a page when it is at the middle of this page', () => {
+        render(<TestCaseVirtualization pageSize={3} />);
+        const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+        const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
+        // Ensure that there's one offset row
+        expect(renderingZone.style.transform).to.equal('translate3d(0px, 0px, 0px)');
+        // Scroll to the rowIndex=4, which is the 2nd row in page 1
+        gridWindow.scrollTop = 192;
+        gridWindow.dispatchEvent(new Event('scroll'));
+        // Ensure that there's one offset row
+        expect(renderingZone.style.transform).to.equal('translate3d(0px, -55px, 0px)');
+        // Scroll to rowIndex=3, which is the 1st row in page 1
+        apiRef.current.scrollToIndexes({ rowIndex: 3, colIndex: 0 });
+        gridWindow.dispatchEvent(new Event('scroll'));
+        // Ensure that there's no offset row
+        expect(renderingZone.style.transform).to.equal('translate3d(0px, 0px, 0px)');
       });
     });
   });
