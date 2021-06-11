@@ -75,7 +75,7 @@ export const GridScrollArea = React.memo(function GridScrollArea(props: ScrollAr
   return dragging ? (
     <div
       ref={rootRef}
-      className={clsx('MuiDataGrid-scrollArea', `MuiDataGrid-scrollArea-${scrollDirection}`)}
+      className={clsx('MuiDataGrid-scrollArea', `MuiDataGrid-scrollArea--${scrollDirection}`)}
       onDragOver={handleDragOver}
     />
   ) : null;

@@ -135,13 +135,13 @@ export const GridColumnHeaderItem = React.memo(
     }
 
     const cssClasses = clsx(
-      column.headerAlign === 'center' && 'MuiDataGrid-columnHeaderCenter',
-      column.headerAlign === 'right' && 'MuiDataGrid-columnHeaderRight',
+      column.headerAlign === 'center' && 'MuiDataGrid-columnHeader--alignCenter',
+      column.headerAlign === 'right' && 'MuiDataGrid-columnHeader--alignRight',
       {
-        'MuiDataGrid-columnHeaderSortable': column.sortable,
-        'MuiDataGrid-columnHeaderMoving': isDragging,
-        'MuiDataGrid-columnHeaderSorted': isColumnSorted,
-        'MuiDataGrid-columnHeaderNumeric': isColumnNumeric,
+        'MuiDataGrid-columnHeader--sortable': column.sortable,
+        'MuiDataGrid-columnHeader--moving': isDragging,
+        'MuiDataGrid-columnHeader--sorted': isColumnSorted,
+        'MuiDataGrid-columnHeader--numeric': isColumnNumeric,
         'MuiDataGrid-withBorder': showColumnRightBorder,
       },
       ...classNames,
@@ -207,7 +207,7 @@ export const GridColumnHeaderItem = React.memo(
         {...mouseEventsHandlers}
       >
         <div
-          className="MuiDataGrid-columnHeader-draggable"
+          className="MuiDataGrid-columnHeaderDraggableContainer"
           draggable={!disableColumnReorder}
           {...draggableEventHandlers}
         >

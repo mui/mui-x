@@ -52,7 +52,7 @@ const useStyles = makeStyles(
       marginBottom: 2,
     },
   },
-  { name: 'MuiDataGridFilterForm' },
+  { name: 'MuiGridFilterForm' },
 );
 
 export function GridFilterForm(props: GridFilterFormProps) {

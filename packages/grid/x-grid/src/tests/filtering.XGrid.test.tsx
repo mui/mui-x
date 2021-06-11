@@ -414,7 +414,7 @@ describe('<XGrid /> - Filter', () => {
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       clock.tick(100);
       fireEvent.click(addButton);
-      const filterForms = document.querySelectorAll(`.MuiDataGridFilterForm-root`);
+      const filterForms = document.querySelectorAll(`.MuiGridFilterForm-root`);
       expect(filterForms).to.have.length(2);
     });
   });

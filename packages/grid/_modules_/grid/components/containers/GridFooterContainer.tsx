@@ -7,6 +7,6 @@ export const GridFooterContainer = React.forwardRef<HTMLDivElement, GridFooterCo
   function GridFooterContainer(props: GridFooterContainerProps, ref) {
     const { className, ...other } = props;
 
-    return <div ref={ref} className={clsx('MuiDataGrid-footer', className)} {...other} />;
+    return <div ref={ref} className={clsx('MuiGridFooterContainer', className)} {...other} />;
   },
 );

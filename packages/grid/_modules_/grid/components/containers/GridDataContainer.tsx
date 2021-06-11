@@ -1,6 +1,5 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { GRID_DATA_CONTAINER_CSS_CLASS } from '../../constants/cssClassesConstants';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import {
   gridDataContainerSizesSelector,
@@ -24,11 +23,5 @@ export function GridDataContainer(props: GridDataContainerProps) {
     style.minHeight = dataContainerSizes?.height!;
   }
 
-  return (
-    <div
-      className={clsx('MuiDataGrid-dataContainer', GRID_DATA_CONTAINER_CSS_CLASS, className)}
-      style={style}
-      {...other}
-    />
-  );
+  return <div className={clsx('MuiDataGrid-dataContainer', className)} style={style} {...other} />;
 }
