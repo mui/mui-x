@@ -40,7 +40,7 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const checked = event.target.checked;
       setChecked(checked);
-      apiRef!.current.selectRows(visibleRowIds, checked);
+      apiRef!.current.selectRows(visibleRowIds, checked, !event.target.indeterminate);
     };
 
     const tabIndex = tabIndexState !== null && tabIndexState.field === props.field ? 0 : -1;
