@@ -247,5 +247,5 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
     if (totalSelectedRows > Object.keys(visibleRowIds).length) {
       selectRows(visibleRowIds, true, true);
     }
-  }, [totalSelectedRows, apiRef, selectRows, visibleRowIds]);
+  }, [totalSelectedRows, visibleRowIds, selectRows]);
 };
