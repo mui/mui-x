@@ -11,7 +11,7 @@ import { gridEditRowsStateSelector } from '../hooks/features/rows/gridEditRowsSe
 import { gridSelectionStateSelector } from '../hooks/features/selection/gridSelectionSelector';
 import { renderStateSelector } from '../hooks/features/virtualization/renderingStateSelector';
 import { optionsSelector } from '../hooks/utils/optionsSelector';
-import { GridApiContext } from './GridApiContext';
+import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { GridDataContainer } from './containers/GridDataContainer';
 import { GridEmptyCell } from './cell/GridEmptyCell';
 import { GridRenderingZone } from './GridRenderingZone';
@@ -28,7 +28,7 @@ type ViewportType = React.ForwardRefExoticComponent<React.RefAttributes<HTMLDivE
 
 export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
   (props, renderingZoneRef) => {
-    const apiRef = React.useContext(GridApiContext);
+    const apiRef = useGridApiContext();
 
     const options = useGridSelector(apiRef, optionsSelector);
     const containerSizes = useGridSelector(apiRef, gridContainerSizesSelector);

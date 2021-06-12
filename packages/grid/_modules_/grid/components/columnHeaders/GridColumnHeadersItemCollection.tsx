@@ -14,7 +14,7 @@ import { gridDensityHeaderHeightSelector } from '../../hooks/features/density/de
 import { gridColumnMenuStateSelector } from '../../hooks/features/columnMenu/columnMenuSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridColumns } from '../../models/colDef/gridColDef';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridColumnHeaderItem } from './GridColumnHeaderItem';
 
 export interface GridColumnHeadersItemCollectionProps {
@@ -23,7 +23,7 @@ export interface GridColumnHeadersItemCollectionProps {
 
 export function GridColumnHeadersItemCollection(props: GridColumnHeadersItemCollectionProps) {
   const { columns } = props;
-  const apiRef = React.useContext(GridApiContext);
+  const apiRef = useGridApiContext();
   const options = useGridSelector(apiRef, optionsSelector);
   const sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector);
   const filterColumnLookup = useGridSelector(apiRef, filterGridColumnLookupSelector);

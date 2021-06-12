@@ -17,7 +17,7 @@ import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridTranslationKeys } from '../../models/api/gridLocaleTextApi';
 import { GridFilterItem } from '../../models/gridFilterItem';
 import { createTheme } from '../../utils/utils';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 
 const defaultTheme = createTheme();
 const useStyles = makeStyles(
@@ -33,7 +33,7 @@ const useStyles = makeStyles(
 export const GridToolbarFilterButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
   function GridToolbarFilterButton(props, ref) {
     const classes = useStyles();
-    const apiRef = React.useContext(GridApiContext);
+    const apiRef = useGridApiContext();
     const options = useGridSelector(apiRef, optionsSelector);
     const counter = useGridSelector(apiRef, filterGridItemsCounterSelector);
     const activeFilters = useGridSelector(apiRef, activeGridFilterItemsSelector);

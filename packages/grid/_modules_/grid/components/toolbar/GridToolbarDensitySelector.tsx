@@ -8,7 +8,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { gridDensityValueSelector } from '../../hooks/features/density/densitySelector';
 import { GridDensity, GridDensityTypes } from '../../models/gridDensity';
 import { isHideMenuKey, isTabKey } from '../../utils/keyboardUtils';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
 import { GridDensityOption } from '../../models/api/gridDensityApi';
@@ -16,7 +16,7 @@ import { GridMenu } from '../menu/GridMenu';
 
 export const GridToolbarDensitySelector = React.forwardRef<HTMLButtonElement, ButtonProps>(
   function GridToolbarDensitySelector(props, ref) {
-    const apiRef = React.useContext(GridApiContext);
+    const apiRef = useGridApiContext();
     const options = useGridSelector(apiRef, optionsSelector);
     const densityValue = useGridSelector(apiRef, gridDensityValueSelector);
     const densityButtonId = useId();

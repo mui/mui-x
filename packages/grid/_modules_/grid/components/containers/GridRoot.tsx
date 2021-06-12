@@ -9,7 +9,7 @@ import { useStyles } from './GridRootStyles';
 import { visibleGridColumnsLengthSelector } from '../../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector } from '../../hooks/features/core/useGridSelector';
 import { useGridState } from '../../hooks/features/core/useGridState';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 
 export type GridRootProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -18,7 +18,7 @@ export const GridRoot = React.forwardRef<HTMLDivElement, GridRootProps>(function
   ref,
 ) {
   const classes = useStyles();
-  const apiRef = React.useContext(GridApiContext)!;
+  const apiRef = useGridApiContext();
   const rootProps = React.useContext(GridRootPropsContext)!;
   const { className } = rootProps;
   const { children, className: classNameProp, ...other } = props;

@@ -3,7 +3,7 @@ import { GridColumnsHeader } from './components/columnHeaders/GridColumnHeaders'
 import { GridColumnsContainer } from './components/containers/GridColumnsContainer';
 import { GridMainContainer } from './components/containers/GridMainContainer';
 import { GridWindow } from './components/containers/GridWindow';
-import { GridApiContext } from './components/GridApiContext';
+import { useGridApiContext } from './hooks/root/useGridApiContext';
 import { GridAutoSizer } from './components/GridAutoSizer';
 import { GridViewport } from './components/GridViewport';
 import { Watermark } from './components/Watermark';
@@ -13,7 +13,7 @@ import { GridOverlays } from './GridOverlays';
 import { ElementSize } from './models/elementSize';
 
 export function GridBody() {
-  const apiRef = React.useContext(GridApiContext)!;
+  const apiRef = useGridApiContext();
   const rootProps = React.useContext(GridRootPropsContext)!;
 
   const columnsHeaderRef = React.useRef<HTMLDivElement>(null);
