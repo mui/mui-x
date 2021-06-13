@@ -109,4 +109,36 @@ describe('<XGrid /> - Export', () => {
     render(<TestCaseCSVExport />);
     expect(apiRef.current.getDataAsCsv()).to.equal('Brand\r\nNike\r\nSamsung 24"" (inches)');
   });
+
+  it('getDataAsCsv should allow to change the delimiter', () => {
+    const TestCaseCSVExport = () => {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <XGrid
+            {...baselineProps}
+            apiRef={apiRef}
+            columns={[{ field: 'brand', headerName: 'Brand' }]}
+            rows={[
+              {
+                id: 0,
+                brand: 'Nike',
+              },
+              {
+                id: 1,
+                brand: 'Adidas',
+              },
+            ]}
+          />
+        </div>
+      );
+    };
+
+    render(<TestCaseCSVExport />);
+    expect(
+      apiRef.current.getDataAsCsv({
+        delimiter: ';',
+      }),
+    ).to.equal('Brand\r\nNike\r\nAdidas');
+  });
 });
