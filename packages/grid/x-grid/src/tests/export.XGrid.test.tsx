@@ -85,7 +85,9 @@ describe('<XGrid /> - Export', () => {
     };
 
     render(<TestCaseCSVExport />);
-    expect(apiRef.current.getDataAsCsv()).to.equal(['id,Brand', '0,Nike', '1,"Adidas,Puma"'].join('\r\n'));
+    expect(apiRef.current.getDataAsCsv()).to.equal(
+      ['id,Brand', '0,Nike', '1,"Adidas,Puma"'].join('\r\n'),
+    );
   });
 
   it('getDataAsCsv should work with double quotes', () => {

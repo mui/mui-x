@@ -31,13 +31,16 @@ export function serialiseRow(
   return mappedRow;
 }
 
-export function buildCSV(
-  columns: GridColumns,
-  rows: Map<GridRowId, GridRowModel>,
-  selectedRows: Record<string, GridRowId>,
-  getCellValue: (id: GridRowId, field: string) => GridCellValue,
-  delimiterCharacter: GridExportCsvDelimiter = ',',
-): string {
+type BuildCSVOptions = {
+  columns: GridColumns;
+  rows: Map<GridRowId, GridRowModel>;
+  selectedRows: Record<string, GridRowId>;
+  getCellValue: (id: GridRowId, field: string) => GridCellValue;
+  delimiterCharacter: GridExportCsvDelimiter;
+};
+
+export function buildCSV(options: BuildCSVOptions): string {
+  const { columns, rows, selectedRows, getCellValue, delimiterCharacter } = options;
   let rowIds = [...rows.keys()];
   const selectedRowIds = Object.keys(selectedRows);
 

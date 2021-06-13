@@ -21,13 +21,13 @@ export const useGridCsvExport = (apiRef: GridApiRef): void => {
     (options?: GridExportCsvOptions): string => {
       logger.debug(`Get data as CSV`);
 
-      return buildCSV(
-        visibleColumns,
-        visibleSortedRows,
-        selection,
-        apiRef.current.getCellValue,
-        options?.delimiter,
-      );
+      return buildCSV({
+        columns: visibleColumns,
+        rows: visibleSortedRows,
+        selectedRows: selection,
+        getCellValue: apiRef.current.getCellValue,
+        delimiterCharacter: options?.delimiter || ',',
+      });
     },
     [logger, visibleColumns, visibleSortedRows, selection, apiRef],
   );
