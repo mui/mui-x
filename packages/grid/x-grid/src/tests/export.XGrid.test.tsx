@@ -15,6 +15,8 @@ describe('<XGrid /> - Export', () => {
 
   let apiRef: GridApiRef;
 
+  const columns = [{ field: 'id' }, { field: 'brand', headerName: 'Brand' }];
+
   it('getDataAsCsv should work with basic strings', () => {
     const TestCaseCSVExport = () => {
       apiRef = useGridApiRef();
@@ -23,7 +25,7 @@ describe('<XGrid /> - Export', () => {
           <XGrid
             {...baselineProps}
             apiRef={apiRef}
-            columns={[{ field: 'brand', headerName: 'Brand' }]}
+            columns={columns}
             rows={[
               {
                 id: 0,
@@ -44,14 +46,18 @@ describe('<XGrid /> - Export', () => {
     };
 
     render(<TestCaseCSVExport />);
-    expect(apiRef.current.getDataAsCsv()).to.equal('Brand\r\nNike\r\nAdidas\r\nPuma');
+    expect(apiRef.current.getDataAsCsv()).to.equal(
+      ['id,Brand', '0,Nike', '1,Adidas', '2,Puma'].join('\r\n'),
+    );
     apiRef.current.updateRows([
       {
         id: 1,
         brand: 'Adidas,Reebok',
       },
     ]);
-    expect(apiRef.current.getDataAsCsv()).to.equal('Brand\r\nNike\r\n"Adidas,Reebok"\r\nPuma');
+    expect(apiRef.current.getDataAsCsv()).to.equal(
+      ['id,Brand', '0,Nike', '1,"Adidas,Reebok"', '2,Puma'].join('\r\n'),
+    );
   });
 
   it('getDataAsCsv should work with comma', () => {
@@ -62,7 +68,7 @@ describe('<XGrid /> - Export', () => {
           <XGrid
             {...baselineProps}
             apiRef={apiRef}
-            columns={[{ field: 'brand', headerName: 'Brand' }]}
+            columns={columns}
             rows={[
               {
                 id: 0,
@@ -79,7 +85,7 @@ describe('<XGrid /> - Export', () => {
     };
 
     render(<TestCaseCSVExport />);
-    expect(apiRef.current.getDataAsCsv()).to.equal('Brand\r\nNike\r\n"Adidas,Puma"');
+    expect(apiRef.current.getDataAsCsv()).to.equal(['id,Brand', '0,Nike', '1,"Adidas,Puma"'].join('\r\n'));
   });
 
   it('getDataAsCsv should work with double quotes', () => {
@@ -90,7 +96,7 @@ describe('<XGrid /> - Export', () => {
           <XGrid
             {...baselineProps}
             apiRef={apiRef}
-            columns={[{ field: 'brand', headerName: 'Brand' }]}
+            columns={columns}
             rows={[
               {
                 id: 0,
@@ -107,7 +113,9 @@ describe('<XGrid /> - Export', () => {
     };
 
     render(<TestCaseCSVExport />);
-    expect(apiRef.current.getDataAsCsv()).to.equal('Brand\r\nNike\r\nSamsung 24"" (inches)');
+    expect(apiRef.current.getDataAsCsv()).to.equal(
+      ['id,Brand', '0,Nike', '1,Samsung 24"" (inches)'].join('\r\n'),
+    );
   });
 
   it('getDataAsCsv should allow to change the delimiter', () => {
@@ -118,7 +126,7 @@ describe('<XGrid /> - Export', () => {
           <XGrid
             {...baselineProps}
             apiRef={apiRef}
-            columns={[{ field: 'brand', headerName: 'Brand' }]}
+            columns={columns}
             rows={[
               {
                 id: 0,
@@ -139,6 +147,6 @@ describe('<XGrid /> - Export', () => {
       apiRef.current.getDataAsCsv({
         delimiter: ';',
       }),
-    ).to.equal('Brand\r\nNike\r\nAdidas');
+    ).to.equal(['id;Brand', '0;Nike', '1;Adidas'].join('\r\n'));
   });
 });
