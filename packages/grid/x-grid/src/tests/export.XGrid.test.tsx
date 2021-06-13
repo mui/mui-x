@@ -15,7 +15,7 @@ describe('<XGrid /> - Export', () => {
 
   let apiRef: GridApiRef;
 
-  it('getDataAsCsv should return the correct string representation of the grid data', () => {
+  it('getDataAsCsv should work with basic strings', () => {
     const TestCaseCSVExport = () => {
       apiRef = useGridApiRef();
       return (
@@ -54,7 +54,7 @@ describe('<XGrid /> - Export', () => {
     expect(apiRef.current.getDataAsCsv()).to.equal('Brand\r\nNike\r\n"Adidas,Reebok"\r\nPuma');
   });
 
-  it('getDataAsCsv should return the correct string representation of the grid data if cell contains comma', () => {
+  it('getDataAsCsv should work with comma', () => {
     const TestCaseCSVExport = () => {
       apiRef = useGridApiRef();
       return (
@@ -82,7 +82,7 @@ describe('<XGrid /> - Export', () => {
     expect(apiRef.current.getDataAsCsv()).to.equal('Brand\r\nNike\r\n"Adidas,Puma"');
   });
 
-  it('getDataAsCsv should return the correct string representation of the grid data if cell contains comma and double quotes', () => {
+  it('getDataAsCsv should work with double quotes', () => {
     const TestCaseCSVExport = () => {
       apiRef = useGridApiRef();
       return (
@@ -94,7 +94,11 @@ describe('<XGrid /> - Export', () => {
             rows={[
               {
                 id: 0,
-                brand: 'Nike,"Adidas",Puma',
+                brand: 'Nike',
+              },
+              {
+                id: 1,
+                brand: 'Samsung 24" (inches)',
               },
             ]}
           />
@@ -103,6 +107,6 @@ describe('<XGrid /> - Export', () => {
     };
 
     render(<TestCaseCSVExport />);
-    expect(apiRef.current.getDataAsCsv()).to.equal('Brand\r\n"Nike,""Adidas"",Puma"');
+    expect(apiRef.current.getDataAsCsv()).to.equal('Brand\r\nNike\r\nSamsung 24"" (inches)');
   });
 });
