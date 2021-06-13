@@ -1,8 +1,7 @@
 /**
  * Available CSV delimiter characters used to separate fields.
- * @default ','
  */
-export type CsvDelimiterCharacter = ',' | ';';
+export type GridExportCsvDelimiter = ',' | ';';
 
 /**
  * The options to apply on the CSV export.
@@ -12,7 +11,7 @@ export interface GridExportCsvOptions {
    * The character used to separate fields.
    * @default ','
    */
-  delimiter?: CsvDelimiterCharacter;
+  delimiter?: GridExportCsvDelimiter;
   /**
    * The string used as the file name.
    * @default `document.title`

@@ -5,9 +5,9 @@ import {
   GridRowId,
   GridRowModel,
 } from '../../../../models';
-import { CsvDelimiterCharacter } from '../../../../models/gridExport';
+import { GridExportCsvDelimiter } from '../../../../models/gridExport';
 
-const serialiseCellValue = (value: any, delimiterCharacter: CsvDelimiterCharacter) => {
+const serialiseCellValue = (value: any, delimiterCharacter: GridExportCsvDelimiter) => {
   if (typeof value === 'string') {
     const formattedValue = value.replace(/"/g, '""');
     return formattedValue.includes(delimiterCharacter) ? `"${formattedValue}"` : formattedValue;
@@ -20,7 +20,7 @@ export function serialiseRow(
   id: GridRowId,
   columns: GridColumns,
   getCellValue: (id: GridRowId, field: string) => GridCellValue,
-  delimiterCharacter: CsvDelimiterCharacter,
+  delimiterCharacter: GridExportCsvDelimiter,
 ): Array<string> {
   const mappedRow: string[] = [];
   columns.forEach(
@@ -36,7 +36,7 @@ export function buildCSV(
   rows: Map<GridRowId, GridRowModel>,
   selectedRows: Record<string, GridRowId>,
   getCellValue: (id: GridRowId, field: string) => GridCellValue,
-  delimiterCharacter: CsvDelimiterCharacter = ',',
+  delimiterCharacter: GridExportCsvDelimiter = ',',
 ): string {
   let rowIds = [...rows.keys()];
   const selectedRowIds = Object.keys(selectedRows);
