@@ -2,6 +2,10 @@ import { GridFilterInputValue } from '../../components/panel/filterPanel/GridFil
 import { GridFilterItem } from '../gridFilterItem';
 import { GridFilterOperator } from '../gridFilterOperator';
 
+function escapeRegExp(string: string): string {
+  return string.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+}
+
 export const getGridStringOperators: () => GridFilterOperator[] = () => [
   {
     value: 'contains',
@@ -10,7 +14,7 @@ export const getGridStringOperators: () => GridFilterOperator[] = () => [
         return null;
       }
 
-      const filterRegex = new RegExp(filterItem.value, 'i');
+      const filterRegex = new RegExp(escapeRegExp(filterItem.value), 'i');
       return ({ value }): boolean => {
         return filterRegex.test((value && value.toString()) || '');
       };
@@ -40,7 +44,7 @@ export const getGridStringOperators: () => GridFilterOperator[] = () => [
         return null;
       }
 
-      const filterRegex = new RegExp(`^${filterItem.value}.*$`, 'i');
+      const filterRegex = new RegExp(`^${escapeRegExp(filterItem.value)}.*$`, 'i');
       return ({ value }): boolean => {
         return filterRegex.test((value && value.toString()) || '');
       };
@@ -54,7 +58,7 @@ export const getGridStringOperators: () => GridFilterOperator[] = () => [
         return null;
       }
 
-      const filterRegex = new RegExp(`.*${filterItem.value}$`, 'i');
+      const filterRegex = new RegExp(`.*${escapeRegExp(filterItem.value)}$`, 'i');
       return ({ value }): boolean => {
         return filterRegex.test((value && value.toString()) || '');
       };
