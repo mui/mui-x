@@ -18,7 +18,6 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
     const apiRef = React.useContext(GridApiContext);
     const visibleRowIds = useGridSelector(apiRef, visibleSortedGridRowIdsSelector);
     const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
-    const element = apiRef!.current.getColumnHeaderElement(props.field);
 
     const totalSelectedRows = useGridSelector(apiRef, selectedGridRowsCountSelector);
     const totalRows = useGridSelector(apiRef, gridRowCountSelector);
@@ -45,10 +44,11 @@ export const GridHeaderCheckbox = React.forwardRef<HTMLInputElement, GridColumnH
 
     const tabIndex = tabIndexState !== null && tabIndexState.field === props.field ? 0 : -1;
     React.useLayoutEffect(() => {
+      const element = apiRef!.current.getColumnHeaderElement(props.field);
       if (tabIndex === 0 && element) {
         element!.tabIndex = -1;
       }
-    }, [element, tabIndex]);
+    }, [tabIndex, apiRef, props.field]);
 
     const handleKeyDown = React.useCallback(
       (event) => {
