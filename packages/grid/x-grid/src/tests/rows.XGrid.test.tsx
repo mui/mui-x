@@ -440,7 +440,7 @@ describe('<XGrid /> - Rows', () => {
     });
 
     describe('scrollToIndexes', () => {
-      it('should scroll correctly to the beginning of a page when it is at the middle of this page', () => {
+      it('should scroll correctly to the previous index', () => {
         render(<TestCaseVirtualization hideFooter headerHeight={50} nbCols={2} rowHeight={50} />);
         const gridWindow = document.querySelector('.MuiDataGrid-window')!;
         const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
@@ -449,7 +449,7 @@ describe('<XGrid /> - Rows', () => {
         // Scroll to the rowIndex=5, which is the 2nd row in page 1
         gridWindow.scrollTop = 202;
         gridWindow.dispatchEvent(new Event('scroll'));
-        // Round the value to prevent inconsistencies accross different browsers
+        // Round the value to prevent inconsistencies across different browsers
         const offset = Math.round(
           Number(renderingZone.style.transform.match(/\dpx, ([-\d.]+)px, \dpx/)![1]),
         );
@@ -460,6 +460,29 @@ describe('<XGrid /> - Rows', () => {
         gridWindow.dispatchEvent(new Event('scroll'));
         // Ensure that there's no offset row
         expect(renderingZone.style.transform).to.equal('translate3d(0px, 0px, 0px)');
+      });
+
+      it('should scroll correctly when the given index is partially visible at the bottom', () => {
+        render(<TestCaseVirtualization hideFooter headerHeight={50} nbCols={2} rowHeight={50} />);
+        const gridWindow = document.querySelector('.MuiDataGrid-window')!;
+        const renderingZone = document.querySelector('.MuiDataGrid-renderingZone')! as HTMLElement;
+        // Ensure that there's no offset row
+        expect(renderingZone.style.transform).to.equal('translate3d(0px, 0px, 0px)');
+        // Scroll enough so rowIndex=7 becomes 50% visible at the bottom of the viewport
+        gridWindow.scrollTop = 125;
+        gridWindow.dispatchEvent(new Event('scroll'));
+        // Round the value to prevent inconsistencies accross different browsers
+        const offset = Math.round(
+          Number(renderingZone.style.transform.match(/\dpx, ([-\d.]+)px, \dpx/)![1]),
+        );
+        // Ensure that there're 2 fully hidden rows and 1 row 50% hidden (50+50+25)
+        expect(offset).to.equal(-125);
+        apiRef.current.scrollToIndexes({ rowIndex: 7, colIndex: 0 });
+        gridWindow.dispatchEvent(new Event('scroll'));
+        const offset2 = Math.round(
+          Number(renderingZone.style.transform.match(/\dpx, ([-\d.]+)px, \dpx/)![1]),
+        );
+        expect(offset2).to.equal(-12);
       });
     });
   });

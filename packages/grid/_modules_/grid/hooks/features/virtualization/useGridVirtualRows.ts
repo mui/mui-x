@@ -233,10 +233,14 @@ export const useGridVirtualRows = (apiRef: GridApiRef): void => {
         const currentRowPage = elementIndex / gridState.containerSizes!.viewportPageSize;
         const viewportHeight = gridState.containerSizes!.renderingZoneScrollHeight;
         const scrollPosition = currentRowPage * viewportHeight;
-        const pageHeight = gridState.containerSizes!.viewportPageSize * rowHeight;
+
+        // The amount of space taken by the first partially visible row
+        const partialRowHeight = windowRef.current!.scrollTop % rowHeight;
 
         isRowIndexAbove = windowRef.current!.scrollTop > scrollPosition;
-        isRowIndexBelow = scrollPosition + rowHeight > windowRef.current!.scrollTop + pageHeight;
+        isRowIndexBelow =
+          scrollPosition + rowHeight >
+          windowRef.current!.scrollTop + viewportHeight + partialRowHeight;
 
         if (isRowIndexAbove) {
           scrollCoordinates.top = scrollPosition; // We put it at the top of the page
