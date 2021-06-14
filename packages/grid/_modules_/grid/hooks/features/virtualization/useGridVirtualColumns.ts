@@ -40,19 +40,30 @@ export const useGridVirtualColumns = (
   const visibleColumnCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
 
-  const getColumnIdxFromScroll = React.useCallback(
-    (left: number) => {
-      const positions = columnsMeta.positions;
-
+  const getColumnIdxFromScroll = React.useMemo(() => {
+    // Since we have an ordered list of positions, we can use a binary search
+    // to find the intersecting column
+    const _getColumnIdxFromScroll = (
+      offset: number,
+      sliceStart = 0,
+      sliceEnd = columnsMeta.positions.length,
+    ): number => {
       if (!visibleColumnCount) {
         return -1;
       }
-      let colIdx = [...positions].reverse().findIndex((p) => left >= p);
-      colIdx = positions.length - 1 - colIdx;
-      return colIdx;
-    },
-    [columnsMeta.positions, visibleColumnCount],
-  );
+
+      if (sliceStart >= sliceEnd) {
+        return sliceStart;
+      }
+
+      const pivot = sliceStart + Math.floor((sliceEnd - sliceStart) / 2);
+      const itemOffset = columnsMeta.positions[pivot];
+      return offset <= itemOffset
+        ? _getColumnIdxFromScroll(offset, sliceStart, pivot)
+        : _getColumnIdxFromScroll(offset, pivot + 1, sliceEnd);
+    };
+    return _getColumnIdxFromScroll;
+  }, [columnsMeta.positions, visibleColumnCount]);
 
   const getColumnFromScroll = React.useCallback(
     (left: number) => {
