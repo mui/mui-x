@@ -49,7 +49,7 @@ describe('<DataGrid /> - Components', () => {
     });
   });
 
-  it('should throw if a component is used without proving the context', function test() {
+  it('should throw if a component is used without providing the context', function test() {
     // TODO is this fixed?
     if (!/jsdom/.test(window.navigator.userAgent)) {
       // can't catch render errors in the browser for unknown reason
