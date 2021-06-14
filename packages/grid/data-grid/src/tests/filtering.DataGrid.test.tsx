@@ -184,6 +184,14 @@ describe('<DataGrid /> - Filter', () => {
         expect(getColumnValues()).to.deep.equal(expected);
       });
     });
+
+    ['contains', 'startsWith', 'endsWith'].forEach(( operatorValue) => {
+      it('should escape RegExp characters if applied as filter values', () => {
+        const regExpToEscape = '[-[]{}()*+?.,\\^$|#s]';
+        render(<TestCase value={regExpToEscape} operatorValue={operatorValue} />);
+        expect(getColumnValues()).to.deep.equal([]);
+      });
+    });
   });
 
   describe('numeric operators', () => {
