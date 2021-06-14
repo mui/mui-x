@@ -2,8 +2,8 @@ import { GridFilterInputValue } from '../../components/panel/filterPanel/GridFil
 import { GridFilterItem } from '../gridFilterItem';
 import { GridFilterOperator } from '../gridFilterOperator';
 
-function escapeRegExp(string: string): string {
-  return string.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+function escapeRegExp(value: string): string {
+  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 }
 
 export const getGridStringOperators: () => GridFilterOperator[] = () => [
