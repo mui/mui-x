@@ -185,7 +185,7 @@ describe('<DataGrid /> - Filter', () => {
       });
     });
 
-    ['contains', 'startsWith', 'endsWith'].forEach(( operatorValue) => {
+    ['contains', 'startsWith', 'endsWith'].forEach((operatorValue) => {
       it('should escape RegExp characters if applied as filter values', () => {
         const regExpToEscape = '[-[]{}()*+?.,\\^$|#s]';
         render(<TestCase value={regExpToEscape} operatorValue={operatorValue} />);
