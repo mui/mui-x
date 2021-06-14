@@ -23,7 +23,7 @@ export interface GridRowProps {
   children: React.ReactNode;
 }
 
-export const GridRow = (props: GridRowProps) => {
+export function GridRow(props: GridRowProps) {
   const { selected, id, className, rowIndex, children } = props;
   const ariaRowIndex = rowIndex + 2; // 1 for the header row and 1 as it's 1 based
   const apiRef = useGridApiContext();
@@ -80,6 +80,4 @@ export const GridRow = (props: GridRowProps) => {
       {children}
     </div>
   );
-};
-
-GridRow.displayName = 'GridRow';
+}

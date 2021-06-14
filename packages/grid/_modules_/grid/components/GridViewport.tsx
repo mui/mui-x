@@ -27,7 +27,7 @@ import {
 type ViewportType = React.ForwardRefExoticComponent<React.RefAttributes<HTMLDivElement>>;
 
 export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
-  (props, renderingZoneRef) => {
+  function GridViewport(props, renderingZoneRef) {
     const apiRef = useGridApiContext();
 
     const options = useGridSelector(apiRef, optionsSelector);
@@ -101,4 +101,3 @@ export const GridViewport: ViewportType = React.forwardRef<HTMLDivElement, {}>(
     );
   },
 );
-GridViewport.displayName = 'GridViewport';
