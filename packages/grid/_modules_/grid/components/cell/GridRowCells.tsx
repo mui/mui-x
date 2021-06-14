@@ -9,7 +9,7 @@ import {
   GridEditRowProps,
 } from '../../models/index';
 import { GridCell, GridCellProps } from './GridCell';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { isFunction } from '../../utils/index';
 import { GRID_CSS_CLASS_PREFIX } from '../../constants/cssClassesConstants';
 
@@ -52,7 +52,7 @@ export const GridRowCells = React.memo(function GridRowCells(props: RowCellsProp
     cellClassName,
     ...other
   } = props;
-  const apiRef = React.useContext(GridApiContext);
+  const apiRef = useGridApiContext();
   const cellsProps = columns.slice(firstColIdx, lastColIdx + 1).map((column, colIdx) => {
     const colIndex = firstColIdx + colIdx;
     const isLastColumn = colIndex === columns.length - 1;

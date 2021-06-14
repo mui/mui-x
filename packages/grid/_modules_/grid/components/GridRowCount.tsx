@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { GridApiContext } from './GridApiContext';
+import { useGridApiContext } from '../hooks/root/useGridApiContext';
 
 interface RowCountProps {
   rowCount: number;
@@ -12,7 +12,7 @@ type GridRowCountProps = React.HTMLAttributes<HTMLDivElement> & RowCountProps;
 export const GridRowCount = React.forwardRef<HTMLDivElement, GridRowCountProps>(
   function GridRowCount(props, ref) {
     const { className, rowCount, visibleRowCount, ...other } = props;
-    const apiRef = React.useContext(GridApiContext);
+    const apiRef = useGridApiContext();
 
     if (rowCount === 0) {
       return null;

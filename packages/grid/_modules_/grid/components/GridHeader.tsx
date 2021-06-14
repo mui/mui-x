@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { GridApiContext } from './GridApiContext';
+import { useGridApiContext } from '../hooks/root/useGridApiContext';
 
 export const GridHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   function GridHeader(props, ref) {
-    const apiRef = React.useContext(GridApiContext);
+    const apiRef = useGridApiContext();
 
     const PreferencesPanelComponent = apiRef?.current.components.PreferencesPanel;
     const PreferencesPanelElement = PreferencesPanelComponent && (

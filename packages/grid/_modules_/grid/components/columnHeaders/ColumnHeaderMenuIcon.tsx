@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import IconButton from '@material-ui/core/IconButton';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 import { GridColDef } from '../../models/colDef/gridColDef';
 
 export interface ColumnHeaderMenuIconProps {
@@ -14,7 +14,7 @@ export interface ColumnHeaderMenuIconProps {
 
 export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps) => {
   const { column, open, columnMenuId, columnMenuButtonId, iconButtonRef } = props;
-  const apiRef = React.useContext(GridApiContext);
+  const apiRef = useGridApiContext();
   const ColumnMenuIcon = apiRef!.current.components.ColumnMenuIcon!;
 
   const handleMenuIconClick = React.useCallback(

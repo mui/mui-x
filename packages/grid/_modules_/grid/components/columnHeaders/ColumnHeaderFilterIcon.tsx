@@ -4,7 +4,7 @@ import Badge from '@material-ui/core/Badge';
 import Tooltip from '@material-ui/core/Tooltip';
 import { gridPreferencePanelStateSelector } from '../../hooks/features/preferencesPanel/gridPreferencePanelSelector';
 import { GridPreferencePanelsValue } from '../../hooks/features/preferencesPanel/gridPreferencePanelsValue';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 
 export interface ColumnHeaderFilterIconProps {
   counter?: number;
@@ -12,7 +12,7 @@ export interface ColumnHeaderFilterIconProps {
 
 export function ColumnHeaderFilterIcon(props: ColumnHeaderFilterIconProps) {
   const { counter } = props;
-  const apiRef = React.useContext(GridApiContext);
+  const apiRef = useGridApiContext();
 
   const FilteredColumnIconElement = apiRef!.current.components.ColumnFilteredIcon!;
 

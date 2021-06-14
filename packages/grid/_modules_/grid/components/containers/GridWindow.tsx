@@ -7,7 +7,7 @@ import {
 } from '../../hooks/features/density/densitySelector';
 import { gridDataContainerHeightSelector } from '../../hooks/root/gridContainerSizesSelector';
 import { optionsSelector } from '../../hooks/utils/optionsSelector';
-import { GridApiContext } from '../GridApiContext';
+import { useGridApiContext } from '../../hooks/root/useGridApiContext';
 
 export interface GridWindowProps extends React.HTMLAttributes<HTMLDivElement> {
   size: { width: number; height: number };
@@ -18,7 +18,7 @@ export const GridWindow = React.forwardRef<HTMLDivElement, GridWindowProps>(func
   ref,
 ) {
   const { className, size, ...other } = props;
-  const apiRef = React.useContext(GridApiContext);
+  const apiRef = useGridApiContext();
   const { autoHeight } = useGridSelector(apiRef, optionsSelector);
   const headerHeight = useGridSelector(apiRef, gridDensityHeaderHeightSelector);
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);

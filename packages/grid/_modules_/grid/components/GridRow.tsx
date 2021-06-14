@@ -11,7 +11,7 @@ import {
 import { GridRowId } from '../models';
 import { isFunction } from '../utils';
 import { gridDensityRowHeightSelector } from '../hooks/features/density';
-import { GridApiContext } from './GridApiContext';
+import { useGridApiContext } from '../hooks/root/useGridApiContext';
 import { useGridSelector } from '../hooks/features/core/useGridSelector';
 import { optionsSelector } from '../hooks/utils/optionsSelector';
 
@@ -26,7 +26,7 @@ export interface GridRowProps {
 export function GridRow(props: GridRowProps) {
   const { selected, id, className, rowIndex, children } = props;
   const ariaRowIndex = rowIndex + 2; // 1 for the header row and 1 as it's 1 based
-  const apiRef = React.useContext(GridApiContext);
+  const apiRef = useGridApiContext();
   const rowHeight = useGridSelector(apiRef, gridDensityRowHeightSelector);
   const { classes, getRowClassName } = useGridSelector(apiRef, optionsSelector);
 
