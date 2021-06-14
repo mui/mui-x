@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { ControlStateItem } from '../../hooks/features/core/useControlState';
 import {
   GridEventEmitter,
   GridSubscribeEventOptions,
 } from '../../utils/eventEmitter/GridEventEmitter';
+import { ControlStateItem } from '../controlStateItem';
 
 /**
  * The core API interface that is available in the grid `apiRef`.

@@ -7,6 +7,7 @@ import { getGridDefaultColumnTypes } from './colDef/gridDefaultColumnTypes';
 import { GridDensity, GridDensityTypes } from './gridDensity';
 import { GridEditRowsModel } from './gridEditRowModel';
 import { GridFeatureMode, GridFeatureModeConstant } from './gridFeatureMode';
+import { GridRowId } from './gridRows';
 import { Logger } from './logger';
 import { GridCellParams } from './params/gridCellParams';
 import { GridColumnHeaderParams } from './params/gridColumnHeaderParams';
@@ -404,9 +405,9 @@ export interface GridOptions {
   onResize?: (param: GridResizeParams) => void;
   /**
    * Callback fired when the selection state of one or multiple rows changes.
-   * @param param With all properties from [[SelectionChangeParams]].
+   * @selectionModel with all the row ids [[GridRowId[]]].
    */
-  onSelectionModelChange?: (param: GridSelectionModelChangeParams) => void;
+  onSelectionModelChange?: (selectionModel: GridRowId[]) => void;
   /**
    * Callback fired when the sort model changes before a column is sorted.
    * @param param With all properties from [[GridSortModelParams]].

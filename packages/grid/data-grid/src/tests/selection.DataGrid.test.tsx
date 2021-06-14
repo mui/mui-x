@@ -239,13 +239,13 @@ describe('<DataGrid /> - Selection', () => {
       }
       const { setProps } = render(<Demo selectionModel={[0]} />);
       expect(onSelectionModelChange.callCount).to.equal(1);
-      expect(onSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equals([0]);
+      expect(onSelectionModelChange.lastCall.args[0]).to.deep.equals([0]);
       setProps({ selectionModel: [0, 1] });
       expect(onSelectionModelChange.callCount).to.equal(2);
-      expect(onSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equals([0, 1]);
+      expect(onSelectionModelChange.lastCall.args[0]).to.deep.equals([0, 1]);
       setProps({ selectionModel: [0, 1] });
       expect(onSelectionModelChange.callCount).to.equal(2);
-      expect(onSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equals([0, 1]);
+      expect(onSelectionModelChange.lastCall.args[0]).to.deep.equals([0, 1]);
     });
 
     it('should filter out unselectable rows when the selectionModel prop changes', () => {

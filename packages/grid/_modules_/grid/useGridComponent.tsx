@@ -38,7 +38,7 @@ export const useGridComponent = (apiRef: GridApiRef, props: GridComponentProps) 
   useLoggerFactory(apiRef, props);
   useApi(apiRef);
   useErrorHandler(apiRef, props);
-  useControlState(apiRef, props);
+  useControlState(apiRef);
   useGridScrollbarSizeDetector(apiRef, props);
   useOptionsProp(apiRef, props);
   useEvents(apiRef);

@@ -1,10 +1,14 @@
 import * as React from 'react';
-import { createClientRenderStrictMode, fireEvent } from 'test/utils';
+import {
+  createClientRenderStrictMode,
+  // @ts-ignore
+  fireEvent
+} from 'test/utils';
 import { expect } from 'chai';
-import { XGrid, GridComponentProps, GridToolbar, isDeepEqual } from '@material-ui/x-grid';
-import { getCell, getColumnValues, getRow } from 'test/utils/helperFn';
-import { GridSelectionModel } from '../../../_modules_/grid/models/gridSelectionModel';
+import { XGrid, GridComponentProps } from '@material-ui/x-grid';
+import { getCell, getRow } from 'test/utils/helperFn';
 import { spy } from 'sinon';
+import { GridSelectionModel } from '../../../_modules_/grid/models/gridSelectionModel';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -48,7 +52,7 @@ describe('<DataGrid /> - Control', () => {
     );
   };
 
-  describe.only('control Selection', () => {
+  describe('control Selection', () => {
 
     it('should update the selection state when neither the model nor the onChange are set', () => {
       render(<TestCase />);
@@ -72,7 +76,8 @@ describe('<DataGrid /> - Control', () => {
 
       fireEvent.click(getCell(0, 0));
       expect(getRow(0)).to.have.class('Mui-selected');
-
+console.log(onModelChange.firstCall.args[0])
+console.log(onModelChange.lastCall.args[0])
       expect(onModelChange.callCount).to.equal(1);
       expect(onModelChange.firstCall.firstArg).to.deep.equal([0]);
     });

@@ -79,8 +79,8 @@ export function HandleSelection() {
 
   const [selectionModel, setSelectionModel] = React.useState<GridRowId[]>([]);
   const handleSelection = React.useCallback(
-    (params: GridSelectionModelChangeParams) => {
-      setSelectionModel(params.selectionModel);
+    (model) => {
+      setSelectionModel(model);
     },
     [setSelectionModel],
   );
