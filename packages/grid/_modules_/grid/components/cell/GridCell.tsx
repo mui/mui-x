@@ -40,7 +40,7 @@ export interface GridCellProps {
   tabIndex: 0 | -1;
 }
 
-export const GridCell = React.memo((props: GridCellProps) => {
+export const GridCell = React.memo(function GridCell(props: GridCellProps) {
   const {
     align,
     className,
@@ -178,5 +178,3 @@ export const GridCell = React.memo((props: GridCellProps) => {
     </div>
   );
 });
-
-GridCell.displayName = 'GridCell';
