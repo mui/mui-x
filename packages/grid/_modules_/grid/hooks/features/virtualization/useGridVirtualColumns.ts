@@ -13,7 +13,6 @@ import { useGridApiMethod } from '../../root/useGridApiMethod';
 import { useGridApiEventHandler } from '../../root/useGridApiEventHandler';
 import {
   gridColumnsMetaSelector,
-  visibleGridColumnsLengthSelector,
   visibleGridColumnsSelector,
 } from '../columns/gridColumnsSelector';
 import { useGridSelector } from '../core/useGridSelector';
@@ -27,6 +26,28 @@ type UseVirtualColumnsReturnType = [
   UpdateRenderedColsFnType,
 ];
 
+// Uses binary search to avoid looping through all positions
+function getIdxFromScroll(
+  offset: number,
+  positions: number[],
+  sliceStart = 0,
+  sliceEnd = positions.length,
+): number {
+  if (positions.length <= 0) {
+    return -1;
+  }
+
+  if (sliceStart >= sliceEnd) {
+    return sliceStart;
+  }
+
+  const pivot = sliceStart + Math.floor((sliceEnd - sliceStart) / 2);
+  const itemOffset = positions[pivot];
+  return offset <= itemOffset
+    ? getIdxFromScroll(offset, positions, sliceStart, pivot)
+    : getIdxFromScroll(offset, positions, pivot + 1, sliceEnd);
+}
+
 export const useGridVirtualColumns = (
   options: GridOptions,
   apiRef: GridApiRef,
@@ -37,33 +58,12 @@ export const useGridVirtualColumns = (
   const containerPropsRef = React.useRef<GridContainerProps | null>(null);
   const lastScrollLeftRef = React.useRef<number>(0);
   const columnsMeta = useGridSelector(apiRef, gridColumnsMetaSelector);
-  const visibleColumnCount = useGridSelector(apiRef, visibleGridColumnsLengthSelector);
   const visibleColumns = useGridSelector(apiRef, visibleGridColumnsSelector);
 
-  const getColumnIdxFromScroll = React.useMemo(() => {
-    // Since we have an ordered list of positions, we can use a binary search
-    // to find the intersecting column
-    const binSearchColumnIdxFromScroll = (
-      offset: number,
-      sliceStart = 0,
-      sliceEnd = columnsMeta.positions.length,
-    ): number => {
-      if (!visibleColumnCount) {
-        return -1;
-      }
-
-      if (sliceStart >= sliceEnd) {
-        return sliceStart;
-      }
-
-      const pivot = sliceStart + Math.floor((sliceEnd - sliceStart) / 2);
-      const itemOffset = columnsMeta.positions[pivot];
-      return offset <= itemOffset
-        ? binSearchColumnIdxFromScroll(offset, sliceStart, pivot)
-        : binSearchColumnIdxFromScroll(offset, pivot + 1, sliceEnd);
-    };
-    return binSearchColumnIdxFromScroll;
-  }, [columnsMeta.positions, visibleColumnCount]);
+  const getColumnIdxFromScroll = React.useCallback(
+    (left: number) => getIdxFromScroll(left, columnsMeta.positions),
+    [columnsMeta.positions],
+  );
 
   const getColumnFromScroll = React.useCallback(
     (left: number) => {
