@@ -317,7 +317,36 @@ describe('<DataGrid /> - Selection', () => {
       expect(firstRow).to.have.class('Mui-selected');
 
       const secondRow = getRow(1);
-      expect(secondRow).to.not.have.class('Mui-selected');
+      expect(secondRow).not.to.have.class('Mui-selected');
+    });
+
+    it('should pass the new id to the onSelectionModelChange props', () => {
+      const handleSelectionModelChange = spy();
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            rows={[
+              {
+                id: 0,
+                brand: 'Nike',
+              },
+              {
+                id: 1,
+                brand: 'Adidas',
+              },
+            ]}
+            columns={[{ field: 'brand' }]}
+            selectionModel={[0]}
+            pageSize={1}
+            onSelectionModelChange={handleSelectionModelChange}
+          />
+        </div>,
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: /next page/i }));
+      fireEvent.click(screen.getByRole('cell', { name: 'Adidas' }));
+
+      expect(handleSelectionModelChange.lastCall.args[0].selectionModel).to.deep.equal([0, 1]);
     });
   });
 

@@ -113,7 +113,7 @@ describe('<XGrid /> - Selection', () => {
     });
   });
 
-  it('should clean the selected ids when the rows prop changes and no selectionModel is provided', () => {
+  it('should clean the selection when the rows prop changes and no selectionModel is provided', () => {
     const { setProps } = render(<Test selectionModel={[0, 1, 2]} checkboxSelection />);
     expect(apiRef.current.getSelectedRows()).to.have.keys([0, 1, 2]);
     setProps({
@@ -125,6 +125,6 @@ describe('<XGrid /> - Selection', () => {
       ],
       selectionModel: undefined,
     });
-    expect(apiRef.current.getSelectedRows()).to.have.keys([0]);
+    expect(Object.values(apiRef.current.getSelectedRows().keys())).to.deep.equal([]);
   });
 });

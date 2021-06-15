@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  GRID_PAGE_CHANGE,
   GRID_ROW_CLICK,
   GRID_ROW_SELECTED,
   GRID_SELECTION_CHANGED,
@@ -63,6 +62,10 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
       logger.debug(`Selecting row ${id}`);
 
       setGridState((state) => {
+        if (selectionModel) {
+          return state;
+        }
+
         let selectionState: GridSelectionState = { ...state.selection };
         const allowMultiSelect =
           allowMultipleOverride ||
@@ -95,8 +98,16 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
         data: row,
         isSelected: selectionState[id] !== undefined,
       };
+
+      let newSelectionModel = Object.values(selectionState);
+      if (selectionModel) {
+        newSelectionModel = selectionModel.includes(rowModelParams.id)
+          ? selectionModel.filter((selection) => selection !== rowModelParams.id)
+          : [...selectionModel, rowModelParams.id];
+      }
+
       const selectionChangeParam: GridSelectionModelChangeParams = {
-        selectionModel: Object.values(selectionState),
+        selectionModel: newSelectionModel,
       };
       apiRef.current.publishEvent(GRID_ROW_SELECTED, rowSelectedParam);
       apiRef.current.publishEvent(GRID_SELECTION_CHANGED, selectionChangeParam);
@@ -107,6 +118,7 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
       apiRef,
       logger,
       checkboxSelection,
+      selectionModel,
       forceUpdate,
       setGridState,
     ],
@@ -184,16 +196,9 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
     [disableSelectionOnClick, selectRowModel],
   );
 
-  const handlePageChange = React.useCallback(() => {
-    if (selectionModel) {
-      apiRef.current.setSelectionModel(selectionModel);
-    }
-  }, [apiRef, selectionModel]);
-
   useGridApiEventHandler(apiRef, GRID_ROW_CLICK, handleRowClick);
   useGridApiOptionHandler(apiRef, GRID_ROW_SELECTED, onRowSelected);
   useGridApiOptionHandler(apiRef, GRID_SELECTION_CHANGED, onSelectionModelChange);
-  useGridApiOptionHandler(apiRef, GRID_PAGE_CHANGE, handlePageChange);
 
   // TODO handle Cell Click/range selection?
   const selectionApi: GridSelectionApi = {
@@ -206,6 +211,10 @@ export const useGridSelection = (apiRef: GridApiRef): void => {
 
   React.useEffect(() => {
     setGridState((state) => {
+      if (selectionModel) {
+        return state;
+      }
+
       const newSelectionState = { ...state.selection };
       let hasChanged = false;
       Object.keys(newSelectionState).forEach((id: GridRowId) => {
