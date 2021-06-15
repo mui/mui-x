@@ -12,7 +12,7 @@ export const GridToolbarContainer = React.forwardRef<HTMLDivElement, GridToolbar
     }
 
     return (
-      <div ref={ref} className={clsx('MuiGridToolbarContainer', className)} {...other}>
+      <div ref={ref} className={clsx('MuiDataGrid-toolbarContainer', className)} {...other}>
         {children}
       </div>
     );

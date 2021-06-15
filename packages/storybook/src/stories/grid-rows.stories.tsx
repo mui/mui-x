@@ -314,25 +314,29 @@ const rows: any = [
     id: 2,
     col1: 'XGrid',
     col2: 'is Awesome',
-    col3: 'In publishing and graphic design, Lorem ipsum is a placeholder text or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
+    col3:
+      'In publishing and graphic design, Lorem ipsum is a placeholder text or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
   },
   {
     id: 3,
     col1: 'Material-UI',
     col2: 'is Amazing',
-    col3: 'Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
+    col3:
+      'Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
   },
   {
     id: 4,
     col1: 'Hello',
     col2: 'World',
-    col3: 'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form.',
+    col3:
+      'In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form.',
   },
   {
     id: 5,
     col1: 'XGrid',
     col2: 'is Awesome',
-    col3: 'Typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
+    col3:
+      'Typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.',
   },
   {
     id: 6,
@@ -422,8 +426,7 @@ const baselineEditProps = {
   ],
 };
 function validateEmail(email) {
-  const re =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
 }
 
