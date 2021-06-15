@@ -16,7 +16,9 @@ interface SkeletonRowCellsProps {
   showCellRightBorder: boolean;
 }
 
-export const GridSkeletonRowCells = React.memo((props: SkeletonRowCellsProps) => {
+export const GridSkeletonRowCells = React.memo(function GridSkeletonRowCells(
+  props: SkeletonRowCellsProps,
+) {
   const {
     columns,
     firstColIdx,
@@ -57,4 +59,3 @@ export const GridSkeletonRowCells = React.memo((props: SkeletonRowCellsProps) =>
     </React.Fragment>
   );
 });
-GridSkeletonRowCells.displayName = 'GridSkeletonRowCells';

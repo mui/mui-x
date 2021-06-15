@@ -11,7 +11,7 @@ export interface GridSkeletonCellProps {
   width: number;
 }
 
-export const GridSkeletonCell = React.memo((props: GridSkeletonCellProps) => {
+export const GridSkeletonCell = React.memo(function GridSkeletonCell(props: GridSkeletonCellProps) {
   const { colIndex, height, rowIndex, showRightBorder, width } = props;
 
   const cellRef = React.useRef<HTMLDivElement>(null);
@@ -41,5 +41,3 @@ export const GridSkeletonCell = React.memo((props: GridSkeletonCellProps) => {
     </div>
   );
 });
-
-GridSkeletonCell.displayName = 'GridSkeletonCell';
