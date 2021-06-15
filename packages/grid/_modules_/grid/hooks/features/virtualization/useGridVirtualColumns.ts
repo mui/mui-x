@@ -26,7 +26,7 @@ type UseVirtualColumnsReturnType = [
   UpdateRenderedColsFnType,
 ];
 
-// Uses binary search to avoid looping through all positions
+// Uses binary search to avoid looping through all possible positions
 function getIdxFromScroll(
   offset: number,
   positions: number[],
@@ -35,17 +35,15 @@ function getIdxFromScroll(
 ): number {
   if (positions.length <= 0) {
     return -1;
-  }
-
-  if (sliceStart >= sliceEnd) {
+  } else if (sliceStart >= sliceEnd) {
     return sliceStart;
+  } else {
+    const pivot = sliceStart + Math.floor((sliceEnd - sliceStart) / 2);
+    const itemOffset = positions[pivot];
+    return offset <= itemOffset
+      ? getIdxFromScroll(offset, positions, sliceStart, pivot)
+      : getIdxFromScroll(offset, positions, pivot + 1, sliceEnd);
   }
-
-  const pivot = sliceStart + Math.floor((sliceEnd - sliceStart) / 2);
-  const itemOffset = positions[pivot];
-  return offset <= itemOffset
-    ? getIdxFromScroll(offset, positions, sliceStart, pivot)
-    : getIdxFromScroll(offset, positions, pivot + 1, sliceEnd);
 }
 
 export const useGridVirtualColumns = (
