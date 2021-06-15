@@ -86,17 +86,6 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
     [apiRef, field, rowId],
   );
 
-  const publishClick = React.useCallback(
-    (eventName: string) => (event: React.MouseEvent) => {
-      const params = apiRef!.current.getCellParams(rowId, field || '');
-      apiRef!.current.publishEvent(eventName, params, event);
-      if (params?.colDef.disableClickEventBubbling) {
-        event.stopPropagation();
-      }
-    },
-    [apiRef, field, rowId],
-  );
-
   const publish = React.useCallback(
     (eventName: string) => (event: React.SyntheticEvent) => {
       // Ignore portal
@@ -115,7 +104,7 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
 
   const eventsHandlers = React.useMemo(
     () => ({
-      onClick: publishClick(GRID_CELL_CLICK),
+      onClick: publish(GRID_CELL_CLICK),
       onDoubleClick: publish(GRID_CELL_DOUBLE_CLICK),
       onMouseDown: publish(GRID_CELL_MOUSE_DOWN),
       onMouseOver: publish(GRID_CELL_OVER),
@@ -129,7 +118,7 @@ export const GridCell = React.memo(function GridCell(props: GridCellProps) {
       onDragEnter: publish(GRID_CELL_DRAG_ENTER),
       onDragOver: publish(GRID_CELL_DRAG_OVER),
     }),
-    [publish, publishBlur, publishClick],
+    [publish, publishBlur],
   );
 
   const style = {

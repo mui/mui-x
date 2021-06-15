@@ -12,7 +12,6 @@ export const gridCheckboxSelectionColDef: GridColDef = {
   resizable: false,
   sortable: false,
   filterable: false,
-  disableClickEventBubbling: true,
   disableColumnMenu: true,
   valueGetter: (params) => params.api.getState().selection[params.id] !== undefined,
   renderHeader: (params) => <GridHeaderCheckbox {...params} />,

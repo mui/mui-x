@@ -21,6 +21,10 @@ export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, Gri
       apiRef!.current.selectRow(id, event.target.checked, true);
     };
 
+    const handleClick = (event: React.MouseEvent<HTMLInputElement>) => {
+      event.stopPropagation();
+    };
+
     React.useLayoutEffect(() => {
       if (tabIndex === 0 && element) {
         element!.tabIndex = -1;
@@ -57,6 +61,7 @@ export const GridCellCheckboxForwardRef = React.forwardRef<HTMLInputElement, Gri
         tabIndex={tabIndex}
         checked={!!value}
         onChange={handleChange}
+        onClick={handleClick}
         className="MuiDataGrid-checkboxInput"
         color="primary"
         inputProps={{ 'aria-label': 'Select Row checkbox' }}
